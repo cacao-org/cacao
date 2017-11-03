@@ -1,3 +1,81 @@
 [submodule "src/image_basic"]
 	path = src/image_basic
 	url = https://github.com/niptk-org/image_basic
+[submodule "src/image_filter"]
+	path = src/image_filter
+	url = https://github.com/niptk-org/image_filter
+[submodule "src/image_format"]
+	path = src/image_format
+	url = https://github.com/niptk-org/image_format
+[submodule "src/image_gen"]
+	path = src/image_gen
+	url = https://github.com/niptk-org/image_gen
+[submodule "src/img_reduce"]
+	path = src/img_reduce
+	url = https://github.com/niptk-org/img_reduce
+[submodule "src/00CORE"]
+	path = src/00CORE
+	url = https://github.com/niptk-org/00CORE
+[submodule "src/COREMOD_arith"]
+	path = src/COREMOD_arith
+	url = https://github.com/niptk-org/COREMOD_arith
+[submodule "src/COREMOD_iofits"]
+	path = src/COREMOD_iofits
+	url = https://github.com/niptk-org/COREMOD_iofits
+[submodule "src/COREMOD_memory"]
+	path = src/COREMOD_memory
+	url = https://github.com/niptk-org/COREMOD_memory
+[submodule "src/COREMOD_tools"]
+	path = src/COREMOD_tools
+	url = https://github.com/niptk-org/COREMOD_tools
+[submodule "src/Calc_CLI_info"]
+	path = src/Calc_CLI_info
+	url = https://github.com/niptk-org/Calc_CLI_info
+[submodule "src/linopt_imtools"]
+	path = src/linopt_imtools
+	url = https://github.com/niptk-org/linopt_imtools
+[submodule "src/fft"]
+	path = src/fft
+	url = https://github.com/niptk-org/fft
+[submodule "src/linARfilterPred"]
+	path = src/linARfilterPred
+	url = https://github.com/niptk-org/linARfilterPred
+[submodule "src/ImageStreamIO"]
+	path = src/ImageStreamIO
+	url = https://github.com/niptk-org/ImageStreamIO
+[submodule "src/statistic"]
+	path = src/statistic
+	url = https://github.com/niptk-org/statistic
+[submodule "src/ZernikePolyn"]
+	path = src/ZernikePolyn
+	url = https://github.com/niptk-org/ZernikePolyn
+[submodule "src/psf"]
+	path = src/psf
+	url = https://github.com/niptk-org/psf
+[submodule "src/FPAOloopControl"]
+	path = src/FPAOloopControl
+	url = https://github.com/CACAO-org/FPAOloopControl
+[submodule "src/AOloopControl"]
+	path = src/AOloopControl
+	url = https://github.com/CACAO-org/AOloopControl
+[submodule "src/AOloopControl_acquireCalib"]
+	path = src/AOloopControl_acquireCalib
+	url = https://github.com/CACAO-org/AOloopControl_acquireCalib
+[submodule "src/AOloopControl_compTools"]
+	path = src/AOloopControl_compTools
+	url = https://github.com/CACAO-org/AOloopControl_compTools
+[submodule "src/AOloopControl_computeCalib"]
+	path = src/AOloopControl_computeCalib
+	url = https://github.com/CACAO-org/AOloopControl_computeCalib
+[submodule "src/AOloopControl_DM"]
+	path = src/AOloopControl_DM
+	url = https://github.com/CACAO-org/AOloopControl_DM
+[submodule "src/AOloopControl_IOtools"]
+	path = src/AOloopControl_IOtools
+	url = https://github.com/CACAO-org/AOloopControl_IOtools
+[submodule "src/AOloopControl_perfTest"]
+	path = src/AOloopControl_perfTest
+	url = https://github.com/CACAO-org/AOloopControl_perfTest
+[submodule "src/AOloopControl_PredictiveControl"]
+	path = src/AOloopControl_PredictiveControl
+	url = https://github.com/CACAO-org/AOloopControl_PredictiveControl
