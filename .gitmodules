@@ -82,3 +82,9 @@
 [submodule "src/info"]
 	path = src/info
 	url = https://github.com/niptk-org/info
+[submodule "src/kdtree"]
+	path = src/kdtree
+	url = https://github.com/niptk-org/kdtree
+[submodule "src/CommandLineInterface"]
+	path = src/CommandLineInterface
+	url = https://github.com/niptk-org/CommandLineInterface
