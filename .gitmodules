@@ -28,9 +28,6 @@
 [submodule "src/COREMOD_tools"]
 	path = src/COREMOD_tools
 	url = https://github.com/niptk-org/COREMOD_tools
-[submodule "src/Calc_CLI_info"]
-	path = src/Calc_CLI_info
-	url = https://github.com/niptk-org/Calc_CLI_info
 [submodule "src/linopt_imtools"]
 	path = src/linopt_imtools
 	url = https://github.com/niptk-org/linopt_imtools
