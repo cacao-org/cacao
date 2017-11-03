@@ -79,3 +79,6 @@
 [submodule "src/AOloopControl_PredictiveControl"]
 	path = src/AOloopControl_PredictiveControl
 	url = https://github.com/CACAO-org/AOloopControl_PredictiveControl
+[submodule "src/cudacomp"]
+	path = src/cudacomp
+	url = https://github.com/niptk-org/cudacomp
