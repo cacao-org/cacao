@@ -401,7 +401,7 @@ src/AOloopControl_DM/Makefile \
 src/AOloopControl_IOtools/Makefile \
 src/AOloopControl_perfTest/Makefile \
 src/AOloopControl_PredictiveControl/Makefile \
-src/FPAOloopControl/Makefile \
+src/FPAOloopControl/Makefile)
 
 AC_OUTPUT
 
