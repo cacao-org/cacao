@@ -304,6 +304,12 @@ int_fast8_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli() {
 /** @name AOloopControl_IOtools functions */
 
 
+void __attribute__ ((constructor)) libinit_AOloopControl_computeCalib()
+{
+	init_AOloopControl_computeCalib();
+	printf(" ...... Loading module %s\n", __FILE__);
+}
+
             
 int_fast8_t init_AOloopControl_computeCalib()
 {
