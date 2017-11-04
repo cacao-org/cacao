@@ -175,6 +175,13 @@ int_fast8_t AOloopControl_PredictiveControl_setPFsimpleAve_cli() {
 /** @name AOloopControl_PredictiveControl functions */
 
 
+void __attribute__ ((constructor)) libinit_AOloopControl_PredictiveControl()
+{
+	init_AOloopControl_PredictiveControl();
+	printf(" ...... Loading module %s\n", __FILE__);
+}
+
+
 int_fast8_t init_AOloopControl_PredictiveControl()
 {
     strcpy(data.module[data.NBmodule].name, __FILE__);
