@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 #
 
-m4_define([PROGNAME], nipTK)
+m4_define([PROGNAME], CACAO)
 m4_define([PVERSION], 3.4.00)
 
 AC_INIT([PROGNAME], [PVERSION], [oliv.guyon@gmail.com], [PROGNAME])
