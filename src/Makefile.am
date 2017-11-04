@@ -28,6 +28,48 @@ CACAO_LDADD =
 
 ## Modules are built as libraries of convenience
 ## Linking order matters
+
+## 
+## AO modules
+##
+
+SUBDIRS += AOloopControl
+CACAO_LDADD += AOloopControl/libaoloopcontrol.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl
+
+SUBDIRS += AOloopControl_acquireCalib
+CACAO_LDADD += AOloopControl_acquireCalib/libaoloopcontrolacquirecalib.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_acquireCalib
+
+SUBDIRS += AOloopControl_compTools
+CACAO_LDADD += AOloopControl_compTools/libaoloopcontrolcomptools.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_compTools
+
+SUBDIRS += AOloopControl_computeCalib
+CACAO_LDADD += AOloopControl_computeCalib/libaoloopcontrolcomputecalib.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_computeCalib
+
+SUBDIRS += AOloopControl_DM
+CACAO_LDADD += AOloopControl_DM/libaoloopcontroldm.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_DM
+
+SUBDIRS += AOloopControl_IOtools
+CACAO_LDADD += AOloopControl_IOtools/libaoloopcontroliotools.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_IOtools
+
+SUBDIRS += AOloopControl_perfTest
+CACAO_LDADD += AOloopControl_perfTest/libaoloopcontrolperftest.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_perfTest
+
+SUBDIRS += AOloopControl_PredictiveControl
+CACAO_LDADD += AOloopControl_PredictiveControl/libaoloopcontrolpredictivecontrol.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_PreditiveControl
+
+SUBDIRS += FPAOloopControl
+CACAO_LDADD += FPAOloopControl/libfpaoloopcontrol.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/FPAOloopControl
+
+
 ## Core modules last, higher level modules at the top
 
 
@@ -109,44 +151,3 @@ CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/00CORE
 SUBDIRS += ImageStreamIO
 CACAO_LDADD += ImageStreamIO/libimagestreamio.la
 CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/ImageStreamIO
-
-
-## 
-## AO modules
-##
-
-SUBDIRS += AOloopControl
-CACAO_LDADD += AOloopControl/libaoloopcontrol.la
-CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl
-
-SUBDIRS += AOloopControl_acquireCalib
-CACAO_LDADD += AOloopControl_acquireCalib/libaoloopcontrolacquirecalib.la
-CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_acquireCalib
-
-SUBDIRS += AOloopControl_compTools
-CACAO_LDADD += AOloopControl_compTools/libaoloopcontrolcomptools.la
-CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_compTools
-
-SUBDIRS += AOloopControl_computeCalib
-CACAO_LDADD += AOloopControl_computeCalib/libaoloopcontrolcomputecalib.la
-CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_computeCalib
-
-SUBDIRS += AOloopControl_DM
-CACAO_LDADD += AOloopControl_DM/libaoloopcontroldm.la
-CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_DM
-
-SUBDIRS += AOloopControl_IOtools
-CACAO_LDADD += AOloopControl_IOtools/libaoloopcontroliotools.la
-CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_IOtools
-
-SUBDIRS += AOloopControl_perfTest
-CACAO_LDADD += AOloopControl_perfTest/libaoloopcontrolperftest.la
-CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_perfTest
-
-SUBDIRS += AOloopControl_PredictiveControl
-CACAO_LDADD += AOloopControl_PredictiveControl/libaoloopcontrolpredictivecontrol.la
-CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/AOloopControl_PreditiveControl
-
-SUBDIRS += FPAOloopControl
-CACAO_LDADD += FPAOloopControl/libfpaoloopcontrol.la
-CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/FPAOloopControl
