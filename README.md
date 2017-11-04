@@ -19,6 +19,7 @@ Executable launches a command line interface (CLI). Type "help" in the CLI to ge
 The CACAO package follows the standard git clone steps and GNU build process :
 
 	git clone https://github.com/CACAO-org/CACAO
+	cd CACAO
 	git submodule init
 	git submodule update
 	autoreconf -i
