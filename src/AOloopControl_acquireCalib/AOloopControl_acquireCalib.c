@@ -217,7 +217,11 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
 /* =============================================================================================== */
 /** @name AOloopControl_IOtools functions */
 
-
+void __attribute__ ((constructor)) libinit_AOloopControl_acquireCalib()
+{
+	init_AOloopControl_acquireCalib();
+	printf(" ...... Loading module %s\n", __FILE__);
+}
             
 int_fast8_t init_AOloopControl_acquireCalib()
 {
@@ -1845,9 +1849,11 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(const char *DMmodes_name, const 
 
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
-    // r = seteuid(euid_called); //This goes up to maximum privileges
+	int r;
+    
+    r = seteuid(data.euid); //This goes up to maximum privileges
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-    // r = seteuid(euid_real);//Go back to normal privileges
+    r = seteuid(data.ruid);//Go back to normal privileges
 #endif
 
     ptr0 = (char*) data.image[IDmodes1].array.F;
