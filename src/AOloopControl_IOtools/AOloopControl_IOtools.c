@@ -288,6 +288,12 @@ int_fast8_t AOloopControl_IOtools_stream3Dto2D_cli() {
 /** @name AOloopControl_IOtools functions */
 
 
+void __attribute__ ((constructor)) libinit_AOloopControl_IOtools()
+{
+	init_AOloopControl_IOtools();
+	printf(" ...... Loading module %s\n", __FILE__);
+}
+
 
 int_fast8_t init_AOloopControl_IOtools()
 {
@@ -1178,7 +1184,7 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(const char *name, const char *fnam
 
 #ifdef AOLOOPCONTROL_LOGFUNC
 	AOLOOPCONTROL_logfunc_level = 2;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
 
@@ -1297,7 +1303,7 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(const char *name, const char *fnam
 
 #ifdef AOLOOPCONTROL_LOGFUNC
 	AOLOOPCONTROL_logfunc_level = 2;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
 
@@ -1335,7 +1341,7 @@ long AOloopControl_IOtools_3Dloadcreate_shmim(const char *name, const char *fnam
 
 #ifdef AOLOOPCONTROL_LOGFUNC
 	AOLOOPCONTROL_logfunc_level = 2;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
 
@@ -1524,7 +1530,7 @@ long AOloopControl_IOtools_3Dloadcreate_shmim(const char *name, const char *fnam
 
 #ifdef AOLOOPCONTROL_LOGFUNC
 	AOLOOPCONTROL_logfunc_level = 2;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
     return ID;
