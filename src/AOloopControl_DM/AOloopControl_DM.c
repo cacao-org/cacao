@@ -43,7 +43,6 @@
 #include "image_filter/image_filter.h"
 #include "image_gen/image_gen.h"
 
-
 #include "AOloopControl_DM/AOloopControl_DM.h"
 
 #ifdef __MACH__
@@ -66,7 +65,10 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 #endif
 
 
+
 extern DATA data;
+
+
 
 int wcol, wrow; // window size
 
@@ -308,7 +310,11 @@ int_fast8_t AOloopControl_mkDM_TT_circle_cli(){
 
 
 
-
+void __attribute__ ((constructor)) libinit_AOloopControl_DM()
+{
+	init_AOloopControl_DM();
+	printf(" ...... Loading module %s\n", __FILE__);
+}
 
 
 int init_AOloopControl_DM()
@@ -1059,9 +1065,9 @@ int AOloopControl_DM_CombineChannels(long DMindex, long xsize, long ysize, int N
     
     schedpar.sched_priority = RT_priority;
     #ifndef __MACH__
-    r = seteuid(euid_called); //This goes up to maximum privileges
+    r = seteuid(data.euid); // This goes up to maximum privileges
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-    r = seteuid(euid_real);//Go back to normal privileges
+    r = seteuid(data.ruid); //Go back to normal privileges
 	#endif
 
    // AOloopControl_DM_createconf();
