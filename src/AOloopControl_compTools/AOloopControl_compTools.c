@@ -164,7 +164,11 @@ int_fast8_t AOloopControl_compTools_mkSimpleZpokeM_cli()
 
 
 
-
+void __attribute__ ((constructor)) libinit_AOloopControl_compTools()
+{
+	init_AOloopControl_compTools();
+	printf(" ...... Loading module %s\n", __FILE__);
+}
 
 
 
