@@ -304,9 +304,9 @@ typedef struct
 
 
 /** @brief Initialize AOloopControl command line interface. */
-int_fast8_t init_AOloopControl();
+void init_AOloopControl();
 
-
+int AOloopControl_bogusfunc();
 
 
 

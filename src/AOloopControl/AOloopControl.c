@@ -356,6 +356,10 @@ AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 /* =============================================================================================== */
 /* =============================================================================================== */
 
+
+
+
+
 /** @brief CLI function for AOloopControl_loadconfigure */
 int_fast8_t AOloopControl_loadconfigure_cli() {
     if(CLI_checkarg(1,2)==0) {
@@ -810,6 +814,20 @@ int_fast8_t AOloopControl_setparam_cli()
 /* =============================================================================================== */
 
 
+void __attribute__ ((constructor)) libinit_AOloopControl()
+{
+	init_AOloopControl();
+	printf(" ...... Loading module %s\n", __FILE__);
+}
+
+
+int AOloopControl_bogusfunc()
+{
+	printf("This function does NOTHING !\n");
+	return 0;
+}
+
+
 // CODING STANDARD NOTE: minimal required documentation for doxygen
 /**
  *  ## Purpose
@@ -828,12 +846,15 @@ int_fast8_t AOloopControl_setparam_cli()
  */
 // CODING STANDARD NOTE: function name start with module name
 
-int_fast8_t init_AOloopControl()
+
+void init_AOloopControl()
 {
     FILE *fp;
 
+
+
 #ifdef AOLOOPCONTROL_LOGFUNC
-    CORE_logFunctionCall( 0, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
 
@@ -849,14 +870,13 @@ int_fast8_t init_AOloopControl()
         LOOPNUMBER = 0;
 
 
+
     strcpy(data.module[data.NBmodule].name, __FILE__);
     strcpy(data.module[data.NBmodule].info, "AO loop control");
     data.NBmodule++;
 
 
-
     RegisterCLIcommand("aolloadconf",__FILE__, AOloopControl_loadconfigure_cli, "load AO loop configuration", "<loop #>", "AOlooploadconf 1", "int AOloopControl_loadconfigure(long loopnb, 1, 10)");
-
 
 
 
@@ -1065,12 +1085,8 @@ int_fast8_t init_AOloopControl()
     RegisterCLIcommand("aoldmmodAB", __FILE__, AOloopControl_DMmodulateAB_cli, "module DM with linear combination of probes A and B", "<probeA> <probeB> <dmstream> <WFS resp mat> <WFS ref stream> <delay [sec]> <NB probes>", "aoldmmodAB probeA probeB wfsrespmat wfsref 0.1 6","int AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes)");
 
 
-
-
     // add atexit functions here
     // atexit((void*) myfunc); atexit = starts a function once the program exits (only if it is not a crash exit)
-
-    return 0;
 }
 
 
@@ -1324,7 +1340,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
 #ifdef AOLOOPCONTROL_LOGFUNC
 	AOLOOPCONTROL_logfunc_level = 0;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
 
@@ -2132,7 +2148,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
 #ifdef AOLOOPCONTROL_LOGFUNC
 	AOLOOPCONTROL_logfunc_level = 0;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
     return(0);
@@ -2173,7 +2189,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 
 #ifdef AOLOOPCONTROL_LOGFUNC
 	AOLOOPCONTROL_logfunc_level = 0;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
     loop = LOOPNUMBER;
@@ -2371,7 +2387,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 
 #ifdef AOLOOPCONTROL_LOGFUNC
 	AOLOOPCONTROL_logfunc_level = 0;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
     return 0;
@@ -2566,13 +2582,13 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *
 
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
-    if(seteuid(euid_called) != 0) //This goes up to maximum privileges
+    if(seteuid(data.euid) != 0) // This goes up to maximum privileges
         printERROR(__FILE__, __func__, __LINE__, "seteuid() returns non-zero value");
 
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
 
-    if(seteuid(euid_real) != 0) //Go back to normal privileges
-        printERROR(__FILE__, __func__, __LINE__, "seteuid() returns non-zero value");
+    if(seteuid(data.ruid) != 0) // Go back to normal privileges
+       printERROR(__FILE__, __func__, __LINE__, "seteuid() returns non-zero value");
 #endif
 
     IDwfsref = image_ID(IDwfsref_name);
@@ -2698,9 +2714,9 @@ int_fast8_t AOloopControl_run()
 
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
-    // r = seteuid(euid_called); //This goes up to maximum privileges
+    r = seteuid(data.euid); //This goes up to maximum privileges
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-    // r = seteuid(euid_real);//Go back to normal privileges
+    r = seteuid(data.ruid);//Go back to normal privileges
 #endif
 
 
