@@ -196,7 +196,11 @@ int_fast8_t FPAOloopControl_MakeLinComb_seq_cli(){
 
 
 
-
+void __attribute__ ((constructor)) libinit_FPAOloopControl()
+{
+	init_FPAOloopControl();
+	printf(" ...... Loading module %s\n", __FILE__);
+}
 
 
 int init_FPAOloopControl()
