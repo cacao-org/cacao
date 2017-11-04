@@ -307,6 +307,11 @@ int_fast8_t AOloopControl_LoopTimer_Analysis_cli()
 /* =============================================================================================== */
 /* =============================================================================================== */
 
+void __attribute__ ((constructor)) libinit_AOloopControl_perfTest()
+{
+	init_AOloopControl_perfTest();
+	printf(" ...... Loading module %s\n", __FILE__);
+}
 
 
 int_fast8_t init_AOloopControl_perfTest()
@@ -1471,9 +1476,11 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
-    // r = seteuid(euid_called); //This goes up to maximum privileges
+	int r;
+	
+    r = seteuid(data.euid); //This goes up to maximum privileges
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-    // r = seteuid(euid_real);//Go back to normal privileges
+    r = seteuid(data.ruid);//Go back to normal privileges
 #endif
 
     latencyarray = (float*) malloc(sizeof(float)*NBiter);
