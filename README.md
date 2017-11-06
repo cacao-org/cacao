@@ -34,7 +34,7 @@ git clone --recursive -j 4 https://github.com/CACAO-org/CACAO
 cd CACAO
 autoreconf -vif
 ./configure
-make
+make -j`nproc`
 make install
 ```
 
