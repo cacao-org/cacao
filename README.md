@@ -4,6 +4,19 @@
 
 # CACAO : Compute And Control for Adaptive Optics
 
+## Table of Contents
+
+* [Overview](#overview)
+* [Downloading and installing](#downloading-and-installing)
+* [Reporting bugs, issues](#reporting-bugs-issues)
+* [Contributing to project](#contributing-to-project)
+* [Documentation](#documentation)
+* [Libraries](#libraries)
+* [Getting Started](#getting-started)
+* [LICENCE](#licence)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+
 ## Overview
 
 Set of image processing tools and functions accessible through a command line interface (CLI). Holds images in RAM, with image stream support (shared memory with low-latency IPC support).
@@ -12,46 +25,37 @@ Written in C, optimized for performance.
 
 Executable launches a command line interface (CLI). Type "help" in the CLI to get started.
 
-
 ## Downloading and installing 
-
 
 The CACAO package follows the standard git clone steps and GNU build process :
 
-	git clone https://github.com/CACAO-org/CACAO
-	cd CACAO
-	git submodule init
-	git submodule update
-	autoreconf -i
-	./configure
-	make
-	make install
+```bash
+git clone --recursive -j 4 https://github.com/CACAO-org/CACAO
+cd CACAO
+autoreconf -vif
+./configure
+make
+make install
+```
 
 Note: On OS X you need to use gcc-mp-5 for openMP:
 
-	./configure "CC=/opt/local/bin/gcc-mp-5" CPPFLAGS="-I/usr/include/malloc/ -I/opt/local/include/readline" LDFLAGS="-L/opt/local/lib/"
+```bash
+./configure "CC=/opt/local/bin/gcc-mp-5" CPPFLAGS="-I/usr/include/malloc/ -I/opt/local/include/readline" LDFLAGS="-L/opt/local/lib/"
 (Replace "/opt/local/" is the location of your installed libraries. )
-
-
+```
 
 ## Reporting bugs, issues
 
 Report bugs and issues on [this page]( https://github.com/CACAO-org/CACAO/issues )
 
-
 ## Contributing to project
 
-
 See [coding standards]( http://CACAO-org.github.io/CACAO/html/page_coding_standards.html ) 
-
-
-
-
 
 ## Documentation
 
 [Online documentation]( http://CACAO-org.github.io/CACAO/ ) 
-
 
 ## Libraries
 
@@ -70,16 +74,14 @@ The following libraries are used:
 
 If you use NVIDIA GPUs, install cuda and magma libraries, and add "--enable-cuda and --enable-magma" options to the configure command.
 
-
-
 ## Getting Started
 
 All functions are accessible from the command line interface (CLI). Enter the CLI and type "help" for instructions.
 
-		./bin/CACAO
-
+```bash
+./bin/CACAO
+```
 
 ## LICENCE
-
 
 [GNU General Public License v3.0]( https://github.com/CACAO-org/CACAO/blob/master/LICENCE.txt )

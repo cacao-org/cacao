@@ -5,7 +5,7 @@ before_install:
 - sudo apt-get install -qq libcfitsio3 libcfitsio3-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison automake autoconf libtool autotools-dev check
 
 script:
-- autoreconf -i
+- autoreconf -vif
 - ./configure
 - make
 - make install
