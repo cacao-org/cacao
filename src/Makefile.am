@@ -1,7 +1,3 @@
-SUBDIRS = src
-ACLOCAL_AMFLAGS = -I m4
-
-
 #SUFFIXES = .c .h .y .l
 
 bin_PROGRAMS = CACAO
@@ -22,8 +18,8 @@ noinst_HEADERS = CommandLineInterface/calc.h
 BUILT_SOURCES = CommandLineInterface/calc_bison.h
 
 
-SUBDIRS = 
 CACAO_LDADD = 
+SUBDIRS =
 
 
 ## Modules are built as libraries of convenience
