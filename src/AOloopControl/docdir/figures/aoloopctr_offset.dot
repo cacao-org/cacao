@@ -1,0 +1,55 @@
+digraph aosim {
+#        size="8,5"
+#		rankdir="LR"
+
+# shared mem stream nodes
+        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];  
+        "aolN_wfsref";
+        "aolN_wfsref0";
+        "aolN_wfszpo0";
+        "aolN_wfszpo1";
+        "aolN_wfszpo2";
+        "aolN_wfszpo3";
+        "aolN_wfszpo4";
+        "aolN_wfszpo5";
+        "aolN_wfszpo6";
+        "aolN_wfszpo7";
+        "aolN_dmZP0";
+        "aolN_dmZP1";
+        "aolN_dmZP2";
+        "aolN_dmZP3";
+        "aolN_dmZP4";
+        "aolN_dmZP5";
+        "aolN_dmZP6";
+        "aolN_dmZP7";
+	
+
+		
+# processess nodes
+        node [style=filled, fillcolor=plum1, fontcolor=red, fontname="bold", shape=ellipse, color=red]; 
+        "aolNzploop0";
+        "aolNzploop1";
+        "aolNzploop2";
+        "aolNzploop3";
+        "aolNzploop4";
+        "aolNzploop5";        
+        "aolNzploop6";
+        "aolNzploop7";
+        "aolzpwfscloop";
+
+
+
+# process output
+edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, color=black, fontsize=10, fontcolor=black]
+       "aolN_wfsref0" -> "aolzpwfscloop";
+       "aolzpwfscloop" -> "aolN_wfsref";
+       "aolN_dmZP0" -> "aolNzploop0" -> "aolN_wfszpo0" -> "aolzpwfscloop";
+       "aolN_dmZP1" -> "aolNzploop1" -> "aolN_wfszpo1" -> "aolzpwfscloop";
+       "aolN_dmZP2" -> "aolNzploop2" -> "aolN_wfszpo2" -> "aolzpwfscloop";
+       "aolN_dmZP3" -> "aolNzploop3" -> "aolN_wfszpo3" -> "aolzpwfscloop";
+       "aolN_dmZP4" -> "aolNzploop4" -> "aolN_wfszpo4" -> "aolzpwfscloop";
+       "aolN_dmZP5" -> "aolNzploop5" -> "aolN_wfszpo5" -> "aolzpwfscloop";
+       "aolN_dmZP6" -> "aolNzploop6" -> "aolN_wfszpo6" -> "aolzpwfscloop";
+       "aolN_dmZP7" -> "aolNzploop7" -> "aolN_wfszpo7" -> "aolzpwfscloop";
+
+}

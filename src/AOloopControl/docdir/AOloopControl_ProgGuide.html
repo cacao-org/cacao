@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Olivier Guyon" />
+  <meta name="date" content="2017-05-26" />
+  <title>AOloopControl Programming Guide</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="/home/olivier/.css/pandoc.css" type="text/css" />
+</head>
+<body>
+<div id="header">
+<h1 class="title">AOloopControl Programming Guide</h1>
+<h2 class="author">Olivier Guyon</h2>
+<h3 class="date">May 26, 2017</h3>
+</div>
+<div id="TOC">
+<ul>
+<li><a href="#processes"><span class="toc-section-number">1</span> Processes</a></li>
+</ul>
+</div>
+<div id="processes" class="section level1">
+<h1><span class="header-section-number">1</span> Processes</h1>
+<p>Processes are logged in directory</p>
+<pre><code>./runproc/</code></pre>
+<p>A running processes creates a <code>xxxx.runproc</code> file in the directory.</p>
+<p>Key functions (located in <code>aolconfscripts/aolconf_funcs</code>):</p>
+<ul>
+<li>Function <code>logRunningProcess</code> to log process</li>
+<li>Function <code>logRunningProcessQ0</code> to log queued process (waiting)</li>
+<li>Function <code>logRunningProcessQ</code> to log that queued process becomes active. The command is sent to a tmux session</li>
+</ul>
+</div>
+</body>
+</html>
