@@ -220,7 +220,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
 void __attribute__ ((constructor)) libinit_AOloopControl_acquireCalib()
 {
 	init_AOloopControl_acquireCalib();
-	printf(" ...... Loading module %s\n", __FILE__);
+//	printf(" ...... Loading module %s\n", __FILE__);
 }
             
 int_fast8_t init_AOloopControl_acquireCalib()
