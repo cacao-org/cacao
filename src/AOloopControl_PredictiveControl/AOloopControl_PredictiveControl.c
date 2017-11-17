@@ -185,7 +185,7 @@ void __attribute__ ((constructor)) libinit_AOloopControl_PredictiveControl()
 int_fast8_t init_AOloopControl_PredictiveControl()
 {
     strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].info, "AO loop control predictive control");
+    strcpy(data.module[data.NBmodule].info, "cacao   - AO loop control predictive control");
     data.NBmodule++;
 
 
