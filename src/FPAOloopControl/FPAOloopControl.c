@@ -230,7 +230,7 @@ int init_FPAOloopControl()
 	RegisterCLIcommand("FPaomklincombs", __FILE__, FPAOloopControl_MakeLinComb_seq_cli, "make linear comb sequence of DM pokes from set of masters", "<master cube (optional)> <xsize> <ysize> <NBmaster> <N (1+2N steps)> <outCube>", "FPaomklincombs masterC 50 50 3 2 outC", "long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0, long NBmaster0, long N, char *IDout_name)");
 
     strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].info, "FP AO loop control");
+    strcpy(data.module[data.NBmodule].info, "cacao   - Focal place AO loop control");
     data.NBmodule++;
 
 
