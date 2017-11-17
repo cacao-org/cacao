@@ -315,7 +315,7 @@ int_fast8_t init_AOloopControl_computeCalib()
 {
 
     strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].info, "AO loop control compute calibration");
+    strcpy(data.module[data.NBmodule].info, "cacao   - AO loop control compute calibration");
     data.NBmodule++;
 
 
