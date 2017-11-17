@@ -16,7 +16,7 @@
 * [LICENCE](#licence)
 
 
-![alt text](cacao-logo.png)
+![Alt text](cacao-logo.png)
 
 ## Overview
 
