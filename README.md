@@ -15,15 +15,18 @@
 * [Getting Started](#getting-started)
 * [LICENCE](#licence)
 
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
 ## Overview
 
-Set of image processing tools and functions accessible through a command line interface (CLI). Holds images in RAM, with image stream support (shared memory with low-latency IPC support).
+
+Computation engine for adaptive optics control; functions accessible through a command line interface (CLI). Holds images in RAM, with image stream support (shared memory with low-latency IPC support).
 
 Written in C, optimized for performance.
-
 Executable launches a command line interface (CLI). Type "help" in the CLI to get started.
+
+
+CACAO uses [MILK](https://github.com/milk-org/MILK)
+
 
 ## Downloading and installing 
 
@@ -34,7 +37,7 @@ git clone --recursive -j 4 https://github.com/CACAO-org/CACAO
 cd CACAO
 autoreconf -vif
 ./configure
-make -j 4
+make
 make install
 ```
 
@@ -55,7 +58,7 @@ See [coding standards]( http://CACAO-org.github.io/CACAO/html/page_coding_standa
 
 ## Documentation
 
-[Online documentation]( http://CACAO-org.github.io/CACAO/ ) 
+[Online documentation]( http://CACAO-org.github.io/CACAO/html/index.html ) 
 
 ## Libraries
 
