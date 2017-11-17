@@ -310,7 +310,7 @@ int_fast8_t AOloopControl_LoopTimer_Analysis_cli()
 void __attribute__ ((constructor)) libinit_AOloopControl_perfTest()
 {
 	init_AOloopControl_perfTest();
-	printf(" ...... Loading module %s\n", __FILE__);
+//	printf(" ...... Loading module %s\n", __FILE__);
 }
 
 
