@@ -313,7 +313,7 @@ int_fast8_t AOloopControl_mkDM_TT_circle_cli(){
 void __attribute__ ((constructor)) libinit_AOloopControl_DM()
 {
 	init_AOloopControl_DM();
-	printf(" ...... Loading module %s\n", __FILE__);
+//	printf(" ...... Loading module %s\n", __FILE__);
 }
 
 
