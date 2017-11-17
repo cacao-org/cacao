@@ -177,7 +177,7 @@ int_fast8_t init_AOloopControl_compTools()
     FILE *fp;
 
     strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].info, "AO loop control - computation tools");
+    strcpy(data.module[data.NBmodule].info, "cacao   - AO loop control - computation tools");
     data.NBmodule++;
 
 
