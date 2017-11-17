@@ -2,10 +2,10 @@
 # Process this file with autoconf to produce a configure script.
 #
 
-m4_define([PROGNAME], CACAO)
-m4_define([PVERSION], 3.4.00)
+m4_define([PROGNAME], cacao)
+m4_define([PVERSION], 0.1.00)
 
-AC_INIT([PROGNAME], [PVERSION], [oliv.guyon@gmail.com], [PROGNAME])
+AC_INIT([PROGNAME], [PVERSION], [https://github.com/CACAO-org/CACAO/issues], [PROGNAME])
 
 AC_PREREQ(2.61)
 #AC_CONFIG_HEADER([config.h])

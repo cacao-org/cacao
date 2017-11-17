@@ -5,10 +5,9 @@
 
 int main(int argc, char *argv[])
 {
+	char *AppName = "cacao";
 
-	printf("WELCOME to CACAO\n\n");
-	runCLI(argc, argv);
-
+	runCLI(argc, argv, AppName);
 
 	return 0;
 }
