@@ -2,6 +2,7 @@ var NAVTREE =
 [
   [ "cacao", "index.html", [
     [ "Outline", "index.html", null ],
+    [ "News", "page_news.html", null ],
     [ "Module 00CORE", "page_module_00CORE.html", null ],
     [ "AOloopControl", "md_src_AOloopControl_README.html", null ],
     [ "AOloopControl_acquireCalib", "md_src_AOloopControl_acquireCalib_README.html", null ],
@@ -72,9 +73,9 @@ var NAVTREEINDEX =
 "functions_o.html",
 "image__basic_8h.html#ae9e7602a9890b09aad6dca8855cd3210",
 "info_8h.html#a1039f41559c2429c6db90981725780ed",
-"psf_8c.html#ad48bc560526c5286e33b4d91dcb9df4b",
-"structCMDARGTOKEN.html#a8ef8bd8dde032f117c7c316dee08a7c9",
-"structsymrec.html#af3db0c7e569f93a9d7385d5b170578f8"
+"psf_8c.html#ad28b90e75ad1ccab94b67671e4d595f7",
+"structCMDARGTOKEN.html#a268f75c3a394c9466df7aba70dc76c00",
+"structsymrec.html#accae313254c71fad5d7eb0446473bec5"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

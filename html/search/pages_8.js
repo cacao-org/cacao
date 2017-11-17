@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['outline',['Outline',['../index.html',1,'']]]
+  ['news',['News',['../page_news.html',1,'']]]
 ];
