@@ -4,18 +4,6 @@
 
 # CACAO : Compute And Control for Adaptive Optics
 
-## Table of Contents
-
-* [Overview](#overview)
-* [Downloading and installing](#downloading-and-installing)
-* [Reporting bugs, issues](#reporting-bugs-issues)
-* [Contributing to project](#contributing-to-project)
-* [Documentation](#documentation)
-* [Libraries](#libraries)
-* [Getting Started](#getting-started)
-* [LICENCE](#licence)
-
-
 ![Alt text](cacao-logo.png)
 
 ## Overview
