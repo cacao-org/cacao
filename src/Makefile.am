@@ -117,6 +117,10 @@ SUBDIRS += fft
 CACAO_LDADD += fft/libfft.la
 CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/fft
 
+SUBDIRS += kdtree
+CACAO_LDADD += kdtree/libkdtree.la
+CACAO_CPPFLAGS += -I@abs_top_srcdir@/src/kdtree
+
 
 ## 
 ## CORE modules, should always be included
