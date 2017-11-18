@@ -346,16 +346,14 @@ if test "$magmaval" == "no"; then
 fi
 
 if test  "$magmaval" = "yes"; then
-	MAGMA_LIBS="-lmagma "
-	MAGMA_CFLAGS="-DADD_ -I/usr/local/magma/include/"
-	MAGMA_LDFLAGS="-L/usr/local/magma/lib/"
+	PKG_CHECK_MODULES([MAGMA], [magma])  
 	AC_DEFINE([HAVE_MAGMA],[1],[Defined if MAGMA should be used])
 	eval "ARRAY${N}='-D_MAGMA'"
     N=`expr $N + 1`
     LIBS="$LIBS $MAGMA_LIBS"
     LDFLAGS="$LDFLAGS $MAGMA_LDFLAGS"
     CFLAGS="$CFLAGS $MAGMA_CFLAGS"
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH -L/usr/local/magma/lib/"
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH -L$MAGMA_INSTALL_PATH/lib"
 fi
 
 
