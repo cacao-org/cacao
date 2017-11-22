@@ -7,10 +7,6 @@
 # cacao : Compute And Control for Adaptive Optics
 
 
-## Overview
-
-
-
 <img align="left" src="cacao-logo-250pix.png">
 
 Computation engine for adaptive optics control; functions accessible through a command line interface (CLI). Holds images in RAM, with image stream support (shared memory with low-latency IPC support).
