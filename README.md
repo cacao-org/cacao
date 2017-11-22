@@ -1,11 +1,14 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8fc93c97bde340078b02340e71b10580)](https://www.codacy.com/app/oguyon/CACAO?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CACAO-org/CACAO&amp;utm_campaign=Badge_Grade)
 
-# CACAO : Compute And Control for Adaptive Optics
+1[](AlphaRelease.svg)
 
-![Alt text](cacao-logo.png =100x100)
 
-<span style="color:red">**This is an alpha release**</span>
+# cacao : Compute And Control for Adaptive Optics
+
+![](cacao-logo.png =100x100)
+
+**This is an alpha release**
 
 
 ## Overview
