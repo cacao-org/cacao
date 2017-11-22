@@ -817,7 +817,7 @@ int_fast8_t AOloopControl_setparam_cli()
 void __attribute__ ((constructor)) libinit_AOloopControl()
 {
 	init_AOloopControl();
-	printf(" ...... Loading module %s\n", __FILE__);
+//	printf(" ...... Loading module %s\n", __FILE__);
 }
 
 
