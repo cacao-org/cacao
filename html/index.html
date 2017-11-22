@@ -105,8 +105,12 @@ $(document).ready(function(){initNavTree('index.html','');});
 <div class="title">Outline </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1>Coronagraph design and simulation</h1>
-<p><a href="https://github.com/CACAO-org/CACAO">cacao on github</a></p>
+<div class="textblock"><h1>Compute And Control For Adaptive Optics (cacao)</h1>
+<hr/>
+<h2>Source Code</h2>
+<p><span style="color:red"> <b>cacao is under development - this is a Alpha release</b> </span></p>
+<p>What is an <a href="https://en.wikipedia.org/wiki/Software_release_life_cycle">alpha release</a> ?</p>
+<p><a href="https://github.com/cacao-org/cacao">cacao on github</a> </p><hr/>
 <h2>User's Guide</h2>
 <ul>
 <li>page_cacao_Introduction</li>
@@ -118,10 +122,12 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li><a class="el" href="page_command_line_interface.html">Command Line Interface Syntax</a></li>
 </ul>
 </li>
-<li><a class="el" href="page_news.html">News</a></li>
+<li><a class="el" href="page_news.html">News</a> <hr/>
+</li>
 </ul>
 <h2>Programmer's Guide</h2>
 <ul>
+<li><a class="el" href="page_WorkingWithGit.html">Working with git</a></li>
 <li><a class="el" href="page_coding_standards.html">Coding Standards</a><ul>
 <li><a class="el" href="page_Compilation.html">Compilation</a></li>
 <li><a class="el" href="page_ModuleFiles.html">Module Files</a></li>
@@ -132,39 +138,52 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li>page_cacao_Ccode</li>
 <li><a class="el" href="page_LoadingModules.html">Loading Modules</a></li>
 </ul>
-<h2>FALCON modules</h2>
+<hr/>
+ <hr/>
+<h2>cacao modules</h2>
+<h3>milk modules</h3>
+<p>cacao build on the milk package and framework. Command line interface, memory management and general purpose image processing functions are provided by the milk modules.</p>
 <ul>
 <li><a class="el" href="page_module_CommandLineInterface.html">Module CommandLineInterface</a></li>
+<li><a class="el" href="page_module_ImageStreamIO.html">Module ImageStreamIO</a></li>
 <li><a class="el" href="page_module_00CORE.html">Module 00CORE</a></li>
 <li><a class="el" href="page_module_COREMOD_memory.html">Module COREMOD_memory</a></li>
 <li><a class="el" href="page_module_COREMOD_iofits.html">Module COREMOD_iofits</a></li>
 <li><a class="el" href="page_module_COREMOD_tools.html">Module COREMOD_tools</a></li>
-<li>page_module_COREMOD_arith</li>
-<li><a class="el" href="page_module_ImageStreamIO.html">Module ImageStreamIO</a></li>
-<li><a class="el" href="page_module_fft.html">Module fft</a></li>
-<li><a class="el" href="page_module_statistic.html">Module statistic</a></li>
-<li>page_module_WFpropagate</li>
-<li><a class="el" href="page_module_psf.html">Module psf</a></li>
+<li><a class="el" href="page_module_COREMOD_arith.html">Module COREMOD_arith</a></li>
 <li><a class="el" href="page_module_info.html">Module info</a></li>
-<li><a class="el" href="page_module_kdtree.html">Module kdtree</a></li>
-<li><a class="el" href="page_module_linARfilterPred.html">Module linARfilterPred</a></li>
-<li><a class="el" href="page_module_cudacomp.html">Module cudacomp</a></li>
-<li><a class="el" href="page_module_image_filter.html">Module image_filter</a></li>
 <li><a class="el" href="page_module_image_basic.html">Module image_basic</a></li>
+<li><a class="el" href="page_module_image_filter.html">Module image_filter</a></li>
 <li><a class="el" href="page_module_image_format.html">Module image_format</a></li>
 <li><a class="el" href="page_module_image_gen.html">Module image_gen</a></li>
 <li><a class="el" href="page_module_img_reduce.html">Module img_reduce</a></li>
+<li><a class="el" href="page_module_fft.html">Module fft</a></li>
+<li><a class="el" href="page_module_statistic.html">Module statistic</a></li>
+<li><a class="el" href="page_module_kdtree.html">Module kdtree</a></li>
+<li><a class="el" href="page_module_linARfilterPred.html">Module linARfilterPred</a></li>
 <li><a class="el" href="page_module_linopt_imtools.html">Module linopt_imtools</a></li>
-<li>page_module_OpticsMaterials</li>
-<li>page_module_OptSystProp</li>
-<li>page_module_AOsystSim </li>
+<li><a class="el" href="page_module_psf.html">Module psf</a></li>
+<li><a class="el" href="page_module_ZernikePolyn.html">Module ZernikePolyn</a></li>
+<li><a class="el" href="page_module_cudacomp.html">Module cudacomp</a></li>
+</ul>
+<h3>cacao-specific modules</h3>
+<ul>
+<li>page_module_AOloopControl</li>
+<li>page_module_AOloopControl_IOtools</li>
+<li>page_module_AOloopControl_acquireCalib</li>
+<li>page_module_AOloopControl_computeCalib</li>
+<li>page_module_AOloopControl_perfTest</li>
+<li>page_module_AOloopControl_compTools</li>
+<li>page_module_AOloopControl_PredictiveControl</li>
+<li>page_module_AOloopControl_DM</li>
+<li>page_module_FPAOloopControl </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Nov 17 2017 08:54:39 for cacao by
+    <li class="footer">Generated on Wed Nov 22 2017 10:57:13 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>
