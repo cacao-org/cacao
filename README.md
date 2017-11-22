@@ -10,10 +10,8 @@
 ## Overview
 
 
-![](cacao-logo-150pix.png) 
 
-
-<img align="right" src="cacao-logo-150pix.png">
+<img align="left" src="cacao-logo-250pix.png">
 Computation engine for adaptive optics control; functions accessible through a command line interface (CLI). Holds images in RAM, with image stream support (shared memory with low-latency IPC support).
 
 Written in C, optimized for performance.
