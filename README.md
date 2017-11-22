@@ -37,8 +37,8 @@ CACAO uses [milk](https://github.com/milk-org/milk)
 The CACAO package follows the standard git clone steps and GNU build process :
 
 ```bash
-git clone --recursive -j 4 https://github.com/CACAO-org/CACAO
-cd CACAO
+git clone --recursive https://github.com/cacao-org/cacao cacao
+cd cacao
 autoreconf -vif
 ./configure
 make
@@ -58,13 +58,17 @@ Note: On OS X, use gcc-mp-5 for openMP:
 
 Report bugs and issues on [this page]( https://github.com/CACAO-org/CACAO/issues )
 
+
 ---
+
 
 ## Contributing to project
 
 See [coding standards]( http://CACAO-org.github.io/CACAO/html/page_coding_standards.html ) 
 
+
 ---
+
 
 ## Documentation
 
@@ -87,6 +91,10 @@ The following libraries are used:
 
 If you use NVIDIA GPUs, install cuda and magma libraries, and add "--enable-cuda and --enable-magma" options to the configure command.
 
+
+---
+
+
 ## Getting Started
 
 All functions are accessible from the command line interface (CLI). Enter the CLI and type "help" for instructions.
@@ -94,6 +102,8 @@ All functions are accessible from the command line interface (CLI). Enter the CL
 ```bash
 ./bin/CACAO
 ```
+---
+
 
 ## LICENCE
 
