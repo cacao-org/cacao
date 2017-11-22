@@ -6,9 +6,8 @@
 
 # cacao : Compute And Control for Adaptive Optics
 
-![](cacao-logo.png =100x100)
+![](cacao-logo-small.png)
 
-**This is an alpha release**
 
 
 ## Overview
