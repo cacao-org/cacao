@@ -1,90 +1,120 @@
 [submodule "src/image_basic"]
 	path = src/image_basic
 	url = https://github.com/milk-org/image_basic
+    branch = dev
 [submodule "src/image_filter"]
 	path = src/image_filter
 	url = https://github.com/milk-org/image_filter
+    branch = dev
 [submodule "src/image_format"]
 	path = src/image_format
 	url = https://github.com/milk-org/image_format
+    branch = dev
 [submodule "src/image_gen"]
 	path = src/image_gen
 	url = https://github.com/milk-org/image_gen
+    branch = dev
 [submodule "src/img_reduce"]
 	path = src/img_reduce
 	url = https://github.com/milk-org/img_reduce
+    branch = dev
 [submodule "src/00CORE"]
 	path = src/00CORE
 	url = https://github.com/milk-org/00CORE
+    branch = dev
 [submodule "src/COREMOD_arith"]
 	path = src/COREMOD_arith
 	url = https://github.com/milk-org/COREMOD_arith
+    branch = dev
 [submodule "src/COREMOD_iofits"]
 	path = src/COREMOD_iofits
 	url = https://github.com/milk-org/COREMOD_iofits
+    branch = dev
 [submodule "src/COREMOD_memory"]
 	path = src/COREMOD_memory
 	url = https://github.com/milk-org/COREMOD_memory
+    branch = dev
 [submodule "src/COREMOD_tools"]
 	path = src/COREMOD_tools
 	url = https://github.com/milk-org/COREMOD_tools
+    branch = dev
 [submodule "src/linopt_imtools"]
 	path = src/linopt_imtools
 	url = https://github.com/milk-org/linopt_imtools
+    branch = dev
 [submodule "src/fft"]
 	path = src/fft
 	url = https://github.com/milk-org/fft
+    branch = dev
 [submodule "src/linARfilterPred"]
 	path = src/linARfilterPred
 	url = https://github.com/milk-org/linARfilterPred
+    branch = dev
 [submodule "src/ImageStreamIO"]
 	path = src/ImageStreamIO
 	url = https://github.com/milk-org/ImageStreamIO
+    branch = dev
 [submodule "src/statistic"]
 	path = src/statistic
 	url = https://github.com/milk-org/statistic
+    branch = dev
 [submodule "src/ZernikePolyn"]
 	path = src/ZernikePolyn
 	url = https://github.com/milk-org/ZernikePolyn
+    branch = dev
 [submodule "src/psf"]
 	path = src/psf
 	url = https://github.com/milk-org/psf
+    branch = dev
 [submodule "src/FPAOloopControl"]
 	path = src/FPAOloopControl
 	url = https://github.com/CACAO-org/FPAOloopControl
+    branch = dev
 [submodule "src/AOloopControl"]
 	path = src/AOloopControl
 	url = https://github.com/CACAO-org/AOloopControl
+    branch = dev
 [submodule "src/AOloopControl_acquireCalib"]
 	path = src/AOloopControl_acquireCalib
 	url = https://github.com/CACAO-org/AOloopControl_acquireCalib
+    branch = dev
 [submodule "src/AOloopControl_compTools"]
 	path = src/AOloopControl_compTools
 	url = https://github.com/CACAO-org/AOloopControl_compTools
+    branch = dev
 [submodule "src/AOloopControl_computeCalib"]
 	path = src/AOloopControl_computeCalib
 	url = https://github.com/CACAO-org/AOloopControl_computeCalib
+    branch = dev
 [submodule "src/AOloopControl_DM"]
 	path = src/AOloopControl_DM
 	url = https://github.com/CACAO-org/AOloopControl_DM
+    branch = dev
 [submodule "src/AOloopControl_IOtools"]
 	path = src/AOloopControl_IOtools
 	url = https://github.com/CACAO-org/AOloopControl_IOtools
+    branch = dev
 [submodule "src/AOloopControl_perfTest"]
 	path = src/AOloopControl_perfTest
 	url = https://github.com/CACAO-org/AOloopControl_perfTest
+    branch = dev
 [submodule "src/AOloopControl_PredictiveControl"]
 	path = src/AOloopControl_PredictiveControl
 	url = https://github.com/CACAO-org/AOloopControl_PredictiveControl
+    branch = dev
 [submodule "src/cudacomp"]
 	path = src/cudacomp
 	url = https://github.com/milk-org/cudacomp
+    branch = dev
 [submodule "src/info"]
 	path = src/info
 	url = https://github.com/milk-org/info
+    branch = dev
 [submodule "src/kdtree"]
 	path = src/kdtree
 	url = https://github.com/milk-org/kdtree
+    branch = dev
 [submodule "src/CommandLineInterface"]
 	path = src/CommandLineInterface
 	url = https://github.com/milk-org/CommandLineInterface
+    branch = dev
