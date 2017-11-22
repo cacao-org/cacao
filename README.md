@@ -17,8 +17,13 @@ Computation engine for adaptive optics control; functions accessible through a c
 Written in C, optimized for performance.
 Executable launches a command line interface (CLI). Type "help" in the CLI to get started.
 
+Modular, easy to add functions, loaded at runtime as shared objects.
 
-CACAO uses [MILK](https://github.com/milk-org/MILK)
+
+CACAO uses [milk](https://github.com/milk-org/milk)
+
+
+---
 
 
 ## Downloading and installing 
@@ -34,20 +39,26 @@ make
 make install
 ```
 
-Note: On OS X you need to use gcc-mp-5 for openMP:
+Note: On OS X, use gcc-mp-5 for openMP:
 
 ```bash
 ./configure "CC=/opt/local/bin/gcc-mp-5" CPPFLAGS="-I/usr/include/malloc/ -I/opt/local/include/readline" LDFLAGS="-L/opt/local/lib/"
 (Replace "/opt/local/" is the location of your installed libraries. )
 ```
 
+---
+
 ## Reporting bugs, issues
 
 Report bugs and issues on [this page]( https://github.com/CACAO-org/CACAO/issues )
 
+---
+
 ## Contributing to project
 
 See [coding standards]( http://CACAO-org.github.io/CACAO/html/page_coding_standards.html ) 
+
+---
 
 ## Documentation
 
