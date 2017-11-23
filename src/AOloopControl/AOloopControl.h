@@ -2,10 +2,11 @@
  * @file    AOloopControl.h
  * @brief   Function prototypes for Adaptive Optics Control loop engine
  * 
+ * 
  * AO engine uses stream data structure
  * 
  * @author  O. Guyon
- * @date    8 Sept 2017
+ * @date    22 Nov 2017
  *
  * @bug No known bugs. 
  * 
