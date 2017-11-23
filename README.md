@@ -96,7 +96,7 @@ If you use NVIDIA GPUs, install cuda and magma libraries, and add "--enable-cuda
 All functions are accessible from the command line interface (CLI). Enter the CLI and type "help" for instructions.
 
 ```bash
-./bin/CACAO
+./bin/cacao
 ```
 ---
 

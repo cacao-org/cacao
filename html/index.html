@@ -33,9 +33,9 @@
   <td id="projectlogo"><img alt="Logo" src="cacao-logo-small.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cacao
-   &#160;<span id="projectnumber">0.1.0</span>
+   &#160;<span id="projectnumber">Alpha Release 0.1.0</span>
    </div>
-   <div id="projectbrief">Compute and Control for Adaptive Optics</div>
+   <div id="projectbrief">Compute And Control For Adaptive Optics</div>
   </td>
  </tr>
  </tbody>
@@ -110,21 +110,20 @@ $(document).ready(function(){initNavTree('index.html','');});
 <h2>Source Code</h2>
 <p><span style="color:red"> <b>cacao is under development - this is a Alpha release</b> </span></p>
 <p>What is an <a href="https://en.wikipedia.org/wiki/Software_release_life_cycle">alpha release</a> ?</p>
-<p><a href="https://github.com/cacao-org/cacao">cacao on github</a> </p><hr/>
+<p><a href="https://github.com/cacao-org/cacao">cacao on github</a></p>
+<hr/>
 <h2>User's Guide</h2>
 <ul>
-<li>page_cacao_Introduction</li>
 <li><a class="el" href="page_installation.html">Installation</a></li>
-<li>page_cacao_GettingStarted</li>
 <li><a class="el" href="page_userinput.html">Command Line Interface</a><ul>
 <li><a class="el" href="page_CLI_Overview.html">CLI Overview</a></li>
 <li><a class="el" href="page_readlinekeys.html">Readline Input Keys</a></li>
 <li><a class="el" href="page_command_line_interface.html">Command Line Interface Syntax</a></li>
 </ul>
 </li>
-<li><a class="el" href="page_news.html">News</a> <hr/>
-</li>
+<li><a class="el" href="page_news.html">News</a></li>
 </ul>
+<hr/>
 <h2>Programmer's Guide</h2>
 <ul>
 <li><a class="el" href="page_WorkingWithGit.html">Working with git</a></li>
@@ -135,55 +134,87 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li><a class="el" href="page_TemplateSourceCode.html">Template Souce Code</a></li>
 </ul>
 </li>
-<li>page_cacao_Ccode</li>
 <li><a class="el" href="page_LoadingModules.html">Loading Modules</a></li>
 </ul>
 <hr/>
- <hr/>
 <h2>cacao modules</h2>
 <h3>milk modules</h3>
-<p>cacao build on the milk package and framework. Command line interface, memory management and general purpose image processing functions are provided by the milk modules.</p>
-<ul>
-<li><a class="el" href="page_module_CommandLineInterface.html">Module CommandLineInterface</a></li>
-<li><a class="el" href="page_module_ImageStreamIO.html">Module ImageStreamIO</a></li>
-<li><a class="el" href="page_module_00CORE.html">Module 00CORE</a></li>
-<li><a class="el" href="page_module_COREMOD_memory.html">Module COREMOD_memory</a></li>
-<li><a class="el" href="page_module_COREMOD_iofits.html">Module COREMOD_iofits</a></li>
-<li><a class="el" href="page_module_COREMOD_tools.html">Module COREMOD_tools</a></li>
-<li><a class="el" href="page_module_COREMOD_arith.html">Module COREMOD_arith</a></li>
-<li><a class="el" href="page_module_info.html">Module info</a></li>
-<li><a class="el" href="page_module_image_basic.html">Module image_basic</a></li>
-<li><a class="el" href="page_module_image_filter.html">Module image_filter</a></li>
-<li><a class="el" href="page_module_image_format.html">Module image_format</a></li>
-<li><a class="el" href="page_module_image_gen.html">Module image_gen</a></li>
-<li><a class="el" href="page_module_img_reduce.html">Module img_reduce</a></li>
-<li><a class="el" href="page_module_fft.html">Module fft</a></li>
-<li><a class="el" href="page_module_statistic.html">Module statistic</a></li>
-<li><a class="el" href="page_module_kdtree.html">Module kdtree</a></li>
-<li><a class="el" href="page_module_linARfilterPred.html">Module linARfilterPred</a></li>
-<li><a class="el" href="page_module_linopt_imtools.html">Module linopt_imtools</a></li>
-<li><a class="el" href="page_module_psf.html">Module psf</a></li>
-<li><a class="el" href="page_module_ZernikePolyn.html">Module ZernikePolyn</a></li>
-<li><a class="el" href="page_module_cudacomp.html">Module cudacomp</a></li>
-</ul>
+<p>cacao builds on the milk package and framework. Command line interface, memory management and general purpose image processing functions are provided by the milk modules.</p>
+<table class="doxtable">
+<tr>
+<th>Module </th><th>Description </th><th>Souce Code Reference  </th></tr>
+<tr>
+<td>CommandLineInterface </td><td>Command interpreter </td><td><a class="el" href="CLIcore_8h.html">CLIcore.h</a> </td></tr>
+<tr>
+<td>ImageStreamIO </td><td>Image format and low-level routines </td><td><a class="el" href="ImageStreamIO_8h.html">ImageStreamIO.h</a> </td></tr>
+<tr>
+<td>00CORE </td><td>Core functions </td><td><a class="el" href="00CORE_8h.html" title="Function prototypes for module 00CORE. ">00CORE.h</a> </td></tr>
+<tr>
+<td>COREMOD_memory </td><td>Memory management, image creation </td><td><a class="el" href="COREMOD__memory_8h.html">COREMOD_memory.h</a> </td></tr>
+<tr>
+<td>COREMOD_iofits </td><td>Read and write FITS files </td><td><a class="el" href="COREMOD__iofits_8h.html">COREMOD_iofits.h</a> </td></tr>
+<tr>
+<td>COREMOD_tools </td><td>Misc frequently used functions </td><td><a class="el" href="COREMOD__tools_8h.html">COREMOD_tools.h</a> </td></tr>
+<tr>
+<td>COREMOD_arith </td><td>Arithmetic operations on images </td><td><a class="el" href="COREMOD__arith_8h.html">COREMOD_arith.h</a> </td></tr>
+<tr>
+<td>info </td><td>Image information </td><td><a class="el" href="info_8h.html">info.h</a> </td></tr>
+<tr>
+<td>image_basic </td><td>Frequently used image functions </td><td><a class="el" href="image__basic_8h.html">image_basic.h</a> </td></tr>
+<tr>
+<td>image_filter </td><td>Image filtering, convolution </td><td><a class="el" href="image__filter_8h.html">image_filter.h</a> </td></tr>
+<tr>
+<td>image_format </td><td>Read/write images in several formats </td><td><a class="el" href="image__format_8h.html">image_format.h</a> </td></tr>
+<tr>
+<td>image_gen </td><td>Generate useful images </td><td><a class="el" href="image__gen_8h.html">image_gen.h</a> </td></tr>
+<tr>
+<td>img_reduce </td><td>Combine raw images into single image </td><td><a class="el" href="img__reduce_8h.html">img_reduce.h</a> </td></tr>
+<tr>
+<td>fft </td><td>Wrapper to FFTW and other functions </td><td><a class="el" href="fft_8h.html">fft.h</a> </td></tr>
+<tr>
+<td>statistic </td><td>Statistical tools and analysis </td><td><a class="el" href="statistic_8h.html">statistic.h</a> </td></tr>
+<tr>
+<td>kdtree </td><td>k-d tree </td><td><a class="el" href="kdtree_8h.html">kdtree.h</a> </td></tr>
+<tr>
+<td>linARfilterPred </td><td>Linear predictive filtering </td><td><a class="el" href="linARfilterPred_8h.html">linARfilterPred.h</a> </td></tr>
+<tr>
+<td><a class="el" href="linopt__imtools_8h.html" title="Function prototypes for linear algebra tools. ">linopt_imtools.h</a> </td><td>Linear optimization tools </td><td><a class="el" href="linopt__imtools_8h.html">linopt_imtools.h</a> </td></tr>
+<tr>
+<td>psf </td><td>Point Spread Function analysis </td><td><a class="el" href="psf_8h.html">psf.h</a> </td></tr>
+<tr>
+<td>ZernikePolyn </td><td>Zernike Polynomials </td><td><a class="el" href="ZernikePolyn_8h.html">ZernikePolyn.h</a> </td></tr>
+<tr>
+<td>cudacomp </td><td>Cuda wrapper </td><td><a class="el" href="cudacomp_8h.html">cudacomp.h</a> </td></tr>
+</table>
 <h3>cacao-specific modules</h3>
-<ul>
-<li>page_module_AOloopControl</li>
-<li>page_module_AOloopControl_IOtools</li>
-<li>page_module_AOloopControl_acquireCalib</li>
-<li>page_module_AOloopControl_computeCalib</li>
-<li>page_module_AOloopControl_perfTest</li>
-<li>page_module_AOloopControl_compTools</li>
-<li>page_module_AOloopControl_PredictiveControl</li>
-<li>page_module_AOloopControl_DM</li>
-<li>page_module_FPAOloopControl </li>
-</ul>
+<table class="doxtable">
+<tr>
+<th>Module </th><th>Description </th><th>Souce Code Reference  </th></tr>
+<tr>
+<td>AOloopControl </td><td>Top-level module for AO control </td><td><a class="el" href="AOloopControl_8h.html">AOloopControl.h</a> </td></tr>
+<tr>
+<td>AOloopControl_IOtools </td><td>Input-Output tools </td><td><a class="el" href="AOloopControl__IOtools_8h.html">AOloopControl_IOtools.h</a> </td></tr>
+<tr>
+<td>AOloopControl_acquireCalib </td><td>Acquire AO calibration </td><td><a class="el" href="AOloopControl__acquireCalib_8h.html">AOloopControl_acquireCalib.h</a> </td></tr>
+<tr>
+<td>AOloopControl_computeCalib </td><td>Compute AO calibration </td><td><a class="el" href="AOloopControl__computeCalib_8h.html">AOloopControl_computeCalib.h</a> </td></tr>
+<tr>
+<td>AOloopControl_perfTest </td><td>AO performance analysis </td><td><a class="el" href="AOloopControl__perfTest_8h.html">AOloopControl_perfTest.h</a> </td></tr>
+<tr>
+<td>AOloopControl_compTools </td><td>AO computation tools </td><td><a class="el" href="AOloopControl__compTools_8h.html">AOloopControl_compTools.h</a> </td></tr>
+<tr>
+<td>AOloopControl_PredictiveControl </td><td>Predictive Control </td><td><a class="el" href="AOloopControl__PredictiveControl_8h.html">AOloopControl_PredictiveControl.h</a> </td></tr>
+<tr>
+<td>AOloopControl_DM </td><td>Deformable mirror control </td><td><a class="el" href="AOloopControl__DM_8h.html">AOloopControl_DM.h</a> </td></tr>
+<tr>
+<td>FPAOloopControl </td><td>Focal plane AO control </td><td><a class="el" href="FPAOloopControl_8h.html">FPAOloopControl.h</a> </td></tr>
+</table>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Nov 22 2017 10:57:13 for cacao by
+    <li class="footer">Generated on Thu Nov 23 2017 10:26:43 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>
