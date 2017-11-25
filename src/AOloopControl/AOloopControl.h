@@ -12,23 +12,32 @@
  * 
  */
 
+
+// _____________________________________________________________ added by nour 
+//#include <mach/mach_time.h>
+#define CLOCK_REALTIME 0
+#define CLOCK_MONOTONIC 0
+#include <stdint.h>
+#include <stdio.h>
+#include <time.h>
+// _____________________________________________________________ added by nour 
+
+
+
 #ifndef _AOLOOPCONTROL_H
 #define _AOLOOPCONTROL_H
-
-
-
-
-
 
 #define maxNBMB 100			// maximum number of mode blocks
 #define MAXNBMODES 10000	// maximum number of control modes
 #define MAX_NUMBER_TIMER 100
 
 
+
+
+
 // logging
 static int loadcreateshm_log = 0; // 1 if results should be logged in ASCII file
 static FILE *loadcreateshm_fplog;
-
 
 
 
@@ -278,26 +287,137 @@ typedef struct
     // semaphores for communication with GPU computing threads
     //sem_t *semptr; // semaphore for this image
 
+
+
 } AOLOOPCONTROL_CONF;
 
 
 
+typedef struct
+{	
+//________________________________________________________________________________________added by nour
+
+/* =============================================================================================== */
+/*                    aoconfID are global variables for convenience                                */
+/*  aoconfID can be used in other modules as well (with extern)                                    */
+/* =============================================================================================== */
+
+long LOOPNUMBER;// = 0; // current loop index
+
+// TIMING
+//struct timespec tnow; //static
+//struct timespec tdiff; //static
+//double tdiffv; //static
+
+int initWFSref_GPU[100];// = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int initcontrMcact_GPU[100];// = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//both previous are static 
+
+float GPU_alpha;// = 0.0;
+float GPU_beta;// = 0.0;
+
+int AOloopcontrol_meminit;// = 0;
+
+int COMPUTE_PIXELSTREAMING; // = 0; // static. multiple pixel groups
+int PIXSTREAM_NBSLICES;// = 1; // number of image slices (= pixel groups)
+int PIXSTREAM_SLICE; // slice index 0 = all pixels
+
+
+// Hardware connections
+long aoconfID_wfsim; //= -1;
+uint8_t WFSatype;
+long aoconfID_dmC;// = -1;
+long aoconfID_dmRM;// = -1;
+
+long aoconfID_wfsdark;// = -1;
+long aoconfID_imWFS0;// = -1;
+long aoconfID_imWFS0tot;// = -1;
+long aoconfID_imWFS1;// = -1;
+long aoconfID_imWFS2;// = -1;
+long aoconfID_wfsref0;// = -1; static
+long aoconfID_wfsref;// = -1;
+long long aoconfcnt0_wfsref_current;// = -1; static
+
+long aoconfID_DMmodes;// = -1;
+long aoconfID_dmdisp;// = -1; static. // to notify DMcomb that DM maps should be summed
 
 
 
+// Control Modes
+long aoconfID_cmd_modes;// = -1;
+long aoconfID_meas_modes;// = -1; // measured
+long aoconfID_RMS_modes;// = -1;
+long aoconfID_AVE_modes;// = -1;
+long aoconfID_modeARPFgainAuto;// = -1;
+long aoconfID_modevalPF;// = -1;
+
+// mode gains, multf, limit are set in 3 tiers
+// global gain
+// block gain
+// individual gains
+
+// blocks
+long aoconfID_gainb;// = -1; // block modal gains
+long aoconfID_multfb;// = -1; // block modal gains
+long aoconfID_limitb;// = -1; // block modal gains
+
+// individual modes
+long aoconfID_DMmode_GAIN;// = -1;
+long aoconfID_LIMIT_modes;// = -1;
+long aoconfID_MULTF_modes;// = -1;
+
+long aoconfID_cmd_modesRM;// = -1;
+
+long aoconfID_wfsmask;//  = -1;
+long aoconfID_dmmask;//  = -1; static
+
+long aoconfID_respM;//  = -1; static 
+long aoconfID_contrM;//  = -1; // static. pixels -> modes
+long long aoconfcnt0_contrM_current;//  = -1; static
+long aoconfID_contrMc;//  = -1; // static . combined control matrix: pixels -> DM actuators
+long aoconfID_meas_act;//  = -1;
+long aoconfID_contrMcact[100];//  = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+//static
+// pixel streaming
+long aoconfID_pixstream_wfspixindex; // index of WFS pixels
+
+// timing
+long aoconfID_looptiming;//  = -1; // control loop timing data. Pixel values correspond to time offset
+// currently has 20 timing slots
+// beginning of iteration is defined when entering "wait for image"
+// md[0].atime.ts is absolute time at beginning of iteration
+//
+// pixel 0 is dt since last iteration
+//
+// pixel 1 is time from beginning of loop to status 01
+// pixel 2 is time from beginning of loop to status 02
+// ...
+long AOcontrolNBtimers;//  = 35;
+
+long aoconfIDlogdata;//  = -1; //static 
+long aoconfIDlog0;//  = -1; static
+long aoconfIDlog1;//  = -1; static 
 
 
 
+int *WFS_active_map; // used to map WFS pixels into active array
+int *DM_active_map; // used to map DM actuators into active array
+long aoconfID_meas_act_active;
+long aoconfID_imWFS2_active[100];
+
+float normfloorcoeff;//  = 1.0; static
+
+long wfsrefcnt0;//  = -1; static
+long contrMcactcnt0[100];// static = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};;
 
 
+// variables used by functions
 
+int GPUcntMax;//  = 100; static
+int *GPUset0; //static
+int *GPUset1;//static
 
-
-
-
-
-
-
+} AOloopControl_var;
 
 
 
