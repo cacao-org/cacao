@@ -192,6 +192,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a16575523a443239711732edc15f2e62b"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a16575523a443239711732edc15f2e62b">fft_DFT</a> (const char *IDin_name, const char *IDinmask_name, const char *IDout_name, const char *IDoutmask_name, double Zfactor, int dir, long kin)</td></tr>
 <tr class="separator:a16575523a443239711732edc15f2e62b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1afebd5e0629d3e6023d4da73c3be84a"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a1afebd5e0629d3e6023d4da73c3be84a">fft_DFTinsertFPM</a> (const char *pupin_name, const char *fpmz_name, double zfactor, const char *pupout_name)</td></tr>
+<tr class="memdesc:a1afebd5e0629d3e6023d4da73c3be84a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use DFT to insert Focal Plane Mask.  <a href="#a1afebd5e0629d3e6023d4da73c3be84a">More...</a><br /></td></tr>
 <tr class="separator:a1afebd5e0629d3e6023d4da73c3be84a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a197189ccadb76ab42b3a1b5ac67a9d53"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a197189ccadb76ab42b3a1b5ac67a9d53">fft_DFTinsertFPM_re</a> (const char *pupin_name, const char *fpmz_name, double zfactor, const char *pupout_name)</td></tr>
 <tr class="separator:a197189ccadb76ab42b3a1b5ac67a9d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -639,6 +640,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Use DFT to insert Focal Plane Mask. </p>
+<p>Pupil convolution by complex focal plane mask of limited support typically used with fpmz = zoomed copy of 1-fpm</p>
+<p>High resolution focal plane mask using DFT</p>
+<p>Forces computation over pixels &gt;0.5 in _DFTmask00 if it exists </p>
 
 </div>
 </div>
@@ -1177,7 +1183,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1fbe5abfc91f031908f9b0fcd26c05f0.html">fft</a></li><li class="navelem"><a class="el" href="fft_8c.html">fft.c</a></li>
-    <li class="footer">Generated on Thu Nov 23 2017 10:26:43 for cacao by
+    <li class="footer">Generated on Fri Nov 24 2017 20:11:17 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

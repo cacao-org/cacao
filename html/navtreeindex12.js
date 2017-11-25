@@ -124,6 +124,7 @@ var NAVTREEINDEX12 =
 "structLOGSHIM__CONF.html#af4a9410a1d66d15e10df76223aeccb50":[39,0,17,3],
 "structLOGSHIM__CONF.html#af89423462a4010b5213f9687f354a548":[39,0,17,0],
 "structMODULE.html":[39,0,18],
+"structMODULE.html#a00f49a3577101cbe48b6c964dea35da2":[39,0,18,2],
 "structMODULE.html#a8e21f2da9fe77d9781fc77e712d9e40c":[39,0,18,0],
 "structMODULE.html#adecbd02b92ae79ddaaff7be512380dea":[39,0,18,1],
 "structTCP__BUFFER__METADATA.html":[39,0,23],
@@ -248,6 +249,5 @@ var NAVTREEINDEX12 =
 "structsavethreadmsg.html#acd2174c7310a13ba8b782fe91b6bc3ab":[39,0,20,6],
 "structsavethreadmsg.html#aed56c895e0322351040d43004fa051c5":[39,0,20,2],
 "structsymrec.html":[39,0,22],
-"structsymrec.html#a13b3ddedd56ed8a393dfd4b266bb81e1":[39,0,22,1],
-"structsymrec.html#a3ed0bae32ad0e16423a49153484094f8":[39,0,22,3]
+"structsymrec.html#a13b3ddedd56ed8a393dfd4b266bb81e1":[39,0,22,1]
 };
