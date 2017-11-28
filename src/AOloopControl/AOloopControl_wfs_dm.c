@@ -16,19 +16,6 @@
 
 #define _GNU_SOURCE
 
-#include "AOloopControl.h"
-
-#include <stdint.h>
-#include <unistd.h>
-#include <malloc.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/syscall.h> // needed for tid = syscall(SYS_gettid);
-
 
 
 #ifdef __MACH__   // for Mac OS X - 
@@ -50,49 +37,18 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include <time.h>
 #endif
 
-#include <math.h>
-#include <sys/types.h>
-#include <sys/file.h>
-#include <sys/mman.h>
-#include <err.h>
-#include <fcntl.h>
-#include <sched.h>
-//#include <ncurses.h>
-#include <semaphore.h>
 
-
-#include <gsl/gsl_matrix.h>
+#include <string.h>
 #include <gsl/gsl_math.h>
-#include <gsl/gsl_eigen.h>
 #include <gsl/gsl_blas.h>
 #include <pthread.h>
-
-#include <fitsio.h>
-
+#include "info/info.h" 
 
 //libraries created by O. Guyon 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-#include "COREMOD_iofits/COREMOD_iofits.h"
-#include "COREMOD_tools/COREMOD_tools.h"
-#include "COREMOD_arith/COREMOD_arith.h"
-#include "linopt_imtools/linopt_imtools.h"
 #include "AOloopControl/AOloopControl.h"
-#include "image_filter/image_filter.h"
-#include "info/info.h"
-#include "ZernikePolyn/ZernikePolyn.h"
-#include "linopt_imtools/linopt_imtools.h"
-#include "image_gen/image_gen.h"
-#include "statistic/statistic.h"
-#include "fft/fft.h"
 
 
-#include "AOloopControl_IOtools/AOloopControl_IOtools.h"
-#include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
-#include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
-#include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
-#include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
 
 
@@ -3510,3 +3466,94 @@ long AOloopControl_dm2dm_offload(const char *streamin, const char *streamout, fl
     return(IDout);
 }
 
+
+
+
+
+
+
+
+//
+// assumes the WFS mode basis is already orthogonall
+// removes reference from each frame
+//
+long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_name, const char *WFSmodes_name, const char *outname)
+{
+    long IDout;
+    long IDwfs, IDmodes, IDwfsref;
+    long wfsxsize, wfsysize, wfssize, NBmodes, NBframes;
+    double totref;
+    float coeff;
+    long ii, m, kk;
+    FILE *fp;
+    double *mcoeff_ave;
+    double *mcoeff_rms;
+
+
+    IDwfs = image_ID(WFSim_name);
+    wfsxsize = data.image[IDwfs].md[0].size[0];
+    wfsysize = data.image[IDwfs].md[0].size[1];
+    NBframes = data.image[IDwfs].md[0].size[2];
+    wfssize = wfsxsize*wfsysize;
+
+
+
+
+    IDwfsref = image_ID(IDwfsref_name);
+
+    IDmodes = image_ID(WFSmodes_name);
+    NBmodes = data.image[IDmodes].md[0].size[2];
+
+    mcoeff_ave = (double*) malloc(sizeof(double)*NBmodes);
+    mcoeff_rms = (double*) malloc(sizeof(double)*NBmodes);
+
+
+
+    IDout = create_2Dimage_ID(outname, NBframes, NBmodes);
+
+    totref = 0.0;
+
+    for(ii=0; ii<wfssize; ii++)
+        totref += data.image[IDwfsref].array.F[ii];
+    for(ii=0; ii<wfssize; ii++)
+        data.image[IDwfsref].array.F[ii] /= totref;
+
+    for(kk=0; kk<NBframes; kk++)
+    {
+		double totim = 0.0;
+		
+        for(ii=0; ii<wfssize; ii++)
+            totim += data.image[IDwfs].array.F[kk*wfssize+ii];
+        for(ii=0; ii<wfssize; ii++)
+        {
+            data.image[IDwfs].array.F[kk*wfssize+ii] /= totim;
+            data.image[IDwfs].array.F[kk*wfssize+ii] -= data.image[IDwfsref].array.F[ii];
+        }
+
+
+        for(m=0; m<NBmodes; m++)
+        {
+            coeff = 0.0;
+            for(ii=0; ii<wfssize; ii++)
+                coeff += data.image[IDmodes].array.F[m*wfssize+ii] * data.image[IDwfs].array.F[kk*wfssize+ii];
+            data.image[IDout].array.F[m*NBframes+kk] = coeff;
+            mcoeff_ave[m] += coeff;
+            mcoeff_rms[m] += coeff*coeff;
+        }
+    }
+
+
+    fp  = fopen("mode_stats.txt", "w");
+    for(m=0; m<NBmodes; m++)
+    {
+        mcoeff_rms[m] = sqrt( mcoeff_rms[m]/NBframes );
+        mcoeff_ave[m] /= NBframes;
+        fprintf(fp, "%4ld  %12g %12g\n", m, mcoeff_ave[m], mcoeff_rms[m]);
+    }
+    fclose(fp);
+
+    free(mcoeff_ave);
+    free(mcoeff_rms);
+
+    return(IDout);
+}
