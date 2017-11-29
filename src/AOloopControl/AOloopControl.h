@@ -435,6 +435,19 @@ int AOloopControl_bogusfunc();
 
 
 /* =============================================================================================== */
+/** @brief Read parameter value - float, char or int - AOloopControl_read_param.c                */
+/* =============================================================================================== */
+/** @brief read parameters float */
+float AOloopControl_readParam_float(char *paramname, float defaultValue, FILE *fplog);
+
+/** @brief read parameters int */
+int AOloopControl_readParam_int(char *paramname, int defaultValue, FILE *fplog);
+
+/** @brief read parameters string */
+char* AOloopControl_readParam_string(char *paramname, char* defaultValue, FILE *fplog)
+
+
+/* =============================================================================================== */
 /* =============================================================================================== */
 /** @name AOloopControl - 1. INITIALIZATION, configurations                                        
  * 
