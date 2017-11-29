@@ -117,19 +117,6 @@ int_fast8_t AOloopControl_logprocess_modeval(const char *IDname)
 
 
 
-//
-// tweak zonal response matrix in accordance to WFS response to modes
-//
-// INPUT :
-//    ZRMimname   : starting response matrix
-//    DMimCname   : cube of DM displacements
-//    WFSimCname  : cube of WFS signal
-//    DMmaskname  : DM pixel mask
-//    WFSmaskname : WFS pixel mask
-//
-// OUTPUT:
-//    RMoutname   : output response matrix
-//
 
 long AOloopControl_TweakRM(char *ZRMinname, char *DMinCname, char *WFSinCname, char *DMmaskname, char *WFSmaskname, char *RMoutname)
 {

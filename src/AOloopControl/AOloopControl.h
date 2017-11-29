@@ -520,7 +520,7 @@ int_fast8_t AOloopControl_setparam(long loop, const char *key, double value);
 
 /* =============================================================================================== */
 /** @name AOloopControl - 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET
- *  Set parameters */
+ *  Set parameters - AOloopControl_loop_onoff.c*/
 /* =============================================================================================== */
 
 /** @brief Close AO loop : AO on */
@@ -550,9 +550,9 @@ int_fast8_t AOloopControl_logon();
 int_fast8_t AOloopControl_logoff();
 
 
-/* =============================================================================================== */
-/** @name AOloopControl - 3.3. LOOP CONTROL INTERFACE - PRIMARY AND FILTERED DM WRITE              */
-/* =============================================================================================== */
+/* ============================================================================================================ */
+/** @name AOloopControl - 3.3. LOOP CONTROL INTERFACE - PRIMARY AND FILTERED DM WRITE - AOloopControl_dmwrite.c */
+/* ============================================================================================================ */
 
 /** @brief Writing on DM, unfiltered actuators (primary) : on */
 int_fast8_t AOloopControl_DMprimaryWrite_on();
@@ -567,9 +567,9 @@ int_fast8_t AOloopControl_DMfilteredWrite_on();
 int_fast8_t AOloopControl_DMfilteredWrite_off();
 
 
-/* =============================================================================================== */
-/** @name AOloopControl - 3.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING                     */
-/* =============================================================================================== */
+/* ====================================================================================================== */
+/** @name AOloopControl - 3.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING - AOloopControl_autotune.c */
+/* ====================================================================================================== */
 
 /** @brief Set limit auto tune : on */
 int_fast8_t AOloopControl_AUTOTUNE_LIMITS_on();
@@ -592,9 +592,9 @@ int_fast8_t AOloopControl_AUTOTUNE_GAINS_on();
 /** @brief Set gain auto tune : off */
 int_fast8_t AOloopControl_AUTOTUNE_GAINS_off();
 
-/* =============================================================================================== */
-/** @name AOloopControl - 3.5. LOOP CONTROL INTERFACE - PREDICTIVE FILTER ON/OFF                   */
-/* =============================================================================================== */
+/* ======================================================================================================== */
+/** @name AOloopControl - 3.5. LOOP CONTROL INTERFACE - PREDICTIVE FILTER ON/OFF AOloopControl_arpf_onoff.c */
+/* ======================================================================================================== */
 
 /** @brief ARPF = auto regressive predictive filter: on */
 int_fast8_t AOloopControl_ARPFon();
@@ -662,7 +662,7 @@ int_fast8_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainSta
 
 /* =============================================================================================== */
 /* =============================================================================================== */
-/** @name AOloopControl - 4. FOCAL PLANE SPECKLE MODULATION / CONTROL
+/** @name AOloopControl - 4. FOCAL PLANE SPECKLE MODULATION / CONTROL - AOloopControl_fpspeckle_mod.c
  *  custom FP AO routines */
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -678,7 +678,7 @@ int_fast8_t AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *ID
 
 /* =============================================================================================== */
 /* =============================================================================================== */
-/** @name AOloopControl - 5. PROCESS LOG FILES
+/** @name AOloopControl - 5. PROCESS LOG FILES - AOloopControl_process_files.c
  *  process log files */
 /* =============================================================================================== */
 /* =============================================================================================== */
