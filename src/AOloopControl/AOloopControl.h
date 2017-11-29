@@ -439,14 +439,14 @@ int AOloopControl_bogusfunc();
 /** @name AOloopControl - 1. INITIALIZATION, configurations                                        
  * 
  * Allocate memory, import/export configurations
- * 
+ *  AOloopControl_loadconfigure.c - AOloopControl_initmem.c
  */
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-
-/** @brief Load configuation parameters from disk */
+/** @brief Load configuation parameters from disk - AOloopControl_loadconfigure.c*/
 int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level);
+
 
 /** @brief Initialize memory - function called within C code only (no CLI call) */
 int_fast8_t AOloopControl_InitializeMemory();
@@ -543,6 +543,7 @@ int_fast8_t AOloopControl_loopreset();
 /** @name AOloopControl - 3.2. LOOP CONTROL INTERFACE - DATA LOGGING                               */
 /* =============================================================================================== */
 
+// NB : doesn't exist anywhere ?? 
 /** @brief Log on the AO interface */
 int_fast8_t AOloopControl_logon();
 
