@@ -602,9 +602,9 @@ int_fast8_t AOloopControl_ARPFon();
 /** @brief ARPF = auto regressive predictive filter: off */
 int_fast8_t AOloopControl_ARPFoff();
 
-/* =============================================================================================== */
-/** @name AOloopControl - 3.6. LOOP CONTROL INTERFACE - TIMING PARAMETERS                          */
-/* =============================================================================================== */
+/* =================================================================================================== */
+/** @name AOloopControl - 3.6. LOOP CONTROL INTERFACE - TIMING PARAMETERS - AOloopControl_time_param.c */
+/* =================================================================================================== */
 
 /** @brief Set AO loop frequency */
 int_fast8_t AOloopControl_set_loopfrequ(float loopfrequ);
@@ -620,9 +620,9 @@ int_fast8_t AOloopControl_set_complatency_frame(float complatency_frame);
 */
 int_fast8_t AOloopControl_set_wfsmextrlatency_frame(float wfsmextrlatency_frame);
 
-/* =============================================================================================== */
-/** @name AOloopControl - 3.7. LOOP CONTROL INTERFACE - CONTROL LOOP PARAMETERS                    */
-/* =============================================================================================== */
+/* ========================================================================================================= */
+/** @name AOloopControl - 3.7. LOOP CONTROL INTERFACE - CONTROL LOOP PARAMETERS - AOloopControl_loop_param.c */
+/* ========================================================================================================= */
 
 /** @brief Set gain of the loop  */
 int_fast8_t AOloopControl_setgain(float gain);
@@ -686,7 +686,8 @@ int_fast8_t AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *ID
 /** @brief Log the process of the mode evaluation  */
 int_fast8_t AOloopControl_logprocess_modeval(const char *IDname);
 
-
+/** @brief tweak zonal response matrix in accordance to WFS response to modes */
+long AOloopControl_TweakRM(char *ZRMinname, char *DMinCname, char *WFSinCname, char *DMmaskname, char *WFSmaskname, char *RMoutname);
 
 
 /* =============================================================================================== */
