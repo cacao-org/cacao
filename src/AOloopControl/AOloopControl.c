@@ -2353,7 +2353,7 @@ int_fast8_t AOloopControl_setparam(long loop, const char *key, double value)
 /** @name AOloopControl - 8.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET  */
 /* =============================================================================================== */
 
-
+/*
 int_fast8_t AOloopControl_loopon()
 {
 
@@ -2444,7 +2444,7 @@ int_fast8_t AOloopControl_loopreset()
     return 0;
 }
 
-
+*/
 
 /* =============================================================================================== */
 /** @name AOloopControl - 8.2. LOOP CONTROL INTERFACE - DATA LOGGING                               */
