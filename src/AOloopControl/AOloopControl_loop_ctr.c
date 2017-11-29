@@ -17,7 +17,7 @@
 #define _GNU_SOURCE
 
 #include "AOloopControl.h"
-
+#include "string.h"
 
 #define AOconfname "/tmp/AOconf.shm"
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
@@ -25,7 +25,7 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-long LOOPNUMBER;// = 0; // current loop index
+//long LOOPNUMBER;// = 0; // current loop index
 
 
 /* =============================================================================================== */
@@ -40,7 +40,7 @@ int_fast8_t AOloopControl_setLoopNumber(long loop)
 
 
     printf("LOOPNUMBER = %ld\n", loop);
-    LOOPNUMBER = loop;
+    aoloopcontrol_var.LOOPNUMBER = loop;
 
     /** append process name with loop number */
 

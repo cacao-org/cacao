@@ -2295,7 +2295,6 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 /** @name AOloopControl - 6. REAL TIME COMPUTING ROUTINES                                          */
 /* =============================================================================================== */
 /* =============================================================================================== */
-
 // cf AOloopControl_wfs_dm.c 
 
 
@@ -2305,146 +2304,14 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 /** @name AOloopControl - 8.   LOOP CONTROL INTERFACE                                              */
 /* =============================================================================================== */
 /* =============================================================================================== */
-
-
-/*
-
-int_fast8_t AOloopControl_setLoopNumber(long loop)
-{
-
-
-    printf("LOOPNUMBER = %ld\n", loop);
-    LOOPNUMBER = loop;
-
-    // append process name with loop number 
-
-
-    return 0;
-}
-
-
-int_fast8_t AOloopControl_setparam(long loop, const char *key, double value)
-{
-    int pOK=0;
-    char kstring[200];
-
-
-
-    strcpy(kstring, "PEperiod");
-    if((strncmp (key, kstring, strlen(kstring)) == 0)&&(pOK==0))
-    {
-        //AOconf[loop].WFScamPEcorr_period = (long double) value;
-        pOK = 1;
-    }
-
-    if(pOK==0)
-        printf("Parameter not found\n");
-
-
-
-    return (0);
-}
-
-*/
-
+// cf AOloopControl_loop_ctr.c
 
 
 /* =============================================================================================== */
 /** @name AOloopControl - 8.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET  */
 /* =============================================================================================== */
+//cf AOloopControl_loop_onoff.c
 
-/*
-int_fast8_t AOloopControl_loopon()
-{
-
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    AOconf[LOOPNUMBER].cntmax = AOconf[LOOPNUMBER].cnt-1;
-
-    AOconf[LOOPNUMBER].on = 1;
-    AOloopControl_perfTest_showparams(LOOPNUMBER);
-
-    return 0;
-}
-
-
-int_fast8_t AOloopControl_loopoff()
-{
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    AOconf[LOOPNUMBER].on = 0;
-    AOloopControl_perfTest_showparams(LOOPNUMBER);
-
-    return 0;
-}
-
-
-int_fast8_t AOloopControl_loopkill()
-{
-
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    AOconf[LOOPNUMBER].kill = 1;
-
-    return 0;
-}
-
-
-int_fast8_t AOloopControl_loopstep(long loop, long NBstep)
-{
-
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    AOconf[loop].cntmax = AOconf[loop].cnt + NBstep;
-    AOconf[LOOPNUMBER].RMSmodesCumul = 0.0;
-    AOconf[LOOPNUMBER].RMSmodesCumulcnt = 0;
-
-    AOconf[loop].on = 1;
-
-    while(AOconf[loop].on==1)
-        usleep(100); // THIS WAITING IS OK
-
-
-    return 0;
-}
-
-
-int_fast8_t AOloopControl_loopreset()
-{
-    long k;
-    long mb;
-
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    if(aoloopcontrol_var.aoconfID_cmd_modes==-1)
-    {
-        char name[200];
-        if(sprintf(name, "DMmode_cmd_%ld", LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
-        aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
-    }
-
-    AOconf[LOOPNUMBER].on = 0;
-    for(k=0; k<AOconf[LOOPNUMBER].NBDMmodes; k++)
-        data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
-
-    for(mb=0; mb<AOconf[LOOPNUMBER].DMmodesNBblock; mb)
-    {
-        AOloopControl_setgainblock(mb, 0.0);
-        AOloopControl_setlimitblock(mb, 0.01);
-        AOloopControl_setmultfblock(mb, 0.95);
-    }
-
-    return 0;
-}
-
-*/
 
 /* =============================================================================================== */
 /** @name AOloopControl - 8.2. LOOP CONTROL INTERFACE - DATA LOGGING                               */
@@ -2455,62 +2322,15 @@ int_fast8_t AOloopControl_loopreset()
 /* =============================================================================================== */
 /** @name AOloopControl - 8.3. LOOP CONTROL INTERFACE - PRIMARY AND FILTERED DM WRITE                           */
 /* =============================================================================================== */
-
-int_fast8_t AOloopControl_DMprimaryWrite_on()
-{
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    AOconf[LOOPNUMBER].DMprimaryWriteON = 1;
-    AOloopControl_perfTest_showparams(LOOPNUMBER);
-
-    return 0;
-}
-
-
-int_fast8_t AOloopControl_DMprimaryWrite_off()
-{
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    AOconf[LOOPNUMBER].DMprimaryWriteON = 0;
-    AOloopControl_perfTest_showparams(LOOPNUMBER);
-
-    return 0;
-}
-
-
-int_fast8_t AOloopControl_DMfilteredWrite_on()
-{
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    AOconf[LOOPNUMBER].DMfilteredWriteON = 1;
-    AOloopControl_perfTest_showparams(LOOPNUMBER);
-
-    return 0;
-}
-
-
-int_fast8_t AOloopControl_DMfilteredWrite_off()
-{
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    AOconf[LOOPNUMBER].DMfilteredWriteON = 0;
-    AOloopControl_perfTest_showparams(LOOPNUMBER);
-
-    return 0;
-}
-
+// cf AOloopControl_dmwrite.c
 
 
 /* =============================================================================================== */
 /** @name AOloopControl - 8.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING                     */
 /* =============================================================================================== */
+// cf AOloopControl_autotune.c
 
-
-
+/*
 int_fast8_t AOloopControl_AUTOTUNE_LIMITS_on()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -2632,7 +2452,7 @@ int_fast8_t AOloopControl_AUTOTUNE_GAINS_off()
 }
 
 
-
+*/
 
 
 /* =============================================================================================== */
@@ -3460,180 +3280,6 @@ int_fast8_t AOloopControl_logprocess_modeval(const char *IDname)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //
 // tweak zonal response matrix in accordance to WFS response to modes
 //
@@ -3702,112 +3348,6 @@ long AOloopControl_TweakRM(char *ZRMinname, char *DMinCname, char *WFSinCname, c
 
     return(0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* =============================================================================================== */
