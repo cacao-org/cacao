@@ -2307,7 +2307,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 /* =============================================================================================== */
 
 
-
+/*
 
 int_fast8_t AOloopControl_setLoopNumber(long loop)
 {
@@ -2316,7 +2316,7 @@ int_fast8_t AOloopControl_setLoopNumber(long loop)
     printf("LOOPNUMBER = %ld\n", loop);
     LOOPNUMBER = loop;
 
-    /** append process name with loop number */
+    // append process name with loop number 
 
 
     return 0;
@@ -2345,7 +2345,7 @@ int_fast8_t AOloopControl_setparam(long loop, const char *key, double value)
     return (0);
 }
 
-
+*/
 
 
 
