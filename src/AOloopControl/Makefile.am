@@ -12,6 +12,7 @@ libaoloopcontrol_la_SOURCES += AOloopControl_fpspeckle_mod.c
 libaoloopcontrol_la_SOURCES += AOloopControl_process_files.c
 libaoloopcontrol_la_SOURCES += AOloopControl_loadconfigure.c
 libaoloopcontrol_la_SOURCES += AOloopControl_initmem.c
+libaoloopcontrol_la_SOURCES += AOloopControl_read_param.c 
 
 EXTRA_DIST = doc scripts
 

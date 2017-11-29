@@ -422,15 +422,10 @@ int *GPUset1;//static
 
 
 
-
-
-
 /** @brief Initialize AOloopControl command line interface. */
 void init_AOloopControl();
 
 int AOloopControl_bogusfunc();
-
-
 
 
 
@@ -444,7 +439,7 @@ float AOloopControl_readParam_float(char *paramname, float defaultValue, FILE *f
 int AOloopControl_readParam_int(char *paramname, int defaultValue, FILE *fplog);
 
 /** @brief read parameters string */
-char* AOloopControl_readParam_string(char *paramname, char* defaultValue, FILE *fplog)
+char* AOloopControl_readParam_string(char *paramname, char* defaultValue, FILE *fplog);
 
 
 /* =============================================================================================== */
