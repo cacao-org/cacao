@@ -5,6 +5,9 @@ libaoloopcontrol_la_SOURCES += AOloopControl_loop_ctr.c
 libaoloopcontrol_la_SOURCES += AOloopControl_loop_onoff.c
 libaoloopcontrol_la_SOURCES += AOloopControl_dmwrite.c
 libaoloopcontrol_la_SOURCES += AOloopControl_autotune.c
+libaoloopcontrol_la_SOURCES += AOloopControl_arpf_onoff.c
+libaoloopcontrol_la_SOURCES += AOloopControl_time_param.c
+libaoloopcontrol_la_SOURCES += AOloopControl_loop_param.c
 
 EXTRA_DIST = doc scripts
 
