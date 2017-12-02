@@ -14,9 +14,7 @@
 
 
 // _____________________________________________________________ added by nour 
-//#include <mach/mach_time.h>
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 0
+
 #include <stdint.h>
 #include <stdio.h>
 #include <time.h>
