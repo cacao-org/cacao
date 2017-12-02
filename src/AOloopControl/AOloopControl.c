@@ -30,9 +30,12 @@
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-#include <stdint.h>
+/*#include <stdint.h>
 #include <unistd.h>
 #include <malloc.h>
+*/
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -41,7 +44,7 @@
 #include <sys/stat.h>
 #include <sys/syscall.h> // needed for tid = syscall(SYS_gettid);
 
-
+#include <gsl/gsl_math.h>
 
 #ifdef __MACH__   // for Mac OS X - 
 //#include <mach/mach_time.h>
@@ -62,25 +65,27 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include <time.h>
 #endif
 
+/*
 #include <math.h>
 #include <sys/types.h>
 #include <sys/file.h>
+*/
+/*
 #include <sys/mman.h>
 #include <err.h>
 #include <fcntl.h>
 #include <sched.h>
 //#include <ncurses.h>
 #include <semaphore.h>
-
-
+*/
+/*
 #include <gsl/gsl_matrix.h>
-#include <gsl/gsl_math.h>
 #include <gsl/gsl_eigen.h>
 #include <gsl/gsl_blas.h>
 #include <pthread.h>
 
 #include <fitsio.h>
-
+*/
 
 //libraries created by O. Guyon 
 #include "CommandLineInterface/CLIcore.h"
