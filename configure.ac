@@ -5,7 +5,7 @@
 m4_define([PROGNAME], cacao)
 m4_define([PVERSION], 0.1.00)
 
-AC_INIT([PROGNAME], [PVERSION], [https://github.com/CACAO-org/CACAO/issues], [PROGNAME])
+AC_INIT([PROGNAME], [PVERSION], [https://github.com/cacao-org/cacao/issues], [PROGNAME])
 
 AC_PREREQ(2.61)
 #AC_CONFIG_HEADER([config.h])
