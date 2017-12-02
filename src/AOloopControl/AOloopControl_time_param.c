@@ -14,6 +14,8 @@
  
  
 #define _GNU_SOURCE
+#include <stdio.h>
+#include <string.h>
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
