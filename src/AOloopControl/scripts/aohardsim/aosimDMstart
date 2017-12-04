@@ -1,0 +1,91 @@
+#!/bin/bash
+
+execname="./AOloopControl"
+
+# number of arguments to script
+NBARGS=0
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $0 : START SIMULATED DM STRUCTURES$(tput sgr 0)"
+echo "------------------------------------------------------------------------"
+echo "  Create DM channels, and start DMcomb process"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr 0)"
+echo "     $0 [-h]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr 0)"
+echo "    $(tput bold)-h$(tput sgr 0)               print help"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr 0)"
+echo "     dm05disp     shared memory DM displacement"
+echo "     dm05disp00   channel 00"
+echo "     dm05disp01   channel 01"
+echo "     ......."
+echo "     dm05disp11   channel 11"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+
+# ================= OPTIONS =============================
+
+#Parse command line flags
+#If an option should be followed by an argument, it should be followed by a ":".
+#Notice there is no ":" after "h". The leading ":" suppresses error messages from
+#getopts. This is required to get unrecognized option code to work.
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      printHELP
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      #If you just want to display a simple error message instead of the full
+      #help, remove the 2 lines above and uncomment the 2 lines below.
+      #echo -e "Use ${BOLD}$SCRIPT -h${NORM} to see the help documentation."\\n
+      #exit 2
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+### End getopts code ###
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr 0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+DMindex=05
+DMsize=50
+NBchannel=12
+
+#WFsize=128
+
+
+$execname -n simDMstart << EOF
+#creaimshm wf1opd $WFsize $WFsize
+aolcontrolDMcomb $DMindex $DMsize $DMsize $NBchannel 2 0 dmmodes out${DMindex}disp 0 wfsrefrm wfsrefout 0 dmvolt 0.0 150.0
+exit
+EOF

@@ -1,0 +1,102 @@
+#!/bin/bash
+
+
+NBARGS=5
+pname=`echo "$0" | sed "s/\.\///g"`
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : DM offload loop $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  DM offload loop"
+echo "additive offload from one stream to the other"
+echo "At each time step:"
+echo " mult*(out+coeff*in) -> out"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <streamin> <streamout> <interval[s]> <offcoeff>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "   <streamin>   : input stream" 
+echo "   <streamout>  : output stream" 
+echo "   <interval>   : time interval between offloads" 
+echo "   <offcoeff>   : offload coefficient" 
+echo "   <multcoeff>  : multiplicative coeff" 
+echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "    $0 dmC_ave dmZP0 1.0 -0.1 0.99"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       DM offload loop\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+pname="aol${loopnb}-$0"
+
+./AOloopControl -n $pname << EOF
+readshmim $1
+readshmim $2
+aoldm2dmoffload $1 $2 $3 $4 $5
+exitCLI
+EOF

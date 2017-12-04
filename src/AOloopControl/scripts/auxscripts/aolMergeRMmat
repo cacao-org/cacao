@@ -1,0 +1,127 @@
+#!/bin/bash
+
+NBARGS=7
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : Merge HO and LO resp matrices $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Merge HO and LO resp matrices"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <HOpoke>        : High order poke matrix" 
+echo "     <HOresp>        : High order response"
+echo "     <LOpoke>        : Low order poke"
+echo "     <LOresp>        : Low order resp" 
+echo "     <RMmask>        : input RM mask"
+echo "     <RM>            : zonal response matrix estimate"
+echo "     <coeff>         : relative coeff of second matrix"
+echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "     $0 HOpoke.fits HOresp.fits LOpoke.fits LOresp.fits RespMat.fits 50"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Merge HO and LO resp matrices\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+./AOloopControl -n aol${loopnb}-$0 << EOF
+loadfits "$1" m_in0
+loadfits "$2" m_out0
+loadfits "$3" m_in1
+loadfits "$4" m_out1
+loadfits "$5" inmask
+loadfits "$6" RMmat
+
+m_in1c=m_in1*$7
+m_out1c=m_out1*$7
+
+merge3d m_in0 m_in1c inC
+merge3d m_out0 m_out1c outC
+listim
+savefits pokeC "!pokeC.fits"
+savefits respC "!respC.fits"
+lincRMiter inC inmask outC RMmat $7
+savefits testout "!testout.fits"
+exitCLI
+EOF
+

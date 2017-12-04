@@ -1,0 +1,108 @@
+#!/bin/bash
+
+
+NBARGS=1
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : Analysis of timing data $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Process looptiming files"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <looptimingfile>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "   <looptimingfile>      Timing file with fits extension"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "creates streams :"
+echo "        aol<loop>_wfsres"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Analysis of timing data\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+TimingFileTXT=$( echo "$1" | sed 's/\.fits/\.txt/g' )
+cp $1 _tmp_timing.fits
+cp $TimingFileTXT _tmp_timing.txt
+
+
+echo "TimingFileTXT = $TimingFileTXT"
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+./AOloopControl -n aol${loopnb}timingproc << EOF
+loadfits "_tmp_timing.fits" imt
+aoltimingstat imt _tmp_timing.txt TimingReport.txt
+exitCLI
+EOF

@@ -1,0 +1,35 @@
+#! /bin/bash
+
+EXPECTED_ARGS=0
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo
+  echo "------ Align Pyramid camera -------"
+  echo
+  echo "   no argument"
+  echo
+  exit
+fi
+
+loopnb=$( head -1 LOOPNUMBER)
+confnb=$( head -1 ./conf/conf_CONFNUMBER.txt)
+
+
+pname0=$0
+pname=${pname0#"./"}-$loopnb
+
+
+Cfits -n pname << EOF
+readshmim aol${loopnb}_wfsim
+readshmim aol${loopnb}_wfsdark
+cp aol${loopnb}_wfsdark wfsdark
+readshmim aol${loopnb}_wfsref0
+imref=0+aol${loopnb}_wfsref0
+scexaopywfscamalign aol${loopnb}_wfsim
+imdiff=imwfs-imref
+savefits imdiff "!./tmp/imdiff.fits"
+exit
+EOF
+
+

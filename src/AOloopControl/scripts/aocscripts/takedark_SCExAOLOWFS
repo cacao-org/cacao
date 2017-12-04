@@ -1,0 +1,15 @@
+#!/bin/bash
+
+loopnb=$( head -1 LOOPNUMBER)
+
+mkdir -p wfsdark
+
+datestr=`date -u +%Y-%m-%d_%H:%M:%S`
+
+Cfits -n takedark << EOF
+readshmim ircam2crop_dark
+savefits ircam2crop_dark "!./wfsdark/wfsdark_${datestr}.fits"
+exitCLI
+EOF
+
+echo "wfsdark/wfsdark_${datestr}.fits" > conf/conf_wfsdark_name.txt

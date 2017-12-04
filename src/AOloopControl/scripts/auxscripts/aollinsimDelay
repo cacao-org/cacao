@@ -1,0 +1,102 @@
+#! /bin/bash
+
+
+# number of arguments to script
+NBARGS=1
+
+# ======================= PROCESS NAME =================================
+pname="aol${loopnb}linsimD"
+
+loopnb=$( head -1 LOOPNUMBER 2> /dev/null)
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : INTRODUCE DM DELAY $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  adds delay between dm${loopnb}disp and dm${loopnb}dispD"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <delay [us]>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <delay>     delay [us]"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Introduce DM delay\n" "$0" 
+}
+
+
+
+
+
+
+
+# ================= OPTIONS =============================
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+./AOloopControl -n $pname << EOF
+readshmim aol${loopnb}_dmdisp
+streamdelay aol${loopnb}_dmdisp aol${loopnb}_dmdispD $1 50
+exitCLI
+EOF
+

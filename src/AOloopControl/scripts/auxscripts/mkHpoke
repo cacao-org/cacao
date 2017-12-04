@@ -1,0 +1,143 @@
+#!/bin/bash
+
+
+# number of arguments to script
+NBARGS=0
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : MAKE HADAMARD POKE MATRIX $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0"
+echo ""
+echo " $(tput bold)OPTIONAL INPUT:$(tput sgr0)"
+echo "     HRM_DMmask.fits    DM active mask file - will be created if doesn't exist"
+echo ""
+echo " $(tput bold)REQUIRED:$(tput sgr0)"
+echo "     dm     output file"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Compute real-time WFS residual image\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+DMindex=$( head -1 conf/param_DMindex.txt )
+DMxsize=$( head -1 conf/param_DMxsize.txt )
+DMysize=$( head -1 conf/param_DMysize.txt )
+echo "DM size = $DMxsize $DMysize"
+
+# DM mode
+# 0=ZONAL : physical actuators on spatial coordinates
+# 1=MODAL : each DM actuiator represents a single WF mode
+DMMODEfile="conf/param_DMMODE.txt"
+if [ -f $DMMODEfile ]; then
+DMMODE=$( head -1 ${DMMODEfile} )
+else
+DMMODE="0"
+echo "$DMMODE" > $DMMODEfile
+fi
+
+
+echo "DM mode = $DMMODE"
+
+if [ ! -f "./conf/RM_DMmask.fits" ]; then
+
+if [ "$DMMODE" = "0" ]; then
+./AOloopControl << EOF
+cx=0.5*${DMxsize}-0.5
+cy=0.5*${DMysize}-0.5
+rad=0.5*${DMxsize}+0.6
+mkdisk dmmask ${DMxsize} ${DMysize} cx cy rad
+savefits dmmask "!./conf/RM_DMmask.fits.gz"
+itot(dmmask)
+exitCLI
+EOF
+else
+./AOloopControl << EOF
+creaim im ${DMxsize} ${DMysize}
+dmmask=im+1
+savefits dmmask "!./conf/RM_DMmask.fits.gz"
+exitCLI
+EOF
+fi
+
+fi
+
+./AOloopControl << EOF
+loadfits "./conf/RM_DMmask.fits.gz" DMmask
+aolmkH DMmask outim
+savefits outim "!./conf/Hpoke.fits.gz"
+exitCLI
+EOF

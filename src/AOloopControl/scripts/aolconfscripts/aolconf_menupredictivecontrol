@@ -1,0 +1,2346 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+# =====================================================
+# ======== PREDICTIVE CONTROL  ========================
+# =====================================================
+
+if [ $state = "menupredictivecontrol" ]; then
+stateok=1
+
+menuname="PREDICTIVE CONTROL"
+
+
+stringcenter "HELP"
+menuitems=( "H" "\Zb\Zr\Z4$string\Zn" )
+menuitems+=( " " " ")
+
+
+# hardware latency (frames)
+ConfReadParam hardwlatency_frame "2.1"; hardwlatency_frame="$paramvalue"
+# software latency (frame)
+ConfReadParam wfsmextrlatency_frame "0.5"; wfsmextrlatency_frame="$paramvalue"
+
+latency_frame=$(awk "BEGIN {printf \"%.3f\",${hardwlatency_frame}+${wfsmextrlatency_frame}}")
+
+
+
+stringcenter "TIMING PARAMETERS"
+menuitems+=( "0 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " ")
+
+menuitems+=( "mt" "Measure Timing (-> timingstats/timingReport.txt)    $hardwlatency_frame + $wfsmextrlatency_frame = $latency_frame")
+
+file="./conf/param_PForder.txt"
+if [ -f $file ]; then
+PForder=$( head -1 $file)
+else
+echo "0" > $file
+PForder=$( head -1 $file)
+fi
+menuitems+=( "PFord" "[$PForder] Select Predictive Filter order" )
+
+file="./conf/param_predcontr_blockSel.txt"
+if [ -f $file ]; then
+blockSel=$( head -1 $file)
+else
+echo "0" > $file
+blockSel=$( head -1 $file)
+fi
+menuitems+=( "selB" "[$blockSel] Select block" )
+
+menuitems+=( " " " ")
+
+
+
+
+stringcenter "SINGLE FILE: COMPUTE FILTER(S)"
+menuitems+=( "1 ->" "\Zb\Zr$string\Zn" )
+
+menuitems+=( " " " ")
+
+
+menuitems+=( "sellat" "Select Latest telemetry files for filter computation" )
+fname=$(ls -lh ./PredictiveControl/modeval_ol.fits )
+fnamel=$( echo $fname |  awk '{print $NF}' )
+menuitems+=( "" "      FILE : $fnamel" )
+menuitems+=( "mkPSDs" "Create open and closed loop PSDs of selected OL / CL telemetry" )
+menuitems+=( "ARPFb" "AO find optimal AR linear predictive filter - single block" )
+menuitems+=( "ARPF" "AO find optimal AR linear predictive filter" )
+
+
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+stringcenter "SINGLE FILE: APPLY FILTER(S)"
+menuitems+=( "2 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " ")
+
+menuitems+=( " " " ")
+menuitems+=( "sellatC" "Select Latest telemetry files for filter correction" )
+fname=$(ls -lh ./PredictiveControl/modeval_ol_C.fits )
+fnamel=$( echo $fname |  awk '{print $NF}' )
+menuitems+=( "" "      FILE : $fnamel" )
+menuitems+=( "PFapplyb" "Apply Predictive Filter - single block" )
+menuitems+=( "PFapply" "Apply Predictive Filter" )
+
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+
+
+
+
+stringcenter "CONTINUOUS PREDICTIVE FILTER LOOP - DEFINE FILTERS"
+menuitems+=( "3 ->" "\Zb\Zr$string\Zn" )
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+
+
+file="./conf/param_NBPFblock.txt"
+if [ -f $file ]; then
+NBPFblock=$( head -1 $file)
+else
+echo "4" > $file
+NBPFblock=$( head -1 $file)
+fi
+menuitems+=( "NBpfb" "[$NBPFblock] Select number of predictive filter blocks" )
+
+
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+
+
+
+
+# FILTER 0
+
+ConfReadParam PFb0start "0.001"; PFb0start="$paramvalue"
+ConfReadParam PFb0end "2"; PFb0end="$paramvalue"
+ConfReadParam PFb0order "10"; PFb0order="$paramvalue"
+ConfReadParam PFb0lag "$latency_frame"; PFb0lag="$paramvalue"
+ConfReadParam PFb0SVDe "0.001"; PFb0SVDe="$paramvalue"
+ConfReadParam PFb0dgain "0.2"; PFb0dgain="$paramvalue"
+
+menuitems+=( "PFb0start" "[$PFb0start] set Predictive filter block 0 start" )
+menuitems+=( "PFb0end" "[$PFb0end] set Predictive filter block 0 end" )
+menuitems+=( "PFb0order" "[$PFb0order] set Predictive filter block 0 order" )
+menuitems+=( "PFb0lag" "[$PFb0lag] set Predictive filter block 0 lag" )
+menuitems+=( "PFb0SVDe" "[$PFb0SVDe] set Predictive filter block 0 SVD limit" )
+menuitems+=( "PFb0dgain" "[$PFb0dgain] set Predictive filter block 0 derivationgain" )
+
+
+ConfReadParam PFb0nbGPU "0"; PFb0nbGPU="$paramvalue"
+menuitems+=( "PFb0nbGPU" "[$PFb0nbGPU] set Predictive filter block 0 number of GPUs" )
+
+
+
+if [ "0" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU0device.txt"
+PFb0GPU0device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU0device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU0device="0"
+fi
+menuitems+=( "PFb0GPU0" "            [ $PFb0GPU0device ]    PF block 0   GPU #0 device" )
+fi
+
+if [ "1" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU1device.txt"
+PFb0GPU1device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU1device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU1device="0"
+fi
+menuitems+=( "PFb0GPU1" "            [ $PFb0GPU1device ]    PF block 0   GPU #1 device" )
+fi
+
+if [ "2" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU2device.txt"
+PFb0GPU2device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU2device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU2device="0"
+fi
+menuitems+=( "PFb0GPU2" "            [ $PFb0GPU2device ]    PF block 0   GPU #2 device" )
+fi
+
+if [ "3" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU3device.txt"
+PFb0GPU3device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU3device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU3device="0"
+fi
+menuitems+=( "PFb0GPU3" "            [ $PFb0GPU3device ]    PF block 0   GPU #3 device" )
+fi
+
+if [ "4" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU4device.txt"
+PFb0GPU4device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU4device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU4device="0"
+fi
+menuitems+=( "PFb0GPU4" "            [ $PFb0GPU4device ]    PF block 0   GPU #4 device" )
+fi
+
+if [ "5" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU5device.txt"
+PFb0GPU5device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU5device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU5device="0"
+fi
+menuitems+=( "PFb0GPU5" "            [ $PFb0GPU5device ]    PF block 0   GPU #5 device" )
+fi
+
+if [ "6" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU6device.txt"
+PFb0GPU6device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU6device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU6device="0"
+fi
+menuitems+=( "PFb0GPU6" "            [ $PFb0GPU6device ]    PF block 0   GPU #6 device" )
+fi
+
+if [ "7" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU7device.txt"
+PFb0GPU7device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU7device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU7device="0"
+fi
+menuitems+=( "PFb0GPU7" "            [ $PFb0GPU7device ]    PF block 0   GPU #7 device" )
+fi
+
+if [ "8" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU8device.txt"
+PFb0GPU8device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU8device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU8device="0"
+fi
+menuitems+=( "PFb0GPU8" "            [ $PFb0GPU8device ]    PF block 0   GPU #8 device" )
+fi
+
+if [ "9" -lt "$PFb0nbGPU" ]; then
+file="./conf/param_PFb0GPU9device.txt"
+PFb0GPU9device=$( head -1 $file )
+if [[ -f "$file" && ${PFb0GPU9device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb0GPU9device="0"
+fi
+menuitems+=( "PFb0GPU9" "            [ $PFb0GPU9device ]    PF block 0   GPU #9 device" )
+fi
+
+
+
+
+
+if [ "$NBPFblock" -gt "1" ]; then
+# FILTER 1
+menuitems+=( " " " ")
+
+ConfReadParam PFb1start "0"; PFb1start="$paramvalue"
+ConfReadParam PFb1end "2"; PFb1end="$paramvalue"
+ConfReadParam PFb1order "10"; PFb1order="$paramvalue"
+ConfReadParam PFb1lag "$latency_frame"; PFb1lag="$paramvalue"
+ConfReadParam PFb1SVDe "0.001"; PFb1SVDe="$paramvalue"
+ConfReadParam PFb1dgain "0.2"; PFb1dgain="$paramvalue"
+
+menuitems+=( "PFb1start" "[$PFb1start] set Predictive filter block 1 start" )
+menuitems+=( "PFb1end" "[$PFb1end] set Predictive filter block 1 end" )
+menuitems+=( "PFb1order" "[$PFb1order] set Predictive filter block 1 order" )
+menuitems+=( "PFb1lag" "[$PFb1lag] set Predictive filter block 1 lag" )
+menuitems+=( "PFb1SVDe" "[$PFb1SVDe] set Predictive filter block 1 SVD limit" )
+menuitems+=( "PFb1dgain" "[$PFb1dgain] set Predictive filter block 1 derivationgain" )
+
+
+ConfReadParam PFb1nbGPU "0"; PFb1nbGPU="$paramvalue"
+menuitems+=( "PFb1nbGPU" "[$PFb1nbGPU] set Predictive filter block 1 number of GPUs" )
+
+
+
+
+
+if [ "0" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU0device.txt"
+PFb1GPU0device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU0device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU0device="0"
+fi
+menuitems+=( "PFb1GPU0" "            [ $PFb1GPU0device ]    PF block 1   GPU #0 device" )
+fi
+
+if [ "1" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU1device.txt"
+PFb1GPU1device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU1device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU1device="0"
+fi
+menuitems+=( "PFb1GPU1" "            [ $PFb1GPU1device ]    PF block 1   GPU #1 device" )
+fi
+
+if [ "2" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU2device.txt"
+PFb1GPU2device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU2device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU2device="0"
+fi
+menuitems+=( "PFb1GPU2" "            [ $PFb1GPU2device ]    PF block 1   GPU #2 device" )
+fi
+
+if [ "3" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU3device.txt"
+PFb1GPU3device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU3device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU3device="0"
+fi
+menuitems+=( "PFb1GPU3" "            [ $PFb1GPU3device ]    PF block 1   GPU #3 device" )
+fi
+
+if [ "4" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU4device.txt"
+PFb1GPU4device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU4device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU4device="0"
+fi
+menuitems+=( "PFb1GPU4" "            [ $PFb1GPU4device ]    PF block 1   GPU #4 device" )
+fi
+
+if [ "5" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU5device.txt"
+PFb1GPU5device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU5device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU5device="0"
+fi
+menuitems+=( "PFb1GPU5" "            [ $PFb1GPU5device ]    PF block 1   GPU #5 device" )
+fi
+
+if [ "6" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU6device.txt"
+PFb1GPU6device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU6device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU6device="0"
+fi
+menuitems+=( "PFb1GPU6" "            [ $PFb1GPU6device ]    PF block 1   GPU #6 device" )
+fi
+
+if [ "7" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU7device.txt"
+PFb1GPU7device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU7device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU7device="0"
+fi
+menuitems+=( "PFb1GPU7" "            [ $PFb1GPU7device ]    PF block 1   GPU #7 device" )
+fi
+
+if [ "8" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU8device.txt"
+PFb1GPU8device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU8device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU8device="0"
+fi
+menuitems+=( "PFb1GPU8" "            [ $PFb1GPU8device ]    PF block 1   GPU #8 device" )
+fi
+
+if [ "9" -lt "$PFb1nbGPU" ]; then
+file="./conf/param_PFb1GPU9device.txt"
+PFb1GPU9device=$( head -1 $file )
+if [[ -f "$file" && ${PFb1GPU9device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb1GPU9device="0"
+fi
+menuitems+=( "PFb1GPU9" "            [ $PFb1GPU9device ]    PF block 1   GPU #9 device" )
+fi
+
+fi
+
+
+
+
+
+
+if [ "$NBPFblock" -gt "2" ]; then
+# FILTER 2
+
+menuitems+=( " " " ")
+
+
+ConfReadParam PFb2start "0"; PFb2start="$paramvalue"
+ConfReadParam PFb2end "2"; PFb2end="$paramvalue"
+ConfReadParam PFb2order "10"; PFb2order="$paramvalue"
+ConfReadParam PFb2lag "$latency_frame"; PFb2lag="$paramvalue"
+ConfReadParam PFb2SVDe "0.001"; PFb2SVDe="$paramvalue"
+ConfReadParam PFb2dgain "0.2"; PFb2dgain="$paramvalue"
+
+menuitems+=( "PFb2start" "[$PFb2start] set Predictive filter block 2 start" )
+menuitems+=( "PFb2end" "[$PFb2end] set Predictive filter block 2 end" )
+menuitems+=( "PFb2order" "[$PFb2order] set Predictive filter block 2 order" )
+menuitems+=( "PFb2lag" "[$PFb2lag] set Predictive filter block 2 lag" )
+menuitems+=( "PFb2SVDe" "[$PFb2SVDe] set Predictive filter block 2 SVD limit" )
+menuitems+=( "PFb2dgain" "[$PFb2dgain] set Predictive filter block 2 derivationgain" )
+
+
+ConfReadParam PFb2nbGPU "0"; PFb2nbGPU="$paramvalue"
+menuitems+=( "PFb2nbGPU" "[$PFb2nbGPU] set Predictive filter block 2 number of GPUs" )
+
+
+
+
+
+
+if [ "0" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU0device.txt"
+PFb2GPU0device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU0device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU0device="0"
+fi
+menuitems+=( "PFb2GPU0" "            [ $PFb2GPU0device ]    PF block 2   GPU #0 device" )
+fi
+
+if [ "1" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU1device.txt"
+PFb2GPU1device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU1device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU1device="0"
+fi
+menuitems+=( "PFb2GPU1" "            [ $PFb2GPU1device ]    PF block 2   GPU #1 device" )
+fi
+
+if [ "2" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU2device.txt"
+PFb2GPU2device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU2device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU2device="0"
+fi
+menuitems+=( "PFb2GPU2" "            [ $PFb2GPU2device ]    PF block 2   GPU #2 device" )
+fi
+
+if [ "3" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU3device.txt"
+PFb2GPU3device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU3device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU3device="0"
+fi
+menuitems+=( "PFb2GPU3" "            [ $PFb2GPU3device ]    PF block 2   GPU #3 device" )
+fi
+
+if [ "4" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU4device.txt"
+PFb2GPU4device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU4device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU4device="0"
+fi
+menuitems+=( "PFb2GPU4" "            [ $PFb2GPU4device ]    PF block 2   GPU #4 device" )
+fi
+
+if [ "5" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU5device.txt"
+PFb2GPU5device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU5device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU5device="0"
+fi
+menuitems+=( "PFb2GPU5" "            [ $PFb2GPU5device ]    PF block 2   GPU #5 device" )
+fi
+
+if [ "6" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU6device.txt"
+PFb2GPU6device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU6device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU6device="0"
+fi
+menuitems+=( "PFb2GPU6" "            [ $PFb2GPU6device ]    PF block 2   GPU #6 device" )
+fi
+
+if [ "7" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU7device.txt"
+PFb2GPU7device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU7device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU7device="0"
+fi
+menuitems+=( "PFb2GPU7" "            [ $PFb2GPU7device ]    PF block 2   GPU #7 device" )
+fi
+
+if [ "8" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU8device.txt"
+PFb2GPU8device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU8device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU8device="0"
+fi
+menuitems+=( "PFb2GPU8" "            [ $PFb2GPU8device ]    PF block 2   GPU #8 device" )
+fi
+
+if [ "9" -lt "$PFb2nbGPU" ]; then
+file="./conf/param_PFb2GPU9device.txt"
+PFb2GPU9device=$( head -1 $file )
+if [[ -f "$file" && ${PFb2GPU9device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb2GPU9device="0"
+fi
+menuitems+=( "PFb2GPU9" "            [ $PFb2GPU9device ]    PF block 2   GPU #9 device" )
+fi
+
+fi
+
+
+
+if [ "$NBPFblock" -gt "3" ]; then
+# FILTER 3
+menuitems+=( " " " ")
+
+
+ConfReadParam PFb3start "0"; PFb3start="$paramvalue"
+ConfReadParam PFb3end "2"; PFb3end="$paramvalue"
+ConfReadParam PFb3order "10"; PFb3order="$paramvalue"
+ConfReadParam PFb3lag "$latency_frame"; PFb3lag="$paramvalue"
+ConfReadParam PFb3SVDe "0.001"; PFb3SVDe="$paramvalue"
+ConfReadParam PFb3dgain "0.2"; PFb3dgain="$paramvalue"
+
+menuitems+=( "PFb3start" "[$PFb3start] set Predictive filter block 3 start" )
+menuitems+=( "PFb3end" "[$PFb3end] set Predictive filter block 3 end" )
+menuitems+=( "PFb3order" "[$PFb3order] set Predictive filter block 3 order" )
+menuitems+=( "PFb3lag" "[$PFb3lag] set Predictive filter block 3 lag" )
+menuitems+=( "PFb3SVDe" "[$PFb3SVDe] set Predictive filter block 3 SVD limit" )
+menuitems+=( "PFb3dgain" "[$PFb3dgain] set Predictive filter block 3 derivationgain" )
+
+
+ConfReadParam PFb3nbGPU "0"; PFb3nbGPU="$paramvalue"
+menuitems+=( "PFb3nbGPU" "[$PFb3nbGPU] set Predictive filter block 3 number of GPUs" )
+
+
+
+
+
+
+if [ "0" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU0device.txt"
+PFb3GPU0device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU0device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU0device="0"
+fi
+menuitems+=( "PFb3GPU0" "            [ $PFb3GPU0device ]    PF block 3   GPU #0 device" )
+fi
+
+if [ "1" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU1device.txt"
+PFb3GPU1device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU1device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU1device="0"
+fi
+menuitems+=( "PFb3GPU1" "            [ $PFb3GPU1device ]    PF block 3   GPU #1 device" )
+fi
+
+if [ "2" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU2device.txt"
+PFb3GPU2device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU2device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU2device="0"
+fi
+menuitems+=( "PFb3GPU2" "            [ $PFb3GPU2device ]    PF block 3   GPU #2 device" )
+fi
+
+if [ "3" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU3device.txt"
+PFb3GPU3device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU3device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU3device="0"
+fi
+menuitems+=( "PFb3GPU3" "            [ $PFb3GPU3device ]    PF block 3   GPU #3 device" )
+fi
+
+if [ "4" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU4device.txt"
+PFb3GPU4device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU4device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU4device="0"
+fi
+menuitems+=( "PFb3GPU4" "            [ $PFb3GPU4device ]    PF block 3   GPU #4 device" )
+fi
+
+if [ "5" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU5device.txt"
+PFb3GPU5device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU5device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU5device="0"
+fi
+menuitems+=( "PFb3GPU5" "            [ $PFb3GPU5device ]    PF block 3   GPU #5 device" )
+fi
+
+if [ "6" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU6device.txt"
+PFb3GPU6device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU6device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU6device="0"
+fi
+menuitems+=( "PFb3GPU6" "            [ $PFb3GPU6device ]    PF block 3   GPU #6 device" )
+fi
+
+if [ "7" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU7device.txt"
+PFb3GPU7device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU7device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU7device="0"
+fi
+menuitems+=( "PFb3GPU7" "            [ $PFb3GPU7device ]    PF block 3   GPU #7 device" )
+fi
+
+if [ "8" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU8device.txt"
+PFb3GPU8device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU8device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU8device="0"
+fi
+menuitems+=( "PFb3GPU8" "            [ $PFb3GPU8device ]    PF block 3   GPU #8 device" )
+fi
+
+if [ "9" -lt "$PFb3nbGPU" ]; then
+file="./conf/param_PFb3GPU9device.txt"
+PFb3GPU9device=$( head -1 $file )
+if [[ -f "$file" && ${PFb3GPU9device} =~ [0-9]$ ]]; then
+echo "OK"
+else
+echo "0" > $file
+PFb3GPU9device="0"
+fi
+menuitems+=( "PFb3GPU9" "            [ $PFb3GPU9device ]    PF block 3   GPU #9 device" )
+fi
+
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+stringcenter "TELEMETRY WATCH"
+menuitems+=( "4 ->" "\Zb\Zr$string\Zn" )
+
+menuitems+=( " " " ")
+
+
+file="./status/stat_PFb0wON.txt"
+PFb0wON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb0wON" = " ON" || "$PFb0wON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb0wON="OFF"
+fi
+
+if [ "$PFb0wON" = "OFF" ]; then
+menuitems+=( "PFb0wON" "[$PFb0wON] switch on Watch input for PF block 0  -> aol${LOOPNUMBER}_modevalol_PFb0" )
+else
+menuitems+=( "PFb0wOFF" "[\Z1\Zr${PFb0wON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_modevalol_PFb0 \Zn Select to switch off Watch input for PF block 0" )
+fi
+
+
+if [ "$NBPFblock" -gt "1" ]; then
+file="./status/stat_PFb1wON.txt"
+PFb1wON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb1wON" = " ON" || "$PFb1wON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb1wON="OFF"
+fi
+
+if [ "$PFb1wON" = "OFF" ]; then
+menuitems+=( "PFb1wON" "[$PFb1wON] switch on Watch input for PF block 1  -> aol${LOOPNUMBER}_modevalol_PFb1" )
+else
+menuitems+=( "PFb1wOFF" "[\Z1\Zr${PFb1wON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_modevalol_PFb1 \Zn Select to  switch off Watch input for PF block 1" )
+fi
+fi
+
+
+if [ "$NBPFblock" -gt "2" ]; then
+file="./status/stat_PFb2wON.txt"
+PFb2wON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb2wON" = " ON" || "$PFb2wON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb2wON="OFF"
+fi
+
+if [ "$PFb2wON" = "OFF" ]; then
+menuitems+=( "PFb2wON" "[$PFb2wON] switch on Watch input for PF block 2  -> aol${LOOPNUMBER}_modevalol_PFb2" )
+else
+menuitems+=( "PFb2wOFF" "[\Z1\Zr${PFb2wON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_modevalol_PFb2 \Zn Select to switch off Watch input for PF block 2" )
+fi
+fi
+
+
+if [ "$NBPFblock" -gt "3" ]; then
+file="./status/stat_PFb3wON.txt"
+PFb3wON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb3wON" = " ON" || "$PFb3wON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb3wON="OFF"
+fi
+
+if [ "$PFb3wON" = "OFF" ]; then
+menuitems+=( "PFb3wON" "[$PFb3wON] switch on Watch input for PF block 3  -> aol${LOOPNUMBER}_modevalol_PFb3" )
+else
+menuitems+=( "PFb3wOFF" "[\Z1\Zr${PFb3wON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_modevalol_PFb3 \Zn Select to  switch off Watch input for PF block 3" )
+fi
+fi
+
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+stringcenter "COMPUTE FILTERS"
+menuitems+=( "5 ->" "\Zb\Zr$string\Zn" )
+
+
+# block 0
+menuitems+=( " " " ")
+ConfReadParam PFb0decayCoeff "0.8"; PFb0decayCoeff="$paramvalue"
+menuitems+=( "PFb0sDecay" "[$PFb0decayCoeff] set Predictive filter block 0 integrator decay coefficient" )
+menuitems+=( "PFb0sAve" "Set PF block 0 to integrator, DecayCoeff = ${PFb0decayCoeff}" )
+file="./status/stat_PFb0cON.txt"
+PFb0cON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb0cON" = " ON" || "$PFb0cON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb0cON="OFF"
+fi
+
+if [ "$PFb0cON" = "OFF" ]; then
+menuitems+=( "PFb0cON" "[$PFb0cON] switch on compute filter for PF block 0  -> aol${LOOPNUMBER}_outPFb0" )
+else
+menuitems+=( "PFb0cOFF" "[\Z1\Zr${PFb0cON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_outPFb0\Zn Select to switch off compute filter input for PF block 0" )
+fi
+
+
+
+
+
+
+# block 1
+menuitems+=( " " " ")
+if [ "$NBPFblock" -gt "1" ]; then
+ConfReadParam PFb1decayCoeff "0.8"; PFb1decayCoeff="$paramvalue"
+menuitems+=( "PFb1sDecay" "[$PFb1decayCoeff] set Predictive filter block 1 integrator decay coefficient" )
+menuitems+=( "PFb1sAve" "Set PF block 1 to integrator, DecayCoeff = ${PFb1decayCoeff}" )
+
+file="./status/stat_PFb1cON.txt"
+PFb1cON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb1cON" = " ON" || "$PFb1cON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb1cON="OFF"
+fi
+
+if [ "$PFb1cON" = "OFF" ]; then
+menuitems+=( "PFb1cON" "[$PFb1cON] switch on compute filter for PF block 1  -> aol${LOOPNUMBER}_outPFb1" )
+else
+menuitems+=( "PFb1cOFF" "[\Z1\Zr${PFb1cON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_outPFb1\Zn Select to switch off compute filter for PF block 1" )
+fi
+
+fi
+
+
+
+
+# block 2
+menuitems+=( " " " ")
+if [ "$NBPFblock" -gt "2" ]; then
+ConfReadParam PFb2decayCoeff "0.8"; PFb2decayCoeff="$paramvalue"
+menuitems+=( "PFb2sDecay" "[$PFb2decayCoeff] set Predictive filter block 2 integrator decay coefficient" )
+menuitems+=( "PFb2sAve" "Set PF block 2 to integrator, DecayCoeff = ${PFb2decayCoeff}" )
+
+file="./status/stat_PFb2cON.txt"
+PFb2cON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb2cON" = " ON" || "$PFb2cON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb2cON="OFF"
+fi
+
+if [ "$PFb2cON" = "OFF" ]; then
+menuitems+=( "PFb2cON" "[$PFb2cON] switch on compute filter for PF block 0  -> aol${LOOPNUMBER}_outPFb2" )
+else
+menuitems+=( "PFb2cOFF" "[\Z1\Zr${PFb2cON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_outPFb2\Zn Select to switch off compute filter input for PF block 0" )
+fi
+
+fi
+
+
+
+
+# block 3
+menuitems+=( " " " ")
+if [ "$NBPFblock" -gt "3" ]; then
+ConfReadParam PFb3decayCoeff "0.8"; PFb3decayCoeff="$paramvalue"
+menuitems+=( "PFb3sDecay" "[$PFb3decayCoeff] set Predictive filter block 3 integrator decay coefficient" )
+menuitems+=( "PFb3sAve" "Set PF block 3 to integrator, DecayCoeff = ${PFb3decayCoeff}" )
+
+file="./status/stat_PFb3cON.txt"
+PFb3cON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb3cON" = " ON" || "$PFb3cON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb3cON="OFF"
+fi
+
+if [ "$PFb3cON" = "OFF" ]; then
+menuitems+=( "PFb3cON" "[$PFb3cON] switch on compute filter for PF block 1  -> aol${LOOPNUMBER}_outPFb3" )
+else
+menuitems+=( "PFb3cOFF" "[\Z1\Zr${PFb3cON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_outPFb3\Zn Select to switch off compute filter for PF block 1" )
+fi
+
+fi
+
+
+
+
+
+
+
+
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+stringcenter "APPLY FILTERS"
+menuitems+=( "6 ->" "\Zb\Zr$string\Zn" )
+
+menuitems+=( " " " ")
+
+
+# FILTER 0
+file="./status/stat_PFb0aON.txt"
+PFb0aON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb0aON" = " ON" || "$PFb0aON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb0aON="OFF"
+fi
+
+if [ "$PFb0aON" = "OFF" ]; then
+menuitems+=( "PFb0aON" "[$PFb0aON] switch on prediction engine for PF block 0" )
+else
+menuitems+=( "PFb0aOFF" "[\Z1\Zr${PFb0aON}\Zn] switch on prediction engine for PF block 0" )
+fi
+
+
+if [ "$NBPFblock" -gt "1" ]; then
+# FILTER 1
+file="./status/stat_PFb1aON.txt"
+PFb1aON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb1aON" = " ON" || "$PFb1aON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb1aON="OFF"
+fi
+
+if [ "$PFb1aON" = "OFF" ]; then
+menuitems+=( "PFb1aON" "[$PFb1aON] switch on prediction engine for PF block 1" )
+else
+menuitems+=( "PFb1aOFF" "[\Z1\Zr${PFb1aON}\Zn] switch on prediction engine for PF block 1" )
+fi
+fi
+
+
+if [ "$NBPFblock" -gt "2" ]; then
+# FILTER 2
+file="./status/stat_PFb2aON.txt"
+PFb2aON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb2aON" = " ON" || "$PFb2aON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb2aON="OFF"
+fi
+
+if [ "$PFb2aON" = "OFF" ]; then
+menuitems+=( "PFb2aON" "[$PFb2aON] switch on prediction engine for PF block 2" )
+else
+menuitems+=( "PFb2aOFF" "[\Z1\Zr${PFb2aON}\Zn] switch on prediction engine for PF block 2" )
+fi
+fi
+
+if [ "$NBPFblock" -gt "3" ]; then
+# FILTER 3
+file="./status/stat_PFb3aON.txt"
+PFb3aON=$( head -1 $file )
+if [[ -f "$file" && ( "$PFb3aON" = " ON" || "$PFb3aON" = "OFF" ) ]]; then
+echo "OK"
+else
+echo "OFF" > $file
+PFb3aON="OFF"
+fi
+
+if [ "$PFb3aON" = "OFF" ]; then
+menuitems+=( "PFb3aON" "[$PFb3aON] switch on prediction engine for PF block 3" )
+else
+menuitems+=( "PFb3aOFF" "[\Z1\Zr${PFb3aON}\Zn] switch on prediction engine for PF block 3" )
+fi
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dialog --colors --title "PREDICTIVE CONTROL - LOOP ${LOOPNUMBER}" --ok-label " Select " --cancel-label "Top" --help-button --help-label "Exit" --default-item "${menupred_default}" --menu "$menuname"  $nbwlines $nbwcols $nbwlines "${menuitems[@]}"  2> $tempfile
+
+
+
+retval=$?
+choiceval=$( head -1 $tempfile)
+menupred_default="$choiceval"
+state="menupredictivecontrol"
+case $retval in
+   0) # Monitor
+	case $choiceval in
+
+  
+  mt)
+mkdir -p timingstats
+echo "Measuring loop timing - please wait a few seconds...."
+./auxscripts/aolMeasureTiming 100000 > timingstats/timingReport.txt 
+
+# software latency (frame)
+ConfReadParam wfsmextrlatency_frame "0.5"; wfsmextrlatency_frame="$paramvalue"
+
+latency_frame=$(awk "BEGIN {printf \"%.3f\",${hardwlatency_frame}+${wfsmextrlatency_frame}}")
+
+echo "$latency_frame" > conf/param_PFb0lag.txt
+echo "$latency_frame" > conf/param_PFb1lag.txt
+echo "$latency_frame" > conf/param_PFb2lag.txt
+echo "$latency_frame" > conf/param_PFb3lag.txt
+;;
+
+  
+	sellat)
+./auxscripts/selectLatestTelemetry
+;;
+  
+	mkPSDs)
+./auxscripts/processTelemetryPSDs
+;;
+  
+	selB)
+exec 3>&1;
+blockSel=$(dialog --inputbox "Select block" 0 0 "$blockSel" 2>&1 1>&3);
+exec 3>&-;
+echo "$blockSel" > ./conf/param_predcontr_blockSel.txt
+;;
+
+	PFord)
+exec 3>&1;
+PForder=$(dialog --inputbox "Select predictive filter order" 0 0 "$PForder" 2>&1 1>&3);
+exec 3>&-;
+echo "$PForder" > ./conf/param_PForder.txt
+;;
+
+
+
+
+    ARPFb)
+echo "./auxscripts/aolARPFblock \"./PredictiveControl/modeval_ol.fits\"  $blockSel $lat $PForder" > cmd.txt
+./auxscripts/aolARPFblock "./PredictiveControl/modeval_ol.fits"  $blockSel $lat $PForder
+;;
+
+    ARPF)
+echo "./auxscripts/aolARPF \"./PredictiveControl/modeval_ol.fits\" $lat $PForder" > cmd.txt
+./auxscripts/aolARPF "./PredictiveControl/modeval_ol.fits" $lat $PForder
+;;
+
+
+
+
+
+
+
+	sellatC)
+./auxscripts/selectLatestTelemetry -c
+;;
+  
+  
+  
+  	PFapplyb)
+echo "./auxscripts/aolApplyARPFblock \"./PredictiveControl/modeval_ol_C.fits\" \"./PredictiveControl/outPF.$blockSel.fits\" $blockSel $lat" > cmd.txt
+./auxscripts/aolApplyARPF "./PredictiveControl/modeval_ol_C.fits" "./PredictiveControl/outPF.$blockSel.fits" $blockSel $lat
+;;
+
+  
+	PFapply)
+echo "./auxscripts/aolApplyARPF \"./PredictiveControl/modeval_ol_C.fits\" \"./PredictiveControl/outPF.fits\" $lat" > cmd.txt
+./auxscripts/aolApplyARPF "./PredictiveControl/modeval_ol_C.fits" "./PredictiveControl/outPF.fits" $lat
+;;
+
+
+
+
+
+
+NBpfb)
+exec 3>&1;
+NBPFblock=$(dialog --inputbox "Select number of predictive filter blocks" 0 0 "$NBPFblock" 2>&1 1>&3);
+exec 3>&-;
+file="./conf/param_NBPFblock.txt"
+echo "$NBPFblock" > $file
+;;
+
+
+
+
+
+# FILTER 0
+
+
+PFb0start)
+exec 3>&1;
+PFb0start=$(dialog --inputbox "Select Predictive filter block 0 start" 0 0 "$PFb0start" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0start" > ./conf/param_PFb0start.txt
+;;
+
+PFb0end)
+exec 3>&1;
+PFb0end=$(dialog --inputbox "Select Predictive filter block 0 end" 0 0 "$PFb0end" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0end" > ./conf/param_PFb0end.txt
+;;
+
+PFb0order)
+exec 3>&1;
+PFb0order=$(dialog --inputbox "Select Predictive filter block 0 order" 0 0 "$PFb0order" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0order" > ./conf/param_PFb0order.txt
+;;
+
+PFb0lag)
+exec 3>&1;
+PFb0lag=$(dialog --inputbox "Select Predictive filter block 0 lag" 0 0 "$PFb0lag" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb0_PFparam
+setpix aol${LOOPNUMBER}_outPFb0_PFparam $PFb0lag 0 0
+exitCLI
+EOF
+echo "$PFb0lag" > ./conf/param_PFb0lag.txt
+;;
+
+PFb0SVDe)
+exec 3>&1;
+PFb0SVDe=$(dialog --inputbox "Select Predictive filter block 0 SVD epsilon" 0 0 "$PFb0SVDe" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb0_PFparam
+setpix aol${LOOPNUMBER}_outPFb0_PFparam $PFb0SVDe 1 0
+exitCLI
+EOF
+echo "$PFb0SVDe" > ./conf/param_PFb0SVDe.txt
+;;
+
+
+PFb0dgain)
+exec 3>&1;
+PFb0dgain=$(dialog --inputbox "Select Predictive filter block 0 derivation gain" 0 0 "$PFb0dgain" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb0_PFparam
+setpix aol${LOOPNUMBER}_outPFb0_PFparam $PFb0dgain 3 0
+exitCLI
+EOF
+echo "$PFb0dgain" > ./conf/param_PFb0dgain.txt
+;;
+
+
+PFb0nbGPU)
+exec 3>&1;
+PFb0nbGPU=$(dialog --inputbox "Select Predictive filter block 0 number of GPUs" 0 0 "$PFb0nbGPU" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0nbGPU" > ./conf/param_PFb0nbGPU.txt
+;;
+
+
+
+    PFb0GPU0)
+exec 3>&1;
+PFb0GPU0device=$(dialog --inputbox "PFb0 GPU0 device" 0 0 "$PFb0GPU0device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU0device" > ./conf/param_PFb0GPU0device.txt
+aoconflog "set PFb0GPU0device = ${PFb0GPU0device}"
+menucontrolloop_default="PFb0GPU0"
+;;
+
+    PFb0GPU1)
+exec 3>&1;
+PFb0GPU1device=$(dialog --inputbox "PFb0 GPU1 device" 0 0 "$PFb0GPU1device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU1device" > ./conf/param_PFb0GPU1device.txt
+aoconflog "set PFb0GPU1device = ${PFb0GPU1device}"
+menucontrolloop_default="PFb0GPU1"
+;;
+
+    PFb0GPU2)
+exec 3>&1;
+PFb0GPU2device=$(dialog --inputbox "PFb0 GPU2 device" 0 0 "$PFb0GPU2device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU2device" > ./conf/param_PFb0GPU2device.txt
+aoconflog "set PFb0GPU2device = ${PFb0GPU2device}"
+menucontrolloop_default="PFb0GPU2"
+;;
+
+    PFb0GPU3)
+exec 3>&1;
+PFb0GPU3device=$(dialog --inputbox "PFb0 GPU3 device" 0 0 "$PFb0GPU3device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU3device" > ./conf/param_PFb0GPU3device.txt
+aoconflog "set PFb0GPU3device = ${PFb0GPU3device}"
+menucontrolloop_default="PFb0GPU3"
+;;
+
+    PFb0GPU4)
+exec 3>&1;
+PFb0GPU4device=$(dialog --inputbox "PFb0 GPU4 device" 0 0 "$PFb0GPU4device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU4device" > ./conf/param_PFb0GPU4device.txt
+aoconflog "set PFb0GPU4device = ${PFb0GPU4device}"
+menucontrolloop_default="PFb0GPU4"
+;;
+
+    PFb0GPU5)
+exec 3>&1;
+PFb0GPU5device=$(dialog --inputbox "PFb0 GPU5 device" 0 0 "$PFb0GPU5device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU5device" > ./conf/param_PFb0GPU5device.txt
+aoconflog "set PFb0GPU5device = ${PFb0GPU5device}"
+menucontrolloop_default="PFb0GPU5"
+;;
+
+    PFb0GPU6)
+exec 3>&1;
+PFb0GPU6device=$(dialog --inputbox "PFb0 GPU6 device" 0 0 "$PFb0GPU6device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU6device" > ./conf/param_PFb0GPU6device.txt
+aoconflog "set PFb0GPU6device = ${PFb0GPU6device}"
+menucontrolloop_default="PFb0GPU6"
+;;
+
+    PFb0GPU7)
+exec 3>&1;
+PFb0GPU7device=$(dialog --inputbox "PFb0 GPU7 device" 0 0 "$PFb0GPU7device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU7device" > ./conf/param_PFb0GPU7device.txt
+aoconflog "set PFb0GPU7device = ${PFb0GPU7device}"
+menucontrolloop_default="PFb0GPU7"
+;;
+
+    PFb0GPU8)
+exec 3>&1;
+PFb0GPU8device=$(dialog --inputbox "PFb0 GPU8 device" 0 0 "$PFb0GPU8device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU8device" > ./conf/param_PFb0GPU8device.txt
+aoconflog "set PFb0GPU8device = ${PFb0GPU8device}"
+menucontrolloop_default="PFb0GPU8"
+;;
+
+    PFb0GPU9)
+exec 3>&1;
+PFb0GPU9device=$(dialog --inputbox "PFb0 GPU9 device" 0 0 "$PFb0GPU9device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0GPU9device" > ./conf/param_PFb0GPU9device.txt
+aoconflog "set PFb0GPU9device = ${PFb0GPU9device}"
+menucontrolloop_default="PFb0GPU9"
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+# FILTER 1
+
+PFb1start)
+exec 3>&1;
+PFb1start=$(dialog --inputbox "Select Predictive filter block 1 start" 0 0 "$PFb1start" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1start" > ./conf/param_PFb1start.txt
+;;
+
+PFb1end)
+exec 3>&1;
+PFb1end=$(dialog --inputbox "Select Predictive filter block 1 end" 0 0 "$PFb1end" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1end" > ./conf/param_PFb1end.txt
+;;
+
+PFb1order)
+exec 3>&1;
+PFb1order=$(dialog --inputbox "Select Predictive filter block 1 order" 0 0 "$PFb1order" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1order" > ./conf/param_PFb1order.txt
+;;
+
+PFb1lag)
+exec 3>&1;
+PFb1lag=$(dialog --inputbox "Select Predictive filter block 1 lag" 0 0 "$PFb1lag" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb1_PFparam
+setpix aol${LOOPNUMBER}_outPFb1_PFparam $PFb1lag 0 0
+exitCLI
+EOF
+echo "$PFb1lag" > ./conf/param_PFb1lag.txt
+;;
+
+PFb1SVDe)
+exec 3>&1;
+PFb1SVDe=$(dialog --inputbox "Select Predictive filter block 1 SVD epsilon" 0 0 "$PFb1SVDe" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb1_PFparam
+setpix aol${LOOPNUMBER}_outPFb1_PFparam $PFb1SVDe 1 0
+exitCLI
+EOF
+echo "$PFb1SVDe" > ./conf/param_PFb1SVDe.txt
+;;
+
+PFb1dgain)
+exec 3>&1;
+PFb1dgain=$(dialog --inputbox "Select Predictive filter block 1 derivation gain" 0 0 "$PFb1dgain" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb1_PFparam
+setpix aol${LOOPNUMBER}_outPFb1_PFparam $PFb1dgain 3 0
+exitCLI
+EOF
+echo "$PFb1dgain" > ./conf/param_PFb1dgain.txt
+;;
+
+
+PFb1nbGPU)
+exec 3>&1;
+PFb1nbGPU=$(dialog --inputbox "Select Predictive filter block 1 number of GPUs" 0 0 "$PFb1nbGPU" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1nbGPU" > ./conf/param_PFb1nbGPU.txt
+;;
+
+
+    PFb1GPU0)
+exec 3>&1;
+PFb1GPU0device=$(dialog --inputbox "PFb1 GPU0 device" 0 0 "$PFb1GPU0device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU0device" > ./conf/param_PFb1GPU0device.txt
+aoconflog "set PFb1GPU0device = ${PFb1GPU0device}"
+menucontrolloop_default="PFb1GPU0"
+;;
+
+    PFb1GPU1)
+exec 3>&1;
+PFb1GPU1device=$(dialog --inputbox "PFb1 GPU1 device" 0 0 "$PFb1GPU1device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU1device" > ./conf/param_PFb1GPU1device.txt
+aoconflog "set PFb1GPU1device = ${PFb1GPU1device}"
+menucontrolloop_default="PFb1GPU1"
+;;
+
+    PFb1GPU2)
+exec 3>&1;
+PFb1GPU2device=$(dialog --inputbox "PFb1 GPU2 device" 0 0 "$PFb1GPU2device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU2device" > ./conf/param_PFb1GPU2device.txt
+aoconflog "set PFb1GPU2device = ${PFb1GPU2device}"
+menucontrolloop_default="PFb1GPU2"
+;;
+
+    PFb1GPU3)
+exec 3>&1;
+PFb1GPU3device=$(dialog --inputbox "PFb1 GPU3 device" 0 0 "$PFb1GPU3device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU3device" > ./conf/param_PFb1GPU3device.txt
+aoconflog "set PFb1GPU3device = ${PFb1GPU3device}"
+menucontrolloop_default="PFb1GPU3"
+;;
+
+    PFb1GPU4)
+exec 3>&1;
+PFb1GPU4device=$(dialog --inputbox "PFb1 GPU4 device" 0 0 "$PFb1GPU4device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU4device" > ./conf/param_PFb1GPU4device.txt
+aoconflog "set PFb1GPU4device = ${PFb1GPU4device}"
+menucontrolloop_default="PFb1GPU4"
+;;
+
+    PFb1GPU5)
+exec 3>&1;
+PFb1GPU5device=$(dialog --inputbox "PFb1 GPU5 device" 0 0 "$PFb1GPU5device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU5device" > ./conf/param_PFb1GPU5device.txt
+aoconflog "set PFb1GPU5device = ${PFb1GPU5device}"
+menucontrolloop_default="PFb1GPU5"
+;;
+
+    PFb1GPU6)
+exec 3>&1;
+PFb1GPU6device=$(dialog --inputbox "PFb1 GPU6 device" 0 0 "$PFb1GPU6device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU6device" > ./conf/param_PFb1GPU6device.txt
+aoconflog "set PFb1GPU6device = ${PFb1GPU6device}"
+menucontrolloop_default="PFb1GPU6"
+;;
+
+    PFb1GPU7)
+exec 3>&1;
+PFb1GPU7device=$(dialog --inputbox "PFb1 GPU7 device" 0 0 "$PFb1GPU7device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU7device" > ./conf/param_PFb1GPU7device.txt
+aoconflog "set PFb1GPU7device = ${PFb1GPU7device}"
+menucontrolloop_default="PFb1GPU7"
+;;
+
+    PFb1GPU8)
+exec 3>&1;
+PFb1GPU8device=$(dialog --inputbox "PFb1 GPU8 device" 0 0 "$PFb1GPU8device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU8device" > ./conf/param_PFb1GPU8device.txt
+aoconflog "set PFb1GPU8device = ${PFb1GPU8device}"
+menucontrolloop_default="PFb1GPU8"
+;;
+
+    PFb1GPU9)
+exec 3>&1;
+PFb1GPU9device=$(dialog --inputbox "PFb1 GPU9 device" 0 0 "$PFb1GPU9device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1GPU9device" > ./conf/param_PFb1GPU9device.txt
+aoconflog "set PFb1GPU9device = ${PFb1GPU9device}"
+menucontrolloop_default="PFb1GPU9"
+;;
+
+
+
+
+
+
+# FILTER 2
+
+PFb2start)
+exec 3>&1;
+PFb2start=$(dialog --inputbox "Select Predictive filter block 2 start" 0 0 "$PFb2start" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2start" > ./conf/param_PFb2start.txt
+;;
+
+PFb2end)
+exec 3>&1;
+PFb2end=$(dialog --inputbox "Select Predictive filter block 2 end" 0 0 "$PFb2end" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2end" > ./conf/param_PFb2end.txt
+;;
+
+PFb2order)
+exec 3>&1;
+PFb2order=$(dialog --inputbox "Select Predictive filter block 2 order" 0 0 "$PFb2order" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2order" > ./conf/param_PFb2order.txt
+;;
+
+PFb2lag)
+exec 3>&1;
+PFb2lag=$(dialog --inputbox "Select Predictive filter block 2 lag" 0 0 "$PFb2lag" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb2_PFparam
+setpix aol${LOOPNUMBER}_outPFb2_PFparam $PFb2lag 0 0
+exitCLI
+EOF
+echo "$PFb2lag" > ./conf/param_PFb2lag.txt
+;;
+
+PFb2SVDe)
+exec 3>&1;
+PFb2SVDe=$(dialog --inputbox "Select Predictive filter block 2 SVD epsilon" 0 0 "$PFb2SVDe" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb2_PFparam
+setpix aol${LOOPNUMBER}_outPFb2_PFparam $PFb2SVDe 1 0
+exitCLI
+EOF
+echo "$PFb2SVDe" > ./conf/param_PFb2SVDe.txt
+;;
+
+PFb2dgain)
+exec 3>&1;
+PFb2dgain=$(dialog --inputbox "Select Predictive filter block 2 derivation gain" 0 0 "$PFb2dgain" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb2_PFparam
+setpix aol${LOOPNUMBER}_outPFb2_PFparam $PFb2dgain 3 0
+exitCLI
+EOF
+echo "$PFb2dgain" > ./conf/param_PFb2dgain.txt
+;;
+
+
+PFb2nbGPU)
+exec 3>&1;
+PFb2nbGPU=$(dialog --inputbox "Select Predictive filter block 2 number of GPUs" 0 0 "$PFb2nbGPU" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2nbGPU" > ./conf/param_PFb2nbGPU.txt
+;;
+
+
+    PFb2GPU0)
+exec 3>&1;
+PFb2GPU0device=$(dialog --inputbox "PFb2 GPU0 device" 0 0 "$PFb2GPU0device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU0device" > ./conf/param_PFb2GPU0device.txt
+aoconflog "set PFb2GPU0device = ${PFb2GPU0device}"
+menucontrolloop_default="PFb2GPU0"
+;;
+
+    PFb2GPU1)
+exec 3>&1;
+PFb2GPU1device=$(dialog --inputbox "PFb2 GPU1 device" 0 0 "$PFb2GPU1device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU1device" > ./conf/param_PFb2GPU1device.txt
+aoconflog "set PFb2GPU1device = ${PFb2GPU1device}"
+menucontrolloop_default="PFb2GPU1"
+;;
+
+    PFb2GPU2)
+exec 3>&1;
+PFb2GPU2device=$(dialog --inputbox "PFb2 GPU2 device" 0 0 "$PFb2GPU2device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU2device" > ./conf/param_PFb2GPU2device.txt
+aoconflog "set PFb2GPU2device = ${PFb2GPU2device}"
+menucontrolloop_default="PFb2GPU2"
+;;
+
+    PFb2GPU3)
+exec 3>&1;
+PFb2GPU3device=$(dialog --inputbox "PFb2 GPU3 device" 0 0 "$PFb2GPU3device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU3device" > ./conf/param_PFb2GPU3device.txt
+aoconflog "set PFb2GPU3device = ${PFb2GPU3device}"
+menucontrolloop_default="PFb2GPU3"
+;;
+
+    PFb2GPU4)
+exec 3>&1;
+PFb2GPU4device=$(dialog --inputbox "PFb2 GPU4 device" 0 0 "$PFb2GPU4device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU4device" > ./conf/param_PFb2GPU4device.txt
+aoconflog "set PFb2GPU4device = ${PFb2GPU4device}"
+menucontrolloop_default="PFb2GPU4"
+;;
+
+    PFb2GPU5)
+exec 3>&1;
+PFb2GPU5device=$(dialog --inputbox "PFb2 GPU5 device" 0 0 "$PFb2GPU5device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU5device" > ./conf/param_PFb2GPU5device.txt
+aoconflog "set PFb2GPU5device = ${PFb2GPU5device}"
+menucontrolloop_default="PFb2GPU5"
+;;
+
+    PFb2GPU6)
+exec 3>&1;
+PFb2GPU6device=$(dialog --inputbox "PFb2 GPU6 device" 0 0 "$PFb2GPU6device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU6device" > ./conf/param_PFb2GPU6device.txt
+aoconflog "set PFb2GPU6device = ${PFb2GPU6device}"
+menucontrolloop_default="PFb2GPU6"
+;;
+
+    PFb2GPU7)
+exec 3>&1;
+PFb2GPU7device=$(dialog --inputbox "PFb2 GPU7 device" 0 0 "$PFb2GPU7device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU7device" > ./conf/param_PFb2GPU7device.txt
+aoconflog "set PFb2GPU7device = ${PFb2GPU7device}"
+menucontrolloop_default="PFb2GPU7"
+;;
+
+    PFb2GPU8)
+exec 3>&1;
+PFb2GPU8device=$(dialog --inputbox "PFb2 GPU8 device" 0 0 "$PFb2GPU8device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU8device" > ./conf/param_PFb2GPU8device.txt
+aoconflog "set PFb2GPU8device = ${PFb2GPU8device}"
+menucontrolloop_default="PFb2GPU8"
+;;
+
+    PFb2GPU9)
+exec 3>&1;
+PFb2GPU9device=$(dialog --inputbox "PFb2 GPU9 device" 0 0 "$PFb2GPU9device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2GPU9device" > ./conf/param_PFb2GPU9device.txt
+aoconflog "set PFb2GPU9device = ${PFb2GPU9device}"
+menucontrolloop_default="PFb2GPU9"
+;;
+
+
+
+
+
+
+# FILTER 3
+
+PFb3start)
+exec 3>&1;
+PFb3start=$(dialog --inputbox "Select Predictive filter block 3 start" 0 0 "$PFb3start" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3start" > ./conf/param_PFb3start.txt
+;;
+
+PFb3end)
+exec 3>&1;
+PFb3end=$(dialog --inputbox "Select Predictive filter block 3 end" 0 0 "$PFb3end" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3end" > ./conf/param_PFb3end.txt
+;;
+
+PFb3order)
+exec 3>&1;
+PFb3order=$(dialog --inputbox "Select Predictive filter block 3 order" 0 0 "$PFb3order" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3order" > ./conf/param_PFb3order.txt
+;;
+
+PFb3lag)
+exec 3>&1;
+PFb3lag=$(dialog --inputbox "Select Predictive filter block 3 lag" 0 0 "$PFb3lag" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb3_PFparam
+setpix aol${LOOPNUMBER}_outPFb3_PFparam $PFb3lag 0 0
+exitCLI
+EOF
+echo "$PFb3lag" > ./conf/param_PFb3lag.txt
+;;
+
+PFb3SVDe)
+exec 3>&1;
+PFb3SVDe=$(dialog --inputbox "Select Predictive filter block 3 SVD epsilon" 0 0 "$PFb3SVDe" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb3_PFparam
+setpix aol${LOOPNUMBER}_outPFb3_PFparam $PFb3SVDe 1 0
+exitCLI
+EOF
+echo "$PFb3SVDe" > ./conf/param_PFb3SVDe.txt
+;;
+
+PFb3dgain)
+exec 3>&1;
+PFb3dgain=$(dialog --inputbox "Select Predictive filter block 3 derivation gain" 0 0 "$PFb3dgain" 2>&1 1>&3);
+exec 3>&-;
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_outPFb3_PFparam
+setpix aol${LOOPNUMBER}_outPFb3_PFparam $PFb3dgain 3 0
+exitCLI
+EOF
+echo "$PFb3dgain" > ./conf/param_PFb3dgain.txt
+;;
+
+
+PFb3nbGPU)
+exec 3>&1;
+PFb3nbGPU=$(dialog --inputbox "Select Predictive filter block 3 number of GPUs" 0 0 "$PFb3nbGPU" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3nbGPU" > ./conf/param_PFb3nbGPU.txt
+;;
+
+
+    PFb3GPU0)
+exec 3>&1;
+PFb3GPU0device=$(dialog --inputbox "PFb3 GPU0 device" 0 0 "$PFb3GPU0device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU0device" > ./conf/param_PFb3GPU0device.txt
+aoconflog "set PFb3GPU0device = ${PFb3GPU0device}"
+menucontrolloop_default="PFb3GPU0"
+;;
+
+    PFb3GPU1)
+exec 3>&1;
+PFb3GPU1device=$(dialog --inputbox "PFb3 GPU1 device" 0 0 "$PFb3GPU1device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU1device" > ./conf/param_PFb3GPU1device.txt
+aoconflog "set PFb3GPU1device = ${PFb3GPU1device}"
+menucontrolloop_default="PFb3GPU1"
+;;
+
+    PFb3GPU2)
+exec 3>&1;
+PFb3GPU2device=$(dialog --inputbox "PFb3 GPU2 device" 0 0 "$PFb3GPU2device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU2device" > ./conf/param_PFb3GPU2device.txt
+aoconflog "set PFb3GPU2device = ${PFb3GPU2device}"
+menucontrolloop_default="PFb3GPU2"
+;;
+
+    PFb3GPU3)
+exec 3>&1;
+PFb3GPU3device=$(dialog --inputbox "PFb3 GPU3 device" 0 0 "$PFb3GPU3device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU3device" > ./conf/param_PFb3GPU3device.txt
+aoconflog "set PFb3GPU3device = ${PFb3GPU3device}"
+menucontrolloop_default="PFb3GPU3"
+;;
+
+    PFb3GPU4)
+exec 3>&1;
+PFb3GPU4device=$(dialog --inputbox "PFb3 GPU4 device" 0 0 "$PFb3GPU4device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU4device" > ./conf/param_PFb3GPU4device.txt
+aoconflog "set PFb3GPU4device = ${PFb3GPU4device}"
+menucontrolloop_default="PFb3GPU4"
+;;
+
+    PFb3GPU5)
+exec 3>&1;
+PFb3GPU5device=$(dialog --inputbox "PFb3 GPU5 device" 0 0 "$PFb3GPU5device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU5device" > ./conf/param_PFb3GPU5device.txt
+aoconflog "set PFb3GPU5device = ${PFb3GPU5device}"
+menucontrolloop_default="PFb3GPU5"
+;;
+
+    PFb3GPU6)
+exec 3>&1;
+PFb3GPU6device=$(dialog --inputbox "PFb3 GPU6 device" 0 0 "$PFb3GPU6device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU6device" > ./conf/param_PFb3GPU6device.txt
+aoconflog "set PFb3GPU6device = ${PFb3GPU6device}"
+menucontrolloop_default="PFb3GPU6"
+;;
+
+    PFb3GPU7)
+exec 3>&1;
+PFb3GPU7device=$(dialog --inputbox "PFb3 GPU7 device" 0 0 "$PFb3GPU7device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU7device" > ./conf/param_PFb3GPU7device.txt
+aoconflog "set PFb3GPU7device = ${PFb3GPU7device}"
+menucontrolloop_default="PFb3GPU7"
+;;
+
+    PFb3GPU8)
+exec 3>&1;
+PFb3GPU8device=$(dialog --inputbox "PFb3 GPU8 device" 0 0 "$PFb3GPU8device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU8device" > ./conf/param_PFb3GPU8device.txt
+aoconflog "set PFb3GPU8device = ${PFb3GPU8device}"
+menucontrolloop_default="PFb3GPU8"
+;;
+
+    PFb3GPU9)
+exec 3>&1;
+PFb3GPU9device=$(dialog --inputbox "PFb3 GPU9 device" 0 0 "$PFb3GPU9device" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3GPU9device" > ./conf/param_PFb3GPU9device.txt
+aoconflog "set PFb3GPU9device = ${PFb3GPU9device}"
+menucontrolloop_default="PFb3GPU9"
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# FILTER 0
+
+	PFb0wON)
+tmuxname="aol${LOOPNUMBER}PFb0watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 0 $PFb0start $PFb0end" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb0wON=" ON"
+file="./status/stat_PFb0wON.txt"
+echo "writing $PFb0wON to file $file"
+echo "$PFb0wON" > $file
+menupred_default="PFb0wOFF"
+;;
+
+	PFb0wOFF)
+tmuxname="aol${LOOPNUMBER}PFb0watchin"
+tmux send-keys -t ${tmuxname} C-c
+PFb0wON="OFF"
+file="./status/stat_PFb0wON.txt"
+echo "$PFb0wON" > $file
+menupred_default="PFb0wON"
+;;
+
+
+
+
+
+# FILTER 1
+
+	PFb1wON)
+tmuxname="aol${LOOPNUMBER}PFb1watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 1 $PFb1start $PFb1end" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb1wON=" ON"
+file="./status/stat_PFb1wON.txt"
+echo "writing $PFb1wON to file $file"
+echo "$PFb1wON" > $file
+menupred_default="PFb1wOFF"
+;;
+
+	PFb1wOFF)
+tmuxname="aol${LOOPNUMBER}PFb1watchin"
+tmux send-keys -t ${tmuxname} C-c
+PFb1wON="OFF"
+file="./status/stat_PFb1wON.txt"
+echo "$PFb1wON" > $file
+menupred_default="PFb1wON"
+;;
+
+
+
+
+# FILTER 2
+
+	PFb2wON)
+tmuxname="aol${LOOPNUMBER}PFb2watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 2 $PFb2start $PFb2end" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb2wON=" ON"
+file="./status/stat_PFb2wON.txt"
+echo "writing $PFb2wON to file $file"
+echo "$PFb2wON" > $file
+menupred_default="PFb2wOFF"
+;;
+
+	PFb2wOFF)
+tmuxname="aol${LOOPNUMBER}PFb2watchin"
+tmux send-keys -t ${tmuxname} C-c
+PFb2wON="OFF"
+file="./status/stat_PFb2wON.txt"
+echo "$PFb2wON" > $file
+menupred_default="PFb2wON"
+;;
+
+
+# FILTER 3
+
+	PFb3wON)
+tmuxname="aol${LOOPNUMBER}PFb3watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 3 $PFb3start $PFb3end" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb3wON=" ON"
+file="./status/stat_PFb3wON.txt"
+echo "writing $PFb3wON to file $file"
+echo "$PFb3wON" > $file
+menupred_default="PFb3wOFF"
+;;
+
+	PFb3wOFF)
+tmuxname="aol${LOOPNUMBER}PFb3watchin"
+tmux send-keys -t ${tmuxname} C-c
+PFb3wON="OFF"
+file="./status/stat_PFb3wON.txt"
+echo "$PFb3wON" > $file
+menupred_default="PFb3wON"
+;;
+
+
+
+
+
+
+
+
+
+
+
+# FILTER 0
+
+	PFb0cON)
+tmuxname="aol${LOOPNUMBER}PFb0comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb0" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb0 ${PFb0order} ${PFb0lag} 0.001 0.0 aol${LOOPNUMBER}_outPFb0 1 ${PFb0dgain}" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb0cON=" ON"
+file="./status/stat_PFb0cON.txt"
+echo "writing $PFb0cON to file $file"
+echo "$PFb0cON" > $file
+menupred_default="PFb0cOFF"
+;;
+
+	PFb0cOFF)
+tmuxname="aol${LOOPNUMBER}PFb0comp"
+tmux send-keys -t ${tmuxname} C-c
+PFb0cON="OFF"
+file="./status/stat_PFb0cON.txt"
+echo "$PFb0cON" > $file
+menupred_default="PFb0cON"
+;;
+
+
+	PFb0sDecay)
+exec 3>&1;
+PFb0decayCoeff=$(dialog --inputbox "Select Predictive filter block 0 integrator decay" 0 0 "$PFb0decayCoeff" 2>&1 1>&3);
+exec 3>&-;
+file="./conf/param_PFb0decayCoeff.txt"
+echo "$PFb0decayCoeff" > $file
+;;
+
+	PFb0sAve)
+Cfits << EOF
+readshmim aol${LOOPNUMBER}_outPFb0
+aolpfsetave aol${LOOPNUMBER}_outPFb0 ${PFb0decayCoeff}
+exitCLI
+EOF
+;;
+
+
+
+
+# FILTER 1
+
+	PFb1cON)
+tmuxname="aol${LOOPNUMBER}PFb1comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb1" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb1 ${PFb1order} ${PFb1lag} 0.001 0.0 aol${LOOPNUMBER}_outPFb1 1 ${PFb1dgain}" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb1cON=" ON"
+file="./status/stat_PFb1cON.txt"
+echo "writing $PFb1cON to file $file"
+echo "$PFb1cON" > $file
+menupred_default="PFb1cOFF"
+;;
+
+	PFb1cOFF)
+tmuxname="aol${LOOPNUMBER}PFb1comp"
+tmux send-keys -t ${tmuxname} C-c
+PFb1cON="OFF"
+file="./status/stat_PFb1cON.txt"
+echo "$PFb1cON" > $file
+menupred_default="PFb1cON"
+;;
+
+
+	PFb1sDecay)
+exec 3>&1;
+PFb1decayCoeff=$(dialog --inputbox "Select Predictive filter block 1 integrator decay" 0 0 "$PFb1decayCoeff" 2>&1 1>&3);
+exec 3>&-;
+file="./conf/param_PFb1decayCoeff.txt"
+echo "$PFb1decayCoeff" > $file
+;;
+
+	PFb1sAve)
+Cfits << EOF
+readshmim aol${LOOPNUMBER}_outPFb1
+aolpfsetave aol${LOOPNUMBER}_outPFb1 ${PFb1decayCoeff}
+exitCLI
+EOF
+;;
+
+
+
+
+
+# FILTER 2
+
+	PFb2cON)
+tmuxname="aol${LOOPNUMBER}PFb2comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb2" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb2 ${PFb2order} ${PFb2lag} 0.001 0.0 aol${LOOPNUMBER}_outPFb2 1 ${PFb2dgain}" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb2cON=" ON"
+file="./status/stat_PFb2cON.txt"
+echo "writing $PFb2cON to file $file"
+echo "$PFb2cON" > $file
+menupred_default="PFb2cOFF"
+;;
+
+	PFb2cOFF)
+tmuxname="aol${LOOPNUMBER}PFb2comp"
+tmux send-keys -t ${tmuxname} C-c
+PFb2cON="OFF"
+file="./status/stat_PFb2cON.txt"
+echo "$PFb2cON" > $file
+menupred_default="PFb2cON"
+;;
+
+
+	PFb2sDecay)
+exec 3>&1;
+PFb2decayCoeff=$(dialog --inputbox "Select Predictive filter block 2 integrator decay" 0 0 "$PFb2decayCoeff" 2>&1 1>&3);
+exec 3>&-;
+file="./conf/param_PFb2decayCoeff.txt"
+echo "$PFb2decayCoeff" > $file
+;;
+
+	PFb2sAve)
+Cfits << EOF
+readshmim aol${LOOPNUMBER}_outPFb2
+aolpfsetave aol${LOOPNUMBER}_outPFb2 ${PFb2decayCoeff}
+exitCLI
+EOF
+;;
+
+
+
+
+
+# FILTER 3
+
+	PFb3cON)
+tmuxname="aol${LOOPNUMBER}PFb3comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb3" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb3 ${PFb3order} ${PFb3lag} 0.001 0.0 aol${LOOPNUMBER}_outPFb3 1 ${PFb3dgain}" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb3cON=" ON"
+file="./status/stat_PFb3cON.txt"
+echo "writing $PFb3cON to file $file"
+echo "$PFb3cON" > $file
+menupred_default="PFb3cOFF"
+;;
+
+	PFb3cOFF)
+tmuxname="aol${LOOPNUMBER}PFb3comp"
+tmux send-keys -t ${tmuxname} C-c
+PFb3cON="OFF"
+file="./status/stat_PFb3cON.txt"
+echo "$PFb3cON" > $file
+menupred_default="PFb3cON"
+;;
+
+
+	PFb3sDecay)
+exec 3>&1;
+PFb3decayCoeff=$(dialog --inputbox "Select Predictive filter block 3 integrator decay" 0 0 "$PFb3decayCoeff" 2>&1 1>&3);
+exec 3>&-;
+file="./conf/param_PFb3decayCoeff.txt"
+echo "$PFb3decayCoeff" > $file
+;;
+
+	PFb3sAve)
+Cfits << EOF
+readshmim aol${LOOPNUMBER}_outPFb3
+aolpfsetave aol${LOOPNUMBER}_outPFb3 ${PFb3decayCoeff}
+exitCLI
+EOF
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+# FILTER 0
+
+	PFb0aON)
+cp PredictiveControl/inmaskPF0.fits inmask0.fits
+cp PredictiveControl/outmaskPF0.fits outmask0.fits
+tmuxname="aol${LOOPNUMBER}PFb0apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 0 -o -g ${PFb0nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb0  aol${LOOPNUMBER}_modevalPFb0" C-m
+
+PFb0aON=" ON"
+file="./status/stat_PFb0aON.txt"
+echo "writing $PFb0aON to file $file"
+echo "$PFb0aON" > $file
+menupred_default="PFb0aOFF"
+;;
+
+	PFb0aOFF)
+Cfits << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask0.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb0apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+PFb0aON="OFF"
+file="./status/stat_PFb0aON.txt"
+echo "$PFb0aON" > $file
+menupred_default="PFb0aON"
+;;
+
+
+
+# FILTER 1
+
+	PFb1aON)
+cp PredictiveControl/inmaskPF1.fits inmask1.fits
+cp PredictiveControl/outmaskPF1.fits outmask1.fits
+tmuxname="aol${LOOPNUMBER}PFb1apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 1 -o -g ${PFb1nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb1 aol${LOOPNUMBER}_modevalPFb1" C-m
+
+PFb1aON=" ON"
+file="./status/stat_PFb1aON.txt"
+echo "writing $PFb1aON to file $file"
+echo "$PFb1aON" > $file
+menupred_default="PFb1aOFF"
+;;
+
+	PFb1aOFF)
+Cfits << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask1.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+
+tmuxname="aol${LOOPNUMBER}PFb1apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+PFb1aON="OFF"
+file="./status/stat_PFb1aON.txt"
+echo "$PFb1aON" > $file
+menupred_default="PFb1aON"
+;;
+
+
+
+
+# FILTER 2
+
+	PFb2aON)
+cp PredictiveControl/inmaskPF2.fits inmask2.fits
+cp PredictiveControl/outmaskPF2.fits outmask2.fits
+tmuxname="aol${LOOPNUMBER}PFb2apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 2 -o -g ${PFb2nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb2  aol${LOOPNUMBER}_modevalPFb2" C-m
+
+PFb2aON=" ON"
+file="./status/stat_PFb2aON.txt"
+echo "writing $PFb2aON to file $file"
+echo "$PFb2aON" > $file
+menupred_default="PFb2aOFF"
+;;
+
+	PFb2aOFF)	
+Cfits << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask2.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb2apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+PFb2aON="OFF"
+file="./status/stat_PFb2aON.txt"
+echo "$PFb2aON" > $file
+menupred_default="PFb2aON"
+;;
+
+
+
+
+# FILTER 3
+
+	PFb3aON)
+cp PredictiveControl/inmaskPF3.fits inmask3.fits
+cp PredictiveControl/outmaskPF3.fits outmask3.fits
+tmuxname="aol${LOOPNUMBER}PFb3apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 3 -o -g ${PFb3nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb3  aol${LOOPNUMBER}_modevalPFb3" C-m
+
+PFb3aON=" ON"
+file="./status/stat_PFb3aON.txt"
+echo "writing $PFb3aON to file $file"
+echo "$PFb3aON" > $file
+menupred_default="PFb3aOFF"
+;;
+
+	PFb3aOFF)
+Cfits << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask3.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+
+tmuxname="aol${LOOPNUMBER}PFb3apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+PFb3aON="OFF"
+file="./status/stat_PFb3aON.txt"
+echo "$PFb3aON" > $file
+menupred_default="PFb3aON"
+;;
+
+
+
+
+
+
+
+
+
+
+
+esac
+;; 
+   1) state="menutop";;   
+  2) state="menuexit";;
+   255) state="menuexit";;
+esac
+
+fi
+
+
+
+
+
+

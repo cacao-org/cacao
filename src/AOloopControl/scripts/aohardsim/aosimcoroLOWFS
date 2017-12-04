@@ -1,0 +1,211 @@
+#!/bin/bash
+
+
+execname="./AOloopControl"
+
+# number of arguments to script
+NBARGS=0
+
+pname=`echo "$0" | sed "s/\.\///g"`
+
+CONFFILE="$pname.conf" #default
+CONFDIR="./conf"
+
+COROFPMAMP="$CONFDIR/aosimcorofpmamp.fits"
+COROFPMPHA="$CONFDIR/aosimcorofpmpha.fits"
+LYOTSTOPRAMP="$CONFDIR/aosimlyotstopramp.fits"
+LYOTSTOPRPHA="$CONFDIR/aosimlyotstoprpha.fits"
+LYOTSTOPTAMP="$CONFDIR/aosimlyotstoptamp.fits"
+LYOTSTOPTPHA="$CONFDIR/aosimlyotstoptpha.fits"
+LOWFSOPDMAP="$CONFDIR/aosimlowfsopdmap.fits"
+mkdir -p $CONFDIR
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CORONAGRAPH + LOWFS SIMULATION (tput sgr 0)"
+echo "------------------------------------------------------------------------"
+echo "  Simulate simple coronagraph + LOWFS"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr 0)"
+echo "     $0 [-hcin]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr 0)"
+echo "    $(tput bold)-h$(tput sgr 0)               print (h)elp"
+echo "    $(tput bold)-c$(tput sgr 0) <conffile>    adopt (c)onfiguration file <conffile>"
+echo "    $(tput bold)-i$(tput sgr 0) <arraysize>   (i)nit masks"
+echo "    $(tput bold)-n$(tput sgr 0)               create new template default configuration -> $CONFFILE"
+echo ""
+echo " $(tput bold)REQUIRED:$(tput sgr 0)"
+echo "     $CONFFILE     configuration file"
+echo "     $COROFPMAMP    coronagraph focal plane mask amplitude"
+echo "     $COROFPMPHA    coronagraph focal plane mask phase"
+echo "     $LYOTSTOPRAMP  coronagraph Lyot stop reflected light amplitude"
+echo "     $ LYOTSTOPRPHA coronagraph Lyot stop reflected light phase"
+echo "     $LYOTSTOPTPHA  coronagraph Lyot stop transmitted light amplitude"
+echo "     $LOWFSOPDMAP  coronagraph Lyot stop transmitted light phase"
+echo "------------------------------------------------------------------------"
+}
+
+
+
+EXITSTATUS=0
+
+
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr 0)] File $1 found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr 0)] File $1 not found"
+    EXITSTATUS=1
+fi
+}
+
+
+
+function initMasks {
+mkdir -p conf
+
+$execname << EOF
+cx=0.5*$1
+cy=0.5*$1
+mkdisk fa $1 $1 cx cy cx
+savefits fa "!$COROFPMAMP"
+fp=fa*0.0
+savefits fp "!$COROFPMPHA"
+refl=0.1
+
+lsra=fp+refl
+savefits lsra "!$LYOTSTOPRAMP"
+lsrp=lsra*0.0
+savefits lsrp "!$LYOTSTOPRPHA"
+
+lsta=sqrt(1.0-lsra*lsra)
+savefits lsta "!$LYOTSTOPTAMP"
+lstp=lsta*0.0
+savefits lstp "!$LYOTSTOPTPHA"
+
+
+br=$1*0.5
+mkzer zfoc $1 4 br
+lopd=zfoc*2.0
+savefits lopd "!$LOWFSOPDMAP"
+
+exit
+EOF
+}
+
+
+
+function CreateDefaultConfiguration {
+$execname << EOF
+AOsimcoroLOWFS "$CONFFILE"
+exit
+EOF
+}
+
+
+
+# ================= OPTIONS =============================
+
+#Parse command line flags
+#If an option should be followed by an argument, it should be followed by a ":".
+#Notice there is no ":" after "h". The leading ":" suppresses error messages from
+#getopts. This is required to get unrecognized option code to work.
+
+while getopts :hc:i:n FLAG; do
+  case $FLAG in
+    h)  #show help
+      printHELP
+      exit
+      ;;
+     c) # set configuration file name
+    CONFFILE=$OPTARG
+    ;;
+    i) # init required masks to simple configuration, arg = arraysize
+    initMasks $OPTARG
+    ;;
+    n) # create default configuration
+    CreateDefaultConfiguration
+    exit
+    ;;
+   \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      #If you just want to display a simple error message instead of the full
+      #help, remove the 2 lines above and uncomment the 2 lines below.
+      #echo -e "Use ${BOLD}$SCRIPT -h${NORM} to see the help documentation."\\n
+      #exit 2
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+### End getopts code ###
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr 0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+# ======================= CHECK REQUIRED FILES =================================
+echo ""
+checkFile $COROFPMAMP
+checkFile $COROFPMPHA
+checkFile $LYOTSTOPRAMP
+checkFile $LYOTSTOPRPHA
+checkFile $LYOTSTOPTAMP
+checkFile $LYOTSTOPTPHA
+checkFile $LOWFSOPDMAP
+
+
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES NOT FOUND: CREATING THEM $(tput sgr 0)"
+initMasks 256
+EXITSTATUS=0
+fi
+
+
+
+
+if [ ! -f $CONFFILE ]
+  then
+    echo "$(tput setaf 5)$(tput bold) WARNING: File $CONFFILE not found $(tput sgr 0)"
+    echo "$(tput setaf 5)$(tput bold) WARNING: Copying $pname.conf.default to $CONFFILE  $(tput sgr 0)"
+    if [ -f "$pname.conf.default" ]; then
+    cp $pname.conf.default $CONFFILE
+    else
+    echo "$(tput setaf 5)$(tput bold) WARNING: File $pname.conf.default not found $(tput sgr 0) -> creating it"
+    CreateDefaultConfiguration
+    cp $pname.conf.default $CONFFILE
+    fi
+fi
+
+
+
+$execname -n $pname << EOF
+# load files
+loadfits "$COROFPMAMP" corofpmamp
+loadfits "$COROFPMPHA" corofpmpha
+loadfits "$LYOTSTOPRAMP" lyotstopreflamp
+loadfits "$LYOTSTOPRPHA" lyotstopreflpha
+loadfits "$LYOTSTOPTAMP" lyotstoptransmamp
+loadfits "$LYOTSTOPTPHA" lyotstoptransmpha
+loadfits "$LOWFSOPDMAP" lowfsopdmap
+AOsimcoroLOWFS "$CONFFILE"
+exit
+EOF

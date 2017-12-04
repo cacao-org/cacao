@@ -1,0 +1,115 @@
+#!/bin/bash
+
+
+# number of arguments to script
+NBARGS=2
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+#echo "pname = $pname"
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : MEASURE ZONAL RM SENSITIVITY $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Measures zonal response matrix efficiency (photon noise-limited sensitivity)"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <ampl[nm]> <lambda[nm]>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "        <ampl>     mode amplitude [nm]"
+echo "        <lambda>   lambda [nm]"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "     wfs_sensitivity.txt     output file"
+echo "        col #1:  mode number"
+echo "        col #2:  average mode value (should be zero)"
+echo "        col #3:  DM mode RMS (should be 1.0)"
+echo "        col #4:  WFS RMS"
+echo "        col #5:  single photon SNR, um"
+echo "        col #6:  fraction of flux used for measurement"
+echo ""
+echo " $(tput bold)NOTES:$(tput sgr0)"
+echo " The <ampl> parameter is only used to clip negative signals in the responde, as these values are non-linear"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Measure photon sensitivity of zonal response matrix\n" "$0" 
+}
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+while getopts :hH:L:N:Cc FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+
+./AOloopControl << EOF
+readshmim aol${loopnb}_DMmodes
+readshmim aol${loopnb}_dmmaskRM
+readshmim aol${loopnb}_wfsref0
+readshmim aol${loopnb}_respM
+readshmim aol${loopnb}_wfsmask
+aolzrmsens aol${loopnb}_DMmodes aol${loopnb}_dmmaskRM aol${loopnb}_wfsref0 aol${loopnb}_respM aol${loopnb}_wfsmask $1 $2 wfs_sensitivity.txt
+exitCLI
+EOF

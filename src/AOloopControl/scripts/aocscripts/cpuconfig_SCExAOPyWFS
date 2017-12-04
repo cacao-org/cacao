@@ -1,0 +1,364 @@
+#!/bin/bash
+
+# number of arguments to script
+NBARGS=0
+
+LOOPNUMBER=$( head -1 LOOPNUMBER )
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname :CONFIGURE CPU FOR LOW-LATENCY AO LOOP $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo " Configures LAN, CPU cores, CPU sets"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-ho]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo "     $(tput bold)-o$(tput sgr0)          turn OFF low-latency configuration (default is ON)"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "%20s       configure CPU for low-latency AO loop operation\n" "$0" 
+}
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+ON=1 # default
+
+while getopts :ho FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    o) 
+    echo "TURNING LOW-LATENCY SETTINGS OFF"
+	ON="0"
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+# low latency TCP
+if [ "$ON" = "1" ]
+then
+sudo ethtool -C eth2 rx-usecs 0
+sudo ethtool -C eth4 rx-usecs 0
+sudo ethtool -C eth2 tx-usecs 0
+sudo ethtool -C eth4 tx-usecs 0
+
+sudo ethtool -A eth2 autoneg off rx off tx off
+sudo ethtool -A eth4 autoneg off rx off tx off
+
+sudo /sbin/sysctl -w net.ipv2.tcp_low_latency=1
+sudo /sbin/sysctl -w net.ipv2.tcp_sack=0
+sudo /sbin/sysctl -w net.ipv2.tcp_timestamps=0
+sudo /sbin/sysctl -w net.ipv2.tcp_fastopen=1
+
+sudo /sbin/sysctl -w net.ipv4.tcp_low_latency=1
+sudo /sbin/sysctl -w net.ipv4.tcp_sack=0
+sudo /sbin/sysctl -w net.ipv4.tcp_timestamps=0
+sudo /sbin/sysctl -w net.ipv4.tcp_fastopen=1
+fi
+
+
+
+# TURN OFF HYPERTHREADING
+
+if [ "$ON" = "1" ]; then
+echo "Turn off hyperthreading"
+sudo -s << EOF
+echo 1 > /sys/devices/system/cpu/cpu0/online
+echo 1 > /sys/devices/system/cpu/cpu1/online
+echo 1 > /sys/devices/system/cpu/cpu2/online
+echo 1 > /sys/devices/system/cpu/cpu3/online
+echo 1 > /sys/devices/system/cpu/cpu4/online
+echo 1 > /sys/devices/system/cpu/cpu5/online
+echo 1 > /sys/devices/system/cpu/cpu6/online
+echo 1 > /sys/devices/system/cpu/cpu7/online
+echo 1 > /sys/devices/system/cpu/cpu8/online
+echo 1 > /sys/devices/system/cpu/cpu9/online
+echo 1 > /sys/devices/system/cpu/cpu10/online
+echo 1 > /sys/devices/system/cpu/cpu11/online
+echo 1 > /sys/devices/system/cpu/cpu12/online
+echo 1 > /sys/devices/system/cpu/cpu13/online
+echo 1 > /sys/devices/system/cpu/cpu14/online
+echo 1 > /sys/devices/system/cpu/cpu15/online
+echo 1 > /sys/devices/system/cpu/cpu16/online
+echo 1 > /sys/devices/system/cpu/cpu17/online
+echo 1 > /sys/devices/system/cpu/cpu18/online
+echo 1 > /sys/devices/system/cpu/cpu19/online
+echo 1 > /sys/devices/system/cpu/cpu20/online
+echo 1 > /sys/devices/system/cpu/cpu21/online
+echo 1 > /sys/devices/system/cpu/cpu22/online
+echo 1 > /sys/devices/system/cpu/cpu23/online
+echo 1 > /sys/devices/system/cpu/cpu24/online
+echo 1 > /sys/devices/system/cpu/cpu25/online
+echo 1 > /sys/devices/system/cpu/cpu26/online
+echo 1 > /sys/devices/system/cpu/cpu27/online
+
+echo 0 > /sys/devices/system/cpu/cpu28/online
+echo 0 > /sys/devices/system/cpu/cpu29/online
+echo 0 > /sys/devices/system/cpu/cpu30/online
+echo 0 > /sys/devices/system/cpu/cpu31/online
+echo 0 > /sys/devices/system/cpu/cpu32/online
+echo 0 > /sys/devices/system/cpu/cpu33/online
+echo 0 > /sys/devices/system/cpu/cpu34/online
+echo 0 > /sys/devices/system/cpu/cpu35/online
+echo 0 > /sys/devices/system/cpu/cpu36/online
+echo 0 > /sys/devices/system/cpu/cpu37/online
+echo 0 > /sys/devices/system/cpu/cpu38/online
+echo 0 > /sys/devices/system/cpu/cpu39/online
+echo 0 > /sys/devices/system/cpu/cpu40/online
+echo 0 > /sys/devices/system/cpu/cpu41/online
+echo 0 > /sys/devices/system/cpu/cpu42/online
+echo 0 > /sys/devices/system/cpu/cpu43/online
+echo 0 > /sys/devices/system/cpu/cpu44/online
+echo 0 > /sys/devices/system/cpu/cpu45/online
+echo 0 > /sys/devices/system/cpu/cpu46/online
+echo 0 > /sys/devices/system/cpu/cpu47/online
+echo 0 > /sys/devices/system/cpu/cpu48/online
+echo 0 > /sys/devices/system/cpu/cpu49/online
+echo 0 > /sys/devices/system/cpu/cpu50/online
+echo 0 > /sys/devices/system/cpu/cpu51/online
+echo 0 > /sys/devices/system/cpu/cpu52/online
+echo 0 > /sys/devices/system/cpu/cpu53/online
+echo 0 > /sys/devices/system/cpu/cpu54/online
+echo 0 > /sys/devices/system/cpu/cpu55/online
+exit
+EOF
+
+else
+
+
+sudo -s << EOF
+echo 1 > /sys/devices/system/cpu/cpu0/online
+echo 1 > /sys/devices/system/cpu/cpu1/online
+echo 1 > /sys/devices/system/cpu/cpu2/online
+echo 1 > /sys/devices/system/cpu/cpu3/online
+echo 1 > /sys/devices/system/cpu/cpu4/online
+echo 1 > /sys/devices/system/cpu/cpu5/online
+echo 1 > /sys/devices/system/cpu/cpu6/online
+echo 1 > /sys/devices/system/cpu/cpu7/online
+echo 1 > /sys/devices/system/cpu/cpu8/online
+echo 1 > /sys/devices/system/cpu/cpu9/online
+echo 1 > /sys/devices/system/cpu/cpu10/online
+echo 1 > /sys/devices/system/cpu/cpu11/online
+echo 1 > /sys/devices/system/cpu/cpu12/online
+echo 1 > /sys/devices/system/cpu/cpu13/online
+echo 1 > /sys/devices/system/cpu/cpu14/online
+echo 1 > /sys/devices/system/cpu/cpu15/online
+echo 1 > /sys/devices/system/cpu/cpu16/online
+echo 1 > /sys/devices/system/cpu/cpu17/online
+echo 1 > /sys/devices/system/cpu/cpu18/online
+echo 1 > /sys/devices/system/cpu/cpu19/online
+echo 1 > /sys/devices/system/cpu/cpu20/online
+echo 1 > /sys/devices/system/cpu/cpu21/online
+echo 1 > /sys/devices/system/cpu/cpu22/online
+echo 1 > /sys/devices/system/cpu/cpu23/online
+echo 1 > /sys/devices/system/cpu/cpu24/online
+echo 1 > /sys/devices/system/cpu/cpu25/online
+echo 1 > /sys/devices/system/cpu/cpu26/online
+echo 1 > /sys/devices/system/cpu/cpu27/online
+
+echo 1 > /sys/devices/system/cpu/cpu28/online
+echo 1 > /sys/devices/system/cpu/cpu29/online
+echo 1 > /sys/devices/system/cpu/cpu30/online
+echo 1 > /sys/devices/system/cpu/cpu31/online
+echo 1 > /sys/devices/system/cpu/cpu32/online
+echo 1 > /sys/devices/system/cpu/cpu33/online
+echo 1 > /sys/devices/system/cpu/cpu34/online
+echo 1 > /sys/devices/system/cpu/cpu35/online
+echo 1 > /sys/devices/system/cpu/cpu36/online
+echo 1 > /sys/devices/system/cpu/cpu37/online
+echo 1 > /sys/devices/system/cpu/cpu38/online
+echo 1 > /sys/devices/system/cpu/cpu39/online
+echo 1 > /sys/devices/system/cpu/cpu40/online
+echo 1 > /sys/devices/system/cpu/cpu41/online
+echo 1 > /sys/devices/system/cpu/cpu42/online
+echo 1 > /sys/devices/system/cpu/cpu43/online
+echo 1 > /sys/devices/system/cpu/cpu44/online
+echo 1 > /sys/devices/system/cpu/cpu45/online
+echo 1 > /sys/devices/system/cpu/cpu46/online
+echo 1 > /sys/devices/system/cpu/cpu47/online
+echo 1 > /sys/devices/system/cpu/cpu48/online
+echo 1 > /sys/devices/system/cpu/cpu49/online
+echo 1 > /sys/devices/system/cpu/cpu50/online
+echo 1 > /sys/devices/system/cpu/cpu51/online
+echo 1 > /sys/devices/system/cpu/cpu52/online
+echo 1 > /sys/devices/system/cpu/cpu53/online
+echo 1 > /sys/devices/system/cpu/cpu54/online
+echo 1 > /sys/devices/system/cpu/cpu55/online
+exit
+EOF
+
+fi
+
+
+
+
+
+
+
+
+
+
+# SYSTEM ARCHITECTURE, CPU SETS
+
+# ================ CPU 0 ====================
+# cores: 0 2 4 6 8 10 12 14 16 18 20 22 24 26
+
+# system         non real-time processes                 2 4 6 8 10 12 14 16 18 20 22
+# dmcomb         DM combine channels                     24
+# dmdrv          MEMs DM driver                          26
+
+# ================ CPU 1 ===================
+# cores: 1 3 5 7 9 11 13 15 17 19 21 23 25 27
+
+# aol0RT         real-time loop computation              3 5 7 9 11 13 15 17 19
+# aol0RT1        modal extraction (WFS output)           21
+# aol0RT2        modal processing (DM contr. channel)    23
+# aol0COM        WFS camera communication                25
+# ocamdec        ocam image decoding                     27                                                                                                       
+
+  
+if [ "$ON" = "1" ]; then
+sudo cset set --cpu 0,1,2,4,6,8,10,12,14 --set system
+#sudo cset set --cpu 22 --set LQG
+sudo cset set --cpu 24 --cpu_exclusive --set dmcomb
+sudo cset set --cpu 26 --cpu_exclusive --set dmdrv
+
+sudo cset set --cpu 3,5,7,9,11,13,15,17 --cpu_exclusive --set aol${LOOPNUMBER}RT
+sudo cset set --cpu 19 --cpu_exclusive --set aol${LOOPNUMBER}RT1
+sudo cset set --cpu 21 --cpu_exclusive --set aol${LOOPNUMBER}RT2
+sudo cset set --cpu 23,25 --cpu_exclusive --set aol${LOOPNUMBER}COM
+sudo cset set --cpu 27 --cpu_exclusive --set ocamdec
+
+sudo cset set --cpu 16,18,20 --cpu_exclusive --set aol${LOOPNUMBER}log
+
+
+# move as much as possible to system
+sudo cset proc -m -f root -t system
+sudo cset proc -k -f root -t system
+
+
+pidlist=$( pgrep aolrun|xargs echo | sed 's/ /,/g' )
+sudo cset proc -m -p $pidlist -t aol${LOOPNUMBER}RT
+
+
+pidlist=$( pgrep TCP|xargs echo | sed 's/ /,/g' )
+sudo cset proc -m -p $pidlist -t aol${LOOPNUMBER}COM
+
+pidlist=$( pgrep dmcomb|xargs echo | sed 's/ /,/g' )
+sudo cset proc -m -p $pidlist -t dmcomb
+
+pidlist=$( pgrep ocam|xargs echo | sed 's/ /,/g' )
+sudo cset proc -m -p $pidlist -t ocamdec
+
+pidlist=$( pgrep bmc|xargs echo | sed 's/ /,/g' )
+sudo cset proc -m -p $pidlist -t dmdrv
+
+
+pidlist=$( pgrep modeval|xargs echo | sed 's/ /,/g' )
+sudo cset proc -m -p $pidlist -t aol${LOOPNUMBER}RT1
+
+
+
+pidlist=$( pgrep logshim|xargs echo | sed 's/ /,/g' )
+sudo cset proc -m -p $pidlist -t aol${LOOPNUMBER}log
+
+
+
+else
+echo "Destroying CPU sets"
+sudo cset se -d LQG
+sudo cset se -d dmcomb 
+sudo cset se -d dmdrv 
+sudo cset se -d aol${LOOPNUMBER}RT 
+sudo cset se -d aol${LOOPNUMBER}RT1 
+sudo cset se -d aol${LOOPNUMBER}RT2 
+sudo cset se -d aol${LOOPNUMBER}COM 
+sudo cset se -d ocamdec
+sudo cset se -d system
+fi
+
+
+if [ "$ON" = "1" ]; then
+tmux new-session -d -s cpulatency
+tmux send-keys -t cpulatency "sudo /home/scexao/bin/setlatency 0" C-m
+else
+tmux kill-session -t cpulatency
+fi
+
+
+# show CPU sets
+cset set -l
+
+
+
+# set precision timing protocol
+if [ "$ON" = "1" ]; then
+ssh scexao@scexao2 "tmux new-session -d -s ptp" 
+ssh scexao@scexao2 "tmux send-keys -t ptp \"ls\" C-m"
+fi
+
+datestr="$( date -u )"
+echo "$datestr" > cpuconfigOK

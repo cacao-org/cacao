@@ -1,0 +1,365 @@
+#!/bin/bash
+
+#########################################################################################
+##          LINEAR HARDWARE SIMULATOR  ON                                              ##
+#########################################################################################
+
+NBARGS=0
+execname="./AOloopControl"
+statusfile="./status/stat_lsimON.txt"
+
+
+
+LHSwfsref0namefile="./conf/shmim_wfsref0linsim.name.txt"
+LHSzrepMnamefile="./conf/shmim_zrespMlinsim.name.txt"
+
+
+
+
+
+
+
+
+
+##############################################
+# FUNCTION: READ STATUS FROM FILE
+##############################################
+# arg 1: parameter name
+# arg 2: default value
+# 
+# param value is stored in variable "paramvalue"
+function StatReadStat {
+mkdir -p status
+file="./status/stat_$1.txt"
+if [ -f "$file" ]; then
+statusvalue=$( head -1 $file )
+else
+statusvalue="$2"
+echo "$2" > $file
+echo "# default value set by function StatReadStat on $( date -u )" >> $file
+fi
+}
+
+##############################################
+# FUNCTION: READ PARAMETER FROM FILE
+##############################################
+# arg 1: parameter name
+# arg 2: default value
+# 
+# param value is stored in variable "paramvalue"
+function ConfReadParam {
+file="./conf/param_$1.txt"
+if [ -f "$file" ]; then
+paramvalue=$( head -1 $file )
+else
+paramvalue="$2"
+echo "$2" > $file
+echo "# default value set by function ConfReadParam on $( date -u )" >> $file
+fi
+}
+
+
+
+
+
+
+
+
+
+
+##########################################
+# IF EMPTY, SET LHS CONF TO CURRENT CONF
+##########################################
+if [ ! -f $LHSwfsref0namefile ]; then
+cp  ./conf/shmim_wfsref0.name.txt $LHSwfsref0namefile
+fi
+
+if [ ! -f $LHSzrepMnamefile ]; then
+cp  ./conf/shmim_zrespM.name.txt $LHSzrepMnamefile
+fi
+
+
+LHSwfsref0_FITS=$( head -1 $LHSwfsref0namefile )
+LHSzrespM_FITS=$( head -1 $LHSzrepMnamefile )
+
+
+
+
+##########################################
+# READ REQUIRED PARAMETERS
+##########################################
+
+# READ LOOP NUMBER
+if [ -f LOOPNUMBER ]; then
+LOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+LOOPNUMBER="7"
+echo "$LOOPNUMBER" > LOOPNUMBER
+fi
+
+ConfReadParam linsimDelay "3000"; linsimDelay="$paramvalue" # READ LHS hardware latency [us]
+ConfReadParam linsimdt "2000"; linsimdt="$paramvalue" # READ LHS loop interval [us]
+ConfReadParam GPUlinsim "7"; GPUlinsim="$paramvalue" # READ GPU index for LHS 
+ConfReadParam DMindex "00"; DMindex="$paramvalue" # DM index 
+
+echo "GPUlinsim = $GPUlinsim"
+
+
+printHELP ()
+{
+echo
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : START LINEAR HARDWARE SIMULATOR $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo " "
+echo "Current values:"
+echo "     $(tput bold)LHS wfsref0 :$(tput sgr0)  $LHSwfsref0_FITS"
+echo "     $(tput bold)LHS zrespM  :$(tput sgr0)  $LHSzrespM_FITS"
+echo "            If current configuration is empty, script has set it to current hardware configuration"
+echo "     $(tput bold)GPUlinsim   :$(tput sgr0)  $GPUlinsim"
+echo "     $(tput bold)limsimdt    :$(tput sgr0)  $linsimdt"
+echo "     $(tput bold)linsimDelay :$(tput sgr0)  $linsimDelay"
+echo ""
+echo " "
+echo " "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [options]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "   --help -h             print (h)elp and exit"
+echo "   --help1               print 1 line summary" 
+echo "   -f                    force don't check status"
+echo "   -g <GPUindex>         set GPU device"
+echo "   -i <linsimdt>         loop interval [us]"
+echo "   -d <linsimDelay>      delay/latency [us]"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+	printf "%20s       AO Start linear hardware simulator\n" "$0" 
+}
+
+
+
+
+
+
+EXITSTATUS=0
+
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function checkDir {
+if [ -d $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function cmdexists()
+{
+  command -v "$1" >/dev/null 2>&1
+}
+
+function checkCommand {
+if cmdexists $1; then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+fi
+}
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+### Start getopts code ###
+while getopts :hfg:i:d: FLAG; do
+  case $FLAG in
+    h)  #show help
+	if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    f)
+    echo "Removing $statusfile"
+    rm $statusfile
+    ;;
+    g)
+    echo "$OPTARG" > conf/param_GPUlinsim.txt
+    GPUlinsim="${OPTARG}"
+    ;;
+    i)
+    echo "$OPTARG" > conf/param_linsimdt.txt
+    linsimdt="${OPTARG}"
+    ;;
+    d)
+    echo "$OPTARG" > conf/param_linsimDelay.txt
+    linsimDelay="${OPTARG}"
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo -e \\n"Illegal number of parameters ($NBARGS params required, $# entered)"\\n
+fi
+printHELP
+        exit
+fi
+
+
+
+
+# ======================= CHECK REQUIRED DIRS & FILES =================================
+echo ""
+checkFile $LHSwfsref0_FIT
+checkFile $LHSzrespM_FITS
+
+
+# ============================= CHECK IF COMMAND EXISTS ==========================
+
+checkFile aolconf
+checkFile $execname
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########################################
+# CHECK IF ALREADY RUNNING
+##########################################
+
+StatReadStat lsimON "OFF"; lsimONstat="$statusvalue"
+
+if [ "$lsimONstat" = " ON" ]; then
+echo ""
+echo "LHS already ON"
+echo "USE -f option to force (removes ./status/stat_lsimON.txt)"
+echo ""
+exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########################################
+# LOAD LIN SIM CALIB
+##########################################
+
+Fits2shm -c -p aol${LOOPNUMBER}_ zrespMlinsim 
+Fits2shm -c -p aol${LOOPNUMBER}_ wfsref0linsim
+
+
+
+
+
+tmuxname="aol${LOOPNUMBER}linsim"
+tmuxnameD="aol${LOOPNUMBER}linsimD"
+
+#logRunningProcess "aollinsimDelay" "$tmuxnameD" "Add delay to simulation"
+#logRunningProcess "aollindm2wfsim" "$tmuxname" "linear computation of simulated WFS from DM"
+
+sleep 0.2
+tmux new-session -d -s ${tmuxnameD}
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+
+#aoconflog "Start linear WFS simulator"
+
+tmux send-keys -t $tmuxnameD "./auxscripts/aollinsimDelay ${linsimDelay}" C-m
+tmux send-keys -t $tmuxname "./auxscripts/aollindm2wfsim -w ${linsimdt} ${GPUlinsim}" C-m
+
+# Save current (hardware) WFS camera name & write new simulated WFS camera name
+cp ./conf/streamlink_wfsim.name.txt ./conf/streamlink_wfsim_hardware.name.txt
+echo "aol${LOOPNUMBER}_linsimWFS" > ./conf/streamlink_wfsim.name.txt
+cp ./conf/instconf_dmDCum.txt > ./conf/instconf_dmDCum_hardware.txt
+
+
+# turn off DM voltage 
+$execname << EOF
+aoldmvoltOFF ${DMindex}
+aolsetdmDC ${DMindex} 0.0
+aolsetdmAveM ${DMindex} 2
+exitCLI
+EOF
+
+# set dark to zero
+$execname << EOF
+readshmim aol${LOOPNUMBER}_wfsdark
+imzero aol${LOOPNUMBER}_wfsdark
+exitCLI
+EOF
+
+# remove flat
+dmdispzero ${DMindex} 00
+
+# connect to camera
+./aolfuncs/aolfunc_StreamLink wfsim
+
+echo " ON" > $statusfile
+
+
+
+

@@ -1,0 +1,176 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+
+function startstreamlog {
+aoconflog "log $1 ON"
+echo "1" > ./status/stat_log$1.txt
+tmuxnameC="logC_$1"
+sleep 0.1
+tmux new-session -d -s $tmuxnameC
+sleep 0.1
+savedir=$( head -1 ./conf/param_savedir.txt )
+datestr=`date -u +%Y%m%d`
+mkdir -p $savedir/$datestr/$1/
+ConfReadParam LogCubeSize "1000"; LogCubeSize="$paramvalue"
+tmux send-keys -t $tmuxnameC "logshim -c aol${LOOPNUMBER}log $1 $2 $savedir/$datestr/$1/" C-m
+tmuxname="log_$1"
+sleep 0.1
+tmux new-session -d -s $tmuxname
+sleep 0.1
+tmux send-keys -t $tmuxname "logshimon $1" C-m
+}
+
+
+
+function stopstreamlog {
+aoconflog "log $1 OFF"
+echo "0" > ./status/stat_log$1.txt
+tmuxname="log_$1"
+sleep 0.1
+tmux new-session -d -s $tmuxname
+sleep 0.1
+tmux send-keys -t $tmuxname "logshimoff $1" C-m
+echo "0" > ./status/stat_log$1.txt
+}
+
+
+function killstreamlog {
+aoconflog "log $1 KILL"
+echo "0" > ./status/stat_log$1.txt
+tmuxname="log_$1"
+sleep 0.1
+tmux new-session -d -s $tmuxname
+sleep 0.1
+tmux send-keys -t $tmuxname "logshimkill $1" C-m
+tmux kill-session -t $tmuxname
+tmuxnameC="logC_$1"
+tmux kill-session -t $tmuxnameC
+echo "0" > ./status/stat_log$1.txt
+}
+
+
+ConfReadParam DMindex "00"; DMindex="$paramvalue"
+
+TELEMETRY_aol_streams="wfsim wfsref0 wfsref gainb DMmode_GAIN limitb DMmode_LIMIT multfb DMmode_MULTF"
+TELEMETRY_hardw_streams="dm${DMindex}disp dm${DMindex}disp00 dm${DMindex}disp01 dm${DMindex}disp02 dm${DMindex}disp03 dm${DMindex}disp04 dm${DMindex}disp05 dm${DMindex}disp06 dm${DMindex}disp07 dm${DMindex}disp08 dm${DMindex}disp09 dm${DMindex}disp10 dm${DMindex}disp11"
+TELEMETRY_modes_streams="modeval modeval_dm_corr modeval_dm_now modeval_dm_now_filt modeval_ol modevalPF modevalPFsync modevalPFres outPFb0 outPFb1 outPFb2 outPFb3"
+
+
+
+
+function start_Telemetrylog_all {
+
+aoconflog "start ALL telemetry logging"
+
+
+for aolstreamname in $TELEMETRY_aol_streams; do
+	streamname="aol${LOOPNUMBER}_${aolstreamname}"
+	startstreamlog ${streamname}
+	echo "startstreamlog ${streamname}"
+	echo "1" > "./status/stat_log_${streamname}.txt"
+done
+
+
+for streamname in $TELEMETRY_hardw_streams; do
+	startstreamlog $streamname
+	echo "startstreamlog ${streamname}"
+	echo "1" > "./status/stat_log_${streamname}.txt"
+done
+
+
+ConfReadParam CMMODE "0"; CMMODE="$paramvalue"
+if [ "${CMMODE}" = "0" ]; then
+for aolstreamname in $TELEMETRY_modes_streams; do
+	streamname="aol${LOOPNUMBER}_${aolstreamname}"
+	startstreamlog $streamname
+	echo "startstreamlog ${streamname}"
+	echo "1" > "./status/stat_log_${streamname}.txt"
+done
+fi
+
+}
+
+
+
+
+
+
+
+
+function stop_Telemetrylog_all {
+aoconflog "stop ALL telemetry logging"
+
+
+for aolstreamname in $TELEMETRY_aol_streams; do
+	streamname="aol${LOOPNUMBER}_$aolstreamname"
+	stopstreamlog $streamname
+	echo "0" > "./status/stat_log_${streamname}.txt"
+done
+
+
+for streamname in $TELEMETRY_hardw_streams; do
+	stopstreamlog $streamname
+	echo "0" > "./status/stat_log_${streamname}.txt"
+done
+
+
+ConfReadParam CMMODE "0"; CMMODE="$paramvalue"
+if [ "${CMMODE}" = "0" ]; then
+for aolstreamname in $TELEMETRY_modes_streams; do
+	streamname="aol${LOOPNUMBER}_$aolstreamname"
+	stopstreamlog $streamname
+	echo "0" > "./status/stat_log_${streamname}.txt"
+done
+fi
+}
+
+
+
+
+
+
+
+
+
+
+
+function kill_Telemetrylog_all {
+aoconflog "kill ALL telemetry logging"
+
+
+
+for aolstreamname in $TELEMETRY_aol_streams; do
+	streamname="aol${LOOPNUMBER}_$aolstreamname"
+	killstreamlog $streamname
+	echo "0" > "./status/stat_log_${streamname}.txt"
+done
+
+
+for streamname in $TELEMETRY_hardw_streams; do
+	killstreamlog $streamname
+	echo "0" > "./status/stat_log_${streamname}.txt"
+done
+
+
+ConfReadParam CMMODE "0"; CMMODE="$paramvalue"
+if [ "${CMMODE}" = "0" ]; then
+for aolstreamname in $TELEMETRY_modes_streams; do
+	streamname="aol${LOOPNUMBER}_$aolstreamname"
+	killstreamlog $streamname
+	echo "0" > "./status/stat_log_${streamname}.txt"
+done
+fi
+
+}
+
+
+
+

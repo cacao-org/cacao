@@ -1,0 +1,100 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+
+function TestStartTurb {
+aoconflog "TEST START TURB, DMindex = ${DMindex}"
+echo " ON" > ./status/stat_turbON.txt
+mkdir -p ./conf/turb
+tmuxname="aosim${LOOPNUMBER}dm${DMindex}turb"
+echo "tmuxname = $tmuxname"
+tmux kill-session -t $tmuxname
+sleep 0.2
+tmux new-session -d -s $tmuxname 
+sleep 0.2
+tmux send-keys -t $tmuxname "$execname -n dmturbrun" C-m
+if [ "$CPUconfRT" -eq "1" ]; then
+tmux send-keys -t $tmuxname "csetpmove system" C-m
+fi
+tmux send-keys -t $tmuxname "aoloopcontroldmturb ${DMindex}" C-m
+sleep 1
+tmuxname="aosim${LOOPNUMBER}dm${DMindex}turbctrl"
+tmux kill-session -t $tmuxname
+sleep 0.2
+tmux new-session -d -s $tmuxname
+sleep 0.2
+tmux send-keys -t $tmuxname "$execname -n dmturbctr" C-m
+if [ "$CPUconfRT" -eq "1" ]; then
+tmux send-keys -t $tmuxname "csetpmove system" C-m
+fi
+#tmux send-keys -t $tmuxname "aoloopcontroldmturampl ${DMindex} 0.1" C-m
+#tmux send-keys -t $tmuxname "aoloopcontroldmturtint ${DMindex} 10000" C-m
+#tmux send-keys -t $tmuxname "aoloopcontroldmturws ${DMindex} 1.0" C-m
+#tmux send-keys -t $tmuxname "aoloopcontroldmturlo ${DMindex} 0.0" C-m
+
+}
+
+function TestStopTurb {
+aoconflog "TEST STOP TURB"
+tmux send-keys -t aosim${LOOPNUMBER}dm${DMindex}turbctrl "exit" C-m
+tmux kill-session -t aosim${LOOPNUMBER}dm${DMindex}turbctrl
+
+tmux kill-session -t aosim${LOOPNUMBER}dm${DMindex}turb
+echo "OFF" > ./status/stat_turbON.txt
+if [ "$CPUconfRT" -eq "1" ]; then
+$execname << EOF
+csetpmove system
+readshmim dm${DMindex}disp10
+imzero dm${DMindex}disp10
+quit
+EOF
+else
+$execname << EOF
+readshmim dm${DMindex}disp10
+imzero dm${DMindex}disp10
+quit
+EOF
+fi
+}
+
+
+
+function DMturb_WriteToFile {
+echo " ON" > ./status/stat_turb2fileWriteON.txt
+
+
+tmuxname="aosim${LOOPNUMBER}dm${DMindex}mkturb"
+logRunningProcess "dmmkturb2file" "$tmuxname" "Creating DM turbulence sequence"
+tmux kill-session -t $tmuxname
+sleep 0.2
+tmux new-session -d -s $tmuxname
+sleep 0.2
+
+ConfReadParam dmturbampl "0.01"; dmturbampl="$paramvalue"
+
+ConfReadParam dmturbws "0"; dmturbws="$paramvalue"
+
+ConfReadParam dmturblo "10"; dmturblo="$paramvalue"
+
+ConfReadParam dmturbtint "1000"; dmturbtint="$paramvalue"
+
+echo "DM turb parameters:  ${DMindex} ${dmturbampl} ${dmturbws} ${dmturblo} ${dmturbtint}"
+
+tmux send-keys -t $tmuxname "$execname -n dmmkturb" C-m
+tmux send-keys -t $tmuxname "aoloopcontroldmturampl ${DMindex} ${dmturbampl}" C-m
+tmux send-keys -t $tmuxname "aoloopcontroldmturws ${DMindex} ${dmturbws}" C-m
+tmux send-keys -t $tmuxname "aoloopcontroldmturlo ${DMindex} ${dmturblo}" C-m
+tmux send-keys -t $tmuxname "aoloopcontroldmturtint ${DMindex} ${dmturbtint}" C-m
+tmux send-keys -t $tmuxname "aoloopcontroldmturb2im ${DMindex} wftout $1" C-m
+tmux send-keys -t $tmuxname "savefits wftout \"!wfturbC.fits\"" C-m
+tmux send-keys -t $tmuxname "exitCLI" C-m
+tmux send-keys -t $tmuxname "echo \"OFF\" > ./status/stat_turb2fileWriteON.txt" C-m
+tmux send-keys -t $tmuxname "rm runproc/dmmkturb2file.runproc" C-m
+}

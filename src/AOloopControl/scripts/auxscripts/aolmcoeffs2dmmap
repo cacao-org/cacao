@@ -1,0 +1,161 @@
+#! /bin/bash
+
+
+
+
+# number of arguments to script
+NBARGS=1
+loopnb=$( head -1 LOOPNUMBER 2> /dev/null)
+pname="$aol${loopnb}mc2dmmap"
+
+# ======================= PROCESS NAME =================================
+
+
+
+loopnb=$( head -1 LOOPNUMBER 2> /dev/null)
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : GPU-based  MODE COEFFS -> DM MAP $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Computes DM map from modal loop coefficients"
+echo "  Requires Open Loop modes extraction process to be running"
+echo "  Triggers on semaphore 2"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h -p <pname> -o <outputstream> -f -g <gain>] <GPU index>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)             help"
+echo "     $(tput bold)-o$(tput sgr0) <file>      set output correction map"
+echo "     $(tput bold)-f$(tput sgr0)             offload correction to aol${looop}_dmC"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <GPUindex>     GPU index"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       GPU-based  MODE COEFFS -> DM MAP\n" "$0" 
+}
+
+
+
+
+OUTMODE=0 # default output : outDM_map
+OFFLOADMODE=0
+OUTCNAME="aol${loopnb}_dmCoutfilt"
+
+# ================= OPTIONS =============================
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :ho:g:fp: FLAG; do
+  case $FLAG in
+    o) # set output correction channel
+    OUTCNAME=$OPTARG
+    OUTMODE=1
+    ;;
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    f) # offload correction to dmC
+    OFFLOADMODE=1
+    ;;
+    p)
+    pname="$OPTARG"
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+### End getopts code ###
+
+
+
+
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+csetname="aol${loopnb}RT"
+
+
+
+
+
+if [ "$OUTMODE" = "0" ]; then
+
+./AOloopControl -n $pname << EOF
+csetpmove ${csetname}
+readshmim aol${loopnb}_modeval_dm_now_filt
+readshmim aol${loopnb}_DMmodes
+readshmim aol${loopnb}_dmC
+im1=0+aol${loopnb}_dmC
+listim
+readshmim ${OUTCNAME}
+cpsh im1 ${OUTCNAME}
+listim
+aolmc2dmfilt 0 aol${loopnb}_modeval_dm_now_filt aol${loopnb}_DMmodes 2 ${OUTCNAME} $1 ${loopnb} $OFFLOADMODE
+exitCLI
+EOF
+
+else
+
+./AOloopControl -n $pname << EOF
+csetpmove ${csetname}
+readshmim aol${loopnb}_modeval_dm_now_filt
+readshmim aol${loopnb}_DMmodes
+readshmim aol${loopnb}_dmC
+im1=0+aol${loopnb}_dmC
+listim
+readshmim ${OUTCNAME}
+cpsh im1 ${OUTCNAME}
+listim
+aolmc2dmfilt 0 aol${loopnb}_modeval_dm_now_filt aol${loopnb}_DMmodes 2 ${OUTCNAME} $1 ${loopnb} $OFFLOADMODE
+exitCLI
+EOF
+
+
+fi

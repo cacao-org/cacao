@@ -1,0 +1,120 @@
+#! /bin/bash
+
+
+# number of arguments to script
+NBARGS=1
+
+# ======================= PROCESS NAME =================================
+pname="aol${loopnb}lindm2wfsim"
+
+
+loopnb=$( head -1 LOOPNUMBER 2> /dev/null)
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CONVERT DM STREAM TO WFS IMAGE $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  computes WFS image from DM stream"
+echo "  uses response matrix and WFS reference"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-hw] <GPUdevice>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)             help"
+echo "     $(tput bold)-w$(tput sgr0) <twait>     wait time per loop [us]"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <GPUdevice>     GPU device"
+echo ""
+echo " $(tput bold)AUTOMATIC INPUT:$(tput sgr0)"
+echo "     aol${loopnb}_dmdisp             input DM stream"
+echo "     aol${loopnb}_zrespMlinsim       WFS reference"
+echo "     aol${loopnb}_wfsref0linsim      zonal response matrix"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "     aol${loopnb}_linsimWFS      linear simulation WFS image"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Convert DM stream to WFS image stream\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+twaitus="0"
+
+# ================= OPTIONS =============================
+
+while getopts :hw: FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    w)
+    twaitus=$OPTARG
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+./AOloopControl -n $pname << EOF
+csetpmove aol${loopnb}RT1
+readshmim aol${loopnb}_dmdispD
+readshmim aol${loopnb}_zrespMlinsim
+readshmim aol${loopnb}_wfsref0linsim
+readshmim aol${loopnb}_wfsmask
+listim
+cudaextrmodes aol${loopnb}_dmdispD NULLim aol${loopnb}_zrespMlinsim NULLim aol${loopnb}_wfsref0linsim aol${loopnb}_linsimWFS $1 0 0 0 6 1 ${twaitus}
+exitCLI
+EOF
+

@@ -1,0 +1,397 @@
+#!/bin/bash
+
+NBARGS=0
+ERRORSTATUS="0"
+execname="./AOloopControl"
+statusfile="./status/stat_DMcombON.txt"
+
+
+
+
+
+
+
+
+
+printHELP ()
+{
+echo
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : START DM PROCESS $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo " "
+echo " "
+echo " "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [options]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "   --help -h             print (h)elp and exit"
+echo "   --help1               print 1 line summary" 
+echo "   -f                    force don't check status"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+	printf "%20s       Start DM process\n" "$0" 
+}
+
+
+
+
+EXITSTATUS=0
+
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function checkDir {
+if [ -d $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function cmdexists()
+{
+  command -v "$1" >/dev/null 2>&1
+}
+
+function checkCommand {
+if cmdexists $1; then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+fi
+}
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+### Start getopts code ###
+while getopts :hf FLAG; do
+  case $FLAG in
+    h)  #show help
+	if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    f)
+    echo "Removing $statusfile"
+    rm $statusfile
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo -e \\n"Illegal number of parameters ($NBARGS params required, $# entered)"\\n
+fi
+printHELP
+        exit
+fi
+
+
+
+
+# ======================= CHECK REQUIRED DIRS & FILES =================================
+echo ""
+
+
+# ============================= CHECK IF COMMAND EXISTS ==========================
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################
+# FUNCTION: READ STATUS FROM FILE
+##############################################
+# arg 1: parameter name
+# arg 2: default value
+# 
+# param value is stored in variable "paramvalue"
+function StatReadStat {
+mkdir -p status
+file="./status/stat_$1.txt"
+if [ -f "$file" ]; then
+statusvalue=$( head -1 $file )
+else
+statusvalue="$2"
+echo "$2" > $file
+echo "# default value set by function StatReadStat on $( date -u )" >> $file
+fi
+}
+
+
+##############################################
+# FUNCTION: READ PARAMETER FROM FILE
+##############################################
+# arg 1: parameter name
+# arg 2: default value
+# 
+# param value is stored in variable "paramvalue"
+function ConfReadParam {
+file="./conf/param_$1.txt"
+if [ -f "$file" ]; then
+paramvalue=$( head -1 $file )
+else
+paramvalue="$2"
+echo "$2" > $file
+echo "# default value set by function ConfReadParam on $( date -u )" >> $file
+fi
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##########################################
+# CHECK IF ALREADY RUNNING
+##########################################
+
+
+StatReadStat DMcombON "OFF"; DMcombONstat="$statusvalue"
+
+if [ "$DMcombONstat" = " ON" ]; then
+echo ""
+echo "DMcomb already ON"
+echo "USE -f option to force (removes ./status/stat_DMcombON.txt)"
+echo ""
+exit
+fi
+
+
+
+
+
+
+
+
+
+##########################################
+# READ REQUIRED PARAMETERS
+##########################################
+
+# READ LOOP NUMBER
+if [ -f LOOPNUMBER ]; then
+LOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+LOOPNUMBER="7"
+echo "$LOOPNUMBER" > LOOPNUMBER
+fi
+
+# READ CPUset_mode
+file="./conf/param_CPUset_mode.txt"
+if [ -a $file ]
+     then          
+     CPUset_mode=$( head -1 $file )
+     else
+     CPUset_mode=0 #default
+     echo "$CPUset_mode" > $file
+fi
+
+ConfReadParam DMindex "00"; DMindex="$paramvalue" # DM index 
+ConfReadParam DMMODE "0"; DMMODE="$paramvalue" # DM mode: 0=zonal, 1=modal
+ConfReadParam DMxsize "32"; DMxsize="$paramvalue" # DM x size 
+ConfReadParam DMysize "32"; DMysize="$paramvalue" # DM y size 
+ConfReadParam DM2DM_mode "0"; DM2DM_mode="$paramvalue" # DM-to-DM mode
+ConfReadParam DMwfsref_mode "0"; DMwfsref_mode="$paramvalue" # DMwfsref_mode (CPU-based dmcomb DM ouput applied as WFS offset)
+ConfReadParam DMcombave_mode "0"; DMcombave_mode="$paramvalue" # READ DMcombave_mode
+ConfReadParam DMvolt_mode "0"; DMvolt_mode="$paramvalue" # READ DMvolt_mode
+ConfReadParam DMdelayON "OFF"; DMdelayON="$paramvalue" # READ DM delay (optional)
+	
+
+
+
+
+
+
+
+
+
+
+
+# creates shmim aol#_dm2dmM if applicable
+./aolfuncs/aolfunc_StreamLink dm2dmM
+
+# creates shmim aol#_dm2dmO if applicable
+./aolfuncs/aolfunc_StreamLink dm2dmO
+
+# creates shmim aol#_dmwrefRM if applicable
+./aolfuncs/aolfunc_StreamLink dmwrefRM
+
+# creates shmim aol#_dmwrefO if applicable
+./aolfuncs/aolfunc_StreamLink dmwrefO
+
+
+
+# default names
+dm2dmM="aol${LOOPNUMBER}_dm2dmM"
+dm2dmO="aol${LOOPNUMBER}_dm2dmO"
+dmwrefRM="aol${LOOPNUMBER}_dmwrefRM"
+dmwrefO="aol${LOOPNUMBER}_dmwrefO"
+
+
+echo "DM2DM_mode = $DM2DM_mode"
+
+if [ ! "$DM2DM_mode" = "1" ];
+then
+    dmmodes="empty"
+    dm2dmO="empty"
+    dm2dmM="empty"
+fi
+
+
+echo "DMwfsref_mode = $DMwfsref_mode"
+
+if [ ! "$DMwfsref_mode" = "1" ];
+then
+    dmwrefRM="empty"
+    dmwrefO="empty"
+fi
+
+
+
+
+
+
+# start tmux session for dmcomb
+
+tmuxname="aol${LOOPNUMBER}dm${DMindex}comb"
+echo "tmux session :  $tmuxname"
+sleep 1
+tmux kill-session -t $tmuxname
+sleep 0.2
+tmux new-session -d -s $tmuxname
+sleep 0.2
+
+
+
+
+tmux send-keys -t $tmuxname "$execname -n aol${LOOPNUMBER}dm${DMindex}comb" C-m
+if [ "$CPUset_mode" = "1" ]; then
+tmux send-keys -t $tmuxname "csetpmove system" C-m
+fi
+    
+if [ "$DMvolt_mode" = "1" ]; then 
+tmux send-keys -t $tmuxname "readshmim dmvolt" C-m
+fi
+
+
+if [ "$DM2DM_mode" = "1" ]; then
+	tmux send-keys -t $tmuxname "readshmim ${dm2dmM}" C-m
+    tmux send-keys -t $tmuxname "readshmim ${dm2dmO}" C-m
+fi
+
+    
+if [ "${DMwfsref_mode}" = "1" ]; then
+    tmux send-keys -t $tmuxname "readshmim ${dmwrefRM}" C-m
+    tmux send-keys -t $tmuxname "readshmim ${dmwrefO}" C-m
+fi
+
+
+if [ "$DMdelayON" = " ON" ]; then
+ConfReadParam DMdelayus "1000"; DMdelayus="$paramvalue"
+tmux send-keys -t $tmuxname "DMTWAIT=${DMdelayus}" C-m
+fi
+
+
+  
+    
+# aoconflog "STARTING DMcomb"
+    
+tmux send-keys -t $tmuxname "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} dmvolt 0.0 120.0" C-m
+
+
+
+# TBD
+# aoconflog "INITIALIZING DM POKE FILES"
+#rm ./conf/RM_DMmask.fits # remove RM DM mask
+#rm ./conf/RMpokeCubeZ.fits # remove zonal poke cube
+#rm ./conf/RMpokeCube.fits # remove poke cube
+#./auxscripts/mkHpoke # make masks, poke pattern (Hadamard mode)
+    
+    
+# if DM is modal, create simple "./conf/DMmodes.fits"
+if [ "$DMMODE" = "1" ]; then
+$execname << EOF
+aolmksimplezpM ${DMxsize} ${DMysize} DMmodes
+savefits DMmodes "!./conf/aol${LOOPNUMBER}_DMmodes.fits"
+savefits DMmodes "!./conf/aol${LOOPNUMBER}_DMmodes_zonal.fits"
+exitCLI
+EOF
+echo "${DMxsize}" > ./conf/param_NBmodes.txt
+echo "conf/aol${LOOPNUMBER}_DMmodes_zonal.fits" > ./conf/shmim_DMmodes.name.txt
+Fits2shm -c -p aol${LOOPNUMBER}_ DMmodes
+fi
+    
+
+# by default, set # of blocks to 1
+file="./conf/param_NBmodeblocks.txt"
+echo "1" > $file
+NBmodeblocks=$( head -1 ./conf/param_NBmodeblocks.txt )
+
+echo " ON" > ./status/stat_DMcombON.txt
+
+
+

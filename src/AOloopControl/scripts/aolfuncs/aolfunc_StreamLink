@@ -1,0 +1,119 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=1
+
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CONNECT TO STREAM $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Connect to stream by sym link. Reads conf/streamlink_<streamname>.name.txt to identify source."
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <streamname>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)                help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <streamname>           stream name (full name: aol<loop>_<stream>)"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "  ./conf/streamlink_<streamname>.imsize.txt :   stream aimage size"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Connect to shared memory stream\n" "$0" 
+}
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+execname="./AOloopControl"
+
+file="./conf/streamlink_$1.name.txt"
+if [ -a $file ]; then
+
+# READ LOOP NUMBER
+if [ -f LOOPNUMBER ]; then
+LOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+LOOPNUMBER="7"
+fi
+
+streamname=$( head -1 $file )
+rm /tmp/aol${LOOPNUMBER}_$1.im.shm
+ln -s /tmp/${streamname}.im.shm /tmp/aol${LOOPNUMBER}_$1.im.shm
+
+
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_$1
+readshmimsize aol${LOOPNUMBER}_$1 "./conf/streamlink_$1.imsize.txt"
+exitCLI
+EOF
+
+fi
+

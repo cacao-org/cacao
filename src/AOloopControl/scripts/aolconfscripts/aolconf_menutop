@@ -1,0 +1,970 @@
+#!/bin/bash
+
+
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+
+
+# =====================================================
+# ===================== TOP MENU ======================
+# =====================================================
+
+if [ $state = "menutop" ]; then
+stateok=1
+dateUTC=$( date -u )
+#aoconflog "$0 state = ${state}"
+confselected="0" #$( head -1 "./conf/conf_CONFNUMBER.txt")
+menuname="TOP MENU\n [Active conf = ${confselected}]    [ $dateUTC ]"
+
+
+
+ConfReadParam DMcombave_mode "0"; DMcombave_mode="$paramvalue"
+
+DMindex=$( head -1 "./conf/param_DMindex.txt")
+
+
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+
+
+# =====================================================================================================================
+# =================================== DM CHANNELS AND OUTPUT (dmcomb process) =========================================
+# =====================================================================================================================
+
+stringcenter "DM CHANNELS AND OUTPUT (dmcomb process)"
+menuitems=( "1 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " ")
+
+
+menuitems+=( "S" "[${DMindex}] Set DM index" )
+
+ConfReadParam DMxsize "0"; DMxsize="$paramvalue"
+menuitems+=( "dmxs" "[${DMxsize}] Set DM x size (if modal control, = number of modes)" )
+
+ConfReadParam DMysize "0"; DMysize="$paramvalue"
+menuitems+=( "dmys" "[${DMysize}] Set DM y size (1 if modal control)" )
+
+menuitems+=( " " " " )
+menuitems+=( "nolink"  "Auto-configure: main DM  (no link)             -> DM actuators are physical actuators" )
+menuitems+=( "dmolink" "Auto-configure: DM output linked to other loop -> DM actuators represent modes" )
+menuitems+=( " " " " )
+
+
+# DM mode
+# ZONAL : physical actuators on spatial coordinates
+# MODAL : each DM actuiator represents a single WF mode
+ConfReadParam DMMODE "0"; DMMODE="$paramvalue"
+if [ "$DMMODE" = "0" ]; then
+menuitems+=( "DMmodeM" "\Zb\Zr DM is ZONAL\Zn  Modes constructed from spatial DM actuators      (select to toggle to MODAL)" )
+else
+menuitems+=( "DMmodeZ" "\Zb\Zr DM is MODAL\Zn  Each DM actuator = 1 mode                        (select to toggle to ZONAL)" )
+fi
+
+
+
+
+file="./conf/param_dm2dmModes_name.txt"
+dm2dmModesMast=$( head -1 $file )
+
+
+
+
+menuitems+=( " " " ")
+
+ConfReadParam DM2DM_mode "0"; DM2DM_mode="$paramvalue"
+if [ "${DM2DM_mode}" = "0" ];
+then
+menuitems+=( "dm2dmMode1" " [  OFF  ] DM-to-DM is OFF (select to activate virtual (modal) DM to physical DM mode)" )
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+fi
+if [ "${dm2dm_mode}" = "1" ];
+then
+menuitems+=( "dm2dmMode0" " [   ON  ] DM-to-DM is ON  (select to de-activate)" )
+
+
+
+dm2dmMfile="/tmp/aol${LOOPNUMBER}_dm2dmM.im.shm"
+if [ -f $dmd2dmMfile ]; then
+sizestring=$( head -1 conf/streamlink_dm2dmM.imsize.txt )
+streamname=$( head -1 conf/streamlink_dm2dmM.name.txt )
+OKstr="\Z2\Zr$sizestring\Zn"
+menuitems+=( "dm2dmM" "[\Z2\Zr${OKstr}\Zn] DM to DM output modes        \Z4\Zbaol${LOOPNUMBER}_dm2dmM\Zn -> \Z4${streamname}\Zn" )
+else
+OKstr="\Z1\Zb  MISSING \Zn"
+menuitems+=( "dm2dmM" "[${OKstr}] DM to DM output modes        \Z4\Zbaol${LOOPNUMBER}_dm2dmM\Zn -> \Z1${streamname}\Zn" )
+fi
+
+
+dm2dmOfile="/tmp/aol${LOOPNUMBER}_dm2dmO.im.shm"
+if [ -f $dmd2dmMfile ]; then
+sizestring=$( head -1 conf/streamlink_dm2dmO.imsize.txt )
+streamname=$( head -1 conf/streamlink_dm2dmO.name.txt )
+OKstr="\Z2\Zr$sizestring\Zn"
+menuitems+=( "dm2dmO" "[\Z2\Zr${OKstr}\Zn] DM output stream        \Z4\Zbaol${LOOPNUMBER}_dm2dmO\Zn -> \Z4${streamname}\Zn" )
+else
+OKstr="\Z1\Zb  MISSING \Zn"
+menuitems+=( "dm2dmO" "[${OKstr}] DM output stream        \Z4\Zbaol${LOOPNUMBER}_dm2dmO\Zn -> \Z1${streamname}\Zn" )
+fi
+
+
+
+fi
+
+
+
+
+ConfReadParam DMwfsref_mode "0"; DMwfsref_mode="$paramvalue"
+if [[ -f "$file" && ( "$DMwfsref_mode" = "1" || "$DMwfsref_mode" = "0" ) ]]; then
+echo "OK"
+else
+echo "0" > $file
+DMwfsref_mode=0
+fi
+
+menuitems+=( " " " ")
+if [ "${DMwfsref_mode}" = "0" ];
+then
+menuitems+=( "dmwref1" " [  OFF  ] CPU-based dmcomb output WFS ref is OFF (select for DM ouput applied as WFS offset)" )
+fi
+if [ "${DMwfsref_mode}" = "1" ];
+then
+menuitems+=( "dmwref0" " [   ON  ] CPU-based dmcomb output WFS ref is ON (select to de-activate)" )
+fi
+
+
+
+./aolfuncs/aolfunc_StreamLink dmwrefRM
+
+dmwrefRMfile="/tmp/aol${LOOPNUMBER}_dmwrefRM.im.shm"
+if [ -f $dmwrefRMfile ]; then
+sizestring=$( head -1 conf/streamlink_dmwrefRM.imsize.txt )
+streamname=$( head -1 conf/streamlink_dmwrefRM.name.txt )
+OKstr="\Z2\Zr$sizestring\Zn"
+menuitems+=( "dmwrefRM" "[\Z2\Zr${OKstr}\Zn] WFS Resp Matrix            \Z4\Zbaol${LOOPNUMBER}_dmwrefRM\Zn -> \Z4${streamname}\Zn" )
+else
+OKstr="\Z1\Zb  MISSING \Zn"
+menuitems+=( "dmwrefRM" "[${OKstr}] WFS Resp Matrix            \Z4\Zbaol${LOOPNUMBER}_dmwrefRM\Zn -> \Z1${streamname}\Zn" )
+confOK=0
+fi
+
+
+
+./aolfuncs/aolfunc_StreamLink dmwrefO
+
+dmwrefOfile="/tmp/aol${LOOPNUMBER}_dmwrefO.im.shm"
+if [ -f $dmwrefOfile ]; then
+sizestring=$( head -1 conf/streamlink_dmwrefO.imsize.txt )
+streamname=$( head -1 conf/streamlink_dmwrefO.name.txt )
+OKstr="\Z2\Zr$sizestring\Zn"
+menuitems+=( "dmwrefO" "[\Z2\Zr${OKstr}\Zn] WFS zp output stream        \Z4\Zbaol${LOOPNUMBER}_dmwrefRM\Zn -> \Z4${streamname}\Zn" )
+else
+OKstr="\Z1\Zb  MISSING \Zn"
+menuitems+=( "dmwrefO" "[${OKstr}] WFS zp output stream        \Z4\Zbaol${LOOPNUMBER}_dmwrefRM\Zn -> \Z1${streamname}\Zn" )
+confOK=0
+fi
+
+
+
+
+
+ConfReadParam DMvolt_mode "0"; DMvolt_mode="$paramvalue"
+
+
+menuitems+=( " " " ")
+if [ "${DMvolt_mode}" = "0" ];
+then
+menuitems+=( "dmvolt1" " [  OFF  ] Activate DM volt output [-> dmvolt]" )
+fi
+if [ "${DMvolt_mode}" = "1" ];
+then
+menuitems+=( "dmvolt0" " [   ON  ] De-activate DM volt output [-> dmvolt]" )
+fi
+menuitems+=( " " " ")
+
+menuitems+=( "dmcombam" "[${DMcombave_mode}] DM combination averaging mode" )
+
+
+menuitems+=( " " " ")
+
+
+ConfReadParam dmdelayus "0"; dmdelayus="$paramvalue"
+menuitems+=( "setDMdelayval" "[${dmdelayus}] Set DM delay value [us]" )
+
+ConfReadParam dmdelayON "OFF"; dmdelayON="$paramvalue"
+if [ "$dmDelayON" = " ON" ]; then
+menuitems+=( "setDMdelayOFF" "[DM delay is  ON] press to toggle DM delay to OFF state" )
+else
+menuitems+=( "setDMdelayON" "[DM delay is OFF] press to toggle DM delay to  ON state" )
+fi
+
+
+
+menuitems+=( " " " ")
+file="status/stat_initdm${DMindex}.txt"
+initDMstat=$( head -1 $file )
+if [[ -f "$file" && ( "$initDMstat" = "1" || "$initDMstat" = "0" ) ]]; then
+echo "OK"
+else
+mkdir -p ./status
+echo "0" > $file
+initDMstat=0
+fi
+
+if [ "${initDMstat}" = "0" ]; then
+menuitems+=( "initDM" "(re)-START  DM comb process (-> dm${DMindex}disp00..07  dm${DMindex}disp)" )
+else
+menuitems+=( "stopDM" "STOP  DM comb process" )
+fi
+
+menuitems+=( "monDM" "Monitor  DM comb process" )
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+
+
+
+
+
+# =====================================================================================================================
+# ===================================  AO CONFIGURE AND CONTROL =======================================================
+# =====================================================================================================================
+
+
+stringcenter "AO CONFIGURE AND CONTROL"
+menuitems+=( "2 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " ")
+
+function_controlmatrix_readparams
+
+if [ -f "runproc/FUNCTION_C0.runproc" ] || [ -f "runproc/FUNCTION_C00.runproc" ]; then
+menuitems+=( " " "\Zr\Z1CALIBRATION RUNNING\Zn" )
+menuitems+=( "stopRM" "Stop RM acquisition" )
+menuitems+=( "stopRMLO" "Stop LO RM acquisition" )
+menuitems+=( " " " " )
+else
+menuitems+=( "C0" "CALIBRATE SYSTEM [CPAmax = $cpamax] RM, CM -> staged (compute masks)" )
+menuitems+=( "C00" "   CALIBRATE SYSTEM [CPAmax = $cpamax] RM -> staged (Re-use masks)" )
+menuitems+=( "C01" "   RM -> CM (staged)" )
+menuitems+=( "C1" "ADOPT CALIBRATION: staged -> conf, SharedMem" )
+fi
+
+
+menuitems+=( " " " ")
+menuitems+=( "M" "load all (M)emory" )
+menuitems+=( "C" "(C)onfigure/link AO loop" )
+
+menuitems+=( "CM" "Modes and Control Matrix" )
+
+menuitems+=( " " " ")
+
+menuitems+=( "L" "Control AO (L)oop" )
+
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+
+
+# =====================================================================================================================
+# ================================  PREDICTIVE CONTROL & POST PROCESSING ==============================================
+# =====================================================================================================================
+
+stringcenter "PREDICTIVE CONTROL"
+menuitems+=( "3 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " ")
+menuitems+=( "P" "Predictive Control")
+# menuitems+=( "Fi" "Filtering")
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+
+
+
+# =====================================================================================================================
+# ===========================================  TEST AND MONITOR =======================================================
+# =====================================================================================================================
+
+
+stringcenter "TEST AND MONITOR"
+menuitems+=( "4 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " ")
+menuitems+=( "l" "List running AO processes, locks" )
+menuitems+=( "T" "Test mode: simulated AO system" )
+menuitems+=( "V" "View / monitor" )
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+
+# =====================================================================================================================
+# ===========================================  DATA LOGGING / ANALYSIS ================================================
+# =====================================================================================================================
+
+
+stringcenter "DATA LOGGING / ANALYSIS"
+menuitems+=( "5 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " ")
+menuitems+=( "R" "Record / analyze")
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+menuitems+=( " " " ")
+
+
+# =====================================================================================================================
+# ===========================================  CUSTOM EXTERNAL SCRIPTS ================================================
+# =====================================================================================================================
+
+
+stringcenter "CUSTOM EXTERNAL SCRIPTS"
+menuitems+=( "6 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " ")
+menuitems+=( "A" "Align")
+menuitems+=( "HC" "Hardware Control")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dialog --colors --title "AO loop top menu  - LOOP ${LOOPNAME} (${LOOPNUMBER})  [$nbwlines x $nbwcols]" \
+--ok-label "Select" \
+--cancel-label "Exit" \
+--default-item "${menutop_default}" \
+ --menu "$menuname" \
+ $nbwlines $nbwcols $nbwlines "${menuitems[@]}"  2> $tempfile
+
+
+retval=$?
+choiceval=$( head -1 $tempfile)
+menutop_default="$choiceval"
+case $retval in
+   0) # button
+	case $choiceval in
+
+# =====================================================================================================================
+# =================================== DM CHANNELS AND OUTPUT (dmcomb process) =========================================
+# =====================================================================================================================
+
+     S) 
+vali=$( echo $DMindex )
+menuitems1=( "00" "DM index = 00" )
+for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15;
+        do
+menuitems1+=( "$i" "DM index = $i" )
+done 
+
+cmd=( dialog --default-item "${vali}" --menu "Choose one:" 50 80 100 "${menuitems1[@]}" )
+DMindex=$("${cmd[@]}" 2>&1 >/dev/tty)
+echo "$DMindex" > ./conf/param_DMindex.txt
+
+echo "dm${DMindex}disp" > ./conf/streamlink_dmdisp.name.txt # total DM displacement channel
+./aolfuncs/aolfunc_StreamLink dmdisp
+
+sizestring=$( head -1 conf/streamlink_dmdisp.imsize.txt )
+read -r DMxsize DMysize <<< "$sizestring"
+echo "$DMxsize" > ./conf/param_DMxsize.txt
+echo "$DMysize" > ./conf/param_DMysize.txt
+;;
+
+	dmxs)
+exec 3>&1;DMxsize=$(dialog --inputbox "DM xsize" 0 0 "$DMxsize" 2>&1 1>&3);
+exec 3>&-;
+echo "$DMxsize" > ./conf/param_DMxsize.txt
+#aoconflog "set DMsize = $DMxsize"
+;;
+
+	dmys)
+exec 3>&1;DMysize=$(dialog --inputbox "DM ysize" 0 0 "$DMysize" 2>&1 1>&3);
+exec 3>&-;
+echo "$DMysize" > ./conf/param_DMysize.txt
+#aoconflog "set DMysize = $DMysize"
+;;
+
+    nolink)
+aoconflog "set DM nolink"
+
+DMMODE="0"
+DMMODEfile="conf/param_DMMODE.txt"
+echo "$DMMODE" > $DMMODEfile
+
+echo "0" > "./conf/param_DM2DM_mode.txt"
+echo "0" > "./conf/param_DMwfsref_mode.txt"
+echo "1" > "./conf/param_DMvolt_mode.txt"
+echo "0" > "./conf/param_DMcombave_mode.txt"
+
+echo "dm${DMindex}disp03" > ./conf/streamlink_dmC.name.txt # DM control channel
+./aolfuncs/aolfunc_StreamLink dmC
+
+echo "dm${DMindex}disp00" > ./conf/streamlink_dmO.name.txt # DM offset channel (flat) 
+./aolfuncs/aolfunc_StreamLink dmO
+
+echo "dm${DMindex}disp04" > ./conf/streamlink_dmZP0.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP0
+
+echo "dm${DMindex}disp05" > ./conf/streamlink_dmZP1.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP1
+
+echo "dm${DMindex}disp06" > ./conf/streamlink_dmZP2.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP2
+
+echo "dm${DMindex}disp07" > ./conf/streamlink_dmZP3.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP3
+
+echo "dm${DMindex}disp08" > ./conf/streamlink_dmZP4.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP4
+
+echo "dm${DMindex}disp09" > ./conf/streamlink_dmZP5.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP5
+
+echo "dm${DMindex}disp10" > ./conf/streamlink_dmZP6.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP6
+
+echo "dm${DMindex}disp11" > ./conf/streamlink_dmZP7.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP7
+
+echo "dm${DMindex}disp" > ./conf/streamlink_dmdisp.name.txt # total DM displacement channel
+./aolfuncs/aolfunc_StreamLink dmdisp
+
+echo "dm${DMindex}disp02" > ./conf/streamlink_dmRM.name.txt # DM actuation channel for RM matrix
+./aolfuncs/aolfunc_StreamLink dmRM
+;;
+
+    dmolink)
+aoconflog "set DM link"
+
+DMMODE="1"
+DMMODEfile="conf/param_DMMODE.txt"
+echo "$DMMODE" > $DMMODEfile
+
+echo "1" > "./conf/param_DM2DM_mode.txt"
+echo "1" > "./conf/param_DMwfsref_mode.txt"
+echo "0" > "./conf/param_DMvolt_mode.txt"
+echo "2" > "./conf/param_DMcombave_mode.txt"
+menuitems1=( "0" "loop 0 (directory ../AOloop0/)" )
+for i in 1 2 3 4 5 6 7 8 9;
+        do
+menuitems1+=( "$i" "loop $i (directory ../AOloop$i/)" )
+done 
+cmd=( dialog --default-item "${vali}" --menu "Choose one:" 50 80 100 "${menuitems1[@]}" )
+dmolinknb=$("${cmd[@]}" 2>&1 >/dev/tty)
+dmnb=$( head -1 ../AOloop${dmolinknb}/conf/param_DMindex.txt )
+
+
+menuitems1=( " " " " )
+for i in 0 1 2 3 4 5 6 7;
+        do
+dmolinkchan="$i"
+dmolinkchan1=$( echo $dmolinkchan | awk '{printf("%02ld", $1+4)}')
+menuitems1+=( "$i" "offset channel $i  ( dm${dmnb}disp${dmolinkchan1} )" )
+done 
+
+
+cmd=( dialog --default-item "${vali}" --menu "Choose one:" 50 80 100 "${menuitems1[@]}" )
+dmolinkchan=$("${cmd[@]}" 2>&1 >/dev/tty)
+
+
+# set external loop DM modes controlled by this loop 
+$execname << EOF
+loadfits "../AOloop${dmolinknb}/mkmodestmp/fmodes0all.fits[*,*,1:$DMxsize]" im
+savefits im "!./conf/param_dm2dmM.fits" 
+cpsh im aol${dmolinknb}_modes0_$DMxsize
+quit
+EOF
+dm2dmM="aol${dmolinknb}_modes0_$DMxsize"
+echo "$dm2dmM" > ./conf/streamlink_dm2dmM.name.txt
+./aolfuncs/aolfunc_StreamLink dm2dmM
+
+
+# symbolic link to dm channel in external loop
+dmolinkchan1=$( echo $dmolinkchan | awk '{printf("%02ld", $1+4)}')
+dm2dmO="dm${dmnb}disp${dmolinkchan1}"
+echo "$dm2dmO" > ./conf/streamlink_dm2dmO.name.txt
+./aolfuncs/aolfunc_StreamLink dm2dmO
+
+
+# external loop WFS response of modes controlled by this loop
+$execname << EOF
+loadfits "../AOloop${dmolinknb}/mkmodestmp/fmodesWFS00all.fits[*,*,1:$DMxsize]" im
+savefits im "!./conf/param_dmwrefRM.fits" 
+cpsh im aol${dmolinknb}_modesWFS0_$DMxsize
+quit
+EOF
+dmwrefRM="aol${dmolinknb}_modesWFS0_$DMxsize"
+echo "$dmwrefRM" > ./conf/streamlink_dmwrefRM.name.txt
+./aolfuncs/aolfunc_StreamLink dmwrefRM
+
+
+dmwrefO="aol${dmolinknb}_wfszpo${dmolinkchan}"
+echo "$dmwrefO" > ./conf/streamlink_dmwrefO.name.txt
+./aolfuncs/aolfunc_StreamLink dmwrefO
+
+
+echo "dm${DMindex}disp03" > ./conf/streamlink_dmC.name.txt # DM control channel
+./aolfuncs/aolfunc_StreamLink dmC
+
+echo "dm${DMindex}disp00" > ./conf/streamlink_dmO.name.txt # DM offset channel (flat) 
+./aolfuncs/aolfunc_StreamLink dmO
+
+
+echo "dm${DMindex}disp04" > ./conf/streamlink_dmZP0.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP0
+
+echo "dm${DMindex}disp05" > ./conf/streamlink_dmZP1.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP1
+
+echo "dm${DMindex}disp06" > ./conf/streamlink_dmZP2.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP2
+
+echo "dm${DMindex}disp07" > ./conf/streamlink_dmZP3.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP3
+
+echo "dm${DMindex}disp08" > ./conf/streamlink_dmZP4.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP4
+
+echo "dm${DMindex}disp09" > ./conf/streamlink_dmZP5.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP5
+
+echo "dm${DMindex}disp10" > ./conf/streamlink_dmZP6.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP6
+
+echo "dm${DMindex}disp11" > ./conf/streamlink_dmZP7.name.txt
+./aolfuncs/aolfunc_StreamLink dmZP7
+
+echo "dm${DMindex}disp" > ./conf/streamlink_dmdisp.name.txt # total DM displacement channel
+./aolfuncs/aolfunc_StreamLink dmdisp
+
+echo "dm${DMindex}disp02" > ./conf/streamlink_dmRM.name.txt # DM actuation channel for RM matrix
+./aolfuncs/aolfunc_StreamLink dmRM
+;;
+
+
+
+
+DMmodeM)
+DMMODE="1"
+DMMODEfile="conf/param_DMMODE.txt"
+echo "$DMMODE" > $DMMODEfile
+menutop_default="DMmodeZ"
+;;
+
+DMmodeZ)
+DMMODE="0"
+DMMODEfile="conf/param_DMMODE.txt"
+echo "$DMMODE" > $DMMODEfile
+menutop_default="DMmodeM"
+;;
+
+
+
+
+
+   dm2dmMode0)
+aoconflog "set dm2dm_mode = 0"
+echo "0" > "./conf/param_DM2DM_mode.txt"
+menutop_default="dm2dmMode1"
+;;
+    dm2dmMode1)
+aoconflog "set dm2dm_mode = 1"
+echo "1" > "./conf/param_DM2DM_mode.txt"
+menutop_default="dm2dmMode0"
+;;
+    dm2dmM)
+exec 3>&1;
+dm2dmM=$(dialog --inputbox "dm2dmM" 0 0 "$dm2dmM" 2>&1 1>&3);
+echo "$dm2dmM" > ./conf/streamlink_dm2dmM.name.txt
+./aolfuncs/aolfunc_StreamLink dm2dmM
+aoconflog "set dm2dm_name = $dm2dmM"
+;;
+
+    dm2dmO)
+exec 3>&1;
+dm2dmO=$(dialog --inputbox "dm2dmO" 0 0 "$dm2dmO" 2>&1 1>&3);
+exec 3>&-;
+echo "$dm2dmO" > ./conf/streamlink_dm2dmO.name.txt
+./aolfuncs/aolfunc_StreamLink dm2dmO
+aoconflog "set dm2dmO_name = $dm2dmO"
+;;
+
+    dmwref0)
+aoconflog "set dmwfsref = 0"
+echo "0" > "./conf/param_DMwfsref_mode.txt"
+menutop_default="dmwref1"
+;;
+    dmwref1)
+aoconflog "set dmwfsref = 1"
+echo "1" > "./conf/param_DMwfsref_mode.txt"
+menutop_default="dmwref0"
+;;
+
+    dmvolt0)
+aoconflog "set DMvolt_mode = 0"
+echo "0" > "./conf/param_DMvolt_mode.txt"
+menutop_default="dmvolt1"
+;;
+    dmvolt1)
+aoconflog "set DMvolt_mode = 1"
+echo "1" > "./conf/param_DMvolt_mode.txt"
+menutop_default="dmvolt0"
+;;
+
+    dmcombam)
+vali=$( echo $DMcombave_mode )
+menuitems1=( "0" "do not appy DC offset command to average, but offset combined average to mid-range, and clip displacement at >0.0" )
+menuitems1+=( "1" "apply DC offset to remove average" )
+menuitems1+=( "2" "do not apply DC offset, do not offset sum, do not clip" )
+
+cmd=( dialog --default-item "${vali}" --menu "Choose one:" 50 80 100 "${menuitems1[@]}" )
+DMcombave_mode=$("${cmd[@]}" 2>&1 >/dev/tty)
+echo "$DMcombave_mode" > ./conf/param_DMcombave_mode.txt
+aoconflog "set DMcombave_mode = ${DMcombave_mode}"
+;;
+
+	setDMdelayval)
+exec 3>&1;dmdelayus=$(dialog --inputbox "DM delay [us]" 0 0 "$DMdelayus" 2>&1 1>&3);
+exec 3>&-;
+echo "$dmdelayus" > ./conf/param_DMdelayus.txt
+aoconflog "set dmdelayus = $DMdelayus"
+;;
+
+	setDMdelayON)
+dmDelayON=" ON"
+echo "$dmDelayON" > ./conf/param_dmdelayON.txt
+menutop_default="setDMdelayOFF"
+;;
+
+	setDMdelayOFF)
+dmDelayON="OFF"
+echo "$dmDelayON" > ./conf/param_dmdelayON.txt
+menutop_default="setDMdelayON"
+;;
+
+
+	initDM)
+mkdir -p status
+file="status/stat_initdm${DMindex}.txt"
+echo "1" > $file
+./aolfuncs/aolfunc_initDM
+menutop_default="stopDM"
+;;
+
+    stopDM)
+mkdir -p status
+file="status/stat_initdm${DMindex}.txt"
+echo "0" > $file
+./aolfuncs/aolfunc_stopDM
+menutop_default="initDM"
+;;
+
+
+	monDM)
+SF="DMmonstartup"
+echo "aoloopcontroldmcombmon $DMindex" > $SF 
+echo "exit" >> $SF
+$execname -n DMmon-$1 -f DMmonfifo -s $SF
+rm $SF
+;;
+
+
+# =====================================================================================================================
+# ===================================  AO CONFIGURE AND CONTROL =======================================================
+# =====================================================================================================================
+
+
+
+C00) 
+tmuxnameC00="aol${LOOPNUMBER}calib00"
+
+RMCalibReuseMasks=1
+echo "$RMCalibReuseMasks" > "./conf/param_RMCalibReuseMasks.txt"
+
+echo "Start session ${tmuxnameC00}"
+echo " command: tmux new-session -d -s ${tmuxnameC00}"
+sleep 0.2
+tmux new-session -d -s ${tmuxnameC00}
+sleep 0.2
+echo " tmux ls | grep aol0cal"
+tmux send-keys -t ${tmuxnameC00} " " C-c
+tmux send-keys -t ${tmuxnameC00} "" C-m
+logRunningProcess "FUNCTION_C00" "$tmuxnameC00" "==== CALIBRATION ===="
+
+# START CALIBRATION: RM(s) ACQUISITION
+function_configureloop_readparams
+function_nAUTOC
+sleep 0.1
+tmux send-keys -t ${tmuxnameC00} "./auxscripts/waitonfile runproc/FUNCTION_nAUTOC.runproc" C-m
+
+tmux send-keys -t ${tmuxnameC00} "rm runproc/FUNCTION_C00.runproc" C-m
+menutop_default="stopRM"
+;;
+
+
+C01)
+# COMPUTE CM
+mkModesMODE=0; # full computation
+function_computeModesCM # in aolconf_controlmatrix_funcs
+;;
+
+
+C0)
+echo "CALIBRATE ALL"
+RMCalibReuseMasks=0
+echo "$RMCalibReuseMasks" > "./conf/param_RMCalibReuseMasks.txt"
+
+# block computeModesCM until this file is removed (will be done after RMs acquisition)
+touch ./runproc/FUNCTION_computeModesCM.lock
+if [ $C0test -eq 0 ]; then
+touch ./runproc/FUNCTION_SharedMemLoadCM.lock
+fi
+
+tmuxnameC0="aol${LOOPNUMBER}caliball"
+sleep 0.2
+tmux new-session -d -s ${tmuxnameC0}
+sleep 0.2
+tmux send-keys -t ${tmuxnameC0} " " C-c
+tmux send-keys -t ${tmuxnameC0} "" C-m
+logRunningProcess "FUNCTION_C0" "$tmuxnameC0" "==== CALIBRATION ===="
+
+# START CALIBRATION: RM(s) ACQUISITION
+function_configureloop_readparams
+
+function_nAUTOC
+
+sleep 0.1
+tmux send-keys -t ${tmuxnameC0} "./auxscripts/waitonfile runproc/FUNCTION_nAUTOC.runproc" C-m
+
+# COMPUTE CM
+mkModesMODE=0; # full computation
+tmux send-keys -t ${tmuxnameC0} "aoconflogext \"START control matrix computation mkModesMODE 0\"" C-m
+tmux send-keys -t ${tmuxnameC0} "rm ./runproc/FUNCTION_computeModesCM.lock" C-m
+function_computeModesCM
+
+tmux send-keys -t ${tmuxnameC0} "rm runproc/FUNCTION_C0.runproc" C-m
+menutop_default="stopRM"
+;;
+
+
+
+stopRM)
+pkill -USR2 aol${LOOPNUMBER}zrespM
+menutop_default="stopRMLO"
+;;
+
+
+
+stopRMLO)
+pkill -USR2 aol${LOOPNUMBER}LOrespM
+;;
+
+
+
+	C1) # ADOPT CALIBRATION
+tmuxnameC0="aol${LOOPNUMBER}caliball"
+tmux send-keys -t ${tmuxnameC0} " " C-c
+tmux send-keys -t ${tmuxnameC0} "" C-m
+
+touch ./runproc/FUNCTION_SharedMemLoadCM.lock
+# SELECT CONFIGURATION NAME
+mkdir -p ./CONF
+CALIBdatestr=`date -u +%Y-%m-%d_%H:%M:%S`
+
+if [ -f "./conf/conf_loopconfname.txt" ]; then
+loopconfname=$( head -1 ./conf/conf_loopconfname.txt)
+else
+loopconfname=""
+fi
+
+dialog --title "Select Configuration" --title "Select Configuration" --ok-label "Select" \
+--cancel-label "Exit" --fselect "./CONF/${CALIBdatestr}_${loopconfname}" $nbwlines $nbwcols 2> $tempfile
+retval="$?"
+confname=$( head -1 $tempfile)
+
+aoconflogext "SAVE configuration to ${confname}"
+echo "saving to ${confname}   tempfile = $tempfile"
+echo "${confname}" > ./status/confname.txt
+aoconflog "CONFIGURATION ${confname}"
+
+
+
+# IF LOOP IS ON - TURN IT OFF HERE
+procONstat=$( head -1 ./status/stat_procON.txt )
+procONstat_old="$procONstat"
+loopONstat=$( head -1 ./status/stat_loopON.txt )
+loopONstat_old="$loopONstat"
+if [ "$procONstat" = " ON" ]; then
+ if [ "$loopONstat" = " ON" ]; then
+  tmux send-keys -t ${tmuxnameC0} "# loopONstat = 1 -> TURNING OFF LOOP" C-m
+  function_LOOP_OFF ${tmuxnameC0}
+  sleep 0.5
+ fi
+ tmux send-keys -t ${tmuxnameC0} "# procONstat = 1 -> TURNING OFF PROCESSES" C-m
+ function_AOloopProcess_OFF ${tmuxnameC0}
+else
+tmux send-keys -t ${tmuxnameC0} "# loopONstat = 0 -> PROCEEDING" C-m
+fi
+
+
+# UPDATE CONFIGURATION (staged -> conf)
+tmux send-keys -t ${tmuxnameC0} "aoconflogext \"Update all configuration files\"" C-m
+tmux send-keys -t ${tmuxnameC0} "cp ./conf_staged/*.txt ./conf/" C-m
+
+
+# LOAD CALIBRATION (conf -> shared mem) 
+tmux send-keys -t ${tmuxnameC0} "./aolconfscripts/aollog -e \"$LOOPNAME\" \"Update calibration configuration files\"" C-m
+# zonal calib
+for imname in $RMZONALCALIBlist
+do
+tmux send-keys -t ${tmuxnameC0} "Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}" C-m	
+done
+# modal calib
+for imname in $RMMODALCALIBlist
+do
+tmux send-keys -t ${tmuxnameC0} "Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}" C-m	
+done
+
+
+# SAVE CONFIGURATION
+tmux send-keys -t ${tmuxnameC0} "mkdir -p \"${confname}\"" C-m	
+tmux send-keys -t ${tmuxnameC0} "cp conf/*.txt \"${confname}/\"" C-m	
+tmux send-keys -t ${tmuxnameC0} "cp conf/*.fits.gz \"${confname}/\"" C-m	
+
+
+
+confnameloaded=${confname}
+echo "$confnameloaded" > conf/conf_conflastloaded_name.txt
+confloadedtime=$( date -u )
+echo "$confloadedtime" > conf/conf_conflastloaded_time.txt
+
+
+# LOAD CM (conf -> shared mem)
+tmux send-keys -t ${tmuxnameC0} "./auxscripts/waitonfile runproc/aolmkmodes.runproc" C-m # waiting for mkmodes to complete
+tmux send-keys -t ${tmuxnameC0} "rm ./runproc/FUNCTION_SharedMemLoad.lock" C-m
+function_SharedMemLoad
+
+
+# IF LOOP WAS ON, RESTART HERE
+if [ "$procONstat_old" = " ON" ]; then
+ tmux send-keys -t ${tmuxnameC0} "# TURNING PROCESSES BACK ON" C-m
+ function_AOloopProcess_ON ${tmuxnameC0}
+ sleep 20
+ if [ "$loopONstat_old" = " ON" ]; then
+  tmux send-keys -t ${tmuxnameC0} "# TURNING LOOP BACK ON" C-m
+  function_LOOP_ON ${tmuxnameC0}
+ else
+  tmux send-keys -t ${tmuxnameC0} "# LEAVING LOOP OFF" C-m
+ fi
+else
+tmux send-keys -t ${tmuxnameC0} "# LEAVING PROCESSES OFF" C-m
+fi
+
+;;
+
+
+
+	M)
+AOloadMem 1
+# AOloadMem is in ./aolconf
+;;
+
+
+   	 C) state="menuconfigureloop";;
+   	 
+  	 CM) state="menucontrolmatrix";;
+   	    
+   	 L) state="menucontrolloop";;
+   	 CM) state="menucontrolmatrix";;
+   	 
+
+# =====================================================================================================================
+# ================================  PREDICTIVE CONTROL & POST PROCESSING ==============================================
+# =====================================================================================================================
+   	 
+   	 P) state="menupredictivecontrol";;
+   	 Fi) state="menudmCfiltering";;
+   	 
+# =====================================================================================================================
+# ===========================================  TEST AND MONITOR =======================================================
+# =====================================================================================================================   	 
+	l)
+	xterm  -geometry 200x40 -e ./auxscripts/listrunproc &
+	;;
+   	 T) state="menutestmode"   ;;
+   	 V) state="menuview" ;;
+
+# =====================================================================================================================
+# ===========================================  DATA LOGGING / ANALYSIS ================================================
+# =====================================================================================================================
+	R) state="menurecord" ;;
+
+
+# =====================================================================================================================
+# ===========================================  CUSTOM EXTERNAL SCRIPTS ================================================
+# =====================================================================================================================
+   	 A) state="menualign";;
+   	 HC) state="menuhardwarecontrol";;
+
+	esac;;
+   1) state="menuexit";;   
+   255) state="menuexit";;
+esac
+fi
+
+
+
+
+
+
+
+
+if [ $state = "menualign" ]; then
+stateok=1
+. ./aocscripts/aoAlign_${LOOPNAME}.bash
+state="menutop"
+fi
+
+
+
+
+if [ $state = "menuhardwarecontrol" ]; then
+stateok=1
+. ./aocscripts/aoHardCtrl_${LOOPNAME}.bash
+state="menutop"
+fi
+
+
+
+
+
+
+

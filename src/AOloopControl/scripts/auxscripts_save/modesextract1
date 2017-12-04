@@ -1,0 +1,32 @@
+#! /bin/bash
+
+
+EXPECTED_ARGS=1
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "------- EXTRACT MODE VALUES FROM CM OUTPUT ---------"
+  echo 
+  echo "Usage:  $0 <GPUdevice>"
+  echo
+fi
+
+
+loopnb=$(cat LOOPNUMBER)
+
+pname="aol${loopnb}modeval1"
+
+
+Cfits -n $pname << EOF
+csetpmove aol${loopnb}RT2
+loadfits "conf/aol${loopnb}_DMmodes.fits" DMmodes
+readshmim aol${loopnb}_meas_act
+readshmim aol${loopnb}_dmC
+readshmim aol${loopnb}_mfiltmult
+creaim aol${loopnb}_gainarray 50 1
+readshmim aol${loopnb}_dmmask
+readshmim dmfiltact
+listim
+cudaextrmodes aol${loopnb}_dmC DMmodes aol${loopnb}_gainarray aol${loopnb}_modevalc $1 1 aol${loopnb}_mfiltmult aol${loopnb}_dmC aol${loopnb}_dmmask
+exit
+EOF

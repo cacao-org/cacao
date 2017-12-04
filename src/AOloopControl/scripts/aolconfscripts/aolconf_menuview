@@ -1,0 +1,113 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+# =====================================================
+# ======== VIEW STREAMS  ============================
+# =====================================================
+
+if [ $state = "menuview" ]; then
+stateok=1
+
+menuname="VIEW MODE"
+
+
+stringcenter "HELP"
+menuitems=( "H" "\Zb\Zr\Z4$string\Zn" )
+menuitems+=( " " " " )
+
+
+stringcenter "CALIBRATION"
+menuitems+=( "1 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( "wfsref0" "WFS reference (uncorrected)" )
+menuitems+=( "wfsref" "WFS reference includes zero point offset" )
+menuitems+=( "DMmodes" "DM modes" )
+menuitems+=( "respM" "modal response matrix" )
+menuitems+=( "contrM" "modal control matrix" )
+menuitems+=( " " " " )
+
+
+stringcenter "WFS input -> signal"
+menuitems+=( "2 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( "wfsim" "Wavefront sensor image stream  " )
+menuitems+=( "imWFS0" "WFS image, dark subtracted" )
+menuitems+=( "imWFS1" "WFS image, dark subtracted, normalized" )
+menuitems+=( "imWFS2" "WFS signal (WFS1-reference)" )
+menuitems+=( " " " " )
+
+stringcenter "DM"
+menuitems+=( "3 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( "dmC" "DM control channel" )
+menuitems+=( "dmdisp" "DM total displacement" )
+
+
+
+dialog --colors --title "VIEW MODE  - LOOP ${LOOPNUMBER}" \
+--ok-label " Monitor " \
+--extra-button --extra-label "view" \
+--cancel-label "Top" \
+--help-button --help-label "Exit" \
+--default-item "${menutestmode_default}" \
+ --menu "$menuname" \
+ $nbwlines $nbwcols 100 "${menuitems[@]}"  2> $tempfile
+
+
+retval=$?
+choiceval=$( head -1 $tempfile)
+menutestmode_default="$choiceval"
+state="menuview"
+case $retval in
+   0) # Monitor
+	case $choiceval in
+   	 H)
+dialog --colors --title "Help" --msgbox 'View shared memory streams / monitor loop\n
+\n
+\Z4\Zbaol#_dmC\Zn : DM control channel\n
+             sem0post : ANY input\n
+             sem0wait : DM comb\n
+' $nbwlines $nbwcols 
+menutestmode_default="H"
+;;
+  	 wfsref0)shmimmon aol${LOOPNUMBER}_wfsref0;;
+  	 wfsref)shmimmon aol${LOOPNUMBER}_wfsref;;
+	DMmodes)shmimmon aol${LOOPNUMBER}_DMmodes;;
+	respM)shmimmon aol${LOOPNUMBER}_respM;;
+	contrM)shmimmon aol${LOOPNUMBER}_contrM;;
+   	 wfsim)shmimmon aol${LOOPNUMBER}_wfsim;;   
+   	 imWFS0)shmimmon aol${LOOPNUMBER}_imWFS0;;   
+   	 imWFS1)shmimmon aol${LOOPNUMBER}_imWFS1;;   
+   	 imWFS2)shmimmon aol${LOOPNUMBER}_imWFS2;;   
+   	 dmC)shmimmon aol${LOOPNUMBER}_dmC;;   
+   	 dmdisp)shmimmon aol${LOOPNUMBER}_dmdisp;;   
+	esac
+;;
+  3) # View
+	case $choiceval in
+     	 wfsref0)shmimview /tmp/aol${LOOPNUMBER}_wfsref0.im.shm > /dev/null &;;
+     	 wfsref)shmimview /tmp/aol${LOOPNUMBER}_wfsref.im.shm > /dev/null &;;
+	DMmodes)shmimview /tmp/aol${LOOPNUMBER}_DMmodes.im.shm > /dev/null &;;	
+     	 respM)shmimview /tmp/aol${LOOPNUMBER}_respM.im.shm > /dev/null &;;
+     	 contrM)shmimview /tmp/aol${LOOPNUMBER}_contrMM.im.shm > /dev/null &;;
+   	 wfsim)shmimview /tmp/aol${LOOPNUMBER}_wfsim.im.shm > /dev/null &;;
+   	 imWFS0)shmimview /tmp/aol${LOOPNUMBER}_imWFS0.im.shm > /dev/null &;;
+   	 imWFS1)shmimview /tmp/aol${LOOPNUMBER}_imWFS1.im.shm > /dev/null &;;
+   	 imWFS2)shmimview /tmp/aol${LOOPNUMBER}_imWFS2.im.shm > /dev/null &;;
+   	 dmC)shmimview /tmp/aol${LOOPNUMBER}_dmC.im.shm 8 > /dev/null &;;
+   	 dmdisp)shmimview /tmp/aol${LOOPNUMBER}_dmdisp.im.shm 8 > /dev/null &;;
+
+esac
+;; 
+   1) state="menutop";;   
+  2) state="menuexit";;
+   255) state="menuexit";;
+esac
+
+fi
+
+

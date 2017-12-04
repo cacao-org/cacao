@@ -1,0 +1,131 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+
+
+function initDMfunc {
+    aoconflog "start initDM ${DMindex}"
+    file="./conf/param_dm${DMindex}xsize.txt"
+    if [ -a $file ]
+        then
+        dmxsize=$(echo "$( head -1 $file )")
+        else
+        dmxsize=32 #default
+        fi
+    file="./conf/param_dm${DMindex}ysize.txt"
+    if [ -a $file ]
+         then          
+         dmysize=$(echo "$( head -1 $file )")
+         else
+         dmysize=32 #default
+         fi
+
+    echo "dm2dm_mode = $dm2dm_mode"
+    if [ ! "$dm2dm_mode" = "1" ];
+    then
+    dmmodes="empty"
+    dm2dmO="empty"
+    dm2dmM="empty"
+    fi
+    echo "dmwfsrefmode = $dmwfsrefmode"
+    if [ ! "$dmwfsrefmode" = "1" ];
+    then
+    dmwrefRM="empty"
+    dmwrefO="empty"
+    fi
+
+
+# start main DM channels
+    tmuxname="aol${LOOPNUMBER}dm${DMindex}comb"
+    echo "tmux session :  $tmuxname"
+    sleep 1
+    tmux kill-session -t $tmuxname
+    sleep 0.2
+    tmux new-session -d -s $tmuxname
+	sleep 0.2
+    tmux send-keys -t $tmuxname "$execname -n aol${LOOPNUMBER}dm${DMindex}comb" C-m
+    if [ "$CPUconfRT" -eq "1" ]; then
+    tmux send-keys -t $tmuxname "csetpmove system" C-m
+    fi
+    if [ "$dmvoltmode" = "1" ]; then 
+    tmux send-keys -t $tmuxname "readshmim dmvolt" C-m
+    fi
+    if [ "$dm2dm_mode" = "1" ]; then
+    tmux send-keys -t $tmuxname "readshmim ${dm2dmM}" C-m
+    tmux send-keys -t $tmuxname "readshmim ${dm2dmO}" C-m
+    fi
+    if [ "${dmwfsrefmode}" = "1" ]; then
+    tmux send-keys -t $tmuxname "readshmim ${dmwrefRM}" C-m
+    tmux send-keys -t $tmuxname "readshmim ${dmwrefO}" C-m
+    fi
+
+
+	if [ -f "./conf/param_dmdelayON.txt" ]; then
+	dmDelayON=$( head -1 ./conf/param_dmdelayON.txt )
+	else
+	dmDelayON="OFF"
+	fi
+	
+	if [ "$dmDelayON" = " ON" ]; then
+	if [ -f "./conf/param_dmdelayus.txt" ]; then
+	dmdelayus=$( head -1 ./conf/param_dmdelayus.txt )
+	tmux send-keys -t $tmuxname "DMTWAIT=${dmdelayus}" C-m
+	fi
+	fi
+
+  
+    
+    aoconflog "STARTING DM COM"
+    
+    tmux send-keys -t $tmuxname "aolcontrolDMcomb ${DMindex} ${dmxsize} ${dmysize} 12 ${dmcombavemode} $dm2dm_mode ${dm2dmM} ${dm2dmO} ${dmwfsrefmode} ${dmwrefRM} ${dmwrefO} ${dmvoltmode} dmvolt 0.0 120.0" C-m
+    
+    aoconflog "INITIALIZING DM POKE FILES"
+    rm ./conf/RM_DMmask.fits # remove RM DM mask
+    rm ./conf/RMpokeCubeZ.fits # remove zonal poke cube
+    rm ./conf/RMpokeCube.fits # remove poke cube
+    ./auxscripts/mkHpoke # make masks, poke pattern (Hadamard mode)
+    
+    # if DM is modal, create simple "./conf/DMmodes.fits"
+    if [ "$DMMODE" = "MODAL" ]; then
+./AOloopControl << EOF
+aolmksimplezpM ${DMxsize} ${DMysize} DMmodes
+savefits DMmodes "!./conf/aol${LOOPNUMBER}_DMmodes.fits"
+savefits DMmodes "!./conf/aol${LOOPNUMBER}_DMmodes_zonal.fits"
+exitCLI
+EOF
+    fi
+    
+    # by default, set # of blocks to 1 
+	file="./conf/conf_NBmodeblocks.txt"
+    echo "1" > $file
+    NBmodeblocks=$( head -1 ./conf/conf_NBmodeblocks.txt )
+}
+
+
+function stopDMfunc {
+    aoconflog "stop initDM ${DMindex}"
+    tmuxname="aol${LOOPNUMBER}dm${DMindex}comboff"
+    tmux kill-session -t $tmuxname
+    sleep 0.2
+    tmux new-session -d -s $tmuxname
+    sleep 0.2
+    tmux send-keys -t $tmuxname "$execname -n aol${LOOPNUMBER}dm${DMindex}comboff" C-m
+    tmux send-keys -t $tmuxname "aoloopcontroldmcomboff ${DMindex}" C-m
+    tmux send-keys -t $tmuxname "exit" C-m
+    tmux send-keys -t $tmuxname "exit" C-m
+#    tmux kill-session -t $tmuxname # not necessary - just making sure
+    tmuxname="aol${LOOPNUMBER}dm${DMindex}comb"
+    tmux send-keys -t $tmuxname "exit" C-m
+    tmux send-keys -t $tmuxname "exit" C-m
+#    tmux kill-session -t $tmuxname # not necessary - just making sure
+}
+
+
+

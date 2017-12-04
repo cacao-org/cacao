@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# args: <confindex> <beta coeff> <max nb modes removed>
+EXPECTED_ARGS=4
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo
+  echo "-------- create control matrixes from/in ./tmp/ directory ------------"
+  echo "Usage:  $0 <beta coeff> <max nb modes removed> <modestep> <conf#>"
+  echo "   INPUT:  <beta coeff>           : Beta coefficient (typically 0.5 to 4.0), enhances low order aberrations for SVD"
+  echo "   INPUT:  <max number modes removed> : will generate matrixes with 0, 10, 20, .... number of modes removed until max number reached"
+  echo "   INPUT   <modestep>            : incremental step for number of modes removed"
+  echo " EXAMPLE: $0 4.0 20 5 003"
+  echo
+  exit
+fi
+
+
+
+loopnb=$(cat LOOPNUMBER)
+confnb=$4
+
+pname0=$0
+pname=${pname0#"./"}-$loopnb
+
+cp ./comf${confnb}/modesfreqcpa.fits .
+
+
+Cfits -n pname << EOF
+aolnb $loopnb
+loadfits "./conf${confnb}/RMmask.fits" RMmask
+loadfits "./conf${confnb}/respm.fits" respm
+loadfits "./conf${confnb}/fmodes.fits" modesM
+aolcmmake $2 respm cmat $1 $3
+savefits evecM "!./conf${confnb}/evecM.fits"
+exit
+EOF
+mkdir -p ./conf${confnb}/cmat/
+mv cmat_*_*.fits ./conf${confnb}/cmat/
+mv evecM.fits ./conf${confnb}/cmat/evecM_$1.fits
+mv eigenv.dat ./conf${confnb}/cmat/eigenv_$1.dat
+mv eigenmodesM*.fits ./conf${confnb}/
+mv eigenmodesrespM*.fits ./conf${confnb}/
