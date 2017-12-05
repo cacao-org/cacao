@@ -1057,7 +1057,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
         {
 #ifdef _PRINT_TEST
-            printf("TEST - CM mult: GPU=1, CMMODE=0 - using matrix %s    GPU alpha beta = %f %f\n", data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, GPU_alpha, GPU_beta);
+            printf("TEST - CM mult: GPU=1, CMMODE=0 - using matrix %s    GPU alpha beta = %f %f\n", data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta);
             fflush(stdout);
 #endif
 
@@ -1112,7 +1112,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
             if(AOconf[loop].GPUall == 1)
-                GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], GPU_alpha, GPU_beta, 1, 25);
+                GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
             else
                 GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
         }
@@ -1219,7 +1219,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
                 if(AOconf[loop].GPUall == 1)
-                    GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], GPU_alpha, GPU_beta, 1, 25);
+                    GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
                 else
                     GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
 
@@ -1307,38 +1307,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     return(0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

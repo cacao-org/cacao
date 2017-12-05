@@ -37,8 +37,9 @@ AOloopControl_read_param.lo: AOloopControl_read_param.c \
  /home/rts/GitHub/cacao/src/ImageStreamIO/ImageStruct.h \
  /usr/include/fcntl.h /usr/include/bits/fcntl.h \
  /usr/include/bits/fcntl-linux.h /usr/include/bits/uio.h \
- /usr/include/bits/stat.h /usr/include/sys/mman.h \
- /usr/include/bits/mman.h
+ /usr/include/bits/stat.h /usr/include/string.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/sys/mman.h /usr/include/bits/mman.h
 
 /usr/include/stdc-predef.h:
 
@@ -185,6 +186,12 @@ AOloopControl.h:
 /usr/include/bits/uio.h:
 
 /usr/include/bits/stat.h:
+
+/usr/include/string.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
 
 /usr/include/sys/mman.h:
 

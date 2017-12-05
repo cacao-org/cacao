@@ -15,7 +15,9 @@
 #define _GNU_SOURCE
 
 #include "AOloopControl.h"
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 //libraries created by O. Guyon 
 #include "CommandLineInterface/CLIcore.h"
