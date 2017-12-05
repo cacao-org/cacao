@@ -1,0 +1,164 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=2
+
+
+pname="aolARPFautoApply"
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : Automatic update of AR linear predictive filter $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Uses pseudo-open loop telemetry"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <block> <PForder>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo "     $(tput bold)-a$(tput sgr0)          Apply all blocks"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <block>            block number (ignored if -a option)"
+echo "     <PForder>          filter order"
+echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "    $0 0 2.36 6"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+
+echo ""
+echo " $(tput bold)NOTES:$(tput sgr0)"
+
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Apply real-time AR linear predictive filter\n" "$0" 
+}
+
+
+EXITSTATUS=0
+
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+ALLBLOCKS=0
+
+while getopts :hau: FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    a) # all blocks
+    ALLBLOCKS=1
+    ;;
+    u) # update coeff
+    updatecoeff="$OPTARG"
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+echo ""
+exit
+else
+echo ""
+fi
+
+
+block="$1"
+PForder="$2"
+
+loopnb=$( head -1 LOOPNUMBER )
+offset="0"
+semtrig="2"
+
+if [ "$ALLBLOCKS" = "1" ]; then 
+PFmatname="PFmat${loopnb}"
+offset="0"
+outPFmodevalname="aol${loopnb}_modevalPF"
+else
+PFmatname="PFmat${loopnb}_${block}"
+offset=$( head -1 ./conf/conf_blockoffset_${block}.txt )
+outPFmodevalname="aol${loopnb}_modevalPF_block${block}"
+fi
+
+if [ -f "conf/conf_GPU_ARPF.txt" ]; then
+nbGPU=$( head -1 conf/conf_GPU_ARPF.txt )
+else
+nbGPU="0"
+fi
+
+./AOloopControl << EOF
+readshmim aol${loopnb}_modeval_ol
+readshmim ${PFmatname}
+semt=${semtrig}+${block}
+linARApplyRT aol${loopnb}_modeval_ol ${offset} semt ${PFmatname} ${PForder} ${outPFmodevalname} ${nbGPU} ${loopnb}
+exitCLI
+EOF
+
+
+
+
+

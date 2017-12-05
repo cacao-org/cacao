@@ -1,0 +1,167 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=4
+
+
+pname="aolApplyARPFblock"
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname :  Apply AR linear predictive filter (single block) $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Uses pseudo-open loop telemetry"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <telemetry log> <PFname> <block> <latency>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <telemetry log>     pseudo-open loop WFS telemetry"
+echo "     <PFname>            predictive filter"
+echo "     <block>             block number"
+echo "     <latency>           latency [frame]"
+echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "    $0 wfsmodes_ol_C.fits Pfilt.fits 3 2.36"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "       ./PredictiveControl/outPFrec.<block>.fits            reconstructed (prediction)"
+echo "       ./PredictiveControl/outPFf.<block>.fits              time-shifted measurement"
+echo ""
+echo " $(tput bold)NOTES:$(tput sgr0)"
+echo "   outPF is a 3D image"
+echo "      ii axis (x, horizontal): input telemetry index"
+echo "      jj axis (y, vertical)  : output telemetry index (predicted variable)"
+echo "      kk axis (z, depth)     : time step (into the past)"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Apply AR linear predictive filter (single block)\n" "$0" 
+}
+
+
+EXITSTATUS=0
+
+
+
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+# ======================= CHECK REQUIRED FILES =================================
+echo ""
+checkFile $1
+checkFile $2
+
+
+
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+echo ""
+exit
+else
+echo ""
+fi
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+
+./AOloopControl -n aol${loopnb}scangain << EOF
+readshmim aol${loopnb}_mode_blknb
+loadfits "$1" olwfsmeas
+mselblock olwfsmeas aol${loopnb}_mode_blknb $3 olwfsmeasblk
+loadfits "$2" Pfilt
+applyARpfilt Pfilt olwfsmeasblk $4 outrec
+savefits outrec "!./PredictiveControl/outPFrec.$3.fits"
+savefits outf "!./PredictiveControl/outPFf.$3.fits"
+res=outrec-outf
+imstats res
+imstats olwfsmeasblk
+exitCLI
+EOF
+
+

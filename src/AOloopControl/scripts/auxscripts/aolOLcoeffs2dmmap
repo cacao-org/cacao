@@ -1,0 +1,125 @@
+#! /bin/bash
+
+
+
+
+# number of arguments to script
+NBARGS=1
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+loopnb=$( head -1 LOOPNUMBER 2> /dev/null)
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : GPU-based open loop mode coeff -> DM MAP $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Computes DM map from open loop modal coefficients"
+echo "  Requires open loop reconstruction process to be running"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h -o <outputstream>] <GPU index>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)             help"
+echo "     $(tput bold)-o$(tput sgr0) <file>      set output correction map"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <GPUindex>     GPU index"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "     aol${loopnb}_dmOLout     output DM stream (default)"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       GPU-based open loop coeffs -> DM MAP\n" "$0" 
+}
+
+
+
+
+OUTMODE=0 # default output : outDM_map
+OUTCNAME="aol${loopnb}_dmOLout"
+
+# ================= OPTIONS =============================
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :ho: FLAG; do
+  case $FLAG in
+    o) # set output correction channel
+    OUTCNAME=$OPTARG
+    ;;
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+### End getopts code ###
+
+
+
+
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+./AOloopControl -n $pname << EOF
+readshmim aol${loopnb}_modeval_ol
+readshmim aol${loopnb}_DMmodes
+
+readshmim aol${loopnb}_dmC
+im=aol${loopnb}_dmC+0
+cpsh im $OUTCNAME
+
+aolmc2dmfilt 0 aol${loopnb}_modeval_ol aol${loopnb}_DMmodes 2 ${OUTCNAME} $1 ${loopnb} 0
+exitCLI
+EOF

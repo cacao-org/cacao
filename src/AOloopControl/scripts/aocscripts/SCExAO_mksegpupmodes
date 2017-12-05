@@ -1,0 +1,12 @@
+#!/bin/bash
+
+Cfits << EOF
+loadfits "conf/aol0_dmmap.fits" dmmap
+loadfits "dmmask.fits" dmmask
+scexaomksegmodes dmmap pupseg
+savefits pupseg "!pupsegmodes.fits"
+exit
+EOF
+
+mv pupsegmodes.fits extrablockM.fits
+

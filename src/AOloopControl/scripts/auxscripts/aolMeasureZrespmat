@@ -1,0 +1,152 @@
+#! /bin/bash
+
+# number of arguments to script
+NBARGS=5
+
+
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : ACQUIRE ZONAL RESPONSE MATRIX $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  measures system zonal response matrix"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-hrc] <ampl[um]> <tdelay[frame]> <nb frames ave> <nb frames excl> <normalize flag>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)                help"
+echo "     $(tput bold)-c$(tput sgr0) <CPUset>       use CPU set"
+echo "     $(tput bold)-d$(tput sgr0) <delayRM1us>   DM command delay [us]"
+echo "     $(tput bold)-n$(tput sgr0) <NBcycle>      Number of poke cycles (default=0: poke until killed)"
+echo "     $(tput bold)-r$(tput sgr0)                (r)e-use AO shared memory structure, do not re-create it"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <ampl[um]>           RM amplitude on DM"
+echo "     <tdelay[frame]>      AO system delay"
+echo "     <nb frames ave>      Number of WFS frames to average for each DM state"
+echo "     <nb frames excl>     Number of WFS frames to be excluded upon DM state change"
+echo "     <normalize flag>     1 if WFS frames to be normalized"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "    ./zresptmp/zrespmat_pos_NNN.fits    : zonal response, positive pokes"
+echo "    ./zresptmp/zrespmat_pos_NNN.fits    : zonal response, negative pokes"
+echo "    ./zresptmp/wfsref0_NNN.fits         : wfs reference"
+echo "    ./zresptmp/wfsimRMS_NNN.fits         : wfs reference"
+#echo "    ./zresptmp/wfsmap.fits    : WFS response map"
+#echo "    ./zresptmp/dmmap.fits     : DM response map"
+echo
+echo "runs forever until killed with USR1 signal"
+#echo "Default output files updated at each cycle" 
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Acquire zonal response matrix\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+AOinitMode="0"      # default
+CPUset="NULL"
+delayRM1us="0"
+NBpokeCycle="0"
+
+while getopts :hrc:d:n: FLAG; do
+  case $FLAG in
+    r) # re-use AO configuration
+    AOinitMode="1"
+    echo "AOinitMode = ${AOinitMode}"
+    ;;
+    c)
+    CPUset="$OPTARG"
+    ;;
+    d)
+    delayRM1us="$OPTARG"
+    ;;
+    n)
+    NBpokeCycle="$OPTARG"
+    ;;
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+pname0=$0
+pname="aol${loopnb}zrespM"
+
+
+./AOloopControl -n $pname << EOF
+aolnb $loopnb
+csetpmove ${CPUset}
+loadfits "./conf/RMpokeCube.fits" RMpokeCube
+aolmeaszrm $1 $2 ${delayRM1us} $3 $4 zrespmat wfsref0 wfsmap dmmap 1 $5 ${AOinitMode} ${NBpokeCycle}
+savefits wfsmask "!wfsmask.fits"
+savefits dmmask "!dmmask.fits"
+listim
+exitCLI
+EOF
+
+

@@ -1,0 +1,121 @@
+#!/bin/bash
+
+
+NBARGS=3
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : Create Control Matrixes $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Create Control Matrixes"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <beta coeff> <max nb modes removed> <modestep>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "       <beta coeff>           : Beta coefficient (typically 0.5 to 4.0), enhances low order aberrations for SVD"
+echo "       <max number modes removed> : will generate matrixes with 0, 10, 20, .... number of modes removed until max number reached"
+echo "       <modestep>            : incremental step for number of modes removed"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "   $0 4.0 20 5"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "%20s       Create Control Matrixes\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+cp ./conf/modesfreqcpa.fits .
+cp ./conf/fmodes.fits .
+cp ./conf/respm.fits .
+
+loopnb=$(cat LOOPNUMBER)
+confnb=$(cat conf/conf_CONFNUMBER.txt)
+
+pname0=$0
+pname=${pname0#"./"}-$loopnb
+
+
+Cfits -n pname << EOF
+aolnb $loopnb
+loadfits "./conf/respm.fits" respm
+loadfits "./conf/fmodes.fits" modesM
+aolcmmake $2 respm cmat $1 $3
+savefits evecM "!evecM.fits"
+exit
+EOF
+mkdir -p ./conf${confnb}/cmat/
+mv cmat_*_*.fits ./conf${confnb}/cmat/
+mv evecM.fits ./conf${confnb}/
+mv eigenv.dat ./conf${confnb}/
+mv eigenmodesM*.fits ./conf${confnb}/
+mv eigenmodesrespM*.fits ./conf${confnb}/

@@ -1,0 +1,3 @@
+readshmim "dm05disp"
+imgmon dm05disp 10
+exit

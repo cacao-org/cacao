@@ -1,0 +1,819 @@
+#!/bin/bash
+
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+# is the loop control in combined/ZONAL CM or MODAL CM mode ?
+ConfReadParam CMMODE "0"; CMMODE="${paramvalue}"
+
+
+
+
+# argument is tmux session name within which command should be executed
+# if agrument is NULL, execute from bash
+
+function WFSresidualOffsetLoop_init
+{
+
+# all commands written in script file
+scriptfile="script_WFSresidualOffsetLoop_init"
+rm $scriptfile
+touch $scriptfile
+chmod +x $scriptfile
+
+#echo "WFSresidualOffsetLoop_init  loop ${LOOPNUMBER}"
+echo "sleep 2" >> $scriptfile
+echo "./AOloopControl << EOF" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfszpo6" >> $scriptfile
+echo "imzero aol${LOOPNUMBER}_wfszpo6" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfsres_ave" >> $scriptfile
+echo "imzero aol${LOOPNUMBER}_wfsres_ave" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfsresm_ave" >> $scriptfile
+echo "imzero aol${LOOPNUMBER}_wfsresm_ave" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfsref0" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfsref" >> $scriptfile
+echo "cpsh aol${LOOPNUMBER}_wfsref0 aol${LOOPNUMBER}_wfsref" >> $scriptfile
+echo "exitCLI" >> $scriptfile
+echo "EOF" >> $scriptfile
+
+if [ "$1" = "NULL" ]; then
+echo "TMUX NULL"
+./$scriptfile
+else
+echo "TMUX $1"
+echo "tmux send-keys -t $1 \"./$scriptfile\""
+tmux send-keys -t $1 "./$scriptfile"
+fi
+}
+
+
+
+
+
+
+
+
+# argument is tmux session name within which command should be executed
+# if agrument is NULL, execute from bash
+
+function function_AOloopProcess_ON {
+
+# all commands written in script file
+scriptfile="script_AOloopProcess_ON"
+rm $scriptfile
+touch $scriptfile
+chmod +x $scriptfile
+
+echo "echo \" ON\" > ./status/stat_procON.txt" >> $scriptfile
+
+echo "./aolconfscripts/aollog -e \"$LOOPNAME\" \"START LOOP PROCESSES\"" >> $scriptfile
+tmuxname="aol${LOOPNUMBER}-ctr"
+echo "unset TMUX" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+echo "tmux new-session -d -s ${tmuxname}" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+logRunningProcessQ0 "aolctr" "$tmuxname" "AO loop control prompt"
+
+echo "tmux send-keys -t ${tmuxname} \" \" C-m" >> $scriptfile
+echo "tmux send-keys -t ${tmuxname} \" \" C-m" >> $scriptfile
+echo "tmux send-keys -t ${tmuxname} \"mv runproc/aolctr.runprocQ runproc/aolctr.runproc\" C-m" >> $scriptfile
+echo "tmux send-keys -t ${tmuxname} \"./auxscripts/aolctr\" C-m" >> $scriptfile
+
+
+echo "sleep 1" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+echo "tmux new-session -d -s aol${LOOPNUMBER}-run" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr " " C-m" >> $scriptfile
+logRunningProcessQ0 "aolrun" "aol${LOOPNUMBER}-run" "AO loop real-time loop"
+echo "tmux send-keys -t aol${LOOPNUMBER}-run \"mv runproc/aolrun.runprocQ runproc/aolrun.runproc\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-run \"./auxscripts/aolrun\" C-m" >> $scriptfile
+
+echo "sleep 1" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgain 0.0\" C-m" >> $scriptfile
+	
+
+
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolon\" C-m" >> $scriptfile
+echo "sleep 2" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aoloff\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgain ${loopgain}\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmaxlim ${loopmaxlim}\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmult ${loopmultcoeff}\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"readshmim aol${LOOPNUMBER}_respM\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolloadconf ${LOOPNUMBER}\" C-m" >> $scriptfile
+echo "sleep 1" >> $scriptfile
+
+
+ConfReadParam NBmodeblocks "1"; NBmodeblocks="${paramvalue}"
+if [ "0" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb00 "1.0"; gainb00="$paramvalue"
+gainb[00]=${gainb00}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 00 ${gainb[00]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb00 "1.0"; limitb00="$paramvalue"
+limitb[00]=${limitb00}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 00 ${limitb[00]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb00 "1.0"; multfb00="$paramvalue"
+multfb[00]=${multfb00}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 00 ${multfb[00]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "1" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb01 "1.0"; gainb01="$paramvalue"
+gainb[01]=${gainb01}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 01 ${gainb[01]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb01 "1.0"; limitb01="$paramvalue"
+limitb[01]=${limitb01}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 01 ${limitb[01]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb01 "1.0"; multfb01="$paramvalue"
+multfb[01]=${multfb01}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 01 ${multfb[01]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "2" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb02 "1.0"; gainb02="$paramvalue"
+gainb[02]=${gainb02}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 02 ${gainb[02]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb02 "1.0"; limitb02="$paramvalue"
+limitb[02]=${limitb02}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 02 ${limitb[02]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb02 "1.0"; multfb02="$paramvalue"
+multfb[02]=${multfb02}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 02 ${multfb[02]}\" C-m" >> $scriptfile
+
+fi
+
+
+
+if [ "3" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb03 "1.0"; gainb03="$paramvalue"
+gainb[03]=${gainb03}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 03 ${gainb[03]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb03 "1.0"; limitb03="$paramvalue"
+limitb[03]=${limitb03}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 03 ${limitb[03]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb03 "1.0"; multfb03="$paramvalue"
+multfb[03]=${multfb03}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 03 ${multfb[03]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "4" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb04 "1.0"; gainb04="$paramvalue"
+gainb[04]=${gainb04}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 04 ${gainb[04]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb04 "1.0"; limitb04="$paramvalue"
+limitb[04]=${limitb04}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 04 ${limitb[04]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb04 "1.0"; multfb04="$paramvalue"
+multfb[04]=${multfb04}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 04 ${multfb[04]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "5" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb05 "1.0"; gainb05="$paramvalue"
+gainb[05]=${gainb05}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 05 ${gainb[05]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb05 "1.0"; limitb05="$paramvalue"
+limitb[05]=${limitb05}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 05 ${limitb[05]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb05 "1.0"; multfb05="$paramvalue"
+multfb[05]=${multfb05}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 05 ${multfb[05]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "6" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb06 "1.0"; gainb06="$paramvalue"
+gainb[06]=${gainb06}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 06 ${gainb[06]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb06 "1.0"; limitb06="$paramvalue"
+limitb[06]=${limitb06}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 06 ${limitb[06]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb06 "1.0"; multfb06="$paramvalue"
+multfb[06]=${multfb06}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 06 ${multfb[06]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "7" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb07 "1.0"; gainb07="$paramvalue"
+gainb[07]=${gainb07}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 07 ${gainb[07]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb07 "1.0"; limitb07="$paramvalue"
+limitb[07]=${limitb07}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 07 ${limitb[07]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb07 "1.0"; multfb07="$paramvalue"
+multfb[07]=${multfb07}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 07 ${multfb[07]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "8" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb08 "1.0"; gainb08="$paramvalue"
+gainb[10#08]=${gainb08}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 08 ${gainb[10#08]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb08 "1.0"; limitb08="$paramvalue"
+limitb[10#08]=${limitb08}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 08 ${limitb[10#08]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb08 "1.0"; multfb08="$paramvalue"
+multfb[10#08]=${multfb08}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 08 ${multfb[10#08]}\" C-m" >> $scriptfile
+
+fi
+
+
+
+if [ "9" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb09 "1.0"; gainb09="$paramvalue"
+gainb[10#09]=${gainb09}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 09 ${gainb[10#09]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb09 "1.0"; limitb09="$paramvalue"
+limitb[10#09]=${limitb09}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 09 ${limitb[10#09]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb09 "1.0"; multfb09="$paramvalue"
+multfb[10#09]=${multfb09}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 09 ${multfb[10#09]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "10" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb10 "1.0"; gainb10="$paramvalue"
+gainb[10]=${gainb10}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 10 ${gainb[10]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb10 "1.0"; limitb10="$paramvalue"
+limitb[10]=${limitb10}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 10 ${limitb[10]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb10 "1.0"; multfb10="$paramvalue"
+multfb[10]=${multfb10}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 10 ${multfb[10]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "11" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb11 "1.0"; gainb11="$paramvalue"
+gainb[11]=${gainb11}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 11 ${gainb[11]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb11 "1.0"; limitb11="$paramvalue"
+limitb[11]=${limitb11}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 11 ${limitb[11]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb11 "1.0"; multfb11="$paramvalue"
+multfb[11]=${multfb11}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 11 ${multfb[11]}\" C-m" >> $scriptfile
+
+fi
+
+
+if [ "12" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb12 "1.0"; gainb12="$paramvalue"
+gainb[12]=${gainb12}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 12 ${gainb[12]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb12 "1.0"; limitb12="$paramvalue"
+limitb[12]=${limitb12}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 12 ${limitb[12]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb12 "1.0"; multfb12="$paramvalue"
+multfb[12]=${multfb12}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 12 ${multfb[12]}\" C-m" >> $scriptfile
+
+fi
+
+
+
+if [ "13" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb13 "1.0"; gainb13="$paramvalue"
+gainb[13]=${gainb13}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 13 ${gainb[13]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb13 "1.0"; limitb13="$paramvalue"
+limitb[13]=${limitb13}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 13 ${limitb[13]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb13 "1.0"; multfb13="$paramvalue"
+multfb[13]=${multfb13}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 13 ${multfb[13]}\" C-m" >> $scriptfile
+
+fi
+
+
+
+if [ "14" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb14 "1.0"; gainb14="$paramvalue"
+gainb[14]=${gainb14}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 14 ${gainb[14]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb14 "1.0"; limitb14="$paramvalue"
+limitb[14]=${limitb14}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 14 ${limitb[14]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb14 "1.0"; multfb14="$paramvalue"
+multfb[14]=${multfb14}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 14 ${multfb[14]}\" C-m" >> $scriptfile
+
+fi
+
+
+
+if [ "15" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb15 "1.0"; gainb15="$paramvalue"
+gainb[15]=${gainb15}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 15 ${gainb[15]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb15 "1.0"; limitb15="$paramvalue"
+limitb[15]=${limitb15}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 15 ${limitb[15]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb15 "1.0"; multfb15="$paramvalue"
+multfb[15]=${multfb15}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 15 ${multfb[15]}\" C-m" >> $scriptfile
+
+fi
+
+
+
+if [ "16" -lt "$NBmodeblocks" ]; then
+
+ConfReadParam gainb16 "1.0"; gainb16="$paramvalue"
+gainb[16]=${gainb16}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetgainb 16 ${gainb[16]}\" C-m" >> $scriptfile
+
+ConfReadParam limitb16 "1.0"; limitb16="$paramvalue"
+limitb[16]=${limitb16}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb 16 ${limitb[16]}\" C-m" >> $scriptfile
+
+ConfReadParam multfb16 "1.0"; multfb16="$paramvalue"
+multfb[16]=${multfb16}
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb 16 ${multfb[16]}\" C-m" >> $scriptfile
+
+fi
+
+
+
+
+#for i in `seq 0 $(( $NBmodeblocks - 1 ))`;
+#do
+#	     gi=$(printf "%02d" "$i")
+
+#		ConfReadParam limitb${gi} "1.0"; limitb${gi}="$paramvalue"
+
+#		file="./conf/conf_limitb${gi}.txt"
+#		if [ ! -f "$file" ]; then
+#		echo "1.0" > $file
+#		fi
+#	     limitb[10#${gi}]=${limitb${gi}}
+#	     echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetlimitb ${gi} ${limitb[10#${gi}]}\" C-m" >> $scriptfile
+
+
+#		ConfReadParam multfb${gi} "1.0"; multfb${gi}="$paramvalue"
+#		file="./conf/conf_multfb${gi}.txt"
+#		if [ ! -f "$file" ]; then
+#		echo "1.0" > $file
+#		fi
+#	     multfb[10#${gi}]=${multfb${gi}}
+#	     echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmultfb ${gi} ${multfb[10#${gi}]}\" C-m" >> $scriptfile
+
+#		ConfReadParam gainb${gi} "0.0"; gainb${gi}="$paramvalue"	     
+#		file="./conf/conf_gainb${gi}.txt"
+#		if [ ! -f "$file" ]; then
+#		echo "1.0" > $file
+#		fi
+#	     gainb[10#${gi}]=${gainb${gi}}
+	     
+#	     echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmbgain ${gi} ${gainb[10#${gi}]} 0\" C-m" >> $scriptfile
+#	 done
+
+#gi="00"
+#file="./conf/conf_gainb${gi}.txt"
+#if [ ! -f "$file" ]; then
+#echo "echo \"1.0\" > $file" >> $scriptfile
+#fi
+#gainb[10#${gi}]=$( head -1 $file )
+#echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolsetmbgain ${gi} ${gainb[10#${gi}]} 1\" C-m" >> $scriptfile
+#echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"# test: ${gainb[10#${gi}]}\" C-m" >> $scriptfile
+
+
+
+
+#  	 echo "${gainb[${gi}]}" > ./conf/conf_gainb${gi}.txt
+#  	 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolsetmbgain ${gi} ${gainb[${gi}]} 1" C-m
+
+if [ "$DMprimaryWriteON" = "1" ]; then
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolDMprimWon\" C-m" >> $scriptfile
+else
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolDMprimWoff\" C-m" >> $scriptfile
+fi
+
+if [ "$DMfilteredWriteON" = "1" ]; then
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolDMfiltWon\" C-m" >> $scriptfile
+else
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolDMfiltWoff\" C-m" >> $scriptfile
+fi
+
+
+
+echo "sleep 2" >> $scriptfile
+
+if [ "$LOOPPROCESS_ZPO" -eq "1" ]; then
+# START ZERO POINT OFFSET LOOP (ZONAL, CPU-BASED)
+tmuxname="aol${LOOPNUMBER}wfszpo"
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+echo "tmux new-session -d -s $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+logRunningProcessQ0 "aolzpwfscloop" "$tmuxname" "AO loop zero point offset (zonal, CPU-based)"
+echo "tmux send-keys -t ${tmuxname} \"mv runproc/aolzpwfscloop.runprocQ runproc/aolzpwfscloop.runproc\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"$execname -n aol${LOOPNUMBER}wfszpo\" C-m" >> $scriptfile
+if [ "$CPUconfRT" -eq "1" ];then
+echo "tmux send-keys -t $tmuxname \"csetpmove aol${LOOPNUMBER}RT\" C-m" >> $scriptfile
+fi
+echo "tmux send-keys -t $tmuxname \"readshmim aol${LOOPNUMBER}_wfsref\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"readshmim aol${LOOPNUMBER}_wfsref0\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"aolzpwfscloop aol${LOOPNUMBER}_wfszpo 8 aol${LOOPNUMBER}_wfsref0 aol${LOOPNUMBER}_wfsref\" C-m" >> $scriptfile
+fi
+
+
+ConfReadParam DMMODE "0"; DMMODE="$paramvalue" # DM mode, 0=zonal, 1=modal
+ConfReadParam CMMODE "0"; CMMODE="$paramvalue"
+if [ "$CMMODE" = "0" ]; then  # if CM multiplication outputs modes
+#echo "Linking    /tmp/aol${LOOPNUMBER}_DMmode_meas.im.shm  - /tmp/aol${LOOPNUMBER}_modeval.im.shm"
+echo "rm /tmp/aol${LOOPNUMBER}_modeval.im.shm" >> $scriptfile
+echo "ln -s /tmp/aol${LOOPNUMBER}_DMmode_meas.im.shm /tmp/aol${LOOPNUMBER}_modeval.im.shm" >> $scriptfile
+fi
+
+
+# EXTRACT WFS MODES
+# process runs in first of GPU set0 aol#RT1
+ConfReadParam GPUset0dev0 "0"; GPUset0dev0="$paramvalue"
+GPUmodesextrwfs="$GPUset0dev0"
+if [ "$LOOPPROCESS_EXTRWFSMODES" -eq "1" ]; then
+tmuxname="aol${LOOPNUMBER}mexwfs"
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+echo "tmux new-session -d -s $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+logRunningProcessQ0 "modesextractwfs" "$tmuxname" "AO loop extract WFS modes"
+echo "tmux send-keys -t ${tmuxname} \"mv runproc/modesextractwfs.runprocQ runproc/modesextractwfs.runproc\" C-m" >> $scriptfile
+if [ "$CMMODE" -eq "1" ]; then
+echo "tmux send-keys -t $tmuxname \"./auxscripts/modesextractwfs ${GPUmodesextrwfs}\" C-m" >> $scriptfile
+else
+echo "tmux send-keys -t $tmuxname \"./auxscripts/modesextractwfs -r ${GPUmodesextrwfs}\" C-m" >> $scriptfile
+fi
+fi
+
+
+# wait to ensure that modesextractwfs has created aol${LOOPNUMBER}_modeval
+echo "sleep 0.2" >> $scriptfile
+
+# process runs in CPU set aol#RT
+if [ "$LOOPPROCESS_EXTROLMODES" -eq "1" ]; then
+tmuxname="aol${LOOPNUMBER}meol"
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+echo "tmux new-session -d -s $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+logRunningProcessQ0 "aolcompolm" "$tmuxname" "AO loop extract open loop WFS modes"
+echo "tmux send-keys -t ${tmuxname} \"mv runproc/aolcompolm.runprocQ runproc/aolcompolm.runproc\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"./AOloopControl -p ${tmuxname}\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"csetpmove aol${LOOPNUMBER}RT\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"aolcompolm ${LOOPNUMBER}\" C-m" >> $scriptfile
+fi
+
+# wait to ensure that aolcompolm has created aol${LOOPNUMBER}_modeval_dm_now_filt
+echo "sleep 0.2" >> $scriptfile
+
+# process runs in CPU set aol0RT
+if [ "$LOOPPROCESS_DMFILTW" -eq "1" ]; then
+tmuxname="aol${LOOPNUMBER}dmfw"
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+echo "tmux new-session -d -s $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+logRunningProcessQ0 "aolmcoeffs2dmmap" "$tmuxname" "DM modal (post-filtering) write back"
+echo "tmux send-keys -t ${tmuxname} \"mv runproc/aolmcoeffs2dmmap.runprocQ runproc/aolmcoeffs2dmmap.runproc\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"./auxscripts/aolmcoeffs2dmmap -p ${tmuxname} -f ${GPUdmfw}\" C-m" >> $scriptfile
+fi
+
+
+
+
+
+if [ "$LOOPPROCESS_DMCAVE" -eq "1" ]; then
+tmuxname="aol${LOOPNUMBER}dmCave"
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+echo "tmux new-session -d -s $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+logRunningProcessQ0 "aol_dmCave" "$tmuxname" "AO loop compute time-averaged DM correction"
+echo "tmux send-keys -t ${tmuxname} \"mv runproc/aol_dmCave.runprocQ runproc/aol_dmCave.runproc\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"./auxscripts/aol_dmCave 0.0005\" C-m" >> $scriptfile
+fi
+
+echo "sleep 2" >> $scriptfile
+echo "./AOloopControl << EOF" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfszpo6" >> $scriptfile
+echo "imzero aol${LOOPNUMBER}_wfszpo6" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfsres_ave" >> $scriptfile
+echo "imzero aol${LOOPNUMBER}_wfsres_ave" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfsresm_ave" >> $scriptfile
+echo "imzero aol${LOOPNUMBER}_wfsresm_ave" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfsref0" >> $scriptfile
+echo "readshmim aol${LOOPNUMBER}_wfsref" >> $scriptfile
+echo "cpsh aol${LOOPNUMBER}_wfsref0 aol${LOOPNUMBER}_wfsref" >> $scriptfile
+echo "exitCLI" >> $scriptfile
+echo "EOF" >> $scriptfile
+
+
+
+if [ "$LOOPPROCESS_WFSRESAVE" -eq "1" ]; then
+ConfReadParam WFSresAveCoeff "0.001"; WFSresAveCoeff="$paramvalue"
+tmuxname="aol${LOOPNUMBER}wfsresave"
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+echo "tmux new-session -d -s $tmuxname" >> $scriptfile
+echo "sleep 0.2" >> $scriptfile
+logRunningProcessQ0 "aolmkWFSres" "$tmuxname" "compute and average WFS residual"
+echo "tmux send-keys -t ${tmuxname} \"mv runproc/aolmkWFSres.runprocQ runproc/aolmkWFSres.runproc\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"./auxscripts/aolmkWFSres ${WFSresAveCoeff}\" C-m" >> $scriptfile
+fi
+
+
+if [ "$1" = "NULL" ]; then
+procONstat=" ON"
+./$scriptfile
+else
+tmux send-keys -t $1 "./$scriptfile" C-m
+fi
+
+}
+
+ 
+ 
+ 
+ 
+ 
+
+
+# argument is tmux session name within which command should be executed
+# if agrument is NULL, execute from bash
+
+function function_AOloopProcess_OFF {
+
+# all commands written in script file
+scriptfile="script_AOloopProcess_OFF"
+rm $scriptfile
+touch $scriptfile
+chmod +x $scriptfile
+
+echo "echo \"OFF\" > ./status/stat_procON.txt" >> $scriptfile
+echo "./aolconfscripts/aollog -e \"$LOOPNAME\" \"STOP LOOP PROCESSES\"" >> $scriptfile
+
+# TURN OFF LIMITS AUTOTUNING
+if [ "$AUTOTUNELIMITS_ON" = " ON" ]; then
+file="./status/stat_AUTOTUNELIMITS_ON.txt"
+echo "echo \"OFF\" > $file" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolAUTOTUNELIMoff\" C-m" >> $scriptfile
+fi
+
+
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aoloff\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolkill\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"exitCLI\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"rm runproc/aolctr.runproc\" C-m" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-run C-c" >> $scriptfile
+echo "pkill -9 aol${LOOPNUMBER}-run" >> $scriptfile
+echo "rm runproc/aolrun.runproc" >> $scriptfile
+
+if [ "$LOOPPROCESS_ZPO" -eq "1" ]; then
+echo "pkill -9 aol${LOOPNUMBER}wfszpo" >> $scriptfile
+tmuxname="aol${LOOPNUMBER}wfszpo"
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "rm runproc/aolzpwfscloop.runproc" >> $scriptfile
+fi
+
+if [ "$LOOPPROCESS_EXTRWFSMODES" -eq "1" ]; then
+tmuxname="aol${LOOPNUMBER}mexwfs"
+echo "tmux send-keys -t $tmuxname C-c" >> $scriptfile
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "rm runproc/modesextractwfs.runproc" >> $scriptfile
+echo "echo \"0\" > \"./status/stat_log_modeval.txt\"" >> $scriptfile
+fi
+
+if [ "$LOOPPROCESS_EXTROLMODES" -eq "1" ]; then
+tmuxname="aol${LOOPNUMBER}meol"
+echo "tmux send-keys -t $tmuxname C-c" >> $scriptfile
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "rm runproc/aolcompolm.runproc" >> $scriptfile
+echo "echo \"0\" > \"./status/stat_log_modeval_ol.txt\"" >> $scriptfile
+fi
+
+if [ "$LOOPPROCESS_DMFILTW" -eq "1" ]; then
+tmuxname="aol${LOOPNUMBER}dmfw"
+echo "tmux send-keys -t $tmuxname C-c" >> $scriptfile
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "rm runproc/aolmcoeffs2dmmap.runproc" >> $scriptfile
+fi
+
+if [ "$LOOPPROCESS_DMCAVE" -eq "1" ]; then
+tmuxname="aol${LOOPNUMBER}dmCave"
+echo "tmux send-keys -t $tmuxname C-c" >> $scriptfile
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "rm runproc/aol_dmCave.runproc" >> $scriptfile
+fi
+
+if [ "$LOOPPROCESS_WFSRESAVE" -eq "1" ]; then
+tmuxname="aol${LOOPNUMBER}wfsresave"
+echo "tmux send-keys -t $tmuxname C-c" >> $scriptfile
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "rm runproc/aolmkWFSres.runproc" >> $scriptfile
+fi
+
+if [ "$procWFSres2refONstat" = " ON" ]; then
+tmuxname="aol${LOOPNUMBER}wfsresoffl"
+file="./status/stat_procWFSres2refON.txt"
+echo "echo \"OFF\" > $file" >> $scriptfile
+echo "tmux send-keys -t $tmuxname C-c" >> $scriptfile
+echo "tmux kill-session -t $tmuxname" >> $scriptfile
+fi
+
+
+
+
+
+if [ "$1" = "NULL" ]; then
+./$scriptfile
+else
+tmux send-keys -t $1 "./$scriptfile" C-m
+fi
+
+}
+
+
+
+
+
+
+
+
+
+
+# argument is tmux session name within which command should be executed
+# if agrument is NULL, execute from bash
+
+function function_LOOP_ON {
+
+# all commands written in script file
+scriptfile="script_AOloop_ON"
+rm $scriptfile
+touch $scriptfile
+chmod +x $scriptfile
+
+echo "echo \" ON\" > ./status/stat_loopON.txt" >> $scriptfile
+echo "./aolconfscripts/aollog -e \"$LOOPNAME\" \"LOOP ON [gain = ${loopgain}   maxlim = ${loopmaxlim}   multcoeff = ${loopmultcoeff}]\"" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aolon\" C-m" >> $scriptfile
+echo "./setupAOloopON" >> $scriptfile
+
+
+
+if [ "$1" = "NULL" ]; then
+./$scriptfile
+
+loopONstat=" ON"
+
+
+ConfReadParam logMode "0"; logMode="$paramvalue" # LOG mode
+if [ "$logMode" = "1" ]; then   # log when loop is closed
+start_Telemetrylog_all
+fi
+
+else
+tmux send-keys -t $1 "./$scriptfile" C-m
+fi
+
+}
+
+
+
+
+
+# argument is tmux session name within which command should be executed
+# if agrument is NULL, execute from bash
+
+function function_LOOP_OFF {
+	
+# all commands written in script file
+scriptfile="script_AOloop_OFF"
+rm $scriptfile
+touch $scriptfile
+chmod +x $scriptfile
+
+
+
+echo "echo \"OFF\" > ./status/stat_loopON.txt" >> $scriptfile
+echo "./aolconfscripts/aollog -e \"$LOOPNAME\" \"LOOP OFF\"" >> $scriptfile
+echo "tmux send-keys -t aol${LOOPNUMBER}-ctr \"aoloff\" C-m" >> $scriptfile
+echo "./setupAOloopOFF" >> $scriptfile
+
+
+
+if [ "$1" = "NULL" ]; then
+./$scriptfile
+loopONstat="OFF"
+
+ConfReadParam logMode "0"; logMode="$paramvalue" # LOG mode
+
+if [ "$logMode" =  "1" ]; then  # log when loop is closed
+stop_Telemetrylog_all
+fi
+
+else
+tmux send-keys -t $1 "./$scriptfile" C-m
+fi
+
+}
+
+
+
+function function_zplon
+{
+echo " ON" > ./status/stat_zp$1loopON.txt
+tmuxnameZP="aol${LOOPNUMBER}zploop$1"
+unset TMUX
+sleep 0.2
+tmux new-session -d -s $tmuxnameZP
+sleep 0.2
+tmux send-keys -t $tmuxnameZP "$execname -n aol${LOOPNUMBER}zploop$1" C-m
+if [ "$CPUconfRT" -eq "1" ];then
+tmux send-keys -t $tmuxnameZP "csetpmove aol${LOOPNUMBER}RT" C-m
+fi
+tmux send-keys -t $tmuxnameZP "readshmim aol${LOOPNUMBER}_wfszpo$1" C-m
+tmux send-keys -t $tmuxnameZP "readshmim aol${LOOPNUMBER}_dmZP$1" C-m
+tmux send-keys -t $tmuxnameZP "readshmim aol${LOOPNUMBER}_zrespM" C-m
+tmux send-keys -t $tmuxnameZP "listim" C-m
+tmux send-keys -t $tmuxnameZP "aolzpwfsloop aol${LOOPNUMBER}_dmZP$1 aol${LOOPNUMBER}_zrespM aol${LOOPNUMBER}_wfszpo$1" C-m
+}
+
+
+function function_zploff
+{
+echo "OFF" > ./status/stat_zp$1loopON.txt
+tmuxnameZP="aol${LOOPNUMBER}zploop$1"
+tmux kill-session -t $tmuxnameZP
+}

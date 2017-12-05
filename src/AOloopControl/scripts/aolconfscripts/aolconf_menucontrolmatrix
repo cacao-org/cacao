@@ -1,0 +1,1356 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+# =====================================================
+# =============== CONTROL MATRIX ======================
+# =====================================================
+
+if [ $state = "menucontrolmatrix" ]; then
+stateok=1
+dateUTC=$( date -u )
+menuname="\Zb\Zu CONTROL MATRIX\Zn  [ $dateUTC ]\n 
+Notations: \n      
+  \Z4shared memory stream\Zn\n
+  \Zufile system FITS file\Zn\n   
+  \Z1missing file or stream\Zn\n
+\n
+For all configurations files (not including Hardware I/O links) :\n
+  File \Zbconf/shmim_<name>.name.txt\Zn contains the original .fits file path and name\n
+  A symbolic link to the FITS file is written as \Zuconf/aol${LOOPNUMBER}_<name>.fits\Zn\n
+  File is loaded in shared memory as /tmp/\Z4aol${LOOPNUMBER}_<name>\Zn.im.shm\n
+"
+
+
+#function_controlmatrix_readparams
+
+confOK=1
+stringcenter "HELP"
+menuitems=( "H" "\Zb\Zr\Z4$string\Zn" )
+menuitems+=( " " " " )
+
+
+ConfReadParam SVDlimall "0.01"; SVDlimall=${paramvalue}
+menuitems+=( "SVDla" "            SVD limit for full built           ${SVDlimall}" )
+
+
+
+# to read variable:
+# ConfReadParam  ""; =${paramvalue}
+
+
+if [ "$DMMODE" = "1" ]; then
+
+ConfReadParam NBmodeblocks "01"; NBmodeblocks="${paramvalue}"
+menuitems+=( "sNBb" "[$NBmodeblocks] Breaking $mNBmodes modes into ${NBmodeblocks} blocks" )
+
+
+if [ "0" -lt "$NBmodeblocks" ]; then
+ConfReadParam block00end "1"; block00end=${paramvalue}
+menuitems+=( "bl00e" "            [ $block00end ]    block 00:  000 -> $block00end" )
+fi
+
+
+if [ "1" -lt "$NBmodeblocks" ]; then
+ConfReadParam block01end "2"; block01end=${paramvalue}
+menuitems+=( "bl01e" "            [ $block01end ]    block 01:  $block00end -> $block01end" )
+fi
+
+
+if [ "2" -lt "$NBmodeblocks" ]; then
+ConfReadParam block02end "3"; block02end=${paramvalue}
+menuitems+=( "bl02e" "            [ $block02end ]    block 02:  $block01end -> $block02end" )
+fi
+
+
+if [ "3" -lt "$NBmodeblocks" ]; then
+ConfReadParam block03end "4"; block03end=${paramvalue}
+menuitems+=( "bl03e" "            [ $block03end ]    block 03:  $block02end -> $block03end" )
+fi
+
+
+if [ "4" -lt "$NBmodeblocks" ]; then
+ConfReadParam block04end "5"; block04end=${paramvalue}
+menuitems+=( "bl04e" "            [ $block04end ]    block 04:  $block03end -> $block04end" )
+fi
+
+
+if [ "5" -lt "$NBmodeblocks" ]; then
+ConfReadParam block05end "6"; block05end=${paramvalue}
+menuitems+=( "bl05e" "            [ $block05end ]    block 05:  $block04end -> $block05end" )
+fi
+
+
+if [ "6" -lt "$NBmodeblocks" ]; then
+ConfReadParam block06end "7"; block06end=${paramvalue}
+menuitems+=( "bl06e" "            [ $block06end ]    block 06:  $block05end -> $block06end" )
+fi
+
+
+if [ "7" -lt "$NBmodeblocks" ]; then
+ConfReadParam block07end "8"; block07end=${paramvalue}
+menuitems+=( "bl07e" "            [ $block07end ]    block 07:  $block06end -> $block07end" )
+fi
+
+
+if [ "8" -lt "$NBmodeblocks" ]; then
+ConfReadParam block08end "9"; block08end=${paramvalue}
+menuitems+=( "bl08e" "            [ $block08end ]    block 08:  $block07end -> $block08end" )
+fi
+
+
+if [ "9" -lt "$NBmodeblocks" ]; then
+ConfReadParam  block09end"10"; block09end=${paramvalue}
+menuitems+=( "bl09e" "            [ $block09end ]    block 09:  $block08end -> $block09end" )
+fi
+
+
+if [ "10" -lt "$NBmodeblocks" ]; then
+ConfReadParam block10end "11"; block10end=${paramvalue}
+menuitems+=( "bl10e" "            [ $block10end ]    block 10:  $block09end -> $block10end" )
+fi
+
+
+
+
+
+
+
+# COMPUTE
+
+menuitems+=( "RM2CMm" "Compute Modes and Control matrix" )
+
+
+fi  # end of:  if [ "$DMMODE" = "1" ]; then
+
+
+
+menuitems+=( " " " " )
+stringcenter "SYSTEM ZONAL RESPONSE -> CONTROL MATRIX"
+menuitems+=( "1 ->" "\Zb\Zr$string\Zn" )
+
+makemenuitemstringaolshm "zrespM" "Zonal Response Matrix"
+menuitems+=( "zRM" "$menustring" )
+
+
+#Q? ConfReadParam SVDNBmodes "00"; SVDNBmodes=${paramvalue}
+menuitems+=( "RM2CM" "Compute Control matrix contrM only (-> eigenv.dat)  [${SVDNBmodes} modes kept]  (./conf_staged/aol${LOOPNUMBER}_zrespM.fits -> ./conf_staged/shmim_contrM.name.txt)" )
+
+
+
+
+
+ConfReadParam DMMODE "0"; DMMODE=${paramvalue}
+if [ "$DMMODE" = "0" ]; then
+
+ConfReadParam CMMODE "0"; CMMODE=${paramvalue}
+ if [ "$CMMODE" = "1" ]; then
+ menuitems+=( "CMmode0" "\Zb\Zrcurrent Combined mode is $CMMODE\Zn  WFSpix -> ACT                       (select to toggle)" )
+ else
+ menuitems+=( "CMmode1" "\Zb\Zrcurrent Combined mode is $CMMODE\Zn  WFSpix -> MODES                     (select to toggle)" )
+ fi
+
+
+
+
+
+
+ menuitems+=( " " " " )
+ stringcenter "SYSTEM MODAL RESPONSE AND CONTROL WITH CPA DECOMPOSITION"
+ menuitems+=( "2 ->" "\Zb\Zr$string\Zn" )
+
+ menuitems+=( " " " " )
+
+
+ConfReadParam extrablockIndex "5"; extrablockIndex=${paramvalue}
+ menuitems+=( "setexbi" "[$extrablockIndex] Set extra block index" )
+
+
+ if [ -f "./extrablockM.fits.gz" ]; then
+	if [ -f "./conf/extrablockM.fits.gz" ]; then
+	menuitems+=( "extBlOFF" "Remove link to custom extra modal block (./extrablockM.fits.gz)" )
+	else
+	menuitems+=( "extBlON" "Link to custom extra modal block (./extrablockM.fits.gz)" )
+	fi
+ else
+ menuitems+=( "" "Extra modal block not available (File ./extrablockM.fits.gz does not exist)" )
+ fi
+
+
+
+
+ menuitems+=( " " " " )
+ 
+ConfReadParam cpamax "00"; cpamax=${paramvalue}
+ menuitems+=( "modeCPA" "[$cpamax] Select maximum CPA" )
+
+ menuitems+=( "mkModes0" "Create DM control modes file, control matrices (full computation, input/output in ./conf_staged/ )" )
+ #menuitems+=( "mkModes1" "<$mkmodesdatestr>  [$NBmodeblocks blocks, $NBmodes modes] Create DM control modes file, control matrices (re-use DM modes)" )
+
+fi 
+
+
+
+
+staged_mkmodesdatestr=$(TZ=utc stat -c %y ./conf_staged/param_NBmodeblocks.txt)
+staged_mkmodesdatestr=${staged_mkmodesdatestr% *}
+staged_NBmodeblocks=$( head -1 ./conf_staged/param_NBmodeblocks.txt )
+staged_NBmodes=$( head -1 ./conf_staged/param_NBmodes.txt )
+
+stringcenter " STAGED CONFIGURATION :  <$staged_mkmodesdatestr>  [$staged_NBmodeblocks blocks, $staged_NBmodes modes]"
+menuitems+=( " " "\Zb\Zr$string\Zn" )
+menuitems+=( "confUp" "\Z1 Configuration Update (cp conf_staged/*.txt ./conf/) \Zn" )
+
+
+menuitems+=( "SMload" "\Z1 Load shared memory from conf \Zn" )
+
+
+#mNBmodes=$( head -1 conf/shmim_zrespM.imsize.txt | awk '{printf("%03ld", $3)}' )
+#NBmodeblocks=$( head -1 ./conf/param_NBmodeblocks.txt )
+
+mkmodesdatestr=$(TZ=utc stat -c %y ./conf/param_NBmodeblocks.txt)
+mkmodesdatestr=${mkmodesdatestr% *}
+
+ConfReadParam NBmodeblocks "01"; NBmodeblocks="${paramvalue}"
+ConfReadParam NBmodes "01"; NBmodes="${paramvalue}"
+stringcenter " ACTIVE CONFIGURATION :  <$mkmodesdatestr>  [$NBmodeblocks blocks, $NBmodes modes] "
+menuitems+=( " " "\Zb\Zr$string\Zn" )
+
+
+
+makemenuitemstringaolshm "DMmodes" "DM control modes"
+menuitems+=( "DMmodes" "$menustring" )
+
+makemenuitemstringaolshm "respM" "Modal Response Matrix"
+menuitems+=( "RM" "$menustring" )
+
+makemenuitemstringaolshm "contrM" "Modal Control Matrix"
+menuitems+=( "CM" "$menustring" )
+
+
+
+
+
+
+
+
+
+
+menuitems+=( " " " " )
+stringcenter " ACTIVE CONFIGURATION : BLOCK DECOMPOSITION (ACTIVE CONFIGURATION)"
+menuitems+=( "3 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " " )
+
+for i in `seq 0 $(( $NBmodeblocks - 1 ))`;
+do
+i2=$(printf "%02d" "$i")
+
+NBblockmodes=$( head -1 ./conf/block${i2}_NBmodes.txt )
+
+SVDlim[10#${i2}]=$( head -1 ./conf/block${i2}_SVDlim.txt)
+menuitems+=( "SetSVD${i2}" "\Zb\ZrBLOCK $i2 - ${NBblockmodes} modes - SVD = ${SVDlim[10#${i2}]}\Zn")
+
+makemenuitemstringaolshm "DMmodes${i2}" "DM control modes"
+menuitems+=( "DMm${i2}" "$menustring" )
+
+makemenuitemstringaolshm "respM${i2}" "Modal Resp matrix"
+menuitems+=( "RMm${i2}" "$menustring" )
+
+makemenuitemstringaolshm "contrM${i2}" "Modal Contr matrix"
+menuitems+=( "CMm${i2}" "$menustring" )
+
+makemenuitemstringaolshm "contrMc${i2}" "Zonal Contr matrix"
+menuitems+=( "CMmc${i2}" "$menustring" )
+
+makemenuitemstringaolshm "contrMcact${i2}_00" "Zonal act Cmat"
+menuitems+=( "CMmca${i2}" "$menustring" )
+
+done
+
+
+
+state="menucontrolmatrix"
+
+
+dialog --colors --title "LOOP CONFIGURATION  - LOOP ${LOOPNAME} (${LOOPNUMBER})" \
+--ok-label "Action: ${actionmode}" \
+--cancel-label "Top" \
+--extra-button --extra-label "Action toggle" \
+--help-button --help-label "Exit" \
+--default-item "${menucontrolmatrix_default}" \
+ --menu "$menuname" \
+ $nbwlines $nbwcols $nbwlines "${menuitems[@]}"  2> $tempfile
+
+
+retval=$?
+choiceval=$( head -1 $tempfile)
+
+menucontrolmatrix_default="$choiceval"
+state="menucontrolmatrix"
+
+case $actionmode in
+	"Select")
+amode=0
+;;
+	"View")
+amode=1
+;;
+esac
+
+case $retval in
+   0) # button
+	case $choiceval in
+	-);;
+	H)
+dialog --title "Help" --msgbox '
+Loop configuration is stored in ./conf/ directory\n
+Files specified in this configuration menu get linked/loaded to shared memory:\n
+\n
+HARDWARE I/O:\n
+     /tmp/aol${LOOPNUMBER}_dmC.im.shm           DM correction channel\n
+     /tmp/aol${LOOPNUMBER}_dmRM.im.shm          DM resp matrix channel\n
+     /tmp/aol${LOOPNUMBER}_wfsim.im.shm         WFS camera image\n
+            cnt0    full frame counter\n
+            cnt1    last slice written (pixel stream mode)\n
+            sem0    post: full frame ready      wait: main WFC loop\n
+            sem1    post: full frame ready      wait: RM acquisition\n
+            sem2    post: subframe ready        wait: main WFC loop, pixel stream mode\n
+            sem3    post: subframe ready\n
+            sem4    post: full frame ready      wait: alignment loop #1 (focus)\n
+            sem5    post: full frame ready      wait: alignment loop #2 (pupil)\n
+            sem6    post: full frame ready      mode coefficients telemetry\n
+\n
+I/O PRE-PROCESSING:\n
+     /tmp/aol${LOOPNUMBER}_wfsdark.im.shm       WFS dark\n
+\n
+SYSTEM ZONAL RESPONSE AND CONTROL:\n
+     /tmp/aol${LOOPNUMBER}_wfsmask.im.shm       WFS mask\n
+     /tmp/aol${LOOPNUMBER}_dmmap.im.shm         DM map\n
+     /tmp/aol${LOOPNUMBER}_dmmaskRM.im.shm      DM mask\n
+     /tmp/aol${LOOPNUMBER}_wfsref0.im.shm        WFS ref\n
+\n
+SYSTEM MODAL RESPONSE AND CONTROL:\n
+     /tmp/aol${LOOPNUMBER}_DMmodes.im.shm       DM modes\n
+     /tmp/aol${LOOPNUMBER}_RM.im.shm            Response Matrix\n
+     /tmp/aol${LOOPNUMBER}_CM.im.shm            Control Matrix\n
+\n
+\n
+    /tmp/aol${LOOPNUMBER}_imWFS0.im.shm         Dark-subtracted WFS frame\n
+            sem0    post: full frame ready      wait: modal reconstruction\n
+            sem1    post: full frame ready      wait: \n
+\n
+' $nbwlines $nbwcols
+;;
+
+
+
+
+
+     sNBb) 
+NBmodeblocks=$( head -1 ./conf/param_NBmodeblocks.txt )
+menuitems1=( "01" "NBmodeblocks = 01" )
+for i in 02 03 04 05 06 07 08 09 10 11 12 13 14 15;
+        do
+menuitems1+=( "$i" "NBmodeblocks = $i" )
+done 
+
+cmd=( dialog --default-item "${vali}" --menu "Choose one:" 50 80 100 "${menuitems1[@]}" )
+NBmodeblocks=$("${cmd[@]}" 2>&1 >/dev/tty)
+echo "$NBmodeblocks" > ./conf/param_NBmodeblocks.txt
+aoconflog "set NBmodeblocks = $NBmodeblocks"
+
+
+if [ "$NBmodeblocks" = "01" ]; then
+block00end="$mNBmodes"
+echo $block00end > ./conf/param_block00end.txt
+fi
+
+if [ "$NBmodeblocks" = "02" ]; then
+block01end="$mNBmodes"
+echo "$block01end" > ./conf/param_block01end.txt
+fi
+
+if [ "$NBmodeblocks" = "03" ]; then
+block02end="$mNBmodes"
+echo "$block02end" > ./conf/param_block02end.txt
+fi
+
+if [ "$NBmodeblocks" = "04" ]; then
+block03end="$mNBmodes"
+echo "$block03end" > ./conf/param_block03end.txt
+fi
+
+if [ "$NBmodeblocks" = "05" ]; then
+block04end="$mNBmodes"
+echo "$block04end" > ./conf/param_block04end.txt
+fi
+
+if [ "$NBmodeblocks" = "06" ]; then
+block05end="$mNBmodes"
+echo "$block05end" > ./conf/param_block05end.txt
+fi
+
+if [ "$NBmodeblocks" = "07" ]; then
+block06end="$mNBmodes"
+echo "$block06end" > ./conf/param_block06end.txt
+fi
+
+if [ "$NBmodeblocks" = "08" ]; then
+block07end="$mNBmodes"
+echo "$block07end" > ./conf/param_block07end.txt
+fi
+
+if [ "$NBmodeblocks" = "09" ]; then
+block08end="$mNBmodes"
+echo "$block08end" > ./conf/param_block08end.txt
+fi
+
+if [ "$NBmodeblocks" = "10" ]; then
+block09end="$mNBmodes"
+echo "$block09end" > ./conf/param_block09end.txt
+fi
+
+
+;;
+
+
+
+
+
+	bl00e)
+exec 3>&1;
+block00end=$(dialog --inputbox "end of block 00" 0 0 "$block00end" 2>&1 1>&3);
+exec 3>&-;
+block00end=$( echo $block00end | awk '{ printf("%03d", $1)}' )
+echo "$block00end" > ./conf/param_block00end.txt
+;;
+
+	bl01e)
+exec 3>&1;
+block01end=$(dialog --inputbox "end of block 01" 0 0 "$block01end" 2>&1 1>&3);
+exec 3>&-;
+block01end=$( echo $block01end | awk '{ printf("%03d", $1)}' )
+echo "$block01end" > ./conf/param_block01end.txt
+;;
+	
+	bl02e)
+exec 3>&1;
+block02end=$(dialog --inputbox "end of block 02" 0 0 "$block02end" 2>&1 1>&3);
+exec 3>&-;
+block02end=$( echo $block02end | awk '{ printf("%03d", $1)}' )
+echo "$block02end" > ./conf/param_block02end.txt
+;;
+
+	bl03e)
+exec 3>&1;
+block03end=$(dialog --inputbox "end of block 03" 0 0 "$block03end" 2>&1 1>&3);
+exec 3>&-;
+block03end=$( echo $block03end | awk '{ printf("%03d", $1)}' )
+echo "$block03end" > ./conf/param_block03end.txt
+;;
+
+	bl04e)
+exec 3>&1;
+block04end=$(dialog --inputbox "end of block 04" 0 0 "$block04end" 2>&1 1>&3);
+exec 3>&-;
+block04end=$( echo $block04end | awk '{ printf("%03d", $1)}' )
+echo "$block04end" > ./conf/param_block04end.txt
+;;
+
+	bl05e)
+exec 3>&1;
+block05end=$(dialog --inputbox "end of block 05" 0 0 "$block05end" 2>&1 1>&3);
+exec 3>&-;
+block05end=$( echo $block05end | awk '{ printf("%03d", $1)}' )
+echo "$block05end" > ./conf/param_block05end.txt
+;;
+
+	bl06e)
+exec 3>&1;
+block06end=$(dialog --inputbox "end of block 06" 0 0 "$block06end" 2>&1 1>&3);
+exec 3>&-;
+block06end=$( echo $block06end | awk '{ printf("%03d", $1)}' )
+echo "$block06end" > ./conf/param_block06end.txt
+;;
+
+	bl07e)
+exec 3>&1;
+block07end=$(dialog --inputbox "end of block 07" 0 0 "$block07end" 2>&1 1>&3);
+exec 3>&-;
+block07end=$( echo $block07end | awk '{ printf("%03d", $1)}' )
+echo "$block07end" > ./conf/param_block07end.txt
+;;
+
+	bl08e)
+exec 3>&1;
+block08end=$(dialog --inputbox "end of block 08" 0 0 "$block08end" 2>&1 1>&3);
+exec 3>&-;
+block08end=$( echo $block08end | awk '{ printf("%03d", $1)}' )
+echo "$block08end" > ./conf/param_block08end.txt
+;;
+
+	bl09e)
+exec 3>&1;
+block09end=$(dialog --inputbox "end of block 09" 0 0 "$block09end" 2>&1 1>&3);
+exec 3>&-;
+block09end=$( echo $block09end | awk '{ printf("%03d", $1)}' )
+echo "$block09end" > ./conf/param_block09end.txt
+;;
+
+	bl10e)
+exec 3>&1;
+block10end=$(dialog --inputbox "end of block 10" 0 0 "$block10end" 2>&1 1>&3);
+exec 3>&-;
+block10end=$( echo $block10end | awk '{ printf("%03d", $1)}' )
+echo "$block10end" > ./conf/param_block10end.txt
+;;
+
+
+CMmode0)
+CMMODE="0"
+CMMODEfile="conf/param_CMMODE.txt"
+echo "$CMMODE" > $CMMODEfile
+menucontrolmatrix_default="CMmode1"
+;;
+
+CMmode1)
+CMMODE="1"
+CMMODEfile="conf/param_CMMODE.txt"
+echo "$CMMODE" > $CMMODEfile
+menucontrolmatrix_default="CMmode0"
+;;
+
+
+	SVDla)
+exec 3>&1;
+SVDlimall=$(dialog --inputbox "SVD limit for full built" 0 0 "$SVDlimall" 2>&1 1>&3);
+exec 3>&-;
+echo "$SVDlimall" > ./conf/param_SVDlimall.txt
+aoconflogext "set SDVlimall ${SVDlimall}"
+;;
+
+
+
+
+
+RM2CMm) # Does modal decomposition - DO NOT RUN IF DM IS MODAL
+tmuxname="aol${LOOPNUMBER}mkmodesM"
+sleep 0.2
+tmux new-session -d -s $tmuxname
+sleep 0.2
+logRunningProcess "aolmkmodesM" "$tmuxname" "Compute control modes and control matrix (tmux session $tmuxname)"
+mkdir -p DMmodes
+mkdir -p respM
+mkdir -p contrM
+mkdir -p contrMc
+mkdir -p contrMcact
+
+tmux send-keys -t $tmuxname "Fits2shm -c -p aol${LOOPNUMBER}_ zrespM" C-m
+tmux send-keys -t $tmuxname "Fits2shm -c -p aol${LOOPNUMBER}_ wfsmask" C-m
+
+
+tmux send-keys -t $tmuxname "echo \"./auxscripts/aolmkmodesM -a 0 ${SVDlimall}\" >> aolcmd.txt" C-m
+tmux send-keys -t $tmuxname "./auxscripts/aolmkmodesM -a 0 ${SVDlimall}" C-m
+
+datestr=`date -u +%Y-%m-%d_%H:%M:%S`
+tmux send-keys -t $tmuxname "cp ./mkmodestmp/fmodesall.fits DMmodes/DMmodes_${datestr}.fits" C-m
+tmux send-keys -t $tmuxname "echo \"DMmodes/DMmodes_${datestr}.fits\" > ./conf/shmim_DMmodes.name.txt" C-m
+tmux send-keys -t $tmuxname "cp ./mkmodestmp/fmodesWFSall.fits respM/respM_${datestr}.fits" C-m
+tmux send-keys -t $tmuxname "echo \"respM/respM_${datestr}.fits\" > ./conf/shmim_respM.name.txt" C-m
+tmux send-keys -t $tmuxname "cp ./mkmodestmp/cmatall.fits contrM/contrM_${datestr}.fits" C-m
+tmux send-keys -t $tmuxname "echo \"contrM/contrM_${datestr}.fits\" > ./conf/shmim_contrM.name.txt" C-m
+
+
+for i in `seq 0 20`;
+do
+i2=$(printf "%02d" "$i")
+fname="mkmodestmp/fmodes_${i2}.fits"
+#if [ -e "$fname" ]; then
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodes_${i2}.fits DMmodes/DMmodes${i2}_${datestr}.fits; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"DMmodes/DMmodes${i2}_${datestr}.fits\" > ./conf/shmim_DMmodes${i2}.name.txt; fi" C-m
+
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodesWFS_${i2}.fits respM/respM${i2}_${datestr}.fits; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"respM/respM${i2}_${datestr}.fits\" > ./conf/shmim_respM${i2}.name.txt; fi" C-m
+
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmat_${i2}.fits contrM/contrM${i2}_${datestr}.fits; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"contrM/contrM${i2}_${datestr}.fits\" > ./conf/shmim_contrM${i2}.name.txt; fi" C-m
+
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatc_${i2}.fits contrMc/contrMc${i2}_${datestr}.fits; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"contrMc/contrMc${i2}_${datestr}.fits\" > ./conf/shmim_contrMc${i2}.name.txt; fi" C-m
+
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatcact_${i2}.fits contrMcact/contrMcact${i2}_${datestr}.fits; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"contrMcact/contrMcact${i2}_${datestr}.fits\" > ./conf/shmim_contrMcact${i2}_00.name.txt; fi" C-m
+#fi
+done
+
+
+tmux send-keys -t $tmuxname "rm runproc/aolmkmodesM.runproc" C-m
+menucontrolmatrix_default="RM2CMm"
+;;
+
+
+
+
+
+
+
+	zRM)
+fname=$( head -1 ./conf/shmim_zrespM.name.txt )
+fname=$(dialog --title "Select zonal Resp Matrix" --stdout --fselect ${fname} $nbwlines $nbwcols)
+echo "$fname" > ./conf/shmim_zrespM.name.txt
+Fits2shm -c -p aol${LOOPNUMBER}_ zrespM
+menucontrolmatrix_default="zRM"
+;;
+
+
+
+	RM2CM)  
+# COMPUTE SINGLE MATRIX (no block decomposition, don't comput modes) : this is a straight pseudo-inverse of the resp matrix
+# USED FOR MODAL CONTROL (assumes 1 act = mode)
+
+#
+# INPUT
+#   ./conf_staged/wfsmask.fits
+#   ./conf_staged/zrespM.fits
+# OUTPUT
+#   ./zcontrM/zcontrM_<date>.fits
+#   ./conf/shmim_contrM.name.txt
+# -> 
+
+# set NBmodeblocks to 1
+echo "01" > conf_staged/param_NBmodeblocks.txt
+
+mkdir -p zcontrM
+datestr=`date -u +%Y-%m-%d_%H:%M:%S`
+./auxscripts/aolRM2CM ${SVDlimall} zcontrM.fits
+mv zcontrM.fits ./zcontrM//zcontrM_${datestr}.fits
+echo "zcontrM/zcontrM_${datestr}.fits" > ./conf_staged/shmim_contrM.name.txt
+echo "zcontrM/zcontrM_${datestr}.fits" > ./conf_staged/shmim_contrM00.name.txt
+echo "conf/aol${LOOPNUMBER}_DMmodes_zonal.fits" > ./conf_staged/shmim_DMmodes.name.txt
+echo "conf/aol${LOOPNUMBER}_DMmodes_zonal.fits" > ./conf_staged/shmim_DMmodes00.name.txt
+cp conf_staged/shmim_zrespM.name.txt conf_staged/shmim_respM.name.txt
+cp conf_staged/shmim_zrespM.name.txt conf_staged/shmim_respM00.name.txt
+cp $PWD/zcontrM/zcontrM_${datestr}.fits $PWD/conf_staged/contrM.fits      # for convenience
+
+CMMODE="1"
+echo "$CMMODE" > $CMMODEfile
+
+
+menucontrolmatrix_default="RM2CM"
+;;
+
+
+
+
+
+	extBlOFF)
+	rm ./conf/extrablockM.fits
+	menucontrolmatrix_default="extBlON"
+	;;
+	
+	extBlON)
+	cp ./extrablockM.fits ./conf/extrablockM.fits
+	menucontrolmatrix_default="extBlOFF"
+	;;
+	
+setexbi)
+exec 3>&1;
+extrablockIndex=$(dialog --inputbox "extrablockIndex" 0 0 "$extrablockIndex" 2>&1 1>&3);
+exec 3>&-;
+echo "$extrablockIndex" > ./conf/param_extrablockIndex.txt
+aoconflog "set extrablockIndex = ${extrablockIndex}"
+menucontrolmatrix_default="setexbi"
+;;
+
+
+	modeCPA)
+menucontrolmatrix_default="modeCPA"
+state="menu_mkFModes"
+;;	
+
+	mkModes0)
+mkModesMODE=0; # full computation
+menucontrolmatrix_default="mkModes0"
+aoconflogext "START control matrix computation mkModesMODE 0"
+CMMODE="0"
+echo "$CMMODE" > $CMMODEfile
+function_computeModesCM
+;;
+
+	mkModes1)
+mkModesMODE=1; # re-use previous DM modes
+menucontrolmatrix_default="mkModes1"
+aoconflogext "START control matrix computation mkModesMODE 1"
+CMMODE="0"
+echo "$CMMODE" > $CMMODEfile
+function_computeModesCM
+;;
+
+
+
+	confUp)
+aoconflogext "Update all configuration files"
+cp conf_staged/*.txt ./conf/
+;;
+
+
+
+SMload)
+function_SharedMemLoad 1
+menucontrolmatrix_default="SMload"
+;;
+
+
+
+	DMmodes)
+fname=$( head -1 ./conf/shmim_DMmodes.name.txt )
+fname=$(dialog --title "Select DM Control Modes" --stdout --fselect ${fname} $nbwlines $nbwcols)
+echo "$fname" > ./conf/shmim_DMmodes.name.txt
+Fits2shm -c -p aol${LOOPNUMBER}_ DMmodes
+menucontrolmatrix_default="DMmodes"
+;;
+	RM)
+fname=$( head -1 ./conf/conf_respM_name.txt )
+fname=$(dialog --title "Select Resp Matrix" --stdout --fselect ${fname} $nbwlines $nbwcols)
+echo "$fname" > ./conf/shmim_respM.name.txt
+Fits2shm -c -p aol${LOOPNUMBER}_ respM
+menucontrolmatrix_default="RM"
+;;
+	CM)
+fname=$( head -1 ./conf/conf_contrM_name.txt )
+fname=$(dialog --title "Select contr Matrix" --stdout --fselect ${fname} $nbwlines $nbwcols)
+echo "$fname" > ./conf/shmim_contrM.name.txt
+Fits2shm -c -p aol${LOOPNUMBER}_ contrM
+menucontrolmatrix_default="CM"
+;;
+
+
+chkSMloadCM)
+if [ -f "runproc/aolmkmodes.runproc" ]; then
+menucontrolmatrix_default="chkSMloadCM"
+else
+menucontrolmatrix_default="SMloadCM"
+fi
+;;
+
+
+
+
+
+
+	SetSVD00) mb="00"
+  	UpdateModes ;;
+
+	SetSVD01) mb="01"
+  	UpdateModes ;;
+
+	SetSVD02) mb="02"
+  	UpdateModes ;;
+
+	SetSVD03) mb="03"
+  	UpdateModes ;;
+
+	SetSVD04) mb="04"
+  	UpdateModes ;;
+
+	SetSVD05) mb="05"
+  	UpdateModes ;;
+
+	SetSVD06) mb="06"
+  	UpdateModes ;;
+
+	SetSVD07) mb="07"
+  	UpdateModes ;;
+
+	SetSVD08) mb="08"
+  	UpdateModes ;;
+
+	SetSVD09) mb="09"
+  	UpdateModes ;;
+
+	SetSVD10) mb="10"
+  	UpdateModes ;;
+
+	SetSVD11) mb="11"
+  	UpdateModes ;;
+
+	SetSVD12) mb="12"
+  	UpdateModes ;;
+
+	SetSVD13) mb="13"
+  	UpdateModes ;;
+
+	SetSVD14) mb="14"
+  	UpdateModes ;;
+
+	SetSVD15) mb="15"
+  	UpdateModes ;;
+
+	SetSVD16) mb="16"
+  	UpdateModes ;;
+
+	SetSVD17) mb="17"
+  	UpdateModes ;;
+
+	SetSVD18) mb="18"
+  	UpdateModes ;;
+
+	SetSVD19) mb="19"
+  	UpdateModes ;;
+
+
+
+
+
+	DMm00)
+SelectConfFile "DMmodes00"
+menucontrolmatrix_default="DMm00"
+state="menuconfigureloop"
+;;
+	DMm01)
+SelectConfFile "DMmodes01"
+menucontrolmatrix_default="DMm01"
+state="menuconfigureloop"
+;;
+	DMm02)
+SelectConfFile "DMmodes02"
+menucontrolmatrix_default="DMm02"
+state="menuconfigureloop"
+;;
+	DMm03)
+SelectConfFile "DMmodes03"
+menucontrolmatrix_default="DMm03"
+state="menuconfigureloop"
+;;
+	DMm04)
+SelectConfFile "DMmodes04"
+menucontrolmatrix_default="DMm04"
+state="menuconfigureloop"
+;;
+	DMm05)
+SelectConfFile "DMmodes05"
+menucontrolmatrix_default="DMm05"
+state="menuconfigureloop"
+;;
+	DMm06)
+SelectConfFile "DMmodes06"
+menucontrolmatrix_default="DMm06"
+state="menuconfigureloop"
+;;
+	DMm07)
+SelectConfFile "DMmodes07"
+menucontrolmatrix_default="DMm07"
+state="menuconfigureloop"
+;;
+	DMm08)
+SelectConfFile "DMmodes08"
+menucontrolmatrix_default="DMm08"
+state="menuconfigureloop"
+;;
+	DMm09)
+SelectConfFile "DMmodes09"
+menucontrolmatrix_default="DMm09"
+state="menuconfigureloop"
+;;
+	DMm10)
+SelectConfFile "DMmodes10"
+menucontrolmatrix_default="DMm10"
+state="menuconfigureloop"
+;;
+	DMm11)
+SelectConfFile "DMmodes11"
+menucontrolmatrix_default="DMm11"
+state="menuconfigureloop"
+;;
+	DMm12)
+SelectConfFile "DMmodes12"
+menucontrolmatrix_default="DMm12"
+state="menuconfigureloop"
+;;
+	DMm13)
+SelectConfFile "DMmodes13"
+menucontrolmatrix_default="DMm13"
+state="menuconfigureloop"
+;;
+	DMm14)
+SelectConfFile "DMmodes14"
+menucontrolmatrix_default="DMm14"
+state="menuconfigureloop"
+;;
+	DMm15)
+SelectConfFile "DMmodes15"
+menucontrolmatrix_default="DMm15"
+state="menuconfigureloop"
+;;
+	DMm16)
+SelectConfFile "DMmodes16"
+menucontrolmatrix_default="DMm16"
+state="menuconfigureloop"
+;;
+	DMm17)
+SelectConfFile "DMmodes17"
+menucontrolmatrix_default="DMm17"
+state="menuconfigureloop"
+;;
+	DMm18)
+SelectConfFile "DMmodes18"
+menucontrolmatrix_default="DMm18"
+state="menuconfigureloop"
+;;
+	DMm19)
+SelectConfFile "DMmodes19"
+menucontrolmatrix_default="DMm19"
+state="menuconfigureloop"
+;;
+
+
+
+
+	RM00)
+SelectConfFile "respM00"
+menucontrolmatrix_default="RM00"
+state="menuconfigureloop"
+;;
+	RM01)
+SelectConfFile "respM01"
+menucontrolmatrix_default="RM01"
+state="menuconfigureloop"
+;;
+	RM02)
+SelectConfFile "respM02"
+menucontrolmatrix_default="RM02"
+state="menuconfigureloop"
+;;
+	RM03)
+SelectConfFile "respM03"
+menucontrolmatrix_default="RM03"
+state="menuconfigureloop"
+;;
+	RM04)
+SelectConfFile "respM04"
+menucontrolmatrix_default="RM04"
+state="menuconfigureloop"
+;;
+	RM05)
+SelectConfFile "respM05"
+menucontrolmatrix_default="RM05"
+state="menuconfigureloop"
+;;
+	RM06)
+SelectConfFile "respM06"
+menucontrolmatrix_default="RM06"
+state="menuconfigureloop"
+;;
+	RM07)
+SelectConfFile "respM07"
+menucontrolmatrix_default="RM07"
+state="menuconfigureloop"
+;;
+	RM08)
+SelectConfFile "respM08"
+menucontrolmatrix_default="RM08"
+state="menuconfigureloop"
+;;
+	RM09)
+SelectConfFile "respM09"
+menucontrolmatrix_default="RM09"
+state="menuconfigureloop"
+;;
+	RM10)
+SelectConfFile "respM10"
+menucontrolmatrix_default="RM10"
+state="menuconfigureloop"
+;;
+	RM11)
+SelectConfFile "respM11"
+menucontrolmatrix_default="RM11"
+state="menuconfigureloop"
+;;
+	RM12)
+SelectConfFile "respM12"
+menucontrolmatrix_default="RM12"
+state="menuconfigureloop"
+;;
+	RM13)
+SelectConfFile "respM13"
+menucontrolmatrix_default="RM13"
+state="menuconfigureloop"
+;;
+	RM14)
+SelectConfFile "respM14"
+menucontrolmatrix_default="RM14"
+state="menuconfigureloop"
+;;
+	RM15)
+SelectConfFile "respM15"
+menucontrolmatrix_default="RM15"
+state="menuconfigureloop"
+;;
+	RM16)
+SelectConfFile "respM16"
+menucontrolmatrix_default="RM16"
+state="menuconfigureloop"
+;;
+	RM17)
+SelectConfFile "respM17"
+menucontrolmatrix_default="RM17"
+state="menuconfigureloop"
+;;
+	RM18)
+SelectConfFile "respM18"
+menucontrolmatrix_default="RM18"
+state="menuconfigureloop"
+;;
+	RM19)
+SelectConfFile "respM19"
+menucontrolmatrix_default="RM19"
+state="menuconfigureloop"
+;;
+
+
+
+
+
+
+	CM00)
+SelectConfFile "contrM00"
+menucontrolmatrix_default="CM00"
+state="menuconfigureloop"
+;;
+	CM01)
+SelectConfFile "contrM01"
+menucontrolmatrix_default="CM01"
+state="menuconfigureloop"
+;;
+	CM02)
+SelectConfFile "contrM02"
+menucontrolmatrix_default="CM02"
+state="menuconfigureloop"
+;;
+	CM03)
+SelectConfFile "contrM03"
+menucontrolmatrix_default="CM03"
+state="menuconfigureloop"
+;;
+	CM04)
+SelectConfFile "contrM04"
+menucontrolmatrix_default="CM04"
+state="menuconfigureloop"
+;;
+	CM05)
+SelectConfFile "contrM05"
+menucontrolmatrix_default="CM05"
+state="menuconfigureloop"
+;;
+	CM06)
+SelectConfFile "contrM06"
+menucontrolmatrix_default="CM06"
+state="menuconfigureloop"
+;;
+	CM07)
+SelectConfFile "contrM07"
+menucontrolmatrix_default="CM07"
+state="menuconfigureloop"
+;;
+	CM08)
+SelectConfFile "contrM08"
+menucontrolmatrix_default="CM08"
+state="menuconfigureloop"
+;;
+	CM09)
+SelectConfFile "contrM09"
+menucontrolmatrix_default="CM09"
+state="menuconfigureloop"
+;;
+	CM10)
+SelectConfFile "contrM10"
+menucontrolmatrix_default="CM10"
+state="menuconfigureloop"
+;;
+	CM11)
+SelectConfFile "contrM11"
+menucontrolmatrix_default="CM11"
+state="menuconfigureloop"
+;;
+	CM12)
+SelectConfFile "contrM12"
+menucontrolmatrix_default="CM12"
+state="menuconfigureloop"
+;;
+	CM13)
+SelectConfFile "contrM13"
+menucontrolmatrix_default="CM13"
+state="menuconfigureloop"
+;;
+	CM14)
+SelectConfFile "contrM14"
+menucontrolmatrix_default="CM14"
+state="menuconfigureloop"
+;;
+	CM15)
+SelectConfFile "contrM15"
+menucontrolmatrix_default="CM15"
+state="menuconfigureloop"
+;;
+	CM16)
+SelectConfFile "contrM16"
+menucontrolmatrix_default="CM16"
+state="menuconfigureloop"
+;;
+	CM17)
+SelectConfFile "contrM17"
+menucontrolmatrix_default="CM17"
+state="menuconfigureloop"
+;;
+	CM18)
+SelectConfFile "contrM18"
+menucontrolmatrix_default="CM18"
+state="menuconfigureloop"
+;;
+	CM19)
+SelectConfFile "contrM19"
+menucontrolmatrix_default="CM19"
+state="menuconfigureloop"
+;;
+
+
+
+
+	CMc00)
+SelectConfFile "contrMc00"
+menucontrolmatrix_default="CMc00"
+state="menuconfigureloop"
+;;
+	CMc01)
+SelectConfFile "contrMc01"
+menucontrolmatrix_default="CMc01"
+state="menuconfigureloop"
+;;
+	CMc02)
+SelectConfFile "contrMc02"
+menucontrolmatrix_default="CMc02"
+state="menuconfigureloop"
+;;
+	CMc03)
+SelectConfFile "contrMc03"
+menucontrolmatrix_default="CMc03"
+state="menuconfigureloop"
+;;
+	CMc04)
+SelectConfFile "contrMc04"
+menucontrolmatrix_default="CMc04"
+state="menuconfigureloop"
+;;
+	CMc05)
+SelectConfFile "contrMc05"
+menucontrolmatrix_default="CMc05"
+state="menuconfigureloop"
+;;
+	CMc06)
+SelectConfFile "contrMc06"
+menucontrolmatrix_default="CMc06"
+state="menuconfigureloop"
+;;
+	CMc07)
+SelectConfFile "contrMc07"
+menucontrolmatrix_default="CMc07"
+state="menuconfigureloop"
+;;
+	CMc08)
+SelectConfFile "contrMc08"
+menucontrolmatrix_default="CMc08"
+state="menuconfigureloop"
+;;
+	CMc09)
+SelectConfFile "contrMc09"
+menucontrolmatrix_default="CMc09"
+state="menuconfigureloop"
+;;
+	CMc10)
+SelectConfFile "contrMc10"
+menucontrolmatrix_default="CMc10"
+state="menuconfigureloop"
+;;
+	CMc11)
+SelectConfFile "contrMc11"
+menucontrolmatrix_default="CMc11"
+state="menuconfigureloop"
+;;
+	CMc12)
+SelectConfFile "contrMc12"
+menucontrolmatrix_default="CMc12"
+state="menuconfigureloop"
+;;
+	CMc13)
+SelectConfFile "contrMc13"
+menucontrolmatrix_default="CMc13"
+state="menuconfigureloop"
+;;
+	CMc14)
+SelectConfFile "contrMc14"
+menucontrolmatrix_default="CMc14"
+state="menuconfigureloop"
+;;
+	CMc15)
+SelectConfFile "contrMc15"
+menucontrolmatrix_default="CMc15"
+state="menuconfigureloop"
+;;
+	CMc16)
+SelectConfFile "contrMc16"
+menucontrolmatrix_default="CMc16"
+state="menuconfigureloop"
+;;
+	CMc17)
+SelectConfFile "contrMc17"
+menucontrolmatrix_default="CMc17"
+state="menuconfigureloop"
+;;
+	CMc18)
+SelectConfFile "contrMc18"
+menucontrolmatrix_default="CMc18"
+state="menuconfigureloop"
+;;
+	CMc19)
+SelectConfFile "contrMc19"
+menucontrolmatrix_default="CMc19"
+state="menuconfigureloop"
+;;
+
+
+
+
+
+
+
+	CMca00)
+SelectConfFile "contrMcact00_00"
+menucontrolmatrix_default="CMca00"
+state="menuconfigureloop"
+;;
+	CMca01)
+SelectConfFile "contrMcact01_00"
+menucontrolmatrix_default="CMca01"
+state="menuconfigureloop"
+;;
+	CMca02)
+SelectConfFile "contrMcact02_00"
+menucontrolmatrix_default="CMca02"
+state="menuconfigureloop"
+;;
+	CMca03)
+SelectConfFile "contrMcact03_00"
+menucontrolmatrix_default="CMca03"
+state="menuconfigureloop"
+;;
+	CMca04)
+SelectConfFile "contrMcact04_00"
+menucontrolmatrix_default="CMca04"
+state="menuconfigureloop"
+;;
+	CMca05)
+SelectConfFile "contrMcact05_00"
+menucontrolmatrix_default="CMca05"
+state="menuconfigureloop"
+;;
+	CMca06)
+SelectConfFile "contrMcact06_00"
+menucontrolmatrix_default="CMca06"
+state="menuconfigureloop"
+;;
+	CMca07)
+SelectConfFile "contrMcact07_00"
+menucontrolmatrix_default="CMca07"
+state="menuconfigureloop"
+;;
+	CMca08)
+SelectConfFile "contrMcact08_00"
+menucontrolmatrix_default="CMca08"
+state="menuconfigureloop"
+;;
+	CMca09)
+SelectConfFile "contrMcact09_00"
+menucontrolmatrix_default="CMca09"
+state="menuconfigureloop"
+;;
+	CMca10)
+SelectConfFile "contrMcact10_00"
+menucontrolmatrix_default="CMca10"
+state="menuconfigureloop"
+;;
+	CMca11)
+SelectConfFile "contrMcact11_00"
+menucontrolmatrix_default="CMca11"
+state="menuconfigureloop"
+;;
+	CMca12)
+SelectConfFile "contrMcact12_00"
+menucontrolmatrix_default="CMca12"
+state="menuconfigureloop"
+;;
+	CMca13)
+SelectConfFile "contrMcact13_00"
+menucontrolmatrix_default="CMca13"
+state="menuconfigureloop"
+;;
+	CMca14)
+SelectConfFile "contrMcact14_00"
+menucontrolmatrix_default="CMca14"
+state="menuconfigureloop"
+;;
+	CMca15)
+SelectConfFile "contrMcact15_00"
+menucontrolmatrix_default="CMca15"
+state="menuconfigureloop"
+;;
+	CMca16)
+SelectConfFile "contrMcact16_00"
+menucontrolmatrix_default="CMca16"
+state="menuconfigureloop"
+;;
+	CMca17)
+SelectConfFile "contrMcact17_00"
+menucontrolmatrix_default="CMca17"
+state="menuconfigureloop"
+;;
+	CMca18)
+SelectConfFile "contrMcact18_00"
+menucontrolmatrix_default="CMca18"
+state="menuconfigureloop"
+;;
+	CMca19)
+SelectConfFile "contrMcact19_00"
+menucontrolmatrix_default="CMca19"
+state="menuconfigureloop"
+;;
+
+
+
+
+
+
+	esac;;
+   1) state="menutop";;   
+   2) state="menuexit";;
+   3)
+case $actionmode in
+	"Select")
+actionmode="View"
+;;
+	"View")
+actionmode="Select"
+;;
+esac
+state="menucontrolmatrix"
+   ;;
+   255) state="menuexit";;
+esac
+
+echo "STATE = $state"
+fi

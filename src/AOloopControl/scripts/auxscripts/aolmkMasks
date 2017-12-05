@@ -1,0 +1,193 @@
+#!/bin/bash
+
+
+# number of arguments to script
+NBARGS=0
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+#echo "pname = $pname"
+
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CREATE/UPDATE AO MASKS $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  updates AO wfs and DM masks"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "     wfsmask.fits"
+echo "     dmmaskRM.fits"
+echo "     dmslaved.fits"
+echo "     dmmask.fits" 
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Create AO wfs and DM masks\n" "$0" 
+}
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+# arg 1: parameter name
+# arg 2: default value
+# 
+# param value is stored in variable "paramvalue"
+function ConfReadParam {
+file="./conf/param_$1.txt"
+if [ -f "$file" ]; then
+paramvalue=$( head -1 $file )
+else
+paramvalue="$2"
+echo "$2" > $file
+fi
+}
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+datestr=`date -u +%Y-%m-%d_%H:%M:%S`
+
+
+
+
+ConfReadParam DMmaskRMp0 "0.2"
+DMmaskRMp0="$paramvalue"
+
+ConfReadParam DMmaskRMc0 "1.0"
+DMmaskRMc0="$paramvalue"
+
+ConfReadParam DMmaskRMp1 "0.7"
+DMmaskRMp1="$paramvalue"
+
+ConfReadParam DMmaskRMc1 "0.3"
+DMmaskRMc1="$paramvalue"
+
+ConfReadParam WFSmaskRMp0 "0.05"
+WFSmaskRMp0="$paramvalue"
+
+ConfReadParam WFSmaskRMc0 "1.0"
+WFSmaskRMc0="$paramvalue"
+
+ConfReadParam WFSmaskRMp1 "0.65"
+WFSmaskRMp1="$paramvalue"
+
+ConfReadParam WFSmaskRMc1 "0.3"
+WFSmaskRMc1="$paramvalue"
+
+
+
+
+stageddir="conf_zrm_staged"
+
+
+./AOloopControl << EOF
+aolnb $loopnb
+loadfits "./${stageddir}/zrespM.fits" zrespm
+aolRMmkmasks zrespm wfsmap dmmap ${DMmaskRMp0} ${DMmaskRMc0} ${DMmaskRMp1} ${DMmaskRMc1} ${WFSmaskRMp0} ${WFSmaskRMc0} ${WFSmaskRMp1} ${WFSmaskRMc1}
+savefits wfsmask "!wfsmask.fits"
+savefits dmmask "!dmmaskRM.fits"
+exitCLI
+EOF
+
+
+
+
+exit
+
+if [ -f "./zrespmtmp/wfsimRMS.fits" ]; then
+./AOloopControl << EOF
+loadfits wfsmask.fits wfsmask0
+imref=0*wfsmask0+1
+loadfits "./zrespmtmp/wfsimRMS.fits" wfsimrms
+imr=wfsmask0/wfsimrms
+imr1=imr*wfsmask0
+# fraction of pixels in wfsmask0
+a1=itot(wfsmask0)/itot(imref)
+# goal fraction of pixels
+a2=a1*(1.0-$WFSmaskSNRr)
+lim=perc(imr1,a2)
+imr2=imr1/lim
+imtrunc imr2 0.0 1.001 imr3
+imr4=floor(imr3)
+savefits imr4 "!wfsmask_SNRfilt.fits"  
+exitCLI
+EOF
+cp wfsmask_SNRfilt.fits wfsmask.fits
+fi
+

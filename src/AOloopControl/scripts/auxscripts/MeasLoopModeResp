@@ -1,0 +1,133 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=6
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : MEASURE LOOP TEMPORAL RESPONSE $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  measure temporal response of AO system"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <modeNB> <modeAmp> <fmin[Hz]> <fmax[Hz]> <fstep> <etime>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <modeNB>      : index of mode to be tested"
+echo "     <modeAmp>     : amplitude applied"
+echo "     <fmin[Hz]>    : minimum frequency [Hz]"
+echo "     <fmax[Hz]>    : maximum frequency [Hz]"
+echo "     <fstep>       : frequency step"
+echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "     $0 0.05 30000 50"
+echo "" 
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "     out.txt     output file"
+echo ""
+echo "NOTES :"
+echo "  Loop must be running"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Measure AO loop temporal response\n" "$0" 
+}
+
+
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+#   <DM mask> <DM in [2D stream]> <DM out [2D stream]> <measurement stream [2D im]> <output [2D im]>
+
+loopnb=$( head -1 LOOPNUMBER )
+
+
+ampl=$2
+fmin=$3
+fmax=$4
+fmultstep="1.1"
+avetime="1.5" 
+tstepus="1000"
+
+./AOloopControl << EOF
+readshmim aol${loopnb}_DMmodes
+readshmim aol${loopnb}_dmmask
+readshmim aol${loopnb}_dmRM
+readshmim aol${loopnb}_dmC
+readshmim aol${loopnb}_meas_act
+
+aoltestmresp aol${loopnb}_DMmodes $1 $2 $fmin $fmax $fmultstep $avetime $tstepus aol${loopnb}_dmmask aol${loopnb}_dmRM aol${loopnb}_dmC out
+listim
+
+exitCLI
+EOF

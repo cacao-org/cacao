@@ -1,0 +1,211 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=0
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+echo "pname = $pname"
+
+
+
+
+
+LOOPNAME="SCExAOPyWFSsim"
+LOOPNUMBER="2"
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CONFIGURE AO LOOP FOR SCExAO PyWFS $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Configures AO loop custom scripts and variables for SCExAO PyWFS"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+
+EXITSTATUS=0
+
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function checkDir {
+if [ -d $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function cmdexists()
+{
+  command -v "$1" >/dev/null 2>&1
+}
+
+
+function checkCommand {
+if cmdexists $1; then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+fi
+
+}
+
+
+# ================= OPTIONS =============================
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      printHELP
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+### End getopts code ###
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+# ======================= FILE NAMES ===========================================
+aoAlign_file="aocscripts/aoAlign_${LOOPNAME}.bash" 
+takedark_file="aocscripts/takedark_${LOOPNAME}"
+
+# ======================= CHECK REQUIRED FILES =================================
+echo ""
+checkFile $aoAlign_file
+checkFile $takedark_file
+
+
+
+
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+echo ""
+exit
+else
+echo ""
+fi
+
+
+
+
+
+echo $LOOPNAME > LOOPNAME
+echo $LOOPNUMBER > LOOPNUMBER
+
+
+rm aocscripts/aoAlign.bash &> /dev/null
+ln -s $PWD/$aoAlign_file aocscripts/aoAlign.bash 
+
+rm aocscripts/takedark &> /dev/null
+ln -s $PWD/$takedark_file aocscripts/takedark 
+
+
+
+
+
+
+
+mkdir -p conf
+DMindex="00"
+echo "$DMindex" > ./conf/conf_DMindex.txt
+echo "50" > ./conf/conf_dm${DMindex}xsize.txt
+echo "50" > ./conf/conf_dm${DMindex}ysize.txt
+echo "0" > "./conf/conf_dm2dm_mode.txt"
+echo "0" > "./conf/conf_dmwfsref_mode.txt"
+echo "1" > "./conf/conf_dmvolt_mode.txt"
+echo "0" > "./conf/conf_dmcombavemode.txt"
+echo "dm${DMindex}disp03" > ./conf/conf_dmC_name.txt # DM control channel
+echo "dm${DMindex}disp00" > ./conf/conf_dmO_name.txt # DM offset channel (flat) 
+echo "dm${DMindex}disp04" > ./conf/conf_dmZP0_name.txt
+echo "dm${DMindex}disp05" > ./conf/conf_dmZP1_name.txt
+echo "dm${DMindex}disp06" > ./conf/conf_dmZP2_name.txt
+echo "dm${DMindex}disp07" > ./conf/conf_dmZP3_name.txt
+echo "dm${DMindex}disp08" > ./conf/conf_dmZP4_name.txt
+echo "dm${DMindex}disp09" > ./conf/conf_dmZP5_name.txt
+echo "dm${DMindex}disp10" > ./conf/conf_dmZP6_name.txt
+echo "dm${DMindex}disp11" > ./conf/conf_dmZP7_name.txt
+echo "dm${DMindex}disp" > ./conf/conf_dmdisp_name.txt # total DM displacement channel
+echo "dm${DMindex}disp02" > ./conf/conf_dmRM_name.txt # DM actuation channel for RM matrix
+
+echo "ocam2d" > ./conf/conf_wfsim_name.txt
+
+echo "0.02" >./conf/conf_RMamplum.txt    
+echo "2" >./conf/conf_RMdelayfr.txt
+echo "5" >./conf/conf_RMfrave.txt 
+echo "3" >./conf/conf_RMexfr.txt      
+echo "1" >./conf/conf_RMpokeMode.txt # use Hadamard poke mode
+./auxscripts/mkHpoke
+mv Hpoke.fits ./conf/Hpoke.fits
+cp ./conf/Hpoke.fits ./conf/RMpokeCube.fits
+mv Hpixindex.fits ./conf/
+cp ./conf/Hpixindex.fits ./conf/RMpixindex.fits
+mv Hmat.fits ./conf/
+cp ./conf/Hmat.fits ./conf/RMHmat.fits
+echo "1" > ./conf/conf_WFSnormalize.txt # normalize WFS frames
+
+echo " ON" > ./conf/conf_RMmodal.txt  
+echo "0.02" >./conf/conf_RMMamplum.txt   
+echo "3" >./conf/conf_RMMcpa.txt      
+
+
+echo "0.1" > ./conf/conf_SVDlimall.txt
+
+
+echo "2" > ./conf/conf_GPU.txt
+echo "1" > ./conf/conf_GPUset0_dev0.txt
+echo "2" > ./conf/conf_GPUset0_dev1.txt
+
+echo "3" > ./conf/conf_GPUmodesextrwfs.txt
+echo "4" > ./conf/conf_GPUzpoffsetM.txt
+echo "5" > ./conf/conf_GPUzpoffsetZ.txt
+
+echo "1" > ./conf/conf_CMmode.txt
+echo "1" > ./conf/conf_GPUall.txt
+
+mkdir simresp
+

@@ -1,0 +1,132 @@
+#! /bin/bash
+
+NBARGS=0
+loopnb=$( head -1 LOOPNUMBER 2> /dev/null)
+confnb=$( head -1 ./conf/conf_CONFNUMBER.txt 2> /dev/null)
+pname="aolctr-$loopnb"
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : AO control process $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  AO control process"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       AO control process\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+echo "pname = $pname"
+
+echo "aolnb ${loopnb}" > aol${loopnb}startup.txt
+echo "readshmim aol${loopnb}_wfsref" >> aol${loopnb}startup.txt
+echo "readshmim aol${loopnb}_respM" >> aol${loopnb}startup.txt
+echo "readshmim aol${loopnb}_contrM" >> aol${loopnb}startup.txt
+echo "readshmim aol${loopnb}_DMmodes" >> aol${loopnb}startup.txt
+echo "readshmim aol${loopnb}_wfsdark" >> aol${loopnb}startup.txt
+echo "readshmim aol${loopnb}_imWFS0" >> aol${loopnb}startup.txt
+echo "readshmim aol${loopnb}_imWFS1" >> aol${loopnb}startup.txt
+echo "readshmim aol${loopnb}_imWFS2" >> aol${loopnb}startup.txt
+
+#echo "readshmim aol${loopnb}_cmd" >> aol${loopnb}startup.txt
+#echo "readshmim aol${loopnb}_cmd1" >> aol${loopnb}startup.txt
+#echo "readshmim aol${loopnb}_DMmode_cmd" >> aol${loopnb}startup.txt
+#echo "readshmim aol${loopnb}_DMmode_cmd1" >> aol${loopnb}startup.txt
+#echo "readshmim aol${loopnb}_DMmode_AVE" >> aol${loopnb}startup.txt
+#echo "readshmim aol${loopnb}_DMmode_RMS" >> aol${loopnb}startup.txt
+#echo "readshmim aol${loopnb}_DMmode_GAIN" >> aol${loopnb}startup.txt
+#echo "readshmim aol${loopnb}_DMmode_LIMIT" >> aol${loopnb}startup.txt
+#echo "readshmim aol${loopnb}_DMmode_MULTF" >> aol${loopnb}startup.txt
+
+
+#echo "loadfits \"./conf/respm.fits\" respm" >> aol${loopnb}startup.txt
+#echo "loadfits \"./conf/cmat.fits\" cmat" >> aol${loopnb}startup.txt
+#echo "loadfits \"./conf/refwfs.fits\" refwfs" >> aol${loopnb}startup.txt
+#echo "loadfits \"./conf/dark.fits\" wfsdark" >> aol${loopnb}startup.txt
+
+#echo "cp wfsdark aol${loopnb}_wfsdark" >> aol${loopnb}startup.txt
+#echo "cp respm aol${loopnb}_RespM" >> aol${loopnb}startup.txt
+#echo "cp refwfs aol${loopnb}_refWFSim" >> aol${loopnb}startup.txt
+#echo "cp cmat aol${loopnb}_ContrM" >> aol${loopnb}startup.txt
+
+rm ${pname}-fifo
+echo "fifo file: ${pname}-fifo"
+echo "pname0 = $pname0"
+echo "pname  = $pname"
+sleep 1
+echo " "
+echo " "
+./AOloopControl -n $pname --startup="aol${loopnb}startup.txt" -f ${pname}-fifo
+ 
+

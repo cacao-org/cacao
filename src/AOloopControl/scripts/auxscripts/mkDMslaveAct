@@ -1,0 +1,185 @@
+#!/bin/bash
+
+
+
+
+
+NBARGS=3
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CREATE DM SLAVED ACTUATORS MAP $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  CREATE DM SLAVED ACTUATORS MAP"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <dmmap> <lim>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "   <dmmap>      : DM response map"
+echo "   <lim>        : limit value (usually 0.7)"
+echo "   <gauss>      : edge blurr (usually 1.0)"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "        dmslaved.fits"
+echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "        $0 dmmap 0.7 1.0"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Create DM slaved actuators map\n" "$0" 
+}
+
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+./AOloopControl << EOF
+
+loadfits "$1" dmmap
+dmmapc=dmmap-perc(dmmap,0.2)
+gaussfilt dmmapc dmmapg 5.0 24
+
+3savefits dmmapg "!test_dmmapg.fits"
+
+dmmap1=dmmap/dmmapg
+
+#savefits dmmap1 "!_test_dmmap1.fits"
+
+a=$2
+b=$2*0.99
+imtrunc dmmap1 0.0 a dmmap2
+
+#savefits dmmap2 "!_test_dmmap2.fits"
+
+dmmap3=dmmap2/b
+dmmap4=floor(dmmap3)
+gaussfilt dmmap4 dmmap4g 1.0 2
+dmmap5=dmmap4g/0.8
+dmmask=floor(dmmap5)
+dmmap6=dmmap5/0.2
+imtrunc dmmap6 0.0 1.01 dmmap6t
+dmmap7=floor(dmmap6t)
+dmmapsl=dmmap7*(1.0-dmmask)
+
+#savefits dmmapsl "!dmslaved.fits"
+
+gaussfilt dmmapsl dmmapslg 3.5 4
+mm1=dmmapslg*6.0
+imtrunc mm1 0.0 1.01 mm2
+mm3=floor(mm2)
+
+#savefits mm3 "!_test_mm3.fits"
+
+dmmap1s=sqrt(dmmap2)
+mm4=(dmmap1s-0.8)*100.0
+imtrunc mm4 0.0 1.01 mm5
+mm6=floor(mm5)
+
+#savefits mm6 "!_test_mm6.fits"
+
+mm7=mm3*(1.0-mm6)
+
+#savefits mm7 "!_test_mm7.fits"
+
+loadfits dmmaskRM.fits dmmRM
+gaussfilt dmmRM dmmRMg 5.5 8
+dmmRMg1=dmmRMg*9
+imtrunc dmmRMg1 0.0 1.01 ma0
+ma1=floor(ma0)
+
+#savefits ma1 "!_test_ma1.fits"
+
+mm8=(mm7+(mm7-1.0)*(dmmRM-1.0))*ma1
+
+#savefits mm8 "!_test_mm8.fits"
+
+gaussfilt mm8 mm8g $3 10
+mm9=3.0*mm8g
+
+#savefits mm9 "!_test_mm9.fits"
+
+imtrunc mm9 0.0 1.1 mm10
+mm11=floor(mm10)
+
+savefits mm11 "!dmslaved.fits"
+
+exitCLI
+EOF
+

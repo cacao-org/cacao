@@ -1,0 +1,140 @@
+#! /bin/bash
+
+NBARGS=4
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : ACQUIRE RESPONSE MATRIX $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Acquire response matrix"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <amplitude [nm]> <output: respm filename> <output: ref filename> <output: RM amplitude text file>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <amplitude[nm]>                    RM poke amplitude [nm]"
+echo "     <output: respm filename>           RM output filename"
+echo "     <output: ref filename>             reference filename"
+echo "     <output: RM amplitude text file>   output amplitude text file"
+echo ""
+#echo " $(tput bold)OUTPUT:$(tput sgr0)"
+#echo "     out.txt     output file"
+#echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Acquire response matrix\n" "$0" 
+}
+
+
+
+
+# ================= OPTIONS =============================
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+mkdir -p ./tmp/
+
+# number of images per DM state
+NBave=100
+
+# modulation amplitude [um DM displacement]
+ampl=$(echo " $1 * 0.001" | bc -l)
+
+# number of loop per matrix generation
+NBloops=1
+
+# frame delay offset [number of frames]
+fdelay=4
+
+# number of matrixes generated (will be continuously averaged)
+NBmat=10000
+
+
+
+
+# creates files "respm.fits" and "refwfs.fits"
+
+loopnb=$( head -1 LOOPNUMBER )
+
+
+./AOloopControl -n aolacqresp-$loopnb << EOF
+aolnb $loopnb
+readshmim aol${loopnb}_wfsdark
+aolacqresp $NBave $ampl $NBloops $fdelay $NBmat
+exitCLI
+EOF
+
+cp ./tmp/respm.fits $2
+cp ./tmp/refwfs.fits $3
+cp ./tmp/RM_optsign.txt $4
+

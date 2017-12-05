@@ -1,0 +1,64 @@
+#!/bin/bash
+
+#########################################################################################
+##          LOAD MODAL CALIB TO SHM                                                    ##
+#########################################################################################
+
+execname="./AOloopControl"
+
+
+
+#RMZONALCALIBlist="wfsref0 zrespM wfsmap dmmap wfsmask dmmaskRM dmslaved dmmask"
+RMMODALCALIBlist="LODMmodes LOrespM LOwfsref0"
+
+
+
+
+
+# CHECK IF ALREADY RUNNING
+mkdir -p status
+statfile="./status/stat_SMload_mCalib_ON.txt"
+if [ -a $statfile ]; then
+	SMload_mCalib_ON_stat=$( head -1 $statfile )
+else
+	SMload_mCalib_ON_stat="OFF"
+	echo "$SMload_mCalib_ON_stat" > $statfile
+fi
+
+
+
+
+if [ "$SMload_mCalib_ON_stat" = " ON" ]; then
+echo "$0 already running"
+exit
+fi
+
+
+
+
+##########################################
+# READ REQUIRED PARAMETERS
+##########################################
+
+# READ LOOP NUMBER
+if [ -f LOOPNUMBER ]; then
+LOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+LOOPNUMBER="7"
+echo "$LOOPNUMBER" > LOOPNUMBER
+fi
+
+
+
+
+#for imname in $RMZONALCALIBlist; do
+#Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}
+#done
+
+for imname in $RMMODALCALIBlist; do
+Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}
+done
+
+
+
+echo "OFF" > $statfile

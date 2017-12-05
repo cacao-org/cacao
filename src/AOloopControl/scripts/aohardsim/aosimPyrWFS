@@ -1,0 +1,108 @@
+#!/bin/bash
+
+execname="./AOloopControl"
+
+# number of arguments to script
+NBARGS=0
+
+pname=`echo "$0" | sed "s/\.\///g"`
+
+CONFFILE="$pname.conf" #default
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : WFS SIMULATION$(tput sgr 0)"
+echo "------------------------------------------------------------------------"
+echo "  Simulate WFS (currently only Pyramid)"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr 0)"
+echo "     $0 [-hc]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr 0)"
+echo "    $(tput bold)-h$(tput sgr 0)               print help"
+echo "    $(tput bold)-c$(tput sgr 0) <conffile>    use configuration file <conffile>"
+echo "    $(tput bold)-n$(tput sgr 0)               create new template default configuration ($CONFFILE.default) and exit"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr 0)"
+echo "     aosimPyrWFS.conf     configuration file"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+function CreateDefaultConfiguration {
+$execname << EOF
+AOsimPyrWFS "$CONFFILE"
+exit
+EOF
+}
+
+
+
+
+
+# ================= OPTIONS =============================
+
+#Parse command line flags
+#If an option should be followed by an argument, it should be followed by a ":".
+#Notice there is no ":" after "h". The leading ":" suppresses error messages from
+#getopts. This is required to get unrecognized option code to work.
+
+while getopts :hc:n FLAG; do
+  case $FLAG in
+    h)  #show help
+      printHELP
+      exit
+      ;;
+     c) # set configuration file name
+    CONFFILE=$OPTARG
+    ;;
+    n) # create default configuration
+    CreateDefaultConfiguration
+    exit
+    ;;
+   \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      #If you just want to display a simple error message instead of the full
+      #help, remove the 2 lines above and uncomment the 2 lines below.
+      #echo -e "Use ${BOLD}$SCRIPT -h${NORM} to see the help documentation."\\n
+      #exit 2
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+### End getopts code ###
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr 0)"
+fi
+printHELP
+        exit
+fi
+
+
+if [ ! -f $CONFFILE ]
+  then
+    echo "$(tput setaf 5)$(tput bold) WARNING: File $CONFFILE not found $(tput sgr 0)"
+    echo "$(tput setaf 5)$(tput bold) WARNING: Copying $pname.conf.default to $CONFFILE  $(tput sgr 0)"
+    if [ -f "$pname.conf.default" ]; then
+    cp $pname.conf.default $CONFFILE
+    else
+    echo "$(tput setaf 5)$(tput bold) WARNING: File $pname.conf.default not found $(tput sgr 0) -> creating it"
+    CreateDefaultConfiguration
+    cp $pname.conf.default $CONFFILE
+    fi
+fi
+
+$execname -n $pname << EOF
+AOsimPyrWFS "$CONFFILE"
+exit
+EOF

@@ -1,0 +1,142 @@
+#! /bin/bash
+
+
+# number of arguments to script
+NBARGS=1
+
+# ======================= PROCESS NAME =================================
+loopnb=$( head -1 LOOPNUMBER 2> /dev/null)
+pname="aol${loopnb}mexwfs"
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : EXTRACT MODE VALUES FROM WFS IMAGES $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  computes mode coefficients from WFS image stream"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-hr] <GPUdevice>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo "     $(tput bold)-r$(tput sgr0)          read from aol${loopnb}_DMmode_meas instead of computing"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <GPUdevice>     GPU device"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "     aol${loopnb}_modeval      Mode coefficient values"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Extract mode values from WFS images\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+# ================= OPTIONS =============================
+IMPORTmodeval="0"
+while getopts :hr FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    r)
+    IMPORTmodeval="1"
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+# this version does not use masking (yet)
+
+if [ "$IMPORTmodeval" = "0" ]; then
+
+./AOloopControl -n $pname << EOF
+csetpmove aol${loopnb}RT1
+readshmim aol${loopnb}_respM
+readshmim aol${loopnb}_imWFS0
+readshmim aol${loopnb}_imWFS0tot
+readshmim aol${loopnb}_wfsref
+readshmim aol${loopnb}_wfsmask
+listim
+cudaextrmodes aol${loopnb}_imWFS0 aol${loopnb}_imWFS0tot aol${loopnb}_respM aol${loopnb}_wfsref nullim aol${loopnb}_modeval $1 1 1 1 2 0 0
+exitCLI
+EOF
+
+else
+
+#echo "Linking    /tmp/aol${loopnb}_DMmode_meas.im.shm  - /tmp/aol${loopnb}_modeval.im.shm"
+#rm /tmp/aol${loopnb}_modeval.im.shm
+#ln -s /tmp/aol${loopnb}_DMmode_meas.im.shm /tmp/aol${loopnb}_modeval.im.shm
+
+./AOloopControl -n $pname << EOF
+csetpmove aol${loopnb}RT1
+readshmim aol${loopnb}_respM
+readshmim aol${loopnb}_imWFS0
+readshmim aol${loopnb}_imWFS0tot
+readshmim aol${loopnb}_wfsref
+readshmim aol${loopnb}_modeval
+readshmim aol${loopnb}_wfsmask
+listim
+cudaextrmodes aol${loopnb}_imWFS0 aol${loopnb}_imWFS0tot aol${loopnb}_respM aol${loopnb}_wfsref nullim aol${loopnb}_modeval $1 1 1 1 2 0 0
+exitCLI
+EOF
+
+fi
+

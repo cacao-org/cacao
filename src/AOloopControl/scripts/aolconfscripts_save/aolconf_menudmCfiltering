@@ -1,0 +1,162 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+# =====================================================
+# ======== dmC filtering = ============================
+# =====================================================
+
+if [ $state = "menudmCfiltering" ]; then
+stateok=1
+
+menuname="DM COMMAND FILTERING"
+
+
+stringcenter "HELP"
+menuitems=( "H" "\Zb\Zr\Z4$string\Zn" )
+menuitems+=( " " " " )
+
+
+stringcenter "APPLY DM MODES LIMITS"
+menuitems+=( "1 ->" "\Zb\Zr$string\Zn" )
+menuitems+=( " " " " )
+
+file="./conf/conf_dmCfilt_lmin.txt"
+if [ -f "$file" ]; then
+dmCfilt_lmin=$( cat $file )
+else
+dmCfilt_lmin="0.1"
+echo $dmCfilt_lmin > "$file"
+fi
+menuitems+=( "setlmin" "[${dmCfilt_lmin}] Set min amplitude - highest spatial frequency")
+
+file="./conf/conf_dmCfilt_lmax.txt"
+if [ -f "$file" ]; then
+dmCfilt_lmax=$( cat $file )
+else
+dmCfilt_lmax="0.5"
+echo $dmCfilt_lmax > "$file"
+fi
+menuitems+=( "setlmax" "[${dmCfilt_lmax}] Set max amplitude - lowest spatial frequency")
+
+file="./conf/conf_dmCfilt_n0.txt"
+if [ -f "$file" ]; then
+dmCfilt_n0=$( cat $file )
+else
+dmCfilt_n0="300"
+echo $dmCfilt_n0 > "$file"
+fi
+menuitems+=( "setn0"   "[${dmCfilt_n0}] Set decay rate")
+
+file="./conf/conf_dmCfilt_alpha.txt"
+if [ -f "$file" ]; then
+dmCfilt_alpha=$( cat $file )
+else
+dmCfilt_alpha="2.0"
+echo $dmCfilt_alpha > "$file"
+fi
+menuitems+=( "setal"   "[${dmCfilt_alpha}] Set exponent" )
+
+
+menuitems+=( " " " " )
+menuitems+=( "mc2dm" "GPU-based  MODE COEFFS -> DM MAP (included filtering) " )
+menuitems+=( " " " " )
+menuitems+=( " " " " )
+
+
+
+
+
+
+
+
+
+
+dialog --colors --title "RECORD and ANALYZE  - LOOP ${LOOPNUMBER}" --ok-label " Select " --cancel-label "Top" --help-button --help-label "Exit" --default-item "${menurecord_default}" --menu "$menuname"  $nbwlines $nbwcols $nbwlines "${menuitems[@]}"  2> $tempfile
+
+
+
+retval=$?
+choiceval=$(cat $tempfile)
+menurecord_default="$choiceval"
+state="menudmCfiltering"
+case $retval in
+   0) # Monitor
+	case $choiceval in
+
+
+	setlmin)
+  	 value=${dmCfilt_lmin}
+	 SelectValue01 100 1200 50
+  	 dmCfilt_lmin=${value}
+  	 echo "$dmCfilt_lmin" > ./conf/conf_dmCfilt_lmin.txt
+./auxscripts/aolSetmcLimit $dmCfilt_lmin $dmCfilt_lmax $dmCfilt_n0 $dmCfilt_alpha
+;;
+
+	setlmax)
+  	 value=${dmCfilt_lmax}
+	 SelectValue01 100 1200 50
+  	 dmCfilt_lmax=${value}
+  	 echo "$dmCfilt_lmax" > ./conf/conf_dmCfilt_lmax.txt
+./auxscripts/aolSetmcLimit $dmCfilt_lmin $dmCfilt_lmax $dmCfilt_n0 $dmCfilt_alpha
+;;
+
+	setn0)
+exec 3>&1;
+dmCfilt_n0=$(dialog --inputbox "Decay rate: # modes" 0 0 "$dmCfilt_n0" 2>&1 1>&3);
+exec 3>&-;
+echo "$dmCfilt_n0" > ./conf/conf_dmCfilt_n0.txt
+./auxscripts/aolSetmcLimit $dmCfilt_lmin $dmCfilt_lmax $dmCfilt_n0 $dmCfilt_alpha
+;;
+
+	setal)
+  	 value=${dmCfilt_alpha}
+	 SelectValue01 400 6000 400
+  	 dmCfilt_alpha=${value}
+  	 echo "$dmCfilt_alpha" > ./conf/conf_dmCfilt_alpha.txt
+  	 ./auxscripts/aolSetmcLimit $dmCfilt_lmin $dmCfilt_lmax $dmCfilt_n0 $dmCfilt_alpha
+;;
+
+
+
+
+	mc2dm)
+./auxscripts/aolmcoeffs2dmmap 
+sleep 5
+;;
+
+
+
+
+
+
+
+esac
+;; 
+   1) state="menutop";;   
+  2) state="menuexit";;
+   255) state="menuexit";;
+esac
+
+fi
+
+
+
+
+
+

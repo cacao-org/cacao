@@ -1,0 +1,604 @@
+#!/bin/bash
+
+# ensures that subscripts are called from the main script
+aolconfFLAG="1"
+
+NBARGS=0
+
+if [ -f LOOPNAME ]; then
+LOOPNAME=$( head -1 LOOPNAME )
+else
+LOOPNAME="null"
+fi
+
+if [ -f LOOPNUMBER ]; then
+LOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+LOOPNUMBER="7"
+fi
+
+
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+#echo "pname = $pname"
+
+
+
+
+printHELP_confFILES ()
+{
+echo "------------------------------------------------------------------------"
+echo -e "\033[1m               CONFIGURATION FILES \033[0m"
+echo "------------------------------------------------------------------------"
+echo "	CONFNUMBER                    loop number (long)"
+echo "	CONFNAME                      loop name"
+echo "  conf/conf_dmC_name.txt        DM control"
+echo "------------------------------------------------------------------------"
+}
+
+
+
+
+
+printHELP ()
+{
+echo
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname :  AO loop CONTROL - main script $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo " "
+echo " $(tput bold)LOOPNUMBER:$(tput sgr0)  $LOOPNUMBER"
+echo " $(tput bold)LOOPNAME:$(tput sgr0)    $LOOPNAME"
+echo " "
+echo " "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [options]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "  Performs task and exit: "
+echo "   --help -h             print (h)elp and exit"
+echo "   --help1               print 1 line summary"
+echo "   -H  <string>         (H)elp category"
+echo "                 cf     list configuration files (incomplete)"    
+echo "   -l <exec>            log executable"  
+echo "   -C                   run (C)PU config: execute ./aocscripts/cpuconfig_${LOOPNAME}"
+echo "   -c                   (c)lear all settings"
+echo "  Runs top level script:"
+echo "   -L <long>            (L)oop number"
+echo "   -N <string>          loop (N)ame. Run ./aosetup/aosetup_<string> if available"
+echo "   -x                   load/initalize and e(x)it"
+echo "   -e <exec>            specify executable name (default: $execname)"
+echo "   -n                   do (n)ot load configuration on startup"
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+	printf "%20s       AO loop CONTROL - main script\n" "$0" 
+}
+
+
+EXITSTATUS=0
+
+
+function cmdexists()
+{
+  command -v "$1" >/dev/null 2>&1
+}
+
+
+function checkCommand {
+if cmdexists $1; then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+fi
+
+}
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+LOADMEM=1
+LOOPNAME_file="LOOPNAME"
+LOOPNUMBER_file="LOOPNUMBER"
+CPUconfRT="1"  # use CPU sets
+LOADexit="0"
+
+execname="./AOloopControl"
+
+mkdir -p logdir
+
+# runproc files indicating which processes are running
+mkdir -p runproc
+
+### Start getopts code ###
+while getopts :hH:l:CcL:N:xe:n FLAG; do
+  case $FLAG in
+    h)  #show help
+	if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    H) # detailed help
+    if [ "$OPTARG" == "cf" ]; then
+    printHELP_confFILES
+    exit
+    fi
+    echo "ERROR: choice $OPTARG not recognized"
+    exit
+    ;;
+    l)
+    echo "Option not yet supported"
+    exit
+    ;;
+    C) # configure CPU
+    echo "Configure CPU"
+    ./aocscripts/cpuconfig_${LOOPNAME}
+    exit
+    ;;    
+    c) # clear
+    echo "Clearing all settings"
+    rm LOOPNUMBER 2> /dev/null
+    rm LOOPNAME 2> /dev/null
+    rm conf/* 2> /dev/null
+    rmdir conf 2> /dev/null
+    rm status/* 2> /dev/null
+    rmdir status 2> /dev/null
+    rm tmp/* 2> /dev/null
+    rmdir tmp 2> /dev/null
+    rm aolconf.log 2> /dev/null
+    exit
+    ;;    
+    L)  #  set loop number
+      LOOPNUMBER=$OPTARG
+      echo "LOOP NUMBER = $LOOPNUMBER"
+      echo "$LOOPNUMBER" > $LOOPNUMBER_file
+      aoconflog "setting LOOPNUMBER to $LOOPNUMBER"
+      ;;
+    N) # set loop name
+    LOOPNAME=$OPTARG
+    echo "LOOP NAME = $LOOPNAME"
+    echo "$LOOPNAME" > $LOOPNAME_file
+    aoconflog "setting LOOPNAME to $LOOPNAME"
+	./aosetup/aosetup_${LOOPNAME}
+    ;;
+	x)
+	LOADexit="1"
+	;;
+    e) # set executable
+    execnameFile=$OPTARG
+    ln -s $execnameFile ./AOloopControl
+    ;;
+    n) # do not load configuration upon startup
+    LOADMEM=0
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+### End getopts code ###
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo -e \\n"Illegal number of parameters ($NBARGS params required, $# entered)"\\n
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+echo ""
+exit
+else
+echo ""
+fi
+
+
+
+
+
+
+
+
+# help, warning, error
+. ./aolconfscripts/aolconf_funcs
+
+
+# ======================= LOGGING =================================
+# NOTE: logdir can be symbolic link set by user
+
+# internal log - logs EVERYTHING
+function aoconflog {
+./aolconfscripts/aollog "$LOOPNAME" "$@"
+}
+
+# external log, use for less verbose log
+function aoconflogext {
+./aolconfscripts/aollog -e "$LOOPNAME" "$@"
+}
+
+
+
+
+
+aoconflog "STARTING NEW aolconf SESSION"
+
+
+
+
+# ====================== USER EDITS THIS SECTION =======================
+
+
+# default parameters
+CPUconfRT="1" # CPU real-time configuration
+
+DMindex=0
+
+
+
+
+# CUSTOM USER-PROVIDED SCRIPTS:
+if [ -f "AOloopsetup.bash" ]; then
+. ./AOloopsetup.bash # executed here
+else
+printWARNING "File AOloopsetup.bash does not exist"
+fi
+
+
+
+
+
+
+# execute CPU configuration script if it exists
+if [ -f "./aocscripts/cpuconfig_${LOOPNAME}" ]; then
+if [ ! -f "cpuconfigOK" ]; then
+. ./aocscripts/cpuconfig_${LOOPNAME}
+fi
+fi
+
+
+
+
+shmimviewexec="shmimview"
+shmimmonexec="shmimmon"
+
+
+# ======================== END OF USER EDIT SECTION =====================
+
+
+
+
+# GLOBAL DECLARATIONS
+
+RMZONALCALIBlist="wfsref0 zrespM wfsmap dmmap wfsmask dmmaskRM dmslaved dmmask"
+RMMODALCALIBlist="LODMmodes LOrespM LOwfsref0"
+
+
+
+
+
+
+. ./aolconfscripts/aolconf_readconf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# =================== some initial setup =======================
+
+
+LINES=$( tput lines )
+COLUMNS=$( tput cols )
+let " nbwlines = $LINES - 10 "
+let " nbwcols = $COLUMNS - 10 "
+#echo "$COLUMNS -> $nbwcols"
+actionmode="Select"
+
+#confnbfile="./conf/conf_CONFNUMBER.txt"
+mkdir -p conf
+mkdir -p status
+mkdir -p tmp
+
+cp LOOPNAME ./conf/conf_LOOPNAME.txt
+
+
+
+
+
+
+
+tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
+trap "rm -f $tempfile" 0 1 2 5 15
+
+
+
+
+
+
+
+
+
+
+# ================ FREQUENTLY USED FUNCTIONS ===================
+
+echo "FUNCTIONS..."
+
+. ./aolconfscripts/aolconf_logfuncs
+
+. ./aolconfscripts/aolconf_configureloop_funcs
+
+. ./aolconfscripts/aolconf_controlmatrix_funcs
+
+. ./aolconfscripts/aolconf_controlloop_funcs
+
+
+
+
+
+function TestModeStart {
+
+aoconflog "TEST MODE START"
+
+
+mkdir -p testconf
+echo "# THIS SCRIPT IS GENERATED BY aolconf" >  script_aol${LOOPNUMBER}test 
+echo "$execname -n aol${LOOPNUMBER}test << EOF" >> script_aol${LOOPNUMBER}test 
+if [ "$CPUconfRT" -eq "1" ]; then
+echo "csetpmove aol0RT" >> script_aol${LOOPNUMBER}test 
+fi
+echo "AOsystsim ${AOsystsimsync} ${DMindex} ${AOsystsimWFSdelayus}" >> script_aol${LOOPNUMBER}test 
+chmod +x script_aol${LOOPNUMBER}test 
+sleep 0.2
+tmux new-session -d -s aol${LOOPNUMBER}test
+sleep 0.2
+echo " ON" > ./status/testloopstatus.txt
+tmux send-keys -t aol${LOOPNUMBER}test "./script_aol${LOOPNUMBER}test" C-m
+
+echo "aosimwfsim" > ./conf/conf_wfsim_name.txt
+#echo "dhfield" > ./conf/conf_wfsim_name.txt
+Readwfsimcamname
+
+}
+
+
+function TestModeStop {
+aoconflog "TEST MODE STOP"
+pkill aol${LOOPNUMBER}test
+echo "OFF" > ./status/testloopstatus.txt
+}
+
+
+
+
+. ./aolconfscripts/aolconf_DMturb
+
+
+
+
+
+# =================== READ CONFIGURATION====================================
+
+
+function StreamsConnect {
+
+# set up symbolic links to streams
+# Custom hardware I/O functions [shared memory]
+./aolfuncs/aolfunc_StreamLink dmC
+./aolfuncs/aolfunc_StreamLink dmO
+./aolfuncs/aolfunc_StreamLink dmdisp
+./aolfuncs/aolfunc_StreamLink dmRM
+./aolfuncs/aolfunc_StreamLink dmZP0
+./aolfuncs/aolfunc_StreamLink dmZP1
+./aolfuncs/aolfunc_StreamLink dmZP2
+./aolfuncs/aolfunc_StreamLink dmZP3
+./aolfuncs/aolfunc_StreamLink dmZP4
+./aolfuncs/aolfunc_StreamLink dmZP5
+./aolfuncs/aolfunc_StreamLink dmZP6
+./aolfuncs/aolfunc_StreamLink dmZP7
+./aolfuncs/aolfunc_StreamLink wfsim  # WFS image
+}
+
+
+
+function function_SharedMemLoad {
+
+touch runproc/SharedMemLoad.runproc # process is starting 
+
+tmuxnameSMl="aol${LOOPNUMBER}SMload"
+echo "tmux new-session -s ${tmuxnameSMl} -d"
+echo "CREATING SESSION : ${tmuxnameSMl}"
+sleep 0.2
+tmux new-session -s ${tmuxnameSMl} -d
+sleep 0.2
+tmux send-keys -t ${tmuxnameSMl} "" C-c
+tmux send-keys -t ${tmuxnameSMl} " " C-m
+
+tmux send-keys -t ${tmuxnameSMl} "./auxscripts/waitonfile FUNCTION_SharedMemLoad.block" C-m
+logRunningProcessQ "SharedMemLoad" "${tmuxnameSMl}" "Load control matrix into shared memory" 
+tmux send-keys -t ${tmuxnameSMl} "aoconflogext \"LOAD files to shared memory\"" C-m
+
+
+# WFS dark
+tmux send-keys -t ${tmuxnameSMl} "Fits2shm -c -p aol${LOOPNUMBER}_ wfsdark" C-m
+
+# zonal calib
+for imname in $RMZONALCALIBlist; do
+tmux send-keys -t ${tmuxnameSMl} "Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}" C-m
+done
+
+# modal calib
+for imname in $RMMODALCALIBlist; do
+tmux send-keys -t ${tmuxnameSMl} "Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}" C-m
+done
+
+# System response and control
+for imname in DMmodes respM contrM
+do
+tmux send-keys -t ${tmuxnameSMl} "Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}" C-m
+done
+
+
+if [ "$1" -eq 1 ];then # BLOCK FILES
+NBmodeblocks=$( head -1 ./conf/param_NBmodeblocks.txt )
+#NBmodes=$( head -1 ./conf/param_NBmodes.txt )
+for i in `seq 0 $(( $NBmodeblocks - 1 ))`; do
+	i2=$(printf "%02d" "$i")
+	for imname in DMmodes${i2} respM${i2} contrM${i2} contrMc${i2} contrMcact${i2}_00 ; do
+		tmux send-keys -t ${tmuxnameSMl} "Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}" C-m	
+	done
+done
+
+
+# remove links/names for files beyond number of blocks
+for i in `seq $NBmodeblocks 20`;
+do
+i2=$(printf "%02d" "$i")
+
+rm "./conf/shmim_DMmodes${i2}.fits" &> /dev/null
+rm "./conf/shmim_DMmodes${i2}.name.txt" &> /dev/null
+rm "./conf/shmim_DMmodes${i2}.imsize.txt" &> /dev/null
+
+rm "./conf/shmim_respM${i2}.fits" &> /dev/null
+rm "./conf/shmim_respM${i2}.name.txt" &> /dev/null
+rm "./conf/shmim_respM${i2}.imsize.txt" &> /dev/null
+
+rm "./conf/shmim_contrM${i2}.fits" &> /dev/null
+rm "./conf/shmim_contrM${i2}.name.txt" &> /dev/null
+rm "./conf/shmim_contrM${i2}.imsize.txt" &> /dev/null
+
+rm "./conf/shmim_contrMc${i2}.fits" &> /dev/null
+rm "./conf/shmim_contrMc${i2}.name.txt" &> /dev/null
+rm "./conf/shmim_contrMc${i2}.imsize.txt" &> /dev/null
+
+rm "./conf/shmim_contrMcact${i2}_00.fits" &> /dev/null
+rm "./conf/shmim_contrMcact${i2}_00.name.txt" &> /dev/null
+rm "./conf/shmim_contrMcact${i2}_00.imsize.txt" &> /dev/null
+done
+
+fi # end of BLOCK FILES if statement
+
+tmux send-keys -t ${tmuxnameSMl} "rm runproc/SharedMemLoad.runproc" C-m	 # process is done
+}
+
+
+
+
+function AOloadMem {
+StreamsConnect
+function_SharedMemLoad $1
+echo "memory loaded"
+}
+
+
+
+
+
+
+if [ "$LOADMEM" -eq "1" ]
+then
+AOloadMem 1
+fi
+
+
+if [ "$LOADexit" -eq "1" ]
+then
+exit
+fi
+
+
+# =================== STATE MACHINE ====================================
+state="menutop"
+
+confselected=1
+menuconfmanage_default=0
+echo "START STATE MACHINE"
+
+
+while true; do
+stateok=0
+. ./aolconfscripts/aolconf_menutop
+. ./aolconfscripts/aolconf_menuconfigureloop
+. ./aolconfscripts/aolconf_menu_mkFModes
+. ./aolconfscripts/aolconf_menucontrolmatrix
+. ./aolconfscripts/aolconf_menucontrolloop
+. ./aolconfscripts/aolconf_menupredictivecontrol
+. ./aolconfscripts/aolconf_menutestmode
+. ./aolconfscripts/aolconf_menuview
+. ./aolconfscripts/aolconf_menurecord
+
+if [ $state = "menuexit" ]; then
+stateok=1
+echo "exit"
+exit
+fi
+
+
+if [ $stateok = 0 ]; then
+echo "state \"$state\" not recognized ... exit"
+aoconflog "state \"$state\" not recognized ... exit"
+exit
+fi
+
+done
+
