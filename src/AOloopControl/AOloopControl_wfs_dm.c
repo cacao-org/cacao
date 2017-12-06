@@ -1061,7 +1061,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             fflush(stdout);
 #endif
 
-            initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1; // default: do not re-compute reference output
+            aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1; // default: do not re-compute reference output
 
             if(AOconf[loop].GPUall == 1)
             {
@@ -1071,11 +1071,11 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 						printf("NEW wfsref [%10ld] or contrM [%10ld]\n", data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0);
 						aoloopcontrol_var.aoconfcnt0_wfsref_current = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
 						aoloopcontrol_var.aoconfcnt0_contrM_current = data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0;
-						initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
+						aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
 					}
 
 
-                if(initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE]==0) // initialize WFS reference
+                if(aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE]==0) // initialize WFS reference
                 {
 #ifdef _PRINT_TEST
                     printf("\nINITIALIZE WFS REFERENCE: COPY NEW REF (WFSREF) TO imWFS0\n"); //TEST
@@ -1096,13 +1096,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
             if(AOconf[loop].GPUall == 1)
-                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
+                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
             else
                 GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, 1, loop);
 
 			
 
-            initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
+            aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
 
             AOconf[loop].status = 6; // 6 execute
             clock_gettime(CLOCK_REALTIME, &tnow);
@@ -1169,24 +1169,24 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 // look for updated control matrix or reference
                 if(AOconf[loop].GPUall == 1) // (**)
                 {
-                    if(data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0 != contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE])
+                    if(data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0 != aoloopcontrol_var.contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE])
                     {
                         printf("NEW CONTROL MATRIX DETECTED (%s) -> RECOMPUTE REFERENCE x MATRIX\n", data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].name);
                         fflush(stdout);
 
-                        initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
-                        contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE] = data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0;
+                        aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
+                        aoloopcontrol_var.contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE] = data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0;
                     }
 
-                    if(data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != wfsrefcnt0)  // (*)
+                    if(data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != aoloopcontrol_var.wfsrefcnt0)  // (*)
                     {
-                        printf("NEW REFERENCE WFS DETECTED (%s) [ %ld %ld ]\n", data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].name, data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0, wfsrefcnt0);
+                        printf("NEW REFERENCE WFS DETECTED (%s) [ %ld %ld ]\n", data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].name, data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0, aoloopcontrol_var.wfsrefcnt0);
                         fflush(stdout);
 
-                        initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
-                        wfsrefcnt0 = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
+                        aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
+                        aoloopcontrol_var.wfsrefcnt0 = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
                     }
-                    if(initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE]==0) // initialize WFS reference
+                    if(aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE]==0) // initialize WFS reference
                     {
                         printf("\nINITIALIZE WFS REFERENCE: COPY NEW REF (WFSREF) TO imWFS2_active\n"); //TEST
                         fflush(stdout);
@@ -1202,13 +1202,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 }
 
                 if(aoloopcontrol_var.initcontrMcact_GPU[aoloopcontrol_var.PIXSTREAM_SLICE]==0)
-                    initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
+                    aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
 
 
-                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_meas_act_active].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
+                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_meas_act_active].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
 
 
-                initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
+                aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
                 aoloopcontrol_var.initcontrMcact_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
                 
                 AOconf[loop].status = 6; // 6 execute
