@@ -23,6 +23,7 @@
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_arith/COREMOD_arith.h"
+#include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
 #define AOconfname "/tmp/AOconf.shm"
 AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
