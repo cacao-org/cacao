@@ -13,7 +13,7 @@
 
 #ifndef _AOLOOPCONTROL_IOTOOLS_H
 #define _AOLOOPCONTROL_IOTOOLS_H
-
+#include <AOloopControl/AOloopControl.h>
 
 
 /** @brief Initialize command line interface. */
