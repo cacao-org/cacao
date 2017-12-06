@@ -110,11 +110,11 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-extern int PIXSTREAM_NBSLICES;
-extern long aoconfID_pixstream_wfspixindex;;
+//extern int aoloopcontrol_var.PIXSTREAM_NBSLICES;
+//extern long aoloopcontrol_var.aoconfID_pixstream_wfspixindex;;
 
-extern int *DM_active_map;
-extern int *WFS_active_map;
+//extern int *aoloopcontrol_var.DM_active_map;
+//extern int *aoloopcontrol_var.WFS_active_map;
 
 
 
@@ -127,7 +127,7 @@ extern DATA data;
 extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
-
+extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 extern int AOloopcontrol_meminit;
 
 
@@ -4777,8 +4777,8 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(const char *IDcmat
 
 
 
-    WFS_active_map = (int*) malloc(sizeof(int)*sizeWFS*PIXSTREAM_NBSLICES);
-    for(slice=0; slice<PIXSTREAM_NBSLICES; slice++)
+    aoloopcontrol_var.WFS_active_map = (int*) malloc(sizeof(int)*sizeWFS*aoloopcontrol_var.PIXSTREAM_NBSLICES);
+    for(slice=0; slice<aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++)
     {
         ii1 = 0;
         for(ii=0; ii<sizeWFS; ii++)
@@ -4786,14 +4786,14 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(const char *IDcmat
             {
                 if(slice==0)
                 {
-                    WFS_active_map[ii1] = ii;
+                    aoloopcontrol_var.WFS_active_map[ii1] = ii;
                     ii1++;
                 }
                 else
                 {
-                    if(data.image[aoconfID_pixstream_wfspixindex].array.UI16[ii]==slice+1)
+                    if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].array.UI16[ii]==slice+1)
                     {
-                        WFS_active_map[slice*sizeWFS+ii1] = ii;
+                        aoloopcontrol_var.WFS_active_map[slice*sizeWFS+ii1] = ii;
                         ii1++;
                     }
                 }
@@ -4814,12 +4814,12 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(const char *IDcmat
 
 
 
-    DM_active_map = (int*) malloc(sizeof(int)*sizeDM);
+    aoloopcontrol_var.DM_active_map = (int*) malloc(sizeof(int)*sizeDM);
     ii1 = 0;
     for(ii=0; ii<sizeDM; ii++)
         if(data.image[IDdmmask].array.F[ii]>0.1)
         {
-            DM_active_map[ii1] = ii;
+            aoloopcontrol_var.DM_active_map[ii1] = ii;
             ii1++;
         }
     sizeDM_active = ii1;
@@ -4839,7 +4839,7 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(const char *IDcmat
 
 
     // reduce matrix size to active elements
-    for(slice=0; slice<PIXSTREAM_NBSLICES; slice++)
+    for(slice=0; slice<aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++)
     {
         if(sprintf(imname, "%s_%02d", IDcmatc_active_name, slice) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -4849,8 +4849,8 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(const char *IDcmat
         {
             for(wfselem_active=0; wfselem_active<sizeWFS_active[slice]; wfselem_active++)
             {
-                act = DM_active_map[act_active];
-                wfselem = WFS_active_map[slice*sizeWFS+wfselem_active];
+                act = aoloopcontrol_var.DM_active_map[act_active];
+                wfselem = aoloopcontrol_var.WFS_active_map[slice*sizeWFS+wfselem_active];
                 data.image[IDcmatc_active[slice]].array.F[act_active*sizeWFS_active[slice]+wfselem_active] = matrix_Mc[act*sizeWFS+wfselem];
             }
         }
