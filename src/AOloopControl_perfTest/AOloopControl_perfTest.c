@@ -36,6 +36,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <pthread.h>
+#include <AOloopControl/AOloopControl.h>
 
 #ifdef __MACH__
 #include <mach/mach_time.h>
@@ -100,21 +101,21 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-extern long aoconfID_wfsim;              // declared in AOloopControl.c
-extern long aoconfID_dmC;                // declared in AOloopControl.c
-extern long aoconfID_dmRM;               // declared in AOloopControl.c
-extern long aoconfID_DMmodes;            // declared in AOloopControl.c
-extern long aoconfID_gainb;              // declared in AOloopControl.c
-extern long aoconfID_limitb;             // declared in AOloopControl.c
-extern long aoconfID_multfb;             // declared in AOloopControl.c
-extern long aoconfID_DMmode_GAIN;        // declared in AOloopControl.c
-extern long aoconfID_LIMIT_modes;        // declared in AOloopControl.c
-extern long aoconfID_MULTF_modes;        // declared in AOloopControl.c
-extern long aoconfID_cmd_modes;          // declared in AOloopControl.c
-extern long aoconfID_meas_modes;         // declared in AOloopControl.c
-extern long aoconfID_RMS_modes;          // declared in AOloopControl.c
-extern long aoconfID_AVE_modes;          // declared in AOloopControl.c
-extern long aoconfID_modeARPFgainAuto;   // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_wfsim;              // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_dmC;                // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_dmRM;               // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_DMmodes;            // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_gainb;              // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_limitb;             // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_multfb;             // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_DMmode_GAIN;        // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_LIMIT_modes;        // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_MULTF_modes;        // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_cmd_modes;          // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_meas_modes;         // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_RMS_modes;          // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_AVE_modes;          // declared in AOloopControl.c
+//extern long aoloopcontrol_var.aoconfID_modeARPFgainAuto;   // declared in AOloopControl.c
      
 
 static int wcol, wrow; // window size
@@ -134,6 +135,7 @@ extern DATA data;
 extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
+extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 extern int AOloopcontrol_meminit;
 
@@ -426,7 +428,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 	
 	if(AOconf[loop].ARPFon==1)
 	{
-		if(aoconfID_modeARPFgainAuto == -1)
+		if(aoloopcontrol_var.aoconfID_modeARPFgainAuto == -1)
 		{
 		// multiplicative auto ratio on top of gain above
 		sizeout = (uint32_t*) malloc(sizeof(uint32_t)*2);
@@ -435,11 +437,11 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 		
 		if(sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1) 
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		aoconfID_modeARPFgainAuto = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
+		aoloopcontrol_var.aoconfID_modeARPFgainAuto = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
 		COREMOD_MEMORY_image_set_createsem(imname, 10);
 		// initialize the gain to zero for all modes
 		for(m=0;m<AOconf[loop].NBDMmodes; m++)
-			data.image[aoconfID_modeARPFgainAuto].array.F[m] = 1.0;
+			data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = 1.0;
 		free(sizeout);
 		}
 		
@@ -452,7 +454,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         for(m=0; m<AOconf[loop].NBDMmodes; m++)
         {
             block = data.image[IDblknb].array.UI16[m];
-			ARPFgainAutob[block] += data.image[aoconfID_modeARPFgainAuto].array.F[m];
+			ARPFgainAutob[block] += data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m];
 			ARPFgainAutob_tot[block] += 1.0;
         }
 		
@@ -463,12 +465,12 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 	
 
 
-    if(aoconfID_LIMIT_modes == -1)
+    if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
     {
         if(sprintf(imname, "aol%ld_DMmode_LIMIT", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_LIMIT_modes = read_sharedmem_image(imname);
+        aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(imname);
     }
 
 
@@ -510,7 +512,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("%3ld", k);
         attroff(A_BOLD);
 
-        printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f", AOconf[loop].NBmodes_block[k], kmin, AOconf[loop].indexmaxMB[k]-1, data.image[aoconfID_gainb].array.F[k], data.image[aoconfID_limitb].array.F[k], data.image[aoconfID_multfb].array.F[k]);
+        printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f", AOconf[loop].NBmodes_block[k], kmin, AOconf[loop].indexmaxMB[k]-1, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[k], data.image[aoloopcontrol_var.aoconfID_limitb].array.F[k], data.image[aoloopcontrol_var.aoconfID_multfb].array.F[k]);
         
         
         printw("  |  %8.2f  %8.2f  ->  %8.2f", 1000.0*(AOconf[loop].blockave_Crms[k]), 1000.0*AOconf[loop].blockave_OLrms[k], 1000.0*AOconf[loop].blockave_WFSrms[k]);
@@ -655,7 +657,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("%4ld ", k);
         attroff(A_BOLD);
 
-        printw("[%5.3f %8.4f %5.3f] ", AOconf[loop].gain * data.image[aoconfID_gainb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoconfID_DMmode_GAIN].array.F[k], 1000.0 * data.image[aoconfID_limitb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoconfID_LIMIT_modes].array.F[k], AOconf[loop].mult * data.image[aoconfID_multfb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoconfID_MULTF_modes].array.F[k]);
+        printw("[%5.3f %8.4f %5.3f] ", AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_gainb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k], 1000.0 * data.image[aoloopcontrol_var.aoconfID_limitb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k], AOconf[loop].mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[k]);
 
         // print current value on DM
         val = data.image[IDmodeval_dm].array.F[k];
@@ -667,7 +669,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         }
         else
         {
-            if(fabs(val)>0.99*AOconf[loop].maxlimit*data.image[aoconfID_LIMIT_modes].array.F[k])
+            if(fabs(val)>0.99*AOconf[loop].maxlimit*data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k])
             {
                 attron(COLOR_PAIR(1));
                 printw("%+8.3f ", 1000.0*val);
@@ -741,90 +743,90 @@ int_fast8_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbc
     fflush(stdout);
 
     // load arrays that are required
-    if(aoconfID_cmd_modes==-1)
+    if(aoloopcontrol_var.aoconfID_cmd_modes==-1)
     {
         if(sprintf(name, "aol%ld_DMmode_cmd", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_cmd_modes = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
     }
 
-    if(aoconfID_meas_modes==-1)
+    if(aoloopcontrol_var.aoconfID_meas_modes==-1)
     {
         if(sprintf(name, "aol%ld_DMmode_meas", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_meas_modes = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_meas_modes = read_sharedmem_image(name);
     }
 
 
-    if(aoconfID_RMS_modes==-1)
+    if(aoloopcontrol_var.aoconfID_RMS_modes==-1)
     {
         if(sprintf(name, "aol%ld_DMmode_RMS", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_RMS_modes = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_RMS_modes = read_sharedmem_image(name);
     }
 
-    if(aoconfID_AVE_modes==-1)
+    if(aoloopcontrol_var.aoconfID_AVE_modes==-1)
     {
         if(sprintf(name, "aol%ld_DMmode_AVE", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_AVE_modes = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_AVE_modes = read_sharedmem_image(name);
     }
 
 
     // blocks
-    if(aoconfID_gainb == -1)
+    if(aoloopcontrol_var.aoconfID_gainb == -1)
     {
         if(sprintf(name, "aol%ld_gainb", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_gainb = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_gainb = read_sharedmem_image(name);
     }
 
-    if(aoconfID_multfb == -1)
+    if(aoloopcontrol_var.aoconfID_multfb == -1)
     {
         if(sprintf(name, "aol%ld_multfb", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_multfb = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_multfb = read_sharedmem_image(name);
     }
 
-    if(aoconfID_limitb == -1)
+    if(aoloopcontrol_var.aoconfID_limitb == -1)
     {
         if(sprintf(name, "aol%ld_limitb", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_limitb = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(name);
     }
 
 
     // individual modes
 
-    if(aoconfID_DMmode_GAIN==-1)
+    if(aoloopcontrol_var.aoconfID_DMmode_GAIN==-1)
     {
         if(sprintf(name, "aol%ld_DMmode_GAIN", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_DMmode_GAIN = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_DMmode_GAIN = read_sharedmem_image(name);
     }
 
-    if(aoconfID_LIMIT_modes==-1)
+    if(aoloopcontrol_var.aoconfID_LIMIT_modes==-1)
     {
         if(sprintf(name, "aol%ld_DMmode_LIMIT", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_LIMIT_modes = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(name);
     }
 
-    if(aoconfID_MULTF_modes==-1)
+    if(aoloopcontrol_var.aoconfID_MULTF_modes==-1)
     {
         if(sprintf(name, "aol%ld_DMmode_MULTF", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_MULTF_modes = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_MULTF_modes = read_sharedmem_image(name);
     }
 
 
@@ -1068,16 +1070,16 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     if(sprintf(imname, "aol%ld_wfsim", LOOPNUMBER) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-    aoconfID_wfsim = read_sharedmem_image(imname);
+    aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(imname);
 
     if(sprintf(imname, "aol%ld_dmC", LOOPNUMBER) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-    aoconfID_dmC = read_sharedmem_image(imname);
+    aoloopcontrol_var.aoconfID_dmC = read_sharedmem_image(imname);
 
 
-    wfsimcnt = data.image[aoconfID_wfsim].md[0].cnt0;
-    dmCcnt = data.image[aoconfID_dmC].md[0].cnt0;
+    wfsimcnt = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0;
+    dmCcnt = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0;
 
 
 
@@ -1113,8 +1115,8 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
         }
     }
     loopcnt = AOconf[LOOPNUMBER].cnt - loopcnt;
-    wfsimcnt = data.image[aoconfID_wfsim].md[0].cnt0 - wfsimcnt;
-    dmCcnt = data.image[aoconfID_dmC].md[0].cnt0 - dmCcnt;
+    wfsimcnt = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0 - wfsimcnt;
+    dmCcnt = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0 - dmCcnt;
 
     clock_gettime(CLOCK_REALTIME, &t2);
     tdiff = info_time_diff(t1, t2);
@@ -1915,18 +1917,18 @@ int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
     if(AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    if(aoconfID_DMmodes==-1)
+    if(aoloopcontrol_var.aoconfID_DMmodes==-1)
     {
 		char name[200];
 		
         if(sprintf(name, "aol%ld_DMmodes", LOOPNUMBER) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_DMmodes = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_DMmodes = read_sharedmem_image(name);
     }
 
-    if(aoconfID_dmRM==-1)
-        aoconfID_dmRM = read_sharedmem_image(AOconf[LOOPNUMBER].dmRMname);
+    if(aoloopcontrol_var.aoconfID_dmRM==-1)
+        aoloopcontrol_var.aoconfID_dmRM = read_sharedmem_image(AOconf[LOOPNUMBER].dmRMname);
 
 
     if((index<0)||(index>AOconf[LOOPNUMBER].NBDMmodes-1))
@@ -1941,14 +1943,14 @@ int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
         arrayf = (float*) malloc(sizeof(float)*AOconf[LOOPNUMBER].sizeDM);
 
         for(i=0; i<AOconf[LOOPNUMBER].sizeDM; i++)
-            arrayf[i] = ampl*data.image[aoconfID_DMmodes].array.F[index*AOconf[LOOPNUMBER].sizeDM+i];
+            arrayf[i] = ampl*data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[index*AOconf[LOOPNUMBER].sizeDM+i];
 
 
 
-        data.image[aoconfID_dmRM].md[0].write = 1;
-        memcpy (data.image[aoconfID_dmRM].array.F, arrayf, sizeof(float)*AOconf[LOOPNUMBER].sizeDM);
-        data.image[aoconfID_dmRM].md[0].cnt0++;
-        data.image[aoconfID_dmRM].md[0].write = 0;
+        data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
+        memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, arrayf, sizeof(float)*AOconf[LOOPNUMBER].sizeDM);
+        data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
+        data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
 
         free(arrayf);
         AOconf[LOOPNUMBER].DMupdatecnt ++;
@@ -2619,15 +2621,15 @@ long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NB
     if(AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    if(aoconfID_DMmodes==-1)
+    if(aoloopcontrol_var.aoconfID_DMmodes==-1)
     {
         if(sprintf(name, "aol%ld_DMmodes", LOOPNUMBER) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_DMmodes = read_sharedmem_image(name);
+        aoloopcontrol_var.aoconfID_DMmodes = read_sharedmem_image(name);
     }
-    xsize = data.image[aoconfID_DMmodes].md[0].size[0];
-    ysize = data.image[aoconfID_DMmodes].md[0].size[1];
+    xsize = data.image[aoloopcontrol_var.aoconfID_DMmodes].md[0].size[0];
+    ysize = data.image[aoloopcontrol_var.aoconfID_DMmodes].md[0].size[1];
     xysize = xsize*ysize;
 
     IDout = create_3Dimage_ID(IDname_out, xsize, ysize, NBpt);
@@ -2643,7 +2645,7 @@ long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NB
             pha0 = M_PI*(1.0*m/NBmodes);
             ampl = ampl0 * sin(2.0*M_PI*(1.0*kk/NBpt)+pha0);
             for(ii=0; ii<xysize; ii++)
-                data.image[IDout].array.F[kk*xysize+ii] += ampl * data.image[aoconfID_DMmodes].array.F[m*xysize+ii];
+                data.image[IDout].array.F[kk*xysize+ii] += ampl * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[m*xysize+ii];
         }        
     }
 
