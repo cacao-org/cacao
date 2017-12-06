@@ -17,6 +17,10 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
+#include "00CORE/00CORE.h"
+#include "COREMOD_memory/COREMOD_memory.h"
+#include "fft/fft.h"
+
 
 #include <string.h>
 #include <math.h>

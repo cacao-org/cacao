@@ -22,9 +22,12 @@
 #include "CommandLineInterface/CLIcore.h"
 #include <unistd.h>
 #include <fcntl.h>
+#include "00CORE/00CORE.h"
+#include "COREMOD_memory/COREMOD_memory.h"
+
 
 #include <sys/mman.h>
-
+#include <sys/stat.h>
 
 
 #define AOconfname "/tmp/AOconf.shm"

@@ -21,6 +21,7 @@
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+#include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
 #define AOconfname "/tmp/AOconf.shm"
 AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
