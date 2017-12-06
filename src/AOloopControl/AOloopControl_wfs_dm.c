@@ -50,7 +50,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
-#include "AOloopControl_IOtools.h"
+#include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
