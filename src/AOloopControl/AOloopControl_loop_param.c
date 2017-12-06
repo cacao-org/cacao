@@ -20,6 +20,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "00CORE/00CORE.h"
+#include "COREMOD_memory/COREMOD_memory.h"
+#include "COREMOD_arith/COREMOD_arith.h"
 
 #define AOconfname "/tmp/AOconf.shm"
 AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
