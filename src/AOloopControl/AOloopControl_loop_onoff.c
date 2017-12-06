@@ -5,7 +5,7 @@
  * REAL TIME COMPUTING ROUTINES
  *  
  * @author  O. Guyon
- * @date    24 nov 2017
+ * @date    5 Dec 2017
  *
  * 
  * @bug No known bugs.
@@ -19,7 +19,9 @@
 
 //libraries created by O. Guyon 
 #include "CommandLineInterface/CLIcore.h"
-
+#include "00CORE/00CORE.h"
+#include "COREMOD_memory/COREMOD_memory.h"
+#include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
 #define AOconfname "/tmp/AOconf.shm"
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
