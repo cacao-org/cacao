@@ -140,17 +140,6 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 extern int AOloopcontrol_meminit;
 
 
-
-
-
-
-
-
-
-
-
-
-
 // CLI commands
 //
 // function CLI_checkarg used to check arguments
