@@ -52,7 +52,7 @@ Note: On OS X, use gcc-mp-5 for openMP:
 
 ## Reporting bugs, issues
 
-Report bugs and issues on [this page]( https://github.com/CACAO-org/CACAO/issues )
+Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues )
 
 
 ---
@@ -60,7 +60,7 @@ Report bugs and issues on [this page]( https://github.com/CACAO-org/CACAO/issues
 
 ## Contributing to project
 
-See [coding standards]( http://CACAO-org.github.io/CACAO/html/page_coding_standards.html ) 
+See [coding standards]( http://CACAO-org.github.io/cacao/html/page_coding_standards.html ) 
 
 
 ---
@@ -68,7 +68,7 @@ See [coding standards]( http://CACAO-org.github.io/CACAO/html/page_coding_standa
 
 ## Documentation
 
-[Online documentation]( http://CACAO-org.github.io/CACAO/html/index.html ) 
+[Online documentation]( http://CACAO-org.github.io/cacao/html/index.html ) 
 
 ## Libraries
 
@@ -103,4 +103,4 @@ All functions are accessible from the command line interface (CLI). Enter the CL
 
 ## LICENCE
 
-[GNU General Public License v3.0]( https://github.com/CACAO-org/CACAO/blob/master/LICENCE.txt )
+[GNU General Public License v3.0]( https://github.com/cacao-org/cacao/blob/master/LICENCE.txt )
