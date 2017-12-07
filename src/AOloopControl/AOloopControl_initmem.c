@@ -215,11 +215,11 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         printf("INITIALIZING GPUset ARRAYS\n");
         fflush(stdout);
 
-        aoloopcontrol_var.GPUset0 = (int*) malloc(sizeof(int)*aoloopcontrol_var.GPUcntMax);
+        aoloopcontrol_var.GPUset0 = (int*) malloc(sizeof(int)*GPUcntMax);
 
         uint_fast16_t k;
 
-        for(k=0; k<aoloopcontrol_var.GPUcntMax; k++)
+        for(k=0; k<GPUcntMax; k++)
         {
             FILE *fp;
             char fname[200];
@@ -240,8 +240,8 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         }
 
 
-        aoloopcontrol_var.GPUset1 = (int*) malloc(sizeof(int)*aoloopcontrol_var.GPUcntMax);
-        for(k=0; k<aoloopcontrol_var.GPUcntMax; k++)
+        aoloopcontrol_var.GPUset1 = (int*) malloc(sizeof(int)*GPUcntMax);
+        for(k=0; k<GPUcntMax; k++)
         {
             FILE *fp;
             char fname[200];

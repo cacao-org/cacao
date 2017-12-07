@@ -416,7 +416,7 @@ float normfloorcoeff;//  = 1.0; static
 
 // variables used by functions
 
-//int GPUcntMax;//  = 100; static
+//int GPUcntMax;//  = 100; static initmem.c
 int *GPUset0; //static
 int *GPUset1;//static
 

@@ -705,7 +705,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
         if(sprintf(fname, "conf/shmim_respM.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoloopcontrol_var.aoconfID_respM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].respMname, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
+        aoconfID_respM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].respMname, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
         AOconf[loop].init_RM = 1;
 
 

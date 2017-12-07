@@ -488,7 +488,7 @@ int_fast8_t AOloopControl_run()
     }
 
 	aoloopcontrol_var.aoconfcnt0_wfsref_current = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
-	aoloopcontrol_var.aoconfcnt0_contrM_current = data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0;
+	aoconfcnt0_contrM_current = data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0;
 
     AOconf[loop].initmapping = 0;
     AOconf[loop].init_CMc = 0;
@@ -958,9 +958,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
                 sizearray[0] =  AOconf[loop].sizeWFS_active[slice];
                 sizearray[1] =  1;
-                aoloopcontrol_var.aoconfID_imWFS2_active[slice] = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+                aoconfID_imWFS2_active[slice] = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
                 free(sizearray);
-                //aoloopcontrol_var.aoconfID_imWFS2_active[slice] = create_2Dimage_ID(imname, AOconf[loop].sizeWFS_active[slice], 1);
+                //aoconfID_imWFS2_active[slice] = create_2Dimage_ID(imname, AOconf[loop].sizeWFS_active[slice], 1);
             }
         }
         else
@@ -1074,11 +1074,11 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             if(AOconf[loop].GPUall == 1)
             {
                 // TEST IF contrM or wfsref have changed
-                if((data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != aoloopcontrol_var.aoconfcnt0_wfsref_current) || (data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0 != aoloopcontrol_var.aoconfcnt0_contrM_current))
+                if((data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != aoloopcontrol_var.aoconfcnt0_wfsref_current) || (data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0 != aoconfcnt0_contrM_current))
 					{
 						printf("NEW wfsref [%10ld] or contrM [%10ld]\n", data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0);
 						aoloopcontrol_var.aoconfcnt0_wfsref_current = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
-						aoloopcontrol_var.aoconfcnt0_contrM_current = data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0;
+						aoconfcnt0_contrM_current = data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0;
 						aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
 					}
 
@@ -1155,56 +1155,56 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                     fflush(stdout);
 #endif
 
-                    data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
+                    data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
                     for(wfselem_active=0; wfselem_active<AOconf[loop].sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
-                        data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_contrM].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].sizeWFS+wfselem_active]];
-                    COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
-                    data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
-                    data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
-                    data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 0;
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_contrM].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].sizeWFS+wfselem_active]];
+                    COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
+                    data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
+                    data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
+                    data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 0;
                 }
                 else
                 {
-                    data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
+                    data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
                     for(wfselem_active=0; wfselem_active<AOconf[loop].sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
-                        data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].sizeWFS+wfselem_active]];
-                    COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
-                    data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
-                    data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
-                    data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 0;
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].sizeWFS+wfselem_active]];
+                    COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
+                    data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
+                    data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
+                    data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 0;
                 }
 
                 // look for updated control matrix or reference
                 if(AOconf[loop].GPUall == 1) // (**)
                 {
-                    if(data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0 != aoloopcontrol_var.contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE])
+                    if(data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0 != contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE])
                     {
                         printf("NEW CONTROL MATRIX DETECTED (%s) -> RECOMPUTE REFERENCE x MATRIX\n", data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].name);
                         fflush(stdout);
 
                         aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
-                        aoloopcontrol_var.contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE] = data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0;
+                        contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE] = data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0;
                     }
 
-                    if(data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != aoloopcontrol_var.wfsrefcnt0)  // (*)
+                    if(data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != wfsrefcnt0)  // (*)
                     {
-                        printf("NEW REFERENCE WFS DETECTED (%s) [ %ld %ld ]\n", data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].name, data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0, aoloopcontrol_var.wfsrefcnt0);
+                        printf("NEW REFERENCE WFS DETECTED (%s) [ %ld %ld ]\n", data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].name, data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0, wfsrefcnt0);
                         fflush(stdout);
 
                         aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
-                        aoloopcontrol_var.wfsrefcnt0 = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
+                        wfsrefcnt0 = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
                     }
                     if(aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE]==0) // initialize WFS reference
                     {
                         printf("\nINITIALIZE WFS REFERENCE: COPY NEW REF (WFSREF) TO imWFS2_active\n"); //TEST
                         fflush(stdout);
-                        data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
                         for(wfselem_active=0; wfselem_active<AOconf[loop].sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
-                            data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].sizeWFS+wfselem_active]];
-                        COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
-                        data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
-                        data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
-                        data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 0;
+                            data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].sizeWFS+wfselem_active]];
+                        COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 0;
                         fflush(stdout);
                     }
                 }
@@ -1213,7 +1213,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                     aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
 
 
-                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_meas_act_active].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
+                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_meas_act_active].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
 
 
                 aoloopcontrol_var.initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
