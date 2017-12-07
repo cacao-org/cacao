@@ -63,8 +63,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 extern DATA data;
 #define NB_AOloopcontrol 10 // max number of loops
-//long aoloopcontrol_var.LOOPNUMBER = 0; // current loop index
-
 
 static int AOlooploadconf_init = 0;
 
@@ -72,6 +70,13 @@ static int AOlooploadconf_init = 0;
 static struct timespec tnow;
 static struct timespec tdiff;
 static double tdiffv;
+
+static int initWFSref_GPU[100] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static long long aoconfcnt0_contrM_current= -1; 
+long aoconfID_imWFS2_active[100];
+static long wfsrefcnt0 = -1; 
+static long contrMcactcnt0[100] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};;
+
 
 
 #define AOconfname "/tmp/AOconf.shm"
@@ -92,6 +97,9 @@ extern AOloopControl_var aoloopcontrol_var;
 //
 // read LOOPiteration from shared memory stream "aol#_LOOPiteration" if available 
 //
+
+
+
 int_fast8_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name, const char *IDzrespM_name, const char *IDwfszp_name)
 {
     long IDzpdm, IDzrespM, IDwfszp;
@@ -2026,11 +2034,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     }
     if(aoloopcontrol_var.aoconfID_MULTF_modes == -1)
         FILTERMODE = 0;
-
-
-
-
-
 
 
 

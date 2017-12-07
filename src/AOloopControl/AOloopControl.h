@@ -308,12 +308,15 @@ long LOOPNUMBER;// = 0; // current loop index
 //struct timespec tdiff; //static
 //double tdiffv; //static
 
-int initWFSref_GPU[100];// = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//int initWFSref_GPU[100];// = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//only in AOloopControl_wfs_dm.c
 int initcontrMcact_GPU[100];// = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//used in AOloopControl_wfs_dm.c & AOloopControl_loop_param.c
 //both previous are static 
 
-float GPU_alpha;// = 0.0;
+float GPU_alpha;// = 0.0; 
 float GPU_beta;// = 0.0;
+// both used in wfs_dm.c and IOtools.c 
 
 int AOloopcontrol_meminit;// = 0;
 
@@ -370,9 +373,10 @@ long aoconfID_cmd_modesRM;// = -1;
 long aoconfID_wfsmask;//  = -1;
 long aoconfID_dmmask;//  = -1; static
 
-long aoconfID_respM;//  = -1; static 
+//long aoconfID_respM;//  = -1; static 
+//only in loadconfigure.c
 long aoconfID_contrM;//  = -1; // static. pixels -> modes
-long long aoconfcnt0_contrM_current;//  = -1; static
+//long long aoconfcnt0_contrM_current;//  = -1; static
 long aoconfID_contrMc;//  = -1; // static . combined control matrix: pixels -> DM actuators
 long aoconfID_meas_act;//  = -1;
 long aoconfID_contrMcact[100];//  = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -394,25 +398,25 @@ long aoconfID_looptiming;//  = -1; // control loop timing data. Pixel values cor
 long AOcontrolNBtimers;//  = 35;
 
 long aoconfIDlogdata;//  = -1; //static 
-long aoconfIDlog0;//  = -1; static
-long aoconfIDlog1;//  = -1; static 
-
+//long aoconfIDlog0;//  = -1; static
+//long aoconfIDlog1;//  = -1; static 
+// those two last don't exist in any functions 
 
 
 int *WFS_active_map; // used to map WFS pixels into active array
 int *DM_active_map; // used to map DM actuators into active array
 long aoconfID_meas_act_active;
-long aoconfID_imWFS2_active[100];
+//long aoconfID_imWFS2_active[100]; wfs_dm.c & computeCalib.c 
 
 float normfloorcoeff;//  = 1.0; static
 
-long wfsrefcnt0;//  = -1; static
-long contrMcactcnt0[100];// static = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};;
-
+//long wfsrefcnt0;//  = -1; static
+//long contrMcactcnt0[100];// static = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};;
+//both in wfs_dm.c
 
 // variables used by functions
 
-int GPUcntMax;//  = 100; static
+//int GPUcntMax;//  = 100; static
 int *GPUset0; //static
 int *GPUset1;//static
 

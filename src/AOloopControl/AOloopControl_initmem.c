@@ -36,6 +36,9 @@ extern AOloopControl_var aoloopcontrol_var;
 extern DATA data;
 #define NB_AOloopcontrol 10 // max number of loops
 
+static int GPUcntMax = 100;
+
+
 
 /**
  * ## Purpose
