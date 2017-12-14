@@ -1,8 +1,8 @@
 var searchData=
 [
   ['wcol',['wcol',['../AOloopControl__DM_8c.html#ae6916da9363f105e747ab3cb5af8a4e7',1,'wcol():&#160;AOloopControl_DM.c'],['../AOloopControl__perfTest_8c.html#ae6916da9363f105e747ab3cb5af8a4e7',1,'wcol():&#160;AOloopControl_perfTest.c'],['../info_8c.html#ae6916da9363f105e747ab3cb5af8a4e7',1,'wcol():&#160;info.c']]],
-  ['wfs_5factive_5fmap',['WFS_active_map',['../AOloopControl_8c.html#abb7ca190f28831881358f1d0a7ee0529',1,'WFS_active_map():&#160;AOloopControl.c'],['../AOloopControl__computeCalib_8c.html#abb7ca190f28831881358f1d0a7ee0529',1,'WFS_active_map():&#160;AOloopControl.c']]],
-  ['wfsatype',['WFSatype',['../AOloopControl_8c.html#ae7fa9238d412594f41ef9f6d5c4206c4',1,'WFSatype():&#160;AOloopControl.c'],['../AOloopControl__IOtools_8c.html#ae7fa9238d412594f41ef9f6d5c4206c4',1,'WFSatype():&#160;AOloopControl.c']]],
+  ['wfs_5factive_5fmap',['WFS_active_map',['../structAOloopControl__var.html#ae7a7f15ccda11e00c81c0efdde07b03a',1,'AOloopControl_var']]],
+  ['wfsatype',['WFSatype',['../structAOloopControl__var.html#a201220fb1ea3715b7dae65978eeac6fe',1,'AOloopControl_var']]],
   ['wfscnt',['WFScnt',['../structAOLOOPCONTROL__CONF.html#a2402535e7cff34f3214c2786c38c3e4b',1,'AOLOOPCONTROL_CONF::WFScnt()'],['../structFPAOLOOPCONTROL__CONF.html#a50a4ab67e8e02b7787214c2bb7ac6304',1,'FPAOLOOPCONTROL_CONF::WFScnt()']]],
   ['wfscntrm',['WFScntRM',['../structAOLOOPCONTROL__CONF.html#a670343e3030850651f0da32276ce2372',1,'AOLOOPCONTROL_CONF']]],
   ['wfsmextrlatency',['wfsmextrlatency',['../structAOLOOPCONTROL__CONF.html#a0f5baf85f4a476afc05eb5d7805a7edb',1,'AOLOOPCONTROL_CONF']]],
@@ -14,7 +14,7 @@ var searchData=
   ['wfsref_5fout_5fname',['wfsref_out_name',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a97eb0aa752361b8eac7ea9fad655add1',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['wfsref_5fpart',['wfsRef_part',['../structGPUMATMULTCONF.html#a8d1e5f402291ff3b749e99956aeb89b2',1,'GPUMATMULTCONF']]],
   ['wfsref_5frespmat_5fname',['wfsref_RespMat_name',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#aa8dbc1fcf6792ce8e821010af6b3b2f1',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
-  ['wfsrefcnt0',['wfsrefcnt0',['../AOloopControl_8c.html#a50daf580553415a9fa4fe7f3fcb85e28',1,'AOloopControl.c']]],
+  ['wfsrefcnt0',['wfsrefcnt0',['../AOloopControl__wfs__dm_8c.html#a50daf580553415a9fa4fe7f3fcb85e28',1,'AOloopControl_wfs_dm.c']]],
   ['wfsrefmode',['wfsrefmode',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#ac7b53922918736ceafc12138a89c389d',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['wfstotalflux',['WFStotalflux',['../structAOLOOPCONTROL__CONF.html#ab19e1ec513dfe03aef82717b63466374',1,'AOLOOPCONTROL_CONF']]],
   ['wfsvec',['wfsVec',['../structGPUMATMULTCONF.html#ad1efb7d30712d853a534f8df701fbda8',1,'GPUMATMULTCONF']]],

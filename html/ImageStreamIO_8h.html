@@ -203,6 +203,18 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Create shared memory image stream. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">image</td><td>IMAGE structure which will have its members allocated and initialized. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>the name of the shared memory file will be SHAREDMEMDIR/&lt;name&gt;_im.shm </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">naxis</td><td>number of axes in the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>the size of the image along each axis. Must have naxis elements. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">atype</td><td>data type code </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">shared</td><td>if true then a shared memory buffer is allocated. If false, only local storage is used. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">NBkw</td><td>the number of keywords to allocate. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -269,6 +281,13 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Read / connect to existing shared memory image stream. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>the name of the shared memory file to access, as in SHAREDMEMDIR/&lt;name&gt;_im.shm </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">image</td><td>the IMAGE structure to connect to the stream </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -490,7 +509,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f9bfd6d7838ce96d8ef51017747ec480.html">ImageStreamIO</a></li><li class="navelem"><a class="el" href="ImageStreamIO_8h.html">ImageStreamIO.h</a></li>
-    <li class="footer">Generated on Fri Nov 24 2017 20:11:17 for cacao by
+    <li class="footer">Generated on Fri Dec 15 2017 02:45:51 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

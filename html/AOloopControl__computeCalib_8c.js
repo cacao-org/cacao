@@ -32,11 +32,9 @@ var AOloopControl__computeCalib_8c =
     [ "AOloopControl_computeCalib_ProcessZrespM_medianfilt", "AOloopControl__computeCalib_8c.html#ade0d65b153ca7fd73554afeed9b62623", null ],
     [ "clock_gettime", "AOloopControl__computeCalib_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "AOconf", "AOloopControl__computeCalib_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
-    [ "aoconfID_pixstream_wfspixindex", "AOloopControl__computeCalib_8c.html#aaae34fb142e8bc34d776a83c575b090e", null ],
+    [ "aoconfID_imWFS2_active", "AOloopControl__computeCalib_8c.html#a0afbb1623e71964eafbdd2f699c44552", null ],
     [ "AOloopcontrol_meminit", "AOloopControl__computeCalib_8c.html#ac8a65ca6927b57d697b359281dd5ff24", null ],
+    [ "aoloopcontrol_var", "AOloopControl__computeCalib_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
     [ "data", "AOloopControl__computeCalib_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
-    [ "DM_active_map", "AOloopControl__computeCalib_8c.html#aac0e77b0cc7425f9d3c65fc079cbe340", null ],
-    [ "LOOPNUMBER", "AOloopControl__computeCalib_8c.html#afc4d319c21df38d7e771591b6934a836", null ],
-    [ "PIXSTREAM_NBSLICES", "AOloopControl__computeCalib_8c.html#a9c9de7324774fada9c33ac97e3f551c7", null ],
-    [ "WFS_active_map", "AOloopControl__computeCalib_8c.html#abb7ca190f28831881358f1d0a7ee0529", null ]
+    [ "LOOPNUMBER", "AOloopControl__computeCalib_8c.html#afc4d319c21df38d7e771591b6934a836", null ]
 ];

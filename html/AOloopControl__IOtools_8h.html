@@ -165,7 +165,7 @@ Functions</h2></td></tr>
 <p>AO engine uses stream data structure</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>25 Aug 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000012">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000027">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a6d1f06e26db9722ba9ab011277d1e671"></a>
 <div class="memitem">
@@ -572,7 +572,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Read image from WFS camera. </p>
-<p>supports ring buffer puts image from camera buffer aoconfID_wfsim into aoconfID_imWFS1 (supplied by user)</p>
+<p>supports ring buffer puts image from camera buffer aoloopcontrol_var.aoconfID_wfsim into aoloopcontrol_var.aoconfID_imWFS1 (supplied by user)</p>
 <p>RM = 1 if response matrix</p>
 <p>if normalize == 1, image is normalized by dividing by (total + AOconf[loop].WFSnormfloor)*AOconf[loop].WFSsize if PixelStreamMode = 1, read on semaphore 1, return slice index </p>
 
@@ -584,7 +584,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d2349ba0799e0b6b9785371f379b7b3a.html">AOloopControl_IOtools</a></li><li class="navelem"><a class="el" href="AOloopControl__IOtools_8h.html">AOloopControl_IOtools.h</a></li>
-    <li class="footer">Generated on Fri Nov 24 2017 20:11:17 for cacao by
+    <li class="footer">Generated on Fri Dec 15 2017 02:45:51 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

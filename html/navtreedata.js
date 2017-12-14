@@ -29,6 +29,7 @@ var NAVTREE =
     [ "Module image_filter", "page_module_image_filter.html", null ],
     [ "Module image_format", "page_module_image_format.html", null ],
     [ "Module image_gen", "page_module_image_gen.html", null ],
+    [ "Change Log", "md_src_ImageStreamIO_CHANGELOG.html", null ],
     [ "Module ImageStreamIO", "page_module_ImageStreamIO.html", null ],
     [ "Module img_reduce", "page_module_img_reduce.html", null ],
     [ "Module info", "page_module_info.html", null ],
@@ -65,19 +66,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "00CORE_8c.html",
-"AOloopControl_8h.html#ab34df3780e349046fc276ec2c38a7daa",
-"AOloopControl__compTools_8h.html#ad5483ed26451cf8bdd9a909f3ce31c7e",
-"COREMOD__arith_8c.html#a3133c629ce2cdf896489e79732eeb64f",
-"COREMOD__arith_8h.html#a6b1810f28e9eefbec3749d82107f632c",
-"COREMOD__memory_8c.html#ab3b37e92981c7793de0c79c2632814b2",
-"FPAOloopControl_8c.html#a9842752e03b4de9b4593f1a3b34364ab",
-"calc__flex_8c.html#a7ffc8c947830757dd87ad202a6823edd",
-"functions_o.html",
-"image__basic_8h.html#ae9e7602a9890b09aad6dca8855cd3210",
-"info_8h.html#a1039f41559c2429c6db90981725780ed",
-"psf_8c.html#aba2c7db26ff4f6ea263776a570d75e6f",
-"structCMD.html#af841a2189f9e693dd3ec530d368d3e92",
-"structsymrec.html#a3ed0bae32ad0e16423a49153484094f8"
+"AOloopControl__DM_8h.html#ab7d115bf256eaddaf712aae855292727",
+"AOloopControl__loop__param_8c.html#a7ba98a514afc5552b970e2171467abfb",
+"COREMOD__arith_8c.html#a3c4d7ff793a1e05b52596ac15f21687c",
+"COREMOD__arith_8h.html#a82313e778fad60a3225d8130b6c3025c",
+"COREMOD__memory_8c.html#aca8bfb0090f916df7c5966890ad83e55",
+"FPAOloopControl_8c.html#af951e683e5e742499e84ed41c56bd888",
+"calc__flex_8c.html#ab596ae57cdabfb4b298edf3dde7cdf04",
+"functions_vars_g.html",
+"image__filter_8c.html#a35a50c8f0a4850f645ecf19c89316f03",
+"info_8h.html#ab61d8deac2a6b06579a7cb02a063d31a",
+"psf_8h.html#a2e66c9ad7a95000b884bfa70480937f9",
+"structAOloopControl__var.html#acec5af79fc9314fc23872ab29580cf11",
+"structkdhyperrect.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

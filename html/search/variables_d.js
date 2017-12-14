@@ -24,7 +24,7 @@ var searchData=
   ['nelement',['nelement',['../struct____attribute____.html#a81543993f67af81d9ea33afd60da5391',1,'__attribute__']]],
   ['next',['next',['../structsymrec.html#a799aa9b5b3ee76aa0634b0ad96f80ea1',1,'symrec::next()'],['../structres__node.html#a218ec7f9710d71366f6ee1bcd647897b',1,'res_node::next()']]],
   ['noffset',['Noffset',['../structGPUMATMULTCONF.html#aa40dc58c23b77d4060e1d33030cd52f8',1,'GPUMATMULTCONF']]],
-  ['normfloorcoeff',['normfloorcoeff',['../AOloopControl_8c.html#af07b9dabb5773557e308701892461165',1,'normfloorcoeff():&#160;AOloopControl.c'],['../AOloopControl__IOtools_8c.html#af07b9dabb5773557e308701892461165',1,'normfloorcoeff():&#160;AOloopControl.c']]],
+  ['normfloorcoeff',['normfloorcoeff',['../structAOloopControl__var.html#a470ba022646da1bc32afc8a04c4a9d91',1,'AOloopControl_var']]],
   ['nsecwait',['nsecwait',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#ab9dec2433b76227ace8aca7fc7663a7f',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['nsize',['Nsize',['../structGPUMATMULTCONF.html#af18ce43d7587a1d9c2ee3959a7034faf',1,'GPUMATMULTCONF']]],
   ['numf',['numf',['../structCMDARGTOKEN.html#a8f29c19d721dbe26248fc92c01c0e497',1,'CMDARGTOKEN::numf()'],['../struct____attribute____.html#ae6fb3e2078d04c2469b3c11ac2b10dc0',1,'__attribute__::numf()']]],

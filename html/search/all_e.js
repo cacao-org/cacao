@@ -29,7 +29,7 @@ var searchData=
   ['next_5favail_5fimage_5fid',['next_avail_image_ID',['../COREMOD__memory_8c.html#a41918c8ae161a6a6134242a29f05fb83',1,'next_avail_image_ID():&#160;COREMOD_memory.c'],['../COREMOD__memory_8h.html#a41918c8ae161a6a6134242a29f05fb83',1,'next_avail_image_ID():&#160;COREMOD_memory.c']]],
   ['next_5favail_5fvariable_5fid',['next_avail_variable_ID',['../COREMOD__memory_8c.html#ad811bfe7214051710d028f9989a2c511',1,'next_avail_variable_ID():&#160;COREMOD_memory.c'],['../COREMOD__memory_8h.html#ad811bfe7214051710d028f9989a2c511',1,'next_avail_variable_ID():&#160;COREMOD_memory.c']]],
   ['noffset',['Noffset',['../structGPUMATMULTCONF.html#aa40dc58c23b77d4060e1d33030cd52f8',1,'GPUMATMULTCONF']]],
-  ['normfloorcoeff',['normfloorcoeff',['../AOloopControl_8c.html#af07b9dabb5773557e308701892461165',1,'normfloorcoeff():&#160;AOloopControl.c'],['../AOloopControl__IOtools_8c.html#af07b9dabb5773557e308701892461165',1,'normfloorcoeff():&#160;AOloopControl.c']]],
+  ['normfloorcoeff',['normfloorcoeff',['../structAOloopControl__var.html#a470ba022646da1bc32afc8a04c4a9d91',1,'AOloopControl_var']]],
   ['nsecwait',['nsecwait',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#ab9dec2433b76227ace8aca7fc7663a7f',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['nsize',['Nsize',['../structGPUMATMULTCONF.html#af18ce43d7587a1d9c2ee3959a7034faf',1,'GPUMATMULTCONF']]],
   ['numf',['numf',['../structCMDARGTOKEN.html#a8f29c19d721dbe26248fc92c01c0e497',1,'CMDARGTOKEN::numf()'],['../struct____attribute____.html#ae6fb3e2078d04c2469b3c11ac2b10dc0',1,'__attribute__::numf()']]],

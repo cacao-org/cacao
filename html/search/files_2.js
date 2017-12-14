@@ -4,6 +4,7 @@ var searchData=
   ['calc_5fbison_2ec',['calc_bison.c',['../calc__bison_8c.html',1,'']]],
   ['calc_5fbison_2eh',['calc_bison.h',['../calc__bison_8h.html',1,'']]],
   ['calc_5fflex_2ec',['calc_flex.c',['../calc__flex_8c.html',1,'']]],
+  ['changelog_2emd',['CHANGELOG.md',['../CHANGELOG_8md.html',1,'']]],
   ['cli_5foverview_2emd',['CLI_Overview.md',['../CLI__Overview_8md.html',1,'']]],
   ['clicore_2ec',['CLIcore.c',['../CLIcore_8c.html',1,'']]],
   ['clicore_2eh',['CLIcore.h',['../CLIcore_8h.html',1,'']]],

@@ -105,13 +105,39 @@ $(document).ready(function(){initNavTree('page_module_ImageStreamIO.html','');})
 <div class="title">Module ImageStreamIO </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Image stream definitions and tools </p>
+<div class="textblock"><p>Image stream definitions and tools.</p>
+<h2>Overview</h2>
+<p>ImageStreamIO implements a shared memory image format, refered to as stream, for low-latency high throughput I/O.</p>
+<p>This is generally used for images, for example dumping the ouptut of a high speed camera onto shared memory, but can also be used for any data requiring fast I/O. The format includes semaphores for low-latency IPC.</p>
+<h2>How to read/write to/from streams</h2>
+<p>The interface protocol can be either:</p>
+<ol type="1">
+<li>Slow interface by reading and writing FITS files. Command-line scripts are provided to apply FITS file to DM and also to read FITS files from any camera</li>
+<li>Fast interface by direct access to shared memory. This option is done by loading shared library and calling it from C program. A Python version also exists; which is slightly slower.</li>
+</ol>
+<h3>Approximate speed / timing accuracy:</h3>
+<ul>
+<li>Option #1 is very slow (few 100 Hz max) and timing stability is probably no better than 50ms</li>
+<li>Option #2 from Python supports ~kHz and timing stability is probably at ms level (I haven't measured it ... just guessing)</li>
+<li>Option #2 from C program supports &gt;10 kHz (- so it is limited by camera speed, not software) and timing stability is ~10us</li>
+</ul>
+<p>For options (1) and (2) with C, you can install milk package: <a href="https://github.com/milk-org/milk">https://github.com/milk-org/milk</a></p>
+<h3>Command line interface (slow) details</h3>
+<p>Download and install the <a href="https://github.com/milk-org/milk">milk package</a>.</p>
+<p>The scripts to interface FITS files with our data streams are in: <a href="https://github.com/milk-org/milk/tree/master/scripts">https://github.com/milk-org/milk/tree/master/scripts</a></p>
+<p>Look for scripts :</p><ul>
+<li>shmim2fits : Converts stream to FITS file</li>
+<li>Fits2shm : Writes FITS file to stream</li>
+</ul>
+<h3>C interface (fast) details</h3>
+<p>Link ImageStreamIO to your program and call IO functions directly.</p>
+<p>See example source code in ImageStremIO module: <a href="https://github.com/milk-org/ImageStreamIO/blob/master/ImCreate_test.c">ImCreate_test.c</a>. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Nov 24 2017 20:11:17 for cacao by
+    <li class="footer">Generated on Fri Dec 15 2017 02:45:51 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

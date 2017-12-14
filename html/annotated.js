@@ -4,6 +4,7 @@ var annotated =
     [ "AOLOOPCONTROL_CONF", "structAOLOOPCONTROL__CONF.html", "structAOLOOPCONTROL__CONF" ],
     [ "AOLOOPCONTROL_DM_DISPCOMB_CONF", "structAOLOOPCONTROL__DM__DISPCOMB__CONF.html", "structAOLOOPCONTROL__DM__DISPCOMB__CONF" ],
     [ "AOLOOPCONTROL_DMTURBCONF", "structAOLOOPCONTROL__DMTURBCONF.html", "structAOLOOPCONTROL__DMTURBCONF" ],
+    [ "AOloopControl_var", "structAOloopControl__var.html", "structAOloopControl__var" ],
     [ "BITMAPFILEHEADER", "structBITMAPFILEHEADER.html", "structBITMAPFILEHEADER" ],
     [ "BITMAPINFOHEADER", "structBITMAPINFOHEADER.html", "structBITMAPINFOHEADER" ],
     [ "CMD", "structCMD.html", "structCMD" ],

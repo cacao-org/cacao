@@ -1,5 +1,6 @@
 var AOloopControl_8h =
 [
+    [ "AOloopControl_var", "structAOloopControl__var.html", "structAOloopControl__var" ],
     [ "AOcompute", "AOloopControl_8h.html#a19a66458a8453e9f5e6ec19a93c3e70a", null ],
     [ "AOloopControl_ARPFoff", "AOloopControl_8h.html#a26bea9d5d6452a589541c1757ff4ba21", null ],
     [ "AOloopControl_ARPFon", "AOloopControl_8h.html#aff4558a2984773735b46e129777b0ad8", null ],
@@ -31,6 +32,9 @@ var AOloopControl_8h =
     [ "AOloopControl_loopreset", "AOloopControl_8h.html#a561e18ffa331146fbed2ca53a6c6fdb4", null ],
     [ "AOloopControl_loopstep", "AOloopControl_8h.html#a80e9d045d44ebe3981beb78e32c482c3", null ],
     [ "AOloopControl_OptimizePSF_LO", "AOloopControl_8h.html#adfb1e7d884741b9eefc631d15ff93613", null ],
+    [ "AOloopControl_readParam_float", "AOloopControl_8h.html#a23378a7cb0758023184263e42050f58a", null ],
+    [ "AOloopControl_readParam_int", "AOloopControl_8h.html#aa93b48138ed31791c6ce3f9ca8882f12", null ],
+    [ "AOloopControl_readParam_string", "AOloopControl_8h.html#af5a4f83681372422f2a97c23d1ab0b28", null ],
     [ "AOloopControl_run", "AOloopControl_8h.html#a9dc5a252d41a2a37735e289953c25126", null ],
     [ "AOloopControl_scanGainBlock", "AOloopControl_8h.html#a13674593e6774f6d4f00fc72cfe49448", null ],
     [ "AOloopControl_set_AUTOTUNE_LIMITS_delta", "AOloopControl_8h.html#acb01629d624f7fff31e0be7a39325df9", null ],
@@ -58,6 +62,7 @@ var AOloopControl_8h =
     [ "AOloopControl_setparam", "AOloopControl_8h.html#a066fb86fe042071a48b93697d1d29918", null ],
     [ "AOloopControl_setWFSnormfloor", "AOloopControl_8h.html#a7ba98a514afc5552b970e2171467abfb", null ],
     [ "AOloopControl_sig2Modecoeff", "AOloopControl_8h.html#aa93e227dac127632ba119916ad1da85c", null ],
+    [ "AOloopControl_TweakRM", "AOloopControl_8h.html#a691df3c02a0cb94559dadc8a62c7bb94", null ],
     [ "AOloopControl_WFSzeropoint_sum_update_loop", "AOloopControl_8h.html#a65d72b70aa47177ca3d2dae68ae5a988", null ],
     [ "AOloopControl_WFSzpupdate_loop", "AOloopControl_8h.html#a002e9ae8ce1c79e6a4ef371e9b814a9a", null ],
     [ "ControlMatrixMultiply", "AOloopControl_8h.html#a3682e64838d25674a308c533631fc2b8", null ],
