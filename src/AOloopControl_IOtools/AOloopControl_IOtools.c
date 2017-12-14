@@ -299,7 +299,8 @@ int_fast8_t init_AOloopControl_IOtools()
 {
 
     strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].info, "cacao   - AO loop control IO tools");
+    strcpy(data.module[data.NBmodule].package, "cacao");;
+    strcpy(data.module[data.NBmodule].info, "AO loop control IO tools");
     data.NBmodule++;
 
 
