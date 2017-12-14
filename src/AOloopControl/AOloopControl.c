@@ -760,7 +760,8 @@ void init_AOloopControl()
 
 
     strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].info, "cacao   - AO loop control");
+    strcpy(data.module[data.NBmodule].package, "cacao");
+    strcpy(data.module[data.NBmodule].info, "AO loop control");
     data.NBmodule++;
 
 
