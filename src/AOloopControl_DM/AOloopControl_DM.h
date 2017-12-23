@@ -121,9 +121,9 @@ int init_AOloopControl_DM();
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-static struct timespec time_diff(struct timespec start, struct timespec end);
+struct timespec time_diff(struct timespec start, struct timespec end);
 
-static int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_name2, long size, float outerscale, float innerscale);
+int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_name2, long size, float outerscale, float innerscale);
 
 
 
@@ -138,9 +138,9 @@ static int make_master_turbulence_screen_local(const char *ID_name1, const char 
 
 static int AOloopControl_DM_createconf();
 
-static int AOloopControl_DM_loadconf();
+int AOloopControl_DM_loadconf();
 
-static int AOloopControl_DM_unloadconf();
+int AOloopControl_DM_unloadconf();
 
 
 
