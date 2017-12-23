@@ -1,3 +1,97 @@
+var NAVTREE =
+[
+  [ "cacao", "index.html", [
+    [ "News", "md_doc_news.html", null ],
+    [ "Module 00CORE", "md_src_00CORE_README.html", null ],
+    [ "AOloopControl", "md_src_AOloopControl_README.html", null ],
+    [ "AOloopControl_acquireCalib", "md_src_AOloopControl_acquireCalib_README.html", null ],
+    [ "AOloopControl_compTools", "md_src_AOloopControl_compTools_README.html", null ],
+    [ "README", "md_src_AOloopControl_computeCalib_README.html", null ],
+    [ "AOloopControl_DM", "md_src_AOloopControl_DM_README.html", null ],
+    [ "AOloopControl_IOtools", "md_src_AOloopControl_IOtools_README.html", null ],
+    [ "AOloopControl_perfTest", "md_src_AOloopControl_perfTest_README.html", null ],
+    [ "AOloopControl_PredictiveControl", "md_src_AOloopControl_PredictiveControl_README.html", null ],
+    [ "CLI Overview", "md_src_CommandLineInterface_doc_CLI_Overview.html", null ],
+    [ "Command Line Interface Syntax", "md_src_CommandLineInterface_doc_CLIcore.html", null ],
+    [ "Coding Standards", "md_src_CommandLineInterface_doc_coding_standards.html", null ],
+    [ "Compilation", "md_src_CommandLineInterface_doc_Compilation.html", null ],
+    [ "Documenting Code", "md_src_CommandLineInterface_doc_DocumentingCode.html", null ],
+    [ "Installation", "md_src_CommandLineInterface_doc_DownloadCompile.html", null ],
+    [ "Readline Input Keys", "md_src_CommandLineInterface_doc_helpreadline.html", null ],
+    [ "Loading Modules", "md_src_CommandLineInterface_doc_LoadingModules.html", null ],
+    [ "Module Files", "md_src_CommandLineInterface_doc_ModuleFiles.html", null ],
+    [ "Template Souce Code", "md_src_CommandLineInterface_doc_TemplateSourceCode.html", null ],
+    [ "Command Line Interface", "md_src_CommandLineInterface_doc_UserInput.html", null ],
+    [ "Working with git", "md_src_CommandLineInterface_doc_WorkingWithGit.html", null ],
+    [ "Module CommandLineInterface", "md_src_CommandLineInterface_README.html", null ],
+    [ "Module COREMOD_arith", "md_src_COREMOD_arith_README.html", null ],
+    [ "Module COREMOD_iofits", "md_src_COREMOD_iofits_README.html", null ],
+    [ "Module COREMOD_memory", "md_src_COREMOD_memory_README.html", null ],
+    [ "Module COREMOD_tools", "md_src_COREMOD_tools_README.html", null ],
+    [ "Module cudacomp", "md_src_cudacomp_README.html", null ],
+    [ "Module fft", "md_src_fft_README.html", null ],
+    [ "FPAOloopControl", "md_src_FPAOloopControl_README.html", null ],
+    [ "Module image_basic", "md_src_image_basic_README.html", null ],
+    [ "Module image_filter", "md_src_image_filter_README.html", null ],
+    [ "Module image_format", "md_src_image_format_README.html", null ],
+    [ "Module image_gen", "md_src_image_gen_README.html", null ],
+    [ "Change Log", "md_src_ImageStreamIO_CHANGELOG.html", null ],
+    [ "Module ImageStreamIO", "md_src_ImageStreamIO_README.html", null ],
+    [ "Module img_reduce", "md_src_img_reduce_README.html", null ],
+    [ "Module info", "md_src_info_README.html", null ],
+    [ "Module kdtree", "md_src_kdtree_README.html", null ],
+    [ "Module linARfilterPred", "md_src_linARfilterPred_README.html", null ],
+    [ "Module linopt_imtools", "md_src_linopt_imtools_README.html", null ],
+    [ "Module psf", "md_src_psf_README.html", null ],
+    [ "Module statistic", "md_src_statistic_README.html", null ],
+    [ "Module ZernikePolyn", "md_src_ZernikePolyn_README.html", null ],
+    [ "Bug List", "bug.html", null ],
+    [ "Modules", "modules.html", "modules" ],
+    [ "Data Structures", null, [
+      [ "Data Structures", "annotated.html", "annotated" ],
+      [ "Data Structure Index", "classes.html", null ],
+      [ "Data Fields", "functions.html", [
+        [ "All", "functions.html", "functions_dup" ],
+        [ "Variables", "functions_vars.html", "functions_vars" ]
+      ] ]
+    ] ],
+    [ "Files", null, [
+      [ "File List", "files.html", "files" ],
+      [ "Globals", "globals.html", [
+        [ "All", "globals.html", "globals_dup" ],
+        [ "Functions", "globals_func.html", "globals_func" ],
+        [ "Variables", "globals_vars.html", "globals_vars" ],
+        [ "Typedefs", "globals_type.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
+        [ "Enumerator", "globals_eval.html", null ]
+      ] ]
+    ] ]
+  ] ]
+];
+
+var NAVTREEINDEX =
+[
+"00CORE_8c.html",
+"AOloopControl__DM__config_8c.html#a2d84b19a6c3085fa15e64aa18d7587ec",
+"AOloopControl__acquireCalib_8c.html#ae06853dcdc250d88993263216bbd4c05",
+"AOloopControl__perfTest__DM_8c.html#a4686db64ee8970c84b269e0425519dec",
+"COREMOD__arith_8c.html#a3c4d7ff793a1e05b52596ac15f21687c",
+"COREMOD__arith_8h.html#a82313e778fad60a3225d8130b6c3025c",
+"COREMOD__memory_8c.html#aca8bfb0090f916df7c5966890ad83e55",
+"FPAOloopControl_8c.html#af951e683e5e742499e84ed41c56bd888",
+"calc__flex_8c.html#a4bf8969e5234aef8b46cce9a67a62724",
+"functions_0x62.html",
+"image__basic_8h.html#aab9d389f322408922724fc1c9bdf8c58",
+"info_8c.html#ae6916da9363f105e747ab3cb5af8a4e7",
+"psf_8c.html#a4b98091982233406ae4c596561cb5d52",
+"structAOloopControl__var.html#a6ce5d96c335becf9ef1087b8f1ea5b1b",
+"struct____attribute____.html#ab61a2a3e43da44507005c7b9214adb55"
+];
+
+var SYNCONMSG = 'click to disable panel synchronisation';
+var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronisation';
+var SYNCOFFMSG = 'click to enable panel synchronisation';
 var navTreeSubIndices = new Array();
 
 function getData(varName)
@@ -18,21 +112,6 @@ function stripPath2(uri)
   var s = uri.substring(i+1);
   var m = uri.substring(0,i+1).match(/\/d\w\/d\w\w\/$/);
   return m ? uri.substring(i-6) : s;
-}
-
-function hashValue()
-{
-  return $(location).attr('hash').substring(1).replace(/[^\w\-]/g,'');
-}
-
-function hashUrl()
-{
-  return '#'+hashValue();
-}
-
-function pathName()
-{
-  return $(location).attr('pathname').replace(/[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]/g, '');
 }
 
 function localStorageSupported()
@@ -57,7 +136,7 @@ function deleteLink()
 {
   if (localStorageSupported()) {
     window.localStorage.setItem('navpath','');
-  }
+  } 
 }
 
 function cachedLink()
@@ -105,7 +184,7 @@ function createIndent(o,domNode,node,level)
     node.expandToggle.onclick = function() {
       if (node.expanded) {
         $(node.getChildrenUL()).slideUp("fast");
-        node.plus_img.src = node.relpath+"arrowright.png";
+        node.plus_img.src = node.relpath+"ftv2pnode.png";
         node.expanded = false;
       } else {
         expandNode(o, node, false, false);
@@ -113,13 +192,13 @@ function createIndent(o,domNode,node,level)
     }
     node.expandToggle.appendChild(imgNode);
     domNode.appendChild(node.expandToggle);
-    imgNode.src = node.relpath+"arrowright.png";
+    imgNode.src = node.relpath+"ftv2pnode.png";
   } else {
     var span = document.createElement("span");
     span.style.display = 'inline-block';
     span.style.width   = 16*(level+1)+'px';
     span.style.height  = '22px';
-    span.innerHTML = '&#160;';
+    span.innerHTML = '&nbsp;';
     domNode.appendChild(span);
   } 
 }
@@ -129,13 +208,11 @@ var animationInProgress = false;
 function gotoAnchor(anchor,aname,updateLocation)
 {
   var pos, docContent = $('#doc-content');
-  var ancParent = $(anchor.parent());
-  if (ancParent.hasClass('memItemLeft') ||
-      ancParent.hasClass('fieldname') ||
-      ancParent.hasClass('fieldtype') ||
-      ancParent.is(':header'))
+  if (anchor.parent().attr('class')=='memItemLeft' ||
+      anchor.parent().attr('class')=='fieldtype' ||
+      anchor.parent().is(':header')) 
   {
-    pos = ancParent.position().top;
+    pos = anchor.parent().position().top;
   } else if (anchor.position()) {
     pos = anchor.position().top;
   }
@@ -193,7 +270,7 @@ function newNode(o, po, text, link, childrenData, lastNode)
     a.className = stripPath(link.replace('#',':'));
     if (link.indexOf('#')!=-1) {
       var aname = '#'+link.split('#')[1];
-      var srcPage = stripPath(pathName());
+      var srcPage = stripPath($(location).attr('pathname'));
       var targetPage = stripPath(link.split('#')[0]);
       a.href = srcPage!=targetPage ? url : "javascript:void(0)"; 
       a.onclick = function(){
@@ -269,9 +346,9 @@ function expandNode(o, node, imm, showRoot)
         $(node.getChildrenUL()).slideDown("fast");
       }
       if (node.isLast) {
-        node.plus_img.src = node.relpath+"arrowdown.png";
+        node.plus_img.src = node.relpath+"ftv2mlastnode.png";
       } else {
-        node.plus_img.src = node.relpath+"arrowdown.png";
+        node.plus_img.src = node.relpath+"ftv2mnode.png";
       }
       node.expanded = true;
     }
@@ -287,13 +364,14 @@ function glowEffect(n,duration)
 
 function highlightAnchor()
 {
-  var aname = hashUrl();
+  var aname = $(location).attr('hash');
   var anchor = $(aname);
   if (anchor.parent().attr('class')=='memItemLeft'){
-    var rows = $('.memberdecls tr[class$="'+hashValue()+'"]');
+    var rows = $('.memberdecls tr[class$="'+
+               window.location.hash.substring(1)+'"]');
     glowEffect(rows.children(),300); // member without details
-  } else if (anchor.parent().attr('class')=='fieldname'){
-    glowEffect(anchor.parent().parent(),1000); // enum value
+  } else if (anchor.parents().slice(2).prop('tagName')=='TR') {
+    glowEffect(anchor.parents('div.memitem'),1000); // enum value
   } else if (anchor.parent().attr('class')=='fieldtype'){
     glowEffect(anchor.parent().parent(),1000); // struct field
   } else if (anchor.parent().is(":header")) {
@@ -308,7 +386,7 @@ function selectAndHighlight(hash,n)
 {
   var a;
   if (hash) {
-    var link=stripPath(pathName())+':'+hash.substring(1);
+    var link=stripPath($(location).attr('pathname'))+':'+hash.substring(1);
     a=$('.item a[class$="'+link+'"]');
   }
   if (a && a.length) {
@@ -341,7 +419,11 @@ function showNode(o, node, index, hash)
         getNode(o, node);
       }
       $(node.getChildrenUL()).css({'display':'block'});
-      node.plus_img.src = node.relpath+"arrowdown.png";
+      if (node.isLast) {
+        node.plus_img.src = node.relpath+"ftv2mlastnode.png";
+      } else {
+        node.plus_img.src = node.relpath+"ftv2mnode.png";
+      }
       node.expanded = true;
       var n = node.children[o.breadcrumbs[index]];
       if (index+1<o.breadcrumbs.length) {
@@ -415,13 +497,14 @@ function navTo(o,root,hash,relpath)
   if (link) {
     var parts = link.split('#');
     root = parts[0];
-    if (parts.length>1) hash = '#'+parts[1].replace(/[^\w\-]/g,'');
+    if (parts.length>1) hash = '#'+parts[1];
     else hash='';
   }
   if (hash.match(/^#l\d+$/)) {
     var anchor=$('a[name='+hash.substring(1)+']');
     glowEffect(anchor.parent(),1000); // line number
     hash=''; // strip line number anchors
+    //root=root.replace(/_source\./,'.'); // source link to doc link
   }
   var url=root+hash;
   var i=-1;
@@ -455,7 +538,7 @@ function toggleSyncButton(relpath)
   if (navSync.hasClass('sync')) {
     navSync.removeClass('sync');
     showSyncOff(navSync,relpath);
-    storeLink(stripPath2(pathName())+hashUrl());
+    storeLink(stripPath2($(location).attr('pathname'))+$(location).attr('hash'));
   } else {
     navSync.addClass('sync');
     showSyncOn(navSync,relpath);
@@ -479,7 +562,7 @@ function initNavTree(toroot,relpath)
   o.node.expanded = false;
   o.node.isLast = true;
   o.node.plus_img = document.createElement("img");
-  o.node.plus_img.src = relpath+"arrowright.png";
+  o.node.plus_img.src = relpath+"ftv2pnode.png";
   o.node.plus_img.width = 16;
   o.node.plus_img.height = 22;
 
@@ -495,7 +578,7 @@ function initNavTree(toroot,relpath)
   }
 
   $(window).load(function(){
-    navTo(o,toroot,hashUrl(),relpath);
+    navTo(o,toroot,window.location.hash,relpath);
     showRoot();
   });
 
@@ -503,20 +586,21 @@ function initNavTree(toroot,relpath)
      if (window.location.hash && window.location.hash.length>1){
        var a;
        if ($(location).attr('hash')){
-         var clslink=stripPath(pathName())+':'+hashValue();
-         a=$('.item a[class$="'+clslink.replace(/</g,'\\3c ')+'"]');
+         var clslink=stripPath($(location).attr('pathname'))+':'+
+                               $(location).attr('hash').substring(1);
+         a=$('.item a[class$="'+clslink+'"]');
        }
        if (a==null || !$(a).parent().parent().hasClass('selected')){
          $('.item').removeClass('selected');
          $('.item').removeAttr('id');
        }
-       var link=stripPath2(pathName());
-       navTo(o,link,hashUrl(),relpath);
+       var link=stripPath2($(location).attr('pathname'));
+       navTo(o,link,$(location).attr('hash'),relpath);
      } else if (!animationInProgress) {
        $('#doc-content').scrollTop(0);
        $('.item').removeClass('selected');
        $('.item').removeAttr('id');
-       navTo(o,toroot,hashUrl(),relpath);
+       navTo(o,toroot,window.location.hash,relpath);
      }
   })
 }
