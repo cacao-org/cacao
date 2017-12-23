@@ -15,9 +15,9 @@
 
 \.libs/libaoloopcontrolcomputecalib\.so\.0\.0\.0
 
-AOloopControl_computeCalib\.lo
+AOloopControl_computeCalib*\.lo
 
-AOloopControl_computeCalib\.o
+AOloopControl_computeCalib*\.o
 
 libaoloopcontrolcomputecalib\.la
 
