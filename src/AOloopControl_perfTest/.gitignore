@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 \.deps/AOloopControl_perfTest\.Plo
 
@@ -21,6 +22,12 @@ AOloopControl_perfTest*\.o
 
 libaoloopcontrolperftest\.la
 
+=======
+.deps/
+.libs/
+*.lo
+*.o
+>>>>>>> e08f1553b3537a30164d1f8203f1450fbec93f0a
 Makefile
-
-Makefile\.in
+Makefile.in
+*.la
