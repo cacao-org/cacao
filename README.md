@@ -60,7 +60,7 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 
 ## Contributing to project
 
-See [coding standards]( http://CACAO-org.github.io/cacao/html/page_coding_standards.html ) 
+See [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html ) 
 
 
 ---
@@ -68,7 +68,7 @@ See [coding standards]( http://CACAO-org.github.io/cacao/html/page_coding_standa
 
 ## Documentation
 
-[Online documentation]( http://CACAO-org.github.io/cacao/html/index.html ) 
+[Online documentation]( http://CACAO-org.github.io/cacao/index.html ) 
 
 ## Libraries
 
