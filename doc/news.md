@@ -1,3 +1,0 @@
-# News {#page_news}
-
-
