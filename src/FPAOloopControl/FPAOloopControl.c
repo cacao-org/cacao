@@ -207,6 +207,13 @@ int init_FPAOloopControl()
 {
 	FILE *fp;
 	
+
+    strcpy(data.module[data.NBmodule].name, __FILE__);
+    strcpy(data.module[data.NBmodule].package, "cacao");
+    strcpy(data.module[data.NBmodule].info, "Focal place AO loop control");
+    data.NBmodule++;
+
+
     if((fp=fopen("LOOPNUMBER","r"))!=NULL)
     {
         if(fscanf(fp,"%ld", &FPLOOPNUMBER) != 1)
@@ -228,10 +235,6 @@ int init_FPAOloopControl()
 	RegisterCLIcommand("FPaoMeasRespl1", __FILE__, FPAOloopControl_MeasureResp_level1_cli, "measure focal plane response, level 1", "<ampl [um]> <delay frame [long]> <delayus [long]> <NBave> <NB frame excl> <initMode> <NBiter>", "FPaoMeasRespl1 0.05 1 231 5 1 0 10", "long FPAOloopControl_MeasureResp_level1(float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, int FPAOinitMode, long NBiter)");
 
 	RegisterCLIcommand("FPaomklincombs", __FILE__, FPAOloopControl_MakeLinComb_seq_cli, "make linear comb sequence of DM pokes from set of masters", "<master cube (optional)> <xsize> <ysize> <NBmaster> <N (1+2N steps)> <outCube>", "FPaomklincombs masterC 50 50 3 2 outC", "long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0, long NBmaster0, long N, char *IDout_name)");
-
-    strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].info, "cacao   - Focal place AO loop control");
-    data.NBmodule++;
 
 
     return 0;
