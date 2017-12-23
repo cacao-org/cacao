@@ -1,0 +1,101 @@
+/*! @mainpage Outline
+
+
+#  Compute And Control For Adaptive Optics (cacao)
+
+
+---
+
+
+## Source Code
+
+<span style="color:red"> **cacao is under development - this is a Alpha release** </span>
+
+What is an [alpha release](https://en.wikipedia.org/wiki/Software_release_life_cycle) ?
+
+
+[cacao on github](https://github.com/cacao-org/cacao)
+
+
+---
+
+
+## User's Guide
+
+- @ref page_installation 
+- @ref page_userinput
+	- @ref page_CLI_Overview
+	- @ref page_readlinekeys
+	- @ref page_command_line_interface
+- @ref page_news
+
+
+---
+
+
+## Programmer's Guide
+
+- @ref page_WorkingWithGit
+- @ref page_coding_standards
+	- @ref page_Compilation
+	- @ref page_ModuleFiles
+	- @ref page_DocumentingCode
+	- @ref page_TemplateSourceCode
+- @ref page_LoadingModules
+
+
+
+---
+
+
+## cacao modules
+
+
+### milk modules
+
+cacao builds on the milk package and framework. Command line interface, memory management and general purpose image processing functions are provided by the milk modules.
+
+
+Module                  | Description                          | Souce Code Reference         |
+------------------------|--------------------------------------|------------------------------|
+CommandLineInterface    | Command interpreter                  |   @ref CLIcore.h             |
+ImageStreamIO           | Image format and low-level routines  |   @ref ImageStreamIO.h       |
+00CORE                  | Core functions                       |   @ref 00CORE.h              |
+COREMOD_memory          | Memory management, image creation    |   @ref COREMOD_memory.h      |
+COREMOD_iofits          | Read and write FITS files            |   @ref COREMOD_iofits.h      |
+COREMOD_tools           | Misc frequently used functions       |   @ref COREMOD_tools.h       |
+COREMOD_arith           | Arithmetic operations on images      |   @ref COREMOD_arith.h       |
+info                    | Image information                    |   @ref info.h                |
+image_basic             | Frequently used image functions      |   @ref image_basic.h         |
+image_filter            | Image filtering, convolution         |   @ref image_filter.h        |
+image_format            | Read/write images in several formats |   @ref image_format.h        |
+image_gen               | Generate useful images               |   @ref image_gen.h           |
+img_reduce              | Combine raw images into single image |   @ref img_reduce.h          |
+fft                     | Wrapper to FFTW and other functions  |   @ref fft.h                 |
+statistic               | Statistical tools and analysis       |   @ref statistic.h           |
+kdtree                  | k-d tree                             |   @ref kdtree.h              |
+linARfilterPred         | Linear predictive filtering          |   @ref linARfilterPred.h     |
+linopt_imtools.h        | Linear optimization tools            |   @ref linopt_imtools.h      |
+psf                     | Point Spread Function analysis       |   @ref psf.h                 |
+ZernikePolyn            | Zernike Polynomials                  |   @ref ZernikePolyn.h        |
+cudacomp                | Cuda wrapper                         |   @ref cudacomp.h            |
+
+
+
+### cacao-specific modules
+
+Module                          | Description                          | Souce Code Reference                     |      
+--------------------------------|--------------------------------------|------------------------------------------|
+AOloopControl                   | Top-level module for AO control      |   @ref AOloopControl.h                   |
+AOloopControl_IOtools           | Input-Output tools                   |   @ref AOloopControl_IOtools.h           |
+AOloopControl_acquireCalib      | Acquire AO calibration               |   @ref AOloopControl_acquireCalib.h      |
+AOloopControl_computeCalib      | Compute AO calibration               |   @ref AOloopControl_computeCalib.h      |
+AOloopControl_perfTest          | AO performance analysis              |   @ref AOloopControl_perfTest.h          |
+AOloopControl_compTools         | AO computation tools                 |   @ref AOloopControl_compTools.h         |
+AOloopControl_PredictiveControl | Predictive Control                   |   @ref AOloopControl_PredictiveControl.h |
+AOloopControl_DM                | Deformable mirror control            |   @ref AOloopControl_DM.h                |
+FPAOloopControl                 | Focal plane AO control               |   @ref FPAOloopControl.h                 |
+
+*/
+
+
