@@ -15,9 +15,9 @@
 
 \.libs/libaoloopcontrolperftest\.so\.0\.0\.0
 
-AOloopControl_perfTest\.lo
+AOloopControl_perfTest*\.lo
 
-AOloopControl_perfTest\.o
+AOloopControl_perfTest*\.o
 
 libaoloopcontrolperftest\.la
 
