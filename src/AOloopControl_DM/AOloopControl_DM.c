@@ -320,7 +320,8 @@ void __attribute__ ((constructor)) libinit_AOloopControl_DM()
 int init_AOloopControl_DM()
 {
     strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].info, "cacao   - AO loop Control DM operation");
+    strcpy(data.module[data.NBmodule].package, "cacao");
+    strcpy(data.module[data.NBmodule].info, "AO loop Control DM operation");
     data.NBmodule++;
 
 
