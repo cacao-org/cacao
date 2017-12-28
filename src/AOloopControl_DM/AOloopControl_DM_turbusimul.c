@@ -11,39 +11,13 @@
  * 
  */
 
-
-
-#include <stdint.h>
-#include <unistd.h>
-#include <malloc.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <math.h>
-#include <sys/types.h>
 #include <sys/file.h>
 #include <sys/mman.h>
-#include <err.h>
-#include <fcntl.h>
-#include <sched.h>
-#include <ncurses.h>
-#include <semaphore.h>
-
-#include <fitsio.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-#include "COREMOD_iofits/COREMOD_iofits.h"
-#include "COREMOD_arith/COREMOD_arith.h"
-#include "COREMOD_tools/COREMOD_tools.h"
-#include "fft/fft.h"
-#include "info/info.h"
-#include "statistic/statistic.h"
-#include "image_filter/image_filter.h"
-#include "image_gen/image_gen.h"
-
 #include "AOloopControl_DM/AOloopControl_DM.h"
+
 
 #ifdef __MACH__
 #include <mach/mach_time.h>
