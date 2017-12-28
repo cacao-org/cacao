@@ -5,79 +5,22 @@
  * To be used for AOloopControl module
  *  
  * @author  O. Guyon
- * @date    10 Jul 2017
+ * @date    26 Dec 2017
  *
  *
  * 
  */
 
-
-
-#include <stdint.h>
-#include <unistd.h>
-#include <malloc.h>
-#include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-#include <math.h>
-#include <sys/types.h>
-#include <sys/file.h>
-#include <sys/mman.h>
-#include <err.h>
-#include <fcntl.h>
-#include <sched.h>
-#include <ncurses.h>
-#include <semaphore.h>
-
-#include <fitsio.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-#include "COREMOD_iofits/COREMOD_iofits.h"
-#include "COREMOD_arith/COREMOD_arith.h"
-#include "COREMOD_tools/COREMOD_tools.h"
-#include "fft/fft.h"
-#include "info/info.h"
-#include "statistic/statistic.h"
-#include "image_filter/image_filter.h"
-#include "image_gen/image_gen.h"
-
 #include "AOloopControl_DM/AOloopControl_DM.h"
-
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct mach_timespec *t){
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t time;
-    time = mach_absolute_time();
-    double nseconds = ((double)time * (double)timebase.numer)/((double)timebase.denom);
-    double seconds = ((double)time * (double)timebase.numer)/((double)timebase.denom * 1e9);
-    t->tv_sec = seconds;
-    t->tv_nsec = nseconds;
-    return 0;
-}
-#else
-#include <time.h>
-#endif
-
-
 
 extern DATA data;
 
-
-
 int wcol, wrow; // window size
 
-
 struct timespec semwaitts;
-
-
-
-
 
 #define DMSTROKE100 0.7 // um displacement for 100V
 
@@ -91,8 +34,6 @@ int SMfd;
 //AOLOOPCONTROL_DMTURBCONF *dmturbconf; // DM turbulence configuration
 int dmturb_loaded = 0;
 int SMturbfd;
-
-
 
 
 
