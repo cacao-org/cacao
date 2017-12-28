@@ -5,7 +5,7 @@
  * AO engine uses stream data structure
  * 
  * @author  O. Guyon
- * @date    26 Aug 2017
+ * @date    28 Dec 2017
  *
  * @bug No known bugs. 
  * 
@@ -14,17 +14,8 @@
 #ifndef _AOLOOPCONTROL_COMPUTECALIB_H
 #define _AOLOOPCONTROL_COMPUTECALIB_H
 
-
-
-
 /** @brief Initialize command line interface. */
 int_fast8_t init_AOloopControl_computeCalib();
-
-
-
-
-
-
 
 
 /* =============================================================================================== */
@@ -59,10 +50,10 @@ long AOloopControl_computeCalib_mkCM(const char *respm_name, const char *cm_name
 long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name, float pixrad, const char *IDout_name);
 
 
-static long AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name, const char *IDout_name);
+long AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name, const char *IDout_name);
 
 
-static long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name, const char *IDmask_name, const char *IDcpa_name, const char *IDout_name);
+long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name, const char *IDmask_name, const char *IDcpa_name, const char *IDout_name);
 
 
 long AOloopControl_computeCalib_DMslaveExt(const char *IDin_name, const char *IDmask_name, const char *IDsl_name, const char *IDout_name, float r0);
