@@ -2,6 +2,10 @@ lib_LTLIBRARIES = libaoloopcontrolcomputecalib.la
 libaoloopcontrolcomputecalib_la_SOURCES = AOloopControl_computeCalib.c AOloopControl_computeCalib.h
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_Hadamard.c
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_loDMmodes.c
+libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_processRM.c
+libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_dm.c
+libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_makemodes.c
+libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_CM.c
 
 EXTRA_DIST = doc
 
