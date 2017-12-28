@@ -327,8 +327,6 @@ int_fast8_t init_AOloopControl_computeCalib()
 }
 
 
-
-
 // dmmask_perclow = 0.2
 // dmmask_coefflow = 1.0
 // dmmask_perchigh = 0.7
