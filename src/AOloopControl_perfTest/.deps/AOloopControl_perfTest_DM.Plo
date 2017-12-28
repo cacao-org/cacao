@@ -1,4 +1,5 @@
 AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
+<<<<<<< HEAD
  /usr/include/stdc-predef.h /usr/include/math.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -90,10 +91,57 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
  /home/olivier/src/CACAO/src/AOloopControl_IOtools/AOloopControl_IOtools.h \
  /home/olivier/src/CACAO/src/AOloopControl_perfTest/AOloopControl_perfTest.h \
  /usr/lib/gcc/x86_64-linux-gnu/5/include/omp.h
+=======
+ /usr/include/stdc-predef.h /usr/include/string.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h \
+ /usr/include/xlocale.h /usr/include/bits/string.h \
+ /usr/include/bits/string2.h /usr/include/endian.h \
+ /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/bits/byteswap-16.h /usr/include/stdlib.h \
+ /usr/include/math.h /usr/include/bits/huge_val.h \
+ /usr/include/bits/huge_valf.h /usr/include/bits/huge_vall.h \
+ /usr/include/bits/inf.h /usr/include/bits/nan.h \
+ /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+ /usr/include/bits/mathinline.h \
+ /home/rts/GitHub/cacao/src/CommandLineInterface/CLIcore.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/stdio.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/bits/stdlib-float.h /usr/include/semaphore.h \
+ /usr/include/bits/semaphore.h /usr/include/fftw3.h \
+ /usr/include/gsl/gsl_rng.h /usr/include/gsl/gsl_types.h \
+ /usr/include/gsl/gsl_errno.h /usr/include/errno.h \
+ /usr/include/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
+ /usr/include/asm-generic/errno-base.h /usr/include/gsl/gsl_inline.h \
+ /usr/include/signal.h /usr/include/bits/signum.h \
+ /usr/include/bits/siginfo.h /usr/include/bits/sigaction.h \
+ /usr/include/bits/sigcontext.h /usr/include/bits/sigstack.h \
+ /usr/include/sys/ucontext.h /usr/include/bits/sigthread.h \
+ /home/rts/GitHub/cacao/src/ImageStreamIO/ImageStruct.h \
+ /home/rts/GitHub/cacao/src/info/info.h \
+ /home/rts/GitHub/cacao/src/AOloopControl/AOloopControl.h \
+ /usr/include/bits/timex.h \
+ /home/rts/GitHub/cacao/src/AOloopControl_perfTest/AOloopControl_perfTest.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/omp.h
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
 
 /usr/include/stdc-predef.h:
 
-/usr/include/math.h:
+/usr/include/string.h:
 
 /usr/include/features.h:
 
@@ -105,7 +153,35 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
 
+<<<<<<< HEAD
 /usr/include/x86_64-linux-gnu/bits/huge_val.h:
+=======
+/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/bits/byteswap-16.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/math.h:
+
+/usr/include/bits/huge_val.h:
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
 
 /usr/include/x86_64-linux-gnu/bits/huge_valf.h:
 
@@ -121,14 +197,21 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 
 /usr/include/x86_64-linux-gnu/bits/mathinline.h:
 
+<<<<<<< HEAD
 /usr/include/x86_64-linux-gnu/bits/math-finite.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h:
+=======
+/home/rts/GitHub/cacao/src/CommandLineInterface/CLIcore.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h:
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
 
 /usr/include/stdint.h:
 
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
 
+<<<<<<< HEAD
 /usr/include/unistd.h:
 
 /usr/include/x86_64-linux-gnu/bits/posix_opt.h:
@@ -149,6 +232,8 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 
 /usr/include/malloc.h:
 
+=======
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
 /usr/include/stdio.h:
 
 /usr/include/libio.h:
@@ -167,6 +252,7 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 
 /usr/include/x86_64-linux-gnu/bits/stdio2.h:
 
+<<<<<<< HEAD
 /usr/include/string.h:
 
 /usr/include/xlocale.h:
@@ -174,17 +260,31 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 /usr/include/x86_64-linux-gnu/bits/string.h:
 
 /usr/include/x86_64-linux-gnu/bits/string2.h:
+=======
+/usr/include/unistd.h:
 
-/usr/include/endian.h:
+/usr/include/bits/posix_opt.h:
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
 
+/usr/include/bits/environments.h:
+
+<<<<<<< HEAD
 /usr/include/x86_64-linux-gnu/bits/endian.h:
 
 /usr/include/x86_64-linux-gnu/bits/byteswap.h:
 
 /usr/include/x86_64-linux-gnu/bits/byteswap-16.h:
+=======
+/usr/include/bits/confname.h:
 
-/usr/include/stdlib.h:
+/usr/include/getopt.h:
 
+/usr/include/bits/waitflags.h:
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
+
+/usr/include/bits/waitstatus.h:
+
+<<<<<<< HEAD
 /usr/include/x86_64-linux-gnu/bits/string3.h:
 
 /usr/include/x86_64-linux-gnu/sys/stat.h:
@@ -224,11 +324,19 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 /usr/include/x86_64-linux-gnu/sys/types.h:
 
 /usr/include/x86_64-linux-gnu/sys/select.h:
+=======
+/usr/include/sys/types.h:
+
+/usr/include/time.h:
+
+/usr/include/sys/select.h:
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
 
 /usr/include/x86_64-linux-gnu/bits/select.h:
 
 /usr/include/x86_64-linux-gnu/bits/sigset.h:
 
+<<<<<<< HEAD
 /usr/include/x86_64-linux-gnu/bits/select2.h:
 
 /usr/include/x86_64-linux-gnu/sys/sysmacros.h:
@@ -236,6 +344,13 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitstatus.h:
+=======
+/usr/include/bits/time.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/pthreadtypes.h:
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
 
 /usr/include/alloca.h:
 
@@ -245,6 +360,7 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 
 /usr/include/x86_64-linux-gnu/bits/stdlib.h:
 
+<<<<<<< HEAD
 /usr/lib/gcc/x86_64-linux-gnu/5/include-fixed/limits.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/5/include-fixed/syslimits.h:
@@ -265,6 +381,8 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 
 /home/olivier/src/CACAO/src/CommandLineInterface/CLIcore.h:
 
+=======
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
 /usr/include/semaphore.h:
 
 /usr/include/x86_64-linux-gnu/bits/semaphore.h:
@@ -309,6 +427,7 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 
 /home/olivier/src/CACAO/src/ImageStreamIO/ImageStruct.h:
 
+<<<<<<< HEAD
 /home/olivier/src/CACAO/src/00CORE/00CORE.h:
 
 /home/olivier/src/CACAO/src/COREMOD_memory/COREMOD_memory.h:
@@ -326,6 +445,13 @@ AOloopControl_perfTest_DM.lo: AOloopControl_perfTest_DM.c \
 /home/olivier/src/CACAO/src/statistic/statistic.h:
 
 /home/olivier/src/CACAO/src/AOloopControl_IOtools/AOloopControl_IOtools.h:
+=======
+/home/rts/GitHub/cacao/src/info/info.h:
+
+/home/rts/GitHub/cacao/src/AOloopControl/AOloopControl.h:
+
+/usr/include/bits/timex.h:
+>>>>>>> f74005e46e64973e6580b8252851fc5fb5e4aa89
 
 /home/olivier/src/CACAO/src/AOloopControl_perfTest/AOloopControl_perfTest.h:
 
