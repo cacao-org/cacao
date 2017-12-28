@@ -5,7 +5,7 @@
  * AO engine uses stream data structure
  *  
  * @author  O. Guyon
- * @date    26 Aug 2017
+ * @date    26 Dec 2017
  *
  * 
  * @bug No known bugs.
@@ -29,6 +29,7 @@
 /* =============================================================================================== */
 
 #include <math.h>
+/*
 #include <stdint.h>
 #include <unistd.h>
 #include <malloc.h>
@@ -64,8 +65,11 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 
 #include <fitsio.h>
+*/
+
 
 #include "CommandLineInterface/CLIcore.h"
+/*
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -82,7 +86,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
 #include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 
-
+*/
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
 #endif
