@@ -28,28 +28,9 @@
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-#include <math.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <malloc.h>
-#include <stdio.h>
 #include <string.h>
 
-
-
-
-
-#include <fitsio.h>
-
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-#include "COREMOD_iofits/COREMOD_iofits.h"
-#include "COREMOD_tools/COREMOD_tools.h"
-#include "COREMOD_arith/COREMOD_arith.h"
-#include "info/info.h"
-
-#include "statistic/statistic.h"
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_compTools/AOloopControl_compTools.h"
