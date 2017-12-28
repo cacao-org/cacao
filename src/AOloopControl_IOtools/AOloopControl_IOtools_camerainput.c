@@ -28,52 +28,14 @@
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-#include <math.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <malloc.h>
-#include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <pthread.h>
-
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct mach_timespec *t) {
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t time;
-    time = mach_absolute_time();
-    double nseconds = ((double)time * (double)timebase.numer)/((double)timebase.denom);
-    double seconds = ((double)time * (double)timebase.numer)/((double)timebase.denom * 1e9);
-    t->tv_sec = seconds;
-    t->tv_nsec = nseconds;
-    return 0;
-}
-#else
-#include <time.h>
-#endif
-
-
-
-#include <fitsio.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-#include "COREMOD_iofits/COREMOD_iofits.h"
-#include "COREMOD_tools/COREMOD_tools.h"
-#include "COREMOD_arith/COREMOD_arith.h"
-#include "info/info.h"
 
-#include "statistic/statistic.h"
+#include "info/info.h"
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
-
-
 
 /* =============================================================================================== */
 /* =============================================================================================== */

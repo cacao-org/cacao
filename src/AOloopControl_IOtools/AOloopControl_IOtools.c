@@ -27,49 +27,9 @@
 /*                                        HEADER FILES                                             */
 /* =============================================================================================== */
 /* =============================================================================================== */
-
-#include <math.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <malloc.h>
-#include <stdio.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <pthread.h>
-
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct mach_timespec *t) {
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t time;
-    time = mach_absolute_time();
-    double nseconds = ((double)time * (double)timebase.numer)/((double)timebase.denom);
-    double seconds = ((double)time * (double)timebase.numer)/((double)timebase.denom * 1e9);
-    t->tv_sec = seconds;
-    t->tv_nsec = nseconds;
-    return 0;
-}
-#else
-#include <time.h>
-#endif
-
-
-
-#include <fitsio.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-#include "COREMOD_iofits/COREMOD_iofits.h"
-#include "COREMOD_tools/COREMOD_tools.h"
-#include "COREMOD_arith/COREMOD_arith.h"
-#include "info/info.h"
-
-#include "statistic/statistic.h"
-
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
@@ -96,21 +56,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 /*                                  GLOBAL DATA DECLARATION                                        */
 /* =============================================================================================== */
 /* =============================================================================================== */
-
-
-//extern long aoloopcontrol_var.AOcontrolNBtimers;           // declared in AOloopControl.c
-
-//extern long aoloopcontrol_var.aoconfID_wfsim;              // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_imWFS0;             // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_imWFS0tot;          // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_imWFS1;             // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_wfsdark;            // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_wfsmask;            // declared in AOloopControl.c
-
-//extern uint8_t aoloopcontrol_var.WFSatype;                 // declared in AOloopControl.c
-
-//extern long aoloopcontrol_var.aoconfID_looptiming;         // declared in AOloopControl.c
-
 
 
 static sem_t AOLCOMPUTE_TOTAL_ASYNC_sem_name;
