@@ -36,6 +36,9 @@
 #include <gsl/gsl_blas.h>
 
 #include "CommandLineInterface/CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
+#include "COREMOD_iofits/COREMOD_iofits.h"
+#include "COREMOD_arith/COREMOD_arith.h"
 #include "info/info.h"
 
 #include "AOloopControl/AOloopControl.h"
@@ -266,7 +269,12 @@ int_fast8_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli() {
 void __attribute__ ((constructor)) libinit_AOloopControl_computeCalib()
 {
 	init_AOloopControl_computeCalib();
-//	printf(" ...... Loading module %s\n", __FILE__);
+
+	if(data.progStatus>0)
+	{
+		printf("  Found unloaded shared object in ./libs/ -> LOADING module %s\n", __FILE__);
+		fflush(stdout);
+	}	
 }
 
             
