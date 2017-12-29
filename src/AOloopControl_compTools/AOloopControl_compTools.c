@@ -148,7 +148,7 @@ int_fast8_t AOloopControl_compTools_mkSimpleZpokeM_cli()
 void __attribute__ ((constructor)) libinit_AOloopControl_compTools()
 {
 	init_AOloopControl_compTools();
-//	printf(" ...... Loading module %s\n", __FILE__);
+	RegisterModule(__FILE__, "cacao", "AO loop control - computation tools");
 }
 
 
@@ -156,11 +156,6 @@ void __attribute__ ((constructor)) libinit_AOloopControl_compTools()
 int_fast8_t init_AOloopControl_compTools()
 {
     FILE *fp;
-
-    strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].package, "cacao");
-    strcpy(data.module[data.NBmodule].info, "cAO loop control - computation tools");
-    data.NBmodule++;
 
 
 /* =============================================================================================== */
