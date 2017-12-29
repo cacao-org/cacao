@@ -15,6 +15,8 @@
 #define _AOLOOPCONTROL_PERFTEST_H
 
 
+/** @brief Initialize module. */
+void __attribute__ ((constructor)) libinit_AOloopControl_perfTest();
 
 /** @brief Initialize command line interface. */
 int_fast8_t init_AOloopControl_perfTest();

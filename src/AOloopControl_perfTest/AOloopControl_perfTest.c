@@ -90,6 +90,8 @@ static struct timespec tdiff;
 
 extern DATA data;
 
+static int INITSTATUS_AOloopControl_perfTest = 0;
+
 extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
@@ -257,8 +259,12 @@ int_fast8_t AOloopControl_LoopTimer_Analysis_cli()
 
 void __attribute__ ((constructor)) libinit_AOloopControl_perfTest()
 {
-	init_AOloopControl_perfTest();
-	RegisterModule(__FILE__, "cacao", "AO loop control performance monitoring and testing");
+	if ( INITSTATUS_AOloopControl_perfTest == 0 )
+	{
+		init_AOloopControl_perfTest();
+		RegisterModule(__FILE__, "cacao", "AO loop control performance monitoring and testing");
+		INITSTATUS_AOloopControl_perfTest = 1;
+	}
 }
 
 
