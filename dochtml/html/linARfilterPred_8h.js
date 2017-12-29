@@ -7,6 +7,7 @@ var linARfilterPred_8h =
     [ "LINARFILTERPRED_LoadASCIIfiles", "linARfilterPred_8h.html#a0aafdfb7a580677c336662ccee672a57", null ],
     [ "LINARFILTERPRED_PF_RealTimeApply", "linARfilterPred_8h.html#a1ba6d5b64ad54154db88c1f3f2d8094d", null ],
     [ "LINARFILTERPRED_PF_updatePFmatrix", "linARfilterPred_8h.html#a73b62a08b726755cd53f4a7d08837ea3", null ],
+    [ "linARfilterPred_repeat_shift_X", "linARfilterPred_8h.html#ad91a776994400be840100d64e36b22c8", null ],
     [ "LINARFILTERPRED_ScanGain", "linARfilterPred_8h.html#a97d7bfb0554348650718fcaa5acb17fb", null ],
     [ "LINARFILTERPRED_SelectBlock", "linARfilterPred_8h.html#a59be8ab2a56ad41041af2a353427a1b4", null ],
     [ "NBwords", "linARfilterPred_8h.html#a757c5f80b839ea32731ba61082ffe185", null ]

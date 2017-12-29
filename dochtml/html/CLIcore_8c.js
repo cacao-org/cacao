@@ -27,6 +27,7 @@ var CLIcore_8c =
     [ "printInfo", "CLIcore_8c.html#af7b677cc9f4680de403254c23bcc2645", null ],
     [ "re_alloc", "CLIcore_8c.html#a7560676ed2f15d3b48a588afc6084615", null ],
     [ "RegisterCLIcommand", "CLIcore_8c.html#a097efcf1913161adeffaf98921d0f5a5", null ],
+    [ "RegisterModule", "CLIcore_8c.html#a63c948bc1a87d4f01dd659b3c691d79c", null ],
     [ "rl_cb", "CLIcore_8c.html#a8d0617e7616ff9298b4a0dd6c7111983", null ],
     [ "runCLI", "CLIcore_8c.html#a167a57a5391116a1a11be9d81b387ea5", null ],
     [ "set_default_precision_double", "CLIcore_8c.html#aaae903153a32128cf13f841c527907cd", null ],

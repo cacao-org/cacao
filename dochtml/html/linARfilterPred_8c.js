@@ -14,6 +14,8 @@ var linARfilterPred_8c =
     [ "LINARFILTERPRED_PF_RealTimeApply_cli", "linARfilterPred_8c.html#aa5ef5067fdbd4d50d8384e28a0cba9db", null ],
     [ "LINARFILTERPRED_PF_updatePFmatrix", "linARfilterPred_8c.html#a73b62a08b726755cd53f4a7d08837ea3", null ],
     [ "LINARFILTERPRED_PF_updatePFmatrix_cli", "linARfilterPred_8c.html#a74e85c80839d265958396974c88c66e0", null ],
+    [ "linARfilterPred_repeat_shift_X", "linARfilterPred_8c.html#ad91a776994400be840100d64e36b22c8", null ],
+    [ "linARfilterPred_repeat_shift_X_cli", "linARfilterPred_8c.html#a0988872c9825c30c810d96f330b177d1", null ],
     [ "LINARFILTERPRED_ScanGain", "linARfilterPred_8c.html#a97d7bfb0554348650718fcaa5acb17fb", null ],
     [ "LINARFILTERPRED_ScanGain_cli", "linARfilterPred_8c.html#a56cabc1038049a486a7911a5a7026dd9", null ],
     [ "LINARFILTERPRED_SelectBlock", "linARfilterPred_8c.html#a59be8ab2a56ad41041af2a353427a1b4", null ],

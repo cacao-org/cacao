@@ -3,7 +3,6 @@ var AOloopControl__wfs_8c =
     [ "AOloopControl_computeWFSresidualimage", "AOloopControl__wfs_8c.html#a643ccc63ee8f47b3893dc49e7a26a575", null ],
     [ "AOloopControl_WFSzeropoint_sum_update_loop", "AOloopControl__wfs_8c.html#a65d72b70aa47177ca3d2dae68ae5a988", null ],
     [ "AOloopControl_WFSzpupdate_loop", "AOloopControl__wfs_8c.html#a002e9ae8ce1c79e6a4ef371e9b814a9a", null ],
-    [ "clock_gettime", "AOloopControl__wfs_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "ControlMatrixMultiply", "AOloopControl__wfs_8c.html#a3682e64838d25674a308c533631fc2b8", null ],
     [ "AOconf", "AOloopControl__wfs_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "aoconfcnt0_contrM_current", "AOloopControl__wfs_8c.html#ae93c55a7735541aa7caed6070aae1875", null ],

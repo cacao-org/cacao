@@ -28,6 +28,7 @@ var structDATA =
     [ "parseerror", "structDATA.html#a04c14ba8ea1844e3f68888dca0fe3519", null ],
     [ "precision", "structDATA.html#a7b6fce0fc9e6046ffa57b30b8bcd0d1f", null ],
     [ "processname", "structDATA.html#a58978653cfb98eaf9b9007cb992cc0e4", null ],
+    [ "progStatus", "structDATA.html#a15b9710b13cfe89af37f42194bc1ba5d", null ],
     [ "quiet", "structDATA.html#a3f7eda27560572dd2510250a1935deb5", null ],
     [ "rndgen", "structDATA.html#a819c0e911d771dbb7da0dbf26e993fc2", null ],
     [ "ruid", "structDATA.html#a58536c786a36c70932f12e4663a2194d", null ],

@@ -46,6 +46,7 @@ var image__basic_8h =
     [ "image_basic_3Dto2D", "image__basic_8h.html#a3f735bd7d42a7aed1e638ec639677ca7", null ],
     [ "IMAGE_BASIC_get_assym_component", "image__basic_8h.html#a326a7bc57b051f39a74e7b71888ce010", null ],
     [ "IMAGE_BASIC_get_sym_component", "image__basic_8h.html#aa86ff9597b0bdcfe1d9efce10218a340", null ],
+    [ "image_basic_indexmap", "image__basic_8h.html#a5b0171ea7272127f6fef2325bf3f65a4", null ],
     [ "IMAGE_BASIC_streamaverage", "image__basic_8h.html#a5dd3c88a093b4c568dc50b7374f9a36e", null ],
     [ "IMAGE_BASIC_streamfeed", "image__basic_8h.html#a2cc69bf5e17e8f8d2bf4243f815bdd75", null ],
     [ "IMAGE_BASIC_streamrecord", "image__basic_8h.html#afa53e0acbc9678faade3d6fa20f66e41", null ],

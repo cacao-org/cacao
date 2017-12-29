@@ -2,7 +2,6 @@ var AOloopControl__DM__TTcircle__astrogrid_8c =
 [
     [ "AOloopControl_DM_mkAstroGrid_seq", "AOloopControl__DM__TTcircle__astrogrid_8c.html#a0ee1201e82111917c3efd41e946cdb9e", null ],
     [ "AOloopControl_mkDM_TT_circle", "AOloopControl__DM__TTcircle__astrogrid_8c.html#a6fcd293aae715d8bb815765d957061ab", null ],
-    [ "clock_gettime", "AOloopControl__DM__TTcircle__astrogrid_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "data", "AOloopControl__DM__TTcircle__astrogrid_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "dmdispcomb_loaded", "AOloopControl__DM__TTcircle__astrogrid_8c.html#a4728552c8d2da32521f2b44a8895420f", null ],
     [ "dmdispcombconf", "AOloopControl__DM__TTcircle__astrogrid_8c.html#a1fc05e08226ca90b0429937215cac795", null ],
