@@ -29,7 +29,7 @@
 #include <string.h>
 
 #include <math.h>
-//#include "statistic/statistic.h"
+#include "statistic/statistic.h"
 #include "CommandLineInterface/CLIcore.h"
 
 #include "AOloopControl/AOloopControl.h"
@@ -73,6 +73,8 @@
 //extern long aoloopcontrol_var.aoconfID_looptiming;         // declared in AOloopControl.c
 
 
+extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
+extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 static sem_t AOLCOMPUTE_TOTAL_ASYNC_sem_name;
 
