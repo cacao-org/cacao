@@ -74,7 +74,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "linopt_imtools/linopt_imtools.h"
 #include "image_filter/image_filter.h"
-
+#include "ZernikePolyn/ZernikePolyn.h"
 /*
 #include "00CORE/00CORE.h"
 
