@@ -31,6 +31,7 @@
 #include <math.h>
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+#include "COREMOD_iofits/COREMOD_iofits.h"
 #include "00CORE/00CORE.h"
 #include "linopt_imtools/linopt_imtools.h"
 #include "info/info.h"
