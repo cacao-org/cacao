@@ -205,18 +205,11 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
 void __attribute__ ((constructor)) libinit_AOloopControl_acquireCalib()
 {
 	init_AOloopControl_acquireCalib();
-//	printf(" ...... Loading module %s\n", __FILE__);
+	RegisterModule(__FILE__, "cacao", "AO loop control acquire calibration");
 }
             
 int_fast8_t init_AOloopControl_acquireCalib()
 {
-
-    strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].package, "cacao");
-    strcpy(data.module[data.NBmodule].info, "AO loop control acquire calibration");
-    data.NBmodule++;
-
-
 
 /* =============================================================================================== */
 /* =============================================================================================== */
