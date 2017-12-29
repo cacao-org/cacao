@@ -108,7 +108,7 @@ extern long LOOPNUMBER; // current loop index
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 
 
-
+static int INITSTATUS_AOloopControl_PredictiveControl = 1;
 
 
 
@@ -177,8 +177,12 @@ int_fast8_t AOloopControl_PredictiveControl_setPFsimpleAve_cli() {
 
 void __attribute__ ((constructor)) libinit_AOloopControl_PredictiveControl()
 {
-	init_AOloopControl_PredictiveControl();
-	RegisterModule(__FILE__, "caco", "AO loop control predictive control");
+	if(INITSTATUS_AOloopControl_PredictiveControl == 0)
+	{
+		init_AOloopControl_PredictiveControl();
+		RegisterModule(__FILE__, "caco", "AO loop control predictive control");
+		INITSTATUS_AOloopControl_PredictiveControl = 1;
+	}
 }
 
 
