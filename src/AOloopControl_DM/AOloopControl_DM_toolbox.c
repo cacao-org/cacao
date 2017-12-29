@@ -17,7 +17,7 @@
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "image_gen/image_gen.h"
 #include "fft/fft.h"
-
+#include "info/info.h"
 #include "AOloopControl_DM/AOloopControl_DM.h"
 
 extern DATA data;
