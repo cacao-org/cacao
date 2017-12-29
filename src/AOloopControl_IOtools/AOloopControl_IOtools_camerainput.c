@@ -29,6 +29,8 @@
 /* =============================================================================================== */
 
 #include <string.h>
+#include <stdio.h>
+#include <pthread.h>
 
 #include "CommandLineInterface/CLIcore.h"
 
@@ -36,6 +38,8 @@
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
+#include "COREMOD_memory/COREMOD_memory.h"
+
 
 /* =============================================================================================== */
 /* =============================================================================================== */
