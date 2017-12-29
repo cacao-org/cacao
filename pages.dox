@@ -84,17 +84,18 @@ cudacomp                | Cuda wrapper                         |   @ref cudacomp
 
 ### cacao-specific modules
 
-Module                          | Description                          | Souce Code Reference                     |      
---------------------------------|--------------------------------------|------------------------------------------|
-AOloopControl                   | Top-level module for AO control      |   @ref AOloopControl.h                   |
-AOloopControl_IOtools           | Input-Output tools                   |   @ref AOloopControl_IOtools.h           |
-AOloopControl_acquireCalib      | Acquire AO calibration               |   @ref AOloopControl_acquireCalib.h      |
-AOloopControl_computeCalib      | Compute AO calibration               |   @ref AOloopControl_computeCalib.h      |
-AOloopControl_perfTest          | AO performance analysis              |   @ref AOloopControl_perfTest.h          |
-AOloopControl_compTools         | AO computation tools                 |   @ref AOloopControl_compTools.h         |
-AOloopControl_PredictiveControl | Predictive Control                   |   @ref AOloopControl_PredictiveControl.h |
-AOloopControl_DM                | Deformable mirror control            |   @ref AOloopControl_DM.h                |
-FPAOloopControl                 | Focal plane AO control               |   @ref FPAOloopControl.h                 |
+Module                               | Description                          | Souce Code Reference                     |      
+-------------------------------------|--------------------------------------|------------------------------------------|
+AOloopControl                        | Top-level module for AO control      |   @ref AOloopControl.h                   |
+AOloopControl_IOtools                | Input-Output tools                   |   @ref AOloopControl_IOtools.h           |
+AOloopControl_acquireCalib           | Acquire AO calibration               |   @ref AOloopControl_acquireCalib.h      |
+@ref page_AOloopControl_computeCalib | Compute AO calibration               |   @ref AOloopControl_computeCalib.h      |
+AOloopControl_perfTest               | AO performance analysis              |   @ref AOloopControl_perfTest.h          |
+AOloopControl_compTools              | AO computation tools                 |   @ref AOloopControl_compTools.h         |
+AOloopControl_PredictiveControl      | Predictive Control                   |   @ref AOloopControl_PredictiveControl.h |
+AOloopControl_DM                     | Deformable mirror control            |   @ref AOloopControl_DM.h                |
+FPAOloopControl                      | Focal plane AO control               |   @ref FPAOloopControl.h                 |
+
 
 */
 
