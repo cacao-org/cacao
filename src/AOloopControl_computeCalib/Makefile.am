@@ -4,7 +4,6 @@ libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_Hadamard.c
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_loDMmodes.c
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_processRM.c
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_dm.c
-libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_makemodes.c
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_CM.c
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_modes.c
 

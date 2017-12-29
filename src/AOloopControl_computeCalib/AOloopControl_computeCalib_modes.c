@@ -90,8 +90,18 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "cudacomp/cudacomp.h"
 #endif
 
+extern DATA data;
 
 
+extern long LOOPNUMBER; // current loop index
+
+extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
+extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
+
+
+long aoconfID_imWFS2_active[100];
+
+#define MAX_MBLOCK 20
 
 /*** \brief creates AO control modes
  *
@@ -1294,17 +1304,9 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
     }
 
 
-
-
-
-
-
     // 1:25
 
-
     // ==================================================
-
-
 
     // WFS modes
     IDzrespM = image_ID("zrespM");
@@ -1505,9 +1507,6 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
                 }
             }
             save_fits("fmodesWFS0all", "!./mkmodestmp/fmodesWFS0all.fits");
-
-
-
 
 
             // time : 02:00
@@ -2007,15 +2006,6 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
         NBmblock = cnt1;
 
 
-
-
-
-
-
-
-
-
-
         /// WFS MODES, MODAL CONTROL MATRICES
         for(mblock=0; mblock<NBmblock; mblock++)
         {
@@ -2204,6 +2194,297 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
 
     return(ID);
 }
+
+
+/*** \brief Creates control matrices per block, using native modes
+ */
+long AOloopControl_computeCalib_mkModes_Simple(const char *IDin_name, long NBmblock, long Cmblock, float SVDlim)
+{
+    long IDin; // input WFS responses
+    FILE *fp;
+    long mblock;
+    long *MBLOCK_NBmode;
+    long *MBLOCK_blockstart;
+    long *MBLOCK_blockend;
+    char fname[500];
+
+    char imname[500];
+    char imname1[500];
+    long ID;
+    long wfsxsize, wfsysize;
+    long wfssize;
+    long ii, kk;
+    char imnameCM[500];
+    char imnameCMc[500];
+    char imnameCMcact[500];
+    long IDwfsmask;
+    long IDdmmask;
+    long IDmodes;
+    long NBmodes;
+    long cnt;
+    long IDm;
+    long m;
+    long IDcmatall;
+    char command[500];
+
+
+    printf("Function AOloopControl_mkModes_Simple - Cmblock = %ld / %ld\n", Cmblock, NBmblock);
+    fflush(stdout);
+
+    if(system("mkdir -p mkmodestmp") != 0)
+        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+
+
+
+    MBLOCK_NBmode = (long*) malloc(sizeof(long)*NBmblock);
+    MBLOCK_blockstart = (long*) malloc(sizeof(long)*NBmblock);
+    MBLOCK_blockend = (long*) malloc(sizeof(long)*NBmblock);
+
+
+    IDin = image_ID(IDin_name);
+    wfsxsize = data.image[IDin].md[0].size[0];
+    wfsysize = data.image[IDin].md[0].size[1];
+    wfssize = wfsxsize*wfsysize;
+    NBmodes = data.image[IDin].md[0].size[2];
+
+    // read block ends
+    if(NBmblock==1)
+    {
+        MBLOCK_blockend[0] = NBmodes;
+
+        if(sprintf(fname, "./conf_staged/param_block00end.txt") < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+        fp = fopen(fname, "w");
+        fprintf(fp, "%03ld\n", NBmodes);
+        fclose(fp);
+    }
+    else
+    {
+        for(mblock=0; mblock<NBmblock; mblock++)
+        {
+            if(sprintf(fname, "./conf_staged/param_block%02ldend.txt", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            fp = fopen(fname, "r");
+            if(fp==NULL)
+            {
+                printf("ERROR: File \"%s\" not found\n", fname);
+                exit(0);
+            }
+            if(fscanf(fp, "%50ld", &MBLOCK_blockend[mblock]) != 1)
+                printERROR(__FILE__, __func__, __LINE__, "Cannot read parameter from file");
+            fclose(fp);
+
+            printf("Block end %ld = %ld\n", mblock, MBLOCK_blockend[mblock]);
+            fflush(stdout);
+        }
+    }
+
+    MBLOCK_NBmode[0] = MBLOCK_blockend[0];
+    MBLOCK_blockstart[0] = 0;
+    for(mblock=1; mblock<NBmblock; mblock++)
+    {
+        MBLOCK_NBmode[mblock] = MBLOCK_blockend[mblock] - MBLOCK_blockend[mblock-1];
+        MBLOCK_blockstart[mblock] =  MBLOCK_blockstart[mblock-1] + MBLOCK_NBmode[mblock-1];
+    }
+
+
+
+
+    IDmodes = create_3Dimage_ID("fmodesall", NBmodes, 1, NBmodes);
+    for(kk=0; kk<NBmodes*NBmodes; kk++)
+        data.image[IDmodes].array.F[kk] = 0.0;
+    for(kk=0; kk<NBmodes; kk++)
+        data.image[IDmodes].array.F[kk*NBmodes+kk] = 1.0;
+    save_fits("fmodesall", "!./mkmodestmp/fmodesall.fits");
+
+    for(mblock=0; mblock<NBmblock; mblock++)
+    {
+        printf("mblock %02ld  : %ld modes\n", mblock, MBLOCK_NBmode[mblock]);
+
+
+        if( (Cmblock == mblock) || (Cmblock == -1) )
+        {
+            printf("Reconstructing block %ld\n", mblock);
+
+            if(sprintf(command, "echo \"%f\" > ./conf_staged/block%02ld_SVDlim.txt", SVDlim, mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            if(system(command) != 0)
+                printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+
+
+            IDdmmask = create_2Dimage_ID("dmmask", NBmodes, 1);
+            for(kk=0; kk<NBmodes; kk++)
+                data.image[IDdmmask].array.F[kk] = 1.0;
+
+            if(sprintf(imname, "fmodesWFS_%02ld", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            ID = create_3Dimage_ID(imname, wfsxsize, wfsysize, MBLOCK_NBmode[mblock]);
+            for(kk=0; kk<MBLOCK_NBmode[mblock]; kk++)
+            {
+                for(ii=0; ii<wfssize; ii++)
+                    data.image[ID].array.F[kk*wfssize+ii] = data.image[IDin].array.F[(kk+MBLOCK_blockstart[mblock])*wfssize+ii];
+            }
+
+            if(sprintf(fname, "!./mkmodestmp/fmodesWFS_%02ld.fits", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            save_fits(imname, fname);
+
+
+            if(sprintf(imnameCM, "cmat_%02ld", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            if(sprintf(imnameCMc, "cmatc_%02ld", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            if(sprintf(imnameCMcact, "cmatcact_%02ld", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            // COMPUTE MODAL CONTROL MATRICES
+            printf("COMPUTE CONTROL MATRIX\n");
+#ifdef HAVE_MAGMA
+            CUDACOMP_magma_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000, "VTmat", 0);
+#else
+            linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000, "VTmat");
+#endif
+
+            delete_image_ID("VTmat");
+
+            if(sprintf(fname, "!./mkmodestmp/cmat_%02ld.fits", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            save_fits(imnameCM, fname);
+
+            printf("-- COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX\n");
+            fflush(stdout);
+
+            // COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX
+            if(sprintf(imname, "fmodes_%02ld", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            IDmodes = create_3Dimage_ID(imname, NBmodes, 1, MBLOCK_NBmode[mblock]);
+            list_image_ID();
+            for(kk=0; kk<MBLOCK_NBmode[mblock]; kk++)
+            {
+                for(ii=0; ii<NBmodes; ii++)
+                    data.image[IDmodes].array.F[kk*NBmodes+ii] = 0.0;
+                data.image[IDmodes].array.F[kk*NBmodes+(kk+MBLOCK_blockstart[mblock])] = 1.0;
+            }
+
+            if(sprintf(fname, "!./mkmodestmp/fmodes_%02ld.fits", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            save_fits(imname, fname);
+
+
+            AOloopControl_computeCalib_compute_CombinedControlMatrix(imnameCM, imname, "wfsmask", "dmmask", imnameCMc, imnameCMcact);
+            delete_image_ID("dmmask");
+
+            if(sprintf(fname, "!./mkmodestmp/cmatc_%02ld.fits", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            save_fits(imnameCMc, fname);
+
+            if(sprintf(fname, "!./mkmodestmp/cmatcact_%02ld.fits", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            if(sprintf(imname1, "%s_00", imnameCMcact) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            save_fits(imname1, fname);
+        }
+
+        else
+        {
+            printf("LOADING WFS MODES, MODAL CONTROL MATRICES: block %ld\n", mblock);
+            fflush(stdout);
+
+            if(sprintf(fname, "./mkmodestmp/fmodesWFS_%02ld.fits", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            load_fits(fname, imname, 1);
+
+            if(sprintf(fname, "./mkmodestmp/cmat_%02ld.fits", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            load_fits(fname, imnameCM, 1);
+
+            if(sprintf(fname, "./mkmodestmp/cmatc_%02ld.fits", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            load_fits(fname, imnameCMc, 1);
+
+            if(sprintf(fname, "./mkmodestmp/cmatcact_%02ld.fits", mblock) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+            load_fits(fname, imnameCMcact, 1);
+        }
+    }
+
+
+    cnt = 0;
+    for(mblock=0; mblock<NBmblock; mblock++)
+        cnt += MBLOCK_NBmode[mblock];
+    IDm = create_3Dimage_ID("fmodesWFSall", wfsxsize, wfsysize, cnt);
+    cnt = 0;
+    for(mblock=0; mblock<NBmblock; mblock++)
+    {
+        if(sprintf(command, "echo \"%ld\" > ./conf_staged/block%02ld_NBmodes.txt", MBLOCK_NBmode[mblock], mblock) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+        if(system(command) != 0)
+            printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+
+        if(sprintf(imname, "fmodesWFS_%02ld", mblock) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+        long IDmwfs = image_ID(imname);
+        for(m=0; m<MBLOCK_NBmode[mblock]; m++)
+        {
+            for(ii=0; ii<wfssize; ii++)
+                data.image[IDm].array.F[cnt*wfssize+ii] = data.image[IDmwfs].array.F[m*wfssize+ii];
+            cnt++;
+        }
+    }
+    save_fits("fmodesWFSall", "!./mkmodestmp/fmodesWFSall.fits");
+
+
+    cnt = 0;
+    for(mblock=0; mblock<NBmblock; mblock++)
+        cnt += MBLOCK_NBmode[mblock];
+    IDcmatall = create_3Dimage_ID("cmatall", wfsxsize, wfsysize, cnt);
+    cnt = 0;
+    for(mblock=0; mblock<NBmblock; mblock++)
+    {
+        if(sprintf(imname, "cmat_%02ld", mblock) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+        long IDcmat = image_ID(imname);
+        for(m=0; m<MBLOCK_NBmode[mblock]; m++)
+        {
+            for(ii=0; ii<wfssize; ii++)
+                data.image[IDcmatall].array.F[cnt*wfssize+ii] = data.image[IDcmat].array.F[m*wfssize+ii];
+            cnt++;
+        }
+    }
+    save_fits("cmatall", "!./mkmodestmp/cmatall.fits");
+
+
+
+
+
+    free(MBLOCK_NBmode);
+    free(MBLOCK_blockstart);
+    free(MBLOCK_blockend);
+
+
+    return(IDin);
+}
+
 
 
 int_fast8_t AOloopControl_computeCalib_mkCalib_map_mask(long loop, const char *zrespm_name, const char *WFSmap_name, const char *DMmap_name, float dmmask_perclow, float dmmask_coefflow, float dmmask_perchigh, float dmmask_coeffhigh, float wfsmask_perclow, float wfsmask_coefflow, float wfsmask_perchigh, float wfsmask_coeffhigh)
