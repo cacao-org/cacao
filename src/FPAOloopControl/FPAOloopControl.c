@@ -199,12 +199,7 @@ int_fast8_t FPAOloopControl_MakeLinComb_seq_cli(){
 void __attribute__ ((constructor)) libinit_FPAOloopControl()
 {
 	init_FPAOloopControl();
-
-	if(data.progStatus>0)
-	{
-		printf("  Found unloaded shared object in ./libs/ -> LOADING module %s\n", __FILE__);
-		fflush(stdout);
-	}	
+	RegisterModule(__FILE__, "milk", "Focal place AO loop control");
 }
 
 
@@ -212,11 +207,6 @@ int init_FPAOloopControl()
 {
 	FILE *fp;
 	
-
-    strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].package, "cacao");
-    strcpy(data.module[data.NBmodule].info, "Focal place AO loop control");
-    data.NBmodule++;
 
 
     if((fp=fopen("LOOPNUMBER","r"))!=NULL)
