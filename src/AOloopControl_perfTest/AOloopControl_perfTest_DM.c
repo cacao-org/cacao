@@ -79,7 +79,6 @@ extern long LOOPNUMBER; // current loop index
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
-extern int AOloopcontrol_meminit;
 
 
 

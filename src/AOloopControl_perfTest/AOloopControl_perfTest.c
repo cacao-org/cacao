@@ -95,7 +95,6 @@ extern long LOOPNUMBER; // current loop index
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
-extern int AOloopcontrol_meminit;
 
 
 // CLI commands
@@ -831,7 +830,7 @@ long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
 
 int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
 {
-    if(AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
     if(aoloopcontrol_var.aoconfID_DMmodes==-1)
@@ -1070,7 +1069,7 @@ long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NB
     float pha0;
     char name[200];
     long m;
-    if(AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
     if(aoloopcontrol_var.aoconfID_DMmodes==-1)

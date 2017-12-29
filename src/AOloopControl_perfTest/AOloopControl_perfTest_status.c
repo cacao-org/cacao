@@ -79,7 +79,6 @@ extern long LOOPNUMBER; // current loop index
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
-extern int AOloopcontrol_meminit;
 
 
 
@@ -453,7 +452,7 @@ int_fast8_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbc
     char fname[200];
 
 
-    if(AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
     printf("MEMORY HAS BEEN INITIALIZED\n");
@@ -654,7 +653,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
     FILE *fp;
 
-    if(AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
 
@@ -1006,7 +1005,7 @@ int_fast8_t AOloopControl_perfTest_resetRMSperf()
     long kmin, kmax;
 
 
-    if(AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
     AOconf[LOOPNUMBER].RMSmodesCumul = 0.0;
