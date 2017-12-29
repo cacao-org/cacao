@@ -680,13 +680,9 @@ int_fast8_t AOloopControl_setparam_cli()
 void __attribute__ ((constructor)) libinit_AOloopControl()
 {
 	init_AOloopControl();
-
-	if(data.progStatus>0)
-	{
-		printf("  Found unloaded shared object in ./libs/ -> LOADING module %s\n", __FILE__);
-		fflush(stdout);
-	}
+	RegisterModule(__FILE__, "cacao", "AO loop control");
 }
+
 
 
 int AOloopControl_bogusfunc()
@@ -736,14 +732,6 @@ void init_AOloopControl()
     }
     else
         LOOPNUMBER = 0;
-
-
-
-    strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].package, "cacao");
-    strcpy(data.module[data.NBmodule].info, "AO loop control");
-    data.NBmodule++;
-
 
     RegisterCLIcommand("aolloadconf",__FILE__, AOloopControl_loadconfigure_cli, "load AO loop configuration", "<loop #>", "AOlooploadconf 1", "int AOloopControl_loadconfigure(long loopnb, 1, 10)");
 
