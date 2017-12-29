@@ -16,6 +16,9 @@
 #include <AOloopControl/AOloopControl.h>
 
 
+/** @brief Initialize module. */
+void __attribute__ ((constructor)) libinit_AOloopControl_IOtools();
+
 /** @brief Initialize command line interface. */
 int_fast8_t init_AOloopControl_IOtools();
 

@@ -110,6 +110,8 @@ static int AOLCOMPUTE_TOTAL_INIT = 0; // toggles to 1 AFTER total for first imag
 
 extern DATA data;
 
+static int INITSTATUS_AOloopControl_IOtools = 0;
+
 extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
@@ -235,8 +237,12 @@ int_fast8_t AOloopControl_IOtools_stream3Dto2D_cli() {
 
 void __attribute__ ((constructor)) libinit_AOloopControl_IOtools()
 {
-	init_AOloopControl_IOtools();
-	RegisterModule(__FILE__, "cacao", "AO loop control IO tools");
+	if ( INITSTATUS_AOloopControl_IOtools == 0)
+	{
+		init_AOloopControl_IOtools();
+		RegisterModule(__FILE__, "cacao", "AO loop control IO tools");
+		INITSTATUS_AOloopControl_IOtools = 1;
+	}
 }
 
 
