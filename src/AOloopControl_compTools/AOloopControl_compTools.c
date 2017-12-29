@@ -34,7 +34,7 @@
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_compTools/AOloopControl_compTools.h"
-
+#include "COREMOD_memory/COREMOD_memory.h"
 
 
 
