@@ -114,6 +114,8 @@ static int RMACQUISITION = 0;  // toggles to 1 when resp matrix is being acquire
 
 extern DATA data;
 
+static int INITSTATUS_AOloopControl_acquireCalib = 0;
+
 extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
@@ -204,8 +206,12 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
 
 void __attribute__ ((constructor)) libinit_AOloopControl_acquireCalib()
 {
-	init_AOloopControl_acquireCalib();
-	RegisterModule(__FILE__, "cacao", "AO loop control acquire calibration");
+	if( INITSTATUS_AOloopControl_acquireCalib == 0)
+	{
+		init_AOloopControl_acquireCalib();
+		RegisterModule(__FILE__, "cacao", "AO loop control acquire calibration");
+		INITSTATUS_AOloopControl_acquireCalib = 1;
+	}
 }
             
 int_fast8_t init_AOloopControl_acquireCalib()
