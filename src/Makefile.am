@@ -65,6 +65,9 @@ SUBDIRS += FPAOloopControl
 cacao_LDADD += FPAOloopControl/libfpaoloopcontrol.la
 cacao_CPPFLAGS += -I@abs_top_srcdir@/src/FPAOloopControl
 
+SUBDIRS += linARfilterPred
+cacao_LDADD += linARfilterPred/liblinarfilterpred.la
+cacao_CPPFLAGS += -I@abs_top_srcdir@/src/linARfilterPred
 
 ## Core modules last, higher level modules at the top
 
