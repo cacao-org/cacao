@@ -143,10 +143,10 @@ Functions</h2></td></tr>
 <tr class="separator:af39548435711af3dd503f75a6199b65f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5a4d6377e976f9ae6f3e00d16e1f64d"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8h.html#ad5a4d6377e976f9ae6f3e00d16e1f64d">AOloopControl_computeCalib_mkSlavedAct</a> (const char *IDmaskRM_name, float pixrad, const char *IDout_name)</td></tr>
 <tr class="separator:ad5a4d6377e976f9ae6f3e00d16e1f64d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cefe84bf7582c02d1b1dac37ce28bc9"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8h.html#a2cefe84bf7582c02d1b1dac37ce28bc9">AOloopControl_computeCalib_DMedgeDetect</a> (const char *IDmaskRM_name, const char *IDout_name)</td></tr>
-<tr class="separator:a2cefe84bf7582c02d1b1dac37ce28bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7eb23b3af7f2b6b1809b8d3252b56c5"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8h.html#ad7eb23b3af7f2b6b1809b8d3252b56c5">AOloopControl_computeCalib_DMextrapolateModes</a> (const char *IDin_name, const char *IDmask_name, const char *IDcpa_name, const char *IDout_name)</td></tr>
-<tr class="separator:ad7eb23b3af7f2b6b1809b8d3252b56c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56677979288b430733d60dc1bbdcda2e"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8h.html#a56677979288b430733d60dc1bbdcda2e">AOloopControl_computeCalib_DMedgeDetect</a> (const char *IDmaskRM_name, const char *IDout_name)</td></tr>
+<tr class="separator:a56677979288b430733d60dc1bbdcda2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36acc7f6cc3dd340c32f82859e0e6581"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8h.html#a36acc7f6cc3dd340c32f82859e0e6581">AOloopControl_computeCalib_DMextrapolateModes</a> (const char *IDin_name, const char *IDmask_name, const char *IDcpa_name, const char *IDout_name)</td></tr>
+<tr class="separator:a36acc7f6cc3dd340c32f82859e0e6581"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afff87ef770e09cd493af8edfaa7a4e6f"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8h.html#afff87ef770e09cd493af8edfaa7a4e6f">AOloopControl_computeCalib_DMslaveExt</a> (const char *IDin_name, const char *IDmask_name, const char *IDsl_name, const char *IDout_name, float r0)</td></tr>
 <tr class="separator:afff87ef770e09cd493af8edfaa7a4e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c35aa3bb31786a153df1f4f445186f8"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8h.html#a1c35aa3bb31786a153df1f4f445186f8">AOloopControl_computeCalib_mkModes</a> (const char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yx, double r0, double r1, int MaskMode, int BlockNB, float SVDlim)</td></tr>
@@ -165,7 +165,7 @@ Functions</h2></td></tr>
 <div class="textblock"><p>Function prototypes for Adaptive Optics Control loop engine compute calibration. </p>
 <p>AO engine uses stream data structure</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>26 Aug 2017</dd></dl>
+<dl class="section date"><dt>Date</dt><dd>28 Dec 2017</dd></dl>
 <dl class="bug"><dt><b><a class="el" href="bug.html#_bug000028">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="aed9417256a79eee53adefc3ca6204083"></a>
@@ -292,15 +292,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2cefe84bf7582c02d1b1dac37ce28bc9"></a>
+<a class="anchor" id="a56677979288b430733d60dc1bbdcda2e"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static long AOloopControl_computeCalib_DMedgeDetect </td>
+          <td class="memname">long AOloopControl_computeCalib_DMedgeDetect </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDmaskRM_name</em>, </td>
@@ -317,24 +314,16 @@ Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="ad7eb23b3af7f2b6b1809b8d3252b56c5"></a>
+<a class="anchor" id="a36acc7f6cc3dd340c32f82859e0e6581"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static long AOloopControl_computeCalib_DMextrapolateModes </td>
+          <td class="memname">long AOloopControl_computeCalib_DMextrapolateModes </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -363,11 +352,6 @@ Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -1004,7 +988,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0394dae130dd6b4601d7d7032afd608b.html">AOloopControl_computeCalib</a></li><li class="navelem"><a class="el" href="AOloopControl__computeCalib_8h.html">AOloopControl_computeCalib.h</a></li>
-    <li class="footer">Generated on Fri Dec 22 2017 20:47:51 for cacao by
+    <li class="footer">Generated on Fri Dec 29 2017 10:02:01 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

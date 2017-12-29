@@ -9,6 +9,7 @@ var CLIcore_8h =
     [ "CLI_checkarg", "CLIcore_8h.html#acfa3a12412c06fe66437c5f77f066fa0", null ],
     [ "CLI_checkarg_noerrmsg", "CLIcore_8h.html#a8b68e72c423d42662e9c37f450ced2df", null ],
     [ "RegisterCLIcommand", "CLIcore_8h.html#a097efcf1913161adeffaf98921d0f5a5", null ],
+    [ "RegisterModule", "CLIcore_8h.html#a63c948bc1a87d4f01dd659b3c691d79c", null ],
     [ "runCLI", "CLIcore_8h.html#a167a57a5391116a1a11be9d81b387ea5", null ],
     [ "sig_handler", "CLIcore_8h.html#a4f31a6fd48ee5d4579ae4aaaa3cae285", null ],
     [ "BuildDate", "CLIcore_8h.html#ac3e78a1257c6b5e478a52bf5b478014b", null ],

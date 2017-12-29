@@ -5,7 +5,6 @@ var AOloopControl__IOtools_8c =
     [ "AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli", "AOloopControl__IOtools_8c.html#aa8290011cb68f3138108f5bd4affdca9", null ],
     [ "AOloopControl_IOtools_frameDelay_cli", "AOloopControl__IOtools_8c.html#ad24854cf77226f9c14c06f69e14dfedb", null ],
     [ "AOloopControl_IOtools_stream3Dto2D_cli", "AOloopControl__IOtools_8c.html#a6446ea64d1a9d88030fec1737ff136a2", null ],
-    [ "clock_gettime", "AOloopControl__IOtools_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "AOconf", "AOloopControl__IOtools_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name", "AOloopControl__IOtools_8c.html#a517aeb04849ec7ca55a2f17a0ed39dc2", null ],
     [ "AOLCOMPUTE_DARK_SUBTRACT_sem_name", "AOloopControl__IOtools_8c.html#a2bc4b02c2021c0bcd0bf7c0ef8a1316e", null ],

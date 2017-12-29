@@ -42,6 +42,7 @@ var searchData=
   ['processname',['processname',['../structDATA.html#a58978653cfb98eaf9b9007cb992cc0e4',1,'DATA']]],
   ['profile',['profile',['../info_8c.html#a241ccde2b381ced2d2148d84a3a856a0',1,'profile(const char *ID_name, const char *outfile, double xcenter, double ycenter, double step, long nb_step):&#160;info.c'],['../info_8h.html#a241ccde2b381ced2d2148d84a3a856a0',1,'profile(const char *ID_name, const char *outfile, double xcenter, double ycenter, double step, long nb_step):&#160;info.c']]],
   ['profile2im',['profile2im',['../info_8c.html#a10786d1e1b7ec84abccd161883fadaf6',1,'profile2im(const char *profile_name, long nbpoints, long size, double xcenter, double ycenter, double radius, const char *out):&#160;info.c'],['../info_8h.html#a10786d1e1b7ec84abccd161883fadaf6',1,'profile2im(const char *profile_name, long nbpoints, long size, double xcenter, double ycenter, double radius, const char *out):&#160;info.c']]],
+  ['progstatus',['progStatus',['../structDATA.html#a15b9710b13cfe89af37f42194bc1ba5d',1,'DATA']]],
   ['psf_2ec',['psf.c',['../psf_8c.html',1,'']]],
   ['psf_2eh',['psf.h',['../psf_8h.html',1,'']]],
   ['psf_5fcoaddbest',['PSF_coaddbest',['../psf_8c.html#af5ba2b7ad4e446d1a19185eee7bf700f',1,'PSF_coaddbest(const char *IDcin_name, const char *IDout_name, float r_pix):&#160;psf.c'],['../psf_8h.html#af5ba2b7ad4e446d1a19185eee7bf700f',1,'PSF_coaddbest(const char *IDcin_name, const char *IDout_name, float r_pix):&#160;psf.c']]],

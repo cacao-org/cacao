@@ -3,7 +3,6 @@ var AOloopControl__IOtools__datastream__processing_8c =
     [ "AOloopControl_IOtools_AveStream", "AOloopControl__IOtools__datastream__processing_8c.html#af116cd60a4c08151a2000df55aad9d55", null ],
     [ "AOloopControl_IOtools_frameDelay", "AOloopControl__IOtools__datastream__processing_8c.html#af68a8d843366c07696b0ab73a6e1fcc9", null ],
     [ "AOloopControl_IOtools_stream3Dto2D", "AOloopControl__IOtools__datastream__processing_8c.html#a56556fb495048e4f21199392e1df7912", null ],
-    [ "clock_gettime", "AOloopControl__IOtools__datastream__processing_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "AOconf", "AOloopControl__IOtools__datastream__processing_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name", "AOloopControl__IOtools__datastream__processing_8c.html#a517aeb04849ec7ca55a2f17a0ed39dc2", null ],
     [ "AOLCOMPUTE_DARK_SUBTRACT_sem_name", "AOloopControl__IOtools__datastream__processing_8c.html#a2bc4b02c2021c0bcd0bf7c0ef8a1316e", null ],

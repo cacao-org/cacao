@@ -1,7 +1,6 @@
 var AOloopControl__IOtools__camerainput_8c =
 [
     [ "AOloopControl_IOtools_camimage_extract2D_sharedmem_loop", "AOloopControl__IOtools__camerainput_8c.html#ad13aee4eff60f6ee2544875f9890770f", null ],
-    [ "clock_gettime", "AOloopControl__IOtools__camerainput_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "compute_function_dark_subtract", "AOloopControl__IOtools__camerainput_8c.html#a08adf8f45f2ea29016a5afc556a4de37", null ],
     [ "compute_function_imtotal", "AOloopControl__IOtools__camerainput_8c.html#ae528115f70c3ee4537c8c6f374ada43f", null ],
     [ "Read_cam_frame", "AOloopControl__IOtools__camerainput_8c.html#a275196fb78a1b7413a18a2df3ebcf995", null ],

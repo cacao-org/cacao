@@ -2,7 +2,6 @@ var AOloopControl__IOtools__load__image__sharedmem_8c =
 [
     [ "AOloopControl_IOtools_2Dloadcreate_shmim", "AOloopControl__IOtools__load__image__sharedmem_8c.html#a6d1f06e26db9722ba9ab011277d1e671", null ],
     [ "AOloopControl_IOtools_3Dloadcreate_shmim", "AOloopControl__IOtools__load__image__sharedmem_8c.html#a8a4f7d5042ff9d58b43ba2c63b48fa8e", null ],
-    [ "clock_gettime", "AOloopControl__IOtools__load__image__sharedmem_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "AOconf", "AOloopControl__IOtools__load__image__sharedmem_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name", "AOloopControl__IOtools__load__image__sharedmem_8c.html#a517aeb04849ec7ca55a2f17a0ed39dc2", null ],
     [ "AOLCOMPUTE_DARK_SUBTRACT_sem_name", "AOloopControl__IOtools__load__image__sharedmem_8c.html#a2bc4b02c2021c0bcd0bf7c0ef8a1316e", null ],

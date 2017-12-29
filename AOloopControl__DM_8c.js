@@ -23,7 +23,6 @@ var AOloopControl__DM_8c =
     [ "AOloopControl_DM_setvoltOFF_cli", "AOloopControl__DM_8c.html#a8a6d5a867e83694f86f49253cb60c323", null ],
     [ "AOloopControl_DM_setvoltON_cli", "AOloopControl__DM_8c.html#a10ee42b53762e3fc377f6e4ebbdd0d24", null ],
     [ "AOloopControl_mkDM_TT_circle_cli", "AOloopControl__DM_8c.html#a9357280a4bcbab55bccd31ce144b08db", null ],
-    [ "clock_gettime", "AOloopControl__DM_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "init_AOloopControl_DM", "AOloopControl__DM_8c.html#a59c2210415bf5dcf30636d77230bcef5", null ],
     [ "data", "AOloopControl__DM_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "dmdispcomb_loaded", "AOloopControl__DM_8c.html#a4728552c8d2da32521f2b44a8895420f", null ],

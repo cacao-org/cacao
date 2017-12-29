@@ -48,7 +48,7 @@ var AOloopControl_8c =
     [ "AOloopControl_WFSzeropoint_sum_update_loop_cli", "AOloopControl_8c.html#acf0d54fe2b296eb78b4c90e2418d6cff", null ],
     [ "AOloopControl_WFSzpupdate_loop_cli", "AOloopControl_8c.html#af2848476386966c635f0ce8b8897314b", null ],
     [ "clock_gettime", "AOloopControl_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
-    [ "AOconf", "AOloopControl_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
+    [ "AOconf", "AOloopControl_8c.html#aa3f87f243d7521618a548e589b7698bd", null ],
     [ "AOLOOPCONTROL_logfunc_fname", "AOloopControl_8c.html#a83cfde6ec0fa2aaecefd547e15cc9e12", null ],
     [ "AOLOOPCONTROL_logfunc_level", "AOloopControl_8c.html#a3b66d3c3860ab5bf3f562c9b0b50f91a", null ],
     [ "AOLOOPCONTROL_logfunc_level_max", "AOloopControl_8c.html#a4e330e3851cdaa16f3c039fd66bbb2fe", null ],

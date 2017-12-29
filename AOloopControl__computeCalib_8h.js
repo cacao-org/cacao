@@ -2,8 +2,8 @@ var AOloopControl__computeCalib_8h =
 [
     [ "AOloopControl_computeCalib_compute_CombinedControlMatrix", "AOloopControl__computeCalib_8h.html#aed9417256a79eee53adefc3ca6204083", null ],
     [ "AOloopControl_computeCalib_compute_ControlMatrix", "AOloopControl__computeCalib_8h.html#a764d8c10e308ea1c15d14afe49df8a60", null ],
-    [ "AOloopControl_computeCalib_DMedgeDetect", "AOloopControl__computeCalib_8h.html#a2cefe84bf7582c02d1b1dac37ce28bc9", null ],
-    [ "AOloopControl_computeCalib_DMextrapolateModes", "AOloopControl__computeCalib_8h.html#ad7eb23b3af7f2b6b1809b8d3252b56c5", null ],
+    [ "AOloopControl_computeCalib_DMedgeDetect", "AOloopControl__computeCalib_8h.html#a56677979288b430733d60dc1bbdcda2e", null ],
+    [ "AOloopControl_computeCalib_DMextrapolateModes", "AOloopControl__computeCalib_8h.html#a36acc7f6cc3dd340c32f82859e0e6581", null ],
     [ "AOloopControl_computeCalib_DMslaveExt", "AOloopControl__computeCalib_8h.html#afff87ef770e09cd493af8edfaa7a4e6f", null ],
     [ "AOloopControl_computeCalib_Hadamard_decodeRM", "AOloopControl__computeCalib_8h.html#aa6ed5085725c0de001352fffea6c98e7", null ],
     [ "AOloopControl_computeCalib_loadCM", "AOloopControl__computeCalib_8h.html#a95fbe173445c120eed3930894de5bda1", null ],
