@@ -19,6 +19,8 @@
 
 extern DATA data;
 
+static int INITSTATUS_AOloopControl_DM = 0;
+
 int wcol, wrow; // window size
 
 struct timespec semwaitts;
@@ -254,8 +256,12 @@ int_fast8_t AOloopControl_mkDM_TT_circle_cli(){
 
 void __attribute__ ((constructor)) libinit_AOloopControl_DM()
 {
-	init_AOloopControl_DM();
-	RegisterModule(__FILE__, "cacao", "AO loop Control DM operation");
+	if ( INITSTATUS_AOloopControl_DM == 0)
+	{
+		init_AOloopControl_DM();
+		RegisterModule(__FILE__, "cacao", "AO loop Control DM operation");
+		INITSTATUS_AOloopControl_DM = 1;
+	}
 }
 
 
