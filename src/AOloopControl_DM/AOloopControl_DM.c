@@ -255,17 +255,12 @@ int_fast8_t AOloopControl_mkDM_TT_circle_cli(){
 void __attribute__ ((constructor)) libinit_AOloopControl_DM()
 {
 	init_AOloopControl_DM();
-//	printf(" ...... Loading module %s\n", __FILE__);
+	RegisterModule(__FILE__, "cacao", "AO loop Control DM operation");
 }
 
 
 int init_AOloopControl_DM()
 {
-    strcpy(data.module[data.NBmodule].name, __FILE__);
-    strcpy(data.module[data.NBmodule].package, "cacao");
-    strcpy(data.module[data.NBmodule].info, "AO loop Control DM operation");
-    data.NBmodule++;
-
 
 /* =============================================================================================== */
 /* =============================================================================================== */
