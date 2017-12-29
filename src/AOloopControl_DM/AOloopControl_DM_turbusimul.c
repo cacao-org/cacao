@@ -18,7 +18,8 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl_DM/AOloopControl_DM.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-
+#include "COREMOD_iofits/COREMOD_iofits.h"
+#include "image_gen/image_gen.h"
 #include "image_filter/image_filter.h"
 #include "image_basic/image_basic.h"
 
