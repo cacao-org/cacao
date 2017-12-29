@@ -45,6 +45,7 @@
 #include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 
 
+
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
 #endif
@@ -90,7 +91,7 @@ extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
-extern int AOloopcontrol_meminit;
+
 
 long aoconfID_imWFS2_active[100];
 
@@ -241,7 +242,6 @@ int_fast8_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli() {
     }
     else return 1;
 }
-
 
 
 
