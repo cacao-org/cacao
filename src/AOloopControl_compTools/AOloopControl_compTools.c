@@ -59,6 +59,9 @@
 
 extern DATA data;
 
+static int INITSTATUS_AOloopControl_compTools = 0;
+
+
 #define NB_AOloopcontrol 10 // max number of loops
 long LOOPNUMBER = 0; // current loop index
 
@@ -147,8 +150,12 @@ int_fast8_t AOloopControl_compTools_mkSimpleZpokeM_cli()
 
 void __attribute__ ((constructor)) libinit_AOloopControl_compTools()
 {
-	init_AOloopControl_compTools();
-	RegisterModule(__FILE__, "cacao", "AO loop control - computation tools");
+	if( INITSTATUS_AOloopControl_compTools == 0)
+	{
+		init_AOloopControl_compTools();
+		RegisterModule(__FILE__, "cacao", "AO loop control - computation tools");
+		INITSTATUS_AOloopControl_compTools = 1;
+	}
 }
 
 
