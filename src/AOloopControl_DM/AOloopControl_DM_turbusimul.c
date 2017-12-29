@@ -17,7 +17,10 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl_DM/AOloopControl_DM.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
+#include "image_filter/image_filter.h"
+#include "image_basic/image_basic.h"
 
 #ifdef __MACH__
 #include <mach/mach_time.h>

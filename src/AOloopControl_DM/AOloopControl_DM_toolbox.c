@@ -13,6 +13,10 @@
 
 #include <math.h>
 #include "CommandLineInterface/CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
+#include "COREMOD_arith/COREMOD_arith.h"
+#include "image_gen/image_gen.h"
+#include "fft/fft.h"
 
 #include "AOloopControl_DM/AOloopControl_DM.h"
 
