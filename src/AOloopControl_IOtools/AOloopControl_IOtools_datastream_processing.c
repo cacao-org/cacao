@@ -27,7 +27,7 @@
 /* =============================================================================================== */
 
 #include <string.h>
-
+#include <stdint.h>
 #include <math.h>
 #include "statistic/statistic.h"
 #include "CommandLineInterface/CLIcore.h"
