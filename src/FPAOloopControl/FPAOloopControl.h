@@ -46,6 +46,7 @@ typedef struct
 
 
 
+void __attribute__ ((constructor)) libinit_FPAOloopControl();
 int init_FPAOloopControl();
 
 

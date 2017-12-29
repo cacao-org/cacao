@@ -105,6 +105,8 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 
 extern DATA data;
 
+static int INITSTATUS_FPAOloopcontrol = 0;
+
 
 
 static long NB_FPAOloopcontrol = 1;
@@ -198,8 +200,12 @@ int_fast8_t FPAOloopControl_MakeLinComb_seq_cli(){
 
 void __attribute__ ((constructor)) libinit_FPAOloopControl()
 {
-	init_FPAOloopControl();
-	RegisterModule(__FILE__, "milk", "Focal place AO loop control");
+	if ( INITSTATUS_FPAOloopcontrol == 0 )
+	{
+		init_FPAOloopControl();
+		RegisterModule(__FILE__, "milk", "Focal place AO loop control");
+		INITSTATUS_FPAOloopcontrol = 1;
+	}
 }
 
 
