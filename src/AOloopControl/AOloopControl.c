@@ -30,10 +30,6 @@
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-/*#include <stdint.h>
-#include <unistd.h>
-#include <malloc.h>
-*/
 
 
 #include <stdio.h>
@@ -65,27 +61,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include <time.h>
 #endif
 
-/*
-#include <math.h>
-#include <sys/types.h>
-#include <sys/file.h>
-*/
-/*
-#include <sys/mman.h>
-#include <err.h>
-#include <fcntl.h>
-#include <sched.h>
-//#include <ncurses.h>
-#include <semaphore.h>
-*/
-/*
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_eigen.h>
-#include <gsl/gsl_blas.h>
-#include <pthread.h>
-
-#include <fitsio.h>
-*/
 
 //libraries created by O. Guyon 
 #include "CommandLineInterface/CLIcore.h"
@@ -705,7 +680,12 @@ int_fast8_t AOloopControl_setparam_cli()
 void __attribute__ ((constructor)) libinit_AOloopControl()
 {
 	init_AOloopControl();
-//	printf(" ...... Loading module %s\n", __FILE__);
+
+	if(data.progStatus>0)
+	{
+		printf("  Found unloaded shared object in ./libs/ -> LOADING module %s\n", __FILE__);
+		fflush(stdout);
+	}
 }
 
 
