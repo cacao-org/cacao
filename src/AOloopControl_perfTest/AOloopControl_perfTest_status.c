@@ -39,7 +39,8 @@
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
-
+#include "COREMOD_memory/COREMOD_memory.h"
+#include "00CORE/00CORE.h"
 
 /* =============================================================================================== */
 /* =============================================================================================== */

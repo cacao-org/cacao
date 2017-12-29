@@ -30,7 +30,9 @@
 #include <string.h>
 #include <math.h>
 #include "CommandLineInterface/CLIcore.h"
-
+#include "COREMOD_memory/COREMOD_memory.h"
+#include "00CORE/00CORE.h"
+#include "linopt_imtools/linopt_imtools.h"
 #include "info/info.h"
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
