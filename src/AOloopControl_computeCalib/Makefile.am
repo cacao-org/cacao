@@ -6,6 +6,7 @@ libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_processRM.
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_dm.c
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_makemodes.c
 libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_CM.c
+libaoloopcontrolcomputecalib_la_SOURCES += AOloopControl_computeCalib_modes.c
 
 EXTRA_DIST = doc
 
