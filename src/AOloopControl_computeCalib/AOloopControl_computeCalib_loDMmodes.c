@@ -69,14 +69,17 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 
 #include "CommandLineInterface/CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
+#include "COREMOD_arith/COREMOD_arith.h"
+#include "COREMOD_iofits/COREMOD_iofits.h"
+#include "linopt_imtools/linopt_imtools.h"
+#include "image_filter/image_filter.h"
+
 /*
 #include "00CORE/00CORE.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-#include "COREMOD_iofits/COREMOD_iofits.h"
+
 #include "COREMOD_tools/COREMOD_tools.h"
-#include "COREMOD_arith/COREMOD_arith.h"
 #include "info/info.h"
-#include "linopt_imtools/linopt_imtools.h"
 #include "statistic/statistic.h"
 #include "ZernikePolyn/ZernikePolyn.h"
 #include "image_filter/image_filter.h"
