@@ -196,6 +196,8 @@ static double tdiffv;
 
 extern DATA data;
 
+static int INITSTATUS_AOloopControl = 0;
+
 #define NB_AOloopcontrol 10 // max number of loops
 long LOOPNUMBER = 0; // current loop index
 
@@ -679,8 +681,12 @@ int_fast8_t AOloopControl_setparam_cli()
 
 void __attribute__ ((constructor)) libinit_AOloopControl()
 {
-	init_AOloopControl();
-	RegisterModule(__FILE__, "cacao", "AO loop control");
+	if( INITSTATUS_AOloopControl == 0)
+	{
+		init_AOloopControl();
+		RegisterModule(__FILE__, "cacao", "AO loop control");
+		INITSTATUS_AOloopControl = 1;
+	}
 }
 
 
