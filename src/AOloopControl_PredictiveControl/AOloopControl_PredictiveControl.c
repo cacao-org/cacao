@@ -178,7 +178,12 @@ int_fast8_t AOloopControl_PredictiveControl_setPFsimpleAve_cli() {
 void __attribute__ ((constructor)) libinit_AOloopControl_PredictiveControl()
 {
 	init_AOloopControl_PredictiveControl();
-//	printf(" ...... Loading module %s\n", __FILE__);
+
+	if(data.progStatus>0)
+	{
+		printf("  Found unloaded shared object in ./libs/ -> LOADING module %s\n", __FILE__);
+		fflush(stdout);
+	}
 }
 
 
@@ -186,7 +191,7 @@ int_fast8_t init_AOloopControl_PredictiveControl()
 {
     strcpy(data.module[data.NBmodule].name, __FILE__);
     strcpy(data.module[data.NBmodule].package, "cacao");
-    strcpy(data.module[data.NBmodule].info, "AO loop control predictive control");
+    strcpy(data.module[data.NBmodule].info, "AO loop control predictive control");      
     data.NBmodule++;
 
 
