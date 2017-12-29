@@ -96,7 +96,7 @@ extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
-extern int AOloopcontrol_meminit;
+
 
 long aoconfID_imWFS2_active[100];
 

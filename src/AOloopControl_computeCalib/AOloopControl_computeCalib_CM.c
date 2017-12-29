@@ -96,7 +96,6 @@ extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
-extern int AOloopcontrol_meminit;
 
 long aoconfID_imWFS2_active[100];
 
@@ -163,7 +162,7 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(long loop, long NB_
     char command[200];
 
 
-    if(AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
 
@@ -690,7 +689,7 @@ long AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
 
 
 
-    if(AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(0);
 
     if( (ID = load_fits(CMfname, "tmpcontrM", 1)) != -1 )
