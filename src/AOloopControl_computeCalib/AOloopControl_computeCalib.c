@@ -87,6 +87,8 @@
 
 extern DATA data;
 
+static int INITSTATUS_AOloopControl_computeCalib = 0;
+
 extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
@@ -268,8 +270,12 @@ int_fast8_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli() {
 
 void __attribute__ ((constructor)) libinit_AOloopControl_computeCalib()
 {
-	init_AOloopControl_computeCalib();
-	RegisterModule(__FILE__, "cacao", "AO loop control compute calibration");
+	if ( INITSTATUS_AOloopControl_computeCalib == 0)
+	{
+		init_AOloopControl_computeCalib();
+		RegisterModule(__FILE__, "cacao", "AO loop control compute calibration");
+		INITSTATUS_AOloopControl_computeCalib = 1;
+	}
 }
 
             

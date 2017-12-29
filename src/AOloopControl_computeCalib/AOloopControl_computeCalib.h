@@ -14,6 +14,10 @@
 #ifndef _AOLOOPCONTROL_COMPUTECALIB_H
 #define _AOLOOPCONTROL_COMPUTECALIB_H
 
+
+/** @brief Initialize module */
+void __attribute__ ((constructor)) libinit_AOloopControl_computeCalib();
+
 /** @brief Initialize command line interface. */
 int_fast8_t init_AOloopControl_computeCalib();
 
