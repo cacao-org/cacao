@@ -203,7 +203,7 @@ void __attribute__ ((constructor)) libinit_FPAOloopControl()
 	if ( INITSTATUS_FPAOloopcontrol == 0 )
 	{
 		init_FPAOloopControl();
-		RegisterModule(__FILE__, "milk", "Focal place AO loop control");
+		RegisterModule(__FILE__, "cacao", "Focal place AO loop control");
 		INITSTATUS_FPAOloopcontrol = 1;
 	}
 }
