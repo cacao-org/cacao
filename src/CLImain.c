@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
 
 	printf(STYLE_BOLD);
 	printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
-	printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
 	printf(STYLE_NO_BOLD);
 
 
