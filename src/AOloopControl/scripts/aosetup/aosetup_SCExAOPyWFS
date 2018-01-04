@@ -171,6 +171,8 @@ ln -s /home/scexao/bin/dmrestart dm00restart
 # =================== set WFS image ================
 echo "ocam2d" > ./conf/conf_wfsim_name.txt
 
+
+
 exit
 
 
