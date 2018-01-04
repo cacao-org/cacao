@@ -149,6 +149,11 @@ rm aocscripts/cpuconfig &> /dev/null
 ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig 
 
 
+# ================== CPU config =============================
+./aocscripts/cpuconfig
+
+
+exit
 
 
 mkdir -p conf
