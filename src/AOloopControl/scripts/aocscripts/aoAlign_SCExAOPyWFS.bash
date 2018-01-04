@@ -221,13 +221,16 @@ menuitems=( "1 ->" "\Zb\Zr$string\Zn" )
 
 
 menuitems+=( "" "" )
-file="./conf/instconf_pywfs_freq.txt"
-if [ -f $file ]; then
-pyfreq=$( head -1 $file)
-else
-pyfreq="2000"
-echo "$pyfreq" > $file
-fi
+
+ConfReadInstConf "pywfs_freq" 2000
+pyfreq=$instconfvalue
+#file="./conf/instconf_pywfs_freq.txt"
+#if [ -f $file ]; then
+#pyfreq=$( head -1 $file)
+#else
+#pyfreq="2000"
+#echo "$pyfreq" > $file
+#fi
 
 pmodscale="0"
 
