@@ -224,13 +224,7 @@ menuitems+=( "" "" )
 
 ConfReadInstConf "pywfs_freq" "?"
 pyfreq=$instconfvalue
-#file="./conf/instconf_pywfs_freq.txt"
-#if [ -f $file ]; then
-#pyfreq=$( head -1 $file)
-#else
-#pyfreq="2000"
-#echo "$pyfreq" > $file
-#fi
+
 
 pmodscale="0"
 
@@ -291,13 +285,16 @@ fi
 
 menuitems+=( "" "" )
 
-file="./conf/instconf_pywfs_modampl.txt"
-if [ -f $file ]; then
-pymodampl=$( head -1 $file)
-else
-pymodampl="05"
-echo "$pymodampl" > $file
-fi
+ConfReadInstConf "pywfs_modampl" "?"
+pymodampl=$instconfvalue
+
+#file="./conf/instconf_pywfs_modampl.txt"
+#if [ -f $file ]; then
+#pymodampl=$( head -1 $file)
+#else
+#pymodampl="05"
+#echo "$pymodampl" > $file
+#fi
 
 
 echo "$pmodscale $pymodampl" > tmpfile.txt
@@ -323,6 +320,11 @@ pmodradmas90=$( awk '{ printf("%5.1f\n", $1*0.90) }' tmpfile.txt )
 pmodradmas95=$( awk '{ printf("%5.1f\n", $1*0.95) }' tmpfile.txt )
 pmodradmas00=$( awk '{ printf("%5.1f\n", $1*1.00) }' tmpfile.txt )
 rm tmpfile.txt
+
+
+if [ "$pymodampl" = "?" ]; then
+menuitems+=( " " "\Zr\Z1 freq = UNKNOWN\Zn" )
+fi
 
 
 if [ "$pymodampl" = "0.05" ]; then
