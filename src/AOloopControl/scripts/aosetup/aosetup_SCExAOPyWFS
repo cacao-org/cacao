@@ -160,7 +160,10 @@ echo "$DMindex" > ./conf/param_DMindex.txt
 echo "50" > ./conf/param_DMxsize.txt
 echo "50" > ./conf/param_DMysize.txt
 
+echo "120.0" > ./conf/instconf_dmVmax.txt
+echo "0.5469" > ./conf/instconf_dmDCum.txt
 
+./aolfunc_initDM
 
 
 # =================== set WFS image ================
@@ -170,10 +173,7 @@ echo "ocam2d" > ./conf/conf_wfsim_name.txt
 exit
 
 
-#echo "0" > "./conf/conf_dm2dm_mode.txt"
-echo "0" > "./conf/conf_dmwfsref_mode.txt"
-echo "1" > "./conf/conf_dmvolt_mode.txt"
-echo "0" > "./conf/conf_dmcombavemode.txt"
+
 echo "dm${DMindex}disp03" > ./conf/conf_dmC_name.txt # DM control channel
 echo "dm${DMindex}disp00" > ./conf/conf_dmO_name.txt # DM offset channel (flat) 
 echo "dm${DMindex}disp04" > ./conf/conf_dmZP0_name.txt
