@@ -515,7 +515,7 @@ pypickoff=$instconfvalue
 #echo "$pypickoff" > $file
 #fi
 
-if [ "$pyfilter" = "?" ]; then
+if [ "$pypickoff" = "?" ]; then
 menuitems+=( " " "\Zr\Z1 PyWFS pickoff = UNKNOWN\Zn" )
 fi
 
