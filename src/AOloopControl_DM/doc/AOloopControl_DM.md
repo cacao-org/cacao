@@ -1,6 +1,5 @@
-# AOloopControl_DM {#page_AOloopControl_DM}
+# AOloopControl_DM {#page_module_AOloopControl_DM}
 
-explain what is it doing 
 
 - @subpage AOloopControl_DM_init.c \n
 Initialize the deformable mirror 
