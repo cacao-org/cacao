@@ -1,6 +1,6 @@
 #!/bin/bash
 
-execname="Cfits"
+execname="./AOloopControl"
 
 
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/test$$
@@ -285,7 +285,7 @@ dmVmax=" 25"
 aoconflogext "Set DM max = $dmVmax V"
 echo "${dmVmax}" > ./conf/instconf_dmVmax.txt
 echo "${dmDCum025}" > ./conf/instconf_dmDCum.txt
-Cfits << EOF
+./AOloopControl << EOF
 aolsetdmvoltmax 00 ${dmVmax}
 aolsetdmDC 00 ${dmDCum025}
 exit
@@ -297,7 +297,7 @@ dmVmax=" 50"
 aoconflogext "Set DM max = $dmVmax V"
 echo "${dmVmax}" > ./conf/instconf_dmVmax.txt
 echo "${dmDCum050}" > ./conf/instconf_dmDCum.txt
-Cfits << EOF
+./AOloopControl << EOF
 aolsetdmvoltmax 00 ${dmVmax}
 aolsetdmDC 00 ${dmDCum050}
 exit
@@ -321,7 +321,7 @@ dmVmax="100"
 aoconflogext "Set DM max = $dmVmax V"
 echo "${dmVmax}" > ./conf/instconf_dmVmax.txt
 echo "${dmDCum100}" > ./conf/instconf_dmDCum.txt
-Cfits << EOF
+./AOloopControl << EOF
 aolsetdmvoltmax 00 ${dmVmax}
 aolsetdmDC 00 ${dmDCum100}
 exit
@@ -333,7 +333,7 @@ dmVmax="125"
 aoconflogext "Set DM max = $dmVmax V"
 echo "${dmVmax}" > ./conf/instconf_dmVmax.txt
 echo "${dmDCum125}" > ./conf/instconf_dmDCum.txt
-Cfits << EOF
+./AOloopControl << EOF
 aolsetdmvoltmax 00 ${dmVmax}
 aolsetdmDC 00 ${dmDCum125}
 exit
@@ -345,7 +345,7 @@ dmVmax="150"
 aoconflogext "Set DM max = $dmVmax V"
 echo "${dmVmax}" > ./conf/instconf_dmVmax.txt
 echo "${dmDCum150}" > ./conf/instconf_dmDCum.txt
-Cfits << EOF
+./AOloopControl << EOF
 aolsetdmvoltmax 00 ${dmVmax}
 aolsetdmDC 00 ${dmDCum150}
 exit

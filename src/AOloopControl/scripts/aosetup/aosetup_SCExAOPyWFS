@@ -161,6 +161,8 @@ echo "50" > ./conf/param_DMxsize.txt
 echo "50" > ./conf/param_DMysize.txt
 
 
+
+
 # =================== set WFS image ================
 echo "ocam2d" > ./conf/conf_wfsim_name.txt
 

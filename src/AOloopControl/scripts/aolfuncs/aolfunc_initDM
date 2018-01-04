@@ -192,6 +192,22 @@ fi
 
 
 
+##############################################
+# FUNCTION: READ INSTRUMENT CONF VAL FROM FILE
+##############################################
+# arg 1: parameter name
+# arg 2: default value
+# 
+# param value is stored in variable "instconfvalue"
+function ConfReadInstConf {
+file="./conf/instconf_$1.txt"
+if [ -f "$file" ]; then
+instconfvalue=$( head -1 $file )
+else
+instconfvalue="$2"
+echo "$2" > $file
+fi
+}
 
 
 
@@ -262,8 +278,8 @@ ConfReadParam DMdelayON "OFF"; DMdelayON="$paramvalue" # READ DM delay (optional
 	
 
 
-
-
+ConfReadInstConf dmDCum "0.0"; dmDCum="$paramvalue" # READ DM DC offset
+ConfReadInstConf dmVmax "125.0"; dmVmax="$instconfvalue"
 
 
 
@@ -360,7 +376,7 @@ fi
     
 # aoconflog "STARTING DMcomb"
     
-tmux send-keys -t $tmuxname "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} dmvolt 0.0 120.0" C-m
+tmux send-keys -t $tmuxname "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} dmvolt ${dmDCum} ${dmVmax}" C-m
 
 
 
