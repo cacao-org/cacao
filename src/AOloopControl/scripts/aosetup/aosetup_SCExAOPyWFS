@@ -159,6 +159,7 @@ DMindex="00"
 echo "$DMindex" > ./conf/param_DMindex.txt
 echo "50" > ./conf/param_DMxsize.txt
 echo "50" > ./conf/param_DMysize.txt
+echo "1" > ./conf/param_DMvolt_mode.txt
 
 echo "120.0" > ./conf/instconf_dmVmax.txt
 echo "0.5469" > ./conf/instconf_dmDCum.txt
