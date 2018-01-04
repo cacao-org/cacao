@@ -288,14 +288,6 @@ menuitems+=( "" "" )
 ConfReadInstConf "pywfs_modampl" "?"
 pymodampl=$instconfvalue
 
-#file="./conf/instconf_pywfs_modampl.txt"
-#if [ -f $file ]; then
-#pymodampl=$( head -1 $file)
-#else
-#pymodampl="05"
-#echo "$pymodampl" > $file
-#fi
-
 
 echo "$pmodscale $pymodampl" > tmpfile.txt
 #pmodradmas=$( awk '{ printf("%5.1f\n", $1*$2) }' tmpfile.txt )
@@ -450,14 +442,21 @@ fi
 
 menuitems+=( "" "" )
 
-file="./conf/instconf_pywfs_filter.txt"
-if [ -f $file ]; then
-pyfilter=$( head -1 $file)
-else
-pyfilter="1"
-echo "$pyfilter" > $file
-fi
+ConfReadInstConf "pywfs_filter" "?"
+pyfilter=$instconfvalue
 
+#file="./conf/instconf_pywfs_filter.txt"
+#if [ -f $file ]; then
+#pyfilter=$( head -1 $file)
+#else
+#pyfilter="1"
+#echo "$pyfilter" > $file
+#fi
+
+
+if [ "$pyfilter" = "?" ]; then
+menuitems+=( " " "\Zr\Z1 PyWFS filter = UNKNOWN\Zn" )
+fi
 
 if [ "$pyfilter" = "1" ]; then
 menuitems+=( "pyfilt1" "\Zr\Z2 PyWFS filter 1  (Open)\Zn" )
@@ -505,12 +504,19 @@ fi
 
 menuitems+=( "" "" )
 
-file="./conf/instconf_pywfs_pickoff.txt"
-if [ -f $file ]; then
-pypickoff=$( head -1 $file)
-else
-pypickoff="01"
-echo "$pypickoff" > $file
+ConfReadInstConf "pywfs_pickoff" "?"
+pypickoff=$instconfvalue
+
+#file="./conf/instconf_pywfs_pickoff.txt"
+#if [ -f $file ]; then
+#pypickoff=$( head -1 $file)
+#else
+#pypickoff="01"
+#echo "$pypickoff" > $file
+#fi
+
+if [ "$pyfilter" = "?" ]; then
+menuitems+=( " " "\Zr\Z1 PyWFS pickoff = UNKNOWN\Zn" )
 fi
 
 
