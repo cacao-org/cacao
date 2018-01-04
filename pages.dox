@@ -18,20 +18,27 @@ What is an [alpha release](https://en.wikipedia.org/wiki/Software_release_life_c
 
 
 ---
+---
 
 
 ## User's Guide
 
 - @ref page_installation 
-- @ref page_userinput
-	- @ref page_CLI_Overview
-	- @ref page_readlinekeys
-	- @ref page_command_line_interface
-- @ref page_news
+- @ref page_news: Major upgrades and new features
 
 
 ---
 
+
+- @ref page_userinput
+	- @ref page_CLI_Overview
+	- @ref page_readlinekeys
+	- @ref page_command_line_interface
+
+- @ref page_LoadingModules
+
+---
+---
 
 ## Programmer's Guide
 
@@ -48,8 +55,10 @@ What is an [alpha release](https://en.wikipedia.org/wiki/Software_release_life_c
 ---
 
 
-## cacao modules
+## Modules
 
+
+cacao uses milk modules for its command line, memory management, image I/O and standard image computations.
 
 ### milk modules
 
@@ -96,6 +105,8 @@ AOloopControl_PredictiveControl      | Predictive Control                   |   
 AOloopControl_DM                     | Deformable mirror control            |   @ref AOloopControl_DM.h                |
 FPAOloopControl                      | Focal plane AO control               |   @ref FPAOloopControl.h                 |
 
+
+---
 
 */
 
