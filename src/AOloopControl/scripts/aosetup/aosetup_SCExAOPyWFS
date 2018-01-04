@@ -164,7 +164,7 @@ echo "1" > ./conf/param_DMvolt_mode.txt
 echo "125.0" > ./conf/instconf_dmVmax.txt
 echo "0.5469" > ./conf/instconf_dmDCum.txt
 
-ln -s dm00restart /home/scexao/bin/dmrestart
+ln -s /home/scexao/bin/dmrestart dm00restart
 ./aolfuncs/aolfunc_initDM -u
 ./aolfuncs/aolfunc_setDMnolink 
 
