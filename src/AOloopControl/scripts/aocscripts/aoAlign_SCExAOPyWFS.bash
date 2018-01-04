@@ -234,6 +234,11 @@ pyfreq=$instconfvalue
 
 pmodscale="0"
 
+if [ "$pyfreq" = "?" ]; then
+menuitems+=( " " "\Zr\Z1 freq = UNKNOWN\Zn" )
+fi
+
+
 if [ "$pyfreq" = "0500" ]; then
 pmodscale="250"
 menuitems+=( "pyfr05" "\Zr\Z2 freq = 0.5 kHz\Zn" )
