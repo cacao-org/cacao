@@ -325,7 +325,7 @@ sleep 0.2
 tmux new-session -d -s $tmuxname
 sleep 0.2
 
-
+exit
 
 
 tmux send-keys -t $tmuxname "$execname -n aol${LOOPNUMBER}dm${DMindex}comb" C-m

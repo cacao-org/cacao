@@ -414,7 +414,7 @@ echo "$DMysize" > ./conf/param_DMysize.txt
 
     nolink)
 aoconflog "set DM nolink"
-./aolfunc/setDMnolink
+./aolfunc/aolfunc_setDMnolink
 ;;
 
     dmolink)

@@ -165,7 +165,7 @@ echo "50" > ./conf/param_DMysize.txt
 echo "ocam2d" > ./conf/conf_wfsim_name.txt
 
 
-
+exit
 
 
 #echo "0" > "./conf/conf_dm2dm_mode.txt"
