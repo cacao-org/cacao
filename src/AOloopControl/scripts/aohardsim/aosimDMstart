@@ -1,6 +1,6 @@
 #!/bin/bash
 
-execname="./AOloopControl"
+execname="cacao"
 
 # number of arguments to script
 NBARGS=0
