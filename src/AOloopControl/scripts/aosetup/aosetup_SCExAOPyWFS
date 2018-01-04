@@ -161,15 +161,14 @@ echo "50" > ./conf/param_DMxsize.txt
 echo "50" > ./conf/param_DMysize.txt
 echo "1" > ./conf/param_DMvolt_mode.txt
 
-echo "120.0" > ./conf/instconf_dmVmax.txt
+echo "125.0" > ./conf/instconf_dmVmax.txt
 echo "0.5469" > ./conf/instconf_dmDCum.txt
 
 ./aolfuncs/aolfunc_initDM
-
+./aolfuncs/aolfunc_setDMnolink 
 
 # =================== set WFS image ================
 echo "ocam2d" > ./conf/conf_wfsim_name.txt
-
 
 exit
 
