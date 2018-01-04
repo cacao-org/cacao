@@ -154,8 +154,8 @@ ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig
 mkdir -p conf
 DMindex="00"
 echo "$DMindex" > ./conf/param_DMindex.txt
-echo "50" > ./conf/param_dm${DMindex}xsize.txt
-echo "50" > ./conf/param_dm${DMindex}ysize.txt
+echo "50" > ./conf/param_DMxsize.txt
+echo "50" > ./conf/param_DMysize.txt
 #echo "0" > "./conf/conf_dm2dm_mode.txt"
 echo "0" > "./conf/conf_dmwfsref_mode.txt"
 echo "1" > "./conf/conf_dmvolt_mode.txt"
