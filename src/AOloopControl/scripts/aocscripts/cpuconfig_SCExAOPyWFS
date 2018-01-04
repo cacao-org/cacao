@@ -336,6 +336,7 @@ sudo cset se -d aol${LOOPNUMBER}RT
 sudo cset se -d aol${LOOPNUMBER}RT1 
 sudo cset se -d aol${LOOPNUMBER}RT2 
 sudo cset se -d aol${LOOPNUMBER}COM 
+sudo cset se -d aol${LOOPNUMBER}log 
 sudo cset se -d ocamdec
 sudo cset se -d system
 fi
