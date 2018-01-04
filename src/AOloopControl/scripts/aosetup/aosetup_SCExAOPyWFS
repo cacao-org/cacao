@@ -163,7 +163,7 @@ echo "50" > ./conf/param_DMysize.txt
 echo "120.0" > ./conf/instconf_dmVmax.txt
 echo "0.5469" > ./conf/instconf_dmDCum.txt
 
-./aolfunc_initDM
+./aolfuncs/aolfunc_initDM
 
 
 # =================== set WFS image ================
