@@ -169,26 +169,12 @@ ln -s /home/scexao/bin/dmrestart dm00restart
 ./aolfuncs/aolfunc_setDMnolink 
 
 # =================== set WFS image ================
-echo "ocam2d" > ./conf/conf_wfsim_name.txt
-
+echo "ocam2d" > ./conf/streamlink_wfsim.name.txt
+./aolfuncs/aolfunc_StreamLink wfsim
 
 
 exit
 
-
-
-echo "dm${DMindex}disp03" > ./conf/conf_dmC_name.txt # DM control channel
-echo "dm${DMindex}disp00" > ./conf/conf_dmO_name.txt # DM offset channel (flat) 
-echo "dm${DMindex}disp04" > ./conf/conf_dmZP0_name.txt
-echo "dm${DMindex}disp05" > ./conf/conf_dmZP1_name.txt
-echo "dm${DMindex}disp06" > ./conf/conf_dmZP2_name.txt
-echo "dm${DMindex}disp07" > ./conf/conf_dmZP3_name.txt
-echo "dm${DMindex}disp08" > ./conf/conf_dmZP4_name.txt
-echo "dm${DMindex}disp09" > ./conf/conf_dmZP5_name.txt
-echo "dm${DMindex}disp10" > ./conf/conf_dmZP6_name.txt
-echo "dm${DMindex}disp11" > ./conf/conf_dmZP7_name.txt
-echo "dm${DMindex}disp" > ./conf/conf_dmdisp_name.txt # total DM displacement channel
-echo "dm${DMindex}disp02" > ./conf/conf_dmRM_name.txt # DM actuation channel for RM matrix
 
 
 echo "0.02" >./conf/param_RMamplum.txt    
