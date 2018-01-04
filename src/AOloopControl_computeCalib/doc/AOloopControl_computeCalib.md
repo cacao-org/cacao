@@ -1,6 +1,5 @@
-# AOloopControl computeCalib {#page_AOloopControl_computeCalib}
+# AOloopControl computeCalib {#page_module_AOloopControl_computeCalib}
 
-explain what is it doing 
 - @subpage AOloopControl_computeCalib \n
 Main .c file with the command line interface functions 
 
