@@ -164,7 +164,8 @@ echo "1" > ./conf/param_DMvolt_mode.txt
 echo "125.0" > ./conf/instconf_dmVmax.txt
 echo "0.5469" > ./conf/instconf_dmDCum.txt
 
-./aolfuncs/aolfunc_initDM
+ln -s dm00restart /home/scexao/bin/dmrestart
+./aolfuncs/aolfunc_initDM -u
 ./aolfuncs/aolfunc_setDMnolink 
 
 # =================== set WFS image ================

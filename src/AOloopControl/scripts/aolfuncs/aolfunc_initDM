@@ -29,6 +29,7 @@ echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "   --help -h             print (h)elp and exit"
 echo "   --help1               print 1 line summary" 
 echo "   -f                    force don't check status"
+echo "   -u                    Don't use standard DM startup, use user-provided script ./dm<DMindex>restart"
 echo ""
 echo "------------------------------------------------------------------------"
 }
@@ -94,9 +95,10 @@ singlelinehelp=1;
 done
 
 
+STANDARD_DMSTART="1"
 
 ### Start getopts code ###
-while getopts :hf FLAG; do
+while getopts :hfu FLAG; do
   case $FLAG in
     h)  #show help
 	if [ "$singlelinehelp" -eq "0" ]; then
@@ -109,6 +111,9 @@ while getopts :hf FLAG; do
     f)
     echo "Removing $statusfile"
     rm $statusfile
+    ;;
+    u)
+    STANDARD_DMSTART="0"
     ;;
     \?) #unrecognized option - show help
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
@@ -284,6 +289,7 @@ ConfReadInstConf dmVmax "125.0"; dmVmax="$instconfvalue"
 
 
 
+if [ "$STANDARD_DMSTART" = "1" ]; then  # STANDARD DM COMB
 
 
 # creates shmim aol#_dm2dmM if applicable
@@ -332,7 +338,7 @@ fi
 
 # start tmux session for dmcomb
 
-tmuxname="aol${LOOPNUMBER}dm${DMindex}comb"
+tmuxname="dm${DMindex}comb"
 echo "tmux session :  $tmuxname"
 sleep 1
 tmux kill-session -t $tmuxname
@@ -343,7 +349,7 @@ sleep 0.2
 
 
 
-tmux send-keys -t $tmuxname "$execname -n aol${LOOPNUMBER}dm${DMindex}comb" C-m
+tmux send-keys -t $tmuxname "$execname -n dm${DMindex}comb" C-m
 if [ "$CPUset_mode" = "1" ]; then
 tmux send-keys -t $tmuxname "csetpmove system" C-m
 fi
@@ -371,11 +377,17 @@ tmux send-keys -t $tmuxname "DMTWAIT=${DMdelayus}" C-m
 fi
 
 
-  
     
 # aoconflog "STARTING DMcomb"
-    
 tmux send-keys -t $tmuxname "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} dmvolt ${dmDCum} ${dmVmax}" C-m
+
+
+else  # USER-PROVIDED
+
+./dm${DMindex}restart
+
+fi
+
 
 
 
