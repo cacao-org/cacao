@@ -297,7 +297,9 @@ fi
 # execute CPU configuration script if it exists
 if [ -f "./aocscripts/cpuconfig_${LOOPNAME}" ]; then
 if [ ! -f "cpuconfigOK" ]; then
+echo "Executing cpu config - please restart $0 when complete"
 . ./aocscripts/cpuconfig_${LOOPNAME}
+exit
 fi
 fi
 

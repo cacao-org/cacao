@@ -108,10 +108,10 @@ sudo ethtool -C eth4 tx-usecs 0
 sudo ethtool -A eth2 autoneg off rx off tx off
 sudo ethtool -A eth4 autoneg off rx off tx off
 
-sudo /sbin/sysctl -w net.ipv2.tcp_low_latency=1
-sudo /sbin/sysctl -w net.ipv2.tcp_sack=0
-sudo /sbin/sysctl -w net.ipv2.tcp_timestamps=0
-sudo /sbin/sysctl -w net.ipv2.tcp_fastopen=1
+sudo /sbin/sysctl -w net.ipv6.tcp_low_latency=1
+sudo /sbin/sysctl -w net.ipv6.tcp_sack=0
+sudo /sbin/sysctl -w net.ipv6.tcp_timestamps=0
+sudo /sbin/sysctl -w net.ipv6.tcp_fastopen=1
 
 sudo /sbin/sysctl -w net.ipv4.tcp_low_latency=1
 sudo /sbin/sysctl -w net.ipv4.tcp_sack=0
