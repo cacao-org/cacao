@@ -1,5 +1,5 @@
-# AOloopControl_compTools {#page_AOloopControl_compTools}
+# AOloopControl_compTools {#page_module_AOloopControl_compTools}
 
-explain what is it doing 
+Computation tools.
 
 
