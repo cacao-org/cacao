@@ -222,7 +222,7 @@ menuitems=( "1 ->" "\Zb\Zr$string\Zn" )
 
 menuitems+=( "" "" )
 
-ConfReadInstConf "pywfs_freq" 2000
+ConfReadInstConf "pywfs_freq" "?"
 pyfreq=$instconfvalue
 #file="./conf/instconf_pywfs_freq.txt"
 #if [ -f $file ]; then
