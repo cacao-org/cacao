@@ -176,9 +176,9 @@ echo "dm${DMindex}disp02" > ./conf/conf_dmRM_name.txt # DM actuation channel for
 echo "ocam2d" > ./conf/conf_wfsim_name.txt
 
 echo "0.02" >./conf/conf_RMamplum.txt    
-echo "2" >./conf/conf_RMdelayfr.txt
-echo "5" >./conf/conf_RMfrave.txt 
-echo "3" >./conf/conf_RMexfr.txt      
+echo "1" >./conf/conf_RMdelayfr.txt
+echo "2" >./conf/conf_RMfrave.txt 
+echo "1" >./conf/conf_RMexfr.txt      
 echo "1" >./conf/conf_RMpokeMode.txt # use Hadamard poke mode
 ./auxscripts/mkHpoke
 mv Hpoke.fits ./conf/Hpoke.fits
@@ -194,7 +194,7 @@ echo "0.02" >./conf/conf_RMMamplum.txt
 echo "3" >./conf/conf_RMMcpa.txt      
 
 
-echo "0.1" > ./conf/conf_SVDlimall.txt
+echo "0.003" > ./conf/conf_SVDlimall.txt
 
 
 echo "2" > ./conf/conf_GPU.txt
