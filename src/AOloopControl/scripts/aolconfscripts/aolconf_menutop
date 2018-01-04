@@ -414,51 +414,7 @@ echo "$DMysize" > ./conf/param_DMysize.txt
 
     nolink)
 aoconflog "set DM nolink"
-
-DMMODE="0"
-DMMODEfile="conf/param_DMMODE.txt"
-echo "$DMMODE" > $DMMODEfile
-
-echo "0" > "./conf/param_DM2DM_mode.txt"
-echo "0" > "./conf/param_DMwfsref_mode.txt"
-echo "1" > "./conf/param_DMvolt_mode.txt"
-echo "0" > "./conf/param_DMcombave_mode.txt"
-
-echo "dm${DMindex}disp03" > ./conf/streamlink_dmC.name.txt # DM control channel
-./aolfuncs/aolfunc_StreamLink dmC
-
-echo "dm${DMindex}disp00" > ./conf/streamlink_dmO.name.txt # DM offset channel (flat) 
-./aolfuncs/aolfunc_StreamLink dmO
-
-echo "dm${DMindex}disp04" > ./conf/streamlink_dmZP0.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP0
-
-echo "dm${DMindex}disp05" > ./conf/streamlink_dmZP1.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP1
-
-echo "dm${DMindex}disp06" > ./conf/streamlink_dmZP2.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP2
-
-echo "dm${DMindex}disp07" > ./conf/streamlink_dmZP3.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP3
-
-echo "dm${DMindex}disp08" > ./conf/streamlink_dmZP4.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP4
-
-echo "dm${DMindex}disp09" > ./conf/streamlink_dmZP5.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP5
-
-echo "dm${DMindex}disp10" > ./conf/streamlink_dmZP6.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP6
-
-echo "dm${DMindex}disp11" > ./conf/streamlink_dmZP7.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP7
-
-echo "dm${DMindex}disp" > ./conf/streamlink_dmdisp.name.txt # total DM displacement channel
-./aolfuncs/aolfunc_StreamLink dmdisp
-
-echo "dm${DMindex}disp02" > ./conf/streamlink_dmRM.name.txt # DM actuation channel for RM matrix
-./aolfuncs/aolfunc_StreamLink dmRM
+./aolfunc/setDMnolink
 ;;
 
     dmolink)

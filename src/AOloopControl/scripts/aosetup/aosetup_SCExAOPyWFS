@@ -153,14 +153,21 @@ ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig
 ./aocscripts/cpuconfig
 
 
-exit
-
-
+# =================== set DM ===================
 mkdir -p conf
 DMindex="00"
 echo "$DMindex" > ./conf/param_DMindex.txt
 echo "50" > ./conf/param_DMxsize.txt
 echo "50" > ./conf/param_DMysize.txt
+
+
+# =================== set WFS image ================
+echo "ocam2d" > ./conf/conf_wfsim_name.txt
+
+
+
+
+
 #echo "0" > "./conf/conf_dm2dm_mode.txt"
 echo "0" > "./conf/conf_dmwfsref_mode.txt"
 echo "1" > "./conf/conf_dmvolt_mode.txt"
@@ -178,7 +185,6 @@ echo "dm${DMindex}disp11" > ./conf/conf_dmZP7_name.txt
 echo "dm${DMindex}disp" > ./conf/conf_dmdisp_name.txt # total DM displacement channel
 echo "dm${DMindex}disp02" > ./conf/conf_dmRM_name.txt # DM actuation channel for RM matrix
 
-echo "ocam2d" > ./conf/conf_wfsim_name.txt
 
 echo "0.02" >./conf/param_RMamplum.txt    
 echo "1" >./conf/param_RMdelayfr.txt
