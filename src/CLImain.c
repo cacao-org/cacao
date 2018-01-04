@@ -13,10 +13,14 @@
 
 // cacao includes for inits
 #include <AOloopControl/AOloopControl.h>
+#include <AOloopControl_DM/AOloopControl_DM.h>
+#include <AOloopControl_acquireCalib/AOloopControl_acquireCalib.h>
+#include <AOloopControl_compTools/AOloopControl_compTools.h>
 #include <AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h>
 #include <linARfilterPred/linARfilterPred.h>
 #include <AOloopControl_computeCalib/AOloopControl_computeCalib.h>
 #include <FPAOloopControl/FPAOloopControl.h>
+
 
 
 #define STYLE_BOLD    "\033[1m"
@@ -47,6 +51,9 @@ int main(int argc, char *argv[])
 	libinit_linARfilterPred();
 	libinit_AOloopControl_computeCalib();
 	libinit_FPAOloopControl();
+	libinit_AOloopControl_DM();
+	libinit_AOloopControl_compTools();
+	libinit_AOloopControl_acquireCalib();
 	
 	runCLI(argc, argv, AppName);
 
