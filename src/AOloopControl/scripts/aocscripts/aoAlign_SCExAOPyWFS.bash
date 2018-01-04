@@ -222,6 +222,8 @@ menuitems=( "1 ->" "\Zb\Zr$string\Zn" )
 
 menuitems+=( "" "" )
 
+PyWFSmodOK=1
+
 ConfReadInstConf "pywfs_freq" "?"
 pyfreq=$instconfvalue
 
@@ -230,6 +232,7 @@ pmodscale="0"
 
 if [ "$pyfreq" = "?" ]; then
 menuitems+=( " " "\Zr\Z1 freq = UNKNOWN\Zn" )
+PyWFSmodOK=0
 fi
 
 
@@ -315,7 +318,8 @@ rm tmpfile.txt
 
 
 if [ "$pymodampl" = "?" ]; then
-menuitems+=( " " "\Zr\Z1 freq = UNKNOWN\Zn" )
+menuitems+=( " " "\Zr\Z1 amplitude = UNKNOWN\Zn" )
+PyWFSmodOK=0
 fi
 
 
@@ -727,64 +731,78 @@ menualign_default="$choiceval"
 	pyfr05)
 pyfreq="0500"
 echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "freq" "${pyfreq}" &
 recomputeLatency ${pyfreq} &> $mesgfile &
 aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
+fi
 ;;
 
 	pyfr10)
 pyfreq="1000"
+if [ "$PyWFSmodOK" = "1" ]; then
 echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "freq" "${pyfreq}" &
 recomputeLatency ${pyfreq} &> $mesgfile &
 aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
+fi
 ;;
 
 	pyfr15)
 pyfreq="1500"
 echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "freq" "${pyfreq}" &
 recomputeLatency ${pyfreq} &> $mesgfile &
 aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
+fi
 ;;
 
 	pyfr20)
 pyfreq="2000"
 echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "freq" "${pyfreq}" &
 recomputeLatency ${pyfreq} &> $mesgfile &
 aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
+fi
 ;;
 
 	pyfr25)
 pyfreq="2500"
 echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "freq" "${pyfreq}" &
 recomputeLatency ${pyfreq} &> $mesgfile &
 aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
+fi
 ;;
 	
 	pyfr30)
 pyfreq="3000"
 echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "freq" "${pyfreq}" &
 recomputeLatency ${pyfreq} &> $mesgfile &
 aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
+fi
 ;;
 
 	pyfr35)
 pyfreq="3500"
 echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "freq" "${pyfreq}" &
 recomputeLatency ${pyfreq} &> $mesgfile &
 aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
+fi
 ;;
 
 
@@ -793,161 +811,201 @@ aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
 	pymoda005)
 pymodampl="0.05"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas05" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda010)
 pymodampl="0.10"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas10" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda015)
 pymodampl="0.15"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas15" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda020)
 pymodampl="0.20"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas20" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda025)
 pymodampl="0.25"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas25" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda030)
 pymodampl="0.30"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas30" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda035)
 pymodampl="0.35"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas35" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda040)
 pymodampl="0.40"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas40" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda045)
 pymodampl="0.45"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas45" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda050)
 pymodampl="0.50"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas50" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda055)
 pymodampl="0.55"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas55" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda060)
 pymodampl="0.60"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas60" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda065)
 pymodampl="0.65"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas65" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda070)
 pymodampl="0.70"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas70" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda075)
 pymodampl="0.75"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas75" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda080)
 pymodampl="0.80"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas80" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda085)
 pymodampl="0.85"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas85" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda090)
 pymodampl="0.90"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas90" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda095)
 pymodampl="0.95"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas95" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 	pymoda100)
 pymodampl="1.00"
 echo "$pymodampl" > ./conf/instconf_pywfs_modampl.txt
+if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "rad" "$pmodradmas00" &
 aoconflogext "Set py modulation amplitude = $pymodampl" &> $mesgfile &
+fi
 ;;
 
 
