@@ -153,10 +153,10 @@ ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig
 
 mkdir -p conf
 DMindex="00"
-echo "$DMindex" > ./conf/conf_DMindex.txt
-echo "50" > ./conf/conf_dm${DMindex}xsize.txt
-echo "50" > ./conf/conf_dm${DMindex}ysize.txt
-echo "0" > "./conf/conf_dm2dm_mode.txt"
+echo "$DMindex" > ./conf/param_DMindex.txt
+echo "50" > ./conf/param_dm${DMindex}xsize.txt
+echo "50" > ./conf/param_dm${DMindex}ysize.txt
+#echo "0" > "./conf/conf_dm2dm_mode.txt"
 echo "0" > "./conf/conf_dmwfsref_mode.txt"
 echo "1" > "./conf/conf_dmvolt_mode.txt"
 echo "0" > "./conf/conf_dmcombavemode.txt"
@@ -175,10 +175,10 @@ echo "dm${DMindex}disp02" > ./conf/conf_dmRM_name.txt # DM actuation channel for
 
 echo "ocam2d" > ./conf/conf_wfsim_name.txt
 
-echo "0.02" >./conf/conf_RMamplum.txt    
-echo "1" >./conf/conf_RMdelayfr.txt
-echo "2" >./conf/conf_RMfrave.txt 
-echo "1" >./conf/conf_RMexfr.txt      
+echo "0.02" >./conf/param_RMamplum.txt    
+echo "1" >./conf/param_RMdelayfr.txt
+echo "2" >./conf/param_RMfrave.txt 
+echo "1" >./conf/param_RMexfr.txt      
 echo "1" >./conf/conf_RMpokeMode.txt # use Hadamard poke mode
 ./auxscripts/mkHpoke
 mv Hpoke.fits ./conf/Hpoke.fits
@@ -189,21 +189,21 @@ mv Hmat.fits ./conf/
 cp ./conf/Hmat.fits ./conf/RMHmat.fits
 echo "1" > ./conf/conf_WFSnormalize.txt # normalize WFS frames
 
-echo " ON" > ./conf/conf_RMmodal.txt  
-echo "0.02" >./conf/conf_RMMamplum.txt   
-echo "3" >./conf/conf_RMMcpa.txt      
+echo " ON" > ./conf/param_RMmodal.txt  
+echo "0.02" >./conf/param_RMMamplum.txt   
+echo "3" >./conf/param_RMMcpa.txt      
 
 
-echo "0.003" > ./conf/conf_SVDlimall.txt
+echo "0.003" > ./conf/param_SVDlimall.txt
 
 
-echo "2" > ./conf/conf_GPU.txt
-echo "1" > ./conf/conf_GPUset0_dev0.txt
-echo "2" > ./conf/conf_GPUset0_dev1.txt
+echo "2" > ./conf/param_GPU.txt
+echo "1" > ./conf/param_GPUset0_dev0.txt
+echo "2" > ./conf/param_GPUset0_dev1.txt
 
-echo "3" > ./conf/conf_GPUmodesextrwfs.txt
-echo "4" > ./conf/conf_GPUzpoffsetM.txt
-echo "5" > ./conf/conf_GPUzpoffsetZ.txt
+echo "3" > ./conf/param_GPUmodesextrwfs.txt
+echo "4" > ./conf/param_GPUzpoffsetM.txt
+echo "5" > ./conf/param_GPUzpoffsetZ.txt
 
-echo "1" > ./conf/conf_CMmode.txt
-echo "1" > ./conf/conf_GPUall.txt
+# echo "1" > ./conf/param_CMmode.txt
+echo "1" > ./conf/param_GPUall.txt
