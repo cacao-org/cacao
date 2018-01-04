@@ -277,8 +277,7 @@ ConfReadParam DMvolt_mode "0"; DMvolt_mode="$paramvalue" # READ DMvolt_mode
 ConfReadParam DMdelayON "OFF"; DMdelayON="$paramvalue" # READ DM delay (optional)
 	
 
-
-ConfReadInstConf dmDCum "0.0"; dmDCum="$paramvalue" # READ DM DC offset
+ConfReadInstConf dmDCum "0.0"; dmDCum="$instconfvalue" # READ DM DC offset
 ConfReadInstConf dmVmax "125.0"; dmVmax="$instconfvalue"
 
 
