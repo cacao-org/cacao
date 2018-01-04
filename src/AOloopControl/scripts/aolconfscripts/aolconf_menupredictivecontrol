@@ -1985,7 +1985,7 @@ echo "$PFb0decayCoeff" > $file
 ;;
 
 	PFb0sAve)
-Cfits << EOF
+./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_outPFb0
 aolpfsetave aol${LOOPNUMBER}_outPFb0 ${PFb0decayCoeff}
 exitCLI
@@ -2034,7 +2034,7 @@ echo "$PFb1decayCoeff" > $file
 ;;
 
 	PFb1sAve)
-Cfits << EOF
+./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_outPFb1
 aolpfsetave aol${LOOPNUMBER}_outPFb1 ${PFb1decayCoeff}
 exitCLI
@@ -2084,7 +2084,7 @@ echo "$PFb2decayCoeff" > $file
 ;;
 
 	PFb2sAve)
-Cfits << EOF
+./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_outPFb2
 aolpfsetave aol${LOOPNUMBER}_outPFb2 ${PFb2decayCoeff}
 exitCLI
@@ -2134,7 +2134,7 @@ echo "$PFb3decayCoeff" > $file
 ;;
 
 	PFb3sAve)
-Cfits << EOF
+./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_outPFb3
 aolpfsetave aol${LOOPNUMBER}_outPFb3 ${PFb3decayCoeff}
 exitCLI
@@ -2174,7 +2174,7 @@ menupred_default="PFb0aOFF"
 ;;
 
 	PFb0aOFF)
-Cfits << EOF
+./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_mode_ARPFgain
 loadfits outmask0.fits outmask
 im1=1-outmask
@@ -2216,7 +2216,7 @@ menupred_default="PFb1aOFF"
 ;;
 
 	PFb1aOFF)
-Cfits << EOF
+./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_mode_ARPFgain
 loadfits outmask1.fits outmask
 im1=1-outmask
@@ -2259,7 +2259,7 @@ menupred_default="PFb2aOFF"
 ;;
 
 	PFb2aOFF)	
-Cfits << EOF
+./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_mode_ARPFgain
 loadfits outmask2.fits outmask
 im1=1-outmask
@@ -2302,7 +2302,7 @@ menupred_default="PFb3aOFF"
 ;;
 
 	PFb3aOFF)
-Cfits << EOF
+./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_mode_ARPFgain
 loadfits outmask3.fits outmask
 im1=1-outmask
