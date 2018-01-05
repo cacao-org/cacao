@@ -218,7 +218,7 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(const char *name, const char *fnam
         printf("Function %s\n", __func__);
         printf("INPUT : \n");
         printf("   name         = \"%s\"\n", name);
-        printf("   fname        =  \"%s\"\n", fname);
+        printf("   fname        = \"%s\"\n", fname);
         printf("   xsize        = %ld\n", xsize);
         printf("   ysize        = %ld\n", ysize);
         printf("   DefaultValue = %f\n", DefaultValue);
