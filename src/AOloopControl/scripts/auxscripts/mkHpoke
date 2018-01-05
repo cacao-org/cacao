@@ -142,7 +142,7 @@ savefits outim "!./conf/Hpoke.fits.gz"
 exitCLI
 EOF
 
-
+mv Hpixindex.fits.gz ./conf/
 mv Hmat.fits.gz ./conf/
 
 
