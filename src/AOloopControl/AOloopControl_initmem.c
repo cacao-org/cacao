@@ -222,7 +222,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             FILE *fp;
             char fname[200];
 
-            if(sprintf(fname, "./conf/param_aoloopcontrol_var.GPUset0dev%d.txt", (int) k) < 1)
+            if(sprintf(fname, "./conf/param_GPUset0dev%d.txt", (int) k) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             fp = fopen(fname, "r");
             if(fp!=NULL)
@@ -244,7 +244,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             FILE *fp;
             char fname[200];
 
-            if(sprintf(fname, "./conf/param_aoloopcontrol_var.GPUset1dev%d.txt", (int) k) < 1)
+            if(sprintf(fname, "./conf/param_GPUset1dev%d.txt", (int) k) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             fp = fopen(fname, "r");
             if(fp!=NULL)
