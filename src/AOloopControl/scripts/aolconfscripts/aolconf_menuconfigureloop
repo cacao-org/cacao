@@ -50,8 +50,8 @@ menuitems+=( " " " " )
 stringcenter "HARDWARE INFO AND I/O LINKS [shared memory sim links]"
 menuitems+=( "1 ->" "\Zb\Zr$string\Zn" )
 
+ConfReadParam mloopfrequ "1000.0"; mloopfrequ="$paramvalue"
 ConfReadParam loopfrequ "1000.0"; loopfrequ="$paramvalue"
-ConfReadParam mloopfrequ "1000.0"; loopfrequ="$paramvalue"
 menuitems+=( "lfreq" "            Loop Frequ                            ${mloopfrequ} Hz (measured)" )
 menuitems+=( "     " "            Loop Frequ                            ${loopfrequ} Hz (requested)" )
 
