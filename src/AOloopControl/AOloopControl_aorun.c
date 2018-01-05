@@ -494,7 +494,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		
 		if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1)
 		{
-			float xval, xval2, xval4;
 
 # ifdef _OPENMP
             #pragma omp parallel num_threads(8) 
@@ -507,6 +506,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 			
 			for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
 				{
+					float xval, xval2, xval4;
+					
 					xval = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] / data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
 					xval2 = xval*xval;
 					xval4 = xval2*xval2;
