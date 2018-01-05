@@ -250,6 +250,9 @@ typedef struct
     double RMSmodesCumul;
     uint_fast64_t RMSmodesCumulcnt;
 
+	// WFS 
+	
+
 	// block statistics (instantaneous)
 	double block_PFresrms[100]; // Prediction residual, meas RMS
 	double block_OLrms[100]; // open loop RMS

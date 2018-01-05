@@ -32,13 +32,20 @@ menuitems=( "H" "\Zb\Zr\Z4$string\Zn" )
 menuitems+=( " " " ")
 
 
+
 # hardware latency (frames)
 ConfReadParam hardwlatency_frame "2.1"; hardwlatency_frame="$paramvalue"
 # software latency (frame)
+if [ -f "conf/param_wfsmextrlatency_frame.${loopfrequ}.txt" ]; then
+cp  conf/param_wfsmextrlatency_frame.${loopfrequ}.txt conf/param_wfsmextrlatency_frame.txt
+fi
 ConfReadParam wfsmextrlatency_frame "0.5"; wfsmextrlatency_frame="$paramvalue"
 
 latency_frame=$(awk "BEGIN {printf \"%.3f\",${hardwlatency_frame}+${wfsmextrlatency_frame}}")
-
+echo "$latency_frame" > conf/param_PFb0lag.txt
+echo "$latency_frame" > conf/param_PFb1lag.txt
+echo "$latency_frame" > conf/param_PFb2lag.txt
+echo "$latency_frame" > conf/param_PFb3lag.txt
 
 
 stringcenter "TIMING PARAMETERS"
@@ -1057,7 +1064,7 @@ case $retval in
 mkdir -p timingstats
 echo "Measuring loop timing - please wait a few seconds...."
 ./auxscripts/aolMeasureTiming 100000 > timingstats/timingReport.txt 
-
+cp timingstats/timingReport.txt timingstats/timingReport.${loopfrequ}.txt
 # software latency (frame)
 ConfReadParam wfsmextrlatency_frame "0.5"; wfsmextrlatency_frame="$paramvalue"
 

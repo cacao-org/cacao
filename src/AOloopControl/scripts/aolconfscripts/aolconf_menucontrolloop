@@ -460,13 +460,13 @@ stringcenter "LOOP SETTING "
 menuitems+=( "5 ->" "\Zb\Zr$string\Zn" )
 
 ConfReadParam loopgain "0.000"; loopgain="$paramvalue"
-menuitems+=( "g" "loop gain         =   ${loopgain}" )
+menuitems+=( "g" "loop gain          =   ${loopgain}" )
 
 ConfReadParam loopmultcoeff "0.000"; loopmultcoeff="$paramvalue"
-menuitems+=( "e" "mult coeff        =   ${loopmultcoeff}" )
+menuitems+=( "e" "mult coeff         =   ${loopmultcoeff}" )
 
 ConfReadParam loopmaxlim "0.000"; loopmaxlim="$paramvalue"
-menuitems+=( "m" "actuator max lim  =   ${loopmaxlim}" )
+menuitems+=( "m" "actuator max lim   =   ${loopmaxlim}" )
 
 ConfReadParam WFSlinlim "1.000"; WFSlinlim="$paramvalue"
 menuitems+=( "wll" "WFS linearity lim  =   ${WFSlinlim}" )

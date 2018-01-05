@@ -494,7 +494,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		
 		if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1)
 		{
-
 # ifdef _OPENMP
             #pragma omp parallel num_threads(2) 
         {
@@ -503,13 +502,17 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 # ifdef _OPENMP
             #pragma omp for
 # endif
-			
+
 			for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
 				{
 					if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] > data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
+					{
 						data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
-					if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] < -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
+					}
+					else if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] < -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
+					{
 						data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
+					}
 
 				}
 # ifdef _OPENMP
