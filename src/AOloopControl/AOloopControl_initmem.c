@@ -74,8 +74,6 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 
     loop = aoloopcontrol_var.LOOPNUMBER;
 
-	aoloopcontrol_var.AOcontrolNBtimers = 35;
-
     SM_fd = open(AOconfname, O_RDWR);
     if(SM_fd==-1)
     {

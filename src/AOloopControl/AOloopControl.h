@@ -314,44 +314,44 @@ int initcontrMcact_GPU[100];// = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 //used in AOloopControl_wfs_dm.c & AOloopControl_loop_param.c
 //both previous are static 
 
-float GPU_alpha;// = 0.0; 
-float GPU_beta;// = 0.0;
-// both used in wfs_dm.c and IOtools.c 
+float GPU_alpha;
+float GPU_beta;
 
-int AOloopcontrol_meminit;// = 0;
 
-int COMPUTE_PIXELSTREAMING; // = 0; // static. multiple pixel groups
-int PIXSTREAM_NBSLICES;// = 1; // number of image slices (= pixel groups)
+int AOloopcontrol_meminit;
+
+int COMPUTE_PIXELSTREAMING; // static. multiple pixel groups
+int PIXSTREAM_NBSLICES;// number of image slices (= pixel groups)
 int PIXSTREAM_SLICE; // slice index 0 = all pixels
 
 
 // Hardware connections
-long aoconfID_wfsim; //= -1;
+long aoconfID_wfsim;
 uint8_t WFSatype;
-long aoconfID_dmC;// = -1;
-long aoconfID_dmRM;// = -1;
+long aoconfID_dmC;
+long aoconfID_dmRM;
 
-long aoconfID_wfsdark;// = -1;
-long aoconfID_imWFS0;// = -1;
-long aoconfID_imWFS0tot;// = -1;
-long aoconfID_imWFS1;// = -1;
-long aoconfID_imWFS2;// = -1;
-long aoconfID_wfsref0;// = -1; static
-long aoconfID_wfsref;// = -1;
-long long aoconfcnt0_wfsref_current;// = -1; static
+long aoconfID_wfsdark;
+long aoconfID_imWFS0;
+long aoconfID_imWFS0tot;
+long aoconfID_imWFS1;
+long aoconfID_imWFS2;
+long aoconfID_wfsref0;
+long aoconfID_wfsref;
+long long aoconfcnt0_wfsref_current;
 
-long aoconfID_DMmodes;// = -1;
-long aoconfID_dmdisp;// = -1; static. // to notify DMcomb that DM maps should be summed
+long aoconfID_DMmodes;
+long aoconfID_dmdisp; // to notify DMcomb that DM maps should be summed
 
 
 
 // Control Modes
-long aoconfID_cmd_modes;// = -1;
-long aoconfID_meas_modes;// = -1; // measured
-long aoconfID_RMS_modes;// = -1;
-long aoconfID_AVE_modes;// = -1;
-long aoconfID_modeARPFgainAuto;// = -1;
-long aoconfID_modevalPF;// = -1;
+long aoconfID_cmd_modes;
+long aoconfID_meas_modes; // measured
+long aoconfID_RMS_modes;
+long aoconfID_AVE_modes;
+long aoconfID_modeARPFgainAuto;
+long aoconfID_modevalPF;
 
 // mode gains, multf, limit are set in 3 tiers
 // global gain
@@ -359,33 +359,37 @@ long aoconfID_modevalPF;// = -1;
 // individual gains
 
 // blocks
-long aoconfID_gainb;// = -1; // block modal gains
-long aoconfID_multfb;// = -1; // block modal gains
-long aoconfID_limitb;// = -1; // block modal gains
+long aoconfID_gainb; // block modal gains
+long aoconfID_multfb; // block modal gains
+long aoconfID_limitb; // block modal gains
 
 // individual modes
-long aoconfID_DMmode_GAIN;// = -1;
-long aoconfID_LIMIT_modes;// = -1;
-long aoconfID_MULTF_modes;// = -1;
+long aoconfID_DMmode_GAIN;
+long aoconfID_LIMIT_modes;
+long aoconfID_MULTF_modes;
 
-long aoconfID_cmd_modesRM;// = -1;
+long aoconfID_cmd_modesRM;
 
-long aoconfID_wfsmask;//  = -1;
-long aoconfID_dmmask;//  = -1; static
+long aoconfID_wfsmask;
+long aoconfID_dmmask;
 
 //long aoconfID_respM;//  = -1; static 
 //only in loadconfigure.c
-long aoconfID_contrM;//  = -1; // static. pixels -> modes
+
+long aoconfID_contrM;//   pixels -> modes
+
 //long long aoconfcnt0_contrM_current;//  = -1; static
-long aoconfID_contrMc;//  = -1; // static . combined control matrix: pixels -> DM actuators
-long aoconfID_meas_act;//  = -1;
-long aoconfID_contrMcact[100];//  = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+
+long aoconfID_contrMc;// combined control matrix: pixels -> DM actuators
+long aoconfID_meas_act;
+long aoconfID_contrMcact[100];
+
 //static
 // pixel streaming
 long aoconfID_pixstream_wfspixindex; // index of WFS pixels
 
 // timing
-long aoconfID_looptiming;//  = -1; // control loop timing data. Pixel values correspond to time offset
+long aoconfID_looptiming;// control loop timing data. Pixel values correspond to time offset
 // currently has 20 timing slots
 // beginning of iteration is defined when entering "wait for image"
 // md[0].atime.ts is absolute time at beginning of iteration
@@ -395,9 +399,9 @@ long aoconfID_looptiming;//  = -1; // control loop timing data. Pixel values cor
 // pixel 1 is time from beginning of loop to status 01
 // pixel 2 is time from beginning of loop to status 02
 // ...
-long AOcontrolNBtimers;//  = 35;
+long AOcontrolNBtimers;
 
-long aoconfIDlogdata;//  = -1; //static 
+long aoconfIDlogdata;
 //long aoconfIDlog0;//  = -1; static
 //long aoconfIDlog1;//  = -1; static 
 // those two last don't exist in any functions 
@@ -418,7 +422,7 @@ float normfloorcoeff;//  = 1.0; static
 
 //int GPUcntMax;//  = 100; static initmem.c
 int *GPUset0; //static
-int *GPUset1;//static
+int *GPUset1; //static
 
 } AOloopControl_var;
 

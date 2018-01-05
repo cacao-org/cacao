@@ -207,7 +207,11 @@ static int AOlooploadconf_init = 0;
 #define AOconfname "/tmp/AOconf.shm"
 AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 //#define AOloopcontrol_varname "/tmp/aoloopcontrol_var.shm" ??
+
+
 AOloopControl_var aoloopcontrol_var;
+
+
 
 // CLI commands
 //
@@ -738,6 +742,64 @@ void init_AOloopControl()
     }
     else
         LOOPNUMBER = 0;
+
+
+	aoloopcontrol_var.AOloopcontrol_meminit = 0;
+	aoloopcontrol_var.GPU_alpha = 0.0;
+	aoloopcontrol_var.GPU_beta = 0.0;
+
+	aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
+	aoloopcontrol_var.PIXSTREAM_NBSLICES = 1;
+	aoloopcontrol_var.aoconfID_wfsim = -1;
+	aoloopcontrol_var.aoconfID_dmC = -1;
+	aoloopcontrol_var.aoconfID_dmRM = -1;
+	aoloopcontrol_var.aoconfID_wfsdark = -1;
+	aoloopcontrol_var.aoconfID_imWFS0 = -1;
+	aoloopcontrol_var.aoconfID_imWFS0tot = -1;
+	aoloopcontrol_var.aoconfID_imWFS1 = -1;
+	aoloopcontrol_var.aoconfID_imWFS2 = -1;
+	aoloopcontrol_var.aoconfID_wfsref0 = -1;
+	aoloopcontrol_var.aoconfID_wfsref = -1;
+	aoloopcontrol_var.aoconfcnt0_wfsref_current = -1;
+	aoloopcontrol_var.aoconfID_DMmodes = -1;
+	aoloopcontrol_var.aoconfID_dmdisp = -1;
+	aoloopcontrol_var.aoconfID_cmd_modes = -1;
+	aoloopcontrol_var.aoconfID_meas_modes = -1;
+	aoloopcontrol_var.aoconfID_RMS_modes = -1;
+	aoloopcontrol_var.aoconfID_AVE_modes = -1;
+	aoloopcontrol_var.aoconfID_modeARPFgainAuto = -1;
+	aoloopcontrol_var.aoconfID_modevalPF = -1;
+	aoloopcontrol_var.aoconfID_gainb = -1;
+	aoloopcontrol_var.aoconfID_multfb = -1;
+	aoloopcontrol_var.aoconfID_limitb = -1;
+	aoloopcontrol_var.aoconfID_DMmode_GAIN = -1;
+	aoloopcontrol_var.aoconfID_LIMIT_modes = -1;
+	aoloopcontrol_var.aoconfID_MULTF_modes = -1;
+	aoloopcontrol_var.aoconfID_cmd_modesRM = -1;
+	aoloopcontrol_var.aoconfID_wfsmask = -1;
+	aoloopcontrol_var.aoconfID_dmmask = -1;
+	aoloopcontrol_var.aoconfID_contrM = -1;
+	aoloopcontrol_var.aoconfID_contrMc = -1;
+	aoloopcontrol_var.aoconfID_meas_act = -1;
+	
+	int i;
+	for(i=0;i<100;i++)
+	{	
+		aoloopcontrol_var.aoconfID_contrMcact[i] = -1;
+		aoloopcontrol_var.initcontrMcact_GPU[i] = -1;
+	}
+	
+	aoloopcontrol_var.aoconfID_looptiming = -1;
+	aoloopcontrol_var.AOcontrolNBtimers = 35;
+
+	aoloopcontrol_var.aoconfIDlogdata = -1;
+	aoloopcontrol_var.aoconfID_meas_act_active = -1;
+
+	
+
+
+
+
 
     RegisterCLIcommand("aolloadconf",__FILE__, AOloopControl_loadconfigure_cli, "load AO loop configuration", "<loop #>", "AOlooploadconf 1", "int AOloopControl_loadconfigure(long loopnb, 1, 10)");
 
