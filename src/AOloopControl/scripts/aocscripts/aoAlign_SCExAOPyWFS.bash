@@ -130,9 +130,9 @@ if [ "$PyWFSmodOK" = "1" ]; then
 pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
 ./statusext "freq" "${pyfreq}" &
 
-cp ./conf/param_mloopfrequ.${pyfrequ}.txt ./conf/param_mloopfrequ.txt
-cp ./conf/param_hardwlatency1.${pyfrequ}.txt ./conf/param_hardwlatency1.txt
-cp ./conf/param_hardwlatency_frame.${pyfrequ}.txt ./conf/param_hardwlatency_frame.txt
+cp ./conf/param_mloopfrequ.${pyfreq}.txt ./conf/param_mloopfrequ.txt
+cp ./conf/param_hardwlatency1.${pyfreq}.txt ./conf/param_hardwlatency1.txt
+cp ./conf/param_hardwlatency_frame.${pyfreq}.txt ./conf/param_hardwlatency_frame.txt
 
 recomputeLatency ${pyfreq} &> $mesgfile &
 aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
