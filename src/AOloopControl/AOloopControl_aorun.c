@@ -496,7 +496,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		{
 
 # ifdef _OPENMP
-            #pragma omp parallel num_threads(8) 
+            #pragma omp parallel num_threads(2) 
         {
 # endif
 
