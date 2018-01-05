@@ -487,9 +487,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     {
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
 
-# ifdef _OPENMP
-            #pragma omp parallel for
-# endif
         for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
             data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
 
@@ -499,9 +496,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		{
 			float xval, xval2, xval4;
 			
-# ifdef _OPENMP
-            #pragma omp parallel for private(xval,xval2,xval4)
-# endif
 			for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
 				{
 					xval = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] / data.image[aoloopcontrol_var.aoconfID_WFSlinlimit].array.F[ii];
