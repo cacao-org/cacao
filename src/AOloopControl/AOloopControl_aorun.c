@@ -510,8 +510,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 					
 					xval = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] / data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
 					xval2 = xval*xval;
-					xval4 = xval2*xval2;
-					xval = xval/(1.0+xval4);
+					//xval4 = xval2*xval2;
+					xval = xval/(1.0+xval2);
 					data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = xval * data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
 				}
 # ifdef _OPENMP
