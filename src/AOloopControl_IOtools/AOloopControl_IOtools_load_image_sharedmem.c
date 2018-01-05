@@ -215,6 +215,14 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(const char *name, const char *fnam
     if(ID==-1)
     {
         printf("ERROR: could not load/create %s\n", name);
+        printf("Function %s\n", __FUNC__);
+        printf("INPUT : \n");
+        printf("   name         = \"%s\"\n", name);
+        printf("   fname        =  \"%s\"\n", fname);
+        printf("   xsize        = %ld\n", xsize);
+        printf("   ysize        = %ld\n", ysize);
+        printf("   DefaultValue = %f\n", DefaultValue);
+		printf("\n");
         exit(0);
     }
     else
