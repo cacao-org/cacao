@@ -1363,11 +1363,8 @@ esac
 	Hon)
 echo "1" > ./conf/param_RMpokeMode.txt
 ./auxscripts/mkHpoke 
-mv Hpoke.fits.gz ./conf/Hpoke.fits.gz
 ln -s $PWD/conf/Hpoke.fits.gz $PWD/conf/RMpokeCube.fits.gz
-mv Hpixindex.fits.gz ./conf/
 ln -s $PWD/conf/Hpixindex.fits.gz $PWD/conf/RMpixindex.fits.gz
-mv Hmat.fits.gz ./conf/
 ln -s $PWD/conf/Hmat.fits.gz $PWD/conf/RMmat.fits.gz 
 aoconflogext "RM: set Hadamard ON"
 menucontrolloop_default="Hoff"

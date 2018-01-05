@@ -178,14 +178,15 @@ echo "0.02" >./conf/param_RMamplum.txt
 echo "1" >./conf/param_RMdelayfr.txt
 echo "2" >./conf/param_RMfrave.txt 
 echo "1" >./conf/param_RMexfr.txt      
-echo "1" >./conf/conf_RMpokeMode.txt # use Hadamard poke mode
-./auxscripts/mkHpoke
-mv Hpoke.fits ./conf/Hpoke.fits
-cp ./conf/Hpoke.fits ./conf/RMpokeCube.fits
-mv Hpixindex.fits ./conf/
-cp ./conf/Hpixindex.fits ./conf/RMpixindex.fits
-mv Hmat.fits ./conf/
-cp ./conf/Hmat.fits ./conf/RMHmat.fits
+echo "1" >./conf/param_RMpokeMode.txt # use Hadamard poke mode
+
+echo "1" > ./conf/param_RMpokeMode.txt
+./auxscripts/mkHpoke 
+ln -s $PWD/conf/Hpoke.fits.gz $PWD/conf/RMpokeCube.fits.gz
+ln -s $PWD/conf/Hpixindex.fits.gz $PWD/conf/RMpixindex.fits.gz
+ln -s $PWD/conf/Hmat.fits.gz $PWD/conf/RMmat.fits.gz 
+
+
 echo "1" > ./conf/param_WFSnorm.txt # normalize WFS frames
 
 echo " ON" > ./conf/param_RMmodal.txt  

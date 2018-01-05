@@ -141,3 +141,8 @@ aolmkH DMmask outim
 savefits outim "!./conf/Hpoke.fits.gz"
 exitCLI
 EOF
+
+
+mv Hmat.fits.gz ./conf/
+
+
