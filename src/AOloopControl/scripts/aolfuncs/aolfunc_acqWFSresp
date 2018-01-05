@@ -124,7 +124,7 @@ exitCLI
 EOF
 fi
 
-exit
+
 
 
 ##############################################
@@ -186,6 +186,9 @@ then # use option -r to re-use AO shared memory configuration
 else
     ./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
 fi
+
+
+exit
 
 
 
