@@ -1314,6 +1314,7 @@ rm tmpfile.txt
 echo "$hardwlatency1" > ./conf/param_hardwlatency1.txt
 echo "$hardwlatency_frame" > ./conf/param_hardwlatency_frame.txt
 
+loopfrequ=$( awk '{print $1}' conf/param_loopfrequ.txt ) 
 cp ./conf/param_mloopfrequ.txt ./conf/param_mloopfrequ.${loopfrequ}.txt
 cp ./conf/param_hardwlatency1.txt ./conf/param_hardwlatency1.${loopfrequ}.txt
 cp ./conf/param_hardwlatency_frame.txt ./conf/param_hardwlatency_frame.${loopfrequ}.txt
