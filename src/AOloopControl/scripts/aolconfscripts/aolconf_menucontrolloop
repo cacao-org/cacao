@@ -468,7 +468,7 @@ menuitems+=( "e" "mult coeff        =   ${loopmultcoeff}" )
 ConfReadParam loopmaxlim "0.000"; loopmaxlim="$paramvalue"
 menuitems+=( "m" "actuator max lim  =   ${loopmaxlim}" )
 
-ConfReadParam WFSlinlim "1.000"; loopmaxlim="$paramvalue"
+ConfReadParam WFSlinlim "1.000"; WFSlinlim="$paramvalue"
 menuitems+=( "wll" "WFS linearity lim  =   ${WFSlinlim}" )
 
 
