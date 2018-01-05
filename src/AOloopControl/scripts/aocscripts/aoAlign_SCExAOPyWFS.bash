@@ -123,6 +123,23 @@ EOF
 }
 
 
+function setpywfsfrequ {
+	
+echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
+if [ "$PyWFSmodOK" = "1" ]; then
+pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
+./statusext "freq" "${pyfreq}" &
+
+cp ./conf/param_mloopfrequ.${loopfrequ}.txt ./conf/param_mloopfrequ.txt
+cp ./conf/param_hardwlatency1.${loopfrequ}.txt ./conf/param_hardwlatency1.txt
+cp ./conf/param_hardwlatency_frame.${loopfrequ}.txt ./conf/param_hardwlatency_frame.txt
+
+recomputeLatency ${pyfreq} &> $mesgfile &
+aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
+fi
+}
+
+
 
 
 
@@ -730,79 +747,37 @@ menualign_default="$choiceval"
 
 	pyfr05)
 pyfreq="0500"
-echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
-if [ "$PyWFSmodOK" = "1" ]; then
-pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
-./statusext "freq" "${pyfreq}" &
-recomputeLatency ${pyfreq} &> $mesgfile &
-aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
-fi
+setpywfsfrequ
 ;;
 
 	pyfr10)
 pyfreq="1000"
-if [ "$PyWFSmodOK" = "1" ]; then
-echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
-pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
-./statusext "freq" "${pyfreq}" &
-recomputeLatency ${pyfreq} &> $mesgfile &
-aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
-fi
+setpywfsfrequ
 ;;
 
 	pyfr15)
 pyfreq="1500"
-echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
-if [ "$PyWFSmodOK" = "1" ]; then
-pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
-./statusext "freq" "${pyfreq}" &
-recomputeLatency ${pyfreq} &> $mesgfile &
-aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
-fi
+setpywfsfrequ
 ;;
 
 	pyfr20)
 pyfreq="2000"
-echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
-if [ "$PyWFSmodOK" = "1" ]; then
-pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
-./statusext "freq" "${pyfreq}" &
-recomputeLatency ${pyfreq} &> $mesgfile &
-aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
-fi
+setpywfsfrequ
 ;;
 
 	pyfr25)
 pyfreq="2500"
-echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
-if [ "$PyWFSmodOK" = "1" ]; then
-pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
-./statusext "freq" "${pyfreq}" &
-recomputeLatency ${pyfreq} &> $mesgfile &
-aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
-fi
+setpywfsfrequ
 ;;
 	
 	pyfr30)
 pyfreq="3000"
-echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
-if [ "$PyWFSmodOK" = "1" ]; then
-pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
-./statusext "freq" "${pyfreq}" &
-recomputeLatency ${pyfreq} &> $mesgfile &
-aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
-fi
+setpywfsfrequ
 ;;
 
 	pyfr35)
 pyfreq="3500"
-echo "${pyfreq}" > ./conf/instconf_pywfs_freq.txt
-if [ "$PyWFSmodOK" = "1" ]; then
-pywfs_mod_setup ${pyfreq} ${pymodampl} &> $mesgfile
-./statusext "freq" "${pyfreq}" &
-recomputeLatency ${pyfreq} &> $mesgfile &
-aoconflogext "Set pyfreq = $pyfreq Hz" &> $mesgfile &
-fi
+setpywfsfrequ
 ;;
 
 
