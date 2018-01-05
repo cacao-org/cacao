@@ -677,7 +677,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     dt = tdouble_end - tdouble_start;
     printf("FRAME RATE = %.3f Hz\n", 1.0*(wfscntend-wfscntstart)/dt);
 
-    if(sprintf(command, "echo %.3f > conf/param_loopfrequ.txt", 1.0*(wfscntend-wfscntstart)/dt ) < 1)
+    if(sprintf(command, "echo %.3f > conf/param_mloopfrequ.txt", 1.0*(wfscntend-wfscntstart)/dt ) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
     if(system(command) != 0)
