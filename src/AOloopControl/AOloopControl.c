@@ -758,7 +758,7 @@ void init_AOloopControl()
 	aoloopcontrol_var.aoconfID_imWFS0tot = -1;
 	aoloopcontrol_var.aoconfID_imWFS1 = -1;
 	aoloopcontrol_var.aoconfID_imWFS2 = -1;
-	aoloopcontrol_var.aoconfID_WFSlinlimit = -1;
+	aoloopcontrol_var.aoconfID_imWFSlinlimit = -1;
 	aoloopcontrol_var.aoconfID_wfsref0 = -1;
 	aoloopcontrol_var.aoconfID_wfsref = -1;
 	aoloopcontrol_var.aoconfcnt0_wfsref_current = -1;

@@ -492,17 +492,17 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 		
 		
-		if(aoloopcontrol_var.aoconfID_WFSlinlimit != -1)
+		if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1)
 		{
 			float xval, xval2, xval4;
 			
 			for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
 				{
-					xval = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] / data.image[aoloopcontrol_var.aoconfID_WFSlinlimit].array.F[ii];
+					xval = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] / data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
 					xval2 = xval*xval;
 					xval4 = xval2*xval2;
 					xval = xval/(1.0+xval4);
-					data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = xval * data.image[aoloopcontrol_var.aoconfID_WFSlinlimit].array.F[ii];
+					data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = xval * data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
 				}
 		}
 		

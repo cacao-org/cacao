@@ -373,6 +373,10 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     aoloopcontrol_var.aoconfID_imWFS2 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
 
+    if(sprintf(name, "aol%ld_imWFSlinlimit", loop) < 1)
+        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    aoloopcontrol_var.aoconfID_imWFSlinlimit = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 1.0);
+
 
 
 

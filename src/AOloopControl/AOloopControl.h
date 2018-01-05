@@ -335,7 +335,7 @@ long aoconfID_imWFS0tot;
 long aoconfID_imWFS1;
 long aoconfID_imWFS2;
 
-long aoconfID_WFSlinlimit; // WFS linearity limit
+long aoconfID_imWFSlinlimit; // WFS linearity limit
 
 long aoconfID_wfsref0;
 long aoconfID_wfsref;
