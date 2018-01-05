@@ -468,6 +468,8 @@ menuitems+=( "e" "mult coeff        =   ${loopmultcoeff}" )
 ConfReadParam loopmaxlim "0.000"; loopmaxlim="$paramvalue"
 menuitems+=( "m" "actuator max lim  =   ${loopmaxlim}" )
 
+ConfReadParam WFSlinlim "1.000"; loopmaxlim="$paramvalue"
+menuitems+=( "wll" "WFS linearity lim  =   ${WFSlinlim}" )
 
 
 ConfReadParam DMprimaryWriteON "0"; DMprimaryWriteON="$paramvalue"
@@ -1597,6 +1599,16 @@ menucontrolloop_default="wzpoinit"
   	 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolsetmaxlim ${loopmaxlim}" C-m
 	 aoconflogext "set max limit ${loopmaxlim}"
    	 ;; 
+   	 
+   	 wll)
+   	 value=${WFSlinlim}
+   	 SelectValue01 100 1200 50
+   	 WFSlinlim=${value}
+   	 echo "$WFSlinlim" > ./conf/param_WFSlinlim.txt
+   	 ./auxscripts/setWFSlinlimit $WFSlinlim
+   	 aoconflogext "set WFS lin limit ${WFSlinlim}"
+   	 ;;
+   	 
    	  
    	 e) 
    	 value=${loopmultcoeff}
