@@ -874,7 +874,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
     if(updateconf==1)
     {
-        fp = fopen("conf/param_loopfrequ.txt", "w");
+        fp = fopen("conf/param_mloopfrequ.txt", "w");
         fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].loopfrequ);
         fclose(fp);
     }
