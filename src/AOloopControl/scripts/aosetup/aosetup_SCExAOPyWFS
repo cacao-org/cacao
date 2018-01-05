@@ -173,10 +173,7 @@ echo "ocam2d" > ./conf/streamlink_wfsim.name.txt
 ./aolfuncs/aolfunc_StreamLink wfsim
 
 
-exit
-
-
-
+# ============ Response Matrix settings ==================
 echo "0.02" >./conf/param_RMamplum.txt    
 echo "1" >./conf/param_RMdelayfr.txt
 echo "2" >./conf/param_RMfrave.txt 
@@ -189,7 +186,7 @@ mv Hpixindex.fits ./conf/
 cp ./conf/Hpixindex.fits ./conf/RMpixindex.fits
 mv Hmat.fits ./conf/
 cp ./conf/Hmat.fits ./conf/RMHmat.fits
-echo "1" > ./conf/conf_WFSnormalize.txt # normalize WFS frames
+echo "1" > ./conf/param_WFSnorm.txt # normalize WFS frames
 
 echo " ON" > ./conf/param_RMmodal.txt  
 echo "0.02" >./conf/param_RMMamplum.txt   
