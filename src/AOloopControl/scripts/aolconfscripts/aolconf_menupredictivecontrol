@@ -32,7 +32,7 @@ menuitems=( "H" "\Zb\Zr\Z4$string\Zn" )
 menuitems+=( " " " ")
 
 
-
+ConfReadParam loopfrequ "1000.0"; loopfrequ="$paramvalue"
 # hardware latency (frames)
 ConfReadParam hardwlatency_frame "2.1"; hardwlatency_frame="$paramvalue"
 # software latency (frame)
@@ -1066,6 +1066,7 @@ echo "Measuring loop timing - please wait a few seconds...."
 ./auxscripts/aolMeasureTiming 100000 > timingstats/timingReport.txt 
 cp timingstats/timingReport.txt timingstats/timingReport.${loopfrequ}.txt
 # software latency (frame)
+cp conf/param_wfsmextrlatency_frame.txt conf/param_wfsmextrlatency_frame.${loopfrequ}.txt
 ConfReadParam wfsmextrlatency_frame "0.5"; wfsmextrlatency_frame="$paramvalue"
 
 latency_frame=$(awk "BEGIN {printf \"%.3f\",${hardwlatency_frame}+${wfsmextrlatency_frame}}")
