@@ -10,7 +10,7 @@ fi
 
 
 function updateRMtiming {
-echo "$hardwlatency_frame $RMexfr $loopfrequ" > tmpfile.txt
+echo "$hardwlatency_frame $RMexfr $mloopfrequ" > tmpfile.txt
 RMdelayfr=$( awk '{ printf("%d\n", int($1-0.5-0.5*$2)+1) }' tmpfile.txt )
 echo "$RMdelayfr" > ./conf/param_RMdelayfr.txt
 delayRM1us=$( awk '{ printf("%d\n", (int($1-0.5-0.5*$2)+1-($1-0.5-0.5*$2))/$3*1000000) }' tmpfile.txt )
@@ -51,7 +51,9 @@ stringcenter "HARDWARE INFO AND I/O LINKS [shared memory sim links]"
 menuitems+=( "1 ->" "\Zb\Zr$string\Zn" )
 
 ConfReadParam loopfrequ "1000.0"; loopfrequ="$paramvalue"
-menuitems+=( "lfreq" "            Loop Frequ                            ${loopfrequ} Hz" )
+ConfReadParam mloopfrequ "1000.0"; loopfrequ="$paramvalue"
+menuitems+=( "lfreq" "            Loop Frequ                            ${mloopfrequ} Hz (measured)" )
+menuitems+=( "     " "            Loop Frequ                            ${loopfrequ} Hz (requested)" )
 
 ConfReadParam hardwlatency "0.001"; hardwlatency="$paramvalue"
 ConfReadParam hardwlatency_frame "2.0"; hardwlatency_frame="$paramvalue"
@@ -315,7 +317,7 @@ if [ -f "runproc/function_nAUTOC.runproc" ]; then
 menuitems+=( "nAUTOCk" "        \Zr\Z1AUTO SYSTEM CALIBRATION RUNNING - Press to KILL\Zn")
 menuitems+=( " " " " )
 else
-RMacqTimeZ=$( echo $loopfrequ $RMfrave $RMexfr $ACzrmNBcycle | awk '{printf("%8.3f", 2.0*($2+$3)*$4/$1*2048)}' )
+RMacqTimeZ=$( echo $mloopfrequ $RMfrave $RMexfr $ACzrmNBcycle | awk '{printf("%8.3f", 2.0*($2+$3)*$4/$1*2048)}' )
 menuitems+=( "nAUTOC" "        \Zb\ZuSTART AUTO SYSTEM CALIBRATION (new modes)\Zn - Acquisition time = ${RMacqTimeZ} s -> ./conf_staged/  (running in tmux session aol${LOOPNUMBER}arespM)" )
 menuitems+=( "nAUTOCr" "        \Zb\ZuSTART AUTO SYSTEM CALIBRATION (same modes)\Zn - Acquisition time = ${RMacqTimeZ} s -> ./conf_staged/  (running in tmux session aol${LOOPNUMBER}arespM)")
 fi
@@ -584,14 +586,14 @@ SYSTEM MODAL RESPONSE AND CONTROL:\n
 
 	lfreq)
 exec 3>&1;
-loopfrequ=$(dialog --inputbox "Loop Frequency [Hz]" 0 0 "$loopfrequ" 2>&1 1>&3);
+mloopfrequ=$(dialog --inputbox "Loop Frequency [Hz]" 0 0 "$mloopfrequ" 2>&1 1>&3);
 exec 3>&-;
-echo "$loopfrequ" > ./conf/param_loopfrequ.txt
+echo "$mloopfrequ" > ./conf/param_mloopfrequ.txt
 $execname << EOF
-aolsetloopfrequ 1000
+aolsetloopfrequ $mloopfrequ
 exit
 EOF
-aoconflogext "set loop frequency $loopfrequ Hz"
+aoconflogext "set loop frequency $mloopfrequ Hz"
 ;;
 
 	lhlat)
@@ -599,7 +601,7 @@ exec 3>&1;
 hardwlatency=$(dialog --inputbox "Hardware latency [s]" 0 0 "$hardwlatency" 2>&1 1>&3);
 exec 3>&-;
 echo "$hardwlatency" > ./conf/param_hardwlatency.txt
-echo "$hardwlatency $loopfrequ" > tmpfile.txt
+echo "$hardwlatency $mloopfrequ" > tmpfile.txt
 hardwlatency_frame=$( awk '{ printf("%05.3f\n", $1*$2) }' tmpfile.txt )
 rm tmpfile.txt
 echo "$hardwlatency_frame" > ./conf/param_hardwlatency_frame.txt
@@ -615,7 +617,7 @@ exec 3>&1;
 complatency=$(dialog --inputbox "Computing latency" 0 0 "$complatency" 2>&1 1>&3);
 exec 3>&-;
 echo "$complatency" > ./conf/param_complatency.txt
-echo "$complatency $loopfrequ" > tmpfile.txt
+echo "$complatency $mloopfrequ" > tmpfile.txt
 complatency_frame=$( awk '{ printf("%05.3f\n", $1*$2) }' tmpfile.txt )
 rm tmpfile.txt
 echo "$complatency_frame" > ./conf/param_complatency_frame.txt
@@ -631,7 +633,7 @@ exec 3>&1;
 wfsmextrlatency=$(dialog --inputbox "WFS modes extraction latency" 0 0 "$wfsmextrlatency" 2>&1 1>&3);
 exec 3>&-;
 echo "$wfsmextrlatency" > ./conf/param_wfsmextrlatency.txt
-echo "$wfsmextrlatency $loopfrequ" > tmpfile.txt
+echo "$wfsmextrlatency $mloopfrequ" > tmpfile.txt
 wfsmextrlatency_frame=$( awk '{ printf("%05.3f\n", $1*$2) }' tmpfile.txt )
 rm tmpfile.txt
 echo "$wfsmextrlatency_frame" > ./conf/param_wfsmextrlatency_frame.txt
@@ -1300,8 +1302,8 @@ echo "$nblatm" > ./conf/param_nblatm.txt
 aoconflogext "Measuring system hardware latency"
 ./auxscripts/MeasureLatency "$RMamplum" "$nblatm"
 hardwlatency=$( awk '{print $1}' conf/param_hardwlatency.txt )
-loopfrequ=$( awk '{print $1}' conf/param_loopfrequ.txt ) 
-echo "$hardwlatency $loopfrequ" > tmpfile.txt
+mloopfrequ=$( awk '{print $1}' conf/param_mloopfrequ.txt ) 
+echo "$hardwlatency $mloopfrequ" > tmpfile.txt
 
 hardwlatency_frame=$( awk '{ printf("%05.3f\n", $1*$2) }' tmpfile.txt )
 
