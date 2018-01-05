@@ -108,7 +108,7 @@ extern long LOOPNUMBER; // current loop index
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 
 
-static int INITSTATUS_AOloopControl_PredictiveControl = 1;
+static int INITSTATUS_AOloopControl_PredictiveControl = 0;
 
 
 
