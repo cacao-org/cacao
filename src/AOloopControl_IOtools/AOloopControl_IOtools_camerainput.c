@@ -677,7 +677,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 # endif
 
 # ifdef _OPENMP
-            #pragma omp for
+            #pragma omp parallel for
 # endif
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = arrayftmp[ii] - data.image[Average_cam_frames_IDdark].array.F[ii];
