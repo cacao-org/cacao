@@ -5,7 +5,7 @@
  * REAL TIME COMPUTING ROUTINES
  *  
  * @author  O. Guyon
- * @date    24 nov 2017
+ * @date    2018-01-04
  *
  * 
  * @bug No known bugs.
@@ -486,8 +486,32 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     if(AOconf[loop].GPUall==0)
     {
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
+
+# ifdef _OPENMP
+            #pragma omp parallel for
+# endif
         for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
             data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
+
+		
+		
+		if(aoloopcontrol_var.aoconfID_WFSlinlimit != -1)
+		{
+			float xval, xval2, xval4;
+			
+# ifdef _OPENMP
+            #pragma omp parallel for private(xval,xval2,xval4)
+# endif
+			for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+				{
+					xval = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] / data.image[aoloopcontrol_var.aoconfID_WFSlinlimit].array.F[ii];
+					xval2 = xval*xval;
+					xval4 = xval2*xval2;
+					xval = xval/(1.0+xval4);
+					data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = xval * data.image[aoloopcontrol_var.aoconfID_WFSlinlimit].array.F[ii];
+				}
+		}
+		
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2, -1);
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt0 ++;
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt1 = LOOPiter;

@@ -193,17 +193,31 @@ echo " ON" > ./conf/param_RMmodal.txt
 echo "0.02" >./conf/param_RMMamplum.txt   
 echo "3" >./conf/param_RMMcpa.txt      
 
+# ============ Control Matrix ==============
 
 echo "0.003" > ./conf/param_SVDlimall.txt
 
 
-echo "2" > ./conf/param_GPU.txt
-echo "1" > ./conf/param_GPUset0_dev0.txt
-echo "2" > ./conf/param_GPUset0_dev1.txt
+# ============ Control loop =================
 
+echo "2" > ./conf/param_GPU0.txt
+echo "6" > ./conf/param_GPUset0dev0.txt
+echo "7" > ./conf/param_GPUset0dev1.txt
+echo "0" > ./conf/param_GPU1.txt
 echo "3" > ./conf/param_GPUmodesextrwfs.txt
-echo "4" > ./conf/param_GPUzpoffsetM.txt
-echo "5" > ./conf/param_GPUzpoffsetZ.txt
+echo "9" > ./conf/param_GPUdmfw.txt
+echo "1" > ./conf/param_GPUzpoffsetZ.txt
 
-# echo "1" > ./conf/param_CMmode.txt
-echo "1" > ./conf/param_GPUall.txt
+echo "0" > ./conf/param_CMMODE.txt
+echo "0" > ./conf/param_GPUall.txt
+
+
+echo "0.980" > ./conf/param_loopmultcoeff.txt
+echo "1" > ./conf/param_DMfilteredWriteON.txt
+
+echo "4" > ./conf/param_AUTOTUNELIMITperc.txt
+echo "1.8" > ./conf/param_AUTOTUNELIMITmcoeff.txt
+echo "0.0005" > ./conf/param_AUTOTUNELIMITdelta.txt
+
+
+

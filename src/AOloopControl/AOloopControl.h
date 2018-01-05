@@ -294,8 +294,6 @@ typedef struct
 
 typedef struct
 {	
-//________________________________________________________________________________________added by nour
-
 /* =============================================================================================== */
 /*                    aoconfID are global variables for convenience                                */
 /*  aoconfID can be used in other modules as well (with extern)                                    */
@@ -336,6 +334,9 @@ long aoconfID_imWFS0;
 long aoconfID_imWFS0tot;
 long aoconfID_imWFS1;
 long aoconfID_imWFS2;
+
+long aoconfID_WFSlinlimit; // WFS linearity limit
+
 long aoconfID_wfsref0;
 long aoconfID_wfsref;
 long long aoconfcnt0_wfsref_current;
