@@ -200,6 +200,20 @@ echo "0.003" > ./conf/param_SVDlimall.txt
 
 # ============ Control loop =================
 
+# GPU use
+
+# 0 [1080 Ti]: general purpose computations (non real-time)
+# 1 [ 980 Ti]: zero point offset
+# 2 [ 980 Ti]: Predictice control block #1
+# 3 [ 980 Ti]: Predictive control block #2
+# 4 [ 980 Ti]: Predictive control block #3
+# 5 [ 980 Ti]: Predictice control block #4
+# 6 [1080 Ti]: WFS -> mode extraction 
+# 7 [1080   ]: WFS -> mode extraction
+# 8 [ 980 Ti]: 
+# 9 [ K40   ]: modes -> DM actuators
+
+
 echo "2" > ./conf/param_GPU0.txt
 echo "6" > ./conf/param_GPUset0dev0.txt
 echo "7" > ./conf/param_GPUset0dev1.txt
@@ -210,7 +224,7 @@ echo "1" > ./conf/param_GPUzpoffsetZ.txt
 
 echo "0" > ./conf/param_CMMODE.txt
 echo "0" > ./conf/param_GPUall.txt
-
+echo "1" > ./conf/param_DMfilteredWriteON.txt
 
 echo "0.980" > ./conf/param_loopmultcoeff.txt
 echo "1" > ./conf/param_DMfilteredWriteON.txt
@@ -219,5 +233,37 @@ echo "4" > ./conf/param_AUTOTUNELIMITperc.txt
 echo "1.8" > ./conf/param_AUTOTUNELIMITmcoeff.txt
 echo "0.0005" > ./conf/param_AUTOTUNELIMITdelta.txt
 
+# ============ Predictive Control =================
 
+echo "0" > param_PFb0start.txt
+echo "2" > param_PFb0end.txt
+echo "20" > ./conf/param_PFb0order.txt
+echo "0.003" > ./conf/param_PFb0SVDe.txt
+echo "0.5" > ./conf/param_PFb0dgain.txt
+echo "1" > ./conf/param_PFb0nbGPU.txt
+echo "2" > ./conf/param_PFb0GPU0device.txt
+
+echo "2" > param_PFb1start.txt
+echo "100" > param_PFb1end.txt
+echo "10" > ./conf/param_PFb1order.txt
+echo "0.003" > ./conf/param_PFb1SVDe.txt
+echo "0.3" > ./conf/param_PFb1dgain.txt
+echo "1" > ./conf/param_PFb1nbGPU.txt
+echo "3" > ./conf/param_PFb1GPU0device.txt
+
+echo "100" > param_PFb2start.txt
+echo "200" > param_PFb2end.txt
+echo "10" > ./conf/param_PFb2order.txt
+echo "0.003" > ./conf/param_PFb2SVDe.txt
+echo "0.3" > ./conf/param_PFb2dgain.txt
+echo "1" > ./conf/param_PFb2nbGPU.txt
+echo "4" > ./conf/param_PFb2GPU0device.txt
+
+echo "200" > param_PFb3start.txt
+echo "300" > param_PFb3end.txt
+echo "10" > ./conf/param_PFb3order.txt
+echo "0.003" > ./conf/param_PFb3SVDe.txt
+echo "0.3" > ./conf/param_PFb3dgain.txt
+echo "1" > ./conf/param_PFb3nbGPU.txt
+echo "5" > ./conf/param_PFb3GPU0device.txt
 
