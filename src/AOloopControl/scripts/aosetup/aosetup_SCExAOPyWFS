@@ -272,6 +272,7 @@ echo "5" > ./conf/param_PFb3GPU0device.txt
 # ================ user-provided scripts ==================
 
 echo "#!/bin/bash" > setupAOloopON
+
 # Turn on pupil alignment
 echo ""
 echo "LOOPNAME=\"SCExAOPyWFS\"" >> setupAOloopON
@@ -282,7 +283,16 @@ echo "tmux kill-session -t alignPcam" >> setupAOloopON
 echo "tmux new-session -d -s alignPcam" >> setupAOloopON
 echo "tmux send-keys -t alignPcam \"./aocscripts/alignPcam_${LOOPNAME}\" C-m" >> setupAOloopON
 echo "echo \" ON\" > ./status/status_alignPcam.txt" >> setupAOloopON
+
+# Turn off TT align
+echo "touch status/stop_PyAlignTT.txt" >> setupAOloopON
+echo "tmux kill-session -t alignPyrTT" >> setupAOloopON
+echo "echo \"OFF\" > ./status/status_alignTT.txt" >> setupAOloopON
+
 chmod +x setupAOloopON
+
+
+
 
 
 
