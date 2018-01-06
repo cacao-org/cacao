@@ -1620,7 +1620,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
                 {
 					float mixratio;
 					
-					mixratio = AOconf[loop].ARPFgain*data.image[IDmodeARPFgain].array.F[m] * data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m];
+					mixratio = AOconf[loop].ARPFgain * data.image[IDmodeARPFgain].array.F[m] * data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m];
 				    data.image[IDmodevalDMnow].array.F[m] = -mixratio*data.image[aoloopcontrol_var.aoconfID_modevalPF].array.F[m]  + (1.0-mixratio)*data.image[IDmodevalDMcorr].array.F[m];
                 }
              
@@ -1648,16 +1648,18 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 					float minVal = AOconf[loop].ARPFgainAutoMin;
 					float maxVal = AOconf[loop].ARPFgainAutoMax;
 					
-					
-					if (data.image[IDmodevalPFres].array.F[m]*data.image[IDmodevalPFres].array.F[m] < data.image[IDmodeval].array.F[m]*data.image[IDmodeval].array.F[m])
-						data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] *= 1.001;
-					else
-						data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] *= 0.999;
+					if(data.image[IDmodeARPFgain].array.F[m]>0.5) // if mode is predictive-controlled
+					{
+						if (data.image[IDmodevalPFres].array.F[m]*data.image[IDmodevalPFres].array.F[m] < data.image[IDmodeval].array.F[m]*data.image[IDmodeval].array.F[m])
+							data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] += 0.001;
+						else
+							data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] -= 0.001;
 						
-					if (data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] > maxVal)
-						data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = maxVal;
-					if (data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] < minVal)
-						data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = minVal;
+						if (data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] > maxVal)
+							data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = maxVal;
+						if (data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] < minVal)
+							data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = minVal;
+					}
 				}
 				data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].md[0].cnt1 = LOOPiter; //modevalPFindex;
 				data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].md[0].cnt0++;

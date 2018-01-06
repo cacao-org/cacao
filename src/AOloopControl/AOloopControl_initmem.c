@@ -137,8 +137,8 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         AOconf[loop].AUTOTUNE_LIMITS_ON = 0;
         AOconf[loop].AUTOTUNE_GAINS_ON = 0;
         AOconf[loop].ARPFon = 0;
-        AOconf[loop].ARPFgainAutoMin = 0.99;
-        AOconf[loop].ARPFgainAutoMax = 1.01;
+        AOconf[loop].ARPFgainAutoMin = 0.00;
+        AOconf[loop].ARPFgainAutoMax = 1.00;
         AOconf[loop].LOOPiteration = 0;
         AOconf[loop].cnt = 0;
         AOconf[loop].cntmax = 0;
