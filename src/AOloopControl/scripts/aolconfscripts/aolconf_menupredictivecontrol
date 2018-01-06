@@ -1846,6 +1846,8 @@ menupred_default="PFb0wOFF"
 	PFb0wOFF)
 tmuxname="aol${LOOPNUMBER}PFb0watchin"
 tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
 PFb0wON="OFF"
 file="./status/stat_PFb0wON.txt"
 echo "$PFb0wON" > $file
@@ -1878,6 +1880,8 @@ menupred_default="PFb1wOFF"
 	PFb1wOFF)
 tmuxname="aol${LOOPNUMBER}PFb1watchin"
 tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
 PFb1wON="OFF"
 file="./status/stat_PFb1wON.txt"
 echo "$PFb1wON" > $file
@@ -1909,6 +1913,8 @@ menupred_default="PFb2wOFF"
 	PFb2wOFF)
 tmuxname="aol${LOOPNUMBER}PFb2watchin"
 tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
 PFb2wON="OFF"
 file="./status/stat_PFb2wON.txt"
 echo "$PFb2wON" > $file
@@ -1938,6 +1944,8 @@ menupred_default="PFb3wOFF"
 	PFb3wOFF)
 tmuxname="aol${LOOPNUMBER}PFb3watchin"
 tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
 PFb3wON="OFF"
 file="./status/stat_PFb3wON.txt"
 echo "$PFb3wON" > $file
@@ -1977,6 +1985,8 @@ menupred_default="PFb0cOFF"
 	PFb0cOFF)
 tmuxname="aol${LOOPNUMBER}PFb0comp"
 tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
 PFb0cON="OFF"
 file="./status/stat_PFb0cON.txt"
 echo "$PFb0cON" > $file
@@ -2026,6 +2036,8 @@ menupred_default="PFb1cOFF"
 	PFb1cOFF)
 tmuxname="aol${LOOPNUMBER}PFb1comp"
 tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
 PFb1cON="OFF"
 file="./status/stat_PFb1cON.txt"
 echo "$PFb1cON" > $file
@@ -2076,6 +2088,8 @@ menupred_default="PFb2cOFF"
 	PFb2cOFF)
 tmuxname="aol${LOOPNUMBER}PFb2comp"
 tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
 PFb2cON="OFF"
 file="./status/stat_PFb2cON.txt"
 echo "$PFb2cON" > $file
@@ -2126,6 +2140,8 @@ menupred_default="PFb3cOFF"
 	PFb3cOFF)
 tmuxname="aol${LOOPNUMBER}PFb3comp"
 tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
 PFb3cON="OFF"
 file="./status/stat_PFb3cON.txt"
 echo "$PFb3cON" > $file
@@ -2194,6 +2210,7 @@ EOF
 tmuxname="aol${LOOPNUMBER}PFb0apply"
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
 PFb0aON="OFF"
 file="./status/stat_PFb0aON.txt"
 echo "$PFb0aON" > $file
@@ -2236,6 +2253,7 @@ EOF
 tmuxname="aol${LOOPNUMBER}PFb1apply"
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
 PFb1aON="OFF"
 file="./status/stat_PFb1aON.txt"
 echo "$PFb1aON" > $file
@@ -2279,6 +2297,7 @@ EOF
 tmuxname="aol${LOOPNUMBER}PFb2apply"
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
 PFb2aON="OFF"
 file="./status/stat_PFb2aON.txt"
 echo "$PFb2aON" > $file
@@ -2322,6 +2341,7 @@ EOF
 tmuxname="aol${LOOPNUMBER}PFb3apply"
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
 PFb3aON="OFF"
 file="./status/stat_PFb3aON.txt"
 echo "$PFb3aON" > $file
