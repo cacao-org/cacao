@@ -253,6 +253,10 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("| %2ld | %9.3f  %6.2f\% |", k, AOconf[loop].blockave_limFrac[k],  100.0*AOconf[loop].blockave_limFrac[k]/AOconf[loop].NBmodes_block[k]);
         attroff(A_BOLD | COLOR_PAIR(2));
         
+        
+        //
+		// PREDICTIVE CONTROL
+		//
         if(AOconf[loop].ARPFon==1){
 			printw("%8.2f |", 1000.0*AOconf[loop].blockave_PFresrms[k]);
 			
