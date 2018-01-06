@@ -209,12 +209,12 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
     printw("=========== %6ld modes, %3ld blocks ================|------------ Telemetry [nm] ----------------|    |     LIMITS         |", AOconf[loop].NBDMmodes, AOconf[loop].DMmodesNBblock);
 	if(AOconf[loop].ARPFon == 1)
-		printw("  PFres  |  Ratio  |");
+		printw("---- Predictive Control ----- |");
 	printw("\n");
 
     printw("BLOCK  #modes [ min - max ]    gain   limit   multf  |       dmC     Input  ->       WFS   Ratio  |    | hits/step    perc  |");
 	if(AOconf[loop].ARPFon==1)
-		printw("         |         |");
+		printw("  PFres  |  Ratio  | autogain |");
 	printw("\n");
 	printw("\n");
 
