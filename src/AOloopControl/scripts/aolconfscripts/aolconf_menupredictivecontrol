@@ -911,7 +911,7 @@ PFb2cON="OFF"
 fi
 
 if [ "$PFb2cON" = "OFF" ]; then
-menuitems+=( "PFb2cON" "[$PFb2cON] switch on compute filter for PF block 0  -> aol${LOOPNUMBER}_outPFb2" )
+menuitems+=( "PFb2cON" "[$PFb2cON] switch on compute filter for PF block 2  -> aol${LOOPNUMBER}_outPFb2" )
 else
 menuitems+=( "PFb2cOFF" "[\Z1\Zr${PFb2cON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_outPFb2\Zn Select to switch off compute filter input for PF block 0" )
 fi
@@ -938,7 +938,7 @@ PFb3cON="OFF"
 fi
 
 if [ "$PFb3cON" = "OFF" ]; then
-menuitems+=( "PFb3cON" "[$PFb3cON] switch on compute filter for PF block 1  -> aol${LOOPNUMBER}_outPFb3" )
+menuitems+=( "PFb3cON" "[$PFb3cON] switch on compute filter for PF block 3  -> aol${LOOPNUMBER}_outPFb3" )
 else
 menuitems+=( "PFb3cOFF" "[\Z1\Zr${PFb3cON}\Zn] \Z1\Zr Currently writing aol${LOOPNUMBER}_outPFb3\Zn Select to switch off compute filter for PF block 1" )
 fi
