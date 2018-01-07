@@ -154,7 +154,7 @@ ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig
 ./aocscripts/cpuconfig
 
 
-exit
+
 
 # =================== set DM ===================
 mkdir -p conf
@@ -199,7 +199,7 @@ echo "3" >./conf/param_RMMcpa.txt
 # ============ Control Matrix ==============
 
 echo "0.003" > ./conf/param_SVDlimall.txt
-
+exit
 
 # ============ Control loop =================
 
