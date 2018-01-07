@@ -154,7 +154,7 @@ ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig
 ./aocscripts/cpuconfig
 
 
-exit
+
 
 # =================== set DM ===================
 mkdir -p conf
@@ -170,6 +170,8 @@ echo "0.5469" > ./conf/instconf_dmDCum.txt
 ln -s /home/scexao/bin/dmrestart dm00restart
 ./aolfuncs/aolfunc_initDM -fu
 ./aolfuncs/aolfunc_setDMnolink 
+
+
 
 # =================== set WFS image ================
 echo "ocam2d" > ./conf/streamlink_wfsim.name.txt

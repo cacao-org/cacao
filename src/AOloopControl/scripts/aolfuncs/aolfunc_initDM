@@ -415,7 +415,10 @@ fi
 
 # by default, set # of blocks to 1
 file="./conf/param_NBmodeblocks.txt"
+if [ ! -f $file ]; then
 echo "1" > $file
+fi
+
 NBmodeblocks=$( head -1 ./conf/param_NBmodeblocks.txt )
 
 echo " ON" > ./status/stat_DMcombON.txt
