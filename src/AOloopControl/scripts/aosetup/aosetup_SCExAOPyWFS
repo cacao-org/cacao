@@ -154,7 +154,7 @@ ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig
 ./aocscripts/cpuconfig
 
 
-
+exit
 
 # =================== set DM ===================
 mkdir -p conf
@@ -175,7 +175,6 @@ ln -s /home/scexao/bin/dmrestart dm00restart
 echo "ocam2d" > ./conf/streamlink_wfsim.name.txt
 ./aolfuncs/aolfunc_StreamLink wfsim
 
-exit
 
 # ============ Response Matrix settings ==================
 echo "0.02" >./conf/param_RMamplum.txt    
