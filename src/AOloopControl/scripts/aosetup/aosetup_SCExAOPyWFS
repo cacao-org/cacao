@@ -14,6 +14,7 @@ echo "pname = $pname"
 
 
 
+
 LOOPNAME="SCExAOPyWFS"
 LOOPNUMBER="0"
 
@@ -153,6 +154,8 @@ ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig
 ./aocscripts/cpuconfig
 
 
+exit
+
 # =================== set DM ===================
 mkdir -p conf
 DMindex="00"
@@ -227,11 +230,17 @@ echo "0" > ./conf/param_GPUall.txt
 echo "1" > ./conf/param_DMfilteredWriteON.txt
 
 echo "0.980" > ./conf/param_loopmultcoeff.txt
-echo "1" > ./conf/param_DMfilteredWriteON.txt
 
 echo "4" > ./conf/param_AUTOTUNELIMITperc.txt
 echo "1.8" > ./conf/param_AUTOTUNELIMITmcoeff.txt
 echo "0.0005" > ./conf/param_AUTOTUNELIMITdelta.txt
+
+
+
+# ============= Data logging =====================
+
+echo "100000" > ./conf/param_LogCubeSize.txt
+
 
 # ============ Predictive Control =================
 
@@ -269,39 +278,45 @@ echo "5" > ./conf/param_PFb3GPU0device.txt
 
 
 
+
+
+
 # ================ user-provided scripts ==================
 
+rm setupAOloopON
 echo "#!/bin/bash" > setupAOloopON
-
-# Turn on pupil alignment
-echo ""
+echo "" >> setupAOloopON
+echo "# Turn on pupil alignment" >> setupAOloopON
+echo "" >> setupAOloopON
 echo "LOOPNAME=\"SCExAOPyWFS\"" >> setupAOloopON
-echo ""
-echo "rm status/stop_PyAlignCam.txt" >> setupAOloopON
-echo "rm status/pause_PyAlignCam.txt" >> setupAOloopON
+echo "" >> setupAOloopON
+echo "rm status/stop_PyAlignCam.txt &> /dev/null" >> setupAOloopON
+echo "rm status/pause_PyAlignCam.txt &> /dev/null" >> setupAOloopON
 echo "tmux kill-session -t alignPcam" >> setupAOloopON
 echo "tmux new-session -d -s alignPcam" >> setupAOloopON
-echo "tmux send-keys -t alignPcam \"./aocscripts/alignPcam_${LOOPNAME}\" C-m" >> setupAOloopON
+echo "tmux send-keys -t alignPcam \"./aocscripts/alignPcam_\${LOOPNAME}\" C-m" >> setupAOloopON
 echo "echo \" ON\" > ./status/status_alignPcam.txt" >> setupAOloopON
-
-# Turn off TT align
+echo "" >> setupAOloopON
+echo "# Turn off TT align" >> setupAOloopON
 echo "touch status/stop_PyAlignTT.txt" >> setupAOloopON
 echo "tmux kill-session -t alignPyrTT" >> setupAOloopON
 echo "echo \"OFF\" > ./status/status_alignTT.txt" >> setupAOloopON
-
 chmod +x setupAOloopON
 
 
 
 
-
-
+rm setupAOloopOFF
 echo "#!/bin/bash" > setupAOloopOFF
 # Turn off pupil alignment
 echo "touch status/stop_PyAlignCam.txt"
 echo "echo \"OFF\" > ./status/status_alignPcam.txt" >> setupAOloopOFF
 echo "tmux kill-session -t alignPcam" >> setupAOloopOFF
 chmod +x setupAOloopOFF
+
+
+
+
 
 
 
