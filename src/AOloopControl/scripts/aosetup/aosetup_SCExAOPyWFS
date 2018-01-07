@@ -241,7 +241,9 @@ echo "0.0005" > ./conf/param_AUTOTUNELIMITdelta.txt
 
 # ============= Data logging =====================
 
+
 echo "100000" > ./conf/param_LogCubeSize.txt
+echo "/media/data" > ./conf/param_savedir.txt
 
 
 # ============ Predictive Control =================
