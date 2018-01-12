@@ -13,10 +13,14 @@
 
 // cacao includes for inits
 #include <AOloopControl/AOloopControl.h>
+#include <AOloopControl_DM/AOloopControl_DM.h>
+#include <AOloopControl_acquireCalib/AOloopControl_acquireCalib.h>
+#include <AOloopControl_compTools/AOloopControl_compTools.h>
 #include <AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h>
 #include <linARfilterPred/linARfilterPred.h>
 #include <AOloopControl_computeCalib/AOloopControl_computeCalib.h>
 #include <FPAOloopControl/FPAOloopControl.h>
+
 
 
 #define STYLE_BOLD    "\033[1m"
@@ -34,19 +38,22 @@ int main(int argc, char *argv[])
 
 
 	// initialize milk modules for which no function calls is included by default
-	init_image_basic();
-	init_image_format();
-	init_psf();
-	init_img_reduce();
-	init_linARfilterPred();
-	init_ZernikePolyn();
+	libinit_image_basic();
+	libinit_image_format();
+	libinit_psf();
+	libinit_img_reduce();
+	libinit_linARfilterPred();
+	libinit_ZernikePolyn();
 	
 	// initialize modules specific to cacao
-	init_AOloopControl();
-	init_AOloopControl_PredictiveControl();
-	init_linARfilterPred();
-	init_AOloopControl_computeCalib();
-	init_FPAOloopControl();
+	libinit_AOloopControl();
+	libinit_AOloopControl_PredictiveControl();
+	libinit_linARfilterPred();
+	libinit_AOloopControl_computeCalib();
+	libinit_FPAOloopControl();
+	libinit_AOloopControl_DM();
+	libinit_AOloopControl_compTools();
+	libinit_AOloopControl_acquireCalib();
 	
 	runCLI(argc, argv, AppName);
 
