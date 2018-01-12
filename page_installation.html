@@ -147,7 +147,7 @@ $(document).ready(function(){initNavTree('page_installation.html','');});
 <li>shared memory image viewer (<code>shmimview</code> or similar)</li>
 <li>qt-based <code>shmimviewqt</code></li>
 </ul>
-<h1>2 Compilation from git clone (recommended for developers)</h1>
+<h1>2 Compilation from git clone (recommended)</h1>
 <h2>2.1 Additional libraries</h2>
 <h3>2.1.1 CentOS</h3>
 <p>Install Development tools, use the command bellow. This will search the yum repositories, and install the tools from the closest repo. </p><pre class="fragment">    sudo yum groupinstall "Development tools"
@@ -158,17 +158,15 @@ $(document).ready(function(){initNavTree('page_installation.html','');});
     ./configure
     make
     make install
-</pre><h1>3 Compilation from tarball</h1>
-<p>Unpack </p><pre class="fragment">    gunzip &lt;package&gt;.tar.gz
-    tar -xvf &lt;package&gt;.tar
-</pre><p>The source code follows the standard GNU build process: </p><pre class="fragment">    ./configure
-    make
-    sudo make install</pre> </div></div><!-- contents -->
+</pre><h1>3 Troubleshooting and FAQs</h1>
+<h2>Configure error: "No package 'magma' found"</h2>
+<p>configure script uses pkg-config to find the package. You need to add in .bashrc : </p><pre class="fragment">export PKG_CONFIG_PATH=/usr/local/magma/lib/pkgconfig</pre> </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Dec 29 2017 10:02:01 for cacao by
+    <li class="navelem"><a class="el" href="md_top.html">top</a></li><li class="navelem"><a class="el" href="page_cacao_users_guide.html">cacao User&#39;s Guide</a></li>
+    <li class="footer">Generated on Thu Jan 11 2018 19:31:54 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

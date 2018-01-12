@@ -116,59 +116,61 @@ $(document).ready(function(){initNavTree('statistic_8h_source.html','');});
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#define _STATISTIC_H</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;int_fast8_t <a class="code" href="statistic_8h.html#a9c83a0d35322da145d178da2f9ec4889">init_statistic</a>();</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keywordtype">void</span> <a class="code" href="statistic_8h.html#a2ecf834111517c14e3175bd9f552edd9">__attribute__</a> ((constructor)) libinit_statistic();</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;int_fast8_t <a class="code" href="statistic_8h.html#a9c83a0d35322da145d178da2f9ec4889">init_statistic</a>();</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a0048e34c54d2da14cb96301fc8df1c0e">ran1</a>();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a0048e34c54d2da14cb96301fc8df1c0e">ran1</a>();</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a61ccd72f7e2d2f65912807eda4c8643c">gauss</a>();</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a61ccd72f7e2d2f65912807eda4c8643c">gauss</a>();</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a37fe6b362a86eaa232c07dd86b3c21cf">gauss_trc</a>();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a37fe6b362a86eaa232c07dd86b3c21cf">gauss_trc</a>();</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">long</span> <a class="code" href="statistic_8h.html#a17397c70ca495597e8232ffa61c9e605">poisson</a>(<span class="keywordtype">double</span> mu);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">long</span> <a class="code" href="statistic_8h.html#a17397c70ca495597e8232ffa61c9e605">poisson</a>(<span class="keywordtype">double</span> mu);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a73469985ca65317217867ea002b4f189">gammaln</a>(<span class="keywordtype">double</span> xx);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a73469985ca65317217867ea002b4f189">gammaln</a>(<span class="keywordtype">double</span> xx);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a617f9bb1c07595bb869077d862cf4c73">better_poisson</a>(<span class="keywordtype">double</span> mu);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#ab7ac1e1d30224f2ad6b02a2bbc575153">fast_poisson</a>(<span class="keywordtype">double</span> mu);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#a617f9bb1c07595bb869077d862cf4c73">better_poisson</a>(<span class="keywordtype">double</span> mu);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keywordtype">double</span> <a class="code" href="statistic_8h.html#ab7ac1e1d30224f2ad6b02a2bbc575153">fast_poisson</a>(<span class="keywordtype">double</span> mu);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keywordtype">long</span> <a class="code" href="statistic_8h.html#ad84dae9cad55950b3f92d17f748be1e8">put_poisson_noise</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *ID_in_name, <span class="keyword">const</span> <span class="keywordtype">char</span> *ID_out_name);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keywordtype">long</span> <a class="code" href="statistic_8h.html#ad84dae9cad55950b3f92d17f748be1e8">put_poisson_noise</a>(const <span class="keywordtype">char</span> *ID_in_name, const <span class="keywordtype">char</span> *ID_out_name);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keywordtype">long</span> <a class="code" href="statistic_8h.html#a3985b53584d8525bec06d55f152f6cf3">put_gauss_noise</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *ID_in_name, <span class="keyword">const</span> <span class="keywordtype">char</span> *ID_out_name, <span class="keywordtype">double</span> ampl);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">long</span> <a class="code" href="statistic_8h.html#a3985b53584d8525bec06d55f152f6cf3">put_gauss_noise</a>(const <span class="keywordtype">char</span> *ID_in_name, const <span class="keywordtype">char</span> *ID_out_name, <span class="keywordtype">double</span> ampl);</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="statistic_8h_html_a61ccd72f7e2d2f65912807eda4c8643c"><div class="ttname"><a href="statistic_8h.html#a61ccd72f7e2d2f65912807eda4c8643c">gauss</a></div><div class="ttdeci">double gauss()</div><div class="ttdoc">Normal distribution, mean=0, sigma=1. </div><div class="ttdef"><b>Definition:</b> statistic.c:159</div></div>
-<div class="ttc" id="statistic_8h_html_ad84dae9cad55950b3f92d17f748be1e8"><div class="ttname"><a href="statistic_8h.html#ad84dae9cad55950b3f92d17f748be1e8">put_poisson_noise</a></div><div class="ttdeci">long put_poisson_noise(const char *ID_in_name, const char *ID_out_name)</div><div class="ttdoc">Apply Poisson noise to image. </div><div class="ttdef"><b>Definition:</b> statistic.c:289</div></div>
-<div class="ttc" id="statistic_8h_html_a37fe6b362a86eaa232c07dd86b3c21cf"><div class="ttname"><a href="statistic_8h.html#a37fe6b362a86eaa232c07dd86b3c21cf">gauss_trc</a></div><div class="ttdeci">double gauss_trc()</div><div class="ttdoc">truncated (-1/+1) sigma = 1 mean = 0 gaussian probability </div><div class="ttdef"><b>Definition:</b> statistic.c:173</div></div>
-<div class="ttc" id="statistic_8h_html_a0048e34c54d2da14cb96301fc8df1c0e"><div class="ttname"><a href="statistic_8h.html#a0048e34c54d2da14cb96301fc8df1c0e">ran1</a></div><div class="ttdeci">double ran1()</div><div class="ttdoc">Uniform distribution from 0 to 1. </div><div class="ttdef"><b>Definition:</b> statistic.c:146</div></div>
-<div class="ttc" id="statistic_8h_html_a17397c70ca495597e8232ffa61c9e605"><div class="ttname"><a href="statistic_8h.html#a17397c70ca495597e8232ffa61c9e605">poisson</a></div><div class="ttdeci">long poisson(double mu)</div><div class="ttdoc">Poisson distribution. </div><div class="ttdef"><b>Definition:</b> statistic.c:188</div></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="statistic_8h_html_a61ccd72f7e2d2f65912807eda4c8643c"><div class="ttname"><a href="statistic_8h.html#a61ccd72f7e2d2f65912807eda4c8643c">gauss</a></div><div class="ttdeci">double gauss()</div><div class="ttdoc">Normal distribution, mean=0, sigma=1. </div><div class="ttdef"><b>Definition:</b> statistic.c:163</div></div>
+<div class="ttc" id="statistic_8h_html_ad84dae9cad55950b3f92d17f748be1e8"><div class="ttname"><a href="statistic_8h.html#ad84dae9cad55950b3f92d17f748be1e8">put_poisson_noise</a></div><div class="ttdeci">long put_poisson_noise(const char *ID_in_name, const char *ID_out_name)</div><div class="ttdoc">Apply Poisson noise to image. </div><div class="ttdef"><b>Definition:</b> statistic.c:293</div></div>
+<div class="ttc" id="statistic_8h_html_a37fe6b362a86eaa232c07dd86b3c21cf"><div class="ttname"><a href="statistic_8h.html#a37fe6b362a86eaa232c07dd86b3c21cf">gauss_trc</a></div><div class="ttdeci">double gauss_trc()</div><div class="ttdoc">truncated (-1/+1) sigma = 1 mean = 0 gaussian probability </div><div class="ttdef"><b>Definition:</b> statistic.c:177</div></div>
+<div class="ttc" id="statistic_8h_html_a0048e34c54d2da14cb96301fc8df1c0e"><div class="ttname"><a href="statistic_8h.html#a0048e34c54d2da14cb96301fc8df1c0e">ran1</a></div><div class="ttdeci">double ran1()</div><div class="ttdoc">Uniform distribution from 0 to 1. </div><div class="ttdef"><b>Definition:</b> statistic.c:150</div></div>
+<div class="ttc" id="statistic_8h_html_a17397c70ca495597e8232ffa61c9e605"><div class="ttname"><a href="statistic_8h.html#a17397c70ca495597e8232ffa61c9e605">poisson</a></div><div class="ttdeci">long poisson(double mu)</div><div class="ttdoc">Poisson distribution. </div><div class="ttdef"><b>Definition:</b> statistic.c:192</div></div>
+<div class="ttc" id="statistic_8h_html_a2ecf834111517c14e3175bd9f552edd9"><div class="ttname"><a href="statistic_8h.html#a2ecf834111517c14e3175bd9f552edd9">__attribute__</a></div><div class="ttdeci">void __attribute__((constructor)) libinit_statistic()</div><div class="ttdoc">Initialize module. </div><div class="ttdef"><b>Definition:</b> 00CORE.c:87</div></div>
 <div class="ttc" id="statistic_8h_html_a73469985ca65317217867ea002b4f189"><div class="ttname"><a href="statistic_8h.html#a73469985ca65317217867ea002b4f189">gammaln</a></div><div class="ttdeci">double gammaln(double xx)</div><div class="ttdoc">Gamma function. </div></div>
-<div class="ttc" id="statistic_8h_html_a617f9bb1c07595bb869077d862cf4c73"><div class="ttname"><a href="statistic_8h.html#a617f9bb1c07595bb869077d862cf4c73">better_poisson</a></div><div class="ttdeci">double better_poisson(double mu)</div><div class="ttdef"><b>Definition:</b> statistic.c:241</div></div>
-<div class="ttc" id="statistic_8h_html_ab7ac1e1d30224f2ad6b02a2bbc575153"><div class="ttname"><a href="statistic_8h.html#ab7ac1e1d30224f2ad6b02a2bbc575153">fast_poisson</a></div><div class="ttdeci">double fast_poisson(double mu)</div><div class="ttdef"><b>Definition:</b> statistic.c:224</div></div>
-<div class="ttc" id="statistic_8h_html_a3985b53584d8525bec06d55f152f6cf3"><div class="ttname"><a href="statistic_8h.html#a3985b53584d8525bec06d55f152f6cf3">put_gauss_noise</a></div><div class="ttdeci">long put_gauss_noise(const char *ID_in_name, const char *ID_out_name, double ampl)</div><div class="ttdoc">Apply Gaussian noise to image. </div><div class="ttdef"><b>Definition:</b> statistic.c:317</div></div>
-<div class="ttc" id="statistic_8h_html_a9c83a0d35322da145d178da2f9ec4889"><div class="ttname"><a href="statistic_8h.html#a9c83a0d35322da145d178da2f9ec4889">init_statistic</a></div><div class="ttdeci">int_fast8_t init_statistic()</div><div class="ttdef"><b>Definition:</b> statistic.c:106</div></div>
+<div class="ttc" id="statistic_8h_html_a617f9bb1c07595bb869077d862cf4c73"><div class="ttname"><a href="statistic_8h.html#a617f9bb1c07595bb869077d862cf4c73">better_poisson</a></div><div class="ttdeci">double better_poisson(double mu)</div><div class="ttdef"><b>Definition:</b> statistic.c:245</div></div>
+<div class="ttc" id="statistic_8h_html_ab7ac1e1d30224f2ad6b02a2bbc575153"><div class="ttname"><a href="statistic_8h.html#ab7ac1e1d30224f2ad6b02a2bbc575153">fast_poisson</a></div><div class="ttdeci">double fast_poisson(double mu)</div><div class="ttdef"><b>Definition:</b> statistic.c:228</div></div>
+<div class="ttc" id="statistic_8h_html_a3985b53584d8525bec06d55f152f6cf3"><div class="ttname"><a href="statistic_8h.html#a3985b53584d8525bec06d55f152f6cf3">put_gauss_noise</a></div><div class="ttdeci">long put_gauss_noise(const char *ID_in_name, const char *ID_out_name, double ampl)</div><div class="ttdoc">Apply Gaussian noise to image. </div><div class="ttdef"><b>Definition:</b> statistic.c:321</div></div>
+<div class="ttc" id="statistic_8h_html_a9c83a0d35322da145d178da2f9ec4889"><div class="ttname"><a href="statistic_8h.html#a9c83a0d35322da145d178da2f9ec4889">init_statistic</a></div><div class="ttdeci">int_fast8_t init_statistic()</div><div class="ttdef"><b>Definition:</b> statistic.c:110</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_545a73c80b83e1c7812a6808fc9654f7.html">statistic</a></li><li class="navelem"><a class="el" href="statistic_8h.html">statistic.h</a></li>
-    <li class="footer">Generated on Fri Dec 29 2017 10:02:01 for cacao by
+    <li class="footer">Generated on Thu Jan 11 2018 19:31:54 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

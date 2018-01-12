@@ -37,6 +37,7 @@ var info_8c =
     [ "test_structure_function", "info_8c.html#a1152c89cc87eaa3cd1738eb21ee0b7a9", null ],
     [ "cntlast", "info_8c.html#af317519ddbdd0c94d26509de6402ef18", null ],
     [ "data", "info_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_info", "info_8c.html#a9abfdec4a9b6e1bb035c1786abfde18d", null ],
     [ "tlast", "info_8c.html#a60ac265155d44da3a9d8e3ede2e03972", null ],
     [ "wcol", "info_8c.html#ae6916da9363f105e747ab3cb5af8a4e7", null ],
     [ "wrow", "info_8c.html#a8f438ed4f013a0ff7b10eec4cd8713a5", null ]

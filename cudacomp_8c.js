@@ -36,6 +36,7 @@ var cudacomp_8c =
     [ "IDtimerinit", "cudacomp_8c.html#af31e8ffad732dfca1b633603a6f79724", null ],
     [ "IDtiming", "cudacomp_8c.html#a3bb6a7b11caac0af48ccd1dc9a2085bb", null ],
     [ "INIT_MAGMA", "cudacomp_8c.html#ad80326b6b9db96e7c4cec646f7cb575e", null ],
+    [ "INITSTATUS_cudacomp", "cudacomp_8c.html#a36b5f6ffcce02da5b71a91d09b1c60ef", null ],
     [ "magma_aux_iwork", "cudacomp_8c.html#a3e7ace0a30ae318164b6cc8b6f23b46c", null ],
     [ "magma_d_A", "cudacomp_8c.html#ae6fafb303190e6cd978aab1470e62f75", null ],
     [ "magma_d_Ainv", "cudacomp_8c.html#a7cdba4f520bc0fbf807adf630c6a6231", null ],

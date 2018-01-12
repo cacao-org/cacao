@@ -18,5 +18,6 @@ var AOloopControl__computeCalib_8c =
     [ "aoconfID_imWFS2_active", "AOloopControl__computeCalib_8c.html#a0afbb1623e71964eafbdd2f699c44552", null ],
     [ "aoloopcontrol_var", "AOloopControl__computeCalib_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
     [ "data", "AOloopControl__computeCalib_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_AOloopControl_computeCalib", "AOloopControl__computeCalib_8c.html#a7bc2cff562406d22807bc097e4bc1857", null ],
     [ "LOOPNUMBER", "AOloopControl__computeCalib_8c.html#afc4d319c21df38d7e771591b6934a836", null ]
 ];

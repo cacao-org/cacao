@@ -50,5 +50,6 @@ var COREMOD__tools_8c =
     [ "write_int_file", "COREMOD__tools_8c.html#a575291550841af37f63fcefbaf121adf", null ],
     [ "data", "COREMOD__tools_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "errormessage", "COREMOD__tools_8c.html#a5d8f2e60f7f536436d04e2f6e5b4d207", null ],
-    [ "fpgnuplot", "COREMOD__tools_8c.html#a7a9031c756cc5a1da42cffc862eb783a", null ]
+    [ "fpgnuplot", "COREMOD__tools_8c.html#a7a9031c756cc5a1da42cffc862eb783a", null ],
+    [ "INITSTATUS_COREMOD_tools", "COREMOD__tools_8c.html#a8c42e77b6c85f41a9312af4681eef2c2", null ]
 ];

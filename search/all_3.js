@@ -90,5 +90,6 @@ var searchData=
   ['builddate',['BuildDate',['../CLIcore_8c.html#ac3e78a1257c6b5e478a52bf5b478014b',1,'BuildDate():&#160;CLIcore.c'],['../CLIcore_8h.html#ac3e78a1257c6b5e478a52bf5b478014b',1,'BuildDate():&#160;CLIcore.c']]],
   ['buildfile',['BuildFile',['../CLIcore_8c.html#a9ebc4d9af3d9a26f49cccce824a976eb',1,'BuildFile():&#160;CLIcore.c'],['../CLIcore_8h.html#a9ebc4d9af3d9a26f49cccce824a976eb',1,'BuildFile():&#160;CLIcore.c']]],
   ['buildtime',['BuildTime',['../CLIcore_8c.html#afeae30b051ddde8c1e7490fa91bc2fc6',1,'BuildTime():&#160;CLIcore.c'],['../CLIcore_8h.html#afeae30b051ddde8c1e7490fa91bc2fc6',1,'BuildTime():&#160;CLIcore.c']]],
-  ['busy',['busy',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a00c9df4a16dad4698649e7cc56d99541',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]]
+  ['busy',['busy',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a00c9df4a16dad4698649e7cc56d99541',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
+  ['building_20control_20matrix',['Building control matrix',['../page_cacao_building_control_matrix.html',1,'page_cacao_top_guide']]]
 ];

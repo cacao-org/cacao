@@ -1,7 +1,6 @@
 var searchData=
 [
   ['ran1',['ran1',['../statistic_8c.html#a0048e34c54d2da14cb96301fc8df1c0e',1,'ran1():&#160;statistic.c'],['../statistic_8h.html#a0048e34c54d2da14cb96301fc8df1c0e',1,'ran1():&#160;statistic.c']]],
-  ['re_5falloc',['re_alloc',['../CLIcore_8c.html#a7560676ed2f15d3b48a588afc6084615',1,'CLIcore.c']]],
   ['read_5f1d_5farray',['read_1D_array',['../COREMOD__tools_8c.html#a0159bf1e5a03600c065ee98cb423f26d',1,'read_1D_array(double *array, long nbpoints, const char *filename):&#160;COREMOD_tools.c'],['../COREMOD__tools_8h.html#a0159bf1e5a03600c065ee98cb423f26d',1,'read_1D_array(double *array, long nbpoints, const char *filename):&#160;COREMOD_tools.c']]],
   ['read_5fasciiimage',['read_ASCIIimage',['../image__format_8c.html#a58ff7d8ee2c4b94b9cace3e2068dcbbc',1,'image_format.c']]],
   ['read_5fasciiimage1',['read_ASCIIimage1',['../image__format_8c.html#ad934af5c75c9ef60e92ffea04bdb3ac3',1,'image_format.c']]],

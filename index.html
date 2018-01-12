@@ -112,19 +112,47 @@ $(document).ready(function(){initNavTree('index.html','');});
 <p>What is an <a href="https://en.wikipedia.org/wiki/Software_release_life_cycle">alpha release</a> ?</p>
 <p><a href="https://github.com/cacao-org/cacao">cacao on github</a></p>
 <hr/>
-<h2>User's Guide</h2>
+ <hr/>
+<h1>cacao User's Guide</h1>
+<p>Getting started :</p>
 <ul>
-<li><a class="el" href="page_installation.html">Installation</a></li>
-<li><a class="el" href="page_userinput.html">Command Line Interface</a><ul>
+<li><a class="el" href="page_installation.html">Installation</a> : Downloading and Installing cacao</li>
+<li><a class="el" href="page_news.html">News</a> : Major upgrades and new features</li>
+<li><a class="el" href="page_userinput.html">Command Line Interface</a> : Using cacao's command line interface (CLI)<ul>
 <li><a class="el" href="page_CLI_Overview.html">CLI Overview</a></li>
 <li><a class="el" href="page_readlinekeys.html">Readline Input Keys</a></li>
 <li><a class="el" href="page_command_line_interface.html">Command Line Interface Syntax</a></li>
 </ul>
 </li>
-<li><a class="el" href="page_news.html">News</a></li>
+</ul>
+<p>Configuring and running cacao :</p>
+<p>Step-by-step instructions:</p>
+<ul>
+<li><a class="el" href="page_cacao_stepbystep_example.html">STEP-BY-STEP EXAMPLE</a></li>
+</ul>
+<p>Users guide:</p>
+<ul>
+<li><a class="el" href="page_cacao_Initial_Setup.html">cacao Initial Setup</a></li>
+<li><a class="el" href="page_cacao_Software_Overview.html">cacao Software Overview</a></li>
+<li><a class="el" href="page_cacao_Hardware_Simulation.html">cacao Hardware Simulation</a></li>
+<li><a class="el" href="page_cacao_Control_Setup_Overview.html">cacao Control: Setup and Overview</a></li>
+<li><a class="el" href="page_cacao_setting_up_hardware_interfaces.html">Setting up hardware interfaces</a></li>
+<li><a class="el" href="page_cacao_calibration.html">Calibration</a></li>
+<li><a class="el" href="page_cacao_building_control_matrix.html">Building control matrix</a></li>
+<li><a class="el" href="page_cacao_running_loop_mode.html">Running the loop: setting mode (CPU/GPU)</a></li>
+<li><a class="el" href="page_cacao_aux_processes.html">Auxilliary processes</a></li>
+<li><a class="el" href="page_cacao_offsetting.html">Offsetting</a></li>
+<li><a class="el" href="page_cacao_predictive_control.html">Predictive control</a></li>
+</ul>
+<p>Appendices:</p>
+<ul>
+<li><a class="el" href="page_cacao_sharedmem_streams.html">APPENDIX A: SHARED MEMORY STREAMS</a></li>
+<li><a class="el" href="page_cacao_conf_directory.html">CONF DIRECTORY CONTENT</a></li>
+<li><a class="el" href="page_cacao_managing_processes.html">MANAGING MULTIPLE PROCESSES</a></li>
 </ul>
 <hr/>
-<h2>Programmer's Guide</h2>
+ <hr/>
+<h1>Programmer's_Guide</h1>
 <ul>
 <li><a class="el" href="page_WorkingWithGit.html">Working with git</a></li>
 <li><a class="el" href="page_coding_standards.html">Coding Standards</a><ul>
@@ -137,7 +165,8 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li><a class="el" href="page_LoadingModules.html">Loading Modules</a></li>
 </ul>
 <hr/>
-<h2>cacao modules</h2>
+<h2>Modules</h2>
+<p>cacao uses milk modules for its command line, memory management, image I/O and standard image computations.</p>
 <h3>milk modules</h3>
 <p>cacao builds on the milk package and framework. Command line interface, memory management and general purpose image processing functions are provided by the milk modules.</p>
 <table class="doxtable">
@@ -197,7 +226,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <tr>
 <td>AOloopControl_acquireCalib </td><td>Acquire AO calibration </td><td><a class="el" href="AOloopControl__acquireCalib_8h.html">AOloopControl_acquireCalib.h</a> </td></tr>
 <tr>
-<td><a class="el" href="page_AOloopControl_computeCalib.html">AOloopControl computeCalib</a> </td><td>Compute AO calibration </td><td><a class="el" href="AOloopControl__computeCalib_8h.html">AOloopControl_computeCalib.h</a> </td></tr>
+<td>page_AOloopControl_computeCalib </td><td>Compute AO calibration </td><td><a class="el" href="AOloopControl__computeCalib_8h.html">AOloopControl_computeCalib.h</a> </td></tr>
 <tr>
 <td>AOloopControl_perfTest </td><td>AO performance analysis </td><td><a class="el" href="AOloopControl__perfTest_8h.html">AOloopControl_perfTest.h</a> </td></tr>
 <tr>
@@ -209,12 +238,13 @@ $(document).ready(function(){initNavTree('index.html','');});
 <tr>
 <td>FPAOloopControl </td><td>Focal plane AO control </td><td><a class="el" href="FPAOloopControl_8h.html">FPAOloopControl.h</a> </td></tr>
 </table>
-</div></div><!-- contents -->
+<hr/>
+ </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Dec 29 2017 10:02:01 for cacao by
+    <li class="footer">Generated on Thu Jan 11 2018 19:31:54 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

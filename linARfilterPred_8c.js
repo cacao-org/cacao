@@ -21,5 +21,6 @@ var linARfilterPred_8c =
     [ "LINARFILTERPRED_SelectBlock", "linARfilterPred_8c.html#a59be8ab2a56ad41041af2a353427a1b4", null ],
     [ "LINARFILTERPRED_SelectBlock_cli", "linARfilterPred_8c.html#a8a6052aaa729aef63c99f274389dd2f8", null ],
     [ "NBwords", "linARfilterPred_8c.html#a757c5f80b839ea32731ba61082ffe185", null ],
-    [ "data", "linARfilterPred_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ]
+    [ "data", "linARfilterPred_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_linARfilterPred", "linARfilterPred_8c.html#a6fb4543431f6f680e91dd4279227e3a7", null ]
 ];

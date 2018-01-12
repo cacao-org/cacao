@@ -20,5 +20,6 @@ var image__filter_8c =
     [ "gauss_filter_cli", "image__filter_8c.html#a391ebc98e6c565175ebedb956120c9ac", null ],
     [ "init_image_filter", "image__filter_8c.html#a13ca00099d3f16386c1bd78337c12bc0", null ],
     [ "median_filter", "image__filter_8c.html#ab22b31f3ca8d174936a7dc6b1ac2e399", null ],
-    [ "data", "image__filter_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ]
+    [ "data", "image__filter_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_image_filter", "image__filter_8c.html#a44be09b45e2848df3a380ec8cc33db35", null ]
 ];

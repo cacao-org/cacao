@@ -11,5 +11,6 @@ var ImageStreamIO_8c =
     [ "ImageStreamIO_sempost_excl", "ImageStreamIO_8c.html#a9a613b61cdeb72e83385b0f1cfbb7a87", null ],
     [ "ImageStreamIO_sempost_loop", "ImageStreamIO_8c.html#af2f7c60e00c3c37f7bd281f39fcd19aa", null ],
     [ "ImageStreamIO_semwait", "ImageStreamIO_8c.html#af3dd8f11402f52b1bb3f3418958621de", null ],
-    [ "init_ImageStreamIO", "ImageStreamIO_8c.html#a6996ee2254bfcc9b0b31759259975202", null ]
+    [ "init_ImageStreamIO", "ImageStreamIO_8c.html#a6996ee2254bfcc9b0b31759259975202", null ],
+    [ "INITSTATUS_ImageStreamIO", "ImageStreamIO_8c.html#a501567377bdf34a056037cd7514b3632", null ]
 ];

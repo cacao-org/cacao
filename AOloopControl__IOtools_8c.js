@@ -22,6 +22,7 @@ var AOloopControl__IOtools_8c =
     [ "COMPUTE_DARK_SUBTRACT_NBTHREADS", "AOloopControl__IOtools_8c.html#ae11bc2d35bec63a0a0d850064022ff9f", null ],
     [ "data", "AOloopControl__IOtools_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "imtotalcnt", "AOloopControl__IOtools_8c.html#a41033a357e6354f03b158d4bae04c81b", null ],
+    [ "INITSTATUS_AOloopControl_IOtools", "AOloopControl__IOtools_8c.html#a0421d77159b672e1c5419eaecc6494bf", null ],
     [ "LOOPNUMBER", "AOloopControl__IOtools_8c.html#afc4d319c21df38d7e771591b6934a836", null ],
     [ "tdiff", "AOloopControl__IOtools_8c.html#a68e5522665259f4ae254e3bf493c4b18", null ],
     [ "tdiffv", "AOloopControl__IOtools_8c.html#ad53086470a2fb4c9e57b950bef50e2c0", null ],

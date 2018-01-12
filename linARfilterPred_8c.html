@@ -139,6 +139,7 @@ Functions</h2></td></tr>
 <tr class="memitem:aa5ef5067fdbd4d50d8384e28a0cba9db"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#aa5ef5067fdbd4d50d8384e28a0cba9db">LINARFILTERPRED_PF_RealTimeApply_cli</a> ()</td></tr>
 <tr class="separator:aa5ef5067fdbd4d50d8384e28a0cba9db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
+<tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affa31abb29f40d65eed5f3b38f286111"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#affa31abb29f40d65eed5f3b38f286111">init_linARfilterPred</a> ()</td></tr>
 <tr class="separator:affa31abb29f40d65eed5f3b38f286111"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,6 +171,8 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a9842752e03b4de9b4593f1a3b34364ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDATA.html">DATA</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a9842752e03b4de9b4593f1a3b34364ab">data</a></td></tr>
 <tr class="separator:a9842752e03b4de9b4593f1a3b34364ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fb4543431f6f680e91dd4279227e3a7"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a6fb4543431f6f680e91dd4279227e3a7">INITSTATUS_linARfilterPred</a> = 0</td></tr>
+<tr class="separator:a6fb4543431f6f680e91dd4279227e3a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>linear auto-regressive predictive filter </p>
@@ -191,6 +194,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initialize module. </p>
 
 </div>
 </div>
@@ -392,8 +397,7 @@ Variables</h2></td></tr>
 <p>if &lt;IFoutPF_name&gt;_PFparam image exist, read parameters from it: PFlag, SVDeps, RegLambda, LOOPgain create it in shared memory by default </p>
 <p>&lt; 1 if regularization</p>
 <p>&lt; use MAGMA library if available</p>
-<p>&lt; 1 if average value of each mode is removed</p>
-<p>measure time </p>
+<p>&lt; 1 if average value of each mode is removed </p>
 
 </div>
 </div>
@@ -802,13 +806,33 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a6fb4543431f6f680e91dd4279227e3a7"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int INITSTATUS_linARfilterPred = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b07b29f2a0f54c902d2948f61c128711.html">linARfilterPred</a></li><li class="navelem"><a class="el" href="linARfilterPred_8c.html">linARfilterPred.c</a></li>
-    <li class="footer">Generated on Fri Dec 29 2017 10:02:01 for cacao by
+    <li class="footer">Generated on Thu Jan 11 2018 19:31:54 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

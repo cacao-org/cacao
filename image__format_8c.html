@@ -147,6 +147,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a9b61d6f741382a96eebc6c9eeed7f744"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__format_8c.html#a9b61d6f741382a96eebc6c9eeed7f744">IMAGE_FORMAT_loadCR2toFITSRGB_cli</a> ()</td></tr>
 <tr class="separator:a9b61d6f741382a96eebc6c9eeed7f744"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__format_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
+<tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Module initialization</div></td></tr>
 <tr class="memitem:a04a60c344899c8e54c2caef2153351a5"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__format_8c.html#a04a60c344899c8e54c2caef2153351a5">init_image_format</a> ()</td></tr>
@@ -207,6 +208,8 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a9842752e03b4de9b4593f1a3b34364ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDATA.html">DATA</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__format_8c.html#a9842752e03b4de9b4593f1a3b34364ab">data</a></td></tr>
 <tr class="separator:a9842752e03b4de9b4593f1a3b34364ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af09493238fc6f38009359150cce6cb2b"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__format_8c.html#af09493238fc6f38009359150cce6cb2b">INITSTATUS_image_format</a> = 0</td></tr>
+<tr class="separator:af09493238fc6f38009359150cce6cb2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac442ae73a4d2edb8a0a196b1c5a4b133"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__format_8c.html#ac442ae73a4d2edb8a0a196b1c5a4b133">CR2toFITS_NORM</a> = 0</td></tr>
 <tr class="separator:ac442ae73a4d2edb8a0a196b1c5a4b133"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7628212b40e2db5559a6a46417b2c7ca"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__format_8c.html#a7628212b40e2db5559a6a46417b2c7ca">FLUXFACTOR</a> = 1.0</td></tr>
@@ -232,6 +235,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initialize module. </p>
 
 </div>
 </div>
@@ -1270,13 +1275,33 @@ each take on values between 0 and 255, inclusive.</p>
 
 </div>
 </div>
+<a class="anchor" id="af09493238fc6f38009359150cce6cb2b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int INITSTATUS_image_format = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0581ea1a1599a935566a2d800eb9900d.html">image_format</a></li><li class="navelem"><a class="el" href="image__format_8c.html">image_format.c</a></li>
-    <li class="footer">Generated on Fri Dec 29 2017 10:02:01 for cacao by
+    <li class="footer">Generated on Thu Jan 11 2018 19:31:54 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

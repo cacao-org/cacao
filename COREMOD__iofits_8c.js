@@ -27,5 +27,6 @@ var COREMOD__iofits_8c =
     [ "saveall_fits", "COREMOD__iofits_8c.html#a69df03c1e174c7934d1e03d1c8c81c90", null ],
     [ "data", "COREMOD__iofits_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "errormessage_iofits", "COREMOD__iofits_8c.html#a391171d7e7a82005b7d7c605641c0fdc", null ],
-    [ "FITSIO_status", "COREMOD__iofits_8c.html#a6c2cc8d105d4821fd2f03c00125c9e86", null ]
+    [ "FITSIO_status", "COREMOD__iofits_8c.html#a6c2cc8d105d4821fd2f03c00125c9e86", null ],
+    [ "INITSTATUS_COREMOD_iofits", "COREMOD__iofits_8c.html#a676cd28bee684731edbf99aecc0dbd5a", null ]
 ];

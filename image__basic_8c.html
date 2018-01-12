@@ -157,6 +157,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a64c22af299cdff84368434d9f243b11a"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__basic_8c.html#a64c22af299cdff84368434d9f243b11a">IMAGE_BASIC_streamrecord_cli</a> ()</td></tr>
 <tr class="separator:a64c22af299cdff84368434d9f243b11a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__basic_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
+<tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a369b2617616d0e846652eb9e0ebf91c8"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__basic_8c.html#a369b2617616d0e846652eb9e0ebf91c8">init_image_basic</a> ()</td></tr>
 <tr class="separator:a369b2617616d0e846652eb9e0ebf91c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -276,6 +277,8 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a9842752e03b4de9b4593f1a3b34364ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDATA.html">DATA</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__basic_8c.html#a9842752e03b4de9b4593f1a3b34364ab">data</a></td></tr>
 <tr class="separator:a9842752e03b4de9b4593f1a3b34364ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5417eea66e528f44b6387b63b286f798"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__basic_8c.html#a5417eea66e528f44b6387b63b286f798">INITSTATUS_image_basic</a> = 0</td></tr>
+<tr class="separator:a5417eea66e528f44b6387b63b286f798"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bb845778df5ade66dd9af426128a622"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__basic_8c.html#a8bb845778df5ade66dd9af426128a622">errmsg</a> [SBUFFERSIZE]</td></tr>
 <tr class="separator:a8bb845778df5ade66dd9af426128a622"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -299,6 +302,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initialize module. </p>
 
 </div>
 </div>
@@ -2398,13 +2403,33 @@ If semindex&lt;0, use counter instead of semaphore </dd></dl>
 
 </div>
 </div>
+<a class="anchor" id="a5417eea66e528f44b6387b63b286f798"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int INITSTATUS_image_basic = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b6897bfb48a1d12c881045d4349aa702.html">image_basic</a></li><li class="navelem"><a class="el" href="image__basic_8c.html">image_basic.c</a></li>
-    <li class="footer">Generated on Fri Dec 29 2017 10:02:01 for cacao by
+    <li class="footer">Generated on Thu Jan 11 2018 19:31:54 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

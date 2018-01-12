@@ -12,5 +12,6 @@ var AOloopControl__PredictiveControl_8c =
     [ "clock_gettime", "AOloopControl__PredictiveControl_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "AOconf", "AOloopControl__PredictiveControl_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "data", "AOloopControl__PredictiveControl_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_AOloopControl_PredictiveControl", "AOloopControl__PredictiveControl_8c.html#aab79f20f524028b6d4273621bcd1a639", null ],
     [ "LOOPNUMBER", "AOloopControl__PredictiveControl_8c.html#afc4d319c21df38d7e771591b6934a836", null ]
 ];

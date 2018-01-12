@@ -56,6 +56,7 @@ var AOloopControl_8c =
     [ "AOlooploadconf_init", "AOloopControl_8c.html#a3cab4b1892467d2abeab3bdad99b690c", null ],
     [ "data", "AOloopControl_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "flogcomment", "AOloopControl_8c.html#aaf62be8fade5b52943c9ee593a5414c7", null ],
+    [ "INITSTATUS_AOloopControl", "AOloopControl_8c.html#a8d7eebfd86e5cdcafff2b28b6da77ce6", null ],
     [ "LOOPNUMBER", "AOloopControl_8c.html#afc4d319c21df38d7e771591b6934a836", null ],
     [ "tdiff", "AOloopControl_8c.html#a68e5522665259f4ae254e3bf493c4b18", null ],
     [ "tdiffv", "AOloopControl_8c.html#ad53086470a2fb4c9e57b950bef50e2c0", null ],

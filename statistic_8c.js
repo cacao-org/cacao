@@ -13,5 +13,6 @@ var statistic_8c =
     [ "ran1", "statistic_8c.html#a0048e34c54d2da14cb96301fc8df1c0e", null ],
     [ "statistic_putgaussnoise_cli", "statistic_8c.html#a42f79098f976305090856a56430e7bcd", null ],
     [ "statistic_putphnoise_cli", "statistic_8c.html#a5536f4a98e2970428387fa813e11c448", null ],
-    [ "data", "statistic_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ]
+    [ "data", "statistic_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_statistic", "statistic_8c.html#af44a695d00122c0a0109c6e51be55c5d", null ]
 ];

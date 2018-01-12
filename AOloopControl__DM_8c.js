@@ -27,6 +27,7 @@ var AOloopControl__DM_8c =
     [ "data", "AOloopControl__DM_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "dmdispcomb_loaded", "AOloopControl__DM_8c.html#a4728552c8d2da32521f2b44a8895420f", null ],
     [ "dmturb_loaded", "AOloopControl__DM_8c.html#a7b2a11ec6d4b0abdc6f15be21e49b6cf", null ],
+    [ "INITSTATUS_AOloopControl_DM", "AOloopControl__DM_8c.html#a9b92f765f951e9509ae4650b7e1a35c2", null ],
     [ "NB_DMindex", "AOloopControl__DM_8c.html#a976c30efd013f84a164a7f557415ea5c", null ],
     [ "semwaitts", "AOloopControl__DM_8c.html#a70cdcb3b0cb701bcd287cded71391140", null ],
     [ "SMfd", "AOloopControl__DM_8c.html#ad3fefa8c187fe37b7835f882acb21dda", null ],

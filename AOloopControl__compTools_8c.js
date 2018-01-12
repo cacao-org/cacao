@@ -9,5 +9,6 @@ var AOloopControl__compTools_8c =
     [ "AOloopcontrol_meminit", "AOloopControl__compTools_8c.html#ac8a65ca6927b57d697b359281dd5ff24", null ],
     [ "AOlooploadconf_init", "AOloopControl__compTools_8c.html#a3cab4b1892467d2abeab3bdad99b690c", null ],
     [ "data", "AOloopControl__compTools_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_AOloopControl_compTools", "AOloopControl__compTools_8c.html#ab985484db8772c364c77d0d59edf4f17", null ],
     [ "LOOPNUMBER", "AOloopControl__compTools_8c.html#afc4d319c21df38d7e771591b6934a836", null ]
 ];

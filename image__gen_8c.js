@@ -46,5 +46,6 @@ var image__gen_8c =
     [ "make_subpixdisk_cli", "image__gen_8c.html#a949093b76286b014ea6b12c4c1503d61", null ],
     [ "make_subpixdisk_perturb", "image__gen_8c.html#a33bb882ddbf19be726ae84d44fd810fc", null ],
     [ "make_tile", "image__gen_8c.html#a29fd321bbc202481f64407d3a998f881", null ],
-    [ "data", "image__gen_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ]
+    [ "data", "image__gen_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_image_gen", "image__gen_8c.html#a1d6321c766f9d8668c68750621a13cd8", null ]
 ];

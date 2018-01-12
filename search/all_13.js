@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['setting_20up_20hardware_20interfaces',['Setting up hardware interfaces',['../page_cacao_setting_up_hardware_interfaces.html',1,'page_cacao_top_guide']]],
+  ['step_2dby_2dstep_20example',['STEP-BY-STEP EXAMPLE',['../page_cacao_stepbystep_example.html',1,'page_cacao_top_guide']]],
   ['s',['s',['../structVARIABLE.html#a63e49f4cf699d62212a55d257d0d87f7',1,'VARIABLE']]],
   ['save_5fdb_5ffits',['save_db_fits',['../COREMOD__iofits_8c.html#a4f04c05fcf644879e73916a75f251a9c',1,'save_db_fits(const char *ID_name, const char *file_name):&#160;COREMOD_iofits.c'],['../COREMOD__iofits_8h.html#a4f04c05fcf644879e73916a75f251a9c',1,'save_db_fits(const char *ID_name, const char *file_name):&#160;COREMOD_iofits.c']]],
   ['save_5fdb_5ffits_5fcli',['save_db_fits_cli',['../COREMOD__iofits_8c.html#acbbbd31c69fdb2671db5e77fc4867caa',1,'COREMOD_iofits.c']]],

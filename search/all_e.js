@@ -35,5 +35,5 @@ var searchData=
   ['numf',['numf',['../structCMDARGTOKEN.html#a8f29c19d721dbe26248fc92c01c0e497',1,'CMDARGTOKEN::numf()'],['../struct____attribute____.html#ae6fb3e2078d04c2469b3c11ac2b10dc0',1,'__attribute__::numf()']]],
   ['numl',['numl',['../structCMDARGTOKEN.html#a8ef8bd8dde032f117c7c316dee08a7c9',1,'CMDARGTOKEN::numl()'],['../struct____attribute____.html#a3a3f57d9027bea9da4468421911f72b4',1,'__attribute__::numl()']]],
   ['numl0',['numl0',['../structTHDATA.html#a709f677a62df7e59ecb8969b5ab1f478',1,'THDATA']]],
-  ['news',['News',['../page_news.html',1,'']]]
+  ['news',['News',['../page_news.html',1,'page_cacao_users_guide']]]
 ];

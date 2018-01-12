@@ -39,5 +39,6 @@ var fft_8c =
     [ "test_fftspeed", "fft_8c.html#ab3fe145c0484fc3b208e8959ac572e40", null ],
     [ "test_fftspeed_cli", "fft_8c.html#a1624de50f0834da8b1df80a7f5a371f7", null ],
     [ "data", "fft_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_fft", "fft_8c.html#a608311664cd92f0ad7b151d796be68ff", null ],
     [ "NB_FFTW_THREADS", "fft_8c.html#abee840ba74ec4a4c170f19dddfbdf2ca", null ]
 ];

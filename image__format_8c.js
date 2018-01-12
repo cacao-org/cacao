@@ -40,5 +40,6 @@ var image__format_8c =
     [ "write24BitBmpFile", "image__format_8c.html#ae534a8ca8b69fb755dce06c32a1f009a", null ],
     [ "CR2toFITS_NORM", "image__format_8c.html#ac442ae73a4d2edb8a0a196b1c5a4b133", null ],
     [ "data", "image__format_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
-    [ "FLUXFACTOR", "image__format_8c.html#a7628212b40e2db5559a6a46417b2c7ca", null ]
+    [ "FLUXFACTOR", "image__format_8c.html#a7628212b40e2db5559a6a46417b2c7ca", null ],
+    [ "INITSTATUS_image_format", "image__format_8c.html#af09493238fc6f38009359150cce6cb2b", null ]
 ];

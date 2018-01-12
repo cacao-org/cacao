@@ -3,6 +3,8 @@ var searchData=
   ['package',['package',['../structMODULE.html#a00f49a3577101cbe48b6c964dea35da2',1,'MODULE']]],
   ['pacos',['Pacos',['../COREMOD__arith_8c.html#abbc0c6a10142c07dc34d9fffdcd1b177',1,'COREMOD_arith.c']]],
   ['padd',['Padd',['../COREMOD__arith_8c.html#aa6349eff12f2596bf41a2621c56f27bc',1,'COREMOD_arith.c']]],
+  ['predictive_20control',['Predictive control',['../page_cacao_predictive_control.html',1,'page_cacao_top_guide']]],
+  ['programmer_27s_20guide',['Programmer&apos;s Guide',['../page_cacao_programmers_guide.html',1,'md_top']]],
   ['pages_2edox',['pages.dox',['../pages_8dox.html',1,'']]],
   ['parseerror',['parseerror',['../structDATA.html#a04c14ba8ea1844e3f68888dca0fe3519',1,'DATA']]],
   ['partial',['partial',['../structsavethreadmsg.html#a67b95feb0e172459de37d4e23fab693b',1,'savethreadmsg']]],
