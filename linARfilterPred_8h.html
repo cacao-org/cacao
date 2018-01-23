@@ -331,29 +331,109 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Build predictive filter. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">IDin_name</td><td>Input telemetry, can be a 2D or 3D image </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">PForder</td><td>Filter order: number of time steps in filter </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">SVDeps</td><td>Cutoff limit on singular values </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">RegLambda</td><td>Regularization parameter </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">IDoutPF_name</td><td>Output predictive filter name </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">outMode</td><td>Output mode. 0: do not write individual files, 1: write individual files (note: output filter cube is always written) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">LOOPmode</td><td>1 if running in infinite loop waiting for input telemetry </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">LOOPgain</td><td>if running in loop, mixing coefficient between previous and current filter</td></tr>
-  </table>
-  </dd>
-</dl>
 <p>Optional pixel masks select input and output variables: "inmask" and "outmask"</p>
 <p>if LOOPmode = 1, operate in a loop, and re-run filter computation everytime IDin_name changes</p>
 <dl class="section note"><dt>Note</dt><dd>if atmospheric wavefronts, data should be piston-free</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>output filter image index</dd></dl>
-<p>IDin_name is a 2D or 3D image</p>
+<h2>Purpose</h2>
+<p>Build predictive filter from real-time AO telemetry</p>
+<h2>Masking</h2>
 <p>Optional input and output pixel masks select active input &amp; output</p>
-<p>if &lt;IFoutPF_name&gt;_PFparam image exist, read parameters from it: PFlag, SVDeps, RegLambda, LOOPgain create it in shared memory by default </p>
-<p>&lt; 1 if regularization</p>
-<p>&lt; use MAGMA library if available</p>
-<p>&lt; 1 if average value of each mode is removed </p>
+<h2>Loop mode</h2>
+<p>If LOOPmode = 1, operate in a loop, and re-run filter computation everytime IDin_name changes</p>
+<h2>Input parameters: dynamic mode</h2>
+<p>if &lt;IFoutPF_name&gt;_PFparam image exist, read parameters from it: PFlag, SVDeps, RegLambda, LOOPgain create it in shared memory by default</p>
+<dl class="section return"><dt>Returns</dt><dd>output filter image indentifier </dd></dl>
+<hr/>
+ <h1>Code Description</h1>
+<h2>Reading Parameters from Image</h2>
+<p>If image named &lt;IDoutPF_name&gt;_PFparam exists, the predictive filter parameters are read from it instead of the function arguments. <br />
+This mode is particularly useful in LOOP mode if the user needs to change the parameters between LOOP iterations.<br />
+</p>
+<h2>Selecting input values</h2>
+<p>The goal of this function is to build a linear link between input and output variables. <br />
+Input variables values are provided by the input telemetry image which is first read to measure dimensions, and allocate memory.<br />
+Note that an optional variable selection step allows only a subset of the telemetry variables to be considered.</p>
+<h3>Read input telemetry image IDin_name to measure xsize, ysize and number of samples</h3>
+<p>If 2D image:</p><ul>
+<li>xysize &lt;- size[0] is number of variables</li>
+<li>nbspl &lt;- size[1] is number of samples</li>
+</ul>
+<p>If 3D image</p><ul>
+<li>xysize &lt;- size[0] * size[1] is number of variables</li>
+<li>nbspl &lt;- size[2] is number of samples</li>
+</ul>
+<p>Once input telemetry size measured, arrays are created:</p><ul>
+<li>pixarray_x : x coordinate of each variable (useful to keep track of spatial coordinates)</li>
+<li>pixarray_y : y coordinate of each variable (useful to keep track of spatial coordinates)</li>
+<li>pixarray_xy : combined index (avoids re-computing index frequently)</li>
+<li>ave_inarray : time averaged value, useful because the predictive filter often needs average to be zero, so we will remove it</li>
+</ul>
+<h3>Select input variables from mask (optional)</h3>
+<p>If image "inmask" exists, use it to select which variables are active. Otherwise, all variables are active<br />
+The number of active input variables is stored in NBpixin.</p>
+<h2>Selecting Output Variables</h2>
+<p>By default, the output variables are the same as the input variables, so the prediction is performed on the same variables as the input.<br />
+ With inmask and outmask, input AND output variables can be selected amond the telemetry.</p>
+<p>Arrays are created:</p><ul>
+<li>outpixarray_x : x coordinate of each output variable (useful to keep track of spatial coordinates)</li>
+<li>outpixarray_y : y coordinate of each output variable (useful to keep track of spatial coordinates)</li>
+<li>outpixarray_xy : combined output index (avoids re-computing index frequently)</li>
+</ul>
+<h2>Reading PFlag from image (optional)</h2>
+<p>PFlag_run needs to be read before entering the loop as some array sizes depend on its value.</p>
+<h2>Build Empty Data Matrix</h2>
+<p>The data matrix is build from the telemetry. Each column (= time sample) of the data matrix consists of consecutives columns (= time sample) of the input telemetry.<br />
+ Variable naming:</p><ul>
+<li>NBmvec is the number of telemetry vectors (each corresponding to a different time) in the data matrix.</li>
+<li>mvecsize is the size of each vector, equal to NBpixin times PForder</li>
+</ul>
+<p>Data matrix is stored as image of size NBmvec x mvecsize, to be fed to routine compute_SVDpseudoInverse in linopt_imtools (CPU mode) or in cudacomp (GPU mode)<br />
+</p>
+<p>Regularization can be added to penalize strong coefficients in the predictive filter. It is optionally implemented by adding extra columns at the end of the data matrix.<br />
+</p>
+<p>Data matrix conventions :</p><ul>
+<li>each column (ii = cst) is a measurement</li>
+<li>m index is measurement</li>
+<li>dt*NBpixin+pix index is pixel</li>
+</ul>
+<h2>Predictive Filter Computation</h2>
+<p>In LOOP mode, LOOP STARTS HERE <br />
+</p>
+<h3>Prepare data matrix PFmatD</h3>
+<p><em>STEP: Read parameters from external image (optional)</em><br />
+</p>
+<p><em>STEP: In loop mode, wait for input data to arrive</em></p>
+<p><em>STEP: Copy IDin to IDincp</em></p>
+<p>Necessary as input may be continuously changing between consecutive loop iterations.</p>
+<p><em>STEP: if DC_MODE==1, compute average value from each variable</em></p>
+<p><em>STEP: Fill up data matrix PFmatD from input telemetry</em></p>
+<p><em>STEP: Write regularization coefficients (optional)</em></p>
+<h3>Compute pseudo-inverse of PFmatD</h3>
+<p><em>STEP: Compute Pseudo-Inverse of PFmatD</em></p>
+<p>If using MAGMA, call function <a class="el" href="cudacomp_8c.html#a6f4b95aa5dca11c797be605b6f459ddf" title="Computes matrix pseudo-inverse (AT A)^-1 AT, using eigenvector/eigenvalue decomposition of AT A...">CUDACOMP_magma_compute_SVDpseudoInverse()</a><br />
+Otherwise, call function <a class="el" href="linopt__imtools_8c.html#a94d6b25fcfb460b2363109268210cc31">linopt_compute_SVDpseudoInverse()</a><br />
+</p>
+<p>Result (pseudoinverse) is stored in image PFmatC<br />
+</p>
+<h3>Assemble Predictive Filters</h3>
+<p>In LOOP mode, LOOP ENDS HERE <br />
+</p>
+<hr/>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">IDin_name</td><td>Input telemetry, a 2D or 3D image </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">PForder</td><td>Number of time steps in output filter </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">PFlag</td><td>Time lag between last measurement and prediction, unit: sampling period </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">SVDeps</td><td>Singular value cutoff limit. Ratio between strongest singular value and limit </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">RegLambda</td><td>Regularization paramater </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">IDoutPF_name</td><td>Output predictive filter name </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">outMode</td><td>Output mode. 0: do not write individual files, 1: write individual files (note: output filter cube is always written) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">LOOPmode</td><td>1 if running in infinite loop waiting for input telemetry </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">LOOPgain</td><td>If running in loop, mixing coefficient between previous and current filter </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -650,7 +730,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b07b29f2a0f54c902d2948f61c128711.html">linARfilterPred</a></li><li class="navelem"><a class="el" href="linARfilterPred_8h.html">linARfilterPred.h</a></li>
-    <li class="footer">Generated on Thu Jan 11 2018 19:49:32 for cacao by
+    <li class="footer">Generated on Mon Jan 22 2018 19:33:53 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

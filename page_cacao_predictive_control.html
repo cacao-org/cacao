@@ -113,10 +113,16 @@ $(document).ready(function(){initNavTree('page_cacao_predictive_control.html',''
 </ul>
 <p>The predictive filter is modal, and adopts the same modes as the main control loop.</p>
 <h2>Scripts</h2>
+<table class="doxtable">
+<tr>
+<th>File </th><th>Description  </th></tr>
+<tr>
+<td>aolARPF </td><td>find auto-regressive predictive filter </td></tr>
+<tr>
+<td>aolARPFblock </td><td>AO find optimal AR linear predictive filter </td></tr>
+</table>
 <hr/>
-<p> File Description </p><hr/>
-<p> <b>aolARPF</b> find auto-regressive predictive filter</p>
-<p><b>aolARPFblock</b> AO find optimal AR linear predictive filter </p><hr/>
+ <hr/>
 <h2>Data flow</h2>
 <p>Predictive control is set up by blocks of modes. A block is configured through the aolconf predictive control sub-panel, which writes to configuration files <code>conf/conf_PFblock_XXX.txt</code>, where XXX is the block number (000, 001, 002 etc...). Configuration files specify the modes within each block (index min to index max), the predictive filter order, time lag and and averaging gain.</p>
 <p>For each block, there are 3 main processes involved in running the predictive control:</p>
@@ -135,7 +141,7 @@ $(document).ready(function(){initNavTree('page_cacao_predictive_control.html',''
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="md_top.html">top</a></li><li class="navelem"><a class="el" href="page_cacao_users_guide.html">cacao User&#39;s Guide</a></li><li class="navelem"><a class="el" href="page_cacao_top_guide.html">Configuring and Running cacao</a></li>
-    <li class="footer">Generated on Thu Jan 11 2018 19:49:32 for cacao by
+    <li class="footer">Generated on Mon Jan 22 2018 19:33:53 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>
