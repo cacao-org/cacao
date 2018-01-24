@@ -357,6 +357,36 @@ if test  "$magmaval" = "yes"; then
 fi
 
 
+#=================================================
+# Setup QDWHpartial
+
+# Check: enable QDWHpartial ?
+AC_MSG_CHECKING([whether to use QDWHpartial library])
+AC_ARG_ENABLE(qdwhpartial,
+    [AS_HELP_STRING(--enable-qdwhpartial,enable QDWHpartial support)],
+    qdwhpartialval="yes",
+    qdwhpartialval="no")
+AC_MSG_RESULT([$qdwhpartialval])
+
+
+# check to see if QDWHpartial been selected
+if test "$qdwhpartialval" == "no"; then
+    AC_MSG_WARN([Not using QDWHpartial!])
+fi
+
+if test  "$qdwhpartialval" = "yes"; then
+	PKG_CHECK_MODULES([QDWHpartial], [qdwhpartial])  
+	AC_DEFINE([HAVE_QDWHpartial],[1],[Defined if QDWHpartial should be used])
+	eval "ARRAY${N}='-D_QDWHpartial'"
+    N=`expr $N + 1`
+    LIBS="$LIBS $QDWHpartial_LIBS"
+    LDFLAGS="$LDFLAGS $QDWHpartial_LDFLAGS"
+    CFLAGS="$CFLAGS $QDWHpartial_CFLAGS"
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH -L$QDWHpartial_INSTALL_PATH/lib"
+fi
+
+
+
 
 
 # Create our own a symbol for execname until we can find the right one
