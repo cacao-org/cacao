@@ -380,9 +380,9 @@ if test  "$qdwhpartialval" = "yes"; then
 	eval "ARRAY${N}='-D_QDWHpartial'"
     N=`expr $N + 1`
     LIBS="$LIBS $QDWHpartial_LIBS"
-    LDFLAGS="$LDFLAGS $QDWHpartial_LDFLAGS"
-    CFLAGS="$CFLAGS $QDWHpartial_CFLAGS"
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH -L$QDWHpartial_INSTALL_PATH/lib"
+#    LDFLAGS="$LDFLAGS $QDWHpartial_LDFLAGS"
+#    CFLAGS="$CFLAGS $QDWHpartial_CFLAGS"
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH -L$QDWHpartial_INSTALL_PATH"
 fi
 
 
