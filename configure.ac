@@ -91,48 +91,6 @@ AC_CHECK_LIB([dl],[main],
 		])
 
 
-case "$host_os" in
-*darwin* | *rhapsody* | *macosx*)
-     AC_DEFINE_UNQUOTED(OSX,1,[This is an OS X system])
-     ;;
-*)
-AC_CHECK_LIB([rt], [clock],
-		[],
-		[ echo "Cannot find required library:rt";
-		  cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:rt"]);
-		  exit 0;
-		])
-;;
-esac
-
-
-AC_CHECK_LIB([pthread], [pthread_create].
-		[],
-		[ echo "Cannot find required library:pthread";
- 		cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:pthread"]);
-		  exit 0;
-		])
-
-AC_CHECK_LIB([gslcblas],[main],
-		[],
-		[ echo "Cannot find required library:gslcblas";
-		  cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:gslcblas"]);
-		  exit 0;
-		])
-
-
-AC_CHECK_LIB([gsl],[main],
-		[],
-		[ echo "Cannot find required library:gsl";
-		  cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:gsl"]);
-		  exit 0;
-		])
-
-
 AC_CHECK_LIB([cfitsio],[main],
 		[],
 		[ echo "Cannot find required static library:fitsio";
@@ -379,11 +337,60 @@ if test  "$qdwhpartialval" = "yes"; then
 	AC_DEFINE([HAVE_QDWHpartial],[1],[Defined if QDWHpartial should be used])
 	eval "ARRAY${N}='-D_QDWHpartial'"
     N=`expr $N + 1`
-    LIBS="$LIBS $QDWHpartial_LIBS"
+    LIBS="$QDWHpartial_LIBS $LIBS"
 #    LDFLAGS="$LDFLAGS $QDWHpartial_LDFLAGS"
 #    CFLAGS="$CFLAGS $QDWHpartial_CFLAGS"
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH -L$QDWHpartial_INSTALL_PATH"
 fi
+
+
+
+
+
+
+
+case "$host_os" in
+*darwin* | *rhapsody* | *macosx*)
+     AC_DEFINE_UNQUOTED(OSX,1,[This is an OS X system])
+     ;;
+*)
+
+AC_CHECK_LIB([rt], [clock],
+		[],
+		[ echo "Cannot find required library:rt";
+		  cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:rt"]);
+		  exit 0;
+		])
+;;
+esac
+
+
+AC_CHECK_LIB([pthread], [pthread_create].
+		[],
+		[ echo "Cannot find required library:pthread";
+ 		cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:pthread"]);
+		  exit 0;
+		])
+
+AC_CHECK_LIB([gslcblas],[main],
+		[],
+		[ echo "Cannot find required library:gslcblas";
+		  cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:gslcblas"]);
+		  exit 0;
+		])
+
+
+AC_CHECK_LIB([gsl],[main],
+		[],
+		[ echo "Cannot find required library:gsl";
+		  cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:gsl"]);
+		  exit 0;
+		])
+
 
 
 
