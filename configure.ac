@@ -337,7 +337,7 @@ if test  "$qdwhpartialval" = "yes"; then
 	AC_DEFINE([HAVE_QDWHpartial],[1],[Defined if QDWHpartial should be used])
 	eval "ARRAY${N}='-D_QDWHpartial'"
     N=`expr $N + 1`
-    LIBS="$QDWHpartial_LIBS $LIBS"
+    LIBS="$LIBS $QDWHpartial_LIBS"
 #    LDFLAGS="$LDFLAGS $QDWHpartial_LDFLAGS"
 #    CFLAGS="$CFLAGS $QDWHpartial_CFLAGS"
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH -L$QDWHpartial_INSTALL_PATH"
