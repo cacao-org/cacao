@@ -375,7 +375,7 @@ if test "$qdwhpartialval" == "no"; then
 fi
 
 if test  "$qdwhpartialval" = "yes"; then
-	PKG_CHECK_MODULES([QDWHpartial], [qdwhpartial])  
+#	PKG_CHECK_MODULES([QDWHpartial], [qdwhpartial])  
 	AC_DEFINE([HAVE_QDWHpartial],[1],[Defined if QDWHpartial should be used])
 	eval "ARRAY${N}='-D_QDWHpartial'"
     N=`expr $N + 1`
