@@ -2054,6 +2054,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 		{
 			long IDbuff;
 			RT_STREAM_LOG_INFO* ptrbuff;
+			char *dataptr;
 			
 			if(AOconf[loop].RTstreamLOG_buff==0)
 			{
@@ -2065,8 +2066,10 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 				IDbuff =  ID__modeval_ol_LOGbuff1;
 				ptrbuff = aolLOG_modeval_ol_infobuff1;
 			}
+			dataptr = (char*) data.image[IDbuff].array.F;
+			dataptr += sizeof(float)*NBmodes*AOconf[loop].RTstreamLOG_frame;
 			data.image[IDbuff].md[0].write = 1;
-			memcpy(data.image[IDbuff].array.F + sizeof(float)*NBmodes*AOconf[loop].RTstreamLOG_frame, data.image[IDout].array.F, sizeof(float)*NBmodes);
+			memcpy((void*) dataptr, data.image[IDout].array.F, sizeof(float)*NBmodes);
 			data.image[IDbuff].md[0].cnt1 = AOconf[loop].RTstreamLOG_frame;
 			if(AOconf[loop].RTstreamLOG_frame == RT_LOGsize-1)
 			{
