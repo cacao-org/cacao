@@ -118,7 +118,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(0);
 
-
+	
 	
 	
 	//
@@ -286,6 +286,8 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(name, "aol%ld_looptiming", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
+
+
 
 
 	/** ## 2. Read/load shared memory arrays

@@ -368,6 +368,15 @@ int_fast8_t AOloopControl_run()
 				AOconf[loop].LOOPiteration++;
 				data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1 = AOconf[loop].LOOPiteration;
 				
+				// REAL TIME LOGGING
+				AOconf[loop].RTstreamLOG_frame++;
+				if(AOconf[loop].RTstreamLOG_frame == RT_LOGsize)
+				{
+					AOconf[loop].RTstreamLOG_frame = 0;
+					AOconf[loop].RTstreamLOG_buff++;
+					if(AOconf[loop].RTstreamLOG_buff == 2)
+						AOconf[loop].RTstreamLOG_buff = 0;
+				}
 
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt0 = AOconf[loop].cnt;
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt1 = AOconf[loop].LOOPiteration;
@@ -937,6 +946,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 
+
+
 int_fast8_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_WFSref_name, const char *ID_WFSim_name, const char *ID_WFSimtot_name, const char *ID_coeff_name)
 {
 #ifdef HAVE_CUDA
@@ -1152,6 +1163,15 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 	uint64_t LOOPiter;
 
 
+	long ID__modeval_ol_LOGbuff0;
+	long ID__modeval_ol_LOGbuff1;
+	RT_STREAM_LOG_INFO *aolLOG_modeval_ol_infobuff0;
+	RT_STREAM_LOG_INFO *aolLOG_modeval_ol_infobuff1;
+
+
+
+
+
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
     sched_setscheduler(0, SCHED_FIFO, &schedpar);
@@ -1198,7 +1218,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
         aoloopcontrol_var.aoconfID_dmC = read_sharedmem_image(imname);
     }
-
 
 
     // CONNECT to arrays holding gain, limit, and multf values for blocks
@@ -1279,17 +1298,36 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 	}
 
     // OUPUT
-    sizeout = (uint32_t*) malloc(sizeof(uint32_t)*2);
+    sizeout = (uint32_t*) malloc(sizeof(uint32_t)*3);
     sizeout[0] = NBmodes;
     sizeout[1] = 1;
 
 	// all images below are vectors of dimension NBmodes x 1
+
 
 	// load/create aol_modeval_ol (pseudo-open loop mode values)
     if(sprintf(imname, "aol%ld_modeval_ol", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     IDout = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 20);
+	//LOG
+	if(AOconf[loop].RTstreamLOG_modeval_ol_ON == 1)
+	{
+		sizeout[2] = RT_LOGsize;
+
+		if(sprintf(imname, "aol%ld_modeval_ol_LOGbuff0", loop) < 1)
+			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+		ID__modeval_ol_LOGbuff0 = create_image_ID(imname, 3, sizeout, _DATATYPE_FLOAT, 1, 0);
+
+		if(sprintf(imname, "aol%ld_modeval_ol_LOGbuff1", loop) < 1)
+			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+		ID__modeval_ol_LOGbuff1 = create_image_ID(imname, 3, sizeout, _DATATYPE_FLOAT, 1, 0);
+
+		aolLOG_modeval_ol_infobuff0 = (RT_STREAM_LOG_INFO*) malloc(sizeof(RT_STREAM_LOG_INFO)*RT_LOGsize); // log info buff0
+		aolLOG_modeval_ol_infobuff1 = (RT_STREAM_LOG_INFO*) malloc(sizeof(RT_STREAM_LOG_INFO)*RT_LOGsize); // log info buff1
+	}
+
+
 
 
 	// load/create aol_mode_blknb (block index for each mode)
@@ -2012,6 +2050,37 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         data.image[IDout].md[0].cnt1 = LOOPiter;
         data.image[IDout].md[0].write = 0;
 
+		if(AOconf[loop].RTstreamLOG_modeval_ol_ON == 1)
+		{
+			long IDbuff;
+			RT_STREAM_LOG_INFO* ptrbuff;
+			
+			if(AOconf[loop].RTstreamLOG_buff==0)
+			{
+				IDbuff =  ID__modeval_ol_LOGbuff0;
+				ptrbuff = aolLOG_modeval_ol_infobuff0;
+			}
+			else
+			{
+				IDbuff =  ID__modeval_ol_LOGbuff1;
+				ptrbuff = aolLOG_modeval_ol_infobuff1;
+			}
+			data.image[IDbuff].md[0].write = 1;
+			memcpy(data.image[IDbuff].array.F + sizeof(float)*NBmodes*AOconf[loop].RTstreamLOG_frame, data.image[IDout].array.F, sizeof(float)*NBmodes);
+			data.image[IDbuff].md[0].cnt1 = AOconf[loop].RTstreamLOG_frame;
+			if(AOconf[loop].RTstreamLOG_frame == RT_LOGsize-1)
+			{
+				COREMOD_MEMORY_image_set_sempost_byID(IDbuff, -1);
+				data.image[IDbuff].md[0].cnt0++;
+			}
+			data.image[IDbuff].md[0].write = 0;
+			
+			ptrbuff[AOconf[loop].RTstreamLOG_frame].loopiter = AOconf[loop].LOOPiteration;
+			ptrbuff[AOconf[loop].RTstreamLOG_frame].imcnt0 = data.image[IDout].md[0].cnt0;
+			ptrbuff[AOconf[loop].RTstreamLOG_frame].imcnt1 = data.image[IDout].md[0].cnt1;
+			ptrbuff[AOconf[loop].RTstreamLOG_frame].imtime = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;			
+		}
+
 
 		if(AOconf[loop].ARPFon==1)
 		{
@@ -2128,6 +2197,9 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 }
 
 
+
+
+
 //
 // gains autotune
 //
@@ -2142,6 +2214,9 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
     long IDmodeval_dm_now;
     long IDmodeval_dm_now_filt;
 	long IDmodeWFSnoise;
+
+
+
 
     long NBmodes;
     char imname[200];

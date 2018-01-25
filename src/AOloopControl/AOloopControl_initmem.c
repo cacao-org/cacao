@@ -140,7 +140,10 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         AOconf[loop].ARPFgainAutoMin = 0.00;
         AOconf[loop].ARPFgainAutoMax = 1.00;
         AOconf[loop].LOOPiteration = 0;
+
         AOconf[loop].cnt = 0;
+        
+
         AOconf[loop].cntmax = 0;
         AOconf[loop].init_CMc = 0;
 
@@ -156,6 +159,18 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             aoloopcontrol_var.aoconfIDlogdata = create_image_ID(cntname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
             free(sizearray);
         }
+        
+        
+        // logging
+        AOconf[loop].RTstreamLOG_buff = 0;
+        AOconf[loop].RTstreamLOG_frame = 0;
+        AOconf[loop].RTstreamLOG_saveToggle = 0;
+        
+        AOconf[loop].RTstreamLOG_wfsim_ON = 0;
+        AOconf[loop].RTstreamLOG_wfsim_save = 0;
+        
+        AOconf[loop].RTstreamLOG_modeval_ol_ON = 0;
+        AOconf[loop].RTstreamLOG_modeval_ol_save = 0 ;
     }
 
 
