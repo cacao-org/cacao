@@ -294,6 +294,7 @@ typedef struct
 	
 	// global log param
 	int  RTstreamLOG_buff;
+	int  RTstreamLOG_buffSwitch;
 	long RTstreamLOG_frame;
 	int  RTstreamLOG_saveToggle;
   

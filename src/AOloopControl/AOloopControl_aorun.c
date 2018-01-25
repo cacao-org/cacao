@@ -372,11 +372,15 @@ int_fast8_t AOloopControl_run()
 				AOconf[loop].RTstreamLOG_frame++;
 				if(AOconf[loop].RTstreamLOG_frame == RT_LOGsize)
 				{
+					AOconf[loop].RTstreamLOG_buffSwitch = 1;
+					
 					AOconf[loop].RTstreamLOG_frame = 0;
 					AOconf[loop].RTstreamLOG_buff++;
 					if(AOconf[loop].RTstreamLOG_buff == 2)
 						AOconf[loop].RTstreamLOG_buff = 0;
 				}
+				else
+					AOconf[loop].RTstreamLOG_buffSwitch = 0;
 
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt0 = AOconf[loop].cnt;
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt1 = AOconf[loop].LOOPiteration;
@@ -1162,9 +1166,10 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 	uint64_t LOOPiter;
 
-
+	long ID__modeval_ol_LOGbuff;
 	long ID__modeval_ol_LOGbuff0;
 	long ID__modeval_ol_LOGbuff1;
+	RT_STREAM_LOG_INFO *aolLOG_modeval_ol_infobuff;
 	RT_STREAM_LOG_INFO *aolLOG_modeval_ol_infobuff0;
 	RT_STREAM_LOG_INFO *aolLOG_modeval_ol_infobuff1;
 
@@ -1325,6 +1330,9 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 		aolLOG_modeval_ol_infobuff0 = (RT_STREAM_LOG_INFO*) malloc(sizeof(RT_STREAM_LOG_INFO)*RT_LOGsize); // log info buff0
 		aolLOG_modeval_ol_infobuff1 = (RT_STREAM_LOG_INFO*) malloc(sizeof(RT_STREAM_LOG_INFO)*RT_LOGsize); // log info buff1
+	
+		ID__modeval_ol_LOGbuff = ID__modeval_ol_LOGbuff0;
+		aolLOG_modeval_ol_infobuff = aolLOG_modeval_ol_infobuff0;
 	}
 
 
@@ -1560,11 +1568,14 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 
+
 	loopPFcnt = 0;
     for(;;)
     {		
 		long modevalDMindex0, modevalDMindex1;
 		long modevalPFindex0, modevalPFindex1;
+		
+		
 		
 		
         // read WFS measured modes (residual)
@@ -1586,6 +1597,21 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[3] = tdiffv;
 
 		LOOPiter = data.image[IDmodeval].md[0].cnt1;
+
+		// RT stream logging buffers
+		if(AOconf[loop].RTstreamLOG_buffSwitch==1)
+		{
+			if(AOconf[loop].RTstreamLOG_buff==0)
+			{
+				ID__modeval_ol_LOGbuff =  ID__modeval_ol_LOGbuff0;
+				aolLOG_modeval_ol_infobuff = aolLOG_modeval_ol_infobuff0;
+			}
+			else
+			{
+				ID__modeval_ol_LOGbuff =  ID__modeval_ol_LOGbuff1;
+				aolLOG_modeval_ol_infobuff = aolLOG_modeval_ol_infobuff1;
+			}
+		}
 
 
         // write gain, mult, limit into arrays
@@ -2052,36 +2078,24 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 		if(AOconf[loop].RTstreamLOG_modeval_ol_ON == 1)
 		{
-			long IDbuff;
-			RT_STREAM_LOG_INFO* ptrbuff;
 			char *dataptr;
-			
-			if(AOconf[loop].RTstreamLOG_buff==0)
-			{
-				IDbuff =  ID__modeval_ol_LOGbuff0;
-				ptrbuff = aolLOG_modeval_ol_infobuff0;
-			}
-			else
-			{
-				IDbuff =  ID__modeval_ol_LOGbuff1;
-				ptrbuff = aolLOG_modeval_ol_infobuff1;
-			}
-			dataptr = (char*) data.image[IDbuff].array.F;
+		
+			dataptr = (char*) data.image[ID__modeval_ol_LOGbuff].array.F;
 			dataptr += sizeof(float)*NBmodes*AOconf[loop].RTstreamLOG_frame;
-			data.image[IDbuff].md[0].write = 1;
+						
 			memcpy((void*) dataptr, data.image[IDout].array.F, sizeof(float)*NBmodes);
-			data.image[IDbuff].md[0].cnt1 = AOconf[loop].RTstreamLOG_frame;
+			data.image[ID__modeval_ol_LOGbuff].md[0].cnt1 = AOconf[loop].RTstreamLOG_frame;
 			if(AOconf[loop].RTstreamLOG_frame == RT_LOGsize-1)
 			{
-				COREMOD_MEMORY_image_set_sempost_byID(IDbuff, -1);
-				data.image[IDbuff].md[0].cnt0++;
+				COREMOD_MEMORY_image_set_sempost_byID(ID__modeval_ol_LOGbuff, -1);
+				data.image[ID__modeval_ol_LOGbuff].md[0].cnt0++;
+				data.image[ID__modeval_ol_LOGbuff].md[0].write = 0;
 			}
-			data.image[IDbuff].md[0].write = 0;
-			
-			ptrbuff[AOconf[loop].RTstreamLOG_frame].loopiter = AOconf[loop].LOOPiteration;
-			ptrbuff[AOconf[loop].RTstreamLOG_frame].imcnt0 = data.image[IDout].md[0].cnt0;
-			ptrbuff[AOconf[loop].RTstreamLOG_frame].imcnt1 = data.image[IDout].md[0].cnt1;
-			ptrbuff[AOconf[loop].RTstreamLOG_frame].imtime = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;			
+						
+			aolLOG_modeval_ol_infobuff[AOconf[loop].RTstreamLOG_frame].loopiter = AOconf[loop].LOOPiteration;
+			aolLOG_modeval_ol_infobuff[AOconf[loop].RTstreamLOG_frame].imcnt0 = data.image[IDout].md[0].cnt0;
+			aolLOG_modeval_ol_infobuff[AOconf[loop].RTstreamLOG_frame].imcnt1 = data.image[IDout].md[0].cnt1;
+			aolLOG_modeval_ol_infobuff[AOconf[loop].RTstreamLOG_frame].imtime = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;			
 		}
 
 
