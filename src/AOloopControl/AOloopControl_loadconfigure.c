@@ -288,6 +288,11 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
 
 
+	/** ### 1.10. Setup RT logging 
+	 */
+	fprintf(fplog, "\n\n============== 1.10. Setup real-time internal logging ===================\n\n");
+	AOconf[loop].RTstreamLOG_modeval_ol_ON = AOloopControl_readParam_int("RTstreamLOG_modeval_ol_ON", 1, fplog);
+	AOconf[loop].RTstreamLOG_modeval_ol_save = AOloopControl_readParam_int("RTstreamLOG_modeval_ol_save", 0, fplog);
 
 
 	/** ## 2. Read/load shared memory arrays
