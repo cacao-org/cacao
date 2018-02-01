@@ -10,6 +10,13 @@ master branch: [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch
 ![](AlphaRelease.svg)
 
 
+---
+
+IMPORTANT NOTE: cacao uses git submodules. Use `git clone --recursive` (see Downloading and Installing section)
+
+---
+
+
 # cacao : Compute And Control for Adaptive Optics
 
 
