@@ -556,7 +556,7 @@ long AOloopControl_computeCalib_mkCM(const char *respm_name, const char *cm_name
 
     printf("COMPUTE OVERALL CONTROL MATRIX\n");
 #ifdef HAVE_MAGMA
-    CUDACOMP_magma_compute_SVDpseudoInverse(respm_name, cm_name, SVDlim, 100000, "VTmat", 0, 1.e-4, 1.e-7);
+    CUDACOMP_magma_compute_SVDpseudoInverse(respm_name, cm_name, SVDlim, 100000, "VTmat", 0, 0, 1.e-4, 1.e-7);
 #else
     linopt_compute_SVDpseudoInverse(respm_name, cm_name, SVDlim, 10000, "VTmat");
 #endif
