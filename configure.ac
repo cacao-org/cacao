@@ -139,6 +139,18 @@ AC_CHECK_LIB( [fftw3], [main],
 
 AC_CHECK_LIB([gomp], [omp_get_num_threads])
 
+
+
+
+AC_CHECK_LIB([pthread], [pthread_create],
+		[],
+		[ echo "Cannot find required library:pthread";
+		  cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:pthread"]);
+		  exit 0;
+		])
+
+
 #
 # fftw multi-thread
 #	
@@ -158,36 +170,10 @@ if   test "x$fftwmt" = "xyes" ; then
         	        ]
 	)	
 	
-	AC_CHECK_LIB([pthread], [pthread_create],
-		[],
-		[ echo "Cannot find required library:pthread";
-		  cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:pthread"]);
-		  exit 0;
-		])
-	
 	AC_DEFINE(FFTWMT)
 fi
 
 
-#AC_CHECK_LIB([usb], [usb_close], ,[AC_MSG_ERROR(
-# [libusb library not found.  Check with vendor or see http://libusb.sourceforge.net])],
-# [$USBLDFLAGS])
-
-
-#AC_SEARCH_LIBS( [bob],      
-#                [tom], 
-#                [AC_DEFINE([HAVE_BOB_H], 1,
-#                           "Define to 1 if you have <readline.h>")] , 
-#                [AC_MSG_ERROR([$str]); exit 0] )
-
-#AC_CHECK_HEADERS( [bob.h], 
-#                  [], 
-#                  [ echo "Cannot find required header:bob.h";
-#                    cat doc/configure.howto;
-#                    AC_MSG_FAILURE(["Cannot find required header:bob.h"]);
-#                  ]
-#)  
 
 AC_CHECK_HEADERS( [fftw3.h], 
                   [], 
@@ -204,25 +190,6 @@ AC_CHECK_HEADERS( [fitsio.h],
                     AC_MSG_FAILURE(["Cannot find required header:fitsio.h"]);
                   ]
 )  
-
-
-
-
-#AC_MSG_NOTICE([Looking for special libraries])
-#AC_INCLUDES_DEFAULT
-#AC_CHECK_LIB(gsl,gsl_ran_gaussian_ziggurat, , echo "FATAL..."; exit 0; )
-#AC_PROG_LEX
-#AC_PROG_YACC
-#AC_PROG_INSTALL
-
-#AC_MSG_CHECKING (feature-description)
-#AC_MSG_NOTICE([eg:checking if stack overflow is detectable])
-#AC_MSG_FAILURE (error-description, [exit-status])
-
-
-
-
-
 
 
 
