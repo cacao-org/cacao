@@ -24,9 +24,8 @@ m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 # Init Libtool
 LT_INIT
 
-# find the c-complier
-#AC_PROG_CC
-AM_PROG_CC_C_O
+# find the c-complier, use gcc by default
+AC_PROG_CC([gcc])
 
 # check for openMP
 AC_OPENMP
