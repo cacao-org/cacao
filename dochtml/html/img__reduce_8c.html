@@ -124,7 +124,10 @@ Functions</h2></td></tr>
 <tr class="separator:a11b41674fec238b1d057c26b29f712e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada277c60b981b30114fba2a3be1cf305"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#ada277c60b981b30114fba2a3be1cf305">IMG_REDUCE_cleanbadpix_fast_cli</a> ()</td></tr>
 <tr class="separator:ada277c60b981b30114fba2a3be1cf305"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76fc26c7de8f1934c7cc070bd0ad9cd0"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a76fc26c7de8f1934c7cc070bd0ad9cd0">IMG_REDUCE_cleanbadpix_stream_fast_cli</a> ()</td></tr>
+<tr class="separator:a76fc26c7de8f1934c7cc070bd0ad9cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
+<tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br/></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3d15b471345b3248a1f0e1366bdbea9"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#af3d15b471345b3248a1f0e1366bdbea9">init_img_reduce</a> ()</td></tr>
 <tr class="separator:af3d15b471345b3248a1f0e1366bdbea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,8 +138,8 @@ Functions</h2></td></tr>
 <tr class="separator:a12e5edbe0619866fc389e6615412e180"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4a9f056022ae8dae761a0b26367690c"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#af4a9f056022ae8dae761a0b26367690c">IMG_REDUCE_cleanbadpix_fast_precompute</a> (const char *IDmask_name)</td></tr>
 <tr class="separator:af4a9f056022ae8dae761a0b26367690c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a937c6898a9899ac3f4035b970ec2a0bc"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a937c6898a9899ac3f4035b970ec2a0bc">IMG_REDUCE_cleanbadpix_fast</a> (const char *IDname, const char *IDbadpix_name, const char *IDoutname)</td></tr>
-<tr class="separator:a937c6898a9899ac3f4035b970ec2a0bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8c9a051ee5dcad2734b21bb4c3fb382"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#aa8c9a051ee5dcad2734b21bb4c3fb382">IMG_REDUCE_cleanbadpix_fast</a> (const char *IDname, const char *IDbadpix_name, const char *IDoutname, int streamMode)</td></tr>
+<tr class="separator:aa8c9a051ee5dcad2734b21bb4c3fb382"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a5179709c35c4c2396c40770cef8634"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a4a5179709c35c4c2396c40770cef8634">IMG_REDUCE_correlMatrix</a> (const char *IDin_name, const char *IDmask_name, const char *IDout_name)</td></tr>
 <tr class="separator:a4a5179709c35c4c2396c40770cef8634"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa81da45369eb27d714946b96d9d0e604"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#aa81da45369eb27d714946b96d9d0e604">IMG_REDUCE_cubeprocess</a> (const char *IDin_name)</td></tr>
@@ -160,13 +163,15 @@ Variables</h2></td></tr>
 <tr class="separator:a79cfc6d5350eba73228ce589400240de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9842752e03b4de9b4593f1a3b34364ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDATA.html">DATA</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a9842752e03b4de9b4593f1a3b34364ab">data</a></td></tr>
 <tr class="separator:a9842752e03b4de9b4593f1a3b34364ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a320efe3b4e8567a15eb1fc452180ddc8"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a320efe3b4e8567a15eb1fc452180ddc8">INITSTATUS_img_reduce</a> = 0</td></tr>
+<tr class="separator:a320efe3b4e8567a15eb1fc452180ddc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Image analysis functions. </p>
 <p>Misc image analysis functions</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>10 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000061">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000064">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <div class="memitem">
@@ -181,6 +186,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initialize module. </p>
 
 </div>
 </div>
@@ -212,7 +219,7 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a937c6898a9899ac3f4035b970ec2a0bc"></a>
+<a class="anchor" id="aa8c9a051ee5dcad2734b21bb4c3fb382"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -232,7 +239,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDoutname</em>&#160;</td>
+          <td class="paramname"><em>IDoutname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>streamMode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -268,6 +281,21 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDmask_name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a76fc26c7de8f1934c7cc070bd0ad9cd0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int_fast8_t IMG_REDUCE_cleanbadpix_stream_fast_cli </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -488,13 +516,33 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a320efe3b4e8567a15eb1fc452180ddc8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int INITSTATUS_img_reduce = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2023aa0f1a7d7dd6bbe7e3d622e6aa1b.html">img_reduce</a></li><li class="navelem"><a class="el" href="img__reduce_8c.html">img_reduce.c</a></li>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

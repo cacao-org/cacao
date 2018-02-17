@@ -106,7 +106,6 @@ $(document).ready(function(){initNavTree('AOloopControl__IOtools_8c.html','');})
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_IOtools.c File Reference</div>  </div>
@@ -118,8 +117,6 @@ $(document).ready(function(){initNavTree('AOloopControl__IOtools_8c.html','');})
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_IOtools - 1. CAMERA INPUT</div></td></tr>
 <tr class="memitem:aa8290011cb68f3138108f5bd4affdca9"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools_8c.html#aa8290011cb68f3138108f5bd4affdca9">AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli</a> ()</td></tr>
 <tr class="memdesc:aa8290011cb68f3138108f5bd4affdca9"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_camimage_extract2D_sharedmem_loop.  <a href="#aa8290011cb68f3138108f5bd4affdca9">More...</a><br/></td></tr>
@@ -136,6 +133,7 @@ Functions</h2></td></tr>
 <tr class="separator:a6446ea64d1a9d88030fec1737ff136a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_IOtools functions</div></td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
+<tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br/></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -178,6 +176,8 @@ Variables</h2></td></tr>
 <tr class="separator:a96cee5d0f6b5e68e80b4191a60083dc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9842752e03b4de9b4593f1a3b34364ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDATA.html">DATA</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools_8c.html#a9842752e03b4de9b4593f1a3b34364ab">data</a></td></tr>
 <tr class="separator:a9842752e03b4de9b4593f1a3b34364ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0421d77159b672e1c5419eaecc6494bf"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools_8c.html#a0421d77159b672e1c5419eaecc6494bf">INITSTATUS_AOloopControl_IOtools</a> = 0</td></tr>
+<tr class="separator:a0421d77159b672e1c5419eaecc6494bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc4d319c21df38d7e771591b6934a836"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools_8c.html#afc4d319c21df38d7e771591b6934a836">LOOPNUMBER</a></td></tr>
 <tr class="separator:afc4d319c21df38d7e771591b6934a836"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f96203c41ad50bad5dd1604a5c069a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAOLOOPCONTROL__CONF.html">AOLOOPCONTROL_CONF</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools_8c.html#a1f96203c41ad50bad5dd1604a5c069a8">AOconf</a></td></tr>
@@ -190,7 +190,7 @@ Variables</h2></td></tr>
 <p>AO engine uses stream data structure</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>22 Aug 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000031">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000035">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <div class="memitem">
@@ -205,6 +205,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initialize module. </p>
 
 </div>
 </div>
@@ -273,32 +275,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>CLI function for AOloopControl_stream3Dto2D. </p>
-
-</div>
-</div>
-<a class="anchor" id="a4686db64ee8970c84b269e0425519dec"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -619,6 +595,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a0421d77159b672e1c5419eaecc6494bf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int INITSTATUS_AOloopControl_IOtools = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="afc4d319c21df38d7e771591b6934a836"></a>
 <div class="memitem">
 <div class="memproto">
@@ -717,7 +713,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d2349ba0799e0b6b9785371f379b7b3a.html">AOloopControl_IOtools</a></li><li class="navelem"><a class="el" href="AOloopControl__IOtools_8c.html">AOloopControl_IOtools.c</a></li>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

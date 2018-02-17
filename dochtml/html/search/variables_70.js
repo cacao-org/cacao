@@ -9,5 +9,6 @@ var searchData=
   ['polycoeff2',['polycoeff2',['../linopt__imtools_8c.html#a05e6847679b5d1fedf8b5f13bd37417c',1,'linopt_imtools.c']]],
   ['pos',['pos',['../structkdnode.html#af92e7d95a2845d3e8611b289d6398a83',1,'kdnode']]],
   ['precision',['precision',['../structDATA.html#a7b6fce0fc9e6046ffa57b30b8bcd0d1f',1,'DATA']]],
-  ['processname',['processname',['../structDATA.html#a58978653cfb98eaf9b9007cb992cc0e4',1,'DATA']]]
+  ['processname',['processname',['../structDATA.html#a58978653cfb98eaf9b9007cb992cc0e4',1,'DATA']]],
+  ['progstatus',['progStatus',['../structDATA.html#a15b9710b13cfe89af37f42194bc1ba5d',1,'DATA']]]
 ];

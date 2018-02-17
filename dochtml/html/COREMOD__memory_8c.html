@@ -213,6 +213,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a6c6c200e2c2cf206ae7ef73cd8cf78aa"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__memory_8c.html#a6c6c200e2c2cf206ae7ef73cd8cf78aa">COREMOD_MEMORY_sharedMem_2Dim_log_cli</a> ()</td></tr>
 <tr class="separator:a6c6c200e2c2cf206ae7ef73cd8cf78aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__memory_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
+<tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br/></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca8bfb0090f916df7c5966890ad83e55"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__memory_8c.html#aca8bfb0090f916df7c5966890ad83e55">init_COREMOD_memory</a> ()</td></tr>
 <tr class="separator:aca8bfb0090f916df7c5966890ad83e55"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -423,6 +424,8 @@ Variables</h2></td></tr>
 <tr class="separator:a1eb50a9cee23de37524836a3433b659e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9842752e03b4de9b4593f1a3b34364ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDATA.html">DATA</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__memory_8c.html#a9842752e03b4de9b4593f1a3b34364ab">data</a></td></tr>
 <tr class="separator:a9842752e03b4de9b4593f1a3b34364ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ad95509513294e65e1aa0d7d54a8caa"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__memory_8c.html#a4ad95509513294e65e1aa0d7d54a8caa">INITSTATUS_COREMOD_memory</a> = 0</td></tr>
+<tr class="separator:a4ad95509513294e65e1aa0d7d54a8caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac131d1fce1239b90898281924cc65ca0"><td class="memItemLeft" align="right" valign="top">static char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__memory_8c.html#ac131d1fce1239b90898281924cc65ca0">errmsg_memory</a> [SBUFFERSIZE]</td></tr>
 <tr class="separator:ac131d1fce1239b90898281924cc65ca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbed262f99f763e9aef2c67cee565f97"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__memory_8c.html#afbed262f99f763e9aef2c67cee565f97">tret</a></td></tr>
@@ -433,7 +436,7 @@ Variables</h2></td></tr>
 <p>Functions to handle images and streams</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>9 Sept 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000048">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000051">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <div class="memitem">
@@ -448,6 +451,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initialize module. </p>
 
 </div>
 </div>
@@ -469,7 +474,7 @@ Variables</h2></td></tr>
 <p>create the 2 buffers</p>
 <p>measure time</p>
 <p>measure time</p>
-<p>cases: index&gt;zsize-1 buffer full wOK==0 &amp;&amp; index&gt;0 : partial</p>
+<p>cases: index&gt;zsize-1 buffer full timeout==1 &amp;&amp; index&gt;0 : partial</p>
 <p>save image </p>
 
 </div>
@@ -3726,6 +3731,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a4ad95509513294e65e1aa0d7d54a8caa"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int INITSTATUS_COREMOD_memory = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="ad82f8d9664d54d3d4adb8e15f6e6dd7c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -3912,7 +3937,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3263a6acd0ffe1d4fb8f1f8557ae17b7.html">COREMOD_memory</a></li><li class="navelem"><a class="el" href="COREMOD__memory_8c.html">COREMOD_memory.c</a></li>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

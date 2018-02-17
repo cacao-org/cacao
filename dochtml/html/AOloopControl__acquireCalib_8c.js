@@ -16,6 +16,7 @@ var AOloopControl__acquireCalib_8c =
     [ "AOloopcontrol_meminit", "AOloopControl__acquireCalib_8c.html#ac8a65ca6927b57d697b359281dd5ff24", null ],
     [ "aoloopcontrol_var", "AOloopControl__acquireCalib_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
     [ "data", "AOloopControl__acquireCalib_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_AOloopControl_acquireCalib", "AOloopControl__acquireCalib_8c.html#afd59685cce055a6f78d872797f093317", null ],
     [ "LOOPNUMBER", "AOloopControl__acquireCalib_8c.html#afc4d319c21df38d7e771591b6934a836", null ],
     [ "RMACQUISITION", "AOloopControl__acquireCalib_8c.html#a56a6de7b23fbb757ba760bf7fe2d0278", null ]
 ];

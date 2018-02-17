@@ -106,7 +106,6 @@ $(document).ready(function(){initNavTree('AOloopControl__computeCalib_8c.html','
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_computeCalib.c File Reference</div>  </div>
@@ -118,8 +117,6 @@ $(document).ready(function(){initNavTree('AOloopControl__computeCalib_8c.html','
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl - 5. COMPUTING CALIBRATION</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Compute control matrix, modes </p>
 </div></td></tr>
@@ -164,48 +161,21 @@ Functions</h2></td></tr>
 <tr class="separator:acd6d4f7c33ab085867e68bd0ed1e2716"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_IOtools functions</div></td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
+<tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br/></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">AOloopControl_computeCalib - 1. COMPUTING CALIBRATION</div></td></tr>
-<tr class="memitem:abb192905b67326a55a7b46a15a341630"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#abb192905b67326a55a7b46a15a341630">AOloopControl_computeCalib_mkCalib_map_mask</a> (long loop, const char *zrespm_name, const char *WFSmap_name, const char *DMmap_name, float dmmask_perclow, float dmmask_coefflow, float dmmask_perchigh, float dmmask_coeffhigh, float wfsmask_perclow, float wfsmask_coefflow, float wfsmask_perchigh, float wfsmask_coeffhigh)</td></tr>
-<tr class="separator:abb192905b67326a55a7b46a15a341630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5821c6a1b61d153c829976d77cfa97c9"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a5821c6a1b61d153c829976d77cfa97c9">AOloopControl_computeCalib_Process_zrespM</a> (long loop, const char *IDzrespm0_name, const char *IDwfsref_name, const char *IDzrespm_name, const char *WFSmap_name, const char *DMmap_name)</td></tr>
-<tr class="separator:a5821c6a1b61d153c829976d77cfa97c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade0d65b153ca7fd73554afeed9b62623"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#ade0d65b153ca7fd73554afeed9b62623">AOloopControl_computeCalib_ProcessZrespM_medianfilt</a> (long loop, const char *zrespm_name, const char *WFSref0_name, const char *WFSmap_name, const char *DMmap_name, double rmampl, int normalize)</td></tr>
-<tr class="separator:ade0d65b153ca7fd73554afeed9b62623"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af39548435711af3dd503f75a6199b65f"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#af39548435711af3dd503f75a6199b65f">AOloopControl_computeCalib_mkCM</a> (const char *respm_name, const char *cm_name, float SVDlim)</td></tr>
-<tr class="separator:af39548435711af3dd503f75a6199b65f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5a4d6377e976f9ae6f3e00d16e1f64d"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#ad5a4d6377e976f9ae6f3e00d16e1f64d">AOloopControl_computeCalib_mkSlavedAct</a> (const char *IDmaskRM_name, float pixrad, const char *IDout_name)</td></tr>
-<tr class="separator:ad5a4d6377e976f9ae6f3e00d16e1f64d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cefe84bf7582c02d1b1dac37ce28bc9"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a2cefe84bf7582c02d1b1dac37ce28bc9">AOloopControl_computeCalib_DMedgeDetect</a> (const char *IDmaskRM_name, const char *IDout_name)</td></tr>
-<tr class="separator:a2cefe84bf7582c02d1b1dac37ce28bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7eb23b3af7f2b6b1809b8d3252b56c5"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#ad7eb23b3af7f2b6b1809b8d3252b56c5">AOloopControl_computeCalib_DMextrapolateModes</a> (const char *IDin_name, const char *IDmask_name, const char *IDcpa_name, const char *IDout_name)</td></tr>
-<tr class="separator:ad7eb23b3af7f2b6b1809b8d3252b56c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afff87ef770e09cd493af8edfaa7a4e6f"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#afff87ef770e09cd493af8edfaa7a4e6f">AOloopControl_computeCalib_DMslaveExt</a> (const char *IDin_name, const char *IDmask_name, const char *IDsl_name, const char *IDout_name, float r0)</td></tr>
-<tr class="separator:afff87ef770e09cd493af8edfaa7a4e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8c63b18800552e16dcf933c28d0fcdc"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#ac8c63b18800552e16dcf933c28d0fcdc">AOloopControl_computeCalib_mkModes</a> (const char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yc, double r0, double r1, int MaskMode, int BlockNB, float SVDlim)</td></tr>
-<tr class="separator:ac8c63b18800552e16dcf933c28d0fcdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c788faad13d22d0e0095162d7467878"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a5c788faad13d22d0e0095162d7467878">AOloopControl_computeCalib_mkModes_Simple</a> (const char *IDin_name, long NBmblock, long Cmblock, float SVDlim)</td></tr>
-<tr class="separator:a5c788faad13d22d0e0095162d7467878"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a764d8c10e308ea1c15d14afe49df8a60"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a764d8c10e308ea1c15d14afe49df8a60">AOloopControl_computeCalib_compute_ControlMatrix</a> (long loop, long NB_MODE_REMOVED, const char *ID_Rmatrix_name, const char *ID_Cmatrix_name, const char *ID_VTmatrix_name, double Beta, long NB_MODE_REMOVED_STEP, float eigenvlim)</td></tr>
-<tr class="memdesc:a764d8c10e308ea1c15d14afe49df8a60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes control matrix using SVD.  <a href="#a764d8c10e308ea1c15d14afe49df8a60">More...</a><br/></td></tr>
-<tr class="separator:a764d8c10e308ea1c15d14afe49df8a60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed9417256a79eee53adefc3ca6204083"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#aed9417256a79eee53adefc3ca6204083">AOloopControl_computeCalib_compute_CombinedControlMatrix</a> (const char *IDcmat_name, const char *IDmodes_name, const char *IDwfsmask_name, const char *IDdmmask_name, const char *IDcmatc_name, const char *IDcmatc_active_name)</td></tr>
-<tr class="separator:aed9417256a79eee53adefc3ca6204083"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95fbe173445c120eed3930894de5bda1"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a95fbe173445c120eed3930894de5bda1">AOloopControl_computeCalib_loadCM</a> (long loop, const char *CMfname)</td></tr>
-<tr class="separator:a95fbe173445c120eed3930894de5bda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a9842752e03b4de9b4593f1a3b34364ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDATA.html">DATA</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a9842752e03b4de9b4593f1a3b34364ab">data</a></td></tr>
 <tr class="separator:a9842752e03b4de9b4593f1a3b34364ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bc2cff562406d22807bc097e4bc1857"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a7bc2cff562406d22807bc097e4bc1857">INITSTATUS_AOloopControl_computeCalib</a> = 0</td></tr>
+<tr class="separator:a7bc2cff562406d22807bc097e4bc1857"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc4d319c21df38d7e771591b6934a836"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#afc4d319c21df38d7e771591b6934a836">LOOPNUMBER</a></td></tr>
 <tr class="separator:afc4d319c21df38d7e771591b6934a836"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f96203c41ad50bad5dd1604a5c069a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAOLOOPCONTROL__CONF.html">AOLOOPCONTROL_CONF</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a1f96203c41ad50bad5dd1604a5c069a8">AOconf</a></td></tr>
 <tr class="separator:a1f96203c41ad50bad5dd1604a5c069a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a549e693c8df5c527e5e6c9b6508749ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAOloopControl__var.html">AOloopControl_var</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a549e693c8df5c527e5e6c9b6508749ca">aoloopcontrol_var</a></td></tr>
 <tr class="separator:a549e693c8df5c527e5e6c9b6508749ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8a65ca6927b57d697b359281dd5ff24"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#ac8a65ca6927b57d697b359281dd5ff24">AOloopcontrol_meminit</a></td></tr>
-<tr class="separator:ac8a65ca6927b57d697b359281dd5ff24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0afbb1623e71964eafbdd2f699c44552"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a0afbb1623e71964eafbdd2f699c44552">aoconfID_imWFS2_active</a> [100]</td></tr>
 <tr class="separator:a0afbb1623e71964eafbdd2f699c44552"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -230,55 +200,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="aed9417256a79eee53adefc3ca6204083"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">long AOloopControl_computeCalib_compute_CombinedControlMatrix </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDcmat_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDmodes_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDwfsmask_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDdmmask_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDcmatc_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDcmatc_active_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Initialize module. </p>
 
 </div>
 </div>
@@ -299,83 +221,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a764d8c10e308ea1c15d14afe49df8a60"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix </td>
-          <td>(</td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>loop</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>NB_MODE_REMOVED</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>ID_Rmatrix_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>ID_Cmatrix_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>ID_VTmatrix_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>Beta</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>NB_MODE_REMOVED_STEP</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>eigenvlim</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Computes control matrix using SVD. </p>
-<pre class="fragment">  Conventions:
-        m: number of actuators (= NB_MODES);
-        n: number of sensors  (= # of pixels)
-</pre><p> works even for m != n </p>
-<p>gain applied to modes to enhance low orders in SVD</p>
-<p>number of modes removed</p>
-<p>in this procedure, m=number of actuators/modes, n=number of WFS elements</p>
-<p>Write rotation matrix to go from DM modes to eigenmodes</p>
-<p>Compute eigenmodes responses</p>
-<p>eigen mode index</p>
-<p>if modesM exists, compute eigenmodes using rotation matrix</p>
-<p>eigen mode index</p>
-<p>second, build the "inverse" of the diagonal matrix of eigenvalues (matrix1) </p>
-
-</div>
-</div>
 <a class="anchor" id="a90bb164169a5f88145ed531034d65b13"></a>
 <div class="memitem">
 <div class="memproto">
@@ -390,130 +235,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>CLI function for AOloopControl_computeCM. </p>
-
-</div>
-</div>
-<a class="anchor" id="a2cefe84bf7582c02d1b1dac37ce28bc9"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static long AOloopControl_computeCalib_DMedgeDetect </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDmaskRM_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDout_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ad7eb23b3af7f2b6b1809b8d3252b56c5"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static long AOloopControl_computeCalib_DMextrapolateModes </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDin_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDmask_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDcpa_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDout_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="afff87ef770e09cd493af8edfaa7a4e6f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">long AOloopControl_computeCalib_DMslaveExt </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDin_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDmask_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDsl_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDout_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>r0</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -534,32 +255,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a95fbe173445c120eed3930894de5bda1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">long AOloopControl_computeCalib_loadCM </td>
-          <td>(</td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>loop</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>CMfname</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a06a987a4bc8ff47f3f75ac69793b29f5"></a>
 <div class="memitem">
 <div class="memproto">
@@ -577,92 +272,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="abb192905b67326a55a7b46a15a341630"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_mkCalib_map_mask </td>
-          <td>(</td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>loop</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>zrespm_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>WFSmap_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>DMmap_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>dmmask_perclow</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>dmmask_coefflow</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>dmmask_perchigh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>dmmask_coeffhigh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>wfsmask_perclow</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>wfsmask_coefflow</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>wfsmask_perchigh</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>wfsmask_coeffhigh</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="ae73d75a1c20f04ada3e6df8e557f5037"></a>
 <div class="memitem">
 <div class="memproto">
@@ -677,38 +286,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>CLI function for AOloopControl_mkCalib_map_mask. </p>
-
-</div>
-</div>
-<a class="anchor" id="af39548435711af3dd503f75a6199b65f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">long AOloopControl_computeCalib_mkCM </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>respm_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>cm_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>SVDlim</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -763,109 +340,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ac8c63b18800552e16dcf933c28d0fcdc"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">long AOloopControl_computeCalib_mkModes </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>ID_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>msizex</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>msizey</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>CPAmax</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>deltaCPA</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>xc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>yc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>r0</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>r1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>MaskMode</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>BlockNB</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>SVDlim</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>CPA for each Zernike (somewhat arbitrary... used to sort modes in CPA)</p>
-<p>STEP 1: CREATE STARTING POINT : ZERNIKES + FOURIER MODES</p>
-<p>if Mmask exists, use it, otherwise create it</p>
-<p>extract xc and yc from mask</p>
-<p>Remove excluded modes if they exist</p>
-<p>Remove excluded modes if they exist</p>
-<p>COMPUTE WFS RESPONSE TO MODES -&gt; fmodesWFS00all.fits</p>
-<p>STEP 2: SEPARATE DM MODES INTO BLOCKS AND MASK</p>
-<p>STEP 3: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim00 FOR CUTOFF -&gt; fmodes1all.fits (DM space)</p>
-<p>STEP 4: REMOVE MODES THAT ARE CONTAINED IN PREVIOUS BLOCKS, AND ENFORCE DM-SPACE ORTHOGONALITY BETWEEN BLOCKS -&gt; fmodes2all.fits (DM space) fmodes1all -&gt; fmodes2all</p>
-<p>STEP 5: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim01 FOR CUTOFF -&gt; fmodes2ball.fits (DM space)</p>
-<p>STEP 6: COMPUTE WFS RESPONSE TO MODES fmodes2ball -&gt; fmodesWFS0all.fits</p>
-<p>Load ... or create WFS mask</p>
-<p>STEP 7: REMOVE WFS MODES THAT ARE CONTAINED IN PREVIOUS BLOCKS, AND ENFORCE WFS-SPACE ORTHOGONALITY BETWEEN BLOCKS Input: fmodesWFS0all (corresponding to fmodes2ball) Output -&gt; fmodesWFS1all / fmodes3all</p>
-<p>STEP 8: SVD WFS SPACE IN EACH BLOCK fmodesWFS1all, fmodes3 -&gt; fmodesall</p>
-<p>eigen mode index</p>
-<p>WFS MODES, MODAL CONTROL MATRICES </p>
-
-</div>
-</div>
 <a class="anchor" id="adb786f719ec5bba4010601ee9998069a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -880,44 +354,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>CLI function for AOloopControl_mkModes. </p>
-
-</div>
-</div>
-<a class="anchor" id="a5c788faad13d22d0e0095162d7467878"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">long AOloopControl_computeCalib_mkModes_Simple </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDin_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>NBmblock</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>Cmblock</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>SVDlim</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -938,38 +374,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad5a4d6377e976f9ae6f3e00d16e1f64d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">long AOloopControl_computeCalib_mkSlavedAct </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDmaskRM_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>pixrad</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDout_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a81e3355412f55f1eabef060120ab38ad"></a>
 <div class="memitem">
 <div class="memproto">
@@ -984,56 +388,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>CLI function for AOloopControl_mkSlavedAct. </p>
-
-</div>
-</div>
-<a class="anchor" id="a5821c6a1b61d153c829976d77cfa97c9"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_Process_zrespM </td>
-          <td>(</td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>loop</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDzrespm0_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDwfsref_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>IDzrespm_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>WFSmap_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>DMmap_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -1071,88 +425,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ade0d65b153ca7fd73554afeed9b62623"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt </td>
-          <td>(</td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>loop</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>zrespm_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>WFSref0_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>WFSmap_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>DMmap_name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>rmampl</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>normalize</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a4686db64ee8970c84b269e0425519dec"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Variable Documentation</h2>
 <a class="anchor" id="a1f96203c41ad50bad5dd1604a5c069a8"></a>
 <div class="memitem">
@@ -1172,18 +444,6 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">long aoconfID_imWFS2_active[100]</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ac8a65ca6927b57d697b359281dd5ff24"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int AOloopcontrol_meminit</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1214,6 +474,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a7bc2cff562406d22807bc097e4bc1857"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int INITSTATUS_AOloopControl_computeCalib = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="afc4d319c21df38d7e771591b6934a836"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1232,7 +512,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0394dae130dd6b4601d7d7032afd608b.html">AOloopControl_computeCalib</a></li><li class="navelem"><a class="el" href="AOloopControl__computeCalib_8c.html">AOloopControl_computeCalib.c</a></li>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

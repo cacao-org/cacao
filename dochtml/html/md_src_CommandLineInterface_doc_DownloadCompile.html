@@ -135,6 +135,7 @@ $(document).ready(function(){initNavTree('md_src_CommandLineInterface_doc_Downlo
 </pre></li>
 </ul>
 <h2>1.3 GPU acceleration (optional, but highly recommended)</h2>
+<p>Required libraries:</p>
 <ul>
 <li>install <b>NVIDIA driver</b></li>
 <li>install <b>CUDA</b></li>
@@ -146,7 +147,7 @@ $(document).ready(function(){initNavTree('md_src_CommandLineInterface_doc_Downlo
 <li>shared memory image viewer (<code>shmimview</code> or similar)</li>
 <li>qt-based <code>shmimviewqt</code></li>
 </ul>
-<h1>2 Compilation from git clone (recommended for developers)</h1>
+<h1>2 Compilation from git clone (recommended)</h1>
 <h2>2.1 Additional libraries</h2>
 <h3>2.1.1 CentOS</h3>
 <p>Install Development tools, use the command bellow. This will search the yum repositories, and install the tools from the closest repo. </p>
@@ -159,19 +160,15 @@ $(document).ready(function(){initNavTree('md_src_CommandLineInterface_doc_Downlo
     ./configure
     make
     make install
-</pre><h1>3 Compilation from tarball</h1>
-<p>Unpack </p>
-<pre class="fragment">    gunzip &lt;package&gt;.tar.gz
-    tar -xvf &lt;package&gt;.tar
-</pre><p>The source code follows the standard GNU build process: </p>
-<pre class="fragment">    ./configure
-    make
-    sudo make install</pre> </div></div><!-- contents -->
+</pre><h1>3 Troubleshooting and FAQs</h1>
+<h2>Configure error: "No package 'magma' found"</h2>
+<p>configure script uses pkg-config to find the package. You need to add in .bashrc : </p>
+<pre class="fragment">export PKG_CONFIG_PATH=/usr/local/magma/lib/pkgconfig</pre> </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

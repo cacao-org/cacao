@@ -23,5 +23,6 @@ var ZernikePolyn_8c =
     [ "ZERNIKEPOLYN_rmPiston", "ZernikePolyn_8c.html#a5dbfdca8ba770d4108b8418de82e1104", null ],
     [ "ZERNIKEPOLYN_rmPiston_cli", "ZernikePolyn_8c.html#aedcbd216b72931511f1531e8b408cc84", null ],
     [ "data", "ZernikePolyn_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_ZernikePolyn", "ZernikePolyn_8c.html#a9b8ca157b7f552c2b4eef89664bdb621", null ],
     [ "Zernike", "ZernikePolyn_8c.html#a756b785b43e264e97a9c0c31ff984411", null ]
 ];

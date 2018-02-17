@@ -1,6 +1,5 @@
 var AOloopControl__DM__toolbox_8c =
 [
-    [ "clock_gettime", "AOloopControl__DM__toolbox_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
     [ "make_master_turbulence_screen_local", "AOloopControl__DM__toolbox_8c.html#a241d3fd4b55ca1d883ec6bc80a4fbefe", null ],
     [ "time_diff", "AOloopControl__DM__toolbox_8c.html#ab99a9aa7e41d1c1fc35848f51f52b76e", null ],
     [ "data", "AOloopControl__DM__toolbox_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],

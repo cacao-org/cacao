@@ -145,6 +145,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ae73ad0e7c113b521dc0b809828d524a5"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#ae73ad0e7c113b521dc0b809828d524a5">linopt_compute_linRM_from_inout_cli</a> ()</td></tr>
 <tr class="separator:ae73ad0e7c113b521dc0b809828d524a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
+<tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br/></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc117916939017260e807f28af155892"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#afc117916939017260e807f28af155892">init_linopt_imtools</a> ()</td></tr>
 <tr class="separator:afc117916939017260e807f28af155892"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,6 +191,8 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a9842752e03b4de9b4593f1a3b34364ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDATA.html">DATA</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a9842752e03b4de9b4593f1a3b34364ab">data</a></td></tr>
 <tr class="separator:a9842752e03b4de9b4593f1a3b34364ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fff557d9f50fec41b81a28459ff908d"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a8fff557d9f50fec41b81a28459ff908d">INITSTATUS_linopt_imtools</a> = 0</td></tr>
+<tr class="separator:a8fff557d9f50fec41b81a28459ff908d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa073a770f3d31757fd3886715dc30c66"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#aa073a770f3d31757fd3886715dc30c66">NBPARAM</a></td></tr>
 <tr class="separator:aa073a770f3d31757fd3886715dc30c66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e16486e94e2fd7d44c5548e907d392b"><td class="memItemLeft" align="right" valign="top">static long double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a8e16486e94e2fd7d44c5548e907d392b">C0</a></td></tr>
@@ -208,7 +211,7 @@ Variables</h2></td></tr>
 <p>CPU-based lineal algebra tools: decomposition, SVD etc...</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>7 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000065">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000068">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <div class="memitem">
@@ -223,6 +226,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initialize module. </p>
 
 </div>
 </div>
@@ -1240,6 +1245,26 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a8fff557d9f50fec41b81a28459ff908d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int INITSTATUS_linopt_imtools = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="aa073a770f3d31757fd3886715dc30c66"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1306,7 +1331,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_082a3b8b4397c5d97227e6064a755880.html">linopt_imtools</a></li><li class="navelem"><a class="el" href="linopt__imtools_8c.html">linopt_imtools.c</a></li>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

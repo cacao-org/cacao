@@ -13,5 +13,6 @@ var 00CORE_8c =
     [ "set_precision", "00CORE_8c.html#a93e8d81fd1fe2de3159ddff15801af81", null ],
     [ "timespec_diff", "00CORE_8c.html#acd8c1457583903d309e19adde6805717", null ],
     [ "timespec_diff_double", "00CORE_8c.html#aa333aaba4981442f52ab55df43d76ac5", null ],
-    [ "data", "00CORE_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ]
+    [ "data", "00CORE_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
+    [ "INITSTATUS_00CORE", "00CORE_8c.html#a0dd7afe3bdf20e2ac1aa84d06eeed108", null ]
 ];

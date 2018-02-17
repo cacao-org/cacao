@@ -37,6 +37,7 @@ var linopt__imtools_8c =
     [ "data", "linopt__imtools_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "dfcnt", "linopt__imtools_8c.html#a31fa525e1d9b569475e55062f6d16a96", null ],
     [ "fmInit", "linopt__imtools_8c.html#a867bce46990afb113a1ab42430a9e888", null ],
+    [ "INITSTATUS_linopt_imtools", "linopt__imtools_8c.html#a8fff557d9f50fec41b81a28459ff908d", null ],
     [ "NBPARAM", "linopt__imtools_8c.html#aa073a770f3d31757fd3886715dc30c66", null ],
     [ "polycoeff1", "linopt__imtools_8c.html#a3cbf724daa6ced25bc4ddf7d17a05f0a", null ],
     [ "polycoeff2", "linopt__imtools_8c.html#a05e6847679b5d1fedf8b5f13bd37417c", null ]

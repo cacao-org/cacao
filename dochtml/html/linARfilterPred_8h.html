@@ -119,6 +119,9 @@ $(document).ready(function(){initNavTree('linARfilterPred_8h.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a1e88dc47f7bdcb5788e9dcafa0de7067"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8h.html#a1e88dc47f7bdcb5788e9dcafa0de7067">__attribute__</a> ((constructor)) libinit_linARfilterPred()</td></tr>
+<tr class="memdesc:a1e88dc47f7bdcb5788e9dcafa0de7067"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#a1e88dc47f7bdcb5788e9dcafa0de7067">More...</a><br/></td></tr>
+<tr class="separator:a1e88dc47f7bdcb5788e9dcafa0de7067"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affa31abb29f40d65eed5f3b38f286111"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8h.html#affa31abb29f40d65eed5f3b38f286111">init_linARfilterPred</a> ()</td></tr>
 <tr class="separator:affa31abb29f40d65eed5f3b38f286111"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">2. I/O TOOLS</div></td></tr>
@@ -130,6 +133,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a59be8ab2a56ad41041af2a353427a1b4"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8h.html#a59be8ab2a56ad41041af2a353427a1b4">LINARFILTERPRED_SelectBlock</a> (const char *IDin_name, const char *IDblknb_name, long blkNB, const char *IDout_name)</td></tr>
 <tr class="separator:a59be8ab2a56ad41041af2a353427a1b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">3. BUILD PREDICTIVE FILTER</div></td></tr>
+<tr class="memitem:ad91a776994400be840100d64e36b22c8"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8h.html#ad91a776994400be840100d64e36b22c8">linARfilterPred_repeat_shift_X</a> (const char *IDin_name, long NBstep, const char *IDout_name)</td></tr>
+<tr class="memdesc:ad91a776994400be840100d64e36b22c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expand 2D image/matrix in X direction by repeat and shift.  <a href="#ad91a776994400be840100d64e36b22c8">More...</a><br/></td></tr>
+<tr class="separator:ad91a776994400be840100d64e36b22c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc6c7c5f8dbcd1656784dda99c517bde"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8h.html#afc6c7c5f8dbcd1656784dda99c517bde">LINARFILTERPRED_Build_LinPredictor</a> (const char *IDin_name, long PForder, float PFlag, double SVDeps, double RegLambda, const char *IDoutPF_name, int outMode, int LOOPmode, float LOOPgain)</td></tr>
 <tr class="memdesc:afc6c7c5f8dbcd1656784dda99c517bde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build predictive filter.  <a href="#afc6c7c5f8dbcd1656784dda99c517bde">More...</a><br/></td></tr>
 <tr class="separator:afc6c7c5f8dbcd1656784dda99c517bde"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,8 +157,26 @@ Functions</h2></td></tr>
 <p>Implements Empirical Orthogonal Functions</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>5 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000064">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000067">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a1e88dc47f7bdcb5788e9dcafa0de7067"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td>(</td>
+          <td class="paramtype">(constructor)&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize module. </p>
+
+</div>
+</div>
 <a class="anchor" id="affa31abb29f40d65eed5f3b38f286111"></a>
 <div class="memitem">
 <div class="memproto">
@@ -327,8 +351,7 @@ Functions</h2></td></tr>
 <p>if &lt;IFoutPF_name&gt;_PFparam image exist, read parameters from it: PFlag, SVDeps, RegLambda, LOOPgain create it in shared memory by default </p>
 <p>&lt; 1 if regularization</p>
 <p>&lt; use MAGMA library if available</p>
-<p>&lt; 1 if average value of each mode is removed</p>
-<p>measure time </p>
+<p>&lt; 1 if average value of each mode is removed </p>
 
 </div>
 </div>
@@ -499,6 +522,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ad91a776994400be840100d64e36b22c8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">long linARfilterPred_repeat_shift_X </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>IDin_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>NBstep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>IDout_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Expand 2D image/matrix in X direction by repeat and shift. </p>
+
+</div>
+</div>
 <a class="anchor" id="a97d7bfb0554348650718fcaa5acb17fb"></a>
 <div class="memitem">
 <div class="memproto">
@@ -591,7 +648,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b07b29f2a0f54c902d2948f61c128711.html">linARfilterPred</a></li><li class="navelem"><a class="el" href="linARfilterPred_8h.html">linARfilterPred.h</a></li>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

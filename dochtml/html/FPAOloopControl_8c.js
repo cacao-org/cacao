@@ -33,5 +33,6 @@ var FPAOloopControl_8c =
     [ "FPcamReadInit", "FPAOloopControl_8c.html#acdf17d8f2ddbc2c3b5a421c28146e64a", null ],
     [ "FPLOOPNUMBER", "FPAOloopControl_8c.html#a6351dbcff0684d3e828a8f6ad1e3a13c", null ],
     [ "FPWFSatype", "FPAOloopControl_8c.html#a47292edb1d45d9a167c9de301eb0a529", null ],
+    [ "INITSTATUS_FPAOloopcontrol", "FPAOloopControl_8c.html#adb9a0466a570c33c3658ba3517c39c28", null ],
     [ "NB_FPAOloopcontrol", "FPAOloopControl_8c.html#a0ad8e237b4cbe145c63971905b7931a3", null ]
 ];

@@ -59,6 +59,8 @@ var image__basic_8c =
     [ "IMAGE_BASIC_get_assym_component_cli", "image__basic_8c.html#ae79660636cfa72bd07d27286df09a441", null ],
     [ "IMAGE_BASIC_get_sym_component", "image__basic_8c.html#aa86ff9597b0bdcfe1d9efce10218a340", null ],
     [ "IMAGE_BASIC_get_sym_component_cli", "image__basic_8c.html#a76c8eccec1dd92fc484462b1f0c15094", null ],
+    [ "image_basic_indexmap", "image__basic_8c.html#a5b0171ea7272127f6fef2325bf3f65a4", null ],
+    [ "image_basic_indexmap_cli", "image__basic_8c.html#a271a5242f527f284ed6b7956ae8c6c0e", null ],
     [ "image_basic_load_fitsimages_cube_cli", "image__basic_8c.html#a0fe01ea02c160a8a30631a99ad64f999", null ],
     [ "image_basic_resize_cli", "image__basic_8c.html#a68e194b354f0b3083ad28f15f96da267", null ],
     [ "image_basic_rotate_cli", "image__basic_8c.html#a460dd41d963d209406f40047173e5100", null ],
@@ -74,5 +76,6 @@ var image__basic_8c =
     [ "load_fitsimages", "image__basic_8c.html#a569f6c5550944ba0a2fbc71900996b45", null ],
     [ "load_fitsimages_cube", "image__basic_8c.html#a4eb60c41877a6f39ea3f35a61a5b99de", null ],
     [ "data", "image__basic_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
-    [ "errmsg", "image__basic_8c.html#a8bb845778df5ade66dd9af426128a622", null ]
+    [ "errmsg", "image__basic_8c.html#a8bb845778df5ade66dd9af426128a622", null ],
+    [ "INITSTATUS_image_basic", "image__basic_8c.html#a5417eea66e528f44b6387b63b286f798", null ]
 ];

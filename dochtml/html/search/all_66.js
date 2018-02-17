@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['f',['F',['../struct____attribute____.html#a1c2360411cef6f9baecbc8e9b016cf58',1,'__attribute__::F()'],['../structVARIABLE.html#af31bb248155770bb6d7080aa50bdb4fd',1,'VARIABLE::f()']]],
+  ['f',['f',['../structVARIABLE.html#af31bb248155770bb6d7080aa50bdb4fd',1,'VARIABLE::f()'],['../struct____attribute____.html#a1c2360411cef6f9baecbc8e9b016cf58',1,'__attribute__::F()']]],
   ['f_5ffilter',['f_filter',['../image__filter_8c.html#abc20ea5404ca4d631c908de64f8677ca',1,'f_filter(const char *ID_name, const char *ID_out, float f1, float f2):&#160;image_filter.c'],['../image__filter_8h.html#abc20ea5404ca4d631c908de64f8677ca',1,'f_filter(const char *ID_name, const char *ID_out, float f1, float f2):&#160;image_filter.c']]],
   ['fact',['fact',['../ZernikePolyn_8c.html#af7524858a2e89eb535d1afe4a573fc48',1,'fact(int n):&#160;ZernikePolyn.c'],['../ZernikePolyn_8h.html#af7524858a2e89eb535d1afe4a573fc48',1,'fact(int n):&#160;ZernikePolyn.c']]],
   ['fast_5fcenter_5fpsf',['fast_center_PSF',['../psf_8c.html#a36346c341caa488e04c4474bf5b395b2',1,'fast_center_PSF(const char *ID_name, double *xcenter, double *ycenter, long box_size):&#160;psf.c'],['../psf_8h.html#a36346c341caa488e04c4474bf5b395b2',1,'fast_center_PSF(const char *ID_name, double *xcenter, double *ycenter, long box_size):&#160;psf.c']]],

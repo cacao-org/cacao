@@ -21,6 +21,7 @@ var annotated =
     [ "LOGSHIM_CONF", "structLOGSHIM__CONF.html", "structLOGSHIM__CONF" ],
     [ "MODULE", "structMODULE.html", "structMODULE" ],
     [ "res_node", "structres__node.html", "structres__node" ],
+    [ "RT_STREAM_LOG_INFO", "structRT__STREAM__LOG__INFO.html", "structRT__STREAM__LOG__INFO" ],
     [ "savethreadmsg", "structsavethreadmsg.html", "structsavethreadmsg" ],
     [ "sImage", "structsImage.html", "structsImage" ],
     [ "symrec", "structsymrec.html", "structsymrec" ],

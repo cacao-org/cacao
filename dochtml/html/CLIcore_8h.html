@@ -147,6 +147,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a4f31a6fd48ee5d4579ae4aaaa3cae285"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8h.html#a4f31a6fd48ee5d4579ae4aaaa3cae285">sig_handler</a> (int signo)</td></tr>
 <tr class="memdesc:a4f31a6fd48ee5d4579ae4aaaa3cae285"><td class="mdescLeft">&#160;</td><td class="mdescRight">signal catching  <a href="#a4f31a6fd48ee5d4579ae4aaaa3cae285">More...</a><br/></td></tr>
 <tr class="separator:a4f31a6fd48ee5d4579ae4aaaa3cae285"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63c948bc1a87d4f01dd659b3c691d79c"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8h.html#a63c948bc1a87d4f01dd659b3c691d79c">RegisterModule</a> (char *FileName, char *PackageName, char *InfoString)</td></tr>
+<tr class="separator:a63c948bc1a87d4f01dd659b3c691d79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a097efcf1913161adeffaf98921d0f5a5"><td class="memItemLeft" align="right" valign="top">uint_fast16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8h.html#a097efcf1913161adeffaf98921d0f5a5">RegisterCLIcommand</a> (char *CLIkey, char *CLImodule, int_fast8_t(*CLIfptr)(), char *CLIinfo, char *CLIsyntax, char *CLIexample, char *CLICcall)</td></tr>
 <tr class="separator:a097efcf1913161adeffaf98921d0f5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a167a57a5391116a1a11be9d81b387ea5"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8h.html#a167a57a5391116a1a11be9d81b387ea5">runCLI</a> (int argc, char *argv[], char *promptstring)</td></tr>
@@ -185,7 +187,7 @@ Variables</h2></td></tr>
 <p>Command line interface (CLI) definitions and function prototypes</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>9 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000043">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000046">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
 </div><h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="a8dfff6fca82af0a0432e777a61607d87"></a>
 <div class="memitem">
@@ -297,6 +299,38 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>CLICcall</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a63c948bc1a87d4f01dd659b3c691d79c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int_fast8_t RegisterModule </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>FileName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>PackageName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>InfoString</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -506,7 +540,7 @@ parsing done with bison and flex </p>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="CLIcore_8h.html">CLIcore.h</a></li>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

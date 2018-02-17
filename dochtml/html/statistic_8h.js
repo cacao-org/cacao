@@ -1,5 +1,6 @@
 var statistic_8h =
 [
+    [ "__attribute__", "statistic_8h.html#a2ecf834111517c14e3175bd9f552edd9", null ],
     [ "better_poisson", "statistic_8h.html#a617f9bb1c07595bb869077d862cf4c73", null ],
     [ "fast_poisson", "statistic_8h.html#ab7ac1e1d30224f2ad6b02a2bbc575153", null ],
     [ "gammaln", "statistic_8h.html#a73469985ca65317217867ea002b4f189", null ],

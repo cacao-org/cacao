@@ -16,5 +16,13 @@ var searchData=
   ['rndgen',['rndgen',['../structDATA.html#a819c0e911d771dbb7da0dbf26e993fc2',1,'DATA']]],
   ['root',['root',['../structkdtree.html#accef3227abac75a5eed239590ce574d9',1,'kdtree']]],
   ['rows',['rows',['../structsImage.html#a7acc75cf6bd1af8be5ac3801bf5a909c',1,'sImage']]],
+  ['rtstreamlog_5fbuff',['RTstreamLOG_buff',['../structAOLOOPCONTROL__CONF.html#a4852cb00bf23c96728839f2cb4bdf21b',1,'AOLOOPCONTROL_CONF']]],
+  ['rtstreamlog_5fbuffswitch',['RTstreamLOG_buffSwitch',['../structAOLOOPCONTROL__CONF.html#a3dd5c832e201e20b7e4bd08188724051',1,'AOLOOPCONTROL_CONF']]],
+  ['rtstreamlog_5fframe',['RTstreamLOG_frame',['../structAOLOOPCONTROL__CONF.html#a333fa6059a20257035a5277c08872a22',1,'AOLOOPCONTROL_CONF']]],
+  ['rtstreamlog_5fmodeval_5fol_5fon',['RTstreamLOG_modeval_ol_ON',['../structAOLOOPCONTROL__CONF.html#ae5629184f6abc2d57917f6396e47e136',1,'AOLOOPCONTROL_CONF']]],
+  ['rtstreamlog_5fmodeval_5fol_5fsave',['RTstreamLOG_modeval_ol_save',['../structAOLOOPCONTROL__CONF.html#a81dcac7211eddf65172a39abd018fd69',1,'AOLOOPCONTROL_CONF']]],
+  ['rtstreamlog_5fsavetoggle',['RTstreamLOG_saveToggle',['../structAOLOOPCONTROL__CONF.html#a7ade228bc77a3fae777dd09c5d13789b',1,'AOLOOPCONTROL_CONF']]],
+  ['rtstreamlog_5fwfsim_5fon',['RTstreamLOG_wfsim_ON',['../structAOLOOPCONTROL__CONF.html#a885962a18a213dd5a33cd97b65e2dbbc',1,'AOLOOPCONTROL_CONF']]],
+  ['rtstreamlog_5fwfsim_5fsave',['RTstreamLOG_wfsim_save',['../structAOLOOPCONTROL__CONF.html#a638c0ddc28047fd692cbdf4a4872290a',1,'AOLOOPCONTROL_CONF']]],
   ['ruid',['ruid',['../structDATA.html#a58536c786a36c70932f12e4663a2194d',1,'DATA']]]
 ];

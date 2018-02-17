@@ -18,6 +18,7 @@ var structAOloopControl__var =
     [ "aoconfID_imWFS0tot", "structAOloopControl__var.html#acd1b6c3391f1120b3352296a4e5b91f7", null ],
     [ "aoconfID_imWFS1", "structAOloopControl__var.html#aff7716a102d5a777d660a82efb7ba74e", null ],
     [ "aoconfID_imWFS2", "structAOloopControl__var.html#af14c2e6d791bff2a3dfc76f9eb7e2782", null ],
+    [ "aoconfID_imWFSlinlimit", "structAOloopControl__var.html#aadfc599fea94f7d3950badb257bdd4da", null ],
     [ "aoconfID_LIMIT_modes", "structAOloopControl__var.html#aa72d8e98fe2970e56ff0e15dbdbe8507", null ],
     [ "aoconfID_limitb", "structAOloopControl__var.html#af3563e0e242d231c71d456f517c6b42f", null ],
     [ "aoconfID_looptiming", "structAOloopControl__var.html#a3078abec1d9e1a9edc42379d9e81296f", null ],

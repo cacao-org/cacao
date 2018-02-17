@@ -112,25 +112,27 @@ $(document).ready(function(){initNavTree('img__reduce_8h_source.html','');});
 <a href="img__reduce_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _IMGREDUCE_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _IMGREDUCE_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;int_fast8_t <a class="code" href="img__reduce_8c.html#af3d15b471345b3248a1f0e1366bdbea9">init_img_reduce</a>();</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keywordtype">long</span> <a class="code" href="img__reduce_8c.html#a937c6898a9899ac3f4035b970ec2a0bc">IMG_REDUCE_cleanbadpix_fast</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *IDname, <span class="keyword">const</span> <span class="keywordtype">char</span> *IDbadpix_name, <span class="keyword">const</span> <span class="keywordtype">char</span> *IDoutname);</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keywordtype">long</span> <a class="code" href="img__reduce_8c.html#a94b3c5e62355eb83af8352a0f97cbc92">IMG_REDUCE_cubesimplestat</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *IDin_name);</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keywordtype">int</span> <a class="code" href="img__reduce_8c.html#aa81da45369eb27d714946b96d9d0e604">IMG_REDUCE_cubeprocess</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *IDin_name);</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="img__reduce_8c_html_af3d15b471345b3248a1f0e1366bdbea9"><div class="ttname"><a href="img__reduce_8c.html#af3d15b471345b3248a1f0e1366bdbea9">init_img_reduce</a></div><div class="ttdeci">int_fast8_t init_img_reduce()</div><div class="ttdef"><b>Definition:</b> img_reduce.c:122</div></div>
-<div class="ttc" id="img__reduce_8c_html_aa81da45369eb27d714946b96d9d0e604"><div class="ttname"><a href="img__reduce_8c.html#aa81da45369eb27d714946b96d9d0e604">IMG_REDUCE_cubeprocess</a></div><div class="ttdeci">int IMG_REDUCE_cubeprocess(const char *IDin_name)</div><div class="ttdef"><b>Definition:</b> img_reduce.c:616</div></div>
-<div class="ttc" id="img__reduce_8c_html_a94b3c5e62355eb83af8352a0f97cbc92"><div class="ttname"><a href="img__reduce_8c.html#a94b3c5e62355eb83af8352a0f97cbc92">IMG_REDUCE_cubesimplestat</a></div><div class="ttdeci">long IMG_REDUCE_cubesimplestat(const char *IDin_name)</div><div class="ttdef"><b>Definition:</b> img_reduce.c:173</div></div>
-<div class="ttc" id="img__reduce_8c_html_a937c6898a9899ac3f4035b970ec2a0bc"><div class="ttname"><a href="img__reduce_8c.html#a937c6898a9899ac3f4035b970ec2a0bc">IMG_REDUCE_cleanbadpix_fast</a></div><div class="ttdeci">long IMG_REDUCE_cleanbadpix_fast(const char *IDname, const char *IDbadpix_name, const char *IDoutname)</div><div class="ttdef"><b>Definition:</b> img_reduce.c:469</div></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keywordtype">void</span> <a class="code" href="00CORE_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor)) libinit_img_reduce();</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;int_fast8_t <a class="code" href="img__reduce_8c.html#af3d15b471345b3248a1f0e1366bdbea9">init_img_reduce</a>();</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">long</span> <a class="code" href="img__reduce_8c.html#aa8c9a051ee5dcad2734b21bb4c3fb382">IMG_REDUCE_cleanbadpix_fast</a>(const <span class="keywordtype">char</span> *IDname, const <span class="keywordtype">char</span> *IDbadpix_name, const <span class="keywordtype">char</span> *IDoutname, <span class="keywordtype">int</span> streamMode);</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keywordtype">long</span> <a class="code" href="img__reduce_8c.html#a94b3c5e62355eb83af8352a0f97cbc92">IMG_REDUCE_cubesimplestat</a>(const <span class="keywordtype">char</span> *IDin_name);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keywordtype">int</span> <a class="code" href="img__reduce_8c.html#aa81da45369eb27d714946b96d9d0e604">IMG_REDUCE_cubeprocess</a>(const <span class="keywordtype">char</span> *IDin_name);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="img__reduce_8c_html_af3d15b471345b3248a1f0e1366bdbea9"><div class="ttname"><a href="img__reduce_8c.html#af3d15b471345b3248a1f0e1366bdbea9">init_img_reduce</a></div><div class="ttdeci">int_fast8_t init_img_reduce()</div><div class="ttdef"><b>Definition:</b> img_reduce.c:138</div></div>
+<div class="ttc" id="img__reduce_8c_html_aa8c9a051ee5dcad2734b21bb4c3fb382"><div class="ttname"><a href="img__reduce_8c.html#aa8c9a051ee5dcad2734b21bb4c3fb382">IMG_REDUCE_cleanbadpix_fast</a></div><div class="ttdeci">long IMG_REDUCE_cleanbadpix_fast(const char *IDname, const char *IDbadpix_name, const char *IDoutname, int streamMode)</div><div class="ttdef"><b>Definition:</b> img_reduce.c:489</div></div>
+<div class="ttc" id="img__reduce_8c_html_aa81da45369eb27d714946b96d9d0e604"><div class="ttname"><a href="img__reduce_8c.html#aa81da45369eb27d714946b96d9d0e604">IMG_REDUCE_cubeprocess</a></div><div class="ttdeci">int IMG_REDUCE_cubeprocess(const char *IDin_name)</div><div class="ttdef"><b>Definition:</b> img_reduce.c:670</div></div>
+<div class="ttc" id="img__reduce_8c_html_a94b3c5e62355eb83af8352a0f97cbc92"><div class="ttname"><a href="img__reduce_8c.html#a94b3c5e62355eb83af8352a0f97cbc92">IMG_REDUCE_cubesimplestat</a></div><div class="ttdeci">long IMG_REDUCE_cubesimplestat(const char *IDin_name)</div><div class="ttdef"><b>Definition:</b> img_reduce.c:191</div></div>
+<div class="ttc" id="00CORE_8c_html_afd02bb0f6a745c39d5e3417493995c71"><div class="ttname"><a href="00CORE_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a></div><div class="ttdeci">void __attribute__((constructor))</div><div class="ttdoc">Initialize module. </div><div class="ttdef"><b>Definition:</b> 00CORE.c:87</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2023aa0f1a7d7dd6bbe7e3d622e6aa1b.html">img_reduce</a></li><li class="navelem"><a class="el" href="img__reduce_8h.html">img_reduce.h</a></li>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

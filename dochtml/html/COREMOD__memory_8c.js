@@ -138,6 +138,7 @@ var COREMOD__memory_8c =
     [ "waitforsemID", "COREMOD__memory_8c.html#a201263a8498c7557ab392a4cdcc13488", null ],
     [ "data", "COREMOD__memory_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "errmsg_memory", "COREMOD__memory_8c.html#ac131d1fce1239b90898281924cc65ca0", null ],
+    [ "INITSTATUS_COREMOD_memory", "COREMOD__memory_8c.html#a4ad95509513294e65e1aa0d7d54a8caa", null ],
     [ "listim_scr", "COREMOD__memory_8c.html#ad82f8d9664d54d3d4adb8e15f6e6dd7c", null ],
     [ "listim_scr_fpi", "COREMOD__memory_8c.html#a2e0d6dbc907d460e05c0a0376a62a864", null ],
     [ "listim_scr_fpo", "COREMOD__memory_8c.html#a9d58a5ddfb4c8e3a8936284f6e5cff01", null ],

@@ -1,5 +1,6 @@
 var COREMOD__iofits_8h =
 [
+    [ "__attribute__", "COREMOD__iofits_8h.html#ac6aa7d77cd95fdebdfea3bcd0d67f79c", null ],
     [ "break_cube", "COREMOD__iofits_8h.html#ae0d7354c8cd7a60606f816ec85800e5a", null ],
     [ "data_type_code", "COREMOD__iofits_8h.html#adcce790fec4b63a6bf470b5e9e0dd6c9", null ],
     [ "file_exists", "COREMOD__iofits_8h.html#a76edb8071574cfd3b322e0df10a18718", null ],

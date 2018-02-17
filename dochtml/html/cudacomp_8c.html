@@ -137,6 +137,7 @@ Functions</h2></td></tr>
 <tr class="separator:a81532ab997fb00a03929e06f393186e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Module initialization</div></td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cudacomp_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
+<tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br/></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aead9dadc577cf10ed989b89b8360c802"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cudacomp_8c.html#aead9dadc577cf10ed989b89b8360c802">init_cudacomp</a> ()</td></tr>
 <tr class="memdesc:aead9dadc577cf10ed989b89b8360c802"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize cudacomp module and command line interface.  <a href="#aead9dadc577cf10ed989b89b8360c802">More...</a><br/></td></tr>
@@ -185,6 +186,8 @@ Variables</h2></td></tr>
 <tr class="separator:ac1a738ea19b335ef19aad2749c296937"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9842752e03b4de9b4593f1a3b34364ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDATA.html">DATA</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cudacomp_8c.html#a9842752e03b4de9b4593f1a3b34364ab">data</a></td></tr>
 <tr class="separator:a9842752e03b4de9b4593f1a3b34364ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36b5f6ffcce02da5b71a91d09b1c60ef"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cudacomp_8c.html#a36b5f6ffcce02da5b71a91d09b1c60ef">INITSTATUS_cudacomp</a> = 0</td></tr>
+<tr class="separator:a36b5f6ffcce02da5b71a91d09b1c60ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5322f5738b8bf1f57458a31aea22f1db"><td class="memItemLeft" align="right" valign="top">pid_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cudacomp_8c.html#a5322f5738b8bf1f57458a31aea22f1db">CLIPID</a></td></tr>
 <tr class="memdesc:a5322f5738b8bf1f57458a31aea22f1db"><td class="mdescLeft">&#160;</td><td class="mdescRight">important directories and info  <a href="#a5322f5738b8bf1f57458a31aea22f1db">More...</a><br/></td></tr>
 <tr class="separator:a5322f5738b8bf1f57458a31aea22f1db"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,7 +285,7 @@ Variables</h2></td></tr>
 <p>Also uses MAGMA library</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>3 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000051">Bug:</a></b></dt><dd>MAGMA execution can hang on dsyevd routine. This seems to be a MAGMA issue.</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000054">Bug:</a></b></dt><dd>MAGMA execution can hang on dsyevd routine. This seems to be a MAGMA issue.</dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <div class="memitem">
@@ -297,6 +300,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initialize module. </p>
 
 </div>
 </div>
@@ -1321,6 +1326,26 @@ EIGENVALUES are good to about 1e-6 of peak eigenvalue in single precision, much 
 
 </div>
 </div>
+<a class="anchor" id="a36b5f6ffcce02da5b71a91d09b1c60ef"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int INITSTATUS_cudacomp = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a3e7ace0a30ae318164b6cc8b6f23b46c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2047,7 +2072,7 @@ EIGENVALUES are good to about 1e-6 of peak eigenvalue in single precision, much 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_dca209fe662ec0d146440db0aa5b9932.html">cudacomp</a></li><li class="navelem"><a class="el" href="cudacomp_8c.html">cudacomp.c</a></li>
-    <li class="footer">Generated on Tue Dec 26 2017 20:37:12 for cacao by
+    <li class="footer">Generated on Fri Feb 16 2018 16:07:29 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>
