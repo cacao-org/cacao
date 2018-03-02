@@ -260,15 +260,17 @@ int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *
                         for(ii=0; ii<sizeoutxy; ii++)
                             data.image[IDout].array.F[ii] *= data.image[IDmask].array.F[ii];
                 }
+                
                 data.image[IDout].md[0].cnt0 = cnt0;
                 data.image[IDout].md[0].write = 0;
+                COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
             }
         }
         break;
     case _DATATYPE_FLOAT :
         while(1)
         {
-            usleep(50); // OK FOR NOW (NOT USED BY FAST WFS)
+            usleep(10); // OK FOR NOW (NOT USED BY FAST WFS)
             if(data.image[IDin].md[0].cnt0!=cnt0)
             {
                 data.image[IDout].md[0].write = 1;
@@ -300,6 +302,7 @@ int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *
 
                 data.image[IDout].md[0].cnt0 = cnt0;
                 data.image[IDout].md[0].write = 0;
+                COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
             }
         }
         break;
