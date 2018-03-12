@@ -1096,7 +1096,7 @@ long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NB
             pha0 = M_PI*(1.0*m/NBmodes);
             ampl = ampl0 * sin(2.0*M_PI*(1.0*kk/NBpt)+pha0);
             for(ii=0; ii<xysize; ii++)
-                data.image[IDout].array.F[kk*xysize+ii] += ampl * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[m*xysize+ii];
+                data.image[IDout].array.F[kk*xysize+ii] += ampl * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[m1*xysize+ii];
         }        
     }
 
