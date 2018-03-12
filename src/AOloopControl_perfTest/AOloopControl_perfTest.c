@@ -120,7 +120,7 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-long AOloopControl_perfTesT_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes);
+//long AOloopControl_perfTesT_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes, long StartMode);
 
 /** @brief CLI function for AOcontrolLoop_TestDMSpeed */
 int_fast8_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
@@ -200,8 +200,8 @@ int_fast8_t AOloopControl_perfTest_statusStats_cli() {
 /** @brief CLI function for AOloopControl_mkTestDynamicModeSeq */
 int_fast8_t AOloopControl_perfTest_mkTestDynamicModeSeq_cli()
 {
-    if(CLI_checkarg(1,3)+CLI_checkarg(2,2)+CLI_checkarg(3,2)==0) {
-        AOloopControl_perfTest_mkTestDynamicModeSeq(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl);
+    if(CLI_checkarg(1,3)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)==0) {
+        AOloopControl_perfTest_mkTestDynamicModeSeq(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl);
         return 0;
     }
     else  return 1;
@@ -296,7 +296,7 @@ int_fast8_t init_AOloopControl_perfTest()
 
     RegisterCLIcommand("aolblockstats", __FILE__, AOloopControl_perfTest_blockstats_cli, "measures mode stats per block", "<loopnb> <outim>", "aolblockstats 2 outstats", "long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)");
 
-    RegisterCLIcommand("aolmktestmseq", __FILE__, AOloopControl_perfTest_mkTestDynamicModeSeq_cli, "make modal periodic test sequence", "<outname> <number of slices> <number of modes>", "aolmktestmseq outmc 100 50", "long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes)");
+    RegisterCLIcommand("aolmktestmseq", __FILE__, AOloopControl_perfTest_mkTestDynamicModeSeq_cli, "make modal periodic test sequence", "<outname> <number of slices> <number of modes> <firstmode>", "aolmktestmseq outmc 100 50 0", "long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes, long StartMode)");
 
     RegisterCLIcommand("aolzrmsens", __FILE__, AOloopControl_perfTest_AnalyzeRM_sensitivity_cli, "Measure zonal RM sensitivity", "<DMmodes> <DMmask> <WFSref> <WFSresp> <WFSmask> <amplitude[nm]> <lambda[nm]> <outname>", "aolzrmsens DMmodes dmmask wfsref0 zrespmat wfsmask 0.1 outfile.txt", "long AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name, const char *IDdmmask_name, const char *IDwfsref_name, const char *IDwfsresp_name, const char *IDwfsmask_name, float amplimitnm, float lambdanm, const char *foutname)");
 
@@ -1058,7 +1058,7 @@ int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_n
 //
 // create dynamic test sequence
 //
-long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes)
+long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes, long StartMode)
 {
     long IDout;
     long xsize, ysize, xysize;
@@ -1067,7 +1067,7 @@ long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NB
     float ampl;
     float pha0;
     char name[200];
-    long m;
+    long m, m1;
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
@@ -1091,6 +1091,7 @@ long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NB
 
         for(m=0; m<NBmodes; m++)
         {
+			m1 = m + StartMode;
             ampl0 = 1.0;
             pha0 = M_PI*(1.0*m/NBmodes);
             ampl = ampl0 * sin(2.0*M_PI*(1.0*kk/NBpt)+pha0);

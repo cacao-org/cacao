@@ -54,11 +54,12 @@ long AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name, long index,
 
 long AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name, float ampl, const char *DMmask_name, const char *DMstream_in_name, const char *DMstream_out_name, const char *DMstream_meas_name, long tlagus, long NBave, const char *IDout_name, const char *IDoutrms_name, const char *IDoutmeas_name, const char *IDoutmeasrms_name);
 
-long AOloopControl_perfTesT_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes);
+long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes, long StartMode);
+
 
 int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name, const char *IDdmmask_name, const char *IDwfsref_name, const char *IDwfsresp_name, const char *IDwfsmask_name, float amplimitnm, float lambdanm, const char *foutname);
 
-long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes);
+
 
 long AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname);
 
