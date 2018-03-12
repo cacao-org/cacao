@@ -1000,7 +1000,7 @@ tmux new-session -d -s ${tmuxname}
 sleep 0.2
 tmux send-keys -t $tmuxname "$execname -n aol${LOOPNUMBER}testpms" C-m
 tmux send-keys -t $tmuxname "nbfr=1000000/${testDMperMdt}/${testDMperMfr}" C-m
-tmux send-keys -t $tmuxname "aolmktestmseq outDMmseq nbfr ${testDMperMn} {testDMperMs}" C-m
+tmux send-keys -t $tmuxname "aolmktestmseq outDMmseq nbfr ${testDMperMn} ${testDMperMs}" C-m
 tmux send-keys -t $tmuxname "outDMmseqn=outDMmseq*${testDMperMamp}" C-m
 tmux send-keys -t $tmuxname "savefits outDMmseqn \"!tmp/outDMmseqn.fits\"" C-m
 tmux send-keys -t $tmuxname "listim" C-m
