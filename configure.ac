@@ -24,9 +24,8 @@ m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 # Init Libtool
 LT_INIT
 
-# find the c-complier
-#AC_PROG_CC
-AM_PROG_CC_C_O
+# find the c-complier, use gcc by default
+AC_PROG_CC([gcc])
 
 # check for openMP
 AC_OPENMP
@@ -91,48 +90,6 @@ AC_CHECK_LIB([dl],[main],
 		])
 
 
-case "$host_os" in
-*darwin* | *rhapsody* | *macosx*)
-     AC_DEFINE_UNQUOTED(OSX,1,[This is an OS X system])
-     ;;
-*)
-AC_CHECK_LIB([rt], [clock],
-		[],
-		[ echo "Cannot find required library:rt";
-		  cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:rt"]);
-		  exit 0;
-		])
-;;
-esac
-
-
-AC_CHECK_LIB([pthread], [pthread_create].
-		[],
-		[ echo "Cannot find required library:pthread";
- 		cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:pthread"]);
-		  exit 0;
-		])
-
-AC_CHECK_LIB([gslcblas],[main],
-		[],
-		[ echo "Cannot find required library:gslcblas";
-		  cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:gslcblas"]);
-		  exit 0;
-		])
-
-
-AC_CHECK_LIB([gsl],[main],
-		[],
-		[ echo "Cannot find required library:gsl";
-		  cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:gsl"]);
-		  exit 0;
-		])
-
-
 AC_CHECK_LIB([cfitsio],[main],
 		[],
 		[ echo "Cannot find required static library:fitsio";
@@ -181,6 +138,18 @@ AC_CHECK_LIB( [fftw3], [main],
 
 AC_CHECK_LIB([gomp], [omp_get_num_threads])
 
+
+
+
+AC_CHECK_LIB([pthread], [pthread_create],
+		[],
+		[ echo "Cannot find required library:pthread";
+		  cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:pthread"]);
+		  exit 0;
+		])
+
+
 #
 # fftw multi-thread
 #	
@@ -200,36 +169,10 @@ if   test "x$fftwmt" = "xyes" ; then
         	        ]
 	)	
 	
-	AC_CHECK_LIB([pthread], [pthread_create],
-		[],
-		[ echo "Cannot find required library:pthread";
-		  cat doc/configure.howto;
-		  AC_MSG_FAILURE(["FATAL...Cannot find required library:pthread"]);
-		  exit 0;
-		])
-	
 	AC_DEFINE(FFTWMT)
 fi
 
 
-#AC_CHECK_LIB([usb], [usb_close], ,[AC_MSG_ERROR(
-# [libusb library not found.  Check with vendor or see http://libusb.sourceforge.net])],
-# [$USBLDFLAGS])
-
-
-#AC_SEARCH_LIBS( [bob],      
-#                [tom], 
-#                [AC_DEFINE([HAVE_BOB_H], 1,
-#                           "Define to 1 if you have <readline.h>")] , 
-#                [AC_MSG_ERROR([$str]); exit 0] )
-
-#AC_CHECK_HEADERS( [bob.h], 
-#                  [], 
-#                  [ echo "Cannot find required header:bob.h";
-#                    cat doc/configure.howto;
-#                    AC_MSG_FAILURE(["Cannot find required header:bob.h"]);
-#                  ]
-#)  
 
 AC_CHECK_HEADERS( [fftw3.h], 
                   [], 
@@ -246,25 +189,6 @@ AC_CHECK_HEADERS( [fitsio.h],
                     AC_MSG_FAILURE(["Cannot find required header:fitsio.h"]);
                   ]
 )  
-
-
-
-
-#AC_MSG_NOTICE([Looking for special libraries])
-#AC_INCLUDES_DEFAULT
-#AC_CHECK_LIB(gsl,gsl_ran_gaussian_ziggurat, , echo "FATAL..."; exit 0; )
-#AC_PROG_LEX
-#AC_PROG_YACC
-#AC_PROG_INSTALL
-
-#AC_MSG_CHECKING (feature-description)
-#AC_MSG_NOTICE([eg:checking if stack overflow is detectable])
-#AC_MSG_FAILURE (error-description, [exit-status])
-
-
-
-
-
 
 
 
@@ -357,6 +281,88 @@ if test  "$magmaval" = "yes"; then
 fi
 
 
+#=================================================
+# Setup QDWHpartial
+
+# Check: enable QDWHpartial ?
+AC_MSG_CHECKING([whether to use QDWHpartial library])
+AC_ARG_ENABLE(qdwhpartial,
+    [AS_HELP_STRING(--enable-qdwhpartial,enable QDWHpartial support)],
+    qdwhpartialval="yes",
+    qdwhpartialval="no")
+AC_MSG_RESULT([$qdwhpartialval])
+
+
+# check to see if QDWHpartial been selected
+if test "$qdwhpartialval" == "no"; then
+    AC_MSG_WARN([Not using QDWHpartial!])
+fi
+
+if test  "$qdwhpartialval" = "yes"; then
+#	PKG_CHECK_MODULES([QDWHpartial], [qdwhpartial])  
+	AC_DEFINE([HAVE_QDWHpartial],[1],[Defined if QDWHpartial should be used])
+	eval "ARRAY${N}='-D_QDWHpartial'"
+    N=`expr $N + 1`
+    LIBS="-L$QDWHpartial_INSTALL_PATH $QDWHpartial_LIBS $LIBS"
+#    LDFLAGS="$LDFLAGS $QDWHpartial_LDFLAGS"
+#    CFLAGS="$CFLAGS $QDWHpartial_CFLAGS"
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH -L$QDWHpartial_INSTALL_PATH"
+fi
+
+
+
+echo "                     C Compiler: $CC"
+echo "                         CFLAGS: $CFLAGS"
+echo "                        LDFLAGS: $LDFLAGS"
+echo "                           LIBS: $LIBS"
+
+
+
+case "$host_os" in
+*darwin* | *rhapsody* | *macosx*)
+     AC_DEFINE_UNQUOTED(OSX,1,[This is an OS X system])
+     ;;
+*)
+
+AC_CHECK_LIB([rt], [clock],
+		[],
+		[ echo "Cannot find required library:rt";
+		  cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:rt"]);
+		  exit 0;
+		])
+;;
+esac
+
+
+AC_CHECK_LIB([pthread], [pthread_create].
+		[],
+		[ echo "Cannot find required library:pthread";
+ 		cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:pthread"]);
+		  exit 0;
+		])
+
+AC_CHECK_LIB([gslcblas],[main],
+		[],
+		[ echo "Cannot find required library:gslcblas";
+		  cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:gslcblas"]);
+		  exit 0;
+		])
+
+
+AC_CHECK_LIB([gsl],[main],
+		[],
+		[ echo "Cannot find required library:gsl";
+		  cat doc/configure.howto;
+		  AC_MSG_FAILURE(["FATAL...Cannot find required library:gsl"]);
+		  exit 0;
+		])
+
+
+
+
 
 
 # Create our own a symbol for execname until we can find the right one
@@ -411,7 +417,6 @@ echo "Compiling Options:"
 echo "------------------"
 echo "                     C Compiler: $CC"
 echo "                         CFLAGS: $CFLAGS"
-
 echo "                        LDFLAGS: $LDFLAGS"
 echo "                           LIBS: $LIBS"
 
