@@ -31,8 +31,12 @@ extern DATA data;
 static int AOlooploadconf_init = 0;
 
 #define AOconfname "/tmp/AOconf.shm"
-AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
-AOloopControl_var aoloopcontrol_var;
+
+// defined in AOloopControl.c
+extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
+
+// defined in AOloopControl.c
+extern AOloopControl_var aoloopcontrol_var;
 
 
 

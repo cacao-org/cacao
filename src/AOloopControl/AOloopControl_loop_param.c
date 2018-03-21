@@ -26,8 +26,12 @@
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
 #define AOconfname "/tmp/AOconf.shm"
-AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
-AOloopControl_var aoloopcontrol_var;
+
+// defined in AOloopControl.c
+extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
+
+// defined in AOloopControl.c
+extern AOloopControl_var aoloopcontrol_var;
 
 extern DATA data;
 
