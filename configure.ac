@@ -311,7 +311,10 @@ fi
 
 
 
-
+echo "                     C Compiler: $CC"
+echo "                         CFLAGS: $CFLAGS"
+echo "                        LDFLAGS: $LDFLAGS"
+echo "                           LIBS: $LIBS"
 
 
 
@@ -414,7 +417,6 @@ echo "Compiling Options:"
 echo "------------------"
 echo "                     C Compiler: $CC"
 echo "                         CFLAGS: $CFLAGS"
-
 echo "                        LDFLAGS: $LDFLAGS"
 echo "                           LIBS: $LIBS"
 
