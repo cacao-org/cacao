@@ -69,7 +69,9 @@ int AOloopcontrol_meminit = 0;
 static int AOlooploadconf_init = 0;
 
 #define AOconfname "/tmp/AOconf.shm"
-AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
+
+// defined in AOloopControl.c
+extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 
 
 
