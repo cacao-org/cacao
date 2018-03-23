@@ -26,7 +26,6 @@
 extern DATA data;
 
 #define NB_AOloopcontrol 10 // max number of loops
-//long LOOPNUMBER = 0; // current loop index
 
 static int AOlooploadconf_init = 0;
 
