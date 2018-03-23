@@ -63,7 +63,7 @@ static int INITSTATUS_AOloopControl_compTools = 0;
 
 
 #define NB_AOloopcontrol 10 // max number of loops
-long LOOPNUMBER = 0; // current loop index
+
 
 int AOloopcontrol_meminit = 0;
 static int AOlooploadconf_init = 0;
