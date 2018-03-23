@@ -105,7 +105,10 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 //extern long aoloopcontrol_var.aoconfID_cmd_modesRM;
 
 static int RMACQUISITION = 0;  // toggles to 1 when resp matrix is being acquired
+static int INITSTATUS_AOloopControl_acquireCalib = 0;
 
+extern long LOOPNUMBER; // current loop index
+extern int AOloopcontrol_meminit; // declared in AOloopControl_compTools.c
 
 
 /* =============================================================================================== */
@@ -114,14 +117,9 @@ static int RMACQUISITION = 0;  // toggles to 1 when resp matrix is being acquire
 
 extern DATA data;
 
-static int INITSTATUS_AOloopControl_acquireCalib = 0;
-
-extern long LOOPNUMBER; // current loop index
-
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var;
 
-extern int AOloopcontrol_meminit;
 
 
 
