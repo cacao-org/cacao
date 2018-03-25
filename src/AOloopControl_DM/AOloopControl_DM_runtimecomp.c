@@ -50,13 +50,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 
 extern DATA data;
 
-int wcol, wrow; // window size
-
-struct timespec semwaitts;
-
-
-
-
 
 #define DMSTROKE100 0.7 // um displacement for 100V
 
@@ -457,6 +450,7 @@ int AOloopControl_DM_CombineChannels(long DMindex, long xsize, long ysize, int N
     
     while(dmdispcombconf[DMindex].ON == 1)
     {
+		struct timespec semwaitts;
 		
         dmdispcombconf[DMindex].status = 2;
 

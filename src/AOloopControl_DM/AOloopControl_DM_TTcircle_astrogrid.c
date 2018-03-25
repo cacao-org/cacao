@@ -22,15 +22,6 @@ extern DATA data;
 
 
 
-int wcol, wrow; // window size
-
-
-struct timespec semwaitts;
-
-
-
-
-
 #define DMSTROKE100 0.7 // um displacement for 100V
 
 extern long NB_DMindex ;

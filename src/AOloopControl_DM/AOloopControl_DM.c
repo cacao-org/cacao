@@ -21,10 +21,6 @@ extern DATA data;
 
 static int INITSTATUS_AOloopControl_DM = 0;
 
-int wcol, wrow; // window size
-
-struct timespec semwaitts;
-
 #define DMSTROKE100 0.7 // um displacement for 100V
 
 long NB_DMindex = 9;

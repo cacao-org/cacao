@@ -69,16 +69,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 extern DATA data;
 
 
-
-int wcol, wrow; // window size
-
-
-struct timespec semwaitts;
-
-
-
-
-
 #define DMSTROKE100 0.7 // um displacement for 100V
 
 extern long NB_DMindex ;
@@ -141,6 +131,8 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
 {
     long long mcnt = 0;
     int ch;
+	int wcol, wrow; // window size
+
 
     AOloopControl_DM_loadconf();
 
