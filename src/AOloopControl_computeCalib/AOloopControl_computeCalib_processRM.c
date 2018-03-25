@@ -100,6 +100,12 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 long aoconfID_imWFS2_active[100];
 
+
+
+
+
+
+
 //
 // if images "Hmat" AND "pixindexim" are provided, decode the image
 // TEST: if "RMpokeC" exists, decode it as well
@@ -232,6 +238,12 @@ int_fast8_t AOloopControl_computeCalib_Process_zrespM(long loop, const char *IDz
     */
 
 }
+
+
+
+
+
+
 
 
 // CANDIDATE FOR RETIREMENT
