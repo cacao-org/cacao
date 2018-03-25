@@ -21,8 +21,6 @@ extern DATA data;
 
 static int INITSTATUS_AOloopControl_DM = 0;
 
-#define DMSTROKE100 0.7 // um displacement for 100V
-
 long NB_DMindex = 9;
 
 //AOLOOPCONTROL_DM_DISPCOMB_CONF *dmdispcombconf; // configuration

@@ -21,8 +21,6 @@
 
 extern DATA data;
 
-#define DMSTROKE100 0.7 // um displacement for 100V
-
 extern long NB_DMindex ;
 
 extern AOLOOPCONTROL_DM_DISPCOMB_CONF *dmdispcombconf; // configuration
