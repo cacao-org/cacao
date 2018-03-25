@@ -353,10 +353,9 @@ typedef struct
     //double tdiffv; //static
 
     //int initWFSref_GPU[100];// = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    //only in AOloopControl_wfs_dm.c
     int initcontrMcact_GPU[100];// = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    //used in AOloopControl_wfs_dm.c & AOloopControl_loop_param.c
-    //both previous are static
+    //used in AOloopControl_loop_param.c
+    // static
 
     float GPU_alpha;
     float GPU_beta;
@@ -582,7 +581,7 @@ int_fast8_t AOloopControl_InitializeMemory();
 
 /* =============================================================================================== */
 /* =============================================================================================== */
-/** @name AOloopControl - 2. REAL TIME COMPUTING ROUTINES - AOloopControl_wfs_dm.c
+/** @name AOloopControl - 2. REAL TIME COMPUTING ROUTINES - AOloopControl.c, AOloopControl_wfs.c
  *  calls CPU and GPU processing */
 /* =============================================================================================== */
 /* =============================================================================================== */

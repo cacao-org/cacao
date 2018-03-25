@@ -1,5 +1,5 @@
 /**
- * @file    AOloopControl_wfs_dm.c 
+ * @file    AOloopControl_loop_ctr.c 
  * @brief   AO loop Control functions wave front sensor and deformable mirror 
  * 
  * LOOP CONTROL INTERFACE
@@ -24,8 +24,6 @@ extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
 
 
-
-//long LOOPNUMBER;// = 0; // current loop index
 
 
 /* =============================================================================================== */

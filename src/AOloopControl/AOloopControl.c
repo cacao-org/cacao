@@ -1048,7 +1048,8 @@ void init_AOloopControl()
 /** @name AOloopControl - 6. REAL TIME COMPUTING ROUTINES                                          */
 /* =============================================================================================== */
 /* =============================================================================================== */
-// cf AOloopControl_wfs_dm.c 
+// cf AOloopControl.c 
+// cf AOloopControl_wfs.c 
 
 
 

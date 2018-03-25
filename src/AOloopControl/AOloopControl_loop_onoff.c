@@ -1,5 +1,5 @@
 /**
- * @file    AOloopControl_wfs_dm.c 
+ * @file    AOloopControl_loop_onoff.c 
  * @brief   AO loop Control functions wave front sensor and deformable mirror 
  * 
  * REAL TIME COMPUTING ROUTINES
