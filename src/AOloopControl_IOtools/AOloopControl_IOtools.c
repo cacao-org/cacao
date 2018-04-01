@@ -108,8 +108,6 @@ static int AOLCOMPUTE_TOTAL_INIT = 0; // toggles to 1 AFTER total for first imag
 /*                                     MAIN DATA STRUCTURES                                        */
 /* =============================================================================================== */
 
-extern DATA data;
-
 static int INITSTATUS_AOloopControl_IOtools = 0;
 
 extern long LOOPNUMBER; // current loop index
