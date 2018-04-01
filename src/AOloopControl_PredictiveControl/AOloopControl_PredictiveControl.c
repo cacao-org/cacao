@@ -178,7 +178,7 @@ void __attribute__ ((constructor)) libinit_AOloopControl_PredictiveControl()
 	if(INITSTATUS_AOloopControl_PredictiveControl == 0)
 	{
 		init_AOloopControl_PredictiveControl();
-		RegisterModule(__FILE__, "caco", "AO loop control predictive control");
+		RegisterModule(__FILE__, "cacao", "AO loop control predictive control");
 		INITSTATUS_AOloopControl_PredictiveControl = 1;
 	}
 }
