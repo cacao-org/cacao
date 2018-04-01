@@ -34,7 +34,6 @@
 #define AOconfname "/tmp/AOconf.shm"
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
-extern DATA data;
 #define NB_AOloopcontrol 10 // max number of loops
 
 

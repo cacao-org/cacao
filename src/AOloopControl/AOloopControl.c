@@ -194,8 +194,6 @@ static double tdiffv;
 /*                                     MAIN DATA STRUCTURES                                        */
 /* =============================================================================================== */
 
-extern DATA data;
-
 static int INITSTATUS_AOloopControl = 0;
 
 #define NB_AOloopcontrol 10 // max number of loops

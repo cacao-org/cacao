@@ -61,7 +61,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #define OMP_NELEMENT_LIMIT 1000000
 # endif
 
-extern DATA data;
 #define NB_AOloopcontrol 10 // max number of loops
 
 static int AOlooploadconf_init = 0;

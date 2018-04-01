@@ -31,7 +31,6 @@ extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 // defined in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var;
 
-extern DATA data;
 
 
 

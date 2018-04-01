@@ -26,7 +26,6 @@
 #define AOconfname "/tmp/AOconf.shm"
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
-extern DATA data;
 
 
 //aoloopcontrol_var.LOOPNUMBER = 0; // current loop index

@@ -23,8 +23,6 @@
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h" 
 
-extern DATA data;
-
 #define NB_AOloopcontrol 10 // max number of loops
 
 static int AOlooploadconf_init = 0;

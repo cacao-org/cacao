@@ -29,7 +29,6 @@
 #define AOconfname "/tmp/AOconf.shm"
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
-extern DATA data;
 
 static long aoconfID_respM = -1; 
 
