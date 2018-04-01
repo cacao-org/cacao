@@ -115,8 +115,6 @@ extern int AOloopcontrol_meminit; // declared in AOloopControl_compTools.c
 /*                                     MAIN DATA STRUCTURES                                        */
 /* =============================================================================================== */
 
-extern DATA data;
-
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var;
 
