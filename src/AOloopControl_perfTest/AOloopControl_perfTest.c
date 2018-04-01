@@ -88,8 +88,6 @@ static struct timespec tdiff;
 /*                                     MAIN DATA STRUCTURES                                        */
 /* =============================================================================================== */
 
-extern DATA data;
-
 static int INITSTATUS_AOloopControl_perfTest = 0;
 
 extern long LOOPNUMBER; // current loop index
