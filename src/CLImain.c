@@ -26,6 +26,7 @@
 #define STYLE_BOLD    "\033[1m"
 #define STYLE_NO_BOLD "\033[22m"
 
+struct DATA data;
 
 
 int main(int argc, char *argv[])
