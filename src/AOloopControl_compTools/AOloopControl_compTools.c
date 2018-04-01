@@ -57,7 +57,6 @@
 /*                                     MAIN DATA STRUCTURES                                        */
 /* =============================================================================================== */
 
-extern DATA data;
 
 static int INITSTATUS_AOloopControl_compTools = 0;
 
