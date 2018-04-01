@@ -103,7 +103,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 
 
 
-extern DATA data;
 
 static int INITSTATUS_FPAOloopcontrol = 0;
 
