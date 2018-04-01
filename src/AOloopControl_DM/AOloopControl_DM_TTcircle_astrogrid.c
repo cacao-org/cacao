@@ -18,8 +18,6 @@
 #include "AOloopControl_DM/AOloopControl_DM.h"
 
 
-extern DATA data;
-
 extern long NB_DMindex ;
 
 extern AOLOOPCONTROL_DM_DISPCOMB_CONF *dmdispcombconf; // configuration

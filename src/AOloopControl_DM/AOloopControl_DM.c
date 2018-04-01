@@ -17,7 +17,6 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl_DM/AOloopControl_DM.h"
 
-extern DATA data;
 
 static int INITSTATUS_AOloopControl_DM = 0;
 

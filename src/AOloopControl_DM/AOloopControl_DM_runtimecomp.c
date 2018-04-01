@@ -48,8 +48,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 
 
 
-extern DATA data;
-
 
 #define DMSTROKE100 0.7 // um displacement for 100V
 

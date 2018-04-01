@@ -44,8 +44,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 
 
 
-extern DATA data;
-
 extern long NB_DMindex ;
 
 extern AOLOOPCONTROL_DM_DISPCOMB_CONF *dmdispcombconf; // configuration
