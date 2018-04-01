@@ -91,7 +91,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #endif
 
 
-extern DATA data;
 
 extern long LOOPNUMBER; // current loop index
 

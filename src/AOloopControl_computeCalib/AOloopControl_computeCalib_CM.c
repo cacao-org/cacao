@@ -90,7 +90,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "cudacomp/cudacomp.h"
 #endif
 
-extern DATA data;
 
 extern long LOOPNUMBER; // current loop index
 
