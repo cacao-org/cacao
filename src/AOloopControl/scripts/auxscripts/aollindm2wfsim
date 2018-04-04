@@ -112,7 +112,7 @@ csetpmove aol${loopnb}RT1
 readshmim aol${loopnb}_dmdispD
 readshmim aol${loopnb}_zrespMlinsim
 readshmim aol${loopnb}_wfsref0linsim
-readshmim aol${loopnb}_wfsmask
+#readshmim aol${loopnb}_wfsmask
 listim
 cudaextrmodes aol${loopnb}_dmdispD NULLim aol${loopnb}_zrespMlinsim NULLim aol${loopnb}_wfsref0linsim aol${loopnb}_linsimWFS $1 0 0 0 6 1 ${twaitus}
 exitCLI

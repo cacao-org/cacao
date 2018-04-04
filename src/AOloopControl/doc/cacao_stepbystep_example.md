@@ -8,11 +8,16 @@
 **STEP 2**: Install scripts into `<workdir>`:
 
 	cd <srcdir>/src/AOloopControl/scripts
-	syncscripts -e <workdir>
+	./syncscripts -e <workdir>
 	cd <workdir>
 	./syncscripts
 
 **STEP 3**: Download a calibration, consisting of zonal response matrix and a WFS reference. Place the file in a new directory `<workdir>/simLHS`
+
+Calibration files : 
+- WFS reference: https://drive.google.com/file/d/1LnYfc8mKYyERc9cNMCiVTvwX-3wRsdFU 
+- WFS zonal response: https://drive.google.com/open?id=1rBkLllb6rR0z-D9YfysHedAWFE_Umwil
+
 
 **STEP 4**: Launch aolconf, loop number 5, loop name simtest:
 
@@ -20,7 +25,10 @@
 	
 Note that you subsequent calls to aolconf should then be without the -L and -N options.
 
-**STEP 5**: Set DM size to match the calibration. `dmxs` and `dmys` GUI top menu.
+**STEP 5**: Set DM :
+- set DM index to 01
+- size to match the calibration. `dmxs` and `dmys` GUI top menu.
+
 
 **STEP 6**: Autoconfigure DM: `dmnolink` in GUI top menu.
 
@@ -32,7 +40,8 @@ Note that you subsequent calls to aolconf should then be without the -L and -N o
 
 **STEP 10**: Load all memory. `M` in GUI top menu
 
-**STEP 11**: Link LHS files
+**STEP 11**: Link LHS files.
+From main menu, go to "Test mode" submenu. Select `zrespMlinsim` and `wfsref0linsim`.
 
 **STEP 12**: Start the LHS process
 
