@@ -44,15 +44,27 @@ Note that you subsequent calls to aolconf should then be without the -L and -N o
 From main menu, go to "Test mode" submenu. Select `zrespMlinsim` and `wfsref0linsim`.
 
 **STEP 12**: Start the LHS process
+To check that output WFS image is updating:
+
+	shmimmon aol5_linsimWFS
+	
+To check GPU useage:
+
+	nvidia-smi
+
+
 
 
 ## Acquiring calibration, compute control matrix
 
-Under configuration GUI menu :
+Under configuration GUI menu (Configure/link AO loop):
 
-- Measure hardware timing: `mlat`
+- Measure hardware timing: `mlat`. You will bye asked how many frames to use for sampling. Keep the default value (100). This command will update timing parameters (measured loop frequ, hardware latency). 
 - set Hadamard mode to ON: `Hon`
-- set RM modal to ON: `RMMon`
+- set modal RM to ON: `RMMon`
+- set modal RM amplitude to 0.05um: `rmMamp`
+- set modal RM cycle per aperture to 3: `rmMcpa`
+- set RM excluded frames to 1: `rmexfr`
 - Acquire automatic calibration: `nAUTOc`
 
 Under control matrix GUI menu :
