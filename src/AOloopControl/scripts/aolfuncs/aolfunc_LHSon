@@ -329,6 +329,9 @@ sleep 0.2
 #aoconflog "Start linear WFS simulator"
 
 tmux send-keys -t $tmuxnameD "./auxscripts/aollinsimDelay ${linsimDelay}" C-m
+
+sleep 2
+
 tmux send-keys -t $tmuxname "./auxscripts/aollindm2wfsim -w ${linsimdt} ${GPUlinsim}" C-m
 
 # Save current (hardware) WFS camera name & write new simulated WFS camera name
