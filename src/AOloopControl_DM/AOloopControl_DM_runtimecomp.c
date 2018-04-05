@@ -87,7 +87,7 @@ printf("TEST line %d\n", __LINE__); fflush(stdout);
 
 	if(dmdispcombconf[DMindex].voltON==1)
 		{
-printf("TEST line %d   %ld\n", __LINE__, dmdispcombconf[DMindex].IDvolt); fflush(stdout);
+printf("TEST line %d   %ld xysize=%ld\n", __LINE__, dmdispcombconf[DMindex].IDvolt, dmdispcombconf[DMindex].xysize); fflush(stdout);
 list_image_ID();
 
 
