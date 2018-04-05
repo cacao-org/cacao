@@ -96,7 +96,7 @@ list_image_ID();
 					volt = 100.0*sqrt(data.image[dmdispcombconf[DMindex].IDdisp].array.F[ii]/DMSTROKE100);
 					if(volt>dmdispcombconf[DMindex].MAXVOLT)
 						volt = dmdispcombconf[DMindex].MAXVOLT;
-					data.image[dmdispcombconf[DMindex].IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0); //65536.0);
+					//data.image[dmdispcombconf[DMindex].IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0); //65536.0);
 				}
 printf("TEST line %d\n", __LINE__); fflush(stdout);
 		}
@@ -413,7 +413,6 @@ int AOloopControl_DM_CombineChannels(
 			printf("CREATING stream %s  %d axis, size = %ld x %ld\n", dmdispcombconf[DMindex].voltname, naxis, size[0], size[1]);
             dmdispcombconf[DMindex].IDvolt = create_image_ID(dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_UINT16, 1, 10);
             COREMOD_MEMORY_image_set_createsem(dmdispcombconf[DMindex].voltname, 10);
-            exit(0);//TEST
          }
          else
             dmdispcombconf[DMindex].IDvolt = image_ID(dmdispcombconf[DMindex].voltname);
