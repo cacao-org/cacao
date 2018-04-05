@@ -18,7 +18,7 @@ then
 fi
 
 
-Cfits << EOF
+cacao << EOF
 readshmim dm$1disp$2
 imzero dm$1disp$2
 exit
