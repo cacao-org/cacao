@@ -236,7 +236,7 @@ ConfReadParam DMindex "00"; DMindex="$paramvalue" # DM index
 
 
 
-tmuxname="aol${LOOPNUMBER}dm${DMindex}comboff"
+tmuxname="dm${DMindex}comboff"
 
 tmux kill-session -t $tmuxname
 sleep 0.2
@@ -244,13 +244,13 @@ tmux new-session -d -s $tmuxname
 sleep 0.2
 
 
-tmux send-keys -t $tmuxname "$execname -n aol${LOOPNUMBER}dm${DMindex}comboff" C-m
+tmux send-keys -t $tmuxname "$execname -n dm${DMindex}comboff" C-m
 tmux send-keys -t $tmuxname "aoloopcontroldmcomboff ${DMindex}" C-m
 tmux send-keys -t $tmuxname "exitCLI" C-m
 tmux send-keys -t $tmuxname "exit" C-m
 
 #    tmux kill-session -t $tmuxname # not necessary - just making sure
-tmuxname="aol${LOOPNUMBER}dm${DMindex}comb"
+tmuxname="dm${DMindex}comb"
 tmux send-keys -t $tmuxname "exit" C-m
 tmux send-keys -t $tmuxname "exit" C-m
 #    tmux kill-session -t $tmuxname # not necessary - just making sure
