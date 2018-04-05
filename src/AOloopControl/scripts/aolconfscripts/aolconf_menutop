@@ -222,9 +222,12 @@ fi
 
 if [ "${initDMstat}" = "0" ]; then
 menuitems+=( "initDM" "(re)-START  DM comb process (-> dm${DMindex}disp00..07  dm${DMindex}disp)" )
+menuitems+=( "stopDM" "... Force STOP  DM comb process" )
 else
 menuitems+=( "stopDM" "STOP  DM comb process" )
+menuitems+=( " " " ")
 fi
+
 
 menuitems+=( "monDM" "Monitor  DM comb process" )
 
