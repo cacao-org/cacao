@@ -18,7 +18,7 @@ echo "pname = $pname"
 
 
 filelist="aolconf"
-dirlist="aolconfscripts auxscripts aohardsim aocscripts aosetup aolfuncs"
+dirlist="aolconfscripts auxscripts aohardsim aocscripts aosetup aolfuncs dmutils"
 
 printHELP ()
 {
