@@ -478,7 +478,8 @@ int AOloopControl_DM_CombineChannels(
 		if(semwaitts.tv_nsec >= 1000000000)
 			semwaitts.tv_sec = semwaitts.tv_sec + 1;
 
-
+printf("TEST line %d\n", __LINE__); fflush(stdout);
+		
 		DMupdate = 0;
 		
 		if(dmdispcombconf[DMindex].TrigMode==0)
@@ -509,6 +510,7 @@ int AOloopControl_DM_CombineChannels(
 				}
         }
         
+printf("TEST line %d\n", __LINE__); fflush(stdout);
             
         if(DMupdate==1)
         {
@@ -525,6 +527,8 @@ int AOloopControl_DM_CombineChannels(
             }
 
             dmdispcombconf[DMindex].status = 4;
+
+printf("TEST line %d\n", __LINE__); fflush(stdout);
 
             ave = 0.0;
             if(dmdispcombconf[DMindex].AveMode == 1) // REMOVE AVERAGE 
@@ -563,7 +567,7 @@ int AOloopControl_DM_CombineChannels(
             COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);      
                    //      sem_post(data.image[dmdispcombconf[DMindex].IDdisp].semptr[0]);
  
- 
+printf("TEST line %d\n", __LINE__); fflush(stdout);
  
             if(dm2dm_mode==1)
             {
@@ -580,6 +584,8 @@ int AOloopControl_DM_CombineChannels(
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].write = 0;            
                 sem_post(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].semptr[0]);                
             }
+
+printf("TEST line %d\n", __LINE__); fflush(stdout);
             
             if(wfsrefmode==1)
             {
@@ -608,6 +614,8 @@ int AOloopControl_DM_CombineChannels(
                 fflush(stdout);
             }
             
+printf("TEST line %d\n", __LINE__); fflush(stdout);
+
             
             dmdispcombconf[DMindex].status = 7;
 
