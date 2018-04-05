@@ -341,19 +341,19 @@ cp ./conf/instconf_dmDCum.txt > ./conf/instconf_dmDCum_hardware.txt
 
 
 # turn off DM voltage 
-#$execname << EOF
-#aoldmvoltOFF ${DMindex}
-#aolsetdmDC ${DMindex} 0.0
-#aolsetdmAveM ${DMindex} 2
-#exitCLI
-#EOF
+$execname << EOF
+aoldmvoltOFF ${DMindex}
+aolsetdmDC ${DMindex} 0.0
+aolsetdmAveM ${DMindex} 2
+exitCLI
+EOF
 
 # set dark to zero
-#$execname << EOF
-#readshmim aol${LOOPNUMBER}_wfsdark
-#imzero aol${LOOPNUMBER}_wfsdark
-#exitCLI
-#EOF
+$execname << EOF
+readshmim aol${LOOPNUMBER}_wfsdark
+imzero aol${LOOPNUMBER}_wfsdark
+exitCLI
+EOF
 
 # remove flat
 dmdispzero ${DMindex} 00
