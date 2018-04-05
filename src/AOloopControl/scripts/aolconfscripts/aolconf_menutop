@@ -651,6 +651,8 @@ mkdir -p status
 file="status/stat_initdm${DMindex}.txt"
 echo "0" > $file
 ./aolfuncs/aolfunc_stopDM -f
+sleep 0.5
+pkill -9 dm${DMindex}comb
 menutop_default="initDM"
 ;;
 
