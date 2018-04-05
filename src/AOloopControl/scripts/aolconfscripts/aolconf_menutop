@@ -653,6 +653,7 @@ echo "0" > $file
 ./aolfuncs/aolfunc_stopDM -f
 sleep 0.5
 pkill -9 dm${DMindex}comb
+rm /tmp/dm${DMindex}disp*
 menutop_default="initDM"
 ;;
 
