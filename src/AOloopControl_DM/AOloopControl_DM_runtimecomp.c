@@ -428,7 +428,7 @@ int AOloopControl_DM_CombineChannels(
     
      AOloopControl_printDMconf();
 
- /*   if (sigaction(SIGINT, &data.sigact, NULL) == -1) {
+    if (sigaction(SIGINT, &data.sigact, NULL) == -1) {
         perror("sigaction");
         exit(EXIT_FAILURE);
     }
@@ -457,7 +457,7 @@ int AOloopControl_DM_CombineChannels(
         exit(EXIT_FAILURE);
     }
     
-   */ 
+   
     
 
     
@@ -649,7 +649,10 @@ printf("TEST line %d\n", __LINE__); fflush(stdout);
         }
     
          if((data.signal_INT == 1)||(data.signal_TERM == 1)||(data.signal_ABRT==1)||(data.signal_BUS==1)||(data.signal_SEGV==1)||(data.signal_HUP==1)||(data.signal_PIPE==1))
-            dmdispcombconf[DMindex].ON = 0;
+            {
+				dmdispcombconf[DMindex].ON = 0;
+				exit(0);
+			}
     }
 
   //  if(voltmode==1)
