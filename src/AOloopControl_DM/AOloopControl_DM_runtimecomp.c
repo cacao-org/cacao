@@ -619,25 +619,33 @@ printf("TEST line %d\n", __LINE__); fflush(stdout);
             
             dmdispcombconf[DMindex].status = 7;
 
+printf("TEST line %d\n", __LINE__); fflush(stdout);
 			
 			clock_gettime(CLOCK_REALTIME, &t1);
 			if(dmdispcombconf[DMindex].voltmode==1)
 				AOloopControl_DM_disp2V(DMindex);
 			
+printf("TEST line %d\n", __LINE__); fflush(stdout);
 
             dmdispcombconf[DMindex].status = 8;
 
             cntsumold = cntsum;
             dmdispcombconf[DMindex].updatecnt++;
+
+printf("TEST line %d\n", __LINE__); fflush(stdout);
             
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiff = time_diff(ttrig, tnow);
 			tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
             dmdispcombconf[DMindex].tdelay = tdiffv;
 
+printf("TEST line %d\n", __LINE__); fflush(stdout);
+
 			tdiff = time_diff(t1, tnow);
 			tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 			dmdispcombconf[DMindex].time_disp2V = tdiffv;
+
+printf("TEST line %d\n", __LINE__); fflush(stdout);
         }
     
          if((data.signal_INT == 1)||(data.signal_TERM == 1)||(data.signal_ABRT==1)||(data.signal_BUS==1)||(data.signal_SEGV==1)||(data.signal_HUP==1)||(data.signal_PIPE==1))
