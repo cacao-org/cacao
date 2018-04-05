@@ -77,12 +77,13 @@ int AOloopControl_DM_disp2V(long DMindex)
 {
     long ii;
     float volt;
+	long IDvolt;
 
-printf("TEST line %d\n", __LINE__); fflush(stdout);
 
-	data.image[dmdispcombconf[DMindex].IDvolt].md[0].write = 1;
+	IDvolt = dmdispcombconf[DMindex].IDvolt;
 
-printf("TEST line %d\n", __LINE__); fflush(stdout);		
+	data.image[IDvolt].md[0].write = 1;
+
 
 
 	if(dmdispcombconf[DMindex].voltON==1)
@@ -99,22 +100,20 @@ list_image_ID();
 					
 					//printf("write value pix %ld to ID %ld\n", ii, dmdispcombconf[DMindex].IDvolt);
 					//fflush(stdout);
-					data.image[dmdispcombconf[DMindex].IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0); //65536.0);
+					data.image[IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0); //65536.0);
 				}
 printf("TEST line %d\n", __LINE__); fflush(stdout);
 		}
 	else
 		for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
-			data.image[dmdispcombconf[DMindex].IDvolt].array.UI16[ii] = 0;
+			data.image[IDvolt].array.UI16[ii] = 0;
 			
-printf("TEST line %d\n", __LINE__); fflush(stdout);
-	data.image[dmdispcombconf[DMindex].IDvolt].md[0].write = 0;
-	data.image[dmdispcombconf[DMindex].IDvolt].md[0].cnt0++;
+	data.image[IDvolt].md[0].write = 0;
+	data.image[IDvolt].md[0].cnt0++;
     
     
 //    COREMOD_MEMORY_image_set_sempost(data.image[dmdispcombconf[DMindex].IDdisp].name, -1);
 	COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
-printf("TEST line %d\n", __LINE__); fflush(stdout);
 
     return 0;
 }
