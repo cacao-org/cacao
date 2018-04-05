@@ -88,7 +88,8 @@ int AOloopControl_DM_disp2V(long DMindex)
 
 	if(dmdispcombconf[DMindex].voltON==1)
 		{
-printf("TEST line %d   %ld xysize=%ld\n", __LINE__, dmdispcombconf[DMindex].IDvolt, dmdispcombconf[DMindex].xysize); fflush(stdout);
+printf("TEST line %d   %ld xysize=%ld\n", __LINE__, dmdispcombconf[DMindex].IDvolt, dmdispcombconf[DMindex].xysize); 
+fflush(stdout);
 list_image_ID();
 
 
@@ -98,8 +99,8 @@ list_image_ID();
 					if(volt>dmdispcombconf[DMindex].MAXVOLT)
 						volt = dmdispcombconf[DMindex].MAXVOLT;
 					
-					//printf("write value pix %ld to ID %ld\n", ii, dmdispcombconf[DMindex].IDvolt);
-					//fflush(stdout);
+					printf("write value pix %ld to ID %ld\n", ii, IDvolt);
+					fflush(stdout);
 					data.image[IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0); //65536.0);
 				}
 printf("TEST line %d\n", __LINE__); fflush(stdout);
