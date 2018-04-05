@@ -145,7 +145,23 @@ int AOloopControl_DM_disp2V(long DMindex)
 // 
 
 
-int AOloopControl_DM_CombineChannels(long DMindex, long xsize, long ysize, int NBchannel, int AveMode, int dm2dm_mode, const char *dm2dm_DMmodes, const char *dm2dm_outdisp, int wfsrefmode, const char *wfsref_WFSRespMat, const char *wfsref_out, int voltmode, const char *IDvolt_name, float DClevel, float maxvolt)
+int AOloopControl_DM_CombineChannels(
+		long DMindex, 
+		long xsize, 
+		long ysize, 
+		int NBchannel, 
+		int AveMode, 
+		int dm2dm_mode, 
+		const char *dm2dm_DMmodes, 
+		const char *dm2dm_outdisp, 
+		int wfsrefmode, 
+		const char *wfsref_WFSRespMat, 
+		const char *wfsref_out, 
+		int voltmode, 
+		const char *IDvolt_name, 
+		float DClevel, 
+		float maxvolt
+		)
 {
     long naxis = 2;
     uint32_t *size;
@@ -444,7 +460,7 @@ int AOloopControl_DM_CombineChannels(long DMindex, long xsize, long ysize, int N
     
     
     list_image_ID();
-    
+    exit(0);
     
     while(dmdispcombconf[DMindex].ON == 1)
     {
