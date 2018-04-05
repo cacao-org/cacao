@@ -96,6 +96,9 @@ list_image_ID();
 					volt = 100.0*sqrt(data.image[dmdispcombconf[DMindex].IDdisp].array.F[ii]/DMSTROKE100);
 					if(volt>dmdispcombconf[DMindex].MAXVOLT)
 						volt = dmdispcombconf[DMindex].MAXVOLT;
+					
+					printf("write value pix %ld to ID %ld\n", ii, dmdispcombconf[DMindex].IDvolt);
+					fflush(stdout);
 					data.image[dmdispcombconf[DMindex].IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0); //65536.0);
 				}
 printf("TEST line %d\n", __LINE__); fflush(stdout);
