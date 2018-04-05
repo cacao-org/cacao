@@ -222,7 +222,7 @@ fi
 
 if [ "${initDMstat}" = "0" ]; then
 menuitems+=( "initDM" "(re)-START  DM comb process (-> dm${DMindex}disp00..07  dm${DMindex}disp)" )
-menuitems+=( "stopDM" "... Force STOP  DM comb process" )
+menuitems+=( "stopDMf" "... Force STOP  DM comb process" )
 else
 menuitems+=( "stopDM" "STOP  DM comb process" )
 menuitems+=( " " " ")
@@ -645,6 +645,15 @@ echo "0" > $file
 ./aolfuncs/aolfunc_stopDM
 menutop_default="initDM"
 ;;
+
+    stopDMf)
+mkdir -p status
+file="status/stat_initdm${DMindex}.txt"
+echo "0" > $file
+./aolfuncs/aolfunc_stopDM -f
+menutop_default="initDM"
+;;
+
 
 
 	monDM)
