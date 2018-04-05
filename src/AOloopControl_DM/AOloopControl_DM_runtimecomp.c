@@ -410,6 +410,7 @@ int AOloopControl_DM_CombineChannels(
         printf("vOK = %d\n", vOK);
         if(vOK==0)
         {
+			printf("CREATING stream %s  %d axis, size = %ld x %ld\n", dmdispcombconf[DMindex].voltname, naxis, size[0], size[1]);
             dmdispcombconf[DMindex].IDvolt = create_image_ID(dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_UINT16, 1, 10);
             COREMOD_MEMORY_image_set_createsem(dmdispcombconf[DMindex].voltname, 10);
          }
