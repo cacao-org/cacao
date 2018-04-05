@@ -356,7 +356,7 @@ exitCLI
 EOF
 
 # remove flat
-#dmdispzero ${DMindex} 00
+./dmutils/dmdispzero ${DMindex} 00
 
 # connect to camera
 ./aolfuncs/aolfunc_StreamLink wfsim
