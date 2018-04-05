@@ -428,7 +428,7 @@ int AOloopControl_DM_CombineChannels(
     
      AOloopControl_printDMconf();
 
-    if (sigaction(SIGINT, &data.sigact, NULL) == -1) {
+ /*   if (sigaction(SIGINT, &data.sigact, NULL) == -1) {
         perror("sigaction");
         exit(EXIT_FAILURE);
     }
@@ -457,10 +457,9 @@ int AOloopControl_DM_CombineChannels(
         exit(EXIT_FAILURE);
     }
     
+   */ 
     
-    
-    list_image_ID();
-    exit(0);
+
     
     while(dmdispcombconf[DMindex].ON == 1)
     {
