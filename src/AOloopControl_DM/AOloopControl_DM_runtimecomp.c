@@ -489,8 +489,6 @@ int AOloopControl_DM_CombineChannels(
 		if(semwaitts.tv_nsec >= 1000000000)
 			semwaitts.tv_sec = semwaitts.tv_sec + 1;
 
-printf("TEST line %d\n", __LINE__); fflush(stdout);
-		
 		DMupdate = 0;
 		
 		if(dmdispcombconf[DMindex].TrigMode==0)
@@ -521,8 +519,6 @@ printf("TEST line %d\n", __LINE__); fflush(stdout);
 				}
         }
         
-printf("TEST line %d\n", __LINE__); fflush(stdout);
-            
         if(DMupdate==1)
         {
 			clock_gettime(CLOCK_REALTIME, &ttrig);
