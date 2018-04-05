@@ -428,7 +428,7 @@ int AOloopControl_DM_CombineChannels(
     
      AOloopControl_printDMconf();
 
-    if (sigaction(SIGINT, &data.sigact, NULL) == -1) {
+/*    if (sigaction(SIGINT, &data.sigact, NULL) == -1) {
         perror("sigaction");
         exit(EXIT_FAILURE);
     }
@@ -456,7 +456,7 @@ int AOloopControl_DM_CombineChannels(
         perror("sigaction");
         exit(EXIT_FAILURE);
     }
-    
+   */ 
    
     
 
