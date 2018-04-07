@@ -96,7 +96,7 @@ fi
 
 ./AOloopControl -n $pname << EOF
 readshmim aol${loopnb}_dmdisp
-streamdelay aol${loopnb}_dmdisp aol${loopnb}_dmdispD $1 50
+streamdelay aol${loopnb}_dmdisp aol${loopnb}_dmdispD $1 100
 exitCLI
 EOF
 
