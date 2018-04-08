@@ -60,6 +60,19 @@ Note: On OS X, use gcc-mp-5 for openMP:
 
 ---
 
+# Post-intallation configuration
+
+Add these lines to your .bashrc (edit first line as needed)
+```bash
+export CACAO_DIR=/home/cacaouser/src/cacao
+export LIBRARY_PATH=$LIBRARY_PATH:$CACAO_DIR/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CACAO_DIR/lib
+
+```
+
+
+---
+
 ## Reporting bugs, issues
 
 Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues )
