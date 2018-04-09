@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
 	printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
 	printf(STYLE_NO_BOLD);
 
-
 	// initialize milk modules for which no function calls is included by default
 	libinit_image_basic();
 	libinit_image_format();
