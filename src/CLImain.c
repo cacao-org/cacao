@@ -10,6 +10,9 @@
 #include <psf/psf.h>
 #include <ZernikePolyn/ZernikePolyn.h>
 
+#include <linopt_imtools/linopt_imtools.h>
+#include <cudacomp/cudacomp.h>
+#include <linARfilterPred/linARfilterPred.h>
 
 // cacao includes for inits
 #include <AOloopControl/AOloopControl.h>
@@ -20,9 +23,6 @@
 #include <linARfilterPred/linARfilterPred.h>
 #include <AOloopControl_computeCalib/AOloopControl_computeCalib.h>
 #include <FPAOloopControl/FPAOloopControl.h>
-#include <linopt_imtools/linopt_imtools.h>
-#include <cudacomp/cudacomp.h>
-#include <linARfilterPred/linARfilterPred.h>
 
 
 
