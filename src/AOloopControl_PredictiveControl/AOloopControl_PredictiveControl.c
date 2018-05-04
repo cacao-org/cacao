@@ -249,7 +249,11 @@ int_fast8_t init_AOloopControl_PredictiveControl()
 // IDcoeff_name is AO telemetry file
 // size:   #modes, 1, #samples
 //
-int_fast8_t AOloopControl_PredictiveControl_mapPredictiveFilter(const char *IDmodecoeff_name, long modeout, double delayfr)
+int_fast8_t AOloopControl_PredictiveControl_mapPredictiveFilter(
+	const char *IDmodecoeff_name, 
+	long modeout, 
+	double delayfr
+	)
 {
     long IDmodecoeff;
     long NBsamples;
@@ -303,7 +307,14 @@ int_fast8_t AOloopControl_PredictiveControl_mapPredictiveFilter(const char *IDmo
 ///     delayfr [delay in frame unit]
 ///     filtsize [number of samples in filter]
 ///
-double AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name, long modeout, double delayfr, long filtsize, const char *IDfilt_name, double SVDeps)
+double AOloopControl_PredictiveControl_testPredictiveFilter(
+	const char *IDtrace_name, 
+	long modeout, 
+	double delayfr, 
+	long filtsize, 
+	const char *IDfilt_name, 
+	double SVDeps
+	)
 {
     long IDtrace;
     long IDmatA;
@@ -440,7 +451,12 @@ double AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_
 
 
 
-long AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop, long PFblock, long PFblockStart, long PFblockEnd)
+long AOloopControl_PredictiveControl_builPFloop_WatchInput(
+	long loop, 
+	long PFblock, 
+	long PFblockStart, 
+	long PFblockEnd
+	)
 {
     long IDinb0;
     long IDinb1;
@@ -621,7 +637,10 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop, long PFblo
  * This is used to give more weigth to most recent measurements
  * 
  */
-long AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name, float DecayCoeff)
+long AOloopControl_PredictiveControl_setPFsimpleAve(
+	char *IDPF_name, 
+	float DecayCoeff
+	)
 {
 	long IDPF;
 	int xsize, ysize; 

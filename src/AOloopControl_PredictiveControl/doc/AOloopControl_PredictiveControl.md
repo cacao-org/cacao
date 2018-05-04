@@ -1,5 +1,6 @@
 # AOloopControl PredictiveControl {#page_module_AOloopControl_PredictiveControl}
 
+---
 
 ## Overview
 
@@ -11,6 +12,8 @@ Predictive control is implemented in two processes:
 The predictive filter is modal, and adopts the same modes as the main control loop.
 
 
+---
+
 ## Scripts
 
 
@@ -20,15 +23,34 @@ aolARPF 	  | Find auto-regressive predictive filter
 aolARPFblock  | AO find optimal AR linear predictive filter
 
 
+---
 
-## Data flow
+
+## Data flow for real-time operation
 
 Predictive control is set up by blocks of modes. A block is configured through the aolconf predictive control sub-panel, which writes to configuration files conf/conf_PFblock_XXX.txt, where XXX is the block number (000, 001, 002 etc...). Configuration files specify the modes within each block (index min to index max), the predictive filter order, time lag and and averaging gain.
 
-For each block, there are 3 main processes involved in running the predictive control:
-
-- Watching input telemetry this process listens to the input telemetry stream and periodically writes data to be used to compute a filter. This runs function AOloopControl_PredictiveControl_builPFloop_WatchInput() in AOloopControl_PredictiveControl.c.
-- Computing filter. Runs CLI command mkARpfilt, which runs function LINARFILTERPRED_Build_LinPredictor() in linARfilterPred.c.
-- Prediction engine (= apply filter). Runs script ./auxscripts/predFiltApplyRT.
-
+For each block, there are 3 main processes involved in running the predictive control.
 All 3 processes work in a chain, and can be turned on/off from the GUI.
+
+
+
+### Collect data from input telemetry
+
+Watching input telemetry this process listens to the input telemetry stream and periodically writes data to be used to compute a filter. This runs function AOloopControl_PredictiveControl_builPFloop_WatchInput() in AOloopControl_PredictiveControl.c.
+
+Output is a 3D image, of size NBmodes x 1 x NBsteps.
+
+
+### Compute filter
+
+Computing filter. Runs CLI command mkARpfilt, which runs function LINARFILTERPRED_Build_LinPredictor() in linARfilterPred.c.
+
+
+
+### Apply prediction
+
+Prediction engine (= apply filter). Runs script ./auxscripts/predFiltApplyRT.
+
+---
+
