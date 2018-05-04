@@ -20,6 +20,9 @@
 #include <linARfilterPred/linARfilterPred.h>
 #include <AOloopControl_computeCalib/AOloopControl_computeCalib.h>
 #include <FPAOloopControl/FPAOloopControl.h>
+#include <linopt_imtools/linopt_imtools.h>
+#include <cudacomp/cudacomp.h>
+#include <linARfilterPred/linARfilterPred.h>
 
 
 
@@ -45,6 +48,10 @@ int main(int argc, char *argv[])
 	libinit_img_reduce();
 	libinit_linARfilterPred();
 	libinit_ZernikePolyn();
+	libinit_linopt_imtools();
+	libinit_cudacomp();
+	libinit_linARfilterPred();
+
 	
 	// initialize modules specific to cacao
 	libinit_AOloopControl();
