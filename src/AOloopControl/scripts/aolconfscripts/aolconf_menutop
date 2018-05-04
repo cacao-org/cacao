@@ -35,7 +35,17 @@ menuitems+=( " " " ")
 menuitems+=( " " " ")
 
 
+menuDM="1"
+menuCONFCONTR="1"
+menuPRED="1"
+menuTEST="1"
+menuLOG="1"
+menuEXT="1"
 
+
+
+
+if [ "$menuDM" = "1" ]; then
 # =====================================================================================================================
 # =================================== DM CHANNELS AND OUTPUT (dmcomb process) =========================================
 # =====================================================================================================================
@@ -125,7 +135,7 @@ fi
 
 ConfReadParam DMwfsref_mode "0"; DMwfsref_mode="$paramvalue"
 if [[ -f "$file" && ( "$DMwfsref_mode" = "1" || "$DMwfsref_mode" = "0" ) ]]; then
-echo "OK"
+echo "DMwfsref_mode = $DMwfsref_mode"
 else
 echo "0" > $file
 DMwfsref_mode=0
@@ -213,7 +223,7 @@ menuitems+=( " " " ")
 file="status/stat_initdm${DMindex}.txt"
 initDMstat=$( head -1 $file )
 if [[ -f "$file" && ( "$initDMstat" = "1" || "$initDMstat" = "0" ) ]]; then
-echo "OK"
+echo "initDMstat = $initDMstat"
 else
 mkdir -p ./status
 echo "0" > $file
@@ -234,12 +244,11 @@ menuitems+=( "monDM" "Monitor  DM comb process" )
 menuitems+=( " " " ")
 menuitems+=( " " " ")
 menuitems+=( " " " ")
+fi
 
 
 
-
-
-
+if [ "$menuCONFCONTR" = "1" ]; then
 # =====================================================================================================================
 # ===================================  AO CONFIGURE AND CONTROL =======================================================
 # =====================================================================================================================
@@ -248,8 +257,6 @@ menuitems+=( " " " ")
 stringcenter "AO CONFIGURE AND CONTROL"
 menuitems+=( "2 ->" "\Zb\Zr$string\Zn" )
 menuitems+=( " " " ")
-
-function_controlmatrix_readparams
 
 if [ -f "runproc/FUNCTION_C0.runproc" ] || [ -f "runproc/FUNCTION_C00.runproc" ]; then
 menuitems+=( " " "\Zr\Z1CALIBRATION RUNNING\Zn" )
@@ -277,9 +284,11 @@ menuitems+=( "L" "Control AO (L)oop" )
 menuitems+=( " " " ")
 menuitems+=( " " " ")
 menuitems+=( " " " ")
+fi
 
 
 
+if [ "$menuPRED" = "1" ]; then
 # =====================================================================================================================
 # ================================  PREDICTIVE CONTROL & POST PROCESSING ==============================================
 # =====================================================================================================================
@@ -292,15 +301,14 @@ menuitems+=( "P" "Predictive Control")
 menuitems+=( " " " ")
 menuitems+=( " " " ")
 menuitems+=( " " " ")
+fi
 
 
 
-
+if [ "$menuTEST" = "1" ]; then
 # =====================================================================================================================
 # ===========================================  TEST AND MONITOR =======================================================
 # =====================================================================================================================
-
-
 stringcenter "TEST AND MONITOR"
 menuitems+=( "4 ->" "\Zb\Zr$string\Zn" )
 menuitems+=( " " " ")
@@ -310,8 +318,11 @@ menuitems+=( "V" "View / monitor" )
 menuitems+=( " " " ")
 menuitems+=( " " " ")
 menuitems+=( " " " ")
+fi
 
 
+
+if [ "$menuLOG" = "1" ]; then
 # =====================================================================================================================
 # ===========================================  DATA LOGGING / ANALYSIS ================================================
 # =====================================================================================================================
@@ -324,24 +335,20 @@ menuitems+=( "R" "Record / analyze")
 menuitems+=( " " " ")
 menuitems+=( " " " ")
 menuitems+=( " " " ")
+fi
 
 
+if [ "$menuEXT" = "1" ]; then
 # =====================================================================================================================
 # ===========================================  CUSTOM EXTERNAL SCRIPTS ================================================
 # =====================================================================================================================
-
 
 stringcenter "CUSTOM EXTERNAL SCRIPTS"
 menuitems+=( "6 ->" "\Zb\Zr$string\Zn" )
 menuitems+=( " " " ")
 menuitems+=( "A" "Align")
 menuitems+=( "HC" "Hardware Control")
-
-
-
-
-
-
+fi
 
 
 
@@ -367,6 +374,9 @@ dialog --colors --title "AO loop top menu  - LOOP ${LOOPNAME} (${LOOPNUMBER})  [
 --default-item "${menutop_default}" \
  --menu "$menuname" \
  $nbwlines $nbwcols $nbwlines "${menuitems[@]}"  2> $tempfile
+
+
+
 
 
 retval=$?

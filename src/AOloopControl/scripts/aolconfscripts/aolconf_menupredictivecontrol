@@ -1824,7 +1824,7 @@ menucontrolloop_default="PFb3GPU9"
 
 
 
-# FILTER 0
+# FILTER 0 - WATCH
 
 	PFb0wON)
 tmuxname="aol${LOOPNUMBER}PFb0watchin"
@@ -1858,7 +1858,7 @@ menupred_default="PFb0wON"
 
 
 
-# FILTER 1
+# FILTER 1 - WATCH
 
 	PFb1wON)
 tmuxname="aol${LOOPNUMBER}PFb1watchin"
@@ -1891,7 +1891,7 @@ menupred_default="PFb1wON"
 
 
 
-# FILTER 2
+# FILTER 2 - WATCH
 
 	PFb2wON)
 tmuxname="aol${LOOPNUMBER}PFb2watchin"
@@ -1922,7 +1922,8 @@ menupred_default="PFb2wON"
 ;;
 
 
-# FILTER 3
+
+# FILTER 3 - WATCH
 
 	PFb3wON)
 tmuxname="aol${LOOPNUMBER}PFb3watchin"
