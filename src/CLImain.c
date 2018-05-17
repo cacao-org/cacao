@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
 	strcpy(data.configdir, CONFIGDIR);
 
 
+
 	printf("\n");
 	printf("        %s version %s\n", data.package_name, data.package_version);
 	printf("        GNU General Public License v3.0\n");

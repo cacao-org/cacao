@@ -1,22 +1,38 @@
-# run from _build directory :
+# Example, run from _build directory :
+#
 # cmake .. -DCMAKE_INSTALL_PREFIX=../_install
+# cmake .. -DUSE_MAGMA=ON
+# cmake .. -DUSE_QDWHPARTIAL=ON
+#
+# make clean
+# make
+# sudo make install
+#
 
 cmake_minimum_required (VERSION 3.1)
 project (cacao C)
 
 # options
-option(USE_CUDA  "Use CUDA library"  OFF)
-option(USE_MAGMA "Use MAGMA library" OFF)
+option(USE_CUDA  "Use CUDA        library"  OFF)
+option(USE_MAGMA "Use MAGMA       library" OFF)
+option(USE_MAGMA "Use QDWHpartial library" OFF)
 
+
+# MAGMA (optional)
 if(USE_MAGMA)
 set(USE_CUDA ON)
 endif(USE_MAGMA)
 
-message("====================================================")
-message("PROJECT_SOURCE_DIR  = ${PROJECT_SOURCE_DIR}")
-message("USE_CUDA            = ${USE_CUDA}")
-message("USE_MAGMA           = ${USE_MAGMA}")
-message("====================================================")
+
+# QDWH (optional)
+if(USE_QDWHPARTIAL)
+set(USE_QDWHPARTIAL ON)
+set(USE_CUDA ON)
+set(USE_MAGMA ON)
+endif(USE_QDWHPARTIAL)
+set( QDWHPARTIAL_INCLUDE_PATH "/home/guyon/src/subaru/qdwhpartial-svd/magma" )
+set( QDWHPARTIAL_LIBRARIES "psinv" )
+
 
 
 
@@ -30,6 +46,30 @@ pkg_check_modules(MAGMA REQUIRED magma)
 message(STATUS ${MAGMA_LIBRARY_DIRS})
 link_directories( ${MAGMA_LIBRARY_DIRS} )
 endif(USE_MAGMA)
+
+
+
+
+
+
+message("====================================================")
+message("PROJECT_SOURCE_DIR       = ${PROJECT_SOURCE_DIR}")
+
+message("USE_CUDA                 = ${USE_CUDA}")
+
+message("USE_MAGMA                = ${USE_MAGMA}")
+if(USE_MAGMA)
+message("   MAGMA_LIBRARIES       = ${MAGMA_LIBRARIES}")
+endif(USE_MAGMA)
+
+message("USE QDWHPARTIAL          = ${USE_QDWHPARTIAL}")
+if(USE_QDWHPARTIAL)
+message("   QDWHPARTIAL_LIBRARIES = ${QDWHPARTIAL_LIBRARIES}")
+endif(USE_QDWHPARTIAL)
+
+message("====================================================")
+
+
 
 
 #                               
@@ -85,11 +125,13 @@ ${CURSES_INCLUDE_DIR}
 target_compile_options(cacao PUBLIC 
 ${FFTW_CFLAGS_OTHER}
 ${FFTWF_CFLAGS_OTHER}
--fopenmp)
+${OpenMP_C_FLAGS}
+)
 
 
 
-set_target_properties(cacao PROPERTIES COMPILE_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DPACKAGE_VERSION=\\\"0.0.0\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/cacao-org/cacao/issues\\\"" )
+set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DPACKAGE_VERSION=\\\"0.0.0\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/cacao-org/cacao/issues\\\"" )
+
 
 
 target_link_libraries (cacao PUBLIC
@@ -109,8 +151,8 @@ image_gen
 statistic
 image_format 
 img_reduce 
-psf 
-cudacomp 
+psf
+cudacomp
 kdtree 
 linARfilterPred
 AOloopControl
@@ -128,17 +170,47 @@ readline
 cfitsio
 dl
 rt
-gomp
 ${GSL_LIBRARIES} 
 ${FFTW_LIBRARIES}
 ${FFTWF_LIBRARIES}
 ${CMAKE_THREAD_LIBS_INIT}
-${CURSES_LIBRARIES})
+${CURSES_LIBRARIES}
+${OpenMP_C_FLAGS}
+)
 
 
 if(USE_MAGMA)
 target_link_libraries (cacao PUBLIC ${MAGMA_LIBRARIES})
-set_target_properties(cacao PROPERTIES COMPILE_FLAGS "-DHAVE_CUDA -DHAVE_MAGMA")
+set(BUILD_FLAGS "${BUILD_FLAGS} -DHAVE_CUDA -DHAVE_MAGMA" )
 endif(USE_MAGMA)
 
+
+
+if(USE_QDWHPARTIAL)
+target_link_libraries (cacao PUBLIC ${QDWHPARTIAL_LIBRARIES})
+target_include_directories(cacao PUBLIC ${QDWHPARTIAL_INCLUDE_PATH} )
+set(BUILD_FLAGS "${BUILD_FLAGS} -DHAVE_QDWHpartial" )
+endif(USE_QDWHPARTIAL)
+
+set_target_properties(cacao PROPERTIES COMPILE_FLAGS "${BUILD_FLAGS}" )
+
+
+message("====================================================")
+message("BUILD_FLAGS   :  ${BUILD_FLAGS}")
+message("====================================================")
+
+
 install(TARGETS cacao DESTINATION bin)
+
+
+
+
+
+
+
+
+
+
+
+
+
