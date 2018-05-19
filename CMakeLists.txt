@@ -12,6 +12,10 @@
 cmake_minimum_required (VERSION 3.1)
 project (cacao C)
 
+add_compile_options(-Ofast)
+add_compile_options(-march=native)
+
+
 # options
 option(USE_CUDA  "Use CUDA        library"  OFF)
 option(USE_MAGMA "Use MAGMA       library" OFF)
