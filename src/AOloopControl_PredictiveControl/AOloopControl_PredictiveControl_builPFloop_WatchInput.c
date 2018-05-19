@@ -61,55 +61,22 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 #include <fitsio.h>
 
+
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
-#include "COREMOD_tools/COREMOD_tools.h"
-#include "COREMOD_arith/COREMOD_arith.h"
-#include "info/info.h"
-#include "linopt_imtools/linopt_imtools.h"
-#include "statistic/statistic.h"
+
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
 
 
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/*                                      DEFINES, MACROS                                            */
-/* =============================================================================================== */
-/* =============================================================================================== */
 
 
-
-# ifdef _OPENMP
-# include <omp.h>
-#define OMP_NELEMENT_LIMIT 1000000
-# endif
-
-
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/*                                  GLOBAL DATA DECLARATION                                        */
-/* =============================================================================================== */
-/* =============================================================================================== */
-
-
-
-/* =============================================================================================== */
-/*                                     MAIN DATA STRUCTURES                                        */
-/* =============================================================================================== */
 
 extern long LOOPNUMBER;            // current loop index
-extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
-
-
-
-
 
 
 
