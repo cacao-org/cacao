@@ -64,7 +64,7 @@ message(STATUS ${MAGMA_LIBRARY_DIRS})
 link_directories( ${MAGMA_LIBRARY_DIRS} )
 endif(USE_MAGMA)
 
-
+SET(CURSES_USE_NCURSES TRUE)
 
 
 
