@@ -12,8 +12,21 @@
 cmake_minimum_required (VERSION 3.1)
 project (cacao C)
 
+
+
+# COMPILING OPTIONS
+
+add_compile_options(-std=gnu11)
 add_compile_options(-Ofast)
 add_compile_options(-march=native)
+
+# runs the standard link-time optimizer
+add_compile_options(-flto)
+
+# A common flag is -pipe. This flag has no effect on the generated code, but it makes the compilation process faster. It tells the compiler to use pipes instead of temporary files during the different stages of compilation, which uses more memory. On systems with low memory, GCC might get killed. In those cases do not use this flag. 
+add_compile_options(-pipe)
+
+
 
 
 # options
