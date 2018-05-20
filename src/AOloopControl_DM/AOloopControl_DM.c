@@ -512,7 +512,7 @@ int init_AOloopControl_DM()
 
 
     strcpy(data.cmd[data.NBcmd].key,"aoloopcontroldmastrogseq");
-    strcpy(data.cmd[data.NBcmd].module,__FILE__);
+    strcpy(data.cmd[data.NBcmd].module, __FILE__);
     data.cmd[data.NBcmd].fp = AOloopControl_DM_mkAstroGrid_seq_cli;
     strcpy(data.cmd[data.NBcmd].info,"make astrogrid sequence");
     strcpy(data.cmd[data.NBcmd].syntax,"<outfname> <DMindex (0-9)> <mode (0-6)> <bin(>1)> <NBcycle>");

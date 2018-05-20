@@ -35,7 +35,7 @@ typedef struct
 
     int voltmode;      // 1 if DM drives voltmap
     long IDvolt;
-    char voltname[200];
+    char voltname[12];
     int voltON;        // 1 if applying voltage 
     float MAXVOLT;     // maximum voltage on DM
 	int AveMode;
