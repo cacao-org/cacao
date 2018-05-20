@@ -72,9 +72,12 @@ The routine packages a data matrix PFmatD with dimension (size[0] = number of ti
 
 In the column-major matrix representation, PFmatD data array is the transpose of the data matrix. Predictive control requires the pseudoinverse of the transpose of the data matrix to be computed, so the pseudoinverse of PFmatD is computed by calling function CUDACOMP_magma_compute_SVDpseudoInverse().
 
-### Computing pseudoinverse
+### Computing Pseudoinverse
 
 Performed by calling function CUDACOMP_magma_compute_SVDpseudoInverse().
+
+
+### Assembling Predictive Filter
 
 
 
