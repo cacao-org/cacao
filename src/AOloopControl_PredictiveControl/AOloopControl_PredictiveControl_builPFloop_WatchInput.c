@@ -3,7 +3,6 @@
  * @brief   Assemble input data from telemetry stream
  * 
  * 
- *
  * 
  * 
  * ## Change log
@@ -76,16 +75,37 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 
 
-extern long LOOPNUMBER;            // current loop index
 
 
-
-
-
-
-
-
-
+/**
+ *  ## Purpose
+ * 
+ * Listens to telemetry streams buffers aol<loop>_modeval_ol_logbuff0 
+ * and aol<loop>_modeval_ol_logbuff1
+ * 
+ * When new buffer is complete, extract the requested values from it
+ * and write to aol<loop>_modevalol_PFb<PFblock>
+ * 
+ * ## Arguments
+ * 
+ * @param[in]
+ * loop 		LONG
+ * 			loop index
+ * 
+ * @param[in]
+ * PFblock		LONG
+ * 			Block number
+ * 
+ * @param[in]
+ * PFblockStart	LONG
+ * 			Block start index
+ * 
+ * @param[in]
+ * PFblockEnd	LONG
+ * 			Block end index
+ * 
+ * 
+ */
 long AOloopControl_PredictiveControl_builPFloop_WatchInput(
 	long loop, 
 	long PFblock, 
@@ -234,7 +254,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
                 for(ii=0; ii<PFblockSize; ii++)
                     data.image[IDout].array.F[kk*PFblockSize + ii] = data.image[IDinb].array.F[kk*xysize + (ii+PFblockStart)];
 
-            for(ii=0; ii<PFblockSize; ii++)
+            for(ii=0; ii<PFblockSize; ii++) // Remove time averaged value
             {
                 ave = 0.0;
                 for(kk=0; kk<zsize; kk++)

@@ -45,9 +45,13 @@ All 3 processes work in a chain, and can be turned on/off from the GUI.
 
 ## Collect data from input telemetry
 
-Watching input telemetry this process listens to the input telemetry stream and periodically writes data to be used to compute a filter. This runs function AOloopControl_PredictiveControl_builPFloop_WatchInput() in AOloopControl_PredictiveControl.c.
+Watching input telemetry this process listens to the input telemetry stream and periodically writes data to be used to compute a filter. This runs function AOloopControl_PredictiveControl_builPFloop_WatchInput() called from AOloopControl_PredictiveControl.c.
 
 Output is a 3D image, of size: NBmodes x 1 x NBsteps.
+
+Output is shared memory image stream, named:
+
+	aol<loop>_modevalol_PFb<blocknumber>
 
 
 ---
@@ -56,6 +60,22 @@ Output is a 3D image, of size: NBmodes x 1 x NBsteps.
 ## Compute filter
 
 Computing filter. Runs CLI command mkARpfilt, which runs function LINARFILTERPRED_Build_LinPredictor() in linARfilterPred.c.
+
+Input to function: aol<loop>_modevalol_PFb<blocknumber>
+
+Output to function: aol<loop>_modevalol_outPFb<blocknumber>
+
+
+### Packaging input data matrix 
+
+The routine packages a data matrix PFmatD with dimension (size[0] = number of time samples) (size[1] = dimension of each sample). Usually, size[0] > size[1]. 
+
+In the column-major matrix representation, PFmatD data array is the transpose of the data matrix. Predictive control requires the pseudoinverse of the transpose of the data matrix to be computed, so the pseudoinverse of PFmatD is computed by calling function CUDACOMP_magma_compute_SVDpseudoInverse().
+
+### Computing pseudoinverse
+
+Performed by calling function CUDACOMP_magma_compute_SVDpseudoInverse().
+
 
 
 
