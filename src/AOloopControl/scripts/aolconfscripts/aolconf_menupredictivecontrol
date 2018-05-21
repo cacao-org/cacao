@@ -1981,7 +1981,7 @@ tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
 tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb0" C-m
-tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb0 ${PFb0order} ${PFb0lag} ${PFb0SVDe} 0.0 aol${LOOPNUMBER}_outPFb0 1 ${PFb0dgain}" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb0 ${PFb0order} ${PFb0lag} ${PFb0SVDe} 0.0 aol${LOOPNUMBER}_outPFb0 1 ${PFb0dgain} 0" C-m
 #tmux send-keys -t ${tmuxname} "exit" C-m
 PFb0cON=" ON"
 file="./status/stat_PFb0cON.txt"
@@ -2032,7 +2032,7 @@ tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
 tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb1" C-m
-tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb1 ${PFb1order} ${PFb1lag} ${PFb1SVDe} 0.0 aol${LOOPNUMBER}_outPFb1 1 ${PFb1dgain}" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb1 ${PFb1order} ${PFb1lag} ${PFb1SVDe} 0.0 aol${LOOPNUMBER}_outPFb1 1 ${PFb1dgain} 0" C-m
 #tmux send-keys -t ${tmuxname} "exit" C-m
 PFb1cON=" ON"
 file="./status/stat_PFb1cON.txt"
@@ -2084,7 +2084,7 @@ tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
 tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb2" C-m
-tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb2 ${PFb2order} ${PFb2lag} ${PFb2SVDe} 0.0 aol${LOOPNUMBER}_outPFb2 1 ${PFb2dgain}" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb2 ${PFb2order} ${PFb2lag} ${PFb2SVDe} 0.0 aol${LOOPNUMBER}_outPFb2 1 ${PFb2dgain} 0" C-m
 #tmux send-keys -t ${tmuxname} "exit" C-m
 PFb2cON=" ON"
 file="./status/stat_PFb2cON.txt"
@@ -2136,7 +2136,7 @@ tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
 tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb3" C-m
-tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb3 ${PFb3order} ${PFb3lag} ${PFb3SVDe} 0.0 aol${LOOPNUMBER}_outPFb3 1 ${PFb3dgain}" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb3 ${PFb3order} ${PFb3lag} ${PFb3SVDe} 0.0 aol${LOOPNUMBER}_outPFb3 1 ${PFb3dgain} 0" C-m
 #tmux send-keys -t ${tmuxname} "exit" C-m
 PFb3cON=" ON"
 file="./status/stat_PFb3cON.txt"

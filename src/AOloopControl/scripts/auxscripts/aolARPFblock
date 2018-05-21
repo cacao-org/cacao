@@ -166,7 +166,7 @@ readshmim aol${loopnb}_mode_blknb
 loadfits "$1" olwfsmeas
 mselblock olwfsmeas aol${loopnb}_mode_blknb $2 olwfsmeasblk
 savefits olwfsmeasblk "!./PredictiveControl/olwfsmeasblk.$2.fits"
-mkARpfilt olwfsmeasblk $4 $3 0.001 0.0 outPF 0 1.0
+mkARpfilt olwfsmeasblk $4 $3 0.001 0.0 outPF 0 1.0 0
 savefits outPF "!./PredictiveControl/outPF.$2.fits"
 
 applyARpfilt outPF olwfsmeasblk $3 outrec
@@ -187,7 +187,7 @@ else
 readshmim aol${loopnb}_mode_blknb
 loadfits "$1" olwfsmeas
 mselblock olwfsmeas aol${loopnb}_mode_blknb $2 olwfsmeasblk
-mkARpfilt olwfsmeasblk $4 $3 0.001 0.0 outPF 0 1.0
+mkARpfilt olwfsmeasblk $4 $3 0.001 0.0 outPF 0 1.0 0
 savefits outPF "!./PredictiveControl/outPF.$2.fits"
 exitCLI
 EOF
