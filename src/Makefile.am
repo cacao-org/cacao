@@ -27,6 +27,9 @@ SUBDIRS =
 
 
 ## Custom user-provided modules
+## this file must exist
+## create empty file to avoid error
+##
 include Makefile.am.add
 
 ## 
