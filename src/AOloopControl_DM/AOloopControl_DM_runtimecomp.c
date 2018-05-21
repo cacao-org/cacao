@@ -99,8 +99,8 @@ int AOloopControl_DM_disp2V(long DMindex)
 					if(volt>dmdispcombconf[DMindex].MAXVOLT)
 						volt = dmdispcombconf[DMindex].MAXVOLT;
 					
-					printf("write value pix %ld to ID %ld\n", ii, IDvolt);
-					fflush(stdout);
+					//printf("write value pix %ld to ID %ld\n", ii, IDvolt);
+					//fflush(stdout);
 					data.image[IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0); //65536.0);
 				}
 //printf("TEST line %d\n", __LINE__); fflush(stdout);
@@ -239,7 +239,7 @@ int AOloopControl_DM_CombineChannels(
     IDvar = variable_ID("DMTWAIT");
     if(IDvar!=-1)
 		DMtwaitus = (long) (data.variable[IDvar].value.f);
-    
+    printf("Using DMtwaitus = %ld us\n", DMtwaitus);
     
     
     schedpar.sched_priority = RT_priority;
@@ -538,7 +538,6 @@ int AOloopControl_DM_CombineChannels(
 
             dmdispcombconf[DMindex].status = 4;
 
-printf("TEST line %d\n", __LINE__); fflush(stdout);
 
             ave = 0.0;
             if(dmdispcombconf[DMindex].AveMode == 1) // REMOVE AVERAGE 
@@ -577,7 +576,6 @@ printf("TEST line %d\n", __LINE__); fflush(stdout);
             COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);      
                    //      sem_post(data.image[dmdispcombconf[DMindex].IDdisp].semptr[0]);
  
-printf("TEST line %d\n", __LINE__); fflush(stdout);
  
             if(dm2dm_mode==1)
             {
@@ -595,7 +593,6 @@ printf("TEST line %d\n", __LINE__); fflush(stdout);
                 sem_post(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].semptr[0]);                
             }
 
-printf("TEST line %d\n", __LINE__); fflush(stdout);
             
             if(wfsrefmode==1)
             {
@@ -624,38 +621,32 @@ printf("TEST line %d\n", __LINE__); fflush(stdout);
                 fflush(stdout);
             }
             
-printf("TEST line %d\n", __LINE__); fflush(stdout);
 
             
             dmdispcombconf[DMindex].status = 7;
 
-printf("TEST line %d\n", __LINE__); fflush(stdout);
 			
 			clock_gettime(CLOCK_REALTIME, &t1);
 			if(dmdispcombconf[DMindex].voltmode==1)
 				AOloopControl_DM_disp2V(DMindex);
 			
-printf("TEST line %d\n", __LINE__); fflush(stdout);
 
             dmdispcombconf[DMindex].status = 8;
 
             cntsumold = cntsum;
             dmdispcombconf[DMindex].updatecnt++;
 
-printf("TEST line %d\n", __LINE__); fflush(stdout);
             
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiff = time_diff(ttrig, tnow);
 			tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
             dmdispcombconf[DMindex].tdelay = tdiffv;
 
-printf("TEST line %d\n", __LINE__); fflush(stdout);
 
 			tdiff = time_diff(t1, tnow);
 			tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 			dmdispcombconf[DMindex].time_disp2V = tdiffv;
 
-printf("TEST line %d\n", __LINE__); fflush(stdout);
         }
     
          if((data.signal_INT == 1)||(data.signal_TERM == 1)||(data.signal_ABRT==1)||(data.signal_BUS==1)||(data.signal_SEGV==1)||(data.signal_HUP==1)||(data.signal_PIPE==1))
