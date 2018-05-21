@@ -25,6 +25,10 @@ SUBDIRS =
 ## Modules are built as libraries of convenience
 ## Linking order matters
 
+
+## Custom user-provided modules
+include Makefile.am.add
+
 ## 
 ## AO modules
 ##
