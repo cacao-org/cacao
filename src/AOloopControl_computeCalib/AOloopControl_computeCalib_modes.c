@@ -2346,7 +2346,7 @@ long AOloopControl_computeCalib_mkModes_Simple(const char *IDin_name, long NBmbl
             // COMPUTE MODAL CONTROL MATRICES
             printf("COMPUTE CONTROL MATRIX\n");
 #ifdef HAVE_MAGMA
-            CUDACOMP_magma_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000, "VTmat", 0, 0, 1.e-4, 1.e-7);
+            CUDACOMP_magma_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000, "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
 #else
             linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000, "VTmat");
 #endif
