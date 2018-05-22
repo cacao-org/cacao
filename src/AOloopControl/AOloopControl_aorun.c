@@ -1318,6 +1318,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     IDout = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 20);
+    
 	//LOG
 	if(AOconf[loop].RTstreamLOG_modeval_ol_ON == 1)
 	{

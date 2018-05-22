@@ -204,15 +204,20 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         AOconf[loop].RTstreamLOG_modeval_dm_now_filt_save = 0 ;
         AOconf[loop].RTstreamLOG_modeval_dm_now_filt_saveToggle = 0;
 
-        AOconf[loop].RTstreamLOG_modeval_PF_ENABLE = 1;
-        AOconf[loop].RTstreamLOG_modeval_PF_ON = 0;
-        AOconf[loop].RTstreamLOG_modeval_PF_save = 0 ;
-        AOconf[loop].RTstreamLOG_modeval_PF_saveToggle = 0;
+        AOconf[loop].RTstreamLOG_modevalPF_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modevalPF_ON = 0;
+        AOconf[loop].RTstreamLOG_modevalPF_save = 0 ;
+        AOconf[loop].RTstreamLOG_modevalPF_saveToggle = 0;
 
-        AOconf[loop].RTstreamLOG_modeval_PFsync_ENABLE = 1;
-        AOconf[loop].RTstreamLOG_modeval_PFsync_ON = 0;
-        AOconf[loop].RTstreamLOG_modeval_PFsync_save = 0 ;
-        AOconf[loop].RTstreamLOG_modeval_PFsync_saveToggle = 0;
+        AOconf[loop].RTstreamLOG_modevalPFsync_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modevalPFsync_ON = 0;
+        AOconf[loop].RTstreamLOG_modevalPFsync_save = 0 ;
+        AOconf[loop].RTstreamLOG_modevalPFsync_saveToggle = 0;
+
+        AOconf[loop].RTstreamLOG_modevalPFres_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modevalPFres_ON = 0;
+        AOconf[loop].RTstreamLOG_modevalPFres_save = 0 ;
+        AOconf[loop].RTstreamLOG_modevalPFres_saveToggle = 0;
 
         AOconf[loop].RTstreamLOG_modeval_dm_ENABLE = 1;
         AOconf[loop].RTstreamLOG_modeval_dm_ON = 0;

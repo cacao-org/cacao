@@ -308,67 +308,101 @@ typedef struct
 	// Timing buffer contains loop iteration, frame counter cnt0 and time stamps when entry is written
 	// 
 	
+	// read by AOloopControl_loadconfigure()
+	// updated in 
   	int RTstreamLOG_wfsim_ENABLE;           // Is logging enabled ? This needs to be specified at startup, if set to zero, no RT logging will be performed
 	int RTstreamLOG_wfsim_ON;               // Is logging ON ? 
 	int RTstreamLOG_wfsim_save;	            // Is saving enabled ?
 	int RTstreamLOG_wfsim_saveToggle;       // 1 if buffer #0 ready to be saved, 2 if buffer #1 ready to be saved, 0 otherwise
 	// Save process will set back to zero after save has been done
     
+    
+    // created/loaded by AOloopControl_loadconfigure()
+	// updated in 
     int RTstreamLOG_imWFS0_ENABLE;  
 	int RTstreamLOG_imWFS0_ON;      
 	int RTstreamLOG_imWFS0_save;	       
 	int RTstreamLOG_imWFS0_saveToggle; 
 
+	// created/loaded by AOloopControl_loadconfigure()
+	// updated in 
     int RTstreamLOG_imWFS1_ENABLE;  
 	int RTstreamLOG_imWFS1_ON;      
 	int RTstreamLOG_imWFS1_save;	       
 	int RTstreamLOG_imWFS1_saveToggle;     
- 
+
+	// created/loaded by AOloopControl_loadconfigure()
+	// updated in 
     int RTstreamLOG_imWFS2_ENABLE;  
 	int RTstreamLOG_imWFS2_ON;      
 	int RTstreamLOG_imWFS2_save;	       
 	int RTstreamLOG_imWFS2_saveToggle;     
 
+	// created/loaded by 
+	// updated in AOloopControl_ComputeOpenLoopModes()
     int RTstreamLOG_modeval_ENABLE;  
 	int RTstreamLOG_modeval_ON;      
 	int RTstreamLOG_modeval_save;	       
 	int RTstreamLOG_modeval_saveToggle;
 
+	// created/loaded by 
+	// updated in AOloopControl_ComputeOpenLoopModes()
     int RTstreamLOG_modeval_dm_corr_ENABLE;  
 	int RTstreamLOG_modeval_dm_corr_ON;      
 	int RTstreamLOG_modeval_dm_corr_save;	       
 	int RTstreamLOG_modeval_dm_corr_saveToggle;
-   
+
+	// created/loaded by    
+	// updated in AOloopControl_ComputeOpenLoopModes()
     int RTstreamLOG_modeval_dm_now_ENABLE;  
 	int RTstreamLOG_modeval_dm_now_ON;      
 	int RTstreamLOG_modeval_dm_now_save;	       
 	int RTstreamLOG_modeval_dm_now_saveToggle;  
-   
+
+	// created/loaded by    
+	// updated in AOloopControl_ComputeOpenLoopModes()
     int RTstreamLOG_modeval_dm_now_filt_ENABLE;  
 	int RTstreamLOG_modeval_dm_now_filt_ON;      
 	int RTstreamLOG_modeval_dm_now_filt_save;	       
 	int RTstreamLOG_modeval_dm_now_filt_saveToggle;  
-   
-    int RTstreamLOG_modeval_PF_ENABLE;  
-	int RTstreamLOG_modeval_PF_ON;      
-	int RTstreamLOG_modeval_PF_save;	       
-	int RTstreamLOG_modeval_PF_saveToggle;    
-   
-    int RTstreamLOG_modeval_PFsync_ENABLE;  
-	int RTstreamLOG_modeval_PFsync_ON;      
-	int RTstreamLOG_modeval_PFsync_save;	       
-	int RTstreamLOG_modeval_PFsync_saveToggle;       
-   
+
+	// created/loaded by    
+	// updated in AOloopControl_ComputeOpenLoopModes()
+    int RTstreamLOG_modevalPF_ENABLE;  
+	int RTstreamLOG_modevalPF_ON;      
+	int RTstreamLOG_modevalPF_save;	       
+	int RTstreamLOG_modevalPF_saveToggle;    
+
+	// created/loaded by    
+	// updated in AOloopControl_ComputeOpenLoopModes()
+    int RTstreamLOG_modevalPFsync_ENABLE;  
+	int RTstreamLOG_modevalPFsync_ON;      
+	int RTstreamLOG_modevalPFsync_save;	       
+	int RTstreamLOG_modevalPFsync_saveToggle;       
+
+	// created/loaded by 
+	// updated in AOloopControl_ComputeOpenLoopModes()
+    int RTstreamLOG_modevalPFres_ENABLE;  
+	int RTstreamLOG_modevalPFres_ON;      
+	int RTstreamLOG_modevalPFres_save;	       
+	int RTstreamLOG_modevalPFres_saveToggle;    
+
+	// created/loaded by    
+	// updated in AOloopControl_ComputeOpenLoopModes()
     int RTstreamLOG_modeval_dm_ENABLE;
     int RTstreamLOG_modeval_dm_ON;
     int RTstreamLOG_modeval_dm_save;
     int RTstreamLOG_modeval_dm_saveToggle; 
-   
+
+	// created/loaded by    
+	// updated in AOloopControl_ComputeOpenLoopModes()
     int RTstreamLOG_modeval_ol_ENABLE;
     int RTstreamLOG_modeval_ol_ON;
     int RTstreamLOG_modeval_ol_save;
     int RTstreamLOG_modeval_ol_saveToggle; 
-    
+
+	// created/loaded by     
+	// updated in 
     int RTstreamLOG_dmdisp_ENABLE;
     int RTstreamLOG_dmdisp_ON;
     int RTstreamLOG_dmdisp_save;
