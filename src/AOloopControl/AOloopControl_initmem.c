@@ -163,13 +163,71 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         // logging
         AOconf[loop].RTstreamLOG_buff = 0;
         AOconf[loop].RTstreamLOG_frame = 0;
-        AOconf[loop].RTstreamLOG_saveToggle = 0;
         
+        AOconf[loop].RTstreamLOG_wfsim_ENABLE = 1;
         AOconf[loop].RTstreamLOG_wfsim_ON = 0;
         AOconf[loop].RTstreamLOG_wfsim_save = 0;
+        AOconf[loop].RTstreamLOG_wfsim_saveToggle = 0;
         
+        AOconf[loop].RTstreamLOG_imWFS0_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_imWFS0_ON = 0;
+        AOconf[loop].RTstreamLOG_imWFS0_save = 0;
+        AOconf[loop].RTstreamLOG_imWFS0_saveToggle = 0;
+
+        AOconf[loop].RTstreamLOG_imWFS1_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_imWFS1_ON = 0;
+        AOconf[loop].RTstreamLOG_imWFS1_save = 0;
+        AOconf[loop].RTstreamLOG_imWFS1_saveToggle = 0;
+        
+        AOconf[loop].RTstreamLOG_imWFS2_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_imWFS2_ON = 0;
+        AOconf[loop].RTstreamLOG_imWFS2_save = 0;
+        AOconf[loop].RTstreamLOG_imWFS2_saveToggle = 0;        
+
+        AOconf[loop].RTstreamLOG_modeval_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modeval_ON = 0;
+        AOconf[loop].RTstreamLOG_modeval_save = 0 ;
+        AOconf[loop].RTstreamLOG_modeval_saveToggle = 0;
+
+        AOconf[loop].RTstreamLOG_modeval_dm_corr_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modeval_dm_corr_ON = 0;
+        AOconf[loop].RTstreamLOG_modeval_dm_corr_save = 0 ;
+        AOconf[loop].RTstreamLOG_modeval_dm_corr_saveToggle = 0;
+
+        AOconf[loop].RTstreamLOG_modeval_dm_now_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modeval_dm_now_ON = 0;
+        AOconf[loop].RTstreamLOG_modeval_dm_now_save = 0 ;
+        AOconf[loop].RTstreamLOG_modeval_dm_now_saveToggle = 0;
+
+        AOconf[loop].RTstreamLOG_modeval_dm_now_filt_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modeval_dm_now_filt_ON = 0;
+        AOconf[loop].RTstreamLOG_modeval_dm_now_filt_save = 0 ;
+        AOconf[loop].RTstreamLOG_modeval_dm_now_filt_saveToggle = 0;
+
+        AOconf[loop].RTstreamLOG_modeval_PF_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modeval_PF_ON = 0;
+        AOconf[loop].RTstreamLOG_modeval_PF_save = 0 ;
+        AOconf[loop].RTstreamLOG_modeval_PF_saveToggle = 0;
+
+        AOconf[loop].RTstreamLOG_modeval_PFsync_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modeval_PFsync_ON = 0;
+        AOconf[loop].RTstreamLOG_modeval_PFsync_save = 0 ;
+        AOconf[loop].RTstreamLOG_modeval_PFsync_saveToggle = 0;
+
+        AOconf[loop].RTstreamLOG_modeval_dm_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_modeval_dm_ON = 0;
+        AOconf[loop].RTstreamLOG_modeval_dm_save = 0 ;
+        AOconf[loop].RTstreamLOG_modeval_dm_saveToggle = 0;
+
+        AOconf[loop].RTstreamLOG_modeval_ol_ENABLE = 1;
         AOconf[loop].RTstreamLOG_modeval_ol_ON = 0;
         AOconf[loop].RTstreamLOG_modeval_ol_save = 0 ;
+        AOconf[loop].RTstreamLOG_modeval_ol_saveToggle = 0;
+        
+        AOconf[loop].RTstreamLOG_dmdisp_ENABLE = 1;
+        AOconf[loop].RTstreamLOG_dmdisp_ON = 0;
+        AOconf[loop].RTstreamLOG_dmdisp_save = 0;
+        AOconf[loop].RTstreamLOG_dmdisp_saveToggle = 0;        
     }
 
 

@@ -367,7 +367,11 @@ int_fast8_t AOloopControl_run()
 				AOconf[loop].LOOPiteration++;
 				data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1 = AOconf[loop].LOOPiteration;
 				
+				
+				
+				
 				// REAL TIME LOGGING
+				
 				AOconf[loop].RTstreamLOG_frame++;
 				if(AOconf[loop].RTstreamLOG_frame == RT_LOGsize)
 				{
