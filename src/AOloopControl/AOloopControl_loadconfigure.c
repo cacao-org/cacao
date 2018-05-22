@@ -290,9 +290,65 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 	/** ### 1.10. Setup RT logging 
 	 */
 	fprintf(fplog, "\n\n============== 1.10. Setup real-time internal logging ===================\n\n");
-	AOconf[loop].RTstreamLOG_modeval_ol_ON   = AOloopControl_readParam_int("RTstreamLOG_modeval_ol_ON",   1, fplog);
-	AOconf[loop].RTstreamLOG_modeval_ol_save = AOloopControl_readParam_int("RTstreamLOG_modeval_ol_save", 0, fplog);
 
+	AOconf[loop].RTLOGsize  = AOloopControl_readParam_int("RTLOGsize", 30000, fplog);
+
+	/// By default, LOG is enabled 
+	AOconf[loop].RTstreamLOG_wfsim_ENABLE                  = AOloopControl_readParam_int("RTstreamLOG_wfsim_ENABLE",                1, fplog);
+	AOconf[loop].RTstreamLOG_wfsim_ON                      = AOloopControl_readParam_int("RTstreamLOG_wfsim_ON",                    0, fplog);
+	AOconf[loop].RTstreamLOG_wfsim_save                    = AOloopControl_readParam_int("RTstreamLOG_wfsim_save",                  0, fplog);
+
+	AOconf[loop].RTstreamLOG_imWFS0_ENABLE                 = AOloopControl_readParam_int("RTstreamLOG_imWFS0_ENABLE",               1, fplog);
+	AOconf[loop].RTstreamLOG_imWFS0_ON                     = AOloopControl_readParam_int("RTstreamLOG_imWFS0_ON",                   0, fplog);
+	AOconf[loop].RTstreamLOG_imWFS0_save                   = AOloopControl_readParam_int("RTstreamLOG_imWFS0_save",                 0, fplog);
+
+	AOconf[loop].RTstreamLOG_imWFS1_ENABLE                 = AOloopControl_readParam_int("RTstreamLOG_imWFS1_ENABLE",               1, fplog);
+	AOconf[loop].RTstreamLOG_imWFS1_ON                     = AOloopControl_readParam_int("RTstreamLOG_imWFS1_ON",                   0, fplog);
+	AOconf[loop].RTstreamLOG_imWFS1_save                   = AOloopControl_readParam_int("RTstreamLOG_imWFS1_save",                 0, fplog);
+
+	AOconf[loop].RTstreamLOG_imWFS2_ENABLE                 = AOloopControl_readParam_int("RTstreamLOG_imWFS2_ENABLE",               1, fplog);
+	AOconf[loop].RTstreamLOG_imWFS2_ON                     = AOloopControl_readParam_int("RTstreamLOG_imWFS2_ON",                   0, fplog);
+	AOconf[loop].RTstreamLOG_imWFS2_save                   = AOloopControl_readParam_int("RTstreamLOG_imWFS2_save",                 0, fplog);
+
+	AOconf[loop].RTstreamLOG_modeval_ENABLE                = AOloopControl_readParam_int("RTstreamLOG_modeval_ENABLE",              1, fplog);
+	AOconf[loop].RTstreamLOG_modeval_ON                    = AOloopControl_readParam_int("RTstreamLOG_modeval_ON",                  0, fplog);
+	AOconf[loop].RTstreamLOG_modeval_save                  = AOloopControl_readParam_int("RTstreamLOG_modeval_save",                0, fplog);	
+
+	AOconf[loop].RTstreamLOG_modeval_dm_corr_ENABLE        = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_corr_ENABLE",      1, fplog);
+	AOconf[loop].RTstreamLOG_modeval_dm_corr_ON            = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_corr_ON",          0, fplog);
+	AOconf[loop].RTstreamLOG_modeval_dm_corr_save          = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_corr_save",        0, fplog);	
+
+	AOconf[loop].RTstreamLOG_modeval_dm_now_ENABLE         = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_now_ENABLE",       1, fplog);
+	AOconf[loop].RTstreamLOG_modeval_dm_now_ON             = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_now_ON",           0, fplog);
+	AOconf[loop].RTstreamLOG_modeval_dm_now_save           = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_now_save",         0, fplog);
+
+	AOconf[loop].RTstreamLOG_modeval_dm_now_filt_ENABLE    = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_now_filt_ENABLE",  1, fplog);
+	AOconf[loop].RTstreamLOG_modeval_dm_now_filt_ON        = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_now_filt_ON",      0, fplog);
+	AOconf[loop].RTstreamLOG_modeval_dm_now_filt_save      = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_now_filt_save",    0, fplog);
+
+	AOconf[loop].RTstreamLOG_modevalPF_ENABLE              = AOloopControl_readParam_int("RTstreamLOG_modevalPF_ENABLE",            1, fplog);
+	AOconf[loop].RTstreamLOG_modevalPF_ON                  = AOloopControl_readParam_int("RTstreamLOG_modevalPF_ON",                0, fplog);
+	AOconf[loop].RTstreamLOG_modevalPF_save                = AOloopControl_readParam_int("RTstreamLOG_modevalPF_save",              0, fplog);	
+
+	AOconf[loop].RTstreamLOG_modevalPFsync_ENABLE          = AOloopControl_readParam_int("RTstreamLOG_modevalPFsync_ENABLE",        1, fplog);
+	AOconf[loop].RTstreamLOG_modevalPFsync_ON              = AOloopControl_readParam_int("RTstreamLOG_modevalPFsync_ON",            0, fplog);
+	AOconf[loop].RTstreamLOG_modevalPFsync_save            = AOloopControl_readParam_int("RTstreamLOG_modevalPFsync_save",          0, fplog);	
+
+	AOconf[loop].RTstreamLOG_modevalPFres_ENABLE           = AOloopControl_readParam_int("RTstreamLOG_modevalPFres_ENABLE",         1, fplog);
+	AOconf[loop].RTstreamLOG_modevalPFres_ON               = AOloopControl_readParam_int("RTstreamLOG_modevalPFres_ON",             0, fplog);
+	AOconf[loop].RTstreamLOG_modevalPFres_save             = AOloopControl_readParam_int("RTstreamLOG_modevalPFres_save",           0, fplog);	
+
+	AOconf[loop].RTstreamLOG_modeval_dm_ENABLE             = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_ENABLE",           1, fplog);
+	AOconf[loop].RTstreamLOG_modeval_dm_ON                 = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_ON",               0, fplog);
+	AOconf[loop].RTstreamLOG_modeval_dm_save               = AOloopControl_readParam_int("RTstreamLOG_modeval_dm_save",             0, fplog);	
+
+	AOconf[loop].RTstreamLOG_modeval_ol_ENABLE             = AOloopControl_readParam_int("RTstreamLOG_modeval_ol_ENABLE",           1, fplog);
+	AOconf[loop].RTstreamLOG_modeval_ol_ON                 = AOloopControl_readParam_int("RTstreamLOG_modeval_ol_ON",               1, fplog);
+	AOconf[loop].RTstreamLOG_modeval_ol_save               = AOloopControl_readParam_int("RTstreamLOG_modeval_ol_save",             0, fplog);		
+
+	AOconf[loop].RTstreamLOG_dmdisp_ENABLE                 = AOloopControl_readParam_int("RTstreamLOG_dmdisp_ENABLE",               1, fplog);
+	AOconf[loop].RTstreamLOG_dmdisp_ON                     = AOloopControl_readParam_int("RTstreamLOG_dmdisp_ON",                   0, fplog);
+	AOconf[loop].RTstreamLOG_dmdisp_save                   = AOloopControl_readParam_int("RTstreamLOG_dmdisp_save",                 0, fplog);		
 
 	/** ## 2. Read/load shared memory arrays
 	 * 
@@ -328,7 +384,10 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     AOconf[loop].sizeWFS = AOconf[loop].sizexWFS*AOconf[loop].sizeyWFS;
 	// -> WFS size known
 	
-	
+	if(AOconf[loop].RTstreamLOG_wfsim_ENABLE==1)
+	{
+		
+	}
 
     fprintf(fplog, "WFS stream size = %ld x %ld\n", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
 
@@ -896,6 +955,9 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
         fprintf(fp, "%4ld\n", AOconf[loop].NBmodes_block[k]);
         fclose(fp);
     }
+
+
+
 
 
 

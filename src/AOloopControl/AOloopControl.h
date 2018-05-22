@@ -30,7 +30,7 @@
 #define MAX_NUMBER_TIMER 100
 
 // LOGGING
-#define RT_LOGsize 30000
+//#define RT_LOGsize 30000
 
 
 
@@ -299,14 +299,23 @@ typedef struct
 	//
 	// Saving to disk is handled outside of cacao real-time
 	//
-	long RTlog_size;                      // Number of samples per shared memory stream 
-	int  RTstreamLOG_buff;                // Which buffer is currently being written (0 or 1)
-	long RTstreamLOG_frame;               // Which frame is to be written in buffer
-	int RTstreamLOG_buffSwitch;           // Goes to 1 when buffer switches. Goes back to zero on next iteration.
+	long  RTLOGsize;                       // Number of samples per shared memory stream
+	int   RTLOG_ON;                        // set to 1 to start logging all RT streams -> ensures synchronization
+	int   RTstreamLOG_buff;                // Which buffer is currently being written (0 or 1)
+	long  RTstreamLOG_frame;               // Which frame is to be written in buffer
+	int   RTstreamLOG_buffSwitch;          // Goes to 1 when buffer switches. Goes back to zero on next iteration.
 	
 	// For each stream, there are two data buffers and two timing buffers
+	// Buffer names:
+	//     aol%ld_<stream>_logbuff0
+	//     aol%ld_<stream>_logbuff1
+	//	   aol%ld_<stream>_logbuffinfo0   
+	//     aol%ld_<stream>_logbuffinfo1
+	//
 	// Timing buffer contains loop iteration, frame counter cnt0 and time stamps when entry is written
 	// 
+	
+	// ENABLES, ON and save are read/set up in AOloopControl_loadconfigure()
 	
 	// read by AOloopControl_loadconfigure()
 	// updated in 
@@ -319,7 +328,7 @@ typedef struct
     
     // created/loaded by AOloopControl_loadconfigure()
 	// updated in 
-    int RTstreamLOG_imWFS0_ENABLE;  
+    int RTstreamLOG_imWFS0_ENABLE;
 	int RTstreamLOG_imWFS0_ON;      
 	int RTstreamLOG_imWFS0_save;	       
 	int RTstreamLOG_imWFS0_saveToggle; 
@@ -333,56 +342,55 @@ typedef struct
 
 	// created/loaded by AOloopControl_loadconfigure()
 	// updated in 
-    int RTstreamLOG_imWFS2_ENABLE;  
+    int RTstreamLOG_imWFS2_ENABLE;
 	int RTstreamLOG_imWFS2_ON;      
 	int RTstreamLOG_imWFS2_save;	       
 	int RTstreamLOG_imWFS2_saveToggle;     
 
 	// created/loaded by 
 	// updated in AOloopControl_ComputeOpenLoopModes()
-    int RTstreamLOG_modeval_ENABLE;  
+    int RTstreamLOG_modeval_ENABLE;
 	int RTstreamLOG_modeval_ON;      
 	int RTstreamLOG_modeval_save;	       
 	int RTstreamLOG_modeval_saveToggle;
 
 	// created/loaded by 
 	// updated in AOloopControl_ComputeOpenLoopModes()
-    int RTstreamLOG_modeval_dm_corr_ENABLE;  
+    int RTstreamLOG_modeval_dm_corr_ENABLE;
 	int RTstreamLOG_modeval_dm_corr_ON;      
 	int RTstreamLOG_modeval_dm_corr_save;	       
 	int RTstreamLOG_modeval_dm_corr_saveToggle;
 
 	// created/loaded by    
 	// updated in AOloopControl_ComputeOpenLoopModes()
-    int RTstreamLOG_modeval_dm_now_ENABLE;  
+    int RTstreamLOG_modeval_dm_now_ENABLE;
 	int RTstreamLOG_modeval_dm_now_ON;      
 	int RTstreamLOG_modeval_dm_now_save;	       
 	int RTstreamLOG_modeval_dm_now_saveToggle;  
 
 	// created/loaded by    
 	// updated in AOloopControl_ComputeOpenLoopModes()
-    int RTstreamLOG_modeval_dm_now_filt_ENABLE;  
+    int RTstreamLOG_modeval_dm_now_filt_ENABLE;
 	int RTstreamLOG_modeval_dm_now_filt_ON;      
 	int RTstreamLOG_modeval_dm_now_filt_save;	       
 	int RTstreamLOG_modeval_dm_now_filt_saveToggle;  
 
 	// created/loaded by    
 	// updated in AOloopControl_ComputeOpenLoopModes()
-    int RTstreamLOG_modevalPF_ENABLE;  
+    int RTstreamLOG_modevalPF_ENABLE;
 	int RTstreamLOG_modevalPF_ON;      
 	int RTstreamLOG_modevalPF_save;	       
 	int RTstreamLOG_modevalPF_saveToggle;    
-
-	// created/loaded by    
-	// updated in AOloopControl_ComputeOpenLoopModes()
-    int RTstreamLOG_modevalPFsync_ENABLE;  
+   
+	// managed in AOloopControl_ComputeOpenLoopModes()
+    int RTstreamLOG_modevalPFsync_ENABLE;
 	int RTstreamLOG_modevalPFsync_ON;      
 	int RTstreamLOG_modevalPFsync_save;	       
 	int RTstreamLOG_modevalPFsync_saveToggle;       
 
 	// created/loaded by 
 	// updated in AOloopControl_ComputeOpenLoopModes()
-    int RTstreamLOG_modevalPFres_ENABLE;  
+    int RTstreamLOG_modevalPFres_ENABLE;
 	int RTstreamLOG_modevalPFres_ON;      
 	int RTstreamLOG_modevalPFres_save;	       
 	int RTstreamLOG_modevalPFres_saveToggle;    
@@ -394,14 +402,13 @@ typedef struct
     int RTstreamLOG_modeval_dm_save;
     int RTstreamLOG_modeval_dm_saveToggle; 
 
-	// created/loaded by    
-	// updated in AOloopControl_ComputeOpenLoopModes()
+	// managed in AOloopControl_ComputeOpenLoopModes()
     int RTstreamLOG_modeval_ol_ENABLE;
     int RTstreamLOG_modeval_ol_ON;
     int RTstreamLOG_modeval_ol_save;
     int RTstreamLOG_modeval_ol_saveToggle; 
 
-	// created/loaded by     
+	// created/loaded by AOloopControl_loadconfigure()
 	// updated in 
     int RTstreamLOG_dmdisp_ENABLE;
     int RTstreamLOG_dmdisp_ON;
@@ -425,19 +432,7 @@ typedef struct
 
 
 
-/**
- * AOloop stream entry info structure
- *
- * Is logged together with raw telemetry stream data
- */
 
-typedef struct
-{
-	uint_fast64_t loopiter; // loop counter
-	uint64_t imcnt0;
-	uint64_t imcnt1;
-	double imtime;
-} RT_STREAM_LOG_INFO;
 
 
 
