@@ -347,62 +347,55 @@ typedef struct
 	int RTstreamLOG_imWFS2_save;	       
 	int RTstreamLOG_imWFS2_saveToggle;     
 
-	// created/loaded by 
-	// updated in AOloopControl_ComputeOpenLoopModes()
+	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
     int RTstreamLOG_modeval_ENABLE;
 	int RTstreamLOG_modeval_ON;      
 	int RTstreamLOG_modeval_save;	       
 	int RTstreamLOG_modeval_saveToggle;
 
-	// created/loaded by 
-	// updated in AOloopControl_ComputeOpenLoopModes()
+	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
     int RTstreamLOG_modeval_dm_corr_ENABLE;
 	int RTstreamLOG_modeval_dm_corr_ON;      
 	int RTstreamLOG_modeval_dm_corr_save;	       
 	int RTstreamLOG_modeval_dm_corr_saveToggle;
 
-	// created/loaded by    
-	// updated in AOloopControl_ComputeOpenLoopModes()
+	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
     int RTstreamLOG_modeval_dm_now_ENABLE;
 	int RTstreamLOG_modeval_dm_now_ON;      
 	int RTstreamLOG_modeval_dm_now_save;	       
 	int RTstreamLOG_modeval_dm_now_saveToggle;  
 
-	// created/loaded by    
-	// updated in AOloopControl_ComputeOpenLoopModes()
+	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
     int RTstreamLOG_modeval_dm_now_filt_ENABLE;
 	int RTstreamLOG_modeval_dm_now_filt_ON;      
 	int RTstreamLOG_modeval_dm_now_filt_save;	       
 	int RTstreamLOG_modeval_dm_now_filt_saveToggle;  
-
-	// created/loaded by    
-	// updated in AOloopControl_ComputeOpenLoopModes()
+  
+	// managed in AOloopControl_ComputeOpenLoopModes() ---------------- 
     int RTstreamLOG_modevalPF_ENABLE;
 	int RTstreamLOG_modevalPF_ON;      
 	int RTstreamLOG_modevalPF_save;	       
 	int RTstreamLOG_modevalPF_saveToggle;    
    
-	// managed in AOloopControl_ComputeOpenLoopModes()
+	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
     int RTstreamLOG_modevalPFsync_ENABLE;
 	int RTstreamLOG_modevalPFsync_ON;      
 	int RTstreamLOG_modevalPFsync_save;	       
 	int RTstreamLOG_modevalPFsync_saveToggle;       
 
-	// created/loaded by 
-	// updated in AOloopControl_ComputeOpenLoopModes()
+	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
     int RTstreamLOG_modevalPFres_ENABLE;
 	int RTstreamLOG_modevalPFres_ON;      
 	int RTstreamLOG_modevalPFres_save;	       
 	int RTstreamLOG_modevalPFres_saveToggle;    
-
-	// created/loaded by    
-	// updated in AOloopControl_ComputeOpenLoopModes()
+    
+	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
     int RTstreamLOG_modeval_dm_ENABLE;
     int RTstreamLOG_modeval_dm_ON;
     int RTstreamLOG_modeval_dm_save;
     int RTstreamLOG_modeval_dm_saveToggle; 
 
-	// managed in AOloopControl_ComputeOpenLoopModes()
+	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
     int RTstreamLOG_modeval_ol_ENABLE;
     int RTstreamLOG_modeval_ol_ON;
     int RTstreamLOG_modeval_ol_save;
