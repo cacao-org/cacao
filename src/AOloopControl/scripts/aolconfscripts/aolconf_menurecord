@@ -512,9 +512,9 @@ streamname="aol${LOOPNUMBER}_modeval_ol"
 infostring="Open loop mode values"
 logwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
-menuitems+=( "laolmodevalolON" "$startlogstring" )
+menuitems+=( "laolmodevalolON" "$startlogstring (logging buffers)" )
 else
-menuitems+=( "laolmodevalolOFF" "$stoplogstring" )
+menuitems+=( "laolmodevalolOFF" "$stoplogstring (logging buffers)" )
 fi
 
 
