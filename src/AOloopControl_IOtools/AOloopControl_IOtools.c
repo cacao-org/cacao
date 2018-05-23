@@ -296,7 +296,7 @@ int_fast8_t init_AOloopControl_IOtools()
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-    RegisterCLIcommand("aolrtlogbuffsave", __FILE__, AOloopControl_IOtools_RTLOGsave_cli, "log realtime buffer stream", "<streamname> <dirname>", "aolrtlogbuffsave modeval \"/media/data/\"", "int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname)");
+    RegisterCLIcommand("aolrtlogbuffsave", __FILE__, AOloopControl_IOtools_RTLOGsave_cli, "log realtime buffer stream", "<loopnumber> <streamname> <dirname>", "aolrtlogbuffsave modeval \"/media/data/\"", "int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname)");
 
 
     // add atexit functions here
