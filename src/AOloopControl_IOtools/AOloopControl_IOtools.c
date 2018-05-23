@@ -213,7 +213,21 @@ int_fast8_t AOloopControl_IOtools_stream3Dto2D_cli() {
 
 
 
+/* =============================================================================================== */
+/* =============================================================================================== */
+/** @name AOloopControl_IOtools - 4. SAVE REAL-TIME TELEMETRY BUFFER
+ *  Save to disk telemetry packaged in alternate buffers */
+/* =============================================================================================== */
+/* =============================================================================================== */
 
+/** @brief Save telemetry */
+int_fast8_t AOloopControl_IOtools_RTLOGsave_cli() {
+	if(CLI_checkarg(1,2)+CLI_checkarg(2,5)+CLI_checkarg(3,5)==0) {
+		AOloopControl_IOtools_RTLOGsave(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string);
+		return 0;
+	}
+	else return 1;
+}
 
 
 
@@ -275,7 +289,14 @@ int_fast8_t init_AOloopControl_IOtools()
     RegisterCLIcommand("aolstream3Dto2D", __FILE__, AOloopControl_IOtools_stream3Dto2D_cli, "remaps 3D cube into 2D image", "<input 3D stream> <output 2D stream> <# cols> <sem trigger>" , "aolstream3Dto2D in3dim out2dim 4 1", "long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const char *out_name, int NBcols, int insem)");
 
 
+/* =============================================================================================== */
+/* =============================================================================================== */
+/** @name AOloopControl_IOtools - 4. SAVE REAL-TIME TELEMETRY BUFFER
+ *  Save to disk telemetry packaged in alternate buffers */
+/* =============================================================================================== */
+/* =============================================================================================== */
 
+    RegisterCLIcommand("aolrtlogbuffsave", __FILE__, AOloopControl_IOtools_RTLOGsave_cli, "log realtime buffer stream", "<streamname> <dirname>", "aolrtlogbuffsave modeval \"/media/data/\"", "int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname)");
 
 
     // add atexit functions here

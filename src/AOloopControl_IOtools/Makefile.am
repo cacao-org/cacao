@@ -3,6 +3,7 @@ libaoloopcontroliotools_la_SOURCES = AOloopControl_IOtools.c AOloopControl_IOtoo
 libaoloopcontroliotools_la_SOURCES += AOloopControl_IOtools_camerainput.c
 libaoloopcontroliotools_la_SOURCES += AOloopControl_IOtools_datastream_processing.c
 libaoloopcontroliotools_la_SOURCES += AOloopControl_IOtools_load_image_sharedmem.c
+libaoloopcontroliotools_la_SOURCES += AOloopControl_IOtools_RTLOGsave.c
 
 EXTRA_DIST = doc
 

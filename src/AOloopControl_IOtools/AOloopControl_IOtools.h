@@ -89,4 +89,15 @@ long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const char *out_nam
 
 
 
+/* =============================================================================================== */
+/* =============================================================================================== */
+/** @name AOloopControl_IOtools - 4. SAVE REAL-TIME TELEMETRY BUFFER
+ *  Save to disk telemetry packaged in alternate buffers */
+/* =============================================================================================== */
+/* =============================================================================================== */
+
+/** @brief Save telemetry */
+int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname);
+
+
 #endif
