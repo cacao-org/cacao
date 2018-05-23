@@ -1127,15 +1127,18 @@ echo "0" > "./status/stat_log_${streamname}.txt"
 menurecord_default="laolmodevaldmnowfiltON"
 ;;
 
-
     laolmodevalolON)
-streamname="aol${LOOPNUMBER}_modeval_ol"
-startstreamlog "$streamname" $LogCubeSize
+streamname="aol${LOOPNUMBER}_modeval_ol_logbuff0"
+startstreamlog "$streamname" 1
+streamname="aol${LOOPNUMBER}_modeval_ol_logbuff1"
+startstreamlog "$streamname" 1
 echo "1" > "./status/stat_log_${streamname}.txt"
 menurecord_default="laolmodevalolOFF"
 ;;
     laolmodevalolOFF)
-streamname="aol${LOOPNUMBER}_modeval_ol"
+streamname="aol${LOOPNUMBER}_modeval_ol_logbuff0"
+skstreamlog "$streamname"
+streamname="aol${LOOPNUMBER}_modeval_ol_logbuff1"
 skstreamlog "$streamname"
 echo "0" > "./status/stat_log_${streamname}.txt"
 menurecord_default="laolmodevalolON"
