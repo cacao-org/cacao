@@ -37,6 +37,33 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
+int_fast8_t AOloopControl_setRTLOG_ON()
+{
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+        AOloopControl_InitializeMemory(1);
+
+    AOconf[aoloopcontrol_var.LOOPNUMBER].RTLOG_ON = 1;
+
+    return 0;
+}
+
+
+int_fast8_t AOloopControl_setRTLOG_OFF()
+{
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+        AOloopControl_InitializeMemory(1);
+
+    AOconf[aoloopcontrol_var.LOOPNUMBER].RTLOG_ON = 0;
+
+    return 0;
+}
+
+
+
+
+
+
+
 int_fast8_t AOloopControl_setgain(float gain)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)

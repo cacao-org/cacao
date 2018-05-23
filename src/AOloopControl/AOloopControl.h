@@ -845,6 +845,9 @@ int_fast8_t AOloopControl_set_wfsmextrlatency_frame(float wfsmextrlatency_frame)
 /** @name AOloopControl - 3.7. LOOP CONTROL INTERFACE - CONTROL LOOP PARAMETERS - AOloopControl_loop_param.c */
 /* ========================================================================================================= */
 
+int_fast8_t AOloopControl_setRTLOG_ON();
+int_fast8_t AOloopControl_setRTLOG_OFF();
+
 /** @brief Set gain of the loop  */
 int_fast8_t AOloopControl_setgain(float gain);
 
