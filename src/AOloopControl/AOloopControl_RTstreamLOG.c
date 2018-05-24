@@ -133,14 +133,16 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 	long infosize = 5;
 	
 	IDstream = image_ID(streamname);
+
 	imsize = (uint32_t*) malloc(sizeof(uint32_t)*3);
 	imsize[0] = data.image[IDstream].md[0].size[0];
 	imsize[1] = data.image[IDstream].md[0].size[1];
 	imsize[2] = AOconf[loop].RTLOGsize;
+
 	
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].INIT == 0))
 	{	
-		/*
+		
 		if(sprintf(imname, "aol%ld_%s_logbuff0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize, _DATATYPE_FLOAT, 1, 0);
@@ -172,7 +174,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr0;
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff0;
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
-		*/
+		
 		retval = 1;
 		AOconf[loop].RTSLOGarray[rtlindex].INIT = 1;
 	}
@@ -187,7 +189,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 
 
-void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
+void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct timespec tnow)
 {
 	char *dataptr;
 

@@ -75,7 +75,7 @@ typedef struct
 	float *srcptr;                // source stream pointer
 	long IDsrc;                   // source ID
 
-	char *destptr;               // destination pointer
+	char *destptr;                // destination pointer
 	char *destptr0;               // destination pointer 0
 	char *destptr1;               // destination pointer 1
 
@@ -997,7 +997,7 @@ long AOloopControl_TweakRM(char *ZRMinname, char *DMinCname, char *WFSinCname, c
 
 int AOloopControl_RTstreamLOG_init(int loop);
 int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname);
-void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow);
+void AOloopControl_RTstreamLOG_update(long loop, long rtlindex); //, struct timespec tnow);
 int AOloopControl_RTstreamLOG_printstatus(int loop);
 
 
