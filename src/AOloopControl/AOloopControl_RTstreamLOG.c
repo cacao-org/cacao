@@ -254,7 +254,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 	int i;
 	
 	printf("\n");
-	printf("%2s  %20s  %2s %2s %2s %2s\n", "id", "streamname", "ENA", " ON", "INI", "SAV");
+	printf("%2s  %20s  %3s %3s %3s %5s %4s %10s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame");
 	printf("------------------------------------------\n");
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
 	{
@@ -278,17 +278,20 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 				sprintf(INstring, "OFF");
 
 			if(AOconf[loop].RTSLOGarray[i].save == 1)
-				sprintf(SAstring, "\033[1;32m ON\033[0m");
+				sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
 			else
 				sprintf(SAstring, "OFF");						
   
   
-			printf("%2d  %20s  %3s %3s %3s %3s\n", i,  
+			printf("%2d  %20s  %3s %3s %3s %6s %4d %10ld\n", i,  
 			AOconf[loop].RTSLOGarray[i].name, 
 			ENstring, 
 			ONstring, 
 			INstring, 
-			SAstring);
+			SAstring,			
+			AOconf[loop].RTSLOGarray[i].buffindex,
+			AOconf[loop].RTSLOGarray[i].frameindex
+			);
 			NBstreams++;			
 		}
 	}
