@@ -246,11 +246,11 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 int AOloopControl_RTstreamLOG_printstatus(int loop)
 {
 	long NBstreams = 0;
-	
+	char ONstring[10];
 	int i;
 	
 	printf("\n");
-	printf("%2s  %12s  %2s %2s %2s %2s\n", "id", "streamname", "EN", "ON", "IN", "SA");
+	printf("%2s  %20s  %2s %2s %2s %2s\n", "id", "streamname", "EN", "ON", "IN", "SA");
 	printf("------------------------------------------\n");
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
 	{
@@ -258,10 +258,15 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 		{
 			//printf("   ENABLE = %d   INIT = %d  ON = %d  save = %d\n", AOconf[loop].RTSLOGarray[i].ENABLE, AOconf[loop].RTSLOGarray[i].INIT, AOconf[loop].RTSLOGarray[i].ON, AOconf[loop].RTSLOGarray[i].save);
 			
+			if(AOconf[loop].RTSLOGarray[i].ON == 1)
+			{
+			 sprintf(ONstring, "\033[1;32mON\033[0m;");
+  
+  
 			printf("%2d  %12s  %2d %2d %2d %2d\n", i,  
 			AOconf[loop].RTSLOGarray[i].name, 
 			AOconf[loop].RTSLOGarray[i].ENABLE, 
-			AOconf[loop].RTSLOGarray[i].ON, 
+			ONstring, 
 			AOconf[loop].RTSLOGarray[i].INIT, 
 			AOconf[loop].RTSLOGarray[i].save);
 			NBstreams++;			
