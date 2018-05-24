@@ -103,6 +103,6 @@ fi
 # startup file
 SF="aolmonstartup"
 
-echo "aolrtlogsavel $1 $2" > $SF
+echo "aolrtlogsavel \"$1\"" > $SF
 echo "exitCLI" >> $SF
 ./AOloopControl -n $pname -f ${pname}fifo -s $SF
