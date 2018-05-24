@@ -401,7 +401,9 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			
 			struct tm *uttime;
 			char timestring[100];
-			char fulldir[500];
+			char fulldir0[500];
+			char fulldir1[500];
+			char fulldir2[500];
 	
 			
 			// buffindex to save	
@@ -433,23 +435,34 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 			sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 			
-			sprintf(fulldir, "%s/%04d%02d%02d/aol%d_%s", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
-			printf("FULL DIR = %s\n", fulldir);
+			sprintf(fulldir0, "%s", dirname);
+			sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
+			sprintf(fulldir2, "%s/aol%d_%s", fulldir1, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
 			
 
 			struct stat st = {0};
 
-			if (stat(fulldir, &st) == -1) {
-				printf("\033[1;31m CREATING DIRECTORY %s \033[0m", fulldir);
-				mkdir(fulldir, 0777);
+			if (stat(fulldir0, &st) == -1) {
+				printf("\033[1;31m CREATING DIRECTORY %s \033[0m", fulldir0);
+				mkdir(fulldir0, 0777);
 			}
+			if (stat(fulldir1, &st) == -1) {
+				printf("\033[1;31m CREATING DIRECTORY %s \033[0m", fulldir1);
+				mkdir(fulldir1, 0777);
+			}
+			if (stat(fulldir2, &st) == -1) {
+				printf("\033[1;31m CREATING DIRECTORY %s \033[0m", fulldir2);
+				mkdir(fulldir2, 0777);
+			}
+						
+
 			
 			printf("%04d - %02d - %02d\n", uttime->tm_year, uttime->tm_mon, uttime->tm_mday);
 			
-			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.txt", fulldir, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.txt", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 
-			if(sprintf(fname, "%s/aol%d_%s.%s.fits", fulldir, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+			if(sprintf(fname, "%s/aol%d_%s.%s.fits", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 			
 			
