@@ -405,7 +405,9 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			char fulldir0[500];
 			char fulldir1[500];
 			char fulldir2[500];
-	
+			
+			FILE *fp;
+			long i;
 			
 			// buffindex to save	
 			buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle-1;
@@ -457,7 +459,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			}
 						
 			
-			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.fits", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 
 			if(sprintf(fname, "%s/aol%d_%s.%s.fits", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
@@ -471,6 +473,12 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
 			save_fits(shmimname, fname);
+			
+			fp = fopen(shmimnameinfo, "w");
+			for(i=0;i<AOconf[loop].RTLOGsize;i++) //TO BE CLIPPED
+				fprintf(fp, "%10ld %010ld.%010ld %10ld %10ld", data.image[IDininfo].array.UI64[i*5], data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], data.image[IDininfo].array.UI64[i*5+3], data.image[IDininfo].array.UI64[i*5+4]);
+			fclose(fp);
+			
 			save_fits(shmimnameinfo, fnameinfo);
 
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
