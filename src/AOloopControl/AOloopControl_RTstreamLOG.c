@@ -391,6 +391,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			
 			struct tm *uttime;
 			char timestring[100];
+			char fulldir[500];
 	
 			
 			// buffindex to save	
@@ -422,12 +423,12 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 			sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 			
+			sprintf(fulldir, "%s/%04d%02d%02d/aol%d_%s", dirname, uttime->tm_year, uttime->tm_mon, uttime->tm_mday, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
 			
-			
-			if(sprintf(fnameinfo, "%s/aol%d_%s/aol%d_%s.%s.txt", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.txt", fulldir, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 
-			if(sprintf(fname, "%s/aol%d_%s/aol%d_%s.%s.fits", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+			if(sprintf(fname, "%s/aol%d_%s.%s.fits", fulldir, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 			
 			
