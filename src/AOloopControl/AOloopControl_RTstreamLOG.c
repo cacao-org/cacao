@@ -423,7 +423,9 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 			sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 			
-			sprintf(fulldir, "%s/%04d%02d%02d/aol%d_%s", dirname, uttime->tm_year, uttime->tm_mon, uttime->tm_mday, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+			sprintf(fulldir, "%s/%04d-%02d-%02d/aol%d_%s", dirname, uttime->tm_year, uttime->tm_mon, uttime->tm_mday, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+			printf("FULL DIR = %s\n", fulldir);
+			printf("%04d - %02d - %02d\n", uttime->tm_year, uttime->tm_mon, uttime->tm_mday);
 			
 			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.txt", fulldir, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
