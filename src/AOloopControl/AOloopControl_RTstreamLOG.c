@@ -169,6 +169,8 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 			break;
 		}
 
+		printf("   %ld MEMSIZE = %ld", rtlindex, (long) AOconf[loop].RTSLOGarray[rtlindex].memsize);
+
 		imsize[0] = infosize;
 		imsize[1] = AOconf[loop].RTLOGsize;		
 		imsize[2] = 1;
