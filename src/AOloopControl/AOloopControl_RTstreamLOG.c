@@ -197,6 +197,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct times
 	fflush(stdout);
 	sleep(1000);
 	
+	
 /*	char *dataptr;
 
 
