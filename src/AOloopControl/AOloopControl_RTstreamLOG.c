@@ -220,7 +220,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct times
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1))
 	{
 
-		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr;// + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
+		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
 
 
 		

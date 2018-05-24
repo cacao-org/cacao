@@ -1699,7 +1699,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 		LOOPiter = data.image[IDmodeval].md[0].cnt1;
 
-		list_image_ID();
 		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval); //, tnow);
 		
 		
