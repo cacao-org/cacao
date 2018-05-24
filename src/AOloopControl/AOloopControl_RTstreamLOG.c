@@ -343,16 +343,23 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 
 
 
+
+
 int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 {
-	long i;
+	int rtlindex;
+	int cntsave = 0;
 	
-	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
+	for(rtlindex=0;rtlindex<MAX_NUMBER_RTLOGSTREAM;rtlindex++)
 	{
-		if(AOconf[loop].RTSLOGarray[i].save == 1)
+		if((AOconf[loop].RTSLOGarray[rtlindex].save == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0))
 		{
+			printf("SAVING %d %s\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
+			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
+			cntsave++;
 		}
 	}
+	printf("%d buffers saved\n", rtlindex);
 	
 	return 0;
 }
