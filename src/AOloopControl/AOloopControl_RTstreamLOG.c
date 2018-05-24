@@ -368,19 +368,20 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
         AOloopControl_InitializeMemory(1);
 
 
-    
+    printf("\n");
     
 	for(rtlindex=0;rtlindex<MAX_NUMBER_RTLOGSTREAM;rtlindex++)
 	{
 		if((AOconf[loop].RTSLOGarray[rtlindex].save == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0))
 		{
-			printf("SAVING %d %s\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
+			printf("   SAVING %d %s\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
 			cntsave++;
 		}
 	}
-	printf("%d buffers saved\n", rtlindex);
-	
+	printf("%d buffers saved\n", cntsave);
+    printf("\n");
+    
 	return 0;
 }
 
