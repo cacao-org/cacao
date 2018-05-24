@@ -302,7 +302,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 			SAstring,			
 			AOconf[loop].RTSLOGarray[i].buffindex,
 			AOconf[loop].RTSLOGarray[i].frameindex,
-			AOconf[loop].RTSLOGarray[i].memsize;
+			AOconf[loop].RTSLOGarray[i].memsize
 			);
 			NBstreams++;			
 		}
