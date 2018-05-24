@@ -197,6 +197,10 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		fflush(stdout);
 		
 		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].frameindex;
+
+		printf("TEST: line %d\n", __LINE__);
+		fflush(stdout);
+		
 		memcpy((void*) dataptr, AOconf[loop].RTSLOGarray[rtlindex].srcptr, AOconf[loop].RTSLOGarray[rtlindex].memsize);
 
 		printf("TEST: line %d\n", __LINE__);
