@@ -360,8 +360,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 {
 	int rtlindex;
 	int cntsave = 0;
-	
-	
 
 	
 	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -374,7 +372,22 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 	{
 		if((AOconf[loop].RTSLOGarray[rtlindex].save == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0))
 		{
-			printf("   SAVING %d %s\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
+			int buff;
+			char shmimname[200];
+			char fname[500];
+
+				
+			buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
+			printf("   SAVING %d %s buffer\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
+			
+			if(sprintf(shmimname, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
+				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+			
+			if(sprintf(fname, "aol%d_%s", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
+			
+			printf("       %s -> %s\n", shmimname, fname);
+
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
 			cntsave++;
 		}
