@@ -440,7 +440,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			struct stat st = {0};
 
 			if (stat(fulldir, &st) == -1) {
-				printf("\033[1;33m CREATING DIRECTORY %s \033[0m", fulldir);
+				printf("\033[1;31m CREATING DIRECTORY %s \033[0m", fulldir);
 				mkdir(fulldir, 0777);
 			}
 			
