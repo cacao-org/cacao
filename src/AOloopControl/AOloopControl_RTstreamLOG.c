@@ -125,7 +125,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 
 int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 {
-/*	long IDstream;
+	long IDstream;
 	uint32_t *imsize;
 	int retval = 0;
 	char imname[500];
@@ -181,7 +181,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 	
 	
 	free(imsize);
-	*/
+	
 	return(0);
 }
 
