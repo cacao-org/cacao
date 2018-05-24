@@ -246,11 +246,15 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 int AOloopControl_RTstreamLOG_printstatus(int loop)
 {
 	long NBstreams = 0;
+	
+	char ENstring[10];
 	char ONstring[10];
+	char INstring[10];
+	char SAstring[10];
 	int i;
 	
 	printf("\n");
-	printf("%2s  %20s  %2s %2s %2s %2s\n", "id", "streamname", "EN", "ON", "IN", "SA");
+	printf("%2s  %20s  %2s %2s %2s %2s\n", "id", "streamname", "ENA", " ON", "INI", "SAV");
 	printf("------------------------------------------\n");
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
 	{
@@ -258,17 +262,33 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 		{
 			//printf("   ENABLE = %d   INIT = %d  ON = %d  save = %d\n", AOconf[loop].RTSLOGarray[i].ENABLE, AOconf[loop].RTSLOGarray[i].INIT, AOconf[loop].RTSLOGarray[i].ON, AOconf[loop].RTSLOGarray[i].save);
 			
+			if(AOconf[loop].RTSLOGarray[i].ENABLE == 1)
+				sprintf(ENstring, "\033[1;32mON\033[0m;");
+			else
+				sprintf(ENstring, "OFF");
+
 			if(AOconf[loop].RTSLOGarray[i].ON == 1)
-			{
-			 sprintf(ONstring, "\033[1;32mON\033[0m;");
+				sprintf(ONstring, "\033[1;32mON\033[0m;");
+			else
+				sprintf(ONstring, "OFF");
+			
+			if(AOconf[loop].RTSLOGarray[i].INIT == 1)
+				sprintf(INstring, "\033[1;32mON\033[0m;");
+			else
+				sprintf(INstring, "OFF");
+
+			if(AOconf[loop].RTSLOGarray[i].save == 1)
+				sprintf(SAstring, "\033[1;32mON\033[0m;");
+			else
+				sprintf(SAstring, "OFF");						
   
   
-			printf("%2d  %12s  %2d %2d %2d %2d\n", i,  
+			printf("%2d  %12s  %3s %3s %3s %3s\n", i,  
 			AOconf[loop].RTSLOGarray[i].name, 
-			AOconf[loop].RTSLOGarray[i].ENABLE, 
+			ENstring, 
 			ONstring, 
-			AOconf[loop].RTSLOGarray[i].INIT, 
-			AOconf[loop].RTSLOGarray[i].save);
+			INstring, 
+			SAstring);
 			NBstreams++;			
 		}
 	}
