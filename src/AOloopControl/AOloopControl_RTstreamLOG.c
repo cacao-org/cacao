@@ -441,7 +441,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 			if (stat(fulldir, &st) == -1) {
 				printf("\033[1;32m CREATING DIRECTORY %s \033[0m", fulldir);
-				mkdir(fulldir, 0777);
+			//	mkdir(fulldir, 0777);
 			}
 			
 			printf("%04d - %02d - %02d\n", uttime->tm_year, uttime->tm_mon, uttime->tm_mday);
