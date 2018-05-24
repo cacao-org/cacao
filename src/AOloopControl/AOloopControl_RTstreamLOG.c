@@ -363,6 +363,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 	float sleeptime = 1.0;
 
 	
+	
 	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
@@ -384,9 +385,11 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			char fname[500];
 			char fnameinfo[500];
 
+			long IDin, IDininfo;
+			
 				
 			buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
-			printf("\n   SAVING %s buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
+			printf("\n   SAVING \033[1;31m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
 			
 			if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -400,9 +403,22 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");						
 			
 			
+			
+			IDin = read_sharedmem_image(shmimname);
+			IDininfo = read_sharedmem_image(shmimnameinfo);
+			list_image_ID();
+
+			// reading first frame timestamp
+			
+
+			
 			printf("       %s -> %s\n", shmimname    , fname);
 			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
+
+			delete_image_ID(shmimname);
+			delete_image_ID(shmimnameinfo);
+			list_image_ID();
 
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
 			cntsave++;
@@ -410,7 +426,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 	}
 	if(cntsave>0)
 		{
-			printf("%d buffers saved\n", cntsave);
+			printf("%d buffer(s) saved\n", cntsave);
 			printf("\n");
 		}
 	else
