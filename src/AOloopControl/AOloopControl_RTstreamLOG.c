@@ -195,7 +195,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 
 		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr;// + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
 
-
+/*
 		
 		memcpy((void*) dataptr, 
 		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
@@ -214,6 +214,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		AOconf[loop].RTSLOGarray[rtlindex].frameindex++;
 		if(AOconf[loop].RTSLOGarray[rtlindex].frameindex == AOconf[loop].RTLOGsize)
 		{
+			sleep(10000); //TEST
 			AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
 		
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].cnt0++;
@@ -243,6 +244,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
 		
 		}
+		*/
 	
 	}
 }
