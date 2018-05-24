@@ -247,18 +247,22 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 {
 	long NBstreams = 0;
 	
-	long i;
+	int i;
 	
+	printf("\n");
+	printf("%2s  %12s  %2s %2s %2s %2s\n", "id", "streamname", "EN", "ON", "IN", "SA");
+	printf("------------------------------------------\n");
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
 	{
 		if(AOconf[loop].RTSLOGarray[i].active == 1)
 		{
-			printf("RTstreamLOG %2ld:  %s\n", i, AOconf[loop].RTSLOGarray[i].name);
 			printf("   ENABLE = %d   INIT = %d  ON = %d  save = %d\n", AOconf[loop].RTSLOGarray[i].ENABLE, AOconf[loop].RTSLOGarray[i].INIT, AOconf[loop].RTSLOGarray[i].ON, AOconf[loop].RTSLOGarray[i].save);
+			printf("%2d  %12s  %2d %2d %2d %2d\n", i,  AOconf[loop].RTSLOGarray[i].name, AOconf[loop].RTSLOGarray[i].ENABLE, AOconf[loop].RTSLOGarray[i].ON, AOconf[loop].RTSLOGarray[i].INIT, AOconf[loop].RTSLOGarray[i].save);
 			NBstreams++;			
 		}
 	}
-	printf("%ld RTstreamLOGs active", NBstreams);
+	printf("------------------------------------------\n");
+	printf("%ld RTstreamLOGs active\n", NBstreams);
 	
 	return NBstreams;
 }
