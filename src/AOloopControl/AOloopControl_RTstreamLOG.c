@@ -256,8 +256,14 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 	{
 		if(AOconf[loop].RTSLOGarray[i].active == 1)
 		{
-			printf("   ENABLE = %d   INIT = %d  ON = %d  save = %d\n", AOconf[loop].RTSLOGarray[i].ENABLE, AOconf[loop].RTSLOGarray[i].INIT, AOconf[loop].RTSLOGarray[i].ON, AOconf[loop].RTSLOGarray[i].save);
-			printf("%2d  %12s  %2d %2d %2d %2d\n", i,  AOconf[loop].RTSLOGarray[i].name, AOconf[loop].RTSLOGarray[i].ENABLE, AOconf[loop].RTSLOGarray[i].ON, AOconf[loop].RTSLOGarray[i].INIT, AOconf[loop].RTSLOGarray[i].save);
+			//printf("   ENABLE = %d   INIT = %d  ON = %d  save = %d\n", AOconf[loop].RTSLOGarray[i].ENABLE, AOconf[loop].RTSLOGarray[i].INIT, AOconf[loop].RTSLOGarray[i].ON, AOconf[loop].RTSLOGarray[i].save);
+			
+			printf("%2d  %12s  %2d %2d %2d %2d\n", i,  
+			AOconf[loop].RTSLOGarray[i].name, 
+			AOconf[loop].RTSLOGarray[i].ENABLE, 
+			AOconf[loop].RTSLOGarray[i].ON, 
+			AOconf[loop].RTSLOGarray[i].INIT, 
+			AOconf[loop].RTSLOGarray[i].save);
 			NBstreams++;			
 		}
 	}
