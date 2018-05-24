@@ -14,9 +14,14 @@
 
 #define _GNU_SOURCE
 
-
+#include <malloc.h>
+#include <stdio.h>
 #include <string.h>
-
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <time.h>
+#include <sys/time.h>
 
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
