@@ -410,15 +410,14 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			TSnsec = data.image[IDininfo].array.UI64[2];
 
 
-			if(sprintf(fnameinfo, "%s/%s/aol%d_%s.txt", 
-			dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+			if(sprintf(fnameinfo, "%s/aol%d_%s/aol%d_%s.txt", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 
-			if(sprintf(fname, "%s/%s/aol%d_%s.fits", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+			if(sprintf(fname, "%s/aol%d_%s/aol%d_%s.fits", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 			
 			
-			printf(" TIME STAMP :  %9ld.%09ld\n", TSsec, TSnec);
+			printf(" TIME STAMP :  %9ld.%09ld\n", TSsec, TSnsec);
 			printf("       %s -> %s\n", shmimname    , fname);
 			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
