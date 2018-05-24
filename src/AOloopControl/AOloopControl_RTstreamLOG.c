@@ -374,19 +374,30 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 		{
 			int buff;
 			char shmimname[200];
+			char shmimnameinfo[200];
+
 			char fname[500];
+			char fnameinfo[500];
 
 				
 			buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
 			printf("   SAVING %d %s buffer\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
 			
-			if(sprintf(shmimname, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
+			if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+			if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
+				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
 			
-			if(sprintf(fname, "aol%d_%s", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+			if(sprintf(fnameinfo, "%s/aol%d_%s.txt", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
+			if(sprintf(fname, "%s/aol%d_%s.fits", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");						
 			
-			printf("       %s -> %s\n", shmimname, fname);
+			
+			printf("       %s -> %s\n", shmimname    , fname);
+			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
+
 
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
 			cntsave++;
