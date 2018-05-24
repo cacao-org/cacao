@@ -23,10 +23,10 @@
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "ImageStreamIO/ImageStruct.h"
 
+#include "AOloopControl/AOloopControl.h"
 
-#include "AOloopControl.h"
 extern AOLOOPCONTROL_CONF *AOconf; 
-
+extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
 
@@ -350,6 +350,14 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 	int rtlindex;
 	int cntsave = 0;
 	
+	
+	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+        AOloopControl_InitializeMemory(1);
+
+    printf("MEMORY HAS BEEN INITIALIZED\n");
+    fflush(stdout);
+    
+    
 	for(rtlindex=0;rtlindex<MAX_NUMBER_RTLOGSTREAM;rtlindex++)
 	{
 		if((AOconf[loop].RTSLOGarray[rtlindex].save == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0))
