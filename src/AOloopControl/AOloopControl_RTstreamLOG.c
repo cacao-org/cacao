@@ -474,12 +474,11 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 			save_fits(shmimname, fname);
 			
-			fp = fopen(shmimnameinfo, "w");
+			fp = fopen(fnameinfo, "w");
 			for(i=0;i<AOconf[loop].RTLOGsize;i++) //TO BE CLIPPED
 				fprintf(fp, "%10ld %010ld.%010ld %10ld %10ld", data.image[IDininfo].array.UI64[i*5], data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], data.image[IDininfo].array.UI64[i*5+3], data.image[IDininfo].array.UI64[i*5+4]);
 			fclose(fp);
 			
-			save_fits(shmimnameinfo, fnameinfo);
 
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
 			cntsave++;
