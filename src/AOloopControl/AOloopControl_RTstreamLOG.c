@@ -187,6 +187,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
 {
 	char *dataptr;
+	long IDbuff, IDsrc;
 	
 	printf("UPDATING RTstreamLOG channel %ld\n", rtlindex);
 	fflush(stdout);
@@ -201,10 +202,23 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		printf("TEST: line %d\n", __LINE__);
 		fflush(stdout);
 		
-		memcpy((void*) dataptr, AOconf[loop].RTSLOGarray[rtlindex].srcptr, AOconf[loop].RTSLOGarray[rtlindex].memsize);
+		//memcpy((void*) dataptr, AOconf[loop].RTSLOGarray[rtlindex].srcptr, AOconf[loop].RTSLOGarray[rtlindex].memsize);
+		list_image_ID();
+		
+		IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff;
+		IDsrc = AOconf[loop].RTSLOGarray[rtlindex].IDsrc;
+		
+		printf("IDbuff = %ld\n", IDbuff);
+		printf("IDsrc  = %ld\n", IDsrc);
+		
+		memcpy((void*) data.image[IDbuff].array.F, 
+		(void*) data.image[IDsrc].array.F, 
+		AOconf[loop].RTSLOGarray[rtlindex].memsize);
 
 		printf("TEST: line %d\n", __LINE__);
 		fflush(stdout);
+
+		sleep(100);
 
 		long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
