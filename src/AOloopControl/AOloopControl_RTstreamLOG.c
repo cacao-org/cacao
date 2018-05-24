@@ -192,6 +192,11 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct timespec tnow)
 {
+	
+	printf("rtlindex=%ld  %s\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
+	fflush(stdout);
+	sleep(1000);
+	
 /*	char *dataptr;
 
 
