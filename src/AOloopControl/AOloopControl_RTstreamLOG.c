@@ -192,17 +192,9 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct timespec tnow)
 {
-	
-	printf("rtlindex=%ld  %s\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
-	fflush(stdout);
-	sleep(1000);
-	
-	
-/*	char *dataptr;
+	char *dataptr;
 
 
-	list_image_ID();
-	sleep(1000);//TEST
 	
 	
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1))
@@ -220,14 +212,14 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct times
 
 		long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
 		list_image_ID();
-		printf("IDinfo = %ld\n", IDinfo);
-		sleep(1000);//TEST
+//		printf("IDinfo = %ld\n", IDinfo);
+//		sleep(1000);//TEST
 		
 		
 		
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
-		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;;
-		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+2] = (long) tnow.tv_nsec;
+		//data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;;
+		//data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+2] = (long) tnow.tv_nsec;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+3] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt0;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+4] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt1;
 
@@ -264,10 +256,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct times
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
 		
 		}
-		
-		
-	
-	}*/
+	}
 }
 
 
