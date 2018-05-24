@@ -212,7 +212,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		printf("IDsrc  = %ld\n", IDsrc);
 		
 		memcpy((void*) data.image[IDbuff].array.F, 
-		(void*) data.image[IDsrc].array.F, 
+		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
 		AOconf[loop].RTSLOGarray[rtlindex].memsize);
 
 		printf("TEST: line %d\n", __LINE__);
