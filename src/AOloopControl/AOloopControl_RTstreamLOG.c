@@ -386,7 +386,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 				
 			buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
-			printf("\n   SAVING %d %s buffer\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
+			printf("\n   SAVING %s buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
 			
 			if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -414,7 +414,10 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			printf("\n");
 		}
 	else
-	printf(".");
+	{
+		printf(".");
+		fflush(stdout);
+	}
 		
 	sleep(sleeptime);
 	}
