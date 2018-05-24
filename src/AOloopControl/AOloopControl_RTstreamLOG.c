@@ -474,9 +474,13 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 			save_fits(shmimname, fname);
 			
+			long double t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 			fp = fopen(fnameinfo, "w");
 			for(i=0;i<AOconf[loop].RTLOGsize;i++) //TO BE CLIPPED
-				fprintf(fp, "%10ld   %010ld.%010ld  %10ld   %10ld\n", data.image[IDininfo].array.UI64[i*5], data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], data.image[IDininfo].array.UI64[i*5+3], data.image[IDininfo].array.UI64[i*5+4]);
+			{
+				long double t1 = data.image[IDininfo].array.UI64[i*5+1] + 1.0e-9*data.image[IDininfo].array.UI64[i*5+2];
+				fprintf(fp, "%10ld  %15.9lf   %010ld.%010ld  %10ld   %10ld\n", data.image[IDininfo].array.UI64[i*5], (double) (t1-t0), data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], data.image[IDininfo].array.UI64[i*5+3], data.image[IDininfo].array.UI64[i*5+4]);
+			}
 			fclose(fp);
 			
 
