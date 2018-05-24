@@ -192,7 +192,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct timespec tnow)
 {
-	char *dataptr;
+/*	char *dataptr;
 
 
 	list_image_ID();
@@ -204,12 +204,12 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct times
 
 		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr;// + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
 
-/*
+
 		
 		memcpy((void*) dataptr, 
 		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
 		AOconf[loop].RTSLOGarray[rtlindex].memsize);
-*/
+
 
 
 		long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
@@ -218,7 +218,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct times
 		sleep(1000);//TEST
 		
 		
-/*		
+		
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+2] = (long) tnow.tv_nsec;
@@ -258,10 +258,10 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct times
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
 		
 		}
-		*/
+		
 		
 	
-	}
+	}*/
 }
 
 
