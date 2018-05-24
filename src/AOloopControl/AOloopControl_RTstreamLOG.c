@@ -233,7 +233,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		
 		
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
-		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;;
+		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+2] = (long) tnow.tv_nsec;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+3] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt0;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+4] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt1;
@@ -386,10 +386,10 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			char fnameinfo[500];
 
 			long IDin, IDininfo;
-			
+			long TSsec, TSnsec;
 				
 			buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
-			printf("\n   SAVING \033[1;31m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
+			printf("\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
 			
 			if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -397,28 +397,36 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 			
-			if(sprintf(fnameinfo, "%s/aol%d_%s.txt", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
-			if(sprintf(fname, "%s/aol%d_%s.fits", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");						
+			
 			
 			
 			
 			IDin = read_sharedmem_image(shmimname);
 			IDininfo = read_sharedmem_image(shmimnameinfo);
-			list_image_ID();
+			//list_image_ID();
 
 			// reading first frame timestamp
-			
+			TSsec = data.image[IDininfo].array.UI64[1];
+			TSnsec = data.image[IDininfo].array.UI64[2];
 
+
+			if(sprintf(fnameinfo, "%s/%s/aol%d_%s.txt", 
+			dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
+
+			if(sprintf(fname, "%s/%s/aol%d_%s.fits", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 			
+			
+			printf(" TIME STAMP :  %9ld.%09ld\n", TSsec, TSnec);
 			printf("       %s -> %s\n", shmimname    , fname);
 			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
 
 			delete_image_ID(shmimname);
 			delete_image_ID(shmimnameinfo);
-			list_image_ID();
+
+			
 
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
 			cntsave++;
