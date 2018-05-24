@@ -433,14 +433,14 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 			sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 			
-			sprintf(fulldir, "%s/%04d-%02d-%02d/aol%d_%s", dirname, uttime->tm_year, uttime->tm_mon, uttime->tm_mday, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+			sprintf(fulldir, "%s/%04d-%02d-%02d/aol%d_%s", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
 			printf("FULL DIR = %s\n", fulldir);
 			
 
 			struct stat st = {0};
 
 			if (stat(fulldir, &st) == -1) {
-				printf("\033[1;32m CREATING DIRECTORY %s \033[0m", fulldir);
+				printf("\033[1;33m CREATING DIRECTORY %s \033[0m", fulldir);
 			//	mkdir(fulldir, 0777);
 			}
 			
