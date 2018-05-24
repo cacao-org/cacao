@@ -195,6 +195,8 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff0;
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
 		
+		printf("   %ld MEMSIZE = %ld", rtlindex, (long) AOconf[loop].RTSLOGarray[rtlindex].memsize);
+		
 		retval = 1;
 		AOconf[loop].RTSLOGarray[rtlindex].INIT = 1;
 	}
