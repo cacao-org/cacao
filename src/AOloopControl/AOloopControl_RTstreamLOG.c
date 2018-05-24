@@ -247,10 +247,10 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 {
 	long NBstreams = 0;
 	
-	char ENstring[10];
-	char ONstring[10];
-	char INstring[10];
-	char SAstring[10];
+	char ENstring[20];
+	char ONstring[20];
+	char INstring[20];
+	char SAstring[20];
 	int i;
 	
 	printf("\n");
