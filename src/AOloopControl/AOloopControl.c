@@ -671,6 +671,7 @@ int_fast8_t AOloopControl_RTstreamLOG_printstatus_cli() {
 	AOloopControl_RTstreamLOG_printstatus(LOOPNUMBER);
 }
 
+
 int_fast8_t AOloopControl_RTstreamLOG_saveloop_cli() {
 	if(CLI_checkarg(1,5)==0) {
 		AOloopControl_RTstreamLOG_saveloop(LOOPNUMBER, data.cmdargtoken[1].val.string);
@@ -678,6 +679,46 @@ int_fast8_t AOloopControl_RTstreamLOG_saveloop_cli() {
 	}
 	else return 1;
 }
+
+
+int_fast8_t AOloopControl_RTstreamLOG_set_saveON_cli() {
+	if(CLI_checkarg(1,2)==0) {
+		AOloopControl_RTstreamLOG_set_saveON(LOOPNUMBER, data.cmdargtoken[1].val.numl);
+		return 0;
+	}
+	else return 1;
+}
+
+int_fast8_t AOloopControl_RTstreamLOG_set_saveOFF_cli() {
+	if(CLI_checkarg(1,2)==0) {
+		AOloopControl_RTstreamLOG_set_saveOFF(LOOPNUMBER, data.cmdargtoken[1].val.numl);
+		return 0;
+	}
+	else return 1;
+}
+
+
+int_fast8_t AOloopControl_RTstreamLOG_set_ON_cli() {
+	if(CLI_checkarg(1,2)==0) {
+		AOloopControl_RTstreamLOG_set_ON(LOOPNUMBER, data.cmdargtoken[1].val.numl);
+		return 0;
+	}
+	else return 1;
+}
+
+int_fast8_t AOloopControl_RTstreamLOG_set_OFF_cli() {
+	if(CLI_checkarg(1,2)==0) {
+		AOloopControl_RTstreamLOG_set_OFF(LOOPNUMBER, data.cmdargtoken[1].val.numl);
+		return 0;
+	}
+	else return 1;
+}
+
+
+
+
+
+
 
 
 
@@ -1029,7 +1070,33 @@ void init_AOloopControl()
 	"AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)");
 	
 
+	
+	RegisterCLIcommand("aolrtlogsetsaveON", __FILE__, AOloopControl_RTstreamLOG_set_saveON_cli,
+	"Real-Time logging: set save to ON",
+	"<rtlindex>",
+	"aolrtlogsetsaveON 2",
+	"int AOloopControl_RTstreamLOG_set_saveON(int loop, int rtlindex)");
 
+
+	RegisterCLIcommand("aolrtlogsetsaveOFF", __FILE__, AOloopControl_RTstreamLOG_set_saveOFF_cli,
+	"Real-Time logging: set save to OFF",
+	"<rtlindex>",
+	"aolrtlogsetsaveOFF 2",
+	"int AOloopControl_RTstreamLOG_set_saveOFF(int loop, int rtlindex)");
+
+	
+	RegisterCLIcommand("aolrtlogsetON", __FILE__, AOloopControl_RTstreamLOG_set_ON_cli,
+	"Real-Time logging: set to ON",
+	"<rtlindex>",
+	"aolrtlogsetON 2",
+	"int AOloopControl_RTstreamLOG_set_ON(int loop, int rtlindex)");
+
+
+	RegisterCLIcommand("aolrtlogsetOFF", __FILE__, AOloopControl_RTstreamLOG_set_OFF_cli,
+	"Real-Time logging: set to OFF",
+	"<rtlindex>",
+	"aolrtlogsetOFF 2",
+	"int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)");
 
     // add atexit functions here
     // atexit((void*) myfunc); atexit = starts a function once the program exits (only if it is not a crash exit)

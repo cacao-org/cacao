@@ -1001,7 +1001,10 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 int AOloopControl_RTstreamLOG_printstatus(int loop);
 int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname);
 
-
+int AOloopControl_RTstreamLOG_set_saveON(int loop, int rtlindex);
+int AOloopControl_RTstreamLOG_set_saveOFF(int loop, int rtlindex);
+int AOloopControl_RTstreamLOG_set_ON(int loop, int rtlindex);
+int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex);
 
 /* =============================================================================================== */
 /* =============================================================================================== */
