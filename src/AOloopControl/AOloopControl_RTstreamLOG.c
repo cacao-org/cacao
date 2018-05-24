@@ -301,7 +301,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 	printf("\n");
 	printf("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
 	printf("%2s  %20s  %3s %3s %3s %6s %4s %10s %10s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize");
-	printf("----------------------------------------------------------\n");
+	printf("----------------------------------------------------------------------\n");
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
 	{
 		if(AOconf[loop].RTSLOGarray[i].active == 1)
@@ -346,7 +346,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 			NBstreams++;			
 		}
 	}
-	printf("----------------------------------------------------------\n");
+	printf("----------------------------------------------------------------------\n");
 	printf("%ld RTstreamLOGs active\n", NBstreams);
 	
 	return NBstreams;
@@ -393,8 +393,9 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			char timestring[100];
 	
 			
-				
-			buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
+			// buffindex to save	
+			buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle-1;
+			
 			printf("\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
 			
 			if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
@@ -413,13 +414,15 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 				IDininfo = read_sharedmem_image(shmimnameinfo);
 
 			// reading first frame timestamp
-			TSsec = data.image[IDininfo].array.UI64[1];
+			TSsec  = (time_t) data.image[IDininfo].array.UI64[1];
 			TSnsec = data.image[IDininfo].array.UI64[2];
 			uttime = gmtime(&TSsec);
 
 
 
 			sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
+			
+			
 			
 			if(sprintf(fnameinfo, "%s/aol%d_%s/aol%d_%s.%s.txt", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
@@ -428,7 +431,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 			
 			
-	
+			
 			
 			printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, timestring);
 			printf("       %s -> %s\n", shmimname    , fname);
