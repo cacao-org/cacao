@@ -200,7 +200,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		memcpy((void*) dataptr, 
 		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
 		AOconf[loop].RTSLOGarray[rtlindex].memsize);
-
+*/
 
 
 		long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
@@ -244,7 +244,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
 		
 		}
-		*/
+		
 	
 	}
 }
