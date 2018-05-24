@@ -207,6 +207,9 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		list_image_ID();
 		printf("IDinfo = %ld\n", IDinfo);
 		sleep(1000);//TEST
+		
+		
+/*		
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+2] = (long) tnow.tv_nsec;
@@ -246,6 +249,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
 		
 		}
+		*/
 		
 	
 	}
