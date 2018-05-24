@@ -21,7 +21,7 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-
+#include "ImageStreamIO/ImageStruct.h"
 
 
 #include "AOloopControl.h"
@@ -129,7 +129,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 	uint32_t *imsize;
 	int retval = 0;
 	char imname[500];
-	
+	long nelement;
 	long infosize = 5;
 	
 	IDstream = image_ID(streamname);
@@ -150,6 +150,24 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		if(sprintf(imname, "aol%ld_%s_logbuff1", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, _DATATYPE_FLOAT, 1, 0);
+
+
+		nelement = data.image[IDstream].md[0].nelement;
+		switch(data.image[IDstream].md[0].atype)
+		{
+			case _DATATYPE_FLOAT :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (nelement * SIZEOF_DATATYPE_FLOAT);
+			break;
+
+			case _DATATYPE_DOUBLE :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (nelement * SIZEOF_DATATYPE_DOUBLE);
+			break;
+			
+			default :
+			printf("Unknown data type\n");
+			exit(0);
+			break;
+		}
 
 		imsize[0] = infosize;
 		imsize[1] = AOconf[loop].RTLOGsize;		
