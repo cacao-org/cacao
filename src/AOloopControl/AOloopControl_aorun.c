@@ -1699,7 +1699,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 		LOOPiter = data.image[IDmodeval].md[0].cnt1;
 
-		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval); //, tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval, tnow);
 		
 		
 
@@ -1737,7 +1737,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[4] = tdiffv;
 
-		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_corr); //, tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_corr, tnow);
 
 	
 	
@@ -1774,7 +1774,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 				// note that second term (non-predictive) does not have minus sign, as it was already applied above
 				//
 				
-				AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modevalPF); //, tnow);
+				AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modevalPF, tnow);
 				
 				
 				
@@ -1844,7 +1844,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			memcpy(data.image[IDmodevalDMnow].array.F, data.image[IDmodevalDMcorr].array.F, sizeof(float)*NBmodes);
 		}
 
-		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_now); //, tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_now, tnow);
 
 
 
@@ -2069,7 +2069,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         data.image[IDmodevalDMnowfilt].md[0].cnt0++;
         data.image[IDmodevalDMnowfilt].md[0].write = 0;
 
-		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_now_filt); //, tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_now_filt, tnow);
 
 
 
@@ -2086,7 +2086,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0++;
 			data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 0;			
 			
-			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_dmC); //, tnow);
+			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_dmC, tnow);
 		}
 
 
@@ -2145,7 +2145,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[10] = tdiffv;
 
-		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm); //, tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm, tnow);
 
 
 
@@ -2171,7 +2171,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			data.image[IDmodevalPFsync].md[0].cnt1 = LOOPiter;
 			data.image[IDmodevalPFsync].md[0].write = 0;
 		
-			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modevalPFsync); //, tnow);
+			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modevalPFsync, tnow);
 		}
 
 
@@ -2194,7 +2194,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         data.image[IDout].md[0].cnt1 = LOOPiter;
         data.image[IDout].md[0].write = 0;
 
-		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_ol); //, tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_ol, tnow);
 
 
 		if(AOconf[loop].ARPFon==1)
@@ -2210,7 +2210,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			data.image[IDmodevalPFres].md[0].cnt1 = LOOPiter;
 			data.image[IDmodevalPFres].md[0].write = 0;
 		
-			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modevalPFres); //, tnow);
+			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modevalPFres, tnow);
 		}
 
 
