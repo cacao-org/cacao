@@ -188,38 +188,20 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
 {
 	char *dataptr;
-//	long IDbuff, IDsrc;
-	
-//	printf("UPDATING RTstreamLOG channel %ld\n", rtlindex);
-//	fflush(stdout);
+
 	
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1))
 	{
-//		printf("TEST: line %d\n", __LINE__);
-//		fflush(stdout);
-		
-		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].frameindex;
 
-//		printf("TEST: line %d\n", __LINE__);
-//		fflush(stdout);
-		
-		//memcpy((void*) dataptr, AOconf[loop].RTSLOGarray[rtlindex].srcptr, AOconf[loop].RTSLOGarray[rtlindex].memsize);
-//		list_image_ID();
-		
-//		IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff;
-//		IDsrc = AOconf[loop].RTSLOGarray[rtlindex].IDsrc;
-		
-//		printf("IDbuff = %ld\n", IDbuff);
-//		printf("IDsrc  = %ld\n", IDsrc);
+		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr;// + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
+
+
 		
 		memcpy((void*) dataptr, 
 		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
 		AOconf[loop].RTSLOGarray[rtlindex].memsize);
 
-//		printf("TEST: line %d\n", __LINE__);
-//		fflush(stdout);
 
-//		sleep(100);
 
 		long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
@@ -228,9 +210,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+3] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt0;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+4] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt1;
 
-		//printf("TEST: line %d\n", __LINE__);
-		//fflush(stdout);
-	
+
 		AOconf[loop].RTSLOGarray[rtlindex].frameindex++;
 		if(AOconf[loop].RTSLOGarray[rtlindex].frameindex == AOconf[loop].RTLOGsize)
 		{
@@ -281,6 +261,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 	int i;
 	
 	printf("\n");
+	printf("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
 	printf("%2s  %20s  %3s %3s %3s %6s %4s %10s %10s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize");
 	printf("----------------------------------------------------------\n");
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
