@@ -360,14 +360,19 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 {
 	int rtlindex;
 	int cntsave = 0;
+	float sleeptime = 1.0;
 
 	
 	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
 
+	
     printf("\n");
     
+    for(;;)
+    {
+		cntsave = 0;
 	for(rtlindex=0;rtlindex<MAX_NUMBER_RTLOGSTREAM;rtlindex++)
 	{
 		if((AOconf[loop].RTSLOGarray[rtlindex].save == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0))
@@ -381,7 +386,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 				
 			buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
-			printf("   SAVING %d %s buffer\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
+			printf("\n   SAVING %d %s buffer\n", rtlindex, AOconf[loop].RTSLOGarray[rtlindex].name);
 			
 			if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -403,8 +408,18 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			cntsave++;
 		}
 	}
-	printf("%d buffers saved\n", cntsave);
-    printf("\n");
+	if(cntsave>0)
+		{
+			printf("%d buffers saved\n", cntsave);
+			printf("\n");
+		}
+	else
+	printf(".");
+		
+	sleep(sleeptime);
+	}
+    
+    
     
 	return 0;
 }
