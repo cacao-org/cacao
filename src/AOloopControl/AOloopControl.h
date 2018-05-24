@@ -5,20 +5,17 @@
  * 
  * AO engine uses stream data structure
  * 
- * @author  O. Guyon
- * @date    22 Nov 2017
- *
  * @bug No known bugs. 
  * 
  */
 
 
-// _____________________________________________________________ added by nour 
+
 
 #include <stdint.h>
 #include <stdio.h>
 #include <time.h>
-// _____________________________________________________________ added by nour 
+
 
 
 
@@ -29,6 +26,71 @@
 #define MAXNBMODES 10000	// maximum number of control modes
 #define MAX_NUMBER_TIMER 100
 
+
+
+
+
+
+
+// REAL TIME DATA LOGGING
+
+#define MAX_NUMBER_RTLOGSTREAM 20
+
+#define RTSLOGindex_wfsim                  0
+#define RTSLOGindex_imWFS0                 1
+#define RTSLOGindex_imWFS1                 2
+#define RTSLOGindex_imWFS2                 3
+#define RTSLOGindex_modeval                4
+#define RTSLOGindex_modeval_dm             5
+#define RTSLOGindex_modeval_dm_corr        6
+#define RTSLOGindex_modeval_dm_now         7
+#define RTSLOGindex_modeval_dm_now_filt    8
+#define RTSLOGindex_modevalPF              9
+#define RTSLOGindex_modevalPFsync         10
+#define RTSLOGindex_modevalPFres          11
+#define RTSLOGindex_modeval_ol            12
+#define RTSLOGindex_dmC                   13
+
+// Real-time streams use this struc to hold relevant info
+typedef struct
+{
+	int active;                   // 1 if used 
+	char name[100];               // stream name (excludes aol#_)
+	int ENABLE;                   // Is logging enabled ? This needs to be specified at startup, if set to zero, no RT logging will be performed
+	int INIT;                     // 1 if memory is initiated
+	int ON;                       // Is logging ON ?
+	int buffindex;                // which buffer (0 or 1)
+	long frameindex;              // frame index
+	int save;                     // Is saving enabled ?
+	int saveToggle;               // 1 if buffer #0 ready to be saved, 2 if buffer #1 ready to be saved, 0 otherwise
+	
+	long IDbuff;
+	long IDbuff0;                 // local identifier
+	long IDbuff1;                 // local identifier
+
+	long IDbuffinfo;
+	long IDbuffinfo0;             // local identifier
+	long IDbuffinfo1;             // local identifier
+	
+	float *srcptr;                // source stream pointer
+	long IDsrc;                   // source ID
+
+	char *destptr;               // destination pointer
+	char *destptr0;               // destination pointer 0
+	char *destptr1;               // destination pointer 1
+
+	size_t memsize;               // size of stream
+	
+} RTstreamLOG;
+
+
+
+
+
+
+
+
+
 // LOGGING
 //#define RT_LOGsize 30000
 
@@ -37,6 +99,8 @@
 // logging
 static int loadcreateshm_log = 0; // 1 if results should be logged in ASCII file
 static FILE *loadcreateshm_fplog;
+
+
 
 
 
@@ -316,6 +380,12 @@ typedef struct
 	// 
 	
 	// ENABLES, ON and save are read/set up in AOloopControl_loadconfigure()
+	
+	
+	// Realtime logging
+	RTstreamLOG RTSLOGarray[MAX_NUMBER_RTLOGSTREAM];
+
+
 	
 	// read by AOloopControl_loadconfigure()
 	// updated in 
@@ -632,6 +702,7 @@ typedef struct
 
 
 
+
 void __attribute__ ((constructor)) libinit_AOloopControl();
 
 /** @brief Initialize AOloopControl command line interface. */
@@ -914,9 +985,27 @@ int_fast8_t AOloopControl_logprocess_modeval(const char *IDname);
 long AOloopControl_TweakRM(char *ZRMinname, char *DMinCname, char *WFSinCname, char *DMmaskname, char *WFSmaskname, char *RMoutname);
 
 
+
+
+
 /* =============================================================================================== */
 /* =============================================================================================== */
-/** @name AOloopControl - 6. OBSOLETE ?                                                           */ 
+/** @name AOloopControl - 6. REAL-TIME LOGGING - AOloopControl_RTstreamLOG.c
+ *  Log real-time streams */
+/* =============================================================================================== */
+/* =============================================================================================== */
+
+int AOloopControl_RTstreamLOG_init(int loop);
+int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname);
+void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow);
+int AOloopControl_RTstreamLOG_printstatus(int loop);
+
+
+
+
+/* =============================================================================================== */
+/* =============================================================================================== */
+/** @name AOloopControl - 7. OBSOLETE ?                                                           */ 
 /* =============================================================================================== */
 /* =============================================================================================== */
 

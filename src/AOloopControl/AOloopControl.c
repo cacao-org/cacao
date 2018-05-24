@@ -207,6 +207,8 @@ AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 //#define AOloopcontrol_varname "/tmp/aoloopcontrol_var.shm" ??
 
 
+
+
 AOloopControl_var aoloopcontrol_var;
 
 
@@ -651,6 +653,27 @@ int_fast8_t AOloopControl_logprocess_modeval_cli() {
 }
 
 
+
+
+
+
+
+
+
+/* =============================================================================================== */
+/* =============================================================================================== */
+/** @name AOloopControl - 6. REAL-TIME LOGGING - AOloopControl_RTstreamLOG.c                                                  */
+/* =============================================================================================== */
+/* =============================================================================================== */
+
+
+int_fast8_t AOloopControl_RTstreamLOG_printstatus_cli() {
+	AOloopControl_RTstreamLOG_printstatus(LOOPNUMBER);
+}
+
+
+
+
 // OBSOLETE ??
 
 
@@ -804,83 +827,53 @@ void init_AOloopControl()
 
 
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 2. LOW LEVEL UTILITIES & TOOLS                                           */
-/* =============================================================================================== */
-/* =============================================================================================== */
-
-/* =============================================================================================== */
-/** @name AOloopControl - 2.1. LOW LEVEL UTILITIES & TOOLS - LOAD DATA STREAMS                     */
-/* =============================================================================================== */
-
-/* =============================================================================================== */
-/** @name AOloopControl - 2.2. LOW LEVEL UTILITIES & TOOLS - DATA STREAMS PROCESSING               */
-/* =============================================================================================== */
-
-/*    RegisterCLIcommand("aveACshmim", __FILE__, AOloopControl_AveStream_cli, "average and AC shared mem image", "<input image> <coeff> <output image ave> <output AC> <output RMS>" , "aveACshmim imin 0.01 outave outAC outRMS", "int AOloopControl_AveStream(char *IDname, double alpha, char *IDname_out_ave, char *IDname_out_AC, char *IDname_out_RMS)");
-
-    RegisterCLIcommand("aolstream3Dto2D", __FILE__, AOloopControl_stream3Dto2D_cli, "remaps 3D cube into 2D image", "<input 3D stream> <output 2D stream> <# cols> <sem trigger>" , "aolstream3Dto2D in3dim out2dim 4 1", "long AOloopControl_stream3Dto2D(const char *in_name, const char *out_name, int NBcols, int insem)");
-*/
 
 
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 6. REAL TIME COMPUTING ROUTINES                                          */
-/* =============================================================================================== */
-/* =============================================================================================== */
-    
+	/* =============================================================================================== */
+    /* =============================================================================================== */
+    /* 3.   LOOP CONTROL INTERFACE - AOloopControl_loop_ctr.c                                          */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
 
-    RegisterCLIcommand("aolrun", __FILE__, AOloopControl_run, "run AO loop", "no arg", "aolrun", "int AOloopControl_run()"); // run AO loop
+	/* =============================================================================================== */
+	/* 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET                  */
+	/* =============================================================================================== */
 
-    RegisterCLIcommand("aolzpwfsloop",__FILE__, AOloopControl_WFSzpupdate_loop_cli, "WFS zero point offset loop", "<dm offset [shared mem]> <zonal resp M [shared mem]> <nominal WFS reference>  <modified WFS reference>", "aolzpwfsloop dmZP zrespM wfszp", "int AOloopControl_WFSzpupdate_loop(char *IDzpdm_name, char *IDzrespM_name, char *IDwfszp_name)"); //WFS zero point offset loop
+    RegisterCLIcommand("aolrun", __FILE__, AOloopControl_run, // Run AO loop
+    "run AO loop", 
+    "no arg", 
+    "aolrun", 
+    "int AOloopControl_run()"); 
 
-    RegisterCLIcommand("aolzpwfscloop", __FILE__, AOloopControl_WFSzeropoint_sum_update_loop_cli, "WFS zero point offset loop: combine multiple input channels", "<name prefix> <number of channels> <wfsref0> <wfsref>", "aolzpwfscloop wfs2zpoffset 4 wfsref0 wfsref", "int AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, char *ID_WFSzp_name, int NBzp, char *IDwfsref0_name, char *IDwfsref_name)"); //WFS zero point offset loop: combine multiple input channels
+    RegisterCLIcommand("aolzpwfsloop",__FILE__, AOloopControl_WFSzpupdate_loop_cli, //WFS zero point offset loop
+    "WFS zero point offset loop", 
+    "<dm offset [shared mem]> <zonal resp M [shared mem]> <nominal WFS reference>  <modified WFS reference>", 
+    "aolzpwfsloop dmZP zrespM wfszp", 
+    "int AOloopControl_WFSzpupdate_loop(char *IDzpdm_name, char *IDzrespM_name, char *IDwfszp_name)"); 
 
-    RegisterCLIcommand("aocmlrun", __FILE__, AOloopControl_CompModes_loop_cli, "run AO compute modes loop", "<CM> <wfsref> <WFS image stream> <WFS image total stream> <output stream>", "aocmlrun CM wfsref wfsim wfsimtot aomodeval", "int AOloopControl_CompModes_loop(char *ID_CM_name, char *ID_WFSref_name, char *ID_WFSim_name, char *ID_WFSimtot, char *ID_coeff_name)"); // run AO compute modes loop
+    RegisterCLIcommand("aolzpwfscloop", __FILE__, AOloopControl_WFSzeropoint_sum_update_loop_cli, 
+    "WFS zero point offset loop: combine multiple input channels", 
+    "<name prefix> <number of channels> <wfsref0> <wfsref>", 
+    "aolzpwfscloop wfs2zpoffset 4 wfsref0 wfsref", 
+    "int AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, char *ID_WFSzp_name, int NBzp, char *IDwfsref0_name, char *IDwfsref_name)"); //WFS zero point offset loop: combine multiple input channels
+
+    RegisterCLIcommand("aocmlrun", __FILE__, AOloopControl_CompModes_loop_cli, 
+    "run AO compute modes loop", 
+    "<CM> <wfsref> <WFS image stream> <WFS image total stream> <output stream>", 
+    "aocmlrun CM wfsref wfsim wfsimtot aomodeval", 
+    "int AOloopControl_CompModes_loop(char *ID_CM_name, char *ID_WFSref_name, char *ID_WFSim_name, char *ID_WFSimtot, char *ID_coeff_name)"); // run AO compute modes loop
 
     RegisterCLIcommand("aolmc2dmfilt", __FILE__, AOloopControl_GPUmodecoeffs2dm_filt_loop_cli, "convert mode coefficients to DM map", "<GPUMATMULTindex> <mode coeffs> <DMmodes> <sem trigg number> <out> <GPUindex> <loopnb> <offloadMode>", "aolmc2dmfilt aolmodeval DMmodesC 2 dmmapc 0.2 1 2 1", "int AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex, char *modecoeffs_name, char *DMmodes_name, int semTrigg, char *out_name, int GPUindex, long loop, long offloadMode)"); //convert mode coefficients to DM map
 
     RegisterCLIcommand("aolsig2mcoeff", __FILE__, AOloopControl_sig2Modecoeff_cli, "convert signals to mode coeffs", "<signal data cube> <reference> <Modes data cube> <output image>", "aolsig2mcoeff wfsdata wfsref wfsmodes outim", "long AOloopControl_sig2Modecoeff(char *WFSim_name, char *IDwfsref_name, char *WFSmodes_name, char *outname)"); // convert signals to mode coeffs
 
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 8.   LOOP CONTROL INTERFACE                                              */
-/* =============================================================================================== */
-/* =============================================================================================== */
+
     
     RegisterCLIcommand("aolnb", __FILE__, AOloopControl_setLoopNumber_cli, "set AO loop #", "<loop nb>", "AOloopnb 0", "int AOloopControl_setLoopNumber(long loop)"); // set AO loop 
 
-/* =============================================================================================== */
-/** @name AOloopControl - 8.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET */
-/* =============================================================================================== */
 
-/* =============================================================================================== */
-/** @name AOloopControl - 8.2. LOOP CONTROL INTERFACE - DATA LOGGING                               */
-/* =============================================================================================== */
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.3. LOOP CONTROL INTERFACE - PRIMARY DM WRITE                           */
-/* =============================================================================================== */
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING                     */
-/* =============================================================================================== */
-  
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.5. LOOP CONTROL INTERFACE - PREDICTIVE FILTER ON/OFF                   */
-/* =============================================================================================== */
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.6. LOOP CONTROL INTERFACE - TIMING PARAMETERS                          */
-/* =============================================================================================== */
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.7. LOOP CONTROL INTERFACE - CONTROL LOOP PARAMETERS                    */
-/* =============================================================================================== */
 
 	RegisterCLIcommand("aolsetRTLOGon", __FILE__, AOloopControl_setRTLOG_ON, "set RTLOG on", "no param", "aolsetRTLOGon", "int_fast8_t AOloopControl_setRTLOG_ON()");
 	RegisterCLIcommand("aolsetRTLOGoff", __FILE__, AOloopControl_setRTLOG_OFF, "set RTLOG off", "no param", "aolsetRTLOGoff", "int_fast8_t AOloopControl_setRTLOG_OFF()");
@@ -932,13 +925,6 @@ void init_AOloopControl()
     RegisterCLIcommand("aolARPFoff", __FILE__, AOloopControl_ARPFoff, "turn auto-regressive predictive filter off", "no arg", "aolARPFoff", "int AOloopControl_ARPFoff()");
 
 
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 10. FOCAL PLANE SPECKLE MODULATION / CONTROL                             */
-/* =============================================================================================== */
-/* =============================================================================================== */
 
 
 
@@ -1009,7 +995,24 @@ void init_AOloopControl()
 
     RegisterCLIcommand("aolset", __FILE__, AOloopControl_setparam_cli, "set parameter", "<parameter> <value>" , "aolset", "int AOloopControl_setparam(long loop, const char *key, double value)");
 
-    RegisterCLIcommand("aoldmmodAB", __FILE__, AOloopControl_DMmodulateAB_cli, "module DM with linear combination of probes A and B", "<probeA> <probeB> <dmstream> <WFS resp mat> <WFS ref stream> <delay [sec]> <NB probes>", "aoldmmodAB probeA probeB wfsrespmat wfsref 0.1 6","int AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes)");
+    RegisterCLIcommand("aoldmmodAB", __FILE__, AOloopControl_DMmodulateAB_cli, 
+    "module DM with linear combination of probes A and B", 
+    "<probeA> <probeB> <dmstream> <WFS resp mat> <WFS ref stream> <delay [sec]> <NB probes>", 
+    "aoldmmodAB probeA probeB wfsrespmat wfsref 0.1 6",
+    "int AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes)");
+
+
+	/* =============================================================================================== */
+	/* =============================================================================================== */
+	/* 6. REAL-TIME LOGGING - AOloopControl_RTstreamLOG.c                                              */
+	/* =============================================================================================== */
+	/* =============================================================================================== */
+
+	RegisterCLIcommand("aolrtlogstat", __FILE__, AOloopControl_RTstreamLOG_printstatus_cli,
+	"Print status of Real-Time logging",
+	"no arg",
+	"aolrtlogstat",
+	"AOloopControl_RTstreamLOG_printstatus(int loop)");
 
 
     // add atexit functions here
@@ -1018,119 +1021,17 @@ void init_AOloopControl()
 
 
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 1. INITIALIZATION, configurations                                        */
-/* =============================================================================================== */
-/* =============================================================================================== */
 
 
 
 
-/* =============================================================================================== */
-/** @brief Read parameter value - float, char or int                                               */
-/* =============================================================================================== */
-// cf AOloopControl_read_param.c
 
 
 
 
-/* =============================================================================================== */
-/** @brief Load / Setup configuration                                                              */
-/* =============================================================================================== */
-// cf AOloopControl_loadconfigure.c
-// cf AOloopControl_initmem.c
 
 
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 6. REAL TIME COMPUTING ROUTINES                                          */
-/* =============================================================================================== */
-/* =============================================================================================== */
-// cf AOloopControl.c 
-// cf AOloopControl_wfs.c 
-
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 8.   LOOP CONTROL INTERFACE                                              */
-/* =============================================================================================== */
-/* =============================================================================================== */
-// cf AOloopControl_loop_ctr.c
-
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET  */
-/* =============================================================================================== */
-//cf AOloopControl_loop_onoff.c
-
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.2. LOOP CONTROL INTERFACE - DATA LOGGING                               */
-/* =============================================================================================== */
-
-
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.3. LOOP CONTROL INTERFACE - PRIMARY AND FILTERED DM WRITE                           */
-/* =============================================================================================== */
-// cf AOloopControl_dmwrite.c
-
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING                     */
-/* =============================================================================================== */
-// cf AOloopControl_autotune.c
-
-
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.5. LOOP CONTROL INTERFACE - PREDICTIVE FILTER ON/OFF                   */
-/* =============================================================================================== */
-// cf AOloopControl_arpf_onoff.c
-
-
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.6. LOOP CONTROL INTERFACE - TIMING PARAMETERS                          */
-/* =============================================================================================== */
-// cf AOloopControl_time_param.c
-
-
-
-/* =============================================================================================== */
-/** @name AOloopControl - 8.7. LOOP CONTROL INTERFACE - CONTROL LOOP PARAMETERS                    */
-/* =============================================================================================== */
-// cf AOloopControl_loop_param.c
-
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 10. FOCAL PLANE SPECKLE MODULATION / CONTROL                             */
-/* =============================================================================================== */
-/* =============================================================================================== */
-// cf AOloopControl_fpspeckle_mod.c
-
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 11. PROCESS LOG FILES                                                    */
-/* =============================================================================================== */
-/* =============================================================================================== */
-// cf AOloopControl_process_files.c
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 12. OBSOLETE ?                                                           */ 
-/* =============================================================================================== */
-/* =============================================================================================== */
-
+/*-------------------------------------------------------------------------------*/
 
 
 

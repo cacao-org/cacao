@@ -1104,6 +1104,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     long IDout;
     long IDmodeval; // WFS measurement
 
+	int ret;
+
     long modeval_bsize = 20; // circular buffer size (valid for both DM and PF)
 
     long IDmodevalDM_C; // DM correction, circular buffer to include history
@@ -1299,8 +1301,9 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     // INPUT
     if(sprintf(imname, "aol%ld_modeval", loop) < 1)// measured from WFS
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
     IDmodeval = read_sharedmem_image(imname);
+    AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval, imname);
+    
     NBmodes = data.image[IDmodeval].md[0].size[0];
 
     modegain = (float*) malloc(sizeof(float)*NBmodes);
@@ -1323,13 +1326,12 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
     // CONNECT to dm control channel
+    if(sprintf(imname, "aol%ld_dmC", loop) < 1)
+       printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     if(aoloopcontrol_var.aoconfID_dmC == -1)
-    {
-        if(sprintf(imname, "aol%ld_dmC", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
         aoloopcontrol_var.aoconfID_dmC = read_sharedmem_image(imname);
-    }
+    AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_dmC, imname);
+
 
 
     // CONNECT to arrays holding gain, limit, and multf values for blocks
@@ -1406,6 +1408,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			long ii;
 			for(ii=0; ii<data.image[aoloopcontrol_var.aoconfID_modevalPF].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_modevalPF].md[0].size[1]; ii++)
 				data.image[aoloopcontrol_var.aoconfID_modevalPF].array.F[ii] = 0.0;
+
+			AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPF, imname);
 		}
 	}
 
@@ -1423,36 +1427,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     IDout = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 20);
     
-	// modeval_ol LOG BUFFER 
-	if(AOconf[loop].RTstreamLOG_modeval_ol_ENABLE == 1)
-	{
-		sizeout[2] = AOconf[loop].RTLOGsize;
-		
-		if(RTstreamLOG_modeval_ol_INIT == 0)
-		{
-			if(sprintf(imname, "aol%ld_modeval_ol_logbuff0", loop) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-			ID_modeval_ol_logbuff0 = create_image_ID(imname, 3, sizeout, _DATATYPE_FLOAT, 1, 0);
-
-			if(sprintf(imname, "aol%ld_modeval_ol_logbuff1", loop) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-			ID_modeval_ol_logbuff1 = create_image_ID(imname, 3, sizeout, _DATATYPE_FLOAT, 1, 0);
-
-			if(sprintf(imname, "aol%ld_modeval_ol_logbuffinfo0", loop) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-			ID_modeval_ol_logbuffinfo0 = create_image_ID(imname, 3, sizeout, _DATATYPE_UINT64, 1, 0);
-
-			if(sprintf(imname, "aol%ld_modeval_ol_logbuffinfo1", loop) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-			ID_modeval_ol_logbuffinfo1 = create_image_ID(imname, 3, sizeout, _DATATYPE_UINT64, 1, 0);
-
-			
-			ID_modeval_ol_logbuff     = ID_modeval_ol_logbuff0;
-			ID_modeval_ol_logbuffinfo = ID_modeval_ol_logbuffinfo0;
-		
-			RTstreamLOG_modeval_ol_INIT = 1;
-		}
-	}
+	// setup RTstreamLOG modeval_ol
+	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_ol, imname);
 
 
 
@@ -1469,6 +1445,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     IDmodevalDMcorr = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
+	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_corr, imname);
 
 
 	// load/create aol_modeval_dm_now (current modal DM correction after mixing with predicitiv control)
@@ -1476,6 +1453,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     IDmodevalDMnow = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
+    AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_now, imname);
 
 
 	// load/create aol_modeval_dm_now_filt (current modal DM correction, filtered)
@@ -1483,6 +1461,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     IDmodevalDMnowfilt = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
+    AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_now_filt, imname);
 
 
 	// load/create aol_modeval_dm (modal DM correction at time of currently available WFS measurement)
@@ -1490,6 +1469,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     IDmodevalDM = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
+    AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm, imname);
 
 
 	// load/create aol_modeval_dm (modal DM correction at time of currently available WFS measurement)
@@ -1497,6 +1477,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 	IDmodevalPFsync = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
+	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPFsync, imname);
 	
 
 	// load/create aol_modeval_dm (modal DM correction at time of currently available WFS measurement)
@@ -1504,7 +1485,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 	IDmodevalPFres = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
-    
+    AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPFres, imname);
+
 
 	// load/create WFS noise estimate
 	if(sprintf(imname, "aol%ld_modeWFSnoise", loop) < 1) 
@@ -1717,50 +1699,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 		LOOPiter = data.image[IDmodeval].md[0].cnt1;
 
-
-		// ====================== LOG modeval
-		if((AOconf[loop].RTstreamLOG_modeval_ON == 1)&&(AOconf[loop].RTLOG_ON == 1))
-		{
-			char *dataptr;
-			
-			dataptr = (char*) data.image[ID_modeval_logbuff].array.F;
-			dataptr += sizeof(float)*NBmodes*modeval_logbuff_frameindex;
-						
-			memcpy((void*) dataptr, data.image[IDmodeval].array.F, sizeof(float)*NBmodes);
-			data.image[ID_modeval_logbuff].md[0].cnt1 = modeval_logbuff_frameindex;
-
-			data.image[ID_modeval_logbuffinfo].array.UI64[modeval_logbuff_frameindex*5]   = AOconf[loop].LOOPiteration;
-			data.image[ID_modeval_logbuffinfo].array.UI64[modeval_logbuff_frameindex*5+1] = (long) tnow.tv_sec;
-			data.image[ID_modeval_logbuffinfo].array.UI64[modeval_logbuff_frameindex*5+2] = (long) tnow.tv_nsec;
-			data.image[ID_modeval_logbuffinfo].array.UI64[modeval_logbuff_frameindex*5+3] = data.image[IDout].md[0].cnt0;
-			data.image[ID_modeval_logbuffinfo].array.UI64[modeval_logbuff_frameindex*5+4] = data.image[IDout].md[0].cnt1;	
-
-			modeval_logbuff_frameindex ++;
-			
-			if(modeval_logbuff_frameindex == AOconf[loop].RTLOGsize)
-			{
-				modeval_logbuff_frameindex = 0;
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_logbuff, -1);
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_logbuffinfo, -1);
-				data.image[ID_modeval_logbuff].md[0].cnt0++;
-				data.image[ID_modeval_logbuffinfo].md[0].cnt0++;
-				data.image[ID_modeval_logbuff].md[0].write = 0;
-				data.image[ID_modeval_logbuffinfo].md[0].write = 0;
-				
-				if(ID_modeval_logbuff == ID_modeval_logbuff0)
-				{
-					ID_modeval_logbuff = ID_modeval_logbuff1;
-					ID_modeval_logbuffinfo = ID_modeval_logbuffinfo1;
-					AOconf[loop].RTstreamLOG_modeval_saveToggle = 1;
-				}
-				else
-				{
-					ID_modeval_logbuff = ID_modeval_logbuff0;
-					ID_modeval_logbuffinfo = ID_modeval_logbuffinfo0;
-					AOconf[loop].RTstreamLOG_modeval_saveToggle = 2;
-				}				
-			}		
-		} // ====================== LOG modeval
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval, tnow);
+		
 		
 
 
@@ -1797,50 +1737,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[4] = tdiffv;
 
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_corr, tnow);
 
-		// ====================== LOG modeval_dm_corr
-		if((AOconf[loop].RTstreamLOG_modeval_dm_corr_ON == 1)&&(AOconf[loop].RTLOG_ON == 1))
-		{
-			char *dataptr;
-			
-			dataptr = (char*) data.image[ID_modeval_dm_corr_logbuff].array.F;
-			dataptr += sizeof(float)*NBmodes*modeval_dm_corr_logbuff_frameindex;
-						
-			memcpy((void*) dataptr, data.image[IDmodevalDMcorr].array.F, sizeof(float)*NBmodes);
-			data.image[ID_modeval_dm_corr_logbuff].md[0].cnt1 = modeval_dm_corr_logbuff_frameindex;
-
-			data.image[ID_modeval_dm_corr_logbuffinfo].array.UI64[modeval_dm_corr_logbuff_frameindex*5]   = AOconf[loop].LOOPiteration;
-			data.image[ID_modeval_dm_corr_logbuffinfo].array.UI64[modeval_dm_corr_logbuff_frameindex*5+1] = (long) tnow.tv_sec;
-			data.image[ID_modeval_dm_corr_logbuffinfo].array.UI64[modeval_dm_corr_logbuff_frameindex*5+2] = (long) tnow.tv_nsec;
-			data.image[ID_modeval_dm_corr_logbuffinfo].array.UI64[modeval_dm_corr_logbuff_frameindex*5+3] = data.image[IDmodevalDMcorr].md[0].cnt0;
-			data.image[ID_modeval_dm_corr_logbuffinfo].array.UI64[modeval_dm_corr_logbuff_frameindex*5+4] = data.image[IDmodevalDMcorr].md[0].cnt1;	
-
-			modeval_dm_corr_logbuff_frameindex ++;
-			
-			if(modeval_dm_corr_logbuff_frameindex == AOconf[loop].RTLOGsize)
-			{
-				modeval_dm_corr_logbuff_frameindex = 0;
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_dm_corr_logbuff, -1);
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_dm_corr_logbuffinfo, -1);
-				data.image[ID_modeval_dm_corr_logbuff].md[0].cnt0++;
-				data.image[ID_modeval_dm_corr_logbuffinfo].md[0].cnt0++;
-				data.image[ID_modeval_dm_corr_logbuff].md[0].write = 0;
-				data.image[ID_modeval_dm_corr_logbuffinfo].md[0].write = 0;
-				
-				if(ID_modeval_dm_corr_logbuff == ID_modeval_dm_corr_logbuff0)
-				{
-					ID_modeval_dm_corr_logbuff = ID_modeval_dm_corr_logbuff1;
-					ID_modeval_dm_corr_logbuffinfo = ID_modeval_dm_corr_logbuffinfo1;
-					AOconf[loop].RTstreamLOG_modeval_dm_corr_saveToggle = 1;
-				}
-				else
-				{
-					ID_modeval_dm_corr_logbuff = ID_modeval_dm_corr_logbuff0;
-					ID_modeval_dm_corr_logbuffinfo = ID_modeval_dm_corr_logbuffinfo0;
-					AOconf[loop].RTstreamLOG_modeval_dm_corr_saveToggle = 2;
-				}				
-			}		
-		} // ====================== LOG modeval_dm_corr
 	
 	
 	
@@ -1876,49 +1774,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 				// note that second term (non-predictive) does not have minus sign, as it was already applied above
 				//
 				
-				// ====================== LOG modevalPF
-				if((AOconf[loop].RTstreamLOG_modevalPF_ON == 1)&&(AOconf[loop].RTLOG_ON == 1))
-					{
-						char *dataptr;
-			
-						dataptr = (char*) data.image[ID_modevalPF_logbuff].array.F;
-						dataptr += sizeof(float)*NBmodes*modevalPF_logbuff_frameindex;
-						
-						memcpy((void*) dataptr, data.image[aoloopcontrol_var.aoconfID_modevalPF].array.F, sizeof(float)*NBmodes);
-						data.image[ID_modevalPF_logbuff].md[0].cnt1 = modevalPF_logbuff_frameindex;
-
-						data.image[ID_modevalPF_logbuffinfo].array.UI64[modevalPF_logbuff_frameindex*5]   = AOconf[loop].LOOPiteration;
-						data.image[ID_modevalPF_logbuffinfo].array.UI64[modevalPF_logbuff_frameindex*5+1] = (long) tnow.tv_sec;
-						data.image[ID_modevalPF_logbuffinfo].array.UI64[modevalPF_logbuff_frameindex*5+2] = (long) tnow.tv_nsec;
-						data.image[ID_modevalPF_logbuffinfo].array.UI64[modevalPF_logbuff_frameindex*5+3] = data.image[aoloopcontrol_var.aoconfID_modevalPF].md[0].cnt0;
-						data.image[ID_modevalPF_logbuffinfo].array.UI64[modevalPF_logbuff_frameindex*5+4] = data.image[aoloopcontrol_var.aoconfID_modevalPF].md[0].cnt1;	
-
-						modevalPF_logbuff_frameindex ++;
-			
-						if(modevalPF_logbuff_frameindex == AOconf[loop].RTLOGsize)
-						{
-							modevalPF_logbuff_frameindex = 0;
-							COREMOD_MEMORY_image_set_sempost_byID(ID_modevalPF_logbuff, -1);
-							COREMOD_MEMORY_image_set_sempost_byID(ID_modevalPF_logbuffinfo, -1);
-							data.image[ID_modevalPF_logbuff].md[0].cnt0++;
-							data.image[ID_modevalPF_logbuffinfo].md[0].cnt0++;
-							data.image[ID_modevalPF_logbuff].md[0].write = 0;
-							data.image[ID_modevalPF_logbuffinfo].md[0].write = 0;
+				AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modevalPF, tnow);
 				
-							if(ID_modevalPF_logbuff == ID_modeval_dm_corr_logbuff0)
-							{
-								ID_modevalPF_logbuff = ID_modevalPF_logbuff1;
-								ID_modevalPF_logbuffinfo = ID_modevalPF_logbuffinfo1;
-								AOconf[loop].RTstreamLOG_modevalPF_saveToggle = 1;
-							}
-							else
-							{
-								ID_modevalPF_logbuff = ID_modevalPF_logbuff0;
-								ID_modevalPF_logbuffinfo = ID_modevalPF_logbuffinfo0;
-								AOconf[loop].RTstreamLOG_modevalPF_saveToggle = 2;
-							}				
-						}		
-			} // ====================== LOG modevalPF
 				
 				
 				
@@ -1987,50 +1844,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			memcpy(data.image[IDmodevalDMnow].array.F, data.image[IDmodevalDMcorr].array.F, sizeof(float)*NBmodes);
 		}
 
-		// ====================== LOG modeval_dm_now
-		if((AOconf[loop].RTstreamLOG_modeval_dm_now_ON == 1)&&(AOconf[loop].RTLOG_ON == 1))
-		{
-			char *dataptr;
-			
-			dataptr = (char*) data.image[ID_modeval_dm_now_logbuff].array.F;
-			dataptr += sizeof(float)*NBmodes*modeval_dm_now_logbuff_frameindex;
-						
-			memcpy((void*) dataptr, data.image[IDmodevalDMnow].array.F, sizeof(float)*NBmodes);
-			data.image[ID_modeval_dm_now_logbuff].md[0].cnt1 = modeval_dm_now_logbuff_frameindex;
-
-			data.image[ID_modeval_dm_now_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5]   = AOconf[loop].LOOPiteration;
-			data.image[ID_modeval_dm_now_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+1] = (long) tnow.tv_sec;
-			data.image[ID_modeval_dm_now_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+2] = (long) tnow.tv_nsec;
-			data.image[ID_modeval_dm_now_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+3] = data.image[IDmodevalDMnow].md[0].cnt0;
-			data.image[ID_modeval_dm_now_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+4] = data.image[IDmodevalDMnow].md[0].cnt1;	
-
-			modeval_dm_now_logbuff_frameindex ++;
-			
-			if(modeval_dm_now_logbuff_frameindex == AOconf[loop].RTLOGsize)
-			{
-				modeval_dm_now_logbuff_frameindex = 0;
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_dm_now_logbuff, -1);
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_dm_now_logbuffinfo, -1);
-				data.image[ID_modeval_dm_now_logbuff].md[0].cnt0++;
-				data.image[ID_modeval_dm_now_logbuffinfo].md[0].cnt0++;
-				data.image[ID_modeval_dm_now_logbuff].md[0].write = 0;
-				data.image[ID_modeval_dm_now_logbuffinfo].md[0].write = 0;
-				
-				if(ID_modeval_dm_now_logbuff == ID_modevalPFsync_logbuff0)
-				{
-					ID_modeval_dm_now_logbuff = ID_modeval_dm_now_logbuff1;
-					ID_modeval_dm_now_logbuffinfo = ID_modeval_dm_now_logbuffinfo1;
-					AOconf[loop].RTstreamLOG_modeval_dm_now_saveToggle = 1;
-				}
-				else
-				{
-					ID_modeval_dm_now_logbuff = ID_modeval_dm_now_logbuff0;
-					ID_modeval_dm_now_logbuffinfo = ID_modeval_dm_now_logbuffinfo0;
-					AOconf[loop].RTstreamLOG_modeval_dm_now_saveToggle = 2;
-				}				
-			}		
-		}// ====================== LOG modeval_dm_now
-
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_now, tnow);
 
 
 
@@ -2133,7 +1947,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 					AOconf[loop].gain = maxGainVal;
 
 					sprintf(command, "echo \"%6.4f\" > conf/param_loopgain.txt", AOconf[loop].gain);
-					system(command);
+					ret = system(command);
 
 
 					
@@ -2152,7 +1966,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 						
 						sprintf(command, "echo \"%6.4f\" > conf/param_gainb%02ld.txt", data.image[aoloopcontrol_var.aoconfID_gainb].array.F[block], block);
-						system(command);
+						ret = system(command);
 					}
 					
 					// Set individual gain
@@ -2255,54 +2069,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         data.image[IDmodevalDMnowfilt].md[0].cnt0++;
         data.image[IDmodevalDMnowfilt].md[0].write = 0;
 
-
-		// ====================== LOG modeval_dm_now_filt
-		if((AOconf[loop].RTstreamLOG_modeval_dm_now_filt_ON == 1)&&(AOconf[loop].RTLOG_ON == 1))
-		{
-			char *dataptr;
-			
-			dataptr = (char*) data.image[ID_modeval_dm_now_filt_logbuff].array.F;
-			dataptr += sizeof(float)*NBmodes*modeval_dm_now_filt_logbuff_frameindex;
-						
-			memcpy((void*) dataptr, data.image[IDmodevalDMnowfilt].array.F, sizeof(float)*NBmodes);
-			data.image[ID_modeval_dm_now_filt_logbuff].md[0].cnt1 = modeval_dm_now_filt_logbuff_frameindex;
-
-			data.image[ID_modeval_dm_now_filt_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5]   = AOconf[loop].LOOPiteration;
-			data.image[ID_modeval_dm_now_filt_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+1] = (long) tnow.tv_sec;
-			data.image[ID_modeval_dm_now_filt_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+2] = (long) tnow.tv_nsec;
-			data.image[ID_modeval_dm_now_filt_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+3] = data.image[IDmodevalDMnowfilt].md[0].cnt0;
-			data.image[ID_modeval_dm_now_filt_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+4] = data.image[IDmodevalDMnowfilt].md[0].cnt1;	
-
-			modeval_dm_now_filt_logbuff_frameindex ++;
-			
-			if(modeval_dm_now_filt_logbuff_frameindex == AOconf[loop].RTLOGsize)
-			{
-				modeval_dm_now_filt_logbuff_frameindex = 0;
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_dm_now_filt_logbuff, -1);
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_dm_now_filt_logbuffinfo, -1);
-				data.image[ID_modeval_dm_now_filt_logbuff].md[0].cnt0++;
-				data.image[ID_modeval_dm_now_filt_logbuffinfo].md[0].cnt0++;
-				data.image[ID_modeval_dm_now_filt_logbuff].md[0].write = 0;
-				data.image[ID_modeval_dm_now_filt_logbuffinfo].md[0].write = 0;
-				
-				if(ID_modeval_dm_now_filt_logbuff == ID_modevalPFsync_logbuff0)
-				{
-					ID_modeval_dm_now_filt_logbuff = ID_modeval_dm_now_filt_logbuff1;
-					ID_modeval_dm_now_filt_logbuffinfo = ID_modeval_dm_now_filt_logbuffinfo1;
-					AOconf[loop].RTstreamLOG_modeval_dm_now_filt_saveToggle = 1;
-				}
-				else
-				{
-					ID_modeval_dm_now_filt_logbuff = ID_modeval_dm_now_filt_logbuff0;
-					ID_modeval_dm_now_filt_logbuffinfo = ID_modeval_dm_now_filt_logbuffinfo0;
-					AOconf[loop].RTstreamLOG_modeval_dm_now_filt_saveToggle = 2;
-				}				
-			}		
-		}// ====================== LOG modeval_dm_now_filt
-
-
-
-
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_now_filt, tnow);
 
 
 
@@ -2318,6 +2085,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = LOOPiter;
 			data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0++;
 			data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 0;			
+			
+			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_dmC, tnow);
 		}
 
 
@@ -2376,49 +2145,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[10] = tdiffv;
 
-		// ====================== LOG modeval_dm
-		if((AOconf[loop].RTstreamLOG_modeval_dm_ON == 1)&&(AOconf[loop].RTLOG_ON == 1))
-			{
-			char *dataptr;
-			
-			dataptr = (char*) data.image[ID_modeval_dm_logbuff].array.F;
-			dataptr += sizeof(float)*NBmodes*modeval_dm_logbuff_frameindex;
-						
-			memcpy((void*) dataptr, data.image[IDmodevalDM].array.F, sizeof(float)*NBmodes);
-			data.image[ID_modeval_dm_logbuff].md[0].cnt1 = modeval_dm_logbuff_frameindex;
-
-			data.image[ID_modeval_dm_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5]   = AOconf[loop].LOOPiteration;
-			data.image[ID_modeval_dm_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+1] = (long) tnow.tv_sec;
-			data.image[ID_modeval_dm_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+2] = (long) tnow.tv_nsec;
-			data.image[ID_modeval_dm_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+3] = data.image[IDmodevalDM].md[0].cnt0;
-			data.image[ID_modeval_dm_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+4] = data.image[IDmodevalDM].md[0].cnt1;	
-
-			modeval_dm_logbuff_frameindex ++;
-			
-			if(modeval_dm_logbuff_frameindex == AOconf[loop].RTLOGsize)
-			{
-				modeval_dm_logbuff_frameindex = 0;
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_dm_logbuff, -1);
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_dm_logbuffinfo, -1);
-				data.image[ID_modeval_dm_logbuff].md[0].cnt0++;
-				data.image[ID_modeval_dm_logbuffinfo].md[0].cnt0++;
-				data.image[ID_modeval_dm_logbuff].md[0].write = 0;
-				data.image[ID_modeval_dm_logbuffinfo].md[0].write = 0;
-				
-				if(ID_modeval_dm_logbuff == ID_modevalPFsync_logbuff0)
-				{
-					ID_modeval_dm_logbuff = ID_modeval_dm_logbuff1;
-					ID_modeval_dm_logbuffinfo = ID_modeval_dm_logbuffinfo1;
-					AOconf[loop].RTstreamLOG_modeval_dm_saveToggle = 1;
-				}
-				else
-				{
-					ID_modeval_dm_logbuff = ID_modeval_dm_logbuff0;
-					ID_modeval_dm_logbuffinfo = ID_modeval_dm_logbuffinfo0;
-					AOconf[loop].RTstreamLOG_modeval_dm_saveToggle = 2;
-				}				
-			}		
-		}// ====================== LOG modeval_dm
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm, tnow);
 
 
 
@@ -2444,51 +2171,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			data.image[IDmodevalPFsync].md[0].cnt1 = LOOPiter;
 			data.image[IDmodevalPFsync].md[0].write = 0;
 		
-			// ====================== LOG modevalPFsync
-			if((AOconf[loop].RTstreamLOG_modevalPFsync_ON == 1)&&(AOconf[loop].RTLOG_ON == 1))
-			{
-			char *dataptr;
-			
-			dataptr = (char*) data.image[ID_modevalPFsync_logbuff].array.F;
-			dataptr += sizeof(float)*NBmodes*modevalPFsync_logbuff_frameindex;
-						
-			memcpy((void*) dataptr, data.image[IDmodevalPFsync].array.F, sizeof(float)*NBmodes);
-			data.image[ID_modevalPFsync_logbuff].md[0].cnt1 = modevalPFsync_logbuff_frameindex;
-
-			data.image[ID_modevalPFsync_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5]   = AOconf[loop].LOOPiteration;
-			data.image[ID_modevalPFsync_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+1] = (long) tnow.tv_sec;
-			data.image[ID_modevalPFsync_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+2] = (long) tnow.tv_nsec;
-			data.image[ID_modevalPFsync_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+3] = data.image[IDmodevalPFsync].md[0].cnt0;
-			data.image[ID_modevalPFsync_logbuffinfo].array.UI64[modevalPFsync_logbuff_frameindex*5+4] = data.image[IDmodevalPFsync].md[0].cnt1;	
-
-			modevalPFsync_logbuff_frameindex ++;
-			
-			if(modevalPFsync_logbuff_frameindex == AOconf[loop].RTLOGsize)
-			{
-				modevalPFsync_logbuff_frameindex = 0;
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modevalPFsync_logbuff, -1);
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modevalPFsync_logbuffinfo, -1);
-				data.image[ID_modevalPFsync_logbuff].md[0].cnt0++;
-				data.image[ID_modevalPFsync_logbuffinfo].md[0].cnt0++;
-				data.image[ID_modevalPFsync_logbuff].md[0].write = 0;
-				data.image[ID_modevalPFsync_logbuffinfo].md[0].write = 0;
-				
-				if(ID_modevalPFsync_logbuff == ID_modevalPFsync_logbuff0)
-				{
-					ID_modevalPFsync_logbuff = ID_modevalPFsync_logbuff1;
-					ID_modevalPFsync_logbuffinfo = ID_modevalPFsync_logbuffinfo1;
-					AOconf[loop].RTstreamLOG_modevalPFsync_saveToggle = 1;
-				}
-				else
-				{
-					ID_modevalPFsync_logbuff = ID_modevalPFsync_logbuff0;
-					ID_modevalPFsync_logbuffinfo = ID_modevalPFsync_logbuffinfo0;
-					AOconf[loop].RTstreamLOG_modevalPFsync_saveToggle = 2;
-				}				
-			}		
-			}// ====================== LOG modevalPFsync
+			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modevalPFsync, tnow);
 		}
-
 
 
 
@@ -2509,51 +2193,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         data.image[IDout].md[0].cnt0++;
         data.image[IDout].md[0].cnt1 = LOOPiter;
         data.image[IDout].md[0].write = 0;
-		// ====================== LOG modeval_ol 
-		if((AOconf[loop].RTstreamLOG_modeval_ol_ON == 1)&&(AOconf[loop].RTLOG_ON == 1))
-		{
-			char *dataptr;
-			
-			dataptr = (char*) data.image[ID_modeval_ol_logbuff].array.F;
-			dataptr += sizeof(float)*NBmodes*modeval_ol_logbuff_frameindex;
-						
-			memcpy((void*) dataptr, data.image[IDout].array.F, sizeof(float)*NBmodes);
-			data.image[ID_modeval_ol_logbuff].md[0].cnt1 = modeval_ol_logbuff_frameindex;
 
-			data.image[ID_modeval_ol_logbuffinfo].array.UI64[modeval_ol_logbuff_frameindex*5]   = AOconf[loop].LOOPiteration;
-			data.image[ID_modeval_ol_logbuffinfo].array.UI64[modeval_ol_logbuff_frameindex*5+1] = (long) tnow.tv_sec;
-			data.image[ID_modeval_ol_logbuffinfo].array.UI64[modeval_ol_logbuff_frameindex*5+2] = (long) tnow.tv_nsec;
-			data.image[ID_modeval_ol_logbuffinfo].array.UI64[modeval_ol_logbuff_frameindex*5+3] = data.image[IDout].md[0].cnt0;
-			data.image[ID_modeval_ol_logbuffinfo].array.UI64[modeval_ol_logbuff_frameindex*5+4] = data.image[IDout].md[0].cnt1;	
-
-			modeval_ol_logbuff_frameindex ++;
-			
-			if(modeval_ol_logbuff_frameindex == AOconf[loop].RTLOGsize)
-			{
-				modeval_ol_logbuff_frameindex = 0;
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_ol_logbuff, -1);
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modeval_ol_logbuffinfo, -1);
-				data.image[ID_modeval_ol_logbuff].md[0].cnt0++;
-				data.image[ID_modeval_ol_logbuffinfo].md[0].cnt0++;
-				data.image[ID_modeval_ol_logbuff].md[0].write = 0;
-				data.image[ID_modeval_ol_logbuffinfo].md[0].write = 0;
-				
-				if(ID_modeval_ol_logbuff == ID_modeval_ol_logbuff0)
-				{
-					ID_modeval_ol_logbuff = ID_modeval_ol_logbuff1;
-					ID_modeval_ol_logbuffinfo = ID_modeval_ol_logbuffinfo1;
-					AOconf[loop].RTstreamLOG_modeval_ol_saveToggle = 1;
-				}
-				else
-				{
-					ID_modeval_ol_logbuff = ID_modeval_ol_logbuff0;
-					ID_modeval_ol_logbuffinfo = ID_modeval_ol_logbuffinfo0;
-					AOconf[loop].RTstreamLOG_modeval_ol_saveToggle = 2;
-				}				
-			}		
-		}// ====================== LOG modeval_ol
-
-
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_ol, tnow);
 
 
 		if(AOconf[loop].ARPFon==1)
@@ -2569,50 +2210,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			data.image[IDmodevalPFres].md[0].cnt1 = LOOPiter;
 			data.image[IDmodevalPFres].md[0].write = 0;
 		
-			// ====================== LOG modevalPFres
-			if((AOconf[loop].RTstreamLOG_modevalPFres_ON == 1)&&(AOconf[loop].RTLOG_ON == 1))
-			{
-			char *dataptr;
-			
-			dataptr = (char*) data.image[ID_modevalPFres_logbuff].array.F;
-			dataptr += sizeof(float)*NBmodes*modevalPFres_logbuff_frameindex;
-						
-			memcpy((void*) dataptr, data.image[IDmodevalPFres].array.F, sizeof(float)*NBmodes);
-			data.image[ID_modevalPFres_logbuff].md[0].cnt1 = modevalPFres_logbuff_frameindex;
-
-			data.image[ID_modevalPFres_logbuffinfo].array.UI64[modevalPFres_logbuff_frameindex*5]   = AOconf[loop].LOOPiteration;
-			data.image[ID_modevalPFres_logbuffinfo].array.UI64[modevalPFres_logbuff_frameindex*5+1] = (long) tnow.tv_sec;
-			data.image[ID_modevalPFres_logbuffinfo].array.UI64[modevalPFres_logbuff_frameindex*5+2] = (long) tnow.tv_nsec;
-			data.image[ID_modevalPFres_logbuffinfo].array.UI64[modevalPFres_logbuff_frameindex*5+3] = data.image[IDmodevalPFres].md[0].cnt0;
-			data.image[ID_modevalPFres_logbuffinfo].array.UI64[modevalPFres_logbuff_frameindex*5+4] = data.image[IDmodevalPFres].md[0].cnt1;	
-
-			modevalPFres_logbuff_frameindex ++;
-			
-			if(modevalPFres_logbuff_frameindex == AOconf[loop].RTLOGsize)
-			{
-				modeval_ol_logbuff_frameindex = 0;
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modevalPFres_logbuff, -1);
-				COREMOD_MEMORY_image_set_sempost_byID(ID_modevalPFres_logbuffinfo, -1);
-				data.image[ID_modevalPFres_logbuff].md[0].cnt0++;
-				data.image[ID_modevalPFres_logbuffinfo].md[0].cnt0++;
-				data.image[ID_modevalPFres_logbuff].md[0].write = 0;
-				data.image[ID_modevalPFres_logbuffinfo].md[0].write = 0;
-				
-				if(ID_modevalPFres_logbuff == ID_modevalPFres_logbuff0)
-				{
-					ID_modevalPFres_logbuff = ID_modevalPFres_logbuff1;
-					ID_modevalPFres_logbuffinfo = ID_modevalPFres_logbuffinfo1;
-					AOconf[loop].RTstreamLOG_modevalPFres_saveToggle = 1;
-				}
-				else
-				{
-					ID_modevalPFres_logbuff = ID_modevalPFres_logbuff0;
-					ID_modevalPFres_logbuffinfo = ID_modevalPFres_logbuffinfo0;
-					AOconf[loop].RTstreamLOG_modevalPFres_saveToggle = 2;
-				}				
-			}		
-			}// ====================== LOG modevalPFsync
-		
+			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modevalPFres, tnow);
 		}
 
 
