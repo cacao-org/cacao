@@ -254,13 +254,12 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 	int i;
 	
 	printf("\n");
-	printf("%2s  %20s  %3s %3s %3s %5s %4s %10s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame");
-	printf("------------------------------------------\n");
+	printf("%2s  %20s  %3s %3s %3s %6s %4s %10s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame");
+	printf("----------------------------------------------------------\n");
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
 	{
 		if(AOconf[loop].RTSLOGarray[i].active == 1)
 		{
-			//printf("   ENABLE = %d   INIT = %d  ON = %d  save = %d\n", AOconf[loop].RTSLOGarray[i].ENABLE, AOconf[loop].RTSLOGarray[i].INIT, AOconf[loop].RTSLOGarray[i].ON, AOconf[loop].RTSLOGarray[i].save);
 			
 			if(AOconf[loop].RTSLOGarray[i].ENABLE == 1)
 				sprintf(ENstring, "\033[1;32m ON\033[0m");
@@ -280,7 +279,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 			if(AOconf[loop].RTSLOGarray[i].save == 1)
 				sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
 			else
-				sprintf(SAstring, "OFF");						
+				sprintf(SAstring, "OFF   ");						
   
   
 			printf("%2d  %20s  %3s %3s %3s %6s %4d %10ld\n", i,  
@@ -295,7 +294,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 			NBstreams++;			
 		}
 	}
-	printf("------------------------------------------\n");
+	printf("----------------------------------------------------------\n");
 	printf("%ld RTstreamLOGs active\n", NBstreams);
 	
 	return NBstreams;
