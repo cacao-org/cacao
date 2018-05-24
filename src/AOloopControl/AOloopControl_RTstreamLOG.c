@@ -23,6 +23,11 @@
 #include <time.h>
 #include <sys/time.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -430,6 +435,15 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			
 			sprintf(fulldir, "%s/%04d-%02d-%02d/aol%d_%s", dirname, uttime->tm_year, uttime->tm_mon, uttime->tm_mday, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
 			printf("FULL DIR = %s\n", fulldir);
+			
+
+			struct stat st = {0};
+
+			if (stat(fulldir, &st) == -1) {
+				printf("\033[1;32m CREATING DIRECTORY %s \033[0m", fulldir);
+				mkdir(fulldir, 0777);
+			}
+			
 			printf("%04d - %02d - %02d\n", uttime->tm_year, uttime->tm_mon, uttime->tm_mday);
 			
 			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.txt", fulldir, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
@@ -445,7 +459,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			printf("       %s -> %s\n", shmimname    , fname);
 			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
-			
 
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
 			cntsave++;
