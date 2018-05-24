@@ -312,7 +312,12 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 				sprintf(INstring, "OFF");
 
 			if(AOconf[loop].RTSLOGarray[i].save == 1)
-				sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
+			{
+				if(AOconf[loop].RTSLOGarray[i].saveToggle!=0)
+					sprintf(SAstring, "\033[1;31m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
+				else
+					sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
+			}
 			else
 				sprintf(SAstring, "OFF   ");						
   
