@@ -362,14 +362,12 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 	int cntsave = 0;
 	
 	
-   printf("INITIALIZING MEMORY\n");
-    fflush(stdout);
+
 	
 	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    printf("MEMORY HAS BEEN INITIALIZED\n");
-    fflush(stdout);
+
     
     
 	for(rtlindex=0;rtlindex<MAX_NUMBER_RTLOGSTREAM;rtlindex++)

@@ -671,6 +671,14 @@ int_fast8_t AOloopControl_RTstreamLOG_printstatus_cli() {
 	AOloopControl_RTstreamLOG_printstatus(LOOPNUMBER);
 }
 
+int_fast8_t AOloopControl_RTstreamLOG_saveloop_cli() {
+	if(CLI_checkarg(1,5)==0) {
+		AOloopControl_RTstreamLOG_saveloop(LOOPNUMBER, data.cmdargtoken[1].val.string);
+		return 0;
+	}
+	else return 1;
+}
+
 
 
 
@@ -1013,6 +1021,14 @@ void init_AOloopControl()
 	"no arg",
 	"aolrtlogstat",
 	"AOloopControl_RTstreamLOG_printstatus(int loop)");
+	
+	RegisterCLIcommand("aolrtlogsavel", __FILE__, AOloopControl_RTstreamLOG_saveloop_cli,
+	"Save files for Real-Time logging",
+	"<directory>",
+	"aolrtlogsavel",
+	"AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)");
+	
+
 
 
     // add atexit functions here
