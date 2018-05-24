@@ -362,7 +362,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 	int cntsave = 0;
 	float sleeptime = 1.0;
 
-	
+	tzset();
 	
 	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -386,7 +386,12 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			char fnameinfo[500];
 
 			long IDin, IDininfo;
-			long TSsec, TSnsec;
+			time_t TSsec; 
+			long TSnsec;
+			
+			struct tm *uttime;
+	
+			
 				
 			buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
 			printf("\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
@@ -416,8 +421,11 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			if(sprintf(fname, "%s/aol%d_%s/aol%d_%s.fits", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 			
-			
-			printf(" TIME STAMP :  %9ld.%09ld\n", TSsec, TSnsec);
+			 uttime = gmtime(&TSsec);
+		
+			//uttime->tm_hour*3600.0 + uttime->tm_min*60.0 + timenow.tv_sec % 60 + 1.0e-9*timenow.tv_nsec;
+		
+			printf(" TIME STAMP :  %9ld.%09ld  -> %02d:%02d:%02d\n", (long) TSsec, TSnsec, uttime->tm_hour, uttime->tm_min,  uttime->tm_sec);
 			printf("       %s -> %s\n", shmimname    , fname);
 			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
