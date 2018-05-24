@@ -637,7 +637,7 @@ typedef struct
     long aoconfID_multfb; // block modal gains
     long aoconfID_limitb; // block modal gains
 
-    // individual modes
+    // individual modesaol0PFb1comp:
     long aoconfID_DMmode_GAIN;
     long aoconfID_LIMIT_modes;
     long aoconfID_MULTF_modes;

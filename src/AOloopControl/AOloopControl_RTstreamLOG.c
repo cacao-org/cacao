@@ -421,10 +421,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			printf("       %s -> %s\n", shmimname    , fname);
 			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
-
-			delete_image_ID(shmimname);
-			delete_image_ID(shmimnameinfo);
-
 			
 
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
