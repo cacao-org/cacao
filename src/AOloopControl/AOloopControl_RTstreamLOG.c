@@ -390,6 +390,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			long TSnsec;
 			
 			struct tm *uttime;
+			char timestring[100];
 	
 			
 				
@@ -405,27 +406,31 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			
 			
 			
+			if((IDin = image_ID(shmimname))==-1)
+				IDin = read_sharedmem_image(shmimname);
 			
-			IDin = read_sharedmem_image(shmimname);
-			IDininfo = read_sharedmem_image(shmimnameinfo);
-			//list_image_ID();
+			if((IDininfo = image_ID(shmimnameinfo))==-1)
+				IDininfo = read_sharedmem_image(shmimnameinfo);
 
 			// reading first frame timestamp
 			TSsec = data.image[IDininfo].array.UI64[1];
 			TSnsec = data.image[IDininfo].array.UI64[2];
+			uttime = gmtime(&TSsec);
 
 
-			if(sprintf(fnameinfo, "%s/aol%d_%s/aol%d_%s.txt", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+
+			sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
+			
+			if(sprintf(fnameinfo, "%s/aol%d_%s/aol%d_%s.%s.txt", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 
-			if(sprintf(fname, "%s/aol%d_%s/aol%d_%s.fits", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+			if(sprintf(fname, "%s/aol%d_%s/aol%d_%s.%s.fits", dirname, loop, AOconf[loop].RTSLOGarray[rtlindex].name, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 			
-			 uttime = gmtime(&TSsec);
-		
-			//uttime->tm_hour*3600.0 + uttime->tm_min*60.0 + timenow.tv_sec % 60 + 1.0e-9*timenow.tv_nsec;
-		
-			printf(" TIME STAMP :  %9ld.%09ld  -> %02d:%02d:%02d\n", (long) TSsec, TSnsec, uttime->tm_hour, uttime->tm_min,  uttime->tm_sec);
+			
+	
+			
+			printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, timestring);
 			printf("       %s -> %s\n", shmimname    , fname);
 			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
