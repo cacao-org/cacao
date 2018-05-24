@@ -189,6 +189,10 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 {
 	char *dataptr;
 
+
+	list_image_ID();
+	sleep(1000);//TEST
+	
 	
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1))
 	{
