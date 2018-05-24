@@ -5,7 +5,7 @@
  * AO engine uses stream data structure
  *  
  * @author  O. Guyon
- * @date    10 Sept 2017 -- 
+ * @date    10 Sept 2017 
  *
  * @bug No known bugs.
  * 
@@ -554,7 +554,7 @@ int_fast8_t AOloopControl_setframesAve_cli() {
     }
     else return 1;
 }
-
+extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 /** @brief CLI function for AOloopControl_setgainrange */
 int_fast8_t AOloopControl_setgainrange_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,1)==0) {
