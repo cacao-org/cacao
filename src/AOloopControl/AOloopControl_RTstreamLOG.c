@@ -263,22 +263,22 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 			//printf("   ENABLE = %d   INIT = %d  ON = %d  save = %d\n", AOconf[loop].RTSLOGarray[i].ENABLE, AOconf[loop].RTSLOGarray[i].INIT, AOconf[loop].RTSLOGarray[i].ON, AOconf[loop].RTSLOGarray[i].save);
 			
 			if(AOconf[loop].RTSLOGarray[i].ENABLE == 1)
-				sprintf(ENstring, "\033[1;32mON\033[0m");
+				sprintf(ENstring, "\033[1;32m ON\033[0m");
 			else
 				sprintf(ENstring, "OFF");
 
 			if(AOconf[loop].RTSLOGarray[i].ON == 1)
-				sprintf(ONstring, "\033[1;32mON\033[0m");
+				sprintf(ONstring, "\033[1;32m ON\033[0m");
 			else
 				sprintf(ONstring, "OFF");
 			
 			if(AOconf[loop].RTSLOGarray[i].INIT == 1)
-				sprintf(INstring, "\033[1;32mON\033[0m");
+				sprintf(INstring, "\033[1;32m ON\033[0m");
 			else
 				sprintf(INstring, "OFF");
 
 			if(AOconf[loop].RTSLOGarray[i].save == 1)
-				sprintf(SAstring, "\033[1;32mON\033[0m");
+				sprintf(SAstring, "\033[1;32m ON\033[0m");
 			else
 				sprintf(SAstring, "OFF");						
   
