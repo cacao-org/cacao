@@ -457,7 +457,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			}
 						
 			
-			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.txt", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.fits", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
 
 			if(sprintf(fname, "%s/aol%d_%s.%s.fits", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
