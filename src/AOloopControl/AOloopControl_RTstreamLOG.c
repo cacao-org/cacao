@@ -169,7 +169,6 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 			break;
 		}
 
-		printf("   line %d   %ld MEMSIZE = %ld\n", __LINE__, rtlindex, (long) AOconf[loop].RTSLOGarray[rtlindex].memsize);
 
 		imsize[0] = infosize;
 		imsize[1] = AOconf[loop].RTLOGsize;		
@@ -183,14 +182,11 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo1 = create_image_ID(imname, 2, imsize, _DATATYPE_UINT64, 1, 0);
 
-		printf("   line %d   %ld MEMSIZE = %ld\n", __LINE__, rtlindex, (long) AOconf[loop].RTSLOGarray[rtlindex].memsize);		
 		
 		AOconf[loop].RTSLOGarray[rtlindex].srcptr = data.image[IDstream].array.F;
-		AOconf[loop].RTSLOGarray[rtlindex].memsize = sizeof(float)*imsize[0]*imsize[1];
 		AOconf[loop].RTSLOGarray[rtlindex].destptr0 = (char*) data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff0].array.F;
 		AOconf[loop].RTSLOGarray[rtlindex].destptr1 = (char*) data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff1].array.F;
 		
-		printf("   line %d   %ld MEMSIZE = %ld\n", __LINE__, rtlindex, (long) AOconf[loop].RTSLOGarray[rtlindex].memsize);
 
 		AOconf[loop].RTSLOGarray[rtlindex].buffindex = 0;
 		AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
@@ -198,7 +194,6 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff0;
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
 		
-		printf("   line %d   %ld MEMSIZE = %ld\n", __LINE__, rtlindex, (long) AOconf[loop].RTSLOGarray[rtlindex].memsize);
 		
 		retval = 1;
 		AOconf[loop].RTSLOGarray[rtlindex].INIT = 1;
