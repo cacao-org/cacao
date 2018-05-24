@@ -287,6 +287,17 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 	char SAstring[20];
 	int i;
 	
+	
+	printf("INITIALIZING MEMORY\n");
+    fflush(stdout);
+	
+	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+        AOloopControl_InitializeMemory(1);
+
+    printf("MEMORY HAS BEEN INITIALIZED\n");
+    fflush(stdout);
+    
+    
 	printf("\n");
 	printf("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
 	printf("%2s  %20s  %3s %3s %3s %6s %4s %10s %10s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize");
