@@ -31,6 +31,7 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+#include "COREMOD_iofits/COREMOD_iofits.h"
 #include "ImageStreamIO/ImageStruct.h"
 
 #include "AOloopControl/AOloopControl.h"
@@ -443,21 +444,18 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			struct stat st = {0};
 
 			if (stat(fulldir0, &st) == -1) {
-				printf("\033[1;31m CREATING DIRECTORY %s \033[0m", fulldir0);
+				printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir0);
 				mkdir(fulldir0, 0777);
 			}
 			if (stat(fulldir1, &st) == -1) {
-				printf("\033[1;31m CREATING DIRECTORY %s \033[0m", fulldir1);
+				printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir1);
 				mkdir(fulldir1, 0777);
 			}
 			if (stat(fulldir2, &st) == -1) {
-				printf("\033[1;31m CREATING DIRECTORY %s \033[0m", fulldir2);
+				printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir2);
 				mkdir(fulldir2, 0777);
 			}
 						
-
-			
-			printf("%04d - %02d - %02d\n", uttime->tm_year, uttime->tm_mon, uttime->tm_mday);
 			
 			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.txt", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
 				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
@@ -472,6 +470,8 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			printf("       %s -> %s\n", shmimname    , fname);
 			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
+			save_fits(shmimname, fname);
+			save_fits(shmimnameinfo, fnameinfo);
 
 			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
 			cntsave++;
