@@ -231,10 +231,6 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex) //, struct times
 
 
 		long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
-		list_image_ID();
-//		printf("IDinfo = %ld\n", IDinfo);
-//		sleep(1000);//TEST
-		
 		
 		
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
