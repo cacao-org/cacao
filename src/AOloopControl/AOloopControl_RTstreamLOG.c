@@ -147,8 +147,9 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		if(sprintf(imname, "aol%ld_%s_logbuff1", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, _DATATYPE_FLOAT, 1, 0);
-		
-		imsize[1] = infosize;
+
+		imsize[0] = infosize;
+		imsize[1] = AOconf[loop].RTLOGsize;		
 		imsize[2] = 1;
 			
 		if(sprintf(imname, "aol%ld_%s_logbuffinfo0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
