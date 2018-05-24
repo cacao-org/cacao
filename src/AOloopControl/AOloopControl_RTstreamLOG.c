@@ -125,7 +125,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 
 int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 {
-	long IDstream;
+/*	long IDstream;
 	uint32_t *imsize;
 	int retval = 0;
 	char imname[500];
@@ -143,7 +143,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].INIT == 0))
 	{	
 		
-		/*if(sprintf(imname, "aol%ld_%s_logbuff0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
+		if(sprintf(imname, "aol%ld_%s_logbuff0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize, _DATATYPE_FLOAT, 1, 0);
 
@@ -174,16 +174,15 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr0;
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff0;
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
-		*/
+		
 		retval = 1;
 		AOconf[loop].RTSLOGarray[rtlindex].INIT = 1;
 	}
 	
 	
-	
 	free(imsize);
-	
-	return(retval);
+	*/
+	return(0);
 }
 
 
