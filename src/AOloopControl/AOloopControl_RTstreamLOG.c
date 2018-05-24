@@ -167,6 +167,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 		AOconf[loop].RTSLOGarray[rtlindex].buffindex = 0;
 		AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
+		AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr0;
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff0;
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
 		
@@ -211,7 +212,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		printf("IDbuff = %ld\n", IDbuff);
 		printf("IDsrc  = %ld\n", IDsrc);
 		
-		memcpy((void*) data.image[IDbuff].array.F, 
+		memcpy((void*) dataptr, 
 		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
 		AOconf[loop].RTSLOGarray[rtlindex].memsize);
 
