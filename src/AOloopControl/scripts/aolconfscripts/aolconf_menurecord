@@ -738,12 +738,12 @@ menurecord_default="slogM2"
 	RTlogON)
 start_RTlog_daemon        # function in aolconf_logfuncs
 "echo \" ON\" > ./status/stat_RTlogON.txt"
-sleep 1
+menurecord_default="RTlogOFF"
 ;;
 	RTlogOFF)
 stop_RTlog_daemon         # function in aolconf_logfuncs
 "echo \"OFF\" > ./status/stat_RTlogON.txt"
-sleep 1
+menurecord_default="RTlogON"
 ;;
 
 
