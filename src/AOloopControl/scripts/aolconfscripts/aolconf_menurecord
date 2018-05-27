@@ -183,8 +183,8 @@ menuitems+=( " " " " )
 
 
 
-StatReadStat RTlogON "OFF"; RTlogONstat="$statusvalue"
-if [ "${RTlogONstat}" = "OFF" ]; then
+StatReadStat RTlogDaemon "OFF"; RTlogDaemonstat="$statusvalue"
+if [ "${RTlogDaemonstat}" = "OFF" ]; then
  menuitems+=( "RTlogON" "  \Zb\Zu ==== START real-time logging ====\ZB\ZU" )
  menuitems+=( " " " " ) 
 else
