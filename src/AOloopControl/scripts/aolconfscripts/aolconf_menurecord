@@ -181,9 +181,9 @@ fi
 
 menuitems+=( " " " " )
 
-menuitems+=( "RTlogON"     " START RTS log Daemon" )
-menuitems+=( "RTlogOFF"    " STOP RTS log Daemon" )
-menuitems+=( "RTlogMon"    " Monitor RTS log Daemon")
+menuitems+=( "RTlogON"     " START RT log Daemon" )
+menuitems+=( "RTlogOFF"    " STOP RT log Daemon" )
+menuitems+=( "RTlogMon"    " Monitor RT log Daemon")
 menuitems+=( " " " " )
 
 menuitems+=( "logON"        " START logging ALL telemetry")

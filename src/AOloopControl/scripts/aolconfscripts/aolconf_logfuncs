@@ -21,7 +21,7 @@ sleep 1
 }
 
 
-function stop_RTSlog_daemon {
+function stop_RTlog_daemon {
 aoconflog "RTlog Daemon OFF"
 echo "0" > ./status/stat_RTlogDaemon.txt
 tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemon"
