@@ -729,6 +729,7 @@ sleep 1
 ;;
 	RTlogOFF)
 stop_RTlog_deamon         # function in aolconf_logfuncs
+sleep 1
 ;;
 
 
