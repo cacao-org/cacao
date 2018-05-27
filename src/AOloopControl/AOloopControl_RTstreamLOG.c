@@ -53,30 +53,33 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			AOconf[loop].RTSLOGarray[i].ENABLE = 0;
 			AOconf[loop].RTSLOGarray[i].INIT = 0;
 			AOconf[loop].RTSLOGarray[i].ON = 0;
-			AOconf[loop].RTstreamLOG_wfsim_save = 0;
+			AOconf[loop].RTSLOGarray[i].save = 0;
 		 AOconf[loop].RTSLOGarray[i].saveToggle = 0;
         }
 	
-	       i = RTSLOGindex_wfsim;
+	    i = RTSLOGindex_wfsim;
         AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "wfsim");
+        strcpy(AOconf[loop].RTSLOGarray[i].name, "wfsim"); //   U in Read_cam_frame()
         AOconf[loop].RTSLOGarray[i].ENABLE = 1;
      
         i = RTSLOGindex_imWFS0;
         AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS0");
+        strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS0");// U in Read_cam_frame()
         AOconf[loop].RTSLOGarray[i].ENABLE = 1;
      
         i = RTSLOGindex_imWFS1;
         AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS1");
+        strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS1");  // U in Read_cam_frame()
         AOconf[loop].RTSLOGarray[i].ENABLE = 1;
      
         i = RTSLOGindex_imWFS2;
         AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS2");
+        strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS2"); // U in AOcompute()
         AOconf[loop].RTSLOGarray[i].ENABLE = 1;
         
+        
+// managed by AOloopControl_ComputeOpenLoopModes()
+
         i = RTSLOGindex_modeval;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval"); // U
@@ -128,6 +131,12 @@ int AOloopControl_RTstreamLOG_init(int loop)
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "dmC");// U
         AOconf[loop].RTSLOGarray[i].ENABLE = 1;                        
+
+        i = RTSLOGindex_dmdisp;
+        AOconf[loop].RTSLOGarray[i].active = 1;
+        strcpy(AOconf[loop].RTSLOGarray[i].name, "dmdisp");// 
+        AOconf[loop].RTSLOGarray[i].ENABLE = 1;                        
+	
 	
 	return 0;
 }
@@ -224,12 +233,9 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
 {
-	char *dataptr;
-
-	
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1))
 	{
-
+		char *dataptr;
 		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
 
 

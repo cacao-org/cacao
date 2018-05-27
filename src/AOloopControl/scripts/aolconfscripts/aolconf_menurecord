@@ -181,6 +181,11 @@ fi
 
 menuitems+=( " " " " )
 
+menuitems+=( "RSTlogON"     " START RTS log Daemon" )
+menuitems+=( "RTSlogOFF"    " STOP RTS log Daemon" )
+menuitems+=( "RTSlogMon"    " Monitor RTS log Daemon")
+menuitems+=( " " " " )
+
 menuitems+=( "logON"        " START logging ALL telemetry")
 menuitems+=( "logOFF"       " STOP  logging ALL telemetry")
 menuitems+=( "logKILL"      " KILL  all telemetry logging processes")
@@ -718,8 +723,16 @@ menurecord_default="slogM2"
 
 
 
+	RTSlogON)
+start_RTSlog_daemon        # function in aolconf_logfuncs
+;;
+	RTSlogOFF)
+stop_RTSlog_deamon         # function in aolconf_logfuncs
+;;
+
+
     logON)
-start_Telemetrylog_all # function in aolconf_logfuncs
+start_Telemetrylog_all     # function in aolconf_logfuncs
 ;;
 
     logOFF)

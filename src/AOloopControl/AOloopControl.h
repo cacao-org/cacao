@@ -50,6 +50,7 @@
 #define RTSLOGindex_modevalPFres          11
 #define RTSLOGindex_modeval_ol            12
 #define RTSLOGindex_dmC                   13
+#define RTSLOGindex_dmdisp                14
 
 // Real-time streams use this struc to hold relevant info
 typedef struct
@@ -385,7 +386,7 @@ typedef struct
 	// Realtime logging
 	RTstreamLOG RTSLOGarray[MAX_NUMBER_RTLOGSTREAM];
 
-
+/*
 	
 	// read by AOloopControl_loadconfigure()
 	// updated in 
@@ -478,7 +479,7 @@ typedef struct
     int RTstreamLOG_dmdisp_save;
     int RTstreamLOG_dmdisp_saveToggle; 
 	
-
+*/
 
 
     // semaphores for communication with GPU computing threads

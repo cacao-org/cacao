@@ -552,6 +552,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt0 ++;
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt1 = LOOPiter;
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 0;
+        
+        clock_gettime(CLOCK_REALTIME, &tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
+        
     }
 
 
@@ -1183,92 +1187,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 	uint64_t LOOPiter;
 
-
-	// LOGGING
-	
-
-	int RTstreamLOG_modeval_INIT = 0;	
-	long ID_modeval_logbuff;
-	long ID_modeval_logbuff0;
-	long ID_modeval_logbuff1;		
-	long ID_modeval_logbuffinfo;
-	long ID_modeval_logbuffinfo0;
-	long ID_modeval_logbuffinfo1;
-	long modeval_logbuff_frameindex = 0;
-
-	int RTstreamLOG_modeval_dm_corr_INIT = 0;	
-	long ID_modeval_dm_corr_logbuff;
-	long ID_modeval_dm_corr_logbuff0;
-	long ID_modeval_dm_corr_logbuff1;		
-	long ID_modeval_dm_corr_logbuffinfo;
-	long ID_modeval_dm_corr_logbuffinfo0;
-	long ID_modeval_dm_corr_logbuffinfo1;
-	long modeval_dm_corr_logbuff_frameindex = 0;
-
-	int RTstreamLOG_modeval_dm_now_INIT = 0;	
-	long ID_modeval_dm_now_logbuff;
-	long ID_modeval_dm_now_logbuff0;
-	long ID_modeval_dm_now_logbuff1;		
-	long ID_modeval_dm_now_logbuffinfo;
-	long ID_modeval_dm_now_logbuffinfo0;
-	long ID_modeval_dm_now_logbuffinfo1;
-	long modeval_dm_now_logbuff_frameindex = 0;
-
-	int RTstreamLOG_modeval_dm_now_filt_INIT = 0;	
-	long ID_modeval_dm_now_filt_logbuff;
-	long ID_modeval_dm_now_filt_logbuff0;
-	long ID_modeval_dm_now_filt_logbuff1;		
-	long ID_modeval_dm_now_filt_logbuffinfo;
-	long ID_modeval_dm_now_filt_logbuffinfo0;
-	long ID_modeval_dm_now_filt_logbuffinfo1;
-	long modeval_dm_now_filt_logbuff_frameindex = 0;
-
-	int RTstreamLOG_modevalPF_INIT = 0;	
-	long ID_modevalPF_logbuff;
-	long ID_modevalPF_logbuff0;
-	long ID_modevalPF_logbuff1;		
-	long ID_modevalPF_logbuffinfo;
-	long ID_modevalPF_logbuffinfo0;
-	long ID_modevalPF_logbuffinfo1;
-	long modevalPF_logbuff_frameindex = 0;
-	
-	int RTstreamLOG_modevalPFsync_INIT = 0;	
-	long ID_modevalPFsync_logbuff;
-	long ID_modevalPFsync_logbuff0;
-	long ID_modevalPFsync_logbuff1;		
-	long ID_modevalPFsync_logbuffinfo;
-	long ID_modevalPFsync_logbuffinfo0;
-	long ID_modevalPFsync_logbuffinfo1;
-	long modevalPFsync_logbuff_frameindex = 0;
-
-	int RTstreamLOG_modevalPFres_INIT = 0;	
-	long ID_modevalPFres_logbuff;
-	long ID_modevalPFres_logbuff0;
-	long ID_modevalPFres_logbuff1;		
-	long ID_modevalPFres_logbuffinfo;
-	long ID_modevalPFres_logbuffinfo0;
-	long ID_modevalPFres_logbuffinfo1;
-	long modevalPFres_logbuff_frameindex = 0;
-
-	int RTstreamLOG_modeval_dm_INIT = 0;	
-	long ID_modeval_dm_logbuff;
-	long ID_modeval_dm_logbuff0;
-	long ID_modeval_dm_logbuff1;		
-	long ID_modeval_dm_logbuffinfo;
-	long ID_modeval_dm_logbuffinfo0;
-	long ID_modeval_dm_logbuffinfo1;
-	long modeval_dm_logbuff_frameindex = 0;
-
-	int RTstreamLOG_modeval_ol_INIT = 0;	
-	long ID_modeval_ol_logbuff;
-	long ID_modeval_ol_logbuff0;
-	long ID_modeval_ol_logbuff1;		
-	long ID_modeval_ol_logbuffinfo;
-	long ID_modeval_ol_logbuffinfo0;
-	long ID_modeval_ol_logbuffinfo1;
-	long modeval_ol_logbuff_frameindex = 0;
-	
-	
 
 
 

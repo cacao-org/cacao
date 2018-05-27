@@ -9,6 +9,30 @@ fi
 
 
 
+function start_RTlog_daemon {
+aoconflog "RTlog Daemon ON"
+echo "1" > ./status/stat_RTlogDaemon.txt
+tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemon"
+sleep 0.1
+tmux new-session -d -s $tmuxnameRTlog
+sleep 0.1
+tmux send-keys -t $tmuxnameC "./auxscripts/aolrtlogsave \"/media/data\"" C-m
+}
+
+
+function stop_RTSlog_daemon {
+aoconflog "RTlog Daemon OFF"
+echo "0" > ./status/stat_RTlogDaemon.txt
+tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemon"
+tmux send-keys -t $tmuxnameRTlog "" C-c
+sleep 0.1
+}
+
+
+
+
+
+
 function startstreamlog {
 aoconflog "log $1 ON"
 echo "1" > ./status/stat_log$1.txt
