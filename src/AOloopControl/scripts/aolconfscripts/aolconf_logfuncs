@@ -12,7 +12,7 @@ fi
 function start_RTlog_daemon {
 status/stat_RTlogON.txt
 echo " ON" > ./status/stat_RTlogDaemonON.txt
-tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemonON"
+tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemon"
 sleep 0.1
 tmux new-session -d -s $tmuxnameRTlog
 sleep 0.1
@@ -31,7 +31,7 @@ sleep 0.1
 function stop_RTlog_daemon {
 aoconflog "RTlog Daemon OFF"
 echo "OFF" > ./status/stat_RTlogDaemonON.txt
-tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemonON"
+tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemon"
 tmux send-keys -t $tmuxnameRTlog "" C-c
 sleep 0.1
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
