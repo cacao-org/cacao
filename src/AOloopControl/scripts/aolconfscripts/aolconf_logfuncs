@@ -35,7 +35,7 @@ tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemon"
 tmux send-keys -t $tmuxnameRTlog "" C-c
 sleep 0.1
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
-tmux new-session -d -s $tmuxnameRTlogC "" C-c
+tmux new-session -d -s $tmuxnameRTlogC "exitCLI" C-m
 }
 
 
