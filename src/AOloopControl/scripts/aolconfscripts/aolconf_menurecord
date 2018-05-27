@@ -725,6 +725,7 @@ menurecord_default="slogM2"
 
 	RTlogON)
 start_RTlog_daemon        # function in aolconf_logfuncs
+sleep 1
 ;;
 	RTlogOFF)
 stop_RTlog_deamon         # function in aolconf_logfuncs
