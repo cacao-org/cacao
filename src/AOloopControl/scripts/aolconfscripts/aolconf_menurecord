@@ -181,8 +181,20 @@ fi
 
 menuitems+=( " " " " )
 
-menuitems+=( "RTlogON"     " START RT log Daemon" )
-menuitems+=( "RTlogOFF"    " STOP RT log Daemon" )
+
+
+StatReadStat RTlogON "OFF"; RTlogONstat="$statusvalue"
+if [ "${RTlogONstat}" = "OFF" ]; then
+ menuitems+=( "RTlogON" "  \Zb\Zu ==== START real-time logging ====\ZB\ZU" )
+ menuitems+=( " " " " ) 
+else
+ menuitems+=( "RTlogOFF" "\Z1\ZrRT logging ON, press to STOP\Zn" )
+ menuitems+=( "RTlogMon"    " Monitor RT log Daemon")
+fi
+ 
+
+#menuitems+=( "RTlogON"     " START RT log Daemon" )
+#menuitems+=( "RTlogOFF"    " STOP RT log Daemon" )
 menuitems+=( "RTlogMon"    " Monitor RT log Daemon")
 menuitems+=( " " " " )
 
@@ -725,10 +737,12 @@ menurecord_default="slogM2"
 
 	RTlogON)
 start_RTlog_daemon        # function in aolconf_logfuncs
+"echo \" ON\" > ./status/stat_RTlogON.txt"
 sleep 1
 ;;
 	RTlogOFF)
 stop_RTlog_daemon         # function in aolconf_logfuncs
+"echo \"OFF\" > ./status/stat_RTlogON.txt"
 sleep 1
 ;;
 
