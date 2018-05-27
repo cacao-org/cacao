@@ -84,6 +84,32 @@ fi
 
 
 
+
+function RTlogwritestartstopstrings {
+startlogstring=$( printf "START RT logging %-25s   %s\n" "$streamname" "$infostring" )
+if [ "$KillStopFlag" = "KILL" ]; then
+stoplogstring=$( printf "\Z1\Zr${KillStopFlag} RT logging  %-25s\Zn   %s\n" "$streamname" (${streamnumber}) "$infostring" )
+else
+stoplogstring=$( printf "\Z3\Zr${KillStopFlag} RT logging  %-25s\Zn   %s\n" "$streamname" (${streamnumber}) "$infostring" )
+fi
+
+file="./status/stat_RTlog${streamnumber}.txt"
+logstat=$( head -1 $file )
+if [[ -f "$file" && ( "$logstat" = "0" || "$logstat" = "1" ) ]]; then
+echo "OK"
+else
+echo "0" > $file
+logstat="0"
+fi
+}
+
+
+
+
+
+
+
+
 # If KillStopFlag="KILL", kill. 
 # If KillStopFlag="STOP",stop.
 function skstreamlog {
@@ -480,7 +506,9 @@ ConfReadParam CMMODE "0"; CMMODE="$paramvalue"
 
 streamname="aol${LOOPNUMBER}_modeval"
 infostring="WFS-measured mode values"
-logwritestartstopstrings
+streamnumber="4"
+#logwritestartstopstrings
+RTlogwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
 menuitems+=( "laolmodevalON" "$startlogstring" )
 else
@@ -1101,15 +1129,21 @@ menurecord_default="ldmdisp11ON"
 
 
     laolmodevalON)
-streamname="aol${LOOPNUMBER}_modeval"
-startstreamlog "$streamname" $LogCubeSize
-echo "1" > "./status/stat_log_${streamname}.txt"
+tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
+tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 4" C-m
+#streamname="aol${LOOPNUMBER}_modeval"
+#startstreamlog "$streamname" $LogCubeSize
+#echo "1" > "./status/stat_log_${streamname}.txt"
+echo "1" > "./status/stat_RTlog4.txt"
 menurecord_default="laolmodevalOFF"
 ;;
     laolmodevalOFF)
-streamname="aol${LOOPNUMBER}_modeval"
-skstreamlog "$streamname"
-echo "0" > "./status/stat_log_${streamname}.txt"
+    tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
+tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 4" C-m
+#streamname="aol${LOOPNUMBER}_modeval"
+#skstreamlog "$streamname"
+#echo "0" > "./status/stat_log_${streamname}.txt"
+echo "0" > "./status/stat_RTlog4.txt"
 menurecord_default="laolmodevalON"
 ;;
 
