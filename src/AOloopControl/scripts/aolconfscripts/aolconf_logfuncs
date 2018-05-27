@@ -16,8 +16,15 @@ tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemon"
 sleep 0.1
 tmux new-session -d -s $tmuxnameRTlog
 sleep 0.1
-tmux send-keys -t $tmuxnameRTlog "./auxscripts/aolrtlogsave \"/media/data\"" C-m
-sleep 1
+tmux send-keys -t $tmuxnameRTlog "./auxscripts/aolrtlogsave \"$savedir\"" C-m
+sleep 0.1
+tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
+tmux new-session -d -s $tmuxnameRTlogC
+sleep 0.1
+tmux send-keys -t $tmuxnameRTlogC "./AOloopControl" C-m
+sleep 0.1
+tmux send-keys -t $tmuxnameRTlogC "aolrtlogstat" C-m
+sleep 0.1
 }
 
 
@@ -27,6 +34,8 @@ echo "0" > ./status/stat_RTlogDaemon.txt
 tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemon"
 tmux send-keys -t $tmuxnameRTlog "" C-c
 sleep 0.1
+tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
+tmux new-session -d -s $tmuxnameRTlogC "" C-c
 }
 
 
