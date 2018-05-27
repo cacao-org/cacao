@@ -16,7 +16,7 @@ tmuxnameRTlog="aol${LOOPNUMBER}_RTlogDaemon"
 sleep 0.1
 tmux new-session -d -s $tmuxnameRTlog
 sleep 0.1
-tmux send-keys -t $tmuxnameC "./auxscripts/aolrtlogsave \"/media/data\"" C-m
+tmux send-keys -t $tmuxnameRTlog "./auxscripts/aolrtlogsave \"/media/data\"" C-m
 sleep 1
 }
 
