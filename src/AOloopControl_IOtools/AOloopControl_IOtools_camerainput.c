@@ -589,6 +589,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 	
     AOconf[loop].statusM = 0;
 
+	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
 
     slice = 0;
     if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].naxis==3) // ring buffer
@@ -597,6 +599,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         if(slice==-1)
             slice = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[2];
     }
+
+	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
 
     switch (aoloopcontrol_var.WFSatype) {
     case _DATATYPE_FLOAT :
@@ -614,10 +619,17 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         exit(0);
         break;
     }
+    
+   	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
+    
     if(RM==0)
         AOconf[loop].WFScnt = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0;
     else
         AOconf[loop].WFScntRM = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0;
+
+	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
 
 
     //   if(COMPUTE_PIXELSTREAMING==1) // multiple pixel groups
