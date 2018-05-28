@@ -484,6 +484,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     else
         semindex = 1;
 
+	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
 
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
 
@@ -521,6 +523,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     printf("TEST - SEMAPHORE INITIALIZED\n");
     fflush(stdout);
 #endif
+
+	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
 
     if(RM==0)
     {
@@ -569,6 +574,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 #endif
     }
 
+	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
 	
 	if(RM==0)
 	{
@@ -617,7 +624,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     aoloopcontrol_var.PIXSTREAM_SLICE = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt1;
 
 	
-	
+	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
 	
 	
 
