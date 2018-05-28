@@ -389,7 +389,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 	
 	printf("------ SETUP wfsim RTlog bugger\n"); //TEST
 	fflush(stdout);
-	sleep(100.0);
+//	sleep(100.0);
 
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_wfsim, AOconf[loop].WFSname);
 

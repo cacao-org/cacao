@@ -174,7 +174,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, _DATATYPE_FLOAT, 1, 0);
 
 
-		printf("Computing memsize ...");
+		printf("Computing memsize ..."); //TEST
 		fflush(stdout);
 		
 		
@@ -195,7 +195,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 			break;
 		}
 
-		printf("done\n");
+		printf("done\n"); //TEST
 		fflush(stdout);
 
 
@@ -226,6 +226,10 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		
 		retval = 1;
 		AOconf[loop].RTSLOGarray[rtlindex].INIT = 1;
+		
+		printf("RTlog init done\n"); //TEST
+		fflush(stdout);
+		
 	}
 	
 	
