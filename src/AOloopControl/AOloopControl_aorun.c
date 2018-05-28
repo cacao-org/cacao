@@ -538,11 +538,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2, -1);
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt0 ++;
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt1 = LOOPiter;
-        data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 0;
-        
-        clock_gettime(CLOCK_REALTIME, &tnow);
-		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
-        
+        data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 0;        
     }
 
 

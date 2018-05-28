@@ -657,7 +657,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 		}
 	else
 	{
-		printf("waiting for buffers ready to save %10.3f  \r", 1.0e-6*sleepcnt*sleeptimeus);
+		printf("waiting for buffers ready to save %10.3f sec \r", 1.0e-6*sleepcnt*sleeptimeus);
 		fflush(stdout);
 		sleepcnt ++;
 	}
