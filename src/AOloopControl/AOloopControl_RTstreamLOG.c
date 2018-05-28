@@ -177,13 +177,14 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, atype, SHARED, 0);
 
-		
+		// nelement for a SINGLE SLICE
 		nelement = (uint64_t) imsize[0];
 		nelement *= imsize[1];
-		nelement *= imsize[2];
 		
 		switch(atype)
 		{
+			// memsize for EACH SLICE
+			
 			case _DATATYPE_UINT8 :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_UINT8*nelement);
 			break;
