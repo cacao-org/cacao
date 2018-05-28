@@ -88,9 +88,9 @@ fi
 function RTlogwritestartstopstrings {
 startlogstring=$( printf "START RT logging %-25s   %s\n" "$streamname" "$infostring" )
 if [ "$KillStopFlag" = "KILL" ]; then
-stoplogstring=$( printf "\Z1\Zr${KillStopFlag} RT logging  %-25s\Zn   %s\n" "$streamname" \["${streamnumber}"\] "$infostring" )
+stoplogstring=$( printf "\Z1\Zr${KillStopFlag} RT logging  [%02d] %-25s\Zn   %s\n"  "$streamnumber" "$streamname" "$infostring" )
 else
-stoplogstring=$( printf "\Z3\Zr${KillStopFlag} RT logging  %-25s\Zn   %s\n" "$streamname" \["${streamnumber}"\] "$infostring" )
+stoplogstring=$( printf "\Z3\Zr${KillStopFlag} RT logging  [%02d] %-25s\Zn   %s\n"  "$streamnumber" "$streamname" "$infostring" )
 fi
 
 file="./status/stat_RTlog${streamnumber}.txt"
