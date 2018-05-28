@@ -153,6 +153,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 	char imname[500];
 	long nelement;
 	long infosize = 5;
+	uint8_t atype;
 	
 	IDstream = image_ID(streamname);
 
@@ -161,17 +162,19 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 	imsize[1] = data.image[IDstream].md[0].size[1];
 	imsize[2] = AOconf[loop].RTLOGsize;
 
+	atype = data.image[IDstream].md[0].atype;
+	
 	
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].INIT == 0))
 	{	
 		
 		if(sprintf(imname, "aol%ld_%s_logbuff0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize, _DATATYPE_FLOAT, 1, 0);
+		AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize, atype, 1, 0);
 
 		if(sprintf(imname, "aol%ld_%s_logbuff1", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, _DATATYPE_FLOAT, 1, 0);
+		AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, atype, 1, 0);
 
 
 		printf("Computing memsize ..."); //TEST
@@ -179,14 +182,54 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		
 		
 		nelement = data.image[IDstream].md[0].nelement;
-		switch(data.image[IDstream].md[0].atype)
+		switch(atype)
 		{
+			case _DATATYPE_UINT8 :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_UINT8*nelement);
+			break;
+
+			case _DATATYPE_UINT16 :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_UINT16*nelement);
+			break;
+
+			case _DATATYPE_UINT32 :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_UINT32*nelement);
+			break;
+
+			case _DATATYPE_UINT64 :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_UINT64*nelement);
+			break;
+
+			case _DATATYPE_INT8 :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_INT8*nelement);
+			break;
+
+			case _DATATYPE_INT16 :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_INT16*nelement);
+			break;
+
+			case _DATATYPE_INT32 :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_INT32*nelement);
+			break;
+
+			case _DATATYPE_INT64 :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_INT64*nelement);
+			break;
+
 			case _DATATYPE_FLOAT :
-			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (nelement * SIZEOF_DATATYPE_FLOAT);
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_FLOAT*nelement);
 			break;
 
 			case _DATATYPE_DOUBLE :
-			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (nelement * SIZEOF_DATATYPE_DOUBLE);
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_DOUBLE*nelement);
+			break;
+
+			case _DATATYPE_COMPLEX_FLOAT :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_COMPLEX_FLOAT*nelement);
+			break;
+
+			case _DATATYPE_COMPLEX_DOUBLE :
+			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_COMPLEX_DOUBLE*nelement);
 			break;
 			
 			default :
