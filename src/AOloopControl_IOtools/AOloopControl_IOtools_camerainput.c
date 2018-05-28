@@ -484,8 +484,6 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     else
         semindex = 1;
 
-	printf("TEST line %d\n", __LINE__); //TEST
-	fflush(stdout);
 
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
 
@@ -524,8 +522,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     fflush(stdout);
 #endif
 
-	printf("TEST line %d\n", __LINE__); //TEST
-	fflush(stdout);
+
 
     if(RM==0)
     {
@@ -574,9 +571,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 #endif
     }
 
-	printf("TEST line %d\n", __LINE__); //TEST
-	fflush(stdout);
-	
+
 	if(RM==0)
 	{
 		clock_gettime(CLOCK_REALTIME, &tnow);
@@ -589,8 +584,6 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 	
     AOconf[loop].statusM = 0;
 
-	printf("TEST line %d\n", __LINE__); //TEST
-	fflush(stdout);
 
     slice = 0;
     if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].naxis==3) // ring buffer
@@ -600,8 +593,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
             slice = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[2];
     }
 
-	printf("TEST line %d\n", __LINE__); //TEST
-	fflush(stdout);
+
 
     switch (aoloopcontrol_var.WFSatype) {
     case _DATATYPE_FLOAT :
@@ -620,24 +612,21 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         break;
     }
     
-   	printf("TEST line %d\n", __LINE__); //TEST
-	fflush(stdout);
+
     
     if(RM==0)
         AOconf[loop].WFScnt = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0;
     else
         AOconf[loop].WFScntRM = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0;
 
-	printf("TEST line %d\n", __LINE__); //TEST
-	fflush(stdout);
+
 
 
     //   if(COMPUTE_PIXELSTREAMING==1) // multiple pixel groups
     aoloopcontrol_var.PIXSTREAM_SLICE = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt1;
 
 	
-	printf("TEST line %d\n", __LINE__); //TEST
-	fflush(stdout);
+
 	
 	
 
