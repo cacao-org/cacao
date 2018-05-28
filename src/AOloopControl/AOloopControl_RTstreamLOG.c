@@ -174,6 +174,10 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, _DATATYPE_FLOAT, 1, 0);
 
 
+		printf("Computing memsize ...");
+		fflush(stdout);
+		
+		
 		nelement = data.image[IDstream].md[0].nelement;
 		switch(data.image[IDstream].md[0].atype)
 		{
@@ -190,6 +194,9 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 			exit(0);
 			break;
 		}
+
+		printf("done\n");
+		fflush(stdout);
 
 
 		imsize[0] = infosize;
