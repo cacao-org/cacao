@@ -64,18 +64,6 @@
 /* =============================================================================================== */
 
 
-//extern long aoloopcontrol_var.AOcontrolNBtimers;           // declared in AOloopControl.c
-
-//extern long aoloopcontrol_var.aoconfID_wfsim;              // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_imWFS0;             // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_imWFS0tot;          // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_imWFS1;             // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_wfsdark;            // declared in AOloopControl.c
-//extern long aoloopcontrol_var.aoconfID_wfsmask;            // declared in AOloopControl.c
-
-//extern uint8_t aoloopcontrol_var.WFSatype;                 // declared in AOloopControl.c
-
-//extern long aoloopcontrol_var.aoconfID_looptiming;         // declared in AOloopControl.c
 
 
 
@@ -581,9 +569,15 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 #endif
     }
 
-    if(RM==0)
-        AOconf[loop].status = 0;  // LOAD IMAGE
+	
+	if(RM==0)
+	{
+		clock_gettime(CLOCK_REALTIME, &tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
 
+        AOconf[loop].status = 0;  // LOAD IMAGE
+	}
+	
     AOconf[loop].statusM = 0;
 
 
@@ -694,6 +688,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         }
 		data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
 		COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0, -1);
+        
+        clock_gettime(CLOCK_REALTIME, &tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
         
         /*for(s=0; s<data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].sem; s++)
         {
@@ -905,7 +902,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 # endif
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS1, -1);
         data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].cnt0 ++;
-        data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].write = 0;
+        data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].write = 0;                
     }
 
 #ifdef _PRINT_TEST
@@ -920,6 +917,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[2] = tdiffv;
+        
+        if(AOconf[loop].GPUall==0)
+			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS1, tnow);
 	}
 
     return(0);
