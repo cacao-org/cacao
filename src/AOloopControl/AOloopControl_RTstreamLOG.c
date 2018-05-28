@@ -157,7 +157,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		uint64_t nelement;
 		long infosize = 5;
 		uint8_t atype;
-		int SHARED = 1;
+		int SHARED = 0;
 	
 		IDstream = image_ID(streamname);
 
