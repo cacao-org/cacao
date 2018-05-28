@@ -383,20 +383,6 @@ int_fast8_t AOloopControl_run()
 				
 				
 				// REAL TIME LOGGING
-				
-				AOconf[loop].RTstreamLOG_frame++;
-				if(AOconf[loop].RTstreamLOG_frame == AOconf[loop].RTLOGsize)
-				{
-					AOconf[loop].RTstreamLOG_buffSwitch = 1;
-					
-					AOconf[loop].RTstreamLOG_frame = 0;
-					AOconf[loop].RTstreamLOG_buff++;
-					if(AOconf[loop].RTstreamLOG_buff == 2)
-						AOconf[loop].RTstreamLOG_buff = 0;
-				}
-				else
-					AOconf[loop].RTstreamLOG_buffSwitch = 0;
-
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt0 = AOconf[loop].cnt;
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt1 = AOconf[loop].LOOPiteration;
                 data.image[aoloopcontrol_var.aoconfIDlogdata].array.F[0] = AOconf[loop].gain;

@@ -60,6 +60,7 @@ typedef struct
 	int ENABLE;                   // Is logging enabled ? This needs to be specified at startup, if set to zero, no RT logging will be performed
 	int INIT;                     // 1 if memory is initiated
 	int ON;                       // Is logging ON ?
+	int SIZE;                     // Max number of samples per buffer
 	int buffindex;                // which buffer (0 or 1)
 	long frameindex;              // frame index
 	int save;                     // Is saving enabled ?
@@ -365,10 +366,10 @@ typedef struct
 	// Saving to disk is handled outside of cacao real-time
 	//
 	long  RTLOGsize;                       // Number of samples per shared memory stream
-	int   RTLOG_ON;                        // set to 1 to start logging all RT streams -> ensures synchronization
-	int   RTstreamLOG_buff;                // Which buffer is currently being written (0 or 1)
-	long  RTstreamLOG_frame;               // Which frame is to be written in buffer
-	int   RTstreamLOG_buffSwitch;          // Goes to 1 when buffer switches. Goes back to zero on next iteration.
+	//int   RTLOG_ON;                        // set to 1 to start logging all RT streams -> ensures synchronization
+	//int   RTstreamLOG_buff;                // Which buffer is currently being written (0 or 1)
+	//long  RTstreamLOG_frame;               // Which frame is to be written in buffer
+	//int   RTstreamLOG_buffSwitch;          // Goes to 1 when buffer switches. Goes back to zero on next iteration.
 	
 	// For each stream, there are two data buffers and two timing buffers
 	// Buffer names:
@@ -386,104 +387,7 @@ typedef struct
 	// Realtime logging
 	RTstreamLOG RTSLOGarray[MAX_NUMBER_RTLOGSTREAM];
 
-/*
-	
-	// read by AOloopControl_loadconfigure()
-	// updated in 
-  	int RTstreamLOG_wfsim_ENABLE;           // Is logging enabled ? This needs to be specified at startup, if set to zero, no RT logging will be performed
-	int RTstreamLOG_wfsim_ON;               // Is logging ON ? 
-	int RTstreamLOG_wfsim_save;	            // Is saving enabled ?
-	int RTstreamLOG_wfsim_saveToggle;       // 1 if buffer #0 ready to be saved, 2 if buffer #1 ready to be saved, 0 otherwise
-	// Save process will set back to zero after save has been done
-    
-    
-    // created/loaded by AOloopControl_loadconfigure()
-	// updated in 
-    int RTstreamLOG_imWFS0_ENABLE;
-	int RTstreamLOG_imWFS0_ON;      
-	int RTstreamLOG_imWFS0_save;	       
-	int RTstreamLOG_imWFS0_saveToggle; 
 
-	// created/loaded by AOloopControl_loadconfigure()
-	// updated in 
-    int RTstreamLOG_imWFS1_ENABLE;  
-	int RTstreamLOG_imWFS1_ON;      
-	int RTstreamLOG_imWFS1_save;	       
-	int RTstreamLOG_imWFS1_saveToggle;     
-
-	// created/loaded by AOloopControl_loadconfigure()
-	// updated in 
-    int RTstreamLOG_imWFS2_ENABLE;
-	int RTstreamLOG_imWFS2_ON;      
-	int RTstreamLOG_imWFS2_save;	       
-	int RTstreamLOG_imWFS2_saveToggle;     
-
-	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
-    int RTstreamLOG_modeval_ENABLE;
-	int RTstreamLOG_modeval_ON;      
-	int RTstreamLOG_modeval_save;	       
-	int RTstreamLOG_modeval_saveToggle;
-
-	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
-    int RTstreamLOG_modeval_dm_corr_ENABLE;
-	int RTstreamLOG_modeval_dm_corr_ON;      
-	int RTstreamLOG_modeval_dm_corr_save;	       
-	int RTstreamLOG_modeval_dm_corr_saveToggle;
-
-	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
-    int RTstreamLOG_modeval_dm_now_ENABLE;
-	int RTstreamLOG_modeval_dm_now_ON;      
-	int RTstreamLOG_modeval_dm_now_save;	       
-	int RTstreamLOG_modeval_dm_now_saveToggle;  
-
-	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
-    int RTstreamLOG_modeval_dm_now_filt_ENABLE;
-	int RTstreamLOG_modeval_dm_now_filt_ON;      
-	int RTstreamLOG_modeval_dm_now_filt_save;	       
-	int RTstreamLOG_modeval_dm_now_filt_saveToggle;  
-  
-	// managed in AOloopControl_ComputeOpenLoopModes() ---------------- 
-    int RTstreamLOG_modevalPF_ENABLE;
-	int RTstreamLOG_modevalPF_ON;      
-	int RTstreamLOG_modevalPF_save;	       
-	int RTstreamLOG_modevalPF_saveToggle;    
-   
-	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
-    int RTstreamLOG_modevalPFsync_ENABLE;
-	int RTstreamLOG_modevalPFsync_ON;      
-	int RTstreamLOG_modevalPFsync_save;	       
-	int RTstreamLOG_modevalPFsync_saveToggle;       
-
-	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
-    int RTstreamLOG_modevalPFres_ENABLE;
-	int RTstreamLOG_modevalPFres_ON;      
-	int RTstreamLOG_modevalPFres_save;	       
-	int RTstreamLOG_modevalPFres_saveToggle;    
-    
-	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
-    int RTstreamLOG_modeval_dm_ENABLE;
-    int RTstreamLOG_modeval_dm_ON;
-    int RTstreamLOG_modeval_dm_save;
-    int RTstreamLOG_modeval_dm_saveToggle; 
-
-	// managed in AOloopControl_ComputeOpenLoopModes() -----------------
-    int RTstreamLOG_modeval_ol_ENABLE;
-    int RTstreamLOG_modeval_ol_ON;
-    int RTstreamLOG_modeval_ol_save;
-    int RTstreamLOG_modeval_ol_saveToggle; 
-
-	// created/loaded by AOloopControl_loadconfigure()
-	// updated in 
-    int RTstreamLOG_dmdisp_ENABLE;
-    int RTstreamLOG_dmdisp_ON;
-    int RTstreamLOG_dmdisp_save;
-    int RTstreamLOG_dmdisp_saveToggle; 
-	
-*/
-
-
-    // semaphores for communication with GPU computing threads
-    //sem_t *semptr; // semaphore for this image
 
 
 

@@ -924,8 +924,6 @@ void init_AOloopControl()
 
 
 
-	RegisterCLIcommand("aolsetRTLOGon", __FILE__, AOloopControl_setRTLOG_ON, "set RTLOG on", "no param", "aolsetRTLOGon", "int_fast8_t AOloopControl_setRTLOG_ON()");
-	RegisterCLIcommand("aolsetRTLOGoff", __FILE__, AOloopControl_setRTLOG_OFF, "set RTLOG off", "no param", "aolsetRTLOGoff", "int_fast8_t AOloopControl_setRTLOG_OFF()");
 
     RegisterCLIcommand("aolsetgain", __FILE__, AOloopControl_setgain_cli, "set gain", "<gain value>", "aolsetgain 0.1", "int AOloopControl_setgain(float gain)");
 

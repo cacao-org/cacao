@@ -45,6 +45,9 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 int AOloopControl_RTstreamLOG_init(int loop)
 {
 	long i;
+	long SIZEwfsim = 3000;
+	long SIZEdm = 3000;
+
 	
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
         {
@@ -52,6 +55,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			strcpy(AOconf[loop].RTSLOGarray[i].name, "NULL");
 			AOconf[loop].RTSLOGarray[i].ENABLE = 0;
 			AOconf[loop].RTSLOGarray[i].INIT = 0;
+			AOconf[loop].RTSLOGarray[i].SIZE = AOconf[loop].RTLOGsize;
 			AOconf[loop].RTSLOGarray[i].ON = 0;
 			AOconf[loop].RTSLOGarray[i].save = 0;
 		 AOconf[loop].RTSLOGarray[i].saveToggle = 0;
@@ -61,21 +65,25 @@ int AOloopControl_RTstreamLOG_init(int loop)
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "wfsim"); //   U in Read_cam_frame()
         AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+        AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
      
         i = RTSLOGindex_imWFS0;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS0");// U in Read_cam_frame()
         AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+		AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
      
         i = RTSLOGindex_imWFS1;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS1");  // U in Read_cam_frame()
         AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+        AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
      
         i = RTSLOGindex_imWFS2;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS2"); // U in AOcompute()
         AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+        AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
         
         
 // managed by AOloopControl_ComputeOpenLoopModes()
@@ -135,7 +143,8 @@ int AOloopControl_RTstreamLOG_init(int loop)
         i = RTSLOGindex_dmdisp;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "dmdisp");// 
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;                        
+        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+        AOconf[loop].RTSLOGarray[i].ENABLE = SIZEdm;
 	
 	
 	return 0;
@@ -631,7 +640,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			
 			long double t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 			fp = fopen(fnameinfo, "w");
-			for(i=0;i<AOconf[loop].RTLOGsize;i++) //TO BE CLIPPED
+			for(i=0;i<AOconf[loop].RTLOGsize;i++) 
 			{
 				long double t1 = data.image[IDininfo].array.UI64[i*5+1] + 1.0e-9*data.image[IDininfo].array.UI64[i*5+2];
 				fprintf(fp, "%10ld  %10ld  %15.9lf   %010ld.%010ld  %10ld   %10ld\n", i, data.image[IDininfo].array.UI64[i*5], (double) (t1-t0), data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], data.image[IDininfo].array.UI64[i*5+3], data.image[IDininfo].array.UI64[i*5+4]);
