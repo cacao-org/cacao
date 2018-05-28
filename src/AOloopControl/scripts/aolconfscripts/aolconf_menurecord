@@ -93,7 +93,7 @@ else
 stoplogstring=$( printf "\Z3\Zr${KillStopFlag}  RT logging  %02d %-25s\Zn   %s\n"  "$streamnumber" "$streamname" "$infostring" )
 fi
 
-file="./status/stat_RTlog${streamnumber}.txt"
+file="./status/stat_RTlog${streamname}.txt"
 logstat=$( head -1 $file )
 if [[ -f "$file" && ( "$logstat" = "0" || "$logstat" = "1" ) ]]; then
 echo "OK"
