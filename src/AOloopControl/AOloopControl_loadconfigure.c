@@ -387,15 +387,15 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
 	// -> WFS size known
 	
-	printf("------ SETUP wfsim RTlog bugger\n"); //TEST
-	fflush(stdout);
+//	printf("------ SETUP wfsim RTlog buffer\n"); //TEST
+//	fflush(stdout);
 //	sleep(100.0);
 
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_wfsim, AOconf[loop].WFSname);
 
 
-    fprintf(fplog, "WFS stream size = %ld x %ld\n", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
-	sleep (100.0);
+//    fprintf(fplog, "WFS stream size = %ld x %ld\n", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
+//	sleep (100.0);//TEST
 
     /**
      * 
