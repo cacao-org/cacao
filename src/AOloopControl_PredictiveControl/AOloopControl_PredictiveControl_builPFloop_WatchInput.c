@@ -80,7 +80,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 /**
  *  ## Purpose
  * 
- * Listens to telemetry streams buffers aol<loop>_modeval_ol_logbuff0 
+ * Listens to real-time telemetry streams buffers aol<loop>_modeval_ol_logbuff0 
  * and aol<loop>_modeval_ol_logbuff1
  * 
  * When new buffer is complete, extract the requested values from it
