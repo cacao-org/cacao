@@ -187,50 +187,62 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 			
 			case _DATATYPE_UINT8 :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_UINT8*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.UI8;
 			break;
 
 			case _DATATYPE_UINT16 :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_UINT16*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.UI16;
 			break;
 
 			case _DATATYPE_UINT32 :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_UINT32*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.UI32;
 			break;
 
 			case _DATATYPE_UINT64 :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_UINT64*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.UI64;
 			break;
 
 			case _DATATYPE_INT8 :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_INT8*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.SI8;
 			break;
 
 			case _DATATYPE_INT16 :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_INT16*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.SI16;
 			break;
 
 			case _DATATYPE_INT32 :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_INT32*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.SI32;
 			break;
 
 			case _DATATYPE_INT64 :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_INT64*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.SI64;
 			break;
 
 			case _DATATYPE_FLOAT :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_FLOAT*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.F;
 			break;
 
 			case _DATATYPE_DOUBLE :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_DOUBLE*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.D;
 			break;
 
 			case _DATATYPE_COMPLEX_FLOAT :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_COMPLEX_FLOAT*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.CF;
 			break;
 
 			case _DATATYPE_COMPLEX_DOUBLE :
 			AOconf[loop].RTSLOGarray[rtlindex].memsize = (size_t) (SIZEOF_DATATYPE_COMPLEX_DOUBLE*nelement);
+			AOconf[loop].RTSLOGarray[rtlindex].srcptr      = (void*) data.image[IDstream].array.CD;
 			break;
 			
 			default :
@@ -254,7 +266,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo1 = create_image_ID(imname, 2, imsize, _DATATYPE_UINT64, 1, 0);
 
 		
-		AOconf[loop].RTSLOGarray[rtlindex].srcptr      = data.image[IDstream].array.F;
+		
 		AOconf[loop].RTSLOGarray[rtlindex].destptr0    = (char*) data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff0].array.F;
 		AOconf[loop].RTSLOGarray[rtlindex].destptr1    = (char*) data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff1].array.F;
 		
