@@ -383,7 +383,14 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     AOconf[loop].sizexWFS = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[0];
     AOconf[loop].sizeyWFS = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[1];
     AOconf[loop].sizeWFS = AOconf[loop].sizexWFS*AOconf[loop].sizeyWFS;
+
+
 	// -> WFS size known
+	
+	printf("------ SETUP wfsim RTlog bugger\n"); //TEST
+	fflush(stdout);
+	sleep(100.0);
+
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_wfsim, AOconf[loop].WFSname);
 
 
