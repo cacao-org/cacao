@@ -574,9 +574,6 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 	{
 		clock_gettime(CLOCK_REALTIME, &tnow);
 		
-		printf("------ SETUP wfsim RTlog bugger\n"); //TEST
-		fflush(stdout);
-		sleep(100.0);
 	
 		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
 
