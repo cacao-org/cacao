@@ -382,6 +382,8 @@ int AOloopControl_RTstreamLOG_set_saveON(int loop, int rtlindex)
     if(rtlindex<MAX_NUMBER_RTLOGSTREAM)
 		AOconf[loop].RTSLOGarray[rtlindex].save = 1;
 	
+	AOloopControl_RTstreamLOG_printstatus(loop);
+	
 	return 0;
 }
 
@@ -393,6 +395,8 @@ int AOloopControl_RTstreamLOG_set_saveOFF(int loop, int rtlindex)
     
     if(rtlindex<MAX_NUMBER_RTLOGSTREAM)
 		AOconf[loop].RTSLOGarray[rtlindex].save = 0;
+
+	AOloopControl_RTstreamLOG_printstatus(loop);
 
 	return 0;
 }
@@ -406,6 +410,8 @@ int AOloopControl_RTstreamLOG_set_ON(int loop, int rtlindex)
     if(rtlindex<MAX_NUMBER_RTLOGSTREAM)
 		AOconf[loop].RTSLOGarray[rtlindex].ON = 1;
 	
+	AOloopControl_RTstreamLOG_printstatus(loop);
+	
 	return 0;
 }
 
@@ -417,6 +423,8 @@ int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)
     
     if(rtlindex<MAX_NUMBER_RTLOGSTREAM)
 		AOconf[loop].RTSLOGarray[rtlindex].ON = 0;
+
+	AOloopControl_RTstreamLOG_printstatus(loop);
 
 	return 0;
 }
@@ -437,7 +445,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 	
 	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
-
 
 	
     printf("\n");
