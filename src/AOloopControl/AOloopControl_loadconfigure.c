@@ -388,7 +388,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
 
     fprintf(fplog, "WFS stream size = %ld x %ld\n", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
-
+	sleep (100.0);
 
     /**
      * 
