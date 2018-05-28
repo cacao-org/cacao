@@ -414,8 +414,8 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
     
 	printf("\n");
 	printf("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
-	printf("%2s  %20s  %3s %3s %3s %6s %4s %10s %10s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize");
-	printf("----------------------------------------------------------------------\n");
+	printf("%2s  %20s  %3s %3s %3s %6s %4s %10s %10s  %5s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize", "size");
+	printf("---------------------------------------------------------------------------\n");
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
 	{
 		if(AOconf[loop].RTSLOGarray[i].active == 1)
@@ -447,7 +447,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 				sprintf(SAstring, "OFF   ");						
   
   
-			printf("%2d  %20s  %3s %3s %3s %6s %4d %10ld %10ld\n", i,  
+			printf("%2d  %20s  %3s %3s %3s %6s %4d %10ld %10ld  %5d\n", i,  
 			AOconf[loop].RTSLOGarray[i].name, 
 			ENstring, 
 			ONstring, 
@@ -455,12 +455,13 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 			SAstring,			
 			AOconf[loop].RTSLOGarray[i].buffindex,
 			AOconf[loop].RTSLOGarray[i].frameindex,
-			AOconf[loop].RTSLOGarray[i].memsize
+			AOconf[loop].RTSLOGarray[i].memsize,
+			AOconf[loop].RTSLOGarray[i].SIZE
 			);
 			NBstreams++;			
 		}
 	}
-	printf("----------------------------------------------------------------------\n");
+	printf("---------------------------------------------------------------------------\n");
 	printf("%ld RTstreamLOGs active\n", NBstreams);
 	
 	return NBstreams;
