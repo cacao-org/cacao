@@ -151,7 +151,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 	uint32_t *imsize;
 	int retval = 0;
 	char imname[500];
-	long nelement;
+	uint64_t nelement;
 	long infosize = 5;
 	uint8_t atype;
 	
@@ -181,7 +181,10 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		fflush(stdout);
 		
 		
-		nelement = data.image[IDstream].md[0].nelement;
+		nelement = (uint64_t) imsize[0];
+		nelement *= imsize[1];
+		nelement *= imsize[2];
+		
 		switch(atype)
 		{
 			case _DATATYPE_UINT8 :
