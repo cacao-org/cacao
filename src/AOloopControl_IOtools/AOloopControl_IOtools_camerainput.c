@@ -572,10 +572,11 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     }
 
 
+
+
 	if(RM==0)
 	{
-		clock_gettime(CLOCK_REALTIME, &tnow);
-		
+		clock_gettime(CLOCK_REALTIME, &tnow);		
 	
 		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
 
@@ -701,7 +702,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 		COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0, -1);
         
         clock_gettime(CLOCK_REALTIME, &tnow);
-		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
+		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
         
         /*for(s=0; s<data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].sem; s++)
         {
