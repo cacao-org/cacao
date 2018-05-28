@@ -47,7 +47,9 @@ int AOloopControl_RTstreamLOG_init(int loop)
 	long i;
 	long SIZEwfsim = 3000;
 	long SIZEdm = 3000;
-
+	
+	// default
+	AOconf[loop].RTLOGsize = 30000;
 	
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
         {
@@ -173,7 +175,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		imsize = (uint32_t*) malloc(sizeof(uint32_t)*3);
 		imsize[0] = data.image[IDstream].md[0].size[0];
 		imsize[1] = data.image[IDstream].md[0].size[1];
-		imsize[2] = AOconf[loop].RTLOGsize;
+		imsize[2] = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
 
 		atype = data.image[IDstream].md[0].atype;
 
@@ -287,7 +289,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 
 		imsize[0] = infosize;
-		imsize[1] = AOconf[loop].RTLOGsize;		
+		imsize[1] = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
 		imsize[2] = 1;
 			
 		if(sprintf(imname, "aol%ld_%s_logbuffinfo0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
@@ -354,7 +356,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		fflush(stdout);
 		
 		AOconf[loop].RTSLOGarray[rtlindex].frameindex++;
-		if(AOconf[loop].RTSLOGarray[rtlindex].frameindex == AOconf[loop].RTLOGsize)
+		if(AOconf[loop].RTSLOGarray[rtlindex].frameindex == AOconf[loop].RTSLOGarray[rtlindex].SIZE)
 		{
 			AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
 		
@@ -537,8 +539,10 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 {
 	int rtlindex;
 	int cntsave = 0;
-	float sleeptime = 1.0;
-
+	
+	int sleeptimeus = 10000;
+	long sleepcnt = 0;
+	
 	tzset();
 	
 	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -641,7 +645,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 			
 			long double t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 			fp = fopen(fnameinfo, "w");
-			for(i=0;i<AOconf[loop].RTLOGsize;i++) 
+			for(i=0;i<AOconf[loop].RTSLOGarray[rtlindex].SIZE;i++) 
 			{
 				long double t1 = data.image[IDininfo].array.UI64[i*5+1] + 1.0e-9*data.image[IDininfo].array.UI64[i*5+2];
 				fprintf(fp, "%10ld  %10ld  %15.9lf   %010ld.%010ld  %10ld   %10ld\n", i, data.image[IDininfo].array.UI64[i*5], (double) (t1-t0), data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], data.image[IDininfo].array.UI64[i*5+3], data.image[IDininfo].array.UI64[i*5+4]);
@@ -657,14 +661,16 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 		{
 			printf("%d buffer(s) saved\n", cntsave);
 			printf("\n");
+			sleepcnt = 0;
 		}
 	else
 	{
-		printf(".");
+		printf("waiting for buffers ready to save %10.3f\n", 1.0e-6*sleepcnt*sleeptimeus);
 		fflush(stdout);
+		sleepcnt ++;
 	}
 		
-	sleep(sleeptime);
+	usleep(sleeptimeus);
 	}
     
     
