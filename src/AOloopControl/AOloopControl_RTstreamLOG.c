@@ -157,6 +157,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		uint64_t nelement;
 		long infosize = 5;
 		uint8_t atype;
+		int SHARED = 0;
 	
 		IDstream = image_ID(streamname);
 
@@ -170,11 +171,11 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		
 		if(sprintf(imname, "aol%ld_%s_logbuff0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize, atype, 0, 0);
+		AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize, atype, SHARED, 0);
 
 		if(sprintf(imname, "aol%ld_%s_logbuff1", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, atype, 0, 0);
+		AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, atype, SHARED, 0);
 
 		
 		nelement = (uint64_t) imsize[0];

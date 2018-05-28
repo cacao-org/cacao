@@ -492,8 +492,12 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     // pixel 1 is time from beginning of loop to status 01
     // pixel 2 is time from beginning of loop to status 02
 
-
+	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
     Read_cam_frame(loop, 0, normalize, 0, 0);
+	printf("TEST line %d\n", __LINE__); //TEST
+	fflush(stdout);
+
 
     slice = aoloopcontrol_var.PIXSTREAM_SLICE;
     if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING==0) // no pixel streaming
