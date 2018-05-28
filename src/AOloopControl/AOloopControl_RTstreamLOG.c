@@ -147,26 +147,26 @@ int AOloopControl_RTstreamLOG_init(int loop)
 
 int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 {
-	long IDstream;
-	uint32_t *imsize;
-	int retval = 0;
-	char imname[500];
-	uint64_t nelement;
-	long infosize = 5;
-	uint8_t atype;
-	
-	IDstream = image_ID(streamname);
-
-	imsize = (uint32_t*) malloc(sizeof(uint32_t)*3);
-	imsize[0] = data.image[IDstream].md[0].size[0];
-	imsize[1] = data.image[IDstream].md[0].size[1];
-	imsize[2] = AOconf[loop].RTLOGsize;
-
-	atype = data.image[IDstream].md[0].atype;
-	
 	
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].INIT == 0))
 	{	
+		long IDstream;
+		uint32_t *imsize;
+		int retval = 0;
+		char imname[500];
+		uint64_t nelement;
+		long infosize = 5;
+		uint8_t atype;
+	
+		IDstream = image_ID(streamname);
+
+		imsize = (uint32_t*) malloc(sizeof(uint32_t)*3);
+		imsize[0] = data.image[IDstream].md[0].size[0];
+		imsize[1] = data.image[IDstream].md[0].size[1];
+		imsize[2] = AOconf[loop].RTLOGsize;
+
+		atype = data.image[IDstream].md[0].atype;
+
 		
 		if(sprintf(imname, "aol%ld_%s_logbuff0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
 			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -266,10 +266,11 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 		
 		retval = 1;
 		AOconf[loop].RTSLOGarray[rtlindex].INIT = 1;
+
+		free(imsize);
+
 	}
-	
-	
-	free(imsize);
+
 	
 	return(0);
 }
