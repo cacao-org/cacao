@@ -249,16 +249,6 @@ fi
 
 
 
-streamname="aol${LOOPNUMBER}_wfsim"
-infostring="WFS input image"
-
-logwritestartstopstrings
-if [ "${logstat}" = "0" ]; then
-menuitems+=( "laolwfsimON" "$startlogstring" )
-else
-menuitems+=( "laolwfsimOFF" "$stoplogstring" )
-fi
-
 
 streamname="aol${LOOPNUMBER}_wfsref0"
 infostring="WFS reference (calibration)"
