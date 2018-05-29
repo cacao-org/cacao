@@ -830,18 +830,6 @@ menurecord_default="laollooptimingON"
 
 
 
-    laolwfsimON)
-streamname="aol${LOOPNUMBER}_wfsim"
-startstreamlog "$streamname" $LogCubeSize
-echo "1" > "./status/stat_log_${streamname}.txt"
-menurecord_default="laolwfsimOFF"
-;;
-    laolwfsimOFF)
-streamname="aol${LOOPNUMBER}_wfsim"
-skstreamlog "$streamname"
-echo "0" > "./status/stat_log_${streamname}.txt"
-menurecord_default="laolwfsimON"
-;;
 
 
     laolwfsref0ON)
