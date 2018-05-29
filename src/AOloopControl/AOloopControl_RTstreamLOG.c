@@ -549,6 +549,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
         {
             if(AOconf[loop].RTSLOGarray[rtlindex].save == 1)
             {
+				int buff;
 				int SAVEfile = 0; // toggles to 1 if file needs to be saved
 				
                 // support for saving partial cube if loop turns off
@@ -556,10 +557,11 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                 uint32_t ID;
                 uint32_t zsizesave;
 
-				if(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0)
+				if(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0) // FULL CUBE
 				{
 					SAVEfile = 1;
 					NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+					buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle-1; // buffindex to save
 				}
 				else // TEST if loop is off and partial buffer needs to be saved
 				{
@@ -567,6 +569,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 					{
 						SAVEfile = 1;
 						NBframe = AOconf[loop].RTSLOGarray[rtlindex].frameindex;
+						buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
 						AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
 						printf("------- LOOP OFF -> SAVING PARTIAL CUBE\n");
 					}
@@ -576,7 +579,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
                 if(SAVEfile == 1)
                 {
-                    int buff;
                     char shmimname[200];
                     char shmimnameinfo[200];
 
@@ -596,8 +598,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     FILE *fp;
                     long i;
 
-                    // buffindex to save
-                    buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle-1;
 
                     printf("\n\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
 
