@@ -495,16 +495,28 @@ fi
 
 menuitems+=( " " " " )
 
-
+menuitems+=( " " " ---------- Real-time (RT) logs ----------" )
 
 ConfReadParam CMMODE "0"; CMMODE="$paramvalue"
 #if [ "$CMMODE" = "0" ]; then
 
 
+streamname="aol${LOOPNUMBER}_wfsim"
+infostring="WFS input image"
+streamnumber="00"
+RTlogwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "laolwfsimON" "$startlogstring" )
+else
+menuitems+=( "laolwfsimOFF" "$stoplogstring" )
+fi
+
+
+
+
 streamname="aol${LOOPNUMBER}_modeval"
 infostring="WFS-measured mode values"
 streamnumber="04"
-#logwritestartstopstrings
 RTlogwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
 menuitems+=( "laolmodevalON" "$startlogstring" )
@@ -516,7 +528,6 @@ fi
 
 streamname="aol${LOOPNUMBER}_modeval_dm_corr"
 infostring="Correction mode values (after modal gains)"
-#logwritestartstopstrings
 streamnumber="06"
 RTlogwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
@@ -531,7 +542,6 @@ fi
 
 streamname="aol${LOOPNUMBER}_modeval_dm_now"
 infostring="Correction mode values (after predictive mixing)"
-#logwritestartstopstrings
 streamnumber="07"
 RTlogwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
@@ -545,7 +555,6 @@ fi
 
 streamname="aol${LOOPNUMBER}_modeval_dm_now_filt"
 infostring="Correction mode values (after clipping)"
-#logwritestartstopstrings
 streamnumber="08"
 RTlogwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
@@ -558,7 +567,6 @@ fi
 
 streamname="aol${LOOPNUMBER}_modeval_ol"
 infostring="Open loop mode values"
-#logwritestartstopstrings
 streamnumber="12"
 RTlogwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
@@ -571,7 +579,6 @@ fi
 
 streamname="aol${LOOPNUMBER}_modevalPF"
 infostring="Predictive  mode values"
-#logwritestartstopstrings
 streamnumber="09"
 RTlogwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
@@ -585,7 +592,6 @@ fi
 
 streamname="aol${LOOPNUMBER}_modevalPFsync"
 infostring="Predictive filter mode values, synced with open loop rec"
-#logwritestartstopstrings
 streamnumber="10"
 RTlogwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
@@ -599,7 +605,6 @@ fi
 
 streamname="aol${LOOPNUMBER}_modevalPFres"
 infostring="Measured predictive filter error mode values"
-#logwritestartstopstrings
 streamnumber="11"
 RTlogwritestartstopstrings
 if [ "${logstat}" = "0" ]; then
@@ -609,6 +614,10 @@ menuitems+=( "laolmodevalPFresOFF" "$stoplogstring" )
 fi
 
 
+
+menuitems+=( " " " " )
+
+menuitems+=( " " " ---------- Predictive filters (PF) logs ----------" )
 
 
 streamname="aol${LOOPNUMBER}_outPFb0"
@@ -1136,6 +1145,21 @@ menurecord_default="ldmdisp11ON"
 
 
 
+
+
+
+    laolwfsimON)
+tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
+tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 00" C-m
+echo "1" > "./status/stat_RTlog00.txt"
+menurecord_default="laolwfsimOFF"
+;;
+    laolwfsimOFF)
+    tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
+tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 00" C-m
+echo "0" > "./status/stat_RTlog00.txt"
+menurecord_default="laolwfsimON"
+;;
 
 
 
