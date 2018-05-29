@@ -457,7 +457,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	uint64_t LOOPiter;
 	
 	
-	double tdiffvlimit = 1.0e-6;
+	double tdiffvlimit = 1.0e-3;
 	
 	
 	// lock loop iteration into variable so that it cannot increment 
