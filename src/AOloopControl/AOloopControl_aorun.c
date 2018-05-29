@@ -476,7 +476,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	{
 		printf("TIMING GLITCH DETECTED: %f ms\n", tdiffv*1.0e6);
 		fflush(stdout);
-		for(i=0;i<24;i++)
+		for(i=0;i<aoloopcontrol_var.AOcontrolNBtimers;i++)
 			printf("   tdiff %2ld = %10.3f ms\n", i, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i]);
 		printf("\n");
 	}
