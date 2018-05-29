@@ -457,6 +457,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	uint64_t LOOPiter;
 	
 	
+	double tdiffvlimit = 1.0e-6;
+	
 	
 	// lock loop iteration into variable so that it cannot increment 
 	LOOPiter = AOconf[loop].LOOPiteration;
@@ -469,6 +471,12 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[23] = tdiffv;
 
+
+	if(tdiffv>tdiffvlimit)
+	{
+		printf("TIMING GLITCH DETECTED: %f ms\n", tdiffv*1.0e6);
+		fflush(stdout);
+	}
 
 
     // md[0].atime.ts is absolute time at beginning of iteration
