@@ -41,6 +41,7 @@ extern AOloopControl_var aoloopcontrol_var;
 
 int_fast8_t AOloopControl_loopon()
 {
+	int rtlindex;
 
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -48,6 +49,11 @@ int_fast8_t AOloopControl_loopon()
     AOconf[aoloopcontrol_var.LOOPNUMBER].cntmax = AOconf[aoloopcontrol_var.LOOPNUMBER].cnt-1;
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].on = 1;
+    
+    // initialize RT logging frame indices
+    for (rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++ )
+		AOconf[aoloopcontrol_var.LOOPNUMBER].RTSLOGarray[rtlindex].frameindex = 0;
+	
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -56,11 +62,15 @@ int_fast8_t AOloopControl_loopon()
 
 int_fast8_t AOloopControl_loopoff()
 {
+	int rtlindex;
+		
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].on = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
+	
+	
 
     return 0;
 }
