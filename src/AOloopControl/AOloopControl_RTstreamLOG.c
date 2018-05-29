@@ -55,7 +55,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
         {
 			AOconf[loop].RTSLOGarray[i].active = 0;
 			strcpy(AOconf[loop].RTSLOGarray[i].name, "NULL");
-			AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+			AOconf[loop].RTSLOGarray[i].ENABLE = 1;
 			AOconf[loop].RTSLOGarray[i].INIT = 0;
 			AOconf[loop].RTSLOGarray[i].SIZE = AOconf[loop].RTLOGsize;
 			AOconf[loop].RTSLOGarray[i].ON = 0;
