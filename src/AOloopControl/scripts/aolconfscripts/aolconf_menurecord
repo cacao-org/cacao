@@ -219,9 +219,6 @@ else
 fi
  
 
-#menuitems+=( "RTlogON"     " START RT log Daemon" )
-#menuitems+=( "RTlogOFF"    " STOP RT log Daemon" )
-menuitems+=( "RTlogMon"    " Monitor RT log Daemon")
 menuitems+=( " " " " )
 
 menuitems+=( "logON"        " START logging ALL telemetry")
@@ -1145,18 +1142,12 @@ menurecord_default="ldmdisp11ON"
     laolmodevalON)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 04" C-m
-#streamname="aol${LOOPNUMBER}_modeval"
-#startstreamlog "$streamname" $LogCubeSize
-#echo "1" > "./status/stat_log_${streamname}.txt"
 echo "1" > "./status/stat_RTlog04.txt"
 menurecord_default="laolmodevalOFF"
 ;;
     laolmodevalOFF)
     tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 04" C-m
-#streamname="aol${LOOPNUMBER}_modeval"
-#skstreamlog "$streamname"
-#echo "0" > "./status/stat_log_${streamname}.txt"
 echo "0" > "./status/stat_RTlog04.txt"
 menurecord_default="laolmodevalON"
 ;;
@@ -1166,18 +1157,12 @@ menurecord_default="laolmodevalON"
     laolmodevaldmcorrON)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 06" C-m
-#streamname="aol${LOOPNUMBER}_modeval_dm_corr"
-#startstreamlog "$streamname" $LogCubeSize
-#echo "1" > "./status/stat_log_${streamname}.txt"
 echo "1" > "./status/stat_RTlog06.txt"
 menurecord_default="laolmodevaldmcorrOFF"
 ;;
     laolmodevaldmcorrOFF)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 06" C-m
-#streamname="aol${LOOPNUMBER}_modeval_dm_corr"
-#skstreamlog "$streamname"
-#echo "0" > "./status/stat_log_${streamname}.txt"
 echo "0" > "./status/stat_RTlog06.txt"
 menurecord_default="laolmodevaldmcorrON"
 ;;
@@ -1186,18 +1171,12 @@ menurecord_default="laolmodevaldmcorrON"
     laolmodevaldmnowON)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 07" C-m
-#streamname="aol${LOOPNUMBER}_modeval_dm_now"
-#startstreamlog "$streamname" $LogCubeSize
-#echo "1" > "./status/stat_log_${streamname}.txt"
 echo "1" > "./status/stat_RTlog07.txt"
 menurecord_default="laolmodevaldmnowOFF"
 ;;
     laolmodevaldmnowOFF)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 07" C-m
-#streamname="aol${LOOPNUMBER}_modeval_dm_now"
-#skstreamlog "$streamname"
-#echo "0" > "./status/stat_log_${streamname}.txt"
 echo "0" > "./status/stat_RTlog07.txt"
 menurecord_default="laolmodevaldmnowON"
 ;;
@@ -1206,18 +1185,12 @@ menurecord_default="laolmodevaldmnowON"
     laolmodevaldmnowfiltON)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 08" C-m
-#streamname="aol${LOOPNUMBER}_modeval_dm_now_filt"
-#startstreamlog "$streamname" $LogCubeSize
-#echo "1" > "./status/stat_log_${streamname}.txt"
 echo "1" > "./status/stat_RTlog08.txt"
 menurecord_default="laolmodevaldmnowfiltOFF"
 ;;
     laolmodevaldmnowfiltOFF)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 08" C-m
-#streamname="aol${LOOPNUMBER}_modeval_dm_now_filt"
-#skstreamlog "$streamname"
-#echo "0" > "./status/stat_log_${streamname}.txt"
 echo "0" > "./status/stat_RTlog08.txt"
 menurecord_default="laolmodevaldmnowfiltON"
 ;;
@@ -1225,22 +1198,12 @@ menurecord_default="laolmodevaldmnowfiltON"
     laolmodevalolON)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 12" C-m
-#streamname="aol${LOOPNUMBER}_modeval_ol_logbuff0"
-#startstreamlog "$streamname" 1
-#streamname="aol${LOOPNUMBER}_modeval_ol_logbuff1"
-#startstreamlog "$streamname" 1
-#echo "1" > "./status/stat_log_${streamname}.txt"
 echo "1" > "./status/stat_RTlog12.txt"
 menurecord_default="laolmodevalolOFF"
 ;;
     laolmodevalolOFF)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 12" C-m
-#streamname="aol${LOOPNUMBER}_modeval_ol_logbuff0"
-#skstreamlog "$streamname"
-#streamname="aol${LOOPNUMBER}_modeval_ol_logbuff1"
-#skstreamlog "$streamname"
-#echo "0" > "./status/stat_log_${streamname}.txt"
 echo "0" > "./status/stat_RTlog12.txt"
 menurecord_default="laolmodevalolON"
 ;;
@@ -1249,18 +1212,12 @@ menurecord_default="laolmodevalolON"
     laolmodevalPFON)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 09" C-m
-#streamname="aol${LOOPNUMBER}_modevalPF"
-#startstreamlog "$streamname" $LogCubeSize
-#echo "1" > "./status/stat_log_${streamname}.txt"
 echo "1" > "./status/stat_RTlog09.txt"
 menurecord_default="laolmodevalPFOFF"
 ;;
     laolmodevalPFOFF)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 09" C-m
-#streamname="aol${LOOPNUMBER}_modevalPF"
-#skstreamlog "$streamname"
-#echo "0" > "./status/stat_log_${streamname}.txt"
 echo "0" > "./status/stat_RTlog09.txt"
 menurecord_default="laolmodevalPFON"
 ;;
@@ -1269,18 +1226,12 @@ menurecord_default="laolmodevalPFON"
     laolmodevalPFsyncON)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 10" C-m
-#streamname="aol${LOOPNUMBER}_modevalPFsync"
-#startstreamlog "$streamname" $LogCubeSize
-#echo "1" > "./status/stat_log_${streamname}.txt"
 echo "1" > "./status/stat_RTlog10.txt"
 menurecord_default="laolmodevalPFsyncOFF"
 ;;
     laolmodevalPFsyncOFF)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 10" C-m
-#streamname="aol${LOOPNUMBER}_modevalPFsync"
-#skstreamlog "$streamname"
-#echo "0" > "./status/stat_log_${streamname}.txt"
 echo "0" > "./status/stat_RTlog10.txt"
 menurecord_default="laolmodevalPFsyncON"
 ;;
@@ -1289,18 +1240,12 @@ menurecord_default="laolmodevalPFsyncON"
     laolmodevalPFresON)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveON 11" C-m
-#streamname="aol${LOOPNUMBER}_modevalPFres"
-#startstreamlog "$streamname" $LogCubeSize
-#echo "1" > "./status/stat_log_${streamname}.txt"
 echo "1" > "./status/stat_RTlog11.txt"
 menurecord_default="laolmodevalPFresOFF"
 ;;
     laolmodevalPFresOFF)
 tmuxnameRTlogC="aol${LOOPNUMBER}_RTlogCTRL"
 tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 11" C-m
-#streamname="aol${LOOPNUMBER}_modevalPFres"
-#skstreamlog "$streamname"
-#echo "0" > "./status/stat_log_${streamname}.txt"
 echo "0" > "./status/stat_RTlog11.txt"
 menurecord_default="laolmodevalPFresON"
 ;;

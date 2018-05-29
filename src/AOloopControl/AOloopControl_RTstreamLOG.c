@@ -377,7 +377,6 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 			}
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].write = 1;
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
-		
 		}
 	}
 }

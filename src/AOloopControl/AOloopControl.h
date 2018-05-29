@@ -63,7 +63,7 @@ typedef struct
 	int SIZE;                     // Max number of samples per buffer
 	int buffindex;                // which buffer (0 or 1)
 	long frameindex;              // frame index
-	int save;                     // Is saving enabled ?
+	int save;                     // 0: do not save, 1: save data+timing, 2: save timing only
 	int saveToggle;               // 1 if buffer #0 ready to be saved, 2 if buffer #1 ready to be saved, 0 otherwise
 	
 	long IDbuff;
