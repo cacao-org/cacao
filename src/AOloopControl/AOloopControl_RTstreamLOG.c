@@ -60,7 +60,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			AOconf[loop].RTSLOGarray[i].SIZE = AOconf[loop].RTLOGsize;
 			AOconf[loop].RTSLOGarray[i].ON = 0;
 			AOconf[loop].RTSLOGarray[i].save = 0;
-		 AOconf[loop].RTSLOGarray[i].saveToggle = 0;
+			AOconf[loop].RTSLOGarray[i].saveToggle = 0;
         }
 	
 	    i = RTSLOGindex_wfsim;
@@ -528,145 +528,179 @@ int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)
 
 int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 {
-	int rtlindex;
-	int cntsave = 0;
-	
-	int sleeptimeus = 10000;
-	long sleepcnt = 0;
-	
-	tzset();
-	
-	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+    int rtlindex;
+    int cntsave = 0;
+
+    int sleeptimeus = 10000;
+    long sleepcnt = 0;
+
+    tzset();
+
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-	
+
     printf("\n");
-    
+
     for(;;)
     {
-		cntsave = 0;
-	for(rtlindex=0;rtlindex<MAX_NUMBER_RTLOGSTREAM;rtlindex++)
-	{
-		if((AOconf[loop].RTSLOGarray[rtlindex].save == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0))
-		{
-			int buff;
-			char shmimname[200];
-			char shmimnameinfo[200];
+        cntsave = 0;
+        for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
+        {
+            if(AOconf[loop].RTSLOGarray[rtlindex].save == 1)
+            {
+				int SAVEfile = 0; // toggles to 1 if file needs to be saved
+				
+                // support for saving partial cube if loop turns off
+                long NBframe;
+                uint32_t ID;
+                uint32_t zsizesave;
 
-			char fname[500];
-			char fnameinfo[500];
-
-			long IDin, IDininfo;
-			time_t TSsec; 
-			long TSnsec;
-			
-			struct tm *uttime;
-			char timestring[100];
-			char fulldir0[500];
-			char fulldir1[500];
-			char fulldir2[500];
-			
-			FILE *fp;
-			long i;
-			
-			// buffindex to save	
-			buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle-1;
-			
-			printf("\n\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
-			
-			if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-			if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
-			
-			
-			
-			
-			if((IDin = image_ID(shmimname))==-1)
-				IDin = read_sharedmem_image(shmimname);
-			
-			if((IDininfo = image_ID(shmimnameinfo))==-1)
-				IDininfo = read_sharedmem_image(shmimnameinfo);
-
-			// reading first frame timestamp
-			TSsec  = (time_t) data.image[IDininfo].array.UI64[1];
-			TSnsec = data.image[IDininfo].array.UI64[2];
-			uttime = gmtime(&TSsec);
+				if(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0)
+				{
+					SAVEfile = 1;
+					NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+				}
+				else // TEST if loop is off and partial buffer needs to be saved
+				{
+					if((AOconf[loop].on == 0)&&(AOconf[loop].RTSLOGarray[rtlindex].frameindex>0))
+					{
+						SAVEfile = 1;
+						NBframe = AOconf[loop].RTSLOGarray[rtlindex].frameindex;
+						AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
+						printf("------- LOOP OFF -> SAVING PARTIAL CUBE\n");
+					}
+					
+				}
 
 
+                if(SAVEfile == 1)
+                {
+                    int buff;
+                    char shmimname[200];
+                    char shmimnameinfo[200];
 
-			sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
-			
-			sprintf(fulldir0, "%s", dirname);
-			sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
-			sprintf(fulldir2, "%s/aol%d_%s", fulldir1, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
-			
+                    char fname[500];
+                    char fnameinfo[500];
 
-			struct stat st = {0};
+                    long IDin, IDininfo;
+                    time_t TSsec;
+                    long TSnsec;
 
-			if (stat(fulldir0, &st) == -1) {
-				printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir0);
-				mkdir(fulldir0, 0777);
-			}
-			if (stat(fulldir1, &st) == -1) {
-				printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir1);
-				mkdir(fulldir1, 0777);
-			}
-			if (stat(fulldir2, &st) == -1) {
-				printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir2);
-				mkdir(fulldir2, 0777);
-			}
-						
-			
-			if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
+                    struct tm *uttime;
+                    char timestring[100];
+                    char fulldir0[500];
+                    char fulldir1[500];
+                    char fulldir2[500];
 
-			if(sprintf(fname, "%s/aol%d_%s.%s.fits", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");			
-			
-			
-			
-			
-			printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, timestring);
-			printf("       %s -> %s\n", shmimname    , fname);
-			printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
+                    FILE *fp;
+                    long i;
 
-			save_fits(shmimname, fname);
-			
-			long double t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
-			fp = fopen(fnameinfo, "w");
-			for(i=0;i<AOconf[loop].RTSLOGarray[rtlindex].SIZE;i++) 
-			{
-				long double t1 = data.image[IDininfo].array.UI64[i*5+1] + 1.0e-9*data.image[IDininfo].array.UI64[i*5+2];
-				fprintf(fp, "%10ld  %10ld  %15.9lf   %010ld.%010ld  %10ld   %10ld\n", i, data.image[IDininfo].array.UI64[i*5], (double) (t1-t0), data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], data.image[IDininfo].array.UI64[i*5+3], data.image[IDininfo].array.UI64[i*5+4]);
-			}
-			fclose(fp);
-			
+                    // buffindex to save
+                    buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle-1;
 
-			AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
-			cntsave++;
-		}
-	}
-	if(cntsave>0)
-		{
-			printf("%d buffer(s) saved\n", cntsave);
-			printf("\n");
-			sleepcnt = 0;
-		}
-	else
-	{
-		printf("waiting for buffers ready to save %10.3f sec \r", 1.0e-6*sleepcnt*sleeptimeus);
-		fflush(stdout);
-		sleepcnt ++;
-	}
-		
-	usleep(sleeptimeus);
-	}
-    
-    
-    
-	return 0;
+                    printf("\n\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
+
+                    if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
+                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
+                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+
+
+
+
+                    if((IDin = image_ID(shmimname))==-1)
+                        IDin = read_sharedmem_image(shmimname);
+
+                    if((IDininfo = image_ID(shmimnameinfo))==-1)
+                        IDininfo = read_sharedmem_image(shmimnameinfo);
+
+                    // reading first frame timestamp
+                    TSsec  = (time_t) data.image[IDininfo].array.UI64[1];
+                    TSnsec = data.image[IDininfo].array.UI64[2];
+                    uttime = gmtime(&TSsec);
+
+
+
+                    sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
+
+                    sprintf(fulldir0, "%s", dirname);
+                    sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
+                    sprintf(fulldir2, "%s/aol%d_%s", fulldir1, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+
+
+                    struct stat st = {0};
+
+                    if (stat(fulldir0, &st) == -1) {
+                        printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir0);
+                        mkdir(fulldir0, 0777);
+                    }
+                    if (stat(fulldir1, &st) == -1) {
+                        printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir1);
+                        mkdir(fulldir1, 0777);
+                    }
+                    if (stat(fulldir2, &st) == -1) {
+                        printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir2);
+                        mkdir(fulldir2, 0777);
+                    }
+
+
+                    if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+                    if(sprintf(fname, "%s/aol%d_%s.%s.fits", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+
+
+
+                    printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, timestring);
+                    printf("       %s -> %s\n", shmimname    , fname);
+                    printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
+
+
+                    ID = image_ID(shmimname);
+                    zsizesave = data.image[ID].md[0].size[2];
+                    data.image[ID].md[0].size[2] = NBframe;
+                    save_fits(shmimname, fname);
+                    data.image[ID].md[0].size[2] = zsizesave;
+
+
+                    long double t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
+                    fp = fopen(fnameinfo, "w");
+                    for(i=0; i<NBframe; i++)
+                    {
+                        long double t1 = data.image[IDininfo].array.UI64[i*5+1] + 1.0e-9*data.image[IDininfo].array.UI64[i*5+2];
+                        fprintf(fp, "%10ld  %10ld  %15.9lf   %010ld.%010ld  %10ld   %10ld\n", i, data.image[IDininfo].array.UI64[i*5], (double) (t1-t0), data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], data.image[IDininfo].array.UI64[i*5+3], data.image[IDininfo].array.UI64[i*5+4]);
+                    }
+                    fclose(fp);
+
+
+                    AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
+                    cntsave++;
+                }
+            }
+        }
+        if(cntsave>0)
+        {
+            printf("%d buffer(s) saved\n", cntsave);
+            printf("\n");
+            sleepcnt = 0;
+        }
+        else
+        {
+            printf("waiting for buffers ready to save %10.3f sec \r", 1.0e-6*sleepcnt*sleeptimeus);
+            fflush(stdout);
+            sleepcnt ++;
+        }
+
+        usleep(sleeptimeus);
+    }
+
+
+
+    return 0;
 }
 
 
