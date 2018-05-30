@@ -520,14 +520,14 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		
 		if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1)
 		{
-# ifdef _OPENMP
+/*# ifdef _OPENMP
             #pragma omp parallel num_threads(2) 
         {
 # endif
 
 # ifdef _OPENMP
             #pragma omp for
-# endif
+# endif*/
 
 			for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
 				{
@@ -541,9 +541,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 					}
 
 				}
-# ifdef _OPENMP
+/*# ifdef _OPENMP
         }
-# endif
+# endif*/
 		}
 		
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2, -1);
