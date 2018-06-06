@@ -95,9 +95,10 @@ fi
 
 
 
+# =================================================================================
+# =========== Setup low latency TCP
+# =================================================================================
 
-
-# low latency TCP
 if [ "$ON" = "1" ]
 then
 sudo ethtool -C eth2 rx-usecs 0
@@ -121,7 +122,11 @@ fi
 
 
 
-# TURN OFF HYPERTHREADING
+
+
+# =================================================================================
+# =========== TURN OFF HYPERTHREADING
+# =================================================================================
 
 if [ "$ON" = "1" ]; then
 echo "Turn off hyperthreading"
@@ -260,24 +265,43 @@ fi
 
 
 
+# =================================================================================
+# =========== set CPU SETS
+# =================================================================================
 
-# SYSTEM ARCHITECTURE, CPU SETS
+
+# numactl --hardware
+#
+# available: 2 nodes (0-1)
+# node 0 cpus: 0 2 4 6 8 10 12 14 16 18 20 22 24 26
+# node 0 size: 257860 MB
+# node 0 free: 13619 MB
+# node 1 cpus: 1 3 5 7 9 11 13 15 17 19 21 23 25 27
+# node 1 size: 258036 MB
+# node 1 free: 256678 MB
+# node distances:
+# node   0   1 
+#   0:  10  21 
+#  1:  21  10 
+
+
+
 
 # ================ CPU 0 ====================
 # cores: 0 2 4 6 8 10 12 14 16 18 20 22 24 26
 
-# system         non real-time processes                 2 4 6 8 10 12 14 16 18 20 22
+# system         non real-time processes                 0 2 4 6 8 10 12 14 16 18 20 22
 # dmcomb         DM combine channels                     24
 # dmdrv          MEMs DM driver                          26
 
 # ================ CPU 1 ===================
 # cores: 1 3 5 7 9 11 13 15 17 19 21 23 25 27
 
-# aol0RT         real-time loop computation              3 5 7 9 11 13 15 17 19
-# aol0RT1        modal extraction (WFS output)           21
-# aol0RT2        modal processing (DM contr. channel)    23
-# aol0COM        WFS camera communication                25
-# ocamdec        ocam image decoding                     27                                                                                                       
+# aol0RT         real-time loop computation              3 5 7 9 11 13 15 17
+# aol0RT1        modal extraction (WFS output)           19
+# aol0RT2        modal processing (DM contr. channel)    21
+# aol0COM        WFS camera communication                23 25
+# ocamdec        ocam image decoding                     27
 
   
 if [ "$ON" = "1" ]; then
@@ -342,6 +366,13 @@ sudo cset se -d system
 fi
 
 
+# Disable real-time CPU throttling
+
+echo -1 > /proc/sys/kernel/sched_rt_runtime_us
+
+
+
+
 if [ "$ON" = "1" ]; then
 tmux new-session -d -s cpulatency
 tmux send-keys -t cpulatency "sudo /home/scexao/bin/setlatency 0" C-m
@@ -355,7 +386,128 @@ cset set -l
 
 
 
-# set precision timing protocol
+
+
+
+
+# =================================================================================
+# =========== set IRQs
+# =================================================================================
+
+
+# Stop IRQbalance
+sudo service irqbalance stop
+
+# Create hex bitmask to ban RT cores from irqbalance
+# Banned CPUs are all RT CPUs
+# 
+# aol0RT         real-time loop computation              3 5 7 9 11 13 15 17
+# aol0RT1        modal extraction (WFS output)           19
+# aol0RT2        modal processing (DM contr. channel)    21
+# ocamdec        ocam image decoding                     27
+# 0001010101010101010101000001
+# 1110101010101010101010111110
+
+#echo "obase=16;ibase=2;0001010101010101010101000001"|bc > IRQBALANCE_BANNED_CPUS.txt
+#echo "obase=16;ibase=2;111010101010101010101011111"|bc > IRQBALANCE_BANNED_CPUS.txt
+#export IRQBALANCE_BANNED_CPUS=$(cat IRQBALANCE_BANNED_CPUS.txt)
+#export IRQBALANCE_BANNED_CPUS=1555541
+
+# REDIRECT IRQs on RT cpus to cpu1
+
+rm _cpu*irq_t0.txt &> /dev/null
+rm _cpu*irq_t1.txt &> /dev/null
+
+rm _cpuRTirq_t0.txt &> /dev/null
+rm _cpuRTirq_t1.txt &> /dev/null
+rm _cpu*irq_active.txt &> /dev/null
+rm _cpuRTirq_active.txt &> /dev/null
+
+touch _cpuRTirq.txt
+
+# protected cores
+cpulist=(3 5 7 9 11 13 15 17 19 21 27)
+
+# where to move IRQs (bitmask)
+# deploy to cpus 1 and 2 
+# Do not include leading zeros
+cpudest="110"
+
+
+twait=5
+
+echo "Monitoring IRQs for $twait second ..."
+
+
+for t in 0 1
+
+do
+
+for cpu in ${cpulist[*]}
+do
+cpu1=$(( $cpu + 2 ))
+cat /proc/interrupts | awk -v ind=$cpu1 '{if ($ind>0) print $0}' | sed 's/://g' | awk '{if ($1 ~  /^[0-9]*$/) print $0}'  > _cpu${cpu}irq_t$t.txt
+awk '{print $1}' _cpu${cpu}irq_t$t.txt >> _cpuRTirq_t$t.txt
+done
+
+sleep $twait
+
+done
+
+
+
+
+
+for cpu in ${cpulist[*]}
+do
+cnt=$( wc -l _cpu${cpu}irq_t0.txt | cut -f 1 -d " ")
+cpu1=$(( $cpu + 2 ))
+awk -v ind=$cpu1 '{print $1, $ind}' _cpu${cpu}irq_t0.txt > _irqt0.txt
+awk -v ind=$cpu1 '{print $1, $ind}' _cpu${cpu}irq_t1.txt > _irqt1.txt
+
+comm -13 _irqt0.txt _irqt1.txt > _cpu${cpu}irq_active.txt
+cntactive=$( wc -l _cpu${cpu}irq_active.txt | cut -f 1 -d " ")
+cat _cpu${cpu}irq_active.txt >> _cpuRTirq_active.txt
+printf "IRQs on RT cpu %2d  :  %3d     ACTIVE : %3d\n" $cpu $cnt $cntactive
+done
+
+
+
+cnt=$( wc -l _cpuRTirq_active.txt | cut -f 1 -d " ")
+irqmask=$( echo "obase=16;ibase=2;${cpudest}"|bc )
+printf "\n%3d IRQs will be moved to cpus %d  (mask : %s)\n\n" $cnt $cpudest $irqmask
+
+awk -v MASK=$irqmask '{printf("echo %d > /proc/irq/%d/smp_affinity\n", MASK, $1)}' _cpuRTirq_active.txt  > _irqmove_cmd.txt
+
+chmod +x _irqmove_cmd.txt
+
+sudo ./_irqmove_cmd.txt
+
+
+# NOTES
+
+# to monitor an irq:
+# watch -n 1 -d grep "271:" /proc/interrupts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# =================================================================================
+# =========== set precision timing protocol
+# =================================================================================
+
 if [ "$ON" = "1" ]; then
 ssh scexao@scexao2 "tmux new-session -d -s ptp" 
 ssh scexao@scexao2 "tmux send-keys -t ptp \"ls\" C-m"
