@@ -206,6 +206,7 @@ FPAOloopControl
 linopt_imtools
 m
 readline
+ncurses
 cfitsio
 dl
 rt
