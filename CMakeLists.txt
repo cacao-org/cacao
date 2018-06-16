@@ -81,6 +81,7 @@ message("CURSES_INCLUDE_PATH = ${CURSES_INCLUDE_PATH}")
 #set( CMAKE_INCLUDE_PATH "/usr/include")
 #set( CMAKE_LIBRARY_PATH "/usr/lib/x86_64-linux-gnu/libncurses.so")
 find_package(Curses REQUIRED)
+message("CURSES_INCLUDE_PATH = ${CURSES_INCLUDE_PATH}")
 SET(CURSES_USE_NCURSES TRUE)
 
 
