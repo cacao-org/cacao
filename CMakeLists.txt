@@ -74,6 +74,12 @@ message(STATUS ${MAGMA_LIBRARY_DIRS})
 link_directories( ${MAGMA_LIBRARY_DIRS} )
 endif(USE_MAGMA)
 
+
+# ncurses
+set( CURSES_INCLUDE_PATH "/usr/include" )
+#set( CMAKE_INCLUDE_PATH "/usr/include")
+#set( CMAKE_LIBRARY_PATH "/usr/lib/x86_64-linux-gnu/libncurses.so")
+find_package(Curses REQUIRED)
 SET(CURSES_USE_NCURSES TRUE)
 
 
