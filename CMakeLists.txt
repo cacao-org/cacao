@@ -14,11 +14,21 @@ project (cacao C)
 
 
 
-# COMPILING OPTIONS
+# PERFORMANCE ORIENTED COMPILING OPTIONS
 
+# Adds options to the compiler command line for targets in the current directory and below that are added after this command is invoked
 add_compile_options(-std=gnu11)
 add_compile_options(-Ofast)
 add_compile_options(-march=native)
+
+# OpenMP
+find_package(OpenMP)
+if (OPENMP_FOUND)
+message("Found OpenMP")
+add_compile_options(-fopenmp)
+endif()
+
+
 
 # runs the standard link-time optimizer
 add_compile_options(-flto)
@@ -139,15 +149,18 @@ ${FFTWF_INCLUDE_DIRS}
 ${CURSES_INCLUDE_DIR}
 )
 
+# adds the options to all targets within the directory and its sub-directories
 target_compile_options(cacao PUBLIC 
 ${FFTW_CFLAGS_OTHER}
 ${FFTWF_CFLAGS_OTHER}
-${OpenMP_C_FLAGS}
+-fopenmp
 )
 
-
+#add_definitions(
 
 set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DPACKAGE_VERSION=\\\"0.0.0\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/cacao-org/cacao/issues\\\"" )
+
+
 
 
 
@@ -192,8 +205,8 @@ ${FFTW_LIBRARIES}
 ${FFTWF_LIBRARIES}
 ${CMAKE_THREAD_LIBS_INIT}
 ${CURSES_LIBRARIES}
-${OpenMP_C_FLAGS}
 )
+
 
 
 if(USE_MAGMA)
@@ -209,11 +222,20 @@ target_include_directories(cacao PUBLIC ${QDWHPARTIAL_INCLUDE_PATH} )
 set(BUILD_FLAGS "${BUILD_FLAGS} -DHAVE_QDWHpartial" )
 endif(USE_QDWHPARTIAL)
 
+
 set_target_properties(cacao PROPERTIES COMPILE_FLAGS "${BUILD_FLAGS}" )
 
 
+
 message("====================================================")
-message("BUILD_FLAGS   :  ${BUILD_FLAGS}")
+
+
+
+
+
+
+message("BUILD_FLAGS    :  ${BUILD_FLAGS}")
+message("CXXFLAGS       :  ${CMAKE_CXX_FLAGS}")
 message("====================================================")
 
 

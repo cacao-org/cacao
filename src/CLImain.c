@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
 	libinit_AOloopControl_DM();
 	libinit_AOloopControl_compTools();
 	libinit_AOloopControl_acquireCalib();
+
 	
 	printf("Starting CLI ...\n");
 	fflush(stdout);
