@@ -26,7 +26,6 @@ find_package(OpenMP)
 if (OPENMP_FOUND)
 message("Found OpenMP")
 add_compile_options(-fopenmp)
-#CMAKE_EXE_LINKER_FLAGS
 endif()
 
 message("COMPILE_OPTIONS:  ${COMPILE_OPTIONS}")
@@ -77,13 +76,9 @@ endif(USE_MAGMA)
 
 
 # ncurses
-#set( CURSES_INCLUDE_PATH "/usr/include" )
+#find_package(Curses REQUIRED)
 #message("CURSES_INCLUDE_PATH = ${CURSES_INCLUDE_PATH}")
-#set( CMAKE_INCLUDE_PATH "/usr/include")
-#set( CMAKE_LIBRARY_PATH "/usr/lib/x86_64-linux-gnu/libncurses.so")
-find_package(Curses REQUIRED)
-message("CURSES_INCLUDE_PATH = ${CURSES_INCLUDE_PATH}")
-message("CURSES_LIBRARIES    = ${CURSES_LIBRARIES}")
+#message("CURSES_LIBRARIES    = ${CURSES_LIBRARIES}")
 SET(CURSES_USE_NCURSES TRUE)
 
 
