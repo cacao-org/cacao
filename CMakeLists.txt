@@ -26,9 +26,10 @@ find_package(OpenMP)
 if (OPENMP_FOUND)
 message("Found OpenMP")
 add_compile_options(-fopenmp)
+#CMAKE_EXE_LINKER_FLAGS
 endif()
 
-
+message("COMPILE_OPTIONS:  ${COMPILE_OPTIONS}")
 
 # runs the standard link-time optimizer
 add_compile_options(-flto)
@@ -213,6 +214,7 @@ ${FFTW_LIBRARIES}
 ${FFTWF_LIBRARIES}
 ${CMAKE_THREAD_LIBS_INIT}
 ${CURSES_LIBRARIES}
+-fopenmp
 )
 
 
@@ -236,14 +238,11 @@ set_target_properties(cacao PROPERTIES COMPILE_FLAGS "${BUILD_FLAGS}" )
 
 
 message("====================================================")
-
-
-
-
-
+get_target_property(cacaocompopts cacao COMPILE_OPTIONS)
 
 message("BUILD_FLAGS    :  ${BUILD_FLAGS}")
-message("CXXFLAGS       :  ${CMAKE_CXX_FLAGS}")
+message("COMPILE_OPTIONS:  ${cacaocompopts}")
+message("CMAKE_EXE_LINKER_FLAGS  :  ${CMAKE_EXE_LINKER_FLAGS}")
 message("====================================================")
 
 
