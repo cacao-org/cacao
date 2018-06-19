@@ -1,17 +1,28 @@
 # cacao Control: Setup and Overview {#page_cacao_Control_Setup_Overview}
 
 
+---
 
 
+## 1. GUIs description
 
-## GUI description
+The script `aolconf` starts the main GUI, from which all setup and control can be done. The GUI consists of several main screens.
 
-The script `aolconf` starts the main GUI, from which all setup and control can be done. The GUI consists of several main screens, as shown below.
+A Typical cacao control screen will include the following panels:
 
-![aolconf GUI screens](./figures/aolconfGUIscreens.jpg "GUI screens")
+- cacao control GUI (aolconf script)
+- alignment GUI (provided by user, system dependent)
+- processes status GUI (launched from cacao control GUI)
+- DM viewing screen
+- AO loop monitoring screen (aolmon script)
+- log viewing window
+- log entry window
+- real-time data logging control/status window
+
+---
 
 
-## Commands log
+## 2. Commands logs
 
 
 ALL commands are logged by the script : 

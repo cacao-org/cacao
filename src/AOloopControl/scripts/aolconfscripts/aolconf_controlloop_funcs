@@ -817,3 +817,15 @@ echo "OFF" > ./status/stat_zp$1loopON.txt
 tmuxnameZP="aol${LOOPNUMBER}zploop$1"
 tmux kill-session -t $tmuxnameZP
 }
+
+
+
+function function_PFAOloopProcess_ON {
+echo " ON" > ./status/stat_procPFON.txt
+}
+
+function function_PFAOloopProcess_OFF {
+echo "OFF" > ./status/stat_procPFON.txt
+}
+
+

@@ -465,6 +465,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 
 
 
+
 int AOloopControl_RTstreamLOG_set_saveON(int loop, int rtlindex)
 {
 	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -477,6 +478,9 @@ int AOloopControl_RTstreamLOG_set_saveON(int loop, int rtlindex)
 	
 	return 0;
 }
+
+
+
 
 
 int AOloopControl_RTstreamLOG_set_saveOFF(int loop, int rtlindex)

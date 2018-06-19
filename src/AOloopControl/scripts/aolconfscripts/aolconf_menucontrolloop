@@ -540,6 +540,15 @@ fi
 
 menuitems+=( " " " " )
 
+
+StatReadStat procPFON "OFF"; procPFONstat="$statusvalue"
+if [ "${procPFONstat}" = "OFF" ]; then
+menuitems+=( "pfS" "\Zb\Zu ==== START Predictive Filter processes ====\ZB\ZU" )
+else
+menuitems+=( "pfK" "\Z1\Zr ==== STOP  Predictive Filter processes ====\Zn" )
+fi
+
+
 ConfReadParam ARPFon "OFF"; ARPFon="$paramvalue"
 if [ "$ARPFon" = "OFF" ]; then
 menuitems+=( "ARPFon" "Predictive control (ARPF) is OFF - press to START" )
@@ -1767,6 +1776,19 @@ EOF
 	echo "OFF" > conf/param_AUTOTUNEGAINSCOMP_ON.txt
 	menucontrolloop_default="agrunS"
 	;;
+
+
+
+   	 pfS)  	 
+function_PFAOloopProcess_ON "NULL" # in aolconf_controlloop_funcs
+menucontrolloop_default="pfK"
+;; 
+
+	pfK)
+function_PFAOloopProcess_OFF "NULL"
+menucontrolloop_default="pfS"
+;;
+
 
 
 	ARPFon)
