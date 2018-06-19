@@ -16,6 +16,44 @@ fi
 
 
 
+# FUNCTIONS
+
+ConfReadParam PFb0start "0.001"; PFb0start="$paramvalue"
+ConfReadParam PFb0end "2"; PFb0end="$paramvalue"
+
+function function_PFb0watchON {
+tmuxname="aol${LOOPNUMBER}PFb0watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 0 $PFb0start $PFb0end" C-m
+PFb0wON=" ON"
+file="./status/stat_PFb0wON.txt"
+echo "writing $PFb0wON to file $file"
+echo "$PFb0wON" > $file
+}
+
+function function_PFb0watchOFF {
+tmuxname="aol${LOOPNUMBER}PFb0watchin"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb0wON="OFF"
+file="./status/stat_PFb0wON.txt"
+echo "$PFb0wON" > $file
+}
+
+
+
+
+
+
+
+
+
 
 # =====================================================
 # ======== PREDICTIVE CONTROL  ========================
@@ -1834,30 +1872,12 @@ menucontrolloop_default="PFb3GPU9"
 # FILTER 0 - WATCH
 
 	PFb0wON)
-tmuxname="aol${LOOPNUMBER}PFb0watchin"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 0 $PFb0start $PFb0end" C-m
-#tmux send-keys -t ${tmuxname} "exit" C-m
-PFb0wON=" ON"
-file="./status/stat_PFb0wON.txt"
-echo "writing $PFb0wON to file $file"
-echo "$PFb0wON" > $file
+function_PFb0watchON
 menupred_default="PFb0wOFF"
 ;;
 
 	PFb0wOFF)
-tmuxname="aol${LOOPNUMBER}PFb0watchin"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} C-c
-tmux kill-session -t ${tmuxname}
-PFb0wON="OFF"
-file="./status/stat_PFb0wON.txt"
-echo "$PFb0wON" > $file
+function_PFb0watchOFF
 menupred_default="PFb0wON"
 ;;
 
@@ -1876,7 +1896,6 @@ tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
 tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 1 $PFb1start $PFb1end" C-m
-#tmux send-keys -t ${tmuxname} "exit" C-m
 PFb1wON=" ON"
 file="./status/stat_PFb1wON.txt"
 echo "writing $PFb1wON to file $file"
@@ -1909,7 +1928,6 @@ tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
 tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 2 $PFb2start $PFb2end" C-m
-#tmux send-keys -t ${tmuxname} "exit" C-m
 PFb2wON=" ON"
 file="./status/stat_PFb2wON.txt"
 echo "writing $PFb2wON to file $file"
@@ -1941,7 +1959,6 @@ tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
 tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 3 $PFb3start $PFb3end" C-m
-#tmux send-keys -t ${tmuxname} "exit" C-m
 PFb3wON=" ON"
 file="./status/stat_PFb3wON.txt"
 echo "writing $PFb3wON to file $file"
