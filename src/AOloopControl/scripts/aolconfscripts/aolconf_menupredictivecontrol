@@ -18,7 +18,7 @@ fi
 
 # FUNCTIONS
 
-ConfReadParam PFb0start "0.001"; PFb0start="$paramvalue"
+ConfReadParam PFb0start "0"; PFb0start="$paramvalue"
 ConfReadParam PFb0end "2"; PFb0end="$paramvalue"
 
 function function_PFb0watchON {
@@ -45,6 +45,101 @@ PFb0wON="OFF"
 file="./status/stat_PFb0wON.txt"
 echo "$PFb0wON" > $file
 }
+
+
+
+ConfReadParam PFb1start "2"; PFb1start="$paramvalue"
+ConfReadParam PFb1end "100"; PFb1end="$paramvalue"
+
+function function_PFb1watchON {
+tmuxname="aol${LOOPNUMBER}PFb1watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 1 $PFb1start $PFb1end" C-m
+PFb1wON=" ON"
+file="./status/stat_PFb1wON.txt"
+echo "writing $PFb1wON to file $file"
+echo "$PFb1wON" > $file
+}
+
+function function_PFb1watchOFF {
+tmuxname="aol${LOOPNUMBER}PFb1watchin"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb1wON="OFF"
+file="./status/stat_PFb1wON.txt"
+echo "$PFb1wON" > $file
+}
+
+
+
+ConfReadParam PFb2start "100"; PFb2start="$paramvalue"
+ConfReadParam PFb2end "200"; PFb2end="$paramvalue"
+
+function function_PFb2watchON {
+tmuxname="aol${LOOPNUMBER}PFb2watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 2 $PFb2start $PFb2end" C-m
+PFb2wON=" ON"
+file="./status/stat_PFb2wON.txt"
+echo "writing $PFb2wON to file $file"
+echo "$PFb2wON" > $file
+}
+
+function function_PFb2watchOFF {
+tmuxname="aol${LOOPNUMBER}PFb2watchin"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb2wON="OFF"
+file="./status/stat_PFb2wON.txt"
+echo "$PFb2wON" > $file
+}
+
+
+
+ConfReadParam PFb3start "200"; PFb3start="$paramvalue"
+ConfReadParam PFb3end "300"; PFb3end="$paramvalue"
+
+function function_PFb3watchON {
+tmuxname="aol${LOOPNUMBER}PFb3watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 3 $PFb3start $PFb3end" C-m
+PFb3wON=" ON"
+file="./status/stat_PFb3wON.txt"
+echo "writing $PFb3wON to file $file"
+echo "$PFb3wON" > $file
+}
+
+function function_PFb3watchOFF {
+tmuxname="aol${LOOPNUMBER}PFb3watchin"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb3wON="OFF"
+file="./status/stat_PFb3wON.txt"
+echo "$PFb3wON" > $file
+}
+
+
+
+
+
 
 
 
@@ -183,7 +278,7 @@ menuitems+=( " " " ")
 
 # FILTER 0
 
-ConfReadParam PFb0start "0.001"; PFb0start="$paramvalue"
+ConfReadParam PFb0start "0"; PFb0start="$paramvalue"
 ConfReadParam PFb0end "2"; PFb0end="$paramvalue"
 ConfReadParam PFb0order "10"; PFb0order="$paramvalue"
 ConfReadParam PFb0lag "$latency_frame"; PFb0lag="$paramvalue"
@@ -331,8 +426,8 @@ if [ "$NBPFblock" -gt "1" ]; then
 # FILTER 1
 menuitems+=( " " " ")
 
-ConfReadParam PFb1start "0"; PFb1start="$paramvalue"
-ConfReadParam PFb1end "2"; PFb1end="$paramvalue"
+ConfReadParam PFb1start "2"; PFb1start="$paramvalue"
+ConfReadParam PFb1end "100"; PFb1end="$paramvalue"
 ConfReadParam PFb1order "10"; PFb1order="$paramvalue"
 ConfReadParam PFb1lag "$latency_frame"; PFb1lag="$paramvalue"
 ConfReadParam PFb1SVDe "0.001"; PFb1SVDe="$paramvalue"
@@ -486,8 +581,8 @@ if [ "$NBPFblock" -gt "2" ]; then
 menuitems+=( " " " ")
 
 
-ConfReadParam PFb2start "0"; PFb2start="$paramvalue"
-ConfReadParam PFb2end "2"; PFb2end="$paramvalue"
+ConfReadParam PFb2start "100"; PFb2start="$paramvalue"
+ConfReadParam PFb2end "200"; PFb2end="$paramvalue"
 ConfReadParam PFb2order "10"; PFb2order="$paramvalue"
 ConfReadParam PFb2lag "$latency_frame"; PFb2lag="$paramvalue"
 ConfReadParam PFb2SVDe "0.001"; PFb2SVDe="$paramvalue"
@@ -638,8 +733,8 @@ if [ "$NBPFblock" -gt "3" ]; then
 menuitems+=( " " " ")
 
 
-ConfReadParam PFb3start "0"; PFb3start="$paramvalue"
-ConfReadParam PFb3end "2"; PFb3end="$paramvalue"
+ConfReadParam PFb3start "200"; PFb3start="$paramvalue"
+ConfReadParam PFb3end "300"; PFb3end="$paramvalue"
 ConfReadParam PFb3order "10"; PFb3order="$paramvalue"
 ConfReadParam PFb3lag "$latency_frame"; PFb3lag="$paramvalue"
 ConfReadParam PFb3SVDe "0.001"; PFb3SVDe="$paramvalue"
@@ -1888,29 +1983,12 @@ menupred_default="PFb0wON"
 # FILTER 1 - WATCH
 
 	PFb1wON)
-tmuxname="aol${LOOPNUMBER}PFb1watchin"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 1 $PFb1start $PFb1end" C-m
-PFb1wON=" ON"
-file="./status/stat_PFb1wON.txt"
-echo "writing $PFb1wON to file $file"
-echo "$PFb1wON" > $file
+function_PFb1watchON
 menupred_default="PFb1wOFF"
 ;;
 
 	PFb1wOFF)
-tmuxname="aol${LOOPNUMBER}PFb1watchin"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} C-c
-tmux kill-session -t ${tmuxname}
-PFb1wON="OFF"
-file="./status/stat_PFb1wON.txt"
-echo "$PFb1wON" > $file
+function_PFb1watchOFF
 menupred_default="PFb1wON"
 ;;
 
@@ -1920,29 +1998,12 @@ menupred_default="PFb1wON"
 # FILTER 2 - WATCH
 
 	PFb2wON)
-tmuxname="aol${LOOPNUMBER}PFb2watchin"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 2 $PFb2start $PFb2end" C-m
-PFb2wON=" ON"
-file="./status/stat_PFb2wON.txt"
-echo "writing $PFb2wON to file $file"
-echo "$PFb2wON" > $file
+function_PFb2watchON
 menupred_default="PFb2wOFF"
 ;;
 
 	PFb2wOFF)
-tmuxname="aol${LOOPNUMBER}PFb2watchin"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} C-c
-tmux kill-session -t ${tmuxname}
-PFb2wON="OFF"
-file="./status/stat_PFb2wON.txt"
-echo "$PFb2wON" > $file
+function_PFb2watchOFF
 menupred_default="PFb2wON"
 ;;
 
@@ -1951,29 +2012,12 @@ menupred_default="PFb2wON"
 # FILTER 3 - WATCH
 
 	PFb3wON)
-tmuxname="aol${LOOPNUMBER}PFb3watchin"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 3 $PFb3start $PFb3end" C-m
-PFb3wON=" ON"
-file="./status/stat_PFb3wON.txt"
-echo "writing $PFb3wON to file $file"
-echo "$PFb3wON" > $file
+function_PFb3watchON
 menupred_default="PFb3wOFF"
 ;;
 
 	PFb3wOFF)
-tmuxname="aol${LOOPNUMBER}PFb3watchin"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} C-c
-tmux kill-session -t ${tmuxname}
-PFb3wON="OFF"
-file="./status/stat_PFb3wON.txt"
-echo "$PFb3wON" > $file
+function_PFb3watchOFF
 menupred_default="PFb3wON"
 ;;
 

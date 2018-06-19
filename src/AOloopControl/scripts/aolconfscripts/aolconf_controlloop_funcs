@@ -822,10 +822,18 @@ tmux kill-session -t $tmuxnameZP
 
 function function_PFAOloopProcess_ON {
 echo " ON" > ./status/stat_procPFON.txt
+function_PFb0watchON
+function_PFb1watchON
+function_PFb2watchON
+function_PFb3watchON
 }
 
 function function_PFAOloopProcess_OFF {
 echo "OFF" > ./status/stat_procPFON.txt
+function_PFb0watchOFF
+function_PFb1watchOFF
+function_PFb2watchOFF
+function_PFb3watchOFF
 }
 
 
