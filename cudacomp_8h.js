@@ -7,7 +7,7 @@ var cudacomp_8h =
     [ "CUDACOMP_Coeff2Map_Loop", "cudacomp_8h.html#a5db894f96230f0ab904cf66eb847a40b", null ],
     [ "CUDACOMP_extractModesLoop", "cudacomp_8h.html#a055b49c0a27133965b1b880c82bdb3c7", null ],
     [ "CUDACOMP_init", "cudacomp_8h.html#a90c08b75f4f631211f74bdb44355adb3", null ],
-    [ "CUDACOMP_magma_compute_SVDpseudoInverse", "cudacomp_8h.html#a6f4b95aa5dca11c797be605b6f459ddf", null ],
+    [ "CUDACOMP_magma_compute_SVDpseudoInverse", "cudacomp_8h.html#af2be454fbe2a3f6878745fc524051554", null ],
     [ "CUDACOMP_magma_compute_SVDpseudoInverse_SVD", "cudacomp_8h.html#a9bdb904d645ecaa0fc77d73082463b17", null ],
     [ "CUDACOMP_MatMatMult_testPseudoInverse", "cudacomp_8h.html#a1194bccddfcc6525520b96f49b05e7a1", null ],
     [ "CUDACOMP_printGPUMATMULTCONF", "cudacomp_8h.html#a1fd7986590f046a9412ba7f1d0f5d3d9", null ],

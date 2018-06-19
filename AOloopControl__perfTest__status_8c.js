@@ -7,7 +7,6 @@ var AOloopControl__perfTest__status_8c =
     [ "AOloopControl_perfTest_statusStats", "AOloopControl__perfTest__status_8c.html#a4197bfe5dbe9f7dc8f4dd547629b8eab", null ],
     [ "AOconf", "AOloopControl__perfTest__status_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "aoloopcontrol_var", "AOloopControl__perfTest__status_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
-    [ "data", "AOloopControl__perfTest__status_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "LOOPNUMBER", "AOloopControl__perfTest__status_8c.html#afc4d319c21df38d7e771591b6934a836", null ],
     [ "tdiff", "AOloopControl__perfTest__status_8c.html#a68e5522665259f4ae254e3bf493c4b18", null ],
     [ "tnow", "AOloopControl__perfTest__status_8c.html#a59d2ab140fff2f63a38f4704a76fc2ec", null ],

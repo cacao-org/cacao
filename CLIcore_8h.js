@@ -17,6 +17,7 @@ var CLIcore_8h =
     [ "BuildTime", "CLIcore_8h.html#afeae30b051ddde8c1e7490fa91bc2fc6", null ],
     [ "C_ERRNO", "CLIcore_8h.html#a9a500d20c5951f1462377328ae5305f5", null ],
     [ "CLIPID", "CLIcore_8h.html#a5322f5738b8bf1f57458a31aea22f1db", null ],
+    [ "data", "CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "DocDir", "CLIcore_8h.html#a1eb488f2804d57c2fe61590f6e9c77f7", null ],
     [ "euid_called", "CLIcore_8h.html#a8a11142864e6c378d6c8268335b965ec", null ],
     [ "euid_real", "CLIcore_8h.html#afcdbfc486152403a8152045c561db794", null ],

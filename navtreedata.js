@@ -2,12 +2,21 @@ var NAVTREE =
 [
   [ "cacao", "index.html", [
     [ "Outline", "index.html", null ],
+    [ "cacao modules", "page_cacao_Modules.html", "page_cacao_Modules" ],
+    [ "milk modules", "page_milk_Modules.html", null ],
+    [ "News", "page_news.html", null ],
+    [ "Configuring and Running cacao", "page_cacao_top_guide.html", "page_cacao_top_guide" ],
+    [ "Change Log", "md_src_CommandLineInterface_CHANGELOG.html", null ],
+    [ "Coding Standards", "page_coding_standards.html", "page_coding_standards" ],
+    [ "Installation", "page_installation.html", null ],
+    [ "Loading and Creating Modules", "page_LoadingModules.html", null ],
+    [ "Command Line Interface", "page_userinput.html", "page_userinput" ],
+    [ "Working with git", "page_WorkingWithGit.html", null ],
     [ "Change Log", "md_src_ImageStreamIO_CHANGELOG.html", null ],
-    [ "top", "md_top.html", "md_top" ],
     [ "Bug List", "bug.html", null ],
     [ "Modules", "modules.html", "modules" ],
-    [ "Data Structures", null, [
-      [ "Data Structures", "annotated.html", "annotated" ],
+    [ "Data Structures", "annotated.html", [
+      [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
       [ "Data Fields", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
@@ -31,20 +40,24 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "00CORE_8c.html",
-"AOloopControl__DM__config_8c.html#a21a85e0539b97ed9a9a6c68ff84b7803",
-"AOloopControl__acquireCalib_8c.html#afc4d319c21df38d7e771591b6934a836",
-"AOloopControl__perfTest_8c.html#ab9328527777439557b04e403a2cfbd2b",
-"COREMOD__arith_8c.html#a36f8ad53cb7498a3bc2ac16bd2d636cd",
-"COREMOD__arith_8h.html#a7110b2ab6105f61fb4d389d6be633950",
-"COREMOD__memory_8c.html#ab3b37e92981c7793de0c79c2632814b2",
-"FPAOloopControl_8c.html#a8b8dae841fee9288162faad0a372e9e3",
-"calc__flex_8c.html#a57edb4569f96dcfce9deaff0eb6a6412",
-"functions_a.html",
-"image__basic_8h.html#a77c56a8e56b1019e76f397f1551a57df",
-"info_8c.html#a5af15f10d196e17adf43d6f5ffb4d2cb",
-"page_cacao_calibration.html",
-"structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a61b8cb3873bb8760a7e12051bf42a2d8",
-"structVARIABLE.html#a40d583ae511f61e22f3ade6f130a7d58"
+"AOloopControl__IOtools__camerainput_8c.html#ad53086470a2fb4c9e57b950bef50e2c0",
+"AOloopControl__loop__onoff_8c.html",
+"COREMOD__arith_8c.html#a3ac28dbb735094c9dee66e55c271904f",
+"COREMOD__memory_8c.html#a55e30ef483e31f4dea2ab064b9bab2fb",
+"__install_2include_200CORE_8h_source.html",
+"__install_2include_2COREMOD__arith_8h.html#a4ce784efdc0c876c89a82c313f9db3fd",
+"__install_2include_2COREMOD__tools_8h.html#a9383571be0026fd23ec4464fa50aba26",
+"__install_2include_2img__reduce_8h_source.html",
+"calc__flex_8c.html#a2f59cc88e85e5455c62e4ef7ce095ea8",
+"functions_m.html",
+"image__format_8c.html#a912bb7d8c2b78ee437aac7fc185d7610",
+"page_CLI_Overview.html",
+"src_2AOloopControl__computeCalib_2AOloopControl__computeCalib_8h_source.html",
+"src_2COREMOD__memory_2COREMOD__memory_8h.html#a77d968806ac968187091bd49cd6e7d7d",
+"src_2image__basic_2image__basic_8h.html#ab79e66d436d823a0e92ed00f82e36ba7",
+"structAOLOOPCONTROL__CONF.html#a28afa60e8c9affb521ebce6ad4907308",
+"structDATA.html#a2522406c33b8f890757cfbd8db858f77",
+"structkdnode.html#ac14038f51e15cb1bb26abe6558d36a3d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

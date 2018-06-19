@@ -11,6 +11,5 @@ var AOloopControl__loop__param_8c =
     [ "AOloopControl_setmult", "AOloopControl__loop__param_8c.html#aef6bb5af1656b860264887edba29d386", null ],
     [ "AOloopControl_setWFSnormfloor", "AOloopControl__loop__param_8c.html#a7ba98a514afc5552b970e2171467abfb", null ],
     [ "AOconf", "AOloopControl__loop__param_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
-    [ "aoloopcontrol_var", "AOloopControl__loop__param_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
-    [ "data", "AOloopControl__loop__param_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ]
+    [ "aoloopcontrol_var", "AOloopControl__loop__param_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ]
 ];

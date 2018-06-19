@@ -13,11 +13,11 @@ var searchData=
   ['gpu_5fbeta',['GPU_beta',['../structAOloopControl__var.html#a19d0640ef5cb42268bc2735290d01eab',1,'AOloopControl_var']]],
   ['gpuall',['GPUall',['../structAOLOOPCONTROL__CONF.html#a65f4ffb63a04738926b536991745b909',1,'AOLOOPCONTROL_CONF']]],
   ['gpucntmax',['GPUcntMax',['../AOloopControl__initmem_8c.html#a6fca5afadc5536deb3a4b2f75df736fd',1,'AOloopControl_initmem.c']]],
-  ['gpudevice',['GPUdevice',['../structGPUMATMULTCONF.html#af46435d16015959a15f0b157c9d4bdb6',1,'GPUMATMULTCONF']]],
+  ['gpudevice',['GPUdevice',['../structGPUMATMULTCONF.html#aace1d395e8b672a4ade7b9b8b9bf0024',1,'GPUMATMULTCONF']]],
   ['gpuinit',['gpuinit',['../structGPUMATMULTCONF.html#a6ea3e8d83269d0910b4228fa433532d9',1,'GPUMATMULTCONF']]],
   ['gpumatmultconf',['gpumatmultconf',['../cudacomp_8c.html#a94d486cdc838f866f7a80cc61bbd74fb',1,'cudacomp.c']]],
-  ['gpuset0',['GPUset0',['../structAOloopControl__var.html#acd2cea03f26badc822621846b393bf8f',1,'AOloopControl_var']]],
-  ['gpuset1',['GPUset1',['../structAOloopControl__var.html#ac40f243cb677b53866381d7a35e3694e',1,'AOloopControl_var']]],
-  ['gpustatus',['GPUstatus',['../structAOLOOPCONTROL__CONF.html#a9cc9387bcd4e897006b66003ed9fcc53',1,'AOLOOPCONTROL_CONF']]],
+  ['gpuset0',['GPUset0',['../structAOloopControl__var.html#a78548fb8072aee02b5487746383bdbf6',1,'AOloopControl_var']]],
+  ['gpuset1',['GPUset1',['../structAOloopControl__var.html#a7ad011552285795ed08a0bf72cae5dc4',1,'AOloopControl_var']]],
+  ['gpustatus',['GPUstatus',['../structAOLOOPCONTROL__CONF.html#a92e16e4263be2c290d8ec9b975ee417e',1,'AOLOOPCONTROL_CONF']]],
   ['gpuusesem',['GPUusesem',['../structAOLOOPCONTROL__CONF.html#a98cd30703d34047c9741abe330e9be89',1,'AOLOOPCONTROL_CONF']]]
 ];

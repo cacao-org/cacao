@@ -23,7 +23,6 @@ var psf_8c =
     [ "PSF_sequence_measure", "psf_8c.html#a7b2a68d6bd854967b576f9d97fa09867", null ],
     [ "PSF_sequence_measure_cli", "psf_8c.html#a16358d58060c676c9155f2f0875f93c6", null ],
     [ "psf_variance", "psf_8c.html#aa47a0a7091240e532f90e3ecd12a385f", null ],
-    [ "data", "psf_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "FWHM_MEASURED", "psf_8c.html#a45c45f9affb7a1208d03534b2c5b0afd", null ],
     [ "INITSTATUS_psf", "psf_8c.html#ab8f8f51e9a7327d495462c1b29316e4d", null ]
 ];

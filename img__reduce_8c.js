@@ -2,6 +2,8 @@ var img__reduce_8c =
 [
     [ "__attribute__", "img__reduce_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "clean_bad_pix", "img__reduce_8c.html#a12e5edbe0619866fc389e6615412e180", null ],
+    [ "IMG_REDUCE_centernormim", "img__reduce_8c.html#ad371c9daa32dd2c8d26393141e15b4cc", null ],
+    [ "IMG_REDUCE_centernormim_cli", "img__reduce_8c.html#acc8848cdfc12654ba42863d66bc4f361", null ],
     [ "IMG_REDUCE_cleanbadpix_fast", "img__reduce_8c.html#aa8c9a051ee5dcad2734b21bb4c3fb382", null ],
     [ "IMG_REDUCE_cleanbadpix_fast_cli", "img__reduce_8c.html#ada277c60b981b30114fba2a3be1cf305", null ],
     [ "IMG_REDUCE_cleanbadpix_fast_precompute", "img__reduce_8c.html#af4a9f056022ae8dae761a0b26367690c", null ],
@@ -19,6 +21,5 @@ var img__reduce_8c =
     [ "badpixclean_init", "img__reduce_8c.html#aceca24b1e53bd0a44dd8e53bde1f5d37", null ],
     [ "badpixclean_NBbadpix", "img__reduce_8c.html#a09119447635dca00a8e363699be085a6", null ],
     [ "badpixclean_NBop", "img__reduce_8c.html#ac9d78e77de56d2a097c0344ac6e2c065", null ],
-    [ "data", "img__reduce_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "INITSTATUS_img_reduce", "img__reduce_8c.html#a320efe3b4e8567a15eb1fc452180ddc8", null ]
 ];

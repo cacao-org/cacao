@@ -50,7 +50,6 @@ var calc__bison_8c =
     [ "yysyntax_error", "calc__bison_8c.html#ae7bce4884c238b92c88006a17478d37c", null ],
     [ "yytnamerr", "calc__bison_8c.html#ac4bdbe6f524e68778be5e1717fda3bc3", null ],
     [ "calctmpimname", "calc__bison_8c.html#a5f4566d37ec53f74821f22df71a6fb93", null ],
-    [ "data", "calc__bison_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "yychar", "calc__bison_8c.html#a9e2c7c7373b818c86b2df7106a92327c", null ],
     [ "yycheck", "calc__bison_8c.html#af434820fddd4631c08de7a1d9629ff18", null ],
     [ "yydebug", "calc__bison_8c.html#ab138aa8e11f58bcdcc7134adf240ea8c", null ],

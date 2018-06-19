@@ -11,5 +11,5 @@ var structyy__buffer__state =
     [ "yy_input_file", "structyy__buffer__state.html#a4843d1422e3276b636d475a3095bd948", null ],
     [ "yy_is_interactive", "structyy__buffer__state.html#abf5c70eea75581b58c0ee7bd31b14490", null ],
     [ "yy_is_our_buffer", "structyy__buffer__state.html#a80ce2431c70dc4f89ced487f18449465", null ],
-    [ "yy_n_chars", "structyy__buffer__state.html#afcc44872643f513e79b43c2b1f334a67", null ]
+    [ "yy_n_chars", "structyy__buffer__state.html#a06406208824817acfec2183b79080945", null ]
 ];

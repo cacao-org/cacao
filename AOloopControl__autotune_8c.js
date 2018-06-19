@@ -8,6 +8,5 @@ var AOloopControl__autotune_8c =
     [ "AOloopControl_set_AUTOTUNE_LIMITS_mcoeff", "AOloopControl__autotune_8c.html#a2640a90affa01148c4d2082b26e6c9d7", null ],
     [ "AOloopControl_set_AUTOTUNE_LIMITS_perc", "AOloopControl__autotune_8c.html#a663727797a7a261b38259bbc69e73a61", null ],
     [ "AOconf", "AOloopControl__autotune_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
-    [ "aoloopcontrol_var", "AOloopControl__autotune_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
-    [ "data", "AOloopControl__autotune_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ]
+    [ "aoloopcontrol_var", "AOloopControl__autotune_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ]
 ];

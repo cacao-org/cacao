@@ -34,7 +34,6 @@ var linopt__imtools_8c =
     [ "linopt_imtools_vec_to_2DImage", "linopt__imtools_8c.html#a8eb1cda29b603a7e7f8be4f49163f557", null ],
     [ "linopt_imtools_vec_to_2DImage_cli", "linopt__imtools_8c.html#a1cb4998061fa447f9d7185b3f8ba0742", null ],
     [ "C0", "linopt__imtools_8c.html#a8e16486e94e2fd7d44c5548e907d392b", null ],
-    [ "data", "linopt__imtools_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "dfcnt", "linopt__imtools_8c.html#a31fa525e1d9b569475e55062f6d16a96", null ],
     [ "fmInit", "linopt__imtools_8c.html#a867bce46990afb113a1ab42430a9e888", null ],
     [ "INITSTATUS_linopt_imtools", "linopt__imtools_8c.html#a8fff557d9f50fec41b81a28459ff908d", null ],

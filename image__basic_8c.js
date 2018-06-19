@@ -75,7 +75,6 @@ var image__basic_8c =
     [ "init_image_basic", "image__basic_8c.html#a369b2617616d0e846652eb9e0ebf91c8", null ],
     [ "load_fitsimages", "image__basic_8c.html#a569f6c5550944ba0a2fbc71900996b45", null ],
     [ "load_fitsimages_cube", "image__basic_8c.html#a4eb60c41877a6f39ea3f35a61a5b99de", null ],
-    [ "data", "image__basic_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "errmsg", "image__basic_8c.html#a8bb845778df5ade66dd9af426128a622", null ],
     [ "INITSTATUS_image_basic", "image__basic_8c.html#a5417eea66e528f44b6387b63b286f798", null ]
 ];

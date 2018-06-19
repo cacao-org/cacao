@@ -19,7 +19,6 @@ var AOloopControl__IOtools__camerainput_8c =
     [ "Average_cam_frames_IDdark", "AOloopControl__IOtools__camerainput_8c.html#a282b71a3e6ef11808ffd8bc10c9faf12", null ],
     [ "Average_cam_frames_nelem", "AOloopControl__IOtools__camerainput_8c.html#a9b11e27293cb519d00bc33ee088bf9af", null ],
     [ "COMPUTE_DARK_SUBTRACT_NBTHREADS", "AOloopControl__IOtools__camerainput_8c.html#ae11bc2d35bec63a0a0d850064022ff9f", null ],
-    [ "data", "AOloopControl__IOtools__camerainput_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "imtotalcnt", "AOloopControl__IOtools__camerainput_8c.html#a41033a357e6354f03b158d4bae04c81b", null ],
     [ "LOOPNUMBER", "AOloopControl__IOtools__camerainput_8c.html#afc4d319c21df38d7e771591b6934a836", null ],
     [ "tdiff", "AOloopControl__IOtools__camerainput_8c.html#a68e5522665259f4ae254e3bf493c4b18", null ],

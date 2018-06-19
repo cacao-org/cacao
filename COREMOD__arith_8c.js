@@ -229,7 +229,6 @@ var COREMOD__arith_8c =
     [ "Ptestlt", "COREMOD__arith_8c.html#a669f287d900166951a3d3dec60d859cd", null ],
     [ "Ptestmt", "COREMOD__arith_8c.html#acc7da2406b697521b13f3e476453d308", null ],
     [ "Ptrunc", "COREMOD__arith_8c.html#af6427f827bed4e0526cf80a1e1f54956", null ],
-    [ "data", "COREMOD__arith_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "errmsg_arith", "COREMOD__arith_8c.html#a25e2c6cb1a390cd8444e09c450f0d50f", null ],
     [ "INITSTATUS_COREMOD_arith", "COREMOD__arith_8c.html#a54c9b14b2ff818e2bf21045471f66d9b", null ]
 ];

@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['val',['val',['../structCMDARGTOKEN.html#a96839ddcbefc8d1629d9be94a1319bc3',1,'CMDARGTOKEN']]],
+  ['val',['val',['../structCMDARGTOKEN.html#a4e1b5722df45f096f62e4a1c4f6eef70',1,'CMDARGTOKEN::val()'],['../structCMDARGTOKEN.html#ad930e5d84d27546728b6504a719ab4c6',1,'CMDARGTOKEN::val()']]],
   ['val_5fd',['val_d',['../unionYYSTYPE.html#a61bc717a8d5bde0979541eb670984140',1,'YYSTYPE']]],
   ['val_5ff',['val_f',['../unionYYSTYPE.html#a6f4050b34641ae09204f63c853cb4c92',1,'YYSTYPE']]],
   ['val_5fl',['val_l',['../unionYYSTYPE.html#a81f209066080f5ffa329c1772b8b70c5',1,'YYSTYPE']]],
   ['valstr',['valstr',['../struct____attribute____.html#a1aabca3f48169935bbbd61596a255cfe',1,'__attribute__']]],
-  ['value',['value',['../structsymrec.html#aabe0b508928c6472fcbdf5071c33b61a',1,'symrec::value()'],['../structVARIABLE.html#ad7e8abd9c114ebdee993748b595c1142',1,'VARIABLE::value()'],['../struct____attribute____.html#acd2442d5a343ff65e0988a36c309b2a3',1,'__attribute__::value()']]],
+  ['value',['value',['../structVARIABLE.html#a0a88f70a914ce5fcc42e9da592ab0fb9',1,'VARIABLE::value()'],['../struct____attribute____.html#a66308d0229a89ebf475caa549711a62c',1,'__attribute__::value()'],['../structsymrec.html#a6010894d0620b4f8aadf53477259e21a',1,'symrec::value()'],['../structVARIABLE.html#a107144deeba3d54569000b89fcf4cdd7',1,'VARIABLE::value()'],['../struct____attribute____.html#aa98e036d0cb6f78cd7bd3d9589fb2c67',1,'__attribute__::value()']]],
   ['var',['var',['../structsymrec.html#af3db0c7e569f93a9d7385d5b170578f8',1,'symrec']]],
-  ['variable',['variable',['../structDATA.html#a38336f0ef793c2aef2a6f3a20e3e361b',1,'DATA']]],
+  ['variable',['variable',['../structDATA.html#adfb228b70f8bffa0badd92348211863c',1,'DATA::variable()'],['../structDATA.html#a38336f0ef793c2aef2a6f3a20e3e361b',1,'DATA::variable()']]],
   ['verbose',['Verbose',['../CLIcore_8c.html#a95f627d7054b1abbffa2c6ea19bf05db',1,'CLIcore.c']]],
   ['voltmode',['voltmode',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#aee4c321e9a9a914717477692e932c3a1',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
-  ['voltname',['voltname',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a4e1ed437db8c760bb0a9757d88959211',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
+  ['voltname',['voltname',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#aa12e274e2e9e8d6064dff605a36759a7',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['volton',['voltON',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a69e52470a28b48ba3bb524760c6bf913',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]]
 ];

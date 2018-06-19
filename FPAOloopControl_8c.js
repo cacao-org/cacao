@@ -18,7 +18,6 @@ var FPAOloopControl_8c =
     [ "init_FPAOloopControl", "FPAOloopControl_8c.html#a055944b50882c0c6dafdfe19881125e5", null ],
     [ "arrayftmp", "FPAOloopControl_8c.html#ad8ff4c1042b8a554ff3f671ccbfe6c13", null ],
     [ "arrayutmp", "FPAOloopControl_8c.html#ac39858ce68e2199bae5b1e5669cd12f6", null ],
-    [ "data", "FPAOloopControl_8c.html#a9842752e03b4de9b4593f1a3b34364ab", null ],
     [ "FPAO_loadcreateshm_fplog", "FPAOloopControl_8c.html#ae38b80dd8fb551e89cb3e3c338258dba", null ],
     [ "FPAO_loadcreateshm_log", "FPAOloopControl_8c.html#a32f1ed8eb72fd6a25f09e94c2171be41", null ],
     [ "FPAOconf", "FPAOloopControl_8c.html#ac300902be7c23a4787b2a895161b4911", null ],
