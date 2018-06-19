@@ -23,6 +23,20 @@ AOloopControl_read_param.c
 AOloopControl_RTstreamLOG.c
 )
 
+
+if(USE_MAGMA)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(MAGMA REQUIRED magma)
+message("---- MAGMA_LIBRARY_DIRS =  ${MAGMA_LIBRARY_DIRS}") 
+message("---- MAGMA_LIBRARIES    =  ${MAGMA_LIBRARIES}" )   
+message("---- MAGMA_CFLAGS_OTHER =  ${MAGMA_CFLAGS_OTHER}" ) 
+target_include_directories(AOloopControl PUBLIC ${MAGMA_INCLUDE_DIRS})
+target_link_libraries(AOloopControl PRIVATE ${MAGMA_LIBRARIES}) 
+target_link_libraries(AOloopControl PRIVATE cusolver)
+target_compile_options(AOloopControl PUBLIC -DHAVE_CUDA -DHAVE_MAGMA -DUSE_MAGMA ${MAGMA_CFLAGS_OTHER})
+endif(USE_MAGMA)
+
+
 install(TARGETS AOloopControl DESTINATION lib)
 install(FILES AOloopControl.h DESTINATION include)
 

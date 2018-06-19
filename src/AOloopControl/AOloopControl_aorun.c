@@ -471,7 +471,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[23] = tdiffv;
 
-
+/*
 	if(tdiffv>tdiffvlimit)
 	{
 		printf("TIMING GLITCH DETECTED: %f ms\n", tdiffv*1.0e6);
@@ -480,7 +480,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 			printf("   tdiff %2ld = %10.3f ms\n", i, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i]);
 		printf("\n");
 	}
-
+*/
 
     // md[0].atime.ts is absolute time at beginning of iteration
     //
@@ -515,8 +515,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
         for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
             data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
-
-		
 		
 		if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1)
 		{
@@ -551,7 +549,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt1 = LOOPiter;
         data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 0;        
     }
-
 
     AOconf[loop].status = 5; // 5 MULTIPLYING BY CONTROL MATRIX -> MODE VALUES
     clock_gettime(CLOCK_REALTIME, &tnow);
@@ -668,8 +665,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     }
 
 
-
-
     if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
     {
         if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
@@ -765,7 +760,11 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             if(AOconf[loop].GPUall == 1)
                 GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
             else
+            {
                 GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
+			}
+
+
         }
         else // direct pixel -> actuators linear transformation
         {
@@ -1276,13 +1275,12 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     // CONNECT to arrays holding gain, limit and multf values for individual modes
     if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
     {
-        if(sprintf(imname, "aol%ld_DMmode_GAIN", aoloopcontrol_var.LOOPNUMBER) < 1)
+        if(sprintf(imname, "aol%ld_DMmode_GAIN", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_DMmode_GAIN = read_sharedmem_image(imname);
     }
     printf("aoloopcontrol_var.aoconfID_DMmode_GAIN = %ld\n", aoloopcontrol_var.aoconfID_DMmode_GAIN);
-
 
     if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
     {
@@ -1588,9 +1586,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 		long modevalPFindex0, modevalPFindex1;
 		
 		
-
-		
-		
         // read WFS measured modes (residual)
         if(data.image[IDmodeval].md[0].sem==0)
         {
@@ -1613,10 +1608,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval, tnow);
 		
-		
-
-
-
         // write gain, mult, limit into arrays
         for(m=0; m<NBmodes; m++)
         {
@@ -1624,7 +1615,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
             modemult[m] = AOconf[loop].mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[modeblock[m]] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[m];
             modelimit[m] = AOconf[loop].maxlimit * data.image[aoloopcontrol_var.aoconfID_limitb].array.F[modeblock[m]] * data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[m];
         }
-
 
         //
         // UPDATE CURRENT DM MODES STATE
@@ -1642,7 +1632,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 		data.image[IDmodevalDMcorr].md[0].cnt0++;
 		data.image[IDmodevalDMcorr].md[0].write = 0;
 
-
         AOconf[loop].statusM = 4;
 		clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
@@ -1652,9 +1641,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_dm_corr, tnow);
 
 	
-	
-	
-
 		int ARPF_ok;
 		ARPF_ok = 0;
 

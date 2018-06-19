@@ -67,7 +67,8 @@ while getopts :hcs:e:d FLAG; do
     execname=$( ls $PWD/../../../bin/ )
     rm $OPTARG/AOloopControl 2> /dev/null
     echo "execname = \"$execname\""
-    ln -s $PWD/../../../bin/$execname $OPTARG/AOloopControl
+    #ln -s $PWD/../../../bin/$execname $OPTARG/AOloopControl
+    ln -s /usr/local/bin/cacao $OPTARG/AOloopControl
     exit
     ;;
     d)
