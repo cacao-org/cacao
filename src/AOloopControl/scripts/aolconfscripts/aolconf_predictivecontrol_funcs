@@ -407,7 +407,7 @@ echo "$PFb2aON" > $file
 
 ConfReadParam PFb3nbGPU "0"; PFb3nbGPU="$paramvalue"
 
-function function_PFb2applyON {
+function function_PFb3applyON {
 cp PredictiveControl/inmaskPF3.fits inmask3.fits
 cp PredictiveControl/outmaskPF3.fits outmask3.fits
 tmuxname="aol${LOOPNUMBER}PFb3apply"
