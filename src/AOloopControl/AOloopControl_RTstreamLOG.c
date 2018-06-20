@@ -676,7 +676,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                 if(SaveSet[i] == 1)
 					printw(" S");
 				else
-					printw("  ");
+					printw(" -");
 
                 if(AOconf[loop].RTSLOGarray[i].save == 1)
                 {
