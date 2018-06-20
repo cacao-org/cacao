@@ -557,6 +557,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
         clear();
         attron(A_BOLD);
         print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
+        printw("  s : Save\n");
         attroff(A_BOLD);
 
         printw("\n");
@@ -590,13 +591,12 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			
 			case 's': 
 			j = ENAstream[selected_entry];
-			
 			if(AOconf[loop].RTSLOGarray[j].save == 1)
 				AOconf[loop].RTSLOGarray[j].save = 0;
 			else
 				AOconf[loop].RTSLOGarray[j].save = 1;
-			
 			break;
+			
 			
 			case 'x': // exit
 			loopOK = 0;
@@ -675,7 +675,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 					}
                 }
                 else
-                    printw("   OFF   ");
+                    printw("   OFF  ");
 
 
                 printw(" %4d %10ld %10ld  %5d\n",
