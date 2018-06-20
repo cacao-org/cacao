@@ -827,6 +827,11 @@ function_PFb0watchON
 function_PFb1watchON
 function_PFb2watchON
 function_PFb3watchON
+
+function_PFb0compON
+function_PFb1compON
+function_PFb2compON
+function_PFb3compON
 }
 
 function function_PFAOloopProcess_OFF {
@@ -835,6 +840,11 @@ function_PFb0watchOFF
 function_PFb1watchOFF
 function_PFb2watchOFF
 function_PFb3watchOFF
+
+function_PFb0compOFF
+function_PFb1compOFF
+function_PFb2compOFF
+function_PFb3compOFF
 }
 
 
