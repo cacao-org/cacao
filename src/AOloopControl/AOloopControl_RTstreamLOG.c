@@ -563,6 +563,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     getmaxyx(stdscr, wrow, wcol);		/* get the number of rows and columns */
     cbreak();
     keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
+    nodelay(stdscr, TRUE);
     noecho();			/* Don't echo() while we do getch */
 
 
