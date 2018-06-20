@@ -541,6 +541,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     nodelay(stdscr, TRUE);
     curs_set(0);
     noecho();			/* Don't echo() while we do getch */
+	box(stdscr, '*', '*');
 
 
 	start_color();
@@ -648,12 +649,15 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			break;		
 			
 			
+			
 			case 'Z':  // Zero indices of set - useful for synchronization
 			for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
 			{
 				if(SaveSet[i]==1)
 					AOconf[loop].RTSLOGarray[i].frameindex = 0;
 			}
+			break;
+			
 			
 			
 			case 't': 
