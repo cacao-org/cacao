@@ -584,7 +584,28 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 
         printw("\n");
         printw("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
-        printw("%2s  %20s  %3s %3s   %3s %6s %4s %10s %10s  %5s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize", "size");
+        printw("%2s  %20s  %3s %3s   %3s %6s %8s %6s %10s  %5s\n", 
+			"id", 
+			"streamname", 
+			"ENA", 
+			" ON", 
+			"INI", 
+			"SAVE", 
+			"buff", 
+			"frame", 
+			"memsize", 
+			"size");
+		
+		
+		switch (ch){
+			case KEY_DOWN:
+			selected_entry++;
+			break;
+			case KEY_UP:
+			selected_entry--;
+			break;
+		}
+		
         printw("---------------------------------------------------------------------------\n");
         for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
         {
