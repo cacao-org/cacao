@@ -529,7 +529,7 @@ int kbdhit_ch(void)
 int AOloopControl_RTstreamLOG_GUI(int loop)
 {
     int wrow, wcol;
-    float frequ = 1.0;
+    float frequ = 10.0;
     int ch;
 
 	long NBstreams = 0;
@@ -572,11 +572,14 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     init_pair(3, COLOR_GREEN, COLOR_BLACK);
     init_pair(4, COLOR_RED,   COLOR_BLACK);
 
-    while( (ch=kbdhit_ch()) != 'x' )
+	int loopOK = 1;
+//    while( (ch=kbdhit_ch()) != 'x' )
+    while ( loopOK = 1 )
     {
 		NBstreams = 0;
 
         usleep((long) (1000000.0/frequ));
+        ch = getch();
         clear();
         attron(A_BOLD);
         print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
@@ -596,7 +599,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			"memsize", 
 			"size");
 		
-		printw("KEY = %d\n", ch);
+	//	printw("KEY = %d\n", ch);
 		
 		switch (ch)
 		{
@@ -606,6 +609,10 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 		
 			case KEY_UP:
 			selected_entry--;
+			break;
+			
+			case 'x':
+			loopOK = 0;
 			break;
 		}
 		
