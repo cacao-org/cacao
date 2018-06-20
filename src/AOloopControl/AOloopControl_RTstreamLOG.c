@@ -540,7 +540,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
             usleep((long) (1000000.0/frequ));
             clear();
             attron(A_BOLD);
-            print_header(" PRESS ANY KEY TO STOP MONITOR ", '-', wcol);
+            print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
             attroff(A_BOLD);
 
 
