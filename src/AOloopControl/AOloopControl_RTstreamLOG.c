@@ -539,6 +539,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     cbreak();
     keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
     nodelay(stdscr, TRUE);
+    curs_set(0);
     noecho();			/* Don't echo() while we do getch */
 
 
