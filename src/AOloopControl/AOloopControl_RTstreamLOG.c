@@ -651,7 +651,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
 			{
 				if(SaveSet[i]==1)
-					AOconf[loop].RTSLOGarray[i].frameindex = 0
+					AOconf[loop].RTSLOGarray[i].frameindex = 0;
 			}
 			
 			
