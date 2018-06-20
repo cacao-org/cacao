@@ -72,7 +72,6 @@ int AOloopControl_RTstreamLOG_init(int loop)
 	    i = RTSLOGindex_wfsim;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "wfsim"); //   U in Read_cam_frame()
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
         AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
      
         i = RTSLOGindex_imWFS0;
@@ -99,54 +98,44 @@ int AOloopControl_RTstreamLOG_init(int loop)
         i = RTSLOGindex_modeval;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval"); // U
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
                 
         i = RTSLOGindex_modeval_ol;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_ol");// U 
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
         AOconf[loop].RTSLOGarray[i].save = 1;
         AOconf[loop].RTSLOGarray[i].ON = 1;                
 
         i = RTSLOGindex_modeval_dm;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm");// U
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
                 
         i = RTSLOGindex_modeval_dm_corr;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm_corr");// U
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
                         
         i = RTSLOGindex_modeval_dm_now;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm_now");// U
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
                                 
         i = RTSLOGindex_modeval_dm_now_filt;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm_now_filt");// U
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
 
         i = RTSLOGindex_modevalPF;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modevalPF");// U
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
                                         
         i = RTSLOGindex_modevalPFsync;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modevalPFsync");// U
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;        
                 
         i = RTSLOGindex_modevalPFres;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "modevalPFres");// U
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;        
 
         i = RTSLOGindex_dmC;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "dmC");// U
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;                        
 
         i = RTSLOGindex_dmdisp;
         AOconf[loop].RTSLOGarray[i].active = 1;
