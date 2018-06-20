@@ -529,7 +529,7 @@ int kbdhit_ch(void)
 int AOloopControl_RTstreamLOG_GUI(int loop)
 {
     int wrow, wcol;
-    float frequ = 10.0;
+    float frequ = 1.0;
     int ch;
 
 	long NBstreams = 0;
@@ -596,11 +596,14 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			"memsize", 
 			"size");
 		
+		printw("KEY = %d\n", ch);
 		
-		switch (ch){
+		switch (ch)
+		{
 			case KEY_DOWN:
 			selected_entry++;
 			break;
+		
 			case KEY_UP:
 			selected_entry--;
 			break;
