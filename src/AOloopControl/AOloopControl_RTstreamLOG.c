@@ -562,7 +562,8 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
         clear();
         attron(A_BOLD);
         print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
-        printw("  s: Save single   t: Add/remove to/from set   S: Save set ON   U: Save set OFF\n");
+        printw("  s: Save single    t: Add/remove to/from set   S: Save set ON   U: Save set OFF\n");
+        printw("  o: ON/OFF single  O: Set ON   F: Set OFF\n");
         attroff(A_BOLD);
 
         printw("\n");
@@ -601,6 +602,15 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			else
 				AOconf[loop].RTSLOGarray[j].save = 1;
 			break;
+
+			case 'o': 
+			j = ENAstream[selected_entry];
+			if(AOconf[loop].RTSLOGarray[j].ON == 1)
+				AOconf[loop].RTSLOGarray[j].ON = 0;
+			else
+				AOconf[loop].RTSLOGarray[j].ON = 1;
+			break;
+			
 			
 			
 			case 'S': 
@@ -618,6 +628,25 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 					AOconf[loop].RTSLOGarray[i].save = 0;
 			}
 			break;		
+			
+			
+			case 'O': 
+			for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+			{
+				if(SaveSet[i]==1)
+					AOconf[loop].RTSLOGarray[i].ON = 1;
+			}
+			break;
+		
+			case 'F': 
+			for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+			{
+				if(SaveSet[i]==1)
+					AOconf[loop].RTSLOGarray[i].ON = 0;
+			}
+			break;		
+			
+			
 			
 			case 't': 
 			j = ENAstream[selected_entry];
