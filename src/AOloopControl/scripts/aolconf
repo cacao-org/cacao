@@ -394,7 +394,7 @@ echo "FUNCTIONS..."
 
 . ./aolconfscripts/aolconf_controlloop_funcs
 
-
+. ./aolconfscripts/aolconf_predictivecontrol_funcs
 
 
 

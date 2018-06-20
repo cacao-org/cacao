@@ -1,0 +1,466 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+
+
+
+
+
+
+ConfReadParam PFb0start "0"; PFb0start="$paramvalue"
+ConfReadParam PFb0end "2"; PFb0end="$paramvalue"
+
+function function_PFb0watchON {
+tmuxname="aol${LOOPNUMBER}PFb0watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 0 $PFb0start $PFb0end" C-m
+PFb0wON=" ON"
+file="./status/stat_PFb0wON.txt"
+echo "writing $PFb0wON to file $file"
+echo "$PFb0wON" > $file
+}
+
+function function_PFb0watchOFF {
+tmuxname="aol${LOOPNUMBER}PFb0watchin"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb0wON="OFF"
+file="./status/stat_PFb0wON.txt"
+echo "$PFb0wON" > $file
+}
+
+
+
+ConfReadParam PFb1start "2"; PFb1start="$paramvalue"
+ConfReadParam PFb1end "100"; PFb1end="$paramvalue"
+
+function function_PFb1watchON {
+tmuxname="aol${LOOPNUMBER}PFb1watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 1 $PFb1start $PFb1end" C-m
+PFb1wON=" ON"
+file="./status/stat_PFb1wON.txt"
+echo "writing $PFb1wON to file $file"
+echo "$PFb1wON" > $file
+}
+
+function function_PFb1watchOFF {
+tmuxname="aol${LOOPNUMBER}PFb1watchin"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb1wON="OFF"
+file="./status/stat_PFb1wON.txt"
+echo "$PFb1wON" > $file
+}
+
+
+
+ConfReadParam PFb2start "100"; PFb2start="$paramvalue"
+ConfReadParam PFb2end "200"; PFb2end="$paramvalue"
+
+function function_PFb2watchON {
+tmuxname="aol${LOOPNUMBER}PFb2watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 2 $PFb2start $PFb2end" C-m
+PFb2wON=" ON"
+file="./status/stat_PFb2wON.txt"
+echo "writing $PFb2wON to file $file"
+echo "$PFb2wON" > $file
+}
+
+function function_PFb2watchOFF {
+tmuxname="aol${LOOPNUMBER}PFb2watchin"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb2wON="OFF"
+file="./status/stat_PFb2wON.txt"
+echo "$PFb2wON" > $file
+}
+
+
+
+ConfReadParam PFb3start "200"; PFb3start="$paramvalue"
+ConfReadParam PFb3end "300"; PFb3end="$paramvalue"
+
+function function_PFb3watchON {
+tmuxname="aol${LOOPNUMBER}PFb3watchin"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 3 $PFb3start $PFb3end" C-m
+PFb3wON=" ON"
+file="./status/stat_PFb3wON.txt"
+echo "writing $PFb3wON to file $file"
+echo "$PFb3wON" > $file
+}
+
+function function_PFb3watchOFF {
+tmuxname="aol${LOOPNUMBER}PFb3watchin"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb3wON="OFF"
+file="./status/stat_PFb3wON.txt"
+echo "$PFb3wON" > $file
+}
+
+
+
+
+
+
+ConfReadParam hardwlatency_frame "2.1"; hardwlatency_frame="$paramvalue"
+ConfReadParam wfsmextrlatency_frame "0.5"; wfsmextrlatency_frame="$paramvalue"
+latency_frame=$(awk "BEGIN {printf \"%.3f\",${hardwlatency_frame}+${wfsmextrlatency_frame}}")
+
+ConfReadParam PFb0order "10"; PFb0order="$paramvalue"
+ConfReadParam PFb0lag "$latency_frame"; PFb0lag="$paramvalue"
+ConfReadParam PFb0SVDe "0.001"; PFb0SVDe="$paramvalue"
+ConfReadParam PFb0dgain "0.2"; PFb0dgain="$paramvalue"
+
+function function_PFb0compON {
+tmuxname="aol${LOOPNUMBER}PFb0comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb0" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb0 ${PFb0order} ${PFb0lag} ${PFb0SVDe} 0.0 aol${LOOPNUMBER}_outPFb0 1 ${PFb0dgain} 0" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb0cON=" ON"
+file="./status/stat_PFb0cON.txt"
+echo "writing $PFb0cON to file $file"
+echo "$PFb0cON" > $file
+}
+
+function function_PFb0compOFF {
+tmuxname="aol${LOOPNUMBER}PFb0comp"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb0cON="OFF"
+file="./status/stat_PFb0cON.txt"
+echo "$PFb0cON" > $file
+}
+
+
+ConfReadParam PFb1order "10"; PFb1order="$paramvalue"
+ConfReadParam PFb1lag "$latency_frame"; PFb1lag="$paramvalue"
+ConfReadParam PFb1SVDe "0.001"; PFb1SVDe="$paramvalue"
+ConfReadParam PFb1dgain "0.2"; PFb1dgain="$paramvalue"
+
+function function_PFb1compON {
+tmuxname="aol${LOOPNUMBER}PFb1comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb1" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb1 ${PFb1order} ${PFb1lag} ${PFb1SVDe} 0.0 aol${LOOPNUMBER}_outPFb1 1 ${PFb1dgain} 0" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb1cON=" ON"
+file="./status/stat_PFb1cON.txt"
+echo "writing $PFb1cON to file $file"
+echo "$PFb1cON" > $file
+}
+
+function function_PFb1compOFF {
+tmuxname="aol${LOOPNUMBER}PFb1comp"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb1cON="OFF"
+file="./status/stat_PFb1cON.txt"
+echo "$PFb1cON" > $file
+}
+
+
+ConfReadParam PFb2order "10"; PFb2order="$paramvalue"
+ConfReadParam PFb2lag "$latency_frame"; PFb2lag="$paramvalue"
+ConfReadParam PFb2SVDe "0.001"; PFb2SVDe="$paramvalue"
+ConfReadParam PFb2dgain "0.2"; PFb2dgain="$paramvalue"
+
+function function_PFb2compON {
+tmuxname="aol${LOOPNUMBER}PFb2comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb2" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb2 ${PFb2order} ${PFb2lag} ${PFb2SVDe} 0.0 aol${LOOPNUMBER}_outPFb2 1 ${PFb2dgain} 0" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb2cON=" ON"
+file="./status/stat_PFb2cON.txt"
+echo "writing $PFb2cON to file $file"
+echo "$PFb2cON" > $file
+}
+
+function function_PFb2compOFF {
+tmuxname="aol${LOOPNUMBER}PFb2comp"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb2cON="OFF"
+file="./status/stat_PFb2cON.txt"
+echo "$PFb2cON" > $file
+}
+
+
+ConfReadParam PFb3order "10"; PFb3order="$paramvalue"
+ConfReadParam PFb3lag "$latency_frame"; PFb3lag="$paramvalue"
+ConfReadParam PFb3SVDe "0.001"; PFb3SVDe="$paramvalue"
+ConfReadParam PFb3dgain "0.2"; PFb3dgain="$paramvalue"
+
+function function_PFb3compON {
+tmuxname="aol${LOOPNUMBER}PFb3comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb3" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb3 ${PFb3order} ${PFb3lag} ${PFb3SVDe} 0.0 aol${LOOPNUMBER}_outPFb3 1 ${PFb3dgain} 0" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb3cON=" ON"
+file="./status/stat_PFb3cON.txt"
+echo "writing $PFb3cON to file $file"
+echo "$PFb3cON" > $file
+}
+
+function function_PFb3compOFF {
+tmuxname="aol${LOOPNUMBER}PFb3comp"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb3cON="OFF"
+file="./status/stat_PFb3cON.txt"
+echo "$PFb3cON" > $file
+}
+
+
+
+
+
+
+
+
+ConfReadParam PFb0nbGPU "0"; PFb0nbGPU="$paramvalue"
+
+function function_PFb0applyON {
+cp PredictiveControl/inmaskPF0.fits inmask0.fits
+cp PredictiveControl/outmaskPF0.fits outmask0.fits
+tmuxname="aol${LOOPNUMBER}PFb0apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 0 -o -g ${PFb0nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb0  aol${LOOPNUMBER}_modevalPFb0" C-m
+
+PFb0aON=" ON"
+file="./status/stat_PFb0aON.txt"
+echo "writing $PFb0aON to file $file"
+echo "$PFb0aON" > $file
+}
+
+function function_PFb0applyOFF {
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask0.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb0apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
+PFb0aON="OFF"
+file="./status/stat_PFb0aON.txt"
+echo "$PFb0aON" > $file
+}
+
+
+
+ConfReadParam PFb1nbGPU "0"; PFb1nbGPU="$paramvalue"
+
+function function_PFb1applyON {
+cp PredictiveControl/inmaskPF1.fits inmask1.fits
+cp PredictiveControl/outmaskPF1.fits outmask1.fits
+tmuxname="aol${LOOPNUMBER}PFb1apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 1 -o -g ${PFb1nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb1  aol${LOOPNUMBER}_modevalPFb1" C-m
+
+PFb1aON=" ON"
+file="./status/stat_PFb1aON.txt"
+echo "writing $PFb1aON to file $file"
+echo "$PFb1aON" > $file
+}
+
+
+function function_PFb1applyOFF {
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask1.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb1apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
+PFb1aON="OFF"
+file="./status/stat_PFb1aON.txt"
+echo "$PFb1aON" > $file
+}
+
+
+
+ConfReadParam PFb2nbGPU "0"; PFb2nbGPU="$paramvalue"
+
+function function_PFb2applyON {
+cp PredictiveControl/inmaskPF2.fits inmask2.fits
+cp PredictiveControl/outmaskPF2.fits outmask2.fits
+tmuxname="aol${LOOPNUMBER}PFb2apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 2 -o -g ${PFb2nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb2  aol${LOOPNUMBER}_modevalPFb2" C-m
+
+PFb2aON=" ON"
+file="./status/stat_PFb2aON.txt"
+echo "writing $PFb2aON to file $file"
+echo "$PFb2aON" > $file
+}
+
+
+function function_PFb2applyOFF {
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask2.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb2apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
+PFb2aON="OFF"
+file="./status/stat_PFb2aON.txt"
+echo "$PFb2aON" > $file
+}
+
+
+
+
+ConfReadParam PFb3nbGPU "0"; PFb3nbGPU="$paramvalue"
+
+function function_PFb2applyON {
+cp PredictiveControl/inmaskPF3.fits inmask3.fits
+cp PredictiveControl/outmaskPF3.fits outmask3.fits
+tmuxname="aol${LOOPNUMBER}PFb3apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 3 -o -g ${PFb3nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb3  aol${LOOPNUMBER}_modevalPFb3" C-m
+
+PFb3aON=" ON"
+file="./status/stat_PFb3aON.txt"
+echo "writing $PFb3aON to file $file"
+echo "$PFb3aON" > $file
+}
+
+
+function function_PFb3applyOFF {
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask3.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb3apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
+PFb3aON="OFF"
+file="./status/stat_PFb3aON.txt"
+echo "$PFb3aON" > $file
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
