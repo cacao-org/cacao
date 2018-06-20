@@ -66,6 +66,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			AOconf[loop].RTSLOGarray[i].ON = 0;
 			AOconf[loop].RTSLOGarray[i].save = 0;
 			AOconf[loop].RTSLOGarray[i].saveToggle = 0;
+			AOconf[loop].RTSLOGarray[i].NBcubeSaved = -1;
         }
 	
 	    i = RTSLOGindex_wfsim;
@@ -327,9 +328,9 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 
 
-
-
-
+//
+// write single entry in log buffer
+//
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
 {
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1) && (AOconf[loop].RTSLOGarray[rtlindex].INIT = 1))
@@ -541,7 +542,6 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     nodelay(stdscr, TRUE);
     curs_set(0);
     noecho();			/* Don't echo() while we do getch */
-	box(stdscr, '*', '*');
 
 
 	start_color();
@@ -659,6 +659,19 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			break;
 			
 			
+			case 'n':  // Synchro and Save only one cube for set
+			for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+			{
+				if(SaveSet[i]==1)
+				{
+					AOconf[loop].RTSLOGarray[i].save = 1;				
+					AOconf[loop].RTSLOGarray[i].frameindex = 0;
+					AOconf[loop].RTSLOGarray[i].NBcubeSaved = 1;
+				}
+				
+			}
+			break;
+						
 			
 			case 't': 
 			j = ENAstream[selected_entry];
@@ -887,6 +900,14 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 					SAVEfile = 1;
 					NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
 					buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle-1; // buffindex to save
+					
+					// in case a finite number of cubes is saved
+					if(AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved >= 0)
+						{
+							AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved --;
+						}
+					if(AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved == 0)
+						AOconf[loop].RTSLOGarray[rtlindex].save = 0;
 				}
 				else // TEST if loop is off and partial buffer needs to be saved
 				{
