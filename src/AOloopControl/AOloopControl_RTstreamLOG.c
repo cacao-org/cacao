@@ -587,7 +587,16 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			selected_entry--;
 			break;
 			
-			case 'x':
+			
+			case 's': // exit
+			j = ENAstream[selected_entry];
+			if(AOconf[loop].RTSLOGarray[i].save == 1)
+				AOconf[loop].RTSLOGarray[i].save = 0;
+			if(AOconf[loop].RTSLOGarray[i].save == 0)
+				AOconf[loop].RTSLOGarray[i].save = 1;
+			break;
+			
+			case 'x': // exit
 			loopOK = 0;
 			break;
 			
