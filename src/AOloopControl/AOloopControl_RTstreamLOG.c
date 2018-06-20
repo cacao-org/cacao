@@ -563,7 +563,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
         attron(A_BOLD);
         print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
         printw("  s: Save single    t: Add/remove to/from set   S: Save set ON   U: Save set OFF\n");
-        printw("  o: ON/OFF single  O: Set ON   F: Set OFF\n");
+        printw("  o: ON/OFF single  O: Set ON   F: Set OFF      Z: Zero index set\n");
         attroff(A_BOLD);
 
         printw("\n");
@@ -646,6 +646,13 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			}
 			break;		
 			
+			
+			case 'Z':  // Zero indices of set - useful for synchronization
+			for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+			{
+				if(SaveSet[i]==1)
+					AOconf[loop].RTSLOGarray[i].frameindex = 0
+			}
 			
 			
 			case 't': 
