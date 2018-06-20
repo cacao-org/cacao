@@ -791,6 +791,7 @@ fi
 
 
 
+
 function function_zplon
 {
 echo " ON" > ./status/stat_zp$1loopON.txt
