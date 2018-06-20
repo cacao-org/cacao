@@ -615,7 +615,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                     printw("OFF   ");
 
 
-                printw(" %6s %4d %10ld %10ld  %5d\n",
+                printw(" %4d %10ld %10ld  %5d\n",
                        AOconf[loop].RTSLOGarray[i].buffindex,
                        AOconf[loop].RTSLOGarray[i].frameindex,
                        AOconf[loop].RTSLOGarray[i].memsize,
