@@ -515,6 +515,8 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 	int selected_entry = 0;
 	int ENAstream[MAX_NUMBER_RTLOGSTREAM];
 	
+	int SaveSet[MAX_NUMBER_RTLOGSTREAM];
+	
 	
 	printf("INITIALIZING MEMORY\n");
     fflush(stdout);
@@ -546,6 +548,9 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     init_pair(3, COLOR_GREEN, COLOR_BLACK);
     init_pair(4, COLOR_RED,   COLOR_BLACK);
 
+	for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+		SaveSet[i] = 0;
+
 	int loopOK = 1;
 	int NB_ENA_streams = 0;
     while ( loopOK == 1 )
@@ -557,7 +562,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
         clear();
         attron(A_BOLD);
         print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
-        printw("  s : Save\n");
+        printw("  s: Save single   t: Add/remove to/from set   S: Save set\n");
         attroff(A_BOLD);
 
         printw("\n");
@@ -595,6 +600,14 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 				AOconf[loop].RTSLOGarray[j].save = 0;
 			else
 				AOconf[loop].RTSLOGarray[j].save = 1;
+			break;
+			
+			case 't': 
+			j = ENAstream[selected_entry];
+			if(SaveSet[j] == 1)
+				SaveSet[j] = 0;
+			else
+				SaveSet[j] = 1;
 			break;
 			
 			
@@ -658,6 +671,12 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                 }
                 else
                     printw("  OFF");
+                    
+                
+                if(SaveSet[i] == 1)
+					printw(" S");
+				else
+					printw("  ");
 
                 if(AOconf[loop].RTSLOGarray[i].save == 1)
                 {
