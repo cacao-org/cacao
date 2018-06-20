@@ -540,6 +540,8 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 	char SAstring[20];
 	int i;
 	
+	int selected_entry = 0;
+	
 	
 	printf("INITIALIZING MEMORY\n");
     fflush(stdout);
@@ -551,6 +553,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     fflush(stdout);
     
 
+	
 
     /*  Initialize ncurses  */
     if ( initscr() == NULL ) {
@@ -587,7 +590,16 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
         {
             if(AOconf[loop].RTSLOGarray[i].active == 1)
             {
-				printw("%2d  %20s", i, AOconf[loop].RTSLOGarray[i].name);
+				if(i==selected_entry)
+				{
+					attron(A_REVERSE|A_BOLD);
+					printw("%2d  %20s", i, AOconf[loop].RTSLOGarray[i].name);
+					attroff(A_REVERSE|A_BOLD);
+				}
+				else
+				{
+					printw("%2d  %20s", i, AOconf[loop].RTSLOGarray[i].name);
+				}
 
                 if(AOconf[loop].RTSLOGarray[i].ENABLE == 1){
                     attron(COLOR_PAIR(3)|A_BOLD);
