@@ -563,14 +563,20 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     noecho();			/* Don't echo() while we do getch */
 
 
+	start_color();
+    init_pair(1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(2, COLOR_BLACK, COLOR_RED);
+    init_pair(3, COLOR_GREEN, COLOR_BLACK);
+    init_pair(4, COLOR_RED,   COLOR_BLACK);
+
     while( (ch=kbdhit_ch()) != 'x' )
     {
-        //		ch = kbdhit_ch();
+		NBstreams = 0;
+
         usleep((long) (1000000.0/frequ));
         clear();
         attron(A_BOLD);
         print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
- //       printw("Typed : %c\n", ch);
         attroff(A_BOLD);
 
         printw("\n");
@@ -581,39 +587,35 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
         {
             if(AOconf[loop].RTSLOGarray[i].active == 1)
             {
+				printw("%2d  %20s", i, AOconf[loop].RTSLOGarray[i].name);
 
                 if(AOconf[loop].RTSLOGarray[i].ENABLE == 1)
-                    sprintf(ENstring, "\033[1;32m ON\033[0m");
+                    printw(" ON");
                 else
-                    sprintf(ENstring, "OFF");
+                    printw("OFF");
 
                 if(AOconf[loop].RTSLOGarray[i].ON == 1)
-                    sprintf(ONstring, "\033[1;32m ON\033[0m");
+                    printw(" ON");
                 else
-                    sprintf(ONstring, "OFF");
+                    printw("OFF");
 
                 if(AOconf[loop].RTSLOGarray[i].INIT == 1)
-                    sprintf(INstring, "\033[1;32m ON\033[0m");
+                    printw(" ON");
                 else
-                    sprintf(INstring, "OFF");
+                    printw("OFF");
 
                 if(AOconf[loop].RTSLOGarray[i].save == 1)
                 {
                     if(AOconf[loop].RTSLOGarray[i].saveToggle!=0)
-                        sprintf(SAstring, "\033[1;31m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
                     else
-                        sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
                 }
                 else
-                    sprintf(SAstring, "OFF   ");
+                    printw("OFF   ");
 
 
-                printw("%2d  %20s  %3s %3s %3s %6s %4d %10ld %10ld  %5d\n", i,
-                       AOconf[loop].RTSLOGarray[i].name,
-                       ENstring,
-                       ONstring,
-                       INstring,
-                       SAstring,
+                printw(" %6s %4d %10ld %10ld  %5d\n",
                        AOconf[loop].RTSLOGarray[i].buffindex,
                        AOconf[loop].RTSLOGarray[i].frameindex,
                        AOconf[loop].RTSLOGarray[i].memsize,
@@ -625,14 +627,10 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
         printw("---------------------------------------------------------------------------\n");
         printw("%ld RTstreamLOGs active\n", NBstreams);
 
-
+		
         refresh();
     }
-    start_color();
-    init_pair(1, COLOR_BLACK, COLOR_WHITE);
-    init_pair(2, COLOR_BLACK, COLOR_RED);
-    init_pair(3, COLOR_GREEN, COLOR_BLACK);
-    init_pair(4, COLOR_RED,   COLOR_BLACK);
+    
 
 
     refresh();
