@@ -691,7 +691,11 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                     
                 
                 if(SaveSet[i] == 1)
+                {
+					attron(A_REVERSE);
 					printw("   S");
+					attroff(A_REVERSE);
+				}
 				else
 					printw("   -");
 
