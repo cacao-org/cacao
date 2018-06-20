@@ -582,7 +582,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 		
 	//	printw("KEY = %d\n", ch);
 		
-	
+
 		
 		switch (ch)
 		{
