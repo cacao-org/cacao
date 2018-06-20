@@ -581,7 +581,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 
         printw("\n");
         printw("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
-        printw("%2s  %20s  %3s %3s %3s %6s %4s %10s %10s  %5s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize", "size");
+        printw("%2s  %20s  %3s %3s   %3s %6s %4s %10s %10s  %5s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize", "size");
         printw("---------------------------------------------------------------------------\n");
         for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
         {
@@ -590,27 +590,27 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 				printw("%2d  %20s", i, AOconf[loop].RTSLOGarray[i].name);
 
                 if(AOconf[loop].RTSLOGarray[i].ENABLE == 1){
-                    attron(COLOR_PAIR(3));
+                    attron(COLOR_PAIR(3)|A_BOLD);
                     printw("   ON");
-                    attroff(COLOR_PAIR(3));
+                    attroff(COLOR_PAIR(3)|A_BOLD);
 				}
                 else
                     printw("  OFF");
 
                 if(AOconf[loop].RTSLOGarray[i].ON == 1)
                 {
-					attron(COLOR_PAIR(3));
+					attron(COLOR_PAIR(3)|A_BOLD);
                     printw("   ON");
-                    attroff(COLOR_PAIR(3));
+                    attroff(COLOR_PAIR(3)|A_BOLD);
                 }
                 else
                     printw("  OFF");
 
                 if(AOconf[loop].RTSLOGarray[i].INIT == 1)
                 {
-					attron(COLOR_PAIR(3));
+					attron(COLOR_PAIR(3)|A_BOLD);
                     printw("   ON");
-                    attroff(COLOR_PAIR(3));
+                    attroff(COLOR_PAIR(3)|A_BOLD);
                 }
                 else
                     printw("  OFF");
@@ -619,19 +619,19 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                 {
                     if(AOconf[loop].RTSLOGarray[i].saveToggle!=0)
                     {
-						attron(COLOR_PAIR(2));
-                        printw("  ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
-                        attroff(COLOR_PAIR(2));
+						attron(COLOR_PAIR(2)|A_BOLD);
+                        printw("   ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        attroff(COLOR_PAIR(2)|A_BOLD);
                     }
                     else
                     {
-						attron(COLOR_PAIR(3));
-                        printw("  ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
-                        attroff(COLOR_PAIR(3));
+						attron(COLOR_PAIR(3)|A_BOLD);
+                        printw("   ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        attroff(COLOR_PAIR(3)|A_BOLD);
 					}
                 }
                 else
-                    printw("OFF   ");
+                    printw("   OFF   ");
 
 
                 printw(" %4d %10ld %10ld  %5d\n",
