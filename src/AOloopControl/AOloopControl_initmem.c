@@ -89,7 +89,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         {
             printf("File \"%s\" size is wrong -> recreating file\n", AOconfname);
             printf("File has size : %zd\n", file_stat.st_size);
-            printf("Should be     : %zd\n", sizeof(AOLOOPCONTROL_CONF)*NB_AOloopcontrol);
+            printf("Should be     : %zd  (%d)\n", sizeof(AOLOOPCONTROL_CONF)*NB_AOloopcontrol, NB_AOloopcontrol);
             create = 1;
             close(SM_fd);
         }
