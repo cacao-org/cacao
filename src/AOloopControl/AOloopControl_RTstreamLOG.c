@@ -510,7 +510,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 	char ONstring[20];
 	char INstring[20];
 	char SAstring[20];
-	int i;
+	int i, j;
 	
 	int selected_entry = 0;
 	int ENAstream[MAX_NUMBER_RTLOGSTREAM];
