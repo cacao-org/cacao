@@ -141,6 +141,146 @@ echo "$PFb3wON" > $file
 
 
 
+ConfReadParam hardwlatency_frame "2.1"; hardwlatency_frame="$paramvalue"
+ConfReadParam wfsmextrlatency_frame "0.5"; wfsmextrlatency_frame="$paramvalue"
+latency_frame=$(awk "BEGIN {printf \"%.3f\",${hardwlatency_frame}+${wfsmextrlatency_frame}}")
+
+ConfReadParam PFb0order "10"; PFb0order="$paramvalue"
+ConfReadParam PFb0lag "$latency_frame"; PFb0lag="$paramvalue"
+ConfReadParam PFb0SVDe "0.001"; PFb0SVDe="$paramvalue"
+ConfReadParam PFb0dgain "0.2"; PFb0dgain="$paramvalue"
+
+function function_PFb0compON {
+tmuxname="aol${LOOPNUMBER}PFb0comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb0" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb0 ${PFb0order} ${PFb0lag} ${PFb0SVDe} 0.0 aol${LOOPNUMBER}_outPFb0 1 ${PFb0dgain} 0" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb0cON=" ON"
+file="./status/stat_PFb0cON.txt"
+echo "writing $PFb0cON to file $file"
+echo "$PFb0cON" > $file
+}
+
+function function_PFb0compOFF {
+tmuxname="aol${LOOPNUMBER}PFb0comp"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb0cON="OFF"
+file="./status/stat_PFb0cON.txt"
+echo "$PFb0cON" > $file
+}
+
+
+ConfReadParam PFb1order "10"; PFb1order="$paramvalue"
+ConfReadParam PFb1lag "$latency_frame"; PFb1lag="$paramvalue"
+ConfReadParam PFb1SVDe "0.001"; PFb1SVDe="$paramvalue"
+ConfReadParam PFb1dgain "0.2"; PFb1dgain="$paramvalue"
+
+function function_PFb1compON {
+tmuxname="aol${LOOPNUMBER}PFb1comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb1" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb1 ${PFb1order} ${PFb1lag} ${PFb1SVDe} 0.0 aol${LOOPNUMBER}_outPFb1 1 ${PFb1dgain} 0" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb1cON=" ON"
+file="./status/stat_PFb1cON.txt"
+echo "writing $PFb1cON to file $file"
+echo "$PFb1cON" > $file
+}
+
+function function_PFb1compOFF {
+tmuxname="aol${LOOPNUMBER}PFb1comp"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb1cON="OFF"
+file="./status/stat_PFb1cON.txt"
+echo "$PFb1cON" > $file
+}
+
+
+ConfReadParam PFb2order "10"; PFb2order="$paramvalue"
+ConfReadParam PFb2lag "$latency_frame"; PFb2lag="$paramvalue"
+ConfReadParam PFb2SVDe "0.001"; PFb2SVDe="$paramvalue"
+ConfReadParam PFb2dgain "0.2"; PFb2dgain="$paramvalue"
+
+function function_PFb2compON {
+tmuxname="aol${LOOPNUMBER}PFb2comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb2" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb2 ${PFb2order} ${PFb2lag} ${PFb2SVDe} 0.0 aol${LOOPNUMBER}_outPFb2 1 ${PFb2dgain} 0" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb2cON=" ON"
+file="./status/stat_PFb2cON.txt"
+echo "writing $PFb2cON to file $file"
+echo "$PFb2cON" > $file
+}
+
+function function_PFb2compOFF {
+tmuxname="aol${LOOPNUMBER}PFb2comp"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb2cON="OFF"
+file="./status/stat_PFb2cON.txt"
+echo "$PFb2cON" > $file
+}
+
+
+ConfReadParam PFb3order "10"; PFb3order="$paramvalue"
+ConfReadParam PFb3lag "$latency_frame"; PFb3lag="$paramvalue"
+ConfReadParam PFb3SVDe "0.001"; PFb3SVDe="$paramvalue"
+ConfReadParam PFb3dgain "0.2"; PFb3dgain="$paramvalue"
+
+function function_PFb3compON {
+tmuxname="aol${LOOPNUMBER}PFb3comp"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
+tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb3" C-m
+tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb3 ${PFb3order} ${PFb3lag} ${PFb3SVDe} 0.0 aol${LOOPNUMBER}_outPFb3 1 ${PFb3dgain} 0" C-m
+#tmux send-keys -t ${tmuxname} "exit" C-m
+PFb3cON=" ON"
+file="./status/stat_PFb3cON.txt"
+echo "writing $PFb3cON to file $file"
+echo "$PFb3cON" > $file
+}
+
+function function_PFb3compOFF {
+tmuxname="aol${LOOPNUMBER}PFb3comp"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} C-c
+tmux kill-session -t ${tmuxname}
+PFb2cON="OFF"
+file="./status/stat_PFb3cON.txt"
+echo "$PFb3cON" > $file
+}
+
+
+
+
+
+
 
 
 
@@ -166,6 +306,7 @@ menuitems+=( " " " ")
 
 
 ConfReadParam loopfrequ "1000.0"; loopfrequ="$paramvalue"
+
 # hardware latency (frames)
 ConfReadParam hardwlatency_frame "2.1"; hardwlatency_frame="$paramvalue"
 # software latency (frame)
@@ -1965,57 +2106,43 @@ menucontrolloop_default="PFb3GPU9"
 
 
 # FILTER 0 - WATCH
-
 	PFb0wON)
 function_PFb0watchON
 menupred_default="PFb0wOFF"
 ;;
-
 	PFb0wOFF)
 function_PFb0watchOFF
 menupred_default="PFb0wON"
 ;;
 
 
-
-
-
 # FILTER 1 - WATCH
-
 	PFb1wON)
 function_PFb1watchON
 menupred_default="PFb1wOFF"
 ;;
-
 	PFb1wOFF)
 function_PFb1watchOFF
 menupred_default="PFb1wON"
 ;;
 
 
-
-
 # FILTER 2 - WATCH
-
 	PFb2wON)
 function_PFb2watchON
 menupred_default="PFb2wOFF"
 ;;
-
 	PFb2wOFF)
 function_PFb2watchOFF
 menupred_default="PFb2wON"
 ;;
 
 
-
 # FILTER 3 - WATCH
-
 	PFb3wON)
 function_PFb3watchON
 menupred_default="PFb3wOFF"
 ;;
-
 	PFb3wOFF)
 function_PFb3watchOFF
 menupred_default="PFb3wON"
@@ -2031,37 +2158,15 @@ menupred_default="PFb3wON"
 
 
 
-# FILTER 0
-
+# FILTER 0 - COMPUTE
 	PFb0cON)
-tmuxname="aol${LOOPNUMBER}PFb0comp"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb0" C-m
-tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb0 ${PFb0order} ${PFb0lag} ${PFb0SVDe} 0.0 aol${LOOPNUMBER}_outPFb0 1 ${PFb0dgain} 0" C-m
-#tmux send-keys -t ${tmuxname} "exit" C-m
-PFb0cON=" ON"
-file="./status/stat_PFb0cON.txt"
-echo "writing $PFb0cON to file $file"
-echo "$PFb0cON" > $file
+function_PFb0compON
 menupred_default="PFb0cOFF"
 ;;
-
 	PFb0cOFF)
-tmuxname="aol${LOOPNUMBER}PFb0comp"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} C-c
-tmux kill-session -t ${tmuxname}
-PFb0cON="OFF"
-file="./status/stat_PFb0cON.txt"
-echo "$PFb0cON" > $file
+function_PFb0compOFF
 menupred_default="PFb0cON"
 ;;
-
 
 	PFb0sDecay)
 exec 3>&1;
@@ -2082,37 +2187,15 @@ EOF
 
 
 
-# FILTER 1
-
+# FILTER 1 - COMPUTE
 	PFb1cON)
-tmuxname="aol${LOOPNUMBER}PFb1comp"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb1" C-m
-tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb1 ${PFb1order} ${PFb1lag} ${PFb1SVDe} 0.0 aol${LOOPNUMBER}_outPFb1 1 ${PFb1dgain} 0" C-m
-#tmux send-keys -t ${tmuxname} "exit" C-m
-PFb1cON=" ON"
-file="./status/stat_PFb1cON.txt"
-echo "writing $PFb1cON to file $file"
-echo "$PFb1cON" > $file
+function_PFb1compON
 menupred_default="PFb1cOFF"
 ;;
-
 	PFb1cOFF)
-tmuxname="aol${LOOPNUMBER}PFb1comp"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} C-c
-tmux kill-session -t ${tmuxname}
-PFb1cON="OFF"
-file="./status/stat_PFb1cON.txt"
-echo "$PFb1cON" > $file
+function_PFb1compOFF
 menupred_default="PFb1cON"
 ;;
-
 
 	PFb1sDecay)
 exec 3>&1;
@@ -2135,33 +2218,12 @@ EOF
 
 
 # FILTER 2
-
 	PFb2cON)
-tmuxname="aol${LOOPNUMBER}PFb2comp"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb2" C-m
-tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb2 ${PFb2order} ${PFb2lag} ${PFb2SVDe} 0.0 aol${LOOPNUMBER}_outPFb2 1 ${PFb2dgain} 0" C-m
-#tmux send-keys -t ${tmuxname} "exit" C-m
-PFb2cON=" ON"
-file="./status/stat_PFb2cON.txt"
-echo "writing $PFb2cON to file $file"
-echo "$PFb2cON" > $file
+function_PFb2compON
 menupred_default="PFb2cOFF"
 ;;
-
 	PFb2cOFF)
-tmuxname="aol${LOOPNUMBER}PFb2comp"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} C-c
-tmux kill-session -t ${tmuxname}
-PFb2cON="OFF"
-file="./status/stat_PFb2cON.txt"
-echo "$PFb2cON" > $file
+function_PFb2compOFF
 menupred_default="PFb2cON"
 ;;
 
@@ -2189,31 +2251,12 @@ EOF
 # FILTER 3
 
 	PFb3cON)
-tmuxname="aol${LOOPNUMBER}PFb3comp"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "readshmim aol${LOOPNUMBER}_modevalol_PFb3" C-m
-tmux send-keys -t ${tmuxname} "mkARpfilt aol${LOOPNUMBER}_modevalol_PFb3 ${PFb3order} ${PFb3lag} ${PFb3SVDe} 0.0 aol${LOOPNUMBER}_outPFb3 1 ${PFb3dgain} 0" C-m
-#tmux send-keys -t ${tmuxname} "exit" C-m
-PFb3cON=" ON"
-file="./status/stat_PFb3cON.txt"
-echo "writing $PFb3cON to file $file"
-echo "$PFb3cON" > $file
+function_PFb3compON
 menupred_default="PFb3cOFF"
 ;;
 
 	PFb3cOFF)
-tmuxname="aol${LOOPNUMBER}PFb3comp"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} C-c
-tmux kill-session -t ${tmuxname}
-PFb3cON="OFF"
-file="./status/stat_PFb3cON.txt"
-echo "$PFb3cON" > $file
+function_PFb3compOFF
 menupred_default="PFb3cON"
 ;;
 
