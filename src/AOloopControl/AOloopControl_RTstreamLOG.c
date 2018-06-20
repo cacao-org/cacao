@@ -504,7 +504,6 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 	
 	int selected_entry = 0;
 	int ENAstream[MAX_NUMBER_RTLOGSTREAM];
-	
 	int SaveSet[MAX_NUMBER_RTLOGSTREAM];
 	
 	

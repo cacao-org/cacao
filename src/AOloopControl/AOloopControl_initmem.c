@@ -88,6 +88,8 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         if(file_stat.st_size!=sizeof(AOLOOPCONTROL_CONF)*NB_AOloopcontrol)
         {
             printf("File \"%s\" size is wrong -> recreating file\n", AOconfname);
+            printf("File has size : %zd\n", file_stat.st_size);
+            printf("Should be     : %zd\n", sizeof(AOLOOPCONTROL_CONF)*NB_AOloopcontrol);
             create = 1;
             close(SM_fd);
         }
