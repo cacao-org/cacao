@@ -360,7 +360,8 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 				AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr1;
 				AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff1;
 				AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo1;
-				AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 1;
+				if(AOconf[loop].RTSLOGarray[rtlindex].save==1)
+					AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 1;
 			}
 			else
 			{
@@ -368,7 +369,8 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 				AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr0;
 				AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff0;
 				AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
-				AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 2;
+				if(AOconf[loop].RTSLOGarray[rtlindex].save==1)
+					AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 2;
 			}
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].write = 1;
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
@@ -652,7 +654,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			{
 				if(SaveSet[i]==1)
 				{
-					AOconf[loop].RTSLOGarray[i].save = 1;				
+					AOconf[loop].RTSLOGarray[i].save = 0;				
 					AOconf[loop].RTSLOGarray[i].frameindex = 0;
 					AOconf[loop].RTSLOGarray[i].NBcubeSaved = 1;
 				}
@@ -887,9 +889,9 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 				{
 					SAVEfile = 1;
 					NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-					buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle-1; // buffindex to save
+					buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle - 1; // buffindex to save
 					
-					// in case a finite number of cubes is saved
+					// in case a finite number of full cubes is to be saved
 					if(AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved >= 0)
 						{
 							AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved --;
@@ -909,6 +911,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 					}
 					
 				}
+
 
 
                 if(SAVEfile == 1)
