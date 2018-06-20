@@ -495,34 +495,6 @@ int print_header(const char *str, char c, int wcol)
 }
 
 
-int kbdhit_ch(void)
-{
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-     
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
- 
-    ch = getchar();
- 
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
- 
-    if(ch != EOF)
-      {
-	//     ungetc(ch, stdin);
-        return ch;
-      }
-    
-    return 0;
-}
-
-
 
 
 
@@ -574,8 +546,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     init_pair(4, COLOR_RED,   COLOR_BLACK);
 
 	int loopOK = 1;
-//    while( (ch=kbdhit_ch()) != 'x' )
-    while ( loopOK = 1 )
+    while ( loopOK == 1 )
     {
 		NBstreams = 0;
 
