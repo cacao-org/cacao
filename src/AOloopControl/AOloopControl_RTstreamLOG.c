@@ -513,6 +513,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 	int i;
 	
 	int selected_entry = 0;
+	int ENAstream[MAX_NUMBER_RTLOGSTREAM];
 	
 	
 	printf("INITIALIZING MEMORY\n");
@@ -546,6 +547,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     init_pair(4, COLOR_RED,   COLOR_BLACK);
 
 	int loopOK = 1;
+	int NB_ENA_streams = 0;
     while ( loopOK == 1 )
     {
 		NBstreams = 0;
@@ -573,6 +575,8 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 		
 	//	printw("KEY = %d\n", ch);
 		
+	
+		
 		switch (ch)
 		{
 			case KEY_DOWN:
@@ -586,14 +590,25 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			case 'x':
 			loopOK = 0;
 			break;
+			
 		}
 		
+		if (selected_entry<0)
+			selected_entry = 0;
+		if (selected_entry>NB_ENA_streams-1)
+			selected_entry = NB_ENA_streams-1;
+		
+		
         printw("---------------------------------------------------------------------------\n");
+        
+        
+        NB_ENA_streams = 0;
         for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
         {
+			
             if(AOconf[loop].RTSLOGarray[i].active == 1)
             {
-				if(i==selected_entry)
+				if(i==ENAstream[selected_entry])
 				{
 					attron(A_REVERSE|A_BOLD);
 					printw("%2d  %20s", i, AOconf[loop].RTSLOGarray[i].name);
@@ -605,6 +620,9 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 				}
 
                 if(AOconf[loop].RTSLOGarray[i].ENABLE == 1){
+					ENAstream[NB_ENA_streams] = i;
+					NB_ENA_streams++;
+					
                     attron(COLOR_PAIR(3)|A_BOLD);
                     printw("   ON");
                     attroff(COLOR_PAIR(3)|A_BOLD);
