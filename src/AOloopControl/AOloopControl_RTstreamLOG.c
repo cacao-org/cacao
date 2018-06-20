@@ -562,7 +562,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
         clear();
         attron(A_BOLD);
         print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
-        printw("  s: Save single   t: Add/remove to/from set   S: Save set\n");
+        printw("  s: Save single   t: Add/remove to/from set   S: Save set ON   U: Save set OFF\n");
         attroff(A_BOLD);
 
         printw("\n");
@@ -601,6 +601,23 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			else
 				AOconf[loop].RTSLOGarray[j].save = 1;
 			break;
+			
+			
+			case 'S': 
+			for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+			{
+				if(SaveSet[i]==1)
+					AOconf[loop].RTSLOGarray[i].save = 1;
+			}
+			break;
+		
+			case 'U': 
+			for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+			{
+				if(SaveSet[i]==1)
+					AOconf[loop].RTSLOGarray[i].save = 0;
+			}
+			break;		
 			
 			case 't': 
 			j = ENAstream[selected_entry];
@@ -674,27 +691,27 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                     
                 
                 if(SaveSet[i] == 1)
-					printw(" S");
+					printw("   S");
 				else
-					printw(" -");
+					printw("   -");
 
                 if(AOconf[loop].RTSLOGarray[i].save == 1)
                 {
                     if(AOconf[loop].RTSLOGarray[i].saveToggle!=0)
                     {
 						attron(COLOR_PAIR(2)|A_BOLD);
-                        printw("   ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
                         attroff(COLOR_PAIR(2)|A_BOLD);
                     }
                     else
                     {
 						attron(COLOR_PAIR(3)|A_BOLD);
-                        printw("   ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
                         attroff(COLOR_PAIR(3)|A_BOLD);
 					}
                 }
                 else
-                    printw("   OFF  ");
+                    printw(" OFF  ");
 
 
                 printw(" %4d %10ld %10ld  %5d\n",
