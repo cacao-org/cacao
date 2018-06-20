@@ -394,9 +394,6 @@ typedef struct
 	RTstreamLOG RTSLOGarray[MAX_NUMBER_RTLOGSTREAM];
 
 
-
-
-
 } AOLOOPCONTROL_CONF;
 
 
