@@ -590,10 +590,12 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			
 			case 's': 
 			j = ENAstream[selected_entry];
+			
 			if(AOconf[loop].RTSLOGarray[j].save == 1)
 				AOconf[loop].RTSLOGarray[j].save = 0;
-			if(AOconf[loop].RTSLOGarray[j].save == 0)
+			else
 				AOconf[loop].RTSLOGarray[j].save = 1;
+			
 			break;
 			
 			case 'x': // exit
