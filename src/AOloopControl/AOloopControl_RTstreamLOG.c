@@ -589,27 +589,46 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
             {
 				printw("%2d  %20s", i, AOconf[loop].RTSLOGarray[i].name);
 
-                if(AOconf[loop].RTSLOGarray[i].ENABLE == 1)
-                    printw(" ON");
+                if(AOconf[loop].RTSLOGarray[i].ENABLE == 1){
+                    attron(COLOR_PAIR(3));
+                    printw("   ON");
+                    attroff(COLOR_PAIR(3));
+				}
                 else
-                    printw("OFF");
+                    printw("  OFF");
 
                 if(AOconf[loop].RTSLOGarray[i].ON == 1)
-                    printw(" ON");
+                {
+					attron(COLOR_PAIR(3));
+                    printw("   ON");
+                    attroff(COLOR_PAIR(3));
+                }
                 else
-                    printw("OFF");
+                    printw("  OFF");
 
                 if(AOconf[loop].RTSLOGarray[i].INIT == 1)
-                    printw(" ON");
+                {
+					attron(COLOR_PAIR(3));
+                    printw("   ON");
+                    attroff(COLOR_PAIR(3));
+                }
                 else
-                    printw("OFF");
+                    printw("  OFF");
 
                 if(AOconf[loop].RTSLOGarray[i].save == 1)
                 {
                     if(AOconf[loop].RTSLOGarray[i].saveToggle!=0)
-                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                    {
+						attron(COLOR_PAIR(2));
+                        printw("  ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        attroff(COLOR_PAIR(2));
+                    }
                     else
-                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                    {
+						attron(COLOR_PAIR(3));
+                        printw("  ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        attroff(COLOR_PAIR(3));
+					}
                 }
                 else
                     printw("OFF   ");
