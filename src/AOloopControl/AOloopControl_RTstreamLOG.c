@@ -472,6 +472,10 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 
 
 
+
+
+
+
 int print_header(const char *str, char c, int wcol)
 {
     long n;
@@ -519,37 +523,111 @@ int kbdhit_ch(void)
 }
 
 
+
+
+
 int AOloopControl_RTstreamLOG_GUI(int loop)
 {
     int wrow, wcol;
     float frequ = 10.0;
-	int ch;
+    int ch;
+
+	long NBstreams = 0;
+	
+	char ENstring[20];
+	char ONstring[20];
+	char INstring[20];
+	char SAstring[20];
+	int i;
+	
+	
+	printf("INITIALIZING MEMORY\n");
+    fflush(stdout);
+	
+	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+        AOloopControl_InitializeMemory(1);
+
+    printf("MEMORY HAS BEEN INITIALIZED\n");
+    fflush(stdout);
+    
+
 
     /*  Initialize ncurses  */
     if ( initscr() == NULL ) {
         fprintf(stderr, "Error initialising ncurses.\n");
         exit(EXIT_FAILURE);
     }
-	getmaxyx(stdscr, wrow, wcol);		/* get the number of rows and columns */
-	cbreak();
-	keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
-	noecho();			/* Don't echo() while we do getch */
-	
-	
-	while( (ch=kbdhit_ch()) != 'x' )
+    getmaxyx(stdscr, wrow, wcol);		/* get the number of rows and columns */
+    cbreak();
+    keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
+    noecho();			/* Don't echo() while we do getch */
+
+
+    while( (ch=kbdhit_ch()) != 'x' )
+    {
+        //		ch = kbdhit_ch();
+        usleep((long) (1000000.0/frequ));
+        clear();
+        attron(A_BOLD);
+        print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
+ //       printw("Typed : %c\n", ch);
+        attroff(A_BOLD);
+
+        printw("\n");
+        printw("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
+        printw("%2s  %20s  %3s %3s %3s %6s %4s %10s %10s  %5s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize", "size");
+        printw("---------------------------------------------------------------------------\n");
+        for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
         {
-	//		ch = kbdhit_ch();
-            usleep((long) (1000000.0/frequ));
-            clear();
-            attron(A_BOLD);
-            print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
-            printw("Typed : %c\n", ch);
-            attroff(A_BOLD);
+            if(AOconf[loop].RTSLOGarray[i].active == 1)
+            {
+
+                if(AOconf[loop].RTSLOGarray[i].ENABLE == 1)
+                    sprintf(ENstring, "\033[1;32m ON\033[0m");
+                else
+                    sprintf(ENstring, "OFF");
+
+                if(AOconf[loop].RTSLOGarray[i].ON == 1)
+                    sprintf(ONstring, "\033[1;32m ON\033[0m");
+                else
+                    sprintf(ONstring, "OFF");
+
+                if(AOconf[loop].RTSLOGarray[i].INIT == 1)
+                    sprintf(INstring, "\033[1;32m ON\033[0m");
+                else
+                    sprintf(INstring, "OFF");
+
+                if(AOconf[loop].RTSLOGarray[i].save == 1)
+                {
+                    if(AOconf[loop].RTSLOGarray[i].saveToggle!=0)
+                        sprintf(SAstring, "\033[1;31m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
+                    else
+                        sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
+                }
+                else
+                    sprintf(SAstring, "OFF   ");
 
 
-
-            refresh();
+                printw("%2d  %20s  %3s %3s %3s %6s %4d %10ld %10ld  %5d\n", i,
+                       AOconf[loop].RTSLOGarray[i].name,
+                       ENstring,
+                       ONstring,
+                       INstring,
+                       SAstring,
+                       AOconf[loop].RTSLOGarray[i].buffindex,
+                       AOconf[loop].RTSLOGarray[i].frameindex,
+                       AOconf[loop].RTSLOGarray[i].memsize,
+                       AOconf[loop].RTSLOGarray[i].SIZE
+                      );
+                NBstreams++;
+            }
         }
+        printw("---------------------------------------------------------------------------\n");
+        printw("%ld RTstreamLOGs active\n", NBstreams);
+
+
+        refresh();
+    }
     start_color();
     init_pair(1, COLOR_BLACK, COLOR_WHITE);
     init_pair(2, COLOR_BLACK, COLOR_RED);
@@ -557,10 +635,10 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     init_pair(4, COLOR_RED,   COLOR_BLACK);
 
 
-	refresh();
+    refresh();
     endwin();
-    
-    
+
+
     return 0;
 }
 
