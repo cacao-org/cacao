@@ -523,6 +523,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 {
     int wrow, wcol;
     float frequ = 10.0;
+	int ch;
 
     /*  Initialize ncurses  */
     if ( initscr() == NULL ) {
@@ -535,12 +536,14 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 	noecho();			/* Don't echo() while we do getch */
 	
 	
-	while( !kbdhit_ch() )
+	while( (ch=kbdhit_ch()) != 'x' )
         {
+	//		ch = kbdhit_ch();
             usleep((long) (1000000.0/frequ));
             clear();
             attron(A_BOLD);
             print_header(" PRESS x TO STOP MONITOR ", '-', wcol);
+            printw("Typed : %c\n", ch);
             attroff(A_BOLD);
 
 
