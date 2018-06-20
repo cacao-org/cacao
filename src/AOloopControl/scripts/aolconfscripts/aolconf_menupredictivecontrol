@@ -271,10 +271,185 @@ tmuxname="aol${LOOPNUMBER}PFb3comp"
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} C-c
 tmux kill-session -t ${tmuxname}
-PFb2cON="OFF"
+PFb3cON="OFF"
 file="./status/stat_PFb3cON.txt"
 echo "$PFb3cON" > $file
 }
+
+
+
+
+
+
+
+
+ConfReadParam PFb0nbGPU "0"; PFb0nbGPU="$paramvalue"
+
+function function_PFb0applyON {
+cp PredictiveControl/inmaskPF0.fits inmask0.fits
+cp PredictiveControl/outmaskPF0.fits outmask0.fits
+tmuxname="aol${LOOPNUMBER}PFb0apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 0 -o -g ${PFb0nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb0  aol${LOOPNUMBER}_modevalPFb0" C-m
+
+PFb0aON=" ON"
+file="./status/stat_PFb0aON.txt"
+echo "writing $PFb0aON to file $file"
+echo "$PFb0aON" > $file
+}
+
+function function_PFb0applyOFF {
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask0.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb0apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
+PFb0aON="OFF"
+file="./status/stat_PFb0aON.txt"
+echo "$PFb0aON" > $file
+}
+
+
+
+ConfReadParam PFb1nbGPU "0"; PFb1nbGPU="$paramvalue"
+
+function function_PFb1applyON {
+cp PredictiveControl/inmaskPF1.fits inmask1.fits
+cp PredictiveControl/outmaskPF1.fits outmask1.fits
+tmuxname="aol${LOOPNUMBER}PFb1apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 1 -o -g ${PFb1nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb1  aol${LOOPNUMBER}_modevalPFb1" C-m
+
+PFb1aON=" ON"
+file="./status/stat_PFb1aON.txt"
+echo "writing $PFb1aON to file $file"
+echo "$PFb1aON" > $file
+}
+
+
+function function_PFb1applyOFF {
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask1.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb1apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
+PFb1aON="OFF"
+file="./status/stat_PFb1aON.txt"
+echo "$PFb1aON" > $file
+}
+
+
+
+ConfReadParam PFb2nbGPU "0"; PFb2nbGPU="$paramvalue"
+
+function function_PFb2applyON {
+cp PredictiveControl/inmaskPF2.fits inmask2.fits
+cp PredictiveControl/outmaskPF2.fits outmask2.fits
+tmuxname="aol${LOOPNUMBER}PFb2apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 2 -o -g ${PFb2nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb2  aol${LOOPNUMBER}_modevalPFb2" C-m
+
+PFb2aON=" ON"
+file="./status/stat_PFb2aON.txt"
+echo "writing $PFb2aON to file $file"
+echo "$PFb2aON" > $file
+}
+
+
+function function_PFb2applyOFF {
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask2.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb2apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
+PFb2aON="OFF"
+file="./status/stat_PFb2aON.txt"
+echo "$PFb2aON" > $file
+}
+
+
+
+
+ConfReadParam PFb3nbGPU "0"; PFb3nbGPU="$paramvalue"
+
+function function_PFb2applyON {
+cp PredictiveControl/inmaskPF3.fits inmask3.fits
+cp PredictiveControl/outmaskPF3.fits outmask3.fits
+tmuxname="aol${LOOPNUMBER}PFb3apply"
+sleep 0.2
+tmux new-session -d -s ${tmuxname}
+sleep 0.2
+tmux send-keys -t ${tmuxname} " " C-m
+tmux send-keys -t ${tmuxname} " " C-m
+
+tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 3 -o -g ${PFb3nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb3  aol${LOOPNUMBER}_modevalPFb3" C-m
+
+PFb3aON=" ON"
+file="./status/stat_PFb3aON.txt"
+echo "writing $PFb3aON to file $file"
+echo "$PFb3aON" > $file
+}
+
+
+function function_PFb3applyOFF {
+./AOloopControl << EOF
+readshmim aol${LOOPNUMBER}_mode_ARPFgain
+loadfits outmask3.fits outmask
+im1=1-outmask
+im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
+cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+exitCLI
+EOF
+	
+tmuxname="aol${LOOPNUMBER}PFb3apply"
+tmux send-keys -t ${tmuxname} C-c
+tmux send-keys -t ${tmuxname} "exit" C-m
+tmux kill-session -t ${tmuxname}
+PFb3aON="OFF"
+file="./status/stat_PFb3aON.txt"
+echo "$PFb3aON" > $file
+}
+
+
 
 
 
@@ -2249,12 +2424,10 @@ EOF
 
 
 # FILTER 3
-
 	PFb3cON)
 function_PFb3compON
 menupred_default="PFb3cOFF"
 ;;
-
 	PFb3cOFF)
 function_PFb3compOFF
 menupred_default="PFb3cON"
@@ -2288,175 +2461,43 @@ EOF
 
 
 
-# FILTER 0
-
+# FILTER 0 - APPLY
 	PFb0aON)
-cp PredictiveControl/inmaskPF0.fits inmask0.fits
-cp PredictiveControl/outmaskPF0.fits outmask0.fits
-tmuxname="aol${LOOPNUMBER}PFb0apply"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-
-tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 0 -o -g ${PFb0nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb0  aol${LOOPNUMBER}_modevalPFb0" C-m
-
-PFb0aON=" ON"
-file="./status/stat_PFb0aON.txt"
-echo "writing $PFb0aON to file $file"
-echo "$PFb0aON" > $file
+function_PFb0applyON
 menupred_default="PFb0aOFF"
 ;;
-
 	PFb0aOFF)
-./AOloopControl << EOF
-readshmim aol${LOOPNUMBER}_mode_ARPFgain
-loadfits outmask0.fits outmask
-im1=1-outmask
-im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
-cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
-exitCLI
-EOF
-	
-tmuxname="aol${LOOPNUMBER}PFb0apply"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} "exit" C-m
-tmux kill-session -t ${tmuxname}
-PFb0aON="OFF"
-file="./status/stat_PFb0aON.txt"
-echo "$PFb0aON" > $file
+function_PFb0applyOFF
 menupred_default="PFb0aON"
 ;;
 
-
-
-# FILTER 1
-
+# FILTER 1 - APPLY
 	PFb1aON)
-cp PredictiveControl/inmaskPF1.fits inmask1.fits
-cp PredictiveControl/outmaskPF1.fits outmask1.fits
-tmuxname="aol${LOOPNUMBER}PFb1apply"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-
-tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 1 -o -g ${PFb1nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb1 aol${LOOPNUMBER}_modevalPFb1" C-m
-
-PFb1aON=" ON"
-file="./status/stat_PFb1aON.txt"
-echo "writing $PFb1aON to file $file"
-echo "$PFb1aON" > $file
+function_PFb1applyON
 menupred_default="PFb1aOFF"
 ;;
-
 	PFb1aOFF)
-./AOloopControl << EOF
-readshmim aol${LOOPNUMBER}_mode_ARPFgain
-loadfits outmask1.fits outmask
-im1=1-outmask
-im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
-cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
-exitCLI
-EOF
-
-tmuxname="aol${LOOPNUMBER}PFb1apply"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} "exit" C-m
-tmux kill-session -t ${tmuxname}
-PFb1aON="OFF"
-file="./status/stat_PFb1aON.txt"
-echo "$PFb1aON" > $file
+function_PFb1applyOFF
 menupred_default="PFb1aON"
 ;;
 
-
-
-
-# FILTER 2
-
+# FILTER 2 - APPLY
 	PFb2aON)
-cp PredictiveControl/inmaskPF2.fits inmask2.fits
-cp PredictiveControl/outmaskPF2.fits outmask2.fits
-tmuxname="aol${LOOPNUMBER}PFb2apply"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-
-tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 2 -o -g ${PFb2nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb2  aol${LOOPNUMBER}_modevalPFb2" C-m
-
-PFb2aON=" ON"
-file="./status/stat_PFb2aON.txt"
-echo "writing $PFb2aON to file $file"
-echo "$PFb2aON" > $file
+function_PFb2applyON
 menupred_default="PFb2aOFF"
 ;;
-
-	PFb2aOFF)	
-./AOloopControl << EOF
-readshmim aol${LOOPNUMBER}_mode_ARPFgain
-loadfits outmask2.fits outmask
-im1=1-outmask
-im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
-cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
-exitCLI
-EOF
-	
-tmuxname="aol${LOOPNUMBER}PFb2apply"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} "exit" C-m
-tmux kill-session -t ${tmuxname}
-PFb2aON="OFF"
-file="./status/stat_PFb2aON.txt"
-echo "$PFb2aON" > $file
+	PFb2aOFF)
+function_PFb2applyOFF
 menupred_default="PFb2aON"
 ;;
 
-
-
-
-# FILTER 3
-
+# FILTER 3 - APPLY
 	PFb3aON)
-cp PredictiveControl/inmaskPF3.fits inmask3.fits
-cp PredictiveControl/outmaskPF3.fits outmask3.fits
-tmuxname="aol${LOOPNUMBER}PFb3apply"
-sleep 0.2
-tmux new-session -d -s ${tmuxname}
-sleep 0.2
-tmux send-keys -t ${tmuxname} " " C-m
-tmux send-keys -t ${tmuxname} " " C-m
-
-tmux send-keys -t ${tmuxname} "./auxscripts/predFiltApplyRT -i 3 -o -g ${PFb3nbGPU} aol${LOOPNUMBER}_modeval_ol aol${LOOPNUMBER}_outPFb3  aol${LOOPNUMBER}_modevalPFb3" C-m
-
-PFb3aON=" ON"
-file="./status/stat_PFb3aON.txt"
-echo "writing $PFb3aON to file $file"
-echo "$PFb3aON" > $file
+function_PFb3applyON
 menupred_default="PFb3aOFF"
 ;;
-
 	PFb3aOFF)
-./AOloopControl << EOF
-readshmim aol${LOOPNUMBER}_mode_ARPFgain
-loadfits outmask3.fits outmask
-im1=1-outmask
-im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
-cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
-exitCLI
-EOF
-
-tmuxname="aol${LOOPNUMBER}PFb3apply"
-tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} "exit" C-m
-tmux kill-session -t ${tmuxname}
-PFb3aON="OFF"
-file="./status/stat_PFb3aON.txt"
-echo "$PFb3aON" > $file
+function_PFb3applyOFF
 menupred_default="PFb3aON"
 ;;
 
