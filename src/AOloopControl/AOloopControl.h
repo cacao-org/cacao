@@ -908,6 +908,7 @@ int AOloopControl_RTstreamLOG_init(int loop);
 int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname);
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow);
 int AOloopControl_RTstreamLOG_printstatus(int loop);
+int AOloopControl_RTstreamLOG_GUI(int loop);
 int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname);
 
 int AOloopControl_RTstreamLOG_set_saveON(int loop, int rtlindex);

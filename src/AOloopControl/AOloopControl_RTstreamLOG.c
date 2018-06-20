@@ -28,6 +28,11 @@
 #include <unistd.h>
 
 
+#include <ncurses.h>
+#include <termios.h>
+#include <fcntl.h> 
+
+
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -384,6 +389,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 
 
 
+
 int AOloopControl_RTstreamLOG_printstatus(int loop)
 {
 	long NBstreams = 0;
@@ -462,6 +468,98 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 
 
 
+
+
+
+
+int print_header(const char *str, char c, int wcol)
+{
+    long n;
+    long i;
+
+    attron(A_BOLD);
+    n = strlen(str);
+    for(i=0; i<(wcol-n)/2; i++)
+        printw("%c",c);
+    printw("%s", str);
+    for(i=0; i<(wcol-n)/2-1; i++)
+        printw("%c",c);
+    printw("\n");
+    attroff(A_BOLD);
+
+    return(0);
+}
+
+
+int kbdhit_ch(void)
+{
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+     
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+ 
+    ch = getchar();
+ 
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+ 
+    if(ch != EOF)
+      {
+	//     ungetc(ch, stdin);
+        return ch;
+      }
+    
+    return 0;
+}
+
+
+int AOloopControl_RTstreamLOG_GUI(int loop)
+{
+    int wrow, wcol;
+    float frequ = 10.0;
+
+    /*  Initialize ncurses  */
+    if ( initscr() == NULL ) {
+        fprintf(stderr, "Error initialising ncurses.\n");
+        exit(EXIT_FAILURE);
+    }
+	getmaxyx(stdscr, wrow, wcol);		/* get the number of rows and columns */
+	cbreak();
+	keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
+	noecho();			/* Don't echo() while we do getch */
+	
+	
+	while( !kbdhit_ch() )
+        {
+            usleep((long) (1000000.0/frequ));
+            clear();
+            attron(A_BOLD);
+            print_header(" PRESS ANY KEY TO STOP MONITOR ", '-', wcol);
+            attroff(A_BOLD);
+
+
+
+            refresh();
+        }
+    start_color();
+    init_pair(1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(2, COLOR_BLACK, COLOR_RED);
+    init_pair(3, COLOR_GREEN, COLOR_BLACK);
+    init_pair(4, COLOR_RED,   COLOR_BLACK);
+
+
+	refresh();
+    endwin();
+    
+    
+    return 0;
+}
 
 
 

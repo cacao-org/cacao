@@ -671,6 +671,10 @@ int_fast8_t AOloopControl_RTstreamLOG_printstatus_cli() {
 	AOloopControl_RTstreamLOG_printstatus(LOOPNUMBER);
 }
 
+int_fast8_t AOloopControl_RTstreamLOG_GUI_cli() {
+	AOloopControl_RTstreamLOG_GUI(LOOPNUMBER);
+}
+
 
 int_fast8_t AOloopControl_RTstreamLOG_saveloop_cli() {
 	if(CLI_checkarg(1,5)==0) {
@@ -1061,6 +1065,13 @@ void init_AOloopControl()
 	"aolrtlogstat",
 	"AOloopControl_RTstreamLOG_printstatus(int loop)");
 	
+	RegisterCLIcommand("aolrtlogGUI", __FILE__, AOloopControl_RTstreamLOG_GUI_cli,
+	"Simple GUI for Real-Time logging",
+	"no arg",
+	"aolrtlogGUI",
+	"AOloopControl_RTstreamLOG_GUI(int loop)");
+	
+
 	RegisterCLIcommand("aolrtlogsavel", __FILE__, AOloopControl_RTstreamLOG_saveloop_cli,
 	"Save files for Real-Time logging",
 	"<directory>",
