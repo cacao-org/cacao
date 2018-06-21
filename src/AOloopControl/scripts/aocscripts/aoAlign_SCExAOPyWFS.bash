@@ -1,6 +1,6 @@
 #!/bin/bash
 
-execname="Cfits"
+execname="cacao"
 echo "execname = $execname"
 mesgfile="/dev/null"
 
@@ -113,7 +113,7 @@ echo "$hardwlatency_frame" > ./conf/param_hardwlatency_frame.txt
 echo "$wfsmextrlatency_frame" > ./conf/param_wfsmextrlatency_frame.txt
 echo "$complatency_frame" > ./conf/param_complatency_frame.txt
 echo "$frHz" > ./conf/param_loopfrequ.txt
-Cfits << EOF
+cacao << EOF
 aolsethlat $hardwlatency_frame
 aolsetwlat $wfsmextrlatency_frame
 aolsetclat $complatency_frame

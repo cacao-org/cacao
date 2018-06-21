@@ -6,7 +6,7 @@ mkdir -p wfsdark
 
 datestr=`date -u +%Y-%m-%d_%H:%M:%S`
 
-Cfits -n takedark << EOF
+cacao -n takedark << EOF
 readshmim ircam2crop_dark
 savefits ircam2crop_dark "!./wfsdark/wfsdark_${datestr}.fits"
 exitCLI

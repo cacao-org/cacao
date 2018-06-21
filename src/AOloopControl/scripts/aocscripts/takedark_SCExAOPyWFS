@@ -24,7 +24,7 @@ mkdir -p wfsdark
 
 datestr=`date -u +%Y-%m-%d_%H:%M:%S`
 
-Cfits -n takedark << EOF
+cacao -n takedark << EOF
 readshmim aol${loopnb}_wfsim
 imgstreamave aol${loopnb}_wfsim $NBframes dark 0 1
 savefits dark "!./wfsdark/wfsdark_${datestr}.fits"
