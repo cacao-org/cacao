@@ -1460,14 +1460,14 @@ tmux send-keys -t aol${LOOPNUMBER}-ctr "setpix aol${LOOPNUMBER}_wfsavecoeff $WFS
 
    	 Nloopon)
 function_LOOP_ON "NULL" # in aolconf_controlloop_funcs
-aoconfLogStatusUpdate "$SLOOPNAME_loop ON 1"
+aoconfLogStatusUpdate "${SLOOPNAME}_loop ON 1"
 echo "$SLOOPNAME_loop ON 1" > testlog.txt
 menucontrolloop_default="Floopoff"
 ;; 
 
    	 Floopoff)
 function_LOOP_OFF "NULL"
-aoconfLogStatusUpdate "$SLOOPNAME_loop OFF 0"
+aoconfLogStatusUpdate "${SLOOPNAME}_loop OFF 0"
 menucontrolloop_default="Nloopon"
 ;;
 
