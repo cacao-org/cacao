@@ -1461,14 +1461,12 @@ tmux send-keys -t aol${LOOPNUMBER}-ctr "setpix aol${LOOPNUMBER}_wfsavecoeff $WFS
    	 Nloopon)
 function_LOOP_ON "NULL" # in aolconf_controlloop_funcs
 aoconfLogStatusUpdate "${SLOOPNAME}_loop ON 1"
-echo "${SLOOPNAME}_loop ON 1" > testlog.txt
 menucontrolloop_default="Floopoff"
 ;; 
 
    	 Floopoff)
 function_LOOP_OFF "NULL"
 aoconfLogStatusUpdate "${SLOOPNAME}_loop OFF 0"
-echo "${SLOOPNAME}_loop OFF 1" > testlog.txt
 menucontrolloop_default="Nloopon"
 ;;
 
@@ -1600,7 +1598,7 @@ menucontrolloop_default="wzpoinit"
   	 loopgain=${value}
   	 echo "$loopgain" > ./conf/param_loopgain.txt
   	 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolsetgain ${loopgain}" C-m
-	 ./statusext "gain" "${loopgain}" &
+	 aoconfLogStatusUpdate "${SLOOPNAME}_gain ${loopgain}"
 	 aoconflogext "set gain ${loopgain}"
   	 ;; 
    	 
@@ -1629,7 +1627,7 @@ menucontrolloop_default="wzpoinit"
  	 loopmultcoeff=${value}
  	 echo "$loopmultcoeff" > ./conf/param_loopmultcoeff.txt
 	 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolsetmult ${loopmultcoeff}" C-m
-	 ./statusext "leak" "${loopmultcoeff}" &
+	 aoconfLogStatusUpdate "${SLOOPNAME}_leak ${loopmultcoeff}"
 	 aoconflogext "set mult coeff ${loopmultcoeff}"
      	 ;;  
 
