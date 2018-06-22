@@ -82,12 +82,6 @@ fi
 
 
 
-file="./conf/param_dm2dmModes_name.txt"
-dm2dmModesMast=$( head -1 $file )
-
-
-
-
 menuitems+=( " " " ")
 
 ConfReadParam DM2DM_mode "0"; DM2DM_mode="$paramvalue"

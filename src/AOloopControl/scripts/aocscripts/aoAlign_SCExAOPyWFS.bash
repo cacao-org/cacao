@@ -140,6 +140,18 @@ fi
 }
 
 
+function func_set_pcampospickoff {
+pfilename="./status/pcampos_ref${pypickoff}.txt"
+if [ -f "$pfilename" ]; then
+cp ${pfilename} ./status/pcamposREF.txt
+if [ -f ./status/pcamposREF.txt ]; then
+pywfsreimagexposref0=$( awk '{print $1}' ./status/pcamposREF.txt )
+pywfsreimageyposref0=$( awk '{print $2}' ./status/pcamposREF.txt )
+pywfs_pup x goto $pywfsreimagexposref0
+pywfs_pup y goto $pywfsreimageyposref0
+fi
+fi
+}
 
 
 
@@ -224,7 +236,6 @@ menuname="ALIGNMENT - LOOP ${LOOPNAME} ($LOOPNUMBER})\n
 
 pyTTloopgain=$( head -1 ./status/gain_PyAlignTT.txt)
 Pcamloopgain=$( head -1 ./status/gain_PyAlignCam.txt)
-
 
 
 if [ -f ./status/pcampos.txt ]; then
@@ -682,6 +693,7 @@ stringcenter "Pyramid Camera Align ( 5925 steps / pix )"
 menuitems+=( "3 ->" "\Zb\Zr$string\Zn" )
 
 menuitems+=( "pz" "Zero Pcam align  ( $pywfsreimagexposref $pywfsreimageyposref )" )
+menuitems+=( "psr" "Update reference for pickoff $pypickoff  [$pywfsreimagexposref $pywfsreimagexposref]" )
 menuitems+=( "pst0" "alignment step = 50000" )
 menuitems+=( "pst1" "alignment step = 10000" )
 menuitems+=( "pst2" "alignment step = 3000" )
@@ -1034,6 +1046,7 @@ aoconflogext "Set py filter = $pyfilter" &> $mesgfile &
 	pypick01)
 pypickoff="01"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1041,6 +1054,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick02)
 pypickoff="02"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1048,6 +1062,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick03)
 pypickoff="03"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1055,6 +1070,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick04)
 pypickoff="04"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1062,6 +1078,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick05)
 pypickoff="05"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1069,6 +1086,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick06)
 pypickoff="06"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1076,6 +1094,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick07)
 pypickoff="07"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1083,6 +1102,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick08)
 pypickoff="08"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1090,6 +1110,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick09)
 pypickoff="09"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1097,6 +1118,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick10)
 pypickoff="10"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1104,6 +1126,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick11)
 pypickoff="11"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1111,6 +1134,7 @@ aoconflogext "Set py pickoff = $pypickoff"
 	pypick12)
 pypickoff="12"
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
+func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
 aoconflogext "Set py pickoff = $pypickoff"
 ;;
@@ -1269,6 +1293,11 @@ pywfs_pup y goto $pywfsreimageyposref #67000
 echo "$pywfsreimagexposref $pywfsreimageyposref" > ./status/pcampos.txt
 menualign_default="pz"
 state="menualign"
+;;
+
+	psr)
+cp ./status/pcampos.txt ./status/pcampos_ref${pypickoff}.txt
+menualign_default="psr"
 ;;
         pst0)
 pcamstep=50000
