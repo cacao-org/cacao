@@ -201,29 +201,29 @@ stringcenter "scexao2 streams"
 menuitems+=( "2 ->" "\Zb\Zr$string\Zn" )
 menuitems+=( " " " " )
 
-menuitems+=( "ir1cs" "\Zr ircam1 \Zn : (re-)start scexao2->scexao TCP transfer [port 30102]" )
-menuitems+=( "ir1ck" "\Zr ircam1 \Zn : kill scexao2->scexao TCP transfer       [port 30102]" )
+menuitems+=( "ir0cs" "\Zr ircam0 \Zn : (re-)start scexao2->scexao TCP transfer [port 30102]" )
+menuitems+=( "ir0ck" "\Zr ircam0 \Zn : kill scexao2->scexao TCP transfer       [port 30102]" )
 menuitems+=( " " " " )
-menuitems+=( "ir1dcs" "\Zr ircam1_dark \Zn: (re-)start scexao2->scexao TCP transfer" )
-menuitems+=( "ir1dck" "\Zr ircam1_dark \Zn: kill scexao2->scexao TCP transfer" )
+menuitems+=( "ir0dcs" "\Zr ircam0_dark \Zn: (re-)start scexao2->scexao TCP transfer" )
+menuitems+=( "ir0dck" "\Zr ircam0_dark \Zn: kill scexao2->scexao TCP transfer" )
 menuitems+=( " " " " )
-menuitems+=( "ir2cs" "\Zr ircam2crop \Zn : (re-)start scexao2->scexao TCP transfer [port 30101]" )
-menuitems+=( "ir2ck" "\Zr ircam2crop \Zn : kill scexao2->scexao TCP transfer       [port 30101]" )
-menuitems+=( " " " " )
-menuitems+=( "ir2dcs" "\Zr ircam2crop_dark \Zn : (re-)start scexao2->scexao TCP transfer" )
-menuitems+=( "ir2dck" "\Zr ircam2crop_dark \Zn : kill scexao2->scexao TCP transfer" )
-menuitems+=( " " " " )
-menuitems+=( "saphcs" "\Zr pbimagediff \Zn : (re-)start scexao2->scexao TCP transfer" )
-menuitems+=( "saphck" "\Zr pbimagediff \Zn : kill scexao2->scexao TCP transfer" )
-menuitems+=( " " " " )
-menuitems+=( "lj1cs" "\Zr labjack1 \Zn: (re-)start scexao2->scexao TCP transfer" )
-menuitems+=( "lj1ck" "\Zr labjack1 \Zn: kill scexao2->scexao TCP transfer" )
-menuitems+=( " " " " )
-menuitems+=( "lj2cs" "\Zr labjack2 \Zn: (re-)start scexao2->scexao TCP transfer" )
-menuitems+=( "lj2ck" "\Zr labjack2 \Zn: kill scexao2->scexao TCP transfer" )
-menuitems+=( " " " " )
-menuitems+=( "ljcs" "\Zr labjack \Zn: (re-)start scexao2->scexao TCP transfer" )
-menuitems+=( "ljck" "\Zr labjack \Zn: kill scexao2->scexao TCP transfer" )
+#menuitems+=( "ir2cs" "\Zr ircam2crop \Zn : (re-)start scexao2->scexao TCP transfer [port 30101]" )
+#menuitems+=( "ir2ck" "\Zr ircam2crop \Zn : kill scexao2->scexao TCP transfer       [port 30101]" )
+#menuitems+=( " " " " )
+#menuitems+=( "ir2dcs" "\Zr ircam2crop_dark \Zn : (re-)start scexao2->scexao TCP transfer" )
+#menuitems+=( "ir2dck" "\Zr ircam2crop_dark \Zn : kill scexao2->scexao TCP transfer" )
+#menuitems+=( " " " " )
+#menuitems+=( "saphcs" "\Zr pbimagediff \Zn : (re-)start scexao2->scexao TCP transfer" )
+#menuitems+=( "saphck" "\Zr pbimagediff \Zn : kill scexao2->scexao TCP transfer" )
+#menuitems+=( " " " " )
+#menuitems+=( "lj1cs" "\Zr labjack1 \Zn: (re-)start scexao2->scexao TCP transfer" )
+#menuitems+=( "lj1ck" "\Zr labjack1 \Zn: kill scexao2->scexao TCP transfer" )
+#menuitems+=( " " " " )
+#menuitems+=( "lj2cs" "\Zr labjack2 \Zn: (re-)start scexao2->scexao TCP transfer" )
+#menuitems+=( "lj2ck" "\Zr labjack2 \Zn: kill scexao2->scexao TCP transfer" )
+#menuitems+=( " " " " )
+#menuitems+=( "ljcs" "\Zr labjack \Zn: (re-)start scexao2->scexao TCP transfer" )
+#menuitems+=( "ljck" "\Zr labjack \Zn: kill scexao2->scexao TCP transfer" )
 
 
 
@@ -353,91 +353,92 @@ EOF
 ;;
 
 
-# ircam1        scexao2->scexao, port 30102
-	ir1cs)
-aoconflogext "(re-)start ircam1 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -c ircam1 30102
+# ircam0        scexao2->scexao, port 30102
+	ir0cs)
+aoconflogext "(re-)start ircam0 scexao2 -> scexao TCP transfer"
+/home/scexao/bin/getTCPscexao2im -c ircam0 30102
 ;;
-	ir1ck)
-aoconflogext "kill ircam1 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k ircam1 30102
+	ir0ck)
+aoconflogext "kill ircam0 scexao2 -> scexao TCP transfer"
+/home/scexao/bin/getTCPscexao2im -k ircam0 30102
 ;;
 
 
-# ircam1_dark   scexao2->scexao, port 30103
-	ir1dcs)
-aoconflogext "(re-)start ircam1_dark scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -c ircam1_dark 30103
+# ircam0_dark   scexao2->scexao, port 30103
+	ir0dcs)
+aoconflogext "(re-)start ircam0_dark scexao2 -> scexao TCP transfer"
+/home/scexao/bin/getTCPscexao2im -c ircam0_dark 30103
 ;;
-	ir1dck)
-aoconflogext "kill ircam1_dark scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k ircam1_dark 30103
+	ir0dck)
+aoconflogext "kill ircam0_dark scexao2 -> scexao TCP transfer"
+/home/scexao/bin/getTCPscexao2im -k ircam0_dark 30103
 ;;
 
 
 # ircam2crop    scexao2->scexao, port 30101
-	ir2cs)
-aoconflogext "(re-)start ircam2crop scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -c ircam2crop 30101
-;;
-	ir2ck)
-aoconflogext "kill ircam1 scexao2crop -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k ircam2crop 30101
-;;
+#	ir2cs)
+#aoconflogext "(re-)start ircam2crop scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -c ircam2crop 30101
+#;;
+
+#	ir2ck)
+#aoconflogext "kill ircam1 scexao2crop -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -k ircam2crop 30101
+#;;
 
 # ircam2crop    scexao2->scexao, port 30104
-	ir2dcs)
-aoconflogext "(re-)start ircam2crop_dark scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -c ircam2crop_dark 30104
-;;
-	ir2dck)
-aoconflogext "kill ircam1 scexao2crop_dark -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k ircam2crop_dark 30104
-;;
+#	ir2dcs)
+#aoconflogext "(re-)start ircam2crop_dark scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -c ircam2crop_dark 30104
+#;;
+#	ir2dck)
+#aoconflogext "kill ircam1 scexao2crop_dark -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -k ircam2crop_dark 30104
+#;;
 
 
 # pbimagediff   scexao2->scexao, port 30108
-	saphcs)
-aoconflogext "(re-)start pbimagediff scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -c pbimagediff 30108
-;;
-	saphck)
-aoconflogext "kill pbimagediff scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k pbimagediff 30108
-;;
+#	saphcs)
+#aoconflogext "(re-)start pbimagediff scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -c pbimagediff 30108
+#;;
+#	saphck)
+#aoconflogext "kill pbimagediff scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -k pbimagediff 30108
+#;;
 
 
 # labjack1      scexao2->scexao, port 30105
-	lj1cs)
-aoconflogext "(re-)start labjack1 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -c labjack1 30105
-;;
-	lj1ck)
-aoconflogext "kill labjack1 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k labjack1 30105
-;;
+#	lj1cs)
+#aoconflogext "(re-)start labjack1 scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -c labjack1 30105
+#;;
+#	lj1ck)
+#aoconflogext "kill labjack1 scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -k labjack1 30105
+#;;
 
 
 # labjack2      scexao2->scexao, port 30106
-	lj2cs)
-aoconflogext "(re-)start labjack2 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -c labjack2 30106
-;;
-	lj2ck)
-aoconflogext "kill labjack2 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k labjack2 30106
-;;
+#	lj2cs)
+#aoconflogext "(re-)start labjack2 scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -c labjack2 30106
+#;;
+#	lj2ck)
+#aoconflogext "kill labjack2 scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -k labjack2 30106
+#;;
 
 
 # labjack       scexao2->scexao, port 30107
-	ljcs)
-aoconflogext "(re-)start labjack scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -c labjack 30109
-;;
-	ljck)
-aoconflogext "kill labjack scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k labjack 30109
-;;
+#	ljcs)
+#aoconflogext "(re-)start labjack scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -c labjack 30109
+#;;
+#	ljck)
+#aoconflogext "kill labjack scexao2 -> scexao TCP transfer"
+#/home/scexao/bin/getTCPscexao2im -k labjack 30109
+#;;
 
 
 

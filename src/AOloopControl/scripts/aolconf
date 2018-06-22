@@ -64,7 +64,7 @@ echo "   -H  <string>         (H)elp category"
 echo "                 cf     list configuration files (incomplete)"    
 echo "   -l <exec>            log executable"  
 echo "   -C                   run (C)PU config: execute ./aocscripts/cpuconfig_${LOOPNAME}"
-echo "   -c                   (c)lear all settings"
+echo "   -c                   (c)lear all settings (ALL SETTINGS WILL BE LOST)"
 echo "  Runs top level script:"
 echo "   -L <long>            (L)oop number"
 echo "   -N <string>          loop (N)ame. Run ./aosetup/aosetup_<string> if available"
@@ -161,16 +161,25 @@ while getopts :hH:l:CcL:N:xe:n FLAG; do
     exit
     ;;    
     c) # clear
-    echo "Clearing all settings"
-    rm LOOPNUMBER 2> /dev/null
-    rm LOOPNAME 2> /dev/null
-    rm conf/* 2> /dev/null
-    rmdir conf 2> /dev/null
-    rm status/* 2> /dev/null
-    rmdir status 2> /dev/null
-    rm tmp/* 2> /dev/null
-    rmdir tmp 2> /dev/null
-    rm aolconf.log 2> /dev/null
+    echo "Clearing all settings - THIS WILL ERASE YOUR CONFIGURATIONS"
+    read -p "Are you sure you want to continue (y/n)?" choice
+	case "$choice" in 
+	y|Y ) echo "yes"
+	echo "erasing things"
+	echo "erasing more"
+	;;
+	n|N ) echo "no";;
+	* ) echo "invalid";;
+	esac
+    #rm LOOPNUMBER 2> /dev/null
+    #rm LOOPNAME 2> /dev/null
+    #rm conf/* 2> /dev/null
+    #rmdir conf 2> /dev/null
+    #rm status/* 2> /dev/null
+    #rmdir status 2> /dev/null
+    #rm tmp/* 2> /dev/null
+    #rmdir tmp 2> /dev/null
+    #rm aolconf.log 2> /dev/null
     exit
     ;;    
     L)  #  set loop number
