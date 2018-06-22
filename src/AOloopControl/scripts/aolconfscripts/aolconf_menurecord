@@ -651,6 +651,51 @@ menuitems+=( "laoloutPFb3OFF" "$stoplogstring" )
 fi
 
 
+menuitems+=( " " " ---------- RAW Predictive filters (PF) logs ----------" )
+
+streamname="aol${LOOPNUMBER}_outPFb0_raw"
+infostring="RAW Predictive filter block 0"
+logwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "laoloutPFb0rON" "$startlogstring" )
+else
+menuitems+=( "laoloutPFb0rOFF" "$stoplogstring" )
+fi
+
+
+
+streamname="aol${LOOPNUMBER}_outPFb1_raw"
+infostring="RAW Predictive filter block 1"
+logwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "laoloutPFb1rON" "$startlogstring" )
+else
+menuitems+=( "laoloutPFb1rOFF" "$stoplogstring" )
+fi
+
+
+streamname="aol${LOOPNUMBER}_outPFb2_raw"
+infostring="RAW Predictive filter block 2"
+logwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "laoloutPFb2rON" "$startlogstring" )
+else
+menuitems+=( "laoloutPFb2rOFF" "$stoplogstring" )
+fi
+
+
+streamname="aol${LOOPNUMBER}_outPFb3_raw"
+infostring="RAW Predictive filter block 3"
+logwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "laoloutPFb3rON" "$startlogstring" )
+else
+menuitems+=( "laoloutPFb3rOFF" "$stoplogstring" )
+fi
+
+
+
+
 
 #fi
 
@@ -1308,6 +1353,63 @@ echo "0" > "./status/stat_log_${streamname}.txt"
 menurecord_default="laoloutPFb3ON"
 ;;
 
+
+
+
+    laoloutPFb0rON)
+streamname="aol${LOOPNUMBER}_outPFb0_raw"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+menurecord_default="laoloutPFb0rOFF"
+;;
+    laoloutPFb0rOFF)
+streamname="aol${LOOPNUMBER}_outPFb0_raw"
+skstreamlog "$streamname"
+echo "0" > "./status/stat_log_${streamname}.txt"
+menurecord_default="laoloutPFb0rON"
+;;
+
+
+    laoloutPFb1rON)
+streamname="aol${LOOPNUMBER}_outPFb1_raw"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+menurecord_default="laoloutPFb1rOFF"
+;;
+    laoloutPFb1rOFF)
+streamname="aol${LOOPNUMBER}_outPFb1_raw"
+skstreamlog "$streamname"
+echo "0" > "./status/stat_log_${streamname}.txt"
+menurecord_default="laoloutPFb1rON"
+;;
+
+
+    laoloutPFb2rON)
+streamname="aol${LOOPNUMBER}_outPFb2_raw"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+menurecord_default="laoloutPFb2rOFF"
+;;
+    laoloutPFb2rOFF)
+streamname="aol${LOOPNUMBER}_outPFb2_raw"
+skstreamlog "$streamname"
+echo "0" > "./status/stat_log_${streamname}.txt"
+menurecord_default="laoloutPFb2rON"
+;;
+
+
+    laoloutPFb3rON)
+streamname="aol${LOOPNUMBER}_outPFb3_raw"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+menurecord_default="laoloutPFb3rOFF"
+;;
+    laoloutPFb3rOFF)
+streamname="aol${LOOPNUMBER}_outPFb3_raw"
+skstreamlog "$streamname"
+echo "0" > "./status/stat_log_${streamname}.txt"
+menurecord_default="laoloutPFb3rON"
+;;
 
 
 
