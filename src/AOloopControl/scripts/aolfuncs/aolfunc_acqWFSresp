@@ -198,7 +198,9 @@ else
 fi
 
 
-sleep 1000
+
+
+
 
 
 if [ "$DMMODE" = "0" ]; then
