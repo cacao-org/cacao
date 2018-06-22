@@ -21,6 +21,7 @@ pname=${pname0#"./"}-$loopnb
 
 
 cacao -n pname << EOF
+mload scexaocontrol
 readshmim aol${loopnb}_wfsim
 readshmim aol${loopnb}_wfsdark
 cp aol${loopnb}_wfsdark wfsdark

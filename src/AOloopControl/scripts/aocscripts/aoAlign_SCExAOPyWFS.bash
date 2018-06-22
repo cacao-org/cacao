@@ -113,7 +113,7 @@ echo "$hardwlatency_frame" > ./conf/param_hardwlatency_frame.txt
 echo "$wfsmextrlatency_frame" > ./conf/param_wfsmextrlatency_frame.txt
 echo "$complatency_frame" > ./conf/param_complatency_frame.txt
 echo "$frHz" > ./conf/param_loopfrequ.txt
-cacao << EOF
+$execname << EOF
 aolsethlat $hardwlatency_frame
 aolsetwlat $wfsmextrlatency_frame
 aolsetclat $complatency_frame
@@ -1207,6 +1207,7 @@ rm status/pause_PyAlignTT.txt &> $mesgfile
 tmux kill-session -t alignPyrTT &> $mesgfile 
 tmux new-session -d -s alignPyrTT
 tmux send-keys -t alignPyrTT "$execname -n alignPyrTT" C-m
+tmux send-keys -t alignPyrTT "mload scexaocontrol" C-m
 tmux send-keys -t alignPyrTT "readshmim aol${LOOPNUMBER}_wfsdark" C-m
 tmux send-keys -t alignPyrTT "cp aol${LOOPNUMBER}_wfsdark wfsdark" C-m
 tmux send-keys -t alignPyrTT "readshmim aol${LOOPNUMBER}_wfsim" C-m
