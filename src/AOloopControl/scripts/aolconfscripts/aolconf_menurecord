@@ -610,6 +610,11 @@ menuitems+=( " " " " )
 menuitems+=( " " " ---------- Predictive filters (PF) logs ----------" )
 
 
+menuitems+=( "laoloutPFballON"  "START logging all outPFb" )
+menuitems+=( "laoloutPFballOFF" "STOP  logging all outPFb" )
+menuitems+=( " " " " )
+
+
 streamname="aol${LOOPNUMBER}_outPFb0"
 infostring="Predictive filter block 0"
 logwritestartstopstrings
@@ -1296,6 +1301,24 @@ tmux send-keys -t $tmuxnameRTlogC "aolrtlogsetsaveOFF 11" C-m
 echo "0" > "./status/stat_RTlog11.txt"
 menurecord_default="laolmodevalPFresON"
 ;;
+
+
+
+
+    laoloutPFballON)
+func_logPFbALL_start
+menurecord_default="laoloutPFballON"
+;;  
+
+
+    laoloutPFballOFF)
+func_logPFbALL_stop
+menurecord_default="laoloutPFballOFF"
+;;  
+
+
+
+
 
 
     laoloutPFb0ON)

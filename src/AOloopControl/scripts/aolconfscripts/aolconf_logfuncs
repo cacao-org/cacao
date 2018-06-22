@@ -208,3 +208,70 @@ fi
 
 
 
+function func_logPFbALL_start {
+streamname="aol${LOOPNUMBER}_outPFb0"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb1"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb2"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb3"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb0_raw"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb1_raw"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb2_raw"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb3_raw"
+startstreamlog "$streamname" 1
+echo "1" > "./status/stat_log_${streamname}.txt"
+}
+
+function func_logPFbALL_stop {
+streamname="aol${LOOPNUMBER}_outPFb0"
+skstreamlog "$streamname" 1
+echo "0" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb1"
+skstreamlog "$streamname" 1
+echo "0" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb2"
+skstreamlog "$streamname" 1
+echo "0" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb3"
+skstreamlog "$streamname" 1
+echo "0" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb0_raw"
+skstreamlog "$streamname" 1
+echo "0" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb1_raw"
+skstreamlog "$streamname" 1
+echo "0" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb2_raw"
+skstreamlog "$streamname" 1
+echo "0" > "./status/stat_log_${streamname}.txt"
+
+streamname="aol${LOOPNUMBER}_outPFb3_raw"
+skstreamlog "$streamname" 1
+echo "0" > "./status/stat_log_${streamname}.txt"
+}
