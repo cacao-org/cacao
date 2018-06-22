@@ -693,7 +693,7 @@ stringcenter "Pyramid Camera Align ( 5925 steps / pix )"
 menuitems+=( "3 ->" "\Zb\Zr$string\Zn" )
 
 menuitems+=( "pz" "Zero Pcam align  ( $pywfsreimagexposref $pywfsreimageyposref )" )
-menuitems+=( "psr" "Update reference for pickoff $pypickoff  [$pywfsreimagexposref $pywfsreimagexposref]" )
+menuitems+=( "psr" "Update reference for pickoff $pypickoff  [$pywfsreimagexposref0 $pywfsreimageyposref0]" )
 menuitems+=( "pst0" "alignment step = 50000" )
 menuitems+=( "pst1" "alignment step = 10000" )
 menuitems+=( "pst2" "alignment step = 3000" )
