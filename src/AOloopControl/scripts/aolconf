@@ -11,6 +11,14 @@ else
 LOOPNAME="null"
 fi
 
+# short loop name (for status log)
+if [ -f SLOOPNAME ]; then
+SLOOPNAME=$( head -1 SLOOPNAME )
+else
+SLOOPNAME="null"
+fi
+
+
 if [ -f LOOPNUMBER ]; then
 LOOPNUMBER=$( head -1 LOOPNUMBER )
 else
@@ -269,7 +277,11 @@ function aoconflogext {
 ./aolconfscripts/aollog -e "$LOOPNAME" "$@"
 }
 
-
+# status update
+# uses SLOOPNAME (short loop name)
+function aoconfLogStatusUpdate {
+/home/scexao/bin/scexaostatusext "$@"
+}
 
 
 
