@@ -55,13 +55,7 @@ function aoconflog {
 ### User-provided UsExternal log (less verbose)
 
 
-More important commands are logged simultaneously to the internal log and an external log. The user provides the command to externally log commands. The executable should be in the path, and named `aollogext`. The syntax is:
-
-~~~
-./aollogext <string>
-~~~
-
-The string usually consists of the loop name followed by comments.
+More important commands are logged simultaneously to the internal log and an external log. The user provides the command to externally log commands. 
 
 Inside the bash script, function `aoconflogext` is used to call `aolconfscripts/aollog` with the proper loop name, as defined in the main `aolconf` script:
 
@@ -93,9 +87,11 @@ It is also common practice to start a `MISC` log for misc comments, also to be i
 ./aolconfscripts/aollog -ie MISC NULL
 ~~~
 
-The corresponding log can be viewed by:
+The corresponding log can be viewed on the local machine :
 
 ~~~
-tail -f logdit/<UTDATE>/logging/MISC.log
+tail -f logdir/<UTDATE>/logging/MISC.log
 ~~~
+
+In the remote machine, entries are logged in the `comments` log.
 
