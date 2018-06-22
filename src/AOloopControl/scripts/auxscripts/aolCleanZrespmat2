@@ -125,7 +125,7 @@ pname0=$0
 pname="aol${loopnb}zrespM"
 
 
-./AOloopControl -n $pname << EOF
+OMP_NUM_THREADS=6 ./AOloopControl -n $pname << EOF
 aolnb $loopnb
 loadfits "./conf/RMpokeCube.fits" RMpokeC
 loadfits "./conf/RMmat.fits" RMmat
