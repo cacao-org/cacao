@@ -54,7 +54,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 	long SIZEdm = 6000;
 	
 	// default
-	AOconf[loop].RTLOGsize = 50000;
+	AOconf[loop].RTLOGsize = 90000;
 	
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
         {
