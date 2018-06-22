@@ -1365,13 +1365,13 @@ menucontrolloop_default="CMm1"
 # LOOP PROCESSES
    	 S)  	 
 function_AOloopProcess_ON "NULL" # in aolconf_controlloop_funcs
-aoconfLogStatusUpdate "$SLOOPNAME_loop ON"
+aoconfLogStatusUpdate "$SLOOPNAME_loop ON 1"
 menucontrolloop_default="K"
 ;; 
 
 	K)
 function_AOloopProcess_OFF "NULL"
-aoconfLogStatusUpdate "$SLOOPNAME_loop OFF"
+aoconfLogStatusUpdate "$SLOOPNAME_loop OFF 0"
 menucontrolloop_default="S"
 ;;
 
