@@ -820,7 +820,7 @@ tmux kill-session -t $tmuxnameZP
 }
 
 
-
+# START predictive filter
 function function_PFAOloopProcess_ON {
 echo " ON" > ./status/stat_procPFON.txt
 function_PFb0watchON
@@ -837,9 +837,12 @@ function_PFb0applyON
 function_PFb1applyON
 function_PFb2applyON
 function_PFb3applyON
+
+func_logPFbALL_start
 }
 
 
+# STOP predictive filter
 function function_PFAOloopProcess_OFF {
 echo "OFF" > ./status/stat_procPFON.txt
 function_PFb0watchOFF
@@ -856,6 +859,8 @@ function_PFb0applyOFF
 function_PFb1applyOFF
 function_PFb2applyOFF
 function_PFb3applyOFF
+
+func_logPFbALL_stop
 }
 
 
