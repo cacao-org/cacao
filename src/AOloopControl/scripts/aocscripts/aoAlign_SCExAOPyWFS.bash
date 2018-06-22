@@ -1251,7 +1251,7 @@ tmux send-keys -t alignPyrTT "cp aol${LOOPNUMBER}_wfsdark wfsdark" C-m
 tmux send-keys -t alignPyrTT "readshmim aol${LOOPNUMBER}_wfsim" C-m
 tmux send-keys -t alignPyrTT "scexaopywfsttalign aol${LOOPNUMBER}_wfsim $TTposX $TTposY" C-m
 echo " ON" > ./status/status_alignTT.txt
-./statusext "cenloop" "'CLOSED' 3" &
+aoconfLogStatusUpdate "${SLOOPNAME}_cenloop CLOSED 1"
 menualign_default="tk"
 state="menualign"
 ;; 
@@ -1264,7 +1264,7 @@ then
 dialog --title "Message" --msgbox "Starting TT align\n (CTRL-C now to abort)\n" 8 30
 fi
 echo " ON" > ./status/status_alignTT.txt
-./statusext "cenloop" "'CLOSED' 3" &
+aoconfLogStatusUpdate "${SLOOPNAME}_cenloop CLOSED 1"
 menualign_default="tp"
 state="menualign"
 ;; 
@@ -1282,7 +1282,7 @@ state="menualign"
 touch status/pause_PyAlignTT.txt
 aoconflogext "TT align loop pause"
 echo "PAU" > ./status/status_alignTT.txt
-./statusext "cenloop" "'OPEN' 1" &
+aoconfLogStatusUpdate "${SLOOPNAME}_cenloop PAUSED 2" 
 menualign_default="tr"
 state="menualign"
 ;;  
@@ -1291,7 +1291,7 @@ state="menualign"
 touch status/stop_PyAlignTT.txt
 tmux kill-session -t alignPyrTT
 echo "OFF" > ./status/status_alignTT.txt
-./statusext "cenloop" "'OPEN' 1" &
+aoconfLogStatusUpdate "${SLOOPNAME}_cenloop OPEN 2"
 aoconflogext "TT align loop off"
 menualign_default="ts"
 state="menualign"
@@ -1373,7 +1373,7 @@ tmux kill-session -t alignPcam &> $mesgfile
 tmux new-session -d -s alignPcam
 tmux send-keys -t alignPcam "./aocscripts/alignPcam_${LOOPNAME}" C-m
 echo " ON" > ./status/status_alignPcam.txt
-./statusext "puploop" "'CLOSED' 3" &
+aoconfLogStatusUpdate "${SLOOPNAME}_puploop CLOSED 1"
 menualign_default="pk"
 state="menualign"
 ;; 
@@ -1385,7 +1385,7 @@ then
 dialog --title "Message" --msgbox "Starting Pcam align\n (CTRL-C now to abort)\n" 8 30
 fi
 echo " ON" > ./status/status_alignPcam.txt
-./statusext "puploop" "'CLOSED' 3" &
+aoconfLogStatusUpdate "${SLOOPNAME}_puploop CLOSED 1"
 menualign_default="pp"
 state="menualign"
 ;;  
@@ -1400,7 +1400,7 @@ state="menualign"
 	pp) 
 touch status/pause_PyAlignCam.txt
 echo "PAU" > ./status/status_alignPcam.txt
-./statusext "puploop" "'OPEN' 1" &
+aoconfLogStatusUpdate "${SLOOPNAME}_puploop PAUSED 2"
 aoconflogext "Pupil align loop pause"
 menualign_default="pr"
 state="menualign"
@@ -1408,7 +1408,7 @@ state="menualign"
    	 pk) 
 touch status/stop_PyAlignCam.txt
 echo "OFF" > ./status/status_alignPcam.txt
-./statusext "puploop" "'OPEN' 1" &
+aoconfLogStatusUpdate "${SLOOPNAME}_puploop OPEN 2"
 tmux kill-session -t alignPcam
 aoconflogext "Pupil align loop kill"
 menualign_default="ps"
