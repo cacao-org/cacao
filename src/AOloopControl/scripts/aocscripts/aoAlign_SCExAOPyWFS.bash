@@ -149,6 +149,8 @@ pywfsreimagexposref0=$( awk '{print $1}' ./status/pcamposREF.txt )
 pywfsreimageyposref0=$( awk '{print $2}' ./status/pcamposREF.txt )
 pywfs_pup x goto $pywfsreimagexposref0
 pywfs_pup y goto $pywfsreimageyposref0
+pywfsreimagexposref="$pywfsreimagexposref0"
+pywfsreimageyposref="$pywfsreimageyposref0"
 fi
 fi
 }
