@@ -459,7 +459,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     uint64_t LOOPiter;
 
 
-    double tdiffvlimit = 0.5e-3;
+    double tdiffvlimit = 500.0e-6;
 
     int ComputeWFSsol_FLAG  = 1; //TEST
 	struct timespec functionTestTimerStart;
@@ -1051,9 +1051,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd); //TEST timing in function
 	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
 	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-	if(tdiffv > 10.0e-6)
+	if(tdiffv > 350.0e-6)
 	{
-		printf("TIMING WARNING: %10.6f   AOcompute()\n", tdiffv);
+		printf("TIMING WARNING: %10.6f  %10ld   AOcompute()\n", tdiffv, (long) LOOPiter);
 		fflush(stdout);
 	}
 
