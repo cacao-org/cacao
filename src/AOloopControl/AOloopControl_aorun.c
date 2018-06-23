@@ -478,7 +478,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 	if(tdiffv>tdiffvlimit)
 	{
-		int timerindex1[] = { 2 15 16 17 25 26 27 28 29 30 31 32 33 18 3 4 5 6 9 10 11 12 13 }
+		int timerindex1[] = { 2, 15, 16, 17, 25, 26, 27, 28, 29, 30, 31, 32, 33, 18, 3, 4, 5, 6, 9, 10, 11, 12, 13 };
 		
 		
 		printf("TIMING GLITCH DETECTED: %f ms   [%09ld]\n", tdiffv*1.0e3, tnow.tv_nsec);
@@ -488,7 +488,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 			int i1 = timerindex1[i];
 			if((i1>26)&&(i1<32))
 				printf("    ");
-			printf("   tdiff %2ld = %10.6f ms   Expecting %10.6f ms   Last %10.6f\n", i1, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i1], 1000.0*ntimerval[i1], 1000.0*ltimerval[i1]);
+			printf("   %2d = %10.6f ms   Expecting %10.6f ms   Last %10.6f\n", i1, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i1], 1000.0*ntimerval[i1], 1000.0*ltimerval[i1]);
 		}
 		printf("\n");
 	}
