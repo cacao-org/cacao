@@ -501,7 +501,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	}
 
 
-
     // md[0].atime.ts is absolute time at beginning of iteration
     //
     // pixel 0 is dt since last iteration
@@ -1605,9 +1604,18 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
             sem_wait(data.image[IDmodeval].semptr[4]);
 
         // drive sem4 to zero
-        while(sem_trywait(data.image[IDmodeval].semptr[4])==0) {
-			printf("DECREMENTING SEM FOR modeval\n");
+/*        while(sem_trywait(data.image[IDmodeval].semptr[4])==0) {
+			printf("WARNING %s %d  : sem_trywait on modeval\n", __FILE__, __LINE__);
+			fflush(stdout);
 			}
+		sem_getvalue(data.image[IDmodeval].semptr[4], &semval);*/
+        int = semcnt;
+        for(semcnt=0; semcnt<semval; semcnt++)
+                {
+					printf("WARNING %s %d  : [%d] sem_trywait on data.image[IDmodeval]\n", __FILE__, __LINE__, semval-semcnt, index, device);
+					fflush(stdout);  
+					sem_trywait(data.image[IDmodeval].semptr[4];	
+				}
         
         AOconf[loop].statusM = 3;
 		clock_gettime(CLOCK_REALTIME, &tnow);
