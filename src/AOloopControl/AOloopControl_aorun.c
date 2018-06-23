@@ -477,34 +477,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[23] = tdiffv;
 
 
-    if(tdiffv>tdiffvlimit)
-    {
-        int timerindex1[] = { 2, 15, 16, 17, 25, 26, 27, 28, 29, 30, 31, 32, 33, 18, 3, 4, 5, 6, 9, 10, 11, 12, 13 };
 
-
-        printf("TIMING GLITCH DETECTED: %f ms   [%09ld]\n", tdiffv*1.0e3, tnow.tv_nsec);
-        fflush(stdout);
-        for(i=0; i<23; i++)
-        {
-            int i1 = timerindex1[i];
-            if((i1>26)&&(i1<32))
-                printf("    ");
-            printf("   %2d = %10.6f ms   Expecting %10.6f ms   Last %10.6f\n", i1, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i1], 1000.0*ntimerval[i1], 1000.0*ltimerval[i1]);
-        }
-        printf("\n");
-    }
-    else
-    {
-        for(i=0; i<aoloopcontrol_var.AOcontrolNBtimers; i++)
-        {
-            if((i!=7)&&(i!=8)&&(i!=20)&&(i!=21)&&(i!=34))
-            {
-                ltimerval[i] = data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
-                ntimerval[i] = ntimerval[i]*0.99 + 0.01*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
-            }
-        }
-
-    }
 
 
     // md[0].atime.ts is absolute time at beginning of iteration
@@ -1055,7 +1028,36 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	{
 		printf("TIMING WARNING: %10.6f  %10ld   AOcompute()\n", tdiffv, (long) LOOPiter);
 		fflush(stdout);
-	}
+
+        int timerindex1[] = { 2, 15, 16, 17, 25, 26, 27, 28, 29, 30, 31, 32, 33, 18, 3, 4, 5, 6, 9, 10, 11, 12, 13 };
+
+
+        printf("TIMING GLITCH DETECTED: %f ms   [%09ld]\n", tdiffv*1.0e3, tnow.tv_nsec);
+        fflush(stdout);
+        for(i=0; i<23; i++)
+        {
+            int i1 = timerindex1[i];
+            if((i1>26)&&(i1<32))
+                printf("    ");
+            printf("   %2d = %10.6f ms   Expecting %10.6f ms   Last %10.6f\n", i1, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i1], 1000.0*ntimerval[i1], 1000.0*ltimerval[i1]);
+        }
+        printf("\n");
+    }
+    else
+    {
+        for(i=0; i<aoloopcontrol_var.AOcontrolNBtimers; i++)
+        {
+            if((i!=7)&&(i!=8)&&(i!=20)&&(i!=21)&&(i!=34))
+            {
+                ltimerval[i] = data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
+                ntimerval[i] = ntimerval[i]*0.99 + 0.01*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
+            }
+        }
+
+    }
+
+
+
 
 
     return(0);
