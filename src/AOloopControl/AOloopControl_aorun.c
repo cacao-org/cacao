@@ -465,6 +465,11 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	struct timespec functionTestTimerStart;
 	struct timespec functionTestTimerEnd;
 
+	struct timespec functionTestTimer00;
+	struct timespec functionTestTimer01;
+	struct timespec functionTestTimer02;
+	struct timespec functionTestTimer03;
+
     // lock loop iteration into variable so that it cannot increment
     LOOPiter = AOconf[loop].LOOPiteration;
 
@@ -903,7 +908,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         {
             int block;
             long k;
-
+            
+            
+			clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
 
             AOconf[loop].RMSmodes = 0;
             for(k=0; k<AOconf[loop].NBDMmodes; k++)
@@ -913,6 +920,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             AOconf[loop].RMSmodesCumulcnt ++;
 
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
+
+			clock_gettime(CLOCK_REALTIME, &functionTestTimer01); //TEST timing in function
 
             for(k=0; k<AOconf[loop].NBDMmodes; k++)
             {
@@ -946,7 +955,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 // update total gain
                 //     data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k+AOconf[loop].NBDMmodes] = AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k];
             }
-
+            
+			clock_gettime(CLOCK_REALTIME, &functionTestTimer02); //TEST timing in function
 
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0 ++;
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt1 = LOOPiter;
@@ -955,6 +965,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
         }
 
+		clock_gettime(CLOCK_REALTIME, &functionTestTimer03); //TEST timing in function
     }
     else
     {
@@ -1034,6 +1045,24 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	{
 		printf("TIMING WARNING: %12.3f us  %10ld   AOcompute()\n", tdiffv*1.0e6, (long) LOOPiter);
 		fflush(stdout);
+
+		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer00);
+		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+		printf("Timer 00 : %12.3f us\n", tdiffv*1.0e6);
+
+		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer01);
+		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+		printf("Timer 01 : %12.3f us\n", tdiffv*1.0e6);
+
+		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer02);
+		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+		printf("Timer 02 : %12.3f us\n", tdiffv*1.0e6);
+
+		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer03);
+		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+		printf("Timer 03 : %12.3f us\n", tdiffv*1.0e6);
+
+
 
         int timerindex1[] = { 2, 15, 16, 17, 25, 26, 27, 28, 29, 30, 31, 32, 33, 18, 3, 4, 5, 6, 9, 10, 11, 12, 13 };
 
