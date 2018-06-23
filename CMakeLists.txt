@@ -76,9 +76,6 @@ endif(USE_MAGMA)
 
 
 # ncurses
-#find_package(Curses REQUIRED)
-#message("CURSES_INCLUDE_PATH = ${CURSES_INCLUDE_PATH}")
-#message("CURSES_LIBRARIES    = ${CURSES_LIBRARIES}")
 SET(CURSES_USE_NCURSES TRUE)
 
 
@@ -161,7 +158,7 @@ ${FFTWF_CFLAGS_OTHER}
 -fopenmp
 )
 
-#add_definitions(
+
 
 set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DPACKAGE_VERSION=\\\"0.0.0\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/cacao-org/cacao/issues\\\"" )
 
