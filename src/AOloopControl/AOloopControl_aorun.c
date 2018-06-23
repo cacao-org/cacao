@@ -1610,7 +1610,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			}*/
 		int semval;
 		sem_getvalue(data.image[IDmodeval].semptr[4], &semval);
-        int = semcnt;
+        int semcnt;
         
         for(semcnt=0; semcnt<semval; semcnt++)
                 {
