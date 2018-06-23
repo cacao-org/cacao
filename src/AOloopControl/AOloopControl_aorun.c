@@ -1144,7 +1144,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
 	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 	tdiffv00 = tdiffv;
-	if(tdiffv > 500.0e-6)
+	if(tdiffv > 600.0e-6)
 	{
 		printf("TIMING WARNING: %12.3f us  %10ld   Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
 		fflush(stdout);
