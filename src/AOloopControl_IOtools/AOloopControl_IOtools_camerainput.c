@@ -322,7 +322,7 @@ static void *compute_function_imtotal( void *ptr )
 	char imname[200];
 
 
-	printf("TEST - =========== ENTERING compute_function_imtotal ===================\n");
+	printf("=========== STARTING compute_function_imtotal loop ===================\n");
 	fflush(stdout);
 
 
@@ -475,8 +475,13 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     int semindex = 0;
 
-
-	//usleep(1000000);// TEST
+	struct timespec functionTestTimerStart;
+	struct timespec functionTestTimerEnd;
+	struct timespec functionTestTimer00;
+	struct timespec functionTestTimer01;
+	struct timespec functionTestTimer02;
+	struct timespec functionTestTimer03;
+	struct timespec functionTestTimer04;
 
 
     if(RM==0)
@@ -535,7 +540,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     else
         data.status1 = 2;
 
-    //   usleep(20);
+
+	clock_gettime(CLOCK_REALTIME, &functionTestTimer00);
+	
 
 #ifdef _PRINT_TEST
     printf("TEST - WAITING FOR IMAGE %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
@@ -571,6 +578,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 #endif
     }
 
+
+	clock_gettime(CLOCK_REALTIME, &functionTestTimerStart);
 
 
 
@@ -932,6 +941,25 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         
         if(AOconf[loop].GPUall==0)
 			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS1, tnow);
+	}
+	
+	clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
+	
+	tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
+	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+	if(tdiffv > 500.0e-6)
+	{
+		printf("TIMING WARNING: %12.3f us       Read_cam_frame()\n", tdiffv*1.0e6);
+		
+		tdiff = info_time_diff(functionTestTimer00, functionTestTimerStart);
+		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+		printf("        Sub-timing  Wait for image     %12.3f us\n", tdiffv*1.0e6);
+
+		tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
+		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+		printf("        Sub-timing  Process image     %12.3f us\n", tdiffv*1.0e6);		
+		
+		fflush(stdout);
 	}
 
     return(0);
