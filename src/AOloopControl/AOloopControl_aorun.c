@@ -1053,7 +1053,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 	if(tdiff > 10.0e-6)
 	{
-		printf("TIMING WARNING: %10.6f   AOcompute()\n", tdiff);
+		printf("TIMING WARNING: %10.6f   AOcompute()\n", tdiffv);
 		fflush(stdout);
 	}
 
