@@ -429,9 +429,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 				if(tdiffv > 600.0e-6)
 				{
 					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_run()\n", tdiffv*1.0e6, (long) AOconf[loop].LOOPiteration);
-					printf("    AOcompute()            read cam        : %12.3f us \n", tdiffv00);
-					printf("    AOcompute()            post read cam   : %12.3f us \n", tdiffv01);
-					printf("    AOloopControl_run()    post-AOcompute  : %12.3f us \n", tdiffv02);
+					printf("    AOcompute()            read cam        : %12.3f us \n", tdiffv00*1.0e6);
+					printf("    AOcompute()            post read cam   : %12.3f us \n", tdiffv01*1.0e6);
+					printf("    AOloopControl_run()    post-AOcompute  : %12.3f us \n", tdiffv02*1.0e6);
 					
 					fflush(stdout);
 					
