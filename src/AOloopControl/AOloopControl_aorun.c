@@ -478,7 +478,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		fflush(stdout);
 		for(i=0;i<aoloopcontrol_var.AOcontrolNBtimers;i++)
 		{
-//			if((i==0))
+			if((i!=7)&&(i!=8)&&(i!=20)&&(i!=21)&&(i!=34))
 				printf("   tdiff %2ld = %10.6f ms\n", i, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i]);
 		}
 		printf("\n");
