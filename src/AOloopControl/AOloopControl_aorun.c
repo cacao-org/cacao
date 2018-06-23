@@ -89,9 +89,10 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 //TEST
-	// normal timer values
-	double ntimerval[50];
-
+// normal timer values
+double ntimerval[50];
+// last timer values
+double timerval[50];
 
 
 
@@ -458,7 +459,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	uint64_t LOOPiter;
 	
 	
-	double tdiffvlimit = 1.0e-3;
+	double tdiffvlimit = 0.5e-3;
 	
 
 	
@@ -482,7 +483,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		for(i=0;i<aoloopcontrol_var.AOcontrolNBtimers;i++)
 		{
 			if((i!=7)&&(i!=8)&&(i!=20)&&(i!=21)&&(i!=34))
-				printf("   tdiff %2ld = %10.6f ms   Expecting %10.6f ms\n", i, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i], 1000.0*ntimerval[i]);
+				printf("   tdiff %2ld = %10.6f ms   Expecting %10.6f ms   Last %10.6f\n", i, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i], 1000.0*ntimerval[i], 1000.0*ltimerval[i]);
 		}
 		printf("\n");
 	}
@@ -491,7 +492,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		for(i=0;i<aoloopcontrol_var.AOcontrolNBtimers;i++)
 		{
 			if((i!=7)&&(i!=8)&&(i!=20)&&(i!=21)&&(i!=34))
+			{	
+				ltimerval[i] = data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
 				ntimerval[i] = ntimerval[i]*0.99 + 0.01*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
+			}
 		}
 		
 	}
