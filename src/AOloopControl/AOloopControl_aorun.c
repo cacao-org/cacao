@@ -92,7 +92,7 @@ extern AOloopControl_var aoloopcontrol_var;
 // normal timer values
 double ntimerval[50];
 // last timer values
-double timerval[50];
+double ltimerval[50];
 
 
 
