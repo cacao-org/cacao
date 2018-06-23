@@ -461,8 +461,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     double tdiffvlimit = 0.5e-3;
 
-    int ComputeWFSsol_FLAG  = 0; //TEST
-
+    int ComputeWFSsol_FLAG  = 1; //TEST
+	struct timespec functionTestTimerStart;
+	struct timespec functionTestTimerEnd;
 
     // lock loop iteration into variable so that it cannot increment
     LOOPiter = AOconf[loop].LOOPiteration;
@@ -515,6 +516,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
     Read_cam_frame(loop, 0, normalize, 0, 0);
+
+	clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
+	
 
 
     slice = aoloopcontrol_var.PIXSTREAM_SLICE;
@@ -1044,9 +1048,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		}
 	}
 
-	
-
-
+	clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd); //TEST timing in function
+	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
+	if(tdiff > 10.0e-6)
+	{
+		printf("TIMING WARNING: %10.6f   AOcompute()\n", tdiff);
+		fflush(stdout);
+	}
 
 
     return(0);
