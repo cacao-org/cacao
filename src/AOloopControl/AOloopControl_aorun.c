@@ -108,7 +108,7 @@ extern AOloopControl_var aoloopcontrol_var;
  * ## Details
  * 
  */ 
-int_fast8_t AOloopControl_run()
+int_fast8_t __attribute__((hot)) AOloopControl_run()
 {
     FILE *fp;
     char fname[200];
