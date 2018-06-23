@@ -994,7 +994,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-        data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv
+        data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 		
 		if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
