@@ -469,6 +469,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	struct timespec functionTestTimer01;
 	struct timespec functionTestTimer02;
 	struct timespec functionTestTimer03;
+	struct timespec functionTestTimer04;
 
     // lock loop iteration into variable so that it cannot increment
     LOOPiter = AOconf[loop].LOOPiteration;
@@ -492,7 +493,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     // pixel 1 is time from beginning of loop to status 01
     // pixel 2 is time from beginning of loop to status 02
 
-
+	clock_gettime(CLOCK_REALTIME, &functionTestTimer04); //TEST timing in function
+	
     Read_cam_frame(loop, 0, normalize, 0, 0);
 
 
@@ -923,6 +925,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 			clock_gettime(CLOCK_REALTIME, &functionTestTimer01); //TEST timing in function
 
+//TEST
 /*           for(k=0; k<AOconf[loop].NBDMmodes; k++)
             {
                 data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] = 0.99*data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] + 0.01*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k]*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
@@ -1088,9 +1091,16 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 ntimerval[i] = ntimerval[i]*0.99 + 0.01*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
             }
         }
-
     }
 
+	tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
+	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
+	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+	if(tdiffv > 500.0e-6)
+	{
+		printf("TIMING WARNING: %12.3f us  %10ld   Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
+		fflush(stdout);
+	}
 
 
 
