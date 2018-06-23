@@ -490,6 +490,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     Read_cam_frame(loop, 0, normalize, 0, 0);
 
+
+
+
 	clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
 	
 
@@ -1021,18 +1024,21 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		}
 	}
 
+
+	// DETECT AND REPORT TIMING ANOMALY
+	
 	clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd); //TEST timing in function
 	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
 	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 	if(tdiffv > 350.0e-6)
 	{
-		printf("TIMING WARNING: %10.6f  %10ld   AOcompute()\n", tdiffv, (long) LOOPiter);
+		printf("TIMING WARNING: %12.3f us  %10ld   AOcompute()\n", tdiffv*1.0e6, (long) LOOPiter);
 		fflush(stdout);
 
         int timerindex1[] = { 2, 15, 16, 17, 25, 26, 27, 28, 29, 30, 31, 32, 33, 18, 3, 4, 5, 6, 9, 10, 11, 12, 13 };
 
 
-        printf("TIMING GLITCH DETECTED: %f ms   [%09ld]\n", tdiffv*1.0e3, tnow.tv_nsec);
+        printf("TIMING GLITCH DETECTED: %f us   [%09ld]\n", tdiffv*1.0e6, tnow.tv_nsec);
         fflush(stdout);
         for(i=0; i<23; i++)
         {
