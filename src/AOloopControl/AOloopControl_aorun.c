@@ -1093,11 +1093,12 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
         int timerindex1[] = { 2, 15, 16, 17, 25, 26, 27, 28, 29, 30, 31, 32, 33, 18, 3, 4, 5, 6, 9, 10, 11, 12, 13 };
 
-
+//TEST
+/*
         printf("TIMING GLITCH DETECTED: %f us   [%09ld]\n", tdiffv*1.0e6, tnow.tv_nsec);
         fflush(stdout);
         for(i=0; i<23; i++)
-        {
+        { 
             int i1 = timerindex1[i];
             if((i1>26)&&(i1<32))
                 printf("    ");
@@ -1116,7 +1117,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             }
         }
     }
-
+*/
 	tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
 	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
 	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
