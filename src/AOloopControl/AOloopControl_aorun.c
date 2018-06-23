@@ -461,7 +461,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     double tdiffvlimit = 0.5e-3;
 
-    int ComputeWFSsol_FLAG  = 0; //TEST
+    int ComputeWFSsol_FLAG  = 1; //TEST
 
 
     // lock loop iteration into variable so that it cannot increment
