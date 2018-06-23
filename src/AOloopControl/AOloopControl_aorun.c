@@ -410,7 +410,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 				clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
 				tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
 				tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-				if(tdiffv > 3.0e-6)
+				if(tdiffv > 30.0e-6)
 				{
 					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_run()\n", tdiffv*1.0e6, (long) AOconf[loop].LOOPiteration);
 					fflush(stdout);
