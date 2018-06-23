@@ -461,7 +461,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     double tdiffvlimit = 0.5e-3;
 
-    int ComputeWFSsol_FLAG  = 1; //TEST
+    int ComputeWFSsol_FLAG  = 0; //TEST
 
 
     // lock loop iteration into variable so that it cannot increment
@@ -999,14 +999,19 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		
 		if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
 		{
-			// to be done
+			// -to be done
 		}
 		else
 		{
 			#ifdef HAVE_CUDA
             if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
-				
+				// -> aoloopcontrol_var.aoconfID_meas_modes
+				data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 1;
+                COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_modes, -1);
+                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt0++;
+                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt1 = LOOPiter;
+                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 0;				
 			}
             else // direct pixel -> actuators linear transformation
             {
