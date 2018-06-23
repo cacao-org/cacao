@@ -1142,7 +1142,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     
 
 	tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
-	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
 	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 	tdiffv00 = tdiffv;
 	if(tdiffv > 500.0e-6)
