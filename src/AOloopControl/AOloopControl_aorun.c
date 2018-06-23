@@ -1205,18 +1205,6 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
     sched_setscheduler(0, SCHED_FIFO, &schedpar);
@@ -1617,7 +1605,8 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
             sem_wait(data.image[IDmodeval].semptr[4]);
 
         // drive sem4 to zero
-        while(sem_trywait(data.image[IDmodeval].semptr[4])==0) {}
+     //   while(sem_trywait(data.image[IDmodeval].semptr[4])==0) {}
+        
         AOconf[loop].statusM = 3;
 		clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
