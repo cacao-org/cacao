@@ -976,6 +976,70 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         }
 
     }
+    else
+    {
+		
+		
+		if(AOconf[loop].GPUall==0)
+		{
+			data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
+			COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2, -1);
+            data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt0 ++;
+            data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt1 = LOOPiter;
+            data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 0;
+		}
+
+		
+		AOconf[loop].status = 11;
+        clock_gettime(CLOCK_REALTIME, &tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv
+        data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
+		
+		if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
+		{
+			// to be done
+		}
+		else
+		{
+			#ifdef HAVE_CUDA
+            if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
+            {
+				
+			}
+            else // direct pixel -> actuators linear transformation
+            {
+				data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
+				COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
+                data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
+                data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
+                data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 0;
+				
+				
+				data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
+				
+				data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
+                COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_act, -1);
+                data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0++;
+                data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt1 = LOOPiter;
+                data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 0;
+			}
+			#endif
+		}
+
+		
+		if(AOconf[loop].CMMODE==0)
+		{
+			data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
+			data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0 ++;
+            data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt1 = LOOPiter;
+            COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_cmd_modes, -1);
+            data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 0;
+		}
+	}
+
+	
 
 
 
