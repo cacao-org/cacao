@@ -138,6 +138,17 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
     int semval;
 
 
+	struct timespec functionTestTimerStart;
+	struct timespec functionTestTimerEnd;
+
+	struct timespec functionTestTimer00;
+	struct timespec functionTestTimer01;
+	struct timespec functionTestTimer02;
+	struct timespec functionTestTimer03;
+	struct timespec functionTestTimer04;
+
+
+
 
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
@@ -274,6 +285,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
             timerinit = 0;
             while(AOconf[loop].on == 1)
             {
+				
                 if(timerinit==0)
                 {
                     //      Read_cam_frame(loop, 0, AOconf[loop].WFSnormalize, 0, 1);
@@ -282,6 +294,8 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
                 }
 
                 AOcompute(loop, AOconf[loop].WFSnormalize);
+				clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
+
 
                 AOconf[loop].status = 12; // 12
                 clock_gettime(CLOCK_REALTIME, &tnow);
@@ -392,6 +406,16 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 
                 if(AOconf[loop].cnt == AOconf[loop].cntmax)
                     AOconf[loop].on = 0;
+            
+				clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
+				tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
+				tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+				if(tdiffv > 3.0e-6)
+				{
+					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_run()\n", tdiffv*1.0e6, (long) AOconf[loop].LOOPiteration);
+					fflush(stdout);
+				}
+            
             }
 
         }
