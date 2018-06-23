@@ -285,7 +285,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
             timerinit = 0;
             while(AOconf[loop].on == 1)
             {
-				
+				clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
                 if(timerinit==0)
                 {
                     //      Read_cam_frame(loop, 0, AOconf[loop].WFSnormalize, 0, 1);
@@ -408,9 +408,19 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
                     AOconf[loop].on = 0;
             
 				clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
+				
+				
 				tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
 				tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 				if(tdiffv > 30.0e-6)
+				{
+					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_run() - excluding AOcompute\n", tdiffv*1.0e6, (long) AOconf[loop].LOOPiteration);
+					fflush(stdout);
+				}
+				
+				tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
+				tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+				if(tdiffv > 600.0e-6)
 				{
 					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_run()\n", tdiffv*1.0e6, (long) AOconf[loop].LOOPiteration);
 					fflush(stdout);
