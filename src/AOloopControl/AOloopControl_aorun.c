@@ -474,7 +474,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 	if(tdiffv>tdiffvlimit)
 	{
-		printf("TIMING GLITCH DETECTED: %f ms   [%ld]\n", tdiffv*1.0e3, tnow.tv_nsec);
+		printf("TIMING GLITCH DETECTED: %f ms   [%09ld]\n", tdiffv*1.0e3, tnow.tv_nsec);
 		fflush(stdout);
 		for(i=0;i<aoloopcontrol_var.AOcontrolNBtimers;i++)
 		{
