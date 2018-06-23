@@ -1608,15 +1608,14 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			printf("WARNING %s %d  : sem_trywait on modeval\n", __FILE__, __LINE__);
 			fflush(stdout);
 			}*/
-		int semval;
+		int semval, semcnt;
+
 		sem_getvalue(data.image[IDmodeval].semptr[4], &semval);
-        int semcnt;
-        
         for(semcnt=0; semcnt<semval; semcnt++)
                 {
 					printf("WARNING %s %d  : [%d] sem_trywait on data.image[IDmodeval]\n", __FILE__, __LINE__, semval-semcnt);
 					fflush(stdout);  
-					sem_trywait(data.image[IDmodeval].semptr[4];	
+					sem_trywait(data.image[IDmodeval].semptr[4]);	
 				}
         
         AOconf[loop].statusM = 3;
