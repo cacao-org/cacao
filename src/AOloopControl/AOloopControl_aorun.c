@@ -923,7 +923,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 			clock_gettime(CLOCK_REALTIME, &functionTestTimer01); //TEST timing in function
 
-            for(k=0; k<AOconf[loop].NBDMmodes; k++)
+/*           for(k=0; k<AOconf[loop].NBDMmodes; k++)
             {
                 data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] = 0.99*data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] + 0.01*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k]*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
                 data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] = 0.99*data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] + 0.01*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
@@ -955,7 +955,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 // update total gain
                 //     data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k+AOconf[loop].NBDMmodes] = AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k];
             }
-            
+  */         
 			clock_gettime(CLOCK_REALTIME, &functionTestTimer02); //TEST timing in function
 
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0 ++;
