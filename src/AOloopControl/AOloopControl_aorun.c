@@ -1605,7 +1605,9 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
             sem_wait(data.image[IDmodeval].semptr[4]);
 
         // drive sem4 to zero
-     //   while(sem_trywait(data.image[IDmodeval].semptr[4])==0) {}
+        while(sem_trywait(data.image[IDmodeval].semptr[4])==0) {
+			printf("DECREMENTING SEM FOR modeval\n");
+			}
         
         AOconf[loop].statusM = 3;
 		clock_gettime(CLOCK_REALTIME, &tnow);
