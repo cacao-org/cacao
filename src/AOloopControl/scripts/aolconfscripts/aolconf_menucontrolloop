@@ -1450,7 +1450,7 @@ menucontrolloop_default="LPwfsresa"
 
 sWFSresac)
 value=${WFSresAveCoeff}
-SelectValue02 0 500 10
+SelectValue02 0 50000 500
 WFSresAveCoeff=${value}
 echo "$WFSresAveCoeff" > ./conf/param_WFSresAveCoeff.txt
 tmux send-keys -t aol${LOOPNUMBER}-ctr "readshmim aol${LOOPNUMBER}_wfsavecoeff" C-m 
