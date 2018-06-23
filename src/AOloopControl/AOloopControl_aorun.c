@@ -997,7 +997,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     else
     {
 		
-		
 		if(AOconf[loop].GPUall==0)
 		{
 			data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
@@ -1065,15 +1064,15 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 	// DETECT AND REPORT TIMING ANOMALY
 	//TEST
-	/*
+	
 	clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd); //TEST timing in function
 	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
 	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 	if(tdiffv > 350.0e-6)
 	{
-		printf("TIMING WARNING: %12.3f us  %10ld   AOcompute()\n", tdiffv*1.0e6, (long) LOOPiter);
+		printf("TIMING WARNING: %12.3f us  %10ld   AOcompute() after Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
 		fflush(stdout);
-
+/*
 		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer00);
 		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 		printf("Timer 00 : %12.3f us\n", tdiffv*1.0e6);
@@ -1104,9 +1103,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 printf("    ");
             printf("   %2d = %10.6f ms   Expecting %10.6f ms   Last %10.6f\n", i1, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i1], 1000.0*ntimerval[i1], 1000.0*ltimerval[i1]);
         }
-        printf("\n");
+        printf("\n");*/
     }
-    else
+/*    else
     {
         for(i=0; i<aoloopcontrol_var.AOcontrolNBtimers; i++)
         {
@@ -1116,8 +1115,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 ntimerval[i] = ntimerval[i]*0.99 + 0.01*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
             }
         }
-    }
-    */
+    }*/
+    
 
 	tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
 	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
