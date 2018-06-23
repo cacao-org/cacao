@@ -88,8 +88,9 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-
-
+//TEST
+	// normal timer values
+	double ntimerval[50];
 
 
 
@@ -459,8 +460,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	
 	double tdiffvlimit = 1.0e-3;
 	
-	// normal timer values
-	double ntimerval[50];
+
 	
 	
 	// lock loop iteration into variable so that it cannot increment 
