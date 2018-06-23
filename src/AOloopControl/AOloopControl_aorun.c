@@ -471,7 +471,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[23] = tdiffv;
 
-/*
+
 	if(tdiffv>tdiffvlimit)
 	{
 		printf("TIMING GLITCH DETECTED: %f ms\n", tdiffv*1.0e6);
@@ -480,7 +480,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 			printf("   tdiff %2ld = %10.3f ms\n", i, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i]);
 		printf("\n");
 	}
-*/
+
 
     // md[0].atime.ts is absolute time at beginning of iteration
     //
