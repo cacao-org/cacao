@@ -574,7 +574,11 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
         sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
         for(i=0; i<semval; i++)
+        {
+			printf("WARNING %s %d  : [%d] sem_trywait on aoloopcontrol_var.aoconfID_wfsim\n", __FILE__, __LINE__, (int) (semval - i));
+			fflush(stdout); 
             sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+		}
 
 
 #ifdef _PRINT_TEST
