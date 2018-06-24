@@ -338,6 +338,19 @@ fi
 menuitems+=( " " " " )
 
 
+streamname="ircam0"
+infostring="IR camera 0"
+logwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "lircam0ON" "$startlogstring" )
+else
+menuitems+=( "lircam0OFF" "$stoplogstring" )
+fi
+
+
+
+menuitems+=( " " " " )
+
 
 
 streamname="dm${DMindex}disp"
@@ -988,6 +1001,23 @@ skstreamlog "$streamname"
 echo "0" > "./status/stat_log_${streamname}.txt"
 menurecord_default="laolDMmodeMULTFON"
 ;;
+
+
+
+    lircam0ON)
+streamname="ircam0"
+startstreamlog "$streamname" $LogCubeSize
+echo "1" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lircam0OFF"
+;;
+    lircam0OFF)
+streamname="ircam0"
+skstreamlog "$streamname"
+echo "0" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lircam0ON"
+;;
+
+
 
 
     ldmdispON)
