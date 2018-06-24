@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	printf("        \n");
 
 
-/*
+
 	// initialize milk modules for which no function calls is included by default
 	libinit_image_basic();
 	libinit_image_format();
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	libinit_AOloopControl_DM();
 	libinit_AOloopControl_compTools();
 	libinit_AOloopControl_acquireCalib();
-*/
+
 	
 	printf("Starting CLI ...\n");
 	fflush(stdout);
