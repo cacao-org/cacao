@@ -86,7 +86,7 @@ if [ "$DMMODE" = "0" ]; then
 fi
 
 
-
+RMamplum="0.001"
 ACzrmNBcycle="3"
 ACmrmNBcycle="20"
 
@@ -97,7 +97,7 @@ echo "./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcyc
 
 echo "./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}"
 
-exit
+
 
 
 aCALIBdatestr=`date -u +%Y-%m-%d_%H:%M:%S`
@@ -131,7 +131,7 @@ echo "####################################################"
 cp zrespmat0.fits.fits ${outDir}/zrespmat0_${aCALIBdatestr}.fits
 cp wfsref00.fits.fits ${outDir}/wfsref00_${aCALIBdatestr}.fits
 
-
+exit
 
 
 
