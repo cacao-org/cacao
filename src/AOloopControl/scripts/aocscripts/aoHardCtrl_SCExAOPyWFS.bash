@@ -356,11 +356,11 @@ EOF
 # ircam0        scexao2->scexao, port 30102
 	ir0cs)
 aoconflogext "(re-)start ircam0 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -c ircam0 30102
+cset proc --set ircam --exec /home/scexao/bin/getTCPscexao2im -- -c ircam0 30102
 ;;
 	ir0ck)
 aoconflogext "kill ircam0 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k ircam0 30102
+cset proc --set ircam --exec /home/scexao/bin/getTCPscexao2im -- -k ircam0 30102
 ;;
 
 
