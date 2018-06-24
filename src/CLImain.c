@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	printf("        \n");
 
 
-
+/*
 	// initialize milk modules for which no function calls is included by default
 	libinit_image_basic();
 	libinit_image_format();
@@ -66,14 +66,14 @@ int main(int argc, char *argv[])
 	libinit_img_reduce();
 	libinit_linARfilterPred();
 	libinit_ZernikePolyn();
-//	libinit_linopt_imtools();
-//	libinit_cudacomp();
-//	libinit_linARfilterPred();
+	libinit_linopt_imtools();
+	libinit_cudacomp();
+	libinit_linARfilterPred();
 
 	
 	// initialize modules specific to cacao
 	libinit_AOloopControl();
-/*	libinit_AOloopControl_PredictiveControl();
+	libinit_AOloopControl_PredictiveControl();
 	libinit_linARfilterPred();
 	libinit_AOloopControl_computeCalib();
 	libinit_FPAOloopControl();
