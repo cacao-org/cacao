@@ -99,6 +99,8 @@ echo "./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} $
 
 
 
+exit
+
 
 aCALIBdatestr=`date -u +%Y-%m-%d_%H:%M:%S`
 
