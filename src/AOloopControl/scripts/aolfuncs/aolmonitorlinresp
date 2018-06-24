@@ -97,7 +97,13 @@ ACmrmNBcycle="40"
 
 for RMamp in "0.001" "0.003"
 do
+echo "Running $RMamp"
+done
 
+
+
+
+exit
 
 #RMamp="$1"
 RMamplum="$RMamp"
@@ -182,5 +188,5 @@ cp LOwfsref0.fits     ${outDir}/LOwfsref0_${aCALIBdatestr}.${RMamplum}.fits
 cp respM_LOmodes.fits ${outDir}/respM_LOmodes_${aCALIBdatestr}.${RMamplum}.fits
 
 
-done
+
 
