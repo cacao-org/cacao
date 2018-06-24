@@ -488,6 +488,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     static double imWaitTimeAve = 0.0;
 
 
+	int FORCE_REG_TIMING = 1;       // force regular timing: proceed if WFS frame is late
+	float REG_TIMING_frac = 1.1;    // how long to wait beyond expected time (fraction)
+	
 
     if(RM==0)
         semindex = 0;
@@ -556,10 +559,6 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem==0)
     {
-		printf("NOT USING SEMAPHORE !\n");
-		fflush(stdout);
-		
-		
         if(RM==0)
             while(AOconf[loop].WFScnt==data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0) // test if new frame exists
                 usleep(5);
@@ -581,7 +580,32 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 			fflush(stdout); 
 		}
 
-        sem_wait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+		if ( FORCE_REG_TIMING == 0 )
+		{
+			sem_wait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+		}
+		else
+		{
+			struct timespec semwaitts;
+			
+			if (clock_gettime(CLOCK_REALTIME, &semwaitts) == -1) {
+				perror("clock_gettime");
+				exit(EXIT_FAILURE);
+			}
+			semwaitts.tv_nsec += (long) (1.0e9 * imWaitTimeAve*REG_TIMING_frac);
+			if(semwaitts.tv_nsec >= 1000000000)
+				semwaitts.tv_sec = semwaitts.tv_sec + 1;
+			
+			int rval;
+			rval = sem_timedwait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semwaitts);
+			if (rval == -1)
+			{
+				if (errno == ETIMEDOUT)
+					printf("sem_timedwait() timed out\n");
+				else
+					perror("sem_timedwait");
+			} 
+		}
 
         sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
         for(i=0; i<semval; i++)
@@ -597,6 +621,11 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         fflush(stdout);
 #endif
     }
+
+
+
+
+
 
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimerStart);
