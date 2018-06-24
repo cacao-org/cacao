@@ -1,0 +1,170 @@
+#!/bin/bash
+
+#########################################################################################
+##          ACQUIRE WFS RESPONSE (LOOP, NO PROCESSING)                                 ##
+#########################################################################################
+
+
+
+
+
+
+
+
+
+# OUTPUT DIRECTORY
+outDir="wfslinresp"
+mkdir -p $outDir
+
+
+
+##############################################
+# FUNCTION: READ PARAMETER FROM FILE
+##############################################
+# arg 1: parameter name
+# arg 2: default value
+# 
+# param value is stored in variable "paramvalue"
+function ConfReadParam {
+file="./conf/param_$1.txt"
+if [ -f "$file" ]; then
+paramvalue=$( head -1 $file )
+else
+paramvalue="$2"
+echo "$2" > $file
+fi
+}
+
+
+echo "##########################################"
+echo "# READ REQUIRED PARAMETERS                "
+echo "##########################################"
+
+# READ LOOP NUMBER
+if [ -f LOOPNUMBER ]; then
+LOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+LOOPNUMBER="7"
+echo "$LOOPNUMBER" > LOOPNUMBER
+fi
+
+ConfReadParam DMMODE "0"; DMMODE="$paramvalue"
+
+ConfReadParam ACzrmNBcycle "5"; ACzrmNBcycle="$paramvalue"
+
+ConfReadParam delayRM1us "0"; delayRM1us="$paramvalue"
+
+ConfReadParam RMamplum "0.05"; RMamplum="$paramvalue"
+
+ConfReadParam RMdelayfr "2"; RMdelayfr="$paramvalue"
+
+ConfReadParam RMfrave "5"; RMfrave="$paramvalue"
+
+ConfReadParam RMexfr "2"; RMexfr="$paramvalue"
+
+ConfReadParam WFSnorm "1"; WFSnorm="$paramvalue"
+
+
+
+
+
+
+
+
+if [ "$DMMODE" = "0" ]; then
+	ConfReadParam ACmrmtime "60.0"
+	ACmrmtime="$paramvalue"
+
+	ConfReadParam ACmrmNBcycle "5"
+	ACmrmNBcycle="$paramvalue"
+	
+    ConfReadParam RMMcpa "1.0"
+    RMMcpa="$paramvalue"
+    
+	ConfReadParam RMMamplum "0.1"
+	RMMamplum="$paramvalue"
+fi
+
+
+
+ACzrmNBcycle="3"
+ACmrmNBcycle="20"
+
+
+
+
+
+
+
+
+
+
+aCALIBdatestr=`date -u +%Y-%m-%d_%H:%M:%S`
+
+
+echo "##########################################"
+echo "# ACQUIRE ZONAL RESPONSE MATRIX           "
+echo "##########################################"
+
+
+# ACQUIRE HIGH ORDER WFS RESPONSE: 
+#
+# INPUT:
+# 	conf/RMpokeCube.fits.gz  (poke sequence)
+#		if file does not exist, create straight poke sequence (one actuator at a time) 
+#
+# OUTPUT: 
+# 	zrespmat0.fits
+#	wfsref00.fits
+#
+if pgrep "aol${LOOPNUMBER}run" > /dev/null  # is aolrun running ?
+then # use option -r to re-use AO shared memory configuration
+	./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+else
+    ./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+fi
+
+echo "####################################################"
+echo "# COPY TO ARCHIVE DIRECTORIES                       "
+echo "####################################################"
+cp zrespmat0.fits.fits ${outDir}/zrespmat0_${aCALIBdatestr}.fits
+cp wfsref00.fits.fits ${outDir}/wfsref00_${aCALIBdatestr}.fits
+
+
+
+
+
+
+
+
+echo "##############################################"
+echo "# ACQUIRE MODAL LO RESPONSE MATRIX            "
+echo "##############################################"
+
+
+#
+# INPUT:
+#	respM_LOmodes.fits (for aolMeasureLOrespmat2)
+#
+# OUTPUT:
+#	LOzrespmat0.fits
+#	LOwfsref0.fits
+#   respM_LOmodes.fits
+
+
+if pgrep "aol${LOOPNUMBER}run" > /dev/null # is aolrun running ?
+then # use option -r to re-use AO shared memory configuration
+    ./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+else
+    ./auxscripts/aolMeasureLOrespmat2 -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+
+
+echo "####################################################"
+echo "# COPY TO ARCHIVE DIRECTORIES                       "
+echo "####################################################"
+cp LOzrespmat0.fits.fits ${outDir}/LOzrespmat0_${aCALIBdatestr}.fits
+cp LOwfsref0.fits.fits ${outDir}/LOwfsref0_${aCALIBdatestr}.fits
+cp respM_LOmodes.fits.fits ${outDir}/respM_LOmodes_${aCALIBdatestr}.fits
+
+
+

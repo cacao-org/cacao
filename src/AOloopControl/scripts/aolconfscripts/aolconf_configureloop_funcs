@@ -61,13 +61,17 @@ tmuxnameaWFSr="aol${LOOPNUMBER}arespM"
 logRunningProcess "function_nAUTOC" "$tmuxnameaWFSr" "ACQUIRE RM(s)"
 
 
-# archive
+
+#
+# Archive previous calibrations
+# A FILO buffer stores the last 20 configurations
+#
 dirnb=20
+
+# First, we erase the configurations #20 (oldest)
 i0=`( printf "%03d" "$dirnb" )`
 rm -rf conf_staged.$i0
-
-
-# save old RMs
+# Then we increment all other configurations indices
 while [ $dirnb -gt 0 ]; do
 	i=$(($dirnb))
 	i1=$(($dirnb-1))
@@ -78,6 +82,7 @@ while [ $dirnb -gt 0 ]; do
 done    
  
 cp -rf conf_staged conf_staged.000
+
 
 # this function populates conf_staged directory
 tmux kill-session -t ${tmuxnameaWFSr}
