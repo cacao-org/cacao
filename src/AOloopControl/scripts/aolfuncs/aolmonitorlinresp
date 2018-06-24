@@ -88,7 +88,7 @@ fi
 
 RMamplum="0.001"
 ACzrmNBcycle="10"
-ACmrmNBcycle="20"
+ACmrmNBcycle="40"
 
 
 
@@ -130,10 +130,10 @@ fi
 echo "####################################################"
 echo "# COPY TO ARCHIVE DIRECTORIES                       "
 echo "####################################################"
-cp zrespmat0.fits.fits ${outDir}/zrespmat0_${aCALIBdatestr}.fits
-cp wfsref00.fits.fits ${outDir}/wfsref00_${aCALIBdatestr}.fits
+cp zrespmat0.fits ${outDir}/zrespmat0_${aCALIBdatestr}.fits
+cp wfsref00.fits ${outDir}/wfsref00_${aCALIBdatestr}.fits
 
-exit
+
 
 
 
