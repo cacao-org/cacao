@@ -86,11 +86,15 @@ if [ "$DMMODE" = "0" ]; then
 fi
 
 
-RMamplum="0.001"
+
+
+
 ACzrmNBcycle="6"
 ACmrmNBcycle="40"
 
 
+
+RMamplum="$1"
 
 
 echo "./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}"
