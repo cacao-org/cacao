@@ -951,7 +951,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
 
 
-
+	// processing time
     tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
     if(tdiffv > 100.0e-6)
@@ -961,25 +961,36 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     }
 
 
-
+	// Total time
     tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 
 
+	// Cam wait time
     if( imWaitTimeAvecnt < imWaitTimeAvecnt0 )
     {
         imWaitTimeAve += 1.0*tdiffv/imWaitTimeAvecnt0;
         imWaitTimeAvecnt++;
     }
-//    else
-//    {
-        if(tdiffv > 600e-6) //imWaitTimeAve*1.2)
+    else
+    {
+		float gain = 1.0/imWaitTimeAvecnt0;
+        imWaitTimeAve = imWaitTimeAve*(1.0-gain) + gain * tdiffv;
+	}
+	
+	
+	
+	// Total time
+    tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
+    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+		
+        if(tdiffv > 600.0e-6) //imWaitTimeAve*1.2)
         {
-            printf("TIMING WARNING: %12.3f us       Read_cam_frame()  - Expecting %12.3f us\n", tdiffv*1.0e6, imWaitTimeAve*1.0e6);
+            printf("TIMING WARNING: %12.3f us       Read_cam_frame()\n", tdiffv*1.0e6);
 
             tdiff = info_time_diff(functionTestTimer00, functionTestTimerStart);
             tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-            printf("        Sub-timing  Wait for image     %12.3f us\n", tdiffv*1.0e6);
+            printf("        Sub-timing  Wait for image     %12.3f us  - Expecting %12.3f us\n", tdiffv*1.0e6, imWaitTimeAve*1.0e6);
 
             tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
             tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -987,12 +998,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
             fflush(stdout);
         }
-        else
-        {
-            float gain = 1.0/imWaitTimeAvecnt0;
-            imWaitTimeAve = imWaitTimeAve*(1.0-gain) + gain * tdiffv;
-        }
-  //  }
+    
 
     return(0);
 }
