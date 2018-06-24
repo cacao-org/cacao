@@ -365,12 +365,19 @@ sudo cset se -d ocamdec
 sudo cset se -d system
 fi
 
+# show CPU sets
+cset set -l
+
+
+
+
+
+# =================================================================================
+# =========== set CPU PERFORMANCE SETTINGS
+# =================================================================================
 
 # Disable real-time CPU throttling
-
 sudo sh -c "echo -1 > /proc/sys/kernel/sched_rt_runtime_us"
-
-
 
 
 if [ "$ON" = "1" ]; then
@@ -379,11 +386,6 @@ tmux send-keys -t cpulatency "sudo /home/scexao/bin/setlatency 0" C-m
 else
 tmux kill-session -t cpulatency
 fi
-
-
-# show CPU sets
-cset set -l
-
 
 
 
@@ -413,7 +415,7 @@ sudo service irqbalance stop
 #export IRQBALANCE_BANNED_CPUS=$(cat IRQBALANCE_BANNED_CPUS.txt)
 #export IRQBALANCE_BANNED_CPUS=1555541
 
-# REDIRECT IRQs on RT cpus to cpu1
+# REDIRECT IRQs on RT cpus
 
 rm _cpu*irq_t0.txt &> /dev/null
 rm _cpu*irq_t1.txt &> /dev/null
@@ -427,7 +429,6 @@ touch _cpuRTirq.txt
 
 # protected cores
 #cpulist=( 3 5 7 9 11 13 15 17 19 21 27)
-
 cpulist=( 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27)
 
 # where to move IRQs (bitmask)
