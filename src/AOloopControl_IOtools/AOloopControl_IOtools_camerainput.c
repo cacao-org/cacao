@@ -483,9 +483,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     struct timespec functionTestTimer03;
     struct timespec functionTestTimer04;
 
-    long imWaitTimeAvecnt = 0;
-    long imWaitTimeAvecnt0 = 1000;
-    double imWaitTimeAve = 0.0;
+    static long imWaitTimeAvecnt = 0;
+    static long imWaitTimeAvecnt0 = 1000;
+    static double imWaitTimeAve = 0.0;
 
 
 
