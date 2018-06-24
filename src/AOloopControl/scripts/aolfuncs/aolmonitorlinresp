@@ -87,7 +87,7 @@ fi
 
 
 RMamplum="0.001"
-ACzrmNBcycle="10"
+ACzrmNBcycle="6"
 ACmrmNBcycle="40"
 
 
