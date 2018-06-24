@@ -169,9 +169,9 @@ fi
 echo "####################################################"
 echo "# COPY TO ARCHIVE DIRECTORIES                       "
 echo "####################################################"
-cp LOzrespmat0.fits.fits ${outDir}/LOzrespmat0_${aCALIBdatestr}.fits
-cp LOwfsref0.fits.fits ${outDir}/LOwfsref0_${aCALIBdatestr}.fits
-cp respM_LOmodes.fits.fits ${outDir}/respM_LOmodes_${aCALIBdatestr}.fits
+cp LOzrespmat0.fits ${outDir}/LOzrespmat0_${aCALIBdatestr}.fits
+cp LOwfsref0.fits ${outDir}/LOwfsref0_${aCALIBdatestr}.fits
+cp respM_LOmodes.fits ${outDir}/respM_LOmodes_${aCALIBdatestr}.fits
 
 
 
