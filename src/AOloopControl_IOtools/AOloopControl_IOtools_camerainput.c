@@ -1010,12 +1010,14 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 	// processing time
     tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+//TEST TIMING
+/*
     if(tdiffv > 100.0e-6)
     {
         printf("\n============ TIMING WARNING: %12.3f us       Read_cam_frame() Process\n", tdiffv*1.0e6);
         fflush(stdout);
     }
-
+*/
 
 	// Total time
     tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
@@ -1035,7 +1037,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 	}
 	
 	
-	
+//TEST TIMING
+/*
 	// Total time
     tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -1054,7 +1057,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
             fflush(stdout);
         }
-    
+*/  
 
     return(0);
 }
