@@ -1797,13 +1797,15 @@ menucontrolloop_default="pfS"
 	ARPFon=" ON"
 	echo "$ARPFon" > ./conf/param_ARPFon.txt
 	tmux send-keys -t aol${LOOPNUMBER}-ctr "aolARPFon" C-m
+	aoconflogext "set Predictive Control ON"
 	menucontrolloop_default="ARPFoff"
 	;;
 	 
 	ARPFoff)
 	ARPFon="OFF"
 	echo "$ARPFon" > ./conf/param_ARPFon.txt
-	 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolARPFoff" C-m
+	tmux send-keys -t aol${LOOPNUMBER}-ctr "aolARPFoff" C-m
+	aoconflogext "set Predictive Control OFF"
 	menucontrolloop_default="ARPFon"
 	;;
 	 
@@ -1813,7 +1815,7 @@ menucontrolloop_default="pfS"
   	 ARPFgain=${value}
   	 echo "$ARPFgain" > ./conf/param_ARPFgain.txt
   	 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolsetARPFgain ${ARPFgain}" C-m
-	 aoconflogext "set ARPF gain ${ARPFgain}"
+	 aoconflogext "set ARPFgain ${ARPFgain}"
   	 ;; 
 	 
 	 gball) 
