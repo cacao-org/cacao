@@ -556,6 +556,10 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem==0)
     {
+		printf("NOT USING SEMAPHORE !\n");
+		fflush(stdout);
+		
+		
         if(RM==0)
             while(AOconf[loop].WFScnt==data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0) // test if new frame exists
                 usleep(5);
