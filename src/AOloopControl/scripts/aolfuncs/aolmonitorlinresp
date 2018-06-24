@@ -94,7 +94,13 @@ ACmrmNBcycle="40"
 
 
 
-RMamplum="$1"
+
+#for RMamp in `seq 0.01 `;
+
+RMamp="$1"
+RMamplum="$RMamp"
+RMMamplum="$RMamp"
+
 
 
 echo "./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}"
