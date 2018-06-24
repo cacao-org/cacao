@@ -490,7 +490,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
 	int FORCE_REG_TIMING = 1;       // force regular timing: proceed if WFS frame is late
 	float REG_TIMING_frac = 1.1;    // how long to wait beyond expected time (fraction)
-	
+	int FORCE_REG_TIMING_val;
 
     if(RM==0)
         semindex = 0;
@@ -580,7 +580,13 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 			fflush(stdout); 
 		}
 
-		if ( FORCE_REG_TIMING == 0 )
+
+		if( imWaitTimeAvecnt < imWaitTimeAvecnt0 )
+			FORCE_REG_TIMING_val = 0;
+		else
+			FORCE_REG_TIMING_val = FORCE_REG_TIMING;
+
+		if ( FORCE_REG_TIMING_val == 0 )
 		{
 			sem_wait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
 		}
