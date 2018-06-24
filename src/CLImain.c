@@ -66,21 +66,21 @@ int main(int argc, char *argv[])
 	libinit_img_reduce();
 	libinit_linARfilterPred();
 	libinit_ZernikePolyn();
-	libinit_linopt_imtools();
-	libinit_cudacomp();
-	libinit_linARfilterPred();
+//	libinit_linopt_imtools();
+//	libinit_cudacomp();
+//	libinit_linARfilterPred();
 
 	
 	// initialize modules specific to cacao
 	libinit_AOloopControl();
-	libinit_AOloopControl_PredictiveControl();
+/*	libinit_AOloopControl_PredictiveControl();
 	libinit_linARfilterPred();
 	libinit_AOloopControl_computeCalib();
 	libinit_FPAOloopControl();
 	libinit_AOloopControl_DM();
 	libinit_AOloopControl_compTools();
 	libinit_AOloopControl_acquireCalib();
-
+*/
 	
 	printf("Starting CLI ...\n");
 	fflush(stdout);
