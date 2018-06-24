@@ -93,11 +93,13 @@ ACzrmNBcycle="6"
 ACmrmNBcycle="40"
 
 
+# 0.010 0.030 0.100`
+
+for RMamp in "0.001" "0.003"
+do
 
 
-#for RMamp in `seq 0.01 `;
-
-RMamp="$1"
+#RMamp="$1"
 RMamplum="$RMamp"
 RMMamplum="$RMamp"
 
@@ -180,4 +182,5 @@ cp LOwfsref0.fits     ${outDir}/LOwfsref0_${aCALIBdatestr}.${RMamplum}.fits
 cp respM_LOmodes.fits ${outDir}/respM_LOmodes_${aCALIBdatestr}.${RMamplum}.fits
 
 
+done
 
