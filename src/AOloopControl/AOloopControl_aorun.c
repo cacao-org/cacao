@@ -418,14 +418,19 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 				tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
 				tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 				tdiffv02 = tdiffv;
+				//TEST TIMING
+				/*
 				if(tdiffv > 30.0e-6)
 				{
 					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_run() - excluding AOcompute\n", tdiffv*1.0e6, (long) AOconf[loop].LOOPiteration);
 					fflush(stdout);
-				}
+				}*/
 				
 				tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
 				tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+				
+				//TEST TIMING
+				/*
 				if(tdiffv > 600.0e-6)
 				{
 					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_run()\n", tdiffv*1.0e6, (long) AOconf[loop].LOOPiteration);
@@ -437,6 +442,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 					
 					
 				}
+				*/ 
             
             }
 
@@ -1091,11 +1097,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
 	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 	tdiffv01 = tdiffv;
+//TEST TIMING	
+	/*
 	if(tdiffv > 350.0e-6)
 	{
 		printf("TIMING WARNING: %12.3f us  %10ld   AOcompute() after Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
 		fflush(stdout);
-/*
+
 		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer00);
 		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 		printf("Timer 00 : %12.3f us\n", tdiffv*1.0e6);
@@ -1126,8 +1134,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 printf("    ");
             printf("   %2d = %10.6f ms   Expecting %10.6f ms   Last %10.6f\n", i1, 1000.0*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i1], 1000.0*ntimerval[i1], 1000.0*ltimerval[i1]);
         }
-        printf("\n");*/
-    }
+        printf("\n");
+    }*/
 /*    else
     {
         for(i=0; i<aoloopcontrol_var.AOcontrolNBtimers; i++)
@@ -1144,11 +1152,14 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
 	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 	tdiffv00 = tdiffv;
+	
+	//TEST TIMING
+	/*
 	if(tdiffv > 600.0e-6)
 	{
 		printf("TIMING WARNING: %12.3f us  %10ld   Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
 		fflush(stdout);
-	}
+	}*/
 
 
 
