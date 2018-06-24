@@ -971,9 +971,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         imWaitTimeAve += 1.0*tdiffv/imWaitTimeAvecnt0;
         imWaitTimeAvecnt++;
     }
-    else
-    {
-        if(tdiffv > imWaitTimeAve*1.2)
+//    else
+//    {
+        if(tdiffv > 600e-6) //imWaitTimeAve*1.2)
         {
             printf("TIMING WARNING: %12.3f us       Read_cam_frame()  - Expecting %12.3f us\n", tdiffv*1.0e6, imWaitTimeAve*1.0e6);
 
@@ -992,7 +992,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
             float gain = 1.0/imWaitTimeAvecnt0;
             imWaitTimeAve = imWaitTimeAve*(1.0-gain) + gain * tdiffv;
         }
-    }
+  //  }
 
     return(0);
 }
