@@ -160,7 +160,7 @@ then # use option -r to re-use AO shared memory configuration
     ./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
 else
     ./auxscripts/aolMeasureLOrespmat2 -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
-
+fi
 
 echo "####################################################"
 echo "# COPY TO ARCHIVE DIRECTORIES                       "
