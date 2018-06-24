@@ -154,7 +154,7 @@ echo "##############################################"
 #	respM_LOmodes.fits (for aolMeasureLOrespmat2)
 #
 # OUTPUT:
-#	LOzrespmat0.fits
+#	LOrespM.fits
 #	LOwfsref0.fits
 #   respM_LOmodes.fits
 
@@ -169,8 +169,8 @@ fi
 echo "####################################################"
 echo "# COPY TO ARCHIVE DIRECTORIES                       "
 echo "####################################################"
-cp LOzrespmat0.fits ${outDir}/LOzrespmat0_${aCALIBdatestr}.${RMamplum}.fits
-cp LOwfsref0.fits ${outDir}/LOwfsref0_${aCALIBdatestr}.${RMamplum}.fits
+cp LOrespM.fits   ${outDir}/LOrespM_${aCALIBdatestr}.${RMamplum}.fits
+cp LOwfsref0.fits     ${outDir}/LOwfsref0_${aCALIBdatestr}.${RMamplum}.fits
 cp respM_LOmodes.fits ${outDir}/respM_LOmodes_${aCALIBdatestr}.${RMamplum}.fits
 
 
