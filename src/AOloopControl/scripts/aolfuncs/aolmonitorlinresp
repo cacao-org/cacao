@@ -87,7 +87,7 @@ fi
 
 
 RMamplum="0.001"
-ACzrmNBcycle="3"
+ACzrmNBcycle="10"
 ACmrmNBcycle="20"
 
 
@@ -99,7 +99,7 @@ echo "./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} $
 
 
 
-exit
+
 
 
 aCALIBdatestr=`date -u +%Y-%m-%d_%H:%M:%S`
