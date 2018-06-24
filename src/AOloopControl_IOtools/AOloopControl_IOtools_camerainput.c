@@ -737,8 +737,10 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     {
         switch ( aoloopcontrol_var.WFSatype ) {
         case _DATATYPE_UINT16 :
+
+// omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
 # ifdef _OPENMP
-            #pragma omp parallel num_threads(8) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+            #pragma omp parallel if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
         {
 # endif
 
@@ -753,7 +755,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         break;
         case _DATATYPE_FLOAT :
 # ifdef _OPENMP
-            #pragma omp parallel num_threads(8) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+            #pragma omp parallel if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
         {
 # endif
 
@@ -973,7 +975,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
         data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].write = 1;
 # ifdef _OPENMP
-        #pragma omp parallel num_threads(8) if (nelem>OMP_NELEMENT_LIMIT)
+        #pragma omp parallel if (nelem>OMP_NELEMENT_LIMIT)
         {
 # endif
 
