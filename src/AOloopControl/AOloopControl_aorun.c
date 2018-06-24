@@ -513,7 +513,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     double tdiffvlimit = 500.0e-6;
 
-    int ComputeWFSsol_FLAG  = 0; //TEST
+    int ComputeWFSsol_FLAG  = 1; //TEST
 	struct timespec functionTestTimerStart;
 	struct timespec functionTestTimerEnd;
 
