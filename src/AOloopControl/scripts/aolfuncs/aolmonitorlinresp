@@ -93,17 +93,17 @@ ACzrmNBcycle="6"
 ACmrmNBcycle="40"
 
 
-# 0.010 0.030 0.100`
 
-for RMamp in "0.001" "0.003"
+
+while true
 do
+
+for RMamp in "0.01" "0.03" "0.05"
+do
+
+
 echo "Running $RMamp"
-done
 
-
-
-
-exit
 
 #RMamp="$1"
 RMamplum="$RMamp"
@@ -189,4 +189,6 @@ cp respM_LOmodes.fits ${outDir}/respM_LOmodes_${aCALIBdatestr}.${RMamplum}.fits
 
 
 
+done
 
+done
