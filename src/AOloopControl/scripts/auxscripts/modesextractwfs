@@ -107,7 +107,7 @@ loopnb=$( head -1 LOOPNUMBER )
 
 if [ "$IMPORTmodeval" = "0" ]; then
 
-./AOloopControl -n $pname << EOF
+OMP_NUM_THREADS=2 ./AOloopControl -n $pname << EOF
 csetpmove aol${loopnb}RT1
 readshmim aol${loopnb}_respM
 readshmim aol${loopnb}_imWFS0
@@ -125,7 +125,7 @@ else
 #rm /tmp/aol${loopnb}_modeval.im.shm
 #ln -s /tmp/aol${loopnb}_DMmode_meas.im.shm /tmp/aol${loopnb}_modeval.im.shm
 
-./AOloopControl -n $pname << EOF
+OMP_NUM_THREADS=2 ./AOloopControl -n $pname << EOF
 csetpmove aol${loopnb}RT1
 readshmim aol${loopnb}_respM
 readshmim aol${loopnb}_imWFS0
