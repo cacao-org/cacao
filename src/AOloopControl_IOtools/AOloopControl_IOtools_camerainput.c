@@ -488,7 +488,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     static double imWaitTimeAve = 0.0;
 
 
-	int FORCE_REG_TIMING = 1;       // force regular timing: proceed if WFS frame is late
+	int FORCE_REG_TIMING = 0;       // force regular timing: proceed if WFS frame is late
 	float REG_TIMING_frac = 1.1;    // how long to wait beyond expected time (fraction)
 	int FORCE_REG_TIMING_val;
 
