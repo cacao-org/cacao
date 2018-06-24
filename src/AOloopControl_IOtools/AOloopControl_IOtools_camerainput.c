@@ -570,6 +570,13 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         fflush(stdout);
 #endif
 
+		sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
+		if(semval>0)
+		{
+			printf("WARNING %s %d  : [%d] SEMAPHORE already posted - no waiting for image\n", __FILE__, __LINE__, semval);
+			fflush(stdout); 
+		}
+
         sem_wait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
 
         sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
