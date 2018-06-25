@@ -76,6 +76,44 @@ int_fast8_t AOloopControl_loopoff()
 }
 
 
+int_fast8_t AOloopControl_loopWFScompon()
+{
+	int rtlindex;
+
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+        AOloopControl_InitializeMemory(1);
+
+    AOconf[aoloopcontrol_var.LOOPNUMBER].cntmax = AOconf[aoloopcontrol_var.LOOPNUMBER].cnt-1;
+
+    AOconf[aoloopcontrol_var.LOOPNUMBER].ComputeWFSsol_FLAG = 1;
+    
+    // initialize RT logging frame indices
+    for (rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++ )
+		AOconf[aoloopcontrol_var.LOOPNUMBER].RTSLOGarray[rtlindex].frameindex = 0;
+	
+    AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
+
+    return 0;
+}
+
+
+int_fast8_t AOloopControl_loopWFScompoff()
+{
+	int rtlindex;
+		
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+        AOloopControl_InitializeMemory(1);
+
+    AOconf[aoloopcontrol_var.LOOPNUMBER].ComputeWFSsol_FLAG = 0;
+    AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
+	
+
+    return 0;
+}
+
+
+
+
 int_fast8_t AOloopControl_loopkill()
 {
 

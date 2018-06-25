@@ -943,6 +943,10 @@ void init_AOloopControl()
 
     RegisterCLIcommand("aoloff", __FILE__, AOloopControl_loopoff, "turn loop off", "no arg", "aoloff", "int AOloopControl_loopoff()");
 
+    RegisterCLIcommand("aolWFScompon", __FILE__, AOloopControl_loopWFScompon, "turn loop WFScomp on", "no arg", "aolWFScompon", "int AOloopControl_loopWFScompon()");
+
+    RegisterCLIcommand("aolWFScompoff", __FILE__, AOloopControl_loopWFScompoff, "turn loop WFScomp off", "no arg", "aolWFScompoff", "int AOloopControl_loopWFScompoff()");
+
     RegisterCLIcommand("aolstep",__FILE__, AOloopControl_loopstep_cli, "turn loop on for N steps", "<nbstep>", "aolstep", "int AOloopControl_loopstep(long loop, long NBstep)");
 
     RegisterCLIcommand("aolreset", __FILE__, AOloopControl_loopreset, "reset loop, and turn it off", "no arg", "aolreset", "int AOloopControl_loopreset()");

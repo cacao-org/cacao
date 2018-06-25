@@ -182,6 +182,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             AOconf[loop].on = 0;
             AOconf[loop].DMprimaryWriteON = 0;
             AOconf[loop].DMfilteredWriteON = 0;
+            AOconf[loop].ComputeWFSsol_FLAG = 1;
             AOconf[loop].ARPFon = 0;
             AOconf[loop].LOOPiteration = 0;
             AOconf[loop].cnt = 0;
