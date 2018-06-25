@@ -382,6 +382,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 
 
 
+
 int AOloopControl_RTstreamLOG_printstatus(int loop)
 {
 	long NBstreams = 0;

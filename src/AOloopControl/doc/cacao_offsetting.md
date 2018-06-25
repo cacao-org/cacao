@@ -7,20 +7,23 @@
 Input channels are provided to offset the AO loop convergence point. By default, **DM channels 04-11 can be dedicated to zero-point offsetting**. The DM channels are sym-linked to `aolN_dmZP0` - `aolN_dmZP7`.
 
 
-![WFS zero point offsetting](./figures/aoloopctr_offset.jpg "WFS zero point offsetting")
+
 
 Zero-point offsetting relies on two separate processes :
 
 - Converting DM offsets to WFS offsets (can be done by CPU or GPU): aolN_dmZP -> aolN_wfszpo
 - Summing and applying WFS offsets aolN_wfszpo to aolN_wfsref
 
+Zonal offsetting takes a DM map, multiplies it by the response matrix (in CPU or GPU). 
+With Modal offsetting, this multiplication is pre-computed.
+
 
 
 ---
 ---
 
 
-## Converting DM offsets to WFS offsets (zonal, CPU mode)
+## 1. Converting DM offsets to WFS offsets (zonal, CPU mode)
 
 CPU-based zero point offsets will compute WFS offsets from the zero point offset DM channels (04-11) and apply them to the `aolN_wfszpo#` stream. 
 
@@ -35,7 +38,7 @@ The process runs inside tmux session `aolNzploop#`
 ---
 
 
-## Converting DM offsets to WFS offsets (zonal, GPU mode)
+## 2. Converting DM offsets to WFS offsets (zonal, GPU mode)
 
 A faster GPU-based zero point offset from DM to WFS is provided for each of the 8 offset channels. GPU-based and CPU-based offsetting for a single channel are mutually exclusive.
 
@@ -49,7 +52,7 @@ The process runs inside tmux session `aolNGPUzploop#`
 ---
 ---
 
-## Modal offsetting from another loop
+## 3. Modal offsetting from another loop
 
 The two methods above are zonal offsetting: the DM map is multiplied by the zonal WFS response to compute WFS offset. 
 
@@ -70,7 +73,7 @@ To implement modal offsetting from a separate loop (refered to as the offsetting
 
 
 
-## Summing and applying WFS offsets to aolN_wfsref
+## 4. Summing and applying WFS offsets to aolN_wfsref
 
 To activate WFS offsets to aolN_wfsref, the user needs to :
 

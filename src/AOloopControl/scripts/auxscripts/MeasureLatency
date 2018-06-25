@@ -104,6 +104,7 @@ loopnb=$( head -1 LOOPNUMBER )
 ./AOloopControl -n aol${loopnb}latency << EOF
 readshmim aol${loopnb}_wfsim
 readshmim aol${loopnb}_dmC
+listim
 aoltestlat aol${loopnb}_dmC aol${loopnb}_wfsim $1 $2
 savefits _testwfsc "!./timingstats/test_latencyC.fits"
 exitCLI
