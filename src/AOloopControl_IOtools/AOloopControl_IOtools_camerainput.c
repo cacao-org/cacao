@@ -417,7 +417,8 @@ static void *compute_function_dark_subtract( void *ptr )
                 data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arrayftmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
             break;
         default :
-            printf("ERROR: WFS data type not recognized\n");
+            printf("ERROR: WFS data type not recognized\n File %s, line %d\n", __FILE__, __LINE__);
+            printf("datatype = %d\n", aoloopcontrol_var.WFSatype);
             exit(0);
             break;
         }
@@ -796,7 +797,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 # endif
         break;
         default :
-            printf("ERROR: WFS data type not recognized\n");
+            printf("ERROR: WFS data type not recognized\n File %s, line %d\n", __FILE__, __LINE__);
+            printf("datatype = %d\n", aoloopcontrol_var.WFSatype);
             exit(0);
             break;
         }
