@@ -434,7 +434,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 
 	printf("Saving test cube\n");
 	fflush(stdout);
-	save__fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+	save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
 
     // coarse estimage of frame rate
     clock_gettime(CLOCK_REALTIME, &tnow);
