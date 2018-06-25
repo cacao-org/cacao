@@ -432,6 +432,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     IDwfsc = create_image_ID("_testwfsc", 3, naxes, atype, 0, 0);
     //    IDwfsc = create_3Dimage_ID("_testwfsc", wfsxsize, wfsysize, wfs_NBframesmax);
 
+	printf("Saving test cube\n");
+	fflush(stdout);
+	save__fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
 
     // coarse estimage of frame rate
     clock_gettime(CLOCK_REALTIME, &tnow);
