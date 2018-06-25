@@ -588,6 +588,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
                 dtoffset = dt; // time at which DM command is sent
             }
             wfsframe++;
+        
+			save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+			exit(0);
         }
         printf("\n\n %ld frames recorded\n", wfsframe);
         fflush(stdout);
