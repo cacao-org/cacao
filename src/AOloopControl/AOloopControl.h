@@ -293,6 +293,12 @@ typedef struct
  	/** @name AOLOOPCONTROL_CONF: COMPUTATION MODES
 	 * 
 	 */
+	// compute flags
+	int_fast8_t ComputeWFSsol_FLAG; 
+	int_fast8_t ComputeFLAG0;
+	int_fast8_t ComputeFLAG1;
+	int_fast8_t ComputeFLAG2;
+	int_fast8_t ComputeFLAG3;
 
     int_fast8_t GPU0; // NB of GPU devices in set 0. 1+ if matrix multiplication done by GPU (set 0)
     int_fast8_t GPU1; // NB of GPU devices in set 1. 1+ if matrix multiplication done by GPU (set 1)

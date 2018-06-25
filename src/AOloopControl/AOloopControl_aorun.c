@@ -514,6 +514,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     double tdiffvlimit = 500.0e-6;
 
     int ComputeWFSsol_FLAG  = 1; //TEST
+    
 	struct timespec functionTestTimerStart;
 	struct timespec functionTestTimerEnd;
 
@@ -572,7 +573,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[15] = tdiffv;
 
 
-    if(ComputeWFSsol_FLAG==1)
+    if(AOconf[loop].ComputeWFSsol_FLAG==1)
     {
 
         if(AOconf[loop].GPUall==0)
