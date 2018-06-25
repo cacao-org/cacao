@@ -541,6 +541,14 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
                 ptr += sizeof(short)*wfsframe*wfssize;
                 memcpy(ptr, data.image[IDwfs].array.UI16, sizeof(short)*wfssize);
             }
+            
+            if(atype == _DATATYPE_INT16)
+            {
+                // copy image to cube slice
+                ptr = (char*) data.image[IDwfsc].array.SI16;
+                ptr += sizeof(short)*wfsframe*wfssize;
+                memcpy(ptr, data.image[IDwfs].array.SI16, sizeof(short)*wfssize);
+            }
 
             clock_gettime(CLOCK_REALTIME, &tarray[wfsframe]);
 
@@ -586,7 +594,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
                     tmp = data.image[IDwfsc].array.F[kk*wfssize+ii] - data.image[IDwfsc].array.F[(kk-1)*wfssize+ii];
                     valarray[kk] += tmp*tmp;
                 }
-            if(atype == _DATATYPE_UINT16)
+            if((atype == _DATATYPE_UINT16) || (atype == _DATATYPE_INT16))
                 for(ii=0; ii<wfssize; ii++)
                 {
                     tmp = data.image[IDwfsc].array.UI16[kk*wfssize+ii] - data.image[IDwfsc].array.UI16[(kk-1)*wfssize+ii];

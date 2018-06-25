@@ -145,19 +145,19 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 	{
 		if(aoloopcontrol_var.aoconfID_modeARPFgainAuto == -1)
 		{
-		// multiplicative auto ratio on top of gain above
-		sizeout = (uint32_t*) malloc(sizeof(uint32_t)*2);
-		sizeout[0] = AOconf[loop].NBDMmodes;
-		sizeout[1] = 1;
+			// multiplicative auto ratio on top of gain above
+			sizeout = (uint32_t*) malloc(sizeof(uint32_t)*2);
+			sizeout[0] = AOconf[loop].NBDMmodes;
+			sizeout[1] = 1;
 		
-		if(sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1) 
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		aoloopcontrol_var.aoconfID_modeARPFgainAuto = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
-		COREMOD_MEMORY_image_set_createsem(imname, 10);
-		// initialize the gain to zero for all modes
-		for(m=0;m<AOconf[loop].NBDMmodes; m++)
-			data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = 1.0;
-		free(sizeout);
+			if(sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1) 
+				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+			aoloopcontrol_var.aoconfID_modeARPFgainAuto = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
+			COREMOD_MEMORY_image_set_createsem(imname, 10);
+			// initialize the gain to zero for all modes
+			for(m=0;m<AOconf[loop].NBDMmodes; m++)
+				data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = 1.0;
+			free(sizeout);
 		}
 		
 		for(k=0; k<AOconf[loop].DMmodesNBblock; k++)
@@ -166,16 +166,15 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 				ARPFgainAutob_tot[k] = 0.0;
 			}
 		
-        for(m=0; m<AOconf[loop].NBDMmodes; m++)
-        {
+		for(m=0; m<AOconf[loop].NBDMmodes; m++)
+		{
             block = data.image[IDblknb].array.UI16[m];
 			ARPFgainAutob[block] += data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m];
 			ARPFgainAutob_tot[block] += 1.0;
-        }
+		}
 		
 		for(k=0; k<AOconf[loop].DMmodesNBblock; k++)
-			ARPFgainAutob[k] /= ARPFgainAutob_tot[k];
-		
+			ARPFgainAutob[k] /= ARPFgainAutob_tot[k];	
 	}
 	
 
@@ -211,7 +210,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
     printw("BLOCK  #modes [ min - max ]    gain   limit   multf  |       dmC     Input  ->       WFS   Ratio  |    | hits/step    perc  |");
 	if(AOconf[loop].ARPFon==1)
-		printw("  PFres  |  Ratio  | autogain |");
+		printw("  PFres  |  Ratio | PFautog |");
 	printw("\n");
 	printw("\n");
 
