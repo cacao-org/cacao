@@ -594,10 +594,16 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
                     tmp = data.image[IDwfsc].array.F[kk*wfssize+ii] - data.image[IDwfsc].array.F[(kk-1)*wfssize+ii];
                     valarray[kk] += tmp*tmp;
                 }
-            if((atype == _DATATYPE_UINT16) || (atype == _DATATYPE_INT16))
+            if(atype == _DATATYPE_UINT16) 
                 for(ii=0; ii<wfssize; ii++)
                 {
                     tmp = data.image[IDwfsc].array.UI16[kk*wfssize+ii] - data.image[IDwfsc].array.UI16[(kk-1)*wfssize+ii];
+                    valarray[kk] += 1.0*tmp*tmp;
+                }
+            if(atype == _DATATYPE_INT16) 
+                for(ii=0; ii<wfssize; ii++)
+                {
+                    tmp = data.image[IDwfsc].array.SI16[kk*wfssize+ii] - data.image[IDwfsc].array.SI16[(kk-1)*wfssize+ii];
                     valarray[kk] += 1.0*tmp*tmp;
                 }
             if(valarray[kk]>valmax)
