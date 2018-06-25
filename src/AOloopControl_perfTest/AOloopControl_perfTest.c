@@ -538,7 +538,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
                 usleep(10);
             }
             wfscnt0 = data.image[IDwfs].md[0].cnt0;
-            printf("[%8ld]  %f  %f\n", wfsframe, dt, dtmax);
+            printf("[%8ld / %8ld]  %f  %f\n", wfsframe, wfs_NBframesmax, dt, dtmax);
             fflush(stdout);
 
             if(atype == _DATATYPE_FLOAT)
@@ -589,8 +589,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
             }
             wfsframe++;
         
-			save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
-			exit(0);
+//			save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+//			exit(0);
         }
         printf("\n\n %ld frames recorded\n", wfsframe);
         fflush(stdout);
@@ -600,6 +600,10 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 
         // Computing difference between consecutive images
         NBwfsframe = wfsframe;
+        
+        printf("------------ NBwfsframe = %ld\n", NBwfsframe);
+        fflush(stdout);
+        
         valarray = (double*) malloc(sizeof(double)*NBwfsframe);
         double valmax = 0.0;
         double valmaxdt = 0.0;
