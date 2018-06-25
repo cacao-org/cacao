@@ -662,14 +662,13 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 		printf("STEP  %d \n", __LINE__);
 		fflush(stdout);
 
-        printf("Hardware latency = %f ms  = %ld frames\n", 1000.0*latency, kkmax);
-        save_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+        printf("... Hardware latency = %f ms  = %ld frames\n", 1000.0*latency, kkmax);
         if(latency > latencymax)
         {
 					printf("STEP  %d \n", __LINE__);
 		fflush(stdout);
             latencymax = latency;
-            save_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+            save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
         }
 
 		printf("STEP  %d \n", __LINE__);
