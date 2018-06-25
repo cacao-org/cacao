@@ -430,11 +430,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     naxes[1] = wfsysize;
     naxes[2] = wfs_NBframesmax;
     IDwfsc = create_image_ID("_testwfsc", 3, naxes, atype, 0, 0);
-    //    IDwfsc = create_3Dimage_ID("_testwfsc", wfsxsize, wfsysize, wfs_NBframesmax);
 
-	printf("Saving test cube\n");
-	fflush(stdout);
-	save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
 
     // coarse estimage of frame rate
     clock_gettime(CLOCK_REALTIME, &tnow);
@@ -588,9 +584,6 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
                 dtoffset = dt; // time at which DM command is sent
             }
             wfsframe++;
-        
-//			save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
-//			exit(0);
         }
         printf("\n\n %ld frames recorded\n", wfsframe);
         fflush(stdout);
@@ -601,11 +594,6 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         // Computing difference between consecutive images
         NBwfsframe = wfsframe;
         
-        printf("------------ NBwfsframe = %ld\n", NBwfsframe);
-        fflush(stdout);
-  
-  	//	save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
-		//	exit(0);
 
         valarray = (double*) malloc(sizeof(double)*NBwfsframe);
         double valmax = 0.0;
@@ -659,29 +647,18 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         latency = valmaxdt-dtoffset;
         // latencystep = kkmax;
 
-		printf("STEP  %d \n", __LINE__);
-		fflush(stdout);
-
         printf("... Hardware latency = %f ms  = %ld frames\n", 1000.0*latency, kkmax);
         if(latency > latencymax)
         {
-					printf("STEP  %d \n", __LINE__);
-		fflush(stdout);
             latencymax = latency;
             save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
         }
 
-		printf("STEP  %d \n", __LINE__);
-		fflush(stdout);
         fprintf(fp, "# %5ld  %8.6f\n", iter, (valmaxdt-dtoffset));
 
-		printf("STEP  %d    iter = %ld\n", __LINE__, iter);
-		fflush(stdout);
         latencysteparray[iter] = 1.0*kkmax;
         latencyarray[iter] = (valmaxdt-dtoffset);
 
-   		printf("STEP  %d \n", __LINE__);
-		fflush(stdout);
     
     }
     fclose(fp);
