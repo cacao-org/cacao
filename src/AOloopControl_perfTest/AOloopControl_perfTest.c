@@ -666,10 +666,18 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         save_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
         if(latency > latencymax)
         {
+					printf("STEP  %d \n", __LINE__);
+		fflush(stdout);
             latencymax = latency;
             save_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
         }
+
+		printf("STEP  %d \n", __LINE__);
+		fflush(stdout);
         fprintf(fp, "# %5ld  %8.6f\n", iter, (valmaxdt-dtoffset));
+
+		printf("STEP  %d    iter = %ld\n", __LINE__, iter);
+		fflush(stdout);
         latencysteparray[iter] = 1.0*kkmax;
         latencyarray[iter] = (valmaxdt-dtoffset);
 
