@@ -470,6 +470,13 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     wfsframeoffset = (long) (0.3*wfs_NBframesmax);
 
 
+	printf("WFS size : %ld %ld\n", wfsxsize, wfsysize);
+	if(atype == _DATATYPE_FLOAT)
+		printf("data type  :  _DATATYPE_FLOAT\n");
+	if(atype == _DATATYPE_UINT16)
+		printf("data type  :  _DATATYPE_UINT16\n");
+		if(atype == _DATATYPE_INT16)
+		printf("data type  :  _DATATYPE_INT16\n");
 
     for(iter=0; iter<NBiter; iter++)
     {
@@ -480,7 +487,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         double latencymax = 0.0;
 	    double latency;
 		
-        printf("ITERATION %5ld / %5ld\n", iter, NBiter);
+        printf(" - ITERATION %5ld / %5ld\n", iter, NBiter);
         fflush(stdout);
 
 
