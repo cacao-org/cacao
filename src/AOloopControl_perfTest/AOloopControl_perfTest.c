@@ -604,8 +604,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         printf("------------ NBwfsframe = %ld\n", NBwfsframe);
         fflush(stdout);
   
-  		save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
-			exit(0);
+  	//	save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+		//	exit(0);
 
         valarray = (double*) malloc(sizeof(double)*NBwfsframe);
         double valmax = 0.0;
@@ -659,7 +659,11 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         latency = valmaxdt-dtoffset;
         // latencystep = kkmax;
 
+		printf("STEP  %d \n", __LINE__);
+		fflush(stdout);
+
         printf("Hardware latency = %f ms  = %ld frames\n", 1000.0*latency, kkmax);
+        save_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
         if(latency > latencymax)
         {
             latencymax = latency;
@@ -668,6 +672,10 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         fprintf(fp, "# %5ld  %8.6f\n", iter, (valmaxdt-dtoffset));
         latencysteparray[iter] = 1.0*kkmax;
         latencyarray[iter] = (valmaxdt-dtoffset);
+
+   		printf("STEP  %d \n", __LINE__);
+		fflush(stdout);
+    
     }
     fclose(fp);
 
