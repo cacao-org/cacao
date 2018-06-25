@@ -603,7 +603,10 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         
         printf("------------ NBwfsframe = %ld\n", NBwfsframe);
         fflush(stdout);
-        
+  
+  		save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+			exit(0);
+
         valarray = (double*) malloc(sizeof(double)*NBwfsframe);
         double valmax = 0.0;
         double valmaxdt = 0.0;
