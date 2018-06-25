@@ -492,6 +492,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         printf(" - ITERATION %5ld / %5ld\n", iter, NBiter);
         fflush(stdout);
 
+		for(ii=0;ii<10;ii++)
+			printf("  %5ld  ->  %f\n", ii, (float) data.image[IDwfs].array.SI16[ii]);
+
 
         printf("write to %s\n", dmname);
         fflush(stdout);
@@ -682,7 +685,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     latencyave /= NBiter;
     latencystepave /= NBiter;
 
-	save_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+	//save__fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
 
 
     quick_sort_float(latencyarray, NBiter);
