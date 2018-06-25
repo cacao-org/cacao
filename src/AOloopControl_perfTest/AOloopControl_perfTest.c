@@ -478,6 +478,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 		if(atype == _DATATYPE_INT16)
 		printf("data type  :  _DATATYPE_INT16\n");
 
+	list_image_ID();
+
     for(iter=0; iter<NBiter; iter++)
     {
 		//double tlastdouble;
