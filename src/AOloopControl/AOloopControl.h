@@ -734,6 +734,12 @@ int_fast8_t AOloopControl_loopon();
 /** @brief  Open AO loop : AO off  */
 int_fast8_t AOloopControl_loopoff();
 
+/** @brief Close AO loop : AO on */
+int_fast8_t AOloopControl_loopWFScompon();
+
+/** @brief  Open AO loop : AO off  */
+int_fast8_t AOloopControl_loopWFScompoff();
+
 /** @brief Kill AO loop : finish the process of the run */
 int_fast8_t AOloopControl_loopkill();
 
