@@ -77,7 +77,8 @@ static sem_t AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[32];
 
 
 static int avcamarraysInit = 0;
-static unsigned short *arrayutmp;
+static unsigned short  *arrayutmp;
+static signed short    *arraystmp;
 
 static char Average_cam_frames_dname[200];
 static long Average_cam_frames_IDdark = -1;
@@ -504,6 +505,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     {
         arrayftmp = (float*) malloc(sizeof(float)*AOconf[loop].sizeWFS);
         arrayutmp = (unsigned short*) malloc(sizeof(unsigned short)*AOconf[loop].sizeWFS);
+		arraystmp = (signed short*) malloc(sizeof(signed short)*AOconf[loop].sizeWFS);
 
         if(sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -680,6 +682,11 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         ptrv += sizeof(unsigned short)*slice* AOconf[loop].sizeWFS;
         memcpy (arrayutmp, ptrv, sizeof(unsigned short)*AOconf[loop].sizeWFS);
         break;
+    case _DATATYPE_INT16 :
+        ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.SI16;
+        ptrv += sizeof(signed short)*slice* AOconf[loop].sizeWFS;
+        memcpy (arraystmp, ptrv, sizeof(signed short)*AOconf[loop].sizeWFS);
+        break;
     default :
         printf("ERROR: DATA TYPE NOT SUPPORTED\n");
         exit(0);
@@ -736,9 +743,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     if((loop==0)||(RM == 1)) // single thread, in CPU
     {
         switch ( aoloopcontrol_var.WFSatype ) {
-        case _DATATYPE_UINT16 :
 
-// omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+
+        case _DATATYPE_UINT16 :
 # ifdef _OPENMP
             #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
         {
@@ -753,6 +760,26 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         }
 # endif
         break;
+        
+        
+  
+        case _DATATYPE_INT16 :
+# ifdef _OPENMP
+            #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+        {
+# endif
+
+# ifdef _OPENMP
+            #pragma omp for
+# endif
+            for(ii=0; ii<Average_cam_frames_nelem; ii++)
+                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
+# ifdef _OPENMP
+        }
+# endif
+        break;
+        
+              
         case _DATATYPE_FLOAT :
 # ifdef _OPENMP
             #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
