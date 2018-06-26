@@ -163,18 +163,18 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
     r = seteuid(data.ruid);//Go back to normal privileges
 #endif
 
-
+    loop = aoloopcontrol_var.LOOPNUMBER;
+    
+    
 	// LOG function start
 	int logfunc_level = 0;
 	int logfunc_level_max = 1;
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
+	char commentstring[200];
+	sprintf(commentstring, "Main function, loop %d\n", loop);
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, commentstring);
 	
 	
 	
-	
-
-    loop = aoloopcontrol_var.LOOPNUMBER;
-
 
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(0);
