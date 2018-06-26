@@ -50,8 +50,8 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 int AOloopControl_RTstreamLOG_init(int loop)
 {
 	long i;
-	long SIZEwfsim = 6000;
-	long SIZEdm = 6000;
+	long SIZEwfsim = 3000;
+	long SIZEdm = 3000;
 	
 	// default
 	AOconf[loop].RTLOGsize = 90000;
@@ -533,6 +533,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
     nodelay(stdscr, TRUE);
     curs_set(0);
     noecho();			/* Don't echo() while we do getch */
+
 
 
 	start_color();

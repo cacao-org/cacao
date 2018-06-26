@@ -39,6 +39,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 
 #include <string.h>
+#include <sched.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_blas.h>
 #include <pthread.h>
