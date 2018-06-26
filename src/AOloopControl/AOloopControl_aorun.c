@@ -164,6 +164,15 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 #endif
 
 
+	// LOG function start
+	int logfunc_level = 0;
+	int logfunc_level_max = 1;
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
+	
+	
+	
+	
+
     loop = aoloopcontrol_var.LOOPNUMBER;
 
 

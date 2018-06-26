@@ -512,8 +512,18 @@ sudo ./_irqmove_cmd.txt
 # =========== Optimize GPU performance
 # =================================================================================
 sudo nvidia-smi -pm 1
-sudo sh -c "sudo nvidia-smi -i 4 -ac 3505,1582"
 
+# To querry clocks:
+# nvidia-smi -i 0-q -d SUPPORTED_CLOCKS
+
+# To view current clocks:
+# nvidia-smi -i 0 -q -d CLOCK
+
+sudo sh -c "sudo nvidia-smi -i 1 -ac 3505,1582"
+sudo sh -c "sudo nvidia-smi -i 2 -ac 3505,1582"
+sudo sh -c "sudo nvidia-smi -i 4 -ac 3505,1582"
+sudo sh -c "sudo nvidia-smi -i 5 -ac 3505,1582"
+sudo sh -c "sudo nvidia-smi -i 8 -ac 3505,1582"
 
 
 
