@@ -328,6 +328,14 @@ static void *compute_function_imtotal( void *ptr )
 
 
 
+	// LOG function / process start
+	int logfunc_level = 0;
+	int logfunc_level_max = 1;
+	char commentstring[200];
+	sprintf(commentstring, "Compute image total flux, loop %ld", LOOPNUMBER);
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
+
+
 	if(aoloopcontrol_var.aoconfID_looptiming == -1)
 	{
 		// LOOPiteration is written in cnt1 of loop timing array
@@ -380,7 +388,9 @@ static void *compute_function_imtotal( void *ptr )
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0tot, -1);
         data.image[aoloopcontrol_var.aoconfID_imWFS0tot].md[0].write = 0;
     }
-
+    
+  	// LOG function / process end
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 }
 
 
