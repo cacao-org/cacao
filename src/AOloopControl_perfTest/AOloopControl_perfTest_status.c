@@ -357,7 +357,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 	//                    SHOW INDIVIDUAL MODES
 	// ====================================================================
 
-
+/*
     print_header(" [ gain 1000xlimit  mult ] MODES [nm]    DM correction -- WFS value -- WFS average -- WFS RMS     ", '-');
 
 
@@ -432,7 +432,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         else
             printw(" | ");
     }
-
+*/
     return(0);
 }
 
@@ -596,6 +596,7 @@ int_fast8_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbc
     {
         usleep((long) (1000000.0/frequ));
         clear();
+        
         attron(A_BOLD);
         print_header(" PRESS ANY KEY TO STOP MONITOR ", '-');
         attroff(A_BOLD);
