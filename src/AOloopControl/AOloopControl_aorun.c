@@ -171,7 +171,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 	int logfunc_level_max = 1;
 	char commentstring[200];
 	sprintf(commentstring, "Main function, loop %ld\n", loop);
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+	
+	printf("func  = %s\n", __func__);
+	//CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 	
 	
 	
