@@ -928,9 +928,6 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
 
 
-                printf("STOP - %d - TESTING\n", __LINE__);
-                fflush(stdout); //TEST
-                sleep(10000.0);
 
     //
     // Normalize: imWFS0 -> imWFS1
@@ -1029,6 +1026,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     aoloopcontrol_var.GPU_beta = -aoloopcontrol_var.normfloorcoeff;
 
+                printf("STOP - %d - TESTING\n", __LINE__);
+                fflush(stdout); //TEST
+                sleep(10000.0);
 
 
 
