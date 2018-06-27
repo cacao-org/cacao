@@ -171,7 +171,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 	int logfunc_level_max = 1;
 	char commentstring[200];
 	sprintf(commentstring, "Main function, loop %ld", loop);
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 	
 	
 	
@@ -462,7 +462,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
     free(thetime);
 
 	// LOG function end
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 
     return(0);
 }
@@ -1216,6 +1216,16 @@ int_fast8_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_
 	char imname[200];
 
 
+
+	// LOG function start
+	int logfunc_level = 0;
+	int logfunc_level_max = 1;
+	char commentstring[200];
+	sprintf(commentstring, "loop %ld", loop);
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
+	
+	
+	
 	if(aoloopcontrol_var.aoconfID_looptiming == -1)
 	{
 		// LOOPiteration is written in cnt1 of loop timing array
@@ -1305,6 +1315,9 @@ int_fast8_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_
 
     free(GPUsetM);
 
+
+	// LOG function start
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 
 
 #endif
@@ -1412,6 +1425,13 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 #ifndef __MACH__
     sched_setscheduler(0, SCHED_FIFO, &schedpar);
 #endif
+
+	// LOG function start
+	int logfunc_level = 0;
+	int logfunc_level_max = 1;
+	char commentstring[200];
+	sprintf(commentstring, "loop %ld", loop);
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 
 
 
@@ -2436,6 +2456,9 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     free(modelimit);
 
     free(modeblock);
+
+	// LOG function start
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 
     return(IDout);
 }
