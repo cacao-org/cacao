@@ -153,6 +153,70 @@ menuitems+=( "dmcommrs" "Re-start scexao2 -> scexao DM communication processes" 
 menuitems+=( "dmcommk" "Kill scexao2 -> scexao DM communication processes" )
 
 
+
+menuitems+=( "" "" )
+if [ "$emgain" = "  1" ]; then
+menuitems+=( "em1" "\Zr\Z2 EMgain =   1\Zn" )
+else
+menuitems+=( "em1" " EMgain =   1" )
+fi
+
+if [ "$emgain" = "  2" ]; then
+menuitems+=( "em2" "\Zr\Z2 EMgain =   2\Zn" )
+else
+menuitems+=( "em2" " EMgain =   2" )
+fi
+
+if [ "$emgain" = "  4" ]; then
+menuitems+=( "em4" "\Zr\Z2 EMgain =   4\Zn" )
+else
+menuitems+=( "em4" " EMgain =   4" )
+fi
+
+if [ "$emgain" = "  8" ]; then
+menuitems+=( "em8" "\Zr\Z2 EMgain =   8\Zn" )
+else
+menuitems+=( "em8" " EMgain =   8" )
+fi
+
+if [ "$emgain" = " 16" ]; then
+menuitems+=( "em16" "\Zr\Z2 EMgain =  16\Zn" )
+else
+menuitems+=( "em16" " EMgain =  16" )
+fi
+
+if [ "$emgain" = " 32" ]; then
+menuitems+=( "em32" "\Zr\Z2 EMgain =  32\Zn" )
+else
+menuitems+=( "em32" " EMgain =  32" )
+fi
+
+if [ "$emgain" = " 64" ]; then
+menuitems+=( "em64" "\Zr\Z2 EMgain =  64\Zn" )
+else
+menuitems+=( "em64" " EMgain =  64" )
+fi
+
+if [ "$emgain" = "128" ]; then
+menuitems+=( "em128" "\Zr\Z2 EMgain = 128\Zn" )
+else
+menuitems+=( "em128" " EMgain = 128" )
+fi
+
+if [ "$emgain" = "256" ]; then
+menuitems+=( "em256" "\Zr\Z2 EMgain = 256\Zn" )
+else
+menuitems+=( "em256" " EMgain = 256" )
+fi
+
+if [ "$emgain" = "512" ]; then
+menuitems+=( "em512" "\Zr\Z2 EMgain = 512\Zn" )
+else
+menuitems+=( "em512" " EMgain = 512" )
+fi
+
+
+
 menuitems+=( "" "" )
 if [ "$dmVmax" = " 25" ]; then
 menuitems+=( "dmVmax025" "\Zr\Z2 dmVmax =  25 V  (DC level = ${dmDCum025} um)\Zn" )
@@ -278,6 +342,81 @@ aoconflogext "DM scexao2 comm restart"
 aoconflogext "DM scexao2 comm kill"
 /home/scexao/bin/dmrestart -c
 ;;
+
+
+
+
+	em1)
+emgain="  1"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+	em2)
+emgain="  2"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+	em4)
+emgain="  4"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+	em8)
+emgain="  8"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+	em16)
+emgain=" 16"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+	em32)
+emgain=" 32"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+	em64)
+emgain=" 64"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+	em128)
+emgain="128"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+	em256)
+emgain="256"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+	em512)
+emgain="512"
+aoconflogext "Set EMgain = ${emgain}"
+echo "${emgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+;;
+
+
 
 
 	dmVmax025)
