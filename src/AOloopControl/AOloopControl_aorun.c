@@ -593,7 +593,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     if(AOconf[loop].ComputeWFSsol_FLAG==1)
     {
-
         if(AOconf[loop].GPUall==0)
         {
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
@@ -1050,6 +1049,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		
 		if(AOconf[loop].GPUall==0)
 		{
+			// Update imWFS2
+			
 			data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
 			COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2, -1);
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt0 ++;
@@ -1074,6 +1075,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 			#ifdef HAVE_CUDA
             if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
+				// Update meas_modes
+				
 				// -> aoloopcontrol_var.aoconfID_meas_modes
 				data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 1;
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_modes, -1);
