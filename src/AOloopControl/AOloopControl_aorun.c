@@ -635,6 +635,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
 
 
+
+printf("--- TEST POINT --- %d\n", __LINE__);
+sleep(10000.0); //TEST
+
         if(AOconf[loop].initmapping == 0) // compute combined control matrix or matrices
         {
             printf("COMPUTING MAPPING ARRAYS .... \n");
@@ -1181,8 +1185,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	}*/
 
 
-printf("--- TEST POINT --- %d\n", __LINE__);
-sleep(10000.0); //TEST
 
     return(0);
 }
