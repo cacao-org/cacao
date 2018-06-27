@@ -581,7 +581,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
 
 
-sleep(10000.0);//TEST
+
 
 #ifdef _PRINT_TEST
     printf("TEST - WAITING FOR IMAGE %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
@@ -698,7 +698,9 @@ sleep(10000.0);//TEST
             slice = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[2];
     }
 
-
+                printf("STOP - %d - TESTING\n", __LINE__);
+                fflush(stdout); //TEST
+                sleep(10000.0);
 
     switch (aoloopcontrol_var.WFSatype) {
     case _DATATYPE_FLOAT :
