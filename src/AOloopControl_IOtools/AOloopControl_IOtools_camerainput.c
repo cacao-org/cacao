@@ -1075,6 +1075,10 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
 
+printf("--- STOP POINT --- line %d\n", __LINE__);
+fflush(stdout);//TEST
+sleep(10000);
+
 
 	// processing time
     tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
