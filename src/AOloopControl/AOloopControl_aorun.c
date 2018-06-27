@@ -828,6 +828,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 else
                     GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, 1, loop);
 
+printf("--- TEST POINT --- %d\n", __LINE__);
+sleep(10000.0); //TEST
 
 
                 initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
@@ -845,9 +847,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 {
                     GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
                 }
-
-printf("--- TEST POINT --- %d\n", __LINE__);
-sleep(10000.0); //TEST
 
             }
             else // direct pixel -> actuators linear transformation
