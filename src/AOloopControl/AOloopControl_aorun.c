@@ -563,13 +563,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	clock_gettime(CLOCK_REALTIME, &functionTestTimer04); //TEST timing in function
 
 
-                printf("STOP - %ld - TESTING\n", __LINE__);
-                fflush(stdout); //TEST
-                sleep(10000.0);
+
 	
     Read_cam_frame(loop, 0, normalize, 0, 0);
 
-
+                printf("STOP - %d - TESTING\n", __LINE__);
+                fflush(stdout); //TEST
+                sleep(10000.0);
 
 	clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
 	
