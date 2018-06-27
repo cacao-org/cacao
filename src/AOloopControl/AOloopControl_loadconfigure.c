@@ -790,7 +790,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
         aoconfID_respM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].respMname, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
         AOconf[loop].init_RM = 1;
-
+		aoloopcontrol_var.init_RM_local = 1;
 
         AOconf[loop].init_CM = 0;
         if(sprintf(fname, "conf/shmim_contrM.fits") < 1)
@@ -798,6 +798,8 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
         aoloopcontrol_var.aoconfID_contrM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].contrMname, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
         AOconf[loop].init_CM = 1;
+        aoloopcontrol_var.init_CM_local = 1;
+
 
         if((fp=fopen("conf/param_NBmodeblocks.txt", "r"))==NULL)
         {
