@@ -253,10 +253,11 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
         printf("ERROR: CANNOT RUN LOOP WITHOUT WFS REFERENCE\n");
         vOK = 0;
     }
-    if(AOconf[loop].init_CM==0)
+//    if(AOconf[loop].init_CM==0)
+    if(aoloopcontrol_var.init_CM_local==0)
     {
         printf("ERROR: CANNOT RUN LOOP WITHOUT CONTROL MATRIX\n");
-        printf("AOconf[loop].init_CM = 0\n");
+        printf("aoloopcontrol_var.init_CM_local = 0\n");
         printf("FILE %s  line %d\n", __FILE__, __LINE__);
         vOK = 0;
     }

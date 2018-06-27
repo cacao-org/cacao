@@ -819,6 +819,10 @@ void init_AOloopControl()
 
 
 	aoloopcontrol_var.AOloopcontrol_meminit = 0;
+	aoloopcontrol_var.init_RM_local = 0;
+	aoloopcontrol_var.init_CM_local = 0;
+	aoloopcontrol_var.init_CMc_local = 0;
+	
 	aoloopcontrol_var.GPU_alpha = 0.0;
 	aoloopcontrol_var.GPU_beta = 0.0;
 
