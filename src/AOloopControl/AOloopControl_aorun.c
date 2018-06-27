@@ -746,8 +746,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 
-printf("--- TEST POINT --- %d\n", __LINE__);
-sleep(10000.0); //TEST
 
         if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
         {
@@ -848,6 +846,8 @@ sleep(10000.0); //TEST
                     GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
                 }
 
+printf("--- TEST POINT --- %d\n", __LINE__);
+sleep(10000.0); //TEST
 
             }
             else // direct pixel -> actuators linear transformation
