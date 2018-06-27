@@ -309,6 +309,8 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
                 }
 
                 AOcompute(loop, AOconf[loop].WFSnormalize);
+                sleep(10000.0);
+                
 				clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
 
 
