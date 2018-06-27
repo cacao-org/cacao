@@ -822,7 +822,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                     }
                 }
 
-printf("--- TEST POINT ---  AOconf[loop].GPU0 = %d\n", __LINE__, AOconf[loop].GPU0);
+printf("--- TEST POINT ---  AOconf[loop].GPU0 = %d\n", AOconf[loop].GPU0);
 
 
                 if(AOconf[loop].GPUall == 1)
