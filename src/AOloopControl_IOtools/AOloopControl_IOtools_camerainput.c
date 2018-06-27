@@ -403,6 +403,14 @@ static void *compute_function_dark_subtract( void *ptr )
     iistart = (long) ((threadindex)*nelem/COMPUTE_DARK_SUBTRACT_NBTHREADS);
     iiend = (long) ((threadindex+1)*nelem/COMPUTE_DARK_SUBTRACT_NBTHREADS);
 
+	// LOG function / process start
+	int logfunc_level = 0;
+	int logfunc_level_max = 1;
+	char commentstring[200];
+	sprintf(commentstring, "Dark subtract WFS image, loop %ld", loop);
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
+
+
     while(1)
     {
         sem_wait(&AOLCOMPUTE_DARK_SUBTRACT_sem_name[threadindex]);
@@ -431,7 +439,9 @@ static void *compute_function_dark_subtract( void *ptr )
         if(semval<SEMAPHORE_MAXVAL)
             sem_post(&AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[threadindex]);
     }
-
+    
+    // LOG function / process end
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 }
 
 
