@@ -698,9 +698,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
             slice = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[2];
     }
 
-                printf("STOP - %d - TESTING\n", __LINE__);
-                fflush(stdout); //TEST
-                sleep(10000.0);
+
 
     switch (aoloopcontrol_var.WFSatype) {
     case _DATATYPE_FLOAT :
@@ -928,6 +926,10 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     fflush(stdout);
 #endif
 
+
+                printf("STOP - %d - TESTING\n", __LINE__);
+                fflush(stdout); //TEST
+                sleep(10000.0);
 
     //
     // Normalize: imWFS0 -> imWFS1
