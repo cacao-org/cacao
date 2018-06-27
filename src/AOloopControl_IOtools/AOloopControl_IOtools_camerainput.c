@@ -580,6 +580,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     clock_gettime(CLOCK_REALTIME, &functionTestTimer00);
 
 
+
+sleep(10000.0);//TEST
+
 #ifdef _PRINT_TEST
     printf("TEST - WAITING FOR IMAGE %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
     fflush(stdout);
