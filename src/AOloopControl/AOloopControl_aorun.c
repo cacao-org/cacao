@@ -256,6 +256,8 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
     if(AOconf[loop].init_CM==0)
     {
         printf("ERROR: CANNOT RUN LOOP WITHOUT CONTROL MATRIX\n");
+        printf("AOconf[loop].init_CM = 0\n");
+        printf("FILE %s  line %d\n", __FILE__, __LINE__);
         vOK = 0;
     }
 
@@ -567,9 +569,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	
     Read_cam_frame(loop, 0, normalize, 0, 0);
 
-                printf("STOP - %d - TESTING\n", __LINE__);
-                fflush(stdout); //TEST
-                sleep(10000.0);
 
 	clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
 	

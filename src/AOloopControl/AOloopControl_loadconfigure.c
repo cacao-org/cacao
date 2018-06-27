@@ -90,10 +90,12 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     FILE *fplog; // human-readable log of load sequence
 
 
-#ifdef AOLOOPCONTROL_LOGFUNC
-	AOLOOPCONTROL_logfunc_level = 0;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FILE__, __FUNCTION__, __LINE__, "");
-#endif
+	// LOG function start
+	int logfunc_level = 0;
+	int logfunc_level_max = 1;
+	char commentstring[200];
+	sprintf(commentstring, "loop=%ld mode=%d level=%d", loop, mode, level);
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 
 
 	// Create logfile for this function
@@ -983,10 +985,9 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     loadcreateshm_log = 0;
     fclose(fplog);
 
-#ifdef AOLOOPCONTROL_LOGFUNC
-	AOLOOPCONTROL_logfunc_level = 0;
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
-#endif
+	// LOG function start
+	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+
 
     return(0);
 }
