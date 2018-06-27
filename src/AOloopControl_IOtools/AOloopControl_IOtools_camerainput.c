@@ -766,7 +766,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     // Dark subtract and compute total
 
-    if((loop==0)||(RM == 1)) // single thread, in CPU
+    if((loop==0)||(RM == 1)) // single thread, in CPU  //WHY do CPU-based if loop=0 ?
     {
 		#ifdef _PRINT_TEST
         printf("TEST - DARK SUBTRACT - single thread, in CPU   loop=%ld  RM=%d\n", loop, RM);
@@ -777,37 +777,37 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
 
         case _DATATYPE_UINT16 :
-# ifdef _OPENMP
-            #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-        {
-# endif
+//# ifdef _OPENMP
+//            #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+//        {
+//# endif
 
-# ifdef _OPENMP
-            #pragma omp for
-# endif
+//# ifdef _OPENMP
+//            #pragma omp for
+//# endif
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
-# ifdef _OPENMP
-        }
-# endif
+//# ifdef _OPENMP
+//        }
+//# endif
         break;
         
         
   
         case _DATATYPE_INT16 :
-# ifdef _OPENMP
-            #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-        {
-# endif
+//# ifdef _OPENMP
+//            #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+//        {
+//# endif
 
-# ifdef _OPENMP
-            #pragma omp for
-# endif
+//# ifdef _OPENMP
+//            #pragma omp for
+//# endif
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
-# ifdef _OPENMP
-        }
-# endif
+//# ifdef _OPENMP
+//        }
+//# endif
         break;
         
               
