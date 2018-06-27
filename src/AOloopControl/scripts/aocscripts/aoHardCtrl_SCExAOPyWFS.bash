@@ -357,72 +357,72 @@ aoconflogext "DM scexao2 comm kill"
 
 	em1)
 EMgain="  1"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 	em2)
 EMgain="  2"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 	em4)
 EMgain="  4"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 	em8)
 EMgain="  8"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 	em16)
 EMgain=" 16"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 	em32)
 EMgain=" 32"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 	em64)
 EMgain=" 64"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 	em128)
 EMgain="128"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 	em256)
 EMgain="256"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 	em512)
 EMgain="512"
-aoconflogext "Set EMgain = ${emgain}"
-echo "${emgain}" > ./conf/instconf_EMgain.txt
-ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${emgain}"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
 ;;
 
 
