@@ -568,8 +568,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	
     Read_cam_frame(loop, 0, normalize, 0, 0);
 
-printf("--- TEST POINT --- %d\n", __LINE__);
-sleep(10000.0); //TEST
+
 
 
 	clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
@@ -1182,7 +1181,8 @@ sleep(10000.0); //TEST
 	}*/
 
 
-
+printf("--- TEST POINT --- %d\n", __LINE__);
+sleep(10000.0); //TEST
 
     return(0);
 }
