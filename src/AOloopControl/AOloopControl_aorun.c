@@ -636,8 +636,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 
-printf("--- TEST POINT --- %d\n", __LINE__);
-sleep(10000.0); //TEST
 
         if(AOconf[loop].initmapping == 0) // compute combined control matrix or matrices
         {
@@ -746,6 +744,10 @@ sleep(10000.0); //TEST
             AOconf[loop].initmapping = 1;
         }
 
+
+
+printf("--- TEST POINT --- %d\n", __LINE__);
+sleep(10000.0); //TEST
 
         if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
         {
