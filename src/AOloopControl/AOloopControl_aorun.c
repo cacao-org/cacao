@@ -1221,7 +1221,7 @@ int_fast8_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_
 	int logfunc_level = 0;
 	int logfunc_level_max = 1;
 	char commentstring[200];
-	sprintf(commentstring, "loop %ld", loop);
+	sprintf(commentstring, "loop %ld", aoloopcontrol_var.LOOPNUMBER);
 	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 	
 	
