@@ -822,16 +822,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                     }
                 }
 
-printf("--- TEST POINT ---  AOconf[loop].GPU0 = %d\n", AOconf[loop].GPU0);
-
 
                 if(AOconf[loop].GPUall == 1)
                     GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
                 else
                     GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, 1, loop);
 
-printf("--- TEST POINT --- %d\n", __LINE__);
-sleep(10000.0); //TEST
+
 
 
                 initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
