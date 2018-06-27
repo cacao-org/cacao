@@ -1026,9 +1026,6 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     aoloopcontrol_var.GPU_beta = -aoloopcontrol_var.normfloorcoeff;
 
-                printf("STOP - %d - TESTING\n", __LINE__);
-                fflush(stdout); //TEST
-                sleep(10000.0);
 
 
 
@@ -1041,19 +1038,19 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 #endif
 
         data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].write = 1;
-# ifdef _OPENMP
-        #pragma omp parallel num_threads(4) if (nelem>OMP_NELEMENT_LIMIT)
-        {
-# endif
+//# ifdef _OPENMP
+//        #pragma omp parallel num_threads(4) if (nelem>OMP_NELEMENT_LIMIT)
+//        {
+//# endif
 
-# ifdef _OPENMP
-            #pragma omp for
-# endif
+//# ifdef _OPENMP
+//            #pragma omp for
+//# endif
             for(ii=0; ii<nelem; ii++)
                 data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii]*totalinv;
-# ifdef _OPENMP
-        }
-# endif
+//# ifdef _OPENMP
+//        }
+//# endif
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS1, -1);
         data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].cnt0 ++;
         data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].write = 0;
