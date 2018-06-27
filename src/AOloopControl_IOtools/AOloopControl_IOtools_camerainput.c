@@ -396,6 +396,7 @@ static void *compute_function_imtotal( void *ptr )
 
 
 
+
 static void *compute_function_dark_subtract( void *ptr )
 {
     long ii, iistart, iiend;
@@ -767,6 +768,11 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     if((loop==0)||(RM == 1)) // single thread, in CPU
     {
+		#ifdef _PRINT_TEST
+        printf("TEST - DARK SUBTRACT - single thread, in CPU   loop=%ld  RM=%d\n", loop, RM);
+        fflush(stdout);
+#endif
+		
         switch ( aoloopcontrol_var.WFSatype ) {
 
 
