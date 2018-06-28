@@ -524,7 +524,12 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     else
         semindex = 1;
 
-
+		
+		
+		printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
+		
+		
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
 
     if(avcamarraysInit==0)
@@ -564,6 +569,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 #endif
 
 
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
 
     if(RM==0)
     {
@@ -580,7 +587,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     clock_gettime(CLOCK_REALTIME, &functionTestTimer00);
 
 
-
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
 
 
 #ifdef _PRINT_TEST
@@ -670,7 +678,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
 
 
-
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
 
 
 
