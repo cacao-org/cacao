@@ -859,6 +859,9 @@ printf("STEP - %d =========\n", __LINE__);
         data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0, -1);
 
+        printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout); 
+
         clock_gettime(CLOCK_REALTIME, &tnow);
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
 
