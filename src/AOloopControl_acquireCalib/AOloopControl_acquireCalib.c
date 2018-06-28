@@ -429,8 +429,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
         printf("iteration # %8ld / %8ld   ( %6ld / %6ld )  \n", iter, NBiter, imcnt, imcntmax);
         fflush(stdout);
 
-		printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
+
 
         // initialize with first poke
         long kk = 0;
@@ -449,8 +448,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
         AOconf[loop].DMupdatecnt ++;
         array_poke[imcnt] = 1;
 
-		printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
+
 
 
         // WAIT FOR LOOP DELAY, PRIMING
@@ -461,22 +459,14 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
         array_PokeIndex1[imcnt] = PokeIndex1;
         imcnt ++;
 
-		
-		
-		printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
+
 		
         Read_cam_frame(loop, 1, normalize, 0, 0);
 
 
-		printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
-
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmRM, -1);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
 
-		printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 
 
         // read delayfr frames
