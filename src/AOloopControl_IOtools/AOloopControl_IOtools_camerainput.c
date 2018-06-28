@@ -813,8 +813,16 @@ printf("STEP - %d =========\n", __LINE__);
 //# ifdef _OPENMP
 //            #pragma omp for
 //# endif
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
+
+
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
+                
+                
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);                
 //# ifdef _OPENMP
 //        }
 //# endif
