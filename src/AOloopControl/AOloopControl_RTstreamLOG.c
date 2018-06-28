@@ -322,8 +322,6 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 //
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
 {
-	printf("======= STEP ==== %d \n", __LINE__);
-	fflush(stdout);
 	
 	
 	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1) && (AOconf[loop].RTSLOGarray[rtlindex].INIT = 1))
@@ -345,6 +343,8 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+3] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt0;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+4] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt1;
 
+		
+		
 		
 		AOconf[loop].RTSLOGarray[rtlindex].frameindex++;
 		if(AOconf[loop].RTSLOGarray[rtlindex].frameindex == AOconf[loop].RTSLOGarray[rtlindex].SIZE)
@@ -381,8 +381,6 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		}
 	}
 	
-		printf("======= STEP ==== %d \n", __LINE__);
-	fflush(stdout);
 }
 
 
