@@ -668,12 +668,6 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     }
 
 
-
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
-
-
-
     clock_gettime(CLOCK_REALTIME, &functionTestTimerStart);
 
 
@@ -737,10 +731,6 @@ printf("STEP - %d =========\n", __LINE__);
 
 
 
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
-
-
 
     // ===================================================================
     //
@@ -763,8 +753,6 @@ printf("STEP - %d =========\n", __LINE__);
     }
 
 
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 
 #ifdef _PRINT_TEST
     printf("TEST - DARK SUBTRACT\n");
@@ -775,8 +763,6 @@ printf("STEP - %d =========\n", __LINE__);
 
     if((loop==0)||(RM == 1)) // single thread, in CPU  //WHY do CPU-based if loop=0 ?
     {
-		printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 		
 		#ifdef _PRINT_TEST
         printf("TEST - DARK SUBTRACT - single thread, in CPU   loop=%ld  RM=%d\n", loop, RM);
@@ -813,16 +799,8 @@ printf("STEP - %d =========\n", __LINE__);
 //# ifdef _OPENMP
 //            #pragma omp for
 //# endif
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
-
-
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
-                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
-                
-                
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);                
+                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];                         
 //# ifdef _OPENMP
 //        }
 //# endif
@@ -850,25 +828,15 @@ printf("STEP - %d =========\n", __LINE__);
             exit(0);
             break;
         }
-        
-        
-        printf("STEP - %d ========= \n", __LINE__);
-		printf("aoloopcontrol_var.aoconfID_imWFS0       = %ld\n", aoloopcontrol_var.aoconfID_imWFS0);
-		printf("aoloopcontrol_var.aoconfID_looptiming   = %ld\n", aoloopcontrol_var.aoconfID_looptiming);
-		list_image_ID();
-		fflush(stdout); 
-		
+        		
 		
         data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0, -1);
 
-        printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout); 
 
         clock_gettime(CLOCK_REALTIME, &tnow);
         
-        printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout); 
+
 		
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
 
@@ -878,15 +846,9 @@ printf("STEP - %d =========\n", __LINE__);
             if(semval<SEMAPHORE_MAXVAL)
                 sem_post(data.image[aoloopcontrol_var.aoconfID_imWFS0].semptr[s]);
         }*/
-        
-        printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
     }
     else
     {
-		printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
-		
 #ifdef _PRINT_TEST
         printf("TEST - DARK SUBTRACT - START  (init = %d, %d threads)\n", AOLCOMPUTE_DARK_SUBTRACT_THREADinit, COMPUTE_DARK_SUBTRACT_NBTHREADS);
         fflush(stdout);
@@ -941,14 +903,10 @@ printf("STEP - %d =========\n", __LINE__);
         printf("TEST - DARK SUBTRACT - END\n");
         fflush(stdout);
 #endif
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 
     }
     
-    
-    printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
+
 
 
     //  if(IDdark!=-1)
@@ -971,8 +929,6 @@ printf("STEP - %d =========\n", __LINE__);
     fflush(stdout);
 #endif
 
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 
 
 
@@ -1043,8 +999,6 @@ printf("STEP - %d =========\n", __LINE__);
                 sem_post(&AOLCOMPUTE_TOTAL_ASYNC_sem_name);
         }
     }
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 
 
     if(RM==0)
@@ -1074,11 +1028,6 @@ printf("STEP - %d =========\n", __LINE__);
     aoloopcontrol_var.GPU_alpha = totalinv;
 
     aoloopcontrol_var.GPU_beta = -aoloopcontrol_var.normfloorcoeff;
-
-
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
-
 
 
     if( ((AOconf[loop].GPUall==0)&&(RM==0)) || (RM==1))  // normalize WFS image by totalinv
@@ -1127,8 +1076,6 @@ printf("STEP - %d =========\n", __LINE__);
     clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
 
 
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 
 	// processing time
     tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
@@ -1158,8 +1105,6 @@ printf("STEP - %d =========\n", __LINE__);
 		float gain = 1.0/imWaitTimeAvecnt0;
         imWaitTimeAve = imWaitTimeAve*(1.0-gain) + gain * tdiffv;
 	}
-	printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 
 	
 //TEST TIMING
