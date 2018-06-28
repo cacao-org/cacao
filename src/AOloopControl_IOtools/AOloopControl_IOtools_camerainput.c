@@ -526,10 +526,6 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
 		
 		
-		printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
-		
-		
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
 
     if(avcamarraysInit==0)
@@ -569,8 +565,6 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 #endif
 
 
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 
     if(RM==0)
     {
@@ -586,9 +580,6 @@ printf("STEP - %d =========\n", __LINE__);
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimer00);
 
-
-printf("STEP - %d =========\n", __LINE__);
-		fflush(stdout);
 
 
 #ifdef _PRINT_TEST
@@ -746,6 +737,8 @@ printf("STEP - %d =========\n", __LINE__);
 
 
 
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
 
 
 
@@ -914,6 +907,11 @@ printf("STEP - %d =========\n", __LINE__);
         fflush(stdout);
 #endif
     }
+    
+    
+    printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
+
 
     //  if(IDdark!=-1)
     // {
@@ -935,6 +933,8 @@ printf("STEP - %d =========\n", __LINE__);
     fflush(stdout);
 #endif
 
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
 
 
 
@@ -1005,6 +1005,8 @@ printf("STEP - %d =========\n", __LINE__);
                 sem_post(&AOLCOMPUTE_TOTAL_ASYNC_sem_name);
         }
     }
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
 
 
     if(RM==0)
@@ -1036,6 +1038,8 @@ printf("STEP - %d =========\n", __LINE__);
     aoloopcontrol_var.GPU_beta = -aoloopcontrol_var.normfloorcoeff;
 
 
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
 
 
 
@@ -1085,6 +1089,8 @@ printf("STEP - %d =========\n", __LINE__);
     clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
 
 
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
 
 	// processing time
     tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
@@ -1114,7 +1120,9 @@ printf("STEP - %d =========\n", __LINE__);
 		float gain = 1.0/imWaitTimeAvecnt0;
         imWaitTimeAve = imWaitTimeAve*(1.0-gain) + gain * tdiffv;
 	}
-	
+	printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
+
 	
 //TEST TIMING
 /*
