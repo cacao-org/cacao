@@ -852,7 +852,10 @@ printf("STEP - %d =========\n", __LINE__);
         }
         
         
-        printf("STEP - %d =========\n", __LINE__);
+        printf("STEP - %d ========= \n", __LINE__);
+		printf("aoloopcontrol_var.aoconfID_imWFS0       = %ld\n", aoloopcontrol_var.aoconfID_imWFS0);
+		printf("aoloopcontrol_var.aoconfID_looptiming   = %ld\n", aoloopcontrol_var.aoconfID_looptiming);
+		list_image_ID();
 		fflush(stdout); 
 		
 		
