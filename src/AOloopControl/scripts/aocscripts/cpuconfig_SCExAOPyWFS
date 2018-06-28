@@ -100,7 +100,9 @@ fi
 # =================================================================================
 
 if [ "$ON" = "1" ]
+
 then
+
 sudo ethtool -C eth2 rx-usecs 0
 sudo ethtool -C eth4 rx-usecs 0
 sudo ethtool -C eth2 tx-usecs 0
@@ -114,10 +116,40 @@ sudo /sbin/sysctl -w net.ipv6.tcp_sack=0
 sudo /sbin/sysctl -w net.ipv6.tcp_timestamps=0
 sudo /sbin/sysctl -w net.ipv6.tcp_fastopen=1
 
+# Enable low latency mode for TCP
 sudo /sbin/sysctl -w net.ipv4.tcp_low_latency=1
+
+# Disable the TCP selective acks option for better CPU utilization
 sudo /sbin/sysctl -w net.ipv4.tcp_sack=0
+
+# Disable the TCP timestamps option for better CPU utilization
 sudo /sbin/sysctl -w net.ipv4.tcp_timestamps=0
+
 sudo /sbin/sysctl -w net.ipv4.tcp_fastopen=1
+
+
+
+# Increase the maximum length of processor input queues:
+sysctl -w net.core.netdev_max_backlog=250000
+
+# Increase the TCP maximum and default buffer sizes using setsockopt():
+sysctl -w net.core.rmem_max=16777216
+sysctl -w net.core.wmem_max=16777216
+sysctl -w net.core.rmem_default=16777216
+sysctl -w net.core.wmem_default=16777216
+sysctl -w net.core.optmem_max=16777216
+
+# Increase memory thresholds to prevent packet dropping:
+sysctl -w net.ipv4.tcp_mem="16777216 16777216 16777216"
+
+# Increase the Linux* auto-tuning of TCP buffer limits. The minimum, default, and maximum number of bytes to use are shown below (in the order minimum, default, and maximum):
+sysctl -w net.ipv4.tcp_rmem="4096 87380 16777216"
+sysctl -w net.ipv4.tcp_wmem="4096 65536 16777216"
+
+
+
+
+
 fi
 
 
@@ -541,3 +573,68 @@ fi
 
 datestr="$( date -u )"
 echo "$datestr" > cpuconfigOK
+
+
+exit
+
+########## NOTES ##########################################################
+
+
+## CHECKING LATENCIES
+sudo cyclictest --smp -p98 -m -i 500 -D 3
+
+## watching non-maskable hardware interrupts
+watch -d -n 1 grep NMI /proc/interrupts
+
+
+
+
+System Profile Settings      System Profile                       Performance Per Watt -> Custom
+System Profile Settings      CPU Power Management                 System DBPM          -> Maximum Performance
+System Profile Settings      Memory Frequency                     Maximum Performance  =  Maximum Performance
+System Profile Settings      Turbo Boost                          Enabled              -> Disabled
+System Profile Settings      C1E                                  Enabled              -> Disabled
+System Profile Settings      C States                             Enabled              -> Disabled
+System Profile Settings      Monitor/Mwait                        Enabled              -> Disabled
+System Profile Settings      Memory Patrol Scrub                  Enabled              =  Enabled
+System Profile Settings      Memory Refresh Rate                  1x                   =  1x
+Memory Settings              Memory Mode Advanced                 ECC or Optimizer     -> Optimizer
+Memory Settings              Memory Node                          Disabled             =  Disabled
+Processor Settings           Logical Processor                    Enabled              -> Disabled
+Processor Settings           Virtualization Technology            Enabled              -> Disabled
+Processor Settings           QPI Speed                            Maximum Data Rate    =  Maximum Data Rate
+Processor Settings           Alternate RTID Setting               Disabled             =  Disabled
+Processor Settings           Adjacent Cache Line Prefetch         Enabled              =  Enabled
+Processor Settings           Hardware Prefetcher                  Enabled              =  Enabled
+Processor Settings           DCU Streamer Prefetcher              Enabled              =  Enabled
+Processor Settings           DCU IP Prefetcher                    Enabled              =  Enabled
+
+Add to kernel boot:
+nosoftlockup intel_idle.max_cstate=0 processor.max_cstate=0 mce=ignore_ce idle=poll
+
+
+Things to do / explore :
+
+- Tickless kernel
+- Disable System Management Interrupts (SMI): USB, TCO timer
+
+
+
+ smi.c to do
+    mask_bits(TCO_EN_BIT, smi_en_addr);
+instead of
+    mask_bits(GBL_SMI_EN_BIT, smi_en_addr);
+(and corresponding set_bits() later), the TCO timer interrupts were 
+knocked out and the latency stayed below 7µs on my machine for hours, 
+even under heavy load.
+
+1) Use PS/2 mouse and keyboard,
+2) Disable USB mouse and keyboard in BIOS,
+3) Compile an ACPI-enabled Kernel.
+This alone should reduce the RTAI responsivity loss from 500µs each 
+second to 100µs each 38 seconds.
+4) Disable TCO timer generation of SMIs (TCO_EN bit in the SMI_EN register).
+The latency should drop to ~10µs permanently, at the expense of not 
+being able to use the i8xx_tco watchdog.
+
+
