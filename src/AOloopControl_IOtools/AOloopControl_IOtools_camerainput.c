@@ -763,6 +763,8 @@ printf("STEP - %d =========\n", __LINE__);
     }
 
 
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
 
 #ifdef _PRINT_TEST
     printf("TEST - DARK SUBTRACT\n");
@@ -773,6 +775,9 @@ printf("STEP - %d =========\n", __LINE__);
 
     if((loop==0)||(RM == 1)) // single thread, in CPU  //WHY do CPU-based if loop=0 ?
     {
+		printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
+		
 		#ifdef _PRINT_TEST
         printf("TEST - DARK SUBTRACT - single thread, in CPU   loop=%ld  RM=%d\n", loop, RM);
         fflush(stdout);
@@ -849,9 +854,15 @@ printf("STEP - %d =========\n", __LINE__);
             if(semval<SEMAPHORE_MAXVAL)
                 sem_post(data.image[aoloopcontrol_var.aoconfID_imWFS0].semptr[s]);
         }*/
+        
+        printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
     }
     else
     {
+		printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
+		
 #ifdef _PRINT_TEST
         printf("TEST - DARK SUBTRACT - START  (init = %d, %d threads)\n", AOLCOMPUTE_DARK_SUBTRACT_THREADinit, COMPUTE_DARK_SUBTRACT_NBTHREADS);
         fflush(stdout);
@@ -906,6 +917,9 @@ printf("STEP - %d =========\n", __LINE__);
         printf("TEST - DARK SUBTRACT - END\n");
         fflush(stdout);
 #endif
+printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout);
+
     }
     
     
