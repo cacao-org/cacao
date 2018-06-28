@@ -130,21 +130,21 @@ sudo /sbin/sysctl -w net.ipv4.tcp_fastopen=1
 
 
 # Increase the maximum length of processor input queues:
-sysctl -w net.core.netdev_max_backlog=250000
+sudo /sbin/sysctl -w net.core.netdev_max_backlog=250000
 
 # Increase the TCP maximum and default buffer sizes using setsockopt():
-sysctl -w net.core.rmem_max=16777216
-sysctl -w net.core.wmem_max=16777216
-sysctl -w net.core.rmem_default=16777216
-sysctl -w net.core.wmem_default=16777216
-sysctl -w net.core.optmem_max=16777216
+sudo /sbin/sysctl -w net.core.rmem_max=16777216
+sudo /sbin/sysctl -w net.core.wmem_max=16777216
+sudo /sbin/sysctl -w net.core.rmem_default=16777216
+sudo /sbin/sysctl -w net.core.wmem_default=16777216
+sudo /sbin/sysctl -w net.core.optmem_max=16777216
 
 # Increase memory thresholds to prevent packet dropping:
-sysctl -w net.ipv4.tcp_mem="16777216 16777216 16777216"
+sudo /sbin/sysctl -w net.ipv4.tcp_mem="16777216 16777216 16777216"
 
 # Increase the Linux* auto-tuning of TCP buffer limits. The minimum, default, and maximum number of bytes to use are shown below (in the order minimum, default, and maximum):
-sysctl -w net.ipv4.tcp_rmem="4096 87380 16777216"
-sysctl -w net.ipv4.tcp_wmem="4096 65536 16777216"
+sudo /sbin/sysctl -w net.ipv4.tcp_rmem="4096 87380 16777216"
+sudo /sbin/sysctl -w net.ipv4.tcp_wmem="4096 65536 16777216"
 
 
 
