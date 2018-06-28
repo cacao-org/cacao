@@ -850,6 +850,12 @@ printf("STEP - %d =========\n", __LINE__);
             exit(0);
             break;
         }
+        
+        
+        printf("STEP - %d =========\n", __LINE__);
+		fflush(stdout); 
+		
+		
         data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0, -1);
 
