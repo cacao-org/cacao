@@ -153,8 +153,6 @@ int AOloopControl_RTstreamLOG_init(int loop)
 
 int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 {
-    if(aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval] == 1) // ensure local ownership
-    {
         if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].INIT == 0))
         {
             long IDstream;
@@ -311,8 +309,6 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
             free(imsize);
 
         }
-    }
-
 
     return(0);
 }
@@ -324,79 +320,80 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 //
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
 {
-	
-	
-	if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1) && (AOconf[loop].RTSLOGarray[rtlindex].INIT = 1))
-	{
-		char *dataptr;
-		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
+    if(aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval] == 1) // ensure local ownership
+    {
+
+        if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1) && (AOconf[loop].RTSLOGarray[rtlindex].INIT = 1))
+        {
+            char *dataptr;
+            dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
 
 
-		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
-		list_image_ID();
-		printf("rtlindex = %ld\n", rtlindex);
-		printf("AOconf[loop].RTSLOGarray[rtlindex].destptr    = %p\n", (void*) AOconf[loop].RTSLOGarray[rtlindex].destptr);
-		printf("AOconf[loop].RTSLOGarray[rtlindex].frameindex = %ld\n", AOconf[loop].RTSLOGarray[rtlindex].frameindex);
-		printf("AOconf[loop].RTSLOGarray[rtlindex].memsize    = %ld\n", (long) AOconf[loop].RTSLOGarray[rtlindex].memsize);
-		fflush(stdout);		
+            /*		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
+            		list_image_ID();
+            		printf("rtlindex = %ld\n", rtlindex);
+            		printf("AOconf[loop].RTSLOGarray[rtlindex].destptr    = %p\n", (void*) AOconf[loop].RTSLOGarray[rtlindex].destptr);
+            		printf("AOconf[loop].RTSLOGarray[rtlindex].frameindex = %ld\n", AOconf[loop].RTSLOGarray[rtlindex].frameindex);
+            		printf("AOconf[loop].RTSLOGarray[rtlindex].memsize    = %ld\n", (long) AOconf[loop].RTSLOGarray[rtlindex].memsize);
+            		fflush(stdout);
 
-sleep(1000);
+            sleep(1000);
+            */
+
+            memcpy((void*) dataptr,
+                   (void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr,
+                   AOconf[loop].RTSLOGarray[rtlindex].memsize);
+
+            /*		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
+            		fflush(stdout);		*/
+
+            long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
 
 
-		memcpy((void*) dataptr, 
-		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
-		AOconf[loop].RTSLOGarray[rtlindex].memsize);
+            data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
+            data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;
+            data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+2] = (long) tnow.tv_nsec;
+            data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+3] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt0;
+            data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+4] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt1;
 
-/*		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
-		fflush(stdout);		*/
 
-		long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
-		
-		
-		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
-		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;
-		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+2] = (long) tnow.tv_nsec;
-		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+3] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt0;
-		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+4] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt1;
 
-		
-		
-		AOconf[loop].RTSLOGarray[rtlindex].frameindex++;
-		if(AOconf[loop].RTSLOGarray[rtlindex].frameindex == AOconf[loop].RTSLOGarray[rtlindex].SIZE)
-		{
-			AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
-		
-			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].cnt0++;
-			data.image[IDinfo].md[0].cnt0++;
-			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].write = 0;
-			data.image[IDinfo].md[0].write = 0;
-			COREMOD_MEMORY_image_set_sempost_byID(AOconf[loop].RTSLOGarray[rtlindex].IDbuff, -1);
-			COREMOD_MEMORY_image_set_sempost_byID(IDinfo, -1);
-		
-			if(AOconf[loop].RTSLOGarray[rtlindex].buffindex==0)
-			{
-				AOconf[loop].RTSLOGarray[rtlindex].buffindex = 1;
-				AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr1;
-				AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff1;
-				AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo1;
-				if(AOconf[loop].RTSLOGarray[rtlindex].save==1)
-					AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 1;
-			}
-			else
-			{
-				AOconf[loop].RTSLOGarray[rtlindex].buffindex = 0;
-				AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr0;
-				AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff0;
-				AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
-				if(AOconf[loop].RTSLOGarray[rtlindex].save==1)
-					AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 2;
-			}
-			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].write = 1;
-			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
-		}
-		
-	}
-	
+            AOconf[loop].RTSLOGarray[rtlindex].frameindex++;
+            if(AOconf[loop].RTSLOGarray[rtlindex].frameindex == AOconf[loop].RTSLOGarray[rtlindex].SIZE)
+            {
+                AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
+
+                data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].cnt0++;
+                data.image[IDinfo].md[0].cnt0++;
+                data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].write = 0;
+                data.image[IDinfo].md[0].write = 0;
+                COREMOD_MEMORY_image_set_sempost_byID(AOconf[loop].RTSLOGarray[rtlindex].IDbuff, -1);
+                COREMOD_MEMORY_image_set_sempost_byID(IDinfo, -1);
+
+                if(AOconf[loop].RTSLOGarray[rtlindex].buffindex==0)
+                {
+                    AOconf[loop].RTSLOGarray[rtlindex].buffindex = 1;
+                    AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr1;
+                    AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff1;
+                    AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo1;
+                    if(AOconf[loop].RTSLOGarray[rtlindex].save==1)
+                        AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 1;
+                }
+                else
+                {
+                    AOconf[loop].RTSLOGarray[rtlindex].buffindex = 0;
+                    AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr0;
+                    AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff0;
+                    AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
+                    if(AOconf[loop].RTSLOGarray[rtlindex].save==1)
+                        AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 2;
+                }
+                data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].write = 1;
+                data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
+            }
+
+        }
+    }
 }
 
 
