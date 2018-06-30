@@ -345,13 +345,11 @@ sleep(1000);
 		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
 		AOconf[loop].RTSLOGarray[rtlindex].memsize);
 
-		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
-		fflush(stdout);		
+/*		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
+		fflush(stdout);		*/
 
 		long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
 		
-				printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
-		fflush(stdout);		
 		
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;
@@ -359,8 +357,6 @@ sleep(1000);
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+3] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt0;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+4] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt1;
 
-		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
-		fflush(stdout);				
 		
 		
 		AOconf[loop].RTSLOGarray[rtlindex].frameindex++;
@@ -397,8 +393,6 @@ sleep(1000);
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
 		}
 		
-		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
-		fflush(stdout);		
 	}
 	
 }
