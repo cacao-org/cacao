@@ -675,7 +675,8 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     if(RM==0)
     {
         clock_gettime(CLOCK_REALTIME, &tnow);
-
+		
+		aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] = 1; // there must only be one such process
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
 
         AOconf[loop].status = 0;  // LOAD IMAGE
@@ -837,8 +838,11 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         clock_gettime(CLOCK_REALTIME, &tnow);
         
 
-		
-        AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
+		if(RM==0)
+		{
+			aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS0] = 1; // there must only be one such process
+			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
+		}
 
         /*for(s=0; s<data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].sem; s++)
         {
@@ -1072,7 +1076,10 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[2] = tdiffv;
 
         if(AOconf[loop].GPUall==0)
+        {
+			aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS1] = 1; // there must only be one such process
             AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS1, tnow);
+		}
     }
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
