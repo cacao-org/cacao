@@ -329,6 +329,9 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		char *dataptr;
 		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
 
+		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
+		fflush(stdout);		
+
 		memcpy((void*) dataptr, 
 		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
 		AOconf[loop].RTSLOGarray[rtlindex].memsize);
@@ -343,7 +346,8 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+3] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt0;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+4] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt1;
 
-		
+		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
+		fflush(stdout);				
 		
 		
 		AOconf[loop].RTSLOGarray[rtlindex].frameindex++;
@@ -379,6 +383,9 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].write = 1;
 			data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
 		}
+		
+		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
+		fflush(stdout);		
 	}
 	
 }
