@@ -1482,7 +1482,7 @@ menucontrolloop_default="Nloopon"
 
 	WFScon)
 loopWFScompONstat=" ON"
-echo "echo \" ON\" > ./status/stat_loopWFScompON.txt" >> $scriptfile
+echo "echo \" ON\" > ./status/stat_loopWFScompON.txt"
 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolWFScompon" C-m
 menucontrolloop_default="WFScoff"
 ;;
@@ -1490,7 +1490,7 @@ menucontrolloop_default="WFScoff"
 
 	WFScoff)
 loopWFScompONstat="OFF"
-echo "echo \"OFF\" > ./status/stat_loopWFScompON.txt" >> $scriptfile
+echo "echo \"OFF\" > ./status/stat_loopWFScompON.txt"
 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolWFScompoff" C-m
 menucontrolloop_default="WFScon"
 ;;
