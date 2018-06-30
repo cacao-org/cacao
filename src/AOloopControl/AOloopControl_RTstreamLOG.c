@@ -336,9 +336,13 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
 		AOconf[loop].RTSLOGarray[rtlindex].memsize);
 
+		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
+		fflush(stdout);		
 
 		long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
 		
+				printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
+		fflush(stdout);		
 		
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
 		data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;
