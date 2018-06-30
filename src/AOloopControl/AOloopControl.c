@@ -876,7 +876,8 @@ void init_AOloopControl()
 
 	
 
-
+	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
+		aoloopcontrol_var.RTSLOGarrayInitFlag[i] = 0;
 
 
 

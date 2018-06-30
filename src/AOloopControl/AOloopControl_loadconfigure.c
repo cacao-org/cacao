@@ -374,6 +374,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     else
         fprintf(fplog, "stream %s loaded as ID = %ld\n", AOconf[loop].dmdispname, aoloopcontrol_var.aoconfID_dmdisp);
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_dmdisp, AOconf[loop].dmdispname);
+	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_dmdisp] = 1;
 
  
     aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(AOconf[loop].WFSname);
@@ -394,6 +395,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 //	sleep(100.0);
 
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_wfsim, AOconf[loop].WFSname);
+	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] = 1;
 
 
 //    fprintf(fplog, "WFS stream size = %ld x %ld\n", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
@@ -435,6 +437,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     aoloopcontrol_var.aoconfID_imWFS0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
     COREMOD_MEMORY_image_set_createsem(name, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_imWFS0, name);
+    aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS0] = 1;
 
 
     if(sprintf(name, "aol%ld_imWFS0tot", loop) < 1)
@@ -446,11 +449,14 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     aoloopcontrol_var.aoconfID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_imWFS1, name);
+    aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS1] = 1;
 
     if(sprintf(name, "aol%ld_imWFS2", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     aoloopcontrol_var.aoconfID_imWFS2 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_imWFS2, name);
+	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS2] = 1;
+
 
     if(sprintf(name, "aol%ld_imWFSlinlimit", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");

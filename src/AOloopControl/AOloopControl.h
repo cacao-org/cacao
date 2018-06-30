@@ -420,6 +420,7 @@ typedef struct
 {
     /* =============================================================================================== */
     /*                    aoconfID are global variables for convenience                                */
+    /*  These variables are LOCAL to each process, and not shared between processes                    */
     /*  aoconfID can be used in other modules as well (with extern)                                    */
     /* =============================================================================================== */
 
@@ -616,8 +617,17 @@ typedef struct
     //int GPUcntMax;//  = 100; static initmem.c
     int *GPUset0; //static
     int *GPUset1; //static
+    
+    
+    
+    // Realtime logging, local init flag
+    // will be equal to 1 only if the current process "owns" the realtime logging
+	int RTSLOGarrayInitFlag[MAX_NUMBER_RTLOGSTREAM];
+    
 
 } AOloopControl_var;
+
+
 
 
 

@@ -1455,7 +1455,10 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     if(sprintf(imname, "aol%ld_modeval", loop) < 1)// measured from WFS
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     IDmodeval = read_sharedmem_image(imname);
+    
+    
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval, imname);
+    aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval] = 1;
     
     NBmodes = data.image[IDmodeval].md[0].size[0];
 
@@ -1484,6 +1487,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     if(aoloopcontrol_var.aoconfID_dmC == -1)
         aoloopcontrol_var.aoconfID_dmC = read_sharedmem_image(imname);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_dmC, imname);
+    aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_dmC] = 1;
 
 
 
@@ -1562,6 +1566,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 				data.image[aoloopcontrol_var.aoconfID_modevalPF].array.F[ii] = 0.0;
 
 			AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPF, imname);
+			aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modevalPF] = 1;
 		}
 	}
 
@@ -1581,6 +1586,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     
 	// setup RTstreamLOG modeval_ol
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_ol, imname);
+	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_ol] = 1;
 
 
 
@@ -1598,6 +1604,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     IDmodevalDMcorr = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_corr, imname);
+	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_dm_corr] = 1;
 
 
 	// load/create aol_modeval_dm_now (current modal DM correction after mixing with predicitiv control)
@@ -1606,6 +1613,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     IDmodevalDMnow = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_now, imname);
+    aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_dm_now] = 1;
 
 
 	// load/create aol_modeval_dm_now_filt (current modal DM correction, filtered)
@@ -1614,6 +1622,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     IDmodevalDMnowfilt = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_now_filt, imname);
+    aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_dm_now_filt] = 1;
 
 
 	// load/create aol_modeval_dm (modal DM correction at time of currently available WFS measurement)
@@ -1622,6 +1631,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     IDmodevalDM = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm, imname);
+    aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_dm] = 1;
 
 
 	// load/create aol_modeval_dm (modal DM correction at time of currently available WFS measurement)
@@ -1630,6 +1640,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 	IDmodevalPFsync = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPFsync, imname);
+	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modevalPFsync] = 1;
 	
 
 	// load/create aol_modeval_dm (modal DM correction at time of currently available WFS measurement)
@@ -1638,6 +1649,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 	IDmodevalPFres = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPFres, imname);
+    aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modevalPFres] = 1;
 
 
 	// load/create WFS noise estimate
