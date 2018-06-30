@@ -837,7 +837,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         clock_gettime(CLOCK_REALTIME, &tnow);
         
 
-		printf("===== STEP ==== %d", __LINE__);//TEST
+		printf("===== STEP ==== %d\n", __LINE__);//TEST
 		fflush(stdout);
 		
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
@@ -849,7 +849,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
                 sem_post(data.image[aoloopcontrol_var.aoconfID_imWFS0].semptr[s]);
         }*/
         
-		printf("===== STEP ==== %d", __LINE__);//TEST
+		printf("===== STEP ==== %d\n", __LINE__);//TEST
 		fflush(stdout);
 
     }
