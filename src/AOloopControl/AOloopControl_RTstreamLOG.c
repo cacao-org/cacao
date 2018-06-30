@@ -323,13 +323,13 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 	if(rtlindex==0)//TEST
 			{
 				printf("  --- [%d] %d     %d %d %d\n", 
-					aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval], 
-					RTSLOGindex_wfsim, AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ENABLE, 
-					AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ON, 
-					AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].INIT);
+					aoloopcontrol_var.RTSLOGarrayInitFlag[rtlindex], 
+					RTSLOGindex_wfsim, AOconf[loop].RTSLOGarray[rtlindex].ENABLE, 
+					AOconf[loop].RTSLOGarray[rtlindex].ON, 
+					AOconf[loop].RTSLOGarray[rtlindex].INIT);
 			}
 	
-    if(aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval] == 1) // ensure local ownership
+    if(aoloopcontrol_var.RTSLOGarrayInitFlag[rtlindex] == 1) // ensure local ownership
     {
 
         if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1) && (AOconf[loop].RTSLOGarray[rtlindex].INIT = 1))
