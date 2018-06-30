@@ -320,16 +320,25 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 //
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
 {
+	if(rtlindex==0)//TEST
+			{
+				printf("  --- [%d] %d     %d %d %d\n", 
+					aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval], 
+					RTSLOGindex_wfsim, AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ENABLE, 
+					AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ON, 
+					AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].INIT);
+			}
+	
     if(aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval] == 1) // ensure local ownership
     {
 
         if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1) && (AOconf[loop].RTSLOGarray[rtlindex].INIT = 1))
         {
+
+			
             char *dataptr;
             dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
-
-
-
+            
             memcpy((void*) dataptr,
                    (void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr,
                    AOconf[loop].RTSLOGarray[rtlindex].memsize);
