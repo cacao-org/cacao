@@ -330,7 +330,15 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 		dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
 
 		printf("===== STEP ==== %s   %d\n", __FILE__, __LINE__);//TEST
+		list_image_ID();
+		printf("rtlindex = %ld\n", rtlindex);
+		printf("AOconf[loop].RTSLOGarray[rtlindex].destptr    = %p\n", void* AOconf[loop].RTSLOGarray[rtlindex].destptr);
+//		printf("AOconf[loop].RTSLOGarray[rtlindex].arr    = %p\n", void* AOconf[loop].RTSLOGarray[rtlindex].array.);
+		printf("AOconf[loop].RTSLOGarray[rtlindex].frameindex = %ld\n", AOconf[loop].RTSLOGarray[rtlindex].frameindex);
+		printf("AOconf[loop].RTSLOGarray[rtlindex].memsize    = %ld\n", (long) AOconf[loop].RTSLOGarray[rtlindex].memsize);
 		fflush(stdout);		
+
+sleep(1000);//TEST
 
 		memcpy((void*) dataptr, 
 		(void*) AOconf[loop].RTSLOGarray[rtlindex].srcptr, 
