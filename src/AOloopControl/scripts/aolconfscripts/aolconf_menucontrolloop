@@ -1481,12 +1481,14 @@ menucontrolloop_default="Nloopon"
 
 
 	WFScon)
+loopWFScompONstat=" ON"
 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolWFScompon" C-m
 menucontrolloop_default="WFScoff"
 ;;
 
 
 	WFScoff)
+loopWFScompONstat="OFF"
 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolWFScompoff" C-m
 menucontrolloop_default="WFScon"
 ;;
