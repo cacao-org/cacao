@@ -424,7 +424,7 @@ if [ "${procONstat}" = " ON" ]; then
  if [ "${loopWFScompONstat}" = "OFF" ]; then
   menuitems+=( "WFScon" "  WFS comp is OFF, press to START" )
  else
-  menuitems+=( "WSFcoff" "\Z1\Zr  WFS comp is ON, press to STOP\Zn" )
+  menuitems+=( "WFScoff" "\Z1\Zr  WFS comp is ON, press to STOP\Zn" )
  fi
  
  menuitems+=( "Z" "LOOP Zero" )
