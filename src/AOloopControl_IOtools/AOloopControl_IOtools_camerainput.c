@@ -677,7 +677,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         clock_gettime(CLOCK_REALTIME, &tnow);
 		
 		printf("---- TEST ---- %s  %d\n", __FILE__, __LINE__);
-		printf("   %d %d %d\n", AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ENABLE, AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ON, AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].INIT);
+		printf("  [%d] %d %d %d\n", RTSLOGindex_wfsim, AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ENABLE, AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ON, AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].INIT);
 		fflush(stdout);
 		
 		
