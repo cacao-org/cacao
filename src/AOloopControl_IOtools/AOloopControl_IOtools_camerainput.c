@@ -677,7 +677,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         clock_gettime(CLOCK_REALTIME, &tnow);
 		
 		printf("---- TEST ---- %s  %d\n", __FILE__, __LINE__);
+		printf("   %d %d %d\n", AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ENABLE, AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].ON, AOconf[loop].RTSLOGarray[RTSLOGindex_wfsim].INIT);
 		fflush(stdout);
+		
 		
 		aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] = 1; // there must only be one such process
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
