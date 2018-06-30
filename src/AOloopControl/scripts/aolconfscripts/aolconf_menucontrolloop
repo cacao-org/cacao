@@ -417,6 +417,15 @@ if [ "${procONstat}" = " ON" ]; then
  else
   menuitems+=( "Floopoff" "\Z1\ZrLoop running, press to STOP\Zn" )
  fi
+
+
+ StatReadStat loopWFScompON "OFF"; loopWFScompONstat="$statusvalue"
+
+ if [ "${loopWFScompONstat}" = "OFF" ]; then
+  menuitems+=( "WFScon" "  WFS comp is OFF, press to START" )
+ else
+  menuitems+=( "WSFcoff" "\Z1\Zr  WFS comp is ON, press to STOP\Zn" )
+ fi
  
  menuitems+=( "Z" "LOOP Zero" )
  
@@ -1469,6 +1478,20 @@ function_LOOP_OFF "NULL"
 aoconfLogStatusUpdate "${SLOOPNAME}_loop OPEN 0"
 menucontrolloop_default="Nloopon"
 ;;
+
+
+	WFScon)
+tmux send-keys -t aol${LOOPNUMBER}-ctr "aolWFScompon" C-m
+menucontrolloop_default="WFScoff"
+;;
+
+
+	WFScoff)
+tmux send-keys -t aol${LOOPNUMBER}-ctr "aolWFScompoff" C-m
+menucontrolloop_default="WFScon"
+;;
+
+
 
 
 
