@@ -1436,7 +1436,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 if(strcmp(ext+1, "dat")==0)
 					{
 						tmpstring = remove_ext(dir->d_name, '.', '/');
-						printf("tmpstring = %s\n", tmpstring);
+					//	printf("tmpstring = %s\n", tmpstring);
 						
 						sprintf(fname, "%s/%s", datadir0, dir->d_name);
 						if((fp = fopen(fname, "r"))==NULL)
