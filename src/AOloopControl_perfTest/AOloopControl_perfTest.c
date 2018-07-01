@@ -1544,7 +1544,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 							datfile0[NBdatFiles0].cnt = cnt;
 						}
 						
-						strcpy(datfile0[NBdatFiles0].name, dir->d_name);
+						strcpy(datfile0[NBdatFiles0].name, tmpstring);
 												
 						if((datfile0[NBdatFiles0].tend > tstart) && (datfile0[NBdatFiles0].tstart < tend))
 						{
@@ -1592,7 +1592,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		
 		if((fp = fopen(fname, "r"))==NULL)
 		{
-			printf("Cannot open file \"%s\"\n", datfile0[i].name);
+			printf("Cannot open file \"%s.dat\"\n", datfile0[i].name);
 			exit(0);
 		}
 		else
