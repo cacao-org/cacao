@@ -1655,7 +1655,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		
         for(tstep=0; tstep<zsize; tstep++)
         {
-            while(intarray_end[j0] < tstartarray[tstep])
+            while((intarray_end[j0] < tstartarray[tstep]) && (j0 < datfile0[i].cnt))
                 j0++;
             j = j0;
 
