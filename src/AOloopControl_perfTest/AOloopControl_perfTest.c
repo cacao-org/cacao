@@ -1650,14 +1650,14 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
         int j0 = 0;
         double expfrac;
-
+		
         for(tstep=0; tstep<zsize; tstep++)
         {
             while(intarray_end[j0] < tstartarray[tstep])
                 j0++;
             j = j0;
 
-            while(intarray_start[j] < tendarray[tstep])
+            while((intarray_start[j] < tendarray[tstep])&&(j<datfile0[i].cnt))
             {
                 expfrac = 1.0;
 
@@ -1676,52 +1676,52 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 {
                 case _DATATYPE_UINT8 :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI8[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI8[xysize*j+ii];
                     break;
 
                 case _DATATYPE_INT8 :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI8[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI8[xysize*j+ii];
                     break;
 
                 case _DATATYPE_UINT16 :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI16[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI16[xysize*j+ii];
                     break;
 
                 case _DATATYPE_INT16 :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI16[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI16[xysize*j+ii];
                     break;
 
                 case _DATATYPE_UINT32 :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI32[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI32[xysize*j+ii];
                     break;
 
                 case _DATATYPE_INT32 :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI32[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI32[xysize*j+ii];
                     break;
 
                 case _DATATYPE_UINT64 :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI64[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI64[xysize*j+ii];
                     break;
 
                 case _DATATYPE_INT64 :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI64[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI64[xysize*j+ii];
                     break;
 
                 case _DATATYPE_FLOAT :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.F[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.F[xysize*j+ii];
                     break;
 
                 case _DATATYPE_DOUBLE :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.D[ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.D[xysize*j+ii];
                     break;
 
                 default :
