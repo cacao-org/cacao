@@ -92,6 +92,7 @@ struct StreamDataFile {
 		char   name[500];
 		double tstart;
 		double tend;
+		long cnt;
 	};  
 
 
@@ -1415,7 +1416,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 	FILE *fp;
 	char fname[500];
-	int ret;
+	long cnt;
 	double valf1, valf2;
 	long vald1, vald2, vald3, vald4;
 
@@ -1428,15 +1429,12 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     d0 = opendir(datadir0);
     if (d0) {
         while ((dir = readdir(d0)) != NULL) {
-            //printf("%s\n", dir->d_name);
             ext = strrchr(dir->d_name, '.');
             if (!ext) {
                // printf("no extension\n");
             } else {
-//                printf("extension is %s\n", ext + 1);
                 if(strcmp(ext+1, "dat")==0)
 					{
-//						strcpy(datfile0[NBdatFiles0].name, remove_ext(dir->d_name, '.', '/'));
 						tmpstring = remove_ext(dir->d_name, '.', '/');
 						printf("tmpstring = %s\n", tmpstring);
 						
@@ -1447,20 +1445,24 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 							exit(0);
 						}
 						else
-						{
-							ret = fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4);
+						{	
+							cnt = 0;
+							while(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==4)
+							{
+								if(cnt == 0)
+									datfile0[NBdatFiles0].tstart = valf2;								
+								cnt++;
+							}
 							fclose(fp);
+							datfile0[NBdatFiles0].tend = valf2;
+							datfile0[NBdatFiles0].cnt = cnt;
 						}
 						
-						//sprintf(datfile0[NBdatFiles0].name, "test");
 						strcpy(datfile0[NBdatFiles0].name, dir->d_name);
 						datfile0[NBdatFiles0].tstart = valf2;
 						
 						
-						printf("%20s  %20.9f\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart);
-						//sprintf(datfile0[NBdatFiles0].name, "%s", tmpstring);
-
-//						printf("File [%5ld]:  %s\n", NBdatFiles0, datfile0[NBdatFiles0].name);
+						printf("%20s       %20.9f -> %20.9f   [%10ld]\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt);
 						NBdatFiles0++;
 					}
                 
