@@ -1494,14 +1494,19 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		tendarray[tstep] = tstart + 1.0*(tstep+1)*(tend-tstart)/zsize;
 	}
 	
-
+			printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
+		fflush(stdout);
+		
+		
 	datfile0 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
 	datfile1 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
 
     sprintf(datadir0, "%s/%s", datadir, stream0);
     sprintf(datadir1, "%s/%s", datadir, stream1);
 
-	
+				printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
+		fflush(stdout);
+		
 	printf("tstart = %20.8f\n", tstart);
 	printf("tend   = %20.8f\n", tend);
 	
