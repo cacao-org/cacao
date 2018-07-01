@@ -346,14 +346,15 @@ sudo cset set --cpu 0,1,2,4,6,8,10,12,14 --set system
 sudo cset set --cpu 24                   --cpu_exclusive --set dmcomb
 sudo cset set --cpu 26                   --cpu_exclusive --set dmdrv
 
-sudo cset set --cpu 3,5,7,9,11,13,15     --cpu_exclusive --set aol${LOOPNUMBER}RT
-sudo cset set --cpu 19                   --cpu_exclusive --set aol${LOOPNUMBER}RT1
+sudo cset set --cpu 3,5,7,9,11,13        --cpu_exclusive --set aol${LOOPNUMBER}RT
+sudo cset set --cpu 15,19                --cpu_exclusive --set aol${LOOPNUMBER}RT1
 sudo cset set --cpu 21                   --cpu_exclusive --set aol${LOOPNUMBER}RT2
 sudo cset set --cpu 23,25                --cpu_exclusive --set aol${LOOPNUMBER}COM
 sudo cset set --cpu 27                   --cpu_exclusive --set ocamdec
 sudo cset set --cpu 17                   --cpu_exclusive --set ircam
 sudo cset set --cpu 16,18                --cpu_exclusive --set aol${LOOPNUMBER}log
 sudo cset set --cpu 20                   --cpu_exclusive --set RTmon
+
 
 
 # move as much as possible to system

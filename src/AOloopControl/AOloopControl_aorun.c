@@ -591,7 +591,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[15] = tdiffv;
 
 
-    if(AOconf[loop].ComputeWFSsol_FLAG==1)
+    if(AOconf[loop].ComputeWFSsol_FLAG==1) // Process WFS frames
     {
         if(AOconf[loop].GPUall==0)
         {
@@ -1045,8 +1045,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 		clock_gettime(CLOCK_REALTIME, &functionTestTimer03); //TEST timing in function
     }
     else
-    {
-		
+    {	
 		if(AOconf[loop].GPUall==0)
 		{
 			// Update imWFS2
