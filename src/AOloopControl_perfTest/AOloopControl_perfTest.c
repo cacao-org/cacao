@@ -1352,6 +1352,16 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     char datadir0[500];
     char datadir1[500];
     char *ext;
+	
+	long MaxNBFiles = 100000;
+	struct DataFile {
+		char  name[500];
+		double tstart;
+		double tend;
+	};  
+
+	struct DataFile datfile0[MaxNBFiles];
+	struct DataFile datfile1[MaxNBFiles];
 
     sprintf(datadir0, "%s/%s", datadir, stream0);
     sprintf(datadir1, "%s/%s", datadir, stream1);
@@ -1361,12 +1371,16 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     d0 = opendir(datadir0);
     if (d0) {
         while ((dir = readdir(d0)) != NULL) {
-            printf("%s\n", dir->d_name);
+            //printf("%s\n", dir->d_name);
             ext = strrchr(dir->d_name, '.');
             if (!ext) {
-                printf("no extension\n");
+               // printf("no extension\n");
             } else {
                 printf("extension is %s\n", ext + 1);
+                if(strcmp(ext+1, "dat")==0)
+					{
+						printf("Found dat file:  %s\n", dir->d_name);
+					}
                 
             }
         }
