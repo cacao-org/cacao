@@ -89,7 +89,7 @@ static struct timespec tdiff;
 
 
 struct StreamDataFile {
-//		char  name[500];
+		char  name[500];
 		double tstart;
 		double tend;
 	};  
