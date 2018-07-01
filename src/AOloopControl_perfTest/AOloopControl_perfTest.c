@@ -1352,7 +1352,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	sprintf(datadir0, "%s/%s", datadir, stream0);
 	sprintf(datadir1, "%s/%s", datadir, stream1);
  
-    d0 = opendir(datadir);
+    d0 = opendir(datadir0);
     if (d0) {
         while ((dir = readdir(d0)) != NULL) {
             printf("%s\n", dir->d_name);
