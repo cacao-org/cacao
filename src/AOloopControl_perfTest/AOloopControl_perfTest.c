@@ -1671,8 +1671,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
                 exparray[tstep] += expfrac;
                 
-
-                long xysize;
+				printf("  %5ld x %8.6f  ->  %5ld\n", j, expfrac, tstep);
+				
                 long ii;
 
                 switch(data.image[IDc].md[0].atype)
@@ -1689,7 +1689,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
                 case _DATATYPE_UINT16 :
                     for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac; //*data.image[IDc].array.UI16[xysize*j+ii];
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI16[xysize*j+ii];
                     break;
 
                 case _DATATYPE_INT16 :
