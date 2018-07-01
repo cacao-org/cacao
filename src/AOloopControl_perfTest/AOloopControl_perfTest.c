@@ -244,9 +244,9 @@ int_fast8_t AOloopControl_LoopTimer_Analysis_cli()
 
 int_fast8_t AOloopControl_perfTest_mkSyncStreamFiles2_cli()
 {
-	if(CLI_checkarg(1,5)+CLI_checkarg(2,5)+CLI_checkarg(3,5)+CLI_checkarg(4,1)+CLI_checkarg(5,1)+CLI_checkarg(6,1)==0)    
+	if(CLI_checkarg(1,5)+CLI_checkarg(2,5)+CLI_checkarg(3,5)+CLI_checkarg(4,1)+CLI_checkarg(5,1)+CLI_checkarg(6,1)+CLI_checkarg(7,1)==0)    
     {
-		AOloopControl_perfTest_mkSyncStreamFiles2(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.numf, data.cmdargtoken[5].val.numf, data.cmdargtoken[6].val.numf);
+		AOloopControl_perfTest_mkSyncStreamFiles2(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.numf, data.cmdargtoken[5].val.numf, data.cmdargtoken[6].val.numf, data.cmdargtoken[7].val.numf);
 		return 0;
 	}
 	else
@@ -330,8 +330,8 @@ int_fast8_t init_AOloopControl_perfTest()
 		AOloopControl_perfTest_mkSyncStreamFiles2_cli,
 		"synchronize two streams from disk telemetry",
 		"<datadir> <stream0name> <stream1name> <tstart> <tend> <dt>",
-		"aolptmksyncs2 \"/media/data/20180701/\" aol2_wfsim aol3_wfsim 1530410732.0 1530410733.0 0.001",
-		"int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char *stream1, double tstart, double tend, double dt)");
+		"aolptmksyncs2 \"/media/data/20180701/\" aol2_wfsim aol3_wfsim 1530410732.0 1530410733.0 0.001 0.00001",
+		"int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char *stream1, double tstart, double tend, double dt, double dtlag)");
 }
 
 
@@ -1433,13 +1433,16 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 //
 // savedir is, for example /media/data/20180202
 //
+// dtlag: positive when stream0 is earlier than stream1 
+//
 int AOloopControl_perfTest_mkSyncStreamFiles2(
     char *datadir,
     char *stream0,
     char *stream1,
     double tstart,
     double tend,
-    double dt
+    double dt,
+    double dtlag
 )
 {
     DIR *d0;
