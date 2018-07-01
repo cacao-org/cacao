@@ -88,6 +88,13 @@ static struct timespec tnow;
 static struct timespec tdiff;
 
 
+struct StreamDataFile {
+		char  name[500];
+		double tstart;
+		double tend;
+	};  
+
+
 
 /* =============================================================================================== */
 /*                                     MAIN DATA STRUCTURES                                        */
@@ -1400,14 +1407,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     char *ext;
     char *tmpstring;
 	
-	struct DataFile {
-		char  name[500];
-		double tstart;
-		double tend;
-	};  
 
-	struct DataFile datfile0[MaxNBdatFiles];
-	struct DataFile datfile1[MaxNBdatFiles];
+
+	struct StreamDataFile datfile0[MaxNBdatFiles];
+	struct StreamDataFile datfile1[MaxNBdatFiles];
 	long NBdatFiles0, NBdatFiles1;
 
 	FILE *fp;
