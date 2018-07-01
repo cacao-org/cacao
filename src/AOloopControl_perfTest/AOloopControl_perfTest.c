@@ -1487,6 +1487,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	
 	// compute exposure start for each slice of output
 	zsize = (tend-tstart)/dt;
+	printf("zsize = %ld\n", zsize);
+	fflush(stdout);
+	
 	tstartarray = (double*) malloc(sizeof(double)*zsize);
 	for(tstep=0;tstep<zsize;tstep++)
 	{
