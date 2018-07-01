@@ -1474,6 +1474,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	uint32_t zsize;
 	double *tstartarray;
 	double *tendarray;
+	double *exparray;
 	long tstep;
 
 	double *intarray_start;
@@ -1488,12 +1489,16 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	printf("zsize = %ld\n", (long) zsize);
 	fflush(stdout);
 	
+	
+	// Allocate Working arrays
 	tstartarray = (double*) malloc(sizeof(double)*zsize);
-	tendarray = (double*) malloc(sizeof(double)*zsize);
+	tendarray   = (double*) malloc(sizeof(double)*zsize);
+	exparray    = (double*) malloc(sizeof(double)*zsize);   // exposure time accumulated, in unit of input frame(s)
 	for(tstep=0;tstep<zsize;tstep++)
 	{
 		tstartarray[tstep] = tstart + 1.0*tstep*(tend-tstart)/zsize;
 		tendarray[tstep] = tstart + 1.0*(tstep+1)*(tend-tstart)/zsize;
+		exparray[tstep] = 0.0;
 	}
 	
 	
@@ -1558,7 +1563,12 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     }
     printf("NBdatFiles0 = %ld\n", NBdatFiles0);
     
+    
+	// sort files according to time
 	quicksort_StreamDataFile(datfile0, 0, NBdatFiles0);
+	
+	
+	
 	for(i=0;i<NBdatFiles0;i++)
 	{
 		printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", 
@@ -1567,11 +1577,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 			datfile0[i].tend, 
 			datfile0[i].cnt, 
 			datfile0[i].cnt/(datfile0[i].tend-datfile0[i].tstart));
-			
-
-		printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
-		printf(" cnt = %ld\n", datfile0[i].cnt);
-		fflush(stdout);
 		
 			
 		// start and end time for input exposures
@@ -1579,10 +1584,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		intarray_end   = (double*) malloc(sizeof(double)*datfile0[i].cnt);
 		dtarray = (double*) malloc(sizeof(double)*datfile0[i].cnt);
 	
-		
-		printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
-		fflush(stdout);
-		
+
 			
 		long j;
 		
@@ -1599,8 +1601,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		{
 			for(j=0;j<datfile0[i].cnt;j++)
 			{
-				printf("j = %ld\n", j);
-				fflush(stdout);
 				
 				if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
 				{
@@ -1613,21 +1613,45 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 			fclose(fp);
 		}
 		
-		printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
-		fflush(stdout);
-		
-		
 		
 		for(j=0;j<datfile0[i].cnt-1;j++)
 			dtarray[j] = intarray_end[j+1] - intarray_end[j];
-
-		printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
-		fflush(stdout);
 
 		double dtmedian;
 		qs_double(dtarray, 0, datfile0[i].cnt-1);
 		dtmedian = dtarray[(datfile0[i].cnt-1)/2];
 		printf("   dtmedian = %10.3f us\n", 1.0e6*dtmedian);
+		
+		// we assume here that every frame as the same exposure time, with 100% duty cycle
+		for(j=0;j<datfile0[i].cnt;j++)
+			intarray_start[j] = intarray_end[j] - dtmedian;
+		
+		
+		int j0 = 0;
+		double expfrac;
+		
+		for(tstep=0;tstep<zsize;tstep++)
+		{
+			while(intarray_end[j0] < tstartarray[tstep])
+				j0++;
+			j = j0;
+			
+			while(intarray_start[j] < tendarray[tstep])
+			{
+				expfrac = 1.0;
+				
+				if(tstartarray[tstep]>intarray_start[j])
+					expfrac -= (tstartarray[tstep]-intarray_start[j])/dtmedian;
+				
+				if(tendarray[tstep]<intarray_end[j])
+					expfrac -= (intarray_end[j]-tendarray[tstep])/dtmedian;
+				
+				printf("--- %5ld   %8.6f\n", j, expfrac);
+				j++;
+			}
+			exit(0);
+		}
+		
 	}
 	
 	
@@ -1643,6 +1667,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     free(intarray_start);
     free(intarray_end);
     free(dtarray);
+    free(exparray);
 
     return 0;
 }
