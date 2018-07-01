@@ -1742,7 +1742,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         }
         
         delete_image_ID("im0C");
-
+		list_image_ID();
     }
 
 	for(tstep=0; tstep<zsize; tstep++)
