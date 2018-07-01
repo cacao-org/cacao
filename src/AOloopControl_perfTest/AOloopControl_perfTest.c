@@ -1587,6 +1587,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		long j;
 		
 		sprintf(fname, "%s/%s.dat", datadir0, dir->d_name);
+		printf("fname = %s\n", fname);
+		fflush(stdout);
+		
 		if((fp = fopen(fname, "r"))==NULL)
 		{
 			printf("Cannot open file \"%s\"\n", dir->d_name);
