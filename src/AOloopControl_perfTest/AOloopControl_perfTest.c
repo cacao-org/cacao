@@ -89,7 +89,7 @@ static struct timespec tdiff;
 
 
 struct StreamDataFile {
-		char  name[500];
+		char   name[500];
 		double tstart;
 		double tend;
 	};  
@@ -1409,7 +1409,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	
 
 
-	struct StreamDataFile datfile0[MaxNBdatFiles];
+	struct StreamDataFile datfile0[100];
 	struct StreamDataFile datfile1[MaxNBdatFiles];
 	long NBdatFiles0, NBdatFiles1;
 
@@ -1452,11 +1452,12 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 							fclose(fp);
 						}
 						
-						sprintf(datfile0[NBdatFiles0].name, "test");
+						//sprintf(datfile0[NBdatFiles0].name, "test");
+						strcpy(datfile0[NBdatFiles0].name, "test");
 						datfile0[NBdatFiles0].tstart = valf2;
 						
 						
-						printf("tmpstring = %20s  %20.9f\n", tmpstring, valf2);
+						printf("%20s  %20.9f\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart);
 						//sprintf(datfile0[NBdatFiles0].name, "%s", tmpstring);
 
 //						printf("File [%5ld]:  %s\n", NBdatFiles0, datfile0[NBdatFiles0].name);
