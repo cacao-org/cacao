@@ -837,11 +837,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         clock_gettime(CLOCK_REALTIME, &tnow);
         
 
-		if(RM==0)
-		{
-			aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS0] = 1; // there must only be one such process
-			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
-		}
+
 
         /*for(s=0; s<data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].sem; s++)
         {
@@ -911,6 +907,14 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     }
     
+
+		if(RM==0)
+		{
+			aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS0] = 1; // there must only be one such process
+			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
+		}
+
+
 
 
 
@@ -1034,6 +1038,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     aoloopcontrol_var.GPU_alpha = totalinv;
 
     aoloopcontrol_var.GPU_beta = -aoloopcontrol_var.normfloorcoeff;
+
+
+
 
 
     if( ((AOconf[loop].GPUall==0)&&(RM==0)) || (RM==1))  // normalize WFS image by totalinv
