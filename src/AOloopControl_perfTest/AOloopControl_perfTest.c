@@ -1452,7 +1452,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 							fclose(fp);
 						}
 						
-						strcpy(datfile0[NBdatFiles0].name, "test");
+						sprintf(datfile0[NBdatFiles0].name, "test");
 						datfile0[NBdatFiles0].tstart = valf2;
 						
 						
