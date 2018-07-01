@@ -329,7 +329,7 @@ int_fast8_t init_AOloopControl_perfTest()
 		__FILE__,
 		AOloopControl_perfTest_mkSyncStreamFiles2_cli,
 		"synchronize two streams from disk telemetry",
-		"<datadir> <stream0name> <stream1name> <tstart> <tend> <dt>",
+		"<datadir> <stream0name> <stream1name> <tstart> <tend> <dt> <dtlag>",
 		"aolptmksyncs2 \"/media/data/20180701/\" aol2_wfsim aol3_wfsim 1530410732.0 1530410733.0 0.001 0.00001",
 		"int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char *stream1, double tstart, double tend, double dt, double dtlag)");
 }
@@ -1480,6 +1480,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	double *intarray_end;
 	double *dtarray;
 	
+	
+			printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
+		fflush(stdout);
 	
 	
 	// compute exposure start for each slice of output
