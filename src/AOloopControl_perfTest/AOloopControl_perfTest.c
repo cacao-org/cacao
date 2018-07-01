@@ -1595,8 +1595,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 					printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
 					exit(0);
 				}
-				
-				intarray_end[j] = valf2;				
+				else
+					intarray_end[j] = valf2;				
 			}
 			fclose(fp);
 		}
