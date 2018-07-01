@@ -1430,6 +1430,9 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 
 
 
+
+
+
 //
 // savedir is, for example /media/data/20180202
 //
@@ -1466,7 +1469,28 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	long vald1, vald2, vald3, vald4;
 	long i;
 	
+	uint32_t stream0xsize;
+	uint32_t stream0ysize;
+	uint32_t zsize;
+	double *tstartarray;
+	double *tendarray;
+	long tstep;
 
+	double *intarray_start;
+	double *intarray_end;
+	double *dtarray;
+	
+	
+	
+	// compute exposure start for each slice of output
+	zsize = (tend-tstart)/dt;
+	tstartarray = (double*) malloc(sizeof(double)*zsize);
+	for(tstep=0;tstep<zsize;tstep++)
+	{
+		tstartarray[tstep] = tstart + 1.0*tstep*(tend-tstart)/zsize;
+		tendarray[tstep] = tstart + 1.0*(tstep+1)*(tend-tstart)/zsize;
+	}
+	
 
 	datfile0 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
 	datfile1 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
@@ -1478,6 +1502,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	printf("tstart = %20.8f\n", tstart);
 	printf("tend   = %20.8f\n", tend);
 	
+	//
+	// Identify relevant files in directory
+	//
 	NBdatFiles0 = 0;
     d0 = opendir(datadir0);
     if (d0) {
@@ -1531,13 +1558,60 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 			datfile0[i].tstart, 
 			datfile0[i].tend, 
 			datfile0[i].cnt, 
-			datfile0[i].cnt/(datfile0[i].tend-datfile0[i].tstart));		
+			datfile0[i].cnt/(datfile0[i].tend-datfile0[i].tstart));
+			
+			
+		// start and end time for input exposures
+		intarray_start = (double*) malloc(sizeof(double)*datfile0[i].cnt);
+		intarray_end   = (double*) malloc(sizeof(double)*datfile0[i].cnt);
+		dtarray = (double*) malloc(sizeof(double)*datfile0[i].cnt);
+	
+	
+		long j;
+		
+		sprintf(fname, "%s/%s.dat", datadir0, dir->d_name);
+		if((fp = fopen(fname, "r"))==NULL)
+		{
+			printf("Cannot open file \"%s\"\n", dir->d_name);
+			exit(0);
+		}
+		else
+		{
+			for(j=0;j<datfile0[i].cnt;j++)
+			{
+				if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
+				{
+					printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
+					exit(0);
+				}
+				
+				intarray_end[j] = valf2;				
+			}
+			fclose(fp);
+		}
+		
+		for(j=0;j<datfile0[i].cnt-1;j++)
+			dtarray[j] = intarray_end[j+1] - intarray_end[j];
+
+		double dtmedian;
+		qs_double(dtarray, 0, datfile0[i].cnt-1);
+		dtmedian = dtarray[(datfile0[i].cnt-1)/2];
+		printf("   dtmedian = %10.3f us\n", 1.0e6*dtmedian);
 	}
-  
+	
+	
+
+
+
     free(datfile0);
     free(datfile1);
     
-    
+    free(tstartarray);
+    free(tendarray);
+
+    free(intarray_start);
+    free(intarray_end);
+    free(dtarray);
 
     return 0;
 }
