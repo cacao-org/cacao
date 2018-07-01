@@ -1485,7 +1485,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	
 	// compute exposure start for each slice of output
 	zsize = (tend-tstart)/dt;
-	printf("zsize = %ld\n", zsize);
+	printf("zsize = %ld\n", (long) zsize);
 	fflush(stdout);
 	
 	tstartarray = (double*) malloc(sizeof(double)*zsize);
@@ -1586,13 +1586,13 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 			
 		long j;
 		
-		sprintf(fname, "%s/%s.dat", datadir0, dir->d_name);
+		sprintf(fname, "%s/%s.dat", datadir0, datfile0[i].name);
 		printf("fname = %s\n", fname);
 		fflush(stdout);
 		
 		if((fp = fopen(fname, "r"))==NULL)
 		{
-			printf("Cannot open file \"%s\"\n", dir->d_name);
+			printf("Cannot open file \"%s\"\n", datfile0[i].name);
 			exit(0);
 		}
 		else
