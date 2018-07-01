@@ -1491,6 +1491,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	fflush(stdout);
 	
 	tstartarray = (double*) malloc(sizeof(double)*zsize);
+	tendarray = (double*) malloc(sizeof(double)*zsize);
 	for(tstep=0;tstep<zsize;tstep++)
 	{
 		tstartarray[tstep] = tstart + 1.0*tstep*(tend-tstart)/zsize;
