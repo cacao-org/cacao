@@ -88,12 +88,12 @@ static struct timespec tnow;
 static struct timespec tdiff;
 
 
-struct StreamDataFile {
+typedef struct {
 		char   name[500];
 		double tstart;
 		double tend;
 		long cnt;
-	};  
+	} StreamDataFile;  
 
 
 
@@ -1388,6 +1388,36 @@ char *remove_ext (char* mystr, char dot, char sep) {
 
 
 
+void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
+{
+    register long i,j;
+    long x,y;
+
+    i = left;
+    j = right;
+    x = datfile[(left+right)/2].tstart;
+
+    do {
+        while(datfile[i].tstart < x && i<right) i++;
+        while(x < datfile[j].tstart && j>left) j--;
+
+        if(i<=j) {
+            y = datfile[i].tstart;
+            datfile[i].tstart = datfile[j].tstart;
+            datfile[j].tstart = y;
+            i++;
+            j--;
+        }
+    } while(i<=j);
+
+    if(left<j) quicksort_StreamDataFile(datfile,left,j);
+    if(i<right) quicksort_StreamDataFile(datfile,i,right);
+}
+
+
+
+
+
 //
 // savedir is, for example /media/data/20180202
 //
@@ -1410,8 +1440,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	
 
 
-	struct StreamDataFile datfile0[100];
-	struct StreamDataFile datfile1[MaxNBdatFiles];
+	StreamDataFile *datfile0;
+	StreamDataFile *datfile1;
 	long NBdatFiles0, NBdatFiles1;
 
 	FILE *fp;
@@ -1420,6 +1450,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	double valf1, valf2;
 	long vald1, vald2, vald3, vald4;
 
+
+
+	datfile0 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
+	datfile1 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
 
     sprintf(datadir0, "%s/%s", datadir, stream0);
     sprintf(datadir1, "%s/%s", datadir, stream1);
@@ -1460,9 +1494,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 						}
 						
 						strcpy(datfile0[NBdatFiles0].name, dir->d_name);
-						
-					//	printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));
-						
+												
 						if((datfile0[NBdatFiles0].tend > tstart) && (datfile0[NBdatFiles0].tstart < tend))
 						{
 							printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));
@@ -1475,7 +1507,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     }
     
   
-        
+    free(datfile0);
+    free(datfile1);
     
     
 
