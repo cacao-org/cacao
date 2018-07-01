@@ -1560,6 +1560,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 			datfile0[i].cnt, 
 			datfile0[i].cnt/(datfile0[i].tend-datfile0[i].tstart));
 			
+
+		printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
+		fflush(stdout);
 			
 		// start and end time for input exposures
 		intarray_start = (double*) malloc(sizeof(double)*datfile0[i].cnt);
@@ -1590,8 +1593,16 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 			fclose(fp);
 		}
 		
+		printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
+		fflush(stdout);
+		
+		
+		
 		for(j=0;j<datfile0[i].cnt-1;j++)
 			dtarray[j] = intarray_end[j+1] - intarray_end[j];
+
+		printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
+		fflush(stdout);
 
 		double dtmedian;
 		qs_double(dtarray, 0, datfile0[i].cnt-1);
