@@ -1447,7 +1447,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 						else
 						{	
 							cnt = 0;
-							while(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==4)
+							while(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)
 							{
 								if(cnt == 0)
 									datfile0[NBdatFiles0].tstart = valf2;								
