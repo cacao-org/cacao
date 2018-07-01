@@ -1442,7 +1442,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 						fp = fopen(dir->d_name, "r");
 						ret = fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4);
 						fclose(fp);
-						datfile0[NBdatFiles0].tstart = valf2;
+						
+						
+						//datfile0[NBdatFiles0].tstart = valf2;
 						
 						printf("tmpstring = %20s  %20.9f\n", tmpstring, valf2);
 						//sprintf(datfile0[NBdatFiles0].name, "%s", tmpstring);
