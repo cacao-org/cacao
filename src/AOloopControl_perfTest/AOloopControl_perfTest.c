@@ -1671,8 +1671,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
                 exparray[tstep] += expfrac;
                 
-                printf(" %8.6f x %5ld  -> %5ld\n", expfrac, j, tstep);
-                fflush(stdout);
 
                 long xysize;
                 long ii;
@@ -1720,6 +1718,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                     break;
 
                 case _DATATYPE_FLOAT :
+                printf("FLOAT\n");
                     for (ii = 0; ii < xysize; ii++)
                         data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.F[xysize*j+ii];
                     break;
@@ -1736,17 +1735,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                     exit(0);
                     break;
                 }
-                            printf("--- TEST --- %s %d\n", __FILE__, __LINE__);
-            fflush(stdout);
-
                 j++;
             }
-            printf("--- TEST --- %s %d\n", __FILE__, __LINE__);
-            fflush(stdout);
         }
-        
-                    printf("--- TEST --- %s %d\n", __FILE__, __LINE__);
-            fflush(stdout);
+
         
         
         delete_image_ID("im0C");
