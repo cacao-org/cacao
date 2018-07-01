@@ -1459,8 +1459,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 						}
 						
 						strcpy(datfile0[NBdatFiles0].name, dir->d_name);
-						datfile0[NBdatFiles0].tstart = valf2;
-						
 						
 						printf("%20s       %20.9f -> %20.9f   [%10ld]\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt);
 						NBdatFiles0++;
