@@ -1596,6 +1596,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		{
 			for(j=0;j<datfile0[i].cnt;j++)
 			{
+				printf("j = %ld\n", j);
+				fflush(stdout);
+				
 				if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
 				{
 					printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
