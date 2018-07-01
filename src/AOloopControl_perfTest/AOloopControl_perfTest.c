@@ -1570,14 +1570,20 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 			
 
 		printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
+		printf(" cnt = %ld\n", datfile0[i].cnt);
 		fflush(stdout);
+		
 			
 		// start and end time for input exposures
 		intarray_start = (double*) malloc(sizeof(double)*datfile0[i].cnt);
 		intarray_end   = (double*) malloc(sizeof(double)*datfile0[i].cnt);
 		dtarray = (double*) malloc(sizeof(double)*datfile0[i].cnt);
 	
-	
+		
+		printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
+		fflush(stdout);
+		
+			
 		long j;
 		
 		sprintf(fname, "%s/%s.dat", datadir0, dir->d_name);
