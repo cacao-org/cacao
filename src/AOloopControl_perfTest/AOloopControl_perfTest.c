@@ -1410,6 +1410,11 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	struct DataFile datfile1[MaxNBdatFiles];
 	long NBdatFiles0, NBdatFiles1;
 
+	FILE *fp;
+	int ret;
+	double valf1, valf2;
+	long vald1, vald2, vald3, vald4;
+
 
     sprintf(datadir0, "%s/%s", datadir, stream0);
     sprintf(datadir1, "%s/%s", datadir, stream1);
@@ -1430,7 +1435,15 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 //						strcpy(datfile0[NBdatFiles0].name, remove_ext(dir->d_name, '.', '/'));
 						tmpstring = remove_ext(dir->d_name, '.', '/');
 						printf("tmpstring = %s\n", tmpstring);
-						sprintf(datfile0[NBdatFiles0].name, "%s", tmpstring);
+						
+						fp = fopen(dir->d_name, "r");
+						ret = fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4);
+						fclose(fp);
+						datfile0[NBdatFiles0].tstart = valf2;
+						
+						printf("tmpstring = %20s  %20.9f\n", tmpstring, valf2);
+						//sprintf(datfile0[NBdatFiles0].name, "%s", tmpstring);
+
 //						printf("File [%5ld]:  %s\n", NBdatFiles0, datfile0[NBdatFiles0].name);
 						NBdatFiles0++;
 					}
