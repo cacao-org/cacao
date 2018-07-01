@@ -1449,18 +1449,15 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 )
 {
     DIR *d0;
-    DIR *d1;
     struct dirent *dir;
-    char datadir0[500];
-    char datadir1[500];
+    char datadirstream[500];
     char *ext;
     char *tmpstring;
 
 
 
-    StreamDataFile *datfile0;
-    StreamDataFile *datfile1;
-    long NBdatFiles0, NBdatFiles1;
+    StreamDataFile *datfile;
+    long NBdatFiles;
 
     FILE *fp;
     char fname[500];
@@ -1481,17 +1478,20 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     double *intarray_end;
     double *dtarray;
 
-	long xysize;
+    long xysize;
 
 
 
     // compute exposure start for each slice of output
+
     zsize = (tend-tstart)/dt;
     printf("zsize = %ld\n", (long) zsize);
     fflush(stdout);
 
 
-    // Allocate Working arrays
+
+    // Allocate Working arrays and populate timing arrays
+
     tstartarray = (double*) malloc(sizeof(double)*zsize);
     tendarray   = (double*) malloc(sizeof(double)*zsize);
     exparray    = (double*) malloc(sizeof(double)*zsize);   // exposure time accumulated, in unit of input frame(s)
@@ -1504,265 +1504,271 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
 
-
-    datfile0 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
-    datfile1 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
-
-    sprintf(datadir0, "%s/%s", datadir, stream0);
-    sprintf(datadir1, "%s/%s", datadir, stream1);
+   // sprintf(datadir0, "%s/%s", datadir, stream0);
+   // sprintf(datadir1, "%s/%s", datadir, stream1);
 
 
 
     printf("tstart = %20.8f\n", tstart);
     printf("tend   = %20.8f\n", tend);
 
-    //
-    // Identify relevant files in directory
-    //
-    NBdatFiles0 = 0;
-    d0 = opendir(datadir0);
-    if (d0) {
-        while ((dir = readdir(d0)) != NULL) {
-            ext = strrchr(dir->d_name, '.');
-            if (!ext) {
-                // printf("no extension\n");
-            } else {
-                if(strcmp(ext+1, "dat")==0)
-                {
-                    tmpstring = remove_ext(dir->d_name, '.', '/');
-                    sprintf(fname, "%s/%s", datadir0, dir->d_name);
-                    if((fp = fopen(fname, "r"))==NULL)
+	int stream;
+    for(stream=0; stream<2; stream++)
+    {
+		if(stream==0)
+			sprintf(datadirstream, "%s/%s", datadir, stream0);
+		else
+			sprintf(datadirstream, "%s/%s", datadir, stream1);
+		
+		
+		datfile = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
+        //
+        // Identify relevant files in directory
+        //
+        NBdatFiles = 0;
+        d0 = opendir(datadirstream);
+        if (d0) {
+            while ((dir = readdir(d0)) != NULL) {
+                ext = strrchr(dir->d_name, '.');
+                if (!ext) {
+                    // printf("no extension\n");
+                } else {
+                    if(strcmp(ext+1, "dat")==0)
                     {
-                        printf("Cannot open file \"%s\"\n", dir->d_name);
+                        tmpstring = remove_ext(dir->d_name, '.', '/');
+                        sprintf(fname, "%s/%s", datadirstream, dir->d_name);
+                        if((fp = fopen(fname, "r"))==NULL)
+                        {
+                            printf("Cannot open file \"%s\"\n", dir->d_name);
+                            exit(0);
+                        }
+                        else
+                        {
+                            cnt = 0;
+                            while(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)
+                            {
+                                if(cnt == 0)
+                                    datfile[NBdatFiles].tstart = valf2;
+                                cnt++;
+                            }
+                            fclose(fp);
+                            datfile[NBdatFiles].tend = valf2;
+                            datfile[NBdatFiles].cnt = cnt;
+                        }
+
+                        strcpy(datfile[NBdatFiles].name, tmpstring);
+
+                        if((datfile[NBdatFiles].tend > tstart) && (datfile[NBdatFiles].tstart < tend))
+                        {
+                            printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile[NBdatFiles].name, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
+                            NBdatFiles++;
+                        }
+                    }
+                }
+            }
+            closedir(d0);
+        }
+        printf("NBdatFiles = %ld\n", NBdatFiles);
+
+
+        // sort files according to time
+        quicksort_StreamDataFile(datfile, 0, NBdatFiles);
+
+
+
+        int initOutput = 0;
+        long xsize, ysize;
+        long IDout;
+
+        for(i=0; i<NBdatFiles; i++)
+        {
+            printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n",
+                   datfile[i].name,
+                   datfile[i].tstart,
+                   datfile[i].tend,
+                   datfile[i].cnt,
+                   datfile[i].cnt/(datfile[i].tend-datfile[i].tstart));
+
+
+
+            // LOAD FITS FILE
+            long IDc;
+            sprintf(fname, "%s/%s.fits", datadirstream, datfile[i].name);
+            IDc = load_fits(fname, "im0C", 2);
+
+
+
+            // CREATE OUTPUT CUBE IF FIRST FILE
+            if(initOutput == 0)
+            {
+                xsize = data.image[IDc].md[0].size[0];
+                ysize = data.image[IDc].md[0].size[1];
+                xysize = xsize*ysize;
+                if(stream==0)
+					IDout = create_3Dimage_ID("outC0", xsize, ysize, zsize);
+                else
+					IDout = create_3Dimage_ID("outC1", xsize, ysize, zsize);
+                initOutput = 1;
+            }
+
+            // start and end time for input exposures
+            intarray_start = (double*) malloc(sizeof(double)*datfile[i].cnt);
+            intarray_end   = (double*) malloc(sizeof(double)*datfile[i].cnt);
+            dtarray = (double*) malloc(sizeof(double)*datfile[i].cnt);
+
+            list_image_ID();
+
+            long j;
+
+            sprintf(fname, "%s/%s.dat", datadirstream, datfile[i].name);
+            printf("fname = %s\n", fname);
+            fflush(stdout);
+
+            if((fp = fopen(fname, "r"))==NULL)
+            {
+                printf("Cannot open file \"%s.dat\"\n", datfile[i].name);
+                exit(0);
+            }
+            else
+            {
+                for(j=0; j<datfile[i].cnt; j++)
+                {
+
+                    if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
+                    {
+                        printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
                         exit(0);
                     }
                     else
-                    {
-                        cnt = 0;
-                        while(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)
-                        {
-                            if(cnt == 0)
-                                datfile0[NBdatFiles0].tstart = valf2;
-                            cnt++;
-                        }
-                        fclose(fp);
-                        datfile0[NBdatFiles0].tend = valf2;
-                        datfile0[NBdatFiles0].cnt = cnt;
-                    }
-
-                    strcpy(datfile0[NBdatFiles0].name, tmpstring);
-
-                    if((datfile0[NBdatFiles0].tend > tstart) && (datfile0[NBdatFiles0].tstart < tend))
-                    {
-                        printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));
-                        NBdatFiles0++;
-                    }
+                        intarray_end[j] = valf2;
                 }
+                fclose(fp);
             }
-        }
-        closedir(d0);
-    }
-    printf("NBdatFiles0 = %ld\n", NBdatFiles0);
 
 
-    // sort files according to time
-    quicksort_StreamDataFile(datfile0, 0, NBdatFiles0);
+            for(j=0; j<datfile[i].cnt-1; j++)
+                dtarray[j] = intarray_end[j+1] - intarray_end[j];
+
+            double dtmedian;
+            qs_double(dtarray, 0, datfile[i].cnt-1);
+            dtmedian = dtarray[(datfile[i].cnt-1)/2];
+            printf("   dtmedian = %10.3f us\n", 1.0e6*dtmedian);
+
+            // we assume here that every frame as the same exposure time, with 100% duty cycle
+            for(j=0; j<datfile[i].cnt; j++)
+                intarray_start[j] = intarray_end[j] - dtmedian;
 
 
+            int j0 = 0;
+            double expfrac;
 
-    int initOutput = 0;
-    long xsize, ysize;
-    long IDout;
-
-    for(i=0; i<NBdatFiles0; i++)
-    {
-        printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n",
-               datfile0[i].name,
-               datfile0[i].tstart,
-               datfile0[i].tend,
-               datfile0[i].cnt,
-               datfile0[i].cnt/(datfile0[i].tend-datfile0[i].tstart));
-
-
-
-        // LOAD FITS FILE
-        long IDc;
-        sprintf(fname, "%s/%s.fits", datadir0, datfile0[i].name);
-        IDc = load_fits(fname, "im0C", 2);
-		
-		
-		
-        // CREATE OUTPUT CUBE IF FIRST FILE
-        if(initOutput == 0)
-        {
-            xsize = data.image[IDc].md[0].size[0];
-            ysize = data.image[IDc].md[0].size[1];
-            xysize = xsize*ysize;
-            IDout = create_3Dimage_ID("outC0", xsize, ysize, zsize);
-            initOutput = 1;
-        }
-
-        // start and end time for input exposures
-        intarray_start = (double*) malloc(sizeof(double)*datfile0[i].cnt);
-        intarray_end   = (double*) malloc(sizeof(double)*datfile0[i].cnt);
-        dtarray = (double*) malloc(sizeof(double)*datfile0[i].cnt);
-
-		list_image_ID();
-
-        long j;
-
-        sprintf(fname, "%s/%s.dat", datadir0, datfile0[i].name);
-        printf("fname = %s\n", fname);
-        fflush(stdout);
-
-        if((fp = fopen(fname, "r"))==NULL)
-        {
-            printf("Cannot open file \"%s.dat\"\n", datfile0[i].name);
-            exit(0);
-        }
-        else
-        {
-            for(j=0; j<datfile0[i].cnt; j++)
+            for(tstep=0; tstep<zsize; tstep++)
             {
+                while((intarray_end[j0] < tstartarray[tstep]) && (j0 < datfile[i].cnt))
+                    j0++;
+                j = j0;
 
-                if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
+                while( (intarray_start[j] < tendarray[tstep]) && (j<datfile[i].cnt) )
                 {
-                    printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
-                    exit(0);
+                    expfrac = 1.0;
+
+                    if(tstartarray[tstep]>intarray_start[j])
+                        expfrac -= (tstartarray[tstep]-intarray_start[j])/dtmedian;
+
+                    if(tendarray[tstep]<intarray_end[j])
+                        expfrac -= (intarray_end[j]-tendarray[tstep])/dtmedian;
+
+                    exparray[tstep] += expfrac;
+
+                    long ii;
+
+                    switch(data.image[IDc].md[0].atype)
+                    {
+                    case _DATATYPE_UINT8 :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI8[xysize*j+ii];
+                        break;
+
+                    case _DATATYPE_INT8 :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI8[xysize*j+ii];
+                        break;
+
+                    case _DATATYPE_UINT16 :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI16[xysize*j+ii];
+                        break;
+
+                    case _DATATYPE_INT16 :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI16[xysize*j+ii];
+                        break;
+
+                    case _DATATYPE_UINT32 :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI32[xysize*j+ii];
+                        break;
+
+                    case _DATATYPE_INT32 :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI32[xysize*j+ii];
+                        break;
+
+                    case _DATATYPE_UINT64 :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI64[xysize*j+ii];
+                        break;
+
+                    case _DATATYPE_INT64 :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI64[xysize*j+ii];
+                        break;
+
+                    case _DATATYPE_FLOAT :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.F[xysize*j+ii];
+                        break;
+
+                    case _DATATYPE_DOUBLE :
+                        for (ii = 0; ii < xysize; ii++)
+                            data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.D[xysize*j+ii];
+                        break;
+
+                    default :
+                        list_image_ID();
+                        printERROR(__FILE__,__func__,__LINE__,"atype value not recognised");
+                        printf("ID %ld  atype = %d\n", IDc, data.image[IDc].md[0].atype);
+                        exit(0);
+                        break;
+                    }
+                    j++;
                 }
-                else
-                    intarray_end[j] = valf2;
             }
-            fclose(fp);
+
+
+            delete_image_ID("im0C");
         }
 
-
-        for(j=0; j<datfile0[i].cnt-1; j++)
-            dtarray[j] = intarray_end[j+1] - intarray_end[j];
-
-        double dtmedian;
-        qs_double(dtarray, 0, datfile0[i].cnt-1);
-        dtmedian = dtarray[(datfile0[i].cnt-1)/2];
-        printf("   dtmedian = %10.3f us\n", 1.0e6*dtmedian);
-
-        // we assume here that every frame as the same exposure time, with 100% duty cycle
-        for(j=0; j<datfile0[i].cnt; j++)
-            intarray_start[j] = intarray_end[j] - dtmedian;
-
-
-        int j0 = 0;
-        double expfrac;
-		
         for(tstep=0; tstep<zsize; tstep++)
         {
-            while((intarray_end[j0] < tstartarray[tstep]) && (j0 < datfile0[i].cnt))
-                j0++;
-            j = j0;
-
-            while( (intarray_start[j] < tendarray[tstep]) && (j<datfile0[i].cnt) )
+            if(exparray[tstep] > 0.01)
             {
-                expfrac = 1.0;
-
-                if(tstartarray[tstep]>intarray_start[j])
-                    expfrac -= (tstartarray[tstep]-intarray_start[j])/dtmedian;
-
-                if(tendarray[tstep]<intarray_end[j])
-                    expfrac -= (intarray_end[j]-tendarray[tstep])/dtmedian;
-
-                exparray[tstep] += expfrac;
-                
-				printf("  %5ld x %8.6f  ->  %5ld\n", j, expfrac, tstep);
-				
                 long ii;
-
-                switch(data.image[IDc].md[0].atype)
-                {
-                case _DATATYPE_UINT8 :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI8[xysize*j+ii];
-                    break;
-
-                case _DATATYPE_INT8 :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI8[xysize*j+ii];
-                    break;
-
-                case _DATATYPE_UINT16 :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI16[xysize*j+ii];
-                    break;
-
-                case _DATATYPE_INT16 :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI16[xysize*j+ii];
-                    break;
-
-                case _DATATYPE_UINT32 :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI32[xysize*j+ii];
-                    break;
-
-                case _DATATYPE_INT32 :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI32[xysize*j+ii];
-                    break;
-
-                case _DATATYPE_UINT64 :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI64[xysize*j+ii];
-                    break;
-
-                case _DATATYPE_INT64 :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI64[xysize*j+ii];
-                    break;
-
-                case _DATATYPE_FLOAT :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.F[xysize*j+ii];
-                    break;
-
-                case _DATATYPE_DOUBLE :
-                    for (ii = 0; ii < xysize; ii++)
-                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.D[xysize*j+ii];
-                    break;
-
-                default :
-                    list_image_ID();
-                    printERROR(__FILE__,__func__,__LINE__,"atype value not recognised");
-                    printf("ID %ld  atype = %d\n", IDc, data.image[IDc].md[0].atype);
-                    exit(0);
-                    break;
-                }
-                j++;
+                for(ii=0; ii<xysize; ii++)
+                    data.image[IDout].array.F[xysize*tstep+ii] /= exparray[tstep];
             }
         }
 
-        
-        delete_image_ID("im0C");
+
+
+        free(datfile);
+        free(intarray_start);
+        free(intarray_end);
+        free(dtarray);
     }
-
-	for(tstep=0; tstep<zsize; tstep++)
-	{
-		if(exparray[tstep] > 0.01)
-		{
-			long ii;
-			for(ii=0;ii<xysize;ii++)
-				data.image[IDout].array.F[xysize*tstep+ii] /= exparray[tstep];
-		}
-	}
-
-
-
-    free(datfile0);
-    free(datfile1);
 
     free(tstartarray);
     free(tendarray);
-
-    free(intarray_start);
-    free(intarray_end);
-    free(dtarray);
     free(exparray);
 
     return 0;
