@@ -1481,9 +1481,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	double *dtarray;
 	
 	
-			printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
-		fflush(stdout);
-	
+
 	
 	// compute exposure start for each slice of output
 	zsize = (tend-tstart)/dt;
@@ -1498,8 +1496,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		tendarray[tstep] = tstart + 1.0*(tstep+1)*(tend-tstart)/zsize;
 	}
 	
-			printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
-		fflush(stdout);
+	
 		
 		
 	datfile0 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
@@ -1508,8 +1505,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     sprintf(datadir0, "%s/%s", datadir, stream0);
     sprintf(datadir1, "%s/%s", datadir, stream1);
 
-				printf("---- STEP ---- %s %d\n", __FILE__, __LINE__);
-		fflush(stdout);
+
 		
 	printf("tstart = %20.8f\n", tstart);
 	printf("tend   = %20.8f\n", tend);
