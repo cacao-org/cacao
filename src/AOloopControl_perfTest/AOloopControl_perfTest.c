@@ -1398,6 +1398,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     char datadir0[500];
     char datadir1[500];
     char *ext;
+    char *tmpstring;
 	
 	struct DataFile {
 		char  name[500];
@@ -1426,8 +1427,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 //                printf("extension is %s\n", ext + 1);
                 if(strcmp(ext+1, "dat")==0)
 					{
-						strcpy(datfile0[NBdatFiles0].name, remove_ext(dir->d_name, '.', '/'));
-						printf("File [%5ld]:  %s\n", NBdatFiles0, datfile0[NBdatFiles0].name);
+//						strcpy(datfile0[NBdatFiles0].name, remove_ext(dir->d_name, '.', '/'));
+						strcpy(tmpstring, remove_ext(dir->d_name, '.', '/'));
+						printf("tmpstring = %s\n", tmpstring);
+//						printf("File [%5ld]:  %s\n", NBdatFiles0, datfile0[NBdatFiles0].name);
 						NBdatFiles0++;
 					}
                 
