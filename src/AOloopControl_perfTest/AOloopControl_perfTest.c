@@ -32,6 +32,7 @@
 #include <pthread.h>
 #include <dirent.h> 
 #include <stdio.h> 
+#include <string.h> /* strrchr */
 
 
 #include "CommandLineInterface/CLIcore.h"
@@ -1331,6 +1332,8 @@ long AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfna
 }
 
 
+
+
 //
 // savedir is, for example /media/data/20180202
 //
@@ -1346,16 +1349,26 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     DIR *d0;
     DIR *d1;
     struct dirent *dir;
-	char datadir0[500];
-	char datadir1[500];
- 
-	sprintf(datadir0, "%s/%s", datadir, stream0);
-	sprintf(datadir1, "%s/%s", datadir, stream1);
- 
+    char datadir0[500];
+    char datadir1[500];
+    char *ext;
+
+    sprintf(datadir0, "%s/%s", datadir, stream0);
+    sprintf(datadir1, "%s/%s", datadir, stream1);
+
+	
+	
     d0 = opendir(datadir0);
     if (d0) {
         while ((dir = readdir(d0)) != NULL) {
             printf("%s\n", dir->d_name);
+            ext = strrchr(dir->d_name, '.');
+            if (!ext) {
+                printf("no extension\n");
+            } else {
+                printf("extension is %s\n", ext + 1);
+                
+            }
         }
         closedir(d0);
     }
