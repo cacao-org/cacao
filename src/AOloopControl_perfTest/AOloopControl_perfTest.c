@@ -1589,7 +1589,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         long IDc;
         sprintf(fname, "%s/%s.fits", datadir0, datfile0[i].name);
         IDc = load_fits(fname, "im0C", 2);
-
+		
+		
+		
         // CREATE OUTPUT CUBE IF FIRST FILE
         if(initOutput == 0)
         {
@@ -1605,7 +1607,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         intarray_end   = (double*) malloc(sizeof(double)*datfile0[i].cnt);
         dtarray = (double*) malloc(sizeof(double)*datfile0[i].cnt);
 
-
+		list_image_ID();
 
         long j;
 
@@ -1668,6 +1670,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                     expfrac -= (intarray_end[j]-tendarray[tstep])/dtmedian;
 
                 exparray[tstep] += expfrac;
+                
+                printf(" %8.6f x %5ld  -> %5ld\n", expfrac, j, tstep);
+                fflush(stdout);
 
                 long xysize;
                 long ii;
@@ -1735,6 +1740,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 j++;
             }
         }
+        
+        delete_image_ID("im0C");
 
     }
 
