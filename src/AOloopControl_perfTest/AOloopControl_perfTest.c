@@ -1511,7 +1511,12 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	quicksort_StreamDataFile(datfile0, 0, NBdatFiles0);
 	for(i=0;i<NBdatFiles0;i++)
 	{
-		printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));		
+		printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", 
+			datfile0[i].name, 
+			datfile0[i].tstart, 
+			datfile0[i].tend, 
+			datfile0[i].cnt, 
+			datfile0[i].cnt/(datfile0[i].tend-datfile0[i].tstart));		
 	}
   
     free(datfile0);
