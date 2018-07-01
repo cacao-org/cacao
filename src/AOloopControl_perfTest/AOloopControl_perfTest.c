@@ -1391,20 +1391,32 @@ char *remove_ext (char* mystr, char dot, char sep) {
 void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 {
     register long i,j;
-    long x,y;
+    StreamDataFile x, y;
 
     i = left;
     j = right;
-    x = datfile[(left+right)/2].tstart;
+    x.tstart = datfile[(left+right)/2].tstart;
 
     do {
-        while(datfile[i].tstart < x && i<right) i++;
-        while(x < datfile[j].tstart && j>left) j--;
+        while(datfile[i].tstart < x.tstart && i<right) i++;
+        while(x.tstart < datfile[j].tstart && j>left) j--;
 
         if(i<=j) {
-            y = datfile[i].tstart;
+			y.tstart = datfile[i].tstart;
+            y.tend = datfile[i].tend;
+            y.cnt = datfile[i].cnt;
+            strcpy(y.name, datfile[i].name);
+            
             datfile[i].tstart = datfile[j].tstart;
-            datfile[j].tstart = y;
+            datfile[i].tend = datfile[j].tend;
+            datfile[i].cnt = datfile[j].cnt;
+            strcpy(datfile[i].name, datfile[j].name);
+            
+            datfile[j].tstart = y.tstart;
+            datfile[j].tend = y.tend;
+            datfile[j].cnt = y.cnt;
+            strcpy(datfile[j].name, y.name);
+            
             i++;
             j--;
         }
