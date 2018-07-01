@@ -1334,6 +1334,51 @@ long AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfna
 
 
 
+
+
+char *remove_ext (char* mystr, char dot, char sep) {
+    char *retstr, *lastdot, *lastsep;
+
+    // Error checks and allocate string.
+
+    if (mystr == NULL)
+        return NULL;
+    if ((retstr = malloc (strlen (mystr) + 1)) == NULL)
+        return NULL;
+
+    // Make a copy and find the relevant characters.
+
+    strcpy (retstr, mystr);
+    lastdot = strrchr (retstr, dot);
+    lastsep = (sep == 0) ? NULL : strrchr (retstr, sep);
+
+    // If it has an extension separator.
+
+    if (lastdot != NULL) {
+        // and it's before the extenstion separator.
+
+        if (lastsep != NULL) {
+            if (lastsep < lastdot) {
+                // then remove it.
+
+                *lastdot = '\0';
+            }
+        } else {
+            // Has extension separator with no path separator.
+
+            *lastdot = '\0';
+        }
+    }
+
+    // Return the modified string.
+
+    return retstr;
+}
+
+
+
+
+
 //
 // savedir is, for example /media/data/20180202
 //
@@ -1362,12 +1407,14 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 	struct DataFile datfile0[MaxNBFiles];
 	struct DataFile datfile1[MaxNBFiles];
+	long NBdatFiles0, NBdatFiles1;
+
 
     sprintf(datadir0, "%s/%s", datadir, stream0);
     sprintf(datadir1, "%s/%s", datadir, stream1);
 
 	
-	
+	NBdatFiles0 = 0;
     d0 = opendir(datadir0);
     if (d0) {
         while ((dir = readdir(d0)) != NULL) {
@@ -1376,10 +1423,12 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             if (!ext) {
                // printf("no extension\n");
             } else {
-                printf("extension is %s\n", ext + 1);
+//                printf("extension is %s\n", ext + 1);
                 if(strcmp(ext+1, "dat")==0)
 					{
-						printf("Found dat file:  %s\n", dir->d_name);
+						strcpy(datfile0[NBdatFiles0].name, remove_ext(dir->d_name, '.', '/'));
+						printf("File [%5ld]:  %s\n", NBdatFiles0, datfile0[NBdatFiles0].name);
+						NBdatFiles0++;
 					}
                 
             }
