@@ -63,4 +63,8 @@ int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_n
 
 long AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname);
 
+
+
+int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char *stream1, double tstart, double tend, double dt);
+
 #endif

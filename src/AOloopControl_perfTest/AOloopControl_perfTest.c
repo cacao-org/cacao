@@ -30,6 +30,9 @@
 #include <string.h>
 #include <math.h>
 #include <pthread.h>
+#include <dirent.h> 
+#include <stdio.h> 
+
 
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
@@ -229,6 +232,17 @@ int_fast8_t AOloopControl_LoopTimer_Analysis_cli()
 }
 
 
+int_fast8_t AOloopControl_perfTest_mkSyncStreamFiles2_cli()
+{
+	if(CLI_checkarg(1,5)+CLI_checkarg(2,5)+CLI_checkarg(3,5)+CLI_checkarg(4,1)+CLI_checkarg(5,1)+CLI_checkarg(6,1)==0)    
+    {
+		AOloopControl_perfTest_mkSyncStreamFiles2(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.numf, data.cmdargtoken[5].val.numf, data.cmdargtoken[6].val.numf);
+		return 0;
+	}
+	else
+		return 1;
+}
+
 
 
 
@@ -300,6 +314,14 @@ int_fast8_t init_AOloopControl_perfTest()
 
 	RegisterCLIcommand("aoltimingstat", __FILE__, AOloopControl_LoopTimer_Analysis_cli, "Analysis of loop timing data", "<TimingImage> <TimingTXTfile> <outFile>", "aoltimingstat aol0_looptiming timing.txt outfile.txt", "long AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)");
 
+
+	RegisterCLIcommand("aolptmksyncs2",
+		__FILE__,
+		AOloopControl_perfTest_mkSyncStreamFiles2_cli,
+		"synchronize two streams from disk telemetry",
+		"<datadir> <stream0name> <stream1name> <tstart> <tend> <dt>",
+		"aolptmksyncs2 \"/media/data/20180701/\" aol2_wfsim aol3_wfsim 1530410732.0 1530410733.0 0.001",
+		"int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char *stream1, double tstart, double tend, double dt)");
 }
 
 
@@ -1308,4 +1330,36 @@ long AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfna
 	return(0);
 }
 
+
+//
+// savedir is, for example /media/data/20180202
+//
+int AOloopControl_perfTest_mkSyncStreamFiles2(
+    char *datadir,
+    char *stream0,
+    char *stream1,
+    double tstart,
+    double tend,
+    double dt
+)
+{
+    DIR *d0;
+    DIR *d1;
+    struct dirent *dir;
+	char datadir0[500];
+	char datadir1[500];
+ 
+	sprintf(datadir0, "%s/%s", datadir, stream0);
+	sprintf(datadir1, "%s/%s", datadir, stream1);
+ 
+    d0 = opendir(datadir);
+    if (d0) {
+        while ((dir = readdir(d0)) != NULL) {
+            printf("%s\n", dir->d_name);
+        }
+        closedir(d0);
+    }
+
+    return 0;
+}
 
