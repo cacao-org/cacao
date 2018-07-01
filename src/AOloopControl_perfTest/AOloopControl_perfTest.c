@@ -1425,6 +1425,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     sprintf(datadir1, "%s/%s", datadir, stream1);
 
 	
+	printf("tstart = %20.8f\n", tstart);
+	printf("tend   = %20.8f\n", tend);
+	
 	NBdatFiles0 = 0;
     d0 = opendir(datadir0);
     if (d0) {
