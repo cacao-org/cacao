@@ -1436,7 +1436,7 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 //
 // savedir is, for example /media/data/20180202
 //
-// dtlag: positive when stream0 is earlier than stream1 
+// dtlag: positive when stream0 is earlier than stream1
 //
 int AOloopControl_perfTest_mkSyncStreamFiles2(
     char *datadir,
@@ -1455,212 +1455,304 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     char datadir1[500];
     char *ext;
     char *tmpstring;
-	
 
 
-	StreamDataFile *datfile0;
-	StreamDataFile *datfile1;
-	long NBdatFiles0, NBdatFiles1;
 
-	FILE *fp;
-	char fname[500];
-	long cnt;
-	double valf1, valf2;
-	long vald1, vald2, vald3, vald4;
-	long i;
-	
-	uint32_t stream0xsize;
-	uint32_t stream0ysize;
-	uint32_t zsize;
-	double *tstartarray;
-	double *tendarray;
-	double *exparray;
-	long tstep;
+    StreamDataFile *datfile0;
+    StreamDataFile *datfile1;
+    long NBdatFiles0, NBdatFiles1;
 
-	double *intarray_start;
-	double *intarray_end;
-	double *dtarray;
-	
-	
+    FILE *fp;
+    char fname[500];
+    long cnt;
+    double valf1, valf2;
+    long vald1, vald2, vald3, vald4;
+    long i;
 
-	
-	// compute exposure start for each slice of output
-	zsize = (tend-tstart)/dt;
-	printf("zsize = %ld\n", (long) zsize);
-	fflush(stdout);
-	
-	
-	// Allocate Working arrays
-	tstartarray = (double*) malloc(sizeof(double)*zsize);
-	tendarray   = (double*) malloc(sizeof(double)*zsize);
-	exparray    = (double*) malloc(sizeof(double)*zsize);   // exposure time accumulated, in unit of input frame(s)
-	for(tstep=0;tstep<zsize;tstep++)
-	{
-		tstartarray[tstep] = tstart + 1.0*tstep*(tend-tstart)/zsize;
-		tendarray[tstep] = tstart + 1.0*(tstep+1)*(tend-tstart)/zsize;
-		exparray[tstep] = 0.0;
-	}
-	
-	
-		
-		
-	datfile0 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
-	datfile1 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
+    uint32_t stream0xsize;
+    uint32_t stream0ysize;
+    uint32_t zsize;
+    double *tstartarray;
+    double *tendarray;
+    double *exparray;
+    long tstep;
+
+    double *intarray_start;
+    double *intarray_end;
+    double *dtarray;
+
+	long xysize;
+
+
+
+    // compute exposure start for each slice of output
+    zsize = (tend-tstart)/dt;
+    printf("zsize = %ld\n", (long) zsize);
+    fflush(stdout);
+
+
+    // Allocate Working arrays
+    tstartarray = (double*) malloc(sizeof(double)*zsize);
+    tendarray   = (double*) malloc(sizeof(double)*zsize);
+    exparray    = (double*) malloc(sizeof(double)*zsize);   // exposure time accumulated, in unit of input frame(s)
+    for(tstep=0; tstep<zsize; tstep++)
+    {
+        tstartarray[tstep] = tstart + 1.0*tstep*(tend-tstart)/zsize;
+        tendarray[tstep] = tstart + 1.0*(tstep+1)*(tend-tstart)/zsize;
+        exparray[tstep] = 0.0;
+    }
+
+
+
+
+    datfile0 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
+    datfile1 = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
 
     sprintf(datadir0, "%s/%s", datadir, stream0);
     sprintf(datadir1, "%s/%s", datadir, stream1);
 
 
-		
-	printf("tstart = %20.8f\n", tstart);
-	printf("tend   = %20.8f\n", tend);
-	
-	//
-	// Identify relevant files in directory
-	//
-	NBdatFiles0 = 0;
+
+    printf("tstart = %20.8f\n", tstart);
+    printf("tend   = %20.8f\n", tend);
+
+    //
+    // Identify relevant files in directory
+    //
+    NBdatFiles0 = 0;
     d0 = opendir(datadir0);
     if (d0) {
         while ((dir = readdir(d0)) != NULL) {
             ext = strrchr(dir->d_name, '.');
             if (!ext) {
-               // printf("no extension\n");
+                // printf("no extension\n");
             } else {
                 if(strcmp(ext+1, "dat")==0)
-					{
-						tmpstring = remove_ext(dir->d_name, '.', '/');
-						sprintf(fname, "%s/%s", datadir0, dir->d_name);
-						if((fp = fopen(fname, "r"))==NULL)
-						{
-							printf("Cannot open file \"%s\"\n", dir->d_name);
-							exit(0);
-						}
-						else
-						{	
-							cnt = 0;
-							while(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)
-							{
-								if(cnt == 0)
-									datfile0[NBdatFiles0].tstart = valf2;
-								cnt++;
-							}
-							fclose(fp);
-							datfile0[NBdatFiles0].tend = valf2;
-							datfile0[NBdatFiles0].cnt = cnt;
-						}
-						
-						strcpy(datfile0[NBdatFiles0].name, tmpstring);
-												
-						if((datfile0[NBdatFiles0].tend > tstart) && (datfile0[NBdatFiles0].tstart < tend))
-						{
-							printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));
-							NBdatFiles0++;
-						}
-					}
+                {
+                    tmpstring = remove_ext(dir->d_name, '.', '/');
+                    sprintf(fname, "%s/%s", datadir0, dir->d_name);
+                    if((fp = fopen(fname, "r"))==NULL)
+                    {
+                        printf("Cannot open file \"%s\"\n", dir->d_name);
+                        exit(0);
+                    }
+                    else
+                    {
+                        cnt = 0;
+                        while(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)
+                        {
+                            if(cnt == 0)
+                                datfile0[NBdatFiles0].tstart = valf2;
+                            cnt++;
+                        }
+                        fclose(fp);
+                        datfile0[NBdatFiles0].tend = valf2;
+                        datfile0[NBdatFiles0].cnt = cnt;
+                    }
+
+                    strcpy(datfile0[NBdatFiles0].name, tmpstring);
+
+                    if((datfile0[NBdatFiles0].tend > tstart) && (datfile0[NBdatFiles0].tstart < tend))
+                    {
+                        printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));
+                        NBdatFiles0++;
+                    }
+                }
             }
         }
         closedir(d0);
     }
     printf("NBdatFiles0 = %ld\n", NBdatFiles0);
-    
-    
-	// sort files according to time
-	quicksort_StreamDataFile(datfile0, 0, NBdatFiles0);
-	
-	
-	
-	for(i=0;i<NBdatFiles0;i++)
+
+
+    // sort files according to time
+    quicksort_StreamDataFile(datfile0, 0, NBdatFiles0);
+
+
+
+    int initOutput = 0;
+    long xsize, ysize;
+    long IDout;
+
+    for(i=0; i<NBdatFiles0; i++)
+    {
+        printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n",
+               datfile0[i].name,
+               datfile0[i].tstart,
+               datfile0[i].tend,
+               datfile0[i].cnt,
+               datfile0[i].cnt/(datfile0[i].tend-datfile0[i].tstart));
+
+
+
+        // LOAD FITS FILE
+        long IDc;
+        sprintf(fname, "%s/%s.fits", datadir0, datfile0[i].name);
+        IDc = load_fits(fname, "im0C", 2);
+
+        // CREATE OUTPUT CUBE IF FIRST FILE
+        if(initOutput == 0)
+        {
+            xsize = data.image[IDc].md[0].size[0];
+            ysize = data.image[IDc].md[0].size[1];
+            xysize = xsize*ysize;
+            IDout = create_3Dimage_ID("outC0", xsize, ysize, zsize);
+            initOutput = 1;
+        }
+
+        // start and end time for input exposures
+        intarray_start = (double*) malloc(sizeof(double)*datfile0[i].cnt);
+        intarray_end   = (double*) malloc(sizeof(double)*datfile0[i].cnt);
+        dtarray = (double*) malloc(sizeof(double)*datfile0[i].cnt);
+
+
+
+        long j;
+
+        sprintf(fname, "%s/%s.dat", datadir0, datfile0[i].name);
+        printf("fname = %s\n", fname);
+        fflush(stdout);
+
+        if((fp = fopen(fname, "r"))==NULL)
+        {
+            printf("Cannot open file \"%s.dat\"\n", datfile0[i].name);
+            exit(0);
+        }
+        else
+        {
+            for(j=0; j<datfile0[i].cnt; j++)
+            {
+
+                if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
+                {
+                    printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
+                    exit(0);
+                }
+                else
+                    intarray_end[j] = valf2;
+            }
+            fclose(fp);
+        }
+
+
+        for(j=0; j<datfile0[i].cnt-1; j++)
+            dtarray[j] = intarray_end[j+1] - intarray_end[j];
+
+        double dtmedian;
+        qs_double(dtarray, 0, datfile0[i].cnt-1);
+        dtmedian = dtarray[(datfile0[i].cnt-1)/2];
+        printf("   dtmedian = %10.3f us\n", 1.0e6*dtmedian);
+
+        // we assume here that every frame as the same exposure time, with 100% duty cycle
+        for(j=0; j<datfile0[i].cnt; j++)
+            intarray_start[j] = intarray_end[j] - dtmedian;
+
+
+        int j0 = 0;
+        double expfrac;
+
+        for(tstep=0; tstep<zsize; tstep++)
+        {
+            while(intarray_end[j0] < tstartarray[tstep])
+                j0++;
+            j = j0;
+
+            while(intarray_start[j] < tendarray[tstep])
+            {
+                expfrac = 1.0;
+
+                if(tstartarray[tstep]>intarray_start[j])
+                    expfrac -= (tstartarray[tstep]-intarray_start[j])/dtmedian;
+
+                if(tendarray[tstep]<intarray_end[j])
+                    expfrac -= (intarray_end[j]-tendarray[tstep])/dtmedian;
+
+                exparray[tstep] += expfrac;
+
+                long xysize;
+                long ii;
+
+                switch(data.image[IDc].md[0].atype)
+                {
+                case _DATATYPE_UINT8 :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI8[ii];
+                    break;
+
+                case _DATATYPE_INT8 :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI8[ii];
+                    break;
+
+                case _DATATYPE_UINT16 :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI16[ii];
+                    break;
+
+                case _DATATYPE_INT16 :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI16[ii];
+                    break;
+
+                case _DATATYPE_UINT32 :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI32[ii];
+                    break;
+
+                case _DATATYPE_INT32 :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI32[ii];
+                    break;
+
+                case _DATATYPE_UINT64 :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.UI64[ii];
+                    break;
+
+                case _DATATYPE_INT64 :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.SI64[ii];
+                    break;
+
+                case _DATATYPE_FLOAT :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.F[ii];
+                    break;
+
+                case _DATATYPE_DOUBLE :
+                    for (ii = 0; ii < xysize; ii++)
+                        data.image[IDout].array.F[xysize*tstep+ii] += expfrac*data.image[IDc].array.D[ii];
+                    break;
+
+                default :
+                    list_image_ID();
+                    printERROR(__FILE__,__func__,__LINE__,"atype value not recognised");
+                    printf("ID %ld  atype = %d\n", IDc, data.image[IDc].md[0].atype);
+                    exit(0);
+                    break;
+                }
+
+                j++;
+            }
+        }
+
+    }
+
+	for(tstep=0; tstep<zsize; tstep++)
 	{
-		printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", 
-			datfile0[i].name, 
-			datfile0[i].tstart, 
-			datfile0[i].tend, 
-			datfile0[i].cnt, 
-			datfile0[i].cnt/(datfile0[i].tend-datfile0[i].tstart));
-		
-			
-		// start and end time for input exposures
-		intarray_start = (double*) malloc(sizeof(double)*datfile0[i].cnt);
-		intarray_end   = (double*) malloc(sizeof(double)*datfile0[i].cnt);
-		dtarray = (double*) malloc(sizeof(double)*datfile0[i].cnt);
-	
-
-			
-		long j;
-		
-		sprintf(fname, "%s/%s.dat", datadir0, datfile0[i].name);
-		printf("fname = %s\n", fname);
-		fflush(stdout);
-		
-		if((fp = fopen(fname, "r"))==NULL)
+		if(exparray[tstep] > 0.01)
 		{
-			printf("Cannot open file \"%s.dat\"\n", datfile0[i].name);
-			exit(0);
+			long ii;
+			for(ii=0;ii<xysize;ii++)
+				data.image[IDout].array.F[xysize*tstep+ii] /= exparray[tstep];
 		}
-		else
-		{
-			for(j=0;j<datfile0[i].cnt;j++)
-			{
-				
-				if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
-				{
-					printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
-					exit(0);
-				}
-				else
-					intarray_end[j] = valf2;				
-			}
-			fclose(fp);
-		}
-		
-		
-		for(j=0;j<datfile0[i].cnt-1;j++)
-			dtarray[j] = intarray_end[j+1] - intarray_end[j];
-
-		double dtmedian;
-		qs_double(dtarray, 0, datfile0[i].cnt-1);
-		dtmedian = dtarray[(datfile0[i].cnt-1)/2];
-		printf("   dtmedian = %10.3f us\n", 1.0e6*dtmedian);
-		
-		// we assume here that every frame as the same exposure time, with 100% duty cycle
-		for(j=0;j<datfile0[i].cnt;j++)
-			intarray_start[j] = intarray_end[j] - dtmedian;
-		
-		
-		int j0 = 0;
-		double expfrac;
-		
-		for(tstep=0;tstep<zsize;tstep++)
-		{
-			while(intarray_end[j0] < tstartarray[tstep])
-				j0++;
-			j = j0;
-			
-			while(intarray_start[j] < tendarray[tstep])
-			{
-				expfrac = 1.0;
-				
-				if(tstartarray[tstep]>intarray_start[j])
-					expfrac -= (tstartarray[tstep]-intarray_start[j])/dtmedian;
-				
-				if(tendarray[tstep]<intarray_end[j])
-					expfrac -= (intarray_end[j]-tendarray[tstep])/dtmedian;
-				
-				printf("--- %5ld   %8.6f\n", j, expfrac);
-				j++;
-			}
-			exit(0);
-		}
-		
 	}
-	
-	
 
 
 
     free(datfile0);
     free(datfile1);
-    
+
     free(tstartarray);
     free(tendarray);
 
