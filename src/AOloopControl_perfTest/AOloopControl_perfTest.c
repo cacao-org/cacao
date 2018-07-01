@@ -1436,8 +1436,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 if(strcmp(ext+1, "dat")==0)
 					{
 						tmpstring = remove_ext(dir->d_name, '.', '/');
-					//	printf("tmpstring = %s\n", tmpstring);
-						
 						sprintf(fname, "%s/%s", datadir0, dir->d_name);
 						if((fp = fopen(fname, "r"))==NULL)
 						{
@@ -1450,7 +1448,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 							while(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)
 							{
 								if(cnt == 0)
-									datfile0[NBdatFiles0].tstart = valf2;								
+									datfile0[NBdatFiles0].tstart = valf2;
 								cnt++;
 							}
 							fclose(fp);
@@ -1460,14 +1458,23 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 						
 						strcpy(datfile0[NBdatFiles0].name, dir->d_name);
 						
-						printf("%20s       %20.9f -> %20.9f   [%10ld]\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt);
-						NBdatFiles0++;
+					//	printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));
+						
+						if((datfile0[NBdatFiles0].tend < tstart) && (datfile0[NBdatFiles0].tstart > tend))
+						{
+							printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));
+							NBdatFiles0++;
+						}
 					}
-                
             }
         }
         closedir(d0);
     }
+    
+  
+        
+    
+    
 
     return 0;
 }
