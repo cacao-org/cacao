@@ -1659,7 +1659,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 j0++;
             j = j0;
 
-            while((intarray_start[j] < tendarray[tstep])&&(j<datfile0[i].cnt))
+            while( (intarray_start[j] < tendarray[tstep]) && (j<datfile0[i].cnt) )
             {
                 expfrac = 1.0;
 
@@ -1736,10 +1736,18 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                     exit(0);
                     break;
                 }
+                            printf("--- TEST --- %s %d\n", __FILE__, __LINE__);
+            fflush(stdout);
 
                 j++;
             }
+            printf("--- TEST --- %s %d\n", __FILE__, __LINE__);
+            fflush(stdout);
         }
+        
+                    printf("--- TEST --- %s %d\n", __FILE__, __LINE__);
+            fflush(stdout);
+        
         
         delete_image_ID("im0C");
 		list_image_ID();
