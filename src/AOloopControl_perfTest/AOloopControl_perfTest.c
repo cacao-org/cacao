@@ -1463,7 +1463,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 						
 					//	printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));
 						
-						if((datfile0[NBdatFiles0].tend < tstart) && (datfile0[NBdatFiles0].tstart > tend))
+						if((datfile0[NBdatFiles0].tend > tstart) && (datfile0[NBdatFiles0].tstart < tend))
 						{
 							printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile0[NBdatFiles0].name, datfile0[NBdatFiles0].tstart, datfile0[NBdatFiles0].tend, datfile0[NBdatFiles0].cnt, datfile0[NBdatFiles0].cnt/(datfile0[NBdatFiles0].tend-datfile0[NBdatFiles0].tstart));
 							NBdatFiles0++;
