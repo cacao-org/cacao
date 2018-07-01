@@ -1124,6 +1124,7 @@ int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_n
 }
 
 
+
 //
 // create dynamic test sequence
 //
@@ -1480,6 +1481,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
     long xysize;
 
+	double dtoffset;
 
 
     // compute exposure start for each slice of output
@@ -1504,11 +1506,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
 
-   // sprintf(datadir0, "%s/%s", datadir, stream0);
-   // sprintf(datadir1, "%s/%s", datadir, stream1);
-
-
-
     printf("tstart = %20.8f\n", tstart);
     printf("tend   = %20.8f\n", tend);
 
@@ -1516,10 +1513,16 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     for(stream=0; stream<2; stream++)
     {
 		if(stream==0)
+		{
+			dtoffset = 0.0; // stream 0 is used as reference
 			sprintf(datadirstream, "%s/%s", datadir, stream0);
+		}
 		else
+		{
+			dtoffset = +dtlag; // stream 1 is lagging behind by dtlag, so we bring it back in time
+			// this is achieved by pushing/delaying the output timing window  
 			sprintf(datadirstream, "%s/%s", datadir, stream1);
-		
+		}
 		
 		datfile = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
         //
@@ -1589,14 +1592,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                    datfile[i].cnt,
                    datfile[i].cnt/(datfile[i].tend-datfile[i].tstart));
 
-
-
             // LOAD FITS FILE
             long IDc;
             sprintf(fname, "%s/%s.fits", datadirstream, datfile[i].name);
             IDc = load_fits(fname, "im0C", 2);
-
-
 
             // CREATE OUTPUT CUBE IF FIRST FILE
             if(initOutput == 0)
@@ -1616,7 +1615,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             intarray_end   = (double*) malloc(sizeof(double)*datfile[i].cnt);
             dtarray = (double*) malloc(sizeof(double)*datfile[i].cnt);
 
-            list_image_ID();
 
             long j;
 
@@ -1664,19 +1662,19 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
             for(tstep=0; tstep<zsize; tstep++)
             {
-                while((intarray_end[j0] < tstartarray[tstep]) && (j0 < datfile[i].cnt))
+                while((intarray_end[j0] < (tstartarray[tstep]+dtoffset) ) && (j0 < datfile[i].cnt))
                     j0++;
                 j = j0;
 
-                while( (intarray_start[j] < tendarray[tstep]) && (j<datfile[i].cnt) )
+                while( (intarray_start[j] < (tendarray[tstep]+dtoffset)) && (j<datfile[i].cnt) )
                 {
                     expfrac = 1.0;
 
-                    if(tstartarray[tstep]>intarray_start[j])
-                        expfrac -= (tstartarray[tstep]-intarray_start[j])/dtmedian;
+                    if((tstartarray[tstep]+dtoffset)>intarray_start[j])
+                        expfrac -= ((tstartarray[tstep]+dtoffset)-intarray_start[j])/dtmedian;
 
-                    if(tendarray[tstep]<intarray_end[j])
-                        expfrac -= (intarray_end[j]-tendarray[tstep])/dtmedian;
+                    if((tendarray[tstep]+dtoffset)<intarray_end[j])
+                        expfrac -= (intarray_end[j]-(tendarray[tstep]+dtoffset))/dtmedian;
 
                     exparray[tstep] += expfrac;
 
