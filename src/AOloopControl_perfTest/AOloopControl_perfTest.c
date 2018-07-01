@@ -1428,7 +1428,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 if(strcmp(ext+1, "dat")==0)
 					{
 //						strcpy(datfile0[NBdatFiles0].name, remove_ext(dir->d_name, '.', '/'));
-						strcpy(tmpstring, remove_ext(dir->d_name, '.', '/'));
+						tmpstring = remove_ext(dir->d_name, '.', '/');
 						printf("tmpstring = %s\n", tmpstring);
 //						printf("File [%5ld]:  %s\n", NBdatFiles0, datfile0[NBdatFiles0].name);
 						NBdatFiles0++;
