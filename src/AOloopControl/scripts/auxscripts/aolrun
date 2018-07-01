@@ -110,6 +110,7 @@ Fits2shm -c -p aol${loopnb}_ DMmodes
 Fits2shm -c -p aol${loopnb}_ contrM
 
 OMP_NUM_THREADS=4 $execname -n $pname << EOF
+csetpmove aol0RT
 csetpmove ${csetname}
 aolnb $loopnb
 aolrun

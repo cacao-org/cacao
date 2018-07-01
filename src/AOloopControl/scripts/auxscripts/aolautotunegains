@@ -100,6 +100,7 @@ csetname="aol${loopnb}RT"
 
 
 ./AOloopControl -n $pname << EOF
+csetpmove aol0RT 
 csetpmove ${csetname}
 aolautotunegains $loopnb aol${loopnb}_autogain $1 $2
 exitCLI

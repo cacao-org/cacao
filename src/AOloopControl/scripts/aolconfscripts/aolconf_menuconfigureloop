@@ -1755,6 +1755,7 @@ sleep 0.2
 tmux new-session -d -s $tmuxsname
 sleep 0.2
 tmux send-keys -t $tmuxsname "$execname -n awfsref0${LOOPNUMBER}" C-m
+tmux send-keys -t $tmuxsname "csetpmove aol0RT" C-m # try 0 first
 tmux send-keys -t $tmuxsname "csetpmove aol${LOOPNUMBER}RT" C-m
 tmux send-keys -t $tmuxsname "readshmim aol${LOOPNUMBER}_wfsdark" C-m
 tmux send-keys -t $tmuxsname "readshmim aol${LOOPNUMBER}_wfsim" C-m

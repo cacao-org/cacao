@@ -108,6 +108,7 @@ fi
 
 
 ./AOloopControl -n $pname << EOF
+csetpmove aol0RT1
 csetpmove aol${loopnb}RT1
 readshmim aol${loopnb}_dmdispD
 readshmim aol${loopnb}_zrespMlinsim

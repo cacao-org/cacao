@@ -541,6 +541,7 @@ sleep 0.2
 tmux new-session -d -s $tmuxname
 sleep 0.2
 tmux send-keys -t $tmuxname "$execname" C-m
+tmux send-keys -t $tmuxname "csetpmove aol0RT2" C-m # try 0 first
 tmux send-keys -t $tmuxname "csetpmove aol${LOOPNUMBER}RT2" C-m
 tmux send-keys -t $tmuxname "loadfits \"wfturbC.fits\" wfc" C-m
 tmux send-keys -t $tmuxname "wfcn=wfc*${dmturbamplmult}" C-m

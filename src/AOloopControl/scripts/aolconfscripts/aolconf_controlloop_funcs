@@ -482,6 +482,7 @@ logRunningProcessQ0 "aolzpwfscloop" "$tmuxname" "AO loop zero point offset (zona
 echo "tmux send-keys -t ${tmuxname} \"mv runproc/aolzpwfscloop.runprocQ runproc/aolzpwfscloop.runproc\" C-m" >> $scriptfile
 echo "tmux send-keys -t $tmuxname \"$execname -n aol${LOOPNUMBER}wfszpo\" C-m" >> $scriptfile
 if [ "$CPUconfRT" -eq "1" ];then
+echo "tmux send-keys -t $tmuxname \"csetpmove aol0RT\" C-m" >> $scriptfile # try index 0 first (default)
 echo "tmux send-keys -t $tmuxname \"csetpmove aol${LOOPNUMBER}RT\" C-m" >> $scriptfile
 fi
 echo "tmux send-keys -t $tmuxname \"readshmim aol${LOOPNUMBER}_wfsref\" C-m" >> $scriptfile
@@ -532,6 +533,7 @@ echo "sleep 0.2" >> $scriptfile
 logRunningProcessQ0 "aolcompolm" "$tmuxname" "AO loop extract open loop WFS modes"
 echo "tmux send-keys -t ${tmuxname} \"mv runproc/aolcompolm.runprocQ runproc/aolcompolm.runproc\" C-m" >> $scriptfile
 echo "tmux send-keys -t $tmuxname \"./AOloopControl -p ${tmuxname}\" C-m" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"csetpmove aol0RT\" C-m" >> $scriptfile # try 0 first
 echo "tmux send-keys -t $tmuxname \"csetpmove aol${LOOPNUMBER}RT\" C-m" >> $scriptfile
 echo "tmux send-keys -t $tmuxname \"aolcompolm ${LOOPNUMBER}\" C-m" >> $scriptfile
 fi
@@ -802,6 +804,7 @@ tmux new-session -d -s $tmuxnameZP
 sleep 0.2
 tmux send-keys -t $tmuxnameZP "$execname -n aol${LOOPNUMBER}zploop$1" C-m
 if [ "$CPUconfRT" -eq "1" ];then
+tmux send-keys -t $tmuxnameZP "csetpmove aol0RT" C-m # try 0 first
 tmux send-keys -t $tmuxnameZP "csetpmove aol${LOOPNUMBER}RT" C-m
 fi
 tmux send-keys -t $tmuxnameZP "readshmim aol${LOOPNUMBER}_wfszpo$1" C-m

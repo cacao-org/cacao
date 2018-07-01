@@ -107,7 +107,6 @@ shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 
 
-
 if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
 if [ "$#" -ne $NBARGS ]; then
     echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
@@ -128,6 +127,7 @@ csetname="aol${loopnb}RT"
 if [ "$OUTMODE" = "0" ]; then
 
 ./AOloopControl -n $pname << EOF
+csetpmove aol0RT
 csetpmove ${csetname}
 readshmim aol${loopnb}_modeval_dm_now_filt
 readshmim aol${loopnb}_DMmodes
@@ -144,6 +144,7 @@ EOF
 else
 
 ./AOloopControl -n $pname << EOF
+csetpmove aol0RT
 csetpmove ${csetname}
 readshmim aol${loopnb}_modeval_dm_now_filt
 readshmim aol${loopnb}_DMmodes
