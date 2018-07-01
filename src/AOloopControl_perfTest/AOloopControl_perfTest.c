@@ -1414,6 +1414,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	long NBdatFiles0, NBdatFiles1;
 
 	FILE *fp;
+	char fname[500];
 	int ret;
 	double valf1, valf2;
 	long vald1, vald2, vald3, vald4;
@@ -1439,10 +1440,17 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 						tmpstring = remove_ext(dir->d_name, '.', '/');
 						printf("tmpstring = %s\n", tmpstring);
 						
-						fp = fopen(dir->d_name, "r");
-						ret = fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4);
-						fclose(fp);
-						
+						sprintf(fname, "%s/%s", datadir0, dir->d_name);
+						if((fp = fopen(fname, "r"))==NULL)
+						{
+							printf("Cannot open file \"%s\"\n", dir->d_name);
+							exit(0);
+						}
+						else
+						{
+							ret = fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4);
+							fclose(fp);
+						}
 						
 						//datfile0[NBdatFiles0].tstart = valf2;
 						
