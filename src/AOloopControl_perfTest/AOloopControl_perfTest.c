@@ -56,6 +56,7 @@
 #define OMP_NELEMENT_LIMIT 1000000
 # endif
 
+#define MaxNBdatFiles 100000
 
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -1398,15 +1399,14 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     char datadir1[500];
     char *ext;
 	
-	long MaxNBFiles = 100000;
 	struct DataFile {
 		char  name[500];
 		double tstart;
 		double tend;
 	};  
 
-	struct DataFile datfile0[MaxNBFiles];
-	struct DataFile datfile1[MaxNBFiles];
+	struct DataFile datfile0[MaxNBdatFiles];
+	struct DataFile datfile1[MaxNBdatFiles];
 	long NBdatFiles0, NBdatFiles1;
 
 
