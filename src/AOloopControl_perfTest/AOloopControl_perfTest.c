@@ -1485,7 +1485,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     long xysize;
 
     double dtoffset;
-    
+
     long IDout0, IDout1;
     long xysize0, xysize1;
 
@@ -1544,10 +1544,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         //
         // Identify relevant files in directory
         //
-        
-        printf("SCANNING directory ... ");
+
+        printf("SCANNING directory ... \n");
         fflush(stdout);
-        
+
         NBdatFiles = 0;
         d0 = opendir(datadirstream);
         if (d0) {
@@ -1558,77 +1558,111 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 } else {
                     if(strcmp(ext+1, "dat")==0)
                     {
+                        int mkTiming;
+                        float tmpv;
+                        int ret;
+
                         tmpstring = remove_ext(dir->d_name, '.', '/');
-                        
-                       
-                        sprintf(fname, "%s/%s", datadirstream, dir->d_name);
-                        if((fp = fopen(fname, "r"))==NULL)
+
+                        // Does timing file exist ?
+                        sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
+                        if ( (fp=fopen(fname, "r")) == NULL )
                         {
-                            printf("Cannot open file \"%s\"\n", dir->d_name);
-                            exit(0);
+                            mkTiming = 1;
+                            printf("File %s : No timing info found -> creating\n", fname);
                         }
                         else
                         {
-							double tlast = 0.0;
-							int tOK = 1;
-
-                            cnt = 0;
-                            while((fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)&&(tOK==1))
-                            {
-                                if(cnt == 0)
-                                {
-                                    datfile[NBdatFiles].tstart = valf2;
-                                    tlast = valf2;
-                                }
-                                else
-                                {
-									if (valf2 > tlast)
-										tOK = 1;
-									else
-										tOK = 0;
-									tlast = valf2;
-								}
-                                cnt++;
-                            }
-                            fclose(fp);
-                            datfile[NBdatFiles].tend = valf2;
-                            datfile[NBdatFiles].cnt = cnt;
-                            strcpy(datfile[NBdatFiles].name, tmpstring);
-                        }
-
-
-                        
-						// write timing file
-						sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
-						if((fp = fopen(fname, "w"))==NULL)
-                        {
-                            printf("Cannot write file \"%s\"\n", fname);
-                            exit(0);
-                        }
-                        else
-                        {
-							fprintf(fp, "%s   %20.9f %20.9f   %10ld  %10.3f\n", tmpstring, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
+                            ret = fscanf(fp, "%s   %lf %lf   %ld  %f\n", 
+								tmpstring, 
+								&datfile[NBdatFiles].tstart, 
+								&datfile[NBdatFiles].tend, 
+								&datfile[NBdatFiles].cnt, 
+								&tmpv);
+							if(ret == 5)
+							{
+								mkTiming = 0;
+								printf("File %s : timing info found\n", fname);
+							}
+							else
+							{
+								mkTiming = 1;
+								printf("File %s corrupted -> recreating\n", fname);
+							}
 							fclose(fp);
-						}
-						
-						
+                        }
+
+
+                        if(mkTiming == 1)
+                        {
+                            sprintf(fname, "%s/%s", datadirstream, dir->d_name);
+                            if((fp = fopen(fname, "r"))==NULL)
+                            {
+                                printf("Cannot open file \"%s\"\n", dir->d_name);
+                                exit(0);
+                            }
+                            else
+                            {
+                                double tlast = 0.0;
+                                int tOK = 1;
+
+                                cnt = 0;
+                                while((fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)&&(tOK==1))
+                                {
+                                    if(cnt == 0)
+                                    {
+                                        datfile[NBdatFiles].tstart = valf2;
+                                        tlast = valf2;
+                                    }
+                                    else
+                                    {
+                                        if (valf2 > tlast)
+                                            tOK = 1;
+                                        else
+                                            tOK = 0;
+                                        tlast = valf2;
+                                    }
+                                    cnt++;
+                                }
+                                fclose(fp);
+                                datfile[NBdatFiles].tend = valf2;
+                                datfile[NBdatFiles].cnt = cnt;
+                                strcpy(datfile[NBdatFiles].name, tmpstring);
+                            }
+
+
+
+                            // write timing file
+                            sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
+                            if((fp = fopen(fname, "w"))==NULL)
+                            {
+                                printf("Cannot write file \"%s\"\n", fname);
+                                exit(0);
+                            }
+                            else
+                            {
+                                fprintf(fp, "%s   %20.9f %20.9f   %10ld  %10.3f\n", tmpstring, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
+                                fclose(fp);
+                            }
+                        }
+
                         if((datfile[NBdatFiles].tend > tstart) && (datfile[NBdatFiles].tstart < tend))
                         {
                             printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile[NBdatFiles].name, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
                             NBdatFiles++;
-                        }						
-						
+                        }
+
                     }
                 }
             }
             closedir(d0);
         }
-        
+
         printf("\ndone\n");
         fflush(stdout);
-        
+
         printf("NBdatFiles = %ld\n", NBdatFiles);
-exit(0);//TEST
+        exit(0);//TEST
 
         for(i=0; i<NBdatFiles; i++)
         {
@@ -1692,9 +1726,9 @@ exit(0);//TEST
                 if(stream==0)
                 {
                     IDout = create_3Dimage_ID("outC0", xsize, ysize, zsize);
-					IDout0 = IDout;
-					xysize0 = xysize;
-				}
+                    IDout0 = IDout;
+                    xysize0 = xysize;
+                }
                 else
                 {
                     IDout = create_3Dimage_ID("outC1", xsize, ysize, zsize);
@@ -1890,28 +1924,28 @@ exit(0);//TEST
     sprintf(fname, "exptime.dat");
     fp = fopen(fname, "w");
 
-	long NBframeOK = 0;
+    long NBframeOK = 0;
     for(tstep=0; tstep<zsize; tstep++)
     {
         fprintf(fp, "%5ld %10.6f %10.6f %d\n", tstep, exparray0[tstep], exparray1[tstep], frameOKarray[tstep]);
         if(frameOKarray[tstep]==1)
-		{
-			if(tstep!=NBframeOK)
-			{
-				void *ptr0;
-				void *ptr1;
-				
-				ptr0 = (char*) data.image[IDout0].array.F + sizeof(float)*xysize0*tstep;
-				ptr1 = (char*) data.image[IDout0].array.F + sizeof(float)*xysize0*NBframeOK;
-				memcpy((void*) ptr1, (void*) ptr0, sizeof(float)*xysize0);
-			
-				ptr0 = (char*) data.image[IDout1].array.F + sizeof(float)*xysize1*tstep;
-				ptr1 = (char*) data.image[IDout1].array.F + sizeof(float)*xysize1*NBframeOK;
-				memcpy((void*) ptr1, (void*) ptr0, sizeof(float)*xysize1);			
-			
-			}
-			NBframeOK++;
-		}
+        {
+            if(tstep!=NBframeOK)
+            {
+                void *ptr0;
+                void *ptr1;
+
+                ptr0 = (char*) data.image[IDout0].array.F + sizeof(float)*xysize0*tstep;
+                ptr1 = (char*) data.image[IDout0].array.F + sizeof(float)*xysize0*NBframeOK;
+                memcpy((void*) ptr1, (void*) ptr0, sizeof(float)*xysize0);
+
+                ptr0 = (char*) data.image[IDout1].array.F + sizeof(float)*xysize1*tstep;
+                ptr1 = (char*) data.image[IDout1].array.F + sizeof(float)*xysize1*NBframeOK;
+                memcpy((void*) ptr1, (void*) ptr0, sizeof(float)*xysize1);
+
+            }
+            NBframeOK++;
+        }
     }
     fclose(fp);
 
