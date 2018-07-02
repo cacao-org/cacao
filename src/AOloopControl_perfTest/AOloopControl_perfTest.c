@@ -1399,6 +1399,7 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
     x.tstart = datfile[(left+right)/2].tstart;
 
     do {
+		printf("QS %ld %ld\n", i, j);
         while(datfile[i].tstart < x.tstart && i<right) i++;
         while(x.tstart < datfile[j].tstart && j>left) j--;
 
