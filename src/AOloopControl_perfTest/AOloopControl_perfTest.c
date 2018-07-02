@@ -1511,7 +1511,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     printf("tend   = %20.8f\n", tend);
 
 	int stream;
-    for(stream=0; stream<1; stream++)
+    for(stream=0; stream<2; stream++)
     {
 		if(stream==0)
 		{
