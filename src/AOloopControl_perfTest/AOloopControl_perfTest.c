@@ -1569,11 +1569,25 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         }
                         else
                         {
+							double tlast = 0.0;
+							int tOK = 1;
+
                             cnt = 0;
-                            while(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)
+                            while((fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)&&(tOK==1))
                             {
                                 if(cnt == 0)
+                                {
                                     datfile[NBdatFiles].tstart = valf2;
+                                    tlast = valf2;
+                                }
+                                else
+                                {
+									if (valf2 > tlast)
+										tOK = 1;
+									else
+										tOK = 0;
+									tlast = valf2;
+								}
                                 cnt++;
                             }
                             fclose(fp);
