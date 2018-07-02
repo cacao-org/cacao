@@ -1680,7 +1680,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
         // sort files according to time
-        quicksort_StreamDataFile(datfile, 0, NBdatFiles-1);
+        if(NBdatFiles>1)
+			quicksort_StreamDataFile(datfile, 0, NBdatFiles-1);
 
         for(i=0; i<NBdatFiles; i++)
         {
