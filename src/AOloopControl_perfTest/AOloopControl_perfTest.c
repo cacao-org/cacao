@@ -1557,9 +1557,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             fclose(fp);
                             datfile[NBdatFiles].tend = valf2;
                             datfile[NBdatFiles].cnt = cnt;
-                        }
-
-                        strcpy(datfile[NBdatFiles].name, tmpstring);
+							strcpy(datfile[NBdatFiles].name, tmpstring);
+						}
 
                         if((datfile[NBdatFiles].tend > tstart) && (datfile[NBdatFiles].tstart < tend))
                         {
@@ -1573,7 +1572,18 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         }
         printf("NBdatFiles = %ld\n", NBdatFiles);
 		
+        for(i=0; i<NBdatFiles; i++)
+        {
+            printf("FILE: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n",
+                   datfile[i].name,
+                   datfile[i].tstart,
+                   datfile[i].tend,
+                   datfile[i].cnt,
+                   datfile[i].cnt/(datfile[i].tend-datfile[i].tstart));
+		}
 
+
+		printf("==========================================================\n");
 
 
         // sort files according to time
@@ -1597,7 +1607,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             // LOAD FITS FILE
             long IDc;
             sprintf(fname, "%s/%s.fits", datadirstream, datfile[i].name);
-            printf("----------------------[%d] LOADING FILE %s\n", i, fname);
+            printf("----------------------[%ld] LOADING FILE %s\n", i, fname);
             IDc = load_fits(fname, "im0C", 2);
             
 
