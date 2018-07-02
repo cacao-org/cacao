@@ -1591,10 +1591,11 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             closedir(d0);
         }
         
-        printf(" done\n");
+        printf("\ndone\n");
         fflush(stdout);
         
         printf("NBdatFiles = %ld\n", NBdatFiles);
+exit(0);//TEST
 
         for(i=0; i<NBdatFiles; i++)
         {
