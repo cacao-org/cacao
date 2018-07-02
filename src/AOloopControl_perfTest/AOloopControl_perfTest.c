@@ -1595,7 +1595,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             // LOAD FITS FILE
             long IDc;
             sprintf(fname, "%s/%s.fits", datadirstream, datfile[i].name);
+            printf("---------------------- LOADING FILE %s\n", fname);
             IDc = load_fits(fname, "im0C", 2);
+            
 
             // CREATE OUTPUT CUBE IF FIRST FILE
             if(initOutput == 0)
@@ -1660,6 +1662,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             int j0 = 0;
             double expfrac;
 
+			
             for(tstep=0; tstep<zsize; tstep++)
             {
                 while((intarray_end[j0] < (tstartarray[tstep]+dtoffset) ) && (j0 < datfile[i].cnt))
@@ -1677,6 +1680,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         expfrac -= (intarray_end[j]-(tendarray[tstep]+dtoffset))/dtmedian;
 
                     exparray[tstep] += expfrac;
+                    
+                    printf("          %5ld   %8.6f  -> %5ld\n", j, expfrac, tstep);
 
                     long ii;
 
