@@ -1484,7 +1484,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
     long xysize;
 
-	double dtoffset;
+    double dtoffset;
+    
+    long IDout0, IDout1;
+    long xysize0, xysize1;
 
 
     // compute exposure start for each slice of output
@@ -1494,9 +1497,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     fflush(stdout);
 
 
-	// Should frame be kept or not ?
-	int *frameOKarray;
-	frameOKarray = (int*) malloc(sizeof(double)*zsize);
+    // Should frame be kept or not ?
+    int *frameOKarray;
+    frameOKarray = (int*) malloc(sizeof(double)*zsize);
 
 
     // Allocate Working arrays and populate timing arrays
@@ -1504,7 +1507,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     tstartarray = (double*) malloc(sizeof(double)*zsize);
     tendarray   = (double*) malloc(sizeof(double)*zsize);
     exparray    = (double*) malloc(sizeof(double)*zsize);   // exposure time accumulated, in unit of input frame(s)
-    exparray0   = (double*) malloc(sizeof(double)*zsize); 
+    exparray0   = (double*) malloc(sizeof(double)*zsize);
     exparray1   = (double*) malloc(sizeof(double)*zsize);
     for(tstep=0; tstep<zsize; tstep++)
     {
@@ -1519,25 +1522,25 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     printf("tstart = %20.8f\n", tstart);
     printf("tend   = %20.8f\n", tend);
 
-	int stream;
+    int stream;
     for(stream=0; stream<2; stream++)
     {
-		for(tstep=0; tstep<zsize; tstep++)
-			exparray[tstep] = 0.0;
-		
-		if(stream==0)
-		{
-			dtoffset = 0.0; // stream 0 is used as reference
-			sprintf(datadirstream, "%s/%s", datadir, stream0);
-		}
-		else
-		{
-			dtoffset = +dtlag; // stream 1 is lagging behind by dtlag, so we bring it back in time
-			// this is achieved by pushing/delaying the output timing window  
-			sprintf(datadirstream, "%s/%s", datadir, stream1);
-		}
-		
-		datfile = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
+        for(tstep=0; tstep<zsize; tstep++)
+            exparray[tstep] = 0.0;
+
+        if(stream==0)
+        {
+            dtoffset = 0.0; // stream 0 is used as reference
+            sprintf(datadirstream, "%s/%s", datadir, stream0);
+        }
+        else
+        {
+            dtoffset = +dtlag; // stream 1 is lagging behind by dtlag, so we bring it back in time
+            // this is achieved by pushing/delaying the output timing window
+            sprintf(datadirstream, "%s/%s", datadir, stream1);
+        }
+
+        datfile = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
         //
         // Identify relevant files in directory
         //
@@ -1570,8 +1573,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             fclose(fp);
                             datfile[NBdatFiles].tend = valf2;
                             datfile[NBdatFiles].cnt = cnt;
-							strcpy(datfile[NBdatFiles].name, tmpstring);
-						}
+                            strcpy(datfile[NBdatFiles].name, tmpstring);
+                        }
 
                         if((datfile[NBdatFiles].tend > tstart) && (datfile[NBdatFiles].tstart < tend))
                         {
@@ -1584,7 +1587,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             closedir(d0);
         }
         printf("NBdatFiles = %ld\n", NBdatFiles);
-		
+
         for(i=0; i<NBdatFiles; i++)
         {
             printf("FILE [%ld]: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", i,
@@ -1593,10 +1596,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                    datfile[i].tend,
                    datfile[i].cnt,
                    datfile[i].cnt/(datfile[i].tend-datfile[i].tstart));
-		}
+        }
 
 
-		printf("==========================================================\n");
+        printf("==========================================================\n");
 
 
         // sort files according to time
@@ -1610,10 +1613,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                    datfile[i].tend,
                    datfile[i].cnt,
                    datfile[i].cnt/(datfile[i].tend-datfile[i].tstart));
-		}
+        }
 
 
-		printf("==========================================================\n");
+        printf("==========================================================\n");
 
 
 
@@ -1636,7 +1639,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             sprintf(fname, "%s/%s.fits", datadirstream, datfile[i].name);
             printf("----------------------[%ld] LOADING FILE %s\n", i, fname);
             IDc = load_fits(fname, "im0C", 2);
-            
+
 
             // CREATE OUTPUT CUBE IF FIRST FILE
             if(initOutput == 0)
@@ -1645,9 +1648,17 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 ysize = data.image[IDc].md[0].size[1];
                 xysize = xsize*ysize;
                 if(stream==0)
-					IDout = create_3Dimage_ID("outC0", xsize, ysize, zsize);
+                {
+                    IDout = create_3Dimage_ID("outC0", xsize, ysize, zsize);
+					IDout0 = IDout;
+					xysize0 = xysize;
+				}
                 else
-					IDout = create_3Dimage_ID("outC1", xsize, ysize, zsize);
+                {
+                    IDout = create_3Dimage_ID("outC1", xsize, ysize, zsize);
+                    IDout1 = IDout;
+                    xysize1 = xysize;
+                }
                 initOutput = 1;
             }
 
@@ -1701,7 +1712,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             int j0 = 0;
             double expfrac;
 
-			
+
             for(tstep=0; tstep<zsize; tstep++)
             {
                 while((intarray_end[j0] < (tstartarray[tstep]+dtoffset) ) && (j0 < datfile[i].cnt))
@@ -1719,8 +1730,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         expfrac -= (intarray_end[j]-(tendarray[tstep]+dtoffset))/dtmedian;
 
                     exparray[tstep] += expfrac;
-                    
-//                    printf("  FILE %d        %5ld   %8.6f  [%20.6f] -> %5ld\n", i, j, expfrac, intarray_start[j], tstep);
+
+                    //                    printf("  FILE %d        %5ld   %8.6f  [%20.6f] -> %5ld\n", i, j, expfrac, intarray_start[j], tstep);
 
                     long ii;
 
@@ -1801,32 +1812,32 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             }
         }
 
-		// COMPUTE MEDIAN EXPTIME
-		if(stream==0)
-			memcpy(exparray0, exparray, sizeof(double)*zsize);
-		else
-			memcpy(exparray1, exparray, sizeof(double)*zsize);
+        // COMPUTE MEDIAN EXPTIME
+        if(stream==0)
+            memcpy(exparray0, exparray, sizeof(double)*zsize);
+        else
+            memcpy(exparray1, exparray, sizeof(double)*zsize);
 
-		quick_sort_double(exparray, zsize);
+        quick_sort_double(exparray, zsize);
 
-		double exptmedian;
-		exptmedian = exparray[zsize/2];
-		printf("Median Exp Time = %6.3f\n", exptmedian);
-		
-		if(stream==0)
-			memcpy(exparray, exparray0, sizeof(double)*zsize);
-		else
-			memcpy(exparray, exparray1, sizeof(double)*zsize);
-		
-		// SELECTION
-		for(tstep=0; tstep<zsize; tstep++)
-		{
-			if(exparray[tstep]<0.8*exptmedian)
-				frameOKarray[tstep] = 0;
-			if(exparray[tstep]>1.2*exptmedian)
-				frameOKarray[tstep] = 0;
-		}
-		
+        double exptmedian;
+        exptmedian = exparray[zsize/2];
+        printf("Median Exp Time = %6.3f\n", exptmedian);
+
+        if(stream==0)
+            memcpy(exparray, exparray0, sizeof(double)*zsize);
+        else
+            memcpy(exparray, exparray1, sizeof(double)*zsize);
+
+        // SELECTION
+        for(tstep=0; tstep<zsize; tstep++)
+        {
+            if(exparray[tstep]<0.8*exptmedian)
+                frameOKarray[tstep] = 0;
+            if(exparray[tstep]>1.2*exptmedian)
+                frameOKarray[tstep] = 0;
+        }
+
         free(datfile);
         free(intarray_start);
         free(intarray_end);
@@ -1834,23 +1845,43 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     }
 
 
-		sprintf(fname, "exptime.dat");
-		fp = fopen(fname, "w");
-        for(tstep=0; tstep<zsize; tstep++)
-        {
-            fprintf(fp, "%5ld %10.6f %10.6f %d\n", tstep, exparray0[tstep], exparray1[tstep], frameOKarray[tstep]);
-        }
-        fclose(fp);
-	
+    sprintf(fname, "exptime.dat");
+    fp = fopen(fname, "w");
+
+	long NBframeOK = 0;
+    for(tstep=0; tstep<zsize; tstep++)
+    {
+        fprintf(fp, "%5ld %10.6f %10.6f %d\n", tstep, exparray0[tstep], exparray1[tstep], frameOKarray[tstep]);
+        if(frameOKarray[tstep]==1)
+		{
+			if(tstep!=NBframeOK)
+			{
+				void *ptr0;
+				void *ptr1;
+				
+				ptr0 = (char*) data.image[IDout0].array.F + sizeof(float)*xysize0*tstep;
+				ptr1 = (char*) data.image[IDout0].array.F + sizeof(float)*xysize0*NBframeOK;
+				memcpy((void*) ptr1, (void*) ptr0, sizeof(float)*xysize0);
+			
+				ptr0 = (char*) data.image[IDout1].array.F + sizeof(float)*xysize1*tstep;
+				ptr1 = (char*) data.image[IDout1].array.F + sizeof(float)*xysize1*NBframeOK;
+				memcpy((void*) ptr1, (void*) ptr0, sizeof(float)*xysize1);			
+			
+			}
+			NBframeOK++;
+		}
+    }
+    fclose(fp);
+
 
     free(tstartarray);
     free(tendarray);
     free(exparray);
     free(exparray0);
     free(exparray1);
-	free(frameOKarray);
-	
-	
+    free(frameOKarray);
+
+
     return 0;
 }
 
