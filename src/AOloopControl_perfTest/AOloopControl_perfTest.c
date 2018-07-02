@@ -1924,16 +1924,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             if(exparray[tstep]>1.2*exptmedian)
                 frameOKarray[tstep] = 0;
         }
-
-
-		printf("==== STEP ==== %s  %d\n", __FILE__, __LINE__);
-		fflush(stdout);
 		
         free(datfile);
-
-		printf("==== STEP ==== %s  %d\n", __FILE__, __LINE__);
-		fflush(stdout);
-
     }
 
 
