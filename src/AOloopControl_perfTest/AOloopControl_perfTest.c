@@ -1889,6 +1889,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                     data.image[IDout].array.F[xysize*tstep+ii] /= exparray[tstep];
             }
         }
+        
+        
+        printf("zsize = %ld\n", zsize);
+        fflush(stdout);
 
         // COMPUTE MEDIAN EXPTIME
         if(stream==0)
