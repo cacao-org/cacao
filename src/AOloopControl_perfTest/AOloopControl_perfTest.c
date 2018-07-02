@@ -1435,7 +1435,9 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 
 
 
-//
+
+// Synchronize two streams
+// 
 // savedir is, for example /media/data/20180202
 //
 // dtlag: positive when stream0 is earlier than stream1
@@ -1488,7 +1490,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
     long IDout0, IDout1;
     long xysize0, xysize1;
-
+	long xsize0, ysize0, xsize1, ysize1;
+	
+	
 
     // compute exposure start for each slice of output
 
@@ -1727,15 +1731,19 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 xysize = xsize*ysize;
                 if(stream==0)
                 {
-                    IDout = create_3Dimage_ID("outC0", xsize, ysize, zsize);
+                    IDout = create_3Dimage_ID("out0", xsize, ysize, zsize);
                     IDout0 = IDout;
                     xysize0 = xysize;
+                    xsize0 = xsize;
+                    ysize0 = ysize;
                 }
                 else
                 {
-                    IDout = create_3Dimage_ID("outC1", xsize, ysize, zsize);
+                    IDout = create_3Dimage_ID("out1", xsize, ysize, zsize);
                     IDout1 = IDout;
                     xysize1 = xysize;
+                    xsize1 = xsize;
+                    ysize1 = ysize;
                 }
                 initOutput = 1;
             }
@@ -1965,6 +1973,19 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     free(exparray1);
     free(frameOKarray);
 
+	if(NBframeOK>0)
+	{
+		long IDoutc0;
+		IDoutc0 = create_3Dimage_ID("outC0", xsize0, ysize0, NBframeOK);
+		memcpy(data.image[IDoutc0].array.F, data.image[IDout0].array.F, sizeof(float)*xysize0*NBframeOK);
+	
+		long IDoutc1;
+		IDoutc1 = create_3Dimage_ID("outC1", xsize1, ysize1, NBframeOK);
+		memcpy(data.image[IDoutc1].array.F, data.image[IDout1].array.F, sizeof(float)*xysize1*NBframeOK);
+	}
+	delete_image_ID("out0");
+	delete_image_ID("out1");
+	
 
     return 0;
 }
