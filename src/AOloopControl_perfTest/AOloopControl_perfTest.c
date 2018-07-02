@@ -1574,7 +1574,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		
         for(i=0; i<NBdatFiles; i++)
         {
-            printf("FILE: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n",
+            printf("FILE [%ld]: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", i,
                    datfile[i].name,
                    datfile[i].tstart,
                    datfile[i].tend,
@@ -1591,7 +1591,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
         for(i=0; i<NBdatFiles; i++)
         {
-            printf("FILE: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n",
+            printf("FILE [%ld]: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", i,
                    datfile[i].name,
                    datfile[i].tstart,
                    datfile[i].tend,
