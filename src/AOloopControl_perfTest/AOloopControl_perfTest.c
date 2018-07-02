@@ -1779,6 +1779,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             delete_image_ID("im0C");
         }
 
+		sprintf(fname, "exptime_%d.dat", stream);
+		fp = fopen(fname, "w");
         for(tstep=0; tstep<zsize; tstep++)
         {
             if(exparray[tstep] > 0.01)
@@ -1787,7 +1789,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 for(ii=0; ii<xysize; ii++)
                     data.image[IDout].array.F[xysize*tstep+ii] /= exparray[tstep];
             }
+            fprintf(fp, "%5ld %10.6f\n", tstep, exparray[tstep]);
         }
+        fclose(fp);
 
 
 
