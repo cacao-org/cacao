@@ -1878,6 +1878,11 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
             delete_image_ID("im0C");
+               
+            free(intarray_start);
+			free(intarray_end);
+			free(dtarray);
+        
         }
 
         for(tstep=0; tstep<zsize; tstep++)
@@ -1925,9 +1930,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 		fflush(stdout);
 		
         free(datfile);
-        free(intarray_start);
-        free(intarray_end);
-        free(dtarray);
 
 		printf("==== STEP ==== %s  %d\n", __FILE__, __LINE__);
 		fflush(stdout);
