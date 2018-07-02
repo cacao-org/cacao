@@ -50,8 +50,8 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 int AOloopControl_RTstreamLOG_init(int loop)
 {
 	long i;
-	long SIZEwfsim = 4000;
-	long SIZEdm = 4000;
+	long SIZEwfsim = 8000;
+	long SIZEdm = 8000;
 	
 	// default
 	AOconf[loop].RTLOGsize = 90000;
