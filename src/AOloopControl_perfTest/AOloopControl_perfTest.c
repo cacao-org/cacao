@@ -1681,7 +1681,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
                     exparray[tstep] += expfrac;
                     
-                    printf("          %5ld   %8.6f  -> %5ld\n", j, expfrac, tstep);
+                    printf("  FILE %d        %5ld   %8.6f  -> %5ld\n", i, j, expfrac, tstep);
 
                     long ii;
 
