@@ -1891,7 +1891,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         }
         
         
-        printf("zsize = %ld\n", zsize);
+        printf("zsize = %ld\n", (long) zsize);
         fflush(stdout);
 
         // COMPUTE MEDIAN EXPTIME
@@ -1920,10 +1920,18 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 frameOKarray[tstep] = 0;
         }
 
+
+		printf("==== STEP ==== %s  %d\n", __FILE__, __LINE__);
+		fflush(stdout);
+		
         free(datfile);
         free(intarray_start);
         free(intarray_end);
         free(dtarray);
+
+		printf("==== STEP ==== %s  %d\n", __FILE__, __LINE__);
+		fflush(stdout);
+
     }
 
 
