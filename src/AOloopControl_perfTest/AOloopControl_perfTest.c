@@ -1544,6 +1544,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         //
         // Identify relevant files in directory
         //
+        
+        printf("SCANNING directory ... ");
+        fflush(stdout);
+        
         NBdatFiles = 0;
         d0 = opendir(datadirstream);
         if (d0) {
@@ -1586,6 +1590,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             }
             closedir(d0);
         }
+        
+        printf(" done\n");
+        fflush(stdout);
+        
         printf("NBdatFiles = %ld\n", NBdatFiles);
 
         for(i=0; i<NBdatFiles; i++)
