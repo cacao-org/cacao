@@ -1474,6 +1474,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     double *tstartarray;
     double *tendarray;
     double *exparray;
+    double *exparray0;
+    double *exparray1;
     long tstep;
 
     double *intarray_start;
@@ -1492,17 +1494,24 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     fflush(stdout);
 
 
+	// Should frame be kept or not ?
+	int *frameOKarray;
+	frameOKarray = (int*) malloc(sizeof(double)*zsize);
+
 
     // Allocate Working arrays and populate timing arrays
 
     tstartarray = (double*) malloc(sizeof(double)*zsize);
     tendarray   = (double*) malloc(sizeof(double)*zsize);
     exparray    = (double*) malloc(sizeof(double)*zsize);   // exposure time accumulated, in unit of input frame(s)
+    exparray0   = (double*) malloc(sizeof(double)*zsize); 
+    exparray1   = (double*) malloc(sizeof(double)*zsize);
     for(tstep=0; tstep<zsize; tstep++)
     {
         tstartarray[tstep] = tstart + 1.0*tstep*(tend-tstart)/zsize;
         tendarray[tstep] = tstart + 1.0*(tstep+1)*(tend-tstart)/zsize;
         exparray[tstep] = 0.0;
+        frameOKarray[tstep] = 1;
     }
 
 
@@ -1782,8 +1791,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             delete_image_ID("im0C");
         }
 
-		sprintf(fname, "exptime_%d.dat", stream);
-		fp = fopen(fname, "w");
         for(tstep=0; tstep<zsize; tstep++)
         {
             if(exparray[tstep] > 0.01)
@@ -1792,30 +1799,58 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 for(ii=0; ii<xysize; ii++)
                     data.image[IDout].array.F[xysize*tstep+ii] /= exparray[tstep];
             }
-            fprintf(fp, "%5ld %10.6f\n", tstep, exparray[tstep]);
         }
-        fclose(fp);
 
 		// COMPUTE MEDIAN EXPTIME
+		if(stream==0)
+			memcpy(exparray0, exparray, sizeof(double)*zsize);
+		else
+			memcpy(exparray1, exparray, sizeof(double)*zsize);
+
 		quick_sort_double(exparray, zsize);
+
 		double exptmedian;
 		exptmedian = exparray[zsize/2];
 		printf("Median Exp Time = %6.3f\n", exptmedian);
-
-
+		
+		if(stream==0)
+			memcpy(exparray, exparray0, sizeof(double)*zsize);
+		else
+			memcpy(exparray, exparray1, sizeof(double)*zsize);
+		
+		// SELECTION
+		for(tstep=0; tstep<zsize; tstep++)
+		{
+			if(exparray[tstep]<0.8*exptmedian)
+				frameOKarray[tstep] = 0;
+			if(exparray[tstep]>1.2*exptmedian)
+				frameOKarray[tstep] = 0;
+		}
+		
         free(datfile);
         free(intarray_start);
         free(intarray_end);
         free(dtarray);
     }
 
+
+		sprintf(fname, "exptime.dat");
+		fp = fopen(fname, "w");
+        for(tstep=0; tstep<zsize; tstep++)
+        {
+            fprintf(fp, "%5ld %10.6f %10.6f %d\n", tstep, exparray0[tstep], exparray1[tstep], frameOKarray[tstep]);
+        }
+        fclose(fp);
+	
+
     free(tstartarray);
     free(tendarray);
     free(exparray);
-
-
-
-
+    free(exparray0);
+    free(exparray1);
+	free(frameOKarray);
+	
+	
     return 0;
 }
 
