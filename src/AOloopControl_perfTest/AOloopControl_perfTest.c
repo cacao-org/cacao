@@ -1387,8 +1387,9 @@ char *remove_ext (char* mystr, char dot, char sep) {
 
 
 
-
-
+//
+// WARNING: right=NBelem-1
+//
 void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 {
     register long i,j;
@@ -1399,7 +1400,6 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
     x.tstart = datfile[(left+right)/2].tstart;
 
     do {
-		printf("QS %ld %ld\n", i, j);
         while(datfile[i].tstart < x.tstart && i<right) i++;
         while(x.tstart < datfile[j].tstart && j>left) j--;
 
@@ -1588,7 +1588,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
         // sort files according to time
-        quicksort_StreamDataFile(datfile, 0, NBdatFiles);
+        quicksort_StreamDataFile(datfile, 0, NBdatFiles-1);
 
         for(i=0; i<NBdatFiles; i++)
         {
