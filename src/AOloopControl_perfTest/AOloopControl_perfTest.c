@@ -1559,6 +1559,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                     if(strcmp(ext+1, "dat")==0)
                     {
                         tmpstring = remove_ext(dir->d_name, '.', '/');
+                        
+                       
                         sprintf(fname, "%s/%s", datadirstream, dir->d_name);
                         if((fp = fopen(fname, "r"))==NULL)
                         {
@@ -1580,11 +1582,28 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             strcpy(datfile[NBdatFiles].name, tmpstring);
                         }
 
+
+                        
+						// write timing file
+						sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
+						if((fp = fopen(fname, "w"))==NULL)
+                        {
+                            printf("Cannot write file \"%s\"\n", fname);
+                            exit(0);
+                        }
+                        else
+                        {
+							fprintf(fp, "%s   %20.9f %20.9f   %10ld  %10.3f\n", tmpstring, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
+							fclose(fp);
+						}
+						
+						
                         if((datfile[NBdatFiles].tend > tstart) && (datfile[NBdatFiles].tstart < tend))
                         {
                             printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile[NBdatFiles].name, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
                             NBdatFiles++;
-                        }
+                        }						
+						
                     }
                 }
             }
