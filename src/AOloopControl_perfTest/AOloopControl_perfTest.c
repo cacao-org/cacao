@@ -1582,7 +1582,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 							if(ret == 5)
 							{
 								mkTiming = 0;
-								printf("File %s : timing info found\n", fname);
+								//printf("File %s : timing info found\n", fname);
 							}
 							else
 							{
