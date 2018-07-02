@@ -1589,6 +1589,20 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         // sort files according to time
         quicksort_StreamDataFile(datfile, 0, NBdatFiles);
 
+        for(i=0; i<NBdatFiles; i++)
+        {
+            printf("FILE: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n",
+                   datfile[i].name,
+                   datfile[i].tstart,
+                   datfile[i].tend,
+                   datfile[i].cnt,
+                   datfile[i].cnt/(datfile[i].tend-datfile[i].tstart));
+		}
+
+
+		printf("==========================================================\n");
+
+
 
 
         int initOutput = 0;
