@@ -1513,6 +1513,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	int stream;
     for(stream=0; stream<2; stream++)
     {
+		for(tstep=0; tstep<zsize; tstep++)
+			exparray[tstep] = 0.0;
+		
 		if(stream==0)
 		{
 			dtoffset = 0.0; // stream 0 is used as reference
@@ -1793,6 +1796,11 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         }
         fclose(fp);
 
+		// COMPUTE MEDIAN EXPTIME
+		quick_sort_double(exparray, zsize);
+		double exptmedian;
+		exptmedian = exparray[zsize/2];
+		printf("Median Exp Time = %6.3f\n", exptmedian);
 
 
         free(datfile);
@@ -1804,6 +1812,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     free(tstartarray);
     free(tendarray);
     free(exparray);
+
+
+
 
     return 0;
 }
