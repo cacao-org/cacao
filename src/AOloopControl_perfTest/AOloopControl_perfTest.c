@@ -1582,6 +1582,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 							if(ret == 5)
 							{
 								mkTiming = 0;
+								strcpy(datfile[NBdatFiles].name, tmpstring);
 								//printf("File %s : timing info found\n", fname);
 							}
 							else
