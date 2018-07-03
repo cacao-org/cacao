@@ -576,19 +576,16 @@ datestr="$( date -u )"
 echo "$datestr" > cpuconfigOK
 
 
+
+
+
 exit
 
 ########## NOTES ##########################################################
 
 
-## CHECKING LATENCIES
-sudo cyclictest --smp -p98 -m -i 500 -D 3
 
-## watching non-maskable hardware interrupts
-watch -d -n 1 grep NMI /proc/interrupts
-
-
-
+# BIOS settings
 
 System Profile Settings      System Profile                       Performance Per Watt -> Custom
 System Profile Settings      CPU Power Management                 System DBPM          -> Maximum Performance
@@ -610,16 +607,34 @@ Processor Settings           Hardware Prefetcher                  Enabled       
 Processor Settings           DCU Streamer Prefetcher              Enabled              =  Enabled
 Processor Settings           DCU IP Prefetcher                    Enabled              =  Enabled
 
-Add to kernel boot:
+
+
+
+# Tools
+
+## CHECKING LATENCIES
+sudo cyclictest --smp -p98 -m -i 500 -D 3
+
+## watching non-maskable hardware interrupts
+watch -d -n 1 grep NMI /proc/interrupts
+
+
+
+
+
+
+
+# Misc / notes / things to do 
+
+
+
+## Add to kernel boot:
 nosoftlockup intel_idle.max_cstate=0 processor.max_cstate=0 mce=ignore_ce idle=poll
 
 
-Things to do / explore :
+## Tickless kernel
 
-- Tickless kernel
-- Disable System Management Interrupts (SMI): USB, TCO timer
-
-
+## Disable System Management Interrupts (SMI): USB, TCO timer
 
  smi.c to do
     mask_bits(TCO_EN_BIT, smi_en_addr);
