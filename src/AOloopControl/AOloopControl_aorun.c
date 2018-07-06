@@ -281,8 +281,11 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
         AOconf[loop].DMprimaryWriteON = 0;
         AOconf[loop].DMfilteredWriteON = 0;
         AOconf[loop].ARPFon = 0;
-        printf("entering loop ...\n");
-        fflush(stdout);
+        
+        #ifdef _PRINT_TEST
+		printf("[%s] [%d]  AOloopControl_run: Entering loop\n", __FILE__, __LINE__);
+		fflush(stdout);
+		#endif
 
         int timerinit = 0;
 
@@ -313,6 +316,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
                     clock_gettime(CLOCK_REALTIME, &t1);
                     timerinit = 1;
                 }
+                
+            #ifdef _PRINT_TEST
+			printf("[%s] [%d]  AOloopControl_run: Starting AOcompute\n", __FILE__, __LINE__);
+			fflush(stdout);
+			#endif
+                
 
                 AOcompute(loop, AOconf[loop].WFSnormalize);
                 
