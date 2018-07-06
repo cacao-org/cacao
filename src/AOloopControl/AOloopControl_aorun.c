@@ -556,7 +556,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 	#ifdef _PRINT_TEST
-	printf("[%s] [%s]  AOcompute start, loop %ld\n", __FILE__, __LINE__, AOconf[loop].LOOPiteration);
+	printf("[%s] [%d]  AOcompute start, loop %ld\n", __FILE__, __LINE__, AOconf[loop].LOOPiteration);
 	fflush(stdout);
 	#endif
 
@@ -588,7 +588,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     Read_cam_frame(loop, 0, normalize, 0, 0);
 
 	#ifdef _PRINT_TEST
-	printf("[%s] [%s]  AOcompute: Input image acquired\n", __FILE__, __LINE__);
+	printf("[%s] [%d]  AOcompute: Input image acquired\n", __FILE__, __LINE__);
 	fflush(stdout);
 	#endif
 
@@ -616,7 +616,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     if(AOconf[loop].ComputeWFSsol_FLAG==1) // Process WFS frame
     {
 		#ifdef _PRINT_TEST
-		printf("[%s] [%s]  AOcompute: Process WFS frame\n", __FILE__, __LINE__);
+		printf("[%s] [%d]  AOcompute: Process WFS frame\n", __FILE__, __LINE__);
 		fflush(stdout);
 		#endif
 		
