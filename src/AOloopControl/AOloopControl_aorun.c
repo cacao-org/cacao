@@ -16,7 +16,8 @@
 
 #define _GNU_SOURCE
 
-
+// uncomment for test print statements to stdout
+#define _PRINT_TEST
 
 #ifdef __MACH__   // for Mac OS X - 
 //#include <mach/mach_time.h>
@@ -107,6 +108,9 @@ double ltimerval[50];
 
 
 
+
+
+
 /**
  * ## Purpose
  * 
@@ -172,7 +176,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 	char commentstring[200];
 	sprintf(commentstring, "Main function, loop %ld", loop);
 	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
-	
 	
 	
 
@@ -541,6 +544,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	struct timespec functionTestTimer03;
 	struct timespec functionTestTimer04;
 
+
+
+	#ifdef _PRINT_TEST
+	printf("[%s] [%s]  AOcompute start, loop %ld\n", __FILE__, __LINE__, AOconf[loop].LOOPiteration);
+	fflush(stdout);
+	#endif
+
     // lock loop iteration into variable so that it cannot increment
     LOOPiter = AOconf[loop].LOOPiteration;
 
@@ -568,7 +578,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 	
     Read_cam_frame(loop, 0, normalize, 0, 0);
 
-
+	#ifdef _PRINT_TEST
+	printf("[%s] [%s]  AOcompute: Input image acquired\n", __FILE__, __LINE__);
+	fflush(stdout);
+	#endif
 
 
 	clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
@@ -591,8 +604,14 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[15] = tdiffv;
 
 
-    if(AOconf[loop].ComputeWFSsol_FLAG==1) // Process WFS frames
+    if(AOconf[loop].ComputeWFSsol_FLAG==1) // Process WFS frame
     {
+		#ifdef _PRINT_TEST
+		printf("[%s] [%s]  AOcompute: Process WFS frame\n", __FILE__, __LINE__);
+		fflush(stdout);
+		#endif
+		
+		
         if(AOconf[loop].GPUall==0)
         {
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
