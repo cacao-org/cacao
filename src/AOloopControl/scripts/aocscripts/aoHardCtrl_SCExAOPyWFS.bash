@@ -280,6 +280,11 @@ menuitems+=( " " " " )
 menuitems+=( "ir0dcs" "\Zr ircam0_dark \Zn: (re-)start scexao2->scexao TCP transfer" )
 menuitems+=( "ir0dck" "\Zr ircam0_dark \Zn: kill scexao2->scexao TCP transfer" )
 menuitems+=( " " " " )
+menuitems+=( "vis0cs" "\Zr vcamim \Zn : (re-)start scexao4->scexao TCP transfer [port 30101]" )
+menuitems+=( "vis0ck" "\Zr vcamim \Zn : kill scexao4->scexao TCP transfer       [port 30101]" )
+menuitems+=( " " " " )
+
+
 #menuitems+=( "ir2cs" "\Zr ircam2crop \Zn : (re-)start scexao2->scexao TCP transfer [port 30101]" )
 #menuitems+=( "ir2ck" "\Zr ircam2crop \Zn : kill scexao2->scexao TCP transfer       [port 30101]" )
 #menuitems+=( " " " " )
@@ -522,6 +527,19 @@ aoconflogext "(re-)start ircam0_dark scexao2 -> scexao TCP transfer"
 aoconflogext "kill ircam0_dark scexao2 -> scexao TCP transfer"
 /home/scexao/bin/getTCPscexao2im -k ircam0_dark 30103
 ;;
+
+
+# ircam0        scexao4->scexao, port 30104
+	vis0s)
+aoconflogext "(re-)start vcamim scexao4 -> scexao TCP transfer"
+/home/scexao/bin/getTCPscexao4im -s vcamim0 -r vcamim0com vcamim0 30104
+;;
+	vis0ck)
+aoconflogext "kill vcamim scexao4 -> scexao TCP transfer"
+/home/scexao/bin/getTCPscexao4im -k vcamim0 30104
+;;
+
+
 
 
 # ircam2crop    scexao2->scexao, port 30101
