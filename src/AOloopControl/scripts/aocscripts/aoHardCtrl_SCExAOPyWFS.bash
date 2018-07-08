@@ -544,7 +544,7 @@ aoconflogext "kill vcamim0 scexao4 -> scexao TCP transfer"
 # vcamim1        scexao4->scexao, port 30105
 	vcam1s)
 aoconflogext "(re-)start vcamim1 scexao4 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao4im -s vcamim0 -r vcamim0com vcamim1 30105
+/home/scexao/bin/getTCPscexao4im -s vcamim0 -r vcamim0com vcamim0 30105
 ;;
 	vcam1k)
 aoconflogext "kill vcamim1 scexao4 -> scexao TCP transfer"
