@@ -162,7 +162,7 @@ else
 	fi
 	
 	if [ "$EXTRADIR" = "1" ]; then
-	printf "%s %-10s %s\n" "$logtime" "$1" "$2" >> ${logdirextraf}/$1.log
+	printf "%s %-10s %s\n" "$logtime" "$1" "$LOGEXT" >> ${logdirextraf}/$1.log
 	fi
 
 done
