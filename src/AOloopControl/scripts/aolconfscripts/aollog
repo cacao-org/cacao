@@ -1,5 +1,7 @@
 #!/bin/bash
 logtime=$(date -u +'%Y/%m/%d %H:%M:%S.%N')
+
+
 logdir="./logdir/$(date -u +'%Y%m%d')/logging"
 logdir1=="./logdir/aolconf.log"
 
@@ -27,13 +29,15 @@ echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)          help"
 echo "     $(tput bold)-e$(tput sgr0)          include external log"
 echo "     $(tput bold)-i$(tput sgr0)          Interactive mode, included external log"
+echo "     $(tput bold)-d$(tput sgr0) <dir>    save to $(tput bold)d$(tput sgr0)irectory <dir>"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
 echo "     <logname>     log name"
 echo "     <entry>       log entry"
 echo ""
 echo " $(tput bold)EXAMPLE:$(tput sgr0)"
-echo "     $1  comments \"this will be logged\""
+echo "     $1 comments \"this will be logged\""
+echo "     $1 -d \"/media/data\""
 echo ""
 echo "------------------------------------------------------------------------"
 }
@@ -68,7 +72,9 @@ done
 
 LOOPMODE=0
 EXTERNAL=0
-while getopts :hei FLAG; do
+EXTRADIR=0
+logdir0=""
+while getopts :heid: FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -83,6 +89,10 @@ while getopts :hei FLAG; do
     ;;
     e)
     EXTERNAL="1"
+    ;;
+    d)
+    EXTRADIR="1"
+    logdirextra="$OPTARG"
     ;;
     \?) #unrecognized option - show help
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
@@ -114,31 +124,45 @@ fi
 
 mkdir -p $logdir
 
+if [ "$EXTRADIR" = "1" ]; then
+logdirextraf="${logdirextra}/$(date -u +'%Y%m%d')/logging"
+fi
+
+
 
 if [ "$LOOPMODE" = "0" ]; then
+## SINGLE ENTRY LOG
+	printf "%s %-10s %s\n" "$logtime" "$1" "$2" >> $logdir/$1.log
+	ln -fs $PWD/$logdir/$1.log aolconf.log
 
-printf "%s %-10s %s\n" "$logtime" "$1" "$2" >> $logdir/$1.log
-ln -fs $PWD/$logdir/$1.log aolconf.log
-if [ "$EXTERNAL" = "1" ]; then
-dologext "$1 $2" &
-fi
+	if [ "$EXTERNAL" = "1" ]; then
+	dologext "$1 $2" &
+	fi
+
+	if [ "$EXTRADIR" = "1" ]; then
+	printf "%s %-10s %s\n" "$logtime" "$1" "$2" >> ${logdirextraf}/$1.log
+	fi
 
 else
+## LOOP MODE
+	echo "LOGGING to FILE \"$logdir/$1.log\""
+	echo "LOOPMODE = $LOOPMODE"
+	echo "EXTERNAL = $EXTERNAL"
 
-echo "LOGGING to FILE \"$logdir/$1.log\""
-echo "LOOPMODE = $LOOPMODE"
-echo "EXTERNAL = $EXTERNAL"
 
+	while [ 1 ]; do
+	read -p "$1 log >  " LOGTEXT
+	logtime=$(date -u +'%Y/%m/%d %H:%M:%S.%N')
+	printf "%s %-10s %s\n" "$logtime" "$1" "$LOGTEXT" >> $logdir/$1.log
+	printf "%s %-10s %s\n" "$logtime" "$1" "$LOGTEXT"
 
-while [ 1 ]; do
-read -p "$1 log >  " LOGTEXT
-logtime=$(date -u +'%Y/%m/%d %H:%M:%S.%N')
-printf "%s %-10s %s\n" "$logtime" "$1" "$LOGTEXT" >> $logdir/$1.log
-printf "%s %-10s %s\n" "$logtime" "$1" "$LOGTEXT"
-
-if [ "$EXTERNAL" = "1" ]; then
-dologext "$1 $LOGTEXT"
-fi
+	if [ "$EXTERNAL" = "1" ]; then
+	dologext "$1 $LOGTEXT"
+	fi
+	
+	if [ "$EXTRADIR" = "1" ]; then
+	printf "%s %-10s %s\n" "$logtime" "$1" "$2" >> ${logdirextraf}/$1.log
+	fi
 
 done
 
