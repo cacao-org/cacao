@@ -126,6 +126,7 @@ mkdir -p $logdir
 
 if [ "$EXTRADIR" = "1" ]; then
 logdirextraf="${logdirextra}/$(date -u +'%Y%m%d')/logging"
+mkdir -p $logdirextraf
 fi
 
 
