@@ -1581,11 +1581,19 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
     // predictive control output
+    // Try to read existing modevalPF if exists    
     if(aoloopcontrol_var.aoconfID_modevalPF == -1)
     {
 		if(sprintf(imname, "aol%ld_modevalPF", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 		aoloopcontrol_var.aoconfID_modevalPF = read_sharedmem_image(imname);
+		
+		//TEST
+		FILE *fptest;
+		fptest = fopen("modevalPF.test", "w");
+		fprintf(fptest, "aoloopcontrol_var.aoconfID_modevalPF =  %ld\n", aoloopcontrol_var.aoconfID_modevalPF);
+		fclose(fptest);
+		
 		if(aoloopcontrol_var.aoconfID_modevalPF != -1)
 		{
 			long ii;
@@ -1950,7 +1958,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         {
 		//	printf("%s  %s  %d\n",__FILE__, __func__, __LINE__);fflush(stdout); //TEST
 			
-            if(aoloopcontrol_var.aoconfID_modevalPF==-1)
+            if(aoloopcontrol_var.aoconfID_modevalPF == -1)
             {
                 if(sprintf(imname, "aol%ld_modevalPF", loop) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
