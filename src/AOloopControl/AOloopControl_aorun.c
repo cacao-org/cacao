@@ -17,7 +17,7 @@
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
-#define _PRINT_TEST
+//#define _PRINT_TEST
 
 #ifdef __MACH__   // for Mac OS X - 
 //#include <mach/mach_time.h>
@@ -1888,14 +1888,14 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 		sem_getvalue(data.image[IDmodeval].semptr[4], &semval);
        
        //TEST
-       {
+       
         for(semcnt=0; semcnt<semval; semcnt++)
                 {
 					printf("WARNING %s %d  : [%d] sem_trywait on data.image[IDmodeval]\n", __FILE__, __LINE__, semval-semcnt);
 					fflush(stdout);  
 					sem_trywait(data.image[IDmodeval].semptr[4]);	
 				}
-        }
+        
         
         AOconf[loop].statusM = 3;
 		clock_gettime(CLOCK_REALTIME, &tnow);
@@ -2594,7 +2594,7 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
     long IDsync;
 
 
-    int TESTMODE = 1;
+    int TESTMODE = 0;
     int TEST_m = 30;
     FILE *fptest;
     
