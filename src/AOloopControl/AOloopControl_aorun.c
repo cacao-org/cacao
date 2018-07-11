@@ -1578,24 +1578,28 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 
-
+	//TEST
+	FILE *fptestmPF; //TEST
+	fptestmPF = fopen("modevalPF.test", "w");//TEST
+	
+	fprintf(fptestmPF, "%4d  aoloopcontrol_var.aoconfID_modevalPF =  %ld\n", __LINE__, aoloopcontrol_var.aoconfID_modevalPF);//TEST
 
     // predictive control output
     // Try to read existing modevalPF if exists    
     if(aoloopcontrol_var.aoconfID_modevalPF == -1)
     {
+	
 		if(sprintf(imname, "aol%ld_modevalPF", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 		aoloopcontrol_var.aoconfID_modevalPF = read_sharedmem_image(imname);
 		
-		//TEST
-		FILE *fptest;
-		fptest = fopen("modevalPF.test", "w");
-		fprintf(fptest, "aoloopcontrol_var.aoconfID_modevalPF =  %ld\n", aoloopcontrol_var.aoconfID_modevalPF);
-		fclose(fptest);
+
+		fprintf(fptestmPF, "%4d  aoloopcontrol_var.aoconfID_modevalPF =  %ld\n", __LINE__, aoloopcontrol_var.aoconfID_modevalPF);//TEST
 		
 		if(aoloopcontrol_var.aoconfID_modevalPF != -1)
 		{
+			fprintf(fptestmPF, "%4d  aoloopcontrol_var.aoconfID_modevalPF =  %ld\n", __LINE__, aoloopcontrol_var.aoconfID_modevalPF);//TEST
+			
 			long ii;
 			for(ii=0; ii<data.image[aoloopcontrol_var.aoconfID_modevalPF].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_modevalPF].md[0].size[1]; ii++)
 				data.image[aoloopcontrol_var.aoconfID_modevalPF].array.F[ii] = 0.0;
@@ -1604,6 +1608,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 			aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modevalPF] = 1;
 		}
 	}
+	fclose(fptestmPF);//TEST
 
     // OUPUT
     sizeout = (uint32_t*) malloc(sizeof(uint32_t)*3);
