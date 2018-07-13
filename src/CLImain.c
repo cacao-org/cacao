@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <sched.h>
+#include <omp.h>
 #include <CommandLineInterface/CLIcore.h>
 
 
 
 #include <image_basic/image_basic.h>
 #include <image_format/image_format.h>
-#include <img_reduce/img_reduce.h>
 #include <psf/psf.h>
+#include <img_reduce/img_reduce.h>
+#include <linARfilterPred/linARfilterPred.h>
 #include <ZernikePolyn/ZernikePolyn.h>
-
 #include <linopt_imtools/linopt_imtools.h>
 #include <cudacomp/cudacomp.h>
-#include <linARfilterPred/linARfilterPred.h>
+
 
 // cacao includes for inits
 #include <AOloopControl/AOloopControl.h>
@@ -24,7 +27,6 @@
 #include <linARfilterPred/linARfilterPred.h>
 #include <AOloopControl_computeCalib/AOloopControl_computeCalib.h>
 #include <FPAOloopControl/FPAOloopControl.h>
-
 
 
 #define STYLE_BOLD    "\033[1m"
@@ -60,6 +62,7 @@ int main(int argc, char *argv[])
 
 
 	// initialize milk modules for which no function calls is included by default
+
 	libinit_image_basic();
 	libinit_image_format();
 	libinit_psf();
@@ -68,10 +71,10 @@ int main(int argc, char *argv[])
 	libinit_ZernikePolyn();
 	libinit_linopt_imtools();
 	libinit_cudacomp();
-	libinit_linARfilterPred();
 
 	
 	// initialize modules specific to cacao
+
 	libinit_AOloopControl();
 	libinit_AOloopControl_PredictiveControl();
 	libinit_linARfilterPred();
@@ -86,6 +89,8 @@ int main(int argc, char *argv[])
 	fflush(stdout);
 	
 	runCLI(argc, argv, AppName);
-
+	
+	printf("NORMAL EXIT\n");
+	
 	return 0;
 }

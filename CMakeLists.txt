@@ -1,5 +1,4 @@
 # Example, run from _build directory :
-#
 # cmake .. -DCMAKE_INSTALL_PREFIX=../_install
 # cmake .. -DUSE_MAGMA=ON
 # cmake .. -DUSE_QDWHPARTIAL=ON
@@ -17,9 +16,17 @@ project (cacao C)
 # PERFORMANCE ORIENTED COMPILING OPTIONS
 
 # Adds options to the compiler command line for targets in the current directory and below that are added after this command is invoked
+
 add_compile_options(-std=gnu11)
 add_compile_options(-Ofast)
 add_compile_options(-march=native)
+
+# runs the standard link-time optimizer
+add_compile_options(-flto)
+
+# A common flag is -pipe. This flag has no effect on the generated code, but it makes the compilation process faster. It tells the compiler to use pipes instead of temporary files during the different stages of compilation, which uses more memory. On systems with low memory, GCC might get killed. In those cases do not use this flag. 
+add_compile_options(-pipe)
+
 
 # OpenMP
 find_package(OpenMP)
@@ -30,17 +37,11 @@ endif()
 
 message("COMPILE_OPTIONS:  ${COMPILE_OPTIONS}")
 
-# runs the standard link-time optimizer
-add_compile_options(-flto)
-
-# A common flag is -pipe. This flag has no effect on the generated code, but it makes the compilation process faster. It tells the compiler to use pipes instead of temporary files during the different stages of compilation, which uses more memory. On systems with low memory, GCC might get killed. In those cases do not use this flag. 
-add_compile_options(-pipe)
-
 
 
 
 # options
-option(USE_CUDA  "Use CUDA        library"  OFF)
+option(USE_CUDA  "Use CUDA        library" OFF)
 option(USE_MAGMA "Use MAGMA       library" OFF)
 option(USE_MAGMA "Use QDWHpartial library" OFF)
 
@@ -62,7 +63,6 @@ set( QDWHPARTIAL_LIBRARIES "psinv" )
 
 
 
-
 if(USE_CUDA)
 find_package( CUDA REQUIRED )
 endif(USE_CUDA)
@@ -74,11 +74,8 @@ message(STATUS ${MAGMA_LIBRARY_DIRS})
 link_directories( ${MAGMA_LIBRARY_DIRS} )
 endif(USE_MAGMA)
 
-
 # ncurses
 SET(CURSES_USE_NCURSES TRUE)
-
-
 
 
 message("====================================================")
@@ -105,7 +102,6 @@ message("====================================================")
 # recursively add libraries to be compiled
 # each library compile as SHARED
 #
-
 add_subdirectory ( "src/ImageStreamIO" )
 add_subdirectory ( "src/CommandLineInterface" )
 add_subdirectory ( "src/00CORE" )
@@ -158,12 +154,7 @@ ${FFTWF_CFLAGS_OTHER}
 -fopenmp
 )
 
-
-
 set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DPACKAGE_VERSION=\\\"0.0.0\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/cacao-org/cacao/issues\\\"" )
-
-
-
 
 
 target_link_libraries (cacao PUBLIC
