@@ -596,6 +596,8 @@ menuconfmanage_default=0
 echo "START STATE MACHINE"
 
 
+command -v dialog
+
 while true; do
 echo "LOOP START"
 stateok=0
