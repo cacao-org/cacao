@@ -664,6 +664,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
                     tmp = data.image[IDwfsc].array.SI16[kk*wfssize+ii] - data.image[IDwfsc].array.SI16[(kk-1)*wfssize+ii];
                     valarray[kk] += 1.0*tmp*tmp;
                 }
+            valarray[kk] = sqrt(valarray[kk]/wfssize/2);
             
             if(valarray[kk]>valmax)
             {
