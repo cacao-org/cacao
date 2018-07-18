@@ -443,6 +443,7 @@ int AOloopControl_DM_CombineChannels(
                         vOK = 1;
 					if(vOK==0)
 						delete_image_ID(dmdispcombconf[DMindex].voltname);
+				}
             }
         
         printf("vOK = %d\n", vOK);
