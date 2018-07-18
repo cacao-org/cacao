@@ -439,6 +439,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 
     IDdm0 = create_2Dimage_ID("_testdm0", dmxsize, dmysize);
     IDdm1 = create_2Dimage_ID("_testdm1", dmxsize, dmysize);
+    
+    float RMStot = 0.0;
     for(ii=0; ii<dmxsize; ii++)
         for(jj=0; jj<dmysize; jj++)
         {
@@ -446,7 +448,15 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
             y = (2.0*jj-1.0*dmxsize)/dmysize;
             data.image[IDdm0].array.F[jj*dmxsize+ii] = 0.0;
             data.image[IDdm1].array.F[jj*dmxsize+ii] = OPDamp*(sin(8.0*x)+sin(8.0*y));
+            RMStot += data.image[IDdm1].array.F[jj*dmxsize+ii]*data.image[IDdm1].array.F[jj*dmxsize+ii];
         }
+    RMStot = sqrt(RMStot/dmxsize/dmysize);
+    for(ii=0; ii<dmxsize; ii++)
+        for(jj=0; jj<dmysize; jj++)
+        {
+			data.image[IDdm1].array.F[jj*dmxsize+ii] *= OPDamp/RMStot;
+		}
+    
 
     //system("mkdir -p tmp");
     //save_fits("_testdm0", "!tmp/_testdm0.fits");
