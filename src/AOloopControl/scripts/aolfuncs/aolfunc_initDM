@@ -379,6 +379,7 @@ tmux send-keys -t $tmuxname "DMTWAIT=${DMdelayus}" C-m
 fi
 
 
+echo "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} ${dmvoltname} ${dmDCum} ${dmVmax}" > testcmd.txt
     
 # aoconflog "STARTING DMcomb"
 tmux send-keys -t $tmuxname "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} ${dmvoltname} ${dmDCum} ${dmVmax}" C-m
