@@ -95,7 +95,7 @@ int_fast8_t AOloopControl_DM_CombineChannels_cli()
     else
         {// DEFAULT: no dm2dm, no wfsref, dmvolt output
 			printf("AUTO volt_name = %s\n", data.cmdargtoken[13].val.string);
-            AOloopControl_DM_CombineChannels(0, 50, 50, 8, 1, 0, "dmmodes", "outdisp", 0, "wfsrm", "refout", 1, "dmvolt", 0.0, 150.0);
+            //AOloopControl_DM_CombineChannels(0, 50, 50, 8, 1, 0, "dmmodes", "outdisp", 0, "wfsrm", "refout", 1, "dmvolt", 0.0, 150.0);
         }
         
     return 1;
