@@ -90,7 +90,7 @@ int_fast8_t AOloopControl_DM_CombineChannels_cli()
     // 15 char *IDvolt_name 
     // 16 float DCum      
     // 17 float maxvolt
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,5)+CLI_checkarg(8,5)+CLI_checkarg(9,2)+CLI_checkarg(10,5)+CLI_checkarg(11,5)+CLI_checkarg(12,2)+CLI_checkarg(13,5)+CLI_checkarg(14,1)+CLI_checkarg(15,1)==0){
+    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,5)+CLI_checkarg(8,5)+CLI_checkarg(9,2)+CLI_checkarg(10,5)+CLI_checkarg(11,5)+CLI_checkarg(12,2)+CLI_checkarg(13,2)+CLI_checkarg(14,1)+CLI_checkarg(15,5)+CLI_checkarg(16,1)+CLI_checkarg(17,1)==0){
 		//printf("volt_name = %s\n", data.cmdargtoken[13].val.string);
         AOloopControl_DM_CombineChannels(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.string, data.cmdargtoken[8].val.string, data.cmdargtoken[9].val.numl, data.cmdargtoken[10].val.string, data.cmdargtoken[11].val.string, data.cmdargtoken[12].val.numl, data.cmdargtoken[13].val.numl, data.cmdargtoken[14].val.numf, data.cmdargtoken[15].val.string, data.cmdargtoken[16].val.numf, data.cmdargtoken[17].val.numf);
 	}
@@ -291,9 +291,9 @@ int init_AOloopControl_DM()
     strcpy(data.cmd[data.NBcmd].module,__FILE__);
     data.cmd[data.NBcmd].fp = AOloopControl_DM_CombineChannels_cli;
     strcpy(data.cmd[data.NBcmd].info,"create and combine DM channels");
-    strcpy(data.cmd[data.NBcmd].syntax,"<DMindex (0-9)> <xsize> <ysize> <NBchannel> <AveMode (1=if average level removed)> <dm2dm mode> <DMmodes> <outdm stream> <wfsref mode> <WFS resp mat> <wfsref stream> <voltmode (1=dmvolt computed)> <dmvoltname> <DClevel> <maxvolt [V]>");
-    strcpy(data.cmd[data.NBcmd].example,"aoloopcontrolDMcomb 0 50 50 8 0 1 dmmodes outdm 1 wfsrm wfsrefout 1 dmvolt 0.78 120.0");
-    strcpy(data.cmd[data.NBcmd].Ccall,"int AOloopControl_DM_CombineChannels(long DMindex, long xsize, long ysize, int NBchannel, int AveMode, int dm2dm_mode, const char *dm2dm_DMmodes, const char *dm2dm_outdisp, int wfsrefmode, const char *wfsref_WFSRespMat, const char *wfsref_out, int voltmode, const char *IDvolt_name, float DClevel, float maxvolt)");
+    strcpy(data.cmd[data.NBcmd].syntax,"<DMindex (0-9)> <xsize> <ysize> <NBchannel> <AveMode (1=if average level removed)> <dm2dm mode> <DMmodes> <outdm stream> <wfsref mode> <WFS resp mat> <wfsref stream> <voltmode (1=dmvolt computed)> <dmvolttype> <dmstroke100> <dmvoltname> <DClevel> <maxvolt [V]>");
+    strcpy(data.cmd[data.NBcmd].example,"aoloopcontrolDMcomb 0 50 50 8 0 1 dmmodes outdm 1 wfsrm wfsrefout 1 1 1.0 dmvolt 0.78 120.0");
+    strcpy(data.cmd[data.NBcmd].Ccall,"int AOloopControl_DM_CombineChannels(long DMindex, long xsize, long ysize, int NBchannel, int AveMode, int dm2dm_mode, const char *dm2dm_DMmodes, const char *dm2dm_outdisp, int wfsrefmode, const char *wfsref_WFSRespMat, const char *wfsref_out, int voltmode, int volttype, float stroke100,const char *IDvolt_name, float DClevel, float maxvolt)");
     data.NBcmd++;
 
     strcpy(data.cmd[data.NBcmd].key,"aoloopcontroldmcomboff");
