@@ -488,6 +488,7 @@ int AOloopControl_DM_CombineChannels(
 			perror("clock_gettime");
 			exit(EXIT_FAILURE);
 		}
+		
 		semwaitts.tv_nsec += dmdispcombconf[DMindex].nsecwait;
 		if(semwaitts.tv_nsec >= 1000000000)
 			semwaitts.tv_sec = semwaitts.tv_sec + 1;
