@@ -49,7 +49,8 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 
 
 
-#define DMSTROKE100 0.7 // um displacement for 100V
+
+//#define DMSTROKE100 0.7 // um displacement for 100V
 
 extern long NB_DMindex ;
 
@@ -73,6 +74,14 @@ extern int SMturbfd;
 /* =============================================================================================== */
 /* =============================================================================================== */
 
+// DM type
+//
+// 0 undef
+// 1 linear    : V =     ( x / DMstroke ) * 100
+// 2 quadratic : V = sqrt( x / DMstroke ) * 100
+//
+
+
 int AOloopControl_DM_disp2V(long DMindex)
 {
     long ii;
@@ -88,22 +97,28 @@ int AOloopControl_DM_disp2V(long DMindex)
 
 	if(dmdispcombconf[DMindex].voltON==1)
 		{
-//printf("TEST line %d   %ld xysize=%ld\n", __LINE__, dmdispcombconf[DMindex].IDvolt, dmdispcombconf[DMindex].xysize); 
-//fflush(stdout);
-//list_image_ID();
-
-
-			for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
+			if(dmdispcombconf[DMindex].volttype == 1) // linear bipolar, output is float
+			{
+				for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
 				{
-					volt = 100.0*sqrt(data.image[dmdispcombconf[DMindex].IDdisp].array.F[ii]/DMSTROKE100);
+					volt = 100.0*(data.image[dmdispcombconf[DMindex].IDdisp].array.F[ii]/dmdispcombconf[DMindex].stroke100);
 					if(volt>dmdispcombconf[DMindex].MAXVOLT)
 						volt = dmdispcombconf[DMindex].MAXVOLT;
-					
-					//printf("write value pix %ld to ID %ld\n", ii, IDvolt);
-					//fflush(stdout);
+					if(volt<-dmdispcombconf[DMindex].MAXVOLT)
+						volt = -dmdispcombconf[DMindex].MAXVOLT;
+					data.image[IDvolt].array.F[ii] = volt;
+				}
+			}
+			else if (dmdispcombconf[DMindex].volttype == 2) // quadratic unipolar, output is UI16
+			{
+				for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
+				{
+					volt = 100.0*sqrt(data.image[dmdispcombconf[DMindex].IDdisp].array.F[ii]/dmdispcombconf[DMindex].stroke100);
+					if(volt>dmdispcombconf[DMindex].MAXVOLT)
+						volt = dmdispcombconf[DMindex].MAXVOLT;
 					data.image[IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0); //65536.0);
 				}
-//printf("TEST line %d\n", __LINE__); fflush(stdout);
+			}
 		}
 	else
 		for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
@@ -170,7 +185,9 @@ int AOloopControl_DM_CombineChannels(
 		int wfsrefmode, 
 		const char *wfsref_WFSRespMat, 
 		const char *wfsref_out, 
-		int voltmode, 
+		int voltmode,
+		int volttype,
+		float stroke100,
 		const char *IDvolt_name, 
 		float DClevel, 
 		float maxvolt
@@ -259,6 +276,8 @@ int AOloopControl_DM_CombineChannels(
     dmdispcombconf[DMindex].xysize = xsize*ysize;
     dmdispcombconf[DMindex].NBchannel = NBchannel;
     dmdispcombconf[DMindex].voltmode = voltmode;
+    dmdispcombconf[DMindex].volttype = volttype;
+    dmdispcombconf[DMindex].stroke100 = stroke100;
     dmdispcombconf[DMindex].voltON = 1;
     dmdispcombconf[DMindex].MAXVOLT = maxvolt;
     dmdispcombconf[DMindex].AveMode = AveMode;
@@ -376,7 +395,7 @@ int AOloopControl_DM_CombineChannels(
     }
 
     printf("Initialize channels\n");
-    printf("Max DM stroke = %f um\n", DMSTROKE100*dmdispcombconf[0].MAXVOLT/100.0*dmdispcombconf[0].MAXVOLT/100.0);
+    printf("Max DM stroke = %f um\n", dmdispcombconf[DMindex].stroke100*dmdispcombconf[DMindex].MAXVOLT/100.0*dmdispcombconf[DMindex].MAXVOLT/100.0);
     fflush(stdout);
 
     for(ch=0; ch<dmdispcombconf[DMindex].NBchannel; ch++)

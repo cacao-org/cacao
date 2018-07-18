@@ -37,6 +37,8 @@ typedef struct
     long IDvolt;
     char voltname[12];
     int voltON;        // 1 if applying voltage 
+    int volttype;      // 1: linear bipolar, 2: quadratic uniplolar
+    float stroke100;   // displacement [um] for 100 V
     float MAXVOLT;     // maximum voltage on DM
 	int AveMode;
     float DClevel;
@@ -158,7 +160,24 @@ int AOloopControl_DM_unloadconf();
 
 int AOloopControl_DM_disp2V(long DMindex);
 
-int AOloopControl_DM_CombineChannels(long DMindex, long xsize, long ysize, int NBchannel, int AveMode, int dm2dm_mode, const char *dm2dm_DMmodes, const char *dm2dm_outdisp, int wfsrefmode, const char *wfsref_WFSRespMat, const char *wfsref_out, int voltmode, const char *IDvolt_name, float DClevel, float maxvolt);
+int AOloopControl_DM_CombineChannels(long DMindex, 
+	long xsize, 
+	long ysize, 
+	int NBchannel, 
+	int AveMode, 
+	int dm2dm_mode, 
+	const char *dm2dm_DMmodes, 
+	const char *dm2dm_outdisp, 
+	int wfsrefmode, 
+	const char *wfsref_WFSRespMat, 
+	const char *wfsref_out, 
+	int voltmode, 
+	int volttype,
+	float stroke100,
+	const char *IDvolt_name, 
+	float DClevel, 
+	float maxvolt
+	);
 
 
 int AOloopControl_DM_dmdispcomboff(long DMindex);

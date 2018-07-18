@@ -96,14 +96,14 @@ int AOloopControl_printDMconf()
     char maxvolt_str[7];
     char voltname_str[13];
     
-    printf("DM | on |  x |  y | Nbch | busy | ave | DClevel | monint  | stat | IDdisp | voltmode | IDvolt | maxvolt |   voltname  |\n");
+    printf("DM | on |  x |  y | Nbch | busy | ave | DClevel | monint  | stat | IDdisp | voltmode | volttype | stroke100 | IDvolt | maxvolt |   voltname  |\n");
     for(DMindex=0; DMindex<NB_DMindex; DMindex++)
         {
 			if(dmdispcombconf[DMindex].voltmode==1)
 				{
 					sprintf(IDvolt_str, "%3ld", dmdispcombconf[DMindex].IDvolt);
 					sprintf(maxvolt_str, "%6.2f", dmdispcombconf[DMindex].MAXVOLT);
-					sprintf(voltname_str, "%12s", dmdispcombconf[DMindex].voltname);
+					sprintf(voltname_str, "%11s", dmdispcombconf[DMindex].voltname);
 				}
 				else
 				{
@@ -112,7 +112,24 @@ int AOloopControl_printDMconf()
 					sprintf(voltname_str, "-----------");
 				}
 				
-			printf("%02ld |  %1d |%3ld |%3ld |  %02ld  |   %1d  |  %1d  | %6.2f  |%8ld |   %02d |   %3ld  |    %4d  |   %3s  |  %6s | %11s |\n", DMindex, dmdispcombconf[DMindex].ON, dmdispcombconf[DMindex].xsize, dmdispcombconf[DMindex].ysize, dmdispcombconf[DMindex].NBchannel, dmdispcombconf[DMindex].busy, dmdispcombconf[DMindex].AveMode, dmdispcombconf[DMindex].DClevel, dmdispcombconf[DMindex].moninterval, dmdispcombconf[DMindex].status, dmdispcombconf[DMindex].IDdisp, dmdispcombconf[DMindex].voltmode, IDvolt_str, maxvolt_str, voltname_str);
+			printf("%02ld |  %1d |%3ld |%3ld |  %02ld  |   %1d  |  %1d  | %6.2f  |%8ld |   %02d |   %3ld  |    %4d  |    %4d  | %9.2f |   %3s  |  %6s | %11s |\n", 
+				DMindex, 
+				dmdispcombconf[DMindex].ON, 
+				dmdispcombconf[DMindex].xsize, 
+				dmdispcombconf[DMindex].ysize, 
+				dmdispcombconf[DMindex].NBchannel, 
+				dmdispcombconf[DMindex].busy, 
+				dmdispcombconf[DMindex].AveMode, 
+				dmdispcombconf[DMindex].DClevel, 
+				dmdispcombconf[DMindex].moninterval, 
+				dmdispcombconf[DMindex].status, 
+				dmdispcombconf[DMindex].IDdisp, 
+				dmdispcombconf[DMindex].voltmode,
+				dmdispcombconf[DMindex].volttype,
+				dmdispcombconf[DMindex].stroke100,
+				IDvolt_str, 
+				maxvolt_str, 
+				voltname_str);
         }
     
     return(0);
@@ -184,7 +201,9 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
 		printw("=========== OUTPUT VOLT ========================================\n");
         printw("voltmode          = %10d      Configured for output voltage ?\n", dmdispcombconf[DMindex].voltmode);
         printw("voltON            = %10d      DM voltage ouptut activated ?\n", dmdispcombconf[DMindex].voltON);
-        printw("MAXVOLT           = %10.2f V    Maximum voltage\n", dmdispcombconf[DMindex].MAXVOLT);
+        printw("volttype          = %10d      DM type (1:linear bipolar, 2: quadratic unipolar)\n", dmdispcombconf[DMindex].volttype);
+        printw("stroke100         = %10.3f um   Displacement [um] for 100 V\n",             dmdispcombconf[DMindex].stroke100);
+        printw("MAXVOLT           = %10.2f V    Maximum voltage\n",             dmdispcombconf[DMindex].MAXVOLT);
         printw("AveMode           = %10d      Averaging mode for combined displacement\n", dmdispcombconf[DMindex].AveMode);
         printw("    0: Offset combined to DC level\n");
         printw("       Clip displacement at 0.0\n");
