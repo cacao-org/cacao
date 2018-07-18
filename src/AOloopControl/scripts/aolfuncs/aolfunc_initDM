@@ -205,11 +205,14 @@ fi
 # 
 # param value is stored in variable "instconfvalue"
 function ConfReadInstConf {
+echo "ConfReadInstConf $1 $2" > test00.txt
 file="./conf/instconf_$1.txt"
 if [ -f "$file" ]; then
 instconfvalue=$( head -1 $file )
+echo "$instconfvalue" > test01.txt
 else
 instconfvalue="$2"
+echo "$instconfvalue" > test02.txt
 echo "$2" > $file
 fi
 }
