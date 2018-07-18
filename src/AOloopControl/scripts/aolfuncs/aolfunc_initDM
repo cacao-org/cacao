@@ -278,9 +278,9 @@ ConfReadParam DMysize "32"; DMysize="$paramvalue" # DM y size
 ConfReadParam DM2DM_mode "0"; DM2DM_mode="$paramvalue" # DM-to-DM mode
 ConfReadParam DMwfsref_mode "0"; DMwfsref_mode="$paramvalue" # DMwfsref_mode (CPU-based dmcomb DM ouput applied as WFS offset)
 ConfReadParam DMcombave_mode "0"; DMcombave_mode="$paramvalue" # READ DMcombave_mode
-
+                               
 ConfReadParam DMvolt_mode "0"; DMvolt_mode="$paramvalue" # READ DMvolt_mode
-ConfReadParam dmvoltname "dmvolt"; DMvolt_mode="$paramvalue" # READ dmvoltname
+ConfReadParam dmvoltname "dmvolt"; dmvoltname="$paramvalue" # READ dmvoltname
 ConfReadParam DMdelayON "OFF"; DMdelayON="$paramvalue" # READ DM delay (optional)
 	
 
