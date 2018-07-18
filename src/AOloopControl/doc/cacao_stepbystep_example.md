@@ -62,8 +62,8 @@ Calibration files :
 
 On scexao computer, files are in /home/scexao/conf directory:
 
-	cp /home/scexao/conf/cacao/simLHS/LHS_zrespM_2018-01-25_05:09:52.fits.gz <workdir>/simLHS
-	cp /home/scexao/conf/cacao/simLHS/LHS_wfsref0_2018-01-25_05:09:52.fits.gz <workdir>/simLHS
+	cp /home/scexao/conf/cacao/simLHS/LHS_zrespM_2018-01-25_05:09:52.fits.gz <workdir>/simLHS ./simLHS/
+	cp /home/scexao/conf/cacao/simLHS/LHS_wfsref0_2018-01-25_05:09:52.fits.gz <workdir>/simLHS ./simLHS/
 
 
 **STEP 4**: Launch aolconf, loop number 5, loop name simtest:
@@ -77,7 +77,7 @@ Note that you subsequent calls to aolconf should then be without the -L and -N o
 - set size to match the calibration. `dmxs` and `dmys` GUI top menu. Both should be set to 50.
 
 
-**STEP 6**: Autoconfigure DM: `dmnolink` in GUI top menu. This will configure the DM in its simplest setting (no link to other loops).
+**STEP 6**: Autoconfigure DM: `nolink` in GUI top menu. This will configure the DM in its simplest setting (no link to other loops).
 
 **STEP 7**: Turn off dmvolt, as we are not connected to actual hardware: `dmvolt0` in GUI top menu.
 
@@ -96,9 +96,13 @@ To check that output WFS image is updating:
 
 	shmimmon aol5_linsimWFS
 	
+You should see counter cnt0 increment and the corresponsing frame rate should show the update rate.
+
 To check GPU useage:
 
 	nvidia-smi
+
+You should see that the GPU selected for linear simulation is somewhat busy.
 
 
 ---
@@ -121,6 +125,7 @@ Under control matrix GUI menu :
 - Select maximum control spatial frequency: `modeCPA`
 - Create modes and control matrix: `mkModes0`
 - update configuration: `confUp`
+- load shared memory: `SMload`
 
 Load and manage configuration :
 
@@ -141,6 +146,7 @@ Go to Loop Control screen.
 
 - Select GPU0 set.
 - Turn off GPU1 set.
+- Select GPU for DM filtered write
 - Set GPUall to OFF.
 - Set CMMODE to OFF.
 - Toggle all processes to ON.
@@ -149,6 +155,8 @@ Go to Loop Control screen.
 ### 4.2. Turning loop ON / OFF
 
 - Start AO processes, wait a few seconds
+- Turn ON DM filtered write
+- Turn ON WFS computation
 - Start/stop AO loop as needed
 
 

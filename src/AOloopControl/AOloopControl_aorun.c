@@ -1,6 +1,6 @@
 /**
- * @file    AOloopControl_dm.c 
- * @brief   AO loop Control functions wave front sensor and deformable mirror 
+ * @file    AOloopControl_aorun.c 
+ * @brief   AO loop Control compute functions 
  * 
  * REAL TIME COMPUTING ROUTINES
  *  

@@ -597,6 +597,7 @@ echo "START STATE MACHINE"
 
 
 while true; do
+echo "LOOP START"
 stateok=0
 . ./aolconfscripts/aolconf_menutop
 . ./aolconfscripts/aolconf_menuconfigureloop

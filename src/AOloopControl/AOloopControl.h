@@ -22,6 +22,42 @@
 #ifndef _AOLOOPCONTROL_H
 #define _AOLOOPCONTROL_H
 
+
+
+
+
+// OVERVIEW
+
+
+// PROCESSES
+/*
+ * AO loop can launch a number of processes
+ * 
+ * 
+ * FUNCTION: AOloopControl_run()
+ * in file : AOloopControl_aorun.c
+ * -> AOcompute() -> Read_cam_frame()
+ * 
+ * 
+ * FUNCTION: AOloopControl_ComputeOpenLoopModes()
+ * in file : AOloopControl_aorun.c
+ * 
+ * 
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
 #define maxNBMB 100			// maximum number of mode blocks
 #define MAXNBMODES 10000	// maximum number of control modes
 #define MAX_NUMBER_TIMER 100
@@ -638,6 +674,17 @@ void __attribute__ ((constructor)) libinit_AOloopControl();
 void init_AOloopControl();
 
 int AOloopControl_bogusfunc();
+
+
+
+
+
+
+
+
+
+
+
 
 
 
