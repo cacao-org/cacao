@@ -595,8 +595,11 @@ confselected=1
 menuconfmanage_default=0
 echo "START STATE MACHINE"
 
+if ! [ -x "$(command -v dialog)" ]; then
+  echo 'Error: dialog is not installed.' >&2
+  exit 1
+fi
 
-command -v dialog
 
 while true; do
 echo "LOOP START"
