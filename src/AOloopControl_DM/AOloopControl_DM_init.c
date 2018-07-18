@@ -91,6 +91,8 @@ static int AOloopControl_DM_createconf()
             dmdispcombconf[DMindex].xysize = 0;
             dmdispcombconf[DMindex].NBchannel = 0;
             dmdispcombconf[DMindex].busy = 0;
+            dmdispcombconf[DMindex].volttype = 0;
+            dmdispcombconf[DMindex].stroke100 = 1.0;
             dmdispcombconf[DMindex].MAXVOLT = 150.0;
             dmdispcombconf[DMindex].moninterval = 30000; // 33Hz
             dmdispcombconf[DMindex].status = 0;
