@@ -121,8 +121,19 @@ int AOloopControl_DM_disp2V(long DMindex)
 			}
 		}
 	else
-		for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
-			data.image[IDvolt].array.UI16[ii] = 0;
+	{
+		if(dmdispcombconf[DMindex].volttype == 1) // linear bipolar, output is float
+		{
+			for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
+				data.image[IDvolt].array.F[ii] = 0;
+		}
+		
+		if (dmdispcombconf[DMindex].volttype == 2)
+		{
+			for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
+				data.image[IDvolt].array.UI16[ii] = 0;
+		}
+	}
 			
 	data.image[IDvolt].md[0].write = 0;
 	data.image[IDvolt].md[0].cnt0++;
@@ -130,6 +141,7 @@ int AOloopControl_DM_disp2V(long DMindex)
     
 //    COREMOD_MEMORY_image_set_sempost(data.image[dmdispcombconf[DMindex].IDdisp].name, -1);
 	COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
+	COREMOD_MEMORY_image_set_sempost_byID(IDvolt, -1);
 
     return 0;
 }
