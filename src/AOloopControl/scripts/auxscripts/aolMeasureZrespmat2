@@ -154,7 +154,7 @@ cp ./conf/RMpokeCubeZ.fits.gz ./conf/RMpokeCube.fits.gz
 fi
 
 
-./AOloopControl -n $pname << EOF
+OMP_NUM_THREADS=1 ./AOloopControl -n $pname << EOF
 aolnb $loopnb
 csetpmove ${CPUset}
 loadfits "./conf/RMpokeCube.fits.gz" RMpokeCube
