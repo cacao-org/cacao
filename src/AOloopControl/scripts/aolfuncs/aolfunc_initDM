@@ -284,6 +284,9 @@ ConfReadParam DMcombave_mode "0"; DMcombave_mode="$paramvalue" # READ DMcombave_
                                
 ConfReadParam DMvolt_mode "0"; DMvolt_mode="$paramvalue" # READ DMvolt_mode
 ConfReadParam dmvoltname "dmvolt"; dmvoltname="$paramvalue" # READ dmvoltname
+ConfReadParam dmvolttype "2"; dmvolttype="$paramvalue" # 1: linear, 2: quadratic
+ConfReadParam dmstroke100 "0.7"; dmstroke100="$paramvalue" # displacement [um] for 100V
+
 ConfReadParam DMdelayON "OFF"; DMdelayON="$paramvalue" # READ DM delay (optional)
 	
 
@@ -382,11 +385,11 @@ tmux send-keys -t $tmuxname "DMTWAIT=${DMdelayus}" C-m
 fi
 
 
-echo "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} ${dmvoltname} ${dmDCum} ${dmVmax}" > testcmd.txt
+echo "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} ${dmvolttype} ${dmstroke100} ${dmvoltname} ${dmDCum} ${dmVmax}" > testcmd.txt
     
     
 # aoconflog "STARTING DMcomb"
-tmux send-keys -t $tmuxname "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} ${dmvoltname} ${dmDCum} ${dmVmax}" C-m
+tmux send-keys -t $tmuxname "aolcontrolDMcomb ${DMindex} ${DMxsize} ${DMysize} 12 ${DMcombave_mode} ${DM2DM_mode} ${dm2dmM} ${dm2dmO} ${DMwfsref_mode} ${dmwrefRM} ${dmwrefO} ${DMvolt_mode} ${dmvolttype} ${dmstroke100} ${dmvoltname} ${dmDCum} ${dmVmax}" C-m
 
 
 else  # USER-PROVIDED
