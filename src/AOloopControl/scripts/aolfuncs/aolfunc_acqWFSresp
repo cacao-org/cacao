@@ -89,6 +89,8 @@ fi
 
 ConfReadParam DMMODE "0"; DMMODE="$paramvalue"
 
+ConfReadParam RMmodal "OFF"; RMmodal="$paramvalue"
+
 ConfReadParam ACzrmNBcycle "5"; ACzrmNBcycle="$paramvalue"
 
 ConfReadParam delayRM1us "0"; delayRM1us="$paramvalue"
@@ -202,7 +204,7 @@ fi
 
 
 
-
+if [ "$RMmodal" = " ON" ]; then
 if [ "$DMMODE" = "0" ]; then
 echo "##########################################"
 echo "# ACQUIRE MODAL LO RESPONSE MATRIX        "
@@ -212,7 +214,7 @@ echo "##########################################"
 	function_acqWFSresp_LOmodes
 	fi
 fi
-
+fi
 
 
 
@@ -353,6 +355,7 @@ done
 
 
 if [ "$DMMODE" = "0" ]; then # zonal DM
+if [ "$RMmodal" = " ON" ]; then
 
 echo "####################################################"
 echo "# ACQUIRE LOW ORDER RESPONSE                        "
@@ -417,6 +420,7 @@ do
 	cp ${imname}.fits ${imname}/${imname}_${aCALIBdatestr}.fits
 done
 
+fi
 fi # end of if [ "$DMMODE" = "0" ]; then
 
 
