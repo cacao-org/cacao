@@ -17,7 +17,7 @@
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
-//#define _PRINT_TEST
+#define _PRINT_TEST
 
 #ifdef __MACH__   // for Mac OS X - 
 //#include <mach/mach_time.h>
@@ -318,7 +318,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
                 }
                 
             #ifdef _PRINT_TEST
-			printf("[%s] [%d]  AOloopControl_run: Starting AOcompute\n", __FILE__, __LINE__);
+			printf("[%s] [%d]  AOloopControl_run: Starting AOcompute, AOconf[%d].WFSnormalize = %d\n", __FILE__, __LINE__, loop, AOconf[loop].WFSnormalize);
 			fflush(stdout);
 			#endif
                 
