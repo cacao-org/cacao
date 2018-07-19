@@ -111,5 +111,6 @@ savefits contrM "!$2"
 exitCLI
 EOF
 
-
+cp conf/RMpokeCubeZ.fits.gz conf/zRMpokeCube.fits.gz
+gunzip conf/zRMpokeCube.fits.gz
 cp ./conf/zRMpokeCube.fits ./conf/aol${loopnb}_DMmodes_zonal.fits
