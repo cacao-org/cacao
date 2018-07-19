@@ -779,7 +779,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
 #ifdef _PRINT_TEST
-                printf("TEST %s %d - CM mult: GPU=0, CMMODE=0 - %s x %s -> %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].name);
+                printf("[%s] [%d] - CM mult: GPU=0, CMMODE=0 - %s x %s -> %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].name);
                 fflush(stdout);
 #endif
 
@@ -793,7 +793,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             else // (*)
             {
 #ifdef _PRINT_TEST
-                printf("TEST %s %d - CM mult: GPU=0, CMMODE=1 - using matrix %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].name);
+                printf("[%s] [%d] - CM mult: GPU=0, CMMODE=1 - using matrix %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].name);
                 fflush(stdout);
 #endif
 
@@ -812,7 +812,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
 #ifdef _PRINT_TEST
-                printf("TEST %s %d - CM mult: GPU=1, CMMODE=0 - using matrix %s    GPU alpha beta = %f %f\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta);
+                printf("[%s] [%d] - CM mult: GPU=1, CMMODE=0 - using matrix %s    GPU alpha beta = %f %f\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta);
                 fflush(stdout);
 #endif
 
@@ -878,7 +878,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             else // direct pixel -> actuators linear transformation
             {
 #ifdef _PRINT_TEST
-                printf("TEST %s %d - CM mult: GPU=1, CMMODE=1\n", __FILE__, __LINE__);
+                printf("[%s] [%d] - CM mult: GPU=1, CMMODE=1\n", __FILE__, __LINE__);
                 fflush(stdout);
 #endif
 
@@ -902,7 +902,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 if(AOconf[loop].GPUall == 1) // (**)
                 {
 #ifdef _PRINT_TEST
-                    printf("TEST %s %d - CM mult: GPU=1, CMMODE=1, GPUall = 1\n", __FILE__, __LINE__);
+                    printf("[%s] [%d] - CM mult: GPU=1, CMMODE=1, GPUall = 1\n", __FILE__, __LINE__);
                     fflush(stdout);
 #endif
 
