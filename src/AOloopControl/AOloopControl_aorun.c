@@ -800,13 +800,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 fflush(stdout);
 #endif
 
-                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 1;
+                data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
                 ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].sizeDM, AOconf[loop].sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_act].array.F);
-                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt0 ++;
-                COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_modes, -1);
-                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt0 ++;
-                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt1 = LOOPiter;
-                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 0;
+                data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0 ++;
+                COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_act, -1);
+                data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0 ++;
+                data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt1 = LOOPiter;
+                data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 0;
             }
         }
         else  // run in GPU if possible
