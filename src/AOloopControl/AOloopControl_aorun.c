@@ -796,6 +796,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 printf("[%s] [%d] - CM mult: GPU=0, CMMODE=1 - using matrix %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].name);
                 printf("  aoloopcontrol_var.aoconfID_contrMc = %ld\n", aoloopcontrol_var.aoconfID_contrMc);
                 printf("  aoloopcontrol_var.aoconfID_meas_act = %ld\n", aoloopcontrol_var.aoconfID_meas_act);
+                printf("  AOconf[loop].sizeDM  = %d\n", AOconf[loop].sizeDM);
+                printf("  AOconf[loop].sizeWFS = %d\n", AOconf[loop].sizeWFS);
                 list_image_ID();
                 fflush(stdout);
 #endif
