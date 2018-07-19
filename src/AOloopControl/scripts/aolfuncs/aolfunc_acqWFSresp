@@ -131,7 +131,7 @@ DMxsize=$( head -1 ./conf/param_DMxsize.txt )
 DMysize=$( head -1 ./conf/param_DMysize.txt )
 ./AOloopControl << EOF
 aolmksimplezpM ${DMxsize} ${DMysize} pokeM
-savefits pokeM "!./conf/"
+savefits pokeM "!./conf/simplepokeM.fits"
 exitCLI
 EOF
 fi

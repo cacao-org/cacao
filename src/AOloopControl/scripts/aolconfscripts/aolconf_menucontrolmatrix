@@ -140,7 +140,7 @@ menuitems+=( "zRM" "$menustring" )
 
 
 #Q? ConfReadParam SVDNBmodes "00"; SVDNBmodes=${paramvalue}
-menuitems+=( "RM2CM" "Compute Control matrix contrM only (-> eigenv.dat)  [${SVDNBmodes} modes kept]  (./conf_staged/aol${LOOPNUMBER}_zrespM.fits -> ./conf_staged/shmim_contrM.name.txt)" )
+menuitems+=( "RM2CM" "Compute straight pseudoinv Control matrix zcontrM  (-> eigenv.dat)  [${SVDNBmodes} modes kept]  (./conf_staged/aol${LOOPNUMBER}_zrespM.fits -> ./conf_staged/shmim_contrM.name.txt)" )
 
 
 
@@ -611,7 +611,7 @@ menucontrolmatrix_default="zRM"
 
 
 	RM2CM)  
-# COMPUTE SINGLE MATRIX (no block decomposition, don't comput modes) : this is a straight pseudo-inverse of the resp matrix
+# COMPUTE SINGLE MATRIX (no block decomposition, don't compute modes) : this is a straight pseudo-inverse of the resp matrix
 # USED FOR MODAL CONTROL (assumes 1 act = mode)
 
 #
