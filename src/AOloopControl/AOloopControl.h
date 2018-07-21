@@ -29,9 +29,21 @@
 // OVERVIEW
 
 
+// AOloopControl_var
+// structure unique to specific process
+// used for convenience to store process-specific values, for example image IDs
+
+// AOLOOPCONTROL_CONF
+// shared memory structure for sharing between processes and provide outside control and visibility
+
+
+
+
 // PROCESSES
 /*
  * AO loop can launch a number of processes
+ * 
+ * 
  * 
  * 
  * FUNCTION: AOloopControl_run()
@@ -148,6 +160,10 @@ static FILE *loadcreateshm_fplog;
 
 
 
+
+
+
+
 /**
  * Main AOloopControl structure. 
  *
@@ -234,6 +250,7 @@ typedef struct
     uint_fast64_t WFScntRM;                   /**< WFS stream counter 0 value at WFS image read (RM acqu mode) */
 
     int_fast8_t WFSnormalize;                 /**< 1 if each WFS frame should be normalized to 1 */
+    int_fast8_t WFSrefzero;                   /**< 1 if WFS reference is zero */
     float WFSnormfloor;                       /**< normalized by dividing by (total + AOconf[loop].WFSnormfloor)*AOconf[loop].WFSsize */
     float WFStotalflux;                       /**< Total WFS flux after dark subtraction */
     /* =============================================================================================== */

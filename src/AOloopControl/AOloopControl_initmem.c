@@ -201,6 +201,9 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             AOconf[loop].DMmodesNBblock = 1;
             AOconf[loop].GPUusesem = 1;
 
+			AOconf[loop].WFSnormalize = 1;
+			AOconf[loop].WFSrefzero = 0;
+
             AOconf[loop].loopfrequ = 2000.0;
             AOconf[loop].hardwlatency = 0.0011;
             AOconf[loop].hardwlatency_frame = 2.2;
