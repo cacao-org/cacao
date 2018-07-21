@@ -262,6 +262,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 			{
 		#ifdef _PRINT_TEST
 		printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
+		for(ii=0;ii<10;ii++)
+			printf("    data.image[%ld].array.F[%ld] = %f\n", aoloopcontrol_var.aoconfID_wfsref, ii, data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii]);
 		fflush(stdout);
 		#endif
 
