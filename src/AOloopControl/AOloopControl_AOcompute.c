@@ -296,9 +296,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                         data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
                     }
 		#ifdef _PRINT_TEST
-		printf("[%s] [%d]  AOcompute: APPLY LINEARITY LIMIT\n", __FILE__, __LINE__);
+		printf("[%s] [%d]  AOcompute: APPLY LINEARITY LIMIT   %ld\n", __FILE__, __LINE__, aoloopcontrol_var.aoconfID_imWFSlinlimit);
 		for(ii=0;ii<AOconf[loop].sizeWFS;ii+=10)
-			printf("    %16f  %16f\n", data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]);
+			printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]);
 		fflush(stdout);
 		#endif
 
