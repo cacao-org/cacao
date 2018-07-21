@@ -262,15 +262,14 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 			{
 				for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
 					data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
-			}
-			else
-			{
 						#ifdef _PRINT_TEST
 		printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
 		for(ii=0;ii<AOconf[loop].sizeWFS;ii+=10)
 			printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii]);
 		#endif
-
+			}
+			else
+			{
 				memcpy(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].sizeWFS);
 			}
 
