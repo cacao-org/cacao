@@ -117,12 +117,12 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
     printw("    loop number %ld    ", loop);
 
 
-    if(AOconf[loop].on == 1)
+    if(AOconf[loop].aorun__on == 1)
         printw("loop is ON     ");
     else
         printw("loop is OFF    ");
         
-     printw(" [%12lu]", AOconf[loop].LOOPiteration);
+     printw(" [%12lu]", AOconf[loop].aorun__LOOPiteration);
 
     /*  if(AOconf[loop].logon == 1)
           printw("log is ON   ");
@@ -141,7 +141,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         IDblknb = read_sharedmem_image(imname);
 
 	
-	if(AOconf[loop].ARPFon==1)
+	if(AOconf[loop].aorun__ARPFon==1)
 	{
 		if(aoloopcontrol_var.aoconfID_modeARPFgainAuto == -1)
 		{
@@ -193,8 +193,8 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
     kmax = (wrow-28)*(nbcol);
 
 	printw("WFS IMAGE TOTAL = %10f -> AVE = %10.3f\n", AOconf[loop].WFStotalflux, AOconf[loop].WFStotalflux/AOconf[loop].sizeWFS);
-    printw("    Gain = %5.3f   maxlim = %5.3f     GPU = %d    kmax=%ld\n", AOconf[loop].gain, AOconf[loop].maxlimit, AOconf[loop].GPU0, kmax);
-    printw("    DMprimWrite = %d   Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE LIM = %d (perc = %.2f %%  delta = %.3f nm mcoeff=%4.2f) GAIN = %d\n", AOconf[loop].DMprimaryWriteON, AOconf[loop].ARPFon, AOconf[loop].ARPFgain, AOconf[loop].AUTOTUNE_LIMITS_ON, AOconf[loop].AUTOTUNE_LIMITS_perc, 1000.0*AOconf[loop].AUTOTUNE_LIMITS_delta, AOconf[loop].AUTOTUNE_LIMITS_mcoeff, AOconf[loop].AUTOTUNE_GAINS_ON);
+    printw("    Gain = %5.3f   maxlim = %5.3f     GPU = %d    kmax=%ld\n", AOconf[loop].gain, AOconf[loop].maxlimit, AOconf[loop].AOcompute.GPU0, kmax);
+    printw("    DMprimWrite = %d   Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE LIM = %d (perc = %.2f %%  delta = %.3f nm mcoeff=%4.2f) GAIN = %d\n", AOconf[loop].aorun__DMprimaryWriteON, AOconf[loop].aorun__ARPFon, AOconf[loop].ARPFgain, AOconf[loop].AUTOTUNE_LIMITS_ON, AOconf[loop].AUTOTUNE_LIMITS_perc, 1000.0*AOconf[loop].AUTOTUNE_LIMITS_delta, AOconf[loop].AUTOTUNE_LIMITS_mcoeff, AOconf[loop].AUTOTUNE_GAINS_ON);
     printw(" TIMIMNG :  lfr = %9.3f Hz    hw lat = %5.3f fr   comp lat = %5.3f fr  wfs extr lat = %5.3f fr\n", AOconf[loop].loopfrequ, AOconf[loop].hardwlatency_frame, AOconf[loop].complatency_frame, AOconf[loop].wfsmextrlatency_frame);
     printw("loop iteration CNT : %lld   ", AOconf[loop].cnt);
     printw("\n");
@@ -204,12 +204,12 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
 
     printw("=========== %6ld modes, %3ld blocks ================|------------ Telemetry [nm] ----------------|    |     LIMITS         |", AOconf[loop].NBDMmodes, AOconf[loop].DMmodesNBblock);
-	if(AOconf[loop].ARPFon == 1)
+	if(AOconf[loop].aorun__ARPFon == 1)
 		printw("---- Predictive Control ----- |");
 	printw("\n");
 
     printw("BLOCK  #modes [ min - max ]    gain   limit   multf  |       dmC     Input  ->       WFS   Ratio  |    | hits/step    perc  |");
-	if(AOconf[loop].ARPFon==1)
+	if(AOconf[loop].aorun__ARPFon==1)
 		printw("  PFres  |  Ratio | PFautog |");
 	printw("\n");
 	printw("\n");
@@ -253,7 +253,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         //
 		// PREDICTIVE CONTROL
 		//
-        if(AOconf[loop].ARPFon==1){
+        if(AOconf[loop].aorun__ARPFon==1){
 			printw("%8.2f |", 1000.0*AOconf[loop].blockave_PFresrms[k]);
 			
 			
@@ -311,7 +311,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("|    |                    |", k, AOconf[loop].blockave_limFrac[k],  100.0*AOconf[loop].blockave_limFrac[k]/AOconf[loop].NBmodes_block[k]);
         attroff(A_BOLD | COLOR_PAIR(2));
         
-        if(AOconf[loop].ARPFon==1){
+        if(AOconf[loop].aorun__ARPFon==1){
 			valPFres = AOconf[loop].blockave_PFresrms[k]*AOconf[loop].blockave_PFresrms[k] - AOconf[loop].blockave_WFSnoise[k]*AOconf[loop].blockave_WFSnoise[k];
 			if(valPFres>0.0)
 				valPFres = sqrt(valPFres);
@@ -673,7 +673,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     statusdef[10] = "CONTROL MATRIX MULT: INCREMENT COUNTER AND EXIT FUNCTION";
     statusdef[11] = "MULTIPLYING BY GAINS";
 
-    if(AOconf[LOOPNUMBER].CMMODE==0)
+    if(AOconf[LOOPNUMBER].aorun__CMMODE==0)
     {
         statusdef[12] = "ENTER SET DM MODES";
         statusdef[13] = "START DM MODES MATRIX MULTIPLICATION";
@@ -758,7 +758,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 #endif
 
 
-    nbgpu = AOconf[LOOPNUMBER].GPU0;
+    nbgpu = AOconf[LOOPNUMBER].AOcompute.GPU0;
 
 
     printf("Measuring loop status distribution \n");
@@ -821,7 +821,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
             statusM1cnt[stM1]++;       
         
         
-        for(gpu=0; gpu<AOconf[LOOPNUMBER].GPU0; gpu++)
+        for(gpu=0; gpu<AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
         {
             // 1st matrix mult
             st = 10*gpu + AOconf[LOOPNUMBER].GPUstatus[gpu];
@@ -928,14 +928,14 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
 	
 
-    if(AOconf[LOOPNUMBER].GPU0!=0)
+    if(AOconf[LOOPNUMBER].AOcompute.GPU0!=0)
     {
         printf("\n");
         printf("          ----1--------2--------3--------4--------5--------6----\n");
         printf("                   wait im | ->GPU |     COMPUTE     |   ->CPU  \n");
         printf("          ------------------------------------------------------\n");
 
-        for(gpu=0; gpu<AOconf[LOOPNUMBER].GPU0; gpu++)
+        for(gpu=0; gpu<AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
         {
             printf("GPU %2d  : ", gpu);
             printf("  %5.2f %%",  100.0*statusgpucnt[10*gpu+1]/NBsample);
@@ -945,7 +945,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
             printf("  %5.2f %%",   100.0*statusgpucnt[10*gpu+5]/NBsample);
             printf("  %5.2f %%\n",  100.0*statusgpucnt[10*gpu+6]/NBsample);
         }
-        for(gpu=0; gpu<AOconf[LOOPNUMBER].GPU0; gpu++)
+        for(gpu=0; gpu<AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
         {
             printf("GPU %2d  : ", gpu);
             printf(" %5.2f us",  loopiterus*statusgpucnt[10*gpu+1]/NBsample);
@@ -957,10 +957,10 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
         }
 
         printf("\n");
-        if(AOconf[LOOPNUMBER].CMMODE == 0)
+        if(AOconf[LOOPNUMBER].aorun__CMMODE == 0)
         {
             printf("          ----1--------2--------3--------4--------5--------6----\n");
-            for(gpu=0; gpu<AOconf[LOOPNUMBER].GPU0; gpu++)
+            for(gpu=0; gpu<AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
             {
                 printf("GPU %2d  : ", gpu);
                 printf("  %5.2f %%",  100.0*statusgpucnt2[10*gpu+1]/NBsample);
@@ -1023,13 +1023,13 @@ int_fast8_t AOloopControl_perfTest_showparams(long loop)
 
     printf("loop number %ld\n", loop);
 
-    if(AOconf[loop].on == 1)
+    if(AOconf[loop].aorun__on == 1)
         printf("loop is ON\n");
     else
         printf("loop is OFF\n");
 
-    printf("Global gain = %f   maxlim = %f\n  multcoeff = %f  GPU = %d\n", AOconf[loop].gain, AOconf[loop].maxlimit, AOconf[loop].mult, AOconf[loop].GPU0);
-    printf("    Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE: lim %d gain %d\n", AOconf[loop].ARPFon, AOconf[loop].ARPFgain, AOconf[loop].AUTOTUNE_LIMITS_ON,  AOconf[loop].AUTOTUNE_GAINS_ON);
+    printf("Global gain = %f   maxlim = %f\n  multcoeff = %f  GPU = %d\n", AOconf[loop].gain, AOconf[loop].maxlimit, AOconf[loop].mult, AOconf[loop].AOcompute.GPU0);
+    printf("    Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE: lim %d gain %d\n", AOconf[loop].aorun__ARPFon, AOconf[loop].ARPFgain, AOconf[loop].AUTOTUNE_LIMITS_ON,  AOconf[loop].AUTOTUNE_GAINS_ON);
     printf("WFS norm floor = %f\n", AOconf[loop].WFSnormfloor);
 
     printf("loopfrequ               =  %8.2f Hz\n", AOconf[loop].loopfrequ);
