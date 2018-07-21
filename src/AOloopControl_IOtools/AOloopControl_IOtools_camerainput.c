@@ -607,9 +607,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 		if(semval>0)
 		{
 			if(semval>1)
-				printf("\n\033[31;1m[%12ld] WARNING [%d] WFS SEMAPHORE already posted - Missed frame\033[0m\n", AOconf[loop].aorun__LOOPiteration, semval);
+				printf("\n\033[31;1m[%12ld] WARNING [%d] WFS SEMAPHORE already posted - Missed frame\033[0m\n", AOconf[loop].aorun.LOOPiteration, semval);
 			else
-				printf("[%12ld] WARNING [%d] WFS SEMAPHORE already posted\n", AOconf[loop].aorun__LOOPiteration, semval);
+				printf("[%12ld] WARNING [%d] WFS SEMAPHORE already posted\n", AOconf[loop].aorun.LOOPiteration, semval);
 			fflush(stdout); 
 		}
 
