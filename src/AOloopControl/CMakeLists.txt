@@ -9,6 +9,7 @@ AOloopControl_wfs.c
 AOloopControl_dm.c 
 AOloopControl_aorun.c 
 AOloopControl_AOcompute.c
+AOloopControl_AOcompute.h 
 AOloopControl_ComputeOpenLoopModes.c
 AOloopControl_AutoTuneGains.c
 AOloopControl_sig2Modecoeff.c
