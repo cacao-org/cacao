@@ -83,7 +83,8 @@ double ltimerval[50];
 
 
 
-
+// TO BE MOVED INTO AOcompute structure
+static int AOcompute_WFSlinlimit = 0;
 
 
 
@@ -165,30 +166,30 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     double tdiffvlimit = 500.0e-6;
 
     int ComputeWFSsol_FLAG  = 1; //TEST
-    
-	struct timespec functionTestTimerStart;
-	struct timespec functionTestTimerEnd;
 
-	struct timespec functionTestTimer00;
-	struct timespec functionTestTimer01;
-	struct timespec functionTestTimer02;
-	struct timespec functionTestTimer03;
-	struct timespec functionTestTimer04;
+    struct timespec functionTestTimerStart;
+    struct timespec functionTestTimerEnd;
 
-
+    struct timespec functionTestTimer00;
+    struct timespec functionTestTimer01;
+    struct timespec functionTestTimer02;
+    struct timespec functionTestTimer03;
+    struct timespec functionTestTimer04;
 
 
-	#ifdef _PRINT_TEST
-	printf("[%s] [%d]  AOcompute start, loop %ld\n", __FILE__, __LINE__, AOconf[loop].LOOPiteration);
-	fflush(stdout);
-	#endif
 
-	if(AOloopControl_AOcompute_ProcessInit_Value == 0)
-	{
-		AOloopControl_AOcompute_ProcessInit(loop);
-		AOloopControl_AOcompute_ProcessInit_Value = 1;
-	}
-	
+
+#ifdef _PRINT_TEST
+    printf("[%s] [%d]  AOcompute start, loop %ld\n", __FILE__, __LINE__, AOconf[loop].LOOPiteration);
+    fflush(stdout);
+#endif
+
+    if(AOloopControl_AOcompute_ProcessInit_Value == 0)
+    {
+        AOloopControl_AOcompute_ProcessInit(loop);
+        AOloopControl_AOcompute_ProcessInit_Value = 1;
+    }
+
 
     // lock loop iteration into variable so that it cannot increment
     LOOPiter = AOconf[loop].LOOPiteration;
@@ -212,19 +213,19 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     // pixel 1 is time from beginning of loop to status 01
     // pixel 2 is time from beginning of loop to status 02
 
-	clock_gettime(CLOCK_REALTIME, &functionTestTimer04); //TEST timing in function
+    clock_gettime(CLOCK_REALTIME, &functionTestTimer04); //TEST timing in function
 
-	
+
     Read_cam_frame(loop, 0, normalize, 0, 0);
 
-	#ifdef _PRINT_TEST
-	printf("[%s] [%d]  AOcompute: Input image acquired\n", __FILE__, __LINE__);
-	fflush(stdout);
-	#endif
+#ifdef _PRINT_TEST
+    printf("[%s] [%d]  AOcompute: Input image acquired\n", __FILE__, __LINE__);
+    fflush(stdout);
+#endif
 
 
-	clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
-	
+    clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
+
 
 
     slice = aoloopcontrol_var.PIXSTREAM_SLICE;
@@ -245,12 +246,12 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     if(AOconf[loop].ComputeWFSsol_FLAG==1) // Process WFS frame
     {
-		#ifdef _PRINT_TEST
-		printf("[%s] [%d]  AOcompute: Process WFS frame\n", __FILE__, __LINE__);
-		fflush(stdout);
-		#endif
-		
-		
+#ifdef _PRINT_TEST
+        printf("[%s] [%d]  AOcompute: Process WFS frame\n", __FILE__, __LINE__);
+        fflush(stdout);
+#endif
+
+
         if(AOconf[loop].GPUall==0)
         {
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
@@ -258,47 +259,48 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 
-			if(AOconf[loop].WFSrefzero == 0) // if WFS reference is NOT zero
-			{
-				for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
-					data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
-						#ifdef _PRINT_TEST
-		printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
-		for(ii=0;ii<AOconf[loop].sizeWFS;ii+=10)
-			printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii]);
-		#endif
-			}
-			else
-			{
-				memcpy(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].sizeWFS);
-			}
-
-
-
-            if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1)
+            if(AOconf[loop].WFSrefzero == 0) // if WFS reference is NOT zero
             {
-               for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                    data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
+#ifdef _PRINT_TEST
+                printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
+                for(ii=0; ii<AOconf[loop].sizeWFS; ii+=10)
+                    printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii]);
+#endif
+            }
+            else
+            {
+                memcpy(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].sizeWFS);
+            }
+
+
+            if(AOcompute_WFSlinlimit == 1)
+            {
+                if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1)
                 {
-                    if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] > data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
+                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
                     {
-                        data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
-                    }
-                    else if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] < -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
-                    {
-                        data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
-                    }
-		#ifdef _PRINT_TEST
-		printf("[%s] [%d]  AOcompute: APPLY LINEARITY LIMIT   %ld\n", __FILE__, __LINE__, aoloopcontrol_var.aoconfID_imWFSlinlimit);
-		for(ii=0;ii<AOconf[loop].sizeWFS;ii+=10)
-			printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]);
-		fflush(stdout);
-		#endif
-
-
-                }
-                /*# ifdef _OPENMP
+                        if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] > data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
+                        {
+                            data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
                         }
-                # endif*/
+                        else if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] < -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
+                        {
+                            data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
+                        }
+
+#ifdef _PRINT_TEST
+                        printf("[%s] [%d]  AOcompute: APPLY LINEARITY LIMIT   %ld\n", __FILE__, __LINE__, aoloopcontrol_var.aoconfID_imWFSlinlimit);
+                        for(ii=0; ii<AOconf[loop].sizeWFS; ii+=10)
+                            printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]);
+                        fflush(stdout);
+#endif
+
+
+                    }
+                }
+
             }
 
             COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2, -1);
@@ -667,9 +669,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         {
             int block;
             long k;
-            
-            
-			clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
+
+
+            clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
 
             AOconf[loop].RMSmodes = 0;
             for(k=0; k<AOconf[loop].NBDMmodes; k++)
@@ -680,10 +682,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
 
-			clock_gettime(CLOCK_REALTIME, &functionTestTimer01); //TEST timing in function
+            clock_gettime(CLOCK_REALTIME, &functionTestTimer01); //TEST timing in function
 
-//TEST TIMING -> COMMENT THIS SECTION
-           for(k=0; k<AOconf[loop].NBDMmodes; k++)
+            //TEST TIMING -> COMMENT THIS SECTION
+            for(k=0; k<AOconf[loop].NBDMmodes; k++)
             {
                 data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] = 0.99*data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] + 0.01*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k]*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
                 data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] = 0.99*data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] + 0.01*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
@@ -715,8 +717,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 // update total gain
                 //     data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k+AOconf[loop].NBDMmodes] = AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k];
             }
-           
-			clock_gettime(CLOCK_REALTIME, &functionTestTimer02); //TEST timing in function
+
+            clock_gettime(CLOCK_REALTIME, &functionTestTimer02); //TEST timing in function
 
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0 ++;
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt1 = LOOPiter;
@@ -725,108 +727,108 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
         }
 
-		clock_gettime(CLOCK_REALTIME, &functionTestTimer03); //TEST timing in function
+        clock_gettime(CLOCK_REALTIME, &functionTestTimer03); //TEST timing in function
     }
     else
-    {	
-		if(AOconf[loop].GPUall==0)
-		{
-			// Update imWFS2
-			
-			data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
-			COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2, -1);
+    {
+        if(AOconf[loop].GPUall==0)
+        {
+            // Update imWFS2
+
+            data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
+            COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS2, -1);
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt0 ++;
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].cnt1 = LOOPiter;
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 0;
-		}
+        }
 
-		
-		AOconf[loop].status = 11;
+
+        AOconf[loop].status = 11;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
-		
-		if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
-		{
-			// -to be done
-		}
-		else
-		{
-			#ifdef HAVE_CUDA
+
+        if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
+        {
+            // -to be done
+        }
+        else
+        {
+#ifdef HAVE_CUDA
             if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
-				// Update meas_modes
-				
-				// -> aoloopcontrol_var.aoconfID_meas_modes
-				data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 1;
+                // Update meas_modes
+
+                // -> aoloopcontrol_var.aoconfID_meas_modes
+                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 1;
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_modes, -1);
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt0++;
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt1 = LOOPiter;
-                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 0;				
-			}
+                data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 0;
+            }
             else // direct pixel -> actuators linear transformation
             {
-				data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
-				COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
+                data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
+                COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
                 data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
                 data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
                 data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 0;
-				
-				
-				data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
-				
-				data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
+
+
+                data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
+
+                data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_act, -1);
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0++;
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt1 = LOOPiter;
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 0;
-			}
-			#endif
-		}
+            }
+#endif
+        }
 
-		
-		if(AOconf[loop].CMMODE==0)
-		{
-			data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
-			data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0 ++;
+
+        if(AOconf[loop].CMMODE==0)
+        {
+            data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
+            data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0 ++;
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt1 = LOOPiter;
             COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_cmd_modes, -1);
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 0;
-		}
-	}
+        }
+    }
 
 
-	// DETECT AND REPORT TIMING ANOMALY
-	//TEST
-	
-	clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd); //TEST timing in function
-	tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
-	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-	tdiffv01 = tdiffv;
-//TEST TIMING	
-	/*
-	if(tdiffv > 350.0e-6)
-	{
-		printf("TIMING WARNING: %12.3f us  %10ld   AOcompute() after Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
-		fflush(stdout);
+    // DETECT AND REPORT TIMING ANOMALY
+    //TEST
 
-		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer00);
-		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-		printf("Timer 00 : %12.3f us\n", tdiffv*1.0e6);
+    clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd); //TEST timing in function
+    tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
+    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv01 = tdiffv;
+    //TEST TIMING
+    /*
+    if(tdiffv > 350.0e-6)
+    {
+    	printf("TIMING WARNING: %12.3f us  %10ld   AOcompute() after Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
+    	fflush(stdout);
 
-		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer01);
-		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-		printf("Timer 01 : %12.3f us\n", tdiffv*1.0e6);
+    	tdiff = info_time_diff(functionTestTimerStart, functionTestTimer00);
+    	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    	printf("Timer 00 : %12.3f us\n", tdiffv*1.0e6);
 
-		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer02);
-		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-		printf("Timer 02 : %12.3f us\n", tdiffv*1.0e6);
+    	tdiff = info_time_diff(functionTestTimerStart, functionTestTimer01);
+    	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    	printf("Timer 01 : %12.3f us\n", tdiffv*1.0e6);
 
-		tdiff = info_time_diff(functionTestTimerStart, functionTestTimer03);
-		tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-		printf("Timer 03 : %12.3f us\n", tdiffv*1.0e6);
+    	tdiff = info_time_diff(functionTestTimerStart, functionTestTimer02);
+    	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    	printf("Timer 02 : %12.3f us\n", tdiffv*1.0e6);
+
+    	tdiff = info_time_diff(functionTestTimerStart, functionTestTimer03);
+    	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    	printf("Timer 03 : %12.3f us\n", tdiffv*1.0e6);
 
 
 
@@ -836,7 +838,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         printf("TIMING GLITCH DETECTED: %f us   [%09ld]\n", tdiffv*1.0e6, tnow.tv_nsec);
         fflush(stdout);
         for(i=0; i<23; i++)
-        { 
+        {
             int i1 = timerindex1[i];
             if((i1>26)&&(i1<32))
                 printf("    ");
@@ -844,30 +846,30 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         }
         printf("\n");
     }*/
-/*    else
-    {
-        for(i=0; i<aoloopcontrol_var.AOcontrolNBtimers; i++)
+    /*    else
         {
-            if((i!=7)&&(i!=8)&&(i!=20)&&(i!=21)&&(i!=34))
+            for(i=0; i<aoloopcontrol_var.AOcontrolNBtimers; i++)
             {
-                ltimerval[i] = data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
-                ntimerval[i] = ntimerval[i]*0.99 + 0.01*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
+                if((i!=7)&&(i!=8)&&(i!=20)&&(i!=21)&&(i!=34))
+                {
+                    ltimerval[i] = data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
+                    ntimerval[i] = ntimerval[i]*0.99 + 0.01*data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[i];
+                }
             }
-        }
-    }*/
-    
+        }*/
 
-	tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
-	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-	tdiffv00 = tdiffv;
-	
-	//TEST TIMING
-	/*
-	if(tdiffv > 600.0e-6)
-	{
-		printf("TIMING WARNING: %12.3f us  %10ld   Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
-		fflush(stdout);
-	}*/
+
+    tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
+    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv00 = tdiffv;
+
+    //TEST TIMING
+    /*
+    if(tdiffv > 600.0e-6)
+    {
+    	printf("TIMING WARNING: %12.3f us  %10ld   Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
+    	fflush(stdout);
+    }*/
 
 
 
