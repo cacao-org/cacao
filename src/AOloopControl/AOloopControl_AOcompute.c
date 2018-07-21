@@ -80,14 +80,20 @@ double ltimerval[50];
 
 
 
+
+
+
+
+
+
+
+
 static int AOloopControl_AOcompute_ProcessInit_Value = 0; // toggles to 1 when AOcompute
 
-
-
-
-//
+// ********************************************************************
 // This initialization runs once per process
-//
+// ********************************************************************
+
 int AOloopControl_AOcompute_ProcessInit(long loop)
 {
 	
