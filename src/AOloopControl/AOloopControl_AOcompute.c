@@ -254,8 +254,17 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         {
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
 
+
+
+
 			if(AOconf[loop].WFSrefzero == 0) // if WFS reference is NOT zero
 			{
+		#ifdef _PRINT_TEST
+		printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
+		fflush(stdout);
+		#endif
+
+
 				for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
 					data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
 			}

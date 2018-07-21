@@ -481,6 +481,20 @@ int_fast8_t __attribute__((hot)) AOloopControl_run()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int_fast8_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_WFSref_name, const char *ID_WFSim_name, const char *ID_WFSimtot_name, const char *ID_coeff_name)
 {
 #ifdef HAVE_CUDA
