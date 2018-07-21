@@ -101,6 +101,25 @@ int AOloopControl_AOcompute_ProcessInit(long loop)
 	
 	aoconfcnt0_contrM_current = data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0;
 	
+	printf("GPU0 = %d\n", AOconf[loop].AOcompute.GPU0);
+    if(AOconf[loop].AOcompute.GPU0>0)
+    {
+        uint8_t k;
+        for(k=0; k<AOconf[loop].AOcompute.GPU0; k++)
+            printf("stream %2d      aoloopcontrol_var.GPUset0 = %2d\n", (int) k, aoloopcontrol_var.GPUset0[k]);
+    }
+
+    printf("GPU1 = %d\n", AOconf[loop].AOcompute.GPU1);
+    if(AOconf[loop].AOcompute.GPU1>0)
+    {
+        uint8_t k;
+        for(k=0; k<AOconf[loop].AOcompute.GPU1; k++)
+            printf("stream %2d      aoloopcontrol_var.GPUset1 = %2d\n", (int) k, aoloopcontrol_var.GPUset1[k]);
+    }
+
+
+	
+	
 	return 0;
 }
 
@@ -180,7 +199,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 #ifdef _PRINT_TEST
-    printf("[%s] [%d]  AOcompute start, loop %ld\n", __FILE__, __LINE__, AOconf[loop].LOOPiteration);
+    printf("[%s] [%d]  AOcompute start, loop %ld\n", __FILE__, __LINE__, AOconf[loop].aorun__LOOPiteration);
     fflush(stdout);
 #endif
 
@@ -192,7 +211,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
     // lock loop iteration into variable so that it cannot increment
-    LOOPiter = AOconf[loop].LOOPiteration;
+    LOOPiter = AOconf[loop].aorun__LOOPiteration;
 
 
     // waiting for dark-subtracted image
@@ -244,7 +263,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[15] = tdiffv;
 
 
-    if(AOconf[loop].ComputeWFSsol_FLAG==1) // Process WFS frame
+    if(AOconf[loop].AOcompute.ComputeWFSsol_FLAG==1) // Process WFS frame
     {
 #ifdef _PRINT_TEST
         printf("[%s] [%d]  AOcompute: Process WFS frame\n", __FILE__, __LINE__);
@@ -252,7 +271,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
 
 
-        if(AOconf[loop].GPUall==0)
+        if(AOconf[loop].AOcompute.GPUall==0)
         {
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
 
@@ -428,9 +447,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 
-        if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
+        if(AOconf[loop].AOcompute.GPU0 == 0)   // no GPU -> run in CPU
         {
-            if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
+            if(AOconf[loop].aorun__CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
 #ifdef _PRINT_TEST
                 printf("[%s] [%d] - CM mult: GPU=0, CMMODE=0 - %s x %s -> %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].name);
@@ -468,7 +487,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         else  // run in GPU if possible
         {
 #ifdef HAVE_CUDA
-            if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
+            if(AOconf[loop].aorun__CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
 #ifdef _PRINT_TEST
                 printf("[%s] [%d] - CM mult: GPU=1, CMMODE=0 - using matrix %s    GPU alpha beta = %f %f\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta);
@@ -477,7 +496,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1; // default: do not re-compute reference output
 
-                if(AOconf[loop].GPUall == 1)
+                if(AOconf[loop].AOcompute.GPUall == 1)
                 {
                     // TEST IF contrM or wfsref have changed
                     if((data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != aoloopcontrol_var.aoconfcnt0_wfsref_current) || (data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0 != aoconfcnt0_contrM_current))
@@ -507,10 +526,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 }
 
 
-                if(AOconf[loop].GPUall == 1)
-                    GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
+                if(AOconf[loop].AOcompute.GPUall == 1)
+                    GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
                 else
-                    GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, 1, loop);
+                    GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, 1, loop);
 
 
 
@@ -524,7 +543,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
 
 
-                if(AOconf[loop].GPUall == 1)
+                if(AOconf[loop].AOcompute.GPUall == 1)
                     GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
                 else
                 {
@@ -556,7 +575,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 // re-map input vector into imWFS2_active
 
-                if(AOconf[loop].GPUall == 1) // (**)
+                if(AOconf[loop].AOcompute.GPUall == 1) // (**)
                 {
 #ifdef _PRINT_TEST
                     printf("[%s] [%d] - CM mult: GPU=1, CMMODE=1, GPUall = 1\n", __FILE__, __LINE__);
@@ -583,7 +602,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 }
 
                 // look for updated control matrix or reference
-                if(AOconf[loop].GPUall == 1) // (**)
+                if(AOconf[loop].AOcompute.GPUall == 1) // (**)
                 {
                     if(data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0 != contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE])
                     {
@@ -634,7 +653,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
 
 
-                if(AOconf[loop].GPUall == 1)
+                if(AOconf[loop].AOcompute.GPUall == 1)
                     GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
                 else
                     GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
@@ -665,7 +684,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 
-        if(AOconf[loop].CMMODE==0)
+        if(AOconf[loop].aorun__CMMODE==0)
         {
             int block;
             long k;
@@ -731,7 +750,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     }
     else
     {
-        if(AOconf[loop].GPUall==0)
+        if(AOconf[loop].AOcompute.GPUall==0)
         {
             // Update imWFS2
 
@@ -750,14 +769,14 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 
-        if(AOconf[loop].GPU0 == 0)   // no GPU -> run in CPU
+        if(AOconf[loop].AOcompute.GPU0 == 0)   // no GPU -> run in CPU
         {
             // -to be done
         }
         else
         {
 #ifdef HAVE_CUDA
-            if(AOconf[loop].CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
+            if(AOconf[loop].aorun__CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
                 // Update meas_modes
 
@@ -789,7 +808,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         }
 
 
-        if(AOconf[loop].CMMODE==0)
+        if(AOconf[loop].aorun__CMMODE==0)
         {
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0 ++;

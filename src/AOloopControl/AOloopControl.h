@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <time.h>
 
-
+#include "AOloopControl/AOloopControl_AOcompute.h"
 
 
 #ifndef _AOLOOPCONTROL_H
@@ -45,10 +45,12 @@
  * 
  * 
  * 
- * 
- * FUNCTION: AOloopControl_run()
+ * All AO loop instances MUST start a AOloopControl_aorun() function call
+ * FUNCTION: AOloopControl_aorun()
  * in file : AOloopControl_aorun.c
- * -> AOcompute() -> Read_cam_frame()
+ * AOloopControl_aorun() -> AOcompute() -> Read_cam_frame()
+ * 
+ * 
  * 
  * 
  * FUNCTION: AOloopControl_ComputeOpenLoopModes()
@@ -164,6 +166,7 @@ static FILE *loadcreateshm_fplog;
 
 
 
+
 /**
  * Main AOloopControl structure. 
  *
@@ -173,7 +176,7 @@ static FILE *loadcreateshm_fplog;
  */
 typedef struct
 {	
-	uint64_t LOOPiteration;                   /**< Loop iteration - set to zero on creation on aolrun start */
+	uint64_t aorun__LOOPiteration;                   /**< Loop iteration - set to zero on creation on aolrun start */
 	
     /* =============================================================================================== */
 	/** @name AOLOOPCONTROL_CONF: TIMING 
@@ -212,11 +215,11 @@ typedef struct
 	 * 
 	 */
 
-    int_fast8_t init;                         /**< Has the structure been initialized ? */
+    int_fast8_t   init;                         /**< Has the structure been initialized ? */
     uint_fast64_t cnt;                        /**<  loop step counter, set to zero every time loop is stopped */
     uint_fast64_t cntmax;                     /**<  max value of counter, used to step loop */
     uint_fast64_t DMupdatecnt;                /**<  */
-    int_fast8_t kill;                         /**<  set to 1 to kill computation loop */
+    int_fast8_t   aorun__kill;                         /**<  set to 1 to kill computation loop */
     char name[80];
 
     int_fast8_t init_RM;                      /**< Response Matrix loaded */
@@ -305,12 +308,12 @@ typedef struct
 	 * 
 	 */
 		
-    int_fast8_t on;                           /**< goes to 1 when loop starts, put to 0 to turn loop off */
+    int_fast8_t   aorun__on;                           /**< goes to 1 when loop starts, put to 0 to turn loop off */
     float gain;                               /**< overall loop gain */
     uint_fast16_t framesAve;                  /**< number of WFS frames to average */
-	int_fast8_t DMprimaryWriteON;             /**< primary DM write */
-	int_fast8_t CMMODE;                       /**< Combined matrix. 0: matrix is WFS pixels -> modes, 1: matrix is WFS pixels -> DM actuators */
-	int_fast8_t DMfilteredWriteON;            /**< Filtered write to DM */
+	int_fast8_t   aorun__DMprimaryWriteON;             /**< primary DM write */
+	int_fast8_t   aorun__CMMODE;                       /**< Combined matrix. 0: matrix is WFS pixels -> modes, 1: matrix is WFS pixels -> DM actuators */
+	int_fast8_t   aorun__DMfilteredWriteON;            /**< Filtered write to DM */
  
 	// MODAL AUTOTUNING 
 	// limits
@@ -333,7 +336,7 @@ typedef struct
 	 * 
 	 */
 	///@{  	
-    int_fast8_t ARPFon; // 1 if auto-regressive predictive filter is ON
+    int_fast8_t aorun__ARPFon; // 1 if auto-regressive predictive filter is ON
 	float ARPFgain; 
 	float ARPFgainAutoMin;
 	float ARPFgainAutoMax;
@@ -346,26 +349,29 @@ typedef struct
  	/** @name AOLOOPCONTROL_CONF: COMPUTATION MODES
 	 * 
 	 */
+	 AOLOOPCONF_AOcompute AOcompute;
+	 
+	 
 	// compute flags
-	int_fast8_t ComputeWFSsol_FLAG; 
-	int_fast8_t ComputeFLAG0;
-	int_fast8_t ComputeFLAG1;
-	int_fast8_t ComputeFLAG2;
-	int_fast8_t ComputeFLAG3;
+	/*int_fast8_t AOcompute__ComputeWFSsol_FLAG; 
+	int_fast8_t AOcompute__ComputeFLAG0;
+	int_fast8_t AOcompute__ComputeFLAG1;
+	int_fast8_t AOcompute__ComputeFLAG2;
+	int_fast8_t AOcompute__ComputeFLAG3;
 
-    int_fast8_t GPU0; // NB of GPU devices in set 0. 1+ if matrix multiplication done by GPU (set 0)
-    int_fast8_t GPU1; // NB of GPU devices in set 1. 1+ if matrix multiplication done by GPU (set 1)
-    int_fast8_t GPU2; // NB of GPU devices in set 2. 1+ if matrix multiplication done by GPU (set 2)
-    int_fast8_t GPU3; // NB of GPU devices in set 3. 1+ if matrix multiplication done by GPU (set 3)    
-    int_fast8_t GPU4; // NB of GPU devices in set 4. 1+ if matrix multiplication done by GPU (set 4)
-    int_fast8_t GPU5; // NB of GPU devices in set 5. 1+ if matrix multiplication done by GPU (set 5)
-    int_fast8_t GPU6; // NB of GPU devices in set 6. 1+ if matrix multiplication done by GPU (set 6)
-    int_fast8_t GPU7; // NB of GPU devices in set 7. 1+ if matrix multiplication done by GPU (set 7)
+    int_fast8_t AOcompute__GPU0; // NB of GPU devices in set 0. 1+ if matrix multiplication done by GPU (set 0)
+    int_fast8_t AOcompute__GPU1; // NB of GPU devices in set 1. 1+ if matrix multiplication done by GPU (set 1)
+    int_fast8_t AOcompute__GPU2; // NB of GPU devices in set 2. 1+ if matrix multiplication done by GPU (set 2)
+    int_fast8_t AOcompute__GPU3; // NB of GPU devices in set 3. 1+ if matrix multiplication done by GPU (set 3)    
+    int_fast8_t AOcompute__GPU4; // NB of GPU devices in set 4. 1+ if matrix multiplication done by GPU (set 4)
+    int_fast8_t AOcompute__GPU5; // NB of GPU devices in set 5. 1+ if matrix multiplication done by GPU (set 5)
+    int_fast8_t AOcompute__GPU6; // NB of GPU devices in set 6. 1+ if matrix multiplication done by GPU (set 6)
+    int_fast8_t AOcompute__GPU7; // NB of GPU devices in set 7. 1+ if matrix multiplication done by GPU (set 7)
             
-    int_fast8_t GPUall; // 1 if scaling computations done by GPU
-    int_fast8_t GPUusesem; // 1 if using semaphores to control GPU
-    int_fast8_t AOLCOMPUTE_TOTAL_ASYNC; // 1 if performing image total in separate thread (runs faster, but image total dates from last frame)
-  
+    int_fast8_t AOcompute__GPUall; // 1 if scaling computations done by GPU
+    int_fast8_t AOcompute__GPUusesem; // 1 if using semaphores to control GPU
+    int_fast8_t AOcompute__AOLCOMPUTE_TOTAL_ASYNC; // 1 if performing image total in separate thread (runs faster, but image total dates from last frame)
+  */
 	/* =============================================================================================== */
     
 
@@ -751,7 +757,7 @@ int_fast8_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name, const char *
 int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *ID_WFSzp_name, int NBzp, const char *IDwfsref0_name, const char *IDwfsref_name);
 
 /** @brief Main loop function */
-int_fast8_t AOloopControl_run();
+int_fast8_t AOloopControl_aorun();
 
 /** @brief CPU based matrix-vector multiplication - when no GPU */
 int_fast8_t ControlMatrixMultiply( float *cm_array, float *imarray, long m, long n, float *outvect);

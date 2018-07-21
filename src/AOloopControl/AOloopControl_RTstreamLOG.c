@@ -336,7 +336,7 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
             long IDinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo;
 
 
-            data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].LOOPiteration;
+            data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5  ] = AOconf[loop].aorun__LOOPiteration;
             data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+1] = (long) tnow.tv_sec;
             data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+2] = (long) tnow.tv_nsec;
             data.image[IDinfo].array.UI64[AOconf[loop].RTSLOGarray[rtlindex].frameindex*5+3] = data.image[AOconf[loop].RTSLOGarray[rtlindex].IDsrc].md[0].cnt0;
@@ -907,7 +907,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 				}
 				else // TEST if loop is off and partial buffer needs to be saved
 				{
-					if((AOconf[loop].on == 0)&&(AOconf[loop].RTSLOGarray[rtlindex].frameindex>0))
+					if((AOconf[loop].aorun__on == 0)&&(AOconf[loop].RTSLOGarray[rtlindex].frameindex>0))
 					{
 						SAVEfile = 1;
 						NBframe = AOconf[loop].RTSLOGarray[rtlindex].frameindex;

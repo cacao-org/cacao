@@ -44,7 +44,7 @@ int_fast8_t AOloopControl_DMprimaryWrite_on()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].DMprimaryWriteON = 1;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__DMprimaryWriteON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -56,7 +56,7 @@ int_fast8_t AOloopControl_DMprimaryWrite_off()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].DMprimaryWriteON = 0;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__DMprimaryWriteON = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -68,7 +68,7 @@ int_fast8_t AOloopControl_DMfilteredWrite_on()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].DMfilteredWriteON = 1;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__DMfilteredWriteON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -80,7 +80,7 @@ int_fast8_t AOloopControl_DMfilteredWrite_off()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].DMfilteredWriteON = 0;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__DMfilteredWriteON = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;

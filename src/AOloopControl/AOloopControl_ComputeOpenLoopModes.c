@@ -502,7 +502,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
     }
     COREMOD_MEMORY_image_set_sempost_byID(IDblknb, -1);
     data.image[IDblknb].md[0].cnt0++;
-    data.image[IDblknb].md[0].cnt1 = AOconf[loop].LOOPiteration;
+    data.image[IDblknb].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
     data.image[IDblknb].md[0].write = 0;
 
 
@@ -661,7 +661,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         //
         //  MIX PREDICTION WITH CURRENT DM STATE
         //
-        if(AOconf[loop].ARPFon==1)
+        if(AOconf[loop].aorun__ARPFon==1)
         {
 		//	printf("%s  %s  %d\n",__FILE__, __func__, __LINE__);fflush(stdout); //TEST
 			
@@ -969,7 +969,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         data.image[IDmodevalDMnow].md[0].cnt0++;
         data.image[IDmodevalDMnow].md[0].write = 0;
 
-		if(AOconf[loop].DMfilteredWriteON==1)
+		if(AOconf[loop].aorun__DMfilteredWriteON==1)
 			COREMOD_MEMORY_image_set_sempost_byID(IDmodevalDMnowfilt, -1);
         else
 			{
@@ -989,7 +989,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 		// IF MODAL DM, AND FILTERED DM WRITE IS ON, SEND TO DM
-		if((AOconf[loop].DMfilteredWriteON==1) && (AOconf[loop].DMMODE==1))
+		if((AOconf[loop].aorun__DMfilteredWriteON==1) && (AOconf[loop].DMMODE==1))
 		{
 			data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
 			memcpy(data.image[aoloopcontrol_var.aoconfID_dmC].array.F, data.image[IDmodevalDMnowfilt].array.F, sizeof(float)*NBmodes);
@@ -1061,7 +1061,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 
-		if(AOconf[loop].ARPFon==1)
+		if(AOconf[loop].aorun__ARPFon==1)
 		{
 			//
 			// COMPUTE OPEN LOOP PREDICTION AT TIME OF WFS MEASUREMENT
@@ -1109,7 +1109,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 		AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval_ol, tnow);
 
 
-		if(AOconf[loop].ARPFon==1)
+		if(AOconf[loop].aorun__ARPFon==1)
 		{
 			//
 			// OPEN LOOP PREDICTION RESIDUAL = most recent OL - time-lagged PF

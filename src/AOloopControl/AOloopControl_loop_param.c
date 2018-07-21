@@ -180,7 +180,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
         data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 1;
         memcpy(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[ID].array.F, sizeof(float)*AOconf[loop].sizexWFS*AOconf[loop].sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM);
         data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt0++;
-        data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 = AOconf[loop].LOOPiteration;
+        data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
         data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 0;
 
         // for GPU mode
@@ -189,7 +189,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
         data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].write = 1;
         memcpy(data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F, data.image[ID].array.F, sizeof(float)*AOconf[loop].activeWFScnt*AOconf[loop].activeDMcnt);
         data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt0++;
-        data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt1 = AOconf[loop].LOOPiteration;
+        data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
         data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].write = 0;
     }
     else
@@ -277,7 +277,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
             data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 1;
             memcpy(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[IDcontrMc0].array.F, sizeof(float)*AOconf[loop].sizexWFS*AOconf[loop].sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM);
             data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt0++;
-			data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 = AOconf[loop].LOOPiteration;
+			data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
 			data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 0;
 
 
@@ -286,7 +286,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
             data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].write = 1;
             memcpy(data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F, data.image[IDcontrMcact0].array.F, sizeof(float)*AOconf[loop].activeWFScnt*AOconf[loop].activeDMcnt);
             data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt0++;
-            data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt1 = AOconf[loop].LOOPiteration;
+            data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
             data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].write = 0;
 
             aoloopcontrol_var.initcontrMcact_GPU[0] = 0;

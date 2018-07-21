@@ -113,7 +113,7 @@ int_fast8_t set_DM_modes(long loop)
 
 	
 
-    if(AOconf[loop].GPU1 == 0)
+    if(AOconf[loop].AOcompute.GPU1 == 0)
     {
         float *arrayf;
         long i, j, k;
@@ -136,7 +136,7 @@ int_fast8_t set_DM_modes(long loop)
                 sem_post(data.image[aoloopcontrol_var.aoconfID_dmC].semptr[0]);
         }
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0++;
-		data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].LOOPiteration;
+		data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 0;
 
         free(arrayf);
@@ -146,7 +146,7 @@ int_fast8_t set_DM_modes(long loop)
 #ifdef HAVE_CUDA
 
 
-        GPU_loop_MultMat_setup(1, data.image[aoloopcontrol_var.aoconfID_DMmodes].name, data.image[aoloopcontrol_var.aoconfID_cmd_modes].name, data.image[aoloopcontrol_var.aoconfID_dmC].name, AOconf[loop].GPU1, aoloopcontrol_var.GPUset1, 1, AOconf[loop].GPUusesem, 1, loop);
+        GPU_loop_MultMat_setup(1, data.image[aoloopcontrol_var.aoconfID_DMmodes].name, data.image[aoloopcontrol_var.aoconfID_cmd_modes].name, data.image[aoloopcontrol_var.aoconfID_dmC].name, AOconf[loop].AOcompute.GPU1, aoloopcontrol_var.GPUset1, 1, AOconf[loop].GPUusesem, 1, loop);
         AOconf[loop].status = 12;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);

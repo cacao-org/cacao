@@ -898,11 +898,11 @@ void init_AOloopControl()
 	/* 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET                  */
 	/* =============================================================================================== */
 
-    RegisterCLIcommand("aolrun", __FILE__, AOloopControl_run, // Run AO loop
+    RegisterCLIcommand("aolrun", __FILE__, AOloopControl_aorun, // Run AO loop
     "run AO loop", 
     "no arg", 
     "aolrun", 
-    "int AOloopControl_run()"); 
+    "int AOloopControl_aorun()"); 
 
     RegisterCLIcommand("aolzpwfsloop",__FILE__, AOloopControl_WFSzpupdate_loop_cli, //WFS zero point offset loop
     "WFS zero point offset loop", 

@@ -242,19 +242,19 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
     /** ### 1.6. Define GPU use
      * 
-     * - ./conf/param_GPU0.txt           > AOconf[loop].GPU0 (0 if missing)
-     * - ./conf/param_GPU1.txt           > AOconf[loop].GPU1 (0 if missing)
-     * - ./conf/param_GPUall.txt        -> AOconf[loop].GPUall
-     * - ./conf/param_DMprimWriteON.txt -> AOconf[loop].DMprimaryWriteON
+     * - ./conf/param_GPU0.txt           > AOconf[loop].AOcompute.GPU0 (0 if missing)
+     * - ./conf/param_GPU1.txt           > AOconf[loop].AOcompute.GPU1 (0 if missing)
+     * - ./conf/param_GPUall.txt        -> AOconf[loop].AOcompute.GPUall
+     * - ./conf/param_DMprimWriteON.txt -> AOconf[loop].aorun__DMprimaryWriteON
      * 
      */ 
 	fprintf(fplog, "\n\n============== 1.6. Define GPU use ===================\n\n");
 	
-	AOconf[loop].GPU0 = AOloopControl_readParam_int("GPU0", 0, fplog);
-	AOconf[loop].GPU1 = AOloopControl_readParam_int("GPU1", 0, fplog);
-	AOconf[loop].GPUall = AOloopControl_readParam_int("GPUall", 0, fplog); // Skip CPU image scaling and go straight to GPUs ?
-	AOconf[loop].DMprimaryWriteON = AOloopControl_readParam_int("DMprimaryWriteON", 0, fplog);    // Direct DM write ?
-	AOconf[loop].DMfilteredWriteON = AOloopControl_readParam_int("DMfilteredWriteON", 0, fplog);    // Filtered DM write ?
+	AOconf[loop].AOcompute.GPU0 = AOloopControl_readParam_int("GPU0", 0, fplog);
+	AOconf[loop].AOcompute.GPU1 = AOloopControl_readParam_int("GPU1", 0, fplog);
+	AOconf[loop].AOcompute.GPUall = AOloopControl_readParam_int("GPUall", 0, fplog); // Skip CPU image scaling and go straight to GPUs ?
+	AOconf[loop].aorun__DMprimaryWriteON = AOloopControl_readParam_int("DMprimaryWriteON", 0, fplog);    // Direct DM write ?
+	AOconf[loop].aorun__DMfilteredWriteON = AOloopControl_readParam_int("DMfilteredWriteON", 0, fplog);    // Filtered DM write ?
     
 
 	/** ### 1.7. WFS image total flux computation mode
@@ -264,7 +264,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 	 fprintf(fplog, "\n\n============== 1.7. WFS image total flux computation mode ===================\n\n");
 
     // TOTAL image done in separate thread ?
-    AOconf[loop].AOLCOMPUTE_TOTAL_ASYNC = AOloopControl_readParam_int("COMPUTE_TOTAL_ASYNC", 1, fplog);
+    AOconf[loop].AOcompute.AOLCOMPUTE_TOTAL_ASYNC = AOloopControl_readParam_int("COMPUTE_TOTAL_ASYNC", 1, fplog);
  
 
     /** ### 1.8. Read CMatrix mult mode
@@ -276,7 +276,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
  	fprintf(fplog, "\n\n============== 1.8. Read CMatrix mult mode ===================\n\n");
 
-	AOconf[loop].CMMODE = AOloopControl_readParam_int("CMMODE", 1, fplog);
+	AOconf[loop].aorun__CMMODE = AOloopControl_readParam_int("CMMODE", 1, fplog);
 
 
 
