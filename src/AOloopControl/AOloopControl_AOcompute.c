@@ -260,14 +260,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 			if(AOconf[loop].WFSrefzero == 0) // if WFS reference is NOT zero
 			{
-		#ifdef _PRINT_TEST
-		printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
-		for(ii=0;ii<AOconf[loop].sizeWFS;ii+=10)
-			printf("    data.image[%ld].array.F[%ld] = %f\n", aoloopcontrol_var.aoconfID_wfsref, ii, data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii]);
-		fflush(stdout);
-		#endif
-
-
 				for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
 					data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
 			}
@@ -275,7 +267,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 			{
 						#ifdef _PRINT_TEST
 		printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
-		fflush(stdout);
+		for(ii=0;ii<AOconf[loop].sizeWFS;ii+=10)
+			printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii]);
 		#endif
 
 				memcpy(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].sizeWFS);
