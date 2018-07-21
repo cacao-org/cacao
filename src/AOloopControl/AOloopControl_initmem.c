@@ -135,15 +135,15 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         char cntname[200];
 		long i;
 
-        AOconf[loop].aorun__on = 0;
-        AOconf[loop].aorun__DMprimaryWriteON = 0;
-        AOconf[loop].aorun__DMfilteredWriteON = 0;
+        AOconf[loop].aorun.on = 0;
+        AOconf[loop].aorun.DMprimaryWriteON = 0;
+        AOconf[loop].aorun.DMfilteredWriteON = 0;
         AOconf[loop].AUTOTUNE_LIMITS_ON = 0;
         AOconf[loop].AUTOTUNE_GAINS_ON = 0;
-        AOconf[loop].aorun__ARPFon = 0;
+        AOconf[loop].aorun.ARPFon = 0;
         AOconf[loop].ARPFgainAutoMin = 0.00;
         AOconf[loop].ARPFgainAutoMax = 1.00;
-        AOconf[loop].aorun__LOOPiteration = 0;
+        AOconf[loop].aorun.LOOPiteration = 0;
 
         AOconf[loop].cnt = 0;
         
@@ -179,12 +179,12 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         for(loop=0; loop<NB_AOloopcontrol; loop++)
         {
             AOconf[loop].init = 0;
-            AOconf[loop].aorun__on = 0;
-            AOconf[loop].aorun__DMprimaryWriteON = 0;
-            AOconf[loop].aorun__DMfilteredWriteON = 0;
+            AOconf[loop].aorun.on = 0;
+            AOconf[loop].aorun.DMprimaryWriteON = 0;
+            AOconf[loop].aorun.DMfilteredWriteON = 0;
             AOconf[loop].AOcompute.ComputeWFSsol_FLAG = 1;
-            AOconf[loop].aorun__ARPFon = 0;
-            AOconf[loop].aorun__LOOPiteration = 0;
+            AOconf[loop].aorun.ARPFon = 0;
+            AOconf[loop].aorun.LOOPiteration = 0;
             AOconf[loop].cnt = 0;
             AOconf[loop].cntmax = 0;
             AOconf[loop].maxlimit = 0.3;

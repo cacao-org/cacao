@@ -8,6 +8,7 @@ AOloopControl.h
 AOloopControl_wfs.c 
 AOloopControl_dm.c 
 AOloopControl_aorun.c 
+AOloopControl_aorun.h 
 AOloopControl_AOcompute.c
 AOloopControl_AOcompute.h 
 AOloopControl_ComputeOpenLoopModes.c

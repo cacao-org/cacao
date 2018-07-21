@@ -39,7 +39,7 @@ int_fast8_t AOloopControl_ARPFon()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__ARPFon = 1;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFon = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -51,7 +51,7 @@ int_fast8_t AOloopControl_ARPFoff()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__ARPFon = 0;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFon = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;

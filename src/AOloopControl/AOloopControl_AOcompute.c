@@ -199,7 +199,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 #ifdef _PRINT_TEST
-    printf("[%s] [%d]  AOcompute start, loop %ld\n", __FILE__, __LINE__, AOconf[loop].aorun__LOOPiteration);
+    printf("[%s] [%d]  AOcompute start, loop %ld\n", __FILE__, __LINE__, AOconf[loop].aorun.LOOPiteration);
     fflush(stdout);
 #endif
 
@@ -211,7 +211,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
     // lock loop iteration into variable so that it cannot increment
-    LOOPiter = AOconf[loop].aorun__LOOPiteration;
+    LOOPiter = AOconf[loop].aorun.LOOPiteration;
 
 
     // waiting for dark-subtracted image
@@ -449,7 +449,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
         if(AOconf[loop].AOcompute.GPU0 == 0)   // no GPU -> run in CPU
         {
-            if(AOconf[loop].aorun__CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
+            if(AOconf[loop].aorun.CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
 #ifdef _PRINT_TEST
                 printf("[%s] [%d] - CM mult: GPU=0, CMMODE=0 - %s x %s -> %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].name);
@@ -487,7 +487,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         else  // run in GPU if possible
         {
 #ifdef HAVE_CUDA
-            if(AOconf[loop].aorun__CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
+            if(AOconf[loop].aorun.CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
 #ifdef _PRINT_TEST
                 printf("[%s] [%d] - CM mult: GPU=1, CMMODE=0 - using matrix %s    GPU alpha beta = %f %f\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta);
@@ -684,7 +684,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 
-        if(AOconf[loop].aorun__CMMODE==0)
+        if(AOconf[loop].aorun.CMMODE==0)
         {
             int block;
             long k;
@@ -776,7 +776,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         else
         {
 #ifdef HAVE_CUDA
-            if(AOconf[loop].aorun__CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
+            if(AOconf[loop].aorun.CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
             {
                 // Update meas_modes
 
@@ -808,7 +808,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         }
 
 
-        if(AOconf[loop].aorun__CMMODE==0)
+        if(AOconf[loop].aorun.CMMODE==0)
         {
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0 ++;

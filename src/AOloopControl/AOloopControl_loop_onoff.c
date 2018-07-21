@@ -48,7 +48,7 @@ int_fast8_t AOloopControl_loopon()
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].cntmax = AOconf[aoloopcontrol_var.LOOPNUMBER].cnt-1;
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__on = 1;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 1;
     
     // initialize RT logging frame indices
     for (rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++ )
@@ -67,7 +67,7 @@ int_fast8_t AOloopControl_loopoff()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__on = 0;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 	
 	
@@ -120,7 +120,7 @@ int_fast8_t AOloopControl_loopkill()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__kill = 1;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.kill = 1;
 
     return 0;
 }
@@ -136,9 +136,9 @@ int_fast8_t AOloopControl_loopstep(long loop, long NBstep)
     AOconf[aoloopcontrol_var.LOOPNUMBER].RMSmodesCumul = 0.0;
     AOconf[aoloopcontrol_var.LOOPNUMBER].RMSmodesCumulcnt = 0;
 
-    AOconf[loop].aorun__on = 1;
+    AOconf[loop].aorun.on = 1;
 
-    while(AOconf[loop].aorun__on==1)
+    while(AOconf[loop].aorun.on==1)
         usleep(100); // THIS WAITING IS OK
 
 
@@ -163,7 +163,7 @@ int_fast8_t AOloopControl_loopreset()
         aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
     }
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun__on = 0;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 0;
     for(k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].NBDMmodes; k++)
         data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
 

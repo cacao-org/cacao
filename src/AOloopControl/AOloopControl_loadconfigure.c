@@ -245,7 +245,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
      * - ./conf/param_GPU0.txt           > AOconf[loop].AOcompute.GPU0 (0 if missing)
      * - ./conf/param_GPU1.txt           > AOconf[loop].AOcompute.GPU1 (0 if missing)
      * - ./conf/param_GPUall.txt        -> AOconf[loop].AOcompute.GPUall
-     * - ./conf/param_DMprimWriteON.txt -> AOconf[loop].aorun__DMprimaryWriteON
+     * - ./conf/param_DMprimWriteON.txt -> AOconf[loop].aorun.DMprimaryWriteON
      * 
      */ 
 	fprintf(fplog, "\n\n============== 1.6. Define GPU use ===================\n\n");
@@ -253,8 +253,8 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 	AOconf[loop].AOcompute.GPU0 = AOloopControl_readParam_int("GPU0", 0, fplog);
 	AOconf[loop].AOcompute.GPU1 = AOloopControl_readParam_int("GPU1", 0, fplog);
 	AOconf[loop].AOcompute.GPUall = AOloopControl_readParam_int("GPUall", 0, fplog); // Skip CPU image scaling and go straight to GPUs ?
-	AOconf[loop].aorun__DMprimaryWriteON = AOloopControl_readParam_int("DMprimaryWriteON", 0, fplog);    // Direct DM write ?
-	AOconf[loop].aorun__DMfilteredWriteON = AOloopControl_readParam_int("DMfilteredWriteON", 0, fplog);    // Filtered DM write ?
+	AOconf[loop].aorun.DMprimaryWriteON = AOloopControl_readParam_int("DMprimaryWriteON", 0, fplog);    // Direct DM write ?
+	AOconf[loop].aorun.DMfilteredWriteON = AOloopControl_readParam_int("DMfilteredWriteON", 0, fplog);    // Filtered DM write ?
     
 
 	/** ### 1.7. WFS image total flux computation mode
@@ -276,7 +276,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
  	fprintf(fplog, "\n\n============== 1.8. Read CMatrix mult mode ===================\n\n");
 
-	AOconf[loop].aorun__CMMODE = AOloopControl_readParam_int("CMMODE", 1, fplog);
+	AOconf[loop].aorun.CMMODE = AOloopControl_readParam_int("CMMODE", 1, fplog);
 
 
 

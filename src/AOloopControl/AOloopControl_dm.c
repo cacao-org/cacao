@@ -136,7 +136,7 @@ int_fast8_t set_DM_modes(long loop)
                 sem_post(data.image[aoloopcontrol_var.aoconfID_dmC].semptr[0]);
         }
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0++;
-		data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
+		data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 0;
 
         free(arrayf);

@@ -17,6 +17,7 @@
 #include <time.h>
 
 #include "AOloopControl/AOloopControl_AOcompute.h"
+#include "AOloopControl/AOloopControl_aorun.h"
 
 
 #ifndef _AOLOOPCONTROL_H
@@ -176,7 +177,10 @@ static FILE *loadcreateshm_fplog;
  */
 typedef struct
 {	
-	uint64_t aorun__LOOPiteration;                   /**< Loop iteration - set to zero on creation on aolrun start */
+	AOLOOPCONF_aorun aorun;
+	
+	
+//	uint64_t aorun__LOOPiteration;                   /**< Loop iteration - set to zero on creation on aolrun start */
 	
     /* =============================================================================================== */
 	/** @name AOLOOPCONTROL_CONF: TIMING 
@@ -219,7 +223,7 @@ typedef struct
     uint_fast64_t cnt;                        /**<  loop step counter, set to zero every time loop is stopped */
     uint_fast64_t cntmax;                     /**<  max value of counter, used to step loop */
     uint_fast64_t DMupdatecnt;                /**<  */
-    int_fast8_t   aorun__kill;                         /**<  set to 1 to kill computation loop */
+//    int_fast8_t   aorun__kill;                         /**<  set to 1 to kill computation loop */
     char name[80];
 
     int_fast8_t init_RM;                      /**< Response Matrix loaded */
@@ -308,12 +312,12 @@ typedef struct
 	 * 
 	 */
 		
-    int_fast8_t   aorun__on;                           /**< goes to 1 when loop starts, put to 0 to turn loop off */
+//    int_fast8_t   aorun__on;                           /**< goes to 1 when loop starts, put to 0 to turn loop off */
     float gain;                               /**< overall loop gain */
     uint_fast16_t framesAve;                  /**< number of WFS frames to average */
-	int_fast8_t   aorun__DMprimaryWriteON;             /**< primary DM write */
-	int_fast8_t   aorun__CMMODE;                       /**< Combined matrix. 0: matrix is WFS pixels -> modes, 1: matrix is WFS pixels -> DM actuators */
-	int_fast8_t   aorun__DMfilteredWriteON;            /**< Filtered write to DM */
+//	int_fast8_t   aorun__DMprimaryWriteON;             /**< primary DM write */
+//	int_fast8_t   aorun__CMMODE;                       /**< Combined matrix. 0: matrix is WFS pixels -> modes, 1: matrix is WFS pixels -> DM actuators */
+//	int_fast8_t   aorun__DMfilteredWriteON;            /**< Filtered write to DM */
  
 	// MODAL AUTOTUNING 
 	// limits
@@ -336,7 +340,7 @@ typedef struct
 	 * 
 	 */
 	///@{  	
-    int_fast8_t aorun__ARPFon; // 1 if auto-regressive predictive filter is ON
+//    int_fast8_t aorun__ARPFon; // 1 if auto-regressive predictive filter is ON
 	float ARPFgain; 
 	float ARPFgainAutoMin;
 	float ARPFgainAutoMax;

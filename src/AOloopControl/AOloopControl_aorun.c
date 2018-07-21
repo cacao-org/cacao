@@ -276,12 +276,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
     if(vOK==1)
     {
-		AOconf[loop].aorun__LOOPiteration = 0;
-        AOconf[loop].aorun__kill = 0;
-        AOconf[loop].aorun__on = 0;
-        AOconf[loop].aorun__DMprimaryWriteON = 0;
-        AOconf[loop].aorun__DMfilteredWriteON = 0;
-        AOconf[loop].aorun__ARPFon = 0;
+		AOconf[loop].aorun.LOOPiteration = 0;
+        AOconf[loop].aorun.kill = 0;
+        AOconf[loop].aorun.on = 0;
+        AOconf[loop].aorun.DMprimaryWriteON = 0;
+        AOconf[loop].aorun.DMfilteredWriteON = 0;
+        AOconf[loop].aorun.ARPFon = 0;
         
         #ifdef _PRINT_TEST
 		printf("[%s] [%d]  AOloopControl_aorun: Entering loop\n", __FILE__, __LINE__);
@@ -290,7 +290,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
         int timerinit = 0;
 
-        while( AOconf[loop].aorun__kill == 0)
+        while( AOconf[loop].aorun.kill == 0)
         {
             if(timerinit==1)
             {
@@ -308,7 +308,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
 
             timerinit = 0;
-            while(AOconf[loop].aorun__on == 1)
+            while(AOconf[loop].aorun.on == 1)
             {
 				clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
                 if(timerinit==0)
@@ -336,9 +336,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[19] = tdiffv;
 
 
-                if(AOconf[loop].aorun__CMMODE==0)  // 2-step : WFS -> mode coeffs -> DM act
+                if(AOconf[loop].aorun.CMMODE==0)  // 2-step : WFS -> mode coeffs -> DM act
                 {
-                    if(AOconf[loop].aorun__DMprimaryWriteON==1) // if Writing to DM
+                    if(AOconf[loop].aorun.DMprimaryWriteON==1) // if Writing to DM
                     {
 
 
@@ -349,7 +349,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 }
                 else // 1 step: WFS -> DM act
                 {
-                    if(AOconf[loop].aorun__DMprimaryWriteON==1) // if Writing to DM
+                    if(AOconf[loop].aorun.DMprimaryWriteON==1) // if Writing to DM
                     {
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
 
@@ -400,7 +400,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                         }*/
                         
                         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmC, -1);
-						data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
+						data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0++;
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 0;
                         // inform dmdisp that new command is ready in one of the channels
@@ -424,20 +424,20 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 AOconf[loop].cnt++;
 
 		
-				AOconf[loop].aorun__LOOPiteration++;
-				data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
+				AOconf[loop].aorun.LOOPiteration++;
+				data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
 				
 				
 				
 				
 				// REAL TIME LOGGING
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt0 = AOconf[loop].cnt;
-                data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt1 = AOconf[loop].aorun__LOOPiteration;
+                data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
                 data.image[aoloopcontrol_var.aoconfIDlogdata].array.F[0] = AOconf[loop].gain;
 
 
                 if(AOconf[loop].cnt == AOconf[loop].cntmax)
-                    AOconf[loop].aorun__on = 0;
+                    AOconf[loop].aorun.on = 0;
             
 				clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
 				
@@ -449,7 +449,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 				/*
 				if(tdiffv > 30.0e-6)
 				{
-					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_aorun() - excluding AOcompute\n", tdiffv*1.0e6, (long) AOconf[loop].aorun__LOOPiteration);
+					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_aorun() - excluding AOcompute\n", tdiffv*1.0e6, (long) AOconf[loop].aorun.LOOPiteration);
 					fflush(stdout);
 				}*/
 				
@@ -460,7 +460,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 				/*
 				if(tdiffv > 600.0e-6)
 				{
-					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_aorun()\n", tdiffv*1.0e6, (long) AOconf[loop].aorun__LOOPiteration);
+					printf("TIMING WARNING: %12.3f us  %10ld   AOloopControl_aorun()\n", tdiffv*1.0e6, (long) AOconf[loop].aorun.LOOPiteration);
 					printf("    AOcompute()            read cam        : %12.3f us \n", tdiffv00*1.0e6);
 					printf("    AOcompute()            post read cam   : %12.3f us \n", tdiffv01*1.0e6);
 					printf("    AOloopControl_aorun()    post-AOcompute  : %12.3f us \n", tdiffv02*1.0e6);
