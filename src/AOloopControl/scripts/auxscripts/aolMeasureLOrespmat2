@@ -17,11 +17,12 @@ echo " $(tput bold)USAGE:$(tput sgr0)"
 echo "     $0 [-hrc] <ampl[um]> <tdelay[frame]> <nb frames ave> <nb frames excl> <normalize flag>"
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-h$(tput sgr0)                help"
-echo "     $(tput bold)-c$(tput sgr0) <CPUset>       use CPU set"
-echo "     $(tput bold)-d$(tput sgr0) <delayRM1us>   DM command delay [us]"
-echo "     $(tput bold)-n$(tput sgr0) <NBcycle>      Number of poke cycles (default=0: poke until killed)"
-echo "     $(tput bold)-r$(tput sgr0)               (r)e-use AO shared memory structure, do not re-create it"
+echo "     $(tput bold)-h$(tput sgr0)                  help"
+echo "     $(tput bold)-c$(tput sgr0) <CPUset>         use CPU set"
+echo "     $(tput bold)-d$(tput sgr0) <delayRM1us>     DM command delay [us]"
+echo "     $(tput bold)-n$(tput sgr0) <NBcycle>        Number of poke cycles (default=0: poke until killed)"
+echo "     $(tput bold)-i$(tput sgr0) <NBcycleInner>   Number of inner poke cycles (default=1)"
+echo "     $(tput bold)-r$(tput sgr0)                  (r)e-use AO shared memory structure, do not re-create it"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
 echo "     <ampl[um]>           RM amplitude on DM"
@@ -75,6 +76,7 @@ AOinitMode="0"      # default
 CPUset="NULL"
 NBpokeCycle="0"
 delayRM1us="0"
+NBpokeCycleInner="1"
 
 while getopts :hrc:d:n: FLAG; do
   case $FLAG in
@@ -91,7 +93,9 @@ while getopts :hrc:d:n: FLAG; do
     n)
     NBpokeCycle="$OPTARG"
     ;;
-    
+    i)
+    NBpokeCycleInner="$OPTARG"
+    ;;
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
       printHELP
@@ -133,7 +137,6 @@ normalize_flag="$5"
 
 
 
-
 loopnb=$( head -1 LOOPNUMBER )
 
 pname0=$0
@@ -143,7 +146,7 @@ pname="aol${loopnb}LOrespM"
 aolnb $loopnb
 csetpmove ${CPUset}
 loadfits respM_LOmodes.fits RMpokeCube
-aolmeaslWFSrespC ${PokeAmpl} ${PokeDelay_fr} ${delayRM1us} ${PokeAveNB_fr} ${PokeNBExcl_fr} RMpokeCube LOwfsresp LOwfsref ${normalize_flag} ${AOinitMode} ${NBpokeCycle}
+aolmeaslWFSrespC ${PokeAmpl} ${PokeDelay_fr} ${delayRM1us} ${PokeAveNB_fr} ${PokeNBExcl_fr} RMpokeCube LOwfsresp LOwfsref ${normalize_flag} ${AOinitMode} ${NBpokeCycle} ${NBpokeCycleInner}
 savefits LOwfsresp "!LOrespM.fits"
 savefits LOwfsref "!LOwfsref0.fits"
 listim

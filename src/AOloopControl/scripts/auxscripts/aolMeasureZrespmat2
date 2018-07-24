@@ -70,6 +70,7 @@ AOinitMode="0"      # default
 CPUset="NULL"
 delayRM1us="0"
 NBpokeCycle="0"
+NBpokeCycleInner="1"
 
 while getopts :hrc:d:n: FLAG; do
   case $FLAG in
@@ -85,6 +86,9 @@ while getopts :hrc:d:n: FLAG; do
     ;;
     n)
     NBpokeCycle="$OPTARG"
+    ;;
+    i)
+    NBpokeCycleInner="$OPTARG"
     ;;
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -130,8 +134,6 @@ PokeNBExcl_fr="$4"
 normalize_flag="$5"
 
 
-
-
 loopnb=$( head -1 LOOPNUMBER )
 dmindex=$( head -1 conf/param_DMindex.txt )
 
@@ -160,7 +162,7 @@ aolnb $loopnb
 csetpmove ${CPUset}
 loadfits "./conf/RMpokeCube.fits" RMpokeCube
 #savefits RMpokeCube "!_RMpokeCube_test00.fits"
-aolmeaslWFSrespC ${PokeAmpl} ${PokeDelay_fr} ${delayRM1us} ${PokeAveNB_fr} ${PokeNBExcl_fr} RMpokeCube wfsresp wfsref ${normalize_flag} ${AOinitMode} ${NBpokeCycle}
+aolmeaslWFSrespC ${PokeAmpl} ${PokeDelay_fr} ${delayRM1us} ${PokeAveNB_fr} ${PokeNBExcl_fr} RMpokeCube wfsresp wfsref ${normalize_flag} ${AOinitMode} ${NBpokeCycle} ${NBpokeCycleInner}
 savefits wfsresp "!zrespmat0.fits"
 savefits wfsref "!wfsref00.fits"
 listim

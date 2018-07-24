@@ -177,10 +177,24 @@ static FILE *loadcreateshm_fplog;
  */
 typedef struct
 {	
+	
+	
 	AOLOOPCONF_aorun aorun;
 	
+	/* ====== COMPUTATION MODES ======= */
+	AOLOOPCONF_AOcompute AOcompute;
 	
-//	uint64_t aorun__LOOPiteration;                   /**< Loop iteration - set to zero on creation on aolrun start */
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
     /* =============================================================================================== */
 	/** @name AOLOOPCONTROL_CONF: TIMING 
@@ -312,12 +326,8 @@ typedef struct
 	 * 
 	 */
 		
-//    int_fast8_t   aorun__on;                           /**< goes to 1 when loop starts, put to 0 to turn loop off */
     float gain;                               /**< overall loop gain */
     uint_fast16_t framesAve;                  /**< number of WFS frames to average */
-//	int_fast8_t   aorun__DMprimaryWriteON;             /**< primary DM write */
-//	int_fast8_t   aorun__CMMODE;                       /**< Combined matrix. 0: matrix is WFS pixels -> modes, 1: matrix is WFS pixels -> DM actuators */
-//	int_fast8_t   aorun__DMfilteredWriteON;            /**< Filtered write to DM */
  
 	// MODAL AUTOTUNING 
 	// limits
@@ -340,7 +350,6 @@ typedef struct
 	 * 
 	 */
 	///@{  	
-//    int_fast8_t aorun__ARPFon; // 1 if auto-regressive predictive filter is ON
 	float ARPFgain; 
 	float ARPFgainAutoMin;
 	float ARPFgainAutoMax;
@@ -350,33 +359,7 @@ typedef struct
 
 
 	/* =============================================================================================== */
- 	/** @name AOLOOPCONTROL_CONF: COMPUTATION MODES
-	 * 
-	 */
-	 AOLOOPCONF_AOcompute AOcompute;
-	 
-	 
-	// compute flags
-	/*int_fast8_t AOcompute__ComputeWFSsol_FLAG; 
-	int_fast8_t AOcompute__ComputeFLAG0;
-	int_fast8_t AOcompute__ComputeFLAG1;
-	int_fast8_t AOcompute__ComputeFLAG2;
-	int_fast8_t AOcompute__ComputeFLAG3;
 
-    int_fast8_t AOcompute__GPU0; // NB of GPU devices in set 0. 1+ if matrix multiplication done by GPU (set 0)
-    int_fast8_t AOcompute__GPU1; // NB of GPU devices in set 1. 1+ if matrix multiplication done by GPU (set 1)
-    int_fast8_t AOcompute__GPU2; // NB of GPU devices in set 2. 1+ if matrix multiplication done by GPU (set 2)
-    int_fast8_t AOcompute__GPU3; // NB of GPU devices in set 3. 1+ if matrix multiplication done by GPU (set 3)    
-    int_fast8_t AOcompute__GPU4; // NB of GPU devices in set 4. 1+ if matrix multiplication done by GPU (set 4)
-    int_fast8_t AOcompute__GPU5; // NB of GPU devices in set 5. 1+ if matrix multiplication done by GPU (set 5)
-    int_fast8_t AOcompute__GPU6; // NB of GPU devices in set 6. 1+ if matrix multiplication done by GPU (set 6)
-    int_fast8_t AOcompute__GPU7; // NB of GPU devices in set 7. 1+ if matrix multiplication done by GPU (set 7)
-            
-    int_fast8_t AOcompute__GPUall; // 1 if scaling computations done by GPU
-    int_fast8_t AOcompute__GPUusesem; // 1 if using semaphores to control GPU
-    int_fast8_t AOcompute__AOLCOMPUTE_TOTAL_ASYNC; // 1 if performing image total in separate thread (runs faster, but image total dates from last frame)
-  */
-	/* =============================================================================================== */
     
 
     
