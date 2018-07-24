@@ -1631,7 +1631,7 @@ menucontrolloop_default="wzpoinit"
    	 
    	 m)
    	 value=${loopmaxlim}
-   	 SelectValue01 100 1200 50
+   	 SelectValue01 100 4000 100
  	 loopmaxlim=${value}
  	 echo "$loopmaxlim" > ./conf/param_loopmaxlim.txt
   	 tmux send-keys -t aol${LOOPNUMBER}-ctr "aolsetmaxlim ${loopmaxlim}" C-m
