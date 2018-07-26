@@ -887,7 +887,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 
 			// swap one pair out of two in cube IDpokeC2b
             pokesign[poke] = pokesigntmp;
-            if(pokesign[poke]==1)
+            if(pokesign[poke]==1)  // do not swap
             {
                 ptra = ptra0 + sizeof(float)*dmxysize*(pokeindex);
                 ptrb = ptrb0 + sizeof(float)*dmxysize*(pokeindex);
@@ -896,10 +896,8 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
                 ptra = ptra0 + sizeof(float)*dmxysize*(pokeindex+1);
                 ptrb = ptrb0 + sizeof(float)*dmxysize*(pokeindex+1);
                 memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
-
-                pokesigntmp = -1;
             }
-            else
+            else  // do swap
             {
                 ptra = ptra0 + sizeof(float)*dmxysize*(pokeindex);
                 ptrb = ptrb0 + sizeof(float)*dmxysize*(pokeindex+1);
@@ -908,12 +906,15 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
                 ptra = ptra0 + sizeof(float)*dmxysize*(pokeindex+1);
                 ptrb = ptrb0 + sizeof(float)*dmxysize*(pokeindex);
                 memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
-
-                pokesigntmp = 1;
             }
             
             pokeindex += 2;
         }
+        
+        if(pokesign[poke]==1)
+			pokesigntmp = -1;
+		else
+			pokesigntmp = 1;        
     }
 
 
