@@ -224,7 +224,7 @@ int_fast8_t init_AOloopControl_acquireCalib()
 
     RegisterCLIcommand("aolmRMfast", __FILE__, AOloopControl_acquireCalib_RespMatrix_Fast_cli, "acquire fast modal response matrix", "<modes> <dm RM stream> <WFS stream> <sem trigger> <hardware latency [s]> <loop frequ [Hz]> <ampl [um]> <outname>", "aolmRMfast DMmodes aol0_dmRM aol0_wfsim 4 0.00112 2000.0 0.03 rm000", "long AOloopControl_acquireCalib_RespMatrix_Fast(char *DMmodes_name, char *dmRM_name, char *imWFS_name, long semtrig, float HardwareLag, float loopfrequ, float ampl, char *outname)");
 
-    RegisterCLIcommand("aolmeasWFSrespC",__FILE__, AOloopControl_acquireCalib_Measure_WFSrespC_cli, "measure WFS resp to DM patterns", "<delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <normalize flag> <AOinitMode> <NBcycle>", "aolmeasWFSrespC 2 135 20 0 dmmodes wfsresp 1 0 5", "long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, long NBcycleInner);");
+    RegisterCLIcommand("aolmeasWFSrespC",__FILE__, AOloopControl_acquireCalib_Measure_WFSrespC_cli, "measure WFS resp to DM patterns", "<delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <normalize flag> <AOinitMode> <NBcycle>", "aolmeasWFSrespC 2 135 20 0 dmmodes wfsresp 1 0 5", "long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, int SequInitMode);");
 
     RegisterCLIcommand("aolmeaslWFSrespC",__FILE__, AOloopControl_acquireCalib_Measure_WFS_linResponse_cli, "measure linear WFS response to DM patterns", "<ampl [um]> <delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <output reference [string]> <normalize flag> <AOinitMode> <NBcycle>", "aolmeasWFSrespC 0.05 2 135 20 0 dmmodes wfsresp wfsref 1 0 5", "long AOloopControl_acquireCalib_Measure_WFS_linResponse(long loop, float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDrespC_name, char *IDwfsref_name, int normalize, int AOinitMode, long NBcycle, long NBinnerCycle)");
 
@@ -261,7 +261,8 @@ int_fast8_t init_AOloopControl_acquireCalib()
 /**
  * ## Purpose
  * 
- * Acquire WFS response to a series of DM patterns
+ * Acquire WFS response to a series of DM patterns.\n
+ * 
  * 
  * ## Arguments
  * 
@@ -274,8 +275,8 @@ int_fast8_t init_AOloopControl_acquireCalib()
  * @param[out] IDoutC_name     Output cube
  * @param[in]  normalize       Normalize flag
  * @param[in]  AOinitMode      AO structure initialization flag
- * @param[in\  NBcycle         Number of cycles averaged (outer)
- * @param[in\  NBcycleInner    Number of cycles averaged (inner)
+ * @param[in]  NBcycle         Number of cycles averaged (outer)
+ * @param[in]  SequInitMode    Sequence initialization mode (0 or 1)
  * 
  * AOinitMode = 0:  create AO shared mem struct
  * AOinitMode = 1:  connect only to AO shared mem struct
@@ -290,7 +291,19 @@ int_fast8_t init_AOloopControl_acquireCalib()
  * 
  */
 
-long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, long NBcycleInner)
+long AOloopControl_acquireCalib_Measure_WFSrespC(
+	long        loop, 
+	long        delayfr, 
+	long        delayRM1us, 
+	long        NBave, 
+	long        NBexcl, 
+	const char *IDpokeC_name, 
+	const char *IDoutC_name, 
+	int         normalize, 
+	int         AOinitMode, 
+	long        NBcycle, 
+	int         SequInitMode
+	)
 {
     char fname[200];
     char name[200];
@@ -313,17 +326,20 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
     long ii;
 
     long imcntmax;
-    long *array_iter;
-    int *array_poke;
-    int *array_accum;
-    long *array_kk;
-    long *array_kk1;
-    long *array_PokeIndex;
-    long *array_PokeIndex1;
+
     FILE *fp;
 
 
+	
 
+
+	/** ## DETAILS, STEPS */
+
+
+	/** 
+	 * Process is given high priority to minimize timing jitter
+	 *
+	 */
 
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
@@ -331,10 +347,16 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
 #endif
 
 
+	/**
+	 * If NBcycle is set to zero, then the process should run in an infinite loop.
+	 * The process will then run until receiving USR1.
+	 *  
+	 */
     if(NBcycle < 1)
         NBiter = LONG_MAX; // runs until USR1 signal received
     else
         NBiter = NBcycle;
+
 
 
 
@@ -363,15 +385,39 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
     aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(AOconf[loop].WFSname);
 
 
+
+
+	/** 
+	 * A temporary array is created and initialized to hold the WFS response to each poke mode.
+	 * 
+	 */ 
     IDpokeC = image_ID(IDpokeC_name);
     NBpoke = data.image[IDpokeC].md[0].size[2];
     sizearray[0] = AOconf[loop].sizexWFS;
     sizearray[1] = AOconf[loop].sizeyWFS;
     sizearray[2] = NBpoke;
-
     IDoutC = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1], sizearray[2]);
 
+    uint_fast16_t PokeIndex;   // Mode to be poked
+    for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
+        for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            data.image[IDoutC].array.F[PokeIndex*AOconf[loop].sizeWFS+ii] = 0.0;
 
+
+	/** 
+	 * WFS frames will arrive in aol_imWFS1RM
+	 * 
+	 */ 
+    if(sprintf(name, "aol%ld_imWFS1RM", loop) < 1)
+        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    aoloopcontrol_var.aoconfID_imWFS1 = create_image_ID(name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+	
+	
+	
+	
+	/** 
+	 * A temporary array is created to hold the DM command
+	 */
     arrayf = (float*) malloc(sizeof(float)*AOconf[loop].sizeDM);
     for(ii=0; ii<AOconf[loop].sizeDM; ii++)
         arrayf[ii] = 0.0;
@@ -381,21 +427,6 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
 
 
 
-    if(sprintf(name, "aol%ld_imWFS1RM", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
-    sizearray[0] = AOconf[loop].sizexWFS;
-    sizearray[1] = AOconf[loop].sizeyWFS;
-    printf("WFS size = %ld %ld\n", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
-    fflush(stdout);
-    aoloopcontrol_var.aoconfID_imWFS1 = create_image_ID(name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
-
-
-
-    uint_fast16_t PokeIndex;
-    for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
-        for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
-            data.image[IDoutC].array.F[PokeIndex*AOconf[loop].sizeWFS+ii] = 0.0;
 
 
     iter = 0;
@@ -408,42 +439,138 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
     fflush(stdout);
 
 
-    imcntmax = (4+delayfr+(NBave+NBexcl)*NBpoke)*NBiter + 4;
-    array_iter = (long*) malloc(sizeof(long)*imcntmax);
-    array_poke = (int*) malloc(sizeof(int)*imcntmax);
-    array_accum = (int*) malloc(sizeof(int)*imcntmax);
-    array_kk = (long*) malloc(sizeof(long)*imcntmax);
-    array_kk1 = (long*) malloc(sizeof(long)*imcntmax);
-    array_PokeIndex = (long*) malloc(sizeof(long)*imcntmax);
-    array_PokeIndex1 = (long*) malloc(sizeof(long)*imcntmax);
+	/**
+	 * Memory is allocated to arrays
+	 */
+    imcntmax          = (4+delayfr+(NBave+NBexcl)*NBpoke)*NBiter + 4;
+
+	long *array_iter;
+    array_iter        = (long*) malloc(sizeof(long)*imcntmax);  // Cycle number
+    
+    int  *array_poke;
+    array_poke        = (int*)  malloc(sizeof(int) *imcntmax);  // Did we poke DM during this time interval ?
+    
+    int  *array_accum;
+    array_accum       = (int*)  malloc(sizeof(int) *imcntmax);  // Does frame count toward accumulated signal ?
+
+	long *array_kk;
+    array_kk          = (long*) malloc(sizeof(long)*imcntmax);  // frame index within poke mode acquisition
+
+	// frame counter within poke mode acquisition, starts negative
+	// becomes positive when accumulating signal
+	long *array_kk1;
+    array_kk1         = (long*) malloc(sizeof(long)*imcntmax);  
+
+	long *array_PokeIndex;
+    array_PokeIndex   = (long*) malloc(sizeof(long)*imcntmax);  // Poke mode being measured
+    
+    long *array_PokeIndex1;
+    array_PokeIndex1  = (long*) malloc(sizeof(long)*imcntmax);  // Current poke mode on DM
+
+
+	long *array_PokeIndexMapped;
+    array_PokeIndexMapped   = (long*) malloc(sizeof(long)*imcntmax);  // Poke mode being measured, index in poke cube
+    
+    long *array_PokeIndex1Mapped;
+    array_PokeIndex1Mapped  = (long*) malloc(sizeof(long)*imcntmax);  // Current poke mode on DM, index in poke cube
+
+
+
+
+	/**
+	 * Poke sequence defines the sequence of mode poked
+	 * 
+	 */
+	long *array_PokeSequ;
+	array_PokeSequ    = (long*) malloc(sizeof(long)*NBpoke);
+
+	for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
+		array_PokeSequ[PokeIndex] = PokeIndex;
+	if(SequInitMode > 0) // swap pairs every 4 indices
+	{
+		for(PokeIndex = 0; PokeIndex < NBpoke-1; PokeIndex += 4)
+		{
+			int index0 = PokeIndex;
+			int index1 = PokeIndex + SequInitMode;			
+			
+			while(index1 > NBpoke-1)
+				index1 -= NBpoke;
+			
+			// swap sequence pairs
+			long tmpPokeMode;
+			tmpPokeMode = array_PokeSequ[index0];
+			array_PokeSequ[index0] = array_PokeSequ[index1];
+			array_PokeSequ[index1] = tmpPokeMode;
+		}
+	}
+	
+
+	int permut_offset = 0; 
+
 
     for(imcnt=0; imcnt<imcntmax; imcnt++)
     {
-        array_poke[imcnt] = 0;
+        array_poke[imcnt]  = 0;
         array_accum[imcnt] = 0;
     }
 
     imcnt = 0;
 
+
+
+	/**
+	 * The outermost loop increments the measurement cycle.
+	 * Signal is to be averaged among cycles. Each measurement cycle repeats the same sequence.
+	 * 
+	 */ 
     while((iter<NBiter)&&(data.signal_USR1==0)&&(data.signal_USR2==0))
     {
-        printf("iteration # %8ld / %8ld   ( %6ld / %6ld )  \n", iter, NBiter, imcnt, imcntmax);
+        printf("Measurement cycle  # %8ld / %8ld   ( %6ld / %6ld )  \n", iter, NBiter, imcnt, imcntmax);
         fflush(stdout);
 
 
+		// RE-ORDER POKE SEQUENCE
+		// adjacent pairs are swapped
+		permut_offset ++;
+		if(permut_offset == 2)
+			permut_offset = 0;
+		
+		for(PokeIndex = permut_offset; PokeIndex < NBpoke; PokeIndex += 2)
+		{
+			int index0 = PokeIndex;
+			int index1 = PokeIndex+1;			
+			
+			if(index1 > NBpoke-1)
+				index1 -= NBpoke;
+				
+			// swap sequence pairs
+			long tmpPokeMode;
+			tmpPokeMode = array_PokeSequ[index0];
+			array_PokeSequ[index0] = array_PokeSequ[index1];
+			array_PokeSequ[index1] = tmpPokeMode;
+		}
+		
 
-        // initialize with first poke
-        long kk = 0;
+
+        // INITIALIZE WITH FIRST POKE
+        
+        long kk  = 0;
         long kk1 = 0;
-        uint_fast16_t PokeIndex = 0;
+
+        uint_fast16_t PokeIndex  = 0;    // Poked mode index
         uint_fast16_t PokeIndex1 = 0;
 
+        uint_fast16_t PokeIndexMapped;   // Poked mode index in original poke cube
+        uint_fast16_t PokeIndex1Mapped;
 
+		PokeIndexMapped  = array_PokeSequ[PokeIndex];
+		PokeIndex1Mapped = array_PokeSequ[PokeIndex1];
+		
         usleep(delayRM1us);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
-        memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1*framesize, sizeof(float)*AOconf[loop].sizeDM);
+        memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1Mapped*framesize, sizeof(float)*AOconf[loop].sizeDM);
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmRM, -1);
-        data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt1 = PokeIndex1;
+        data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt1 = PokeIndex1Mapped;
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
         AOconf[loop].DMupdatecnt ++;
@@ -453,31 +580,30 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
 
 
         // WAIT FOR LOOP DELAY, PRIMING
-        array_iter[imcnt] = iter;
-        array_kk[imcnt] = kk;
-        array_kk1[imcnt] = kk1;
-        array_PokeIndex[imcnt] = PokeIndex;
-        array_PokeIndex1[imcnt] = PokeIndex1;
+
+        array_iter[imcnt]             = iter;
+        array_kk[imcnt]               = kk;
+        array_kk1[imcnt]              = kk1;
+        array_PokeIndex[imcnt]        = PokeIndex;
+        array_PokeIndex1[imcnt]       = PokeIndex1;
+        array_PokeIndexMapped[imcnt]  = PokeIndexMapped;
+        array_PokeIndex1Mapped[imcnt] = PokeIndex1Mapped;
         imcnt ++;
-
-
-		
+        
         Read_cam_frame(loop, 1, normalize, 0, 0);
-
-
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmRM, -1);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
-
-
 
         // read delayfr frames
         for(kk=0; kk<delayfr; kk++)
         {
-            array_iter[imcnt] = iter;
-            array_kk[imcnt] = kk;
-            array_kk1[imcnt] = kk1;
-            array_PokeIndex[imcnt] = PokeIndex;
-            array_PokeIndex1[imcnt] = PokeIndex1;
+            array_iter[imcnt]             = iter;
+            array_kk[imcnt]               = kk;
+            array_kk1[imcnt]              = kk1;
+            array_PokeIndex[imcnt]        = PokeIndex;
+            array_PokeIndex1[imcnt]       = PokeIndex1;
+            array_PokeIndexMapped[imcnt]  = PokeIndexMapped;
+			array_PokeIndex1Mapped[imcnt] = PokeIndex1Mapped;
             imcnt ++;
 
             Read_cam_frame(loop, 1, normalize, 0, 0);
@@ -490,13 +616,15 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
 
                 if(PokeIndex1>NBpoke-1)
                     PokeIndex1 -= NBpoke;
-
+					
+				PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
+                
                 // POKE
                 usleep(delayRM1us);
                 data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
-                memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1*framesize, sizeof(float)*AOconf[loop].sizeDM);
+                memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1Mapped*framesize, sizeof(float)*AOconf[loop].sizeDM);
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmRM, -1);
-                data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt1 = PokeIndex1;
+                data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt1 = PokeIndex1Mapped;
                 data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
                 data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
                 AOconf[loop].DMupdatecnt ++;
@@ -507,18 +635,23 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
 
 
 
-
+		/** 
+		 * First inner loop increment poke mode
+		 * 
+		 */ 
         while ((PokeIndex < NBpoke)&&(data.signal_USR1==0))
         {
             // INTEGRATION
 
             for(kk=0; kk<NBave+NBexcl; kk++)
             {
-                array_iter[imcnt] = iter;
-                array_kk[imcnt] = kk;
-                array_kk1[imcnt] = kk1;
-                array_PokeIndex[imcnt] = PokeIndex;
-                array_PokeIndex1[imcnt] = PokeIndex1;
+                array_iter[imcnt]             = iter;
+                array_kk[imcnt]               = kk;
+                array_kk1[imcnt]              = kk1;
+                array_PokeIndex[imcnt]        = PokeIndex;
+                array_PokeIndex1[imcnt]       = PokeIndex1;
+				array_PokeIndexMapped[imcnt]  = PokeIndexMapped;
+				array_PokeIndex1Mapped[imcnt] = PokeIndex1Mapped;
                 imcnt ++;
 
                 Read_cam_frame(loop, 1, normalize, 0, 0);
@@ -527,7 +660,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
                 if(kk<NBave)
                 {
                     for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
-                        data.image[IDoutC].array.F[PokeIndex*AOconf[loop].sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
+                        data.image[IDoutC].array.F[PokeIndexMapped*AOconf[loop].sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                     array_accum[imcnt] = 1;
                 }
                 kk1++;
@@ -538,13 +671,14 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
 
                     if(PokeIndex1>NBpoke-1)
                         PokeIndex1 -= NBpoke;
-
+					
+					PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
 
                     usleep(delayRM1us);
                     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
-                    memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1*framesize, sizeof(float)*AOconf[loop].sizeDM);
+                    memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1Mapped*framesize, sizeof(float)*AOconf[loop].sizeDM);
                     COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmRM, -1);
-                    data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt1 = PokeIndex1;
+                    data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt1 = PokeIndex1Mapped;
                     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
                     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
                     AOconf[loop].DMupdatecnt ++;
@@ -553,6 +687,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
             }
 
             PokeIndex++;
+            PokeIndexMapped  = array_PokeSequ[PokeIndex];
         }
 
 
@@ -588,7 +723,21 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
     fp = fopen("RMpokelog.txt", "w");
     for(imcnt=0; imcnt<imcntmax; imcnt++)
     {
-        fprintf(fp, "%6ld %3ld    %1d %1d     %6ld  %6ld  %6ld  %6ld     %3ld %3ld %3ld\n", imcnt, array_iter[imcnt], array_poke[imcnt], array_accum[imcnt], array_kk[imcnt], array_kk1[imcnt], array_PokeIndex[imcnt], array_PokeIndex1[imcnt], NBpoke, NBexcl, NBave);
+        fprintf(fp, "%6ld %3ld    %1d %1d     %6ld  %6ld     %4ld %4ld   %4ld %4ld     %3ld %3ld %3ld\n", 
+			imcnt, 
+			array_iter[imcnt], 
+			array_poke[imcnt], 
+			array_accum[imcnt], 
+			array_kk[imcnt], 
+			array_kk1[imcnt], 
+			array_PokeIndex[imcnt], 
+			array_PokeIndex1[imcnt], 
+			array_PokeIndexMapped[imcnt], 
+			array_PokeIndex1Mapped[imcnt],
+			NBpoke, 
+			NBexcl, 
+			NBave
+			);
     }
     fclose(fp);
 
@@ -600,7 +749,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
     free(array_kk1);
     free(array_PokeIndex);
     free(array_PokeIndex1);
-
+    free(array_PokeIndexMapped);
+    free(array_PokeIndex1Mapped);
+	free(array_PokeSequ);
 
     return(IDoutC);
 }
@@ -623,11 +774,26 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
  * This function creates positive and negative maps which are sent by AOloopControl_acquireCalib_Measure_WFSrespC() \n
  * Bleeding from one pattern to the next due to limited DM time response is canceled by using two patterns \n
  * 
+ * 
  * pattern a sequence : +- +- +- +- ... \n
  * pattern b sequence : +- -+ +- -+ ... \n
  * 
  */
-long AOloopControl_acquireCalib_Measure_WFS_linResponse(long loop, float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDrespC_name, const char *IDwfsref_name, int normalize, int AOinitMode, long NBcycle, long NBinnerCycle)
+long AOloopControl_acquireCalib_Measure_WFS_linResponse(
+    long        loop,
+    float       ampl,
+    long        delayfr,
+    long        delayRM1us,
+    long        NBave,
+    long        NBexcl,
+    const char *IDpokeC_name,
+    const char *IDrespC_name,
+    const char *IDwfsref_name,
+    int         normalize,
+    int         AOinitMode,
+    long        NBcycle,
+    long        NBinnerCycle
+)
 {
     long IDrespC;
     long IDpokeC;
@@ -639,12 +805,20 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(long loop, float ampl, l
     long poke, act, pix;
     long IDwfsref;
 
-	int *pokesign;
-	int pokesigntmp;
-	char *ptra;
-	char *ptrb;
-	char *ptra0;
-	char *ptrb0;
+    int *pokesign;
+    int pokesigntmp;
+    char *ptra;
+    char *ptrb;
+    char *ptra0;
+    char *ptrb0;
+
+
+    long NBinnerCycleC;
+    if(NBinnerCycle < 1)
+        NBinnerCycleC = 1;
+    else
+        NBinnerCycleC = NBinnerCycle;
+
 
 
     IDpokeC = image_ID(IDpokeC_name);
@@ -653,84 +827,110 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(long loop, float ampl, l
     dmxysize = dmxsize*dmysize;
     NBpoke = data.image[IDpokeC].md[0].size[2];
 
-    NBpoke2 = 2*NBpoke + 4; // add zero frame before and after
+    NBpoke2 = 2*NBpoke*NBinnerCycleC + 4; // add zero frame before and after
 
 
     IDpokeC2a = create_3Dimage_ID("dmpokeC2a", dmxsize, dmysize, NBpoke2);
     IDpokeC2b = create_3Dimage_ID("dmpokeC2b", dmxsize, dmysize, NBpoke2);
 
-	// set start and end frames to zero
+
+
+
+    // set start and end frames to zero
+    
     for(act=0; act<dmxysize; act++)
     {
         data.image[IDpokeC2a].array.F[act] = 0.0;
         data.image[IDpokeC2a].array.F[dmxysize + act] = 0.0;
-        data.image[IDpokeC2a].array.F[dmxysize*(2*NBpoke+2) + act] = 0.0;
-        data.image[IDpokeC2a].array.F[dmxysize*(2*NBpoke+3) + act] = 0.0;
+        data.image[IDpokeC2a].array.F[dmxysize*(2*NBpoke*NBinnerCycleC+2) + act] = 0.0;
+        data.image[IDpokeC2a].array.F[dmxysize*(2*NBpoke*NBinnerCycleC+3) + act] = 0.0;
     }
 
-	ptra0 = (char*) data.image[IDpokeC2a].array.F;
-	ptrb0 = (char*) data.image[IDpokeC2b].array.F;
-	memcpy((void *) ptrb0, (void *) ptra0, sizeof(float)*dmxysize);
-	
-	ptrb = ptrb0 + sizeof(float)*dmxysize;
-	memcpy((void *) ptrb, (void *) ptra0, sizeof(float)*dmxysize);
-	
-	ptrb = ptrb0 + sizeof(float)*dmxysize*(2*NBpoke+2);
-	memcpy((void *) ptrb, (void *) ptra0, sizeof(float)*dmxysize);	
-	
-	ptrb = ptrb0 + sizeof(float)*dmxysize*(2*NBpoke+2);
-	memcpy((void *) ptrb, (void *) ptra0, sizeof(float)*dmxysize);
-	
-	pokesign = (int*) malloc(sizeof(int)*NBpoke);
-	
-	pokesigntmp = 1;
+    ptra0 = (char*) data.image[IDpokeC2a].array.F;
+    ptrb0 = (char*) data.image[IDpokeC2b].array.F;
+    memcpy((void *) ptrb0, (void *) ptra0, sizeof(float)*dmxysize);
+
+    ptrb = ptrb0 + sizeof(float)*dmxysize;
+    memcpy((void *) ptrb, (void *) ptra0, sizeof(float)*dmxysize);
+
+    ptrb = ptrb0 + sizeof(float)*dmxysize*(2*NBpoke*NBinnerCycleC+2);
+    memcpy((void *) ptrb, (void *) ptra0, sizeof(float)*dmxysize);
+
+    ptrb = ptrb0 + sizeof(float)*dmxysize*(2*NBpoke*NBinnerCycleC+2);
+    memcpy((void *) ptrb, (void *) ptra0, sizeof(float)*dmxysize);
+
+
+
+
+
+
+    pokesign = (int*) malloc(sizeof(int)*NBpoke);
+
+    pokesigntmp = 1;
+    
+    int pokeindex;
+    pokeindex = 2; // accounts for first two zero pokes
+    
     for(poke=0; poke<NBpoke; poke++)
     {
-		pokesign[poke] = pokesigntmp;
-        for(act=0; act<dmxysize; act++)
-            data.image[IDpokeC2a].array.F[dmxysize*(2*poke+2) + act] = ampl*data.image[IDpokeC].array.F[dmxysize*poke+act];
-        for(act=0; act<dmxysize; act++)
-            data.image[IDpokeC2a].array.F[dmxysize*(2*poke+3) + act] = -ampl*data.image[IDpokeC].array.F[dmxysize*poke+act];		
-    
+        int innercycle;
+        for(innercycle=0; innercycle < NBinnerCycleC; innercycle++)
+        {						            
+            // note
+            // old incices were 2*poke+2 and 2*poke+3
+            
+            for(act=0; act<dmxysize; act++)
+                data.image[IDpokeC2a].array.F[dmxysize*(pokeindex) + act]   =  ampl*data.image[IDpokeC].array.F[dmxysize*poke+act];
+            for(act=0; act<dmxysize; act++)
+                data.image[IDpokeC2a].array.F[dmxysize*(pokeindex+1) + act] = -ampl*data.image[IDpokeC].array.F[dmxysize*poke+act];
 
-		if(pokesign[poke]==1)
-		{
-			ptra = ptra0 + sizeof(float)*dmxysize*(2*poke+2);
-			ptrb = ptrb0 + sizeof(float)*dmxysize*(2*poke+2);
-			memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
 
-			ptra = ptra0 + sizeof(float)*dmxysize*(2*poke+3);
-			ptrb = ptrb0 + sizeof(float)*dmxysize*(2*poke+3);
-			memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
+			// swap one pair out of two in cube IDpokeC2b
+            pokesign[poke] = pokesigntmp;
+            if(pokesign[poke]==1)
+            {
+                ptra = ptra0 + sizeof(float)*dmxysize*(pokeindex);
+                ptrb = ptrb0 + sizeof(float)*dmxysize*(pokeindex);
+                memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
 
-			pokesigntmp = -1;
-		}
-		else
-		{
-			ptra = ptra0 + sizeof(float)*dmxysize*(2*poke+2);
-			ptrb = ptrb0 + sizeof(float)*dmxysize*(2*poke+3);
-			memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
+                ptra = ptra0 + sizeof(float)*dmxysize*(pokeindex+1);
+                ptrb = ptrb0 + sizeof(float)*dmxysize*(pokeindex+1);
+                memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
 
-			ptra = ptra0 + sizeof(float)*dmxysize*(2*poke+3);
-			ptrb = ptrb0 + sizeof(float)*dmxysize*(2*poke+2);
-			memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
-			
-			pokesigntmp = 1;
-		}
+                pokesigntmp = -1;
+            }
+            else
+            {
+                ptra = ptra0 + sizeof(float)*dmxysize*(pokeindex);
+                ptrb = ptrb0 + sizeof(float)*dmxysize*(pokeindex+1);
+                memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
+
+                ptra = ptra0 + sizeof(float)*dmxysize*(pokeindex+1);
+                ptrb = ptrb0 + sizeof(float)*dmxysize*(pokeindex);
+                memcpy((void *) ptrb, (void *) ptra, sizeof(float)*dmxysize);
+
+                pokesigntmp = 1;
+            }
+            
+            pokeindex += 2;
+        }
     }
-    
-    
-    
-//  	save_fits("dmpokeC2a", "!tmp/test_dmpokeC2a.fits");
-//	save_fits("dmpokeC2b", "!tmp/test_dmpokeC2b.fits");
+
+
+
+      	save_fits("dmpokeC2a", "!tmp/test_dmpokeC2a.fits");
+    	save_fits("dmpokeC2b", "!tmp/test_dmpokeC2b.fits");
 
 
     printf("NBpoke = %ld\n", NBpoke);
     fflush(stdout);
 
-    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2a", "wfsresp2a", normalize, AOinitMode, (long) (NBcycle/2), NBinnerCycle);
-    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2b", "wfsresp2b", normalize, AOinitMode, (long) (NBcycle/2), NBinnerCycle);
-    
+    // Positive direction sequence
+    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2a", "wfsresp2a", normalize, AOinitMode, (long) (NBcycle/2), 0);
+
+    // Negative direction sequence
+    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2b", "wfsresp2b", normalize, AOinitMode, (long) (NBcycle/2), 0);
+
     printf("STEP done\n");
     fflush(stdout);
 
@@ -750,18 +950,18 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(long loop, float ampl, l
     for(poke=0; poke<NBpoke; poke++)
     {
         for(pix=0; pix<wfsxysize; pix++)
-			{
-				data.image[IDrespC].array.F[wfsxysize*poke + pix] = 0.5*(data.image[IDwfsresp2a].array.F[wfsxysize*(2*poke+2) + pix] - data.image[IDwfsresp2a].array.F[wfsxysize*(2*poke+2) + wfsxysize + pix])/2.0/ampl;
-				data.image[IDrespC].array.F[wfsxysize*poke + pix] += 0.5*pokesign[poke]*(data.image[IDwfsresp2b].array.F[wfsxysize*(2*poke+2) + pix] - data.image[IDwfsresp2b].array.F[wfsxysize*(2*poke+2) + wfsxysize + pix])/2.0/ampl;
-			}
+        {
+            data.image[IDrespC].array.F[wfsxysize*poke + pix] = 0.5*(data.image[IDwfsresp2a].array.F[wfsxysize*(2*poke+2) + pix] - data.image[IDwfsresp2a].array.F[wfsxysize*(2*poke+2) + wfsxysize + pix])/2.0/ampl;
+            data.image[IDrespC].array.F[wfsxysize*poke + pix] += 0.5*pokesign[poke]*(data.image[IDwfsresp2b].array.F[wfsxysize*(2*poke+2) + pix] - data.image[IDwfsresp2b].array.F[wfsxysize*(2*poke+2) + wfsxysize + pix])/2.0/ampl;
+        }
 
         for(pix=0; pix<wfsxysize; pix++)
-            {
-				data.image[IDwfsref].array.F[pix] += (data.image[IDwfsresp2a].array.F[wfsxysize*(2*poke+2) + pix] + data.image[IDwfsresp2a].array.F[wfsxysize*(2*poke+2) + wfsxysize + pix])/(2*NBpoke);
-				data.image[IDwfsref].array.F[pix] += (data.image[IDwfsresp2b].array.F[wfsxysize*(2*poke+2) + pix] + data.image[IDwfsresp2b].array.F[wfsxysize*(2*poke+2) + wfsxysize + pix])/(2*NBpoke);
-			}
+        {
+            data.image[IDwfsref].array.F[pix] += (data.image[IDwfsresp2a].array.F[wfsxysize*(2*poke+2) + pix] + data.image[IDwfsresp2a].array.F[wfsxysize*(2*poke+2) + wfsxysize + pix])/(2*NBpoke);
+            data.image[IDwfsref].array.F[pix] += (data.image[IDwfsresp2b].array.F[wfsxysize*(2*poke+2) + pix] + data.image[IDwfsresp2b].array.F[wfsxysize*(2*poke+2) + wfsxysize + pix])/(2*NBpoke);
+        }
     }
-    
+
     free(pokesign);
 
 

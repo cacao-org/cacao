@@ -31,7 +31,7 @@ int_fast8_t init_AOloopControl_acquireCalib();
 /* =============================================================================================== */
 
 /** @brief Acquire WFS response to a series of DM pattern */
-long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, long NBcycleInner);
+long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, int SequInitMode);
 
 
 /** @brief Measure linear response to set of DM modes/patterns */
