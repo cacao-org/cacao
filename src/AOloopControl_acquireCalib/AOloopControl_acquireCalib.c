@@ -535,7 +535,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 		if(permut_offset == 2)
 			permut_offset = 0;
 		
-/*		for(PokeIndex = permut_offset; PokeIndex < NBpoke; PokeIndex += 2)
+		for(PokeIndex = permut_offset; PokeIndex < NBpoke; PokeIndex += 2)
 		{
 			int index0 = PokeIndex;
 			int index1 = PokeIndex+1;			
@@ -549,7 +549,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 			array_PokeSequ[index0] = array_PokeSequ[index1];
 			array_PokeSequ[index1] = tmpPokeMode;
 		}
-		*/
+		
 
 
         // INITIALIZE WITH FIRST POKE
@@ -915,7 +915,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
             pokesigntmp = -1;
         else
             pokesigntmp = 1;
-        pokesigntmp = 1; // no inversion
+        //pokesigntmp = 1; // no inversion
     }
 
 
