@@ -915,6 +915,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
             pokesigntmp = -1;
         else
             pokesigntmp = 1;
+        pokesigntmp = 1; // no inversion
     }
 
 
