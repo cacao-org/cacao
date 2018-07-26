@@ -70,7 +70,7 @@ AOinitMode="0"      # default
 CPUset="NULL"
 delayRM1us="0"
 NBpokeCycle="0"
-NBpokeCycleInner="1"
+NBpokeCycleInner="2"
 
 while getopts :hrc:d:n: FLAG; do
   case $FLAG in
