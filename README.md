@@ -94,7 +94,7 @@ Note: On OS X, use gcc-mp-5 for openMP:
 
 ## Shared memory data streams
 
-Both cacao and milk make use a common shared memory data stream format. See [ImageStreamIO module](https://github.com/milk-org/ImageStreamIO) for details.
+Both cacao and milk use a common shared memory data stream format. See [ImageStreamIO module](https://github.com/milk-org/ImageStreamIO) for details.
 
 ### Viewing real-time data streams
 
