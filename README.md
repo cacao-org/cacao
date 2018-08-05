@@ -31,19 +31,24 @@ Uses multi-core CPUs and GPGPUs to high computing throughput.
 
 Modular, easy to add functions, loaded at runtime as shared objects.
 
-
-CACAO uses [milk](https://github.com/milk-org/milk)
-
+cacao uses [milk](https://github.com/milk-org/milk). 
 
 ---
 
 
-## Downloading and installing 
+## Downloading and installing cacao
 
-The CACAO package follows the standard git clone steps and GNU build process :
+### Downloading 
+
+The CACAO package follows the standard git clone steps :
 
 ```bash
 git clone --recursive https://github.com/cacao-org/cacao cacao
+```
+
+### Compiling with GNU autotools
+
+```bash
 cd cacao
 autoreconf -vif
 ./configure
@@ -51,12 +56,58 @@ make
 make install
 ```
 
+### Compiling with cmake
+
+
+```bash
+cd cacao
+mkdir _build
+cd _build
+cmake ..
+```
+
+On CentOS, the cmake command could be cmake3.
+
+You may need to add /usr/local/lib to LD_LIBRARY_PATH environment variable:
+```bash
+echo "/usr/local/lib" > usrlocal.conf
+sudo mv usrlocal.conf /etc/ld.so.conf.d/
+sudo ldconfig -v
+```
+
+### Notes and troubleshooting
+
+
 Note: On OS X, use gcc-mp-5 for openMP:
 
 ```bash
 ./configure "CC=/opt/local/bin/gcc-mp-5" CPPFLAGS="-I/usr/include/malloc/ -I/opt/local/include/readline" LDFLAGS="-L/opt/local/lib/"
 (Replace "/opt/local/" is the location of your installed libraries. )
 ```
+
+
+---
+
+## Shared memory data streams
+
+Both cacao and milk make use a common shared memory data stream format. See [ImageStreamIO module](https://github.com/milk-org/ImageStreamIO) for details.
+
+### Viewing real-time data streams
+
+Additional software is required to view real-time data streams. Several options exist:
+
+  * [milk2ds9](https://github.com/jaredmales/milk2ds9) uses ds9 to view data streams (convenient for ds9 users)
+  * [rtimv](https://github.com/jaredmales/rtimv), a qt-based image viewer, higher performance than ds9 option
+  * [shmimviewqt](https://github.com/milk-org/shmimviewqt), another qt-based option (less polished than rtimv)
+  * [xaosim](https://github.com/fmartinache/xaosim)'s shmview image viewer
+  
+### Python interface to data streams
+
+Python users can read/write milk/cacao's data streams using additional packages:
+
+  * [pyImageStreamIO](https://github.com/milk-org/pyImageStreamIO) provides an interface to data streams.
+  * [xaosim](https://github.com/fmartinache/xaosim) includes a python interface to data streams.. and much more
+
 
 ---
 
