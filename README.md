@@ -46,17 +46,8 @@ The CACAO package follows the standard git clone steps :
 git clone --recursive https://github.com/cacao-org/cacao cacao
 ```
 
-### Compiling with GNU autotools
 
-```bash
-cd cacao
-autoreconf -vif
-./configure
-make
-make install
-```
-
-### Compiling with cmake
+### Compiling with cmake (preferred option)
 
 
 ```bash
@@ -74,6 +65,19 @@ echo "/usr/local/lib" > usrlocal.conf
 sudo mv usrlocal.conf /etc/ld.so.conf.d/
 sudo ldconfig -v
 ```
+
+
+### Compiling with GNU autotools
+
+```bash
+cd cacao
+autoreconf -vif
+./configure
+make
+make install
+```
+
+
 
 ### Notes and troubleshooting
 
@@ -99,7 +103,7 @@ Additional software is required to view real-time data streams. Several options 
   * [milk2ds9](https://github.com/jaredmales/milk2ds9) uses ds9 to view data streams (convenient for ds9 users)
   * [rtimv](https://github.com/jaredmales/rtimv), a qt-based image viewer, higher performance than ds9 option
   * [shmimviewqt](https://github.com/milk-org/shmimviewqt), another qt-based option (less polished than rtimv)
-  * [xaosim](https://github.com/fmartinache/xaosim)'s shmview image viewer
+  * [xaosim](https://github.com/fmartinache/xaosim)'s shmview image viewer, using python qt interface
   
 ### Python interface to data streams
 
