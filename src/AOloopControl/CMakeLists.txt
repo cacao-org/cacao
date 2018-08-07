@@ -4,30 +4,30 @@ include_directories ("${PROJECT_SOURCE_DIR}/src")
 include_directories ("${PROJECT_SOURCE_DIR}/..")
 
 add_library(AOloopControl SHARED AOloopControl.c 
-AOloopControl.h 
-AOloopControl_wfs.c 
-AOloopControl_dm.c 
-AOloopControl_aorun.c 
-AOloopControl_aorun.h 
+AOloopControl.h
 AOloopControl_AOcompute.c
-AOloopControl_AOcompute.h 
-AOloopControl_ComputeOpenLoopModes.c
-AOloopControl_AutoTuneGains.c
-AOloopControl_sig2Modecoeff.c
-AOloopControl_CompModes_loop.c
-AOloopControl_loop_ctr.c 
-AOloopControl_loop_onoff.c 
-AOloopControl_dmwrite.c 
-AOloopControl_autotune.c 
+AOloopControl_AOcompute.h
+AOloopControl_aorun.c
+AOloopControl_aorun.h
 AOloopControl_arpf_onoff.c 
-AOloopControl_time_param.c 
-AOloopControl_loop_param.c 
+AOloopControl_autotune.c
+AOloopControl_AutoTuneGains.c
+AOloopControl_CompModes_loop.c
+AOloopControl_ComputeOpenLoopModes.c
+AOloopControl_dm.c
+AOloopControl_dmwrite.c
 AOloopControl_fpspeckle_mod.c 
-AOloopControl_process_files.c 
-AOloopControl_loadconfigure.c 
-AOloopControl_initmem.c 
+AOloopControl_initmem.c
+AOloopControl_loadconfigure.c
+AOloopControl_loop_ctr.c
+AOloopControl_loop_onoff.c
+AOloopControl_loop_param.c
+AOloopControl_process_files.c
 AOloopControl_read_param.c
 AOloopControl_RTstreamLOG.c
+AOloopControl_sig2Modecoeff.c
+AOloopControl_time_param.c
+AOloopControl_wfs.c
 )
 
 
