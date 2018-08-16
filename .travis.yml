@@ -6,7 +6,7 @@ before_install:
 
 script:
 - touch src/Makefile.am.add
-- cp configure.ac.cacao configure.ac
+- cp configure_files/configure.ac.cacao configure.ac
 - autoreconf -vif
 - ./configure
 - make
