@@ -222,13 +222,28 @@ int_fast8_t set_DM_modesRM(long loop)
 
 
 
-//
-// compute DM map from mode values
-// this is a separate process 
-//
-// if offloadMode = 1, apply correction to aol#_dmC
-//
-int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex, const char *modecoeffs_name, const char *DMmodes_name, int semTrigg, const char *out_name, int GPUindex, long loop, int offloadMode)
+
+
+
+/**
+ * ## Purpose
+ *
+ * Compute DM map from mode values.
+ * This is a separate process
+ *
+ * If offloadMode = 1, apply correction to aol#_dmC
+ */
+
+int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
+    const int   GPUMATMULTCONFindex,
+    const char *modecoeffs_name,
+    const char *DMmodes_name,
+    int         semTrigg,
+    const char *out_name,
+    int         GPUindex,
+    long        loop,
+    int         offloadMode
+)
 {
 #ifdef HAVE_CUDA
     long IDmodecoeffs;
@@ -260,7 +275,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFind
     int RT_priority = 80; //any number from 0-99
     struct sched_param schedpar;
 
-	char imname[200];
+    char imname[200];
 
 
     schedpar.sched_priority = RT_priority;
@@ -269,21 +284,21 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFind
 #endif
 
 
-	if(aoloopcontrol_var.aoconfID_looptiming == -1)
-	{
-		// LOOPiteration is written in cnt1 of loop timing array
-		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
-	}
-
-
-	if(GPUMATMULTCONFindex==0)
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
-		// read AO loop gain, mult
-		if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-			AOloopControl_InitializeMemory(1);
-	}
+        // LOOPiteration is written in cnt1 of loop timing array
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
+    }
+
+
+    if(GPUMATMULTCONFindex==0)
+    {
+        // read AO loop gain, mult
+        if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+            AOloopControl_InitializeMemory(1);
+    }
 
 
     GPUcnt = 1;
@@ -297,35 +312,39 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFind
     NBmodes = data.image[IDmodecoeffs].md[0].size[0];
 
 
-   // sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+    // sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
 
     //if(sprintf(imnameInput, "aol%ld_mode_limcorr", loop) < 1)
     //    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-	
-
-   // sizearray[0] = NBmodes;
-   // sizearray[1] = 1;
-  //  IDmodesC = create_image_ID(imnameInput, 2, sizearray, _DATATYPE_FLOAT, 0, 0);
-  //  COREMOD_MEMORY_image_set_createsem(imnamecorr, 10);
-  //  free(sizearray);
 
 
+    // sizearray[0] = NBmodes;
+    // sizearray[1] = 1;
+    //  IDmodesC = create_image_ID(imnameInput, 2, sizearray, _DATATYPE_FLOAT, 0, 0);
+    //  COREMOD_MEMORY_image_set_createsem(imnamecorr, 10);
+    //  free(sizearray);
 
 
+
+	printf(" ====================     SETTING UP GPU COMPUTATION\n");
+	fflush(stdout);
+    
     GPU_loop_MultMat_setup(GPUMATMULTCONFindex, DMmodes_name, modecoeffs_name, out_name, GPUcnt, GPUsetM, orientation, use_sem, initWFSref, 0);
 
+
+	
 
     for(k=0; k<GPUcnt; k++)
         printf(" ====================     USING GPU %d\n", GPUsetM[k]);
 
-	list_image_ID();
+    list_image_ID();
 
     if(offloadMode==1)
     {
-	    char imnamedmC[200];
+        char imnamedmC[200];
 
-		
-		
+
+
         if(sprintf(imnamedmC, "aol%ld_dmC", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
@@ -338,27 +357,27 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFind
         fflush(stdout);
     }
     else
-		printf("offloadMode = %d\n", offloadMode);
+        printf("offloadMode = %d\n", offloadMode);
 
-	printf("out_name = %s \n", out_name);
-	printf("IDout    = %ld\n", IDout);
-	
+    printf("out_name = %s \n", out_name);
+    printf("IDout    = %ld\n", IDout);
+
 
 
 
     for(;;)
     {
         COREMOD_MEMORY_image_set_semwait(modecoeffs_name, semTrigg);
-	
-//		if(GPUMATMULTCONFindex==0)
-			AOconf[loop].statusM = 10;               
-			clock_gettime(CLOCK_REALTIME, &tnow);
-            tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
-            tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-            data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[7] = tdiffv;
 
-      //  for(m=0; m<NBmodes; m++)
-      //      data.image[IDmodesC].array.F[m] = data.image[IDmodecoeffs].array.F[m];
+        //		if(GPUMATMULTCONFindex==0)
+        AOconf[loop].statusM = 10;
+        clock_gettime(CLOCK_REALTIME, &tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[7] = tdiffv;
+
+        //  for(m=0; m<NBmodes; m++)
+        //      data.image[IDmodesC].array.F[m] = data.image[IDmodecoeffs].array.F[m];
 
 
         GPU_loop_MultMat_execute(GPUMATMULTCONFindex, &status, &GPUstatus[0], alpha, beta, write_timing, 0);
@@ -369,19 +388,19 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFind
             for(ii=0; ii<dmxsize*dmysize; ii++)
                 data.image[IDc].array.F[ii] = data.image[IDout].array.F[ii];
 
-			data.image[IDc].md[0].cnt0++;
-			data.image[IDc].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
+            data.image[IDc].md[0].cnt0++;
+            data.image[IDc].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
             COREMOD_MEMORY_image_set_sempost_byID(IDc, -1);
             data.image[IDc].md[0].write = 0;
         }
-      
-  
-  //		if(GPUMATMULTCONFindex==0)  
-			AOconf[loop].statusM = 20;
-			clock_gettime(CLOCK_REALTIME, &tnow);
-            tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
-            tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-            data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
+
+
+        //		if(GPUMATMULTCONFindex==0)
+        AOconf[loop].statusM = 20;
+        clock_gettime(CLOCK_REALTIME, &tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
     }
 
 
@@ -392,6 +411,10 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFind
 
     return(0);
 }
+
+
+
+
 
 
 
