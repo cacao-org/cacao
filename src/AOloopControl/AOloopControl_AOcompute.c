@@ -527,9 +527,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
                 if(AOconf[loop].AOcompute.GPUall == 1)
-                    GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
+                    GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
                 else
-                    GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, 1, loop);
+                    GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, 1, loop);
 
 
 
@@ -561,7 +561,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 // depreciated: use all pixels
                 /*            if(1==0)
                             {
-                                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMc].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_act].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, 1, loop);
+                                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMc].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_act].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, 1, loop);
                                 AOconf[loop].status = 6;
                                 clock_gettime(CLOCK_REALTIME, &tnow);
                                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
@@ -640,7 +640,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                     initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
 
 
-                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_meas_act_active].name, AOconf[loop].GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
+                GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_meas_act_active].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
 
 
                 initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
