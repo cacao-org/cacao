@@ -556,6 +556,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                     GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
                 }
 
+
+#ifdef _PRINT_TEST
+                printf("[%s] [%d] - \n", __FILE__, __LINE__);
+                fflush(stdout);
+#endif
+
+
             }
             else // direct pixel -> actuators linear transformation
             {
