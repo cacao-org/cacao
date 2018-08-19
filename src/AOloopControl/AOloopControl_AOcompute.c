@@ -13,7 +13,7 @@
  */
 
 // uncomment for test print statements to stdout
-//#define _PRINT_TEST
+#define _PRINT_TEST
 
 #define _GNU_SOURCE
 
@@ -315,8 +315,6 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                             printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]);
                         fflush(stdout);
 #endif
-
-
                     }
                 }
 

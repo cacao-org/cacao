@@ -183,12 +183,7 @@ typedef struct
 	
 	/* ====== COMPUTATION MODES ======= */
 	AOLOOPCONF_AOcompute AOcompute;
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
