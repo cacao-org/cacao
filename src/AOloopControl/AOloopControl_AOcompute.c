@@ -548,6 +548,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
 
+#ifdef _PRINT_TEST
+                printf("[%s] [%d] - \n", __FILE__, __LINE__);
+                fflush(stdout);
+#endif
 
                 if(AOconf[loop].AOcompute.GPUall == 1)
                     GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
