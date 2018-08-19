@@ -524,12 +524,20 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 }
 
 
+#ifdef _PRINT_TEST
+                printf("[%s] [%d] - AOconf[loop].AOcompute.GPUall = %d\n", __FILE__, __LINE__, AOconf[loop].AOcompute.GPUall);
+                fflush(stdout);
+#endif
+
                 if(AOconf[loop].AOcompute.GPUall == 1)
                     GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
                 else
                     GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, 1, loop);
 
-
+#ifdef _PRINT_TEST
+                printf("[%s] [%d] - \n", __FILE__, __LINE__);
+                fflush(stdout);
+#endif
 
 
                 initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
