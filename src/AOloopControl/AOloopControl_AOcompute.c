@@ -213,7 +213,7 @@ int AOloopControl_AOcompute_GUI(
             else
                 freeze = 0;
             break;
-            */
+           
         case 'x':
             loopOK=0;
             break;
