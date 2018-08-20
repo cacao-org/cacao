@@ -156,19 +156,19 @@ int printstatus_AOloopControl_AOcompute(int loop)
 
 
 int AOloopControl_AOcompute_GUI(
-	long loop, 
-	double frequ
-	)
+    long loop,
+    double frequ
+)
 {
     char monstring[200];
     int loopOK = 1;
     int freeze = 0;
-	long cnt = 0;
+    long cnt = 0;
 
 
 
-	// Connect to shared memory
-	AOloopControl_InitializeMemory(1);
+    // Connect to shared memory
+    AOloopControl_InitializeMemory(1);
 
 
     /*  Initialize ncurses  */
@@ -213,21 +213,24 @@ int AOloopControl_AOcompute_GUI(
             else
                 freeze = 0;
             break;
+            */
         case 'x':
             loopOK=0;
             break;
-            if(freeze==0)
-            {
-                clear();
-                printstatus_AOloopControl_AOcompute(loop);
-
-                refresh();
-
-                cnt++;
-            }
         }
-        endwin();
+
+        if(freeze==0)
+        {
+            clear();
+            printstatus_AOloopControl_AOcompute(loop);
+
+            refresh();
+
+            cnt++;
+        }
     }
+    endwin();
+
 
     return(0);
 }
