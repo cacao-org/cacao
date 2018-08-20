@@ -54,6 +54,9 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
+#include <ncurses.h>
+
+
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
 #endif
@@ -68,7 +71,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 static int AOlooploadconf_init = 0;
 
 
-
+static int wcol, wrow; // window size
 
 
 
@@ -99,6 +102,108 @@ int AOloopControl_aorun_ProcessInit()
 	
 	return 0;
 }
+
+
+
+
+
+
+int printstatus_AOloopControl_aorun(int loop)
+{
+	printw("LOOPiteration     %8ld\n", AOconf[loop].aorun.LOOPiteration);
+	printw("kill              %d\n",   AOconf[loop].aorun.kill);
+	printw("on                %d\n", AOconf[loop].aorun.on);
+	printw("DMprimaryWriteON  %d\n", AOconf[loop].aorun.DMprimaryWriteON);
+	printw("CMMODE            %d\n", AOconf[loop].aorun.CMMODE);
+	printw("DMfilteredWriteON %d\n", AOconf[loop].aorun.DMfilteredWriteON);
+	printw("ARPFon            %d\n", AOconf[loop].aorun.ARPFon);
+	
+	return 0;
+}
+
+
+
+
+int AOloopControl_aorun_GUI(
+    long loop,
+    double frequ
+)
+{
+    char monstring[200];
+    int loopOK = 1;
+    int freeze = 0;
+    long cnt = 0;
+
+
+
+    // Connect to shared memory
+    AOloopControl_InitializeMemory(1);
+
+
+    /*  Initialize ncurses  */
+    if ( initscr() == NULL ) {
+        fprintf(stderr, "Error initialising ncurses.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    getmaxyx(stdscr, wrow, wcol);		/* get the number of rows and columns */
+    cbreak();
+    keypad(stdscr, TRUE);		        /* We get F1, F2 etc..		*/
+    nodelay(stdscr, TRUE);
+    curs_set(0);
+    noecho();			                /* Don't echo() while we do getch */
+
+    start_color();
+    init_pair(1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(2, COLOR_BLACK, COLOR_RED);
+    init_pair(3, COLOR_GREEN, COLOR_BLACK);
+    init_pair(4, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(5, COLOR_RED, COLOR_BLACK);
+    init_pair(6, COLOR_BLACK, COLOR_RED);
+
+    while( loopOK == 1 )
+    {
+        usleep((long) (1000000.0/frequ));
+        int ch = getch();
+
+        if(freeze==0)
+        {
+            attron(A_BOLD);
+            sprintf(monstring, "PRESS x TO STOP MONITOR");
+            print_header(monstring, '-');
+            attroff(A_BOLD);
+        }
+
+        switch (ch)
+        {
+        case 'f':
+            if(freeze==0)
+                freeze = 1;
+            else
+                freeze = 0;
+            break;
+           
+        case 'x':
+            loopOK=0;
+            break;
+        }
+
+        if(freeze==0)
+        {
+            clear();
+            printstatus_AOloopControl_aorun(loop);
+
+            refresh();
+
+            cnt++;
+        }
+    }
+    endwin();
+
+
+    return(0);
+}
+
 
 
 

@@ -132,19 +132,19 @@ int AOloopControl_AOcompute_ProcessInit(long loop)
 
 int printstatus_AOloopControl_AOcompute(int loop)
 {
-	printw("ComputeWFSsol_FLAG  %d\n", AOconf[loop].AOcompute.ComputeWFSsol_FLAG);
-	printw("ComputeFLAG0        %d\n", AOconf[loop].AOcompute.ComputeFLAG0);
-	printw("ComputeFLAG1        %d\n", AOconf[loop].AOcompute.ComputeFLAG1);
-	printw("ComputeFLAG2        %d\n", AOconf[loop].AOcompute.ComputeFLAG2);
-	printw("ComputeFLAG3        %d\n", AOconf[loop].AOcompute.ComputeFLAG3);
+	printw("ComputeWFSsol_FLAG      %d\n", AOconf[loop].AOcompute.ComputeWFSsol_FLAG);
+	printw("ComputeFLAG0            %d\n", AOconf[loop].AOcompute.ComputeFLAG0);
+	printw("ComputeFLAG1            %d\n", AOconf[loop].AOcompute.ComputeFLAG1);
+	printw("ComputeFLAG2            %d\n", AOconf[loop].AOcompute.ComputeFLAG2);
+	printw("ComputeFLAG3            %d\n", AOconf[loop].AOcompute.ComputeFLAG3);
 	
-	printw("GPU0                %d\n", AOconf[loop].AOcompute.GPU0);
-	printw("GPU1                %d\n", AOconf[loop].AOcompute.GPU1);
-	printw("GPU2                %d\n", AOconf[loop].AOcompute.GPU2);
-	printw("GPU3                %d\n", AOconf[loop].AOcompute.GPU3);
+	printw("GPU0                    %d\n", AOconf[loop].AOcompute.GPU0);
+	printw("GPU1                    %d\n", AOconf[loop].AOcompute.GPU1);
+	printw("GPU2                    %d\n", AOconf[loop].AOcompute.GPU2);
+	printw("GPU3                    %d\n", AOconf[loop].AOcompute.GPU3);
 	
-	printw("GPUall              %d\n", AOconf[loop].AOcompute.GPUall);
-	printw("GPUusesem           %d\n", AOconf[loop].AOcompute.GPUusesem);
+	printw("GPUall                  %d\n", AOconf[loop].AOcompute.GPUall);
+	printw("GPUusesem               %d\n", AOconf[loop].AOcompute.GPUusesem);
 	printw("AOLCOMPUTE_TOTAL_ASYNC  %d\n", AOconf[loop].AOcompute.AOLCOMPUTE_TOTAL_ASYNC);
 	
 	return 0;
