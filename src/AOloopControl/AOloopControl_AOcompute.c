@@ -35,6 +35,9 @@
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
+#include <ncurses.h>
+
+
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
 #endif
@@ -80,7 +83,7 @@ double ltimerval[50];
 
 
 
-
+static int wcol, wrow; // window size
 
 
 // TO BE MOVED INTO AOcompute structure
@@ -121,6 +124,112 @@ int AOloopControl_AOcompute_ProcessInit(long loop)
 	
 	
 	return 0;
+}
+
+
+
+
+
+int printstatus_AOloopControl_AOcompute(int loop)
+{
+	printw("ComputeWFSsol_FLAG  %d\n", AOconf[loop].AOcompute.ComputeWFSsol_FLAG);
+	printw("ComputeFLAG0        %d\n", AOconf[loop].AOcompute.ComputeFLAG0);
+	printw("ComputeFLAG1        %d\n", AOconf[loop].AOcompute.ComputeFLAG1);
+	printw("ComputeFLAG2        %d\n", AOconf[loop].AOcompute.ComputeFLAG2);
+	printw("ComputeFLAG3        %d\n", AOconf[loop].AOcompute.ComputeFLAG3);
+	
+	printw("GPU0                %d\n", AOconf[loop].AOcompute.GPU0);
+	printw("GPU1                %d\n", AOconf[loop].AOcompute.GPU1);
+	printw("GPU2                %d\n", AOconf[loop].AOcompute.GPU2);
+	printw("GPU3                %d\n", AOconf[loop].AOcompute.GPU3);
+	
+	printw("GPUall              %d\n", AOconf[loop].AOcompute.GPUall);
+	printw("GPUusesem           %d\n", AOconf[loop].AOcompute.GPUusesem);
+	printw("AOLCOMPUTE_TOTAL_ASYNC  %d\n", AOconf[loop].AOcompute.AOLCOMPUTE_TOTAL_ASYNC);
+	
+	return 0;
+}
+
+
+
+
+
+
+int AOloopControl_AOcompute_GUI(
+	long loop, 
+	double frequ
+	)
+{
+    char monstring[200];
+    int loopOK = 1;
+    int freeze = 0;
+	long cnt = 0;
+
+
+
+	// Connect to shared memory
+	AOloopControl_InitializeMemory(1);
+
+
+    /*  Initialize ncurses  */
+    if ( initscr() == NULL ) {
+        fprintf(stderr, "Error initialising ncurses.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    getmaxyx(stdscr, wrow, wcol);		/* get the number of rows and columns */
+    cbreak();
+    keypad(stdscr, TRUE);		        /* We get F1, F2 etc..		*/
+    nodelay(stdscr, TRUE);
+    curs_set(0);
+    noecho();			                /* Don't echo() while we do getch */
+
+    start_color();
+    init_pair(1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(2, COLOR_BLACK, COLOR_RED);
+    init_pair(3, COLOR_GREEN, COLOR_BLACK);
+    init_pair(4, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(5, COLOR_RED, COLOR_BLACK);
+    init_pair(6, COLOR_BLACK, COLOR_RED);
+
+    while( loopOK == 1 )
+    {
+        usleep((long) (1000000.0/frequ));
+        int ch = getch();
+
+        if(freeze==0)
+        {
+            attron(A_BOLD);
+            sprintf(monstring, "PRESS x TO STOP MONITOR");
+            print_header(monstring, '-');
+            attroff(A_BOLD);
+        }
+
+        switch (ch)
+        {
+        case 'f':
+            if(freeze==0)
+                freeze = 1;
+            else
+                freeze = 0;
+            break;
+        case 'x':
+            loopOK=0;
+            break;
+            if(freeze==0)
+            {
+                clear();
+                printstatus_AOloopControl_AOcompute(loop);
+
+                refresh();
+
+                cnt++;
+            }
+        }
+        endwin();
+    }
+
+    return(0);
 }
 
 
@@ -467,8 +576,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 printf("[%s] [%d] - CM mult: GPU=0, CMMODE=1 - using matrix %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].name);
                 printf("  aoloopcontrol_var.aoconfID_contrMc = %ld\n", aoloopcontrol_var.aoconfID_contrMc);
                 printf("  aoloopcontrol_var.aoconfID_meas_act = %ld\n", aoloopcontrol_var.aoconfID_meas_act);
-                printf("  AOconf[loop].sizeDM  = %d\n", AOconf[loop].sizeDM);
-                printf("  AOconf[loop].sizeWFS = %d\n", AOconf[loop].sizeWFS);
+                printf("  AOconf[loop].sizeDM  = %ld\n", AOconf[loop].sizeDM);
+                printf("  AOconf[loop].sizeWFS = %ld\n", AOconf[loop].sizeWFS);
                 list_image_ID();
                 fflush(stdout);
 #endif

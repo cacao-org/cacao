@@ -269,6 +269,18 @@ int_fast8_t AOloopControl_loadconfigure_cli() {
 /* =============================================================================================== */
 /* =============================================================================================== */
 
+
+/** @brief CLI function for AOloopControl_AOcompute_GUI */
+int_fast8_t AOloopControl_AOcompute_GUI_cli() {
+    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0) {
+        AOloopControl_AOcompute_GUI(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
+        return 0;
+    }
+    else return 1;
+}
+
+
+
 /** @brief CLI function for AOloopControl_WFSzpupdate_loop */
 int_fast8_t AOloopControl_WFSzpupdate_loop_cli() {
     if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,4)==0) {
@@ -903,6 +915,14 @@ void init_AOloopControl()
     "no arg", 
     "aolrun", 
     "int AOloopControl_aorun()"); 
+    
+    
+     RegisterCLIcommand("aolcompGUI", __FILE__, AOloopControl_AOcompute_GUI_cli, // AOcompute GUI
+    "AOcompute GUI", 
+    "<loop> <frequ [Hz]>", 
+    "aolcompGUI 0 20", 
+    "int AOloopControl_AOcompute_GUI(long loop, double frequ)"); 
+    
 
     RegisterCLIcommand("aolzpwfsloop",__FILE__, AOloopControl_WFSzpupdate_loop_cli, //WFS zero point offset loop
     "WFS zero point offset loop", 

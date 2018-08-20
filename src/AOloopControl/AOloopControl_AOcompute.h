@@ -28,5 +28,10 @@ typedef struct
 
 
 
+int AOloopControl_AOcompute_GUI(
+	long loop, 
+	double frequ
+	);
+
 
 #endif

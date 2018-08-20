@@ -49,9 +49,9 @@ static int GPUcntMax = 100;
  * ## Arguments
  * 
  * @param[in]
- * paramname	int
- * 				value of the mode
- * 
+ * mode     	int
+ * 		- 0 initialize memory when connecting
+ * 		- 1 connect only, do not modify/initialize
  *
  *  
  */
@@ -167,11 +167,10 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         
         // logging
         AOloopControl_RTstreamLOG_init(loop);
-
-        
-        
-    
     }
+
+
+
 
 
     if(create==1)
