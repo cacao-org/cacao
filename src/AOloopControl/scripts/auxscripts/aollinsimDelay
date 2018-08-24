@@ -93,8 +93,8 @@ printHELP
 fi
 
 
-
-./AOloopControl -n $pname << EOF
+touch AOloopControl.errlog
+./AOloopControl -n $pname 2>> AOloopControl.errlog << EOF
 readshmim aol${loopnb}_dmdisp
 streamdelay aol${loopnb}_dmdisp aol${loopnb}_dmdispD $1 100
 exitCLI
