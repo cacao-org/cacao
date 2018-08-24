@@ -106,8 +106,8 @@ fi
 
 
 
-
-./AOloopControl -n $pname << EOF
+touch AOloopControl.errlog
+./AOloopControl -n $pname 2>> AOloopControl.errlog << EOF
 csetpmove aol0RT1
 csetpmove aol${loopnb}RT1
 readshmim aol${loopnb}_dmdispD

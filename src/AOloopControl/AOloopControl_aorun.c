@@ -110,6 +110,8 @@ int AOloopControl_aorun_ProcessInit()
 
 int printstatus_AOloopControl_aorun(int loop)
 {
+	
+	
 	printw("LOOPiteration     %8ld\n", AOconf[loop].aorun.LOOPiteration);
 	printw("kill              %d\n",   AOconf[loop].aorun.kill);
 	printw("on                %d\n", AOconf[loop].aorun.on);
