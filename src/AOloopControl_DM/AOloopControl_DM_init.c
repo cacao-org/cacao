@@ -96,7 +96,7 @@ static int AOloopControl_DM_createconf()
             dmdispcombconf[DMindex].MAXVOLT = 150.0;
             dmdispcombconf[DMindex].moninterval = 30000; // 33Hz
             dmdispcombconf[DMindex].status = 0;
-			dmdispcombconf[DMindex].nsecwait = 1000; // 3 us
+			dmdispcombconf[DMindex].nsecwait = 1000; // 1 us
 			
 			dmdispcombconf[DMindex].TrigMode = 0;
 			dmdispcombconf[DMindex].TrigChan = 0;
