@@ -265,7 +265,7 @@ int AOloopControl_DM_CombineChannels(
         processinfo->loopstat = 0; // loop initialization
 
         char msgstring[200];
-        sprintf(msgstring, "DMindex %ld (%ld x %ld), %ld channels\n", DMindex, xsize, ysize, NBchannel);
+        sprintf(msgstring, "DMindex %ld (%ld x %ld), %ld channels", DMindex, xsize, ysize, NBchannel);
         strcpy(processinfo->statusmsg, msgstring);
     }
 
