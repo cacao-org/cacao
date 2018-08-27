@@ -284,6 +284,26 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 #endif
 
 
+
+    PROCESSINFO *processinfo;
+    if(data.processinfo==1)
+    {
+        // CREATE PROCESSINFO ENTRY
+        // see processtools.c in module CommandLineInterface for details
+        //
+        char pinfoname[200];
+        sprintf(pinfoname, "%s", __FUNCTION__);
+        processinfo = processinfo_shm_create(pinfoname, 0);
+        processinfo->loopstat = 0; // loop initialization
+
+        char msgstring[200];
+        sprintf(msgstring, "Running on GPU %d", GPUindex);
+        strcpy(processinfo->statusmsg, msgstring);
+    }
+
+
+
+
     if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
         // LOOPiteration is written in cnt1 of loop timing array
@@ -363,10 +383,28 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     printf("IDout    = %ld\n", IDout);
 
 
+    if(data.processinfo==1)
+        processinfo->loopstat = 1; // loop running
+    int loopOK = 1;
+    int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
+    long loopcnt = 0;
 
-
-    for(;;)
+    while(loopOK == 1)
     {
+		// processinfo control
+        if(data.processinfo==1)
+        {
+            while(processinfo->CTRLval == 1)  // pause
+                usleep(50);
+
+            if(processinfo->CTRLval == 2) // single iteration
+                processinfo->CTRLval = 1;
+
+            if(processinfo->CTRLval == 3) // exit loop
+                loopCTRLexit = 1;
+        }
+		
+		
         COREMOD_MEMORY_image_set_semwait(modecoeffs_name, semTrigg);
 
         //		if(GPUMATMULTCONFindex==0)
@@ -401,6 +439,31 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
+    
+    
+		if(loopCTRLexit == 1)
+        {
+            loopOK = 0;
+            if(data.processinfo==1)
+            {
+                struct timespec tstop;
+                struct tm *tstoptm;
+                char msgstring[200];
+
+                clock_gettime(CLOCK_REALTIME, &tstop);
+                tstoptm = gmtime(&tstop.tv_sec);
+
+                sprintf(msgstring, "CTRLexit at %02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*(tstop.tv_nsec)));
+                strncpy(processinfo->statusmsg, msgstring, 200);
+
+                processinfo->loopstat = 3; // clean exit
+            }
+        }
+
+        loopcnt++;
+        if(data.processinfo==1)
+            processinfo->loopcnt = loopcnt;
+    
     }
 
 
