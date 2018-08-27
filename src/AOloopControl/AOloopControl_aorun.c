@@ -437,7 +437,8 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 #endif
 
         int timerinit = 0;
-
+		processinfo->loopstat = 1;
+        
         while( AOconf[loop].aorun.kill == 0)
         {
             if(timerinit==1)
