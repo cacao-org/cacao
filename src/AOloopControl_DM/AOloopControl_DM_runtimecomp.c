@@ -756,7 +756,7 @@ int AOloopControl_DM_CombineChannels(
                 clock_gettime(CLOCK_REALTIME, &tstop);
                 tstoptm = gmtime(&tstop.tv_sec);
 
-                sprintf(msgstring, "[CTRL] -> exit at %02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*(tstop.tv_nsec)));
+                sprintf(msgstring, "CTRLexit at %02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*(tstop.tv_nsec)));
                 strncpy(processinfo->statusmsg, msgstring, 200);
 
                 processinfo->loopstat = 3; // clean exit
@@ -777,7 +777,7 @@ int AOloopControl_DM_CombineChannels(
             clock_gettime(CLOCK_REALTIME, &tstop);
             tstoptm = gmtime(&tstop.tv_sec);
 
-            sprintf(msgstring, "dmdispcombconf[].ON set to 0 at %02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*(tstop.tv_nsec)));
+            sprintf(msgstring, "set OFF at %02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*(tstop.tv_nsec)));
             strncpy(processinfo->statusmsg, msgstring, 200);
 
             processinfo->loopstat = 3;
