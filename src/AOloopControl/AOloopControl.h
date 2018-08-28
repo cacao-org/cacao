@@ -177,8 +177,12 @@ static FILE *loadcreateshm_fplog;
  */
 typedef struct
 {	
+
 	AOLOOPCONF_aorun       aorun;       // structure defined in AOloopControl_aorun.h
+
 	AOLOOPCONF_AOcompute   AOcompute;   // structure defined in AOloopControl_AOcompute.h
+	
+	AOLOOPCONF_WFSimread   WFSimread;   // structure defined in AOloopControl_IOtools.h
 
 	
 	

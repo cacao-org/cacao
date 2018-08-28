@@ -218,6 +218,12 @@ int AOloopControl_aorun_GUI(
  *
  * Main AO loop function
  *
+ * ## Overview
+ * 
+ * Runs the AO loop\n
+ * Calls AOcompute(), which computes the correction to the applied.\n
+ * Then, the correction is applied by calling set_DM_modes() if modal correction, or by direct write to the DM otherwise.\n
+ * 
  *
  * ## Details
  *
@@ -494,7 +500,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 fflush(stdout);
 #endif
 
-
+				//
+				// Most computation are performed inside AOcompute
+				//
                 AOcompute(loop, AOconf[loop].WFSnormalize);
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function

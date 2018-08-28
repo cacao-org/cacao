@@ -240,12 +240,20 @@ int AOloopControl_AOcompute_GUI(
 
 
 
+
+
+
 /**
  * ## Purpose
  * 
+ * Main computation routine.\n
+ * AOcompute() is called inside the aorun loop.\n
  * 
+ * AOcompute main steps are:
+ * - Read WFS image (call to Read_cam_frame())
+ * - Process WFS frame
+ * - Multiply by control matrix
  * 
- * Takes mode values from ????????
  * 
  * 
  * ## Arguments
@@ -322,7 +330,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     }
 
 
-    // lock loop iteration into variable so that it cannot increment
+    // lock loop iteration into variable so that it cannot increment in case loop interations overlap
     LOOPiter = AOconf[loop].aorun.LOOPiteration;
 
 
@@ -347,7 +355,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     clock_gettime(CLOCK_REALTIME, &functionTestTimer04); //TEST timing in function
 
 
+	// Read WFS image
     Read_cam_frame(loop, 0, normalize, 0, 0);
+
+
 
 #ifdef _PRINT_TEST
     printf("[%s] [%d]  AOcompute: Input image acquired\n", __FILE__, __LINE__);
