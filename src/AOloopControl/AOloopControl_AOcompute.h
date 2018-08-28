@@ -28,6 +28,16 @@ typedef struct
 
 
 
+typedef struct
+{
+	int i1;
+
+} AOLOOPCONF_WFSimread;
+
+
+
+
+
 int AOloopControl_AOcompute_GUI(
 	long loop, 
 	double frequ

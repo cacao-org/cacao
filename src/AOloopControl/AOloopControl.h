@@ -16,9 +16,9 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "AOloopControl/AOloopControl_AOcompute.h"
+#include "AOloopControl/AOloopControl_AOcompute.h"    // AOLOOPCONF_WFSimread
 #include "AOloopControl/AOloopControl_aorun.h"
-#include "AOloopControl_IOtools/AOloopControl_IOtools.h"  // AOLOOPCONF_WFSimread
+#include "AOloopControl_IOtools/AOloopControl_IOtools.h"  
 
 #ifndef _AOLOOPCONTROL_H
 #define _AOLOOPCONTROL_H
@@ -182,7 +182,7 @@ typedef struct
 
 	AOLOOPCONF_AOcompute   AOcompute;   // structure defined in AOloopControl_AOcompute.h
 	
-	AOLOOPCONF_WFSimread   WFSimread;   // structure defined in AOloopControl_IOtools.h
+	AOLOOPCONF_WFSimread   WFSimread;   // structure defined in AOloopControl_AOcompute.h
 
 	
 	

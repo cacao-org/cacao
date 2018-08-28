@@ -19,6 +19,4 @@ typedef struct
 
 
 
-
-
 #endif
