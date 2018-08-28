@@ -16,8 +16,8 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "AOloopControl/AOloopControl_AOcompute.h"    // AOLOOPCONF_WFSimread
-#include "AOloopControl/AOloopControl_aorun.h"
+#include "AOloopControl/AOloopControl_AOcompute.h" 
+#include "AOloopControl/AOloopControl_aorun.h"              // AOLOOPCONF_WFSim
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"  
 
 #ifndef _AOLOOPCONTROL_H
@@ -181,7 +181,7 @@ typedef struct
 
 	AOLOOPCONF_aorun       aorun;         // structure defined in AOloopControl_aorun.h
 	AOLOOPCONF_AOcompute   AOcompute;     // structure defined in AOloopControl_AOcompute.h	
-	AOLOOPCONF_WFSimread   WFSimread;     // structure defined in AOloopControl_AOcompute.h
+	AOLOOPCONF_WFSim       WFSim;         // structure defined in AOloopControl_AOcompute.h
 
 	AOloopTimingInfo       AOtiminginfo;  // structure defined in AOloopControl_aorun.h
 	
@@ -189,14 +189,6 @@ typedef struct
 	
 	
 	
-	
-	
-    /* =============================================================================================== */
-	/** @name AOLOOPCONTROL_CONF: TIMING 
-	 * LOOP Timing info
-	 */
-
-    /* =============================================================================================== */
 
 
 
@@ -232,20 +224,7 @@ typedef struct
      * 
      * Usually set to aol_wfsim by function AOloopControl_loadconfigure
      */
-    char WFSname[80];                        
-    
-    uint_fast32_t sizexWFS;                   /**< WFS image x size*/
-    uint_fast32_t sizeyWFS;                   /**< WFS image y size */
-    uint_fast32_t sizeWFS;                    /**< WFS total image (= x size * y size) */
-    uint_fast32_t activeWFScnt;               /**< Number of active WFS pixels */
-    uint_fast32_t sizeWFS_active[100];        /**< Only takes into account WFS pixels in use/active for each slice */
-    uint_fast64_t WFScnt;                     /**< WFS stream counter 0 value at WFS image read */
-    uint_fast64_t WFScntRM;                   /**< WFS stream counter 0 value at WFS image read (RM acqu mode) */
 
-    int_fast8_t WFSnormalize;                 /**< 1 if each WFS frame should be normalized to 1 */
-    int_fast8_t WFSrefzero;                   /**< 1 if WFS reference is zero */
-    float WFSnormfloor;                       /**< normalized by dividing by (total + AOconf[loop].WFSnormfloor)*AOconf[loop].WFSsize */
-    float WFStotalflux;                       /**< Total WFS flux after dark subtraction */
     /* =============================================================================================== */
 
 

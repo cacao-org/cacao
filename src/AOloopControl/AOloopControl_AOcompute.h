@@ -28,13 +28,6 @@ typedef struct
 
 
 
-typedef struct
-{
-	int i1;
-
-} AOLOOPCONF_WFSimread;
-
-
 
 
 

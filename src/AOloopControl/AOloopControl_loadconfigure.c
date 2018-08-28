@@ -151,7 +151,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(name, "aol%ld_wfsim", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     printf("WFS file name: %s\n", name);
-    strcpy(AOconf[loop].WFSname, name);
+    strcpy(AOconf[loop].WFSim.WFSname, name);
 
 
 
@@ -207,11 +207,11 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
     /** ### 1.4. Define WFS image normalization mode 
      * 
-     * - conf/param_WFSnorm.txt -> AOconf[loop].WFSnormalize
+     * - conf/param_WFSnorm.txt -> AOconf[loop].WFSim.WFSnormalize
      */ 
     fprintf(fplog, "\n\n============== 1.4. Define WFS image normalization mode ===================\n\n");
     
-    AOconf[loop].WFSnormalize = AOloopControl_readParam_int("WFSnorm", 1, fplog);
+    AOconf[loop].WFSim.WFSnormalize = AOloopControl_readParam_int("WFSnorm", 1, fplog);
    
 
 
@@ -363,7 +363,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
      * Note: these streams MUST exist
      * 
      *  - AOconf[loop].dmdispname  : this image is read to notify when new dm displacement is ready
-     *  - AOconf[loop].WFSname     : connect to WFS camera. This is where the size of the WFS is read 
+     *  - AOconf[loop].WFSim.WFSname     : connect to WFS camera. This is where the size of the WFS is read 
      */
      
      fprintf(fplog, "\n\n============== 2.1. CONNECT to existing streams  ===================\n\n");
@@ -377,15 +377,15 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_dmdisp] = 1;
 
  
-    aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(AOconf[loop].WFSname);
+    aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(AOconf[loop].WFSim.WFSname);
     if(aoloopcontrol_var.aoconfID_wfsim == -1)
-        fprintf(fplog, "ERROR : cannot read shared memory stream %s\n", AOconf[loop].WFSname);
+        fprintf(fplog, "ERROR : cannot read shared memory stream %s\n", AOconf[loop].WFSim.WFSname);
     else
-        fprintf(fplog, "stream %s loaded as ID = %ld\n", AOconf[loop].WFSname, aoloopcontrol_var.aoconfID_wfsim);
+        fprintf(fplog, "stream %s loaded as ID = %ld\n", AOconf[loop].WFSim.WFSname, aoloopcontrol_var.aoconfID_wfsim);
 
-    AOconf[loop].sizexWFS = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[0];
-    AOconf[loop].sizeyWFS = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[1];
-    AOconf[loop].sizeWFS = AOconf[loop].sizexWFS*AOconf[loop].sizeyWFS;
+    AOconf[loop].WFSim.sizexWFS = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[0];
+    AOconf[loop].WFSim.sizeyWFS = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[1];
+    AOconf[loop].WFSim.sizeWFS = AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS;
 
 
 	// -> WFS size known
@@ -394,11 +394,11 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 //	fflush(stdout);
 //	sleep(100.0);
 
-	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_wfsim, AOconf[loop].WFSname);
+	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_wfsim, AOconf[loop].WFSim.WFSname);
 	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] = 1;
 
 
-//    fprintf(fplog, "WFS stream size = %ld x %ld\n", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
+//    fprintf(fplog, "WFS stream size = %ld x %ld\n", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
 //	sleep (100.0);//TEST
 
     /**
@@ -428,13 +428,13 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(name, "aol%ld_wfsdark", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     sprintf(fname, "./conf/shmim_wfsdark.fits");
-    aoloopcontrol_var.aoconfID_wfsdark = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
+    aoloopcontrol_var.aoconfID_wfsdark = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
 
 
 
     if(sprintf(name, "aol%ld_imWFS0", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-    aoloopcontrol_var.aoconfID_imWFS0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
+    aoloopcontrol_var.aoconfID_imWFS0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
     COREMOD_MEMORY_image_set_createsem(name, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_imWFS0, name);
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS0] = 1;
@@ -447,20 +447,20 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
     if(sprintf(name, "aol%ld_imWFS1", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-    aoloopcontrol_var.aoconfID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
+    aoloopcontrol_var.aoconfID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_imWFS1, name);
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS1] = 1;
 
     if(sprintf(name, "aol%ld_imWFS2", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-    aoloopcontrol_var.aoconfID_imWFS2 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
+    aoloopcontrol_var.aoconfID_imWFS2 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
 	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_imWFS2, name);
 	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS2] = 1;
 
 
     if(sprintf(name, "aol%ld_imWFSlinlimit", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-    aoloopcontrol_var.aoconfID_imWFSlinlimit = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 1.0);
+    aoloopcontrol_var.aoconfID_imWFSlinlimit = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 1.0);
 
 
 
@@ -473,7 +473,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(fname, "./conf/shmim_wfsref0.fits") < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-    aoloopcontrol_var.aoconfID_wfsref0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
+    aoloopcontrol_var.aoconfID_wfsref0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
     AOconf[loop].init_wfsref0 = 1;
 
     if(sprintf(name, "aol%ld_wfsref", loop) < 1)
@@ -482,7 +482,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(fname, "./conf/shmim_wfsref.fits") < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-    aoloopcontrol_var.aoconfID_wfsref = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 0.0);
+    aoloopcontrol_var.aoconfID_wfsref = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
 
     if(initwfsref==0)
     {
@@ -770,11 +770,11 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
         if(sprintf(name, "aol%ld_wfsmask", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         sprintf(fname, "conf/%s.fits", name);
-        aoloopcontrol_var.aoconfID_wfsmask = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, 1.0);
-        AOconf[loop].activeWFScnt = 0;
-        for(ii=0; ii<AOconf[loop].sizexWFS*AOconf[loop].sizeyWFS; ii++)
+        aoloopcontrol_var.aoconfID_wfsmask = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 1.0);
+        AOconf[loop].WFSim.activeWFScnt = 0;
+        for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS; ii++)
             if(data.image[aoloopcontrol_var.aoconfID_wfsmask].array.F[ii]>0.5)
-                AOconf[loop].activeWFScnt++;
+                AOconf[loop].WFSim.activeWFScnt++;
 
         if(sprintf(name, "aol%ld_dmmask", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -786,15 +786,15 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             if(data.image[aoloopcontrol_var.aoconfID_dmmask].array.F[ii]>0.5)
                 AOconf[loop].activeDMcnt++;
 
-        printf(" AOconf[loop].activeWFScnt = %ld\n", AOconf[loop].activeWFScnt );
-        printf(" AOconf[loop].activeDMcnt = %ld\n", AOconf[loop].activeDMcnt );
+        printf(" AOconf[loop].WFSim.activeWFScnt = %ld\n", AOconf[loop].WFSim.activeWFScnt );
+        printf(" AOconf[loop].WFSim.activeDMcnt = %ld\n", AOconf[loop].activeDMcnt );
 
 
         AOconf[loop].init_RM = 0;
         if(sprintf(fname, "conf/shmim_respM.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_respM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].respMname, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
+        aoconfID_respM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].respMname, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
         AOconf[loop].init_RM = 1;
 		aoloopcontrol_var.init_RM_local = 1;
 
@@ -802,7 +802,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
         if(sprintf(fname, "conf/shmim_contrM.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoloopcontrol_var.aoconfID_contrM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].contrMname, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
+        aoloopcontrol_var.aoconfID_contrM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].contrMname, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
         AOconf[loop].init_CM = 1;
         aoloopcontrol_var.init_CM_local = 1;
 
@@ -829,13 +829,13 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         if(sprintf(fname, "conf/shmim_contrMc.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        aoloopcontrol_var.aoconfID_contrMc = AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].sizeDM, 0.0);
+        aoloopcontrol_var.aoconfID_contrMc = AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].sizeDM, 0.0);
 
         if(sprintf(name, "aol%ld_contrMcact", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         if(sprintf(fname, "conf/shmim_contrMcact_00.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        aoloopcontrol_var.aoconfID_contrMcact[0] = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].activeWFScnt, AOconf[loop].activeDMcnt, 0.0);
+        aoloopcontrol_var.aoconfID_contrMcact[0] = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.activeWFScnt, AOconf[loop].activeDMcnt, 0.0);
 
 
 
@@ -905,7 +905,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             printf("====== LOADING %s to %s\n", fname, name);
             fflush(stdout);
-            AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBmodes_block[kk], 0.0);
+            AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBmodes_block[kk], 0.0);
 
 
             if(sprintf(name, "aol%ld_contrM%02ld", loop, kk) < 1)
@@ -914,18 +914,18 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             printf("====== LOADING %s to %s\n", fname, name);
             fflush(stdout);
-            AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBmodes_block[kk], 0.0);
+            AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBmodes_block[kk], 0.0);
 
 
             if(sprintf(name, "aol%ld_contrMc%02ld", loop, kk) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             if(sprintf(fname, "conf/%s.fits", name) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-            ID = AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].sizexDM*AOconf[loop].sizeyDM, 0.0);
+            ID = AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].sizexDM*AOconf[loop].sizeyDM, 0.0);
             if(kk==0)
-                for(ii=0; ii<AOconf[loop].sizexWFS*AOconf[loop].sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM; ii++)
                     data.image[aoloopcontrol_var.aoconfID_contrMc].array.F[ii] = 0.0;
-            for(ii=0; ii<AOconf[loop].sizexWFS*AOconf[loop].sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM; ii++)
                 data.image[aoloopcontrol_var.aoconfID_contrMc].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk]*data.image[ID].array.F[ii];
 
 
@@ -934,14 +934,14 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             if(sprintf(fname, "conf/%s.fits", name) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             //   sprintf(fname, "conf/shmim_contrMcact%02ld_00", kk);
-            printf("====== LOADING %s to %s  size %ld %ld\n", fname, name,  AOconf[loop].activeWFScnt, AOconf[loop].activeDMcnt);
-            ID = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].activeWFScnt, AOconf[loop].activeDMcnt, 0.0);
+            printf("====== LOADING %s to %s  size %ld %ld\n", fname, name,  AOconf[loop].WFSim.activeWFScnt, AOconf[loop].activeDMcnt);
+            ID = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.activeWFScnt, AOconf[loop].activeDMcnt, 0.0);
 
             if(kk==0)
-                for(ii=0; ii<AOconf[loop].activeWFScnt*AOconf[loop].activeDMcnt; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.activeWFScnt*AOconf[loop].activeDMcnt; ii++)
                     data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F[ii] = 0.0;
 
-            for(ii=0; ii<AOconf[loop].activeWFScnt*AOconf[loop].activeDMcnt; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.activeWFScnt*AOconf[loop].activeDMcnt; ii++)
                 data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk]*data.image[ID].array.F[ii];
 
         }
@@ -981,7 +981,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
 
     list_image_ID();
-    printf(" AOconf[loop].activeWFScnt = %ld\n", AOconf[loop].activeWFScnt );
+    printf(" AOconf[loop].WFSim.activeWFScnt = %ld\n", AOconf[loop].WFSim.activeWFScnt );
     printf(" AOconf[loop].activeDMcnt = %ld\n", AOconf[loop].activeDMcnt );
     printf("   init_WFSref0    %d\n", AOconf[loop].init_wfsref0);
     printf("   init_RM        %d\n", AOconf[loop].init_RM);

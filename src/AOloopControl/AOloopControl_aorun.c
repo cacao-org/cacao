@@ -290,7 +290,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         processinfo->loopstat = 0; // loop initialization
 
         char msgstring[200];
-        sprintf(msgstring, "Initialize AO loop %d", loop);
+        sprintf(msgstring, "Initialize AO loop %ld", loop);
         strcpy(processinfo->statusmsg, msgstring);
     }
 
@@ -490,20 +490,20 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
                 if(timerinit==0)
                 {
-                    //      Read_cam_frame(loop, 0, AOconf[loop].WFSnormalize, 0, 1);
+                    //      Read_cam_frame(loop, 0, AOconf[loop].WFSim.WFSnormalize, 0, 1);
                     clock_gettime(CLOCK_REALTIME, &t1);
                     timerinit = 1;
                 }
 
 #ifdef _PRINT_TEST
-                printf("[%s] [%d]  AOloopControl_aorun: Starting AOcompute, AOconf[%d].WFSnormalize = %d\n", __FILE__, __LINE__, loop, AOconf[loop].WFSnormalize);
+                printf("[%s] [%d]  AOloopControl_aorun: Starting AOcompute, AOconf[%d].WFSim.WFSnormalize = %d\n", __FILE__, __LINE__, loop, AOconf[loop].WFSim.WFSnormalize);
                 fflush(stdout);
 #endif
 
 				//
 				// Most computation are performed inside AOcompute
 				//
-                AOcompute(loop, AOconf[loop].WFSnormalize);
+                AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
 

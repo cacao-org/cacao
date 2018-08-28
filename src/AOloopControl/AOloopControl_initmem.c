@@ -195,13 +195,13 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             AOconf[loop].ARPFgain = 0.0;
 			AOconf[loop].ARPFgainAutoMin = 0.99;
 			AOconf[loop].ARPFgainAutoMax = 1.01;
-            AOconf[loop].WFSnormfloor = 0.0;
+            AOconf[loop].WFSim.WFSnormfloor = 0.0;
             AOconf[loop].framesAve = 1;
             AOconf[loop].DMmodesNBblock = 1;
             AOconf[loop].AOcompute.GPUusesem = 1;
 
-			AOconf[loop].WFSnormalize = 1;
-			AOconf[loop].WFSrefzero = 0;
+			AOconf[loop].WFSim.WFSnormalize = 1;
+			AOconf[loop].WFSim.WFSrefzero = 0;
 
             AOconf[loop].AOtiminginfo.loopfrequ = 2000.0;
             AOconf[loop].AOtiminginfo.hardwlatency = 0.0011;
@@ -219,7 +219,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             {
                 printf("LIST OF ACTIVE LOOPS:\n");
                 printf("----- Loop %ld   (%s) ----------\n", loop, AOconf[loop].name);
-                printf("  WFS:  %s  [%ld]  %ld x %ld\n", AOconf[loop].WFSname, aoloopcontrol_var.aoconfID_wfsim, AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
+                printf("  WFS:  %s  [%ld]  %ld x %ld\n", AOconf[loop].WFSim.WFSname, aoloopcontrol_var.aoconfID_wfsim, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
                 printf("   DM:  %s  [%ld]  %ld x %ld\n", AOconf[loop].dmCname, aoloopcontrol_var.aoconfID_dmC, AOconf[loop].sizexDM, AOconf[loop].sizeyDM);
                 printf("DM RM:  %s  [%ld]  %ld x %ld\n", AOconf[loop].dmRMname, aoloopcontrol_var.aoconfID_dmC, AOconf[loop].sizexDM, AOconf[loop].sizeyDM);
             }

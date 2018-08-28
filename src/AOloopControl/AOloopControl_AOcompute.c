@@ -401,19 +401,19 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 
-            if(AOconf[loop].WFSrefzero == 0) // if WFS reference is NOT zero
+            if(AOconf[loop].WFSim.WFSrefzero == 0) // if WFS reference is NOT zero
             {
-                for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
 #ifdef _PRINT_TEST
                 printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
-                for(ii=0; ii<AOconf[loop].sizeWFS; ii+=10)
+                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii+=10)
                     printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii]);
 #endif
             }
             else
             {
-                memcpy(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].sizeWFS);
+                memcpy(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].WFSim.sizeWFS);
             }
 
 
@@ -421,7 +421,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             {
                 if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1)
                 {
-                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     {
                         if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] > data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
                         {
@@ -434,7 +434,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 #ifdef _PRINT_TEST
                         printf("[%s] [%d]  AOcompute: APPLY LINEARITY LIMIT   %ld\n", __FILE__, __LINE__, aoloopcontrol_var.aoconfID_imWFSlinlimit);
-                        for(ii=0; ii<AOconf[loop].sizeWFS; ii+=10)
+                        for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii+=10)
                             printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]);
                         fflush(stdout);
 #endif
@@ -469,27 +469,27 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             // There is one mapping array per WFS slice
             // WFS slice 0 = all active pixels
             //
-            aoloopcontrol_var.WFS_active_map = (int*) malloc(sizeof(int)*AOconf[loop].sizeWFS*aoloopcontrol_var.PIXSTREAM_NBSLICES);
+            aoloopcontrol_var.WFS_active_map = (int*) malloc(sizeof(int)*AOconf[loop].WFSim.sizeWFS*aoloopcontrol_var.PIXSTREAM_NBSLICES);
             if(aoloopcontrol_var.aoconfID_wfsmask != -1)
             {
                 for(slice=0; slice<aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++)
                 {
                     long ii1 = 0;
-                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         if(data.image[aoloopcontrol_var.aoconfID_wfsmask].array.F[ii]>0.1)
                         {
                             if(slice==0)
                             {
-                                aoloopcontrol_var.WFS_active_map[slice*AOconf[loop].sizeWFS+ii1] = ii;
+                                aoloopcontrol_var.WFS_active_map[slice*AOconf[loop].WFSim.sizeWFS+ii1] = ii;
                                 ii1++;
                             }
                             else if (data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].array.UI16[ii]==slice+1)
                             {
-                                aoloopcontrol_var.WFS_active_map[slice*AOconf[loop].sizeWFS+ii1] = ii;
+                                aoloopcontrol_var.WFS_active_map[slice*AOconf[loop].WFSim.sizeWFS+ii1] = ii;
                                 ii1++;
                             }
                         }
-                    AOconf[loop].sizeWFS_active[slice] = ii1;
+                    AOconf[loop].WFSim.sizeWFS_active[slice] = ii1;
 
                     char imname[200];
                     if(sprintf(imname, "aol%ld_imWFS2active_%02d", aoloopcontrol_var.LOOPNUMBER, slice) < 1)
@@ -497,11 +497,11 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                     uint32_t *sizearray;
                     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
-                    sizearray[0] =  AOconf[loop].sizeWFS_active[slice];
+                    sizearray[0] =  AOconf[loop].WFSim.sizeWFS_active[slice];
                     sizearray[1] =  1;
                     aoconfID_imWFS2_active[slice] = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
                     free(sizearray);
-                    //aoconfID_imWFS2_active[slice] = create_2Dimage_ID(imname, AOconf[loop].sizeWFS_active[slice], 1);
+                    //aoconfID_imWFS2_active[slice] = create_2Dimage_ID(imname, AOconf[loop].WFSim.sizeWFS_active[slice], 1);
                 }
             }
             else
@@ -578,7 +578,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
 
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 1;
-                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrM].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].NBDMmodes, AOconf[loop].sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F);
+                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrM].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].NBDMmodes, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F);
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_modes, -1);
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt0 ++;
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt1 = LOOPiter;
@@ -591,13 +591,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 printf("  aoloopcontrol_var.aoconfID_contrMc = %ld\n", aoloopcontrol_var.aoconfID_contrMc);
                 printf("  aoloopcontrol_var.aoconfID_meas_act = %ld\n", aoloopcontrol_var.aoconfID_meas_act);
                 printf("  AOconf[loop].sizeDM  = %ld\n", AOconf[loop].sizeDM);
-                printf("  AOconf[loop].sizeWFS = %ld\n", AOconf[loop].sizeWFS);
+                printf("  AOconf[loop].WFSim.sizeWFS = %ld\n", AOconf[loop].WFSim.sizeWFS);
                 list_image_ID();
                 fflush(stdout);
 #endif
 
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
-                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].sizeDM, AOconf[loop].sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_act].array.F);
+                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].sizeDM, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_act].array.F);
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0 ++;
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_act, -1);
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0 ++;
@@ -637,7 +637,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
 
                         data.image[aoloopcontrol_var.aoconfID_contrM].md[0].write = 1;
-                        memcpy(data.image[aoloopcontrol_var.aoconfID_contrM].array.F, data.image[aoloopcontrol_var.aoconfID_wfsref].array.F, sizeof(float)*AOconf[loop].sizeWFS);
+                        memcpy(data.image[aoloopcontrol_var.aoconfID_contrM].array.F, data.image[aoloopcontrol_var.aoconfID_wfsref].array.F, sizeof(float)*AOconf[loop].WFSim.sizeWFS);
                         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_contrM, -1);
                         data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0++;
                         data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt1 = LOOPiter;
@@ -723,8 +723,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
 
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
-                    for(wfselem_active=0; wfselem_active<AOconf[loop].sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
-                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_contrM].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].sizeWFS+wfselem_active]];
+                    for(wfselem_active=0; wfselem_active<AOconf[loop].WFSim.sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_contrM].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].WFSim.sizeWFS+wfselem_active]];
                     COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
@@ -733,8 +733,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 else
                 {
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
-                    for(wfselem_active=0; wfselem_active<AOconf[loop].sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
-                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].sizeWFS+wfselem_active]];
+                    for(wfselem_active=0; wfselem_active<AOconf[loop].WFSim.sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].WFSim.sizeWFS+wfselem_active]];
                     COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
@@ -766,8 +766,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                         printf("\nINITIALIZE WFS REFERENCE: COPY NEW REF (WFSREF) TO imWFS2_active\n"); //TEST
                         fflush(stdout);
                         data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
-                        for(wfselem_active=0; wfselem_active<AOconf[loop].sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
-                            data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].sizeWFS+wfselem_active]];
+                        for(wfselem_active=0; wfselem_active<AOconf[loop].WFSim.sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
+                            data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].WFSim.sizeWFS+wfselem_active]];
                         COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
                         data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
                         data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
