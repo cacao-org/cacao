@@ -188,14 +188,28 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
     }
 
 
-    printw("   STATUS = %3d %3d    ", AOconf[loop].status, AOconf[loop].statusM);
+    printw("   STATUS = %3d %3d    ", AOconf[loop].AOtiminginfo.status, AOconf[loop].AOtiminginfo.statusM);
 
     kmax = (wrow-28)*(nbcol);
 
 	printw("WFS IMAGE TOTAL = %10f -> AVE = %10.3f\n", AOconf[loop].WFStotalflux, AOconf[loop].WFStotalflux/AOconf[loop].sizeWFS);
     printw("    Gain = %5.3f   maxlim = %5.3f     GPU = %d    kmax=%ld\n", AOconf[loop].gain, AOconf[loop].maxlimit, AOconf[loop].AOcompute.GPU0, kmax);
-    printw("    DMprimWrite = %d   Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE LIM = %d (perc = %.2f %%  delta = %.3f nm mcoeff=%4.2f) GAIN = %d\n", AOconf[loop].aorun.DMprimaryWriteON, AOconf[loop].aorun.ARPFon, AOconf[loop].ARPFgain, AOconf[loop].AUTOTUNE_LIMITS_ON, AOconf[loop].AUTOTUNE_LIMITS_perc, 1000.0*AOconf[loop].AUTOTUNE_LIMITS_delta, AOconf[loop].AUTOTUNE_LIMITS_mcoeff, AOconf[loop].AUTOTUNE_GAINS_ON);
-    printw(" TIMIMNG :  lfr = %9.3f Hz    hw lat = %5.3f fr   comp lat = %5.3f fr  wfs extr lat = %5.3f fr\n", AOconf[loop].loopfrequ, AOconf[loop].hardwlatency_frame, AOconf[loop].complatency_frame, AOconf[loop].wfsmextrlatency_frame);
+   
+    printw("    DMprimWrite = %d   Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE LIM = %d (perc = %.2f %%  delta = %.3f nm mcoeff=%4.2f) GAIN = %d\n", 
+		AOconf[loop].aorun.DMprimaryWriteON, 
+		AOconf[loop].aorun.ARPFon, 
+		AOconf[loop].ARPFgain, 
+		AOconf[loop].AUTOTUNE_LIMITS_ON, 
+		AOconf[loop].AUTOTUNE_LIMITS_perc, 
+		1000.0*AOconf[loop].AUTOTUNE_LIMITS_delta, 
+		AOconf[loop].AUTOTUNE_LIMITS_mcoeff, 
+		AOconf[loop].AUTOTUNE_GAINS_ON);
+    
+    printw(" TIMIMNG :  lfr = %9.3f Hz    hw lat = %5.3f fr   comp lat = %5.3f fr  wfs extr lat = %5.3f fr\n", 
+		AOconf[loop].AOtiminginfo.loopfrequ, 
+		AOconf[loop].AOtiminginfo.hardwlatency_frame, 
+		AOconf[loop].AOtiminginfo.complatency_frame, 
+		AOconf[loop].AOtiminginfo.wfsmextrlatency_frame);
     printw("loop iteration CNT : %lld   ", AOconf[loop].cnt);
     printw("\n");
 
@@ -809,9 +823,9 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 		int stM1;
 		
         usleep((long) (usec0 + usec1*(1.0*k/NBsample)));
-        st = AOconf[LOOPNUMBER].status;
-        stM = AOconf[LOOPNUMBER].statusM;
-        stM1 = AOconf[LOOPNUMBER].statusM1;
+        st = AOconf[LOOPNUMBER].AOtiminginfo.status;
+        stM = AOconf[LOOPNUMBER].AOtiminginfo.statusM;
+        stM1 = AOconf[LOOPNUMBER].AOtiminginfo.statusM1;
         
         if(st<statusmax)
             statuscnt[st]++;
@@ -824,11 +838,11 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
         for(gpu=0; gpu<AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
         {
             // 1st matrix mult
-            st = 10*gpu + AOconf[LOOPNUMBER].GPUstatus[gpu];
+            st = 10*gpu + AOconf[LOOPNUMBER].AOtiminginfo.GPUstatus[gpu];
             statusgpucnt[st]++;
 
             // 2nd matrix mult
-            st = 10*gpu + AOconf[LOOPNUMBER].GPUstatus[10+gpu];
+            st = 10*gpu + AOconf[LOOPNUMBER].AOtiminginfo.GPUstatus[10+gpu];
             statusgpucnt2[st]++;
         }
     }
@@ -851,32 +865,32 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
     loopfrequ_measured = 1.0*loopcnt/tdiffv;
     if(updateconf==1)
-        AOconf[LOOPNUMBER].loopfrequ = loopfrequ_measured;
+        AOconf[LOOPNUMBER].AOtiminginfo.loopfrequ = loopfrequ_measured;
 
 	// Primary control matrix computation latency
     complatency_frame_measured = 1.0-1.0*statuscnt[20]/NBsample;
     if(updateconf==1)
-        AOconf[LOOPNUMBER].complatency_frame = complatency_frame_measured;
+        AOconf[LOOPNUMBER].AOtiminginfo.complatency_frame = complatency_frame_measured;
 
     complatency_measured = complatency_frame_measured/loopfrequ_measured;
     if(updateconf==1)
-        AOconf[LOOPNUMBER].complatency = complatency_measured;
+        AOconf[LOOPNUMBER].AOtiminginfo.complatency = complatency_measured;
 
 
 
     wfsmextrlatency_frame_measured = 1.0-1.0*statusMcnt[20]/NBsample;
     printf("==========> %ld %ld -> %f\n", statusMcnt[20], NBsample, wfsmextrlatency_frame_measured);
     if(updateconf==1)
-        AOconf[LOOPNUMBER].wfsmextrlatency_frame = wfsmextrlatency_frame_measured;
+        AOconf[LOOPNUMBER].AOtiminginfo.wfsmextrlatency_frame = wfsmextrlatency_frame_measured;
 
     wfsmextrlatency_measured = wfsmextrlatency_frame_measured / loopfrequ_measured;
     if(updateconf==1)
-        AOconf[LOOPNUMBER].wfsmextrlatency = wfsmextrlatency_measured;
+        AOconf[LOOPNUMBER].AOtiminginfo.wfsmextrlatency = wfsmextrlatency_measured;
 
     if(updateconf==1)
     {
         fp = fopen("conf/param_mloopfrequ.txt", "w");
-        fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].loopfrequ);
+        fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].AOtiminginfo.loopfrequ);
         fclose(fp);
     }
 
@@ -886,37 +900,37 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     }
     else
     {
-        if(fscanf(fp, "%50f", &AOconf[LOOPNUMBER].hardwlatency) != 1)
+        if(fscanf(fp, "%50f", &AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency) != 1)
             printERROR(__FILE__, __func__, __LINE__, "Cannot read parameter from file");
 
-        printf("hardware latency = %f\n", AOconf[LOOPNUMBER].hardwlatency);
+        printf("hardware latency = %f\n", AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency);
         fclose(fp);
         fflush(stdout);
     }
 
-    printf("hardwlatency = %f\n", AOconf[LOOPNUMBER].hardwlatency);
+    printf("hardwlatency = %f\n", AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency);
     if(updateconf==1)
     {
-        AOconf[LOOPNUMBER].hardwlatency_frame = AOconf[LOOPNUMBER].hardwlatency * AOconf[LOOPNUMBER].loopfrequ;
+        AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency_frame = AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency * AOconf[LOOPNUMBER].AOtiminginfo.loopfrequ;
 
         fp = fopen("conf/param_hardwlatency_frame.txt", "w");
-        fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].hardwlatency_frame);
+        fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency_frame);
         fclose(fp);
 
         fp = fopen("conf/param_complatency.txt", "w");
-        fprintf(fp, "%8.6f", AOconf[LOOPNUMBER].complatency);
+        fprintf(fp, "%8.6f", AOconf[LOOPNUMBER].AOtiminginfo.complatency);
         fclose(fp);
 
         fp = fopen("conf/param_complatency_frame.txt", "w");
-        fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].complatency_frame);
+        fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].AOtiminginfo.complatency_frame);
         fclose(fp);
 
         fp = fopen("conf/param_wfsmextrlatency.txt", "w");
-        fprintf(fp, "%8.6f", AOconf[LOOPNUMBER].wfsmextrlatency);
+        fprintf(fp, "%8.6f", AOconf[LOOPNUMBER].AOtiminginfo.wfsmextrlatency);
         fclose(fp);
 
         fp = fopen("conf/param_wfsmextrlatency_frame.txt", "w");
-        fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].wfsmextrlatency_frame);
+        fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].AOtiminginfo.wfsmextrlatency_frame);
         fclose(fp);
     }
 
@@ -1032,10 +1046,10 @@ int_fast8_t AOloopControl_perfTest_showparams(long loop)
     printf("    Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE: lim %d gain %d\n", AOconf[loop].aorun.ARPFon, AOconf[loop].ARPFgain, AOconf[loop].AUTOTUNE_LIMITS_ON,  AOconf[loop].AUTOTUNE_GAINS_ON);
     printf("WFS norm floor = %f\n", AOconf[loop].WFSnormfloor);
 
-    printf("loopfrequ               =  %8.2f Hz\n", AOconf[loop].loopfrequ);
-    printf("hardwlatency_frame      =  %8.2f fr\n", AOconf[loop].hardwlatency_frame);
-    printf("complatency_frame       =  %8.2f fr\n", AOconf[loop].complatency_frame);
-    printf("wfsmextrlatency_frame   =  %8.2f fr\n", AOconf[loop].wfsmextrlatency_frame);
+    printf("loopfrequ               =  %8.2f Hz\n", AOconf[loop].AOtiminginfo.loopfrequ);
+    printf("hardwlatency_frame      =  %8.2f fr\n", AOconf[loop].AOtiminginfo.hardwlatency_frame);
+    printf("complatency_frame       =  %8.2f fr\n", AOconf[loop].AOtiminginfo.complatency_frame);
+    printf("wfsmextrlatency_frame   =  %8.2f fr\n", AOconf[loop].AOtiminginfo.wfsmextrlatency_frame);
 
 
     return 0;
