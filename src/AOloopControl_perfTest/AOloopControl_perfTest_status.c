@@ -192,7 +192,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
     kmax = (wrow-28)*(nbcol);
 
-	printw("WFS IMAGE TOTAL = %10f -> AVE = %10.3f\n", AOconf[loop].WFStotalflux, AOconf[loop].WFStotalflux/AOconf[loop].sizeWFS);
+	printw("WFS IMAGE TOTAL = %10f -> AVE = %10.3f\n", AOconf[loop].WFSim.WFStotalflux, AOconf[loop].WFSim.WFStotalflux/AOconf[loop].WFSim.sizeWFS);
     printw("    Gain = %5.3f   maxlim = %5.3f     GPU = %d    kmax=%ld\n", AOconf[loop].gain, AOconf[loop].maxlimit, AOconf[loop].AOcompute.GPU0, kmax);
    
     printw("    DMprimWrite = %d   Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE LIM = %d (perc = %.2f %%  delta = %.3f nm mcoeff=%4.2f) GAIN = %d\n", 
@@ -1044,7 +1044,7 @@ int_fast8_t AOloopControl_perfTest_showparams(long loop)
 
     printf("Global gain = %f   maxlim = %f\n  multcoeff = %f  GPU = %d\n", AOconf[loop].gain, AOconf[loop].maxlimit, AOconf[loop].mult, AOconf[loop].AOcompute.GPU0);
     printf("    Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE: lim %d gain %d\n", AOconf[loop].aorun.ARPFon, AOconf[loop].ARPFgain, AOconf[loop].AUTOTUNE_LIMITS_ON,  AOconf[loop].AUTOTUNE_GAINS_ON);
-    printf("WFS norm floor = %f\n", AOconf[loop].WFSnormfloor);
+    printf("WFS norm floor = %f\n", AOconf[loop].WFSim.WFSnormfloor);
 
     printf("loopfrequ               =  %8.2f Hz\n", AOconf[loop].AOtiminginfo.loopfrequ);
     printf("hardwlatency_frame      =  %8.2f fr\n", AOconf[loop].AOtiminginfo.hardwlatency_frame);
