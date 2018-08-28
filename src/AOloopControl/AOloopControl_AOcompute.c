@@ -677,10 +677,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
 
                 if(AOconf[loop].AOcompute.GPUall == 1)
-                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
+                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
                 else
                 {
-                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
+                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], 1.0, 0.0, 1, 25);
                 }
 
 
@@ -708,7 +708,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[6] = tdiffv;
 
-                                GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1);
+                                GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], 1.0, 0.0, 1);
                             }
                             else // only use active pixels and actuators (**)
                             {*/
@@ -794,9 +794,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
                 if(AOconf[loop].AOcompute.GPUall == 1)
-                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
+                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
                 else
-                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
+                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], 1.0, 0.0, 1, 25);
 
                 // re-map output vector
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
