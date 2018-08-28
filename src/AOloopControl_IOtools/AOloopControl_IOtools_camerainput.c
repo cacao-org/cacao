@@ -595,7 +595,7 @@ int_fast8_t Read_cam_frame(
 
     if(RM==0)
     {
-        AOconf[loop].status = 20;  // 020: WAIT FOR IMAGE
+        AOconf[loop].AOtiminginfo.status = 20;  // 020: WAIT FOR IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -726,10 +726,10 @@ int_fast8_t Read_cam_frame(
 		aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] = 1; // there must only be one such process
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
 
-        AOconf[loop].status = 0;  // LOAD IMAGE
+        AOconf[loop].AOtiminginfo.status = 0;  // LOAD IMAGE
     }
 
-    AOconf[loop].statusM = 0;
+    AOconf[loop].AOtiminginfo.statusM = 0;
 
 
     slice = 0;
@@ -796,7 +796,7 @@ int_fast8_t Read_cam_frame(
     // ===================================================================
     if(RM==0)
     {
-        AOconf[loop].status = 1;  // 3->001: DARK SUBTRACT
+        AOconf[loop].AOtiminginfo.status = 1;  // 3->001: DARK SUBTRACT
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -992,10 +992,10 @@ int_fast8_t Read_cam_frame(
     //    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
     //       data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] -= data.image[IDdark].array.F[ii];
     //}
-    AOconf[loop].statusM = 1;
+    AOconf[loop].AOtiminginfo.statusM = 1;
     if(RM==0)
     {
-        AOconf[loop].status = 2; // 4 -> 002 : COMPUTE TOTAL OF IMAGE
+        AOconf[loop].AOtiminginfo.status = 2; // 4 -> 002 : COMPUTE TOTAL OF IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -1082,7 +1082,7 @@ int_fast8_t Read_cam_frame(
 
     if(RM==0)
     {
-        AOconf[loop].status = 3;  // 5 -> 003: NORMALIZE WFS IMAGE
+        AOconf[loop].AOtiminginfo.status = 3;  // 5 -> 003: NORMALIZE WFS IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -1143,7 +1143,7 @@ int_fast8_t Read_cam_frame(
     fflush(stdout);
 #endif
 
-    AOconf[loop].statusM = 2;
+    AOconf[loop].AOtiminginfo.statusM = 2;
     if(RM==0)
     {
         clock_gettime(CLOCK_REALTIME, &tnow);
