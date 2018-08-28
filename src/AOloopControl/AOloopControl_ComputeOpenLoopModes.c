@@ -529,7 +529,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 
-    framelatency = AOconf[loop].hardwlatency_frame + AOconf[loop].wfsmextrlatency_frame;
+    framelatency = AOconf[loop].AOtiminginfo.hardwlatency_frame + AOconf[loop].AOtiminginfo.wfsmextrlatency_frame;
     
     if(data.processinfo==1)
     {
@@ -662,7 +662,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 				}
         
         
-        AOconf[loop].statusM = 3;
+        AOconf[loop].AOtiminginfo.statusM = 3;
 		clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -696,7 +696,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 		data.image[IDmodevalDMcorr].md[0].cnt0++;
 		data.image[IDmodevalDMcorr].md[0].write = 0;
 
-        AOconf[loop].statusM = 4;
+        AOconf[loop].AOtiminginfo.statusM = 4;
 		clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -810,7 +810,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 
-        AOconf[loop].statusM = 5;
+        AOconf[loop].AOtiminginfo.statusM = 5;
 			clock_gettime(CLOCK_REALTIME, &tnow);
             tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -1052,14 +1052,14 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 		}
 
 
-        AOconf[loop].statusM = 6;
+        AOconf[loop].AOtiminginfo.statusM = 6;
         
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[6] = tdiffv;
         
-		AOconf[loop].statusM1 = 0;
+		AOconf[loop].AOtiminginfo.statusM1 = 0;
 
 
         //
@@ -1075,7 +1075,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 
-        AOconf[loop].statusM1 = 1;
+        AOconf[loop].AOtiminginfo.statusM1 = 1;
 
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
@@ -1101,7 +1101,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
         data.image[IDmodevalDM].md[0].cnt1 = LOOPiter;
         data.image[IDmodevalDM].md[0].write = 0;
 
-		AOconf[loop].statusM1 = 2;
+		AOconf[loop].AOtiminginfo.statusM1 = 2;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -1138,7 +1138,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 
-        AOconf[loop].statusM1 = 3;
+        AOconf[loop].AOtiminginfo.statusM1 = 3;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -1177,7 +1177,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 
-        AOconf[loop].statusM1 = 4;
+        AOconf[loop].AOtiminginfo.statusM1 = 4;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -1258,7 +1258,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 		
 
 
-        AOconf[loop].statusM1 = 5;
+        AOconf[loop].AOtiminginfo.statusM1 = 5;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;

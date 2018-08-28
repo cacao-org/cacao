@@ -508,7 +508,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
 
 
-                AOconf[loop].status = 12; // 12
+                AOconf[loop].AOtiminginfo.status = 12; // 12
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -542,7 +542,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                         }
 
 
-                        AOconf[loop].status = 13; // enforce limits
+                        AOconf[loop].AOtiminginfo.status = 13; // enforce limits
                         clock_gettime(CLOCK_REALTIME, &tnow);
                         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
                         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -562,7 +562,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                         }
 
 
-                        AOconf[loop].status = 14; // write to DM
+                        AOconf[loop].AOtiminginfo.status = 14; // write to DM
                         clock_gettime(CLOCK_REALTIME, &tnow);
                         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
                         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -594,7 +594,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                     }
                 }
 
-                AOconf[loop].status = 18; // 18
+                AOconf[loop].AOtiminginfo.status = 18; // 18
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;

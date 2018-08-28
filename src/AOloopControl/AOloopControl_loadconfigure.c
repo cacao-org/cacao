@@ -217,26 +217,26 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
     /** ### 1.5. Read Timing info
      * 
-     * - ./conf/param_loopfrequ.txt    -> AOconf[loop].loopfrequ
-     * - ./conf/param_hardwlatency.txt -> AOconf[loop].hardwlatency
-     * - AOconf[loop].hardwlatency_frame = AOconf[loop].hardwlatency * AOconf[loop].loopfrequ
-     * - ./conf/param_complatency.txt  -> AOconf[loop].complatency
-     * - AOconf[loop].complatency_frame = AOconf[loop].complatency * AOconf[loop].loopfrequ;
-     * - ./conf/param_wfsmextrlatency.txt -> AOconf[loop].wfsmextrlatency
+     * - ./conf/param_loopfrequ.txt    -> AOconf[loop].AOtiminginfo.loopfrequ
+     * - ./conf/param_hardwlatency.txt -> AOconf[loop].AOtiminginfo.hardwlatency
+     * - AOconf[loop].AOtiminginfo.hardwlatency_frame = AOconf[loop].AOtiminginfo.hardwlatency * AOconf[loop].AOloopTimingInfo.loopfrequ
+     * - ./conf/param_complatency.txt  -> AOconf[loop].AOtiminginfo.complatency
+     * - AOconf[loop].AOtiminginfo.complatency_frame = AOconf[loop].AOtiminginfo.complatency * AOconf[loop].AOloopTimingInfo.loopfrequ;
+     * - ./conf/param_wfsmextrlatency.txt -> AOconf[loop].AOloopTimingInfo.wfsmextrlatency
      */
      fprintf(fplog, "\n\n============== 1.5. Read Timing info ===================\n\n");
     
     
     
-    AOconf[loop].loopfrequ = AOloopControl_readParam_float("loopfrequ", 1000.0, fplog);
-	AOconf[loop].hardwlatency = AOloopControl_readParam_float("hardwlatency", 0.0, fplog);  
-    AOconf[loop].hardwlatency_frame = AOconf[loop].hardwlatency * AOconf[loop].loopfrequ;
+    AOconf[loop].AOtiminginfo.loopfrequ = AOloopControl_readParam_float("loopfrequ", 1000.0, fplog);
+	AOconf[loop].AOtiminginfo.hardwlatency = AOloopControl_readParam_float("hardwlatency", 0.0, fplog);  
+    AOconf[loop].AOtiminginfo.hardwlatency_frame = AOconf[loop].AOtiminginfo.hardwlatency * AOconf[loop].AOtiminginfo.loopfrequ;
 
-	AOconf[loop].complatency = AOloopControl_readParam_float("complatency", 0.0, fplog);
-    AOconf[loop].complatency_frame = AOconf[loop].complatency * AOconf[loop].loopfrequ;
+	AOconf[loop].AOtiminginfo.complatency = AOloopControl_readParam_float("complatency", 0.0, fplog);
+    AOconf[loop].AOtiminginfo.complatency_frame = AOconf[loop].AOtiminginfo.complatency * AOconf[loop].AOtiminginfo.loopfrequ;
 
-	AOconf[loop].wfsmextrlatency = AOloopControl_readParam_float("wfsmextrlatency", 0.0, fplog);
-    AOconf[loop].wfsmextrlatency_frame = AOconf[loop].wfsmextrlatency * AOconf[loop].loopfrequ;
+	AOconf[loop].AOtiminginfo.wfsmextrlatency = AOloopControl_readParam_float("wfsmextrlatency", 0.0, fplog);
+    AOconf[loop].AOtiminginfo.wfsmextrlatency_frame = AOconf[loop].AOtiminginfo.wfsmextrlatency * AOconf[loop].AOtiminginfo.loopfrequ;
 
 
 

@@ -177,13 +177,13 @@ static FILE *loadcreateshm_fplog;
  */
 typedef struct
 {	
+	// These structures are always part of AO loop control (not optional)
 
-	AOLOOPCONF_aorun       aorun;       // structure defined in AOloopControl_aorun.h
+	AOLOOPCONF_aorun       aorun;         // structure defined in AOloopControl_aorun.h
+	AOLOOPCONF_AOcompute   AOcompute;     // structure defined in AOloopControl_AOcompute.h	
+	AOLOOPCONF_WFSimread   WFSimread;     // structure defined in AOloopControl_AOcompute.h
 
-	AOLOOPCONF_AOcompute   AOcompute;   // structure defined in AOloopControl_AOcompute.h
-	
-	AOLOOPCONF_WFSimread   WFSimread;   // structure defined in AOloopControl_AOcompute.h
-
+	AOloopTimingInfo       AOtiminginfo;  // structure defined in AOloopControl_aorun.h
 	
 	
 	
@@ -196,29 +196,6 @@ typedef struct
 	 * LOOP Timing info
 	 */
 
-
-	float loopfrequ;                          /**< Loop frequency [Hz] */
-
-	// Hardware latency = time from DM command issued to WFS response changed 
-	float hardwlatency;                       /**< hardware latency between DM command and WFS response [sec] */ 
-	float hardwlatency_frame;                 /**< hardware latency between DM command and WFS response [frame] */
-
-	// Computation time for direct WFS->DM mode through single matrix multiplication
-	float complatency;                        /**< Computation latency [sec] */
-	float complatency_frame;                  /**< Computation latency (main loop) from WFS image reception to DM command output [frame] */
-
-	// Computation time for full computation including open loop computation
-	float wfsmextrlatency;                    /**< WFS mode extraction latency [sec] */ 
-	float wfsmextrlatency_frame;              /**< WFS mode extraction latency [frame] */
-
-    int_fast8_t status;                       /**< loop status for main loop */
-    int_fast8_t statusM;                      /**< loop status for modal loop */
-    int_fast8_t statusM1;                     /**< loop status for modal loop */
-  
-    int_fast8_t GPUstatus[50];                /**<  GPU status index */
-    uint_fast16_t NBtimer;                    /**<  Number of active timers - 1 timer per status value */
-    struct timespec timer[MAX_NUMBER_TIMER];  /**<  Timers */
-   
     /* =============================================================================================== */
 
 

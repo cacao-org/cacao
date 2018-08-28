@@ -335,7 +335,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
     // waiting for dark-subtracted image
-    AOconf[loop].status = 19;  //  19: WAITING FOR IMAGE
+    AOconf[loop].AOtiminginfo.status = 19;  //  19: WAITING FOR IMAGE
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -379,7 +379,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     //    printf("slice = %d  ->  %d\n", slice, aoloopcontrol_var.PIXSTREAM_SLICE);
     //    fflush(stdout);
 
-    AOconf[loop].status = 4;  // 4: REMOVING REF
+    AOconf[loop].AOtiminginfo.status = 4;  // 4: REMOVING REF
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -449,7 +449,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 0;
         }
 
-        AOconf[loop].status = 5; // 5 MULTIPLYING BY CONTROL MATRIX -> MODE VALUES
+        AOconf[loop].AOtiminginfo.status = 5; // 5 MULTIPLYING BY CONTROL MATRIX -> MODE VALUES
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -665,7 +665,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
 
-                AOconf[loop].status = 6; // 6 execute
+                AOconf[loop].AOtiminginfo.status = 6; // 6 execute
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -677,10 +677,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
 
                 if(AOconf[loop].AOcompute.GPUall == 1)
-                    GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
+                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
                 else
                 {
-                    GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
+                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
                 }
 
 
@@ -702,13 +702,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 /*            if(1==0)
                             {
                                 GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMc].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_act].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, 1, loop);
-                                AOconf[loop].status = 6;
+                                AOconf[loop].AOtiminginfo.status = 6;
                                 clock_gettime(CLOCK_REALTIME, &tnow);
                                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
                                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[6] = tdiffv;
 
-                                GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1);
+                                GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1);
                             }
                             else // only use active pixels and actuators (**)
                             {*/
@@ -786,7 +786,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
                 aoloopcontrol_var.initcontrMcact_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
 
-                AOconf[loop].status = 6; // 6 execute
+                AOconf[loop].AOtiminginfo.status = 6; // 6 execute
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -794,9 +794,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
                 if(AOconf[loop].AOcompute.GPUall == 1)
-                    GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
+                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
                 else
-                    GPU_loop_MultMat_execute(0, &AOconf[loop].status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
+                    GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].GPUstatus[0], 1.0, 0.0, 1, 25);
 
                 // re-map output vector
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
@@ -818,7 +818,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
         }
 
-        AOconf[loop].status = 11; // 11 MULTIPLYING BY GAINS
+        AOconf[loop].AOtiminginfo.status = 11; // 11 MULTIPLYING BY GAINS
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
@@ -902,7 +902,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         }
 
 
-        AOconf[loop].status = 11;
+        AOconf[loop].AOtiminginfo.status = 11;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;

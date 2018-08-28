@@ -165,7 +165,7 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
 
 
 
-    gain0 = 1.0/(AOconf[loop].loopfrequ*AOconf[loop].AUTOTUNEGAINS_evolTimescale);
+    gain0 = 1.0/(AOconf[loop].AOtiminginfo.loopfrequ*AOconf[loop].AUTOTUNEGAINS_evolTimescale);
 
 
 
@@ -320,7 +320,7 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
 
 
         // prepare gain array
-        latency = AOconf[loop].hardwlatency_frame + AOconf[loop].wfsmextrlatency_frame;
+        latency = AOconf[loop].AOtiminginfo.hardwlatency_frame + AOconf[loop].AOtiminginfo.wfsmextrlatency_frame;
         //printf("latency = %f frame\n", latency);
         NBgain = 0;
         gain = mingain;

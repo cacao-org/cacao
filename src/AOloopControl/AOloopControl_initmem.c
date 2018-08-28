@@ -203,13 +203,13 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 			AOconf[loop].WFSnormalize = 1;
 			AOconf[loop].WFSrefzero = 0;
 
-            AOconf[loop].loopfrequ = 2000.0;
-            AOconf[loop].hardwlatency = 0.0011;
-            AOconf[loop].hardwlatency_frame = 2.2;
-            AOconf[loop].complatency = 0.0001;
-            AOconf[loop].complatency_frame = 0.2;
-            AOconf[loop].wfsmextrlatency = 0.0003;
-            AOconf[loop].wfsmextrlatency_frame = 0.6;
+            AOconf[loop].AOtiminginfo.loopfrequ = 2000.0;
+            AOconf[loop].AOtiminginfo.hardwlatency = 0.0011;
+            AOconf[loop].AOtiminginfo.hardwlatency_frame = 2.2;
+            AOconf[loop].AOtiminginfo.complatency = 0.0001;
+            AOconf[loop].AOtiminginfo.complatency_frame = 0.2;
+            AOconf[loop].AOtiminginfo.wfsmextrlatency = 0.0003;
+            AOconf[loop].AOtiminginfo.wfsmextrlatency_frame = 0.6;
         }
     }
     else
