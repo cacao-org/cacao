@@ -172,7 +172,7 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(long loop, long NB_
 
 
     n = data.image[ID_Rmatrix].md[0].size[0]*data.image[ID_Rmatrix].md[0].size[1]; //AOconf[loop].NBDMmodes;
-    m = data.image[ID_Rmatrix].md[0].size[2]; //AOconf[loop].sizeWFS;
+    m = data.image[ID_Rmatrix].md[0].size[2]; //AOconf[loop].WFSim.sizeWFS;
 
 
     ID_RMmask = image_ID("RMmask");
@@ -346,8 +346,8 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(long loop, long NB_
     /// second, build the "inverse" of the diagonal matrix of eigenvalues (matrix1)
     matrix1 = gsl_matrix_alloc (m, m);
     matrix2 = gsl_matrix_alloc (m, m);
-    arraysizetmp[0] = AOconf[loop].sizexWFS;
-    arraysizetmp[1] = AOconf[loop].sizeyWFS;
+    arraysizetmp[0] = AOconf[loop].WFSim.sizexWFS;
+    arraysizetmp[1] = AOconf[loop].WFSim.sizeyWFS;
     arraysizetmp[2] = m;
     ID_Cmatrix = create_image_ID(ID_Cmatrix_name, 3, arraysizetmp, _DATATYPE_FLOAT, 0, 0);
 
@@ -710,12 +710,12 @@ long AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
         }
         if(vOK==1)
         {
-            if(data.image[ID].md[0].size[0]!=AOconf[loop].sizexWFS)
+            if(data.image[ID].md[0].size[0]!=AOconf[loop].WFSim.sizexWFS)
             {
-                printf("Control matrix has wrong x size : is %ld, should be %ld\n", (long) data.image[ID].md[0].size[0], (long) AOconf[loop].sizexWFS);
+                printf("Control matrix has wrong x size : is %ld, should be %ld\n", (long) data.image[ID].md[0].size[0], (long) AOconf[loop].WFSim.sizexWFS);
                 vOK = 0;
             }
-            if(data.image[ID].md[0].size[1]!=AOconf[loop].sizeyWFS)
+            if(data.image[ID].md[0].size[1]!=AOconf[loop].WFSim.sizeyWFS)
             {
                 printf("Control matrix has wrong y size\n");
                 vOK = 0;
@@ -741,7 +741,7 @@ long AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
             long ID0 = image_ID("tmpcontrM");
             data.image[ID].md[0].write  = 1;
             long ii;
-            for(ii=0; ii<AOconf[loop].sizexWFS*AOconf[loop].sizeyWFS*AOconf[loop].NBDMmodes; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].NBDMmodes; ii++)
                 data.image[ID].array.F[ii] = data.image[ID0].array.F[ii];
             data.image[ID].md[0].write  = 0;
             data.image[ID].md[0].cnt0++;
