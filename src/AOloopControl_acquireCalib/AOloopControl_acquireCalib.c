@@ -382,7 +382,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     printf("Importing WFS camera image shared memory ... \n");
     fflush(stdout);
-    aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(AOconf[loop].WFSname);
+    aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(AOconf[loop].WFSim.WFSname);
 
 
 
@@ -393,15 +393,15 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 	 */ 
     IDpokeC = image_ID(IDpokeC_name);
     NBpoke = data.image[IDpokeC].md[0].size[2];
-    sizearray[0] = AOconf[loop].sizexWFS;
-    sizearray[1] = AOconf[loop].sizeyWFS;
+    sizearray[0] = AOconf[loop].WFSim.sizexWFS;
+    sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
     sizearray[2] = NBpoke;
     IDoutC = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1], sizearray[2]);
 
     uint_fast16_t PokeIndex;   // Mode to be poked
     for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
-        for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
-            data.image[IDoutC].array.F[PokeIndex*AOconf[loop].sizeWFS+ii] = 0.0;
+        for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            data.image[IDoutC].array.F[PokeIndex*AOconf[loop].WFSim.sizeWFS+ii] = 0.0;
 
 
 	/** 
@@ -659,8 +659,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
                 if(kk<NBave)
                 {
-                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
-                        data.image[IDoutC].array.F[PokeIndexMapped*AOconf[loop].sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
+                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                        data.image[IDoutC].array.F[PokeIndexMapped*AOconf[loop].WFSim.sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                     array_accum[imcnt] = 1;
                 }
                 kk1++;
@@ -715,8 +715,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     free(sizearray);
 
     for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
-        for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
-            data.image[IDoutC].array.F[PokeIndex*AOconf[loop].sizeWFS+ii] /= NBave*iter;
+        for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            data.image[IDoutC].array.F[PokeIndex*AOconf[loop].WFSim.sizeWFS+ii] /= NBave*iter;
 
 
     // print poke log
@@ -1087,16 +1087,16 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
 
     printf("Importing WFS camera image shared memory ... \n");
     fflush(stdout);
-    aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(AOconf[loop].WFSname);
+    aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(AOconf[loop].WFSim.WFSname);
 
 
 
     if(sprintf(name, "aol%ld_imWFS1RM", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-    sizearray[0] = AOconf[loop].sizexWFS;
-    sizearray[1] = AOconf[loop].sizeyWFS;
-    printf("WFS size = %ld %ld\n", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
+    sizearray[0] = AOconf[loop].WFSim.sizexWFS;
+    sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
+    printf("WFS size = %ld %ld\n", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
     fflush(stdout);
     aoloopcontrol_var.aoconfID_imWFS1 = create_image_ID(name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
 
@@ -1108,8 +1108,8 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
     ID_DMmap = create_image_ID(DMmap_name, 2, sizearray, _DATATYPE_FLOAT, 1, 5);
 
 
-    IDpos = create_2Dimage_ID("wfsposim", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
-    IDneg = create_2Dimage_ID("wfsnegim", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
+    IDpos = create_2Dimage_ID("wfsposim", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
+    IDneg = create_2Dimage_ID("wfsnegim", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
 
 
 
@@ -1148,8 +1148,8 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
 
     //    sleep(10);
 
-    sizearray[0] = AOconf[loop].sizexWFS;
-    sizearray[1] = AOconf[loop].sizeyWFS;
+    sizearray[0] = AOconf[loop].WFSim.sizexWFS;
+    sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
     sizearray[2] = NBpoke; //AOconf[loop].sizeDM;
 
     actarray = (long*) malloc(sizeof(long)*NBpoke);
@@ -1167,8 +1167,8 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
 
     if(mode>0)
     {
-        sizearray[0] = AOconf[loop].sizexWFS;
-        sizearray[1] = AOconf[loop].sizeyWFS;
+        sizearray[0] = AOconf[loop].WFSim.sizexWFS;
+        sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
         ID_WFSmask = create_image_ID("wfsmask", 2, sizearray, _DATATYPE_FLOAT, 1, 5);
 
         sizearray[0] = AOconf[loop].sizexDM;
@@ -1227,8 +1227,8 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
 
 
         for(poke=0; poke<NBpoke; poke++)
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
-                data.image[IDzrespm].array.F[poke*AOconf[loop].sizeWFS+ii] = 0.0;
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                data.image[IDzrespm].array.F[poke*AOconf[loop].WFSim.sizeWFS+ii] = 0.0;
 
 
         act = 0;
@@ -1295,7 +1295,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
         {
             //	printf("act = %6ld   NBpoke = %6ld\n", act, NBpoke);
             //	fflush(stdout);
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
                 data.image[IDpos].array.F[ii] = 0.0;
                 data.image[IDneg].array.F[ii] = 0.0;
@@ -1308,7 +1308,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
             {
                 Read_cam_frame(loop, 1, normalize, 0, 0);
                 if(kk<NBave)
-                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         data.image[IDpos].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                 kk1++;
                 if(kk1==NBave)
@@ -1337,10 +1337,10 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
             }
 
 
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
-                data.image[IDzrespm].array.F[actarray[act]*AOconf[loop].sizeWFS+ii] += data.image[IDpos].array.F[ii];
-                data.image[IDzrespfp].array.F[actarray[act]*AOconf[loop].sizeWFS+ii] = data.image[IDpos].array.F[ii];
+                data.image[IDzrespm].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii] += data.image[IDpos].array.F[ii];
+                data.image[IDzrespfp].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDpos].array.F[ii];
                 data.image[ID_WFSref0].array.F[ii] += data.image[IDpos].array.F[ii];
                 data.image[ID_WFSref2].array.F[ii] += data.image[IDpos].array.F[ii]*data.image[IDpos].array.F[ii];
             }
@@ -1352,7 +1352,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
             {
                 Read_cam_frame(loop, 1, normalize, 0, 0);
                 if(kk<NBave)
-                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         data.image[IDneg].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                 kk1++;
                 if(kk1==NBave)
@@ -1380,10 +1380,10 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
                 }
             }
 
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
-                data.image[IDzrespm].array.F[actarray[act]*AOconf[loop].sizeWFS+ii] -= data.image[IDneg].array.F[ii];
-                data.image[IDzrespfm].array.F[actarray[act]*AOconf[loop].sizeWFS+ii] = data.image[IDneg].array.F[ii];
+                data.image[IDzrespm].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii] -= data.image[IDneg].array.F[ii];
+                data.image[IDzrespfm].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDneg].array.F[ii];
                 data.image[ID_WFSref0].array.F[ii] += data.image[IDneg].array.F[ii];
                 data.image[ID_WFSref2].array.F[ii] += data.image[IDneg].array.F[ii] * data.image[IDneg].array.F[ii];
             }
@@ -1407,17 +1407,17 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
         if(data.signal_USR1==0) // keep looping
         {
             for(act=0; act<NBpoke; act++)
-                for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
-                    data.image[IDzrespmn].array.F[act*AOconf[loop].sizeWFS+ii] = data.image[IDzrespm].array.F[actarray[act]*AOconf[loop].sizeWFS+ii]/ampl/cntn;
+                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                    data.image[IDzrespmn].array.F[act*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDzrespm].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii]/ampl/cntn;
             if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", zrespm_name, iter) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             save_fits(zrespm_name, fname);
 
             for(act=0; act<NBpoke; act++)
-                for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
-                    data.image[IDzrespfp].array.F[act*AOconf[loop].sizeWFS+ii] /= NBave;
-                    data.image[IDzrespfm].array.F[act*AOconf[loop].sizeWFS+ii] /= NBave;
+                    data.image[IDzrespfp].array.F[act*AOconf[loop].WFSim.sizeWFS+ii] /= NBave;
+                    data.image[IDzrespfm].array.F[act*AOconf[loop].WFSim.sizeWFS+ii] /= NBave;
                 }
 
             if(sprintf(fname, "!./zresptmp/%s_pos_%03ld.fits", zrespm_name, iter) < 1)
@@ -1431,7 +1431,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
             save_fits("zrespfm", fname);
 
             total = 0.0;
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
                 data.image[ID_WFSref2n].array.F[ii] = sqrt((data.image[ID_WFSref2].array.F[ii] - data.image[ID_WFSref0].array.F[ii]*data.image[ID_WFSref0].array.F[ii])/NBave/cntn);
                 data.image[ID_WFSref0n].array.F[ii] = data.image[ID_WFSref0].array.F[ii]/NBave/cntn;
@@ -1442,7 +1442,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
 
             if(normalize==1)
             {
-                for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
                     data.image[ID_WFSref0n].array.F[ii] /= total;
                     data.image[ID_WFSref2n].array.F[ii] /= total;
@@ -1450,7 +1450,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
             }
             else
             {
-                for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
                     data.image[ID_WFSref0n].array.F[ii] /= NBave;
                     data.image[ID_WFSref2n].array.F[ii] /= NBave;
@@ -1473,9 +1473,9 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
                 for(poke=0; poke<NBpoke; poke++)
                 {
                     rms = 0.0;
-                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     {
-                        tmpv = data.image[IDzrespmn].array.F[poke*AOconf[loop].sizeWFS+ii];
+                        tmpv = data.image[IDzrespmn].array.F[poke*AOconf[loop].WFSim.sizeWFS+ii];
                         rms += tmpv*tmpv;
                     }
                     data.image[ID_DMmap].array.F[act] = rms;
@@ -1487,12 +1487,12 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
                 save_fits(DMmap_name, fname);
 
 
-                for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
                     rms = 0.0;
                     for(poke=0; poke<NBpoke; poke++)
                     {
-                        tmpv = data.image[IDzrespmn].array.F[poke*AOconf[loop].sizeWFS+ii];
+                        tmpv = data.image[IDzrespmn].array.F[poke*AOconf[loop].WFSim.sizeWFS+ii];
                         rms += tmpv*tmpv;
                     }
                     data.image[ID_WFSmap].array.F[ii] = rms;
@@ -1507,7 +1507,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long del
                 {
                     // WFSmask : select pixels >40% of 85-percentile
                     lim = 0.4*img_percentile(WFSmap_name, 0.7);
-                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     {
                         if(data.image[ID_WFSmap].array.F[ii]<lim)
                             data.image[ID_WFSmask].array.F[ii] = 0.0;
@@ -1627,8 +1627,8 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
 
 
     // create output
-    IDwfsref0 = create_2Dimage_ID("refwfsacq", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
-    IDrespM = create_3Dimage_ID("respmacq", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes);
+    IDwfsref0 = create_2Dimage_ID("refwfsacq", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
+    IDrespM = create_3Dimage_ID("respmacq", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes);
 
 
 
@@ -1651,25 +1651,25 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
     printf("%ld frames total\n", RespMatNBframes);
     fflush(stdout);
 
-    IDrmc = create_3Dimage_ID("RMcube", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, RespMatNBframes); // this is the main cube
+    IDrmc = create_3Dimage_ID("RMcube", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, RespMatNBframes); // this is the main cube
 
 
 
 
 
-    IDrmi = create_3Dimage_ID("RMiter", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes);    // Response matrix for 1 iteration
-    IDrmcumul = create_3Dimage_ID("RMcumul", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes);  // Cumulative Response matrix
+    IDrmi = create_3Dimage_ID("RMiter", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes);    // Response matrix for 1 iteration
+    IDrmcumul = create_3Dimage_ID("RMcumul", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes);  // Cumulative Response matrix
 
-    IDrefi = create_2Dimage_ID("REFiter", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
-    IDrefcumul = create_2Dimage_ID("REFcumul", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
+    IDrefi = create_2Dimage_ID("REFiter", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
+    IDrefcumul = create_2Dimage_ID("REFcumul", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
 
 
 
     /// local arrays for image acquision
-    //	aoloopcontrol_var.aoconfID_wfsim = create_2Dimage_ID("RMwfs", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
-    aoloopcontrol_var.aoconfID_imWFS0 = create_2Dimage_ID("RMwfs0", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
-    aoloopcontrol_var.aoconfID_imWFS1 = create_2Dimage_ID("RMwfs1", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
-    aoloopcontrol_var.aoconfID_imWFS1 = create_2Dimage_ID("RMwfs2", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS);
+    //	aoloopcontrol_var.aoconfID_wfsim = create_2Dimage_ID("RMwfs", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
+    aoloopcontrol_var.aoconfID_imWFS0 = create_2Dimage_ID("RMwfs0", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
+    aoloopcontrol_var.aoconfID_imWFS1 = create_2Dimage_ID("RMwfs1", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
+    aoloopcontrol_var.aoconfID_imWFS1 = create_2Dimage_ID("RMwfs2", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
 
 
     aoloopcontrol_var.aoconfID_cmd_modesRM = create_2Dimage_ID("RMmodesloc", AOconf[loop].NBDMmodes, 1);
@@ -1690,10 +1690,10 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
 
 
             // initialize reference to zero
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 data.image[IDrefi].array.F[ii] = 0.0;
 
-            for(ii=0; ii<AOconf[loop].sizeWFS*RespMatNBframes; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS*RespMatNBframes; ii++)
                 data.image[IDrmc].array.F[ii] = 0.0;
 
 
@@ -1742,10 +1742,10 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
                         Read_cam_frame(loop, 1, 1, 0, 0);
 
 
-                        for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                        for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         {
                             data.image[IDrefi].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
-                            data.image[IDrmc].array.F[kc*AOconf[loop].sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
+                            data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                         }
                         kc++;
                     }
@@ -1761,17 +1761,17 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
                     {
                         Read_cam_frame(loop, 1, 1, 0, 0);
 
-                        for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                        for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         {
                             data.image[IDrefi].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
-                            data.image[IDrmc].array.F[kc*AOconf[loop].sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
+                            data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                         }
                         kc++;
                     }
                 }
             }
 
-            for(ii=0; ii<AOconf[loop].sizeWFS*RespMatNBframes; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS*RespMatNBframes; ii++)
                 data.image[IDrmc].array.F[ii] /= NBloops;
 
 
@@ -1780,7 +1780,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
                 data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k2] = 0.0;
             set_DM_modesRM(loop);
 
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 data.image[IDrefi].array.F[ii] /= RespMatNBframes*NBloops;
 
 
@@ -1791,16 +1791,16 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
             // remove average
             if(1)
             {
-                IDrmc1 = create_3Dimage_ID("RMcube1", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, RespMatNBframes); // this is the main cube, average removed
+                IDrmc1 = create_3Dimage_ID("RMcube1", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, RespMatNBframes); // this is the main cube, average removed
 
-                for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
                     valave = 0.0;
                     for(kc=0; kc<RespMatNBframes; kc++)
-                        valave += data.image[IDrmc].array.F[kc*AOconf[loop].sizeWFS+ii];
+                        valave += data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii];
                     valave /= RespMatNBframes;
                     for(kc=0; kc<RespMatNBframes; kc++)
-                        data.image[IDrmc1].array.F[kc*AOconf[loop].sizeWFS+ii] = data.image[IDrmc].array.F[kc*AOconf[loop].sizeWFS+ii] - valave;
+                        data.image[IDrmc1].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] - valave;
                 }
                 save_fits("RMcube1", "!RMcube1.fits");
             }
@@ -1808,15 +1808,15 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
 
 
 
-            IDrmtest = create_3Dimage_ID("rmtest", AOconf[loop].sizexWFS, AOconf[loop].sizeyWFS, AOconf[loop].NBDMmodes);
+            IDrmtest = create_3Dimage_ID("rmtest", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes);
 
 
             kc0 = fDelay;
 
             // initialize RM to zero
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 for(k=0; k<AOconf[loop].NBDMmodes; k++)
-                    data.image[IDrmtest].array.F[k*AOconf[loop].sizeWFS+ii] = 0.0;
+                    data.image[IDrmtest].array.F[k*AOconf[loop].WFSim.sizeWFS+ii] = 0.0;
 
             // initialize reference to zero
             kc = kc0;
@@ -1829,10 +1829,10 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
                     kc -= data.image[IDrmc].md[0].size[2];
                 for(kk=NBexcl; kk<NbAve-NBexcl; kk++)
                 {
-                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     {
-                        data.image[IDrmtest].array.F[k1*AOconf[loop].sizeWFS+ii] += data.image[IDrmc].array.F[kc*AOconf[loop].sizeWFS+ii];
-                        //     data.image[IDrmc].array.F[kc*AOconf[loop].sizeWFS+ii] += 1.0;
+                        data.image[IDrmtest].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] += data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii];
+                        //     data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] += 1.0;
                     }
                     kc++;
                     if(kc > data.image[IDrmc].md[0].size[2]-1)
@@ -1848,10 +1848,10 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
                     kc -= data.image[IDrmc].md[0].size[2];
                 for(kk=NBexcl; kk<NbAve-NBexcl; kk++)
                 {
-                    for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     {
-                        data.image[IDrmtest].array.F[k1*AOconf[loop].sizeWFS+ii] -= data.image[IDrmc].array.F[kc*AOconf[loop].sizeWFS+ii];
-                        //  data.image[IDrmc].array.F[kc*AOconf[loop].sizeWFS+ii] -= 1.0;
+                        data.image[IDrmtest].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] -= data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii];
+                        //  data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] -= 1.0;
                     }
                     kc++;
                     if(kc > data.image[IDrmc].md[0].size[2]-1)
@@ -1864,9 +1864,9 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
 
             //  save_fits("RMcube", "!RMcube2.fits");
             //  exit(0);
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 for(k1=0; k1<AOconf[loop].NBDMmodes; k1++)
-                    data.image[IDrmi].array.F[k1*AOconf[loop].sizeWFS+ii] = data.image[IDrmtest].array.F[k1*AOconf[loop].sizeWFS+ii];
+                    data.image[IDrmi].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDrmtest].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii];
 
 
             //        save_fl_fits("rmtest", "!rmtest.fits");
@@ -1879,7 +1879,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
 
 
             beta = (1.0-gain)*beta + gain;
-            for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
                 data.image[IDrefcumul].array.F[ii] = (1.0-gain)*data.image[IDrefcumul].array.F[ii] + gain*data.image[IDrefi].array.F[ii];
 
@@ -1889,16 +1889,16 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
 
                 for(k1=0; k1<AOconf[loop].NBDMmodes; k1++)
                 {
-                    data.image[IDrmcumul].array.F[k1*AOconf[loop].sizeWFS+ii] = (1.0-gain)*data.image[IDrmcumul].array.F[k1*AOconf[loop].sizeWFS+ii] + gain*data.image[IDrmi].array.F[k1*AOconf[loop].sizeWFS+ii];
-                    data.image[IDrespM].array.F[k1*AOconf[loop].sizeWFS+ii] = data.image[IDrmcumul].array.F[k1*AOconf[loop].sizeWFS+ii]/beta;
+                    data.image[IDrmcumul].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] = (1.0-gain)*data.image[IDrmcumul].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] + gain*data.image[IDrmi].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii];
+                    data.image[IDrespM].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDrmcumul].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii]/beta;
                 }
             }
 
             for(k1=0; k1<AOconf[loop].NBDMmodes; k1++)
             {
                 rmsval = 0.0;
-                for(ii=0; ii<AOconf[loop].sizeWFS; ii++)
-                    rmsval += data.image[IDrespM].array.F[k1*AOconf[loop].sizeWFS+ii]*data.image[IDrespM].array.F[k1*AOconf[loop].sizeWFS+ii];
+                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                    rmsval += data.image[IDrespM].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii]*data.image[IDrespM].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii];
 
                 data.image[IDoptsignal].array.F[k1] += rmsval;
                 data.image[IDoptcnt].array.F[k1] += 1.0;
