@@ -19,14 +19,6 @@
 
 
 
-typedef struct
-{
-	
-
-} AOLOOPCONF_WFSimread;
-
-
-
 
 
 
