@@ -18,7 +18,7 @@
 
 #include "AOloopControl/AOloopControl_AOcompute.h"
 #include "AOloopControl/AOloopControl_aorun.h"
-
+#include "AOloopControl_IOtools/AOloopControl_IOtools.h"  // AOLOOPCONF_WFSimread
 
 #ifndef _AOLOOPCONTROL_H
 #define _AOLOOPCONTROL_H
