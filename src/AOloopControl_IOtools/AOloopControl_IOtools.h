@@ -16,6 +16,23 @@
 #include <AOloopControl/AOloopControl.h>
 
 
+
+
+
+typedef struct
+{
+	
+
+} AOLOOPCONF_WFSimread;
+
+
+
+
+
+
+
+
+
 /** @brief Initialize module. */
 void __attribute__ ((constructor)) libinit_AOloopControl_IOtools();
 

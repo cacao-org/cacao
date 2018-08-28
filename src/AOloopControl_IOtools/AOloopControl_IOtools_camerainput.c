@@ -141,7 +141,15 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 //
 // every time im_name changes (counter increments), crop it to out_name in shared memory
 //
-int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name, const char *dark_name, const char *out_name, long size_x, long size_y, long xstart, long ystart)
+int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
+	const char *in_name, 
+	const char *dark_name, 
+	const char *out_name, 
+	long        size_x, 
+	long        size_y, 
+	long        xstart, 
+	long        ystart
+	)
 {
     long iiin,jjin, iiout, jjout;
     long IDin, IDout, IDdark;
@@ -397,6 +405,9 @@ static void *compute_function_imtotal( void *ptr )
 
 
 
+
+
+
 static void *compute_function_dark_subtract( void *ptr )
 {
     long ii, iistart, iiend;
@@ -466,8 +477,16 @@ static void *compute_function_dark_subtract( void *ptr )
 
 
 
+
+
 /** @brief Read image from WFS camera
  *
+ * ## Purpose
+ * 
+ * Reads WFS image and performs some basic processing
+ * 
+ * Output is imWFS1, which is dark-subtracted and normalized, but not reference-subtracted.
+ * 
  * supports ring buffer
  * puts image from camera buffer aoloopcontrol_var.aoconfID_wfsim into aoloopcontrol_var.aoconfID_imWFS1 (supplied by user)
  *
@@ -478,27 +497,33 @@ static void *compute_function_dark_subtract( void *ptr )
  *
  */
 
-int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode, int InitSem)
+int_fast8_t Read_cam_frame(
+	long loop, 
+	int RM, 
+	int normalize, 
+	int PixelStreamMode, 
+	int InitSem
+	)
 {
-    long imcnt;
-    long ii;
-    double totalinv;
-    char name[200];
-    int slice;
-    char *ptrv;
-    long double tmplv1;
-    double tmpf;
-    long IDdark;
-    char dname[200];
-    long nelem;
-    pthread_t thread_computetotal_id;
-    pthread_t thread_dark_subtract[20];
-    float resulttotal;
-    int sval0, sval;
-    void *status = 0;
-    long i;
-    int semval;
-    int s;
+    long         imcnt;
+    long         ii;
+    double       totalinv;
+    char         name[200];
+    int          slice;
+    char        *ptrv;
+    long double  tmplv1;
+    double       tmpf;
+    long         IDdark;
+    char         dname[200];
+    long         nelem;
+    pthread_t    thread_computetotal_id;
+    pthread_t    thread_dark_subtract[20];
+    float        resulttotal;
+    int          sval0, sval;
+    void        *status = 0;
+    long         i;
+    int          semval;
+    int          s;
 
     int semindex = 0;
 
@@ -510,9 +535,9 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     struct timespec functionTestTimer03;
     struct timespec functionTestTimer04;
 
-    static long imWaitTimeAvecnt = 0;
-    static long imWaitTimeAvecnt0 = 1000;
-    static double imWaitTimeAve = 0.0;
+    static long    imWaitTimeAvecnt = 0;
+    static long    imWaitTimeAvecnt0 = 1000;
+    static double  imWaitTimeAve = 0.0;
 
 
 	int FORCE_REG_TIMING = 0;       // force regular timing: proceed if WFS frame is late
@@ -528,11 +553,13 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 		
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
 
+
+	// initialize camera averaging arrays if not already done
     if(avcamarraysInit==0)
     {
-        arrayftmp = (float*) malloc(sizeof(float)*AOconf[loop].sizeWFS);
-        arrayutmp = (unsigned short*) malloc(sizeof(unsigned short)*AOconf[loop].sizeWFS);
-		arraystmp = (signed short*) malloc(sizeof(signed short)*AOconf[loop].sizeWFS);
+        arrayftmp = (float*)          malloc(sizeof(float) *          AOconf[loop].sizeWFS);
+        arrayutmp = (unsigned short*) malloc(sizeof(unsigned short) * AOconf[loop].sizeWFS);
+		arraystmp = (signed short*)   malloc(sizeof(signed short) *   AOconf[loop].sizeWFS);
 
         if(sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -582,6 +609,17 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
 
 
+
+
+
+
+
+	// ***********************************************************************************************
+	// WAITING FOR WFS FRAME
+	// listening for counter or semaphore in wfsim
+	// ***********************************************************************************************
+
+
 #ifdef _PRINT_TEST
     printf("TEST - WAITING FOR IMAGE %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
     fflush(stdout);
@@ -589,6 +627,7 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
     if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem==0)
     {
+		// if not using semaphors, use counter to test if new WFS frame is ready
         if(RM==0)
             while(AOconf[loop].WFScnt==data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0) // test if new frame exists
                 usleep(5);
@@ -668,9 +707,18 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     }
 
 
+
+
+
+
+
+
+
     clock_gettime(CLOCK_REALTIME, &functionTestTimerStart);
 
-
+	// ***********************************************************************************************
+	// WHEN NEW IMAGE IS READY, COPY IT TO LOCAL ARRAY (arrayftmp, arrayutmp or arraystmp)
+	// ***********************************************************************************************
 
     if(RM==0)
     {
@@ -695,27 +743,33 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
 
 
     switch (aoloopcontrol_var.WFSatype) {
+		
     case _DATATYPE_FLOAT :
         ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.F;
         ptrv += sizeof(float)*slice* AOconf[loop].sizeWFS;
         memcpy(arrayftmp, ptrv,  sizeof(float)*AOconf[loop].sizeWFS);
         break;
+    
     case _DATATYPE_UINT16 :
         ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.UI16;
         ptrv += sizeof(unsigned short)*slice* AOconf[loop].sizeWFS;
         memcpy (arrayutmp, ptrv, sizeof(unsigned short)*AOconf[loop].sizeWFS);
         break;
+    
     case _DATATYPE_INT16 :
         ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.SI16;
         ptrv += sizeof(signed short)*slice* AOconf[loop].sizeWFS;
         memcpy (arraystmp, ptrv, sizeof(signed short)*AOconf[loop].sizeWFS);
         break;
+    
     default :
         printf("ERROR: DATA TYPE NOT SUPPORTED\n");
         exit(0);
         break;
     }
-
+	
+	printf("WFS size = %ld\n", AOconf[loop].sizeWFS);
+	fflush(stdout);
 
 
     if(RM==0)
@@ -724,17 +778,20 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
         AOconf[loop].WFScntRM = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0;
 
 
-
-
     //   if(COMPUTE_PIXELSTREAMING==1) // multiple pixel groups
     aoloopcontrol_var.PIXSTREAM_SLICE = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt1;
 
 
 
 
+
+
+
+
+
     // ===================================================================
     //
-    // THIS IS THE STARTING POINT FOR THE LOOP
+    // THIS IS THE STARTING POINT FOR THE AO LOOP TIMING
     //
     // ===================================================================
     if(RM==0)
@@ -759,7 +816,19 @@ int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode
     fflush(stdout);
 #endif
 
-    // Dark subtract and compute total
+
+
+
+
+
+
+
+
+
+	// ***********************************************************************************************
+    // DARK SUBTRACT AND COMPUTE IMAGE TOTAL
+    // output is imWFS0 (dark subtracted) and imWFS1 (normalized)
+    // ***********************************************************************************************
 
     if((loop==0)||(RM == 1)) // single thread, in CPU  //WHY do CPU-based if loop=0 ?
     {
