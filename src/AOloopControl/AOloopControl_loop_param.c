@@ -47,7 +47,7 @@ int_fast8_t AOloopControl_setgain(float gain)
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].gain = gain;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.gain = gain;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -59,7 +59,7 @@ int_fast8_t AOloopControl_setARPFgain(float gain)
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].ARPFgain = gain;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFgain = gain;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -71,7 +71,7 @@ int_fast8_t AOloopControl_setARPFgainAutoMin(float val)
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].ARPFgainAutoMin = val;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFgainAutoMin = val;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -82,7 +82,7 @@ int_fast8_t AOloopControl_setARPFgainAutoMax(float val)
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].ARPFgainAutoMax = val;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFgainAutoMax = val;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -112,7 +112,7 @@ int_fast8_t AOloopControl_setmaxlimit(float maxlimit)
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].maxlimit = maxlimit;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.maxlimit = maxlimit;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
@@ -124,13 +124,13 @@ int_fast8_t AOloopControl_setmult(float multcoeff)
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].mult = multcoeff;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.mult = multcoeff;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return 0;
 }
 
-
+/*
 int_fast8_t AOloopControl_setframesAve(long nbframes)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -141,7 +141,7 @@ int_fast8_t AOloopControl_setframesAve(long nbframes)
 
     return 0;
 }
-
+*/
 
 
 

@@ -675,9 +675,9 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         // write gain, mult, limit into arrays
         for(m=0; m<NBmodes; m++)
         {
-            modegain[m] = AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_gainb].array.F[modeblock[m]] * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m];
-            modemult[m] = AOconf[loop].mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[modeblock[m]] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[m];
-            modelimit[m] = AOconf[loop].maxlimit * data.image[aoloopcontrol_var.aoconfID_limitb].array.F[modeblock[m]] * data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[m];
+            modegain[m] = AOconf[loop].aorun.gain * data.image[aoloopcontrol_var.aoconfID_gainb].array.F[modeblock[m]] * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m];
+            modemult[m] = AOconf[loop].aorun.mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[modeblock[m]] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[m];
+            modelimit[m] = AOconf[loop].aorun.maxlimit * data.image[aoloopcontrol_var.aoconfID_limitb].array.F[modeblock[m]] * data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[m];
         }
 
         //
@@ -745,7 +745,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 {
 					float mixratio;
 					
-					mixratio = AOconf[loop].ARPFgain * data.image[IDmodeARPFgain].array.F[m] * data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m];
+					mixratio = AOconf[loop].aorun.ARPFgain * data.image[IDmodeARPFgain].array.F[m] * data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m];
 				    data.image[IDmodevalDMnow].array.F[m] = -mixratio*data.image[aoloopcontrol_var.aoconfID_modevalPF].array.F[m]  + (1.0-mixratio)*data.image[IDmodevalDMcorr].array.F[m];
                 }
              
@@ -777,8 +777,8 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 				data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].md[0].write = 1;
 				for(m=0; m<NBmodes; m++)
 				{
-					float minVal = AOconf[loop].ARPFgainAutoMin;
-					float maxVal = AOconf[loop].ARPFgainAutoMax;
+					float minVal = AOconf[loop].aorun.ARPFgainAutoMin;
+					float maxVal = AOconf[loop].aorun.ARPFgainAutoMax;
 					
 					if(data.image[IDmodeARPFgain].array.F[m]>0.5) // if mode is predictive-controlled
 					{
@@ -906,9 +906,9 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 					}					
 					globalgain = maxGainVal;
 					printf("     Setting  global gain = %f\n", maxGainVal);
-					AOconf[loop].gain = maxGainVal;
+					AOconf[loop].aorun.gain = maxGainVal;
 
-					sprintf(command, "echo \"%6.4f\" > conf/param_loopgain.txt", AOconf[loop].gain);
+					sprintf(command, "echo \"%6.4f\" > conf/param_loopgain.txt", AOconf[loop].aorun.gain);
 					ret = system(command);
 
 
@@ -924,7 +924,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 					
 						printf("Set block %2ld gain to  %f\n", block, maxGainVal/globalgain);
 					
-						data.image[aoloopcontrol_var.aoconfID_gainb].array.F[block] = maxGainVal/AOconf[loop].gain;
+						data.image[aoloopcontrol_var.aoconfID_gainb].array.F[block] = maxGainVal/AOconf[loop].aorun.gain;
 
 						
 						sprintf(command, "echo \"%6.4f\" > conf/param_gainb%02ld.txt", data.image[aoloopcontrol_var.aoconfID_gainb].array.F[block], block);
@@ -934,10 +934,10 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 					// Set individual gain
 					for(m=0;m<NBmodes;m++)
 					{
-						data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m] = data.image[IDautogain].array.F[m]/data.image[aoloopcontrol_var.aoconfID_gainb].array.F[modeblock[m]]/AOconf[loop].gain;
+						data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m] = data.image[IDautogain].array.F[m]/data.image[aoloopcontrol_var.aoconfID_gainb].array.F[modeblock[m]]/AOconf[loop].aorun.gain;
 						
 						if(m<20)
-							printf("Mode %3ld   %12f  %12f  %12f ->   %12f  %12f\n", m, AOconf[loop].gain, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[modeblock[m]], data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m], AOconf[loop].gain*data.image[aoloopcontrol_var.aoconfID_gainb].array.F[modeblock[m]]*data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m], data.image[IDautogain].array.F[m]);
+							printf("Mode %3ld   %12f  %12f  %12f ->   %12f  %12f\n", m, AOconf[loop].aorun.gain, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[modeblock[m]], data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m], AOconf[loop].aorun.gain*data.image[aoloopcontrol_var.aoconfID_gainb].array.F[modeblock[m]]*data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m], data.image[IDautogain].array.F[m]);
 					}
 					
 					

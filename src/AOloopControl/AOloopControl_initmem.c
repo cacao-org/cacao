@@ -141,8 +141,8 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_ON = 0;
         AOconf[loop].AOAutoTune.AUTOTUNE_GAINS_ON = 0;
         AOconf[loop].aorun.ARPFon = 0;
-        AOconf[loop].ARPFgainAutoMin = 0.00;
-        AOconf[loop].ARPFgainAutoMax = 1.00;
+        AOconf[loop].aorun.ARPFgainAutoMin = 0.00;
+        AOconf[loop].aorun.ARPFgainAutoMax = 1.00;
         AOconf[loop].aorun.LOOPiteration = 0;
 
         AOconf[loop].aorun.cnt = 0;
@@ -181,25 +181,30 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             AOconf[loop].aorun.on = 0;
             AOconf[loop].aorun.DMprimaryWriteON = 0;
             AOconf[loop].aorun.DMfilteredWriteON = 0;
-            AOconf[loop].AOcompute.ComputeWFSsol_FLAG = 1;
             AOconf[loop].aorun.ARPFon = 0;
             AOconf[loop].aorun.LOOPiteration = 0;
             AOconf[loop].aorun.cnt = 0;
             AOconf[loop].aorun.cntmax = 0;
-            AOconf[loop].maxlimit = 0.3;
-            AOconf[loop].mult = 1.00;
-            AOconf[loop].gain = 0.0;
+            AOconf[loop].aorun.maxlimit = 0.3;
+            AOconf[loop].aorun.mult = 1.00;
+            AOconf[loop].aorun.gain = 0.0;            
+            AOconf[loop].aorun.ARPFgain = 0.0;
+			AOconf[loop].aorun.ARPFgainAutoMin = 0.99;
+			AOconf[loop].aorun.ARPFgainAutoMax = 1.01;
+			
+			            
+            AOconf[loop].AOcompute.ComputeWFSsol_FLAG = 1;
+            AOconf[loop].AOcompute.GPUusesem = 1;
+
             AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_perc = 1.0; // percentile threshold
             AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_mcoeff = 1.0; // multiplicative coeff
             AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta = 1.0e-3;
-            AOconf[loop].ARPFgain = 0.0;
-			AOconf[loop].ARPFgainAutoMin = 0.99;
-			AOconf[loop].ARPFgainAutoMax = 1.01;
-            AOconf[loop].WFSim.WFSnormfloor = 0.0;
-            AOconf[loop].framesAve = 1;
-            AOconf[loop].AOpmodecoeffs.DMmodesNBblock = 1;
-            AOconf[loop].AOcompute.GPUusesem = 1;
 
+
+//            AOconf[loop].framesAve = 1;
+            AOconf[loop].AOpmodecoeffs.DMmodesNBblock = 1;
+
+            AOconf[loop].WFSim.WFSnormfloor = 0.0;
 			AOconf[loop].WFSim.WFSnormalize = 1;
 			AOconf[loop].WFSim.WFSrefzero = 0;
 

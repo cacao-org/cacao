@@ -203,63 +203,45 @@ typedef struct
 	char name[80]; // AO loop name
 	
 	
-	
 	// These structures are always part of AO loop control (not optional)
 	
+	// High level AO loop parameters and variables
+	// includes both status and some top level control (gain, mult, max)
 	AOLOOPCONF_aorun                     aorun;                // defined in AOloopControl_aorun.h		
+
+	// Wavefront sensor image
 	AOLOOPCONF_WFSim                     WFSim;                // defined in AOloopControl_aorun.h
+
+	// AO loop timing parameters
 	AOloopTimingInfo                     AOtiminginfo;         // defined in AOloopControl_aorun.h
 
+	// Computation parameters
 	AOLOOPCONF_AOcompute                 AOcompute;            // defined in AOloopControl_AOcompute.h	
 	
+	// DM control
 	AOLOOPCONF_DMctrl                    DMctrl;               // defined in AOloopControl_dm.h
 	
+	// Modal control
 	AOLOOPCONF_ProcessModeCoefficients   AOpmodecoeffs;        // defined in AOloopControl_ProcessModeCoefficients.h
 	
+	// Automatic loop tuning (experimental)
 	AOLOOPCONF_AutoTune                  AOAutoTune;           // defined in AOloopControl_autotune.h
 	
 	
 	
 	
-	
-
-    int_fast8_t init_wfsref0;    // WFS reference image loaded
-
-    float maxlimit; // maximum absolute value for mode values
-    float mult; // multiplication coefficient to be applied at each loop iteration
- 
-	/* =============================================================================================== */
 
 
 
-
-	/* =============================================================================================== */
-	/** @name AOLOOPCONTROL_CONF: LOOP CONTROL
-	 * 
-	 */
-		
-    float gain;                               /**< overall loop gain */
-    uint_fast16_t framesAve;                  /**< number of WFS frames to average */
+//    uint_fast16_t framesAve;                  /**< number of WFS frames to average */
 
 
  
  
-	/* =============================================================================================== */
-	/** @name AOLOOPCONTROL_CONF: PREDICTIVE CONTROL
-	 * 
-	 */
-	///@{  	
-	float ARPFgain; 
-	float ARPFgainAutoMin;
-	float ARPFgainAutoMax;
-    ///@}
-	/* =============================================================================================== */
-
-
 
 
 	// Realtime logging
-	long  RTLOGsize;                       // Number of samples per shared memory stream	
+	long        RTLOGsize;                       // Number of samples per shared memory stream	
 	RTstreamLOG RTSLOGarray[MAX_NUMBER_RTLOGSTREAM];
 
 

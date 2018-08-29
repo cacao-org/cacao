@@ -308,8 +308,8 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
             unsigned short block;
 
             block = data.image[IDblk].array.UI16[m];
-            modegain[m] = AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_gainb].array.F[block] * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m];
-            modemult[m] = AOconf[loop].mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[block] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[m];
+            modegain[m] = AOconf[loop].aorun.gain * data.image[aoloopcontrol_var.aoconfID_gainb].array.F[block] * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[m];
+            modemult[m] = AOconf[loop].aorun.mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[block] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[m];
             NOISEfactor[m] = 1.0 + modemult[m]*modemult[m]*modegain[m]*modegain[m]/(1.0-modemult[m]*modemult[m]);
         }
 

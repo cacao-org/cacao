@@ -465,7 +465,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
 
 
-    initwfsref = AOconf[loop].init_wfsref0;
+    initwfsref = AOconf[loop].aorun.init_wfsref0;
 
     if(sprintf(name, "aol%ld_wfsref0", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -474,7 +474,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
     aoloopcontrol_var.aoconfID_wfsref0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
-    AOconf[loop].init_wfsref0 = 1;
+    AOconf[loop].aorun.init_wfsref0 = 1;
 
     if(sprintf(name, "aol%ld_wfsref", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -983,7 +983,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     list_image_ID();
     printf(" AOconf[loop].WFSim.activeWFScnt = %ld\n", AOconf[loop].WFSim.activeWFScnt );
     printf(" AOconf[loop].DMctrl.activeDMcnt = %ld\n", AOconf[loop].DMctrl.activeDMcnt );
-    printf("   init_WFSref0    %d\n", AOconf[loop].init_wfsref0);
+    printf("   init_WFSref0    %d\n", AOconf[loop].aorun.init_wfsref0);
     printf("   init_RM        %d\n", AOconf[loop].aorun.init_RM);
     printf("   init_CM        %d\n", AOconf[loop].aorun.init_CM);
 

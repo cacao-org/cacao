@@ -388,7 +388,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
 
     vOK = 1;
-    if(AOconf[loop].init_wfsref0==0)
+    if(AOconf[loop].aorun.init_wfsref0==0)
     {
         char msgstring[200];
 
@@ -521,7 +521,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                     {
 
 
-                        if(fabs(AOconf[loop].gain)>1.0e-6)
+                        if(fabs(AOconf[loop].aorun.gain)>1.0e-6)
                             set_DM_modes(loop);
                     }
 
@@ -551,14 +551,14 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
                         for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)
                         {
-                            data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] -= AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii];
+                            data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] -= AOconf[loop].aorun.gain * data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii];
 
-                            data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] *= AOconf[loop].mult;
+                            data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] *= AOconf[loop].aorun.mult;
 
-                            if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] > AOconf[loop].maxlimit)
-                                data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = AOconf[loop].maxlimit;
-                            if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] < -AOconf[loop].maxlimit)
-                                data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = -AOconf[loop].maxlimit;
+                            if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] > AOconf[loop].aorun.maxlimit)
+                                data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = AOconf[loop].aorun.maxlimit;
+                            if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] < -AOconf[loop].aorun.maxlimit)
+                                data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = -AOconf[loop].aorun.maxlimit;
                         }
 
 
@@ -612,7 +612,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 // REAL TIME LOGGING
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt0 = AOconf[loop].aorun.cnt;
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
-                data.image[aoloopcontrol_var.aoconfIDlogdata].array.F[0] = AOconf[loop].gain;
+                data.image[aoloopcontrol_var.aoconfIDlogdata].array.F[0] = AOconf[loop].aorun.gain;
 
 
                 if(AOconf[loop].aorun.cnt == AOconf[loop].aorun.cntmax)

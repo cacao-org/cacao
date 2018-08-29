@@ -567,15 +567,20 @@ int_fast8_t AOloopControl_setmult_cli() {
     else return 1;
 }
 
+
 /** @brief CLI function for AOloopControl_setframesAve */
-int_fast8_t AOloopControl_setframesAve_cli() {
+/*int_fast8_t AOloopControl_setframesAve_cli() {
     if(CLI_checkarg(1,2)==0) {
         AOloopControl_setframesAve(data.cmdargtoken[1].val.numl);
         return 0;
     }
     else return 1;
 }
+* 
+*/
+ 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
+
 /** @brief CLI function for AOloopControl_setgainrange */
 int_fast8_t AOloopControl_setgainrange_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,1)==0) {
@@ -1057,7 +1062,7 @@ void init_AOloopControl()
 
     RegisterCLIcommand("aolsetmult", __FILE__, AOloopControl_setmult_cli, "set mult coeff for AO mode correction", "<mult value>", "aolsetmult 0.98", "int AOloopControl_setmult(float multcoeff)");
 
-    RegisterCLIcommand("aolsetnbfr",__FILE__, AOloopControl_setframesAve_cli, "set number of frames to be averaged", "<nb frames>", "aolsetnbfr 10", "int AOloopControl_setframesAve(long nbframes)");
+ //   RegisterCLIcommand("aolsetnbfr",__FILE__, AOloopControl_setframesAve_cli, "set number of frames to be averaged", "<nb frames>", "aolsetnbfr 10", "int AOloopControl_setframesAve(long nbframes)");
 
 
 
