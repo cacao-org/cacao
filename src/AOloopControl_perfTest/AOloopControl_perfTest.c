@@ -947,7 +947,7 @@ int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
 
         free(arrayf);
-        AOconf[LOOPNUMBER].DMupdatecnt ++;
+        AOconf[LOOPNUMBER].aorun.DMupdatecnt ++;
     }
 
     return(0);

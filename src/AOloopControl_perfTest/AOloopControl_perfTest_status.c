@@ -210,7 +210,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 		AOconf[loop].AOtiminginfo.hardwlatency_frame, 
 		AOconf[loop].AOtiminginfo.complatency_frame, 
 		AOconf[loop].AOtiminginfo.wfsmextrlatency_frame);
-    printw("loop iteration CNT : %lld   ", AOconf[loop].cnt);
+    printw("loop iteration CNT : %lld   ", AOconf[loop].aorun.cnt);
     printw("\n");
 
 
@@ -815,7 +815,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
 
 
-    loopcnt = AOconf[LOOPNUMBER].cnt;
+    loopcnt = AOconf[LOOPNUMBER].aorun.cnt;
     clock_gettime(CLOCK_REALTIME, &t1);
     for(k=0; k<NBsample; k++)
     {
@@ -846,7 +846,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
             statusgpucnt2[st]++;
         }
     }
-    loopcnt = AOconf[LOOPNUMBER].cnt - loopcnt;
+    loopcnt = AOconf[LOOPNUMBER].aorun.cnt - loopcnt;
     wfsimcnt = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0 - wfsimcnt;
     dmCcnt = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0 - dmCcnt;
 
