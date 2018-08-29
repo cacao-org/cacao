@@ -532,7 +532,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                     {
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
 
-                        for(ii=0; ii<AOconf[loop].sizeDM; ii++)//TEST
+                        for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)//TEST
                         {
                             if(isnan(data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii])!=0)
                             {
@@ -549,7 +549,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[20] = tdiffv;
 
 
-                        for(ii=0; ii<AOconf[loop].sizeDM; ii++)
+                        for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)
                         {
                             data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] -= AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii];
 

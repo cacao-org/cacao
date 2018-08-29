@@ -178,7 +178,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
         printf("UPDATING Mc matrix (CPU mode)\n");
         ID = image_ID(name2);
         data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 1;
-        memcpy(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[ID].array.F, sizeof(float)*AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM);
+        memcpy(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[ID].array.F, sizeof(float)*AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM);
         data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt0++;
         data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
         data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 0;
@@ -187,7 +187,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
         printf("UPDATING Mcact matrix (GPU mode)\n");
         ID = image_ID(name3);
         data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].write = 1;
-        memcpy(data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F, data.image[ID].array.F, sizeof(float)*AOconf[loop].WFSim.activeWFScnt*AOconf[loop].activeDMcnt);
+        memcpy(data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F, data.image[ID].array.F, sizeof(float)*AOconf[loop].WFSim.activeWFScnt*AOconf[loop].DMctrl.activeDMcnt);
         data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt0++;
         data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
         data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].write = 0;
@@ -219,12 +219,12 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
 			
             IDcontrMc0 = image_ID("contrMc0");
             if(IDcontrMc0==-1)
-                IDcontrMc0 = create_3Dimage_ID("contrMc0", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].sizexDM*AOconf[loop].sizeyDM);
+                IDcontrMc0 = create_3Dimage_ID("contrMc0", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM);
 
 
             IDcontrMcact0 = image_ID("contrMcact0");
             if(IDcontrMcact0==-1)
-                IDcontrMcact0 = create_2Dimage_ID("contrMcact0", AOconf[loop].WFSim.activeWFScnt, AOconf[loop].activeDMcnt);
+                IDcontrMcact0 = create_2Dimage_ID("contrMcact0", AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt);
 
             //arith_image_zero("contrM0");
             arith_image_zero("contrMc0");
@@ -259,14 +259,14 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
 # ifdef _OPENMP
                     #pragma omp parallel for
 # endif
-                    for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM; ii++)
                         data.image[IDcontrMc0].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk]*data.image[ID].array.F[ii];
 
                     ID = image_ID(name3);
 # ifdef _OPENMP
                     #pragma omp parallel for
 # endif
-                    for(ii=0; ii<AOconf[loop].WFSim.activeWFScnt*AOconf[loop].activeDMcnt; ii++)
+                    for(ii=0; ii<AOconf[loop].WFSim.activeWFScnt*AOconf[loop].DMctrl.activeDMcnt; ii++)
                         data.image[IDcontrMcact0].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk]*data.image[ID].array.F[ii];
                 }
 
@@ -275,7 +275,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
             // for CPU mode
             printf("UPDATING Mc matrix (CPU mode)\n");
             data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 1;
-            memcpy(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[IDcontrMc0].array.F, sizeof(float)*AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM);
+            memcpy(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[IDcontrMc0].array.F, sizeof(float)*AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM);
             data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt0++;
 			data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
 			data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 0;
@@ -284,7 +284,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
             // for GPU mode
             printf("UPDATING Mcact matrix (GPU mode)\n");
             data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].write = 1;
-            memcpy(data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F, data.image[IDcontrMcact0].array.F, sizeof(float)*AOconf[loop].WFSim.activeWFScnt*AOconf[loop].activeDMcnt);
+            memcpy(data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F, data.image[IDcontrMcact0].array.F, sizeof(float)*AOconf[loop].WFSim.activeWFScnt*AOconf[loop].DMctrl.activeDMcnt);
             data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt0++;
             data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
             data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].write = 0;

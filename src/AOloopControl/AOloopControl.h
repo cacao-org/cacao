@@ -19,6 +19,9 @@
 #include "AOloopControl/AOloopControl_AOcompute.h" 
 #include "AOloopControl/AOloopControl_aorun.h"              // AOLOOPCONF_WFSim
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"  
+#include "AOloopControl/AOloopControl_dm.h"
+
+
 
 #ifndef _AOLOOPCONTROL_H
 #define _AOLOOPCONTROL_H
@@ -54,7 +57,7 @@
  * 
  * 
  * 
- * FUNCTION: AOloopControl_ComputeOpenLoopModes()
+ * FUNCTION: AOloopControl_ProcessModeCoefficients()
  * in file : AOloopControl_aorun.c
  * 
  * 
@@ -181,12 +184,11 @@ typedef struct
 
 	AOLOOPCONF_aorun       aorun;         // structure defined in AOloopControl_aorun.h
 	AOLOOPCONF_AOcompute   AOcompute;     // structure defined in AOloopControl_AOcompute.h	
-	AOLOOPCONF_WFSim       WFSim;         // structure defined in AOloopControl_AOcompute.h
+	AOLOOPCONF_WFSim       WFSim;         // structure defined in AOloopControl_aorun.h
 
 	AOloopTimingInfo       AOtiminginfo;  // structure defined in AOloopControl_aorun.h
 	
-	
-	
+	AOLOOPCONF_DMctrl      DMctrl;        // structure defined in AOloopControl_dm.h
 	
 	
 
@@ -215,36 +217,6 @@ typedef struct
 
 
 
-    /* =============================================================================================== */
-	/** @name AOLOOPCONTROL_CONF: WFS CAMERA
-	 * 
-	 */
-	
-    /** @brief WFS stream name
-     * 
-     * Usually set to aol_wfsim by function AOloopControl_loadconfigure
-     */
-
-    /* =============================================================================================== */
-
-
-
-    /* =============================================================================================== */
-	/** @name AOLOOPCONTROL_CONF: DEFORMABLE MIRROR
-	 * 
-	 */
-	 
-    char dmCname[80];
-    char dmdispname[80];
-    char dmRMname[80];
-    uint_fast8_t DMMODE;                      /**< 0: zonal DM, 1: modal DM */
-    uint_fast32_t sizexDM;                    /**< DM x size*/
-    uint_fast32_t sizeyDM;                    /**< DM y size*/
-    uint_fast32_t sizeDM;                     /**< DM total image (= x size * y size) */
-    uint_fast32_t activeDMcnt;                /**< number of active actuators */
-    uint_fast32_t sizeDM_active;              /**< only takes into account DM actuators that are active/in use */
-    
-    /* =============================================================================================== */
 
 
 
@@ -326,8 +298,7 @@ typedef struct
     double RMSmodesCumul;
     uint_fast64_t RMSmodesCumulcnt;
 
-	// WFS 
-	
+
 
 	// block statistics (instantaneous)
 	double block_PFresrms[100]; // Prediction residual, meas RMS
@@ -342,6 +313,7 @@ typedef struct
 	double ALL_WFSrms; // WFS residual RMS
 	double ALL_WFSnoise; // WFS noise
 	double ALL_limFrac; // fraction of mode coefficients exceeding limit
+	
 	
 	// averaged
 	uint_fast32_t AveStats_NBpt; // averaging interval
@@ -460,7 +432,7 @@ typedef struct
 	//
 	//
 	// wfsim              logged in function  ??
-	// modeval_ol         logged in function  AOloopControl_ComputeOpenLoopModes
+	// modeval_ol         logged in function  AOloopControl_ProcessModeCoefficients
 	//
 	
 	
@@ -722,7 +694,7 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_na
 long AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name);
 
 /** @brief Compute modes in open loop */
-long AOloopControl_ComputeOpenLoopModes(long loop);
+long AOloopControl_ProcessModeCoefficients(long loop);
 
 /** @brief Auto tune gains of the closed loop */
 int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float GainCoeff, long NBsamples);

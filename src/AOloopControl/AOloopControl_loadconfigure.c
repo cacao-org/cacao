@@ -132,20 +132,20 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(name, "aol%ld_dmC", loop)<1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     printf("DM control file name : %s\n", name);
-    strcpy(AOconf[loop].dmCname, name);
+    strcpy(AOconf[loop].DMctrl.dmCname, name);
 
 	/** - dmdisp stream : total DM displacement */
 	// used to notify dm combine that a new displacement should be computed
     if(sprintf(name, "aol%ld_dmdisp", loop) < 1) 
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     printf("DM displacement file name : %s\n", name);
-    strcpy(AOconf[loop].dmdispname, name);
+    strcpy(AOconf[loop].DMctrl.dmdispname, name);
 
 	/** - dmRM stream : response matrix */
     if(sprintf(name, "aol%ld_dmRM", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     printf("DM RM file name : %s\n", name);
-    strcpy(AOconf[loop].dmRMname, name);
+    strcpy(AOconf[loop].DMctrl.dmRMname, name);
 
 	/** - wfsim : WFS image */
     if(sprintf(name, "aol%ld_wfsim", loop) < 1)
@@ -362,18 +362,18 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
      * 
      * Note: these streams MUST exist
      * 
-     *  - AOconf[loop].dmdispname  : this image is read to notify when new dm displacement is ready
+     *  - AOconf[loop].DMctrl.dmdispname  : this image is read to notify when new dm displacement is ready
      *  - AOconf[loop].WFSim.WFSname     : connect to WFS camera. This is where the size of the WFS is read 
      */
      
      fprintf(fplog, "\n\n============== 2.1. CONNECT to existing streams  ===================\n\n");
      
-    aoloopcontrol_var.aoconfID_dmdisp = read_sharedmem_image(AOconf[loop].dmdispname);
+    aoloopcontrol_var.aoconfID_dmdisp = read_sharedmem_image(AOconf[loop].DMctrl.dmdispname);
     if(aoloopcontrol_var.aoconfID_dmdisp==-1)
-        fprintf(fplog, "ERROR : cannot read shared memory stream %s\n", AOconf[loop].dmdispname);
+        fprintf(fplog, "ERROR : cannot read shared memory stream %s\n", AOconf[loop].DMctrl.dmdispname);
     else
-        fprintf(fplog, "stream %s loaded as ID = %ld\n", AOconf[loop].dmdispname, aoloopcontrol_var.aoconfID_dmdisp);
-	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_dmdisp, AOconf[loop].dmdispname);
+        fprintf(fplog, "stream %s loaded as ID = %ld\n", AOconf[loop].DMctrl.dmdispname, aoloopcontrol_var.aoconfID_dmdisp);
+	AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_dmdisp, AOconf[loop].DMctrl.dmdispname);
 	aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_dmdisp] = 1;
 
  
@@ -499,49 +499,49 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
     /** ### 2.3. Connect to DM
      * 
-     * - AOconf[loop].dmCname : DM control channel
+     * - AOconf[loop].DMctrl.dmCname : DM control channel
      * 
-     *  Here the DM size is read -> Oconf[loop].sizexDM, AOconf[loop].sizeyDM
+     *  Here the DM size is read -> Oconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM
      */
 
 
-	AOconf[loop].DMMODE = AOloopControl_readParam_int("DMMODE", 0, fplog); // zonal DM by default
+	AOconf[loop].DMctrl.DMMODE = AOloopControl_readParam_int("DMMODE", 0, fplog); // zonal DM by default
 
-    aoloopcontrol_var.aoconfID_dmC = image_ID(AOconf[loop].dmCname);
+    aoloopcontrol_var.aoconfID_dmC = image_ID(AOconf[loop].DMctrl.dmCname);
     if(aoloopcontrol_var.aoconfID_dmC==-1)
     {
-        printf("connect to %s\n", AOconf[loop].dmCname);
-        aoloopcontrol_var.aoconfID_dmC = read_sharedmem_image(AOconf[loop].dmCname);
+        printf("connect to %s\n", AOconf[loop].DMctrl.dmCname);
+        aoloopcontrol_var.aoconfID_dmC = read_sharedmem_image(AOconf[loop].DMctrl.dmCname);
         if(aoloopcontrol_var.aoconfID_dmC==-1)
         {
-            printf("ERROR: cannot connect to shared memory %s\n", AOconf[loop].dmCname);
+            printf("ERROR: cannot connect to shared memory %s\n", AOconf[loop].DMctrl.dmCname);
             exit(0);
         }
     }
-    AOconf[loop].sizexDM = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].size[0];
-    AOconf[loop].sizeyDM = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].size[1];
-    AOconf[loop].sizeDM = AOconf[loop].sizexDM*AOconf[loop].sizeyDM;
+    AOconf[loop].DMctrl.sizexDM = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].size[0];
+    AOconf[loop].DMctrl.sizeyDM = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].size[1];
+    AOconf[loop].DMctrl.sizeDM = AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM;
 
-    fprintf(fplog, "Connected to DM %s, size = %ld x %ld\n", AOconf[loop].dmCname, AOconf[loop].sizexDM, AOconf[loop].sizeyDM);
+    fprintf(fplog, "Connected to DM %s, size = %ld x %ld\n", AOconf[loop].DMctrl.dmCname, AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM);
 
 
 
 	/**
-	 * - AOconf[loop].dmRMname : DM response matrix channel
+	 * - AOconf[loop].DMctrl.dmRMname : DM response matrix channel
 	 * 
 	 */
-    aoloopcontrol_var.aoconfID_dmRM = image_ID(AOconf[loop].dmRMname);
+    aoloopcontrol_var.aoconfID_dmRM = image_ID(AOconf[loop].DMctrl.dmRMname);
     if(aoloopcontrol_var.aoconfID_dmRM==-1)
     {
-        printf("connect to %s\n", AOconf[loop].dmRMname);
-        aoloopcontrol_var.aoconfID_dmRM = read_sharedmem_image(AOconf[loop].dmRMname);
+        printf("connect to %s\n", AOconf[loop].DMctrl.dmRMname);
+        aoloopcontrol_var.aoconfID_dmRM = read_sharedmem_image(AOconf[loop].DMctrl.dmRMname);
         if(aoloopcontrol_var.aoconfID_dmRM==-1)
         {
-            printf("ERROR: cannot connect to shared memory %s\n", AOconf[loop].dmRMname);
+            printf("ERROR: cannot connect to shared memory %s\n", AOconf[loop].DMctrl.dmRMname);
             exit(0);
         }
     }
-    fprintf(fplog, "stream %s loaded as ID = %ld\n", AOconf[loop].dmRMname, aoloopcontrol_var.aoconfID_dmRM);
+    fprintf(fplog, "stream %s loaded as ID = %ld\n", AOconf[loop].DMctrl.dmRMname, aoloopcontrol_var.aoconfID_dmRM);
 
 
 
@@ -622,14 +622,14 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
                 printf("ERROR: File \"%s\" is not a 3D image (cube)\n", fname);
                 exit(0);
             }
-            if(data.image[ID1tmp].md[0].size[0] != AOconf[loop].sizexDM)
+            if(data.image[ID1tmp].md[0].size[0] != AOconf[loop].DMctrl.sizexDM)
             {
-                printf("ERROR: File \"%s\" has wrong x size: should be %ld, is %ld\n", fname, AOconf[loop].sizexDM, (long) data.image[ID1tmp].md[0].size[0]);
+                printf("ERROR: File \"%s\" has wrong x size: should be %ld, is %ld\n", fname, AOconf[loop].DMctrl.sizexDM, (long) data.image[ID1tmp].md[0].size[0]);
                 exit(0);
             }
-            if(data.image[ID1tmp].md[0].size[1] != AOconf[loop].sizeyDM)
+            if(data.image[ID1tmp].md[0].size[1] != AOconf[loop].DMctrl.sizeyDM)
             {
-                printf("ERROR: File \"%s\" has wrong y size: should be %ld, is %ld\n", fname, AOconf[loop].sizeyDM, (long) data.image[ID1tmp].md[0].size[1]);
+                printf("ERROR: File \"%s\" has wrong y size: should be %ld, is %ld\n", fname, AOconf[loop].DMctrl.sizeyDM, (long) data.image[ID1tmp].md[0].size[1]);
                 exit(0);
             }
             AOconf[loop].NBDMmodes = data.image[ID1tmp].md[0].size[2];
@@ -647,14 +647,14 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
                     printf("ERROR: Shared memory File %s is not a 3D image (cube)\n", AOconf[loop].DMmodesname);
                     vOK = 0;
                 }
-                if(data.image[ID2tmp].md[0].size[0] != AOconf[loop].sizexDM)
+                if(data.image[ID2tmp].md[0].size[0] != AOconf[loop].DMctrl.sizexDM)
                 {
-                    printf("ERROR: Shared memory File %s has wrong x size: should be %ld, is %ld\n", AOconf[loop].DMmodesname, AOconf[loop].sizexDM, (long) data.image[ID2tmp].md[0].size[0]);
+                    printf("ERROR: Shared memory File %s has wrong x size: should be %ld, is %ld\n", AOconf[loop].DMmodesname, AOconf[loop].DMctrl.sizexDM, (long) data.image[ID2tmp].md[0].size[0]);
                     vOK = 0;
                 }
-                if(data.image[ID2tmp].md[0].size[1] != AOconf[loop].sizeyDM)
+                if(data.image[ID2tmp].md[0].size[1] != AOconf[loop].DMctrl.sizeyDM)
                 {
-                    printf("ERROR: Shared memory File %s has wrong y size: should be %ld, is %ld\n", AOconf[loop].DMmodesname, AOconf[loop].sizeyDM, (long) data.image[ID2tmp].md[0].size[1]);
+                    printf("ERROR: Shared memory File %s has wrong y size: should be %ld, is %ld\n", AOconf[loop].DMmodesname, AOconf[loop].DMctrl.sizeyDM, (long) data.image[ID2tmp].md[0].size[1]);
                     vOK = 0;
                 }
                 if(data.image[ID2tmp].md[0].size[2] != AOconf[loop].NBDMmodes)
@@ -676,8 +676,8 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             if(vOK==0) // create shared memory
             {
 
-                sizearray[0] = AOconf[loop].sizexDM;
-                sizearray[1] = AOconf[loop].sizeyDM;
+                sizearray[0] = AOconf[loop].DMctrl.sizexDM;
+                sizearray[1] = AOconf[loop].DMctrl.sizeyDM;
                 sizearray[2] = AOconf[loop].NBDMmodes;
                 printf("Creating %s   [%ld x %ld x %ld]\n", AOconf[loop].DMmodesname, (long) sizearray[0], (long) sizearray[1], (long) sizearray[2]);
                 fflush(stdout);
@@ -688,10 +688,10 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
             switch (data.image[ID1tmp].md[0].atype) {
             case _DATATYPE_FLOAT :
-                memcpy(data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F, data.image[ID1tmp].array.F, sizeof(float)*AOconf[loop].sizexDM*AOconf[loop].sizeyDM*AOconf[loop].NBDMmodes);
+                memcpy(data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F, data.image[ID1tmp].array.F, sizeof(float)*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM*AOconf[loop].NBDMmodes);
                 break;
             case _DATATYPE_DOUBLE :
-                for(ii=0; ii<AOconf[loop].sizexDM*AOconf[loop].sizeyDM*AOconf[loop].NBDMmodes; ii++)
+                for(ii=0; ii<AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM*AOconf[loop].NBDMmodes; ii++)
                     data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[ii] = data.image[ID1tmp].array.D[ii];
                 break;
             default :
@@ -703,7 +703,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             delete_image_ID("tmp3Dim");
         }
 
-        fprintf(fplog, "stream %s loaded as ID = %ld, size %ld %ld %ld\n", AOconf[loop].DMmodesname, aoloopcontrol_var.aoconfID_DMmodes, AOconf[loop].sizexDM, AOconf[loop].sizeyDM, AOconf[loop].NBDMmodes);
+        fprintf(fplog, "stream %s loaded as ID = %ld, size %ld %ld %ld\n", AOconf[loop].DMmodesname, aoloopcontrol_var.aoconfID_DMmodes, AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM, AOconf[loop].NBDMmodes);
     }
 
 
@@ -780,14 +780,14 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         if(sprintf(fname, "conf/%s.fits", name) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        aoloopcontrol_var.aoconfID_dmmask = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].sizexDM, AOconf[loop].sizeyDM, 1.0);
-        AOconf[loop].activeDMcnt = 0;
-        for(ii=0; ii<AOconf[loop].sizexDM*AOconf[loop].sizeyDM; ii++)
+        aoloopcontrol_var.aoconfID_dmmask = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM, 1.0);
+        AOconf[loop].DMctrl.activeDMcnt = 0;
+        for(ii=0; ii<AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM; ii++)
             if(data.image[aoloopcontrol_var.aoconfID_dmmask].array.F[ii]>0.5)
-                AOconf[loop].activeDMcnt++;
+                AOconf[loop].DMctrl.activeDMcnt++;
 
         printf(" AOconf[loop].WFSim.activeWFScnt = %ld\n", AOconf[loop].WFSim.activeWFScnt );
-        printf(" AOconf[loop].WFSim.activeDMcnt = %ld\n", AOconf[loop].activeDMcnt );
+        printf(" AOconf[loop].WFSim.activeDMcnt = %ld\n", AOconf[loop].DMctrl.activeDMcnt );
 
 
         AOconf[loop].init_RM = 0;
@@ -829,13 +829,13 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         if(sprintf(fname, "conf/shmim_contrMc.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        aoloopcontrol_var.aoconfID_contrMc = AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].sizeDM, 0.0);
+        aoloopcontrol_var.aoconfID_contrMc = AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].DMctrl.sizeDM, 0.0);
 
         if(sprintf(name, "aol%ld_contrMcact", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         if(sprintf(fname, "conf/shmim_contrMcact_00.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        aoloopcontrol_var.aoconfID_contrMcact[0] = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.activeWFScnt, AOconf[loop].activeDMcnt, 0.0);
+        aoloopcontrol_var.aoconfID_contrMcact[0] = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt, 0.0);
 
 
 
@@ -890,7 +890,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             printf("FILE = %s\n", fname);
             printf("====== LOADING %s to %s\n", fname, name);
             fflush(stdout);
-            if((ID=AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].sizexDM, AOconf[loop].sizeyDM, 0, 0.0))!=-1)
+            if((ID=AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM, 0, 0.0))!=-1)
                 AOconf[loop].NBmodes_block[kk] = data.image[ID].md[0].size[2];
 
 			int m;
@@ -921,11 +921,11 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             if(sprintf(fname, "conf/%s.fits", name) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-            ID = AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].sizexDM*AOconf[loop].sizeyDM, 0.0);
+            ID = AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM, 0.0);
             if(kk==0)
-                for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM; ii++)
                     data.image[aoloopcontrol_var.aoconfID_contrMc].array.F[ii] = 0.0;
-            for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].sizexDM*AOconf[loop].sizeyDM; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM; ii++)
                 data.image[aoloopcontrol_var.aoconfID_contrMc].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk]*data.image[ID].array.F[ii];
 
 
@@ -934,14 +934,14 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             if(sprintf(fname, "conf/%s.fits", name) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             //   sprintf(fname, "conf/shmim_contrMcact%02ld_00", kk);
-            printf("====== LOADING %s to %s  size %ld %ld\n", fname, name,  AOconf[loop].WFSim.activeWFScnt, AOconf[loop].activeDMcnt);
-            ID = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.activeWFScnt, AOconf[loop].activeDMcnt, 0.0);
+            printf("====== LOADING %s to %s  size %ld %ld\n", fname, name,  AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt);
+            ID = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt, 0.0);
 
             if(kk==0)
-                for(ii=0; ii<AOconf[loop].WFSim.activeWFScnt*AOconf[loop].activeDMcnt; ii++)
+                for(ii=0; ii<AOconf[loop].WFSim.activeWFScnt*AOconf[loop].DMctrl.activeDMcnt; ii++)
                     data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F[ii] = 0.0;
 
-            for(ii=0; ii<AOconf[loop].WFSim.activeWFScnt*AOconf[loop].activeDMcnt; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.activeWFScnt*AOconf[loop].DMctrl.activeDMcnt; ii++)
                 data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk]*data.image[ID].array.F[ii];
 
         }
@@ -982,7 +982,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
     list_image_ID();
     printf(" AOconf[loop].WFSim.activeWFScnt = %ld\n", AOconf[loop].WFSim.activeWFScnt );
-    printf(" AOconf[loop].activeDMcnt = %ld\n", AOconf[loop].activeDMcnt );
+    printf(" AOconf[loop].DMctrl.activeDMcnt = %ld\n", AOconf[loop].DMctrl.activeDMcnt );
     printf("   init_WFSref0    %d\n", AOconf[loop].init_wfsref0);
     printf("   init_RM        %d\n", AOconf[loop].init_RM);
     printf("   init_CM        %d\n", AOconf[loop].init_CM);

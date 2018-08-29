@@ -335,10 +335,10 @@ int_fast8_t AOloopControl_computeWFSresidualimage_cli() {
     else return 1;
 }
 
-/** @brief CLI function for AOloopControl_ComputeOpenLoopModes */
-int_fast8_t AOloopControl_ComputeOpenLoopModes_cli() {
+/** @brief CLI function for AOloopControl_ProcessModeCoefficients */
+int_fast8_t AOloopControl_ProcessModeCoefficients_cli() {
     if(CLI_checkarg(1,2)==0) {
-        AOloopControl_ComputeOpenLoopModes(data.cmdargtoken[1].val.numl);
+        AOloopControl_ProcessModeCoefficients(data.cmdargtoken[1].val.numl);
         return 0;
     } else return 1;
 }
@@ -1083,7 +1083,7 @@ void init_AOloopControl()
 
 
 
-    RegisterCLIcommand("aolcompolm", __FILE__, AOloopControl_ComputeOpenLoopModes_cli, "compute open loop mode values", "<loop #>", "aolcompolm 2", "long AOloopControl_ComputeOpenLoopModes(long loop)");
+    RegisterCLIcommand("aolcompolm", __FILE__, AOloopControl_ProcessModeCoefficients_cli, "process mode coefficients, incl open loop mode comp", "<loop #>", "aolcompolm 2", "long AOloopControl_ProcessModeCoefficients(long loop)");
 
     RegisterCLIcommand("aolautotunegains", __FILE__, AOloopControl_AutoTuneGains_cli, "compute optimal gains", "<loop #> <gain stream> <gaincoeff> <NBsamples>", "aolautotunegains 0 autogain 0.1 20000", "long AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float GainCoeff, long NBsamples)");
 

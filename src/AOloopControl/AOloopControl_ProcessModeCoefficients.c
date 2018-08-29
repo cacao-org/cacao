@@ -1,5 +1,5 @@
 /**
- * @file    AOloopControl_aorun.c 
+ * @file    AOloopControl_ProcessModeCoefficients.c 
  * @brief   AO loop Control compute functions 
  * 
  * REAL TIME COMPUTING ROUTINES
@@ -67,7 +67,7 @@ extern AOloopControl_var aoloopcontrol_var;
 
 // includes mode filtering (limits, multf)
 //
-long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
+long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 {
 	// TIMING
 	struct timespec tnow;
@@ -1039,7 +1039,7 @@ long __attribute__((hot)) AOloopControl_ComputeOpenLoopModes(long loop)
 
 
 		// IF MODAL DM, AND FILTERED DM WRITE IS ON, SEND TO DM
-		if((AOconf[loop].aorun.DMfilteredWriteON==1) && (AOconf[loop].DMMODE==1))
+		if((AOconf[loop].aorun.DMfilteredWriteON==1) && (AOconf[loop].DMctrl.DMMODE==1))
 		{
 			data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
 			memcpy(data.image[aoloopcontrol_var.aoconfID_dmC].array.F, data.image[IDmodevalDMnowfilt].array.F, sizeof(float)*NBmodes);

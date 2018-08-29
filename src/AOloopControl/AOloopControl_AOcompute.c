@@ -514,24 +514,24 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
             // create DM active map
-            aoloopcontrol_var.DM_active_map = (int*) malloc(sizeof(int)*AOconf[loop].sizeDM);
+            aoloopcontrol_var.DM_active_map = (int*) malloc(sizeof(int)*AOconf[loop].DMctrl.sizeDM);
             if(aoloopcontrol_var.aoconfID_dmmask != -1)
             {
                 long ii1 = 0;
-                for(ii=0; ii<AOconf[loop].sizeDM; ii++)
+                for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)
                     if(data.image[aoloopcontrol_var.aoconfID_dmmask].array.F[ii]>0.5)
                     {
                         aoloopcontrol_var.DM_active_map[ii1] = ii;
                         ii1++;
                     }
-                AOconf[loop].sizeDM_active = ii1;
+                AOconf[loop].DMctrl.sizeDM_active = ii1;
             }
 
 
 
             uint32_t *sizearray;
             sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
-            sizearray[0] = AOconf[loop].sizeDM_active;
+            sizearray[0] = AOconf[loop].DMctrl.sizeDM_active;
             sizearray[1] = 1;
 
             char imname[200];
@@ -546,8 +546,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             if(aoloopcontrol_var.aoconfID_meas_act==-1)
             {
                 sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
-                sizearray[0] = AOconf[loop].sizexDM;
-                sizearray[1] = AOconf[loop].sizeyDM;
+                sizearray[0] = AOconf[loop].DMctrl.sizexDM;
+                sizearray[1] = AOconf[loop].DMctrl.sizeyDM;
 
                 if(sprintf(imname, "aol%ld_meas_act", aoloopcontrol_var.LOOPNUMBER) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -590,14 +590,14 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 printf("[%s] [%d] - CM mult: GPU=0, CMMODE=1 - using matrix %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].name);
                 printf("  aoloopcontrol_var.aoconfID_contrMc = %ld\n", aoloopcontrol_var.aoconfID_contrMc);
                 printf("  aoloopcontrol_var.aoconfID_meas_act = %ld\n", aoloopcontrol_var.aoconfID_meas_act);
-                printf("  AOconf[loop].sizeDM  = %ld\n", AOconf[loop].sizeDM);
+                printf("  AOconf[loop].DMctrl.sizeDM  = %ld\n", AOconf[loop].DMctrl.sizeDM);
                 printf("  AOconf[loop].WFSim.sizeWFS = %ld\n", AOconf[loop].WFSim.sizeWFS);
                 list_image_ID();
                 fflush(stdout);
 #endif
 
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
-                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].sizeDM, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_act].array.F);
+                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].DMctrl.sizeDM, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_act].array.F);
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0 ++;
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_act, -1);
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0 ++;
@@ -800,7 +800,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 // re-map output vector
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
-                for(act_active=0; act_active<AOconf[loop].sizeDM_active; act_active++)
+                for(act_active=0; act_active<AOconf[loop].DMctrl.sizeDM_active; act_active++)
                     data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[aoloopcontrol_var.DM_active_map[act_active]] = data.image[aoloopcontrol_var.aoconfID_meas_act_active].array.F[act_active];
 
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_act, -1);

@@ -118,17 +118,17 @@ int_fast8_t set_DM_modes(long loop)
         float *arrayf;
         long i, j, k;
 
-        arrayf = (float*) malloc(sizeof(float)*AOconf[loop].sizeDM);
+        arrayf = (float*) malloc(sizeof(float)*AOconf[loop].DMctrl.sizeDM);
 
-        for(j=0; j<AOconf[loop].sizeDM; j++)
+        for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
             arrayf[j] = 0.0;
 
-        for(i=0; i<AOconf[loop].sizeDM; i++)
+        for(i=0; i<AOconf[loop].DMctrl.sizeDM; i++)
             for(k=0; k < AOconf[loop].NBDMmodes; k++)
-                arrayf[i] += data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[k*AOconf[loop].sizeDM+i];
+                arrayf[i] += data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[k*AOconf[loop].DMctrl.sizeDM+i];
 
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
-        memcpy (data.image[aoloopcontrol_var.aoconfID_dmC].array.F, arrayf, sizeof(float)*AOconf[loop].sizeDM);
+        memcpy (data.image[aoloopcontrol_var.aoconfID_dmC].array.F, arrayf, sizeof(float)*AOconf[loop].DMctrl.sizeDM);
         if(data.image[aoloopcontrol_var.aoconfID_dmC].md[0].sem > 0)
         {
             sem_getvalue(data.image[aoloopcontrol_var.aoconfID_dmC].semptr[0], &semval);
@@ -197,20 +197,20 @@ int_fast8_t set_DM_modesRM(long loop)
     float *arrayf;
 
 
-    arrayf = (float*) malloc(sizeof(float)*AOconf[loop].sizeDM);
+    arrayf = (float*) malloc(sizeof(float)*AOconf[loop].DMctrl.sizeDM);
 
-    for(j=0; j<AOconf[loop].sizeDM; j++)
+    for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
         arrayf[j] = 0.0;
 
     for(k=0; k < AOconf[loop].NBDMmodes; k++)
     {
-        for(i=0; i<AOconf[loop].sizeDM; i++)
-            arrayf[i] += data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k] * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[k*AOconf[loop].sizeDM+i];
+        for(i=0; i<AOconf[loop].DMctrl.sizeDM; i++)
+            arrayf[i] += data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k] * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[k*AOconf[loop].DMctrl.sizeDM+i];
     }
 
 
     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
-    memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, arrayf, sizeof(float)*AOconf[loop].sizeDM);
+    memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, arrayf, sizeof(float)*AOconf[loop].DMctrl.sizeDM);
     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
 

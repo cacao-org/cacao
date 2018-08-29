@@ -13,7 +13,8 @@ AOloopControl_arpf_onoff.c
 AOloopControl_autotune.c
 AOloopControl_AutoTuneGains.c
 AOloopControl_CompModes_loop.c
-AOloopControl_ComputeOpenLoopModes.c
+AOloopControl_ProcessModeCoefficients.c
+AOloopControl_ProcessModeCoefficients.h
 AOloopControl_dm.c
 AOloopControl_dmwrite.c
 AOloopControl_fpspeckle_mod.c 
