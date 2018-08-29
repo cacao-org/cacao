@@ -138,8 +138,8 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         AOconf[loop].aorun.on = 0;
         AOconf[loop].aorun.DMprimaryWriteON = 0;
         AOconf[loop].aorun.DMfilteredWriteON = 0;
-        AOconf[loop].AUTOTUNE_LIMITS_ON = 0;
-        AOconf[loop].AUTOTUNE_GAINS_ON = 0;
+        AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_ON = 0;
+        AOconf[loop].AOAutoTune.AUTOTUNE_GAINS_ON = 0;
         AOconf[loop].aorun.ARPFon = 0;
         AOconf[loop].ARPFgainAutoMin = 0.00;
         AOconf[loop].ARPFgainAutoMax = 1.00;
@@ -189,9 +189,9 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             AOconf[loop].maxlimit = 0.3;
             AOconf[loop].mult = 1.00;
             AOconf[loop].gain = 0.0;
-            AOconf[loop].AUTOTUNE_LIMITS_perc = 1.0; // percentile threshold
-            AOconf[loop].AUTOTUNE_LIMITS_mcoeff = 1.0; // multiplicative coeff
-            AOconf[loop].AUTOTUNE_LIMITS_delta = 1.0e-3;
+            AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_perc = 1.0; // percentile threshold
+            AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_mcoeff = 1.0; // multiplicative coeff
+            AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta = 1.0e-3;
             AOconf[loop].ARPFgain = 0.0;
 			AOconf[loop].ARPFgainAutoMin = 0.99;
 			AOconf[loop].ARPFgainAutoMax = 1.01;

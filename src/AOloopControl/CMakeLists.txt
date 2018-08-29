@@ -11,6 +11,7 @@ AOloopControl_aorun.c
 AOloopControl_aorun.h
 AOloopControl_arpf_onoff.c 
 AOloopControl_autotune.c
+AOloopControl_autotune.h
 AOloopControl_AutoTuneGains.c
 AOloopControl_CompModes_loop.c
 AOloopControl_ProcessModeCoefficients.c

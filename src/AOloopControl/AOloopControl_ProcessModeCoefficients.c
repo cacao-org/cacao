@@ -823,7 +823,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             data.image[IDmodevalDMnowfilt].array.F[m] = data.image[IDmodevalDMnow].array.F[m];
 
 
-        if(AOconf[loop].AUTOTUNE_LIMITS_ON==1) // automatically adjust modal limits
+        if(AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_ON==1) // automatically adjust modal limits
         {
             data.image[IDatlimbcoeff].md[0].write = 1;
             for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
@@ -837,10 +837,10 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             {
                 block = data.image[IDblknb].array.UI16[m];
 
-                if(  fabs(AOconf[loop].AUTOTUNE_LIMITS_mcoeff*data.image[IDmodevalDMnowfilt].array.F[m]) > modelimit[m])
-                    data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[m] *= (1.0 + AOconf[loop].AUTOTUNE_LIMITS_delta);
+                if(  fabs(AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_mcoeff*data.image[IDmodevalDMnowfilt].array.F[m]) > modelimit[m])
+                    data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[m] *= (1.0 + AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta);
                 else
-                    data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[m] *= (1.0 - AOconf[loop].AUTOTUNE_LIMITS_delta*0.01*AOconf[loop].AUTOTUNE_LIMITS_perc);
+                    data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[m] *= (1.0 - AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta*0.01*AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_perc);
 
                 limitblockarray[block] += data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[m];
             }
@@ -854,11 +854,11 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
             {
                 data.image[IDatlimbcoeff].array.F[block] = limitblockarray[block] / blockNBmodes[block];
-                coeff = ( 1.0 + (data.image[IDatlimbcoeff].array.F[block]-1.0)*AOconf[loop].AUTOTUNE_LIMITS_delta*0.1 );
-                if(coeff < 1.0-AOconf[loop].AUTOTUNE_LIMITS_delta )
-                    coeff = 1.0-AOconf[loop].AUTOTUNE_LIMITS_delta;
-                if(coeff> 1.0+AOconf[loop].AUTOTUNE_LIMITS_delta )
-                    coeff = 1.0+AOconf[loop].AUTOTUNE_LIMITS_delta;
+                coeff = ( 1.0 + (data.image[IDatlimbcoeff].array.F[block]-1.0)*AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta*0.1 );
+                if(coeff < 1.0-AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta )
+                    coeff = 1.0-AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta;
+                if(coeff> 1.0+AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta )
+                    coeff = 1.0+AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta;
                 data.image[aoloopcontrol_var.aoconfID_limitb].array.F[block] = data.image[aoloopcontrol_var.aoconfID_limitb].array.F[block] * coeff;
             }
             COREMOD_MEMORY_image_set_sempost_byID(IDatlimbcoeff, -1);
@@ -875,7 +875,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         }
 
 
-		if(AOconf[loop].AUTOTUNE_GAINS_ON==1)
+		if(AOconf[loop].AOAutoTune.AUTOTUNE_GAINS_ON==1)
 		{
 			// CONNECT to auto gain input
 			if(IDautogain == -1)
@@ -973,11 +973,11 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
             {
                 data.image[IDatlimbcoeff].array.F[block] = limitblockarray[block] / blockNBmodes[block];
-                coeff = ( 1.0 + (data.image[IDatlimbcoeff].array.F[block]-1.0)*AOconf[loop].AUTOTUNE_LIMITS_delta*0.1 );
-                if(coeff < 1.0-AOconf[loop].AUTOTUNE_LIMITS_delta )
-                    coeff = 1.0-AOconf[loop].AUTOTUNE_LIMITS_delta;
-                if(coeff> 1.0+AOconf[loop].AUTOTUNE_LIMITS_delta )
-                    coeff = 1.0+AOconf[loop].AUTOTUNE_LIMITS_delta;
+                coeff = ( 1.0 + (data.image[IDatlimbcoeff].array.F[block]-1.0)*AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta*0.1 );
+                if(coeff < 1.0-AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta )
+                    coeff = 1.0-AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta;
+                if(coeff> 1.0+AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta )
+                    coeff = 1.0+AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta;
                 data.image[aoloopcontrol_var.aoconfID_limitb].array.F[block] = data.image[aoloopcontrol_var.aoconfID_limitb].array.F[block] * coeff;
             }
             COREMOD_MEMORY_image_set_sempost_byID(IDatlimbcoeff, -1);

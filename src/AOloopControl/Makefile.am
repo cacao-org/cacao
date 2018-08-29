@@ -4,6 +4,7 @@ libaoloopcontrol_la_SOURCES += AOloopControl_AOcompute.c
 libaoloopcontrol_la_SOURCES += AOloopControl_aorun.c
 libaoloopcontrol_la_SOURCES += AOloopControl_arpf_onoff.c
 libaoloopcontrol_la_SOURCES += AOloopControl_autotune.c
+libaoloopcontrol_la_SOURCES += AOloopControl_autotune.h
 libaoloopcontrol_la_SOURCES += AOloopControl_AutoTuneGains.c
 libaoloopcontrol_la_SOURCES += AOloopControl_CompModes_loop.c
 libaoloopcontrol_la_SOURCES += AOloopControl_ProcessModeCoefficients.c

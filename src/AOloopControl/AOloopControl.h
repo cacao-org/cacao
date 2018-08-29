@@ -21,6 +21,7 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"  
 #include "AOloopControl/AOloopControl_dm.h"
 #include "AOloopControl/AOloopControl_ProcessModeCoefficients.h"
+#include "AOloopControl/AOloopControl_autotune.h"
 
 
 #ifndef _AOLOOPCONTROL_H
@@ -88,6 +89,15 @@
 
 // REAL TIME DATA LOGGING
 
+//
+// Real-time streams are updated once per loop iteration
+// Realtime logging buffers are synchronized
+// Two buffers are created for each stream to be logged
+//
+// Saving to disk is handled outside of cacao real-time
+//
+
+
 #define MAX_NUMBER_RTLOGSTREAM 20
 
 #define RTSLOGindex_wfsim                  0
@@ -109,40 +119,58 @@
 
 
 // Real-time streams use this struc to hold relevant info
+
+//int   RTLOG_ON;                        // set to 1 to start logging all RT streams -> ensures synchronization
+//int   RTstreamLOG_buff;                // Which buffer is currently being written (0 or 1)
+//long  RTstreamLOG_frame;               // Which frame is to be written in buffer
+//int   RTstreamLOG_buffSwitch;          // Goes to 1 when buffer switches. Goes back to zero on next iteration.
+
+// For each stream, there are two data buffers and two timing buffers
+// Buffer names:
+//     aol%ld_<stream>_logbuff0
+//     aol%ld_<stream>_logbuff1
+//	   aol%ld_<stream>_logbuffinfo0
+//     aol%ld_<stream>_logbuffinfo1
+//
+// Timing buffer contains loop iteration, frame counter cnt0 and time stamps when entry is written
+//
+
+// ENABLES, ON and save are read/set up in AOloopControl_loadconfigure()
+
 typedef struct
 {
-	int active;                   // 1 if used 
-	char name[100];               // stream name (excludes aol#_)
-	int ENABLE;                   // Is logging enabled ? This needs to be specified at startup, if set to zero, no RT logging will be performed
-	int INIT;                     // 1 if memory is initiated
-	int ON;                       // Is logging ON ?
-	int SIZE;                     // Max number of samples per buffer
-	int buffindex;                // which buffer (0 or 1)
-	long frameindex;              // frame index
-	long frameindexend0;          // last frame in buffer 0
-	long frameindexend1;          // last frame in buffer 1
-	int save;                     // 0: do not save, 1: save data+timing, 2: save timing only
-	int saveToggle;               // 1 if buffer #0 ready to be saved, 2 if buffer #1 ready to be saved, 0 otherwise
-	
-	long IDbuff;
-	long IDbuff0;                 // local identifier
-	long IDbuff1;                 // local identifier
+    int active;                   // 1 if used
+    char name[100];               // stream name (excludes aol#_)
+    int ENABLE;                   // Is logging enabled ? This needs to be specified at startup, if set to zero, no RT logging will be performed
+    int INIT;                     // 1 if memory is initiated
+    int ON;                       // Is logging ON ?
+    int SIZE;                     // Max number of samples per buffer
+    int buffindex;                // which buffer (0 or 1)
+    long frameindex;              // frame index
+    long frameindexend0;          // last frame in buffer 0
+    long frameindexend1;          // last frame in buffer 1
+    int save;                     // 0: do not save, 1: save data+timing, 2: save timing only
+    int saveToggle;               // 1 if buffer #0 ready to be saved, 2 if buffer #1 ready to be saved, 0 otherwise
 
-	long IDbuffinfo;
-	long IDbuffinfo0;             // local identifier
-	long IDbuffinfo1;             // local identifier
-	
-	float *srcptr;                // source stream pointer
-	long IDsrc;                   // source ID
+    long IDbuff;
+    long IDbuff0;                 // local identifier
+    long IDbuff1;                 // local identifier
 
-	char *destptr;                // destination pointer
-	char *destptr0;               // destination pointer 0
-	char *destptr1;               // destination pointer 1
+    long IDbuffinfo;
+    long IDbuffinfo0;             // local identifier
+    long IDbuffinfo1;             // local identifier
 
-	size_t memsize;               // size of stream
-	
-	int NBcubeSaved;              // Number of cubes to save, default = -1
-	
+    float *srcptr;                // source stream pointer
+    long IDsrc;                   // source ID
+
+    char *destptr;                // destination pointer
+    char *destptr0;               // destination pointer 0
+    char *destptr1;               // destination pointer 1
+
+    size_t memsize;               // size of stream
+
+    int NBcubeSaved;              // Number of cubes to save, default = -1
+
 } RTstreamLOG;
 
 
@@ -182,17 +210,20 @@ typedef struct
 {	
 	// These structures are always part of AO loop control (not optional)
 
-	AOLOOPCONF_aorun                     aorun;                // structure defined in AOloopControl_aorun.h
-	AOLOOPCONF_AOcompute                 AOcompute;            // structure defined in AOloopControl_AOcompute.h	
-	AOLOOPCONF_WFSim                     WFSim;                // structure defined in AOloopControl_aorun.h
+	AOLOOPCONF_aorun                     aorun;                // defined in AOloopControl_aorun.h		
+	AOLOOPCONF_WFSim                     WFSim;                // defined in AOloopControl_aorun.h
+	AOloopTimingInfo                     AOtiminginfo;         // defined in AOloopControl_aorun.h
 
-	AOloopTimingInfo                     AOtiminginfo;         // structure defined in AOloopControl_aorun.h
+	AOLOOPCONF_AOcompute                 AOcompute;            // defined in AOloopControl_AOcompute.h	
 	
-	AOLOOPCONF_DMctrl                    DMctrl;               // structure defined in AOloopControl_dm.h
-	AOLOOPCONF_ProcessModeCoefficients   AOpmodecoeffs;        // structure defined in AOloopControl_ProcessModeCoefficients.h
+	AOLOOPCONF_DMctrl                    DMctrl;               // defined in AOloopControl_dm.h
 	
-
-
+	AOLOOPCONF_ProcessModeCoefficients   AOpmodecoeffs;        // defined in AOloopControl_ProcessModeCoefficients.h
+	
+	AOLOOPCONF_AutoTune                  AOAutoTune;           // defined in AOloopControl_autotune.h
+	
+	
+	
 
     /* =============================================================================================== */
 	/** @name AOLOOPCONTROL_CONF: SETUP & INITIALIZATION STATE 
@@ -251,20 +282,7 @@ typedef struct
 		
     float gain;                               /**< overall loop gain */
     uint_fast16_t framesAve;                  /**< number of WFS frames to average */
- 
-	// MODAL AUTOTUNING 
-	// limits
-	int_fast8_t AUTOTUNE_LIMITS_ON;
-	float AUTOTUNE_LIMITS_perc; // percentile limit for autotuning
-	float AUTOTUNE_LIMITS_mcoeff; // multiplicative coeff 
-	float AUTOTUNE_LIMITS_delta; // autotune loop increment 
 
-	int_fast8_t AUTOTUNE_GAINS_ON;
-	float AUTOTUNEGAINS_updateGainCoeff;      /**< Averaging coefficient (usually about 0.1) */
-	float AUTOTUNEGAINS_evolTimescale;        /**< Evolution timescale, beyond which errors stop growing */
-	long AUTOTUNEGAINS_NBsamples;            /**< Number of samples */
-   
-	/* =============================================================================================== */
 
  
  
@@ -281,44 +299,9 @@ typedef struct
 
 
 
-	/* =============================================================================================== */
 
-    
-
-    
-    /* =============================================================================================== */
- 	/** @name AOLOOPCONTROL_CONF: REAL TIME LOGGING
-	 * 
-	 */
-//LOG
-
-	//
-	// Real-time streams are updated once per loop iteration
-	// Realtime logging buffers are synchronized
-	// Two buffers are created for each stream to be logged
-	//
-	// Saving to disk is handled outside of cacao real-time
-	//
-	long  RTLOGsize;                       // Number of samples per shared memory stream
-	//int   RTLOG_ON;                        // set to 1 to start logging all RT streams -> ensures synchronization
-	//int   RTstreamLOG_buff;                // Which buffer is currently being written (0 or 1)
-	//long  RTstreamLOG_frame;               // Which frame is to be written in buffer
-	//int   RTstreamLOG_buffSwitch;          // Goes to 1 when buffer switches. Goes back to zero on next iteration.
-	
-	// For each stream, there are two data buffers and two timing buffers
-	// Buffer names:
-	//     aol%ld_<stream>_logbuff0
-	//     aol%ld_<stream>_logbuff1
-	//	   aol%ld_<stream>_logbuffinfo0   
-	//     aol%ld_<stream>_logbuffinfo1
-	//
-	// Timing buffer contains loop iteration, frame counter cnt0 and time stamps when entry is written
-	// 
-	
-	// ENABLES, ON and save are read/set up in AOloopControl_loadconfigure()
-	
-	
 	// Realtime logging
+	long  RTLOGsize;                       // Number of samples per shared memory stream	
 	RTstreamLOG RTSLOGarray[MAX_NUMBER_RTLOGSTREAM];
 
 
