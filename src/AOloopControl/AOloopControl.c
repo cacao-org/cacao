@@ -1384,7 +1384,7 @@ int_fast8_t AOloopControl_AutoTune()
 
             AOloopControl_setgainblock(block, gain);
             AOloopControl_loopstep(LOOPNUMBER, NBstep);
-            val = sqrt(AOconf[LOOPNUMBER].RMSmodesCumul/AOconf[LOOPNUMBER].RMSmodesCumulcnt);
+            val = sqrt(AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul/AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt);
             printf("%6.4f  %10.8lf\n", gain, val);
 
             if(val<bestval)

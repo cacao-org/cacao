@@ -832,12 +832,12 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
             clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
 
-            AOconf[loop].RMSmodes = 0;
+            AOconf[loop].AOpmodecoeffs.RMSmodes = 0;
             for(k=0; k<AOconf[loop].NBDMmodes; k++)
-                AOconf[loop].RMSmodes += data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k]*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
+                AOconf[loop].AOpmodecoeffs.RMSmodes += data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k]*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
 
-            AOconf[loop].RMSmodesCumul += AOconf[loop].RMSmodes;
-            AOconf[loop].RMSmodesCumulcnt ++;
+            AOconf[loop].AOpmodecoeffs.RMSmodesCumul += AOconf[loop].AOpmodecoeffs.RMSmodes;
+            AOconf[loop].AOpmodecoeffs.RMSmodesCumulcnt ++;
 
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
 

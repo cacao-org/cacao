@@ -1214,16 +1214,16 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         
 
         blockstatcnt ++;
-        if(blockstatcnt == AOconf[loop].AveStats_NBpt)
+        if(blockstatcnt == AOconf[loop].AOpmodecoeffs.AveStats_NBpt)
         {
             for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
             {
-				AOconf[loop].blockave_PFresrms[block] = sqrt(blockavePFresrms[block]/blockstatcnt);
-                AOconf[loop].blockave_OLrms[block] = sqrt(blockaveOLrms[block]/blockstatcnt);
-                AOconf[loop].blockave_Crms[block] = sqrt(blockaveCrms[block]/blockstatcnt);
-                AOconf[loop].blockave_WFSrms[block] = sqrt(blockaveWFSrms[block]/blockstatcnt);
-				AOconf[loop].blockave_WFSnoise[block] = sqrt(blockaveWFSnoise[block]/blockstatcnt);
-                AOconf[loop].blockave_limFrac[block] = (blockavelimFrac[block])/blockstatcnt;
+				AOconf[loop].AOpmodecoeffs.blockave_PFresrms[block] = sqrt(blockavePFresrms[block]/blockstatcnt);
+                AOconf[loop].AOpmodecoeffs.blockave_OLrms[block] = sqrt(blockaveOLrms[block]/blockstatcnt);
+                AOconf[loop].AOpmodecoeffs.blockave_Crms[block] = sqrt(blockaveCrms[block]/blockstatcnt);
+                AOconf[loop].AOpmodecoeffs.blockave_WFSrms[block] = sqrt(blockaveWFSrms[block]/blockstatcnt);
+				AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[block] = sqrt(blockaveWFSnoise[block]/blockstatcnt);
+                AOconf[loop].AOpmodecoeffs.blockave_limFrac[block] = (blockavelimFrac[block])/blockstatcnt;
 
 				allavePFresrms += blockavePFresrms[block];
                 allaveOLrms += blockaveOLrms[block];
@@ -1240,11 +1240,11 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 blockavelimFrac[block] = 0.0;                
             }
 
-            AOconf[loop].ALLave_OLrms = sqrt(allaveOLrms/blockstatcnt);
-            AOconf[loop].ALLave_Crms = sqrt(allaveCrms/blockstatcnt);
-            AOconf[loop].ALLave_WFSrms = sqrt(allaveWFSrms/blockstatcnt);
-			AOconf[loop].ALLave_WFSnoise = sqrt(allaveWFSnoise/blockstatcnt);
-            AOconf[loop].ALLave_limFrac = allavelimFrac/blockstatcnt;
+            AOconf[loop].AOpmodecoeffs.ALLave_OLrms = sqrt(allaveOLrms/blockstatcnt);
+            AOconf[loop].AOpmodecoeffs.ALLave_Crms = sqrt(allaveCrms/blockstatcnt);
+            AOconf[loop].AOpmodecoeffs.ALLave_WFSrms = sqrt(allaveWFSrms/blockstatcnt);
+			AOconf[loop].AOpmodecoeffs.ALLave_WFSnoise = sqrt(allaveWFSnoise/blockstatcnt);
+            AOconf[loop].AOpmodecoeffs.ALLave_limFrac = allavelimFrac/blockstatcnt;
 
 			allavePFresrms = 0.0;
             allaveOLrms = 0.0;

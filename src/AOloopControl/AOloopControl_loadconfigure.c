@@ -715,18 +715,18 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     // fflush(stdout);
 
 
-    AOconf[loop].AveStats_NBpt = 100;
+    AOconf[loop].AOpmodecoeffs.AveStats_NBpt = 100;
     for(k=0; k<AOconf[loop].DMmodesNBblock; k++)
     {
-        AOconf[loop].block_OLrms[k] = 0.0;
-        AOconf[loop].block_Crms[k] = 0.0;
-        AOconf[loop].block_WFSrms[k] = 0.0;
-        AOconf[loop].block_limFrac[k] = 0.0;
+        AOconf[loop].AOpmodecoeffs.block_OLrms[k] = 0.0;
+        AOconf[loop].AOpmodecoeffs.block_Crms[k] = 0.0;
+        AOconf[loop].AOpmodecoeffs.block_WFSrms[k] = 0.0;
+        AOconf[loop].AOpmodecoeffs.block_limFrac[k] = 0.0;
 
-        AOconf[loop].blockave_OLrms[k] = 0.0;
-        AOconf[loop].blockave_Crms[k] = 0.0;
-        AOconf[loop].blockave_WFSrms[k] = 0.0;
-        AOconf[loop].blockave_limFrac[k] = 0.0;
+        AOconf[loop].AOpmodecoeffs.blockave_OLrms[k] = 0.0;
+        AOconf[loop].AOpmodecoeffs.blockave_Crms[k] = 0.0;
+        AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k] = 0.0;
+        AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] = 0.0;
     }
 
     printf("%ld modes\n", AOconf[loop].NBDMmodes);

@@ -337,7 +337,7 @@ int_fast8_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainSta
         gain = gainStart + 1.0*kg/(NBgain-1)*(gainEnd-gainStart);
         AOloopControl_setgainblock(NBblock, gain);
         AOloopControl_loopstep(aoloopcontrol_var.LOOPNUMBER, NBstep);
-        val = sqrt(AOconf[aoloopcontrol_var.LOOPNUMBER].RMSmodesCumul/AOconf[aoloopcontrol_var.LOOPNUMBER].RMSmodesCumulcnt);
+        val = sqrt(AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul/AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt);
         printf("%2ld  %6.4f  %10.8lf\n", kg, gain, val);
 
         if(val<bestval)

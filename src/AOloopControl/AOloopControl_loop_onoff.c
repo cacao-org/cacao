@@ -133,8 +133,8 @@ int_fast8_t AOloopControl_loopstep(long loop, long NBstep)
         AOloopControl_InitializeMemory(1);
 
     AOconf[loop].cntmax = AOconf[loop].cnt + NBstep;
-    AOconf[aoloopcontrol_var.LOOPNUMBER].RMSmodesCumul = 0.0;
-    AOconf[aoloopcontrol_var.LOOPNUMBER].RMSmodesCumulcnt = 0;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul = 0.0;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt = 0;
 
     AOconf[loop].aorun.on = 1;
 
