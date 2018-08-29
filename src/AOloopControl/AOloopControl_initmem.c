@@ -145,11 +145,11 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
         AOconf[loop].ARPFgainAutoMax = 1.00;
         AOconf[loop].aorun.LOOPiteration = 0;
 
-        AOconf[loop].cnt = 0;
+        AOconf[loop].aorun.cnt = 0;
         
 
-        AOconf[loop].cntmax = 0;
-        AOconf[loop].init_CMc = 0;
+        AOconf[loop].aorun.cntmax = 0;
+        AOconf[loop].aorun.init_CMc = 0;
 
         if(sprintf(cntname, "aol%ld_logdata", loop) < 1) // contains loop count (cnt0) and loop gain
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -177,15 +177,15 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
     {
         for(loop=0; loop<NB_AOloopcontrol; loop++)
         {
-            AOconf[loop].init = 0;
+            AOconf[loop].aorun.init = 0;
             AOconf[loop].aorun.on = 0;
             AOconf[loop].aorun.DMprimaryWriteON = 0;
             AOconf[loop].aorun.DMfilteredWriteON = 0;
             AOconf[loop].AOcompute.ComputeWFSsol_FLAG = 1;
             AOconf[loop].aorun.ARPFon = 0;
             AOconf[loop].aorun.LOOPiteration = 0;
-            AOconf[loop].cnt = 0;
-            AOconf[loop].cntmax = 0;
+            AOconf[loop].aorun.cnt = 0;
+            AOconf[loop].aorun.cntmax = 0;
             AOconf[loop].maxlimit = 0.3;
             AOconf[loop].mult = 1.00;
             AOconf[loop].gain = 0.0;
@@ -215,7 +215,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
     else
     {
         for(loop=0; loop<NB_AOloopcontrol; loop++)
-            if(AOconf[loop].init == 1)
+            if(AOconf[loop].aorun.init == 1)
             {
                 printf("LIST OF ACTIVE LOOPS:\n");
                 printf("----- Loop %ld   (%s) ----------\n", loop, AOconf[loop].name);

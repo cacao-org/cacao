@@ -167,13 +167,13 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(name, "aol%ld_respM", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     printf("respM file name: %s\n", name);
-    strcpy(AOconf[loop].respMname, name);
+    strcpy(AOconf[loop].aorun.respMname, name);
 
 	/** - contrM : control matrix */
     if(sprintf(name, "aol%ld_contrM", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     printf("contrM file name: %s\n", name);
-    strcpy(AOconf[loop].contrMname, name);
+    strcpy(AOconf[loop].aorun.contrMname, name);
 
 
 
@@ -790,20 +790,20 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
         printf(" AOconf[loop].WFSim.activeDMcnt = %ld\n", AOconf[loop].DMctrl.activeDMcnt );
 
 
-        AOconf[loop].init_RM = 0;
+        AOconf[loop].aorun.init_RM = 0;
         if(sprintf(fname, "conf/shmim_respM.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoconfID_respM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].respMname, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
-        AOconf[loop].init_RM = 1;
+        aoconfID_respM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].aorun.respMname, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
+        AOconf[loop].aorun.init_RM = 1;
 		aoloopcontrol_var.init_RM_local = 1;
 
-        AOconf[loop].init_CM = 0;
+        AOconf[loop].aorun.init_CM = 0;
         if(sprintf(fname, "conf/shmim_contrM.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-        aoloopcontrol_var.aoconfID_contrM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].contrMname, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
-        AOconf[loop].init_CM = 1;
+        aoloopcontrol_var.aoconfID_contrM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].aorun.contrMname, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].NBDMmodes, 0.0);
+        AOconf[loop].aorun.init_CM = 1;
         aoloopcontrol_var.init_CM_local = 1;
 
 
@@ -984,11 +984,11 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     printf(" AOconf[loop].WFSim.activeWFScnt = %ld\n", AOconf[loop].WFSim.activeWFScnt );
     printf(" AOconf[loop].DMctrl.activeDMcnt = %ld\n", AOconf[loop].DMctrl.activeDMcnt );
     printf("   init_WFSref0    %d\n", AOconf[loop].init_wfsref0);
-    printf("   init_RM        %d\n", AOconf[loop].init_RM);
-    printf("   init_CM        %d\n", AOconf[loop].init_CM);
+    printf("   init_RM        %d\n", AOconf[loop].aorun.init_RM);
+    printf("   init_CM        %d\n", AOconf[loop].aorun.init_CM);
 
 
-    AOconf[loop].init = 1;
+    AOconf[loop].aorun.init = 1;
 
     loadcreateshm_log = 0;
     fclose(fplog);

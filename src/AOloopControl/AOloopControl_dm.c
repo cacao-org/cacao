@@ -165,7 +165,7 @@ int_fast8_t set_DM_modes(long loop)
                 sem_post(data.image[aoloopcontrol_var.aoconfID_dmdisp].semptr[1]);
         }
 
-    AOconf[loop].DMupdatecnt ++;
+    AOconf[loop].aorun.DMupdatecnt ++;
 
     return(0);
 }
@@ -215,7 +215,7 @@ int_fast8_t set_DM_modesRM(long loop)
     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
 
     free(arrayf);
-    AOconf[loop].DMupdatecnt ++;
+    AOconf[loop].aorun.DMupdatecnt ++;
 
     return(0);
 }

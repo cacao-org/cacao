@@ -9,6 +9,21 @@
 
 typedef struct
 {
+	int_fast8_t   init;                         /**< Has the structure been initialized ? */
+    uint_fast64_t cnt;                        /**<  loop step counter, set to zero every time loop is stopped */
+    uint_fast64_t cntmax;                     /**<  max value of counter, used to step loop */
+    uint_fast64_t DMupdatecnt;                /**<  */
+    char name[80];
+
+    int_fast8_t init_RM;                      /**< Response Matrix loaded */
+    int_fast8_t init_CM;                      /**< Control Matrix loaded */
+    int_fast8_t init_CMc;                     /**< Combined control matrix computed */
+    int_fast8_t initmapping;
+    char respMname[80];
+    char contrMname[80];
+	
+	
+	
 	uint64_t      LOOPiteration;                   /**< Loop iteration - set to zero on creation on aolrun start */
 	int_fast8_t   kill;                            /**<  set to 1 to kill computation loop */
 	int_fast8_t   on;                              /**< goes to 1 when loop starts, put to 0 to turn loop off */

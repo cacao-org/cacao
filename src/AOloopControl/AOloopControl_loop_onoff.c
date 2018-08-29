@@ -46,7 +46,7 @@ int_fast8_t AOloopControl_loopon()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].cntmax = AOconf[aoloopcontrol_var.LOOPNUMBER].cnt-1;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.cntmax = AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.cnt-1;
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 1;
     
@@ -83,7 +83,7 @@ int_fast8_t AOloopControl_loopWFScompon()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].cntmax = AOconf[aoloopcontrol_var.LOOPNUMBER].cnt-1;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.cntmax = AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.cnt-1;
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOcompute.ComputeWFSsol_FLAG = 1;
     
@@ -132,7 +132,7 @@ int_fast8_t AOloopControl_loopstep(long loop, long NBstep)
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[loop].cntmax = AOconf[loop].cnt + NBstep;
+    AOconf[loop].aorun.cntmax = AOconf[loop].aorun.cnt + NBstep;
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul = 0.0;
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt = 0;
 

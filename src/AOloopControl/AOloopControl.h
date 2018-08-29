@@ -208,8 +208,13 @@ static FILE *loadcreateshm_fplog;
  */
 typedef struct
 {	
+	
+	char name[80]; // AO loop name
+	
+	
+	
 	// These structures are always part of AO loop control (not optional)
-
+	
 	AOLOOPCONF_aorun                     aorun;                // defined in AOloopControl_aorun.h		
 	AOLOOPCONF_WFSim                     WFSim;                // defined in AOloopControl_aorun.h
 	AOloopTimingInfo                     AOtiminginfo;         // defined in AOloopControl_aorun.h
@@ -223,31 +228,6 @@ typedef struct
 	AOLOOPCONF_AutoTune                  AOAutoTune;           // defined in AOloopControl_autotune.h
 	
 	
-	
-
-    /* =============================================================================================== */
-	/** @name AOLOOPCONTROL_CONF: SETUP & INITIALIZATION STATE 
-	 * 
-	 */
-
-    int_fast8_t   init;                         /**< Has the structure been initialized ? */
-    uint_fast64_t cnt;                        /**<  loop step counter, set to zero every time loop is stopped */
-    uint_fast64_t cntmax;                     /**<  max value of counter, used to step loop */
-    uint_fast64_t DMupdatecnt;                /**<  */
-//    int_fast8_t   aorun__kill;                         /**<  set to 1 to kill computation loop */
-    char name[80];
-
-    int_fast8_t init_RM;                      /**< Response Matrix loaded */
-    int_fast8_t init_CM;                      /**< Control Matrix loaded */
-    int_fast8_t init_CMc;                     /**< Combined control matrix computed */
-    int_fast8_t initmapping;
-    char respMname[80];
-    char contrMname[80];
-  
-    /* =============================================================================================== */
-
-
-
 
 
 

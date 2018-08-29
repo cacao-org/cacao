@@ -420,8 +420,8 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
     aoloopcontrol_var.aoconfcnt0_wfsref_current = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
 
 
-    AOconf[loop].initmapping = 0;
-    AOconf[loop].init_CMc = 0;
+    AOconf[loop].aorun.initmapping = 0;
+    AOconf[loop].aorun.init_CMc = 0;
     clock_gettime(CLOCK_REALTIME, &t1);
 
 
@@ -590,7 +590,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                                 if(semval<SEMAPHORE_MAXVAL)
                                     sem_post(data.image[aoloopcontrol_var.aoconfID_dmdisp].semptr[1]);
                             }
-                        AOconf[loop].DMupdatecnt ++;
+                        AOconf[loop].aorun.DMupdatecnt ++;
                     }
                 }
 
@@ -600,7 +600,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[22] = tdiffv;
 
-                AOconf[loop].cnt++;
+                AOconf[loop].aorun.cnt++;
 
 
                 AOconf[loop].aorun.LOOPiteration++;
@@ -610,12 +610,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
 
                 // REAL TIME LOGGING
-                data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt0 = AOconf[loop].cnt;
+                data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt0 = AOconf[loop].aorun.cnt;
                 data.image[aoloopcontrol_var.aoconfIDlogdata].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
                 data.image[aoloopcontrol_var.aoconfIDlogdata].array.F[0] = AOconf[loop].gain;
 
 
-                if(AOconf[loop].cnt == AOconf[loop].cntmax)
+                if(AOconf[loop].aorun.cnt == AOconf[loop].aorun.cntmax)
                     AOconf[loop].aorun.on = 0;
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);

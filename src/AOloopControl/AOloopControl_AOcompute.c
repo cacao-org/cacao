@@ -458,7 +458,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 
-        if(AOconf[loop].initmapping == 0) // compute combined control matrix or matrices
+        if(AOconf[loop].aorun.initmapping == 0) // compute combined control matrix or matrices
         {
             printf("COMPUTING MAPPING ARRAYS .... \n");
             fflush(stdout);
@@ -562,7 +562,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
             printf("\n");
             printf("TIME TO COMPUTE MAPPING ARRAYS = %f sec\n", tdiffv);
-            AOconf[loop].initmapping = 1;
+            AOconf[loop].aorun.initmapping = 1;
         }
 
 
