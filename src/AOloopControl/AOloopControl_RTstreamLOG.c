@@ -67,6 +67,9 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			AOconf[loop].RTSLOGarray[i].save = 0;
 			AOconf[loop].RTSLOGarray[i].saveToggle = 0;
 			AOconf[loop].RTSLOGarray[i].NBcubeSaved = -1;
+			
+			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 3;
+			AOconf[loop].RTSLOGarray[i].FileBuffer   = 0;
         }
 	
 	    i = RTSLOGindex_wfsim;
@@ -686,6 +689,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 		
 		if (selected_entry<0)
 			selected_entry = 0;
+			
 		if (selected_entry>NB_ENA_streams-1)
 			selected_entry = NB_ENA_streams-1;
 		
@@ -857,17 +861,20 @@ int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)
 
 
 
-
-
+//
+// loop waits for buffer to be ready and then saves it
+//
 
 int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 {
     int rtlindex;
     int cntsave = 0;
 
-    int sleeptimeus = 10000;
+    int sleeptimeus = 1000; // 1 ms
     long sleepcnt = 0;
 
+
+	
     tzset();
 
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -875,6 +882,8 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 
     printf("\n");
+
+
 
     for(;;)
     {
@@ -989,10 +998,14 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     }
 
 
-                    if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+                    if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat.%03d", 
+						fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, 
+						timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-                    if(sprintf(fname, "%s/aol%d_%s.%s.fits", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+                    if(sprintf(fname, "%s/aol%d_%s.%s.fits.%03d", 
+						fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, 
+						timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 
@@ -1019,7 +1032,9 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     }
                     fclose(fp);
 
-
+					AOconf[loop].RTSLOGarray[rtlindex].FileBuffer++;
+                    if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
+						AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
                     AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
                     cntsave++;
                 }

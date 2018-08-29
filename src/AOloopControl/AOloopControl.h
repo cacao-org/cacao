@@ -161,6 +161,11 @@ typedef struct
     size_t memsize;               // size of stream
 
     int NBcubeSaved;              // Number of cubes to save, default = -1
+    
+    
+    
+    int NBFileBuffer;             // Number of buffers per big file
+	int FileBuffer;               // File buffer index
 
 } RTstreamLOG;
 
