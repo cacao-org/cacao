@@ -578,7 +578,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
 
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 1;
-                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrM].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].NBDMmodes, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F);
+                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrM].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].AOpmodecoeffs.NBDMmodes, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F);
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_modes, -1);
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt0 ++;
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt1 = LOOPiter;
@@ -833,7 +833,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
 
             AOconf[loop].AOpmodecoeffs.RMSmodes = 0;
-            for(k=0; k<AOconf[loop].NBDMmodes; k++)
+            for(k=0; k<AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
                 AOconf[loop].AOpmodecoeffs.RMSmodes += data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k]*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
 
             AOconf[loop].AOpmodecoeffs.RMSmodesCumul += AOconf[loop].AOpmodecoeffs.RMSmodes;
@@ -844,7 +844,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             clock_gettime(CLOCK_REALTIME, &functionTestTimer01); //TEST timing in function
 
             //TEST TIMING -> COMMENT THIS SECTION
-            for(k=0; k<AOconf[loop].NBDMmodes; k++)
+            for(k=0; k<AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
             {
                 data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] = 0.99*data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] + 0.01*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k]*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
                 data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] = 0.99*data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] + 0.01*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
@@ -852,13 +852,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 // apply gain
 
-                data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] -= AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_gainb].array.F[AOconf[loop].modeBlockIndex[k]] * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k] * data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
+                data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] -= AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_gainb].array.F[AOconf[loop].AOpmodecoeffs.modeBlockIndex[k]] * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k] * data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
 
 
                 // apply limits
 
                 float limitval;
-                limitval = AOconf[loop].maxlimit * data.image[aoloopcontrol_var.aoconfID_limitb].array.F[AOconf[loop].modeBlockIndex[k]] * data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k];
+                limitval = AOconf[loop].maxlimit * data.image[aoloopcontrol_var.aoconfID_limitb].array.F[AOconf[loop].AOpmodecoeffs.modeBlockIndex[k]] * data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k];
 
                 if(data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] < -limitval)
                     data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = -limitval;
@@ -869,12 +869,12 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 // apply mult factor
 
-                data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] *= AOconf[loop].mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[AOconf[loop].modeBlockIndex[k]] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[k];
+                data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] *= AOconf[loop].mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[AOconf[loop].AOpmodecoeffs.modeBlockIndex[k]] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[k];
 
 
 
                 // update total gain
-                //     data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k+AOconf[loop].NBDMmodes] = AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k];
+                //     data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k+AOconf[loop].AOpmodecoeffs.NBDMmodes] = AOconf[loop].gain * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k];
             }
 
             clock_gettime(CLOCK_REALTIME, &functionTestTimer02); //TEST timing in function

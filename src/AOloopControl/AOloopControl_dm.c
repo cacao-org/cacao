@@ -124,7 +124,7 @@ int_fast8_t set_DM_modes(long loop)
             arrayf[j] = 0.0;
 
         for(i=0; i<AOconf[loop].DMctrl.sizeDM; i++)
-            for(k=0; k < AOconf[loop].NBDMmodes; k++)
+            for(k=0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
                 arrayf[i] += data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[k*AOconf[loop].DMctrl.sizeDM+i];
 
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
@@ -202,7 +202,7 @@ int_fast8_t set_DM_modesRM(long loop)
     for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
         arrayf[j] = 0.0;
 
-    for(k=0; k < AOconf[loop].NBDMmodes; k++)
+    for(k=0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
     {
         for(i=0; i<AOconf[loop].DMctrl.sizeDM; i++)
             arrayf[i] += data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k] * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[k*AOconf[loop].DMctrl.sizeDM+i];

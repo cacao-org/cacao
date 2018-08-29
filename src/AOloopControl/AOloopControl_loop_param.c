@@ -156,7 +156,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
     long m1;
 
 
-    printf("AOconf[loop].DMmodesNBblock = %ld\n", AOconf[loop].DMmodesNBblock);
+    printf("AOconf[loop].AOpmodecoeffs.DMmodesNBblock = %ld\n", AOconf[loop].AOpmodecoeffs.DMmodesNBblock);
     fflush(stdout);
 
     /*if(AOconf[loop].CMMODE==0)
@@ -166,7 +166,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
     }
     else*/
      
-    if (AOconf[loop].DMmodesNBblock<2)
+    if (AOconf[loop].AOpmodecoeffs.DMmodesNBblock<2)
     {
         if(sprintf(name2, "aol%ld_contrMc00", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -198,8 +198,8 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
 	    char name[200];
 	    long NBmodes = 0;
         
-        for(kk=0; kk<AOconf[loop].DMmodesNBblock; kk++)
-            NBmodes += AOconf[loop].NBmodes_block[kk];
+        for(kk=0; kk<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; kk++)
+            NBmodes += AOconf[loop].AOpmodecoeffs.NBmodes_block[kk];
 
 
 
@@ -207,7 +207,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_gainb = image_ID(name);
-        if((blocknb<AOconf[loop].DMmodesNBblock)&&(blocknb>-1))
+        if((blocknb<AOconf[loop].AOpmodecoeffs.DMmodesNBblock)&&(blocknb>-1))
             data.image[aoloopcontrol_var.aoconfID_gainb].array.F[blocknb] = gain;
 
 
@@ -231,7 +231,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
             arith_image_zero("contrMcact0");
 
 
-            for(kk=0; kk<AOconf[loop].DMmodesNBblock; kk++)
+            for(kk=0; kk<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; kk++)
             {
 			    double eps=1e-6;
 				
@@ -242,7 +242,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
                 if(sprintf(name3, "aol%ld_contrMcact%02ld_00", loop, kk) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-                printf("Adding %4ld / %4ld  (%5.3f)   %s   [%ld]\n", kk, AOconf[loop].DMmodesNBblock, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk], name, aoloopcontrol_var.aoconfID_gainb);
+                printf("Adding %4ld / %4ld  (%5.3f)   %s   [%ld]\n", kk, AOconf[loop].AOpmodecoeffs.DMmodesNBblock, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk], name, aoloopcontrol_var.aoconfID_gainb);
 
                 
 
@@ -331,7 +331,7 @@ int_fast8_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainSta
 	    float gain;
 		float val;
 		
-        for(k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].NBDMmodes; k++)
+        for(k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
 
         gain = gainStart + 1.0*kg/(NBgain-1)*(gainEnd-gainStart);

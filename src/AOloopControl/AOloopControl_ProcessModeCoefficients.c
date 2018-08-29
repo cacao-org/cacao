@@ -473,7 +473,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
 
     // auto limit tuning
-    sizeout[0] = AOconf[loop].DMmodesNBblock;
+    sizeout[0] = AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
     sizeout[1] = 1;
     if(sprintf(imname, "aol%ld_autotune_lim_bcoeff", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -587,7 +587,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     cnt = 0;
 
     blockstatcnt = 0;
-    for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
+    for(block=0; block<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; block++)
     {
 		blockavePFresrms[block] = 0.0;
         blockaveOLrms[block] = 0.0;
@@ -826,7 +826,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         if(AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_ON==1) // automatically adjust modal limits
         {
             data.image[IDatlimbcoeff].md[0].write = 1;
-            for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
+            for(block=0; block<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; block++)
                 limitblockarray[block] = 0.0;
 
             data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].md[0].write = 1;
@@ -851,7 +851,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
 			// update block limits to drive average limit coefficients to 1
             data.image[IDatlimbcoeff].md[0].write = 1;
-            for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
+            for(block=0; block<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; block++)
             {
                 data.image[IDatlimbcoeff].array.F[block] = limitblockarray[block] / blockNBmodes[block];
                 coeff = ( 1.0 + (data.image[IDatlimbcoeff].array.F[block]-1.0)*AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta*0.1 );
@@ -914,7 +914,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
 					
 					// Set block gain to max gain within block, scaled to global gain
-					for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
+					for(block=0; block<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; block++)
 					{
 						maxGainVal = 0.0;
 						for(m=0; m<NBmodes; m++)
@@ -970,7 +970,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
 			// update block gains to drive average gain coefficients to 1
             data.image[IDatgainbcoeff].md[0].write = 1;
-            for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
+            for(block=0; block<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; block++)
             {
                 data.image[IDatlimbcoeff].array.F[block] = limitblockarray[block] / blockNBmodes[block];
                 coeff = ( 1.0 + (data.image[IDatlimbcoeff].array.F[block]-1.0)*AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta*0.1 );
@@ -1216,7 +1216,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         blockstatcnt ++;
         if(blockstatcnt == AOconf[loop].AOpmodecoeffs.AveStats_NBpt)
         {
-            for(block=0; block<AOconf[loop].DMmodesNBblock; block++)
+            for(block=0; block<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; block++)
             {
 				AOconf[loop].AOpmodecoeffs.blockave_PFresrms[block] = sqrt(blockavePFresrms[block]/blockstatcnt);
                 AOconf[loop].AOpmodecoeffs.blockave_OLrms[block] = sqrt(blockaveOLrms[block]/blockstatcnt);

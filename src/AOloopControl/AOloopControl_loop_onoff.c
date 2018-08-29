@@ -164,10 +164,10 @@ int_fast8_t AOloopControl_loopreset()
     }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 0;
-    for(k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].NBDMmodes; k++)
+    for(k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
         data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
 
-    for(mb=0; mb<AOconf[aoloopcontrol_var.LOOPNUMBER].DMmodesNBblock; mb)
+    for(mb=0; mb<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; mb)
     {
         AOloopControl_setgainblock(mb, 0.0);
         AOloopControl_setlimitblock(mb, 0.01);

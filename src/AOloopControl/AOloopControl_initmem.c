@@ -197,7 +197,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 			AOconf[loop].ARPFgainAutoMax = 1.01;
             AOconf[loop].WFSim.WFSnormfloor = 0.0;
             AOconf[loop].framesAve = 1;
-            AOconf[loop].DMmodesNBblock = 1;
+            AOconf[loop].AOpmodecoeffs.DMmodesNBblock = 1;
             AOconf[loop].AOcompute.GPUusesem = 1;
 
 			AOconf[loop].WFSim.WFSnormalize = 1;
