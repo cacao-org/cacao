@@ -242,12 +242,12 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f", AOconf[loop].NBmodes_block[k], kmin, AOconf[loop].indexmaxMB[k]-1, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[k], data.image[aoloopcontrol_var.aoconfID_limitb].array.F[k], data.image[aoloopcontrol_var.aoconfID_multfb].array.F[k]);
         
         
-        printw("  |  %8.2f  %8.2f  ->  %8.2f", 1000.0*(AOconf[loop].blockave_Crms[k]), 1000.0*AOconf[loop].blockave_OLrms[k], 1000.0*AOconf[loop].blockave_WFSrms[k]);
+        printw("  |  %8.2f  %8.2f  ->  %8.2f", 1000.0*(AOconf[loop].AOpmodecoeffs.blockave_Crms[k]), 1000.0*AOconf[loop].AOpmodecoeffs.blockave_OLrms[k], 1000.0*AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]);
 		
 
 		
        
-        ratio0 = AOconf[loop].blockave_WFSrms[k]/AOconf[loop].blockave_OLrms[k];
+        ratio0 = AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]/AOconf[loop].AOpmodecoeffs.blockave_OLrms[k];
 		if(ratio0>0.999)
 			color=2;
 		else
@@ -257,10 +257,10 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("   %5.3f  ", ratio0);
         attroff(A_BOLD | COLOR_PAIR(color));
 
-        if( AOconf[loop].blockave_limFrac[k] > 0.01 )
+        if( AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01 )
             attron(A_BOLD | COLOR_PAIR(2));
 
-        printw("| %2ld | %9.3f  %6.2f\% |", k, AOconf[loop].blockave_limFrac[k],  100.0*AOconf[loop].blockave_limFrac[k]/AOconf[loop].NBmodes_block[k]);
+        printw("| %2ld | %9.3f  %6.2f\% |", k, AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].NBmodes_block[k]);
         attroff(A_BOLD | COLOR_PAIR(2));
         
         
@@ -268,10 +268,10 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 		// PREDICTIVE CONTROL
 		//
         if(AOconf[loop].aorun.ARPFon==1){
-			printw("%8.2f |", 1000.0*AOconf[loop].blockave_PFresrms[k]);
+			printw("%8.2f |", 1000.0*AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]);
 			
 			
-			ratio = AOconf[loop].blockave_PFresrms[k]/AOconf[loop].blockave_OLrms[k];
+			ratio = AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]/AOconf[loop].AOpmodecoeffs.blockave_OLrms[k];
 			color = 0;
 			if(ratio>1.0)
 				color=2;
@@ -296,13 +296,13 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 		
 		printw("          WFS noise removed ------->               ");
 		
-		valOL = AOconf[loop].blockave_OLrms[k]*AOconf[loop].blockave_OLrms[k] - AOconf[loop].blockave_WFSnoise[k]*AOconf[loop].blockave_WFSnoise[k];
+		valOL = AOconf[loop].AOpmodecoeffs.blockave_OLrms[k]*AOconf[loop].AOpmodecoeffs.blockave_OLrms[k] - AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k];
 		if(valOL>0.0)
 			valOL = sqrt(valOL);
 		else
 			valOL = 0.0;
 		
-		valWFS = AOconf[loop].blockave_WFSrms[k]*AOconf[loop].blockave_WFSrms[k] - AOconf[loop].blockave_WFSnoise[k]*AOconf[loop].blockave_WFSnoise[k];
+		valWFS = AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k] - AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k];
 		if(valWFS>0.0)
 			valWFS = sqrt(valWFS);
 		else
@@ -319,14 +319,14 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("   %5.3f  ", ratio0);
         attroff(A_BOLD | COLOR_PAIR(color));
 
-        if( AOconf[loop].blockave_limFrac[k] > 0.01 )
+        if( AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01 )
             attron(A_BOLD | COLOR_PAIR(2));
 
-        printw("|    |                    |", k, AOconf[loop].blockave_limFrac[k],  100.0*AOconf[loop].blockave_limFrac[k]/AOconf[loop].NBmodes_block[k]);
+        printw("|    |                    |", k, AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].NBmodes_block[k]);
         attroff(A_BOLD | COLOR_PAIR(2));
         
         if(AOconf[loop].aorun.ARPFon==1){
-			valPFres = AOconf[loop].blockave_PFresrms[k]*AOconf[loop].blockave_PFresrms[k] - AOconf[loop].blockave_WFSnoise[k]*AOconf[loop].blockave_WFSnoise[k];
+			valPFres = AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]*AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k] - AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k];
 			if(valPFres>0.0)
 				valPFres = sqrt(valPFres);
 			else
@@ -353,17 +353,17 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
     printw("\n");
 
     printw(" ALL   %4ld                                        ", AOconf[loop].NBDMmodes);
-    printw("  |  %8.2f  %8.2f  ->  %8.2f", 1000.0*AOconf[loop].ALLave_Crms, 1000.0*AOconf[loop].ALLave_OLrms, 1000.0*AOconf[loop].ALLave_WFSrms);
+    printw("  |  %8.2f  %8.2f  ->  %8.2f", 1000.0*AOconf[loop].AOpmodecoeffs.ALLave_Crms, 1000.0*AOconf[loop].AOpmodecoeffs.ALLave_OLrms, 1000.0*AOconf[loop].AOpmodecoeffs.ALLave_WFSrms);
 
     attron(A_BOLD);
-    printw("   %5.3f  ", AOconf[loop].ALLave_WFSrms/AOconf[loop].ALLave_OLrms);
+    printw("   %5.3f  ", AOconf[loop].AOpmodecoeffs.ALLave_WFSrms/AOconf[loop].AOpmodecoeffs.ALLave_OLrms);
     attroff(A_BOLD);
 
-    printw("| %2ld | %9.3f  %6.2f\% |\n", k, AOconf[loop].ALLave_limFrac,  100.0*AOconf[loop].ALLave_limFrac/AOconf[loop].NBDMmodes);
+    printw("| %2ld | %9.3f  %6.2f\% |\n", k, AOconf[loop].AOpmodecoeffs.ALLave_limFrac,  100.0*AOconf[loop].AOpmodecoeffs.ALLave_limFrac/AOconf[loop].NBDMmodes);
 
     printw("\n");
 
-    //printw("            MODAL RMS (ALL MODES) : %6.4lf     AVERAGE :  %8.6lf       ( %20g / %8lld )\n", sqrt(AOconf[loop].RMSmodes), sqrt(AOconf[loop].RMSmodesCumul/AOconf[loop].RMSmodesCumulcnt), AOconf[loop].RMSmodesCumul, AOconf[loop].RMSmodesCumulcnt);
+    //printw("            MODAL RMS (ALL MODES) : %6.4lf     AVERAGE :  %8.6lf       ( %20g / %8lld )\n", sqrt(AOconf[loop].AOpmodecoeffs.RMSmodes), sqrt(AOconf[loop].AOpmodecoeffs.RMSmodesCumul/AOconf[loop].AOpmodecoeffs.RMSmodesCumulcnt), AOconf[loop].AOpmodecoeffs.RMSmodesCumul, AOconf[loop].AOpmodecoeffs.RMSmodesCumulcnt);
 
 
 
@@ -1024,8 +1024,8 @@ int_fast8_t AOloopControl_perfTest_resetRMSperf()
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[LOOPNUMBER].RMSmodesCumul = 0.0;
-    AOconf[LOOPNUMBER].RMSmodesCumulcnt = 0;
+    AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul = 0.0;
+    AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt = 0;
 
 
     return 0;
