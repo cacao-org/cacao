@@ -227,22 +227,10 @@ typedef struct
 	// Automatic loop tuning (experimental)
 	AOLOOPCONF_AutoTune                  AOAutoTune;           // defined in AOloopControl_autotune.h
 	
-	
-	
-	
-
-
-
-//    uint_fast16_t framesAve;                  /**< number of WFS frames to average */
-
-
- 
- 
-
 
 	// Realtime logging
-	long        RTLOGsize;                       // Number of samples per shared memory stream	
-	RTstreamLOG RTSLOGarray[MAX_NUMBER_RTLOGSTREAM];
+	long                                 RTLOGsize;                                     // Number of samples per shared memory stream	
+	RTstreamLOG                          RTSLOGarray[MAX_NUMBER_RTLOGSTREAM];
 
 
 } AOLOOPCONTROL_CONF;

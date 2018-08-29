@@ -200,8 +200,6 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
             AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_mcoeff = 1.0; // multiplicative coeff
             AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta = 1.0e-3;
 
-
-//            AOconf[loop].framesAve = 1;
             AOconf[loop].AOpmodecoeffs.DMmodesNBblock = 1;
 
             AOconf[loop].WFSim.WFSnormfloor = 0.0;

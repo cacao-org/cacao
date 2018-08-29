@@ -130,19 +130,6 @@ int_fast8_t AOloopControl_setmult(float multcoeff)
     return 0;
 }
 
-/*
-int_fast8_t AOloopControl_setframesAve(long nbframes)
-{
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
-        AOloopControl_InitializeMemory(1);
-
-    AOconf[aoloopcontrol_var.LOOPNUMBER].framesAve = nbframes;
-    AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
-
-    return 0;
-}
-*/
-
 
 
 
