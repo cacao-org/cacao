@@ -922,7 +922,7 @@ int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
     }
 
     if(aoloopcontrol_var.aoconfID_dmRM==-1)
-        aoloopcontrol_var.aoconfID_dmRM = read_sharedmem_image(AOconf[LOOPNUMBER].dmRMname);
+        aoloopcontrol_var.aoconfID_dmRM = read_sharedmem_image(AOconf[LOOPNUMBER].DMctrl.dmRMname);
 
 
     if((index<0)||(index>AOconf[LOOPNUMBER].NBDMmodes-1))
@@ -934,15 +934,15 @@ int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
         float *arrayf;
 		long i;
 		
-        arrayf = (float*) malloc(sizeof(float)*AOconf[LOOPNUMBER].sizeDM);
+        arrayf = (float*) malloc(sizeof(float)*AOconf[LOOPNUMBER].DMctrl.sizeDM);
 
-        for(i=0; i<AOconf[LOOPNUMBER].sizeDM; i++)
-            arrayf[i] = ampl*data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[index*AOconf[LOOPNUMBER].sizeDM+i];
+        for(i=0; i<AOconf[LOOPNUMBER].DMctrl.sizeDM; i++)
+            arrayf[i] = ampl*data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[index*AOconf[LOOPNUMBER].DMctrl.sizeDM+i];
 
 
 
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
-        memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, arrayf, sizeof(float)*AOconf[LOOPNUMBER].sizeDM);
+        memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, arrayf, sizeof(float)*AOconf[LOOPNUMBER].DMctrl.sizeDM);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
 
@@ -952,6 +952,9 @@ int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
 
     return(0);
 }
+
+
+
 
 
 
