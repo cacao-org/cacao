@@ -171,7 +171,7 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(long loop, long NB_
     ID_Rmatrix = image_ID(ID_Rmatrix_name);
 
 
-    n = data.image[ID_Rmatrix].md[0].size[0]*data.image[ID_Rmatrix].md[0].size[1]; //AOconf[loop].NBDMmodes;
+    n = data.image[ID_Rmatrix].md[0].size[0]*data.image[ID_Rmatrix].md[0].size[1]; //AOconf[loop].AOpmodecoeffs.NBDMmodes;
     m = data.image[ID_Rmatrix].md[0].size[2]; //AOconf[loop].WFSim.sizeWFS;
 
 
@@ -720,7 +720,7 @@ long AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
                 printf("Control matrix has wrong y size\n");
                 vOK = 0;
             }
-            if(data.image[ID].md[0].size[2]!=AOconf[loop].NBDMmodes)
+            if(data.image[ID].md[0].size[2]!=AOconf[loop].AOpmodecoeffs.NBDMmodes)
             {
                 printf("Control matrix has wrong z size\n");
                 vOK = 0;
@@ -730,7 +730,7 @@ long AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
 
         if(vOK==1)
         {
-            AOconf[loop].init_CM = 1;
+            AOconf[loop].aorun.init_CM = 1;
             char name[200];
             if(sprintf(name, "ContrM_%ld", loop) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -741,7 +741,7 @@ long AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
             long ID0 = image_ID("tmpcontrM");
             data.image[ID].md[0].write  = 1;
             long ii;
-            for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].NBDMmodes; ii++)
+            for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].AOpmodecoeffs.NBDMmodes; ii++)
                 data.image[ID].array.F[ii] = data.image[ID0].array.F[ii];
             data.image[ID].md[0].write  = 0;
             data.image[ID].md[0].cnt0++;
