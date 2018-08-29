@@ -147,7 +147,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 		{
 			// multiplicative auto ratio on top of gain above
 			sizeout = (uint32_t*) malloc(sizeof(uint32_t)*2);
-			sizeout[0] = AOconf[loop].NBDMmodes;
+			sizeout[0] = AOconf[loop].AOpmodecoeffs.NBDMmodes;
 			sizeout[1] = 1;
 		
 			if(sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1) 
@@ -155,25 +155,25 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 			aoloopcontrol_var.aoconfID_modeARPFgainAuto = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
 			COREMOD_MEMORY_image_set_createsem(imname, 10);
 			// initialize the gain to zero for all modes
-			for(m=0;m<AOconf[loop].NBDMmodes; m++)
+			for(m=0;m<AOconf[loop].AOpmodecoeffs.NBDMmodes; m++)
 				data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = 1.0;
 			free(sizeout);
 		}
 		
-		for(k=0; k<AOconf[loop].DMmodesNBblock; k++)
+		for(k=0; k<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
 			{
 				ARPFgainAutob[k] = 0.0;
 				ARPFgainAutob_tot[k] = 0.0;
 			}
 		
-		for(m=0; m<AOconf[loop].NBDMmodes; m++)
+		for(m=0; m<AOconf[loop].AOpmodecoeffs.NBDMmodes; m++)
 		{
             block = data.image[IDblknb].array.UI16[m];
 			ARPFgainAutob[block] += data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m];
 			ARPFgainAutob_tot[block] += 1.0;
 		}
 		
-		for(k=0; k<AOconf[loop].DMmodesNBblock; k++)
+		for(k=0; k<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
 			ARPFgainAutob[k] /= ARPFgainAutob_tot[k];	
 	}
 	
@@ -217,7 +217,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
 
 
-    printw("=========== %6ld modes, %3ld blocks ================|------------ Telemetry [nm] ----------------|    |     LIMITS         |", AOconf[loop].NBDMmodes, AOconf[loop].DMmodesNBblock);
+    printw("=========== %6ld modes, %3ld blocks ================|------------ Telemetry [nm] ----------------|    |     LIMITS         |", AOconf[loop].AOpmodecoeffs.NBDMmodes, AOconf[loop].AOpmodecoeffs.DMmodesNBblock);
 	if(AOconf[loop].aorun.ARPFon == 1)
 		printw("---- Predictive Control ----- |");
 	printw("\n");
@@ -228,18 +228,18 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 	printw("\n");
 	printw("\n");
 
-    for(k=0; k<AOconf[loop].DMmodesNBblock; k++)
+    for(k=0; k<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
     {
         if(k==0)
             kmin = 0;
         else
-            kmin = AOconf[loop].indexmaxMB[k-1];
+            kmin = AOconf[loop].AOpmodecoeffs.indexmaxMB[k-1];
 
         attron(A_BOLD);
         printw("%3ld", k);
         attroff(A_BOLD);
 
-        printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f", AOconf[loop].NBmodes_block[k], kmin, AOconf[loop].indexmaxMB[k]-1, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[k], data.image[aoloopcontrol_var.aoconfID_limitb].array.F[k], data.image[aoloopcontrol_var.aoconfID_multfb].array.F[k]);
+        printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f", AOconf[loop].AOpmodecoeffs.NBmodes_block[k], kmin, AOconf[loop].AOpmodecoeffs.indexmaxMB[k]-1, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[k], data.image[aoloopcontrol_var.aoconfID_limitb].array.F[k], data.image[aoloopcontrol_var.aoconfID_multfb].array.F[k]);
         
         
         printw("  |  %8.2f  %8.2f  ->  %8.2f", 1000.0*(AOconf[loop].AOpmodecoeffs.blockave_Crms[k]), 1000.0*AOconf[loop].AOpmodecoeffs.blockave_OLrms[k], 1000.0*AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]);
@@ -260,7 +260,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         if( AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01 )
             attron(A_BOLD | COLOR_PAIR(2));
 
-        printw("| %2ld | %9.3f  %6.2f\% |", k, AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].NBmodes_block[k]);
+        printw("| %2ld | %9.3f  %6.2f\% |", k, AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
         attroff(A_BOLD | COLOR_PAIR(2));
         
         
@@ -322,7 +322,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         if( AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01 )
             attron(A_BOLD | COLOR_PAIR(2));
 
-        printw("|    |                    |", k, AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].NBmodes_block[k]);
+        printw("|    |                    |", k, AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
         attroff(A_BOLD | COLOR_PAIR(2));
         
         if(AOconf[loop].aorun.ARPFon==1){
@@ -352,14 +352,14 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
     printw("\n");
 
-    printw(" ALL   %4ld                                        ", AOconf[loop].NBDMmodes);
+    printw(" ALL   %4ld                                        ", AOconf[loop].AOpmodecoeffs.NBDMmodes);
     printw("  |  %8.2f  %8.2f  ->  %8.2f", 1000.0*AOconf[loop].AOpmodecoeffs.ALLave_Crms, 1000.0*AOconf[loop].AOpmodecoeffs.ALLave_OLrms, 1000.0*AOconf[loop].AOpmodecoeffs.ALLave_WFSrms);
 
     attron(A_BOLD);
     printw("   %5.3f  ", AOconf[loop].AOpmodecoeffs.ALLave_WFSrms/AOconf[loop].AOpmodecoeffs.ALLave_OLrms);
     attroff(A_BOLD);
 
-    printw("| %2ld | %9.3f  %6.2f\% |\n", k, AOconf[loop].AOpmodecoeffs.ALLave_limFrac,  100.0*AOconf[loop].AOpmodecoeffs.ALLave_limFrac/AOconf[loop].NBDMmodes);
+    printw("| %2ld | %9.3f  %6.2f\% |\n", k, AOconf[loop].AOpmodecoeffs.ALLave_limFrac,  100.0*AOconf[loop].AOpmodecoeffs.ALLave_limFrac/AOconf[loop].AOpmodecoeffs.NBDMmodes);
 
     printw("\n");
 
@@ -375,8 +375,8 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
     print_header(" [ gain 1000xlimit  mult ] MODES [nm]    DM correction -- WFS value -- WFS average -- WFS RMS     ", '-');
 
 
-    if(kmax>AOconf[loop].NBDMmodes)
-        kmax = AOconf[loop].NBDMmodes;
+    if(kmax>AOconf[loop].AOpmodecoeffs.NBDMmodes)
+        kmax = AOconf[loop].AOpmodecoeffs.NBDMmodes;
 
     col = 0;
     for(k=0; k<kmax; k++)
@@ -415,7 +415,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
 
         // Time average
-        val = data.image[IDmodevalave].array.F[(ksize-1)*AOconf[loop].NBDMmodes+k];
+        val = data.image[IDmodevalave].array.F[(ksize-1)*AOconf[loop].AOpmodecoeffs.NBDMmodes+k];
         if(fabs(val)>AVElim)
         {
             attron(A_BOLD | COLOR_PAIR(2));
@@ -427,7 +427,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
 
         // RMS variation
-        val = sqrt(data.image[IDmodevalrms].array.F[(ksize-1)*AOconf[loop].NBDMmodes+k]);
+        val = sqrt(data.image[IDmodevalrms].array.F[(ksize-1)*AOconf[loop].AOpmodecoeffs.NBDMmodes+k]);
         if(fabs(val)>RMSlim)
         {
             attron(A_BOLD | COLOR_PAIR(2));

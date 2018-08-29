@@ -925,9 +925,9 @@ int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
         aoloopcontrol_var.aoconfID_dmRM = read_sharedmem_image(AOconf[LOOPNUMBER].DMctrl.dmRMname);
 
 
-    if((index<0)||(index>AOconf[LOOPNUMBER].NBDMmodes-1))
+    if((index<0)||(index>AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes-1))
     {
-        printf("Invalid mode index... must be between 0 and %ld\n", AOconf[LOOPNUMBER].NBDMmodes);
+        printf("Invalid mode index... must be between 0 and %ld\n", AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes);
     }
     else
     {
