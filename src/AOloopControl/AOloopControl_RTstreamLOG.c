@@ -978,6 +978,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer==0)
                     {
+						initOK = 1;
                         sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 
                         sprintf(fulldir0, "%s", dirname);
@@ -1065,8 +1066,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring,
 								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring
 							);
-							system(command);
-							
+							system(command);							
 						}
                     }
 
