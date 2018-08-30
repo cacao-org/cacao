@@ -515,11 +515,11 @@ EOF
 	ir0cs)
 aoconflogext "(re-)start ircam0 scexao2 -> scexao TCP transfer"
 ssh scexao@scexao2 "/home/scexao/src/hardw-cred2/src/imgtakeCPUconf"
-/home/scexao/bin/getTCPscexao2im -s ircam -r ircam0com ircam0 30101
+/home/scexao/bin/getTCPscexao2im -s ircam -r ircam0com ircam0 30102
 ;;
 	ir0ck)
 aoconflogext "kill ircam0 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k ircam0 30101
+/home/scexao/bin/getTCPscexao2im -k ircam0 30102
 ;;
 
 # ircam1      scexao2->scexao, port 30102
