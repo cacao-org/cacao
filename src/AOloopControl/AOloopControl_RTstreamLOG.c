@@ -1082,7 +1082,21 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                             free(imsize);
                         }
                         destptrBuff = data.image[IDout].array.F + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-                        memcpy((void*) destptrBuff, (void*) data.image[ID].array.F, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                        
+                        switch (data.image[IDout].md[0].atype)
+                        {
+							case _DATATYPE_UINT16:
+							memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI16, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE)
+							break;
+							
+							case _DATATYPE_FLOAT:
+							memcpy((void*) destptrBuff, (void*) data.image[ID].array.F, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+							break;
+							
+							case _DATATYPE_DOUBLE:
+							memcpy((void*) destptrBuff, (void*) data.image[ID].array.D, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+							break;
+						}
                     }
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == 0)
