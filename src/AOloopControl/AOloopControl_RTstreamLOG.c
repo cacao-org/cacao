@@ -50,11 +50,11 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 int AOloopControl_RTstreamLOG_init(int loop)
 {
 	long i;
-	long SIZEwfsim = 2000;
-	long SIZEdm = 2000;
+	long SIZEwfsim = 3000;
+	long SIZEdm = 3000;
 	
 	// default
-	AOconf[loop].RTLOGsize = 20000;
+	AOconf[loop].RTLOGsize = 90000;
 	
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
         {
@@ -68,7 +68,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			AOconf[loop].RTSLOGarray[i].saveToggle = 0;
 			AOconf[loop].RTSLOGarray[i].NBcubeSaved = -1;
 			
-			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 5;
+			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 1;
 			AOconf[loop].RTSLOGarray[i].FileBuffer   = 0;
         }
 	
@@ -865,9 +865,16 @@ int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)
 
 
 
-//
-// loop waits for buffer to be ready and then saves it
-//
+/**
+ * 
+ * loop monitors multiple buffers
+ * 
+ * Waits for small buffers to be ready, assembles larger buffer and saves
+ * 
+ * Routine is designed to only occupy two threads: one to monitor, one to save
+ * 
+ * Takes timing data from the processes that create the data to achieve high performance timing
+ */
 
 int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 {
@@ -877,6 +884,14 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
     int sleeptimeus = 1000; // 1 ms
     long sleepcnt = 0;
 
+/*
+	pthread_t thread_savefits;
+	int tOK = 0;
+    int iret_savefits;
+    //	char tmessage[500];
+    struct savethreadmsg *tmsg = malloc(sizeof(struct savethreadmsg));
+
+*/
 
 
     tzset();
@@ -1036,13 +1051,24 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
 
+
+
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer==1)
                     {
                         ID = image_ID(shmimname);
                         zsizesave = data.image[ID].md[0].size[2];
                         data.image[ID].md[0].size[2] = NBframe;
+                        
+                        
+                        
+                        
                         save_fits(shmimname, fnameFITS);
+                        
+                        
                         data.image[ID].md[0].size[2] = zsizesave;
+                        
+                        
+                        
                     }
                     else
                     {
@@ -1110,7 +1136,14 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     for(i=0; i<NBframe; i++)
                     {
                         long double t1 = data.image[IDininfo].array.UI64[i*5+1] + 1.0e-9*data.image[IDininfo].array.UI64[i*5+2];
-                        fprintf(fp, "%10ld  %10ld  %15.9lf   %010ld.%09ld  %10ld   %10ld\n", i+NBframe*AOconf[loop].RTSLOGarray[rtlindex].FileBuffer, data.image[IDininfo].array.UI64[i*5], (double) (t1-t0), data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], data.image[IDininfo].array.UI64[i*5+3], data.image[IDininfo].array.UI64[i*5+4]);
+                        fprintf(fp, "%10ld  %10ld  %15.9lf   %010ld.%09ld  %10ld   %10ld\n", 
+							i+NBframe*AOconf[loop].RTSLOGarray[rtlindex].FileBuffer, 
+							data.image[IDininfo].array.UI64[i*5], 
+							(double) (t1-t0), 
+							data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], 
+							data.image[IDininfo].array.UI64[i*5+3], 
+							data.image[IDininfo].array.UI64[i*5+4]
+							);
                     }
                     fclose(fp);
 
