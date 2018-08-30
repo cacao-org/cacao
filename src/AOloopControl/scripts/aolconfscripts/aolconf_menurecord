@@ -347,6 +347,43 @@ else
 menuitems+=( "lircam0OFF" "$stoplogstring" )
 fi
 
+streamname="ircam1"
+infostring="IR camera 1"
+logwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "lircam1ON" "$startlogstring" )
+else
+menuitems+=( "lircam1OFF" "$stoplogstring" )
+fi
+
+streamname="ircam2"
+infostring="IR camera 2"
+logwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "lircam2ON" "$startlogstring" )
+else
+menuitems+=( "lircam2OFF" "$stoplogstring" )
+fi
+
+streamname="vcamim0"
+infostring="VAMPIRES camera 0"
+logwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "lvcam0ON" "$startlogstring" )
+else
+menuitems+=( "lvcam0OFF" "$stoplogstring" )
+fi
+
+streamname="vcamim1"
+infostring="VAMPIRES camera 1"
+logwritestartstopstrings
+if [ "${logstat}" = "0" ]; then
+menuitems+=( "lvcam1ON" "$startlogstring" )
+else
+menuitems+=( "lvcam1OFF" "$stoplogstring" )
+fi
+
+
 
 
 menuitems+=( " " " " )
@@ -1016,6 +1053,68 @@ skstreamlog "$streamname"
 echo "0" > "./status/stat_log_${streamname}.txt"
 menurecord_default="lircam0ON"
 ;;
+
+
+    lircam1ON)
+streamname="ircam1"
+startstreamlog "$streamname" $LogCubeSize
+echo "1" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lircam1OFF"
+;;
+    lircam1OFF)
+streamname="ircam1"
+skstreamlog "$streamname"
+echo "0" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lircam1ON"
+;;
+
+
+    lircam2ON)
+streamname="ircam2"
+startstreamlog "$streamname" $LogCubeSize
+echo "1" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lircam2OFF"
+;;
+    lircam2OFF)
+streamname="ircam2"
+skstreamlog "$streamname"
+echo "0" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lircam2ON"
+;;
+
+
+
+    lvcam0ON)
+streamname="vcam0"
+startstreamlog "$streamname" $LogCubeSize
+echo "1" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lvcam0OFF"
+;;
+    lvcam0OFF)
+streamname="vcam0"
+skstreamlog "$streamname"
+echo "0" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lvcam0ON"
+;;
+
+
+    lvcam1ON)
+streamname="vcam1"
+startstreamlog "$streamname" $LogCubeSize
+echo "1" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lvcam1OFF"
+;;
+    lvcam1OFF)
+streamname="vcam1"
+skstreamlog "$streamname"
+echo "0" > "./status/stat_log_${streamname}.txt"
+menurecord_default="lvcam1ON"
+;;
+
+
+
+
+
 
 
 

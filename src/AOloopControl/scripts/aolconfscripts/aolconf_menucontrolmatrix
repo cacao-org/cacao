@@ -45,6 +45,7 @@ menuitems+=( "SVDla" "            SVD limit for full built           ${SVDlimall
 # ConfReadParam  ""; =${paramvalue}
 
 
+# If DM is modal, then we can break the control matrix in blocks of modes
 if [ "$DMMODE" = "1" ]; then
 
 ConfReadParam NBmodeblocks "01"; NBmodeblocks="${paramvalue}"
@@ -629,7 +630,7 @@ echo "01" > conf_staged/param_NBmodeblocks.txt
 mkdir -p zcontrM
 datestr=`date -u +%Y-%m-%d_%H:%M:%S`
 ./auxscripts/aolRM2CM ${SVDlimall} zcontrM.fits
-mv zcontrM.fits ./zcontrM//zcontrM_${datestr}.fits
+mv zcontrM.fits ./zcontrM/zcontrM_${datestr}.fits
 echo "zcontrM/zcontrM_${datestr}.fits" > ./conf_staged/shmim_contrM.name.txt
 echo "zcontrM/zcontrM_${datestr}.fits" > ./conf_staged/shmim_contrM00.name.txt
 echo "conf/aol${LOOPNUMBER}_DMmodes_zonal.fits" > ./conf_staged/shmim_DMmodes.name.txt
