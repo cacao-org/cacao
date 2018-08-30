@@ -18,6 +18,9 @@ echo "$delayRM1us" > ./conf/param_delayRM1us.txt
 }
 
 
+
+
+
 # =====================================================
 # =============== CONFIGURE AO LOOP ===================
 # =====================================================
@@ -422,6 +425,9 @@ menuitems+=( "wfsref0" "$menustring" )
 
 menuitems+=(" " " ")
 
+
+
+## If the DM is modal, do not compute/apply DM spatial masks
 if [ "$DMMODE" = "0" ]; then
 
 ConfReadParam DMmaskRMp0 "0.2"; DMmaskRMp0="$paramvalue"
@@ -435,6 +441,9 @@ menuitems+=( "DMmaskRMp1"  "            DM mask RM: high level percentile       
 
 ConfReadParam DMmaskRMc1 "0.5"; DMmaskRMc1="$paramvalue"
 menuitems+=( "DMmaskRMc1"  "            DM mask RM: high level coefficient                              ${DMmaskRMc1}" )
+
+fi
+
 
 ConfReadParam WFSmaskRMp0 "0.2"; WFSmaskRMp0="$paramvalue"
 menuitems+=( "WFSmaskRMp0" "            WFS mask RM: low level percentile                               ${WFSmaskRMp0}" )
@@ -459,7 +468,7 @@ else
 menuitems+=(" " "CANNOT (re-)create AO masks in AO mask LOCK mode")
 fi
 
-fi
+
 
 
 

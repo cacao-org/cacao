@@ -312,11 +312,6 @@ menuitems+=( " " " " )
 
 
 
-menuitems+=( "" "" )
-stringcenter "scexao2 streams"
-menuitems+=( "2 ->" "\Zb\Zr$string\Zn" )
-menuitems+=( " " " " )
-
 
 
 dialog --colors --title "Hardware Control" \
