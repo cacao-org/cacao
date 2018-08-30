@@ -1004,6 +1004,8 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
                     {
+						
+						
                         if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat.%03d",
                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
                                    timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
@@ -1054,8 +1056,18 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
                     {
                         AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
-                        // merge buffer files
-
+                        
+                        if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
+                        {
+							char command[500];
+							// merge buffer files
+							sprintf(command, "cat %s/aol%d_%s.%s.dat.* > %s/aol%d_%s.%s.dat",
+								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring,
+								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring
+							);
+							system(command);
+							
+						}
                     }
 
                     AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
