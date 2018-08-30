@@ -1052,16 +1052,16 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
                         ID = image_ID(shmimname);
                         zsizesave = data.image[ID].md[0].size[2];
-                        if(zsizesave>AOconf[loop].RTSLOGarray[rtlindex].SIZE-1)
+                        if(zsizesave>AOconf[loop].RTSLOGarray[rtlindex].SIZE)
                         {
-                            printf("[%s][%d] ERROR: zsizesave>AOconf[loop].RTSLOGarray[rtlindex].SIZE-1\n", __FILE__, __LINE__);
+                            printf("[%s][%d] ERROR: zsizesave>AOconf[loop].RTSLOGarray[rtlindex].SIZE\n", __FILE__, __LINE__);
                             printf("     zsizesave                                = %ld\n", zsizesave);
                             printf("     AOconf[loop].RTSLOGarray[rtlindex].SIZE  = %ld\n", AOconf[loop].RTSLOGarray[rtlindex].SIZE);
                             exit(0);
                         }
-                        if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer>AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer-1)
+                        if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer>AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
                         {
-                            printf("[%s][%d] ERROR: AOconf[loop].RTSLOGarray[rtlindex].FileBuffer>AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer-1\n", __FILE__, __LINE__);
+                            printf("[%s][%d] ERROR: AOconf[loop].RTSLOGarray[rtlindex].FileBuffer>AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer\n", __FILE__, __LINE__);
                             exit(0);
                         }
                         sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
