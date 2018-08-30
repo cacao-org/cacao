@@ -89,6 +89,10 @@ fi
 
 ConfReadParam DMMODE "0"; DMMODE="$paramvalue"
 
+ConfReadParam DMmaskMode "1"; DMmaskMode="$paramvalue"
+
+ConfReadParam WFSmaskMode "1"; WFSmaskMode="$paramvalue"
+
 ConfReadParam RMmodal "OFF"; RMmodal="$paramvalue"
 
 ConfReadParam ACzrmNBcycle "5"; ACzrmNBcycle="$paramvalue"
@@ -267,7 +271,7 @@ echo "##########################################"
 #
 ./auxscripts/aolmkMasks
 
-if [ "$DMMODE" = "1" ]; then  # set dmmaskRM.fits to 1.0 over all pixels
+if [ "$DMmaskMode" = "0" ]; then  # set dmmaskRM.fits to 1.0 over all pixels
 $execname << EOF
 readshmim aol${LOOPNUMBER}_dmC
 im0=0*aol${LOOPNUMBER}_dmC
@@ -286,7 +290,7 @@ fi
 #	dmmask.fits    (overwrite)
 #
 
-if [ "$DMMODE" = "0" ]; then
+if [ "$DMmaskMode" = "1" ]; then
 ./auxscripts/mkDMslaveActprox dmmaskRM.fits 2.5
 else # set dmmask to 1, dmslaved to 0
 $execname << EOF
