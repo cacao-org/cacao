@@ -946,7 +946,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     long TSnsec;
 
                     struct tm *uttime;
-                   // char timestring[100];
+                    // char timestring[100];
                     char fulldir0[500];
                     char fulldir1[500];
                     char fulldir2[500];
@@ -977,33 +977,36 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     uttime = gmtime(&TSsec);
 
 
-                        sprintf(AOconf[loop].RTSLOGarray[rtlindex].timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
+                    sprintf(AOconf[loop].RTSLOGarray[rtlindex].timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 
-                        sprintf(fulldir0, "%s", dirname);
-                        sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
-                        sprintf(fulldir2, "%s/aol%d_%s", fulldir1, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+                    if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == 0)
+                        sprintf(AOconf[loop].RTSLOGarray[rtlindex].timestring0, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
+
+                    sprintf(fulldir0, "%s", dirname);
+                    sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
+                    sprintf(fulldir2, "%s/aol%d_%s", fulldir1, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
 
 
-                        struct stat st = {0};
+                    struct stat st = {0};
 
-                        if (stat(fulldir0, &st) == -1) {
-                            printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir0);
-                            mkdir(fulldir0, 0777);
-                        }
-                        if (stat(fulldir1, &st) == -1) {
-                            printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir1);
-                            mkdir(fulldir1, 0777);
-                        }
-                        if (stat(fulldir2, &st) == -1) {
-                            printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir2);
-                            mkdir(fulldir2, 0777);
-                        }
-					
-					
+                    if (stat(fulldir0, &st) == -1) {
+                        printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir0);
+                        mkdir(fulldir0, 0777);
+                    }
+                    if (stat(fulldir1, &st) == -1) {
+                        printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir1);
+                        mkdir(fulldir1, 0777);
+                    }
+                    if (stat(fulldir2, &st) == -1) {
+                        printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir2);
+                        mkdir(fulldir2, 0777);
+                    }
+
+
 
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
-                    {	
+                    {
                         if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat.%03d",
                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
                                    AOconf[loop].RTSLOGarray[rtlindex].timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
@@ -1053,17 +1056,17 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
                     {
                         AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
-                        
+
                         if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
                         {
-							char command[500];
-							// merge buffer files
-							sprintf(command, "cat %s/aol%d_%s.%s.dat.* > %s/aol%d_%s.%s.dat",
-								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring,
-								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring
-							);
-							system(command);							
-						}
+                            char command[500];
+                            // merge buffer files
+                            sprintf(command, "cat %s/aol%d_%s.%s.dat.* > %s/aol%d_%s.%s.dat",
+                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring,
+                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring0
+                                   );
+                            system(command);
+                        }
                     }
 
                     AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;

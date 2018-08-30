@@ -166,7 +166,8 @@ typedef struct
     
     int NBFileBuffer;             // Number of buffers per big file
 	int FileBuffer;               // File buffer index
-	char timestring[100];         // timestring for file to be saved to
+	char timestring[100];         // current timestring
+	char timestring0[100];        // timestring for file to be saved to
 	
 } RTstreamLOG;
 
