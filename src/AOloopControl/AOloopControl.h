@@ -158,7 +158,7 @@ typedef struct
     char *destptr0;               // destination pointer 0
     char *destptr1;               // destination pointer 1
 
-    size_t memsize;               // size of stream
+    size_t memsize;               // size of stream frame (byte)
 
     int NBcubeSaved;              // Number of cubes to save, default = -1
     
