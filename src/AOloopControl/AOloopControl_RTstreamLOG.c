@@ -861,6 +861,10 @@ int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)
 
 
 
+
+
+
+
 //
 // loop waits for buffer to be ready and then saves it
 //
@@ -874,7 +878,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
     long sleepcnt = 0;
 
 
-	
+
     tzset();
 
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -884,7 +888,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
     printf("\n");
 
 
-
+    long double t0; // time reference for differential timer
     for(;;)
     {
         cntsave = 0;
@@ -892,40 +896,40 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
         {
             if(AOconf[loop].RTSLOGarray[rtlindex].save == 1)
             {
-				int buff;
-				int SAVEfile = 0; // toggles to 1 if file needs to be saved
-				
+                int buff;
+                int SAVEfile = 0; // toggles to 1 if file needs to be saved
+
                 // support for saving partial cube if loop turns off
                 long NBframe;
                 uint32_t ID;
                 uint32_t zsizesave;
 
-				if(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0) // FULL CUBE
-				{
-					SAVEfile = 1;
-					NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-					buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle - 1; // buffindex to save
-					
-					// in case a finite number of full cubes is to be saved
-					if(AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved >= 0)
-						{
-							AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved --;
-						}
-					if(AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved == 0)
-						AOconf[loop].RTSLOGarray[rtlindex].save = 0;
-				}
-				else // TEST if loop is off and partial buffer needs to be saved
-				{
-					if((AOconf[loop].aorun.on == 0)&&(AOconf[loop].RTSLOGarray[rtlindex].frameindex>0))
-					{
-						SAVEfile = 1;
-						NBframe = AOconf[loop].RTSLOGarray[rtlindex].frameindex;
-						buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
-						AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
-						printf("------- LOOP OFF -> SAVING PARTIAL CUBE\n");
-					}
-					
-				}
+                if(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0) // FULL CUBE
+                {
+                    SAVEfile = 1;
+                    NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                    buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle - 1; // buffindex to save
+
+                    // in case a finite number of full cubes is to be saved
+                    if(AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved >= 0)
+                    {
+                        AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved --;
+                    }
+                    if(AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved == 0)
+                        AOconf[loop].RTSLOGarray[rtlindex].save = 0;
+                }
+                else // TEST if loop is off and partial buffer needs to be saved
+                {
+                    if((AOconf[loop].aorun.on == 0)&&(AOconf[loop].RTSLOGarray[rtlindex].frameindex>0))
+                    {
+                        SAVEfile = 1;
+                        NBframe = AOconf[loop].RTSLOGarray[rtlindex].frameindex;
+                        buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
+                        AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
+                        printf("------- LOOP OFF -> SAVING PARTIAL CUBE\n");
+                    }
+
+                }
 
 
 
@@ -961,7 +965,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 
 
-
                     if((IDin = image_ID(shmimname))==-1)
                         IDin = read_sharedmem_image(shmimname);
 
@@ -973,40 +976,54 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     TSnsec = data.image[IDininfo].array.UI64[2];
                     uttime = gmtime(&TSsec);
 
+                    if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer==0)
+                    {
+                        sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
+
+                        sprintf(fulldir0, "%s", dirname);
+                        sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
+                        sprintf(fulldir2, "%s/aol%d_%s", fulldir1, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
 
 
-                    sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
+                        struct stat st = {0};
 
-                    sprintf(fulldir0, "%s", dirname);
-                    sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
-                    sprintf(fulldir2, "%s/aol%d_%s", fulldir1, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
-
-
-                    struct stat st = {0};
-
-                    if (stat(fulldir0, &st) == -1) {
-                        printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir0);
-                        mkdir(fulldir0, 0777);
+                        if (stat(fulldir0, &st) == -1) {
+                            printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir0);
+                            mkdir(fulldir0, 0777);
+                        }
+                        if (stat(fulldir1, &st) == -1) {
+                            printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir1);
+                            mkdir(fulldir1, 0777);
+                        }
+                        if (stat(fulldir2, &st) == -1) {
+                            printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir2);
+                            mkdir(fulldir2, 0777);
+                        }
                     }
-                    if (stat(fulldir1, &st) == -1) {
-                        printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir1);
-                        mkdir(fulldir1, 0777);
+
+
+                    if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
+                    {
+                        if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat.%03d",
+                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
+                                   timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
+                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+                        if(sprintf(fname, "%s/aol%d_%s.%s.fits.%03d",
+                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
+                                   timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
+                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
                     }
-                    if (stat(fulldir2, &st) == -1) {
-                        printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir2);
-                        mkdir(fulldir2, 0777);
+                    else
+                    {
+                        if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat",
+                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+
+                        if(sprintf(fname, "%s/aol%d_%s.%s.fits",
+                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
                     }
-
-
-                    if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat.%03d", 
-						fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, 
-						timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
-                    if(sprintf(fname, "%s/aol%d_%s.%s.fits.%03d", 
-						fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, 
-						timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 
 
@@ -1022,8 +1039,9 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     save_fits(shmimname, fname);
                     data.image[ID].md[0].size[2] = zsizesave;
 
+                    if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == 0)
+                        t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 
-                    long double t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
                     fp = fopen(fnameinfo, "w");
                     for(i=0; i<NBframe; i++)
                     {
@@ -1032,9 +1050,14 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     }
                     fclose(fp);
 
-					AOconf[loop].RTSLOGarray[rtlindex].FileBuffer++;
+                    AOconf[loop].RTSLOGarray[rtlindex].FileBuffer++;
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
-						AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
+                    {
+                        AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
+                        // merge buffer files
+
+                    }
+
                     AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
                     cntsave++;
                 }
