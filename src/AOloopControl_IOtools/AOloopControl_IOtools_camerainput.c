@@ -768,8 +768,8 @@ int_fast8_t Read_cam_frame(
         break;
     }
 	
-	printf("WFS size = %ld\n", AOconf[loop].WFSim.sizeWFS);
-	fflush(stdout);
+//	printf("WFS size = %ld\n", AOconf[loop].WFSim.sizeWFS);
+//	fflush(stdout);
 
 
     if(RM==0)
