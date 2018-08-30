@@ -1086,7 +1086,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                         switch (data.image[IDout].md[0].atype)
                         {
 							case _DATATYPE_UINT16:
-							memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI16, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE)
+							memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI16, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
 							break;
 							
 							case _DATATYPE_FLOAT:
@@ -1096,6 +1096,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 							case _DATATYPE_DOUBLE:
 							memcpy((void*) destptrBuff, (void*) data.image[ID].array.D, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
 							break;
+							
 						}
                     }
 
