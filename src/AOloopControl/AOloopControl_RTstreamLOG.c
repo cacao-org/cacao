@@ -946,7 +946,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     long TSnsec;
 
                     struct tm *uttime;
-                    char timestring[100];
+                    //char timestring[100];
                     char fulldir0[500];
                     char fulldir1[500];
                     char fulldir2[500];
@@ -976,9 +976,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     TSnsec = data.image[IDininfo].array.UI64[2];
                     uttime = gmtime(&TSsec);
 
-                    if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer==0)
-                    {
-                        sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
+                        sprintf(AOconf[loop].RTSLOGarray[rtlindex].timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 
                         sprintf(fulldir0, "%s", dirname);
                         sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
@@ -999,7 +997,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                             printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir2);
                             mkdir(fulldir2, 0777);
                         }
-                    }
 
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
@@ -1008,29 +1005,29 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 						
                         if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat.%03d",
                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
-                                   timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
+                                   AOconf[loop].RTSLOGarray[rtlindex].timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
                             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
                         if(sprintf(fname, "%s/aol%d_%s.%s.fits.%03d",
                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
-                                   timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
+                                   AOconf[loop].RTSLOGarray[rtlindex].timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
                             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
                     }
                     else
                     {
                         if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat",
-                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring) < 1)
                             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
                         if(sprintf(fname, "%s/aol%d_%s.%s.fits",
-                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring) < 1)
+                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring) < 1)
                             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
                     }
 
 
 
 
-                    printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, timestring);
+                    printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, AOconf[loop].RTSLOGarray[rtlindex].timestring);
                     printf("       %s -> %s\n", shmimname    , fname);
                     printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
 
@@ -1062,8 +1059,8 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 							char command[500];
 							// merge buffer files
 							sprintf(command, "cat %s/aol%d_%s.%s.dat.* > %s/aol%d_%s.%s.dat",
-								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring,
-								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, timestring
+								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring,
+								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring
 							);
 							system(command);							
 						}
