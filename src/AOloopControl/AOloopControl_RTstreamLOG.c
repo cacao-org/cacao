@@ -1098,7 +1098,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 							printf("END       =  %ld\n", AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE + AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
 							// AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*
 							
-							destptrBuff = (char*) data.image[IDout].array.UI16 + (char*) AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+							destptrBuff = (char*) data.image[IDout].array.UI16 + AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
 							
 							memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI16, 
 								AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
