@@ -375,6 +375,9 @@ menuitems+=( "zrespM" "$menustring" )
 
 
 
+
+
+# Using Hadamard encoding ?
 ConfReadParam RMpokeMode "0"; RMpokeMode="$paramvalue"
 if [ "${RMpokeMode}" -eq "0" ]; then
 	menuitems+=( "Hon" "\ZbHadamard mode is OFF\ZB   press to turn on")
@@ -382,8 +385,7 @@ if [ "${RMpokeMode}" -eq "0" ]; then
 	menuitems+=( "Hoff" "\Zr\Z2Hadamard mode is ON\Zn    press to turn off")
 fi
 
-
-
+# Normalize WFS stream ?
 ConfReadParam WFSnorm "1"; WFSnorm="$paramvalue"
 if [ "${WFSnorm}" -eq "0" ]; then
 menuitems+=( "WFSNon" "\ZbWFS normalize is OFF\ZB   press to turn on")
@@ -391,7 +393,21 @@ else
 menuitems+=( "WFSNoff" "\Zr\Z2WFS normalize is ON\Zn    press to turn off")
 fi
 
+# Compute/apply WFS masks ?
+ConfReadParam WFSmaskMode "1"; WFSmaskMode="$paramvalue"
+if [ "${WFSmaskMode}" -eq "0" ]; then
+menuitems+=( "WFSMon" "\ZbWFS masking is OFF\ZB   press to turn on")
+else
+menuitems+=( "WFSMoff" "\Zr\Z2WFS masking is ON\Zn    press to turn off")
+fi
 
+# Compute/apply DM masks ?
+ConfReadParam DMmaskMode "1"; DMmaskMode="$paramvalue"
+if [ "${DMmaskMode}" -eq "0" ]; then
+menuitems+=( "DMMon" "\ZbDM masking is OFF\ZB   press to turn on")
+else
+menuitems+=( "DMMoff" "\Zr\Z2DM masking is ON\Zn    press to turn off")
+fi
 
 
 
@@ -1376,6 +1392,10 @@ esac
 
 
 
+
+
+
+
 	Hon)
 echo "1" > ./conf/param_RMpokeMode.txt
 ./auxscripts/mkHpoke 
@@ -1406,6 +1426,45 @@ echo "0" > ./conf/param_WFSnorm.txt
 aoconflogext "RM: set WFS normalize OFF"
 menucontrolloop_default="WFSNon"
 ;;
+
+
+    WFSMon)
+echo "1" > ./conf/param_WFSmaskMode.txt
+aoconflogext "RM: set WFS masking ON"
+menucontrolloop_default="WFSMoff"
+;;
+    WFSMoff)
+echo "0" > ./conf/param_WFSmaskMode.txt
+aoconflogext "RM: set WFS masking OFF"
+menucontrolloop_default="WFSMon"
+;;
+
+    DMMon)
+echo "1" > ./conf/param_DMmaskMode.txt
+aoconflogext "RM: set DM masking ON"
+menucontrolloop_default="DMMoff"
+;;
+    DMMoff)
+echo "0" > ./conf/param_DMmaskMode.txt
+aoconflogext "RM: set DM masking OFF"
+menucontrolloop_default="DMMon"
+;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #	zresp_on)
 #function_zresp_on
