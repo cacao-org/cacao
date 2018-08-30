@@ -181,7 +181,6 @@ fi
 
 
 
-
 ConfReadParam DMvolt_mode "0"; DMvolt_mode="$paramvalue"
 
 
