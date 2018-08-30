@@ -1026,7 +1026,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 
 
-
                     printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, AOconf[loop].RTSLOGarray[rtlindex].timestring);
                     printf("       %s -> %s\n", shmimname    , fname);
                     printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
