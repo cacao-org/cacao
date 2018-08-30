@@ -109,6 +109,7 @@ menuitems+=( "dm2dmM" "[${OKstr}] DM to DM output modes        \Z4\Zbaol${LOOPNU
 fi
 
 
+# DM output 
 dm2dmOfile="/tmp/aol${LOOPNUMBER}_dm2dmO.im.shm"
 if [ -f $dmd2dmMfile ]; then
 sizestring=$( head -1 conf/streamlink_dm2dmO.imsize.txt )
@@ -170,10 +171,10 @@ if [ -f $dmwrefOfile ]; then
 sizestring=$( head -1 conf/streamlink_dmwrefO.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmwrefO.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
-menuitems+=( "dmwrefO" "[\Z2\Zr${OKstr}\Zn] WFS zp output stream        \Z4\Zbaol${LOOPNUMBER}_dmwrefRM\Zn -> \Z4${streamname}\Zn" )
+menuitems+=( "dmwrefO" "[\Z2\Zr${OKstr}\Zn] WFS zp output stream        \Z4\Zbaol${LOOPNUMBER}_dmwrefO\Zn -> \Z4${streamname}\Zn" )
 else
 OKstr="\Z1\Zb  MISSING \Zn"
-menuitems+=( "dmwrefO" "[${OKstr}] WFS zp output stream        \Z4\Zbaol${LOOPNUMBER}_dmwrefRM\Zn -> \Z1${streamname}\Zn" )
+menuitems+=( "dmwrefO" "[${OKstr}] WFS zp output stream        \Z4\Zbaol${LOOPNUMBER}_dmwrefO\Zn -> \Z1${streamname}\Zn" )
 confOK=0
 fi
 
