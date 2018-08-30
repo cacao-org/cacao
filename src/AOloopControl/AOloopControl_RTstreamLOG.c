@@ -1072,7 +1072,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                             uint8_t atype;
                             int SHARED = 0;
 
-
                             imsize = (uint32_t*) malloc(sizeof(uint32_t)*3);
                             imsize[0] = data.image[ID].md[0].size[0];
                             imsize[1] = data.image[ID].md[0].size[1];
@@ -1087,10 +1086,15 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                         {
 							case _DATATYPE_UINT16:
 							list_image_ID();
+							
 							printf("OFFSET    =  %ld\n", AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+							
 							printf("BUFF SIZE =  %ld\n", 2*data.image[ID].md[0].size[0]*data.image[ID].md[0].size[1]*AOconf[loop].RTSLOGarray[rtlindex].SIZE*AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer);
+							
 							printf("END       =  %ld\n", AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE + AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
-							destptrBuff = data.image[IDout].array.UI16 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+							
+							destptrBuff = data.image[IDout].array.UI16;// + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+							
 							memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI16, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
 							break;
 							
