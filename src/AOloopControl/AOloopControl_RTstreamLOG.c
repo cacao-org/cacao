@@ -1138,9 +1138,9 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                             sprintf(command, "rm %s/aol%d_%s.*.dat.0*", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
                             system(command);
 
-                            //char OutBuffIm[200];
-                            //sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
-                            //save_fits(OutBuffIm, fnameFITS);
+                            char OutBuffIm[200];
+                            sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+                            save_fits(OutBuffIm, fnameFITS);
                         }
 
                         AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
