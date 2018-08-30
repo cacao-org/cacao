@@ -946,7 +946,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     long TSnsec;
 
                     struct tm *uttime;
-                    //char timestring[100];
+                    char timestring[100];
                     char fulldir0[500];
                     char fulldir1[500];
                     char fulldir2[500];
@@ -976,7 +976,8 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                     TSnsec = data.image[IDininfo].array.UI64[2];
                     uttime = gmtime(&TSsec);
 
-                        sprintf(AOconf[loop].RTSLOGarray[rtlindex].timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
+
+                        sprintf(timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 
                         sprintf(fulldir0, "%s", dirname);
                         sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
@@ -997,12 +998,13 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                             printf("\033[1;31m CREATING DIRECTORY %s \033[0m\n", fulldir2);
                             mkdir(fulldir2, 0777);
                         }
+					
+					if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == 0)
+						strcpy(AOconf[loop].RTSLOGarray[rtlindex].timestring, timestring);
 
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
-                    {
-						
-						
+                    {	
                         if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat.%03d",
                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
                                    AOconf[loop].RTSLOGarray[rtlindex].timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
@@ -1057,8 +1059,8 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                         {
 							char command[500];
 							// merge buffer files
-							sprintf(command, "cat %s/aol%d_%s.%s.dat.* > %s/aol%d_%s.%s.dat",
-								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring,
+							sprintf(command, "cat %s/aol%d_%s.*.dat.* > %s/aol%d_%s.%s.dat",
+								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, 
 								fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring
 							);
 							system(command);							
