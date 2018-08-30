@@ -50,11 +50,11 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 int AOloopControl_RTstreamLOG_init(int loop)
 {
 	long i;
-	long SIZEwfsim = 1000;
-	long SIZEdm = 1000;
+	long SIZEwfsim = 2000;
+	long SIZEdm = 2000;
 	
 	// default
-	AOconf[loop].RTLOGsize = 10000;
+	AOconf[loop].RTLOGsize = 20000;
 	
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
         {
@@ -68,7 +68,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			AOconf[loop].RTSLOGarray[i].saveToggle = 0;
 			AOconf[loop].RTSLOGarray[i].NBcubeSaved = -1;
 			
-			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 10;
+			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 5;
 			AOconf[loop].RTSLOGarray[i].FileBuffer   = 0;
         }
 	
