@@ -443,8 +443,9 @@ menuitems+=(" " " ")
 
 
 
-## If the DM is modal, do not compute/apply DM spatial masks
-if [ "$DMMODE" = "0" ]; then
+## If the DM is modal, usually do not compute/apply DM spatial masks
+
+if [ "$DMmaskMode" = "1" ]; then
 
 ConfReadParam DMmaskRMp0 "0.2"; DMmaskRMp0="$paramvalue"
 menuitems+=( "DMmaskRMp0"  "            DM mask RM: low level percentile                                ${DMmaskRMp0}" )
@@ -461,6 +462,8 @@ menuitems+=( "DMmaskRMc1"  "            DM mask RM: high level coefficient      
 fi
 
 
+if [ "$WFSmaskMode" = "1" ]; then
+
 ConfReadParam WFSmaskRMp0 "0.2"; WFSmaskRMp0="$paramvalue"
 menuitems+=( "WFSmaskRMp0" "            WFS mask RM: low level percentile                               ${WFSmaskRMp0}" )
 
@@ -475,6 +478,8 @@ menuitems+=( "WFSmaskRMc1" "            WFS mask RM: high level coefficient     
 
 ConfReadParam WFSmaskSNRr "0.05"; WFSmaskSNRr="$paramvalue"
 menuitems+=( "WFSmaskSNRr" "            WFS mask RN: fraction of pixels rejected for poor SNR           ${WFSmaskSNRr}" )
+
+fi
 
 
 
