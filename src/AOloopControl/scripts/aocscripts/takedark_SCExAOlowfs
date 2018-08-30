@@ -1,0 +1,39 @@
+#!/bin/bash
+
+EXPECTED_ARGS=0
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo
+  echo "------ Take Dark Image ------"
+  echo
+#  echo "  INPUT : Number of frames" 
+  echo "  OUTPUT: dark.fits"
+  exit
+fi
+
+NBframes=10000
+
+loopnb=$( head -1 LOOPNUMBER)
+
+ssh scexao@scexaoCTRL "/home/scexao/devices/lowfs_block"
+sleep 1
+
+mkdir -p wfsdark
+
+datestr=`date -u +%Y-%m-%d_%H:%M:%S`
+
+cacao -n takedark << EOF
+readshmim aol${loopnb}_wfsim
+imgstreamave aol${loopnb}_wfsim $NBframes dark 0 1
+savefits dark "!./wfsdark/wfsdark_${datestr}.fits"
+#cpsh dark aol${loopnb}_wfsdark
+exit
+EOF
+
+echo "wfsdark/wfsdark_${datestr}.fits" > conf/shmim_wfsdark.name.txt
+
+ssh scexao@scexaoCTRL "/home/scexao/devices/lowfs_block"
+
+
+
