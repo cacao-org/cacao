@@ -1091,7 +1091,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 							printf("BUFF SIZE =  %ld\n", 2*data.image[ID].md[0].size[0]*data.image[ID].md[0].size[1]*AOconf[loop].RTSLOGarray[rtlindex].SIZE*AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer);
 							printf("END       =  %ld\n", AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE + AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
 							destptrBuff = data.image[IDout].array.UI16 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-							memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI16, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+						//	memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI16, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
 							break;
 							
 							case _DATATYPE_FLOAT:
@@ -1134,9 +1134,9 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                             sprintf(command, "rm %s/aol%d_%s.*.dat.0*", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
                             system(command);
 
-                            char OutBuffIm[200];
-                            sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
-                            save_fits(OutBuffIm, fnameFITS);
+                            //char OutBuffIm[200];
+                            //sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+                            //save_fits(OutBuffIm, fnameFITS);
                         }
 
                         AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
