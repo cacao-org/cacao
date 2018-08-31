@@ -1224,7 +1224,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                     {
                         if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
                         {
-                            char command[500];
+                            char command[1000];
                             // merge buffer files
                             sprintf(command, "( cat %s/aol%d_%s.*.dat.0* > %s/aol%d_%s.%s.dat; rm %s/aol%d_%s.*.dat.0* ) &",
                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
