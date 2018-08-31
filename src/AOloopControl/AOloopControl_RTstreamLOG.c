@@ -1226,14 +1226,16 @@ int AOloopControl_RTstreamLOG_saveloop(
                         {
                             char command[500];
                             // merge buffer files
-                            sprintf(command, "cat %s/aol%d_%s.*.dat.0* > %s/aol%d_%s.%s.dat",
+                            sprintf(command, "( cat %s/aol%d_%s.*.dat.0* > %s/aol%d_%s.%s.dat; rm %s/aol%d_%s.*.dat.0* ) &",
                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
-                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring0
+                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring0,
+                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name
                                    );
-                            system(command);
+                            if(system(command) != 0)
+								printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
 
-                            sprintf(command, "rm %s/aol%d_%s.*.dat.0*", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
-                            system(command);
+                         //   sprintf(command, "rm %s/aol%d_%s.*.dat.0*", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+                         //   system(command);
 
                             char OutBuffIm[200];
                             sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
