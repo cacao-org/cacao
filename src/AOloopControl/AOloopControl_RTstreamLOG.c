@@ -318,9 +318,12 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 
 
-//
-// write single entry in log buffer
-//
+/**
+ * ## Purpose
+ * 
+ * Write single entry in log buffer
+ * 
+ */
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
 {
     if(aoloopcontrol_var.RTSLOGarrayInitFlag[rtlindex] == 1) // ensure local ownership
@@ -865,18 +868,41 @@ int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)
 
 
 
+
+
+
 /**
- * 
- * loop monitors multiple buffers
- * 
- * Waits for small buffers to be ready, includes them in larger buffer and saves the large buffers
- * 
- * Routine is designed to only occupy two threads: one to monitor, one to save
- * 
+ * ## Purpose
+ *
+ * Monitors multiple real-time AO loop buffers and saves them to disk
+ *
+ * ## Arguments
+ *
+ * Loop index and save derectory on disk
+ *
+ * ## Use
+ *
+ * This function runs in a dedicated in a dedicated tmux session.\n
+ * It is controlled by a ncurses-based GUI.\n
+ *
+ * ## Details
+ *
+ * Each real-time process maintains, for each streams, small alternating buffers where data
+ * is written at high speed. Timing/indexing buffers are also written.
+ *
+ * This function monitors the small buffers. When a small buffer is ready/filled, it is included
+ * in a larger buffer which can be saved to disk.
+ *
+ *
+ * The routine is designed to only occupy two threads: one to monitor, one to save
+ *
  * Takes timing data from the processes that create the data to achieve high performance timing
  */
 
-int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
+int AOloopControl_RTstreamLOG_saveloop(
+    int loop,
+    char *dirname
+)
 {
     int rtlindex;
     int cntsave = 0;
@@ -884,15 +910,21 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
     int sleeptimeus = 1000; // 1 ms
     long sleepcnt = 0;
 
-/*
-	pthread_t thread_savefits;
-	int tOK = 0;
-    int iret_savefits;
-    //	char tmessage[500];
-    struct savethreadmsg *tmsg = malloc(sizeof(struct savethreadmsg));
+    /*
+    	pthread_t thread_savefits;
+    	int tOK = 0;
+        int iret_savefits;
+        //	char tmessage[500];
+        struct savethreadmsg *tmsg = malloc(sizeof(struct savethreadmsg));
 
-*/
+    */
 
+    /**
+     * ### Initialization
+     *
+     * Intialize time conversion information and AOloopControl memory
+     *
+     */
 
     tzset();
 
@@ -904,6 +936,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
 
     long double t0; // time reference for differential timer
+
     for(;;)
     {
         cntsave = 0;
@@ -943,7 +976,6 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                         AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
                         printf("------- LOOP OFF -> SAVING PARTIAL CUBE\n");
                     }
-
                 }
 
 
@@ -974,7 +1006,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
                     if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-                    if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
+                    if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinftmsg->arraycnt0[k]o%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 
@@ -1058,17 +1090,10 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                         ID = image_ID(shmimname);
                         zsizesave = data.image[ID].md[0].size[2];
                         data.image[ID].md[0].size[2] = NBframe;
-                        
-                        
-                        
-                        
+
                         save_fits(shmimname, fnameFITS);
-                        
-                        
+
                         data.image[ID].md[0].size[2] = zsizesave;
-                        
-                        
-                        
                     }
                     else
                     {
@@ -1081,8 +1106,8 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                         if(zsizesave>AOconf[loop].RTSLOGarray[rtlindex].SIZE)
                         {
                             printf("[%s][%d] ERROR: zsizesave>AOconf[loop].RTSLOGarray[rtlindex].SIZE\n", __FILE__, __LINE__);
-                            printf("     zsizesave                                = %ld\n", zsizesave);
-                            printf("     AOconf[loop].RTSLOGarray[rtlindex].SIZE  = %ld\n", AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            printf("     zsizesave                                = %d\n", zsizesave);
+                            printf("     AOconf[loop].RTSLOGarray[rtlindex].SIZE  = %d\n", AOconf[loop].RTSLOGarray[rtlindex].SIZE);
                             exit(0);
                         }
                         if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer>AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
@@ -1092,7 +1117,7 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                         }
                         sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
                         IDout = image_ID(OutBuffIm);
-                        if(IDout == -1) // create it
+                        if(IDout == -1) // create data stream large buffer
                         {
                             uint32_t *imsize;
                             uint8_t atype;
@@ -1106,46 +1131,93 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                             IDout = create_image_ID(OutBuffIm, 3, imsize, atype, SHARED, 0);
                             free(imsize);
                         }
-                        
-                        
+
+
                         switch (data.image[IDout].md[0].atype)
                         {
-							case _DATATYPE_UINT16:
-							destptrBuff = (char*) data.image[IDout].array.UI16 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-							memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI16, 
-								AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
-							break;
-							
-							case _DATATYPE_FLOAT:
-							destptrBuff = (char*) data.image[IDout].array.F + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-							memcpy((void*) destptrBuff, (void*) data.image[ID].array.F, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
-							break;
-							
-							case _DATATYPE_DOUBLE:
-							destptrBuff = (char*) data.image[IDout].array.D + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-							memcpy((void*) destptrBuff, (void*) data.image[ID].array.D, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
-							break;
-							
-						}
+                        case _DATATYPE_INT8:
+                            destptrBuff = (char*) data.image[IDout].array.SI8 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.SI8,
+                                   AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+                        case _DATATYPE_UINT8:
+                            destptrBuff = (char*) data.image[IDout].array.UI8 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI8,
+                                   AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+
+                        case _DATATYPE_INT16:
+                            destptrBuff = (char*) data.image[IDout].array.SI16 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.SI16,
+                                   AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+                        case _DATATYPE_UINT16:
+                            destptrBuff = (char*) data.image[IDout].array.UI16 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI16,
+                                   AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+                        case _DATATYPE_INT32:
+                            destptrBuff = (char*) data.image[IDout].array.SI32 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.SI32,
+                                   AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+                        case _DATATYPE_UINT32:
+                            destptrBuff = (char*) data.image[IDout].array.UI32 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI32,
+                                   AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+                        case _DATATYPE_INT64:
+                            destptrBuff = (char*) data.image[IDout].array.SI64 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.SI64,
+                                   AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+                        case _DATATYPE_UINT64:
+                            destptrBuff = (char*) data.image[IDout].array.UI64 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.UI64,
+                                   AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+                        case _DATATYPE_FLOAT:
+                            destptrBuff = (char*) data.image[IDout].array.F + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.F, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+                        case _DATATYPE_DOUBLE:
+                            destptrBuff = (char*) data.image[IDout].array.D + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            memcpy((void*) destptrBuff, (void*) data.image[ID].array.D, AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE);
+                            break;
+
+                        }
                     }
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == 0)
                         t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 
                     fp = fopen(fnameinfo, "w");
+                    
+                  
                     for(i=0; i<NBframe; i++)
                     {
                         long double t1 = data.image[IDininfo].array.UI64[i*5+1] + 1.0e-9*data.image[IDininfo].array.UI64[i*5+2];
-                        fprintf(fp, "%10ld  %10ld  %15.9lf   %010ld.%09ld  %10ld   %10ld\n", 
-							i+NBframe*AOconf[loop].RTSLOGarray[rtlindex].FileBuffer, 
-							data.image[IDininfo].array.UI64[i*5], 
-							(double) (t1-t0), 
-							data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2], 
-							data.image[IDininfo].array.UI64[i*5+3], 
-							data.image[IDininfo].array.UI64[i*5+4]
-							);
+                        fprintf(fp, "%10ld  %10ld  %15.9lf   %010ld.%09ld  %10ld   %10ld\n",
+                                i+NBframe*AOconf[loop].RTSLOGarray[rtlindex].FileBuffer,
+                                data.image[IDininfo].array.UI64[i*5],
+                                (double) (t1-t0),
+                                data.image[IDininfo].array.UI64[i*5+1], data.image[IDininfo].array.UI64[i*5+2],
+                                data.image[IDininfo].array.UI64[i*5+3],
+                                data.image[IDininfo].array.UI64[i*5+4]
+                               );
                     }
                     fclose(fp);
+
+
 
                     AOconf[loop].RTSLOGarray[rtlindex].FileBuffer++;
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
@@ -1165,7 +1237,10 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
 
                             char OutBuffIm[200];
                             sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+
+							
                             save_fits(OutBuffIm, fnameFITS);
+							
                         }
 
                         AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;

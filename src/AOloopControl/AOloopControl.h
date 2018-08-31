@@ -130,44 +130,44 @@
 
 typedef struct
 {
-    int active;                   // 1 if used
-    char name[100];               // stream name (excludes aol#_)
-    int ENABLE;                   // Is logging enabled ? This needs to be specified at startup, if set to zero, no RT logging will be performed
-    int INIT;                     // 1 if memory is initiated
-    int ON;                       // Is logging ON ?
-    int SIZE;                     // Max number of samples per buffer
-    int buffindex;                // which buffer (0 or 1)
-    long frameindex;              // frame index
-    long frameindexend0;          // last frame in buffer 0
-    long frameindexend1;          // last frame in buffer 1
-    int save;                     // 0: do not save, 1: save data+timing, 2: save timing only
-    int saveToggle;               // 1 if buffer #0 ready to be saved, 2 if buffer #1 ready to be saved, 0 otherwise
+    int    active;                   // 1 if used
+    char   name[100];               // stream name (excludes aol#_)
+    int    ENABLE;                   // Is logging enabled ? This needs to be specified at startup, if set to zero, no RT logging will be performed
+    int    INIT;                     // 1 if memory is initiated
+    int    ON;                       // Is logging ON ?
+    int    SIZE;                     // Max number of samples per buffer
+    int    buffindex;                // which buffer (0 or 1)
+    long   frameindex;              // frame index
+    long   frameindexend0;          // last frame in buffer 0
+    long   frameindexend1;          // last frame in buffer 1
+    int    save;                     // 0: do not save, 1: save data+timing, 2: save timing only
+    int    saveToggle;               // 1 if buffer #0 ready to be saved, 2 if buffer #1 ready to be saved, 0 otherwise
 
-    long IDbuff;
-    long IDbuff0;                 // local identifier
-    long IDbuff1;                 // local identifier
+    long   IDbuff;
+    long   IDbuff0;                 // local identifier
+    long   IDbuff1;                 // local identifier
 
-    long IDbuffinfo;
-    long IDbuffinfo0;             // local identifier
-    long IDbuffinfo1;             // local identifier
+    long   IDbuffinfo;
+    long   IDbuffinfo0;             // local identifier
+    long   IDbuffinfo1;             // local identifier
 
     float *srcptr;                // source stream pointer
-    long IDsrc;                   // source ID
+    long   IDsrc;                   // source ID
 
-    char *destptr;                // destination pointer
-    char *destptr0;               // destination pointer 0
-    char *destptr1;               // destination pointer 1
+    char  *destptr;                // destination pointer
+    char  *destptr0;               // destination pointer 0
+    char  *destptr1;               // destination pointer 1
 
     size_t memsize;               // size of stream frame (byte)
 
-    int NBcubeSaved;              // Number of cubes to save, default = -1
+    int    NBcubeSaved;              // Number of cubes to save, default = -1
     
     
     
-    int NBFileBuffer;             // Number of buffers per big file
-	int FileBuffer;               // File buffer index
-	char timestring[100];         // current timestring
-	char timestring0[100];        // timestring for file to be saved to
+    int    NBFileBuffer;             // Number of buffers per big file
+	int    FileBuffer;               // File buffer index
+	char   timestring[100];         // current timestring
+	char   timestring0[100];        // timestring for file to be saved to
 	
 } RTstreamLOG;
 
