@@ -50,11 +50,11 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 int AOloopControl_RTstreamLOG_init(int loop)
 {
 	long i;
-	long SIZEwfsim = 3000;
-	long SIZEdm = 3000;
+	long SIZEwfsim = 1000;
+	long SIZEdm = 1000;
 	
 	// default
-	AOconf[loop].RTLOGsize = 90000;
+	AOconf[loop].RTLOGsize = 1000;
 	
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
         {
@@ -68,7 +68,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			AOconf[loop].RTSLOGarray[i].saveToggle = 0;
 			AOconf[loop].RTSLOGarray[i].NBcubeSaved = -1;
 			
-			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 1;
+			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 5; // number of buffers combined to create large buffer = file to disk
 			AOconf[loop].RTSLOGarray[i].FileBuffer   = 0;
         }
 	
@@ -869,7 +869,7 @@ int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)
  * 
  * loop monitors multiple buffers
  * 
- * Waits for small buffers to be ready, assembles larger buffer and saves
+ * Waits for small buffers to be ready, includes them in larger buffer and saves the large buffers
  * 
  * Routine is designed to only occupy two threads: one to monitor, one to save
  * 
