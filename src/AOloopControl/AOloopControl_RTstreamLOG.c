@@ -927,7 +927,7 @@ int AOloopControl_RTstreamLOG_saveloop(
      * ### Initialization
      *
      * Intialize :
-     * - time conversion information 
+     * - time conversion information
      * - AOloopControl memory
      * - save thread message array
      * - processinfo
@@ -939,9 +939,9 @@ int AOloopControl_RTstreamLOG_saveloop(
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
-	STREAMSAVE_THREAD_MESSAGE *savethreadmsg_array;
-	savethreadmsg_array = (STREAMSAVE_THREAD_MESSAGE*) malloc(sizeof(STREAMSAVE_THREAD_MESSAGE)*MAX_NUMBER_RTLOGSTREAM);
-    
+    STREAMSAVE_THREAD_MESSAGE *savethreadmsg_array;
+    savethreadmsg_array = (STREAMSAVE_THREAD_MESSAGE*) malloc(sizeof(STREAMSAVE_THREAD_MESSAGE)*MAX_NUMBER_RTLOGSTREAM);
+
     PROCESSINFO *processinfo;
     if(data.processinfo==1)
     {
@@ -958,38 +958,38 @@ int AOloopControl_RTstreamLOG_saveloop(
         strcpy(processinfo->statusmsg, msgstring);
     }
 
-    
-    
-    
+
+
+
     printf("\n");
 
 
     long double t0; // time reference for differential timer
 
     if(data.processinfo == 1)
-		processinfo->loopstat = 1;
+        processinfo->loopstat = 1;
 
-	int loopOK = 1;
-	long loopcnt = 0;
-	
-	
+    int loopOK = 1;
+    long loopcnt = 0;
+
+
     while(loopOK == 1)
     {
-		if(data.processinfo==1)
-                {
-                    while(processinfo->CTRLval == 1)  // pause
-                        usleep(50);
+        if(data.processinfo==1)
+        {
+            while(processinfo->CTRLval == 1)  // pause
+                usleep(50);
 
-                    if(processinfo->CTRLval == 2) // single iteration
-                        processinfo->CTRLval = 1;
+            if(processinfo->CTRLval == 2) // single iteration
+                processinfo->CTRLval = 1;
 
-                    if(processinfo->CTRLval == 3) // exit loop
-                        {
-							loopOK = 0;
-						}
-                }
-		
-		
+            if(processinfo->CTRLval == 3) // exit loop
+            {
+                loopOK = 0;
+            }
+        }
+
+
         cntsave = 0;
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
         {
@@ -1252,8 +1252,8 @@ int AOloopControl_RTstreamLOG_saveloop(
                         t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 
                     fp = fopen(fnameinfo, "w");
-                    
-                  
+
+
                     for(i=0; i<NBframe; i++)
                     {
                         long double t1 = data.image[IDininfo].array.UI64[i*5+1] + 1.0e-9*data.image[IDininfo].array.UI64[i*5+2];
@@ -1283,17 +1283,17 @@ int AOloopControl_RTstreamLOG_saveloop(
                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name
                                    );
                             if(system(command) != 0)
-								printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+                                printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
 
-                         //   sprintf(command, "rm %s/aol%d_%s.*.dat.0*", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
-                         //   system(command);
+                            //   sprintf(command, "rm %s/aol%d_%s.*.dat.0*", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+                            //   system(command);
 
                             char OutBuffIm[200];
                             sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
 
-							
+
                             save_fits(OutBuffIm, fnameFITS);
-							
+
                         }
 
                         AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
@@ -1318,15 +1318,18 @@ int AOloopControl_RTstreamLOG_saveloop(
         }
 
         usleep(sleeptimeus);
-        
-                   loopcnt++;
-                if(data.processinfo==1)
-                    processinfo->loopcnt = loopcnt;
-        
+
+        loopcnt++;
+        if(data.processinfo==1)
+            processinfo->loopcnt = loopcnt;
+
     }
 
-
-
+    if(data.processinfo==1)
+    {
+		printf("CLEAN EXIT\n");
+        processinfo_cleanExit(processinfo);
+	}
     return 0;
 }
 
