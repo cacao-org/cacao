@@ -1057,7 +1057,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                     if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-                    if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinftmsg->arraycnt0[k]o%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
+                    if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 
@@ -1071,7 +1071,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                     if((IDininfo = image_ID(shmimnameinfo))==-1)
                     {
-						printf("IMPORTING buffer %s\n", shmimnameinfo);
+						printf("IMPORTING stream %s buffer %d : buffer %s\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex, shmimnameinfo);
                         IDininfo = read_sharedmem_image(shmimnameinfo);
 					}
 
