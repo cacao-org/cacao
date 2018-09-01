@@ -948,9 +948,9 @@ int AOloopControl_RTstreamLOG_saveloop(
     STREAMSAVE_THREAD_MESSAGE *savethreadmsg_array;
     savethreadmsg_array = (STREAMSAVE_THREAD_MESSAGE*) malloc(sizeof(STREAMSAVE_THREAD_MESSAGE)*MAX_NUMBER_RTLOGSTREAM);
 
-	int thd;
-	for(thd=0; thd<MAX_NUMBER_RTLOGSTREAM; thd++)
-		tOK[thd] = 0;
+    int thd;
+    for(thd=0; thd<MAX_NUMBER_RTLOGSTREAM; thd++)
+        tOK[thd] = 0;
 
 
     PROCESSINFO *processinfo;
@@ -1001,12 +1001,12 @@ int AOloopControl_RTstreamLOG_saveloop(
         }
 
 
-                            if(data.processinfo==1)
-                            {
-                                char msgstring[200];
-                                sprintf(msgstring, "%d save threads", NBthreads);
-                                strcpy(processinfo->statusmsg, msgstring);
-                            }
+        if(data.processinfo==1)
+        {
+            char msgstring[200];
+            sprintf(msgstring, "%d save threads", NBthreads);
+            strcpy(processinfo->statusmsg, msgstring);
+        }
 
 
         cntsave = 0;
@@ -1072,7 +1072,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                     long i;
 
 
-                    printf("\n\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
+                   // printf("\n\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
 
                     if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -1153,11 +1153,11 @@ int AOloopControl_RTstreamLOG_saveloop(
                     }
 
 
-
+/*
                     printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, AOconf[loop].RTSLOGarray[rtlindex].timestring);
                     printf("       %s -> %s\n", shmimname    , fnameFITS);
                     printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
-
+*/
 
 
 
@@ -1344,10 +1344,10 @@ int AOloopControl_RTstreamLOG_saveloop(
                                 }
                                 NBthreads--;
                             }
-                            
+
                             iret_savefits[rtlindex] = pthread_create( &thread_savefits[rtlindex], NULL, save_fits_function, &savethreadmsg_array[rtlindex]);
                             NBthreads++;
-                            
+
 
 
                             tOK[rtlindex] = 1;  // next time, we'll wait for thread to be done
