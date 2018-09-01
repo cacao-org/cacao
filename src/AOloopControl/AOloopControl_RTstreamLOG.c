@@ -954,7 +954,7 @@ int AOloopControl_RTstreamLOG_saveloop(
         processinfo->loopstat = 0; // loop initialization
 
         char msgstring[200];
-        sprintf(msgstring, "Real-time telemetry, loop %ld", loop);
+        sprintf(msgstring, "Real-time telemetry, loop %d", loop);
         strcpy(processinfo->statusmsg, msgstring);
     }
 
@@ -1065,7 +1065,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                     if((IDin = image_ID(shmimname))==-1)
                     {
-						printf("IMPORTING buffer %s\n", shmimname);
+						printf("IMPORTING stream %s buffer %d :  %s\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex, shmimname);
                         IDin = read_sharedmem_image(shmimname);
 					}
 
