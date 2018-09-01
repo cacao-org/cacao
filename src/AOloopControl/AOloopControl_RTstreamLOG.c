@@ -1325,7 +1325,6 @@ int AOloopControl_RTstreamLOG_saveloop(
                                         printf("%5d  PREVIOUS SAVE THREAD NOT TERMINATED -> waiting\n", __LINE__);
                                     }
                                     pthread_join(thread_savefits[rtlindex], NULL);
-                                    NBthreads--;
                                     if(VERBOSE > 0)
                                     {
                                         printf("%5d  PREVIOUS SAVE THREAD NOW COMPLETED -> continuing\n", __LINE__);
@@ -1335,6 +1334,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                                 {
                                     printf("%5d  PREVIOUS SAVE THREAD ALREADY COMPLETED -> OK\n", __LINE__);
                                 }
+                                NBthreads--;
                             }
                             iret_savefits[rtlindex] = pthread_create( &thread_savefits[rtlindex], NULL, save_fits_function, &savethreadmsg_array[rtlindex]);
                             NBthreads++;
