@@ -1324,26 +1324,34 @@ int AOloopControl_RTstreamLOG_saveloop(
                             savethreadmsg_array[rtlindex].saveascii = 0; // just save FITS, dat file handled separately
 
                             // Wait for save thread to complete to launch next one
-                            if(tOK[rtlindex] == 1)
+                            if(tOK[rtlindex] == 1)                            
                             {
+								printf("\n Wait start-----------------------\n");
+								fflush(stdout);
+								
                                 if(pthread_tryjoin_np(thread_savefits[rtlindex], NULL) == EBUSY)
                                 {
                                     if(VERBOSE > 0)
                                     {
                                         printf("%5d  PREVIOUS SAVE THREAD NOT TERMINATED -> waiting\n", __LINE__);
+                                        fflush(stdout);
                                     }
                                     pthread_join(thread_savefits[rtlindex], NULL);
                                     if(VERBOSE > 0)
                                     {
                                         printf("%5d  PREVIOUS SAVE THREAD NOW COMPLETED -> continuing\n", __LINE__);
+                                        fflush(stdout);
                                     }
                                 }
                                 else if(VERBOSE > 0)
                                 {
                                     printf("%5d  PREVIOUS SAVE THREAD ALREADY COMPLETED -> OK\n", __LINE__);
+                                    fflush(stdout);
                                 }
                                 NBthreads--;
-                            }
+       							printf("\n Wait end  -----------------------\n");
+								fflush(stdout);
+							}
 
                             iret_savefits[rtlindex] = pthread_create( &thread_savefits[rtlindex], NULL, save_fits_function, &savethreadmsg_array[rtlindex]);
                             NBthreads++;
