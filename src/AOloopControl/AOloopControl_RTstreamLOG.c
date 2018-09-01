@@ -22,7 +22,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
-
+#include <pthread.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -908,6 +908,7 @@ int AOloopControl_RTstreamLOG_saveloop(
     char *dirname
 )
 {
+	int VERBOSE = 1;
     int rtlindex;
     int cntsave = 0;
 
@@ -939,8 +940,14 @@ int AOloopControl_RTstreamLOG_saveloop(
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
+
+    pthread_t thread_savefits;
+    int tOK = 0;
+    int iret_savefits;
     STREAMSAVE_THREAD_MESSAGE *savethreadmsg_array;
     savethreadmsg_array = (STREAMSAVE_THREAD_MESSAGE*) malloc(sizeof(STREAMSAVE_THREAD_MESSAGE)*MAX_NUMBER_RTLOGSTREAM);
+
+
 
     PROCESSINFO *processinfo;
     if(data.processinfo==1)
@@ -1065,15 +1072,15 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                     if((IDin = image_ID(shmimname))==-1)
                     {
-						printf("IMPORTING stream %s buffer %d :  %s\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex, shmimname);
+                        printf("IMPORTING stream %s buffer %d :  %s\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex, shmimname);
                         IDin = read_sharedmem_image(shmimname);
-					}
+                    }
 
                     if((IDininfo = image_ID(shmimnameinfo))==-1)
                     {
-						printf("IMPORTING stream %s buffer %d : buffer %s\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex, shmimnameinfo);
+                        printf("IMPORTING stream %s buffer %d : buffer %s\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex, shmimnameinfo);
                         IDininfo = read_sharedmem_image(shmimnameinfo);
-					}
+                    }
 
                     // reading first frame timestamp
                     TSsec  = (time_t) data.image[IDininfo].array.UI64[1];
@@ -1298,7 +1305,33 @@ int AOloopControl_RTstreamLOG_saveloop(
                             sprintf(OutBuffIm, "aol%d_%s_outbuff", loop, AOconf[loop].RTSLOGarray[rtlindex].name);
 
 
-                            save_fits(OutBuffIm, fnameFITS);
+                            strcpy(savethreadmsg_array[rtlindex].iname, OutBuffIm);
+                            strcpy(savethreadmsg_array[rtlindex].fname, fnameFITS);
+                            savethreadmsg_array[rtlindex].partial = 0; // full cube
+                            savethreadmsg_array[rtlindex].cubesize = AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
+                            savethreadmsg_array[rtlindex].saveascii = 0; // just save FITS, dat file handled separately
+
+                            // Wait for save thread to complete to launch next one
+                            if(tOK == 1)
+                            {
+                                if(pthread_tryjoin_np(thread_savefits, NULL) == EBUSY)
+                                {
+                                    if(VERBOSE > 0)
+                                    {
+                                        printf("%5d  PREVIOUS SAVE THREAD NOT TERMINATED -> waiting\n", __LINE__);
+                                    }
+                                    pthread_join(thread_savefits, NULL);
+                                    if(VERBOSE > 0)
+                                    {
+                                        printf("%5d  PREVIOUS SAVE THREAD NOW COMPLETED -> continuing\n", __LINE__);
+                                    }
+                                }
+                                else if(VERBOSE > 0)
+                                {
+                                    printf("%5d  PREVIOUS SAVE THREAD ALREADY COMPLETED -> OK\n", __LINE__);
+                                }
+                            }
+                            //                         save_fits(OutBuffIm, fnameFITS);
 
                         }
 
@@ -1333,10 +1366,12 @@ int AOloopControl_RTstreamLOG_saveloop(
 
     if(data.processinfo==1)
     {
-		printf("CLEAN EXIT\n");
+        printf("CLEAN EXIT\n");
         processinfo_cleanExit(processinfo);
-	}
-	
+    }
+
+    free(savethreadmsg_array);
+
     return 0;
 }
 
