@@ -1001,6 +1001,14 @@ int AOloopControl_RTstreamLOG_saveloop(
         }
 
 
+                            if(data.processinfo==1)
+                            {
+                                char msgstring[200];
+                                sprintf(msgstring, "%d save threads", NBthreads);
+                                strcpy(processinfo->statusmsg, msgstring);
+                            }
+
+
         cntsave = 0;
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
         {
@@ -1336,14 +1344,11 @@ int AOloopControl_RTstreamLOG_saveloop(
                                 }
                                 NBthreads--;
                             }
+                            
                             iret_savefits[rtlindex] = pthread_create( &thread_savefits[rtlindex], NULL, save_fits_function, &savethreadmsg_array[rtlindex]);
                             NBthreads++;
-                            if(data.processinfo==1)
-                            {
-                                char msgstring[200];
-                                sprintf(msgstring, "%d save threads", NBthreads);
-                                strcpy(processinfo->statusmsg, msgstring);
-                            }
+                            
+
 
                             tOK[rtlindex] = 1;  // next time, we'll wait for thread to be done
                             if(iret_savefits[rtlindex])
