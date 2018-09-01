@@ -1371,8 +1371,8 @@ int AOloopControl_RTstreamLOG_saveloop(
         }
         if(cntsave>0)
         {
-            printf("%d buffer(s) saved\n", cntsave);
-            printf("\n");
+          //  printf("%d buffer(s) saved\n", cntsave);
+          printf("\n");
             sleepcnt = 0;
         }
         else
