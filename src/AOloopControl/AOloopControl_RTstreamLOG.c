@@ -908,7 +908,8 @@ int AOloopControl_RTstreamLOG_saveloop(
     char *dirname
 )
 {
-	int VERBOSE = 1;
+    int VERBOSE = 1;
+    int NBthreads = 0;
     int rtlindex;
     int cntsave = 0;
 
@@ -1321,6 +1322,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                                         printf("%5d  PREVIOUS SAVE THREAD NOT TERMINATED -> waiting\n", __LINE__);
                                     }
                                     pthread_join(thread_savefits, NULL);
+                                    NBthreads--;
                                     if(VERBOSE > 0)
                                     {
                                         printf("%5d  PREVIOUS SAVE THREAD NOW COMPLETED -> continuing\n", __LINE__);
@@ -1331,6 +1333,22 @@ int AOloopControl_RTstreamLOG_saveloop(
                                     printf("%5d  PREVIOUS SAVE THREAD ALREADY COMPLETED -> OK\n", __LINE__);
                                 }
                             }
+                            iret_savefits = pthread_create( &thread_savefits, NULL, save_fits_function, &savethreadmsg_array[rtlindex]);
+                            NBthreads++;
+                            if(data.processinfo==1)
+                            {
+								 char msgstring[200];
+        sprintf(msgstring, "%d save threads", NBthreads);
+        strcpy(processinfo->statusmsg, msgstring);
+							}
+                            
+                            tOK = 1;  // next time, we'll wait for thread to be done
+                            if(iret_savefits)
+                            {
+                                fprintf(stderr, "Error - pthread_create() return code: %d\n", iret_savefits);
+                                exit(EXIT_FAILURE);
+                            }
+
                             //                         save_fits(OutBuffIm, fnameFITS);
 
                         }
