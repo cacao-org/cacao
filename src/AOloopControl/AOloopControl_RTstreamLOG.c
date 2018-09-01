@@ -942,12 +942,15 @@ int AOloopControl_RTstreamLOG_saveloop(
         AOloopControl_InitializeMemory(1);
 
 
-    pthread_t thread_savefits;
-    int tOK = 0;
-    int iret_savefits;
+    pthread_t thread_savefits[MAX_NUMBER_RTLOGSTREAM];
+    int tOK[MAX_NUMBER_RTLOGSTREAM];
+    int iret_savefits[MAX_NUMBER_RTLOGSTREAM];
     STREAMSAVE_THREAD_MESSAGE *savethreadmsg_array;
     savethreadmsg_array = (STREAMSAVE_THREAD_MESSAGE*) malloc(sizeof(STREAMSAVE_THREAD_MESSAGE)*MAX_NUMBER_RTLOGSTREAM);
 
+	int thd;
+	for(thd=0; thd<MAX_NUMBER_RTLOGSTREAM; thd++)
+		tOK[thd] = 0;
 
 
     PROCESSINFO *processinfo;
@@ -1313,15 +1316,15 @@ int AOloopControl_RTstreamLOG_saveloop(
                             savethreadmsg_array[rtlindex].saveascii = 0; // just save FITS, dat file handled separately
 
                             // Wait for save thread to complete to launch next one
-                            if(tOK == 1)
+                            if(tOK[rtlindex] == 1)
                             {
-                                if(pthread_tryjoin_np(thread_savefits, NULL) == EBUSY)
+                                if(pthread_tryjoin_np(thread_savefits[rtlindex], NULL) == EBUSY)
                                 {
                                     if(VERBOSE > 0)
                                     {
                                         printf("%5d  PREVIOUS SAVE THREAD NOT TERMINATED -> waiting\n", __LINE__);
                                     }
-                                    pthread_join(thread_savefits, NULL);
+                                    pthread_join(thread_savefits[rtlindex], NULL);
                                     NBthreads--;
                                     if(VERBOSE > 0)
                                     {
@@ -1333,19 +1336,19 @@ int AOloopControl_RTstreamLOG_saveloop(
                                     printf("%5d  PREVIOUS SAVE THREAD ALREADY COMPLETED -> OK\n", __LINE__);
                                 }
                             }
-                            iret_savefits = pthread_create( &thread_savefits, NULL, save_fits_function, &savethreadmsg_array[rtlindex]);
+                            iret_savefits[rtlindex] = pthread_create( &thread_savefits[rtlindex], NULL, save_fits_function, &savethreadmsg_array[rtlindex]);
                             NBthreads++;
                             if(data.processinfo==1)
                             {
-								 char msgstring[200];
-        sprintf(msgstring, "%d save threads", NBthreads);
-        strcpy(processinfo->statusmsg, msgstring);
-							}
-                            
-                            tOK = 1;  // next time, we'll wait for thread to be done
-                            if(iret_savefits)
+                                char msgstring[200];
+                                sprintf(msgstring, "%d save threads", NBthreads);
+                                strcpy(processinfo->statusmsg, msgstring);
+                            }
+
+                            tOK[rtlindex] = 1;  // next time, we'll wait for thread to be done
+                            if(iret_savefits[rtlindex])
                             {
-                                fprintf(stderr, "Error - pthread_create() return code: %d\n", iret_savefits);
+                                fprintf(stderr, "Error - pthread_create() return code: %d\n", iret_savefits[rtlindex]);
                                 exit(EXIT_FAILURE);
                             }
 
