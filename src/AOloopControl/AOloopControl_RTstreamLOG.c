@@ -1064,10 +1064,16 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
                     if((IDin = image_ID(shmimname))==-1)
+                    {
+						printf("IMPORTING buffer %s\n", shmimname);
                         IDin = read_sharedmem_image(shmimname);
+					}
 
                     if((IDininfo = image_ID(shmimnameinfo))==-1)
+                    {
+						printf("IMPORTING buffer %s\n", shmimnameinfo);
                         IDininfo = read_sharedmem_image(shmimnameinfo);
+					}
 
                     // reading first frame timestamp
                     TSsec  = (time_t) data.image[IDininfo].array.UI64[1];
@@ -1330,6 +1336,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 		printf("CLEAN EXIT\n");
         processinfo_cleanExit(processinfo);
 	}
+	
     return 0;
 }
 
