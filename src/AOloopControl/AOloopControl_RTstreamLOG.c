@@ -47,6 +47,9 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
 
+
+
+
 int AOloopControl_RTstreamLOG_init(int loop)
 {
 	long i;
@@ -55,6 +58,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 	
 	// default
 	AOconf[loop].RTLOGsize = 1000;
+	
 	
 	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
         {
@@ -922,7 +926,11 @@ int AOloopControl_RTstreamLOG_saveloop(
     /**
      * ### Initialization
      *
-     * Intialize time conversion information and AOloopControl memory
+     * Intialize :
+     * - time conversion information 
+     * - AOloopControl memory
+     * - save thread message array
+     * - processinfo
      *
      */
 
@@ -931,14 +939,57 @@ int AOloopControl_RTstreamLOG_saveloop(
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
+	STREAMSAVE_THREAD_MESSAGE *savethreadmsg_array;
+	savethreadmsg_array = (STREAMSAVE_THREAD_MESSAGE*) malloc(sizeof(STREAMSAVE_THREAD_MESSAGE)*MAX_NUMBER_RTLOGSTREAM);
+    
+    PROCESSINFO *processinfo;
+    if(data.processinfo==1)
+    {
+        // CREATE PROCESSINFO ENTRY
+        // see processtools.c in module CommandLineInterface for details
+        //
+        char pinfoname[200];
+        sprintf(pinfoname, "%s", __FUNCTION__);
+        processinfo = processinfo_shm_create(pinfoname, 0);
+        processinfo->loopstat = 0; // loop initialization
 
+        char msgstring[200];
+        sprintf(msgstring, "Real-time telemetry, loop %ld", loop);
+        strcpy(processinfo->statusmsg, msgstring);
+    }
+
+    
+    
+    
     printf("\n");
 
 
     long double t0; // time reference for differential timer
 
-    for(;;)
+    if(data.processinfo == 1)
+		processinfo->loopstat = 1;
+
+	int loopOK = 1;
+	long loopcnt = 0;
+	
+	
+    while(loopOK == 1)
     {
+		if(data.processinfo==1)
+                {
+                    while(processinfo->CTRLval == 1)  // pause
+                        usleep(50);
+
+                    if(processinfo->CTRLval == 2) // single iteration
+                        processinfo->CTRLval = 1;
+
+                    if(processinfo->CTRLval == 3) // exit loop
+                        {
+							loopOK = 0;
+						}
+                }
+		
+		
         cntsave = 0;
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
         {
@@ -1267,6 +1318,11 @@ int AOloopControl_RTstreamLOG_saveloop(
         }
 
         usleep(sleeptimeus);
+        
+                   loopcnt++;
+                if(data.processinfo==1)
+                    processinfo->loopcnt = loopcnt;
+        
     }
 
 

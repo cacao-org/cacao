@@ -393,9 +393,11 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         char msgstring[200];
 
         sprintf(msgstring, "ERROR: no WFS reference");
-        processinfo->loopstat = 4; // ERROR
-
-        strcpy(processinfo->statusmsg, msgstring);
+        if(data.processinfo == 1)
+        {
+			processinfo->loopstat = 4; // ERROR
+			strcpy(processinfo->statusmsg, msgstring);
+		}
         printf("%s\n", msgstring);
 
         vOK = 0;
@@ -410,9 +412,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         printf("FILE %s  line %d\n", __FILE__, __LINE__);
 
         sprintf(msgstring, "ERROR: no control matrix");
-        processinfo->loopstat = 4; // ERROR
-
-        strcpy(processinfo->statusmsg, msgstring);
+        
+		if(data.processinfo == 1)
+		{
+			processinfo->loopstat = 4; // ERROR
+			strcpy(processinfo->statusmsg, msgstring);
+		}
 
         vOK = 0;
     }
@@ -443,7 +448,8 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 #endif
 
         int timerinit = 0;
-		processinfo->loopstat = 1;
+        if(data.processinfo == 1)
+			processinfo->loopstat = 1;
         
         while( AOconf[loop].aorun.kill == 0)
         {
@@ -658,6 +664,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         } // loop has been killed (normal exit)
         
         if(data.processinfo==1)
+			processinfo_cleanExit(processinfo);
+        
+/*        if(data.processinfo==1)
         {
 			processinfo->loopstat = 3; // clean exit
 			
@@ -674,7 +683,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 sprintf(msgstring, "Loop exit at %02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*(tstop.tv_nsec)));
 
             strncpy(processinfo->statusmsg, msgstring, 200);
-		}
+		}*/
     }
 
     free(thetime);
