@@ -1399,10 +1399,7 @@ int AOloopControl_RTstreamLOG_saveloop(
     }
 
     if(data.processinfo==1)
-    {
-        printf("CLEAN EXIT\n");
         processinfo_cleanExit(processinfo);
-    }
 
     free(savethreadmsg_array);
 
