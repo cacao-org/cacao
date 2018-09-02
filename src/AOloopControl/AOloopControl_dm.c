@@ -292,7 +292,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         // see processtools.c in module CommandLineInterface for details
         //
         char pinfoname[200];
-        sprintf(pinfoname, "aol%ld-GPUmodes2dm", %ld);
+        sprintf(pinfoname, "aol%ld-GPUmodes2dm", loop);
         processinfo = processinfo_shm_create(pinfoname, 0);
         processinfo->loopstat = 0; // loop initialization
 
