@@ -47,3 +47,4 @@ lib/
 src/\.libs/
 src/cacao
 dochtml/
+build/
