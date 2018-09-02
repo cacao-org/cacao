@@ -259,13 +259,22 @@ int AOloopControl_DM_CombineChannels(
         // CREATE PROCESSINFO ENTRY
         // see processtools.c in module CommandLineInterface for details
         //
+        
         char pinfoname[200];
-        sprintf(pinfoname, "%s", __FUNCTION__);
+        char pinfostring[200];
+        
+        sprintf(pinfoname, "Combine DM%02ld channels", DMindex);
         processinfo = processinfo_shm_create(pinfoname, 0);
+        
+        
+        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+        strcpy(processinfo->source_FILE,     __FILE__);
+        processinfo->source_LINE = __LINE__;
+        
         processinfo->loopstat = 0; // loop initialization
 
         char msgstring[200];
-        sprintf(msgstring, "DMindex %ld (%ld x %ld), %ld channels", DMindex, xsize, ysize, NBchannel);
+        sprintf(msgstring, "DMindex %ld (%ld x %ld), %d channels", DMindex, xsize, ysize, NBchannel);
         strcpy(processinfo->statusmsg, msgstring);
     }
 
@@ -767,22 +776,12 @@ int AOloopControl_DM_CombineChannels(
     //  if(voltmode==1)
     //    arith_image_zero(dmdispcombconf[DMindex].voltname);
 
-    if(data.processinfo==1) {
-        if(loopCTRLexit==0) // loop was NOT stopped by loopCTRL exit
-        {
-            struct timespec tstop;
-            struct tm *tstoptm;
-            char msgstring[200];
 
-            clock_gettime(CLOCK_REALTIME, &tstop);
-            tstoptm = gmtime(&tstop.tv_sec);
-
-            sprintf(msgstring, "set OFF at %02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*(tstop.tv_nsec)));
-            strncpy(processinfo->statusmsg, msgstring, 200);
-
-            processinfo->loopstat = 3;
-        }
-    }
+    if(data.processinfo==1)
+        processinfo_cleanExit(processinfo);
+    
+    
+    
 
     printf("LOOP STOPPED\n");
     fflush(stdout);
