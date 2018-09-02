@@ -974,6 +974,10 @@ int AOloopControl_RTstreamLOG_saveloop(
     }
 
 
+	// Catch signals
+	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGTERM\n");
+
 
 
     printf("\n");
