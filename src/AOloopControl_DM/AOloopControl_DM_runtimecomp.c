@@ -263,7 +263,7 @@ int AOloopControl_DM_CombineChannels(
         char pinfoname[200];
         char pinfostring[200];
         
-        sprintf(pinfoname, "Combine DM%02ld channels", DMindex);
+        sprintf(pinfoname, "dm%02ld-comb", DMindex);
         processinfo = processinfo_shm_create(pinfoname, 0);
         
         
@@ -276,7 +276,6 @@ int AOloopControl_DM_CombineChannels(
         char msgstring[200];
         sprintf(msgstring, "DMindex %ld (%ld x %ld), %d channels", DMindex, xsize, ysize, NBchannel);
 		processinfo_WriteMessage(processinfo, msgstring);
-//        strcpy(processinfo->statusmsg, msgstring);
     }
 
 
