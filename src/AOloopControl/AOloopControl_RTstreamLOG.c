@@ -975,7 +975,6 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
 
-
 	// Catch signals
 
 	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
