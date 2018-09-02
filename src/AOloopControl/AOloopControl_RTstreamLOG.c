@@ -960,7 +960,7 @@ int AOloopControl_RTstreamLOG_saveloop(
         // see processtools.c in module CommandLineInterface for details
         //
         char pinfoname[200];
-        sprintf(pinfoname, "aol%d_RealTimeTelemetrySave", loop);
+        sprintf(pinfoname, "aol%d-RealTimeTelemetrySave", loop);
         processinfo = processinfo_shm_create(pinfoname, 0);
         processinfo->loopstat = 0; // loop initialization
         
