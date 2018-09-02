@@ -1450,7 +1450,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
     }
 
-    if(data.processinfo==1)
+    if(data.processinfo==1) 
         processinfo_cleanExit(processinfo);
 
     free(savethreadmsg_array);
