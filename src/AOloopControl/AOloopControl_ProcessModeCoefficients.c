@@ -173,14 +173,42 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         // see processtools.c in module CommandLineInterface for details
         //
         char pinfoname[200];
-        sprintf(pinfoname, "%s", __FUNCTION__);
+        sprintf(pinfoname, "aol%ld-ProcessModeCoefficients", loop);
         processinfo = processinfo_shm_create(pinfoname, 0);
         processinfo->loopstat = 0; // loop initialization
+        
+        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+        strcpy(processinfo->source_FILE,     __FILE__);
+        processinfo->source_LINE = __LINE__;
 
         char msgstring[200];
-        sprintf(msgstring, "initialization");
-        strcpy(processinfo->statusmsg, msgstring);
+        sprintf(msgstring, "Initialization");
+        processinfo_WriteMessage(processinfo, msgstring);
     }
+
+
+// CATCH SIGNALS
+ 	
+	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGTERM\n");
+
+	if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGINT\n");    
+
+	if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGABRT\n");     
+
+	if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGBUS\n");
+
+	if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGSEGV\n");         
+
+	if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGHUP\n");         
+
+	if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGPIPE\n");   
 
 
 
@@ -602,7 +630,10 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
 
     if(data.processinfo==1)
+    {
         processinfo->loopstat = 1; // loop running
+		 processinfo_WriteMessage(processinfo, "Starting loop");
+	}
     int loopOK = 1;
     int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
     long loopcnt = 0;
@@ -1266,24 +1297,45 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
 
 
-        if(loopCTRLexit == 1)
-        {
-            loopOK = 0;
-            if(data.processinfo==1)
-            {
-                struct timespec tstop;
-                struct tm *tstoptm;
-                char msgstring[200];
 
-                clock_gettime(CLOCK_REALTIME, &tstop);
-                tstoptm = gmtime(&tstop.tv_sec);
 
-                sprintf(msgstring, "CTRLexit at %02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*(tstop.tv_nsec)));
-                strncpy(processinfo->statusmsg, msgstring, 200);
+    // process signals
+     
+		if(data.signal_INT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGINT);
+		}
 
-                processinfo->loopstat = 3; // clean exit
-            }
-        }
+		if(data.signal_ABRT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGABRT);
+		}
+
+		if(data.signal_BUS == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGBUS);
+		}
+		
+		if(data.signal_SEGV == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGSEGV);
+		}
+		
+		if(data.signal_HUP == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGHUP);
+		}
+		
+		if(data.signal_PIPE == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGPIPE);
+		}	
 
 		loopcnt++;
         if(data.processinfo==1)
@@ -1299,7 +1351,12 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
 	// LOG function start
 	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
-
+    
+    
+    if(data.processinfo==1)
+        processinfo_cleanExit(processinfo);
+        
+        
     return(IDout);
 }
 
