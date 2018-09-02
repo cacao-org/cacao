@@ -189,12 +189,12 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
 // CATCH SIGNALS
  	
-	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+/*	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGTERM\n");
 
 	if (sigaction(SIGINT, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGINT\n");    
-
+*/
 	if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGABRT\n");     
 
