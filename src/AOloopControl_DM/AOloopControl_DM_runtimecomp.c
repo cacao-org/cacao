@@ -275,7 +275,8 @@ int AOloopControl_DM_CombineChannels(
 
         char msgstring[200];
         sprintf(msgstring, "DMindex %ld (%ld x %ld), %d channels", DMindex, xsize, ysize, NBchannel);
-        strcpy(processinfo->statusmsg, msgstring);
+		processinfo_WriteMessage(processinfo, msgstring);
+//        strcpy(processinfo->statusmsg, msgstring);
     }
 
 
@@ -745,7 +746,9 @@ int AOloopControl_DM_CombineChannels(
                 if(data.signal_PIPE == 1)
                     sprintf(msgstring, "SIGPIPE at %s", timestring);
 
-                strncpy(processinfo->statusmsg, msgstring, 200);
+                //strncpy(processinfo->statusmsg, msgstring, 200);
+                
+                processinfo_WriteMessage(processinfo, msgstring);
                 processinfo->loopstat = 3; // clean exit
             }
 
