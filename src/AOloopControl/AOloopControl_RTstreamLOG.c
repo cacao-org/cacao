@@ -960,13 +960,17 @@ int AOloopControl_RTstreamLOG_saveloop(
         // see processtools.c in module CommandLineInterface for details
         //
         char pinfoname[200];
-        sprintf(pinfoname, "%s", __FUNCTION__);
+        sprintf(pinfoname, "Real_Time_Telemetry_CTR_loop%d", loop);
         processinfo = processinfo_shm_create(pinfoname, 0);
         processinfo->loopstat = 0; // loop initialization
-
+        
+        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+        strcpy(processinfo->source_FILE,     __FILE__);
+        processinfo->source_LINE = __LINE__;
+        
         char msgstring[200];
         sprintf(msgstring, "Real-time telemetry, loop %d", loop);
-        strcpy(processinfo->statusmsg, msgstring);
+        processinfo_WriteMessage(processinfo, msgstring);
     }
 
 
@@ -1389,6 +1393,44 @@ int AOloopControl_RTstreamLOG_saveloop(
             fflush(stdout);
             sleepcnt ++;
         }
+
+		
+		
+		if(data.signal_INT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGINT);
+		}
+
+		if(data.signal_ABRT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGABRT);
+		}
+
+		if(data.signal_BUS == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGBUS);
+		}
+		
+		if(data.signal_SEGV == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGSEGV);
+		}
+		
+		if(data.signal_HUP == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGHUP);
+		}
+		
+		if(data.signal_PIPE == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGPIPE);
+		}	
 
         usleep(sleeptimeus);
 
