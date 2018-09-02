@@ -292,16 +292,44 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         // see processtools.c in module CommandLineInterface for details
         //
         char pinfoname[200];
-        sprintf(pinfoname, "%s", __FUNCTION__);
+        sprintf(pinfoname, "aol%ld-GPUmodes2dm", %ld);
         processinfo = processinfo_shm_create(pinfoname, 0);
         processinfo->loopstat = 0; // loop initialization
 
+        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+        strcpy(processinfo->source_FILE,     __FILE__);
+        processinfo->source_LINE = __LINE__;
+
         char msgstring[200];
         sprintf(msgstring, "Running on GPU %d", GPUindex);
-        strcpy(processinfo->statusmsg, msgstring);
+        processinfo_WriteMessage(processinfo, msgstring);
     }
 
+ // CATCH SIGNALS
+ 	
+	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGTERM\n");
 
+	if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGINT\n");    
+
+	if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGABRT\n");     
+
+	if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGBUS\n");
+
+	if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGSEGV\n");         
+
+	if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGHUP\n");         
+
+	if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGPIPE\n");   
+ 
+ 
+ 
 
 
     if(aoloopcontrol_var.aoconfID_looptiming == -1)
@@ -440,31 +468,63 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
     
-    
-		if(loopCTRLexit == 1)
-        {
-            loopOK = 0;
-            if(data.processinfo==1)
-            {
-                struct timespec tstop;
-                struct tm *tstoptm;
-                char msgstring[200];
 
-                clock_gettime(CLOCK_REALTIME, &tstop);
-                tstoptm = gmtime(&tstop.tv_sec);
 
-                sprintf(msgstring, "CTRLexit at %02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*(tstop.tv_nsec)));
-                strncpy(processinfo->statusmsg, msgstring, 200);
 
-                processinfo->loopstat = 3; // clean exit
-            }
-        }
+      // process signals
+
+		if(data.signal_TERM == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGTERM);
+		}
+     
+		if(data.signal_INT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGINT);
+		}
+
+		if(data.signal_ABRT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGABRT);
+		}
+
+		if(data.signal_BUS == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGBUS);
+		}
+		
+		if(data.signal_SEGV == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGSEGV);
+		}
+		
+		if(data.signal_HUP == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGHUP);
+		}
+		
+		if(data.signal_PIPE == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGPIPE);
+		}	
+        
 
         loopcnt++;
         if(data.processinfo==1)
             processinfo->loopcnt = loopcnt;
     
     }
+    
+    
+        if(data.processinfo==1)
+        processinfo_cleanExit(processinfo);
 
 
 
