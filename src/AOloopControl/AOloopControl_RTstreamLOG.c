@@ -158,6 +158,10 @@ int AOloopControl_RTstreamLOG_init(int loop)
 
 
 
+
+
+
+
 int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 {
         if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].INIT == 0))
