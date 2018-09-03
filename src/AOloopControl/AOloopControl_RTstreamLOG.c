@@ -659,7 +659,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 					AOconf[loop].RTSLOGarray[i].ON = 0;
 			}
 			break;		
-			
+
 			
 			
 			case 'Z':  // Zero indices of set - useful for synchronization
