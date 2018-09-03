@@ -453,7 +453,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 				sprintf(SAstring, "OFF   ");						
   
   
-			printf("%2d  %20s  %3s %3s %3s %6s %2d %8ld %8ld %5dx%d\n", i,  
+			printf("%2d  %20s  %3s %3s %3s %6s %2d %8ld %8ld %5d x %d\n", i,  
 			AOconf[loop].RTSLOGarray[i].name, 
 			ENstring, 
 			ONstring, 
@@ -780,7 +780,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                     printw(" OFF  ");
 
 
-                printw(" %2d %8ld %8ld  %5dx%d\n",
+                printw(" %2d %8ld %8ld  %5d x %d\n",
                        AOconf[loop].RTSLOGarray[i].buffindex,
                        AOconf[loop].RTSLOGarray[i].frameindex,
                        AOconf[loop].RTSLOGarray[i].memsize,
