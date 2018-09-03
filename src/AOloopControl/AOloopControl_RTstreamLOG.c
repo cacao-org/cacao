@@ -780,11 +780,12 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                     printw(" OFF  ");
 
 
-                printw(" %4d %10ld %10ld  %5d\n",
+                printw(" %2d %8ld %8ld  %5dx%d\n",
                        AOconf[loop].RTSLOGarray[i].buffindex,
                        AOconf[loop].RTSLOGarray[i].frameindex,
                        AOconf[loop].RTSLOGarray[i].memsize,
-                       AOconf[loop].RTSLOGarray[i].SIZE
+                       AOconf[loop].RTSLOGarray[i].SIZE,
+                       AOconf[loop].RTSLOGarray[i].NBFileBuffer
                       );
                 NBstreams++;
             }
