@@ -80,7 +80,6 @@ int AOloopControl_RTstreamLOG_init(int loop)
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "wfsim"); //   U in Read_cam_frame()
         AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
-		AOconf[loop].RTSLOGarray[i].NBFileBuffer = 30;
      
      
         i = RTSLOGindex_imWFS0;

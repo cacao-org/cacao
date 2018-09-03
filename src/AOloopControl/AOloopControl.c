@@ -693,9 +693,16 @@ int_fast8_t AOloopControl_logprocess_modeval_cli() {
 /* =============================================================================================== */
 
 
+
+int_fast8_t AOloopControl_RTstreamLOG_init_cli() {
+	AOloopControl_RTstreamLOG_init(LOOPNUMBER);
+}
+
+
 int_fast8_t AOloopControl_RTstreamLOG_printstatus_cli() {
 	AOloopControl_RTstreamLOG_printstatus(LOOPNUMBER);
 }
+
 
 int_fast8_t AOloopControl_RTstreamLOG_GUI_cli() {
 	AOloopControl_RTstreamLOG_GUI(LOOPNUMBER);
@@ -1108,6 +1115,13 @@ void init_AOloopControl()
 	/* 6. REAL-TIME LOGGING - AOloopControl_RTstreamLOG.c                                              */
 	/* =============================================================================================== */
 	/* =============================================================================================== */
+
+
+	RegisterCLIcommand("aolrtloginit", __FILE__, AOloopControl_RTstreamLOG_init_cli,
+	"Init Real-Time logging",
+	"no arg",
+	"aolrtloginit",
+	"AOloopControl_RTstreamLOG_init(int loop)");
 
 	RegisterCLIcommand("aolrtlogstat", __FILE__, AOloopControl_RTstreamLOG_printstatus_cli,
 	"Print status of Real-Time logging",
