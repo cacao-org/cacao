@@ -1085,13 +1085,13 @@ menurecord_default="lircam2ON"
 
 
     lvcam0ON)
-streamname="vcam0"
+streamname="vcamim0"
 startstreamlog "$streamname" $LogCubeSize
 echo "1" > "./status/stat_log_${streamname}.txt"
 menurecord_default="lvcam0OFF"
 ;;
     lvcam0OFF)
-streamname="vcam0"
+streamname="vcamim0"
 skstreamlog "$streamname"
 echo "0" > "./status/stat_log_${streamname}.txt"
 menurecord_default="lvcam0ON"
@@ -1099,13 +1099,13 @@ menurecord_default="lvcam0ON"
 
 
     lvcam1ON)
-streamname="vcam1"
+streamname="vcamim1"
 startstreamlog "$streamname" $LogCubeSize
 echo "1" > "./status/stat_log_${streamname}.txt"
 menurecord_default="lvcam1OFF"
 ;;
     lvcam1OFF)
-streamname="vcam1"
+streamname="vcamim1"
 skstreamlog "$streamname"
 echo "0" > "./status/stat_log_${streamname}.txt"
 menurecord_default="lvcam1ON"
