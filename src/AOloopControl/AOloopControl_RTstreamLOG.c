@@ -453,7 +453,7 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 				sprintf(SAstring, "OFF   ");						
   
   
-			printf("%2d  %20s  %3s %3s %3s %6s %4d %10ld %10ld  %5d\n", i,  
+			printf("%2d  %20s  %3s %3s %3s %6s %2d %8ld %8ld %5dx%d\n", i,  
 			AOconf[loop].RTSLOGarray[i].name, 
 			ENstring, 
 			ONstring, 
@@ -462,7 +462,8 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 			AOconf[loop].RTSLOGarray[i].buffindex,
 			AOconf[loop].RTSLOGarray[i].frameindex,
 			AOconf[loop].RTSLOGarray[i].memsize,
-			AOconf[loop].RTSLOGarray[i].SIZE
+			AOconf[loop].RTSLOGarray[i].SIZE,
+			AOconf[loop].RTSLOGarray[i].NBFileBuffer
 			);
 			NBstreams++;			
 		}
