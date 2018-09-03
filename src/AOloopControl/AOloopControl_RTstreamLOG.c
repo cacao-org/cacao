@@ -72,7 +72,7 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			AOconf[loop].RTSLOGarray[i].saveToggle = 0;
 			AOconf[loop].RTSLOGarray[i].NBcubeSaved = -1;
 			
-			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 5; // number of buffers combined to create large buffer = file to disk
+			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 30; // number of buffers combined to create large buffer = file to disk
 			AOconf[loop].RTSLOGarray[i].FileBuffer   = 0;
         }
 	

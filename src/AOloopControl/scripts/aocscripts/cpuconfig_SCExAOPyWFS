@@ -322,7 +322,7 @@ fi
 # ================ CPU 0 ====================
 # cores: 0 2 4 6 8 10 12 14 16 18 20 22 24 26
 
-# system         non real-time processes                 0 2 4 6 8 10 12 14
+# system         non real-time processes                 0 1 2 4 6 8 10 12 14
 # dmcomb         DM combine channels                     24
 # dmdrv          MEMs DM driver                          26
 # aol0log        Log streams (non-RT)                    16 18
@@ -369,7 +369,9 @@ sudo cset proc -m -p $pidlist -t aol${LOOPNUMBER}RT
 #pidlist=$( pgrep TCP|xargs echo | sed 's/ /,/g' )
 #sudo cset proc -m -p $pidlist -t aol${LOOPNUMBER}COM
 
-pidlist=$( pgrep dmcomb|xargs echo | sed 's/ /,/g' )
+pidlist=$( pgrep dm00comb|xargs echo | sed 's/ /,/g' )
+sudo cset proc -m -p $pidlist -t dmcomb
+pidlist=$( pgrep dm01comb|xargs echo | sed 's/ /,/g' )
 sudo cset proc -m -p $pidlist -t dmcomb
 
 pidlist=$( pgrep ocam|xargs echo | sed 's/ /,/g' )
