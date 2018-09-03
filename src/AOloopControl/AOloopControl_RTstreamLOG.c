@@ -80,6 +80,8 @@ int AOloopControl_RTstreamLOG_init(int loop)
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "wfsim"); //   U in Read_cam_frame()
         AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
+		AOconf[loop].RTSLOGarray[i].NBFileBuffer = 30;
+     
      
         i = RTSLOGindex_imWFS0;
         AOconf[loop].RTSLOGarray[i].active = 1;
@@ -784,7 +786,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                     printw(" OFF  ");
 
 
-                printw(" %2d %8ld %8ld  %5d x %d\n",
+                printw(" %2d %8ld %8ld  %5d (x %d)\n",
                        AOconf[loop].RTSLOGarray[i].buffindex,
                        AOconf[loop].RTSLOGarray[i].frameindex,
                        AOconf[loop].RTSLOGarray[i].memsize,
