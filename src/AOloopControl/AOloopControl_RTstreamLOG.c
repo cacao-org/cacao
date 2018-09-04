@@ -930,11 +930,14 @@ int AOloopControl_RTstreamLOG_saveloop(
 {
     int VERBOSE = 1;
     int NBthreads = 0;
+    int NBthreadsActive = 0;
     int rtlindex;
     int cntsave = 0;
 
     int sleeptimeus = 1000; // 1 ms
     long sleepcnt = 0;
+
+	
 
     /*
     	pthread_t thread_savefits;
@@ -1052,11 +1055,15 @@ int AOloopControl_RTstreamLOG_saveloop(
             }
         }
 
-
+		
+		NBthreadsActive = 0;
+		if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
+			NBthreadsActive++;
+        
         if(data.processinfo==1)
-        {
+        {						
             char msgstring[200];
-            sprintf(msgstring, "%d save threads", NBthreads);
+            sprintf(msgstring, "%02d/%02d save threads", NBthreadsActive, NBthreads);
             strcpy(processinfo->statusmsg, msgstring);
         }
 
