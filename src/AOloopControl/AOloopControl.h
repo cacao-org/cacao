@@ -141,7 +141,7 @@ typedef struct
     long   frameindexend0;          // last frame in buffer 0
     long   frameindexend1;          // last frame in buffer 1
     int    save;                     // 0: do not save, 1: save data+timing, 2: save timing only
-    int    saveToggle;               // 1 if buffer #0 ready to be saved, 2 if buffer #1 ready to be saved, 0 otherwise
+    int    memcpToggle;               // 1 if file buffer #0 ready to be memcpied, 2 if file buffer #1 ready to be memcpied, 0 otherwise
 
     long   IDbuff;
     long   IDbuff0;                 // local identifier
@@ -168,6 +168,8 @@ typedef struct
 	int    FileBuffer;               // File buffer index
 	char   timestring[100];         // current timestring
 	char   timestring0[100];        // timestring for file to be saved to
+	
+	int    tActive;                // 1: save thread is active, 0 otherwise
 	
 } RTstreamLOG;
 

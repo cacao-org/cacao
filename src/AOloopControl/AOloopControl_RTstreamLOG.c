@@ -69,11 +69,13 @@ int AOloopControl_RTstreamLOG_init(int loop)
 			AOconf[loop].RTSLOGarray[i].SIZE = AOconf[loop].RTLOGsize;
 			AOconf[loop].RTSLOGarray[i].ON = 0;
 			AOconf[loop].RTSLOGarray[i].save = 0;
-			AOconf[loop].RTSLOGarray[i].saveToggle = 0;
+			AOconf[loop].RTSLOGarray[i].memcpToggle = 0;
 			AOconf[loop].RTSLOGarray[i].NBcubeSaved = -1;
 			
 			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 30; // number of buffers combined to create large buffer = file to disk
 			AOconf[loop].RTSLOGarray[i].FileBuffer   = 0;
+			
+			AOconf[loop].RTSLOGarray[i].tActive = 0;
         }
 	
 	    i = RTSLOGindex_wfsim;
@@ -377,8 +379,9 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
                     AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr1;
                     AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff1;
                     AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo1;
+                    
                     if(AOconf[loop].RTSLOGarray[rtlindex].save==1)
-                        AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 1;
+                        AOconf[loop].RTSLOGarray[rtlindex].memcpToggle = 1;
                 }
                 else
                 {
@@ -386,8 +389,9 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
                     AOconf[loop].RTSLOGarray[rtlindex].destptr = AOconf[loop].RTSLOGarray[rtlindex].destptr0;
                     AOconf[loop].RTSLOGarray[rtlindex].IDbuff = AOconf[loop].RTSLOGarray[rtlindex].IDbuff0;
                     AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
+                    
                     if(AOconf[loop].RTSLOGarray[rtlindex].save==1)
-                        AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 2;
+                        AOconf[loop].RTSLOGarray[rtlindex].memcpToggle = 2;
                 }
                 data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuff].md[0].write = 1;
                 data.image[AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo].md[0].write = 1;
@@ -449,10 +453,10 @@ int AOloopControl_RTstreamLOG_printstatus(int loop)
 
 			if(AOconf[loop].RTSLOGarray[i].save == 1)
 			{
-				if(AOconf[loop].RTSLOGarray[i].saveToggle!=0)
-					sprintf(SAstring, "\033[1;31m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
+				if(AOconf[loop].RTSLOGarray[i].memcpToggle!=0)
+					sprintf(SAstring, "\033[1;31m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].memcpToggle);
 				else
-					sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].saveToggle);
+					sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].memcpToggle);
 			}
 			else
 				sprintf(SAstring, "OFF   ");						
@@ -776,16 +780,16 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 
                 if(AOconf[loop].RTSLOGarray[i].save == 1)
                 {
-                    if(AOconf[loop].RTSLOGarray[i].saveToggle!=0)
+                    if(AOconf[loop].RTSLOGarray[i].tActive!=0)
                     {
 						attron(COLOR_PAIR(2)|A_BOLD);
-                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].memcpToggle);
                         attroff(COLOR_PAIR(2)|A_BOLD);
                     }
                     else
                     {
 						attron(COLOR_PAIR(3)|A_BOLD);
-                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].saveToggle);
+                        printw(" ON[%1d]", AOconf[loop].RTSLOGarray[i].memcpToggle);
                         attroff(COLOR_PAIR(3)|A_BOLD);
 					}
                 }
@@ -959,14 +963,18 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
     pthread_t thread_savefits[MAX_NUMBER_RTLOGSTREAM];
-    int tOK[MAX_NUMBER_RTLOGSTREAM];
+    int tOK[MAX_NUMBER_RTLOGSTREAM];          // is thread alive ?
+    
     int iret_savefits[MAX_NUMBER_RTLOGSTREAM];
     STREAMSAVE_THREAD_MESSAGE *savethreadmsg_array;
     savethreadmsg_array = (STREAMSAVE_THREAD_MESSAGE*) malloc(sizeof(STREAMSAVE_THREAD_MESSAGE)*MAX_NUMBER_RTLOGSTREAM);
 
     int thd;
     for(thd=0; thd<MAX_NUMBER_RTLOGSTREAM; thd++)
+    {
         tOK[thd] = 0;
+        AOconf[loop].RTSLOGarray[thd].tActive = 0;
+	}
 
 
     PROCESSINFO *processinfo;
@@ -1056,6 +1064,7 @@ int AOloopControl_RTstreamLOG_saveloop(
         cntsave = 0;
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
         {
+			
             if(AOconf[loop].RTSLOGarray[rtlindex].save == 1)
             {
                 int buff;
@@ -1066,11 +1075,22 @@ int AOloopControl_RTstreamLOG_saveloop(
                 uint32_t ID;
                 uint32_t zsizesave;
 
-                if(AOconf[loop].RTSLOGarray[rtlindex].saveToggle!=0) // FULL CUBE
+
+				// check thread activity
+				if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
+				{
+					if(pthread_tryjoin_np(thread_savefits[rtlindex], NULL) == 0)
+						AOconf[loop].RTSLOGarray[rtlindex].tActive = 0;						
+				}
+				
+
+
+
+                if(AOconf[loop].RTSLOGarray[rtlindex].memcpToggle!=0) // FULL CUBE READY
                 {
                     SAVEfile = 1;
                     NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-                    buff = AOconf[loop].RTSLOGarray[rtlindex].saveToggle - 1; // buffindex to save
+                    buff = AOconf[loop].RTSLOGarray[rtlindex].memcpToggle - 1; // buffindex to save
 
                     // in case a finite number of full cubes is to be saved
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved >= 0)
@@ -1207,6 +1227,8 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer==1)
                     {
+						// If file size = buffer size, then just save the buffer to file
+						//
                         ID = image_ID(shmimname);
                         zsizesave = data.image[ID].md[0].size[2];
                         data.image[ID].md[0].size[2] = NBframe;
@@ -1217,6 +1239,9 @@ int AOloopControl_RTstreamLOG_saveloop(
                     }
                     else
                     {
+						// Otherwise, copy buffer into large buffer
+						//
+						
                         long IDout;
                         char OutBuffIm[200];
                         char *destptrBuff;
@@ -1340,10 +1365,15 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
                     AOconf[loop].RTSLOGarray[rtlindex].FileBuffer++;
+                    
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
                     {
+						// Save large buffer
+						
                         if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
                         {
+							// save large buffer to file
+							
                             char command[1000];
                             // merge buffer files
                             sprintf(command, "( cat %s/aol%d_%s.*.dat.0* > %s/aol%d_%s.%s.dat; rm %s/aol%d_%s.*.dat.0* ) &",
@@ -1398,6 +1428,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 							}
 
                             iret_savefits[rtlindex] = pthread_create( &thread_savefits[rtlindex], NULL, save_fits_function, &savethreadmsg_array[rtlindex]);
+                            AOconf[loop].RTSLOGarray[rtlindex].tActive = 1;
                             NBthreads++;
 
 
@@ -1416,7 +1447,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                         AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
                     }
 
-                    AOconf[loop].RTSLOGarray[rtlindex].saveToggle = 0;
+                    AOconf[loop].RTSLOGarray[rtlindex].memcpToggle = 0;
                     cntsave++;
                 }
             }
