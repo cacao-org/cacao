@@ -567,13 +567,14 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 
 	int loopOK = 1;
 	int NB_ENA_streams = 0;
+	clear();
     while ( loopOK == 1 )
     {
 		NBstreams = 0;
 
         usleep((long) (1000000.0/frequ));
         ch = getch();
-        clear();
+        erase();
         attron(A_BOLD);
         print_header_line(" PRESS x TO STOP MONITOR ", '-', wcol);
         printw("  s: Save single    t: Add/remove to/from set   S: Save set ON   U: Save set OFF\n");
@@ -582,7 +583,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 
         printw("\n");
         printw("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
-        printw("%2s  %20s  %3s %3s   %3s %6s %8s %6s %10s  %5s\n", 
+        printw("%2s  %20s  %3s %3s   %3s %6s %8s %6s x %4s %10s  %5s\n", 
 			"id", 
 			"streamname", 
 			"ENA", 
@@ -590,7 +591,8 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			"INI", 
 			"SAVE", 
 			"buff", 
-			"frame", 
+			"frame",
+			"buff", 
 			"memsize", 
 			"size");
 		
@@ -785,9 +787,10 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                     printw(" OFF  ");
 
 
-                printw(" %2d %8ld %8ld  %5d (x %d)\n",
+                printw(" %2d %8ld x %2d  %8ld  %5d (x %d)\n",
                        AOconf[loop].RTSLOGarray[i].buffindex,
                        AOconf[loop].RTSLOGarray[i].frameindex,
+                       AOconf[loop].RTSLOGarray[i].FileBuffer,
                        AOconf[loop].RTSLOGarray[i].memsize,
                        AOconf[loop].RTSLOGarray[i].SIZE,
                        AOconf[loop].RTSLOGarray[i].NBFileBuffer
