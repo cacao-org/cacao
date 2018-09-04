@@ -1057,9 +1057,9 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 		
 		NBthreadsActive = 0;
-		if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
-			NBthreadsActive++;
-        
+		for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
+			if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
+				NBthreadsActive++;
         if(data.processinfo==1)
         {						
             char msgstring[200];
