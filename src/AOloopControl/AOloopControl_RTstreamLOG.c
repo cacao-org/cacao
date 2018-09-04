@@ -511,6 +511,10 @@ static int print_header_line(const char *str, char c, int wcol)
 
 
 
+
+
+
+
 int AOloopControl_RTstreamLOG_GUI(int loop)
 {
     int wrow, wcol;
@@ -711,7 +715,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 			selected_entry = NB_ENA_streams-1;
 		
 		
-        printw("---------------------------------------------------------------------------\n");
+        printw("-------------------------------------------------------------------------------------\n");
         
         
         NB_ENA_streams = 0;
@@ -800,7 +804,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
                 NBstreams++;
             }
         }
-        printw("---------------------------------------------------------------------------\n");
+        printw("-------------------------------------------------------------------------------------\n");
         printw("%ld RTstreamLOGs active\n", NBstreams);
 
 		
