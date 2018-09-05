@@ -134,6 +134,7 @@ add_subdirectory ( "src/AOloopControl_perfTest" )
 add_subdirectory ( "src/AOloopControl_PredictiveControl" )
 add_subdirectory ( "src/FPAOloopControl" )
 
+add_subdirectory ( "src/pyCacao" )
 
 # main
 add_executable(cacao 

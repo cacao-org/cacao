@@ -118,3 +118,6 @@
 	path = src/CommandLineInterface
 	url = https://github.com/milk-org/CommandLineInterface
     branch = dev
+[submodule "src/pyCacao/wyrm"]
+	path = src/pyCacao/wyrm
+	url = https://gitlab.obspm.fr/greenflash/wyrm.git
