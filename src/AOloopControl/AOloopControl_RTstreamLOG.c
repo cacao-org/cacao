@@ -1471,7 +1471,7 @@ int AOloopControl_RTstreamLOG_saveloop(
             }
             else
             {
-				AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0; // ensures we are at buffer start when starting to save
+				AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0; // Ensure we are at buffer start when starting to save
 			}
 			
         }
