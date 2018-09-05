@@ -1026,7 +1026,21 @@ int AOloopControl_RTstreamLOG_saveloop(
 	if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGPIPE\n");   
 
-
+	
+	
+	
+	for(rtlindex=0;rtlindex<MAX_NUMBER_RTLOGSTREAM;rtlindex++)
+        {
+			AOconf[loop].RTSLOGarray[rtlindex].save = 0;
+			AOconf[loop].RTSLOGarray[rtlindex].memcpToggle = 0;
+			AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved = -1;
+			
+			AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
+			AOconf[loop].RTSLOGarray[rtlindex].FileBuffer   = 0;
+			
+			AOconf[loop].RTSLOGarray[rtlindex].tActive = 0;
+        }
+	
 
     printf("\n");
 
