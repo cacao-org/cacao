@@ -1072,6 +1072,8 @@ int AOloopControl_RTstreamLOG_saveloop(
         cntsave = 0;
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
         {
+			printf("[%d] TEST %d \n", __LINE__, rtlindex);
+			fflush(stdout);
 			
             if(AOconf[loop].RTSLOGarray[rtlindex].save == 1)
             {
@@ -1084,6 +1086,10 @@ int AOloopControl_RTstreamLOG_saveloop(
                 uint32_t zsizesave;
 
 
+			printf("[%d] TEST %d \n", __LINE__, rtlindex);
+			fflush(stdout);
+
+
 				// check thread activity
 				if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
 				{
@@ -1091,7 +1097,8 @@ int AOloopControl_RTstreamLOG_saveloop(
 						AOconf[loop].RTSLOGarray[rtlindex].tActive = 0;						
 				}
 				
-
+			printf("[%d] TEST %d \n", __LINE__, rtlindex);
+			fflush(stdout);
 
 
                 if(AOconf[loop].RTSLOGarray[rtlindex].memcpToggle!=0) // FULL CUBE READY
@@ -1120,7 +1127,8 @@ int AOloopControl_RTstreamLOG_saveloop(
                     }
                 }
 
-
+			printf("[%d] TEST %d \n", __LINE__, rtlindex);
+			fflush(stdout);
 
                 if(SAVEfile == 1)
                 {
@@ -1151,7 +1159,8 @@ int AOloopControl_RTstreamLOG_saveloop(
                     if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-
+			printf("[%d] TEST %d \n", __LINE__, rtlindex);
+			fflush(stdout);
 
 
                     if((IDin = image_ID(shmimname))==-1)
@@ -1197,7 +1206,8 @@ int AOloopControl_RTstreamLOG_saveloop(
                         mkdir(fulldir2, 0777);
                     }
 
-
+			printf("[%d] TEST %d \n", __LINE__, rtlindex);
+			fflush(stdout);
 
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
@@ -1353,6 +1363,9 @@ int AOloopControl_RTstreamLOG_saveloop(
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == 0)
                         t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 
+			printf("[%d] TEST %d \n", __LINE__, rtlindex);
+			fflush(stdout);
+
                     fp = fopen(fnameinfo, "w");
 
 
@@ -1370,7 +1383,8 @@ int AOloopControl_RTstreamLOG_saveloop(
                     }
                     fclose(fp);
 
-
+			printf("[%d] TEST %d \n", __LINE__, rtlindex);
+			fflush(stdout);
 
                     AOconf[loop].RTSLOGarray[rtlindex].FileBuffer++;
                     
