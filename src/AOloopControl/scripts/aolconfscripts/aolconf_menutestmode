@@ -585,6 +585,8 @@ tmux a -t aosim${LOOPNUMBER}dm${DMindex}turbctrl
 exec 3>&1;dmturbampl=$(dialog --inputbox "DM turbulence amplitude [um]" 0 0 "$dmturbampl" 2>&1 1>&3);
 exec 3>&-;
 echo "$dmturbampl" > ./conf/param_dmturbampl.txt
+tmuxname="aosim${LOOPNUMBER}dm${DMindex}turbctrl"
+tmux send-keys -t $tmuxname "aoloopcontroldmturampl ${DMindex} $dmturbampl" C-m
 aoconflog "dmturbampl = ${dmturbampl}"
 ;;
 
@@ -600,18 +602,26 @@ aoconflog "dmturbamplmult = ${dmturbamplmult}"
 exec 3>&1;dmturbws=$(dialog --inputbox "DM turbulence wind speed [m/s]" 0 0 "$dmturbws" 2>&1 1>&3);
 exec 3>&-;
 echo "$dmturbws" > ./conf/param_dmturbws.txt
+tmuxname="aosim${LOOPNUMBER}dm${DMindex}turbctrl"
+tmux send-keys -t $tmuxname "aoloopcontroldmturws ${DMindex} $dmturbws" C-m
 aoconflog "dmturbws = $dmturbws"
 ;;
+
     DMtlo)
 exec 3>&1;dmturblo=$(dialog --inputbox "DM turbulence low order coeff" 0 0 "$dmturblo" 2>&1 1>&3);
 exec 3>&-;
 echo "$dmturblo" > ./conf/param_dmturblo.txt
+tmuxname="aosim${LOOPNUMBER}dm${DMindex}turbctrl"
+tmux send-keys -t $tmuxname "aoloopcontroldmturlo ${DMindex} $dmturblo" C-m
 aoconflog "dmturblo = $dmturblo"
 ;;
+
 	DMttint)
 exec 3>&1;dmturbtint=$(dialog --inputbox "DM turbulence interval [us]" 0 0 "$dmturbtint" 2>&1 1>&3);
 exec 3>&-;
 echo "$dmturbtint" > ./conf/param_dmturbtint.txt
+tmuxname="aosim${LOOPNUMBER}dm${DMindex}turbctrl"
+tmux send-keys -t $tmuxname "aoloopcontroldmturtint ${DMindex} $dmturbtint" C-m
 aoconflog "dmturbtint = $dmturbtint"
 ;;
 
