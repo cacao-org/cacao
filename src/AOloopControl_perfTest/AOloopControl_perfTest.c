@@ -1794,7 +1794,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
         printf("==========================================================\n");
 
-
+exit(0);
 
 
         int initOutput = 0;
