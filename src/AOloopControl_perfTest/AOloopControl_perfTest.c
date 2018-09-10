@@ -1547,7 +1547,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     printf("tend   = %20.8f\n", tend);
 
 
-    dtagarray[0] = dtlag;
+    dtlagarray[0] = dtlag;
 
     int stream;
     int NBstream = 2;
@@ -1603,8 +1603,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         }
                         else
                         {
-                            scanOK = 1; // keep scanning file
-                            readOK = 0; // read successful
+                            int scanOK = 1; // keep scanning file
+                            int readOK = 0; // read successful
                             while(scanOK==1)
                             {
                                 if( fgets(line, sizeof(line), fp) == NULL )
