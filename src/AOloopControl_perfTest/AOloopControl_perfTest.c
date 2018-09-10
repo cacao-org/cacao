@@ -1607,6 +1607,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             int readOK = 0; // read successful
                             while(scanOK==1)
                             {
+								printf("Reading line\n"); //TEST
+								
                                 if( fgets(line, sizeof(line), fp) == NULL )
                                     scanOK = 0;
 
