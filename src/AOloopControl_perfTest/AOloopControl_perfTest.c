@@ -1605,16 +1605,17 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         {
                             int scanOK = 1; // keep scanning file
                             int readOK = 0; // read successful
+                            int linenb = 0;
                             while(scanOK==1)
                             {
-								printf("Reading line\n"); //TEST
+								//printf("Reading line %d\n", linenb); //TEST
 								
                                 if( fgets(line, sizeof(line), fp) == NULL )
                                     scanOK = 0;
 
                                 if( line[0] != '#' )
                                 {
-                                    ret = fscanf(fp, "%s   %lf %lf   %ld  %f\n",
+                                    ret = sscanf(line, "%s   %lf %lf   %ld  %f\n",
                                                  tmpstring,
                                                  &datfile[NBdatFiles].tstart,
                                                  &datfile[NBdatFiles].tend,
@@ -1630,17 +1631,17 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                                         readOK = 1;
                                     }
                                 }
+							}
+							fclose(fp);
 
                                 if(readOK==0)
                                 {
                                     mkTiming = 1;
                                     printf("File %s corrupted -> recreating\n", fname);
-                                }
-                            }
-                            fclose(fp);
+                                }                            
                         }
 
-exit(0);//TEST
+//exit(0);//TEST
 
                         if(mkTiming == 1)
                         {
