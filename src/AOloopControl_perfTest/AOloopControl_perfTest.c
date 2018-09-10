@@ -92,7 +92,7 @@ typedef struct {
 		char   name[500];
 		double tstart;
 		double tend;
-		long cnt;
+		long   cnt;
 	} StreamDataFile;  
 
 
@@ -1400,6 +1400,17 @@ char *remove_ext (char* mystr, char dot, char sep) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 //
 // WARNING: right=NBelem-1
 //
@@ -1515,13 +1526,6 @@ int AOloopControl_perfTest_mkTimingFile(
         fclose(fp);
     }
 
-/*
-    if((datfile[NBdatFiles].tend > tstart) && (datfile[NBdatFiles].tstart < tend))
-    {
-        printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile[NBdatFiles].name, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
-        NBdatFiles++;
-    }
-*/
 
 
     return 0;
