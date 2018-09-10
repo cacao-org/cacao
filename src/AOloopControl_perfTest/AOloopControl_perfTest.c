@@ -2092,8 +2092,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	fprintf(fp, "# tend    : %f\n", tend);
 	fprintf(fp, "# dt      : %f\n", dt);
 	fprintf(fp, "#\n");
-	fprintf(fp, "# stream0 median exp time : %6.3f sec\n", medianexptimearray[0]);
-	fprintf(fp, "# stream1 median exp time : %6.3f sec\n", medianexptimearray[1]);
+	fprintf(fp, "# stream0 median exp time : %6.3f frame -> %8.3f Hz\n", medianexptimearray[0], medianexptimearray[0]/dt);
+	fprintf(fp, "# stream1 median exp time : %6.3f frame -> %8.3f Hz\n", medianexptimearray[1], medianexptimearray[0]/dt);
 	fprintf(fp, "#\n");
 	fprintf(fp, "#\n");
 	fprintf(fp, "# col 1 :   time step\n");
