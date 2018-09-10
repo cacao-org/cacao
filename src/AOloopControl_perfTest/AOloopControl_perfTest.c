@@ -1447,17 +1447,100 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 
 
 
-/** 
+
+
+/**
  * # Purpose
- * 
+ *
+ * Create timing summary file
+ *
+ */
+int AOloopControl_perfTest_mkTimingFile(
+    char *inTimingfname,
+    char *outTimingfname
+)
+{
+    FILE *fp;
+    FILE *fpout;
+	StreamDataFile datfile;
+    long cnt;
+    double valf1, valf2;
+    long vald1, vald2, vald3, vald4;
+    char *tmpstring;
+
+    if((fp = fopen(inTimingfname, "r"))==NULL)
+    {
+        printf("Cannot open file \"%s\"\n", inTimingfname);
+        exit(0);
+    }
+    else
+    {
+        double tlast = 0.0;
+        int tOK = 1;
+
+        cnt = 0;
+        while((fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6) && (tOK==1))
+        {
+            if(cnt == 0)
+            {
+                datfile.tstart = valf2;
+                tlast = valf2;
+            }
+            else
+            {
+                if (valf2 > tlast)
+                    tOK = 1;
+                else
+                    tOK = 0;
+                tlast = valf2;
+            }
+            cnt++;
+        }
+        fclose(fp);
+        datfile.tend = valf2;
+        datfile.cnt = cnt;
+        strcpy(datfile.name, tmpstring);
+    }
+
+    // write timing summary file
+
+    if((fpout = fopen(outTimingfname, "w"))==NULL)
+    {
+        printf("Cannot write file \"%s\"\n", outTimingfname);
+        exit(0);
+    }
+    else
+    {
+        fprintf(fpout, "%s   %20.9f %20.9f   %10ld  %10.3f\n", tmpstring, datfile.tstart, datfile.tend, datfile.cnt, datfile.cnt/(datfile.tend-datfile.tstart));
+        fclose(fp);
+    }
+
+/*
+    if((datfile[NBdatFiles].tend > tstart) && (datfile[NBdatFiles].tstart < tend))
+    {
+        printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile[NBdatFiles].name, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
+        NBdatFiles++;
+    }
+*/
+
+
+    return 0;
+}
+
+
+
+
+/**
+ * # Purpose
+ *
  * Synchronize two telemetry streams
- * 
+ *
  * # Arguments
- * 
+ *
  * savedir is the location of the telemetry, for example /media/data/20180202
- * 
+ *
  * dtlag: positive when stream0 is earlier than stream1
- * 
+ *
  */
 int AOloopControl_perfTest_mkSyncStreamFiles2(
     char *datadir,
@@ -1594,119 +1677,75 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
 
+                        // TIMING FILE
+                        //
+
+
+
                         // Does timing file exist ?
                         sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
                         if ( (fp=fopen(fname, "r")) == NULL )
                         {
-                            mkTiming = 1;
-                            printf("File %s : No timing info found -> creating\n", fname);
+                            char fnamein[256];
+                            
+                            printf("File %s : No timing info found -> creating\n", fname);                            
+                            sprintf(fnamein, "%s/%s.dat", datadirstream, tmpstring);
+                            AOloopControl_perfTest_mkTimingFile(fnamein, fname);
                         }
-                        else
+                        
+                        
+                        
+
+
+                        // read timing file
+
+                        int scanOK = 1; // keep scanning file
+                        int readOK = 0; // read successful
+                        int linenb = 0;
+                        while(scanOK==1)
                         {
-                            int scanOK = 1; // keep scanning file
-                            int readOK = 0; // read successful
-                            int linenb = 0;
-                            while(scanOK==1)
+                            //printf("Reading line %d\n", linenb); //TEST
+
+                            if( fgets(line, sizeof(line), fp) == NULL )
+                                scanOK = 0;
+
+                            if( line[0] != '#' )
                             {
-								//printf("Reading line %d\n", linenb); //TEST
-								
-                                if( fgets(line, sizeof(line), fp) == NULL )
-                                    scanOK = 0;
+                                ret = sscanf(line, "%s   %lf %lf   %ld  %f\n",
+                                             tmpstring,
+                                             &datfile[NBdatFiles].tstart,
+                                             &datfile[NBdatFiles].tend,
+                                             &datfile[NBdatFiles].cnt,
+                                             &tmpv);
 
-                                if( line[0] != '#' )
+                                if(ret == 5)
                                 {
-                                    ret = sscanf(line, "%s   %lf %lf   %ld  %f\n",
-                                                 tmpstring,
-                                                 &datfile[NBdatFiles].tstart,
-                                                 &datfile[NBdatFiles].tend,
-                                                 &datfile[NBdatFiles].cnt,
-                                                 &tmpv);
-
-                                    if(ret == 5)
-                                    {
-                                        mkTiming = 0;
-                                        strcpy(datfile[NBdatFiles].name, tmpstring);
-                                        //printf("File %s : timing info found\n", fname);
-                                        scanOK = 0; // done reading
-                                        readOK = 1;
-                                    }
+                                    mkTiming = 0;
+                                    strcpy(datfile[NBdatFiles].name, tmpstring);
+                                    //printf("File %s : timing info found\n", fname);
+                                    scanOK = 0; // done reading
+                                    readOK = 1;
                                 }
-							}
-							fclose(fp);
-
-                                if(readOK==0)
-                                {
-                                    mkTiming = 1;
-                                    printf("File %s corrupted -> recreating\n", fname);
-                                }                            
+                            }
                         }
+                        fclose(fp);
 
-//exit(0);//TEST
-
-                        if(mkTiming == 1)
+                        if(readOK==0)
                         {
-                            sprintf(fname, "%s/%s", datadirstream, dir->d_name);
-                            if((fp = fopen(fname, "r"))==NULL)
-                            {
-                                printf("Cannot open file \"%s\"\n", dir->d_name);
-                                exit(0);
-                            }
-                            else
-                            {
-                                double tlast = 0.0;
-                                int tOK = 1;
-
-                                cnt = 0;
-                                while((fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)&&(tOK==1))
-                                {
-                                    if(cnt == 0)
-                                    {
-                                        datfile[NBdatFiles].tstart = valf2;
-                                        tlast = valf2;
-                                    }
-                                    else
-                                    {
-                                        if (valf2 > tlast)
-                                            tOK = 1;
-                                        else
-                                            tOK = 0;
-                                        tlast = valf2;
-                                    }
-                                    cnt++;
-                                }
-                                fclose(fp);
-                                datfile[NBdatFiles].tend = valf2;
-                                datfile[NBdatFiles].cnt = cnt;
-                                strcpy(datfile[NBdatFiles].name, tmpstring);
-                            }
-
-
-
-                            // write timing summary file
-                            sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
-                            if((fp = fopen(fname, "w"))==NULL)
-                            {
-                                printf("Cannot write file \"%s\"\n", fname);
-                                exit(0);
-                            }
-                            else
-                            {
-                                fprintf(fp, "%s   %20.9f %20.9f   %10ld  %10.3f\n", tmpstring, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
-                                fclose(fp);
-                            }
+                            printf("File %s corrupted \n", fname);
+                            exit(0);
                         }
-
-                        if((datfile[NBdatFiles].tend > tstart) && (datfile[NBdatFiles].tstart < tend))
-                        {
-                            printf("%20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n", datfile[NBdatFiles].name, datfile[NBdatFiles].tstart, datfile[NBdatFiles].tend, datfile[NBdatFiles].cnt, datfile[NBdatFiles].cnt/(datfile[NBdatFiles].tend-datfile[NBdatFiles].tstart));
-                            NBdatFiles++;
-                        }
-
                     }
+
+
                 }
             }
             closedir(d0);
         }
+
+
+
+
 
         printf("\ndone\n");
         fflush(stdout);
