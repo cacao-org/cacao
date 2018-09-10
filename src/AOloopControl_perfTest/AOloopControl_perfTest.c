@@ -1468,7 +1468,8 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
  */
 int AOloopControl_perfTest_mkTimingFile(
     char *inTimingfname,
-    char *outTimingfname
+    char *outTimingfname,
+    char *tmpstring
 )
 {
     FILE *fp;
@@ -1695,7 +1696,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             printf("File %s : No timing info found -> creating\n", fname);                            
                             sprintf(fnamein, "%s/%s.dat", datadirstream, tmpstring);
                             
-                            AOloopControl_perfTest_mkTimingFile(fnamein, fname);
+                            AOloopControl_perfTest_mkTimingFile(fnamein, fname, tmpstring);
 
                             if ( (fp=fopen(fname, "r")) == NULL )
                             {
