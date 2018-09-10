@@ -1447,14 +1447,18 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 
 
 
-
-
-// Synchronize two streams
-// 
-// savedir is, for example /media/data/20180202
-//
-// dtlag: positive when stream0 is earlier than stream1
-//
+/** 
+ * # Purpose
+ * 
+ * Synchronize two telemetry streams
+ * 
+ * # Arguments
+ * 
+ * savedir is the location of the telemetry, for example /media/data/20180202
+ * 
+ * dtlag: positive when stream0 is earlier than stream1
+ * 
+ */
 int AOloopControl_perfTest_mkSyncStreamFiles2(
     char *datadir,
     char *stream0,
@@ -1470,7 +1474,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     char datadirstream[500];
     char *ext;
     char *tmpstring;
-
+    char line[512];
 
 
     StreamDataFile *datfile;
@@ -1503,12 +1507,15 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
     long IDout0, IDout1;
     long xysize0, xysize1;
-	long xsize0, ysize0, xsize1, ysize1;
-	
-	
+    long xsize0, ysize0, xsize1, ysize1;
+
+    double dtlagarray[10]; // maximum 10 streams
+
+
 
     // compute exposure start for each slice of output
 
+    // How many frames are expected in the output ?
     zsize = (tend-tstart)/dt;
     printf("zsize = %ld\n", (long) zsize);
     fflush(stdout);
@@ -1539,8 +1546,12 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     printf("tstart = %20.8f\n", tstart);
     printf("tend   = %20.8f\n", tend);
 
+
+    dtagarray[0] = dtlag;
+
     int stream;
-    for(stream=0; stream<2; stream++)
+    int NBstream = 2;
+    for(stream=0; stream<NBstream; stream++)
     {
         for(tstep=0; tstep<zsize; tstep++)
             exparray[tstep] = 0.0;
@@ -1581,6 +1592,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
                         tmpstring = remove_ext(dir->d_name, '.', '/');
 
+
+
                         // Does timing file exist ?
                         sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
                         if ( (fp=fopen(fname, "r")) == NULL )
@@ -1590,24 +1603,39 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         }
                         else
                         {
-                            ret = fscanf(fp, "%s   %lf %lf   %ld  %f\n", 
-								tmpstring, 
-								&datfile[NBdatFiles].tstart, 
-								&datfile[NBdatFiles].tend, 
-								&datfile[NBdatFiles].cnt, 
-								&tmpv);
-							if(ret == 5)
-							{
-								mkTiming = 0;
-								strcpy(datfile[NBdatFiles].name, tmpstring);
-								//printf("File %s : timing info found\n", fname);
-							}
-							else
-							{
-								mkTiming = 1;
-								printf("File %s corrupted -> recreating\n", fname);
-							}
-							fclose(fp);
+                            scanOK = 1; // keep scanning file
+                            readOK = 0; // read successful
+                            while(scanOK==1)
+                            {
+                                if( fgets(line, sizeof(line), fp) == NULL )
+                                    scanOK = 0;
+
+                                if( line[0] != '#' )
+                                {
+                                    ret = fscanf(fp, "%s   %lf %lf   %ld  %f\n",
+                                                 tmpstring,
+                                                 &datfile[NBdatFiles].tstart,
+                                                 &datfile[NBdatFiles].tend,
+                                                 &datfile[NBdatFiles].cnt,
+                                                 &tmpv);
+
+                                    if(ret == 5)
+                                    {
+                                        mkTiming = 0;
+                                        strcpy(datfile[NBdatFiles].name, tmpstring);
+                                        //printf("File %s : timing info found\n", fname);
+                                        scanOK = 0; // done reading
+                                        readOK = 1;
+                                    }
+                                }
+
+                                if(readOK==0)
+                                {
+                                    mkTiming = 1;
+                                    printf("File %s corrupted -> recreating\n", fname);
+                                }
+                            }
+                            fclose(fp);
                         }
 
 
@@ -1680,7 +1708,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         fflush(stdout);
 
         printf("NBdatFiles = %ld\n", NBdatFiles);
-        
+
 
         for(i=0; i<NBdatFiles; i++)
         {
@@ -1698,7 +1726,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
         // sort files according to time
         if(NBdatFiles>1)
-			quicksort_StreamDataFile(datfile, 0, NBdatFiles-1);
+            quicksort_StreamDataFile(datfile, 0, NBdatFiles-1);
 
         for(i=0; i<NBdatFiles; i++)
         {
@@ -1899,11 +1927,11 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
             delete_image_ID("im0C");
-               
+
             free(intarray_start);
-			free(intarray_end);
-			free(dtarray);
-        
+            free(intarray_end);
+            free(dtarray);
+
         }
 
         for(tstep=0; tstep<zsize; tstep++)
@@ -1915,8 +1943,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                     data.image[IDout].array.F[xysize*tstep+ii] /= exparray[tstep];
             }
         }
-        
-        
+
+
         printf("zsize = %ld\n", (long) zsize);
         fflush(stdout);
 
@@ -1945,7 +1973,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             if(exparray[tstep]>1.2*exptmedian)
                 frameOKarray[tstep] = 0;
         }
-		
+
         free(datfile);
     }
 
@@ -1986,19 +2014,19 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     free(exparray1);
     free(frameOKarray);
 
-	if(NBframeOK>0)
-	{
-		long IDoutc0;
-		IDoutc0 = create_3Dimage_ID("outC0", xsize0, ysize0, NBframeOK);
-		memcpy(data.image[IDoutc0].array.F, data.image[IDout0].array.F, sizeof(float)*xysize0*NBframeOK);
-	
-		long IDoutc1;
-		IDoutc1 = create_3Dimage_ID("outC1", xsize1, ysize1, NBframeOK);
-		memcpy(data.image[IDoutc1].array.F, data.image[IDout1].array.F, sizeof(float)*xysize1*NBframeOK);
-	}
-	delete_image_ID("out0");
-	delete_image_ID("out1");
-	
+    if(NBframeOK>0)
+    {
+        long IDoutc0;
+        IDoutc0 = create_3Dimage_ID("outC0", xsize0, ysize0, NBframeOK);
+        memcpy(data.image[IDoutc0].array.F, data.image[IDout0].array.F, sizeof(float)*xysize0*NBframeOK);
+
+        long IDoutc1;
+        IDoutc1 = create_3Dimage_ID("outC1", xsize1, ysize1, NBframeOK);
+        memcpy(data.image[IDoutc1].array.F, data.image[IDout1].array.F, sizeof(float)*xysize1*NBframeOK);
+    }
+    delete_image_ID("out0");
+    delete_image_ID("out1");
+
 
     return 0;
 }
