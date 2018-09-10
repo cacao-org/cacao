@@ -1632,6 +1632,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     long xsize0, ysize0, xsize1, ysize1;
 
     double dtlagarray[10]; // maximum 10 streams
+    double medianexptimearray[10];
 
 
 
@@ -2058,6 +2059,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
         double exptmedian;
         exptmedian = exparray[zsize/2];
+        medianexptimearray[stream] = exptmedian;
         printf("Median Exp Time = %6.3f\n", exptmedian);
 
         if(stream==0)
@@ -2089,6 +2091,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	fprintf(fp, "# tstart  : %f\n", tstart);
 	fprintf(fp, "# tend    : %f\n", tend);
 	fprintf(fp, "# dt      : %f\n", dt);
+	fprintf(fp, "#\n");
+	fprintf(fp, "# stream0 median exp time : %f\n", medianexptimearray[0]);
+	fprintf(fp, "# stream1 median exp time : %f\n", medianexptimearray[1]);
 	fprintf(fp, "#\n");
 	fprintf(fp, "#\n");
 	fprintf(fp, "# col 1 :   time step\n");
