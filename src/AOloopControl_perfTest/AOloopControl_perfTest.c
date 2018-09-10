@@ -1744,7 +1744,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             exit(0);
                         }
                         
-                        NBdatFiles++;
+                        
+                        
+                        if((datfile[NBdatFiles].tstart < tend)&&(datfile[NBdatFiles].tend > tstart))
+							NBdatFiles++;
                     }
 
 
@@ -1752,9 +1755,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             }
             closedir(d0);
         }
-
-
-
 
 
         printf("\ndone\n");
@@ -1794,7 +1794,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
         printf("==========================================================\n");
 
-exit(0);
+
 
 
         int initOutput = 0;
