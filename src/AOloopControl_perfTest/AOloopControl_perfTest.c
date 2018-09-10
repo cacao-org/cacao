@@ -1478,7 +1478,6 @@ int AOloopControl_perfTest_mkTimingFile(
     long cnt;
     double valf1, valf2;
     long vald1, vald2, vald3, vald4;
-    char *tmpstring;
 
     if((fp = fopen(inTimingfname, "r"))==NULL)
     {
