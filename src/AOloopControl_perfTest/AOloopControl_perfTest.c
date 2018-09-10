@@ -1638,6 +1638,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             fclose(fp);
                         }
 
+exit(0);//TEST
 
                         if(mkTiming == 1)
                         {
@@ -1678,7 +1679,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
 
-                            // write timing file
+                            // write timing summary file
                             sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
                             if((fp = fopen(fname, "w"))==NULL)
                             {
