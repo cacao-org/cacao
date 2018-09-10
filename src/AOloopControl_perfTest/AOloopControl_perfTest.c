@@ -1690,7 +1690,15 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             
                             printf("File %s : No timing info found -> creating\n", fname);                            
                             sprintf(fnamein, "%s/%s.dat", datadirstream, tmpstring);
+                            
                             AOloopControl_perfTest_mkTimingFile(fnamein, fname);
+
+                            if ( (fp=fopen(fname, "r")) == NULL )
+                            {
+								printf("ERROR: can't open file %s\n", fname);
+								exit(0);
+							}
+                            
                         }
                         
                         
@@ -1735,6 +1743,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             printf("File %s corrupted \n", fname);
                             exit(0);
                         }
+                        
+                        NBdatFiles++;
                     }
 
 
