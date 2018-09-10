@@ -1512,6 +1512,8 @@ int AOloopControl_perfTest_mkTimingFile(
             {
                 if((sscanf(line, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6) && (tOK==1))
                 {
+					tarray[cnt] = valf2;
+					
                     if(cnt == 0)
                     {
                         datfile.tstart = valf2;
@@ -1723,8 +1725,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         // TIMING FILE
                         //
 
-
-
                         // Does timing file exist ?
                         sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
                         if ( (fp=fopen(fname, "r")) == NULL )
@@ -1931,7 +1931,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             dtmedian = dtarray[(datfile[i].cnt-1)/2];
             printf("   dtmedian = %10.3f us\n", 1.0e6*dtmedian);
 
-            // we assume here that every frame as the same exposure time, with 100% duty cycle
+            // we assume here that every frame has the same exposure time, with 100% duty cycle
             for(j=0; j<datfile[i].cnt; j++)
                 intarray_start[j] = intarray_end[j] - dtmedian;
 
@@ -2091,16 +2091,18 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 	fprintf(fp, "# dt      : %f\n", dt);
 	fprintf(fp, "#\n");
 	fprintf(fp, "#\n");
-	fprintf(fp, "# col 1 :   output frame index\n");
-	fprintf(fp, "# col 2 :   stream0 exposure time\n");
-	fprintf(fp, "# col 3 :   stream1 exposure time\n");
-	fprintf(fp, "# col 4 :   OK flag\n");
+	fprintf(fp, "# col 1 :   time step\n");
+	fprintf(fp, "# col 2 :   output frame index (valid if OK flag = 1)\n");
+	fprintf(fp, "# col 3 :   OK flag\n");
+	fprintf(fp, "# col 4 :   time (stream0)\n");
+	fprintf(fp, "# col 5 :   stream0 exposure time\n");
+	fprintf(fp, "# col 6 :   stream1 exposure time\n");
 	fprintf(fp, "#\n");
 
     long NBframeOK = 0;
     for(tstep=0; tstep<zsize; tstep++)
     {
-        fprintf(fp, "%5ld %10.6f %10.6f %d\n", tstep, exparray0[tstep], exparray1[tstep], frameOKarray[tstep]);
+        fprintf(fp, "%5ld %5ld %d %10.6f %10.6f %10.6f\n", tstep, NBframeOK, frameOKarray[tstep], tstartarray[tstep], exparray0[tstep], exparray1[tstep]);
         if(frameOKarray[tstep]==1)
         {
             if(tstep!=NBframeOK)
