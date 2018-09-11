@@ -2368,7 +2368,9 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 			{
 				if(paircnt > NBpairMax-1)
 				{
-					printf("[%s] [%s] [%d]  ERROR: paircnt (%ld)> NBpairMax (%ld)\n", __FILE__, __FUNCTION__, __LINE__, paircnt, NBpairMax);
+					printf("[%s] [%s] [%d]  ERROR: paircnt (%ld) >= NBpairMax (%ld)\n", __FILE__, __FUNCTION__, __LINE__, paircnt, NBpairMax);
+					printf("NBframe0 = %ld\n", NBframe0);
+					
 					exit(0);
 				}				
 				
