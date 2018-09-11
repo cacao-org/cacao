@@ -2366,6 +2366,12 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 		{
 			if((k1-k2)>dtmin)
 			{
+				if(paircnt>NBpairMax-1)
+				{
+					printf("[%s] [%s] [%d]  ERROR: paircnt (%ld)> NBpairMax (%ld)\n", __FILE__, __FUNCTION__, __LINE__, pair, paircnt);
+					exit(0);
+				}				
+				
 				sim0pair_k1[paircnt] = k1;
 				sim0pair_k2[paircnt] = k2;
 				sim0pair_val[paircnt] = data.image[IDsimM0].array.F[k1*NBframe0+k2];
@@ -2377,7 +2383,9 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 				paircnt++;
 			}
 		}
-	
+
+
+/*	
 	quick_sort3ll_double(sim0pair_val, sim0pair_k1, sim0pair_k2, paircnt);
 	quick_sort3ll_double(sim1pair_val, sim1pair_k1, sim1pair_k2, paircnt);
 	
@@ -2396,7 +2404,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	fclose(fpout0);
 	
 	
-	if( (fpout0 = fopen("sim1pairs.txt", "w")) == NULL)
+	if( (fpout1 = fopen("sim1pairs.txt", "w")) == NULL)
 	{
 		printf("[%s] [%s] [%d]  ERROR: cannot create file\n", __FILE__, __FUNCTION__, __LINE__);
 		exit(0);
@@ -2405,10 +2413,10 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	{
 		k1 = sim1pair_k1[pair];
 		k2 = sim1pair_k2[pair];
-		fprintf(fpout0, "%5ld  %5ld  %5ld  %g  %g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe0+k2]);
+		fprintf(fpout1, "%5ld  %5ld  %5ld  %g  %g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe0+k2]);
 	}
-	fclose(fpout0);
-	
+	fclose(fpout1);
+	*/
 	
 
 
