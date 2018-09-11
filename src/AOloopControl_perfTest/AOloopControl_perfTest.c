@@ -1550,7 +1550,8 @@ int AOloopControl_perfTest_mkTimingFile(
             {
                 if( line[0] != '#' )
                     scanOK = 1;
-                else
+                
+                if(scanOK==1)
                 {
                     if((sscanf(line, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6) && (tOK==1))
                     {
