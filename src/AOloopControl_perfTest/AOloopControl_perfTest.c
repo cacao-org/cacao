@@ -2349,6 +2349,16 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	NBframe1 = data.image[IDstream1].md[0].size[2];
 	
 	
+	// a few checks before proceeding
+	if(NBframe0!=NBframe1)
+	{
+		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != NBframe1 (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, NBframe1);
+		exit(0);
+	}
+	
+	
+	
+	
 	NBpairMax = data.image[IDsimM0].md[0].size[0]*(data.image[IDsimM0].md[0].size[0]-1)/2;
 	
 	sim0pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
@@ -2380,7 +2390,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
 				sim1pair_k1[paircnt] = k1;
 				sim1pair_k2[paircnt] = k2;
-				sim1pair_val[paircnt] = data.image[IDsimM1].array.F[k1*NBframe0+k2];
+				sim1pair_val[paircnt] = data.image[IDsimM1].array.F[k1*NBframe1+k2];
 				
 				paircnt++;
 			}
@@ -2401,7 +2411,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	{
 		k1 = sim0pair_k1[pair];
 		k2 = sim0pair_k2[pair];
-		fprintf(fpout0, "%5ld  %5ld  %5ld  %g  %g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe0+k2]);
+		fprintf(fpout0, "%5ld  %5ld  %5ld  %20g  %20g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe0+k2]);
 	}
 	fclose(fpout0);
 	
@@ -2415,7 +2425,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	{
 		k1 = sim1pair_k1[pair];
 		k2 = sim1pair_k2[pair];
-		fprintf(fpout1, "%5ld  %5ld  %5ld  %g  %g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe0+k2]);
+		fprintf(fpout1, "%5ld  %5ld  %5ld  %20g  %20g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe1+k2]);
 	}
 	fclose(fpout1);
 	
