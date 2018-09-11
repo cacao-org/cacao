@@ -2294,7 +2294,12 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
  * 
  * sim0pairs.txt  : best NBselected stream0 pairs\n
  * sim1pairs.txt  : best NBselected stream1 pairs\n
- * sim2Ddistrib   : 2D similarity distribution image
+ * sim2Ddistrib   : 2D similarity distribution image\n
+ * 
+ * sim0diff0      : best sim pairs 0, differences stream 0 images\n
+ * sim0diff1      : best sim pairs 0, differences stream 0 images\n
+ * sim1diff0      : best sim pairs 0, differences stream 0 images\n
+ * sim1diff1      : best sim pairs 0, differences stream 0 images\n
  * 
  */
 
@@ -2324,8 +2329,8 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	long *sim1pair_k2;
 	double *sim1pair_val;
 
-	long xsize0, ysize0, NBframe0;
-	long xsize1, ysize1, NBframe1;
+	long xsize0, ysize0, NBframe0, xysize0;
+	long xsize1, ysize1, NBframe1, xysize1;
 	long k1, k2;
 	long paircnt;
 	
@@ -2347,10 +2352,12 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	
 	xsize0 = data.image[IDstream0].md[0].size[0];
 	ysize0 = data.image[IDstream0].md[0].size[1];
+	xysize0 = xsize0*ysize0;
 	NBframe0 = data.image[IDstream0].md[0].size[2];
 	
 	xsize1 = data.image[IDstream1].md[0].size[0];
 	ysize1 = data.image[IDstream1].md[0].size[1];
+	xysize1 = xsize1*ysize1;
 	NBframe1 = data.image[IDstream1].md[0].size[2];
 	
 	
@@ -2494,6 +2501,40 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 		}
 	
 
+	long IDsim0diff0 = create_3Dimage_ID("sim0diff0", xsize0, ysize0, NBselected);
+	long IDsim0diff1 = create_3Dimage_ID("sim0diff1", xsize1, ysize1, NBselected);
+	
+	for(pair=0;pair<NBselected;pair++)
+	{
+		long ii;
+		
+		k1 = sim0pair_k1[pair];
+		k2 = sim0pair_k2[pair];
+		
+		for(ii=0;ii<xysize0;ii++)
+			data.image[IDsim0diff0].array.F[pair*xysize0+ii] = data.image[IDstream0].array.F[k1*xysize0+ii] - data.image[IDstream0].array.F[k2*xysize0+ii];
+		for(ii=0;ii<xysize1;ii++)
+			data.image[IDsim0diff1].array.F[pair*xysize1+ii] = data.image[IDstream1].array.F[k1*xysize1+ii] - data.image[IDstream1].array.F[k2*xysize1+ii];
+	}
+	
+	
+	long IDsim1diff0 = create_3Dimage_ID("sim1diff0", xsize0, ysize0, NBselected);
+	long IDsim1diff1 = create_3Dimage_ID("sim1diff1", xsize1, ysize1, NBselected);
+
+	for(pair=0;pair<NBselected;pair++)
+	{
+		long ii;
+		
+		k1 = sim1pair_k1[pair];
+		k2 = sim1pair_k2[pair];
+		
+		for(ii=0;ii<xysize0;ii++)
+			data.image[IDsim1diff0].array.F[pair*xysize0+ii] = data.image[IDstream0].array.F[k1*xysize0+ii] - data.image[IDstream0].array.F[k2*xysize0+ii];
+		for(ii=0;ii<xysize1;ii++)
+			data.image[IDsim1diff1].array.F[pair*xysize1+ii] = data.image[IDstream1].array.F[k1*xysize1+ii] - data.image[IDstream1].array.F[k2*xysize1+ii];
+	}
+	
+	
 
 	free(sim0pair_k1);
 	free(sim0pair_k2);
