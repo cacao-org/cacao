@@ -1963,8 +1963,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 exit(0);
 				}
             }
-            else
-            {
+            
+            
                 for(j=0; j<datfile[i].cnt; j++)
                 {
 
@@ -1977,7 +1977,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         intarray_end[j] = valf2;
                 }
                 fclose(fp);
-            }
+            
 
 
             for(j=0; j<datfile[i].cnt-1; j++)
