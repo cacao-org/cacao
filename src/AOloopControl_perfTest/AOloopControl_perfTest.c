@@ -1554,6 +1554,7 @@ int AOloopControl_perfTest_mkTimingFile(
                 {
                     if((sscanf(line, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6) && (tOK==1))
                     {
+						printf("cnt %5ld read\n", cnt);//TEST
                         tarray[cnt] = valf2;
 
                         if(cnt == 0)
