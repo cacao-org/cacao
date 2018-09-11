@@ -1606,7 +1606,7 @@ int AOloopControl_perfTest_mkTimingFile(
         fclose(fp);
     }
 
-
+	
 
     return 0;
 }
@@ -1628,13 +1628,13 @@ int AOloopControl_perfTest_mkTimingFile(
  *
  */
 int AOloopControl_perfTest_mkSyncStreamFiles2(
-    char *datadir,
-    char *stream0,
-    char *stream1,
-    double tstart,
-    double tend,
-    double dt,
-    double dtlag
+    char   *datadir,
+    char   *stream0,
+    char   *stream1,
+    double  tstart,
+    double  tend,
+    double  dt,
+    double  dtlag
 )
 {
     DIR *d0;
@@ -1789,6 +1789,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             printf("output : %s\n", fname);
                             
                             AOloopControl_perfTest_mkTimingFile(fnamein, fname, tmpstring);
+                            
+                            exit(0);//TEST
 
                             if ( (fp=fopen(fname, "r")) == NULL )
                             {
