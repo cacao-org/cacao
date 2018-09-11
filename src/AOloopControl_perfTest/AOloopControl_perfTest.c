@@ -2477,6 +2477,8 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	for(k1=0;k1<NBframe0;k1++)
 		for(k2=0;k2<k1;k2++)
 		{
+			if((k1-k2)>dtmin)
+			{
 			float x, y;
 			long ii, jj;
 			
@@ -2488,6 +2490,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 			
 			if((ii<xsize2Ddistrib)&&(jj<ysize2Ddistrib))
 				data.image[IDsim2Ddistrib].array.F[jj*xsize2Ddistrib+ii] += 1.0;
+			}
 		}
 	
 
