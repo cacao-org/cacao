@@ -1520,9 +1520,9 @@ int AOloopControl_perfTest_mkTimingFile(
     long vald1, vald2, vald3, vald4;
     char line[512];
     long linecnt = 0;
-	
-	double *tarray;
-	double MaxNBsample = 1000000;
+
+    double *tarray;
+    double MaxNBsample = 1000000;
 
 
     if((fp = fopen(inTimingfname, "r"))==NULL)
@@ -1538,7 +1538,7 @@ int AOloopControl_perfTest_mkTimingFile(
 
 
 
-		tarray = (double*) malloc(sizeof(double)*MaxNBsample);
+        tarray = (double*) malloc(sizeof(double)*MaxNBsample);
 
         cnt = 0;
 
@@ -1546,35 +1546,37 @@ int AOloopControl_perfTest_mkTimingFile(
         {
             if( fgets(line, sizeof(line), fp) == NULL )
                 scanOK = 0;
-
-            if( line[0] != '#' )
-                scanOK = 1;
             else
             {
-                if((sscanf(line, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6) && (tOK==1))
+                if( line[0] != '#' )
+                    scanOK = 1;
+                else
                 {
-					tarray[cnt] = valf2;
-					
-                    if(cnt == 0)
+                    if((sscanf(line, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6) && (tOK==1))
                     {
-                        datfile.tstart = valf2;
-                        tlast = valf2;
-                    }
-                    else
-                    {
-                        if (valf2 > tlast)
-                            tOK = 1;
+                        tarray[cnt] = valf2;
+
+                        if(cnt == 0)
+                        {
+                            datfile.tstart = valf2;
+                            tlast = valf2;
+                        }
                         else
-                            tOK = 0;
-                        tlast = valf2;
+                        {
+                            if (valf2 > tlast)
+                                tOK = 1;
+                            else
+                                tOK = 0;
+                            tlast = valf2;
+                        }
+                        cnt++;
                     }
-                    cnt++;
                 }
             }
 
             if(tOK==0)
                 scanOK = 0;
-                
+
             printf("[%5ld] [%d] LINE: \"%s\"\n", linecnt, scanOK, line);
             linecnt++;
 
@@ -1583,10 +1585,10 @@ int AOloopControl_perfTest_mkTimingFile(
         datfile.tend = valf2;
         datfile.cnt = cnt;
         strcpy(datfile.name, tmpstring);
-        
-        
-        
-        
+
+
+
+
         free(tarray);
 
     }
