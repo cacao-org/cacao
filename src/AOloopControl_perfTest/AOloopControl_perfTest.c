@@ -2197,6 +2197,7 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 	long ID, IDout;
 	uint32_t xsize, ysize, xysize, zsize;
 	long k1, k2;
+	long cnt = 0;
 	
 	ID = image_ID(IDname);
 	xsize = data.image[ID].md[0].size[0];
@@ -2214,14 +2215,15 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 			long ii;
 			double v0;
 			
-			printf("\r %5ld / %5ld    %5ld / %5ld     ", k1, (long) zsize, k2, (long) zsize);
+			printf("\r [%5.2f %%]   %5ld / %5ld    %5ld / %5ld     ", 100.0*cnt/(zsize*(zsize-1)/2), k1, (long) zsize, k2, (long) zsize);
 			fflush(stdout);
 			for(ii=0;ii<xysize;ii++)
 			{
 				v0 = (data.image[ID].array.F[k1*xysize+ii] - data.image[ID].array.F[k2*xysize+ii]);
 				val += v0*v0;
 			}
-			data.image[IDout].array.F[k1*zsize+k2] = v0;
+			data.image[IDout].array.F[k1*zsize+k2] = val;
+			cnt++;
 		}
 	}
 	printf("\n");
