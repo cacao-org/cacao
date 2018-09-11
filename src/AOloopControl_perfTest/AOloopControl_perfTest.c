@@ -2202,6 +2202,7 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 	float *array2;
 	char *srcptr;
 	
+	int perccomplete;
 	int perccompletelast = 0;
 	
 	ID = image_ID(IDname);
