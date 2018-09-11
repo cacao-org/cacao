@@ -2292,7 +2292,9 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
  * 
  * # Output
  * 
- * 
+ * sim0pairs.txt  : best NBselected stream0 pairs\n
+ * sim1pairs.txt  : best NBselected stream1 pairs\n
+ * sim2Ddistrib   : 2D similarity distribution image
  * 
  */
 
@@ -2332,6 +2334,9 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	long pair;
 	FILE *fpout0;
 	FILE *fpout1;
+	
+	double mediansim0, mediansim1;
+	
 	
 	
 	
@@ -2430,18 +2435,19 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	
 	quick_sort3ll_double(sim0pair_val, sim0pair_k1, sim0pair_k2, paircnt);
 	quick_sort3ll_double(sim1pair_val, sim1pair_k1, sim1pair_k2, paircnt);
-	
+	mediansim0 = sim0pair_val[paircnt/2];
+	mediansim1 = sim1pair_val[paircnt/2];
 	
 	if( (fpout0 = fopen("sim0pairs.txt", "w")) == NULL)
 	{
 		printf("[%s] [%s] [%d]  ERROR: cannot create file\n", __FILE__, __FUNCTION__, __LINE__);
 		exit(0);
 	}
-	for(pair=0;pair<paircnt;pair++)
+	for(pair=0;pair<NBselected;pair++)
 	{
 		k1 = sim0pair_k1[pair];
 		k2 = sim0pair_k2[pair];
-		fprintf(fpout0, "%5ld  %5ld  %5ld  %20g  %20g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe0+k2]);
+		fprintf(fpout0, "%5ld  %5ld  %5ld  %8.6f  %8.6f\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2]/mediansim0, data.image[IDsimM1].array.F[k1*NBframe0+k2]/mediansim1);
 	}
 	fclose(fpout0);
 	
@@ -2451,14 +2457,38 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 		printf("[%s] [%s] [%d]  ERROR: cannot create file\n", __FILE__, __FUNCTION__, __LINE__);
 		exit(0);
 	}
-	for(pair=0;pair<paircnt;pair++)
+	for(pair=0;pair<NBselected;pair++)
 	{
 		k1 = sim1pair_k1[pair];
 		k2 = sim1pair_k2[pair];
-		fprintf(fpout1, "%5ld  %5ld  %5ld  %20g  %20g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe1+k2]);
+		fprintf(fpout1, "%5ld  %5ld  %5ld  %8.6f  %8.6f\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2]/mediansim0, data.image[IDsimM1].array.F[k1*NBframe1+k2]/mediansim1);
 	}
 	fclose(fpout1);
 	
+	
+	
+	// Create 2D distribution of similarities
+	
+	uint32_t xsize2Ddistrib = 512;
+	uint32_t ysize2Ddistrib = 512;
+	
+	long IDsim2Ddistrib = create_2Dimage_ID("sim2Ddistrib", xsize2Ddistrib, ysize2Ddistrib);
+
+	for(k1=0;k1<NBframe0;k1++)
+		for(k2=0;k2<k1;k2++)
+		{
+			float x, y;
+			long ii, jj;
+			
+			x = data.image[IDsimM0].array.F[k1*NBframe0+k2] / mediansim0;
+			y = data.image[IDsimM1].array.F[k1*NBframe1+k2] / mediansim1;
+			
+			ii = (uint32_t) (2.0*x*xsize2Ddistrib);
+			jj = (uint32_t) (2.0*y*ysize2Ddistrib);
+			
+			if((ii<xsize2Ddistrib)&&(jj<ysize2Ddistrib))
+				data.image[IDsim2Ddistrib].array.F[jj*xsize2Ddistrib+ii] += 1.0;
+		}
 	
 
 
