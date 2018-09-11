@@ -1755,12 +1755,12 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                 if (!ext) {
                     // printf("no extension\n");
                 } else {
-					int datfileOK = 0;
+                    int datfileOK = 0;
                     if(strcmp(ext+1, "dat")==0)
-						datfileOK = 1;
-					if(strcmp(ext+1, "txt")==0)
-						datfileOK = 2;
-                    
+                        datfileOK = 1;
+                    if(strcmp(ext+1, "txt")==0)
+                        datfileOK = 2;
+
                     if(datfileOK != 0)
                     {
                         int mkTiming;
@@ -1779,30 +1779,30 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         if ( (fp=fopen(fname, "r")) == NULL )
                         {
                             char fnamein[256];
-                            
+
                             printf("File %s : No timing info found -> creating\n", fname);
-                            
-                            if(datfileOK == 1) 
-								sprintf(fnamein, "%s/%s.dat", datadirstream, tmpstring);
-							else
-								sprintf(fnamein, "%s/%s.txt", datadirstream, tmpstring);
-                            
+
+                            if(datfileOK == 1)
+                                sprintf(fnamein, "%s/%s.dat", datadirstream, tmpstring);
+                            else
+                                sprintf(fnamein, "%s/%s.txt", datadirstream, tmpstring);
+
                             printf("input  : %s\n", fnamein);
                             printf("output : %s\n", fname);
-                            
+
                             AOloopControl_perfTest_mkTimingFile(fnamein, fname, tmpstring);
-                            
+
 
                             if ( (fp=fopen(fname, "r")) == NULL )
                             {
-								printf("ERROR: can't open file %s\n", fname);
-								exit(0);
-							}
-                            
+                                printf("ERROR: can't open file %s\n", fname);
+                                exit(0);
+                            }
+
                         }
-                        
-                        
-                        
+
+
+
 
 
                         // read timing file
@@ -1843,11 +1843,11 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             printf("File %s corrupted \n", fname);
                             exit(0);
                         }
-                        
-                        
-                        
+
+
+
                         if((datfile[NBdatFiles].tstart < tend)&&(datfile[NBdatFiles].tend > tstart))
-							NBdatFiles++;
+                            NBdatFiles++;
                     }
 
 
@@ -1956,32 +1956,63 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
             if((fp = fopen(fname, "r"))==NULL)
             {
-				sprintf(fname, "%s/%s.txt", datadirstream, datfile[i].name);
-				
-				if((fp = fopen(fname, "r"))==NULL){
-                printf("Cannot open file \"%s.dat\" or \"%s.txt\"\n", datfile[i].name, datfile[i].name);
-                exit(0);
-				}
-            }
-            
-            
-                for(j=0; j<datfile[i].cnt; j++)
-                {
+                sprintf(fname, "%s/%s.txt", datadirstream, datfile[i].name);
 
-                    if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
-                    {
-                        printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
-                        exit(0);
-                    }
-                    else
-                        intarray_end[j] = valf2;
+                if((fp = fopen(fname, "r"))==NULL) {
+                    printf("Cannot open file \"%s.dat\" or \"%s.txt\"\n", datfile[i].name, datfile[i].name);
+                    exit(0);
                 }
-                fclose(fp);
-            
+            }
+
+
+            int scanOK = 1;
+            j = 0;
+            while(scanOK == 1)
+            {
+                if( fgets(line, sizeof(line), fp) == NULL )
+                    scanOK = 0;
+                else
+                {
+                    if( line[0] != '#' )
+                        scanOK = 1;
+
+                    if(scanOK==1)
+                    {
+                        if(sscanf(line, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6)
+                        {
+                            intarray_end[j] = valf2;
+                            j++;
+                            if(j==datfile[i].cnt)
+                                scanOK = 0;
+                        }
+                    }
+                }
+            }
+
+
+
+
+/*
+            for(j=0; j<datfile[i].cnt; j++)
+            {
+                if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
+                {
+                    printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
+                    exit(0);
+                }
+                else
+                    intarray_end[j] = valf2;
+            }*/
+            fclose(fp);
+
+
+
+
 
 
             for(j=0; j<datfile[i].cnt-1; j++)
                 dtarray[j] = intarray_end[j+1] - intarray_end[j];
+
 
             double dtmedian;
             qs_double(dtarray, 0, datfile[i].cnt-1);
@@ -2136,35 +2167,35 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     }
 
 
-	long NBmissingFrame = 0;
-	for(tstep=0;tstep<zsize; tstep++)
-		if(frameOKarray[tstep] == 0)
-			NBmissingFrame++;
+    long NBmissingFrame = 0;
+    for(tstep=0; tstep<zsize; tstep++)
+        if(frameOKarray[tstep] == 0)
+            NBmissingFrame++;
 
 
     sprintf(fname, "exptime.dat");
     fp = fopen(fname, "w");
 
-	fprintf(fp, "# Exposure time per output frame, unit = input frame\n");
-	fprintf(fp, "#\n");
-	fprintf(fp, "# Generated by function %s in file %s\n", __FUNCTION__, __FILE__);
-	fprintf(fp, "# stream0 : %s\n", stream0);
-	fprintf(fp, "# stream1 : %s\n", stream1);
-	fprintf(fp, "# tstart  : %f\n", tstart);
-	fprintf(fp, "# tend    : %f\n", tend);
-	fprintf(fp, "# dt      : %f\n", dt);
-	fprintf(fp, "#\n");
-	fprintf(fp, "# stream0 median exp time : %6.3f frame -> %8.3f Hz\n", medianexptimearray[0], medianexptimearray[0]/dt);
-	fprintf(fp, "# stream1 median exp time : %6.3f frame -> %8.3f Hz\n", medianexptimearray[1], medianexptimearray[1]/dt);
-	fprintf(fp, "# missing frames : %6ld / %ld  ( %10.6f %%)\n", NBmissingFrame, (long) zsize, 100.0*NBmissingFrame/zsize);
-	fprintf(fp, "#\n");
-	fprintf(fp, "# col 1 :   time step\n");
-	fprintf(fp, "# col 2 :   output frame index (valid if OK flag = 1)\n");
-	fprintf(fp, "# col 3 :   OK flag\n");
-	fprintf(fp, "# col 4 :   time (stream0)\n");
-	fprintf(fp, "# col 5 :   stream0 exposure time\n");
-	fprintf(fp, "# col 6 :   stream1 exposure time\n");
-	fprintf(fp, "#\n");
+    fprintf(fp, "# Exposure time per output frame, unit = input frame\n");
+    fprintf(fp, "#\n");
+    fprintf(fp, "# Generated by function %s in file %s\n", __FUNCTION__, __FILE__);
+    fprintf(fp, "# stream0 : %s\n", stream0);
+    fprintf(fp, "# stream1 : %s\n", stream1);
+    fprintf(fp, "# tstart  : %f\n", tstart);
+    fprintf(fp, "# tend    : %f\n", tend);
+    fprintf(fp, "# dt      : %f\n", dt);
+    fprintf(fp, "#\n");
+    fprintf(fp, "# stream0 median exp time : %6.3f frame -> %8.3f Hz\n", medianexptimearray[0], medianexptimearray[0]/dt);
+    fprintf(fp, "# stream1 median exp time : %6.3f frame -> %8.3f Hz\n", medianexptimearray[1], medianexptimearray[1]/dt);
+    fprintf(fp, "# missing frames : %6ld / %ld  ( %10.6f %%)\n", NBmissingFrame, (long) zsize, 100.0*NBmissingFrame/zsize);
+    fprintf(fp, "#\n");
+    fprintf(fp, "# col 1 :   time step\n");
+    fprintf(fp, "# col 2 :   output frame index (valid if OK flag = 1)\n");
+    fprintf(fp, "# col 3 :   OK flag\n");
+    fprintf(fp, "# col 4 :   time (stream0)\n");
+    fprintf(fp, "# col 5 :   stream0 exposure time\n");
+    fprintf(fp, "# col 6 :   stream1 exposure time\n");
+    fprintf(fp, "#\n");
 
     long NBframeOK = 0;
     for(tstep=0; tstep<zsize; tstep++)
@@ -2218,11 +2249,11 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
 
-/** 
+/**
  * # Purpose
- * 
+ *
  * Compute similarity matrix between frames of a datacube
- * 
+ *
  */
 
 int AOloopControl_perfTest_ComputeSimilarityMatrix(
@@ -2230,70 +2261,70 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
     char *IDname_out
 )
 {
-	long ID, IDout;
-	uint32_t xsize, ysize, xysize, zsize;
-	long k1, k2;
-	long cnt = 0;
-	float *array1;
-	float *array2;
-	char *srcptr;
-	
-	int perccomplete;
-	int perccompletelast = 0;
-	
-	
-	
-	ID = image_ID(IDname);
-	xsize = data.image[ID].md[0].size[0];
+    long ID, IDout;
+    uint32_t xsize, ysize, xysize, zsize;
+    long k1, k2;
+    long cnt = 0;
+    float *array1;
+    float *array2;
+    char *srcptr;
+
+    int perccomplete;
+    int perccompletelast = 0;
+
+
+
+    ID = image_ID(IDname);
+    xsize = data.image[ID].md[0].size[0];
     ysize = data.image[ID].md[0].size[1];
     xysize = xsize*ysize;
     zsize = data.image[ID].md[0].size[2];
 
-	array1 = (float*) malloc(sizeof(float)*xysize);
-	array2 = (float*) malloc(sizeof(float)*xysize);
+    array1 = (float*) malloc(sizeof(float)*xysize);
+    array2 = (float*) malloc(sizeof(float)*xysize);
 
-	
+
     IDout = create_2Dimage_ID(IDname_out, zsize, zsize);
-	printf("\n");
-	for(k1=0;k1<zsize;k1++)
-	{
-		srcptr = (char*) data.image[ID].array.F + sizeof(float)*xysize*k1;
-		
-		memcpy(array1, srcptr, sizeof(float)*xysize);
-		
-		for(k2=0;k2<k1;k2++)
-		{
-			double val = 0.0;
-			long ii;
-			double v0;
-			
-			srcptr = (char*) data.image[ID].array.F + sizeof(float)*xysize*k2;
-			memcpy(array2, srcptr, sizeof(float)*xysize);
+    printf("\n");
+    for(k1=0; k1<zsize; k1++)
+    {
+        srcptr = (char*) data.image[ID].array.F + sizeof(float)*xysize*k1;
 
-			perccomplete = (int) (100.0*cnt/(zsize*(zsize-1)/2));
-			if(perccompletelast<perccomplete)
-			{
-				printf("\r [%5.2f %%]   %5ld / %5ld    %5ld / %5ld     ", 100.0*cnt/(zsize*(zsize-1)/2), k1, (long) zsize, k2, (long) zsize);
-				fflush(stdout);
-				perccompletelast = perccomplete;
-			}
-			
-			for(ii=0;ii<xysize;ii++)
-			{
-				v0 = (array1[ii] - array2[ii]);
-				val += v0*v0;
-			}
-			
-			data.image[IDout].array.F[k1*zsize+k2] = val;
-			cnt++;
-		}
-	}
-	printf("\n");
-	
-	free(array1);
-	free(array2);
-	
-	return 0;
+        memcpy(array1, srcptr, sizeof(float)*xysize);
+
+        for(k2=0; k2<k1; k2++)
+        {
+            double val = 0.0;
+            long ii;
+            double v0;
+
+            srcptr = (char*) data.image[ID].array.F + sizeof(float)*xysize*k2;
+            memcpy(array2, srcptr, sizeof(float)*xysize);
+
+            perccomplete = (int) (100.0*cnt/(zsize*(zsize-1)/2));
+            if(perccompletelast<perccomplete)
+            {
+                printf("\r [%5.2f %%]   %5ld / %5ld    %5ld / %5ld     ", 100.0*cnt/(zsize*(zsize-1)/2), k1, (long) zsize, k2, (long) zsize);
+                fflush(stdout);
+                perccompletelast = perccomplete;
+            }
+
+            for(ii=0; ii<xysize; ii++)
+            {
+                v0 = (array1[ii] - array2[ii]);
+                val += v0*v0;
+            }
+
+            data.image[IDout].array.F[k1*zsize+k2] = val;
+            cnt++;
+        }
+    }
+    printf("\n");
+
+    free(array1);
+    free(array2);
+
+    return 0;
 }
 
 
