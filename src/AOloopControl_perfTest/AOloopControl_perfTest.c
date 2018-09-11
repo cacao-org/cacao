@@ -1575,7 +1575,7 @@ int AOloopControl_perfTest_mkTimingFile(
             if(tOK==0)
                 scanOK = 0;
                 
-            printf("[%d] LINE: \"%s\"\n", scanOK, line);
+            printf("[%5ld] [%d] LINE: \"%s\"\n", linecnt, scanOK, line);
             linecnt++;
 
         }
