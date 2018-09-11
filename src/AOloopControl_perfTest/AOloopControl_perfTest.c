@@ -254,6 +254,16 @@ int_fast8_t AOloopControl_perfTest_mkSyncStreamFiles2_cli()
 }
 
 
+int_fast8_t AOloopControl_perfTest_ComputeSimilarityMatrix_cli()
+{
+	if(CLI_checkarg(1,4)+CLI_checkarg(2,5) == 0)
+	{
+		AOloopControl_perfTest_ComputeSimilarityMatrix(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string);
+	}
+	else
+		return 1;
+}
+
 
 
 
@@ -332,6 +342,16 @@ int_fast8_t init_AOloopControl_perfTest()
 		"<datadir> <stream0name> <stream1name> <tstart> <tend> <dt> <dtlag>",
 		"aolptmksyncs2 \"/media/data/20180701/\" aol2_wfsim aol3_wfsim 1530410732.0 1530410733.0 0.001 0.00001",
 		"int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char *stream1, double tstart, double tend, double dt, double dtlag)");
+		
+		
+	RegisterCLIcommand("aolperfcompsimM",
+		__FILE__,
+		AOloopControl_perfTest_ComputeSimilarityMatrix_cli,
+		"compute similarity matrix from image sequence",
+		"<input cube> <output matrix>",
+		"aolperfcompsimM imc outM",
+		"int AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname, char *IDname_out)");
+	
 }
 
 
@@ -2169,7 +2189,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
  * 
  */
 
-int AOloopControl_perfTest_ComputeSimilarity(
+int AOloopControl_perfTest_ComputeSimilarityMatrix(
     char *IDname,
     char *IDname_out
 )

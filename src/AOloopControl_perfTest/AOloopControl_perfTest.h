@@ -67,4 +67,6 @@ long AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfna
 
 int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char *stream1, double tstart, double tend, double dt, double dtlag);
 
+int AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname, char *IDname_out);
+
 #endif
