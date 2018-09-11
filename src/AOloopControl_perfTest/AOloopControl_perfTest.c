@@ -2279,270 +2279,273 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 }
 
 
+
+
+
 /**
  * # Purpose
- * 
+ *
  * Perform statistical analysis of two streams from similarity matrices
- * 
+ *
  * # Details
- * 
+ *
  * Selects the NBselected most similar pairs in stream0 and stream1 separated by at least dtmin frames
- * 
+ *
  * Computes the differences between the corresponding pairs in the other stream
- * 
+ *
  * # Output
- * 
+ *
  * sim0pairs.txt  : best NBselected stream0 pairs\n
  * sim1pairs.txt  : best NBselected stream1 pairs\n
  * sim2Ddistrib   : 2D similarity distribution image\n
- * 
+ *
  * sim0diff0      : best sim pairs 0, differences stream 0 images\n
  * sim0diff1      : best sim pairs 0, differences stream 0 images\n
  * sim1diff0      : best sim pairs 0, differences stream 0 images\n
  * sim1diff1      : best sim pairs 0, differences stream 0 images\n
- * 
+ *
  */
 
 int AOloopControl_perfTest_StatAnalysis_2streams(
-	char *IDname_stream0,
-	char *IDname_stream1,
-	char *IDname_simM0,
-	char *IDname_simM1,
-	long dtmin,
-	long NBselected
-	)
+    char *IDname_stream0,
+    char *IDname_stream1,
+    char *IDname_simM0,
+    char *IDname_simM1,
+    long dtmin,
+    long NBselected
+)
 {
-	long IDstream0;
-	long IDstream1;
-	long IDsimM0;
-	long IDsimM1;
-	
-	long NBpairMax; 
-	
-	// similarity pairs extracted from stream0
-	long *sim0pair_k1;
-	long *sim0pair_k2;
-	double *sim0pair_val;
-	
-	// similarity pairs extracted from stream1
-	long *sim1pair_k1;
-	long *sim1pair_k2;
-	double *sim1pair_val;
+    long IDstream0;
+    long IDstream1;
+    long IDsimM0;
+    long IDsimM1;
 
-	long xsize0, ysize0, NBframe0, xysize0;
-	long xsize1, ysize1, NBframe1, xysize1;
-	long k1, k2;
-	long paircnt;
-	
-	
-	// ouput
-	long pair;
-	FILE *fpout0;
-	FILE *fpout1;
-	
-	double mediansim0, mediansim1;
-	
-	
-	
-	
-	IDstream0 = image_ID(IDname_stream0);
-	IDstream1 = image_ID(IDname_stream1);
-	IDsimM0 = image_ID(IDname_simM0);
-	IDsimM1 = image_ID(IDname_simM1);
-	
-	xsize0 = data.image[IDstream0].md[0].size[0];
-	ysize0 = data.image[IDstream0].md[0].size[1];
-	xysize0 = xsize0*ysize0;
-	NBframe0 = data.image[IDstream0].md[0].size[2];
-	
-	xsize1 = data.image[IDstream1].md[0].size[0];
-	ysize1 = data.image[IDstream1].md[0].size[1];
-	xysize1 = xsize1*ysize1;
-	NBframe1 = data.image[IDstream1].md[0].size[2];
-	
-	
-	// a few checks before proceeding
-	if(NBframe0!=NBframe1)
-	{
-		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != NBframe1 (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, NBframe1);
-		exit(0);
-	}
-	
-	if(NBframe0!=data.image[IDsimM0].md[0].size[0])
-	{
-		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 xsize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, (long) data.image[IDsimM0].md[0].size[0]);
-		exit(0);
-	}
-	
-	if(NBframe0!=data.image[IDsimM0].md[0].size[1])
-	{
-		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 ysize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, (long) data.image[IDsimM0].md[0].size[1]);
-		exit(0);
-	}
+    long NBpairMax;
 
-	if(NBframe1!=data.image[IDsimM1].md[0].size[0])
-	{
-		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 xsize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe1, (long) data.image[IDsimM1].md[0].size[0]);
-		exit(0);
-	}
-	
-	if(NBframe1!=data.image[IDsimM1].md[0].size[1])
-	{
-		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 ysize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe1, (long) data.image[IDsimM1].md[0].size[1]);
-		exit(0);
-	}
-	
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	NBpairMax = data.image[IDsimM0].md[0].size[0]*(data.image[IDsimM0].md[0].size[0]-1)/2;
-	
-	sim0pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
-	sim0pair_k2 = (long*) malloc(sizeof(long)*NBpairMax);
-	sim0pair_val = (double*) malloc(sizeof(double)*NBpairMax);
-	
-	sim1pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
-	sim1pair_k2 = (long*) malloc(sizeof(long)*NBpairMax);
-	sim1pair_val = (double*) malloc(sizeof(double)*NBpairMax);	
+    // similarity pairs extracted from stream0
+    long *sim0pair_k1;
+    long *sim0pair_k2;
+    double *sim0pair_val;
 
-	
-	paircnt = 0;
-	for(k1=0;k1<NBframe0;k1++)
-		for(k2=0;k2<k1;k2++)
-		{
-			if((k1-k2)>dtmin)
-			{
-				if(paircnt > NBpairMax-1)
-				{
-					printf("[%s] [%s] [%d]  ERROR: paircnt (%ld) >= NBpairMax (%ld)\n", __FILE__, __FUNCTION__, __LINE__, paircnt, NBpairMax);
-					printf("NBframe0 = %ld\n", NBframe0);
-					
-					exit(0);
-				}				
-				
-				sim0pair_k1[paircnt] = k1;
-				sim0pair_k2[paircnt] = k2;
-				sim0pair_val[paircnt] = data.image[IDsimM0].array.F[k1*NBframe0+k2];
+    // similarity pairs extracted from stream1
+    long *sim1pair_k1;
+    long *sim1pair_k2;
+    double *sim1pair_val;
 
-				sim1pair_k1[paircnt] = k1;
-				sim1pair_k2[paircnt] = k2;
-				sim1pair_val[paircnt] = data.image[IDsimM1].array.F[k1*NBframe1+k2];
-				
-				paircnt++;
-			}
-		}
+    long xsize0, ysize0, NBframe0, xysize0;
+    long xsize1, ysize1, NBframe1, xysize1;
+    long k1, k2;
+    long paircnt;
 
 
-	
-	quick_sort3ll_double(sim0pair_val, sim0pair_k1, sim0pair_k2, paircnt);
-	quick_sort3ll_double(sim1pair_val, sim1pair_k1, sim1pair_k2, paircnt);
-	mediansim0 = sim0pair_val[paircnt/2];
-	mediansim1 = sim1pair_val[paircnt/2];
-	
-	if( (fpout0 = fopen("sim0pairs.txt", "w")) == NULL)
-	{
-		printf("[%s] [%s] [%d]  ERROR: cannot create file\n", __FILE__, __FUNCTION__, __LINE__);
-		exit(0);
-	}
-	for(pair=0;pair<NBselected;pair++)
-	{
-		k1 = sim0pair_k1[pair];
-		k2 = sim0pair_k2[pair];
-		fprintf(fpout0, "%5ld  %5ld  %5ld  %8.6f  %8.6f\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2]/mediansim0, data.image[IDsimM1].array.F[k1*NBframe0+k2]/mediansim1);
-	}
-	fclose(fpout0);
-	
-	
-	if( (fpout1 = fopen("sim1pairs.txt", "w")) == NULL)
-	{
-		printf("[%s] [%s] [%d]  ERROR: cannot create file\n", __FILE__, __FUNCTION__, __LINE__);
-		exit(0);
-	}
-	for(pair=0;pair<NBselected;pair++)
-	{
-		k1 = sim1pair_k1[pair];
-		k2 = sim1pair_k2[pair];
-		fprintf(fpout1, "%5ld  %5ld  %5ld  %8.6f  %8.6f\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2]/mediansim0, data.image[IDsimM1].array.F[k1*NBframe1+k2]/mediansim1);
-	}
-	fclose(fpout1);
-	
-	
-	
-	// Create 2D distribution of similarities
-	
-	uint32_t xsize2Ddistrib = 512;
-	uint32_t ysize2Ddistrib = 512;
-	
-	long IDsim2Ddistrib = create_2Dimage_ID("sim2Ddistrib", xsize2Ddistrib, ysize2Ddistrib);
+    // ouput
+    long pair;
+    FILE *fpout0;
+    FILE *fpout1;
 
-	for(k1=0;k1<NBframe0;k1++)
-		for(k2=0;k2<k1;k2++)
-		{
-			if((k1-k2)>dtmin)
-			{
-			float x, y;
-			long ii, jj;
-			
-			x = data.image[IDsimM0].array.F[k1*NBframe0+k2] / mediansim0;
-			y = data.image[IDsimM1].array.F[k1*NBframe1+k2] / mediansim1;
-			
-			ii = (uint32_t) (2.0*x*xsize2Ddistrib);
-			jj = (uint32_t) (2.0*y*ysize2Ddistrib);
-			
-			if((ii<xsize2Ddistrib)&&(jj<ysize2Ddistrib))
-				data.image[IDsim2Ddistrib].array.F[jj*xsize2Ddistrib+ii] += 1.0;
-			}
-		}
-	
+    double mediansim0, mediansim1;
 
-	long IDsim0diff0 = create_3Dimage_ID("sim0diff0", xsize0, ysize0, NBselected);
-	long IDsim0diff1 = create_3Dimage_ID("sim0diff1", xsize1, ysize1, NBselected);
-	
-	for(pair=0;pair<NBselected;pair++)
-	{
-		long ii;
-		
-		k1 = sim0pair_k1[pair];
-		k2 = sim0pair_k2[pair];
-		
-		for(ii=0;ii<xysize0;ii++)
-			data.image[IDsim0diff0].array.F[pair*xysize0+ii] = data.image[IDstream0].array.F[k1*xysize0+ii] - data.image[IDstream0].array.F[k2*xysize0+ii];
-		for(ii=0;ii<xysize1;ii++)
-			data.image[IDsim0diff1].array.F[pair*xysize1+ii] = data.image[IDstream1].array.F[k1*xysize1+ii] - data.image[IDstream1].array.F[k2*xysize1+ii];
-	}
-	
-	
-	long IDsim1diff0 = create_3Dimage_ID("sim1diff0", xsize0, ysize0, NBselected);
-	long IDsim1diff1 = create_3Dimage_ID("sim1diff1", xsize1, ysize1, NBselected);
 
-	for(pair=0;pair<NBselected;pair++)
-	{
-		long ii;
-		
-		k1 = sim1pair_k1[pair];
-		k2 = sim1pair_k2[pair];
-		
-		for(ii=0;ii<xysize0;ii++)
-			data.image[IDsim1diff0].array.F[pair*xysize0+ii] = data.image[IDstream0].array.F[k1*xysize0+ii] - data.image[IDstream0].array.F[k2*xysize0+ii];
-		for(ii=0;ii<xysize1;ii++)
-			data.image[IDsim1diff1].array.F[pair*xysize1+ii] = data.image[IDstream1].array.F[k1*xysize1+ii] - data.image[IDstream1].array.F[k2*xysize1+ii];
-	}
-	
-	
 
-	free(sim0pair_k1);
-	free(sim0pair_k2);
-	free(sim0pair_val);
 
-	free(sim1pair_k1);
-	free(sim1pair_k2);
-	free(sim1pair_val);
-	
-	return 0;
+    IDstream0 = image_ID(IDname_stream0);
+    IDstream1 = image_ID(IDname_stream1);
+    IDsimM0 = image_ID(IDname_simM0);
+    IDsimM1 = image_ID(IDname_simM1);
+
+    xsize0 = data.image[IDstream0].md[0].size[0];
+    ysize0 = data.image[IDstream0].md[0].size[1];
+    xysize0 = xsize0*ysize0;
+    NBframe0 = data.image[IDstream0].md[0].size[2];
+
+    xsize1 = data.image[IDstream1].md[0].size[0];
+    ysize1 = data.image[IDstream1].md[0].size[1];
+    xysize1 = xsize1*ysize1;
+    NBframe1 = data.image[IDstream1].md[0].size[2];
+
+
+    // a few checks before proceeding
+    if(NBframe0!=NBframe1)
+    {
+        printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != NBframe1 (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, NBframe1);
+        exit(0);
+    }
+
+    if(NBframe0!=data.image[IDsimM0].md[0].size[0])
+    {
+        printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 xsize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, (long) data.image[IDsimM0].md[0].size[0]);
+        exit(0);
+    }
+
+    if(NBframe0!=data.image[IDsimM0].md[0].size[1])
+    {
+        printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 ysize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, (long) data.image[IDsimM0].md[0].size[1]);
+        exit(0);
+    }
+
+    if(NBframe1!=data.image[IDsimM1].md[0].size[0])
+    {
+        printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 xsize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe1, (long) data.image[IDsimM1].md[0].size[0]);
+        exit(0);
+    }
+
+    if(NBframe1!=data.image[IDsimM1].md[0].size[1])
+    {
+        printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 ysize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe1, (long) data.image[IDsimM1].md[0].size[1]);
+        exit(0);
+    }
+
+
+
+
+
+
+
+
+
+
+    NBpairMax = data.image[IDsimM0].md[0].size[0]*(data.image[IDsimM0].md[0].size[0]-1)/2;
+
+    sim0pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
+    sim0pair_k2 = (long*) malloc(sizeof(long)*NBpairMax);
+    sim0pair_val = (double*) malloc(sizeof(double)*NBpairMax);
+
+    sim1pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
+    sim1pair_k2 = (long*) malloc(sizeof(long)*NBpairMax);
+    sim1pair_val = (double*) malloc(sizeof(double)*NBpairMax);
+
+
+    paircnt = 0;
+    for(k1=0; k1<NBframe0; k1++)
+        for(k2=0; k2<k1; k2++)
+        {
+            if((k1-k2)>dtmin)
+            {
+                if(paircnt > NBpairMax-1)
+                {
+                    printf("[%s] [%s] [%d]  ERROR: paircnt (%ld) >= NBpairMax (%ld)\n", __FILE__, __FUNCTION__, __LINE__, paircnt, NBpairMax);
+                    printf("NBframe0 = %ld\n", NBframe0);
+
+                    exit(0);
+                }
+
+                sim0pair_k1[paircnt] = k1;
+                sim0pair_k2[paircnt] = k2;
+                sim0pair_val[paircnt] = data.image[IDsimM0].array.F[k1*NBframe0+k2];
+
+                sim1pair_k1[paircnt] = k1;
+                sim1pair_k2[paircnt] = k2;
+                sim1pair_val[paircnt] = data.image[IDsimM1].array.F[k1*NBframe1+k2];
+
+                paircnt++;
+            }
+        }
+
+
+
+    quick_sort3ll_double(sim0pair_val, sim0pair_k1, sim0pair_k2, paircnt);
+    quick_sort3ll_double(sim1pair_val, sim1pair_k1, sim1pair_k2, paircnt);
+    mediansim0 = sim0pair_val[paircnt/2];
+    mediansim1 = sim1pair_val[paircnt/2];
+
+    if( (fpout0 = fopen("sim0pairs.txt", "w")) == NULL)
+    {
+        printf("[%s] [%s] [%d]  ERROR: cannot create file\n", __FILE__, __FUNCTION__, __LINE__);
+        exit(0);
+    }
+    for(pair=0; pair<NBselected; pair++)
+    {
+        k1 = sim0pair_k1[pair];
+        k2 = sim0pair_k2[pair];
+        fprintf(fpout0, "%5ld  %5ld  %5ld  %8.6f  %8.6f\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2]/mediansim0, data.image[IDsimM1].array.F[k1*NBframe0+k2]/mediansim1);
+    }
+    fclose(fpout0);
+
+
+    if( (fpout1 = fopen("sim1pairs.txt", "w")) == NULL)
+    {
+        printf("[%s] [%s] [%d]  ERROR: cannot create file\n", __FILE__, __FUNCTION__, __LINE__);
+        exit(0);
+    }
+    for(pair=0; pair<NBselected; pair++)
+    {
+        k1 = sim1pair_k1[pair];
+        k2 = sim1pair_k2[pair];
+        fprintf(fpout1, "%5ld  %5ld  %5ld  %8.6f  %8.6f\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2]/mediansim0, data.image[IDsimM1].array.F[k1*NBframe1+k2]/mediansim1);
+    }
+    fclose(fpout1);
+
+
+
+    // Create 2D distribution of similarities
+
+    uint32_t xsize2Ddistrib = 512;
+    uint32_t ysize2Ddistrib = 512;
+
+    long IDsim2Ddistrib = create_2Dimage_ID("sim2Ddistrib", xsize2Ddistrib, ysize2Ddistrib);
+
+    for(k1=0; k1<NBframe0; k1++)
+        for(k2=0; k2<k1; k2++)
+        {
+            if((k1-k2)>dtmin)
+            {
+                float x, y;
+                long ii, jj;
+
+                x = data.image[IDsimM0].array.F[k1*NBframe0+k2] / mediansim0;
+                y = data.image[IDsimM1].array.F[k1*NBframe1+k2] / mediansim1;
+
+                ii = (uint32_t) (0.5*x*xsize2Ddistrib);
+                jj = (uint32_t) (0.5*y*ysize2Ddistrib);
+
+                if((ii<xsize2Ddistrib)&&(jj<ysize2Ddistrib))
+                    data.image[IDsim2Ddistrib].array.F[jj*xsize2Ddistrib+ii] += 1.0;
+            }
+        }
+
+
+    long IDsim0diff0 = create_3Dimage_ID("sim0diff0", xsize0, ysize0, NBselected);
+    long IDsim0diff1 = create_3Dimage_ID("sim0diff1", xsize1, ysize1, NBselected);
+
+    for(pair=0; pair<NBselected; pair++)
+    {
+        long ii;
+
+        k1 = sim0pair_k1[pair];
+        k2 = sim0pair_k2[pair];
+
+        for(ii=0; ii<xysize0; ii++)
+            data.image[IDsim0diff0].array.F[pair*xysize0+ii] = data.image[IDstream0].array.F[k1*xysize0+ii] - data.image[IDstream0].array.F[k2*xysize0+ii];
+        for(ii=0; ii<xysize1; ii++)
+            data.image[IDsim0diff1].array.F[pair*xysize1+ii] = data.image[IDstream1].array.F[k1*xysize1+ii] - data.image[IDstream1].array.F[k2*xysize1+ii];
+    }
+
+
+    long IDsim1diff0 = create_3Dimage_ID("sim1diff0", xsize0, ysize0, NBselected);
+    long IDsim1diff1 = create_3Dimage_ID("sim1diff1", xsize1, ysize1, NBselected);
+
+    for(pair=0; pair<NBselected; pair++)
+    {
+        long ii;
+
+        k1 = sim1pair_k1[pair];
+        k2 = sim1pair_k2[pair];
+
+        for(ii=0; ii<xysize0; ii++)
+            data.image[IDsim1diff0].array.F[pair*xysize0+ii] = data.image[IDstream0].array.F[k1*xysize0+ii] - data.image[IDstream0].array.F[k2*xysize0+ii];
+        for(ii=0; ii<xysize1; ii++)
+            data.image[IDsim1diff1].array.F[pair*xysize1+ii] = data.image[IDstream1].array.F[k1*xysize1+ii] - data.image[IDstream1].array.F[k2*xysize1+ii];
+    }
+
+
+
+    free(sim0pair_k1);
+    free(sim0pair_k2);
+    free(sim0pair_val);
+
+    free(sim1pair_k1);
+    free(sim1pair_k2);
+    free(sim1pair_val);
+
+    return 0;
 }
