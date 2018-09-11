@@ -1555,7 +1555,7 @@ int AOloopControl_perfTest_mkTimingFile(
                 {
                     if((sscanf(line, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)==6) && (tOK==1))
                     {
-						printf("cnt %5ld read\n", cnt);//TEST
+						//printf("cnt %5ld read\n", cnt);//TEST
                         tarray[cnt] = valf2;
 
                         if(cnt == 0)
@@ -1579,7 +1579,7 @@ int AOloopControl_perfTest_mkTimingFile(
             if(tOK==0)
                 scanOK = 0;
 
-            printf("[%5ld] [%d] LINE: \"%s\"\n", linecnt, scanOK, line);
+            //printf("[%5ld] [%d] LINE: \"%s\"\n", linecnt, scanOK, line);
             linecnt++;
 
         }
@@ -1592,8 +1592,8 @@ int AOloopControl_perfTest_mkTimingFile(
 
     }
     
-    printf("datfile.tstart  = %f\n", datfile.tstart);
-    printf("datfile.tend    = %f\n", datfile.tend);
+    //printf("datfile.tstart  = %f\n", datfile.tstart);
+    //printf("datfile.tend    = %f\n", datfile.tend);
 
     // write timing summary file
 
@@ -1792,7 +1792,6 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             
                             AOloopControl_perfTest_mkTimingFile(fnamein, fname, tmpstring);
                             
-                            exit(0);//TEST
 
                             if ( (fp=fopen(fname, "r")) == NULL )
                             {
