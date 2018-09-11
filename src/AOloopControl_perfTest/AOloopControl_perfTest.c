@@ -1744,7 +1744,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         // Identify relevant files in directory
         //
 
-        printf("SCANNING directory ... \n");
+        printf("SCANNING directory (stream %d)  %s ... \n", stream, datadirstream);
         fflush(stdout);
 
         NBdatFiles = 0;
