@@ -1779,6 +1779,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 							else
 								sprintf(fnamein, "%s/%s.txt", datadirstream, tmpstring);
                             
+                            printf("input  : %s\n", fnamein);
+                            printf("output : %s\n", fname);
+                            
                             AOloopControl_perfTest_mkTimingFile(fnamein, fname, tmpstring);
 
                             if ( (fp=fopen(fname, "r")) == NULL )
@@ -2225,7 +2228,6 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 	int perccomplete;
 	int perccompletelast = 0;
 	
-	float alpha = 0.2;
 	
 	
 	ID = image_ID(IDname);
