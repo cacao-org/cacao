@@ -266,6 +266,16 @@ int_fast8_t AOloopControl_perfTest_ComputeSimilarityMatrix_cli()
 
 
 
+int_fast8_t AOloopControl_perfTest_StatAnalysis_2streams_cli()
+{
+	if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,4)+CLI_checkarg(4,4)+CLI_checkarg(5,2)+CLI_checkarg(6,2) == 0)
+	{
+		AOloopControl_perfTest_StatAnalysis_2streams(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl);
+	}
+	else
+		return 1;
+}
+
 
 
 
@@ -351,6 +361,16 @@ int_fast8_t init_AOloopControl_perfTest()
 		"<input cube> <output matrix>",
 		"aolperfcompsimM imc outM",
 		"int AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname, char *IDname_out)");
+		
+
+	RegisterCLIcommand("aolperfsimpairs",
+		__FILE__,
+		AOloopControl_perfTest_StatAnalysis_2streams_cli,
+		"Find similarity pairs and perform statistical analysis",
+		"<input stream0 cube> <input stream1 cube> <input simM0> <input simM1> <min frame dt> <NBselected>",
+		"aolperfsimpairs imc0 imc1 simM0 simM1 20 1000",
+		"int AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0, char *IDname_stream1, char *IDname_simM0, char *IDname_simM1, long dtmin, long NBselected)");
+
 	
 }
 
@@ -2254,6 +2274,151 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 	
 	free(array1);
 	free(array2);
+	
+	return 0;
+}
+
+
+/**
+ * # Purpose
+ * 
+ * Perform statistical analysis of two streams from similarity matrices
+ * 
+ * # Details
+ * 
+ * Selects the NBselected most similar pairs in stream0 and stream1 separated by at least dtmin frames
+ * 
+ * Computes the differences between the corresponding pairs in the other stream
+ * 
+ * # Output
+ * 
+ * 
+ * 
+ */
+
+int AOloopControl_perfTest_StatAnalysis_2streams(
+	char *IDname_stream0,
+	char *IDname_stream1,
+	char *IDname_simM0,
+	char *IDname_simM1,
+	long dtmin,
+	long NBselected
+	)
+{
+	long IDstream0;
+	long IDstream1;
+	long IDsimM0;
+	long IDsimM1;
+	
+	long NBpairMax; 
+	
+	// similarity pairs extracted from stream0
+	long *sim0pair_k1;
+	long *sim0pair_k2;
+	double *sim0pair_val;
+	
+	// similarity pairs extracted from stream1
+	long *sim1pair_k1;
+	long *sim1pair_k2;
+	double *sim1pair_val;
+
+	long xsize0, ysize0, NBframe0;
+	long xsize1, ysize1, NBframe1;
+	long k1, k2;
+	long paircnt;
+	
+	
+	// ouput
+	long pair;
+	FILE *fpout0;
+	FILE *fpout1;
+	
+	
+	
+	IDstream0 = image_ID(IDname_stream0);
+	IDstream1 = image_ID(IDname_stream1);
+	IDsimM0 = image_ID(IDname_simM0);
+	IDsimM1 = image_ID(IDname_simM1);
+	
+	xsize0 = data.image[IDstream0].md[0].size[0];
+	ysize0 = data.image[IDstream0].md[0].size[1];
+	NBframe0 = data.image[IDstream0].md[0].size[2];
+	
+	xsize1 = data.image[IDstream1].md[0].size[0];
+	ysize1 = data.image[IDstream1].md[0].size[1];
+	NBframe1 = data.image[IDstream1].md[0].size[2];
+	
+	
+	NBpairMax = data.image[IDsimM0].md[0].size[0];
+	
+	sim0pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
+	sim0pair_k2 = (long*) malloc(sizeof(long)*NBpairMax);
+	sim0pair_val = (double*) malloc(sizeof(double)*NBpairMax);
+	
+	sim1pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
+	sim1pair_k2 = (long*) malloc(sizeof(long)*NBpairMax);
+	sim1pair_val = (double*) malloc(sizeof(double)*NBpairMax);	
+
+	
+	paircnt = 0;
+	for(k1=0;k1<NBframe0;k1++)
+		for(k2=0;k2<k1;k2++)
+		{
+			if((k1-k2)>dtmin)
+			{
+				sim0pair_k1[paircnt] = k1;
+				sim0pair_k2[paircnt] = k2;
+				sim0pair_val[paircnt] = data.image[IDsimM0].array.F[k1*NBframe0+k2];
+
+				sim1pair_k1[paircnt] = k1;
+				sim1pair_k2[paircnt] = k2;
+				sim1pair_val[paircnt] = data.image[IDsimM1].array.F[k1*NBframe0+k2];
+				
+				paircnt++;
+			}
+		}
+	
+	quick_sort3ll_double(sim0pair_val, sim0pair_k1, sim0pair_k2, paircnt);
+	quick_sort3ll_double(sim1pair_val, sim1pair_k1, sim1pair_k2, paircnt);
+	
+	
+	if( (fpout0 = fopen("sim0pairs.txt", "w")) == NULL)
+	{
+		printf("[%s] [%s] [%d]  ERROR: cannot create file\n", __FILE__, __FUNCTION__, __LINE__);
+		exit(0);
+	}
+	for(pair=0;pair<paircnt;pair++)
+	{
+		k1 = sim0pair_k1[pair];
+		k2 = sim0pair_k2[pair];
+		fprintf(fpout0, "%5ld  %5ld  %5ld  %g  %g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe0+k2]);
+	}
+	fclose(fpout0);
+	
+	
+	if( (fpout0 = fopen("sim1pairs.txt", "w")) == NULL)
+	{
+		printf("[%s] [%s] [%d]  ERROR: cannot create file\n", __FILE__, __FUNCTION__, __LINE__);
+		exit(0);
+	}
+	for(pair=0;pair<paircnt;pair++)
+	{
+		k1 = sim1pair_k1[pair];
+		k2 = sim1pair_k2[pair];
+		fprintf(fpout0, "%5ld  %5ld  %5ld  %g  %g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe0+k2]);
+	}
+	fclose(fpout0);
+	
+	
+
+
+	free(sim0pair_k1);
+	free(sim0pair_k2);
+	free(sim0pair_val);
+
+	free(sim1pair_k1);
+	free(sim1pair_k2);
+	free(sim1pair_val);
 	
 	return 0;
 }

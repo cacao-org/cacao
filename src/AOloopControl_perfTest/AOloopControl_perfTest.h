@@ -69,4 +69,14 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char
 
 int AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname, char *IDname_out);
 
+int AOloopControl_perfTest_StatAnalysis_2streams(
+	char *IDname_stream0,
+	char *IDname_stream1,
+	char *IDname_simM0,
+	char *IDname_simM1,
+	long dtmin,
+	long NBselected
+	);
+
+
 #endif
