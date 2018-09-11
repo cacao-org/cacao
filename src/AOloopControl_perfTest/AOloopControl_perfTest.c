@@ -2202,6 +2202,8 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 	float *array2;
 	char *srcptr;
 	
+	int perccompletelast = 0;
+	
 	ID = image_ID(IDname);
 	xsize = data.image[ID].md[0].size[0];
     ysize = data.image[ID].md[0].size[1];
@@ -2211,6 +2213,7 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 	array1 = (float*) malloc(sizeof(float)*xysize);
 	array2 = (float*) malloc(sizeof(float)*xysize);
 
+	
     IDout = create_2Dimage_ID(IDname_out, zsize, zsize);
 	printf("\n");
 	for(k1=0;k1<zsize;k1++)
@@ -2227,9 +2230,15 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 			
 			srcptr = (char*) data.image[ID].array.F + sizeof(float)*xysize*k2;
 			memcpy(array2, srcptr, sizeof(float)*xysize);
+
+			perccomplete = (int) (100.0*cnt/(zsize*(zsize-1)/2));
+			if(perccompletelast<perccomplete)
+			{
+				printf("\r [%5.2f %%]   %5ld / %5ld    %5ld / %5ld     ", 100.0*cnt/(zsize*(zsize-1)/2), k1, (long) zsize, k2, (long) zsize);
+				fflush(stdout);
+				perccompletelast = perccomplete;
+			}
 			
-			printf("\r [%5.2f %%]   %5ld / %5ld    %5ld / %5ld     ", 100.0*cnt/(zsize*(zsize-1)/2), k1, (long) zsize, k2, (long) zsize);
-			fflush(stdout);
 			for(ii=0;ii<xysize;ii++)
 			{
 				v0 = (array1[ii] - array2[ii]);
