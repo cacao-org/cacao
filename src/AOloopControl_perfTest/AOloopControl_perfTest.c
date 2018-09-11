@@ -2225,6 +2225,9 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 	int perccomplete;
 	int perccompletelast = 0;
 	
+	float apha = 0.2;
+	
+	
 	ID = image_ID(IDname);
 	xsize = data.image[ID].md[0].size[0];
     ysize = data.image[ID].md[0].size[1];
@@ -2263,7 +2266,7 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 			for(ii=0;ii<xysize;ii++)
 			{
 				v0 = (array1[ii] - array2[ii]);
-				val += v0*v0;
+				val += pow(v0, alpha);
 			}
 			
 			data.image[IDout].array.F[k1*zsize+k2] = val;
