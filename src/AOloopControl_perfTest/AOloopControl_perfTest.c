@@ -2266,7 +2266,7 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 			for(ii=0;ii<xysize;ii++)
 			{
 				v0 = (array1[ii] - array2[ii]);
-				val += pow(v0, alpha);
+				val += v0*v0;
 			}
 			
 			data.image[IDout].array.F[k1*zsize+k2] = val;
