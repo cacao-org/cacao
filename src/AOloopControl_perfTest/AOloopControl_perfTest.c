@@ -1956,8 +1956,12 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
             if((fp = fopen(fname, "r"))==NULL)
             {
-                printf("Cannot open file \"%s.dat\"\n", datfile[i].name);
+				sprintf(fname, "%s/%s.txt", datadirstream, datfile[i].name);
+				
+				if((fp = fopen(fname, "r"))==NULL){
+                printf("Cannot open file \"%s.dat\" or \"%s.txt\"\n", datfile[i].name, datfile[i].name);
                 exit(0);
+				}
             }
             else
             {
