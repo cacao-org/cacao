@@ -2349,7 +2349,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	NBframe1 = data.image[IDstream1].md[0].size[2];
 	
 	
-	NBpairMax = data.image[IDsimM0].md[0].size[0];
+	NBpairMax = data.image[IDsimM0].md[0].size[0]*(data.image[IDsimM0].md[0].size[0]-1)/2;
 	
 	sim0pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
 	sim0pair_k2 = (long*) malloc(sizeof(long)*NBpairMax);
