@@ -2387,7 +2387,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 		}
 
 
-/*	
+	
 	quick_sort3ll_double(sim0pair_val, sim0pair_k1, sim0pair_k2, paircnt);
 	quick_sort3ll_double(sim1pair_val, sim1pair_k1, sim1pair_k2, paircnt);
 	
@@ -2418,7 +2418,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 		fprintf(fpout1, "%5ld  %5ld  %5ld  %g  %g\n", pair, k1, k2, data.image[IDsimM0].array.F[k1*NBframe0+k2], data.image[IDsimM1].array.F[k1*NBframe0+k2]);
 	}
 	fclose(fpout1);
-	*/
+	
 	
 
 
