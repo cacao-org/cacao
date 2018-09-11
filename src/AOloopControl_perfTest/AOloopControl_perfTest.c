@@ -1586,12 +1586,12 @@ int AOloopControl_perfTest_mkTimingFile(
         datfile.cnt = cnt;
         strcpy(datfile.name, tmpstring);
 
-
-
-
         free(tarray);
 
     }
+    
+    printf("datfile.tstart  = %f\n", datfile.tstart);
+    printf("datfile.tend    = %f\n", datfile.tend);
 
     // write timing summary file
 
