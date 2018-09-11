@@ -1519,6 +1519,7 @@ int AOloopControl_perfTest_mkTimingFile(
     double valf1, valf2;
     long vald1, vald2, vald3, vald4;
     char line[512];
+    long linecnt = 0;
 	
 	double *tarray;
 	double MaxNBsample = 1000000;
@@ -1573,6 +1574,9 @@ int AOloopControl_perfTest_mkTimingFile(
 
             if(tOK==0)
                 scanOK = 0;
+                
+            printf("[%d] LINE: \"%s\"\n", scanOK, line);
+            linecnt++;
 
         }
         fclose(fp);
