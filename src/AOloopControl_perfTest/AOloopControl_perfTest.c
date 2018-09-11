@@ -2356,6 +2356,36 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 		exit(0);
 	}
 	
+	if(NBframe0!=data.image[IDsimM0].md[0].size[0])
+	{
+		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 xsize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, (long) data.image[IDsimM0].md[0].size[0]);
+		exit(0);
+	}
+	
+	if(NBframe0!=data.image[IDsimM0].md[0].size[1])
+	{
+		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 ysize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, (long) data.image[IDsimM0].md[0].size[1]);
+		exit(0);
+	}
+
+	if(NBframe1!=data.image[IDsimM1].md[0].size[0])
+	{
+		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 xsize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe1, (long) data.image[IDsimM1].md[0].size[0]);
+		exit(0);
+	}
+	
+	if(NBframe1!=data.image[IDsimM1].md[0].size[1])
+	{
+		printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 ysize (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe1, (long) data.image[IDsimM1].md[0].size[1]);
+		exit(0);
+	}
+	
+		
+	
+	
+	
+	
+	
 	
 	
 	
