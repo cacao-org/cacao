@@ -2198,6 +2198,9 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
 	uint32_t xsize, ysize, xysize, zsize;
 	long k1, k2;
 	long cnt = 0;
+	float *array1;
+	float *array2;
+	char *srcptr;
 	
 	ID = image_ID(IDname);
 	xsize = data.image[ID].md[0].size[0];
@@ -2205,29 +2208,42 @@ int AOloopControl_perfTest_ComputeSimilarityMatrix(
     xysize = xsize*ysize;
     zsize = data.image[ID].md[0].size[2];
 
+	array1 = (float*) malloc(sizeof(float)*xysize);
+	array2 = (float*) malloc(sizeof(float)*xysize);
+
     IDout = create_2Dimage_ID(IDname_out, zsize, zsize);
 	printf("\n");
 	for(k1=0;k1<zsize;k1++)
 	{
+		srcptr = (char*) data.image[ID].array.F + sizeof(float)*xysize*k1;
+		
+		memcpy(array1, srcptr, sizeof(float)*xysize);
+		
 		for(k2=0;k2<k1;k2++)
 		{
 			double val = 0.0;
 			long ii;
 			double v0;
 			
+			srcptr = (char*) data.image[ID].array.F + sizeof(float)*xysize*k2;
+			memcpy(array2, srcptr, sizeof(float)*xysize);
+			
 			printf("\r [%5.2f %%]   %5ld / %5ld    %5ld / %5ld     ", 100.0*cnt/(zsize*(zsize-1)/2), k1, (long) zsize, k2, (long) zsize);
 			fflush(stdout);
 			for(ii=0;ii<xysize;ii++)
 			{
-				v0 = (data.image[ID].array.F[k1*xysize+ii] - data.image[ID].array.F[k2*xysize+ii]);
+				v0 = (array1[ii] - array2[ii]);
 				val += v0*v0;
 			}
+			
 			data.image[IDout].array.F[k1*zsize+k2] = val;
 			cnt++;
 		}
 	}
 	printf("\n");
 	
+	free(array1);
+	free(array2);
 	
 	return 0;
 }
