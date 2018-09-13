@@ -480,7 +480,10 @@ void init_AOloopControl();
 
 int AOloopControl_bogusfunc();
 
-
+int AOloopControl_aorun_GUI(
+    long loop,
+    double frequ
+);
 
 
 
