@@ -49,3 +49,4 @@ src/cacao
 dochtml/
 build
 include
+.vscode
