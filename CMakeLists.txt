@@ -67,8 +67,14 @@ if(USE_CUDA)
 find_package( CUDA REQUIRED )
 endif(USE_CUDA)
 
-if(USE_MAGMA)
 find_package(PkgConfig REQUIRED)
+pkg_check_modules(CFITSIO REQUIRED cfitsio)
+link_directories( ${CFITSIO_LIBRARY_DIRS} )
+
+pkg_check_modules(NCURSES REQUIRED ncurses)
+link_directories( ${NCURSES_LIBRARY_DIRS} )
+
+if(USE_MAGMA)
 pkg_check_modules(MAGMA REQUIRED magma)
 message(STATUS ${MAGMA_LIBRARY_DIRS})
 link_directories( ${MAGMA_LIBRARY_DIRS} )
@@ -92,6 +98,16 @@ message("USE QDWHPARTIAL          = ${USE_QDWHPARTIAL}")
 if(USE_QDWHPARTIAL)
 message("   QDWHPARTIAL_LIBRARIES = ${QDWHPARTIAL_LIBRARIES}")
 endif(USE_QDWHPARTIAL)
+
+include_directories(
+${PROJECT_SOURCE_DIR}/src
+${GSL_INCLUDE_DIRS}
+${FFTW_INCLUDE_DIRS}
+${FFTWF_INCLUDE_DIRS}
+${NCURSES_INCLUDE_DIR}
+${CFITSIO_INCLUDE_DIRS}
+)
+
 
 message("====================================================")
 
@@ -140,14 +156,6 @@ add_subdirectory ( "src/pyCacao" )
 add_executable(cacao 
 src/CLImain.c)
 
-target_include_directories(cacao PUBLIC
-${PROJECT_SOURCE_DIR}/src
-${GSL_INCLUDE_DIRS}
-${FFTW_INCLUDE_DIRS}
-${FFTWF_INCLUDE_DIRS}
-${CURSES_INCLUDE_DIR}
-)
-
 # adds the options to all targets within the directory and its sub-directories
 target_compile_options(cacao PUBLIC 
 ${FFTW_CFLAGS_OTHER}
@@ -191,8 +199,8 @@ FPAOloopControl
 linopt_imtools
 m
 readline
-ncurses
-cfitsio
+${NCURSES_LIBRARIES}
+${CFITSIO_LIBRARIES}
 dl
 rt
 ${GSL_LIBRARIES} 
