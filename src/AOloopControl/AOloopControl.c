@@ -3,6 +3,43 @@
  * @brief   Adaptive Optics Control loop engine
  * 
  * AO engine uses stream data structure
+ * 
+ * # Files
+ * 
+ * ## Main files
+ * 
+ * AOloopControl_initmem.c                   Initialize memory
+ * AOloopControl_loadconfigure.c             Load and save configuration
+ * AOloopControl_aorun.c                     Main level loop function, calls AOcompute
+ * AOloopControl_AOcompute.c                 AO Compute function, WFS to DM commands
+ * AOloopControl_wfs.c                       Read WFS data, low level processing of WFS data
+ * AOloopControl_dm.c                        Deformable mirror control, write modes to DM
+ * AOloopControl_dmwrite.c                   Turn DM write on/off
+ * AOloopControl_loop_ctr.c                  Loop control user interface
+ * AOloopControl_loop_onoff.c                Turn loop on/off, pause, step
+ * AOloopControl_param.c                     Set parameters
+ * AOloopControl_read_param.c                Read parameters
+ * AOloopControl_ProcessModeCoefficients.c   Modal control
+ * AOloopControl_CompModes_loop.c            Compute modes (loop)
+ * 
+ * 
+ * ## I/O, telemetry
+ * 
+ * AOloopControl_RTstreamLOG.c               Log real-time telemetry
+ * 
+ * 
+ * ## Performance tuning / optimization
+ * 
+ * AOloopControl_arpf_onoff.c                Autoregressive predictive control On/Off
+ * AOloopControl_predfilter_onoff.c          Turn predictive control on/off
+ * AOloopControl_autotune.c                  Automatic loop tuning (mostly gain values)
+ * AOloopControl_process_files.c             -- EXPERIMENTAL -- RM optimization from telemetry
+ * 
+ * 
+ * AOloopControl_time_param.c                ??
+ * AOloopControl_sig2Modecoeff.c             ??
+ * AOloopControl_fpspeckle_mod.c             Speckle modulation (experimental)
+ * 
  *  
  * @author  O. Guyon
  * @date    10 Sept 2017 
