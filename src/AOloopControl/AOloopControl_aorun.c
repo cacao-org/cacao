@@ -17,7 +17,7 @@
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
-#define _PRINT_TEST
+//#define _PRINT_TEST
 
 #ifdef __MACH__   // for Mac OS X - 
 //#include <mach/mach_time.h>
