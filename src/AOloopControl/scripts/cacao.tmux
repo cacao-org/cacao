@@ -121,15 +121,17 @@ fi
 if [ "$STARTPROC" = "1" ]; then
 # START aolconf
 tmux send-keys -t $SESSION:0.0 "./aolconf" C-m
-sleep 0.1
+sleep 0.5
 
 # START Alignment screen
 tmux send-keys -t $SESSION:0.2 "./aolconf -n" C-m
+sleep 0.5
 tmux send-keys -t $SESSION:0.2 "A" C-m
 sleep 0.1
 
 # START Hardware control screen
 tmux send-keys -t $SESSION:0.3 "./aolconf -n" C-m
+sleep 0.5
 tmux send-keys -t $SESSION:0.3 "H" C-m
 sleep 0.1
 
