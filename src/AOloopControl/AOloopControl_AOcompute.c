@@ -13,7 +13,7 @@
  */
 
 // uncomment for test print statements to stdout
-//#define _PRINT_TEST
+#define _PRINT_TEST
 
 #define _GNU_SOURCE
 
