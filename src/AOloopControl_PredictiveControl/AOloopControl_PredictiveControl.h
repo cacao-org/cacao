@@ -35,7 +35,7 @@ int_fast8_t AOloopControl_PredictiveControl_mapPredictiveFilter(const char *IDmo
 
 double AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name, long mode, double delayfr, long filtsize, const char *IDfilt_name, double SVDeps);
 
-long AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop, long PFblock, long PFblockStart, long PFblockEnd);
+long AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop, long PFblock, long PFblockStart, long PFblockEnd, long NBbuff);
 
 /** @brief Set predictive filter to simple average of previous measures */
 long AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name, float DecayCoeff);

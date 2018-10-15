@@ -65,8 +65,8 @@ static int INITSTATUS_AOloopControl_PredictiveControl = 0;
 
 /** @brief CLI function for AOloopControl_builPFloop_WatchInput */
 int_fast8_t AOloopControl_PredictiveControl_builPFloop_WatchInput_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)==0) {
-        AOloopControl_PredictiveControl_builPFloop_WatchInput(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl);
+    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)==0) {
+        AOloopControl_PredictiveControl_builPFloop_WatchInput(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl);
         return 0;
     } else return 1;
 }
@@ -131,7 +131,7 @@ int_fast8_t init_AOloopControl_PredictiveControl()
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-    RegisterCLIcommand("aolPFwatchin",__FILE__, AOloopControl_PredictiveControl_builPFloop_WatchInput_cli, "watch telemetry for predictive filter input", "<loop #> <PFblock #> <start> <end>", "aolPFwatchin 0 2", "long AOloopControl_builPFloop_WatchInput(long loop, long PFblock, long PFblockStart, long PFblockEnd)");
+    RegisterCLIcommand("aolPFwatchin",__FILE__, AOloopControl_PredictiveControl_builPFloop_WatchInput_cli, "watch telemetry for predictive filter input", "<loop #> <PFblock #> <start> <end>", "aolPFwatchin 0 2", "long AOloopControl_builPFloop_WatchInput(long loop, long PFblock, long PFblockStart, long PFblockEnd, long NBbuff)");
 
     RegisterCLIcommand("aolmappfilt", __FILE__, AOloopControl_PredictiveControl_mapPredictiveFilter_cli, "map/search predictive filter", "<input coeffs> <mode number> <delay [frames]>", "aolmkapfilt coeffim 23 2.4", "long AOloopControl_mapPredictiveFilter(char *IDmodecoeff_name, long modeout, double delayfr)");
 

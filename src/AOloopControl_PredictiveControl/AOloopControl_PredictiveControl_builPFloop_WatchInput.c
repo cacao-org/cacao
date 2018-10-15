@@ -104,13 +104,17 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
  * PFblockEnd	LONG
  * 			Block end index
  * 
+ * #param[in]
+ * NBbuff       LONG
+ *          Number of input buffers to merge for each output 
  * 
  */
 long AOloopControl_PredictiveControl_builPFloop_WatchInput(
 	long loop, 
 	long PFblock, 
 	long PFblockStart, 
-	long PFblockEnd
+	long PFblockEnd,
+	long NBbuff
 	)
 {
     long IDinb0;
@@ -121,7 +125,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
     long cnt0_old, cnt1_old;
     long IDinb;
 
-    long twaitus = 100000; // 0.1 sec
+    long twaitus = 10000; // 0.01 sec
 
 
     long PFblockSize;
@@ -137,6 +141,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
     struct tm *uttime;
     struct timespec timenow;
     long xsize, ysize, zsize, xysize;
+    long zsizein;
     int cube;
 
     long IDout;
@@ -170,7 +175,8 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
     xsize = data.image[IDinb0].md[0].size[0];
     ysize = data.image[IDinb0].md[0].size[1];
     xysize = xsize*ysize;
-    zsize = data.image[IDinb0].md[0].size[2];
+    zsizein = data.image[IDinb0].md[0].size[2];
+    zsize = data.image[IDinb0].md[0].size[2]*NBbuff;
     atype = data.image[IDinb0].md[0].atype;
 
 
@@ -218,7 +224,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
     printf("Done\n");
     fflush(stdout);
 
-
+	long buffindex = 0;
     for(;;)
     {
         cnt0 = data.image[IDinb0].md[0].cnt0;
@@ -242,18 +248,28 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
         if(Tupdate == 1)
         {
+            data.image[IDout].md[0].write = 1;			
+			long kkin;
+            for(kkin=0; kkin<zsizein; kkin++)
+            {
+				kk = buffindex*zsizein + kkin;
+                for(ii=0; ii<PFblockSize; ii++)
+                    data.image[IDout].array.F[kk*PFblockSize + ii] = data.image[IDinb].array.F[kkin*xysize + (ii+PFblockStart)];
+			}
+			data.image[IDout].md[0].write = 0;
+			
+			buffindex ++;
+		}
+		
+		
+		if(buffindex == NBbuff) // write output
+		{
             t = time(NULL);
             uttime = gmtime(&t);
             clock_gettime(CLOCK_REALTIME, &timenow);
             printf("%02d:%02d:%02ld.%09ld  NEW TELEMETRY BUFFER AVAILABLE [%d]\n", uttime->tm_hour, uttime->tm_min, timenow.tv_sec % 60, timenow.tv_nsec, cube);
-
-
-            data.image[IDout].md[0].write = 1;
-
-            for(kk=0; kk<zsize; kk++)
-                for(ii=0; ii<PFblockSize; ii++)
-                    data.image[IDout].array.F[kk*PFblockSize + ii] = data.image[IDinb].array.F[kk*xysize + (ii+PFblockStart)];
-
+			
+			data.image[IDout].md[0].write = 1;
             for(ii=0; ii<PFblockSize; ii++) // Remove time averaged value
             {
                 ave = 0.0;
