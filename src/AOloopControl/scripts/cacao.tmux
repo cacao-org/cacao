@@ -106,9 +106,9 @@ tmux split-window -v -p 50
 tmux select-pane -t 5
 tmux split-window -v -p 95
 tmux split-window -v -p 85
-tmux split-window -v -p 85
-tmux split-window -v -p 65
-tmux split-window -v -p 60
+tmux split-window -v -p 78
+tmux split-window -v -p 70
+tmux split-window -v -p 63
 
 
 sleep 0.5
