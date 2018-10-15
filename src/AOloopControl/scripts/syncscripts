@@ -17,7 +17,7 @@ echo "pname = $pname"
 
 
 
-filelist="aolconf"
+filelist="aolconf cacao.tmux"
 dirlist="aolconfscripts auxscripts aohardsim aocscripts aosetup aolfuncs dmutils"
 
 printHELP ()
