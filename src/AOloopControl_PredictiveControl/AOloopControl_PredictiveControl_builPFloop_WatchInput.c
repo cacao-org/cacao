@@ -291,7 +291,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
             data.image[IDout].md[0].write = 0;
 
             buffindex = 0;
-            outnct++;
+            outcnt++;
         }
 
 
