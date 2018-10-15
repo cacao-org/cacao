@@ -257,7 +257,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
                     data.image[IDout].array.F[kk*PFblockSize + ii] = data.image[IDinb].array.F[kkin*xysize + (ii+PFblockStart)];
 			}
 			data.image[IDout].md[0].write = 0;
-			
+			Tupdate = 0;
 			buffindex ++;
 		}
 		
@@ -286,7 +286,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
             data.image[IDout].md[0].cnt0++;
             data.image[IDout].md[0].write = 0;
 
-            Tupdate = 0;
+            buffindex = 0;
         }
 
 
