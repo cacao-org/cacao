@@ -259,7 +259,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
 			}
 			data.image[IDout].md[0].write = 0;
 			
-			printf("[%5ld %d]\n", buffindex, cube);
+			printf("[%3ld/%3ld  %d]\n", buffindex, NBbuff, cube);
 			Tupdate = 0;
 			buffindex ++;
 		}
