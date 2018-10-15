@@ -13,16 +13,18 @@
 #  pane 3    Hardware control
 #  pane 4    
 #
-#  pane 5    log
-#  pane 6    Data logging RT streams
-#  pane 7    process control
+#  pane 5    log input
+#  pane 6    log output
+#  pane 7    
+#  pane 8    Data logging RT streams
+#  pane 9    process control
 #
 # ==============================================================================
 
 STARTSESSION="1"
 STARTPROC="1"
 wXsize=500
-wYsize=160
+wYsize=150
 
 
 DIR="/data0/dataWORK/AOloop"
@@ -95,10 +97,12 @@ tmux select-pane -t 2
 tmux split-window -v -p 50 
 tmux split-window -v -p 50 
 
-# pane 5 6 7 (right column)
+# pane 5 6 7 8 (right column)
 tmux select-pane -t 5
+tmux split-window -v -p 95
+tmux split-window -v -p 85
 tmux split-window -v -p 65
-tmux split-window -v -p 50
+tmux split-window -v -p 60
 
 
 sleep 1
@@ -110,6 +114,7 @@ tmux send-keys -t $SESSION:0.4 "# pane 4: " C-m
 tmux send-keys -t $SESSION:0.5 "# pane 5: " C-m
 tmux send-keys -t $SESSION:0.6 "# pane 6: " C-m
 tmux send-keys -t $SESSION:0.7 "# pane 7: " C-m
+tmux send-keys -t $SESSION:0.8 "# pane 8: " C-m
 
 fi
 
@@ -135,14 +140,23 @@ sleep 0.5
 tmux send-keys -t $SESSION:0.3 "H" C-m
 sleep 0.1
 
-# START process control
-tmux send-keys -t $SESSION:0.6 "cacao" C-m
-tmux send-keys -t $SESSION:0.6 "aolrtlogGUI" C-m
+# START log input
+tmux send-keys -t $SESSION:0.5 "# log input" C-m
+sleep 0.1
+
+
+# START log output
+tmux send-keys -t $SESSION:0.6 "tail -f aolconf.log" C-m
 sleep 0.1
 
 # START process control
-tmux send-keys -t $SESSION:0.7 "cacao" C-m
-tmux send-keys -t $SESSION:0.7 "procCTRL" C-m
+tmux send-keys -t $SESSION:0.8 "cacao" C-m
+tmux send-keys -t $SESSION:0.8 "aolrtlogGUI" C-m
+sleep 0.1
+
+# START process control
+tmux send-keys -t $SESSION:0.9 "cacao" C-m
+tmux send-keys -t $SESSION:0.9 "procCTRL" C-m
 sleep 0.1
 
 
