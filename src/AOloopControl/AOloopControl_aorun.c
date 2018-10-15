@@ -17,7 +17,7 @@
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
-//#define _PRINT_TEST
+#define _PRINT_TEST
 
 #ifdef __MACH__   // for Mac OS X - 
 //#include <mach/mach_time.h>
@@ -314,7 +314,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         printf("\ncan't catch SIGBUS\n");
 
 	if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGSEGV\n");         
+        printf("\ncan't catch SIGSEGV\n");         Initialize
 
 	if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGHUP\n");         
