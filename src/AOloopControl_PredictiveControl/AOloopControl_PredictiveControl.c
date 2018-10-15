@@ -43,7 +43,6 @@
 
 
 
-
 static int INITSTATUS_AOloopControl_PredictiveControl = 0;
 
 
