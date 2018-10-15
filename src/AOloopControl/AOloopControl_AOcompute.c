@@ -407,8 +407,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                     data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
 #ifdef _PRINT_TEST
                 printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
-                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii+=10)
-                    printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii]);
+//                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii+=10)
+//                    printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii]);
 #endif
             }
             else
@@ -434,8 +434,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 #ifdef _PRINT_TEST
                         printf("[%s] [%d]  AOcompute: APPLY LINEARITY LIMIT   %ld\n", __FILE__, __LINE__, aoloopcontrol_var.aoconfID_imWFSlinlimit);
-                        for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii+=10)
-                            printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]);
+//                        for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii+=10)
+//                            printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]);
                         fflush(stdout);
 #endif
                     }
