@@ -15,7 +15,7 @@
 #
 #  pane 5    log input
 #  pane 6    log output
-#  pane 7    
+#  pane 7    loop monitor (aolmon)
 #  pane 8    Data logging RT streams
 #  pane 9    process control
 #
@@ -25,6 +25,9 @@ STARTSESSION="1"
 STARTPROC="1"
 wXsize=500
 wYsize=150
+
+
+
 
 
 DIR="/data0/dataWORK/AOloop"
@@ -63,6 +66,7 @@ cd $DIR
 tmux -2 new-session -d -s $SESSION
 tmux setw force-width $wXsize
 tmux setw force-height $wYsize
+
 
 # Setup additional window for logs
 tmux new-window -t $SESSION:1 -n logs
@@ -105,17 +109,18 @@ tmux split-window -v -p 65
 tmux split-window -v -p 60
 
 
-sleep 1
-tmux send-keys -t $SESSION:0.0 "# pane 0: " C-m
-tmux send-keys -t $SESSION:0.1 "# pane 1: " C-m
-tmux send-keys -t $SESSION:0.2 "# pane 2: " C-m
-tmux send-keys -t $SESSION:0.3 "# pane 3: " C-m
-tmux send-keys -t $SESSION:0.4 "# pane 4: " C-m
-tmux send-keys -t $SESSION:0.5 "# pane 5: " C-m
-tmux send-keys -t $SESSION:0.6 "# pane 6: " C-m
-tmux send-keys -t $SESSION:0.7 "# pane 7: " C-m
-tmux send-keys -t $SESSION:0.8 "# pane 8: " C-m
-
+sleep 0.5
+# Allow TMUX access within TMUX
+tmux send-keys -t $SESSION:0.0 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.1 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.2 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.3 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.4 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.5 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.6 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.7 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.8 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.9 "TMUX=" C-m
 fi
 
 
@@ -148,6 +153,12 @@ sleep 0.1
 # START log output
 tmux send-keys -t $SESSION:0.6 "tail -f aolconf.log" C-m
 sleep 0.1
+
+# START process control
+tmux send-keys -t $SESSION:0.7 "cacao" C-m
+tmux send-keys -t $SESSION:0.7 "aolmon" C-m
+sleep 0.1
+
 
 # START process control
 tmux send-keys -t $SESSION:0.8 "cacao" C-m
