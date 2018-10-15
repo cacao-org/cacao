@@ -477,6 +477,17 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         if(data.processinfo == 1)
 			processinfo->loopstat = 1;
         
+        
+		if(data.processinfo==1)
+		{
+			char msgstring[200];
+			sprintf(msgstring, "Entering loop");
+			processinfo_WriteMessage(processinfo, msgstring);
+		}
+        
+        
+        int processinfoUpdate = 0;
+        
         while( AOconf[loop].aorun.kill == 0)
         {
             if(timerinit==1)
@@ -493,6 +504,14 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
             fflush(stdout);
             usleep(1000);
 
+			if(data.processinfo==1)
+			{
+				char msgstring[200];
+				sprintf(msgstring, "Waiting %20.3lf sec", tdiffv);
+				processinfo_WriteMessage(processinfo, msgstring);
+			}
+			
+			processinfoUpdate = 1;
 
             timerinit = 0;
 
@@ -516,7 +535,14 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 						}
                 }
 
-
+				
+				if((data.processinfo==1)&&(processinfoUpdate==1))
+				{
+					char msgstring[200];
+					sprintf(msgstring, "LOOP RUNNING", tdiffv);
+					processinfo_WriteMessage(processinfo, msgstring);
+					processinfoUpdate = 0;
+				}
 
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
