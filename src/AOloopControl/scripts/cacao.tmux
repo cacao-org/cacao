@@ -149,12 +149,13 @@ tmux send-keys -t $SESSION:0.3 "H" C-m
 sleep 0.1
 
 # START log input
-tmux send-keys -t $SESSION:0.5 "# log input" C-m
+tmux send-keys -t $SESSION:0.5 "./aolconfscripts/aollog -ie MISC NULL" C-m
 sleep 0.1
 
 
 # START log output
-tmux send-keys -t $SESSION:0.6 "tail -f aolconf.log" C-m
+tmux send-keys -t $SESSION:0.6 "tail -f aolconf.log &" C-m
+tmux send-keys -t $SESSION:0.6 "tail -f aolconf.log &" C-m
 sleep 0.1
 
 # START process control
