@@ -314,7 +314,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         printf("\ncan't catch SIGBUS\n");
 
 	if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGSEGV\n");         Initialize
+        printf("\ncan't catch SIGSEGV\n");        
 
 	if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGHUP\n");         
