@@ -553,7 +553,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 
     /*  Initialize ncurses  */
     if ( initscr() == NULL ) {
-        fprintf(stderr, "Error initialising ncurses.\n");
+        fprintf(stderr, "Error initializing ncurses.\n");
         exit(EXIT_FAILURE);
     }
     getmaxyx(stdscr, wrow, wcol);		/* get the number of rows and columns */
@@ -903,7 +903,7 @@ int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)
  *
  * ## Arguments
  *
- * Loop index and save derectory on disk
+ * Loop index and save directory on disk
  *
  * ## Use
  *

@@ -162,6 +162,7 @@ menuitems+=( " " " ")
 
 ConfReadParam PFb0start "0"; PFb0start="$paramvalue"
 ConfReadParam PFb0end "2"; PFb0end="$paramvalue"
+ConfReadParam PFb0NBbuff "20"; PFb0NBbuff="$paramvalue"
 ConfReadParam PFb0order "10"; PFb0order="$paramvalue"
 ConfReadParam PFb0lag "$latency_frame"; PFb0lag="$paramvalue"
 ConfReadParam PFb0SVDe "0.001"; PFb0SVDe="$paramvalue"
@@ -169,6 +170,7 @@ ConfReadParam PFb0dgain "0.2"; PFb0dgain="$paramvalue"
 
 menuitems+=( "PFb0start" "[$PFb0start] set Predictive filter block 0 start" )
 menuitems+=( "PFb0end" "[$PFb0end] set Predictive filter block 0 end" )
+menuitems+=( "PFb0NBbuff" "[$PFb0NBbuff] set Predictive filter block 0 NBbuff" )
 menuitems+=( "PFb0order" "[$PFb0order] set Predictive filter block 0 order" )
 menuitems+=( "PFb0lag" "[$PFb0lag] set Predictive filter block 0 lag" )
 menuitems+=( "PFb0SVDe" "[$PFb0SVDe] set Predictive filter block 0 SVD limit" )
@@ -310,6 +312,7 @@ menuitems+=( " " " ")
 
 ConfReadParam PFb1start "2"; PFb1start="$paramvalue"
 ConfReadParam PFb1end "100"; PFb1end="$paramvalue"
+ConfReadParam PFb1NBbuff "20"; PFb1NBbuff="$paramvalue"
 ConfReadParam PFb1order "10"; PFb1order="$paramvalue"
 ConfReadParam PFb1lag "$latency_frame"; PFb1lag="$paramvalue"
 ConfReadParam PFb1SVDe "0.001"; PFb1SVDe="$paramvalue"
@@ -317,6 +320,7 @@ ConfReadParam PFb1dgain "0.2"; PFb1dgain="$paramvalue"
 
 menuitems+=( "PFb1start" "[$PFb1start] set Predictive filter block 1 start" )
 menuitems+=( "PFb1end" "[$PFb1end] set Predictive filter block 1 end" )
+menuitems+=( "PFb1NBbuff" "[$PFb1NBbuff] set Predictive filter block 1 NBbuff" )
 menuitems+=( "PFb1order" "[$PFb1order] set Predictive filter block 1 order" )
 menuitems+=( "PFb1lag" "[$PFb1lag] set Predictive filter block 1 lag" )
 menuitems+=( "PFb1SVDe" "[$PFb1SVDe] set Predictive filter block 1 SVD limit" )
@@ -465,6 +469,7 @@ menuitems+=( " " " ")
 
 ConfReadParam PFb2start "100"; PFb2start="$paramvalue"
 ConfReadParam PFb2end "200"; PFb2end="$paramvalue"
+ConfReadParam PFb2NBbuff "20"; PFb2NBbuff="$paramvalue"
 ConfReadParam PFb2order "10"; PFb2order="$paramvalue"
 ConfReadParam PFb2lag "$latency_frame"; PFb2lag="$paramvalue"
 ConfReadParam PFb2SVDe "0.001"; PFb2SVDe="$paramvalue"
@@ -472,6 +477,7 @@ ConfReadParam PFb2dgain "0.2"; PFb2dgain="$paramvalue"
 
 menuitems+=( "PFb2start" "[$PFb2start] set Predictive filter block 2 start" )
 menuitems+=( "PFb2end" "[$PFb2end] set Predictive filter block 2 end" )
+menuitems+=( "PFb2NBbuff" "[$PFb2NBbuff] set Predictive filter block 2 NBbuff" )
 menuitems+=( "PFb2order" "[$PFb2order] set Predictive filter block 2 order" )
 menuitems+=( "PFb2lag" "[$PFb2lag] set Predictive filter block 2 lag" )
 menuitems+=( "PFb2SVDe" "[$PFb2SVDe] set Predictive filter block 2 SVD limit" )
@@ -617,6 +623,7 @@ menuitems+=( " " " ")
 
 ConfReadParam PFb3start "200"; PFb3start="$paramvalue"
 ConfReadParam PFb3end "300"; PFb3end="$paramvalue"
+ConfReadParam PFb3NBbuff "20"; PFb3NBbuff="$paramvalue"
 ConfReadParam PFb3order "10"; PFb3order="$paramvalue"
 ConfReadParam PFb3lag "$latency_frame"; PFb3lag="$paramvalue"
 ConfReadParam PFb3SVDe "0.001"; PFb3SVDe="$paramvalue"
@@ -624,6 +631,7 @@ ConfReadParam PFb3dgain "0.2"; PFb3dgain="$paramvalue"
 
 menuitems+=( "PFb3start" "[$PFb3start] set Predictive filter block 3 start" )
 menuitems+=( "PFb3end" "[$PFb3end] set Predictive filter block 3 end" )
+menuitems+=( "PFb3NBbuff" "[$PFb3NBbuff] set Predictive filter block 3 NBbuff" )
 menuitems+=( "PFb3order" "[$PFb3order] set Predictive filter block 3 order" )
 menuitems+=( "PFb3lag" "[$PFb3lag] set Predictive filter block 3 lag" )
 menuitems+=( "PFb3SVDe" "[$PFb3SVDe] set Predictive filter block 3 SVD limit" )
@@ -1192,6 +1200,13 @@ exec 3>&-;
 echo "$PFb0end" > ./conf/param_PFb0end.txt
 ;;
 
+PFb0NBbuff)
+exec 3>&1;
+PFb0NBbuff=$(dialog --inputbox "Select Predictive filter block 0 NBbuff" 0 0 "$PFb0NBbuff" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb0NBbuff" > ./conf/param_PFb0NBbuff.txt
+;;
+
 PFb0order)
 exec 3>&1;
 PFb0order=$(dialog --inputbox "Select Predictive filter block 0 order" 0 0 "$PFb0order" 2>&1 1>&3);
@@ -1363,6 +1378,14 @@ exec 3>&-;
 echo "$PFb1end" > ./conf/param_PFb1end.txt
 ;;
 
+PFb1NBbuff)
+exec 3>&1;
+PFb1NBbuff=$(dialog --inputbox "Select Predictive filter block 1 NBbuff" 0 0 "$PFb1NBbuff" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb1NBbuff" > ./conf/param_PFb1NBbuff.txt
+;;
+
+
 PFb1order)
 exec 3>&1;
 PFb1order=$(dialog --inputbox "Select Predictive filter block 1 order" 0 0 "$PFb1order" 2>&1 1>&3);
@@ -1526,6 +1549,13 @@ exec 3>&-;
 echo "$PFb2end" > ./conf/param_PFb2end.txt
 ;;
 
+PFb2NBbuff)
+exec 3>&1;
+PFb2NBbuff=$(dialog --inputbox "Select Predictive filter block 2 NBbuff" 0 0 "$PFb2NBbuff" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb2NBbuff" > ./conf/param_PFb2NBbuff.txt
+;;
+
 PFb2order)
 exec 3>&1;
 PFb2order=$(dialog --inputbox "Select Predictive filter block 2 order" 0 0 "$PFb2order" 2>&1 1>&3);
@@ -1687,6 +1717,13 @@ exec 3>&1;
 PFb3end=$(dialog --inputbox "Select Predictive filter block 3 end" 0 0 "$PFb3end" 2>&1 1>&3);
 exec 3>&-;
 echo "$PFb3end" > ./conf/param_PFb3end.txt
+;;
+
+PFb3NBbuff)
+exec 3>&1;
+PFb3NBbuff=$(dialog --inputbox "Select Predictive filter block 3 NBbuff" 0 0 "$PFb3NBbuff" 2>&1 1>&3);
+exec 3>&-;
+echo "$PFb3NBbuff" > ./conf/param_PFb3NBbuff.txt
 ;;
 
 PFb3order)

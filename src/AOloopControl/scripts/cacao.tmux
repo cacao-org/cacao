@@ -154,8 +154,9 @@ sleep 0.1
 
 
 # START log output
+touch logdir/$datestr/logging/RTC-MISC.log
 tmux send-keys -t $SESSION:0.6 "tail -f aolconf.log &" C-m
-tmux send-keys -t $SESSION:0.6 "tail -f logdir/$datestr/logging/RTC-MISC.log &" C-m
+tmux send-keys -t $SESSION:0.6 "tail -f logdir/$datestr/logging/RTC-MISC.log" C-m
 sleep 0.1
 
 # START process control

@@ -16,6 +16,8 @@ fi
 
 ConfReadParam PFb0start "0"; PFb0start="$paramvalue"
 ConfReadParam PFb0end "2"; PFb0end="$paramvalue"
+ConfReadParam PFb0NBbuff "20"; PFb0NBbuff="$paramvalue"
+
 
 function function_PFb0watchON {
 tmuxname="aol${LOOPNUMBER}PFb0watchin"
@@ -25,7 +27,7 @@ sleep 0.2
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 0 $PFb0start $PFb0end" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 0 $PFb0start $PFb0end $PFb0NBbuff" C-m
 PFb0wON=" ON"
 file="./status/stat_PFb0wON.txt"
 echo "writing $PFb0wON to file $file"
@@ -46,6 +48,7 @@ echo "$PFb0wON" > $file
 
 ConfReadParam PFb1start "2"; PFb1start="$paramvalue"
 ConfReadParam PFb1end "100"; PFb1end="$paramvalue"
+ConfReadParam PFb1NBbuff "20"; PFb1NBbuff="$paramvalue"
 
 function function_PFb1watchON {
 tmuxname="aol${LOOPNUMBER}PFb1watchin"
@@ -55,7 +58,7 @@ sleep 0.2
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 1 $PFb1start $PFb1end" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 1 $PFb1start $PFb1end $PFb1NBbuff" C-m
 PFb1wON=" ON"
 file="./status/stat_PFb1wON.txt"
 echo "writing $PFb1wON to file $file"
@@ -76,6 +79,7 @@ echo "$PFb1wON" > $file
 
 ConfReadParam PFb2start "100"; PFb2start="$paramvalue"
 ConfReadParam PFb2end "200"; PFb2end="$paramvalue"
+ConfReadParam PFb2NBbuff "20"; PFb2NBbuff="$paramvalue"
 
 function function_PFb2watchON {
 tmuxname="aol${LOOPNUMBER}PFb2watchin"
@@ -85,7 +89,7 @@ sleep 0.2
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 2 $PFb2start $PFb2end" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 2 $PFb2start $PFb2end $PFb2NBbuff" C-m
 PFb2wON=" ON"
 file="./status/stat_PFb2wON.txt"
 echo "writing $PFb2wON to file $file"
@@ -106,6 +110,7 @@ echo "$PFb2wON" > $file
 
 ConfReadParam PFb3start "200"; PFb3start="$paramvalue"
 ConfReadParam PFb3end "300"; PFb3end="$paramvalue"
+ConfReadParam PFb3NBbuff "20"; PFb3NBbuff="$paramvalue"
 
 function function_PFb3watchON {
 tmuxname="aol${LOOPNUMBER}PFb3watchin"
@@ -115,7 +120,7 @@ sleep 0.2
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} " " C-m
 tmux send-keys -t ${tmuxname} "./AOloopControl" C-m
-tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 3 $PFb3start $PFb3end" C-m
+tmux send-keys -t ${tmuxname} "aolPFwatchin ${LOOPNUMBER} 3 $PFb3start $PFb3end $PFb3NBbuff" C-m
 PFb3wON=" ON"
 file="./status/stat_PFb3wON.txt"
 echo "writing $PFb3wON to file $file"
