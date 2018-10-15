@@ -225,6 +225,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
     fflush(stdout);
 
 	long buffindex = 0;
+	long outcnt = 0;
     for(;;)
     {
         cnt0 = data.image[IDinb0].md[0].cnt0;
@@ -257,6 +258,8 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
                     data.image[IDout].array.F[kk*PFblockSize + ii] = data.image[IDinb].array.F[kkin*xysize + (ii+PFblockStart)];
 			}
 			data.image[IDout].md[0].write = 0;
+			
+			printf("[%5ld %d]\n", buffindex, cube);
 			Tupdate = 0;
 			buffindex ++;
 		}
@@ -267,7 +270,8 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
             t = time(NULL);
             uttime = gmtime(&t);
             clock_gettime(CLOCK_REALTIME, &timenow);
-            printf("%02d:%02d:%02ld.%09ld  NEW TELEMETRY BUFFER AVAILABLE [%d]\n", uttime->tm_hour, uttime->tm_min, timenow.tv_sec % 60, timenow.tv_nsec, cube);
+            printf("%02d:%02d:%02ld.%09ld  NEW TELEMETRY BUFFER AVAILABLE [%ld]\n", uttime->tm_hour, uttime->tm_min, timenow.tv_sec % 60, timenow.tv_nsec, outcnt);
+			
 			
 			data.image[IDout].md[0].write = 1;
             for(ii=0; ii<PFblockSize; ii++) // Remove time averaged value
@@ -287,6 +291,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
             data.image[IDout].md[0].write = 0;
 
             buffindex = 0;
+            outnct++;
         }
 
 
