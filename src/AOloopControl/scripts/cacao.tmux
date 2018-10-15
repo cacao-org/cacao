@@ -15,9 +15,10 @@
 #
 #  pane 5    log input
 #  pane 6    log output
-#  pane 7    loop monitor (aolmon)
-#  pane 8    Data logging RT streams
-#  pane 9    process control
+#  pane 7
+#  pane 8    loop monitor (aolmon)
+#  pane 7    Data logging RT streams
+#  pane 10   process control
 #
 # ==============================================================================
 
@@ -105,6 +106,7 @@ tmux split-window -v -p 50
 tmux select-pane -t 5
 tmux split-window -v -p 95
 tmux split-window -v -p 85
+tmux split-window -v -p 85
 tmux split-window -v -p 65
 tmux split-window -v -p 60
 
@@ -121,6 +123,7 @@ tmux send-keys -t $SESSION:0.6 "TMUX=" C-m
 tmux send-keys -t $SESSION:0.7 "TMUX=" C-m
 tmux send-keys -t $SESSION:0.8 "TMUX=" C-m
 tmux send-keys -t $SESSION:0.9 "TMUX=" C-m
+tmux send-keys -t $SESSION:0.10 "TMUX=" C-m
 fi
 
 
@@ -155,19 +158,19 @@ tmux send-keys -t $SESSION:0.6 "tail -f aolconf.log" C-m
 sleep 0.1
 
 # START process control
-tmux send-keys -t $SESSION:0.7 "cacao" C-m
-tmux send-keys -t $SESSION:0.7 "aolmon" C-m
-sleep 0.1
-
-
-# START process control
 tmux send-keys -t $SESSION:0.8 "cacao" C-m
-tmux send-keys -t $SESSION:0.8 "aolrtlogGUI" C-m
+tmux send-keys -t $SESSION:0.8 "aolmon" C-m
 sleep 0.1
+
 
 # START process control
 tmux send-keys -t $SESSION:0.9 "cacao" C-m
-tmux send-keys -t $SESSION:0.9 "procCTRL" C-m
+tmux send-keys -t $SESSION:0.9 "aolrtlogGUI" C-m
+sleep 0.1
+
+# START process control
+tmux send-keys -t $SESSION:0.10 "cacao" C-m
+tmux send-keys -t $SESSION:0.10 "procCTRL" C-m
 sleep 0.1
 
 
