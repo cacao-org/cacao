@@ -591,7 +591,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         }
 
 
-        printf("Measurement cycle  # %8ld / %8ld   ( %6ld / %6ld )  \n", iter, NBiter, imcnt, imcntmax);
+        printf("NBpoke=%ld # %3ld/%3ld (%6ld/%6ld)\n", NBpoke, iter, NBiter, imcnt, imcntmax);
         fflush(stdout);
 
         if(data.processinfo==1)
@@ -639,7 +639,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         PokeIndexMapped  = array_PokeSequ[PokeIndex];
         PokeIndex1Mapped = array_PokeSequ[PokeIndex1];
 	
-		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke))
+		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke-1))
 		{
 			printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
 			exit(0);
@@ -698,7 +698,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
                 PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
 
-		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke))
+		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke-1))
 		{
 			printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
 			exit(0);
@@ -759,7 +759,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
                     PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
 
-		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke))
+		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke-1))
 		{
 			printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
 			exit(0);
