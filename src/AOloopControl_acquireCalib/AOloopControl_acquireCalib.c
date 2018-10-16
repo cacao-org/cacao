@@ -437,7 +437,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      *
      */
     IDpokeC = image_ID(IDpokeC_name);
-    save_fits(IDpokeC_name, "!./tmp/test_pokeC.fits"); //TEST
+    save_fits(IDpokeC_name, "!./tmp/test_pokeC.fits"); //TEST -> OK
     NBpoke = data.image[IDpokeC].md[0].size[2];
     sizearray[0] = AOconf[loop].WFSim.sizexWFS;
     sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
@@ -647,7 +647,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         if(data.processinfo==1)//TEST
         {
             char msgstring[200];
-            sprintf(msgstring, "poke = %ld", PokeIndex1Mapped);
+            sprintf(msgstring, "poke = %ld %ld %ld", PokeIndex1Mapped, AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM);
             processinfo_WriteMessage(processinfo, msgstring);
         }
 
