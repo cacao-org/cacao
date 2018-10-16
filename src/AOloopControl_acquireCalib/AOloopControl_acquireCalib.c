@@ -645,6 +645,13 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
             exit(0);
         }
 
+        if(data.processinfo==1)//TEST
+        {
+            char msgstring[200];
+            sprintf(msgstring, "poke = %ld", PokeIndex1Mapped);
+            processinfo_WriteMessage(processinfo, msgstring);
+        }
+
         usleep(delayRM1us);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
         memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1Mapped*framesize, sizeof(float)*AOconf[loop].DMctrl.sizeDM);
@@ -704,7 +711,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                     exit(0);
                 }
 
-        if(data.processinfo==1)
+        if(data.processinfo==1)//TEST
         {
             char msgstring[200];
             sprintf(msgstring, "poke = %ld", PokeIndex1Mapped);
@@ -714,7 +721,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 // POKE
                 usleep(delayRM1us);
                 data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
-                memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1Mapped*framesize, sizeof(float)*AOconf[loop].DMctrl.sizeDM);
+                //memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1Mapped*framesize, sizeof(float)*AOconf[loop].DMctrl.sizeDM); //TEST
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmRM, -1);
                 data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt1 = PokeIndex1Mapped;
                 data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
@@ -796,7 +803,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         usleep(delayRM1us);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
-        memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, arrayf, sizeof(float)*AOconf[loop].DMctrl.sizeDM);
+        memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, arrayf, sizeof(float)*AOconf[loop].DMctrl.sizeDM); 
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmRM, -1);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt1 = 0;
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
