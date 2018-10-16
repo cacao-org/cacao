@@ -900,6 +900,14 @@ if(data.processinfo==1)
     free(dtarray);
     free(tarray);
 
+	if(data.processinfo==1)
+        {
+            char msgstring[200];
+            sprintf(msgstring, "Processing Data (%d iterations)", NBiter);
+            processinfo_WriteMessage(processinfo, msgstring);
+        }
+
+
     latencyave = 0.0;
     latencystepave = 0.0;
     minlatency = latencyarray[0];
@@ -950,6 +958,14 @@ if(data.processinfo==1)
 
     free(latencyarray);
     free(latencysteparray);
+
+	if(data.processinfo==1)
+        {
+            char msgstring[200];
+            sprintf(msgstring, "Measured %8.3f ms @ %.3f Hz", latencyave*1000.0, 1.0*(wfscntend-wfscntstart)/dt);
+            processinfo_WriteMessage(processinfo, msgstring);
+        }
+
 
     if(data.processinfo==1)
         processinfo_cleanExit(processinfo);
