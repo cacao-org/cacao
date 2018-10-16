@@ -594,12 +594,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         printf("NBpoke=%ld # %3ld/%3ld (%6ld/%6ld)\n", NBpoke, iter, NBiter, imcnt, imcntmax);
         fflush(stdout);
 
-        if(data.processinfo==1)
+      /*  if(data.processinfo==1)
         {
             char msgstring[200];
             sprintf(msgstring, "NBpoke=%ld # %3ld/%3ld (%6ld/%6ld)", NBpoke, iter, NBiter, imcnt, imcntmax);
             processinfo_WriteMessage(processinfo, msgstring);
-        }
+        }*/
 
 
         // RE-ORDER POKE SEQUENCE
