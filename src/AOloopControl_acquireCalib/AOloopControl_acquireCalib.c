@@ -597,7 +597,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         if(data.processinfo==1)
         {
             char msgstring[200];
-            sprintf(msgstring, "cycle # %6ld/%6ld (%6ld/%6ld)", iter, NBiter, imcnt, imcntmax);
+            sprintf(msgstring, "NBpoke=%ld # %3ld/%3ld (%6ld/%6ld)", NBpoke, iter, NBiter, imcnt, imcntmax);
             processinfo_WriteMessage(processinfo, msgstring);
         }
 
