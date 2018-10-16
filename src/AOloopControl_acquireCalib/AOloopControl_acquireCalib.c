@@ -329,52 +329,53 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     FILE *fp;
 
-	PROCESSINFO *processinfo;
+    PROCESSINFO *processinfo;
 
-if(data.processinfo==1)
-  {
-      // CREATE PROCESSINFO ENTRY
-      // see processtools.c in module CommandLineInterface for details
-      //
-      
-      char pinfoname[200];  // short name for the processinfo instance
-      // avoid spaces, name should be human-readable
-  
-  
-      sprintf(pinfoname, "aol%ld-acqRM", loop);
-      processinfo = processinfo_shm_create(pinfoname, 0);
-      processinfo->loopstat = 0; // loop initialization
-      strcpy(processinfo->source_FUNCTION, __FUNCTION__);
-      strcpy(processinfo->source_FILE,     __FILE__);
-      processinfo->source_LINE = __LINE__;
-  
-      char msgstring[200];
-      sprintf(msgstring, "delay=%ld+%ldus ave=%ld excl=%ld cyc=%ld", delayfr, delayRM1us, NBave, NBexcl, NBcycle);
-      processinfo_WriteMessage(processinfo, msgstring);
-  }
+    if((data.processinfo==1)&&(data.processinfoActive==0))
+    {
+        // CREATE PROCESSINFO ENTRY
+        // see processtools.c in module CommandLineInterface for details
+        //
 
-// CATCH SIGNALS
-  
-  if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGTERM\n");
-  
-  if (sigaction(SIGINT, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGINT\n");    
-  
-  if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGABRT\n");
-  
-  if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGBUS\n");
-  
-  if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGSEGV\n");         
-  
-  if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGHUP\n");         
- 
-	if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGPIPE\n");
+        char pinfoname[200];  // short name for the processinfo instance
+        // avoid spaces, name should be human-readable
+
+
+        sprintf(pinfoname, "aol%ld-acqRM", loop);
+        processinfo = processinfo_shm_create(pinfoname, 0);
+        processinfo->loopstat = 0; // loop initialization
+        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+        strcpy(processinfo->source_FILE,     __FILE__);
+        processinfo->source_LINE = __LINE__;
+
+        char msgstring[200];
+        sprintf(msgstring, "delay=%ld+%ldus ave=%ld excl=%ld cyc=%ld", delayfr, delayRM1us, NBave, NBexcl, NBcycle);
+        processinfo_WriteMessage(processinfo, msgstring);
+        data.processinfoActive = 1;
+    }
+
+    // CATCH SIGNALS
+
+    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGTERM\n");
+
+    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGINT\n");
+
+    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGABRT\n");
+
+    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGBUS\n");
+
+    if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGSEGV\n");
+
+    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGHUP\n");
+
+    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGPIPE\n");
 
 
     /** ## DETAILS, STEPS */
@@ -561,20 +562,20 @@ if(data.processinfo==1)
     imcnt = 0;
 
 
-	int loopOK = 1;
+    int loopOK = 1;
     if(data.processinfo==1)
         processinfo->loopstat = 1;  // Notify processinfo that we are entering loop
     long loopcnt = 0;
-    
+
     /**
      * The outermost loop increments the measurement cycle.
      * Signal is to be averaged among cycles. Each measurement cycle repeats the same sequence.
      *
      */
-    
+
     while(loopOK==1)
     {
-		 if(data.processinfo==1)
+        if(data.processinfo==1)
         {
             while(processinfo->CTRLval == 1)  // pause
                 usleep(50);
@@ -587,12 +588,12 @@ if(data.processinfo==1)
                 loopOK = 0;
             }
         }
-		
-		
+
+
         printf("Measurement cycle  # %8ld / %8ld   ( %6ld / %6ld )  \n", iter, NBiter, imcnt, imcntmax);
         fflush(stdout);
 
-		if(data.processinfo==1)
+        if(data.processinfo==1)
         {
             char msgstring[200];
             sprintf(msgstring, "cycle # %6ld/%6ld (%6ld/%6ld)", iter, NBiter, imcnt, imcntmax);
@@ -782,69 +783,69 @@ if(data.processinfo==1)
 
 
 
-// process signals
+        // process signals
 
-		if(data.signal_TERM == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGTERM);
-		}
-     
-		if(data.signal_INT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGINT);
-		}
+        if(data.signal_TERM == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGTERM);
+        }
 
-		if(data.signal_ABRT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGABRT);
-		}
+        if(data.signal_INT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGINT);
+        }
 
-		if(data.signal_BUS == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGBUS);
-		}
-		
-		if(data.signal_SEGV == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGSEGV);
-		}
-		
-		if(data.signal_HUP == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGHUP);
-		}
-		
-		if(data.signal_PIPE == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGPIPE);
-		}	
-     
+        if(data.signal_ABRT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGABRT);
+        }
+
+        if(data.signal_BUS == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGBUS);
+        }
+
+        if(data.signal_SEGV == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGSEGV);
+        }
+
+        if(data.signal_HUP == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGHUP);
+        }
+
+        if(data.signal_PIPE == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGPIPE);
+        }
+
         loopcnt++;
         if(data.processinfo==1)
             processinfo->loopcnt = loopcnt;
 
 
 
-	if(iter==NBiter)
-		loopOK = 0;
-	if(data.signal_USR1==1)
-		loopOK = 0;
-	if(data.signal_USR2==1)
-		loopOK = 0;
+        if(iter==NBiter)
+            loopOK = 0;
+        if(data.signal_USR1==1)
+            loopOK = 0;
+        if(data.signal_USR2==1)
+            loopOK = 0;
     } // end of iteration loop
 
     free(arrayf);
 
     free(sizearray);
 
-	if(data.processinfo==1)
+    if(data.processinfo==1)
         processinfo_cleanExit(processinfo);
 
 
