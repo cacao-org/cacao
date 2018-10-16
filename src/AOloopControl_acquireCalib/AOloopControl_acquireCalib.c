@@ -483,6 +483,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     printf("STARTING response measurement...\n");
     fflush(stdout);
 
+	list_image_ID();
 
     /**
      * Memory is allocated to arrays
