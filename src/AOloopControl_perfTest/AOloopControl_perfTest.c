@@ -460,7 +460,54 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     uint8_t atype;
     uint32_t naxes[3];
 
+	PROCESSINFO *processinfo;
 
+if(data.processinfo==1)
+{
+    // CREATE PROCESSINFO ENTRY
+    // see processtools.c in module CommandLineInterface for details
+     //
+    
+    char pinfoname[200];  // short name for the processinfo instance     
+    // avoid spaces, name should be human-readable
+ 
+  
+      sprintf(pinfoname, "mlat-%s-%s", dmname, wfsname);
+      processinfo = processinfo_shm_create(pinfoname, 0);
+      processinfo->loopstat = 0; // loop initialization
+      strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+      strcpy(processinfo->source_FILE,     __FILE__);
+      processinfo->source_LINE = __LINE__;
+  
+      char msgstring[200];
+      sprintf(msgstring, "Measure Latency amp=%f %ld iter", OPDamp, NBiter);
+      processinfo_WriteMessage(processinfo, msgstring);
+  }
+
+// CATCH SIGNALS
+  
+  if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+      printf("\ncan't catch SIGTERM\n");
+  
+  if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+      printf("\ncan't catch SIGINT\n");    
+  
+  if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+      printf("\ncan't catch SIGABRT\n");
+  
+  if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+      printf("\ncan't catch SIGBUS\n");
+  
+  if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+      printf("\ncan't catch SIGSEGV\n");         
+  
+  if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+      printf("\ncan't catch SIGHUP\n");         
+  
+  if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+      printf("\ncan't catch SIGPIPE\n");
+ 
+ 
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
 	int r;
@@ -512,12 +559,19 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     naxes[2] = wfs_NBframesmax;
     IDwfsc = create_image_ID("_testwfsc", 3, naxes, atype, 0, 0);
 
+	float FrameRateWait = 5.0;
+	if(data.processinfo==1)
+        {
+            char msgstring[200];
+            sprintf(msgstring, "Estimating frame rate over %.1f sec", FrameRateWait);
+            processinfo_WriteMessage(processinfo, msgstring);
+        }
 
-    // coarse estimage of frame rate
+    // coarse estimate of frame rate
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_start = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;
     wfscntstart = data.image[IDwfs].md[0].cnt0;
-    sleep(5.0);
+    sleep(FrameRateWait);
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_end = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;
     wfscntend = data.image[IDwfs].md[0].cnt0;
@@ -560,14 +614,51 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 
 	list_image_ID();
 
-    for(iter=0; iter<NBiter; iter++)
+	if(data.processinfo==1)
+        {
+            char msgstring[200];
+            sprintf(msgstring, "Measuring Latency");
+            processinfo_WriteMessage(processinfo, msgstring);
+        }
+
+	long loopcnt = 0;
+	int loopOK = 1;
+	iter = 0;
+//    for(iter=0; iter<NBiter; iter++)
+    while(loopOK == 1)
     {
+		
 		//double tlastdouble;
 		double tstartdouble;
 		long NBwfsframe;
 	    unsigned long wfscnt0;
         double latencymax = 0.0;
 	    double latency;
+		
+		
+      if(data.processinfo==1)
+        {
+            while(processinfo->CTRLval == 1)  // pause
+                usleep(50);
+
+            if(processinfo->CTRLval == 2) // single iteration
+                processinfo->CTRLval = 1;
+
+            if(processinfo->CTRLval == 3) // exit loop
+            {
+                loopOK = 0;
+            }
+        }
+    
+		
+		
+		if(data.processinfo==1)
+        {
+            char msgstring[200];
+            sprintf(msgstring, "iteration %5ld / %5ld", iter, NBiter);
+            processinfo_WriteMessage(processinfo, msgstring);
+        }
+
 		
         printf(" - ITERATION %5ld / %5ld\n", iter, NBiter);
         fflush(stdout);
@@ -741,7 +832,62 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         latencysteparray[iter] = 1.0*kkmax;
         latencyarray[iter] = (valmaxdt-dtoffset);
 
-    
+
+     // process signals
+
+		if(data.signal_TERM == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGTERM);
+		}
+     
+		if(data.signal_INT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGINT);
+		}
+
+		if(data.signal_ABRT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGABRT);
+		}
+
+		if(data.signal_BUS == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGBUS);
+		}
+		
+		if(data.signal_SEGV == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGSEGV);
+		}
+		
+		if(data.signal_HUP == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGHUP);
+		}
+		
+		if(data.signal_PIPE == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGPIPE);
+		}	
+     
+        loopcnt++;
+        if(data.processinfo==1)
+            processinfo->loopcnt = loopcnt;
+
+		loopcnt++;
+		 if(data.processinfo==1)
+            processinfo->loopcnt = loopcnt;
+		
+		iter++;
+		if(iter==NBiter)
+			loopOK = 0;
     }
     fclose(fp);
 
@@ -805,6 +951,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     free(latencyarray);
     free(latencysteparray);
 
+    if(data.processinfo==1)
+        processinfo_cleanExit(processinfo);
+        
     return 0;
 }
 
