@@ -638,6 +638,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         PokeIndexMapped  = array_PokeSequ[PokeIndex];
         PokeIndex1Mapped = array_PokeSequ[PokeIndex1];
+	
+		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke))
+		{
+			printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
+			exit(0);
+		}
 
         usleep(delayRM1us);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
@@ -691,6 +697,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                     PokeIndex1 -= NBpoke;
 
                 PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
+
+		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke))
+		{
+			printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
+			exit(0);
+		}
 
                 // POKE
                 usleep(delayRM1us);
@@ -746,6 +758,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                         PokeIndex1 -= NBpoke;
 
                     PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
+
+		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke))
+		{
+			printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
+			exit(0);
+		}
 
                     usleep(delayRM1us);
                     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
