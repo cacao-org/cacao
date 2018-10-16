@@ -16,7 +16,7 @@ NBframes=10000
 
 loopnb=$( head -1 LOOPNUMBER)
 
-ssh scexao@scexaoCTRL "/home/scexao/devices/lowfs_block"
+ssh scexao@scexaoCTRL "/home/scexao/bin/devices/lowfs_block"
 sleep 1
 
 mkdir -p wfsdark
@@ -33,7 +33,7 @@ EOF
 
 echo "wfsdark/wfsdark_${datestr}.fits" > conf/shmim_wfsdark.name.txt
 
-ssh scexao@scexaoCTRL "/home/scexao/devices/lowfs_block"
+ssh scexao@scexaoCTRL "/home/scexao/bin/devices/lowfs_block"
 
 
 
