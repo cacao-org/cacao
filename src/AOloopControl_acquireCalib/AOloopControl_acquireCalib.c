@@ -483,7 +483,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     printf("STARTING response measurement...\n");
     fflush(stdout);
 
-	list_image_ID();
+    list_image_ID();
 
     /**
      * Memory is allocated to arrays
@@ -638,12 +638,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         PokeIndexMapped  = array_PokeSequ[PokeIndex];
         PokeIndex1Mapped = array_PokeSequ[PokeIndex1];
-	
-		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke-1))
-		{
-			printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
-			exit(0);
-		}
+
+        if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke-1))
+        {
+            printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
+            exit(0);
+        }
 
         usleep(delayRM1us);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
@@ -698,11 +698,11 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
                 PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
 
-		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke-1))
-		{
-			printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
-			exit(0);
-		}
+                if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke-1))
+                {
+                    printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
+                    exit(0);
+                }
 
                 // POKE
                 usleep(delayRM1us);
@@ -759,15 +759,15 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
                     PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
 
-		if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke-1))
-		{
-			printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
-			exit(0);
-		}
+                    if((PokeIndex1Mapped<0)||(PokeIndex1Mapped>NBpoke-1))
+                    {
+                        printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
+                        exit(0);
+                    }
 
                     usleep(delayRM1us);
                     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
-                    memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1Mapped*framesize, sizeof(float)*AOconf[loop].DMctrl.sizeDM);
+                    //memcpy (data.image[aoloopcontrol_var.aoconfID_dmRM].array.F, ptr0 + PokeIndex1Mapped*framesize, sizeof(float)*AOconf[loop].DMctrl.sizeDM);
                     COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmRM, -1);
                     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt1 = PokeIndex1Mapped;
                     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
