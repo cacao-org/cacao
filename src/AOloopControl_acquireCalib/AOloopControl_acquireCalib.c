@@ -437,6 +437,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      *
      */
     IDpokeC = image_ID(IDpokeC_name);
+    save_fits(IDpokeC_name, "!./tmp/test_pokeC.fits"); //TEST
     NBpoke = data.image[IDpokeC].md[0].size[2];
     sizearray[0] = AOconf[loop].WFSim.sizexWFS;
     sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
@@ -466,8 +467,6 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     arrayf = (float*) malloc(sizeof(float)*AOconf[loop].DMctrl.sizeDM);
     for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)
         arrayf[ii] = 0.0;
-
-
 
 
 
