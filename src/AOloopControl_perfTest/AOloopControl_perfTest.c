@@ -2837,7 +2837,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	x0t = x0;
 	x1t = x1;
 	y0t = y0;
-	y1y = y1;
+	y1t = y1;
 	
 	if(x0<0)
 		x0t = x0;
