@@ -2894,7 +2894,13 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	IDwfsbest = create_2Dimage_ID("impsfbest", xsizepsf, ysizepsf);
 	IDwfsall  = create_2Dimage_ID("impsfall", xsizepsf, ysizepsf);
 	
-	long kklim = (long) (frac*NBframe);
+	
+	
+	long kklim;
+	kklim = (long) (frac*NBframe);
+	
+	printf("kklim = %ld\n", kklim);
+	
 	for(kk=0;kk<NBframe;kk++)
 	{
 		long ii;
