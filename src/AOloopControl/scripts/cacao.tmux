@@ -89,7 +89,7 @@ if [ "$STARTSESSION" = "1" ]; then
 sleep 0.1
 
 tmux split-window -h -p 70 -t $SESSION:0
-tmux split-window -h -p 67 -t $SESSION:0
+tmux split-window -h -p 62 -t $SESSION:0
 
 
 # pane 0 1 (left column)
