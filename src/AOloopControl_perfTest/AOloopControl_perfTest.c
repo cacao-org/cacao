@@ -2882,7 +2882,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 		}
 	}
 	
-	quick_sort2l(evalarray, indexarray, NBframe);
+	//quick_sort2l(evalarray, indexarray, NBframe);
 	
 	
 	long IDwfsbest, IDwfsall;
