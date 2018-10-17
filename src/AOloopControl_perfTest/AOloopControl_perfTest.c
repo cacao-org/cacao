@@ -2857,7 +2857,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 			for(jj=y0t;jj<y1t;jj++)
 			{
 				float tval;
-				tval  = data.image[IDpsf].array.F[jj*xsizepsf+ii];
+				tval  = data.image[IDpsf].array.F[kk*xysizepsf+jj*xsizepsf+ii];
 				sum += tval;
 				ssum += tval*tval;				
 			}		
@@ -2866,7 +2866,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 		switch (EvalMode) 
 		{
 			case 0 :
-				evalarray[kk] = (ssum/(sum*sum));
+				evalarray[kk] = -(ssum/(sum*sum));
 			break;
 			
 			case 1 :
