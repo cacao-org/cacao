@@ -234,6 +234,10 @@ echo "dm${DMindex}disp02" > ./conf/streamlink_dmRM.name.txt # DM actuation chann
 ./aolfuncs/aolfunc_StreamLink dmRM
 
 
+# remove pre-existing poke patterns
+rm ./conf/RMpokeCubeZ.fits.gz
+rm ./conf/RMpokeCube.fits.gz
+rm respM_LOmodes.fits
 
 
 

@@ -427,6 +427,7 @@ aoconflog "set DM nolink"
     dmolink)
 aoconflog "set DM link"
 
+
 DMMODE="1"
 DMMODEfile="conf/param_DMMODE.txt"
 echo "$DMMODE" > $DMMODEfile
@@ -457,6 +458,11 @@ done
 cmd=( dialog --default-item "${vali}" --menu "Choose one:" 50 80 100 "${menuitems1[@]}" )
 dmolinkchan=$("${cmd[@]}" 2>&1 >/dev/tty)
 
+
+# remove pre-existing poke patterns
+rm ./conf/RMpokeCubeZ.fits.gz
+rm ./conf/RMpokeCube.fits.gz
+rm respM_LOmodes.fits
 
 # set external loop DM modes controlled by this loop 
 $execname << EOF
