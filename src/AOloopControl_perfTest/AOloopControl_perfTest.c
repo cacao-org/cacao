@@ -2904,7 +2904,6 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	
 	for(kk=0;kk<NBframe;kk++)
 	{
-		kk = 0;
 		long ii;
 		
 		if(kk<kklim)
