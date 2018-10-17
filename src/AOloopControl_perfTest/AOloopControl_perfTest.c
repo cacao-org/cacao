@@ -409,7 +409,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     long dmxsize, dmysize;
     long IDwfs;
     long wfsxsize, wfsysize, wfssize;
-//    long twait0us = 100000;
+    //    long twait0us = 100000;
 
     double tdouble_start;
     double tdouble_end;
@@ -417,7 +417,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     long wfscntend;
 
     struct timespec tstart;
-//    struct timespec tnow;
+    //    struct timespec tnow;
     struct timespec *tarray;
     double tdouble;
     double dtmax = 1.0;  // Max running time per iteration
@@ -460,58 +460,58 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     uint8_t atype;
     uint32_t naxes[3];
 
-	PROCESSINFO *processinfo;
+    PROCESSINFO *processinfo;
 
-if(data.processinfo==1)
-{
-    // CREATE PROCESSINFO ENTRY
-    // see processtools.c in module CommandLineInterface for details
-     //
-    
-    char pinfoname[200];  // short name for the processinfo instance     
-    // avoid spaces, name should be human-readable
- 
-  
-      sprintf(pinfoname, "mlat-%s-%s", dmname, wfsname);
-      processinfo = processinfo_shm_create(pinfoname, 0);
-      processinfo->loopstat = 0; // loop initialization
-      strcpy(processinfo->source_FUNCTION, __FUNCTION__);
-      strcpy(processinfo->source_FILE,     __FILE__);
-      processinfo->source_LINE = __LINE__;
-  
-      char msgstring[200];
-      sprintf(msgstring, "Measure Latency amp=%f %ld iter", OPDamp, NBiter);
-      processinfo_WriteMessage(processinfo, msgstring);
-  }
+    if(data.processinfo==1)
+    {
+        // CREATE PROCESSINFO ENTRY
+        // see processtools.c in module CommandLineInterface for details
+        //
 
-// CATCH SIGNALS
-  
-  if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGTERM\n");
-  
-  if (sigaction(SIGINT, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGINT\n");    
-  
-  if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGABRT\n");
-  
-  if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGBUS\n");
-  
-  if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGSEGV\n");         
-  
-  if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGHUP\n");         
-  
-  if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
-      printf("\ncan't catch SIGPIPE\n");
- 
- 
+        char pinfoname[200];  // short name for the processinfo instance
+        // avoid spaces, name should be human-readable
+
+
+        sprintf(pinfoname, "mlat-%s-%s", dmname, wfsname);
+        processinfo = processinfo_shm_create(pinfoname, 0);
+        processinfo->loopstat = 0; // loop initialization
+        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+        strcpy(processinfo->source_FILE,     __FILE__);
+        processinfo->source_LINE = __LINE__;
+
+        char msgstring[200];
+        sprintf(msgstring, "Measure Latency amp=%f %ld iter", OPDamp, NBiter);
+        processinfo_WriteMessage(processinfo, msgstring);
+    }
+
+    // CATCH SIGNALS
+
+    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGTERM\n");
+
+    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGINT\n");
+
+    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGABRT\n");
+
+    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGBUS\n");
+
+    if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGSEGV\n");
+
+    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGHUP\n");
+
+    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGPIPE\n");
+
+
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
-	int r;
-	
+    int r;
+
     r = seteuid(data.euid); //This goes up to maximum privileges
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
     r = seteuid(data.ruid);//Go back to normal privileges
@@ -526,7 +526,7 @@ if(data.processinfo==1)
 
     IDdm0 = create_2Dimage_ID("_testdm0", dmxsize, dmysize);
     IDdm1 = create_2Dimage_ID("_testdm1", dmxsize, dmysize);
-    
+
     float RMStot = 0.0;
     for(ii=0; ii<dmxsize; ii++)
         for(jj=0; jj<dmysize; jj++)
@@ -541,8 +541,8 @@ if(data.processinfo==1)
 
     for(ii=0; ii<dmxsize; ii++)
         for(jj=0; jj<dmysize; jj++)
-			data.image[IDdm1].array.F[jj*dmxsize+ii] *= OPDamp/RMStot;
-    
+            data.image[IDdm1].array.F[jj*dmxsize+ii] *= OPDamp/RMStot;
+
 
     system("mkdir -p tmp");
     save_fits("_testdm0", "!tmp/_testdm0.fits");
@@ -559,13 +559,13 @@ if(data.processinfo==1)
     naxes[2] = wfs_NBframesmax;
     IDwfsc = create_image_ID("_testwfsc", 3, naxes, atype, 0, 0);
 
-	float FrameRateWait = 5.0;
-	if(data.processinfo==1)
-        {
-            char msgstring[200];
-            sprintf(msgstring, "Estimating frame rate over %.1f sec", FrameRateWait);
-            processinfo_WriteMessage(processinfo, msgstring);
-        }
+    float FrameRateWait = 5.0;
+    if(data.processinfo==1)
+    {
+        char msgstring[200];
+        sprintf(msgstring, "Estimating frame rate over %.1f sec", FrameRateWait);
+        processinfo_WriteMessage(processinfo, msgstring);
+    }
 
     // coarse estimate of frame rate
     clock_gettime(CLOCK_REALTIME, &tnow);
@@ -604,39 +604,39 @@ if(data.processinfo==1)
     wfsframeoffset = (long) (0.3*wfs_NBframesmax);
 
 
-	printf("WFS size : %ld %ld\n", wfsxsize, wfsysize);
-	if(atype == _DATATYPE_FLOAT)
-		printf("data type  :  _DATATYPE_FLOAT\n");
-	if(atype == _DATATYPE_UINT16)
-		printf("data type  :  _DATATYPE_UINT16\n");
-	if(atype == _DATATYPE_INT16)
-		printf("data type  :  _DATATYPE_INT16\n");
+    printf("WFS size : %ld %ld\n", wfsxsize, wfsysize);
+    if(atype == _DATATYPE_FLOAT)
+        printf("data type  :  _DATATYPE_FLOAT\n");
+    if(atype == _DATATYPE_UINT16)
+        printf("data type  :  _DATATYPE_UINT16\n");
+    if(atype == _DATATYPE_INT16)
+        printf("data type  :  _DATATYPE_INT16\n");
 
-	list_image_ID();
+    list_image_ID();
 
-	if(data.processinfo==1)
-        {
-            char msgstring[200];
-            sprintf(msgstring, "Measuring Latency");
-            processinfo_WriteMessage(processinfo, msgstring);
-        }
+    if(data.processinfo==1)
+    {
+        char msgstring[200];
+        sprintf(msgstring, "Measuring Latency");
+        processinfo_WriteMessage(processinfo, msgstring);
+    }
 
-	long loopcnt = 0;
-	int loopOK = 1;
-	iter = 0;
-//    for(iter=0; iter<NBiter; iter++)
+    long loopcnt = 0;
+    int loopOK = 1;
+    iter = 0;
+    //    for(iter=0; iter<NBiter; iter++)
     while(loopOK == 1)
     {
-		
-		//double tlastdouble;
-		double tstartdouble;
-		long NBwfsframe;
-	    unsigned long wfscnt0;
+
+        //double tlastdouble;
+        double tstartdouble;
+        long NBwfsframe;
+        unsigned long wfscnt0;
         double latencymax = 0.0;
-	    double latency;
-		
-		
-      if(data.processinfo==1)
+        double latency;
+
+
+        if(data.processinfo==1)
         {
             while(processinfo->CTRLval == 1)  // pause
                 usleep(50);
@@ -649,22 +649,22 @@ if(data.processinfo==1)
                 loopOK = 0;
             }
         }
-    
-		
-		
-		if(data.processinfo==1)
+
+
+
+        if(data.processinfo==1)
         {
             char msgstring[200];
             sprintf(msgstring, "iteration %5ld / %5ld", iter, NBiter);
             processinfo_WriteMessage(processinfo, msgstring);
         }
 
-		
+
         printf(" - ITERATION %5ld / %5ld\n", iter, NBiter);
         fflush(stdout);
 
-		for(ii=0;ii<10;ii++)
-			printf("  %5ld  ->  %f\n", ii, (float) data.image[IDwfs].array.SI16[ii]);
+        for(ii=0; ii<10; ii++)
+            printf("  %5ld  ->  %f\n", ii, (float) data.image[IDwfs].array.SI16[ii]);
 
 
         printf("write to %s\n", dmname);
@@ -691,7 +691,7 @@ if(data.processinfo==1)
         dt = 0.0;
         clock_gettime(CLOCK_REALTIME, &tstart);
         tstartdouble = 1.0*tstart.tv_sec + 1.0e-9*tstart.tv_nsec;
-    //    tlastdouble = tstartdouble;
+        //    tlastdouble = tstartdouble;
 
 
 
@@ -724,7 +724,7 @@ if(data.processinfo==1)
                 ptr += sizeof(short)*wfsframe*wfssize;
                 memcpy(ptr, data.image[IDwfs].array.UI16, sizeof(short)*wfssize);
             }
-            
+
             if(atype == _DATATYPE_INT16)
             {
                 // copy image to cube slice
@@ -739,7 +739,7 @@ if(data.processinfo==1)
             dt = tdouble - tstartdouble;
             //  dt1 = tdouble - tlastdouble;
             dtarray[wfsframe] = dt;
-       //     tlastdouble = tdouble;
+            //     tlastdouble = tdouble;
 
             // apply DM pattern #1
             if((dmstate==0)&&(dt>dtoffset0)&&(wfsframe>wfsframeoffset))
@@ -765,7 +765,7 @@ if(data.processinfo==1)
 
         // Computing difference between consecutive images
         NBwfsframe = wfsframe;
-        
+
 
         valarray = (double*) malloc(sizeof(double)*NBwfsframe);
         double valmax = 0.0;
@@ -773,30 +773,30 @@ if(data.processinfo==1)
         for(kk=1; kk<NBwfsframe; kk++)
         {
             valarray[kk] = 0.0;
-            
+
             if(atype == _DATATYPE_FLOAT)
                 for(ii=0; ii<wfssize; ii++)
                 {
                     tmp = data.image[IDwfsc].array.F[kk*wfssize+ii] - data.image[IDwfsc].array.F[(kk-1)*wfssize+ii];
                     valarray[kk] += tmp*tmp;
                 }
-                
-            if(atype == _DATATYPE_UINT16) 
+
+            if(atype == _DATATYPE_UINT16)
                 for(ii=0; ii<wfssize; ii++)
                 {
                     tmp = data.image[IDwfsc].array.UI16[kk*wfssize+ii] - data.image[IDwfsc].array.UI16[(kk-1)*wfssize+ii];
                     valarray[kk] += 1.0*tmp*tmp;
                 }
-                
-            if(atype == _DATATYPE_INT16) 
+
+            if(atype == _DATATYPE_INT16)
                 for(ii=0; ii<wfssize; ii++)
                 {
-					tmp = 0.0;
+                    tmp = 0.0;
                     tmp = data.image[IDwfsc].array.SI16[kk*wfssize+ii] - data.image[IDwfsc].array.SI16[(kk-1)*wfssize+ii];
                     valarray[kk] += 1.0*tmp*tmp;
                 }
             valarray[kk] = sqrt(valarray[kk]/wfssize/2);
-            
+
             if(valarray[kk]>valmax)
             {
                 valmax = valarray[kk];
@@ -833,61 +833,61 @@ if(data.processinfo==1)
         latencyarray[iter] = (valmaxdt-dtoffset);
 
 
-     // process signals
+        // process signals
 
-		if(data.signal_TERM == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGTERM);
-		}
-     
-		if(data.signal_INT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGINT);
-		}
+        if(data.signal_TERM == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGTERM);
+        }
 
-		if(data.signal_ABRT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGABRT);
-		}
+        if(data.signal_INT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGINT);
+        }
 
-		if(data.signal_BUS == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGBUS);
-		}
-		
-		if(data.signal_SEGV == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGSEGV);
-		}
-		
-		if(data.signal_HUP == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGHUP);
-		}
-		
-		if(data.signal_PIPE == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGPIPE);
-		}	
-     
+        if(data.signal_ABRT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGABRT);
+        }
+
+        if(data.signal_BUS == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGBUS);
+        }
+
+        if(data.signal_SEGV == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGSEGV);
+        }
+
+        if(data.signal_HUP == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGHUP);
+        }
+
+        if(data.signal_PIPE == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGPIPE);
+        }
+
         loopcnt++;
         if(data.processinfo==1)
             processinfo->loopcnt = loopcnt;
 
-		loopcnt++;
-		 if(data.processinfo==1)
+        loopcnt++;
+        if(data.processinfo==1)
             processinfo->loopcnt = loopcnt;
-		
-		iter++;
-		if(iter==NBiter)
-			loopOK = 0;
+
+        iter++;
+        if(iter==NBiter)
+            loopOK = 0;
     }
     fclose(fp);
 
@@ -900,12 +900,12 @@ if(data.processinfo==1)
     free(dtarray);
     free(tarray);
 
-	if(data.processinfo==1)
-        {
-            char msgstring[200];
-            sprintf(msgstring, "Processing Data (%d iterations)", NBiter);
-            processinfo_WriteMessage(processinfo, msgstring);
-        }
+    if(data.processinfo==1)
+    {
+        char msgstring[200];
+        sprintf(msgstring, "Processing Data (%ld iterations)", NBiter);
+        processinfo_WriteMessage(processinfo, msgstring);
+    }
 
 
     latencyave = 0.0;
@@ -926,7 +926,7 @@ if(data.processinfo==1)
     latencyave /= NBiter;
     latencystepave /= NBiter;
 
-	//save__fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+    //save__fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
 
 
     quick_sort_float(latencyarray, NBiter);
@@ -959,17 +959,17 @@ if(data.processinfo==1)
     free(latencyarray);
     free(latencysteparray);
 
-	if(data.processinfo==1)
-        {
-            char msgstring[200];
-            sprintf(msgstring, "Measured %8.3f ms @ %.3f Hz", latencyave*1000.0, 1.0*(wfscntend-wfscntstart)/dt);
-            processinfo_WriteMessage(processinfo, msgstring);
-        }
+    if(data.processinfo==1)
+    {
+        char msgstring[200];
+        sprintf(msgstring, "Measured %8.3f ms @ %.3f Hz", latencyave*1000.0, 1.0*(wfscntend-wfscntstart));
+                processinfo_WriteMessage(processinfo, msgstring);
+    }
 
 
     if(data.processinfo==1)
         processinfo_cleanExit(processinfo);
-        
+
     return 0;
 }
 

@@ -222,7 +222,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 		printw("---- Predictive Control ----- |");
 	printw("\n");
 
-    printw("BLOCK  #modes [ min - max ]    gain   limit   multf  |       dmC     Input  ->       WFS   Ratio  |    | hits/step    perc  |");
+    printw("BLOCK  #modes [ min - max ]    gain   limit   multf  |       dmC  Input[OL] ->    WFS[CL]  Ratio  |    | hits/step    perc  |");
 	if(AOconf[loop].aorun.ARPFon==1)
 		printw("  PFres  |  Ratio | PFautog |");
 	printw("\n");
@@ -239,10 +239,19 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("%3ld", k);
         attroff(A_BOLD);
 
-        printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f", AOconf[loop].AOpmodecoeffs.NBmodes_block[k], kmin, AOconf[loop].AOpmodecoeffs.indexmaxMB[k]-1, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[k], data.image[aoloopcontrol_var.aoconfID_limitb].array.F[k], data.image[aoloopcontrol_var.aoconfID_multfb].array.F[k]);
+        printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f", 
+			AOconf[loop].AOpmodecoeffs.NBmodes_block[k], 
+			kmin, 
+			AOconf[loop].AOpmodecoeffs.indexmaxMB[k]-1, 
+			data.image[aoloopcontrol_var.aoconfID_gainb].array.F[k], 
+			data.image[aoloopcontrol_var.aoconfID_limitb].array.F[k], 
+			data.image[aoloopcontrol_var.aoconfID_multfb].array.F[k]);
         
         
-        printw("  |  %8.2f  %8.2f  ->  %8.2f", 1000.0*(AOconf[loop].AOpmodecoeffs.blockave_Crms[k]), 1000.0*AOconf[loop].AOpmodecoeffs.blockave_OLrms[k], 1000.0*AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]);
+        printw("  |  %8.2f  %8.2f  ->  %8.2f", 
+			1000.0*(AOconf[loop].AOpmodecoeffs.blockave_Crms[k]), 
+			1000.0*AOconf[loop].AOpmodecoeffs.blockave_OLrms[k], 
+			1000.0*AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]);
 		
 
 		
@@ -260,7 +269,10 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         if( AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01 )
             attron(A_BOLD | COLOR_PAIR(2));
 
-        printw("| %2ld | %9.3f  %6.2f\% |", k, AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
+        printw("| %2ld | %9.3f  %6.2f\% |", 
+			k, 
+			AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  
+			100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
         attroff(A_BOLD | COLOR_PAIR(2));
         
         
@@ -453,7 +465,23 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
 
 
-int_fast8_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbcol)
+
+
+
+/**
+ * ## Purpose
+ * 
+ * Monitors AO loop performance \n
+ * Prints status on screen\n
+ * 
+ * 
+ */
+
+int_fast8_t AOloopControl_perfTest_loopMonitor(
+	long loop, 
+	double frequ, 
+	long nbcol
+	)
 {
     char name[200];
     // DM mode values
@@ -594,7 +622,7 @@ int_fast8_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbc
     IDmodevalrms = read_sharedmem_image(fname);
 
 
-
+	
 
     initscr();
     getmaxyx(stdscr, wrow, wcol);
