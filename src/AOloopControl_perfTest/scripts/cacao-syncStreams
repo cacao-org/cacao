@@ -124,14 +124,19 @@ printHELP
 fi
 
 
-
-
+directory="$1"
+stream0="$2"
+stream1="$3"
+tstart="$4"
+tstop="$5"
+dtsample="$6"
+dtlag="$7"
 
 
 cacao << EOF
 aolptmksyncs2 "$directory" ${stream0} ${stream1} ${tstart} ${tstop} ${dtsample} ${dtlag}
-loadfits "${stream0}.dark.fits" stream0dark
-loadfits "${stream1}.dark.fits" stream1dark
+#loadfits "${stream0}.dark.fits" stream0dark
+#loadfits "${stream1}.dark.fits" stream1dark
 savefits outC0 "!${stream0}.sync.fits"
 savefits outC1 "!${stream1}.sync.fits"
 #outC0c=outC0-stream0dark
