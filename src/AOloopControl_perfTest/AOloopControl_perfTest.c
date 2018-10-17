@@ -2901,18 +2901,35 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 		
 		if(kk<kklim)
 		{
+			for(ii=0;ii<xysizewfs;ii++)
+				data.image[IDwfsbest].array.F[ii] += data.image[IDwfs].array.F[indexarray[kk]*xysizewfs+ii];
+			
 			for(ii=0;ii<xysizepsf;ii++)
-			{
-				data.image[IDwfsbest].array.F[ii] += data.image[IDwfs].array.F[kk*xysizewfs+ii];
-				data.image[IDpsfbest].array.F[ii] += data.image[IDpsf].array.F[kk*xysizepsf+ii];
-			}
+				data.image[IDpsfbest].array.F[ii] += data.image[IDpsf].array.F[indexarray[kk]*xysizepsf+ii];
+			
 		}
-		for(ii=0;ii<xysizepsf;ii++)
-			{
+		
+		for(ii=0;ii<xysizewfs;ii++)
 				data.image[IDwfsall].array.F[ii] += data.image[IDwfs].array.F[kk*xysizewfs+ii];
+	
+		for(ii=0;ii<xysizepsf;ii++)
 				data.image[IDpsfall].array.F[ii] += data.image[IDpsf].array.F[kk*xysizepsf+ii];
-			}	
 	}
+	
+	long ii;
+	
+	for(ii=0;ii<xysizewfs;ii++)
+		data.image[IDwfsbest].array.F[ii] /= kklim;
+
+	for(ii=0;ii<xysizepsf;ii++)
+		data.image[IDpsfbest].array.F[ii] /= kklim;
+	
+	
+	for(ii=0;ii<xysizewfs;ii++)
+		data.image[IDwfsall].array.F[ii] /= NBframe;
+
+	for(ii=0;ii<xysizepsf;ii++)
+		data.image[IDpsfall].array.F[ii] /= NBframe;	
 	
 	
 	free(evalarray);
