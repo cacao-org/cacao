@@ -2893,7 +2893,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	IDwfsall  = create_2Dimage_ID("imwfsall", xsizewfs, ysizewfs);
 	
 	IDpsfbest = create_2Dimage_ID("impsfbest", xsizepsf, ysizepsf);
-	IDpsfsall  = create_2Dimage_ID("impsfall", xsizepsf, ysizepsf);
+	IDpsfall  = create_2Dimage_ID("impsfall", xsizepsf, ysizepsf);
 	
 	
 	
