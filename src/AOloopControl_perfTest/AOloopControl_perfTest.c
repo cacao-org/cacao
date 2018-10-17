@@ -2903,13 +2903,13 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 		{
 			for(ii=0;ii<xysizepsf;ii++)
 			{
-				data.image[IDwfsbest].array.F[ii] += data.image[IDwfs].array.F[kk*xysizepsf+ii];
+				data.image[IDwfsbest].array.F[ii] += data.image[IDwfs].array.F[kk*xysizewfs+ii];
 				data.image[IDpsfbest].array.F[ii] += data.image[IDpsf].array.F[kk*xysizepsf+ii];
 			}
 		}
 		for(ii=0;ii<xysizepsf;ii++)
 			{
-				data.image[IDwfsall].array.F[ii] += data.image[IDwfs].array.F[kk*xysizepsf+ii];
+				data.image[IDwfsall].array.F[ii] += data.image[IDwfs].array.F[kk*xysizewfs+ii];
 				data.image[IDpsfall].array.F[ii] += data.image[IDpsf].array.F[kk*xysizepsf+ii];
 			}	
 	}
