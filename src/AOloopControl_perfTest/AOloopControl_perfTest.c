@@ -277,6 +277,17 @@ int_fast8_t AOloopControl_perfTest_StatAnalysis_2streams_cli()
 }
 
 
+int_fast8_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli()
+{
+	if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,1)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,2)+CLI_checkarg(8,2) == 0)
+	{
+		AOloopControl_perfTest_SelectWFSframes_from_PSFframes(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.numl, data.cmdargtoken[8].val.numl);
+	}
+	else
+		return 1;
+}
+
+
 
 
 
@@ -371,6 +382,14 @@ int_fast8_t init_AOloopControl_perfTest()
 		"aolperfsimpairs imc0 imc1 simM0 simM1 20 1000",
 		"int AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0, char *IDname_stream1, char *IDname_simM0, char *IDname_simM1, long dtmin, long NBselected)");
 
+	
+	RegisterCLIcommand("aolperfselwfsfpsf",
+		__FILE__,
+		AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli,
+		"select WFS frames from PSF frames (synchronized)",
+		"<input WFS cube> <input PSF cube> <fraction> <x0> <x1> <y0> <y1> <EvalMode>",
+		"aolperfselwfsfpsf imwfsC impsfC 100 120 100 120 0",
+		"int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode)");
 	
 }
 
@@ -2763,3 +2782,142 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
     return 0;
 }
+
+
+
+
+
+/**
+ * 
+ * PSF evaluation window is (x0,y0) to (x1,y1)
+ * 
+ * EvalMode = 0  : Maximize Energy concentration
+ * EvalMode = 1  : Maximize flux
+ * EvalMode = 2  : Minimize flux
+ * 
+ * output:
+ * 
+ * imwfsbest
+ * imwfsall
+ * 
+ * impsfbest
+ * impsfall
+ * 
+ */ 
+
+int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode)
+{
+	long IDwfs;
+	long IDpsf;
+	
+	long NBframe;
+	long xsizewfs, ysizewfs, xysizewfs;
+	long xsizepsf, ysizepsf, xysizepsf;
+	
+	double *evalarray;
+	long *indexarray;
+	
+	IDwfs = image_ID(IDnameWFS);
+	IDpsf = image_ID(IDnamePSF);
+	
+	xsizewfs = data.image[IDwfs].md[0].size[0];
+	ysizewfs = data.image[IDwfs].md[0].size[1];
+	xysizewfs = xsizewfs*ysizewfs;
+	
+	xsizepsf = data.image[IDpsf].md[0].size[0];
+	ysizepsf = data.image[IDpsf].md[0].size[1];
+	xysizepsf = xsizepsf*ysizepsf;	
+	
+	NBframe = data.image[IDwfs].md[0].size[2];
+	
+	evalarray = (double*) malloc(sizeof(double)*NBframe);
+	indexarray = (long*) malloc(sizeof(long)*NBframe);
+	
+	long x0t, y0t, x1t, y1t;
+	if(x0<0)
+		x0t = x0;
+	if(x1>xsizepsf-1)
+		x1t = xsizepsf-1;
+	if(y0<0)
+		y0t = y0;
+	if(y1>ysizepsf-1)
+		y1t = ysizepsf-1;	
+	
+	
+	long kk;
+	for(kk=0;kk<NBframe;kk++)
+	{
+		long ii, jj;
+		double sum = 0.0;
+		double ssum = 0.0;
+		
+		indexarray[kk] = kk;
+
+		for(ii=x0t;ii<x1t;jj++)
+			for(jj=y0t;jj<y1t;jj++)
+			{
+				float tval = data.image[IDpsf].array.F[jj*xsizepsf+ii];
+				sum += tval;
+				ssum += tval*tval;				
+			}		
+		
+		// best frame 
+		switch (EvalMode) 
+		{
+			case 0 :
+				evalarray[kk] = -(ssum/(sum*sum));
+			break;
+			
+			case 1 :
+				evalarray[kk] = -sum;
+			break;
+			
+			case 2 :
+				evalarray[kk] = sum;
+			break;
+			
+			default:
+				evalarray[kk] = -sum;
+			break;
+		}
+	}
+	
+	quick_sort2l(evalarray, indexarray, NBframe);
+	
+	
+	long IDwfsbest, IDwfsall;
+	long IDpsfbest, IDpsfall;
+	
+	IDwfsbest = create_2Dimage_ID("imwfsbest", xsizewfs, ysizewfs);
+	IDwfsall  = create_2Dimage_ID("imwfsall", xsizewfs, ysizewfs);
+	
+	IDwfsbest = create_2Dimage_ID("impsfbest", xsizepsf, ysizepsf);
+	IDwfsall  = create_2Dimage_ID("impsfall", xsizepsf, ysizepsf);
+	
+	long kklim = (long) (frac*NBframe);
+	for(kk=0;kk<NBframe;kk++)
+	{
+		long ii;
+		
+		if(kk<kklim)
+		{
+			for(ii=0;ii<xysizepsf;ii++)
+			{
+				data.image[IDwfsbest].array.F[ii] += data.image[IDwfs].array.F[kk*xysizepsf+ii];
+				data.image[IDpsfbest].array.F[ii] += data.image[IDpsf].array.F[kk*xysizepsf+ii];
+			}
+		}
+		for(ii=0;ii<xysizepsf;ii++)
+			{
+				data.image[IDwfsall].array.F[ii] += data.image[IDwfs].array.F[kk*xysizepsf+ii];
+				data.image[IDpsfall].array.F[ii] += data.image[IDpsf].array.F[kk*xysizepsf+ii];
+			}	
+	}
+	
+	
+	free(evalarray);
+	free(indexarray);
+	
+	return 0;
+}
+

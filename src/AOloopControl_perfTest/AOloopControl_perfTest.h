@@ -78,5 +78,6 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 	long NBselected
 	);
 
+int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode);
 
 #endif
