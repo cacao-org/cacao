@@ -2833,7 +2833,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	evalarray = (double*) malloc(sizeof(double)*NBframe);
 	indexarray = (long*) malloc(sizeof(long)*NBframe);
 	
-/*	long x0t, y0t, x1t, y1t;
+	long x0t, y0t, x1t, y1t;
 	if(x0<0)
 		x0t = x0;
 	if(x1>xsizepsf-1)
@@ -2842,10 +2842,10 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 		y0t = y0;
 	if(y1>ysizepsf-1)
 		y1t = ysizepsf-1;	
-	*/
+	
 	
 	long kk;
-	/*for(kk=0;kk<NBframe;kk++)
+	for(kk=0;kk<NBframe;kk++)
 	{
 		long ii, jj;
 		double sum = 0.0;
@@ -2881,9 +2881,9 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 				evalarray[kk] = -sum;
 			break;
 		}
-	}*/
+	}
 	
-	//quick_sort2l(evalarray, indexarray, NBframe);
+	quick_sort2l(evalarray, indexarray, NBframe);
 	
 	
 	long IDwfsbest, IDwfsall;
@@ -2892,8 +2892,8 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	IDwfsbest = create_2Dimage_ID("imwfsbest", xsizewfs, ysizewfs);
 	IDwfsall  = create_2Dimage_ID("imwfsall", xsizewfs, ysizewfs);
 	
-	IDwfsbest = create_2Dimage_ID("impsfbest", xsizepsf, ysizepsf);
-	IDwfsall  = create_2Dimage_ID("impsfall", xsizepsf, ysizepsf);
+	IDpsfbest = create_2Dimage_ID("impsfbest", xsizepsf, ysizepsf);
+	IDpsfsall  = create_2Dimage_ID("impsfall", xsizepsf, ysizepsf);
 	
 	
 	
@@ -2904,9 +2904,10 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	
 	for(kk=0;kk<NBframe;kk++)
 	{
+		kk = 0;
 		long ii;
 		
-/*		if(kk<kklim)
+		if(kk<kklim)
 		{
 			for(ii=0;ii<xysizewfs;ii++)
 				data.image[IDwfsbest].array.F[ii] += data.image[IDwfs].array.F[indexarray[kk]*xysizewfs+ii];
@@ -2915,16 +2916,16 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 				data.image[IDpsfbest].array.F[ii] += data.image[IDpsf].array.F[indexarray[kk]*xysizepsf+ii];
 			
 		}
-	*/
+	
 		
 		for(ii=0;ii<xysizewfs;ii++)
-				data.image[IDwfsall].array.F[ii] += data.image[IDwfs].array.F[kk*xysizewfs+ii];
+				data.image[IDwfsall].array.F[ii] = data.image[IDwfs].array.F[kk*xysizewfs+ii];
 	
 		for(ii=0;ii<xysizepsf;ii++)
-				data.image[IDpsfall].array.F[ii] += data.image[IDpsf].array.F[kk*xysizepsf+ii];
+				data.image[IDpsfall].array.F[ii] = data.image[IDpsf].array.F[kk*xysizepsf+ii];
 	}
 	
-/*	long ii;
+	long ii;
 	
 	for(ii=0;ii<xysizewfs;ii++)
 		data.image[IDwfsbest].array.F[ii] /= kklim;
@@ -2938,7 +2939,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 
 	for(ii=0;ii<xysizepsf;ii++)
 		data.image[IDpsfall].array.F[ii] /= NBframe;	
-	*/
+	
 	
 	free(evalarray);
 	free(indexarray);
