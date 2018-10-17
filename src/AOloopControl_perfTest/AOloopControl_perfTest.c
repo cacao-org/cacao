@@ -2866,7 +2866,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 		switch (EvalMode) 
 		{
 			case 0 :
-				evalarray[kk] = (ssum/(sum*sum));
+				evalarray[kk] = -(ssum/(sum*sum));
 			break;
 			
 			case 1 :
@@ -2886,6 +2886,8 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	quick_sort2l(evalarray, indexarray, NBframe);
 	
 	
+	
+	
 	long IDwfsbest, IDwfsall;
 	long IDpsfbest, IDpsfall;
 	
@@ -2902,9 +2904,12 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	
 	printf("kklim = %ld     %ld %ld\n", kklim, xysizewfs, xysizepsf);
 	
+	FILE fp = fopen("fptest.txt", "w");
 	for(kk=0;kk<NBframe;kk++)
 	{
 		long ii;
+		
+		fprintf(fp, "%6ld  %6ld  %g\n", kk, indexarray[kk], evalarray[kk]);
 		
 		if(kk<kklim)
 		{
@@ -2923,6 +2928,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 		for(ii=0;ii<xysizepsf;ii++)
 				data.image[IDpsfall].array.F[ii] += data.image[IDpsf].array.F[kk*xysizepsf+ii];
 	}
+	fclose(fp);
 	
 	long ii;
 	
