@@ -104,11 +104,11 @@ tmux split-window -v -p 50
 
 # pane 5 6 7 8 (right column)
 tmux select-pane -t 5
-tmux split-window -v -p 95
-tmux split-window -v -p 85
-tmux split-window -v -p 80
-tmux split-window -v -p 73
-tmux split-window -v -p 65
+tmux split-window -v -p 95 # 0.0500
+tmux split-window -v -p 90 # 0.1425
+tmux split-window -v -p 85 # 0.1615
+tmux split-window -v -p 76 # 0.1744
+tmux split-window -v -p 70 # 0.1651 - 0.3065
 
 
 sleep 0.5
