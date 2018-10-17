@@ -2899,7 +2899,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	long kklim;
 	kklim = (long) (frac*NBframe);
 	
-	printf("kklim = %ld\n", kklim);
+	printf("kklim = %ld     %ld %ld\n", kklim, xysizewfs, xysizepsf);
 	
 	for(kk=0;kk<NBframe;kk++)
 	{
