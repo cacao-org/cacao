@@ -24,7 +24,7 @@
 
 STARTSESSION="1"
 STARTPROC="1"
-wXsize=550
+wXsize=500
 wYsize=150
 
 
@@ -88,7 +88,7 @@ xterm -geometry ${wXsize}x${wYsize} -e "tmux a -t $SESSION" &
 if [ "$STARTSESSION" = "1" ]; then
 sleep 0.1
 
-tmux split-window -h -p 75 -t $SESSION:0
+tmux split-window -h -p 70 -t $SESSION:0
 tmux split-window -h -p 67 -t $SESSION:0
 
 
