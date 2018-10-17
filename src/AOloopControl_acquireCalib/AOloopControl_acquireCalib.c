@@ -330,6 +330,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     FILE *fp;
 
     PROCESSINFO *processinfo;
+    int loopOK = 1;
+
 
     if((data.processinfo==1)&&(data.processinfoActive==0))
     {
@@ -443,6 +445,21 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
     sizearray[2] = NBpoke;
     IDoutC = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1], sizearray[2]);
+
+
+	// Check that DM size matches poke file
+	if( data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1] != data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[1])
+	{
+		char msgstring[200];
+		sprintf(msgstring, "ERROR: DM and Poke mismatch");
+      if(data.processinfo == 1)
+      {
+          processinfo->loopstat = 4; // ERROR
+          processinfo_WriteMessage(processinfo, msgstring);
+      }
+      loopOK = 0;
+	}
+
 
     uint_fast16_t PokeIndex;   // Mode to be poked
     for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
@@ -562,9 +579,10 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     imcnt = 0;
 
 
-    int loopOK = 1;
+    
     if(data.processinfo==1)
-        processinfo->loopstat = 1;  // Notify processinfo that we are entering loop
+		if(loopOK == 1)
+			processinfo->loopstat = 1;  // Notify processinfo that we are entering loop
     long loopcnt = 0;
 
     /**
