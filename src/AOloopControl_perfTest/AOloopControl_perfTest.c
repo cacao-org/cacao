@@ -2904,7 +2904,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	
 	printf("kklim = %ld     %ld %ld\n", kklim, xysizewfs, xysizepsf);
 	
-	FILE fp = fopen("fptest.txt", "w");
+	FILE *fp = fopen("fptest.txt", "w");
 	for(kk=0;kk<NBframe;kk++)
 	{
 		long ii;
