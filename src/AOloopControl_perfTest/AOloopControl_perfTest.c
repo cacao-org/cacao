@@ -2843,6 +2843,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	if(y1>ysizepsf-1)
 		y1t = ysizepsf-1;	
 	
+	printf("WINDOW: %ld - %ld     %ld -%ld\n", x0t, x1t, y0t, y1t);
 	
 	long kk;
 	for(kk=0;kk<NBframe;kk++)
@@ -2853,7 +2854,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 		
 		indexarray[kk] = kk;
 
-		for(ii=x0t;ii<x1t;jj++)
+		for(ii=x0t;ii<x1t;ii++)
 			for(jj=y0t;jj<y1t;jj++)
 			{
 				float tval;
