@@ -132,10 +132,12 @@ cacao << EOF
 aolptmksyncs2 "$directory" ${stream0} ${stream1} ${tstart} ${tstop} ${dtsample} ${dtlag}
 loadfits "${stream0}.dark.fits" stream0dark
 loadfits "${stream1}.dark.fits" stream1dark
-outC0c=outC0-stream0dark
-outC1c=outC1-stream1dark
-savefits outC0c "!${stream0}.sync.fits"
-savefits outC1c "!${stream1}.sync.fits"
+savefits outC0 "!${stream0}.sync.fits"
+savefits outC1 "!${stream1}.sync.fits"
+#outC0c=outC0-stream0dark
+#outC1c=outC1-stream1dark
+#savefits outC0c "!${stream0}.syncC.fits"
+#savefits outC1c "!${stream1}.syncC.fits"
 listim
 exitCLI
 EOF
