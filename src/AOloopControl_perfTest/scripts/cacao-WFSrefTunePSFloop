@@ -196,10 +196,10 @@ echo "=================================================================== PROCES
 timestart=${timeend}
 
 # generate synchronized cubes
-#cacao-syncStreams "$logdirectory" $streamWFS $streamPSF $timestart $timeend  $texp $dtlag
+cacao-syncStreams "$logdirectory" $streamWFS $streamPSF $timestart $timeend  $texp $dtlag
 
 # generate selection
-#cacao-selectWFSframes $streamWFS.sync.fits $streamPSF.sync.fits $selFrac $windowx0 $windowx1 $windowy0 $windowy1 $evalMode
+cacao-selectWFSframes $streamWFS.sync.fits $streamPSF.sync.fits $selFrac $windowx0 $windowx1 $windowy0 $windowy1 $evalMode
 
 else
 echo "WAITING. .."
