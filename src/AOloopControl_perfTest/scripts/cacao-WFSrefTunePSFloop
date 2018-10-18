@@ -140,6 +140,7 @@ echo "WFSdir = $streamWFSdir"
 ls $streamWFSdir/*.dat $streamWFSdir/*.txt 2> /dev/null | tail -n 1
 lastLogFileWFS=$(ls $streamWFSdir/*.dat $streamWFSdir/*.txt 2> /dev/null | tail -n 1)
 echo "Last WFS file = $lastLogFileWFS"
+cp $lastLogFileWFS _lastlogfileWFS
 
 #echo "PSFdir = $streamPSFdir"
 #ls $streamPSFdir/*.dat $streamPSFdir/*.txt 2> /dev/null | tail -n 1
@@ -152,7 +153,7 @@ timeend=$((timestart + timespan))
 echo "TIME : $timestart -> $timeend"
 
 echo "HERE"
-lastLogTimeWFS=${ cat $lastLogFileWFS | tail -n 1 }
+lastLogTimeWFS=${ cat _lastLogFileWFS | tail -n 1 }
 
 
 #cat $LastLogFileWFS
