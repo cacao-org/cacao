@@ -137,6 +137,6 @@ ls $stream0dir/*.dat | tail -n 1
 
 lastFile=$(ls $stream0dir/*.dat| tail -n 1)
 
-echo "Last file = $lasfFile"
+echo "Last file = $lastFile"
 
 
