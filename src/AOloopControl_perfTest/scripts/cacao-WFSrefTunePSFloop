@@ -150,6 +150,9 @@ streamPSFdir="$logdirectory/$datestr/$streamPSF"
 
 
 
+echo "cacao-syncStreams \"$logdirectory\" $streamWFS $streamPSF $timestart $timeend  $texp $dtlag"
+exit
+
 while :
 do
 
