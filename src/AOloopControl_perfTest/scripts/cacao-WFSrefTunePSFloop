@@ -153,7 +153,7 @@ timeend=$((timestart + timespan))
 echo "TIME : $timestart -> $timeend"
 
 echo "HERE"
-lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print $4}' | printf "%.0f" )
+lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
 
 
 #cat $LastLogFileWFS
