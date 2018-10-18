@@ -123,8 +123,8 @@ printHELP
 fi
 
 
-streamPSFcube="$1"
-streamWFScube="$2"
+streamWFScube="$1"
+streamPSFcube="$2"
 selFrac="$3"
 
 x0="$4"
@@ -137,7 +137,7 @@ evalMode="$8"
 cacao << EOF
 loadfits "$streamWFScube" imwfsC
 loadfits "$streamPSFcube" impsfC
-savefits imwfsC "!imwfsC.fits"
+
 aolperfselwfsfpsf imwfsC impsfC $selFrac $x0 $x1 $y0 $y1 $evalMode
 
 savefits imwfsbest "!imwfsbest.fits"
