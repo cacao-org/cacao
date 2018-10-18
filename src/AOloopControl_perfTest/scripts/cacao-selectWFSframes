@@ -135,8 +135,9 @@ evalMode="$8"
 
 
 cacao << EOF
-loadfits "$streamPSFcube" impsfC
 loadfits "$streamWFScube" imwfsC
+loadfits "$streamPSFcube" impsfC
+savefits imwfsC "!imwfsC.fits"
 aolperfselwfsfpsf imwfsC impsfC $selFrac $x0 $x1 $y0 $y1 $evalMode
 
 savefits imwfsbest "!imwfsbest.fits"
