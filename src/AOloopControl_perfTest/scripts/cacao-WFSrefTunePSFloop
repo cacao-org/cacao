@@ -153,12 +153,14 @@ echo "TIME : $timestart -> $timeend"
 
 echo "HERE"
 
+cat $LastLogFileWFS
+
 # check if files are ready
-lastLogtimeWFS=$( cat $LastLogFileWFS )
+#lastLogtimeWFS=$( cat $LastLogFileWFS )
 
-echo "HERE"
+#echo "HERE"
 
-echo "WFS last log at $lastLogtimeWFS"
+#echo "WFS last log at $lastLogtimeWFS"
 
 
 
