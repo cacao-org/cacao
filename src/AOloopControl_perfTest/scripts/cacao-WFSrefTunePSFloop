@@ -125,18 +125,21 @@ fi
 
 
 logdirectory="$1"
-stream0="$2"
-stream1="$3"
+streamWFS="$2"
+streamPSF="$3"
 datestr=`date -u +%Y%m%d`
-stream0dir="$logdirectory/$datestr/$stream0"
-stream1dir="$logdirectory/$datestr/$stream1"
+streamWFSdir="$logdirectory/$datestr/$streamWFS"
+streamPSFdir="$logdirectory/$datestr/$streamPSF"
 
 
-echo "dir = $stream0dir"
-ls $stream0dir/*.dat $stream0dir/*.txt | tail -n 1
+echo "WFSdir = $streamWFSdir"
+ls $streamWFSdir/*.dat $streamWFSdir/*.txt | tail -n 1
+lastLogFileWFS=$(ls $streamWFSdir/*.dat $streamWFSdir/*.txt | tail -n 1)
+echo "Last WFS file = $lastLogFileWFS"
 
-lastFile=$(ls $stream0dir/*.dat $stream0dir/*.txt | tail -n 1)
-
-echo "Last file = $lastFile"
+echo "PSFdir = $streamPSFdir"
+ls $streamPSFdir/*.dat $streamPSFdir/*.txt | tail -n 1
+lastLogFilePSF=$(ls $streamPSFdir/*.dat $streamPSFdir/*.txt | tail -n 1)
+echo "Last PSF file = $lastLogFilePSF"
 
 
