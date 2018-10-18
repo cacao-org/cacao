@@ -192,7 +192,7 @@ fi
 if [ "vOK" = "1" ]; then
 
 
-echo "PROCESSING -> "
+echo "=================================================================== PROCESSING -> "
 timestart=${timeend}
 
 # generate synchronized cubes
