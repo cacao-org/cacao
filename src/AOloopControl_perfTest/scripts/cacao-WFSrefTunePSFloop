@@ -125,6 +125,9 @@ printHELP
 fi
 
 
+while :
+do
+
 timestart=$(date "+%s")
 
 
@@ -176,7 +179,10 @@ if [ "vOK" = "1" ]; then
 echo "PROCESSING -> "
 else
 echo "WAITING. .."
+sleep 1
 fi
 
+
+done
 
 
