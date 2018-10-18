@@ -7,7 +7,7 @@ streamPSF="$2"
 NBARGS=11
 
 
-timespan="20" # second
+
 
 
 # ======================= PROCESS NAME =================================
@@ -23,10 +23,13 @@ echo "  Select WFS frames from times at which PSF is best"
 echo "  Requires synchronized data cubes created by cacao-syncStreams"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h] <logdirectory> <streamWFS> <streamPSF> <Selection fraction> <x0> <x1> <y0> <y1> <evalMode> <texp> <dtlag>"
+echo "     $0 [-hst] <logdirectory> <streamWFS> <streamPSF> <Selection fraction> <x0> <x1> <y0> <y1> <evalMode> <texp> <dtlag>"
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)          help"
+echo "     $(tput bold)-n$(tput sgr0)          number of iteration (default 0=inf)"
+echo "     $(tput bold)-s$(tput sgr0)          time (s)pan (default 100s)"
+echo "     $(tput bold)-t$(tput sgr0)          start (t)ime (default=now)"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
 echo "     <streamWFS>         WFC stream name"
@@ -78,14 +81,16 @@ singlelinehelp=1;
 done
 
 
-
+timespan="100" # second
+timestart=$(date "+%s")
+NBiter="0" # infinite loop
 
 #Parse command line flags
 #If an option should be followed by an argument, it should be followed by a ":".
 #Notice there is no ":" after "h". The leading ":" suppresses error messages from
 #getopts. This is required to get unrecognized option code to work.
 
-while getopts :hH:L:N:Cc FLAG; do
+while getopts :hH:s:t:n: FLAG; do
   case $FLAG in
     H) # detailed help
     if [ "$OPTARG" == "cf" ]; then
@@ -94,6 +99,15 @@ while getopts :hH:L:N:Cc FLAG; do
     fi
     echo "ERROR: choice $OPTARG not recognized"
     exit
+    ;;
+    s)
+    timespan=$OPTARG
+    ;;
+    t)
+    timestart=$OPTARG
+    ;;
+    n)
+    NBiter=$OPTARG
     ;;
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -129,7 +143,7 @@ fi
 
 
 
-timestart=$(date "+%s")
+
 
 
 logdirectory="$1"
@@ -149,9 +163,11 @@ streamWFSdir="$logdirectory/$datestr/$streamWFS"
 streamPSFdir="$logdirectory/$datestr/$streamPSF"
 
 
+iter=0
 
 while :
 do
+let iter++
 
 echo "WFSdir = $streamWFSdir"
 ls $streamWFSdir/*.dat $streamWFSdir/*.txt 2> /dev/null | tail -n 1
@@ -209,8 +225,9 @@ sleep 2
 fi
 
 
-
-
+if [ "$iter" -eq "$NBiter" ]; then
+exit
+fi
 
 
 done
