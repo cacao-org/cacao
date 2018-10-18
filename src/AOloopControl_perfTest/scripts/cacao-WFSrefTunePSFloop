@@ -4,7 +4,7 @@ streamWFS="$1"
 streamPSF="$2"
 
 # number of arguments to script
-NBARGS=9
+NBARGS=11
 
 
 timespan="100" # second
@@ -23,7 +23,7 @@ echo "  Select WFS frames from times at which PSF is best"
 echo "  Requires synchronized data cubes created by cacao-syncStreams"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h] <logdirectory> <streamWFS> <streamPSF> <Selection fraction> <x0> <x1> <y0> <y1> <Mode>"
+echo "     $0 [-h] <logdirectory> <streamWFS> <streamPSF> <Selection fraction> <x0> <x1> <y0> <y1> <evalMode> <texp> <dtlag>"
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)          help"
@@ -32,12 +32,14 @@ echo " $(tput bold)INPUT:$(tput sgr0)"
 echo "     <streamWFS>         WFC stream name"
 echo "     <streamPSF>         PSF stream name"
 echo "     <x0><x1><y0><y1>    PSF evaluation window"
-echo "     <evalMode>          0: optimize flux concentration"
-echo "                         1: maximize flux"
-echo "                         2: minimize flux"
+echo "     <evalMode>            0: optimize flux concentration"
+echo "                           1: maximize flux"
+echo "                           2: minimize flux"
+echo "     <texp>              resampled exposure time"
+echo "     <dtlag>             lag time"
 echo ""
 echo " $(tput bold)EXAMPLE:$(tput sgr0)"
-echo "     $0 aol0_wfsim aol0_psf 0 64 0 64 0"
+echo "     $0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001"
 echo ""
 echo " $(tput bold)OUTPUT:$(tput sgr0)"
 echo "     impsfbest.fits     Average of selected PSF frames"
@@ -133,6 +135,15 @@ timestart=$(date "+%s")
 logdirectory="$1"
 streamWFS="$2"
 streamPSF="$3"
+selFrac="$4"
+windowx0="$5"
+windowx1="$6"
+windowy0="$7"
+windowy1="$8"
+evalMode="$9"
+texp="$10"
+dtlag="$11"
+
 datestr=`date -u +%Y%m%d`
 streamWFSdir="$logdirectory/$datestr/$streamWFS"
 streamPSFdir="$logdirectory/$datestr/$streamPSF"
@@ -179,11 +190,25 @@ fi
 
 
 if [ "vOK" = "1" ]; then
+
+
 echo "PROCESSING -> "
+timestart=${timeend}
+
+# generate synchronized cubes
+cacao-syncStreams "$logdirectory" $streamWFS $streamPSF $timestart $timeend  $texp $dtlag
+
+# generate selection
+cacao-selectWFSframes $streamWFS.sync.fits $streamPSF.sync.fits $selFrac $windowx0 $windowx1 $windowy0 $windowy1 $evalMode
+
 else
 echo "WAITING. .."
-sleep 1
+sleep 2
 fi
+
+
+
+
 
 
 done
