@@ -154,11 +154,11 @@ echo "TIME : $timestart -> $timeend"
 echo "HERE"
 
 # check if files are ready
-lastlogtimeWFS=$( tail -n 1 $LastLogFileWFS )   #| awk '{print $4}' )
+lastLogtimeWFS=$( cat $LastLogFileWFS | tail -n 1 | awk '{print $4}' )
 
 echo "HERE"
 
-echo "WFS last log at $lastlogtimeWFS"
+echo "WFS last log at $lastLogtimeWFS"
 
 
 
