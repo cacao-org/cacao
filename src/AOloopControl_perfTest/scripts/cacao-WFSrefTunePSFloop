@@ -141,19 +141,23 @@ ls $streamWFSdir/*.dat $streamWFSdir/*.txt 2> /dev/null | tail -n 1
 lastLogFileWFS=$(ls $streamWFSdir/*.dat $streamWFSdir/*.txt | tail -n 1)
 echo "Last WFS file = $lastLogFileWFS"
 
-echo "PSFdir = $streamPSFdir"
-ls $streamPSFdir/*.dat $streamPSFdir/*.txt 2> /dev/null | tail -n 1
-lastLogFilePSF=$(ls $streamPSFdir/*.dat $streamPSFdir/*.txt | tail -n 1)
-echo "Last PSF file = $lastLogFilePSF"
+#echo "PSFdir = $streamPSFdir"
+#ls $streamPSFdir/*.dat $streamPSFdir/*.txt 2> /dev/null | tail -n 1
+#lastLogFilePSF=$(ls $streamPSFdir/*.dat $streamPSFdir/*.txt | tail -n 1)
+#echo "Last PSF file = $lastLogFilePSF"
 
 
 timeend=$((timestart + timespan))
 
-echo "TIME : $timestart -> $timeend "
+echo "TIME : $timestart -> $timeend"
 
+echo "HERE"
 
 # check if files are ready
 lastlogtimeWFS=$( tail -n 1 $LastLogFileWFS )   #| awk '{print $4}' )
+
+echo "HERE"
+
 echo "WFS last log at $lastlogtimeWFS"
 
 
