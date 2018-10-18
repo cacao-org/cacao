@@ -198,7 +198,6 @@ echo "=================================================================== PROCES
 
 # generate synchronized cubes
 cacao-syncStreams "$logdirectory/$datestr" $streamWFS $streamPSF $timestart $timeend  $texp $dtlag
-exit
 
 # generate selection
 cacao-selectWFSframes $streamWFS.sync.fits $streamPSF.sync.fits $selFrac $windowx0 $windowx1 $windowy0 $windowy1 $evalMode
