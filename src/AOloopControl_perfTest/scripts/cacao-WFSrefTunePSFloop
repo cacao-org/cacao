@@ -156,7 +156,7 @@ cp $lastLogFilePSF _lastlogfilePSF
 
 timeend=$((timestart + timespan))
 
-echo "TIME : $timestart -> $timeend"
+echo "TIME : $timestart -> $timeend ====================================="
 
 
 vOK="1"
