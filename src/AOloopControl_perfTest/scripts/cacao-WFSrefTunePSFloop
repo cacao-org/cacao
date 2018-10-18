@@ -141,8 +141,8 @@ windowx1="$6"
 windowy0="$7"
 windowy1="$8"
 evalMode="$9"
-texp="$10"
-dtlag="$11"
+texp="${10}"
+dtlag="${11}"
 
 datestr=`date -u +%Y%m%d`
 streamWFSdir="$logdirectory/$datestr/$streamWFS"
