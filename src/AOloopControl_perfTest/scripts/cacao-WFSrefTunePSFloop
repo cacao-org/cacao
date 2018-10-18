@@ -7,6 +7,8 @@ streamPSF="$2"
 NBARGS=9
 
 
+timespan="100" # second
+
 
 # ======================= PROCESS NAME =================================
 pname=`echo "$0" | sed "s/\.\///g"`
@@ -123,6 +125,8 @@ printHELP
 fi
 
 
+timestart=$(date "+%s")
+
 
 logdirectory="$1"
 streamWFS="$2"
@@ -133,13 +137,16 @@ streamPSFdir="$logdirectory/$datestr/$streamPSF"
 
 
 echo "WFSdir = $streamWFSdir"
-ls $streamWFSdir/*.dat $streamWFSdir/*.txt | tail -n 1
+ls $streamWFSdir/*.dat $streamWFSdir/*.txt 2> /dev/null | tail -n 1
 lastLogFileWFS=$(ls $streamWFSdir/*.dat $streamWFSdir/*.txt | tail -n 1)
 echo "Last WFS file = $lastLogFileWFS"
 
 echo "PSFdir = $streamPSFdir"
-ls $streamPSFdir/*.dat $streamPSFdir/*.txt | tail -n 1
+ls $streamPSFdir/*.dat $streamPSFdir/*.txt 2> /dev/null | tail -n 1
 lastLogFilePSF=$(ls $streamPSFdir/*.dat $streamPSFdir/*.txt | tail -n 1)
 echo "Last PSF file = $lastLogFilePSF"
 
 
+timeend=$((timenow + timespan))
+
+echo "TIME : $timestart -> $timeend "
