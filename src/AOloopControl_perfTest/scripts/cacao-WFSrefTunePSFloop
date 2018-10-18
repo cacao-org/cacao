@@ -124,13 +124,15 @@ fi
 
 
 
-directory="$1"
+logdirectory="$1"
 stream0="$2"
 stream1="$3"
 
 stream0dir="$logdirectory/$stream0"
 stream1dir="$logdirectory/$stream1"
 
+
+echo "dir = $stream0dir"
 ls $stream0dir/*.dat $stream0dir/*.txt | tail -n 1
 
 lastFile="$(ls $stream0dir/*.dat $stream0dir/*.txt | tail -n 1)"
