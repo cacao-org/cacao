@@ -149,8 +149,6 @@ streamWFSdir="$logdirectory/$datestr/$streamWFS"
 streamPSFdir="$logdirectory/$datestr/$streamPSF"
 
 
-echo "cacao-selectWFSframes $streamWFS.sync.fits $streamPSF.sync.fits $selFrac $windowx0 $windowx1 $windowy0 $windowy1 $evalMode"
-exit
 
 while :
 do
