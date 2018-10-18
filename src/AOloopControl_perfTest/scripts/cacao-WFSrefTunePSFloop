@@ -152,6 +152,8 @@ timeend=$((timestart + timespan))
 echo "TIME : $timestart -> $timeend"
 
 echo "HERE"
+echo "Last WFS file = $lastLogFileWFS"
+
 
 #cat $LastLogFileWFS
 
