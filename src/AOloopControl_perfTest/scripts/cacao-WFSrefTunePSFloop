@@ -127,9 +127,9 @@ fi
 logdirectory="$1"
 stream0="$2"
 stream1="$3"
-
-stream0dir="$logdirectory/$stream0"
-stream1dir="$logdirectory/$stream1"
+datestr=`date -u +%Y%m%d`
+stream0dir="$logdirectory/$datestr/$stream0"
+stream1dir="$logdirectory/$datestr/$stream1"
 
 
 echo "dir = $stream0dir"
