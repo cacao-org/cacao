@@ -176,7 +176,7 @@ vOK="1"
 lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
 echo "WFS last log at $lastLogTimeWFS"
 
-if [ "$lastLogTimeWFS" < "$timeend" ]; then
+if [ "$lastLogTimeWFS" -lt "$timeend" ]; then
 vOK="0"
 fi
 
@@ -184,7 +184,7 @@ fi
 lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
 echo "PSF last log at $lastLogTimePSF"
 
-if [ "$lastLogTimePSF" < "$timeend" ]; then
+if [ "$lastLogTimePSF" -lt "$timeend" ]; then
 vOK="0"
 fi
 
