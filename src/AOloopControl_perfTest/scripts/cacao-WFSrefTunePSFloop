@@ -135,7 +135,7 @@ stream1dir="$logdirectory/$datestr/$stream1"
 echo "dir = $stream0dir"
 ls $stream0dir/*.dat | tail -n 1
 
-lastFile=$(ls $stream0dir/*.dat $stream0dir/*.txt | tail -n 1)
+lastFile=$(ls $stream0dir/*.dat| tail -n 1)
 
 echo "Last file = $lasfFile"
 
