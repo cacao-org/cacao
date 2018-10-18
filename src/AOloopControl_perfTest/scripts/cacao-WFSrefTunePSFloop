@@ -152,7 +152,7 @@ timeend=$((timestart + timespan))
 echo "TIME : $timestart -> $timeend"
 
 echo "HERE"
-lastLogTimeWFS=${ cat "$lastLogFileWFS" | tail -n 1 }
+lastLogTimeWFS=${ cat $lastLogFileWFS | tail -n 1 }
 
 
 #cat $LastLogFileWFS
