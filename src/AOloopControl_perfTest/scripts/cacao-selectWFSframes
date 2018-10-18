@@ -2,7 +2,7 @@
 
 
 # number of arguments to script
-NBARGS=7
+NBARGS=8
 
 # ======================= PROCESS NAME =================================
 pname=`echo "$0" | sed "s/\.\///g"`
@@ -11,34 +11,33 @@ echo "pname = $pname"
 
 function printHELP {
 echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname : SYNCHRONIZE DATA STREAMS $(tput sgr0)"
+echo "$(tput bold) $pname : SELECT WFS FRAMES FROM PSF TELEMETRY $(tput sgr0)"
 echo "------------------------------------------------------------------------"
-echo "  Synchronize and resample streams (postprocessing)"
+echo "  Select WFS frames from times at which PSF is best"
+echo "  Requires synchronized data cubes created by cacao-syncStreams"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h] <directory> <stream0> <stream1> <tstart> <tend> <dtsample> <dtlag>"
+echo "     $0 [-h] <streamWFScube> <streamPSFcube> <Selection fraction> <x0> <x1> <y0> <y1> <Mode>"
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)          help"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
-echo "     <directory>   data directory, will look for files in /dir/streamname/"
-echo "     <stream0>     stream 0 name"
-echo "     <stream1>     stream 1 name"
-echo "     <tstart>      start time, Unix second"
-echo "     <tend>        end time, Unix second"
-echo "     <dtsample>    output sample interval"
-echo "     <dtlag>       Lag between stream0 and stream1. stream1 later"
-echo ""
-echo " $(tput bold)OPTIONAL INPUT:$(tput sgr0)"
-echo " file: <stream0>.dark.fits"
-echo " file: <stream1>.dark.fits"
+echo "     <streamWFScube>     WFC stream name"
+echo "     <streamPSFcube>     PSF stream name"
+echo "     <x0><x1><y0><y1>    PSF evaluation window"
+echo "     <evalMode>          0: optimize flux concentration"
+echo "                         1: maximize flux"
+echo "                         2: minimize flux"
 echo ""
 echo " $(tput bold)EXAMPLE:$(tput sgr0)"
-echo "     $0 \"/media/data/20180628/\" stream0 stream1 1530180589.0 1530180589.8 0.0002 0.000556"
+echo "     $0 aol0_wfsim.sync.fits aol0_psf.sync.fits 0 64 0 64 0"
 echo ""
 echo " $(tput bold)OUTPUT:$(tput sgr0)"
-echo "     stream0-sync.fits     output file"
+echo "     impsfbest.fits     Average of selected PSF frames"
+echo "     impsfall.fits      Average of all PSF frames"
+echo "     imwfsbest.fits     Average of selected WFS frames"
+echo "     imwfsall.fits      Average of all WFS frames"
 echo ""
 echo "------------------------------------------------------------------------"
 }
@@ -47,7 +46,7 @@ echo "------------------------------------------------------------------------"
 
 printHELP1 ()
 {
-	printf "%20s       Synchronize streams from telemetry files\n" "$0" 
+	printf "%20s       Select WFS frames from best PSF frames\n" "$0" 
 }
 
 
@@ -124,49 +123,27 @@ printHELP
 fi
 
 
-directory="$1"
-stream0="$2"
-stream1="$3"
+streamPSFcube="$1"
+streamWFScube="$2"
+selFrac="$3"
 tstart="$4"
 tstop="$5"
 dtsample="$6"
 dtlag="$7"
 
 
+
 cacao << EOF
-aolptmksyncs2 "$directory" ${stream0} ${stream1} ${tstart} ${tstop} ${dtsample} ${dtlag}
-savefits outC0 "!${stream0}.sync.fits"
-savefits outC1 "!${stream1}.sync.fits"
+loadfits "$streamPSFcube" impsfC
+loadfits "$streamWFScube" imwfsC
+aolperfselwfsfpsf imwfsC impsfC $selFrac $x0 $x1 $y0 $y1 0
+
+savefits imwfsbest "!imwfsbest.fits"
+savefits imwfsall "!imwfsall.fits"
+
+savefits impsfbest "!impsfbest.fits"
+savefits impsfall "!impsfall.fits"
+
 listim
-exitCLI
+exit
 EOF
-
-
-
-
-# subtract dark if it exists
-
-if [ -f "${stream0}.dark.fits" ]; then
-cacao << EOF
-loadfits "${stream0}.dark.fits" stream0dark
-loadfits "${stream0}.sync.fits" outC0
-outC0c=outC0-stream0dark
-savefits outC0c "!${stream0}.syncC.fits"
-exitCLI
-EOF
-mv ${stream0}.syncC.fits ${stream0}.sync.fits
-fi
-
-
-if [ -f "${stream1}.dark.fits" ]; then
-cacao << EOF
-loadfits "${stream1}.dark.fits" stream1dark
-loadfits "${stream1}.sync.fits" outC1
-outC1c=outC1-stream0dark
-savefits outC1c "!${stream1}.syncC.fits"
-exitCLI
-EOF
-mv ${stream1}.syncC.fits ${stream1}.sync.fits
-fi
-
-
