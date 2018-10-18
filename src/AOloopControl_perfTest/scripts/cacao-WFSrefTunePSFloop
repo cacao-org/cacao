@@ -131,7 +131,9 @@ stream1="$3"
 stream0dir="$logdirectory/$stream0"
 stream1dir="$logdirectory/$stream1"
 
-lastFile="$(ls *.dat *.txt | tail -n 1)"
+ls $stream0dir/*.dat $stream0dir/*.txt | tail -n 1
+
+lastFile="$(ls $stream0dir/*.dat $stream0dir/*.txt | tail -n 1)"
 
 echo "Last file = $lasfFile"
 
