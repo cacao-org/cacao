@@ -7,7 +7,7 @@ streamPSF="$2"
 NBARGS=11
 
 
-timespan="100" # second
+timespan="30" # second
 
 
 # ======================= PROCESS NAME =================================
@@ -189,7 +189,7 @@ vOK="0"
 fi
 
 
-if [ "vOK" = "1" ]; then
+if [ "$vOK" = "1" ]; then
 
 
 echo "=================================================================== PROCESSING -> "
