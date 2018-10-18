@@ -125,8 +125,7 @@ printHELP
 fi
 
 
-while :
-do
+
 
 timestart=$(date "+%s")
 
@@ -138,6 +137,10 @@ datestr=`date -u +%Y%m%d`
 streamWFSdir="$logdirectory/$datestr/$streamWFS"
 streamPSFdir="$logdirectory/$datestr/$streamPSF"
 
+
+
+while :
+do
 
 echo "WFSdir = $streamWFSdir"
 ls $streamWFSdir/*.dat $streamWFSdir/*.txt 2> /dev/null | tail -n 1
