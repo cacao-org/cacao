@@ -197,7 +197,7 @@ echo "=================================================================== PROCES
 timestart=${timeend}
 
 # generate synchronized cubes
-cacao-syncStreams "$logdirectory" $streamWFS $streamPSF $timestart $timeend  $texp $dtlag
+cacao-syncStreams "$logdirectory/$datestr" $streamWFS $streamPSF $timestart $timeend  $texp $dtlag
 exit
 
 # generate selection
