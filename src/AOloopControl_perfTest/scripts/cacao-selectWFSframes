@@ -126,17 +126,18 @@ fi
 streamPSFcube="$1"
 streamWFScube="$2"
 selFrac="$3"
-tstart="$4"
-tstop="$5"
-dtsample="$6"
-dtlag="$7"
 
+x0="$4"
+x1="$5"
+y0="$6"
+y1="$7"
+evalMode="$8"
 
 
 cacao << EOF
 loadfits "$streamPSFcube" impsfC
 loadfits "$streamWFScube" imwfsC
-aolperfselwfsfpsf imwfsC impsfC $selFrac $x0 $x1 $y0 $y1 0
+aolperfselwfsfpsf imwfsC impsfC $selFrac $x0 $x1 $y0 $y1 $evalMode
 
 savefits imwfsbest "!imwfsbest.fits"
 savefits imwfsall "!imwfsall.fits"
