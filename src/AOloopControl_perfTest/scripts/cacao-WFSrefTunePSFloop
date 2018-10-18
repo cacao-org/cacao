@@ -153,7 +153,7 @@ echo "TIME : $timestart -> $timeend "
 
 
 # check if files are ready
-lastlogtimeWFS=$( tail -n 1 $LastLogFileWFS | awk '{print $4}' )
+lastlogtimeWFS=$( tail -n 1 $LastLogFileWFS )   #| awk '{print $4}' )
 echo "WFS last log at $lastlogtimeWFS"
 
 
