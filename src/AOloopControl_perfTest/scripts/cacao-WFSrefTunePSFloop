@@ -142,29 +142,41 @@ lastLogFileWFS=$(ls $streamWFSdir/*.dat $streamWFSdir/*.txt 2> /dev/null | tail 
 echo "Last WFS file = $lastLogFileWFS"
 cp $lastLogFileWFS _lastlogfileWFS
 
-#echo "PSFdir = $streamPSFdir"
-#ls $streamPSFdir/*.dat $streamPSFdir/*.txt 2> /dev/null | tail -n 1
-#lastLogFilePSF=$(ls $streamPSFdir/*.dat $streamPSFdir/*.txt | tail -n 1)
-#echo "Last PSF file = $lastLogFilePSF"
+echo "PSFdir = $streamPSFdir"
+ls $streamPSFdir/*.dat $streamPSFdir/*.txt 2> /dev/null | tail -n 1
+lastLogFilePSF=$(ls $streamPSFdir/*.dat $streamPSFdir/*.txt | tail -n 1)
+echo "Last PSF file = $lastLogFilePSF"
 
 
 timeend=$((timestart + timespan))
 
 echo "TIME : $timestart -> $timeend"
 
-echo "HERE"
+
+vOK="1"
+
+
 lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
-
-
-#cat $LastLogFileWFS
-
-# check if files are ready
-#lastLogtimeWFS=$( cat $LastLogFileWFS )
-
-#echo "HERE"
-
 echo "WFS last log at $lastLogTimeWFS"
 
+if [ "$lastLogTimeWFS" < "$timeend" ]; then
+vOK="0"
+fi
+
+
+lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
+echo "PSF last log at $lastLogTimePSF"
+
+if [ "$lastLogTimePSF" < "$timeend" ]; then
+vOK="0"
+fi
+
+
+if [ "vOK" = "1" ]; then
+echo "PROCESSING -> "
+else
+echo "WAITING. .."
+fi
 
 
 
