@@ -691,6 +691,14 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 					fflush(stdout);  
 					sem_trywait(data.image[IDmodeval].semptr[4]);	
 				}
+		
+		
+		
+		
+		if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+			processinfo_exec_start(processinfo);
+		
+		
         
         
         AOconf[loop].AOtiminginfo.statusM = 3;
@@ -1296,7 +1304,8 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[13] = tdiffv;
 
 
-
+		if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+			processinfo_exec_end(processinfo);
 
 
     // process signals
