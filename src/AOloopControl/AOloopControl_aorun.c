@@ -559,10 +559,10 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 #endif
 
 
-                if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
-                    processinfo_exec_start(processinfo);
                 //
                 // Most computation are performed inside AOcompute
+                //
+                // note: processinfo_exec_start is launched in Read_cam_frame() in AOcompute()
                 //
                 AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
 
