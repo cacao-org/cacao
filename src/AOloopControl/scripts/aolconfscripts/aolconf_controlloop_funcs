@@ -661,7 +661,8 @@ fi
 if [ "$LOOPPROCESS_EXTROLMODES" -eq "1" ]; then
 tmuxname="aol${LOOPNUMBER}meol"
 echo "tmux send-keys -t $tmuxname C-c" >> $scriptfile
-echo "tmux kill-session -t $tmuxname" >> $scriptfile
+echo "tmux send-keys -t $tmuxname \"exitCLI\" C-m" >> $scriptfile
+#echo "tmux kill-session -t $tmuxname" >> $scriptfile
 echo "rm runproc/aolcompolm.runproc" >> $scriptfile
 echo "echo \"0\" > \"./status/stat_log_modeval_ol.txt\"" >> $scriptfile
 fi

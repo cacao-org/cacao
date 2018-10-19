@@ -1363,7 +1363,6 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     free(modemult);
     free(modelimit);
 	
-	processinfo_WriteMessage(processinfo, "left loop"); //TEST
     
     free(modeblock);
 
