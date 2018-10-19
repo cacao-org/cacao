@@ -495,6 +495,13 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 				processinfoUpdate = 1;
                 clock_gettime(CLOCK_REALTIME, &t1);
                 printf("timer init\n");
+                if(data.processinfo==1)
+                {
+					char msgstring[200];
+                sprintf(msgstring, "Waiting");
+                processinfo_WriteMessage(processinfo, msgstring);
+				}
+                
             }
             clock_gettime(CLOCK_REALTIME, &t2);
 
@@ -504,14 +511,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
             printf(" WAITING     %20.3lf sec         \r", tdiffv);
             fflush(stdout);
             usleep(1000);
-
-            if((data.processinfo==1)&&(processinfoUpdate==1))
-            {
-                char msgstring[200];
-                sprintf(msgstring, "Waiting");
-                processinfo_WriteMessage(processinfo, msgstring);
-                processinfoUpdate = 0;
-            }
 
             processinfoUpdate = 1;
 
