@@ -434,7 +434,12 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 		
 		
         COREMOD_MEMORY_image_set_semwait(modecoeffs_name, semTrigg);
-
+        
+        
+        if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+			processinfo_exec_start(processinfo);
+        
+        
         //		if(GPUMATMULTCONFindex==0)
         AOconf[loop].AOtiminginfo.statusM = 10;
         clock_gettime(CLOCK_REALTIME, &tnow);
@@ -467,10 +472,12 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
-    
-
-
-
+        
+        
+        
+        if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+			processinfo_exec_end(processinfo);
+        
       // process signals
 
 		if(data.signal_TERM == 1){
