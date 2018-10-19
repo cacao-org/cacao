@@ -497,7 +497,7 @@ static void *compute_function_dark_subtract( void *ptr )
  *
  */
 
-int_fast8_t Read_cam_frame(
+int_fast8_t __attribute__((hot)) Read_cam_frame(
 	long loop, 
 	int RM, 
 	int normalize, 
@@ -707,7 +707,9 @@ int_fast8_t Read_cam_frame(
     }
 
 
-
+	  if(data.processinfo==1)
+		if(data.pinfo->MeasureTiming==1)
+            processinfo_exec_start(data.pinfo);
 
 
 
