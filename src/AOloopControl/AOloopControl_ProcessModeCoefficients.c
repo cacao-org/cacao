@@ -632,7 +632,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     if(data.processinfo==1)
     {
         processinfo->loopstat = 1; // loop running
-        processinfo_WriteMessage(processinfo, "Starting loop");
+        processinfo_WriteMessage(processinfo, "Running loop");
     }
     int loopOK = 1;
     int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
@@ -643,8 +643,6 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     {
         long modevalDMindex0, modevalDMindex1;
         long modevalPFindex0, modevalPFindex1;
-
-
 
 
         // processinfo control
