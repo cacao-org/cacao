@@ -1362,7 +1362,9 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     free(modegain);
     free(modemult);
     free(modelimit);
-
+	
+	processinfo_WriteMessage(processinfo, "left loop"); //TEST
+    
     free(modeblock);
 
     // LOG function start
