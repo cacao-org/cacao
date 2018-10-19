@@ -657,7 +657,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 processinfo->CTRLval = 1;
 
             if(processinfo->CTRLval == 3) // exit loop
-                loopCTRLexit = 1;
+                loopOK = 0; //loopCTRLexit = 1;
         }
 		
 		
@@ -1367,8 +1367,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 	// LOG function start
 	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
     
-    
-    if(data.processinfo==1)
+    if((data.processinfo==1)&&(processinfo->loopstat != 4))
         processinfo_cleanExit(processinfo);
         
         
