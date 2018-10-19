@@ -290,7 +290,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         processinfo = processinfo_shm_create(pinfoname, 0);
         processinfo->loopstat = 0; // loop initialization
 
-		strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
         strcpy(processinfo->source_FILE,     __FILE__);
         processinfo->source_LINE = __LINE__;
 
@@ -299,28 +299,28 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         processinfo_WriteMessage(processinfo, msgstring);
     }
 
-// CATCH SIGNALS
- 	
-	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+    // CATCH SIGNALS
+
+    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGTERM\n");
 
-	if (sigaction(SIGINT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGINT\n");    
+    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGINT\n");
 
-	if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGABRT\n");     
+    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGABRT\n");
 
-	if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGBUS\n");
 
-	if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGSEGV\n");        
+    if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGSEGV\n");
 
-	if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGHUP\n");         
+    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGHUP\n");
 
-	if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGPIPE\n");   
+    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGPIPE\n");
 
 
 
@@ -421,9 +421,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         sprintf(msgstring, "ERROR: no WFS reference");
         if(data.processinfo == 1)
         {
-			processinfo->loopstat = 4; // ERROR
-			strcpy(processinfo->statusmsg, msgstring);
-		}
+            processinfo->loopstat = 4; // ERROR
+            strcpy(processinfo->statusmsg, msgstring);
+        }
         printf("%s\n", msgstring);
 
         vOK = 0;
@@ -438,12 +438,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         printf("FILE %s  line %d\n", __FILE__, __LINE__);
 
         sprintf(msgstring, "ERROR: no control matrix");
-        
-		if(data.processinfo == 1)
-		{
-			processinfo->loopstat = 4; // ERROR
-			strcpy(processinfo->statusmsg, msgstring);
-		}
+
+        if(data.processinfo == 1)
+        {
+            processinfo->loopstat = 4; // ERROR
+            strcpy(processinfo->statusmsg, msgstring);
+        }
 
         vOK = 0;
     }
@@ -475,19 +475,19 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
         int timerinit = 0;
         if(data.processinfo == 1)
-			processinfo->loopstat = 1;
-        
-        
-		if(data.processinfo==1)
-		{
-			char msgstring[200];
-			sprintf(msgstring, "Entering loop");
-			processinfo_WriteMessage(processinfo, msgstring);
-		}
-        
-        
+            processinfo->loopstat = 1;
+
+
+        if(data.processinfo==1)
+        {
+            char msgstring[200];
+            sprintf(msgstring, "Entering loop");
+            processinfo_WriteMessage(processinfo, msgstring);
+        }
+
+
         int processinfoUpdate = 0;
-        
+
         while( AOconf[loop].aorun.kill == 0)
         {
             if(timerinit==1)
@@ -504,14 +504,14 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
             fflush(stdout);
             usleep(1000);
 
-			if(data.processinfo==1)
-			{
-				char msgstring[200];
-				sprintf(msgstring, "Waiting %20.3lf sec", tdiffv);
-				processinfo_WriteMessage(processinfo, msgstring);
-			}
-			
-			processinfoUpdate = 1;
+            if(data.processinfo==1)
+            {
+                char msgstring[200];
+                sprintf(msgstring, "Waiting %20.3lf sec", tdiffv);
+                processinfo_WriteMessage(processinfo, msgstring);
+            }
+
+            processinfoUpdate = 1;
 
             timerinit = 0;
 
@@ -529,20 +529,20 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                         processinfo->CTRLval = 1;
 
                     if(processinfo->CTRLval == 3) // exit loop
-                        {
-							AOconf[loop].aorun.on = 0;
-							AOconf[loop].aorun.kill = 1;
-						}
+                    {
+                        AOconf[loop].aorun.on = 0;
+                        AOconf[loop].aorun.kill = 1;
+                    }
                 }
 
-				
-				if((data.processinfo==1)&&(processinfoUpdate==1))
-				{
-					char msgstring[200];
-					sprintf(msgstring, "LOOP RUNNING", tdiffv);
-					processinfo_WriteMessage(processinfo, msgstring);
-					processinfoUpdate = 0;
-				}
+
+                if((data.processinfo==1)&&(processinfoUpdate==1))
+                {
+                    char msgstring[200];
+                    sprintf(msgstring, "LOOP RUNNING", tdiffv);
+                    processinfo_WriteMessage(processinfo, msgstring);
+                    processinfoUpdate = 0;
+                }
 
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
@@ -558,9 +558,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 fflush(stdout);
 #endif
 
-				//
-				// Most computation are performed inside AOcompute
-				//
+
+                if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+                    processinfo_exec_start(processinfo);
+                //
+                // Most computation are performed inside AOcompute
+                //
                 AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
@@ -707,54 +710,57 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
                 }
                 */
+                if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+                    processinfo_exec_end(processinfo);
 
-     // process signals
-     
-		if(data.signal_INT == 1){
-			AOconf[loop].aorun.on = 0;
-			AOconf[loop].aorun.kill = 1;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGINT);
-		}
 
-		if(data.signal_ABRT == 1){
-			AOconf[loop].aorun.on = 0;
-			AOconf[loop].aorun.kill = 1;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGABRT);
-		}
+                // process signals
 
-		if(data.signal_BUS == 1){
-			AOconf[loop].aorun.on = 0;
-			AOconf[loop].aorun.kill = 1;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGBUS);
-		}
-		
-		if(data.signal_SEGV == 1){
-			AOconf[loop].aorun.on = 0;
-			AOconf[loop].aorun.kill = 1;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGSEGV);
-		}
-		
-		if(data.signal_HUP == 1){
-			AOconf[loop].aorun.on = 0;
-			AOconf[loop].aorun.kill = 1;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGHUP);
-		}
-		
-		if(data.signal_PIPE == 1){
-			AOconf[loop].aorun.on = 0;
-			AOconf[loop].aorun.kill = 1;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGPIPE);
-		}	
-     
-        loopcnt++;
-        if(data.processinfo==1)
-            processinfo->loopcnt = loopcnt;
+                if(data.signal_INT == 1) {
+                    AOconf[loop].aorun.on = 0;
+                    AOconf[loop].aorun.kill = 1;
+                    if(data.processinfo==1)
+                        processinfo_SIGexit(processinfo, SIGINT);
+                }
+
+                if(data.signal_ABRT == 1) {
+                    AOconf[loop].aorun.on = 0;
+                    AOconf[loop].aorun.kill = 1;
+                    if(data.processinfo==1)
+                        processinfo_SIGexit(processinfo, SIGABRT);
+                }
+
+                if(data.signal_BUS == 1) {
+                    AOconf[loop].aorun.on = 0;
+                    AOconf[loop].aorun.kill = 1;
+                    if(data.processinfo==1)
+                        processinfo_SIGexit(processinfo, SIGBUS);
+                }
+
+                if(data.signal_SEGV == 1) {
+                    AOconf[loop].aorun.on = 0;
+                    AOconf[loop].aorun.kill = 1;
+                    if(data.processinfo==1)
+                        processinfo_SIGexit(processinfo, SIGSEGV);
+                }
+
+                if(data.signal_HUP == 1) {
+                    AOconf[loop].aorun.on = 0;
+                    AOconf[loop].aorun.kill = 1;
+                    if(data.processinfo==1)
+                        processinfo_SIGexit(processinfo, SIGHUP);
+                }
+
+                if(data.signal_PIPE == 1) {
+                    AOconf[loop].aorun.on = 0;
+                    AOconf[loop].aorun.kill = 1;
+                    if(data.processinfo==1)
+                        processinfo_SIGexit(processinfo, SIGPIPE);
+                }
+
+                loopcnt++;
+                if(data.processinfo==1)
+                    processinfo->loopcnt = loopcnt;
 
 
 
@@ -764,10 +770,10 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
             }
 
         } // loop has been killed (normal exit)
-        
+
         if(data.processinfo==1)
-			processinfo_cleanExit(processinfo);
-        
+            processinfo_cleanExit(processinfo);
+
 
     }
 

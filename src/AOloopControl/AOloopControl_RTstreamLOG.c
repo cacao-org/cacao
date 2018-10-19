@@ -520,6 +520,8 @@ static int print_header_line(const char *str, char c, int wcol)
 
 
 
+
+
 int AOloopControl_RTstreamLOG_GUI(int loop)
 {
     int wrow, wcol;
@@ -579,12 +581,15 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 	clear();
     while ( loopOK == 1 )
     {
+		char title[200];
+		
 		NBstreams = 0;
 
         usleep((long) (1000000.0/frequ));
         ch = getch();
         erase();
         attron(A_BOLD);
+        sprintf(title, "LOOP %d  REAL-TIME STREAMS MONITOR      PRESS x TO STOP MONITOR");
         print_header_line(" PRESS x TO STOP MONITOR ", '-', wcol);
         printw("  s: Save single    t: Add/remove to/from set   S: Save set ON   U: Save set OFF\n");
         printw("  o: ON/OFF single  O: Set ON   F: Set OFF      Z: Zero index set\n");
@@ -824,6 +829,12 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
 
     return 0;
 }
+
+
+
+
+
+
 
 
 
