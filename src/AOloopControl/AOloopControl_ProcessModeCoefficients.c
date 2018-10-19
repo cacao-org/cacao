@@ -1363,7 +1363,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     free(modemult);
     free(modelimit);
 	
-	processinfo_WriteMessage(processinfo, "left loop"); //TEST
+	//processinfo_WriteMessage(processinfo, "left loop"); //TEST
     
     free(modeblock);
 
@@ -1373,7 +1373,8 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     if((data.processinfo==1)&&(processinfo->loopstat != 4))
         processinfo_cleanExit(processinfo);
 
-
+	processinfo_WriteMessage(processinfo, "left loop again");
+    
     return(IDout);
 }
 
