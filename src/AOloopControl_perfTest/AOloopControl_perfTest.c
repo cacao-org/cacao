@@ -601,7 +601,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 
     // update times
     dtmax = wfsdt*wfs_NBframesmax*1.2 + 0.5;
-    twaitus = 1000000.0*wfsdt;
+    twaitus = 1000000.0*wfsdt*3.0;
     dtoffset0 = 1.5*wfsdt;
 
 
@@ -722,8 +722,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
             // WAITING for image
             while(wfscnt0==data.image[IDwfs].md[0].cnt0)
             {
-                usleep(10);
+                usleep(2);
             }
+            
             wfscnt0 = data.image[IDwfs].md[0].cnt0;
             printf("[%8ld / %8ld]  %f  %f\n", wfsframe, wfs_NBframesmax, dt, dtmax);
             fflush(stdout);
