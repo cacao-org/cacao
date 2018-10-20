@@ -234,7 +234,15 @@ cpsh imwfs0n aol0_wfsref
 exitCLI
 EOF
 
+fname="$(printf "imwfsbest.%06d.fits" $iter )"
+cp imwfsbest.fits $fname
+fname="$(printf "imwfsall.%06d.fits" $iter )"
+cp imwfsall.fits $fname
 
+fname="$(printf "impsfbest.%06d.fits" $iter )"
+cp impsfbest.fits $fname
+fname="$(printf "impsfall.%06d.fits" $iter )"
+cp impsfall.fits $fname
 
 timestart=${timeend}
 
