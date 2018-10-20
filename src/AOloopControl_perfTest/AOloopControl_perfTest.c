@@ -449,7 +449,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     float x, y;
 
     long IDwfsc;
-    long wfs_NBframesmax = 20;
+    long wfs_NBframesmax = 30;
     long wfsframe;
     long twaitus = 30000; // initial wait [us]
     double dtoffset0 = 0.002; // 2 ms
