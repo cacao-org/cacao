@@ -217,6 +217,25 @@ cacao-syncStreams "$logdirectory/$datestr" $streamWFS $streamPSF $timestart $tim
 # generate selection
 cacao-selectWFSframes $streamWFS.sync.fits $streamPSF.sync.fits $selFrac $windowx0 $windowx1 $windowy0 $windowy1 $evalMode
 
+
+cacao << EOF
+readshmim aol0_wfsmask
+loadfits "imwfsbest.fits" imwfs
+readshmim aol0_wfsdark
+imwfs0=imwfs-aol0_wfsdark
+imwfs0m=imwfs0*aol0_wfsmask
+#totm=itot(aol0_wfsmask)
+totm=itot(imwfs0m)
+imwfs0n=imwfs0/totm
+readshmim aol0_wfsref
+savefits aol0_wfsref "!aol0_wfsref.fits"
+savefits imwfs0n "!imwfs0n.fits"
+cpsh imwfs0n aol0_wfsref
+exitCLI
+EOF
+
+
+
 timestart=${timeend}
 
 else
