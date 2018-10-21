@@ -4,9 +4,6 @@
  * 
  * Real-time stream logging
  *  
- * @author  O. Guyon
- *
- * 
  * 
  */
 
@@ -330,20 +327,23 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 
 
 
+
+
 /**
  * ## Purpose
  * 
  * Write single entry in log buffer
  * 
+ * This function is called by the process writing to the stream
+ * 
  */
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
 {
+	
     if(aoloopcontrol_var.RTSLOGarrayInitFlag[rtlindex] == 1) // ensure local ownership
     {
         if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE==1) && (AOconf[loop].RTSLOGarray[rtlindex].ON==1) && (AOconf[loop].RTSLOGarray[rtlindex].INIT = 1))
-        {
-
-			
+        {	
             char *dataptr;
             dataptr = AOconf[loop].RTSLOGarray[rtlindex].destptr + AOconf[loop].RTSLOGarray[rtlindex].memsize * AOconf[loop].RTSLOGarray[rtlindex].frameindex;
             
@@ -949,7 +949,7 @@ int AOloopControl_RTstreamLOG_saveloop(
     int sleeptimeus = 1000; // 1 ms
     long sleepcnt = 0;
 
-	
+
 
     /*
     	pthread_t thread_savefits;
@@ -979,7 +979,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
     pthread_t thread_savefits[MAX_NUMBER_RTLOGSTREAM];
     int tOK[MAX_NUMBER_RTLOGSTREAM];          // is thread alive ?
-    
+
     int iret_savefits[MAX_NUMBER_RTLOGSTREAM];
     STREAMSAVE_THREAD_MESSAGE *savethreadmsg_array;
     savethreadmsg_array = (STREAMSAVE_THREAD_MESSAGE*) malloc(sizeof(STREAMSAVE_THREAD_MESSAGE)*MAX_NUMBER_RTLOGSTREAM);
@@ -989,7 +989,7 @@ int AOloopControl_RTstreamLOG_saveloop(
     {
         tOK[thd] = 0;
         AOconf[loop].RTSLOGarray[thd].tActive = 0;
-	}
+    }
 
 
     PROCESSINFO *processinfo;
@@ -1002,11 +1002,11 @@ int AOloopControl_RTstreamLOG_saveloop(
         sprintf(pinfoname, "aol%d-RealTimeTelemetrySave", loop);
         processinfo = processinfo_shm_create(pinfoname, 0);
         processinfo->loopstat = 0; // loop initialization
-        
+
         strcpy(processinfo->source_FUNCTION, __FUNCTION__);
         strcpy(processinfo->source_FILE,     __FILE__);
         processinfo->source_LINE = __LINE__;
-        
+
         char msgstring[200];
         sprintf(msgstring, "Real-time telemetry, loop %d", loop);
         processinfo_WriteMessage(processinfo, msgstring);
@@ -1014,44 +1014,44 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
 
-	// Catch signals
+    // Catch signals
 
-	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGTERM\n");
-        
-	if (sigaction(SIGINT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGINT\n");    
 
-	if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGABRT\n");     
+    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGINT\n");
 
-	if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGABRT\n");
+
+    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
         printf("\ncan't catch SIGBUS\n");
 
-	if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGSEGV\n");         
+    if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGSEGV\n");
 
-	if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGHUP\n");         
+    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGHUP\n");
 
-	if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGPIPE\n");   
+    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGPIPE\n");
 
-	
-	
-	
-	for(rtlindex=0;rtlindex<MAX_NUMBER_RTLOGSTREAM;rtlindex++)
-        {
-			AOconf[loop].RTSLOGarray[rtlindex].save = 0;
-			AOconf[loop].RTSLOGarray[rtlindex].memcpToggle = 0;
-			AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved = -1;
-			
-			AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
-			AOconf[loop].RTSLOGarray[rtlindex].FileBuffer   = 0;
-			
-			AOconf[loop].RTSLOGarray[rtlindex].tActive = 0;
-        }
-	
+
+
+
+    for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
+    {
+        AOconf[loop].RTSLOGarray[rtlindex].save = 0;
+        AOconf[loop].RTSLOGarray[rtlindex].memcpToggle = 0;
+        AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved = -1;
+
+        AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
+        AOconf[loop].RTSLOGarray[rtlindex].FileBuffer   = 0;
+
+        AOconf[loop].RTSLOGarray[rtlindex].tActive = 0;
+    }
+
 
     printf("\n");
 
@@ -1081,22 +1081,24 @@ int AOloopControl_RTstreamLOG_saveloop(
             }
         }
 
-		
-		NBthreadsActive = 0;
-		for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
-			if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
-				NBthreadsActive++;
+        if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+            processinfo_exec_start(processinfo);
+
+        NBthreadsActive = 0;
+        for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
+            if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
+                NBthreadsActive++;
         if(data.processinfo==1)
-        {						
+        {
             char msgstring[200];
             sprintf(msgstring, "%02d/%02d save threads", NBthreadsActive, NBthreads);
-            strcpy(processinfo->statusmsg, msgstring);
+            processinfo_WriteMessage(processinfo, msgstring);
         }
 
 
         cntsave = 0;
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
-        {	
+        {
             if(AOconf[loop].RTSLOGarray[rtlindex].save == 1)
             {
                 int buff;
@@ -1109,13 +1111,13 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
 
-				// check thread activity
-				if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
-				{
-					if(pthread_tryjoin_np(thread_savefits[rtlindex], NULL) == 0)
-						AOconf[loop].RTSLOGarray[rtlindex].tActive = 0;						
-				}
-				
+                // check thread activity
+                if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
+                {
+                    if(pthread_tryjoin_np(thread_savefits[rtlindex], NULL) == 0)
+                        AOconf[loop].RTSLOGarray[rtlindex].tActive = 0;
+                }
+
 
 
                 if(AOconf[loop].RTSLOGarray[rtlindex].memcpToggle!=0) // FULL CUBE READY
@@ -1167,7 +1169,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                     long i;
 
 
-                   // printf("\n\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
+                    // printf("\n\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
 
                     if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -1246,18 +1248,18 @@ int AOloopControl_RTstreamLOG_saveloop(
                     }
 
 
-/*
-                    printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, AOconf[loop].RTSLOGarray[rtlindex].timestring);
-                    printf("       %s -> %s\n", shmimname    , fnameFITS);
-                    printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
-*/
+                    /*
+                                        printf(" TIME STAMP :  %9ld.%09ld  -> %s\n", (long) TSsec, TSnsec, AOconf[loop].RTSLOGarray[rtlindex].timestring);
+                                        printf("       %s -> %s\n", shmimname    , fnameFITS);
+                                        printf("       %s -> %s\n", shmimnameinfo, fnameinfo);
+                    */
 
 
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer==1)
                     {
-						// If file size = buffer size, then just save the buffer to file
-						//
+                        // If file size = buffer size, then just save the buffer to file
+                        //
                         ID = image_ID(shmimname);
                         zsizesave = data.image[ID].md[0].size[2];
                         data.image[ID].md[0].size[2] = NBframe;
@@ -1268,9 +1270,9 @@ int AOloopControl_RTstreamLOG_saveloop(
                     }
                     else
                     {
-						// Otherwise, copy buffer into large buffer
-						//
-						
+                        // Otherwise, copy buffer into large buffer
+                        //
+
                         long IDout;
                         char OutBuffIm[200];
                         char *destptrBuff;
@@ -1284,7 +1286,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                             printf("     AOconf[loop].RTSLOGarray[rtlindex].SIZE  = %d\n", AOconf[loop].RTSLOGarray[rtlindex].SIZE);
                             exit(0);
                         }
-                        if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer>AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
+                        if( AOconf[loop].RTSLOGarray[rtlindex].FileBuffer > AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer )
                         {
                             printf("[%s][%d] ERROR: AOconf[loop].RTSLOGarray[rtlindex].FileBuffer>AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer\n", __FILE__, __LINE__);
                             exit(0);
@@ -1394,15 +1396,15 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
                     AOconf[loop].RTSLOGarray[rtlindex].FileBuffer++;
-                    
+
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
                     {
-						// Save large buffer
-						
+                        // Save large buffer
+
                         if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
                         {
-							// save large buffer to file
-							
+                            // save large buffer to file
+
                             char command[1000];
                             // merge buffer files
                             sprintf(command, "( cat %s/aol%d_%s.*.dat.0* > %s/aol%d_%s.%s.dat; rm %s/aol%d_%s.*.dat.0* ) &",
@@ -1427,11 +1429,11 @@ int AOloopControl_RTstreamLOG_saveloop(
                             savethreadmsg_array[rtlindex].saveascii = 0; // just save FITS, dat file handled separately
 
                             // Wait for save thread to complete to launch next one
-                            if(tOK[rtlindex] == 1)                            
+                            if(tOK[rtlindex] == 1)
                             {
-								printf("\n Wait start-----------------------\n");
-								fflush(stdout);
-								
+                                printf("\n Wait start-----------------------\n");
+                                fflush(stdout);
+
                                 if(pthread_tryjoin_np(thread_savefits[rtlindex], NULL) == EBUSY)
                                 {
                                     if(VERBOSE > 0)
@@ -1452,9 +1454,9 @@ int AOloopControl_RTstreamLOG_saveloop(
                                     fflush(stdout);
                                 }
                                 NBthreads--;
-       							printf("\n Wait end  -----------------------\n");
-								fflush(stdout);
-							}
+                                printf("\n Wait end  -----------------------\n");
+                                fflush(stdout);
+                            }
 
                             iret_savefits[rtlindex] = pthread_create( &thread_savefits[rtlindex], NULL, save_fits_function, &savethreadmsg_array[rtlindex]);
                             AOconf[loop].RTSLOGarray[rtlindex].tActive = 1;
@@ -1482,14 +1484,15 @@ int AOloopControl_RTstreamLOG_saveloop(
             }
             else
             {
-				AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0; // Ensure we are at buffer start when starting to save
-			}
-			
+                AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0; // Ensure we are at buffer start when starting to save
+            }
+
         }
+        
         if(cntsave>0)
         {
-          //  printf("%d buffer(s) saved\n", cntsave);
-          printf("\n");
+            //  printf("%d buffer(s) saved\n", cntsave);
+            printf("\n");
             sleepcnt = 0;
         }
         else
@@ -1499,49 +1502,52 @@ int AOloopControl_RTstreamLOG_saveloop(
             sleepcnt ++;
         }
 
+        if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+            processinfo_exec_end(processinfo);
 
-		if(data.signal_TERM == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGTERM);
-		}		
-		
-		
-		if(data.signal_INT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGINT);
-		}
 
-		if(data.signal_ABRT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGABRT);
-		}
+        if(data.signal_TERM == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGTERM);
+        }
 
-		if(data.signal_BUS == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGBUS);
-		}
-		
-		if(data.signal_SEGV == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGSEGV);
-		}
-		
-		if(data.signal_HUP == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGHUP);
-		}
-		
-		if(data.signal_PIPE == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGPIPE);
-		}	
+
+        if(data.signal_INT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGINT);
+        }
+
+        if(data.signal_ABRT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGABRT);
+        }
+
+        if(data.signal_BUS == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGBUS);
+        }
+
+        if(data.signal_SEGV == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGSEGV);
+        }
+
+        if(data.signal_HUP == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGHUP);
+        }
+
+        if(data.signal_PIPE == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGPIPE);
+        }
 
         usleep(sleeptimeus);
 
@@ -1551,7 +1557,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
     }
 
-    if(data.processinfo==1) 
+    if(data.processinfo==1)
         processinfo_cleanExit(processinfo);
 
     free(savethreadmsg_array);
