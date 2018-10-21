@@ -1088,13 +1088,7 @@ int AOloopControl_RTstreamLOG_saveloop(
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
             if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
                 NBthreadsActive++;
-        if(data.processinfo==1)
-        {
-            char msgstring[200];
-            sprintf(msgstring, "%02d/%02d save threads", NBthreadsActive, NBthreads);
-            processinfo_WriteMessage(processinfo, msgstring);
-        }
-
+      
 
         cntsave = 0;
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
