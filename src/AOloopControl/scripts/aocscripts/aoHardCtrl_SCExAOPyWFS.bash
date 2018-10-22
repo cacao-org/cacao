@@ -162,6 +162,12 @@ menuitems+=( "dmcommrs" "Re-start scexao2 -> scexao DM communication processes" 
 menuitems+=( "dmcommk" "Kill scexao2 -> scexao DM communication processes" )
 
 
+menuitems+=( "" "" )
+if [ "$EMgain" = "  0" ]; then
+menuitems+=( "em0" "\Zr\Z2 EMgain =   0\Zn" )
+else
+menuitems+=( "em0" " EMgain =   0" )
+fi
 
 menuitems+=( "" "" )
 if [ "$EMgain" = "  1" ]; then
@@ -358,7 +364,12 @@ aoconflogext "DM scexao2 comm kill"
 ;;
 
 
-
+	em0)
+EMgain="  1"
+aoconflogext "Set EMgain = ${EMgain}"
+echo "${EMgain}" > ./conf/instconf_EMgain.txt
+ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
+;;
 
 	em1)
 EMgain="  1"

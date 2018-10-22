@@ -293,6 +293,8 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         strcpy(processinfo->source_FUNCTION, __FUNCTION__);
         strcpy(processinfo->source_FILE,     __FILE__);
         processinfo->source_LINE = __LINE__;
+        
+        sprintf(processinfo->description, "AOloop%ld", loop);
 
         char msgstring[200];
         sprintf(msgstring, "Initialize AO loop %ld", loop);
