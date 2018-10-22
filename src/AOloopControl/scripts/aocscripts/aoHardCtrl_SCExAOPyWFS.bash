@@ -521,7 +521,8 @@ EOF
 	ir0cs)
 aoconflogext "(re-)start ircam0 scexaoCTRL -> scexao TCP transfer"
 ssh scexao@scexaoCTRL "/home/scexao/src/hardw-cred2/src/imgtakeCPUconf"
-/home/scexao/bin/getTCPscexao2im -s ircam -r ircam0com ircam0 30101
+#/home/scexao/bin/getTCPscexao2im -s ircam -r ircam0com ircam0 30101
+/home/scexao/bin/getTCPscexao2im -s ircam  ircam0 30101
 ;;
 	ir0ck)
 aoconflogext "kill ircam0 scexaoCTRL -> scexao TCP transfer"
@@ -543,7 +544,8 @@ aoconflogext "kill ircam0 scexao2 -> scexao TCP transfer"
 	ir2cs)
 aoconflogext "(re-)start ircam0 scexaoCTRL -> scexao TCP transfer"
 ssh scexao@scexaoCTRL "/home/scexao/src/hardw-cred2/src/imgtakeCPUconf"
-/home/scexao/bin/getTCPscexao2im -s ircam -r ircam2com ircam2 30103
+#/home/scexao/bin/getTCPscexao2im -s ircam -r ircam2com ircam2 30103
+/home/scexao/bin/getTCPscexao2im -s ircam ircam2 30103
 ;;
 	ir2ck)
 aoconflogext "kill ircam0 scexaoCTRL -> scexao TCP transfer"
