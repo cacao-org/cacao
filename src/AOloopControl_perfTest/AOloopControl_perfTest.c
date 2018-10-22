@@ -2792,6 +2792,9 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
  * 
  * PSF evaluation window is (x0,y0) to (x1,y1)
  * 
+ * Optional input: PSFmask, to be multiplied by PSF
+ * 
+ * 
  * EvalMode = 0  : Maximize Energy concentration
  * EvalMode = 1  : Maximize flux
  * EvalMode = 2  : Minimize flux
@@ -2804,13 +2807,16 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
  * impsfbest
  * impsfall
  * 
+ * 
+ * 
  */ 
 
 int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode, float alpha)
 {
 	long IDwfs;
 	long IDpsf;
-	
+	long IDpsfmask;   // optional
+
 	long NBframe;
 	long xsizewfs, ysizewfs, xysizewfs;
 	long xsizepsf, ysizepsf, xysizepsf;
@@ -2852,6 +2858,23 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 	printf("WINDOW: %ld - %ld     %ld -%ld\n", x0t, x1t, y0t, y1t);
 	
 	long kk;
+	IDpsfmask = image_ID("PSFmask");
+	if(IDpsfmask != -1)
+	{
+		for(kk=0;kk<NBframe;kk++)
+		{
+			long ii, jj;
+			
+			for(ii=x0t;ii<x1t;ii++)
+				for(jj=y0t;jj<y1t;jj++)
+				{
+					data.image[IDpsf].array.F[kk*xysizepsf+jj*xsizepsf+ii] *= data.image[IDpsfmask].array.F[jj*xsizepsf+ii];
+				}
+		}
+	}
+	
+	
+	
 	for(kk=0;kk<NBframe;kk++)
 	{
 		long ii, jj;
@@ -2865,6 +2888,8 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 			{
 				float tval;
 				tval  = data.image[IDpsf].array.F[kk*xysizepsf+jj*xsizepsf+ii];
+				if(tval<0.0)
+					tval = 0.0;
 				sum += tval;
 				ssum += pow(tval,alpha);				
 			}		
