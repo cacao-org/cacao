@@ -1006,6 +1006,8 @@ int AOloopControl_RTstreamLOG_saveloop(
         strcpy(processinfo->source_FUNCTION, __FUNCTION__);
         strcpy(processinfo->source_FILE,     __FILE__);
         processinfo->source_LINE = __LINE__;
+        
+		sprintf(processinfo->description, "RTlog loop%d", loop);
 
         char msgstring[200];
         sprintf(msgstring, "Real-time telemetry, loop %d", loop);
