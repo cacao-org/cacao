@@ -30,6 +30,7 @@ echo "     $(tput bold)-h$(tput sgr0)          help"
 echo "     $(tput bold)-n$(tput sgr0)          number of iteration (default 0=inf)"
 echo "     $(tput bold)-s$(tput sgr0)          time (s)pan (default 100s)"
 echo "     $(tput bold)-t$(tput sgr0)          start (t)ime (default=now)"
+echo "     $(tput bold)-a$(tput sgr0)          alpha norm (default=2.0)"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
 echo "     <streamWFS>         WFC stream name"
@@ -85,12 +86,14 @@ timespan="100" # second
 timestart=$(date "+%s")
 NBiter="0" # infinite loop
 
+ALPHAnorm="2.0"
+
 #Parse command line flags
 #If an option should be followed by an argument, it should be followed by a ":".
 #Notice there is no ":" after "h". The leading ":" suppresses error messages from
 #getopts. This is required to get unrecognized option code to work.
 
-while getopts :hH:s:t:n: FLAG; do
+while getopts :hH:s:t:n:a: FLAG; do
   case $FLAG in
     H) # detailed help
     if [ "$OPTARG" == "cf" ]; then
@@ -108,6 +111,9 @@ while getopts :hH:s:t:n: FLAG; do
     ;;
     n)
     NBiter=$OPTARG
+    ;;
+    a)
+    ALPHAnorm="$OPTARG"
     ;;
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -215,7 +221,7 @@ echo "=================================================================== PROCES
 cacao-syncStreams "$logdirectory/$datestr" $streamWFS $streamPSF $timestart $timeend  $texp $dtlag
 
 # generate selection
-cacao-selectWFSframes $streamWFS.sync.fits $streamPSF.sync.fits $selFrac $windowx0 $windowx1 $windowy0 $windowy1 $evalMode
+cacao-selectWFSframes -a $ALPHAnorm $streamWFS.sync.fits $streamPSF.sync.fits $selFrac $windowx0 $windowx1 $windowy0 $windowy1 $evalMode
 
 
 cacao << EOF

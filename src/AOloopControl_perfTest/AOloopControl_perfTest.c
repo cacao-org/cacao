@@ -279,9 +279,9 @@ int_fast8_t AOloopControl_perfTest_StatAnalysis_2streams_cli()
 
 int_fast8_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli()
 {
-	if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,1)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,2)+CLI_checkarg(8,2) == 0)
+	if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,1)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,2)+CLI_checkarg(8,2)+CLI_checkarg(9,1) == 0)
 	{
-		AOloopControl_perfTest_SelectWFSframes_from_PSFframes(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.numl, data.cmdargtoken[8].val.numl);
+		AOloopControl_perfTest_SelectWFSframes_from_PSFframes(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.numl, data.cmdargtoken[8].val.numl, data.cmdargtoken[9].val.numf);
 	}
 	else
 		return 1;
@@ -387,9 +387,9 @@ int_fast8_t init_AOloopControl_perfTest()
 		__FILE__,
 		AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli,
 		"select WFS frames from PSF frames (synchronized)",
-		"<input WFS cube> <input PSF cube> <fraction> <x0> <x1> <y0> <y1> <EvalMode>",
-		"aolperfselwfsfpsf imwfsC impsfC 100 120 100 120 0",
-		"int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode)");
+		"<input WFS cube> <input PSF cube> <fraction> <x0> <x1> <y0> <y1> <EvalMode> <alpha>",
+		"aolperfselwfsfpsf imwfsC impsfC 100 120 100 120 0 2.0",
+		"int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode, float alpha)");
 	
 }
 
@@ -2806,7 +2806,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
  * 
  */ 
 
-int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode)
+int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode, float alpha)
 {
 	long IDwfs;
 	long IDpsf;
@@ -2866,14 +2866,14 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 				float tval;
 				tval  = data.image[IDpsf].array.F[kk*xysizepsf+jj*xsizepsf+ii];
 				sum += tval;
-				ssum += tval*tval;				
+				ssum += pow(tval,alpha);				
 			}		
 		
 		// best frame 
 		switch (EvalMode) 
 		{
 			case 0 :
-				evalarray[kk] = -(ssum/(sum*sum));
+				evalarray[kk] = -(ssum/(pow(sum,alpha)));
 			break;
 			
 			case 1 :

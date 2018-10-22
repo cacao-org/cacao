@@ -21,6 +21,7 @@ echo "     $0 [-h] <streamWFScube> <streamPSFcube> <Selection fraction> <x0> <x1
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)          help"
+echo "     $(tput bold)-a$(tput sgr0)          alpha norm (default=2.0)"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
 echo "     <streamWFScube>     WFC stream name"
@@ -72,6 +73,7 @@ done
 
 
 
+ALPHAnorm="2.0"
 
 #Parse command line flags
 #If an option should be followed by an argument, it should be followed by a ":".
@@ -96,6 +98,9 @@ while getopts :hH:L:N:Cc FLAG; do
       fi
       exit
       ;;
+    a)
+    ALPHAnorm="$OPTARG"
+    ;;
     \?) #unrecognized option - show help
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
       printHELP
