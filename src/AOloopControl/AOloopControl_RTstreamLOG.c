@@ -1429,7 +1429,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 	if(data.processinfo==1)
         {
             char msgstring[200];
-            sprintf(msgstring, "Saving %s", OutBuffIm, fnameFITS);
+            sprintf(msgstring, "Saving %s", fnameFITS);
             processinfo_WriteMessage(processinfo, msgstring);
         }
 
