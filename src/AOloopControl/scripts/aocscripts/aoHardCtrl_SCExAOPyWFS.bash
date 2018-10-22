@@ -365,7 +365,7 @@ aoconflogext "DM scexao2 comm kill"
 
 
 	em0)
-EMgain="  1"
+EMgain="  0"
 aoconflogext "Set EMgain = ${EMgain}"
 echo "${EMgain}" > ./conf/instconf_EMgain.txt
 ssh scexao@scexao4 "/home/scexao/bin/ocam2k_gain ${EMgain}"
