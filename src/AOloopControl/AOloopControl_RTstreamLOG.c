@@ -957,8 +957,8 @@ int AOloopControl_RTstreamLOG_saveloop(
     int sleeptimeus = 1000; // 1 ms
     long sleepcnt = 0;
     
-    int InBuffIndex = 0; // input buffer index. Usually there are two such files, so value is 0 or 1
-    int OutBuffIndex = 0; // large file buffer index. Usually there are two such files, so value is 0 or 1
+    int InBuffIndex[MAX_NUMBER_RTLOGSTREAM]; // input buffer index. Usually there are two such files, so value is 0 or 1
+    int OutBuffIndex[MAX_NUMBER_RTLOGSTREAM]; // large file buffer index. Usually there are two such files, so value is 0 or 1
 
     /*
     	pthread_t thread_savefits;
@@ -979,6 +979,13 @@ int AOloopControl_RTstreamLOG_saveloop(
      * - processinfo
      *
      */
+
+	int i;
+	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
+	{
+		InBuffIndex[i] = 0;
+		OutBuffIndex[i] = 0;
+	}
 
     tzset();
 
@@ -1136,7 +1143,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                 {
                     BUFFERget = 1;
                     NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-                    InBuffIndex = AOconf[loop].RTSLOGarray[rtlindex].memcpToggle - 1; // buffindex to save
+                    InBuffIndex[rtlindex] = AOconf[loop].RTSLOGarray[rtlindex].memcpToggle - 1; // buffindex to save
                                         
                     //
                     // In case a finite number of full cubes is to be saved
@@ -1154,7 +1161,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                     {
                         BUFFERget = 1;
                         NBframe = AOconf[loop].RTSLOGarray[rtlindex].frameindex;
-                        InBuffIndex = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
+                        InBuffIndex[rtlindex] = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
                         AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
                         printf("------- LOOP OFF -> SAVING PARTIAL CUBE\n");
                     }
@@ -1186,9 +1193,9 @@ int AOloopControl_RTstreamLOG_saveloop(
                     
                     // CONNECT TO INPUT BUFFERS SHARED MEMORY
 
-                    if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex) < 1)
+                    if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex[rtlindex]) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-                    if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex) < 1)
+                    if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex[rtlindex]) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 
@@ -1318,7 +1325,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                         // get name of large buffer into which small buffer should be copied
                         //
-                        sprintf(OutBuffIm, "aol%d_%s_outbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, OutBuffIndex);
+                        sprintf(OutBuffIm, "aol%d_%s_outbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, OutBuffIndex[rtlindex]);
                         IDout = image_ID(OutBuffIm);
                         if(IDout == -1) // create large buffer if it does not exist
                         {
@@ -1456,7 +1463,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                             //   system(command);
 
                             char OutBuffIm[200];
-                            sprintf(OutBuffIm, "aol%d_%s_outbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, OutBuffIndex);
+                            sprintf(OutBuffIm, "aol%d_%s_outbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, OutBuffIndex[rtlindex]);
 
 
                             strcpy(savethreadmsg_array[rtlindex].iname, OutBuffIm);
@@ -1521,9 +1528,9 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                         AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
 
-                        OutBuffIndex++;
-                        if(OutBuffIndex==2)
-                            OutBuffIndex = 0;
+                        OutBuffIndex[rtlindex]++;
+                        if(OutBuffIndex[rtlindex]==2)
+                            OutBuffIndex[rtlindex] = 0;
 
                     }
 
