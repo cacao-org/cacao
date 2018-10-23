@@ -180,6 +180,8 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         strcpy(processinfo->source_FUNCTION, __FUNCTION__);
         strcpy(processinfo->source_FILE,     __FILE__);
         processinfo->source_LINE = __LINE__;
+        
+        sprintf(processinfo->description, "Modal Processing");
 
         char msgstring[200];
         sprintf(msgstring, "Initialization");
