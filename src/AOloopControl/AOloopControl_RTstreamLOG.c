@@ -144,11 +144,12 @@ int AOloopControl_RTstreamLOG_init(int loop)
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "dmC");// U
 
+
         i = RTSLOGindex_dmdisp;
         AOconf[loop].RTSLOGarray[i].active = 1;
         strcpy(AOconf[loop].RTSLOGarray[i].name, "dmdisp");// 
         AOconf[loop].RTSLOGarray[i].ENABLE = 0;
-        AOconf[loop].RTSLOGarray[i].ENABLE = SIZEdm;
+        AOconf[loop].RTSLOGarray[i].SIZE = SIZEdm;
 	
 	
 	return 0;
@@ -160,7 +161,14 @@ int AOloopControl_RTstreamLOG_init(int loop)
 
 
 
-
+/**
+ * # PURPOSE
+ * 
+ * Setup RT stream for logging
+ * 
+ * Creates required buffers
+ * 
+ */ 
 
 int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
 {
@@ -334,7 +342,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
  * 
  * Write single entry in log buffer
  * 
- * This function is called by the process writing to the stream
+ * This function is called by the process writing to the stream to minimize IPC need and reduce logging latency
  * 
  */
 void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
@@ -948,8 +956,9 @@ int AOloopControl_RTstreamLOG_saveloop(
 
     int sleeptimeus = 1000; // 1 ms
     long sleepcnt = 0;
-
-	int OutBuffIndex = 0; // large file buffer index. Usually there are two such files, so value is 0 or 1
+    
+    int InBuffIndex = 0; // input buffer index. Usually there are two such files, so value is 0 or 1
+    int OutBuffIndex = 0; // large file buffer index. Usually there are two such files, so value is 0 or 1
 
     /*
     	pthread_t thread_savefits;
@@ -1006,8 +1015,8 @@ int AOloopControl_RTstreamLOG_saveloop(
         strcpy(processinfo->source_FUNCTION, __FUNCTION__);
         strcpy(processinfo->source_FILE,     __FILE__);
         processinfo->source_LINE = __LINE__;
-        
-		sprintf(processinfo->description, "RTlog loop%d", loop);
+
+        sprintf(processinfo->description, "RTlog loop%d", loop);
 
         char msgstring[200];
         sprintf(msgstring, "Real-time telemetry, loop %d", loop);
@@ -1090,15 +1099,16 @@ int AOloopControl_RTstreamLOG_saveloop(
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
             if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
                 NBthreadsActive++;
-      
+
 
         cntsave = 0;
-        for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++)
+        for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++) // scan list of RT streams
         {
+			
+			
             if(AOconf[loop].RTSLOGarray[rtlindex].save == 1)
             {
-                int buff;
-                int SAVEfile = 0; // toggles to 1 if file needs to be saved
+                int BUFFERget = 0; // toggle to 1 if input buffer is ready
 
                 // support for saving partial cube if loop turns off
                 long NBframe;
@@ -1108,21 +1118,29 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
                 // check thread activity
+                //
                 if((tOK[rtlindex]==1)&&(AOconf[loop].RTSLOGarray[rtlindex].tActive==1))
                 {
                     if(pthread_tryjoin_np(thread_savefits[rtlindex], NULL) == 0)
                         AOconf[loop].RTSLOGarray[rtlindex].tActive = 0;
                 }
-
-
-
-                if(AOconf[loop].RTSLOGarray[rtlindex].memcpToggle!=0) // FULL CUBE READY
+                
+                
+                
+                // memcpToggle is updated by write process
+                // 0 : no buffer ready
+                // 1 : buffer #0 ready
+                // 2 : buffer #1 ready
+                
+                if(AOconf[loop].RTSLOGarray[rtlindex].memcpToggle!=0) // Input buffer ready
                 {
-                    SAVEfile = 1;
+                    BUFFERget = 1;
                     NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
-                    buff = AOconf[loop].RTSLOGarray[rtlindex].memcpToggle - 1; // buffindex to save
-
-                    // in case a finite number of full cubes is to be saved
+                    InBuffIndex = AOconf[loop].RTSLOGarray[rtlindex].memcpToggle - 1; // buffindex to save
+                                        
+                    //
+                    // In case a finite number of full cubes is to be saved
+                    //
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved >= 0)
                     {
                         AOconf[loop].RTSLOGarray[rtlindex].NBcubeSaved --;
@@ -1134,16 +1152,16 @@ int AOloopControl_RTstreamLOG_saveloop(
                 {
                     if((AOconf[loop].aorun.on == 0)&&(AOconf[loop].RTSLOGarray[rtlindex].frameindex>0))
                     {
-                        SAVEfile = 1;
+                        BUFFERget = 1;
                         NBframe = AOconf[loop].RTSLOGarray[rtlindex].frameindex;
-                        buff = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
+                        InBuffIndex = AOconf[loop].RTSLOGarray[rtlindex].buffindex;
                         AOconf[loop].RTSLOGarray[rtlindex].frameindex = 0;
                         printf("------- LOOP OFF -> SAVING PARTIAL CUBE\n");
                     }
                 }
 
 
-                if(SAVEfile == 1)
+                if(BUFFERget == 1) // input buffer ready, get it
                 {
                     char shmimname[200];
                     char shmimnameinfo[200];
@@ -1164,14 +1182,14 @@ int AOloopControl_RTstreamLOG_saveloop(
                     FILE *fp;
                     long i;
 
+                    
+                    
+                    // CONNECT TO INPUT BUFFERS SHARED MEMORY
 
-                    // printf("\n\n   SAVING \033[1;32m%s\033[0m buffer (%d)\n", AOconf[loop].RTSLOGarray[rtlindex].name, rtlindex);
-
-                    if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
+                    if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-                    if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, buff) < 1)
+                    if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
 
 
                     if((IDin = image_ID(shmimname))==-1)
@@ -1186,11 +1204,15 @@ int AOloopControl_RTstreamLOG_saveloop(
                         IDininfo = read_sharedmem_image(shmimnameinfo);
                     }
 
-                    // reading first frame timestamp
+
+
+
+
+                    // reading first frame timestamp -> defines filename 
+                    
                     TSsec  = (time_t) data.image[IDininfo].array.UI64[1];
                     TSnsec = data.image[IDininfo].array.UI64[2];
                     uttime = gmtime(&TSsec);
-
 
                     sprintf(AOconf[loop].RTSLOGarray[rtlindex].timestring, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 
@@ -1219,7 +1241,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
 
-                    if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer>1)
+                    if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer > 1)
                     {
                         if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat.%03d",
                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
@@ -1230,7 +1252,6 @@ int AOloopControl_RTstreamLOG_saveloop(
                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
                                    AOconf[loop].RTSLOGarray[rtlindex].timestring0) < 1)
                             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
                     }
                     else
                     {
@@ -1254,6 +1275,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer==1)
                     {
+                        //
                         // If file size = buffer size, then just save the buffer to file
                         //
                         ID = image_ID(shmimname);
@@ -1266,13 +1288,18 @@ int AOloopControl_RTstreamLOG_saveloop(
                     }
                     else
                     {
+                        //
                         // Otherwise, copy buffer into large buffer
                         //
 
                         long IDout;
                         char OutBuffIm[200];
                         char *destptrBuff;
-
+                        
+                        
+                        
+                        // CHECK INPUT STREAM
+                        //
                         ID = image_ID(shmimname);
                         zsizesave = data.image[ID].md[0].size[2];
                         if(zsizesave>AOconf[loop].RTSLOGarray[rtlindex].SIZE)
@@ -1287,11 +1314,13 @@ int AOloopControl_RTstreamLOG_saveloop(
                             printf("[%s][%d] ERROR: AOconf[loop].RTSLOGarray[rtlindex].FileBuffer>AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer\n", __FILE__, __LINE__);
                             exit(0);
                         }
-                        
-						sprintf(OutBuffIm, "aol%d_%s_outbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, OutBuffIndex);
-							
+
+
+                        // get name of large buffer into which small buffer should be copied
+                        //
+                        sprintf(OutBuffIm, "aol%d_%s_outbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, OutBuffIndex);
                         IDout = image_ID(OutBuffIm);
-                        if(IDout == -1) // create data stream large buffer
+                        if(IDout == -1) // create large buffer if it does not exist
                         {
                             uint32_t *imsize;
                             uint8_t atype;
@@ -1307,6 +1336,11 @@ int AOloopControl_RTstreamLOG_saveloop(
                         }
 
 
+
+                        //
+                        // Copy small buffer into large buffer
+                        // memory offset is memsize x SIZE x FileBuffer
+                        //
                         switch (data.image[IDout].md[0].atype)
                         {
                         case _DATATYPE_INT8:
@@ -1370,13 +1404,15 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                         }
                     }
-
+                    
+                    
+                    
+                    // WRITE TIMING FILE (1 file per input buffer)
+                    //
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == 0)
                         t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 
-
                     fp = fopen(fnameinfo, "w");
-
 
                     for(i=0; i<NBframe; i++)
                     {
@@ -1394,7 +1430,10 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
                     AOconf[loop].RTSLOGarray[rtlindex].FileBuffer++;
-
+                    
+                    
+                    // If last buffer, write large buffer to disk and merge small timing files
+                    //
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
                     {
                         // Save large output buffer
@@ -1426,12 +1465,12 @@ int AOloopControl_RTstreamLOG_saveloop(
                             savethreadmsg_array[rtlindex].cubesize = AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
                             savethreadmsg_array[rtlindex].saveascii = 0; // just save FITS, dat file handled separately
 
-	if(data.processinfo==1)
-        {
-            char msgstring[200];
-            sprintf(msgstring, "Saving %s", fnameFITS);
-            processinfo_WriteMessage(processinfo, msgstring);
-        }
+                            if(data.processinfo==1)
+                            {
+                                char msgstring[200];
+                                sprintf(msgstring, "%s", fnameFITS);
+                                processinfo_WriteMessage(processinfo, msgstring);
+                            }
 
                             // Wait for save thread to complete to launch next one
                             if(tOK[rtlindex] == 1)
@@ -1484,7 +1523,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                         OutBuffIndex++;
                         if(OutBuffIndex==2)
-							OutBuffIndex = 0;
+                            OutBuffIndex = 0;
 
                     }
 
@@ -1494,11 +1533,12 @@ int AOloopControl_RTstreamLOG_saveloop(
             }
             else
             {
-                AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0; // Ensure we are at buffer start when starting to save
+				// if save if off, then ensure we are at buffer start when starting to save
+                AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0; 
             }
 
         }
-        
+
         if(cntsave>0)
         {
             //  printf("%d buffer(s) saved\n", cntsave);
