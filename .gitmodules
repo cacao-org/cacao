@@ -121,3 +121,6 @@
 [submodule "src/pyCacao/wyrm"]
 	path = src/pyCacao/wyrm
 	url = https://gitlab.obspm.fr/greenflash/wyrm.git
+[submodule "src/processtools"]
+	path = src/processtools
+	url = https://github.com/a-sevin/processtools.git
