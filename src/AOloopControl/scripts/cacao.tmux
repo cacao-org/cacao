@@ -124,7 +124,7 @@ while getopts :hsx:y:n:lq FLAG; do
       ;;
     s)
     SIMPLECONTROL=1
-    wXsize="300"
+    wXsize="360"
     wYsize="90"
     ;;
     x)  #  set X size
