@@ -157,6 +157,52 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
     long IDinmask;
 
 
+	PROCESSINFO *processinfo;
+	
+	if(data.processinfo==1)
+	{
+     // CREATE PROCESSINFO ENTRY
+     // see processtools.c in module CommandLineInterface for details
+     //
+     
+     char pinfoname[200];  // short name for the processinfo instance
+     // avoid spaces, name should be human-readable
+  
+     sprintf(pinfoname, "PFwatchInput-loop%d-block%d", loop, PFblock);
+     processinfo = processinfo_shm_create(pinfoname, 0);
+     processinfo->loopstat = 0; // loop initialization
+     strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+     strcpy(processinfo->source_FILE,     __FILE__);
+     processinfo->source_LINE = __LINE__;
+ 
+     char msgstring[200];
+     sprintf(msgstring, "%ld->%ld %ld buffers", PFblockStart, PFblockEnd, NBbuff);
+     processinfo_WriteMessage(processinfo, msgstring);
+	}
+
+	// CATCH SIGNALS
+
+	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+	printf("\ncan't catch SIGTERM\n");
+	
+	if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+	printf("\ncan't catch SIGINT\n");    
+
+if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+printf("\ncan't catch SIGABRT\n");
+
+if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+printf("\ncan't catch SIGBUS\n");
+
+if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+printf("\ncan't catch SIGSEGV\n");         
+
+if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+printf("\ncan't catch SIGHUP\n");         
+
+if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+printf("\ncan't catch SIGPIPE\n");
+
     PFblockSize = PFblockEnd - PFblockStart;
 
 
@@ -224,10 +270,36 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
     printf("Done\n");
     fflush(stdout);
 
+
+		if(data.processinfo==1)
+        processinfo->loopstat = 1;  // Notify processinfo that we are entering loop
+
 	long buffindex = 0;
 	long outcnt = 0;
-    for(;;)
+long loopcnt = 0;
+    
+    int loopOK = 1;
+    
+    while(loopOK==1)
     {
+
+if(data.processinfo==1)
+        {
+            while(processinfo->CTRLval == 1)  // pause
+                usleep(50);
+
+            if(processinfo->CTRLval == 2) // single iteration
+                processinfo->CTRLval = 1;
+
+            if(processinfo->CTRLval == 3) // exit loop
+            {
+                loopOK = 0;
+            }
+        }
+
+
+
+		
         cnt0 = data.image[IDinb0].md[0].cnt0;
         cnt1 = data.image[IDinb1].md[0].cnt0;
 
@@ -296,8 +368,63 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
 
         usleep(twaitus);
-    }
 
+
+
+		// process signals
+
+		if(data.signal_TERM == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGTERM);
+		}
+     
+		if(data.signal_INT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGINT);
+		}
+
+		if(data.signal_ABRT == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGABRT);
+		}
+
+		if(data.signal_BUS == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGBUS);
+		}
+		
+		if(data.signal_SEGV == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGSEGV);
+		}
+		
+		if(data.signal_HUP == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGHUP);
+		}
+		
+		if(data.signal_PIPE == 1){
+			loopOK = 0;
+			if(data.processinfo==1)
+				processinfo_SIGexit(processinfo, SIGPIPE);
+		}	
+     
+        loopcnt++;
+        if(data.processinfo==1)
+            processinfo->loopcnt = loopcnt;
+
+    }
+    
+	if(data.processinfo==1)
+        processinfo_cleanExit(processinfo);
+        
+        
     return (IDout);
 }
 
