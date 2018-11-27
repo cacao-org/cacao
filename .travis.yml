@@ -5,6 +5,8 @@ before_install:
 - sudo apt-get install -qq libcfitsio3 libcfitsio3-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison automake autoconf libtool autotools-dev check
 
 script:
+- touch src/Makefile.am.add
+- cp configure_files/configure.ac.cacao configure.ac
 - autoreconf -vif
 - ./configure
 - make
