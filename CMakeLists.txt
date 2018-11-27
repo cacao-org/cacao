@@ -1,4 +1,5 @@
 # Example, run from _build directory :
+# cmake ..
 # cmake .. -DCMAKE_INSTALL_PREFIX=../_install
 # cmake .. -DUSE_MAGMA=ON
 # cmake .. -DUSE_QDWHPARTIAL=ON
@@ -8,7 +9,8 @@
 # sudo make install
 #
 
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.5)
+
 project (cacao C)
 
 
