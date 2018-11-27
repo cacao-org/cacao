@@ -2867,9 +2867,7 @@ int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char 
 			
 			for(ii=x0t;ii<x1t;ii++)
 				for(jj=y0t;jj<y1t;jj++)
-				{
 					data.image[IDpsf].array.F[kk*xysizepsf+jj*xsizepsf+ii] *= data.image[IDpsfmask].array.F[jj*xsizepsf+ii];
-				}
 		}
 	}
 	

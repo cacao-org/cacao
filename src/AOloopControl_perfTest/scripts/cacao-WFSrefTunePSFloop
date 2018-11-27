@@ -170,6 +170,7 @@ streamPSFdir="$logdirectory/$datestr/$streamPSF"
 
 
 iter=0
+iter0=0
 
 while :
 do
@@ -240,17 +241,18 @@ cpsh imwfs0n aol0_wfsref
 exitCLI
 EOF
 
-fname="$(printf "imwfsbest.%06d.fits" $iter )"
+fname="$(printf "imwfsbest.%06d.fits" $iter0 )"
 cp imwfsbest.fits $fname
-fname="$(printf "imwfsall.%06d.fits" $iter )"
+fname="$(printf "imwfsall.%06d.fits" $iter0 )"
 cp imwfsall.fits $fname
 
-fname="$(printf "impsfbest.%06d.fits" $iter )"
+fname="$(printf "impsfbest.%06d.fits" $iter0 )"
 cp impsfbest.fits $fname
-fname="$(printf "impsfall.%06d.fits" $iter )"
+fname="$(printf "impsfall.%06d.fits" $iter0 )"
 cp impsfall.fits $fname
 
 timestart=${timeend}
+let iter0++
 
 else
 echo "WAITING. .."
