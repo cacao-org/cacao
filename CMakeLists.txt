@@ -24,12 +24,7 @@ add_compile_options(-Ofast)
 add_compile_options(-march=native)
 
 # runs the standard link-time optimizer
-# Under gcc 5.4.0, cmake 3.5.1, this option can break linking
-# symbol "data", declared in CLImain.c, is then local instead of global, 
-# and is therefore not resolved by linker
-# -> keep this option OFF until fix is identified
-#
-#add_compile_options(-flto)
+add_compile_options(-flto)
 
 
 # OpenMP
