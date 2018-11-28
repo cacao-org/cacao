@@ -19,9 +19,9 @@ project (cacao C)
 
 # Adds options to the compiler command line for targets in the current directory and below that are added after this command is invoked
 
-#add_compile_options(-std=gnu11)
-#add_compile_options(-Ofast)
-#add_compile_options(-march=native)
+add_compile_options(-std=gnu11)
+add_compile_options(-Ofast)
+add_compile_options(-march=native)
 
 # runs the standard link-time optimizer
 #add_compile_options(-flto)
