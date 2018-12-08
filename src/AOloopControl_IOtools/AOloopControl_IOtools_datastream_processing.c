@@ -36,6 +36,8 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
+#include "fft/fft.h"
+
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                      DEFINES, MACROS                                            */
@@ -239,8 +241,125 @@ int_fast8_t AOloopControl_IOtools_AveStream(const char *IDname, double alpha, co
 
 
 
+/**
+ * ## Purpose
+ * 
+ * Align image stream in realtime\n
+ * 
+ * ## Arguments
+ * 
+ * IDname is input stream \n
+ * The alignment is computed using a rectangular box of starting at (xbox0,ybox0)\n
+ * Reference image used for alignment is provided by IDref_name\n
+ * 
+ * 
+ * ## Use
+ * 
+ * Function runs a loop. Reacts to updates to stream IDname\n
+ * 
+ * 
+ * ## Details
+ * 
+ * 
+ * @return number of iteration [int]
+ * 
+ * 
+ * 
+ * @note sched_setscheduler and seteuid not supported under OS-X
+ * @warning This function does nothing useful 
+ * 
+ * 
+ * \ingroup RTfunctions
+ */
 
-long AOloopControl_IOtools_frameDelay(const char *IDin_name, const char *IDkern_name, const char *IDout_name, int insem)
+
+int_fast8_t AOloopControl_IOtools_imAlignStream(
+    const char    *IDname,
+          int      xbox0,
+          int      ybox0,
+    const char    *IDref_name,
+    const char    *IDout_name,
+          int      insem
+)
+{
+    long IDin, IDref, IDout, IDtmp;
+    uint32_t xboxsize, yboxsize;
+    uint32_t xsize, ysize;
+    long cnt;
+
+    long xoffset, yoffset;
+
+    IDin = image_ID(IDname);
+    xsize = data.image[IDin].md[0].size[0];
+    ysize = data.image[IDin].md[0].size[1];
+
+    IDref = image_ID(IDref_name);
+    xboxsize = data.image[IDref].md[0].size[0];
+    yboxsize = data.image[IDref].md[0].size[1];
+
+    IDtmp = create_2Dimage_ID("imAlign_tmp", xboxsize, yboxsize);
+
+    for(;;)
+    {
+        if(data.image[IDin].md[0].sem==0)
+        {
+            while(cnt==data.image[IDin].md[0].cnt0) // test if new frame exists
+                usleep(5);
+            cnt = data.image[IDin].md[0].cnt0;
+        }
+        else
+            sem_wait(data.image[IDin].semptr[insem]);
+
+        // copy box into tmp image
+        long ii, jj;
+        for(ii=0; ii<xboxsize; ii++)
+            for(jj=0; jj<yboxsize; jj++)
+            {
+                long ii1, jj1;
+
+                ii1 = ii + xbox0;
+                jj1 = jj + ybox0;
+                data.image[IDtmp].array.F[jj*xboxsize+ii] = data.image[IDin].array.F[jj*xsize+ii];
+            }
+
+        // compute cross correlation
+        fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
+
+        // find the correlation peak
+        float vmax = 0.0;
+        long ID;
+        ID = image_ID("tmpCorr");
+        for(ii=0; ii<xboxsize; ii++)
+            for(jj=0; jj<yboxsize; jj++)
+            {
+                if(data.image[ID].array.F[jj*xboxsize+ii] > vmax)
+                {
+                    vmax = data.image[ID].array.F[jj*xboxsize+ii];
+                    xoffset = ii;
+                    yoffset = jj;
+                }
+            }
+
+        printf("offset = %ld %ld\n", ii, jj);
+
+        delete_image_ID("tmpCorr");
+    }
+
+    return 0;
+}
+
+
+
+
+
+
+
+long AOloopControl_IOtools_frameDelay(
+	const char *IDin_name, 
+	const char *IDkern_name, 
+	const char *IDout_name, 
+	int insem
+	)
 {
     long IDout;
     long IDin;

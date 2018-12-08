@@ -142,14 +142,14 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 // every time im_name changes (counter increments), crop it to out_name in shared memory
 //
 int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
-	const char *in_name, 
-	const char *dark_name, 
-	const char *out_name, 
-	long        size_x, 
-	long        size_y, 
-	long        xstart, 
-	long        ystart
-	)
+    const char *in_name,
+    const char *dark_name,
+    const char *out_name,
+    long        size_x,
+    long        size_y,
+    long        xstart,
+    long        ystart
+)
 {
     long iiin,jjin, iiout, jjout;
     long IDin, IDout, IDdark;
@@ -256,7 +256,7 @@ int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
                         for(ii=0; ii<sizeoutxy; ii++)
                             data.image[IDout].array.F[ii] *= data.image[IDmask].array.F[ii];
                 }
-                
+
                 data.image[IDout].md[0].cnt0 = cnt0;
                 data.image[IDout].md[0].write = 0;
                 COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
@@ -327,30 +327,30 @@ static void *compute_function_imtotal( void *ptr )
     long ii;
     long nelem;
     int semval;
-	float IMTOTAL;
-	char imname[200];
+    float IMTOTAL;
+    char imname[200];
 
 
-	printf("=========== STARTING compute_function_imtotal loop ===================\n");
-	fflush(stdout);
+    printf("=========== STARTING compute_function_imtotal loop ===================\n");
+    fflush(stdout);
 
 
 
-	// LOG function / process start
-	int logfunc_level = 0;
-	int logfunc_level_max = 1;
-	char commentstring[200];
-	sprintf(commentstring, "Compute image total flux, loop %ld", LOOPNUMBER);
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
+    // LOG function / process start
+    int logfunc_level = 0;
+    int logfunc_level_max = 1;
+    char commentstring[200];
+    sprintf(commentstring, "Compute image total flux, loop %ld", LOOPNUMBER);
+    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 
 
-	if(aoloopcontrol_var.aoconfID_looptiming == -1)
-	{
-		// LOOPiteration is written in cnt1 of loop timing array
-		if(sprintf(imname, "aol%ld_looptiming", LOOPNUMBER) < 1)
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
-	}
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
+    {
+        // LOOPiteration is written in cnt1 of loop timing array
+        if(sprintf(imname, "aol%ld_looptiming", LOOPNUMBER) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
+    }
 
 
 
@@ -359,20 +359,20 @@ static void *compute_function_imtotal( void *ptr )
 
     for(;;)
     {
-		#ifdef _PRINT_TEST
-		printf("TEST - Waiting for semaphore\n");
-		fflush(stdout);
-		#endif
+#ifdef _PRINT_TEST
+        printf("TEST - Waiting for semaphore\n");
+        fflush(stdout);
+#endif
 
         sem_wait(&AOLCOMPUTE_TOTAL_ASYNC_sem_name);
 
-		#ifdef _PRINT_TEST
-		printf("TEST - COMPUTING TOTAL FOR IMAGE ID %ld : %s\n", aoloopcontrol_var.aoconfID_imWFS0, data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].name);
-		fflush(stdout);
-		#endif
-	
-		imtotalcnt++;
-		
+#ifdef _PRINT_TEST
+        printf("TEST - COMPUTING TOTAL FOR IMAGE ID %ld : %s\n", aoloopcontrol_var.aoconfID_imWFS0, data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].name);
+        fflush(stdout);
+#endif
+
+        imtotalcnt++;
+
         data.image[aoloopcontrol_var.aoconfID_imWFS0tot].md[0].write = 1;
         IMTOTAL = 0.0;
         if(aoloopcontrol_var.aoconfID_wfsmask!=-1)
@@ -386,19 +386,19 @@ static void *compute_function_imtotal( void *ptr )
                 IMTOTAL += data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii];
         }
         data.image[aoloopcontrol_var.aoconfID_imWFS0tot].array.F[0] = IMTOTAL;
-        
+
         AOconf[LOOPNUMBER].WFSim.WFStotalflux = IMTOTAL;
-        
-        
+
+
         data.image[aoloopcontrol_var.aoconfID_imWFS0tot].md[0].cnt0++;
         data.image[aoloopcontrol_var.aoconfID_imWFS0tot].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
-        
+
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0tot, -1);
         data.image[aoloopcontrol_var.aoconfID_imWFS0tot].md[0].write = 0;
     }
-    
-  	// LOG function / process end
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+
+    // LOG function / process end
+    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 }
 
 
@@ -425,12 +425,12 @@ static void *compute_function_dark_subtract( void *ptr )
     iistart = (long) ((threadindex)*nelem/COMPUTE_DARK_SUBTRACT_NBTHREADS);
     iiend = (long) ((threadindex+1)*nelem/COMPUTE_DARK_SUBTRACT_NBTHREADS);
 
-	// LOG function / process start
-	int logfunc_level = 0;
-	int logfunc_level_max = 1;
-	char commentstring[200];
-	sprintf(commentstring, "Dark subtract WFS image, loop %ld", LOOPNUMBER);
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
+    // LOG function / process start
+    int logfunc_level = 0;
+    int logfunc_level_max = 1;
+    char commentstring[200];
+    sprintf(commentstring, "Dark subtract WFS image, loop %ld", LOOPNUMBER);
+    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 
 
     while(1)
@@ -461,9 +461,9 @@ static void *compute_function_dark_subtract( void *ptr )
         if(semval<SEMAPHORE_MAXVAL)
             sem_post(&AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[threadindex]);
     }
-    
+
     // LOG function / process end
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 }
 
 
@@ -482,11 +482,11 @@ static void *compute_function_dark_subtract( void *ptr )
 /** @brief Read image from WFS camera
  *
  * ## Purpose
- * 
+ *
  * Reads WFS image and performs some basic processing
- * 
+ *
  * Output is imWFS1, which is dark-subtracted and normalized, but not reference-subtracted.
- * 
+ *
  * supports ring buffer
  * puts image from camera buffer aoloopcontrol_var.aoconfID_wfsim into aoloopcontrol_var.aoconfID_imWFS1 (supplied by user)
  *
@@ -498,12 +498,12 @@ static void *compute_function_dark_subtract( void *ptr )
  */
 
 int_fast8_t __attribute__((hot)) Read_cam_frame(
-	long loop, 
-	int RM, 
-	int normalize, 
-	int PixelStreamMode, 
-	int InitSem
-	)
+    long loop,
+    int RM,
+    int normalize,
+    int PixelStreamMode,
+    int InitSem
+)
 {
     long         imcnt;
     long         ii;
@@ -540,26 +540,26 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     static double  imWaitTimeAve = 0.0;
 
 
-	int FORCE_REG_TIMING = 0;       // force regular timing: proceed if WFS frame is late
-	float REG_TIMING_frac = 1.1;    // how long to wait beyond expected time (fraction)
-	int FORCE_REG_TIMING_val;
+    int FORCE_REG_TIMING = 0;       // force regular timing: proceed if WFS frame is late
+    float REG_TIMING_frac = 1.1;    // how long to wait beyond expected time (fraction)
+    int FORCE_REG_TIMING_val;
 
     if(RM==0)
         semindex = 0;
     else
         semindex = 1;
 
-		
-		
+
+
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
 
 
-	// initialize camera averaging arrays if not already done
+    // initialize camera averaging arrays if not already done
     if(avcamarraysInit==0)
     {
         arrayftmp = (float*)          malloc(sizeof(float) *          AOconf[loop].WFSim.sizeWFS);
         arrayutmp = (unsigned short*) malloc(sizeof(unsigned short) * AOconf[loop].WFSim.sizeWFS);
-		arraystmp = (signed short*)   malloc(sizeof(signed short) *   AOconf[loop].WFSim.sizeWFS);
+        arraystmp = (signed short*)   malloc(sizeof(signed short) *   AOconf[loop].WFSim.sizeWFS);
 
         if(sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -614,10 +614,10 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
 
-	// ***********************************************************************************************
-	// WAITING FOR WFS FRAME
-	// listening for counter or semaphore in wfsim
-	// ***********************************************************************************************
+    // ***********************************************************************************************
+    // WAITING FOR WFS FRAME
+    // listening for counter or semaphore in wfsim
+    // ***********************************************************************************************
 
 
 #ifdef _PRINT_TEST
@@ -627,7 +627,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem==0)
     {
-		// if not using semaphors, use counter to test if new WFS frame is ready
+        // if not using semaphors, use counter to test if new WFS frame is ready
         if(RM==0)
             while(AOconf[loop].WFSim.WFScnt==data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0) // test if new frame exists
                 usleep(5);
@@ -642,62 +642,62 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         fflush(stdout);
 #endif
 
-		sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
-		if(semval>0)
-		{
-			if(semval>1)
-				printf("\n\033[31;1m[%12ld] WARNING [%d] WFS SEMAPHORE already posted - Missed frame\033[0m\n", AOconf[loop].aorun.LOOPiteration, semval);
-//			else
-//				printf("[%12ld] WARNING [%d] WFS SEMAPHORE already posted\n", AOconf[loop].aorun.LOOPiteration, semval);
-			fflush(stdout); 
-		}
+        sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
+        if(semval>0)
+        {
+            if(semval>1)
+                printf("\n\033[31;1m[%12ld] WARNING [%d] WFS SEMAPHORE already posted - Missed frame\033[0m\n", AOconf[loop].aorun.LOOPiteration, semval);
+            //			else
+            //				printf("[%12ld] WARNING [%d] WFS SEMAPHORE already posted\n", AOconf[loop].aorun.LOOPiteration, semval);
+            fflush(stdout);
+        }
 
 
-		if( imWaitTimeAvecnt < imWaitTimeAvecnt0 )
-			FORCE_REG_TIMING_val = 0;
-		else
-			FORCE_REG_TIMING_val = FORCE_REG_TIMING;
+        if( imWaitTimeAvecnt < imWaitTimeAvecnt0 )
+            FORCE_REG_TIMING_val = 0;
+        else
+            FORCE_REG_TIMING_val = FORCE_REG_TIMING;
 
-		if ( FORCE_REG_TIMING_val == 0 )
-		{
-			int rval;
-			rval = sem_wait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
-			if (rval == -1)
-				perror("sem_timedwait");
-		}
-		else
-		{
-			struct timespec semwaitts;
-			
-			if (clock_gettime(CLOCK_REALTIME, &semwaitts) == -1) {
-				perror("clock_gettime");
-				exit(EXIT_FAILURE);
-			}
-			semwaitts.tv_nsec += (long) (1.0e9 * imWaitTimeAve*REG_TIMING_frac);
-			while(semwaitts.tv_nsec >= 1000000000)
-			{
-				semwaitts.tv_nsec -= 1000000000;
-				semwaitts.tv_sec = semwaitts.tv_sec + 1;
-			}
-			
-			int rval;
-			rval = sem_timedwait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semwaitts);
-			if (rval == -1)
-			{
-				if (errno == ETIMEDOUT)
-					printf("sem_timedwait() timed out\n");
-				else
-					perror("sem_timedwait");
-			} 
-		}
+        if ( FORCE_REG_TIMING_val == 0 )
+        {
+            int rval;
+            rval = sem_wait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+            if (rval == -1)
+                perror("sem_timedwait");
+        }
+        else
+        {
+            struct timespec semwaitts;
+
+            if (clock_gettime(CLOCK_REALTIME, &semwaitts) == -1) {
+                perror("clock_gettime");
+                exit(EXIT_FAILURE);
+            }
+            semwaitts.tv_nsec += (long) (1.0e9 * imWaitTimeAve*REG_TIMING_frac);
+            while(semwaitts.tv_nsec >= 1000000000)
+            {
+                semwaitts.tv_nsec -= 1000000000;
+                semwaitts.tv_sec = semwaitts.tv_sec + 1;
+            }
+
+            int rval;
+            rval = sem_timedwait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semwaitts);
+            if (rval == -1)
+            {
+                if (errno == ETIMEDOUT)
+                    printf("sem_timedwait() timed out\n");
+                else
+                    perror("sem_timedwait");
+            }
+        }
 
         sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
         for(i=0; i<semval; i++)
         {
-//			printf("WARNING: [%d] sem_trywait on aoloopcontrol_var.aoconfID_wfsim\n", (int) (semval - i));
-//			fflush(stdout); 
+            //			printf("WARNING: [%d] sem_trywait on aoloopcontrol_var.aoconfID_wfsim\n", (int) (semval - i));
+            //			fflush(stdout);
             sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
-		}
+        }
 
 
 #ifdef _PRINT_TEST
@@ -707,8 +707,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     }
 
 
-	  if(data.processinfo==1)
-		if(data.pinfo->MeasureTiming==1)
+    if(data.processinfo==1)
+        if(data.pinfo->MeasureTiming==1)
             processinfo_exec_start(data.pinfo);
 
 
@@ -718,14 +718,14 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimerStart);
 
-	// ***********************************************************************************************
-	// WHEN NEW IMAGE IS READY, COPY IT TO LOCAL ARRAY (arrayftmp, arrayutmp or arraystmp)
-	// ***********************************************************************************************
+    // ***********************************************************************************************
+    // WHEN NEW IMAGE IS READY, COPY IT TO LOCAL ARRAY (arrayftmp, arrayutmp or arraystmp)
+    // ***********************************************************************************************
 
     if(RM==0)
     {
         clock_gettime(CLOCK_REALTIME, &tnow);
-		aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] = 1; // there must only be one such process
+        aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] = 1; // there must only be one such process
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
 
         AOconf[loop].AOtiminginfo.status = 0;  // LOAD IMAGE
@@ -745,33 +745,33 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
     switch (aoloopcontrol_var.WFSatype) {
-		
+
     case _DATATYPE_FLOAT :
         ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.F;
         ptrv += sizeof(float)*slice* AOconf[loop].WFSim.sizeWFS;
         memcpy(arrayftmp, ptrv,  sizeof(float)*AOconf[loop].WFSim.sizeWFS);
         break;
-    
+
     case _DATATYPE_UINT16 :
         ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.UI16;
         ptrv += sizeof(unsigned short)*slice* AOconf[loop].WFSim.sizeWFS;
         memcpy (arrayutmp, ptrv, sizeof(unsigned short)*AOconf[loop].WFSim.sizeWFS);
         break;
-    
+
     case _DATATYPE_INT16 :
         ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.SI16;
         ptrv += sizeof(signed short)*slice* AOconf[loop].WFSim.sizeWFS;
         memcpy (arraystmp, ptrv, sizeof(signed short)*AOconf[loop].WFSim.sizeWFS);
         break;
-    
+
     default :
         printf("ERROR: DATA TYPE NOT SUPPORTED\n");
         exit(0);
         break;
     }
-	
-//	printf("WFS size = %ld\n", AOconf[loop].WFSim.sizeWFS);
-//	fflush(stdout);
+
+    //	printf("WFS size = %ld\n", AOconf[loop].WFSim.sizeWFS);
+    //	fflush(stdout);
 
 
     if(RM==0)
@@ -827,57 +827,57 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
 
-	// ***********************************************************************************************
+    // ***********************************************************************************************
     // DARK SUBTRACT AND COMPUTE IMAGE TOTAL
     // output is imWFS0 (dark subtracted) and imWFS1 (normalized)
     // ***********************************************************************************************
 
     if((loop==0)||(RM == 1)) // single thread, in CPU  //WHY do CPU-based if loop=0 ?
     {
-		
-		#ifdef _PRINT_TEST
+
+#ifdef _PRINT_TEST
         printf("TEST - DARK SUBTRACT - single thread, in CPU   loop=%ld  RM=%d\n", loop, RM);
         fflush(stdout);
 #endif
-		
+
         switch ( aoloopcontrol_var.WFSatype ) {
 
 
         case _DATATYPE_UINT16 :
-//# ifdef _OPENMP
-//            #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-//        {
-//# endif
+            //# ifdef _OPENMP
+            //            #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+            //        {
+            //# endif
 
-//# ifdef _OPENMP
-//            #pragma omp for
-//# endif
+            //# ifdef _OPENMP
+            //            #pragma omp for
+            //# endif
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
-//# ifdef _OPENMP
-//        }
-//# endif
-        break;
-        
-        
-  
-        case _DATATYPE_INT16 :
-//# ifdef _OPENMP
-//            #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-//        {
-//# endif
+            //# ifdef _OPENMP
+            //        }
+            //# endif
+            break;
 
-//# ifdef _OPENMP
-//            #pragma omp for
-//# endif
+
+
+        case _DATATYPE_INT16 :
+            //# ifdef _OPENMP
+            //            #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+            //        {
+            //# endif
+
+            //# ifdef _OPENMP
+            //            #pragma omp for
+            //# endif
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
-                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];                         
-//# ifdef _OPENMP
-//        }
-//# endif
-        break;
-        
-              
+                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
+            //# ifdef _OPENMP
+            //        }
+            //# endif
+            break;
+
+
         case _DATATYPE_FLOAT :
 # ifdef _OPENMP
             #pragma omp parallel num_threads(4) if (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
@@ -899,14 +899,14 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             exit(0);
             break;
         }
-        		
-		
+
+
         data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0, -1);
 
 
         clock_gettime(CLOCK_REALTIME, &tnow);
-        
+
 
 
 
@@ -916,7 +916,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             if(semval<SEMAPHORE_MAXVAL)
                 sem_post(data.image[aoloopcontrol_var.aoconfID_imWFS0].semptr[s]);
         }*/
-        
+
 
     }
     else
@@ -977,13 +977,13 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 #endif
 
     }
-    
 
-		if(RM==0)
-		{
-			aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS0] = 1; // there must only be one such process
-			AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
-		}
+
+    if(RM==0)
+    {
+        aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS0] = 1; // there must only be one such process
+        AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
+    }
 
 
 
@@ -1122,19 +1122,19 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 #endif
 
         data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].write = 1;
-//# ifdef _OPENMP
-//        #pragma omp parallel num_threads(4) if (nelem>OMP_NELEMENT_LIMIT)
-//        {
-//# endif
+        //# ifdef _OPENMP
+        //        #pragma omp parallel num_threads(4) if (nelem>OMP_NELEMENT_LIMIT)
+        //        {
+        //# endif
 
-//# ifdef _OPENMP
-//            #pragma omp for
-//# endif
-            for(ii=0; ii<nelem; ii++)
-                data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii]*totalinv;
-//# ifdef _OPENMP
-//        }
-//# endif
+        //# ifdef _OPENMP
+        //            #pragma omp for
+        //# endif
+        for(ii=0; ii<nelem; ii++)
+            data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii]*totalinv;
+        //# ifdef _OPENMP
+        //        }
+        //# endif
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS1, -1);
         data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].cnt0 ++;
         data.image[aoloopcontrol_var.aoconfID_imWFS1].md[0].write = 0;
@@ -1155,33 +1155,33 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
         if(AOconf[loop].AOcompute.GPUall==0)
         {
-			aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS1] = 1; // there must only be one such process
+            aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS1] = 1; // there must only be one such process
             AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS1, tnow);
-		}
+        }
     }
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
 
 
 
-	// processing time
+    // processing time
     tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-//TEST TIMING
-/*
-    if(tdiffv > 100.0e-6)
-    {
-        printf("\n============ TIMING WARNING: %12.3f us       Read_cam_frame() Process\n", tdiffv*1.0e6);
-        fflush(stdout);
-    }
-*/
+    //TEST TIMING
+    /*
+        if(tdiffv > 100.0e-6)
+        {
+            printf("\n============ TIMING WARNING: %12.3f us       Read_cam_frame() Process\n", tdiffv*1.0e6);
+            fflush(stdout);
+        }
+    */
 
-	// Total time
+    // Total time
     tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 
 
-	// Cam wait time
+    // Cam wait time
     if( imWaitTimeAvecnt < imWaitTimeAvecnt0 )
     {
         imWaitTimeAve += 1.0*tdiffv/imWaitTimeAvecnt0;
@@ -1189,32 +1189,32 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     }
     else
     {
-		float gain = 1.0/imWaitTimeAvecnt0;
+        float gain = 1.0/imWaitTimeAvecnt0;
         imWaitTimeAve = imWaitTimeAve*(1.0-gain) + gain * tdiffv;
-	}
+    }
 
-	
-//TEST TIMING
-/*
-	// Total time
-    tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
-    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-		
-        if(tdiffv > 600.0e-6) //imWaitTimeAve*1.2)
-        {
-            printf("TIMING WARNING: %12.3f us       Read_cam_frame()\n", tdiffv*1.0e6);
 
-            tdiff = info_time_diff(functionTestTimer00, functionTestTimerStart);
-            tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-            printf("        Sub-timing  Wait for image     %12.3f us  - Expecting %12.3f us\n", tdiffv*1.0e6, imWaitTimeAve*1.0e6);
+    //TEST TIMING
+    /*
+    	// Total time
+        tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
+        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 
-            tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
-            tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
-            printf("        Sub-timing  Process image     %12.3f us\n", tdiffv*1.0e6);
+            if(tdiffv > 600.0e-6) //imWaitTimeAve*1.2)
+            {
+                printf("TIMING WARNING: %12.3f us       Read_cam_frame()\n", tdiffv*1.0e6);
 
-            fflush(stdout);
-        }
-*/  
+                tdiff = info_time_diff(functionTestTimer00, functionTestTimerStart);
+                tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                printf("        Sub-timing  Wait for image     %12.3f us  - Expecting %12.3f us\n", tdiffv*1.0e6, imWaitTimeAve*1.0e6);
+
+                tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
+                tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                printf("        Sub-timing  Process image     %12.3f us\n", tdiffv*1.0e6);
+
+                fflush(stdout);
+            }
+    */
 
     return(0);
 }
