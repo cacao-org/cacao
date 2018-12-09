@@ -241,10 +241,12 @@ int_fast8_t AOloopControl_IOtools_AveStream(const char *IDname, double alpha, co
 
 
 
+
+
 /**
  * ## Purpose
  * 
- * Align image stream in realtime\n
+ * Align image stream in real-time\n
  * 
  * ## Arguments
  * 
@@ -264,9 +266,6 @@ int_fast8_t AOloopControl_IOtools_AveStream(const char *IDname, double alpha, co
  * @return number of iteration [int]
  * 
  * 
- * 
- * @note sched_setscheduler and seteuid not supported under OS-X
- * @warning This function does nothing useful 
  * 
  * 
  * \ingroup RTfunctions
