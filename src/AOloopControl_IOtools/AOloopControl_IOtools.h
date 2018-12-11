@@ -90,6 +90,16 @@ long AOloopControl_IOtools_3Dloadcreate_shmim(const char *name, const char *fnam
 /** @brief Average data stream */
 int_fast8_t AOloopControl_IOtools_AveStream(const char *IDname, double alpha, const char *IDname_out_ave, const char *IDname_out_AC, const char *IDname_out_RMS);
 
+/** @brief Aligns data stream */
+int_fast8_t AOloopControl_IOtools_imAlignStream(
+    const char    *IDname,
+          int      xbox0,
+          int      ybox0,
+    const char    *IDref_name,
+    const char    *IDout_name,
+          int      insem
+);
+
 /** @brief Induces temporal offset between input and output streams */
 long AOloopControl_IOtools_frameDelay(const char *IDin_name, const char *IDkern_name, const char *IDout_name, int insem);
 

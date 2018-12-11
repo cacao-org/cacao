@@ -191,6 +191,16 @@ int_fast8_t AOloopControl_IOtools_AveStream_cli() {
 }
 
 
+/** @brief Aligns data stream */
+int_fast8_t AOloopControl_IOtools_imAlignStream_cli() {
+	if(CLI_checkarg(1,4)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,4)+CLI_checkarg(5,3)+CLI_checkarg(6,2)==0) {
+		AOloopControl_IOtools_imAlignStream(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.string, data.cmdargtoken[6].val.numl);
+		return 0;
+	}
+	else return 1;
+}
+
+
 /** @brief CLI function for AOloopControl_frameDelay */
 int_fast8_t AOloopControl_IOtools_frameDelay_cli()
 {
@@ -200,6 +210,7 @@ int_fast8_t AOloopControl_IOtools_frameDelay_cli()
     }
     else        return 1;
 }
+
 
 
 /** @brief CLI function for AOloopControl_stream3Dto2D */
@@ -283,6 +294,8 @@ int_fast8_t init_AOloopControl_IOtools()
 
 
     RegisterCLIcommand("aveACshmim", __FILE__, AOloopControl_IOtools_AveStream_cli, "average and AC shared mem image", "<input image> <coeff> <output image ave> <output AC> <output RMS>" , "aveACshmim imin 0.01 outave outAC outRMS", "int AOloopControl_IOtools_AveStream(char *IDname, double alpha, char *IDname_out_ave, char *IDname_out_AC, char *IDname_out_RMS)");
+
+	RegisterCLIcommand("alignshmim", __FILE__, AOloopControl_IOtools_imAlignStream_cli, "align image stream to reference", "<input stream> <box x offset> <box y offset> <ref stream> <output stream> <sem index>" , "alignshmim imin 100 100 imref imout 3", "int_fast8_t AOloopControl_IOtools_imAlignStream(const char *IDname, int xbox0, int ybox0, const char *IDref_name, const char *IDout_name, int insem)");
 
     RegisterCLIcommand("aolframedelay", __FILE__, AOloopControl_IOtools_frameDelay_cli, "introduce temporal delay", "<in> <temporal kernel> <out> <sem index>","aolframedelay in kern out 0","long AOloopControl_IOtools_frameDelay(const char *IDin_name, const char *IDkern_name, const char *IDout_name, int insem)");
 
