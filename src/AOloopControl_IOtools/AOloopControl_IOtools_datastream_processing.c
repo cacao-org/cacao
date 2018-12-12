@@ -389,8 +389,8 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
             }
         }
 
-	xoffset -= 0.5*xboxsize - 0.5;
-	yoffset -= 0.5*yboxsize - 0.5;
+	xoffset = 0.5*xboxsize - 0.5;
+	yoffset = 0.5*yboxsize - 0.5;
     printf("offset = %4.2f %4.2f\n", xoffset, yoffset);
 
     fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
