@@ -274,18 +274,18 @@ int_fast8_t AOloopControl_IOtools_AveStream(const char *IDname, double alpha, co
 
 int_fast8_t AOloopControl_IOtools_imAlignStream(
     const char    *IDname,
-          int      xbox0,
-          int      ybox0,
+    int      xbox0,
+    int      ybox0,
     const char    *IDref_name,
     const char    *IDout_name,
-          int      insem
+    int      insem
 )
 {
     long IDin, IDref, IDout, IDtmp;
     uint32_t xboxsize, yboxsize;
     uint32_t xsize, ysize;
     long cnt;
-    
+
     long IDdark;
 
     long xoffset, yoffset;
@@ -298,77 +298,104 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     xboxsize = data.image[IDref].md[0].size[0];
     yboxsize = data.image[IDref].md[0].size[1];
 
-	// is there a dark ?
-	IDdark = image_ID("dark");
+    // is there a dark ?
+    IDdark = image_ID("dark");
+
 
     IDtmp = create_2Dimage_ID("imAlign_tmp", xboxsize, yboxsize);
 
-  //  for(;;)
-  //  {
-        if(data.image[IDin].md[0].sem==0)
+	// dark-subtracted full frame image
+    uint32_t IDin1;
+    IDin1 = create_2Dimage_ID("alignintmpim", xsize, ysize);
+
+    uint8_t atype;
+    atype = data.image[IDin].md[0].atype;
+
+    if(IDdark != -1)
+    {
+        if(atype == _DATATYPE_FLOAT)
         {
-            while(cnt==data.image[IDin].md[0].cnt0) // test if new frame exists
-                usleep(5);
-            cnt = data.image[IDin].md[0].cnt0;
+            long ii;
+            for(ii=0; ii<xsize*ysize; ii++)
+                data.image[IDin1].array.F[ii] = data.image[IDin].array.F[ii] - data.image[IDdark].array.F[ii];
         }
-        else
-            sem_wait(data.image[IDin].semptr[insem]);
-
-
-		
-
-        // copy box into tmp image
-        long ii, jj;
-        if(IDdark != -1)
+        if(atype == _DATATYPE_INT16)
         {
-        for(ii=0; ii<xboxsize; ii++)
-            for(jj=0; jj<yboxsize; jj++)
+            long ii;
+            for(ii=0; ii<xsize*ysize; ii++)
+                data.image[IDin1].array.F[ii] = 1.0*data.image[IDin].array.SI16[ii] - data.image[IDdark].array.F[ii];
+        }
+    }
+    else
+    {
+        if(atype == _DATATYPE_FLOAT)
+        {
+            long ii;
+            for(ii=0; ii<xsize*ysize; ii++)
+                data.image[IDin1].array.F[ii] = data.image[IDin].array.F[ii];
+        }
+        if(atype == _DATATYPE_INT16)
+        {
+            long ii;
+            for(ii=0; ii<xsize*ysize; ii++)
+                data.image[IDin1].array.F[ii] = 1.0*data.image[IDin].array.SI16[ii];
+        }
+    }
+
+
+    //  for(;;)
+    //  {
+    if(data.image[IDin].md[0].sem==0)
+    {
+        while(cnt==data.image[IDin].md[0].cnt0) // test if new frame exists
+            usleep(5);
+        cnt = data.image[IDin].md[0].cnt0;
+    }
+    else
+        sem_wait(data.image[IDin].semptr[insem]);
+
+
+
+
+    // copy box into tmp image
+    long ii, jj;
+
+    for(ii=0; ii<xboxsize; ii++)
+        for(jj=0; jj<yboxsize; jj++)
+        {
+            long ii1, jj1;
+
+            ii1 = ii + xbox0;
+            jj1 = jj + ybox0;
+            data.image[IDtmp].array.F[jj*xboxsize+ii] = 1.0*data.image[IDin1].array.F[jj1*xsize+ii1];
+        }
+
+
+    // compute cross correlation
+    fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
+
+
+    // find the correlation peak
+    float vmax = 0.0;
+    long ID;
+    ID = image_ID("tmpCorr");
+    for(ii=0; ii<xboxsize; ii++)
+        for(jj=0; jj<yboxsize; jj++)
+        {
+            if(data.image[ID].array.F[jj*xboxsize+ii] > vmax)
             {
-                long ii1, jj1;
-
-                ii1 = ii + xbox0;
-                jj1 = jj + ybox0;
-                data.image[IDtmp].array.F[jj*xboxsize+ii] = 1.0*data.image[IDin].array.SI16[jj1*xsize+ii1] - data.image[IDdark].array.F[jj1*xsize+ii1];
+                vmax = data.image[ID].array.F[jj*xboxsize+ii];
+                xoffset = ii;
+                yoffset = jj;
             }
-		}
-		else
-		{
-			for(ii=0; ii<xboxsize; ii++)
-            for(jj=0; jj<yboxsize; jj++)
-            {
-                long ii1, jj1;
+        }
 
-                ii1 = ii + xbox0;
-                jj1 = jj + ybox0;
-                data.image[IDtmp].array.F[jj*xboxsize+ii] = 1.0*data.image[IDin].array.SI16[jj1*xsize+ii1];
-            }
-		}
+    printf("offset = %ld %ld\n", xoffset, yoffset);
 
-        // compute cross correlation
-        fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
-      //  permut("tmpCorr");
-        
-        
+    fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
 
-        // find the correlation peak
-        float vmax = 0.0;
-        long ID;
-        ID = image_ID("tmpCorr");
-        for(ii=0; ii<xboxsize; ii++)
-            for(jj=0; jj<yboxsize; jj++)
-            {
-                if(data.image[ID].array.F[jj*xboxsize+ii] > vmax)
-                {
-                    vmax = data.image[ID].array.F[jj*xboxsize+ii];
-                    xoffset = ii;
-                    yoffset = jj;
-                }
-            }
-
-        printf("offset = %ld %ld\n", ii, jj);
-
-       // delete_image_ID("tmpCorr");
-   // }
+    // delete_image_ID("tmpCorr");
+    // }
 
     return 0;
 }
