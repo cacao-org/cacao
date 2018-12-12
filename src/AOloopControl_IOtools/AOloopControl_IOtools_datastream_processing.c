@@ -372,8 +372,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
 
     // compute cross correlation
-    //fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
-	fft_correlation(IDref_name, IDref_name, "tmpCorr");
+    fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
 
     // find the correlation peak
     float vmax = 0.0;
