@@ -346,7 +346,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
         // compute cross correlation
         fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
-        permut("tmpCorr");
+      //  permut("tmpCorr");
         
         
 
