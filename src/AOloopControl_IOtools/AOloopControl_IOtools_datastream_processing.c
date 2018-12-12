@@ -281,7 +281,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     int      insem
 )
 {
-    long IDin, IDref, IDout, IDtmp;
+    uint32_t IDin, IDref, IDtmp;
     uint32_t xboxsize, yboxsize;
     uint32_t xsize, ysize;
     long cnt;
@@ -311,130 +311,156 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     uint8_t atype;
     atype = data.image[IDin].md[0].atype;
 
-    if(IDdark != -1)
+	// create output stream
+	uint32_t IDout;
+	uint32_t *sizearray;
+    sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+    sizearray[0] = xsize;
+    sizearray[1] = ysize;
+    IDout = create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+    COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
+    free(sizearray);
+
+
+
+    for(;;)
     {
-        if(atype == _DATATYPE_FLOAT)
+        if(IDdark != -1)
         {
-            long ii;
-            for(ii=0; ii<xsize*ysize; ii++)
-                data.image[IDin1].array.F[ii] = data.image[IDin].array.F[ii] - data.image[IDdark].array.F[ii];
-        }
-        if(atype == _DATATYPE_INT16)
-        {
-            long ii;
-            for(ii=0; ii<xsize*ysize; ii++)
-                data.image[IDin1].array.F[ii] = 1.0*data.image[IDin].array.SI16[ii] - data.image[IDdark].array.F[ii];
-        }
-    }
-    else
-    {
-        if(atype == _DATATYPE_FLOAT)
-        {
-            long ii;
-            for(ii=0; ii<xsize*ysize; ii++)
-                data.image[IDin1].array.F[ii] = data.image[IDin].array.F[ii];
-        }
-        if(atype == _DATATYPE_INT16)
-        {
-            long ii;
-            for(ii=0; ii<xsize*ysize; ii++)
-                data.image[IDin1].array.F[ii] = 1.0*data.image[IDin].array.SI16[ii];
-        }
-    }
-
-
-    //  for(;;)
-    //  {
-    if(data.image[IDin].md[0].sem==0)
-    {
-        while(cnt==data.image[IDin].md[0].cnt0) // test if new frame exists
-            usleep(5);
-        cnt = data.image[IDin].md[0].cnt0;
-    }
-    else
-        sem_wait(data.image[IDin].semptr[insem]);
-
-
-
-
-    // copy box into tmp image
-    long ii, jj;
-
-    for(ii=0; ii<xboxsize; ii++)
-        for(jj=0; jj<yboxsize; jj++)
-        {
-            long ii1, jj1;
-
-            ii1 = ii + xbox0;
-            jj1 = jj + ybox0;
-            data.image[IDtmp].array.F[jj*xboxsize+ii] = 1.0*data.image[IDin1].array.F[jj1*xsize+ii1];
-        }
-
-
-    // compute cross correlation
-    fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
-
-    // find the correlation peak
-    float vmax = 0.0;
-    long ID;
-    long xoffset0, yoffset0;
-    ID = image_ID("tmpCorr");
-    for(ii=0; ii<xboxsize; ii++)
-        for(jj=0; jj<yboxsize; jj++)
-        {
-            if(data.image[ID].array.F[jj*xboxsize+ii] > vmax)
+            if(atype == _DATATYPE_FLOAT)
             {
-                vmax = data.image[ID].array.F[jj*xboxsize+ii];
-                xoffset0 = ii;
-                yoffset0 = jj;
+                long ii;
+                for(ii=0; ii<xsize*ysize; ii++)
+                    data.image[IDin1].array.F[ii] = data.image[IDin].array.F[ii] - data.image[IDdark].array.F[ii];
+            }
+            if(atype == _DATATYPE_INT16)
+            {
+                long ii;
+                for(ii=0; ii<xsize*ysize; ii++)
+                    data.image[IDin1].array.F[ii] = 1.0*data.image[IDin].array.SI16[ii] - data.image[IDdark].array.F[ii];
+            }
+        }
+        else
+        {
+            if(atype == _DATATYPE_FLOAT)
+            {
+                long ii;
+                for(ii=0; ii<xsize*ysize; ii++)
+                    data.image[IDin1].array.F[ii] = data.image[IDin].array.F[ii];
+            }
+            if(atype == _DATATYPE_INT16)
+            {
+                long ii;
+                for(ii=0; ii<xsize*ysize; ii++)
+                    data.image[IDin1].array.F[ii] = 1.0*data.image[IDin].array.SI16[ii];
             }
         }
 
-    xoffset = 1.0*xoffset0;
-    yoffset = 1.0*yoffset0;
-    float krad;
-    krad = 0.2*xboxsize;
-    float krad2;
-    krad2 = krad*krad;
 
-    int kiter;
-    int NBkiter = 5;
-    for(kiter=0; kiter<NBkiter; kiter++)
-    {
-        double tmpxs = 0.0;
-        double tmpys = 0.0;
-        double tmps = 0.0;
+
+        if(data.image[IDin].md[0].sem==0)
+        {
+            while(cnt==data.image[IDin].md[0].cnt0) // test if new frame exists
+                usleep(5);
+            cnt = data.image[IDin].md[0].cnt0;
+        }
+        else
+            sem_wait(data.image[IDin].semptr[insem]);
+
+
+
+
+        // copy box into tmp image
+        long ii, jj;
+
         for(ii=0; ii<xboxsize; ii++)
             for(jj=0; jj<yboxsize; jj++)
             {
-                float dx, dy, dx2, dy2;
-                float kcoeff;
+                long ii1, jj1;
 
-                dx = 1.0*ii - xoffset;
-                dy = 1.0*jj - yoffset;
-                dx2 = dx*dx;
-                dy2 = dy*dy;
-                kcoeff = exp(-(dx2+dy2)/krad2);
-
-                tmpxs += kcoeff*ii*data.image[ID].array.F[jj*xboxsize+ii];
-                tmpys += kcoeff*jj*data.image[ID].array.F[jj*xboxsize+ii];
-                tmps += kcoeff*data.image[ID].array.F[jj*xboxsize+ii];
+                ii1 = ii + xbox0;
+                jj1 = jj + ybox0;
+                data.image[IDtmp].array.F[jj*xboxsize+ii] = 1.0*data.image[IDin1].array.F[jj1*xsize+ii1];
             }
-        xoffset = tmpxs/tmps;
-        yoffset = tmpys/tmps;
-        printf("%2d center = %4.2f %4.2f\n", kiter, xoffset, yoffset);
+
+
+        // compute cross correlation
+        fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
+
+        // find the correlation peak
+        float vmax = 0.0;
+        long ID;
+        long xoffset0, yoffset0;
+        ID = image_ID("tmpCorr");
+        for(ii=0; ii<xboxsize; ii++)
+            for(jj=0; jj<yboxsize; jj++)
+            {
+                if(data.image[ID].array.F[jj*xboxsize+ii] > vmax)
+                {
+                    vmax = data.image[ID].array.F[jj*xboxsize+ii];
+                    xoffset0 = ii;
+                    yoffset0 = jj;
+                }
+            }
+
+        xoffset = 1.0*xoffset0;
+        yoffset = 1.0*yoffset0;
+        float krad;
+        krad = 0.2*xboxsize;
+        float krad2;
+        krad2 = krad*krad;
+
+        int kiter;
+        int NBkiter = 3;
+        for(kiter=0; kiter<NBkiter; kiter++)
+        {
+            double tmpxs = 0.0;
+            double tmpys = 0.0;
+            double tmps = 0.0;
+            for(ii=0; ii<xboxsize; ii++)
+                for(jj=0; jj<yboxsize; jj++)
+                {
+                    float dx, dy, dx2, dy2;
+                    float kcoeff;
+
+                    dx = 1.0*ii - xoffset;
+                    dy = 1.0*jj - yoffset;
+                    dx2 = dx*dx;
+                    dy2 = dy*dy;
+                    kcoeff = exp(-(dx2+dy2)/krad2);
+
+                    tmpxs += kcoeff*ii*data.image[ID].array.F[jj*xboxsize+ii];
+                    tmpys += kcoeff*jj*data.image[ID].array.F[jj*xboxsize+ii];
+                    tmps += kcoeff*data.image[ID].array.F[jj*xboxsize+ii];
+                }
+            xoffset = tmpxs/tmps;
+            yoffset = tmpys/tmps;
+          //  printf("%2d center = %4.2f %4.2f\n", kiter, xoffset, yoffset);
+        }
+        delete_image_ID("tmpCorr");
+
+
+        xoffset = - (xoffset - 0.5*xboxsize);
+        yoffset = - (yoffset - 0.5*yboxsize);
+
+        //printf("offset = %4.2f %4.2f\n", xoffset, yoffset);
+
+        fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
+        
+        // write to IDout
+        long framesize = sizeof(float)*xsize*ysize;
+        IDtmp = image_ID("alignouttmp");
+        data.image[IDout].md[0].write = 1;
+        memcpy(data.image[IDout].array.F, data.image[IDtmp].array.F, framesize);
+        COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
+        data.image[IDout].md[0].cnt0++;
+        data.image[IDout].md[0].write = 0;
+
+
+        delete_image_ID("alignouttmp");
     }
-
-
-    xoffset = - (xoffset - 0.5*xboxsize);
-    yoffset = - (yoffset - 0.5*yboxsize);
-
-    printf("offset = %4.2f %4.2f\n", xoffset, yoffset);
-
-    fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
-
-    // delete_image_ID("tmpCorr");
-    // }
+    delete_image_ID("alignintmpim");
+    delete_image_ID("imAlign_tmp");
 
     return 0;
 }
