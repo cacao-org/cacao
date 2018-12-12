@@ -449,6 +449,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
         fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
         
         // write to IDout
+        list_image_ID();
         long framesize = sizeof(float)*xsize*ysize;
         IDtmp = image_ID("alignouttmp");
         data.image[IDout].md[0].write = 1;
