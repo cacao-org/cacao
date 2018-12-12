@@ -449,13 +449,13 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
         fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
         
         // write to IDout
-/*        long framesize = sizeof(float)*xsize*ysize;
+        long framesize = sizeof(float)*xsize*ysize;
         IDtmp = image_ID("alignouttmp");
         data.image[IDout].md[0].write = 1;
-        memcpy(data.image[IDout].array.F, data.image[IDtmp].array.F, framesize);
+        //memcpy(data.image[IDout].array.F, data.image[IDtmp].array.F, framesize);
         COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
         data.image[IDout].md[0].cnt0++;
-        data.image[IDout].md[0].write = 0;*/
+        data.image[IDout].md[0].write = 0;
 
 
         delete_image_ID("alignouttmp");
