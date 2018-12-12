@@ -285,6 +285,8 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     uint32_t xboxsize, yboxsize;
     uint32_t xsize, ysize;
     long cnt;
+    
+    long IDdark;
 
     long xoffset, yoffset;
 
@@ -295,6 +297,9 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     IDref = image_ID(IDref_name);
     xboxsize = data.image[IDref].md[0].size[0];
     yboxsize = data.image[IDref].md[0].size[1];
+
+	// is there a dark ?
+	IDdark = image_ID("dark");
 
     IDtmp = create_2Dimage_ID("imAlign_tmp", xboxsize, yboxsize);
 
@@ -309,8 +314,13 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
         else
             sem_wait(data.image[IDin].semptr[insem]);
 
+
+		
+
         // copy box into tmp image
         long ii, jj;
+        if(IDdark != -1)
+        {
         for(ii=0; ii<xboxsize; ii++)
             for(jj=0; jj<yboxsize; jj++)
             {
@@ -318,8 +328,21 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
                 ii1 = ii + xbox0;
                 jj1 = jj + ybox0;
-                data.image[IDtmp].array.F[jj*xboxsize+ii] = data.image[IDin].array.F[jj*xsize+ii];
+                data.image[IDtmp].array.F[jj*xboxsize+ii] = data.image[IDin].array.SI16[jj*xsize+ii] - data.image[IDdark].array.F[jj*xysize+ii];
             }
+		}
+		else
+		{
+			for(ii=0; ii<xboxsize; ii++)
+            for(jj=0; jj<yboxsize; jj++)
+            {
+                long ii1, jj1;
+
+                ii1 = ii + xbox0;
+                jj1 = jj + ybox0;
+                data.image[IDtmp].array.F[jj*xboxsize+ii] = data.image[IDin].array.SI16[jj*xsize+ii];
+            }
+		}
 
         // compute cross correlation
         fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
