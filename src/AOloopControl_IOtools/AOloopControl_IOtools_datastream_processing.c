@@ -328,7 +328,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
                 ii1 = ii + xbox0;
                 jj1 = jj + ybox0;
-                data.image[IDtmp].array.F[jj*xboxsize+ii] = data.image[IDin].array.SI16[jj*xsize+ii] - data.image[IDdark].array.F[jj*xsize+ii];
+                data.image[IDtmp].array.F[jj*xboxsize+ii] = 1.0*data.image[IDin].array.SI16[jj1*xsize+ii1] - data.image[IDdark].array.F[jj1*xsize+ii1];
             }
 		}
 		else
@@ -340,7 +340,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
                 ii1 = ii + xbox0;
                 jj1 = jj + ybox0;
-                data.image[IDtmp].array.F[jj*xboxsize+ii] = data.image[IDin].array.SI16[jj*xsize+ii];
+                data.image[IDtmp].array.F[jj*xboxsize+ii] = 1.0*data.image[IDin].array.SI16[jj1*xsize+ii1];
             }
 		}
 
