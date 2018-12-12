@@ -298,8 +298,8 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
     IDtmp = create_2Dimage_ID("imAlign_tmp", xboxsize, yboxsize);
 
-    for(;;)
-    {
+  //  for(;;)
+  //  {
         if(data.image[IDin].md[0].sem==0)
         {
             while(cnt==data.image[IDin].md[0].cnt0) // test if new frame exists
@@ -323,6 +323,8 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
         // compute cross correlation
         fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
+        
+        
 
         // find the correlation peak
         float vmax = 0.0;
@@ -342,7 +344,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
         printf("offset = %ld %ld\n", ii, jj);
 
         delete_image_ID("tmpCorr");
-    }
+   // }
 
     return 0;
 }
