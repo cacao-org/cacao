@@ -453,7 +453,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
         IDtmp = image_ID("alignouttmp");
         data.image[IDout].md[0].write = 1;
         //memcpy(data.image[IDout].array.F, data.image[IDtmp].array.F, framesize);
-        COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
+        //COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
         data.image[IDout].md[0].cnt0++;
         data.image[IDout].md[0].write = 0;
 
