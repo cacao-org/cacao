@@ -414,7 +414,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
                 dy = 1.0*jj - yoffset;
                 dx2 = dx*dx;
                 dy2 = dy*dy;
-                kcoeff = exp((dx2+dy2)/krad2);
+                kcoeff = exp(-(dx2+dy2)/krad2);
 
                 tmpxs += kcoeff*ii*data.image[ID].array.F[jj*xboxsize+ii];
                 tmpys += kcoeff*jj*data.image[ID].array.F[jj*xboxsize+ii];
