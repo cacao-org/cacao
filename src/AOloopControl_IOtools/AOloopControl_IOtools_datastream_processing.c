@@ -304,7 +304,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
     IDtmp = create_2Dimage_ID("imAlign_tmp", xboxsize, yboxsize);
 
-	// dark-subtracted full frame image
+    // dark-subtracted full frame image
     uint32_t IDin1;
     IDin1 = create_2Dimage_ID("alignintmpim", xsize, ysize);
 
@@ -377,6 +377,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     // find the correlation peak
     float vmax = 0.0;
     long ID;
+    long xoffset0, yoffset0;
     ID = image_ID("tmpCorr");
     for(ii=0; ii<xboxsize; ii++)
         for(jj=0; jj<yboxsize; jj++)
@@ -384,14 +385,50 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
             if(data.image[ID].array.F[jj*xboxsize+ii] > vmax)
             {
                 vmax = data.image[ID].array.F[jj*xboxsize+ii];
-                xoffset = 1.0*ii;
-                yoffset = 1.0*jj;
+                xoffset0 = ii;
+                yoffset0 = jj;
             }
         }
 
-	xoffset = - (xoffset - 0.5*xboxsize - 0.5);
-	yoffset = - (yoffset - 0.5*yboxsize - 0.5);
-    
+    xoffset = 1.0*xoffset0;
+    yoffset = 1.0*yoffset0;
+    float krad;
+    krad = 0.2*xboxsize;
+    float krad2;
+    krad2 = krad*krad;
+
+    int kiter;
+    int NBkiter = 5;
+    for(kiter=0; kiter<NBkiter; kiter++)
+    {
+        double tmpxs = 0.0;
+        double tmpys = 0.0;
+        double tmps = 0.0;
+        for(ii=0; ii<xboxsize; ii++)
+            for(jj=0; jj<yboxsize; jj++)
+            {
+                float dx, dy, dx2, dy2;
+                float kcoeff;
+
+                dx = 1.0*ii - xoffset;
+                dy = 1.0*jj - yoffset;
+                dx2 = dx*dx;
+                dy2 = dy*dy;
+                kcoeff = exp((dx2+dy2)/krad2);
+
+                tmpxs += kcoeff*ii;
+                tmpys += kcoeff*jj;
+                tmps += kcoeff;
+            }
+        xoffset = tmpxs/tmps;
+        yoffset = tmpys/tmps;
+        printf("%2d center = %4.2f %4.2f\n", kiter, xoffset, yoffset);
+    }
+
+
+    xoffset = - (xoffset - 0.5*xboxsize - 0.5);
+    yoffset = - (yoffset - 0.5*yboxsize - 0.5);
+
     printf("offset = %4.2f %4.2f\n", xoffset, yoffset);
 
     fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
