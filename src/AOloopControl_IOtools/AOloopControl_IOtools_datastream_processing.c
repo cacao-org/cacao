@@ -443,13 +443,12 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
         xoffset = - (xoffset - 0.5*xboxsize);
         yoffset = - (yoffset - 0.5*yboxsize);
 
-        printf("offset = %4.2f %4.2f\n", xoffset, yoffset);
-        fflush(stdout);
+       // printf("offset = %4.2f %4.2f\n", xoffset, yoffset);
+       // fflush(stdout);
 
         fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
         
         // write to IDout
-        list_image_ID();
         long IDouttmp;
         long framesize = sizeof(float)*xsize*ysize;
         IDouttmp = image_ID("alignouttmp");
