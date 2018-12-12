@@ -343,7 +343,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
         printf("offset = %ld %ld\n", ii, jj);
 
-        delete_image_ID("tmpCorr");
+       // delete_image_ID("tmpCorr");
    // }
 
     return 0;
