@@ -288,7 +288,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
     long IDdark;
 
-    long xoffset, yoffset;
+    float xoffset, yoffset;
 
     IDin = image_ID(IDname);
     xsize = data.image[IDin].md[0].size[0];
@@ -374,7 +374,6 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     // compute cross correlation
     fft_correlation("imAlign_tmp", IDref_name, "tmpCorr");
 
-
     // find the correlation peak
     float vmax = 0.0;
     long ID;
@@ -385,12 +384,14 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
             if(data.image[ID].array.F[jj*xboxsize+ii] > vmax)
             {
                 vmax = data.image[ID].array.F[jj*xboxsize+ii];
-                xoffset = ii;
-                yoffset = jj;
+                xoffset = 1.0*ii;
+                yoffset = 1.0*jj;
             }
         }
 
-    printf("offset = %ld %ld\n", xoffset, yoffset);
+	xoffset -= 0.5*xsize - 0.5;
+	yoffset -= 0.5*ysize - 0.5;
+    printf("offset = %4.2f %4.2f\n", xoffset, yoffset);
 
     fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
 
