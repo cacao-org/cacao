@@ -597,7 +597,7 @@ int AOloopControl_RTstreamLOG_GUI(int loop)
         ch = getch();
         erase();
         attron(A_BOLD);
-        sprintf(title, "LOOP %d  REAL-TIME STREAMS MONITOR      PRESS x TO STOP MONITOR");
+        sprintf(title, "AO LOOP REAL-TIME STREAMS MONITOR      PRESS x TO STOP MONITOR");
         print_header_line(" PRESS x TO STOP MONITOR ", '-', wcol);
         printw("  s: Save single    t: Add/remove to/from set   S: Save set ON   U: Save set OFF\n");
         printw("  o: ON/OFF single  O: Set ON   F: Set OFF      Z: Zero index set\n");

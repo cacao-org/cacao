@@ -233,6 +233,8 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     if(sprintf(imname, "aol%ld_modeval", loop) < 1)// measured from WFS
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     IDmodeval = read_sharedmem_image(imname);
+    int modeval_semwaitindex = ImageStreamIO_getsemwaitindex(data.image[IDmodeval], 4);
+    //data.image[IDmodeval].semReadPID[modeval_semwaitindex] = getpid();
 
 
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval, imname);
@@ -672,7 +674,9 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 cnt = data.image[IDmodeval].md[0].cnt0;
             }
             else
-                sem_wait(data.image[IDmodeval].semptr[4]);
+				ImageStreamIO_semwait(data.image[IDmodeval], modeval_semwaitindex);
+//                sem_wait(data.image[IDmodeval].semptr[modeval_semwait]);
+
 
             // drive sem4 to zero
             //TEST

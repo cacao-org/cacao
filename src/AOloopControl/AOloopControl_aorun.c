@@ -542,7 +542,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 if((data.processinfo==1)&&(processinfoUpdate==1))
                 {
                     char msgstring[200];
-                    sprintf(msgstring, "LOOP RUNNING", tdiffv);
+                    sprintf(msgstring, "LOOP RUNNING");
                     processinfo_WriteMessage(processinfo, msgstring);
                     processinfoUpdate = 0;
                 }
