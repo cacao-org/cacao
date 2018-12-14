@@ -27,7 +27,7 @@
 #include <pthread.h>
 #include "info/info.h" 
 
-//libraries created by O. Guyon 
+#include "ImageStreamIO/ImageStreamIO.h"
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
 #include "00CORE/00CORE.h"

@@ -64,7 +64,6 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-
 // includes mode filtering (limits, multf)
 //
 long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
