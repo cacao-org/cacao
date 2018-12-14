@@ -31,7 +31,8 @@
 #include <pthread.h>
 #include "info/info.h" 
 
-#include "AOloopControl/AOloopControl.h"
+
+#include "ImageStreamIO/ImageStreamIO.h"
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
 #include "00CORE/00CORE.h"
@@ -232,7 +233,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     if(sprintf(imname, "aol%ld_modeval", loop) < 1)// measured from WFS
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     IDmodeval = read_sharedmem_image(imname);
-    int modeval_semwaitindex = ImageStreamIO_getsemwaitindex(data.image[IDmodeval], 4);
+    int modeval_semwaitindex = ImageStreamIO_getsemwaitindex(&data.image[IDmodeval], 4);
     //data.image[IDmodeval].semReadPID[modeval_semwaitindex] = getpid();
 
 
@@ -673,7 +674,7 @@ long __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 cnt = data.image[IDmodeval].md[0].cnt0;
             }
             else
-				ImageStreamIO_semwait(data.image[IDmodeval], modeval_semwaitindex);
+				ImageStreamIO_semwait(&data.image[IDmodeval], modeval_semwaitindex);
 //                sem_wait(data.image[IDmodeval].semptr[modeval_semwait]);
 
 
