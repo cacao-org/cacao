@@ -47,7 +47,7 @@ git clone --recursive https://github.com/cacao-org/cacao cacao
 ```
 
 
-### Compiling with cmake (preferred option)
+### Compiling with cmake
 
 
 ```bash
@@ -66,28 +66,6 @@ sudo mv usrlocal.conf /etc/ld.so.conf.d/
 sudo ldconfig -v
 ```
 
-
-### Compiling with GNU autotools
-
-```bash
-cd cacao
-autoreconf -vif
-./configure
-make
-make install
-```
-
-
-
-### Notes and troubleshooting
-
-
-Note: On OS X, use gcc-mp-5 for openMP:
-
-```bash
-./configure "CC=/opt/local/bin/gcc-mp-5" CPPFLAGS="-I/usr/include/malloc/ -I/opt/local/include/readline" LDFLAGS="-L/opt/local/lib/"
-(Replace "/opt/local/" is the location of your installed libraries. )
-```
 
 
 ---
@@ -147,6 +125,7 @@ See [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.h
 ## Documentation
 
 [Online documentation]( http://CACAO-org.github.io/cacao/index.html ) 
+
 
 ## Libraries
 
