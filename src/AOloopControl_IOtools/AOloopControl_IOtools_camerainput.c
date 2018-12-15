@@ -699,7 +699,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         {
             //			printf("WARNING: [%d] sem_trywait on aoloopcontrol_var.aoconfID_wfsim\n", (int) (semval - i));
             //			fflush(stdout);
-            sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+            //sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+            ImageStreamIO_semtrywait(&data.image[aoloopcontrol_var.aoconfID_wfsim], wfsim_semwaitindex);
         }
 
 
