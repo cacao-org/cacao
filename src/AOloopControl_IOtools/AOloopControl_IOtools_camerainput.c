@@ -549,11 +549,12 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     else
         semindex = 1;
 
+	int wfsim_semwaitindex = semindex;
 
 
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
-    int wfsim_semwaitindex = ImageStreamIO_getsemwaitindex(&data.image[aoloopcontrol_var.aoconfID_wfsim], semindex);
-
+   
+	
 
     // initialize camera averaging arrays if not already done
     if(avcamarraysInit==0)
@@ -581,11 +582,16 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     if(InitSem==1)
     {
-        sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
+		wfsim_semwaitindex = ImageStreamIO_getsemwaitindex(&data.image[aoloopcontrol_var.aoconfID_wfsim], semindex);
+        
+        sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[wfsim_semwaitindex], &semval);
         printf("INITIALIZING SEMAPHORE %d   %s   (%d)\n", semindex, data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name, semval);
         for(i=0; i<semval; i++)
-            sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+            sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[wfsim_semwaitindex]);
     }
+    else
+		semindex = wfsim_semwaitindex;
+
 
 #ifdef _PRINT_TEST
     printf("TEST - SEMAPHORE INITIALIZED\n");
