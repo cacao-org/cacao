@@ -89,8 +89,7 @@ $(document).ready(function(){initNavTree('page_DocumentingCode.html','');});
 <div class="textblock"><p>Instructions to build locally documentation and push it to repo.</p>
 <hr/>
 <h2>1. Setting up documentation</h2>
-<p>Documentation is built by doxygen in the ./dochtml/html directory. To set it up on you local repo, follow these steps AFTER you have cloned the repo </p><pre class="fragment">git push
-mkdir dochtml
+<p>Documentation is built by doxygen in the ./dochtml/html directory. To set it up on you local repo, follow these steps AFTER you have cloned the repo </p><pre class="fragment">mkdir dochtml
 mkdir dochtml/html
 cd dochtml/html
 git clone https://github.com/&lt;reponame&gt; .
@@ -99,8 +98,7 @@ git checkout gh-pages
 git branch -d master
 cd ../..
 </pre><p>For initial setup (creating gh-pages branch for the first time)</p>
-<pre class="fragment">git push
-mkdir dochtml
+<pre class="fragment">mkdir dochtml
 mkdir dochtml/html
 # exclude dochtml from repo
 echo "dochtml/" &gt;&gt; .gitignore
@@ -172,7 +170,7 @@ git push
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="page_coding_standards.html">Coding Standards</a></li>
-    <li class="footer">Generated on Sat Dec 15 2018 01:36:42 for cacao by
+    <li class="footer">Generated on Sat Dec 15 2018 01:47:30 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>
