@@ -590,6 +590,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         printf("INITIALIZING SEMAPHORE %d   %s   (%d)\n", semindex, data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name, semval);
         for(i=0; i<semval; i++)
             sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[wfsim_semwaitindex]);
+        sleep(10);//TEST
     }
     else
     {
