@@ -563,7 +563,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
             data.image[IDdm1].array.F[jj*dmxsize+ii] *= OPDamp/RMStot;
 
 
-    system("mkdir -p tmp");
+    if(system("mkdir -p tmp") != 0)
+		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+	
     save_fits("_testdm0", "!tmp/_testdm0.fits");
     save_fits("_testdm1", "!tmp/_testdm1.fits");
 
