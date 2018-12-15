@@ -28,6 +28,7 @@
 /* =============================================================================================== */
 /* =============================================================================================== */
 
+
 #include <math.h>
 #include <stdint.h>
 #include <unistd.h>
@@ -450,7 +451,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 	if( data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1] != data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[1])
 	{
 		char msgstring[200];
-		sprintf(msgstring, "ERROR: DM [%ld] and Poke [%ld] mismatch", data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[1], data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1]);
+		sprintf(msgstring, "ERROR: DM [%ld] and Poke [%ld] mismatch", (long) data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[1], (long) data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1]);
       if(data.processinfo == 1)
       {
           processinfo->loopstat = 4; // ERROR
