@@ -552,6 +552,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
+    int wfsim_semwaitindex = ImageStreamIO_getsemwaitindex(&data.image[aoloopcontrol_var.aoconfID_wfsim], semindex);
 
 
     // initialize camera averaging arrays if not already done
@@ -661,7 +662,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         if ( FORCE_REG_TIMING_val == 0 )
         {
             int rval;
-            rval = sem_wait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+            rval = ImageStreamIO_semwait(&data.image[aoloopcontrol_var.aoconfID_wfsim], wfsim_semwaitindex);            
+            //rval = sem_wait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
             if (rval == -1)
                 perror("sem_timedwait");
         }
