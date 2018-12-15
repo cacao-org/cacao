@@ -1420,6 +1420,14 @@ int AOloopControl_RTstreamLOG_saveloop(
                         t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 
                     fp = fopen(fnameinfo, "w");
+                    
+                    fprintf(fp, "# 1: Frame index   (i+NBframe*AOconf[loop].RTSLOGarray[rtlindex].FileBuffer)\n");
+                    fprintf(fp, "# 2: Loop counter  (data.image[IDininfo].array.UI64[i*5])\n");
+                    fprintf(fp, "# 3: Time offset since file origin\n");
+                    fprintf(fp, "# 4: Absolute Unix time\n");
+                    fprintf(fp, "# 5: counter 0\n");
+                    fprintf(fp, "# 6: counter 1\n");
+                    fprintf(fp, "#\n");
 
                     for(i=0; i<NBframe; i++)
                     {
