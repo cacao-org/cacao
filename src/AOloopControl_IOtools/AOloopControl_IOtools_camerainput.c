@@ -18,7 +18,7 @@
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
-//#define _PRINT_TEST
+#define _PRINT_TEST
 
 
 
@@ -554,7 +554,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
    
-   printf("READING IMAGE----------- %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
+   printf("READING IMAGE----------- %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);//TEST
    fflush(stdout);
 	
 
@@ -594,7 +594,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     else
     {
 		semindex = wfsim_semwaitindex;
-		printf("semindex = %d\n", semindex);
+		printf("semindex = %d\n", semindex);//TEST
 	}
 
 
