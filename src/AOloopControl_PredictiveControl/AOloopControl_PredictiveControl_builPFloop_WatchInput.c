@@ -168,7 +168,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
      char pinfoname[200];  // short name for the processinfo instance
      // avoid spaces, name should be human-readable
   
-     sprintf(pinfoname, "PFwatchInput-loop%d-block%d", loop, PFblock);
+     sprintf(pinfoname, "PFwatchInput-loop%ld-block%ld", loop, PFblock);
      processinfo = processinfo_shm_create(pinfoname, 0);
      processinfo->loopstat = 0; // loop initialization
      strcpy(processinfo->source_FUNCTION, __FUNCTION__);
