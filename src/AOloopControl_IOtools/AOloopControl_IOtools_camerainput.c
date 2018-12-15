@@ -554,7 +554,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
    
-   printf("READING IMAGE-----------\n");
+   printf("READING IMAGE----------- %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
    fflush(stdout);
 	
 
@@ -592,7 +592,10 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[wfsim_semwaitindex]);
     }
     else
+    {
 		semindex = wfsim_semwaitindex;
+		printf("semindex = %d\n", semindex);
+	}
 
 
 #ifdef _PRINT_TEST
