@@ -38,59 +38,62 @@ DATA __attribute__((used)) data;
 
 int main(int argc, char *argv[])
 {
-	char *AppName = "cacao";
+    char *AppName = "cacao";
 
-	printf(STYLE_BOLD);
-	printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
-	printf(STYLE_NO_BOLD);
-
-	
-	strcpy(data.package_name, PACKAGE_NAME);
-	strcpy(data.package_version, PACKAGE_VERSION);
-	strcpy(data.sourcedir, SOURCEDIR);
-	strcpy(data.configdir, CONFIGDIR);
+    printf(STYLE_BOLD);
+    printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
+    printf(STYLE_NO_BOLD);
 
 
+    strcpy(data.package_name, PACKAGE_NAME);
+    strcpy(data.package_version, PACKAGE_VERSION);
+    strcpy(data.sourcedir, SOURCEDIR);
+    strcpy(data.configdir, CONFIGDIR);
 
-	printf("\n");
-	printf("        %s version %s\n", data.package_name, data.package_version);
-	printf("        GNU General Public License v3.0\n");
-	printf("        Report bugs to : %s\n", PACKAGE_BUGREPORT);
+
+
+    printf("\n");
+    printf("        %s version %s\n", data.package_name, data.package_version);
+    printf("        GNU General Public License v3.0\n");
+    printf("        Report bugs to : %s\n", PACKAGE_BUGREPORT);
     printf("        Type \"help\" for instructions\n");
-	printf("        \n");
+    printf("        \n");
 
 
 
-	// initialize milk modules for which no function calls is included by default
+    // initialize milk modules for which no function calls is included by default
 
-	libinit_image_basic();
-	libinit_image_format();
-	libinit_psf();
-	libinit_img_reduce();
-	libinit_linARfilterPred();
-	libinit_ZernikePolyn();
-	libinit_linopt_imtools();
-	libinit_cudacomp();
+    libinit_image_basic();
+    libinit_image_format();
+    libinit_psf();
+    libinit_img_reduce();
+    libinit_linARfilterPred();
+    libinit_ZernikePolyn();
+    libinit_linopt_imtools();
+    libinit_cudacomp();
 
-	
-	// initialize modules specific to cacao
 
-	libinit_AOloopControl();
-	libinit_AOloopControl_PredictiveControl();
-	libinit_linARfilterPred();
-	libinit_AOloopControl_computeCalib();
-	libinit_FPAOloopControl();
-	libinit_AOloopControl_DM();
-	libinit_AOloopControl_compTools();
-	libinit_AOloopControl_acquireCalib();
+    // initialize modules specific to cacao
 
-	
-	printf("Starting CLI ...\n");
-	fflush(stdout);
-	
-	runCLI(argc, argv, AppName);
-	
-	printf("NORMAL EXIT\n");
-	
-	return 0;
+    libinit_AOloopControl();
+    libinit_AOloopControl_PredictiveControl();
+    libinit_linARfilterPred();
+    libinit_AOloopControl_computeCalib();
+    libinit_FPAOloopControl();
+    libinit_AOloopControl_DM();
+    libinit_AOloopControl_compTools();
+    libinit_AOloopControl_acquireCalib();
+
+
+
+
+
+    printf("Starting CLI ...\n");
+    fflush(stdout);
+
+    runCLI(argc, argv, AppName);
+
+    printf("NORMAL EXIT\n");
+
+    return 0;
 }
