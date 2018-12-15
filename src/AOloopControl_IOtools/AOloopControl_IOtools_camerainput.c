@@ -554,6 +554,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
    
+   printf("READING IMAGE-----------\n");
+   fflush(stdout);
 	
 
     // initialize camera averaging arrays if not already done
