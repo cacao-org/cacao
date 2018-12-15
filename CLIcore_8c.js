@@ -34,6 +34,8 @@ var CLIcore_8c =
     [ "runCLI", "CLIcore_8c.html#a167a57a5391116a1a11be9d81b387ea5", null ],
     [ "set_default_precision_double", "CLIcore_8c.html#aaae903153a32128cf13f841c527907cd", null ],
     [ "set_default_precision_single", "CLIcore_8c.html#a58f813ca559ecbde1ad32275d32b9f6c", null ],
+    [ "set_processinfoOFF", "CLIcore_8c.html#a93868b95a934bb6efde53a399ed8fbed", null ],
+    [ "set_processinfoON", "CLIcore_8c.html#a6cdaedfc91267321806efd6fac17d5c2", null ],
     [ "sig_handler", "CLIcore_8c.html#a4f31a6fd48ee5d4579ae4aaaa3cae285", null ],
     [ "user_function", "CLIcore_8c.html#ac22472c4ee36d70ae07159f83fb690d3", null ],
     [ "xmalloc", "CLIcore_8c.html#a90dfbfc4af01ed2fa845ad04b5f40ed8", null ],

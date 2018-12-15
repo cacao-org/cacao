@@ -1,9 +1,9 @@
 var AOloopControl__IOtools__camerainput_8c =
 [
+    [ "__attribute__", "AOloopControl__IOtools__camerainput_8c.html#a3bdc387d75a84dd14d5a52b1be16d971", null ],
     [ "AOloopControl_IOtools_camimage_extract2D_sharedmem_loop", "AOloopControl__IOtools__camerainput_8c.html#ad13aee4eff60f6ee2544875f9890770f", null ],
     [ "compute_function_dark_subtract", "AOloopControl__IOtools__camerainput_8c.html#a08adf8f45f2ea29016a5afc556a4de37", null ],
     [ "compute_function_imtotal", "AOloopControl__IOtools__camerainput_8c.html#ae528115f70c3ee4537c8c6f374ada43f", null ],
-    [ "Read_cam_frame", "AOloopControl__IOtools__camerainput_8c.html#a275196fb78a1b7413a18a2df3ebcf995", null ],
     [ "AOconf", "AOloopControl__IOtools__camerainput_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name", "AOloopControl__IOtools__camerainput_8c.html#a517aeb04849ec7ca55a2f17a0ed39dc2", null ],
     [ "AOLCOMPUTE_DARK_SUBTRACT_sem_name", "AOloopControl__IOtools__camerainput_8c.html#a2bc4b02c2021c0bcd0bf7c0ef8a1316e", null ],
@@ -13,6 +13,7 @@ var AOloopControl__IOtools__camerainput_8c =
     [ "AOLCOMPUTE_TOTAL_INIT", "AOloopControl__IOtools__camerainput_8c.html#a96cee5d0f6b5e68e80b4191a60083dc5", null ],
     [ "aoloopcontrol_var", "AOloopControl__IOtools__camerainput_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
     [ "arrayftmp", "AOloopControl__IOtools__camerainput_8c.html#ad8ff4c1042b8a554ff3f671ccbfe6c13", null ],
+    [ "arraystmp", "AOloopControl__IOtools__camerainput_8c.html#a14887f68efaf5fff21debefef45c053a", null ],
     [ "arrayutmp", "AOloopControl__IOtools__camerainput_8c.html#ac39858ce68e2199bae5b1e5669cd12f6", null ],
     [ "avcamarraysInit", "AOloopControl__IOtools__camerainput_8c.html#aff4e5acd229f86129440961b3272ae52", null ],
     [ "Average_cam_frames_dname", "AOloopControl__IOtools__camerainput_8c.html#a15bf87225e43ca5f1b9d05b1a14b06c0", null ],

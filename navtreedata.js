@@ -20,6 +20,7 @@ var NAVTREE =
       [ "Data Structure Index", "classes.html", null ],
       [ "Data Fields", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
+        [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", "functions_vars" ]
       ] ]
     ] ],
@@ -40,24 +41,26 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "00CORE_8c.html",
-"AOloopControl__IOtools__camerainput_8c.html#ad53086470a2fb4c9e57b950bef50e2c0",
-"AOloopControl__loop__onoff_8c.html",
-"COREMOD__arith_8c.html#a3ac28dbb735094c9dee66e55c271904f",
-"COREMOD__memory_8c.html#a55e30ef483e31f4dea2ab064b9bab2fb",
-"__install_2include_200CORE_8h_source.html",
-"__install_2include_2COREMOD__arith_8h.html#a4ce784efdc0c876c89a82c313f9db3fd",
-"__install_2include_2COREMOD__tools_8h.html#a9383571be0026fd23ec4464fa50aba26",
-"__install_2include_2img__reduce_8h_source.html",
-"calc__flex_8c.html#a2f59cc88e85e5455c62e4ef7ce095ea8",
-"functions_m.html",
-"image__format_8c.html#a912bb7d8c2b78ee437aac7fc185d7610",
-"page_CLI_Overview.html",
-"src_2AOloopControl__computeCalib_2AOloopControl__computeCalib_8h_source.html",
-"src_2COREMOD__memory_2COREMOD__memory_8h.html#a77d968806ac968187091bd49cd6e7d7d",
-"src_2image__basic_2image__basic_8h.html#ab79e66d436d823a0e92ed00f82e36ba7",
-"structAOLOOPCONTROL__CONF.html#a28afa60e8c9affb521ebce6ad4907308",
-"structDATA.html#a2522406c33b8f890757cfbd8db858f77",
-"structkdnode.html#ac14038f51e15cb1bb26abe6558d36a3d"
+"AOloopControl__DM__runtimecomp_8c.html#a9b9c6aa6b9270a9af545311c48a2b25b",
+"AOloopControl__computeCalib_8c.html#a7bc2cff562406d22807bc097e4bc1857",
+"CLIcore_8c.html#a6cdaedfc91267321806efd6fac17d5c2",
+"COREMOD__arith_8c.html#aef7ec8736b6332475973c1cc3b0bd201",
+"COREMOD__tools_8c.html#af29b6a5988ec5e09c82d7bd9b80cdb3c",
+"__install_2include_2AOloopControl__compTools_8h_source.html",
+"__install_2include_2COREMOD__memory_8h.html#a055d59f38c8a8bcbad6a285fab3a9131",
+"__install_2include_2image__basic_8h.html#a5e752be3a9de1140805fb33f86d97cf9",
+"calc__bison_8c.html#a15c9f7bd2f0e9686df5d9df4f3314aa9a201a8ab59571d58582381d4f34f173db",
+"cudacomp_8c.html#ad654a86af832bf54b9587bdb9fe730b7",
+"group__AOloopControl__streams.html#ga18c9e2ec793ea161e750b86ffbe8672d",
+"info_8c.html#a9abfdec4a9b6e1bb035c1786abfde18d",
+"psf_8c.html#abc9379a9744f9a97da13a63b65a7c15f",
+"src_2COREMOD__arith_2COREMOD__arith_8h.html#a30c5713a3e7c97ca31a4b0e063c89d2b",
+"src_2COREMOD__memory_2COREMOD__memory_8h.html#aedba8b276660cb1b0b4a0aa6e8c93c99",
+"src_2image__filter_2image__filter_8h.html#ab20ee902b86ee7d0e192c7c00e843d45",
+"structAOLOOPCONF__DMctrl.html",
+"structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#aae214325cb868e367cb9cbd83bc90c35",
+"structLOGSHIM__CONF.html#a540e125719be22adb4d4d1c1c87f575d",
+"structres__node.html#ac291090c8cb9b8ec553c1eeee9c64882"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

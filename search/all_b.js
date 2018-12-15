@@ -33,9 +33,8 @@ var searchData=
   ['kdres',['kdres',['../structkdres.html',1,'']]],
   ['kdtree',['kdtree',['../structkdtree.html',1,'']]],
   ['kdtree_2ec',['kdtree.c',['../kdtree_8c.html',1,'']]],
-  ['kdtree_2eh',['kdtree.h',['../src_2kdtree_2kdtree_8h.html',1,'']]],
-  ['kdtree_2eh',['kdtree.h',['../__install_2include_2kdtree_8h.html',1,'']]],
+  ['kdtree_2eh',['kdtree.h',['../__install_2include_2kdtree_8h.html',1,'(Global Namespace)'],['../src_2kdtree_2kdtree_8h.html',1,'(Global Namespace)']]],
   ['key',['key',['../structCMD.html#a208433b07e89cca90d13c52613fe897f',1,'CMD']]],
-  ['kill',['kill',['../structAOLOOPCONTROL__CONF.html#aef48e5d352522d499e5bba701f4ba668',1,'AOLOOPCONTROL_CONF']]],
+  ['kill',['kill',['../structAOLOOPCONTROL__CONF.html#aef48e5d352522d499e5bba701f4ba668',1,'AOLOOPCONTROL_CONF::kill()'],['../structAOLOOPCONF__aorun.html#a777e8d6fbb67594a346eb093b52dddb8',1,'AOLOOPCONF_aorun::kill()']]],
   ['kw',['kw',['../struct____attribute____.html#adf25bde46d8083cab64f2d63381d15fb',1,'__attribute__']]]
 ];

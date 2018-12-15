@@ -23,6 +23,8 @@ var info_8c =
     [ "info_image_stats", "info_8c.html#a5af15f10d196e17adf43d6f5ffb4d2cb", null ],
     [ "info_image_stats_cli", "info_8c.html#a3bb90ba2677e51691443eb48dd7208fc", null ],
     [ "info_image_statsf_cli", "info_8c.html#a03816c0a5278f39664fcceca936464d0", null ],
+    [ "info_image_streamtiming_stats", "info_8c.html#ada90baeed3dc221f0c0ca8353c5c41ff", null ],
+    [ "info_image_streamtiming_stats_disp", "info_8c.html#a795d4c32b7799389d8f7630322a115ad", null ],
     [ "info_pixelstats_smallImage", "info_8c.html#a61aa4a9be8463a003d00ac9be49f7bbb", null ],
     [ "info_profile_cli", "info_8c.html#ac9de05ab62f4c7d6efe48bc424825050", null ],
     [ "info_time_diff", "info_8c.html#a6fb9173b416d4ca64e84793024c86a9e", null ],

@@ -45,11 +45,15 @@ var structAOloopControl__var =
     [ "GPU_beta", "structAOloopControl__var.html#a19d0640ef5cb42268bc2735290d01eab", null ],
     [ "GPUset0", "structAOloopControl__var.html#a78548fb8072aee02b5487746383bdbf6", null ],
     [ "GPUset1", "structAOloopControl__var.html#a7ad011552285795ed08a0bf72cae5dc4", null ],
+    [ "init_CM_local", "structAOloopControl__var.html#af71b2bb631a0f40aceae9e55a1749103", null ],
+    [ "init_CMc_local", "structAOloopControl__var.html#a3ef5f10da091b601f4cc6462061e6576", null ],
+    [ "init_RM_local", "structAOloopControl__var.html#a30063490abc90732bec059894e18a912", null ],
     [ "initcontrMcact_GPU", "structAOloopControl__var.html#a70f3f6bdb5074345877ed2df22170bd6", null ],
     [ "LOOPNUMBER", "structAOloopControl__var.html#acb2172faf0e69fc6183f4bbf77712da9", null ],
     [ "normfloorcoeff", "structAOloopControl__var.html#a470ba022646da1bc32afc8a04c4a9d91", null ],
     [ "PIXSTREAM_NBSLICES", "structAOloopControl__var.html#aaefb39eed2bffd57068ab6882a2eebfa", null ],
     [ "PIXSTREAM_SLICE", "structAOloopControl__var.html#aed465f7ef326f5784b5f3d357eaee132", null ],
+    [ "RTSLOGarrayInitFlag", "structAOloopControl__var.html#a9b20c22eca442cca126133d55c3ee4e7", null ],
     [ "WFS_active_map", "structAOloopControl__var.html#abd09aeed84b02996803bc3061ef5ab38", null ],
     [ "WFSatype", "structAOloopControl__var.html#a201220fb1ea3715b7dae65978eeac6fe", null ]
 ];

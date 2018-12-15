@@ -32,6 +32,8 @@ var struct____attribute____ =
     [ "sem", "struct____attribute____.html#a91eff0cec31b3772d749beca4905947b", null ],
     [ "semlog", "struct____attribute____.html#a7ba20a0eb6cc5ff293085d3cc31cc4de", null ],
     [ "semptr", "struct____attribute____.html#ab9d375e336860eed0a586cde62dad81d", null ],
+    [ "semReadPID", "struct____attribute____.html#ae619166a7db8b8a88484ec7ca0d8773f", null ],
+    [ "semWritePID", "struct____attribute____.html#af3d45fbf5f336e074a81872b67af28a9", null ],
     [ "shared", "struct____attribute____.html#a406def6b37695e4203f7c929f97b68db", null ],
     [ "shmfd", "struct____attribute____.html#ac41b84d49d48656863d49edd5ce14410", null ],
     [ "SI16", "struct____attribute____.html#ac392e8b3dea36ebae8661aa89f99ae7b", null ],

@@ -4,7 +4,7 @@ var 00CORE_8c =
     [ "CLIinfoPrint", "00CORE_8c.html#ae838278c08c0e2a86eaabaa30a51ed1c", null ],
     [ "CLIWritePid", "00CORE_8c.html#ad2eef847a9eb4e38bd371170f5fdcf93", null ],
     [ "clock_gettime", "00CORE_8c.html#a4686db64ee8970c84b269e0425519dec", null ],
-    [ "CORE_logFunctionCall", "00CORE_8c.html#af647d2afb4bc4b85305a53050ab19c8f", null ],
+    [ "CORE_logFunctionCall", "00CORE_8c.html#a323ffc502278c9aea7ee205ef7a1df4d", null ],
     [ "file_exist", "00CORE_8c.html#a928b1da945af8413e422d1749058d33a", null ],
     [ "init_00CORE", "00CORE_8c.html#a1469340da3e86a14a43d8541390c19be", null ],
     [ "printERROR", "00CORE_8c.html#a3e77ac9461466e89a13b467f64a8df67", null ],

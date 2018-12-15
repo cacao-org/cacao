@@ -4,6 +4,7 @@ var AOloopControl__IOtools_8c =
     [ "AOloopControl_IOtools_AveStream_cli", "AOloopControl__IOtools_8c.html#acd325546902319e99ac79ae161196fa5", null ],
     [ "AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli", "AOloopControl__IOtools_8c.html#aa8290011cb68f3138108f5bd4affdca9", null ],
     [ "AOloopControl_IOtools_frameDelay_cli", "AOloopControl__IOtools_8c.html#ad24854cf77226f9c14c06f69e14dfedb", null ],
+    [ "AOloopControl_IOtools_imAlignStream_cli", "AOloopControl__IOtools_8c.html#abff91909db6d4810ff0f78aa74dcd0ea", null ],
     [ "AOloopControl_IOtools_RTLOGsave_cli", "AOloopControl__IOtools_8c.html#a8265299716b1b4a75711a8a0c781e1ff", null ],
     [ "AOloopControl_IOtools_stream3Dto2D_cli", "AOloopControl__IOtools_8c.html#a6446ea64d1a9d88030fec1737ff136a2", null ],
     [ "AOconf", "AOloopControl__IOtools_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],

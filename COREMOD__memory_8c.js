@@ -1,6 +1,5 @@
 var COREMOD__memory_8c =
 [
-    [ "savethreadmsg", "structsavethreadmsg.html", "structsavethreadmsg" ],
     [ "__attribute__", "COREMOD__memory_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "__attribute__", "COREMOD__memory_8c.html#abacdaba9e3350fa071e573870afd2d6b", null ],
     [ "check_2Dsize", "COREMOD__memory_8c.html#ae33095c38f0d8d55e3e98fc846f8d3c4", null ],
@@ -25,6 +24,8 @@ var COREMOD__memory_8c =
     [ "COREMOD_MEMORY_image_NETWORKreceive_cli", "COREMOD__memory_8c.html#ad5693983e9c45c85b2dadb33bbeaf5c1", null ],
     [ "COREMOD_MEMORY_image_NETWORKtransmit", "COREMOD__memory_8c.html#af7c02416f0db711e00895b876f5be4a9", null ],
     [ "COREMOD_MEMORY_image_NETWORKtransmit_cli", "COREMOD__memory_8c.html#af9d26d964ad6d5c7dc91e6c6b7389bd9", null ],
+    [ "COREMOD_MEMORY_image_seminfo", "COREMOD__memory_8c.html#ab1668c172510be3ed6d1408f2626650c", null ],
+    [ "COREMOD_MEMORY_image_seminfo_cli", "COREMOD__memory_8c.html#a937ccd6be86bb082d7e54cfaede8e558", null ],
     [ "COREMOD_MEMORY_image_set_cnt0", "COREMOD__memory_8c.html#aaeb18535b9e2c6003de95f46bc02d43e", null ],
     [ "COREMOD_MEMORY_image_set_cnt0_cli", "COREMOD__memory_8c.html#afc65860033225b3a9d6770bd4a6a5b6a", null ],
     [ "COREMOD_MEMORY_image_set_cnt1", "COREMOD__memory_8c.html#a055d59f38c8a8bcbad6a285fab3a9131", null ],
@@ -71,6 +72,10 @@ var COREMOD__memory_8c =
     [ "COREMOD_MEMORY_streamDelay_cli", "COREMOD__memory_8c.html#a92cfbeabc8f13f3a58d00732d0001102", null ],
     [ "COREMOD_MEMORY_streamDiff", "COREMOD__memory_8c.html#ae11d3a0de47d45a60107c9e360eed117", null ],
     [ "COREMOD_MEMORY_streamDiff_cli", "COREMOD__memory_8c.html#aba715a32b0de9d17ba350e86b68022fb", null ],
+    [ "COREMOD_MEMORY_streamPaste", "COREMOD__memory_8c.html#a66902ba0ebf702e9ee65e551ec985ad2", null ],
+    [ "COREMOD_MEMORY_streamPaste_cli", "COREMOD__memory_8c.html#a5501c309f01ba789486357c1c4f70ce3", null ],
+    [ "COREMOD_MEMORY_streamPoke", "COREMOD__memory_8c.html#a022454fb3ac99a39c43f6f55b743af50", null ],
+    [ "COREMOD_MEMORY_streamPoke_cli", "COREMOD__memory_8c.html#a9b8a1b341a1c25f9716faaeada3a8303", null ],
     [ "COREMOD_MEMORY_testfunc", "COREMOD__memory_8c.html#aa97c480e1d2fa341c233d5059e0b5f79", null ],
     [ "create_1DCimage_ID", "COREMOD__memory_8c.html#a31e167d2d2fe4dea5c77e0ee3cd20d2b", null ],
     [ "create_1Dimage_ID", "COREMOD__memory_8c.html#af4310a93970c5e6f9ef77a4585b5cc25", null ],
@@ -146,6 +151,7 @@ var COREMOD__memory_8c =
     [ "listim_scr_wrow", "COREMOD__memory_8c.html#a58d431324373b438a591c9aa3d782456", null ],
     [ "MEM_MONITOR", "COREMOD__memory_8c.html#a3ca98c8ecb9eebb8a1fd3fce60d44e75", null ],
     [ "NB_thrarray_semwait", "COREMOD__memory_8c.html#a6b243f923478fcbe7db68996128bc46c", null ],
+    [ "savethreadmsg", "COREMOD__memory_8c.html#abddb29f9254561f977e02bfdf9db9d3f", null ],
     [ "thrarray_semwait", "COREMOD__memory_8c.html#adf74b4200727265ecd87c43407a67f8e", null ],
     [ "tret", "COREMOD__memory_8c.html#afbed262f99f763e9aef2c67cee565f97", null ]
 ];

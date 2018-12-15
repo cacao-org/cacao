@@ -1,6 +1,7 @@
 var searchData=
 [
   ['m',['M',['../structGPUMATMULTCONF.html#a5cc4d996d98e120aba3dd57b5106be18',1,'GPUMATMULTCONF']]],
+  ['m_5fpinfo',['m_pinfo',['../classpyPROCESSINFO.html#a9dd20cf87041d51bbfec1cb3f4b267dc',1,'pyPROCESSINFO']]],
   ['magma_5faux_5fiwork',['magma_aux_iwork',['../cudacomp_8c.html#a3e7ace0a30ae318164b6cc8b6f23b46c',1,'cudacomp.c']]],
   ['magma_5fd_5fa',['magma_d_A',['../cudacomp_8c.html#ae6fafb303190e6cd978aab1470e62f75',1,'cudacomp.c']]],
   ['magma_5fd_5fainv',['magma_d_Ainv',['../cudacomp_8c.html#a7cdba4f520bc0fbf807adf630c6a6231',1,'cudacomp.c']]],
@@ -42,14 +43,17 @@ var searchData=
   ['magmaloop_5fiter',['MAGMAloop_iter',['../cudacomp_8c.html#a4be940f5b37979d1fa040aae25413cf3',1,'cudacomp.c']]],
   ['magmaqueue',['magmaqueue',['../cudacomp_8c.html#a7e5094baa98f7ac8fd22c8f9baa0ac8c',1,'cudacomp.c']]],
   ['max',['max',['../structkdhyperrect.html#aaeaab78eb4536bcd8d4ae4d5e08540f5',1,'kdhyperrect']]],
-  ['maxlimit',['maxlimit',['../structAOLOOPCONTROL__CONF.html#a471189277591da1769fcb1c11696949b',1,'AOLOOPCONTROL_CONF']]],
+  ['maxlimit',['maxlimit',['../structAOLOOPCONTROL__CONF.html#a471189277591da1769fcb1c11696949b',1,'AOLOOPCONTROL_CONF::maxlimit()'],['../structAOLOOPCONF__aorun.html#ac52ba7a64ce230094d54fbdf8d5f5c0b',1,'AOLOOPCONF_aorun::maxlimit()']]],
   ['maxvolt',['MAXVOLT',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#aa2720d128f464f809274e76bdbe21cb2',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['md',['md',['../struct____attribute____.html#a018f076e4c71899ed607ee1010ed656a',1,'__attribute__']]],
+  ['measuretiming',['MeasureTiming',['../structPROCESSINFO.html#aba1c55f3b8cd222f1e6bc6ba79d9f983',1,'PROCESSINFO']]],
   ['mem_5fmonitor',['MEM_MONITOR',['../COREMOD__memory_8c.html#a3ca98c8ecb9eebb8a1fd3fce60d44e75',1,'COREMOD_memory.c']]],
+  ['memcptoggle',['memcpToggle',['../structRTstreamLOG.html#aeb549909298bfd0326401488cba62b60',1,'RTstreamLOG']]],
+  ['memload',['memload',['../structPROCESSINFODISP.html#a1b7b6538a5a35fcbc841bf8dcfcdb04a',1,'PROCESSINFODISP']]],
   ['memsize',['memsize',['../struct____attribute____.html#aec54dc3e0867ac61ab1cb8e8ba7ca31a',1,'__attribute__::memsize()'],['../structRTstreamLOG.html#aa2b2a0dafcb1cf3792fc25e7a223407e',1,'RTstreamLOG::memsize()']]],
   ['min',['min',['../structkdhyperrect.html#a57d70c409c2bda502c3aa8fea80cc4f4',1,'kdhyperrect']]],
-  ['modeblockindex',['modeBlockIndex',['../structAOLOOPCONTROL__CONF.html#ad3451f944f2f2ed6c7bd57e7f328a5c1',1,'AOLOOPCONTROL_CONF']]],
+  ['modeblockindex',['modeBlockIndex',['../structAOLOOPCONTROL__CONF.html#acb8056dd50de825b50e9ec5a1c49fffb',1,'AOLOOPCONTROL_CONF::modeBlockIndex()'],['../structAOLOOPCONF__ProcessModeCoefficients.html#a235ff1f69c88f01886a93189c24a5b05',1,'AOLOOPCONF_ProcessModeCoefficients::modeBlockIndex()']]],
   ['module',['module',['../structCMD.html#af59d856e468e0d279c6b0e49db4f0cc5',1,'CMD::module()'],['../structDATA.html#a539a3b5a157fe350cb5e4a4ee0ee640e',1,'DATA::module()']]],
   ['moninterval',['moninterval',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a0e9dd6356232d1f72e5328d758840a1f',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
-  ['mult',['mult',['../structAOLOOPCONTROL__CONF.html#afa3e61913c4a9174ab6b44bef3b55777',1,'AOLOOPCONTROL_CONF']]]
+  ['mult',['mult',['../structAOLOOPCONTROL__CONF.html#afa3e61913c4a9174ab6b44bef3b55777',1,'AOLOOPCONTROL_CONF::mult()'],['../structAOLOOPCONF__aorun.html#a3c0202ae28ec2182ee5eee9f5f29e7d1',1,'AOLOOPCONF_aorun::mult()']]]
 ];

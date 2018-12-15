@@ -29,6 +29,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "linopt_imtools", "dir_082a3b8b4397c5d97227e6064a755880.html", "dir_082a3b8b4397c5d97227e6064a755880" ],
     [ "psf", "dir_1d8bbc4c9e8585fb3b55cb602a75e682.html", "dir_1d8bbc4c9e8585fb3b55cb602a75e682" ],
     [ "statistic", "dir_545a73c80b83e1c7812a6808fc9654f7.html", "dir_545a73c80b83e1c7812a6808fc9654f7" ],
+    [ "utils", "dir_313caf1132e152dd9b58bea13a4052ca.html", "dir_313caf1132e152dd9b58bea13a4052ca" ],
     [ "ZernikePolyn", "dir_79cde7c2c2a1e8c6935a72a82b7ac777.html", "dir_79cde7c2c2a1e8c6935a72a82b7ac777" ],
     [ "CLImain.c", "CLImain_8c.html", "CLImain_8c" ]
 ];

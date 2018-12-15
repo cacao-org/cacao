@@ -5,7 +5,6 @@ var AOloopControl__loop__param_8c =
     [ "AOloopControl_setARPFgain", "AOloopControl__loop__param_8c.html#a02026f2deb2e03abfc7de384afeb3974", null ],
     [ "AOloopControl_setARPFgainAutoMax", "AOloopControl__loop__param_8c.html#aff2875061bb78a40cd8638efe54a04c7", null ],
     [ "AOloopControl_setARPFgainAutoMin", "AOloopControl__loop__param_8c.html#a2ddf3435aa220a6ff56e52a66068f6aa", null ],
-    [ "AOloopControl_setframesAve", "AOloopControl__loop__param_8c.html#a0a6a191fb615f972df917fe20d62fee9", null ],
     [ "AOloopControl_setgain", "AOloopControl__loop__param_8c.html#a12814ba8c8ae4ebaaa90885a93d0f33b", null ],
     [ "AOloopControl_setmaxlimit", "AOloopControl__loop__param_8c.html#a7ecfb134b94893b705ba5b37c38424ce", null ],
     [ "AOloopControl_setmult", "AOloopControl__loop__param_8c.html#aef6bb5af1656b860264887edba29d386", null ],
