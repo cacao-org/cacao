@@ -1421,7 +1421,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                     fp = fopen(fnameinfo, "w");
                     
-                    if(i==0)
+                    if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer==0)
                     {
 						fprintf(fp, "# 1: Frame index   (i+NBframe*AOconf[loop].RTSLOGarray[rtlindex].FileBuffer)\n");
 						fprintf(fp, "# 2: Loop counter  (data.image[IDininfo].array.UI64[i*5])\n");
