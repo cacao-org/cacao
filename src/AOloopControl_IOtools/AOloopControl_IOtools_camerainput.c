@@ -683,7 +683,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             }
 
             int rval;
-            rval = sem_timedwait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semwaitts);
+            rval = ImageStreamIO_semtimedwait(&data.image[aoloopcontrol_var.aoconfID_wfsim], wfsim_semwaitindex, &semwaitts);
+            //rval = sem_timedwait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semwaitts);
             if (rval == -1)
             {
                 if (errno == ETIMEDOUT)
