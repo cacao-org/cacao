@@ -38,7 +38,8 @@ function function_PFb0watchOFF {
 tmuxname="aol${LOOPNUMBER}PFb0watchin"
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} exitCLI
+tmux send-keys -t ${tmuxname} "exitCLI" C-m
+sleep 0.2
 tmux kill-session -t ${tmuxname}
 PFb0wON="OFF"
 file="./status/stat_PFb0wON.txt"
@@ -70,7 +71,8 @@ function function_PFb1watchOFF {
 tmuxname="aol${LOOPNUMBER}PFb1watchin"
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} exitCLI
+tmux send-keys -t ${tmuxname} "exitCLI" C-m
+sleep 0.2
 tmux kill-session -t ${tmuxname}
 PFb1wON="OFF"
 file="./status/stat_PFb1wON.txt"
@@ -102,7 +104,8 @@ function function_PFb2watchOFF {
 tmuxname="aol${LOOPNUMBER}PFb2watchin"
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} exitCLI
+tmux send-keys -t ${tmuxname} "exitCLI" C-m
+sleep 0.2
 tmux kill-session -t ${tmuxname}
 PFb2wON="OFF"
 file="./status/stat_PFb2wON.txt"
@@ -134,7 +137,8 @@ function function_PFb3watchOFF {
 tmuxname="aol${LOOPNUMBER}PFb3watchin"
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} C-c
-tmux send-keys -t ${tmuxname} exitCLI
+tmux send-keys -t ${tmuxname} "exitCLI" C-m
+sleep 0.2
 tmux kill-session -t ${tmuxname}
 PFb3wON="OFF"
 file="./status/stat_PFb3wON.txt"
