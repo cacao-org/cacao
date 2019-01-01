@@ -1,5 +1,9 @@
 # milk modules {#page_milk_Modules}
 
+[TOC]
+
+@note This file: ./milk_Modules.md
+
 
 - @subpage page_module_00CORE
 - @subpage page_module_COREMOD_memory

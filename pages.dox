@@ -1,35 +1,27 @@
-/*! @mainpage Outline
 
-last updated 2018-02-16
+/*! @mainpage cacao Documentation
+
+@note This file: ./pages.dox
 
 
-#  Compute And Control For Adaptive Optics (cacao)
+[TOC]
+
+
+---
+
+# 1. What is cacao ? {#mainsection_whatiscacao}
+
+
+The compute and control for adaptive optics (cacao) package is a collection of tools for adaptive optics real-time control.
 
 
 ---
 
 
-## Source Code
 
-<span style="color:red"> **cacao is under development - this is a Alpha release** </span>
-
-What is an [alpha release](https://en.wikipedia.org/wiki/Software_release_life_cycle) ?
-
-
-[cacao on github](https://github.com/cacao-org/cacao)
-
-
----
----
-
-
-
-# cacao User's Guide
-
-Getting started :
+# 2. Installing cacao and running command line interface {#mainsection_gettingstarted}
 
 - @ref page_installation : Downloading and Installing cacao  
-- @ref page_news : Major upgrades and new features
 
 - @ref page_userinput : Using cacao's command line interface (CLI)
 	- @ref page_CLI_Overview
@@ -37,11 +29,44 @@ Getting started :
 	- @ref page_command_line_interface
 
 
-Configuring and running cacao :
+---
 
-Step-by-step instructions:
+# 3. Fundamentals {#mainsection_fundamentals}
 
-- @ref page_cacao_stepbystep_example
+
+## 3.1. Processes and Streams {#mainsection_fundamentals_processesstreams}
+
+cacao relies on a collection of **processes** to run an AO loop, rather than a single large function. This provides a modular and flexible solution, able to run simple AO control loop as well as very complex setups.
+
+Synchronization and communication between processes is achieved by the data **stream** structure used throughout cacao. Mechanisms to synchronize processes and track interactions between data and processes (such as: which process is writing a specific stream) are embedded within the data structure. For more details, see module ImageStreamIO.c.
+
+
+
+## 3.2. Building an AO control loop {#mainsection_fundamentals_buildingloop}
+
+Under cacao's framework, the AO control loop is assembled from **streams** and **processes**. Each process typically reads (= listens) to a stream. Once the stream is updated, the process will start computations and will usually update other stream(s). Long chains of processes can thus be built, with multiple branches (several processes can listen to the same stream). 
+
+
+
+## 3.3. Key tools {#mainsection_fundamentals_keytools}
+
+To manage processes and streams, cacao offers a few useful tools, allowing users to quickly inspect complex AO loops. They are included in the directory `src/CommandLineInterface/scripts`, which is included in the path, per installation instructions. cacao users will make frequent use of these tools.
+
+- **procCTRL**, the process controller. See processtools.c for details.
+- **streamCTRL**, the stream controller. See streamCTRL.c for details.
+- **shmimmon**, the shared memory image monitor, is used to inspect individual streams
+
+
+---
+
+
+
+# 4. Configuring and running cacao {#mainsection_cacaoconfrun}
+
+
+## 4.1. Step-by-step instructions {#mainsection_cacao_example}
+
+- @ref page_cacao_stepbystep_example 
 
 
 Users guide:
@@ -72,11 +97,25 @@ Appendices:
 ---
 ---
 
-# Programmer's_Guide
+# 5. Programming with cacao {#mainsection_cacaoprog}
+
+
+
+
+## 5.1. Source Code {#mainsection_sourcecode}
+
+[cacao is hosted on github](https://github.com/cacao-org/cacao), and consists of multiple modules.
+
+cacao is coded in C, compiles with gcc under cmake. cacao is built on top of the milk package. The cacao package includes milk (@ref page_milk_Modules), and adds AO-specific modules (@ref page_cacao_Modules).
+
+Important changes to the package are listed in the @ref page_CommandLineInterface_ChangeLog.
+
+
+
+## 5.2. Programming guide {#mainsection_programmingguide}
 
 - @ref page_WorkingWithGit
 - @ref page_coding_standards
-	- @ref page_Compilation
 	- @ref page_ModuleFiles
 	- @ref page_DocumentingCode
 	- @ref page_TemplateSourceCode
@@ -87,12 +126,12 @@ Appendices:
 ---
 
 
-## Modules
+# Appendix A. Modules {#mainsection_modules}
 
 
 cacao uses milk modules for its command line, memory management, image I/O and standard image computations.
 
-### milk modules
+## A.1. milk modules {#mainsection_modules_milk}
 
 cacao builds on the milk package and framework. Command line interface, memory management and general purpose image processing functions are provided by the milk modules.
 
@@ -123,7 +162,7 @@ cudacomp                | Cuda wrapper                         |   @ref cudacomp
 
 
 
-### cacao-specific modules
+## A.2. cacao-specific modules {#mainsection_modules_cacao}
 
 Module                               | Description                          | Souce Code Reference                     |      
 -------------------------------------|--------------------------------------|------------------------------------------|
