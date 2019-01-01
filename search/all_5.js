@@ -14,6 +14,7 @@ var searchData=
   ['delete_5fimage_5fid_5fcli',['delete_image_ID_cli',['../COREMOD__memory_8c.html#a8b0cabae9194126711b426b85474975b',1,'COREMOD_memory.c']]],
   ['delete_5fimage_5fid_5fprefix',['delete_image_ID_prefix',['../__install_2include_2COREMOD__memory_8h.html#ad2845db5159be13eac47d7fa0d539ca5',1,'delete_image_ID_prefix(const char *prefix):&#160;COREMOD_memory.c'],['../COREMOD__memory_8c.html#ad2845db5159be13eac47d7fa0d539ca5',1,'delete_image_ID_prefix(const char *prefix):&#160;COREMOD_memory.c'],['../src_2COREMOD__memory_2COREMOD__memory_8h.html#ad2845db5159be13eac47d7fa0d539ca5',1,'delete_image_ID_prefix(const char *prefix):&#160;COREMOD_memory.c']]],
   ['delete_5fvariable_5fid',['delete_variable_ID',['../__install_2include_2COREMOD__memory_8h.html#a3556f80129594d22fb68f7f0b02d50b8',1,'delete_variable_ID(const char *varname):&#160;COREMOD_memory.c'],['../COREMOD__memory_8c.html#a3556f80129594d22fb68f7f0b02d50b8',1,'delete_variable_ID(const char *varname):&#160;COREMOD_memory.c'],['../src_2COREMOD__memory_2COREMOD__memory_8h.html#a3556f80129594d22fb68f7f0b02d50b8',1,'delete_variable_ID(const char *varname):&#160;COREMOD_memory.c']]],
+  ['deltacnt0',['deltacnt0',['../structSTREAMINFO.html#af72dab6398c16aab1d35849ac7824028',1,'STREAMINFO']]],
   ['description',['description',['../structPROCESSINFO.html#ae2ee44a370610db3b85a9b31bda8c2ec',1,'PROCESSINFO::description()'],['../structSTRINGLISTENTRY.html#a9891d4cb3efd9ceeaa3ae3548f4ebfe2',1,'STRINGLISTENTRY::description()']]],
   ['destptr',['destptr',['../structRTstreamLOG.html#a902e6d03ea1c6e42055410d970105dbf',1,'RTstreamLOG']]],
   ['destptr0',['destptr0',['../structRTstreamLOG.html#aad3d95ed3612078bb713518e123bd20c',1,'RTstreamLOG']]],
@@ -23,6 +24,7 @@ var searchData=
   ['dfcnt',['dfcnt',['../linopt__imtools_8c.html#a31fa525e1d9b569475e55062f6d16a96',1,'linopt_imtools.c']]],
   ['dim',['dim',['../structkdhyperrect.html#a3db4daba51eb2a53cf9e94a6dbe8316a',1,'kdhyperrect::dim()'],['../structkdtree.html#a50a985e0d8433bdc599078663b618a83',1,'kdtree::dim()']]],
   ['dir',['dir',['../structkdnode.html#aa3b02f2e7995f08cd16a85ea93e1fc80',1,'kdnode']]],
+  ['displaymode',['DisplayMode',['../structPROCINFOPROC.html#af669a3a227250efdc7bf70771a205b88',1,'PROCINFOPROC']]],
   ['dist_5fsq',['dist_sq',['../structres__node.html#ac291090c8cb9b8ec553c1eeee9c64882',1,'res_node']]],
   ['dlib_5fhandle',['DLib_handle',['../CLIcore_8c.html#a2cd34bea18a071eca4434d14ad84fb76',1,'CLIcore.c']]],
   ['dlib_5findex',['DLib_index',['../CLIcore_8c.html#a877fde0b363048f42781e761c0e98101',1,'CLIcore.c']]],
@@ -70,6 +72,7 @@ var searchData=
   ['dtiter_5flimit_5fvalue',['dtiter_limit_value',['../structPROCESSINFO.html#a6371fe2f7cd1caf030fe71929a23beaf',1,'PROCESSINFO']]],
   ['dtmedian_5fexec_5fns',['dtmedian_exec_ns',['../structPROCESSINFO.html#a36f121134fb67643b79bcc4cc386d103',1,'PROCESSINFO']]],
   ['dtmedian_5fiter_5fns',['dtmedian_iter_ns',['../structPROCESSINFO.html#a4121b017b73a9ca1a121ada47e47c6ae',1,'PROCESSINFO']]],
+  ['dtscan',['dtscan',['../structPROCINFOPROC.html#a001b562279a90de87a23d7c8bc9047ba',1,'PROCINFOPROC::dtscan()'],['../structSTREAMINFOPROC.html#a582d3edbbf8f1e7f040a393c0a7417a9',1,'STREAMINFOPROC::dtscan()']]],
   ['dtus',['dtus',['../struct____attribute____.html#adb6153e0035fad0c5f3de09b5fbb3e79',1,'__attribute__']]],
   ['dupstr',['dupstr',['../CLIcore_8c.html#aaa38e8336f9b0dabd89fba19867a6e88',1,'CLIcore.c']]],
   ['documenting_20code',['Documenting Code',['../page_DocumentingCode.html',1,'page_coding_standards']]]

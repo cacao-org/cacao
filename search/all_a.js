@@ -2,6 +2,7 @@ var searchData=
 [
   ['image_20streams',['Image streams',['../group__AOloopControl__streams.html',1,'']]],
   ['i',['i',['../calc__flex_8c.html#a139066bd9e344a8daae82c5ca919fffe',1,'calc_flex.c']]],
+  ['id',['ID',['../structSTREAMINFO.html#a53ae57ec64a7c01508fcc1c69f771a70',1,'STREAMINFO']]],
   ['id_5fdm2dm_5fdmmodes',['ID_dm2dm_DMmodes',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a2bf434b16c3583f8c3dc176c7bd965c6',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['id_5fdm2dm_5foutdisp',['ID_dm2dm_outdisp',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a7bdd58230071f2708262130dbbca4ace',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['id_5fwfsref_5fout',['ID_wfsref_out',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a6d057826db19c7deb34eb1f8a60017ae',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
@@ -213,7 +214,7 @@ var searchData=
   ['init_5fzernikepolyn',['init_ZernikePolyn',['../__install_2include_2ZernikePolyn_8h.html#a1fe2ce39f9bc2169cb9978832ef64fb8',1,'init_ZernikePolyn():&#160;ZernikePolyn.c'],['../ZernikePolyn_8c.html#a1fe2ce39f9bc2169cb9978832ef64fb8',1,'init_ZernikePolyn():&#160;ZernikePolyn.c'],['../src_2ZernikePolyn_2ZernikePolyn_8h.html#a1fe2ce39f9bc2169cb9978832ef64fb8',1,'init_ZernikePolyn():&#160;ZernikePolyn.c']]],
   ['initcontrmcact_5fgpu',['initcontrMcact_GPU',['../structAOloopControl__var.html#a70f3f6bdb5074345877ed2df22170bd6',1,'AOloopControl_var']]],
   ['initmapping',['initmapping',['../structAOLOOPCONTROL__CONF.html#ae6189ec85542d01a616bb2f48d73f2a3',1,'AOLOOPCONTROL_CONF::initmapping()'],['../structAOLOOPCONF__aorun.html#ad6a245eb72b54ae2a6133cf9967e617f',1,'AOLOOPCONF_aorun::initmapping()']]],
-  ['initncurses',['initncurses',['../processtools_8c.html#a57321d4280cb8b6bb462a6e32512e7b1',1,'processtools.c']]],
+  ['initncurses',['initncurses',['../processtools_8c.html#a57321d4280cb8b6bb462a6e32512e7b1',1,'initncurses():&#160;processtools.c'],['../streamCTRL_8c.html#a57321d4280cb8b6bb462a6e32512e7b1',1,'initncurses():&#160;streamCTRL.c']]],
   ['initstatus_5f00core',['INITSTATUS_00CORE',['../00CORE_8c.html#a0dd7afe3bdf20e2ac1aa84d06eeed108',1,'00CORE.c']]],
   ['initstatus_5faoloopcontrol',['INITSTATUS_AOloopControl',['../AOloopControl_8c.html#a8d7eebfd86e5cdcafff2b28b6da77ce6',1,'AOloopControl.c']]],
   ['initstatus_5faoloopcontrol_5facquirecalib',['INITSTATUS_AOloopControl_acquireCalib',['../AOloopControl__acquireCalib_8c.html#afd59685cce055a6f78d872797f093317',1,'AOloopControl_acquireCalib.c']]],
@@ -254,5 +255,5 @@ var searchData=
   ['isfunction_5fsev_5fvar',['isfunction_sev_var',['../COREMOD__arith_8c.html#a90ebf7655e29cbfd616366805cca80d8',1,'COREMOD_arith.c']]],
   ['isoperand',['isoperand',['../COREMOD__arith_8c.html#a31e8d5a699f05053cfe28c7bea908af7',1,'COREMOD_arith.c']]],
   ['item',['item',['../structres__node.html#a6d1e853ec1f48f263c277344f37f8cc3',1,'res_node']]],
-  ['installation',['Installation',['../page_installation.html',1,'']]]
+  ['install',['Install',['../page_installation.html',1,'page_cacao_topmenu']]]
 ];

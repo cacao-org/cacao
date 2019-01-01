@@ -1,3 +1,4 @@
+<!-- HTML header for doxygen 1.8.13-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -5,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>cacao: Outline</title>
+<title>cacao: cacao Documentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -20,6 +21,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -83,23 +85,40 @@ $(document).ready(function(){initNavTree('index.html','');});
 
 <div class="header">
   <div class="headertitle">
-<div class="title">Outline </div>  </div>
+<div class="title">cacao Documentation </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>last updated 2018-02-16</p>
-<h1>Compute And Control For Adaptive Optics (cacao)</h1>
+<div class="toc"><h3>Table of Contents</h3>
+<ul><li class="level1"><a href="#mainsection_whatiscacao">1. What is cacao ?</a></li>
+<li class="level1"><a href="#mainsection_gettingstarted">2. Installing cacao and running command line interface</a></li>
+<li class="level1"><a href="#mainsection_fundamentals">3. Fundamentals</a><ul><li class="level2"><a href="#mainsection_fundamentals_processesstreams">3.1. Processes and Streams</a></li>
+<li class="level2"><a href="#mainsection_fundamentals_buildingloop">3.2. Building an AO control loop</a></li>
+<li class="level2"><a href="#mainsection_fundamentals_keytools">3.3. Key tools</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#mainsection_cacaoconfrun">4. Configuring and running cacao</a><ul><li class="level2"><a href="#mainsection_cacao_example">4.1. Step-by-step instructions</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#mainsection_cacaoprog">5. Programming with cacao</a><ul><li class="level2"><a href="#mainsection_sourcecode">5.1. Source Code</a></li>
+<li class="level2"><a href="#mainsection_programmingguide">5.2. Programming guide</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#mainsection_modules">Appendix A. Modules</a><ul><li class="level2"><a href="#mainsection_modules_milk">A.1. milk modules</a></li>
+<li class="level2"><a href="#mainsection_modules_cacao">A.2. cacao-specific modules</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="textblock"><dl class="section note"><dt>Note</dt><dd>This file: ./pages.dox</dd></dl>
 <hr/>
-<h2>Source Code</h2>
-<p><span style="color:red"> <b>cacao is under development - this is a Alpha release</b> </span></p>
-<p>What is an <a href="https://en.wikipedia.org/wiki/Software_release_life_cycle">alpha release</a> ?</p>
-<p><a href="https://github.com/cacao-org/cacao">cacao on github</a></p>
+<h1><a class="anchor" id="mainsection_whatiscacao"></a>
+1. What is cacao ?</h1>
+<p>The compute and control for adaptive optics (cacao) package is a collection of tools for adaptive optics real-time control.</p>
 <hr/>
- <hr/>
-<h1>cacao User's Guide</h1>
-<p>Getting started :</p>
+<h1><a class="anchor" id="mainsection_gettingstarted"></a>
+2. Installing cacao and running command line interface</h1>
 <ul>
-<li><a class="el" href="page_installation.html">Installation</a> : Downloading and Installing cacao</li>
-<li><a class="el" href="page_news.html">News</a> : Major upgrades and new features</li>
+<li><a class="el" href="page_installation.html">Install</a> : Downloading and Installing cacao</li>
 <li><a class="el" href="page_userinput.html">Command Line Interface</a> : Using cacao's command line interface (CLI)<ul>
 <li><a class="el" href="page_CLI_Overview.html">CLI Overview</a></li>
 <li><a class="el" href="page_readlinekeys.html">Readline Input Keys</a></li>
@@ -107,8 +126,29 @@ $(document).ready(function(){initNavTree('index.html','');});
 </ul>
 </li>
 </ul>
-<p>Configuring and running cacao :</p>
-<p>Step-by-step instructions:</p>
+<hr/>
+<h1><a class="anchor" id="mainsection_fundamentals"></a>
+3. Fundamentals</h1>
+<h2><a class="anchor" id="mainsection_fundamentals_processesstreams"></a>
+3.1. Processes and Streams</h2>
+<p>cacao relies on a collection of <b>processes</b> to run an AO loop, rather than a single large function. This provides a modular and flexible solution, able to run simple AO control loop as well as very complex setups.</p>
+<p>Synchronization and communication between processes is achieved by the data <b>stream</b> structure used throughout cacao. Mechanisms to synchronize processes and track interactions between data and processes (such as: which process is writing a specific stream) are embedded within the data structure. For more details, see module <a class="el" href="ImageStreamIO_8c.html" title="Read and Create image. ">ImageStreamIO.c</a>.</p>
+<h2><a class="anchor" id="mainsection_fundamentals_buildingloop"></a>
+3.2. Building an AO control loop</h2>
+<p>Under cacao's framework, the AO control loop is assembled from <b>streams</b> and <b>processes</b>. Each process typically reads (= listens) to a stream. Once the stream is updated, the process will start computations and will usually update other stream(s). Long chains of processes can thus be built, with multiple branches (several processes can listen to the same stream).</p>
+<h2><a class="anchor" id="mainsection_fundamentals_keytools"></a>
+3.3. Key tools</h2>
+<p>To manage processes and streams, cacao offers a few useful tools, allowing users to quickly inspect complex AO loops. They are included in the directory <code>src/CommandLineInterface/scripts</code>, which is included in the path, per installation instructions. cacao users will make frequent use of these tools.</p>
+<ul>
+<li><b>procCTRL</b>, the process controller. See <a class="el" href="processtools_8c.html" title="Tools to manage processes. ">processtools.c</a> for details.</li>
+<li><b>streamCTRL</b>, the stream controller. See <a class="el" href="streamCTRL_8c.html" title="Data streams control panel. ">streamCTRL.c</a> for details.</li>
+<li><b>shmimmon</b>, the shared memory image monitor, is used to inspect individual streams</li>
+</ul>
+<hr/>
+<h1><a class="anchor" id="mainsection_cacaoconfrun"></a>
+4. Configuring and running cacao</h1>
+<h2><a class="anchor" id="mainsection_cacao_example"></a>
+4.1. Step-by-step instructions</h2>
 <ul>
 <li><a class="el" href="page_cacao_stepbystep_example.html">STEP-BY-STEP EXAMPLE</a></li>
 </ul>
@@ -134,11 +174,18 @@ $(document).ready(function(){initNavTree('index.html','');});
 </ul>
 <hr/>
  <hr/>
-<h1>Programmer's_Guide</h1>
+<h1><a class="anchor" id="mainsection_cacaoprog"></a>
+5. Programming with cacao</h1>
+<h2><a class="anchor" id="mainsection_sourcecode"></a>
+5.1. Source Code</h2>
+<p><a href="https://github.com/cacao-org/cacao">cacao is hosted on github</a>, and consists of multiple modules.</p>
+<p>cacao is coded in C, compiles with gcc under cmake. cacao is built on top of the milk package. The cacao package includes milk (<a class="el" href="page_milk_Modules.html">milk modules</a>), and adds AO-specific modules (<a class="el" href="page_cacao_Modules.html">cacao modules</a>).</p>
+<p>Important changes to the package are listed in the <a class="el" href="page_CommandLineInterface_ChangeLog.html">CommandLineInterface Change Log</a>.</p>
+<h2><a class="anchor" id="mainsection_programmingguide"></a>
+5.2. Programming guide</h2>
 <ul>
 <li><a class="el" href="page_WorkingWithGit.html">Working with git</a></li>
 <li><a class="el" href="page_coding_standards.html">Coding Standards</a><ul>
-<li><a class="el" href="page_Compilation.html">Compilation</a></li>
 <li><a class="el" href="page_ModuleFiles.html">Module Files</a></li>
 <li><a class="el" href="page_DocumentingCode.html">Documenting Code</a></li>
 <li><a class="el" href="page_TemplateSourceCode.html">Template Souce Code</a></li>
@@ -147,9 +194,11 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li><a class="el" href="page_LoadingModules.html">Loading and Creating Modules</a></li>
 </ul>
 <hr/>
-<h2>Modules</h2>
+<h1><a class="anchor" id="mainsection_modules"></a>
+Appendix A. Modules</h1>
 <p>cacao uses milk modules for its command line, memory management, image I/O and standard image computations.</p>
-<h3>milk modules</h3>
+<h2><a class="anchor" id="mainsection_modules_milk"></a>
+A.1. milk modules</h2>
 <p>cacao builds on the milk package and framework. Command line interface, memory management and general purpose image processing functions are provided by the milk modules.</p>
 <table class="doxtable">
 <tr>
@@ -197,7 +246,8 @@ $(document).ready(function(){initNavTree('index.html','');});
 <tr>
 <td>cudacomp </td><td>Cuda wrapper </td><td><a class="el" href="src_2cudacomp_2cudacomp_8h.html">cudacomp.h</a> </td></tr>
 </table>
-<h3>cacao-specific modules</h3>
+<h2><a class="anchor" id="mainsection_modules_cacao"></a>
+A.2. cacao-specific modules</h2>
 <table class="doxtable">
 <tr>
 <th>Module </th><th>Description </th><th>Souce Code Reference  </th></tr>
@@ -223,10 +273,11 @@ $(document).ready(function(){initNavTree('index.html','');});
 <hr/>
  </div></div><!-- contents -->
 </div><!-- doc-content -->
+<!-- HTML footer for doxygen 1.8.13-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Dec 15 2018 01:47:30 for cacao by
+    <li class="footer">Generated on Sun Dec 30 2018 21:39:34 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

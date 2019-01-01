@@ -1,11 +1,13 @@
 var searchData=
 [
   ['f',['F',['../struct____attribute____.html#a1c2360411cef6f9baecbc8e9b016cf58',1,'__attribute__::F()'],['../structVARIABLE.html#af31bb248155770bb6d7080aa50bdb4fd',1,'VARIABLE::f()']]],
+  ['fdarray',['fdarray',['../structPROCINFOPROC.html#ae512c30138dc28a043d12a72df107c21',1,'PROCINFOPROC']]],
   ['features',['features',['../feature__tests_8c.html#a1582568e32f689337602a16bf8a5bff0',1,'feature_tests.c']]],
   ['fifoname',['fifoname',['../structDATA.html#a604785ee6d2a7393bb2b832633f74fe3',1,'DATA']]],
   ['fifoon',['fifoON',['../structDATA.html#a37b44a7ef0d3d29f33bf3700ec28665e',1,'DATA']]],
   ['filebuffer',['FileBuffer',['../structRTstreamLOG.html#a673e4ec01e40ada050f2c66977712107',1,'RTstreamLOG']]],
   ['filecnt',['filecnt',['../structLOGSHIM__CONF.html#a540e125719be22adb4d4d1c1c87f575d',1,'LOGSHIM_CONF']]],
+  ['filter',['filter',['../structSTREAMINFOPROC.html#ad38af195cc82fa368e4d2473f6c1bff1',1,'STREAMINFOPROC']]],
   ['firstlong',['firstlong',['../structTIMESPECFIXED.html#ac5d8359c6f00ae3b50f59946055ac6c8',1,'TIMESPECFIXED']]],
   ['fitsio_5fstatus',['FITSIO_status',['../COREMOD__iofits_8c.html#a6c2cc8d105d4821fd2f03c00125c9e86',1,'COREMOD_iofits.c']]],
   ['floatarray',['FLOATARRAY',['../structDATA.html#a61336e8f5f1586474bec34d70788a188',1,'DATA']]],
@@ -40,5 +42,7 @@ var searchData=
   ['frameindexend1',['frameindexend1',['../structRTstreamLOG.html#ac700435ffcd4dab5bf4c0ca21e093724',1,'RTstreamLOG']]],
   ['framesave',['framesAve',['../structAOLOOPCONTROL__CONF.html#a832db85f5873c001309ed59c5faf327a',1,'AOLOOPCONTROL_CONF']]],
   ['free_5fnodes',['free_nodes',['../kdtree_8c.html#a36fcc7a723160bc0d367c6e616940231',1,'kdtree.c']]],
+  ['fuserupdate',['fuserUpdate',['../structSTREAMINFOPROC.html#a10f13921ddb97b3f73a58b8dd2379b68',1,'STREAMINFOPROC']]],
+  ['fuserupdate0',['fuserUpdate0',['../structSTREAMINFOPROC.html#adb0861d198cb3fcb07f8cd087dc642ce',1,'STREAMINFOPROC']]],
   ['fwhm_5fmeasured',['FWHM_MEASURED',['../psf_8c.html#a45c45f9affb7a1208d03534b2c5b0afd',1,'psf.c']]]
 ];

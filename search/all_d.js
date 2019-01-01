@@ -128,7 +128,7 @@ var searchData=
   ['moninterval',['moninterval',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a0e9dd6356232d1f72e5328d758840a1f',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['mult',['mult',['../structAOLOOPCONTROL__CONF.html#afa3e61913c4a9174ab6b44bef3b55777',1,'AOLOOPCONTROL_CONF::mult()'],['../structAOLOOPCONF__aorun.html#a3c0202ae28ec2182ee5eee9f5f29e7d1',1,'AOLOOPCONF_aorun::mult()']]],
   ['managing_20multiple_20processes',['MANAGING MULTIPLE PROCESSES',['../page_cacao_managing_processes.html',1,'page_cacao_top_guide']]],
-  ['milk_20modules',['milk modules',['../page_milk_Modules.html',1,'']]],
+  ['milk_20modules',['milk modules',['../page_milk_Modules.html',1,'page_cacao_topmenu']]],
   ['module_20aoloopcontrol',['Module AOloopControl',['../page_module_AOloopControl.html',1,'page_cacao_Modules']]],
   ['module_20files',['Module Files',['../page_ModuleFiles.html',1,'page_coding_standards']]]
 ];

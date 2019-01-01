@@ -26,5 +26,8 @@ var searchData=
   ['ssquare',['ssquare',['../__install_2include_2info_8h.html#a9df84723bfaaabc262e2059262818ba3',1,'ssquare(const char *ID_name):&#160;info.c'],['../info_8c.html#a9df84723bfaaabc262e2059262818ba3',1,'ssquare(const char *ID_name):&#160;info.c'],['../src_2info_2info_8h.html#a9df84723bfaaabc262e2059262818ba3',1,'ssquare(const char *ID_name):&#160;info.c']]],
   ['statistic_5fbirch_5fclustering',['statistic_BIRCH_clustering',['../statistic_8c.html#ad657c73399975437682ef3dce12f1999',1,'statistic.c']]],
   ['statistic_5fputgaussnoise_5fcli',['statistic_putgaussnoise_cli',['../statistic_8c.html#a42f79098f976305090856a56430e7bcd',1,'statistic.c']]],
-  ['statistic_5fputphnoise_5fcli',['statistic_putphnoise_cli',['../statistic_8c.html#a5536f4a98e2970428387fa813e11c448',1,'statistic.c']]]
+  ['statistic_5fputphnoise_5fcli',['statistic_putphnoise_cli',['../statistic_8c.html#a5536f4a98e2970428387fa813e11c448',1,'statistic.c']]],
+  ['streamctrl_5fcatchsignals',['streamCTRL_CatchSignals',['../streamCTRL_8c.html#a86f200e5c8ce512ba17c51954f944e8a',1,'streamCTRL.c']]],
+  ['streamctrl_5fctrlscreen',['streamCTRL_CTRLscreen',['../src_2CommandLineInterface_2CLIcore_8h.html#af5f28020d484f3e325a6093ff4d2caa7',1,'streamCTRL_CTRLscreen():&#160;streamCTRL.c'],['../streamCTRL_8c.html#af5f28020d484f3e325a6093ff4d2caa7',1,'streamCTRL_CTRLscreen():&#160;streamCTRL.c']]],
+  ['streamctrl_5fscan',['streamCTRL_scan',['../streamCTRL_8c.html#a37e9e3baa3e0f825636d1df403c87594',1,'streamCTRL.c']]]
 ];

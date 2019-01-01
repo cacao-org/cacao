@@ -1,17 +1,27 @@
 var NAVTREE =
 [
   [ "cacao", "index.html", [
-    [ "Outline", "index.html", null ],
-    [ "cacao modules", "page_cacao_Modules.html", "page_cacao_Modules" ],
-    [ "milk modules", "page_milk_Modules.html", null ],
-    [ "News", "page_news.html", null ],
-    [ "Configuring and Running cacao", "page_cacao_top_guide.html", "page_cacao_top_guide" ],
-    [ "Change Log", "md_src_CommandLineInterface_CHANGELOG.html", null ],
-    [ "Coding Standards", "page_coding_standards.html", "page_coding_standards" ],
-    [ "Installation", "page_installation.html", null ],
-    [ "Loading and Creating Modules", "page_LoadingModules.html", null ],
-    [ "Command Line Interface", "page_userinput.html", "page_userinput" ],
-    [ "Working with git", "page_WorkingWithGit.html", null ],
+    [ "cacao Documentation", "index.html", [
+      [ "1. What is cacao ?", "index.html#mainsection_whatiscacao", null ],
+      [ "2. Installing cacao and running command line interface", "index.html#mainsection_gettingstarted", null ],
+      [ "3. Fundamentals", "index.html#mainsection_fundamentals", [
+        [ "3.1. Processes and Streams", "index.html#mainsection_fundamentals_processesstreams", null ],
+        [ "3.2. Building an AO control loop", "index.html#mainsection_fundamentals_buildingloop", null ],
+        [ "3.3. Key tools", "index.html#mainsection_fundamentals_keytools", null ]
+      ] ],
+      [ "4. Configuring and running cacao", "index.html#mainsection_cacaoconfrun", [
+        [ "4.1. Step-by-step instructions", "index.html#mainsection_cacao_example", null ]
+      ] ],
+      [ "5. Programming with cacao", "index.html#mainsection_cacaoprog", [
+        [ "5.1. Source Code", "index.html#mainsection_sourcecode", null ],
+        [ "5.2. Programming guide", "index.html#mainsection_programmingguide", null ]
+      ] ],
+      [ "Appendix A. Modules", "index.html#mainsection_modules", [
+        [ "A.1. milk modules", "index.html#mainsection_modules_milk", null ],
+        [ "A.2. cacao-specific modules", "index.html#mainsection_modules_cacao", null ]
+      ] ]
+    ] ],
+    [ "Subpages", "page_cacao_topmenu.html", "page_cacao_topmenu" ],
     [ "Change Log", "md_src_ImageStreamIO_CHANGELOG.html", null ],
     [ "Bug List", "bug.html", null ],
     [ "Modules", "modules.html", "modules" ],
@@ -52,15 +62,15 @@ var NAVTREEINDEX =
 "calc__bison_8c.html#a15c9f7bd2f0e9686df5d9df4f3314aa9a201a8ab59571d58582381d4f34f173db",
 "cudacomp_8c.html#ad654a86af832bf54b9587bdb9fe730b7",
 "group__AOloopControl__streams.html#ga18c9e2ec793ea161e750b86ffbe8672d",
-"info_8c.html#a9abfdec4a9b6e1bb035c1786abfde18d",
-"psf_8c.html#abc9379a9744f9a97da13a63b65a7c15f",
-"src_2COREMOD__arith_2COREMOD__arith_8h.html#a30c5713a3e7c97ca31a4b0e063c89d2b",
-"src_2COREMOD__memory_2COREMOD__memory_8h.html#aedba8b276660cb1b0b4a0aa6e8c93c99",
-"src_2image__filter_2image__filter_8h.html#ab20ee902b86ee7d0e192c7c00e843d45",
-"structAOLOOPCONF__DMctrl.html",
-"structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#aae214325cb868e367cb9cbd83bc90c35",
-"structLOGSHIM__CONF.html#a540e125719be22adb4d4d1c1c87f575d",
-"structres__node.html#ac291090c8cb9b8ec553c1eeee9c64882"
+"info_8c.html#a3b8f52e95c4feb6615aba01669afcd83",
+"psf_8c.html#ae404b3aa35fec71ae3d9930ae01aded9",
+"src_2COREMOD__arith_2COREMOD__arith_8h.html#a378d285225cef59907673ed50ae70ab9",
+"src_2COREMOD__memory_2COREMOD__memory_8h.html#af7c02416f0db711e00895b876f5be4a9",
+"src_2image__filter_2image__filter_8h.html#ac3e86d60a7bcee3e86680b3688d9e348",
+"structAOLOOPCONF__AutoTune.html#a9486cbf3a1195b22c6f1e92023b56e58",
+"structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a9a6ffc859e2b876f6cc247520f896e09",
+"structGPUMATMULTCONF.html#ae0f1b4ef5fad13670cfd96814e1bc0f4",
+"struct____attribute____.html#a418bf0136d9db9bd521f6ac95c25e858"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

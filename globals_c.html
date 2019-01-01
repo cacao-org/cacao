@@ -1,3 +1,4 @@
+<!-- HTML header for doxygen 1.8.13-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -20,6 +21,7 @@
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -417,14 +419,12 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 : <a class="el" href="COREMOD__memory_8c.html#a36e4254124a02c335b96b9d267554a2f">COREMOD_memory.c</a>
 </li>
 <li>COREMOD_MEMORY_image_set_semwait_OR_IDarray()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a1b4b8135f1a24212048a83d6153b2d39">COREMOD_memory.h</a>
-, <a class="el" href="COREMOD__memory_8c.html#a1b4b8135f1a24212048a83d6153b2d39">COREMOD_memory.c</a>
-, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a1b4b8135f1a24212048a83d6153b2d39">COREMOD_memory.h</a>
+: <a class="el" href="COREMOD__memory_8c.html#a1b4b8135f1a24212048a83d6153b2d39">COREMOD_memory.c</a>
+, <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a1b4b8135f1a24212048a83d6153b2d39">COREMOD_memory.h</a>
 </li>
 <li>COREMOD_MEMORY_image_set_status()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#ab4f13d224122d1461f7cef6ce2a4533c">COREMOD_memory.h</a>
+: <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#ab4f13d224122d1461f7cef6ce2a4533c">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#ab4f13d224122d1461f7cef6ce2a4533c">COREMOD_memory.c</a>
-, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#ab4f13d224122d1461f7cef6ce2a4533c">COREMOD_memory.h</a>
 </li>
 <li>COREMOD_MEMORY_image_set_status_cli()
 : <a class="el" href="COREMOD__memory_8c.html#a5442106af514930c2ab812aa7a64b179">COREMOD_memory.c</a>
@@ -533,8 +533,8 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 : <a class="el" href="COREMOD__memory_8c.html#a5501c309f01ba789486357c1c4f70ce3">COREMOD_memory.c</a>
 </li>
 <li>COREMOD_MEMORY_streamPoke()
-: <a class="el" href="COREMOD__memory_8c.html#a022454fb3ac99a39c43f6f55b743af50">COREMOD_memory.c</a>
-, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a022454fb3ac99a39c43f6f55b743af50">COREMOD_memory.h</a>
+: <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a022454fb3ac99a39c43f6f55b743af50">COREMOD_memory.h</a>
+, <a class="el" href="COREMOD__memory_8c.html#a022454fb3ac99a39c43f6f55b743af50">COREMOD_memory.c</a>
 </li>
 <li>COREMOD_MEMORY_streamPoke_cli()
 : <a class="el" href="COREMOD__memory_8c.html#a9b8a1b341a1c25f9716faaeada3a8303">COREMOD_memory.c</a>
@@ -542,7 +542,6 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 <li>COREMOD_MEMORY_testfunc()
 : <a class="el" href="__install_2include_2COREMOD__memory_8h.html#aa97c480e1d2fa341c233d5059e0b5f79">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#aa97c480e1d2fa341c233d5059e0b5f79">COREMOD_memory.c</a>
-, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#aa97c480e1d2fa341c233d5059e0b5f79">COREMOD_memory.h</a>
 </li>
 <li>COREMOD_TOOLS_imgdisplay3D()
 : <a class="el" href="src_2COREMOD__tools_2COREMOD__tools_8h.html#aadce3c8dde88e975c3e553c7419ecf00">COREMOD_tools.h</a>
@@ -590,45 +589,10 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 <li>CPsub_CF_CF()
 : <a class="el" href="COREMOD__arith_8c.html#abe480f992487a61d9acba905ccbf5982">COREMOD_arith.c</a>
 </li>
-<li>CPUcnt0
-: <a class="el" href="processtools_8c.html#a14b24065399b71364d82c772d484a415">processtools.c</a>
-</li>
-<li>CPUcnt1
-: <a class="el" href="processtools_8c.html#adde5ab72ec8f282e37c1f034861205d4">processtools.c</a>
-</li>
-<li>CPUcnt2
-: <a class="el" href="processtools_8c.html#ae98ca2b719db8695287c3cfce994576a">processtools.c</a>
-</li>
-<li>CPUcnt3
-: <a class="el" href="processtools_8c.html#affff706809cd62a8492500e6b03b3d87">processtools.c</a>
-</li>
-<li>CPUcnt4
-: <a class="el" href="processtools_8c.html#ab0c5d5ba1af8df80c8a0b08f19341cad">processtools.c</a>
-</li>
-<li>CPUcnt5
-: <a class="el" href="processtools_8c.html#ac6a124ceccf32e93ddc4f5556cc18cfc">processtools.c</a>
-</li>
-<li>CPUcnt6
-: <a class="el" href="processtools_8c.html#a055ecb659de7a30cec7bb56c6ae52ea0">processtools.c</a>
-</li>
-<li>CPUcnt7
-: <a class="el" href="processtools_8c.html#ac425fa9659f5334d7a0e65bb10fc192a">processtools.c</a>
-</li>
-<li>CPUcnt8
-: <a class="el" href="processtools_8c.html#abc7e39975c952c19f04d937c7677f2d5">processtools.c</a>
-</li>
-<li>CPUids
-: <a class="el" href="processtools_8c.html#aa3aef79860c2ed3dfb939c118b0e017d">processtools.c</a>
-</li>
-<li>CPUload
-: <a class="el" href="processtools_8c.html#a5d6aacbe3632033e5df4319066fea94d">processtools.c</a>
-</li>
-<li>CPUpcnt
-: <a class="el" href="processtools_8c.html#a4f25b82dd32d02164ade2c32927551f7">processtools.c</a>
-</li>
 <li>CR2toFITS()
 : <a class="el" href="src_2image__format_2image__format_8h.html#ad6e3a4cbb0bb3f8e7814bace36380418">image_format.h</a>
 , <a class="el" href="image__format_8c.html#ad6e3a4cbb0bb3f8e7814bace36380418">image_format.c</a>
+, <a class="el" href="__install_2include_2image__format_8h.html#ad6e3a4cbb0bb3f8e7814bace36380418">image_format.h</a>
 </li>
 <li>CR2toFITS_cli()
 : <a class="el" href="image__format_8c.html#a8a9cd3db37b67415f0c45199e06ada6b">image_format.c</a>
@@ -643,22 +607,21 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 : <a class="el" href="image__format_8c.html#ab068cc08dc3ad92ac18bca1314bfc7d2">image_format.c</a>
 </li>
 <li>create_1DCimage_ID()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a31e167d2d2fe4dea5c77e0ee3cd20d2b">COREMOD_memory.h</a>
-, <a class="el" href="COREMOD__memory_8c.html#a31e167d2d2fe4dea5c77e0ee3cd20d2b">COREMOD_memory.c</a>
+: <a class="el" href="COREMOD__memory_8c.html#a31e167d2d2fe4dea5c77e0ee3cd20d2b">COREMOD_memory.c</a>
+, <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a31e167d2d2fe4dea5c77e0ee3cd20d2b">COREMOD_memory.h</a>
 </li>
 <li>create_1Dimage_ID()
 : <a class="el" href="__install_2include_2COREMOD__memory_8h.html#af4310a93970c5e6f9ef77a4585b5cc25">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#af4310a93970c5e6f9ef77a4585b5cc25">COREMOD_memory.c</a>
+, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#af4310a93970c5e6f9ef77a4585b5cc25">COREMOD_memory.h</a>
 </li>
 <li>create_2DCimage_ID()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#adf21e8412f5edde73fe16cf8ebf30a9d">COREMOD_memory.h</a>
-, <a class="el" href="COREMOD__memory_8c.html#adf21e8412f5edde73fe16cf8ebf30a9d">COREMOD_memory.c</a>
+: <a class="el" href="COREMOD__memory_8c.html#adf21e8412f5edde73fe16cf8ebf30a9d">COREMOD_memory.c</a>
 , <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#adf21e8412f5edde73fe16cf8ebf30a9d">COREMOD_memory.h</a>
 </li>
 <li>create_2DCimage_ID_double()
-: <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#af1fe9dbf2a8d0199bb9c4d2d164f6205">COREMOD_memory.h</a>
+: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#af1fe9dbf2a8d0199bb9c4d2d164f6205">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#af1fe9dbf2a8d0199bb9c4d2d164f6205">COREMOD_memory.c</a>
-, <a class="el" href="__install_2include_2COREMOD__memory_8h.html#af1fe9dbf2a8d0199bb9c4d2d164f6205">COREMOD_memory.h</a>
 </li>
 <li>create_2Dimage_float()
 : <a class="el" href="COREMOD__memory_8c.html#ab3eed7c1b2e4446bdaa3fd05bf1fd0a0">COREMOD_memory.c</a>
@@ -666,41 +629,41 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 <li>create_2Dimage_ID()
 : <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a8bd82d826bb0ab4a138a753e7541deb5">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#a8bd82d826bb0ab4a138a753e7541deb5">COREMOD_memory.c</a>
+, <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a8bd82d826bb0ab4a138a753e7541deb5">COREMOD_memory.h</a>
 </li>
 <li>create_2Dimage_ID_double()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a2ca66c3dcacc3eb1f3e60ab3f700103b">COREMOD_memory.h</a>
-, <a class="el" href="COREMOD__memory_8c.html#a2ca66c3dcacc3eb1f3e60ab3f700103b">COREMOD_memory.c</a>
-, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a2ca66c3dcacc3eb1f3e60ab3f700103b">COREMOD_memory.h</a>
+: <a class="el" href="COREMOD__memory_8c.html#a2ca66c3dcacc3eb1f3e60ab3f700103b">COREMOD_memory.c</a>
+, <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a2ca66c3dcacc3eb1f3e60ab3f700103b">COREMOD_memory.h</a>
 </li>
 <li>create_3DCimage_ID()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a0a1982d50532e2f44856140fa331c0e6">COREMOD_memory.h</a>
+: <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a0a1982d50532e2f44856140fa331c0e6">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#a0a1982d50532e2f44856140fa331c0e6">COREMOD_memory.c</a>
-, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a0a1982d50532e2f44856140fa331c0e6">COREMOD_memory.h</a>
 </li>
 <li>create_3Dimage_float()
 : <a class="el" href="COREMOD__memory_8c.html#af807d947d32781c30bcbcc4e4b61fd2f">COREMOD_memory.c</a>
 </li>
 <li>create_3Dimage_ID()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a9628a89f32c48e510cd8554232b9e0c3">COREMOD_memory.h</a>
-, <a class="el" href="COREMOD__memory_8c.html#a9628a89f32c48e510cd8554232b9e0c3">COREMOD_memory.c</a>
+: <a class="el" href="COREMOD__memory_8c.html#a9628a89f32c48e510cd8554232b9e0c3">COREMOD_memory.c</a>
+, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a9628a89f32c48e510cd8554232b9e0c3">COREMOD_memory.h</a>
 </li>
 <li>create_3Dimage_ID_double()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a55f4eceef762e9f116f2a730d808f4ba">COREMOD_memory.h</a>
-, <a class="el" href="COREMOD__memory_8c.html#a55f4eceef762e9f116f2a730d808f4ba">COREMOD_memory.c</a>
-, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a55f4eceef762e9f116f2a730d808f4ba">COREMOD_memory.h</a>
+: <a class="el" href="COREMOD__memory_8c.html#a55f4eceef762e9f116f2a730d808f4ba">COREMOD_memory.c</a>
+, <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a55f4eceef762e9f116f2a730d808f4ba">COREMOD_memory.h</a>
 </li>
 <li>create_3Dimage_ID_float()
 : <a class="el" href="COREMOD__memory_8c.html#a0c2372253b303105ca546b586267da2b">COREMOD_memory.c</a>
 </li>
 <li>create_counter_file()
-: <a class="el" href="src_2COREMOD__tools_2COREMOD__tools_8h.html#a6eb0f1e9287d62ad891cec91932b0422">COREMOD_tools.h</a>
+: <a class="el" href="__install_2include_2COREMOD__tools_8h.html#a6eb0f1e9287d62ad891cec91932b0422">COREMOD_tools.h</a>
 , <a class="el" href="COREMOD__tools_8c.html#a6eb0f1e9287d62ad891cec91932b0422">COREMOD_tools.c</a>
+, <a class="el" href="src_2COREMOD__tools_2COREMOD__tools_8h.html#a6eb0f1e9287d62ad891cec91932b0422">COREMOD_tools.h</a>
 </li>
 <li>create_image_cli()
 : <a class="el" href="COREMOD__memory_8c.html#ab602e6a4a31fbdcb2f42bddf39d1d834">COREMOD_memory.c</a>
 </li>
 <li>create_image_ID()
-: <a class="el" href="COREMOD__memory_8c.html#a720050d028582ca6102f506e70f549d2">COREMOD_memory.c</a>
+: <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a368f826f06263b07e76fd4cab19a0f47">COREMOD_memory.h</a>
+, <a class="el" href="COREMOD__memory_8c.html#a720050d028582ca6102f506e70f549d2">COREMOD_memory.c</a>
 , <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a368f826f06263b07e76fd4cab19a0f47">COREMOD_memory.h</a>
 </li>
 <li>create_image_shared_cli()
@@ -710,23 +673,20 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 : <a class="el" href="COREMOD__memory_8c.html#a3de6193b7f8dd73c556a4681f1a77e53">COREMOD_memory.c</a>
 </li>
 <li>create_variable_ID()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a92bb4be8f7727c20b7dd450b04ec8529">COREMOD_memory.h</a>
+: <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a92bb4be8f7727c20b7dd450b04ec8529">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#a92bb4be8f7727c20b7dd450b04ec8529">COREMOD_memory.c</a>
-, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a92bb4be8f7727c20b7dd450b04ec8529">COREMOD_memory.h</a>
 </li>
 <li>create_variable_long_ID()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#aa4d030b85c72003e5ffb33a9f76cc258">COREMOD_memory.h</a>
-, <a class="el" href="COREMOD__memory_8c.html#aa4d030b85c72003e5ffb33a9f76cc258">COREMOD_memory.c</a>
-, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#aa4d030b85c72003e5ffb33a9f76cc258">COREMOD_memory.h</a>
+: <a class="el" href="COREMOD__memory_8c.html#aa4d030b85c72003e5ffb33a9f76cc258">COREMOD_memory.c</a>
+, <a class="el" href="__install_2include_2COREMOD__memory_8h.html#aa4d030b85c72003e5ffb33a9f76cc258">COREMOD_memory.h</a>
 </li>
 <li>create_variable_string_ID()
 : <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a489cd2e304ceb20504a2b676adb950d1">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#a489cd2e304ceb20504a2b676adb950d1">COREMOD_memory.c</a>
 </li>
 <li>cube_average()
-: <a class="el" href="__install_2include_2image__basic_8h.html#a55872a031dbf30f2731e46415d8c33fd">image_basic.h</a>
+: <a class="el" href="src_2image__basic_2image__basic_8h.html#a55872a031dbf30f2731e46415d8c33fd">image_basic.h</a>
 , <a class="el" href="image__basic_8c.html#a55872a031dbf30f2731e46415d8c33fd">image_basic.c</a>
-, <a class="el" href="src_2image__basic_2image__basic_8h.html#a55872a031dbf30f2731e46415d8c33fd">image_basic.h</a>
 </li>
 <li>cube_collapse()
 : <a class="el" href="__install_2include_2image__basic_8h.html#aab9d389f322408922724fc1c9bdf8c58">image_basic.h</a>
@@ -740,9 +700,8 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 : <a class="el" href="cudacomp_8c.html#a21e3e5d23dc38473b93c97c079dd9e2f">cudacomp.c</a>
 </li>
 <li>CUDACOMP_Coeff2Map_Loop()
-: <a class="el" href="src_2cudacomp_2cudacomp_8h.html#a5db894f96230f0ab904cf66eb847a40b">cudacomp.h</a>
+: <a class="el" href="__install_2include_2cudacomp_8h.html#a5db894f96230f0ab904cf66eb847a40b">cudacomp.h</a>
 , <a class="el" href="cudacomp_8c.html#a5db894f96230f0ab904cf66eb847a40b">cudacomp.c</a>
-, <a class="el" href="__install_2include_2cudacomp_8h.html#a5db894f96230f0ab904cf66eb847a40b">cudacomp.h</a>
 </li>
 <li>CUDACOMP_Coeff2Map_Loop_cli()
 : <a class="el" href="cudacomp_8c.html#aa710759e73dca737b44aa33220480fbe">cudacomp.c</a>
@@ -754,28 +713,26 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 : <a class="el" href="__install_2include_2cudacomp_8h.html#a055b49c0a27133965b1b880c82bdb3c7">cudacomp.h</a>
 </li>
 <li>CUDACOMP_init()
-: <a class="el" href="cudacomp_8c.html#a90c08b75f4f631211f74bdb44355adb3">cudacomp.c</a>
-, <a class="el" href="__install_2include_2cudacomp_8h.html#a90c08b75f4f631211f74bdb44355adb3">cudacomp.h</a>
+: <a class="el" href="__install_2include_2cudacomp_8h.html#a90c08b75f4f631211f74bdb44355adb3">cudacomp.h</a>
+, <a class="el" href="cudacomp_8c.html#a90c08b75f4f631211f74bdb44355adb3">cudacomp.c</a>
 </li>
 <li>CUDACOMP_magma_compute_SVDpseudoInverse()
 : <a class="el" href="cudacomp_8c.html#a294bf74bb627643ec6422380adeb7262">cudacomp.c</a>
-, <a class="el" href="__install_2include_2cudacomp_8h.html#af2be454fbe2a3f6878745fc524051554">cudacomp.h</a>
+, <a class="el" href="src_2cudacomp_2cudacomp_8h.html#a294bf74bb627643ec6422380adeb7262">cudacomp.h</a>
 </li>
 <li>CUDACOMP_magma_compute_SVDpseudoInverse_cli()
 : <a class="el" href="cudacomp_8c.html#a3364bbb0d1130a52d89b8bee30b1add1">cudacomp.c</a>
 </li>
 <li>CUDACOMP_magma_compute_SVDpseudoInverse_SVD()
-: <a class="el" href="__install_2include_2cudacomp_8h.html#a9bdb904d645ecaa0fc77d73082463b17">cudacomp.h</a>
-, <a class="el" href="cudacomp_8c.html#a9bdb904d645ecaa0fc77d73082463b17">cudacomp.c</a>
-, <a class="el" href="src_2cudacomp_2cudacomp_8h.html#a9bdb904d645ecaa0fc77d73082463b17">cudacomp.h</a>
+: <a class="el" href="cudacomp_8c.html#a9bdb904d645ecaa0fc77d73082463b17">cudacomp.c</a>
+, <a class="el" href="__install_2include_2cudacomp_8h.html#a9bdb904d645ecaa0fc77d73082463b17">cudacomp.h</a>
 </li>
 <li>CUDACOMP_magma_compute_SVDpseudoInverse_SVD_cli()
 : <a class="el" href="cudacomp_8c.html#a4ddf7835e6f15dafbf1f50aeb16e0794">cudacomp.c</a>
 </li>
 <li>CUDACOMP_MatMatMult_testPseudoInverse()
-: <a class="el" href="src_2cudacomp_2cudacomp_8h.html#a1194bccddfcc6525520b96f49b05e7a1">cudacomp.h</a>
-, <a class="el" href="cudacomp_8c.html#a1194bccddfcc6525520b96f49b05e7a1">cudacomp.c</a>
-, <a class="el" href="__install_2include_2cudacomp_8h.html#a1194bccddfcc6525520b96f49b05e7a1">cudacomp.h</a>
+: <a class="el" href="cudacomp_8c.html#a1194bccddfcc6525520b96f49b05e7a1">cudacomp.c</a>
+, <a class="el" href="src_2cudacomp_2cudacomp_8h.html#a1194bccddfcc6525520b96f49b05e7a1">cudacomp.h</a>
 </li>
 <li>CUDACOMP_MatMatMult_testPseudoInverse_cli()
 : <a class="el" href="cudacomp_8c.html#a452a6f095dd28bf63a83be60fdccda6a">cudacomp.c</a>
@@ -787,8 +744,8 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 : <a class="el" href="cudacomp_8c.html#a7c7242795b0afe9f0c1ed1c878e5a693">cudacomp.c</a>
 </li>
 <li>CUDACOMP_printGPUMATMULTCONF()
-: <a class="el" href="__install_2include_2cudacomp_8h.html#a1fd7986590f046a9412ba7f1d0f5d3d9">cudacomp.h</a>
-, <a class="el" href="cudacomp_8c.html#a1fd7986590f046a9412ba7f1d0f5d3d9">cudacomp.c</a>
+: <a class="el" href="cudacomp_8c.html#a1fd7986590f046a9412ba7f1d0f5d3d9">cudacomp.c</a>
+, <a class="el" href="src_2cudacomp_2cudacomp_8h.html#a1fd7986590f046a9412ba7f1d0f5d3d9">cudacomp.h</a>
 </li>
 <li>CUDACOMP_test_cli()
 : <a class="el" href="cudacomp_8c.html#ad81526b0b3c245b0f134a3bae42e0d24">cudacomp.c</a>
@@ -796,10 +753,11 @@ $(document).ready(function(){initNavTree('globals_c.html','');});
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
+<!-- HTML footer for doxygen 1.8.13-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Dec 15 2018 01:47:30 for cacao by
+    <li class="footer">Generated on Sun Dec 30 2018 21:39:34 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>
