@@ -311,6 +311,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     char command[200];
     uint32_t *sizearray;
     long IDoutC;
+    char *ptr;
 
     long NBiter = 10000; // runs until USR1 signal received
     long iter;
@@ -786,7 +787,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 {
                     for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         data.image[IDoutC].array.F[PokeIndexMapped*AOconf[loop].WFSim.sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
-                    memcpy(data.image[IDoutCstep[kk]].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].WFSim.sizeWFS); //NEW
+                    ptr = (char*) data.image[IDoutCstep[kk]].array.F;
+                    ptr += sizeof(float)*PokeIndexMapped*AOconf[loop].WFSim.sizeWFS;
+                    memcpy(ptr, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].WFSim.sizeWFS); //NEW
                     array_accum[imcnt] = 1;
                 }
                 kk1++;
