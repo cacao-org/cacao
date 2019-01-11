@@ -149,6 +149,83 @@ int AOloopControl_DM_disp2V(long DMindex)
 
 
 
+
+
+//
+// manages configuration parameters
+// initializes configuration parameters structure
+//
+int AOloopControl_DM_CombineChannels_conf(
+	long DMindex,
+    long xsize,
+    long ysize,
+    int NBchannel,
+    int AveMode,
+    int dm2dm_mode,
+    const char *dm2dm_DMmodes,
+    const char *dm2dm_outdisp,
+    int wfsrefmode,
+    const char *wfsref_WFSRespMat,
+    const char *wfsref_out,
+    int voltmode,
+    int volttype,
+    float stroke100,
+    const char *IDvolt_name,
+    float DClevel,
+    float maxvolt
+    )
+{
+	// define function parameters
+	int fpindex;  // function parameter index
+	int NBparam = FUNCTION_PARAMETER_NBPARAM_DEFAULT;
+	char sname[200];
+	char pname[200];
+	
+	sprintf(sname, "DMCOMB%02ld", DMindex);
+	function_parameter_struct_create(NBparam, sname);
+
+
+	FUNCTION_PARAMETER_STRUCT funcparamstruct;
+	function_parameter_struct_connect(sname, &funcparamstruct);
+	
+
+	sprintf(pname, "%s.DMindex", sname);
+	fpindex = function_parameter_add_entry(funcparamstruct.parray, pname, "Deformable mirror index", FUNCTION_PARAMETER_TYPE_INT64, NBparam, &DMindex);
+	funcparamstruct.parray[fpindex].val.l[1] = 0;  // min
+	funcparamstruct.parray[fpindex].val.l[2] = 9;  // max
+	funcparamstruct.parray[fpindex].status = funcparamstruct.parray[fpindex].status | FUNCTION_PARAMETER_STATUS_MINLIMIT | FUNCTION_PARAMETER_STATUS_MAXLIMIT;
+	
+	sprintf(pname, "%s.xsize", sname);
+	fpindex = function_parameter_add_entry(funcparamstruct.parray, pname, "Deformable mirror X size", FUNCTION_PARAMETER_TYPE_INT64, NBparam, &xsize);
+	
+	sprintf(pname, "%s.ysize", sname);
+	fpindex = function_parameter_add_entry(funcparamstruct.parray, pname, "Deformable mirror Y size", FUNCTION_PARAMETER_TYPE_INT64, NBparam, &ysize);
+
+	sprintf(pname, "%s.zsize.test1", sname);
+	fpindex = function_parameter_add_entry(funcparamstruct.parray, pname, "Deformable mirror Y size", FUNCTION_PARAMETER_TYPE_INT64, NBparam, &ysize);
+
+	sprintf(pname, "%s.zsize.test2", sname);
+	fpindex = function_parameter_add_entry(funcparamstruct.parray, pname, "Deformable mirror Y size", FUNCTION_PARAMETER_TYPE_INT64, NBparam, &ysize);
+
+	sprintf(pname, "%s.zsize.test3", sname);
+	fpindex = function_parameter_add_entry(funcparamstruct.parray, pname, "Deformable mirror Y size", FUNCTION_PARAMETER_TYPE_INT64, NBparam, &ysize);
+	
+	sprintf(pname, "%s.zsize.ttest.sub1", sname);
+	fpindex = function_parameter_add_entry(funcparamstruct.parray, pname, "Deformable mirror Y size", FUNCTION_PARAMETER_TYPE_INT64, NBparam, &ysize);
+	
+	
+	function_parameter_struct_disconnect(&funcparamstruct, NBparam);
+
+
+	exit(0);
+	
+	return(0);
+}
+
+
+
+
+
 //
 // DMindex is a unique DM identifier (0-9), so multiple instances can coexist
 //
@@ -252,6 +329,13 @@ int AOloopControl_DM_CombineChannels(
     double tdiffv;
 
     int DMupdate;
+
+
+	// manage configuration parameters
+	
+	AOloopControl_DM_CombineChannels_conf(DMindex, xsize, ysize, NBchannel, AveMode, dm2dm_mode, dm2dm_DMmodes, dm2dm_outdisp, wfsrefmode, wfsref_WFSRespMat, wfsref_out, voltmode, volttype, stroke100, IDvolt_name, DClevel, maxvolt);
+
+
 
     PROCESSINFO *processinfo;
     if(data.processinfo==1)
@@ -781,6 +865,8 @@ int AOloopControl_DM_CombineChannels(
 
     return 0;
 }
+
+
 
 
 
