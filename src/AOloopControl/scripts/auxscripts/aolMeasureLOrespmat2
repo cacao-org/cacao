@@ -142,6 +142,9 @@ loopnb=$( head -1 LOOPNUMBER )
 pname0=$0
 pname="aol${loopnb}LOrespM"
 
+# flush tmpRMacq directory
+rm ./tmpRMacq/*
+
 ./AOloopControl -n $pname << EOF
 aolnb $loopnb
 csetpmove ${CPUset}
@@ -154,4 +157,4 @@ exitCLI
 EOF
 cp respM_LOmodes.fits LODMmodes.fits
 
-
+mv tmpRMacq tmpRMacqLO

@@ -157,6 +157,9 @@ cp ./conf/RMpokeCubeZ.fits.gz ./conf/RMpokeCube.fits.gz
 fi
 
 
+# flush tmpRMacq directory
+rm ./tmpRMacq/*
+
 OMP_NUM_THREADS=1 ./AOloopControl -n $pname << EOF
 aolnb $loopnb
 csetpmove ${CPUset}
@@ -169,4 +172,5 @@ listim
 exitCLI
 EOF
 
+mv tmpRMacq tmpRMacqZ
 
