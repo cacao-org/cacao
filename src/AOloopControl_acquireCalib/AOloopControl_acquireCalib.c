@@ -334,6 +334,10 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     int loopOK = 1;
 
 
+	int SAVE_CYCLE = 1;
+	
+	
+
     if((data.processinfo==1)&&(data.processinfoActive==0))
     {
         // CREATE PROCESSINFO ENTRY
@@ -446,6 +450,19 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     sizearray[2] = NBpoke;
     IDoutC = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1], sizearray[2]);
 
+	// create one temporary array per time step
+	int AveStep;
+	long *IDoutCstep = (long*) malloc(sizeof(long)*NBave);
+	for(AveStep=0; AveStep<NBave; AveStep++)
+	{
+		char imname[100];
+		sprintf(imname, "imoutStep%03d", AveStep);
+		IDoutCstep[AveStep] = create_3Dimage_ID(imname, sizearray[0], sizearray[1], sizearray[2]);
+	}
+
+
+
+
 
 	// Check that DM size matches poke file
 	if( data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1] != data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[1])
@@ -464,7 +481,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     uint_fast16_t PokeIndex;   // Mode to be poked
     for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
         for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+        {
             data.image[IDoutC].array.F[PokeIndex*AOconf[loop].WFSim.sizeWFS+ii] = 0.0;
+			for(AveStep=0; AveStep<NBave; AveStep++)
+				data.image[IDoutCstep[AveStep]].array.F[PokeIndex*AOconf[loop].WFSim.sizeWFS+ii] = 0.0;
+         }   
+    
 
 
     /**
@@ -764,6 +786,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 {
                     for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         data.image[IDoutC].array.F[PokeIndexMapped*AOconf[loop].WFSim.sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
+                    memcpy(data.image[IDoutCstep[kk]].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].WFSim.sizeWFS); //NEW
                     array_accum[imcnt] = 1;
                 }
                 kk1++;
@@ -808,6 +831,21 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
         AOconf[loop].aorun.DMupdatecnt ++;
         array_poke[imcnt] = 1;
+
+
+		
+		if(SAVE_CYCLE == 1) // Save intermediate result
+		{
+			char tmpfname[200];
+			
+			system("mkdir -p tmpRMacqu");
+			for(AveStep=0; AveStep < NBave; AveStep++)
+			{
+				sprintf(tmpfname, "!./tmpRMacqu/%s.%03d.%03ld.fits", IDoutC_name, AveStep, iter);
+				save_fits(data.image[IDoutCstep[kk]].md[0].name, tmpfname);
+			}
+			
+		}
 
         iter++;
 
@@ -907,6 +945,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     }
     fclose(fp);
 
+	free(IDoutCstep);
 
     free(array_iter);
     free(array_accum);
@@ -948,17 +987,17 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 long AOloopControl_acquireCalib_Measure_WFS_linResponse(
     long        loop,
     float       ampl,
-    long        delayfr,
-    long        delayRM1us,
-    long        NBave,
-    long        NBexcl,
+    long        delayfr,          /// Frame delay [# of frame]
+    long        delayRM1us,       /// Sub-frame delay [us]
+    long        NBave,            /// Number of frames averaged for a single poke measurement
+    long        NBexcl,           /// Number of frames excluded 
     const char *IDpokeC_name,
     const char *IDrespC_name,
     const char *IDwfsref_name,
     int         normalize,
     int         AOinitMode,
-    long        NBcycle,
-    long        NBinnerCycle
+    long        NBcycle,         /// Number of measurement cycles to be repeated
+    long        NBinnerCycle     /// Number of inner cycles (how many consecutive times should a single +/- poke be repeated) 
 )
 {
     long IDrespC;
@@ -992,6 +1031,22 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
     dmysize = data.image[IDpokeC].md[0].size[1];
     dmxysize = dmxsize*dmysize;
     NBpoke = data.image[IDpokeC].md[0].size[2];
+
+
+
+
+
+
+
+	// **************************************************************
+	// *************** PREPARE POKE CUBES ***************************
+	// **************************************************************
+
+	//
+	// Poke cubes will be written to dmpokeC2a and dmpokeC2b
+
+
+
 
     NBpoke2 = 2*NBpoke*NBinnerCycleC + 4; // add zero frame before and after
 
@@ -1027,9 +1082,6 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 
 
 
-
-
-
     pokesign = (int*) malloc(sizeof(int)*NBpoke);
 
     pokesigntmp = 1;
@@ -1043,7 +1095,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
         for(innercycle=0; innercycle < NBinnerCycleC; innercycle++)
         {
             // note
-            // old incices were 2*poke+2 and 2*poke+3
+            // old indices were 2*poke+2 and 2*poke+3
 
             for(act=0; act<dmxysize; act++)
                 data.image[IDpokeC2a].array.F[dmxysize*(pokeindex) + act]   =  ampl*data.image[IDpokeC].array.F[dmxysize*poke+act];
@@ -1093,6 +1145,14 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
     printf("NBpoke = %ld\n", NBpoke);
     fflush(stdout);
 
+
+
+
+
+	// ******************************************************************
+	// *************** EXECUTE POKE SEQUENCES ***************************
+	// ******************************************************************
+
     // Positive direction sequence
     AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2a", "wfsresp2a", normalize, AOinitMode, (long) (NBcycle/2), 0);
 
@@ -1104,6 +1164,13 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 
     //	save_fits("wfsresp2", "!tmp/test_wfsresp2.fits");
 
+
+
+
+
+	// ******************************************************************
+	// *************** PROCESS DATA CUBES *******************************
+	// ******************************************************************
 
     // process data cube
     IDwfsresp2a = image_ID("wfsresp2a");
