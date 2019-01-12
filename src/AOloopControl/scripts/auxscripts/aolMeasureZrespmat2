@@ -114,7 +114,6 @@ shift $((OPTIND-1))
 
 
 
-
 if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
 if [ "$#" -ne $NBARGS ]; then
     echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
