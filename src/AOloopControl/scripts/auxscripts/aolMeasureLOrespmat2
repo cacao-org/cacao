@@ -157,4 +157,7 @@ exitCLI
 EOF
 cp respM_LOmodes.fits LODMmodes.fits
 
-mv tmpRMacqu tmpRMacquLO
+
+rm tmpRMacquLO/*
+mkdir -p tmpRMacquLO
+mv tmpRMacqu/* tmpRMacquLO
