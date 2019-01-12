@@ -196,6 +196,9 @@ echo "##########################################"
 # 	zrespmat0.fits
 #	wfsref00.fits
 #
+
+touch TTEST000 #TEST
+
 if pgrep "aol${LOOPNUMBER}run" > /dev/null  # is aolrun running ?
 then # use option -r to re-use AO shared memory configuration
 	./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
