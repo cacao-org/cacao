@@ -849,8 +849,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 				
 				sprintf(tmpfname, "!tmpRMacqu/%s.%03d.%03ld.fits", IDoutC_name, AveStep, iter);				
 				list_image_ID();
-				printf("imname = %s -> %s\n", imname, tmpfname);
+				printf("SAVING %s -> %s ... ", imname, tmpfname);
 				save_fits(imname, tmpfname);
+				printf("DONE\n");
 			}
 			
 		}
