@@ -785,8 +785,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
                 if(kk<NBave)
                 {
-                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
-                        data.image[IDoutC].array.F[PokeIndexMapped*AOconf[loop].WFSim.sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
+                  //  for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                  //     data.image[IDoutC].array.F[PokeIndexMapped*AOconf[loop].WFSim.sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                     ptr = (char*) data.image[IDoutCstep[kk]].array.F;
                     ptr += sizeof(float)*PokeIndexMapped*AOconf[loop].WFSim.sizeWFS;
                     memcpy(ptr, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].WFSim.sizeWFS); //NEW
@@ -835,6 +835,16 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         AOconf[loop].aorun.DMupdatecnt ++;
         array_poke[imcnt] = 1;
 
+
+
+		for(AveStep=0; AveStep < NBave; AveStep++)
+		{
+			for(PokeIndexMapped=0; PokeIndexMapped<NBpoke ; PokeIndexMapped++)
+			{
+				for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+					data.image[IDoutC].array.F[PokeIndexMapped*AOconf[loop].WFSim.sizeWFS+ii] += data.image[IDoutCstep[AveStep]].array.F[PokeIndexMapped*AOconf[loop].WFSim.sizeWFS+ii];
+			}
+		}
 
 		
 		if(SAVE_CYCLE == 1) // Save intermediate result
