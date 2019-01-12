@@ -22,7 +22,7 @@ echo "     $(tput bold)-h$(tput sgr0)                  help"
 echo "     $(tput bold)-c$(tput sgr0) <CPUset>         use CPU set"
 echo "     $(tput bold)-d$(tput sgr0) <delayRM1us>     DM command delay [us]"
 echo "     $(tput bold)-n$(tput sgr0) <NBcycle>        Number of poke cycles (default=0: poke until killed)"
-echo "     $(tput bold)-i$(tput sgr0) <NBcycleInner>   Number of poke inner cycles (default=10)"
+echo "     $(tput bold)-i$(tput sgr0) <NBcycleInner>   Number of poke inner cycles (default=3)"
 echo "     $(tput bold)-r$(tput sgr0)                  (r)e-use AO shared memory structure, do not re-create it"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
@@ -71,7 +71,7 @@ AOinitMode="0"      # default
 CPUset="NULL"
 delayRM1us="0"
 NBpokeCycle="0"
-NBpokeCycleInner="10"
+NBpokeCycleInner="3"
 
 while getopts :hrc:d:n:i: FLAG; do
   case $FLAG in
