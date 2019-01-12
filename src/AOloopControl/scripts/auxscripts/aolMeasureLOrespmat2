@@ -143,7 +143,7 @@ pname0=$0
 pname="aol${loopnb}LOrespM"
 
 # flush tmpRMacq directory
-rm ./tmpRMacq/*
+rm ./tmpRMacqu/*
 
 ./AOloopControl -n $pname << EOF
 aolnb $loopnb
@@ -157,4 +157,4 @@ exitCLI
 EOF
 cp respM_LOmodes.fits LODMmodes.fits
 
-mv tmpRMacq tmpRMacqLO
+mv tmpRMacqu tmpRMacquLO

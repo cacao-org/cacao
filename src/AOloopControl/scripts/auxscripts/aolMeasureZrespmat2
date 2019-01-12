@@ -158,10 +158,9 @@ fi
 
 
 
-touch TTEST002
 
 # flush tmpRMacq directory
-rm tmpRMacq/*
+rm tmpRMacqu/*
 
 OMP_NUM_THREADS=1 ./AOloopControl -n $pname << EOF
 aolnb $loopnb
@@ -175,5 +174,5 @@ listim
 exitCLI
 EOF
 
-mv tmpRMacq tmpRMacqZ
+mv tmpRMacqu tmpRMacquZ
 
