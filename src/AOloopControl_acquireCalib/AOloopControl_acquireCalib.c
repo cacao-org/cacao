@@ -615,7 +615,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
     // timing info for pokes
-    long NBpokeTotal = NBiter*(4+NBpoke);
+    long NBpokeTotal = (4+delayfr+(NBave+NBexcl)*NBpoke)*NBiter + 4;
     long pokecnt = 0;
     struct timespec poke_ts;
     long *pokeTime_sec;
