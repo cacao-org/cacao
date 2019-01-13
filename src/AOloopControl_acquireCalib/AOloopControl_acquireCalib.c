@@ -369,8 +369,8 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 	{
 		fprintf(fpvect, "%3ld   ", pm);
 		long axis;
-/*		for(axis=0; axis<NBmode; axis++)
-			fprintf(fpvect, "  %+8.6f", vectarray[pm*NBmode+axis]);*/
+		for(axis=0; axis<NBmode; axis++)
+			fprintf(fpvect, "  %+8.6f", vectarray[pm*NBmode+axis]);
 		fprintf(fpvect, "\n");
 	}
 	fclose(fpvect);
