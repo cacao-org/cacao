@@ -315,6 +315,8 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 	
 	long NBpoke;
 	
+	printf("Creating pokes\n");
+	fflush(stdout);
 	
     IDmodeC = image_ID(IDmodeC_name);
     long xsize = data.image[IDmodeC].md[0].size[0];
