@@ -381,12 +381,13 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 	for(pm=0; pm<NBpokemap; pm++)
 	{	
 		long axis;
+		long ii;
+		
 		for(axis=0; axis<NBmode; axis++)
 		{
-			long ii;
 			for(ii=0;ii<xsize*ysize;ii++)
 				data.image[IDpokemapC].array.F[xsize*ysize*pm + ii] += vectarray[pm*NBmode+axis] * data.image[IDmodeC].array.F[axis*xsize*ysize+ii];
-		
+		}
 		
 		
 			for(ii=0;ii<xsize*ysize;ii++)
