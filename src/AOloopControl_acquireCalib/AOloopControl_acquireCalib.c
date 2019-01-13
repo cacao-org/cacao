@@ -363,7 +363,7 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 		{
 			long ii;
 			for(ii=0;ii<xsize*ysize;ii++)
-				data.image[IDpokemapC].array.F[xsize*ysize*pm + ii] += vectarray[pm*NBmode+axis] * data.image[IDmodeC].array.F[axis*xsize*ysize+ii];
+				data.image[IDpokemapC].array.F[xsize*ysize*pm + ii] += 1.0; //vectarray[pm*NBmode+axis] * data.image[IDmodeC].array.F[axis*xsize*ysize+ii];
 		}
 	
 	}
