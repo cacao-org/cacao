@@ -340,6 +340,7 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 	
 	// random allocation
 	long pm; // poke map index
+	long pm1 = 0; // poke frame index
 	for(pm=0; pm<NBpokemap; pm++)
 	{
 		long axis;
@@ -364,6 +365,20 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 			long ii;
 			for(ii=0;ii<xsize*ysize;ii++)
 				data.image[IDpokemapC].array.F[xsize*ysize*pm + ii] += vectarray[pm*NBmode+axis] * data.image[IDmodeC].array.F[axis*xsize*ysize+ii];
+		
+		
+		
+			for(ii=0;ii<xsize*ysize;ii++)
+				data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = data.image[IDpokemapC].array.F[xsize*ysize*pm + ii];
+			pm1++;
+			
+			for(ii=0;ii<xsize*ysize;ii++)
+				data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = -data.image[IDpokemapC].array.F[xsize*ysize*pm + ii];
+			pm1++;
+			
+			for(ii=0;ii<xsize*ysize;ii++)
+				data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = 0.0;
+			pm1++;			
 		}
 	
 	}
