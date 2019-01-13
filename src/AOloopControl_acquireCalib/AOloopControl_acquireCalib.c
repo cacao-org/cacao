@@ -401,7 +401,7 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 			for(ii=0;ii<xsize*ysize;ii++)
 				data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = 0.0;
 			pm1++;			
-		}
+		
 	
 	}
 	
