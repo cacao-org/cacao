@@ -340,7 +340,6 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 	
 	// random allocation
 	long pm; // poke map index
-	long pm1 = 0; // poke frame index
 	for(pm=0; pm<NBpokemap; pm++)
 	{
 		long axis;
@@ -358,8 +357,28 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 		for(axis=0; axis<NBmode; axis++)
 			printf("  %+5.3f", vectarray[pm*NBmode+axis]);
 		printf("\n");
+	}
 	
 	
+	
+	
+	// Write vectors to disk
+	FILE *fpvect = fopen("PokeVect.dat", "w");
+	for(pm=0; pm<NBpokemap; pm++)
+	{
+		fprintf(fpvect, "%3ld   ", pm);
+		long axis;
+		for(axis=0; axis<NBmode; axis++)
+			fprintf(fpvect, "  %+8.6f", vectarray[pm*NBmode+axis]);
+	}
+	fclose(fpvect);
+	
+	
+	
+	long pm1 = 0; // poke frame index
+	for(pm=0; pm<NBpokemap; pm++)
+	{	
+		long axis;
 		for(axis=0; axis<NBmode; axis++)
 		{
 			long ii;
