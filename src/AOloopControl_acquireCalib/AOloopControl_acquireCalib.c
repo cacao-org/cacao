@@ -363,13 +363,15 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 	
 	
 	// Write vectors to disk
-	FILE *fpvect = fopen("PokeVect.dat", "w");
+	FILE *fpvect;
+	fpvect = fopen("PokeVect.dat", "w");
 	for(pm=0; pm<NBpokemap; pm++)
 	{
 		fprintf(fpvect, "%3ld   ", pm);
 		long axis;
-		for(axis=0; axis<NBmode; axis++)
-			fprintf(fpvect, "  %+8.6f", vectarray[pm*NBmode+axis]);
+/*		for(axis=0; axis<NBmode; axis++)
+			fprintf(fpvect, "  %+8.6f", vectarray[pm*NBmode+axis]);*/
+		fprintf(fpvect, "\n");
 	}
 	fclose(fpvect);
 	
