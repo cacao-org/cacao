@@ -334,8 +334,33 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 	NBpoke = NBpokemap*3;
 	IDpokemapC = create_3Dimage_ID(IDpokeC_name, xsize, ysize, NBpoke);	
 
-	// 
-
+	// create direction vectors
+	float *vectarray;
+	vectarray = (float*) malloc(sizeof(float)*NBpokemap*NBmode);
+	
+	// random allocation
+	long pm; // poke map index
+	for(pm=0; pm<NBpokemap; pm++)
+	{
+		long axis;
+		float val = 0.0;
+		for(axis=0; axis<NBmode; axis++)
+		{
+			vectarray[pm*NBmode+axis] = 2.0*ran1()-1.0;
+			val += vectarray[pm*NBmode+axis]*vectarray[pm*NBmode+axis];
+		}
+		// set norm = 1
+		for(axis=0; axis<NBmode; axis++)
+			vectarray[pm*NBmode+axis] /= sqrt(val);
+			
+		printf("Vect #%3ld   ");
+		for(axis=0; axis<NBmode; axis++)
+			printf("  %+5.3f", vectarray[pm*NBmode+axis]);
+		printf("\n");
+	}
+	
+	free(vectarray);
+	
 	
 	return(IDpokeC);
 }
