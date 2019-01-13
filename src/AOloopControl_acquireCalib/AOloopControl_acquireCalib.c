@@ -353,11 +353,22 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 		for(axis=0; axis<NBmode; axis++)
 			vectarray[pm*NBmode+axis] /= sqrt(val);
 			
-		printf("Vect #%3ld   ");
+		printf("Vect #%3ld   ", pm);
 		for(axis=0; axis<NBmode; axis++)
 			printf("  %+5.3f", vectarray[pm*NBmode+axis]);
 		printf("\n");
+	
+	
+		for(axis=0; axis<NBmode; axis++)
+		{
+			long ii;
+			for(ii=0;ii<xsize*ysize;ii++)
+				data.image[IDpokemapC].array.F[xsize*ysize*pm + ii] += vectarray[pm*NBmode+axis] * data.image[IDmodeC].array.F[axis*xsize*ysize+ii];
+		}
+	
 	}
+	
+	
 	
 	free(vectarray);
 	
