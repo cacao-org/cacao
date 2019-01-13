@@ -332,7 +332,7 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 
 
 	NBpoke = NBpokemap*3;
-	IDpokemapC = create_3Dimage_ID(IDpokeC_name, xsize, ysize, NBpoke);	
+	IDpokeC = create_3Dimage_ID(IDpokeC_name, xsize, ysize, NBpoke);	
 
 	// create direction vectors
 	float *vectarray;
@@ -363,7 +363,7 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 		{
 			long ii;
 			for(ii=0;ii<xsize*ysize;ii++)
-				data.image[IDpokemapC].array.F[xsize*ysize*pm + ii] += 1.0; //vectarray[pm*NBmode+axis] * data.image[IDmodeC].array.F[axis*xsize*ysize+ii];
+				data.image[IDpokemapC].array.F[xsize*ysize*pm + ii] += vectarray[pm*NBmode+axis] * data.image[IDmodeC].array.F[axis*xsize*ysize+ii];
 		}
 	
 	}
