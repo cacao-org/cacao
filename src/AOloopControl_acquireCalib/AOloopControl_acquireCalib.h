@@ -30,6 +30,8 @@ int_fast8_t init_AOloopControl_acquireCalib();
 /* =============================================================================================== */
 /* =============================================================================================== */
 
+long AOloopControl_acquireCalib_mkRandomLinPokeSequence(char *IDmodeC_name, long NBpokemap, char *IDpokemapC_name, char *IDpokeC_name);
+
 /** @brief Acquire WFS response to a series of DM pattern */
 long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, int SequInitMode);
 

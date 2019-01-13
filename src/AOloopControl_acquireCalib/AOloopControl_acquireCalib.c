@@ -123,12 +123,42 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
+
+
+
+
+// CLI commands
+//
+// function CLI_checkarg used to check arguments
+// CLI_checkarg ( CLI argument index , type code )
+//
+// type codes:
+// 1: float
+// 2: long
+// 3: string, not existing image
+// 4: existing image
+// 5: string
+//
+
+
+
 /* =============================================================================================== */
 /* =============================================================================================== */
 /** @name AOloopControl_acquireCalib - 1. ACQUIRING CALIBRATION
  *  Measure system response */
 /* =============================================================================================== */
 /* =============================================================================================== */
+
+int_fast8_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli() {
+	if(CLI_checkarg(1,4)+CLI_checkarg(2,2)+CLI_checkarg(3,5)+CLI_checkarg(4,5)==0) {
+		AOloopControl_acquireCalib_mkRandomLinPokeSequence(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string);
+		return 0;
+	}
+	else return 1;	
+}
+
+
+
 
 /** @brief CLI function for AOloopControl_RespMatrix_Fast */
 int_fast8_t AOloopControl_acquireCalib_RespMatrix_Fast_cli() {
@@ -220,8 +250,17 @@ int_fast8_t init_AOloopControl_acquireCalib()
 /* =============================================================================================== */
 /* =============================================================================================== */
   
+  RegisterCLIcommand(
+	"aolacqmkrlps", 
+	__FILE__, 
+	AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli, 
+	"create sequence of linearly coupled poke maps", 
+	"<poke modes cube> <NBpokemaps> <output poke map> <output poke frames>", 
+	"aolacqmkrlps pokeModesC 50 pokemC pokeC", 
+	"long AOloopControl_acquireCalib_mkRandomLinPokeSequence(char *IDmodeC_name, long NBpokemap, char *IDpokemapC_name, char *IDpokeC_name)");
+  
 
-    RegisterCLIcommand("aolacqresp", __FILE__, AOloopControl_acquireCalib_Measure_Resp_Matrix_cli, "acquire AO response matrix and WFS reference", "<ave# [long]> <ampl [float]> <nbloop [long]> <frameDelay [long]> <NBiter [long]>", "aolacqresp 50 0.1 5 2", "intAOloopControl_acquireCalib_ Measure_Resp_Matrix(long loop, long NbAve, float amp, long nbloop, long fDelay, long NBiter)");
+    RegisterCLIcommand("aolacqresp", __FILE__, AOloopControl_acquireCalib_Measure_Resp_Matrix_cli, "acquire AO response matrix and WFS reference", "<ave# [long]> <ampl [float]> <nbloop [long]> <frameDelay [long]> <NBiter [long]>", "aolacqresp 50 0.1 5 2", "int AOloopControl_acquireCalib_ Measure_Resp_Matrix(long loop, long NbAve, float amp, long nbloop, long fDelay, long NBiter)");
 
     RegisterCLIcommand("aolmRMfast", __FILE__, AOloopControl_acquireCalib_RespMatrix_Fast_cli, "acquire fast modal response matrix", "<modes> <dm RM stream> <WFS stream> <sem trigger> <hardware latency [s]> <loop frequ [Hz]> <ampl [um]> <outname>", "aolmRMfast DMmodes aol0_dmRM aol0_wfsim 4 0.00112 2000.0 0.03 rm000", "long AOloopControl_acquireCalib_RespMatrix_Fast(char *DMmodes_name, char *dmRM_name, char *imWFS_name, long semtrig, float HardwareLag, float loopfrequ, float ampl, char *outname)");
 
@@ -256,6 +295,49 @@ int_fast8_t init_AOloopControl_acquireCalib()
 /** @name AOloopControl - 4. ACQUIRING CALIBRATION                                                 */
 /* =============================================================================================== */
 /* =============================================================================================== */
+
+
+
+
+
+
+
+long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
+	char *IDmodeC_name,  // input
+	long NBpokemap,  // input	
+	char *IDpokemapC_name,
+	char *IDpokeC_name
+)
+{
+	long IDmodeC;
+	long IDpokemapC;
+	long IDpokeC;
+	
+	long NBpoke;
+	
+	
+    IDmodeC = image_ID(IDmodeC_name);
+    long xsize = data.image[IDmodeC].md[0].size[0];
+    long ysize = data.image[IDmodeC].md[0].size[1];
+    long NBmode = data.image[IDmodeC].md[0].size[2];
+    
+
+    IDpokemapC = create_3Dimage_ID(IDpokemapC_name, xsize, ysize, NBpokemap);	
+
+	NBpoke = NBpokemap*3;
+	IDpokemapC = create_3Dimage_ID(IDpokemapC_name, xsize, ysize, NBpoke);	
+
+	// 
+
+	
+	return(IDpokeC);
+}
+
+
+
+
+
+
 
 
 
@@ -335,7 +417,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     int loopOK = 1;
 
 
-	int SAVE_CYCLE = 1;
+	int SAVE_RMACQU_ALL = 1;
 	
 	
 
@@ -450,6 +532,20 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
     sizearray[2] = NBpoke;
     IDoutC = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1], sizearray[2]);
+
+
+	// timing info for pokes
+	long NBpokeTotal = NBiter*(4+NBpoke);
+	long pokecnt = 0;
+	struct timespec poke_ts;
+	long *pokeTime_sec;
+	long *pokeTime_nsec;
+	long *pokeTime_index;
+	
+	pokeTime_sec = (long*) malloc(sizeof(long)*NBpokeTotal);
+	pokeTime_nsec = (long*) malloc(sizeof(long)*NBpokeTotal);
+	pokeTime_index = (long*) malloc(sizeof(long)*NBpokeTotal);
+	
 
 	// create one temporary array per time step
 	int AveStep;
@@ -694,6 +790,13 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
         AOconf[loop].aorun.DMupdatecnt ++;
+        
+        clock_gettime(CLOCK_REALTIME, &poke_ts);
+        pokeTime_sec[pokecnt] = (long) poke_ts.tv_sec;
+        pokeTime_sec[pokecnt] = (long) poke_ts.tv_nsec;
+        pokeTime_index[pokecnt] = PokeIndex1Mapped;
+        pokecnt++;
+        
         array_poke[imcnt] = 1;
 
 
@@ -714,7 +817,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmRM, -1);
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
 
-        // read delayfr frames
+        // read delayfr frames (priming)
         for(kk=0; kk<delayfr; kk++)
         {
             array_iter[imcnt]             = iter;
@@ -754,6 +857,13 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
                 data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
                 AOconf[loop].aorun.DMupdatecnt ++;
+                
+				clock_gettime(CLOCK_REALTIME, &poke_ts);
+				pokeTime_sec[pokecnt] = (long) poke_ts.tv_sec;
+				pokeTime_sec[pokecnt] = (long) poke_ts.tv_nsec;
+				pokeTime_index[pokecnt] = PokeIndex1Mapped;
+				pokecnt++;
+                
                 array_poke[imcnt] = 1;
             }
         }
@@ -811,6 +921,13 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].cnt0++;
                     data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 0;
                     AOconf[loop].aorun.DMupdatecnt ++;
+                    
+					clock_gettime(CLOCK_REALTIME, &poke_ts);
+					pokeTime_sec[pokecnt] = (long) poke_ts.tv_sec;
+					pokeTime_sec[pokecnt] = (long) poke_ts.tv_nsec;
+					pokeTime_index[pokecnt] = PokeIndex1Mapped;
+					pokecnt++;                   
+                    
                     array_poke[imcnt] = 1;
                 }
             }
@@ -847,17 +964,33 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 		}
 
 		
-		if(SAVE_CYCLE == 1) // Save intermediate result
+		if(SAVE_RMACQU_ALL == 1) // Save all intermediate result
 		{
 			char tmpfname[200];
+			FILE *fplog;
 			
 			system("mkdir -p tmpRMacqu");
+			
+			fplog = fopen("tmpRMacqu/RMacqulog.txt", "r");
+			fprintf(fplog, "%-20s  %ld\n", "loop", loop);
+			fprintf(fplog, "%-20s  %ld\n", "delayfr", delayfr);
+			fprintf(fplog, "%-20s  %ld\n", "delayRM1us", delayRM1us);
+			fprintf(fplog, "%-20s  %ld\n", "NBave", NBave);
+			fprintf(fplog, "%-20s  %ld\n", "NBexcl", NBexcl);
+			fprintf(fplog, "%-20s  %s\n", "IDpokeC_name", IDpokeC_name);
+			fprintf(fplog, "%-20s  %s\n", "IIDoutC_name", IDoutC_name);
+			fprintf(fplog, "%-20s  %d\n", "normalize", normalize);
+			fprintf(fplog, "%-20s  %d\n", "AOinitMode", AOinitMode);
+			fprintf(fplog, "%-20s  %ld\n", "NBcycle", NBcycle);
+			fprintf(fplog, "%-20s  %d\n", "SequInitMode", SequInitMode);
+			fclose(fplog);
+
 			for(AveStep=0; AveStep < NBave; AveStep++)
 			{
 				char imname[100];
 				sprintf(imname, "imoutStep%03d", AveStep);
 				
-				sprintf(tmpfname, "!tmpRMacqu/%s.%03d.%03ld.fits", IDoutC_name, AveStep, iter);				
+				sprintf(tmpfname, "!tmpRMacqu/%s.tstep%03d.iter%03ld.fits", IDoutC_name, AveStep, iter);				
 				list_image_ID();
 				printf("SAVING %s -> %s ... ", imname, tmpfname);
 				save_fits(imname, tmpfname);
@@ -964,6 +1097,11 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     }
     fclose(fp);
 
+	fp = fopen("RMpokeTiming.txt", "w");
+	for(ii=0;ii<pokecnt;ii++)
+		fprintf(fp, "%16ld.%09ld  %ld\n", pokeTime_sec[ii], pokeTime_nsec[ii], pokeTime_index[ii]);
+	fclose(fp);
+
 	free(IDoutCstep);
 
     free(array_iter);
@@ -976,6 +1114,10 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     free(array_PokeIndexMapped);
     free(array_PokeIndex1Mapped);
     free(array_PokeSequ);
+
+	free(pokeTime_sec);
+	free(pokeTime_nsec);
+	free(pokeTime_index);
 
     return(IDoutC);
 }
@@ -1178,7 +1320,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
     // Negative direction sequence
     AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2b", "wfsresp2b", normalize, AOinitMode, (long) (NBcycle/2), 0);
 
-    printf("STEP done\n");
+    printf("Acquisition complete\n");
     fflush(stdout);
 
     //	save_fits("wfsresp2", "!tmp/test_wfsresp2.fits");
