@@ -322,12 +322,17 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
     long xsize = data.image[IDmodeC].md[0].size[0];
     long ysize = data.image[IDmodeC].md[0].size[1];
     long NBmode = data.image[IDmodeC].md[0].size[2];
-    
 
+	printf("  %ld %ld %ld\n", xsize, ysize, NBmode);
+	fflush(stdout);    
+
+	printf("Creating image %s\n", IDpokemapC_name);
+	fflush(stdout);
     IDpokemapC = create_3Dimage_ID(IDpokemapC_name, xsize, ysize, NBpokemap);	
 
+
 	NBpoke = NBpokemap*3;
-	IDpokemapC = create_3Dimage_ID(IDpokemapC_name, xsize, ysize, NBpoke);	
+	IDpokemapC = create_3Dimage_ID(IDpokeC_name, xsize, ysize, NBpoke);	
 
 	// 
 
