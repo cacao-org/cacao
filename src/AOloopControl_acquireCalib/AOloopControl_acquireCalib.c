@@ -873,7 +873,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         clock_gettime(CLOCK_REALTIME, &poke_ts);
         pokeTime_sec[pokecnt] = (long) poke_ts.tv_sec;
-        pokeTime_sec[pokecnt] = (long) poke_ts.tv_nsec;
+        pokeTime_nsec[pokecnt] = (long) poke_ts.tv_nsec;
         pokeTime_index[pokecnt] = PokeIndex1Mapped;
         pokecnt++;
         if(pokecnt > NBpokeTotal-1)
@@ -945,7 +945,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
                 clock_gettime(CLOCK_REALTIME, &poke_ts);
                 pokeTime_sec[pokecnt] = (long) poke_ts.tv_sec;
-                pokeTime_sec[pokecnt] = (long) poke_ts.tv_nsec;
+                pokeTime_nsec[pokecnt] = (long) poke_ts.tv_nsec;
                 pokeTime_index[pokecnt] = PokeIndex1Mapped;
                 pokecnt++;
                 if(pokecnt > NBpokeTotal-1)
@@ -1014,7 +1014,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
                     clock_gettime(CLOCK_REALTIME, &poke_ts);
                     pokeTime_sec[pokecnt] = (long) poke_ts.tv_sec;
-                    pokeTime_sec[pokecnt] = (long) poke_ts.tv_nsec;
+                    pokeTime_nsec[pokecnt] = (long) poke_ts.tv_nsec;
                     pokeTime_index[pokecnt] = PokeIndex1Mapped;
                     pokecnt++;
                     if(pokecnt > NBpokeTotal-1)
@@ -1048,7 +1048,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         clock_gettime(CLOCK_REALTIME, &poke_ts);
         pokeTime_sec[pokecnt] = (long) poke_ts.tv_sec;
-        pokeTime_sec[pokecnt] = (long) poke_ts.tv_nsec;
+        pokeTime_nsec[pokecnt] = (long) poke_ts.tv_nsec;
         pokeTime_index[pokecnt] = -1;
         pokecnt++;
         if(pokecnt > NBpokeTotal-1)
