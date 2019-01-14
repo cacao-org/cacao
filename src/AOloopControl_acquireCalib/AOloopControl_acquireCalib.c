@@ -1206,7 +1206,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     fp = fopen("RMpokeTiming.txt", "w");
     for(ii=0; ii<pokecnt; ii++)
-        fprintf(fp, "%16ld.%09ld  %ld\n", pokeTime_sec[ii], pokeTime_nsec[ii], pokeTime_index[ii]);
+        fprintf(fp, "%5ld  %16ld.%09ld  %ld\n", pokecnt, pokeTime_sec[ii], pokeTime_nsec[ii], pokeTime_index[ii]);
     fclose(fp);
 
     free(IDoutCstep);
