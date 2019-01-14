@@ -172,7 +172,7 @@ int_fast8_t AOloopControl_acquireCalib_RespMatrix_Fast_cli() {
 /** @brief CLI function for AOloopControl_Measure_WFSrespC */
 int_fast8_t AOloopControl_acquireCalib_Measure_WFSrespC_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,4)+CLI_checkarg(6,5)+CLI_checkarg(7,2)+CLI_checkarg(8,2)+CLI_checkarg(9,2)+CLI_checkarg(10,2)==0) {
-        AOloopControl_acquireCalib_Measure_WFSrespC(LOOPNUMBER, data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.string, data.cmdargtoken[6].val.string, data.cmdargtoken[7].val.numl, data.cmdargtoken[8].val.numl, data.cmdargtoken[9].val.numl, data.cmdargtoken[10].val.numl);
+        AOloopControl_acquireCalib_Measure_WFSrespC(LOOPNUMBER, data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.string, data.cmdargtoken[6].val.string, data.cmdargtoken[7].val.numl, data.cmdargtoken[8].val.numl, data.cmdargtoken[9].val.numl, (uint32_t) data.cmdargtoken[10].val.numl);
         return 0;
     }
     else return 1;
@@ -264,7 +264,7 @@ int_fast8_t init_AOloopControl_acquireCalib()
 
     RegisterCLIcommand("aolmRMfast", __FILE__, AOloopControl_acquireCalib_RespMatrix_Fast_cli, "acquire fast modal response matrix", "<modes> <dm RM stream> <WFS stream> <sem trigger> <hardware latency [s]> <loop frequ [Hz]> <ampl [um]> <outname>", "aolmRMfast DMmodes aol0_dmRM aol0_wfsim 4 0.00112 2000.0 0.03 rm000", "long AOloopControl_acquireCalib_RespMatrix_Fast(char *DMmodes_name, char *dmRM_name, char *imWFS_name, long semtrig, float HardwareLag, float loopfrequ, float ampl, char *outname)");
 
-    RegisterCLIcommand("aolmeasWFSrespC",__FILE__, AOloopControl_acquireCalib_Measure_WFSrespC_cli, "measure WFS resp to DM patterns", "<delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <normalize flag> <AOinitMode> <NBcycle>", "aolmeasWFSrespC 2 135 20 0 dmmodes wfsresp 1 0 5", "long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, int SequInitMode);");
+    RegisterCLIcommand("aolmeasWFSrespC",__FILE__, AOloopControl_acquireCalib_Measure_WFSrespC_cli, "measure WFS resp to DM patterns", "<delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <normalize flag> <AOinitMode> <NBcycle>", "aolmeasWFSrespC 2 135 20 0 dmmodes wfsresp 1 0 5", "long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, uint32_t SequInitMode);");
 
     RegisterCLIcommand("aolmeaslWFSrespC",__FILE__, AOloopControl_acquireCalib_Measure_WFS_linResponse_cli, "measure linear WFS response to DM patterns", "<ampl [um]> <delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <output reference [string]> <normalize flag> <AOinitMode> <NBcycle>", "aolmeasWFSrespC 0.05 2 135 20 0 dmmodes wfsresp wfsref 1 0 5", "long AOloopControl_acquireCalib_Measure_WFS_linResponse(long loop, float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDrespC_name, char *IDwfsref_name, int normalize, int AOinitMode, long NBcycle, long NBinnerCycle)");
 
@@ -439,7 +439,9 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
  * @param[in]  normalize       Normalize flag
  * @param[in]  AOinitMode      AO structure initialization flag
  * @param[in]  NBcycle         Number of cycles averaged (outer)
- * @param[in]  SequInitMode    Sequence initialization mode (0 or 1)
+ * @param[in]  SequInitMode    Sequence initialization mode bitmask
+ *                             0x01  swap pairs every 4 indices
+ *                             0x02 adjacent pairs are swapped between cycles
  *
  * AOinitMode = 0:  create AO shared mem struct
  * AOinitMode = 1:  connect only to AO shared mem struct
@@ -465,7 +467,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     int         normalize,
     int         AOinitMode,
     long        NBcycle,
-    int         SequInitMode
+    uint32_t         SequInitMode
 )
 {
     char fname[200];
@@ -747,7 +749,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
         array_PokeSequ[PokeIndex] = PokeIndex;
-    if(SequInitMode > 0) // swap pairs every 4 indices
+    if(SequInitMode & 0x01) // swap pairs every 4 indices
     {
         for(PokeIndex = 0; PokeIndex < NBpoke-1; PokeIndex += 4)
         {
@@ -819,7 +821,10 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
         // RE-ORDER POKE SEQUENCE
-        // adjacent pairs are swapped
+        // adjacent pairs are swapped between cycles
+
+		if(SequInitMode & 0x02)
+        {
         permut_offset ++;
         if(permut_offset == 2)
             permut_offset = 0;
@@ -838,7 +843,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
             array_PokeSequ[index0] = array_PokeSequ[index1];
             array_PokeSequ[index1] = tmpPokeMode;
         }
-
+		}
 
 
         // INITIALIZE WITH FIRST POKE
@@ -1422,10 +1427,10 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 	// ******************************************************************
 
     // Positive direction sequence
-    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2a", "wfsresp2a", normalize, AOinitMode, (long) (NBcycle/2), 0);
+    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2a", "wfsresp2a", normalize, AOinitMode, (long) (NBcycle/2), (uint32_t) 0x02);
 
     // Negative direction sequence
-    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2b", "wfsresp2b", normalize, AOinitMode, (long) (NBcycle/2), 0);
+    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2b", "wfsresp2b", normalize, AOinitMode, (long) (NBcycle/2), (uint32_t) 0x02);
 
     printf("Acquisition complete\n");
     fflush(stdout);
