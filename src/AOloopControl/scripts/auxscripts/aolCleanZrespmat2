@@ -150,8 +150,8 @@ EOF
 AVEFILECOUNTER=0
 while [  $AVEFILECOUNTER -lt 100 ]; do
 cntnum=$( echo ${AVEFILECOUNTER} | awk '{printf("%03d", $1)}')
-zrespM_filename="./tmp/respM.ave${cntnum}.fits"
-wfsref_filename="./tmp/wfsref.ave${cntnum}.fits"
+zrespM_filename="./tmpRMacquZ/respM.ave${cntnum}.fits"
+wfsref_filename="./tmpRMacquZ/wfsref.ave${cntnum}.fits"
 
 if [ -f "$zrespM_filename" ]; then
     
@@ -167,7 +167,7 @@ loadfits "$wfsref_filename" wfsref00
 
 aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
 
-savefits zrespmat "!./tmp/zrespM.ave${cntnum}.fits"
+savefits zrespmat "!./tmpRMacquZ/zrespM.ave${cntnum}.fits"
 listim
 exitCLI
 EOF
