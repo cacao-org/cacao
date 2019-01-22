@@ -1434,7 +1434,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
     }
 
 
-
+	system("mkdir -p tmpRMacqu");
     save_fits("dmpokeC2a", "!tmpRMacqu/test_dmpokeC2a.fits");
     save_fits("dmpokeC2b", "!tmpRMacqu/test_dmpokeC2b.fits");
 
@@ -1545,6 +1545,8 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
         {
 			char filename_respC[100];
 			char filename_wfsref[100];
+			
+			
 			
 			sprintf(filename_respC, "!tmpRMacqu/respM.ave%03d.fits", FileNumber);
 			sprintf(filename_wfsref, "!tmpRMacqu/wfsref.ave%03d.fits", FileNumber);
