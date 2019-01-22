@@ -765,7 +765,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         for(PokeIndex = 0; PokeIndex < NBpoke-1; PokeIndex += 4)
         {
             int index0 = PokeIndex;
-            int index1 = PokeIndex + SequInitMode;
+            int index1 = PokeIndex + 1;
 
             while(index1 > NBpoke-1)
                 index1 -= NBpoke;
@@ -1324,16 +1324,47 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 
 
 
+	int SHUFFLE = 1;
+
+
+
+
     IDpokeC = image_ID(IDpokeC_name);
     dmxsize = data.image[IDpokeC].md[0].size[0];
     dmysize = data.image[IDpokeC].md[0].size[1];
     dmxysize = dmxsize*dmysize;
     NBpoke = data.image[IDpokeC].md[0].size[2];
 
+	int *pokearray = (int*) malloc(sizeof(int)*NBpoke); // shuffled array
 
 
+	int p;
+	for(p=0; p<NBpoke; p++)
+		pokearray[p] = p;
+	if(SHUFFLE == 1)
+	{
+		int rindex;
 
-
+		for(rindex=0;rindex<NBpoke;rindex++)
+		{
+			int p1;
+			int p2;
+			int tmpp;
+			
+			p1 = (int) (ran1()*NBpoke);
+			if(p1>NBpoke-1)
+				p1 = NBpoke-1;
+			
+			p2 = (int) (ran1()*NBpoke);
+			if(p2>NBpoke-1)
+				p2 = NBpoke-1;
+			
+			tmpp = pokearray[p1];
+			pokearray[p1] = pokearray[p2];
+			pokearray[p2] = tmpp;
+						
+		}
+	}
 
 
     // **************************************************************
@@ -1344,7 +1375,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
     // Poke cubes will be written to dmpokeC2a and dmpokeC2b
 
 
-
+	
 
     NBpoke2 = 2*NBpoke*NBinnerCycleC + 4; // add zero frame before and after
 
@@ -1396,9 +1427,9 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
             // old indices were 2*poke+2 and 2*poke+3
 
             for(act=0; act<dmxysize; act++)
-                data.image[IDpokeC2a].array.F[dmxysize*(pokeindex) + act]   =  ampl*data.image[IDpokeC].array.F[dmxysize*poke+act];
+                data.image[IDpokeC2a].array.F[dmxysize*(pokeindex) + act]   =  ampl*data.image[IDpokeC].array.F[dmxysize*pokearray[poke]+act];
             for(act=0; act<dmxysize; act++)
-                data.image[IDpokeC2a].array.F[dmxysize*(pokeindex+1) + act] = -ampl*data.image[IDpokeC].array.F[dmxysize*poke+act];
+                data.image[IDpokeC2a].array.F[dmxysize*(pokeindex+1) + act] = -ampl*data.image[IDpokeC].array.F[dmxysize*pokearray[poke]+act];
 
 
             // swap one pair out of two in cube IDpokeC2b
@@ -1525,8 +1556,8 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
                     // Sum response
                     for(pix=0; pix<wfsxysize; pix++)
                     {
-                        data.image[IDrespC].array.F[wfsxysize*poke + pix] += 0.5*(data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
-                        data.image[IDrespC].array.F[wfsxysize*poke + pix] += 0.5*pokesign[poke]*(data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
+                        data.image[IDrespC].array.F[wfsxysize*pokearray[poke] + pix] += 0.5*(data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
+                        data.image[IDrespC].array.F[wfsxysize*pokearray[poke] + pix] += 0.5*pokesign[poke]*(data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
                     }
 
                     // Sum reference
@@ -1562,7 +1593,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 
 
     free(pokesign);
-
+	free(pokearray);
 
     return(IDrespC);
 }
