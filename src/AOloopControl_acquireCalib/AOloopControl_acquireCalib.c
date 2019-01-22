@@ -1435,8 +1435,8 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 
 
 
-    save_fits("dmpokeC2a", "!tmp/test_dmpokeC2a.fits");
-    save_fits("dmpokeC2b", "!tmp/test_dmpokeC2b.fits");
+    save_fits("dmpokeC2a", "!tmpRMacqu/test_dmpokeC2a.fits");
+    save_fits("dmpokeC2b", "!tmpRMacqu/test_dmpokeC2b.fits");
 
 
     printf("NBpoke = %ld\n", NBpoke);
@@ -1546,8 +1546,8 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 			char filename_respC[100];
 			char filename_wfsref[100];
 			
-			sprintf(filename_respC, "!tmp/respM.ave%03d.fits", FileNumber);
-			sprintf(filename_wfsref, "!tmp/wfsref.ave%03d.fits", FileNumber);
+			sprintf(filename_respC, "!tmpRMacqu/respM.ave%03d.fits", FileNumber);
+			sprintf(filename_wfsref, "!tmpRMacqu/wfsref.ave%03d.fits", FileNumber);
 		
 			save_fits(imnameout_respC, filename_respC);
 			save_fits(imnameout_wfsref, filename_wfsref);
