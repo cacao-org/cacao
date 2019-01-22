@@ -125,6 +125,8 @@ pname0=$0
 pname="aol${loopnb}zrespM"
 
 
+
+
 OMP_NUM_THREADS=6 ./AOloopControl -n $pname << EOF
 aolnb $loopnb
 loadfits "./conf/RMpokeCube.fits" RMpokeC
@@ -142,5 +144,37 @@ listim
 exitCLI
 EOF
 
+
+# Process time sampled slices
+
+AVEFILECOUNTER=0
+while [  $AVEFILECOUNTER -lt 100 ]; do
+cntnum=$( echo ${AVEFILECOUNTER} | awk '{printf("%03d", $1)}')
+zrespM_filename="./tmp/respM.ave${cntnum}.fits"
+wfsref_filename="./tmp/wfsref.ave${cntnum}.fits"
+
+if [ -f "$zrespM_filename" ]; then
+    
+
+
+OMP_NUM_THREADS=6 ./AOloopControl -n $pname << EOF
+aolnb $loopnb
+loadfits "./conf/RMpokeCube.fits" RMpokeC
+loadfits "./conf/RMmat.fits" RMmat
+loadfits "./conf/RMpixindex.fits" pixindexim
+loadfits "$zrespM_filename" zrespmat0
+loadfits "$wfsref_filename" wfsref00
+
+aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
+
+savefits zrespmat "!./tmp/zrespM.ave${cntnum}.fits"
+listim
+exitCLI
+EOF
+
+fi
+
+let AVEFILECOUNTER=AVEFILECOUNTER+1 
+done
 
 

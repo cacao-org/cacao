@@ -622,7 +622,7 @@ menucontrolmatrix_default="zRM"
 # OUTPUT
 #   ./zcontrM/zcontrM_<date>.fits
 #   ./conf/shmim_contrM.name.txt
-# -> 
+# -> conf_staged 
 
 # set NBmodeblocks to 1
 echo "01" > conf_staged/param_NBmodeblocks.txt
@@ -676,7 +676,7 @@ state="menu_mkFModes"
 ;;	
 
 	mkModes0)
-mkModesMODE=0; # full computation
+mkModesMODE=0; # full computation, merges high order and low order RMs
 menucontrolmatrix_default="mkModes0"
 aoconflogext "START control matrix computation mkModesMODE 0"
 CMMODE="0"
