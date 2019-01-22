@@ -1206,8 +1206,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
             data.image[IDoutC].array.F[PokeIndex*AOconf[loop].WFSim.sizeWFS+ii] /= NBave*iter;
 
 
-    // print poke log
-    fp = fopen("RMpokelog.txt", "w");
+    // print poke log 
+    system("mkdir -p tmpRMacqu");
+    fp = fopen("./tmpRMacqu/RMpokelog.txt", "w");
     for(imcnt=0; imcnt<imcntmax; imcnt++)
     {
         fprintf(fp, "%6ld %3ld    %1d %1d     %6ld  %6ld     %4ld %4ld   %4ld %4ld     %3ld %3ld %3ld\n",
@@ -1228,7 +1229,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     }
     fclose(fp);
 
-    fp = fopen("RMpokeTiming.txt", "w");
+    fp = fopen("./tmpRMacqu/RMpokeTiming.txt", "w");
     double ftime0 = pokeTime_sec[0]+1.0e-9*pokeTime_nsec[0];
     double ftime;
     for(ii=0; ii<pokecnt; ii++) {
