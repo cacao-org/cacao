@@ -19,7 +19,8 @@ echo "$hardwlatency_frame $RMexfr $mloopfrequ" > tmpfile.txt
 
 RMdelay=$( awk '{ printf("%f\n", $1-0.5-0.5*$2 }' tmpfile.txt )
 
-echo "RMdelay = $RMdelay" > testRMdelay.txt
+RMdelaytest=$( awk '{ printf("%d\n", 1 }' tmpfile.txt )
+echo "RMdelay = ${RMdelaytest}" > testRMdelay.txt
 
 if (( $(echo "$RMdelay < 0" |bc -l) )); then
 
