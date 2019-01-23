@@ -119,6 +119,10 @@ int AOloopControl_DM_disp2V(long DMindex)
 			sprintf(qmapname, "dm%02ldquant", DMindex);
 			IDqmap = create_image_ID(qmapname, 2, sizearray, _DATATYPE_FLOAT, 1, 10);
 			free(sizearray);
+			
+			printf("ARRAY %s CREATED\n", qmapname);
+			
+			qmapinit = 1;
 		}
 	}
 
