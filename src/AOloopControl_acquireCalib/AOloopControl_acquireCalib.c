@@ -207,8 +207,13 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
 
 
 
-
-
+int_fast8_t AOloopControl_acquireCalib_RMseries_deinterlace_cli() {
+	if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,3)==0) {
+		AOloopControl_acquireCalib_RMseries_deinterlace(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.string);
+		return 0;
+	}
+	else return 1;
+}
 
 
 
@@ -270,6 +275,15 @@ int_fast8_t init_AOloopControl_acquireCalib()
 
     RegisterCLIcommand("aolmeaszrm",__FILE__, AOloopControl_acquireCalib_Measure_zonalRM_cli, "measure zonal resp mat, WFS ref, DM and WFS response maps", "<ampl [float]> <delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <output image [string]> <output WFS ref [string]>  <output WFS response map [string]>  <output DM response map [string]> <mode> <normalize flag> <AOinitMode> <NBcycle>", "aolmeaszrm 0.05 2 135 20 zrm wfsref wfsmap dmmap 1 0 0 0", "long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, char *zrespm_name, char *WFSref_name, char *WFSmap_name, char *DMmap_name, long mode, int normalize, int AOinitMode, long NBcycle)");
 
+
+	RegisterCLIcommand(
+		"aolRMdeinterlace",
+		__FILE__, 
+		AOloopControl_acquireCalib_RMseries_deinterlace_cli, 
+		"process overlapping RMs", 
+		"<Number RMs> <refstart> <refend> <outname>", 
+		"aolRMdeinterlace 8 4 9 outRMseq", 
+		"long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name)");
 
 
 
@@ -2754,7 +2768,136 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(const char *DMmodes_name, const 
 
 
 
+/** 
+ * 
+ * ## Purpose
+ * 
+ * Processes a series of RMs that are overlapping in time
+ * 
+ * 
+ * ## Arguments
+ * 
+ * Input RMs are named imrespC_000, imrespC_001 etc...\n
+ * They are assumed to be regularly spaced\n
+ * 
+ * The reference is built by integrating from time refstart to refend as measured from the first RMsequence
+ * 
+ */
 
+long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name)
+{
+	long IDout;
+	long xsize, ysize, zsize, xysize;
+	long rmCindex;
+	
+	long * IDRMarray = (long*) malloc(sizeof(long)*NBRM);
+	
+	for(rmCindex=0; rmCindex<NBRM; rmCindex++)
+	{
+		char rmCname[100];
+		sprintf(rmCname, "imrespC_%03ld", rmCindex);
+		
+		IDRMarray[rmCindex] = image_ID(rmCname);
+	}
+	
+	xsize = data.image[IDRMarray[0]].md[0].size[0];
+	ysize = data.image[IDRMarray[0]].md[0].size[1];
+	zsize = data.image[IDRMarray[0]].md[0].size[2];
+	xysize = xsize*ysize;
+
+	// Compute reference
+	long IDref = create_2Dimage_ID("imrespRef", xsize, ysize);
+	long cntref = 0;
+	for(rmCindex=0; rmCindex<NBRM; rmCindex++)
+	{
+		long imindex;
+		for(imindex=0;imindex<zsize;imindex++)
+		{
+			float tstart, tend;
+			
+			tstart = 1.0*imindex + 1.0*rmCindex/NBRM;
+			tend = tstart+1.0;
+			
+			if( (tstart>refstart) && (tend<refend) )
+				{
+					long ii;
+					
+					for(ii=0;ii<xysize;ii++)
+						data.image[IDref].array.F[ii] += data.image[IDRMarray[rmCindex]].array.F[imindex*xysize+ii];
+					cntref++;
+				}
+		}
+	}
+	if(cntref>0)
+	{
+		long ii;
+		for(ii=0;ii<xysize;ii++)
+			data.image[IDref].array.F[ii] /= cntref;
+		}
+		
+	
+	
+	
+	long zsizeout = NBRM*refstart;
+	
+	IDout = create_3Dimage_ID(IDout_name, xsize, ysize, zsizeout);
+	
+	float * coeffarray = (float*) malloc(sizeof(float)*zsizeout*NBRM*refstart); 
+	
+	
+	for(rmCindex=0; rmCindex<NBRM; rmCindex++)
+	{
+		long rmCindex1 = rmCindex+1;
+		if(rmCindex1 == NBRM)
+			rmCindex1 = 0;
+		
+		long imindex;
+		for(imindex=0;imindex<zsize;imindex++)
+		{
+			float tstart0, tend0;
+			float tstart1, tend1;
+			
+			tstart0 = 1.0*imindex + 1.0*rmCindex/NBRM;
+			tend0 = tstart0 + 1.0;
+			
+			tstart1 = tstart0 + 1.0*rmCindex/NBRM;
+			tend1 = tstart1 + 1.0;			
+			
+			// slice index in output
+			long outindex = rmCindex + NBRM*imindex;
+			
+			if(outindex < zsizeout)
+			{
+				if(tstart0<refstart)
+					{
+						long ii;
+						long imindex1;
+						
+						for (ii=0;ii<xysize;ii++)
+							data.image[IDout].array.F[outindex*xysize+ii] += data.image[IDRMarray[rmCindex]].array.F[imindex*xysize+ii];
+						
+						if(rmCindex1 == 0)
+							imindex1 = imindex + 1;
+						else
+							imindex1 = imindex;
+						
+						for (ii=0;ii<xysize;ii++)
+							data.image[IDout].array.F[outindex*xysize+ii] -= data.image[IDRMarray[rmCindex1]].array.F[imindex1*xysize+ii];
+					
+						
+						for (ii=0;ii<xysize;ii++)
+							data.image[IDout].array.F[outindex*xysize+ii] += 1.0/NBRM * data.image[IDref].array.F[ii];
+					}
+			}
+			
+		}
+	}
+
+	
+	free(IDRMarray);
+	
+	return(IDout);
+}
 
 
 
