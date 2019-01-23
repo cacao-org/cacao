@@ -18,7 +18,7 @@ function updateRMtiming {
 echo "$hardwlatency_frame $RMexfr $mloopfrequ" > tmpfile.txt
 RMdelayfr=$( awk '{ printf("%d\n", int($1-0.5-0.5*$2+10)+1-10) }' tmpfile.txt )
 echo "$RMdelayfr" > ./conf/param_RMdelayfr.txt
-delayRM1us=$( awk '{ printf("%d\n", (int($1-0.5-0.5*$2)+1-($1-0.5-0.5*$2))/$3*1000000) }' tmpfile.txt )
+delayRM1us=$( awk '{ printf("%d\n", (int($1-0.5-0.5*$2+10)+1-10-($1-0.5-0.5*$2))/$3*1000000) }' tmpfile.txt )
 echo "$delayRM1us" > ./conf/param_delayRM1us.txt
 }
 
