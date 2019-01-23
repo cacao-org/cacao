@@ -92,15 +92,35 @@ int AOloopControl_DM_disp2V(long DMindex)
     long ii;
     float volt;
     long IDvolt;
+    
+	static int qmapinit = 0;
+	static char qmapname[100];
+	static long IDqmap;
 
-    int QUANTIZATION_RANDOM = 1; // remove quantization error by probabilistic value
-
-
+    int QUANTIZATION_RANDOM = 2; 
+    // 1: remove quantization error by probabilistic value, recomputed for each new value
+	// 2: remove quantization error by adding an external random map between 0 and 1, named dmXXquant
+	//    USER SHOULD UPDATE THIS MAP WHEN REQUIRED
+	
     IDvolt = dmdispcombconf[DMindex].IDvolt;
 
     data.image[IDvolt].md[0].write = 1;
 
 
+	if(QUANTIZATION_RANDOM == 2)
+	{
+		if(qmapinit == 0)
+		{
+			uint32_t *sizearray;
+			
+			sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+			sizearray[0] = dmdispcombconf[DMindex].xsize;
+			sizearray[1] = dmdispcombconf[DMindex].ysize;
+			sprintf(qmapname, "dm%02ldquant", DMindex);
+			IDqmap = create_image_ID(qmapname, 2, sizearray, _DATATYPE_FLOAT, 1, 10);
+			free(sizearray);
+		}
+	}
 
     if(dmdispcombconf[DMindex].voltON==1)
     {
@@ -139,6 +159,10 @@ int AOloopControl_DM_disp2V(long DMindex)
                     
                     data.image[IDvolt].array.UI16[ii] = uval;
                 }
+                else if (QUANTIZATION_RANDOM == 2)
+                {
+					data.image[IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0 + data.image[IDqmap].array.F[ii]);
+				}
                 else
                     data.image[IDvolt].array.UI16[ii] = (unsigned short int) volt/300.0*16384.0;
 
