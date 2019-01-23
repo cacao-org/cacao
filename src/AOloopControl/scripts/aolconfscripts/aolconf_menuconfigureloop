@@ -16,9 +16,22 @@ function updateRMtiming {
 #           0.798 - 0.5 - 1 = -0.702
 
 echo "$hardwlatency_frame $RMexfr $mloopfrequ" > tmpfile.txt
+
+RMdelay=$( awk '{ printf("%d\n", $1-0.5-0.5*$2 }' tmpfile.txt )
+
+if (( $(echo "$RMdelay < 0" |bc -l) )); then
+
+RMdelayfr="0"
+delayRM1us="0"
+
+else
+
 RMdelayfr=$( awk '{ printf("%d\n", int($1-0.5-0.5*$2+10)+1-10) }' tmpfile.txt )
-echo "$RMdelayfr" > ./conf/param_RMdelayfr.txt
 delayRM1us=$( awk '{ printf("%d\n", (int($1-0.5-0.5*$2+10)+1-10-($1-0.5-0.5*$2))/$3*1000000) }' tmpfile.txt )
+
+fi
+
+echo "$RMdelayfr" > ./conf/param_RMdelayfr.txt
 echo "$delayRM1us" > ./conf/param_delayRM1us.txt
 }
 
