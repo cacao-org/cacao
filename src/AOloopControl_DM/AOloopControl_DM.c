@@ -79,78 +79,89 @@ int_fast8_t AOloopControl_DM_CombineChannels_cli()
     // 4  int NBchannel
     // 5  int AveMode
     // 6  int dm2dm_mode
-    // 7  char *dm2dm_DMmodes 
-    // 8  char *dm2dm_outdisp  
+    // 7  char *dm2dm_DMmodes
+    // 8  char *dm2dm_outdisp
     // 9  int wfsrefmode
-    // 10 char *wfsref_WFSRespMat 
-    // 11 char *wfsref_out      
+    // 10 char *wfsref_WFSRespMat
+    // 11 char *wfsref_out
     // 12 int voltmode
     // 13 int volttype     : voltage command type (1: linear bipolar, output is float) (2: quadratic unipolar, output is UI16)
     // 14 float stroke100  : displacement [um] for 100 V
-    // 15 char *IDvolt_name 
-    // 16 float DCum      
+    // 15 char *IDvolt_name
+    // 16 float DCum
     // 17 float maxvolt
-    
 
-	if( CLI_checkarg(1,5) + CLI_checkarg(2,2) == 0 )
-	{
+    char fpsname[200];
+
+
+
+    if( CLI_checkarg(1,5) + CLI_checkarg(2,2) == 0 )
+    {
+		int DMindex = data.cmdargtoken[2].val.numl;
 		
-		// provide standard interface 
-
-		if( ( strcmp(data.cmdargtoken[1].val.string,"_CONFINIT_") == 0) && (CLI_checkarg(2,2) == 0) )   // init conf process
-			{
-				printf("Function parameters configure\n");
-				AOloopControl_DM_CombineChannels_FPCONF( CMDCODE_CONFINIT, data.cmdargtoken[2].val.numl);
-				return 0;
-			}
+		// FPS interface name
+		if(data.processnameflag == 0)
+			sprintf(fpsname, "DMcomb-%02d", DMindex);
+		else // Set fps name to be process name up to first instance of character '.'
+			strcpy(fpsname, data.processname0);
 		
-		if( ( strcmp(data.cmdargtoken[1].val.string,"_CONFSTART_") == 0) && (CLI_checkarg(2,2) == 0) )   // Start conf process
-			{
-				printf("Function parameters configure\n");
-				AOloopControl_DM_CombineChannels_FPCONF( CMDCODE_CONFSTART, data.cmdargtoken[2].val.numl);
-				return 0;
-			}
-			
-		if( ( strcmp(data.cmdargtoken[1].val.string,"_CONFSTOP_") == 0) && (CLI_checkarg(2,2) == 0) )  // Stop conf process
-			{
-				printf("Function parameters configure\n");
-				AOloopControl_DM_CombineChannels_FPCONF( CMDCODE_CONFSTOP, data.cmdargtoken[2].val.numl);
-				return 0;
-			}
-			
-		if( ( strcmp(data.cmdargtoken[1].val.string,"_RUNSTART_") == 0) && (CLI_checkarg(2,2) == 0) )  // Run process
-			{
-				printf("Run function\n");
-				AOloopControl_DM_CombineChannels_RUN( data.cmdargtoken[2].val.numl );
-				return 0;
-			}
 
-		if( ( strcmp(data.cmdargtoken[1].val.string,"_RUNSTOP_") == 0) && (CLI_checkarg(2,2) == 0) )  // Run process
-			{
-				printf("Run function\n");
-				AOloopControl_DM_dmdispcomboff(data.cmdargtoken[2].val.numl);
-				return 0;
-			}
+        if( ( strcmp(data.cmdargtoken[1].val.string,"_CONFINIT_") == 0) && (CLI_checkarg(2,2) == 0) )   // init conf process
+        {
+            printf("Function parameters configure\n");
+            AOloopControl_DM_CombineChannels_FPCONF( fpsname, CMDCODE_CONFINIT, data.cmdargtoken[2].val.numl);
+            return 0;
+        }
 
-	}
+        if( ( strcmp(data.cmdargtoken[1].val.string,"_CONFSTART_") == 0) && (CLI_checkarg(2,2) == 0) )   // Start conf process
+        {
+            printf("Function parameters configure\n");
+            AOloopControl_DM_CombineChannels_FPCONF( fpsname, CMDCODE_CONFSTART, data.cmdargtoken[2].val.numl);
+            return 0;
+        }
 
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,5)+CLI_checkarg(8,5)+CLI_checkarg(9,2)+CLI_checkarg(10,5)+CLI_checkarg(11,5)+CLI_checkarg(12,2)+CLI_checkarg(13,2)+CLI_checkarg(14,1)+CLI_checkarg(15,5)+CLI_checkarg(16,1)+CLI_checkarg(17,1)==0){
-		//printf("volt_name = %s\n", data.cmdargtoken[13].val.string);
+        if( ( strcmp(data.cmdargtoken[1].val.string,"_CONFSTOP_") == 0) && (CLI_checkarg(2,2) == 0) )  // Stop conf process
+        {
+            printf("Function parameters configure\n");
+            AOloopControl_DM_CombineChannels_FPCONF( fpsname, CMDCODE_CONFSTOP, data.cmdargtoken[2].val.numl);
+            return 0;
+        }
+
+        if( ( strcmp(data.cmdargtoken[1].val.string,"_RUNSTART_") == 0) && (CLI_checkarg(2,2) == 0) )  // Run process
+        {
+            printf("Run function\n");
+            AOloopControl_DM_CombineChannels_RUN(  fpsname );
+            return 0;
+        }
+
+        if( ( strcmp(data.cmdargtoken[1].val.string,"_RUNSTOP_") == 0) && (CLI_checkarg(2,2) == 0) )  // Run process
+        {
+            printf("Run function\n");
+            AOloopControl_DM_dmdispcomboff( data.cmdargtoken[2].val.numl);
+            return 0;
+        }
+
+    }
+
+    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,5)+CLI_checkarg(8,5)+CLI_checkarg(9,2)+CLI_checkarg(10,5)+CLI_checkarg(11,5)+CLI_checkarg(12,2)+CLI_checkarg(13,2)+CLI_checkarg(14,1)+CLI_checkarg(15,5)+CLI_checkarg(16,1)+CLI_checkarg(17,1)==0) {
         AOloopControl_DM_CombineChannels(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.string, data.cmdargtoken[8].val.string, data.cmdargtoken[9].val.numl, data.cmdargtoken[10].val.string, data.cmdargtoken[11].val.string, data.cmdargtoken[12].val.numl, data.cmdargtoken[13].val.numl, data.cmdargtoken[14].val.numf, data.cmdargtoken[15].val.string, data.cmdargtoken[16].val.numf, data.cmdargtoken[17].val.numf);
         return 0;
-	}
-	else
-	{
-		// launch configuration process	
-		return 1;
-	}
+    }
+    else
+    {
+        // launch configuration process
+        return 1;
+    }
 
-     //   {// DEFAULT: no dm2dm, no wfsref, dmvolt output
-			//printf("AUTO volt_name = %s\n", data.cmdargtoken[13].val.string);
-       //     AOloopControl_DM_CombineChannels(0, 50, 50, 12, 1, 0, "dmmodes", "outdisp", 0, "wfsrm", "refout", 1, 2, 0.7, "dmvolt", 0.0, 150.0);
-       // }
- 
+    //   {// DEFAULT: no dm2dm, no wfsref, dmvolt output
+    //printf("AUTO volt_name = %s\n", data.cmdargtoken[13].val.string);
+    //     AOloopControl_DM_CombineChannels(0, 50, 50, 12, 1, 0, "dmmodes", "outdisp", 0, "wfsrm", "refout", 1, 2, 0.7, "dmvolt", 0.0, 150.0);
+    // }
+
 }
+
+
+
 
 int_fast8_t AOloopControl_DM_dmdispcomboff_cli(){
         if(CLI_checkarg(1,2)==0){

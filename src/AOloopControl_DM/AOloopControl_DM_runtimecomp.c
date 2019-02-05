@@ -212,178 +212,93 @@ int AOloopControl_DM_disp2V(long DMindex)
 // initializes configuration parameters structure
 //
 int AOloopControl_DM_CombineChannels_FPCONF(
+    char *fpsname,
     uint32_t CMDmode,
     long DMindex
 )
 {
-    // define function parameters
-    int fpi;  // function parameter index
-    int NBparam = FUNCTION_PARAMETER_NBPARAM_DEFAULT;
-    char sname[200];
-    char pname[200];
-
-    void * pNull = NULL;
+	uint16_t loopstatus;
+	
 
 
-	if(data.processnameflag == 0)
-		sprintf(sname, "DMcomb-%02ld", DMindex);
-	else // Set fps name to be process name up to first instance of character '.'
-		strcpy(sname, data.processname0);
-
-
-    FUNCTION_PARAMETER_STRUCT fps;
-    
-
-
-    if(CMDmode & CMDCODE_CONFINIT) // (re-)create fps even if it exists
-    {
-        function_parameter_struct_create(NBparam, sname);
-        function_parameter_struct_connect(sname, &fps);
-    }
-    else // load existing fps if exists
-    {
-        if(function_parameter_struct_connect(sname, &fps) == -1)
-        {
-            function_parameter_struct_create(NBparam, sname);
-            function_parameter_struct_connect(sname, &fps);
-        }
-    }
-
-
-    if( CMDmode & CMDCODE_CONFSTOP ) // stop fps
-    {
-        fps.md->signal &= ~FUNCTION_PARAMETER_STRUCT_SIGNAL_CONFRUN;
-        function_parameter_struct_disconnect(&fps);
+	// SETUP FPS
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
+    if( loopstatus == 0 ) // stop fps
         return 0;
-    }
-
-
-
-    fpi = function_parameter_add_entry(&fps, "AOCONF.DMindex", "Deformable mirror index", FPTYPE_INT64, pNull);
-    fps.parray[fpi].val.l[0] = DMindex;
-    fps.parray[fpi].val.l[3] = DMindex;
-    fps.parray[fpi].cnt0 = 1;
-    fps.parray[fpi].status &= ~FPFLAG_WRITECONF;
-    fps.parray[fpi].status &= ~FPFLAG_WRITERUN;
-    fps.parray[fpi].status |= FPFLAG_MINLIMIT;
-    fps.parray[fpi].val.l[1] = 0;  // min
-    fps.parray[fpi].status |= FPFLAG_MAXLIMIT;
-    fps.parray[fpi].val.l[2] = 9;  // max
-    long fp_DMindex = fpi;
-
-
-    fpi = function_parameter_add_entry(&fps, "AOCONF.DMxsize", "Deformable mirror X size", FPTYPE_INT64, pNull);
-    fps.parray[fpi].val.l[1] = 1;  // min
-    fps.parray[fpi].status |= FPFLAG_MINLIMIT;
-    fps.parray[fpi].status &= ~FPFLAG_WRITERUN;
-    long fp_xsize = fpi;
-
-
-    fpi = function_parameter_add_entry(&fps, "AOCONF.DMysize", "Deformable mirror Y size", FPTYPE_INT64, pNull);
-    fps.parray[fpi].val.l[1] = 1;  // min
-    fps.parray[fpi].status |= FPFLAG_MINLIMIT;
-    fps.parray[fpi].status &= ~FPFLAG_WRITERUN;
-    long fp_ysize = fpi;
-
-
-    long NBchannel_default = 12;
-    fpi = function_parameter_add_entry(&fps, ".NBchannel", "Number of channels", FPTYPE_INT64, &NBchannel_default);
-    fps.parray[fpi].val.l[1] = 1;  // min
-    fps.parray[fpi].status |= FPFLAG_MINLIMIT;
-    fps.parray[fpi].status &= ~FPFLAG_WRITERUN;
-    long fp_NBchannel = fpi;
-
-
-    long AveMode_default = 0;
-    fpi = function_parameter_add_entry(&fps, ".AveMode", "Averaging mode", FPTYPE_INT64, &AveMode_default);
-    fps.parray[fpi].val.l[1] = 0;  // min
-    fps.parray[fpi].val.l[2] = 2;  // max
-    fps.parray[fpi].status |= FPFLAG_MINLIMIT;
-    fps.parray[fpi].status |= FPFLAG_MAXLIMIT;
-    fps.parray[fpi].status &= ~FPFLAG_WRITERUN;
-    long fp_AveMode = fpi;
-
-
-    long dm2dm_mode_default = 0;
-    long fp_dm2dm_mode = function_parameter_add_entry(&fps, ".option.dm2dm_mode", "DM to DM offset mode", FPTYPE_ONOFF, &dm2dm_mode_default);
-
-
-    long fp_dm2dm_DMmodes = function_parameter_add_entry(&fps, ".option.dm2dm_DMmodes", "Output stream DM to DM", FPTYPE_STREAMNAME, pNull);
     
-    long fp_dm2dm_outdisp = function_parameter_add_entry(&fps, ".option.dm2dm_outdisp", "data stream to which output DM is written", FPTYPE_STREAMNAME, pNull);
+	
+	
+	
+	
+	
+	
+	// ALLOCATE ENTRIES	
+	
+	void *pNull = NULL;
+    uint64_t FPFLAG;
+    
+    FPFLAG = FPFLAG_DFT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
+    FPFLAG &= ~FPFLAG_WRITECONF;
+    FPFLAG &= ~FPFLAG_WRITERUN;
+	long DMindex_default[4] = { DMindex, 0, 9, DMindex };
+    long fp_DMindex = function_parameter_add_entry(&fps, "AOCONF.DMindex", "Deformable mirror index", FPTYPE_INT64, FPFLAG, &DMindex_default);
 
+	FPFLAG = FPFLAG_DFT_INPUT | FPFLAG_MINLIMIT;
+	FPFLAG &= ~FPFLAG_WRITERUN;
+	long DMsize_default[4] = { 1, 1, 1000, 1 };
+    long fp_DMxsize = function_parameter_add_entry(&fps, "AOCONF.DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG, &DMsize_default);
+    long fp_DMysize = function_parameter_add_entry(&fps, "AOCONF.DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG, &DMsize_default);
 
+	FPFLAG = FPFLAG_DFT_INPUT | FPFLAG_MINLIMIT;
+	FPFLAG &= ~FPFLAG_WRITERUN;
+    long NBchannel_default[4] = { 12, 1, 20, 12 };
+    long fp_NBchannel = function_parameter_add_entry(&fps, ".NBchannel", "Number of channels", FPTYPE_INT64, FPFLAG_DFT_INPUT, &NBchannel_default);
 
-    long wfsrefmode_default = 0;
-    long fp_wfsrefmode = function_parameter_add_entry(&fps, ".option.wfsrefmode", "WFS ref mode", FPTYPE_ONOFF, &wfsrefmode_default);
+	FPFLAG = FPFLAG_DFT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
+	FPFLAG &= ~FPFLAG_WRITERUN;
+    long AveMode_default[4] = { 0, 0, 2, 0 };
+    long fp_AveMode = function_parameter_add_entry(&fps, ".AveMode", "Averaging mode", FPTYPE_INT64, FPFLAG, &AveMode_default);
 
-    long fp_wfsref_WFSRespMat = function_parameter_add_entry(&fps, ".option.wfsref_WFSRespMat", "Output WFS resp matrix", FPTYPE_STREAMNAME, pNull);
+    //long dm2dm_mode_default[4] = { 0, 0, 1, 0 };
+    long fp_dm2dm_mode = function_parameter_add_entry(&fps, ".option.dm2dm_mode", "DM to DM offset mode", FPTYPE_ONOFF, FPFLAG_DFT_INPUT, pNull); //&dm2dm_mode_default);
 
-    long fp_wfsref_out = function_parameter_add_entry(&fps, ".option.wfsref_out", "Output WFS", FPTYPE_STREAMNAME, pNull);
+    long fp_dm2dm_DMmodes = function_parameter_add_entry(&fps, ".option.dm2dm_DMmodes", "Output stream DM to DM", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
+    
+    long fp_dm2dm_outdisp = function_parameter_add_entry(&fps, ".option.dm2dm_outdisp", "data stream to which output DM is written", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
 
+    long fp_wfsrefmode = function_parameter_add_entry(&fps, ".option.wfsrefmode", "WFS ref mode", FPTYPE_ONOFF, FPFLAG, pNull); 
 
+    long fp_wfsref_WFSRespMat = function_parameter_add_entry(&fps, ".option.wfsref_WFSRespMat", "Output WFS resp matrix", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
 
-    long voltmode_default = 0;
-    long fp_voltmode = function_parameter_add_entry(&fps, ".option.voltmode", "Volt mode", FPTYPE_ONOFF, &voltmode_default);
+    long fp_wfsref_out = function_parameter_add_entry(&fps, ".option.wfsref_out", "Output WFS", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
 
-    long fp_volttype = function_parameter_add_entry(&fps, ".option.volttype", "Volt type", FPTYPE_INT64, pNull);
+    long fp_voltmode = function_parameter_add_entry(&fps, ".option.voltmode", "Volt mode", FPTYPE_ONOFF, FPFLAG_DFT_INPUT, pNull); 
 
-    long fp_stroke100 = function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, pNull);
+    long fp_volttype = function_parameter_add_entry(&fps, ".option.volttype", "Volt type", FPTYPE_INT64, FPFLAG_DFT_INPUT, pNull);
 
-    long fp_voltname = function_parameter_add_entry(&fps, ".option.voltname", "Stream name for volt output", FPTYPE_STREAMNAME, pNull);
+    long fp_stroke100 = function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DFT_INPUT, pNull);
 
-    double DClevel_default = 0.0;
-    long fp_DClevel = function_parameter_add_entry(&fps, ".option.DClevel", "DC level [um]", FPTYPE_FLOAT64, &DClevel_default);
+    long fp_voltname = function_parameter_add_entry(&fps, ".option.voltname", "Stream name for volt output", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
 
-    long fp_maxvolt = function_parameter_add_entry(&fps, ".option.maxvolt", "Maximum voltage", FPTYPE_FLOAT64, pNull);
+    double DClevel_default[4] = { 0.0, 0.0, 100.0, 0.0 };
+    long fp_DClevel = function_parameter_add_entry(&fps, ".option.DClevel", "DC level [um]", FPTYPE_FLOAT64, FPFLAG_DFT_INPUT, &DClevel_default);
+
+    long fp_maxvolt = function_parameter_add_entry(&fps, ".option.maxvolt", "Maximum voltage", FPTYPE_FLOAT64, FPFLAG_DFT_INPUT, pNull);
 
 	// status (RO)
-    fpi = function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, pNull);
-    fps.parray[fpi].status = FPFLAG_DFT_STATUS;
-    long fp_loopcnt = fpi;
+    long fp_loopcnt = function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, FPFLAG_DFT_STATUS, pNull);
 
 
 
 
 
-
-
-    // update on first loop iteration
-    fps.md->signal |= FUNCTION_PARAMETER_STRUCT_SIGNAL_UPDATE;
-
-    fps.md->confpid = getpid();
-
-    if( CMDmode & CMDCODE_CONFSTART )  // parameter configuration loop
-    {
-		fps.md->signal |= FUNCTION_PARAMETER_STRUCT_SIGNAL_CONFRUN;
-		
-        fps.md->confpid = getpid();
-
-
-        while(fps.md->signal & FUNCTION_PARAMETER_STRUCT_SIGNAL_CONFRUN)
-        {
-
-			// Test if CONF process is running
-            if((getpgid(fps.md->confpid) >= 0)&&(fps.md->confpid>0))
-                fps.md->status |= FUNCTION_PARAMETER_STRUCT_STATUS_CONF;
-            else
-                fps.md->status &= ~FUNCTION_PARAMETER_STRUCT_STATUS_CONF;
-
-			// Test if RUN process is running
-            if((getpgid(fps.md->runpid) >= 0)&&(fps.md->runpid>0))
-                fps.md->status |= FUNCTION_PARAMETER_STRUCT_STATUS_RUN;
-            else
-                fps.md->status &= ~FUNCTION_PARAMETER_STRUCT_STATUS_RUN;
-
-
-
-
-            if( fps.md->signal & FUNCTION_PARAMETER_STRUCT_SIGNAL_UPDATE ) // GUI to update display
-            {
-
-                // Here we insert logical links between parameters
-
-                if ( fps.parray[fp_dm2dm_mode].status & FPFLAG_ONOFF )  // ON state
+	// RUN UPDATE LOOP
+	while( loopstatus == 1 )
+	{
+		if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // if update needed
+		{
+			// here goes the logic
+			if ( fps.parray[fp_dm2dm_mode].status & FPFLAG_ONOFF )  // ON state
                 {
                     fps.parray[fp_dm2dm_DMmodes].status |= FPFLAG_USED;
                     fps.parray[fp_dm2dm_outdisp].status |= FPFLAG_USED;
@@ -426,23 +341,11 @@ int AOloopControl_DM_CombineChannels_FPCONF(
                     fps.parray[fp_voltname].status &= ~FPFLAG_USED;
                     fps.parray[fp_voltname].status &= ~FPFLAG_VISIBLE;
                 }
-
-
-                functionparameter_CheckParametersAll(&fps);  // check all parameter values
                 
-                fps.md->signal &= ~FUNCTION_PARAMETER_STRUCT_SIGNAL_UPDATE;
-
-            }
-
-            usleep(fps.md->confwaitus);
-        }
-
-
-        fps.md->confpid = 0;
-    }
-
-    fps.md->status &= ~FUNCTION_PARAMETER_STRUCT_STATUS_CONF;
-    function_parameter_struct_disconnect(&fps);
+            functionparameter_CheckParametersAll(&fps);  // check all parameter values
+		}		
+	}
+	function_parameter_FPCONFexit( &fps );
 
 
     return(0);
@@ -475,7 +378,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
 //
 // dm2dm_mode: 1 if this DM controls an output DM
 //
-// dm2dm_DMmodes: data cube containting linear relationship between current DM and the output DM it controls
+// dm2dm_DMmodes: data cube containing linear relationship between current DM and the output DM it controls
 //
 // dm2dm_outdisp: data stream to which output DM is written
 //
@@ -494,7 +397,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
 
 
 int AOloopControl_DM_CombineChannels_RUN(
-    long DMindex
+	char *fpsname
 )
 {
     uint8_t naxis = 2;
@@ -517,7 +420,6 @@ int AOloopControl_DM_CombineChannels_RUN(
     float *dmdispptr;
     float *dmdispptr_array[20];
     long IDdispt;
-    char sname[200];
 
     int vOK;
     float maxmaxvolt = 150.0;
@@ -550,23 +452,27 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
 
-	// manage configuration parameters
-	if(data.processnameflag == 0)
-		sprintf(sname, "DMcomb-%02ld", DMindex);
-	else
-		strcpy(sname, data.processname0);
+
 	
 	FUNCTION_PARAMETER_STRUCT fps;
+	int FPSINTERFACE = 1;
 	
-	if(function_parameter_struct_connect(sname, &fps) == -1)
+	if(function_parameter_struct_connect(fpsname, &fps) == -1)
 	{
-		printf("ERROR: fps \"%s\" does not exist\n", sname);
-		exit(0);
+		printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
+		FPSINTERFACE = 0;
 	}
+	else
+	{
+		FPSINTERFACE = 1;
+	}
+
+
 
 	fps.md->runpid = getpid();
 	
 	// GET FUNCTION PARAMETER VALUES
+	long DMindex = functionparameter_GetParamValue_INT64(&fps, "AOCONF.DMindex");
 	long xsize = functionparameter_GetParamValue_INT64(&fps, "AOCONF.DMxsize");
 	long ysize = functionparameter_GetParamValue_INT64(&fps, "AOCONF.DMysize");	
 	int NBchannel = functionparameter_GetParamValue_INT64(&fps, "NBchannel");	
@@ -998,7 +904,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
             /*     for(semnb=0;semnb<data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem;semnb++)
                     {
-                        sem_getvalue(data.image[dmdispcombconf[DMindex].IDdisp].semptr[semnb], &semval);
+                        sem_getvalue(data.image[dmdispcombconffps->parray[fpsi].status != FPFLAG_ONOFF;[DMindex].IDdisp].semptr[semnb], &semval);
                         if(semval<SEMAPHORE_MAXVAL)
                         sem_post(data.image[dmdispcombconf[DMindex].IDdisp].semptr[semnb]);
                      }*/
@@ -1222,6 +1128,53 @@ int AOloopControl_DM_CombineChannels(
     float maxvolt
 )
 {
+	char fpsname[200];
+    FUNCTION_PARAMETER_STRUCT fps;
+	
+	// create FPS
+	sprintf(fpsname, "DMcomb-%02ld", DMindex);
+	AOloopControl_DM_CombineChannels_FPCONF( fpsname, CMDCODE_CONFINIT, DMindex);
+	
+	
+
+
+    function_parameter_struct_connect(fpsname, &fps);
+    
+	functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMindex", DMindex);
+	functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMxsize", xsize);
+	functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMysize", ysize);	
+	functionparameter_SetParamValue_INT64(&fps, "NBchannel", NBchannel);	
+	functionparameter_SetParamValue_INT64(&fps, ".AveMode", AveMode);		
+	
+	functionparameter_SetParamValue_INT64(&fps, ".option.dm2dm_mode", dm2dm_mode);
+	functionparameter_SetParamValue_STRING(&fps, ".option.dm2dm_DMmodes", dm2dm_DMmodes);
+	functionparameter_SetParamValue_STRING(&fps, ".option.dm2dm_outdisp", dm2dm_outdisp);
+			
+	functionparameter_SetParamValue_INT64(&fps, ".option.wfsrefmode", wfsrefmode);
+	functionparameter_SetParamValue_STRING(&fps, ".option.wfsref_WFSRespMat", wfsref_WFSRespMat);
+	functionparameter_SetParamValue_STRING(&fps, ".option.wfsref_out", wfsref_out);
+	
+	functionparameter_SetParamValue_ONOFF(&fps, ".option.voltmode", voltmode);		
+	functionparameter_SetParamValue_STRING(&fps, ".option.voltname", IDvolt_name);
+
+	functionparameter_SetParamValue_INT64(&fps, ".option.volttype", volttype);
+		
+	functionparameter_SetParamValue_FLOAT64(&fps, ".option.stroke100", stroke100);
+	functionparameter_SetParamValue_FLOAT64(&fps, ".option.DClevel", DClevel);
+	functionparameter_SetParamValue_FLOAT64(&fps, ".option.maxvolt", maxvolt);
+	
+		
+	function_parameter_struct_disconnect(&fps);
+
+
+
+	AOloopControl_DM_CombineChannels_RUN( fpsname );
+
+	return 0;
+}
+
+
+/*
     uint8_t naxis = 2;
     uint32_t *size;
     long ch;
@@ -1647,12 +1600,7 @@ int AOloopControl_DM_CombineChannels(
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].cnt0++;
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].write = 0;
 
-            /*     for(semnb=0;semnb<data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem;semnb++)
-                    {
-                        sem_getvalue(data.image[dmdispcombconf[DMindex].IDdisp].semptr[semnb], &semval);
-                        if(semval<SEMAPHORE_MAXVAL)
-                        sem_post(data.image[dmdispcombconf[DMindex].IDdisp].semptr[semnb]);
-                     }*/
+
             COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
             //      sem_post(data.image[dmdispcombconf[DMindex].IDdisp].semptr[0]);
 
@@ -1807,7 +1755,7 @@ int AOloopControl_DM_CombineChannels(
 }
 
 
-
+*/
 
 
 int AOloopControl_DM_dmdispcomboff(long DMindex)
