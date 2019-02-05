@@ -49,7 +49,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long loop, long NbAve
 long AOloopControl_acquireCalib_RespMatrix_Fast(const char *DMmodes_name, const char *dmRM_name, const char *imWFS_name, long semtrig, float HardwareLag, float loopfrequ, float ampl, const char *outname);
 
 
-long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name);
+long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name, int dmode, int NBtstep);
 
 
 #endif

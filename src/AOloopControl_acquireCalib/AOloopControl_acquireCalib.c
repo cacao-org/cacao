@@ -208,8 +208,8 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
 
 
 int_fast8_t AOloopControl_acquireCalib_RMseries_deinterlace_cli() {
-	if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,3)==0) {
-		AOloopControl_acquireCalib_RMseries_deinterlace(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.string);
+	if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,3)+CLI_checkarg(5,2)+CLI_checkarg(6,2)==0) {
+		AOloopControl_acquireCalib_RMseries_deinterlace(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl);
 		return 0;
 	}
 	else return 1;
@@ -281,7 +281,7 @@ int_fast8_t init_AOloopControl_acquireCalib()
 		__FILE__, 
 		AOloopControl_acquireCalib_RMseries_deinterlace_cli, 
 		"process overlapping RMs", 
-		"<Number RMs> <refstart> <refend> <outname>", 
+		"aolRMdeinterlace <Number RMs> <refstart> <refend> <outname>", 
 		"aolRMdeinterlace 8 4 9 outRMseq", 
 		"long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name)");
 
@@ -2778,45 +2778,166 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(const char *DMmodes_name, const 
  * ## Arguments
  * 
  * Input RMs are named imrespC_000, imrespC_001 etc...\n
- * They are assumed to be regularly spaced\n
+ * They are assumed to be regularly spaced in time\n
+ * In each of these RM cubes, the z axis is time, increments by 1 frame\n
  * 
  * The reference is built by integrating from time refstart to refend as measured from the first RMsequence
  * 
  */
 
-long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name)
+long AOloopControl_acquireCalib_RMseries_deinterlace(
+	int NBRM,         // Number of RM sequences, each offset in time be 1/NBRM frame
+	int refstart,     // start of reference time interval
+	int refend,       // end of reference time interval
+	char *IDout_name,
+	int dmode,        // dimension mode. 0: classical, RM is 2D, 3rd dim is time. 1: RM is 3D, integer time step YYY encoded in image name: imrespC_XXX_YYY
+	int NBtstep       // if dmode=1, number of RM time steps YYY
+)
 {
 	long IDout;
+	long xsizeWFS, ysizeWFS, sizeDM;
 	long xsize, ysize, zsize, xysize;
 	long rmCindex;
 	
+	
 	long * IDRMarray = (long*) malloc(sizeof(long)*NBRM);
+	
+	if(dmode == 1)
+	{
+		long ID = image_ID("imrespC_000_000");
+		xsizeWFS = data.image[ID].md[0].size[0];
+		ysizeWFS = data.image[ID].md[0].size[1];
+		sizeDM = data.image[ID].md[0].size[2];
+	}
 	
 	for(rmCindex=0; rmCindex<NBRM; rmCindex++)
 	{
 		char rmCname[100];
 		sprintf(rmCname, "imrespC_%03ld", rmCindex);
 		
-		IDRMarray[rmCindex] = image_ID(rmCname);
+		
+		if(dmode == 0)
+			IDRMarray[rmCindex] = image_ID(rmCname);
+		else
+		{
+			// assemble sequence from individual RM cubes
+			char rmCfname[100];
+			
+			
+			sprintf(rmCfname, "!imrespC_%03ld.fits", rmCindex);
+			
+			IDRMarray[rmCindex] = create_3Dimage_ID(rmCname, xsizeWFS*ysizeWFS, sizeDM, NBtstep);
+			int tstep;
+			for(tstep=0; tstep<NBtstep; tstep++)
+			{
+				char rmCname1[100];
+				long ii, jj;
+				
+				sprintf(rmCname1, "imrespC_%03ld_%03d", rmCindex, tstep);
+				long ID = image_ID(rmCname1);
+				
+				if(ID != -1)
+					printf("Processing image %s\n", rmCname1);
+				else
+					{
+						printf("ERROR: cannot find image %s\n", rmCname1);
+						exit(0);
+					}
+				for(jj=0; jj<sizeDM; jj++)
+					for(ii=0; ii<xsizeWFS*ysizeWFS; ii++)
+					{
+						data.image[IDRMarray[rmCindex]].array.F[(xsizeWFS*ysizeWFS*sizeDM)*tstep + jj*xsizeWFS*ysizeWFS + ii] = data.image[ID].array.F[xsizeWFS*ysizeWFS*jj+ii];					
+					}
+				delete_image_ID(rmCname1);
+			}
+			
+			//save_fits(rmCname, rmCfname);			
+		}
 	}
+	
+	list_image_ID();
 	
 	xsize = data.image[IDRMarray[0]].md[0].size[0];
 	ysize = data.image[IDRMarray[0]].md[0].size[1];
 	zsize = data.image[IDRMarray[0]].md[0].size[2];
 	xysize = xsize*ysize;
 
-	// Compute reference
-	long IDref = create_2Dimage_ID("imrespRef", xsize, ysize);
-	long cntref = 0;
+
+
+	
+	
+	
+	// Set RMS to 1
+	double *RMSarray;
+	RMSarray = (double*) malloc(sizeof(double)*NBRM);
 	for(rmCindex=0; rmCindex<NBRM; rmCindex++)
 	{
+		RMSarray[rmCindex] = 0;
+		
+		long imindex;
+		for(imindex=0;imindex<zsize;imindex++)
+		{
+			float tstart0, tend0;
+			
+			tstart0 = 1.0*imindex;
+			tend0 = tstart0+1.0;
+			
+			if((tstart0>refstart) && (tend0<refend))
+			{
+				long ii;
+				
+				for(ii=0;ii<xysize;ii++)
+				{
+					double tmpf;
+				
+					tmpf = data.image[IDRMarray[rmCindex]].array.F[imindex*xysize+ii];
+					RMSarray[rmCindex] += tmpf*tmpf;
+				}
+			}
+		}
+		printf("RMS %ld = %g\n", rmCindex, RMSarray[rmCindex]);
+		
+		for(imindex=0;imindex<zsize;imindex++)
+		{
+			long ii;
+			for(ii=0;ii<xysize;ii++)
+				data.image[IDRMarray[rmCindex]].array.F[imindex*xysize+ii] /= sqrt(RMSarray[rmCindex]);
+		}
+	}
+
+
+
+	// Compute reference and measure RMS
+	long IDref = create_2Dimage_ID("imrespRef", xsize, ysize);
+	long cntref = 0;
+	
+	for(rmCindex=0; rmCindex<NBRM; rmCindex++)
+	{
+		RMSarray[rmCindex] = 0;
+		
 		long imindex;
 		for(imindex=0;imindex<zsize;imindex++)
 		{
 			float tstart, tend;
+			float tstart0, tend0;
 			
+			tstart0 = 1.0*imindex;
+			tend0 = tstart0+1.0;
 			tstart = 1.0*imindex + 1.0*rmCindex/NBRM;
 			tend = tstart+1.0;
+			
+			if((tstart0>refstart) && (tend0<refend))
+			{
+				long ii;
+				
+				for(ii=0;ii<xysize;ii++)
+				{
+					double tmpf;
+				
+					tmpf = data.image[IDRMarray[rmCindex]].array.F[imindex*xysize+ii];
+					RMSarray[rmCindex] += tmpf*tmpf;
+				}
+			}
 			
 			if( (tstart>refstart) && (tend<refend) )
 				{
@@ -2827,7 +2948,11 @@ long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int
 					cntref++;
 				}
 		}
+		printf("RMS %ld = %g\n", rmCindex, RMSarray[rmCindex]);
 	}
+	
+	free(RMSarray);
+	
 	if(cntref>0)
 	{
 		long ii;
@@ -2854,40 +2979,51 @@ long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int
 		long imindex;
 		for(imindex=0;imindex<zsize;imindex++)
 		{
-			float tstart0, tend0;
-			float tstart1, tend1;
+			float tstart0;
+			long imindex_run;
 			
-			tstart0 = 1.0*imindex + 1.0*rmCindex/NBRM;
-			tend0 = tstart0 + 1.0;
-			
-			tstart1 = tstart0 + 1.0*rmCindex/NBRM;
-			tend1 = tstart1 + 1.0;			
+			imindex_run = imindex;
+			tstart0 = 1.0*imindex_run + (1.0*rmCindex)/NBRM;
+	
 			
 			// slice index in output
 			long outindex = rmCindex + NBRM*imindex;
 			
+			
+			
+			
 			if(outindex < zsizeout)
 			{
-				if(tstart0<refstart)
+				printf("Output Frame %5ld  [ f%ld in s%ld ]", outindex, imindex, rmCindex );
+				
+				while((tstart0<refstart)&&(imindex_run<zsize))
 					{
 						long ii;
-						long imindex1;
+						long imindex1_run;
 						
 						for (ii=0;ii<xysize;ii++)
-							data.image[IDout].array.F[outindex*xysize+ii] += data.image[IDRMarray[rmCindex]].array.F[imindex*xysize+ii];
+							data.image[IDout].array.F[outindex*xysize+ii] += data.image[IDRMarray[rmCindex]].array.F[imindex_run*xysize+ii];
 						
 						if(rmCindex1 == 0)
-							imindex1 = imindex + 1;
+							imindex1_run = imindex_run + 1;
 						else
-							imindex1 = imindex;
+							imindex1_run = imindex_run;
 						
 						for (ii=0;ii<xysize;ii++)
-							data.image[IDout].array.F[outindex*xysize+ii] -= data.image[IDRMarray[rmCindex1]].array.F[imindex1*xysize+ii];
+							data.image[IDout].array.F[outindex*xysize+ii] -= data.image[IDRMarray[rmCindex1]].array.F[imindex1_run*xysize+ii];
 					
-						
-						for (ii=0;ii<xysize;ii++)
-							data.image[IDout].array.F[outindex*xysize+ii] += 1.0/NBRM * data.image[IDref].array.F[ii];
+					
+						printf(" [ + f%ld s%ld  - f%ld s%ld ]", imindex_run, rmCindex, imindex1_run, rmCindex1 );
+					
+						imindex_run += 1;
+						tstart0 = 1.0*imindex_run + (1.0*rmCindex)/NBRM;
 					}
+					
+				long ii;
+				for (ii=0;ii<xysize;ii++)
+					data.image[IDout].array.F[outindex*xysize+ii] += 1.0/NBRM * data.image[IDref].array.F[ii];
+							
+				printf("\n");
 			}
 			
 		}
@@ -2895,6 +3031,24 @@ long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int
 
 	
 	free(IDRMarray);
+	
+	
+	if(dmode == 1)
+	{
+		long act = 820;
+		long IDactRM;
+		
+		IDactRM = create_3Dimage_ID("actRM", xsizeWFS, ysizeWFS, zsizeout);
+		long kk;
+		for(kk=0;kk<zsizeout;kk++)
+		{
+			long ii;
+			for(ii=0;ii<xsizeWFS*ysizeWFS;ii++)
+				data.image[IDactRM].array.F[kk*xsizeWFS*ysizeWFS+ii] = data.image[IDout].array.F[kk*xysize + act*xsize + ii];
+		}
+		
+	}
+	
 	
 	return(IDout);
 }
