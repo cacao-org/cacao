@@ -133,6 +133,12 @@ add_subdirectory ( "src/AOloopControl_perfTest" )
 add_subdirectory ( "src/AOloopControl_PredictiveControl" )
 add_subdirectory ( "src/FPAOloopControl" )
 
+#add_subdirectory ( "src/WFpropagate" )
+#add_subdirectory ( "src/OpticsMaterials" )
+#add_subdirectory ( "src/AtmosphereModel" )
+#add_subdirectory ( "src/AtmosphericTurbulence" )
+
+
 
 # main
 add_executable(cacao 
@@ -187,6 +193,10 @@ AOloopControl_perfTest
 AOloopControl_PredictiveControl
 FPAOloopControl
 linopt_imtools
+#WFpropagate
+#OpticsMaterials
+#AtmosphereModel
+#AtmosphericTurbulence
 m
 readline
 ncurses
