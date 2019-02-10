@@ -59,6 +59,8 @@ cmake ..
 
 On CentOS, the cmake command could be cmake3.
 
+### Post-installation 
+
 You may need to add /usr/local/lib to LD_LIBRARY_PATH environment variable:
 ```bash
 echo "/usr/local/lib" > usrlocal.conf
@@ -66,6 +68,16 @@ sudo mv usrlocal.conf /etc/ld.so.conf.d/
 sudo ldconfig -v
 ```
 
+Unless you have a separate install of milk on your system, a symbolic link to milk is required for milk scripts that are included in cacao:
+
+```bash
+sudo ln -s /usr/local/bin/cacao /usr/local/bin/milk
+```
+
+Add milk executable scripts to PATH environment variable. Add this line to the .bashrc file (change source code location as needed):
+```bash
+export PATH=$PATH:/home/myname/src/cacao/src/CommandLineInterface/scripts
+```
 
 
 ---
