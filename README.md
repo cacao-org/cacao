@@ -4,8 +4,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;master branch: [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao)
 
 
-![](AlphaRelease.svg)
 
+CACAO version 0.1.01
 
 ---
 
@@ -47,7 +47,7 @@ git clone --recursive https://github.com/cacao-org/cacao cacao
 ```
 
 
-### Compiling with cmake
+### Compiling
 
 
 ```bash
