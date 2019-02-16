@@ -9,5 +9,5 @@ script:
 - cd _build
 - cmake ..
 - make
-- make install
+- sudo make install
 
