@@ -1,6 +1,7 @@
 var searchData=
 [
   ['enable',['ENABLE',['../structRTstreamLOG.html#ae2004d1b41ed5b16bbc4a299c324c91b',1,'RTstreamLOG']]],
+  ['errcnt',['errcnt',['../structFUNCTION__PARAMETER__STRUCT__MD.html#aa06f00f43606d05e57c413f02816cd19',1,'FUNCTION_PARAMETER_STRUCT_MD']]],
   ['errmsg',['errmsg',['../image__basic_8c.html#a8bb845778df5ade66dd9af426128a622',1,'image_basic.c']]],
   ['errmsg_5farith',['errmsg_arith',['../COREMOD__arith_8c.html#a25e2c6cb1a390cd8444e09c450f0d50f',1,'COREMOD_arith.c']]],
   ['errmsg_5fmemory',['errmsg_memory',['../COREMOD__memory_8c.html#ac131d1fce1239b90898281924cc65ca0',1,'COREMOD_memory.c']]],

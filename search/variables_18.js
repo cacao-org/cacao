@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['year',['year',['../structnrlmsise__input.html#a32893d62ceca558ccfb7e34789ea9536',1,'nrlmsise_input']]],
   ['ypix',['ypix',['../struct____attribute____.html#a2307ff611d1fd723cb696c3ba8aa2c5b',1,'__attribute__']]],
   ['ysize',['ysize',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a71c110191b56e16e6119fef949d651f5',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['ysizeout',['ysizeout',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a86ed41abdfe7e97373b97b5b180b045f',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],

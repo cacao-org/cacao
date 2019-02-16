@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['zernikepolyn_2ec',['ZernikePolyn.c',['../ZernikePolyn_8c.html',1,'']]],
-  ['zernikepolyn_2eh',['ZernikePolyn.h',['../__install_2include_2ZernikePolyn_8h.html',1,'(Global Namespace)'],['../src_2ZernikePolyn_2ZernikePolyn_8h.html',1,'(Global Namespace)']]]
+  ['wfpropagate_2ec',['WFpropagate.c',['../WFpropagate_8c.html',1,'']]],
+  ['wfpropagate_2eh',['WFpropagate.h',['../WFpropagate_8h.html',1,'']]],
+  ['wfsim_2econf',['WFsim.conf',['../WFsim_8conf.html',1,'']]],
+  ['workingwithgit_2emd',['WorkingWithGit.md',['../WorkingWithGit_8md.html',1,'']]]
 ];

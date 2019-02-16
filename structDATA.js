@@ -35,6 +35,8 @@ var structDATA =
     [ "processinfo", "structDATA.html#adbe67865c1e9afa0616a28967eca2d2d", null ],
     [ "processinfoActive", "structDATA.html#acbe79e27b5b3128e13c1f2285832c564", null ],
     [ "processname", "structDATA.html#a0733d8fb587cc3f3fc906578f766f1b1", null ],
+    [ "processname0", "structDATA.html#a98c7e10f8d9e02f5dc37014ae7c001bd", null ],
+    [ "processnameflag", "structDATA.html#adebbda49e36d8b1665d3519077f2091e", null ],
     [ "progStatus", "structDATA.html#a15b9710b13cfe89af37f42194bc1ba5d", null ],
     [ "quiet", "structDATA.html#a3f7eda27560572dd2510250a1935deb5", null ],
     [ "rndgen", "structDATA.html#a3308ac8a12a70a6b558d38db7666c648", null ],

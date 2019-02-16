@@ -100,6 +100,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
 <tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_acquireCalib - 1. ACQUIRING CALIBRATION</div></td></tr>
+<tr class="memitem:a047a5dc36a8fad094682b223388b020e"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a047a5dc36a8fad094682b223388b020e">AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli</a> ()</td></tr>
+<tr class="separator:a047a5dc36a8fad094682b223388b020e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35f7b888324de7646c7aed2b280f6d92"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a35f7b888324de7646c7aed2b280f6d92">AOloopControl_acquireCalib_RespMatrix_Fast_cli</a> ()</td></tr>
 <tr class="memdesc:a35f7b888324de7646c7aed2b280f6d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_RespMatrix_Fast.  <a href="#a35f7b888324de7646c7aed2b280f6d92">More...</a><br /></td></tr>
 <tr class="separator:a35f7b888324de7646c7aed2b280f6d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,14 +117,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a314f7ab80661584e75a4dd96e1ecfb7f"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a314f7ab80661584e75a4dd96e1ecfb7f">AOloopControl_acquireCalib_Measure_Resp_Matrix_cli</a> ()</td></tr>
 <tr class="memdesc:a314f7ab80661584e75a4dd96e1ecfb7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Measure_Resp_Matrix.  <a href="#a314f7ab80661584e75a4dd96e1ecfb7f">More...</a><br /></td></tr>
 <tr class="separator:a314f7ab80661584e75a4dd96e1ecfb7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a910017702375d44043d2c3bee4ff4662"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a910017702375d44043d2c3bee4ff4662">AOloopControl_acquireCalib_RMseries_deinterlace_cli</a> ()</td></tr>
+<tr class="separator:a910017702375d44043d2c3bee4ff4662"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_IOtools functions</div></td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl - 4. ACQUIRING CALIBRATION</div></td></tr>
-<tr class="memitem:a577b4b3ac104a37dffb2e92bec2f8a24"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a577b4b3ac104a37dffb2e92bec2f8a24">AOloopControl_acquireCalib_Measure_WFSrespC</a> (long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, int SequInitMode)</td></tr>
-<tr class="memdesc:a577b4b3ac104a37dffb2e92bec2f8a24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire WFS response to a series of DM pattern.  <a href="#a577b4b3ac104a37dffb2e92bec2f8a24">More...</a><br /></td></tr>
-<tr class="separator:a577b4b3ac104a37dffb2e92bec2f8a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ec44810336fcc7c5c78ff2ef452c919"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a6ec44810336fcc7c5c78ff2ef452c919">AOloopControl_acquireCalib_mkRandomLinPokeSequence</a> (char *IDmodeC_name, long NBpokemap, char *IDpokemapC_name, char *IDpokeC_name)</td></tr>
+<tr class="separator:a6ec44810336fcc7c5c78ff2ef452c919"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0b950020a33fbecd354df4534dcd9e9"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#af0b950020a33fbecd354df4534dcd9e9">AOloopControl_acquireCalib_Measure_WFSrespC</a> (long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, uint32_t SequInitMode)</td></tr>
+<tr class="memdesc:af0b950020a33fbecd354df4534dcd9e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire WFS response to a series of DM pattern.  <a href="#af0b950020a33fbecd354df4534dcd9e9">More...</a><br /></td></tr>
+<tr class="separator:af0b950020a33fbecd354df4534dcd9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a717b12ffede18da65ae0ca25e29e37d4"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a717b12ffede18da65ae0ca25e29e37d4">AOloopControl_acquireCalib_Measure_WFS_linResponse</a> (long loop, float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDrespC_name, const char *IDwfsref_name, int normalize, int AOinitMode, long NBcycle, long NBinnerCycle)</td></tr>
 <tr class="memdesc:a717b12ffede18da65ae0ca25e29e37d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure linear response to set of DM modes/patterns.  <a href="#a717b12ffede18da65ae0ca25e29e37d4">More...</a><br /></td></tr>
 <tr class="separator:a717b12ffede18da65ae0ca25e29e37d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,6 +138,8 @@ Functions</h2></td></tr>
 <tr class="separator:aaa8bc5995efddb82cdaf491f2df02340"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bea54ad83f480407592abd36dea624d"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a2bea54ad83f480407592abd36dea624d">AOloopControl_acquireCalib_RespMatrix_Fast</a> (const char *DMmodes_name, const char *dmRM_name, const char *imWFS_name, long semtrig, float HardwareLag, float loopfrequ, float ampl, const char *outname)</td></tr>
 <tr class="separator:a2bea54ad83f480407592abd36dea624d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa03168ac066833719f189722cbc4af07"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#aa03168ac066833719f189722cbc4af07">AOloopControl_acquireCalib_RMseries_deinterlace</a> (int NBRM, int refstart, int refend, char *IDout_name, int dmode, int NBtstep)</td></tr>
+<tr class="separator:aa03168ac066833719f189722cbc4af07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -344,12 +352,22 @@ Variables</h2></td></tr>
 <p>Measure linear response to set of DM modes/patterns. </p>
 <h2>Purpose</h2>
 <p>Measure the WFS linear response to a set of DM patterns</p>
-<p>This function creates positive and negative maps which are sent by <a class="el" href="AOloopControl__acquireCalib_8c.html#a577b4b3ac104a37dffb2e92bec2f8a24" title="Acquire WFS response to a series of DM pattern. ">AOloopControl_acquireCalib_Measure_WFSrespC()</a> <br />
+<p>This function creates positive and negative maps which are sent by <a class="el" href="AOloopControl__acquireCalib_8c.html#af0b950020a33fbecd354df4534dcd9e9" title="Acquire WFS response to a series of DM pattern. ">AOloopControl_acquireCalib_Measure_WFSrespC()</a> <br />
 Bleeding from one pattern to the next due to limited DM time response is canceled by using two patterns <br />
 </p>
 <p>pattern a sequence : +- +- +- +- ... <br />
 pattern b sequence : +- -+ +- -+ ... <br />
 </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">delayRM1us</td><td>Frame delay [# of frame] </td></tr>
+    <tr><td class="paramname">NBave</td><td>Sub-frame delay [us] </td></tr>
+    <tr><td class="paramname">NBexcl</td><td>Number of frames averaged for a single poke measurement </td></tr>
+    <tr><td class="paramname">IDpokeC_name</td><td>Number of frames excluded </td></tr>
+    <tr><td class="paramname">NBinnerCycle</td><td>Number of measurement cycles to be repeated Number of inner cycles (how many consecutive times should a single +/- poke be repeated) </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -372,8 +390,8 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="a577b4b3ac104a37dffb2e92bec2f8a24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a577b4b3ac104a37dffb2e92bec2f8a24">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC()</h2>
+<a id="af0b950020a33fbecd354df4534dcd9e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0b950020a33fbecd354df4534dcd9e9">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -441,7 +459,7 @@ pattern b sequence : +- -+ +- -+ ... <br />
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>SequInitMode</em>&#160;</td>
         </tr>
         <tr>
@@ -469,7 +487,7 @@ pattern b sequence : +- -+ +- -+ ... <br />
     <tr><td class="paramdir">[in]</td><td class="paramname">normalize</td><td>Normalize flag </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">AOinitMode</td><td>AO structure initialization flag </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">NBcycle</td><td>Number of cycles averaged (outer) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">SequInitMode</td><td>Sequence initialization mode (0 or 1)</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">SequInitMode</td><td>Sequence initialization mode bitmask 0x01 swap pairs every 4 indices 0x02 adjacent pairs are swapped between cycles</td></tr>
   </table>
   </dd>
 </dl>
@@ -632,6 +650,63 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
+<a id="a6ec44810336fcc7c5c78ff2ef452c919"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ec44810336fcc7c5c78ff2ef452c919">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_mkRandomLinPokeSequence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">long AOloopControl_acquireCalib_mkRandomLinPokeSequence </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>IDmodeC_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>NBpokemap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>IDpokemapC_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>IDpokeC_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a047a5dc36a8fad094682b223388b020e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a047a5dc36a8fad094682b223388b020e">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int_fast8_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2bea54ad83f480407592abd36dea624d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2bea54ad83f480407592abd36dea624d">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_RespMatrix_Fast()</h2>
 
@@ -712,6 +787,82 @@ pattern b sequence : +- -+ +- -+ ... <br />
 </div><div class="memdoc">
 
 <p>CLI function for AOloopControl_RespMatrix_Fast. </p>
+
+</div>
+</div>
+<a id="aa03168ac066833719f189722cbc4af07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa03168ac066833719f189722cbc4af07">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_RMseries_deinterlace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">long AOloopControl_acquireCalib_RMseries_deinterlace </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>NBRM</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>refstart</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>refend</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>IDout_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>dmode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>NBtstep</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<h2>Purpose</h2>
+<p>Processes a series of RMs that are overlapping in time</p>
+<h2>Arguments</h2>
+<p>Input RMs are named imrespC_000, imrespC_001 etc...<br />
+They are assumed to be regularly spaced in time<br />
+In each of these RM cubes, the z axis is time, increments by 1 frame<br />
+ The reference is built by integrating from time refstart to refend as measured from the first RMsequence </p>
+
+</div>
+</div>
+<a id="a910017702375d44043d2c3bee4ff4662"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a910017702375d44043d2c3bee4ff4662">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_RMseries_deinterlace_cli()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int_fast8_t AOloopControl_acquireCalib_RMseries_deinterlace_cli </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -853,7 +1004,7 @@ pattern b sequence : +- -+ +- -+ ... <br />
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b9dbe0ab556e115fe806e391623776a6.html">AOloopControl_acquireCalib</a></li><li class="navelem"><a class="el" href="AOloopControl__acquireCalib_8c.html">AOloopControl_acquireCalib.c</a></li>
-    <li class="footer">Generated on Sun Dec 30 2018 21:39:33 for cacao by
+    <li class="footer">Generated on Sat Feb 16 2019 12:57:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

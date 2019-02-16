@@ -12,6 +12,7 @@ var CLIcore_8c =
     [ "dupstr", "CLIcore_8c.html#aaa38e8336f9b0dabd89fba19867a6e88", null ],
     [ "exitCLI", "CLIcore_8c.html#a59af8cdd8ef607fb9221fb3a6a3185bb", null ],
     [ "fnExit1", "CLIcore_8c.html#aba10aa7a7ca914de660d5e55c431baee", null ],
+    [ "functionparameter_CTRLscreen_cli", "CLIcore_8c.html#a7b68ce5751ae4d9c7c3f145a33f47ab2", null ],
     [ "help", "CLIcore_8c.html#a8c42aee07751784b814e4d279b586ffd", null ],
     [ "help_cmd", "CLIcore_8c.html#a32841e2d4954c9c57c464b81d0a4eb54", null ],
     [ "help_command", "CLIcore_8c.html#a522da96e72181268998f5371a2e771cd", null ],

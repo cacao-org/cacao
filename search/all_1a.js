@@ -1,5 +1,8 @@
 var searchData=
 [
+  ['z_5fair',['Z_Air',['../AtmosphericTurbulence_8c.html#a6c3139e4f450454cdaa4ce079dcc6191',1,'AtmosphericTurbulence.c']]],
+  ['z_5fn2',['Z_N2',['../AtmosphericTurbulence_8c.html#a00902d1a290cdedf3678e8dbaeb75ba9',1,'AtmosphericTurbulence.c']]],
+  ['zenithangle',['ZenithAngle',['../AtmosphereModel_8c.html#a58f391202e2e3ae1de02f60930370e29',1,'AtmosphereModel.c']]],
   ['zer_5fm',['Zer_m',['../structZERNIKE.html#a5e2bbe4eed60483ff115a9661462cff9',1,'ZERNIKE']]],
   ['zer_5fn',['Zer_n',['../structZERNIKE.html#a144847f36a12051560840131c95ddd0e',1,'ZERNIKE']]],
   ['zermax',['ZERMAX',['../structZERNIKE.html#a2c37fde142f459b1374da2472151ee29',1,'ZERNIKE']]],
@@ -11,5 +14,6 @@ var searchData=
   ['zernikepolyn_2ec',['ZernikePolyn.c',['../ZernikePolyn_8c.html',1,'']]],
   ['zernikepolyn_2eh',['ZernikePolyn.h',['../__install_2include_2ZernikePolyn_8h.html',1,'(Global Namespace)'],['../src_2ZernikePolyn_2ZernikePolyn_8h.html',1,'(Global Namespace)']]],
   ['zernikepolyn_5frmpiston',['ZERNIKEPOLYN_rmPiston',['../__install_2include_2ZernikePolyn_8h.html#a5dbfdca8ba770d4108b8418de82e1104',1,'ZERNIKEPOLYN_rmPiston(const char *ID_name, const char *IDmask_name):&#160;ZernikePolyn.c'],['../ZernikePolyn_8c.html#a5dbfdca8ba770d4108b8418de82e1104',1,'ZERNIKEPOLYN_rmPiston(const char *ID_name, const char *IDmask_name):&#160;ZernikePolyn.c'],['../src_2ZernikePolyn_2ZernikePolyn_8h.html#a5dbfdca8ba770d4108b8418de82e1104',1,'ZERNIKEPOLYN_rmPiston(const char *ID_name, const char *IDmask_name):&#160;ZernikePolyn.c']]],
-  ['zernikepolyn_5frmpiston_5fcli',['ZERNIKEPOLYN_rmPiston_cli',['../ZernikePolyn_8c.html#aedcbd216b72931511f1531e8b408cc84',1,'ZernikePolyn.c']]]
+  ['zernikepolyn_5frmpiston_5fcli',['ZERNIKEPOLYN_rmPiston_cli',['../ZernikePolyn_8c.html#aedcbd216b72931511f1531e8b408cc84',1,'ZernikePolyn.c']]],
+  ['zeta',['zeta',['../AtmosphereModel_8c.html#a2fec2cce97c98dff8ba8bc5cb3011af1',1,'zeta(double zz, double zl):&#160;AtmosphereModel.c'],['../nrlmsise-00_8c.html#a2fec2cce97c98dff8ba8bc5cb3011af1',1,'zeta(double zz, double zl):&#160;nrlmsise-00.c']]]
 ];

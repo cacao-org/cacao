@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['g_5flat',['g_lat',['../structnrlmsise__input.html#ae3919a79645584e3cf537a82a958b734',1,'nrlmsise_input']]],
+  ['g_5flong',['g_long',['../structnrlmsise__input.html#a7bd53a112c70d2ccbab37096541dd4bc',1,'nrlmsise_input']]],
   ['gain',['gain',['../structAOLOOPCONTROL__CONF.html#acf3d0a55c37a60451e4eff487c94bdf7',1,'AOLOOPCONTROL_CONF::gain()'],['../structAOLOOPCONF__aorun.html#a0ec79aca3d65b815a50edf47d801baf4',1,'AOLOOPCONF_aorun::gain()']]],
   ['gpu0',['GPU0',['../structAOLOOPCONTROL__CONF.html#a9c38287c6ef9f4ba8affaf5b55afbe8c',1,'AOLOOPCONTROL_CONF::GPU0()'],['../structAOLOOPCONF__AOcompute.html#a7345506c5b2539d1cddcad5943920cd8',1,'AOLOOPCONF_AOcompute::GPU0()']]],
   ['gpu1',['GPU1',['../structAOLOOPCONTROL__CONF.html#adc121d1a4c728ab07f4567e8da99698f',1,'AOLOOPCONTROL_CONF::GPU1()'],['../structAOLOOPCONF__AOcompute.html#a1489713882e647bc8237157e6ac4a2da',1,'AOLOOPCONF_AOcompute::GPU1()']]],
@@ -19,5 +21,6 @@ var searchData=
   ['gpuset0',['GPUset0',['../structAOloopControl__var.html#a78548fb8072aee02b5487746383bdbf6',1,'AOloopControl_var']]],
   ['gpuset1',['GPUset1',['../structAOloopControl__var.html#a7ad011552285795ed08a0bf72cae5dc4',1,'AOloopControl_var']]],
   ['gpustatus',['GPUstatus',['../structAOLOOPCONTROL__CONF.html#a9cc9387bcd4e897006b66003ed9fcc53',1,'AOLOOPCONTROL_CONF::GPUstatus()'],['../structAOloopTimingInfo.html#a1223d681e82bb6ebb9caf84865111315',1,'AOloopTimingInfo::GPUstatus()']]],
-  ['gpuusesem',['GPUusesem',['../structAOLOOPCONTROL__CONF.html#a98cd30703d34047c9741abe330e9be89',1,'AOLOOPCONTROL_CONF::GPUusesem()'],['../structAOLOOPCONF__AOcompute.html#a03e2d5fc7659ef44bffe0de389e1926b',1,'AOLOOPCONF_AOcompute::GPUusesem()']]]
+  ['gpuusesem',['GPUusesem',['../structAOLOOPCONTROL__CONF.html#a98cd30703d34047c9741abe330e9be89',1,'AOLOOPCONTROL_CONF::GPUusesem()'],['../structAOLOOPCONF__AOcompute.html#a03e2d5fc7659ef44bffe0de389e1926b',1,'AOLOOPCONF_AOcompute::GPUusesem()']]],
+  ['gsurf',['gsurf',['../AtmosphereModel_8c.html#a9a778fbd1234a0e028c01268c7052111',1,'gsurf():&#160;AtmosphereModel.c'],['../nrlmsise-00_8c.html#a9a778fbd1234a0e028c01268c7052111',1,'gsurf():&#160;nrlmsise-00.c']]]
 ];

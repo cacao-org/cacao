@@ -8,9 +8,11 @@ var dir_100645d6fa43bdf6aa49bbcbad19d7c2 =
     [ "calc_flex.c", "calc__flex_8c.html", "calc__flex_8c" ],
     [ "CLIcore.c", "CLIcore_8c.html", "CLIcore_8c" ],
     [ "CLIcore.h", "src_2CommandLineInterface_2CLIcore_8h.html", "src_2CommandLineInterface_2CLIcore_8h" ],
+    [ "function_parameters.c", "function__parameters_8c.html", "function__parameters_8c" ],
     [ "processtools.c", "processtools_8c.html", "processtools_8c" ],
     [ "processtools.h", "processtools_8h.html", "processtools_8h" ],
     [ "standalone_dependencies.c", "standalone__dependencies_8c.html", "standalone__dependencies_8c" ],
     [ "standalone_dependencies.h", "standalone__dependencies_8h.html", "standalone__dependencies_8h" ],
-    [ "streamCTRL.c", "streamCTRL_8c.html", "streamCTRL_8c" ]
+    [ "streamCTRL.c", "streamCTRL_8c.html", "streamCTRL_8c" ],
+    [ "streamCTRL.h", "streamCTRL_8h.html", "streamCTRL_8h" ]
 ];

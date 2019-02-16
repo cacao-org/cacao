@@ -1,6 +1,8 @@
 var AOloopControl__DM__runtimecomp_8c =
 [
     [ "AOloopControl_DM_CombineChannels", "AOloopControl__DM__runtimecomp_8c.html#ac5b44d0dcfc2e69728b84eae2c8d9ab0", null ],
+    [ "AOloopControl_DM_CombineChannels_FPCONF", "AOloopControl__DM__runtimecomp_8c.html#a5e51c51f4b1041febbd4d750776e31e2", null ],
+    [ "AOloopControl_DM_CombineChannels_RUN", "AOloopControl__DM__runtimecomp_8c.html#af43ec1e44d011f06a2a696c661aae814", null ],
     [ "AOloopControl_DM_disp2V", "AOloopControl__DM__runtimecomp_8c.html#a2570f680462b9f6e4e041e99d5a90124", null ],
     [ "AOloopControl_DM_dmdispcomboff", "AOloopControl__DM__runtimecomp_8c.html#ad5e093be28052fa0fb58caac501738df", null ],
     [ "AOloopControl_DM_dmtrigoff", "AOloopControl__DM__runtimecomp_8c.html#a9b9c6aa6b9270a9af545311c48a2b25b", null ],
