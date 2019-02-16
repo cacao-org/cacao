@@ -28,9 +28,6 @@
 #include <AOloopControl_computeCalib/AOloopControl_computeCalib.h>
 #include <FPAOloopControl/FPAOloopControl.h>
 
-//#include <WFpropagate/WFpropagate.h>
-//#include <OpticsMaterials/OpticsMaterials.h>
-
 
 
 #define STYLE_BOLD    "\033[1m"
@@ -88,8 +85,6 @@ int main(int argc, char *argv[])
     libinit_AOloopControl_compTools();
     libinit_AOloopControl_acquireCalib();
 
-//	libinit_WFpropagate();
-//	libinit_OpticsMaterials();
 
 
     printf("Starting CLI ...\n");

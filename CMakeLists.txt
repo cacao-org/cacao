@@ -92,6 +92,8 @@ if(USE_QDWHPARTIAL)
 message("   QDWHPARTIAL_LIBRARIES = ${QDWHPARTIAL_LIBRARIES}")
 endif(USE_QDWHPARTIAL)
 
+message("EXTRAMODULES             = ${EXTRAMODULES}")
+
 message("====================================================")
 
 
@@ -133,10 +135,16 @@ add_subdirectory ( "src/AOloopControl_perfTest" )
 add_subdirectory ( "src/AOloopControl_PredictiveControl" )
 add_subdirectory ( "src/FPAOloopControl" )
 
-#add_subdirectory ( "src/WFpropagate" )
-#add_subdirectory ( "src/OpticsMaterials" )
-#add_subdirectory ( "src/AtmosphereModel" )
-#add_subdirectory ( "src/AtmosphericTurbulence" )
+
+#
+# Add extra optional modules (list provided by user)
+# separator character ";"
+#
+
+FOREACH(extramodule ${EXTRAMODULES})
+add_subdirectory ( "src/${extramodule}" )
+ENDFOREACH()
+
 
 
 
@@ -163,12 +171,8 @@ set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DPACKAGE_VERSION=\\\"0.0.0\\\" -D
 
 
 target_link_libraries (cacao PUBLIC
-CLIcore 
-00CORE 
-COREMOD_arith 
-COREMOD_memory 
-ImageStreamIO 
-COREMOD_tools 
+CLIcore
+00CORE;COREMOD_arith;COREMOD_memory;ImageStreamIO;COREMOD_tools 
 info 
 fft 
 image_basic
@@ -193,10 +197,7 @@ AOloopControl_perfTest
 AOloopControl_PredictiveControl
 FPAOloopControl
 linopt_imtools
-#WFpropagate
-#OpticsMaterials
-#AtmosphereModel
-#AtmosphericTurbulence
+${EXTRAMODULES}
 m
 readline
 ncurses
