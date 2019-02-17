@@ -4,6 +4,13 @@
  * 
  * AO engine uses stream data structure
  *  
+ * 
+ * ## Main files
+ * 
+ * AOloopControl_perfTest_DM.c               Test DM speed and examine DM modes
+ * AOloopControl_perfTest_status.c           Report loop metrics, loop performance monitor
+ * 
+ * 
  * @author  O. Guyon
  * @date    27 Aug 2017
  *
@@ -131,7 +138,16 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-//long AOloopControl_perfTesT_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes, long StartMode);
+
+
+
+
+
+
+
+
+
+
 
 /** @brief CLI function for AOcontrolLoop_TestDMSpeed */
 int_fast8_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
