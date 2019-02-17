@@ -1,3 +1,5 @@
+#include "Config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,7 +49,10 @@ int main(int argc, char *argv[])
 
 
     strcpy(data.package_name, PACKAGE_NAME);
-    strcpy(data.package_version, PACKAGE_VERSION);
+    
+    char versionstring[200];
+    sprintf(versionstring, "%d.%d.%02d",  VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+    strcpy(data.package_version, versionstring);
     strcpy(data.sourcedir, SOURCEDIR);
     strcpy(data.configdir, CONFIGDIR);
 

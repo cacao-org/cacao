@@ -13,6 +13,20 @@ cmake_minimum_required (VERSION 3.5)
 
 project (cacao C)
 
+# Version number
+set ( VERSION_MAJOR 0 )
+set ( VERSION_MINOR 1 )
+set ( VERSION_PATCH 01 )
+
+
+
+
+# configure a header file to pass some of the CMake settings
+# to the source code
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/Config.h.in"
+  "${PROJECT_SOURCE_DIR}/src/Config.h"
+  )
 
 
 # PERFORMANCE ORIENTED COMPILING OPTIONS
@@ -78,7 +92,11 @@ SET(CURSES_USE_NCURSES TRUE)
 
 
 message("====================================================")
+message("VERSION  ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+message("====================================================")
+
 message("PROJECT_SOURCE_DIR       = ${PROJECT_SOURCE_DIR}")
+message("PROJECT_BINARY_DIR       = ${PROJECT_BINARY_DIR}")
 
 message("USE_CUDA                 = ${USE_CUDA}")
 
@@ -167,7 +185,7 @@ ${FFTWF_CFLAGS_OTHER}
 -fopenmp
 )
 
-set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DPACKAGE_VERSION=\\\"0.0.0\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/cacao-org/cacao/issues\\\"" )
+set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/cacao-org/cacao/issues\\\"" )
 
 
 target_link_libraries (cacao PUBLIC

@@ -4,7 +4,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;master branch: [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao)
 
 
-Latest CACAO version 0.1.01 (Feb 16, 2019)
+CACAO version 0.1.01 (Feb 16, 2019)
 
 ---
 
