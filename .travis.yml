@@ -2,7 +2,7 @@ language: C
 
 before_install:
 - sudo apt-get update -qq
-- sudo apt-get install -qq libcfitsio3 libcfitsio3-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison automake autoconf libtool autotools-dev check
+- sudo apt-get install -qq libcfitsio3 libcfitsio3-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison
 
 script:
 - mkdir _build
