@@ -106,8 +106,16 @@ git checkout master
 git merge dev
 git submodule foreach "(git checkout master; git push)"
 git push
-</pre><p>When updating master, it's good practice to also issue a git tag </p><pre class="fragment">git tag -a v0.1.23 -m "Version 0.1.23"
-git push origin v0.1.23
+</pre><h2>Releasing a new version</h2>
+<p>In dev branch:</p><ul>
+<li>Update version number in the CMakeList.txt</li>
+<li>Edit version number in README.md</li>
+</ul>
+<p>Update master branch to current dev branch.</p>
+<p>Issue a git tag for the version: </p><pre class="fragment">git tag -a vX.YY.ZZ -m "milk version X.YY.ZZ"
+git push origin vX.YY.ZZ
+</pre><p>Issue tags for submodules (optional, but helpful to track which submodule version makes it into package version): </p><pre class="fragment">git submodule foreach git tag -a milk-vX.Y.ZZ -m "milk version X.YY.ZZ"
+git submodule foreach git push origin milk-vX.Y.ZZ
 </pre><h2>Documentation</h2>
 <p>Documentation tree can be locally built on dev branch with doxygen from main directory and pushed by : </p><pre class="fragment">git checkout dev
 doxygen
@@ -123,7 +131,7 @@ git push
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="page_cacao_topmenu.html">Subpages</a></li>
-    <li class="footer">Generated on Sat Feb 16 2019 12:57:18 for cacao by
+    <li class="footer">Generated on Sat Feb 16 2019 22:30:48 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

@@ -32,6 +32,7 @@ var searchData=
   ['cmakeccompilerid_2ec',['CMakeCCompilerId.c',['../3_810_82_2CompilerIdC_2CMakeCCompilerId_8c.html',1,'(Global Namespace)'],['../3_811_81_2CompilerIdC_2CMakeCCompilerId_8c.html',1,'(Global Namespace)']]],
   ['cmakecxxcompilerid_2ecpp',['CMakeCXXCompilerId.cpp',['../3_810_82_2CompilerIdCXX_2CMakeCXXCompilerId_8cpp.html',1,'(Global Namespace)'],['../3_811_81_2CompilerIdCXX_2CMakeCXXCompilerId_8cpp.html',1,'(Global Namespace)']]],
   ['coding_5fstandards_2emd',['coding_standards.md',['../coding__standards_8md.html',1,'']]],
+  ['config_2eh',['Config.h',['../Config_8h.html',1,'']]],
   ['coremod_5farith_2ec',['COREMOD_arith.c',['../COREMOD__arith_8c.html',1,'']]],
   ['coremod_5farith_2eh',['COREMOD_arith.h',['../__install_2include_2COREMOD__arith_8h.html',1,'(Global Namespace)'],['../src_2COREMOD__arith_2COREMOD__arith_8h.html',1,'(Global Namespace)']]],
   ['coremod_5fiofits_2ec',['COREMOD_iofits.c',['../COREMOD__iofits_8c.html',1,'']]],

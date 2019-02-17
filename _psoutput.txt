@@ -1,0 +1,332 @@
+  PID PSR CPU CMD
+    1   1   - /sbin/init splash
+    2   7   - [kthreadd]
+    4   0   - [kworker/0:0H]
+    6   2   - [mm_percpu_wq]
+    7   0   - [ksoftirqd/0]
+    8   6   - [rcu_sched]
+    9   0   - [rcu_bh]
+   10   0   - [migration/0]
+   11   0   - [watchdog/0]
+   12   0   - [cpuhp/0]
+   13   1   - [cpuhp/1]
+   14   1   - [watchdog/1]
+   15   1   - [migration/1]
+   16   1   - [ksoftirqd/1]
+   18   1   - [kworker/1:0H]
+   19   2   - [cpuhp/2]
+   20   2   - [watchdog/2]
+   21   2   - [migration/2]
+   22   2   - [ksoftirqd/2]
+   24   2   - [kworker/2:0H]
+   25   3   - [cpuhp/3]
+   26   3   - [watchdog/3]
+   27   3   - [migration/3]
+   28   3   - [ksoftirqd/3]
+   30   3   - [kworker/3:0H]
+   31   4   - [cpuhp/4]
+   32   4   - [watchdog/4]
+   33   4   - [migration/4]
+   34   4   - [ksoftirqd/4]
+   36   4   - [kworker/4:0H]
+   37   5   - [cpuhp/5]
+   38   5   - [watchdog/5]
+   39   5   - [migration/5]
+   40   5   - [ksoftirqd/5]
+   42   5   - [kworker/5:0H]
+   43   6   - [cpuhp/6]
+   44   6   - [watchdog/6]
+   45   6   - [migration/6]
+   46   6   - [ksoftirqd/6]
+   48   6   - [kworker/6:0H]
+   49   7   - [cpuhp/7]
+   50   7   - [watchdog/7]
+   51   7   - [migration/7]
+   52   7   - [ksoftirqd/7]
+   54   7   - [kworker/7:0H]
+   55   5   - [kdevtmpfs]
+   56   3   - [netns]
+   57   1   - [rcu_tasks_kthre]
+   58   3   - [kauditd]
+   61   2   - [khungtaskd]
+   62   1   - [oom_reaper]
+   63   1   - [writeback]
+   64   5   - [kcompactd0]
+   65   6   - [ksmd]
+   66   7   - [khugepaged]
+   67   2   - [crypto]
+   68   5   - [kintegrityd]
+   69   6   - [kblockd]
+   71   4   - [kworker/4:1]
+   76   7   - [ata_sff]
+   77   5   - [md]
+   78   2   - [edac-poller]
+   79   3   - [devfreq_wq]
+   80   4   - [watchdogd]
+   83   5   - [kswapd0]
+   84   6   - [ecryptfs-kthrea]
+  126   7   - [kthrotld]
+  127   0   - [acpi_thermal_pm]
+  132   4   - [ipv6_addrconf]
+  133   5   - [kworker/5:2]
+  142   3   - [kstrp]
+  165   6   - [charger_manager]
+  223   2   - [nvme-wq]
+  225   0   - [scsi_eh_0]
+  226   1   - [scsi_tmf_0]
+  227   6   - [scsi_eh_1]
+  228   0   - [scsi_tmf_1]
+  229   0   - [scsi_eh_2]
+  230   7   - [scsi_tmf_2]
+  231   0   - [scsi_eh_3]
+  232   6   - [scsi_tmf_3]
+  238   6   - [nvidia-modeset]
+  243   6   - [kworker/6:1H]
+  285   0   - [jbd2/sda4-8]
+  286   7   - [ext4-rsv-conver]
+  319   3   - /lib/systemd/systemd-journald
+  348   4   - [kworker/4:1H]
+  350   3   - [kworker/3:1H]
+  351   5   - [kworker/5:1H]
+  352   2   - [kworker/2:1H]
+  353   7   - [kworker/7:2]
+  355   7   - [kworker/7:1H]
+  356   0   - [loop0]
+  359   1   - [kworker/1:1H]
+  363   0   - [loop1]
+  367   0   - [loop2]
+  369   1   - [loop3]
+  379   3   - [loop4]
+  380   0   - [loop5]
+  381   7   - [loop6]
+  394   2   - /lib/systemd/systemd-udevd
+  395   0   - [loop7]
+  396   0   - [kworker/0:1H]
+  397   3   - [loop8]
+  398   1   - [loop9]
+  399   0   - [loop10]
+  400   0   - [loop11]
+  401   0   - [loop12]
+  402   0   - [loop13]
+  403   4   - [loop14]
+  404   0   - [loop15]
+  405   2   - [loop16]
+  406   0   - [loop17]
+  407   6   - [loop18]
+  408   0   - [loop19]
+  409   0   - [loop20]
+  410   1   - [loop21]
+  411   0   - [loop22]
+  412   2   - [loop23]
+  413   0   - [loop24]
+  414   6   - [loop25]
+  432   2   - [loop26]
+  439   0   - [loop27]
+  447   7   - [loop28]
+  454   3   - [UVM global queu]
+  455   5   - [UVM Tools Event]
+  457   6   - [loop29]
+  467   0   - [loop30]
+  517   4   - [cfg80211]
+  531   7   - [irq/141-iwlwifi]
+  535   3   - [kworker/u17:2]
+  636   1   - [kworker/1:4]
+  846   4   - [jbd2/nvme0n1p4-]
+  847   5   - [ext4-rsv-conver]
+  848   4   - [jbd2/nvme1n1p2-]
+  849   4   - [ext4-rsv-conver]
+  851   4   - [jbd2/nvme0n1p1-]
+  852   3   - [ext4-rsv-conver]
+  887   4   - [jbd2/sdb1-8]
+  888   2   - [ext4-rsv-conver]
+  946   1   - [jbd2/nvme1n1p1-]
+  947   0   - [ext4-rsv-conver]
+  979   4   - [jbd2/sda1-8]
+  980   1   - [ext4-rsv-conver]
+ 1005   0   - /lib/systemd/systemd-resolved
+ 1007   4   - /lib/systemd/systemd-timesyncd
+ 1058   4   - /lib/systemd/systemd-logind
+ 1064   6   - /usr/sbin/thermald --no-daemon --dbus-enable
+ 1067   5   - /usr/lib/bluetooth/bluetoothd
+ 1068   5   - /usr/lib/accountsservice/accounts-daemon
+ 1077   2   - /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+ 1083   7   - /usr/sbin/irqbalance --foreground
+ 1085   2   - /usr/sbin/rsyslogd -n
+ 1086   6   - /usr/lib/udisks2/udisksd
+ 1088   4   - /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 1090   2   - /usr/sbin/atopacctd
+ 1108   6   - /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
+ 1109   6   - /usr/sbin/NetworkManager --no-daemon
+ 1111   1   - /usr/sbin/cron -f
+ 1112   4   - avahi-daemon: running [oglt.local]
+ 1113   1   - /usr/sbin/acpid
+ 1114   2   - /usr/lib/snapd/snapd
+ 1125   3   - /usr/lib/policykit-1/polkitd --no-debug
+ 1126   7   - /usr/lib/colord/colord
+ 1130   1   - avahi-daemon: chroot helper
+ 1192   2   - /usr/sbin/sshd -D
+ 1193   1   - /usr/sbin/gdm3
+ 1282   3   - [kworker/u16:0]
+ 1283   6   - [kworker/u16:1]
+ 1286   5   - /usr/lib/upower/upowerd
+ 1308   2   - gdm-session-worker [pam/gdm-launch-environment]
+ 1325   5   - /bin/bash /home/guyon/src/cacao/src/CommandLineInterface/scripts/procCTRL
+ 1329   5   - procCTRLprocCTRL -f procctrlfifo -s shmimmonstartup
+ 1335   3   - /lib/systemd/systemd --user
+ 1336   7   - (sd-pam)
+ 1347   2   - /usr/lib/gdm3/gdm-x-session gnome-session --autostart /usr/share/gdm/greeter/autostart
+ 1349   7   - /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/121/gdm/Xauthority -background none -noreset -keeptty -verbose 3
+ 1354   3   - /usr/bin/nvidia-persistenced --user nvidia-persistenced --no-persistence-mode --verbose
+ 1355   2   - [irq/147-nvidia]
+ 1360   1   - /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 1366   0   - /usr/lib/gnome-session/gnome-session-binary --autostart /usr/share/gdm/greeter/autostart
+ 1369   3   - /usr/lib/at-spi2-core/at-spi-bus-launcher
+ 1374   3   - /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 3
+ 1376   2   - /usr/lib/at-spi2-core/at-spi2-registryd --use-gnome-session
+ 1390   2   - /usr/bin/gnome-shell
+ 1398   1   - /usr/bin/pulseaudio --daemonize=no
+ 1399   3   - /usr/lib/rtkit/rtkit-daemon
+ 1513   5   - ibus-daemon --xim --panel disable
+ 1516   2   - /usr/lib/ibus/ibus-dconf
+ 1518   1   - /usr/lib/ibus/ibus-x11 --kill-daemon
+ 1521   3   - /usr/lib/ibus/ibus-portal
+ 1537   5   - /usr/lib/x86_64-linux-gnu/boltd
+ 1538   6   - /usr/lib/packagekit/packagekitd
+ 1539   5   - /usr/lib/gnome-settings-daemon/gsd-xsettings
+ 1540   6   - /usr/lib/gnome-settings-daemon/gsd-a11y-settings
+ 1542   3   - /usr/lib/gnome-settings-daemon/gsd-clipboard
+ 1543   4   - /usr/lib/gnome-settings-daemon/gsd-color
+ 1546   2   - /usr/lib/gnome-settings-daemon/gsd-datetime
+ 1547   2   - /usr/lib/gnome-settings-daemon/gsd-housekeeping
+ 1548   1   - /usr/lib/gnome-settings-daemon/gsd-keyboard
+ 1553   5   - /usr/lib/gnome-settings-daemon/gsd-media-keys
+ 1555   6   - /usr/lib/gnome-settings-daemon/gsd-mouse
+ 1559   2   - /usr/lib/gnome-settings-daemon/gsd-power
+ 1566   2   - /usr/lib/gnome-settings-daemon/gsd-print-notifications
+ 1569   7   - /usr/lib/gnome-settings-daemon/gsd-rfkill
+ 1578   2   - /usr/lib/gnome-settings-daemon/gsd-screensaver-proxy
+ 1581   6   - /usr/lib/gnome-settings-daemon/gsd-sharing
+ 1588   5   - /usr/lib/gnome-settings-daemon/gsd-smartcard
+ 1590   1   - /usr/lib/gnome-settings-daemon/gsd-sound
+ 1599   2   - /usr/lib/gnome-settings-daemon/gsd-wacom
+ 1628   5   - /usr/lib/ibus/ibus-engine-simple
+ 1653   6   - /usr/sbin/kerneloops --test
+ 1656   2   - /usr/sbin/kerneloops
+ 1741   6   - /usr/sbin/cupsd -l
+ 1742   5   - /usr/sbin/cups-browsed
+ 1814   6   - [kworker/6:0]
+ 1918   4   - [kworker/4:3]
+ 1993   1   - [kworker/u17:1]
+ 2199   1   - gdm-session-worker [pam/gdm-password]
+ 2207   6   - /usr/lib/cups/notifier/dbus dbus://
+ 2222   6   - /lib/systemd/systemd --user
+ 2223   7   - (sd-pam)
+ 2236   1   - /usr/bin/gnome-keyring-daemon --daemonize --login
+ 2240   6   - /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu
+ 2242   6   - /usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1000/gdm/Xauthority -background none -noreset -keeptty -verbose 3
+ 2246   3   - /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 2252   1   - /usr/lib/gnome-session/gnome-session-binary --session=ubuntu
+ 2356   0   - /usr/bin/ssh-agent /usr/bin/im-launch env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu
+ 2358   6   - /usr/lib/at-spi2-core/at-spi-bus-launcher
+ 2363   5   - /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 3
+ 2365   7   - /usr/lib/at-spi2-core/at-spi2-registryd --use-gnome-session
+ 2378   1   - /usr/lib/gvfs/gvfsd
+ 2383   3   - /usr/lib/gvfs/gvfsd-fuse /run/user/1000/gvfs -f -o big_writes
+ 2400   2   - /usr/bin/gnome-shell
+ 2410   5   - /usr/bin/pulseaudio --start --log-target=syslog
+ 2416   1   - [krfcommd]
+ 2431   7   - ibus-daemon --xim --panel disable
+ 2435   1   - /usr/lib/ibus/ibus-dconf
+ 2437   7   - /usr/lib/ibus/ibus-x11 --kill-daemon
+ 2439   3   - /usr/lib/ibus/ibus-portal
+ 2451   0   - /usr/lib/gnome-shell/gnome-shell-calendar-server
+ 2457   6   - /usr/lib/evolution/evolution-source-registry
+ 2463   3   - /usr/lib/gnome-online-accounts/goa-daemon
+ 2469   7   - /usr/lib/dconf/dconf-service
+ 2474   1   - /usr/lib/gvfs/gvfs-udisks2-volume-monitor
+ 2484   5   - /usr/lib/gvfs/gvfs-goa-volume-monitor
+ 2493   7   - /usr/lib/gnome-online-accounts/goa-identity-service
+ 2498   3   - /usr/lib/gvfs/gvfs-afc-volume-monitor
+ 2503   3   - /usr/lib/gvfs/gvfs-gphoto2-volume-monitor
+ 2507   3   - /usr/lib/gvfs/gvfs-mtp-volume-monitor
+ 2513   5   - /usr/lib/gnome-settings-daemon/gsd-power
+ 2515   5   - /usr/lib/gnome-settings-daemon/gsd-print-notifications
+ 2516   7   - /usr/lib/gnome-settings-daemon/gsd-rfkill
+ 2517   5   - /usr/lib/gnome-settings-daemon/gsd-screensaver-proxy
+ 2518   0   - /usr/lib/gnome-settings-daemon/gsd-sharing
+ 2521   1   - /usr/lib/gnome-settings-daemon/gsd-sound
+ 2525   6   - /usr/lib/gnome-settings-daemon/gsd-xsettings
+ 2534   3   - /usr/lib/gnome-settings-daemon/gsd-wacom
+ 2538   1   - /usr/lib/gnome-settings-daemon/gsd-smartcard
+ 2548   0   - /usr/lib/gnome-settings-daemon/gsd-clipboard
+ 2553   1   - /usr/lib/gnome-settings-daemon/gsd-a11y-settings
+ 2555   5   - /usr/lib/gnome-settings-daemon/gsd-datetime
+ 2558   0   - /usr/lib/gnome-settings-daemon/gsd-color
+ 2560   7   - /usr/lib/gnome-settings-daemon/gsd-keyboard
+ 2566   5   - /usr/lib/gnome-settings-daemon/gsd-housekeeping
+ 2568   2   - /usr/lib/gnome-settings-daemon/gsd-mouse
+ 2573   7   - /usr/lib/gnome-settings-daemon/gsd-media-keys
+ 2606   2   - /usr/lib/gnome-disk-utility/gsd-disk-utility-notify
+ 2607   4   - /usr/lib/x86_64-linux-gnu/indicator-messages/indicator-messages-service
+ 2617   0   - /usr/lib/x86_64-linux-gnu/libexec/kdeconnectd
+ 2624   1   - /usr/bin/gnome-software --gapplication-service
+ 2625   1   - /usr/bin/python3 /usr/bin/blueman-applet
+ 2630   1   - /usr/lib/x86_64-linux-gnu/indicator-application/indicator-application-service
+ 2634   5   - nautilus-desktop
+ 2648   0   - /usr/lib/gvfs/gvfsd-trash --spawner :1.22 /org/gtk/gvfs/exec_spaw/0
+ 2667   7   - /usr/lib/gnome-settings-daemon/gsd-printer
+ 2684   1   - /usr/lib/bluetooth/obexd
+ 2996   0   - gjs /home/guyon/.local/share/gnome-shell/extensions/cpufreq@konkor/cpufreq-service
+ 3019   6   - /usr/lib/fwupd/fwupd
+ 3023   5   - /usr/lib/evolution/evolution-calendar-factory
+ 3037   1   - /usr/lib/evolution/evolution-calendar-factory-subprocess --factory all --bus-name org.gnome.evolution.dataserver.Subprocess.Backend.Calendarx3023x2 --own-path /org/gnome/evolution/dataserver/Subprocess/Backend/Calend
+ 3062   6   - /usr/lib/evolution/evolution-addressbook-factory
+ 3067   3   - /usr/lib/ibus/ibus-engine-simple
+ 3079   4   - /usr/lib/evolution/evolution-addressbook-factory-subprocess --factory all --bus-name org.gnome.evolution.dataserver.Subprocess.Backend.AddressBookx3062x2 --own-path /org/gnome/evolution/dataserver/Subprocess/Backend/
+ 3248   1   - /usr/lib/gvfs/gvfsd-metadata
+ 3382   7   - zeitgeist-datahub
+ 3391   7   - /usr/bin/zeitgeist-daemon
+ 3397   0   - /usr/lib/zeitgeist/zeitgeist/zeitgeist-fts
+ 3561   3   - update-notifier
+ 3811   1   - /usr/lib/deja-dup/deja-dup-monitor
+ 4212   3   - /usr/lib/thunderbird/thunderbird
+ 5000   1   - /usr/bin/python /usr/bin/x-terminal-emulator
+ 5012   5   - /bin/bash
+ 5030   6   - /bin/bash
+ 5068   4   - conky .
+ 5189   0   - /usr/lib/firefox/firefox -new-window
+ 5271   5   - /usr/lib/firefox/firefox -contentproc -childID 1 -isForBrowser -prefsLen 1 -prefMapSize 172895 -schedulerPrefs 0001,2 -parentBuildID 20181207224003 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/browser/
+ 5362   3   - /usr/lib/firefox/firefox -contentproc -childID 3 -isForBrowser -prefsLen 241 -prefMapSize 172895 -schedulerPrefs 0001,2 -parentBuildID 20181207224003 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/browse
+ 5452   6   - /usr/bin/python3 /usr/bin/chrome-gnome-shell /usr/lib/mozilla/native-messaging-hosts/org.gnome.chrome_gnome_shell.json chrome-gnome-shell@gnome.org
+ 5462   4   - /usr/lib/firefox/firefox -contentproc -childID 4 -isForBrowser -prefsLen 5898 -prefMapSize 172895 -schedulerPrefs 0001,2 -parentBuildID 20181207224003 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/brows
+ 5562   6   - /usr/lib/firefox/firefox -contentproc -childID 5 -isForBrowser -prefsLen 5898 -prefMapSize 172895 -schedulerPrefs 0001,2 -parentBuildID 20181207224003 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/brows
+ 5712   7   - /usr/lib/speech-dispatcher-modules/sd_dummy /etc/speech-dispatcher/modules/dummy.conf
+ 5715   5   - /usr/lib/speech-dispatcher-modules/sd_generic /etc/speech-dispatcher/modules/generic.conf
+ 5718   7   - /usr/lib/speech-dispatcher-modules/sd_espeak-ng /etc/speech-dispatcher/modules/espeak-ng.conf
+ 5724   1   - /usr/bin/speech-dispatcher --spawn --communication-method unix_socket --socket-path /run/user/1000/speech-dispatcher/speechd.sock
+11652   6   - sh -c { if [ ! -f _psOKlock ]; then touch _psOKlock; ps -e -o pid,psr,cpu,cmd > _psoutput.txt; fi; rm _psOKlock &> /dev/null; } &
+11654   1   - ps -e -o pid,psr,cpu,cmd
+12221   6   - [kworker/6:1]
+12564   4   - /usr/lib/firefox/firefox -contentproc -childID 9 -isForBrowser -prefsLen 8777 -prefMapSize 172895 -schedulerPrefs 0001,2 -parentBuildID 20181207224003 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/brows
+12974   0   - [kworker/0:2]
+14428   2   - /usr/lib/gvfs/gvfsd-http --spawner :1.22 /org/gtk/gvfs/exec_spaw/2
+21788   7   - [kworker/7:0]
+25842   2   - [kworker/2:1]
+27283   3   - [kworker/3:1]
+28718   3   - [kworker/u16:28]
+28726   1   - [kworker/u16:36]
+28775   0   - [nvidia]
+28776   1   - [irq/19-mmc0]
+28777   4   - [irq/123-mei_me]
+28826   7   - /usr/bin/atop -R -w /var/log/atop/atop_20181229 600
+29433   7   - /bin/bash
+29513   3   - /bin/bash
+30477   6   - geany -i processtools.c
+30485   0   - /bin/bash
+31099   0   - /bin/bash
+31212   0   - [kworker/0:1]
+31222   1   - [kworker/1:0]
+31238   3   - [kworker/3:2]
+31291   5   - [kworker/5:0]
+31310   2   - [kworker/2:2]
+31452   2   - /usr/lib/firefox/firefox -contentproc -childID 10 -isForBrowser -prefsLen 8813 -prefMapSize 172895 -schedulerPrefs 0001,2 -parentBuildID 20181207224003 -greomni /usr/lib/firefox/omni.ja -appomni /usr/lib/firefox/brow

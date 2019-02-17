@@ -1,5 +1,7 @@
 var NAVTREEINDEX13 =
 {
+"image__basic_8c.html#af76bccecd9d355cb9496a7c12fdae530":[7,0,2,19,0,54],
+"image__basic_8c.html#af80c26092a2ed516b53f9996faaba087":[7,0,2,19,0,52],
 "image__basic_8c.html#af833b1c5e4b0f9924321156e0c59b9ac":[7,0,2,19,0,12],
 "image__basic_8c.html#afa53e0acbc9678faade3d6fa20f66e41":[7,0,2,19,0,68],
 "image__basic_8c.html#afd02bb0f6a745c39d5e3417493995c71":[7,0,2,19,0,0],
@@ -135,8 +137,8 @@ var NAVTREEINDEX13 =
 "img__reduce_8c.html#af3d15b471345b3248a1f0e1366bdbea9":[7,0,2,24,0,13],
 "img__reduce_8c.html#af4a9f056022ae8dae761a0b26367690c":[7,0,2,24,0,6],
 "img__reduce_8c.html#afd02bb0f6a745c39d5e3417493995c71":[7,0,2,24,0,0],
-"index.html":[],
 "index.html":[0],
+"index.html":[],
 "index.html#mainsection_cacao_example":[0,3,0],
 "index.html#mainsection_cacaoconfrun":[0,3],
 "index.html#mainsection_cacaoprog":[0,4],
@@ -247,7 +249,5 @@ var NAVTREEINDEX13 =
 "linARfilterPred_8c.html#a3dc2133c6090f5e5586ca1a05dcacd17":[7,0,2,27,0,9],
 "linARfilterPred_8c.html#a54e73d17ef0ca9a9e8ae022e15f97aa3":[7,0,2,27,0,7],
 "linARfilterPred_8c.html#a56cabc1038049a486a7911a5a7026dd9":[7,0,2,27,0,17],
-"linARfilterPred_8c.html#a59be8ab2a56ad41041af2a353427a1b4":[7,0,2,27,0,18],
-"linARfilterPred_8c.html#a6fb4543431f6f680e91dd4279227e3a7":[7,0,2,27,0,21],
-"linARfilterPred_8c.html#a73b62a08b726755cd53f4a7d08837ea3":[7,0,2,27,0,12]
+"linARfilterPred_8c.html#a59be8ab2a56ad41041af2a353427a1b4":[7,0,2,27,0,18]
 };

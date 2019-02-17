@@ -35,5 +35,6 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "utils", "dir_313caf1132e152dd9b58bea13a4052ca.html", "dir_313caf1132e152dd9b58bea13a4052ca" ],
     [ "WFpropagate", "dir_cad50416a3e7e6cff3daf0b59fb2403a.html", "dir_cad50416a3e7e6cff3daf0b59fb2403a" ],
     [ "ZernikePolyn", "dir_79cde7c2c2a1e8c6935a72a82b7ac777.html", "dir_79cde7c2c2a1e8c6935a72a82b7ac777" ],
-    [ "CLImain.c", "CLImain_8c.html", "CLImain_8c" ]
+    [ "CLImain.c", "CLImain_8c.html", "CLImain_8c" ],
+    [ "Config.h", "Config_8h.html", null ]
 ];

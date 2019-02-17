@@ -1,0 +1,28 @@
+var structAOLOOPCONF__aorun =
+[
+    [ "ARPFgain", "structAOLOOPCONF__aorun.html#ad050722c4d8c671aabd01e6a02431873", null ],
+    [ "ARPFgainAutoMax", "structAOLOOPCONF__aorun.html#a8abd333852db32ee8829e2d689bda936", null ],
+    [ "ARPFgainAutoMin", "structAOLOOPCONF__aorun.html#ac3fc67d4bcaba06ce81db9bfcc62daaa", null ],
+    [ "ARPFon", "structAOLOOPCONF__aorun.html#a2012804b309e8f1bff6a2db48043425a", null ],
+    [ "CMMODE", "structAOLOOPCONF__aorun.html#a44e7d1d766e257068b1a650c131b70be", null ],
+    [ "cnt", "structAOLOOPCONF__aorun.html#a0f6eb295947115f458b129ddb0ebe55c", null ],
+    [ "cntmax", "structAOLOOPCONF__aorun.html#a76bef9ea3218837491b7b6afcfd0c949", null ],
+    [ "contrMname", "structAOLOOPCONF__aorun.html#ae7bcdd56bf8b824c3d2c5997ff67beb0", null ],
+    [ "DMfilteredWriteON", "structAOLOOPCONF__aorun.html#a27d24b69c255b1474056abf0034bd36d", null ],
+    [ "DMprimaryWriteON", "structAOLOOPCONF__aorun.html#abb032627375b262d1f0cf320cb7ed081", null ],
+    [ "DMupdatecnt", "structAOLOOPCONF__aorun.html#a2519689634b889606c64be62ed1a182a", null ],
+    [ "gain", "structAOLOOPCONF__aorun.html#a0ec79aca3d65b815a50edf47d801baf4", null ],
+    [ "init", "structAOLOOPCONF__aorun.html#ad2e69abf8009f5b1c07b4ffd6657ee50", null ],
+    [ "init_CM", "structAOLOOPCONF__aorun.html#a016e2f25423fb8ee7ee11250cd5017b2", null ],
+    [ "init_CMc", "structAOLOOPCONF__aorun.html#afadf3a6496714ba2fd73d8f934f007fd", null ],
+    [ "init_RM", "structAOLOOPCONF__aorun.html#aff79098b7299e1340935fd22549f0503", null ],
+    [ "init_wfsref0", "structAOLOOPCONF__aorun.html#af50ee0a0b8cf8cfe1efd2c1d64b5c560", null ],
+    [ "initmapping", "structAOLOOPCONF__aorun.html#ad6a245eb72b54ae2a6133cf9967e617f", null ],
+    [ "kill", "structAOLOOPCONF__aorun.html#a777e8d6fbb67594a346eb093b52dddb8", null ],
+    [ "LOOPiteration", "structAOLOOPCONF__aorun.html#aa56c1d009bbc7d610b097f06dfecdeaf", null ],
+    [ "maxlimit", "structAOLOOPCONF__aorun.html#ac52ba7a64ce230094d54fbdf8d5f5c0b", null ],
+    [ "mult", "structAOLOOPCONF__aorun.html#a3c0202ae28ec2182ee5eee9f5f29e7d1", null ],
+    [ "name", "structAOLOOPCONF__aorun.html#a71e7b59b7a8153efef1c4547f0ed4a7b", null ],
+    [ "on", "structAOLOOPCONF__aorun.html#ad99b19fd2674a98b735cd170d24c5259", null ],
+    [ "respMname", "structAOLOOPCONF__aorun.html#a41e6213eb2237bba1eb7830250c7eaed", null ]
+];

@@ -1,5 +1,7 @@
 var NAVTREEINDEX8 =
 {
+"__install_2include_2COREMOD__arith_8h.html#a6c4d80435fee4bc9081eea48bde2bde5":[7,0,1,0,10,96],
+"__install_2include_2COREMOD__arith_8h.html#a7088c9c111a0e19bb66b2043f859b472":[7,0,1,0,10,97],
 "__install_2include_2COREMOD__arith_8h.html#a7110b2ab6105f61fb4d389d6be633950":[7,0,1,0,10,39],
 "__install_2include_2COREMOD__arith_8h.html#a7217be245f8f5a5570cffa00888a06a3":[7,0,1,0,10,130],
 "__install_2include_2COREMOD__arith_8h.html#a73f820b11b32a6e8a1eea4630448f751":[7,0,1,0,10,62],
@@ -247,7 +249,5 @@ var NAVTREEINDEX8 =
 "__install_2include_2COREMOD__tools_8h.html#ab9047efbd5a05884710714bf8c7b5bbb":[7,0,1,0,13,14],
 "__install_2include_2COREMOD__tools_8h.html#ac286bf2e5f8d44e14a914ee3f4a7e587":[7,0,1,0,13,37],
 "__install_2include_2COREMOD__tools_8h.html#ac56cad87ceda581d8e207334654c6d3d":[7,0,1,0,13,23],
-"__install_2include_2COREMOD__tools_8h.html#ac9577e84bb6061b911a633dd40168ca9":[7,0,1,0,13,30],
-"__install_2include_2COREMOD__tools_8h.html#ad0c407e2ba13fc631e388de0be0a051d":[7,0,1,0,13,20],
-"__install_2include_2COREMOD__tools_8h.html#adcc132f855ef70380890363c5b0fa8fc":[7,0,1,0,13,12]
+"__install_2include_2COREMOD__tools_8h.html#ac9577e84bb6061b911a633dd40168ca9":[7,0,1,0,13,30]
 };
