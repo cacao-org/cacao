@@ -116,7 +116,8 @@ git push
 git push origin vX.YY.ZZ
 </pre><p>Issue tags for submodules (optional, but helpful to track which submodule version makes it into package version): </p><pre class="fragment">git submodule foreach git tag -a milk-vX.Y.ZZ -m "milk version X.YY.ZZ"
 git submodule foreach git push origin milk-vX.Y.ZZ
-</pre><h2>Documentation</h2>
+</pre><dl class="section note"><dt>Note</dt><dd>Modules inherit version numbers from the package(s) to which they belong. Consequently, modules that are shared between packages can have parallel version number histories. For example, the version history for a module may be: milk-v0.1.01 -&gt; cacao-v0.1.01 -&gt; cacao-v0.1.02 -&gt; cacao-v0.2.00 -&gt; milk-v0.1.02. Any new version, regardless of which package it is associated with, still includes all previous changes: there is a single version thread.</dd></dl>
+<h2>Documentation</h2>
 <p>Documentation tree can be locally built on dev branch with doxygen from main directory : </p><pre class="fragment">git checkout dev
 doxygen
 </pre><p>To push it on the origin : </p><pre class="fragment">cd dochtml/html
@@ -131,7 +132,7 @@ git push
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="page_cacao_topmenu.html">Subpages</a></li>
-    <li class="footer">Generated on Sat Feb 16 2019 22:38:26 for cacao by
+    <li class="footer">Generated on Sun Feb 17 2019 10:12:05 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>
