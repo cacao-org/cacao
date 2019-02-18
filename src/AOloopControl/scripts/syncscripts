@@ -64,11 +64,10 @@ while getopts :hcs:e:d FLAG; do
     echo "$PWD" > $OPTARG/.scripts_src_dir.conf
     rm $OPTARG/syncscripts 2> /dev/null
     ln -s $PWD/syncscripts $OPTARG/syncscripts
-    execname=$( ls $PWD/../../../bin/ )
+    execname=$( ls /usr/local/bin/cacao )
     rm $OPTARG/AOloopControl 2> /dev/null
     echo "execname = \"$execname\""
-    #ln -s $PWD/../../../bin/$execname $OPTARG/AOloopControl
-    ln -s /usr/local/bin/cacao $OPTARG/AOloopControl
+    ln -s ${execname} $OPTARG/AOloopControl
     exit
     ;;
     d)

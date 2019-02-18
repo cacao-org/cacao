@@ -1,40 +1,38 @@
 # cacao Initial Setup {#page_cacao_Initial_Setup}
 
+@note This file: ./src/AOloopControl/doc/cacao_Initial_Setup.md
+
+[TOC]
+
+---
+
+@note <srcdir> is the directory where cacao should be installed. For example: `/home/myname/src`. 
 
 
-## Installing and configuring the cacao package
-
-Include recommended high performance compile flags for faster execution speed:
-
-	./configure CFLAGS='-Ofast -march=native'
-
-If you have installed CUDA and MAGMA libraries:
-
-	./configure CFLAGS='-Ofast -march=native' --enable-cuda --enable-magma
-
-A pre-written high performance configure script is available:
-
-	./configure_highperf
+# Installing cacao {#page_cacaoSetup_install}
 
 
-The executable is built with:
+## Download and install package {#page_cacaoSetup_downloadinstall}
 
+See @ref page_installation for detailed instructions.
+
+
+After installing the required packages, the main steps will be:
+
+	git clone --recursive https://github.com/cacao-org/cacao cacao
+
+	cd <srcdir>/cacao
+	mkdir _build
+	cd _build
+	cmake .. -DUSE_MAGMA=ON
 	make
-	make install
-	
-The executable is `./bin/cacao`
+	sudo make install
 
 
 
-## System configuration (to be added to .bashrc file)
 
-Add cacao to PATH
+## Post installation configuration {#page_cacaoSetup_postinstall}
 
-	export PATH=<srcdir>/bin:$PATH
-
-Add milk scripts`to PATH 
-
-	export PATH=<srcdir>/src/CommandLineInterface/scripts:$PATH
 
 If milk is not installed, create sym link milk->cacao
 
@@ -42,13 +40,17 @@ If milk is not installed, create sym link milk->cacao
 
 
 
-## Setting up the work directory
+---
+
+# Setting up AOloop work directory {#page_cacaoSetup_AOloopdir}
+
+
 
 Conventions:
 
-- `<srcdir>` is the source code directory, usually `.../cacao/`
+- `<srcdir>` is the source code directory, for example `/home/CACAOuser/src`
 - `<workdir>` is the work directory where the program and scripts will be executed. Note that the full 
-path should end with `.../AOloop<#>` where `<#>` ranges from 0 to 9. For example, `AOloop2`.
+path should end with `/AOloop<#>` where `<#>` ranges from 0 to 9. For example, `<workdir>` could be `/home/CACAOuser/AOloop/AOloop2`.
 
 
 The work directory is where all scripts and high level commands should be run from. You will first need to create the work directory and then load scripts from the source directory to the work directory.
