@@ -16,12 +16,13 @@ project (cacao C)
 # Version number
 set ( VERSION_MAJOR 0 )
 set ( VERSION_MINOR 1 )
-set ( VERSION_PATCH 01 )
+set ( VERSION_PATCH 02 )
+set ( VERSION_OPTION "-dev" )
 
 
 
 
-# configure a header file to pass some of the CMake settings
+# Configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
   "${PROJECT_SOURCE_DIR}/src/Config.h.in"
@@ -51,7 +52,8 @@ endif()
 message("COMPILE_OPTIONS:  ${COMPILE_OPTIONS}")
 
 
-
+# A common flag is -pipe. This flag has no effect on the generated code, but it makes the compilation process faster. It tells the compiler to use pipes instead of temporary files during the different stages of compilation, which uses more memory. On systems with low memory, GCC might get killed. In those cases do not use this flag. 
+add_compile_options(-pipe)
 
 # options
 option(USE_CUDA  "Use CUDA        library" OFF)
@@ -89,6 +91,8 @@ endif(USE_MAGMA)
 
 # ncurses
 SET(CURSES_USE_NCURSES TRUE)
+
+
 
 
 message("====================================================")

@@ -4,7 +4,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;master branch: [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao)
 
 
-CACAO version 0.1.01 (Feb 16, 2019)
+Development branch for CACAO version 0.1.02
 
 ---
 
@@ -142,8 +142,6 @@ See [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.h
 
 The following libraries are used:
 
-- libtool
-- automake
 - readline, for reading the command line input
 - ncurses-dev
 - flex, for parsing the command line input
@@ -164,7 +162,7 @@ If you use NVIDIA GPUs, install cuda and magma libraries, and add "--enable-cuda
 All functions are accessible from the command line interface (CLI). Enter the CLI and type "help" for instructions.
 
 ```bash
-./bin/cacao
+cacao
 ```
 ---
 
