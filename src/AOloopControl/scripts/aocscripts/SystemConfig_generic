@@ -64,6 +64,9 @@ cpusetoption[RTmon]="--cpu_exclusive"
 
 # =========== Optimize GPU performance
 
+
+function GPUconfig()
+{
 sudo nvidia-smi -pm 1
 
 # To querry clocks:
@@ -78,7 +81,7 @@ sudo sh -c "sudo nvidia-smi -i 3 -ac 3505,1582"
 sudo sh -c "sudo nvidia-smi -i 4 -ac 3505,1582"
 sudo sh -c "sudo nvidia-smi -i 5 -ac 3505,1582"
 sudo sh -c "sudo nvidia-smi -i 6 -ac 3505,1582"
-
+}
 
 
 
@@ -146,7 +149,20 @@ function checkCommand {
 if cmdexists $1; then
     echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
 else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed."
+    if [ -z "$1" ];then
+    echo "Aborting"
+    EXITSTATUS=1
+    else
+    echo "Installing package $2"
+    sudo apt install $2
+    if cmdexists $1; then
+    echo "Package installed, command found"
+    else
+    echo "Installation failed - Aborting"
+    EXITSTATUS=1
+    fi
+    fi    
 fi
 
 }
@@ -187,9 +203,9 @@ while getopts :hTo FLAG; do
       ;;
     T) # test mode, do not execute commands
     TESTMODE="1"
-    rm sysconfig.test.log
+    rm systemconfig.test.log
     echo "Commands will not be executed"
-    echo "Commands written to sysconfig.test.log"
+    echo "Commands written to systemconfig.test.log"
     ;;
     o) 
     echo "TURNING LOW-LATENCY SETTINGS OFF"
@@ -219,10 +235,10 @@ fi
 
 
 
-checkCommand tmux
-checkCommand cset
+checkCommand tmux tmux
+checkCommand cset cpuset
 checkCommand netstat
-#checkCommand $HOME/bin/setlatency
+checkCommand $HOME/bin/setlatency
 
 if [ $EXITSTATUS -eq 1 ]; then
 echo ""
@@ -240,7 +256,7 @@ fi
 function evalcmd()
 {
 	if [ "$TESTMODE" -eq "1" ]; then
-	echo "$1" >> sysconfig.test.log
+	echo "$1" >> systemconfig.test.log
 	else
 	eval "$1"
 	fi

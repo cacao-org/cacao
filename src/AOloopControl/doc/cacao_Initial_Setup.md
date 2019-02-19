@@ -42,8 +42,12 @@ If milk is not installed, create sym link milk->cacao
 
 ---
 
+
+
 # Setting up AOloop work directory {#page_cacaoSetup_AOloopdir}
 
+
+## Importing scripts {#page_cacaoSetup_AOloopdir_scripts}
 
 Conventions:
 
@@ -83,4 +87,11 @@ Symbolic links to the source scripts and executable are now installed in the wor
 
 
 If new scripts are added in the source directory, running `./syncscripts` again from the work directory will add them to the work directory.
+
+
+## Creating SystemConfig script (optional) {#page_cacaoSetup_AOloopdir_systemconfig}
+
+A system configuration script can be created so that it is executed upon cacao AO loop startup. The script should be in the work directory, and should be named `SystemConfig`. A template is provided and can be edited:
+
+	cp ./aocscripts/SystemConfig_generic SystemConfig
 
