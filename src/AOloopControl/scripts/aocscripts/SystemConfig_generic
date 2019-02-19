@@ -431,60 +431,6 @@ done
 
 
 
-# =================================================================================
-# =========== set CPU SETS
-# =================================================================================
-
-
-  
-if [ "$ON" = "1" ]; then
-
-for c in "${!cpusetlist[@]}"; do
-	printf "CPU set %10s cpus: %s\n" "$c" "${cpusetlist[$c]}"
-    cmdstring=$( printf "sudo cset set --cpu %s %s --set %s" "${cpusetlist[$c]}" "${cpusetoption[$c]}" "$c" )
-    evalcmd "$cmdstring"
-done
-
-
-
-# move as much as possible to system
-cmdstring="sudo cset proc -m -f root -t system"
-evalcmd "$cmdstring"
-
-cmdstring="sudo cset proc -k -f root -t system"
-evalcmd "$cmdstring"
-
-
-
-for c in "${!cpusetpgrep[@]}"; do
-	
-	pidlist=$( pgrep ${cpusetpgrep[$c]}|xargs echo | sed 's/ /,/g' )
-	cmdstring="sudo cset proc -m -p $pidlist -t $c"
-    evalcmd "$cmdstring"
-done
-
-
-
-# RTmon should be used for RT process monitoring and testing
-# to run a process/job/script within RTmon, use:
-#
-# cset proc -s RTmon -e bash
-#
-
-
-else
-echo "Destroying CPU sets"
-
-for c in "${!cpusetlist[@]}"; do
-	printf "destroying CPU set %10s\n" "$c" 
-    cmdstring=$( printf "sudo cset se -d %s" "$c" )
-    evalcmd "$cmdstring"
-done
-fi
-
-# show CPU sets
-cset set -l
-
 
 
 
@@ -521,6 +467,7 @@ fi
 # =========== set IRQs
 # =================================================================================
 
+if [ "$ON" = "1" ]; then
 
 # Stop IRQbalance
 cmdstring="sudo service irqbalance stop"
@@ -636,6 +583,7 @@ evalcmd "$cmdstring"
 # to monitor an irq:
 # watch -n 1 -d grep "271:" /proc/interrupts
 
+fi
 
 
 
@@ -651,6 +599,64 @@ evalcmd "$cmdstring"
 
 GPUconfig
 
+
+
+
+
+
+# =================================================================================
+# =========== set CPU SETS
+# =================================================================================
+
+
+  
+if [ "$ON" = "1" ]; then
+
+for c in "${!cpusetlist[@]}"; do
+	printf "CPU set %10s cpus: %s\n" "$c" "${cpusetlist[$c]}"
+    cmdstring=$( printf "sudo cset set --cpu %s %s --set %s" "${cpusetlist[$c]}" "${cpusetoption[$c]}" "$c" )
+    evalcmd "$cmdstring"
+done
+
+
+
+# move as much as possible to system
+cmdstring="sudo cset proc -m -f root -t system"
+evalcmd "$cmdstring"
+
+cmdstring="sudo cset proc -k -f root -t system"
+evalcmd "$cmdstring"
+
+
+
+for c in "${!cpusetpgrep[@]}"; do
+	
+	pidlist=$( pgrep ${cpusetpgrep[$c]}|xargs echo | sed 's/ /,/g' )
+	cmdstring="sudo cset proc -m -p $pidlist -t $c"
+    evalcmd "$cmdstring"
+done
+
+
+
+# RTmon should be used for RT process monitoring and testing
+# to run a process/job/script within RTmon, use:
+#
+# cset proc -s RTmon -e bash
+#
+
+
+else
+echo "Destroying CPU sets"
+
+for c in "${!cpusetlist[@]}"; do
+	printf "destroying CPU set %10s\n" "$c" 
+    cmdstring=$( printf "sudo cset se -d %s" "$c" )
+    evalcmd "$cmdstring"
+done
+fi
+
+# show CPU sets
+sudo cset set -l
 
 
 
