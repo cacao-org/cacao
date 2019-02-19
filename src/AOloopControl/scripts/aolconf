@@ -70,7 +70,7 @@ echo "   --help1               print 1 line summary"
 echo "   -H  <string>         (H)elp category"
 echo "                 cf     list configuration files (incomplete)"    
 echo "   -l <exec>            log executable"  
-echo "   -C                   run (C)PU config: execute ./aocscripts/cpuconfig_${LOOPNAME}"
+echo "   -C                   (C)onfigure system: execute user-provided ./SystemConfig script"
 echo "   -c                   (c)lear all settings (ALL SETTINGS WILL BE LOST)"
 echo "  Runs top level script:"
 echo "   -L <long>            (L)oop number"
@@ -164,8 +164,8 @@ while getopts :hH:l:CcL:N:xe:n FLAG; do
     exit
     ;;
     C) # configure CPU
-    echo "Configure CPU"
-    ./aocscripts/cpuconfig_${LOOPNAME}
+    echo "Configure System"
+    ./SystemConfig
     exit
     ;;    
     c) # clear
@@ -314,10 +314,10 @@ fi
 
 
 # execute CPU configuration script if it exists
-if [ -f "./aocscripts/cpuconfig_${LOOPNAME}" ]; then
-if [ ! -f "cpuconfigOK" ]; then
-echo "Executing cpu config - please restart $0 when complete"
-. ./aocscripts/cpuconfig_${LOOPNAME}
+if [ -f "./SystemConfig" ]; then
+if [ ! -f "systemconfigOK" ]; then
+echo "Executing system config - please restart $0 when complete"
+. ./SystemConfig
 exit
 fi
 fi
