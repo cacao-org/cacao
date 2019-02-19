@@ -1,0 +1,685 @@
+#!/bin/bash
+
+#
+# GENERIC CONFIGURATION SCRIPT - EDIT TO MATCH YOUR SYSTEM 
+#
+# Notes :
+# - This script is a system-wide configuration, not a configuration for a single AO loop
+# - 
+
+
+
+# ====================================================================================
+# ======================= USER SHOULD FILL THIS SECTION ==============================
+# ====================================================================================
+
+
+# =========== Setup cpu sets
+
+# check CPUs with: numactl --hardware
+
+declare -A cpusetlist
+
+cpusetlist[system]="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+cpusetoption[system]=""
+
+cpusetlist[ircam]="16,17"
+cpusetoption[ircam]="--cpu_exclusive"
+
+cpusetlist[dmcomb]="18"
+cpusetoption[dmcomb]="--cpu_exclusive"
+cpusetpgrep[dmcomb]="dmcomb"
+
+cpusetlist[dmdrv]="19"
+cpusetoption[dmdrv]="--cpu_exclusive"
+cpusetpgrep[dmdrv]="bmc"
+
+cpusetlist[aol0RT]="20,21,22,23,24,25"
+cpusetoption[aol0RT]="--cpu_exclusive"
+cpusetpgrep[aol0RT]="aolrun"
+
+cpusetlist[aol0RT1]="26,27"
+cpusetoption[aol0RT1]="--cpu_exclusive"
+cpusetpgrep[aol0RT1]="modeval"
+
+cpusetlist[aol0RT2]="28"
+cpusetoption[aol0RT2]="--cpu_exclusive"
+
+cpusetlist[aol0COM]="29,30"
+cpusetoption[aol0COM]="--cpu_exclusive"
+
+cpusetlist[ocamdec]="31"
+cpusetoption[ocamdec]="--cpu_exclusive"
+cpusetpgrep[ocamdec]="ocam"
+
+cpusetlist[aollog]="32,33,34"
+cpusetoption[aollog]="--cpu_exclusive"
+cpusetpgrep[aollog]="logshim"
+
+cpusetlist[RTmon]="35"
+cpusetoption[RTmon]="--cpu_exclusive"
+
+
+
+
+# =========== Optimize GPU performance
+
+sudo nvidia-smi -pm 1
+
+# To querry clocks:
+# nvidia-smi -i 0 -q -d SUPPORTED_CLOCKS
+
+# To view current clocks:
+# nvidia-smi -i 0 -q -d CLOCK
+
+
+# GTX980 Ti cards :
+sudo sh -c "sudo nvidia-smi -i 3 -ac 3505,1582"
+sudo sh -c "sudo nvidia-smi -i 4 -ac 3505,1582"
+sudo sh -c "sudo nvidia-smi -i 5 -ac 3505,1582"
+sudo sh -c "sudo nvidia-smi -i 6 -ac 3505,1582"
+
+
+
+
+# ====================================================================================
+# ====================================================================================
+# ====================================================================================
+
+
+
+
+
+
+
+
+
+
+
+# number of arguments to script
+NBARGS=0
+
+LOOPNUMBER=$( head -1 LOOPNUMBER )
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname :CONFIGURE CPU FOR LOW-LATENCY AO LOOP $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo " Configures LAN, CPU cores, CPU sets, GPU(s)"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-ho]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo "     $(tput bold)-T$(tput sgr0)          (T)est mode. Log commands to file instead of executing them"
+echo "     $(tput bold)-o$(tput sgr0)          turn OFF low-latency configuration (default is ON)"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "%20s       configure CPU for low-latency AO loop operation\n" "$0" 
+}
+
+
+
+
+
+
+EXITSTATUS=0
+
+function cmdexists()
+{
+  command -v "$1" >/dev/null 2>&1
+}
+
+
+function checkCommand {
+if cmdexists $1; then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+fi
+
+}
+
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+ON=1 # default
+TESTMODE=0 # default
+while getopts :hTo FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    T) # test mode, do not execute commands
+    TESTMODE="1"
+    rm sysconfig.test.log
+    echo "Commands will not be executed"
+    echo "Commands written to sysconfig.test.log"
+    ;;
+    o) 
+    echo "TURNING LOW-LATENCY SETTINGS OFF"
+	ON="0"
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+checkCommand tmux
+checkCommand cset
+checkCommand netstat
+#checkCommand $HOME/bin/setlatency
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+echo ""
+exit
+else
+echo ""
+fi
+
+
+
+
+
+function evalcmd()
+{
+	if [ "$TESTMODE" -eq "1" ]; then
+	echo "$1" >> sysconfig.test.log
+	else
+	eval "$1"
+	fi
+}
+
+
+
+
+# =================================================================================
+# =========== Setup low latency TCP
+# We assume, by convention, that all interfaces with IP starting with "10." should be low-latency
+# =================================================================================
+
+if [ "$ON" = "1" ]
+
+then
+
+# find all interfaces with IP numbers starting by 10.
+mapfile -t < <( netstat -r | awk '$1 ~ /^ *10./' | awk '{print $NF}' )
+
+# now loop through the above array 
+
+for ifname in "${MAPFILE[@]}"
+do
+	echo "Configuring interface for low-latency: $ifname"
+   
+	cmdstring="sudo ethtool -C ${ifname} rx-usecs 0"
+	evalcmd "$cmdstring"
+	
+	cmdstring="sudo ethtool -C ${ifname} tx-usecs 0"
+	evalcmd "$cmdstring"
+	
+	cmdstring="sudo ethtool -A ${ifname} autoneg off rx off tx off"
+	evalcmd "$cmdstring"
+done
+
+
+
+cmdstring="sudo /sbin/sysctl -w net.ipv6.tcp_low_latency=1"
+evalcmd "$cmdstring"
+
+cmdstring="sudo /sbin/sysctl -w net.ipv6.tcp_sack=0"
+evalcmd "$cmdstring"
+
+cmdstring="sudo /sbin/sysctl -w net.ipv6.tcp_timestamps=0"
+evalcmd "$cmdstring"
+
+cmdstring="sudo /sbin/sysctl -w net.ipv6.tcp_fastopen=1"
+evalcmd "$cmdstring"
+
+
+
+
+# Enable low latency mode for TCP
+cmdstring="sudo /sbin/sysctl -w net.ipv4.tcp_low_latency=1"
+evalcmd "$cmdstring"
+
+
+
+# Disable the TCP selective acks option for better CPU utilization
+cmdstring="sudo /sbin/sysctl -w net.ipv4.tcp_sack=0"
+evalcmd "$cmdstring"
+
+
+
+# Disable the TCP timestamps option for better CPU utilization
+cmdstring="sudo /sbin/sysctl -w net.ipv4.tcp_timestamps=0"
+evalcmd "$cmdstring"
+
+
+
+cmdstring="sudo /sbin/sysctl -w net.ipv4.tcp_fastopen=1"
+evalcmd "$cmdstring"
+
+
+
+# Increase the maximum length of processor input queues:
+cmdstring="sudo /sbin/sysctl -w net.core.netdev_max_backlog=250000"
+evalcmd "$cmdstring"
+
+
+
+# Increase the TCP maximum and default buffer sizes using setsockopt():
+cmdstring="sudo /sbin/sysctl -w net.core.rmem_max=16777216"
+evalcmd "$cmdstring"
+
+
+cmdstring="sudo /sbin/sysctl -w net.core.wmem_max=16777216"
+evalcmd "$cmdstring"
+
+
+cmdstring="sudo /sbin/sysctl -w net.core.rmem_default=16777216"
+evalcmd "$cmdstring"
+
+
+cmdstring="sudo /sbin/sysctl -w net.core.wmem_default=16777216"
+evalcmd "$cmdstring"
+
+
+cmdstring="sudo /sbin/sysctl -w net.core.optmem_max=16777216"
+evalcmd "$cmdstring"
+
+
+
+# Increase memory thresholds to prevent packet dropping:
+cmdstring="sudo /sbin/sysctl -w net.ipv4.tcp_mem=\"16777216 16777216 16777216\""
+evalcmd "$cmdstring"
+
+
+
+# Increase the Linux* auto-tuning of TCP buffer limits. The minimum, default, and maximum number of bytes to use are shown below (in the order minimum, default, and maximum):
+cmdstring="sudo /sbin/sysctl -w net.ipv4.tcp_rmem=\"4096 87380 16777216\""
+evalcmd "$cmdstring"
+
+
+cmdstring="sudo /sbin/sysctl -w net.ipv4.tcp_wmem=\"4096 65536 16777216\""
+evalcmd "$cmdstring"
+
+
+
+fi
+
+
+
+
+
+# =================================================================================
+# =========== TURN OFF/ON HYPERTHREADING
+# =================================================================================
+
+if [ "$ON" = "1" ]; then
+echo "Turn off hyperthreading"
+HTmode="0"
+else
+HTmode="1"
+fi
+
+
+typeset -i core_id
+typeset -i sibling_id
+typeset -i state
+
+for i in /sys/devices/system/cpu/cpu[0-9]*; do
+
+  core_id="${i##*cpu}"
+  sibling_id="-1"
+
+  if [ -f ${i}/topology/thread_siblings_list ]; then
+    sibling_id="$(cut -d',' -f1 ${i}/topology/thread_siblings_list)"
+  fi
+
+  if [ $core_id -ne $sibling_id ]; then
+    state="$(<${i}/online)"
+
+    if [ "$state" -eq "$HTmode" ]; then
+		echo "kept ${i}/online to ${HTmode}"
+    else
+		cmdstring="sudo bash -c \"echo ${HTmode} > ${i}/online\""
+		evalcmd "$cmdstring"
+		echo "switched ${i}/online to ${HTmode}"
+    fi
+  fi
+done
+
+
+
+
+
+
+
+
+
+
+
+# =================================================================================
+# =========== set CPU SETS
+# =================================================================================
+
+
+  
+if [ "$ON" = "1" ]; then
+
+for c in "${!cpusetlist[@]}"; do
+	printf "CPU set %10s cpus: %s\n" "$c" "${cpusetlist[$c]}"
+    cmdstring=$( printf "sudo cset set --cpu %s %s --set %s" "${cpusetlist[$c]}" "${cpusetoption[$c]}" "$c" )
+    evalcmd "$cmdstring"
+done
+
+
+
+# move as much as possible to system
+cmdstring="sudo cset proc -m -f root -t system"
+evalcmd "$cmdstring"
+
+cmdstring="sudo cset proc -k -f root -t system"
+evalcmd "$cmdstring"
+
+
+
+for c in "${!cpusetpgrep[@]}"; do
+	
+	pidlist=$( pgrep ${cpusetpgrep[$c]}|xargs echo | sed 's/ /,/g' )
+	cmdstring="sudo cset proc -m -p $pidlist -t $c"
+    evalcmd "$cmdstring"
+done
+
+
+
+# RTmon should be used for RT process monitoring and testing
+# to run a process/job/script within RTmon, use:
+#
+# cset proc -s RTmon -e bash
+#
+
+
+else
+echo "Destroying CPU sets"
+
+for c in "${!cpusetlist[@]}"; do
+	printf "destroying CPU set %10s\n" "$c" 
+    cmdstring=$( printf "sudo cset se -d %s" "$c" )
+    evalcmd "$cmdstring"
+done
+fi
+
+# show CPU sets
+cset set -l
+
+
+
+
+
+# =================================================================================
+# =========== set CPU PERFORMANCE SETTINGS
+# =================================================================================
+
+# Disable real-time CPU throttling
+sudo sh -c "echo -1 > /proc/sys/kernel/sched_rt_runtime_us"
+
+
+if [ "$ON" = "1" ]; then
+
+cmdstring="tmux new-session -d -s cpulatency"
+evalcmd "$cmdstring"
+
+cmdstring="tmux send-keys -t cpulatency \"sudo $HOME/bin/setlatency 0\" C-m"
+evalcmd "$cmdstring"
+
+else
+
+cmdstring="tmux kill-session -t cpulatency"
+evalcmd "$cmdstring"
+
+fi
+
+
+
+
+
+
+# =================================================================================
+# =========== set IRQs
+# =================================================================================
+
+
+# Stop IRQbalance
+cmdstring="sudo service irqbalance stop"
+evalcmd "$cmdstring"
+
+# Create hex bitmask to ban RT cores from irqbalance
+# Banned CPUs are all RT CPUs
+# 
+# aol0RT         real-time loop computation              3 5 7 9 11 13 15 17
+# aol0RT1        modal extraction (WFS output)           19
+# aol0RT2        modal processing (DM contr. channel)    21
+# ocamdec        ocam image decoding                     27
+# 0001010101010101010101000001
+# 1110101010101010101010111110
+
+#echo "obase=16;ibase=2;0001010101010101010101000001"|bc > IRQBALANCE_BANNED_CPUS.txt
+#echo "obase=16;ibase=2;111010101010101010101011111"|bc > IRQBALANCE_BANNED_CPUS.txt
+#export IRQBALANCE_BANNED_CPUS=$(cat IRQBALANCE_BANNED_CPUS.txt)
+#export IRQBALANCE_BANNED_CPUS=1555541
+
+# REDIRECT IRQs on RT cpus
+
+rm _cpu*irq_t0.txt &> /dev/null
+
+rm _cpu*irq_t1.txt &> /dev/null
+
+
+rm _cpuRTirq_t0.txt &> /dev/null
+
+rm _cpuRTirq_t1.txt &> /dev/null
+
+rm _cpu*irq_active.txt &> /dev/null
+
+rm _cpuRTirq_active.txt &> /dev/null
+
+touch _cpuRTirq.txt
+
+
+
+# number of CPUs on which IRQs will be moved
+typeset -i NBcpuIRQ
+NBcpuIRQ=3      # irqs moves to cpus 0, 1, 2
+
+# where to move IRQs (bitmask)
+# deploy to cpus 0, 1 and 2 
+# Do not include leading zeros
+cpudest="111"
+
+
+twait=5
+
+echo "Monitoring IRQs for $twait second ..."
+
+
+# total number of cpu
+NBcpu=$( nproc )
+
+
+
+for t in 0 1
+
+do
+
+for cpu in $(seq ${NBcpuIRQ} ${NBcpu})
+do
+cpu1=$(( $cpu + 2 ))
+cat /proc/interrupts | awk -v ind=$cpu1 '{if ($ind>0) print $0}' | sed 's/://g' | awk '{if ($1 ~  /^[0-9]*$/) print $0}'  > _cpu${cpu}irq_t$t.txt
+awk '{print $1}' _cpu${cpu}irq_t$t.txt >> _cpuRTirq_t$t.txt
+done
+
+sleep $twait
+
+done
+
+
+
+
+
+for cpu in $(seq ${NBcpuIRQ} ${NBcpu})
+do
+cnt=$( wc -l _cpu${cpu}irq_t0.txt | cut -f 1 -d " ")
+cpu1=$(( $cpu + 2 ))
+awk -v ind=$cpu1 '{print $1, $ind}' _cpu${cpu}irq_t0.txt > _irqt0.txt
+awk -v ind=$cpu1 '{print $1, $ind}' _cpu${cpu}irq_t1.txt > _irqt1.txt
+
+comm -13 _irqt0.txt _irqt1.txt > _cpu${cpu}irq_active.txt
+cntactive=$( wc -l _cpu${cpu}irq_active.txt | cut -f 1 -d " ")
+cat _cpu${cpu}irq_active.txt >> _cpuRTirq_active.txt
+printf "IRQs on RT cpu %2d  :  %3d     ACTIVE : %3d\n" $cpu $cnt $cntactive
+done
+
+
+
+cnt=$( wc -l _cpuRTirq_active.txt | cut -f 1 -d " ")
+irqmask=$( echo "obase=16;ibase=2;${cpudest}"|bc )
+printf "\n%3d IRQs will be moved to cpus %d  (mask : %s)\n\n" $cnt $cpudest $irqmask
+
+awk -v MASK=$irqmask '{printf("echo %d > /proc/irq/%d/smp_affinity\n", MASK, $1)}' _cpuRTirq_active.txt  > _irqmove_cmd.run
+
+chmod +x _irqmove_cmd.run
+rm _cpu*irq_*
+rm _irqt*.txt
+rm _cpuRTirq.txt
+
+cmdstring="sudo ./_irqmove_cmd.run"
+evalcmd "$cmdstring"
+
+cmdstring="rm _irqmove_cmd.run"
+evalcmd "$cmdstring"
+
+# NOTES
+
+# to monitor an irq:
+# watch -n 1 -d grep "271:" /proc/interrupts
+
+
+
+
+
+
+
+
+datestr="$( date -u )"
+echo "$datestr" > cpuconfigOK
+
+
+
+
+
+exit
+
+########## NOTES ##########################################################
+
+
+# Tools
+
+## CHECKING LATENCIES
+sudo cyclictest --smp -p98 -m -i 500 -D 3
+
+## watching non-maskable hardware interrupts
+watch -d -n 1 grep NMI /proc/interrupts
+
+
+
+
+
+
+
+# Misc / notes / things to do 
+
+
+
+## Add to kernel boot:
+nosoftlockup intel_idle.max_cstate=0 processor.max_cstate=0 mce=ignore_ce idle=poll
+
+
+
+
+## Disable System Management Interrupts (SMI): USB, TCO timer
+
+ smi.c to do
+    mask_bits(TCO_EN_BIT, smi_en_addr);
+instead of
+    mask_bits(GBL_SMI_EN_BIT, smi_en_addr);
+(and corresponding set_bits() later), the TCO timer interrupts were 
+knocked out and the latency stayed below 7µs on my machine for hours, 
+even under heavy load.
+
+1) Use PS/2 mouse and keyboard,
+2) Disable USB mouse and keyboard in BIOS,
+3) Compile an ACPI-enabled Kernel.
+This alone should reduce the RTAI responsivity loss from 500µs each 
+second to 100µs each 38 seconds.
+4) Disable TCO timer generation of SMIs (TCO_EN bit in the SMI_EN register).
+The latency should drop to ~10µs permanently, at the expense of not 
+being able to use the i8xx_tco watchdog.
+
+

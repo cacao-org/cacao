@@ -6,7 +6,7 @@
 
 ---
 
-@note <srcdir> is the directory where cacao should be installed. For example: `/home/myname/src`. 
+@note <srcdir> is the directory where cacao should be installed. For example: `/home/cacaouser/src`. 
 
 
 # Installing cacao {#page_cacaoSetup_install}
@@ -19,9 +19,9 @@ See @ref page_installation for detailed instructions.
 
 After installing the required packages, the main steps will be:
 
+	cd <srcdir>
 	git clone --recursive https://github.com/cacao-org/cacao cacao
-
-	cd <srcdir>/cacao
+	cd cacao
 	mkdir _build
 	cd _build
 	cmake .. -DUSE_MAGMA=ON
@@ -45,12 +45,11 @@ If milk is not installed, create sym link milk->cacao
 # Setting up AOloop work directory {#page_cacaoSetup_AOloopdir}
 
 
-
 Conventions:
 
-- `<srcdir>` is the source code directory, for example `/home/CACAOuser/src`
+- `<srcdir>` is the source code directory, for example `/home/cacaouser/src`
 - `<workdir>` is the work directory where the program and scripts will be executed. Note that the full 
-path should end with `/AOloop<#>` where `<#>` ranges from 0 to 9. For example, `<workdir>` could be `/home/CACAOuser/AOloop/AOloop2`.
+path should end with `/AOloop<#>` where `<#>` ranges from 0 to 9. For example, `<workdir>` could be `/home/cacaouser/AOloop/AOloop2`.
 
 
 The work directory is where all scripts and high level commands should be run from. You will first need to create the work directory and then load scripts from the source directory to the work directory.
@@ -68,19 +67,20 @@ The 'syncscript' script should now be in the work directory. Execute it to copy 
 
 Symbolic links to the source scripts and executable are now installed in the work directory (exact links / directories may vary) :
 
-	scexao@scexao:~/AOloop/AOloop0$ ls -l
-	total 40
-	drwxrwxr-x 2 scexao scexao 4096 Jan  3 23:11 aocscripts
-	drwxrwxr-x 2 scexao scexao 4096 Jan  3 23:11 aohardsim
-	lrwxrwxrwx 1 scexao scexao   56 Jan  3 23:11 aolconf -> /home/scexao/src/cacao/src/AOloopControl/scripts/aolconf
-	drwxrwxr-x 2 scexao scexao 4096 Jan  3 23:11 aolconfscripts
-	drwxrwxr-x 2 scexao scexao 4096 Jan  3 23:11 aolfuncs
-	lrwxrwxrwx 1 scexao scexao   67 Jan  3 23:10 AOloopControl -> /home/scexao/src/cacao/src/AOloopControl/scripts/../../../bin/cacao
-	drwxrwxr-x 2 scexao scexao 4096 Jan  3 23:11 aosetup
-	drwxrwxr-x 2 scexao scexao 4096 Jan  3 23:11 auxscripts
-	-rw-rw-r-- 1 scexao scexao   39 Jan  3 22:47 shmimmonstartup
-	drwxrwxr-x 2 scexao scexao 4096 Jan  3 18:31 status
-	lrwxrwxrwx 1 scexao scexao   60 Jan  3 23:10 syncscripts -> /home/scexao/src/cacao/src/AOloopControl/scripts/syncscripts
+	cacaouser@cacaortc:~/AOloop/AOloop0$ ls -l
+	total 16
+	drwxrwxr-x 1 cacaouser cacaouser  620 Feb 18 22:08 aocscripts
+	drwxrwxr-x 1 cacaouser cacaouser  332 Feb 18 22:08 aohardsim
+	lrwxrwxrwx 1 cacaouser cacaouser   56 Feb 18 22:08 aolconf -> /home/cacaouser/src/cacao/src/AOloopControl/scripts/aolconf
+	drwxrwxr-x 1 cacaouser cacaouser  796 Feb 18 22:08 aolconfscripts
+	drwxrwxr-x 1 cacaouser cacaouser  338 Feb 18 22:08 aolfuncs
+	lrwxrwxrwx 1 cacaouser cacaouser   20 Feb 18 21:52 AOloopControl -> /usr/local/bin/cacao
+	drwxrwxr-x 1 cacaouser cacaouser  120 Feb 18 22:08 aosetup
+	drwxrwxr-x 1 cacaouser cacaouser 1756 Feb 18 22:08 auxscripts
+	lrwxrwxrwx 1 cacaouser cacaouser   59 Feb 18 22:08 cacao.tmux -> /home/cacaouser/src/cacao/src/AOloopControl/scripts/cacao.tmux
+	drwxrwxr-x 1 cacaouser cacaouser   20 Feb 18 22:08 dmutils
+	lrwxrwxrwx 1 cacaouser cacaouser   60 Feb 18 21:52 syncscripts -> /home/cacaouser/src/cacao/src/AOloopControl/scripts/syncscripts
+
 
 If new scripts are added in the source directory, running `./syncscripts` again from the work directory will add them to the work directory.
 
