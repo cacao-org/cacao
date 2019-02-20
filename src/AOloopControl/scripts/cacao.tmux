@@ -401,7 +401,7 @@ tmux send-keys -t $SESSION:0.$SCREEN_RTLOGGING "aolrtlogGUI" C-m
 sleep $tdelay
 
 # START process control
-tmux send-keys -t $SESSION:0.$SCREEN_PROCCTRL "cacao" C-m
+#tmux send-keys -t $SESSION:0.$SCREEN_PROCCTRL "cacao" C-m
 tmux send-keys -t $SESSION:0.$SCREEN_PROCCTRL "procCTRL" C-m
 sleep $tdelay
 
