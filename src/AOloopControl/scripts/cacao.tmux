@@ -26,7 +26,7 @@
 NBARGS=0
 
 # window size in characters
-wXsize=600
+wXsize=550
 wYsize=150
 
 if [ -f LOOPNUMBER ]; then
@@ -336,7 +336,7 @@ fi
 tdelay="1.0"
 
 
-exit
+
 
 if [ "$STARTPROC" = "1" ]; then
 # START aolconf
