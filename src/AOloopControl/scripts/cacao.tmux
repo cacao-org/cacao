@@ -25,7 +25,8 @@
 
 NBARGS=0
 
-wXsize=500
+# window size in characters
+wXsize=600
 wYsize=150
 
 if [ -f LOOPNUMBER ]; then
@@ -248,9 +249,9 @@ tdelay="0.5"
 
 if [ "$SIMPLECONTROL" = "0" ]; then
 sleep $tdelay
-tmux split-window -h -p 70 -t $SESSION:0
+tmux split-window -h -p 72 -t $SESSION:0
 sleep $tdelay
-tmux split-window -h -p 62 -t $SESSION:0
+tmux split-window -h -p 65 -t $SESSION:0
 RIGHTSCREEN="5"
 else
 sleep $tdelay
@@ -335,7 +336,7 @@ fi
 tdelay="1.0"
 
 
-
+exit
 
 if [ "$STARTPROC" = "1" ]; then
 # START aolconf
