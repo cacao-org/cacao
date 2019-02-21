@@ -114,6 +114,7 @@ echo "------------------------------------------------------------------------"
 echo "$(tput bold) $pname :CONFIGURE CPU FOR LOW-LATENCY AO LOOP $(tput sgr0)"
 echo "------------------------------------------------------------------------"
 echo " Configures LAN, CPU cores, CPU sets, GPU(s)"
+echo " To toggle system in high performance mode, use -P option (-PF to turn off)"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
 echo "     $0 [-ho]"
@@ -121,7 +122,16 @@ echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)          help"
 echo "     $(tput bold)-T$(tput sgr0)          (T)est mode. Log commands to file instead of executing them"
-echo "     $(tput bold)-o$(tput sgr0)          turn OFF low-latency configuration (default is ON)"
+echo "     $(tput bold)-F$(tput sgr0)          turn O(F)F low-latency configuration (default is ON)"
+echo ""
+echo "     $(tput bold)-P$(tput sgr0)          CPU (P)erformance"
+echo ""
+echo "     $(tput bold)-n$(tput sgr0)          (n)etwork"
+echo "     $(tput bold)-y$(tput sgr0)          h(y)yperthreading"
+echo "     $(tput bold)-l$(tput sgr0)          CPU (l)atency"
+echo "     $(tput bold)-I$(tput sgr0)          (I)RQ"
+echo "     $(tput bold)-G$(tput sgr0)          (G)PU"
+echo "     $(tput bold)-c$(tput sgr0)          (c)puset"
 echo ""
 echo "------------------------------------------------------------------------"
 }
@@ -190,8 +200,21 @@ done
 
 
 ON=1 # default
+
+ALL=1 # default
+
+CPUPERFORMANCEsetup="0"
+
+NETWORKsetup="0"
+HYPERTHREADINGsetup="0"
+CPULATENCYsetup="0"
+IRQsetup="0"
+GPUsetup="0"
+CPUSETsetup="0"
+
+
 TESTMODE=0 # default
-while getopts :hTo FLAG; do
+while getopts :hTFnylIGcP FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -207,10 +230,43 @@ while getopts :hTo FLAG; do
     echo "Commands will not be executed"
     echo "Commands written to systemconfig.test.log"
     ;;
-    o) 
+    F) 
     echo "TURNING LOW-LATENCY SETTINGS OFF"
 	ON="0"
     ;;
+    
+    
+    P)
+    CPUPERFORMANCEsetup="1"
+    ALL="0"
+    ;;
+    
+    n)
+    NETWORKsetup="1"
+    ALL="0"
+    ;;
+    y)
+    HYPERTHREADINGsetup="1"
+    ALL="0"
+    ;;
+    l)
+    CPULATENCYsetup="1"
+    ALL="0"
+    ;;
+    I)
+    IRQsetup="1"
+    ALL="0"
+    ;;
+    G)
+    GPUsetup="1"
+    ALL="0"
+    ;;
+    c)
+    CPUSETsetup="1"
+    ALL="0"
+    ;;
+    
+    
     \?) #unrecognized option - show help
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
       printHELP
@@ -238,7 +294,8 @@ fi
 checkCommand tmux tmux
 checkCommand cset cpuset
 checkCommand netstat
-checkCommand $HOME/bin/setlatency
+#checkCommand $HOME/bin/setlatency
+checkCommand cpupower linux-tools-common
 
 if [ $EXITSTATUS -eq 1 ]; then
 echo ""
@@ -265,13 +322,62 @@ function evalcmd()
 
 
 
+if [ "$ALL" = "1" ]; then
+
+NETWORKsetup="1"
+HYPERTHREADINGsetup="1"
+CPULATENCYsetup="1"
+IRQsetup="1"
+GPUsetup="1"
+CPUSETsetup="1"
+
+fi
+
+
+
+
+echo "==============================="
+echo "CPUPERFORMANCEsetup   = $CPUPERFORMANCEsetup"
+echo""
+echo "NETWORKsetup          = $NETWORKsetup"
+echo "HYPERTHREADINGsetup   = $HYPERTHREADINGsetup"
+echo "CPULATENCYsetup       = $CPULATENCYsetup"
+echo "IRQsetup              = $IRQsetup"
+echo "GPUsetup              = $GPUsetup"
+echo "CPUSETsetup           = $CPUSETsetup"
+echo "==============================="
+
+
+
+
+
+# =================================================================================
+# =========== Toggles high performance mode
+# =================================================================================
+
+if [ "$CPUPERFORMANCEsetup" = "1" ]; then
+if [ "$ON" = "1" ]; then
+sudo cpupower frequency-set --governor performance
+else
+sudo cpupower frequency-set --governor ondemand
+fi
+fi
+
+
+
+
+
+
+
+
 # =================================================================================
 # =========== Setup low latency TCP
 # We assume, by convention, that all interfaces with IP starting with "10." should be low-latency
 # =================================================================================
 
-if [ "$ON" = "1" ]
+if [ "$NETWORKsetup" = "1" ]; then
 
+if [ "$ON" = "1" ]
 then
 
 # find all interfaces with IP numbers starting by 10.
@@ -375,6 +481,7 @@ evalcmd "$cmdstring"
 cmdstring="sudo /sbin/sysctl -w net.ipv4.tcp_wmem=\"4096 65536 16777216\""
 evalcmd "$cmdstring"
 
+fi
 
 
 fi
@@ -382,10 +489,11 @@ fi
 
 
 
-
 # =================================================================================
 # =========== TURN OFF/ON HYPERTHREADING
 # =================================================================================
+
+if [ "$HYPERTHREADINGsetup" = "1" ]; then
 
 if [ "$ON" = "1" ]; then
 echo "Turn off hyperthreading"
@@ -422,7 +530,7 @@ for i in /sys/devices/system/cpu/cpu[0-9]*; do
 done
 
 
-
+fi
 
 
 
@@ -438,6 +546,8 @@ done
 # =================================================================================
 # =========== set CPU PERFORMANCE SETTINGS
 # =================================================================================
+
+if [ "$CPULATENCYsetup" = "1" ]; then
 
 # Disable real-time CPU throttling
 sudo sh -c "echo -1 > /proc/sys/kernel/sched_rt_runtime_us"
@@ -458,7 +568,7 @@ evalcmd "$cmdstring"
 
 fi
 
-
+fi
 
 
 
@@ -466,6 +576,8 @@ fi
 # =================================================================================
 # =========== set IRQs
 # =================================================================================
+
+if [ "$IRQsetup" = "1" ]; then
 
 if [ "$ON" = "1" ]; then
 
@@ -585,6 +697,7 @@ evalcmd "$cmdstring"
 
 fi
 
+fi
 
 
 
@@ -597,8 +710,12 @@ fi
 # =========== GPU config
 # =================================================================================
 
+if [ "$GPUsetup" = "1" ]; then
+
 if [ "$ON" = "1" ]; then
 GPUconfig
+fi
+
 fi
 
 
@@ -609,7 +726,7 @@ fi
 # =========== set CPU SETS
 # =================================================================================
 
-
+if [ "$CPUSETsetup" = "1" ]; then
   
 if [ "$ON" = "1" ]; then
 
@@ -659,6 +776,7 @@ fi
 # show CPU sets
 sudo cset set -l
 
+fi
 
 
 
