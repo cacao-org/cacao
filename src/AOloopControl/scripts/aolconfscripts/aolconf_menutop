@@ -930,7 +930,7 @@ fi
 
 if [ $state = "menualign" ]; then
 stateok=1
-. ./userScript/aoAlign.bash
+. ./userScripts/aoAlign.bash
 state="menutop"
 fi
 
@@ -939,7 +939,7 @@ fi
 
 if [ $state = "menuhardwarecontrol" ]; then
 stateok=1
-. ./userScript/aoHardwCtrl.bash
+. ./userScripts/aoHardwCtrl.bash
 state="menutop"
 fi
 
