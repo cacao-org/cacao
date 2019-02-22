@@ -59,6 +59,10 @@ echo " "
 echo " $(tput bold)LOOPNUMBER:$(tput sgr0)  $LOOPNUMBER"
 echo " $(tput bold)LOOPNAME:$(tput sgr0)    $LOOPNAME"
 echo " "
+echo " User is expected to provide the following system-dependent scripts :"
+echo "     ./userScripts/SystemConfig       configure computer system"
+echo "     ./userScripts/aoAlign.bash       Optical Alignment script"
+ehco "     ./userScripts/aoHharCtrl.bash    Hardware control"
 echo " "
 echo " $(tput bold)USAGE:$(tput sgr0)"
 echo "     $0 [options]"
@@ -70,7 +74,7 @@ echo "   --help1               print 1 line summary"
 echo "   -H  <string>         (H)elp category"
 echo "                 cf     list configuration files (incomplete)"    
 echo "   -l <exec>            log executable"  
-echo "   -C                   (C)onfigure system: execute user-provided ./SystemConfig script"
+echo "   -C                   (C)onfigure system: execute user-provided ./userScripts/SystemConfig"
 echo "   -c                   (c)lear all settings (ALL SETTINGS WILL BE LOST)"
 echo "  Runs top level script:"
 echo "   -L <long>            (L)oop number"
@@ -106,7 +110,15 @@ fi
 
 }
 
-
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
 
 
 
@@ -165,7 +177,7 @@ while getopts :hH:l:CcL:N:xe:n FLAG; do
     ;;
     C) # configure CPU
     echo "Configure System"
-    ./SystemConfig
+    ./userScripts/SystemConfig
     exit
     ;;    
     c) # clear
@@ -241,6 +253,18 @@ fi
 
 
 
+# ======================= CHECK REQUIRED FILES =================================
+echo ""
+mkdir -p userScripts
+checkFile ./userScripts/aoAlign.bash 
+checkFile ./userScripts/aoHardwCtrl.bash
+
+
+
+# ============================= CHECK IF COMMAND EXISTS ==========================
+
+checkCommand ./userScripts/SystemConfig
+
 
 
 
@@ -314,10 +338,10 @@ fi
 
 
 # execute CPU configuration script if it exists
-if [ -f "./SystemConfig" ]; then
+if [ -f "./userScripts/SystemConfig" ]; then
 if [ ! -f "systemconfigOK" ]; then
 echo "Executing system config - please restart $0 when complete"
-. ./SystemConfig
+. ./userScripts/SystemConfig
 exit
 fi
 fi

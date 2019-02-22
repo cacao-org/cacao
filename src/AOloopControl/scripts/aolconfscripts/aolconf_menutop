@@ -340,8 +340,8 @@ if [ "$menuEXT" = "1" ]; then
 stringcenter "CUSTOM EXTERNAL SCRIPTS"
 menuitems+=( "6 ->" "\Zb\Zr$string\Zn" )
 menuitems+=( " " " ")
-menuitems+=( "A" "Align")
-menuitems+=( "HC" "Hardware Control")
+menuitems+=( "A" "Align              (User-provided script ./userScripts/aoAlign.bash)")
+menuitems+=( "HC" "Hardware Control  (User-provided script ./userScripts/aoHardwCtrl.bash)")
 fi
 
 
@@ -930,7 +930,7 @@ fi
 
 if [ $state = "menualign" ]; then
 stateok=1
-. ./aocscripts/aoAlign_${LOOPNAME}.bash
+. ./userScript/aoAlign.bash
 state="menutop"
 fi
 
@@ -939,7 +939,7 @@ fi
 
 if [ $state = "menuhardwarecontrol" ]; then
 stateok=1
-. ./aocscripts/aoHardCtrl_${LOOPNAME}.bash
+. ./userScript/aoHardwCtrl.bash
 state="menutop"
 fi
 

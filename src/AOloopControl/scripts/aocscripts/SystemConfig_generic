@@ -4,13 +4,13 @@
 # GENERIC CONFIGURATION SCRIPT - EDIT TO MATCH YOUR SYSTEM 
 #
 # Notes :
-# - This script is a system-wide configuration, not a configuration for a single AO loop
-# - 
-
-
+# - script is a system-wide configuration, not a configuration for a single AO loop
+# - script is a template. Users should modify the USER section to match system
+# - Script assumes ubuntu distribution, uses apt package manager
+#
 
 # ====================================================================================
-# ======================= USER SHOULD FILL THIS SECTION ==============================
+# ======================= USER SHOULD EDIT THIS SECTION ==============================
 # ====================================================================================
 
 
