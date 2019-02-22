@@ -348,7 +348,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
 	function_parameter_FPCONFexit( &fps );
 
 
-    return(0);
+    return EXIT_SUCCESS;
 }
 
 
@@ -517,9 +517,6 @@ int AOloopControl_DM_CombineChannels_RUN(
 	
 	// STATUS
 	long *addr_loopcnt = functionparameter_GetParamPtr_INT64(&fps, ".status.loopcnt");
-
-
-
 
 
 
