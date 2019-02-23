@@ -56,7 +56,6 @@ cd _build
 cmake ..
 ```
 
-On CentOS, the cmake command could be cmake3.
 
 ### Post-installation 
 
@@ -102,33 +101,6 @@ Python users can read/write milk/cacao's data streams using additional packages:
   * [xaosim](https://github.com/fmartinache/xaosim) includes a python interface to data streams.. and much more
 
 
----
-
-# Post-intallation configuration
-
-Add these lines to your .bashrc (edit first line as needed)
-```bash
-export CACAO_DIR=/home/cacaouser/src/cacao
-export LIBRARY_PATH=$LIBRARY_PATH:$CACAO_DIR/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CACAO_DIR/lib
-
-```
-
-
----
-
-## Reporting bugs, issues
-
-Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues )
-
-
----
-
-
-## Contributing to project
-
-See [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html ) 
-
 
 ---
 
@@ -136,6 +108,12 @@ See [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.h
 ## Documentation
 
 [Online documentation]( http://CACAO-org.github.io/cacao/index.html ) 
+
+Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues )
+
+Contributing to project : See [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html ) 
+
+
 
 
 ## Libraries

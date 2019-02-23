@@ -92,8 +92,8 @@ int main(int argc, char *argv[])
 
 
 
-    printf("Starting CLI ...\n");
-    fflush(stdout);
+//    printf("Starting CLI ...\n");
+//    fflush(stdout);
 
     runCLI(argc, argv, AppName);
 

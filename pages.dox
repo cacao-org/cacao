@@ -46,14 +46,16 @@ Synchronization and communication between processes is achieved by the data **st
 
 Under cacao's framework, the AO control loop is assembled from **streams** and **processes**. Each process typically reads (= listens) to a stream. Once the stream is updated, the process will start computations and will usually update other stream(s). Long chains of processes can thus be built, with multiple branches (several processes can listen to the same stream). 
 
+More of cacao's processes are running a loop. 
 
 
 ## 3.3. Key tools {#mainsection_fundamentals_keytools}
 
 To manage processes and streams, cacao offers a few useful tools, allowing users to quickly inspect complex AO loops. They are included in the directory `src/CommandLineInterface/scripts`, which is included in the path, per installation instructions. cacao users will make frequent use of these tools.
 
-- **procCTRL**, the process controller. See processtools.c for details.
+- **procCTRL**, the process controller. See @ref page_ProcessInfoStructure for details.
 - **streamCTRL**, the stream controller. See streamCTRL.c for details.
+- **fpsCTRL**, the function parameter structure controller. See @ref page_FunctionParameterStructure for details.
 - **shmimmon**, the shared memory image monitor, is used to inspect individual streams
 
 
@@ -119,6 +121,8 @@ Important changes to the package are listed in the @ref page_CommandLineInterfac
 	- @ref page_ModuleFiles
 	- @ref page_DocumentingCode
 	- @ref page_TemplateSourceCode
+	- @ref page_ProcessInfoStructure
+	- @ref page_FunctionParameterStructure
 - @ref page_LoadingModules
 
 
