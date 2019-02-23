@@ -305,31 +305,12 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         processinfo_WriteMessage(processinfo, msgstring);
     }
 
- // CATCH SIGNALS
- 	
-	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGTERM\n");
+    // Process signals are caught for suitable processing and reporting.
+    processinfo_CatchSignals();
 
-	if (sigaction(SIGINT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGINT\n");    
 
-	if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGABRT\n");     
 
-	if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGBUS\n");
 
-	if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGSEGV\n");         
-
-	if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGHUP\n");         
-
-	if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGPIPE\n");   
- 
- 
- 
 
 
     if(aoloopcontrol_var.aoconfID_looptiming == -1)
@@ -360,27 +341,15 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     NBmodes = data.image[IDmodecoeffs].md[0].size[0];
 
 
-    // sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
-
-    //if(sprintf(imnameInput, "aol%ld_mode_limcorr", loop) < 1)
-    //    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 
-    // sizearray[0] = NBmodes;
-    // sizearray[1] = 1;
-    //  IDmodesC = create_image_ID(imnameInput, 2, sizearray, _DATATYPE_FLOAT, 0, 0);
-    //  COREMOD_MEMORY_image_set_createsem(imnamecorr, 10);
-    //  free(sizearray);
+    printf(" ====================     SETTING UP GPU COMPUTATION\n");
+    fflush(stdout);
 
-
-
-	printf(" ====================     SETTING UP GPU COMPUTATION\n");
-	fflush(stdout);
-    
     GPU_loop_MultMat_setup(GPUMATMULTCONFindex, DMmodes_name, modecoeffs_name, out_name, GPUcnt, GPUsetM, orientation, use_sem, initWFSref, 0);
 
 
-	
+
 
     for(k=0; k<GPUcnt; k++)
         printf(" ====================     USING GPU %d\n", GPUsetM[k]);
@@ -419,7 +388,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
     while(loopOK == 1)
     {
-		// processinfo control
+        // processinfo control
         if(data.processinfo==1)
         {
             while(processinfo->CTRLval == 1)  // pause
@@ -431,39 +400,56 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
             if(processinfo->CTRLval == 3) // exit loop
                 loopCTRLexit = 1;
         }
-		
-		
+
+
         COREMOD_MEMORY_image_set_semwait(modecoeffs_name, semTrigg);
-        
-        
+
+
         if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
-			processinfo_exec_start(processinfo);
-        
-        
-        //		if(GPUMATMULTCONFindex==0)
+            processinfo_exec_start(processinfo);
+
+
+        // CTRLval = 5 will disable computations in loop (usually for testing)
+        int doComputation = 1;
+        if(data.processinfo == 1)
+            if(processinfo->CTRLval == 5)
+                doComputation = 0;
+
+
         AOconf[loop].AOtiminginfo.statusM = 10;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[7] = tdiffv;
 
-        //  for(m=0; m<NBmodes; m++)
-        //      data.image[IDmodesC].array.F[m] = data.image[IDmodecoeffs].array.F[m];
 
-
-        GPU_loop_MultMat_execute(GPUMATMULTCONFindex, &status, &GPUstatus[0], alpha, beta, write_timing, 0);
-
-        if(offloadMode==1) // offload back to dmC
+        if(doComputation==1)
         {
-            data.image[IDc].md[0].write = 1;
-            for(ii=0; ii<dmxsize*dmysize; ii++)
-                data.image[IDc].array.F[ii] = data.image[IDout].array.F[ii];
+            //
+            // computation ....
+            //
 
-            data.image[IDc].md[0].cnt0++;
-            data.image[IDc].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
-            COREMOD_MEMORY_image_set_sempost_byID(IDc, -1);
-            data.image[IDc].md[0].write = 0;
-        }
+            //  for(m=0; m<NBmodes; m++)
+            //      data.image[IDmodesC].array.F[m] = data.image[IDmodecoeffs].array.F[m];
+
+
+            GPU_loop_MultMat_execute(GPUMATMULTCONFindex, &status, &GPUstatus[0], alpha, beta, write_timing, 0);
+
+		}
+
+
+    if(offloadMode==1) // offload back to dmC
+            {
+                data.image[IDc].md[0].write = 1;
+                for(ii=0; ii<dmxsize*dmysize; ii++)
+                    data.image[IDc].array.F[ii] = data.image[IDout].array.F[ii];
+
+                data.image[IDc].md[0].cnt0++;
+                data.image[IDc].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
+                COREMOD_MEMORY_image_set_sempost_byID(IDc, -1);
+                data.image[IDc].md[0].write = 0;
+            }
+        
 
 
         //		if(GPUMATMULTCONFindex==0)
@@ -472,65 +458,64 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
-        
-        
-        
+
+
         if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
-			processinfo_exec_end(processinfo);
-        
-      // process signals
+            processinfo_exec_end(processinfo);
 
-		if(data.signal_TERM == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGTERM);
-		}
-     
-		if(data.signal_INT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGINT);
-		}
+        // process signals
 
-		if(data.signal_ABRT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGABRT);
-		}
+        if(data.signal_TERM == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGTERM);
+        }
 
-		if(data.signal_BUS == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGBUS);
-		}
-		
-		if(data.signal_SEGV == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGSEGV);
-		}
-		
-		if(data.signal_HUP == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGHUP);
-		}
-		
-		if(data.signal_PIPE == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGPIPE);
-		}	
-        
+        if(data.signal_INT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGINT);
+        }
+
+        if(data.signal_ABRT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGABRT);
+        }
+
+        if(data.signal_BUS == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGBUS);
+        }
+
+        if(data.signal_SEGV == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGSEGV);
+        }
+
+        if(data.signal_HUP == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGHUP);
+        }
+
+        if(data.signal_PIPE == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGPIPE);
+        }
+
 
         loopcnt++;
         if(data.processinfo==1)
             processinfo->loopcnt = loopcnt;
-    
+
     }
-    
-    
-        if(data.processinfo==1)
+
+
+    if(data.processinfo==1)
         processinfo_cleanExit(processinfo);
 
 
