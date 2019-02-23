@@ -46,7 +46,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include <pthread.h>
 #include "info/info.h" 
 
-//libraries created by O. Guyon 
+
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
 #include "00CORE/00CORE.h"
@@ -219,11 +219,11 @@ int AOloopControl_aorun_GUI(
  * Main AO loop function
  *
  * ## Overview
- * 
+ *
  * Runs the AO loop\n
  * Calls AOcompute(), which computes the correction to the applied.\n
  * Then, the correction is applied by calling set_DM_modes() if modal correction, or by direct write to the DM otherwise.\n
- * 
+ *
  *
  * ## Details
  *
@@ -293,7 +293,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         strcpy(processinfo->source_FUNCTION, __FUNCTION__);
         strcpy(processinfo->source_FILE,     __FILE__);
         processinfo->source_LINE = __LINE__;
-        
+
         sprintf(processinfo->description, "AOloop%ld", loop);
 
         char msgstring[200];
@@ -301,28 +301,10 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         processinfo_WriteMessage(processinfo, msgstring);
     }
 
-    // CATCH SIGNALS
 
-    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGTERM\n");
+    // Process signals are caught for suitable processing and reporting.
+    processinfo_CatchSignals();
 
-    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGINT\n");
-
-    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGABRT\n");
-
-    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGBUS\n");
-
-    if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGSEGV\n");
-
-    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGHUP\n");
-
-    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGPIPE\n");
 
 
 
@@ -494,16 +476,16 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
         {
             if(timerinit==1)
             {
-				processinfoUpdate = 1;
+                processinfoUpdate = 1;
                 clock_gettime(CLOCK_REALTIME, &t1);
                 printf("timer init\n");
                 if(data.processinfo==1)
                 {
-					char msgstring[200];
-                sprintf(msgstring, "Waiting");
-                processinfo_WriteMessage(processinfo, msgstring);
-				}
-                
+                    char msgstring[200];
+                    sprintf(msgstring, "Waiting");
+                    processinfo_WriteMessage(processinfo, msgstring);
+                }
+
             }
             clock_gettime(CLOCK_REALTIME, &t2);
 
@@ -562,12 +544,26 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 #endif
 
 
+                // CTRLval = 5 will disable computations in loop (usually for testing)
+                int doComputation = 1;
+                if(data.processinfo == 1)
+                    if(processinfo->CTRLval == 5)
+                        doComputation = 0;
+
+
+
+
                 //
                 // Most computation are performed inside AOcompute
                 //
                 // note: processinfo_exec_start is launched in Read_cam_frame() in AOcompute()
                 //
-                AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
+
+                if(doComputation==1)
+                {
+                    AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
+                }
+
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
 
@@ -583,10 +579,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 {
                     if(AOconf[loop].aorun.DMprimaryWriteON==1) // if Writing to DM
                     {
+                        if(doComputation==1)
+                        {
 
-
-                        if(fabs(AOconf[loop].aorun.gain)>1.0e-6)
-                            set_DM_modes(loop);
+                            if(fabs(AOconf[loop].aorun.gain)>1.0e-6)
+                                set_DM_modes(loop);
+                        }
                     }
 
                 }
@@ -613,18 +611,20 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[20] = tdiffv;
 
 
-                        for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)
+                        if(doComputation==1)
                         {
-                            data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] -= AOconf[loop].aorun.gain * data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii];
+                            for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)
+                            {
+                                data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] -= AOconf[loop].aorun.gain * data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii];
 
-                            data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] *= AOconf[loop].aorun.mult;
+                                data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] *= AOconf[loop].aorun.mult;
 
-                            if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] > AOconf[loop].aorun.maxlimit)
-                                data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = AOconf[loop].aorun.maxlimit;
-                            if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] < -AOconf[loop].aorun.maxlimit)
-                                data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = -AOconf[loop].aorun.maxlimit;
+                                if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] > AOconf[loop].aorun.maxlimit)
+                                    data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = AOconf[loop].aorun.maxlimit;
+                                if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] < -AOconf[loop].aorun.maxlimit)
+                                    data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = -AOconf[loop].aorun.maxlimit;
+                            }
                         }
-
 
                         AOconf[loop].AOtiminginfo.status = 14; // write to DM
                         clock_gettime(CLOCK_REALTIME, &tnow);

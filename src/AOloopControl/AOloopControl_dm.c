@@ -464,49 +464,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
             processinfo_exec_end(processinfo);
 
         // process signals
-
-        if(data.signal_TERM == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGTERM);
-        }
-
-        if(data.signal_INT == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGINT);
-        }
-
-        if(data.signal_ABRT == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGABRT);
-        }
-
-        if(data.signal_BUS == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGBUS);
-        }
-
-        if(data.signal_SEGV == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGSEGV);
-        }
-
-        if(data.signal_HUP == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGHUP);
-        }
-
-        if(data.signal_PIPE == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGPIPE);
-        }
-
+		processinfo_ProcessSignals(processinfo);
 
         loopcnt++;
         if(data.processinfo==1)
