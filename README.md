@@ -8,7 +8,7 @@ Development branch for CACAO version 0.1.02
 
 ---
 
-IMPORTANT NOTE: cacao uses git submodules. Use `git clone --recursive` (see Downloading and Installing section)
+NOTE: cacao uses git submodules. Use `git clone --recursive` (see Downloading and Installing section)
 
 ---
 
@@ -18,35 +18,27 @@ IMPORTANT NOTE: cacao uses git submodules. Use `git clone --recursive` (see Down
 
 <img align="left" src="cacao-logo-250pix.png">
 
-Computation engine for adaptive optics control; functions accessible through a command line interface (CLI). Holds images in RAM, with image stream support (shared memory with low-latency IPC support).
+cacao is a computation engine for adaptive optics control.
+
+**Compute Performance**: Uses multi-core CPUs and GPGPUs for (high computing throughput)[https://github.com/cacao-org/cacao/wiki/Compute-Performance-Benchmark]. Written in C, optimized for performance. Holds images in RAM, with image stream support (shared memory with low-latency IPC support). cacao uses [milk](https://github.com/milk-org/milk). 
 
 
-Written in C, optimized for performance.
-Executable launches a command line interface (CLI). Type "help" in the CLI to get started.
+**User input**: Executable launches a (command line interface (CLI))[https://cacao-org.github.io/cacao/page_userinput.html] from which functions are accessible. Type "help" in the CLI to get started.
 
 
-Uses multi-core CPUs and GPGPUs to high computing throughput.
+**Modular**, (easy to add functions)[https://cacao-org.github.io/cacao/page_LoadingModules.html], loaded at runtime as shared objects.
 
 
-Modular, easy to add functions, loaded at runtime as shared objects.
-
-cacao uses [milk](https://github.com/milk-org/milk). 
 
 ---
 
 
 ## Downloading and installing cacao
 
-### Downloading 
-
-The CACAO package follows the standard git clone steps :
 
 ```bash
 git clone --recursive https://github.com/cacao-org/cacao cacao
 ```
-
-
-### Compiling
 
 
 ```bash
