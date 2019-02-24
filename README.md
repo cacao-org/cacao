@@ -20,13 +20,13 @@ NOTE: cacao uses git submodules. Use `git clone --recursive` (see Downloading an
 
 cacao is a computation engine for adaptive optics control.
 
-**Compute Performance**: Uses multi-core CPUs and GPGPUs for (high computing throughput)[https://github.com/cacao-org/cacao/wiki/Compute-Performance-Benchmark]. Written in C, optimized for performance. Holds images in RAM, with image stream support (shared memory with low-latency IPC support). cacao uses [milk](https://github.com/milk-org/milk). 
+**Compute Performance**: Uses multi-core CPUs and GPGPUs for [high computing throughput](https://github.com/cacao-org/cacao/wiki/Compute-Performance-Benchmark). Written in C, optimized for performance. Holds images in RAM, with image stream support (shared memory with low-latency IPC support). cacao uses [milk](https://github.com/milk-org/milk). 
 
 
-**User input**: Executable launches a (command line interface (CLI))[https://cacao-org.github.io/cacao/page_userinput.html] from which functions are accessible. Type "help" in the CLI to get started.
+**User input**: Executable launches a [command line interface (CLI)](https://cacao-org.github.io/cacao/page_userinput.html) from which functions are accessible. Type "help" in the CLI to get started.
 
 
-**Modular**, (easy to add functions)[https://cacao-org.github.io/cacao/page_LoadingModules.html], loaded at runtime as shared objects.
+**Modular**, [easy to add functions](https://cacao-org.github.io/cacao/page_LoadingModules.html), loaded at runtime as shared objects.
 
 
 
