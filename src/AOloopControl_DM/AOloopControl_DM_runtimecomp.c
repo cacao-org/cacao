@@ -452,20 +452,15 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
 
-
 	
 	FUNCTION_PARAMETER_STRUCT fps;
-	int FPSINTERFACE = 1;
 	
 	if(function_parameter_struct_connect(fpsname, &fps) == -1)
 	{
-		printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
-		FPSINTERFACE = 0;
+		printf("ERROR: fps \"%s\" does not exist -> Cannot run\n", fpsname);
+		return EXIT_FAILURE;
 	}
-	else
-	{
-		FPSINTERFACE = 1;
-	}
+
 
 
 
@@ -520,7 +515,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
 
-
+exit(0);
 
 
 
