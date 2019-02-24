@@ -105,13 +105,14 @@ $(document).ready(function(){initNavTree('page_installation.html','');});
 </ul>
 </div>
 <div class="textblock"><dl class="section note"><dt>Note</dt><dd>This file: ./src/CommandLineInterface/doc/DownloadCompile.md</dd></dl>
-<p>To compile : </p><pre class="fragment">cd cacao
+<p>To compile : </p><pre class="fragment">cd milk
 mkdir _build
 cd _build
 cmake ..
 make
 sudo make install
 </pre><hr/>
+<dl class="section warning"><dt>Warning</dt><dd>This page describes installation of the core package milk. If you install application package (cacao or coffee), replace "milk" with "cacao" in these instructions.</dd></dl>
 <h1><a class="anchor" id="page_installation_details"></a>
 Details</h1>
 <h2><a class="anchor" id="page_installation_details_libraries"></a>
@@ -168,7 +169,7 @@ Installing cmake</h3>
 <p>To install cmake on centOS system (cmake executable will be cmake3): </p><pre class="fragment">sudo yum install cmake3
 </pre><h3><a class="anchor" id="page_installation_details_compilation_compilesourcecode"></a>
 Compile source code</h3>
-<p>To compile using cmake </p><pre class="fragment">cd cacao
+<p>To compile using cmake </p><pre class="fragment">cd milk
 mkdir _build
 cd _build
 cmake ..
@@ -179,7 +180,7 @@ Post-installation configuration</h3>
 <p>You may need to add /usr/local/lib to LD_LIBRARY_PATH environment variable: </p><pre class="fragment">echo "/usr/local/lib" &gt; usrlocal.conf
 sudo mv usrlocal.conf /etc/ld.so.conf.d/
 sudo ldconfig -v
-</pre><p>Add milk executable scripts to PATH environment variable. Add this line to the .bashrc file (change source code location as needed): </p><pre class="fragment">export PATH=$PATH:/home/myname/src/cacao/src/CommandLineInterface/scripts
+</pre><p>Add milk executable scripts to PATH environment variable. Add this line to the .bashrc file (change source code location as needed): </p><pre class="fragment">export PATH=$PATH:/home/myname/src/milk/src/CommandLineInterface/scripts
 </pre><hr/>
 <h2><a class="anchor" id="page_installation_details_troubleshooting"></a>
 Troubleshooting and FAQs</h2>
@@ -191,7 +192,7 @@ Troubleshooting and FAQs</h2>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="page_cacao_topmenu.html">Subpages</a></li>
-    <li class="footer">Generated on Sun Feb 17 2019 10:32:03 for cacao by
+    <li class="footer">Generated on Sat Feb 23 2019 19:36:42 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

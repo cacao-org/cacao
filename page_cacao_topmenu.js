@@ -20,15 +20,18 @@ var page_cacao_topmenu =
     [ "Working with git", "page_WorkingWithGit.html", null ],
     [ "Coding Standards", "page_coding_standards.html", "page_coding_standards" ],
     [ "Loading, Creating Additional Modules", "page_LoadingModules.html", [
-      [ "Loading modules", "page_LoadingModules.html#page_LoadingModules_Loading", [
-        [ "Automatic loading from `./lib/` directory", "page_LoadingModules.html#page_LoadingModules_loading_libdir", null ],
-        [ "Loading module from within CLI with soload", "page_LoadingModules.html#page_LoadingModules_loading_soload", null ],
-        [ "Loading module from within CLI with mload", "page_LoadingModules.html#page_LoadingModules_loading_mload", null ],
-        [ "Using environment variable `CLI_ADD_LIBS` to load shared objects", "page_LoadingModules.html#page_LoadingModules_loading_envvar", null ]
+      [ "Downloading Optional Modules", "page_LoadingModules.html#page_LoadingModules_download", null ],
+      [ "Linking Modules to CLI", "page_LoadingModules.html#page_LoadingModules_linking", [
+        [ "Automatic linking from `./lib/` directory", "page_LoadingModules.html#page_LoadingModules_linking_libdir", null ],
+        [ "Linking module from within CLI with soload", "page_LoadingModules.html#page_LoadingModules_linking_soload", null ],
+        [ "Linking module from within CLI with mload", "page_LoadingModules.html#page_LoadingModules_linking_mload", null ],
+        [ "Using environment variable `CLI_ADD_LIBS` to link shared objects", "page_LoadingModules.html#page_LoadingModules_linking_envvar", null ]
       ] ],
-      [ "Writing and compiling milk modules", "page_LoadingModules.html#page_LoadingModules_compiling", [
+      [ "Writing and Compiling Modules", "page_LoadingModules.html#page_LoadingModules_compiling", [
         [ "Principles", "page_LoadingModules.html#page_LoadingModules_compiling_principles", null ],
         [ "Adding modules to the main package compilation", "page_LoadingModules.html#page_LoadingModules_compiling_compiling_cmake", null ],
+        [ "Automatic loading", "page_LoadingModules.html#page_LoadingModules_compiling_autoloading", null ],
+        [ "Adding new module to github", "page_LoadingModules.html#page_LoadingModules_compiling_addingmodulegithub", null ],
         [ "Custom compilation: Example code", "page_LoadingModules.html#page_LoadingModules_compiling_examplecode", null ]
       ] ]
     ] ],

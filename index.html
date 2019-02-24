@@ -136,12 +136,14 @@ $(document).ready(function(){initNavTree('index.html','');});
 <h2><a class="anchor" id="mainsection_fundamentals_buildingloop"></a>
 3.2. Building an AO control loop</h2>
 <p>Under cacao's framework, the AO control loop is assembled from <b>streams</b> and <b>processes</b>. Each process typically reads (= listens) to a stream. Once the stream is updated, the process will start computations and will usually update other stream(s). Long chains of processes can thus be built, with multiple branches (several processes can listen to the same stream).</p>
+<p>More of cacao's processes are running a loop.</p>
 <h2><a class="anchor" id="mainsection_fundamentals_keytools"></a>
 3.3. Key tools</h2>
 <p>To manage processes and streams, cacao offers a few useful tools, allowing users to quickly inspect complex AO loops. They are included in the directory <code>src/CommandLineInterface/scripts</code>, which is included in the path, per installation instructions. cacao users will make frequent use of these tools.</p>
 <ul>
-<li><b>procCTRL</b>, the process controller. See <a class="el" href="processtools_8c.html" title="Tools to manage processes. ">processtools.c</a> for details.</li>
+<li><b>procCTRL</b>, the process controller. See <a class="el" href="page_ProcessInfoStructure.html">Processinfo Structure (PiS)</a> for details.</li>
 <li><b>streamCTRL</b>, the stream controller. See <a class="el" href="streamCTRL_8c.html" title="Data streams control panel. ">streamCTRL.c</a> for details.</li>
+<li><b>fpsCTRL</b>, the function parameter structure controller. See <a class="el" href="page_FunctionParameterStructure.html">Function Parameter Structure (FPS)</a> for details.</li>
 <li><b>shmimmon</b>, the shared memory image monitor, is used to inspect individual streams</li>
 </ul>
 <hr/>
@@ -189,6 +191,8 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li><a class="el" href="page_ModuleFiles.html">Module Files</a></li>
 <li><a class="el" href="page_DocumentingCode.html">Documenting Code</a></li>
 <li><a class="el" href="page_TemplateSourceCode.html">Template Souce Code</a></li>
+<li><a class="el" href="page_ProcessInfoStructure.html">Processinfo Structure (PiS)</a></li>
+<li><a class="el" href="page_FunctionParameterStructure.html">Function Parameter Structure (FPS)</a></li>
 </ul>
 </li>
 <li><a class="el" href="page_LoadingModules.html">Loading, Creating Additional Modules</a></li>
@@ -277,7 +281,7 @@ A.2. cacao-specific modules</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Feb 17 2019 10:32:03 for cacao by
+    <li class="footer">Generated on Sat Feb 23 2019 19:36:42 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

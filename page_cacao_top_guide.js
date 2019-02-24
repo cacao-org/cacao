@@ -1,7 +1,16 @@
 var page_cacao_top_guide =
 [
     [ "STEP-BY-STEP EXAMPLE", "page_cacao_stepbystep_example.html", null ],
-    [ "cacao Initial Setup", "page_cacao_Initial_Setup.html", null ],
+    [ "cacao Initial Setup", "page_cacao_Initial_Setup.html", [
+      [ "Installing cacao", "page_cacao_Initial_Setup.html#page_cacaoSetup_install", [
+        [ "Download and install package", "page_cacao_Initial_Setup.html#page_cacaoSetup_downloadinstall", null ],
+        [ "Post installation configuration", "page_cacao_Initial_Setup.html#page_cacaoSetup_postinstall", null ]
+      ] ],
+      [ "Setting up AOloop work directory", "page_cacao_Initial_Setup.html#page_cacaoSetup_AOloopdir", [
+        [ "Importing scripts", "page_cacao_Initial_Setup.html#page_cacaoSetup_AOloopdir_scripts", null ],
+        [ "Creating SystemConfig script (optional)", "page_cacao_Initial_Setup.html#page_cacaoSetup_AOloopdir_systemconfig", null ]
+      ] ]
+    ] ],
     [ "cacao Software Overview", "page_cacao_Software_Overview.html", null ],
     [ "cacao Hardware Simulation", "page_cacao_Hardware_Simulation.html", null ],
     [ "cacao Control: Setup and Overview", "page_cacao_Control_Setup_Overview.html", null ],

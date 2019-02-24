@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['setting_20up_20hardware_20interfaces',['Setting up hardware interfaces',['../page_cacao_setting_up_hardware_interfaces.html',1,'page_cacao_top_guide']]],
-  ['step_2dby_2dstep_20example',['STEP-BY-STEP EXAMPLE',['../page_cacao_stepbystep_example.html',1,'page_cacao_top_guide']]],
-  ['subpages',['Subpages',['../page_cacao_topmenu.html',1,'']]]
+  ['running_20the_20loop_3a_20setting_20mode_20_28cpu_2fgpu_29',['Running the loop: setting mode (CPU/GPU)',['../page_cacao_running_loop_mode.html',1,'page_cacao_top_guide']]],
+  ['readline_20input_20keys',['Readline Input Keys',['../page_readlinekeys.html',1,'page_userinput']]]
 ];
