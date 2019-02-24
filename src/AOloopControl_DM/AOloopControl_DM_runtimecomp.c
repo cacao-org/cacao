@@ -779,7 +779,7 @@ int AOloopControl_DM_CombineChannels_RUN(
     AOloopControl_printDMconf();
 
 
-exit(0);
+
 
 
     int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
