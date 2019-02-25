@@ -513,9 +513,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     int loopOK = 1;
 
 
-    int SAVE_RMACQU_ALL = 0;
-	
-	int COMP_RMACQU_AVESTEP = 1;
+    int SAVE_RMACQU_ALL = 0; // save all intermediate results
+	int COMP_RMACQU_AVESTEP = 0;  // group images by time delay step and average accordingly -> get time-resolved RM
 
 
     if((data.processinfo==1)&&(data.processinfoActive==0))
@@ -542,27 +541,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     }
 
     // CATCH SIGNALS
+	processinfo_CatchSignals();
 
-    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGTERM\n");
-
-    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGINT\n");
-
-    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGABRT\n");
-
-    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGBUS\n");
-
-    if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGSEGV\n");
-
-    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGHUP\n");
-
-    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGPIPE\n");
 
 
     /** ## DETAILS, STEPS */
@@ -1113,8 +1093,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         {
             char tmpfname[200];
             FILE *fplog;
+            int retv;
 
-            system("mkdir -p tmpRMacqu");
+            retv = system("mkdir -p tmpRMacqu");
 
             fplog = fopen("tmpRMacqu/RMacqulog.txt", "r");
             fprintf(fplog, "%-20s  %ld\n", "loop", loop);
@@ -1150,48 +1131,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
         // process signals
+        processinfo_ProcessSignals(processinfo);
 
-        if(data.signal_TERM == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGTERM);
-        }
-
-        if(data.signal_INT == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGINT);
-        }
-
-        if(data.signal_ABRT == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGABRT);
-        }
-
-        if(data.signal_BUS == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGBUS);
-        }
-
-        if(data.signal_SEGV == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGSEGV);
-        }
-
-        if(data.signal_HUP == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGHUP);
-        }
-
-        if(data.signal_PIPE == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGPIPE);
-        }
 
         loopcnt++;
         if(data.processinfo==1)
@@ -1221,7 +1162,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
     // print poke log 
-    system("mkdir -p tmpRMacqu");
+    int retv;
+    retv = system("mkdir -p tmpRMacqu");
     fp = fopen("./tmpRMacqu/RMpokelog.txt", "w");
     for(imcnt=0; imcnt<imcntmax; imcnt++)
     {
@@ -1479,8 +1421,10 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
         //pokesigntmp = 1; // no inversion
     }
 
-
-	system("mkdir -p tmpRMacqu");
+	int retv;
+	retv = system("mkdir -p tmpRMacqu");
+	
+	
     save_fits("dmpokeC2a", "!tmpRMacqu/test_dmpokeC2a.fits");
     save_fits("dmpokeC2b", "!tmpRMacqu/test_dmpokeC2b.fits");
 
