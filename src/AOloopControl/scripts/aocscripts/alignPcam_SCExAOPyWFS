@@ -25,11 +25,11 @@ mload scexaocontrol
 readshmim aol${loopnb}_wfsim
 readshmim aol${loopnb}_wfsdark
 cp aol${loopnb}_wfsdark wfsdark
-readshmim aol${loopnb}_wfsref0
-imref=0+aol${loopnb}_wfsref0
+readshmim aol${loopnb}_wfsref00
+imref=0+aol${loopnb}_wfsref00
 scexaopywfscamalign aol${loopnb}_wfsim
 imdiff=imwfs-imref
-savefits imdiff "!./tmp/imdiff.fits"
+#savefits imdiff "!./tmp/imdiff.fits"
 exitCLI
 EOF
 
