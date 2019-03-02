@@ -8,7 +8,7 @@ var page_coding_standards =
       [ "Creating a processinfo instance", "page_ProcessInfoStructure.html#page_ProcessinfoStructure_Create", null ]
     ] ],
     [ "Function Parameter Structure (FPS)", "page_FunctionParameterStructure.html", [
-      [ "1. Overview", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_Overview", null ],
+      [ "1. Overview and background", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_Overview", null ],
       [ "2. FPS user interface", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_UserInterface", [
         [ "2.1. Building command scripts from a `fpslist.txt` file", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_WritingFPSCMDscripts", null ],
         [ "2.2. fpsCTRL tool", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_fpsCTRL", null ]

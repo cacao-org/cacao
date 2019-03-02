@@ -21,7 +21,7 @@ var src_2CommandLineInterface_2CLIcore_8h =
     [ "function_parameter_struct_disconnect", "src_2CommandLineInterface_2CLIcore_8h.html#aed1068418a14a370741809bf76bab69b", null ],
     [ "functionparameter_CheckParameter", "src_2CommandLineInterface_2CLIcore_8h.html#a0c7c20a4a7c0981b9f9804df07715eda", null ],
     [ "functionparameter_CheckParametersAll", "src_2CommandLineInterface_2CLIcore_8h.html#a1844480cafd3c9101c8543c338b3e5e4", null ],
-    [ "functionparameter_CTRLscreen", "src_2CommandLineInterface_2CLIcore_8h.html#a010ac9339dd7036c810701d5dbbf4e1a", null ],
+    [ "functionparameter_CTRLscreen", "src_2CommandLineInterface_2CLIcore_8h.html#a3c47cdee61ae73762dd873cd2355b1fd", null ],
     [ "functionparameter_GetParamIndex", "src_2CommandLineInterface_2CLIcore_8h.html#a98f6267496eab5f421cc7c5e10bd4cc4", null ],
     [ "functionparameter_GetParamPtr_FLOAT64", "src_2CommandLineInterface_2CLIcore_8h.html#a8bc60317f572928ff4b6eaecb70487e0", null ],
     [ "functionparameter_GetParamPtr_INT64", "src_2CommandLineInterface_2CLIcore_8h.html#addd13080ec2760b30dc2e08f537ab184", null ],

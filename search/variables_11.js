@@ -1,6 +1,7 @@
 var searchData=
 [
   ['r_5farray',['R_array',['../structZERNIKE.html#aa9e9284d2a3580d31d3d9b35fa4d2b25',1,'ZERNIKE']]],
+  ['raw',['raw',['../struct____attribute____.html#aa9a5ea3a0863c88555c3d58b4e2013ef',1,'__attribute__']]],
   ['re',['re',['../structcomplex__float.html#a170e8285dc5452b1c27d6a97590509dd',1,'complex_float::re()'],['../structcomplex__double.html#af3466e0949b17c561569ba827aa878f4',1,'complex_double::re()'],['../AtmosphereModel_8c.html#a5a6fce2fc5cae153945fea2c45beeb4f',1,'re():&#160;AtmosphereModel.c'],['../nrlmsise-00_8c.html#a5a6fce2fc5cae153945fea2c45beeb4f',1,'re():&#160;nrlmsise-00.c']]],
   ['rect',['rect',['../structkdtree.html#aad2df600bbe8cf682fe61ac6847f5e18',1,'kdtree']]],
   ['refwfsinit',['refWFSinit',['../structGPUMATMULTCONF.html#ac85e89bf85a69a06cb96bee4d742a952',1,'GPUMATMULTCONF']]],

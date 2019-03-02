@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="cacao-logo-small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">cacao
-   &#160;<span id="projectnumber">Release 0.1.01</span>
+   &#160;<span id="projectnumber">Release 0.1.02-dev</span>
    </div>
    <div id="projectbrief">Compute And Control For Adaptive Optics</div>
   </td>
@@ -129,11 +129,15 @@ Functions</h2></td></tr>
 <tr class="separator:aa14763f95a1e13d3c13983f099772dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1094e44a07df0c6e44e28847654fccba"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8c.html#a1094e44a07df0c6e44e28847654fccba">processinfo_scan</a> (void *thptr)</td></tr>
 <tr class="separator:a1094e44a07df0c6e44e28847654fccba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a365cf7888a29c1c6785cdd4e3382a262"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8c.html#a365cf7888a29c1c6785cdd4e3382a262">processinfo_CTRLscreen_atexit</a> ()</td></tr>
+<tr class="separator:a365cf7888a29c1c6785cdd4e3382a262"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62d6014b10e0370d7fd49620de57cf06"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8c.html#a62d6014b10e0370d7fd49620de57cf06">processinfo_CTRLscreen</a> ()</td></tr>
 <tr class="separator:a62d6014b10e0370d7fd49620de57cf06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a992805da7205e1a1b8fb8d3d4e898ab2"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8c.html#a992805da7205e1a1b8fb8d3d4e898ab2">CTRLscreenExitLine</a> = 0</td></tr>
+<tr class="separator:a992805da7205e1a1b8fb8d3d4e898ab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d2c15953786347587d6fbfdcb8b9455"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structPROCESSINFOLIST.html">PROCESSINFOLIST</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8c.html#a1d2c15953786347587d6fbfdcb8b9455">pinfolist</a></td></tr>
 <tr class="separator:a1d2c15953786347587d6fbfdcb8b9455"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f438ed4f013a0ff7b10eec4cd8713a5"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8c.html#a8f438ed4f013a0ff7b10eec4cd8713a5">wrow</a></td></tr>
@@ -364,6 +368,23 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a365cf7888a29c1c6785cdd4e3382a262"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a365cf7888a29c1c6785cdd4e3382a262">&#9670;&nbsp;</a></span>processinfo_CTRLscreen_atexit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void processinfo_CTRLscreen_atexit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4fc8ad2d87c7a9e1b36c8bb929f0cd10"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4fc8ad2d87c7a9e1b36c8bb929f0cd10">&#9670;&nbsp;</a></span>processinfo_exec_end()</h2>
 
@@ -578,6 +599,28 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a992805da7205e1a1b8fb8d3d4e898ab2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a992805da7205e1a1b8fb8d3d4e898ab2">&#9670;&nbsp;</a></span>CTRLscreenExitLine</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int CTRLscreenExitLine = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1d2c15953786347587d6fbfdcb8b9455"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1d2c15953786347587d6fbfdcb8b9455">&#9670;&nbsp;</a></span>pinfolist</h2>
 
@@ -871,7 +914,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="processtools_8c.html">processtools.c</a></li>
-    <li class="footer">Generated on Sat Feb 23 2019 19:36:42 for cacao by
+    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

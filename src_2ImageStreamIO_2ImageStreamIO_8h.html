@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="cacao-logo-small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">cacao
-   &#160;<span id="projectnumber">Release 0.1.01</span>
+   &#160;<span id="projectnumber">Release 0.1.02-dev</span>
    </div>
    <div id="projectbrief">Compute And Control For Adaptive Optics</div>
   </td>
@@ -112,7 +112,7 @@ Functions</h2></td></tr>
 <tr class="separator:a54101dd6118562190681ca4c161888d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">ImageStreamIO - 1. READ / WRITE STREAM</div></td></tr>
 <tr class="memitem:a8fc3bb169fb87361c1e136e3c6a55dfb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html#a8fc3bb169fb87361c1e136e3c6a55dfb">ImageStreamIO_createIm</a> (<a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *image, const char *name, long naxis, uint32_t *size, uint8_t atype, int shared, int NBkw)</td></tr>
-<tr class="memdesc:a8fc3bb169fb87361c1e136e3c6a55dfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create shared memory image stream.  <a href="#a8fc3bb169fb87361c1e136e3c6a55dfb">More...</a><br /></td></tr>
+<tr class="memdesc:a8fc3bb169fb87361c1e136e3c6a55dfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create shared memory image stream (legacy API)  <a href="#a8fc3bb169fb87361c1e136e3c6a55dfb">More...</a><br /></td></tr>
 <tr class="separator:a8fc3bb169fb87361c1e136e3c6a55dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1f9a587a6e5fb77dadc979b82726329"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html#ab1f9a587a6e5fb77dadc979b82726329">ImageStreamIO_destroyIm</a> (<a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *image)</td></tr>
 <tr class="memdesc:ab1f9a587a6e5fb77dadc979b82726329"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocate and remove an IMAGE structure.  <a href="#ab1f9a587a6e5fb77dadc979b82726329">More...</a><br /></td></tr>
@@ -120,6 +120,11 @@ Functions</h2></td></tr>
 <tr class="memitem:aa12c6be97699d693c89e6a67e2b14dcb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html#aa12c6be97699d693c89e6a67e2b14dcb">ImageStreamIO_openIm</a> (<a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *image, const char *name)</td></tr>
 <tr class="memdesc:aa12c6be97699d693c89e6a67e2b14dcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect to an existing shared memory image stream.  <a href="#aa12c6be97699d693c89e6a67e2b14dcb">More...</a><br /></td></tr>
 <tr class="separator:aa12c6be97699d693c89e6a67e2b14dcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a544caf35775a11e4360183d1744f9791"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html#a544caf35775a11e4360183d1744f9791">ImageStreamIO_createIm_gpu</a> (<a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *image, const char *name, long naxis, uint32_t *size, uint8_t atype, int8_t location, int shared, int NBkw)</td></tr>
+<tr class="memdesc:a544caf35775a11e4360183d1744f9791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create shared memory image stream.  <a href="#a544caf35775a11e4360183d1744f9791">More...</a><br /></td></tr>
+<tr class="separator:a544caf35775a11e4360183d1744f9791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e4e873d282d6eeaab3f94f8da92e52f"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html#a2e4e873d282d6eeaab3f94f8da92e52f">ImageStreamIO_get_image_d_ptr</a> (<a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *image)</td></tr>
+<tr class="separator:a2e4e873d282d6eeaab3f94f8da92e52f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6c6d9c11729b96075bcad94e7e7ff4a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html#af6c6d9c11729b96075bcad94e7e7ff4a">ImageStreamIO_read_sharedmem_image_toIMAGE</a> (const char *name, <a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *image)</td></tr>
 <tr class="memdesc:af6c6d9c11729b96075bcad94e7e7ff4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read / connect to existing shared memory image stream.  <a href="#af6c6d9c11729b96075bcad94e7e7ff4a">More...</a><br /></td></tr>
 <tr class="separator:af6c6d9c11729b96075bcad94e7e7ff4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,6 +132,9 @@ Functions</h2></td></tr>
 <tr class="memdesc:aa681411420a1b46497f65ab49cf61584"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close a shared memmory image stream.  <a href="#aa681411420a1b46497f65ab49cf61584">More...</a><br /></td></tr>
 <tr class="separator:aa681411420a1b46497f65ab49cf61584"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">ImageStreamIO - 2. MANAGE SEMAPHORES</div></td></tr>
+<tr class="memitem:a8805ac5deb9a38475086896da0778426"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html#a8805ac5deb9a38475086896da0778426">ImageStreamIO_destroysem</a> (<a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *image)</td></tr>
+<tr class="memdesc:a8805ac5deb9a38475086896da0778426"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy shmim semaphores.  <a href="#a8805ac5deb9a38475086896da0778426">More...</a><br /></td></tr>
+<tr class="separator:a8805ac5deb9a38475086896da0778426"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e3731c2f1dbaee42302fc2c625065c6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html#a9e3731c2f1dbaee42302fc2c625065c6">ImageStreamIO_createsem</a> (<a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *image, long NBsem)</td></tr>
 <tr class="memdesc:a9e3731c2f1dbaee42302fc2c625065c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create shmim semaphores.  <a href="#a9e3731c2f1dbaee42302fc2c625065c6">More...</a><br /></td></tr>
 <tr class="separator:a9e3731c2f1dbaee42302fc2c625065c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -286,6 +294,85 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Create shared memory image stream (legacy API) </p>
+<p>Create shared memory image stream (legacy API) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">image</td><td>IMAGE structure which will have its members allocated and initialized. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>the name of the shared memory file will be SHAREDMEMDIR/&lt;name&gt;_im.shm </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">naxis</td><td>number of axes in the image. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>the size of the image along each axis. Must have naxis elements. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">atype</td><td>data type code </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">shared</td><td>if true then a shared memory buffer is allocated. If false, only local storage is used. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">NBkw</td><td>the number of keywords to allocate. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a544caf35775a11e4360183d1744f9791"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a544caf35775a11e4360183d1744f9791">&#9670;&nbsp;</a></span>ImageStreamIO_createIm_gpu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ImageStreamIO_createIm_gpu </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *&#160;</td>
+          <td class="paramname"><em>image</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>naxis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t *&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>atype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>location</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>shared</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>NBkw</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
 <p>Create shared memory image stream. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -294,6 +381,7 @@ Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">naxis</td><td>number of axes in the image. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>the size of the image along each axis. Must have naxis elements. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">atype</td><td>data type code </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">location</td><td>if -1 then a CPU memory buffer is allocated. If &gt;=0, GPU memory buffer is allocated on devive <code>location</code>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">shared</td><td>if true then a shared memory buffer is allocated. If false, only local storage is used. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">NBkw</td><td>the number of keywords to allocate. </td></tr>
   </table>
@@ -373,6 +461,35 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a8805ac5deb9a38475086896da0778426"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8805ac5deb9a38475086896da0778426">&#9670;&nbsp;</a></span>ImageStreamIO_destroysem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ImageStreamIO_destroysem </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *&#160;</td>
+          <td class="paramname"><em>image</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy shmim semaphores. </p>
+<h2>Purpose</h2>
+<p>Destroy semaphore of a shmim</p>
+<h2>Arguments</h2>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>IMAGE* pointer to shmim </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a62a2e68be24a9bee009f44c752a0b864"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a62a2e68be24a9bee009f44c752a0b864">&#9670;&nbsp;</a></span>ImageStreamIO_filename()</h2>
 
@@ -418,6 +535,24 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a2e4e873d282d6eeaab3f94f8da92e52f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e4e873d282d6eeaab3f94f8da92e52f">&#9670;&nbsp;</a></span>ImageStreamIO_get_image_d_ptr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* ImageStreamIO_get_image_d_ptr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *&#160;</td>
+          <td class="paramname"><em>image</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -859,7 +994,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f9bfd6d7838ce96d8ef51017747ec480.html">ImageStreamIO</a></li><li class="navelem"><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html">ImageStreamIO.h</a></li>
-    <li class="footer">Generated on Sat Feb 23 2019 19:36:42 for cacao by
+    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

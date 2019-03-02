@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="cacao-logo-small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">cacao
-   &#160;<span id="projectnumber">Release 0.1.01</span>
+   &#160;<span id="projectnumber">Release 0.1.02-dev</span>
    </div>
    <div id="projectbrief">Compute And Control For Adaptive Optics</div>
   </td>
@@ -157,8 +157,10 @@ Functions</h2></td></tr>
 <tr class="separator:ae8841aac21ccff9e2a8616307147287e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f8f2770c86630135112d5a526230ff4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a7f8f2770c86630135112d5a526230ff4">functionparameter_UserInputSetParamValue</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fpsentry, int pindex)</td></tr>
 <tr class="separator:a7f8f2770c86630135112d5a526230ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bf52ba1d2b74445d4d821a58c6f71e3"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a7bf52ba1d2b74445d4d821a58c6f71e3">functionparameter_CTRLscreen</a> (char *fpsnamemask)</td></tr>
-<tr class="separator:a7bf52ba1d2b74445d4d821a58c6f71e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7acc759f3b4d54e2849576129a4ce64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aa7acc759f3b4d54e2849576129a4ce64">functionparameter_CTRLscreen_atexit</a> ()</td></tr>
+<tr class="separator:aa7acc759f3b4d54e2849576129a4ce64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a011259bce4a24e867076a9ab112d7ca8"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a011259bce4a24e867076a9ab112d7ca8">functionparameter_CTRLscreen</a> (uint32_t mode, char *fpsnamemask)</td></tr>
+<tr class="separator:a011259bce4a24e867076a9ab112d7ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -488,8 +490,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a7bf52ba1d2b74445d4d821a58c6f71e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7bf52ba1d2b74445d4d821a58c6f71e3">&#9670;&nbsp;</a></span>functionparameter_CTRLscreen()</h2>
+<a id="a011259bce4a24e867076a9ab112d7ca8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a011259bce4a24e867076a9ab112d7ca8">&#9670;&nbsp;</a></span>functionparameter_CTRLscreen()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -497,14 +499,41 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">int_fast8_t functionparameter_CTRLscreen </td>
           <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>fpsnamemask</em></td><td>)</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsnamemask</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <h2>Purpose</h2>
 <p>Automatically build simple ASCII GUI from function parameter structure (fps) name mask </p>
+
+</div>
+</div>
+<a id="aa7acc759f3b4d54e2849576129a4ce64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7acc759f3b4d54e2849576129a4ce64">&#9670;&nbsp;</a></span>functionparameter_CTRLscreen_atexit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void functionparameter_CTRLscreen_atexit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1061,7 +1090,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="function__parameters_8c.html">function_parameters.c</a></li>
-    <li class="footer">Generated on Sat Feb 23 2019 19:36:42 for cacao by
+    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

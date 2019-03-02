@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="cacao-logo-small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">cacao
-   &#160;<span id="projectnumber">Release 0.1.01</span>
+   &#160;<span id="projectnumber">Release 0.1.02-dev</span>
    </div>
    <div id="projectbrief">Compute And Control For Adaptive Optics</div>
   </td>
@@ -179,6 +179,8 @@ Functions</h2></td></tr>
 <tr class="separator:a63c948bc1a87d4f01dd659b3c691d79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a097efcf1913161adeffaf98921d0f5a5"><td class="memItemLeft" align="right" valign="top">uint_fast16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a097efcf1913161adeffaf98921d0f5a5">RegisterCLIcommand</a> (char *CLIkey, char *CLImodule, int_fast8_t(*CLIfptr)(), char *CLIinfo, char *CLIsyntax, char *CLIexample, char *CLICcall)</td></tr>
 <tr class="separator:a097efcf1913161adeffaf98921d0f5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a980f67eef831ce172d6868476ff0622c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a980f67eef831ce172d6868476ff0622c">fnExit_fifoclose</a> ()</td></tr>
+<tr class="separator:a980f67eef831ce172d6868476ff0622c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a167a57a5391116a1a11be9d81b387ea5"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a167a57a5391116a1a11be9d81b387ea5">runCLI</a> (int argc, char *argv[], char *promptstring)</td></tr>
 <tr class="memdesc:a167a57a5391116a1a11be9d81b387ea5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command Line Interface (CLI) main<br />
 .  <a href="#a167a57a5391116a1a11be9d81b387ea5">More...</a><br /></td></tr>
@@ -227,6 +229,10 @@ Variables</h2></td></tr>
 <tr class="separator:a5f4566d37ec53f74821f22df71a6fb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17fbe78d8166c9971c01d8acb0a74ee6"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a17fbe78d8166c9971c01d8acb0a74ee6">CLIstartupfilename</a> [200] = &quot;CLIstartup.txt&quot;</td></tr>
 <tr class="separator:a17fbe78d8166c9971c01d8acb0a74ee6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c9faa97cb2e0013ca30969c11b47110"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a1c9faa97cb2e0013ca30969c11b47110">fifofd</a></td></tr>
+<tr class="separator:a1c9faa97cb2e0013ca30969c11b47110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ff385f18807311622d978da0cca3bc3"><td class="memItemLeft" align="right" valign="top">static fd_set&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a5ff385f18807311622d978da0cca3bc3">cli_fdin_set</a></td></tr>
+<tr class="separator:a5ff385f18807311622d978da0cca3bc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a970d70bbebe50d747e96c95a5c5024a3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a970d70bbebe50d747e96c95a5c5024a3">CLImatchMode</a> = 0</td></tr>
 <tr class="separator:a970d70bbebe50d747e96c95a5c5024a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -557,6 +563,23 @@ Variables</h2></td></tr>
           <td class="memname">void fnExit1 </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a980f67eef831ce172d6868476ff0622c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a980f67eef831ce172d6868476ff0622c">&#9670;&nbsp;</a></span>fnExit_fifoclose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void fnExit_fifoclose </td>
+          <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -1363,6 +1386,28 @@ parsing done with bison and flex </p>
 
 </div>
 </div>
+<a id="a5ff385f18807311622d978da0cca3bc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ff385f18807311622d978da0cca3bc3">&#9670;&nbsp;</a></span>cli_fdin_set</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">fd_set cli_fdin_set</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9e041e5e654d85941bd71358b0ef40f5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9e041e5e654d85941bd71358b0ef40f5">&#9670;&nbsp;</a></span>CLIexecuteCMDready</h2>
 
@@ -1463,6 +1508,28 @@ parsing done with bison and flex </p>
 
 </div>
 </div>
+<a id="a1c9faa97cb2e0013ca30969c11b47110"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c9faa97cb2e0013ca30969c11b47110">&#9670;&nbsp;</a></span>fifofd</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int fifofd</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8adb30f4f6669f927fd9232f686c637b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8adb30f4f6669f927fd9232f686c637b">&#9670;&nbsp;</a></span>line</h2>
 
@@ -1554,7 +1621,7 @@ parsing done with bison and flex </p>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="CLIcore_8c.html">CLIcore.c</a></li>
-    <li class="footer">Generated on Sat Feb 23 2019 19:36:42 for cacao by
+    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

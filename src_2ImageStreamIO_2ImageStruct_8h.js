@@ -7,6 +7,7 @@ var src_2ImageStreamIO_2ImageStruct_8h =
     [ "__attribute__", "struct____attribute____.html", "struct____attribute____" ],
     [ "__attribute__", "struct____attribute____.html", "struct____attribute____" ],
     [ "__attribute__", "struct____attribute____.html", "struct____attribute____" ],
+    [ "cudaIpcMemHandle_t", "src_2ImageStreamIO_2ImageStruct_8h.html#a6d480155b63015b5ceb42a2013bf9cc1", null ],
     [ "EVENT_UI8_UI8_UI16_UI8", "src_2ImageStreamIO_2ImageStruct_8h.html#ad3bd41dace53a6604afd86d3fae841cb", null ],
     [ "IMAGE", "src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1", null ],
     [ "IMAGE_KEYWORD", "src_2ImageStreamIO_2ImageStruct_8h.html#a32d4a4f32b0941aeb2a595f8be33fc8a", null ],

@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="cacao-logo-small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">cacao
-   &#160;<span id="projectnumber">Release 0.1.01</span>
+   &#160;<span id="projectnumber">Release 0.1.02-dev</span>
    </div>
    <div id="projectbrief">Compute And Control For Adaptive Optics</div>
   </td>
@@ -93,12 +93,14 @@ $(document).ready(function(){initNavTree('md_src_ImageStreamIO_CHANGELOG.html','
 <h3>Added</h3>
 <ul>
 <li>2017-12-14 Posting semlog sempaphore in functions ImageStreamIO_sempost, ImageStreamIO_sempost_loop (Sevin, Guyon)</li>
+<li>2018-07-03 Add GPUIPC feature need to be validate with non-regression tests (Sevin)</li>
 </ul>
 <h3>Changed</h3>
 <ul>
 <li>2017-12-14 Change return value in functions ImageStreamIO_sempost, ImageStreamIO_sempost_loop to be compiliant with standards (Sevin, Guyon)</li>
 <li>2018-03-27 initialize shmfd and memsize to 0 when not shared, remove free semptr in ImageStreamIO_createsem which can produce segfault (Sevin)</li>
 <li>2018-05-03 update CMakeLists.txt with 3.0 conventions</li>
+<li>2018-07-04 Debug GPUIPC feature need more tests to validate (Sevin)</li>
 </ul>
 <h3>Removed</h3>
 </div></div><!-- contents -->
@@ -107,7 +109,7 @@ $(document).ready(function(){initNavTree('md_src_ImageStreamIO_CHANGELOG.html','
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Feb 23 2019 19:36:42 for cacao by
+    <li class="footer">Generated on Fri Mar 1 2019 17:19:14 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="cacao-logo-small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">cacao
-   &#160;<span id="projectnumber">Release 0.1.01</span>
+   &#160;<span id="projectnumber">Release 0.1.02-dev</span>
    </div>
    <div id="projectbrief">Compute And Control For Adaptive Optics</div>
   </td>
@@ -216,7 +216,11 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 , <a class="el" href="OpenMPCheckVersion_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">OpenMPCheckVersion.c</a>
 , <a class="el" href="OpenMPTryFlag_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">OpenMPTryFlag.c</a>
 , <a class="el" href="nrlmsise-00__test_8c.html#a840291bc02cba5474a4cb46a9b9566fe">nrlmsise-00_test.c</a>
+, <a class="el" href="ImCreate__cube_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">ImCreate_cube.c</a>
+, <a class="el" href="ImCreate__img_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">ImCreate_img.c</a>
 , <a class="el" href="ImCreate__test_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">ImCreate_test.c</a>
+, <a class="el" href="ImCreate__test__gpuipc_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">ImCreate_test_gpuipc.c</a>
+, <a class="el" href="ImCreate__test__gpuipc2_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">ImCreate_test_gpuipc2.c</a>
 , <a class="el" href="setlatency_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">setlatency.c</a>
 </li>
 <li>main_free()
@@ -231,9 +235,8 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 , <a class="el" href="src_2image__gen_2image__gen_8h.html#a832473ca374b30e3de8eed9a0306e44a">image_gen.h</a>
 </li>
 <li>make_2Dgridpix()
-: <a class="el" href="__install_2include_2image__gen_8h.html#a6a35ad66ddee255c7e5cc35d936e97b9">image_gen.h</a>
+: <a class="el" href="src_2image__gen_2image__gen_8h.html#a6a35ad66ddee255c7e5cc35d936e97b9">image_gen.h</a>
 , <a class="el" href="image__gen_8c.html#a6a35ad66ddee255c7e5cc35d936e97b9">image_gen.c</a>
-, <a class="el" href="src_2image__gen_2image__gen_8h.html#a6a35ad66ddee255c7e5cc35d936e97b9">image_gen.h</a>
 </li>
 <li>make_2Dgridpix_cli()
 : <a class="el" href="image__gen_8c.html#ae321c68a0bd3732f14c89a3e297c2943">image_gen.c</a>
@@ -353,14 +356,13 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 , <a class="el" href="AtmosphericTurbulence_8h.html#a96dcf297bc7ab456d213bf2983ae38ea">AtmosphericTurbulence.h</a>
 </li>
 <li>make_offsetHyperGaussian()
-: <a class="el" href="__install_2include_2image__gen_8h.html#a569861f60dd659cfe49f73fd65a84cbe">image_gen.h</a>
-, <a class="el" href="image__gen_8c.html#a569861f60dd659cfe49f73fd65a84cbe">image_gen.c</a>
+: <a class="el" href="image__gen_8c.html#a569861f60dd659cfe49f73fd65a84cbe">image_gen.c</a>
 , <a class="el" href="src_2image__gen_2image__gen_8h.html#a569861f60dd659cfe49f73fd65a84cbe">image_gen.h</a>
 </li>
 <li>make_PosAngle()
-: <a class="el" href="src_2image__gen_2image__gen_8h.html#a554ff90d2199a91ba37c6a90a01d45c7">image_gen.h</a>
+: <a class="el" href="__install_2include_2image__gen_8h.html#a554ff90d2199a91ba37c6a90a01d45c7">image_gen.h</a>
 , <a class="el" href="image__gen_8c.html#a554ff90d2199a91ba37c6a90a01d45c7">image_gen.c</a>
-, <a class="el" href="__install_2include_2image__gen_8h.html#a554ff90d2199a91ba37c6a90a01d45c7">image_gen.h</a>
+, <a class="el" href="src_2image__gen_2image__gen_8h.html#a554ff90d2199a91ba37c6a90a01d45c7">image_gen.h</a>
 </li>
 <li>make_psf_from_profile()
 : <a class="el" href="__install_2include_2image__gen_8h.html#a2dd0cffd354941445da465418ec86c0c">image_gen.h</a>
@@ -397,8 +399,7 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 , <a class="el" href="src_2image__gen_2image__gen_8h.html#a1264ad7301901334df33d77bfcc0f81c">image_gen.h</a>
 </li>
 <li>make_slopexy()
-: <a class="el" href="__install_2include_2image__gen_8h.html#abb95da64bd1fc49c72cb9fe2bb98c21f">image_gen.h</a>
-, <a class="el" href="image__gen_8c.html#abb95da64bd1fc49c72cb9fe2bb98c21f">image_gen.c</a>
+: <a class="el" href="image__gen_8c.html#abb95da64bd1fc49c72cb9fe2bb98c21f">image_gen.c</a>
 , <a class="el" href="src_2image__gen_2image__gen_8h.html#abb95da64bd1fc49c72cb9fe2bb98c21f">image_gen.h</a>
 </li>
 <li>make_slopexy_cli()
@@ -411,6 +412,7 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 <li>make_subpixdisk()
 : <a class="el" href="__install_2include_2image__gen_8h.html#a88e914d18925c539949a438f7bff4061">image_gen.h</a>
 , <a class="el" href="image__gen_8c.html#a88e914d18925c539949a438f7bff4061">image_gen.c</a>
+, <a class="el" href="src_2image__gen_2image__gen_8h.html#a88e914d18925c539949a438f7bff4061">image_gen.h</a>
 </li>
 <li>make_subpixdisk_cli()
 : <a class="el" href="image__gen_8c.html#a949093b76286b014ea6b12c4c1503d61">image_gen.c</a>
@@ -431,19 +433,16 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 : <a class="el" href="OpticsMaterials_8c.html#a8e9a5245b5b87e4c8de05527ec2374eb">OpticsMaterials.c</a>
 </li>
 <li>matrixMulCPU()
-: <a class="el" href="__install_2include_2cudacomp_8h.html#a4cbe9184adde3917cc30ee9272e5665e">cudacomp.h</a>
-, <a class="el" href="cudacomp_8c.html#a4cbe9184adde3917cc30ee9272e5665e">cudacomp.c</a>
-, <a class="el" href="src_2cudacomp_2cudacomp_8h.html#a4cbe9184adde3917cc30ee9272e5665e">cudacomp.h</a>
+: <a class="el" href="cudacomp_8c.html#a4cbe9184adde3917cc30ee9272e5665e">cudacomp.c</a>
+, <a class="el" href="__install_2include_2cudacomp_8h.html#a4cbe9184adde3917cc30ee9272e5665e">cudacomp.h</a>
 </li>
 <li>measure_enc_NRJ()
-: <a class="el" href="src_2psf_2psf_8h.html#af3abea5e0e28eb1de427bbe7934bf2e0">psf.h</a>
+: <a class="el" href="__install_2include_2psf_8h.html#af3abea5e0e28eb1de427bbe7934bf2e0">psf.h</a>
 , <a class="el" href="psf_8c.html#af3abea5e0e28eb1de427bbe7934bf2e0">psf.c</a>
-, <a class="el" href="__install_2include_2psf_8h.html#af3abea5e0e28eb1de427bbe7934bf2e0">psf.h</a>
 </li>
 <li>measure_enc_NRJ1()
-: <a class="el" href="__install_2include_2psf_8h.html#a4b98091982233406ae4c596561cb5d52">psf.h</a>
+: <a class="el" href="src_2psf_2psf_8h.html#a4b98091982233406ae4c596561cb5d52">psf.h</a>
 , <a class="el" href="psf_8c.html#a4b98091982233406ae4c596561cb5d52">psf.c</a>
-, <a class="el" href="src_2psf_2psf_8h.html#a4b98091982233406ae4c596561cb5d52">psf.h</a>
 </li>
 <li>measure_FWHM()
 : <a class="el" href="__install_2include_2psf_8h.html#a5334002f97c8582b738094e81251f762">psf.h</a>
@@ -459,15 +458,14 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 , <a class="el" href="AtmosphericTurbulence_8h.html#a6bff849fb34541fc7fd9567653387d7a">AtmosphericTurbulence.h</a>
 </li>
 <li>median_filter()
-: <a class="el" href="src_2image__filter_2image__filter_8h.html#ab22b31f3ca8d174936a7dc6b1ac2e399">image_filter.h</a>
+: <a class="el" href="__install_2include_2image__filter_8h.html#ab22b31f3ca8d174936a7dc6b1ac2e399">image_filter.h</a>
 , <a class="el" href="image__filter_8c.html#ab22b31f3ca8d174936a7dc6b1ac2e399">image_filter.c</a>
-, <a class="el" href="__install_2include_2image__filter_8h.html#ab22b31f3ca8d174936a7dc6b1ac2e399">image_filter.h</a>
 </li>
 <li>MEM_MONITOR
 : <a class="el" href="COREMOD__memory_8c.html#a3ca98c8ecb9eebb8a1fd3fce60d44e75">COREMOD_memory.c</a>
 </li>
 <li>memory_monitor()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a8af523bbaa4182f659d2d195861293a7">COREMOD_memory.h</a>
+: <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a8af523bbaa4182f659d2d195861293a7">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#a8af523bbaa4182f659d2d195861293a7">COREMOD_memory.c</a>
 </li>
 <li>memory_monitor_cli()
@@ -477,12 +475,12 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 : <a class="el" href="CLIcore_8c.html#a4c72da473d70f5a18e3a1ba80560dd04">CLIcore.c</a>
 </li>
 <li>meso_tgn1
-: <a class="el" href="AtmosphereModel_8c.html#a90f2ec0e8bf6a8b6972dde3026828773">AtmosphereModel.c</a>
-, <a class="el" href="nrlmsise-00_8c.html#a90f2ec0e8bf6a8b6972dde3026828773">nrlmsise-00.c</a>
+: <a class="el" href="nrlmsise-00_8c.html#a90f2ec0e8bf6a8b6972dde3026828773">nrlmsise-00.c</a>
+, <a class="el" href="AtmosphereModel_8c.html#a90f2ec0e8bf6a8b6972dde3026828773">AtmosphereModel.c</a>
 </li>
 <li>meso_tgn2
-: <a class="el" href="nrlmsise-00_8c.html#aff651e4d19dfbd75ce329f35ddbe9350">nrlmsise-00.c</a>
-, <a class="el" href="AtmosphereModel_8c.html#aff651e4d19dfbd75ce329f35ddbe9350">AtmosphereModel.c</a>
+: <a class="el" href="AtmosphereModel_8c.html#aff651e4d19dfbd75ce329f35ddbe9350">AtmosphereModel.c</a>
+, <a class="el" href="nrlmsise-00_8c.html#aff651e4d19dfbd75ce329f35ddbe9350">nrlmsise-00.c</a>
 </li>
 <li>meso_tgn3
 : <a class="el" href="nrlmsise-00_8c.html#a42cc3fd7704e724ee42bff5a7b646716">nrlmsise-00.c</a>
@@ -497,8 +495,8 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 , <a class="el" href="nrlmsise-00_8c.html#a793989a4dd46c72a8f65b89d0416fe29">nrlmsise-00.c</a>
 </li>
 <li>meso_tn3
-: <a class="el" href="nrlmsise-00_8c.html#a54d193f8b08abc8f1dbc203dd86c8d96">nrlmsise-00.c</a>
-, <a class="el" href="AtmosphereModel_8c.html#a54d193f8b08abc8f1dbc203dd86c8d96">AtmosphereModel.c</a>
+: <a class="el" href="AtmosphereModel_8c.html#a54d193f8b08abc8f1dbc203dd86c8d96">AtmosphereModel.c</a>
+, <a class="el" href="nrlmsise-00_8c.html#a54d193f8b08abc8f1dbc203dd86c8d96">nrlmsise-00.c</a>
 </li>
 <li>mk_amph_from_complex()
 : <a class="el" href="__install_2include_2COREMOD__memory_8h.html#ab732911a63858dee59fcdcdd66aeee58">COREMOD_memory.h</a>
@@ -508,8 +506,8 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 : <a class="el" href="COREMOD__memory_8c.html#a55e30ef483e31f4dea2ab064b9bab2fb">COREMOD_memory.c</a>
 </li>
 <li>mk_amph_from_reim()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#ab7fa3444b113a2f7b68a6386d3c9e792">COREMOD_memory.h</a>
-, <a class="el" href="COREMOD__memory_8c.html#ab7fa3444b113a2f7b68a6386d3c9e792">COREMOD_memory.c</a>
+: <a class="el" href="COREMOD__memory_8c.html#ab7fa3444b113a2f7b68a6386d3c9e792">COREMOD_memory.c</a>
+, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#ab7fa3444b113a2f7b68a6386d3c9e792">COREMOD_memory.h</a>
 </li>
 <li>mk_complex_from_amph()
 : <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a77d968806ac968187091bd49cd6e7d7d">COREMOD_memory.h</a>
@@ -519,15 +517,15 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 : <a class="el" href="COREMOD__memory_8c.html#a5dd75d03e17c4e74e21db4f8c4e7792d">COREMOD_memory.c</a>
 </li>
 <li>mk_complex_from_reim()
-: <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#ab6f969d35abddf8beb740473988ddf6d">COREMOD_memory.h</a>
+: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#ab6f969d35abddf8beb740473988ddf6d">COREMOD_memory.h</a>
 , <a class="el" href="COREMOD__memory_8c.html#ab6f969d35abddf8beb740473988ddf6d">COREMOD_memory.c</a>
+, <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#ab6f969d35abddf8beb740473988ddf6d">COREMOD_memory.h</a>
 </li>
 <li>mk_complex_from_reim_cli()
 : <a class="el" href="COREMOD__memory_8c.html#aac8f3702a5b70226cafc5ef412e30a16">COREMOD_memory.c</a>
 </li>
 <li>mk_reim_from_amph()
-: <a class="el" href="__install_2include_2COREMOD__memory_8h.html#a60e48270286e4a238e08c94989eea330">COREMOD_memory.h</a>
-, <a class="el" href="COREMOD__memory_8c.html#a60e48270286e4a238e08c94989eea330">COREMOD_memory.c</a>
+: <a class="el" href="COREMOD__memory_8c.html#a60e48270286e4a238e08c94989eea330">COREMOD_memory.c</a>
 , <a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a60e48270286e4a238e08c94989eea330">COREMOD_memory.h</a>
 </li>
 <li>mk_reim_from_complex()
@@ -538,23 +536,24 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 : <a class="el" href="COREMOD__memory_8c.html#ab3b37e92981c7793de0c79c2632814b2">COREMOD_memory.c</a>
 </li>
 <li>mk_zer()
-: <a class="el" href="ZernikePolyn_8c.html#a9c560e3379d16ae5a239ff1ba300b310">ZernikePolyn.c</a>
-, <a class="el" href="__install_2include_2ZernikePolyn_8h.html#a9c560e3379d16ae5a239ff1ba300b310">ZernikePolyn.h</a>
+: <a class="el" href="src_2ZernikePolyn_2ZernikePolyn_8h.html#a9c560e3379d16ae5a239ff1ba300b310">ZernikePolyn.h</a>
+, <a class="el" href="ZernikePolyn_8c.html#a9c560e3379d16ae5a239ff1ba300b310">ZernikePolyn.c</a>
 </li>
 <li>mk_zer_cli()
 : <a class="el" href="ZernikePolyn_8c.html#a1ffbde69d004277c5845138ecb9394ae">ZernikePolyn.c</a>
 </li>
 <li>mk_zer_series()
 : <a class="el" href="ZernikePolyn_8c.html#a4fc56cafbb9e2796ed3543782d27c64a">ZernikePolyn.c</a>
-, <a class="el" href="__install_2include_2ZernikePolyn_8h.html#a4fc56cafbb9e2796ed3543782d27c64a">ZernikePolyn.h</a>
+, <a class="el" href="src_2ZernikePolyn_2ZernikePolyn_8h.html#a4fc56cafbb9e2796ed3543782d27c64a">ZernikePolyn.h</a>
 </li>
 <li>mk_zer_seriescube()
 : <a class="el" href="__install_2include_2ZernikePolyn_8h.html#ab8c8976411c01da5bcc024f5f4c72a3b">ZernikePolyn.h</a>
 , <a class="el" href="ZernikePolyn_8c.html#ab8c8976411c01da5bcc024f5f4c72a3b">ZernikePolyn.c</a>
+, <a class="el" href="src_2ZernikePolyn_2ZernikePolyn_8h.html#ab8c8976411c01da5bcc024f5f4c72a3b">ZernikePolyn.h</a>
 </li>
 <li>mk_zer_unbounded()
-: <a class="el" href="__install_2include_2ZernikePolyn_8h.html#a9d1b4238d001e5a9b08010138853c8fb">ZernikePolyn.h</a>
-, <a class="el" href="ZernikePolyn_8c.html#a9d1b4238d001e5a9b08010138853c8fb">ZernikePolyn.c</a>
+: <a class="el" href="ZernikePolyn_8c.html#a9d1b4238d001e5a9b08010138853c8fb">ZernikePolyn.c</a>
+, <a class="el" href="__install_2include_2ZernikePolyn_8h.html#a9d1b4238d001e5a9b08010138853c8fb">ZernikePolyn.h</a>
 </li>
 <li>mk_zer_unbounded1()
 : <a class="el" href="ZernikePolyn_8c.html#aaa9a17c8f3de4537ab065288009d8c8c">ZernikePolyn.c</a>
@@ -566,7 +565,7 @@ $(document).ready(function(){initNavTree('globals_m.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Feb 23 2019 19:36:42 for cacao by
+    <li class="footer">Generated on Fri Mar 1 2019 17:19:14 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

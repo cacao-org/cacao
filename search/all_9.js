@@ -7,6 +7,7 @@ var searchData=
   ['help_5fcmd',['help_cmd',['../CLIcore_8c.html#a32841e2d4954c9c57c464b81d0a4eb54',1,'CLIcore.c']]],
   ['help_5fcommand',['help_command',['../CLIcore_8c.html#a522da96e72181268998f5371a2e771cd',1,'CLIcore.c']]],
   ['help_5fmodule',['help_module',['../CLIcore_8c.html#acda89d7a39d7806e055c55f650e4467c',1,'CLIcore.c']]],
+  ['helper_5fcuda_2eh',['helper_cuda.h',['../helper__cuda_8h.html',1,'']]],
   ['helpreadline',['helpreadline',['../CLIcore_8c.html#a31e1e0bdd93d19a316b8d83741e48017',1,'CLIcore.c']]],
   ['helpreadline_2emd',['helpreadline.md',['../helpreadline_8md.html',1,'']]],
   ['hyperrect_5fcreate',['hyperrect_create',['../kdtree_8c.html#a6ecffd47a42fc25a3174cfa2fc6cc406',1,'kdtree.c']]],
