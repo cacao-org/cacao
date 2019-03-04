@@ -308,8 +308,8 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     uint32_t IDin1;
     IDin1 = create_2Dimage_ID("alignintmpim", xsize, ysize);
 
-    uint8_t atype;
-    atype = data.image[IDin].md[0].atype;
+    uint8_t datatype;
+    datatype = data.image[IDin].md[0].datatype;
 
 	// create output stream
 	uint32_t IDout;
@@ -327,13 +327,13 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     {
         if(IDdark != -1)
         {
-            if(atype == _DATATYPE_FLOAT)
+            if(datatype == _DATATYPE_FLOAT)
             {
                 long ii;
                 for(ii=0; ii<xsize*ysize; ii++)
                     data.image[IDin1].array.F[ii] = data.image[IDin].array.F[ii] - data.image[IDdark].array.F[ii];
             }
-            if(atype == _DATATYPE_INT16)
+            if(datatype == _DATATYPE_INT16)
             {
                 long ii;
                 for(ii=0; ii<xsize*ysize; ii++)
@@ -342,13 +342,13 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
         }
         else
         {
-            if(atype == _DATATYPE_FLOAT)
+            if(datatype == _DATATYPE_FLOAT)
             {
                 long ii;
                 for(ii=0; ii<xsize*ysize; ii++)
                     data.image[IDin1].array.F[ii] = data.image[IDin].array.F[ii];
             }
-            if(atype == _DATATYPE_INT16)
+            if(datatype == _DATATYPE_INT16)
             {
                 long ii;
                 for(ii=0; ii<xsize*ysize; ii++)
@@ -600,7 +600,7 @@ long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const char *out_nam
     uint_fast16_t iioffset, jjoffset;
     long long cnt;
     uint32_t *sizearray;
-    uint8_t atype;
+    uint8_t datatype;
     char out0name[200]; // noise-free image, in contrast
     long IDout0;
 
@@ -631,12 +631,12 @@ long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const char *out_nam
     if(sprintf(out0name, "%sc", out_name) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-    atype = _DATATYPE_FLOAT;
+    datatype = _DATATYPE_FLOAT;
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
     sizearray[0] = xsize1;
     sizearray[1] = ysize1;
-    IDout = create_image_ID(out_name, 2, sizearray, atype, 1, 0);
-    IDout0 = create_image_ID(out0name, 2, sizearray, atype, 1, 0);
+    IDout = create_image_ID(out_name, 2, sizearray, datatype, 1, 0);
+    IDout0 = create_image_ID(out0name, 2, sizearray, datatype, 1, 0);
     free(sizearray);
 
     for(;;)

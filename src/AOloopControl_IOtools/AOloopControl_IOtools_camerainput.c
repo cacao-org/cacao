@@ -153,8 +153,8 @@ int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
 {
     long iiin,jjin, iiout, jjout;
     long IDin, IDout, IDdark;
-    uint8_t atype;
-    uint8_t atypeout;
+    uint8_t datatype;
+    uint8_t datatypeout;
     uint32_t *sizeout;
     long long cnt0;
     long IDmask;
@@ -168,7 +168,7 @@ int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
     sizeoutxy = size_x*size_y;
 
     IDin = image_ID(in_name);
-    atype = data.image[IDin].md[0].atype;
+    datatype = data.image[IDin].md[0].datatype;
 
 
 
@@ -178,7 +178,7 @@ int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
         if((data.image[IDmask].md[0].size[0]!=size_x)||(data.image[IDmask].md[0].size[1]!=size_y))
         {
             printf("ERROR: csmask has wrong size\n");
-            exit(0);
+            exit(EXIT_FAILURE);
         }
 
     // Check dark
@@ -189,25 +189,25 @@ int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
         if((data.image[IDdark].md[0].size[0]!=data.image[IDin].md[0].size[0])||(data.image[IDdark].md[0].size[1]!=data.image[IDin].md[0].size[1]))
         {
             printf("ERROR: csmask has wrong size\n");
-            exit(0);
+            exit(EXIT_FAILURE);
         }
-        if(data.image[IDdark].md[0].atype != _DATATYPE_FLOAT)
+        if(data.image[IDdark].md[0].datatype != _DATATYPE_FLOAT)
         {
             printf("ERROR: csmask has wrong type\n");
-            exit(0);
+            exit(EXIT_FAILURE);
         }
-        atypeout = _DATATYPE_FLOAT;
+        datatypeout = _DATATYPE_FLOAT;
     }
     else
-        atypeout = atype;
+        datatypeout = datatype;
 
 
     // Create shared memory output image
-    IDout = create_image_ID(out_name, 2, sizeout, atypeout, 1, 0);
+    IDout = create_image_ID(out_name, 2, sizeout, datatypeout, 1, 0);
 
     cnt0 = -1;
 
-    switch (atype) {
+    switch (datatype) {
     case _DATATYPE_UINT16 :
         while(1)
         {
@@ -216,7 +216,7 @@ int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
             {
                 data.image[IDout].md[0].write = 1;
                 cnt0 = data.image[IDin].md[0].cnt0;
-                if(atypeout == _DATATYPE_UINT16)
+                if(datatypeout == _DATATYPE_UINT16)
                 {
                     for(iiout=0; iiout<size_x; iiout++)
                         for(jjout=0; jjout<size_y; jjout++)
@@ -559,7 +559,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 	if(wfsim_semwaitindex>-1)
 		semindex = wfsim_semwaitindex;
 
-    aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].atype;
+    aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].datatype;
    
 
     // initialize camera averaging arrays if not already done
@@ -607,7 +607,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     {
         AOconf[loop].AOtiminginfo.status = 20;  // 020: WAIT FOR IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[24] = tdiffv;
     }
@@ -813,12 +813,12 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     {
         AOconf[loop].AOtiminginfo.status = 1;  // 3->001: DARK SUBTRACT
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[0] = tdiffv;
 
         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].write = 1;
-        data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts = tnow;
+        data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime = tnow;
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_looptiming, -1);
         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt0++;
         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].write = 0;
@@ -1012,7 +1012,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     {
         AOconf[loop].AOtiminginfo.status = 2; // 4 -> 002 : COMPUTE TOTAL OF IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[1] = tdiffv;
     }
@@ -1099,7 +1099,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     {
         AOconf[loop].AOtiminginfo.status = 3;  // 5 -> 003: NORMALIZE WFS IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[14] = tdiffv;
     }
@@ -1162,7 +1162,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     if(RM==0)
     {
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[2] = tdiffv;
 
