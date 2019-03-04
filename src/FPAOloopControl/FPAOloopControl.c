@@ -130,7 +130,7 @@ static int FPcamReadInit = 0;
 static long FPaoconfID_wfsim = -1;
 static long FPaoconfID_imWFS0 = -1;
 static long FPaoconfID_imWFS1 = -1;
-static int FPWFSatype;
+static int FPWFSdatatype;
 static long FPaoconfID_wfsdark = -1;
 
 static long FPaoconfID_dmC = -1;
@@ -651,11 +651,11 @@ int FPAOloopControl_Read_cam_frame(long loop, int semindex)
     int semval;
     int s;
     
-    int WFSatype;
+    int WFSdatatype;
     long nelem;
  	
 	
-    WFSatype = data.image[FPaoconfID_wfsim].md[0].atype;
+    WFSdatatype = data.image[FPaoconfID_wfsim].md[0].datatype;
  
  
 	if(FPcamReadInit==0)
@@ -698,7 +698,7 @@ int FPAOloopControl_Read_cam_frame(long loop, int semindex)
             slice = data.image[FPaoconfID_wfsim].md[0].size[2];
     }
 
-    switch (WFSatype) {
+    switch (WFSdatatype) {
     case _DATATYPE_FLOAT :
         ptrv = (char*) data.image[FPaoconfID_wfsim].array.F;
         ptrv += sizeof(float)*slice* FPAOconf[loop].sizeWFS;
@@ -723,7 +723,7 @@ int FPAOloopControl_Read_cam_frame(long loop, int semindex)
 
 	nelem = FPAOconf[loop].sizeWFS;
 	
-        switch ( WFSatype ) {
+        switch ( WFSdatatype ) {
         case _DATATYPE_UINT16 :
 # ifdef _OPENMP
             #pragma omp parallel num_threads(8) if (nelem>OMP_NELEMENT_LIMIT)
