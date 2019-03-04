@@ -686,7 +686,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
             // put modes into shared memory
 
-            switch (data.image[ID1tmp].md[0].atype) {
+            switch (data.image[ID1tmp].md[0].datatype) {
             case _DATATYPE_FLOAT :
                 memcpy(data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F, data.image[ID1tmp].array.F, sizeof(float)*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM*AOconf[loop].AOpmodecoeffs.NBDMmodes);
                 break;

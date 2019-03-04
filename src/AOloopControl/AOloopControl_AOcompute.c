@@ -337,7 +337,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     // waiting for dark-subtracted image
     AOconf[loop].AOtiminginfo.status = 19;  //  19: WAITING FOR IMAGE
     clock_gettime(CLOCK_REALTIME, &tnow);
-    tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+    tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[23] = tdiffv;
 
@@ -345,7 +345,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 
-    // md[0].atime.ts is absolute time at beginning of iteration
+    // md[0].atime is absolute time at beginning of iteration
     //
     // pixel 0 is dt since last iteration
     //
@@ -381,7 +381,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     AOconf[loop].AOtiminginfo.status = 4;  // 4: REMOVING REF
     clock_gettime(CLOCK_REALTIME, &tnow);
-    tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+    tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
     tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[15] = tdiffv;
 
@@ -451,7 +451,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
         AOconf[loop].AOtiminginfo.status = 5; // 5 MULTIPLYING BY CONTROL MATRIX -> MODE VALUES
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
 
@@ -667,7 +667,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 AOconf[loop].AOtiminginfo.status = 6; // 6 execute
                 clock_gettime(CLOCK_REALTIME, &tnow);
-                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
 
@@ -704,7 +704,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                                 GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMc].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_act].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, 1, loop);
                                 AOconf[loop].AOtiminginfo.status = 6;
                                 clock_gettime(CLOCK_REALTIME, &tnow);
-                                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+                                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[6] = tdiffv;
 
@@ -788,7 +788,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 AOconf[loop].AOtiminginfo.status = 6; // 6 execute
                 clock_gettime(CLOCK_REALTIME, &tnow);
-                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
 
@@ -820,7 +820,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
         AOconf[loop].AOtiminginfo.status = 11; // 11 MULTIPLYING BY GAINS
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 
@@ -904,7 +904,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
         AOconf[loop].AOtiminginfo.status = 11;
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;

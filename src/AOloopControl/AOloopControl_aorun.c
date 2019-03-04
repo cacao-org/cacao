@@ -363,7 +363,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
     {
         printf("Testing data type\n");
         fflush(stdout);
-        if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].md[0].atype != _DATATYPE_UINT16)
+        if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].md[0].datatype != _DATATYPE_UINT16)
             aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
     }
 
@@ -570,7 +570,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
                 AOconf[loop].AOtiminginfo.status = 12; // 12
                 clock_gettime(CLOCK_REALTIME, &tnow);
-                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[19] = tdiffv;
 
@@ -606,7 +606,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
                         AOconf[loop].AOtiminginfo.status = 13; // enforce limits
                         clock_gettime(CLOCK_REALTIME, &tnow);
-                        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+                        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[20] = tdiffv;
 
@@ -628,7 +628,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
                         AOconf[loop].AOtiminginfo.status = 14; // write to DM
                         clock_gettime(CLOCK_REALTIME, &tnow);
-                        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+                        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                         tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[21] = tdiffv;
 
@@ -660,7 +660,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
                 AOconf[loop].AOtiminginfo.status = 18; // 18
                 clock_gettime(CLOCK_REALTIME, &tnow);
-                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime.ts, tnow);
+                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                 tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[22] = tdiffv;
 

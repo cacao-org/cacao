@@ -180,7 +180,7 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
             char imname[500];
             uint64_t nelement;
             long infosize = 5;
-            uint8_t atype;
+            uint8_t datatype;
             int SHARED = 1;
 
             IDstream = image_ID(streamname);
@@ -190,22 +190,22 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
             imsize[1] = data.image[IDstream].md[0].size[1];
             imsize[2] = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
 
-            atype = data.image[IDstream].md[0].atype;
+            datatype = data.image[IDstream].md[0].datatype;
 
 
             if(sprintf(imname, "aol%ld_%s_logbuff0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-            AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize, atype, SHARED, 0);
+            AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize, datatype, SHARED, 0);
 
             if(sprintf(imname, "aol%ld_%s_logbuff1", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-            AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, atype, SHARED, 0);
+            AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, datatype, SHARED, 0);
 
             // nelement for a SINGLE SLICE
             nelement = (uint64_t) imsize[0];
             nelement *= imsize[1];
 
-            switch(atype)
+            switch(datatype)
             {
             // memsize for EACH SLICE
 
@@ -1330,15 +1330,15 @@ int AOloopControl_RTstreamLOG_saveloop(
                         if(IDout == -1) // create large buffer if it does not exist
                         {
                             uint32_t *imsize;
-                            uint8_t atype;
+                            uint8_t datatype;
                             int SHARED = 0;
 
                             imsize = (uint32_t*) malloc(sizeof(uint32_t)*3);
                             imsize[0] = data.image[ID].md[0].size[0];
                             imsize[1] = data.image[ID].md[0].size[1];
                             imsize[2] = AOconf[loop].RTSLOGarray[rtlindex].SIZE*AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer;
-                            atype = data.image[ID].md[0].atype;
-                            IDout = create_image_ID(OutBuffIm, 3, imsize, atype, SHARED, 0);
+                            datatype = data.image[ID].md[0].datatype;
+                            IDout = create_image_ID(OutBuffIm, 3, imsize, datatype, SHARED, 0);
                             free(imsize);
                         }
 
@@ -1348,7 +1348,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                         // Copy small buffer into large buffer
                         // memory offset is memsize x SIZE x FileBuffer
                         //
-                        switch (data.image[IDout].md[0].atype)
+                        switch (data.image[IDout].md[0].datatype)
                         {
                         case _DATATYPE_INT8:
                             destptrBuff = (char*) data.image[IDout].array.SI8 + AOconf[loop].RTSLOGarray[rtlindex].FileBuffer*AOconf[loop].RTSLOGarray[rtlindex].memsize*AOconf[loop].RTSLOGarray[rtlindex].SIZE;
