@@ -492,7 +492,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     float minlatency, maxlatency;
     double wfsdt;
 
-    uint8_t atype;
+    uint8_t datatype;
     uint32_t naxes[3];
 
     PROCESSINFO *processinfo;
@@ -589,12 +589,12 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     wfsxsize = data.image[IDwfs].md[0].size[0];
     wfsysize = data.image[IDwfs].md[0].size[1];
     wfssize = wfsxsize*wfsysize;
-    atype = data.image[IDwfs].md[0].atype;
+    datatype = data.image[IDwfs].md[0].datatype;
 
     naxes[0] = wfsxsize;
     naxes[1] = wfsysize;
     naxes[2] = wfs_NBframesmax;
-    IDwfsc = create_image_ID("_testwfsc", 3, naxes, atype, 0, 0);
+    IDwfsc = create_image_ID("_testwfsc", 3, naxes, datatype, 0, 0);
 
     float FrameRateWait = 5.0;
     if(data.processinfo==1)
@@ -642,11 +642,11 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 
 
     printf("WFS size : %ld %ld\n", wfsxsize, wfsysize);
-    if(atype == _DATATYPE_FLOAT)
+    if(datatype == _DATATYPE_FLOAT)
         printf("data type  :  _DATATYPE_FLOAT\n");
-    if(atype == _DATATYPE_UINT16)
+    if(datatype == _DATATYPE_UINT16)
         printf("data type  :  _DATATYPE_UINT16\n");
-    if(atype == _DATATYPE_INT16)
+    if(datatype == _DATATYPE_INT16)
         printf("data type  :  _DATATYPE_INT16\n");
 
     list_image_ID();
@@ -747,7 +747,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
             printf("[%8ld / %8ld]  %f  %f\n", wfsframe, wfs_NBframesmax, dt, dtmax);
             fflush(stdout);
 
-            if(atype == _DATATYPE_FLOAT)
+            if(datatype == _DATATYPE_FLOAT)
             {
                 // copy image to cube slice
                 ptr = (char*) data.image[IDwfsc].array.F;
@@ -755,7 +755,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
                 memcpy(ptr, data.image[IDwfs].array.F, sizeof(float)*wfssize);
             }
 
-            if(atype == _DATATYPE_UINT16)
+            if(datatype == _DATATYPE_UINT16)
             {
                 // copy image to cube slice
                 ptr = (char*) data.image[IDwfsc].array.UI16;
@@ -763,7 +763,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
                 memcpy(ptr, data.image[IDwfs].array.UI16, sizeof(short)*wfssize);
             }
 
-            if(atype == _DATATYPE_INT16)
+            if(datatype == _DATATYPE_INT16)
             {
                 // copy image to cube slice
                 ptr = (char*) data.image[IDwfsc].array.SI16;
@@ -812,21 +812,21 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         {
             valarray[kk] = 0.0;
 
-            if(atype == _DATATYPE_FLOAT)
+            if(datatype == _DATATYPE_FLOAT)
                 for(ii=0; ii<wfssize; ii++)
                 {
                     tmp = data.image[IDwfsc].array.F[kk*wfssize+ii] - data.image[IDwfsc].array.F[(kk-1)*wfssize+ii];
                     valarray[kk] += tmp*tmp;
                 }
 
-            if(atype == _DATATYPE_UINT16)
+            if(datatype == _DATATYPE_UINT16)
                 for(ii=0; ii<wfssize; ii++)
                 {
                     tmp = data.image[IDwfsc].array.UI16[kk*wfssize+ii] - data.image[IDwfsc].array.UI16[(kk-1)*wfssize+ii];
                     valarray[kk] += 1.0*tmp*tmp;
                 }
 
-            if(atype == _DATATYPE_INT16)
+            if(datatype == _DATATYPE_INT16)
                 for(ii=0; ii<wfssize; ii++)
                 {
                     tmp = 0.0;
@@ -2253,7 +2253,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
                     long ii;
 
-                    switch(data.image[IDc].md[0].atype)
+                    switch(data.image[IDc].md[0].datatype)
                     {
                     case _DATATYPE_UINT8 :
                         for (ii = 0; ii < xysize; ii++)
@@ -2307,8 +2307,8 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
                     default :
                         list_image_ID();
-                        printERROR(__FILE__,__func__,__LINE__,"atype value not recognised");
-                        printf("ID %ld  atype = %d\n", IDc, data.image[IDc].md[0].atype);
+                        printERROR(__FILE__,__func__,__LINE__,"datatype value not recognised");
+                        printf("ID %ld  datatype = %d\n", IDc, data.image[IDc].md[0].datatype);
                         exit(0);
                         break;
                     }
