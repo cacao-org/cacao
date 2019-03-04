@@ -146,7 +146,7 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     long IDout;
     uint32_t *imsizearray;
-    uint8_t atype;
+    uint8_t datatype;
     char imnameout[500];
     long ii, kk;
     long ave;
@@ -223,7 +223,7 @@ printf("\ncan't catch SIGPIPE\n");
     xysize = xsize*ysize;
     zsizein = data.image[IDinb0].md[0].size[2];
     zsize = data.image[IDinb0].md[0].size[2]*NBbuff;
-    atype = data.image[IDinb0].md[0].atype;
+    datatype = data.image[IDinb0].md[0].datatype;
 
 
     list_image_ID();
@@ -264,7 +264,7 @@ printf("\ncan't catch SIGPIPE\n");
     if(sprintf(imnameout, "aol%ld_modevalol_PFb%ld", loop, PFblock) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-    IDout = create_image_ID(imnameout, 3, imsizearray, atype, 1, 1);
+    IDout = create_image_ID(imnameout, 3, imsizearray, datatype, 1, 1);
     free(imsizearray);
     COREMOD_MEMORY_image_set_semflush(imnameout, -1);
     printf("Done\n");
