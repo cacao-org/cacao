@@ -703,7 +703,7 @@ long AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
             printf("Control matrix has wrong dimension\n");
             vOK = 0;
         }
-        if(data.image[ID].md[0].atype!=_DATATYPE_FLOAT)
+        if(data.image[ID].md[0].datatype!=_DATATYPE_FLOAT)
         {
             printf("Control matrix has wrong type\n");
             vOK = 0;
