@@ -732,9 +732,9 @@ int AOloopControl_DM_CombineChannels_RUN(
         {
             if((data.image[IDvolt].md[0].naxis==2)&&(data.image[IDvolt].md[0].size[0]==xsize)&&(data.image[IDvolt].md[0].size[1]==ysize))
             {
-                if((dmdispcombconf[DMindex].volttype==1)&&(data.image[IDvolt].md[0].atype==_DATATYPE_FLOAT))
+                if((dmdispcombconf[DMindex].volttype==1)&&(data.image[IDvolt].md[0].datatype==_DATATYPE_FLOAT))
                     vOK = 1;
-                if((dmdispcombconf[DMindex].volttype==2)&&(data.image[IDvolt].md[0].atype==_DATATYPE_UINT16))
+                if((dmdispcombconf[DMindex].volttype==2)&&(data.image[IDvolt].md[0].datatype==_DATATYPE_UINT16))
                     vOK = 1;
                 if(vOK==0)
                     delete_image_ID(dmdispcombconf[DMindex].voltname);
@@ -1430,9 +1430,9 @@ int AOloopControl_DM_CombineChannels(
         {
             if((data.image[IDvolt].md[0].naxis==2)&&(data.image[IDvolt].md[0].size[0]==xsize)&&(data.image[IDvolt].md[0].size[1]==ysize))
             {
-                if((dmdispcombconf[DMindex].volttype==1)&&(data.image[IDvolt].md[0].atype==_DATATYPE_FLOAT))
+                if((dmdispcombconf[DMindex].volttype==1)&&(data.image[IDvolt].md[0].datatype==_DATATYPE_FLOAT))
                     vOK = 1;
-                if((dmdispcombconf[DMindex].volttype==2)&&(data.image[IDvolt].md[0].atype==_DATATYPE_UINT16))
+                if((dmdispcombconf[DMindex].volttype==2)&&(data.image[IDvolt].md[0].datatype==_DATATYPE_UINT16))
                     vOK = 1;
                 if(vOK==0)
                     delete_image_ID(dmdispcombconf[DMindex].voltname);
