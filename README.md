@@ -6,6 +6,9 @@
 
 [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
+[lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao.svg)(Last commit)
+
+
 Development branch for CACAO version 0.1.02
 
 ---
