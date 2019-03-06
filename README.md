@@ -16,7 +16,7 @@ v0.1.02 (dev)
 
 
 
-[![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+Support / questions : [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
 
