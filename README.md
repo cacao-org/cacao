@@ -5,12 +5,12 @@
 
 
 
-Master branch v0.1.01
+**v0.1.01 (master)**
 [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao)
 ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/master.svg)
 
 
-Development branch v0.1.02
+v0.1.02 (dev)
 [![Build Status dev](https://travis-ci.org/cacao-org/cacao.svg?branch=dev)](https://travis-ci.org/cacao-org/cacao) 
 ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)
 
