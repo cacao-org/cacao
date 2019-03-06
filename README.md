@@ -5,8 +5,8 @@
 
 
 
-**Stable**
-[![stable](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/cacao-org/cacao/tree/master)
+
+[![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/cacao-org/cacao/tree/v0.1.01)
 [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao)
 ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/master.svg)
 
