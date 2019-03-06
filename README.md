@@ -11,7 +11,7 @@
 ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/master.svg)
 
 
-[v0.1.02 (dev)](https://github.com/cacao-org/cacao/tree/dev)
+[**dev**](https://github.com/cacao-org/cacao/tree/dev)
 [![Build Status dev](https://travis-ci.org/cacao-org/cacao.svg?branch=dev)](https://travis-ci.org/cacao-org/cacao) 
 ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)
 
