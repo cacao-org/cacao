@@ -4,6 +4,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;master branch: [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao)
 
 
+[![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 Development branch for CACAO version 0.1.02
 
 ---
