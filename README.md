@@ -10,9 +10,22 @@
 
 
 
-Support / questions : [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+---
+
+## Getting help
+
+Chats:
+
+- Community : [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+- Hardware / OS setup: [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+- Developers [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
+[Online documentation]( http://CACAO-org.github.io/cacao/index.html ) 
+
+Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues )
+
+Contributing to project : [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html ) 
 
 
 ---
@@ -105,16 +118,6 @@ Python users can read/write milk/cacao's data streams using additional packages:
 
 
 ---
-
-
-## Documentation
-
-[Online documentation]( http://CACAO-org.github.io/cacao/index.html ) 
-
-Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues )
-
-Contributing to project : See [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html ) 
-
 
 
 
