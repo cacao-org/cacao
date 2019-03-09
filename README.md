@@ -14,11 +14,11 @@
 
 ## Getting help
 
-Chats:
-
-- Community : [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-- Hardware / OS setup: [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-- Developers [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+|  Chat room           |  link              | 
+|----------------------|--------------------|
+| Community            | [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)   |
+| Hardware / OS setup  | [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)   |
+| Developers           | [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)       |
 
 
 [Online documentation]( http://CACAO-org.github.io/cacao/index.html ) 
