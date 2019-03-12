@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
 
     printf("\n");
     printf("        %s version %s\n", data.package_name, data.package_version);
+    printf("        IMAGESTRUCT_VERSION %s\n", IMAGESTRUCT_VERSION);
     printf("        GNU General Public License v3.0\n");
     printf("        Report bugs to : %s\n", PACKAGE_BUGREPORT);
     printf("        Type \"help\" for instructions\n");
