@@ -163,7 +163,7 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
     // 5 : FITS image <fname> does not exist, stream <name> does not exist -> create empty stream
 
 
-	printf("%s   %s <-> %s  exit status = %d\n", __FUNCTION__, name, fname, loadcreatestatus);
+	printf("%5d   %s   %s <-> %s  exit status = %d\n", __LINE__, __FUNCTION__, name, fname, loadcreatestatus);
 	fflush(stdout);
 
 #ifdef AOLOOPCONTROL_LOGFUNC
@@ -217,6 +217,9 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
     }
     free(sizearray);
 
+	printf("%5d   %s   %s <-> %s  exit status = %d\n", __LINE__, __FUNCTION__, name, fname, loadcreatestatus);
+	fflush(stdout);
+
 
     if(ID==-1)
     {
@@ -262,6 +265,10 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
         }
     }
 
+
+	printf("%5d   %s   %s <-> %s  exit status = %d\n", __LINE__, __FUNCTION__, name, fname, loadcreatestatus);
+	fflush(stdout);
+
     // logging
 
 
@@ -298,7 +305,7 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
     CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
-	printf("%s   %s <-> %s  exit status = %d\n", __FUNCTION__, name, fname, loadcreatestatus);
+	printf("%5d   %s   %s <-> %s  exit status = %d\n", __LINE__, __FUNCTION__, name, fname, loadcreatestatus);
 	fflush(stdout);
     
     
