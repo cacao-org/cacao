@@ -283,7 +283,9 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 	/** ### 1.9. Setup loop timing array 
 	 */
 	fprintf(fplog, "\n\n============== 1.9. Setup loop timing array ===================\n\n");
-	// LOOPiteration is written in cnt1 
+	// LOOPiteration is written in cnt1
+	fprintf(fplog, "AOcontrolNBtimers = %ld\n", aoloopcontrol_var.AOcontrolNBtimers); 
+	
     if(sprintf(name, "aol%ld_looptiming", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);

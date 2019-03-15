@@ -106,7 +106,19 @@ fi
 
 
 
+
+if [[ -z "${AOLCONF_NOCSET}" ]]; then
+CPUconfRT="0"
+else
+CPUconfRT="1" # CPU real-time configuration
+fi
+
+
+
 touch AOloopControl.errlog
+
+if [ "$CPUconfRT" -eq "1" ];then
+
 ./AOloopControl -n $pname 2>> AOloopControl.errlog << EOF
 csetpmove aol0RT1
 csetpmove aol${loopnb}RT1
@@ -117,4 +129,18 @@ listim
 cudaextrmodes aol${loopnb}_dmdispD NULLim aol${loopnb}_zrespMlinsim NULLim aol${loopnb}_wfsref0linsim aol${loopnb}_linsimWFS $1 0 0 0 6 1 ${twaitus} 0
 exitCLI
 EOF
+
+else
+
+./AOloopControl -n $pname 2>> AOloopControl.errlog << EOF
+readshmim aol${loopnb}_dmdispD
+readshmim aol${loopnb}_zrespMlinsim
+readshmim aol${loopnb}_wfsref0linsim
+listim
+cudaextrmodes aol${loopnb}_dmdispD NULLim aol${loopnb}_zrespMlinsim NULLim aol${loopnb}_wfsref0linsim aol${loopnb}_linsimWFS $1 0 0 0 6 1 ${twaitus} 0
+exitCLI
+EOF
+
+
+fi
 

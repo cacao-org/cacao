@@ -1846,8 +1846,10 @@ sleep 0.2
 tmux new-session -d -s $tmuxsname
 sleep 0.2
 tmux send-keys -t $tmuxsname "$execname -n awfsref0${LOOPNUMBER}" C-m
+if [ "$CPUconfRT" -eq "1" ];then
 tmux send-keys -t $tmuxsname "csetpmove aol0RT" C-m # try 0 first
 tmux send-keys -t $tmuxsname "csetpmove aol${LOOPNUMBER}RT" C-m
+fi
 tmux send-keys -t $tmuxsname "readshmim aol${LOOPNUMBER}_wfsdark" C-m
 tmux send-keys -t $tmuxsname "readshmim aol${LOOPNUMBER}_wfsim" C-m
 tmux send-keys -t $tmuxsname "imgstreamave aol${LOOPNUMBER}_wfsim 100000 imave 1 4" C-m

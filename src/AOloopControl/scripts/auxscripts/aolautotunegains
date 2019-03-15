@@ -88,7 +88,11 @@ fi
 
 
 
-
+if [[ -z "${AOLCONF_NOCSET}" ]]; then
+CPUconfRT="0"
+else
+CPUconfRT="1" # CPU real-time configuration
+fi
 
 
 
@@ -98,6 +102,7 @@ fi
 loopnb=$( head -1 LOOPNUMBER )
 csetname="aol${loopnb}RT"
 
+if [ "$CPUconfRT" -eq "1" ];then
 
 ./AOloopControl -n $pname << EOF
 csetpmove aol0RT 
@@ -106,4 +111,12 @@ aolautotunegains $loopnb aol${loopnb}_autogain $1 $2
 exitCLI
 EOF
 
+else
+
+./AOloopControl -n $pname << EOF
+aolautotunegains $loopnb aol${loopnb}_autogain $1 $2
+exitCLI
+EOF
+
+fi
 

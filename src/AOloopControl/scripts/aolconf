@@ -82,6 +82,10 @@ echo "   -N <string>          loop (N)ame. Run ./aosetup/aosetup_<string> if ava
 echo "   -x                   load/initalize and e(x)it"
 echo "   -e <exec>            specify executable name (default: $execname)"
 echo "   -n                   do (n)ot load configuration on startup"
+echo ""
+echo "Environment variables :"
+echo "  AOLCONF_NOCSET        do not use CPU sets"
+echo ""
 echo "------------------------------------------------------------------------"
 }
 
@@ -105,7 +109,8 @@ function checkCommand {
 if cmdexists $1; then
     echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
 else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting.";     
+    EXITSTATUS=1;
 fi
 
 }
@@ -256,7 +261,10 @@ fi
 # ======================= CHECK REQUIRED FILES =================================
 echo ""
 mkdir -p userScripts
+
 checkFile ./userScripts/aoAlign.bash 
+
+
 checkFile ./userScripts/aoHardwCtrl.bash
 
 
@@ -318,7 +326,14 @@ aoconflog "STARTING NEW aolconf SESSION"
 
 
 # default parameters
+
+if [[ -z "${AOLCONF_NOCSET}" ]]; then
+CPUconfRT="0"
+else
 CPUconfRT="1" # CPU real-time configuration
+fi
+
+
 
 DMindex=0
 
@@ -341,6 +356,7 @@ fi
 if [ -f "./userScripts/SystemConfig" ]; then
 if [ ! -f "systemconfigOK" ]; then
 echo "Executing system config - please restart $0 when complete"
+echo "Note: To skip this test, create empty file named systemconfigOK in working directory"
 . ./userScripts/SystemConfig
 exit
 fi

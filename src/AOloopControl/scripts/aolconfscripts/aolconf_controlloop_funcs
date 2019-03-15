@@ -533,8 +533,10 @@ echo "sleep 0.2" >> $scriptfile
 logRunningProcessQ0 "aolcompolm" "$tmuxname" "AO loop extract open loop WFS modes"
 echo "tmux send-keys -t ${tmuxname} \"mv runproc/aolcompolm.runprocQ runproc/aolcompolm.runproc\" C-m" >> $scriptfile
 echo "tmux send-keys -t $tmuxname \"./AOloopControl -p ${tmuxname}\" C-m" >> $scriptfile
+if [ "$CPUconfRT" -eq "1" ];then
 echo "tmux send-keys -t $tmuxname \"csetpmove aol0RT\" C-m" >> $scriptfile # try 0 first
 echo "tmux send-keys -t $tmuxname \"csetpmove aol${LOOPNUMBER}RT\" C-m" >> $scriptfile
+fi
 echo "tmux send-keys -t $tmuxname \"aolcompolm ${LOOPNUMBER}\" C-m" >> $scriptfile
 fi
 
