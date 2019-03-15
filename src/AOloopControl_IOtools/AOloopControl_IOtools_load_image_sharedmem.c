@@ -182,6 +182,8 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
 		
         CreateSMim = 0;
         ID = read_sharedmem_image(name);
+        printf("------------- ID = %ld\n", (long) ID);
+        
         if(ID!=-1)  // ... and <name> does not exist as a memory stream
         {
 			list_image_ID();
