@@ -1283,7 +1283,8 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 	int SHUFFLE = 1;
 
 
-
+	printf("Entering function %s \n", __function__);
+	fflush(stdout);
 
     IDpokeC = image_ID(IDpokeC_name);
     dmxsize = data.image[IDpokeC].md[0].size[0];
