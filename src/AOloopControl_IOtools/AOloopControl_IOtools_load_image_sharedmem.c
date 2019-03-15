@@ -188,6 +188,10 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
 			fflush(stdout);
 		
             sizeOK = COREMOD_MEMORY_check_2Dsize(name, xsize, ysize);
+
+			printf("%5d   %s   %s <-> %s  exit status = %d\n", __LINE__, __FUNCTION__, name, fname, loadcreatestatus);
+			fflush(stdout);
+
             if(sizeOK==0)  // if size is different, delete stream -> create new one
             {
                 char command[500];
