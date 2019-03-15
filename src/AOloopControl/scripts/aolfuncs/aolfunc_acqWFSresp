@@ -328,7 +328,8 @@ echo "####################################################"
 $execname << EOF
 loadfits wfsref00.fits im0
 loadfits wfsmask.fits wfm
-a=itot(im0)/itot(im0*wfm)
+im0m=wfm*im0
+a=itot(im0)/itot(im0m)
 # a is fraction of flux inside mask
 im1=im0*a/itot(im0)
 savefits im1 "!wfsref0.fits"
