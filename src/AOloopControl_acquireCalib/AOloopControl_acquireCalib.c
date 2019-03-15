@@ -513,7 +513,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     int loopOK = 1;
 
 
-    int SAVE_RMACQU_ALL = 0; // save all intermediate results
+    int SAVE_RMACQU_ALL = 1; // save all intermediate results
 	int COMP_RMACQU_AVESTEP = 0;  // group images by time delay step and average accordingly -> get time-resolved RM
 
 
