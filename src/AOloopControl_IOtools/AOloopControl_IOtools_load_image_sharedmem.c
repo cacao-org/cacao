@@ -163,6 +163,8 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
     // 5 : FITS image <fname> does not exist, stream <name> does not exist -> create empty stream
 
 
+	printf("%s   %s <-> %s  exit status = %d\n", __FUNCTION__, name, fname, loadcreatestatus);
+	fflush(stdout);
 
 #ifdef AOLOOPCONTROL_LOGFUNC
 	AOLOOPCONTROL_logfunc_level = 2;
