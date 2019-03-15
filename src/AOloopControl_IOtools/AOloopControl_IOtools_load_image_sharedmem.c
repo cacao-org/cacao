@@ -139,7 +139,13 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
 
-long AOloopControl_IOtools_2Dloadcreate_shmim(const char *name, const char *fname, long xsize, long ysize, float DefaultValue)
+long AOloopControl_IOtools_2Dloadcreate_shmim(
+	const char *name, 
+	const char *fname, 
+	long xsize, 
+	long ysize, 
+	float DefaultValue
+	)
 {
     long ID;
     int CreateSMim = 0;
@@ -290,7 +296,10 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(const char *name, const char *fnam
     CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
-
+	printf("%s   %s <-> %s  exit status = %d\n", __FUNCTION__, name, fname, loadcreatestatus);
+	fflush(stdout);
+    
+    
     return ID;
 }
 
