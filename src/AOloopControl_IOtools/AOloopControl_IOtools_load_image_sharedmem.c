@@ -184,6 +184,8 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
         ID = read_sharedmem_image(name);
         if(ID!=-1)  // ... and <name> does not exist as a memory stream
         {
+			list_image_ID();
+			
 			printf("%5d   %s   %s <-> %s  exit status = %d\n", __LINE__, __FUNCTION__, name, fname, loadcreatestatus);
 			fflush(stdout);
 		
