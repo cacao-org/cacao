@@ -1097,7 +1097,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
             retv = system("mkdir -p tmpRMacqu");
 
-            fplog = fopen("tmpRMacqu/RMacqulog.txt", "r");
+            fplog = fopen("tmpRMacqu/RMacqulog.txt", "w");
             fprintf(fplog, "%-20s  %ld\n", "loop", loop);
             fprintf(fplog, "%-20s  %ld\n", "delayfr", delayfr);
             fprintf(fplog, "%-20s  %ld\n", "delayRM1us", delayRM1us);
