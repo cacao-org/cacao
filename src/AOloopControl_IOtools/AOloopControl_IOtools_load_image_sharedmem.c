@@ -177,10 +177,16 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
 
     if(ID==-1) // if <name> is not loaded in memory
     {
+		printf("%5d   %s   %s <-> %s  exit status = %d\n", __LINE__, __FUNCTION__, name, fname, loadcreatestatus);
+		fflush(stdout);		
+		
         CreateSMim = 0;
         ID = read_sharedmem_image(name);
         if(ID!=-1)  // ... and <name> does not exist as a memory stream
         {
+			printf("%5d   %s   %s <-> %s  exit status = %d\n", __LINE__, __FUNCTION__, name, fname, loadcreatestatus);
+			fflush(stdout);
+		
             sizeOK = COREMOD_MEMORY_check_2Dsize(name, xsize, ysize);
             if(sizeOK==0)  // if size is different, delete stream -> create new one
             {
