@@ -205,6 +205,9 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
             loadcreatestatus = 1;
         }
 
+		printf("%5d   %s   %s <-> %s  exit status = %d\n", __LINE__, __FUNCTION__, name, fname, loadcreatestatus);
+		fflush(stdout);
+
         if(CreateSMim == 1)
         {
             sizearray[0] =  xsize;
