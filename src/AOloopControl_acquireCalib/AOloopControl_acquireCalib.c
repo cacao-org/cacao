@@ -1283,7 +1283,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 	int SHUFFLE = 1;
 
 
-	printf("Entering function %s \n", __function__);
+	printf("Entering function %s \n", __FUNCTION__);
 	fflush(stdout);
 
     IDpokeC = image_ID(IDpokeC_name);
