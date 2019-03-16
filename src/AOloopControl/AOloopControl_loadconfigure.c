@@ -427,16 +427,18 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
      
 	fprintf(fplog, "\n\n============== 2.2. Read file to stream or connect to existing stream  ===================\n\n");
 
-
 	
-	fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_wfsdark); fflush(stdout);
+	printf(" ID = %ld\n", aoloopcontrol_var.aoconfID_wfsdark);
+	fflush(stdout);
+	
+	fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_wfsdark);
     if(sprintf(name, "aol%ld_wfsdark", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     sprintf(fname, "./conf/shmim_wfsdark.fits");
     
     fprintf(fplog, "Connecting to %s [%s]...", name, fname); fflush(stdout);
     aoloopcontrol_var.aoconfID_wfsdark = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
-	fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_wfsdark); fflush(stdout);
+	fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_wfsdark); 
 
 
 
@@ -444,9 +446,9 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(name, "aol%ld_imWFS0", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         
-    fprintf(fplog, "Connecting to %s [%s]...", name, " "); fflush(stdout);
+    fprintf(fplog, "Connecting to %s [%s]...", name, " ");
     aoloopcontrol_var.aoconfID_imWFS0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
-    fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_imWFS0); fflush(stdout);
+    fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_imWFS0);
     
     COREMOD_MEMORY_image_set_createsem(name, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_imWFS0, name);
