@@ -197,7 +197,7 @@ int_fast8_t AOloopControl_perfTest_blockstats_cli() {
 
 /** @brief CLI function for AOloopControl_InjectMode */
 int_fast8_t AOloopControl_perfTest_InjectMode_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0)    {__STDC_LIB_EXT1__
+    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0)    {
         AOloopControl_perfTest_InjectMode(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
         return 0;
     }
