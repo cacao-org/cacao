@@ -1012,7 +1012,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
                 if(data.image[IDSVDcoeff].array.F[m] > SVDlim00*svdcoeff0)
                     cnt++;
             }
-            printf("BLOCK %ld/%ld: keeping %ld / %ld modes  ( %f %f ) [%ld  %ld %ld]\n", mblock, NBmblock, cnt, m, SVDlim00, svdcoeff0, (long) data.image[IDSVDcoeff].md[0].size[0], msizex, msizey);
+            printf("STEP3  -  BLOCK %ld/%ld: keeping %ld / %ld modes  ( %f %f ) [%ld  %ld %ld]\n", mblock, NBmblock, cnt, m, SVDlim00, svdcoeff0, (long) data.image[IDSVDcoeff].md[0].size[0], msizex, msizey);
             fflush(stdout);
 
             if(sprintf(imname1, "fmodes1_%02ld", mblock) < 1)
@@ -1068,11 +1068,11 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
         for(m=0; m<NBmm; m++)
             mok[m] = 1;
 
-        for(mblock=0; mblock<NBmblock; mblock++)
+        for(mblock=0; mblock<NBmblock; mblock++)   // outer block loop
         {
             for(m=0; m<MBLOCK_NBmode[mblock]; m++)
                 mok[m] = 1;
-            for(mblock0=0; mblock0<mblock; mblock0++)
+            for(mblock0=0; mblock0<mblock; mblock0++) // inner block loop
             {
                 reuse = 0;
                 for(m=0; m<MBLOCK_NBmode[mblock]; m++)
@@ -1118,7 +1118,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
             cnt = 0;
             for(m=0; m<MBLOCK_NBmode[mblock]; m++)
                 cnt += mok[m];
-            printf("====== BLOCK %ld : keeping %ld / %ld modes\n", mblock, cnt, MBLOCK_NBmode[mblock]);
+            printf("====== STEP4  -  BLOCK %ld : keeping %ld / %ld modes\n", mblock, cnt, MBLOCK_NBmode[mblock]);
             fflush(stdout);
             if(cnt>0)
             {
@@ -1177,10 +1177,20 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
         save_fits("fmodes2all", "!./mkmodestmp/fmodes2all.fits");
 
 
+
+		// TRUCATE NUMBER OF BLOCKS TO LAST NON-ZERO SIZED BLOCK
+		for(mblock=0; mblock<NBmblock; mblock++)
+		{
+			if( MBLOCK_NBmode[mblock] == 0 )
+				NBmblock = mblock;
+		}
+
+
+
         /// STEP 5: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim01 FOR CUTOFF -> fmodes2ball.fits  (DM space)
         for(mblock=0; mblock<NBmblock; mblock++)
         {
-            printf("MODE BLOCK %ld\n", mblock);
+            printf("====== STEP5  -  MODE BLOCK %ld\n", mblock);
             fflush(stdout);
 
             if(sprintf(imname, "fmodes2_%02ld", mblock) < 1)
