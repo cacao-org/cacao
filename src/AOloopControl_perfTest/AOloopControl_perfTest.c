@@ -197,7 +197,7 @@ int_fast8_t AOloopControl_perfTest_blockstats_cli() {
 
 /** @brief CLI function for AOloopControl_InjectMode */
 int_fast8_t AOloopControl_perfTest_InjectMode_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0)    {
+    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0)    {__STDC_LIB_EXT1__
         AOloopControl_perfTest_InjectMode(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
         return 0;
     }
@@ -465,7 +465,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     float x, y;
 
     long IDwfsc;
-    long wfs_NBframesmax = 30;
+    long wfs_NBframesmax = 50;
     long wfsframe;
     long twaitus = 30000; // initial wait [us]
     double dtoffset0 = 0.002; // 2 ms
