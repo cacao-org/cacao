@@ -425,9 +425,9 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
      */
      
      
-	fprintf(fplog, "\n\n============== 2.2. Read file to stream or connect to existing stream  ===================\n\n");
+	fprintf(fplog, "\n\n============== 2.2. --- Read file to stream or connect to existing stream  ===================\n\n");
 
-	sdggs
+
 	printf(" ID = %ld\n", aoloopcontrol_var.aoconfID_wfsdark);
 	fflush(stdout);
 	
