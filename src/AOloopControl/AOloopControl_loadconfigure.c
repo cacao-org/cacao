@@ -498,8 +498,9 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
     if(sprintf(name, "aol%ld_imWFSlinlimit", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    fprintf(fplog, "Connecting to %s [%s]...", name, " ");
     aoloopcontrol_var.aoconfID_imWFSlinlimit = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 1.0);
-
+	fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_imWFSlinlimit);
 
 
 
@@ -511,8 +512,15 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(fname, "./conf/shmim_wfsref0.fits") < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
+	fprintf(fplog, "Connecting to %s [%s]...", name, fname);
     aoloopcontrol_var.aoconfID_wfsref0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
+	fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_wfsref0);
     AOconf[loop].aorun.init_wfsref0 = 1;
+
+
+
+
+
 
     if(sprintf(name, "aol%ld_wfsref", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -520,7 +528,9 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(fname, "./conf/shmim_wfsref.fits") < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
+	fprintf(fplog, "Connecting to %s [%s]...", name, fname);
     aoloopcontrol_var.aoconfID_wfsref = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
+	fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_wfsref);
 
     if(initwfsref==0)
     {
