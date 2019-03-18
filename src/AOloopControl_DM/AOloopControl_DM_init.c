@@ -4,9 +4,6 @@
  * 
  * To be used for AOloopControl module
  *  
- * @author  O. Guyon
- * @date    10 Jul 2017
- *
  *
  * 
  */
@@ -49,7 +46,7 @@ static int AOloopControl_DM_createconf()
     long DMindex;
     char errstr[200];
 
-    sprintf(fname, "%s/dmdispcombconf.conf.shm", data.tmpfsdir);
+    sprintf(fname, "%s/dmdispcombconf.conf.shm", data.shmdir);
 
     if( dmdispcomb_loaded == 0 )
     {
@@ -131,7 +128,7 @@ int AOloopControl_DM_loadconf()
     char fname[200];
     char errstr[200];
 
-    sprintf(fname, "%s/dmdispcombconf.conf.shm", data.tmpfsdir);
+    sprintf(fname, "%s/dmdispcombconf.conf.shm", data.shmdir);
 
 
 
