@@ -3,10 +3,6 @@
  * @brief   Adaptive Optics Control loop engine misc computation tools
  * 
  * AO engine uses stream data structure
- *  
- * @author  O. Guyon
- * @date    28 Aug 2017
- *
  * 
  * @bug No known bugs.
  * 
@@ -67,7 +63,6 @@ static int INITSTATUS_AOloopControl_compTools = 0;
 int AOloopcontrol_meminit = 0;
 static int AOlooploadconf_init = 0;
 
-#define AOconfname "/tmp/AOconf.shm"
 
 // defined in AOloopControl.c
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
