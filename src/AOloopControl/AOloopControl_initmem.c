@@ -75,7 +75,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
     loop = aoloopcontrol_var.LOOPNUMBER;
 
 	char AOconfnamefull[200];
-	sprintf(AOconfnamefull, "%s/%s", data.tmpfsdir, AOconfname);
+	sprintf(AOconfnamefull, "%s/%s", data.shmdir, AOconfname);
     SM_fd = open(AOconfnamefull, O_RDWR);
     if(SM_fd==-1)
     {
