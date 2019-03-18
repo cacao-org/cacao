@@ -4,10 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @author  O. Guyon
- * @date    24 nov 2017
- *
- * 
  * @bug No known bugs.
  * 
  */
@@ -78,7 +74,6 @@ static long contrMcactcnt0[100] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
 
 
 
-#define AOconfname "/tmp/AOconf.shm"
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
 

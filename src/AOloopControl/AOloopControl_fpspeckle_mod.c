@@ -4,8 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @author  O. Guyon
- * @date    24 nov 2017
  *
  * 
  * @bug No known bugs.
@@ -24,8 +22,6 @@
 
 #include <string.h>
 #include <math.h>
-
-#define AOconfname "/tmp/AOconf.shm"
 
 // defined in AOloopControl.c
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array

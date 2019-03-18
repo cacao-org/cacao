@@ -3,9 +3,6 @@
  * @brief   AO loop Control functions PRIMARY AND FILTERED DM WRITE  
  * 
  * REAL TIME COMPUTING ROUTINES
- *  
- * @author  O. Guyon
- * @date    24 nov 2017
  *
  * 
  * @bug No known bugs.
@@ -27,7 +24,7 @@
 
 static int AOlooploadconf_init = 0;
 
-#define AOconfname "/tmp/AOconf.shm"
+
 
 // defined in AOloopControl.c
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array

@@ -4,9 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @author  O. Guyon
- * @date    24 nov 2017
- *
  * 
  * 
  * @bug No known bugs.
@@ -32,7 +29,9 @@
 #include <sys/stat.h>
 
 
-#define AOconfname "/tmp/AOconf.shm"
+#define AOconfname "AOconf.shm"
+
+
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
 #define NB_AOloopcontrol 10 // max number of loops
@@ -75,19 +74,21 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 
     loop = aoloopcontrol_var.LOOPNUMBER;
 
-    SM_fd = open(AOconfname, O_RDWR);
+	char AOconfnamefull[200];
+	sprintf(AOconfnamefull, "%s/%s", data.tmpfsdir, AOconfname);
+    SM_fd = open(AOconfnamefull, O_RDWR);
     if(SM_fd==-1)
     {
-        printf("Cannot import file \"%s\" -> creating file\n", AOconfname);
+        printf("Cannot import file \"%s\" -> creating file\n", AOconfnamefull);
         create = 1;
     }
     else
     {
         fstat(SM_fd, &file_stat);
-        printf("File %s size: %zd\n", AOconfname, file_stat.st_size);
+        printf("File %s size: %zd\n", AOconfnamefull, file_stat.st_size);
         if(file_stat.st_size!=sizeof(AOLOOPCONTROL_CONF)*NB_AOloopcontrol)
         {
-            printf("File \"%s\" size is wrong -> recreating file\n", AOconfname);
+            printf("File \"%s\" size is wrong -> recreating file\n", AOconfnamefull);
             printf("File has size : %zd\n", file_stat.st_size);
             printf("Should be     : %zd  (%d)\n", sizeof(AOLOOPCONTROL_CONF)*NB_AOloopcontrol, NB_AOloopcontrol);
             create = 1;
@@ -99,7 +100,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
     {
         int result;
 
-        SM_fd = open(AOconfname, O_RDWR | O_CREAT | O_TRUNC, (mode_t)0600);
+        SM_fd = open(AOconfnamefull, O_RDWR | O_CREAT | O_TRUNC, (mode_t)0600);
 
         if (SM_fd == -1) {
             perror("Error opening file for writing");

@@ -41,9 +41,6 @@
  * AOloopControl_fpspeckle_mod.c             Speckle modulation (experimental)
  * 
  *  
- * @author  O. Guyon
- * @date    10 Sept 2017 
- *
  * @bug No known bugs.
  * 
  * @see http://oguyon.github.io/AdaptiveOpticsControl/src/AOloopControl/doc/AOloopControl.html
@@ -239,9 +236,8 @@ long LOOPNUMBER = 0; // current loop index
 
 static int AOlooploadconf_init = 0;
 
-#define AOconfname "/tmp/AOconf.shm"
 AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
-//#define AOloopcontrol_varname "/tmp/aoloopcontrol_var.shm" ??
+
 
 
 

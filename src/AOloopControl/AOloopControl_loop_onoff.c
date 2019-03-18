@@ -3,10 +3,6 @@
  * @brief   AO loop Control functions wave front sensor and deformable mirror 
  * 
  * REAL TIME COMPUTING ROUTINES
- *  
- * @author  O. Guyon
- * @date    5 Dec 2017
- *
  * 
  * @bug No known bugs.
  * 
@@ -17,13 +13,12 @@
 #include "AOloopControl.h"
 
 
-//libraries created by O. Guyon 
+
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
-#define AOconfname "/tmp/AOconf.shm"
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
 
