@@ -200,7 +200,7 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
                 printf("\n========== EXISTING %s HAS WRONG SIZE -> CREATING BLANK %s ===========\n\n", name, name);
                 delete_image_ID(name);
 
-                if(sprintf(command, "rm %s/%s.im.shm", data.tmpfsdir, name) < 1)
+                if(sprintf(command, "rm %s/%s.im.shm", data.shmdir, name) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
                 if(system(command)!=0)
@@ -396,7 +396,7 @@ long AOloopControl_IOtools_3Dloadcreate_shmim(const char *name, const char *fnam
 
                 delete_image_ID(name);
 
-                if(sprintf(command, "rm %s/%s.im.shm", data.tmpfsdir, name) < 1)
+                if(sprintf(command, "rm %s/%s.im.shm", data.shmdir, name) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
                 if(system(command) != 0)
