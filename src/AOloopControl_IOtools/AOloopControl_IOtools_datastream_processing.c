@@ -4,9 +4,6 @@
  * 
  * AO engine uses stream data structure
  *  
- * @author  O. Guyon
- * @date    22 Dec 2017
- *
  * 
  * @bug No known bugs.
  * 
