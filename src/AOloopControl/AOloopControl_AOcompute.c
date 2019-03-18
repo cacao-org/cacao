@@ -3,9 +3,6 @@
  * @brief   AO loop Control compute functions 
  * 
  * Low level compute
- *  
- * @author  O. Guyon
- * @date    2018-07-20
  *
  * 
  * @bug No known bugs.
@@ -65,7 +62,7 @@ static long contrMcactcnt0[100] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
 
 
 
-#define AOconfname "/tmp/AOconf.shm"
+// #define AOconfname "AOconf.shm" // not used ?
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
 
