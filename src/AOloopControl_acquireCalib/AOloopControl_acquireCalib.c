@@ -2,11 +2,8 @@
  * @file    AOloopControl_acquireCalib.c
  * @brief   Adaptive Optics Control loop engine acquire calibration
  * 
- * AO engine uses stream data structure
+ * Acquire AO system calibration assuming linear response
  *  
- * @author  O. Guyon
- * @date    25 Aug 2017
- *
  * 
  * @bug No known bugs.
  * 
