@@ -49,7 +49,7 @@ static int AOloopControl_DM_createconf()
     long DMindex;
     char errstr[200];
 
-    sprintf(fname, "/tmp/dmdispcombconf.conf.shm");
+    sprintf(fname, "%s/dmdispcombconf.conf.shm", data.tmpfsdir);
 
     if( dmdispcomb_loaded == 0 )
     {
@@ -131,7 +131,7 @@ int AOloopControl_DM_loadconf()
     char fname[200];
     char errstr[200];
 
-    sprintf(fname, "/tmp/dmdispcombconf.conf.shm");
+    sprintf(fname, "%s/dmdispcombconf.conf.shm", data.tmpfsdir);
 
 
 
