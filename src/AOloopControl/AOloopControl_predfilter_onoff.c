@@ -3,10 +3,6 @@
  * @brief   AO loop control - Predictive Filter ON/OFF through the ARPF multiplicator
  * 
  * REAL TIME COMPUTING ROUTINES
- *  
- * @author  O. Guyon
- * @date    24 nov 2017
- *
  * 
  * @bug No known bugs.
  * 
@@ -17,8 +13,6 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-
-#define AOconfname "/tmp/AOconf.shm"
 
 // defined in AOloopControl.c
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array

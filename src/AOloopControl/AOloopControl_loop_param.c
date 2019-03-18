@@ -4,10 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @author  O. Guyon
- * @date    24 nov 2017
- *
- * 
  * @bug No known bugs.
  * 
  */
@@ -24,8 +20,6 @@
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
-
-#define AOconfname "/tmp/AOconf.shm"
 
 // defined in AOloopControl.c
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
