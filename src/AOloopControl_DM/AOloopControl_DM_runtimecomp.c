@@ -892,6 +892,7 @@ int AOloopControl_DM_CombineChannels_RUN(
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].write = 1;
             memcpy (data.image[dmdispcombconf[DMindex].IDdisp].array.F,data.image[IDdispt].array.F, sizeof(float)*data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement);
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].cnt0++;
+            data.image[dmdispcombconf[DMindex].IDdisp].md[0].atime = ttrig;
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].write = 0;
 
             /*     for(semnb=0;semnb<data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem;semnb++)
@@ -916,6 +917,7 @@ int AOloopControl_DM_CombineChannels_RUN(
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].write = 1;
                 memcpy (data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].array.F,data.image[IDtmpoutdm].array.F, sizeof(float)*sizexyDMout);
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].cnt0++;
+                data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].atime = ttrig;
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].write = 0;
                 sem_post(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].semptr[0]);
             }
@@ -942,6 +944,7 @@ int AOloopControl_DM_CombineChannels_RUN(
                 data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].write = 1;
                 memcpy (data.image[dmdispcombconf[DMindex].ID_wfsref_out].array.F,data.image[IDtmpoutref].array.F, sizeof(float)*sizexywfsref);
                 data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].cnt0++;
+                data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].atime = ttrig;
                 data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].write = 0;
                 sem_post(data.image[dmdispcombconf[DMindex].ID_wfsref_out].semptr[0]);
                 printf("Done\n");
