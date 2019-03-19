@@ -434,8 +434,8 @@ ConfReadParam loopNBstep "1"; loopNBstep="$paramvalue"
  menuitems+=( "tstep" "Advance $loopNBstep step(s)" )
 
 
-menuitem+=( "wrm" "Set WFS ref to be equal to mask" )
-menuitem+=( "wr0" "Set WFS ref to be equal to measured ref" )
+menuitems+=( "wrm" "Set WFS ref to be equal to mask" )
+menuitems+=( "wr0" "Set WFS ref to be equal to measured ref" )
 
  
  StatReadStat procWFSres2refON "OFF"; procWFSres2refONstat="$statusvalue"
