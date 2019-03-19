@@ -1565,6 +1565,7 @@ im=aol0_wfsmask/itot(aol0_wfsmask)
 cpshm im aol0_wfsref
 exitCLI
 EOF
+sleep 10
 ;;
 
 
