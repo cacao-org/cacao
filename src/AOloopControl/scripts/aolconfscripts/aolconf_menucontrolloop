@@ -1575,6 +1575,7 @@ readshmim aol0_wfsref0
 cpsh aol0_wfsref0 aol0_wfsref
 exitCLI
 EOF
+sleep 10
 ;;
 
 
