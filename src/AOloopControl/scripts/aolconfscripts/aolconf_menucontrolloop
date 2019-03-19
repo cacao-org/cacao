@@ -1572,6 +1572,7 @@ EOF
 # set WFS ref to measured
 cacao << EOF
 readshmim aol0_wfsref0
+readshmim aol0_wfsref
 cpsh aol0_wfsref0 aol0_wfsref
 exitCLI
 EOF
