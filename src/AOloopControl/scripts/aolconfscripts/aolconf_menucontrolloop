@@ -1562,10 +1562,9 @@ aoconflogext "aolstep $loopNBstep"
 cacao << EOF
 readshmim aol0_wfsmask
 im=aol0_wfsmask/itot(aol0_wfsmask)
-cpshm im aol0_wfsref
+cpsh im aol0_wfsref
 exitCLI
 EOF
-sleep 10
 ;;
 
 
@@ -1573,7 +1572,7 @@ sleep 10
 # set WFS ref to measured
 cacao << EOF
 readshmim aol0_wfsref0
-cpshm aol0_wfsref0 aol0_wfsref
+cpsh aol0_wfsref0 aol0_wfsref
 exitCLI
 EOF
 ;;
