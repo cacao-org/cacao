@@ -432,6 +432,11 @@ if [ "${procONstat}" = " ON" ]; then
 ConfReadParam loopNBstep "1"; loopNBstep="$paramvalue"
  menuitems+=( "nbstep" "[$loopNBstep] set loopNBsteps" )
  menuitems+=( "tstep" "Advance $loopNBstep step(s)" )
+
+
+menuitem+=( "wrm" "Set WFS ref to be equal to mask" )
+menuitem+=( "wr0" "Set WFS ref to be equal to measured ref" )
+
  
  StatReadStat procWFSres2refON "OFF"; procWFSres2refONstat="$statusvalue"
  if [ "$procWFSres2refONstat" = "OFF" ]; then
@@ -1550,6 +1555,27 @@ tmux send-keys -t aol${LOOPNUMBER}-ctr "aolstep $loopNBstep" C-m
 aoconflogext "aolstep $loopNBstep"
 ;;
 
+
+
+	wrm)
+# set WFS ref to mask
+cacao << EOF
+readshmim aol0_wfsmask
+im=aol0_wfsmask/itot(aol0_wfsmask)
+cpshm im aol0_wfsref
+exitCLI
+EOF
+;;
+
+
+	wr0)
+# set WFS ref to measured
+cacao << EOF
+readshmim aol0_wfsref0
+cpshm aol0_wfsref0 aol0_wfsref
+exitCLI
+EOF
+;;
 
 
 	wresolON)
