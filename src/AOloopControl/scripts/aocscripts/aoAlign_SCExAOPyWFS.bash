@@ -573,9 +573,9 @@ menuitems+=( "pypick01" " PyWFS pickoff 01  (Open)" )
 fi
 
 if [ "$pypickoff" = "02" ]; then
-menuitems+=( "pypick02" "\Zr\Z2 PyWFS pickoff 02  (Silver mirror)\Zn" )
+menuitems+=( "pypick02" "\Zr\Z2 PyWFS pickoff 02  (Silver mirror) + realign pcam\Zn" )
 else
-menuitems+=( "pypick02" " PyWFS pickoff 02  (Silver mirror)" )
+menuitems+=( "pypick02" " PyWFS pickoff 02  (Silver mirror) + realign pcam" )
 fi
 
 if [ "$pypickoff" = "03" ]; then
@@ -603,9 +603,9 @@ menuitems+=( "pypick06" " PyWFS pickoff 06  (750 nm SP)" )
 fi
 
 if [ "$pypickoff" = "07" ]; then
-menuitems+=( "pypick07" "\Zr\Z2 PyWFS pickoff 07  (800 nm SP)\Zn" )
+menuitems+=( "pypick07" "\Zr\Z2 PyWFS pickoff 07  (800 nm SP) + realign pcam\Zn" )
 else
-menuitems+=( "pypick07" " PyWFS pickoff 07  (800 nm SP)" )
+menuitems+=( "pypick07" " PyWFS pickoff 07  (800 nm SP) + realign pcam" )
 fi
 
 if [ "$pypickoff" = "08" ]; then
@@ -1067,6 +1067,10 @@ aoconflogext "Set py pickoff = $pypickoff"
 
 	pypick02)
 pypickoff="02"
+pywfsreimagexposref="52970"
+pywfsreimageyposref="60787"
+pywfs_pup x goto $pywfsreimagexposref
+pywfs_pup y goto $pywfsreimageyposref
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
 func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
@@ -1107,6 +1111,10 @@ aoconflogext "Set py pickoff = $pypickoff"
 
 	pypick07)
 pypickoff="07"
+pywfsreimagexposref="39847"
+pywfsreimageyposref="64481"
+pywfs_pup x goto $pywfsreimagexposref 
+pywfs_pup y goto $pywfsreimageyposref 
 echo "${pypickoff}" > ./conf/instconf_pywfs_pickoff.txt
 func_set_pcampospickoff
 pywfs_pickoff ${pypickoff}
@@ -1301,9 +1309,9 @@ state="menualign"
 	pz)
 aoconflogext "Pupil align zero"
 pywfs_pup x home
-pywfs_pup x goto $pywfsreimagexposref #150000
+pywfs_pup x goto $pywfsreimagexposref 
 pywfs_pup y home
-pywfs_pup y goto $pywfsreimageyposref #67000
+pywfs_pup y goto $pywfsreimageyposref 
 echo "$pywfsreimagexposref $pywfsreimageyposref" > ./status/pcampos.txt
 menualign_default="pz"
 state="menualign"
@@ -1335,7 +1343,7 @@ state="menualign"
 ;;
         pxm)
 pywfsreimagexposref=$(($pywfsreimagexposref-$pcamstep))
-pywfs_pup x goto $pywfsreimagexposref #150000
+pywfs_pup x goto $pywfsreimagexposref 
 aoconflog "Pupil move x ${pywfsreimagexposref}"
 echo "$pywfsreimagexposref $pywfsreimageyposref" > ./status/pcampos.txt
 menualign_default="pxm"
@@ -1343,7 +1351,7 @@ state="menualign"
 ;;
         pxp)
 pywfsreimagexposref=$(($pywfsreimagexposref+$pcamstep))
-pywfs_pup x goto $pywfsreimagexposref #150000
+pywfs_pup x goto $pywfsreimagexposref
 aoconflog "Pupil move x ${pywfsreimagexposref}"
 echo "$pywfsreimagexposref $pywfsreimageyposref" > ./status/pcampos.txt
 menualign_default="pxp"
@@ -1351,7 +1359,7 @@ state="menualign"
 ;;
         pym)
 pywfsreimageyposref=$(($pywfsreimageyposref-$pcamstep))
-pywfs_pup y goto $pywfsreimageyposref #150000
+pywfs_pup y goto $pywfsreimageyposref
 aoconflog "Pupil move y ${pywfsreimagexposref}"
 echo "$pywfsreimagexposref $pywfsreimageyposref" > ./status/pcampos.txt
 menualign_default="pym"
@@ -1359,7 +1367,7 @@ state="menualign"
 ;;
         pyp)
 pywfsreimageyposref=$(($pywfsreimageyposref+$pcamstep))
-pywfs_pup y goto $pywfsreimageyposref #150000
+pywfs_pup y goto $pywfsreimageyposref 
 aoconflog "Pupil move y ${pywfsreimagexposref}"
 echo "$pywfsreimagexposref $pywfsreimageyposref" > ./status/pcampos.txt
 menualign_default="pyp"
