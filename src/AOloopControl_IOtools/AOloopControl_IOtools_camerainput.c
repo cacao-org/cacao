@@ -635,7 +635,9 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     fflush(stdout);
 #endif
 
-    if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem==0)
+//    if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem == 0) //HACK
+
+	if(1==0)
     {
         // if not using semaphors, use counter to test if new WFS frame is ready
         if(RM==0)
