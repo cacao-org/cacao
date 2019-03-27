@@ -97,6 +97,7 @@ printHELP1 ()
 
 
 EXITSTATUS=0
+WARNINGSTATUS=0
 
 
 function cmdexists()
@@ -109,8 +110,13 @@ function checkCommand {
 if cmdexists $1; then
     echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
 else
+if [ "$ERRORMODE" = "W" ]; then
+    echo "[$(tput setaf 1)$(tput bold) WARNING $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.";     
+	WARNINGSTATUS=1;
+else
     echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting.";     
     EXITSTATUS=1;
+fi
 fi
 
 }
@@ -120,8 +126,13 @@ if [ -f $1 ]
   then
     echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
    else
+   if [ "$ERRORMODE" = "W" ]; then
+	echo "[$(tput setaf 1)$(tput bold) WARNING $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+    WARNINGSTATUS=1
+   else
     echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
     EXITSTATUS=1
+   fi
 fi
 }
 
@@ -262,9 +273,9 @@ fi
 echo ""
 mkdir -p userScripts
 
+
+ERRORMODE="W"
 checkFile ./userScripts/aoAlign.bash 
-
-
 checkFile ./userScripts/aoHardwCtrl.bash
 
 
@@ -287,6 +298,13 @@ fi
 
 
 
+if [ $WARNINGSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) WARNING - REQUIRED FILES, COMMANDS NOT FOUND $(tput sgr0)"
+echo "Press ENTER to proceed"
+echo ""
+read
+fi
 
 
 

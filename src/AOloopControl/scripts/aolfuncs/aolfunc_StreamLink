@@ -105,8 +105,8 @@ LOOPNUMBER="7"
 fi
 
 streamname=$( head -1 $file )
-rm /tmp/aol${LOOPNUMBER}_$1.im.shm
-ln -s /tmp/${streamname}.im.shm /tmp/aol${LOOPNUMBER}_$1.im.shm
+rm /milk/shm/aol${LOOPNUMBER}_$1.im.shm
+ln -s /milk/shm/${streamname}.im.shm /milk/shm/aol${LOOPNUMBER}_$1.im.shm
 
 
 ./AOloopControl << EOF

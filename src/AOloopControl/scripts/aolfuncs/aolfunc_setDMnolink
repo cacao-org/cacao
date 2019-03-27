@@ -190,6 +190,9 @@ DMMODE="0"
 DMMODEfile="conf/param_DMMODE.txt"
 echo "$DMMODE" > $DMMODEfile
 
+
+mkdir -p conf
+
 echo "0" > "./conf/param_DM2DM_mode.txt"
 echo "0" > "./conf/param_DMwfsref_mode.txt"
 echo "1" > "./conf/param_DMvolt_mode.txt"
