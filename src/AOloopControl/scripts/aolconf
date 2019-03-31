@@ -309,6 +309,20 @@ fi
 
 
 
+# check if MILK_SHM_DIR exists
+
+
+if [[ -z "${MILK_SHM_DIR}" ]]; then
+  echo "ERROR: MILK_SHM_DIR environment variable does not exist: cannot find/access shared memory"
+  exit
+else
+  SHMDIR="${MILK_SHM_DIR}"
+fi
+echo "SHMDIR = $SHMDIR"
+
+
+
+
 
 # help, warning, error
 . ./aolconfscripts/aolconf_funcs

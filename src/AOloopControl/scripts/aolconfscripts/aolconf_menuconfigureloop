@@ -56,7 +56,7 @@ Notations: \n
 For all configurations files (not including Hardware I/O links) :\n
   File \Zbconf/streamlink_<name>_name.txt\Zn contains the original .fits file path and name\n
   A symbolic link to the FITS file is written as \Zuconf/aol${LOOPNUMBER}_<name>.fits\Zn\n
-  File is loaded in shared memory as /tmp/\Z4aol${LOOPNUMBER}_<name>\Zn.im.shm\n
+  File is loaded in shared memory as $SHMDIR/\Z4aol${LOOPNUMBER}_<name>\Zn.im.shm\n
 "
 
 
@@ -91,7 +91,7 @@ menuitems+=( "lslat" "            Filtered DM write computing Latency   ${wfsmex
 
 
 
-dmCfile="/tmp/aol${LOOPNUMBER}_dmC.im.shm"
+dmCfile="$SHMDIR/aol${LOOPNUMBER}_dmC.im.shm"
 if [ -f $dmCfile ]; then
 sizestring=$( head -1 conf/streamlink_dmC.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmC.name.txt )
@@ -103,7 +103,7 @@ menuitems+=( "dmC" "[${OKstr}] DM control channel        \Z4\Zbaol${LOOPNUMBER}_
 confOK=0
 fi
 
-dmOfile="/tmp/aol${LOOPNUMBER}_dmO.im.shm"
+dmOfile="$SHMDIR/aol${LOOPNUMBER}_dmO.im.shm"
 if [ -f $dmOfile ]; then
 sizestring=$( head -1 conf/streamlink_dmO.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmO.name.txt )
@@ -116,7 +116,7 @@ confOK=0
 fi
 
 
-dmZP0file="/tmp/aol${LOOPNUMBER}_dmZP0.im.shm"
+dmZP0file="$SHMDIR/aol${LOOPNUMBER}_dmZP0.im.shm"
 if [ -f $dmZP0file ]; then
 sizestring=$( head -1 conf/streamlink_dmZP0.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmZP0.name.txt )
@@ -128,7 +128,7 @@ menuitems+=( "dmZP0" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}
 confOK=0
 fi
 
-dmZP1file="/tmp/aol${LOOPNUMBER}_dmZP1.im.shm"
+dmZP1file="$SHMDIR/aol${LOOPNUMBER}_dmZP1.im.shm"
 if [ -f $dmZP1file ]; then
 sizestring=$( head -1 conf/streamlink_dmZP1.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmZP1.name.txt )
@@ -140,7 +140,7 @@ menuitems+=( "dmZP1" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}
 confOK=0
 fi
 
-dmZP2file="/tmp/aol${LOOPNUMBER}_dmZP2.im.shm"
+dmZP2file="$SHMDIR/aol${LOOPNUMBER}_dmZP2.im.shm"
 if [ -f $dmZP2file ]; then
 sizestring=$( head -1 conf/streamlink_dmZP2.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmZP2.name.txt )
@@ -152,7 +152,7 @@ menuitems+=( "dmZP2" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}
 confOK=0
 fi
 
-dmZP3file="/tmp/aol${LOOPNUMBER}_dmZP3.im.shm"
+dmZP3file="$SHMDIR/aol${LOOPNUMBER}_dmZP3.im.shm"
 if [ -f $dmZP3file ]; then
 sizestring=$( head -1 conf/streamlink_dmZP3.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmZP3.name.txt )
@@ -164,7 +164,7 @@ menuitems+=( "dmZP3" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}
 confOK=0
 fi
 
-dmZP4file="/tmp/aol${LOOPNUMBER}_dmZP4.im.shm"
+dmZP4file="$SHMDIR/aol${LOOPNUMBER}_dmZP4.im.shm"
 if [ -f $dmZP4file ]; then
 sizestring=$( head -1 conf/streamlink_dmZP4.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmZP4.name.txt )
@@ -176,7 +176,7 @@ menuitems+=( "dmZP4" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}
 confOK=0
 fi
 
-dmZP5file="/tmp/aol${LOOPNUMBER}_dmZP5.im.shm"
+dmZP5file="$SHMDIR/aol${LOOPNUMBER}_dmZP5.im.shm"
 if [ -f $dmZP5file ]; then
 sizestring=$( head -1 conf/streamlink_dmZP5.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmZP5.name.txt )
@@ -188,7 +188,7 @@ menuitems+=( "dmZP5" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}
 confOK=0
 fi
 
-dmZP6file="/tmp/aol${LOOPNUMBER}_dmZP6.im.shm"
+dmZP6file="$SHMDIR/aol${LOOPNUMBER}_dmZP6.im.shm"
 if [ -f $dmZP6file ]; then
 sizestring=$( head -1 conf/streamlink_dmZP6.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmZP6.name.txt )
@@ -200,7 +200,7 @@ menuitems+=( "dmZP6" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}
 confOK=0
 fi
 
-dmZP7file="/tmp/aol${LOOPNUMBER}_dmZP7.im.shm"
+dmZP7file="$SHMDIR/aol${LOOPNUMBER}_dmZP7.im.shm"
 if [ -f $dmZP7file ]; then
 sizestring=$( head -1 conf/streamlink_dmZP7.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmZP7.name.txt )
@@ -214,7 +214,7 @@ fi
 
 
 
-dmdispfile="/tmp/aol${LOOPNUMBER}_dmdisp.im.shm"
+dmdispfile="$SHMDIR/aol${LOOPNUMBER}_dmdisp.im.shm"
 if [ -f $dmdispfile ]; then
 sizestring=$( head -1 conf/streamlink_dmdisp.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmdisp.name.txt )
@@ -226,7 +226,7 @@ menuitems+=( "dmdisp" "[${OKstr}] DM total displacement  \Z4\Zbaol${LOOPNUMBER}_
 confOK=0
 fi
 
-dmRMfile="/tmp/aol${LOOPNUMBER}_dmRM.im.shm"
+dmRMfile="$SHMDIR/aol${LOOPNUMBER}_dmRM.im.shm"
 if [ -f $dmRMfile ]; then
 sizestring=$( head -1 conf/streamlink_dmRM.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmRM.name.txt )
@@ -242,7 +242,7 @@ fi
 menuitems+=( "zerodm" "Zero all DM arrays\Zn" )
 
 
-wfsimfile="/tmp/aol${LOOPNUMBER}_wfsim.im.shm"
+wfsimfile="$SHMDIR/aol${LOOPNUMBER}_wfsim.im.shm"
 if [ -f $wfsimfile ]; then
 sizestring=$( head -1 conf/streamlink_wfsim.imsize.txt )
 streamname=$( head -1 conf/streamlink_wfsim.name.txt )
@@ -592,9 +592,9 @@ Loop configuration is stored in ./conf/ directory\n
 Files specified in this configuration menu get linked/loaded to shared memory:\n
 \n
 HARDWARE I/O:\n
-     /tmp/aol${LOOPNUMBER}_dmC.im.shm           DM correction channel\n
-     /tmp/aol${LOOPNUMBER}_dmRM.im.shm          DM resp matrix channel\n
-     /tmp/aol${LOOPNUMBER}_wfsim.im.shm         WFS camera image\n
+     $SHMDIR/aol${LOOPNUMBER}_dmC.im.shm           DM correction channel\n
+     $SHMDIR/aol${LOOPNUMBER}_dmRM.im.shm          DM resp matrix channel\n
+     $SHMDIR/aol${LOOPNUMBER}_wfsim.im.shm         WFS camera image\n
             cnt0    full frame counter\n
             cnt1    last slice written (pixel stream mode)\n
             sem0    post: full frame ready      wait: main WFC loop\n
@@ -606,21 +606,21 @@ HARDWARE I/O:\n
             sem6    post: full frame ready      mode coefficients telemetry\n
 \n
 I/O PRE-PROCESSING:\n
-     /tmp/aol${LOOPNUMBER}_wfsdark.im.shm       WFS dark\n
+     $SHMDIR/aol${LOOPNUMBER}_wfsdark.im.shm       WFS dark\n
 \n
 SYSTEM ZONAL RESPONSE AND CONTROL:\n
-     /tmp/aol${LOOPNUMBER}_wfsmask.im.shm       WFS mask\n
-     /tmp/aol${LOOPNUMBER}_dmmap.im.shm         DM map\n
-     /tmp/aol${LOOPNUMBER}_dmmaskRM.im.shm      DM mask\n
-     /tmp/aol${LOOPNUMBER}_wfsref0.im.shm        WFS ref\n
+     $SHMDIR/aol${LOOPNUMBER}_wfsmask.im.shm       WFS mask\n
+     $SHMDIR/aol${LOOPNUMBER}_dmmap.im.shm         DM map\n
+     $SHMDIR/aol${LOOPNUMBER}_dmmaskRM.im.shm      DM mask\n
+     $SHMDIR/aol${LOOPNUMBER}_wfsref0.im.shm        WFS ref\n
 \n
 SYSTEM MODAL RESPONSE AND CONTROL:\n
-     /tmp/aol${LOOPNUMBER}_DMmodes.im.shm       DM modes\n
-     /tmp/aol${LOOPNUMBER}_RM.im.shm            Response Matrix\n
-     /tmp/aol${LOOPNUMBER}_CM.im.shm            Control Matrix\n
+     $SHMDIR/aol${LOOPNUMBER}_DMmodes.im.shm       DM modes\n
+     $SHMDIR/aol${LOOPNUMBER}_RM.im.shm            Response Matrix\n
+     $SHMDIR/aol${LOOPNUMBER}_CM.im.shm            Control Matrix\n
 \n
 \n
-    /tmp/aol${LOOPNUMBER}_imWFS0.im.shm         Dark-subtracted WFS frame\n
+    $SHMDIR/aol${LOOPNUMBER}_imWFS0.im.shm         Dark-subtracted WFS frame\n
             sem0    post: full frame ready      wait: modal reconstruction\n
             sem1    post: full frame ready      wait: \n
 \n

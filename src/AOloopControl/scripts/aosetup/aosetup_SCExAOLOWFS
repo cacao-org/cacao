@@ -133,6 +133,15 @@ fi
 
 
 
+# check if MILK_SHM_DIR exists
+
+if [[ -z "${MILK_SHM_DIR}" ]]; then
+  echo "ERROR: MILK_SHM_DIR environment variable does not exist: cannot find/access shared memory"
+  exit
+else
+  SHMDIR="${MILK_SHM_DIR}"
+fi
+
 
 
 echo $LOOPNAME > LOOPNAME
@@ -150,8 +159,8 @@ ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig
 
 
 # WFS dark
-rm /tmp/aol${LOOPNUMBER}_wfsdark.im.shm
-ln -s /tmp/ircam2crop_dark.im.shm /tmp/aol${LOOPNUMBER}_wfsdark.im.shm
+rm $SHMDIR/aol${LOOPNUMBER}_wfsdark.im.shm
+ln -s $SHMDIR/ircam2crop_dark.im.shm $SHMDIR/aol${LOOPNUMBER}_wfsdark.im.shm
 
 
 mkdir -p conf

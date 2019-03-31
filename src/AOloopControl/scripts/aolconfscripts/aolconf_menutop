@@ -97,7 +97,7 @@ menuitems+=( "dm2dmMode0" " [   ON  ] DM-to-DM is ON  (select to de-activate)" )
 
 
 
-dm2dmMfile="/tmp/aol${LOOPNUMBER}_dm2dmM.im.shm"
+dm2dmMfile="$SHMDIR/aol${LOOPNUMBER}_dm2dmM.im.shm"
 if [ -f $dmd2dmMfile ]; then
 sizestring=$( head -1 conf/streamlink_dm2dmM.imsize.txt )
 streamname=$( head -1 conf/streamlink_dm2dmM.name.txt )
@@ -110,7 +110,7 @@ fi
 
 
 # DM output 
-dm2dmOfile="/tmp/aol${LOOPNUMBER}_dm2dmO.im.shm"
+dm2dmOfile="$SHMDIR/aol${LOOPNUMBER}_dm2dmO.im.shm"
 if [ -f $dmd2dmMfile ]; then
 sizestring=$( head -1 conf/streamlink_dm2dmO.imsize.txt )
 streamname=$( head -1 conf/streamlink_dm2dmO.name.txt )
@@ -150,7 +150,7 @@ fi
 
 ./aolfuncs/aolfunc_StreamLink dmwrefRM
 
-dmwrefRMfile="/tmp/aol${LOOPNUMBER}_dmwrefRM.im.shm"
+dmwrefRMfile="$SHMDIR/aol${LOOPNUMBER}_dmwrefRM.im.shm"
 if [ -f $dmwrefRMfile ]; then
 sizestring=$( head -1 conf/streamlink_dmwrefRM.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmwrefRM.name.txt )
@@ -166,7 +166,7 @@ fi
 
 ./aolfuncs/aolfunc_StreamLink dmwrefO
 
-dmwrefOfile="/tmp/aol${LOOPNUMBER}_dmwrefO.im.shm"
+dmwrefOfile="$SHMDIR/aol${LOOPNUMBER}_dmwrefO.im.shm"
 if [ -f $dmwrefOfile ]; then
 sizestring=$( head -1 conf/streamlink_dmwrefO.imsize.txt )
 streamname=$( head -1 conf/streamlink_dmwrefO.name.txt )
@@ -663,7 +663,7 @@ echo "0" > $file
 ./aolfuncs/aolfunc_stopDM -f
 sleep 0.5
 pkill -9 dm${DMindex}comb
-rm /tmp/dm${DMindex}disp*
+rm $SHMDIR/dm${DMindex}disp*
 menutop_default="initDM"
 ;;
 

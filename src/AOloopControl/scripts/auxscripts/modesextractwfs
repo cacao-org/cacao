@@ -122,9 +122,7 @@ EOF
 
 else
 
-#echo "Linking    /tmp/aol${loopnb}_DMmode_meas.im.shm  - /tmp/aol${loopnb}_modeval.im.shm"
-#rm /tmp/aol${loopnb}_modeval.im.shm
-#ln -s /tmp/aol${loopnb}_DMmode_meas.im.shm /tmp/aol${loopnb}_modeval.im.shm
+
 
 OMP_NUM_THREADS=2 ./AOloopControl -n $pname << EOF
 csetpmove aol0RT1

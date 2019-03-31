@@ -24,7 +24,7 @@ Notations: \n
 For all configurations files (not including Hardware I/O links) :\n
   File \Zbconf/shmim_<name>.name.txt\Zn contains the original .fits file path and name\n
   A symbolic link to the FITS file is written as \Zuconf/aol${LOOPNUMBER}_<name>.fits\Zn\n
-  File is loaded in shared memory as /tmp/\Z4aol${LOOPNUMBER}_<name>\Zn.im.shm\n
+  File is loaded in shared memory as $SHMDIR/\Z4aol${LOOPNUMBER}_<name>\Zn.im.shm\n
 "
 
 
@@ -314,9 +314,9 @@ Loop configuration is stored in ./conf/ directory\n
 Files specified in this configuration menu get linked/loaded to shared memory:\n
 \n
 HARDWARE I/O:\n
-     /tmp/aol${LOOPNUMBER}_dmC.im.shm           DM correction channel\n
-     /tmp/aol${LOOPNUMBER}_dmRM.im.shm          DM resp matrix channel\n
-     /tmp/aol${LOOPNUMBER}_wfsim.im.shm         WFS camera image\n
+     $SHMDIR/aol${LOOPNUMBER}_dmC.im.shm           DM correction channel\n
+     $SHMDIR/aol${LOOPNUMBER}_dmRM.im.shm          DM resp matrix channel\n
+     $SHMDIR/aol${LOOPNUMBER}_wfsim.im.shm         WFS camera image\n
             cnt0    full frame counter\n
             cnt1    last slice written (pixel stream mode)\n
             sem0    post: full frame ready      wait: main WFC loop\n
@@ -328,21 +328,21 @@ HARDWARE I/O:\n
             sem6    post: full frame ready      mode coefficients telemetry\n
 \n
 I/O PRE-PROCESSING:\n
-     /tmp/aol${LOOPNUMBER}_wfsdark.im.shm       WFS dark\n
+     $SHMDIR/aol${LOOPNUMBER}_wfsdark.im.shm       WFS dark\n
 \n
 SYSTEM ZONAL RESPONSE AND CONTROL:\n
-     /tmp/aol${LOOPNUMBER}_wfsmask.im.shm       WFS mask\n
-     /tmp/aol${LOOPNUMBER}_dmmap.im.shm         DM map\n
-     /tmp/aol${LOOPNUMBER}_dmmaskRM.im.shm      DM mask\n
-     /tmp/aol${LOOPNUMBER}_wfsref0.im.shm        WFS ref\n
+     $SHMDIR/aol${LOOPNUMBER}_wfsmask.im.shm       WFS mask\n
+     $SHMDIR/aol${LOOPNUMBER}_dmmap.im.shm         DM map\n
+     $SHMDIR/aol${LOOPNUMBER}_dmmaskRM.im.shm      DM mask\n
+     $SHMDIR/aol${LOOPNUMBER}_wfsref0.im.shm        WFS ref\n
 \n
 SYSTEM MODAL RESPONSE AND CONTROL:\n
-     /tmp/aol${LOOPNUMBER}_DMmodes.im.shm       DM modes\n
-     /tmp/aol${LOOPNUMBER}_RM.im.shm            Response Matrix\n
-     /tmp/aol${LOOPNUMBER}_CM.im.shm            Control Matrix\n
+     $SHMDIR/aol${LOOPNUMBER}_DMmodes.im.shm       DM modes\n
+     $SHMDIR/aol${LOOPNUMBER}_RM.im.shm            Response Matrix\n
+     $SHMDIR/aol${LOOPNUMBER}_CM.im.shm            Control Matrix\n
 \n
 \n
-    /tmp/aol${LOOPNUMBER}_imWFS0.im.shm         Dark-subtracted WFS frame\n
+    $SHMDIR/aol${LOOPNUMBER}_imWFS0.im.shm         Dark-subtracted WFS frame\n
             sem0    post: full frame ready      wait: modal reconstruction\n
             sem1    post: full frame ready      wait: \n
 \n

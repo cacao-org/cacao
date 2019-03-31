@@ -89,17 +89,17 @@ menutestmode_default="H"
 ;;
   3) # View
 	case $choiceval in
-     	 wfsref0)shmimview /tmp/aol${LOOPNUMBER}_wfsref0.im.shm > /dev/null &;;
-     	 wfsref)shmimview /tmp/aol${LOOPNUMBER}_wfsref.im.shm > /dev/null &;;
-	DMmodes)shmimview /tmp/aol${LOOPNUMBER}_DMmodes.im.shm > /dev/null &;;	
-     	 respM)shmimview /tmp/aol${LOOPNUMBER}_respM.im.shm > /dev/null &;;
-     	 contrM)shmimview /tmp/aol${LOOPNUMBER}_contrMM.im.shm > /dev/null &;;
-   	 wfsim)shmimview /tmp/aol${LOOPNUMBER}_wfsim.im.shm > /dev/null &;;
-   	 imWFS0)shmimview /tmp/aol${LOOPNUMBER}_imWFS0.im.shm > /dev/null &;;
-   	 imWFS1)shmimview /tmp/aol${LOOPNUMBER}_imWFS1.im.shm > /dev/null &;;
-   	 imWFS2)shmimview /tmp/aol${LOOPNUMBER}_imWFS2.im.shm > /dev/null &;;
-   	 dmC)shmimview /tmp/aol${LOOPNUMBER}_dmC.im.shm 8 > /dev/null &;;
-   	 dmdisp)shmimview /tmp/aol${LOOPNUMBER}_dmdisp.im.shm 8 > /dev/null &;;
+     	 wfsref0)shmimview $SHMDIR/aol${LOOPNUMBER}_wfsref0.im.shm > /dev/null &;;
+     	 wfsref)shmimview $SHMDIR/aol${LOOPNUMBER}_wfsref.im.shm > /dev/null &;;
+	DMmodes)shmimview $SHMDIR/aol${LOOPNUMBER}_DMmodes.im.shm > /dev/null &;;	
+     	 respM)shmimview $SHMDIR/aol${LOOPNUMBER}_respM.im.shm > /dev/null &;;
+     	 contrM)shmimview $SHMDIR/aol${LOOPNUMBER}_contrMM.im.shm > /dev/null &;;
+   	 wfsim)shmimview $SHMDIR/aol${LOOPNUMBER}_wfsim.im.shm > /dev/null &;;
+   	 imWFS0)shmimview $SHMDIR/aol${LOOPNUMBER}_imWFS0.im.shm > /dev/null &;;
+   	 imWFS1)shmimview $SHMDIR/aol${LOOPNUMBER}_imWFS1.im.shm > /dev/null &;;
+   	 imWFS2)shmimview $SHMDIR/aol${LOOPNUMBER}_imWFS2.im.shm > /dev/null &;;
+   	 dmC)shmimview $SHMDIR/aol${LOOPNUMBER}_dmC.im.shm 8 > /dev/null &;;
+   	 dmdisp)shmimview $SHMDIR/aol${LOOPNUMBER}_dmdisp.im.shm 8 > /dev/null &;;
 
 esac
 ;; 

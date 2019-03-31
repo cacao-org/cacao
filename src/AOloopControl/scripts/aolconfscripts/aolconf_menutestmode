@@ -637,7 +637,7 @@ aoconflog "dmturbtintmult = $dmturbtintmult"
 
 
 	dm1v)
-$shmimviewexec /tmp/dm${DMindex}disp10.im.shm 4 &> /dev/null &
+$shmimviewexec $SHMDIR/dm${DMindex}disp10.im.shm 4 &> /dev/null &
 menutestmode_default="dm1v"
 ;;   
 	dm1m)
@@ -1035,7 +1035,7 @@ menutestmode_default="spmsON"
 
 
    	 psfv)
-shmimview /tmp/aosimpsfout.im.shm > /dev/null &
+shmimview $SHMDIR/aosimpsfout.im.shm > /dev/null &
 #menutestmode_default="psfv"
 ;;
 	esac;;

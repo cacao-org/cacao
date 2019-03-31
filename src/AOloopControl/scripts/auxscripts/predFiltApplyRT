@@ -160,8 +160,8 @@ fi
 
 # ======================= CHECK REQUIRED FILES =================================
 echo ""
-checkFile /tmp/$1.im.shm
-checkFile /tmp/$2.im.shm
+checkFile $SHMDIR/$1.im.shm
+checkFile $SHMDIR/$2.im.shm
 
 
 # ============================= CHECK IF COMMAND EXISTS ==========================
@@ -179,6 +179,24 @@ exit
 else
 echo ""
 fi
+
+
+
+
+# check if MILK_SHM_DIR exists
+
+if [[ -z "${MILK_SHM_DIR}" ]]; then
+  echo "ERROR: MILK_SHM_DIR environment variable does not exist: cannot find/access shared memory"
+  exit
+else
+  SHMDIR="${MILK_SHM_DIR}"
+fi
+
+
+
+
+
+
 
 
 
