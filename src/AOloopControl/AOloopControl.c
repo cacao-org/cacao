@@ -1224,29 +1224,31 @@ void init_AOloopControl()
 
 
 
-int_fast8_t AOloopControl_setgainrange(long m0, long m1, float gainval)
-{
+int_fast8_t AOloopControl_setgainrange(long m0, long m1, float gainval) {
     long k;
     long kmax;
 
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
+    }
 
-    if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
-    {
+    if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1) {
         char name[200];
-        if(sprintf(name, "aol%ld_DMmode_GAIN", LOOPNUMBER) < 1)
+        if(sprintf(name, "aol%ld_DMmode_GAIN", LOOPNUMBER) < 1) {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
 
         aoloopcontrol_var.aoconfID_DMmode_GAIN = read_sharedmem_image(name);
     }
 
-    kmax = m1+1;
-    if(kmax>AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes)
-        kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes-1;
+    kmax = m1 + 1;
+    if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes) {
+        kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1;
+    }
 
-    for(k=m0; k<kmax; k++)
+    for(k = m0; k < kmax; k++) {
         data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k] = gainval;
+    }
 
     return 0;
 }
@@ -1254,29 +1256,31 @@ int_fast8_t AOloopControl_setgainrange(long m0, long m1, float gainval)
 
 
 
-int_fast8_t AOloopControl_setlimitrange(long m0, long m1, float limval)
-{
+int_fast8_t AOloopControl_setlimitrange(long m0, long m1, float limval) {
     long k;
     long kmax;
 
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
+    }
 
-    if(aoloopcontrol_var.aoconfID_LIMIT_modes==-1)
-    {
+    if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1) {
         char name[200];
-        if(sprintf(name, "aol%ld_DMmode_LIMIT", LOOPNUMBER) < 1)
+        if(sprintf(name, "aol%ld_DMmode_LIMIT", LOOPNUMBER) < 1) {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
 
         aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(name);
     }
 
-    kmax = m1+1;
-    if(kmax>AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes)
-        kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes-1;
+    kmax = m1 + 1;
+    if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes) {
+        kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1;
+    }
 
-    for(k=m0; k<kmax; k++)
+    for(k = m0; k < kmax; k++) {
         data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k] = limval;
+    }
 
     return 0;
 }
@@ -1284,29 +1288,31 @@ int_fast8_t AOloopControl_setlimitrange(long m0, long m1, float limval)
 
 
 
-int_fast8_t AOloopControl_setmultfrange(long m0, long m1, float multfval)
-{
+int_fast8_t AOloopControl_setmultfrange(long m0, long m1, float multfval) {
     long k;
     long kmax;
 
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
+    }
 
-    if(aoloopcontrol_var.aoconfID_MULTF_modes==-1)
-    {
+    if(aoloopcontrol_var.aoconfID_MULTF_modes == -1) {
         char name[200];
-        if(sprintf(name, "aol%ld_DMmode_MULTF", LOOPNUMBER) < 1)
+        if(sprintf(name, "aol%ld_DMmode_MULTF", LOOPNUMBER) < 1) {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
 
         aoloopcontrol_var.aoconfID_MULTF_modes = read_sharedmem_image(name);
     }
 
-    kmax = m1+1;
-    if(kmax>AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes)
-        kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes-1;
+    kmax = m1 + 1;
+    if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes) {
+        kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1;
+    }
 
-    for(k=m0; k<kmax; k++)
+    for(k = m0; k < kmax; k++) {
         data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[k] = multfval;
+    }
 
     return 0;
 }
@@ -1314,23 +1320,24 @@ int_fast8_t AOloopControl_setmultfrange(long m0, long m1, float multfval)
 
 
 
-int_fast8_t AOloopControl_setgainblock(long mb, float gainval)
-{
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+int_fast8_t AOloopControl_setgainblock(long mb, float gainval) {
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
+    }
 
-    if(aoloopcontrol_var.aoconfID_gainb == -1)
-    {
+    if(aoloopcontrol_var.aoconfID_gainb == -1) {
         char imname[200];
-        if(sprintf(imname, "aol%ld_gainb", LOOPNUMBER) < 1)
+        if(sprintf(imname, "aol%ld_gainb", LOOPNUMBER) < 1) {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
 
         aoloopcontrol_var.aoconfID_gainb = read_sharedmem_image(imname);
     }
 
 
-    if(mb<AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock)
+    if(mb < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock) {
         data.image[aoloopcontrol_var.aoconfID_gainb].array.F[mb] = gainval;
+    }
 
     return 0;
 }
@@ -1338,22 +1345,23 @@ int_fast8_t AOloopControl_setgainblock(long mb, float gainval)
 
 
 
-int_fast8_t AOloopControl_setlimitblock(long mb, float limitval)
-{
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+int_fast8_t AOloopControl_setlimitblock(long mb, float limitval) {
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
+    }
 
-    if(aoloopcontrol_var.aoconfID_limitb == -1)
-    {
+    if(aoloopcontrol_var.aoconfID_limitb == -1) {
         char imname[200];
-        if(sprintf(imname, "aol%ld_limitb", LOOPNUMBER) < 1)
+        if(sprintf(imname, "aol%ld_limitb", LOOPNUMBER) < 1) {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
 
         aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
     }
 
-    if(mb<AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock)
+    if(mb < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock) {
         data.image[aoloopcontrol_var.aoconfID_limitb].array.F[mb] = limitval;
+    }
 
     return 0;
 }
@@ -1384,37 +1392,35 @@ int_fast8_t AOloopControl_setmultfblock(long mb, float multfval)
 
 
 
-int_fast8_t AOloopControl_AutoTune()
-{
+int_fast8_t AOloopControl_AutoTune() {
     long block;
     long NBstep = 10000;
     char name[200];
     long k;
-    float bestgain= 0.0;
+    float bestgain = 0.0;
     float val;
 
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
+    }
 
-    if(aoloopcontrol_var.aoconfID_cmd_modes==-1)
-    {
-        if(sprintf(name, "aol%ld_DMmode_cmd", LOOPNUMBER) < 1)
+    if(aoloopcontrol_var.aoconfID_cmd_modes == -1) {
+        if(sprintf(name, "aol%ld_DMmode_cmd", LOOPNUMBER) < 1) {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
 
         aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
     }
 
     // initialize
-    for(block=0; block<AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++)
-    {
+    for(block = 0; block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++) {
         AOloopControl_setgainblock(block, 0.0);
         AOloopControl_setlimitblock(block, 0.1);
         AOloopControl_setmultfblock(block, 0.8);
     }
 
 
-    for(block=0; block<AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++)
-    {
+    for(block = 0; block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++) {
         float gainStart = 0.0;
         float gainEnd = 1.0;
         int gOK = 1;
@@ -1424,26 +1430,25 @@ int_fast8_t AOloopControl_AutoTune()
 
         // tune block gain
         gain = gainStart;
-        while((gOK==1)&&(gain<gainEnd))
-        {
-            for(k=0; k<AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
+        while((gOK == 1) && (gain < gainEnd)) {
+            for(k = 0; k < AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++) {
                 data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
+            }
 
             gain += 0.01;
             gain *= 1.1;
 
             AOloopControl_setgainblock(block, gain);
             AOloopControl_loopstep(LOOPNUMBER, NBstep);
-            val = sqrt(AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul/AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt);
+            val = sqrt(AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul / AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt);
             printf("%6.4f  %10.8lf\n", gain, val);
 
-            if(val<bestval)
-            {
+            if(val < bestval) {
                 bestval = val;
                 bestgain = gain;
-            }
-            else
+            } else {
                 gOK = 0;
+            }
         }
         printf("BLOCK %ld  : BEST GAIN = %f\n", block, bestgain);
 
