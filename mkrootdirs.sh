@@ -7,7 +7,7 @@ then
     echo "  Usage: $0 <MILK_ROOT path>"
     echo ""
     echo "This script creates the directories's architecture needed by MILK under: (ordered by priority)"
-    echo " - \$MILK_ROOT is this variable is defined"
+    echo " - MILK_ROOT is this variable is defined"
     echo " - <MILK_ROOT path> put as argument"
     echo " - /milk otherwhise"
     echo ""
