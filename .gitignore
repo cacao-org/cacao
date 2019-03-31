@@ -48,3 +48,4 @@ src/\.libs/
 src/cacao
 dochtml/
 build/
+.vscode
