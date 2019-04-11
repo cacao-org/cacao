@@ -89,8 +89,8 @@ int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
 	// ALLOCATE ENTRIES
 	void * pNull = NULL;
     int fpi;  // function parameter index
-    fpi = function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG_DFT_INPUT, pNull);
-    fpi = function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG_DFT_INPUT, pNull);
+    fpi = function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
+    fpi = function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
 
 	// RUN UPDATE LOOP
 	while( loopstatus == 1 )
