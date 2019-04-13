@@ -227,56 +227,56 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     void *pNull = NULL;
     uint64_t FPFLAG;
 
-    FPFLAG = FPFLAG_DFT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
     FPFLAG &= ~FPFLAG_WRITECONF;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long DMindex_default[4] = { DMindex, 0, 9, DMindex };
     long fp_DMindex = function_parameter_add_entry(&fps, "AOCONF.DMindex", "Deformable mirror index", FPTYPE_INT64, FPFLAG, &DMindex_default);
 
-    FPFLAG = FPFLAG_DFT_INPUT | FPFLAG_MINLIMIT;
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long DMsize_default[4] = { 1, 1, 1000, 1 };
     long fp_DMxsize = function_parameter_add_entry(&fps, "AOCONF.DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG, &DMsize_default);
     long fp_DMysize = function_parameter_add_entry(&fps, "AOCONF.DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG, &DMsize_default);
 
-    FPFLAG = FPFLAG_DFT_INPUT | FPFLAG_MINLIMIT;
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long NBchannel_default[4] = { 12, 1, 20, 12 };
-    long fp_NBchannel = function_parameter_add_entry(&fps, ".NBchannel", "Number of channels", FPTYPE_INT64, FPFLAG_DFT_INPUT, &NBchannel_default);
+    long fp_NBchannel = function_parameter_add_entry(&fps, ".NBchannel", "Number of channels", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBchannel_default);
 
-    FPFLAG = FPFLAG_DFT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long AveMode_default[4] = { 0, 0, 2, 0 };
     long fp_AveMode = function_parameter_add_entry(&fps, ".AveMode", "Averaging mode", FPTYPE_INT64, FPFLAG, &AveMode_default);
 
     //long dm2dm_mode_default[4] = { 0, 0, 1, 0 };
-    long fp_dm2dm_mode     = function_parameter_add_entry(&fps, ".option.dm2dm_mode", "DM to DM offset mode", FPTYPE_ONOFF, FPFLAG_DFT_INPUT, pNull); //&dm2dm_mode_default);
+    long fp_dm2dm_mode     = function_parameter_add_entry(&fps, ".option.dm2dm_mode", "DM to DM offset mode", FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull); //&dm2dm_mode_default);
 
-    long fp_dm2dm_DMmodes  = function_parameter_add_entry(&fps, ".option.dm2dm_DMmodes", "Output stream DM to DM", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
+    long fp_dm2dm_DMmodes  = function_parameter_add_entry(&fps, ".option.dm2dm_DMmodes", "Output stream DM to DM", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_dm2dm_outdisp  = function_parameter_add_entry(&fps, ".option.dm2dm_outdisp", "data stream to which output DM is written", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
+    long fp_dm2dm_outdisp  = function_parameter_add_entry(&fps, ".option.dm2dm_outdisp", "data stream to which output DM is written", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
     long fp_wfsrefmode     = function_parameter_add_entry(&fps, ".option.wfsrefmode", "WFS ref mode", FPTYPE_ONOFF, FPFLAG, pNull);
 
-    long fp_wfsref_WFSRespMat = function_parameter_add_entry(&fps, ".option.wfsref_WFSRespMat", "Output WFS resp matrix", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
+    long fp_wfsref_WFSRespMat = function_parameter_add_entry(&fps, ".option.wfsref_WFSRespMat", "Output WFS resp matrix", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_wfsref_out     = function_parameter_add_entry(&fps, ".option.wfsref_out", "Output WFS", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
+    long fp_wfsref_out     = function_parameter_add_entry(&fps, ".option.wfsref_out", "Output WFS", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_voltmode       = function_parameter_add_entry(&fps, ".option.voltmode", "Volt mode", FPTYPE_ONOFF, FPFLAG_DFT_INPUT, pNull);
+    long fp_voltmode       = function_parameter_add_entry(&fps, ".option.voltmode", "Volt mode", FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_volttype       = function_parameter_add_entry(&fps, ".option.volttype", "Volt type", FPTYPE_INT64, FPFLAG_DFT_INPUT, pNull);
+    long fp_volttype       = function_parameter_add_entry(&fps, ".option.volttype", "Volt type", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_stroke100      = function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DFT_INPUT, pNull);
+    long fp_stroke100      = function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_voltname       = function_parameter_add_entry(&fps, ".option.voltname", "Stream name for volt output", FPTYPE_STREAMNAME, FPFLAG_DFT_INPUT, pNull);
+    long fp_voltname       = function_parameter_add_entry(&fps, ".option.voltname", "Stream name for volt output", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
     double DClevel_default[4] = { 0.0, 0.0, 100.0, 0.0 };
-    long fp_DClevel = function_parameter_add_entry(&fps, ".option.DClevel", "DC level [um]", FPTYPE_FLOAT64, FPFLAG_DFT_INPUT, &DClevel_default);
+    long fp_DClevel = function_parameter_add_entry(&fps, ".option.DClevel", "DC level [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &DClevel_default);
 
-    long fp_maxvolt = function_parameter_add_entry(&fps, ".option.maxvolt", "Maximum voltage", FPTYPE_FLOAT64, FPFLAG_DFT_INPUT, pNull);
+    long fp_maxvolt = function_parameter_add_entry(&fps, ".option.maxvolt", "Maximum voltage", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
 
     // status (RO)
-    long fp_loopcnt = function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, FPFLAG_DFT_STATUS, pNull);
+    long fp_loopcnt = function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, FPFLAG_DEFAULT_STATUS, pNull);
 
 
 
@@ -433,15 +433,11 @@ int AOloopControl_DM_CombineChannels_RUN(
 
     FUNCTION_PARAMETER_STRUCT fps;
 
-    if(function_parameter_struct_connect(fpsname, &fps) == -1) {
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1) {
         printf("ERROR: fps \"%s\" does not exist -> Cannot run\n", fpsname);
         return EXIT_FAILURE;
     }
 
-
-
-
-    fps.md->runpid = getpid();
 
     // GET FUNCTION PARAMETER VALUES
     long DMindex  = functionparameter_GetParamValue_INT64(&fps, "AOCONF.DMindex");
@@ -1091,7 +1087,7 @@ int AOloopControl_DM_CombineChannels(
 	
 
 
-    function_parameter_struct_connect(fpsname, &fps);
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN);
     
 	functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMindex", DMindex);
 	functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMxsize", xsize);
