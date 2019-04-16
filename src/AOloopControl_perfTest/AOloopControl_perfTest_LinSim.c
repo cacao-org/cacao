@@ -121,7 +121,7 @@ int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_RUN(
 	FUNCTION_PARAMETER_STRUCT fps;
 	int FPSINTERFACE = 1;
 	
-	if(function_parameter_struct_connect(fpsname, &fps) == -1)
+	if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
 	{
 		printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
 		FPSINTERFACE = 0;
