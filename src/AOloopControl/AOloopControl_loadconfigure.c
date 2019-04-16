@@ -430,7 +430,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 	fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_wfsdark);
     if(sprintf(name, "aol%ld_wfsdark", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-    sprintf(fname, "./conf/shmim_wfsdark.fits");
+    sprintf(fname, "./conf/shmim.wfsdark.fits");
     
     fprintf(fplog, "Connecting to %s [%s]...", name, fname); fflush(stdout);
     aoloopcontrol_var.aoconfID_wfsdark = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, 0.0);
@@ -505,7 +505,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(name, "aol%ld_wfsref0", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-    if(sprintf(fname, "./conf/shmim_wfsref0.fits") < 1)
+    if(sprintf(fname, "./conf/shmim.wfsref0.fits") < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 	fprintf(fplog, "Connecting to %s [%s]...", name, fname);
@@ -521,7 +521,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
     if(sprintf(name, "aol%ld_wfsref", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-    if(sprintf(fname, "./conf/shmim_wfsref.fits") < 1)
+    if(sprintf(fname, "./conf/shmim.wfsref.fits") < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 	fprintf(fplog, "Connecting to %s [%s]...", name, fname);
@@ -624,7 +624,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 		/** 
 		 * Load AOconf[loop].AOpmodecoeffs.DMmodesname \n
 		 * if already exists in local memory, trust it and adopt it \n
-		 * if not, load from ./conf/shmim_DMmodes.fits \n
+		 * if not, load from ./conf/shmim.DMmodes.fits \n
 		 * 
 		 */
 		
@@ -637,7 +637,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
 			
 
-            if(sprintf(fname, "./conf/shmim_DMmodes.fits") < 1)
+            if(sprintf(fname, "./conf/shmim.DMmodes.fits") < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
             printf("Checking file \"%s\"\n", fname);
@@ -648,7 +648,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
             {
                 printf("WARNING: no file \"%s\" -> loading zonal modes\n", fname);
 
-                if(sprintf(fname, "./conf/shmim_DMmodes_zonal.fits") <1)
+                if(sprintf(fname, "./conf/shmim.DMmodes_zonal.fits") <1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
                 ID1tmp = load_fits(fname, "tmp3Dim", 1);
@@ -835,7 +835,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
 
         AOconf[loop].aorun.init_RM = 0;
-        if(sprintf(fname, "conf/shmim_respM.fits") < 1)
+        if(sprintf(fname, "conf/shmim.respM.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
         aoconfID_respM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].aorun.respMname, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].AOpmodecoeffs.NBDMmodes, 0.0);
@@ -843,7 +843,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 		aoloopcontrol_var.init_RM_local = 1;
 
         AOconf[loop].aorun.init_CM = 0;
-        if(sprintf(fname, "conf/shmim_contrM.fits") < 1)
+        if(sprintf(fname, "conf/shmim.contrM.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_contrM = AOloopControl_IOtools_3Dloadcreate_shmim(AOconf[loop].aorun.contrMname, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].AOpmodecoeffs.NBDMmodes, 0.0);
@@ -871,13 +871,13 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
         if(sprintf(name, "aol%ld_contrMc", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        if(sprintf(fname, "conf/shmim_contrMc.fits") < 1)
+        if(sprintf(fname, "conf/shmim.contrMc.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_contrMc = AOloopControl_IOtools_3Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].DMctrl.sizeDM, 0.0);
 
         if(sprintf(name, "aol%ld_contrMcact", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        if(sprintf(fname, "conf/shmim_contrMcact_00.fits") < 1)
+        if(sprintf(fname, "conf/shmim.contrMcact_00.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_contrMcact[0] = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt, 0.0);
 
@@ -885,26 +885,26 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
 
         if(sprintf(name, "aol%ld_gainb", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        if(sprintf(fname, "conf/shmim_gainb.fits") < 1)
+        if(sprintf(fname, "conf/shmim.gainb.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_gainb = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].AOpmodecoeffs.DMmodesNBblock, 1, 0.0);
 
 		if(sprintf(name, "aol%ld_modeARPFgainAuto", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        if(sprintf(fname, "conf/shmim_modeARPFgainAuto.fits") < 1)
+        if(sprintf(fname, "conf/shmim.modeARPFgainAuto.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_modeARPFgainAuto = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].AOpmodecoeffs.NBDMmodes, 1, 1.0);
 
 
         if(sprintf(name, "aol%ld_multfb", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        if(sprintf(fname, "conf/shmim_multfb.fits") < 1)
+        if(sprintf(fname, "conf/shmim.multfb.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_multfb = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].AOpmodecoeffs.DMmodesNBblock, 1, 0.0);
 
         if(sprintf(name, "aol%ld_limitb", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-        if(sprintf(fname, "conf/shmim_limitb.fits") < 1)
+        if(sprintf(fname, "conf/shmim.limitb.fits") < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_limitb = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].AOpmodecoeffs.DMmodesNBblock, 1, 0.0);
 
@@ -977,7 +977,7 @@ int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             if(sprintf(fname, "conf/%s.fits", name) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-            //   sprintf(fname, "conf/shmim_contrMcact%02ld_00", kk);
+            //   sprintf(fname, "conf/shmim.contrMcact%02ld_00", kk);
             printf("====== LOADING %s to %s  size %ld %ld\n", fname, name,  AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt);
             ID = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt, 0.0);
 
