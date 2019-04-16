@@ -32,7 +32,7 @@ savefits dark "!./wfsdark/wfsdark_${datestr}.fits"
 exit
 EOF
 
-echo "wfsdark/wfsdark_${datestr}.fits" > conf/shmim_wfsdark.name.txt
+echo "wfsdark/wfsdark_${datestr}.fits" > conf/shmim.wfsdark.name.txt
 
 wn="1"
 pywfs_filter $wn

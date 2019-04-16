@@ -445,13 +445,13 @@ mkdir -p $dir
 if [ "$DMMODE" = "0" ]; then
 	for imname in $RMZONALCALIBlist $RMMODALCALIBlist
 	do
-		echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim_${imname}.name.txt
+		echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim.${imname}.name.txt
 		mv ${imname}.fits ./${dir}/
 	done
 else
 	for imname in $RMZONALCALIBlist
 	do
-		echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim_${imname}.name.txt
+		echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim.${imname}.name.txt
 		mv ${imname}.fits ./${dir}/
 	done
 fi

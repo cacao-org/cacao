@@ -455,14 +455,14 @@ syncmode:\n
 zrespMlinsim)
 	exec 3>&1;
 	zrespMlinsimfname=$(dialog --title "linear simulation: Select Zonal RM" --stdout --title "linear simulation: select zonal RM" --fselect "${zrespMlinsimfname}" $nbwlines $nbwcols)
-	echo "$zrespMlinsimfname" > ./conf/shmim_zrespMlinsim.name.txt
+	echo "$zrespMlinsimfname" > ./conf/shmim.zrespMlinsim.name.txt
 	Fits2shm -c -p aol${LOOPNUMBER}_ zrespMlinsim
 ;;
 
 wfsref0linsim)
 	exec 3>&1;
 	wfsref0linsimfname=$(dialog --title "linear simulation: Select WFS ref" --stdout --title "linear simulation: select WFS ref" --fselect "${wfsref0linsimfname}" $nbwlines $nbwcols)
-	echo "$wfsref0linsimfname" > ./conf/shmim_wfsref0linsim.name.txt
+	echo "$wfsref0linsimfname" > ./conf/shmim.wfsref0linsim.name.txt
 	Fits2shm -c -p aol${LOOPNUMBER}_ wfsref0linsim
 ;;
 

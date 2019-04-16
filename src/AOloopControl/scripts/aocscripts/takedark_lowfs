@@ -31,7 +31,7 @@ savefits dark "!./wfsdark/wfsdark_${datestr}.fits"
 exit
 EOF
 
-echo "wfsdark/wfsdark_${datestr}.fits" > conf/shmim_wfsdark.name.txt
+echo "wfsdark/wfsdark_${datestr}.fits" > conf/shmim.wfsdark.name.txt
 
 ssh scexao@scexaoCTRL "/home/scexao/bin/devices/lowfs_block"
 

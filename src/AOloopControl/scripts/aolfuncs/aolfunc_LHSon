@@ -10,8 +10,8 @@ statusfile="./status/stat_lsimON.txt"
 
 
 
-LHSwfsref0namefile="./conf/shmim_wfsref0linsim.name.txt"
-LHSzrepMnamefile="./conf/shmim_zrespMlinsim.name.txt"
+LHSwfsref0namefile="./conf/shmim.wfsref0linsim.name.txt"
+LHSzrepMnamefile="./conf/shmim.zrespMlinsim.name.txt"
 
 
 
@@ -71,11 +71,11 @@ fi
 # IF EMPTY, SET LHS CONF TO CURRENT CONF
 ##########################################
 if [ ! -f $LHSwfsref0namefile ]; then
-cp  ./conf/shmim_wfsref0.name.txt $LHSwfsref0namefile
+cp  ./conf/shmim.wfsref0.name.txt $LHSwfsref0namefile
 fi
 
 if [ ! -f $LHSzrepMnamefile ]; then
-cp  ./conf/shmim_zrespM.name.txt $LHSzrepMnamefile
+cp  ./conf/shmim.zrespM.name.txt $LHSzrepMnamefile
 fi
 
 

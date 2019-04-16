@@ -608,25 +608,25 @@ for i in `seq $NBmodeblocks 20`;
 do
 i2=$(printf "%02d" "$i")
 
-rm "./conf/shmim_DMmodes${i2}.fits" &> /dev/null
-rm "./conf/shmim_DMmodes${i2}.name.txt" &> /dev/null
-rm "./conf/shmim_DMmodes${i2}.imsize.txt" &> /dev/null
+rm "./conf/shmim.DMmodes${i2}.fits" &> /dev/null
+rm "./conf/shmim.DMmodes${i2}.name.txt" &> /dev/null
+rm "./conf/shmim.DMmodes${i2}.imsize.txt" &> /dev/null
 
-rm "./conf/shmim_respM${i2}.fits" &> /dev/null
-rm "./conf/shmim_respM${i2}.name.txt" &> /dev/null
-rm "./conf/shmim_respM${i2}.imsize.txt" &> /dev/null
+rm "./conf/shmim.respM${i2}.fits" &> /dev/null
+rm "./conf/shmim.respM${i2}.name.txt" &> /dev/null
+rm "./conf/shmim.respM${i2}.imsize.txt" &> /dev/null
 
-rm "./conf/shmim_contrM${i2}.fits" &> /dev/null
-rm "./conf/shmim_contrM${i2}.name.txt" &> /dev/null
-rm "./conf/shmim_contrM${i2}.imsize.txt" &> /dev/null
+rm "./conf/shmim.contrM${i2}.fits" &> /dev/null
+rm "./conf/shmim.contrM${i2}.name.txt" &> /dev/null
+rm "./conf/shmim.contrM${i2}.imsize.txt" &> /dev/null
 
-rm "./conf/shmim_contrMc${i2}.fits" &> /dev/null
-rm "./conf/shmim_contrMc${i2}.name.txt" &> /dev/null
-rm "./conf/shmim_contrMc${i2}.imsize.txt" &> /dev/null
+rm "./conf/shmim.contrMc${i2}.fits" &> /dev/null
+rm "./conf/shmim.contrMc${i2}.name.txt" &> /dev/null
+rm "./conf/shmim.contrMc${i2}.imsize.txt" &> /dev/null
 
-rm "./conf/shmim_contrMcact${i2}_00.fits" &> /dev/null
-rm "./conf/shmim_contrMcact${i2}_00.name.txt" &> /dev/null
-rm "./conf/shmim_contrMcact${i2}_00.imsize.txt" &> /dev/null
+rm "./conf/shmim.contrMcact${i2}_00.fits" &> /dev/null
+rm "./conf/shmim.contrMcact${i2}_00.name.txt" &> /dev/null
+rm "./conf/shmim.contrMcact${i2}_00.imsize.txt" &> /dev/null
 done
 
 fi # end of BLOCK FILES if statement

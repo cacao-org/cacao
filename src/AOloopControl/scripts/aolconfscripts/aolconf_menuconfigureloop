@@ -282,7 +282,7 @@ if [ "$DMMODE" = "0" ]; then # zonal
 menuitems+=( " " " " )
 
 
-menuitems+=( "smlock" "Set locked masks to current ./conf/shmim_<mask>.name.txt masks (dmmaskRM, dmmask, dmslaved, wfsmask)")
+menuitems+=( "smlock" "Set locked masks to current ./conf/shmim.<mask>.name.txt masks (dmmaskRM, dmmask, dmslaved, wfsmask)")
 
 
 ConfReadParam MASKS_LOCK "0"; MASKS_LOCK="$paramvalue"
@@ -922,11 +922,11 @@ cd wfsdark
 exec 3>&1;
 wfsdarkfname=$(dialog --title "Select WFS dark file name" --stdout --fselect "${wfsdarkfname}" $nbwlines $nbwcols)
 cd ..
-echo "wfsdark/$wfsdarkfname" > ./conf/shmim_wfsdark.name.txt
+echo "wfsdark/$wfsdarkfname" > ./conf/shmim.wfsdark.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ wfsdark
 ;;
 	1)
-imname=$( head -1 ./conf/shmim_wfsdark.name.txt )
+imname=$( head -1 ./conf/shmim.wfsdark.name.txt )
 ds9 $imname &
 ;;
 esac
@@ -962,20 +962,20 @@ menucontrolloop_default="zerodark"
 
 	smlock) # set masks lock files (from conf file)
 aoconflogext "Set masks lock files"
-fname=$( head -1 ./conf/shmim_dmmask.name.txt )
-cp ./conf/shmim_dmmask.name.txt ./conf/shmim_dmmask.name.LOCK.txt
+fname=$( head -1 ./conf/shmim.dmmask.name.txt )
+cp ./conf/shmim.dmmask.name.txt ./conf/shmim.dmmask.name.LOCK.txt
 cp $fname ./conf/dmmask.LOCK.fits
 
-fname=$( head -1 ./conf/shmim_dmmaskRM.name.txt )
-cp ./conf/shmim_dmmaskRM.name.txt ./conf/shmim_dmmaskRM.name.LOCK.txt 
+fname=$( head -1 ./conf/shmim.dmmaskRM.name.txt )
+cp ./conf/shmim.dmmaskRM.name.txt ./conf/shmim.dmmaskRM.name.LOCK.txt 
 cp $fname ./conf/dmmaskRM.LOCK.fits
 
-fname=$( head -1 ./conf/shmim_dmslaved.name.txt )
-cp ./conf/shmim_dmslaved.name.txt ./conf/shmim_dmslaved.name.LOCK.txt
+fname=$( head -1 ./conf/shmim.dmslaved.name.txt )
+cp ./conf/shmim.dmslaved.name.txt ./conf/shmim.dmslaved.name.LOCK.txt
 cp $fname ./conf/dmslaved.LOCK.fits
 
-fname=$( head -1 ./conf/shmim_wfsmask.name.txt )
-cp ./conf/shmim_wfsmask.name.txt ./conf/shmim_wfsmask.name.LOCK.txt
+fname=$( head -1 ./conf/shmim.wfsmask.name.txt )
+cp ./conf/shmim.wfsmask.name.txt ./conf/shmim.wfsmask.name.LOCK.txt
 cp $fname ./conf/wfsmask.LOCK.fits
 
 menucontrolloop_default="smlock"
@@ -992,16 +992,16 @@ mlock)
 
 aoconflogext "MASKS_LOCK = $MASKS_LOCK"
 
-cp ./conf/shmim_dmmask.name.LOCK.txt ./conf/shmim_dmmask.name.txt
+cp ./conf/shmim.dmmask.name.LOCK.txt ./conf/shmim.dmmask.name.txt
 cp ./conf/dmmask.LOCK.fits ./conf/dmmask.fits #Q
 
-cp ./conf/shmim_dmmaskRM.name.LOCK.txt ./conf/shmim_dmmaskRM.name.txt 
+cp ./conf/shmim.dmmaskRM.name.LOCK.txt ./conf/shmim.dmmaskRM.name.txt 
 cp ./conf/dmmaskRM.LOCK.fits ./conf/dmmaskRM.fits #Q
 
-cp ./conf/shmim_dmslaved.name.LOCK.txt ./conf/shmim_dmslaved.name.txt
+cp ./conf/shmim.dmslaved.name.LOCK.txt ./conf/shmim.dmslaved.name.txt
 cp ./conf/dmslaved.LOCK.fits ./conf/dmslaved.fits
 
-cp ./conf/shmim_wfsmask.name.LOCK.txt ./conf/shmim_wfsmask.name.txt
+cp ./conf/shmim.wfsmask.name.LOCK.txt ./conf/shmim.wfsmask.name.txt
 cp ./conf/wfsmask.LOCK.fits ./conf/wfsmask.fits
 
 	fi
@@ -1249,9 +1249,9 @@ cp conf/param_conflastloaded_time.txt1 conf/param_conflastloaded_time.txt
 #	else
 #	name="${namet}${i2}"
 #	fi
-#	fname1="${confname}/shmim_${name}.name.txt"
+#	fname1="${confname}/shmim.${name}.name.txt"
 #	if [ -f "$fname1" ]; then
-#	cp ${confname}/shmim_${name}.name.txt ./conf/shmim_${name}.name.txt
+#	cp ${confname}/shmim.${name}.name.txt ./conf/shmim.${name}.name.txt
 #	Fits2shm -cr -p aol${LOOPNUMBER}_ ${name}
 #	else
 #	echo "MISSING FILE: $fname1" 
@@ -1267,7 +1267,7 @@ cp conf/param_conflastloaded_time.txt1 conf/param_conflastloaded_time.txt
 #	name="${namet}${i2}"
 #	fi
 #rm "./conf/aol${LOOPNUMBER}_${name}.fits"
-#rm "./conf/shmim_${name}.name.txt"
+#rm "./conf/shmim.${name}.name.txt"
 #done
 
 #done
@@ -1384,30 +1384,30 @@ cd zrespM
 exec 3>&1;
 zrespMfname=$(dialog --title "Select Zonal RM" --stdout --title "Select zonal RM" --fselect "${zrespMfname}" $nbwlines $nbwcols)
 cd ..
-echo "./zrespM/$zrespMfname" > ./conf/shmim_zrespM.name.txt
+echo "./zrespM/$zrespMfname" > ./conf/shmim.zrespM.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ zrespM
 
-sed -e 's/zrespM/wfsmask/g' ./conf/shmim_zrespM.name.txt > ./conf/shmim_wfsmask.name.txt
+sed -e 's/zrespM/wfsmask/g' ./conf/shmim.zrespM.name.txt > ./conf/shmim.wfsmask.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ wfsmask
 
-sed -e 's/zrespM/dmmaskRM/g' ./conf/shmim_zrespM.name.txt > ./conf/shmim_dmmaskRM.name.txt
+sed -e 's/zrespM/dmmaskRM/g' ./conf/shmim.zrespM.name.txt > ./conf/shmim.dmmaskRM.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ dmmaskRM
 
-sed -e 's/zrespM/dmmap/g' ./conf/shmim_zrespM.name.txt > ./conf/shmim_dmmap.name.txt
+sed -e 's/zrespM/dmmap/g' ./conf/shmim.zrespM.name.txt > ./conf/shmim.dmmap.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ dmmap
 
-sed -e 's/zrespM/wfsref0/g' ./conf/shmim_zrespM.name.txt > ./conf/shmim_wfsref0.name.txt
+sed -e 's/zrespM/wfsref0/g' ./conf/shmim.zrespM.name.txt > ./conf/shmim.wfsref0.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ wfsref0
 
-sed -e 's/zrespM/dmslaved/g' ./conf/shmim_zrespM.name.txt > ./conf/shmim_dmslaved.name.txt
+sed -e 's/zrespM/dmslaved/g' ./conf/shmim.zrespM.name.txt > ./conf/shmim.dmslaved.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ dmslaved
 
-sed -e 's/zrespM/dmmask/g' ./conf/shmim_zrespM.name.txt > ./conf/shmim_dmmask.name.txt
+sed -e 's/zrespM/dmmask/g' ./conf/shmim.zrespM.name.txt > ./conf/shmim.dmmask.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ dmmask
 ;;
 	1)
 ds9 $imname &
-imname=$( head -1 ./conf/shmim_zrespM.name.txt )
+imname=$( head -1 ./conf/shmim.zrespM.name.txt )
 ;;
 esac
 ;;
@@ -1691,16 +1691,16 @@ tmux send-keys -t aol${LOOPNUMBER}zrmcust "cp dmmask.fits dmmask/dmmask_${datest
 fi
 
 
-echo "zrespM/zrespM_${datestr}.fits" > ./conf/shmim_zrespM.name.txt
-echo "wfsref0/wfsref0_${datestr}.fits" > ./conf/shmim_wfsref0.name.txt
-echo "wfsmap/wfsmap_${datestr}.fits" > ./conf/shmim_wfsmap.name.txt
-echo "dmmap/dmmap_${datestr}.fits" > ./conf/shmim_dmmap.name.txt
-echo "wfsmask/wfsmask_${datestr}.fits" > ./conf/shmim_wfsmask.name.txt
+echo "zrespM/zrespM_${datestr}.fits" > ./conf/shmim.zrespM.name.txt
+echo "wfsref0/wfsref0_${datestr}.fits" > ./conf/shmim.wfsref0.name.txt
+echo "wfsmap/wfsmap_${datestr}.fits" > ./conf/shmim.wfsmap.name.txt
+echo "dmmap/dmmap_${datestr}.fits" > ./conf/shmim.dmmap.name.txt
+echo "wfsmask/wfsmask_${datestr}.fits" > ./conf/shmim.wfsmask.name.txt
 
 if [ "$DMMODE" = "0" ]; then
-echo "dmmaskRM/dmmaskRM_${datestr}.fits" > ./conf/shmim_dmmaskRM.name.txt
-echo "dmslaved/dmslaved_${datestr}.fits" > ./conf/shmim_dmslaved.name.txt
-echo "dmmaskRM/dmmask_${datestr}.fits" > ./conf/shmim_dmmask.name.txt
+echo "dmmaskRM/dmmaskRM_${datestr}.fits" > ./conf/shmim.dmmaskRM.name.txt
+echo "dmslaved/dmslaved_${datestr}.fits" > ./conf/shmim.dmslaved.name.txt
+echo "dmmaskRM/dmmask_${datestr}.fits" > ./conf/shmim.dmmask.name.txt
 fi
 
 rm zrmcust.run
@@ -1728,11 +1728,11 @@ cd wfsmask
 exec 3>&1;
 wfsmaskfname=$(dialog --title "Select WFS pixel mask file name" --stdout  --fselect "${wfsmaskfname}" $nbwlines $nbwcols)
 cd ..
-echo "./wfsmask/$wfsmaskfname" > ./conf/shmim_wfsmask.name.txt
+echo "./wfsmask/$wfsmaskfname" > ./conf/shmim.wfsmask.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ wfsmask
 ;;
 	1)
-imname=$( head -1 ./conf/shmim_wfsmask.name.txt )
+imname=$( head -1 ./conf/shmim.wfsmask.name.txt )
 ds9 $imname &
 ;;
 esac
@@ -1748,11 +1748,11 @@ cd dmmap
 exec 3>&1;
 dmmapfname=$(dialog --title "Select DM map file name" --stdout --fselect "wfsdark/" $nbwlines $nbwcols)
 cd ..
-echo "./dmmap/$dmmapfname" > ./conf/shmim_dmmap.name.txt
+echo "./dmmap/$dmmapfname" > ./conf/shmim.dmmap.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ dmmap
 ;;
 	1)
-imname=$( head -1 ./conf/shmim_dmmap.name.txt )
+imname=$( head -1 ./conf/shmim.dmmap.name.txt )
 ds9 $imname &
 ;;
 esac
@@ -1767,11 +1767,11 @@ cd dmmaskRM
 exec 3>&1;
 dmmaskRMfname=$(dialog --title "Select DM act mask file name" --stdout --fselect "${dmmaskRMfname}" $nbwlines $nbwcols)
 cd ..
-echo "./dmmaskRM/$dmmaskRMfname" > ./conf/shmim_dmmaskRM.name.txt
+echo "./dmmaskRM/$dmmaskRMfname" > ./conf/shmim.dmmaskRM.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ dmmaskRM
 ;;
 	1)
-imname=$( head -1 ./conf/shmim_dmmaskRM.name.txt )
+imname=$( head -1 ./conf/shmim.dmmaskRM.name.txt )
 ds9 $imname &
 ;;
 esac
@@ -1787,11 +1787,11 @@ datestr=`date -u +%Y-%m-%d_%H:%M:%S`
 fname="dmslaved/dmslaved_${datestr}.fits"
 mkdir -p dmslaved
 cp dmslaved.fits $fname
-echo "$fname" > ./conf/shmim_dmslaved.name.txt
+echo "$fname" > ./conf/shmim.dmslaved.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ dmslaved
 ;;
         1)
-imname =$( head -1 ./conf/shmim_dmslaved.name.txt )
+imname =$( head -1 ./conf/shmim.dmslaved.name.txt )
 ds9 $imname &
 ;;
 esac
@@ -1804,11 +1804,11 @@ cd dmmask
 exec 3>&1;
 dmmaskfname=$(dialog --title "Select ext DM act mask file name" --stdout --fselect "${dmmaskfname}" $nbwlines $nbwcols)
 cd ..
-echo "./dmmask/$dmmaskfname" > ./conf/shmim_dmmask.name.txt
+echo "./dmmask/$dmmaskfname" > ./conf/shmim.dmmask.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ dmmask
 ;;
 	1)
-imname=$( head -1 ./conf/shmim_dmmask.name.txt )
+imname=$( head -1 ./conf/shmim.dmmask.name.txt )
 ds9 $imname &
 ;;
 esac
@@ -1824,11 +1824,11 @@ cd wfsref0
 exec 3>&1;
 wfsref0fname=$(dialog --title "Select WFS reference file name" --stdout --fselect "${wfsref0fname}" $nbwlines $nbwcols)
 cd ..
-echo "./wfsref0/$wfsref0fname" > ./conf/shmim_wfsref0.name.txt
+echo "./wfsref0/$wfsref0fname" > ./conf/shmim.wfsref0.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ wfsref0
 ;;
 	1)
-imname=$( head -1 ./conf/shmim_wfsref.name.txt )
+imname=$( head -1 ./conf/shmim.wfsref.name.txt )
 ds9 $imname &
 ;;
 esac
@@ -1873,7 +1873,7 @@ tmux send-keys -t $tmuxsname "exit" C-m
 datestr=`date -u +%Y-%m-%d_%H:%M:%S`
 tmux send-keys -t $tmuxsname "cp wfsref0.fits wfsref0/wfsref0_${datestr}.fits" C-m
 tmux send-keys -t $tmuxsname "exit" C-m
-echo "wfsref0/wfsref0_${datestr}.fits" > ./conf/shmim_wfsref0.name.txt
+echo "wfsref0/wfsref0_${datestr}.fits" > ./conf/shmim.wfsref0.name.txt
 aoconflogext "STOP taking WFS reference"
 menucontrolloop_default="awfsref0_on"
 state="menuconfigureloop"
@@ -1950,15 +1950,15 @@ cd LOrespM
 exec 3>&1;
 LOrespMfname=$(dialog --title "Select Zonal RM" --stdout --title "Select zonal RM" --fselect "${LOrespMfname}" $nbwlines $nbwcols)
 cd ..
-echo "./LOrespM/$LOrespMfname" > ./conf/shmim_LOrespM.name.txt
+echo "./LOrespM/$LOrespMfname" > ./conf/shmim.LOrespM.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ LOrespM
 
-sed -e 's/LOrespM/LODMmodes/g' ./conf/shmim_LOrespM.name.txt > ./conf/shmim_LODMmodes.name.txt
+sed -e 's/LOrespM/LODMmodes/g' ./conf/shmim.LOrespM.name.txt > ./conf/shmim.LODMmodes.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ LODMmodes
 ;;
 	1)
 ds9 $imname &
-imname=$( head -1 ./conf/shmim_LOrespM.name.txt )
+imname=$( head -1 ./conf/shmim.LOrespM.name.txt )
 ;;
 esac
 ;;

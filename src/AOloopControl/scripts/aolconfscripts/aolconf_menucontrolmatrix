@@ -22,7 +22,7 @@ Notations: \n
   \Z1missing file or stream\Zn\n
 \n
 For all configurations files (not including Hardware I/O links) :\n
-  File \Zbconf/shmim_<name>.name.txt\Zn contains the original .fits file path and name\n
+  File \Zbconf/shmim.<name>.name.txt\Zn contains the original .fits file path and name\n
   A symbolic link to the FITS file is written as \Zuconf/aol${LOOPNUMBER}_<name>.fits\Zn\n
   File is loaded in shared memory as $SHMDIR/\Z4aol${LOOPNUMBER}_<name>\Zn.im.shm\n
 "
@@ -141,7 +141,7 @@ menuitems+=( "zRM" "$menustring" )
 
 
 #Q? ConfReadParam SVDNBmodes "00"; SVDNBmodes=${paramvalue}
-menuitems+=( "RM2CM" "Compute straight pseudoinv Control matrix zcontrM  (-> eigenv.dat)  [${SVDNBmodes} modes kept]  (./conf_staged/aol${LOOPNUMBER}_zrespM.fits -> ./conf_staged/shmim_contrM.name.txt)" )
+menuitems+=( "RM2CM" "Compute straight pseudoinv Control matrix zcontrM  (-> eigenv.dat)  [${SVDNBmodes} modes kept]  (./conf_staged/aol${LOOPNUMBER}_zrespM.fits -> ./conf_staged/shmim.contrM.name.txt)" )
 
 
 
@@ -212,7 +212,7 @@ menuitems+=( "confUp" "\Z1 Configuration Update (cp conf_staged/*.txt ./conf/) \
 menuitems+=( "SMload" "\Z1 Load shared memory from conf \Zn" )
 
 
-#mNBmodes=$( head -1 conf/shmim_zrespM.imsize.txt | awk '{printf("%03ld", $3)}' )
+#mNBmodes=$( head -1 conf/shmim.zrespM.imsize.txt | awk '{printf("%03ld", $3)}' )
 #NBmodeblocks=$( head -1 ./conf/param_NBmodeblocks.txt )
 
 mkmodesdatestr=$(TZ=utc stat -c %y ./conf/param_NBmodeblocks.txt)
@@ -561,11 +561,11 @@ tmux send-keys -t $tmuxname "./auxscripts/aolmkmodesM -a 0 ${SVDlimall}" C-m
 
 datestr=`date -u +%Y-%m-%d_%H:%M:%S`
 tmux send-keys -t $tmuxname "cp ./mkmodestmp/fmodesall.fits DMmodes/DMmodes_${datestr}.fits" C-m
-tmux send-keys -t $tmuxname "echo \"DMmodes/DMmodes_${datestr}.fits\" > ./conf/shmim_DMmodes.name.txt" C-m
+tmux send-keys -t $tmuxname "echo \"DMmodes/DMmodes_${datestr}.fits\" > ./conf/shmim.DMmodes.name.txt" C-m
 tmux send-keys -t $tmuxname "cp ./mkmodestmp/fmodesWFSall.fits respM/respM_${datestr}.fits" C-m
-tmux send-keys -t $tmuxname "echo \"respM/respM_${datestr}.fits\" > ./conf/shmim_respM.name.txt" C-m
+tmux send-keys -t $tmuxname "echo \"respM/respM_${datestr}.fits\" > ./conf/shmim.respM.name.txt" C-m
 tmux send-keys -t $tmuxname "cp ./mkmodestmp/cmatall.fits contrM/contrM_${datestr}.fits" C-m
-tmux send-keys -t $tmuxname "echo \"contrM/contrM_${datestr}.fits\" > ./conf/shmim_contrM.name.txt" C-m
+tmux send-keys -t $tmuxname "echo \"contrM/contrM_${datestr}.fits\" > ./conf/shmim.contrM.name.txt" C-m
 
 
 for i in `seq 0 20`;
@@ -574,19 +574,19 @@ i2=$(printf "%02d" "$i")
 fname="mkmodestmp/fmodes_${i2}.fits"
 #if [ -e "$fname" ]; then
 tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodes_${i2}.fits DMmodes/DMmodes${i2}_${datestr}.fits; fi" C-m
-tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"DMmodes/DMmodes${i2}_${datestr}.fits\" > ./conf/shmim_DMmodes${i2}.name.txt; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"DMmodes/DMmodes${i2}_${datestr}.fits\" > ./conf/shmim.DMmodes${i2}.name.txt; fi" C-m
 
 tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodesWFS_${i2}.fits respM/respM${i2}_${datestr}.fits; fi" C-m
-tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"respM/respM${i2}_${datestr}.fits\" > ./conf/shmim_respM${i2}.name.txt; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"respM/respM${i2}_${datestr}.fits\" > ./conf/shmim.respM${i2}.name.txt; fi" C-m
 
 tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmat_${i2}.fits contrM/contrM${i2}_${datestr}.fits; fi" C-m
-tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"contrM/contrM${i2}_${datestr}.fits\" > ./conf/shmim_contrM${i2}.name.txt; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"contrM/contrM${i2}_${datestr}.fits\" > ./conf/shmim.contrM${i2}.name.txt; fi" C-m
 
 tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatc_${i2}.fits contrMc/contrMc${i2}_${datestr}.fits; fi" C-m
-tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"contrMc/contrMc${i2}_${datestr}.fits\" > ./conf/shmim_contrMc${i2}.name.txt; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"contrMc/contrMc${i2}_${datestr}.fits\" > ./conf/shmim.contrMc${i2}.name.txt; fi" C-m
 
 tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatcact_${i2}.fits contrMcact/contrMcact${i2}_${datestr}.fits; fi" C-m
-tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"contrMcact/contrMcact${i2}_${datestr}.fits\" > ./conf/shmim_contrMcact${i2}_00.name.txt; fi" C-m
+tmux send-keys -t $tmuxname "if [ -f \"$fname\" ]; then echo \"contrMcact/contrMcact${i2}_${datestr}.fits\" > ./conf/shmim.contrMcact${i2}_00.name.txt; fi" C-m
 #fi
 done
 
@@ -602,9 +602,9 @@ menucontrolmatrix_default="RM2CMm"
 
 
 	zRM)
-fname=$( head -1 ./conf/shmim_zrespM.name.txt )
+fname=$( head -1 ./conf/shmim.zrespM.name.txt )
 fname=$(dialog --title "Select zonal Resp Matrix" --stdout --fselect ${fname} $nbwlines $nbwcols)
-echo "$fname" > ./conf/shmim_zrespM.name.txt
+echo "$fname" > ./conf/shmim.zrespM.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ zrespM
 menucontrolmatrix_default="zRM"
 ;;
@@ -621,7 +621,7 @@ menucontrolmatrix_default="zRM"
 #   ./conf_staged/zrespM.fits
 # OUTPUT
 #   ./zcontrM/zcontrM_<date>.fits
-#   ./conf/shmim_contrM.name.txt
+#   ./conf/shmim.contrM.name.txt
 # -> conf_staged 
 
 # set NBmodeblocks to 1
@@ -631,12 +631,12 @@ mkdir -p zcontrM
 datestr=`date -u +%Y-%m-%d_%H:%M:%S`
 ./auxscripts/aolRM2CM ${SVDlimall} zcontrM.fits
 mv zcontrM.fits ./zcontrM/zcontrM_${datestr}.fits
-echo "zcontrM/zcontrM_${datestr}.fits" > ./conf_staged/shmim_contrM.name.txt
-echo "zcontrM/zcontrM_${datestr}.fits" > ./conf_staged/shmim_contrM00.name.txt
-echo "conf/aol${LOOPNUMBER}_DMmodes_zonal.fits" > ./conf_staged/shmim_DMmodes.name.txt
-echo "conf/aol${LOOPNUMBER}_DMmodes_zonal.fits" > ./conf_staged/shmim_DMmodes00.name.txt
-cp conf_staged/shmim_zrespM.name.txt conf_staged/shmim_respM.name.txt
-cp conf_staged/shmim_zrespM.name.txt conf_staged/shmim_respM00.name.txt
+echo "zcontrM/zcontrM_${datestr}.fits" > ./conf_staged/shmim.contrM.name.txt
+echo "zcontrM/zcontrM_${datestr}.fits" > ./conf_staged/shmim.contrM00.name.txt
+echo "conf/aol${LOOPNUMBER}_DMmodes_zonal.fits" > ./conf_staged/shmim.DMmodes.name.txt
+echo "conf/aol${LOOPNUMBER}_DMmodes_zonal.fits" > ./conf_staged/shmim.DMmodes00.name.txt
+cp conf_staged/shmim.zrespM.name.txt conf_staged/shmim.respM.name.txt
+cp conf_staged/shmim.zrespM.name.txt conf_staged/shmim.respM00.name.txt
 cp $PWD/zcontrM/zcontrM_${datestr}.fits $PWD/conf_staged/contrM.fits      # for convenience
 
 CMMODE="1"
@@ -710,23 +710,23 @@ menucontrolmatrix_default="SMload"
 
 
 	DMmodes)
-fname=$( head -1 ./conf/shmim_DMmodes.name.txt )
+fname=$( head -1 ./conf/shmim.DMmodes.name.txt )
 fname=$(dialog --title "Select DM Control Modes" --stdout --fselect ${fname} $nbwlines $nbwcols)
-echo "$fname" > ./conf/shmim_DMmodes.name.txt
+echo "$fname" > ./conf/shmim.DMmodes.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ DMmodes
 menucontrolmatrix_default="DMmodes"
 ;;
 	RM)
 fname=$( head -1 ./conf/conf_respM_name.txt )
 fname=$(dialog --title "Select Resp Matrix" --stdout --fselect ${fname} $nbwlines $nbwcols)
-echo "$fname" > ./conf/shmim_respM.name.txt
+echo "$fname" > ./conf/shmim.respM.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ respM
 menucontrolmatrix_default="RM"
 ;;
 	CM)
 fname=$( head -1 ./conf/conf_contrM_name.txt )
 fname=$(dialog --title "Select contr Matrix" --stdout --fselect ${fname} $nbwlines $nbwcols)
-echo "$fname" > ./conf/shmim_contrM.name.txt
+echo "$fname" > ./conf/shmim.contrM.name.txt
 Fits2shm -c -p aol${LOOPNUMBER}_ contrM
 menucontrolmatrix_default="CM"
 ;;

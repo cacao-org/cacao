@@ -7,8 +7,8 @@
 execname="./AOloopControl"
 
 
-LHSwfsref0namefile="./conf/shmim_wfsref0linsim.name.txt"
-LHSzrepMnamefile="./conf/shmim_zrespMlinsim.name.txt"
+LHSwfsref0namefile="./conf/shmim.wfsref0linsim.name.txt"
+LHSzrepMnamefile="./conf/shmim.zrespMlinsim.name.txt"
 
 LHSwfsref0_FITS=$( head -1 $LHSwfsref0namefile )
 LHSzrespM_FITS=$( head -1 $LHSzrepMnamefile )

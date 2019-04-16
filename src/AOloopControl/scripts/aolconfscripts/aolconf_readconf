@@ -45,7 +45,7 @@ fi
 
 function SelectConfFile {
 name="$1"
-ffname="./conf/shmim_${name}.name.txt"
+ffname="./conf/shmim.${name}.name.txt"
 fname=$( head -1 $ffname )
 echo "fname = $fname"
 fname=$(dialog --title "Select  Matrix" --stdout --title "Select ${name}" --fselect ${fname} $nbwlines $nbwcols)

@@ -44,13 +44,13 @@ echo "./auxscripts/aolmkmodes2 ${cpamax} -1 ${SVDlimall} ${mkModesMODE}"  >> $co
 datestr=`date -u +%Y-%m-%d_%H:%M:%S`
 
 echo "cp ./mkmodestmp/fmodesall.fits DMmodes/DMmodes_${datestr}.fits"  >> $computeModesCMscriptfile
-echo "echo \"DMmodes/DMmodes_${datestr}.fits\" > ./conf_staged/shmim_DMmodes.name.txt"  >> $computeModesCMscriptfile
+echo "echo \"DMmodes/DMmodes_${datestr}.fits\" > ./conf_staged/shmim.DMmodes.name.txt"  >> $computeModesCMscriptfile
 
 echo "cp ./mkmodestmp/fmodesWFSall.fits respM/respM_${datestr}.fits"  >> $computeModesCMscriptfile
-echo "echo \"respM/respM_${datestr}.fits\" > ./conf_staged/shmim_respM.name.txt"  >> $computeModesCMscriptfile
+echo "echo \"respM/respM_${datestr}.fits\" > ./conf_staged/shmim.respM.name.txt"  >> $computeModesCMscriptfile
 
 echo "cp ./mkmodestmp/cmatall.fits contrM/contrM_${datestr}.fits"  >> $computeModesCMscriptfile
-echo "echo \"contrM/contrM_${datestr}.fits\" > ./conf_staged/shmim_contrM.name.txt"  >> $computeModesCMscriptfile
+echo "echo \"contrM/contrM_${datestr}.fits\" > ./conf_staged/shmim.contrM.name.txt"  >> $computeModesCMscriptfile
 
 echo "cp ./mkmodestmp/NBmodes.txt ./conf_staged/param_NBmodes.txt" >> $computeModesCMscriptfile
 
@@ -60,19 +60,19 @@ i2=$(printf "%02d" "$i")
 fname="mkmodestmp/fmodes_${i2}.fits"
 #if [ -e "$fname" ]; then
 echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodes_${i2}.fits DMmodes/DMmodes${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-echo "if [ -f \"$fname\" ]; then echo \"DMmodes/DMmodes${i2}_${datestr}.fits\" > ./conf_staged/shmim_DMmodes${i2}.name.txt; fi"  >> $computeModesCMscriptfile
+echo "if [ -f \"$fname\" ]; then echo \"DMmodes/DMmodes${i2}_${datestr}.fits\" > ./conf_staged/shmim.DMmodes${i2}.name.txt; fi"  >> $computeModesCMscriptfile
 
 echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodesWFS_${i2}.fits respM/respM${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-echo "if [ -f \"$fname\" ]; then echo \"respM/respM${i2}_${datestr}.fits\" > ./conf_staged/shmim_respM${i2}.name.txt; fi"  >> $computeModesCMscriptfile
+echo "if [ -f \"$fname\" ]; then echo \"respM/respM${i2}_${datestr}.fits\" > ./conf_staged/shmim.respM${i2}.name.txt; fi"  >> $computeModesCMscriptfile
 
 echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmat_${i2}.fits contrM/contrM${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-echo "if [ -f \"$fname\" ]; then echo \"contrM/contrM${i2}_${datestr}.fits\" > ./conf_staged/shmim_contrM${i2}.name.txt; fi"  >> $computeModesCMscriptfile
+echo "if [ -f \"$fname\" ]; then echo \"contrM/contrM${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrM${i2}.name.txt; fi"  >> $computeModesCMscriptfile
 
 echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatc_${i2}.fits contrMc/contrMc${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-echo "if [ -f \"$fname\" ]; then echo \"contrMc/contrMc${i2}_${datestr}.fits\" > ./conf_staged/shmim_contrMc${i2}.name.txt; fi"  >> $computeModesCMscriptfile
+echo "if [ -f \"$fname\" ]; then echo \"contrMc/contrMc${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrMc${i2}.name.txt; fi"  >> $computeModesCMscriptfile
 
 echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatcact_${i2}.fits contrMcact/contrMcact${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-echo "if [ -f \"$fname\" ]; then echo \"contrMcact/contrMcact${i2}_${datestr}.fits\" > ./conf_staged/shmim_contrMcact${i2}_00.name.txt; fi"  >> $computeModesCMscriptfile
+echo "if [ -f \"$fname\" ]; then echo \"contrMcact/contrMcact${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrMcact${i2}_00.name.txt; fi"  >> $computeModesCMscriptfile
 #fi
 done
 chmod +x $computeModesCMscriptfile
