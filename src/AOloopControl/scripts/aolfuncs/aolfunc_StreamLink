@@ -97,6 +97,20 @@ execname="./AOloopControl"
 file="./conf/streamlink_$1.name.txt"
 if [ -a $file ]; then
 
+
+
+
+if [[ -z "${MILK_SHM_DIR}" ]]; then
+  echo "ERROR: MILK_SHM_DIR environment variable does not exist: cannot find/access shared memory"
+  exit
+else
+  SHMDIR="${MILK_SHM_DIR}"
+fi
+echo "SHMDIR = $SHMDIR"
+
+
+
+
 # READ LOOP NUMBER
 if [ -f LOOPNUMBER ]; then
 LOOPNUMBER=$( head -1 LOOPNUMBER )
@@ -105,8 +119,8 @@ LOOPNUMBER="7"
 fi
 
 streamname=$( head -1 $file )
-rm /milk/shm/aol${LOOPNUMBER}_$1.im.shm
-ln -s /milk/shm/${streamname}.im.shm /milk/shm/aol${LOOPNUMBER}_$1.im.shm
+rm $SHMDIR/aol${LOOPNUMBER}_$1.im.shm
+ln -s $SHMDIR/${streamname}.im.shm $SHMDIR/aol${LOOPNUMBER}_$1.im.shm
 
 
 ./AOloopControl << EOF
