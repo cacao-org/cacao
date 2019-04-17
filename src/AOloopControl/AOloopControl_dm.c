@@ -238,8 +238,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     int         GPUindex,
     long        loop,
     int         offloadMode
-)
-{
+) {
 #ifdef HAVE_CUDA
     long IDmodecoeffs;
     int GPUcnt, k;
@@ -268,21 +267,46 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
     int RT_priority = 80; //any number from 0-99
+   
+   
     struct sched_param schedpar;
 
     char imname[200];
 
-
+/*
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
     sched_setscheduler(0, SCHED_FIFO, &schedpar);
 #endif
-
+*/
 
 
     PROCESSINFO *processinfo;
-    if(data.processinfo==1)
-    {
+    
+    char pinfoname[200];
+    sprintf(pinfoname, "aol%ld-GPUmodes2dm", loop);
+    
+    char pinfodescr[200];
+    sprintf(pinfodescr, "GPU%d -> %s", GPUindex, out_name);
+    
+    char pinfomsg[200];
+    sprintf(pinfomsg, "setup", GPUindex);
+       
+    processinfo = processinfo_setup(
+        pinfoname,             // short name for the processinfo instance, no spaces, no dot, name should be human-readable
+        pinfodescr,    // description
+        pinfomsg,  // message on startup
+        __FUNCTION__, __FILE__, __LINE__
+        );
+    // OPTIONAL SETTINGS
+    processinfo->MeasureTiming = 1; // Measure timing 
+    processinfo->RT_priority = RT_priority;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+
+    int loopOK = 1;
+    
+    
+    /*
+    if(data.processinfo == 1) {
         // CREATE PROCESSINFO ENTRY
         // see processtools.c in module CommandLineInterface for details
         //
@@ -302,33 +326,34 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
     // Process signals are caught for suitable processing and reporting.
     processinfo_CatchSignals();
+*/
 
 
 
 
 
-
-    if(aoloopcontrol_var.aoconfID_looptiming == -1)
-    {
+    if(aoloopcontrol_var.aoconfID_looptiming == -1) {
         // LOOPiteration is written in cnt1 of loop timing array
-        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1) {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
         aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
     }
 
 
-    if(GPUMATMULTCONFindex==0)
-    {
+    if(GPUMATMULTCONFindex == 0) {
         // read AO loop gain, mult
-        if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+        if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
             AOloopControl_InitializeMemory(1);
+        }
     }
 
 
     GPUcnt = 1;
-    GPUsetM = (int*) malloc(sizeof(int)*GPUcnt);
-    for(k=0; k<GPUcnt; k++)
-        GPUsetM[k] = k+GPUindex;
+    GPUsetM = (int *) malloc(sizeof(int) * GPUcnt);
+    for(k = 0; k < GPUcnt; k++) {
+        GPUsetM[k] = k + GPUindex;
+    }
 
     IDout = image_ID(out_name);
     IDmodecoeffs = image_ID(modecoeffs_name);
@@ -337,7 +362,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
 
-
+	processinfo_WriteMessage(processinfo, "SETTING UP GPU COMPUTATION");
     printf(" ====================     SETTING UP GPU COMPUTATION\n");
     fflush(stdout);
 
@@ -346,19 +371,20 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
 
-    for(k=0; k<GPUcnt; k++)
+    for(k = 0; k < GPUcnt; k++) {
         printf(" ====================     USING GPU %d\n", GPUsetM[k]);
+    }
 
     list_image_ID();
 
-    if(offloadMode==1)
-    {
+    if(offloadMode == 1) {
         char imnamedmC[200];
 
 
 
-        if(sprintf(imnamedmC, "aol%ld_dmC", loop) < 1)
+        if(sprintf(imnamedmC, "aol%ld_dmC", loop) < 1) {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
 
         IDc = image_ID(imnamedmC);
         dmxsize = data.image[IDc].md[0].size[0];
@@ -367,59 +393,70 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
         printf("offloadMode = %d  %ld %ld\n", offloadMode, dmxsize, dmysize);
         fflush(stdout);
-    }
-    else
+    } else {
         printf("offloadMode = %d\n", offloadMode);
+    }
 
     printf("out_name = %s \n", out_name);
     printf("IDout    = %ld\n", IDout);
 
-
-    if(data.processinfo==1)
-        processinfo->loopstat = 1; // loop running
-    int loopOK = 1;
+/*
+    if(data.processinfo == 1) {
+        processinfo->loopstat = 1;    // loop running
+    }
+*/
     int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
-    long loopcnt = 0;
+  //  long loopcnt = 0;
 
-    while(loopOK == 1)
-    {
+    // ==================================
+    // STARTING LOOP
+    // ==================================
+    processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
+
+
+    while(loopOK == 1) {
         // processinfo control
-        if(data.processinfo==1)
-        {
-            while(processinfo->CTRLval == 1)  // pause
+        loopOK = processinfo_loopstep(processinfo);
+        /*
+        if(data.processinfo == 1) {
+            while(processinfo->CTRLval == 1) { // pause
                 usleep(50);
+            }
 
-            if(processinfo->CTRLval == 2) // single iteration
+            if(processinfo->CTRLval == 2) { // single iteration
                 processinfo->CTRLval = 1;
+            }
 
-            if(processinfo->CTRLval == 3) // exit loop
+            if(processinfo->CTRLval == 3) { // exit loop
                 loopCTRLexit = 1;
+            }
         }
-
+*/
 
         COREMOD_MEMORY_image_set_semwait(modecoeffs_name, semTrigg);
 
 
-        if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+       // if((data.processinfo == 1) && (processinfo->MeasureTiming == 1)) {
             processinfo_exec_start(processinfo);
+      //  }
 
 
         // CTRLval = 5 will disable computations in loop (usually for testing)
         int doComputation = 1;
         if(data.processinfo == 1)
-            if(processinfo->CTRLval == 5)
+            if(processinfo->CTRLval == 5) {
                 doComputation = 0;
+            }
 
 
         AOconf[loop].AOtiminginfo.statusM = 10;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[7] = tdiffv;
 
 
-        if(doComputation==1)
-        {
+        if(doComputation == 1) {
             //
             // computation ....
             //
@@ -430,46 +467,49 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
             GPU_loop_MultMat_execute(GPUMATMULTCONFindex, &status, &GPUstatus[0], alpha, beta, write_timing, 0);
 
-		}
+        }
 
 
-    if(offloadMode==1) // offload back to dmC
-            {
-                data.image[IDc].md[0].write = 1;
-                for(ii=0; ii<dmxsize*dmysize; ii++)
-                    data.image[IDc].array.F[ii] = data.image[IDout].array.F[ii];
-
-                data.image[IDc].md[0].cnt0++;
-                data.image[IDc].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
-                COREMOD_MEMORY_image_set_sempost_byID(IDc, -1);
-                data.image[IDc].md[0].write = 0;
+        if(offloadMode == 1) { // offload back to dmC
+            data.image[IDc].md[0].write = 1;
+            for(ii = 0; ii < dmxsize * dmysize; ii++) {
+                data.image[IDc].array.F[ii] = data.image[IDout].array.F[ii];
             }
-        
+
+            data.image[IDc].md[0].cnt0++;
+            data.image[IDc].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
+            COREMOD_MEMORY_image_set_sempost_byID(IDc, -1);
+            data.image[IDc].md[0].write = 0;
+        }
+
 
 
         //		if(GPUMATMULTCONFindex==0)
         AOconf[loop].AOtiminginfo.statusM = 20;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
 
 
-        if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+     //   if((data.processinfo == 1) && (processinfo->MeasureTiming == 1)) {
             processinfo_exec_end(processinfo);
+     //   }
 
         // process signals
-		processinfo_ProcessSignals(processinfo);
+     //   processinfo_ProcessSignals(processinfo);
 
-        loopcnt++;
-        if(data.processinfo==1)
-            processinfo->loopcnt = loopcnt;
+       // loopcnt++;
+      //  if(data.processinfo == 1) {
+       //     processinfo->loopcnt = loopcnt;
+     //   }
 
     }
 
 
-    if(data.processinfo==1)
+ //   if(data.processinfo == 1) {
         processinfo_cleanExit(processinfo);
+ //   }
 
 
 
