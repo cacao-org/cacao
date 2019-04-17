@@ -268,17 +268,9 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
     int RT_priority = 80; //any number from 0-99
    
-   
-    struct sched_param schedpar;
 
     char imname[200];
 
-/*
-    schedpar.sched_priority = RT_priority;
-#ifndef __MACH__
-    sched_setscheduler(0, SCHED_FIFO, &schedpar);
-#endif
-*/
 
 
     PROCESSINFO *processinfo;
@@ -305,31 +297,6 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     int loopOK = 1;
     
     
-    /*
-    if(data.processinfo == 1) {
-        // CREATE PROCESSINFO ENTRY
-        // see processtools.c in module CommandLineInterface for details
-        //
-        char pinfoname[200];
-        sprintf(pinfoname, "aol%ld-GPUmodes2dm", loop);
-        processinfo = processinfo_shm_create(pinfoname, 0);
-        processinfo->loopstat = 0; // loop initialization
-
-        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
-        strcpy(processinfo->source_FILE,     __FILE__);
-        processinfo->source_LINE = __LINE__;
-
-        char msgstring[200];
-        sprintf(msgstring, "Running on GPU %d", GPUindex);
-        processinfo_WriteMessage(processinfo, msgstring);
-    }
-
-    // Process signals are caught for suitable processing and reporting.
-    processinfo_CatchSignals();
-*/
-
-
-
 
 
     if(aoloopcontrol_var.aoconfID_looptiming == -1) {
@@ -362,7 +329,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
 
-	processinfo_WriteMessage(processinfo, "SETTING UP GPU COMPUTATION");
+	processinfo_WriteMessage(processinfo, "Setting up GPU computation");
     printf(" ====================     SETTING UP GPU COMPUTATION\n");
     fflush(stdout);
 
@@ -400,14 +367,11 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     printf("out_name = %s \n", out_name);
     printf("IDout    = %ld\n", IDout);
 
-/*
-    if(data.processinfo == 1) {
-        processinfo->loopstat = 1;    // loop running
-    }
-*/
-    int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
-  //  long loopcnt = 0;
 
+    int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
+
+
+	processinfo_WriteMessage(processinfo, "Setting up complete");
     // ==================================
     // STARTING LOOP
     // ==================================
@@ -417,28 +381,12 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     while(loopOK == 1) {
         // processinfo control
         loopOK = processinfo_loopstep(processinfo);
-        /*
-        if(data.processinfo == 1) {
-            while(processinfo->CTRLval == 1) { // pause
-                usleep(50);
-            }
 
-            if(processinfo->CTRLval == 2) { // single iteration
-                processinfo->CTRLval = 1;
-            }
-
-            if(processinfo->CTRLval == 3) { // exit loop
-                loopCTRLexit = 1;
-            }
-        }
-*/
 
         COREMOD_MEMORY_image_set_semwait(modecoeffs_name, semTrigg);
 
 
-       // if((data.processinfo == 1) && (processinfo->MeasureTiming == 1)) {
             processinfo_exec_start(processinfo);
-      //  }
 
 
         // CTRLval = 5 will disable computations in loop (usually for testing)
@@ -457,14 +405,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
         if(doComputation == 1) {
-            //
-            // computation ....
-            //
-
-            //  for(m=0; m<NBmodes; m++)
-            //      data.image[IDmodesC].array.F[m] = data.image[IDmodecoeffs].array.F[m];
-
-
+         
             GPU_loop_MultMat_execute(GPUMATMULTCONFindex, &status, &GPUstatus[0], alpha, beta, write_timing, 0);
 
         }
@@ -491,27 +432,11 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
 
-
-     //   if((data.processinfo == 1) && (processinfo->MeasureTiming == 1)) {
             processinfo_exec_end(processinfo);
-     //   }
-
-        // process signals
-     //   processinfo_ProcessSignals(processinfo);
-
-       // loopcnt++;
-      //  if(data.processinfo == 1) {
-       //     processinfo->loopcnt = loopcnt;
-     //   }
-
     }
 
 
- //   if(data.processinfo == 1) {
         processinfo_cleanExit(processinfo);
- //   }
-
-
 
     free(GPUsetM);
 
