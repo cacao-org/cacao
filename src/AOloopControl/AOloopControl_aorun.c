@@ -4,10 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @author  O. Guyon
- * @date    2018-01-04
- *
- * 
  * @bug No known bugs.
  * 
  */
@@ -228,8 +224,7 @@ int AOloopControl_aorun_GUI(
  * ## Details
  *
  */
-int_fast8_t __attribute__((hot)) AOloopControl_aorun()
-{
+int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
     FILE *fp;
     char fname[200];
     long loop;
@@ -267,21 +262,48 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
 
 
-
+/*
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
     r = seteuid(data.euid); //This goes up to maximum privileges
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
     r = seteuid(data.ruid);//Go back to normal privileges
 #endif
+*/
+
 
     loop = aoloopcontrol_var.LOOPNUMBER;
 
 
 
+
     PROCESSINFO *processinfo;
-    if(data.processinfo==1)
-    {
+
+    char pinfoname[200];
+    sprintf(pinfoname, "aol%ld-aorun", loop);
+
+    char pinfodescr[200];
+    sprintf(pinfodescr, "run AOloop %ld", loop);
+
+    char pinfomsg[200];
+    sprintf(pinfomsg, "Initialize AO loop %ld", loop);
+
+    processinfo = processinfo_setup(
+                      pinfoname,             // short name for the processinfo instance, no spaces, no dot, name should be human-readable
+                      pinfodescr,    // description
+                      pinfomsg,  // message on startup
+                      __FUNCTION__, __FILE__, __LINE__
+                  );
+    // OPTIONAL SETTINGS
+    processinfo->MeasureTiming = 1; // Measure timing
+    processinfo->RT_priority = RT_priority;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+
+	int loopOK = 1;
+
+
+
+    /*
+    if(data.processinfo == 1) {
         // CREATE PROCESSINFO ENTRY
         // see processtools.c in module CommandLineInterface for details
         //
@@ -304,7 +326,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
     // Process signals are caught for suitable processing and reporting.
     processinfo_CatchSignals();
-
+*/
 
 
 
@@ -316,16 +338,16 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
     int logfunc_level_max = 1;
     char commentstring[200];
     sprintf(commentstring, "Main function, loop %ld", loop);
-    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
+    CORE_logFunctionCall(logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 
 
 
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(0);
+    }
 
 
-    if(AOloopControl_aorun_ProcessInit_Value == 0)
-    {
+    if(AOloopControl_aorun_ProcessInit_Value == 0) {
         AOloopControl_aorun_ProcessInit();
         AOloopControl_aorun_ProcessInit_Value = 1;
     }
@@ -347,34 +369,36 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
     // pixel streaming ?
     aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 1;
 
-    if(AOconf[loop].AOcompute.GPUall == 0)
+    if(AOconf[loop].AOcompute.GPUall == 0) {
         aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
+    }
 
 
     printf("============ pixel streaming ? =============\n");
     fflush(stdout);
 
-    if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 1)
+    if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 1) {
         aoloopcontrol_var.aoconfID_pixstream_wfspixindex = load_fits("pixstream_wfspixindex.fits", "pixstream", 1);
-
-    if(aoloopcontrol_var.aoconfID_pixstream_wfspixindex == -1)
-        aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
-    else
-    {
-        printf("Testing data type\n");
-        fflush(stdout);
-        if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].md[0].datatype != _DATATYPE_UINT16)
-            aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
     }
 
-    if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 1)
-    {
+    if(aoloopcontrol_var.aoconfID_pixstream_wfspixindex == -1) {
+        aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
+    } else {
+        printf("Testing data type\n");
+        fflush(stdout);
+        if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].md[0].datatype != _DATATYPE_UINT16) {
+            aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
+        }
+    }
+
+    if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 1) {
         long xsize = data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].md[0].size[0];
         long ysize = data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].md[0].size[1];
         aoloopcontrol_var.PIXSTREAM_NBSLICES = 0;
-        for(ii=0; ii<xsize*ysize; ii++)
-            if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].array.UI16[ii] > aoloopcontrol_var.PIXSTREAM_NBSLICES)
+        for(ii = 0; ii < xsize * ysize; ii++)
+            if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].array.UI16[ii] > aoloopcontrol_var.PIXSTREAM_NBSLICES) {
                 aoloopcontrol_var.PIXSTREAM_NBSLICES = data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].array.UI16[ii];
+            }
         aoloopcontrol_var.PIXSTREAM_NBSLICES++;
         printf("PIXEL STREAMING:   %d image slices\n", aoloopcontrol_var.PIXSTREAM_NBSLICES);
     }
@@ -398,37 +422,39 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
 
     vOK = 1;
-    if(AOconf[loop].aorun.init_wfsref0==0)
-    {
-        char msgstring[200];
-
+    if(AOconf[loop].aorun.init_wfsref0 == 0) {
+        
+		processinfo_error(processinfo, "ERROR: no WFS reference");
+/*
         sprintf(msgstring, "ERROR: no WFS reference");
-        if(data.processinfo == 1)
-        {
+        if(data.processinfo == 1) {
             processinfo->loopstat = 4; // ERROR
             strcpy(processinfo->statusmsg, msgstring);
         }
         printf("%s\n", msgstring);
-
+*/
+		loopOK = 0;
         vOK = 0;
     }
+    
+    
     //    if(AOconf[loop].init_CM==0)
-    if(aoloopcontrol_var.init_CM_local==0)
-    {
+    if(aoloopcontrol_var.init_CM_local == 0) {
         char msgstring[200];
 
         printf("ERROR: CANNOT RUN LOOP WITHOUT CONTROL MATRIX\n");
         printf("aoloopcontrol_var.init_CM_local = 0\n");
         printf("FILE %s  line %d\n", __FILE__, __LINE__);
 
-        sprintf(msgstring, "ERROR: no control matrix");
-
-        if(data.processinfo == 1)
-        {
+       // sprintf(msgstring, "ERROR: no control matrix");
+		processinfo_error(processinfo, "ERROR: no control matrix");
+        /*
+        if(data.processinfo == 1) {
             processinfo->loopstat = 4; // ERROR
             strcpy(processinfo->statusmsg, msgstring);
         }
-
+		*/
+		loopOK = 0;
         vOK = 0;
     }
 
@@ -443,8 +469,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
 
 
-    if(vOK==1)
-    {
+    if(vOK == 1) {
         AOconf[loop].aorun.LOOPiteration = 0;
         AOconf[loop].aorun.kill = 0;
         AOconf[loop].aorun.on = 0;
@@ -458,12 +483,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 #endif
 
         int timerinit = 0;
-        if(data.processinfo == 1)
+        if(data.processinfo == 1) {
             processinfo->loopstat = 1;
+        }
 
 
-        if(data.processinfo==1)
-        {
+        if(data.processinfo == 1) {
             char msgstring[200];
             sprintf(msgstring, "Entering loop");
             processinfo_WriteMessage(processinfo, msgstring);
@@ -472,15 +497,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
         int processinfoUpdate = 0;
 
-        while( AOconf[loop].aorun.kill == 0)
-        {
-            if(timerinit==1)
-            {
+        while(AOconf[loop].aorun.kill == 0) {
+            if(timerinit == 1) {
                 processinfoUpdate = 1;
                 clock_gettime(CLOCK_REALTIME, &t1);
                 printf("timer init\n");
-                if(data.processinfo==1)
-                {
+                if(data.processinfo == 1) {
                     char msgstring[200];
                     sprintf(msgstring, "Waiting");
                     processinfo_WriteMessage(processinfo, msgstring);
@@ -490,7 +512,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
             clock_gettime(CLOCK_REALTIME, &t2);
 
             tdiff = info_time_diff(t1, t2);
-            double tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+            double tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
 
             printf(" WAITING     %20.3lf sec         \r", tdiffv);
             fflush(stdout);
@@ -501,28 +523,26 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
             timerinit = 0;
 
             long loopcnt = 0;
-            while(AOconf[loop].aorun.on == 1)
-            {
+            while(AOconf[loop].aorun.on == 1) {
 
                 // processinfo control
-                if(data.processinfo==1)
-                {
-                    while(processinfo->CTRLval == 1)  // pause
+                if(data.processinfo == 1) {
+                    while(processinfo->CTRLval == 1) { // pause
                         usleep(50);
+                    }
 
-                    if(processinfo->CTRLval == 2) // single iteration
+                    if(processinfo->CTRLval == 2) { // single iteration
                         processinfo->CTRLval = 1;
+                    }
 
-                    if(processinfo->CTRLval == 3) // exit loop
-                    {
+                    if(processinfo->CTRLval == 3) { // exit loop
                         AOconf[loop].aorun.on = 0;
                         AOconf[loop].aorun.kill = 1;
                     }
                 }
 
 
-                if((data.processinfo==1)&&(processinfoUpdate==1))
-                {
+                if((data.processinfo == 1) && (processinfoUpdate == 1)) {
                     char msgstring[200];
                     sprintf(msgstring, "LOOP RUNNING");
                     processinfo_WriteMessage(processinfo, msgstring);
@@ -531,8 +551,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
-                if(timerinit==0)
-                {
+                if(timerinit == 0) {
                     //      Read_cam_frame(loop, 0, AOconf[loop].WFSim.WFSnormalize, 0, 1);
                     clock_gettime(CLOCK_REALTIME, &t1);
                     timerinit = 1;
@@ -547,8 +566,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 // CTRLval = 5 will disable computations in loop (usually for testing)
                 int doComputation = 1;
                 if(data.processinfo == 1)
-                    if(processinfo->CTRLval == 5)
+                    if(processinfo->CTRLval == 5) {
                         doComputation = 0;
+                    }
 
 
 
@@ -559,8 +579,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 // note: processinfo_exec_start is launched in Read_cam_frame() in AOcompute()
                 //
 
-                if(doComputation==1)
-                {
+                if(doComputation == 1) {
                     AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
                 }
 
@@ -571,33 +590,26 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 AOconf[loop].AOtiminginfo.status = 12; // 12
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[19] = tdiffv;
 
 
-                if(AOconf[loop].aorun.CMMODE==0)  // 2-step : WFS -> mode coeffs -> DM act
-                {
-                    if(AOconf[loop].aorun.DMprimaryWriteON==1) // if Writing to DM
-                    {
-                        if(doComputation==1)
-                        {
+                if(AOconf[loop].aorun.CMMODE == 0) { // 2-step : WFS -> mode coeffs -> DM act
+                    if(AOconf[loop].aorun.DMprimaryWriteON == 1) { // if Writing to DM
+                        if(doComputation == 1) {
 
-                            if(fabs(AOconf[loop].aorun.gain)>1.0e-6)
+                            if(fabs(AOconf[loop].aorun.gain) > 1.0e-6) {
                                 set_DM_modes(loop);
+                            }
                         }
                     }
 
-                }
-                else // 1 step: WFS -> DM act
-                {
-                    if(AOconf[loop].aorun.DMprimaryWriteON==1) // if Writing to DM
-                    {
+                } else { // 1 step: WFS -> DM act
+                    if(AOconf[loop].aorun.DMprimaryWriteON == 1) { // if Writing to DM
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
 
-                        for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)//TEST
-                        {
-                            if(isnan(data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii])!=0)
-                            {
+                        for(ii = 0; ii < AOconf[loop].DMctrl.sizeDM; ii++) { //TEST
+                            if(isnan(data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii]) != 0) {
                                 printf("image aol2_meas_act  element %ld is NAN -> replacing by 0\n", ii);
                                 data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii] = 0.0;
                             }
@@ -607,29 +619,29 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                         AOconf[loop].AOtiminginfo.status = 13; // enforce limits
                         clock_gettime(CLOCK_REALTIME, &tnow);
                         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[20] = tdiffv;
 
 
-                        if(doComputation==1)
-                        {
-                            for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)
-                            {
+                        if(doComputation == 1) {
+                            for(ii = 0; ii < AOconf[loop].DMctrl.sizeDM; ii++) {
                                 data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] -= AOconf[loop].aorun.gain * data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii];
 
                                 data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] *= AOconf[loop].aorun.mult;
 
-                                if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] > AOconf[loop].aorun.maxlimit)
+                                if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] > AOconf[loop].aorun.maxlimit) {
                                     data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = AOconf[loop].aorun.maxlimit;
-                                if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] < -AOconf[loop].aorun.maxlimit)
+                                }
+                                if(data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] < -AOconf[loop].aorun.maxlimit) {
                                     data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] = -AOconf[loop].aorun.maxlimit;
+                                }
                             }
                         }
 
                         AOconf[loop].AOtiminginfo.status = 14; // write to DM
                         clock_gettime(CLOCK_REALTIME, &tnow);
                         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[21] = tdiffv;
 
 
@@ -647,12 +659,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0++;
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 0;
                         // inform dmdisp that new command is ready in one of the channels
-                        if(aoloopcontrol_var.aoconfID_dmdisp!=-1)
-                            if(data.image[aoloopcontrol_var.aoconfID_dmdisp].md[0].sem > 1)
-                            {
+                        if(aoloopcontrol_var.aoconfID_dmdisp != -1)
+                            if(data.image[aoloopcontrol_var.aoconfID_dmdisp].md[0].sem > 1) {
                                 sem_getvalue(data.image[aoloopcontrol_var.aoconfID_dmdisp].semptr[0], &semval);
-                                if(semval<SEMAPHORE_MAXVAL)
+                                if(semval < SEMAPHORE_MAXVAL) {
                                     sem_post(data.image[aoloopcontrol_var.aoconfID_dmdisp].semptr[1]);
+                                }
                             }
                         AOconf[loop].aorun.DMupdatecnt ++;
                     }
@@ -661,7 +673,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 AOconf[loop].AOtiminginfo.status = 18; // 18
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[22] = tdiffv;
 
                 AOconf[loop].aorun.cnt++;
@@ -679,14 +691,15 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 data.image[aoloopcontrol_var.aoconfIDlogdata].array.F[0] = AOconf[loop].aorun.gain;
 
 
-                if(AOconf[loop].aorun.cnt == AOconf[loop].aorun.cntmax)
+                if(AOconf[loop].aorun.cnt == AOconf[loop].aorun.cntmax) {
                     AOconf[loop].aorun.on = 0;
+                }
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
 
 
                 tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
-                tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                 double tdiffv02 = tdiffv;
                 //TEST TIMING
                 /*
@@ -697,7 +710,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 }*/
 
                 tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
-                tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
 
                 //TEST TIMING
                 /*
@@ -713,8 +726,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
 
                 }
                 */
-                if((data.processinfo==1)&&(processinfo->MeasureTiming==1))
+                if((data.processinfo == 1) && (processinfo->MeasureTiming == 1)) {
                     processinfo_exec_end(processinfo);
+                }
 
 
                 // process signals
@@ -722,60 +736,69 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
                 if(data.signal_INT == 1) {
                     AOconf[loop].aorun.on = 0;
                     AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo==1)
+                    if(data.processinfo == 1) {
                         processinfo_SIGexit(processinfo, SIGINT);
+                    }
                 }
 
                 if(data.signal_ABRT == 1) {
                     AOconf[loop].aorun.on = 0;
                     AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo==1)
+                    if(data.processinfo == 1) {
                         processinfo_SIGexit(processinfo, SIGABRT);
+                    }
                 }
 
                 if(data.signal_BUS == 1) {
                     AOconf[loop].aorun.on = 0;
                     AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo==1)
+                    if(data.processinfo == 1) {
                         processinfo_SIGexit(processinfo, SIGBUS);
+                    }
                 }
 
                 if(data.signal_SEGV == 1) {
                     AOconf[loop].aorun.on = 0;
                     AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo==1)
+                    if(data.processinfo == 1) {
                         processinfo_SIGexit(processinfo, SIGSEGV);
+                    }
                 }
 
                 if(data.signal_HUP == 1) {
                     AOconf[loop].aorun.on = 0;
                     AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo==1)
+                    if(data.processinfo == 1) {
                         processinfo_SIGexit(processinfo, SIGHUP);
+                    }
                 }
 
                 if(data.signal_PIPE == 1) {
                     AOconf[loop].aorun.on = 0;
                     AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo==1)
+                    if(data.processinfo == 1) {
                         processinfo_SIGexit(processinfo, SIGPIPE);
+                    }
                 }
 
                 loopcnt++;
-                if(data.processinfo==1)
+                if(data.processinfo == 1) {
                     processinfo->loopcnt = loopcnt;
+                }
 
 
 
                 loopcnt++;
-                if(data.processinfo==1)
+                if(data.processinfo == 1) {
                     processinfo->loopcnt = loopcnt;
+                }
             }
 
         } // loop has been killed (normal exit)
 
-        if(data.processinfo==1)
+        if(data.processinfo == 1) {
             processinfo_cleanExit(processinfo);
+        }
 
 
     }
@@ -783,7 +806,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun()
     free(thetime);
 
     // LOG function end
-    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+    CORE_logFunctionCall(logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 
     return(0);
 }
