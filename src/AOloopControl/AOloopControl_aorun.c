@@ -262,14 +262,14 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
 
 
-/*
-    schedpar.sched_priority = RT_priority;
-#ifndef __MACH__
-    r = seteuid(data.euid); //This goes up to maximum privileges
-    sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-    r = seteuid(data.ruid);//Go back to normal privileges
-#endif
-*/
+    /*
+        schedpar.sched_priority = RT_priority;
+    #ifndef __MACH__
+        r = seteuid(data.euid); //This goes up to maximum privileges
+        sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
+        r = seteuid(data.ruid);//Go back to normal privileges
+    #endif
+    */
 
 
     loop = aoloopcontrol_var.LOOPNUMBER;
@@ -298,7 +298,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
     processinfo->MeasureTiming = 1; // Measure timing
     processinfo->RT_priority = RT_priority;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
 
-	int loopOK = 1;
+    int loopOK = 1;
 
 
 
@@ -326,7 +326,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
     // Process signals are caught for suitable processing and reporting.
     processinfo_CatchSignals();
-*/
+    */
 
 
 
@@ -423,21 +423,21 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
     vOK = 1;
     if(AOconf[loop].aorun.init_wfsref0 == 0) {
-        
-		processinfo_error(processinfo, "ERROR: no WFS reference");
-/*
-        sprintf(msgstring, "ERROR: no WFS reference");
-        if(data.processinfo == 1) {
-            processinfo->loopstat = 4; // ERROR
-            strcpy(processinfo->statusmsg, msgstring);
-        }
-        printf("%s\n", msgstring);
-*/
-		loopOK = 0;
+
+        processinfo_error(processinfo, "ERROR: no WFS reference");
+        /*
+                sprintf(msgstring, "ERROR: no WFS reference");
+                if(data.processinfo == 1) {
+                    processinfo->loopstat = 4; // ERROR
+                    strcpy(processinfo->statusmsg, msgstring);
+                }
+                printf("%s\n", msgstring);
+        */
+        loopOK = 0;
         vOK = 0;
     }
-    
-    
+
+
     //    if(AOconf[loop].init_CM==0)
     if(aoloopcontrol_var.init_CM_local == 0) {
         char msgstring[200];
@@ -446,15 +446,15 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
         printf("aoloopcontrol_var.init_CM_local = 0\n");
         printf("FILE %s  line %d\n", __FILE__, __LINE__);
 
-       // sprintf(msgstring, "ERROR: no control matrix");
-		processinfo_error(processinfo, "ERROR: no control matrix");
+        // sprintf(msgstring, "ERROR: no control matrix");
+        processinfo_error(processinfo, "ERROR: no control matrix");
         /*
         if(data.processinfo == 1) {
             processinfo->loopstat = 4; // ERROR
             strcpy(processinfo->statusmsg, msgstring);
         }
-		*/
-		loopOK = 0;
+        */
+        loopOK = 0;
         vOK = 0;
     }
 
@@ -497,6 +497,14 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
         int processinfoUpdate = 0;
 
+
+
+        // ==================================
+        // STARTING LOOP
+        // ==================================
+        processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
+
+
         while(AOconf[loop].aorun.kill == 0) {
             if(timerinit == 1) {
                 processinfoUpdate = 1;
@@ -522,10 +530,18 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
             timerinit = 0;
 
+
+
+			
+
+
             long loopcnt = 0;
-            while(AOconf[loop].aorun.on == 1) {
+            while((AOconf[loop].aorun.on == 1)&&(loopOK==1)) {
+        
+				loopOK = processinfo_loopstep(processinfo);
 
                 // processinfo control
+                /*
                 if(data.processinfo == 1) {
                     while(processinfo->CTRLval == 1) { // pause
                         usleep(50);
@@ -540,14 +556,25 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                         AOconf[loop].aorun.kill = 1;
                     }
                 }
+                */
+                
+                if(loopOK == 0)
+                {
+					AOconf[loop].aorun.on = 0;
+					AOconf[loop].aorun.kill = 1;
+				}
 
 
-                if((data.processinfo == 1) && (processinfoUpdate == 1)) {
+				if ( processinfoUpdate == 1) {
+					processinfo_WriteMessage(processinfo, "LOOP RUNNING");
+				}
+				
+/*                if((data.processinfo == 1) && (processinfoUpdate == 1)) {
                     char msgstring[200];
                     sprintf(msgstring, "LOOP RUNNING");
                     processinfo_WriteMessage(processinfo, msgstring);
                     processinfoUpdate = 0;
-                }
+                }*/
 
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
@@ -726,9 +753,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
                 }
                 */
-                if((data.processinfo == 1) && (processinfo->MeasureTiming == 1)) {
+               // if((data.processinfo == 1) && (processinfo->MeasureTiming == 1)) {
                     processinfo_exec_end(processinfo);
-                }
+              //  }
 
 
                 // process signals
@@ -782,7 +809,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 }
 
                 loopcnt++;
-                if(data.processinfo == 1) {
+               /* if(data.processinfo == 1) {
                     processinfo->loopcnt = loopcnt;
                 }
 
@@ -791,14 +818,18 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 loopcnt++;
                 if(data.processinfo == 1) {
                     processinfo->loopcnt = loopcnt;
-                }
+                }*/
+            }
+
+            if(AOconf[loop].aorun.kill == 0) {
+                loopOK = 0;
             }
 
         } // loop has been killed (normal exit)
 
-        if(data.processinfo == 1) {
-            processinfo_cleanExit(processinfo);
-        }
+//       if(data.processinfo == 1) {
+        processinfo_cleanExit(processinfo);
+//       }
 
 
     }
