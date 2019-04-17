@@ -262,16 +262,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
 
 
-    /*
-        schedpar.sched_priority = RT_priority;
-    #ifndef __MACH__
-        r = seteuid(data.euid); //This goes up to maximum privileges
-        sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-        r = seteuid(data.ruid);//Go back to normal privileges
-    #endif
-    */
-
-
     loop = aoloopcontrol_var.LOOPNUMBER;
 
 
@@ -299,35 +289,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
     processinfo->RT_priority = RT_priority;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
 
     int loopOK = 1;
-
-
-
-    /*
-    if(data.processinfo == 1) {
-        // CREATE PROCESSINFO ENTRY
-        // see processtools.c in module CommandLineInterface for details
-        //
-        char pinfoname[200];
-        sprintf(pinfoname, "aol%ld-aorun", loop);
-        processinfo = processinfo_shm_create(pinfoname, 0);
-        processinfo->loopstat = 0; // loop initialization
-
-        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
-        strcpy(processinfo->source_FILE,     __FILE__);
-        processinfo->source_LINE = __LINE__;
-
-        sprintf(processinfo->description, "AOloop%ld", loop);
-
-        char msgstring[200];
-        sprintf(msgstring, "Initialize AO loop %ld", loop);
-        processinfo_WriteMessage(processinfo, msgstring);
-    }
-
-
-    // Process signals are caught for suitable processing and reporting.
-    processinfo_CatchSignals();
-    */
-
 
 
 
@@ -425,14 +386,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
     if(AOconf[loop].aorun.init_wfsref0 == 0) {
 
         processinfo_error(processinfo, "ERROR: no WFS reference");
-        /*
-                sprintf(msgstring, "ERROR: no WFS reference");
-                if(data.processinfo == 1) {
-                    processinfo->loopstat = 4; // ERROR
-                    strcpy(processinfo->statusmsg, msgstring);
-                }
-                printf("%s\n", msgstring);
-        */
         loopOK = 0;
         vOK = 0;
     }
@@ -446,14 +399,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
         printf("aoloopcontrol_var.init_CM_local = 0\n");
         printf("FILE %s  line %d\n", __FILE__, __LINE__);
 
-        // sprintf(msgstring, "ERROR: no control matrix");
         processinfo_error(processinfo, "ERROR: no control matrix");
-        /*
-        if(data.processinfo == 1) {
-            processinfo->loopstat = 4; // ERROR
-            strcpy(processinfo->statusmsg, msgstring);
-        }
-        */
         loopOK = 0;
         vOK = 0;
     }
@@ -488,12 +434,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
         }
 
 
-/*        if(data.processinfo == 1) {
-            char msgstring[200];
-            sprintf(msgstring, "Entering loop");
-            processinfo_WriteMessage(processinfo, msgstring);
-        }
-*/
+
 		
 		processinfo_WriteMessage(processinfo, "Entering loop");
         
@@ -506,9 +447,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
         // ==================================
         processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
 
-
-		sprintf(pinfomsg, "AOconf[loop].aorun.kill = %d\n", AOconf[loop].aorun.kill);
-		processinfo_WriteMessage(processinfo, pinfomsg);
 
         while(AOconf[loop].aorun.kill == 0) {
             if(timerinit == 1) {
@@ -538,7 +476,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
 
 			
-			sprintf(pinfomsg, "on= %d   loopOK= %d\n", AOconf[loop].aorun.on, loopOK);
+			sprintf(pinfomsg, "WAITING (on=%d   loopOK=%d)", AOconf[loop].aorun.on, loopOK);
 			processinfo_WriteMessage(processinfo, pinfomsg);
 
             long loopcnt = 0;
@@ -546,23 +484,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
         
 				loopOK = processinfo_loopstep(processinfo);
 
-                // processinfo control
-                /*
-                if(data.processinfo == 1) {
-                    while(processinfo->CTRLval == 1) { // pause
-                        usleep(50);
-                    }
-
-                    if(processinfo->CTRLval == 2) { // single iteration
-                        processinfo->CTRLval = 1;
-                    }
-
-                    if(processinfo->CTRLval == 3) { // exit loop
-                        AOconf[loop].aorun.on = 0;
-                        AOconf[loop].aorun.kill = 1;
-                    }
-                }
-                */
                 
                 if(loopOK == 0)
                 {
@@ -574,13 +495,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 				if ( processinfoUpdate == 1) {
 					processinfo_WriteMessage(processinfo, "LOOP RUNNING");
 				}
-				
-/*                if((data.processinfo == 1) && (processinfoUpdate == 1)) {
-                    char msgstring[200];
-                    sprintf(msgstring, "LOOP RUNNING");
-                    processinfo_WriteMessage(processinfo, msgstring);
-                    processinfoUpdate = 0;
-                }*/
 
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
@@ -615,6 +529,8 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 if(doComputation == 1) {
                     AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
                 }
+                else
+					processinfo_exec_start(processinfo);
 
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
@@ -759,13 +675,13 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
                 }
                 */
-               // if((data.processinfo == 1) && (processinfo->MeasureTiming == 1)) {
-                    processinfo_exec_end(processinfo);
-              //  }
+
+
+               processinfo_exec_end(processinfo);
 
 
                 // process signals
-
+/*
                 if(data.signal_INT == 1) {
                     AOconf[loop].aorun.on = 0;
                     AOconf[loop].aorun.kill = 1;
@@ -813,18 +729,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                         processinfo_SIGexit(processinfo, SIGPIPE);
                     }
                 }
+                */
 
                 loopcnt++;
-               /* if(data.processinfo == 1) {
-                    processinfo->loopcnt = loopcnt;
-                }
-
-
-
-                loopcnt++;
-                if(data.processinfo == 1) {
-                    processinfo->loopcnt = loopcnt;
-                }*/
             }
 
             if(AOconf[loop].aorun.kill == 1) {
@@ -833,11 +740,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
         } // loop has been killed (normal exit)
 
-//       if(data.processinfo == 1) {
         processinfo_cleanExit(processinfo);
-//       }
-
-
     }
 
     free(thetime);
