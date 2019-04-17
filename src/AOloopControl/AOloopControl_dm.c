@@ -290,7 +290,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     sprintf(pinfodescr, "GPU%d -> %s", GPUindex, out_name);
     
     char pinfomsg[200];
-    sprintf(pinfomsg, "setup", GPUindex);
+    sprintf(pinfomsg, "setup");
        
     processinfo = processinfo_setup(
         pinfoname,             // short name for the processinfo instance, no spaces, no dot, name should be human-readable
