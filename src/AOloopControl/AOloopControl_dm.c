@@ -267,36 +267,36 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
     int RT_priority = 80; //any number from 0-99
-   
+
 
     char imname[200];
 
 
 
     PROCESSINFO *processinfo;
-    
+
     char pinfoname[200];
     sprintf(pinfoname, "aol%ld-GPUmodes2dm", loop);
-    
+
     char pinfodescr[200];
     sprintf(pinfodescr, "GPU%d -> %s", GPUindex, out_name);
-    
+
     char pinfomsg[200];
     sprintf(pinfomsg, "setup");
-       
+
     processinfo = processinfo_setup(
-        pinfoname,             // short name for the processinfo instance, no spaces, no dot, name should be human-readable
-        pinfodescr,    // description
-        pinfomsg,  // message on startup
-        __FUNCTION__, __FILE__, __LINE__
-        );
+                      pinfoname,             // short name for the processinfo instance, no spaces, no dot, name should be human-readable
+                      pinfodescr,    // description
+                      pinfomsg,  // message on startup
+                      __FUNCTION__, __FILE__, __LINE__
+                  );
     // OPTIONAL SETTINGS
-    processinfo->MeasureTiming = 1; // Measure timing 
+    processinfo->MeasureTiming = 1; // Measure timing
     processinfo->RT_priority = RT_priority;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
 
     int loopOK = 1;
-    
-    
+
+
 
 
     if(aoloopcontrol_var.aoconfID_looptiming == -1) {
@@ -329,7 +329,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
 
-	processinfo_WriteMessage(processinfo, "Setting up GPU computation");
+    processinfo_WriteMessage(processinfo, "Setting up GPU computation");
     printf(" ====================     SETTING UP GPU COMPUTATION\n");
     fflush(stdout);
 
@@ -371,22 +371,20 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
 
 
-	processinfo_WriteMessage(processinfo, "Setting up complete");
+    processinfo_WriteMessage(processinfo, "Setting up complete");
     // ==================================
     // STARTING LOOP
     // ==================================
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
-
-
+	
+	processinfo_WriteMessage(processinfo, "Running loop");
     while(loopOK == 1) {
         // processinfo control
         loopOK = processinfo_loopstep(processinfo);
 
-
         COREMOD_MEMORY_image_set_semwait(modecoeffs_name, semTrigg);
 
-
-            processinfo_exec_start(processinfo);
+        processinfo_exec_start(processinfo);
 
 
         // CTRLval = 5 will disable computations in loop (usually for testing)
@@ -405,7 +403,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
         if(doComputation == 1) {
-         
+
             GPU_loop_MultMat_execute(GPUMATMULTCONFindex, &status, &GPUstatus[0], alpha, beta, write_timing, 0);
 
         }
@@ -432,11 +430,11 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
 
-            processinfo_exec_end(processinfo);
+        processinfo_exec_end(processinfo);
     }
 
 
-        processinfo_cleanExit(processinfo);
+    processinfo_cleanExit(processinfo);
 
     free(GPUsetM);
 
