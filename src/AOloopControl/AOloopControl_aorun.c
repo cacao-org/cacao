@@ -827,7 +827,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 }*/
             }
 
-            if(AOconf[loop].aorun.kill == 0) {
+            if(AOconf[loop].aorun.kill == 1) {
                 loopOK = 0;
             }
 
