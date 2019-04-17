@@ -538,10 +538,11 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
 
 			
-
+			sprintf(pinfomsg, "on= %d   loopOK= %d\n", AOconf[loop].aorun.on, loopOK);
+			processinfo_WriteMessage(processinfo, pinfomsg);
 
             long loopcnt = 0;
-            while((AOconf[loop].aorun.on == 1)&&(loopOK==1)) {
+            while((AOconf[loop].aorun.on==1) && (loopOK==1)) {
         
 				loopOK = processinfo_loopstep(processinfo);
 
