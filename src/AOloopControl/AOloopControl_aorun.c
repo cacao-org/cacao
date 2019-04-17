@@ -488,13 +488,15 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
         }
 
 
-        if(data.processinfo == 1) {
+/*        if(data.processinfo == 1) {
             char msgstring[200];
             sprintf(msgstring, "Entering loop");
             processinfo_WriteMessage(processinfo, msgstring);
         }
-
-
+*/
+		
+		processinfo_WriteMessage(processinfo, "Entering loop");
+        
         int processinfoUpdate = 0;
 
 
@@ -504,6 +506,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
         // ==================================
         processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
 
+
+		sprintf(pinfomsg, "AOconf[loop].aorun.kill = %d\n", AOconf[loop].aorun.kill);
+		processinfo_WriteMessage(processinfo, pinfomsg);
 
         while(AOconf[loop].aorun.kill == 0) {
             if(timerinit == 1) {
