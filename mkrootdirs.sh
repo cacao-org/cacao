@@ -45,10 +45,9 @@ do
     echo "creating $MILK_ROOT/$dir"
     mkdir -p $MILK_ROOT/$dir
 done;
-chmod a+rwx $MILK_ROOT
 echo ""
 
 echo "initializing $MILK_SHM_DIR as tmpfs"
-tee -a /etc/fstab <<< "tmpfs $MILK_SHM_DIR tmpfs rw,nosuid,nodev"
+echo "tmpfs $MILK_SHM_DIR tmpfs rw,nosuid,nodev" | tee -a /etc/fstab
 mount $MILK_SHM_DIR
-
+chmod a+rwx $MILK_ROOT
