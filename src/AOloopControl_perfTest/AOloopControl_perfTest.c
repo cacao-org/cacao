@@ -10,11 +10,6 @@
  * AOloopControl_perfTest_DM.c               Test DM speed and examine DM modes
  * AOloopControl_perfTest_status.c           Report loop metrics, loop performance monitor
  * 
- * 
- * @author  O. Guyon
- * @date    27 Aug 2017
- *
- * 
  * @bug No known bugs.
  * 
  * 
@@ -584,7 +579,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     IDwfsc = create_image_ID("_testwfsc", 3, naxes, datatype, 0, 0);
 
     float FrameRateWait = 5.0;
-    sprintf(msgstring, "Estimating frame rate over %.1f sec", FrameRateWait);
+    sprintf(msgstring, "Measuring frame rate over %.1f sec", FrameRateWait);
     processinfo_WriteMessage(processinfo, msgstring);
 
 
