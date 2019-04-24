@@ -643,7 +643,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
 
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
     processinfo_WriteMessage(processinfo, "Starting loop");
-
+	iter = 0;
     while(loopOK == 1) {
         //double tlastdouble;
         double tstartdouble;
