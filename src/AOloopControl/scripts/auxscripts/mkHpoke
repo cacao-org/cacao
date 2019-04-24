@@ -93,9 +93,14 @@ fi
 
 loopnb=$( head -1 LOOPNUMBER )
 
-DMindex=$( head -1 conf/param_DMindex.txt )
-DMxsize=$( head -1 conf/param_DMxsize.txt )
-DMysize=$( head -1 conf/param_DMysize.txt )
+#DMindex=$( head -1 conf/param_DMindex.txt )
+#DMxsize=$( head -1 conf/param_DMxsize.txt )
+#DMysize=$( head -1 conf/param_DMysize.txt )
+
+DMindex=$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{print $1;}' )
+DMxsize=$( head -1 fpsconf/AOCONF/DMxsize.setval.txt  | awk '{print $1;}' )
+DMysize=$( head -1 fpsconf/AOCONF/DMysize.setval.txt  | awk '{print $1;}' )
+
 echo "DM size = $DMxsize $DMysize"
 
 # DM mode
