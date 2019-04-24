@@ -134,13 +134,24 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 /* =============================================================================================== */
 
 
-
+/**
+ * 
+ * Implements stream loading policy with optional check on size for 2D images.
+ * See CLIcore.h for policy details.
+ * 
+ * (1) If image already in local memory, and has correct size, upload FITS file to existing array, go to (END-success), otherwise, go to (2)
+ * (2) If image already in local memory, but size does not match, go to (END-fail), otherwise, go to (3)
+ * (3) Load FITS image to local memory
+ * (4) 
+ * 
+ * 
+ */ 
 
 long AOloopControl_IOtools_2Dloadcreate_shmim(
-    const char *name,
-    const char *fname,
-    long xsize,
-    long ysize,
+    const char *name,     // stream name
+    const char *fname,    // file name
+    long xsize,           // X size
+    long ysize,           // Y size
     float DefaultValue
 ) {
     long ID;
@@ -150,7 +161,7 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
     long ii;
 
     int loadcreatestatus = -1;
-    // value of loadcreatestatus :
+    // value of return code loadcreatestatus :
     // 0 : existing stream has wrong size -> recreating stream
     // 1 : new stream created and content loaded
     // 2 : existing stream updated
