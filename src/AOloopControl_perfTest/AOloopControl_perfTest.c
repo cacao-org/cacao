@@ -415,31 +415,34 @@ int_fast8_t init_AOloopControl_perfTest()
 
 /**
  *  ## Purpose
- * 
+ *
  * Measure hardware latency between DM and WFS streams
- * 
- * 
+ *
+ *
  * ## Arguments
- * 
+ *
  * @param[in]
  * dmname	char*
  * 			DM actuation stream to which function sends pokes
- * 
+ *
  * @param[in]
  * wfsname	char*
  * -		WFS image stream
- * 
+ *
  * @param[in]
  * OPDamp	FLOAT
  * 			Poke amplitude \[um\]
- * 
+ *
  * @param[in]
  * NBiter	LONG
  * 			Number of poke cycles
- * 
+ *
  */
-int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *wfsname, float OPDamp, long NBiter)
-{
+int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
+    const char *dmname,
+    char *wfsname,
+    float OPDamp,
+    long NBiter) {
     long IDdm;
     long dmxsize, dmysize;
     long IDwfs;
@@ -487,73 +490,47 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     float latencyave, latencystepave;
 
     FILE *fp;
-    int RT_priority = 80; //any number from 0-99
-    struct sched_param schedpar;
     float minlatency, maxlatency;
     double wfsdt;
 
     uint8_t datatype;
     uint32_t naxes[3];
 
+
+
+    // ===========================
+    // processinfo support
+    // ===========================
+
     PROCESSINFO *processinfo;
 
-    if(data.processinfo==1)
-    {
-        // CREATE PROCESSINFO ENTRY
-        // see processtools.c in module CommandLineInterface for details
-        //
+    char pinfoname[200];
+    sprintf(pinfoname, "mlat-%s-%s", dmname, wfsname);
+    char descrstring[200];
+    sprintf(descrstring, "lat %s %s", dmname, wfsname);
+    char msgstring[200];
+    sprintf(msgstring, "Measure Latency amp=%f %ld iter", OPDamp, NBiter);
 
-        char pinfoname[200];  // short name for the processinfo instance
-        // avoid spaces, name should be human-readable
+    processinfo = processinfo_setup(
+                      pinfoname,
+                      descrstring,    // description
+                      msgstring,  // message on startup
+                      __FUNCTION__, __FILE__, __LINE__
+                  );
 
-
-        sprintf(pinfoname, "mlat-%s-%s", dmname, wfsname);
-        processinfo = processinfo_shm_create(pinfoname, 0);
-        processinfo->loopstat = 0; // loop initialization
-        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
-        strcpy(processinfo->source_FILE,     __FILE__);
-        processinfo->source_LINE = __LINE__;
-
-        char msgstring[200];
-        sprintf(msgstring, "Measure Latency amp=%f %ld iter", OPDamp, NBiter);
-        processinfo_WriteMessage(processinfo, msgstring);
-    }
-
-    // CATCH SIGNALS
-
-    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGTERM\n");
-
-    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGINT\n");
-
-    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGABRT\n");
-
-    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGBUS\n");
-
-    if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGSEGV\n");
-
-    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGHUP\n");
-
-    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
-        printf("\ncan't catch SIGPIPE\n");
+    // OPTIONAL SETTINGS
+    processinfo->MeasureTiming = 1; // Measure timing
+    processinfo->RT_priority = 80;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+	processinfo->loopcntMax = NBiter;
+    int loopOK = 1;
 
 
-    schedpar.sched_priority = RT_priority;
-#ifndef __MACH__
-    int r;
 
-    r = seteuid(data.euid); //This goes up to maximum privileges
-    sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-    r = seteuid(data.ruid);//Go back to normal privileges
-#endif
 
-    latencyarray = (float*) malloc(sizeof(float)*NBiter);
-    latencysteparray = (float*) malloc(sizeof(float)*NBiter);
+    processinfo_WriteMessage(processinfo, "Allocating memory");
+
+    latencyarray = (float *) malloc(sizeof(float) * NBiter);
+    latencysteparray = (float *) malloc(sizeof(float) * NBiter);
 
     IDdm = image_ID(dmname);
     dmxsize = data.image[IDdm].md[0].size[0];
@@ -563,32 +540,42 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     IDdm1 = create_2Dimage_ID("_testdm1", dmxsize, dmysize);
 
     float RMStot = 0.0;
-    for(ii=0; ii<dmxsize; ii++)
-        for(jj=0; jj<dmysize; jj++)
-        {
-            x = (2.0*ii-1.0*dmxsize)/dmxsize;
-            y = (2.0*jj-1.0*dmxsize)/dmysize;
-            data.image[IDdm0].array.F[jj*dmxsize+ii] = 0.0;
-            data.image[IDdm1].array.F[jj*dmxsize+ii] = OPDamp*(sin(8.0*x)*sin(8.0*y));
-            RMStot += data.image[IDdm1].array.F[jj*dmxsize+ii]*data.image[IDdm1].array.F[jj*dmxsize+ii];
+    for(ii = 0; ii < dmxsize; ii++)
+        for(jj = 0; jj < dmysize; jj++) {
+            x = (2.0 * ii - 1.0 * dmxsize) / dmxsize;
+            y = (2.0 * jj - 1.0 * dmxsize) / dmysize;
+            data.image[IDdm0].array.F[jj * dmxsize + ii] = 0.0;
+            data.image[IDdm1].array.F[jj * dmxsize + ii] = OPDamp * (sin(8.0 * x) * sin(8.0 * y));
+            RMStot += data.image[IDdm1].array.F[jj * dmxsize + ii] * data.image[IDdm1].array.F[jj * dmxsize + ii];
         }
-    RMStot = sqrt(RMStot/dmxsize/dmysize);
+    RMStot = sqrt(RMStot / dmxsize / dmysize);
 
-    for(ii=0; ii<dmxsize; ii++)
-        for(jj=0; jj<dmysize; jj++)
-            data.image[IDdm1].array.F[jj*dmxsize+ii] *= OPDamp/RMStot;
+    for(ii = 0; ii < dmxsize; ii++)
+        for(jj = 0; jj < dmysize; jj++) {
+            data.image[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
+        }
 
 
-    if(system("mkdir -p tmp") != 0)
-		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
-	
+    if(system("mkdir -p tmp") != 0) {
+        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+    }
+
     save_fits("_testdm0", "!tmp/_testdm0.fits");
     save_fits("_testdm1", "!tmp/_testdm1.fits");
 
     IDwfs = image_ID(wfsname);
+    sprintf(msgstring, "Connecting to stream %s %ld", wfsname, IDwfs);
+    processinfo_WriteMessage(processinfo, msgstring);
+
+    if(IDwfs == -1) {
+        sprintf(msgstring, "Cannot connect to stream %s", wfsname);
+        processinfo_error(processinfo, msgstring);
+        return RETURN_FAILURE;
+    }
+
     wfsxsize = data.image[IDwfs].md[0].size[0];
     wfsysize = data.image[IDwfs].md[0].size[1];
-    wfssize = wfsxsize*wfsysize;
+    wfssize = wfsxsize * wfsysize;
     datatype = data.image[IDwfs].md[0].datatype;
 
     naxes[0] = wfsxsize;
@@ -597,74 +584,72 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     IDwfsc = create_image_ID("_testwfsc", 3, naxes, datatype, 0, 0);
 
     float FrameRateWait = 5.0;
-    if(data.processinfo==1)
-    {
-        char msgstring[200];
-        sprintf(msgstring, "Estimating frame rate over %.1f sec", FrameRateWait);
-        processinfo_WriteMessage(processinfo, msgstring);
-    }
+    sprintf(msgstring, "Estimating frame rate over %.1f sec", FrameRateWait);
+    processinfo_WriteMessage(processinfo, msgstring);
+
 
     // coarse estimate of frame rate
     clock_gettime(CLOCK_REALTIME, &tnow);
-    tdouble_start = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;
+    tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntstart = data.image[IDwfs].md[0].cnt0;
     sleep(FrameRateWait);
     clock_gettime(CLOCK_REALTIME, &tnow);
-    tdouble_end = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;
+    tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntend = data.image[IDwfs].md[0].cnt0;
-    wfsdt = (tdouble_end - tdouble_start)/(wfscntend-wfscntstart);
+    wfsdt = (tdouble_end - tdouble_start) / (wfscntend - wfscntstart);
 
     printf("wfs dt = %f sec\n", wfsdt);
 
 
     // update times
-    dtmax = wfsdt*wfs_NBframesmax*1.2 + 0.5;
-    twaitus = 1000000.0*wfsdt*3.0;
-    dtoffset0 = 1.5*wfsdt;
+    dtmax = wfsdt * wfs_NBframesmax * 1.2 + 0.5;
+    twaitus = 1000000.0 * wfsdt * 3.0;
+    dtoffset0 = 1.5 * wfsdt;
 
 
-    tarray = (struct timespec *) malloc(sizeof(struct timespec)*wfs_NBframesmax);
-    dtarray = (double*) malloc(sizeof(double)*wfs_NBframesmax);
+    tarray = (struct timespec *) malloc(sizeof(struct timespec) * wfs_NBframesmax);
+    dtarray = (double *) malloc(sizeof(double) * wfs_NBframesmax);
 
-    if(system("mkdir -p timingstats") != 0)
+    if(system("mkdir -p timingstats") != 0) {
         printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+    }
 
-    if ((fp=fopen("timingstats/hardwlatency.txt", "w"))==NULL)
-    {
+    if((fp = fopen("timingstats/hardwlatency.txt", "w")) == NULL) {
         printf("ERROR: cannot create file \"timingstats/hardwlatency.txt\"\\n");
         exit(0);
     }
 
     clock_gettime(CLOCK_REALTIME, &tnow);
-    tdouble_start = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;
+    tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntstart = data.image[IDwfs].md[0].cnt0;
-    wfsframeoffset = (long) (0.3*wfs_NBframesmax);
+    wfsframeoffset = (long)(0.3 * wfs_NBframesmax);
 
 
     printf("WFS size : %ld %ld\n", wfsxsize, wfsysize);
-    if(datatype == _DATATYPE_FLOAT)
+    if(datatype == _DATATYPE_FLOAT) {
         printf("data type  :  _DATATYPE_FLOAT\n");
-    if(datatype == _DATATYPE_UINT16)
+    }
+    if(datatype == _DATATYPE_UINT16) {
         printf("data type  :  _DATATYPE_UINT16\n");
-    if(datatype == _DATATYPE_INT16)
+    }
+    if(datatype == _DATATYPE_INT16) {
         printf("data type  :  _DATATYPE_INT16\n");
+    }
 
     list_image_ID();
 
-    if(data.processinfo==1)
-    {
-        char msgstring[200];
-        sprintf(msgstring, "Measuring Latency");
-        processinfo_WriteMessage(processinfo, msgstring);
-    }
 
-    long loopcnt = 0;
-    int loopOK = 1;
-    iter = 0;
-    //    for(iter=0; iter<NBiter; iter++)
-    while(loopOK == 1)
-    {
 
+
+
+    // ===========================
+    // Start loop
+    // ===========================
+
+    processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
+    processinfo_WriteMessage(processinfo, "Starting loop");
+
+    while(loopOK == 1) {
         //double tlastdouble;
         double tstartdouble;
         long NBwfsframe;
@@ -673,35 +658,20 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         double latency;
 
 
-        if(data.processinfo==1)
-        {
-            while(processinfo->CTRLval == 1)  // pause
-                usleep(50);
+        loopOK = processinfo_loopstep(processinfo);
 
-            if(processinfo->CTRLval == 2) // single iteration
-                processinfo->CTRLval = 1;
-
-            if(processinfo->CTRLval == 3) // exit loop
-            {
-                loopOK = 0;
-            }
-        }
+        sprintf(msgstring, "iteration %5ld / %5ld", iter, NBiter);
+        processinfo_WriteMessage(processinfo, msgstring);
 
 
-
-        if(data.processinfo==1)
-        {
-            char msgstring[200];
-            sprintf(msgstring, "iteration %5ld / %5ld", iter, NBiter);
-            processinfo_WriteMessage(processinfo, msgstring);
-        }
-
+        processinfo_exec_start(processinfo);
 
         printf(" - ITERATION %5ld / %5ld\n", iter, NBiter);
         fflush(stdout);
 
-        for(ii=0; ii<10; ii++)
+        for(ii = 0; ii < 10; ii++) {
             printf("  %5ld  ->  %f\n", ii, (float) data.image[IDwfs].array.SI16[ii]);
+        }
 
 
         printf("write to %s\n", dmname);
@@ -713,13 +683,10 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         // waiting time
         usleep(twaitus);
 
-
         // and waiting frames
         wfscnt0 = data.image[IDwfs].md[0].cnt0;
-        for(wfsframe=0; wfsframe<wfs_NBframesmax; wfsframe++)
-        {
-            while(wfscnt0==data.image[IDwfs].md[0].cnt0)
-            {
+        for(wfsframe = 0; wfsframe < wfs_NBframesmax; wfsframe++) {
+            while(wfscnt0 == data.image[IDwfs].md[0].cnt0) {
                 usleep(50);
             }
             wfscnt0 = data.image[IDwfs].md[0].cnt0;
@@ -727,7 +694,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 
         dt = 0.0;
         clock_gettime(CLOCK_REALTIME, &tstart);
-        tstartdouble = 1.0*tstart.tv_sec + 1.0e-9*tstart.tv_nsec;
+        tstartdouble = 1.0 * tstart.tv_sec + 1.0e-9 * tstart.tv_nsec;
         //    tlastdouble = tstartdouble;
 
 
@@ -735,61 +702,55 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         wfsframe = 0;
         wfscnt0 = data.image[IDwfs].md[0].cnt0;
         printf("\n");
-        while( (dt < dtmax) && (wfsframe<wfs_NBframesmax) )
-        {
+        while((dt < dtmax) && (wfsframe < wfs_NBframesmax)) {
             // WAITING for image
-            while(wfscnt0==data.image[IDwfs].md[0].cnt0)
-            {
+            while(wfscnt0 == data.image[IDwfs].md[0].cnt0) {
                 usleep(2);
             }
-            
+
             wfscnt0 = data.image[IDwfs].md[0].cnt0;
             printf("[%8ld / %8ld]  %f  %f\n", wfsframe, wfs_NBframesmax, dt, dtmax);
             fflush(stdout);
 
-            if(datatype == _DATATYPE_FLOAT)
-            {
+            if(datatype == _DATATYPE_FLOAT) {
                 // copy image to cube slice
-                ptr = (char*) data.image[IDwfsc].array.F;
-                ptr += sizeof(float)*wfsframe*wfssize;
+                ptr = (char *) data.image[IDwfsc].array.F;
+                ptr += sizeof(float) * wfsframe * wfssize;
                 memcpy(ptr, data.image[IDwfs].array.F, sizeof(float)*wfssize);
             }
 
-            if(datatype == _DATATYPE_UINT16)
-            {
+            if(datatype == _DATATYPE_UINT16) {
                 // copy image to cube slice
-                ptr = (char*) data.image[IDwfsc].array.UI16;
-                ptr += sizeof(short)*wfsframe*wfssize;
+                ptr = (char *) data.image[IDwfsc].array.UI16;
+                ptr += sizeof(short) * wfsframe * wfssize;
                 memcpy(ptr, data.image[IDwfs].array.UI16, sizeof(short)*wfssize);
             }
 
-            if(datatype == _DATATYPE_INT16)
-            {
+            if(datatype == _DATATYPE_INT16) {
                 // copy image to cube slice
-                ptr = (char*) data.image[IDwfsc].array.SI16;
-                ptr += sizeof(short)*wfsframe*wfssize;
+                ptr = (char *) data.image[IDwfsc].array.SI16;
+                ptr += sizeof(short) * wfsframe * wfssize;
                 memcpy(ptr, data.image[IDwfs].array.SI16, sizeof(short)*wfssize);
             }
 
             clock_gettime(CLOCK_REALTIME, &tarray[wfsframe]);
 
-            tdouble = 1.0*tarray[wfsframe].tv_sec + 1.0e-9*tarray[wfsframe].tv_nsec;
+            tdouble = 1.0 * tarray[wfsframe].tv_sec + 1.0e-9 * tarray[wfsframe].tv_nsec;
             dt = tdouble - tstartdouble;
             //  dt1 = tdouble - tlastdouble;
             dtarray[wfsframe] = dt;
             //     tlastdouble = tdouble;
 
             // apply DM pattern #1
-            if((dmstate==0)&&(dt>dtoffset0)&&(wfsframe>wfsframeoffset))
-            {
-                usleep((long) (ran1()*1000000.0*wfsdt));
+            if((dmstate == 0) && (dt > dtoffset0) && (wfsframe > wfsframeoffset)) {
+                usleep((long)(ran1() * 1000000.0 * wfsdt));
                 printf("\nDM STATE CHANGED ON ITERATION %ld\n\n", wfsframe);
                 kkoffset = wfsframe;
                 dmstate = 1;
                 copy_image_ID("_testdm1", dmname, 1);
 
                 clock_gettime(CLOCK_REALTIME, &tnow);
-                tdouble = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;
+                tdouble = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
                 dt = tdouble - tstartdouble;
                 dtoffset = dt; // time at which DM command is sent
             }
@@ -805,41 +766,36 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         NBwfsframe = wfsframe;
 
 
-        valarray = (double*) malloc(sizeof(double)*NBwfsframe);
+        valarray = (double *) malloc(sizeof(double) * NBwfsframe);
         double valmax = 0.0;
         double valmaxdt = 0.0;
-        for(kk=1; kk<NBwfsframe; kk++)
-        {
+        for(kk = 1; kk < NBwfsframe; kk++) {
             valarray[kk] = 0.0;
 
             if(datatype == _DATATYPE_FLOAT)
-                for(ii=0; ii<wfssize; ii++)
-                {
-                    tmp = data.image[IDwfsc].array.F[kk*wfssize+ii] - data.image[IDwfsc].array.F[(kk-1)*wfssize+ii];
-                    valarray[kk] += tmp*tmp;
+                for(ii = 0; ii < wfssize; ii++) {
+                    tmp = data.image[IDwfsc].array.F[kk * wfssize + ii] - data.image[IDwfsc].array.F[(kk - 1) * wfssize + ii];
+                    valarray[kk] += tmp * tmp;
                 }
 
             if(datatype == _DATATYPE_UINT16)
-                for(ii=0; ii<wfssize; ii++)
-                {
-                    tmp = data.image[IDwfsc].array.UI16[kk*wfssize+ii] - data.image[IDwfsc].array.UI16[(kk-1)*wfssize+ii];
-                    valarray[kk] += 1.0*tmp*tmp;
+                for(ii = 0; ii < wfssize; ii++) {
+                    tmp = data.image[IDwfsc].array.UI16[kk * wfssize + ii] - data.image[IDwfsc].array.UI16[(kk - 1) * wfssize + ii];
+                    valarray[kk] += 1.0 * tmp * tmp;
                 }
 
             if(datatype == _DATATYPE_INT16)
-                for(ii=0; ii<wfssize; ii++)
-                {
+                for(ii = 0; ii < wfssize; ii++) {
                     tmp = 0.0;
-                    tmp = data.image[IDwfsc].array.SI16[kk*wfssize+ii] - data.image[IDwfsc].array.SI16[(kk-1)*wfssize+ii];
-                    valarray[kk] += 1.0*tmp*tmp;
+                    tmp = data.image[IDwfsc].array.SI16[kk * wfssize + ii] - data.image[IDwfsc].array.SI16[(kk - 1) * wfssize + ii];
+                    valarray[kk] += 1.0 * tmp * tmp;
                 }
-            valarray[kk] = sqrt(valarray[kk]/wfssize/2);
+            valarray[kk] = sqrt(valarray[kk] / wfssize / 2);
 
-            if(valarray[kk]>valmax)
-            {
+            if(valarray[kk] > valmax) {
                 valmax = valarray[kk];
-                valmaxdt = 0.5*(dtarray[kk-1]+dtarray[kk]);
-                kkmax = kk-kkoffset;
+                valmaxdt = 0.5 * (dtarray[kk - 1] + dtarray[kk]);
+                kkmax = kk - kkoffset;
             }
         }
 
@@ -847,90 +803,38 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
         //
         //
         //
-        for(wfsframe=1; wfsframe<NBwfsframe; wfsframe++)
-            fprintf(fp, "%ld   %10.2f     %g\n", wfsframe-kkoffset, 1.0e6*(0.5*(dtarray[wfsframe]+dtarray[wfsframe-1])-dtoffset), valarray[wfsframe]);
+        for(wfsframe = 1; wfsframe < NBwfsframe; wfsframe++) {
+            fprintf(fp, "%ld   %10.2f     %g\n", wfsframe - kkoffset, 1.0e6 * (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - dtoffset), valarray[wfsframe]);
+        }
 
-        printf("mean interval =  %10.2f ns\n", 1.0e9*(dt-dtoffset)/NBwfsframe);
+        printf("mean interval =  %10.2f ns\n", 1.0e9 * (dt - dtoffset) / NBwfsframe);
         fflush(stdout);
 
         free(valarray);
 
-        latency = valmaxdt-dtoffset;
+        latency = valmaxdt - dtoffset;
         // latencystep = kkmax;
 
-        printf("... Hardware latency = %f ms  = %ld frames\n", 1000.0*latency, kkmax);
-        if(latency > latencymax)
-        {
+        printf("... Hardware latency = %f ms  = %ld frames\n", 1000.0 * latency, kkmax);
+        if(latency > latencymax) {
             latencymax = latency;
             save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
         }
 
-        fprintf(fp, "# %5ld  %8.6f\n", iter, (valmaxdt-dtoffset));
+        fprintf(fp, "# %5ld  %8.6f\n", iter, (valmaxdt - dtoffset));
 
-        latencysteparray[iter] = 1.0*kkmax;
-        latencyarray[iter] = (valmaxdt-dtoffset);
+        latencysteparray[iter] = 1.0 * kkmax;
+        latencyarray[iter] = (valmaxdt - dtoffset);
 
 
-        // process signals
-
-        if(data.signal_TERM == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGTERM);
-        }
-
-        if(data.signal_INT == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGINT);
-        }
-
-        if(data.signal_ABRT == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGABRT);
-        }
-
-        if(data.signal_BUS == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGBUS);
-        }
-
-        if(data.signal_SEGV == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGSEGV);
-        }
-
-        if(data.signal_HUP == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGHUP);
-        }
-
-        if(data.signal_PIPE == 1) {
-            loopOK = 0;
-            if(data.processinfo==1)
-                processinfo_SIGexit(processinfo, SIGPIPE);
-        }
-
-        loopcnt++;
-        if(data.processinfo==1)
-            processinfo->loopcnt = loopcnt;
-
-        loopcnt++;
-        if(data.processinfo==1)
-            processinfo->loopcnt = loopcnt;
-
+        // process signals, increment loop counter
+        processinfo_exec_end(processinfo);
         iter++;
-        if(iter==NBiter)
-            loopOK = 0;
     }
     fclose(fp);
 
     clock_gettime(CLOCK_REALTIME, &tnow);
-    tdouble_end = 1.0*tnow.tv_sec + 1.0e-9*tnow.tv_nsec;
+    tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntend = data.image[IDwfs].md[0].cnt0;
 
 
@@ -938,25 +842,24 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
     free(dtarray);
     free(tarray);
 
-    if(data.processinfo==1)
-    {
-        char msgstring[200];
-        sprintf(msgstring, "Processing Data (%ld iterations)", NBiter);
-        processinfo_WriteMessage(processinfo, msgstring);
-    }
+
+    sprintf(msgstring, "Processing Data (%ld iterations)", NBiter);
+    processinfo_WriteMessage(processinfo, msgstring);
+
 
 
     latencyave = 0.0;
     latencystepave = 0.0;
     minlatency = latencyarray[0];
     maxlatency = latencyarray[0];
-    for(iter=0; iter<NBiter; iter++)
-    {
-        if(latencyarray[iter]>maxlatency)
+    for(iter = 0; iter < NBiter; iter++) {
+        if(latencyarray[iter] > maxlatency) {
             maxlatency = latencyarray[iter];
+        }
 
-        if(latencyarray[iter]<minlatency)
+        if(latencyarray[iter] < minlatency) {
             minlatency = latencyarray[iter];
+        }
 
         latencyave += latencyarray[iter];
         latencystepave += latencysteparray[iter];
@@ -969,44 +872,50 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *w
 
     quick_sort_float(latencyarray, NBiter);
 
-    printf("AVERAGE LATENCY = %8.3f ms   %f frames\n", latencyave*1000.0, latencystepave);
-    printf("min / max over %ld measurements: %8.3f ms / %8.3f ms\n", NBiter, minlatency*1000.0, maxlatency*1000.0);
+    printf("AVERAGE LATENCY = %8.3f ms   %f frames\n", latencyave * 1000.0, latencystepave);
+    printf("min / max over %ld measurements: %8.3f ms / %8.3f ms\n", NBiter, minlatency * 1000.0, maxlatency * 1000.0);
 
-    if(sprintf(command, "echo %8.6f > conf/param_hardwlatency.txt", latencyarray[NBiter/2]) < 1)
+    if(sprintf(command, "echo %8.6f > conf/param_hardwlatency.txt", latencyarray[NBiter / 2]) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    }
 
-    if(system(command) != 0)
+    if(system(command) != 0) {
         printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+    }
 
-    if(sprintf(command, "echo %f %f %f %f %f > timinstats/hardwlatencyStats.txt", latencyarray[NBiter/2], latencyave, minlatency, maxlatency, latencystepave) < 1)
+    if(sprintf(command, "echo %f %f %f %f %f > timingstats/hardwlatencyStats.txt", latencyarray[NBiter / 2], latencyave, minlatency, maxlatency, latencystepave) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    }
 
-    if(system(command) != 0)
+    if(system(command) != 0) {
         printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+    }
 
 
     dt = tdouble_end - tdouble_start;
-    printf("FRAME RATE = %.3f Hz\n", 1.0*(wfscntend-wfscntstart)/dt);
+    printf("FRAME RATE = %.3f Hz\n", 1.0 * (wfscntend - wfscntstart) / dt);
 
-    if(sprintf(command, "echo %.3f > conf/param_mloopfrequ.txt", 1.0*(wfscntend-wfscntstart)/dt ) < 1)
+    if(sprintf(command, "echo %.3f > conf/param_mloopfrequ.txt", 1.0 * (wfscntend - wfscntstart) / dt) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    }
 
-    if(system(command) != 0)
+    if(system(command) != 0) {
         printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+    }
 
     free(latencyarray);
     free(latencysteparray);
 
-    if(data.processinfo==1)
-    {
-        char msgstring[200];
-        sprintf(msgstring, "Measured %8.3f ms @ %.3f Hz", latencyave*1000.0, 1.0*(wfscntend-wfscntstart));
-                processinfo_WriteMessage(processinfo, msgstring);
-    }
 
 
-    if(data.processinfo==1)
-        processinfo_cleanExit(processinfo);
+    sprintf(msgstring, "Measured %8.3f ms @ %.3f Hz", latencyave * 1000.0, 1.0 * (wfscntend - wfscntstart));
+    processinfo_WriteMessage(processinfo, msgstring);
+
+    // ==================================
+    // ENDING LOOP
+    // ==================================
+    processinfo_cleanExit(processinfo);
+
 
     return 0;
 }
