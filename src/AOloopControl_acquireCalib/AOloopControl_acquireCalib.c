@@ -532,6 +532,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     FILE *fp;
 
 
+
 #ifdef AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG
     snprintf(data.execSRCmessage, STRINGMAXLEN_FUNCTIONARGS, "%ld %ld %ld %ld %ld %s %s %d %d %ld %d",
              loop,
