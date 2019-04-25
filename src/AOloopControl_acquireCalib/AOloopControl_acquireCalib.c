@@ -19,6 +19,33 @@
 
 
 
+// OPTIONAL LINE TRACKING FOR DEBUGGING
+//
+// Warning: enabling this feature will slow down execution
+// Use it for debugging only
+//
+//  Calling the LOGEXEC function will update :
+//  data.execSRCline      : current line of code
+//  data.execSRCfunc      : current function
+//  data.execSRCmessage   : User message
+//
+// Uncomment this line to turn on line tracking for debug purposes
+#define AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG
+//
+// If enabled, calling macro AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC will 
+#ifdef AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG
+#define AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC do {                      \
+    snprintf(data.execSRCfunc, STRINGMAXLEN_FUNCTIONNAME, "%s", __FUNCTION__); \
+    data.execSRCline = __LINE__;                   \
+    } while(0)
+#else
+#define AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC 
+#endif
+
+
+
+
+
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                        HEADER FILES                                             */
@@ -505,6 +532,24 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     FILE *fp;
 
 
+#ifdef AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG
+    snprintf(data.execSRCmessage, STRINGMAXLEN_FUNCTIONARGS, "%ld %ld %ld %ld %ld %s %s %d %d %ld %d",
+             loop,
+             delayfr,
+             delayRM1us,
+             NBave,
+             NBexcl,
+             IDpokeC_name,
+             IDoutC_name,
+             normalize,
+             AOinitMode,
+             NBcycle,
+             SequInitMode);
+#endif
+
+
+
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
 
     int SAVE_RMACQU_ALL = 1; // save all intermediate results
@@ -515,14 +560,18 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     sprintf(pinfoname, "aol%ld-acqRM", loop);
 
     char pinfodescr[200];
-    sprintf(pinfodescr, "NBcycle=%ld", NBcycle);
+    sprintf(pinfodescr, "%s", IDpokeC_name);
 
     char pinfomsg[200];
     sprintf(pinfomsg, "delay=%ld+%ldus ave=%ld excl=%ld cyc=%ld", delayfr, delayRM1us, NBave, NBexcl, NBcycle);
 
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
 
     PROCESSINFO *processinfo;
     int loopOK = 1;
+
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     processinfo = processinfo_setup(
                       pinfoname,             // short name for the processinfo instance, no spaces, no dot, name should be human-readable
@@ -530,6 +579,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                       pinfomsg,  // message on startup
                       __FUNCTION__, __FILE__, __LINE__
                   );
+
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1; // Measure timing
@@ -552,11 +603,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         NBiter = NBcycle;
     }
 
-
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     processinfo_WriteMessage(processinfo, "Initializing/Loading memory");
-
-
+    
+    
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
 
@@ -564,12 +616,15 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     printf("INITIALIZE MEMORY (mode %d, meminit = %d)....\n", AOinitMode, AOloopcontrol_meminit);
     fflush(stdout);
 
+	AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
     if(AOloopcontrol_meminit == 0) {
+		AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
         AOloopControl_InitializeMemory(AOinitMode);
     }
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     AOloopControl_loadconfigure(LOOPNUMBER, 1, 2);
-
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
 
     processinfo_WriteMessage(processinfo, "Connecting to DM response matrix");
@@ -593,34 +648,31 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         return RETURN_FAILURE;
     }
 
-
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     /**
      * A temporary array is created and initialized to hold the WFS response to each poke mode.
      *
      */
     IDpokeC = image_ID(IDpokeC_name);
-    if(IDpokeC == -1)
-    {
-		sprintf(pinfomsg, "ERROR: Cannot load stream %s", IDpokeC_name);
+    if(IDpokeC == -1) {
+        sprintf(pinfomsg, "ERROR: Cannot load stream %s", IDpokeC_name);
         processinfo_error(processinfo, pinfomsg);
         loopOK = 0;
         return RETURN_FAILURE;
-	}
-	else
-	{
-		sprintf(pinfomsg, "Loaded stream %s [%d %d %d]", IDpokeC_name, data.image[IDpokeC].md[0].size[0], data.image[IDpokeC].md[0].size[1], data.image[IDpokeC].md[0].size[2]);
-		processinfo_WriteMessage(processinfo, pinfomsg);
-	}
+    } else {
+        sprintf(pinfomsg, "Loaded stream %s [%d %d %d]", IDpokeC_name, data.image[IDpokeC].md[0].size[0], data.image[IDpokeC].md[0].size[1], data.image[IDpokeC].md[0].size[2]);
+        processinfo_WriteMessage(processinfo, pinfomsg);
+    }
 
-    
+
     NBpoke = data.image[IDpokeC].md[0].size[2];
     sizearray[0] = AOconf[loop].WFSim.sizexWFS;
     sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
     sizearray[2] = NBpoke;
     IDoutC = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1], sizearray[2]);
 
-
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
     // timing info for pokes
     long NBpokeTotal = (4 + delayfr + (NBave + NBexcl) * NBpoke) * NBiter + 4;
     long pokecnt = 0;
@@ -654,7 +706,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         }
     }
 
-
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
     // Check that DM size matches poke file
     if(data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1] != data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[1]) {
         sprintf(pinfomsg, "ERROR: DM [%ld] and Poke [%ld] mismatch", (long) data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].size[1], (long) data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1]);
@@ -674,7 +726,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
             }
         }
 
-
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     /**
      * WFS frames will arrive in aol_imWFS1RM
@@ -698,7 +750,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
 
-
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
 
     iter = 0;
@@ -748,7 +800,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     array_PokeIndex1Mapped  = (long *) malloc(sizeof(long) * imcntmax); // Current poke mode on DM, index in poke cube
 
 
-
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     /**
      * Poke sequence defines the sequence of mode poked
@@ -788,13 +840,14 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     imcnt = 0;
 
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     // ==================================
     // STARTING LOOP
     // ==================================
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
 
-	sprintf(pinfomsg, "%d  Starting loop, NBcycle = %ld", loopOK, NBcycle);
+    sprintf(pinfomsg, "%d  Starting loop, NBcycle = %ld", loopOK, NBcycle);
     processinfo_WriteMessage(processinfo, pinfomsg);
 
     long loopcnt = 0;
@@ -806,11 +859,15 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      */
 
     while(loopOK == 1) {
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
         loopOK = processinfo_loopstep(processinfo);
 
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
         processinfo_exec_start(processinfo);
 
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
         printf("NBpoke=%ld # %3ld/%3ld (%6ld/%6ld)\n", NBpoke, iter, NBiter, imcnt, imcntmax);
         fflush(stdout);
@@ -889,7 +946,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         array_poke[imcnt] = 1;
 
 
-
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
         // WAIT FOR LOOP DELAY, PRIMING
 
@@ -960,7 +1017,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         }
 
 
-
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
         /**
          * First inner loop increment poke mode
@@ -1034,6 +1091,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
             arrayf[ii] = 0.0;
         }
 
+
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
         // zero DM channel
 
         usleep(delayRM1us);
@@ -1074,6 +1134,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         }
 
 
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
         if(SAVE_RMACQU_ALL == 1) { // Save all intermediate result
             char tmpfname[200];
@@ -1111,7 +1172,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         iter++;
 
-
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
 
         // process signals, increment loop counter
@@ -1123,20 +1184,23 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
         if(iter == NBiter) {
-			sprintf(pinfomsg, "Reached iteration %ld -> stop", NBiter);
-			processinfo_WriteMessage(processinfo, pinfomsg);
+            sprintf(pinfomsg, "Reached iteration %ld -> stop", NBiter);
+            processinfo_WriteMessage(processinfo, pinfomsg);
             loopOK = 0;
         }
         if(data.signal_USR1 == 1) {
-			sprintf(pinfomsg, "received USR1-> stop");
-			processinfo_WriteMessage(processinfo, pinfomsg);
+            sprintf(pinfomsg, "received USR1-> stop");
+            processinfo_WriteMessage(processinfo, pinfomsg);
             loopOK = 0;
         }
         if(data.signal_USR2 == 1) {
-			sprintf(pinfomsg, "received USR2-> stop");
-			processinfo_WriteMessage(processinfo, pinfomsg);
+            sprintf(pinfomsg, "received USR2-> stop");
+            processinfo_WriteMessage(processinfo, pinfomsg);
             loopOK = 0;
         }
+
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
     } // end of iteration loop
 
 
@@ -1145,14 +1209,18 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     free(sizearray);
 
 
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
     processinfo_cleanExit(processinfo);
 
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
         for(ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++) {
             data.image[IDoutC].array.F[PokeIndex * AOconf[loop].WFSim.sizeWFS + ii] /= NBave * iter;
         }
 
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     // print poke log
     int retv;
@@ -1177,6 +1245,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     }
     fclose(fp);
 
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
     fp = fopen("./tmpRMacqu/RMpokeTiming.txt", "w");
     double ftime0 = pokeTime_sec[0] + 1.0e-9 * pokeTime_nsec[0];
     double ftime;
@@ -1186,6 +1256,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         ftime0 = ftime;
     }
     fclose(fp);
+
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     free(IDoutCstep);
 
@@ -1203,6 +1275,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     free(pokeTime_sec);
     free(pokeTime_nsec);
     free(pokeTime_index);
+
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     return(IDoutC);
 }
@@ -1436,11 +1510,18 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
     // Positive direction sequence
     AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2a", "wfsresp2a", normalize, AOinitMode, (long) (NBcycle/2), (uint32_t) 0x02);
 
+
+
     // Negative direction sequence
     AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2b", "wfsresp2b", normalize, AOinitMode, (long) (NBcycle/2), (uint32_t) 0x02);
 
+
+	
+
     printf("Acquisition complete\n");
     fflush(stdout);
+
+
 
     //	save_fits("wfsresp2", "!tmp/test_wfsresp2.fits");
 
