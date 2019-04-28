@@ -17,7 +17,7 @@ project (cacao C)
 set ( VERSION_MAJOR 0 )
 set ( VERSION_MINOR 1 )
 set ( VERSION_PATCH 02 )
-set ( VERSION_OPTION "-dev" )
+set ( VERSION_OPTION "" )
 
 
 
