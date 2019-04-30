@@ -1,30 +1,3 @@
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8fc93c97bde340078b02340e71b10580)](https://www.codacy.com/app/oguyon/CACAO?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CACAO-org/CACAO&amp;utm_campaign=Badge_Grade)
-
-
-
-|     branch       |   version             |  status                     | latest        |
-|------------------|-----------------------|-----------------------------|---------------|
-**master** | [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/cacao-org/cacao/tree/master) | [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao) | ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/master.svg)
-[**dev**](https://github.com/cacao-org/cacao/tree/dev) | | [![Build Status dev](https://travis-ci.org/cacao-org/cacao.svg?branch=dev)](https://travis-ci.org/cacao-org/cacao) | ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)
-
-
-
----
-
-## Getting help, Documentation
-
-Topic                        |  Chat room                             |  Documentation             | 
------------------------------|----------------------------------------|--------------------|
-How to use cacao ?           | Community           [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community)   | [Online documentation]( http://CACAO-org.github.io/cacao/index.html )  |
-Configuring computer system  | Hardware / OS setup [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig)   | [RTC setup]( https://github.com/cacao-org/cacao/wiki/Seeting-up-a-RTC-system ) |
-Software development         | Developers          [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev)       | [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html )  |
-
-
-
-Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues ) and discuss them on the [Developers chat](https://gitter.im/cacao-org/codedev).
-
-
 
 
 # cacao : Compute And Control for Adaptive Optics
@@ -47,8 +20,39 @@ cacao is a computation engine for adaptive optics control.
 ---
 
 
-## Downloading and installing cacao
+## Getting help, Documentation
 
+Topic                        |  Chat room                             |  Documentation             | 
+-----------------------------|----------------------------------------|--------------------|
+How to use cacao ?           | Community           [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community)   | [Online documentation]( http://CACAO-org.github.io/cacao/index.html )  |
+Configuring computer system  | Hardware / OS setup [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig)   | [RTC setup]( https://github.com/cacao-org/cacao/wiki/Seeting-up-a-RTC-system ) |
+Software development         | Developers          [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev)       | [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html )  |
+
+
+
+Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues ) and discuss them on the [Developers chat](https://gitter.im/cacao-org/codedev).
+
+
+
+---
+
+## Installing cacao
+
+
+### Source code status
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8fc93c97bde340078b02340e71b10580)](https://www.codacy.com/app/oguyon/CACAO?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CACAO-org/CACAO&amp;utm_campaign=Badge_Grade)
+
+
+|     branch       |   version             |  status                     | latest        |
+|------------------|-----------------------|-----------------------------|---------------|
+**master** | [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/cacao-org/cacao/tree/master) | [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao) | ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/master.svg)
+[**dev**](https://github.com/cacao-org/cacao/tree/dev) | | [![Build Status dev](https://travis-ci.org/cacao-org/cacao.svg?branch=dev)](https://travis-ci.org/cacao-org/cacao) | ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)
+
+
+
+### Install steps
 
 ```bash
 git clone --recursive https://github.com/cacao-org/cacao cacao
@@ -56,6 +60,7 @@ cd cacao
 mkdir _build
 cd _build
 cmake ..
+# If you use NVIDIA GPUs, install cuda and magma libraries, and use "cmake .. -DUSE_MAGMA=ON"
 make
 sudo make install
 ```
@@ -84,7 +89,20 @@ export PATH=$PATH:/home/myname/src/cacao/src/CommandLineInterface/scripts
 
 ---
 
-## Shared memory data streams
+
+## Getting Started
+
+All functions are accessible from the command line interface (CLI). Enter the CLI and type "help" for instructions.
+
+```bash
+cacao
+```
+
+
+
+---
+
+## Tools
 
 Both cacao and milk use a common shared memory data stream format. See [ImageStreamIO module](https://github.com/milk-org/ImageStreamIO) for details.
 
@@ -110,36 +128,3 @@ Python users can read/write milk/cacao's data streams using additional packages:
 ---
 
 
-
-## Libraries
-
-The following libraries are used:
-
-- readline, for reading the command line input
-- ncurses-dev
-- flex, for parsing the command line input
-- bison, to interpret the command line input
-- fftw, for performing Fourier Transforms
-- gsl, for math functions and tools
-- fitsio, for reading and writing FITS image files
-- CUDA, CuBLAS, MAGMA for GPU acceleration (optional)
-
-If you use NVIDIA GPUs, install cuda and magma libraries, and add "--enable-cuda and --enable-magma" options to the configure command.
-
-
----
-
-
-## Getting Started
-
-All functions are accessible from the command line interface (CLI). Enter the CLI and type "help" for instructions.
-
-```bash
-cacao
-```
----
-
-
-## LICENCE
-
-[GNU General Public License v3.0]( https://github.com/cacao-org/cacao/blob/master/LICENCE.txt )
