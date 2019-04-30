@@ -239,33 +239,36 @@ int AOloopControl_AOcompute_GUI(
 
 
 
+// TODO : zero DMmode_cmd upon loop startup
+
+
+
 /**
  * ## Purpose
- * 
+ *
  * Main computation routine.\n
  * AOcompute() is called inside the aorun loop.\n
- * 
+ *
  * AOcompute main steps are:
  * - Read WFS image (call to Read_cam_frame())
  * - Process WFS frame
  * - Multiply by control matrix
- * 
- * 
- * 
+ *
+ *
+ *
  * ## Arguments
- * 
+ *
  * @param[in]
  * paramname	long
- * 				number of the loop 
+ * 				number of the loop
  *
  *
  * @param[in]
  * paramname	int
- * 				normalize 
- * 
- */ 
-int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
-{
+ * 				normalize
+ *
+ */
+int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize) {
     long k1, k2;
     long ii;
     long i;
@@ -319,8 +322,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     fflush(stdout);
 #endif
 
-    if(AOloopControl_AOcompute_ProcessInit_Value == 0)
-    {
+    if(AOloopControl_AOcompute_ProcessInit_Value == 0) {
         AOloopControl_AOcompute_ProcessInit(loop);
         AOloopControl_AOcompute_ProcessInit_Value = 1;
     }
@@ -334,7 +336,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     AOconf[loop].AOtiminginfo.status = 19;  //  19: WAITING FOR IMAGE
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[23] = tdiffv;
 
 
@@ -351,7 +353,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     clock_gettime(CLOCK_REALTIME, &functionTestTimer04); //TEST timing in function
 
 
-	// Read WFS image
+    // Read WFS image
     Read_cam_frame(loop, 0, normalize, 0, 0);
 
 
@@ -367,8 +369,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
     slice = aoloopcontrol_var.PIXSTREAM_SLICE;
-    if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING==0) // no pixel streaming
+    if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 0) { // no pixel streaming
         aoloopcontrol_var.PIXSTREAM_SLICE = 0;
+    }
     //    else
     //        aoloopcontrol_var.PIXSTREAM_SLICE = 1 + slice;
 
@@ -378,53 +381,43 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
     AOconf[loop].AOtiminginfo.status = 4;  // 4: REMOVING REF
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[15] = tdiffv;
 
 
-    if(AOconf[loop].AOcompute.ComputeWFSsol_FLAG==1) // Process WFS frame
-    {
+    if(AOconf[loop].AOcompute.ComputeWFSsol_FLAG == 1) { // Process WFS frame
 #ifdef _PRINT_TEST
         printf("[%s] [%d]  AOcompute: Process WFS frame\n", __FILE__, __LINE__);
         fflush(stdout);
 #endif
 
 
-        if(AOconf[loop].AOcompute.GPUall==0)
-        {
+        if(AOconf[loop].AOcompute.GPUall == 0) {
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
 
 
 
 
-            if(AOconf[loop].WFSim.WFSrefzero == 0) // if WFS reference is NOT zero
-            {
-                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
-                    data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff*data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
+            if(AOconf[loop].WFSim.WFSrefzero == 0) { // if WFS reference is NOT zero
+                for(ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++) {
+                    data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff * data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[ii];
+                }
 #ifdef _PRINT_TEST
                 printf("[%s] [%d]  AOcompute: aoloopcontrol_var.normfloorcoeff = %f\n", __FILE__, __LINE__, aoloopcontrol_var.normfloorcoeff);
 //                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii+=10)
 //                    printf("    %4ld  %16f  %16f\n", ii, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii], data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii]);
 #endif
-            }
-            else
-            {
+            } else {
                 memcpy(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F, sizeof(float)*AOconf[loop].WFSim.sizeWFS);
             }
 
 
-            if(AOcompute_WFSlinlimit == 1)
-            {
-                if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1)
-                {
-                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
-                    {
-                        if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] > data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
-                        {
+            if(AOcompute_WFSlinlimit == 1) {
+                if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1) {
+                    for(ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++) {
+                        if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] > data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]) {
                             data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
-                        }
-                        else if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] < -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii])
-                        {
+                        } else if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] < -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]) {
                             data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
                         }
 
@@ -448,14 +441,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         AOconf[loop].AOtiminginfo.status = 5; // 5 MULTIPLYING BY CONTROL MATRIX -> MODE VALUES
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
 
 
 
 
-        if(AOconf[loop].aorun.initmapping == 0) // compute combined control matrix or matrices
-        {
+        if(AOconf[loop].aorun.initmapping == 0) { // compute combined control matrix or matrices
             printf("COMPUTING MAPPING ARRAYS .... \n");
             fflush(stdout);
 
@@ -465,43 +457,36 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             // There is one mapping array per WFS slice
             // WFS slice 0 = all active pixels
             //
-            aoloopcontrol_var.WFS_active_map = (int*) malloc(sizeof(int)*AOconf[loop].WFSim.sizeWFS*aoloopcontrol_var.PIXSTREAM_NBSLICES);
-            if(aoloopcontrol_var.aoconfID_wfsmask != -1)
-            {
-                for(slice=0; slice<aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++)
-                {
+            aoloopcontrol_var.WFS_active_map = (int *) malloc(sizeof(int) * AOconf[loop].WFSim.sizeWFS * aoloopcontrol_var.PIXSTREAM_NBSLICES);
+            if(aoloopcontrol_var.aoconfID_wfsmask != -1) {
+                for(slice = 0; slice < aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++) {
                     long ii1 = 0;
-                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
-                        if(data.image[aoloopcontrol_var.aoconfID_wfsmask].array.F[ii]>0.1)
-                        {
-                            if(slice==0)
-                            {
-                                aoloopcontrol_var.WFS_active_map[slice*AOconf[loop].WFSim.sizeWFS+ii1] = ii;
+                    for(ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++)
+                        if(data.image[aoloopcontrol_var.aoconfID_wfsmask].array.F[ii] > 0.1) {
+                            if(slice == 0) {
+                                aoloopcontrol_var.WFS_active_map[slice * AOconf[loop].WFSim.sizeWFS + ii1] = ii;
                                 ii1++;
-                            }
-                            else if (data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].array.UI16[ii]==slice+1)
-                            {
-                                aoloopcontrol_var.WFS_active_map[slice*AOconf[loop].WFSim.sizeWFS+ii1] = ii;
+                            } else if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].array.UI16[ii] == slice + 1) {
+                                aoloopcontrol_var.WFS_active_map[slice * AOconf[loop].WFSim.sizeWFS + ii1] = ii;
                                 ii1++;
                             }
                         }
                     AOconf[loop].WFSim.sizeWFS_active[slice] = ii1;
 
                     char imname[200];
-                    if(sprintf(imname, "aol%ld_imWFS2active_%02d", aoloopcontrol_var.LOOPNUMBER, slice) < 1)
+                    if(sprintf(imname, "aol%ld_imWFS2active_%02d", aoloopcontrol_var.LOOPNUMBER, slice) < 1) {
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    }
 
                     uint32_t *sizearray;
-                    sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+                    sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
                     sizearray[0] =  AOconf[loop].WFSim.sizeWFS_active[slice];
                     sizearray[1] =  1;
                     aoconfID_imWFS2_active[slice] = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
                     free(sizearray);
                     //aoconfID_imWFS2_active[slice] = create_2Dimage_ID(imname, AOconf[loop].WFSim.sizeWFS_active[slice], 1);
                 }
-            }
-            else
-            {
+            } else {
                 printf("ERROR: aoloopcontrol_var.aoconfID_wfsmask = -1\n");
                 fflush(stdout);
                 exit(0);
@@ -510,13 +495,11 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
             // create DM active map
-            aoloopcontrol_var.DM_active_map = (int*) malloc(sizeof(int)*AOconf[loop].DMctrl.sizeDM);
-            if(aoloopcontrol_var.aoconfID_dmmask != -1)
-            {
+            aoloopcontrol_var.DM_active_map = (int *) malloc(sizeof(int) * AOconf[loop].DMctrl.sizeDM);
+            if(aoloopcontrol_var.aoconfID_dmmask != -1) {
                 long ii1 = 0;
-                for(ii=0; ii<AOconf[loop].DMctrl.sizeDM; ii++)
-                    if(data.image[aoloopcontrol_var.aoconfID_dmmask].array.F[ii]>0.5)
-                    {
+                for(ii = 0; ii < AOconf[loop].DMctrl.sizeDM; ii++)
+                    if(data.image[aoloopcontrol_var.aoconfID_dmmask].array.F[ii] > 0.5) {
                         aoloopcontrol_var.DM_active_map[ii1] = ii;
                         ii1++;
                     }
@@ -526,27 +509,28 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
             uint32_t *sizearray;
-            sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+            sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
             sizearray[0] = AOconf[loop].DMctrl.sizeDM_active;
             sizearray[1] = 1;
 
             char imname[200];
-            if(sprintf(imname, "aol%ld_meas_act_active", aoloopcontrol_var.LOOPNUMBER) < 1)
+            if(sprintf(imname, "aol%ld_meas_act_active", aoloopcontrol_var.LOOPNUMBER) < 1) {
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            }
 
             aoloopcontrol_var.aoconfID_meas_act_active = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
             free(sizearray);
 
 
 
-            if(aoloopcontrol_var.aoconfID_meas_act==-1)
-            {
-                sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+            if(aoloopcontrol_var.aoconfID_meas_act == -1) {
+                sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
                 sizearray[0] = AOconf[loop].DMctrl.sizexDM;
                 sizearray[1] = AOconf[loop].DMctrl.sizeyDM;
 
-                if(sprintf(imname, "aol%ld_meas_act", aoloopcontrol_var.LOOPNUMBER) < 1)
+                if(sprintf(imname, "aol%ld_meas_act", aoloopcontrol_var.LOOPNUMBER) < 1) {
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                }
 
                 aoloopcontrol_var.aoconfID_meas_act = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
                 COREMOD_MEMORY_image_set_createsem(imname, 10);
@@ -555,7 +539,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
             clock_gettime(CLOCK_REALTIME, &t2);
             tdiff = info_time_diff(t1, t2);
-            tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+            tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
             printf("\n");
             printf("TIME TO COMPUTE MAPPING ARRAYS = %f sec\n", tdiffv);
             AOconf[loop].aorun.initmapping = 1;
@@ -564,24 +548,20 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
 
-        if(AOconf[loop].AOcompute.GPU0 == 0)   // no GPU -> run in CPU
-        {
-            if(AOconf[loop].aorun.CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
-            {
+        if(AOconf[loop].AOcompute.GPU0 == 0) { // no GPU -> run in CPU
+            if(AOconf[loop].aorun.CMMODE == 0) { // goes explicitly through modes, slower but required for access to mode values
 #ifdef _PRINT_TEST
                 printf("[%s] [%d] - CM mult: GPU=0, CMMODE=0 - %s x %s -> %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].name);
                 fflush(stdout);
 #endif
 
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 1;
-                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrM].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].AOpmodecoeffs.NBDMmodes, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F);
+                ControlMatrixMultiply(data.image[aoloopcontrol_var.aoconfID_contrM].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].AOpmodecoeffs.NBDMmodes, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F);
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_modes, -1);
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt0 ++;
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt1 = LOOPiter;
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 0;
-            }
-            else // (*)
-            {
+            } else { // (*)
 #ifdef _PRINT_TEST
                 printf("[%s] [%d] - CM mult: GPU=0, CMMODE=1 - using matrix %s\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].name);
                 printf("  aoloopcontrol_var.aoconfID_contrMc = %ld\n", aoloopcontrol_var.aoconfID_contrMc);
@@ -593,19 +573,16 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
 
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
-                ControlMatrixMultiply( data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].DMctrl.sizeDM, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_act].array.F);
+                ControlMatrixMultiply(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F, AOconf[loop].DMctrl.sizeDM, AOconf[loop].WFSim.sizeWFS, data.image[aoloopcontrol_var.aoconfID_meas_act].array.F);
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0 ++;
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_act, -1);
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt0 ++;
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].cnt1 = LOOPiter;
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 0;
             }
-        }
-        else  // run in GPU if possible
-        {
+        } else { // run in GPU if possible
 #ifdef HAVE_CUDA
-            if(AOconf[loop].aorun.CMMODE==0)  // goes explicitly through modes, slower but required for access to mode values
-            {
+            if(AOconf[loop].aorun.CMMODE == 0) { // goes explicitly through modes, slower but required for access to mode values
 #ifdef _PRINT_TEST
                 printf("[%s] [%d] - CM mult: GPU=1, CMMODE=0 - using matrix %s    GPU alpha beta = %f %f\n", __FILE__, __LINE__, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].name, aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta);
                 fflush(stdout);
@@ -613,11 +590,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1; // default: do not re-compute reference output
 
-                if(AOconf[loop].AOcompute.GPUall == 1)
-                {
+                if(AOconf[loop].AOcompute.GPUall == 1) {
                     // TEST IF contrM or wfsref have changed
-                    if((data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != aoloopcontrol_var.aoconfcnt0_wfsref_current) || (data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0 != aoconfcnt0_contrM_current))
-                    {
+                    if((data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != aoloopcontrol_var.aoconfcnt0_wfsref_current) || (data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0 != aoconfcnt0_contrM_current)) {
                         printf("NEW wfsref [%10ld] or contrM [%10ld]\n", data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0, data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0);
                         aoloopcontrol_var.aoconfcnt0_wfsref_current = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
                         aoconfcnt0_contrM_current = data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0;
@@ -625,8 +600,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                     }
 
 
-                    if(initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE]==0) // initialize WFS reference
-                    {
+                    if(initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] == 0) { // initialize WFS reference
 #ifdef _PRINT_TEST
                         printf("\nINITIALIZE WFS REFERENCE: COPY NEW REF (WFSREF) TO imWFS0\n"); //TEST
                         fflush(stdout);
@@ -648,10 +622,11 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 fflush(stdout);
 #endif
 
-                if(AOconf[loop].AOcompute.GPUall == 1)
+                if(AOconf[loop].AOcompute.GPUall == 1) {
                     GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
-                else
+                } else {
                     GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrM].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_modes].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, 1, loop);
+                }
 
 #ifdef _PRINT_TEST
                 printf("[%s] [%d] - \n", __FILE__, __LINE__);
@@ -664,7 +639,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 AOconf[loop].AOtiminginfo.status = 6; // 6 execute
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
 
 #ifdef _PRINT_TEST
@@ -672,10 +647,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 fflush(stdout);
 #endif
 
-                if(AOconf[loop].AOcompute.GPUall == 1)
+                if(AOconf[loop].AOcompute.GPUall == 1) {
                     GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
-                else
-                {
+                } else {
                     GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], 1.0, 0.0, 1, 25);
                 }
 
@@ -686,9 +660,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 #endif
 
 
-            }
-            else // direct pixel -> actuators linear transformation
-            {
+            } else { // direct pixel -> actuators linear transformation
 #ifdef _PRINT_TEST
                 printf("[%s] [%d] - CM mult: GPU=1, CMMODE=1\n", __FILE__, __LINE__);
                 fflush(stdout);
@@ -711,26 +683,25 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
                 // re-map input vector into imWFS2_active
 
-                if(AOconf[loop].AOcompute.GPUall == 1) // (**)
-                {
+                if(AOconf[loop].AOcompute.GPUall == 1) { // (**)
 #ifdef _PRINT_TEST
                     printf("[%s] [%d] - CM mult: GPU=1, CMMODE=1, GPUall = 1\n", __FILE__, __LINE__);
                     fflush(stdout);
 #endif
 
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
-                    for(wfselem_active=0; wfselem_active<AOconf[loop].WFSim.sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
-                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_contrM].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].WFSim.sizeWFS+wfselem_active]];
+                    for(wfselem_active = 0; wfselem_active < AOconf[loop].WFSim.sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++) {
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_contrM].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE * AOconf[loop].WFSim.sizeWFS + wfselem_active]];
+                    }
                     COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 0;
-                }
-                else
-                {
+                } else {
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
-                    for(wfselem_active=0; wfselem_active<AOconf[loop].WFSim.sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
-                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].WFSim.sizeWFS+wfselem_active]];
+                    for(wfselem_active = 0; wfselem_active < AOconf[loop].WFSim.sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++) {
+                        data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE * AOconf[loop].WFSim.sizeWFS + wfselem_active]];
+                    }
                     COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
                     data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
@@ -738,10 +709,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 }
 
                 // look for updated control matrix or reference
-                if(AOconf[loop].AOcompute.GPUall == 1) // (**)
-                {
-                    if(data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0 != contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE])
-                    {
+                if(AOconf[loop].AOcompute.GPUall == 1) { // (**)
+                    if(data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0 != contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE]) {
                         printf("NEW CONTROL MATRIX DETECTED (%s) -> RECOMPUTE REFERENCE x MATRIX\n", data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].name);
                         fflush(stdout);
 
@@ -749,21 +718,20 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                         contrMcactcnt0[aoloopcontrol_var.PIXSTREAM_SLICE] = data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0;
                     }
 
-                    if(data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != wfsrefcnt0)  // (*)
-                    {
+                    if(data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0 != wfsrefcnt0) { // (*)
                         printf("NEW REFERENCE WFS DETECTED (%s) [ %ld %ld ]\n", data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].name, data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0, wfsrefcnt0);
                         fflush(stdout);
 
                         initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
                         wfsrefcnt0 = data.image[aoloopcontrol_var.aoconfID_wfsref].md[0].cnt0;
                     }
-                    if(initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE]==0) // initialize WFS reference
-                    {
+                    if(initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] == 0) { // initialize WFS reference
                         printf("\nINITIALIZE WFS REFERENCE: COPY NEW REF (WFSREF) TO imWFS2_active\n"); //TEST
                         fflush(stdout);
                         data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
-                        for(wfselem_active=0; wfselem_active<AOconf[loop].WFSim.sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++)
-                            data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE*AOconf[loop].WFSim.sizeWFS+wfselem_active]];
+                        for(wfselem_active = 0; wfselem_active < AOconf[loop].WFSim.sizeWFS_active[aoloopcontrol_var.PIXSTREAM_SLICE]; wfselem_active++) {
+                            data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].array.F[wfselem_active] = data.image[aoloopcontrol_var.aoconfID_wfsref].array.F[aoloopcontrol_var.WFS_active_map[aoloopcontrol_var.PIXSTREAM_SLICE * AOconf[loop].WFSim.sizeWFS + wfselem_active]];
+                        }
                         COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
                         data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
                         data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt1 = LOOPiter;
@@ -772,8 +740,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                     }
                 }
 
-                if(aoloopcontrol_var.initcontrMcact_GPU[aoloopcontrol_var.PIXSTREAM_SLICE]==0)
+                if(aoloopcontrol_var.initcontrMcact_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] == 0) {
                     initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 0;
+                }
 
 
                 GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMcact[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].name, data.image[aoloopcontrol_var.aoconfID_meas_act_active].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE], loop);
@@ -785,19 +754,21 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 AOconf[loop].AOtiminginfo.status = 6; // 6 execute
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
 
 
-                if(AOconf[loop].AOcompute.GPUall == 1)
+                if(AOconf[loop].AOcompute.GPUall == 1) {
                     GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], aoloopcontrol_var.GPU_alpha, aoloopcontrol_var.GPU_beta, 1, 25);
-                else
+                } else {
                     GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], 1.0, 0.0, 1, 25);
+                }
 
                 // re-map output vector
                 data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].write = 1;
-                for(act_active=0; act_active<AOconf[loop].DMctrl.sizeDM_active; act_active++)
+                for(act_active = 0; act_active < AOconf[loop].DMctrl.sizeDM_active; act_active++) {
                     data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[aoloopcontrol_var.DM_active_map[act_active]] = data.image[aoloopcontrol_var.aoconfID_meas_act_active].array.F[act_active];
+                }
 
                 COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_meas_act, -1);
                 /*    for(semnb=0; semnb<data.image[aoloopcontrol_var.aoconfID_meas_act].md[0].sem; semnb++)
@@ -817,11 +788,10 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         AOconf[loop].AOtiminginfo.status = 11; // 11 MULTIPLYING BY GAINS
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 
-        if(AOconf[loop].aorun.CMMODE==0)
-        {
+        if(AOconf[loop].aorun.CMMODE == 0) {
             int block;
             long k;
 
@@ -829,8 +799,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
 
             AOconf[loop].AOpmodecoeffs.RMSmodes = 0;
-            for(k=0; k<AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
-                AOconf[loop].AOpmodecoeffs.RMSmodes += data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k]*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
+            for(k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++) {
+                AOconf[loop].AOpmodecoeffs.RMSmodes += data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k] * data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
+            }
 
             AOconf[loop].AOpmodecoeffs.RMSmodesCumul += AOconf[loop].AOpmodecoeffs.RMSmodes;
             AOconf[loop].AOpmodecoeffs.RMSmodesCumulcnt ++;
@@ -840,10 +811,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
             clock_gettime(CLOCK_REALTIME, &functionTestTimer01); //TEST timing in function
 
             //TEST TIMING -> COMMENT THIS SECTION
-            for(k=0; k<AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
-            {
-                data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] = 0.99*data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] + 0.01*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k]*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
-                data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] = 0.99*data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] + 0.01*data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
+            for(k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++) {
+                data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] = 0.99 * data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] + 0.01 * data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k] * data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
+                data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] = 0.99 * data.image[aoloopcontrol_var.aoconfID_AVE_modes].array.F[k] + 0.01 * data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
 
 
                 // apply gain
@@ -856,11 +826,13 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 float limitval;
                 limitval = AOconf[loop].aorun.maxlimit * data.image[aoloopcontrol_var.aoconfID_limitb].array.F[AOconf[loop].AOpmodecoeffs.modeBlockIndex[k]] * data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k];
 
-                if(data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] < -limitval)
+                if(data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] < -limitval) {
                     data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = -limitval;
+                }
 
-                if(data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] > limitval)
+                if(data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] > limitval) {
                     data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = limitval;
+                }
 
 
                 // apply mult factor
@@ -883,11 +855,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         }
 
         clock_gettime(CLOCK_REALTIME, &functionTestTimer03); //TEST timing in function
-    }
-    else
-    {
-        if(AOconf[loop].AOcompute.GPUall==0)
-        {
+    } else {
+        if(AOconf[loop].AOcompute.GPUall == 0) {
             // Update imWFS2
 
             data.image[aoloopcontrol_var.aoconfID_imWFS2].md[0].write = 1;
@@ -901,19 +870,15 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         AOconf[loop].AOtiminginfo.status = 11;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 
-        if(AOconf[loop].AOcompute.GPU0 == 0)   // no GPU -> run in CPU
-        {
+        if(AOconf[loop].AOcompute.GPU0 == 0) { // no GPU -> run in CPU
             // -to be done
-        }
-        else
-        {
+        } else {
 #ifdef HAVE_CUDA
-            if(AOconf[loop].aorun.CMMODE==0)  // goes explicitely through modes, slower but required for access to mode values
-            {
+            if(AOconf[loop].aorun.CMMODE == 0) { // goes explicitly through modes, slower but required for access to mode values
                 // Update meas_modes
 
                 // -> aoloopcontrol_var.aoconfID_meas_modes
@@ -922,9 +887,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt0++;
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].cnt1 = LOOPiter;
                 data.image[aoloopcontrol_var.aoconfID_meas_modes].md[0].write = 0;
-            }
-            else // direct pixel -> actuators linear transformation
-            {
+            } else { // direct pixel -> actuators linear transformation
                 data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].write = 1;
                 COREMOD_MEMORY_image_set_sempost_byID(aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE], -1);
                 data.image[aoconfID_imWFS2_active[aoloopcontrol_var.PIXSTREAM_SLICE]].md[0].cnt0++;
@@ -944,8 +907,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
         }
 
 
-        if(AOconf[loop].aorun.CMMODE==0)
-        {
+        if(AOconf[loop].aorun.CMMODE == 0) {
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0 ++;
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt1 = LOOPiter;
@@ -960,7 +922,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd); //TEST timing in function
     tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
-    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
     tdiffv01 = tdiffv;
     //TEST TIMING
     /*
@@ -1015,7 +977,7 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
 
     tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
-    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
     tdiffv00 = tdiffv;
 
     //TEST TIMING
