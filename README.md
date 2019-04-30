@@ -12,27 +12,19 @@
 
 ---
 
-## Getting help
+## Getting help, Documentation
 
-Topic                        |  Chat room           |  link              | 
------------------------------|----------------------|--------------------|
-How to use cacao ?           | Community            | [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community)   |
-Configuring computer system  | Hardware / OS setup  | [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig)   |
-Software development         | Developers           | [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev)       |
+Topic                        |  Chat room                             |  Documentation             | 
+-----------------------------|----------------------------------------|--------------------|
+How to use cacao ?           | Community           [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community)   | [Online documentation]( http://CACAO-org.github.io/cacao/index.html )  |
+Configuring computer system  | Hardware / OS setup [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig)   | [RTC setup]( https://github.com/cacao-org/cacao/wiki/Seeting-up-a-RTC-system ) |
+Software development         | Developers          [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev)       | [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html )  |
 
 
-[Online documentation]( http://CACAO-org.github.io/cacao/index.html ) 
 
 Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues ) and discuss them on the [Developers chat](https://gitter.im/cacao-org/codedev).
 
-Contributing to project : [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html ) 
 
-
----
-
-NOTE: cacao uses git submodules. Use `git clone --recursive` (see Downloading and Installing section)
-
----
 
 
 # cacao : Compute And Control for Adaptive Optics
@@ -60,10 +52,6 @@ cacao is a computation engine for adaptive optics control.
 
 ```bash
 git clone --recursive https://github.com/cacao-org/cacao cacao
-```
-
-
-```bash
 cd cacao
 mkdir _build
 cd _build
