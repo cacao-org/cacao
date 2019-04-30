@@ -14,16 +14,16 @@
 
 ## Getting help
 
-|  Chat room           |  link              | 
-|----------------------|--------------------|
-| Community            | [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)   |
-| Hardware / OS setup  | [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)   |
-| Developers           | [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)       |
+Topic                        |  Chat room           |  link              | 
+-----------------------------|----------------------|--------------------|
+How to use cacao ?           | Community            | [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community)   |
+Configuring computer system  | Hardware / OS setup  | [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig)   |
+Software development         | Developers           | [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev)       |
 
 
 [Online documentation]( http://CACAO-org.github.io/cacao/index.html ) 
 
-Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues )
+Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues ) and discuss them on the [Developers chat](https://gitter.im/cacao-org/codedev).
 
 Contributing to project : [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html ) 
 
@@ -68,6 +68,8 @@ cd cacao
 mkdir _build
 cd _build
 cmake ..
+make
+sudo make install
 ```
 
 
