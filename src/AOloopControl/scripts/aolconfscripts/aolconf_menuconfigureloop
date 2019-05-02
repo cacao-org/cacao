@@ -699,7 +699,8 @@ exec 3>&1;
 dmC=$(dialog --inputbox "dmC" 0 0 "$dmC" 2>&1 1>&3);
 exec 3>&-;
 echo "$dmC" > ./conf/streamlink.dmC.name.txt
-./aolfuncs/aolfunc_StreamLink dmC
+#./aolfuncs/aolfunc_StreamLink dmC
+milkStreamLink-p aol${LOOPNUMBER}_ dmC
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmC;;
 esac
@@ -713,7 +714,8 @@ exec 3>&1;
 dmO=$(dialog --inputbox "dmO" 0 0 "$dmO" 2>&1 1>&3);
 exec 3>&-;
 echo "$dmO" > ./conf/streamlink.dmO.name.txt
-./aolfuncs/aolfunc_StreamLink dmC
+#./aolfuncs/aolfunc_StreamLink dmO
+milkStreamLink-p aol${LOOPNUMBER}_ dmO
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmO;;
 esac
@@ -729,7 +731,8 @@ dmZP0=$(dialog --inputbox "dmZP0" 0 0 "$dmZP0" 2>&1 1>&3);
 exec 3>&-;
 #echo $result $exitcode;
 echo "$dmZP0" > ./conf/streamlink.dmZP0.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP0
+#./aolfuncs/aolfunc_StreamLink dmZP0
+milkStreamLink-p aol${LOOPNUMBER}_ dmZP0
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP0;;
 esac
@@ -745,7 +748,8 @@ dmZP1=$(dialog --inputbox "dmZP1" 0 0 "$dmZP1" 2>&1 1>&3);
 exec 3>&-;
 #echo $result $exitcode;
 echo "$dmZP1" > ./conf/streamlink.dmZP1.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP1
+#./aolfuncs/aolfunc_StreamLink dmZP1
+milkStreamLink-p aol${LOOPNUMBER}_ dmZP1
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP1;;
 esac
@@ -760,7 +764,8 @@ dmZP2=$(dialog --inputbox "dmZP2" 0 0 "$dmZP2" 2>&1 1>&3);
 exec 3>&-;
 #echo $result $exitcode;
 echo "$dmZP2" > ./conf/streamlink.dmZP2.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP2
+#./aolfuncs/aolfunc_StreamLink dmZP2
+milkStreamLink-p aol${LOOPNUMBER}_ dmZP2
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP2;;
 esac
@@ -775,7 +780,8 @@ dmZP3=$(dialog --inputbox "dmZP3" 0 0 "$dmZP3" 2>&1 1>&3);
 exec 3>&-;
 #echo $result $exitcode;
 echo "$dmZP3" > ./conf/streamlink.dmZP3.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP3
+#./aolfuncs/aolfunc_StreamLink dmZP3
+milkStreamLink-p aol${LOOPNUMBER}_ dmZP3
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP3;;
 esac
@@ -790,7 +796,8 @@ dmZP4=$(dialog --inputbox "dmZP4" 0 0 "$dmZP4" 2>&1 1>&3);
 exec 3>&-;
 #echo $result $exitcode;
 echo "$dmZP4" > ./conf/streamlink.dmZP4.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP4
+#./aolfuncs/aolfunc_StreamLink dmZP4
+milkStreamLink-p aol${LOOPNUMBER}_ dmZP4
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP4;;
 esac
@@ -805,7 +812,8 @@ dmZP5=$(dialog --inputbox "dmZP5" 0 0 "$dmZP5" 2>&1 1>&3);
 exec 3>&-;
 #echo $result $exitcode;
 echo "$dmZP5" > ./conf/streamlink.dmZP5.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP5
+#./aolfuncs/aolfunc_StreamLink dmZP5
+milkStreamLink-p aol${LOOPNUMBER}_ dmZP5
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP5;;
 esac
@@ -820,7 +828,8 @@ dmZP6=$(dialog --inputbox "dmZP6" 0 0 "$dmZP4" 2>&1 1>&3);
 exec 3>&-;
 #echo $result $exitcode;
 echo "$dmZP6" > ./conf/streamlink.dmZP6.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP6
+#./aolfuncs/aolfunc_StreamLink dmZP6
+milkStreamLink-p aol${LOOPNUMBER}_ dmZP6
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP6;;
 esac
@@ -835,7 +844,8 @@ dmZP7=$(dialog --inputbox "dmZP7" 0 0 "$dmZP7" 2>&1 1>&3);
 exec 3>&-;
 #echo $result $exitcode;
 echo "$dmZP7" > ./conf/streamlink.dmZP7.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP7
+#./aolfuncs/aolfunc_StreamLink dmZP7
+milkStreamLink-p aol${LOOPNUMBER}_ dmZP7
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP7;;
 esac
@@ -851,7 +861,8 @@ dmdisp=$(dialog --inputbox "dmdisp" 0 0 "$dmdisp" 2>&1 1>&3);
 exec 3>&-;
 #echo $result $exitcode;
 echo "$dmdisp" > ./conf/streamlink.dmdisp.name.txt
-./aolfuncs/aolfunc_StreamLink dmdisp
+#./aolfuncs/aolfunc_StreamLink dmdisp
+milkStreamLink-p aol${LOOPNUMBER}_ dmdisp
 ;;
 	1)
 shmimmon aol${LOOPNUMBER}_dmdisp
@@ -865,7 +876,8 @@ exec 3>&1;
 dmRM=$(dialog --inputbox "dmRM" 0 0 "$dmRM" 2>&1 1>&3);
 exec 3>&-;
 echo "$dmRM" > ./conf/streamlink.dmRM.name.txt
-./aolfuncs/aolfunc_StreamLink dmRM
+#./aolfuncs/aolfunc_StreamLink dmRM
+milkStreamLink-p aol${LOOPNUMBER}_  dmRM
 ;;
 	1)
 shmimmon aol${LOOPNUMBER}_dmRM
@@ -898,7 +910,7 @@ wfsim=$(dialog --inputbox "WFS image" 0 0 "$wfsim" 2>&1 1>&3);
 exec 3>&-;
 echo "$wfsim" > ./conf/streamlink.wfsim.name.txt
 #./aolfuncs/aolfunc_StreamLink wfsim
-milkStreamLink wfsim
+milkStreamLink-p aol${LOOPNUMBER}_ wfsim
 ;;
 	1)
 shmimmon aol${LOOPNUMBER}_wfsim

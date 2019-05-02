@@ -37,15 +37,15 @@ DMysize="50"
 if [[ -z "${CACAOSIM_DMxsize}" ]]; then
   echo "CACAOSIM_DMxsize    not set -> using default ${DMxsize}"
 else
-  DMxsize="$CACAOSIM_DMxsize"
-  echo "DMxsize = $DMxsize"
+  DMxsize="${CACAOSIM_DMxsize}"
+  echo "CACAOSIM_DMxsize    set =====> ${CACAOSIM_DMxsize}"
 fi
 
 if [[ -z "${CACAOSIM_DMysize}" ]]; then
   echo "CACAOSIM_DMysize    not set -> using default ${DMysize}"
 else
-  DMysize="$CACAOSIM_DMysize"
-  echo "DMysize = $DMysize"
+  DMysize="${CACAOSIM_DMysize}"
+  echo "CACAOSIM_DMysize    set =====> ${CACAOSIM_DMysize}"
 fi
 
 
@@ -58,7 +58,7 @@ if [[ -z "${CACAOSIM_WORKDIR}" ]]; then
   echo "CACAOSIM_WORKDIR    not set -> using default ${WORKDIR}"
 else
   WORKDIR="$CACAOSIM_WORKDIR"
-  echo "WORKDIR = $WORKDIR"
+  echo "CACAOSIM_WORKDIR    set =====> ${CACAOSIM_WORKDIR}"
 fi
 
 
@@ -66,7 +66,7 @@ if [[ -z "${CACAOSIM_DMINDEX}" ]]; then
   echo "CACAOSIM_DMINDEX    not set -> using default ${DMINDEX}"
 else
   DMINDEX="$CACAOSIM_DMINDEX"
-  echo "DMINDEX = $DMINDEX"
+  echo "CACAOSIM_DMINDEX    set =====> ${CACAOSIM_DMINDEX}"
 fi
 
 
@@ -74,7 +74,7 @@ if [[ -z "${CACAOSIM_LOOPNUMBER}" ]]; then
   echo "CACAOSIM_LOOPNUMBER not set -> using default ${LOOPNUMBER}"
 else
   LOOPNUMBER="$CACAOSIM_LOOPNUMBER"
-  echo "LOOPNUMBER = $LOOPNUMBER"
+  echo "CACAOSIM_LOOPNUMBER set =====> ${CACAOSIM_LOOPNUMBER}"
 fi
 
 
@@ -82,7 +82,7 @@ if [[ -z "${CACAOSIM_LOOPNAME}" ]]; then
   echo "CACAOSIM_LOOPNAME   not set -> using default ${LOOPNAME}"
 else
   LOOPNAME="$CACAOSIM_LOOPNAME"
-  echo "LOOPNAME = $LOOPNAME"
+  echo "CACAOSIM_LOOPNAME   set =====> ${CACAOSIM_LOOPNAME}"
 fi
 
 
@@ -90,7 +90,7 @@ if [[ -z "${CACAOSIM_GPU}" ]]; then
   echo "CACAOSIM_GPU        not set -> using default ${GPU}"
 else
   GPU="$CACAOSIM_GPU"
-  echo "GPU = $GPU"
+  echo "CACAOSIM_GPU        set =====> ${CACAOSIM_GPU}"
 fi
 
 
@@ -98,7 +98,7 @@ if [[ -z "${CACAOSIM_LINSIMDT}" ]]; then
   echo "CACAOSIM_LINSIMDT   not set -> using default ${LINSIMDT}"
 else
   LINSIMDT="$CACAOSIM_LINSIMDT"
-  echo "LINSIMDT = $LINSIMDT"
+  echo "CACAOSIM_LINSIMDT   set =====> ${CACAOSIM_LINSIMDT}"
 fi
 
 
@@ -109,14 +109,15 @@ if [[ -z "${CACAOSIM_LHSRESPM}" ]]; then
   echo "CACAOSIM_LHSRESPM   not set -> using default ${LHSRESPM}"
 else
   LHSRESPM="$CACAOSIM_LHSRESPM"
-  echo "LHSRESPM = $LHSRESPM"
+  echo "CACAOSIM_LHSRESPM   set =====> ${CACAOSIM_LHSRESPM}"
 fi
+
 
 if [[ -z "${CACAOSIM_LHSWFSREF}" ]]; then
   echo "CACAOSIM_LHSWFSREF  not set -> using default ${LHSWFSREF}"
 else
   LHSWFSREF="$CACAOSIM_LHSWFSREF"
-  echo "LHSWFSREF = $LHSWFSREF"
+  echo "CACAOSIM_LHSWFSREF  set =====> ${CACAOSIM_LHSWFSREF}"
 fi
 
 
@@ -402,7 +403,7 @@ tmux send-keys -t ${fpsCTRLtmuxname} "fpsCTRL -f ${fpsCTRLfifo}" C-m
 echo "setval AOCONF.DMxsize ${DMxsize}" >> ${fpsCTRLfifo}
 echo "setval AOCONF.DMysize ${DMysize}" >> ${fpsCTRLfifo}
 # start DM comb
-sleep 1.0
+sleep 5  # TODO why do we need to wait here ?
 echo "runstart DMcomb-${DMINDEX}" >> ${fpsCTRLfifo}
 
 
@@ -459,9 +460,13 @@ sleep 1
 echo "runstart simmvmgpu-$LOOPNUMBER" >> ${fpsCTRLfifo}
 
 
+echo "aol${LOOPNUMBER}_linsimWFS" > ./conf/streamlink.wfsim.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ wfsim
 
 
 # finished - get back to current directory
 cd $CURRDIR
+
+
 
 
