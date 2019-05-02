@@ -301,16 +301,16 @@ if [ "$STANDARD_DMSTART" = "1" ]; then  # STANDARD DM COMB
 
 
 # creates shmim aol#_dm2dmM if applicable
-./aolfuncs/aolfunc_StreamLink dm2dmM
+milkStreamLink -p aol${LOOPNUMBER}_ dm2dmM
 
 # creates shmim aol#_dm2dmO if applicable
-./aolfuncs/aolfunc_StreamLink dm2dmO
+milkStreamLink -p aol${LOOPNUMBER}_ dm2dmO
 
 # creates shmim aol#_dmwrefRM if applicable
-./aolfuncs/aolfunc_StreamLink dmwrefRM
+milkStreamLink -p aol${LOOPNUMBER}_ dmwrefRM
 
 # creates shmim aol#_dmwrefO if applicable
-./aolfuncs/aolfunc_StreamLink dmwrefO
+milkStreamLink -p aol${LOOPNUMBER}_ dmwrefO
 
 
 

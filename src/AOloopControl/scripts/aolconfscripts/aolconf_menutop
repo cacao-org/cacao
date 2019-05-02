@@ -116,8 +116,8 @@ menuitems+=( "dm2dmMode0" " [   ON  ] DM-to-DM is ON  (select to de-activate)" )
 
 dm2dmMfile="$SHMDIR/aol${LOOPNUMBER}_dm2dmM.im.shm"
 if [ -f $dmd2dmMfile ]; then
-sizestring=$( head -1 conf/streamlink_dm2dmM.imsize.txt )
-streamname=$( head -1 conf/streamlink_dm2dmM.name.txt )
+sizestring=$( head -1 conf/streamlink.dm2dmM.imsize.txt )
+streamname=$( head -1 conf/streamlink.dm2dmM.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dm2dmM" "[\Z2\Zr${OKstr}\Zn] DM to DM output modes        \Z4\Zbaol${LOOPNUMBER}_dm2dmM\Zn -> \Z4${streamname}\Zn" )
 else
@@ -129,8 +129,8 @@ fi
 # DM output 
 dm2dmOfile="$SHMDIR/aol${LOOPNUMBER}_dm2dmO.im.shm"
 if [ -f $dmd2dmMfile ]; then
-sizestring=$( head -1 conf/streamlink_dm2dmO.imsize.txt )
-streamname=$( head -1 conf/streamlink_dm2dmO.name.txt )
+sizestring=$( head -1 conf/streamlink.dm2dmO.imsize.txt )
+streamname=$( head -1 conf/streamlink.dm2dmO.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dm2dmO" "[\Z2\Zr${OKstr}\Zn] DM output stream        \Z4\Zbaol${LOOPNUMBER}_dm2dmO\Zn -> \Z4${streamname}\Zn" )
 else
@@ -164,13 +164,12 @@ menuitems+=( "dmwref0" " [   ON  ] CPU-based dmcomb output WFS ref is ON (select
 fi
 
 
-
-./aolfuncs/aolfunc_StreamLink dmwrefRM
+milkStreamLink -p aol${LOOPNUMBER}_ dmwrefRM
 
 dmwrefRMfile="$SHMDIR/aol${LOOPNUMBER}_dmwrefRM.im.shm"
 if [ -f $dmwrefRMfile ]; then
-sizestring=$( head -1 conf/streamlink_dmwrefRM.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmwrefRM.name.txt )
+sizestring=$( head -1 conf/streamlink.dmwrefRM.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmwrefRM.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmwrefRM" "[\Z2\Zr${OKstr}\Zn] WFS Resp Matrix            \Z4\Zbaol${LOOPNUMBER}_dmwrefRM\Zn -> \Z4${streamname}\Zn" )
 else
@@ -181,12 +180,12 @@ fi
 
 
 
-./aolfuncs/aolfunc_StreamLink dmwrefO
+milkStreamLink -p aol${LOOPNUMBER}_ dmwrefO
 
 dmwrefOfile="$SHMDIR/aol${LOOPNUMBER}_dmwrefO.im.shm"
 if [ -f $dmwrefOfile ]; then
-sizestring=$( head -1 conf/streamlink_dmwrefO.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmwrefO.name.txt )
+sizestring=$( head -1 conf/streamlink.dmwrefO.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmwrefO.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmwrefO" "[\Z2\Zr${OKstr}\Zn] WFS zp output stream        \Z4\Zbaol${LOOPNUMBER}_dmwrefO\Zn -> \Z4${streamname}\Zn" )
 else
@@ -414,10 +413,10 @@ cmd=( dialog --default-item "${vali}" --menu "Choose one:" 50 80 100 "${menuitem
 DMindex=$("${cmd[@]}" 2>&1 >/dev/tty)
 echo "$DMindex" > ./conf/param_DMindex.txt
 
-echo "dm${DMindex}disp" > ./conf/streamlink_dmdisp.name.txt # total DM displacement channel
-./aolfuncs/aolfunc_StreamLink dmdisp
+echo "dm${DMindex}disp" > ./conf/streamlink.dmdisp.name.txt # total DM displacement channel
+milkStreamLink -p aol${LOOPNUMBER}_  dmdisp
 
-sizestring=$( head -1 conf/streamlink_dmdisp.imsize.txt )
+sizestring=$( head -1 conf/streamlink.dmdisp.imsize.txt )
 read -r DMxsize DMysize <<< "$sizestring"
 echo "$DMxsize" > ./conf/param_DMxsize.txt
 echo "$DMysize" > ./conf/param_DMysize.txt
@@ -490,15 +489,15 @@ cpsh im aol${dmolinknb}_modes0_$DMxsize
 quit
 EOF
 dm2dmM="aol${dmolinknb}_modes0_$DMxsize"
-echo "$dm2dmM" > ./conf/streamlink_dm2dmM.name.txt
-./aolfuncs/aolfunc_StreamLink dm2dmM
+echo "$dm2dmM" > ./conf/streamlink.dm2dmM.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_  dm2dmM
 
 
 # symbolic link to dm channel in external loop
 dmolinkchan1=$( echo $dmolinkchan | awk '{printf("%02ld", $1+4)}')
 dm2dmO="dm${dmnb}disp${dmolinkchan1}"
-echo "$dm2dmO" > ./conf/streamlink_dm2dmO.name.txt
-./aolfuncs/aolfunc_StreamLink dm2dmO
+echo "$dm2dmO" > ./conf/streamlink.dm2dmO.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_  dm2dmO
 
 
 # external loop WFS response of modes controlled by this loop
@@ -509,51 +508,51 @@ cpsh im aol${dmolinknb}_modesWFS0_$DMxsize
 quit
 EOF
 dmwrefRM="aol${dmolinknb}_modesWFS0_$DMxsize"
-echo "$dmwrefRM" > ./conf/streamlink_dmwrefRM.name.txt
-./aolfuncs/aolfunc_StreamLink dmwrefRM
+echo "$dmwrefRM" > ./conf/streamlink.dmwrefRM.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_  dmwrefRM
 
 
 dmwrefO="aol${dmolinknb}_wfszpo${dmolinkchan}"
-echo "$dmwrefO" > ./conf/streamlink_dmwrefO.name.txt
-./aolfuncs/aolfunc_StreamLink dmwrefO
+echo "$dmwrefO" > ./conf/streamlink.dmwrefO.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_  dmwrefO
 
 
-echo "dm${DMindex}disp03" > ./conf/streamlink_dmC.name.txt # DM control channel
-./aolfuncs/aolfunc_StreamLink dmC
+echo "dm${DMindex}disp03" > ./conf/streamlink.dmC.name.txt # DM control channel
+milkStreamLink -p aol${LOOPNUMBER}_ dmC
 
-echo "dm${DMindex}disp00" > ./conf/streamlink_dmO.name.txt # DM offset channel (flat) 
-./aolfuncs/aolfunc_StreamLink dmO
+echo "dm${DMindex}disp00" > ./conf/streamlink.dmO.name.txt # DM offset channel (flat) 
+milkStreamLink -p aol${LOOPNUMBER}_ dmO
 
 
-echo "dm${DMindex}disp04" > ./conf/streamlink_dmZP0.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP0
+echo "dm${DMindex}disp04" > ./conf/streamlink.dmZP0.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dmZP0
 
-echo "dm${DMindex}disp05" > ./conf/streamlink_dmZP1.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP1
+echo "dm${DMindex}disp05" > ./conf/streamlink.dmZP1.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dmZP1
 
-echo "dm${DMindex}disp06" > ./conf/streamlink_dmZP2.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP2
+echo "dm${DMindex}disp06" > ./conf/streamlink.dmZP2.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dmZP2
 
-echo "dm${DMindex}disp07" > ./conf/streamlink_dmZP3.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP3
+echo "dm${DMindex}disp07" > ./conf/streamlink.dmZP3.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dmZP3
 
-echo "dm${DMindex}disp08" > ./conf/streamlink_dmZP4.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP4
+echo "dm${DMindex}disp08" > ./conf/streamlink.dmZP4.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dmZP4
 
-echo "dm${DMindex}disp09" > ./conf/streamlink_dmZP5.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP5
+echo "dm${DMindex}disp09" > ./conf/streamlink.dmZP5.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dmZP5
 
-echo "dm${DMindex}disp10" > ./conf/streamlink_dmZP6.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP6
+echo "dm${DMindex}disp10" > ./conf/streamlink.dmZP6.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dmZP6
 
-echo "dm${DMindex}disp11" > ./conf/streamlink_dmZP7.name.txt
-./aolfuncs/aolfunc_StreamLink dmZP7
+echo "dm${DMindex}disp11" > ./conf/streamlink.dmZP7.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dmZP7
 
-echo "dm${DMindex}disp" > ./conf/streamlink_dmdisp.name.txt # total DM displacement channel
-./aolfuncs/aolfunc_StreamLink dmdisp
+echo "dm${DMindex}disp" > ./conf/streamlink.dmdisp.name.txt # total DM displacement channel
+milkStreamLink -p aol${LOOPNUMBER}_ dmdisp
 
-echo "dm${DMindex}disp02" > ./conf/streamlink_dmRM.name.txt # DM actuation channel for RM matrix
-./aolfuncs/aolfunc_StreamLink dmRM
+echo "dm${DMindex}disp02" > ./conf/streamlink.dmRM.name.txt # DM actuation channel for RM matrix
+milkStreamLink -p aol${LOOPNUMBER}_ dmRM
 ;;
 
 
@@ -590,8 +589,8 @@ menutop_default="dm2dmMode0"
     dm2dmM)
 exec 3>&1;
 dm2dmM=$(dialog --inputbox "dm2dmM" 0 0 "$dm2dmM" 2>&1 1>&3);
-echo "$dm2dmM" > ./conf/streamlink_dm2dmM.name.txt
-./aolfuncs/aolfunc_StreamLink dm2dmM
+echo "$dm2dmM" > ./conf/streamlink.dm2dmM.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dm2dmM
 aoconflog "set dm2dm_name = $dm2dmM"
 ;;
 
@@ -599,8 +598,8 @@ aoconflog "set dm2dm_name = $dm2dmM"
 exec 3>&1;
 dm2dmO=$(dialog --inputbox "dm2dmO" 0 0 "$dm2dmO" 2>&1 1>&3);
 exec 3>&-;
-echo "$dm2dmO" > ./conf/streamlink_dm2dmO.name.txt
-./aolfuncs/aolfunc_StreamLink dm2dmO
+echo "$dm2dmO" > ./conf/streamlink.dm2dmO.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ dm2dmO
 aoconflog "set dm2dmO_name = $dm2dmO"
 ;;
 

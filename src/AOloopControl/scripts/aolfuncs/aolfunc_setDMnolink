@@ -209,51 +209,39 @@ fi
 
 
 echo "dm${DMindex}disp03" > ./conf/streamlink.dmC.name.txt # DM control channel
-#./aolfuncs/aolfunc_StreamLink dmC
 milkStreamLink -p aol${LOOPNUMBER}_ dmC
 
 echo "dm${DMindex}disp00" > ./conf/streamlink.dmO.name.txt # DM offset channel (flat) 
-#./aolfuncs/aolfunc_StreamLink dmO
 milkStreamLink -p aol${LOOPNUMBER}_ dmO
 
 echo "dm${DMindex}disp04" > ./conf/streamlink.dmZP0.name.txt
-#./aolfuncs/aolfunc_StreamLink dmZP0
 milkStreamLink -p aol${LOOPNUMBER}_ dmZP0
 
 echo "dm${DMindex}disp05" > ./conf/streamlink.dmZP1.name.txt
-#./aolfuncs/aolfunc_StreamLink dmZP1
 milkStreamLink -p aol${LOOPNUMBER}_ dmZP1
 
 echo "dm${DMindex}disp06" > ./conf/streamlink.dmZP2.name.txt
-#./aolfuncs/aolfunc_StreamLink dmZP2
 milkStreamLink -p aol${LOOPNUMBER}_ dmZP2
 
 echo "dm${DMindex}disp07" > ./conf/streamlink.dmZP3.name.txt
-#./aolfuncs/aolfunc_StreamLink dmZP3
 milkStreamLink -p aol${LOOPNUMBER}_ dmZP3
 
 echo "dm${DMindex}disp08" > ./conf/streamlink.dmZP4.name.txt
-#./aolfuncs/aolfunc_StreamLink dmZP4
 milkStreamLink -p aol${LOOPNUMBER}_ dmZP4
 
 echo "dm${DMindex}disp09" > ./conf/streamlink.dmZP5.name.txt
-#./aolfuncs/aolfunc_StreamLink dmZP5
 milkStreamLink -p aol${LOOPNUMBER}_ dmZP5
 
 echo "dm${DMindex}disp10" > ./conf/streamlink.dmZP6.name.txt
-#./aolfuncs/aolfunc_StreamLink dmZP6
 milkStreamLink -p aol${LOOPNUMBER}_ dmZP6
 
 echo "dm${DMindex}disp11" > ./conf/streamlink.dmZP7.name.txt
-#./aolfuncs/aolfunc_StreamLink dmZP7
 milkStreamLink -p aol${LOOPNUMBER}_ dmZP7
 
 echo "dm${DMindex}disp" > ./conf/streamlink.dmdisp.name.txt # total DM displacement channel
-#./aolfuncs/aolfunc_StreamLink dmdisp
 milkStreamLink -p aol${LOOPNUMBER}_ dmdisp
 
 echo "dm${DMindex}disp02" > ./conf/streamlink.dmRM.name.txt # DM actuation channel for RM matrix
-#./aolfuncs/aolfunc_StreamLink dmRM
 milkStreamLink -p aol${LOOPNUMBER}_ dmRM
 
 # remove pre-existing poke patterns
