@@ -734,33 +734,11 @@ int AOloopControl_DM_CombineChannels_RUN(
     int loopOK = 1;
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
 
-    /*
-        int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
-        if(data.processinfo==1)
-            processinfo->loopstat = 1;
-    */
-
 
     while(dmdispcombconf[DMindex].ON == 1) {
         struct timespec semwaitts;
 
         loopOK = processinfo_loopstep(processinfo);
-
-        /*
-
-                if(data.processinfo==1)
-                {
-                    while(processinfo->CTRLval == 1)  // pause
-                        usleep(50);
-
-                    if(processinfo->CTRLval == 2) // single iteration
-                        processinfo->CTRLval = 1;
-
-                    if(processinfo->CTRLval == 3) // exit loop
-                        loopOK = 0;
-                }
-        */
-
 
         dmdispcombconf[DMindex].status = 2;
 
@@ -934,54 +912,7 @@ int AOloopControl_DM_CombineChannels_RUN(
             dmdispcombconf[DMindex].time_disp2V = tdiffv;
 
         }
-        /*
-                if((data.signal_INT == 1)||(data.signal_TERM == 1)||(data.signal_ABRT==1)||(data.signal_BUS==1)||(data.signal_SEGV==1)||(data.signal_HUP==1)||(data.signal_PIPE==1))
-                {
-                    if(data.processinfo==1)
-                    {
-                        struct timespec tstop;
-                        struct tm *tstoptm;
-                        char msgstring[200];
-                        char timestring[200];
-
-
-                        clock_gettime(CLOCK_REALTIME, &tstop);
-                        tstoptm = gmtime(&tstop.tv_sec);
-                        sprintf(timestring, "%02d:%02d:%02d.%03d", tstoptm->tm_hour, tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*tstop.tv_nsec));
-
-                        sprintf(msgstring, "Unknown signal at %s", timestring); // default
-
-                        if(data.signal_INT == 1)
-                            sprintf(msgstring, "SIGINT at %s", timestring);
-
-                        if(data.signal_TERM == 1)
-                            sprintf(msgstring, "SIGTERM at %s", timestring);
-
-                        if(data.signal_ABRT == 1)
-                            sprintf(msgstring, "SIGABRT at %s", timestring);
-
-                        if(data.signal_BUS == 1)
-                            sprintf(msgstring, "SIGBUS at %s", timestring);
-
-                        if(data.signal_SEGV == 1)
-                            sprintf(msgstring, "SIGSEGV at %s", timestring);
-
-                        if(data.signal_HUP == 1)
-                            sprintf(msgstring, "SIGHUP at %s", timestring);
-
-                        if(data.signal_PIPE == 1)
-                            sprintf(msgstring, "SIGPIPE at %s", timestring);
-
-                        //strncpy(processinfo->statusmsg, msgstring, 200);
-
-                        processinfo_WriteMessage(processinfo, msgstring);
-                        processinfo->loopstat = 3; // clean exit
-                    }
-
-                    dmdispcombconf[DMindex].ON = 0;
-                   // exit(0);
-                }
-                */
+ 
 
         if(loopOK == 0) {
             dmdispcombconf[DMindex].ON = 0;
@@ -991,12 +922,6 @@ int AOloopControl_DM_CombineChannels_RUN(
         }
     }
 
-    //  if(voltmode==1)
-    //    arith_image_zero(dmdispcombconf[DMindex].voltname);
-
-
-    /*    if(data.processinfo==1)
-            processinfo_cleanExit(processinfo);*/
     processinfo_cleanExit(processinfo);
 
 
