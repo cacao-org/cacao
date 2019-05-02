@@ -1,0 +1,467 @@
+#!/bin/bash
+
+# Deploy simulator
+
+# number of arguments to script
+NBARGS=0
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+echo "pname = $pname"
+
+
+
+
+SRCDIR="$CACAO_ROOT"
+CURRDIR="$(pwd)"
+WORKDIR="$CURRDIR/simtest"
+
+
+DMINDEX="01"
+LOOPNUMBER="2"
+LOOPNAME="simloop"
+
+GPU="0"
+LINSIMDT="2000" # simulator frame period [us]
+
+# relative path
+LHSRESPM="simLHS/respM.fits"
+LHSWFSREF="simLHS/wfsref.fits"
+
+
+
+DMxsize="50"
+DMysize="50"
+
+if [[ -z "${CACAOSIM_DMxsize}" ]]; then
+  echo "CACAOSIM_DMxsize    not set -> using default ${DMxsize}"
+else
+  DMxsize="$CACAOSIM_DMxsize"
+  echo "DMxsize = $DMxsize"
+fi
+
+if [[ -z "${CACAOSIM_DMysize}" ]]; then
+  echo "CACAOSIM_DMysize    not set -> using default ${DMysize}"
+else
+  DMysize="$CACAOSIM_DMysize"
+  echo "DMysize = $DMysize"
+fi
+
+
+
+
+
+
+
+if [[ -z "${CACAOSIM_WORKDIR}" ]]; then
+  echo "CACAOSIM_WORKDIR    not set -> using default ${WORKDIR}"
+else
+  WORKDIR="$CACAOSIM_WORKDIR"
+  echo "WORKDIR = $WORKDIR"
+fi
+
+
+if [[ -z "${CACAOSIM_DMINDEX}" ]]; then
+  echo "CACAOSIM_DMINDEX    not set -> using default ${DMINDEX}"
+else
+  DMINDEX="$CACAOSIM_DMINDEX"
+  echo "DMINDEX = $DMINDEX"
+fi
+
+
+if [[ -z "${CACAOSIM_LOOPNUMBER}" ]]; then
+  echo "CACAOSIM_LOOPNUMBER not set -> using default ${LOOPNUMBER}"
+else
+  LOOPNUMBER="$CACAOSIM_LOOPNUMBER"
+  echo "LOOPNUMBER = $LOOPNUMBER"
+fi
+
+
+if [[ -z "${CACAOSIM_LOOPNAME}" ]]; then
+  echo "CACAOSIM_LOOPNAME   not set -> using default ${LOOPNAME}"
+else
+  LOOPNAME="$CACAOSIM_LOOPNAME"
+  echo "LOOPNAME = $LOOPNAME"
+fi
+
+
+if [[ -z "${CACAOSIM_GPU}" ]]; then
+  echo "CACAOSIM_GPU        not set -> using default ${GPU}"
+else
+  GPU="$CACAOSIM_GPU"
+  echo "GPU = $GPU"
+fi
+
+
+if [[ -z "${CACAOSIM_LINSIMDT}" ]]; then
+  echo "CACAOSIM_LINSIMDT   not set -> using default ${LINSIMDT}"
+else
+  LINSIMDT="$CACAOSIM_LINSIMDT"
+  echo "LINSIMDT = $LINSIMDT"
+fi
+
+
+
+
+
+if [[ -z "${CACAOSIM_LHSRESPM}" ]]; then
+  echo "CACAOSIM_LHSRESPM   not set -> using default ${LHSRESPM}"
+else
+  LHSRESPM="$CACAOSIM_LHSRESPM"
+  echo "LHSRESPM = $LHSRESPM"
+fi
+
+if [[ -z "${CACAOSIM_LHSWFSREF}" ]]; then
+  echo "CACAOSIM_LHSWFSREF  not set -> using default ${LHSWFSREF}"
+else
+  LHSWFSREF="$CACAOSIM_LHSWFSREF"
+  echo "LHSWFSREF = $LHSWFSREF"
+fi
+
+
+fpsCTRLtmuxname="${LOOPNAME}_fpsCTRL"
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : cacao AO simulator $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Deploys AO simulator for cacao"
+echo "  parameters set by env variable:"
+echo "  $ export VAR=\"value\""
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-hCc]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo "     $(tput bold)-C$(tput sgr0)          clear all memory/files and exit"
+echo "     $(tput bold)-c$(tput sgr0)          check and exit"
+echo ""
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+printHELP1 ()
+{
+    printf "%20s       Example script\n" "$0" 
+}
+
+
+
+
+
+EXITSTATUS=0
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+function checkDir {
+if [ -d $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+function cmdexists()
+{
+  command -v "$1" >/dev/null 2>&1
+}
+function checkCommand {
+if cmdexists $1; then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+fi
+}
+
+
+
+
+
+
+
+function cacaosimCLEAR {
+
+
+cd ${WORKDIR}
+
+if [ -f "./fpscmd/fpsrunstopscript" ]; then
+./fpscmd/fpsrunstopscript     # stop all previous FPS run process(es)
+fi
+
+if [ -f "./fpscmd/fpsconfstopscript" ]; then
+./fpscmd/fpsconfstopscript    # stop FPS CONF process(es)
+fi
+
+tmux kill-session -t DMcomb-${DMINDEX}-conf
+tmux kill-session -t DMcomb-${DMINDEX}-run
+tmux kill-session -t simmvmgpu-${LOOPNUMBER}-conf
+tmux kill-session -t simmvmgpu-${LOOPNUMBER}-run
+tmux kill-session -t streamDelay-${DMINDEX}-conf
+tmux kill-session -t streamDelay-${DMINDEX}-run
+tmux kill-session -t ${fpsCTRLtmuxname}
+
+cd ${CURRDIR}
+
+
+if [ -f "${WORKDIR}/LOOPNAME" ]; then
+rm -rf ${WORKDIR}
+else
+echo "No active cacao instance found in directory"
+fi
+
+rm $MILK_SHM_DIR/*
+
+}
+
+
+
+
+# ================= OPTIONS =============================
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+CHECKMODE="0"
+
+while getopts :hCc FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    c) # check
+    CHECKMODE="1"
+    ;;
+    C) # clear
+    echo "Clearing all settings"
+    cacaosimCLEAR
+    exit
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+shift $((OPTIND-1))  
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+# ======================= CHECK REQUIRED FILES =================================
+echo ""
+LHSRESPM_ABS="${CURRDIR}/${LHSRESPM}"
+checkFile ${LHSRESPM_ABS}
+LHSWFSREF_ABS="${CURRDIR}/${LHSWFSREF}"
+checkFile ${LHSWFSREF_ABS}
+
+checkDir $CACAO_ROOT/src/AOloopControl/scripts
+
+checkCommand tmux
+checkCommand fpsCTRL
+
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+echo ""
+exit
+else
+echo ""
+fi
+
+
+
+# ======================= SCRIPT CODE STARTS HERE =================================
+
+
+
+if [ $CHECKMODE = "1" ]; then
+exit
+fi
+
+
+# Create working directory
+
+mkdir -p $WORKDIR
+mkdir -p $WORKDIR/conf/
+
+
+# copy LHS files
+
+cd $WORKDIR
+mkdir simLHS
+cp ${LHSRESPM_ABS} ./simLHS/simLHS_respM.fits
+cp ${LHSWFSREF_ABS} ./simLHS/simLHS_wfsref.fits
+
+# Populate work directory with scripts
+
+cd ${SRCDIR}/src/AOloopControl/scripts
+./syncscripts -e $WORKDIR
+cd $WORKDIR
+./syncscripts
+
+echo "$LOOPNUMBER" > LOOPNUMBER
+echo "$LOOPNAME" > LOOPNAME
+
+
+
+
+
+
+# Setup FPS commands for processes we plan to use
+
+if [ -f "./fpscmd/fpsrunstopscript" ]; then
+./fpscmd/fpsrunstopscript     # stop all previous FPS run process(es)
+fi
+
+if [ -f "./fpscmd/fpsconfstopscript" ]; then
+./fpscmd/fpsconfstopscript    # stop FPS CONF process(es)
+fi
+
+
+
+# Write in this file FPS-compatible processes that will be used
+# col1: FPS name as it should appear in FPS
+# col2: function to be called in cacao to launch process
+# col3: optional arg to ensure uniqueness and pass argument to process
+echo "DMcomb         aolcontrolDMcomb    $DMINDEX"  > fpslist.txt
+echo "streamDelay    streamdelay         $DMINDEX"  >> fpslist.txt
+echo "simmvmgpu      cudaextrmodes       $LOOPNUMBER"  >> fpslist.txt
+
+
+
+fpsmkcmd                      # (re-)create FPS scripts in `./fpscmd/`
+./fpscmd/fpsinitscript        # (re-)create FPS shared memory structure(s)
+
+
+
+
+
+
+# start fpsCTRL and conf processes
+
+
+fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
+tmux new-session -d -s ${fpsCTRLtmuxname} \; setw force-width 160 \; setw force-height 48 \; attach \; detach
+sleep 1
+tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m
+tmux send-keys -t ${fpsCTRLtmuxname} "TMUX=" C-m   # ensures that tmux sessions can be created from fpsCTRL
+tmux send-keys -t ${fpsCTRLtmuxname} "fpsCTRL -f ${fpsCTRLfifo}" C-m
+
+
+
+./fpscmd/fpsconfstartscript   # (re-)start FPS configuration process(es)
+
+
+
+
+
+
+
+
+# Settings 
+# DM
+echo "setval AOCONF.DMxsize ${DMxsize}" >> ${fpsCTRLfifo}
+echo "setval AOCONF.DMysize ${DMysize}" >> ${fpsCTRLfifo}
+# start DM comb
+sleep 1.0
+echo "runstart DMcomb-${DMINDEX}" >> ${fpsCTRLfifo}
+
+
+
+
+# streamDelay
+echo "setval streamDelay-$DMINDEX.in_name aol${LOOPNUMBER}_dmdisp" >> ${fpsCTRLfifo}
+echo "setval streamDelay-$DMINDEX.out_name aol${LOOPNUMBER}_dmdispD" >> ${fpsCTRLfifo}
+
+
+
+# simMVMGPU
+echo "setval simmvmgpu-$LOOPNUMBER.sname_in aol${LOOPNUMBER}_dmdispD" >> ${fpsCTRLfifo}
+
+cp ./simLHS/simLHS_respM.fits ./conf/shmim.aolsimLHSresmM.fits
+echo "setval simmvmgpu-$LOOPNUMBER.sname_modes aolsimLHSresmM" >> ${fpsCTRLfifo}
+
+echo "setval simmvmgpu-$LOOPNUMBER.sname_outmodesval aol${LOOPNUMBER}_linsimWFS" >> ${fpsCTRLfifo}
+
+# run simulator at 500 Hz frame rate
+echo "setval simmvmgpu-$LOOPNUMBER.option.twait ${LINSIMDT}" >> ${fpsCTRLfifo}
+
+cp ./simLHS/simLHS_wfsref.fits ./conf/shmim.aolsimLHSwfsref.fits
+echo "setval simmvmgpu-$LOOPNUMBER.option.sname_refout aolsimLHSwfsref" >> ${fpsCTRLfifo}
+
+echo "setval simmvmgpu-$LOOPNUMBER.option.insem 6" >> ${fpsCTRLfifo}
+echo "setval simmvmgpu-$LOOPNUMBER.option.axmode 1" >> ${fpsCTRLfifo}
+
+
+
+
+
+
+# give time to fpsCTRL to process above commands
+sleep 1
+
+
+
+
+# Startup sequence
+
+
+# link DM index to loop number
+./aolfuncs/aolfunc_setDMnolink
+
+
+
+
+echo "runstart streamDelay-$DMINDEX" >> ${fpsCTRLfifo}
+
+# give time to fpsCTRL to process above commands
+sleep 1
+
+echo "runstart simmvmgpu-$LOOPNUMBER" >> ${fpsCTRLfifo}
+
+
+
+
+# finished - get back to current directory
+cd $CURRDIR
+
+
