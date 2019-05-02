@@ -123,6 +123,7 @@ Important changes to the package are listed in the @ref page_CommandLineInterfac
 	- @ref page_TemplateSourceCode
 	- @ref page_ProcessInfoStructure
 	- @ref page_FunctionParameterStructure
+	- @ref page_exampleBASHscript
 - @ref page_LoadingModules
 
 

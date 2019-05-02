@@ -81,9 +81,10 @@ Unless you have a separate install of milk on your system, a symbolic link to mi
 sudo ln -s /usr/local/bin/cacao /usr/local/bin/milk
 ```
 
-Add milk executable scripts to PATH environment variable. Add this line to the .bashrc file (change source code location as needed):
+Add milk and cacao executable scripts to PATH environment variable. Add this line to the .bashrc file (change source code location as needed):
 ```bash
 export PATH=$PATH:/home/myname/src/cacao/src/CommandLineInterface/scripts
+export PATH=$PATH:/home/myname/src/cacao/src/AOloopControl/scripts
 ```
 
 
