@@ -175,9 +175,9 @@ fi
 # READ REQUIRED PARAMETERS
 ##########################################
 
-ConfReadParam DMindex "00"; DMindex="$paramvalue" # DM index 
+#ConfReadParam DMindex "00"; DMindex="$paramvalue" # DM index 
 
-
+DMindex=$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{printf("%02d",$1);}' )
 
 
 
@@ -214,7 +214,7 @@ milkStreamLink -p aol${LOOPNUMBER}_ dmC
 
 echo "dm${DMindex}disp00" > ./conf/streamlink.dmO.name.txt # DM offset channel (flat) 
 #./aolfuncs/aolfunc_StreamLink dmO
-milkStreamLink -p aol${LOOPNUMBER}_ dmC
+milkStreamLink -p aol${LOOPNUMBER}_ dmO
 
 echo "dm${DMindex}disp04" > ./conf/streamlink.dmZP0.name.txt
 #./aolfuncs/aolfunc_StreamLink dmZP0

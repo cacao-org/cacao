@@ -10,6 +10,7 @@ fi
 
 
 
+fps="1"
 
 
 # =====================================================
@@ -49,6 +50,22 @@ if [ "$menuDM" = "1" ]; then
 # =====================================================================================================================
 # =================================== DM CHANNELS AND OUTPUT (dmcomb process) =========================================
 # =====================================================================================================================
+
+
+if [ "$fps" = "1" ]; then
+
+stringcenter "DM CHANNELS AND OUTPUT (dmcomb process)"
+menuitems=( "1 ->" "\Zb\Zr$string\Zn" )
+
+DMindex=$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{print $1;}' )
+DMxsize=$( head -1 fpsconf/AOCONF/DMxsize.setval.txt  | awk '{print $1;}' )
+DMysize=$( head -1 fpsconf/AOCONF/DMysize.setval.txt  | awk '{print $1;}' )
+
+menuitems+=( "INFO" "DM index = $DMindex  size = $DMxsize x $DMysize")
+
+menuitems+=( " " " ")
+
+else
 
 stringcenter "DM CHANNELS AND OUTPUT (dmcomb process)"
 menuitems=( "1 ->" "\Zb\Zr$string\Zn" )
@@ -240,6 +257,10 @@ menuitems+=( " " " ")
 menuitems+=( " " " ")
 fi
 
+fi # end of if fps
+
+
+
 
 
 if [ "$menuCONFCONTR" = "1" ]; then
@@ -250,8 +271,10 @@ if [ "$menuCONFCONTR" = "1" ]; then
 
 stringcenter "AO CONFIGURE AND CONTROL"
 menuitems+=( "2 ->" "\Zb\Zr$string\Zn" )
-menuitems+=( " " " ")
 
+if [ ! "$fps" = "1" ]; then
+
+menuitems+=( " " " ")
 if [ -f "runproc/FUNCTION_C0.runproc" ] || [ -f "runproc/FUNCTION_C00.runproc" ]; then
 menuitems+=( " " "\Zr\Z1CALIBRATION RUNNING\Zn" )
 menuitems+=( "stopRM" "Stop RM acquisition" )
@@ -263,20 +286,15 @@ menuitems+=( "C00" "   CALIBRATE SYSTEM [CPAmax = $cpamax] RM -> staged (Re-use 
 menuitems+=( "C01" "   RM -> CM (staged)" )
 menuitems+=( "C1" "ADOPT CALIBRATION: staged -> conf, SharedMem" )
 fi
-
-
 menuitems+=( " " " ")
+
+fi # end of fps
+
 menuitems+=( "M" "load all (M)emory" )
 menuitems+=( "C" "(C)onfigure/link AO loop" )
-
 menuitems+=( "CM" "Modes and Control Matrix" )
-
-menuitems+=( " " " ")
-
 menuitems+=( "L" "Control AO (L)oop" )
-
-menuitems+=( " " " ")
-menuitems+=( " " " ")
+#menuitems+=( " " " ")
 menuitems+=( " " " ")
 fi
 
@@ -289,11 +307,11 @@ if [ "$menuPRED" = "1" ]; then
 
 stringcenter "PREDICTIVE CONTROL"
 menuitems+=( "3 ->" "\Zb\Zr$string\Zn" )
-menuitems+=( " " " ")
+#menuitems+=( " " " ")
 menuitems+=( "P" "Predictive Control")
 # menuitems+=( "Fi" "Filtering")
-menuitems+=( " " " ")
-menuitems+=( " " " ")
+#menuitems+=( " " " ")
+#menuitems+=( " " " ")
 menuitems+=( " " " ")
 fi
 
@@ -305,12 +323,12 @@ if [ "$menuTEST" = "1" ]; then
 # =====================================================================================================================
 stringcenter "TEST AND MONITOR"
 menuitems+=( "4 ->" "\Zb\Zr$string\Zn" )
-menuitems+=( " " " ")
-menuitems+=( "l" "List running AO processes, locks" )
+#menuitems+=( " " " ")
+#menuitems+=( "l" "List running AO processes, locks" )
 menuitems+=( "T" "Test mode: simulated AO system" )
-menuitems+=( "V" "View / monitor" )
-menuitems+=( " " " ")
-menuitems+=( " " " ")
+#menuitems+=( "V" "View / monitor" )
+#menuitems+=( " " " ")
+#menuitems+=( " " " ")
 menuitems+=( " " " ")
 fi
 
@@ -324,10 +342,10 @@ if [ "$menuLOG" = "1" ]; then
 
 stringcenter "DATA LOGGING / ANALYSIS"
 menuitems+=( "5 ->" "\Zb\Zr$string\Zn" )
-menuitems+=( " " " ")
+#menuitems+=( " " " ")
 menuitems+=( "R" "Record / analyze")
-menuitems+=( " " " ")
-menuitems+=( " " " ")
+#menuitems+=( " " " ")
+#menuitems+=( " " " ")
 menuitems+=( " " " ")
 fi
 

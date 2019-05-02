@@ -54,7 +54,7 @@ Notations: \n
   \Z1missing file or stream\Zn\n
 \n
 For all configurations files (not including Hardware I/O links) :\n
-  File \Zbconf/streamlink_<name>_name.txt\Zn contains the original .fits file path and name\n
+  File \Zbconf/streamlink.<name>_name.txt\Zn contains the original .fits file path and name\n
   A symbolic link to the FITS file is written as \Zuconf/aol${LOOPNUMBER}_<name>.fits\Zn\n
   File is loaded in shared memory as $SHMDIR/\Z4aol${LOOPNUMBER}_<name>\Zn.im.shm\n
 "
@@ -93,8 +93,8 @@ menuitems+=( "lslat" "            Filtered DM write computing Latency   ${wfsmex
 
 dmCfile="$SHMDIR/aol${LOOPNUMBER}_dmC.im.shm"
 if [ -f $dmCfile ]; then
-sizestring=$( head -1 conf/streamlink_dmC.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmC.name.txt )
+sizestring=$( head -1 conf/streamlink.dmC.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmC.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmC" "[\Z2\Zr${OKstr}\Zn] DM control channel        \Z4\Zbaol${LOOPNUMBER}_dmC\Zn -> \Z4${streamname}\Zn" )
 else
@@ -105,8 +105,8 @@ fi
 
 dmOfile="$SHMDIR/aol${LOOPNUMBER}_dmO.im.shm"
 if [ -f $dmOfile ]; then
-sizestring=$( head -1 conf/streamlink_dmO.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmO.name.txt )
+sizestring=$( head -1 conf/streamlink.dmO.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmO.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmO" "[\Z2\Zr${OKstr}\Zn] DM offset channel         \Z4\Zbaol${LOOPNUMBER}_dmO\Zn -> \Z4${streamname}\Zn" )
 else
@@ -118,8 +118,8 @@ fi
 
 dmZP0file="$SHMDIR/aol${LOOPNUMBER}_dmZP0.im.shm"
 if [ -f $dmZP0file ]; then
-sizestring=$( head -1 conf/streamlink_dmZP0.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmZP0.name.txt )
+sizestring=$( head -1 conf/streamlink.dmZP0.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmZP0.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmZP0" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}_dmZP0\Zn -> \Z4${streamname}\Zn" )
 else
@@ -130,8 +130,8 @@ fi
 
 dmZP1file="$SHMDIR/aol${LOOPNUMBER}_dmZP1.im.shm"
 if [ -f $dmZP1file ]; then
-sizestring=$( head -1 conf/streamlink_dmZP1.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmZP1.name.txt )
+sizestring=$( head -1 conf/streamlink.dmZP1.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmZP1.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmZP1" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}_dmZP1\Zn -> \Z4${streamname}\Zn" )
 else
@@ -142,8 +142,8 @@ fi
 
 dmZP2file="$SHMDIR/aol${LOOPNUMBER}_dmZP2.im.shm"
 if [ -f $dmZP2file ]; then
-sizestring=$( head -1 conf/streamlink_dmZP2.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmZP2.name.txt )
+sizestring=$( head -1 conf/streamlink.dmZP2.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmZP2.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmZP2" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}_dmZP2\Zn -> \Z4${streamname}\Zn" )
 else
@@ -154,8 +154,8 @@ fi
 
 dmZP3file="$SHMDIR/aol${LOOPNUMBER}_dmZP3.im.shm"
 if [ -f $dmZP3file ]; then
-sizestring=$( head -1 conf/streamlink_dmZP3.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmZP3.name.txt )
+sizestring=$( head -1 conf/streamlink.dmZP3.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmZP3.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmZP3" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}_dmZP3\Zn -> \Z4${streamname}\Zn" )
 else
@@ -166,8 +166,8 @@ fi
 
 dmZP4file="$SHMDIR/aol${LOOPNUMBER}_dmZP4.im.shm"
 if [ -f $dmZP4file ]; then
-sizestring=$( head -1 conf/streamlink_dmZP4.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmZP4.name.txt )
+sizestring=$( head -1 conf/streamlink.dmZP4.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmZP4.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmZP4" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}_dmZP4\Zn -> \Z4${streamname}\Zn" )
 else
@@ -178,8 +178,8 @@ fi
 
 dmZP5file="$SHMDIR/aol${LOOPNUMBER}_dmZP5.im.shm"
 if [ -f $dmZP5file ]; then
-sizestring=$( head -1 conf/streamlink_dmZP5.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmZP5.name.txt )
+sizestring=$( head -1 conf/streamlink.dmZP5.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmZP5.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmZP5" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}_dmZP5\Zn -> \Z4${streamname}\Zn" )
 else
@@ -190,8 +190,8 @@ fi
 
 dmZP6file="$SHMDIR/aol${LOOPNUMBER}_dmZP6.im.shm"
 if [ -f $dmZP6file ]; then
-sizestring=$( head -1 conf/streamlink_dmZP6.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmZP6.name.txt )
+sizestring=$( head -1 conf/streamlink.dmZP6.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmZP6.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmZP6" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}_dmZP6\Zn -> \Z4${streamname}\Zn" )
 else
@@ -202,8 +202,8 @@ fi
 
 dmZP7file="$SHMDIR/aol${LOOPNUMBER}_dmZP7.im.shm"
 if [ -f $dmZP7file ]; then
-sizestring=$( head -1 conf/streamlink_dmZP7.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmZP7.name.txt )
+sizestring=$( head -1 conf/streamlink.dmZP7.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmZP7.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmZP7" "[${OKstr}] DM control offset chan.  \Z4\Zbaol${LOOPNUMBER}_dmZP7\Zn -> \Z4${streamname}\Zn" )
 else
@@ -216,8 +216,8 @@ fi
 
 dmdispfile="$SHMDIR/aol${LOOPNUMBER}_dmdisp.im.shm"
 if [ -f $dmdispfile ]; then
-sizestring=$( head -1 conf/streamlink_dmdisp.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmdisp.name.txt )
+sizestring=$( head -1 conf/streamlink.dmdisp.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmdisp.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmdisp" "[${OKstr}] DM total displacement  \Z4\Zbaol${LOOPNUMBER}_dmdisp\Zn -> \Z4${streamname}\Zn" )
 else
@@ -228,8 +228,8 @@ fi
 
 dmRMfile="$SHMDIR/aol${LOOPNUMBER}_dmRM.im.shm"
 if [ -f $dmRMfile ]; then
-sizestring=$( head -1 conf/streamlink_dmRM.imsize.txt )
-streamname=$( head -1 conf/streamlink_dmRM.name.txt )
+sizestring=$( head -1 conf/streamlink.dmRM.imsize.txt )
+streamname=$( head -1 conf/streamlink.dmRM.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "dmRM" "[${OKstr}] DM RM acqu channel      \Z4\Zbaol${LOOPNUMBER}_dmdRM\Zn -> \Z4${streamname}\Zn" )
 else
@@ -244,8 +244,8 @@ menuitems+=( "zerodm" "Zero all DM arrays\Zn" )
 
 wfsimfile="$SHMDIR/aol${LOOPNUMBER}_wfsim.im.shm"
 if [ -f $wfsimfile ]; then
-sizestring=$( head -1 conf/streamlink_wfsim.imsize.txt )
-streamname=$( head -1 conf/streamlink_wfsim.name.txt )
+sizestring=$( head -1 conf/streamlink.wfsim.imsize.txt )
+streamname=$( head -1 conf/streamlink.wfsim.name.txt )
 OKstr="\Z2\Zr$sizestring\Zn"
 menuitems+=( "wfs" "[${OKstr}] WFS camera image        \Z4\Zbaol${LOOPNUMBER}_wfsim\Zn -> \Z4${streamname}\Zn" )
 else
@@ -698,7 +698,7 @@ case $amode in
 exec 3>&1;
 dmC=$(dialog --inputbox "dmC" 0 0 "$dmC" 2>&1 1>&3);
 exec 3>&-;
-echo "$dmC" > ./conf/streamlink_dmC.name.txt
+echo "$dmC" > ./conf/streamlink.dmC.name.txt
 ./aolfuncs/aolfunc_StreamLink dmC
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmC;;
@@ -712,7 +712,7 @@ case $amode in
 exec 3>&1;
 dmO=$(dialog --inputbox "dmO" 0 0 "$dmO" 2>&1 1>&3);
 exec 3>&-;
-echo "$dmO" > ./conf/streamlink_dmO.name.txt
+echo "$dmO" > ./conf/streamlink.dmO.name.txt
 ./aolfuncs/aolfunc_StreamLink dmC
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmO;;
@@ -728,7 +728,7 @@ dmZP0=$(dialog --inputbox "dmZP0" 0 0 "$dmZP0" 2>&1 1>&3);
 #exitcode=$?;
 exec 3>&-;
 #echo $result $exitcode;
-echo "$dmZP0" > ./conf/streamlink_dmZP0.name.txt
+echo "$dmZP0" > ./conf/streamlink.dmZP0.name.txt
 ./aolfuncs/aolfunc_StreamLink dmZP0
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP0;;
@@ -744,7 +744,7 @@ dmZP1=$(dialog --inputbox "dmZP1" 0 0 "$dmZP1" 2>&1 1>&3);
 #exitcode=$?;
 exec 3>&-;
 #echo $result $exitcode;
-echo "$dmZP1" > ./conf/streamlink_dmZP1.name.txt
+echo "$dmZP1" > ./conf/streamlink.dmZP1.name.txt
 ./aolfuncs/aolfunc_StreamLink dmZP1
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP1;;
@@ -759,7 +759,7 @@ dmZP2=$(dialog --inputbox "dmZP2" 0 0 "$dmZP2" 2>&1 1>&3);
 #exitcode=$?;
 exec 3>&-;
 #echo $result $exitcode;
-echo "$dmZP2" > ./conf/streamlink_dmZP2.name.txt
+echo "$dmZP2" > ./conf/streamlink.dmZP2.name.txt
 ./aolfuncs/aolfunc_StreamLink dmZP2
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP2;;
@@ -774,7 +774,7 @@ dmZP3=$(dialog --inputbox "dmZP3" 0 0 "$dmZP3" 2>&1 1>&3);
 #exitcode=$?;
 exec 3>&-;
 #echo $result $exitcode;
-echo "$dmZP3" > ./conf/streamlink_dmZP3.name.txt
+echo "$dmZP3" > ./conf/streamlink.dmZP3.name.txt
 ./aolfuncs/aolfunc_StreamLink dmZP3
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP3;;
@@ -789,7 +789,7 @@ dmZP4=$(dialog --inputbox "dmZP4" 0 0 "$dmZP4" 2>&1 1>&3);
 #exitcode=$?;
 exec 3>&-;
 #echo $result $exitcode;
-echo "$dmZP4" > ./conf/streamlink_dmZP4.name.txt
+echo "$dmZP4" > ./conf/streamlink.dmZP4.name.txt
 ./aolfuncs/aolfunc_StreamLink dmZP4
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP4;;
@@ -804,7 +804,7 @@ dmZP5=$(dialog --inputbox "dmZP5" 0 0 "$dmZP5" 2>&1 1>&3);
 #exitcode=$?;
 exec 3>&-;
 #echo $result $exitcode;
-echo "$dmZP5" > ./conf/streamlink_dmZP5.name.txt
+echo "$dmZP5" > ./conf/streamlink.dmZP5.name.txt
 ./aolfuncs/aolfunc_StreamLink dmZP5
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP5;;
@@ -819,7 +819,7 @@ dmZP6=$(dialog --inputbox "dmZP6" 0 0 "$dmZP4" 2>&1 1>&3);
 #exitcode=$?;
 exec 3>&-;
 #echo $result $exitcode;
-echo "$dmZP6" > ./conf/streamlink_dmZP6.name.txt
+echo "$dmZP6" > ./conf/streamlink.dmZP6.name.txt
 ./aolfuncs/aolfunc_StreamLink dmZP6
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP6;;
@@ -834,7 +834,7 @@ dmZP7=$(dialog --inputbox "dmZP7" 0 0 "$dmZP7" 2>&1 1>&3);
 #exitcode=$?;
 exec 3>&-;
 #echo $result $exitcode;
-echo "$dmZP7" > ./conf/streamlink_dmZP7.name.txt
+echo "$dmZP7" > ./conf/streamlink.dmZP7.name.txt
 ./aolfuncs/aolfunc_StreamLink dmZP7
 ;;
 	1)shmimmon aol${LOOPNUMBER}_dmZP7;;
@@ -850,7 +850,7 @@ dmdisp=$(dialog --inputbox "dmdisp" 0 0 "$dmdisp" 2>&1 1>&3);
 #exitcode=$?;
 exec 3>&-;
 #echo $result $exitcode;
-echo "$dmdisp" > ./conf/streamlink_dmdisp.name.txt
+echo "$dmdisp" > ./conf/streamlink.dmdisp.name.txt
 ./aolfuncs/aolfunc_StreamLink dmdisp
 ;;
 	1)
@@ -864,7 +864,7 @@ case $amode in
 exec 3>&1;
 dmRM=$(dialog --inputbox "dmRM" 0 0 "$dmRM" 2>&1 1>&3);
 exec 3>&-;
-echo "$dmRM" > ./conf/streamlink_dmRM.name.txt
+echo "$dmRM" > ./conf/streamlink.dmRM.name.txt
 ./aolfuncs/aolfunc_StreamLink dmRM
 ;;
 	1)
@@ -896,8 +896,9 @@ case $amode in
 exec 3>&1;
 wfsim=$(dialog --inputbox "WFS image" 0 0 "$wfsim" 2>&1 1>&3);
 exec 3>&-;
-echo "$wfsim" > ./conf/streamlink_wfsim.name.txt
-./aolfuncs/aolfunc_StreamLink wfsim
+echo "$wfsim" > ./conf/streamlink.wfsim.name.txt
+#./aolfuncs/aolfunc_StreamLink wfsim
+milkStreamLink wfsim
 ;;
 	1)
 shmimmon aol${LOOPNUMBER}_wfsim
