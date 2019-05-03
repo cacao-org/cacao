@@ -481,12 +481,10 @@ done < $CONFFILE
 # start DM comb
 sleep 5  # TODO why do we need to wait here ?
 echo "runstart DMcomb-${DMINDEX}" >> ${fpsCTRLfifo}
-
+sleep 2
 echo "runstart streamDelay-$DMINDEX" >> ${fpsCTRLfifo}
-
 # give time to fpsCTRL to process above commands
-sleep 1
-
+sleep 2
 echo "runstart simmvmgpu-$LOOPNUMBER" >> ${fpsCTRLfifo}
 
 
