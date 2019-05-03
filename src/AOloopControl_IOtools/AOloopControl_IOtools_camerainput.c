@@ -611,7 +611,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
 	char pmsg[200];
-	sprintf(pmsg, "waiting stream %s update", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
+	sprintf(pmsg, "waiting %s update", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
 	processinfo_WriteMessage(data.pinfo, pmsg);
 
 
@@ -630,7 +630,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem == 0)
     {
-        // if not using semaphors, use counter to test if new WFS frame is ready
+        // if not using semaphore, use counter to test if new WFS frame is ready
         if(RM==0)
             while(AOconf[loop].WFSim.WFScnt==data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0) // test if new frame exists
                 usleep(5);
@@ -654,7 +654,10 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             //				printf("[%12ld] WARNING [%d] WFS SEMAPHORE already posted\n", AOconf[loop].aorun.LOOPiteration, semval);
             fflush(stdout);
         }
-
+        
+        
+		sprintf(pmsg, "sem=%d [%d]", semval, FORCE_REG_TIMING);
+		processinfo_WriteMessage(data.pinfo, pmsg);
 
         if( imWaitTimeAvecnt < imWaitTimeAvecnt0 )
             FORCE_REG_TIMING_val = 0;
