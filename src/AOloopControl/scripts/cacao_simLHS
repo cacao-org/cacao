@@ -131,16 +131,26 @@ echo "------------------------------------------------------------------------"
 echo "$(tput bold) $pname : cacao AO simulator $(tput sgr0)"
 echo "------------------------------------------------------------------------"
 echo "  Deploys AO simulator for cacao"
-echo "  parameters set by env variable:"
+echo "  Will start 3 processes:"
+echo "     - DMcomb"
+echo "     - streamdelay"
+echo "     - MVM on GPU"
+echo ""
+echo "  Essential parameters are set by env variable:"
 echo "  $ export VAR=\"value\""
 echo "   "
+echo "  Optional parameters are set in user-provided configuration file $pname.conf"
+echo "  Alternate configuration file specified by -c option"
+echo "  "
+echo ""
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-hCc]"
+echo "     $0 [-hCp] [-c <conffile>]"
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-h$(tput sgr0)          help"
-echo "     $(tput bold)-C$(tput sgr0)          clear all memory/files and exit"
-echo "     $(tput bold)-c$(tput sgr0)          check and exit"
+echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
+echo "     $(tput bold)-C$(tput sgr0)            (C)lear all memory/files and exit"
+echo "     $(tput bold)-p$(tput sgr0)            (p)rint parameters and exit"
+echo "     $(tput bold)-c$(tput sgr0) <fname>    Use this (c)onfiguration file"
 echo ""
 echo ""
 echo "------------------------------------------------------------------------"
@@ -246,8 +256,9 @@ done
 
 
 CHECKMODE="0"
+CONFFILE="$pname.conf"
 
-while getopts :hCc FLAG; do
+while getopts :hCpc: FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -257,13 +268,16 @@ while getopts :hCc FLAG; do
       fi
       exit
       ;;
-    c) # check
+    p) # print
     CHECKMODE="1"
     ;;
     C) # clear
     echo "Clearing all settings"
     cacaosimCLEAR
     exit
+    ;;
+    c) # user-provided configuration file
+    CONFFILE="$OPTARG"
     ;;
     \?) #unrecognized option - show help
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
@@ -394,25 +408,18 @@ tmux send-keys -t ${fpsCTRLtmuxname} "fpsCTRL -f ${fpsCTRLfifo}" C-m
 
 
 
+# ===================================================================================
+# ============== DEFAULT SETTINGS AND ENV VARIABLES =================================
+# ===================================================================================
 
-
-
-
-# Settings 
 # DM
 echo "setval AOCONF.DMxsize ${DMxsize}" >> ${fpsCTRLfifo}
 echo "setval AOCONF.DMysize ${DMysize}" >> ${fpsCTRLfifo}
-# start DM comb
-sleep 5  # TODO why do we need to wait here ?
-echo "runstart DMcomb-${DMINDEX}" >> ${fpsCTRLfifo}
-
-
 
 
 # streamDelay
 echo "setval streamDelay-$DMINDEX.in_name aol${LOOPNUMBER}_dmdisp" >> ${fpsCTRLfifo}
 echo "setval streamDelay-$DMINDEX.out_name aol${LOOPNUMBER}_dmdispD" >> ${fpsCTRLfifo}
-
 
 
 # simMVMGPU
@@ -433,24 +440,47 @@ echo "setval simmvmgpu-$LOOPNUMBER.option.insem 6" >> ${fpsCTRLfifo}
 echo "setval simmvmgpu-$LOOPNUMBER.option.axmode 1" >> ${fpsCTRLfifo}
 
 
-
-
-
-
 # give time to fpsCTRL to process above commands
 sleep 1
 
 
 
+# ===================================================================================
+# ========= OPTIONAL ADDITIONAL SETTINGS IMPORTED FROM CONF FILE ====================
+# ===================================================================================
 
+
+
+
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    echo "$line"
+    echo "$line" >> ${fpsCTRLfifo}
+done < $CONFFILE
+
+
+
+
+
+
+# ===================================================================================
 # Startup sequence
-
+# ===================================================================================
 
 # link DM index to loop number
 ./aolfuncs/aolfunc_setDMnolink
 
 
 
+
+
+
+# ===================================================================================
+# ======================== START RUN PROCESSES ======================================
+# ===================================================================================
+
+# start DM comb
+sleep 5  # TODO why do we need to wait here ?
+echo "runstart DMcomb-${DMINDEX}" >> ${fpsCTRLfifo}
 
 echo "runstart streamDelay-$DMINDEX" >> ${fpsCTRLfifo}
 
