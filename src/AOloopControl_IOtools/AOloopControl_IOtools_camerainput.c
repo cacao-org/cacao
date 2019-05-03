@@ -656,7 +656,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         }
         
         
-		sprintf(pmsg, "sem=%d [%d]", semval, FORCE_REG_TIMING);
+		sprintf(pmsg, "sem %d = %d [%d]", semindex, semval, FORCE_REG_TIMING);
 		processinfo_WriteMessage(data.pinfo, pmsg);
 
         if( imWaitTimeAvecnt < imWaitTimeAvecnt0 )
@@ -668,7 +668,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         {
             int rval;
             rval = ImageStreamIO_semwait(&data.image[aoloopcontrol_var.aoconfID_wfsim], wfsim_semwaitindex);            
-            //rval = sem_wait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+            
             if (rval == -1)
                 perror("sem_timedwait");
         }
