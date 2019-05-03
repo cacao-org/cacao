@@ -517,7 +517,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     int          semval;
     int          s;
 
-    int semindex = 0;
+    int semindex = 1;
 
     struct timespec functionTestTimerStart;
     struct timespec functionTestTimerEnd;
