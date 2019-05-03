@@ -140,7 +140,7 @@ echo ""
 echo "  Essential parameters are set by env variable:"
 echo "  $ export VAR=\"value\""
 echo "   "
-echo "  Optional parameters are set in user-provided configuration file $pname.conf"
+echo "  Optional parameters are set in user-provided configuration file $pname.conf (relative to current directory)"
 echo "  Alternate configuration file specified by -c option"
 echo "  "
 echo ""
@@ -456,7 +456,7 @@ sleep 1
 while IFS='' read -r line || [[ -n "$line" ]]; do
     echo "$line"
     echo "$line" >> ${fpsCTRLfifo}
-done < $CONFFILE
+done < ${CURRDIR}/$CONFFILE
 
 
 
