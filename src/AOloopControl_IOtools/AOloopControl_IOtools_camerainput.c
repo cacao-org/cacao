@@ -537,9 +537,9 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     int FORCE_REG_TIMING_val;
 
     if(RM==0)
-        semindex = 0;
-    else
         semindex = 1;
+    else
+        semindex = 2;
 
 	static int wfsim_semwaitindex = -1;
 
