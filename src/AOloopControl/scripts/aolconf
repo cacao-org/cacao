@@ -563,9 +563,9 @@ echo "tmux new-session -s ${tmuxnameSMl} -d"
 echo "CREATING SESSION : ${tmuxnameSMl}"
 sleep 0.2
 tmux new-session -s ${tmuxnameSMl} -d
-sleep 0.2
-tmux send-keys -t ${tmuxnameSMl} "" C-c
-tmux send-keys -t ${tmuxnameSMl} " " C-m
+sleep 0.5
+#tmux send-keys -t ${tmuxnameSMl} "" C-c
+tmux send-keys -t ${tmuxnameSMl} "# NEW SESSION STARTED" C-m
 
 tmux send-keys -t ${tmuxnameSMl} "./auxscripts/waitonfile FUNCTION_SharedMemLoad.block" C-m
 logRunningProcessQ "SharedMemLoad" "${tmuxnameSMl}" "Load control matrix into shared memory" 
