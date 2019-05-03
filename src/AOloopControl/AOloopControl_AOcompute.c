@@ -315,6 +315,8 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize) {
     struct timespec functionTestTimer04;
 
 
+	// import processinfo from upstream 
+	PROCESSINFO *processinfo = data.pinfo;
 
 
 #ifdef _PRINT_TEST
@@ -354,8 +356,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize) {
 
 
     // Read WFS image
+    processinfo_WriteMessage(processinfo, "Wait for WFS image");
     Read_cam_frame(loop, 0, normalize, 0, 0);
-
+	processinfo_WriteMessage(processinfo, "Process WFS image");
 
 
 #ifdef _PRINT_TEST
