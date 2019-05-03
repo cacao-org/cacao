@@ -2,14 +2,6 @@
  * @file    AOloopControl_IOtools_camerainput.c
  * @brief   Adaptive Optics Control loop engine I/O tools
  * 
- * AO engine uses stream data structure
- *  
- * @author  O. Guyon
- * @date    22 Dec 2017
- *
- * 
- * @bug No known bugs.
- * 
  * 
  */
 
@@ -618,8 +610,9 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     clock_gettime(CLOCK_REALTIME, &functionTestTimer00);
 
 
-
-
+	char pmsg[200];
+	sprintf("waiting stream %s update", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
+	processinfo_WriteMessage(data.pinfo, pmsg);
 
 
 
