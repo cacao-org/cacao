@@ -343,9 +343,14 @@ mkdir -p $WORKDIR/conf/
 # copy LHS files
 
 cd $WORKDIR
+# update WORKDIR to full path
+WORKDIR=$( pwd )
+
 mkdir simLHS
 cp ${LHSRESPM_ABS} ./simLHS/simLHS_respM.fits
 cp ${LHSWFSREF_ABS} ./simLHS/simLHS_wfsref.fits
+
+
 
 # Populate work directory with scripts
 
@@ -384,6 +389,7 @@ echo "simmvmgpu      cudaextrmodes       $LOOPNUMBER"  >> fpslist.txt
 
 
 
+
 fpsmkcmd                      # (re-)create FPS scripts in `./fpscmd/`
 ./fpscmd/fpsinitscript        # (re-)create FPS shared memory structure(s)
 
@@ -400,6 +406,8 @@ tmux new-session -d -s ${fpsCTRLtmuxname} \; setw force-width 160 \; setw force-
 sleep 1
 tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m
 tmux send-keys -t ${fpsCTRLtmuxname} "TMUX=" C-m   # ensures that tmux sessions can be created from fpsCTRL
+
+
 tmux send-keys -t ${fpsCTRLtmuxname} "fpsCTRL -f ${fpsCTRLfifo}" C-m
 
 
