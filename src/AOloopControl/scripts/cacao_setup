@@ -418,8 +418,6 @@ done < ${CURRDIR}/$CONFFILE
 # start DM comb
 sleep 5  # TODO why do we need to wait here ?
 echo "runstart DMcomb-${DMINDEX}" >> ${fpsCTRLfifo}
-sleep 2
-milkStreamLink -p aol${LOOPNUMBER}_ wfsim
 
 
 # finished - get back to current directory
