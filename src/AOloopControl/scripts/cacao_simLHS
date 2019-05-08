@@ -494,6 +494,8 @@ sleep 2
 echo "runstart streamDelay-$DMINDEX" >> ${fpsCTRLfifo}
 # give time to fpsCTRL to process above commands
 sleep 2
+
+rm $MILK_SHM_DIR/aol${LOOPNUMBER}_linsimWFS.im.shm
 echo "runstart simmvmgpu-$LOOPNUMBER" >> ${fpsCTRLfifo}
 
 
