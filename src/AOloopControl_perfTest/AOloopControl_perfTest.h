@@ -44,6 +44,9 @@ int_fast8_t AOloopControl_perfTest_showparams(long loop);
 
 int_fast8_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname, long delayus, long NBpts, float ampl);
 
+
+errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(char *fpsname, uint32_t CMDmode);
+int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(char *fpsname);
 int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname, char *wfsname, float OPDamp, long NBiter);
 
 long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name);

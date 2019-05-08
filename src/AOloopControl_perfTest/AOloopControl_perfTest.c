@@ -154,14 +154,53 @@ int_fast8_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
     else return 1;
 }
 
-/** @brief CLI function for AOcontrolLoop_TestSystemLatency */
+
+
+
 int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,1)+CLI_checkarg(4,2)==0) {
-        AOcontrolLoop_perfTest_TestSystemLatency(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numl);
-        return 0;
+    char fpsname[200];
+    // First, we try to execute function through FPS interface
+    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string, second arg is int
+        unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
+        // Set FPS interface name
+        // By convention, if there are optional arguments, they should be appended to the fps name
+        //
+        if(data.processnameflag == 0) { // name fps to something different than the process name
+            sprintf(fpsname, "mlat");
+        } else { // Automatically set fps name to be process name up to first instance of character '.'
+            strcpy(fpsname, data.processname0);
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFINIT_") == 0) {  // Initialize FPS and conf process
+            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_CONFINIT);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
+            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_CONFSTART);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
+            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+            AOcontrolLoop_perfTest_TestSystemLatency_RUN(fpsname);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+       //     AOcontrolLoop_perfTest_TestSystemLatency_STOP(OptionalArg00);
+            return RETURN_SUCCESS;
+        }
     }
-    else return 1;
+    // non FPS implementation - all parameters specified at function launch
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 1) + CLI_checkarg(4, 2) == 0) {
+        AOcontrolLoop_perfTest_TestSystemLatency(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numl);
+            return RETURN_SUCCESS;
+        } else {
+            return RETURN_FAILURE;
+        }
 }
+
+
 
 /** @brief CLI function for AOloopControl_TestDMmodeResp */
 int_fast8_t AOloopControl_perfTest_TestDMmodeResp_cli() {
@@ -408,6 +447,77 @@ int_fast8_t init_AOloopControl_perfTest()
 
 
 
+
+
+errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
+    char *fpsname,
+    uint32_t CMDmode
+)
+{
+    uint16_t loopstatus;
+    
+    
+    // ===========================
+    // SETUP FPS
+    // ===========================
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
+    if( loopstatus == 0 ) // stop fps
+        return 0;
+
+
+
+    // ===========================
+    // ALLOCATE FPS ENTRIES
+    // ===========================
+    void *pNull = NULL;
+    uint64_t FPFLAG;
+
+	float frameratewait_default[4] = { 5, 1, 100, 5 };
+    long fpi_frameratewait = function_parameter_add_entry(&fps, ".frameratewait", "time period for frame rate measurement", FPTYPE_FLOAT32, FPFLAG_DEFAULT_INPUT, &frameratewait_default);
+    
+	float OPDamp_default[4] = { 0.1, 0.1, 1.0, 0.1 };
+    long fpi_OPDamp = function_parameter_add_entry(&fps, ".OPDamp", "poke amplitude", FPTYPE_FLOAT32, FPFLAG_DEFAULT_INPUT, &OPDamp_default);
+    
+	long NBiter_default[4] = { 100, 10, 100000, 100 };
+    long fpi_NBiter = function_parameter_add_entry(&fps, ".NBiter", "Number of iteration", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBiter_default);
+    
+    
+    // input stream
+    FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM;
+    
+    long fp_streamname_dm       = function_parameter_add_entry(&fps, ".sn_dm",  "DM stream name",
+                                     FPTYPE_STREAMNAME, FPFLAG, pNull);
+
+    long fp_streamname_wfs       = function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
+                                     FPTYPE_STREAMNAME, FPFLAG, pNull);
+    
+        
+    // =====================================
+    // PARAMETER LOGIC AND UPDATE LOOP
+    // =====================================
+    while ( loopstatus == 1 )
+    {
+        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        {
+            // here goes the logic
+
+            functionparameter_CheckParametersAll(&fps);  // check all parameter values
+        }
+    }
+    function_parameter_FPCONFexit( &fps );
+
+
+    return RETURN_SUCCESS;
+}
+
+
+
+
+
+
+
+
+
 /**
  *  ## Purpose
  *
@@ -433,11 +543,10 @@ int_fast8_t init_AOloopControl_perfTest()
  * 			Number of poke cycles
  *
  */
-int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
-    const char *dmname,
-    char *wfsname,
-    float OPDamp,
-    long NBiter) {
+int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
+char *fpsname
+    ) 
+    {
     long IDdm;
     long dmxsize, dmysize;
     long IDwfs;
@@ -490,6 +599,33 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
 
     uint8_t datatype;
     uint32_t naxes[3];
+
+
+
+    // ===========================
+    // CONNECT TO FPS
+    // ===========================
+    FUNCTION_PARAMETER_STRUCT fps;
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1) {
+        printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
+        return RETURN_FAILURE;
+    }
+
+    // ===============================
+    // GET FUNCTION PARAMETER VALUES
+    // ===============================
+
+	char dmname[200];
+    strncpy(dmname,  functionparameter_GetParamPtr_STRING(&fps, ".sn_dm"),  FUNCTION_PARAMETER_STRMAXLEN);
+
+	char wfsname[200];
+    strncpy(wfsname,  functionparameter_GetParamPtr_STRING(&fps, ".sn_wfs"),  FUNCTION_PARAMETER_STRMAXLEN);
+
+	long NBiter     = functionparameter_GetParamValue_INT64(&fps, ".NBiter");
+	float OPDamp    = functionparameter_GetParamValue_FLOAT32(&fps, ".OPDamp");
+
+	float FrameRateWait = functionparameter_GetParamValue_FLOAT32(&fps, ".frameratewait");
+
 
 
 
@@ -578,7 +714,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     naxes[2] = wfs_NBframesmax;
     IDwfsc = create_image_ID("_testwfsc", 3, naxes, datatype, 0, 0);
 
-    float FrameRateWait = 5.0;
+    
     sprintf(msgstring, "Measuring frame rate over %.1f sec", FrameRateWait);
     processinfo_WriteMessage(processinfo, msgstring);
 
@@ -643,7 +779,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
 
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
     processinfo_WriteMessage(processinfo, "Starting loop");
+
 	iter = 0;
+
     while(loopOK == 1) {
         //double tlastdouble;
         double tstartdouble;
@@ -862,7 +1000,6 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     latencyave /= NBiter;
     latencystepave /= NBiter;
 
-    //save__fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
 
 
     quick_sort_float(latencyarray, NBiter);
@@ -914,6 +1051,63 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
+    const char *dmname,
+    char *wfsname,
+    float OPDamp,
+    long NBiter
+    ) 
+{
+    // ==================================
+    // CREATE FPS AND START CONF
+    // ==================================
+
+    char fpsname[200];
+    long pindex = (long) getpid();  // index used to differentiate multiple calls to function
+    // if we don't have anything more informative, we use PID
+    FUNCTION_PARAMETER_STRUCT fps;
+    sprintf(fpsname, "mlat-%s-%s", dmname, wfsname);
+    AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_CONFINIT);
+
+
+
+
+    // ==================================
+    // SET PARAMETER VALUES
+    // ==================================
+
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
+
+    functionparameter_SetParamValue_STRING(&fps, ".sn_dm", dmname);
+    functionparameter_SetParamValue_STRING(&fps, ".sn_wfs", wfsname);
+
+    functionparameter_SetParamValue_FLOAT32(&fps, ".OPDamp", OPDamp);
+    functionparameter_SetParamValue_INT64(&fps, ".NBiter", NBiter);
+
+    function_parameter_struct_disconnect(&fps);
+
+
+    // ==================================
+    // START RUN PROCESS
+    // ==================================
+
+    AOcontrolLoop_perfTest_TestSystemLatency_RUN(fpsname);
+
+    return RETURN_SUCCESS;
+}
+
+
+
+
 
 
 
