@@ -8,6 +8,20 @@
  * 
  */
 
+
+#define AOLOOPCONTROL_DM_LOGDEBUG 1
+
+#if defined(AOLOOPCONTROL_DM_LOGDEBUG) && !defined(STANDALONE)
+#define AOLOOPCONTROL_DM_LOGEXEC do {                      \
+    sprintf(data.execSRCfunc, "%s", __FUNCTION__); \
+    data.execSRCline = __LINE__;                   \
+    } while(0)
+#else
+#define AOLOOPCONTROL_DM_LOGEXEC 
+#endif
+
+
+
 #include <malloc.h>
 
 #include <string.h>
@@ -231,52 +245,70 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     FPFLAG &= ~FPFLAG_WRITECONF;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long DMindex_default[4] = { DMindex, 0, 9, DMindex };
-    long fp_DMindex = function_parameter_add_entry(&fps, "AOCONF.DMindex", "Deformable mirror index", FPTYPE_INT64, FPFLAG, &DMindex_default);
+    long fp_DMindex =
+        function_parameter_add_entry(&fps, "AOCONF.DMindex", "Deformable mirror index", FPTYPE_INT64, FPFLAG, &DMindex_default);
 
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long DMsize_default[4] = { 1, 1, 1000, 1 };
-    long fp_DMxsize = function_parameter_add_entry(&fps, "AOCONF.DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG, &DMsize_default);
-    long fp_DMysize = function_parameter_add_entry(&fps, "AOCONF.DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG, &DMsize_default);
+    long fp_DMxsize =
+        function_parameter_add_entry(&fps, "AOCONF.DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG, &DMsize_default);
+    long fp_DMysize =
+        function_parameter_add_entry(&fps, "AOCONF.DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG, &DMsize_default);
 
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long NBchannel_default[4] = { 12, 1, 20, 12 };
-    long fp_NBchannel = function_parameter_add_entry(&fps, ".NBchannel", "Number of channels", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBchannel_default);
+    long fp_NBchannel =
+        function_parameter_add_entry(&fps, ".NBchannel", "Number of channels", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBchannel_default);
 
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long AveMode_default[4] = { 0, 0, 2, 0 };
-    long fp_AveMode = function_parameter_add_entry(&fps, ".AveMode", "Averaging mode", FPTYPE_INT64, FPFLAG, &AveMode_default);
+    long fp_AveMode =
+        function_parameter_add_entry(&fps, ".AveMode", "Averaging mode", FPTYPE_INT64, FPFLAG, &AveMode_default);
 
     //long dm2dm_mode_default[4] = { 0, 0, 1, 0 };
-    long fp_dm2dm_mode     = function_parameter_add_entry(&fps, ".option.dm2dm_mode", "DM to DM offset mode", FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull); //&dm2dm_mode_default);
+    long fp_dm2dm_mode     =
+        function_parameter_add_entry(&fps, ".option.dm2dm_mode", "DM to DM offset mode", FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull); //&dm2dm_mode_default);
 
-    long fp_dm2dm_DMmodes  = function_parameter_add_entry(&fps, ".option.dm2dm_DMmodes", "Output stream DM to DM", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
+    long fp_dm2dm_DMmodes  =
+        function_parameter_add_entry(&fps, ".option.dm2dm_DMmodes", "Output stream DM to DM", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_dm2dm_outdisp  = function_parameter_add_entry(&fps, ".option.dm2dm_outdisp", "data stream to which output DM is written", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
+    long fp_dm2dm_outdisp  =
+        function_parameter_add_entry(&fps, ".option.dm2dm_outdisp", "data stream to which output DM is written", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_wfsrefmode     = function_parameter_add_entry(&fps, ".option.wfsrefmode", "WFS ref mode", FPTYPE_ONOFF, FPFLAG, pNull);
+    long fp_wfsrefmode     =
+        function_parameter_add_entry(&fps, ".option.wfsrefmode", "WFS ref mode", FPTYPE_ONOFF, FPFLAG, pNull);
 
-    long fp_wfsref_WFSRespMat = function_parameter_add_entry(&fps, ".option.wfsref_WFSRespMat", "Output WFS resp matrix", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
+    long fp_wfsref_WFSRespMat =
+        function_parameter_add_entry(&fps, ".option.wfsref_WFSRespMat", "Output WFS resp matrix", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_wfsref_out     = function_parameter_add_entry(&fps, ".option.wfsref_out", "Output WFS", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
+    long fp_wfsref_out     =
+        function_parameter_add_entry(&fps, ".option.wfsref_out", "Output WFS", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_voltmode       = function_parameter_add_entry(&fps, ".option.voltmode", "Volt mode", FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+    long fp_voltmode       =
+        function_parameter_add_entry(&fps, ".option.voltmode", "Volt mode", FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_volttype       = function_parameter_add_entry(&fps, ".option.volttype", "Volt type", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
+    long fp_volttype       =
+        function_parameter_add_entry(&fps, ".option.volttype", "Volt type", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_stroke100      = function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
+    long fp_stroke100      =
+        function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_voltname       = function_parameter_add_entry(&fps, ".option.voltname", "Stream name for volt output", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
+    long fp_voltname       =
+        function_parameter_add_entry(&fps, ".option.voltname", "Stream name for volt output", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
 
     double DClevel_default[4] = { 0.0, 0.0, 100.0, 0.0 };
-    long fp_DClevel = function_parameter_add_entry(&fps, ".option.DClevel", "DC level [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &DClevel_default);
+    long fp_DClevel =
+        function_parameter_add_entry(&fps, ".option.DClevel", "DC level [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &DClevel_default);
 
-    long fp_maxvolt = function_parameter_add_entry(&fps, ".option.maxvolt", "Maximum voltage", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
+    long fp_maxvolt =
+        function_parameter_add_entry(&fps, ".option.maxvolt", "Maximum voltage", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
 
     // status (RO)
-    long fp_loopcnt = function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, FPFLAG_DEFAULT_STATUS, pNull);
+    long fp_loopcnt =
+        function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, FPFLAG_DEFAULT_STATUS, pNull);
 
 
 
@@ -391,8 +423,6 @@ int AOloopControl_DM_CombineChannels_RUN(
     long IDvolt;
     double ave;
     long ID1;
-    int RT_priority = 95; //any number from 0-99
-    struct sched_param schedpar;
     int r;
     long sizexy;
     float *dmdispptr;
@@ -429,7 +459,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
 
-
+	AOLOOPCONTROL_DM_LOGEXEC;
 
     FUNCTION_PARAMETER_STRUCT fps;
 
@@ -485,7 +515,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
 
-
+	AOLOOPCONTROL_DM_LOGEXEC;
 
     PROCESSINFO *processinfo;
 
@@ -505,7 +535,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1; // Measure timing
-    processinfo->RT_priority = RT_priority;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+    processinfo->RT_priority = 95;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
 
 
 
@@ -524,31 +554,24 @@ int AOloopControl_DM_CombineChannels_RUN(
     }
     printf("Using DMtwaitus = %ld us\n", DMtwaitus);
 
-    /*
-        schedpar.sched_priority = RT_priority;
-    #ifndef __MACH__
-        r = seteuid(data.euid); // This goes up to maximum privileges
-        sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-        r = seteuid(data.ruid); //Go back to normal privileges
-    #endif
-    */
+
     // AOloopControl_DM_createconf();
 
 
 
     AOloopControl_DM_loadconf();
 
-    dmdispcombconf[DMindex].ON = 1;
-    dmdispcombconf[DMindex].xsize = xsize;
-    dmdispcombconf[DMindex].ysize = ysize;
-    dmdispcombconf[DMindex].xysize = xsize * ysize;
-    dmdispcombconf[DMindex].NBchannel = NBchannel;
-    dmdispcombconf[DMindex].voltmode = voltmode;
-    dmdispcombconf[DMindex].volttype = volttype;
-    dmdispcombconf[DMindex].stroke100 = stroke100;
-    dmdispcombconf[DMindex].voltON = 1;
-    dmdispcombconf[DMindex].MAXVOLT = maxvolt;
-    dmdispcombconf[DMindex].AveMode = AveMode;
+    dmdispcombconf[DMindex].ON          = 1;
+    dmdispcombconf[DMindex].xsize       = xsize;
+    dmdispcombconf[DMindex].ysize       = ysize;
+    dmdispcombconf[DMindex].xysize      = xsize * ysize;
+    dmdispcombconf[DMindex].NBchannel   = NBchannel;
+    dmdispcombconf[DMindex].voltmode    = voltmode;
+    dmdispcombconf[DMindex].volttype    = volttype;
+    dmdispcombconf[DMindex].stroke100   = stroke100;
+    dmdispcombconf[DMindex].voltON      = 1;
+    dmdispcombconf[DMindex].MAXVOLT     = maxvolt;
+    dmdispcombconf[DMindex].AveMode     = AveMode;
     sprintf(dmdispcombconf[DMindex].voltname, "%s", IDvolt_name);
     dmdispcombconf[DMindex].status = 0;
 
@@ -556,6 +579,8 @@ int AOloopControl_DM_CombineChannels_RUN(
 
     printf("maxvolt = %f\n", maxvolt);
 
+
+	AOLOOPCONTROL_DM_LOGEXEC;
 
     size = (uint32_t *) malloc(sizeof(uint32_t) * naxis);
     size[0] = xsize;
@@ -604,6 +629,9 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
     list_image_ID(); //TEST
+    
+    
+    AOLOOPCONTROL_DM_LOGEXEC;
 
     dmdispcombconf[DMindex].wfsrefmode = wfsrefmode;
     if(wfsrefmode == 1) {
@@ -652,6 +680,8 @@ int AOloopControl_DM_CombineChannels_RUN(
         printf("done\n\n");
         fflush(stdout);
     }
+    
+    AOLOOPCONTROL_DM_LOGEXEC;
 
     printf("Initialize channels\n");
     printf("Max DM stroke = %f um\n", dmdispcombconf[DMindex].stroke100 * dmdispcombconf[DMindex].MAXVOLT / 100.0 * dmdispcombconf[DMindex].MAXVOLT / 100.0);
@@ -673,12 +703,19 @@ int AOloopControl_DM_CombineChannels_RUN(
     sprintf(name, "dm%02lddispt", DMindex);
     IDdispt = create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 0, 0);
     dmdispptr = data.image[IDdispt].array.F;
+    
+    
+    AOLOOPCONTROL_DM_LOGEXEC;
+
+
 
     if(dmdispcombconf[DMindex].voltmode == 1) {
         IDvolt = image_ID(dmdispcombconf[DMindex].voltname);
 
         vOK = 0;
         if(IDvolt != -1) {
+			printf("stream %s found  %d axis, size = %u x %u\n", dmdispcombconf[DMindex].voltname, naxis, size[0], size[1]);
+			fflush(stdout);
             if((data.image[IDvolt].md[0].naxis == 2) && (data.image[IDvolt].md[0].size[0] == xsize) && (data.image[IDvolt].md[0].size[1] == ysize)) {
                 if((dmdispcombconf[DMindex].volttype == 1) && (data.image[IDvolt].md[0].datatype == _DATATYPE_FLOAT)) {
                     vOK = 1;
@@ -708,6 +745,9 @@ int AOloopControl_DM_CombineChannels_RUN(
             dmdispcombconf[DMindex].IDvolt = image_ID(dmdispcombconf[DMindex].voltname);
         }
     }
+    
+    AOLOOPCONTROL_DM_LOGEXEC;
+
 
     cntsumold = 0;
 
@@ -733,7 +773,9 @@ int AOloopControl_DM_CombineChannels_RUN(
 
     int loopOK = 1;
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
-
+    
+    
+    AOLOOPCONTROL_DM_LOGEXEC;
 
     while(dmdispcombconf[DMindex].ON == 1) {
         struct timespec semwaitts;
@@ -741,6 +783,8 @@ int AOloopControl_DM_CombineChannels_RUN(
         loopOK = processinfo_loopstep(processinfo);
 
         dmdispcombconf[DMindex].status = 2;
+        
+        AOLOOPCONTROL_DM_LOGEXEC;
 
         if(DMtwaitus > 0) {
             usleep(DMtwaitus);
@@ -762,7 +806,9 @@ int AOloopControl_DM_CombineChannels_RUN(
             //
             // this is semaphore that triggers the write to the DM
             //
+            AOLOOPCONTROL_DM_LOGEXEC;
             sem_timedwait(data.image[dmdispcombconf[DMindex].IDdisp].semptr[1], &semwaitts);
+            AOLOOPCONTROL_DM_LOGEXEC;
 
             cntsum = 0;
             for(ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++) {
@@ -781,9 +827,11 @@ int AOloopControl_DM_CombineChannels_RUN(
                 cntold = cnt;
             }
         }
+        AOLOOPCONTROL_DM_LOGEXEC;
 
         if(DMupdate == 1) {
             clock_gettime(CLOCK_REALTIME, &ttrig);
+            AOLOOPCONTROL_DM_LOGEXEC;
 
             dmdispcombconf[0].status = 3;
             cnt++;
@@ -796,6 +844,7 @@ int AOloopControl_DM_CombineChannels_RUN(
             }
 
             dmdispcombconf[DMindex].status = 4;
+            AOLOOPCONTROL_DM_LOGEXEC;
 
 
             ave = 0.0;
@@ -806,6 +855,7 @@ int AOloopControl_DM_CombineChannels_RUN(
                 ave /= dmdispcombconf[DMindex].xysize;
             }
             dmdispcombconf[DMindex].status = 5;
+            AOLOOPCONTROL_DM_LOGEXEC;
 
             if(dmdispcombconf[DMindex].AveMode < 2) { // OFFSET BY DClevel
                 for(ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++) {
@@ -819,12 +869,14 @@ int AOloopControl_DM_CombineChannels_RUN(
                 }
             }
             dmdispcombconf[DMindex].status = 6;
+            AOLOOPCONTROL_DM_LOGEXEC;
 
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].write = 1;
             memcpy(data.image[dmdispcombconf[DMindex].IDdisp].array.F, data.image[IDdispt].array.F, sizeof(float)*data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement);
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].cnt0++;
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].atime = ttrig;
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].write = 0;
+            AOLOOPCONTROL_DM_LOGEXEC;
 
             /*     for(semnb=0;semnb<data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem;semnb++)
                     {
@@ -834,9 +886,11 @@ int AOloopControl_DM_CombineChannels_RUN(
                      }*/
             COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
             //      sem_post(data.image[dmdispcombconf[DMindex].IDdisp].semptr[0]);
-
+            
+            AOLOOPCONTROL_DM_LOGEXEC;
 
             if(dm2dm_mode == 1) {
+				AOLOOPCONTROL_DM_LOGEXEC;
                 memset(data.image[IDtmpoutdm].array.F, '\0', sizeof(float)*sizexyDMout);
                 for(kk = 0; kk < data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement; kk++) {
                     for(ii = 0; ii < sizexyDMout; ii++) {
@@ -850,10 +904,12 @@ int AOloopControl_DM_CombineChannels_RUN(
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].atime = ttrig;
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].write = 0;
                 sem_post(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].semptr[0]);
+                AOLOOPCONTROL_DM_LOGEXEC;
             }
 
 
             if(wfsrefmode == 1) {
+				AOLOOPCONTROL_DM_LOGEXEC;
                 memset(data.image[IDtmpoutref].array.F, '\0', sizeof(float)*sizexywfsref);
                 list_image_ID();
                 printf("kkmax = %ld\n", data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement);
@@ -867,6 +923,7 @@ int AOloopControl_DM_CombineChannels_RUN(
                         data.image[IDtmpoutref].array.F[ii] += data.image[dmdispcombconf[DMindex].IDdisp].array.F[kk] * data.image[dmdispcombconf[DMindex].ID_wfsref_RespMat].array.F[kk * sizexywfsref + ii];
                     }
                 }
+                AOLOOPCONTROL_DM_LOGEXEC;
                 printf("\n");
                 printf("Updating Zero Point  %ld <- %ld\n", dmdispcombconf[DMindex].ID_wfsref_out, IDtmpoutref);
                 fflush(stdout);
@@ -878,6 +935,7 @@ int AOloopControl_DM_CombineChannels_RUN(
                 sem_post(data.image[dmdispcombconf[DMindex].ID_wfsref_out].semptr[0]);
                 printf("Done\n");
                 fflush(stdout);
+                AOLOOPCONTROL_DM_LOGEXEC;
             }
 
 
@@ -887,7 +945,9 @@ int AOloopControl_DM_CombineChannels_RUN(
 
             clock_gettime(CLOCK_REALTIME, &t1);
             if(dmdispcombconf[DMindex].voltmode == 1) {
+				AOLOOPCONTROL_DM_LOGEXEC;
                 AOloopControl_DM_disp2V(DMindex);
+                AOLOOPCONTROL_DM_LOGEXEC;
             }
 
 
@@ -896,6 +956,8 @@ int AOloopControl_DM_CombineChannels_RUN(
             cntsumold = cntsum;
             dmdispcombconf[DMindex].updatecnt++;
             *addr_loopcnt = dmdispcombconf[DMindex].updatecnt;
+            
+            AOLOOPCONTROL_DM_LOGEXEC;
 
             if(data.processinfo == 1) {
                 processinfo->loopcnt = dmdispcombconf[DMindex].updatecnt;
@@ -905,25 +967,30 @@ int AOloopControl_DM_CombineChannels_RUN(
             tdiff = time_diff(ttrig, tnow);
             tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
             dmdispcombconf[DMindex].tdelay = tdiffv;
+            
+            AOLOOPCONTROL_DM_LOGEXEC;
 
 
             tdiff = time_diff(t1, tnow);
             tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
             dmdispcombconf[DMindex].time_disp2V = tdiffv;
-
+            
+            AOLOOPCONTROL_DM_LOGEXEC;
         }
  
 
         if(loopOK == 0) {
+			AOLOOPCONTROL_DM_LOGEXEC;
             dmdispcombconf[DMindex].ON = 0;
             if(data.processinfo == 1) {
                 processinfo->loopstat = 3;
             }
         }
     }
+    AOLOOPCONTROL_DM_LOGEXEC;
 
     processinfo_cleanExit(processinfo);
-
+    AOLOOPCONTROL_DM_LOGEXEC;
 
 
     printf("LOOP STOPPED\n");
@@ -1002,49 +1069,49 @@ int AOloopControl_DM_CombineChannels(
     float maxvolt
 )
 {
-	char fpsname[200];
+    char fpsname[200];
     FUNCTION_PARAMETER_STRUCT fps;
-	
-	// create FPS
-	sprintf(fpsname, "DMcomb-%02ld", DMindex);
-	AOloopControl_DM_CombineChannels_FPCONF( fpsname, CMDCODE_CONFINIT, DMindex);
-	
-	
+
+    // create FPS
+    sprintf(fpsname, "DMcomb-%02ld", DMindex);
+    AOloopControl_DM_CombineChannels_FPCONF( fpsname, CMDCODE_CONFINIT, DMindex);
+
+
 
 
     function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN);
-    
-	functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMindex", DMindex);
-	functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMxsize", xsize);
-	functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMysize", ysize);	
-	functionparameter_SetParamValue_INT64(&fps, "NBchannel", NBchannel);	
-	functionparameter_SetParamValue_INT64(&fps, ".AveMode", AveMode);		
-	
-	functionparameter_SetParamValue_INT64(&fps, ".option.dm2dm_mode", dm2dm_mode);
-	functionparameter_SetParamValue_STRING(&fps, ".option.dm2dm_DMmodes", dm2dm_DMmodes);
-	functionparameter_SetParamValue_STRING(&fps, ".option.dm2dm_outdisp", dm2dm_outdisp);
-			
-	functionparameter_SetParamValue_INT64(&fps, ".option.wfsrefmode", wfsrefmode);
-	functionparameter_SetParamValue_STRING(&fps, ".option.wfsref_WFSRespMat", wfsref_WFSRespMat);
-	functionparameter_SetParamValue_STRING(&fps, ".option.wfsref_out", wfsref_out);
-	
-	functionparameter_SetParamValue_ONOFF(&fps, ".option.voltmode", voltmode);		
-	functionparameter_SetParamValue_STRING(&fps, ".option.voltname", IDvolt_name);
 
-	functionparameter_SetParamValue_INT64(&fps, ".option.volttype", volttype);
-		
-	functionparameter_SetParamValue_FLOAT64(&fps, ".option.stroke100", stroke100);
-	functionparameter_SetParamValue_FLOAT64(&fps, ".option.DClevel", DClevel);
-	functionparameter_SetParamValue_FLOAT64(&fps, ".option.maxvolt", maxvolt);
-	
-		
-	function_parameter_struct_disconnect(&fps);
+    functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMindex", DMindex);
+    functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMxsize", xsize);
+    functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMysize", ysize);
+    functionparameter_SetParamValue_INT64(&fps, "NBchannel", NBchannel);
+    functionparameter_SetParamValue_INT64(&fps, ".AveMode", AveMode);
+
+    functionparameter_SetParamValue_INT64(&fps, ".option.dm2dm_mode", dm2dm_mode);
+    functionparameter_SetParamValue_STRING(&fps, ".option.dm2dm_DMmodes", dm2dm_DMmodes);
+    functionparameter_SetParamValue_STRING(&fps, ".option.dm2dm_outdisp", dm2dm_outdisp);
+
+    functionparameter_SetParamValue_INT64(&fps, ".option.wfsrefmode", wfsrefmode);
+    functionparameter_SetParamValue_STRING(&fps, ".option.wfsref_WFSRespMat", wfsref_WFSRespMat);
+    functionparameter_SetParamValue_STRING(&fps, ".option.wfsref_out", wfsref_out);
+
+    functionparameter_SetParamValue_ONOFF(&fps, ".option.voltmode", voltmode);
+    functionparameter_SetParamValue_STRING(&fps, ".option.voltname", IDvolt_name);
+
+    functionparameter_SetParamValue_INT64(&fps, ".option.volttype", volttype);
+
+    functionparameter_SetParamValue_FLOAT64(&fps, ".option.stroke100", stroke100);
+    functionparameter_SetParamValue_FLOAT64(&fps, ".option.DClevel", DClevel);
+    functionparameter_SetParamValue_FLOAT64(&fps, ".option.maxvolt", maxvolt);
 
 
+    function_parameter_struct_disconnect(&fps);
 
-	AOloopControl_DM_CombineChannels_RUN( fpsname );
 
-	return 0;
+
+    AOloopControl_DM_CombineChannels_RUN( fpsname );
+
+    return 0;
 }
 
 
