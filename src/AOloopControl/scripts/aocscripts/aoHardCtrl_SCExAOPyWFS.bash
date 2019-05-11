@@ -535,11 +535,11 @@ aoconflogext "kill ircam0 scexaoCTRL -> scexao TCP transfer"
 
 
 # ircam0_dark        scexaoCTRL->scexao, port 30102
-	ir0cs)
+	ir0ds)
 aoconflogext "(re-)start ircam0_dark scexaoCTRL -> scexao TCP transfer"
 /home/scexao/bin/getTCPscexao2im -s ircam  ircam0_dark 30102
 ;;
-	ir0ck)
+	ir0dk)
 aoconflogext "kill ircam0_dark scexaoCTRL -> scexao TCP transfer"
 /home/scexao/bin/getTCPscexao2im -k ircam0_dark 30102
 ;;
