@@ -283,12 +283,15 @@ menuitems+=( " " " " )
 menuitems+=( "ir0cs" "\Zr ircam0 \Zn : (re-)start scexaoCTRL->scexaoRTC TCP transfer [port 30101]" )
 menuitems+=( "ir0ck" "\Zr ircam0 \Zn : kill scexaoCTRL->scexaoRTC TCP transfer       [port 30101]" )
 menuitems+=( " " " " )
-menuitems+=( "ir1cs" "\Zr ircam1 \Zn : (re-)start scexaoCTRL->scexaoRTC TCP transfer [port 30102]" )
-menuitems+=( "ir1ck" "\Zr ircam1 \Zn : kill scexaoCTRL->scexaoRTC TCP transfer       [port 30102]" )
+menuitems+=( "ir0ds" "\Zr ircam0_dark \Zn : (re-)start scexaoCTRL->scexaoRTC TCP transfer [port 30102]" )
+menuitems+=( "ir0dk" "\Zr ircam0_dark \Zn : kill scexaoCTRL->scexaoRTC TCP transfer       [port 30102]" )
 menuitems+=( " " " " )
-menuitems+=( "ir2cs" "\Zr ircam2 \Zn : (re-)start scexaoCTRL->scexaoRTC TCP transfer [port 30103]" )
-menuitems+=( "ir2ck" "\Zr ircam2 \Zn : kill scexaoCTRL->scexaoRTC TCP transfer       [port 30103]" )
+menuitems+=( "ir1cs" "\Zr ircam1 \Zn : (re-)start scexaoCTRL->scexaoRTC TCP transfer [port 30103]" )
+menuitems+=( "ir1ck" "\Zr ircam1 \Zn : kill scexaoCTRL->scexaoRTC TCP transfer       [port 30103]" )
 menuitems+=( " " " " )
+#menuitems+=( "ir2cs" "\Zr ircam2 \Zn : (re-)start scexaoCTRL->scexaoRTC TCP transfer [port 30104]" )
+#menuitems+=( "ir2ck" "\Zr ircam2 \Zn : kill scexaoCTRL->scexaoRTC TCP transfer       [port 30104]" )
+#menuitems+=( " " " " )
 menuitems+=( "vcam0s" "\Zr vcamim0 \Zn : (re-)start scexao4->scexaoRTC TCP transfer [port 30104]" )
 menuitems+=( "vcam0k" "\Zr vcamim0 \Zn : kill scexao4->scexaoRTC TCP transfer       [port 30104]" )
 menuitems+=( " " " " )
@@ -529,16 +532,33 @@ aoconflogext "kill ircam0 scexaoCTRL -> scexao TCP transfer"
 /home/scexao/bin/getTCPscexao2im -k ircam0 30101
 ;;
 
-# ircam1      scexaoCTRL->scexao, port 30102
+
+
+# ircam0_dark        scexaoCTRL->scexao, port 30102
+	ir0cs)
+aoconflogext "(re-)start ircam0_dark scexaoCTRL -> scexao TCP transfer"
+/home/scexao/bin/getTCPscexao2im -s ircam  ircam0_dark 30102
+;;
+	ir0ck)
+aoconflogext "kill ircam0_dark scexaoCTRL -> scexao TCP transfer"
+/home/scexao/bin/getTCPscexao2im -k ircam0_dark 30102
+;;
+
+
+
+# ircam1      scexaoCTRL->scexao, port 30103
 	ir1cs)
 aoconflogext "(re-)start ircam0 scexaoCTRL -> scexao TCP transfer"
 ssh scexao@scexaoCTRL "/home/scexao/src/hardw-cred2/src/imgtakeCPUconf"
-/home/scexao/bin/getTCPscexao2im -s ircam -r ircam1com ircam1 30102
+/home/scexao/bin/getTCPscexao2im -s ircam -r ircam1com ircam1 30103
 ;;
 	ir1ck)
 aoconflogext "kill ircam0 scexao2 -> scexao TCP transfer"
-/home/scexao/bin/getTCPscexao2im -k ircam1 30102
+/home/scexao/bin/getTCPscexao2im -k ircam1 30103
 ;;
+
+
+
 
 # ircam2        scexaoCTRL->scexao, port 30103
 	ir2cs)
