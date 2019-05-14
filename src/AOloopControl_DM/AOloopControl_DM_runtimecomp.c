@@ -295,7 +295,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
 
     double strok100_default[4] = { 100.0, 0.1, 100.0, 100.0 };
     long fp_stroke100      =
-        function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &stroke100);
+        function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &stroke100_default);
 
     long fp_voltname       =
         function_parameter_add_entry(&fps, ".option.voltname", "Stream name for volt output", FPTYPE_STREAMNAME, FPFLAG_DEFAULT_INPUT, pNull);
