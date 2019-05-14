@@ -293,7 +293,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     long fp_volttype       =
         function_parameter_add_entry(&fps, ".option.volttype", "Volt type", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
 
-    double strok100_default[4] = { 100.0, 0.1, 100.0, 100.0 };
+    double stroke100_default[4] = { 100.0, 0.1, 100.0, 100.0 };
     long fp_stroke100      =
         function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &stroke100_default);
 
