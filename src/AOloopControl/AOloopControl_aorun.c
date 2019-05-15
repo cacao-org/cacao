@@ -526,9 +526,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 //
 
                 if(doComputation == 1) {
-                    //processinfo_WriteMessage(processinfo, "start AOcompute");
+                    processinfo_WriteMessage(processinfo, "start AOcompute");
                     AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
-                    //processinfo_WriteMessage(processinfo, "end AOcompute");
+                    processinfo_WriteMessage(processinfo, "end AOcompute");
                 } else {
                     processinfo_exec_start(processinfo);
                 }
@@ -592,17 +592,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                         tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                         tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[21] = tdiffv;
-
-
-                        /*  int semnb;
-                          for(semnb=0; semnb<data.image[aoloopcontrol_var.aoconfID_dmC].md[0].sem; semnb++)
-                          {
-                              sem_getvalue(data.image[aoloopcontrol_var.aoconfID_dmC].semptr[semnb], &semval);
-                              if(semval<SEMAPHORE_MAXVAL)
-                                  sem_post(data.image[aoloopcontrol_var.aoconfID_dmC].semptr[semnb]);
-                          }*/
-
-
 
                         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmC, -1);
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
