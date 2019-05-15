@@ -356,9 +356,9 @@ int_fast8_t __attribute__((hot)) AOcompute(long loop, int normalize) {
 
 
     // Read WFS image
-    processinfo_WriteMessage(processinfo, "Wait for WFS image");
+    //processinfo_WriteMessage(processinfo, "Wait for WFS image");
     Read_cam_frame(loop, 0, normalize, 0, 0);  // in AOloopControl_IOtools
-	processinfo_WriteMessage(processinfo, "Process WFS image");
+	//processinfo_WriteMessage(processinfo, "Process WFS image");
 
 
 #ifdef _PRINT_TEST

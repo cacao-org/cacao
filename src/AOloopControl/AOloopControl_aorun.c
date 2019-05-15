@@ -527,9 +527,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 //
 
                 if(doComputation == 1) {
-					processinfo_WriteMessage(processinfo, "start AOcompute");
+					//processinfo_WriteMessage(processinfo, "start AOcompute");
                     AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
-                    processinfo_WriteMessage(processinfo, "end AOcompute");
+                    //processinfo_WriteMessage(processinfo, "end AOcompute");
                 }
                 else
 					processinfo_exec_start(processinfo);
@@ -605,14 +605,19 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                                   sem_post(data.image[aoloopcontrol_var.aoconfID_dmC].semptr[semnb]);
                           }*/
 
+
+			sprintf(pinfomsg, "POST %ld %s", AOconf[loop].aorun.LOOPiteration, data.image[aoloopcontrol_var.aoconfID_dmC].md[0].name);
+			processinfo_WriteMessage(processinfo, pinfomsg);	
+
                         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmC, -1);
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0++;
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 0;
+
                         // inform dmdisp that new command is ready in one of the channels
                         if(aoloopcontrol_var.aoconfID_dmdisp != -1)
                             if(data.image[aoloopcontrol_var.aoconfID_dmdisp].md[0].sem > 1) {
-                                sem_getvalue(data.image[aoloopcontrol_var.aoconfID_dmdisp].semptr[0], &semval);
+                                sem_getvalue(data.image[aoloopcontrol_var.aoconfID_dmdisp].semptr[1], &semval);
                                 if(semval < SEMAPHORE_MAXVAL) {
                                     sem_post(data.image[aoloopcontrol_var.aoconfID_dmdisp].semptr[1]);
                                 }
@@ -680,58 +685,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
 
                processinfo_exec_end(processinfo);
-
-
-                // process signals
-/*
-                if(data.signal_INT == 1) {
-                    AOconf[loop].aorun.on = 0;
-                    AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo == 1) {
-                        processinfo_SIGexit(processinfo, SIGINT);
-                    }
-                }
-
-                if(data.signal_ABRT == 1) {
-                    AOconf[loop].aorun.on = 0;
-                    AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo == 1) {
-                        processinfo_SIGexit(processinfo, SIGABRT);
-                    }
-                }
-
-                if(data.signal_BUS == 1) {
-                    AOconf[loop].aorun.on = 0;
-                    AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo == 1) {
-                        processinfo_SIGexit(processinfo, SIGBUS);
-                    }
-                }
-
-                if(data.signal_SEGV == 1) {
-                    AOconf[loop].aorun.on = 0;
-                    AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo == 1) {
-                        processinfo_SIGexit(processinfo, SIGSEGV);
-                    }
-                }
-
-                if(data.signal_HUP == 1) {
-                    AOconf[loop].aorun.on = 0;
-                    AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo == 1) {
-                        processinfo_SIGexit(processinfo, SIGHUP);
-                    }
-                }
-
-                if(data.signal_PIPE == 1) {
-                    AOconf[loop].aorun.on = 0;
-                    AOconf[loop].aorun.kill = 1;
-                    if(data.processinfo == 1) {
-                        processinfo_SIGexit(processinfo, SIGPIPE);
-                    }
-                }
-                */
 
                 loopcnt++;
             }
