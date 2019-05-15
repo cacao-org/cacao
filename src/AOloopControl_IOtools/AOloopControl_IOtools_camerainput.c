@@ -628,7 +628,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     fflush(stdout);
 #endif
 
-    if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem == 0)
+    if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem == 0) // don't use semaphore
     {
         // if not using semaphore, use counter to test if new WFS frame is ready
         if(RM==0)
@@ -656,8 +656,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         }
         
         
-		//sprintf(pmsg, "sem %d = %d [%d]", semindex, semval, FORCE_REG_TIMING);
-		//processinfo_WriteMessage(data.pinfo, pmsg);
+		sprintf(pmsg, "sem %d = %d [%d]", semindex, semval, FORCE_REG_TIMING);
+		processinfo_WriteMessage(data.pinfo, pmsg);
 
         if( imWaitTimeAvecnt < imWaitTimeAvecnt0 )
             FORCE_REG_TIMING_val = 0;
