@@ -611,7 +611,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
 	char pmsg[200];
-	sprintf(pmsg, "waiting %s update", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
+	sprintf(pmsg, "waiting %s update [sem %d]", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name, wfsim_semwaitindex);
 	processinfo_WriteMessage(data.pinfo, pmsg);
 
 
