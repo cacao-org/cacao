@@ -126,13 +126,6 @@ int_fast8_t set_DM_modes(long loop)
         memcpy (data.image[aoloopcontrol_var.aoconfID_dmC].array.F, arrayf, sizeof(float)*AOconf[loop].DMctrl.sizeDM);
         
         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmC, -1);
-        /*
-        if(data.image[aoloopcontrol_var.aoconfID_dmC].md[0].sem > 0)
-        {
-            sem_getvalue(data.image[aoloopcontrol_var.aoconfID_dmC].semptr[0], &semval);
-            if(semval<SEMAPHORE_MAXVAL)
-                sem_post(data.image[aoloopcontrol_var.aoconfID_dmC].semptr[0]);
-        }*/
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0++;
 		data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 0;
