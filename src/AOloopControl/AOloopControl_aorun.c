@@ -435,9 +435,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
 
 
-		
-		processinfo_WriteMessage(processinfo, "Entering loop");
-        
+
+        processinfo_WriteMessage(processinfo, "Entering loop");
+
         int processinfoUpdate = 0;
 
 
@@ -475,26 +475,25 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
 
 
-			
-			sprintf(pinfomsg, "WAITING (on=%d   loopOK=%d)", AOconf[loop].aorun.on, loopOK);
-			processinfo_WriteMessage(processinfo, pinfomsg);
+
+            sprintf(pinfomsg, "WAITING (on=%d   loopOK=%d) [%d]", AOconf[loop].aorun.on, loopOK, AOconf[loop].aorun.CMMODE);
+            processinfo_WriteMessage(processinfo, pinfomsg);
 
             long loopcnt = 0;
-            while((AOconf[loop].aorun.on==1) && (loopOK==1)) {
-        
-				loopOK = processinfo_loopstep(processinfo);
+            while((AOconf[loop].aorun.on == 1) && (loopOK == 1)) {
 
-                
-                if(loopOK == 0)
-                {
-					AOconf[loop].aorun.on = 0;
-					AOconf[loop].aorun.kill = 1;
-				}
+                loopOK = processinfo_loopstep(processinfo);
 
 
-				if ( processinfoUpdate == 1) {
-					processinfo_WriteMessage(processinfo, "LOOP RUNNING");
-				}
+                if(loopOK == 0) {
+                    AOconf[loop].aorun.on = 0;
+                    AOconf[loop].aorun.kill = 1;
+                }
+
+
+                if(processinfoUpdate == 1) {
+                    processinfo_WriteMessage(processinfo, "LOOP RUNNING");
+                }
 
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
@@ -527,12 +526,12 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 //
 
                 if(doComputation == 1) {
-					//processinfo_WriteMessage(processinfo, "start AOcompute");
+                    //processinfo_WriteMessage(processinfo, "start AOcompute");
                     AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
                     //processinfo_WriteMessage(processinfo, "end AOcompute");
+                } else {
+                    processinfo_exec_start(processinfo);
                 }
-                else
-					processinfo_exec_start(processinfo);
 
 
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerStart); //TEST timing in function
@@ -548,7 +547,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 if(AOconf[loop].aorun.CMMODE == 0) { // 2-step : WFS -> mode coeffs -> DM act
                     if(AOconf[loop].aorun.DMprimaryWriteON == 1) { // if Writing to DM
                         if(doComputation == 1) {
-
                             if(fabs(AOconf[loop].aorun.gain) > 1.0e-6) {
                                 set_DM_modes(loop);
                             }
@@ -605,8 +603,9 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                           }*/
 
 
-			sprintf(pinfomsg, "POST %ld %s", AOconf[loop].aorun.LOOPiteration, data.image[aoloopcontrol_var.aoconfID_dmC].md[0].name);
-			processinfo_WriteMessage(processinfo, pinfomsg);	
+                        // TEST
+                        sprintf(pinfomsg, "%d POST %ld %s", __LINE__, AOconf[loop].aorun.LOOPiteration, data.image[aoloopcontrol_var.aoconfID_dmC].md[0].name);
+                        processinfo_WriteMessage(processinfo, pinfomsg);
 
                         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmC, -1);
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
@@ -683,7 +682,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 */
 
 
-               processinfo_exec_end(processinfo);
+                processinfo_exec_end(processinfo);
 
                 loopcnt++;
             }
