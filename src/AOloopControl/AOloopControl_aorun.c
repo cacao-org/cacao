@@ -603,9 +603,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                           }*/
 
 
-                        // TEST
-                        sprintf(pinfomsg, "%d POST %ld %s", __LINE__, AOconf[loop].aorun.LOOPiteration, data.image[aoloopcontrol_var.aoconfID_dmC].md[0].name);
-                        processinfo_WriteMessage(processinfo, pinfomsg);
 
                         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmC, -1);
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
