@@ -738,13 +738,17 @@ int AOloopControl_DM_CombineChannels_RUN(
 
         printf("vOK = %d\n", vOK);
         if(vOK == 0) {
-            printf("CREATING stream %s  %d axis, size = %u x %u\n", dmdispcombconf[DMindex].voltname, naxis, size[0], size[1]);
+			
+			if(dmdispcombconf[DMindex].volttype == 0)
+				printf("volttype=0 NOT CREATING stream %s\n", dmdispcombconf[DMindex].voltname);
 
             if(dmdispcombconf[DMindex].volttype == 1) {
+				 printf("CREATING stream %s  %d axis, size = %u x %u\n", dmdispcombconf[DMindex].voltname, naxis, size[0], size[1]);
                 dmdispcombconf[DMindex].IDvolt = create_image_ID(dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_FLOAT, 1, 10);
             }
 
             if(dmdispcombconf[DMindex].volttype == 2) {
+				 printf("CREATING stream %s  %d axis, size = %u x %u\n", dmdispcombconf[DMindex].voltname, naxis, size[0], size[1]);
                 dmdispcombconf[DMindex].IDvolt = create_image_ID(dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_UINT16, 1, 10);
             }
             COREMOD_MEMORY_image_set_createsem(dmdispcombconf[DMindex].voltname, 10);
