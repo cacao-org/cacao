@@ -610,9 +610,9 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     clock_gettime(CLOCK_REALTIME, &functionTestTimer00);
 
 
-	char pmsg[200];
-	sprintf(pmsg, "waiting %s update", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
-	processinfo_WriteMessage(data.pinfo, pmsg);
+	//char pmsg[200];
+	//sprintf(pmsg, "waiting %s update", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
+	//processinfo_WriteMessage(data.pinfo, pmsg);
 
 
 
@@ -656,8 +656,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         }
         
         
-		sprintf(pmsg, "sem %d = %d [%d]", semindex, semval, FORCE_REG_TIMING);
-		processinfo_WriteMessage(data.pinfo, pmsg);
+		//sprintf(pmsg, "sem %d = %d [%d]", semindex, semval, FORCE_REG_TIMING);
+		//processinfo_WriteMessage(data.pinfo, pmsg);
 
         if( imWaitTimeAvecnt < imWaitTimeAvecnt0 )
             FORCE_REG_TIMING_val = 0;
