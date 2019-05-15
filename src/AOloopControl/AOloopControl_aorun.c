@@ -596,7 +596,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[21] = tdiffv;
 
 
-
                         /*  int semnb;
                           for(semnb=0; semnb<data.image[aoloopcontrol_var.aoconfID_dmC].md[0].sem; semnb++)
                           {
