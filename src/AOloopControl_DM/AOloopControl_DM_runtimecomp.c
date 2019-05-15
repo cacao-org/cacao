@@ -113,11 +113,13 @@ int AOloopControl_DM_disp2V(long DMindex)
 	// 2: remove quantization error by adding an external random map between 0 and 1, named dmXXquant
 	//    USER SHOULD UPDATE THIS MAP WHEN REQUIRED
 	
+	AOLOOPCONTROL_DM_LOGEXEC;
+	
     IDvolt = dmdispcombconf[DMindex].IDvolt;
 
     data.image[IDvolt].md[0].write = 1;
 
-
+	AOLOOPCONTROL_DM_LOGEXEC;
 	if(QUANTIZATION_RANDOM == 2)
 	{
 		if(qmapinit == 0)
@@ -136,7 +138,8 @@ int AOloopControl_DM_disp2V(long DMindex)
 			qmapinit = 1;
 		}
 	}
-
+	
+	AOLOOPCONTROL_DM_LOGEXEC;
     if(dmdispcombconf[DMindex].voltON==1)
     {
         if(dmdispcombconf[DMindex].volttype == 1) // linear bipolar, output is float
@@ -199,6 +202,7 @@ int AOloopControl_DM_disp2V(long DMindex)
         }
     }
 
+	AOLOOPCONTROL_DM_LOGEXEC;
     data.image[IDvolt].md[0].write = 0;
     data.image[IDvolt].md[0].cnt0++;
 
@@ -206,6 +210,8 @@ int AOloopControl_DM_disp2V(long DMindex)
     //    COREMOD_MEMORY_image_set_sempost(data.image[dmdispcombconf[DMindex].IDdisp].name, -1);
     COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
     COREMOD_MEMORY_image_set_sempost_byID(IDvolt, -1);
+
+	AOLOOPCONTROL_DM_LOGEXEC;
 
     return 0;
 }
