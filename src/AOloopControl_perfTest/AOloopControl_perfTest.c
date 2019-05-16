@@ -24,6 +24,23 @@
 
 
 
+
+#define AOLOOPCONTROL_PERFTEST_LOGDEBUG 1
+
+#if defined(AOLOOPCONTROL_PERFTEST_LOGDEBUG) && !defined(STANDALONE)
+#define AOLOOPCONTROL_PERFTEST_LOGEXEC do {                      \
+    sprintf(data.execSRCfunc, "%s", __FUNCTION__); \
+    data.execSRCline = __LINE__;                   \
+    } while(0)
+#else
+#define AOLOOPCONTROL_PERFTEST_LOGEXEC 
+#endif
+
+
+
+
+
+
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                        HEADER FILES                                             */
@@ -472,11 +489,11 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     void *pNull = NULL;
     uint64_t FPFLAG;
 
-	float frameratewait_default[4] = { 5, 1, 100, 5 };
-    long fpi_frameratewait = function_parameter_add_entry(&fps, ".frameratewait", "time period for frame rate measurement", FPTYPE_FLOAT32, FPFLAG_DEFAULT_INPUT, &frameratewait_default);
+	double frameratewait_default[4] = { 5, 1, 100, 5 };
+    long fpi_frameratewait = function_parameter_add_entry(&fps, ".frameratewait", "time period for frame rate measurement", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &frameratewait_default);
     
-	float OPDamp_default[4] = { 0.1, 0.1, 1.0, 0.1 };
-    long fpi_OPDamp = function_parameter_add_entry(&fps, ".OPDamp", "poke amplitude", FPTYPE_FLOAT32, FPFLAG_DEFAULT_INPUT, &OPDamp_default);
+	double OPDamp_default[4] = { 0.1, 0.1, 1.0, 0.1 };
+    long fpi_OPDamp = function_parameter_add_entry(&fps, ".OPDamp", "poke amplitude", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &OPDamp_default);
     
 	long NBiter_default[4] = { 100, 10, 100000, 100 };
     long fpi_NBiter = function_parameter_add_entry(&fps, ".NBiter", "Number of iteration", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBiter_default);
@@ -544,9 +561,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
  *
  */
 int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
-char *fpsname
-    ) 
-    {
+    char *fpsname
+) {
     long IDdm;
     long dmxsize, dmysize;
     long IDwfs;
@@ -615,16 +631,16 @@ char *fpsname
     // GET FUNCTION PARAMETER VALUES
     // ===============================
 
-	char dmname[200];
+    char dmname[200];
     strncpy(dmname,  functionparameter_GetParamPtr_STRING(&fps, ".sn_dm"),  FUNCTION_PARAMETER_STRMAXLEN);
 
-	char wfsname[200];
+    char wfsname[200];
     strncpy(wfsname,  functionparameter_GetParamPtr_STRING(&fps, ".sn_wfs"),  FUNCTION_PARAMETER_STRMAXLEN);
 
-	long NBiter     = functionparameter_GetParamValue_INT64(&fps, ".NBiter");
-	float OPDamp    = functionparameter_GetParamValue_FLOAT32(&fps, ".OPDamp");
+    long NBiter     = functionparameter_GetParamValue_INT64(&fps, ".NBiter");
+    float OPDamp    = functionparameter_GetParamValue_FLOAT64(&fps, ".OPDamp");
 
-	float FrameRateWait = functionparameter_GetParamValue_FLOAT32(&fps, ".frameratewait");
+    float FrameRateWait = functionparameter_GetParamValue_FLOAT64(&fps, ".frameratewait");
 
 
 
@@ -652,7 +668,7 @@ char *fpsname
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1; // Measure timing
     processinfo->RT_priority = 80;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
-	processinfo->loopcntMax = NBiter;
+    processinfo->loopcntMax = NBiter;
     int loopOK = 1;
 
 
@@ -667,6 +683,13 @@ char *fpsname
     dmxsize = data.image[IDdm].md[0].size[0];
     dmysize = data.image[IDdm].md[0].size[1];
 
+    sprintf(msgstring, "dmxsize %ld", dmxsize);
+    processinfo_WriteMessage(processinfo, msgstring);
+
+    sprintf(msgstring, "dmysize %ld", dmysize);
+    processinfo_WriteMessage(processinfo, msgstring);
+
+
     IDdm0 = create_2Dimage_ID("_testdm0", dmxsize, dmysize);
     IDdm1 = create_2Dimage_ID("_testdm1", dmxsize, dmysize);
 
@@ -680,6 +703,10 @@ char *fpsname
             RMStot += data.image[IDdm1].array.F[jj * dmxsize + ii] * data.image[IDdm1].array.F[jj * dmxsize + ii];
         }
     RMStot = sqrt(RMStot / dmxsize / dmysize);
+
+
+    sprintf(msgstring, "RMStot %f", RMStot);
+    processinfo_WriteMessage(processinfo, msgstring);
 
     for(ii = 0; ii < dmxsize; ii++)
         for(jj = 0; jj < dmysize; jj++) {
@@ -701,6 +728,7 @@ char *fpsname
     if(IDwfs == -1) {
         sprintf(msgstring, "Cannot connect to stream %s", wfsname);
         processinfo_error(processinfo, msgstring);
+
         return RETURN_FAILURE;
     }
 
@@ -714,22 +742,34 @@ char *fpsname
     naxes[2] = wfs_NBframesmax;
     IDwfsc = create_image_ID("_testwfsc", 3, naxes, datatype, 0, 0);
 
-    
-    sprintf(msgstring, "Measuring frame rate over %.1f sec", FrameRateWait);
-    processinfo_WriteMessage(processinfo, msgstring);
 
 
     // coarse estimate of frame rate
+
+    sprintf(msgstring, "Measuring frame rate over %.1f sec", FrameRateWait);
+    processinfo_WriteMessage(processinfo, msgstring);
+
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntstart = data.image[IDwfs].md[0].cnt0;
-    sleep(FrameRateWait);
+    usleep((long)(1000000 * FrameRateWait));
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntend = data.image[IDwfs].md[0].cnt0;
     wfsdt = (tdouble_end - tdouble_start) / (wfscntend - wfscntstart);
 
     printf("wfs dt = %f sec\n", wfsdt);
+
+    if(wfscntend - wfscntstart < 5) {
+        sprintf(msgstring, "Number of frames %ld too small -> cannot proceed", wfscntend - wfscntstart);
+        processinfo_error(processinfo, msgstring);                
+        return RETURN_FAILURE;
+    }
+
+    sprintf(msgstring, "frame period wfsdt = %f sec  ( %f Hz )\n", wfsdt, 1.0 / wfsdt);
+    processinfo_WriteMessage(processinfo, msgstring);
+
+
 
 
     // update times
@@ -780,7 +820,7 @@ char *fpsname
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
     processinfo_WriteMessage(processinfo, "Starting loop");
 
-	iter = 0;
+    iter = 0;
 
     while(loopOK == 1) {
         //double tlastdouble;
@@ -1049,7 +1089,7 @@ char *fpsname
     processinfo_cleanExit(processinfo);
 
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
