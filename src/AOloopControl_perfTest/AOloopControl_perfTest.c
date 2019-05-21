@@ -508,7 +508,23 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     long fp_streamname_wfs       = function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
                                      FPTYPE_STREAMNAME, FPFLAG, pNull);
     
-        
+    
+
+    long wfsNBframesmax_default[4] = { 50, 10, 100000, 50 };
+    long fp_status_wfsNBframesmax = function_parameter_add_entry(&fps, ".status.wfsNBframemax", "Number frames in measurement sequence", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &wfsNBframesmax_default);
+
+
+    // status
+    long fp_wfsdt        = function_parameter_add_entry(&fps, ".status.wfsdt", "WFS frame interval", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    long fp_twaitus      = function_parameter_add_entry(&fps, ".status.twaitus", "initial wait [us]", FPTYPE_INT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+	long fp_refdtoffset  = function_parameter_add_entry(&fps, ".status.refdtoffset", "baseline time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+	long fp_dtoffset     = function_parameter_add_entry(&fps, ".status.dtoffset", "actual time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+
+	// output
+	long fp_outframerateHz = function_parameter_add_entry(&fps, ".out.framerateHz", "WFS frame rate [Hz]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+	long fp_outHardLatencyfr = function_parameter_add_entry(&fps, ".out.latencyfr", "hardware latency [frame]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+
+	
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
@@ -588,10 +604,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     float x, y;
 
     long IDwfsc;
-    long wfs_NBframesmax = 50;
     long wfsframe;
-    long twaitus = 30000; // initial wait [us]
-    double dtoffset0 = 0.002; // 2 ms
     long wfsframeoffset = 10;
 
     long IDwfsref;
@@ -600,7 +613,6 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     long kk, kkmax;
     double *valarray;
     double tmp;
-    double dtoffset;
     long kkoffset;
 
     long iter;
@@ -611,7 +623,6 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     FILE *fp;
     float minlatency, maxlatency;
-    double wfsdt;
 
     uint8_t datatype;
     uint32_t naxes[3];
@@ -642,7 +653,18 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     float FrameRateWait = functionparameter_GetParamValue_FLOAT64(&fps, ".frameratewait");
 
-
+	long wfs_NBframesmax = functionparameter_GetParamValue_INT64(&fps, ".status.wfsNBframemax");
+	
+	// status (output)
+	double *wfsdt = functionparameter_GetParamPtr_FLOAT64(&fps, ".status.wfsdt");
+	
+	long *twaitus = functionparameter_GetParamPtr_INT64(&fps, ".status.twaitus");
+	double *refdtoffset = functionparameter_GetParamPtr_FLOAT64(&fps, ".status.refdtoffset");
+	double *dtoffset  = functionparameter_GetParamPtr_FLOAT64(&fps, ".status.dtoffset");
+	
+	// output
+	double *framerateHz = functionparameter_GetParamPtr_FLOAT64(&fps, ".out.framerateHz");
+	double *latencyfr = functionparameter_GetParamPtr_FLOAT64(&fps, ".out.latencyfr");
 
 
     // ===========================
@@ -756,9 +778,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntend = data.image[IDwfs].md[0].cnt0;
-    wfsdt = (tdouble_end - tdouble_start) / (wfscntend - wfscntstart);
+    *wfsdt = (tdouble_end - tdouble_start) / (wfscntend - wfscntstart);
 
-    printf("wfs dt = %f sec\n", wfsdt);
+    printf("wfs dt = %f sec\n", *wfsdt);
 
     if(wfscntend - wfscntstart < 5) {
         sprintf(msgstring, "Number of frames %ld too small -> cannot proceed", wfscntend - wfscntstart);
@@ -766,16 +788,17 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
         return RETURN_FAILURE;
     }
 
-    sprintf(msgstring, "frame period wfsdt = %f sec  ( %f Hz )\n", wfsdt, 1.0 / wfsdt);
+    sprintf(msgstring, "frame period wfsdt = %f sec  ( %f Hz )\n", *wfsdt, 1.0 / *wfsdt);
     processinfo_WriteMessage(processinfo, msgstring);
 
-
+	*framerateHz = 1.0/(*wfsdt);
+	functionparameter_SaveParam2disk(&fps, ".out.framerateHz");
 
 
     // update times
-    dtmax = wfsdt * wfs_NBframesmax * 1.2 + 0.5;
-    twaitus = 1000000.0 * wfsdt * 3.0;
-    dtoffset0 = 1.5 * wfsdt;
+    dtmax = *wfsdt * wfs_NBframesmax * 1.2 + 0.5;
+    *twaitus = 1000000.0 * *wfsdt * 3.0;   // wait 3 frames
+    *refdtoffset = 0.5 * *wfsdt;
 
 
     tarray = (struct timespec *) malloc(sizeof(struct timespec) * wfs_NBframesmax);
@@ -793,7 +816,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntstart = data.image[IDwfs].md[0].cnt0;
-    wfsframeoffset = (long)(0.3 * wfs_NBframesmax);
+    wfsframeoffset = (long) (0.1 * wfs_NBframesmax);
 
 
     printf("WFS size : %ld %ld\n", wfsxsize, wfsysize);
@@ -849,12 +872,12 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
         printf("write to %s\n", dmname);
         fflush(stdout);
-        copy_image_ID("_testdm0", dmname, 1);
+		copy_image_ID("_testdm0", dmname, 1);
 
         unsigned int dmstate = 0;
 
         // waiting time
-        usleep(twaitus);
+        usleep(*twaitus);
 
         // and waiting frames
         wfscnt0 = data.image[IDwfs].md[0].cnt0;
@@ -915,23 +938,27 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
             //     tlastdouble = tdouble;
 
             // apply DM pattern #1
-            if((dmstate == 0) && (dt > dtoffset0) && (wfsframe > wfsframeoffset)) {
-                usleep((long)(ran1() * 1000000.0 * wfsdt));
-                printf("\nDM STATE CHANGED ON ITERATION %ld\n\n", wfsframe);
+            if((dmstate == 0) && (dt > *refdtoffset) && (wfsframe > wfsframeoffset)) {
+                usleep((long)(ran1() * 1000000.0 * *wfsdt));
+                printf("\nDM STATE CHANGED ON ITERATION %ld   / %ld\n\n", wfsframe, wfsframeoffset);
                 kkoffset = wfsframe;
+                
                 dmstate = 1;
                 copy_image_ID("_testdm1", dmname, 1);
 
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdouble = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
                 dt = tdouble - tstartdouble;
-                dtoffset = dt; // time at which DM command is sent
+                *dtoffset = dt; // time at which DM command is sent
+                printf("    dt = %lf\n\n", dt);
             }
             wfsframe++;
         }
         printf("\n\n %ld frames recorded\n", wfsframe);
         fflush(stdout);
-        copy_image_ID("_testdm0", dmname, 1);
+        
+        
+       copy_image_ID("_testdm0", dmname, 1);
         dmstate = 0;
 
 
@@ -977,15 +1004,15 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
         //
         //
         for(wfsframe = 1; wfsframe < NBwfsframe; wfsframe++) {
-            fprintf(fp, "%ld   %10.2f     %g\n", wfsframe - kkoffset, 1.0e6 * (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - dtoffset), valarray[wfsframe]);
+            fprintf(fp, "%ld   %10.2f     %g\n", wfsframe - kkoffset, 1.0e6 * (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - *dtoffset), valarray[wfsframe]);
         }
 
-        printf("mean interval =  %10.2f ns\n", 1.0e9 * (dt - dtoffset) / NBwfsframe);
+        printf("mean interval =  %10.2f ns\n", 1.0e9 * (dt - *dtoffset) / NBwfsframe);
         fflush(stdout);
 
         free(valarray);
 
-        latency = valmaxdt - dtoffset;
+        latency = valmaxdt - *dtoffset;
         // latencystep = kkmax;
 
         printf("... Hardware latency = %f ms  = %ld frames\n", 1000.0 * latency, kkmax);
@@ -994,10 +1021,10 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
             save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
         }
 
-        fprintf(fp, "# %5ld  %8.6f\n", iter, (valmaxdt - dtoffset));
+        fprintf(fp, "# %5ld  %8.6f\n", iter, (valmaxdt - *dtoffset));
 
         latencysteparray[iter] = 1.0 * kkmax;
-        latencyarray[iter] = (valmaxdt - dtoffset);
+        latencyarray[iter] = (valmaxdt - *dtoffset);
 
 
         // process signals, increment loop counter
@@ -1019,7 +1046,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     sprintf(msgstring, "Processing Data (%ld iterations)", NBiter);
     processinfo_WriteMessage(processinfo, msgstring);
 
-
+        copy_image_ID("_testdm0", dmname, 1);
 
     latencyave = 0.0;
     latencystepave = 0.0;
@@ -1046,6 +1073,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     printf("AVERAGE LATENCY = %8.3f ms   %f frames\n", latencyave * 1000.0, latencystepave);
     printf("min / max over %ld measurements: %8.3f ms / %8.3f ms\n", NBiter, minlatency * 1000.0, maxlatency * 1000.0);
+    
+    *latencyfr = latencystepave;
+	functionparameter_SaveParam2disk(&fps, ".out.latencyfr");
 
     if(sprintf(command, "echo %8.6f > conf/param_hardwlatency.txt", latencyarray[NBiter / 2]) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
