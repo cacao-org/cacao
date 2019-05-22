@@ -1564,6 +1564,7 @@ cacao << EOF
 readshmim aol0_wfsmask
 im=aol0_wfsmask/itot(aol0_wfsmask)
 cpsh im aol0_wfsref
+cpsh im aol0_wfsref00
 exitCLI
 EOF
 ;;
@@ -1575,6 +1576,7 @@ cacao << EOF
 readshmim aol0_wfsref0
 readshmim aol0_wfsref
 cpsh aol0_wfsref0 aol0_wfsref
+cpsh aol0_wfsref0 aol0_wfsref00
 exitCLI
 EOF
 ;;
