@@ -526,11 +526,11 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                 //
 
                 if(doComputation == 1) {
-                    processinfo_WriteMessage(processinfo, "start AOcompute");
+                    //processinfo_WriteMessage(processinfo, "start AOcompute");
                     AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
-                    processinfo_WriteMessage(processinfo, "end AOcompute");
+                    //processinfo_WriteMessage(processinfo, "end AOcompute");
                 } else {
-					processinfo_WriteMessage(processinfo, "doComputation = 0");
+					//processinfo_WriteMessage(processinfo, "doComputation = 0");
                     processinfo_exec_start(processinfo);
                 }
 
