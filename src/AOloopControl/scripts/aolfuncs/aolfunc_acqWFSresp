@@ -55,6 +55,14 @@ dir_conf_staged="conf_staged"
 
 
 
+
+#================================================================================================================
+#============================= FUNCTIONS AND PARAMETERS =========================================================
+#================================================================================================================
+
+
+
+
 ##############################################
 # FUNCTION: READ PARAMETER FROM FILE
 ##############################################
@@ -174,6 +182,10 @@ fi
 
 
 
+#================================================================================================================
+#========================[END] FUNCTIONS AND PARAMETERS [END]====================================================
+#================================================================================================================
+
 
 
 
@@ -197,8 +209,8 @@ echo "##########################################"
 #		if file does not exist, create straight poke sequence (one actuator at a time) 
 #
 # OUTPUT: 
-# 	zrespmat0.fits
-#	wfsref00.fits
+# 	zrespmat0.fits		# Raw RM, prior to decoding
+#	wfsref00.fits       # Raw reference
 #
 
 if pgrep "aol${LOOPNUMBER}run" > /dev/null  # is aolrun running ?
@@ -213,12 +225,14 @@ fi
 
 
 
-
+### This is usually not executed, as the standard procedure is to have RMCalibReuseMasks set to 0
 if [ "$RMmodal" = " ON" ]; then
 if [ "$DMMODE" = "0" ]; then
 echo "##########################################"
 echo "# ACQUIRE MODAL LO RESPONSE MATRIX        "
 echo "##########################################"
+
+
 	if [ "$RMCalibReuseMasks" = "1" ]; then
 	# reuse modes
 	function_acqWFSresp_LOmodes
@@ -246,9 +260,9 @@ echo "##########################################"
 #		if these 3 files exist, use them to decode the zrespmat0.fits
 #	
 # OUTPUT:
-#	./conf_zrm_staged/zrespM.fits
-#	./conf_zrm_staged/wfsmap.fits
-#	./conf_zrm_staged/dmmap.fits   
+#	zrespM.fits  ... copied to   ./conf_zrm_staged/zrespM.fits
+#	wfsmap.fits  ... copied to   ./conf_zrm_staged/wfsmap.fits
+#	dmmap.fits   ... copied to   ./conf_zrm_staged/dmmap.fits   
 #
 ./auxscripts/aolCleanZrespmat2
 stageddir="conf_zrm_staged"
@@ -272,10 +286,14 @@ echo "##########################################"
 # INPUT:
 #     ./conf_zrm_staged/zrespM.fits
 # OUTPUT:
-#     wfsmask.fits  (overwrite)
-#     dmmaskRM.fits (overwrite)
+#     wfsmask.fits  (overwrite)  ... will be copied to ./wfsmask/
+#     dmmaskRM.fits (overwrite)  ... will be copied to ./dmmaskRM/
 #
 ./auxscripts/aolmkMasks
+
+
+
+
 
 if [ "$DMmaskMode" = "0" ]; then  # set dmmaskRM.fits to 1.0 over all pixels
 $execname << EOF
@@ -292,8 +310,8 @@ fi
 # INPUT:
 #	dmmaskRM.fits
 # OUTPUT:
-#	dmslaved.fits  (overwrite)
-#	dmmask.fits    (overwrite)
+#	dmslaved.fits  (overwrite)  ... will be copied to ./dmslaved/
+#	dmmask.fits    (overwrite)  ... will be copied to ./dmmask/
 #
 
 if [ "$DMmaskMode" = "1" ]; then
@@ -451,13 +469,13 @@ if [ "$DMMODE" = "0" ]; then
 	for imname in $RMZONALCALIBlist $RMMODALCALIBlist
 	do
 		echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim.${imname}.name.txt
-		mv ${imname}.fits ./${dir}/
+		cp ${imname}.fits ./${dir}/
 	done
 else
 	for imname in $RMZONALCALIBlist
 	do
 		echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim.${imname}.name.txt
-		mv ${imname}.fits ./${dir}/
+		cp ${imname}.fits ./${dir}/
 	done
 fi
 

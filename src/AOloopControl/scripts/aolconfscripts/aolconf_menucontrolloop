@@ -1510,10 +1510,6 @@ menucontrolloop_default="WFScon"
 ./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_DMmode_cmd
 imzero aol${LOOPNUMBER}_DMmode_cmd
-readshmim aol${LOOPNUMBER}_dmC
-imzero aol${LOOPNUMBER}_dmC
-readshmim aol${LOOPNUMBER}_dmC
-imzero aol${LOOPNUMBER}_dmC
 
 readshmim aol${LOOPNUMBER}_modeval
 imzero aol${LOOPNUMBER}_modeval
@@ -1532,6 +1528,11 @@ imzero aol${LOOPNUMBER}_modeval_dm_now
 
 readshmim aol${LOOPNUMBER}_modeval_dm_now_filt
 imzero aol${LOOPNUMBER}_modeval_dm_now_filt
+
+readshmim aol${LOOPNUMBER}_dmC
+imzero aol${LOOPNUMBER}_dmC
+readshmim aol${LOOPNUMBER}_dmC
+imzero aol${LOOPNUMBER}_dmC
 
 exit
 EOF
