@@ -39,6 +39,9 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 ## Installing cacao
 
 
+cacao runs on Linux/x86 systems.
+
+
 ### Source code status
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
