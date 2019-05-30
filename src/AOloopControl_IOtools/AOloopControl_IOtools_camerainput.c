@@ -630,6 +630,11 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem == 0) // don't use semaphore
     {
+#ifdef _PRINT_TEST
+    printf("TEST - NOT USING SEMAPHORE\n");
+    fflush(stdout);
+#endif
+
         // if not using semaphore, use counter to test if new WFS frame is ready
         if(RM==0)
             while(AOconf[loop].WFSim.WFScnt==data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0) // test if new frame exists
@@ -714,6 +719,12 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         fflush(stdout);
 #endif
     }
+
+
+#ifdef _PRINT_TEST
+    printf("TEST - IMAGE RECEIVED - PROCEEDING\n");
+    fflush(stdout);
+#endif
 
 
     if(data.processinfo==1)
