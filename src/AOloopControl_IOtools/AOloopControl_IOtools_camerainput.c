@@ -10,7 +10,7 @@
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
-//#define _PRINT_TEST
+#define _PRINT_TEST
 
 
 
@@ -537,9 +537,9 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     int FORCE_REG_TIMING_val;
 
     if(RM==0)
-        semindex = 2;
+        semindex = 8;
     else
-        semindex = 3;
+        semindex = 9;
 
 	static int wfsim_semwaitindex = -1;
 
