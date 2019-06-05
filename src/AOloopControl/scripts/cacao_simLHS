@@ -24,7 +24,7 @@ LOOPNUMBER="2"
 LOOPNAME="simloop"
 
 GPU="0"
-LINSIMDT="2000" # simulator frame period [us]
+LINSIMDT="10000" # simulator frame period [us]
 
 # relative path
 LHSRESPM="simLHS/respM.fits"

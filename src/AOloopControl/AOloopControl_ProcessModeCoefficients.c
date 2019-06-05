@@ -4,8 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @author  O. Guyon
- * @date    2018-01-04
  *
  * 
  * @bug No known bugs.
