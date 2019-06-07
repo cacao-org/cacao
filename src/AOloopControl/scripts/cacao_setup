@@ -54,7 +54,6 @@ fi
 
 
 
-
 if [[ -z "${CACAO_WORKDIR}" ]]; then
   echo "CACAO_WORKDIR    not set -> using default ${WORKDIR}"
 else
