@@ -35,55 +35,55 @@ LHSWFSREF="simLHS/wfsref.fits"
 DMxsize="50"
 DMysize="50"
 
-if [[ -z "${CACAOSIM_DMxsize}" ]]; then
-  echo "CACAOSIM_DMxsize    not set -> using default ${DMxsize}"
+if [[ -z "${CACAO_DMxsize}" ]]; then
+  echo "CACAO_DMxsize    not set -> using default ${DMxsize}"
 else
-  DMxsize="${CACAOSIM_DMxsize}"
-  echo "CACAOSIM_DMxsize    set =====> ${CACAOSIM_DMxsize}"
+  DMxsize="${CACAO_DMxsize}"
+  echo "CACAO_DMxsize    set =====> ${CACAO_DMxsize}"
 fi
 
-if [[ -z "${CACAOSIM_DMysize}" ]]; then
-  echo "CACAOSIM_DMysize    not set -> using default ${DMysize}"
+if [[ -z "${CACAO_DMysize}" ]]; then
+  echo "CACAO_DMysize    not set -> using default ${DMysize}"
 else
-  DMysize="${CACAOSIM_DMysize}"
-  echo "CACAOSIM_DMysize    set =====> ${CACAOSIM_DMysize}"
-fi
-
-
-
-
-
-
-
-if [[ -z "${CACAOSIM_WORKDIR}" ]]; then
-  echo "CACAOSIM_WORKDIR    not set -> using default ${WORKDIR}"
-else
-  WORKDIR="$CACAOSIM_WORKDIR"
-  echo "CACAOSIM_WORKDIR    set =====> ${CACAOSIM_WORKDIR}"
+  DMysize="${CACAO_DMysize}"
+  echo "CACAO_DMysize    set =====> ${CACAO_DMysize}"
 fi
 
 
-if [[ -z "${CACAOSIM_DMINDEX}" ]]; then
-  echo "CACAOSIM_DMINDEX    not set -> using default ${DMINDEX}"
+
+
+
+
+
+if [[ -z "${CACAO_WORKDIR}" ]]; then
+  echo "CACAO_WORKDIR    not set -> using default ${WORKDIR}"
 else
-  DMINDEX="$CACAOSIM_DMINDEX"
-  echo "CACAOSIM_DMINDEX    set =====> ${CACAOSIM_DMINDEX}"
+  WORKDIR="$CACAO_WORKDIR"
+  echo "CACAO_WORKDIR    set =====> ${CACAO_WORKDIR}"
 fi
 
 
-if [[ -z "${CACAOSIM_LOOPNUMBER}" ]]; then
-  echo "CACAOSIM_LOOPNUMBER not set -> using default ${LOOPNUMBER}"
+if [[ -z "${CACAO_DMINDEX}" ]]; then
+  echo "CACAO_DMINDEX    not set -> using default ${DMINDEX}"
 else
-  LOOPNUMBER="$CACAOSIM_LOOPNUMBER"
-  echo "CACAOSIM_LOOPNUMBER set =====> ${CACAOSIM_LOOPNUMBER}"
+  DMINDEX="$CACAO_DMINDEX"
+  echo "CACAO_DMINDEX    set =====> ${CACAO_DMINDEX}"
 fi
 
 
-if [[ -z "${CACAOSIM_LOOPNAME}" ]]; then
-  echo "CACAOSIM_LOOPNAME   not set -> using default ${LOOPNAME}"
+if [[ -z "${CACAO_LOOPNUMBER}" ]]; then
+  echo "CACAO_LOOPNUMBER not set -> using default ${LOOPNUMBER}"
 else
-  LOOPNAME="$CACAOSIM_LOOPNAME"
-  echo "CACAOSIM_LOOPNAME   set =====> ${CACAOSIM_LOOPNAME}"
+  LOOPNUMBER="$CACAO_LOOPNUMBER"
+  echo "CACAO_LOOPNUMBER set =====> ${CACAO_LOOPNUMBER}"
+fi
+
+
+if [[ -z "${CACAO_LOOPNAME}" ]]; then
+  echo "CACAO_LOOPNAME   not set -> using default ${LOOPNAME}"
+else
+  LOOPNAME="$CACAO_LOOPNAME"
+  echo "CACAO_LOOPNAME   set =====> ${CACAO_LOOPNAME}"
 fi
 
 
