@@ -26,14 +26,16 @@ LOOPNAME="cacaoloop"
 GPU="0"
 LINSIMDT="2000" # simulator frame period [us]
 
+
 # relative path
 LHSRESPM="simLHS/respM.fits"
 LHSWFSREF="simLHS/wfsref.fits"
 
-
-
 DMxsize="50"
 DMysize="50"
+
+
+
 
 if [[ -z "${CACAO_DMxsize}" ]]; then
   echo "CACAO_DMxsize    not set -> using default ${DMxsize}"
@@ -101,8 +103,10 @@ echo "------------------------------------------------------------------------"
 echo "  Basic setup for cacao"
 echo "  Will start DMcomb process and links DM to loop"
 echo ""
-echo "  Essential parameters are set by env variable:"
+echo "  Essential setup parameters are set by env variable:"
 echo "  $ export VAR=\"value\""
+echo "  Run with -p option to list current settings without running script."
+echo "  For convenience, consider creating bash file and source it."
 echo "   "
 echo "  Optional parameters are set in user-provided configuration file $pname.conf (relative to current directory)"
 echo "  Alternate configuration file specified by -c option"

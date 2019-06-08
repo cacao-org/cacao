@@ -35,90 +35,90 @@ LHSWFSREF="simLHS/wfsref.fits"
 DMxsize="50"
 DMysize="50"
 
-if [[ -z "${CACAOSIM_DMxsize}" ]]; then
-  echo "CACAOSIM_DMxsize    not set -> using default ${DMxsize}"
+if [[ -z "${CACAO_DMxsize}" ]]; then
+  echo "CACAO_DMxsize    not set -> using default ${DMxsize}"
 else
-  DMxsize="${CACAOSIM_DMxsize}"
-  echo "CACAOSIM_DMxsize    set =====> ${CACAOSIM_DMxsize}"
+  DMxsize="${CACAO_DMxsize}"
+  echo "CACAO_DMxsize    set =====> ${CACAO_DMxsize}"
 fi
 
-if [[ -z "${CACAOSIM_DMysize}" ]]; then
-  echo "CACAOSIM_DMysize    not set -> using default ${DMysize}"
+if [[ -z "${CACAO_DMysize}" ]]; then
+  echo "CACAO_DMysize    not set -> using default ${DMysize}"
 else
-  DMysize="${CACAOSIM_DMysize}"
-  echo "CACAOSIM_DMysize    set =====> ${CACAOSIM_DMysize}"
-fi
-
-
-
-
-
-
-
-if [[ -z "${CACAOSIM_WORKDIR}" ]]; then
-  echo "CACAOSIM_WORKDIR    not set -> using default ${WORKDIR}"
-else
-  WORKDIR="$CACAOSIM_WORKDIR"
-  echo "CACAOSIM_WORKDIR    set =====> ${CACAOSIM_WORKDIR}"
-fi
-
-
-if [[ -z "${CACAOSIM_DMINDEX}" ]]; then
-  echo "CACAOSIM_DMINDEX    not set -> using default ${DMINDEX}"
-else
-  DMINDEX="$CACAOSIM_DMINDEX"
-  echo "CACAOSIM_DMINDEX    set =====> ${CACAOSIM_DMINDEX}"
-fi
-
-
-if [[ -z "${CACAOSIM_LOOPNUMBER}" ]]; then
-  echo "CACAOSIM_LOOPNUMBER not set -> using default ${LOOPNUMBER}"
-else
-  LOOPNUMBER="$CACAOSIM_LOOPNUMBER"
-  echo "CACAOSIM_LOOPNUMBER set =====> ${CACAOSIM_LOOPNUMBER}"
-fi
-
-
-if [[ -z "${CACAOSIM_LOOPNAME}" ]]; then
-  echo "CACAOSIM_LOOPNAME   not set -> using default ${LOOPNAME}"
-else
-  LOOPNAME="$CACAOSIM_LOOPNAME"
-  echo "CACAOSIM_LOOPNAME   set =====> ${CACAOSIM_LOOPNAME}"
-fi
-
-
-if [[ -z "${CACAOSIM_GPU}" ]]; then
-  echo "CACAOSIM_GPU        not set -> using default ${GPU}"
-else
-  GPU="$CACAOSIM_GPU"
-  echo "CACAOSIM_GPU        set =====> ${CACAOSIM_GPU}"
-fi
-
-
-if [[ -z "${CACAOSIM_LINSIMDT}" ]]; then
-  echo "CACAOSIM_LINSIMDT   not set -> using default ${LINSIMDT}"
-else
-  LINSIMDT="$CACAOSIM_LINSIMDT"
-  echo "CACAOSIM_LINSIMDT   set =====> ${CACAOSIM_LINSIMDT}"
+  DMysize="${CACAO_DMysize}"
+  echo "CACAO_DMysize    set =====> ${CACAO_DMysize}"
 fi
 
 
 
 
 
-if [[ -z "${CACAOSIM_LHSRESPM}" ]]; then
-  echo "CACAOSIM_LHSRESPM   not set -> using default ${LHSRESPM}"
+
+
+if [[ -z "${CACAO_WORKDIR}" ]]; then
+  echo "CACAO_WORKDIR    not set -> using default ${WORKDIR}"
 else
-  LHSRESPM="$CACAOSIM_LHSRESPM"
-  echo "CACAOSIM_LHSRESPM   set =====> ${CACAOSIM_LHSRESPM}"
+  WORKDIR="$CACAO_WORKDIR"
+  echo "CACAO_WORKDIR    set =====> ${CACAO_WORKDIR}"
 fi
 
 
-if [[ -z "${CACAOSIM_LHSWFSREF}" ]]; then
-  echo "CACAOSIM_LHSWFSREF  not set -> using default ${LHSWFSREF}"
+if [[ -z "${CACAO_DMINDEX}" ]]; then
+  echo "CACAO_DMINDEX    not set -> using default ${DMINDEX}"
 else
-  LHSWFSREF="$CACAOSIM_LHSWFSREF"
-  echo "CACAOSIM_LHSWFSREF  set =====> ${CACAOSIM_LHSWFSREF}"
+  DMINDEX="$CACAO_DMINDEX"
+  echo "CACAO_DMINDEX    set =====> ${CACAO_DMINDEX}"
+fi
+
+
+if [[ -z "${CACAO_LOOPNUMBER}" ]]; then
+  echo "CACAO_LOOPNUMBER not set -> using default ${LOOPNUMBER}"
+else
+  LOOPNUMBER="$CACAO_LOOPNUMBER"
+  echo "CACAO_LOOPNUMBER set =====> ${CACAO_LOOPNUMBER}"
+fi
+
+
+if [[ -z "${CACAO_LOOPNAME}" ]]; then
+  echo "CACAO_LOOPNAME   not set -> using default ${LOOPNAME}"
+else
+  LOOPNAME="$CACAO_LOOPNAME"
+  echo "CACAO_LOOPNAME   set =====> ${CACAO_LOOPNAME}"
+fi
+
+
+if [[ -z "${CACAO_GPU}" ]]; then
+  echo "CACAO_GPU        not set -> using default ${GPU}"
+else
+  GPU="$CACAO_GPU"
+  echo "CACAO_GPU        set =====> ${CACAO_GPU}"
+fi
+
+
+if [[ -z "${CACAO_LINSIMDT}" ]]; then
+  echo "CACAO_LINSIMDT   not set -> using default ${LINSIMDT}"
+else
+  LINSIMDT="$CACAO_LINSIMDT"
+  echo "CACAO_LINSIMDT   set =====> ${CACAO_LINSIMDT}"
+fi
+
+
+
+
+
+if [[ -z "${CACAO_LHSRESPM}" ]]; then
+  echo "CACAO_LHSRESPM   not set -> using default ${LHSRESPM}"
+else
+  LHSRESPM="$CACAO_LHSRESPM"
+  echo "CACAO_LHSRESPM   set =====> ${CACAO_LHSRESPM}"
+fi
+
+
+if [[ -z "${CACAO_LHSWFSREF}" ]]; then
+  echo "CACAO_LHSWFSREF  not set -> using default ${LHSWFSREF}"
+else
+  LHSWFSREF="$CACAO_LHSWFSREF"
+  echo "CACAO_LHSWFSREF  set =====> ${CACAO_LHSWFSREF}"
 fi
 
 
@@ -218,10 +218,13 @@ fi
 
 tmux kill-session -t DMcomb-${DMINDEX}-conf
 tmux kill-session -t DMcomb-${DMINDEX}-run
+
 tmux kill-session -t simmvmgpu-${LOOPNUMBER}-conf
 tmux kill-session -t simmvmgpu-${LOOPNUMBER}-run
+
 tmux kill-session -t streamDelay-${DMINDEX}-conf
 tmux kill-session -t streamDelay-${DMINDEX}-run
+
 tmux kill-session -t ${fpsCTRLtmuxname}
 
 cd ${CURRDIR}
