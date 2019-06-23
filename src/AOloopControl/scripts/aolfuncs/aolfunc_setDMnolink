@@ -150,16 +150,16 @@ echo ""
 # arg 2: default value
 # 
 # param value is stored in variable "paramvalue"
-function ConfReadParam {
-file="./conf/param_$1.txt"
-if [ -f "$file" ]; then
-paramvalue=$( head -1 $file )
-else
-paramvalue="$2"
-echo "$2" > $file
-echo "# default value set by function ConfReadParam on $( date -u )" >> $file
-fi
-}
+#function ConfReadParam {
+#file="./conf/param_$1.txt"
+#if [ -f "$file" ]; then
+#paramvalue=$( head -1 $file )
+#else
+#paramvalue="$2"
+#echo "$2" > $file
+#echo "# default value set by function ConfReadParam on $( date -u )" >> $file
+#fi
+#}
 
 
 
@@ -193,10 +193,10 @@ echo "$DMMODE" > $DMMODEfile
 
 mkdir -p conf
 
-echo "0" > "./conf/param_DM2DM_mode.txt"
-echo "0" > "./conf/param_DMwfsref_mode.txt"
-echo "1" > "./conf/param_DMvolt_mode.txt"
-echo "0" > "./conf/param_DMcombave_mode.txt"
+#echo "0" > "./conf/param_DM2DM_mode.txt"
+#echo "0" > "./conf/param_DMwfsref_mode.txt"
+#echo "1" > "./conf/param_DMvolt_mode.txt"
+#echo "0" > "./conf/param_DMcombave_mode.txt"
 
 
 

@@ -15,18 +15,19 @@ echo "# Do not edit"
 echo ""
 
 
-# Set on ON or OFF
+# User is expected to set FPS processes to ON or OFF before running this script
+# Examples:
 
-FPSPROC_STREAMDELAY="ON"
-FPSPROC_SIMMVMGPU="ON"
-FPSPROC_MLAT="ON"
-
-
-
+#export CACAO_FPSPROC_STREAMDELAY="ON"
+#export CACAO_FPSPROC_SIMMVMGPU="ON"
+#export CACAO_FPSPROC_MLAT="ON"
 
 
 
-if [ "${FPSPROC_STREAMDELAY}" = "ON" ]; then
+
+
+
+if [ "${CACAO_FPSPROC_STREAMDELAY}" = "ON" ]; then
 # ==============================================================================
 # ==========  streamdelay for simulation mode ==================================
 # ==============================================================================
@@ -52,7 +53,7 @@ fi
 
 
 
-if [ "${FPSPROC_SIMMVMGPU}" = "ON" ]; then
+if [ "${CACAO_FPSPROC_SIMMVMGPU}" = "ON" ]; then
 # ==============================================================================
 # ========== GPU-based modal extraction ========================================
 # ==============================================================================
@@ -98,7 +99,7 @@ fi
 
 
 
-if [ "${FPSPROC_MLAT}" = "ON" ]; then
+if [ "${CACAO_FPSPROC_MLAT}" = "ON" ]; then
 # ==============================================================================
 # ========== Measure Latency ===================================================
 # ==============================================================================

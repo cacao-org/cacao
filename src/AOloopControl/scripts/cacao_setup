@@ -13,7 +13,7 @@ NBARGS=0
 # ======================= PROCESS NAME =================================
 pnameFull=`echo "$0" | sed "s/\.\///g"`
 pname=$( basename $pnameFull )
-echo "pname = $pname"
+#echo "pname = $pname"
 
 
 
@@ -30,7 +30,7 @@ SETTINGOK="1"  # switches to 0 if settings not OK
 
 
 
-fpsCTRLtmuxname="${LOOPNAME}_fpsCTRL"
+
 
 
 
@@ -41,7 +41,6 @@ echo "$(tput bold) $pname : cacao setup $(tput sgr0)"
 echo "------------------------------------------------------------------------"
 echo "  Initial setup for cacao"
 echo "  Will create work directory, install scripts and start DMcomb process and links DM to loop"
-echo ""
 echo "  Each cacao loop has a ascii name, referred to as <loopname> in this manual."
 echo ""
 echo ""
@@ -49,18 +48,24 @@ echo ""
 echo "$(tput bold) SUMMARY: ASSOCIATED FILES / STEPS $(tput sgr0)"
 echo ""
 echo "[1] Set essential environment variables"
-echo "    Create file $(tput bold)$(tput setaf 2) cacaovars.<loopname>.bash $(tput sgr0)."
+echo "    Create file $(tput bold)$(tput setaf 2) cacaovars.<loopname>.bash$(tput sgr0)"
 echo "    $(tput bold)$(tput setaf 5)\$ source ./cacaovars.<loopname>.bash$(tput sgr0)"
-echo "[2] Review settings"
+echo ""
+echo "[2] OPTIONAL: Set parameter values in file $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0)"
+echo "    syntax: \"setval <paramfullname> <value>\""
+echo ""
+echo "[3] OPTIONAL: Review settings (optional)"
 echo "    $(tput bold)$(tput setaf 5)\$ cacao_setup -p$(tput sgr0)"
-echo "[3] Run setup"
+echo ""
+echo "[4] Run setup"
 echo "    $(tput bold)$(tput setaf 5)\$ cacao_setup$(tput sgr0)"
+echo ""
 echo ""
 echo ""
 echo "$(tput bold) REQUIRED FOR INITIAL SETUP $(tput sgr0)"
 echo "  Essential setup parameters are required prior to setting up the working directory"
 echo "  This script depends on these parameters to be set and will return an error message if they are not."
-echo "  Essential parameters are set by environment variables:"
+echo "  Essential parameters can be set by environment variables:"
 echo "  $ export VAR=\"value\""
 echo "  Run with -p option to list current settings without running script."
 echo "  For convenience, consider creating bash file and source it before running this script."
@@ -88,7 +93,7 @@ echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
 echo "     $(tput bold)-C$(tput sgr0)            (C)lear all memory/files and exit"
 echo "     $(tput bold)-p$(tput sgr0)            (p)rint parameters and exit"
-echo "     $(tput bold)-c$(tput sgr0) <fname>    Use this (c)onfiguration file"
+echo "     $(tput bold)-c$(tput sgr0) <fname>    Use this (c)onfiguration file instead of default"
 echo ""
 echo "------------------------------------------------------------------------"
 }
@@ -154,7 +159,7 @@ fi
 
 function cacaosimCLEAR {
 
-
+echo "CLEARING"
 cd ${WORKDIR}
 
 if [ -f "./fpscmd/fpsrunstopscript" ]; then
@@ -195,7 +200,7 @@ done
 
 
 CHECKMODE="0"
-CONFFILE="$pname.conf"
+
 
 while getopts :hCpc: FLAG; do
   case $FLAG in
@@ -211,12 +216,7 @@ while getopts :hCpc: FLAG; do
     CHECKMODE="1"
     ;;
     C) # clear
-    echo "Clearing all settings"
-    cacaosimCLEAR
-    exit
-    ;;
-    c) # user-provided configuration file
-    CONFFILE="$OPTARG"
+    CLEAR="1"
     ;;
     \?) #unrecognized option - show help
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
@@ -240,12 +240,33 @@ fi
 
 
 
+# ======================= CHECK REQUIRED FILES =================================
+echo ""
 
+
+checkDir $CACAO_ROOT/src/AOloopControl/scripts
+checkFile $CACAO_ROOT/src/AOloopControl/scripts/fpslistadd.bash
+checkCommand tmux
+checkCommand fpsCTRL
 
 
 
 echo ""
-echo "REQUIRED ENVIRONMENT VARIABLES:"
+echo ""
+echo "====== REQUIRED ENVIRONMENT VARIABLES ====="
+
+
+if [[ -z "${CACAO_LOOPNAME}" ]]; then
+  echo "CACAO_LOOPNAME   not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+  SETTINGOK="0"
+else
+  LOOPNAME="$CACAO_LOOPNAME"
+  echo "CACAO_LOOPNAME   : ${CACAO_LOOPNAME}"
+  echo "$LOOPNAME" > LOOPNAME  
+fi
+
+echo "Set by adding \"export VARNAME=\"VALUE\"\" to file cacaovars.${LOOPNAME}.bash"
+echo ""
 
 if [[ -z "${CACAO_DMxsize}" ]]; then
   echo "CACAO_DMxsize    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
@@ -297,14 +318,6 @@ else
 fi
 
 
-if [[ -z "${CACAO_LOOPNAME}" ]]; then
-  echo "CACAO_LOOPNAME   not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
-  SETTINGOK="0"
-else
-  LOOPNAME="$CACAO_LOOPNAME"
-  echo "CACAO_LOOPNAME   : ${CACAO_LOOPNAME}"
-  echo "$LOOPNAME" > LOOPNAME  
-fi
 
 
 
@@ -313,20 +326,20 @@ fi
 
 
 
-# ======================= CHECK REQUIRED FILES =================================
+
+# ======================= FPS PROCESSES =================================
 echo ""
-
-
-checkDir $CACAO_ROOT/src/AOloopControl/scripts
-checkFile $CACAO_ROOT/src/AOloopControl/scripts/fpslistadd.bash
-checkCommand tmux
-checkCommand fpsCTRL
-
+echo "============ FPS processes ==========="
+echo "Enable FPS process PNAME setup by adding \"export CACAO_FPSPROC_PNAME=\"ON\"\" to file cacaovars.${LOOPNAME}.bash"
+echo "Disable by setting to \"OFF\" or unset"
+echo ""
+printenv | grep CACAO_FPSPROC
+echo ""
 
 if [[ ! -z "${CACAO_LOOPNAME}" ]]; then
 
 if [ -f "${LOOPNAME}.fpslistadd.bash" ]; then
-echo "custom fpslistadd file exists : ${LOOPNAME}.fpslistadd.bash"
+echo "Using custom fpslistadd file: ${LOOPNAME}.fpslistadd.bash"
 else
 echo "Using template fpslistadd script: $CACAO_ROOT/src/AOloopControl/scripts/fpslistadd.bash"
 cp $CACAO_ROOT/src/AOloopControl/scripts/fpslistadd.bash ${LOOPNAME}.fpslistadd.bash
@@ -334,8 +347,13 @@ fi
 
 fi
 
+fpsCTRLtmuxname="${LOOPNAME}_fpsCTRL"
+
+fpsSETPARAMCONFfile="fpssetup.setval.${LOOPNAME}.conf"
+checkFile ${fpsSETPARAMCONFfile}
 
 # ======================= CHECK SETTINGOK ===============================
+echo ""
 echo ""
 if [ ${SETTINGOK} -eq 1 ]
   then
@@ -369,6 +387,12 @@ fi
 
 
 # ======================= SCRIPT CODE STARTS HERE =================================
+
+
+if [ "$CLEAR" = "1" ]; then
+cacaosimCLEAR
+exit
+fi
 
 
 
@@ -497,25 +521,23 @@ sleep 1
 
 
 # ===================================================================================
-# ========= INIT SETTINGS IMPORTED FROM CONF FILE ====================
+# ========= INIT SETTINGS IMPORTED FROM CONF FILE ===================================
 # ===================================================================================
 
-cp ../fpssetup.setval.conf .
+echo ""
+cp ${CURRDIR}/${fpsSETPARAMCONFfile} fpssetup.setval.conf
+echo "============================"
+more fpssetup.setval.conf
+echo "fifo : ${fpsCTRLfifo}"
+echo "============================"
 while IFS='' read -r line || [[ -n "$line" ]]; do
     echo "$line"
     echo "$line" >> ${fpsCTRLfifo}
-done < ${CURRDIR}/fpssetup.setval.conf
+done < fpssetup.setval.conf
 
 
-# ===================================================================================
-# ========= OPTIONAL ADDITIONAL SETTINGS IMPORTED FROM CONF FILE ====================
-# ===================================================================================
 
 
-while IFS='' read -r line || [[ -n "$line" ]]; do
-    echo "$line"
-    echo "$line" >> ${fpsCTRLfifo}
-done < ${CURRDIR}/${CONFFILE}
 
 
 
