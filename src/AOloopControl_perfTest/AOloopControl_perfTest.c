@@ -1094,17 +1094,21 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     if(sprintf(command, "echo %8.6f > conf/param_hardwlatency.txt", latencyarray[NBiter / 2]) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     }
+    if(system(command) != 0) {
+        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+    }
+
+
 
     if(sprintf(command, "echo %8.6f > conf/param_hardwlatency_frame.txt", latencystepave ) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     }
-
-
-
-
     if(system(command) != 0) {
         printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
     }
+
+
+
 
     if(sprintf(command, "echo %f %f %f %f %f > timingstats/hardwlatencyStats.txt", latencyarray[NBiter / 2], latencyave, minlatency, maxlatency, latencystepave) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
