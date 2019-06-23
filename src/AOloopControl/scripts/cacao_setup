@@ -267,7 +267,8 @@ checkDir $CACAO_ROOT/src/AOloopControl/scripts
 checkFile $CACAO_ROOT/src/AOloopControl/scripts/fpslistadd.bash
 checkCommand tmux
 checkCommand fpsCTRL
-
+checkCommand milkStreamLink
+checkCommand milkFits2shm
 
 
 echo ""
@@ -338,6 +339,14 @@ fi
 
 
 
+
+if [[ -z "${CACAO_WFSSTREAM}" ]]; then
+  echo "CACAO_WFSSTREAM    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+  SETTINGOK="0"
+else
+  WFSSTREAM="$CACAO_WFSSTREAM"
+  echo "CACAO_WFSSTREAM  : ${CACAO_WFSSTREAM}"
+fi
 
 
 
@@ -569,13 +578,15 @@ fpssetparamconf
 
 
 # ===================================================================================
-# Startup sequence
+# Startup sequence: establish links
 # ===================================================================================
 
 # link DM index to loop number
 ./aolfuncs/aolfunc_setDMnolink
 
-
+# link WFS
+echo "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
+milkStreamLink -p aol${LOOPNUMBER}_ wfsim
 
 
 
