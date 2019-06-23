@@ -1095,7 +1095,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     }
 
-    if(sprintf(command, "echo %8.6f > conf/param_hardwlatency_frame.txt", (latencyarray[NBiter / 2])*(*framerateHz) ) < 1) {
+    if(sprintf(command, "echo %8.6f > conf/param_hardwlatency_frame.txt", latencystepave ) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     }
 
