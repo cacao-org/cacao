@@ -438,7 +438,8 @@ fi
 
 mkdir -p $WORKDIR
 mkdir -p $WORKDIR/conf/
-
+echo "${LOOPNAME}" > ${WORKDIR}/LOOPNAME
+echo "${LOOPNUMBER}" > ${WORKDIR}/LOOPNUMBER
 
 
 
