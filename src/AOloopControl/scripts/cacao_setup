@@ -6,6 +6,10 @@
 NBARGS=0
 
 
+# 
+
+
+
 # ======================= PROCESS NAME =================================
 pnameFull=`echo "$0" | sed "s/\.\///g"`
 pname=$( basename $pnameFull )
@@ -16,76 +20,11 @@ echo "pname = $pname"
 
 SRCDIR="$CACAO_ROOT"
 CURRDIR="$(pwd)"
-WORKDIR="$CURRDIR/AOloop1"
-
-
-DMINDEX="01"
-LOOPNUMBER="1"
-LOOPNAME="cacaoloop"
-
-GPU="0"
-LINSIMDT="2000" # simulator frame period [us]
-
-
-# relative path
-LHSRESPM="simLHS/respM.fits"
-LHSWFSREF="simLHS/wfsref.fits"
-
-DMxsize="50"
-DMysize="50"
 
 
 
 
-if [[ -z "${CACAO_DMxsize}" ]]; then
-  echo "CACAO_DMxsize    not set -> using default ${DMxsize}"
-else
-  DMxsize="${CACAO_DMxsize}"
-  echo "CACAO_DMxsize    set =====> ${CACAO_DMxsize}"
-fi
-
-if [[ -z "${CACAO_DMysize}" ]]; then
-  echo "CACAO_DMysize    not set -> using default ${DMysize}"
-else
-  DMysize="${CACAO_DMysize}"
-  echo "CACAO_DMysize    set =====> ${CACAO_DMysize}"
-fi
-
-
-
-
-
-
-if [[ -z "${CACAO_WORKDIR}" ]]; then
-  echo "CACAO_WORKDIR    not set -> using default ${WORKDIR}"
-else
-  WORKDIR="$CACAO_WORKDIR"
-  echo "CACAO_WORKDIR    set =====> ${CACAO_WORKDIR}"
-fi
-
-
-if [[ -z "${CACAO_DMINDEX}" ]]; then
-  echo "CACAO_DMINDEX    not set -> using default ${DMINDEX}"
-else
-  DMINDEX="$CACAO_DMINDEX"
-  echo "CACAO_DMINDEX    set =====> ${CACAO_DMINDEX}"
-fi
-
-
-if [[ -z "${CACAO_LOOPNUMBER}" ]]; then
-  echo "CACAO_LOOPNUMBER not set -> using default ${LOOPNUMBER}"
-else
-  LOOPNUMBER="$CACAO_LOOPNUMBER"
-  echo "CACAO_LOOPNUMBER set =====> ${CACAO_LOOPNUMBER}"
-fi
-
-
-if [[ -z "${CACAO_LOOPNAME}" ]]; then
-  echo "CACAO_LOOPNAME   not set -> using default ${LOOPNAME}"
-else
-  LOOPNAME="$CACAO_LOOPNAME"
-  echo "CACAO_LOOPNAME   set =====> ${CACAO_LOOPNAME}"
-fi
+SETTINGOK="1"  # switches to 0 if settings not OK
 
 
 
@@ -100,20 +39,50 @@ function printHELP {
 echo "------------------------------------------------------------------------"
 echo "$(tput bold) $pname : cacao setup $(tput sgr0)"
 echo "------------------------------------------------------------------------"
-echo "  Basic setup for cacao"
-echo "  Will start DMcomb process and links DM to loop"
+echo "  Initial setup for cacao"
+echo "  Will create work directory, install scripts and start DMcomb process and links DM to loop"
 echo ""
-echo "  Essential setup parameters are set by env variable:"
+echo "  Each cacao loop has a ascii name, referred to as <loopname> in this manual."
+echo ""
+echo ""
+echo ""
+echo "$(tput bold) SUMMARY: ASSOCIATED FILES / STEPS $(tput sgr0)"
+echo ""
+echo "[1] Set essential environment variables"
+echo "    Create file $(tput bold)$(tput setaf 2) cacaovars.<loopname>.bash $(tput sgr0)."
+echo "    $(tput bold)$(tput setaf 5)\$ source ./cacaovars.<loopname>.bash$(tput sgr0)"
+echo "[2] Review settings"
+echo "    $(tput bold)$(tput setaf 5)\$ cacao_setup -p$(tput sgr0)"
+echo "[3] Run setup"
+echo "    $(tput bold)$(tput setaf 5)\$ cacao_setup$(tput sgr0)"
+echo ""
+echo ""
+echo "$(tput bold) REQUIRED FOR INITIAL SETUP $(tput sgr0)"
+echo "  Essential setup parameters are required prior to setting up the working directory"
+echo "  This script depends on these parameters to be set and will return an error message if they are not."
+echo "  Essential parameters are set by environment variables:"
 echo "  $ export VAR=\"value\""
 echo "  Run with -p option to list current settings without running script."
-echo "  For convenience, consider creating bash file and source it."
-echo "   "
-echo "  Optional parameters are set in user-provided configuration file $pname.conf (relative to current directory)"
+echo "  For convenience, consider creating bash file and source it before running this script."
+echo ""
+echo ""
+echo "$(tput bold) ADDING FPS-ENABLED PROCESSES (OPTIONAL) $(tput sgr0)"
+echo "  Function parameter structures (FPSs) hold values of parameters for frequently used functions."
+echo "  A common interface and fifo allows for the parameters to be set or read."
+echo "  The user may provide an executable script to add FPS-enabled processes that may run, named:"
+echo "    ./<loopname>.fpslistadd.bash"
+echo "  The script will add entries to fpslist.txt and issue fps commands."
+echo ""
+echo ""
+echo "$(tput bold) OPTIONAL PARAMETERS $(tput sgr0)"
+echo "  Optional parameters can be set after the initial setup"
+echo "  They can be provided in user-provided configuration file $pname.conf (relative to current directory)"
 echo "  Alternate configuration file specified by -c option"
-echo "  "
+echo ""
 echo ""
 echo " $(tput bold)USAGE:$(tput sgr0)"
 echo "     $0 [-hCp] [-c <conffile>]"
+echo ""
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
@@ -121,13 +90,12 @@ echo "     $(tput bold)-C$(tput sgr0)            (C)lear all memory/files and ex
 echo "     $(tput bold)-p$(tput sgr0)            (p)rint parameters and exit"
 echo "     $(tput bold)-c$(tput sgr0) <fname>    Use this (c)onfiguration file"
 echo ""
-echo ""
 echo "------------------------------------------------------------------------"
 }
 
 printHELP1 ()
 {
-    printf "%20s       Example script\n" "$0" 
+    printf "%20s       CACAO setup script\n" "$0" 
 }
 
 
@@ -135,6 +103,8 @@ printHELP1 ()
 
 
 EXITSTATUS=0
+
+
 function checkFile {
 if [ -f $1 ]
   then
@@ -144,6 +114,8 @@ if [ -f $1 ]
     EXITSTATUS=1
 fi
 }
+
+
 function checkDir {
 if [ -d $1 ]
   then
@@ -153,10 +125,14 @@ if [ -d $1 ]
     EXITSTATUS=1
 fi
 }
+
+
 function cmdexists()
 {
   command -v "$1" >/dev/null 2>&1
 }
+
+
 function checkCommand {
 if cmdexists $1; then
     echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
@@ -164,6 +140,11 @@ else
     echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
 fi
 }
+
+
+
+
+
 
 
 
@@ -187,6 +168,8 @@ fi
 tmux kill-session -t DMcomb-${DMINDEX}-conf
 tmux kill-session -t DMcomb-${DMINDEX}-run
 tmux kill-session -t ${fpsCTRLtmuxname}
+
+
 
 cd ${CURRDIR}
 
@@ -256,27 +239,132 @@ fi
 
 
 
+
+
+
+
+
+echo ""
+echo "REQUIRED ENVIRONMENT VARIABLES:"
+
+if [[ -z "${CACAO_DMxsize}" ]]; then
+  echo "CACAO_DMxsize    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+  SETTINGOK="0"
+else
+  DMxsize="${CACAO_DMxsize}"
+  echo "CACAO_DMxsize    : ${CACAO_DMxsize}"
+fi
+
+
+if [[ -z "${CACAO_DMysize}" ]]; then
+  echo "CACAO_DMysize    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+  SETTINGOK="0"
+else
+  DMysize="${CACAO_DMysize}"
+  echo "CACAO_DMysize    : ${CACAO_DMysize}"
+fi
+
+
+
+
+
+
+if [[ -z "${CACAO_WORKDIR}" ]]; then
+  echo "CACAO_WORKDIR    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+  SETTINGOK="0"
+else
+  WORKDIR="$CACAO_WORKDIR"
+  echo "CACAO_WORKDIR    : ${CACAO_WORKDIR}"
+fi
+
+
+if [[ -z "${CACAO_DMINDEX}" ]]; then
+  echo "CACAO_DMINDEX    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+  SETTINGOK="0"
+else
+  DMINDEX="$CACAO_DMINDEX"
+  echo "CACAO_DMINDEX    : ${CACAO_DMINDEX}"
+fi
+
+
+if [[ -z "${CACAO_LOOPNUMBER}" ]]; then
+  echo "CACAO_LOOPNUMBER not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+  SETTINGOK="0"
+else
+  LOOPNUMBER="$CACAO_LOOPNUMBER"
+  echo "CACAO_LOOPNUMBER : ${CACAO_LOOPNUMBER}"
+  echo "$LOOPNUMBER" > LOOPNUMBER
+fi
+
+
+if [[ -z "${CACAO_LOOPNAME}" ]]; then
+  echo "CACAO_LOOPNAME   not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+  SETTINGOK="0"
+else
+  LOOPNAME="$CACAO_LOOPNAME"
+  echo "CACAO_LOOPNAME   : ${CACAO_LOOPNAME}"
+  echo "$LOOPNAME" > LOOPNAME  
+fi
+
+
+
+
+
+
+
+
 # ======================= CHECK REQUIRED FILES =================================
 echo ""
-LHSRESPM_ABS="${CURRDIR}/${LHSRESPM}"
-checkFile ${LHSRESPM_ABS}
-LHSWFSREF_ABS="${CURRDIR}/${LHSWFSREF}"
-checkFile ${LHSWFSREF_ABS}
+
 
 checkDir $CACAO_ROOT/src/AOloopControl/scripts
-
+checkFile $CACAO_ROOT/src/AOloopControl/scripts/fpslistadd.bash
 checkCommand tmux
 checkCommand fpsCTRL
 
 
-if [ $EXITSTATUS -eq 1 ]; then
+if [[ ! -z "${CACAO_LOOPNAME}" ]]; then
+
+if [ -f "${LOOPNAME}.fpslistadd.bash" ]; then
+echo "custom fpslistadd file exists : ${LOOPNAME}.fpslistadd.bash"
+else
+echo "Using template fpslistadd script: $CACAO_ROOT/src/AOloopControl/scripts/fpslistadd.bash"
+cp $CACAO_ROOT/src/AOloopControl/scripts/fpslistadd.bash ${LOOPNAME}.fpslistadd.bash
+fi
+
+fi
+
+
+# ======================= CHECK SETTINGOK ===============================
 echo ""
-echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+if [ ${SETTINGOK} -eq 1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Settings OK"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Some settings missing -> cannot proceed"
+    EXITSTATUS=1
+fi
+
+ 
+if [ $EXITSTATUS -eq 1 ]; then
+echo "$(tput setaf 1)$(tput bold) -> EXITING $(tput sgr0)"
 echo ""
 exit
 else
 echo ""
 fi
+
+
+
+
+
+
+
+
+if [ "${CHECKMODE}" = "1" ]; then
+exit
+fi
+
 
 
 
@@ -295,11 +383,34 @@ mkdir -p $WORKDIR
 mkdir -p $WORKDIR/conf/
 
 
-# copy LHS files
+
+
+
+
+
+
+# create local fpslist.txt (to be moved to work directory)
+
+
+# Write in this file FPS-compatible processes that will be used
+# col1: FPS name as it should appear in FPS
+# col2: function to be called in cacao to launch process
+# col3: optional arg to ensure uniqueness and pass argument to process
+echo "DMcomb         aolcontrolDMcomb    $DMINDEX"  > fpslist.txt
+
+
+
+## Run script to insert additional FPS-compatible processes that may be used
+./${LOOPNAME}.fpslistadd.bash
+
+
+cp fpslist.txt ${WORKDIR}
 
 cd $WORKDIR
 # update WORKDIR to full path
 WORKDIR=$( pwd )
+
+
 
 
 
@@ -312,8 +423,7 @@ cd ${SRCDIR}/src/AOloopControl/scripts
 cd $WORKDIR
 ./syncscripts
 
-echo "$LOOPNUMBER" > LOOPNUMBER
-echo "$LOOPNAME" > LOOPNAME
+
 
 
 
@@ -321,6 +431,7 @@ echo "$LOOPNAME" > LOOPNAME
 
 
 # Setup FPS commands for processes we plan to use
+
 
 if [ -f "./fpscmd/fpsrunstopscript" ]; then
 ./fpscmd/fpsrunstopscript     # stop all previous FPS run process(es)
@@ -332,12 +443,10 @@ fi
 
 
 
-# Write in this file FPS-compatible processes that will be used
-# col1: FPS name as it should appear in FPS
-# col2: function to be called in cacao to launch process
-# col3: optional arg to ensure uniqueness and pass argument to process
-echo "DMcomb         aolcontrolDMcomb    $DMINDEX"  > fpslist.txt
-#echo "mlat           aoltestlat" >> fpslist.txt
+
+
+
+
 
 
 
@@ -360,6 +469,7 @@ tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m
 tmux send-keys -t ${fpsCTRLtmuxname} "TMUX=" C-m   # ensures that tmux sessions can be created from fpsCTRL
 
 
+rm ${fpsCTRLfifo}
 tmux send-keys -t ${fpsCTRLtmuxname} "fpsCTRL -f ${fpsCTRLfifo}" C-m
 
 
@@ -385,17 +495,27 @@ sleep 1
 
 
 
+
+# ===================================================================================
+# ========= INIT SETTINGS IMPORTED FROM CONF FILE ====================
+# ===================================================================================
+
+cp ../fpssetup.setval.conf .
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    echo "$line"
+    echo "$line" >> ${fpsCTRLfifo}
+done < ${CURRDIR}/fpssetup.setval.conf
+
+
 # ===================================================================================
 # ========= OPTIONAL ADDITIONAL SETTINGS IMPORTED FROM CONF FILE ====================
 # ===================================================================================
 
 
-
-
 while IFS='' read -r line || [[ -n "$line" ]]; do
     echo "$line"
     echo "$line" >> ${fpsCTRLfifo}
-done < ${CURRDIR}/$CONFFILE
+done < ${CURRDIR}/${CONFFILE}
 
 
 
@@ -419,8 +539,8 @@ done < ${CURRDIR}/$CONFFILE
 # ===================================================================================
 
 # start DM comb
-sleep 5  # TODO why do we need to wait here ?
-echo "runstart DMcomb-${DMINDEX}" >> ${fpsCTRLfifo}
+#sleep 5  # TODO why do we need to wait here ?
+# echo "runstart DMcomb-${DMINDEX}" >> ${fpsCTRLfifo}
 
 
 # finished - get back to current directory
