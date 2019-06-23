@@ -176,14 +176,18 @@ int_fast8_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
 
 int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_cli() {
     char fpsname[200];
+    
     // First, we try to execute function through FPS interface
-    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string, second arg is int
-        unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
+    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
+        //unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
         // Set FPS interface name
         // By convention, if there are optional arguments, they should be appended to the fps name
         //
         if(data.processnameflag == 0) { // name fps to something different than the process name
-            sprintf(fpsname, "mlat");
+            if(strlen(data.cmdargtoken[2].val.string)>0)
+				sprintf(fpsname, "measlat-%s", data.cmdargtoken[2].val.string);
+			else
+				sprintf(fpsname, "measlat");
         } else { // Automatically set fps name to be process name up to first instance of character '.'
             strcpy(fpsname, data.processname0);
         }
@@ -493,7 +497,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     long fpi_frameratewait = function_parameter_add_entry(&fps, ".frameratewait", "time period for frame rate measurement", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &frameratewait_default);
     
 	double OPDamp_default[4] = { 0.1, 0.1, 1.0, 0.1 };
-    long fpi_OPDamp = function_parameter_add_entry(&fps, ".OPDamp", "poke amplitude", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &OPDamp_default);
+    long fpi_OPDamp = function_parameter_add_entry(&fps, ".OPDamp", "poke amplitude [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &OPDamp_default);
     
 	long NBiter_default[4] = { 100, 10, 100000, 100 };
     long fpi_NBiter = function_parameter_add_entry(&fps, ".NBiter", "Number of iteration", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBiter_default);
@@ -653,18 +657,18 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     float FrameRateWait = functionparameter_GetParamValue_FLOAT64(&fps, ".frameratewait");
 
-	long wfs_NBframesmax = functionparameter_GetParamValue_INT64(&fps, ".status.wfsNBframemax");
-	
-	// status (output)
-	double *wfsdt = functionparameter_GetParamPtr_FLOAT64(&fps, ".status.wfsdt");
-	
-	long *twaitus = functionparameter_GetParamPtr_INT64(&fps, ".status.twaitus");
-	double *refdtoffset = functionparameter_GetParamPtr_FLOAT64(&fps, ".status.refdtoffset");
-	double *dtoffset  = functionparameter_GetParamPtr_FLOAT64(&fps, ".status.dtoffset");
-	
-	// output
-	double *framerateHz = functionparameter_GetParamPtr_FLOAT64(&fps, ".out.framerateHz");
-	double *latencyfr = functionparameter_GetParamPtr_FLOAT64(&fps, ".out.latencyfr");
+    long wfs_NBframesmax = functionparameter_GetParamValue_INT64(&fps, ".status.wfsNBframemax");
+
+    // status (output)
+    double *wfsdt = functionparameter_GetParamPtr_FLOAT64(&fps, ".status.wfsdt");
+
+    long *twaitus = functionparameter_GetParamPtr_INT64(&fps, ".status.twaitus");
+    double *refdtoffset = functionparameter_GetParamPtr_FLOAT64(&fps, ".status.refdtoffset");
+    double *dtoffset  = functionparameter_GetParamPtr_FLOAT64(&fps, ".status.dtoffset");
+
+    // output
+    double *framerateHz = functionparameter_GetParamPtr_FLOAT64(&fps, ".out.framerateHz");
+    double *latencyfr = functionparameter_GetParamPtr_FLOAT64(&fps, ".out.latencyfr");
 
 
     // ===========================
@@ -768,7 +772,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     // coarse estimate of frame rate
 
-    sprintf(msgstring, "Measuring frame rate over %.1f sec", FrameRateWait);
+    sprintf(msgstring, "Measuring approx frame rate over %.1f sec", FrameRateWait);
     processinfo_WriteMessage(processinfo, msgstring);
 
     clock_gettime(CLOCK_REALTIME, &tnow);
@@ -784,15 +788,15 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     if(wfscntend - wfscntstart < 5) {
         sprintf(msgstring, "Number of frames %ld too small -> cannot proceed", wfscntend - wfscntstart);
-        processinfo_error(processinfo, msgstring);                
+        processinfo_error(processinfo, msgstring);
         return RETURN_FAILURE;
     }
 
     sprintf(msgstring, "frame period wfsdt = %f sec  ( %f Hz )\n", *wfsdt, 1.0 / *wfsdt);
     processinfo_WriteMessage(processinfo, msgstring);
 
-	*framerateHz = 1.0/(*wfsdt);
-	functionparameter_SaveParam2disk(&fps, ".out.framerateHz");
+    *framerateHz = 1.0/(*wfsdt); // This is approximate, will be measured more precisely later on
+   
 
 
     // update times
@@ -872,7 +876,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
         printf("write to %s\n", dmname);
         fflush(stdout);
-		copy_image_ID("_testdm0", dmname, 1);
+        copy_image_ID("_testdm0", dmname, 1);
 
         unsigned int dmstate = 0;
 
@@ -942,7 +946,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
                 usleep((long)(ran1() * 1000000.0 * *wfsdt));
                 printf("\nDM STATE CHANGED ON ITERATION %ld   / %ld\n\n", wfsframe, wfsframeoffset);
                 kkoffset = wfsframe;
-                
+
                 dmstate = 1;
                 copy_image_ID("_testdm1", dmname, 1);
 
@@ -956,9 +960,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
         }
         printf("\n\n %ld frames recorded\n", wfsframe);
         fflush(stdout);
-        
-        
-       copy_image_ID("_testdm0", dmname, 1);
+
+
+        copy_image_ID("_testdm0", dmname, 1);
         dmstate = 0;
 
 
@@ -1046,7 +1050,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     sprintf(msgstring, "Processing Data (%ld iterations)", NBiter);
     processinfo_WriteMessage(processinfo, msgstring);
 
-        copy_image_ID("_testdm0", dmname, 1);
+    copy_image_ID("_testdm0", dmname, 1);
 
     latencyave = 0.0;
     latencystepave = 0.0;
@@ -1067,15 +1071,24 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     latencyave /= NBiter;
     latencystepave /= NBiter;
 
-
+	// measure precise frame rate
+    dt = tdouble_end - tdouble_start;
+    printf("FRAME RATE = %.3f Hz\n", 1.0 * (wfscntend - wfscntstart) / dt);
+	*framerateHz = 1.0 * (wfscntend - wfscntstart) / dt;
+    functionparameter_SaveParam2disk(&fps, ".out.framerateHz");
+	
+	
+	
+	// update latencystepave from framerate
+	latencystepave = latencyave * (1.0 * (wfscntend - wfscntstart) / dt);
 
     quick_sort_float(latencyarray, NBiter);
 
     printf("AVERAGE LATENCY = %8.3f ms   %f frames\n", latencyave * 1000.0, latencystepave);
     printf("min / max over %ld measurements: %8.3f ms / %8.3f ms\n", NBiter, minlatency * 1000.0, maxlatency * 1000.0);
-    
+
     *latencyfr = latencystepave;
-	functionparameter_SaveParam2disk(&fps, ".out.latencyfr");
+    functionparameter_SaveParam2disk(&fps, ".out.latencyfr");
 
     if(sprintf(command, "echo %8.6f > conf/param_hardwlatency.txt", latencyarray[NBiter / 2]) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -1094,8 +1107,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     }
 
 
-    dt = tdouble_end - tdouble_start;
-    printf("FRAME RATE = %.3f Hz\n", 1.0 * (wfscntend - wfscntstart) / dt);
+
 
     if(sprintf(command, "echo %.3f > conf/param_mloopfrequ.txt", 1.0 * (wfscntend - wfscntstart) / dt) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
