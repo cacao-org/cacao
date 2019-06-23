@@ -86,14 +86,14 @@ echo "  Alternate configuration file specified by -c option"
 echo ""
 echo ""
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-hCp] [-c <conffile>]"
+echo "     $0 [-hCpr]"
 echo ""
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
 echo "     $(tput bold)-C$(tput sgr0)            (C)lear all memory/files and exit"
 echo "     $(tput bold)-p$(tput sgr0)            (p)rint parameters and exit"
-echo "     $(tput bold)-c$(tput sgr0) <fname>    Use this (c)onfiguration file instead of default"
+echo "     $(tput bold)-r$(tput sgr0)            (r)un fps setval updates and exit"
 echo ""
 echo "------------------------------------------------------------------------"
 }
@@ -182,6 +182,21 @@ cd ${CURRDIR}
 
 
 
+function fpssetparamconf {
+
+echo ""
+echo "FIFO: ${fpsCTRLfifo}"
+cp ${CURRDIR}/${fpsSETPARAMCONFfile} fpssetup.setval.conf
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    echo "$line"
+    echo "$line" >> ${fpsCTRLfifo}
+done < fpssetup.setval.conf
+
+}
+
+
+
+
 
 # ================= OPTIONS =============================
 # Transform long options to short ones
@@ -199,10 +214,11 @@ singlelinehelp=1;
 done
 
 
+CLEAR="0"
 CHECKMODE="0"
+FPSSETPARAMCONF="0"
 
-
-while getopts :hCpc: FLAG; do
+while getopts :hCpr FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -217,6 +233,9 @@ while getopts :hCpc: FLAG; do
     ;;
     C) # clear
     CLEAR="1"
+    ;;
+    r) # just run fps params setup
+    FPSSETPARAMCONF="1"
     ;;
     \?) #unrecognized option - show help
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
@@ -352,6 +371,9 @@ fpsCTRLtmuxname="${LOOPNAME}_fpsCTRL"
 fpsSETPARAMCONFfile="fpssetup.setval.${LOOPNAME}.conf"
 checkFile ${fpsSETPARAMCONFfile}
 
+fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
+
+
 # ======================= CHECK SETTINGOK ===============================
 echo ""
 echo ""
@@ -389,10 +411,21 @@ fi
 # ======================= SCRIPT CODE STARTS HERE =================================
 
 
+
+
+
 if [ "$CLEAR" = "1" ]; then
 cacaosimCLEAR
 exit
 fi
+
+if [ "$FPSSETPARAMCONF" = "1" ]; then
+fpssetparamconf
+exit
+fi
+
+
+
 
 
 
@@ -486,7 +519,7 @@ fpsmkcmd                      # (re-)create FPS scripts in `./fpscmd/`
 # start fpsCTRL and conf processes
 
 
-fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
+
 tmux new-session -d -s ${fpsCTRLtmuxname} \; setw force-width 160 \; setw force-height 48 \; attach \; detach
 sleep 1
 tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m
@@ -524,18 +557,8 @@ sleep 1
 # ========= INIT SETTINGS IMPORTED FROM CONF FILE ===================================
 # ===================================================================================
 
-echo ""
-cp ${CURRDIR}/${fpsSETPARAMCONFfile} fpssetup.setval.conf
-echo "============================"
-more fpssetup.setval.conf
-echo "fifo : ${fpsCTRLfifo}"
-echo "============================"
-while IFS='' read -r line || [[ -n "$line" ]]; do
-    echo "$line"
-    echo "$line" >> ${fpsCTRLfifo}
-done < fpssetup.setval.conf
 
-
+fpssetparamconf
 
 
 
