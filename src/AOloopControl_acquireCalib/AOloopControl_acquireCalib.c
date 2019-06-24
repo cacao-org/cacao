@@ -763,7 +763,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     printf("STARTING response measurement...\n");
     fflush(stdout);
 
-    list_image_ID();
+    //list_image_ID();
 
     /**
      * Memory is allocated to arrays
@@ -1165,10 +1165,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 sprintf(imname, "imoutStep%03d", AveStep);
 
                 sprintf(tmpfname, "!tmpRMacqu/%s.tstep%03d.iter%03ld.fits", IDoutC_name, AveStep, iter);
-                list_image_ID();
+                //list_image_ID();
                 printf("SAVING %s -> %s ... ", imname, tmpfname);
+                fflush(stdout);
                 save_fits(imname, tmpfname);
                 printf("DONE\n");
+                fflush(stdout);
             }
                         
         }
