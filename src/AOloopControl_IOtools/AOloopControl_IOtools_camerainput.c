@@ -574,7 +574,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         functionINIT = 1;
     }
 
-
+	printf("Connected to image - %ld   %ld x %ld =  %ld\n", ID_wfsim, sizexWFS, sizeyWFS, sizeWFS);
+	fflush(stdout);
 
 
 
