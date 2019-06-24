@@ -14,6 +14,35 @@
 
 
 
+
+
+// OPTIONAL LINE TRACKING FOR DEBUGGING
+//
+// Warning: enabling this feature will slow down execution
+// Use it for debugging only
+//
+//  Calling the LOGEXEC function will update :
+//  data.execSRCline      : current line of code
+//  data.execSRCfunc      : current function
+//  data.execSRCmessage   : User message
+//
+// Uncomment this line to turn on line tracking for debug purposes
+#define AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG
+//
+// If enabled, calling macro AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC will 
+#ifdef AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG
+#define AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC do {                      \
+    snprintf(data.execSRCfunc, STRINGMAXLEN_FUNCTIONNAME, "%s", __FUNCTION__); \
+    data.execSRCline = __LINE__;                   \
+    } while(0)
+#else
+#define AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC 
+#endif
+
+
+
+
+
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                        HEADER FILES                                             */
@@ -554,6 +583,9 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 	static long long WFScnt = 0;
 	static long long WFScntRM = 0;
 
+
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
+
     if(functionINIT == 0)
     {
 		// connect to WFS image
@@ -574,9 +606,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         functionINIT = 1;
     }
 
-	printf("Connected to image - %ld   %ld x %ld =  %ld\n", ID_wfsim, sizexWFS, sizeyWFS, sizeWFS);
-	fflush(stdout);
 
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
 
 
 	if(wfsim_semwaitindex == -1)
@@ -588,6 +619,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].datatype;
    
+
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
 
     // initialize camera averaging arrays if not already done
     if(avcamarraysInit==0)
@@ -613,6 +646,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         avcamarraysInit = 1;
     }
 
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
+
     if(InitSem==1)
     {   
         sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[wfsim_semwaitindex], &semval);
@@ -621,7 +656,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[wfsim_semwaitindex]);
     }
 
-
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
 
 #ifdef _PRINT_TEST
     printf("TEST - SEMAPHORE INITIALIZED\n");
@@ -657,6 +692,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     // listening for counter or semaphore in wfsim
     // ***********************************************************************************************
 
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
 
 #ifdef _PRINT_TEST
     printf("TEST - WAITING FOR IMAGE %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
