@@ -724,11 +724,11 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 	AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
     if(AOloopcontrol_meminit == 0) {
 		AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
-//        AOloopControl_InitializeMemory(AOinitMode);
+        AOloopControl_InitializeMemory(AOinitMode);
     }
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
-//    AOloopControl_loadconfigure(LOOPNUMBER, 1, 2);
+    AOloopControl_loadconfigure(LOOPNUMBER, 1, 2);
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
 
