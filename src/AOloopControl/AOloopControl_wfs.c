@@ -218,7 +218,13 @@ int_fast8_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name, const char *
 //
 //
 //
-int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *ID_WFSzp_name, int NBzp, const char *IDwfsref0_name, const char *IDwfsref_name)
+int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(
+    long loopnb,
+    const char *ID_WFSzp_name,
+    int NBzp,
+    const char *IDwfsref0_name,
+    const char *IDwfsref_name
+)
 {
     long wfsxsize, wfsysize, wfsxysize;
     long IDwfsref, IDwfsref0;
@@ -236,13 +242,13 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *
 
 
 
-	if(aoloopcontrol_var.aoconfID_looptiming == -1)
-	{
-		// LOOPiteration is written in cnt1 of loop timing array
-		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
-	}
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
+    {
+        // LOOPiteration is written in cnt1 of loop timing array
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
+    }
 
 
     schedpar.sched_priority = RT_priority;
@@ -253,7 +259,7 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
 
     if(seteuid(data.ruid) != 0) // Go back to normal privileges
-       printERROR(__FILE__, __func__, __LINE__, "seteuid() returns non-zero value");
+        printERROR(__FILE__, __func__, __LINE__, "seteuid() returns non-zero value");
 #endif
 
     IDwfsref = image_ID(IDwfsref_name);
@@ -272,7 +278,7 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *
         exit(0);
     }
 
-    IDwfszparray = (long*) malloc(sizeof(long)*NBzp);
+    IDwfszparray = (long*) malloc(sizeof(long)*(NBzp+1));
     // create / read the zero point WFS channels
     for(ch=0; ch<NBzp; ch++)
     {
@@ -283,6 +289,14 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *
         COREMOD_MEMORY_image_set_createsem(imname, 10);
         IDwfszparray[ch] = image_ID(imname);
     }
+    // extra special zp channel
+    ch = NBzp;
+    if(sprintf(imname, "%s_00", ID_WFSzp_name) < 1)
+		printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    AOloopControl_IOtools_2Dloadcreate_shmim(imname, "", wfsxsize, wfsysize, 0.0);
+    COREMOD_MEMORY_image_set_createsem(imname, 10);
+    IDwfszparray[ch] = image_ID(imname);
+    
 
     cntsumold = 0;
     for(;;)
@@ -298,16 +312,16 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *
         sem_timedwait(data.image[IDwfsref].semptr[1], &semwaitts);
 
         long cntsum = 0;
-        for(ch=0; ch<NBzp; ch++)
+        for(ch=0; ch<(NBzp+1); ch++)
             cntsum += data.image[IDwfszparray[ch]].md[0].cnt0;
 
 
         if(cntsum != cntsumold)
         {
-			// copy wfsref0 to tmp
+            // copy wfsref0 to tmp
             memcpy(data.image[IDtmp].array.F, data.image[IDwfsref0].array.F, sizeof(float)*wfsxysize);
 
-            for(ch=0; ch<NBzp; ch++)
+            for(ch=0; ch<(NBzp+1); ch++)
                 for(ii=0; ii<wfsxysize; ii++)
                     data.image[IDtmp].array.F[ii] += data.image[IDwfszparray[ch]].array.F[ii];
 
@@ -318,11 +332,11 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *
             data.image[IDwfsref].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
             data.image[IDwfsref].md[0].write = 0;
 
-/*            sem_getvalue(data.image[IDwfsref].semptr[0], &semval); // do not update sem 1
-            if(semval<SEMAPHORE_MAXVAL)
-                COREMOD_MEMORY_image_set_sempost(IDwfsref_name, 0);*/
+            /*            sem_getvalue(data.image[IDwfsref].semptr[0], &semval); // do not update sem 1
+                        if(semval<SEMAPHORE_MAXVAL)
+                            COREMOD_MEMORY_image_set_sempost(IDwfsref_name, 0);*/
             COREMOD_MEMORY_image_set_sempost_excl_byID(IDwfsref, 1);
-            
+
 
             cntsumold = cntsum;
         }
