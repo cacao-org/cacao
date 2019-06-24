@@ -1087,6 +1087,10 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         Read_cam_frame(loop, 1, normalize, 0, 0);
         COREMOD_MEMORY_image_set_sempost_byID(ID_dmRM, -1);
         data.image[ID_dmRM].md[0].cnt0++;
+        
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
+
 
         // read delayfr frames (priming)
         for(kk = 0; kk < delayfr; kk++) {
