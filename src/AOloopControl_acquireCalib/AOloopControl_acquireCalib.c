@@ -1084,7 +1084,10 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         array_PokeIndex1Mapped[imcnt] = PokeIndex1Mapped;
         imcnt ++;
 
+		AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
         Read_cam_frame(loop, 1, normalize, 0, 0);
+		AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+		
         COREMOD_MEMORY_image_set_sempost_byID(ID_dmRM, -1);
         data.image[ID_dmRM].md[0].cnt0++;
         
