@@ -1692,6 +1692,9 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
                 char filename_wfsref[100];
 
 
+				printf(" [saving ... ");
+				fflush(stdout);
+
                 sprintf(filename_respC, "!tmpRMacqu/respM.tstep%03d.iter%03d.fits", AveStep, IterNumber);
                 sprintf(filename_wfsref, "!tmpRMacqu/wfsref.tstep%03d.iter%03d.fits", AveStep, IterNumber);
                 save_fits(imnameout_respC, filename_respC);
@@ -1712,6 +1715,9 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
                 save_fits(imnameout_wfsref_B, filename_wfsref);                
                 delete_image_ID(imnameout_respC_B);
                 delete_image_ID(imnameout_wfsref_B);
+                
+                printf("done] \n");
+                fflush(stdout);
                 
             }
             else
