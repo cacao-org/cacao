@@ -1693,7 +1693,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
                 IterNumber = 0; // start processing iterations
 
             AveStep ++;
-            if(AveStep==AveStep) {
+            if(AveStep==NBave) {
                 AveStep = 0;
                 IterNumber ++;
             }
