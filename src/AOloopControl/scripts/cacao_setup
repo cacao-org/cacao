@@ -463,7 +463,9 @@ echo "${LOOPNUMBER}" > ${WORKDIR}/LOOPNUMBER
 # col1: FPS name as it should appear in FPS
 # col2: function to be called in cacao to launch process
 # col3: optional arg to ensure uniqueness and pass argument to process
-echo "DMcomb         aolcontrolDMcomb    $DMINDEX"  > fpslist.txt
+
+# for example:
+# echo "DMcomb         aolcontrolDMcomb    $DMINDEX"  > fpslist.txt
 
 
 
@@ -542,20 +544,6 @@ tmux send-keys -t ${fpsCTRLtmuxname} "fpsCTRL -f ${fpsCTRLfifo}" C-m
 
 
 ./fpscmd/fpsconfstartscript   # (re-)start FPS configuration process(es)
-
-
-
-
-# ===================================================================================
-# ============== DEFAULT SETTINGS AND ENV VARIABLES =================================
-# ===================================================================================
-
-# DM
-echo "setval AOCONF.DMxsize ${DMxsize}" >> ${fpsCTRLfifo}
-echo "setval AOCONF.DMysize ${DMysize}" >> ${fpsCTRLfifo}
-
-
-
 
 # give time to fpsCTRL to process above commands
 sleep 1
