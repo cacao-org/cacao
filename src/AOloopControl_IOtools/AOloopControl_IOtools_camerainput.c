@@ -594,18 +594,22 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     static long sizexWFS = 0;
     static long sizeyWFS = 0;
     static long sizeWFS = 0;
-	static int WFSatype = -1;
-	
-	static long long WFScnt = 0;
-	static long long WFScntRM = 0;
+    static int WFSatype = -1;
+
+	static long ID_imWFS0;
+
+    static long long WFScnt = 0;
+    static long long WFScntRM = 0;
 
 
-	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
+    AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 
+
+    // ======================= INITIALIZATION ========================
     if(functionINIT == 0)
     {
-		// connect to WFS image
+        // connect to WFS image
         char WFSname[100];
         sprintf(WFSname, "aol%ld_wfsim", loop);
         ID_wfsim = read_sharedmem_image(WFSname);
@@ -616,9 +620,12 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         sizexWFS = data.image[ID_wfsim].md[0].size[0];
         sizeyWFS = data.image[ID_wfsim].md[0].size[1];
         sizeWFS = sizexWFS*sizeyWFS;
+        WFSatype = data.image[ID_wfsim].md[0].datatype;
 
-		WFSatype = data.image[ID_wfsim].md[0].datatype;
 
+        if(sprintf(name, "aol%ld_imWFS0", loop) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        ID_imWFS0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
 
         functionINIT = 1;
     }
@@ -685,7 +692,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 #endif
 
 
-/*
+
     if(RM==0)
     {
         AOconf[loop].AOtiminginfo.status = 20;  // 020: WAIT FOR IMAGE
@@ -696,7 +703,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     }
     else
         data.status1 = 2;
-*/
+
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimer00);
 
@@ -745,10 +752,10 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         sem_getvalue(data.image[ID_wfsim].semptr[semindex], &semval);
         if(semval>0)
         {
-            if(semval>1)
+            if(semval>1){
                 printf("\n\033[31;1m[%12ld] WARNING [%d] WFS SEMAPHORE already posted - Missed frame\033[0m\n", AOconf[loop].aorun.LOOPiteration, semval);
-            //			else
-            //				printf("[%12ld] WARNING [%d] WFS SEMAPHORE already posted\n", AOconf[loop].aorun.LOOPiteration, semval);
+				//printf("\n\033[31;1m WARNING [%d] WFS SEMAPHORE already posted - Missed frame\033[0m\n", semval);
+			}
             fflush(stdout);
         }
         
@@ -841,10 +848,10 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] = 1; // there must only be one such process
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
 
-        //AOconf[loop].AOtiminginfo.status = 0;  // LOAD IMAGE
+        AOconf[loop].AOtiminginfo.status = 0;  // LOAD IMAGE
     }
 
-    //AOconf[loop].AOtiminginfo.statusM = 0;
+    AOconf[loop].AOtiminginfo.statusM = 0;
 
 
     slice = 0;
@@ -966,7 +973,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             //            #pragma omp for
             //# endif
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
-                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
+                data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
             //# ifdef _OPENMP
             //        }
             //# endif
@@ -984,7 +991,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             //            #pragma omp for
             //# endif
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
-                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
+                data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
             //# ifdef _OPENMP
             //        }
             //# endif
@@ -1001,7 +1008,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             #pragma omp parallel for
 # endif
             for(ii=0; ii<Average_cam_frames_nelem; ii++)
-                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = arrayftmp[ii] - data.image[Average_cam_frames_IDdark].array.F[ii];
+                data.image[ID_imWFS0].array.F[ii] = arrayftmp[ii] - data.image[Average_cam_frames_IDdark].array.F[ii];
 # ifdef _OPENMP
         }
 # endif
@@ -1014,8 +1021,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         }
 
 
-        data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
-        COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0, -1);
+        data.image[ID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
+        COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS0, -1);
 
 
         clock_gettime(CLOCK_REALTIME, &tnow);
@@ -1023,11 +1030,11 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
 
-        /*for(s=0; s<data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].sem; s++)
+        /*for(s=0; s<data.image[ID_imWFS0].md[0].sem; s++)
         {
-            sem_getvalue(data.image[aoloopcontrol_var.aoconfID_imWFS0].semptr[s], &semval);
+            sem_getvalue(data.image[ID_imWFS0].semptr[s], &semval);
             if(semval<SEMAPHORE_MAXVAL)
-                sem_post(data.image[aoloopcontrol_var.aoconfID_imWFS0].semptr[s]);
+                sem_post(data.image[ID_imWFS0].semptr[s]);
         }*/
 
 
@@ -1075,14 +1082,14 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             sem_wait(&AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[ti]);
         }
 
-        data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
-        COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_imWFS0, -1);
+        data.image[ID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
+        COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS0, -1);
 
-        /*  for(s=0; s<data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].sem; s++)
+        /*  for(s=0; s<data.image[ID_imWFS0].md[0].sem; s++)
           {
-              sem_getvalue(data.image[aoloopcontrol_var.aoconfID_imWFS0].semptr[s], &semval);
+              sem_getvalue(data.image[ID_imWFS0].semptr[s], &semval);
               if(semval<SEMAPHORE_MAXVAL)
-                  sem_post(data.image[aoloopcontrol_var.aoconfID_imWFS0].semptr[s]);
+                  sem_post(data.image[ID_imWFS0].semptr[s]);
           }*/
 #ifdef _PRINT_TEST
         printf("TEST - DARK SUBTRACT - END\n");
@@ -1105,7 +1112,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     //  if(IDdark!=-1)
     // {
     //    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
-    //       data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] -= data.image[IDdark].array.F[ii];
+    //       data.image[ID_imWFS0].array.F[ii] -= data.image[IDdark].array.F[ii];
     //}
     AOconf[loop].AOtiminginfo.statusM = 1;
     if(RM==0)
@@ -1135,20 +1142,20 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         {
             float IMTOTAL;
 
-            nelem = data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].size[1];
+            nelem = data.image[ID_imWFS0].md[0].size[0]*data.image[ID_imWFS0].md[0].size[1];
             IMTOTAL = 0.0;
             if(aoloopcontrol_var.aoconfID_wfsmask!=-1)
             {
                 for(ii=0; ii<nelem; ii++)
-                    IMTOTAL += data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii]*data.image[aoloopcontrol_var.aoconfID_wfsmask].array.F[ii];
+                    IMTOTAL += data.image[ID_imWFS0].array.F[ii]*data.image[aoloopcontrol_var.aoconfID_wfsmask].array.F[ii];
             }
             else
             {
                 for(ii=0; ii<nelem; ii++)
-                    IMTOTAL += data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii];
+                    IMTOTAL += data.image[ID_imWFS0].array.F[ii];
             }
 
-            //            AOconf[loop].WFStotalflux = arith_image_total(data.image[aoloopcontrol_var.aoconfID_imWFS0].name);
+            //            AOconf[loop].WFStotalflux = arith_image_total(data.image[ID_imWFS0].name);
             AOconf[loop].WFSim.WFStotalflux = IMTOTAL;
 
             AOLCOMPUTE_TOTAL_INIT = 1;
@@ -1204,7 +1211,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[14] = tdiffv;
     }
 
-    data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].cnt0 ++;
+    data.image[ID_imWFS0].md[0].cnt0 ++;
 
     nelem = AOconf[loop].WFSim.sizeWFS;
 
@@ -1244,7 +1251,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         //            #pragma omp for
         //# endif
         for(ii=0; ii<nelem; ii++)
-            data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii]*totalinv;
+            data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] = data.image[ID_imWFS0].array.F[ii]*totalinv;
         //# ifdef _OPENMP
         //        }
         //# endif
