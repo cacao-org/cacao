@@ -10,7 +10,7 @@
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
-#define _PRINT_TEST
+//#define _PRINT_TEST
 
 
 
@@ -586,6 +586,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
+
     if(functionINIT == 0)
     {
 		// connect to WFS image
@@ -605,6 +606,10 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
         functionINIT = 1;
     }
+
+
+
+
 
 
 	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
