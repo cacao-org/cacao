@@ -221,6 +221,8 @@ else
 fi
 
 
+exit
+
 
 
 ### This is usually not executed, as the standard procedure is to have RMCalibReuseMasks set to 0
