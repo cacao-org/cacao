@@ -805,7 +805,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
 
-
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimerStart);
@@ -820,10 +820,10 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] = 1; // there must only be one such process
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_wfsim, tnow);
 
-        AOconf[loop].AOtiminginfo.status = 0;  // LOAD IMAGE
+        //AOconf[loop].AOtiminginfo.status = 0;  // LOAD IMAGE
     }
 
-    AOconf[loop].AOtiminginfo.statusM = 0;
+    //AOconf[loop].AOtiminginfo.statusM = 0;
 
 
     slice = 0;
