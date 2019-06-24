@@ -856,14 +856,16 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     /**
-     * WFS frames will arrive in aol_imWFS1RM
+     * WFS frames will arrive in aol_imWFS1
      *
      */
-    if(sprintf(name, "aol%ld_imWFS1RM", loop) < 1) {
+    if(sprintf(name, "aol%ld_imWFS1", loop) < 1) {
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     }
-    //ID_imWFS1 = read_sharedmem_image(name);
-    long ID_imWFS1 = create_image_ID(name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+    long ID_imWFS1 = read_sharedmem_image(name);
+    if(ID_imWFS1 == -1){
+		ID_imWFS1 = create_image_ID(name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+	}
 
 
 
