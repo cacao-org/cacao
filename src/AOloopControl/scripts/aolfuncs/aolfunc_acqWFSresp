@@ -223,8 +223,6 @@ fi
 
 
 
-
-
 ### This is usually not executed, as the standard procedure is to have RMCalibReuseMasks set to 0
 if [ "$RMmodal" = " ON" ]; then
 if [ "$DMMODE" = "0" ]; then
@@ -335,9 +333,9 @@ fi  # end of if [ "$RMCalibReuseMasks" = "0" ]; then
 
 
 
-echo "####################################################"
+echo "#################################################################"
 echo "# UPDATE wfsref00, zrespM TO NORMALIZE FLUX OVER wfsmask    "
-echo "####################################################"
+echo "#################################################################"
 # 
 # INPUT
 #	wfsref00.fits
@@ -407,9 +405,9 @@ fi
 
 
 
-echo "####################################################"
+echo "################################################################"
 echo "# UPDATE LOwfsref0 LOrespmat0 TO NORMALIZE FLUX OVER wfsmask    "
-echo "####################################################"
+echo "#################################################################"
 # 
 # INPUT
 #	LOrespM.fits
