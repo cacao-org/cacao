@@ -750,6 +750,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 	long sizeDM = sizexDM*sizeyDM;
 
 
+
     processinfo_WriteMessage(processinfo, "Connecting to WFS stream");
     printf("Importing WFS camera image shared memory ... \n");
     fflush(stdout);
@@ -767,6 +768,14 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     long sizeWFS = sizexWFS*sizeyWFS;
 
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
+
+
+
+
+
+
+
 
     /**
      * A temporary array is created and initialized to hold the WFS response to each poke mode.
