@@ -429,17 +429,32 @@ static void *compute_function_imtotal( void *ptr )
 
 
 
+
+
 static void *compute_function_dark_subtract( void *ptr )
 {
     long ii, iistart, iiend;
-    long nelem;
     long *index;
     int sval;
     long threadindex;
     int semval;
 
+	long nelem;
+	
 
-    nelem = data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].size[0]*data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].size[1];
+	// connect to imWFS0
+    char sname[100];
+    sprintf(sname, "aol%ld_imWFS0", LOOPNUMBER);
+    long ID_imWFS0 = read_sharedmem_image(sname);
+    if(ID_imWFS0 == -1) {
+        printf("ERROR: cannot connect to WFS stream");
+        exit(0);
+    }
+
+	nelem = data.image[ID_imWFS0].md[0].size[0]*data.image[ID_imWFS0].md[0].size[1];
+
+
+    
     index = (long*) ptr;
     threadindex = *index;
 
@@ -461,15 +476,15 @@ static void *compute_function_dark_subtract( void *ptr )
         switch ( aoloopcontrol_var.WFSatype ) {
         case _DATATYPE_UINT16 :
             for(ii=iistart; ii<iiend; ii++)
-                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
+                data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
             break;
         case _DATATYPE_INT16 :
             for(ii=iistart; ii<iiend; ii++)
-                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
+                data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
             break;
         case _DATATYPE_FLOAT :
             for(ii=iistart; ii<iiend; ii++)
-                data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] = ((float) arrayftmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
+                data.image[ID_imWFS0].array.F[ii] = ((float) arrayftmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
             break;
         default :
             printf("ERROR: WFS data type not recognized\n File %s, line %d\n", __FILE__, __LINE__);
@@ -579,7 +594,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     static long sizexWFS = 0;
     static long sizeyWFS = 0;
     static long sizeWFS = 0;
-
+	static int WFSatype = -1;
+	
 	static long long WFScnt = 0;
 	static long long WFScntRM = 0;
 
@@ -601,8 +617,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         sizeyWFS = data.image[ID_wfsim].md[0].size[1];
         sizeWFS = sizexWFS*sizeyWFS;
 
+		WFSatype = data.image[ID_wfsim].md[0].datatype;
 
-		aoloopcontrol_var.aoconfID_wfsim = ID_wfsim;
 
         functionINIT = 1;
     }
@@ -617,12 +633,12 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 	if(wfsim_semwaitindex == -1)
 	{
-		wfsim_semwaitindex = ImageStreamIO_getsemwaitindex(&data.image[aoloopcontrol_var.aoconfID_wfsim], semindex);
+		wfsim_semwaitindex = ImageStreamIO_getsemwaitindex(&data.image[ID_wfsim], semindex);
 	}
 	if(wfsim_semwaitindex>-1)
 		semindex = wfsim_semwaitindex;
 
-    aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].datatype;
+    
    
 
 	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
@@ -641,12 +657,12 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         Average_cam_frames_nelem = sizeWFS; //AOconf[loop].WFSim.sizeWFS;
 
         // set semaphore to 0
-        sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
-        printf("INITIALIZING SEMAPHORE %d   %s   (%d)\n", semindex, data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name, semval);
+        sem_getvalue(data.image[ID_wfsim].semptr[semindex], &semval);
+        printf("INITIALIZING SEMAPHORE %d   %s   (%d)\n", semindex, data.image[ID_wfsim].md[0].name, semval);
         for(i=0; i<semval; i++)
-            sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
+            sem_trywait(data.image[ID_wfsim].semptr[semindex]);
 
-        //aoloopcontrol_var.PIXSTREAM_SLICE = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt1;    // set semaphore 1 to 0
+        //aoloopcontrol_var.PIXSTREAM_SLICE = data.image[ID_wfsim].md[0].cnt1;    // set semaphore 1 to 0
 
         avcamarraysInit = 1;
     }
@@ -655,10 +671,10 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
     if(InitSem==1)
     {   
-        sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[wfsim_semwaitindex], &semval);
-        printf("INITIALIZING SEMAPHORE %d   %s   (%d)\n", semindex, data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name, semval);
+        sem_getvalue(data.image[ID_wfsim].semptr[wfsim_semwaitindex], &semval);
+        printf("INITIALIZING SEMAPHORE %d   %s   (%d)\n", semindex, data.image[ID_wfsim].md[0].name, semval);
         for(i=0; i<semval; i++)
-            sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[wfsim_semwaitindex]);
+            sem_trywait(data.image[ID_wfsim].semptr[wfsim_semwaitindex]);
     }
 
 	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
@@ -686,7 +702,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
 	//char pmsg[200];
-	//sprintf(pmsg, "waiting %s update [sem %d]", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name, wfsim_semwaitindex);
+	//sprintf(pmsg, "waiting %s update [sem %d]", data.image[ID_wfsim].md[0].name, wfsim_semwaitindex);
 	//processinfo_WriteMessage(data.pinfo, pmsg);
 
 
@@ -700,11 +716,11 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 #ifdef _PRINT_TEST
-    printf("TEST - WAITING FOR IMAGE %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
+    printf("TEST - WAITING FOR IMAGE %s\n", data.image[ID_wfsim].md[0].name);
     fflush(stdout);
 #endif
 
-    if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].sem == 0) // don't use semaphore
+    if(data.image[ID_wfsim].md[0].sem == 0) // don't use semaphore
     {
 #ifdef _PRINT_TEST
     printf("TEST - NOT USING SEMAPHORE\n");
@@ -713,10 +729,10 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
         // if not using semaphore, use counter to test if new WFS frame is ready
         if(RM==0)
-            while(WFScnt == data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0) // test if new frame exists
+            while(WFScnt == data.image[ID_wfsim].md[0].cnt0) // test if new frame exists
                 usleep(5);
         else
-            while(WFScntRM == data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0) // test if new frame exists
+            while(WFScntRM == data.image[ID_wfsim].md[0].cnt0) // test if new frame exists
                 usleep(5);
     }
     else
@@ -726,7 +742,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         fflush(stdout);
 #endif
 
-        sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
+        sem_getvalue(data.image[ID_wfsim].semptr[semindex], &semval);
         if(semval>0)
         {
             if(semval>1)
@@ -748,7 +764,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         if ( FORCE_REG_TIMING_val == 0 )
         {
             int rval;
-            rval = ImageStreamIO_semwait(&data.image[aoloopcontrol_var.aoconfID_wfsim], wfsim_semwaitindex);            
+            rval = ImageStreamIO_semwait(&data.image[ID_wfsim], wfsim_semwaitindex);            
             
             if (rval == -1)
                 perror("sem_timedwait");
@@ -769,8 +785,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             }
 
             int rval;
-            rval = ImageStreamIO_semtimedwait(&data.image[aoloopcontrol_var.aoconfID_wfsim], wfsim_semwaitindex, &semwaitts);
-            //rval = sem_timedwait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semwaitts);
+            rval = ImageStreamIO_semtimedwait(&data.image[ID_wfsim], wfsim_semwaitindex, &semwaitts);
+            //rval = sem_timedwait(data.image[ID_wfsim].semptr[semindex], &semwaitts);
             if (rval == -1)
             {
                 if (errno == ETIMEDOUT)
@@ -780,13 +796,13 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             }
         }
 
-        sem_getvalue(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex], &semval);
+        sem_getvalue(data.image[ID_wfsim].semptr[semindex], &semval);
         for(i=0; i<semval; i++)
         {
-            //			printf("WARNING: [%d] sem_trywait on aoloopcontrol_var.aoconfID_wfsim\n", (int) (semval - i));
+            //			printf("WARNING: [%d] sem_trywait on ID_wfsim\n", (int) (semval - i));
             //			fflush(stdout);
-            //sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[semindex]);
-            ImageStreamIO_semtrywait(&data.image[aoloopcontrol_var.aoconfID_wfsim], wfsim_semwaitindex);
+            //sem_trywait(data.image[ID_wfsim].semptr[semindex]);
+            ImageStreamIO_semtrywait(&data.image[ID_wfsim], wfsim_semwaitindex);
         }
 
 
@@ -832,31 +848,31 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
     slice = 0;
-    if(data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].naxis==3) // ring buffer
+    if(data.image[ID_wfsim].md[0].naxis==3) // ring buffer
     {
-        slice = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt1;
+        slice = data.image[ID_wfsim].md[0].cnt1;
         if(slice==-1)
-            slice = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[2];
+            slice = data.image[ID_wfsim].md[0].size[2];
     }
 
 	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
-    switch (aoloopcontrol_var.WFSatype) {
+    switch (WFSatype) {
 
     case _DATATYPE_FLOAT :
-        ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.F;
+        ptrv = (char*) data.image[ID_wfsim].array.F;
         ptrv += sizeof(float)*slice* sizeWFS; //AOconf[loop].WFSim.sizeWFS;
         memcpy(arrayftmp, ptrv,  sizeof(float)*sizeWFS); //AOconf[loop].WFSim.sizeWFS);
         break;
 
     case _DATATYPE_UINT16 :
-        ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.UI16;
+        ptrv = (char*) data.image[ID_wfsim].array.UI16;
         ptrv += sizeof(unsigned short)*slice* sizeWFS; //AOconf[loop].WFSim.sizeWFS;
         memcpy (arrayutmp, ptrv, sizeof(unsigned short)*sizeWFS); //AOconf[loop].WFSim.sizeWFS);
         break;
 
     case _DATATYPE_INT16 :
-        ptrv = (char*) data.image[aoloopcontrol_var.aoconfID_wfsim].array.SI16;
+        ptrv = (char*) data.image[ID_wfsim].array.SI16;
         ptrv += sizeof(signed short)*slice* sizeWFS; //AOconf[loop].WFSim.sizeWFS;
         memcpy (arraystmp, ptrv, sizeof(signed short)*sizeWFS); //AOconf[loop].WFSim.sizeWFS);
         break;
@@ -872,13 +888,13 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
     if(RM==0)
-        WFScnt = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0;
+        WFScnt = data.image[ID_wfsim].md[0].cnt0;
     else
-        WFScntRM = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0;
+        WFScntRM = data.image[ID_wfsim].md[0].cnt0;
 
 
     //   if(COMPUTE_PIXELSTREAMING==1) // multiple pixel groups
-    aoloopcontrol_var.PIXSTREAM_SLICE = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt1;
+    aoloopcontrol_var.PIXSTREAM_SLICE = data.image[ID_wfsim].md[0].cnt1;
 
 
 	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
@@ -937,7 +953,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         fflush(stdout);
 #endif
 
-        switch ( aoloopcontrol_var.WFSatype ) {
+        switch ( WFSatype ) {
 
 
         case _DATATYPE_UINT16 :
@@ -992,7 +1008,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         break;
         default :
             printf("ERROR: WFS data type not recognized\n File %s, line %d\n", __FILE__, __LINE__);
-            printf("datatype = %d\n", aoloopcontrol_var.WFSatype);
+            printf("datatype = %d\n", WFSatype);
             exit(0);
             break;
         }
