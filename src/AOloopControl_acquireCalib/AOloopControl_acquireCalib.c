@@ -1861,6 +1861,8 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
             else
                 IterNumber = 0; // start processing iterations
 
+			FileOK = 0; // do not process individual files
+
             AveStep ++;
             if(AveStep==NBave) {
                 AveStep = 0;
