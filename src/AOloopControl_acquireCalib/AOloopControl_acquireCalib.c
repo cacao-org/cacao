@@ -1252,6 +1252,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
+	printf("Writing poke timing to file ... ");
+	fflush(stdout);
+
     fp = fopen("./tmpRMacqu/RMpokeTiming.txt", "w");
     double ftime0 = pokeTime_sec[0] + 1.0e-9 * pokeTime_nsec[0];
     double ftime;
@@ -1261,6 +1264,10 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         ftime0 = ftime;
     }
     fclose(fp);
+    
+    printf("DONE\n");
+    fflush(stdout);
+    
 
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
