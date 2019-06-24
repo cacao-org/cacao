@@ -1629,20 +1629,21 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
                 int innercycle;
                 for(innercycle=0; innercycle < NBinnerCycleC; innercycle++)
                 {
+					float valA;
+					float valB;
+					
                     // Sum response
                     for(pix=0; pix<wfsxysize; pix++)
                     {
                         // pattern A
-                        data.image[IDrespC].array.F[wfsxysize*pokearray[poke] + pix] += 0.5*(data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
-
-                        data.image[IDrespC_A].array.F[wfsxysize*pokearray[poke] + pix] += 1.0*(data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
-                        
-                        
+                        valA = (data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
+                        data.image[IDrespC].array.F[wfsxysize*pokearray[poke] + pix] += 0.5*valA;
+                        data.image[IDrespC_A].array.F[wfsxysize*pokearray[poke] + pix] += 1.0*valA;
+                                                
                         // pattern B
-                        data.image[IDrespC].array.F[wfsxysize*pokearray[poke] + pix] += 0.5*pokesign[poke]*(data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
-                        
-                        data.image[IDrespC_B].array.F[wfsxysize*pokearray[poke] + pix] += 1.0*pokesign[poke]*(data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
-                        
+                        valB = pokesign[poke]*(data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
+                        data.image[IDrespC].array.F[wfsxysize*pokearray[poke] + pix] += 0.5*valB;
+                        data.image[IDrespC_B].array.F[wfsxysize*pokearray[poke] + pix] += 1.0*valB;                        
                     }
 
                     // Sum reference
