@@ -1583,10 +1583,10 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
             delete_image_ID(wfsresp2bname);
 
             sprintf(tmpfname, "tmpRMacqu/wfsresp2a.tstep%03d.iter%03d.fits", AveStep, IterNumber);
-            IDwfsresp2a = load_fits(tmpfname, wfsresp2aname, 2);
+            IDwfsresp2a = load_fits(tmpfname, wfsresp2aname, 1);
 
             sprintf(tmpfname, "tmpRMacqu/wfsresp2b.tstep%03d.iter%03d.fits", AveStep, IterNumber);
-            IDwfsresp2b = load_fits(tmpfname, wfsresp2bname, 2);
+            IDwfsresp2b = load_fits(tmpfname, wfsresp2bname, 1);
 
 
             sprintf(imnameout_respC, "%s.tstep%03d.iter%03d", IDrespC_name, AveStep, IterNumber);
