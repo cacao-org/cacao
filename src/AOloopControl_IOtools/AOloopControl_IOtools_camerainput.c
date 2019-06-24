@@ -584,7 +584,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 	static long long WFScntRM = 0;
 
 
-	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
     if(functionINIT == 0)
     {
@@ -607,7 +607,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     }
 
 
-	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 
 	if(wfsim_semwaitindex == -1)
@@ -620,7 +620,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     aoloopcontrol_var.WFSatype = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].datatype;
    
 
-	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
     // initialize camera averaging arrays if not already done
     if(avcamarraysInit==0)
@@ -646,7 +646,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         avcamarraysInit = 1;
     }
 
-	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
     if(InitSem==1)
     {   
@@ -656,7 +656,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             sem_trywait(data.image[aoloopcontrol_var.aoconfID_wfsim].semptr[wfsim_semwaitindex]);
     }
 
-	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 #ifdef _PRINT_TEST
     printf("TEST - SEMAPHORE INITIALIZED\n");
@@ -692,7 +692,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     // listening for counter or semaphore in wfsim
     // ***********************************************************************************************
 
-	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG;
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 #ifdef _PRINT_TEST
     printf("TEST - WAITING FOR IMAGE %s\n", data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].name);
@@ -797,6 +797,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     fflush(stdout);
 #endif
 
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
     if(data.processinfo==1)
         if(data.pinfo->MeasureTiming==1)
@@ -833,7 +834,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
             slice = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].size[2];
     }
 
-
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
     switch (aoloopcontrol_var.WFSatype) {
 
@@ -875,7 +876,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     aoloopcontrol_var.PIXSTREAM_SLICE = data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt1;
 
 
-
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 
 
@@ -910,7 +911,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 #endif
 
 
-
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 
 
@@ -1076,7 +1077,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
     }
 
-
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 
 
@@ -1101,7 +1102,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 #endif
 
 
-
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
 
     //
@@ -1203,7 +1204,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
 
-
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
 
     if( ((AOconf[loop].AOcompute.GPUall==0)&&(RM==0)) || (RM==1))  // normalize WFS image by totalinv
     {
@@ -1236,6 +1237,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     fflush(stdout);
 #endif
 
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
+	
     AOconf[loop].AOtiminginfo.statusM = 2;
     if(RM==0)
     {
@@ -1284,7 +1287,8 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
         imWaitTimeAve = imWaitTimeAve*(1.0-gain) + gain * tdiffv;
     }
 
-
+	AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGEXEC;
+	
     //TEST TIMING
     /*
     	// Total time
