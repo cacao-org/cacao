@@ -881,6 +881,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         // RE-ORDER POKE SEQUENCE
         // adjacent pairs are swapped between cycles
+        
+        printf("re-ordering poke sequence ... ");
+        fflush(stdout);
 
         if(SequInitMode & 0x02) {
             permut_offset ++;
@@ -903,6 +906,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 array_PokeSequ[index1] = tmpPokeMode;
             }
         }
+        
+        printf("DONE\n");
+        fflush(stdout);
 
 
         // INITIALIZE WITH FIRST POKE
@@ -1119,6 +1125,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         array_poke[imcnt] = 1;
 
 
+		printf("Combining results ... ");
+		fflush(stdout);
 
         for(AveStep = 0; AveStep < NBave; AveStep++) {
             for(PokeIndexMapped = 0; PokeIndexMapped < NBpoke ; PokeIndexMapped++) {
@@ -1133,6 +1141,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 }
             }
         }
+        
+        printf("DONE\n");
+        fflush(stdout);        
 
 
         AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
