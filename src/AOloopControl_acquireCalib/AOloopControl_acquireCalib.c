@@ -1571,6 +1571,10 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
             char wfsresp2aname[100];
             char wfsresp2bname[100];
             char tmpfname[500];
+            
+            
+            printf("Processing AveStep %3d  Iter %3d ...\n", AveStep, IterNumber);
+            fflush(stdout);
 
             sprintf(wfsresp2aname, "wfsresp2a.snap");
             sprintf(wfsresp2bname, "wfsresp2b.snap");
