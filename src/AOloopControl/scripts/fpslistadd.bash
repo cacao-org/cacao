@@ -44,8 +44,8 @@ fpsfname="${fpsname}-${fpsarg0}"
 
 echo "${fpsname}      aolcontrolDMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
 
-echo "setval AOCONF.DMxsize ${CACAO_DMxsize}" >> ${fpsCTRLfifo}
-echo "setval AOCONF.DMysize ${CACAO_DMxsize}" >> ${fpsCTRLfifo}
+echo "setval AOCONF.DMxsize ${CACAO_DMxsize}" >> ${FPSCONFFILE}
+echo "setval AOCONF.DMysize ${CACAO_DMxsize}" >> ${FPSCONFFILE}
 fi
 
 
