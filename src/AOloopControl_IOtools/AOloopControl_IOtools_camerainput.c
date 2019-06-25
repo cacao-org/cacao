@@ -439,10 +439,23 @@ static void *compute_function_dark_subtract( void *ptr )
     long threadindex;
     int semval;
 
-	long nelem;
-	int WFSatype;
+    long nelem;
+    int WFSatype;
 
-	// connect to imWFS0
+
+    // connect to WFS image
+    char WFSname[100];
+    sprintf(WFSname, "aol%ld_wfsim", loop);
+    long ID_wfsim = read_sharedmem_image(WFSname);
+    if(ID_wfsim == -1) {
+        printf("ERROR: cannot connect to WFS stream\n");
+        exit(0);
+    }
+
+    WFSatype = data.image[ID_wfsim].md[0].datatype;
+
+
+    // connect to imWFS0
     char sname[100];
     sprintf(sname, "aol%ld_imWFS0", LOOPNUMBER);
     long ID_imWFS0 = read_sharedmem_image(sname);
@@ -451,10 +464,14 @@ static void *compute_function_dark_subtract( void *ptr )
         exit(0);
     }
 
-	nelem = data.image[ID_imWFS0].md[0].size[0]*data.image[ID_imWFS0].md[0].size[1];
-	WFSatype = data.image[ID_imWFS0].md[0].datatype;
+    nelem = data.image[ID_imWFS0].md[0].size[0]*data.image[ID_imWFS0].md[0].size[1];
 
-    
+
+
+    WFSatype = data.image[ID_wfsim].md[0].datatype;
+
+
+
     index = (long*) ptr;
     threadindex = *index;
 
@@ -480,7 +497,7 @@ static void *compute_function_dark_subtract( void *ptr )
             break;
         case _DATATYPE_INT16 :
             for(ii=iistart; ii<iiend; ii++)
-                data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);// - data.image[Average_cam_frames_IDdark].array.F[ii];
+                data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
             break;
         case _DATATYPE_FLOAT :
             for(ii=iistart; ii<iiend; ii++)
