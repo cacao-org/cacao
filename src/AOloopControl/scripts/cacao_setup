@@ -473,7 +473,10 @@ echo "${LOOPNUMBER}" > ${WORKDIR}/LOOPNUMBER
 ./${LOOPNAME}.fpslistadd.bash
 
 
+echo "cp fpslist.txt ${WORKDIR}"
 cp fpslist.txt ${WORKDIR}
+exit
+
 
 cd $WORKDIR
 # update WORKDIR to full path
