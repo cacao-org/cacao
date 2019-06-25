@@ -170,11 +170,8 @@ if [ -f "./fpscmd/fpsconfstopscript" ]; then
 ./fpscmd/fpsconfstopscript    # stop FPS CONF process(es)
 fi
 
-tmux kill-session -t DMcomb-${DMINDEX}-conf
-tmux kill-session -t DMcomb-${DMINDEX}-run
+
 tmux kill-session -t ${fpsCTRLtmuxname}
-
-
 
 cd ${CURRDIR}
 
@@ -182,15 +179,18 @@ cd ${CURRDIR}
 
 
 
+
 function fpssetparamconf {
 
 echo ""
 echo "FIFO: ${fpsCTRLfifo}"
-cp ${CURRDIR}/${fpsSETPARAMCONFfile} fpssetup.setval.conf
+
+cat ${CURRDIR}/${fpsSETPARAMCONFfile} ${CURRDIR}/fpssetup.setval.conf > fpssetup.setval.combined.conf
+
 while IFS='' read -r line || [[ -n "$line" ]]; do
     echo "$line"
     echo "$line" >> ${fpsCTRLfifo}
-done < fpssetup.setval.conf
+done < fpssetup.setval.combined.conf
 
 }
 
