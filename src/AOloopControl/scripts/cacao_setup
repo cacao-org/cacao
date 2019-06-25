@@ -564,13 +564,16 @@ sleep 1
 # ========= INIT SETTINGS IMPORTED FROM CONF FILE ===================================
 # ===================================================================================
 
-
 fpssetparamconf
 
 
 
 
-
+mkdir fpsconf
+mkdir fpsconf/AOCONF
+echo "${CACAO_DMINDEX}" > ./fpsconf/AOCONF/DMindex.setval.txt
+echo "${CACAO_DMxsize}" > ./fpsconf/AOCONF/DMxsize.setval.txt
+echo "${CACAO_DMysize}" > ./fpsconf/AOCONF/DMysize.setval.txt
 
 
 
