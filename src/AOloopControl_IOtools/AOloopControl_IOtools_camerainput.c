@@ -445,7 +445,7 @@ static void *compute_function_dark_subtract( void *ptr )
 
     // connect to WFS image
     char WFSname[100];
-    sprintf(WFSname, "aol%ld_wfsim", loop);
+    sprintf(WFSname, "aol%ld_wfsim", LOOPNUMBER);
     long ID_wfsim = read_sharedmem_image(WFSname);
     if(ID_wfsim == -1) {
         printf("ERROR: cannot connect to WFS stream\n");
