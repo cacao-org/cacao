@@ -475,7 +475,6 @@ echo "${LOOPNUMBER}" > ${WORKDIR}/LOOPNUMBER
 
 echo "cp fpslist.txt ${WORKDIR}"
 cp fpslist.txt ${WORKDIR}
-exit
 
 
 cd $WORKDIR
