@@ -175,9 +175,8 @@ echo ""
 # READ REQUIRED PARAMETERS
 ##########################################
 
-#ConfReadParam DMindex "00"; DMindex="$paramvalue" # DM index 
-
-DMindex=$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{printf("%02d",$1);}' )
+DMindex="$CACAO_DMINDEX"
+#$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{printf("%02d",$1);}' )
 
 
 
