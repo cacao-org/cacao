@@ -3,10 +3,6 @@
  * @brief   Adaptive Optics Control loop engine I/O tools
  * 
  * AO engine uses stream data structure
- *  
- * @author  O. Guyon
- * @date    22 Aug 2017
- *
  * 
  * @bug No known bugs.
  * 

@@ -440,7 +440,7 @@ static void *compute_function_dark_subtract( void *ptr )
     int semval;
 
 	long nelem;
-	
+	int WFSatype;
 
 	// connect to imWFS0
     char sname[100];
@@ -452,7 +452,7 @@ static void *compute_function_dark_subtract( void *ptr )
     }
 
 	nelem = data.image[ID_imWFS0].md[0].size[0]*data.image[ID_imWFS0].md[0].size[1];
-
+	WFSatype = data.image[ID_imWFS0].md[0].datatype;
 
     
     index = (long*) ptr;
@@ -473,7 +473,7 @@ static void *compute_function_dark_subtract( void *ptr )
     {
         sem_wait(&AOLCOMPUTE_DARK_SUBTRACT_sem_name[threadindex]);
 
-        switch ( aoloopcontrol_var.WFSatype ) {
+        switch ( WFSatype ) {
         case _DATATYPE_UINT16 :
             for(ii=iistart; ii<iiend; ii++)
                 data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
@@ -653,15 +653,15 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     // initialize camera averaging arrays if not already done
     if(avcamarraysInit==0)
     {
-        arrayftmp = (float*)          malloc(sizeof(float) *          sizeWFS);  //AOconf[loop].WFSim.sizeWFS);
-        arrayutmp = (unsigned short*) malloc(sizeof(unsigned short) * sizeWFS);  //AOconf[loop].WFSim.sizeWFS);
-        arraystmp = (signed short*)   malloc(sizeof(signed short) *   sizeWFS);  //AOconf[loop].WFSim.sizeWFS);
+        arrayftmp = (float*)          malloc(sizeof(float) *          sizeWFS);  
+        arrayutmp = (unsigned short*) malloc(sizeof(unsigned short) * sizeWFS); 
+        arraystmp = (signed short*)   malloc(sizeof(signed short) *   sizeWFS);  
 
         if(sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
         Average_cam_frames_IDdark = image_ID(Average_cam_frames_dname);
-        Average_cam_frames_nelem = sizeWFS; //AOconf[loop].WFSim.sizeWFS;
+        Average_cam_frames_nelem = sizeWFS; 
 
         // set semaphore to 0
         sem_getvalue(data.image[ID_wfsim].semptr[semindex], &semval);
