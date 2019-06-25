@@ -141,7 +141,7 @@ fpsfname="${fpsname}-${fpsarg0}"
 echo "${fpsname}           aoltestlat     ${fpsarg0}" >> fpslist.txt
 
 echo "setval ${fpsfname}.sn_dm aol${CACAO_LOOPNUMBER}_dmRM" >> ${FPSCONFFILE}
-echo "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_linsimWFS" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_wfsim" >> ${FPSCONFFILE}
 fi
 
 
