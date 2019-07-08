@@ -192,7 +192,8 @@ function fpssetparamconf {
 echo ""
 echo "FIFO: ${fpsCTRLfifo}"
 
-cat ${CURRDIR}/${fpsSETPARAMCONFfile} ${CURRDIR}/fpssetup.setval.conf > fpssetup.setval.combined.conf
+rm fpssetup.setval.combined.conf
+cat ${CURRDIR}/fpssetup.setval.conf ${CURRDIR}/${fpsSETPARAMCONFfile} > fpssetup.setval.combined.conf
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
     echo "$line"
@@ -358,7 +359,8 @@ fi
 
 
 
-
+# ============ CREATE GENERAL PURPOSE TMUX SESSION ============
+tmux new -d -s cacao-${CACAO_LOOPNAME}
 
 
 
@@ -465,6 +467,8 @@ echo "${LOOPNUMBER}" > ${WORKDIR}/LOOPNUMBER
 
 # create local fpslist.txt (to be moved to work directory)
 
+rm fpslist.txt
+touch fpslist.txt
 
 # Write in this file FPS-compatible processes that will be used
 # col1: FPS name as it should appear in FPS
@@ -557,6 +561,8 @@ tmux send-keys -t ${fpsCTRLtmuxname} "fpsCTRL -f ${fpsCTRLfifo}" C-m
 # give time to fpsCTRL to process above commands
 sleep 1
 
+# build sym link to output log
+echo "logsymlink ${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}" >> ${fpsCTRLfifo}
 
 
 
