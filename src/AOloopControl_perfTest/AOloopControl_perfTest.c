@@ -2241,7 +2241,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
 
-                        if((datfile[NBdatFiles].tstart < tend)&&(datfile[NBdatFiles].tend > tstart))
+                        if( (datfile[NBdatFiles].tstart < tend) && (datfile[NBdatFiles].tend > tstart) && (datfile[NBdatFiles].cnt>0) )
                             NBdatFiles++;
                     }
 
