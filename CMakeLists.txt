@@ -234,6 +234,11 @@ ${CMAKE_THREAD_LIBS_INIT}
 )
 
 
+if(USE_CUDA)
+target_link_libraries (cacao PUBLIC ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
+set(BUILD_FLAGS "${BUILD_FLAGS} -DHAVE_CUDA" )
+endif(USE_CUDA)
+
 
 if(USE_MAGMA)
 target_link_libraries (cacao PUBLIC ${MAGMA_LIBRARIES})
