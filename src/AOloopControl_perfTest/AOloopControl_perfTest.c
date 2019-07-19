@@ -2969,8 +2969,8 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
         for(ii=0; ii<xsize0; ii++)
             for(jj=0; jj<ysize0; jj++)
             {
-                data.image[IDsim0pair0].array.F[pair*ysize0*xsize0*2+jj*xsize0+ii] = data.image[IDstream0].array.F[k1*xysize0+ii];
-                data.image[IDsim0pair0].array.F[pair*ysize0*xsize0*2+jj*xsize0+ii+xsize0] = data.image[IDstream0].array.F[k2*xysize0+ii];
+                data.image[IDsim0pair0].array.F[pair*ysize0*xsize0*2+jj*xsize0+ii] = data.image[IDstream0].array.F[k1*xysize0 + xsize0*jj +ii];
+                data.image[IDsim0pair0].array.F[pair*ysize0*xsize0*2+jj*xsize0+ii+xsize0] = data.image[IDstream0].array.F[k2*xysize0+ xsize0*jj+ii];
             }
 
         for(ii=0; ii<xsize1; ii++)
@@ -3004,8 +3004,8 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
         for(ii=0; ii<xsize0; ii++)
             for(jj=0; jj<ysize0; jj++)
             {
-                data.image[IDsim1pair0].array.F[pair*ysize0*xsize0*2+jj*xsize0+ii] = data.image[IDstream0].array.F[k1*xysize0+ii];
-                data.image[IDsim1pair0].array.F[pair*ysize0*xsize0*2+jj*xsize0+ii+xsize0] = data.image[IDstream0].array.F[k2*xysize0+ii];
+                data.image[IDsim1pair0].array.F[pair*ysize0*xsize0*2+jj*xsize0+ii] = data.image[IDstream0].array.F[k1*xysize0 + xsize0*jj + ii];
+                data.image[IDsim1pair0].array.F[pair*ysize0*xsize0*2+jj*xsize0+ii+xsize0] = data.image[IDstream0].array.F[k2*xysize0+ xsize0*jj + ii];
             }
 
         for(ii=0; ii<xsize1; ii++)
