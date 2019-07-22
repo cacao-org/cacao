@@ -2759,31 +2759,33 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
     long NBselected
 )
 {
-    long IDstream0;
-    long IDstream1;
-    long IDsimM0;
-    long IDsimM1;
+    uint32_t IDstream0;
+    uint32_t IDstream1;
+    uint32_t IDsimM0;
+    uint32_t IDsimM1;
 
-    long NBpairMax;
+    uint64_t NBpairMax;
 
     // similarity pairs extracted from stream0
-    long *sim0pair_k1;
-    long *sim0pair_k2;
+    unsigned long *sim0pair_k1;
+    unsigned long *sim0pair_k2;
     double *sim0pair_val;
 
     // similarity pairs extracted from stream1
-    long *sim1pair_k1;
-    long *sim1pair_k2;
+    unsigned long *sim1pair_k1;
+    unsigned long *sim1pair_k2;
     double *sim1pair_val;
 
-    long xsize0, ysize0, NBframe0, xysize0;
-    long xsize1, ysize1, NBframe1, xysize1;
-    long k1, k2;
-    long paircnt;
+    uint32_t xsize0, ysize0;
+    unsigned long NBframe0, xysize0;
+    uint32_t xsize1, ysize1;
+    unsigned long NBframe1, xysize1;
+    unsigned long k1, k2;
+    unsigned long paircnt;
 
 
     // ouput
-    long pair;
+    unsigned long pair;
     FILE *fpout0;
     FILE *fpout1;
 
@@ -2809,7 +2811,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
 
     // a few checks before proceeding
-    if(NBframe0!=NBframe1)
+    if(NBframe0 != NBframe1)
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != NBframe1 (%ld)\n", __FILE__, __FUNCTION__, __LINE__, NBframe0, NBframe1);
         exit(0);
@@ -2850,12 +2852,12 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
     NBpairMax = data.image[IDsimM0].md[0].size[0]*(data.image[IDsimM0].md[0].size[0]-1)/2;
 
-    sim0pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
-    sim0pair_k2 = (long*) malloc(sizeof(long)*NBpairMax);
+    sim0pair_k1 = (unsigned long*) malloc(sizeof(unsigned long)*NBpairMax);
+    sim0pair_k2 = (unsigned long*) malloc(sizeof(unsigned long)*NBpairMax);
     sim0pair_val = (double*) malloc(sizeof(double)*NBpairMax);
 
-    sim1pair_k1 = (long*) malloc(sizeof(long)*NBpairMax);
-    sim1pair_k2 = (long*) malloc(sizeof(long)*NBpairMax);
+    sim1pair_k1 = (unsigned long*) malloc(sizeof(unsigned long)*NBpairMax);
+    sim1pair_k2 = (unsigned long*) malloc(sizeof(unsigned long)*NBpairMax);
     sim1pair_val = (double*) malloc(sizeof(double)*NBpairMax);
 
 
@@ -2863,7 +2865,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
     for(k1=0; k1<NBframe0; k1++)
         for(k2=0; k2<k1; k2++)
         {
-            if((k1-k2)>dtmin)
+            if( (k1-k2) > dtmin )
             {
                 if(paircnt > NBpairMax-1)
                 {
@@ -2887,8 +2889,8 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
 
 
-    quick_sort3ll_double(sim0pair_val, sim0pair_k1, sim0pair_k2, paircnt);
-    quick_sort3ll_double(sim1pair_val, sim1pair_k1, sim1pair_k2, paircnt);
+    quick_sort3ulul_double(sim0pair_val, sim0pair_k1, sim0pair_k2, paircnt);
+    quick_sort3ulul_double(sim1pair_val, sim1pair_k1, sim1pair_k2, paircnt);
     mediansim0 = sim0pair_val[paircnt/2];
     mediansim1 = sim1pair_val[paircnt/2];
 
@@ -2934,7 +2936,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
             if((k1-k2)>dtmin)
             {
                 float x, y;
-                long ii, jj;
+                unsigned long ii, jj;
 
                 x = data.image[IDsimM0].array.F[k1*NBframe0+k2] / mediansim0;
                 y = data.image[IDsimM1].array.F[k1*NBframe1+k2] / mediansim1;
@@ -2956,7 +2958,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
     for(pair=0; pair<NBselected; pair++)
     {
-        long ii, jj;
+        unsigned long ii, jj;
 
         k1 = sim0pair_k1[pair];
         k2 = sim0pair_k2[pair];
@@ -2993,7 +2995,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
     for(pair=0; pair<NBselected; pair++)
     {
-        long ii, jj;
+        unsigned long ii, jj;
 
         k1 = sim1pair_k1[pair];
         k2 = sim1pair_k2[pair];
