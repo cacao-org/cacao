@@ -2420,7 +2420,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             qs_double(dtarray, 0, datfile[i].cnt-1);
             dtmedian = dtarray[(datfile[i].cnt-1)/2];
             printf("   dtmedian = %10.3f us\n", 1.0e6*dtmedian);
-            ffush(stdout);
+            fflush(stdout);
 
             // we assume here that every frame has the same exposure time, with 100% duty cycle
             for(j=0; j<datfile[i].cnt; j++)
