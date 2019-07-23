@@ -84,12 +84,27 @@ Unless you have a separate install of milk on your system, a symbolic link to mi
 sudo ln -s /usr/local/bin/cacao /usr/local/bin/milk
 ```
 
+Create local bin directory and sym links to all cacao- scripts:
+```bash
+mkdir bin
+cd bin
+find /home/scexao/src/cacao/ -executable -type f -name "milk-*" -print0 | xargs -0 -I {} ln -s {} .
+find /home/scexao/src/cacao/ -executable -type f -name "cacao-*" -print0 | xargs -0 -I {} ln -s {} .
+```
+
 Add milk and cacao executable scripts to PATH environment variable. Add this line to the .bashrc file (change source code location as needed):
 ```bash
+export PATH=$PATH:/home/myname/src/cacao/bin
 export PATH=$PATH:/home/myname/src/cacao/src/CommandLineInterface/scripts
 export PATH=$PATH:/home/myname/src/cacao/src/AOloopControl/scripts
 ```
 
+OPTIONAL: Create tmpfs disk for high performance I/O:
+```bash
+echo "tmpfs /milk/shm tmpfs rw,nosuid,nodev" | sudo tee -a /etc/fstab
+sudo mkdir -p /milk/shm
+sudo mount /milk/shm
+```
 
 ---
 
