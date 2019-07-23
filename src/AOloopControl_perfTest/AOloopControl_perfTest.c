@@ -2795,19 +2795,29 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
 
     IDstream0 = image_ID(IDname_stream0);
-    IDstream1 = image_ID(IDname_stream1);
-    IDsimM0 = image_ID(IDname_simM0);
-    IDsimM1 = image_ID(IDname_simM1);
-
     xsize0 = data.image[IDstream0].md[0].size[0];
     ysize0 = data.image[IDstream0].md[0].size[1];
     xysize0 = xsize0*ysize0;
     NBframe0 = data.image[IDstream0].md[0].size[2];
-
+    
+    NBpairMax = (unsigned long long) NBframe0; //data.image[IDsimM0].md[0].size[0];
+    NBpairMax *= (unsigned long long) (NBframe0-1)/2;
+	printf("NBpairMax = %llu x %llu =  %llu\n", (unsigned long long) NBframe0, (unsigned long long) (NBframe0-1)/2, NBpairMax);
+	    
+        
+    IDstream1 = image_ID(IDname_stream1);
     xsize1 = data.image[IDstream1].md[0].size[0];
     ysize1 = data.image[IDstream1].md[0].size[1];
     xysize1 = xsize1*ysize1;
     NBframe1 = data.image[IDstream1].md[0].size[2];
+
+
+    IDsimM0 = image_ID(IDname_simM0);
+    IDsimM1 = image_ID(IDname_simM1);
+
+
+
+
 
 
     // a few checks before proceeding
@@ -2850,10 +2860,6 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
 
 
-    NBpairMax = (unsigned long long) data.image[IDsimM0].md[0].size[0];
-    NBpairMax *= (unsigned long long) (data.image[IDsimM0].md[0].size[0]-1)/2;
-	printf("NBpairMax = %llu x %llu =  %llu\n", (unsigned long long) data.image[IDsimM0].md[0].size[0], (unsigned long long) (data.image[IDsimM0].md[0].size[0]-1)/2, NBpairMax);
-	
 
     sim0pair_k1 = (unsigned long*) malloc(sizeof(unsigned long)*NBpairMax);
     sim0pair_k2 = (unsigned long*) malloc(sizeof(unsigned long)*NBpairMax);
