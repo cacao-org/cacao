@@ -2346,8 +2346,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             long j;
 
             sprintf(fname, "%s/%s.dat", datadirstream, datfile[i].name);
-            printf("fname = %s\n", fname);
-            fflush(stdout);
+
 
             if((fp = fopen(fname, "r"))==NULL)
             {
@@ -2358,6 +2357,10 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                     exit(0);
                 }
             }
+
+            printf("READING file \"%s\" ...", fname);
+            fflush(stdout);
+
 
 
             int scanOK = 1;
@@ -2387,19 +2390,21 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
 
 
-/*
-            for(j=0; j<datfile[i].cnt; j++)
-            {
-                if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
-                {
-                    printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
-                    exit(0);
-                }
-                else
-                    intarray_end[j] = valf2;
-            }*/
+            /*
+                        for(j=0; j<datfile[i].cnt; j++)
+                        {
+                            if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1, &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
+                            {
+                                printf("fscanf error, %s line %d\n", __FILE__, __LINE__);
+                                exit(0);
+                            }
+                            else
+                                intarray_end[j] = valf2;
+                        }*/
             fclose(fp);
 
+            printf(" %ld lines processed\n", j);
+            fflush(stdout);
 
 
 
@@ -2903,7 +2908,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
     printf("Done\n");
     fflush(stdout);
     
-	printf("Running quicksort sim0 (%llu elements) ... ", paircnt);
+	printf("Running quicksort sim1 (%llu elements) ... ", paircnt);
 	fflush(stdout);    
     quick_sort3ulul_double(sim1pair_val, sim1pair_k1, sim1pair_k2, (long) paircnt);
     printf("Done\n");
