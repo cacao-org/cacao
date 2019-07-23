@@ -2850,8 +2850,9 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
 
 
-    NBpairMax = data.image[IDsimM0].md[0].size[0]*(data.image[IDsimM0].md[0].size[0]-1)/2;
-	printf("NBpairMax = %lld\n", NBpairMax);
+    NBpairMax = (unsigned long long) data.image[IDsimM0].md[0].size[0];
+    NBpairMax *= (unsigned long long) (data.image[IDsimM0].md[0].size[0]-1)/2;
+	printf("NBpairMax = %llu x %llu =  %llu\n", (unsigned long long) data.image[IDsimM0].md[0].size[0], (unsigned long long) (data.image[IDsimM0].md[0].size[0]-1)/2, NBpairMax);
 	
 
     sim0pair_k1 = (unsigned long*) malloc(sizeof(unsigned long)*NBpairMax);
@@ -2871,7 +2872,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
             {
                 if(paircnt > NBpairMax-1)
                 {
-                    printf("[%s] [%s] [%d]  ERROR: paircnt (%lld) >= NBpairMax (%lld)\n", __FILE__, __FUNCTION__, __LINE__, paircnt, NBpairMax);
+                    printf("[%s] [%s] [%d]  ERROR: paircnt (%llu) >= NBpairMax (%llu)\n", __FILE__, __FUNCTION__, __LINE__, paircnt, NBpairMax);
                     printf("NBframe0 = %ld\n", NBframe0);
 
                     exit(0);
