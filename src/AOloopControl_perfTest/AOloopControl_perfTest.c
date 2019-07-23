@@ -2417,7 +2417,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             double dtmedian;
             printf("Sorting %ld interval values ...", datfile[i].cnt-1);
             fflush(stdout);
-            qs_double(dtarray, 0, datfile[i].cnt-1);
+            qs_double(dtarray, 0, (unsigned long) (datfile[i].cnt-1));
             dtmedian = dtarray[(datfile[i].cnt-1)/2];
             printf("   dtmedian = %10.3f us\n", 1.0e6*dtmedian);
             fflush(stdout);
