@@ -2897,15 +2897,15 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
         }
 
 
-	printf("Running quicksort sim0 (%lu elements) ... ", paircnt);
+	printf("Running quicksort sim0 (%llu elements) ... ", paircnt);
 	fflush(stdout);
-    quick_sort3ulul_double(sim0pair_val, sim0pair_k1, sim0pair_k2, paircnt);
+    quick_sort3ulul_double(sim0pair_val, sim0pair_k1, sim0pair_k2, (long) paircnt);
     printf("Done\n");
     fflush(stdout);
     
-	printf("Running quicksort sim0 (%lu elements) ... ", paircnt);
+	printf("Running quicksort sim0 (%llu elements) ... ", paircnt);
 	fflush(stdout);    
-    quick_sort3ulul_double(sim1pair_val, sim1pair_k1, sim1pair_k2, paircnt);
+    quick_sort3ulul_double(sim1pair_val, sim1pair_k1, sim1pair_k2, (long) paircnt);
     printf("Done\n");
     fflush(stdout);
     
