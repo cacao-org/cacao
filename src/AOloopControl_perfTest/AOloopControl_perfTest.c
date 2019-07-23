@@ -2764,7 +2764,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
     uint32_t IDsimM0;
     uint32_t IDsimM1;
 
-    uint64_t NBpairMax;
+    unsigned long long NBpairMax;
 
     // similarity pairs extracted from stream0
     unsigned long *sim0pair_k1;
@@ -2781,7 +2781,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
     uint32_t xsize1, ysize1;
     unsigned long NBframe1, xysize1;
     unsigned long k1, k2;
-    unsigned long paircnt;
+    unsigned long long paircnt;
 
 
     // ouput
@@ -2851,6 +2851,8 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
 
 
     NBpairMax = data.image[IDsimM0].md[0].size[0]*(data.image[IDsimM0].md[0].size[0]-1)/2;
+	printf("NBpairMax = %lld\n", NBpairMax);
+	
 
     sim0pair_k1 = (unsigned long*) malloc(sizeof(unsigned long)*NBpairMax);
     sim0pair_k2 = (unsigned long*) malloc(sizeof(unsigned long)*NBpairMax);
@@ -2869,7 +2871,7 @@ int AOloopControl_perfTest_StatAnalysis_2streams(
             {
                 if(paircnt > NBpairMax-1)
                 {
-                    printf("[%s] [%s] [%d]  ERROR: paircnt (%ld) >= NBpairMax (%ld)\n", __FILE__, __FUNCTION__, __LINE__, paircnt, NBpairMax);
+                    printf("[%s] [%s] [%d]  ERROR: paircnt (%lld) >= NBpairMax (%lld)\n", __FILE__, __FUNCTION__, __LINE__, paircnt, NBpairMax);
                     printf("NBframe0 = %ld\n", NBframe0);
 
                     exit(0);
