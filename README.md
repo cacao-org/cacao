@@ -92,19 +92,20 @@ find /home/scexao/src/cacao/ -executable -type f -name "milk-*" -print0 | xargs 
 find /home/scexao/src/cacao/ -executable -type f -name "cacao-*" -print0 | xargs -0 -I {} ln -s {} .
 ```
 
-Add milk and cacao executable scripts to PATH environment variable. Add this line to the .bashrc file (change source code location as needed):
+Add milk and cacao executable scripts to PATH environment variable. Add this line to the .bashrc or .profile file (change source code location as needed):
 ```bash
+export CACAO_ROOT=/home/myname/src/cacao
 export PATH=$PATH:/home/myname/src/cacao/bin
 export PATH=$PATH:/home/myname/src/cacao/src/CommandLineInterface/scripts
 export PATH=$PATH:/home/myname/src/cacao/src/AOloopControl/scripts
 ```
 
 OPTIONAL: Create tmpfs disk for high performance I/O:
-```bash
-echo "tmpfs /milk/shm tmpfs rw,nosuid,nodev" | sudo tee -a /etc/fstab
-sudo mkdir -p /milk/shm
-sudo mount /milk/shm
-```
+
+    echo "tmpfs /milk/shm tmpfs rw,nosuid,nodev" | sudo tee -a /etc/fstab
+    sudo mkdir -p /milk/shm
+    sudo mount /milk/shm
+
 
 ---
 
@@ -113,10 +114,11 @@ sudo mount /milk/shm
 
 All functions are accessible from the command line interface (CLI). Enter the CLI and type "help" for instructions.
 
-```bash
-cacao
-```
+    cacao
 
+To set up a cacao AO loop, use the cacao-setup script. Consult help with :
+
+    cacao-setup -h
 
 
 ---
