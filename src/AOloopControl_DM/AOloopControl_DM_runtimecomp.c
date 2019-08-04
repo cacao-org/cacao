@@ -330,6 +330,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
 
     // RUN UPDATE LOOP
     while(loopstatus == 1) {
+		
         if(function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) { // if update needed
             // here goes the logic
             if(fps.parray[fp_dm2dm_mode].fpflag & FPFLAG_ONOFF) {   // ON state
@@ -362,9 +363,11 @@ int AOloopControl_DM_CombineChannels_FPCONF(
             if(fps.parray[fp_voltmode].fpflag & FPFLAG_ONOFF) {  // ON state
                 fps.parray[fp_voltname].fpflag |= FPFLAG_USED;
                 fps.parray[fp_voltname].fpflag |= FPFLAG_VISIBLE;
+                fps.parray[fp_voltname].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
             } else { // OFF state
                 fps.parray[fp_voltname].fpflag &= ~FPFLAG_USED;
                 fps.parray[fp_voltname].fpflag &= ~FPFLAG_VISIBLE;
+                fps.parray[fp_voltname].fpflag &= ~FPFLAG_STREAM_RUN_REQUIRED;
             }
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
@@ -472,7 +475,6 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
 
-
     AOLOOPCONTROL_DM_LOGEXEC;
 
     FUNCTION_PARAMETER_STRUCT fps;
@@ -481,6 +483,8 @@ int AOloopControl_DM_CombineChannels_RUN(
         printf("ERROR: fps \"%s\" does not exist -> Cannot run\n", fpsname);
         return EXIT_FAILURE;
     }
+
+
 
 
     // GET FUNCTION PARAMETER VALUES
@@ -527,6 +531,11 @@ int AOloopControl_DM_CombineChannels_RUN(
     // STATUS
     long *addr_loopcnt = functionparameter_GetParamPtr_INT64(&fps, ".status.loopcnt");
 
+
+
+	printf("%5d - enter function\n", __LINE__);
+	fflush(stdout);
+	sleep(1);
 
 
     AOLOOPCONTROL_DM_LOGEXEC;
