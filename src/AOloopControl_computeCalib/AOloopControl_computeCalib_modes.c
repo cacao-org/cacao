@@ -4,9 +4,6 @@
  * 
  * AO engine uses stream data structure
  *  
- * @author  O. Guyon
- * @date    26 Dec 2017
- *
  * 
  * @bug No known bugs.
  * 
@@ -126,7 +123,20 @@ long aoconfID_imWFS2_active[100];
  *
  */
 
-long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yc, double r0, double r1, int MaskMode, int BlockNB, float SVDlim)
+long AOloopControl_computeCalib_mkModes(
+    const char *ID_name,
+    long msizex,
+    long msizey,
+    float CPAmax,
+    float deltaCPA,
+    double xc,
+    double yc,
+    double r0,
+    double r1,
+    int MaskMode,
+    int BlockNB,
+    float SVDlim
+)
 {
     FILE *fp;
     long ID = -1;
@@ -149,7 +159,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
 
     long MBLOCK_NBmode[MAX_MBLOCK]; // number of blocks
     long MBLOCK_ID[MAX_MBLOCK];
-//    long MBLOCK_IDwfs[MAX_MBLOCK];
+    //    long MBLOCK_IDwfs[MAX_MBLOCK];
     float MBLOCK_CPA[MAX_MBLOCK];
 
 
@@ -170,7 +180,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
 
     long iter;
 
-	long IDmask;
+    long IDmask;
 
     long IDzrespM;
     long wfsxsize, wfsysize, wfssize;
@@ -375,7 +385,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
         {
             long IDmaskRMin;
             long IDmaskRMedge;
-            
+
 
             // AOloopControl_mkloDMmodes(ID_name, msizex, msizey, CPAmax, deltaCPA, xc, yc, r0, r1, MaskMode);
             //NBZ = 5; /// 3: tip, tilt, focus
@@ -433,7 +443,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
 
             for(k=0; k<data.image[ID0].md[0].size[2]-1+NBZ; k++)
             {
-				
+
                 // set RMS = 1 over mask
                 rms = 0.0;
                 for(ii=0; ii<msizex*msizey; ii++)
@@ -506,7 +516,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
                     data.image[ID].array.F[k*msizex*msizey+ii] /= rms;
             }
             fclose(fp);
-			printf("\n");
+            printf("\n");
 
 
             if(MaskMode==1)
@@ -555,7 +565,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
             for(ii=0; ii<msizex*msizey; ii++)
             {
                 data.image[IDmask].array.F[ii] = 1.0 - (1.0-data.image[IDmaskRM].array.F[ii])*(1.0-data.image[IDslaved].array.F[ii]);
-            //    data.image[IDmask].array.F[ii] = 1.0 - (1.0-data.image[IDslaved].array.F[ii]);
+                //    data.image[IDmask].array.F[ii] = 1.0 - (1.0-data.image[IDslaved].array.F[ii]);
                 if(data.image[IDmask].array.F[ii]>1.0)
                     data.image[IDmask].array.F[ii] = 1.0;
             }
@@ -935,7 +945,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
             MBLOCK_NBmode[mblock] = 0;
 
 
-		ID = image_ID("fmodes");
+        ID = image_ID("fmodes");
         for(m=0; m<data.image[ID].md[0].size[2]; m++)
         {
             long mblock1;
@@ -994,9 +1004,9 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
             if(sprintf(imname, "fmodes0_%02ld", mblock) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-			//TEST
-			//sprintf(fname, "!./mkmodestmp/fmodes0_%02ld.fits", mblock);
-			//save_fits(imname, fname);
+            //TEST
+            //sprintf(fname, "!./mkmodestmp/fmodes0_%02ld.fits", mblock);
+            //save_fits(imname, fname);
 
             printf("SVD decomp ... (%ld) .... ", (long) data.image[image_ID(imname)].md[0].size[2]);
             fflush(stdout);
@@ -1008,7 +1018,7 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
             float svdcoeff0 = data.image[IDSVDcoeff].array.F[0];
             for(m=0; m<data.image[IDSVDcoeff].md[0].size[0]; m++)
             {
-				//printf("( %ld -> %g )\n", m, data.image[IDSVDcoeff].array.F[m]);
+                //printf("( %ld -> %g )\n", m, data.image[IDSVDcoeff].array.F[m]);
                 if(data.image[IDSVDcoeff].array.F[m] > SVDlim00*svdcoeff0)
                     cnt++;
             }
@@ -1178,12 +1188,12 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
 
 
 
-		// TRUCATE NUMBER OF BLOCKS TO LAST NON-ZERO SIZED BLOCK
-		for(mblock=0; mblock<NBmblock; mblock++)
-		{
-			if( MBLOCK_NBmode[mblock] == 0 )
-				NBmblock = mblock;
-		}
+        // TRUCATE NUMBER OF BLOCKS TO LAST NON-ZERO SIZED BLOCK
+        for(mblock=0; mblock<NBmblock; mblock++)
+        {
+            if( MBLOCK_NBmode[mblock] == 0 )
+                NBmblock = mblock;
+        }
 
 
 
@@ -1809,8 +1819,8 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
 
         for(mblock=0; mblock<NBmblock; mblock++)
         {
-			long IDmask;
-			
+            long IDmask;
+
             if(BlockNB>-1) // LOAD & VERIFY SIZE
             {
                 if(sprintf(imname1, "fmodesWFS1_%02ld", mblock) < 1)
@@ -1842,9 +1852,9 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
 
             if((BlockNB<0)||(BlockNB==mblock))
             {
-				char command[1000];
-                
-                
+                char command[1000];
+
+
                 if(sprintf(command, "echo \"%f\" > ./conf_staged/block%02ld_SVDlim.txt", SVDlim, mblock) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
@@ -2144,11 +2154,11 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
         save_fits("fmodesWFSall", "!./mkmodestmp/fmodesWFSall.fits");
 
 
-		fp = fopen("./mkmodestmp/NBmodes.txt", "w");
+        fp = fopen("./mkmodestmp/NBmodes.txt", "w");
         fprintf(fp, "%ld\n", cnt);
-        fclose(fp);		
-		
-		
+        fclose(fp);
+
+
         cnt = 0;
         for(mblock=0; mblock<NBmblock; mblock++)
             cnt += MBLOCK_NBmode[mblock];
@@ -2207,7 +2217,12 @@ long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long m
 
 /*** \brief Creates control matrices per block, using native modes
  */
-long AOloopControl_computeCalib_mkModes_Simple(const char *IDin_name, long NBmblock, long Cmblock, float SVDlim)
+long AOloopControl_computeCalib_mkModes_Simple(
+    const char *IDin_name,
+    long NBmblock,
+    long Cmblock,
+    float SVDlim
+)
 {
     long IDin; // input WFS responses
     FILE *fp;
@@ -2496,7 +2511,20 @@ long AOloopControl_computeCalib_mkModes_Simple(const char *IDin_name, long NBmbl
 
 
 
-int_fast8_t AOloopControl_computeCalib_mkCalib_map_mask(long loop, const char *zrespm_name, const char *WFSmap_name, const char *DMmap_name, float dmmask_perclow, float dmmask_coefflow, float dmmask_perchigh, float dmmask_coeffhigh, float wfsmask_perclow, float wfsmask_coefflow, float wfsmask_perchigh, float wfsmask_coeffhigh)
+int_fast8_t AOloopControl_computeCalib_mkCalib_map_mask(
+    long loop,
+    const char *zrespm_name,
+    const char *WFSmap_name,
+    const char *DMmap_name,
+    float dmmask_perclow,
+    float dmmask_coefflow,
+    float dmmask_perchigh,
+    float dmmask_coeffhigh,
+    float wfsmask_perclow,
+    float wfsmask_coefflow,
+    float wfsmask_perchigh,
+    float wfsmask_coeffhigh
+)
 {
     long IDWFSmap, IDDMmap;
     long IDWFSmask, IDDMmask;
