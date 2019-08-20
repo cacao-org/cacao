@@ -631,7 +631,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     uint8_t datatype;
     uint32_t naxes[3];
 
-
+	int CIRCBUFFER = 0; // 1 if circular buffer
 
     // ===========================
     // CONNECT TO FPS
@@ -757,9 +757,16 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
         return RETURN_FAILURE;
     }
+    
+    
+    
 
     wfsxsize = data.image[IDwfs].md[0].size[0];
     wfsysize = data.image[IDwfs].md[0].size[1];
+	if( (data.image[IDwfs].md[0].naxis == 3) && (data.image[IDwfs].md[0].size[2] > 1) ) {
+		CIRCBUFFER = 1;
+	}
+	
     wfssize = wfsxsize * wfsysize;
     datatype = data.image[IDwfs].md[0].datatype;
 
@@ -833,6 +840,13 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     if(datatype == _DATATYPE_INT16) {
         printf("data type  :  _DATATYPE_INT16\n");
     }
+    if(datatype == _DATATYPE_UINT32) {
+        printf("data type  :  _DATATYPE_UINT32\n");
+    }
+    if(datatype == _DATATYPE_INT32) {
+        printf("data type  :  _DATATYPE_INT32\n");
+    }
+
 
     list_image_ID();
 
@@ -869,9 +883,6 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
         printf(" - ITERATION %5ld / %5ld\n", iter, NBiter);
         fflush(stdout);
 
-        for(ii = 0; ii < 10; ii++) {
-            printf("  %5ld  ->  %f\n", ii, (float) data.image[IDwfs].array.SI16[ii]);
-        }
 
 
         printf("write to %s\n", dmname);
@@ -911,6 +922,15 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
             wfscnt0 = data.image[IDwfs].md[0].cnt0;
             printf("[%8ld / %8ld]  %f  %f\n", wfsframe, wfs_NBframesmax, dt, dtmax);
             fflush(stdout);
+            
+            if(CIRCBUFFER == 1){
+				wfsframe = data.image[IDwfs].md[0].cnt1;
+			}
+			else
+			{
+				wfsframe = 0;
+			}
+            
 
             if(datatype == _DATATYPE_FLOAT) {
                 // copy image to cube slice
@@ -922,16 +942,31 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
             if(datatype == _DATATYPE_UINT16) {
                 // copy image to cube slice
                 ptr = (char *) data.image[IDwfsc].array.UI16;
-                ptr += sizeof(short) * wfsframe * wfssize;
+                ptr += SIZEOF_DATATYPE_UINT16 * wfsframe * wfssize;
                 memcpy(ptr, data.image[IDwfs].array.UI16, sizeof(short)*wfssize);
             }
 
             if(datatype == _DATATYPE_INT16) {
                 // copy image to cube slice
                 ptr = (char *) data.image[IDwfsc].array.SI16;
-                ptr += sizeof(short) * wfsframe * wfssize;
+                ptr += SIZEOF_DATATYPE_INT16 * wfsframe * wfssize;
                 memcpy(ptr, data.image[IDwfs].array.SI16, sizeof(short)*wfssize);
             }
+
+            if(datatype == _DATATYPE_UINT32) {
+                // copy image to cube slice
+                ptr = (char *) data.image[IDwfsc].array.UI32;
+                ptr += SIZEOF_DATATYPE_UINT32 * wfsframe * wfssize;
+                memcpy(ptr, data.image[IDwfs].array.UI32, sizeof(short)*wfssize);
+            }
+
+            if(datatype == _DATATYPE_INT32) {
+                // copy image to cube slice
+                ptr = (char *) data.image[IDwfsc].array.SI32;
+                ptr += SIZEOF_DATATYPE_INT32 * wfsframe * wfssize;
+                memcpy(ptr, data.image[IDwfs].array.SI32, sizeof(short)*wfssize);
+            }
+
 
             clock_gettime(CLOCK_REALTIME, &tarray[wfsframe]);
 
@@ -994,6 +1029,23 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
                     tmp = data.image[IDwfsc].array.SI16[kk * wfssize + ii] - data.image[IDwfsc].array.SI16[(kk - 1) * wfssize + ii];
                     valarray[kk] += 1.0 * tmp * tmp;
                 }
+            
+            if(datatype == _DATATYPE_UINT32)
+                for(ii = 0; ii < wfssize; ii++) {
+                    tmp = data.image[IDwfsc].array.UI32[kk * wfssize + ii] - data.image[IDwfsc].array.UI32[(kk - 1) * wfssize + ii];
+                    valarray[kk] += 1.0 * tmp * tmp;
+                }
+
+            if(datatype == _DATATYPE_INT32)
+                for(ii = 0; ii < wfssize; ii++) {
+                    tmp = 0.0;
+                    tmp = data.image[IDwfsc].array.SI32[kk * wfssize + ii] - data.image[IDwfsc].array.SI32[(kk - 1) * wfssize + ii];
+                    valarray[kk] += 1.0 * tmp * tmp;
+                }
+            
+            
+            
+            
             valarray[kk] = sqrt(valarray[kk] / wfssize / 2);
 
             if(valarray[kk] > valmax) {
