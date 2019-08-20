@@ -613,6 +613,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     long IDwfsref;
 
+	char *ptr0;
     char *ptr;
     long kk, kkmax;
     double *valarray;
@@ -911,6 +912,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
 
         wfsframe = 0;
+        int wfsslice = 0;
         wfscnt0 = data.image[IDwfs].md[0].cnt0;
         printf("\n");
         while((dt < dtmax) && (wfsframe < wfs_NBframesmax)) {
@@ -924,47 +926,57 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
             fflush(stdout);
             
             if(CIRCBUFFER == 1){
-				wfsframe = data.image[IDwfs].md[0].cnt1;
+				wfsslice = data.image[IDwfs].md[0].cnt1;
 			}
 			else
 			{
-				wfsframe = 0;
+				wfsslice = 0;
 			}
             
 
             if(datatype == _DATATYPE_FLOAT) {
+				ptr0 = (char *) data.image[IDwfs].array.F;
+				ptr0 += SIZEOF_DATATYPE_FLOAT * wfsslice * wfssize;
                 // copy image to cube slice
                 ptr = (char *) data.image[IDwfsc].array.F;
                 ptr += sizeof(float) * wfsframe * wfssize;
-                memcpy(ptr, data.image[IDwfs].array.F, sizeof(float)*wfssize);
+                memcpy(ptr, ptr0, sizeof(float)*wfssize);
             }
 
             if(datatype == _DATATYPE_UINT16) {
+				ptr0 = (char *) data.image[IDwfs].array.UI16;
+				ptr0 += SIZEOF_DATATYPE_UINT16 * wfsslice * wfssize;
                 // copy image to cube slice
                 ptr = (char *) data.image[IDwfsc].array.UI16;
                 ptr += SIZEOF_DATATYPE_UINT16 * wfsframe * wfssize;
-                memcpy(ptr, data.image[IDwfs].array.UI16, sizeof(short)*wfssize);
+                memcpy(ptr, ptr0, sizeof(short)*wfssize);
             }
 
             if(datatype == _DATATYPE_INT16) {
+				ptr0 = (char *) data.image[IDwfs].array.SI16;
+				ptr0 += SIZEOF_DATATYPE_INT16 * wfsslice * wfssize;
                 // copy image to cube slice
                 ptr = (char *) data.image[IDwfsc].array.SI16;
                 ptr += SIZEOF_DATATYPE_INT16 * wfsframe * wfssize;
-                memcpy(ptr, data.image[IDwfs].array.SI16, sizeof(short)*wfssize);
+                memcpy(ptr, ptr0, sizeof(short)*wfssize);
             }
 
             if(datatype == _DATATYPE_UINT32) {
+				ptr0 = (char *) data.image[IDwfs].array.UI32;
+				ptr0 += SIZEOF_DATATYPE_UINT32 * wfsslice * wfssize;
                 // copy image to cube slice
                 ptr = (char *) data.image[IDwfsc].array.UI32;
                 ptr += SIZEOF_DATATYPE_UINT32 * wfsframe * wfssize;
-                memcpy(ptr, data.image[IDwfs].array.UI32, sizeof(short)*wfssize);
+                memcpy(ptr, ptr0, sizeof(short)*wfssize);
             }
 
             if(datatype == _DATATYPE_INT32) {
+				ptr0 = (char *) data.image[IDwfs].array.SI32;
+				ptr0 += SIZEOF_DATATYPE_INT32 * wfsslice * wfssize;
                 // copy image to cube slice
                 ptr = (char *) data.image[IDwfsc].array.SI32;
                 ptr += SIZEOF_DATATYPE_INT32 * wfsframe * wfssize;
-                memcpy(ptr, data.image[IDwfs].array.SI32, sizeof(short)*wfssize);
+                memcpy(ptr, ptr0, sizeof(short)*wfssize);
             }
 
 
