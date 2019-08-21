@@ -127,6 +127,18 @@ fi
 }
 
 
+function checkFileCreate {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 3)$(tput bold)  INFO  $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found: Creating"
+    touch $1
+fi
+}
+
+
+
 function checkDir {
 if [ -d $1 ]
   then
@@ -386,7 +398,7 @@ fi
 fpsCTRLtmuxname="${LOOPNAME}_fpsCTRL"
 
 fpsSETPARAMCONFfile="fpssetup.setval.${LOOPNAME}.conf"
-checkFile ${fpsSETPARAMCONFfile}
+checkFileCreate ${fpsSETPARAMCONFfile}
 
 fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
 

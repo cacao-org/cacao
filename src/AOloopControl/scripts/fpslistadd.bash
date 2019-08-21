@@ -102,7 +102,7 @@ mkdir ${CACAO_WORKDIR}/simLHS
 cp simLHS/respM.fits ./${CACAO_WORKDIR}/simLHS/simLHS_respM.fits
 cp simLHS/wfsref.fits ./${CACAO_WORKDIR}/simLHS/simLHS_wfsref.fits
 
-cp ./${CACAO_WORKDIR}/simLHS/simLHS_respM.fits ./${CACAO_WORKDIR}/conf/shmim.aolsimLHSresmM.fits
+cp ./${CACAO_WORKDIR}/simLHS/simLHS_respM.fits ./${CACAO_WORKDIR}/conf/shmim.aolsimLHSrespM.fits
 cp ./${CACAO_WORKDIR}/simLHS/simLHS_wfsref.fits ./${CACAO_WORKDIR}/conf/shmim.aolsimLHSwfsref.fits
 
 echo "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_dmdispD" >> ${FPSCONFFILE}
