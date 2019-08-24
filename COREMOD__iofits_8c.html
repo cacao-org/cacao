@@ -148,6 +148,8 @@ Functions</h2></td></tr>
 <tr class="separator:a0e4378b0d29e717e9eedb6a636d9c9ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb3c87d25bcbc47f98e46ddd857f7df5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__iofits_8c.html#acb3c87d25bcbc47f98e46ddd857f7df5">images_to_cube</a> (const char *restrict img_name, long nbframes, const char *restrict cube_name)</td></tr>
 <tr class="separator:acb3c87d25bcbc47f98e46ddd857f7df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a9cb5db18fc72a5474dc7dd2004bb4a"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__iofits_8c.html#a1a9cb5db18fc72a5474dc7dd2004bb4a">COREMOD_IOFITS_LoadMemStream</a> (const char *sname, uint64_t *streamflag, uint32_t *imLOC)</td></tr>
+<tr class="separator:a1a9cb5db18fc72a5474dc7dd2004bb4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -161,9 +163,7 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>I/O for FITS files. </p>
 <p>Uses CFITSIO library heavily</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>7 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000077">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000076">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
@@ -249,6 +249,40 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>print</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1a9cb5db18fc72a5474dc7dd2004bb4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a9cb5db18fc72a5474dc7dd2004bb4a">&#9670;&nbsp;</a></span>COREMOD_IOFITS_LoadMemStream()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">long COREMOD_IOFITS_LoadMemStream </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>sname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramname"><em>streamflag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t *&#160;</td>
+          <td class="paramname"><em>imLOC</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -826,7 +860,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_46751c7a5bc1e31a9b6c34ab5bccdf31.html">COREMOD_iofits</a></li><li class="navelem"><a class="el" href="COREMOD__iofits_8c.html">COREMOD_iofits.c</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

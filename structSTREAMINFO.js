@@ -1,7 +1,7 @@
 var structSTREAMINFO =
 [
-    [ "atype", "structSTREAMINFO.html#a1456521bc269e927de16041bec3df69d", null ],
     [ "cnt0", "structSTREAMINFO.html#a612474ade974c0a723b98550e84bc48c", null ],
+    [ "datatype", "structSTREAMINFO.html#a3bc5a1971e49bd1c2661a4b25525c0b6", null ],
     [ "deltacnt0", "structSTREAMINFO.html#af72dab6398c16aab1d35849ac7824028", null ],
     [ "ID", "structSTREAMINFO.html#a53ae57ec64a7c01508fcc1c69f771a70", null ],
     [ "linkname", "structSTREAMINFO.html#a840a27f9de9fc8fb999eccd924c38564", null ],

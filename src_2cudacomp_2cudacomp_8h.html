@@ -153,6 +153,10 @@ Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">4. HIGH LEVEL FUNCTIONS</div></td></tr>
 <tr class="memitem:a5db894f96230f0ab904cf66eb847a40b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2cudacomp_2cudacomp_8h.html#a5db894f96230f0ab904cf66eb847a40b">CUDACOMP_Coeff2Map_Loop</a> (const char *IDmodes_name, const char *IDcoeff_name, int GPUindex, const char *IDoutmap_name, int offsetmode, const char *IDoffset_name)</td></tr>
 <tr class="separator:a5db894f96230f0ab904cf66eb847a40b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2feafbb6f7b1b526939e286d26fbd01c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2cudacomp_2cudacomp_8h.html#a2feafbb6f7b1b526939e286d26fbd01c">CUDACOMP_MVMextractModesLoop_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="separator:a2feafbb6f7b1b526939e286d26fbd01c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a397175cdc35c4437d5ff1f8c52d39a00"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2cudacomp_2cudacomp_8h.html#a397175cdc35c4437d5ff1f8c52d39a00">CUDACOMP_MVMextractModesLoop_RUN</a> (char *fpsname)</td></tr>
+<tr class="separator:a397175cdc35c4437d5ff1f8c52d39a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace52bf3403804785544c321ee0dda3b9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2cudacomp_2cudacomp_8h.html#ace52bf3403804785544c321ee0dda3b9">CUDACOMP_MVMextractModesLoop</a> (const char *in_stream, const char *intot_stream, const char *IDmodes_name, const char *IDrefin_name, const char *IDrefout_name, const char *IDmodes_val_name, int GPUindex, int PROCESS, int TRACEMODE, int MODENORM, int insem, int axmode, long twait, int semwarn)</td></tr>
 <tr class="memdesc:ace52bf3403804785544c321ee0dda3b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">extract mode coefficients from data stream  <a href="#ace52bf3403804785544c321ee0dda3b9">More...</a><br /></td></tr>
 <tr class="separator:ace52bf3403804785544c321ee0dda3b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -647,6 +651,52 @@ if IDrefout_name exists, match output image size to IDrefout_name </dd></dl>
 
 </div>
 </div>
+<a id="a2feafbb6f7b1b526939e286d26fbd01c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2feafbb6f7b1b526939e286d26fbd01c">&#9670;&nbsp;</a></span>CUDACOMP_MVMextractModesLoop_FPCONF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> CUDACOMP_MVMextractModesLoop_FPCONF </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>CMDmode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a397175cdc35c4437d5ff1f8c52d39a00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a397175cdc35c4437d5ff1f8c52d39a00">&#9670;&nbsp;</a></span>CUDACOMP_MVMextractModesLoop_RUN()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> CUDACOMP_MVMextractModesLoop_RUN </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1fd7986590f046a9412ba7f1d0f5d3d9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1fd7986590f046a9412ba7f1d0f5d3d9">&#9670;&nbsp;</a></span>CUDACOMP_printGPUMATMULTCONF()</h2>
 
@@ -1017,7 +1067,7 @@ if IDrefout_name exists, match output image size to IDrefout_name </dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_dca209fe662ec0d146440db0aa5b9932.html">cudacomp</a></li><li class="navelem"><a class="el" href="src_2cudacomp_2cudacomp_8h.html">cudacomp.h</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

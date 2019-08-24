@@ -11,5 +11,6 @@ var structSTREAMINFOPROC =
     [ "PIDtable", "structSTREAMINFOPROC.html#a789da016691fcd921f6b49e19f6527cc", null ],
     [ "sindexscan", "structSTREAMINFOPROC.html#a5f2863cb27581adb2329dc874945a16b", null ],
     [ "sinfo", "structSTREAMINFOPROC.html#a898b0b2441a259ec37d183b78394d8f7", null ],
-    [ "twaitus", "structSTREAMINFOPROC.html#ad212f63eb2cb7aaac3a7838aed3cd89a", null ]
+    [ "twaitus", "structSTREAMINFOPROC.html#ad212f63eb2cb7aaac3a7838aed3cd89a", null ],
+    [ "WriteFlistToFile", "structSTREAMINFOPROC.html#a3cd11fe6a8f5d3a3a198c9fc5102e767", null ]
 ];

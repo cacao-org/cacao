@@ -3,6 +3,8 @@ var src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h =
     [ "__attribute__", "src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a828e1ce70b3c72ffe853772fe8caad7f", null ],
     [ "AOcontrolLoop_perfTest_TestDMSpeed", "src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a51460844efeec15c9a71496261ba864b", null ],
     [ "AOcontrolLoop_perfTest_TestSystemLatency", "src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a8941ded395577bb3ee5c9b0e7b03b1ce", null ],
+    [ "AOcontrolLoop_perfTest_TestSystemLatency_FPCONF", "src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#acc07aab91f55dc5f028fd440ba50b4a3", null ],
+    [ "AOcontrolLoop_perfTest_TestSystemLatency_RUN", "src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a0444be65084384560c1fab311c54a264", null ],
     [ "AOloopControl_LoopTimer_Analysis", "src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a306175ed86116bfca9888501c98b9885", null ],
     [ "AOloopControl_perfTest_AnalyzeRM_sensitivity", "src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a6e21be5cf980119ac86334c44d00dfa1", null ],
     [ "AOloopControl_perfTest_blockstats", "src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a5714813d71edf1f2261babc06c2287fd", null ],

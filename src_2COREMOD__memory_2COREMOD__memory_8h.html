@@ -143,8 +143,8 @@ Functions</h2></td></tr>
 <tr class="separator:aa4d030b85c72003e5ffb33a9f76cc258"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a489cd2e304ceb20504a2b676adb950d1"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a489cd2e304ceb20504a2b676adb950d1">create_variable_string_ID</a> (const char *name, const char *value)</td></tr>
 <tr class="separator:a489cd2e304ceb20504a2b676adb950d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a368f826f06263b07e76fd4cab19a0f47"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a368f826f06263b07e76fd4cab19a0f47">create_image_ID</a> (const char *name, long naxis, uint32_t *size, uint8_t atype, int shared, int nbkw)</td></tr>
-<tr class="separator:a368f826f06263b07e76fd4cab19a0f47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75f07f8ce33c14c5855df3cc4290ff7a"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a75f07f8ce33c14c5855df3cc4290ff7a">create_image_ID</a> (const char *name, long naxis, uint32_t *size, uint8_t datatype, int shared, int nbkw)</td></tr>
+<tr class="separator:a75f07f8ce33c14c5855df3cc4290ff7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfa9e91be46df5329679b8330b8db494"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#adfa9e91be46df5329679b8330b8db494">clearall</a> ()</td></tr>
 <tr class="separator:adfa9e91be46df5329679b8330b8db494"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1b0a2a5c4a3c31d996df61a2223d669"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#ae1b0a2a5c4a3c31d996df61a2223d669">save_fits_function</a> (void *ptr)</td></tr>
@@ -294,12 +294,20 @@ Functions</h2></td></tr>
 <tr class="memitem:a5280d18c322d31888dc66f5cf95ae1f2"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a5280d18c322d31888dc66f5cf95ae1f2">COREMOD_MEMORY_image_streamupdateloop_semtrig</a> (const char *IDinname, const char *IDoutname, long period, long offsetus, const char *IDsync_name, int semtrig, int timingmode)</td></tr>
 <tr class="memdesc:a5280d18c322d31888dc66f5cf95ae1f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">takes a 3Dimage (circular buffer) and writes slices to a 2D image synchronized with an image semaphore  <a href="#a5280d18c322d31888dc66f5cf95ae1f2">More...</a><br /></td></tr>
 <tr class="separator:a5280d18c322d31888dc66f5cf95ae1f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f4e603c2e0c46566659ba83b9064704"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a6f4e603c2e0c46566659ba83b9064704">COREMOD_MEMORY_streamDelay_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="memdesc:a6f4e603c2e0c46566659ba83b9064704"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages configuration parameters for streamDelay.  <a href="#a6f4e603c2e0c46566659ba83b9064704">More...</a><br /></td></tr>
+<tr class="separator:a6f4e603c2e0c46566659ba83b9064704"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0af3c6b8a652ce0462de70b79fab72d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a0af3c6b8a652ce0462de70b79fab72d0">COREMOD_MEMORY_streamDelay_RUN</a> (char *fpsname)</td></tr>
+<tr class="memdesc:a0af3c6b8a652ce0462de70b79fab72d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delay image stream by time offset.  <a href="#a0af3c6b8a652ce0462de70b79fab72d0">More...</a><br /></td></tr>
+<tr class="separator:a0af3c6b8a652ce0462de70b79fab72d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08bd70b13c19050ff683af640e72ffd3"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a08bd70b13c19050ff683af640e72ffd3">COREMOD_MEMORY_streamDelay</a> (const char *IDin_name, const char *IDout_name, long delayus, long dtus)</td></tr>
 <tr class="separator:a08bd70b13c19050ff683af640e72ffd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6c3d5446663e40dec70a930d62dd323"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#ae6c3d5446663e40dec70a930d62dd323">COREMOD_MEMORY_SaveAll_snapshot</a> (const char *dirname)</td></tr>
 <tr class="separator:ae6c3d5446663e40dec70a930d62dd323"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c21d23a1996bd4af6fc1096bcc9be71"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a0c21d23a1996bd4af6fc1096bcc9be71">COREMOD_MEMORY_SaveAll_sequ</a> (const char *dirname, const char *IDtrig_name, long semtrig, long NBframes)</td></tr>
 <tr class="separator:a0c21d23a1996bd4af6fc1096bcc9be71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a7184e03b10a8ff8df57770912fa416"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#a5a7184e03b10a8ff8df57770912fa416">COREMOD_MEMORY_testfunction_semaphore</a> (const char *IDname, int semtrig, int testmode)</td></tr>
+<tr class="separator:a5a7184e03b10a8ff8df57770912fa416"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7c02416f0db711e00895b876f5be4a9"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#af7c02416f0db711e00895b876f5be4a9">COREMOD_MEMORY_image_NETWORKtransmit</a> (const char *IDname, const char *IPaddr, int port, int mode, int RT_priority)</td></tr>
 <tr class="separator:af7c02416f0db711e00895b876f5be4a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6fac8d092c578c299f9717e474ae68c"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html#ad6fac8d092c578c299f9717e474ae68c">COREMOD_MEMORY_image_NETWORKreceive</a> (int port, int mode, int RT_priority)</td></tr>
@@ -1646,7 +1654,76 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6f4e603c2e0c46566659ba83b9064704"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f4e603c2e0c46566659ba83b9064704">&#9670;&nbsp;</a></span>COREMOD_MEMORY_streamDelay_FPCONF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> COREMOD_MEMORY_streamDelay_FPCONF </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>CMDmode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Manages configuration parameters for streamDelay. </p>
+<h2>Purpose</h2>
+<p>Initializes configuration parameters structure<br />
+ </p><h2>Arguments</h2>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">char*</td><td>fpsname name of function parameter structure</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">uint32_t</td><td>CMDmode Command mode </td></tr>
+  </table>
+  </dd>
+</dl>
+<h3>SETUP FPS</h3>
+<h3>ALLOCATE FPS ENTRIES</h3>
+<h3>RUN UPDATE LOOP</h3>
+
+</div>
+</div>
+<a id="a0af3c6b8a652ce0462de70b79fab72d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0af3c6b8a652ce0462de70b79fab72d0">&#9670;&nbsp;</a></span>COREMOD_MEMORY_streamDelay_RUN()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> COREMOD_MEMORY_streamDelay_RUN </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Delay image stream by time offset. </p>
 <p>IDout_name is a time-delayed copy of IDin_name </p>
+<h3>CONNECT TO FPS</h3>
+<h3>GET FUNCTION PARAMETER VALUES</h3>
+<h3>processinfo support</h3>
+<h3>OPTIONAL: TESTING CONDITION FOR LOOP ENTRY</h3>
+<h3>START LOOP</h3>
+<h3>ENDING LOOP</h3>
 
 </div>
 </div>
@@ -1805,6 +1882,40 @@ Does not change shared memory content<br />
       </table>
 </div><div class="memdoc">
 <p>Test function aimed at creating unsolved seg fault bug Will crash under gcc-7 if -O3 or -Ofast gcc compilation flag </p>
+
+</div>
+</div>
+<a id="a5a7184e03b10a8ff8df57770912fa416"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a7184e03b10a8ff8df57770912fa416">&#9670;&nbsp;</a></span>COREMOD_MEMORY_testfunction_semaphore()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int COREMOD_MEMORY_testfunction_semaphore </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>IDname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>semtrig</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>testmode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -2120,8 +2231,8 @@ Does not change shared memory content<br />
 
 </div>
 </div>
-<a id="a368f826f06263b07e76fd4cab19a0f47"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a368f826f06263b07e76fd4cab19a0f47">&#9670;&nbsp;</a></span>create_image_ID()</h2>
+<a id="a75f07f8ce33c14c5855df3cc4290ff7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75f07f8ce33c14c5855df3cc4290ff7a">&#9670;&nbsp;</a></span>create_image_ID()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2148,7 +2259,7 @@ Does not change shared memory content<br />
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>atype</em>, </td>
+          <td class="paramname"><em>datatype</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3173,7 +3284,7 @@ Does not change shared memory content<br />
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3263a6acd0ffe1d4fb8f1f8557ae17b7.html">COREMOD_memory</a></li><li class="navelem"><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html">COREMOD_memory.h</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

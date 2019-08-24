@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['materialindex',['MaterialIndex',['../structMaterialIndex.html',1,'']]],
-  ['module',['MODULE',['../structMODULE.html',1,'']]]
+  ['logshim_5fconf',['LOGSHIM_CONF',['../structLOGSHIM__CONF.html',1,'']]]
 ];

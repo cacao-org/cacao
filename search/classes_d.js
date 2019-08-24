@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['simage',['sImage',['../structsImage.html',1,'']]],
-  ['streamdatafile',['StreamDataFile',['../structStreamDataFile.html',1,'']]],
-  ['streaminfo',['STREAMINFO',['../structSTREAMINFO.html',1,'']]],
-  ['streaminfoproc',['STREAMINFOPROC',['../structSTREAMINFOPROC.html',1,'']]],
-  ['streamsave_5fthread_5fmessage',['STREAMSAVE_THREAD_MESSAGE',['../structSTREAMSAVE__THREAD__MESSAGE.html',1,'']]],
-  ['stringlistentry',['STRINGLISTENTRY',['../structSTRINGLISTENTRY.html',1,'']]],
-  ['symrec',['symrec',['../structsymrec.html',1,'']]]
+  ['res_5fnode',['res_node',['../structres__node.html',1,'']]],
+  ['rt_5fstream_5flog_5finfo',['RT_STREAM_LOG_INFO',['../structRT__STREAM__LOG__INFO.html',1,'']]],
+  ['rtstreamlog',['RTstreamLOG',['../structRTstreamLOG.html',1,'']]]
 ];

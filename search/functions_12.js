@@ -33,7 +33,8 @@ var searchData=
   ['statistic_5fputgaussnoise_5fcli',['statistic_putgaussnoise_cli',['../statistic_8c.html#a42f79098f976305090856a56430e7bcd',1,'statistic.c']]],
   ['statistic_5fputphnoise_5fcli',['statistic_putphnoise_cli',['../statistic_8c.html#a5536f4a98e2970428387fa813e11c448',1,'statistic.c']]],
   ['streamctrl_5fcatchsignals',['streamCTRL_CatchSignals',['../streamCTRL_8c.html#a86f200e5c8ce512ba17c51954f944e8a',1,'streamCTRL_CatchSignals():&#160;streamCTRL.c'],['../streamCTRL_8h.html#a86f200e5c8ce512ba17c51954f944e8a',1,'streamCTRL_CatchSignals():&#160;streamCTRL.c']]],
-  ['streamctrl_5fctrlscreen',['streamCTRL_CTRLscreen',['../src_2CommandLineInterface_2CLIcore_8h.html#af5f28020d484f3e325a6093ff4d2caa7',1,'streamCTRL_CTRLscreen():&#160;streamCTRL.c'],['../streamCTRL_8c.html#af5f28020d484f3e325a6093ff4d2caa7',1,'streamCTRL_CTRLscreen():&#160;streamCTRL.c'],['../streamCTRL_8h.html#af5f28020d484f3e325a6093ff4d2caa7',1,'streamCTRL_CTRLscreen():&#160;streamCTRL.c']]],
+  ['streamctrl_5fctrlscreen',['streamCTRL_CTRLscreen',['../streamCTRL_8c.html#ae47e701b56c205e55ee6353b99ed39e1',1,'streamCTRL_CTRLscreen():&#160;streamCTRL.c'],['../streamCTRL_8h.html#ae47e701b56c205e55ee6353b99ed39e1',1,'streamCTRL_CTRLscreen():&#160;streamCTRL.c']]],
+  ['streamctrl_5fctrlscreen_5fcli',['streamCTRL_CTRLscreen_cli',['../CLIcore_8c.html#a6c999254e12bea37ad6c8e051efe30d2',1,'CLIcore.c']]],
   ['streamctrl_5fscan',['streamCTRL_scan',['../streamCTRL_8c.html#a95adb4c2ba2ce77d4139fef3ef8c3db1',1,'streamCTRL_scan(void *argptr):&#160;streamCTRL.c'],['../streamCTRL_8h.html#a37e9e3baa3e0f825636d1df403c87594',1,'streamCTRL_scan(void *thptr):&#160;streamCTRL.c']]],
   ['sumex',['sumex',['../AtmosphereModel_8c.html#ac607590e0e6c779fc4a6cbb1261975c6',1,'sumex(double ex):&#160;AtmosphereModel.c'],['../nrlmsise-00_8c.html#ac607590e0e6c779fc4a6cbb1261975c6',1,'sumex(double ex):&#160;nrlmsise-00.c']]]
 ];

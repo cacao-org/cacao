@@ -24,6 +24,7 @@ var NAVTREE =
     [ "Subpages", "page_cacao_topmenu.html", "page_cacao_topmenu" ],
     [ "AtmosphericTurbulence", "md_src_AtmosphericTurbulence_doc_AtmosphericTurbulence.html", null ],
     [ "Change Log", "md_src_ImageStreamIO_CHANGELOG.html", null ],
+    [ "Todo List", "todo.html", null ],
     [ "Bug List", "bug.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Data Structures", "annotated.html", [
@@ -32,7 +33,9 @@ var NAVTREE =
       [ "Data Fields", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", null ],
-        [ "Variables", "functions_vars.html", "functions_vars" ]
+        [ "Variables", "functions_vars.html", "functions_vars" ],
+        [ "Enumerations", "functions_enum.html", null ],
+        [ "Enumerator", "functions_eval.html", null ]
       ] ]
     ] ],
     [ "Files", null, [
@@ -52,29 +55,30 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "00CORE_8c.html",
-"AOloopControl__DM__runtimecomp_8c.html#a976c30efd013f84a164a7f557415ea5c",
-"AOloopControl__computeCalib_8c.html#a1e550abf97dffc690d91901e3da865ec",
-"AtmosphereModel_8c.html#a15bcc1aa63b963a7331ff962c1e7871e",
-"AtmosphericTurbulence_8c.html#a9190a96f3ce33477acce1d64fb4aab35",
-"COREMOD__arith_8c.html#a8be2ef0b5a4f1d72ffd48f66188a8233",
-"COREMOD__memory_8c.html#abe806dec4c8cf12328b0ccfaf23d5324",
-"__install_2include_200CORE_8h_source.html",
-"__install_2include_2COREMOD__arith_8h.html#a4ce784efdc0c876c89a82c313f9db3fd",
-"__install_2include_2COREMOD__tools_8h.html#a9383571be0026fd23ec4464fa50aba26",
-"__install_2include_2img__reduce_8h_source.html",
-"calc__flex_8c.html#a2f59cc88e85e5455c62e4ef7ce095ea8",
-"fft_8c.html#ab7bfdbeb0850dbb6d8fd671238b18287",
-"image__basic_8c.html#a8d37e3424c78be76e0e4262f6158e917",
-"kdtree_8c.html#abbff3a82caa304688020bc050d474d30",
-"processtools_8c.html#a4d2c95951594c90d498c70da9dd8395f",
-"src_2AOloopControl__computeCalib_2AOloopControl__computeCalib_8h.html#ade0d65b153ca7fd73554afeed9b62623",
-"src_2COREMOD__memory_2COREMOD__memory_8h.html#a60e48270286e4a238e08c94989eea330",
-"src_2fft_2fft_8h.html#a7b65ada4e8370e4de4b98f1c8bde6696",
-"src_2psf_2psf_8h.html#ad48bc560526c5286e33b4d91dcb9df4b",
-"structAOLOOPCONTROL__CONF.html#a8af3e7153798fc723c7acbcf973a93ed",
-"structDATA.html#a3f7eda27560572dd2510250a1935deb5",
-"structPROCINFOPROC.html#a5e93e2f3db4135e8c47bff397c156937",
-"structres__node.html#a6d1e853ec1f48f263c277344f37f8cc3"
+"AOloopControl__IOtools_8c.html#a6446ea64d1a9d88030fec1737ff136a2",
+"AOloopControl__computeCalib__modes_8c.html#ac8c63b18800552e16dcf933c28d0fcdc",
+"AtmosphereModel_8c.html#a484fb6b4b11b8e7d9afa597a3c74b6b7",
+"AtmosphericTurbulence_8h.html#a5c52d7fcae693afbee62929227221a5e",
+"COREMOD__arith_8c.html#ac1cc6e71a4f4af5dec62e89ea8dd7ebf",
+"COREMOD__memory_8c.html#afa73452bfd75ec058b33bed2c2879506",
+"__build_2CMakeFiles_23_811_81_2CompilerIdCXX_2CMakeCXXCompilerId_8cpp.html#a129136602504b3f22bcafe03b2f464a5",
+"__install_2include_2CLIcore_8h.html#a5322f5738b8bf1f57458a31aea22f1db",
+"__install_2include_2COREMOD__memory_8h.html#a8bd82d826bb0ab4a138a753e7541deb5",
+"__install_2include_2image__filter_8h.html#ab20ee902b86ee7d0e192c7c00e843d45",
+"calc__bison_8c.html#ab779f3189fbfd3b164b7802b945d619b",
+"dir_3f8690ac481edc4fab3ed153dbcb4019.html",
+"globals_func_p.html",
+"image__gen_8c.html#aefc4dfd7ba154a7c41813f46fbda95bc",
+"nrlmsise-00_8c.html#adefb8cc23535073a700d4009d0343679",
+"src_2AOloopControl_2AOloopControl_8h.html#a65d72b70aa47177ca3d2dae68ae5a988",
+"src_2COREMOD__arith_2COREMOD__arith_8h.html#a846eefa02a97019a744e8fba9cf54769",
+"src_2COREMOD__tools_2COREMOD__tools_8h.html#a5ef631f0fb27997402411dd881c20aba",
+"src_2image__basic_2image__basic_8h.html#af51158923b1887aae4a1f21ac03387b4",
+"streamCTRL_8c.html#a86f200e5c8ce512ba17c51954f944e8a",
+"structAOLOOPCONTROL__CONF.html#affb39359a4e3432b0bb5b87e13972180",
+"structFPAOLOOPCONTROL__CONF.html#a99255ca9be0a1178d880c982067f8456",
+"structPROCINFOPROC.html#ab785646a089394e8d8403c2f8b155125",
+"structsImage.html#a8afe7b8cf4e980a69f07b4173d05a456"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

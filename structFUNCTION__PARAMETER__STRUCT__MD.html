@@ -91,7 +91,7 @@ $(document).ready(function(){initNavTree('structFUNCTION__PARAMETER__STRUCT__MD.
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="src_2CommandLineInterface_2CLIcore_8h_source.html">CLIcore.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="function__parameters_8h_source.html">function_parameters.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -101,14 +101,16 @@ Data Fields</h2></td></tr>
 <tr class="separator:a4783da37614f6d8b6d2700e41273bac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7d748ee1f83640d0eec9bf439d98184"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#aa7d748ee1f83640d0eec9bf439d98184">pname</a> [100]</td></tr>
 <tr class="separator:aa7d748ee1f83640d0eec9bf439d98184"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab237dd9ea4fdc586054b014499c91da3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#ab237dd9ea4fdc586054b014499c91da3">nameindex</a> [10]</td></tr>
-<tr class="separator:ab237dd9ea4fdc586054b014499c91da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d2bbaea856b87ca25ae5c65df02e89b"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#a1d2bbaea856b87ca25ae5c65df02e89b">nameindexW</a> [16][10]</td></tr>
+<tr class="separator:a1d2bbaea856b87ca25ae5c65df02e89b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d43f2489593c9edde60d700270222ef"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#a3d43f2489593c9edde60d700270222ef">NBnameindex</a></td></tr>
 <tr class="separator:a3d43f2489593c9edde60d700270222ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66a198f94469cb63009b943ed4365a93"><td class="memItemLeft" align="right" valign="top">pid_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#a66a198f94469cb63009b943ed4365a93">confpid</a></td></tr>
 <tr class="separator:a66a198f94469cb63009b943ed4365a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16323f43175d9eb68d94dca3e0f29b43"><td class="memItemLeft" align="right" valign="top">pid_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#a16323f43175d9eb68d94dca3e0f29b43">runpid</a></td></tr>
 <tr class="separator:a16323f43175d9eb68d94dca3e0f29b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6b50b14b07e2156bd60b1b5f8ce067a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#ae6b50b14b07e2156bd60b1b5f8ce067a">conf_fifofd</a></td></tr>
+<tr class="separator:ae6b50b14b07e2156bd60b1b5f8ce067a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55b66b6ee2263181fabe39f98237123b"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#a55b66b6ee2263181fabe39f98237123b">signal</a></td></tr>
 <tr class="separator:a55b66b6ee2263181fabe39f98237123b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad64983aea1fe3b222511b84c9c503aee"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#ad64983aea1fe3b222511b84c9c503aee">confwaitus</a></td></tr>
@@ -125,10 +127,38 @@ Data Fields</h2></td></tr>
 <tr class="separator:a0a034cf3a72faa8702f7753a6107bcfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae309a30ecec5c90d9e47d8ef56f9b030"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#ae309a30ecec5c90d9e47d8ef56f9b030">msgcnt</a></td></tr>
 <tr class="separator:ae309a30ecec5c90d9e47d8ef56f9b030"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa06f00f43606d05e57c413f02816cd19"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#aa06f00f43606d05e57c413f02816cd19">errcnt</a></td></tr>
-<tr class="separator:aa06f00f43606d05e57c413f02816cd19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef951298df10eda42f84cabf4fb690cf"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html#aef951298df10eda42f84cabf4fb690cf">conferrcnt</a></td></tr>
+<tr class="separator:aef951298df10eda42f84cabf4fb690cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Field Documentation</h2>
+<a id="ae6b50b14b07e2156bd60b1b5f8ce067a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6b50b14b07e2156bd60b1b5f8ce067a">&#9670;&nbsp;</a></span>conf_fifofd</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int FUNCTION_PARAMETER_STRUCT_MD::conf_fifofd</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef951298df10eda42f84cabf4fb690cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef951298df10eda42f84cabf4fb690cf">&#9670;&nbsp;</a></span>conferrcnt</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t FUNCTION_PARAMETER_STRUCT_MD::conferrcnt</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a66a198f94469cb63009b943ed4365a93"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a66a198f94469cb63009b943ed4365a93">&#9670;&nbsp;</a></span>confpid</h2>
 
@@ -151,20 +181,6 @@ Data Fields</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">uint64_t FUNCTION_PARAMETER_STRUCT_MD::confwaitus</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa06f00f43606d05e57c413f02816cd19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa06f00f43606d05e57c413f02816cd19">&#9670;&nbsp;</a></span>errcnt</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">long FUNCTION_PARAMETER_STRUCT_MD::errcnt</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -255,14 +271,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="ab237dd9ea4fdc586054b014499c91da3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab237dd9ea4fdc586054b014499c91da3">&#9670;&nbsp;</a></span>nameindex</h2>
+<a id="a1d2bbaea856b87ca25ae5c65df02e89b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d2bbaea856b87ca25ae5c65df02e89b">&#9670;&nbsp;</a></span>nameindexW</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int FUNCTION_PARAMETER_STRUCT_MD::nameindex[10]</td>
+          <td class="memname">char FUNCTION_PARAMETER_STRUCT_MD::nameindexW[16][10]</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -354,7 +370,7 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/CommandLineInterface/<a class="el" href="src_2CommandLineInterface_2CLIcore_8h_source.html">CLIcore.h</a></li>
+<li>src/CommandLineInterface/<a class="el" href="function__parameters_8h_source.html">function_parameters.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -363,7 +379,7 @@ Data Fields</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structFUNCTION__PARAMETER__STRUCT__MD.html">FUNCTION_PARAMETER_STRUCT_MD</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:14 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

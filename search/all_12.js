@@ -111,7 +111,7 @@ var searchData=
   ['root',['root',['../structkdtree.html#accef3227abac75a5eed239590ce574d9',1,'kdtree']]],
   ['rotate_5fcube',['rotate_cube',['../__install_2include_2COREMOD__memory_8h.html#a6ec74f3a91aa2fb625947bfecdda0419',1,'rotate_cube(const char *ID_name, const char *ID_out_name, int orientation):&#160;COREMOD_memory.c'],['../COREMOD__memory_8c.html#a6ec74f3a91aa2fb625947bfecdda0419',1,'rotate_cube(const char *ID_name, const char *ID_out_name, int orientation):&#160;COREMOD_memory.c'],['../src_2COREMOD__memory_2COREMOD__memory_8h.html#a6ec74f3a91aa2fb625947bfecdda0419',1,'rotate_cube(const char *ID_name, const char *ID_out_name, int orientation):&#160;COREMOD_memory.c']]],
   ['rows',['rows',['../structsImage.html#a7acc75cf6bd1af8be5ac3801bf5a909c',1,'sImage']]],
-  ['rt_5fpriority',['rt_priority',['../structPROCESSINFODISP.html#a12bfddad1afd442bcdeec79e37491e50',1,'PROCESSINFODISP']]],
+  ['rt_5fpriority',['RT_priority',['../structPROCESSINFO.html#a547f4806f0bcb3da0ca25727e9d824de',1,'PROCESSINFO::RT_priority()'],['../structPROCESSINFODISP.html#a12bfddad1afd442bcdeec79e37491e50',1,'PROCESSINFODISP::rt_priority()']]],
   ['rt_5fstream_5flog_5finfo',['RT_STREAM_LOG_INFO',['../structRT__STREAM__LOG__INFO.html',1,'']]],
   ['rtlogsize',['RTLOGsize',['../structAOLOOPCONTROL__CONF.html#af962b54c71dadf275ab33d47b43edf52',1,'AOLOOPCONTROL_CONF']]],
   ['rtslogarray',['RTSLOGarray',['../structAOLOOPCONTROL__CONF.html#ae6d475aeeb4f4aac4ffb2ead6e2d6a43',1,'AOLOOPCONTROL_CONF']]],

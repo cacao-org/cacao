@@ -2,6 +2,7 @@ var src_2COREMOD__iofits_2COREMOD__iofits_8h =
 [
     [ "__attribute__", "src_2COREMOD__iofits_2COREMOD__iofits_8h.html#ac6aa7d77cd95fdebdfea3bcd0d67f79c", null ],
     [ "break_cube", "src_2COREMOD__iofits_2COREMOD__iofits_8h.html#a0e4378b0d29e717e9eedb6a636d9c9ce", null ],
+    [ "COREMOD_IOFITS_LoadMemStream", "src_2COREMOD__iofits_2COREMOD__iofits_8h.html#a1a9cb5db18fc72a5474dc7dd2004bb4a", null ],
     [ "data_type_code", "src_2COREMOD__iofits_2COREMOD__iofits_8h.html#adcce790fec4b63a6bf470b5e9e0dd6c9", null ],
     [ "file_exists", "src_2COREMOD__iofits_2COREMOD__iofits_8h.html#a8cc0efbf0483da8ea546063e372111be", null ],
     [ "images_to_cube", "src_2COREMOD__iofits_2COREMOD__iofits_8h.html#acb3c87d25bcbc47f98e46ddd857f7df5", null ],

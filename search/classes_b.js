@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['processinfo',['PROCESSINFO',['../structPROCESSINFO.html',1,'']]],
-  ['processinfodisp',['PROCESSINFODISP',['../structPROCESSINFODISP.html',1,'']]],
-  ['processinfolist',['PROCESSINFOLIST',['../structPROCESSINFOLIST.html',1,'']]],
-  ['procinfoproc',['PROCINFOPROC',['../structPROCINFOPROC.html',1,'']]],
-  ['pyprocessinfo',['pyPROCESSINFO',['../classpyPROCESSINFO.html',1,'']]]
+  ['nrlmsise_5fflags',['nrlmsise_flags',['../structnrlmsise__flags.html',1,'']]],
+  ['nrlmsise_5finput',['nrlmsise_input',['../structnrlmsise__input.html',1,'']]],
+  ['nrlmsise_5foutput',['nrlmsise_output',['../structnrlmsise__output.html',1,'']]]
 ];

@@ -99,8 +99,8 @@ $(document).ready(function(){initNavTree('CLIcore_8c.html','');});
 Functions</h2></td></tr>
 <tr class="memitem:a65786e09c3bd4c1f8f8f311e91c672c6"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a65786e09c3bd4c1f8f8f311e91c672c6">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
 <tr class="separator:a65786e09c3bd4c1f8f8f311e91c672c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2456979d39ad6205343f328542fbd437"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a2456979d39ad6205343f328542fbd437">yy_scan_string</a> (const char *)</td></tr>
-<tr class="separator:a2456979d39ad6205343f328542fbd437"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac57bd4c4cef39bd360bd180f031bc74c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#ac57bd4c4cef39bd360bd180f031bc74c">yy_scan_string</a> (const char *)</td></tr>
+<tr class="separator:ac57bd4c4cef39bd360bd180f031bc74c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab596ae57cdabfb4b298edf3dde7cdf04"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#ab596ae57cdabfb4b298edf3dde7cdf04">yylex_destroy</a> (void)</td></tr>
 <tr class="separator:ab596ae57cdabfb4b298edf3dde7cdf04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">CLIcore functions</div></td></tr>
@@ -170,6 +170,10 @@ Functions</h2></td></tr>
 <tr class="separator:aa8c8cd420981d3b426cf2dd01d1df40b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b68ce5751ae4d9c7c3f145a33f47ab2"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a7b68ce5751ae4d9c7c3f145a33f47ab2">functionparameter_CTRLscreen_cli</a> ()</td></tr>
 <tr class="separator:a7b68ce5751ae4d9c7c3f145a33f47ab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98c4da7efb2c64b865ad37316d4c92ac"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a98c4da7efb2c64b865ad37316d4c92ac">processinfo_CTRLscreen_cli</a> ()</td></tr>
+<tr class="separator:a98c4da7efb2c64b865ad37316d4c92ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c999254e12bea37ad6c8e051efe30d2"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a6c999254e12bea37ad6c8e051efe30d2">streamCTRL_CTRLscreen_cli</a> ()</td></tr>
+<tr class="separator:a6c999254e12bea37ad6c8e051efe30d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96110e28a48d1faed4d2623a9c61be2f"><td class="memItemLeft" align="right" valign="top">static int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a96110e28a48d1faed4d2623a9c61be2f">CLI_execute_line</a> ()</td></tr>
 <tr class="separator:a96110e28a48d1faed4d2623a9c61be2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d0617e7616ff9298b4a0dd6c7111983"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CLIcore_8c.html#a8d0617e7616ff9298b4a0dd6c7111983">rl_cb</a> (char *linein)</td></tr>
@@ -238,8 +242,6 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>main C file </p>
-<dl class="section author"><dt>Author</dt><dd>Olivier Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>Aug 2 2017 </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="aa8c8cd420981d3b426cf2dd01d1df40b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa8c8cd420981d3b426cf2dd01d1df40b">&#9670;&nbsp;</a></span>cfits_usleep_cli()</h2>
@@ -1003,6 +1005,23 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a98c4da7efb2c64b865ad37316d4c92ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98c4da7efb2c64b865ad37316d4c92ac">&#9670;&nbsp;</a></span>processinfo_CTRLscreen_cli()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int_fast8_t processinfo_CTRLscreen_cli </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a097efcf1913161adeffaf98921d0f5a5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a097efcf1913161adeffaf98921d0f5a5">&#9670;&nbsp;</a></span>RegisterCLIcommand()</h2>
 
@@ -1244,6 +1263,23 @@ parsing done with bison and flex </p>
 
 </div>
 </div>
+<a id="a6c999254e12bea37ad6c8e051efe30d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c999254e12bea37ad6c8e051efe30d2">&#9670;&nbsp;</a></span>streamCTRL_CTRLscreen_cli()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int_fast8_t streamCTRL_CTRLscreen_cli </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac22472c4ee36d70ae07159f83fb690d3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac22472c4ee36d70ae07159f83fb690d3">&#9670;&nbsp;</a></span>user_function()</h2>
 
@@ -1279,14 +1315,14 @@ parsing done with bison and flex </p>
 
 </div>
 </div>
-<a id="a2456979d39ad6205343f328542fbd437"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2456979d39ad6205343f328542fbd437">&#9670;&nbsp;</a></span>yy_scan_string()</h2>
+<a id="ac57bd4c4cef39bd360bd180f031bc74c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac57bd4c4cef39bd360bd180f031bc74c">&#9670;&nbsp;</a></span>yy_scan_string()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int yy_scan_string </td>
+          <td class="memname">void yy_scan_string </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -1621,7 +1657,7 @@ parsing done with bison and flex </p>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="CLIcore_8c.html">CLIcore.c</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

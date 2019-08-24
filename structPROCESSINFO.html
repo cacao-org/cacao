@@ -95,8 +95,8 @@ $(document).ready(function(){initNavTree('structPROCESSINFO.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a05596063f0ddb8bc3f006bd84e627a7b"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#a05596063f0ddb8bc3f006bd84e627a7b">name</a> [200]</td></tr>
-<tr class="separator:a05596063f0ddb8bc3f006bd84e627a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46313f7035a7bbbd42544629bed09925"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#a46313f7035a7bbbd42544629bed09925">name</a> [PROCESSINFONAME_MAXCHAR]</td></tr>
+<tr class="separator:a46313f7035a7bbbd42544629bed09925"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12f960318c3332a6a1551b9ecbbdc3e0"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#a12f960318c3332a6a1551b9ecbbdc3e0">source_FUNCTION</a> [200]</td></tr>
 <tr class="memdesc:a12f960318c3332a6a1551b9ecbbdc3e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">process name (human-readable)  <a href="#a12f960318c3332a6a1551b9ecbbdc3e0">More...</a><br /></td></tr>
 <tr class="separator:a12f960318c3332a6a1551b9ecbbdc3e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -114,6 +114,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:aef0d3dd2d1ce547b7e1d12923a08b1b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaf13b46635ce2df9a138b0607ee9204"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#aeaf13b46635ce2df9a138b0607ee9204">loopcnt</a></td></tr>
 <tr class="separator:aeaf13b46635ce2df9a138b0607ee9204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad003eb4e1cabb0fc41becc8321daa0f4"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#ad003eb4e1cabb0fc41becc8321daa0f4">loopcntMax</a></td></tr>
+<tr class="separator:ad003eb4e1cabb0fc41becc8321daa0f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52ad127084956058b18127b0c4a62ac7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#a52ad127084956058b18127b0c4a62ac7">CTRLval</a></td></tr>
 <tr class="separator:a52ad127084956058b18127b0c4a62ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad645b1c4750f019e097cd849ee1b779b"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#ad645b1c4750f019e097cd849ee1b779b">tmuxname</a> [100]</td></tr>
@@ -130,6 +132,8 @@ Data Fields</h2></td></tr>
 <tr class="separator:a260f3c4e5d611f35806c3acf4061deec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba1c55f3b8cd222f1e6bc6ba79d9f983"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#aba1c55f3b8cd222f1e6bc6ba79d9f983">MeasureTiming</a></td></tr>
 <tr class="separator:aba1c55f3b8cd222f1e6bc6ba79d9f983"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a547f4806f0bcb3da0ca25727e9d824de"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#a547f4806f0bcb3da0ca25727e9d824de">RT_priority</a></td></tr>
+<tr class="separator:a547f4806f0bcb3da0ca25727e9d824de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedd118c31b64f169f520abb41c952157"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#aedd118c31b64f169f520abb41c952157">timerindex</a></td></tr>
 <tr class="separator:aedd118c31b64f169f520abb41c952157"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47c0baf8db864089d61150b0e7c22fdf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPROCESSINFO.html#a47c0baf8db864089d61150b0e7c22fdf">timingbuffercnt</a></td></tr>
@@ -359,6 +363,20 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="ad003eb4e1cabb0fc41becc8321daa0f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad003eb4e1cabb0fc41becc8321daa0f4">&#9670;&nbsp;</a></span>loopcntMax</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">long PROCESSINFO::loopcntMax</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="abc8029ed64ebdf79b70c1c9718ad3a71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abc8029ed64ebdf79b70c1c9718ad3a71">&#9670;&nbsp;</a></span>loopstat</h2>
 
@@ -387,14 +405,14 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a05596063f0ddb8bc3f006bd84e627a7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05596063f0ddb8bc3f006bd84e627a7b">&#9670;&nbsp;</a></span>name</h2>
+<a id="a46313f7035a7bbbd42544629bed09925"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46313f7035a7bbbd42544629bed09925">&#9670;&nbsp;</a></span>name</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char PROCESSINFO::name[200]</td>
+          <td class="memname">char PROCESSINFO::name[PROCESSINFONAME_MAXCHAR]</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -414,6 +432,20 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>source code line </p>
+
+</div>
+</div>
+<a id="a547f4806f0bcb3da0ca25727e9d824de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a547f4806f0bcb3da0ca25727e9d824de">&#9670;&nbsp;</a></span>RT_priority</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int PROCESSINFO::RT_priority</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -573,7 +605,7 @@ Data Fields</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:14 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

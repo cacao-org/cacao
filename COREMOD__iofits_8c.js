@@ -4,6 +4,7 @@ var COREMOD__iofits_8c =
     [ "break_cube", "COREMOD__iofits_8c.html#a0e4378b0d29e717e9eedb6a636d9c9ce", null ],
     [ "break_cube_cli", "COREMOD__iofits_8c.html#a2a03a65f69660604a8c1eee6a7814410", null ],
     [ "check_FITSIO_status", "COREMOD__iofits_8c.html#a387f1e0afdb5fb057e167936ff6947bb", null ],
+    [ "COREMOD_IOFITS_LoadMemStream", "COREMOD__iofits_8c.html#a1a9cb5db18fc72a5474dc7dd2004bb4a", null ],
     [ "data_type_code", "COREMOD__iofits_8c.html#adcce790fec4b63a6bf470b5e9e0dd6c9", null ],
     [ "file_exists", "COREMOD__iofits_8c.html#a8cc0efbf0483da8ea546063e372111be", null ],
     [ "images_to_cube", "COREMOD__iofits_8c.html#acb3c87d25bcbc47f98e46ddd857f7df5", null ],

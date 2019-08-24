@@ -104,6 +104,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8f8b23aaac538756cb237b96b518f0e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af127b8b6349ce4677c73acf3faedadea"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpyPROCESSINFO.html#af127b8b6349ce4677c73acf3faedadea">create</a> (char *pname, int CTRLval)</td></tr>
 <tr class="separator:af127b8b6349ce4677c73acf3faedadea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a050897f90125618b917786097267d800"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpyPROCESSINFO.html#a050897f90125618b917786097267d800">link</a> (char *pname)</td></tr>
+<tr class="separator:a050897f90125618b917786097267d800"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0404d7bc664f4cd7556d3be486982eba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpyPROCESSINFO.html#a0404d7bc664f4cd7556d3be486982eba">close</a> (char *pname)</td></tr>
+<tr class="separator:a0404d7bc664f4cd7556d3be486982eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3056878aff80cc6b929989c6ab65f0d8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpyPROCESSINFO.html#a3056878aff80cc6b929989c6ab65f0d8">sigexit</a> (int sig)</td></tr>
 <tr class="separator:a3056878aff80cc6b929989c6ab65f0d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8aa3650f4a4ef866a36a0e031dada578"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpyPROCESSINFO.html#a8aa3650f4a4ef866a36a0e031dada578">writeMessage</a> (const char *message)</td></tr>
@@ -117,6 +121,8 @@ Public Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a9dd20cf87041d51bbfec1cb3f4b267dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpyPROCESSINFO.html#a9dd20cf87041d51bbfec1cb3f4b267dc">m_pinfo</a></td></tr>
 <tr class="separator:a9dd20cf87041d51bbfec1cb3f4b267dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd87edfe1a0b6dc515d1d3b0b265ed0d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpyPROCESSINFO.html#abd87edfe1a0b6dc515d1d3b0b265ed0d">m_fd</a></td></tr>
+<tr class="separator:abd87edfe1a0b6dc515d1d3b0b265ed0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af6131dc948cc84ba9939b3bf7d0de8d2"></a>
@@ -206,6 +212,32 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0404d7bc664f4cd7556d3be486982eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0404d7bc664f4cd7556d3be486982eba">&#9670;&nbsp;</a></span>close()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pyPROCESSINFO::close </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>pname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af127b8b6349ce4677c73acf3faedadea"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af127b8b6349ce4677c73acf3faedadea">&#9670;&nbsp;</a></span>create()</h2>
 
@@ -280,6 +312,32 @@ Private Attributes</h2></td></tr>
           <td class="memname">int pyPROCESSINFO::exec_start </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a050897f90125618b917786097267d800"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a050897f90125618b917786097267d800">&#9670;&nbsp;</a></span>link()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pyPROCESSINFO::link </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>pname</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -370,6 +428,28 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Field Documentation</h2>
+<a id="abd87edfe1a0b6dc515d1d3b0b265ed0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd87edfe1a0b6dc515d1d3b0b265ed0d">&#9670;&nbsp;</a></span>m_fd</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pyPROCESSINFO::m_fd</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9dd20cf87041d51bbfec1cb3f4b267dc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9dd20cf87041d51bbfec1cb3f4b267dc">&#9670;&nbsp;</a></span>m_pinfo</h2>
 
@@ -402,7 +482,7 @@ Private Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classpyPROCESSINFO.html">pyPROCESSINFO</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:14 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

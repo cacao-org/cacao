@@ -155,9 +155,7 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Adaptive Optics Control loop engine I/O tools. </p>
 <p>AO engine uses stream data structure</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>22 Dec 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000059">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000058">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a6d1f06e26db9722ba9ab011277d1e671"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6d1f06e26db9722ba9ab011277d1e671">&#9670;&nbsp;</a></span>AOloopControl_IOtools_2Dloadcreate_shmim()</h2>
@@ -204,6 +202,8 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Load 2D image in shared memory. </p>
+<p>Implements stream loading policy with optional check on size for 2D images. See CLIcore.h for policy details.</p>
+<p>(1) If image already in local memory, and has correct size, upload FITS file to existing array, go to (END-success), otherwise, go to (2) (2) If image already in local memory, but size does not match, go to (END-fail), otherwise, go to (3) (3) Load FITS image to local memory </p>
 
 </div>
 </div>
@@ -709,7 +709,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d2349ba0799e0b6b9785371f379b7b3a.html">AOloopControl_IOtools</a></li><li class="navelem"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html">AOloopControl_IOtools_load_image_sharedmem.c</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

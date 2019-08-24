@@ -116,6 +116,10 @@ Functions</h2></td></tr>
 <tr class="separator:a9f0176adad00df72a0492114bfe8b2c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51460844efeec15c9a71496261ba864b"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a51460844efeec15c9a71496261ba864b">AOcontrolLoop_perfTest_TestDMSpeed</a> (const char *dmname, long delayus, long NBpts, float ampl)</td></tr>
 <tr class="separator:a51460844efeec15c9a71496261ba864b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc07aab91f55dc5f028fd440ba50b4a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#acc07aab91f55dc5f028fd440ba50b4a3">AOcontrolLoop_perfTest_TestSystemLatency_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="separator:acc07aab91f55dc5f028fd440ba50b4a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0444be65084384560c1fab311c54a264"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a0444be65084384560c1fab311c54a264">AOcontrolLoop_perfTest_TestSystemLatency_RUN</a> (char *fpsname)</td></tr>
+<tr class="separator:a0444be65084384560c1fab311c54a264"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8941ded395577bb3ee5c9b0e7b03b1ce"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a8941ded395577bb3ee5c9b0e7b03b1ce">AOcontrolLoop_perfTest_TestSystemLatency</a> (const char *dmname, char *wfsname, float OPDamp, long NBiter)</td></tr>
 <tr class="separator:a8941ded395577bb3ee5c9b0e7b03b1ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5714813d71edf1f2261babc06c2287fd"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html#a5714813d71edf1f2261babc06c2287fd">AOloopControl_perfTest_blockstats</a> (long loop, const char *IDout_name)</td></tr>
@@ -236,6 +240,52 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acc07aab91f55dc5f028fd440ba50b4a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc07aab91f55dc5f028fd440ba50b4a3">&#9670;&nbsp;</a></span>AOcontrolLoop_perfTest_TestSystemLatency_FPCONF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_perfTest_TestSystemLatency_FPCONF </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>CMDmode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0444be65084384560c1fab311c54a264"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0444be65084384560c1fab311c54a264">&#9670;&nbsp;</a></span>AOcontrolLoop_perfTest_TestSystemLatency_RUN()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsname</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -810,9 +860,9 @@ Prints status on screen<br />
 sim1pairs.txt : best NBselected stream1 pairs<br />
 sim2Ddistrib : 2D similarity distribution image<br />
  sim0diff0 : best sim pairs 0, differences stream 0 images<br />
-sim0diff1 : best sim pairs 0, differences stream 0 images<br />
-sim1diff0 : best sim pairs 0, differences stream 0 images<br />
-sim1diff1 : best sim pairs 0, differences stream 0 images<br />
+sim0diff1 : best sim pairs 0, differences stream 1 images<br />
+sim1diff0 : best sim pairs 1, differences stream 0 images<br />
+sim1diff1 : best sim pairs 1, differences stream 1 images<br />
 </p>
 
 </div>
@@ -1047,7 +1097,7 @@ sim1diff1 : best sim pairs 0, differences stream 0 images<br />
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ca88da18f3effcf0279f64df07f494e2.html">AOloopControl_perfTest</a></li><li class="navelem"><a class="el" href="src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html">AOloopControl_perfTest.h</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

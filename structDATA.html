@@ -203,6 +203,16 @@ Data Fields</h2></td></tr>
 <tr class="separator:a14eafa363f5cd5dd7ff9ca0744029565"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc1a46fa384934e24a89660d8d0c9f7a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDATA.html#acc1a46fa384934e24a89660d8d0c9f7a">status1</a></td></tr>
 <tr class="separator:acc1a46fa384934e24a89660d8d0c9f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac65a59aa25b9ea537bf8e3daeae07369"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDATA.html#ac65a59aa25b9ea537bf8e3daeae07369">shmdir</a> [100]</td></tr>
+<tr class="separator:ac65a59aa25b9ea537bf8e3daeae07369"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2547eaecb4e920b9852cf352fd1f6d2d"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDATA.html#a2547eaecb4e920b9852cf352fd1f6d2d">shmsemdirname</a> [100]</td></tr>
+<tr class="separator:a2547eaecb4e920b9852cf352fd1f6d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa26c753579dd68f86bac8a9e8a9851b0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDATA.html#aa26c753579dd68f86bac8a9e8a9851b0">execSRCline</a></td></tr>
+<tr class="separator:aa26c753579dd68f86bac8a9e8a9851b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78a3ddab52d85c6ad3b31bf9249de40c"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDATA.html#a78a3ddab52d85c6ad3b31bf9249de40c">execSRCfunc</a> [STRINGMAXLEN_FUNCTIONNAME]</td></tr>
+<tr class="separator:a78a3ddab52d85c6ad3b31bf9249de40c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f5292b938386cdc1be7b445dfdfe2bd"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDATA.html#a4f5292b938386cdc1be7b445dfdfe2bd">execSRCmessage</a> [STRINGMAXLEN_FUNCTIONARGS]</td></tr>
+<tr class="separator:a4f5292b938386cdc1be7b445dfdfe2bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbe67865c1e9afa0616a28967eca2d2d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDATA.html#adbe67865c1e9afa0616a28967eca2d2d">processinfo</a></td></tr>
 <tr class="separator:adbe67865c1e9afa0616a28967eca2d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbe79e27b5b3128e13c1f2285832c564"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDATA.html#acbe79e27b5b3128e13c1f2285832c564">processinfoActive</a></td></tr>
@@ -377,6 +387,48 @@ Data Fields</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">uid_t DATA::euid</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a78a3ddab52d85c6ad3b31bf9249de40c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78a3ddab52d85c6ad3b31bf9249de40c">&#9670;&nbsp;</a></span>execSRCfunc</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char DATA::execSRCfunc[STRINGMAXLEN_FUNCTIONNAME]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa26c753579dd68f86bac8a9e8a9851b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa26c753579dd68f86bac8a9e8a9851b0">&#9670;&nbsp;</a></span>execSRCline</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int DATA::execSRCline</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4f5292b938386cdc1be7b445dfdfe2bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f5292b938386cdc1be7b445dfdfe2bd">&#9670;&nbsp;</a></span>execSRCmessage</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char DATA::execSRCmessage[STRINGMAXLEN_FUNCTIONARGS]</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -817,6 +869,34 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="ac65a59aa25b9ea537bf8e3daeae07369"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac65a59aa25b9ea537bf8e3daeae07369">&#9670;&nbsp;</a></span>shmdir</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char DATA::shmdir[100]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2547eaecb4e920b9852cf352fd1f6d2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2547eaecb4e920b9852cf352fd1f6d2d">&#9670;&nbsp;</a></span>shmsemdirname</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char DATA::shmsemdirname[100]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a24a327ad06e9f5c593d4dbd4665afab8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a24a327ad06e9f5c593d4dbd4665afab8">&#9670;&nbsp;</a></span>sigact</h2>
 
@@ -1051,7 +1131,7 @@ Data Fields</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structDATA.html">DATA</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:14 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

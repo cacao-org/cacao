@@ -103,8 +103,9 @@ Functions</h2></td></tr>
 <tr class="separator:a63934f4134acc14c506cb12d7168b27b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ed1eb3a75d520cfb66aef4a73163c7d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__AOcompute_8c.html#a4ed1eb3a75d520cfb66aef4a73163c7d">AOloopControl_AOcompute_GUI</a> (long loop, double frequ)</td></tr>
 <tr class="separator:a4ed1eb3a75d520cfb66aef4a73163c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bdc387d75a84dd14d5a52b1be16d971"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__AOcompute_8c.html#a3bdc387d75a84dd14d5a52b1be16d971">__attribute__</a> ((hot))</td></tr>
-<tr class="separator:a3bdc387d75a84dd14d5a52b1be16d971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd6d8251bb13d4353354cfba6a2cb87f"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__AOcompute_8c.html#afd6d8251bb13d4353354cfba6a2cb87f">__attribute__</a> ((hot))</td></tr>
+<tr class="memdesc:afd6d8251bb13d4353354cfba6a2cb87f"><td class="mdescLeft">&#160;</td><td class="mdescRight">extract mode coefficients from data stream (MVM)  <a href="#afd6d8251bb13d4353354cfba6a2cb87f">More...</a><br /></td></tr>
+<tr class="separator:afd6d8251bb13d4353354cfba6a2cb87f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -149,18 +150,16 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AO loop Control compute functions. </p>
 <p>Low level compute</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2018-07-20</dd></dl>
 <dl class="bug"><dt><b><a class="el" href="bug.html#_bug000022">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a3bdc387d75a84dd14d5a52b1be16d971"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bdc387d75a84dd14d5a52b1be16d971">&#9670;&nbsp;</a></span>__attribute__()</h2>
+<a id="afd6d8251bb13d4353354cfba6a2cb87f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd6d8251bb13d4353354cfba6a2cb87f">&#9670;&nbsp;</a></span>__attribute__()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">int <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
           <td>(</td>
           <td class="paramtype">(hot)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -168,6 +167,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>extract mode coefficients from data stream (MVM) </p>
 <h2>Purpose</h2>
 <p>Main computation routine.<br />
 <a class="el" href="__install_2include_2AOloopControl_8h.html#a19a66458a8453e9f5e6ec19a93c3e70a" title="Main computation function, runs once per loop iteration. ">AOcompute()</a> is called inside the aorun loop.<br />
@@ -180,7 +181,7 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">paramname</td><td>long number of the loop</td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">paramname</td><td>int normalize </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">paramname</td><td>int normalize</td></tr>
   </table>
   </dd>
 </dl>
@@ -617,7 +618,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__AOcompute_8c.html">AOloopControl_AOcompute.c</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

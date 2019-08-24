@@ -86,6 +86,7 @@ $(document).ready(function(){initNavTree('processtools_8h.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">processtools.h File Reference</div>  </div>
@@ -110,10 +111,29 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSTRINGLISTENTRY.html">STRINGLISTENTRY</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a46a037236862ac1a534efbe605c10f42"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td></tr>
+<tr class="separator:a46a037236862ac1a534efbe605c10f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a67274122618939d69dec5ae423918ffe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a67274122618939d69dec5ae423918ffe">processinfo_shm_create</a> (char *pname, int CTRLval)</td></tr>
-<tr class="separator:a67274122618939d69dec5ae423918ffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9912007733ec7c0b2f4f18a2763fe12b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a9912007733ec7c0b2f4f18a2763fe12b">processinfo_setup</a> (char *pinfoname, char descriptionstring[200], char msgstring[200], const char *functionname, const char *filename, int linenumber)</td></tr>
+<tr class="separator:a9912007733ec7c0b2f4f18a2763fe12b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac299545ba314c71a211102ef2b08ee44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#ac299545ba314c71a211102ef2b08ee44">processinfo_error</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo, char *errmsgstring)</td></tr>
+<tr class="separator:ac299545ba314c71a211102ef2b08ee44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c1684f725dca2f03649af3a0de4dfe6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a7c1684f725dca2f03649af3a0de4dfe6">processinfo_loopstart</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo)</td></tr>
+<tr class="separator:a7c1684f725dca2f03649af3a0de4dfe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4b2e6d100dbb484529e7b8f6ce29f74"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#ad4b2e6d100dbb484529e7b8f6ce29f74">processinfo_loopstep</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo)</td></tr>
+<tr class="separator:ad4b2e6d100dbb484529e7b8f6ce29f74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29f5a97a4a7f9cc283111ab5bbf00101"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a29f5a97a4a7f9cc283111ab5bbf00101">processinfo_compute_status</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo)</td></tr>
+<tr class="separator:a29f5a97a4a7f9cc283111ab5bbf00101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83ebc0c8fd508e27717b0a4b11eafc1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a83ebc0c8fd508e27717b0a4b11eafc1b">processinfo_shm_create</a> (const char *pname, int CTRLval)</td></tr>
+<tr class="separator:a83ebc0c8fd508e27717b0a4b11eafc1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16fbdc89056a8659514c9e5601b83ee3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a16fbdc89056a8659514c9e5601b83ee3">processinfo_shm_link</a> (const char *pname, int *fd)</td></tr>
+<tr class="separator:a16fbdc89056a8659514c9e5601b83ee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7b5fb5c1b062084f05c237af9ab96b8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#aa7b5fb5c1b062084f05c237af9ab96b8">processinfo_shm_close</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *pinfo, int fd)</td></tr>
+<tr class="separator:aa7b5fb5c1b062084f05c237af9ab96b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af888f7a68f7df49ce295a2920a82b68e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#af888f7a68f7df49ce295a2920a82b68e">processinfo_cleanExit</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo)</td></tr>
 <tr class="separator:af888f7a68f7df49ce295a2920a82b68e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43158fe11f27c2c4c1d90bfc1002014d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a43158fe11f27c2c4c1d90bfc1002014d">processinfo_SIGexit</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo, int SignalNumber)</td></tr>
@@ -128,20 +148,33 @@ Functions</h2></td></tr>
 <tr class="separator:a471b344c1c387b4c4573b1f7a3770b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa29570be52da95b8ef3911f99b73e7bb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#aa29570be52da95b8ef3911f99b73e7bb">processinfo_ProcessSignals</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo)</td></tr>
 <tr class="separator:aa29570be52da95b8ef3911f99b73e7bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62d6014b10e0370d7fd49620de57cf06"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a62d6014b10e0370d7fd49620de57cf06">processinfo_CTRLscreen</a> ()</td></tr>
-<tr class="separator:a62d6014b10e0370d7fd49620de57cf06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51c78bc5ec23c1ad565c27e318ce0d96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a51c78bc5ec23c1ad565c27e318ce0d96">processinfo_CTRLscreen</a> ()</td></tr>
+<tr class="separator:a51c78bc5ec23c1ad565c27e318ce0d96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Command line interface. </p>
 <p>Command line interface (CLI) definitions and function prototypes</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>9 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000074">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000073">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
 <p>Command line interface (CLI) definitions and function prototypes</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>9 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000075">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000074">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="a46a037236862ac1a534efbe605c10f42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46a037236862ac1a534efbe605c10f42">&#9670;&nbsp;</a></span>errno_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef int <a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a471b344c1c387b4c4573b1f7a3770b1c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a471b344c1c387b4c4573b1f7a3770b1c">&#9670;&nbsp;</a></span>processinfo_CatchSignals()</h2>
 
@@ -177,14 +210,32 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a62d6014b10e0370d7fd49620de57cf06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62d6014b10e0370d7fd49620de57cf06">&#9670;&nbsp;</a></span>processinfo_CTRLscreen()</h2>
+<a id="a29f5a97a4a7f9cc283111ab5bbf00101"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29f5a97a4a7f9cc283111ab5bbf00101">&#9670;&nbsp;</a></span>processinfo_compute_status()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t processinfo_CTRLscreen </td>
+          <td class="memname">int processinfo_compute_status </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td>
+          <td class="paramname"><em>processinfo</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a51c78bc5ec23c1ad565c27e318ce0d96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51c78bc5ec23c1ad565c27e318ce0d96">&#9670;&nbsp;</a></span>processinfo_CTRLscreen()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> processinfo_CTRLscreen </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -197,6 +248,34 @@ Functions</h2></td></tr>
 <p>Relies on ncurses for display<br />
 </p>
 <h3>Display</h3>
+
+</div>
+</div>
+<a id="ac299545ba314c71a211102ef2b08ee44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac299545ba314c71a211102ef2b08ee44">&#9670;&nbsp;</a></span>processinfo_error()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> processinfo_error </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td>
+          <td class="paramname"><em>processinfo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>errmsgstring</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -236,6 +315,42 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a7c1684f725dca2f03649af3a0de4dfe6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c1684f725dca2f03649af3a0de4dfe6">&#9670;&nbsp;</a></span>processinfo_loopstart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> processinfo_loopstart </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td>
+          <td class="paramname"><em>processinfo</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad4b2e6d100dbb484529e7b8f6ce29f74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4b2e6d100dbb484529e7b8f6ce29f74">&#9670;&nbsp;</a></span>processinfo_loopstep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int processinfo_loopstep </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td>
+          <td class="paramname"><em>processinfo</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa29570be52da95b8ef3911f99b73e7bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa29570be52da95b8ef3911f99b73e7bb">&#9670;&nbsp;</a></span>processinfo_ProcessSignals()</h2>
 
@@ -254,8 +369,88 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a67274122618939d69dec5ae423918ffe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67274122618939d69dec5ae423918ffe">&#9670;&nbsp;</a></span>processinfo_shm_create()</h2>
+<a id="a9912007733ec7c0b2f4f18a2763fe12b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9912007733ec7c0b2f4f18a2763fe12b">&#9670;&nbsp;</a></span>processinfo_setup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a>* processinfo_setup </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>pinfoname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>descriptionstring</em>[200], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>msgstring</em>[200], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>functionname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>linenumber</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa7b5fb5c1b062084f05c237af9ab96b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7b5fb5c1b062084f05c237af9ab96b8">&#9670;&nbsp;</a></span>processinfo_shm_close()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int processinfo_shm_close </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td>
+          <td class="paramname"><em>pinfo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a83ebc0c8fd508e27717b0a4b11eafc1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83ebc0c8fd508e27717b0a4b11eafc1b">&#9670;&nbsp;</a></span>processinfo_shm_create()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,7 +458,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a>* processinfo_shm_create </td>
           <td>(</td>
-          <td class="paramtype">char *&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>pname</em>, </td>
         </tr>
         <tr>
@@ -281,6 +476,34 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Create <a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> structure in shared memory</p>
 <p>The structure holds real-time information about a process, so its status can be monitored and controlled See structure <a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> in CLLIcore.h for details </p>
+
+</div>
+</div>
+<a id="a16fbdc89056a8659514c9e5601b83ee3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16fbdc89056a8659514c9e5601b83ee3">&#9670;&nbsp;</a></span>processinfo_shm_link()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a>* processinfo_shm_link </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>pname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>fd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -347,7 +570,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="processtools_8h.html">processtools.h</a></li>
-    <li class="footer">Generated on Fri Mar 1 2019 17:19:13 for cacao by
+    <li class="footer">Generated on Sat Aug 24 2019 08:40:27 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

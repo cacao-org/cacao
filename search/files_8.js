@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['linarfilterpred_2ec',['linARfilterPred.c',['../linARfilterPred_8c.html',1,'']]],
-  ['linarfilterpred_2eh',['linARfilterPred.h',['../__install_2include_2linARfilterPred_8h.html',1,'(Global Namespace)'],['../src_2linARfilterPred_2linARfilterPred_8h.html',1,'(Global Namespace)']]],
-  ['linopt_5fimtools_2ec',['linopt_imtools.c',['../linopt__imtools_8c.html',1,'']]],
-  ['linopt_5fimtools_2eh',['linopt_imtools.h',['../__install_2include_2linopt__imtools_8h.html',1,'(Global Namespace)'],['../src_2linopt__imtools_2linopt__imtools_8h.html',1,'(Global Namespace)']]],
-  ['loadingmodules_2emd',['LoadingModules.md',['../LoadingModules_8md.html',1,'']]]
+  ['kdtree_2ec',['kdtree.c',['../kdtree_8c.html',1,'']]],
+  ['kdtree_2eh',['kdtree.h',['../__install_2include_2kdtree_8h.html',1,'(Global Namespace)'],['../src_2kdtree_2kdtree_8h.html',1,'(Global Namespace)']]]
 ];

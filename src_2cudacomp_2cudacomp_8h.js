@@ -10,6 +10,8 @@ var src_2cudacomp_2cudacomp_8h =
     [ "CUDACOMP_magma_compute_SVDpseudoInverse_SVD", "src_2cudacomp_2cudacomp_8h.html#a9bdb904d645ecaa0fc77d73082463b17", null ],
     [ "CUDACOMP_MatMatMult_testPseudoInverse", "src_2cudacomp_2cudacomp_8h.html#a1194bccddfcc6525520b96f49b05e7a1", null ],
     [ "CUDACOMP_MVMextractModesLoop", "src_2cudacomp_2cudacomp_8h.html#ace52bf3403804785544c321ee0dda3b9", null ],
+    [ "CUDACOMP_MVMextractModesLoop_FPCONF", "src_2cudacomp_2cudacomp_8h.html#a2feafbb6f7b1b526939e286d26fbd01c", null ],
+    [ "CUDACOMP_MVMextractModesLoop_RUN", "src_2cudacomp_2cudacomp_8h.html#a397175cdc35c4437d5ff1f8c52d39a00", null ],
     [ "CUDACOMP_printGPUMATMULTCONF", "src_2cudacomp_2cudacomp_8h.html#a1fd7986590f046a9412ba7f1d0f5d3d9", null ],
     [ "GPU_loop_MultMat_execute", "src_2cudacomp_2cudacomp_8h.html#a2270415c2fe29a781e411e2047702e65", null ],
     [ "GPU_loop_MultMat_free", "src_2cudacomp_2cudacomp_8h.html#a687d05f78bca83f55a69c25a4ea03f05", null ],

@@ -5,6 +5,8 @@ var AOloopControl__perfTest_8c =
     [ "AOcontrolLoop_perfTest_TestDMSpeed_cli", "AOloopControl__perfTest_8c.html#a679f49e2c47ab660ee79ef174844e384", null ],
     [ "AOcontrolLoop_perfTest_TestSystemLatency", "AOloopControl__perfTest_8c.html#a8941ded395577bb3ee5c9b0e7b03b1ce", null ],
     [ "AOcontrolLoop_perfTest_TestSystemLatency_cli", "AOloopControl__perfTest_8c.html#a0b219e5dcb6147701ec621745b4fe6be", null ],
+    [ "AOcontrolLoop_perfTest_TestSystemLatency_FPCONF", "AOloopControl__perfTest_8c.html#acc07aab91f55dc5f028fd440ba50b4a3", null ],
+    [ "AOcontrolLoop_perfTest_TestSystemLatency_RUN", "AOloopControl__perfTest_8c.html#a0444be65084384560c1fab311c54a264", null ],
     [ "AOloopControl_LoopTimer_Analysis", "AOloopControl__perfTest_8c.html#a306175ed86116bfca9888501c98b9885", null ],
     [ "AOloopControl_LoopTimer_Analysis_cli", "AOloopControl__perfTest_8c.html#a6d5c9612a322bd0173405b5d2bf7843b", null ],
     [ "AOloopControl_perfTest_AnalyzeRM_sensitivity", "AOloopControl__perfTest_8c.html#a6e21be5cf980119ac86334c44d00dfa1", null ],

@@ -1,6 +1,8 @@
 var src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h =
 [
     [ "__attribute__", "src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#a97c95d1ee0a5255ce421fa2cb02397de", null ],
+    [ "AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF", "src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#a526a1855d49330fe11067537cbeb7d4c", null ],
+    [ "AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN", "src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#ab478356daf82f906522f489595de47f1", null ],
     [ "AOloopControl_acquireCalib_Measure_Resp_Matrix", "src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#aaa8bc5995efddb82cdaf491f2df02340", null ],
     [ "AOloopControl_acquireCalib_Measure_WFS_linResponse", "src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#a717b12ffede18da65ae0ca25e29e37d4", null ],
     [ "AOloopControl_acquireCalib_Measure_WFSrespC", "src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#af0b950020a33fbecd354df4534dcd9e9", null ],

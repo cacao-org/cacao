@@ -1,12 +1,16 @@
 var AOloopControl__acquireCalib_8c =
 [
     [ "__attribute__", "AOloopControl__acquireCalib_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF", "AOloopControl__acquireCalib_8c.html#a526a1855d49330fe11067537cbeb7d4c", null ],
+    [ "AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN", "AOloopControl__acquireCalib_8c.html#ab478356daf82f906522f489595de47f1", null ],
     [ "AOloopControl_acquireCalib_Measure_Resp_Matrix", "AOloopControl__acquireCalib_8c.html#aaa8bc5995efddb82cdaf491f2df02340", null ],
     [ "AOloopControl_acquireCalib_Measure_Resp_Matrix_cli", "AOloopControl__acquireCalib_8c.html#a314f7ab80661584e75a4dd96e1ecfb7f", null ],
     [ "AOloopControl_acquireCalib_Measure_WFS_linResponse", "AOloopControl__acquireCalib_8c.html#a717b12ffede18da65ae0ca25e29e37d4", null ],
     [ "AOloopControl_acquireCalib_Measure_WFS_linResponse_cli", "AOloopControl__acquireCalib_8c.html#a1928d62495a4c5a62622461f9d7dd135", null ],
     [ "AOloopControl_acquireCalib_Measure_WFSrespC", "AOloopControl__acquireCalib_8c.html#af0b950020a33fbecd354df4534dcd9e9", null ],
     [ "AOloopControl_acquireCalib_Measure_WFSrespC_cli", "AOloopControl__acquireCalib_8c.html#a1d04157c95f9df94f6fb5874bc087a15", null ],
+    [ "AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF", "AOloopControl__acquireCalib_8c.html#a9482c1387ee79807262a232406ba6d7f", null ],
+    [ "AOloopControl_acquireCalib_Measure_WFSrespC_RUN", "AOloopControl__acquireCalib_8c.html#ab250e6d4b0b56051e257cfd6e07dbf6d", null ],
     [ "AOloopControl_acquireCalib_Measure_zonalRM", "AOloopControl__acquireCalib_8c.html#a9e32f266b727519079436c5f1260fc19", null ],
     [ "AOloopControl_acquireCalib_Measure_zonalRM_cli", "AOloopControl__acquireCalib_8c.html#affcc7108fd76a277fc1a82ec9a38b081", null ],
     [ "AOloopControl_acquireCalib_mkRandomLinPokeSequence", "AOloopControl__acquireCalib_8c.html#a6ec44810336fcc7c5c78ff2ef452c919", null ],

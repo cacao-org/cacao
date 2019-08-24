@@ -8,6 +8,6 @@ var streamCTRL_8h =
     [ "image_ID_from_images", "streamCTRL_8h.html#a40b4a3fa534313c896930e708a0938be", null ],
     [ "initncurses", "streamCTRL_8h.html#a57321d4280cb8b6bb462a6e32512e7b1", null ],
     [ "streamCTRL_CatchSignals", "streamCTRL_8h.html#a86f200e5c8ce512ba17c51954f944e8a", null ],
-    [ "streamCTRL_CTRLscreen", "streamCTRL_8h.html#af5f28020d484f3e325a6093ff4d2caa7", null ],
+    [ "streamCTRL_CTRLscreen", "streamCTRL_8h.html#ae47e701b56c205e55ee6353b99ed39e1", null ],
     [ "streamCTRL_scan", "streamCTRL_8h.html#a37e9e3baa3e0f825636d1df403c87594", null ]
 ];

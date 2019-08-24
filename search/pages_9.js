@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['predictive_20control',['Predictive control',['../page_cacao_predictive_control.html',1,'page_cacao_top_guide']]],
-  ['processinfo_20structure_20_28pis_29',['Processinfo Structure (PiS)',['../page_ProcessInfoStructure.html',1,'page_coding_standards']]]
+  ['offsetting',['Offsetting',['../page_cacao_offsetting.html',1,'page_cacao_top_guide']]]
 ];

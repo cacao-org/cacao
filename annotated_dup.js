@@ -27,6 +27,8 @@ var annotated_dup =
     [ "FUNCTION_PARAMETER_STRUCT", "structFUNCTION__PARAMETER__STRUCT.html", "structFUNCTION__PARAMETER__STRUCT" ],
     [ "FUNCTION_PARAMETER_STRUCT_MD", "structFUNCTION__PARAMETER__STRUCT__MD.html", "structFUNCTION__PARAMETER__STRUCT__MD" ],
     [ "GPUMATMULTCONF", "structGPUMATMULTCONF.html", "structGPUMATMULTCONF" ],
+    [ "ImageStreamIODataType", "structImageStreamIODataType.html", "structImageStreamIODataType" ],
+    [ "ImageStreamIOType", "structImageStreamIOType.html", "structImageStreamIOType" ],
     [ "kdhyperrect", "structkdhyperrect.html", "structkdhyperrect" ],
     [ "kdnode", "structkdnode.html", "structkdnode" ],
     [ "kdres", "structkdres.html", "structkdres" ],
