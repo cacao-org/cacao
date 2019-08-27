@@ -83,14 +83,17 @@ int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
 	
 	// SETUP FPS
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
-    if( loopstatus == 0 ) // stop fps
-        return 0;    
+
 
 	// ALLOCATE ENTRIES
 	void * pNull = NULL;
     int fpi;  // function parameter index
     fpi = function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
     fpi = function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
+
+
+    if( loopstatus == 0 ) // stop fps
+        return RETURN_SUCCESS;    
 
 	// RUN UPDATE LOOP
 	while( loopstatus == 1 )
@@ -104,7 +107,7 @@ int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
 	function_parameter_FPCONFexit( &fps );
 
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 

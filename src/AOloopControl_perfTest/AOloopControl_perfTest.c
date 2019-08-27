@@ -191,8 +191,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_cli() {
         } else { // Automatically set fps name to be process name up to first instance of character '.'
             strcpy(fpsname, data.processname0);
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_CONFINIT_") == 0) {  // Initialize FPS and conf process
-            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_CONFINIT);
+        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS and conf process
+            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
@@ -482,9 +482,6 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     // SETUP FPS
     // ===========================
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
-    if( loopstatus == 0 ) // stop fps
-        return 0;
-
 
 
     // ===========================
@@ -515,18 +512,21 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     
 
     long wfsNBframesmax_default[4] = { 50, 10, 100000, 50 };
-    long fp_status_wfsNBframesmax = function_parameter_add_entry(&fps, ".status.wfsNBframemax", "Number frames in measurement sequence", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &wfsNBframesmax_default);
+    long fpi_status_wfsNBframesmax = function_parameter_add_entry(&fps, ".status.wfsNBframemax", "Number frames in measurement sequence", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &wfsNBframesmax_default);
 
 
     // status
-    long fp_wfsdt        = function_parameter_add_entry(&fps, ".status.wfsdt", "WFS frame interval", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
-    long fp_twaitus      = function_parameter_add_entry(&fps, ".status.twaitus", "initial wait [us]", FPTYPE_INT64, FPFLAG_DEFAULT_OUTPUT, pNull);
-	long fp_refdtoffset  = function_parameter_add_entry(&fps, ".status.refdtoffset", "baseline time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
-	long fp_dtoffset     = function_parameter_add_entry(&fps, ".status.dtoffset", "actual time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    long fpi_wfsdt        = function_parameter_add_entry(&fps, ".status.wfsdt", "WFS frame interval", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    long fpi_twaitus      = function_parameter_add_entry(&fps, ".status.twaitus", "initial wait [us]", FPTYPE_INT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+	long fpi_refdtoffset  = function_parameter_add_entry(&fps, ".status.refdtoffset", "baseline time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+	long fpi_dtoffset     = function_parameter_add_entry(&fps, ".status.dtoffset", "actual time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
 	// output
-	long fp_outframerateHz = function_parameter_add_entry(&fps, ".out.framerateHz", "WFS frame rate [Hz]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
-	long fp_outHardLatencyfr = function_parameter_add_entry(&fps, ".out.latencyfr", "hardware latency [frame]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+	long fpi_outframerateHz = function_parameter_add_entry(&fps, ".out.framerateHz", "WFS frame rate [Hz]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+	long fpi_outHardLatencyfr = function_parameter_add_entry(&fps, ".out.latencyfr", "hardware latency [frame]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+
+    if( loopstatus == 0 ) // stop fps
+        return RETURN_SUCCESS;
 
 	
     // =====================================
@@ -835,19 +835,34 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     if(datatype == _DATATYPE_FLOAT) {
         printf("data type  :  _DATATYPE_FLOAT\n");
     }
+
+    if(datatype == _DATATYPE_DOUBLE) {
+        printf("data type  :  _DATATYPE_DOUBLE\n");
+    }
+
     if(datatype == _DATATYPE_UINT16) {
         printf("data type  :  _DATATYPE_UINT16\n");
     }
+
     if(datatype == _DATATYPE_INT16) {
         printf("data type  :  _DATATYPE_INT16\n");
     }
+
     if(datatype == _DATATYPE_UINT32) {
         printf("data type  :  _DATATYPE_UINT32\n");
     }
+
     if(datatype == _DATATYPE_INT32) {
         printf("data type  :  _DATATYPE_INT32\n");
     }
 
+    if(datatype == _DATATYPE_UINT64) {
+        printf("data type  :  _DATATYPE_UINT64\n");
+    }
+
+    if(datatype == _DATATYPE_INT64) {
+        printf("data type  :  _DATATYPE_INT64\n");
+    }
 
     list_image_ID();
 
@@ -943,6 +958,16 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
                 memcpy(ptr, ptr0, sizeof(float)*wfssize);
             }
 
+            if(datatype == _DATATYPE_DOUBLE) {
+				ptr0 = (char *) data.image[IDwfs].array.D;
+				ptr0 += SIZEOF_DATATYPE_DOUBLE * wfsslice * wfssize;
+                // copy image to cube slice
+                ptr = (char *) data.image[IDwfsc].array.D;
+                ptr += sizeof(float) * wfsframe * wfssize;
+                memcpy(ptr, ptr0, sizeof(float)*wfssize);
+            }
+
+
             if(datatype == _DATATYPE_UINT16) {
 				ptr0 = (char *) data.image[IDwfs].array.UI16;
 				ptr0 += SIZEOF_DATATYPE_UINT16 * wfsslice * wfssize;
@@ -976,6 +1001,24 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
                 // copy image to cube slice
                 ptr = (char *) data.image[IDwfsc].array.SI32;
                 ptr += SIZEOF_DATATYPE_INT32 * wfsframe * wfssize;
+                memcpy(ptr, ptr0, sizeof(short)*wfssize);
+            }
+
+            if(datatype == _DATATYPE_UINT64) {
+				ptr0 = (char *) data.image[IDwfs].array.UI64;
+				ptr0 += SIZEOF_DATATYPE_UINT64 * wfsslice * wfssize;
+                // copy image to cube slice
+                ptr = (char *) data.image[IDwfsc].array.UI64;
+                ptr += SIZEOF_DATATYPE_UINT64 * wfsframe * wfssize;
+                memcpy(ptr, ptr0, sizeof(short)*wfssize);
+            }
+
+            if(datatype == _DATATYPE_INT64) {
+				ptr0 = (char *) data.image[IDwfs].array.SI64;
+				ptr0 += SIZEOF_DATATYPE_INT64 * wfsslice * wfssize;
+                // copy image to cube slice
+                ptr = (char *) data.image[IDwfsc].array.SI64;
+                ptr += SIZEOF_DATATYPE_INT64 * wfsframe * wfssize;
                 memcpy(ptr, ptr0, sizeof(short)*wfssize);
             }
 
@@ -1029,6 +1072,12 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
                     valarray[kk] += tmp * tmp;
                 }
 
+            if(datatype == _DATATYPE_DOUBLE)
+                for(ii = 0; ii < wfssize; ii++) {
+                    tmp = data.image[IDwfsc].array.D[kk * wfssize + ii] - data.image[IDwfsc].array.D[(kk - 1) * wfssize + ii];
+                    valarray[kk] += tmp * tmp;
+                }
+
             if(datatype == _DATATYPE_UINT16)
                 for(ii = 0; ii < wfssize; ii++) {
                     tmp = data.image[IDwfsc].array.UI16[kk * wfssize + ii] - data.image[IDwfsc].array.UI16[(kk - 1) * wfssize + ii];
@@ -1054,7 +1103,19 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
                     tmp = data.image[IDwfsc].array.SI32[kk * wfssize + ii] - data.image[IDwfsc].array.SI32[(kk - 1) * wfssize + ii];
                     valarray[kk] += 1.0 * tmp * tmp;
                 }
-            
+
+            if(datatype == _DATATYPE_UINT64)
+                for(ii = 0; ii < wfssize; ii++) {
+                    tmp = data.image[IDwfsc].array.UI64[kk * wfssize + ii] - data.image[IDwfsc].array.UI64[(kk - 1) * wfssize + ii];
+                    valarray[kk] += 1.0 * tmp * tmp;
+                }
+
+            if(datatype == _DATATYPE_INT64)
+                for(ii = 0; ii < wfssize; ii++) {
+                    tmp = 0.0;
+                    tmp = data.image[IDwfsc].array.SI64[kk * wfssize + ii] - data.image[IDwfsc].array.SI64[(kk - 1) * wfssize + ii];
+                    valarray[kk] += 1.0 * tmp * tmp;
+                }            
             
             
             
@@ -1234,7 +1295,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     // if we don't have anything more informative, we use PID
     FUNCTION_PARAMETER_STRUCT fps;
     sprintf(fpsname, "mlat-%s-%s", dmname, wfsname);
-    AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_CONFINIT);
+    AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_FPSINIT);
 
 
 
