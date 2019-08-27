@@ -243,9 +243,6 @@ int AOloopControl_DM_CombineChannels_FPCONF(
 
     // SETUP FPS
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
-    if(loopstatus == 0) { // stop fps
-        return 0;
-    }
 
 
     // ALLOCATE FPS ENTRIES
@@ -325,7 +322,9 @@ int AOloopControl_DM_CombineChannels_FPCONF(
         function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, FPFLAG_DEFAULT_STATUS, pNull);
 
 
-
+    if(loopstatus == 0) { // stop fps
+        return EXIT_SUCCESS;
+    }
 
 
     // RUN UPDATE LOOP
@@ -1101,7 +1100,7 @@ int AOloopControl_DM_CombineChannels(
 
     // create FPS
     sprintf(fpsname, "DMcomb-%02ld", DMindex);
-    AOloopControl_DM_CombineChannels_FPCONF( fpsname, CMDCODE_CONFINIT, DMindex);
+    AOloopControl_DM_CombineChannels_FPCONF( fpsname, CMDCODE_FPSINIT, DMindex);
 
 
 
