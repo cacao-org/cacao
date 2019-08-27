@@ -37,6 +37,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long d
 
 
 /** @brief Measure linear response to set of DM modes/patterns */
+errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(char *fpsname, uint32_t CMDmode);
+int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(char *fpsname);
 long AOloopControl_acquireCalib_Measure_WFS_linResponse(long loop, float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDrespC_name, const char *IDwfsref_name, int normalize, int AOinitMode, long NBcycle, long NBinnerCycle);
 
 
