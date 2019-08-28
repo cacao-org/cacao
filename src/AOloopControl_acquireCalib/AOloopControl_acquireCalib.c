@@ -215,7 +215,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
 
     // First, we try to execute function through FPS interface
     if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
-        //unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
+        // unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
         // Set FPS interface name
         // By convention, if there are optional arguments, they should be appended to the fps name
         //
@@ -1571,11 +1571,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
     // input streams
-    FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM;
-
-    long fpi_streamname_pokeC     = function_parameter_add_entry(&fps, ".sn_pokeC",
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
+    long fpi_streamname_pokeC     = function_parameter_add_entry(&fps, ".fn_pokeC",
                                     "Poke sequence cube",
-                                    FPTYPE_STREAMNAME, FPFLAG, pNull);
+                                    FPTYPE_FITSFILENAME, FPFLAG, pNull);
 
 
     // output files
@@ -1593,6 +1592,25 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                          "Normalize WFS frames",
                          FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
+    long fpi_Hpokemode = function_parameter_add_entry(&fps, ".Hpoke",
+                         "Hadamard Poke mode",
+                         FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+
+
+    long fpi_autoTiming = function_parameter_add_entry(&fps, ".autoTiming",
+                         "Auto Timing",
+                         FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+
+
+
+    long fpi_FPS_mlat = function_parameter_add_entry(&fps, ".FPSmlat",
+                         "FPS mlat",
+                         FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
+	FUNCTION_PARAMETER_STRUCT FPSmlat;
+	long FPSmlat_NBparam = 0;
+
+
+
     if( loopstatus == 0 ) // stop fps
         return RETURN_SUCCESS;
 
@@ -1603,13 +1621,43 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     // =====================================
     while ( loopstatus == 1 )
     {
+		usleep(50);
+		
         if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
         {
             // here goes the logic
+            
+            // try to connect to aux FPS
+            if ( FPSmlat_NBparam < 1 ) {
+				FPSmlat_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_mlat].val.string[0], &FPSmlat, FPSCONNECT_SIMPLE);
+			}
+            
+            
+            
+            if(fps.parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF) {   // ON state
+				functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Hpoke.fits");
+			}
+			else {
+				functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Spoke.fits");
+			}
+			
+			if(fps.parray[fpi_autoTiming].fpflag & FPFLAG_ONOFF) {   // ON state
+				if ( FPSmlat_NBparam > 0 ) {
+					double latfr = functionparameter_GetParamValue_FLOAT64 ( &FPSmlat, ".out.latencyfr" );
+					long delayfr = (long) (1000000.0*latfr);
+					fps.parray[fpi_delayfr].val.l[0] = delayfr;
+				}
+			}
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }
     }
+    
+    if ( FPSmlat_NBparam > 0 ) {
+		function_parameter_struct_disconnect( &FPSmlat );
+	}
+    
+    
     function_parameter_FPCONFexit( &fps );
 
 
@@ -1647,7 +1695,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     long NBexcl      = functionparameter_GetParamValue_INT64(&fps, ".NBexcl");
     
     char IDpokeC_name[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(IDpokeC_name,  functionparameter_GetParamPtr_STRING(&fps, ".sn_pokeC"),  FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(IDpokeC_name,  functionparameter_GetParamPtr_STRING(&fps, ".fn_pokeC"),  FUNCTION_PARAMETER_STRMAXLEN);
 
 	char IDrespC_name[FUNCTION_PARAMETER_STRMAXLEN];
 	strncpy(IDrespC_name,  functionparameter_GetParamPtr_STRING(&fps, ".out.fn_respC"),  FUNCTION_PARAMETER_STRMAXLEN);
