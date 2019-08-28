@@ -289,10 +289,12 @@ echo ""
 
 checkDir $CACAO_ROOT/src/AOloopControl/scripts
 checkFile $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash
+
 checkCommand tmux
 checkCommand fpsCTRL
 checkCommand milkStreamLink
 checkCommand milkFits2shm
+checkCommand milk-fpsmkcmd
 
 
 echo ""
