@@ -100,21 +100,21 @@ loopnb=$( head -1 LOOPNUMBER )
 DMindex=$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{print $1;}' )
 DMxsize=$( head -1 fpsconf/AOCONF/DMxsize.setval.txt  | awk '{print $1;}' )
 DMysize=$( head -1 fpsconf/AOCONF/DMysize.setval.txt  | awk '{print $1;}' )
-
 echo "DM size = $DMxsize $DMysize"
 
 # DM mode
-# 0=ZONAL : physical actuators on spatial coordinates
+# 0=ZONAL SQUARE: physical actuators on spatial coordinates
 # 1=MODAL : each DM actuiator represents a single WF mode
-DMMODEfile="conf/param_DMMODE.txt"
-if [ -f $DMMODEfile ]; then
-DMMODE=$( head -1 ${DMMODEfile} )
-else
-DMMODE="0"
-echo "$DMMODE" > $DMMODEfile
-fi
 
+#DMMODEfile="conf/param_DMMODE.txt"
+#if [ -f $DMMODEfile ]; then
+#DMMODE=$( head -1 ${DMMODEfile} )
+#else
+#DMMODE="0"
+#echo "$DMMODE" > $DMMODEfile
+#fi
 
+DMMODE=$( head -1 fpsconf/AOCONF/DMMODE.setval.txt  | awk '{print $1;}' )
 echo "DM mode = $DMMODE"
 
 if [ ! -f "./conf/RM_DMmask.fits" ]; then
@@ -125,7 +125,7 @@ cx=0.5*${DMxsize}-0.5
 cy=0.5*${DMysize}-0.5
 rad=0.5*${DMxsize}+0.6
 mkdisk dmmask ${DMxsize} ${DMysize} cx cy rad
-savefits dmmask "!./conf/RM_DMmask.fits.gz"
+savefits dmmask "!./conf/RM_DMmask.fits"
 itot(dmmask)
 exitCLI
 EOF
@@ -133,7 +133,7 @@ else
 ./AOloopControl << EOF
 creaim im ${DMxsize} ${DMysize}
 dmmask=im+1
-savefits dmmask "!./conf/RM_DMmask.fits.gz"
+savefits dmmask "!./conf/RM_DMmask.fits"
 exitCLI
 EOF
 fi
@@ -141,13 +141,18 @@ fi
 fi
 
 ./AOloopControl << EOF
-loadfits "./conf/RM_DMmask.fits.gz" DMmask
+loadfits "./conf/RM_DMmask.fits" DMmask
 aolmkH DMmask outim
-savefits outim "!./conf/Hpoke.fits.gz"
+savefits outim "!./conf/Hpoke.fits"
 exitCLI
 EOF
 
-mv Hpixindex.fits.gz ./conf/
-mv Hmat.fits.gz ./conf/
+mv Hpixindex.fits ./conf/
+mv Hmat.fits ./conf/
 
+gzip -f ./conf/Hmat.fits
+gzip -f ./conf/Hpixindex.fits
+
+
+gzip -kf ./conf/Hpoke.fits
 
