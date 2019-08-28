@@ -4,9 +4,6 @@
  * 
  * To be used for AOloopControl module
  *  
- * @author  O. Guyon
- * @date    26 Dec 2017
- *
  *
  * 
  */

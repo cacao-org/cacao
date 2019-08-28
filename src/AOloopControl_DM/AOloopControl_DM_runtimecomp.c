@@ -265,6 +265,11 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     long fp_DMysize =
         function_parameter_add_entry(&fps, "AOCONF.DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG, &DMsize_default);
 
+	long DMMODE_default[4] = { 0, 0, 1, 0 };
+    long fp_DMMODE =
+        function_parameter_add_entry(&fps, "AOCONF.DMMODE", "0:SquareGrid, 1:Generic", FPTYPE_INT64, FPFLAG, &DMMODE_default);
+
+
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long NBchannel_default[4] = { 12, 1, 20, 12 };
