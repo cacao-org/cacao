@@ -4,9 +4,6 @@
  * 
  * AO engine uses stream data structure
  *  
- * @author  O. Guyon
- * @date    26 Dec 2017
- *
  * 
  * @bug No known bugs.
  * 
@@ -129,7 +126,7 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
 
             index++;
         }
-    save_fits("Hpixindex", "!Hpixindex.fits.gz");
+    save_fits("Hpixindex", "!Hpixindex.fits");
 
     Hmat = (int*) malloc(sizeof(int)*Hsize*Hsize);
 
@@ -162,7 +159,7 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
         for(jj=0; jj<Hsize; jj++)
             data.image[IDtest].array.F[jj*Hsize+ii] = Hmat[jj*Hsize+ii];
 
-    save_fits("Htest", "!Hmat.fits.gz");
+    save_fits("Htest", "!Hmat.fits");
 
 
     IDout = create_3Dimage_ID(outname, xsize, ysize, Hsize);
