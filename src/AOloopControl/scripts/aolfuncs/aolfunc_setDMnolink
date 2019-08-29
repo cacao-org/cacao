@@ -176,7 +176,7 @@ echo ""
 ##########################################
 
 DMindex="$CACAO_DMINDEX"
-#$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{printf("%02d",$1);}' )
+#$( head -1 fpsconf/AOCONF/DMindex  | awk '{printf("%02d",$1);}' )
 
 
 

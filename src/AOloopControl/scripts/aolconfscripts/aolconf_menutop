@@ -57,11 +57,11 @@ if [ "$fps" = "1" ]; then
 stringcenter "DM CHANNELS AND OUTPUT (dmcomb process)"
 menuitems=( "1 ->" "\Zb\Zr$string\Zn" )
 
-DMindex=$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{printf "%02d", $1;}' )
+DMindex=$( head -1 fpsconf/AOCONF/DMindex  | awk '{printf "%02d", $1;}' )
 
 
-DMxsize=$( head -1 fpsconf/AOCONF/DMxsize.setval.txt  | awk '{print $1;}' )
-DMysize=$( head -1 fpsconf/AOCONF/DMysize.setval.txt  | awk '{print $1;}' )
+DMxsize=$( head -1 fpsconf/AOCONF/DMxsize  | awk '{print $1;}' )
+DMysize=$( head -1 fpsconf/AOCONF/DMysize  | awk '{print $1;}' )
 
 menuitems+=( "INFO" "DM index = $DMindex  size = $DMxsize x $DMysize")
 

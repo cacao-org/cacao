@@ -46,8 +46,8 @@ else
 echo "Adding process ${fpsname}"
 echo "${fpsname}      aolcontrolDMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
 
-echo "setval AOCONF.DMxsize ${CACAO_DMxsize}" >> ${FPSCONFFILE}
-echo "setval AOCONF.DMysize ${CACAO_DMxsize}" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.DMysize ${CACAO_DMxsize}" >> ${FPSCONFFILE}
 fi
 
 fi

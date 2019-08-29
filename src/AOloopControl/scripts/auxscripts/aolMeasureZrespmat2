@@ -137,7 +137,7 @@ normalize_flag="$5"
 
 
 loopnb=$( head -1 LOOPNUMBER )
-dmindex=$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{print $1;}' )
+dmindex=$( head -1 fpsconf/AOCONF/DMindex | awk '{print $1;}' )
 
 
 
@@ -148,8 +148,8 @@ pname="aol${loopnb}zrespM"
 if [ ! -f ./conf/RMpokeCubeZ.fits.gz ]; then
 #DMxsize=$( head -1 ./conf/param_DMxsize.txt )
 #DMysize=$( head -1 ./conf/param_DMysize.txt )
-DMxsize=$( head -1 fpsconf/AOCONF/DMxsize.setval.txt  | awk '{print $1;}' )
-DMysize=$( head -1 fpsconf/AOCONF/DMysize.setval.txt  | awk '{print $1;}' )
+DMxsize=$( head -1 fpsconf/AOCONF/DMxsize | awk '{print $1;}' )
+DMysize=$( head -1 fpsconf/AOCONF/DMysize | awk '{print $1;}' )
 
 ./AOloopControl << EOF
 aolmksimplezpM ${DMxsize} ${DMysize} pokeM

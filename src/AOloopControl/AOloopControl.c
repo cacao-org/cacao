@@ -96,7 +96,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #endif
 
 
-//libraries created by O. Guyon 
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"

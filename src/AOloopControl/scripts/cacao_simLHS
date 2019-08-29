@@ -425,8 +425,8 @@ tmux send-keys -t ${fpsCTRLtmuxname} "fpsCTRL -f ${fpsCTRLfifo}" C-m
 # ===================================================================================
 
 # DM
-echo "setval AOCONF.DMxsize ${DMxsize}" >> ${fpsCTRLfifo}
-echo "setval AOCONF.DMysize ${DMysize}" >> ${fpsCTRLfifo}
+echo "setval DMcomb-$DMINDEX.DMxsize ${DMxsize}" >> ${fpsCTRLfifo}
+echo "setval DMcomb-$DMINDEX.DMysize ${DMysize}" >> ${fpsCTRLfifo}
 
 
 # streamDelay

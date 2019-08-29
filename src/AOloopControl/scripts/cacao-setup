@@ -623,11 +623,20 @@ if [ "$UPDATEMODE" = "0" ]; then
 fpssetparamconf
 
 
-mkdir fpsconf
-mkdir fpsconf/AOCONF
-echo "${CACAO_DMINDEX}" > ./fpsconf/AOCONF/DMindex.setval.txt
-echo "${CACAO_DMxsize}" > ./fpsconf/AOCONF/DMxsize.setval.txt
-echo "${CACAO_DMysize}" > ./fpsconf/AOCONF/DMysize.setval.txt
+DMcomb-${CACAO_DMINDEX}
+
+CACAO_DMxsize    : 50
+CACAO_DMysize    : 50
+CACAO_WORKDIR    : linsimtest1
+CACAO_DMINDEX    : 01
+CACAO_LOOPNUMBER : 2
+CACAO_WFSSTREAM  : aol2_linsimWFS
+
+mkdir -p fpsconf
+mkdir -p fpsconf/AOCONF
+echo "${CACAO_DMINDEX}" > ./fpsconf/AOCONF/DMindex
+echo "${CACAO_DMxsize}" > ./fpsconf/AOCONF/DMxsize
+echo "${CACAO_DMysize}" > ./fpsconf/AOCONF/DMysize
 fi
 
 

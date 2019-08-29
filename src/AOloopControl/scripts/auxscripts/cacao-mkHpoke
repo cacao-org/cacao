@@ -97,9 +97,9 @@ loopnb=$( head -1 LOOPNUMBER )
 #DMxsize=$( head -1 conf/param_DMxsize.txt )
 #DMysize=$( head -1 conf/param_DMysize.txt )
 
-DMindex=$( head -1 fpsconf/AOCONF/DMindex.setval.txt  | awk '{print $1;}' )
-DMxsize=$( head -1 fpsconf/AOCONF/DMxsize.setval.txt  | awk '{print $1;}' )
-DMysize=$( head -1 fpsconf/AOCONF/DMysize.setval.txt  | awk '{print $1;}' )
+DMindex=$( head -1 fpsconf/AOCONF/DMindex | awk '{print $1;}' )
+DMxsize=$( head -1 fpsconf/AOCONF/DMxsize | awk '{print $1;}' )
+DMysize=$( head -1 fpsconf/AOCONF/DMysize | awk '{print $1;}' )
 echo "DM size = $DMxsize $DMysize"
 
 # DM mode
@@ -114,8 +114,9 @@ echo "DM size = $DMxsize $DMysize"
 #echo "$DMMODE" > $DMMODEfile
 #fi
 
-DMMODE=$( head -1 fpsconf/AOCONF/DMMODE.setval.txt  | awk '{print $1;}' )
+DMMODE=$( head -1 fpsconf/DMcomb-${DMindex}/DMMODE.setval.txt  | awk '{print $1;}' )
 echo "DM mode = $DMMODE"
+
 
 if [ ! -f "./conf/RM_DMmask.fits" ]; then
 
