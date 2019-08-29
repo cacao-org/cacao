@@ -241,6 +241,8 @@ int AOloopControl_DM_CombineChannels_FPCONF(
 ) {
     uint16_t loopstatus;
 
+
+
     // SETUP FPS
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
 
@@ -255,19 +257,21 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     FPFLAG &= ~FPFLAG_WRITERUN;
     long DMindex_default[4] = { DMindex, 0, 9, DMindex };
     long fp_DMindex =
-        function_parameter_add_entry(&fps, "AOCONF.DMindex", "Deformable mirror index", FPTYPE_INT64, FPFLAG, &DMindex_default);
+        function_parameter_add_entry(&fps, ".DMindex", "Deformable mirror index", FPTYPE_INT64, FPFLAG, &DMindex_default);
+
+
 
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long DMsize_default[4] = { 1, 1, 1000, 1 };
     long fp_DMxsize =
-        function_parameter_add_entry(&fps, "AOCONF.DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG, &DMsize_default);
+        function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG, &DMsize_default);
     long fp_DMysize =
-        function_parameter_add_entry(&fps, "AOCONF.DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG, &DMsize_default);
+        function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG, &DMsize_default);
 
 	long DMMODE_default[4] = { 0, 0, 1, 0 };
     long fp_DMMODE =
-        function_parameter_add_entry(&fps, "AOCONF.DMMODE", "0:SquareGrid, 1:Generic", FPTYPE_INT64, FPFLAG, &DMMODE_default);
+        function_parameter_add_entry(&fps, ".DMMODE", "0:SquareGrid, 1:Generic", FPTYPE_INT64, FPFLAG, &DMMODE_default);
 
 
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
@@ -492,9 +496,9 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
     // GET FUNCTION PARAMETER VALUES
-    long DMindex  = functionparameter_GetParamValue_INT64(&fps, "AOCONF.DMindex");
-    long xsize    = functionparameter_GetParamValue_INT64(&fps, "AOCONF.DMxsize");
-    long ysize    = functionparameter_GetParamValue_INT64(&fps, "AOCONF.DMysize");
+    long DMindex  = functionparameter_GetParamValue_INT64(&fps, ".DMindex");
+    long xsize    = functionparameter_GetParamValue_INT64(&fps, ".DMxsize");
+    long ysize    = functionparameter_GetParamValue_INT64(&fps, ".DMysize");
     int NBchannel = functionparameter_GetParamValue_INT64(&fps, "NBchannel");
     int AveMode   = functionparameter_GetParamValue_INT64(&fps, ".AveMode");
 
@@ -1112,10 +1116,10 @@ int AOloopControl_DM_CombineChannels(
 
     function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN);
 
-    functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMindex", DMindex);
-    functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMxsize", xsize);
-    functionparameter_SetParamValue_INT64(&fps, "AOCONF.DMysize", ysize);
-    functionparameter_SetParamValue_INT64(&fps, "NBchannel", NBchannel);
+    functionparameter_SetParamValue_INT64(&fps, ".DMindex", DMindex);
+    functionparameter_SetParamValue_INT64(&fps, ".DMxsize", xsize);
+    functionparameter_SetParamValue_INT64(&fps, ".DMysize", ysize);
+    functionparameter_SetParamValue_INT64(&fps, ".NBchannel", NBchannel);
     functionparameter_SetParamValue_INT64(&fps, ".AveMode", AveMode);
 
     functionparameter_SetParamValue_INT64(&fps, ".option.dm2dm_mode", dm2dm_mode);
