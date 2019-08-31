@@ -1637,6 +1637,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
             
             
             if(fps.parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF) {   // ON state
+				char fname_Hpoke[200];
+				
 				functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Hpoke.fits");
 			}
 			else {
