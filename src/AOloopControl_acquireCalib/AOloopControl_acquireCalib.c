@@ -1825,14 +1825,14 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     }
 
 
-printf("TEST POINT LINE %d\n", __LINE__);
-fflush(stdout);
+    printf("TEST POINT LINE %d\n", __LINE__);
+    fflush(stdout);
 
 
     // ===============================
     // GET FUNCTION PARAMETER VALUES
     // ===============================
-    
+
     long loop        = functionparameter_GetParamValue_INT64(&fps, ".loop");
     float ampl       = functionparameter_GetParamValue_FLOAT64(&fps, ".ampl");
     long delayfr     = functionparameter_GetParamValue_INT64(&fps, ".delayfr");
@@ -1841,32 +1841,32 @@ fflush(stdout);
     long NBexcl      = functionparameter_GetParamValue_INT64(&fps, ".NBexcl");
     long NBcycle     = functionparameter_GetParamValue_INT64(&fps, ".NBcycle");
     long NBinnerCycle = functionparameter_GetParamValue_INT64(&fps, ".NBinnerCycle");
-    
+
     printf("TEST POINT LINE %d\n", __LINE__);
     fflush(stdout);
 
 
-    
+
     char pokeC_filename[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(pokeC_filename,  functionparameter_GetParamPtr_STRING(&fps, ".fn_pokeC"),  FUNCTION_PARAMETER_STRMAXLEN);
 
-	char respC_filename[FUNCTION_PARAMETER_STRMAXLEN];
-	strncpy(respC_filename,  functionparameter_GetParamPtr_STRING(&fps, ".out.fn_respC"),  FUNCTION_PARAMETER_STRMAXLEN);
-	char respC_sname[] = "respC";
+    char respC_filename[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(respC_filename,  functionparameter_GetParamPtr_STRING(&fps, ".out.fn_respC"),  FUNCTION_PARAMETER_STRMAXLEN);
+    char respC_sname[] = "respC";
 
-	char wfsref_filename[FUNCTION_PARAMETER_STRMAXLEN];
-	strncpy(wfsref_filename,  functionparameter_GetParamPtr_STRING(&fps, ".out.fn_wfsref"),  FUNCTION_PARAMETER_STRMAXLEN);
-	char wfsref_sname[] = "wfsref";
+    char wfsref_filename[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(wfsref_filename,  functionparameter_GetParamPtr_STRING(&fps, ".out.fn_wfsref"),  FUNCTION_PARAMETER_STRMAXLEN);
+    char wfsref_sname[] = "wfsref";
 
     printf("TEST POINT LINE %d\n", __LINE__);
     fflush(stdout);
 
 
-	int normalize = functionparameter_GetParamValue_ONOFF(&fps, ".normalize");
-	int AOinitMode = functionparameter_GetParamValue_INT64(&fps, ".AOinitMode");
+    int normalize = functionparameter_GetParamValue_ONOFF(&fps, ".normalize");
+    int AOinitMode = functionparameter_GetParamValue_INT64(&fps, ".AOinitMode");
 
-	
-	
+
+
     printf("Entering function %s \n", __FUNCTION__);
     fflush(stdout);
 
@@ -1882,24 +1882,24 @@ fflush(stdout);
 
     int SHUFFLE = 1;
 
-	uint32_t act;
+    uint32_t act;
     char *ptra;
     char *ptrb;
     char *ptra0;
     char *ptrb0;
-	uint64_t pix;
-	long IDwfsresp2a, IDwfsresp2b;
-	uint64_t wfsxsize, wfsysize, wfsxysize;
-	long IDrespC;
-	long IDwfsref;
+    uint64_t pix;
+    long IDwfsresp2a, IDwfsresp2b;
+    uint64_t wfsxsize, wfsysize, wfsxysize;
+    long IDrespC;
+    long IDwfsref;
 
-	char pokeC_name[] = "pokeC";
+    char pokeC_name[] = "pokeC";
     long IDpokeC = load_fits(pokeC_filename, pokeC_name, 1);
     if(IDpokeC == -1) {
-		printf("ERROR: cannot load image %s\n", pokeC_filename);
-		exit(0);
-	}
-        
+        printf("ERROR: cannot load image %s\n", pokeC_filename);
+        exit(0);
+    }
+
     uint32_t dmxsize = data.image[IDpokeC].md[0].size[0];
     uint32_t dmysize = data.image[IDpokeC].md[0].size[1];
     uint32_t dmxysize = dmxsize*dmysize;
@@ -1908,7 +1908,7 @@ fflush(stdout);
     int *pokearray = (int*) malloc(sizeof(int)*NBpoke); // shuffled array
 
     printf("TEST POINT LINE %d    NBpoke = %ld\n", __LINE__, NBpoke);
-    fflush(stdout);	
+    fflush(stdout);
 
     int p;
     for(p=0; p<NBpoke; p++)
@@ -2089,6 +2089,8 @@ fflush(stdout);
     int IterNumber = -1;
     int AveStep = 0;
 
+    list_image_ID();
+
     while(FileOK == 1) // keep processing until there is no more file to process
     {
         char imnameout_respC[100];
@@ -2103,6 +2105,8 @@ fflush(stdout);
 
         if(IterNumber == -1) // Process the global average
         {
+            printf("Processing global average\n");
+
             IDwfsresp2a = image_ID("wfsresp2a");
             IDwfsresp2b = image_ID("wfsresp2b");
             sprintf(imnameout_respC, "%s", respC_sname);
@@ -2110,23 +2114,23 @@ fflush(stdout);
 
             sprintf(imnameout_respC_A, "%s_A", respC_sname);
             sprintf(imnameout_wfsref_A, "%s_A", wfsref_sname);
-            
+
             sprintf(imnameout_respC_B, "%s_B", respC_sname);
-            sprintf(imnameout_wfsref_B, "%s_B", wfsref_sname);            
+            sprintf(imnameout_wfsref_B, "%s_B", wfsref_sname);
         }
         else
         {
             char wfsresp2aname[100];
             char wfsresp2bname[100];
             char tmpfname[500];
-            
-            
+
+
             printf("Processing AveStep %3d  Iter %3d ...\n", AveStep, IterNumber);
             fflush(stdout);
 
             sprintf(wfsresp2aname, "wfsresp2a.snap");
             sprintf(wfsresp2bname, "wfsresp2b.snap");
-            
+
             delete_image_ID(wfsresp2aname);
             delete_image_ID(wfsresp2bname);
 
@@ -2142,25 +2146,25 @@ fflush(stdout);
 
             sprintf(imnameout_respC_A, "%s_A.tstep%03d.iter%03d", respC_sname, AveStep, IterNumber);
             sprintf(imnameout_wfsref_A, "%s_A.tstep%03d.iter%03d", wfsref_sname, AveStep, IterNumber);
-            
+
             sprintf(imnameout_respC_B, "%s_B.tstep%03d.iter%03d", respC_sname, AveStep, IterNumber);
             sprintf(imnameout_wfsref_B, "%s_B.tstep%03d.iter%03d", wfsref_sname, AveStep, IterNumber);
         }
 
         if( (IDwfsresp2a == -1) || (IDwfsresp2b == -1))
         {
-			printf("No file(s) to process\n");
+            printf("No file(s) to process\n");
             FileOK = 0;
         }
         else
         {
-			long IDrespC_A;
-			long IDwfsref_A;
-			long IDrespC_B;
-			long IDwfsref_B;
+            long IDrespC_A;
+            long IDwfsref_A;
+            long IDrespC_B;
+            long IDwfsref_B;
 
-			printf("Processing files\m");
-			
+            printf("Processing files\n");
+
             wfsxsize = data.image[IDwfsresp2a].md[0].size[0];
             wfsysize = data.image[IDwfsresp2a].md[0].size[1];
             wfsxysize = wfsxsize*wfsysize;
@@ -2180,9 +2184,9 @@ fflush(stdout);
                 int innercycle;
                 for(innercycle=0; innercycle < NBinnerCycleC; innercycle++)
                 {
-					float valA;
-					float valB;
-					
+                    float valA;
+                    float valB;
+
                     // Sum response
                     for(pix=0; pix<wfsxysize; pix++)
                     {
@@ -2190,24 +2194,24 @@ fflush(stdout);
                         valA = (data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
                         data.image[IDrespC].array.F[wfsxysize*pokearray[poke] + pix] += 0.5*valA;
                         data.image[IDrespC_A].array.F[wfsxysize*pokearray[poke] + pix] += 1.0*valA;
-                                                
+
                         // pattern B
                         valB = pokesign[poke]*(data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
                         data.image[IDrespC].array.F[wfsxysize*pokearray[poke] + pix] += 0.5*valB;
-                        data.image[IDrespC_B].array.F[wfsxysize*pokearray[poke] + pix] += 1.0*valB;                        
+                        data.image[IDrespC_B].array.F[wfsxysize*pokearray[poke] + pix] += 1.0*valB;
                     }
 
                     // Sum reference
                     for(pix=0; pix<wfsxysize; pix++)
                     {
-						// pattern A
+                        // pattern A
                         data.image[IDwfsref].array.F[pix] += (data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] + data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/(2*NBpoke)/NBinnerCycleC;
-                        
+
                         data.image[IDwfsref_A].array.F[pix] += 2.0*(data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] + data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/(2*NBpoke)/NBinnerCycleC;
-                        
+
                         // pattern B
                         data.image[IDwfsref].array.F[pix] += (data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex) + pix] + data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex+1) + pix])/(2*NBpoke)/NBinnerCycleC;
-                        
+
                         data.image[IDwfsref_B].array.F[pix] += 2.0*(data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex) + pix] + data.image[IDwfsresp2b].array.F[wfsxysize*(pokeindex+1) + pix])/(2*NBpoke)/NBinnerCycleC;
                     }
 
@@ -2223,38 +2227,72 @@ fflush(stdout);
                 char filename_wfsref[100];
 
 
-				printf(" [saving ... ");
-				fflush(stdout);
+                printf(" [saving ... ");
+                fflush(stdout);
 
                 sprintf(filename_respC, "!tmpRMacqu/respM.tstep%03d.iter%03d.fits", AveStep, IterNumber);
                 sprintf(filename_wfsref, "!tmpRMacqu/wfsref.tstep%03d.iter%03d.fits", AveStep, IterNumber);
                 save_fits(imnameout_respC, filename_respC);
-                save_fits(imnameout_wfsref, filename_wfsref);                
+                save_fits(imnameout_wfsref, filename_wfsref);
                 delete_image_ID(imnameout_respC);
                 delete_image_ID(imnameout_wfsref);
-                
+
                 sprintf(filename_respC, "!tmpRMacqu/respM_A.tstep%03d.iter%03d.fits", AveStep, IterNumber);
                 sprintf(filename_wfsref, "!tmpRMacqu/wfsref_A.tstep%03d.iter%03d.fits", AveStep, IterNumber);
                 save_fits(imnameout_respC_A, filename_respC);
-                save_fits(imnameout_wfsref_A, filename_wfsref);                
+                save_fits(imnameout_wfsref_A, filename_wfsref);
                 delete_image_ID(imnameout_respC_A);
-                delete_image_ID(imnameout_wfsref_A);                
-                
+                delete_image_ID(imnameout_wfsref_A);
+
                 sprintf(filename_respC, "!tmpRMacqu/respM_B.tstep%03d.iter%03d.fits", AveStep, IterNumber);
                 sprintf(filename_wfsref, "!tmpRMacqu/wfsref_B.tstep%03d.iter%03d.fits", AveStep, IterNumber);
                 save_fits(imnameout_respC_B, filename_respC);
-                save_fits(imnameout_wfsref_B, filename_wfsref);                
+                save_fits(imnameout_wfsref_B, filename_wfsref);
                 delete_image_ID(imnameout_respC_B);
                 delete_image_ID(imnameout_wfsref_B);
-                
+
                 printf("done] \n");
                 fflush(stdout);
-                
-            }
-            else
-                IterNumber = 0; // start processing iterations
 
-			FileOK = 0; // do not process individual files
+            }
+            else // save globals
+            {
+                char filename_respC[100];
+                char filename_wfsref[100];				
+				
+                sprintf(imnameout_respC, "%s", respC_sname);
+                sprintf(filename_respC, "!tmpRMacqu/respM.fits");
+                save_fits(imnameout_respC, filename_respC);
+
+                sprintf(imnameout_wfsref, "%s", wfsref_sname);
+                sprintf(filename_wfsref, "!tmpRMacqu/wfsref.fits");
+                save_fits(imnameout_wfsref, filename_wfsref);
+
+
+                sprintf(imnameout_respC_A, "%s_A", respC_sname);
+                sprintf(filename_respC, "!tmpRMacqu/respM_A.fits");
+                save_fits(imnameout_respC_A, filename_respC);
+
+                sprintf(imnameout_wfsref_A, "%s_A", wfsref_sname);
+                sprintf(filename_wfsref, "!tmpRMacqu/wfsref_A.fits");
+                save_fits(imnameout_wfsref_A, filename_wfsref);
+
+
+                sprintf(imnameout_respC_B, "%s_A", respC_sname);
+                sprintf(filename_respC, "!tmpRMacqu/respM_A.fits");
+                save_fits(imnameout_respC_B, filename_respC);
+
+                sprintf(imnameout_wfsref_B, "%s_A", wfsref_sname);
+                sprintf(filename_wfsref, "!tmpRMacqu/wfsref_B.fits");
+                save_fits(imnameout_wfsref_B, filename_wfsref);
+
+
+
+
+                IterNumber = 0; // start processing iterations
+            }
+
+            FileOK = 0; // do not process individual files
 
             AveStep ++;
             if(AveStep==NBave) {
@@ -2268,9 +2306,11 @@ fflush(stdout);
 
     free(pokesign);
     free(pokearray);
-	
-	
-	function_parameter_struct_disconnect( &fps );
+
+
+    function_parameter_struct_disconnect( &fps );
+
+    list_image_ID();
 
     return RETURN_SUCCESS;
 }
