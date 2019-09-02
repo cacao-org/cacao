@@ -174,6 +174,35 @@ fi
 
 
 
+if [ "${CACAO_FPSPROC_ACQUWFS}" = "ON" ]; then
+# ==============================================================================
+# ========== WFS acquire frames ================================================
+# ==============================================================================
+
+# FPS name
+fpsname="acquWFS" 
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}" 
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echo "Process ${fpsname} already registered - skipping"
+else
+echo "Adding process ${fpsname}"
+echo "${fpsname}           aolacquireWFSloop     ${fpsarg0}" >> fpslist.txt
+
+echo "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+fi
+
+fi
+
+
+
+
+
+
 
 if [ "${CACAO_FPSPROC_ACQLINRM}" = "ON" ]; then
 # ==============================================================================
@@ -196,8 +225,21 @@ echo "${fpsname}           aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
 echo "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
 
-#echo "setval ${fpsfname}.sn_dm aol${CACAO_LOOPNUMBER}_dmRM" >> ${FPSCONFFILE}
-#echo "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_wfsim" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}" >> ${FPSCONFFILE}
+
+# default startup values
+echo "setval ${fpsfname}.normalize ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.Hpoke ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.autoTiming ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.compDMmask ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.compMpoke ON" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.NBave 1" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.NBcycle 4" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.NBinnerCycle 1" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.NBexcl 0" >> ${FPSCONFFILE}
+
 fi
 
 fi
