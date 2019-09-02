@@ -4,8 +4,6 @@
  * 
  * AO engine uses stream data structure
  * 
- * @author  O. Guyon
- * @date    25 Aug 2017
  *
  * @bug No known bugs. 
  * 
@@ -18,7 +16,9 @@
 
 
 
-
+#ifndef __STDC_LIB_EXT1__
+typedef int errno_t;
+#endif
 
 
 
