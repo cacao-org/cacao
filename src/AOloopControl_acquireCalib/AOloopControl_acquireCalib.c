@@ -1727,10 +1727,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 					save_fl_fits("Hmat", "!./conf/Hmat.fits");
 
 					// create compressed files
-					if(system("gzip -f ./conf/Hmat.fits") != 0) {
+					if(system("gzip -kf ./conf/Hmat.fits") != 0) {
 						printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
 					}
-					if(system("gzip -f ./conf/Hpixindex.fits") != 0) {
+					if(system("gzip -kf ./conf/Hpixindex.fits") != 0) {
 						printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
 					}
 					if(system("gzip -kf ./conf/Hpoke.fits") != 0) {
@@ -1747,7 +1747,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
             
             if(fps.parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF) {  
 				char fname_Hpoke[200];
-				functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Hpoke.fits");
+				functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Hpoke.fits");								
 			}
 			else {
 				functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Spoke.fits");
@@ -1862,7 +1862,15 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     fflush(stdout);
 
 
-    int normalize = functionparameter_GetParamValue_ONOFF(&fps, ".normalize");
+
+
+    uint64_t *FPFLAG_NORMALIZE;
+    FPFLAG_NORMALIZE = functionparameter_GetParamPtr_fpflag(&fps, ".normalize");
+
+    uint64_t *FPFLAG_HPOKE;
+    FPFLAG_HPOKE = functionparameter_GetParamPtr_fpflag(&fps, ".Hpoke");
+
+
     int AOinitMode = functionparameter_GetParamValue_INT64(&fps, ".AOinitMode");
 
 
@@ -2050,8 +2058,37 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     printf("NBpoke = %ld\n", NBpoke);
     fflush(stdout);
 
+    // ******************************************************************
+    // *************** COPY POKE INFO TO tmpRMacqu **********************
+    // ******************************************************************
 
+    if( (*FPFLAG_HPOKE) & FPFLAG_ONOFF ) {
+        char command[500];
 
+        sprintf(command, "cp %s tmpRMacqu/RMpokeCube.fits", pokeC_filename);
+        if(system(command) != 0) {
+            printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+        }
+
+        sprintf(command, "cp conf/Hmat.fits tmpRMacqu/RMmat.fits");
+        if(system(command) != 0) {
+            printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+        }
+
+        sprintf(command, "cp conf/Hpixindex.fits tmpRMacqu/RMpixindex.fits");
+        if(system(command) != 0) {
+            printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+        }
+    }
+    else
+    {
+        char command[500];
+
+        sprintf(command, "cp %s tmpRMacqu/RMpokeCube.fits", pokeC_filename);
+        if(system(command) != 0) {
+            printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+        }
+    }
 
 
     // ******************************************************************
@@ -2059,12 +2096,17 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     // ******************************************************************
 
     // Positive direction sequence
-    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2a", "wfsresp2a", normalize, AOinitMode, (long) (NBcycle/2), (uint32_t) 0x02);
+    int normalizeflag = 0;
+    if( (*FPFLAG_NORMALIZE) & FPFLAG_ONOFF ) {
+        normalizeflag = 1;
+    }
+
+    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2a", "wfsresp2a", normalizeflag, AOinitMode, (long) (NBcycle/2), (uint32_t) 0x02);
 
 
 
     // Negative direction sequence
-    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2b", "wfsresp2b", normalize, AOinitMode, (long) (NBcycle/2), (uint32_t) 0x02);
+    AOloopControl_acquireCalib_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "dmpokeC2b", "wfsresp2b", normalizeflag, AOinitMode, (long) (NBcycle/2), (uint32_t) 0x02);
 
 
 
@@ -2258,8 +2300,8 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             else // save globals
             {
                 char filename_respC[100];
-                char filename_wfsref[100];				
-				
+                char filename_wfsref[100];
+
                 sprintf(imnameout_respC, "%s", respC_sname);
                 sprintf(filename_respC, "!tmpRMacqu/respM.fits");
                 save_fits(imnameout_respC, filename_respC);
