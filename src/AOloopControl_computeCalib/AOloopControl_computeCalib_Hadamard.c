@@ -69,7 +69,7 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
 
     long *indexarray;
     long index;
-    long IDtest;
+    long IDmat;
     int *Hmat;
     long k, ii, jj, n, n2, i, j;
     long IDindex;
@@ -126,7 +126,7 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
 
             index++;
         }
-    save_fits("Hpixindex", "!Hpixindex.fits");
+    //save_fits("Hpixindex", "!./conf/Hpixindex.fits");
 
     Hmat = (int*) malloc(sizeof(int)*Hsize*Hsize);
 
@@ -153,13 +153,13 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
     printf("n2 = %ld\n", n2);
     fflush(stdout);
 
-    IDtest = create_2Dimage_ID("Htest", Hsize, Hsize);
+    IDmat = create_2Dimage_ID("Hmat", Hsize, Hsize);
 
     for(ii=0; ii<Hsize; ii++)
         for(jj=0; jj<Hsize; jj++)
-            data.image[IDtest].array.F[jj*Hsize+ii] = Hmat[jj*Hsize+ii];
+            data.image[IDmat].array.F[jj*Hsize+ii] = Hmat[jj*Hsize+ii];
 
-    save_fits("Htest", "!Hmat.fits");
+//    save_fits("Htest", "!./conf/Hmat.fits");
 
 
     IDout = create_3Dimage_ID(outname, xsize, ysize, Hsize);

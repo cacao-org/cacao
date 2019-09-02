@@ -4,9 +4,6 @@
  * 
  * AO engine uses stream data structure
  *  
- * @author  O. Guyon
- * @date    26 Dec 2017
- *
  * 
  * @bug No known bugs.
  * 
@@ -128,7 +125,7 @@ int_fast8_t AOloopControl_computeCalib_Process_zrespM(long loop, const char *IDz
     IDzrm = image_ID(IDzrespm0_name);
     if((image_ID("RMmat")!=-1) && (image_ID("pixindexim")!=-1))  // start decoding
     {
-        save_fits(IDzrespm0_name, "!zrespm_Hadamard.fits");
+        save_fits(IDzrespm0_name, "!./tmpRMacqu/zrespm_Hadamard.fits");
 
         AOloopControl_computeCalib_Hadamard_decodeRM(IDzrespm0_name, "RMmat", "pixindexim", IDzrespm_name);
         IDzrm = image_ID(IDzrespm_name);
