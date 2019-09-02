@@ -13,7 +13,9 @@
 //#define _PRINT_TEST
 
 
-
+#ifndef __STDC_LIB_EXT1__
+typedef int errno_t;
+#endif
 
 
 // OPTIONAL LINE TRACKING FOR DEBUGGING
