@@ -147,6 +147,61 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 /* =============================================================================================== */
 
 
+
+
+
+int_fast8_t AOloopControl_IOtools_acquireWFSloop_cli() {
+    char fpsname[200];
+
+    // First, we try to execute function through FPS interface
+    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
+        // unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
+        // Set FPS interface name
+        // By convention, if there are optional arguments, they should be appended to the fps name
+        //
+        if(data.processnameflag == 0) { // name fps to something different than the process name
+            if(strlen(data.cmdargtoken[2].val.string)>0)
+                sprintf(fpsname, "acquWFS-%s", data.cmdargtoken[2].val.string);
+            else
+                sprintf(fpsname, "acquWFS");
+        } else { // Automatically set fps name to be process name up to first instance of character '.'
+            strcpy(fpsname, data.processname0);
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS 
+            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, CMDCODE_FPSINIT);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
+            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, CMDCODE_CONFSTART);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
+            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+            AOcontrolLoop_IOtools_acquireWFSloop_RUN(fpsname);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+            //
+            return RETURN_SUCCESS;
+        }
+    //}
+    // non FPS implementation - all parameters specified at function launch
+    //if(CLI_checkarg(1,1)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,4)+CLI_checkarg(7,5)+CLI_checkarg(8,5)+CLI_checkarg(9,2)+CLI_checkarg(10,2)+CLI_checkarg(11,2)+CLI_checkarg(12,2)==0) {
+        //AOloopControl_Otools_acquireWFSloop();
+      //  return RETURN_SUCCESS;
+    } else {
+        return RETURN_FAILURE;
+    }
+}
+
+
+
+
+
+
 /** @brief CLI function for AOloopControl_camimage_extract2D_sharedmem_loop */
 int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli() {
     if(CLI_checkarg(1,4)+CLI_checkarg(2,5)+CLI_checkarg(3,3)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,2)==0) {
@@ -269,41 +324,59 @@ int_fast8_t init_AOloopControl_IOtools()
 {
 
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl_IOtools - 1. CAMERA INPUT
- *  Read camera imates */
-/* =============================================================================================== */
-/* =============================================================================================== */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+    /** @name AOloopControl_IOtools - 1. CAMERA INPUT
+     *  Read camera imates */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
 
-    RegisterCLIcommand("cropshim", __FILE__, AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli, "crop shared mem image", "<input image> <optional dark> <output image> <sizex> <sizey> <xstart> <ystart>" , "cropshim imin null imout 32 32 153 201", "int AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(char *in_name, const char *dark_name, char *out_name, long size_x, long size_y, long xstart, long ystart)");
-
-
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl_IOtools - 3. DATA STREAMS PROCESSING      
- *  Data streams real-time processing */
-/* =============================================================================================== */
-/* =============================================================================================== */
+    RegisterCLIcommand(
+        "aolacquireWFSloop",
+        __FILE__,
+        AOloopControl_IOtools_acquireWFSloop_cli,
+        "acquire WFS loop",
+        "<loopindex>",
+        "aolacquireWFSloop 2",
+        "int AOloopControl_IOtools_acquireWFSloop(long loop)");
 
 
-    RegisterCLIcommand("aveACshmim", __FILE__, AOloopControl_IOtools_AveStream_cli, "average and AC shared mem image", "<input image> <coeff> <output image ave> <output AC> <output RMS>" , "aveACshmim imin 0.01 outave outAC outRMS", "int AOloopControl_IOtools_AveStream(char *IDname, double alpha, char *IDname_out_ave, char *IDname_out_AC, char *IDname_out_RMS)");
 
-	RegisterCLIcommand("alignshmim", __FILE__, AOloopControl_IOtools_imAlignStream_cli, "align image stream to reference", "<input stream> <box x offset> <box y offset> <ref stream> <output stream> <sem index>" , "alignshmim imin 100 100 imref imout 3", "int_fast8_t AOloopControl_IOtools_imAlignStream(const char *IDname, int xbox0, int ybox0, const char *IDref_name, const char *IDout_name, int insem)");
+    RegisterCLIcommand(
+        "cropshim",
+        __FILE__,
+        AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli,
+        "crop shared mem image",
+        "<input image> <optional dark> <output image> <sizex> <sizey> <xstart> <ystart>",
+        "cropshim imin null imout 32 32 153 201",
+        "int AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(char *in_name, const char *dark_name, char *out_name, long size_x, long size_y, long xstart, long ystart)");
+
+
+
+
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+    /** @name AOloopControl_IOtools - 3. DATA STREAMS PROCESSING
+     *  Data streams real-time processing */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+
+
+    RegisterCLIcommand("aveACshmim", __FILE__, AOloopControl_IOtools_AveStream_cli, "average and AC shared mem image", "<input image> <coeff> <output image ave> <output AC> <output RMS>", "aveACshmim imin 0.01 outave outAC outRMS", "int AOloopControl_IOtools_AveStream(char *IDname, double alpha, char *IDname_out_ave, char *IDname_out_AC, char *IDname_out_RMS)");
+
+    RegisterCLIcommand("alignshmim", __FILE__, AOloopControl_IOtools_imAlignStream_cli, "align image stream to reference", "<input stream> <box x offset> <box y offset> <ref stream> <output stream> <sem index>", "alignshmim imin 100 100 imref imout 3", "int_fast8_t AOloopControl_IOtools_imAlignStream(const char *IDname, int xbox0, int ybox0, const char *IDref_name, const char *IDout_name, int insem)");
 
     RegisterCLIcommand("aolframedelay", __FILE__, AOloopControl_IOtools_frameDelay_cli, "introduce temporal delay", "<in> <temporal kernel> <out> <sem index>","aolframedelay in kern out 0","long AOloopControl_IOtools_frameDelay(const char *IDin_name, const char *IDkern_name, const char *IDout_name, int insem)");
 
-    RegisterCLIcommand("aolstream3Dto2D", __FILE__, AOloopControl_IOtools_stream3Dto2D_cli, "remaps 3D cube into 2D image", "<input 3D stream> <output 2D stream> <# cols> <sem trigger>" , "aolstream3Dto2D in3dim out2dim 4 1", "long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const char *out_name, int NBcols, int insem)");
+    RegisterCLIcommand("aolstream3Dto2D", __FILE__, AOloopControl_IOtools_stream3Dto2D_cli, "remaps 3D cube into 2D image", "<input 3D stream> <output 2D stream> <# cols> <sem trigger>", "aolstream3Dto2D in3dim out2dim 4 1", "long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const char *out_name, int NBcols, int insem)");
 
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl_IOtools - 4. SAVE REAL-TIME TELEMETRY BUFFER
- *  Save to disk telemetry packaged in alternate buffers */
-/* =============================================================================================== */
-/* =============================================================================================== */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+    /** @name AOloopControl_IOtools - 4. SAVE REAL-TIME TELEMETRY BUFFER
+     *  Save to disk telemetry packaged in alternate buffers */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
 
     RegisterCLIcommand("aolrtlogbuffsave", __FILE__, AOloopControl_IOtools_RTLOGsave_cli, "log realtime buffer stream", "<loopnumber> <streamname> <dirname>", "aolrtlogbuffsave modeval \"/media/data/\"", "int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname)");
 

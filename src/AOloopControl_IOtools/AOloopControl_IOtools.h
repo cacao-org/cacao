@@ -50,6 +50,12 @@ static void *compute_function_imtotal( void *ptr );
 /** @brief Subtract dark */
 static void *compute_function_dark_subtract( void *ptr );
 
+
+errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(char *fpsname, uint32_t CMDmode);
+errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(char *fpsname);
+errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop);
+
+
 /** @brief Read image from WFS camera */
 int_fast8_t Read_cam_frame(long loop, int RM, int normalize, int PixelStreamMode, int InitSem);
 
