@@ -103,6 +103,25 @@ fi
 stageddir="conf_zrm_staged"
 
 loopnb=$( head -1 LOOPNUMBER )
+
+
+
+
+echo "##########################################"
+echo "# MAKE MASKS                              "
+echo "##########################################"
+# 
+# MAKE SLAVED ACTUATOR DM MASK: dmmaskRM.fits -> dmslaved.fits, dmmask.fits
+# 
+# INPUT:
+#	dmmaskRM.fits
+# OUTPUT:
+#	dmslaved.fits  
+#	dmmask.fits    
+#
+
+
+
 actproxrad=$( head -1 fpsconf/acqlinRM-${loopnb}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
 
 
@@ -122,6 +141,48 @@ dmm=1.0-(1.0-dmmRM)*(1.0-dmsl1)
 savefits dmm "!${stageddir}/dmmask.fits"
 exitCLI
 EOF
+
+
+
+
+
+echo "#################################################################"
+echo "# UPDATE wfsref00, zrespM TO NORMALIZE FLUX OVER wfsmask    "
+echo "#################################################################"
+# 
+# INPUT
+#	wfsref00.fits
+#	wfsmask.fits
+#   zrespM.fits
+#  
+# OUTPUT
+#	wfsref0.fits
+#   zrespM.fits
+#
+
+
+./AOloopControl << EOF
+loadfits "${stageddir}/wfsref00.fits" im0
+loadfits "${stageddir}/wfsmask.fits" wfm
+im0m=wfm*im0
+a=itot(im0)/itot(im0m)
+# a is fraction of flux inside mask
+im1=im0*a/itot(im0)
+savefits im1 "!${stageddir}/wfsref0.fits"
+loadfits "${stageddir}/zrespM.fits" zrespm
+zrespm1=zrespm*a
+savefits zrespm1 "!${stageddir}/zrespMn.fits"
+listim
+exitCLI
+EOF
+
+#cp wfsref0.fits rmtest_wfsref0.fits
+
+
+
+
+
+
 
 
 

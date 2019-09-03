@@ -145,6 +145,7 @@ EOF
 stageddir="conf_zrm_staged"
 mkdir -p ${stageddir}
 cp ./tmpRMacqu/zrespM.fits ${stageddir}/
+cp ./tmpRMacqu/wfsref.fits ${stageddir}/wfsref00.fits
 
 
 # Process time sampled slices
