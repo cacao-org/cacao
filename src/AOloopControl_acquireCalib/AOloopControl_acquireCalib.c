@@ -1591,6 +1591,62 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
 
+
+    long fpi_MaskMode = function_parameter_add_entry(&fps, ".MaskMode",
+                         "Mask mode, DM and WFS",
+                         FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+
+	double maskRMp0_default[4] = { 0.2, 0.0, 1.0, 0.2 };
+	long fpi_maskRMp0 = function_parameter_add_entry(&fps, ".DMmask.RMp0",
+                       "DM mask, first percentile point",
+                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp0_default);
+
+	double maskRMc0_default[4] = { 1.0, 0.0, 5.0, 1.0 };
+	long fpi_maskRMc0 = function_parameter_add_entry(&fps, ".DMmask.RMc0",
+                       "DM mask, first percentile value coefficient",
+                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc0_default);
+
+	double maskRMp1_default[4] = { 0.5, 0.0, 1.0, 0.5 };
+	long fpi_maskRMp1 = function_parameter_add_entry(&fps, ".DMmask.RMp1",
+                       "DM mask, second percentile point",
+                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp1_default);
+
+	double maskRMc1_default[4] = { 0.5, 0.0, 5.0, 0.5 };
+	long fpi_maskRMc1 = function_parameter_add_entry(&fps, ".DMmask.RMc1",
+                       "DM mask, second percentile value coefficient",
+                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc1_default);
+	
+	double DMproxrad_default[4] = { 2.5, 0.0, 10.0, 2.5 };
+	long fpi_DMproxrad = function_parameter_add_entry(&fps, ".DMmask.proxrad",
+                       "DM actuator proximity radius",
+                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &DMproxrad_default);
+
+
+
+	double maskWFSp0_default[4] = { 0.2, 0.0, 1.0, 0.2 };
+	long fpi_maskWFSp0 = function_parameter_add_entry(&fps, ".WFSmask.RMp0",
+                       "WFS mask, first percentile point",
+                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp0_default);
+
+	double maskWFSc0_default[4] = { 1.0, 0.0, 5.0, 1.0 };
+	long fpi_maskWFSc0 = function_parameter_add_entry(&fps, ".WFSmask.RMc0",
+                       "WFS mask, first percentile value coefficient",
+                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc0_default);
+
+	double maskWFSp1_default[4] = { 0.6, 0.0, 1.0, 0.6 };
+	long fpi_maskWFSp1 = function_parameter_add_entry(&fps, ".WFSmask.RMp1",
+                       "WFS mask, second percentile point",
+                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp1_default);
+
+	double maskWFSc1_default[4] = { 0.6, 0.0, 5.0, 0.6 };
+	long fpi_maskWFSc1 = function_parameter_add_entry(&fps, ".WFSmask.RMc1",
+                       "WFS mask, second percentile value coefficient",
+                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc1_default);	
+
+
+
+
+
     // input streams
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
     long fpi_filename_pokeC     = function_parameter_add_entry(&fps, ".fn_pokeC",
@@ -1641,6 +1697,22 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
 
+	
+	// External scripts (post)
+	long fpi_exec_post_RMdecode = function_parameter_add_entry(&fps, ".exec.RMdecode",
+                         "RM decode script",
+                         FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+	long fpi_exec_post_mkDMWFSmasks = function_parameter_add_entry(&fps, ".exec.mkDMWFSmasks",
+                         "Make DM and WFS masks",
+                         FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+	long fpi_exec_post_mkDMslaveact = function_parameter_add_entry(&fps, ".exec.mkDMslaveact",
+                         "Make DM slaved actuators",
+                         FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+
+
     long fpi_FPS_mlat = function_parameter_add_entry(&fps, ".FPS_mlat",
                          "FPS mlat",
                          FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
@@ -1681,6 +1753,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 			}            
 
 
+
 			//
 			// Compute action: make DM RM mask
 			//
@@ -1705,6 +1778,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 					fps.parray[fpi_comp_RM_DMmask].fpflag &= ~FPFLAG_ONOFF;
 				}
 			}
+
 			
 			//
 			// Compute action: make Spoke and Hpoke
@@ -1782,7 +1856,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 					}
 				}
 			}
-			
+		
 						
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values            
@@ -1796,8 +1870,6 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     if ( FPS_DMcomb_NBparam > 0 ) {
 		function_parameter_struct_disconnect( &FPS_DMcomb );
 	}
-    
-    
     
     function_parameter_FPCONFexit( &fps );
 
@@ -1870,8 +1942,24 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     uint64_t *FPFLAG_HPOKE;
     FPFLAG_HPOKE = functionparameter_GetParamPtr_fpflag(&fps, ".Hpoke");
 
+	uint64_t *FPFLAG_MASKMODE;
+	FPFLAG_MASKMODE = functionparameter_GetParamPtr_fpflag(&fps, ".MaskMode");
+	
+	
+	
 
     int AOinitMode = functionparameter_GetParamValue_INT64(&fps, ".AOinitMode");
+
+
+    char execRMdecode[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(execRMdecode, functionparameter_GetParamPtr_STRING(&fps, ".exec.RMdecode"),  FUNCTION_PARAMETER_STRMAXLEN);
+
+    char execmkDMWFSmasks[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(execmkDMWFSmasks, functionparameter_GetParamPtr_STRING(&fps, ".exec.mkDMWFSmasks"),  FUNCTION_PARAMETER_STRMAXLEN);
+
+    char execmkDMslaveact[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(execmkDMslaveact, functionparameter_GetParamPtr_STRING(&fps, ".exec.mkDMslaveact"),  FUNCTION_PARAMETER_STRMAXLEN);
+    
 
 
 
@@ -2346,8 +2434,24 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     }
 
 
+
+
     free(pokesign);
     free(pokearray);
+
+    // run RM decode exec script
+    // 
+    if(system(execRMdecode) != 0) {
+        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    }
+
+    if(system(execmkDMWFSmasks) != 0) {
+        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    }
+
+    if(system(execmkDMslaveact) != 0) {
+        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    }
 
 
     function_parameter_struct_disconnect( &fps );
