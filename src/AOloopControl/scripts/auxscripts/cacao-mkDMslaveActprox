@@ -1,0 +1,130 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=2
+
+
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CREATE DM SLAVED ACTUATORS MAP $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Created DM slaved actuators map based on proximity"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <DMmaskRM> <distance>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <DMmaskRM>     DM mask for response matrix"
+echo "     <distance>     distance threshold (pixel)"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "     dmslaved.fits     DM slaved actuators map"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Create DM slaved actuators map\n" "$0" 
+}
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+stageddir="conf_zrm_staged"
+
+loopnb=$( head -1 LOOPNUMBER )
+actproxrad==$( head -1 fpsconf/acqlinRM-${loopnb}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
+
+
+./AOloopControl << EOF
+loadfits "${stageddir}/dmmaskRM.fits" DMmaskRM
+aolmkslact DMmaskRM ${actproxrad} DMslavedact
+savefits DMslavedact "!${stageddir}/dmslaved.fits"
+exitCLI
+EOF
+
+
+./AOloopControl << EOF
+loadfits "$1" dmmRM
+loadfits "${stageddir}/dmslaved.fits" dmsl
+imtrunc dmsl 0.0 1.0 dmsl1
+dmm=1.0-(1.0-dmmRM)*(1.0-dmsl1)
+savefits dmm "!${stageddir}/dmmask.fits"
+exitCLI
+EOF
+
+
+
+#stageddir="conf_zrm_staged"
+#cp dmslavedact.fits ./${stageddir}/
+#cp dmmask.fits ./${stageddir}/

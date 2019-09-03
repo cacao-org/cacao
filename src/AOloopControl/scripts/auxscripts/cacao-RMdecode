@@ -13,7 +13,7 @@ function printHELP {
 echo "------------------------------------------------------------------------"
 echo "$(tput bold) $pname : Decode zonal resp matrix $(tput sgr0)"
 echo "------------------------------------------------------------------------"
-echo "Cleans zonal response matrices in ./zresptmp/ directory"
+echo "Cleans zonal response matrices in ./tmpRMacqu/ directory"
 echo "if images conf/RMpixindex.fits conf/RMmat.fits exist, use them for coding/decoding"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
@@ -25,10 +25,6 @@ echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
 echo "     <RM ampl>      RM amplitude [um]"
 echo "     <WFSn flag>    WFS normalization flag"
-echo "     <DMperc0>      DM map: background noise level percentile"
-echo "     <DMcoeff0>     DM map: background coefficient (ususally 1.0)"
-echo "     <DMperc1>      DM map: percentile level above background"
-echo "     <DMcoeff1>     DM map: coefficient on level above background"
 echo ""
 echo " $(tput bold)OUTPUT:$(tput sgr0)"
 echo "  zrespmat.fits    : zonal response matrix"
@@ -143,6 +139,12 @@ savefits dmmap "!./tmpRMacqu/dmmap.fits"
 listim
 exitCLI
 EOF
+
+
+# copy to staged dir
+stageddir="conf_zrm_staged"
+mkdir -p ${stageddir}
+cp ./tmpRMacqu/zrespM.fits ${stageddir}/
 
 
 # Process time sampled slices

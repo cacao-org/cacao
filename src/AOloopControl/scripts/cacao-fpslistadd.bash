@@ -194,6 +194,12 @@ echo "Adding process ${fpsname}"
 echo "${fpsname}           aolacquireWFSloop     ${fpsarg0}" >> fpslist.txt
 
 echo "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.WFSnormalize ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.comp.darksub ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.comp.imtotal ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.comp.normwfsim ON" >> ${FPSCONFFILE}
+
 fi
 
 fi
@@ -240,8 +246,13 @@ echo "setval ${fpsfname}.NBcycle 4" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.NBinnerCycle 1" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.NBexcl 0" >> ${FPSCONFFILE}
 
-fi
+echo "setval ${fpsfname}.MaskMode ON" >> ${FPSCONFFILE}
 
+echo "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox" >> ${FPSCONFFILE}
+
+fi
 fi
 
 
