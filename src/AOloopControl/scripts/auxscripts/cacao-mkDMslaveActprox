@@ -3,7 +3,7 @@
 
 
 # number of arguments to script
-NBARGS=2
+NBARGS=0
 
 
 
@@ -103,7 +103,7 @@ fi
 stageddir="conf_zrm_staged"
 
 loopnb=$( head -1 LOOPNUMBER )
-actproxrad==$( head -1 fpsconf/acqlinRM-${loopnb}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
+actproxrad=$( head -1 fpsconf/acqlinRM-${loopnb}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
 
 
 ./AOloopControl << EOF
@@ -115,7 +115,7 @@ EOF
 
 
 ./AOloopControl << EOF
-loadfits "$1" dmmRM
+loadfits "${stageddir}/dmmaskRM.fits" dmmRM
 loadfits "${stageddir}/dmslaved.fits" dmsl
 imtrunc dmsl 0.0 1.0 dmsl1
 dmm=1.0-(1.0-dmmRM)*(1.0-dmsl1)
