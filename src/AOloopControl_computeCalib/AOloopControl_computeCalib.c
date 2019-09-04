@@ -690,44 +690,44 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     long DMxsize    = functionparameter_GetParamValue_INT64(&fps, ".DMxsize");
     long DMysize    = functionparameter_GetParamValue_INT64(&fps, ".DMysize");
 
-	char fname_dmslaved[FUNCTION_PARAMETER_STRMAXLEN];
-	strncpy(fname_dmslaved,  functionparameter_GetParamPtr_STRING(&fps, ".DMslaved"),  FUNCTION_PARAMETER_STRMAXLEN);
-	load_fits(fname_dmslaved, "dmslaved", 1);
+    char fname_dmslaved[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(fname_dmslaved,  functionparameter_GetParamPtr_STRING(&fps, ".DMslaved"),  FUNCTION_PARAMETER_STRMAXLEN);
+    load_fits(fname_dmslaved, "dmslaved", 1);
 
-	char fname_zrespM[FUNCTION_PARAMETER_STRMAXLEN];
-	strncpy(fname_zrespM,  functionparameter_GetParamPtr_STRING(&fps, ".zrespM"),  FUNCTION_PARAMETER_STRMAXLEN);
-	load_fits(fname_zrespM, "zrespM", 1);
+    char fname_zrespM[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(fname_zrespM,  functionparameter_GetParamPtr_STRING(&fps, ".zrespM"),  FUNCTION_PARAMETER_STRMAXLEN);
+    load_fits(fname_zrespM, "zrespM", 1);
 
-	char fname_DMmaskRM[FUNCTION_PARAMETER_STRMAXLEN];
-	strncpy(fname_DMmaskRM,  functionparameter_GetParamPtr_STRING(&fps, ".DMmaskRM"),  FUNCTION_PARAMETER_STRMAXLEN);
-	load_fits(fname_DMmaskRM, "dmmaskRM", 1);
+    char fname_DMmaskRM[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(fname_DMmaskRM,  functionparameter_GetParamPtr_STRING(&fps, ".DMmaskRM"),  FUNCTION_PARAMETER_STRMAXLEN);
+    load_fits(fname_DMmaskRM, "dmmaskRM", 1);
 
-	char fname_WFSmask[FUNCTION_PARAMETER_STRMAXLEN];
-	strncpy(fname_WFSmask,  functionparameter_GetParamPtr_STRING(&fps, ".WFSmask"),  FUNCTION_PARAMETER_STRMAXLEN);
-	load_fits(fname_WFSmask, "wfsmask", 1);
+    char fname_WFSmask[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(fname_WFSmask,  functionparameter_GetParamPtr_STRING(&fps, ".WFSmask"),  FUNCTION_PARAMETER_STRMAXLEN);
+    load_fits(fname_WFSmask, "wfsmask", 1);
 
-	char fname_loRM[FUNCTION_PARAMETER_STRMAXLEN];
-	strncpy(fname_loRM,  functionparameter_GetParamPtr_STRING(&fps, ".loRM"),  FUNCTION_PARAMETER_STRMAXLEN);
-	load_fits(fname_loRM, "LOrespM", 1);
+    char fname_loRM[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(fname_loRM,  functionparameter_GetParamPtr_STRING(&fps, ".loRM"),  FUNCTION_PARAMETER_STRMAXLEN);
+    load_fits(fname_loRM, "LOrespM", 1);
 
-	char fname_loRMmodes[FUNCTION_PARAMETER_STRMAXLEN];
-	strncpy(fname_loRMmodes,  functionparameter_GetParamPtr_STRING(&fps, ".loRMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
-	load_fits(fname_loRMmodes, "RMMmodes", 1);
+    char fname_loRMmodes[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(fname_loRMmodes,  functionparameter_GetParamPtr_STRING(&fps, ".loRMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
+    load_fits(fname_loRMmodes, "RMMmodes", 1);
 
-	list_image_ID();
+    list_image_ID();
 
 
 
-	// Get time
-	time_t tnow;
-	struct tm *tmnow;
-	char datestring[200];
-	
-	time(&tnow);
-	tmnow = gmtime(&tnow);
-	
-	printf("TIMESTRING:  %d %d %d  %02d:%02d:%02d\n", tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
+    // Get time
+    time_t tnow;
+    struct tm *tmnow;
+    char datestring[200];
 
+    time(&tnow);
+    tmnow = gmtime(&tnow);
+
+    printf("TIMESTRING:  %04d %02d %02d  %02d:%02d:%02d\n", 1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
+    sprintf(datestring, "%04d-%02d-%02d_%02d:%02d:%02d", 1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
 
     // MaskMode = 0  : tapered masking
     // MaskMode = 1  : STRICT masking
@@ -741,60 +741,116 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
 
     AOloopControl_computeCalib_mkModes("fmodes", DMxsize, DMysize, CPAmax, deltaCPA, align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim);
 
-	// save results to disk
-	char fnamesrc[500];
-	char fnamedest[500];
-	char fnametxt[500];
-	char stagedir[] = "conf_staged";
-	char command[500];
-	FILE *fp;
-	
-	sprintf(fnamesrc, "./mkmodestmp/fmodesall.fits");
-	sprintf(fnamedest, "DMmodes/DMmodes_%s.fits", datestring);
-	sprintf(fnametxt, "./%s/shmim.DMmodes.name.txt", stagedir);
-	
-	sprintf(command, "cp %s %s", fnamesrc, fnamedest);
-	if(system(command) != 0) {
-		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
-	}
-	fp = fopen(fnametxt, "w");
-	fprintf(fp, "%s", fnamedest);
-	fclose(fp);
-	
-	
-	
-	sprintf(fnamesrc, "./mkmodestmp/fmodesWFSall.fits");
-	sprintf(fnamedest, "respM/respM_%s.fits", datestring);
-	sprintf(fnametxt, "./%s/shmim.respM.name.txt", stagedir);
-		
-	sprintf(command, "cp %s %s", fnamesrc, fnamedest);
-	if(system(command) != 0) {
-		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
-	}
-	fp = fopen(fnametxt, "w");
-	fprintf(fp, "%s", fnamedest);
-	fclose(fp);
-	
-	
-	sprintf(fnamesrc, "./mkmodestmp/cmatall.fits");
-	sprintf(fnamedest, "contrM/contrM_%s.fits", datestring);
-	sprintf(fnametxt, "./%s/shmim.contrM.name.txt", stagedir);
-		
-	sprintf(command, "cp %s %s", fnamesrc, fnamedest);
-	if(system(command) != 0) {
-		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
-	}
-	fp = fopen(fnametxt, "w");
-	fprintf(fp, "%s", fnamedest);
-	fclose(fp);
-	
-	
+    // save results to disk
+    char fnamesrc[500];
+    char fnamedest[500];
+    char fnametxt[500];
+    char stagedir[] = "conf_staged";
+    char command[500];
+    FILE *fp;
 
-	sprintf(command, "cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt", stagedir);
-	if(system(command) != 0) {
-		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
-	}
-	
+    sprintf(fnamesrc, "./mkmodestmp/fmodesall.fits");
+    sprintf(fnamedest, "DMmodes/DMmodes_%s.fits", datestring);
+    sprintf(fnametxt, "./%s/shmim.DMmodes.name.txt", stagedir);
+
+    sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+    if(system(command) != 0) {
+        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    }
+    fp = fopen(fnametxt, "w");
+    fprintf(fp, "%s", fnamedest);
+    fclose(fp);
+
+
+
+    sprintf(fnamesrc, "./mkmodestmp/fmodesWFSall.fits");
+    sprintf(fnamedest, "respM/respM_%s.fits", datestring);
+    sprintf(fnametxt, "./%s/shmim.respM.name.txt", stagedir);
+
+    sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+    if(system(command) != 0) {
+        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    }
+    fp = fopen(fnametxt, "w");
+    fprintf(fp, "%s", fnamedest);
+    fclose(fp);
+
+
+    sprintf(fnamesrc, "./mkmodestmp/cmatall.fits");
+    sprintf(fnamedest, "contrM/contrM_%s.fits", datestring);
+    sprintf(fnametxt, "./%s/shmim.contrM.name.txt", stagedir);
+
+    sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+    if(system(command) != 0) {
+        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    }
+    fp = fopen(fnametxt, "w");
+    fprintf(fp, "%s", fnamedest);
+    fclose(fp);
+
+
+
+    sprintf(command, "cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt", stagedir);
+    if(system(command) != 0) {
+        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    }
+
+
+
+
+    for (int i=0; i<20; i++)
+    {
+        sprintf(fnamesrc, "./mkmodestmp/fmodes_%02d.fits", i);
+        
+        if(is_fits_file(fnamesrc)==1)
+        {
+			printf("Found file %s\n", fnamesrc);
+			
+		}
+/*        
+        sprintf(fnamedest, "DMmodes/DMmodes_%s.fits", datestring);
+        sprintf(fnametxt, "./%s/shmim.DMmodes.name.txt", stagedir);
+
+        sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+        if(system(command) != 0) {
+            printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+        }
+        fp = fopen(fnametxt, "w");
+        fprintf(fp, "%s", fnamedest);
+        fclose(fp);
+*/
+    }
+
+    /*
+    for i in `seq 0 20`;
+    do
+    i2=$(printf "%02d" "$i")
+    fname="mkmodestmp/fmodes_${i2}.fits"
+    #if [ -e "$fname" ]; then
+    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodes_${i2}.fits DMmodes/DMmodes${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
+    echo "if [ -f \"$fname\" ]; then echo \"DMmodes/DMmodes${i2}_${datestr}.fits\" > ./conf_staged/shmim.DMmodes${i2}.name.txt; fi"  >> $computeModesCMscriptfile
+
+    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodesWFS_${i2}.fits respM/respM${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
+    echo "if [ -f \"$fname\" ]; then echo \"respM/respM${i2}_${datestr}.fits\" > ./conf_staged/shmim.respM${i2}.name.txt; fi"  >> $computeModesCMscriptfile
+
+    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmat_${i2}.fits contrM/contrM${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
+    echo "if [ -f \"$fname\" ]; then echo \"contrM/contrM${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrM${i2}.name.txt; fi"  >> $computeModesCMscriptfile
+
+    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatc_${i2}.fits contrMc/contrMc${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
+    echo "if [ -f \"$fname\" ]; then echo \"contrMc/contrMc${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrMc${i2}.name.txt; fi"  >> $computeModesCMscriptfile
+
+    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatcact_${i2}.fits contrMcact/contrMcact${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
+    echo "if [ -f \"$fname\" ]; then echo \"contrMcact/contrMcact${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrMcact${i2}_00.name.txt; fi"  >> $computeModesCMscriptfile
+    #fi
+    done
+
+    */
+
+
+
+
+
+
     function_parameter_struct_disconnect( &fps );
 
 
