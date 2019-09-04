@@ -336,6 +336,14 @@ mkdir -p ${CACAO_WORKDIR}/${outdir}
 mkdir -p ${CACAO_WORKDIR}/conf_staged
 mkdir -p ${CACAO_WORKDIR}/mkmodestmp
 
+mkdir -p ${CACAO_WORKDIR}/DMmodes
+mkdir -p ${CACAO_WORKDIR}/respM
+mkdir -p ${CACAO_WORKDIR}/contrM
+mkdir -p ${CACAO_WORKDIR}/contrMc
+mkdir -p ${CACAO_WORKDIR}/contrMcact
+
+
+
 # FPS full name
 fpsfname="${fpsname}-${fpsarg0}" 
 
