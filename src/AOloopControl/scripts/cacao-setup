@@ -306,12 +306,11 @@ if [[ -z "${CACAO_LOOPNAME}" ]]; then
   echo "CACAO_LOOPNAME   not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
   SETTINGOK="0"
 else
-  LOOPNAME="$CACAO_LOOPNAME"
   echo "CACAO_LOOPNAME   : ${CACAO_LOOPNAME}"
-  echo "$LOOPNAME" > LOOPNAME  
+  echo "$CACAO_LOOPNAME" > LOOPNAME  
 fi
 
-echo "Set by adding \"export VARNAME=\"VALUE\"\" to file cacaovars.${LOOPNAME}.bash"
+echo "Set by adding \"export VARNAME=\"VALUE\"\" to file cacaovars.${CACAO_LOOPNAME}.bash"
 echo ""
 
 if [[ -z "${CACAO_DMxsize}" ]]; then
@@ -383,7 +382,7 @@ fi
 # ======================= FPS PROCESSES =================================
 echo ""
 echo "============ FPS processes ==========="
-echo "Enable FPS process PNAME setup by adding \"export CACAO_FPSPROC_PNAME=\"ON\"\" to file cacaovars.${LOOPNAME}.bash"
+echo "Enable FPS process PNAME setup by adding \"export CACAO_FPSPROC_PNAME=\"ON\"\" to file cacaovars.${CACAO_LOOPNAME}.bash"
 echo "Disable by setting to \"OFF\" or unset"
 echo ""
 printenv | grep CACAO_FPSPROC
@@ -392,18 +391,18 @@ echo ""
 
 if [[ ! -z "${CACAO_LOOPNAME}" ]]; then
 
-if [ -f "${LOOPNAME}.fpslistadd.bash" ]; then
-echo "Using custom fpslistadd file: ${LOOPNAME}.fpslistadd.bash"
+if [ -f "${CACAO_LOOPNAME}.fpslistadd.bash" ]; then
+echo "Using custom fpslistadd file: ${CACAO_LOOPNAME}.fpslistadd.bash"
 else
 echo "Using template fpslistadd script: $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash"
-cp $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash ${LOOPNAME}.fpslistadd.bash
+cp $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash ${CACAO_LOOPNAME}.fpslistadd.bash
 fi
 
 fi
 
-fpsCTRLtmuxname="${LOOPNAME}_fpsCTRL"
+fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
 
-fpsSETPARAMCONFfile="fpssetup.setval.${LOOPNAME}.conf"
+fpsSETPARAMCONFfile="fpssetup.setval.${CACAO_LOOPNAME}.conf"
 checkFileCreate ${fpsSETPARAMCONFfile}
 
 fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
@@ -485,7 +484,7 @@ fi
 
 mkdir -p $WORKDIR
 mkdir -p $WORKDIR/conf/
-echo "${LOOPNAME}" > ${WORKDIR}/LOOPNAME
+echo "${CACAO_LOOPNAME}" > ${WORKDIR}/LOOPNAME
 echo "${LOOPNUMBER}" > ${WORKDIR}/LOOPNUMBER
 
 
@@ -525,7 +524,7 @@ fi
 
 
 ## Run script to insert additional FPS-compatible processes that may be used
-./${LOOPNAME}.fpslistadd.bash
+./${CACAO_LOOPNAME}.fpslistadd.bash
 
 
 echo "cp fpslist.txt ${WORKDIR}"
