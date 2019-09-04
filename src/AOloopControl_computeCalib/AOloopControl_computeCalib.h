@@ -39,6 +39,10 @@ long AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname, const char
 long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yc, double r0, double r1, int MaskMode);
 
 
+errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(char *fpsname, uint32_t CMDmode);
+errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(char *fpsname);
+
+
 int_fast8_t AOloopControl_computeCalib_mkCalib_map_mask(long loop, const char *zrespm_name, const char *WFSmap_name, const char *DMmap_name, float dmmask_perclow, float dmmask_coefflow, float dmmask_perchigh, float dmmask_coeffhigh, float wfsmask_perclow, float wfsmask_coefflow, float wfsmask_perchigh, float wfsmask_coeffhigh);
 
 

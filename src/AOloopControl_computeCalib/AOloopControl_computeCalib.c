@@ -3,9 +3,6 @@
  * @brief   Adaptive Optics Control loop engine compute calibration
  * 
  * AO engine uses stream data structure
- *  
- * @author  O. Guyon
- * @date    26 Dec 2017 
  *
  * 
  * @bug No known bugs.
@@ -35,12 +32,13 @@
 #include <gsl/gsl_eigen.h>
 #include <gsl/gsl_blas.h>
 
+
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "info/info.h"
-
+#include "00CORE/00CORE.h"
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 
@@ -144,6 +142,59 @@ int_fast8_t AOloopControl_computeCalib_mkloDMmodes_cli() {
     }
     else return 1;
 }
+
+
+
+
+
+
+/** @brief CLI function for AOloopControl_computeCalib_ComputeCM */
+
+int_fast8_t AOloopControl_computeCalib_ComputeCM_cli() {
+    char fpsname[200];
+
+    // First, we try to execute function through FPS interface
+    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
+        // unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
+        // Set FPS interface name
+        // By convention, if there are optional arguments, they should be appended to the fps name
+        //
+        if(data.processnameflag == 0) { // name fps to something different than the process name
+            if(strlen(data.cmdargtoken[2].val.string)>0)
+                sprintf(fpsname, "compCM-%s", data.cmdargtoken[2].val.string);
+            else
+                sprintf(fpsname, "compCM");
+        } else { // Automatically set fps name to be process name up to first instance of character '.'
+            strcpy(fpsname, data.processname0);
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS 
+            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, CMDCODE_FPSINIT);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
+            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, CMDCODE_CONFSTART);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
+            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+            AOcontrolLoop_computeCalib_ComputeCM_RUN(fpsname);
+            return RETURN_SUCCESS;
+        }
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+            //     AOcontrolLoop__STOP(OptionalArg00);
+            return RETURN_SUCCESS;
+        }
+    }    
+     return RETURN_FAILURE;
+}
+
+
+
+
+
 
 /** @brief CLI function for AOloopControl_mkCM */
 int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
@@ -296,6 +347,17 @@ int_fast8_t init_AOloopControl_computeCalib()
 
     RegisterCLIcommand("aolmklodmmodes",__FILE__, AOloopControl_computeCalib_mkloDMmodes_cli, "make low order DM modes", "<output modes> <sizex> <sizey> <max CPA> <delta CPA> <cx> <cy> <r0> <r1> <masking mode>", "aolmklodmmodes modes 50 50 5.0 0.8 1", "long AOloopControl_computeCalib_mkloDMmodes(char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yx, double r0, double r1, int MaskMode)");
 
+
+	RegisterCLIcommand(
+		"aolcomputeCM",
+		__FILE__, 
+		AOloopControl_computeCalib_ComputeCM_cli, 
+		"compute control matrix, high level function FPS only", 
+		"<CODE>", 
+		"aolcomputeCM _CONFRUN_", 
+		"FPS only");
+
+
     RegisterCLIcommand("aolRM2CM",__FILE__, AOloopControl_computeCalib_mkCM_cli, "make control matrix from response matrix", "<RMimage> <CMimage> <SVDlim>", "aolRM2CM respM contrM 0.1", "long AOloopControl_computeCalib_mkCM(char *respm_name, char *cm_name, float SVDlim)");
 
     RegisterCLIcommand("aolmkmodes", __FILE__, AOloopControl_computeCalib_mkModes_cli, "make control modes", "<output modes> <sizex> <sizey> <max CPA> <delta CPA> <cx> <cy> <r0> <r1> <masking mode> <block> <SVDlim>", "aolmkmodes modes 50 50 5.0 0.8 1 2 0.01", "long AOloopControl_computeCalib_mkModes(char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yx, double r0, double r1, int MaskMode, int BlockNB, float SVDlim)");
@@ -326,9 +388,435 @@ int_fast8_t init_AOloopControl_computeCalib()
 }
 
 
-// dmmask_perclow = 0.2
-// dmmask_coefflow = 1.0
-// dmmask_perchigh = 0.7
-// dmmask_coeffhigh = 0.3
+
+
+
+
+
+errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
+    char *fpsname,
+    uint32_t CMDmode
+) {
+    uint16_t loopstatus;
+
+
+    // ===========================
+    // SETUP FPS
+    // ===========================
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
+
+
+    // ===========================
+    // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
+    // ===========================
+    void *pNull = NULL;
+    uint64_t FPFLAG;
+
+
+    long loop_default[4] = { 0, 0, 10, 0 };
+    long fpi_loop = function_parameter_add_entry(&fps, ".loop",
+                    "loop index",
+                    FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
+
+    double SVDlim_default[4] = { 0.01, 0.000001, 1.0, 0.01 };
+    long fpi_SVDlim = function_parameter_add_entry(&fps, ".SVDlim",
+                      "RM poke amplitude",
+                      FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &SVDlim_default);
+
+
+    double CPAmax_default[4] = { 10.0, 0.1, 100.0, 10.0 };
+    long fpi_CPAmax = function_parameter_add_entry(&fps, ".CPAmax",
+                      "maximum controlled CPA",
+                      FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &CPAmax_default);
+
+    double deltaCPA_default[4] = { 0.8, 0.1, 2.0, 0.8 };
+    long fpi_deltaCPA = function_parameter_add_entry(&fps, ".deltaCPA",
+                      "delta CPA",
+                      FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &deltaCPA_default);
+
+    double alignCX_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
+    long fpi_alignCX = function_parameter_add_entry(&fps, ".align.CX",
+                      "DM mask center X (if no DMmaskRM)",
+                      FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignCX_default);
+
+    double alignCY_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
+    long fpi_alignCY = function_parameter_add_entry(&fps, ".align.CY",
+                      "DM mask center Y (if no DMmaskRM)",
+                      FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignCY_default);
+
+    double alignID_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
+    long fpi_alignID = function_parameter_add_entry(&fps, ".align.ID",
+                      "mask I.D. (if no DMmaskRM)",
+                      FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignID_default);
+
+    double alignOD_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
+    long fpi_alignOD = function_parameter_add_entry(&fps, ".align.OD",
+                      "mask O.D. (if no DMmaskRM)",
+                      FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignOD_default);
+
+    long DMxsize_default[4] = { 10, 1, 2000, 10 };
+    long fpi_DMxsize = function_parameter_add_entry(&fps, ".DMxsize",
+                      "DM x size",
+                      FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &DMxsize_default);
+
+    long DMysize_default[4] = { 10, 1, 2000, 10 };
+    long fpi_DMysize = function_parameter_add_entry(&fps, ".DMysize",
+                      "DM y size",
+                      FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &DMysize_default);
+
+
+	// FPS 
+	
+    long fpi_FPS_zRMacqu = function_parameter_add_entry(&fps, ".FPS_zRMacqu",
+                           "FPS zonal RM acquisition",
+                           FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
+    FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
+    long FPS_zRMacqu_NBparam = 0;
+
+    long fpi_FPS_loRMacqu = function_parameter_add_entry(&fps, ".FPS_loRMacqu",
+                            "FPS low order modal RM acquisition",
+                            FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
+    FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
+    long FPS_loRMacqu_NBparam = 0;
+
+
+    long fpi_FPS_DMcomb = function_parameter_add_entry(&fps, ".FPS_DMcomb",
+                         "FPS DMcomb",
+                         FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
+	FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
+	long FPS_DMcomb_NBparam = 0;
+
+
+
+
+
+    long fpi_fname_dmslaved = function_parameter_add_entry(&fps, ".DMslaved",
+                              "DM slaved actuators",
+                              FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+    long fpi_fname_zrespM = function_parameter_add_entry(&fps, ".zrespM",
+                            "Zonal response matrix",
+                            FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+    long fpi_fname_dmmaskRM = function_parameter_add_entry(&fps, ".DMmaskRM",
+                              "actuators directly controlled",
+                              FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+    long fpi_fname_WFSmask = function_parameter_add_entry(&fps, ".WFSmask",
+                             "WFS mask",
+                             FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+    long fpi_fname_loRM = function_parameter_add_entry(&fps, ".loRM",
+                          "low order modal response matrix",
+                          FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+    long fpi_fname_loRMmodes = function_parameter_add_entry(&fps, ".loRMmodes",
+                               "low order RM modes",
+                               FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+
+    long fpi_fname_extrablockM = function_parameter_add_entry(&fps, ".option.extrablockM",
+                                 "extra modes block",
+                                 FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
+
+    long fpi_fname_exclmodes = function_parameter_add_entry(&fps, ".option.exclmodes",
+                               "excluded modes",
+                               FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
+
+
+    // Update Actions
+    long fpi_update_RMfiles = function_parameter_add_entry(&fps, ".upRMfiles",
+                              "update RM files",
+                              FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+
+    long fpi_update_align = function_parameter_add_entry(&fps, ".upAlign",
+                              "update default align (if no DMmaskRM)",
+                              FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+
+
+
+    if( loopstatus == 0 ) // stop fps
+        return RETURN_SUCCESS;
+
+
+
+    // =====================================
+    // PARAMETER LOGIC AND UPDATE LOOP
+    // =====================================
+    while ( loopstatus == 1 )
+    {
+        usleep(50);
+
+        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        {
+            //
+            //  Connect to aux FPS
+            //
+            if ( FPS_zRMacqu_NBparam < 1 ) {
+                FPS_zRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_zRMacqu].val.string[0], &FPS_zRMacqu, FPSCONNECT_SIMPLE);
+            }
+            if ( FPS_loRMacqu_NBparam < 1 ) {
+                FPS_loRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_loRMacqu].val.string[0], &FPS_loRMacqu, FPSCONNECT_SIMPLE);
+            }
+            if ( FPS_DMcomb_NBparam < 1 ) {
+				FPS_DMcomb_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_DMcomb].val.string[0], &FPS_DMcomb, FPSCONNECT_SIMPLE);
+			}            
+
+            // Update RM files
+            if(fps.parray[fpi_update_RMfiles].fpflag & FPFLAG_ONOFF) {
+
+                if ( FPS_zRMacqu_NBparam > 0 ) {
+                    char outdir[FUNCTION_PARAMETER_STRMAXLEN];
+                    char fname[FUNCTION_PARAMETER_STRMAXLEN];
+
+                    strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_zRMacqu, ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
+
+                    sprintf(fname, "%s/dmslaved.fits", outdir);
+                    functionparameter_SetParamValue_STRING(&fps, ".DMslaved", fname);
+
+                    sprintf(fname, "%s/zrespM.fits", outdir);
+                    functionparameter_SetParamValue_STRING(&fps, ".zrespM", fname);
+
+                    sprintf(fname, "%s/dmmaskRM.fits", outdir);
+                    functionparameter_SetParamValue_STRING(&fps, ".DMmaskRM", fname);
+
+                    sprintf(fname, "%s/wfsmask.fits", outdir);
+                    functionparameter_SetParamValue_STRING(&fps, ".WFSmask", fname);
+                }
+
+                if ( FPS_loRMacqu_NBparam > 0 ) {
+                    char outdir[FUNCTION_PARAMETER_STRMAXLEN];
+                    char fname[FUNCTION_PARAMETER_STRMAXLEN];
+
+                    strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_loRMacqu, ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
+
+                    sprintf(fname, "%s/respM.fits", outdir);
+                    functionparameter_SetParamValue_STRING(&fps, ".loRM", fname);
+
+                    sprintf(fname, "%s/RMpokeCube.fits", outdir);
+                    functionparameter_SetParamValue_STRING(&fps, ".loRMmodes", fname);
+                }
+
+                // set back to OFF
+                fps.parray[fpi_update_RMfiles].fpflag &= ~FPFLAG_ONOFF;
+            }
+            
+            
+            // update align params for auto mask
+            if(fps.parray[fpi_update_align].fpflag & FPFLAG_ONOFF) {
+				if ( FPS_DMcomb_NBparam > 0 ) {
+					int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
+					int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
+					int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
+
+					float cx = 0.5*DMxsize - 0.5;
+					float cy = 0.5*DMysize - 0.5;
+					float od = 0.45*DMxsize;
+					float id = 0.05*DMxsize;
+					
+					functionparameter_SetParamValue_INT64(&fps, ".DMxsize", DMxsize);
+					functionparameter_SetParamValue_INT64(&fps, ".DMysize", DMysize);
+					functionparameter_SetParamValue_FLOAT64(&fps, ".align.CX", cx);
+					functionparameter_SetParamValue_FLOAT64(&fps, ".align.CY", cy);
+					functionparameter_SetParamValue_FLOAT64(&fps, ".align.OD", od);
+					functionparameter_SetParamValue_FLOAT64(&fps, ".align.ID", id);
+				}
+				fps.parray[fpi_update_align].fpflag &= ~FPFLAG_ONOFF;
+			}
+				
+				
+
+            
+            
+            // update align parameters
+            
+
+
+            functionparameter_CheckParametersAll(&fps);  // check all parameter values
+        }
+    }
+
+
+    function_parameter_FPCONFexit( &fps );
+
+    if ( FPS_zRMacqu_NBparam > 0 ) {
+        function_parameter_struct_disconnect( &FPS_zRMacqu );
+    }
+
+
+    if ( FPS_loRMacqu_NBparam > 0 ) {
+        function_parameter_struct_disconnect( &FPS_loRMacqu );
+    }
+
+    if ( FPS_DMcomb_NBparam > 0 ) {
+		function_parameter_struct_disconnect( &FPS_DMcomb );
+	}
+    
+
+    return RETURN_SUCCESS;
+
+}
+
+
+
+
+
+errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
+    char *fpsname
+) {
+    // ===========================
+    // CONNECT TO FPS
+    // ===========================
+    FUNCTION_PARAMETER_STRUCT fps;
+
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1) {
+        printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
+        return RETURN_FAILURE;
+    }
+
+    // ===============================
+    // GET FUNCTION PARAMETER VALUES
+    // ===============================
+    long loop         = functionparameter_GetParamValue_INT64(&fps, ".loop");
+    float SVDlim      = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
+    float CPAmax      = functionparameter_GetParamValue_FLOAT64(&fps, ".CPAmax");
+    float deltaCPA    = functionparameter_GetParamValue_FLOAT64(&fps, ".deltaCPA");
+
+    float align_CX    = functionparameter_GetParamValue_FLOAT64(&fps, ".align.CX");
+    float align_CY    = functionparameter_GetParamValue_FLOAT64(&fps, ".align.CY");
+    float align_ID    = functionparameter_GetParamValue_FLOAT64(&fps, ".align.ID");
+    float align_OD    = functionparameter_GetParamValue_FLOAT64(&fps, ".align.OD");
+
+    long DMxsize    = functionparameter_GetParamValue_INT64(&fps, ".DMxsize");
+    long DMysize    = functionparameter_GetParamValue_INT64(&fps, ".DMysize");
+
+	char fname_dmslaved[FUNCTION_PARAMETER_STRMAXLEN];
+	strncpy(fname_dmslaved,  functionparameter_GetParamPtr_STRING(&fps, ".DMslaved"),  FUNCTION_PARAMETER_STRMAXLEN);
+	load_fits(fname_dmslaved, "dmslaved", 1);
+
+	char fname_zrespM[FUNCTION_PARAMETER_STRMAXLEN];
+	strncpy(fname_zrespM,  functionparameter_GetParamPtr_STRING(&fps, ".zrespM"),  FUNCTION_PARAMETER_STRMAXLEN);
+	load_fits(fname_zrespM, "zrespM", 1);
+
+	char fname_DMmaskRM[FUNCTION_PARAMETER_STRMAXLEN];
+	strncpy(fname_DMmaskRM,  functionparameter_GetParamPtr_STRING(&fps, ".DMmaskRM"),  FUNCTION_PARAMETER_STRMAXLEN);
+	load_fits(fname_DMmaskRM, "dmmaskRM", 1);
+
+	char fname_WFSmask[FUNCTION_PARAMETER_STRMAXLEN];
+	strncpy(fname_WFSmask,  functionparameter_GetParamPtr_STRING(&fps, ".WFSmask"),  FUNCTION_PARAMETER_STRMAXLEN);
+	load_fits(fname_WFSmask, "wfsmask", 1);
+
+	char fname_loRM[FUNCTION_PARAMETER_STRMAXLEN];
+	strncpy(fname_loRM,  functionparameter_GetParamPtr_STRING(&fps, ".loRM"),  FUNCTION_PARAMETER_STRMAXLEN);
+	load_fits(fname_loRM, "LOrespM", 1);
+
+	char fname_loRMmodes[FUNCTION_PARAMETER_STRMAXLEN];
+	strncpy(fname_loRMmodes,  functionparameter_GetParamPtr_STRING(&fps, ".loRMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
+	load_fits(fname_loRMmodes, "RMMmodes", 1);
+
+	list_image_ID();
+
+
+
+	// Get time
+	time_t tnow;
+	struct tm *tmnow;
+	char datestring[200];
+	
+	time(&tnow);
+	tmnow = gmtime(&tnow);
+	
+	printf("TIMESTRING:  %d %d %d  %02d:%02d:%02d\n", tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
+
+
+    // MaskMode = 0  : tapered masking
+    // MaskMode = 1  : STRICT masking
+    //
+    // if BlockNB < 0 : do all blocks
+    // if BlockNB >= 0 : only update single block (untested)
+    int MaskMode = 0;
+    int BlockNB = -1;
+
+
+
+    AOloopControl_computeCalib_mkModes("fmodes", DMxsize, DMysize, CPAmax, deltaCPA, align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim);
+
+	// save results to disk
+	char fnamesrc[500];
+	char fnamedest[500];
+	char fnametxt[500];
+	char stagedir[] = "conf_staged";
+	char command[500];
+	FILE *fp;
+	
+	sprintf(fnamesrc, "./mkmodestmp/fmodesall.fits");
+	sprintf(fnamedest, "DMmodes/DMmodes_%s.fits", datestring);
+	sprintf(fnametxt, "./%s/shmim.DMmodes.name.txt", stagedir);
+	
+	sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+	if(system(command) != 0) {
+		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+	}
+	fp = fopen(fnametxt, "w");
+	fprintf(fp, "%s", fnamedest);
+	fclose(fp);
+	
+	
+	
+	sprintf(fnamesrc, "./mkmodestmp/fmodesWFSall.fits");
+	sprintf(fnamedest, "respM/respM_%s.fits", datestring);
+	sprintf(fnametxt, "./%s/shmim.respM.name.txt", stagedir);
+		
+	sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+	if(system(command) != 0) {
+		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+	}
+	fp = fopen(fnametxt, "w");
+	fprintf(fp, "%s", fnamedest);
+	fclose(fp);
+	
+	
+	sprintf(fnamesrc, "./mkmodestmp/cmatall.fits");
+	sprintf(fnamedest, "contrM/contrM_%s.fits", datestring);
+	sprintf(fnametxt, "./%s/shmim.contrM.name.txt", stagedir);
+		
+	sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+	if(system(command) != 0) {
+		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+	}
+	fp = fopen(fnametxt, "w");
+	fprintf(fp, "%s", fnamedest);
+	fclose(fp);
+	
+	
+
+	sprintf(command, "cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt", stagedir);
+	if(system(command) != 0) {
+		printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+	}
+	
+    function_parameter_struct_disconnect( &fps );
+
+
+    return RETURN_SUCCESS;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

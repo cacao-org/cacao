@@ -362,7 +362,6 @@ long AOloopControl_computeCalib_mkModes(
 
 
 
-
     COMPUTE_DM_MODES = 0;
     ID2b = image_ID("fmodes2ball");
 
@@ -435,6 +434,7 @@ long AOloopControl_computeCalib_mkModes(
                 for(ii=0; ii<msizex*msizey; ii++)
                     data.image[ID].array.F[(k+NBZ)*msizex*msizey+ii] = data.image[ID0].array.F[(k+1)*msizex*msizey+ii];
             }
+
 
 
             fp = fopen("rmscomp.dat", "w");
@@ -554,6 +554,7 @@ long AOloopControl_computeCalib_mkModes(
             IDslaved = image_ID("dmslaved");
             // load or create DM mask : union of dmslaved and dmmaskRM
             //IDmask = load_fits("dmmask.fits", "dmmask", 1);
+
             printf("Create DM mask\n");
             fflush(stdout);
 
@@ -562,6 +563,8 @@ long AOloopControl_computeCalib_mkModes(
             //if(IDmask == -1)
             //{
             IDmask = create_2Dimage_ID("dmmask", msizex, msizey);
+            printf("IDs: %ld %ld %ld\n", IDmask, IDmaskRM, IDslaved);
+            fflush(stdout);
             for(ii=0; ii<msizex*msizey; ii++)
             {
                 data.image[IDmask].array.F[ii] = 1.0 - (1.0-data.image[IDmaskRM].array.F[ii])*(1.0-data.image[IDslaved].array.F[ii]);
@@ -573,10 +576,15 @@ long AOloopControl_computeCalib_mkModes(
             //}
 
             // EDGE PIXELS IN IDmaskRM
+            printf("Create dmmaskRMedge\n");
+            fflush(stdout);
             IDmaskRMedge = AOloopControl_computeCalib_DMedgeDetect(data.image[IDmaskRM].md[0].name, "dmmaskRMedge");
             save_fits("dmmaskRMedge", "!dmmaskRMedge.fits");
 
+			
             // IDmaskRM pixels excluding edge
+            printf("Create dmmaskRMin\n");
+            fflush(stdout);
             IDmaskRMin = create_2Dimage_ID("dmmaskRMin", msizex, msizey);
             for(ii=0; ii<msizex*msizey; ii++)
                 data.image[IDmaskRMin].array.F[ii] = data.image[IDmaskRM].array.F[ii] * (1.0 - data.image[IDmaskRMedge].array.F[ii]);
@@ -585,11 +593,13 @@ long AOloopControl_computeCalib_mkModes(
 
             save_fits(ID_name, "!./mkmodestmp/_test_fmodes0all00.fits");
 
-
+			printf("Running AOloopControl_computeCalib_DMextrapolateModes\n");
+            fflush(stdout);
             IDtmp = AOloopControl_computeCalib_DMextrapolateModes(ID_name, "dmmaskRMin", "modesfreqcpa", "fmodes0test");
             save_fits("fmodes0test", "!fmodes0test.fits");
 
-
+			printf("Applying DM mask on %ud modes\n", data.image[ID].md[0].size[2]);
+			fflush(stdout);
             for(m=0; m<data.image[ID].md[0].size[2]; m++)
             {
                 for(ii=0; ii<msizex*msizey; ii++)
