@@ -1,6 +1,6 @@
 #! /bin/bash
 
-NBARGS=0
+NBARGS=1
 pname=`echo "$0" | sed "s/\.\///g"`
 
 
@@ -17,14 +17,13 @@ echo "Cleans zonal response matrices in ./tmpRMacqu/ directory"
 echo "if images conf/RMpixindex.fits conf/RMmat.fits exist, use them for coding/decoding"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h]"
+echo "     $0 [-h] <FPSname>"
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)          help"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
-echo "     <RM ampl>      RM amplitude [um]"
-echo "     <WFSn flag>    WFS normalization flag"
+echo "     <FPSname>      Function Parameter Structure (FPS) name"
 echo ""
 echo " $(tput bold)OUTPUT:$(tput sgr0)"
 echo "  zrespmat.fits    : zonal response matrix"
@@ -116,36 +115,37 @@ fi
 
 
 loopnb=$( head -1 LOOPNUMBER )
+FPSname=$1
+stageddir=$( head -1 fpsconf/${FPSname}/out/dir.setval.txt | awk '{print $1;}' )
+mkdir -p ${stageddir}
 
 pname0=$0
 pname="aol${loopnb}zrespM"
 
 
 
-
 OMP_NUM_THREADS=6 ./AOloopControl -n $pname << EOF
 aolnb $loopnb
-loadfits "./tmpRMacqu/RMpokeCube.fits" RMpokeC
-loadfits "./tmpRMacqu/RMmat.fits" RMmat
-loadfits "./tmpRMacqu/RMpixindex.fits" pixindexim
-loadfits "./tmpRMacqu/respM.fits" respm
-loadfits "./tmpRMacqu/wfsref.fits" wfsref0
+loadfits "./${stageddir}/tmpRMacqu/RMpokeCube.fits" RMpokeC
+loadfits "./${stageddir}/tmpRMacqu/RMmat.fits" RMmat
+loadfits "./${stageddir}/tmpRMacqu/RMpixindex.fits" pixindexim
+loadfits "./${stageddir}/tmpRMacqu/respM.fits" respm
+loadfits "./${stageddir}/tmpRMacqu/wfsref.fits" wfsref0
 
 aolproczrm respm wfsref0 zrespm wfsmap dmmap
 
-savefits zrespm "!./tmpRMacqu/zrespM.fits"
-savefits wfsmap "!./tmpRMacqu/wfsmap.fits"
-savefits dmmap "!./tmpRMacqu/dmmap.fits"
+savefits zrespm "!./${stageddir}/tmpRMacqu/zrespM.fits"
+savefits wfsmap "!./${stageddir}/tmpRMacqu/wfsmap.fits"
+savefits dmmap "!./${stageddir}/tmpRMacqu/dmmap.fits"
 listim
 exitCLI
 EOF
 
 
 # copy to staged dir
-stageddir="conf_zrm_staged"
-mkdir -p ${stageddir}
-cp ./tmpRMacqu/zrespM.fits ${stageddir}/
-cp ./tmpRMacqu/wfsref.fits ${stageddir}/wfsref00.fits
+
+cp ./${stageddir}/tmpRMacqu/zrespM.fits ${stageddir}/zrespM.fits
+cp ./${stageddir}/tmpRMacqu/wfsref.fits ${stageddir}/wfsref00.fits
 
 
 # Process time sampled slices
@@ -153,8 +153,8 @@ cp ./tmpRMacqu/wfsref.fits ${stageddir}/wfsref00.fits
 AVEFILECOUNTER=0
 while [  $AVEFILECOUNTER -lt 100 ]; do
 cntnum=$( echo ${AVEFILECOUNTER} | awk '{printf("%03d", $1)}')
-zrespM_filename="./tmpRMacqu/respM.ave${cntnum}.fits"
-wfsref_filename="./tmpRMacqu/wfsref.ave${cntnum}.fits"
+zrespM_filename="./${stageddir}/tmpRMacqu/respM.ave${cntnum}.fits"
+wfsref_filename="./${stageddir}/tmpRMacqu/wfsref.ave${cntnum}.fits"
 
 if [ -f "$zrespM_filename" ]; then
     
@@ -162,15 +162,15 @@ if [ -f "$zrespM_filename" ]; then
 
 OMP_NUM_THREADS=6 ./AOloopControl -n $pname << EOF
 aolnb $loopnb
-loadfits "./tmpRMacqu/RMpokeCube.fits" RMpokeC
-loadfits "./tmpRMacqu/RMmat.fits" RMmat
-loadfits "./tmpRMacqu/RMpixindex.fits" pixindexim
+loadfits "./${stageddir}/tmpRMacqu/RMpokeCube.fits" RMpokeC
+loadfits "./${stageddir}/tmpRMacqu/RMmat.fits" RMmat
+loadfits "./${stageddir}/tmpRMacqu/RMpixindex.fits" pixindexim
 loadfits "$zrespM_filename" zrespmat0
 loadfits "$wfsref_filename" wfsref00
 
 aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
 
-savefits zrespmat "!./tmpRMacqu/zrespM.ave${cntnum}.fits"
+savefits zrespmat "!./${stageddir}/tmpRMacqu/zrespM.ave${cntnum}.fits"
 listim
 exitCLI
 EOF

@@ -165,6 +165,7 @@ else
 echo "Adding process ${fpsname}"
 echo "${fpsname}           aoltestlat     ${fpsarg0}" >> fpslist.txt
 
+echo "setval ${fpsfname}.NBiter 20" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.sn_dm aol${CACAO_LOOPNUMBER}_dmRM" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_wfsim" >> ${FPSCONFFILE}
 fi
@@ -210,14 +211,16 @@ fi
 
 
 
-if [ "${CACAO_FPSPROC_ACQLINRM}" = "ON" ]; then
+if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
 # ==============================================================================
 # ========== Acquire Linear Response Matrix ====================================
 # ==============================================================================
 
 # FPS name
-fpsname="acqlinRM" 
+fpsname="acqlin_zRM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
+outdir="conf-zRM-staged"
+mkdir -p ${CACAO_WORKDIR}/${outdir}
 
 # FPS full name
 fpsfname="${fpsname}-${fpsarg0}" 
@@ -242,7 +245,7 @@ echo "setval ${fpsfname}.compDMmask ON" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.compMpoke ON" >> ${FPSCONFFILE}
 
 echo "setval ${fpsfname}.NBave 1" >> ${FPSCONFFILE}
-echo "setval ${fpsfname}.NBcycle 4" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.NBcycle 2" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.NBinnerCycle 1" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.NBexcl 0" >> ${FPSCONFFILE}
 
@@ -251,9 +254,107 @@ echo "setval ${fpsfname}.MaskMode ON" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.out.dir ${outdir}" >> ${FPSCONFFILE}
 
 fi
 fi
+
+
+
+
+
+if [ "${CACAO_FPSPROC_ACQLINLORM}" = "ON" ]; then
+# ==============================================================================
+# ========== Acquire Linear Response Matrix ====================================
+# ==============================================================================
+
+# FPS name
+fpsname="acqlin_loRM" 
+fpsarg0="${CACAO_LOOPNUMBER}"
+outdir="conf-loRM-staged"
+mkdir -p ${CACAO_WORKDIR}/${outdir}
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}" 
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echo "Process ${fpsname} already registered - skipping"
+else
+echo "Adding process ${fpsname}"
+echo "${fpsname}           aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
+
+echo "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}" >> ${FPSCONFFILE}
+
+# default startup values
+echo "setval ${fpsfname}.normalize ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.Hpoke OFF" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.autoTiming ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.compDMmask OFF" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.compMpoke OFF" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.NBave 1" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.NBcycle 4" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.NBinnerCycle 1" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.NBexcl 0" >> ${FPSCONFFILE}
+
+
+echo "setval ${fpsfname}.fn_pokeC conf/respM_LOmodes.fits" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.MaskMode OFF" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-NULL" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.out.dir ${outdir}" >> ${FPSCONFFILE}
+
+fi
+fi
+
+
+
+
+
+if [ "${CACAO_FPSPROC_COMPCM}" = "ON" ]; then
+# ==============================================================================
+# ========== Compute Control Matrix ============================================
+# ==============================================================================
+
+# FPS name
+fpsname="compCM" 
+fpsarg0="${CACAO_LOOPNUMBER}"
+outdir="conf-CM-staged"
+mkdir -p ${CACAO_WORKDIR}/${outdir}
+
+mkdir -p ${CACAO_WORKDIR}/conf_staged
+mkdir -p ${CACAO_WORKDIR}/mkmodestmp
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}" 
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echo "Process ${fpsname} already registered - skipping"
+else
+echo "Adding process ${fpsname}"
+echo "${fpsname}         aolcomputeCM       ${fpsarg0}" >> fpslist.txt
+
+echo "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.FPS_loRMacqu acqlin_loRM-${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}" >> ${FPSCONFFILE}
+
+fi
+fi
+
 
 
 

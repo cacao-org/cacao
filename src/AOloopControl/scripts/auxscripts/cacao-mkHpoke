@@ -2,7 +2,7 @@
 
 
 # number of arguments to script
-NBARGS=0
+NBARGS=1
 
 
 # ======================= PROCESS NAME =================================
@@ -17,7 +17,10 @@ echo "$(tput bold) $pname : MAKE HADAMARD POKE MATRIX $(tput sgr0)"
 echo "------------------------------------------------------------------------"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0"
+echo "     $0 [-h] <FPSname>"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <FPSname>      Function Parameter Structure (FPS) name"
 echo ""
 echo " $(tput bold)OPTIONAL INPUT:$(tput sgr0)"
 echo "     HRM_DMmask.fits    DM active mask file - will be created if doesn't exist"

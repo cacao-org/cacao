@@ -3,7 +3,7 @@
 
 
 # number of arguments to script
-NBARGS=0
+NBARGS=1
 
 
 
@@ -22,14 +22,13 @@ echo "------------------------------------------------------------------------"
 echo "  Created DM slaved actuators map based on proximity"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h] <DMmaskRM> <distance>"
+echo "     $0 [-h] <FPSname>"
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)          help"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
-echo "     <DMmaskRM>     DM mask for response matrix"
-echo "     <distance>     distance threshold (pixel)"
+echo "     <FPSname>      Function Parameter Structure (FPS) name"
 echo ""
 echo " $(tput bold)OUTPUT:$(tput sgr0)"
 echo "     dmslaved.fits     DM slaved actuators map"
@@ -100,10 +99,11 @@ printHELP
 fi
 
 
-stageddir="conf_zrm_staged"
+
 
 loopnb=$( head -1 LOOPNUMBER )
-
+FPSname=$1
+stageddir=$( head -1 fpsconf/${FPSname}/out/dir.setval.txt | awk '{print $1;}' )
 
 
 
@@ -122,7 +122,7 @@ echo "##########################################"
 
 
 
-actproxrad=$( head -1 fpsconf/acqlinRM-${loopnb}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
+actproxrad=$( head -1 fpsconf/${FPSname}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
 
 
 ./AOloopControl << EOF

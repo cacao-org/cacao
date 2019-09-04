@@ -671,6 +671,11 @@ fi
 # finished - get back to current directory
 cd $CURRDIR
 
+echo ""
+echo ""
+echo "cacao setup complete"
+echo ""
+echo ""
 
 
 

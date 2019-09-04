@@ -2,7 +2,7 @@
 
 
 # number of arguments to script
-NBARGS=0
+NBARGS=1
 
 
 # ======================= PROCESS NAME =================================
@@ -21,12 +21,13 @@ echo "------------------------------------------------------------------------"
 echo "  updates AO wfs and DM masks"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h]"
+echo "     $0 [-h] <FPSname>"
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)          help"
 echo ""
 echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <FPSname>      Function Parameter Structure (FPS) name"
 echo ""
 echo " $(tput bold)OUTPUT:$(tput sgr0)"
 echo "     wfsmask.fits"
@@ -121,23 +122,27 @@ fi
 
 
 loopnb=$( head -1 LOOPNUMBER )
+FPSname=$1
+stageddir=$( head -1 fpsconf/${FPSname}/out/dir.setval.txt | awk '{print $1;}' )
+
+
+
 datestr=`date -u +%Y-%m-%d_%H:%M:%S`
 
 
-DMmaskRMp0=$( head -1 fpsconf/acqlinRM-${loopnb}/DMmask/RMp0.setval.txt | awk '{print $1;}' )
-DMmaskRMc0=$( head -1 fpsconf/acqlinRM-${loopnb}/DMmask/RMc0.setval.txt | awk '{print $1;}' )
-DMmaskRMp1=$( head -1 fpsconf/acqlinRM-${loopnb}/DMmask/RMp1.setval.txt | awk '{print $1;}' )
-DMmaskRMc1=$( head -1 fpsconf/acqlinRM-${loopnb}/DMmask/RMc1.setval.txt | awk '{print $1;}' )
+DMmaskRMp0=$( head -1 fpsconf/${FPSname}/DMmask/RMp0.setval.txt | awk '{print $1;}' )
+DMmaskRMc0=$( head -1 fpsconf/${FPSname}/DMmask/RMc0.setval.txt | awk '{print $1;}' )
+DMmaskRMp1=$( head -1 fpsconf/${FPSname}/DMmask/RMp1.setval.txt | awk '{print $1;}' )
+DMmaskRMc1=$( head -1 fpsconf/${FPSname}/DMmask/RMc1.setval.txt | awk '{print $1;}' )
 
-WFSmaskRMp0=$( head -1 fpsconf/acqlinRM-${loopnb}/WFSmask/RMp0.setval.txt | awk '{print $1;}' )
-WFSmaskRMc0=$( head -1 fpsconf/acqlinRM-${loopnb}/WFSmask/RMc0.setval.txt | awk '{print $1;}' )
-WFSmaskRMp1=$( head -1 fpsconf/acqlinRM-${loopnb}/WFSmask/RMp1.setval.txt | awk '{print $1;}' )
-WFSmaskRMc1=$( head -1 fpsconf/acqlinRM-${loopnb}/WFSmask/RMc1.setval.txt | awk '{print $1;}' )
+WFSmaskRMp0=$( head -1 fpsconf/${FPSname}/WFSmask/RMp0.setval.txt | awk '{print $1;}' )
+WFSmaskRMc0=$( head -1 fpsconf/${FPSname}/WFSmask/RMc0.setval.txt | awk '{print $1;}' )
+WFSmaskRMp1=$( head -1 fpsconf/${FPSname}/WFSmask/RMp1.setval.txt | awk '{print $1;}' )
+WFSmaskRMc1=$( head -1 fpsconf/${FPSname}/WFSmask/RMc1.setval.txt | awk '{print $1;}' )
 
 echo "LOOP: ${loopnb}"
 
 
-stageddir="conf_zrm_staged"
 
 
 ./AOloopControl << EOF
