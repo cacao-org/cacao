@@ -865,8 +865,6 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
                 fp = fopen(fnametxt, "w");
                 fprintf(fp, "%s", fnamedest);
                 fclose(fp);
-
-                i++;
             }
             else {
                 OKloop = 0;
@@ -875,24 +873,6 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
         }
 
     }
-
-    /*
-
-
-    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmat_${i2}.fits contrM/contrM${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-    echo "if [ -f \"$fname\" ]; then echo \"contrM/contrM${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrM${i2}.name.txt; fi"  >> $computeModesCMscriptfile
-
-    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatc_${i2}.fits contrMc/contrMc${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-    echo "if [ -f \"$fname\" ]; then echo \"contrMc/contrMc${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrMc${i2}.name.txt; fi"  >> $computeModesCMscriptfile
-
-    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmatcact_${i2}.fits contrMcact/contrMcact${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-    echo "if [ -f \"$fname\" ]; then echo \"contrMcact/contrMcact${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrMcact${i2}_00.name.txt; fi"  >> $computeModesCMscriptfile
-    #fi
-    done
-
-    */
-
-
 
 
 
