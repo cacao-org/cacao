@@ -88,8 +88,8 @@ Create local bin directory and sym links to all cacao- scripts:
 ```bash
 mkdir bin
 cd bin
-find /home/scexao/src/cacao/ -executable -type f -name "milk-*" -print0 | xargs -0 -I {} ln -s {} .
-find /home/scexao/src/cacao/ -executable -type f -name "cacao-*" -print0 | xargs -0 -I {} ln -s {} .
+find /home/myname/src/cacao/ -executable -type f -name "milk-*" -print0 | xargs -0 -I {} ln -s {} .
+find /home/myname/src/cacao/ -executable -type f -name "cacao-*" -print0 | xargs -0 -I {} ln -s {} .
 ```
 
 Add milk and cacao executable scripts to PATH environment variable. Add this line to the .bashrc or .profile file (change source code location as needed):
