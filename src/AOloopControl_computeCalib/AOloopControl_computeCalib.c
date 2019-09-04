@@ -801,37 +801,78 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     for (int i=0; i<20; i++)
     {
         sprintf(fnamesrc, "./mkmodestmp/fmodes_%02d.fits", i);
-        
-        if(is_fits_file(fnamesrc)==1)
-        {
-			printf("Found file %s\n", fnamesrc);
-			
-		}
-/*        
-        sprintf(fnamedest, "DMmodes/DMmodes_%s.fits", datestring);
-        sprintf(fnametxt, "./%s/shmim.DMmodes.name.txt", stagedir);
 
-        sprintf(command, "cp %s %s", fnamesrc, fnamedest);
-        if(system(command) != 0) {
-            printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+        while(is_fits_file(fnamesrc)==1)
+        {
+            printf("Found file %s\n", fnamesrc);
+            
+            sprintf(fnamesrc, "./mkmodestmp/fmodes_%02d.fits", i);
+            sprintf(fnamedest, "DMmodes/DMmodes%02d_%s.fits", i, datestring);
+            sprintf(fnametxt, "./%s/shmim.DMmodes%02d.name.txt", stagedir, i);
+            sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+            if(system(command) != 0) {
+                printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+            }
+            fp = fopen(fnametxt, "w");
+            fprintf(fp, "%s", fnamedest);
+            fclose(fp);
+            
+            
+            sprintf(fnamesrc, "./mkmodestmp/fmodesWFS_%02d.fits", i);
+            sprintf(fnamedest, "respM/respM%02d_%s.fits", i, datestring);
+            sprintf(fnametxt, "./%s/shmim.respM%02d.name.txt", stagedir, i);
+            sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+            if(system(command) != 0) {
+                printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+            }
+            fp = fopen(fnametxt, "w");
+            fprintf(fp, "%s", fnamedest);
+            fclose(fp);            
+            
+
+            sprintf(fnamesrc, "./mkmodestmp/cmat_%02d.fits", i);
+            sprintf(fnamedest, "contrM/contrM%02d_%s.fits", i, datestring);
+            sprintf(fnametxt, "./%s/shmim.contrM%02d.name.txt", stagedir, i);
+            sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+            if(system(command) != 0) {
+                printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+            }
+            fp = fopen(fnametxt, "w");
+            fprintf(fp, "%s", fnamedest);
+            fclose(fp);            
+            
+            
+            sprintf(fnamesrc, "./mkmodestmp/cmatc_%02d.fits", i);
+            sprintf(fnamedest, "contrMc/contrMc%02d_%s.fits", i, datestring);
+            sprintf(fnametxt, "./%s/shmim.contrMc%02d.name.txt", stagedir, i);
+            sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+            if(system(command) != 0) {
+                printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+            }
+            fp = fopen(fnametxt, "w");
+            fprintf(fp, "%s", fnamedest);
+            fclose(fp);            
+          
+          
+            sprintf(fnamesrc, "./mkmodestmp/cmatcact_%02d.fits", i);
+            sprintf(fnamedest, "contrMcact/contrMcact%02d_%s.fits", i, datestring);
+            sprintf(fnametxt, "./%s/shmim.contrMcact%02d.name.txt", stagedir, i);
+            sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+            if(system(command) != 0) {
+                printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+            }
+            fp = fopen(fnametxt, "w");
+            fprintf(fp, "%s", fnamedest);
+            fclose(fp);            
+                      
+            i++;
         }
-        fp = fopen(fnametxt, "w");
-        fprintf(fp, "%s", fnamedest);
-        fclose(fp);
-*/
+		printf("Cannot find file %s -> stopping\n", fnamesrc);
+	
     }
 
     /*
-    for i in `seq 0 20`;
-    do
-    i2=$(printf "%02d" "$i")
-    fname="mkmodestmp/fmodes_${i2}.fits"
-    #if [ -e "$fname" ]; then
-    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodes_${i2}.fits DMmodes/DMmodes${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-    echo "if [ -f \"$fname\" ]; then echo \"DMmodes/DMmodes${i2}_${datestr}.fits\" > ./conf_staged/shmim.DMmodes${i2}.name.txt; fi"  >> $computeModesCMscriptfile
 
-    echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/fmodesWFS_${i2}.fits respM/respM${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
-    echo "if [ -f \"$fname\" ]; then echo \"respM/respM${i2}_${datestr}.fits\" > ./conf_staged/shmim.respM${i2}.name.txt; fi"  >> $computeModesCMscriptfile
 
     echo "if [ -f \"$fname\" ]; then cp ./mkmodestmp/cmat_${i2}.fits contrM/contrM${i2}_${datestr}.fits; fi"  >> $computeModesCMscriptfile
     echo "if [ -f \"$fname\" ]; then echo \"contrM/contrM${i2}_${datestr}.fits\" > ./conf_staged/shmim.contrM${i2}.name.txt; fi"  >> $computeModesCMscriptfile
