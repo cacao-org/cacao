@@ -1518,6 +1518,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
 
+
+
 errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     char *fpsname,
     uint32_t CMDmode
@@ -1661,7 +1663,12 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                                     
 
 
-    // output files
+    // output files and dir
+    long fpi_dirname_out      = function_parameter_add_entry(&fps, ".out.dir",
+                                    "output directory",
+                                    FPTYPE_DIRNAME, FPFLAG_DEFAULT_OUTPUT, pNull);
+
+    
     long fpi_filename_respC       = function_parameter_add_entry(&fps, ".out.fn_respC",
                                     "output response matrix",
                                     FPTYPE_FILENAME, FPFLAG_DEFAULT_OUTPUT, pNull);
@@ -1696,6 +1703,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                          FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
 
+    double LOmaxCPA_default[4] = { 3.0, 1.0, 30.0, 3.0 };
+    long fpi_LOmaxCPA = function_parameter_add_entry(&fps, ".LOmaxCPA",
+                    "Low orders max CPA",
+                    FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &LOmaxCPA_default);
 
 	
 	// External scripts (post)
@@ -1710,6 +1721,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 	long fpi_exec_post_mkDMslaveact = function_parameter_add_entry(&fps, ".exec.mkDMslaveact",
                          "Make DM slaved actuators",
                          FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+	long fpi_exec_post_mkLODMmodes = function_parameter_add_entry(&fps, ".exec.mkLODMmodes",
+                         "Make DM low order modes",
+                         FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
 
 
 
@@ -1816,7 +1832,6 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 					// set back to OFF
 					fps.parray[fpi_comp_RM_Mpoke].fpflag &= ~FPFLAG_ONOFF;
 				}
-			}
             
             
             if(fps.parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF) {  
@@ -1825,7 +1840,13 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 			}
 			else {
 				functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Spoke.fits");
+			}				
+				
+				
 			}
+            
+            
+
 
 			
 			//
@@ -1960,7 +1981,13 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     char execmkDMslaveact[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(execmkDMslaveact, functionparameter_GetParamPtr_STRING(&fps, ".exec.mkDMslaveact"),  FUNCTION_PARAMETER_STRMAXLEN);
     
+    char execmkLODMmodes[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(execmkLODMmodes, functionparameter_GetParamPtr_STRING(&fps, ".exec.mkLODMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
 
+
+
+	char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
 
 
     printf("Entering function %s \n", __FUNCTION__);
@@ -2136,11 +2163,16 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     }
 
     int retv;
-    retv = system("mkdir -p tmpRMacqu");
+    char command[500];
+    sprintf(command, "mkdir -p %s/tmpRMacqu", outdirname);
+    retv = system(command);
 
-
-    save_fits("dmpokeC2a", "!tmpRMacqu/test_dmpokeC2a.fits");
-    save_fits("dmpokeC2b", "!tmpRMacqu/test_dmpokeC2b.fits");
+	char fname[200];
+	sprintf(fname, "!%s/tmpRMacqu/test_dmpokeC2a.fits", outdirname);
+    save_fits("dmpokeC2a", fname);
+    
+    sprintf(fname, "!%s/tmpRMacqu/test_dmpokeC2b.fits", outdirname);
+    save_fits("dmpokeC2b", fname);
 
 
     printf("NBpoke = %ld\n", NBpoke);
@@ -2153,17 +2185,23 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     if( (*FPFLAG_HPOKE) & FPFLAG_ONOFF ) {
         char command[500];
 
-        sprintf(command, "cp %s tmpRMacqu/RMpokeCube.fits", pokeC_filename);
+        sprintf(command, "cp %s %s/tmpRMacqu/RMpokeCube.fits", pokeC_filename, outdirname);
         if(system(command) != 0) {
             printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
         }
 
-        sprintf(command, "cp conf/Hmat.fits tmpRMacqu/RMmat.fits");
+        sprintf(command, "cp %s %s/RMpokeCube.fits", pokeC_filename, outdirname);
         if(system(command) != 0) {
             printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
         }
 
-        sprintf(command, "cp conf/Hpixindex.fits tmpRMacqu/RMpixindex.fits");
+
+        sprintf(command, "cp conf/Hmat.fits %s/tmpRMacqu/RMmat.fits", outdirname);
+        if(system(command) != 0) {
+            printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+        }
+
+        sprintf(command, "cp conf/Hpixindex.fits %s/tmpRMacqu/RMpixindex.fits", outdirname);
         if(system(command) != 0) {
             printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
         }
@@ -2172,10 +2210,16 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     {
         char command[500];
 
-        sprintf(command, "cp %s tmpRMacqu/RMpokeCube.fits", pokeC_filename);
+        sprintf(command, "cp %s %s/tmpRMacqu/RMpokeCube.fits", pokeC_filename, outdirname);
         if(system(command) != 0) {
             printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
         }
+
+        sprintf(command, "cp %s %s/RMpokeCube.fits", pokeC_filename, outdirname);
+        if(system(command) != 0) {
+            printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+        }
+
     }
 
 
@@ -2264,10 +2308,10 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             delete_image_ID(wfsresp2aname);
             delete_image_ID(wfsresp2bname);
 
-            sprintf(tmpfname, "tmpRMacqu/wfsresp2a.tstep%03d.iter%03d.fits", AveStep, IterNumber);
+            sprintf(tmpfname, "%s/tmpRMacqu/wfsresp2a.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
             IDwfsresp2a = load_fits(tmpfname, wfsresp2aname, 1);
 
-            sprintf(tmpfname, "tmpRMacqu/wfsresp2b.tstep%03d.iter%03d.fits", AveStep, IterNumber);
+            sprintf(tmpfname, "%s/tmpRMacqu/wfsresp2b.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
             IDwfsresp2b = load_fits(tmpfname, wfsresp2bname, 1);
 
 
@@ -2360,22 +2404,22 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 printf(" [saving ... ");
                 fflush(stdout);
 
-                sprintf(filename_respC, "!tmpRMacqu/respM.tstep%03d.iter%03d.fits", AveStep, IterNumber);
-                sprintf(filename_wfsref, "!tmpRMacqu/wfsref.tstep%03d.iter%03d.fits", AveStep, IterNumber);
+                sprintf(filename_respC, "!%s/tmpRMacqu/respM.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
+                sprintf(filename_wfsref, "!%s/tmpRMacqu/wfsref.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
                 save_fits(imnameout_respC, filename_respC);
                 save_fits(imnameout_wfsref, filename_wfsref);
                 delete_image_ID(imnameout_respC);
                 delete_image_ID(imnameout_wfsref);
 
-                sprintf(filename_respC, "!tmpRMacqu/respM_A.tstep%03d.iter%03d.fits", AveStep, IterNumber);
-                sprintf(filename_wfsref, "!tmpRMacqu/wfsref_A.tstep%03d.iter%03d.fits", AveStep, IterNumber);
+                sprintf(filename_respC, "!%s/tmpRMacqu/respM_A.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
+                sprintf(filename_wfsref, "!%s/tmpRMacqu/wfsref_A.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
                 save_fits(imnameout_respC_A, filename_respC);
                 save_fits(imnameout_wfsref_A, filename_wfsref);
                 delete_image_ID(imnameout_respC_A);
                 delete_image_ID(imnameout_wfsref_A);
 
-                sprintf(filename_respC, "!tmpRMacqu/respM_B.tstep%03d.iter%03d.fits", AveStep, IterNumber);
-                sprintf(filename_wfsref, "!tmpRMacqu/wfsref_B.tstep%03d.iter%03d.fits", AveStep, IterNumber);
+                sprintf(filename_respC, "!%s/tmpRMacqu/respM_B.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
+                sprintf(filename_wfsref, "!%s/tmpRMacqu/wfsref_B.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
                 save_fits(imnameout_respC_B, filename_respC);
                 save_fits(imnameout_wfsref_B, filename_wfsref);
                 delete_image_ID(imnameout_respC_B);
@@ -2391,29 +2435,32 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 char filename_wfsref[100];
 
                 sprintf(imnameout_respC, "%s", respC_sname);
-                sprintf(filename_respC, "!tmpRMacqu/respM.fits");
+                sprintf(filename_respC, "!%s/tmpRMacqu/respM.fits", outdirname);
+                save_fits(imnameout_respC, filename_respC);
+                sprintf(filename_respC, "!%s/respM.fits", outdirname);
                 save_fits(imnameout_respC, filename_respC);
 
                 sprintf(imnameout_wfsref, "%s", wfsref_sname);
-                sprintf(filename_wfsref, "!tmpRMacqu/wfsref.fits");
+                sprintf(filename_wfsref, "!%s/tmpRMacqu/wfsref.fits", outdirname);
+                save_fits(imnameout_wfsref, filename_wfsref);
+                sprintf(filename_wfsref, "!%s/wfsref.fits", outdirname);
                 save_fits(imnameout_wfsref, filename_wfsref);
 
-
                 sprintf(imnameout_respC_A, "%s_A", respC_sname);
-                sprintf(filename_respC, "!tmpRMacqu/respM_A.fits");
+                sprintf(filename_respC, "!%s/tmpRMacqu/respM_A.fits", outdirname);
                 save_fits(imnameout_respC_A, filename_respC);
 
                 sprintf(imnameout_wfsref_A, "%s_A", wfsref_sname);
-                sprintf(filename_wfsref, "!tmpRMacqu/wfsref_A.fits");
+                sprintf(filename_wfsref, "!%s/tmpRMacqu/wfsref_A.fits", outdirname);
                 save_fits(imnameout_wfsref_A, filename_wfsref);
 
 
                 sprintf(imnameout_respC_B, "%s_A", respC_sname);
-                sprintf(filename_respC, "!tmpRMacqu/respM_A.fits");
+                sprintf(filename_respC, "!%s/tmpRMacqu/respM_A.fits", outdirname);
                 save_fits(imnameout_respC_B, filename_respC);
 
                 sprintf(imnameout_wfsref_B, "%s_A", wfsref_sname);
-                sprintf(filename_wfsref, "!tmpRMacqu/wfsref_B.fits");
+                sprintf(filename_wfsref, "!%s/tmpRMacqu/wfsref_B.fits", outdirname);
                 save_fits(imnameout_wfsref_B, filename_wfsref);
 
 
@@ -2441,17 +2488,27 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     // run RM decode exec script
     // 
-    if(system(execRMdecode) != 0) {
+    
+    sprintf(command, "%s %s", execRMdecode, fpsname);
+    if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
 
-    if(system(execmkDMWFSmasks) != 0) {
+	sprintf(command, "%s %s", execmkDMWFSmasks, fpsname);
+    if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
 
-    if(system(execmkDMslaveact) != 0) {
+	sprintf(command, "%s %s", execmkDMslaveact, fpsname);
+    if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
+
+	sprintf(command, "%s %s", execmkLODMmodes, fpsname);
+    if(system(command) != 0) {
+        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    }
+
 
 
     function_parameter_struct_disconnect( &fps );
