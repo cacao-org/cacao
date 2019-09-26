@@ -367,7 +367,6 @@ int AOloopControl_DM_CombineChannels_FPCONF(
             }
 
 
-
             if(fps.parray[fp_voltmode].fpflag & FPFLAG_ONOFF) {  // ON state
                 fps.parray[fp_voltname].fpflag |= FPFLAG_USED;
                 fps.parray[fp_voltname].fpflag |= FPFLAG_VISIBLE;
