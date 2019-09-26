@@ -368,3 +368,60 @@ fi
 
 
 
+if [ "${CACAO_FPSPROC_MODESEXTRACTWFSGPU}" = "ON" ]; then
+# ==============================================================================
+# ========== GPU-based MVM extract modes ============================================
+# ==============================================================================
+
+# FPS name
+fpsname="modesextractWFSGPU" 
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}" 
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echo "Process ${fpsname} already registered - skipping"
+else
+echo "Adding process ${fpsname}"
+echo "${fpsname}         cudaextrmodes       ${fpsarg0}" >> fpslist.txt
+
+echo "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+
+# input frame
+echo "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_imWFS0" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot" >> ${FPSCONFFILE}
+
+# we use respM for direct MVM as it is already orthonormal set of modes
+echo "setval ${fpsfname}.sname_modes aol0_respM" >> ${FPSCONFFILE}
+# TBD: load in shm
+
+echo "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.sname_outmodesval aol${CACAO_LOOPNUMBER}_modeval" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.outinit ON" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.option.GPindex 0" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.option.PROCESS ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.option.TRACEMODE ON" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.option.MODENORM ON" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.option.insem 2" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.option.axmode 0" >> ${FPSCONFFILE}
+
+# run GPU full speed
+echo "setval ${fpsfname}.option.twait 0" >> ${FPSCONFFILE}
+
+echo "setval ${fpsfname}.option.semwarn ON" >> ${FPSCONFFILE}
+
+
+fi
+fi
+
+
+
+

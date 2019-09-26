@@ -624,16 +624,6 @@ fi
 if [ "$UPDATEMODE" = "0" ]; then
 fpssetparamconf
 
-
-DMcomb-${CACAO_DMINDEX}
-
-CACAO_DMxsize    : 50
-CACAO_DMysize    : 50
-CACAO_WORKDIR    : linsimtest1
-CACAO_DMINDEX    : 01
-CACAO_LOOPNUMBER : 2
-CACAO_WFSSTREAM  : aol2_linsimWFS
-
 mkdir -p fpsconf
 mkdir -p fpsconf/AOCONF
 echo "${CACAO_DMINDEX}" > ./fpsconf/AOCONF/DMindex
