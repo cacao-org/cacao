@@ -471,21 +471,20 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
                            "FPS zonal RM acquisition",
                            FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
     FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
-    long FPS_zRMacqu_NBparam = 0;
+	fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparam = 0;
 
     long fpi_FPS_loRMacqu = function_parameter_add_entry(&fps, ".FPS_loRMacqu",
                             "FPS low order modal RM acquisition",
                             FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
     FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
-    long FPS_loRMacqu_NBparam = 0;
+	fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparam = 0;
 
 
     long fpi_FPS_DMcomb = function_parameter_add_entry(&fps, ".FPS_DMcomb",
                          "FPS DMcomb",
                          FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
-	FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
-	long FPS_DMcomb_NBparam = 0;
-
+	FUNCTION_PARAMETER_STRUCT FPS_DMcomb;;
+	fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam = 0;
 
 
 
@@ -552,20 +551,23 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
             //
             //  Connect to aux FPS
             //
-            if ( FPS_zRMacqu_NBparam < 1 ) {
-                FPS_zRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_zRMacqu].val.string[0], &FPS_zRMacqu, FPSCONNECT_SIMPLE);
+            if ( fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparam < 1 ) {
+				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_zRMacqu, &FPS_zRMacqu);
+//                FPS_zRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_zRMacqu].val.string[0], &FPS_zRMacqu, FPSCONNECT_SIMPLE);
             }
-            if ( FPS_loRMacqu_NBparam < 1 ) {
-                FPS_loRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_loRMacqu].val.string[0], &FPS_loRMacqu, FPSCONNECT_SIMPLE);
+            if ( fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparam  < 1 ) {
+				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_loRMacqu, &FPS_loRMacqu);
+                //FPS_loRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_loRMacqu].val.string[0], &FPS_loRMacqu, FPSCONNECT_SIMPLE);
             }
-            if ( FPS_DMcomb_NBparam < 1 ) {
-				FPS_DMcomb_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_DMcomb].val.string[0], &FPS_DMcomb, FPSCONNECT_SIMPLE);
+            if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam  < 1 ) {
+				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb);
+				//FPS_DMcomb_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_DMcomb].val.string[0], &FPS_DMcomb, FPSCONNECT_SIMPLE);
 			}            
 
             // Update RM files
             if(fps.parray[fpi_update_RMfiles].fpflag & FPFLAG_ONOFF) {
 
-                if ( FPS_zRMacqu_NBparam > 0 ) {
+                if ( fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparam > 0 ) {
                     char outdir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
 
@@ -584,7 +586,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
                     functionparameter_SetParamValue_STRING(&fps, ".WFSmask", fname);
                 }
 
-                if ( FPS_loRMacqu_NBparam > 0 ) {
+                if ( fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparam > 0 ) {
                     char outdir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
 
@@ -604,7 +606,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
             
             // update align params for auto mask
             if(fps.parray[fpi_update_align].fpflag & FPFLAG_ONOFF) {
-				if ( FPS_DMcomb_NBparam > 0 ) {
+				if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam  > 0 ) {
 					int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
 					int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
 					int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
@@ -639,16 +641,16 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
     function_parameter_FPCONFexit( &fps );
 
-    if ( FPS_zRMacqu_NBparam > 0 ) {
+    if ( fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparam > 0 ) {
         function_parameter_struct_disconnect( &FPS_zRMacqu );
     }
 
 
-    if ( FPS_loRMacqu_NBparam > 0 ) {
+    if ( fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparam > 0 ) {
         function_parameter_struct_disconnect( &FPS_loRMacqu );
     }
 
-    if ( FPS_DMcomb_NBparam > 0 ) {
+    if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam > 0 ) {
 		function_parameter_struct_disconnect( &FPS_DMcomb );
 	}
     
