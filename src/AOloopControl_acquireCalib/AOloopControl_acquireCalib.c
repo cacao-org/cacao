@@ -1543,8 +1543,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
     long loop_default[4] = { 0, 0, 10, 0 };
     long fpi_loop = function_parameter_add_entry(&fps, ".loop",
-                       "loop index",
-                       FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
+                    "loop index",
+                    FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
 
 
 
@@ -1588,62 +1588,62 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
     long AOinitMode_default[4] = { 0, 0, 2, 0 };
     long fpi_AOinitMode = function_parameter_add_entry(&fps, ".AOinitMode",
-                       "AO initialization mode",
-                       FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &AOinitMode_default);
+                          "AO initialization mode",
+                          FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &AOinitMode_default);
 
 
 
 
     long fpi_MaskMode = function_parameter_add_entry(&fps, ".MaskMode",
-                         "Mask mode, DM and WFS",
-                         FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+                        "Mask mode, DM and WFS",
+                        FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
-	double maskRMp0_default[4] = { 0.2, 0.0, 1.0, 0.2 };
-	long fpi_maskRMp0 = function_parameter_add_entry(&fps, ".DMmask.RMp0",
-                       "DM mask, first percentile point",
-                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp0_default);
+    double maskRMp0_default[4] = { 0.2, 0.0, 1.0, 0.2 };
+    long fpi_maskRMp0 = function_parameter_add_entry(&fps, ".DMmask.RMp0",
+                        "DM mask, first percentile point",
+                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp0_default);
 
-	double maskRMc0_default[4] = { 1.0, 0.0, 5.0, 1.0 };
-	long fpi_maskRMc0 = function_parameter_add_entry(&fps, ".DMmask.RMc0",
-                       "DM mask, first percentile value coefficient",
-                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc0_default);
+    double maskRMc0_default[4] = { 1.0, 0.0, 5.0, 1.0 };
+    long fpi_maskRMc0 = function_parameter_add_entry(&fps, ".DMmask.RMc0",
+                        "DM mask, first percentile value coefficient",
+                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc0_default);
 
-	double maskRMp1_default[4] = { 0.5, 0.0, 1.0, 0.5 };
-	long fpi_maskRMp1 = function_parameter_add_entry(&fps, ".DMmask.RMp1",
-                       "DM mask, second percentile point",
-                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp1_default);
+    double maskRMp1_default[4] = { 0.5, 0.0, 1.0, 0.5 };
+    long fpi_maskRMp1 = function_parameter_add_entry(&fps, ".DMmask.RMp1",
+                        "DM mask, second percentile point",
+                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp1_default);
 
-	double maskRMc1_default[4] = { 0.5, 0.0, 5.0, 0.5 };
-	long fpi_maskRMc1 = function_parameter_add_entry(&fps, ".DMmask.RMc1",
-                       "DM mask, second percentile value coefficient",
-                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc1_default);
-	
-	double DMproxrad_default[4] = { 2.5, 0.0, 10.0, 2.5 };
-	long fpi_DMproxrad = function_parameter_add_entry(&fps, ".DMmask.proxrad",
-                       "DM actuator proximity radius",
-                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &DMproxrad_default);
+    double maskRMc1_default[4] = { 0.5, 0.0, 5.0, 0.5 };
+    long fpi_maskRMc1 = function_parameter_add_entry(&fps, ".DMmask.RMc1",
+                        "DM mask, second percentile value coefficient",
+                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc1_default);
+
+    double DMproxrad_default[4] = { 2.5, 0.0, 10.0, 2.5 };
+    long fpi_DMproxrad = function_parameter_add_entry(&fps, ".DMmask.proxrad",
+                         "DM actuator proximity radius",
+                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &DMproxrad_default);
 
 
 
-	double maskWFSp0_default[4] = { 0.2, 0.0, 1.0, 0.2 };
-	long fpi_maskWFSp0 = function_parameter_add_entry(&fps, ".WFSmask.RMp0",
-                       "WFS mask, first percentile point",
-                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp0_default);
+    double maskWFSp0_default[4] = { 0.2, 0.0, 1.0, 0.2 };
+    long fpi_maskWFSp0 = function_parameter_add_entry(&fps, ".WFSmask.RMp0",
+                         "WFS mask, first percentile point",
+                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp0_default);
 
-	double maskWFSc0_default[4] = { 1.0, 0.0, 5.0, 1.0 };
-	long fpi_maskWFSc0 = function_parameter_add_entry(&fps, ".WFSmask.RMc0",
-                       "WFS mask, first percentile value coefficient",
-                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc0_default);
+    double maskWFSc0_default[4] = { 1.0, 0.0, 5.0, 1.0 };
+    long fpi_maskWFSc0 = function_parameter_add_entry(&fps, ".WFSmask.RMc0",
+                         "WFS mask, first percentile value coefficient",
+                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc0_default);
 
-	double maskWFSp1_default[4] = { 0.6, 0.0, 1.0, 0.6 };
-	long fpi_maskWFSp1 = function_parameter_add_entry(&fps, ".WFSmask.RMp1",
-                       "WFS mask, second percentile point",
-                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp1_default);
+    double maskWFSp1_default[4] = { 0.6, 0.0, 1.0, 0.6 };
+    long fpi_maskWFSp1 = function_parameter_add_entry(&fps, ".WFSmask.RMp1",
+                         "WFS mask, second percentile point",
+                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp1_default);
 
-	double maskWFSc1_default[4] = { 0.6, 0.0, 5.0, 0.6 };
-	long fpi_maskWFSc1 = function_parameter_add_entry(&fps, ".WFSmask.RMc1",
-                       "WFS mask, second percentile value coefficient",
-                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc1_default);	
+    double maskWFSc1_default[4] = { 0.6, 0.0, 5.0, 0.6 };
+    long fpi_maskWFSc1 = function_parameter_add_entry(&fps, ".WFSmask.RMc1",
+                         "WFS mask, second percentile value coefficient",
+                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc1_default);
 
 
 
@@ -1652,23 +1652,23 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     // input streams
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
     long fpi_filename_pokeC     = function_parameter_add_entry(&fps, ".fn_pokeC",
-                                    "Poke sequence cube",
-                                    FPTYPE_FITSFILENAME, FPFLAG, pNull);
+                                  "Poke sequence cube",
+                                  FPTYPE_FITSFILENAME, FPFLAG, pNull);
 
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
     long fpi_filename_DMRMmask = function_parameter_add_entry(&fps, ".fn_RMDMmask",
-                                    "RM active DM actuators mask",
-                                    FPTYPE_FITSFILENAME, FPFLAG, pNull);
+                                 "RM active DM actuators mask",
+                                 FPTYPE_FITSFILENAME, FPFLAG, pNull);
     functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask", "./conf/RM_DMmask.fits");
-                                    
+
 
 
     // output files and dir
     long fpi_dirname_out      = function_parameter_add_entry(&fps, ".out.dir",
-                                    "output directory",
-                                    FPTYPE_DIRNAME, FPFLAG_DEFAULT_OUTPUT, pNull);
+                                "output directory",
+                                FPTYPE_DIRNAME, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    
+
     long fpi_filename_respC       = function_parameter_add_entry(&fps, ".out.fn_respC",
                                     "output response matrix",
                                     FPTYPE_FILENAME, FPFLAG_DEFAULT_OUTPUT, pNull);
@@ -1689,57 +1689,57 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
     long fpi_autoTiming = function_parameter_add_entry(&fps, ".autoTiming",
-                         "Auto Timing",
-                         FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+                          "Auto Timing",
+                          FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
 
-	// Compute Actions
-	long fpi_comp_RM_DMmask = function_parameter_add_entry(&fps, ".compDMmask",
-                         "(re-)compute RM DM mask",
-                         FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+    // Compute Actions
+    long fpi_comp_RM_DMmask = function_parameter_add_entry(&fps, ".compDMmask",
+                              "(re-)compute RM DM mask",
+                              FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
-	long fpi_comp_RM_Mpoke = function_parameter_add_entry(&fps, ".compMpoke",
-                         "(re-)compute poke matrices",
-                         FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+    long fpi_comp_RM_Mpoke = function_parameter_add_entry(&fps, ".compMpoke",
+                             "(re-)compute poke matrices",
+                             FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
 
     double LOmaxCPA_default[4] = { 3.0, 1.0, 30.0, 3.0 };
     long fpi_LOmaxCPA = function_parameter_add_entry(&fps, ".LOmaxCPA",
-                    "Low orders max CPA",
-                    FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &LOmaxCPA_default);
+                        "Low orders max CPA",
+                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &LOmaxCPA_default);
 
-	
-	// External scripts (post)
-	long fpi_exec_post_RMdecode = function_parameter_add_entry(&fps, ".exec.RMdecode",
-                         "RM decode script",
-                         FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-	long fpi_exec_post_mkDMWFSmasks = function_parameter_add_entry(&fps, ".exec.mkDMWFSmasks",
-                         "Make DM and WFS masks",
-                         FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+    // External scripts (post)
+    long fpi_exec_post_RMdecode = function_parameter_add_entry(&fps, ".exec.RMdecode",
+                                  "RM decode script",
+                                  FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-	long fpi_exec_post_mkDMslaveact = function_parameter_add_entry(&fps, ".exec.mkDMslaveact",
-                         "Make DM slaved actuators",
-                         FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+    long fpi_exec_post_mkDMWFSmasks = function_parameter_add_entry(&fps, ".exec.mkDMWFSmasks",
+                                      "Make DM and WFS masks",
+                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-	long fpi_exec_post_mkLODMmodes = function_parameter_add_entry(&fps, ".exec.mkLODMmodes",
-                         "Make DM low order modes",
-                         FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+    long fpi_exec_post_mkDMslaveact = function_parameter_add_entry(&fps, ".exec.mkDMslaveact",
+                                      "Make DM slaved actuators",
+                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+
+    long fpi_exec_post_mkLODMmodes = function_parameter_add_entry(&fps, ".exec.mkLODMmodes",
+                                     "Make DM low order modes",
+                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
 
 
 
     long fpi_FPS_mlat = function_parameter_add_entry(&fps, ".FPS_mlat",
-                         "FPS mlat",
-                         FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
-	FUNCTION_PARAMETER_STRUCT FPS_mlat;
-	long FPS_mlat_NBparam = 0;
+                        "FPS mlat",
+                        FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
+    FUNCTION_PARAMETER_STRUCT FPS_mlat;
+    fps.parray[fpi_FPS_mlat].info.fps.FPSNBparam = 0;
 
     long fpi_FPS_DMcomb = function_parameter_add_entry(&fps, ".FPS_DMcomb",
-                         "FPS DMcomb",
-                         FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
-	FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
-	long FPS_DMcomb_NBparam = 0;
+                          "FPS DMcomb",
+                          FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
+    FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
+    fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam = 0;
 
 
     if( loopstatus == 0 ) // stop fps
@@ -1754,144 +1754,145 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     // =====================================
     while ( loopstatus == 1 )
     {
-		usleep(50);
-		
+        usleep(50);
+
         if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
         {
             //
             //  Connect to aux FPS
             //
-            if ( FPS_mlat_NBparam < 1 ) {
-				FPS_mlat_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_mlat].val.string[0], &FPS_mlat, FPSCONNECT_SIMPLE);
-			}
-            if ( FPS_DMcomb_NBparam < 1 ) {
-				FPS_DMcomb_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_DMcomb].val.string[0], &FPS_DMcomb, FPSCONNECT_SIMPLE);
-			}            
-
-
-
-			//
-			// Compute action: make DM RM mask
-			//
-			if(fps.parray[fpi_comp_RM_DMmask].fpflag & FPFLAG_ONOFF) {  
-				if ( FPS_DMcomb_NBparam > 0 ) {
-					int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
-					int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
-					int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
-					
-					if(DMMODE == 0) { // square grid DM
-						make_disk("RMDMmask", DMxsize, DMysize, 0.5*DMxsize, 0.5*DMysize, 0.5*(DMxsize)+0.6);
-					}
-					else // modal DM -> all pixels to 1
-					{
-						make_disk("RMDMmask", DMxsize, DMysize, 0.5*DMxsize, 0.5*DMysize, (DMxsize+DMysize));						
-					}
-					
-					save_fl_fits("RMDMmask", "!./conf/RM_DMmask.fits");
-					delete_image_ID("RMDMmask");
-					
-					// set back to OFF
-					fps.parray[fpi_comp_RM_DMmask].fpflag &= ~FPFLAG_ONOFF;
-				}
-			}
-
-			
-			//
-			// Compute action: make Spoke and Hpoke
-			//
-			if(fps.parray[fpi_comp_RM_Mpoke].fpflag & FPFLAG_ONOFF) {  
-				if ( FPS_DMcomb_NBparam > 0 ) {
-					int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
-					int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
-					int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
-					
-					AOloopControl_compTools_mkSimpleZpokeM(DMxsize, DMysize, "Spoke");
-					save_fl_fits("Spoke", "!./conf/Spoke.fits");
-					delete_image_ID("Spoke");
-					
-					load_fits("./conf/RM_DMmask.fits", "RMDMmask", 1);
-					AOloopControl_computeCalib_mkHadamardModes("RMDMmask", "Hpoke");
-					
-					save_fl_fits("Hpoke", "!./conf/Hpoke.fits");
-					save_fl_fits("Hpixindex", "!./conf/Hpixindex.fits");
-					save_fl_fits("Hmat", "!./conf/Hmat.fits");
-
-					// create compressed files
-					if(system("gzip -kf ./conf/Hmat.fits") != 0) {
-						printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
-					}
-					if(system("gzip -kf ./conf/Hpixindex.fits") != 0) {
-						printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
-					}
-					if(system("gzip -kf ./conf/Hpoke.fits") != 0) {
-						printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
-					}
-					
-					delete_image_ID("RMDMmask");
-					
-					// set back to OFF
-					fps.parray[fpi_comp_RM_Mpoke].fpflag &= ~FPFLAG_ONOFF;
-				}
             
             
-            if(fps.parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF) {  
-				char fname_Hpoke[200];
-				functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Hpoke.fits");								
-			}
-			else {
-				functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Spoke.fits");
-			}				
-				
-				
-			}
+            if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparam < 1 ) {
+                functionparameter_ConnectExternalFPS(&fps, fpi_FPS_mlat, &FPS_mlat);
+            }
             
-            
+            if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam  < 1 ) {
+				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb);
+            }
 
 
-			
-			//
-			// Import latency measurements and compute timing parameters
-			//
-			if(fps.parray[fpi_autoTiming].fpflag & FPFLAG_ONOFF) {   // ON state
-				if ( FPS_mlat_NBparam > 0 ) {
-					double latfr = functionparameter_GetParamValue_FLOAT64 ( &FPS_mlat, ".out.latencyfr" );
-					double framerateHz = functionparameter_GetParamValue_FLOAT64 ( &FPS_mlat, ".out.framerateHz" );
-					
-					long delayfr = (long) (1000000.0*latfr);
-					
-					// RMdelay = hardwlaten - 0.5 - excl/2
-					double RMdelay = latfr - 0.5 - 0.5 * fps.parray[fpi_NBexcl].val.l[0];
-					
-					int RMdelayfr = ((int) (latfr - 0.5 - 0.5 * fps.parray[fpi_NBexcl].val.l[0] + 10.0)) + 1 - 10;
-					
-					int delayRM1us = (int) ((1.0*RMdelayfr - RMdelay)/framerateHz*1000000.0);
-					
-					if(RMdelay > 0) {
-						fps.parray[fpi_delayfr].val.l[0] = RMdelayfr;
-						fps.parray[fpi_delayRM1us].val.l[0] = delayRM1us;
-					}
-					else
-					{
-						fps.parray[fpi_delayfr].val.l[0] = 0;
-						fps.parray[fpi_delayRM1us].val.l[0] = 0;
-					}
-				}
-			}
-		
-						
 
-            functionparameter_CheckParametersAll(&fps);  // check all parameter values            
+            //
+            // Compute action: make DM RM mask
+            //
+            if(fps.parray[fpi_comp_RM_DMmask].fpflag & FPFLAG_ONOFF) {
+                if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam > 0 ) {
+                    int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
+                    int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
+                    int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
+
+                    if(DMMODE == 0) { // square grid DM
+                        make_disk("RMDMmask", DMxsize, DMysize, 0.5*DMxsize, 0.5*DMysize, 0.5*(DMxsize)+0.6);
+                    }
+                    else // modal DM -> all pixels to 1
+                    {
+                        make_disk("RMDMmask", DMxsize, DMysize, 0.5*DMxsize, 0.5*DMysize, (DMxsize+DMysize));
+                    }
+
+                    save_fl_fits("RMDMmask", "!./conf/RM_DMmask.fits");
+                    delete_image_ID("RMDMmask");
+
+                    // set back to OFF
+                    fps.parray[fpi_comp_RM_DMmask].fpflag &= ~FPFLAG_ONOFF;
+                }
+            }
+
+
+            //
+            // Compute action: make Spoke and Hpoke
+            //
+            if(fps.parray[fpi_comp_RM_Mpoke].fpflag & FPFLAG_ONOFF) {
+                if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam > 0 ) {
+                    int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
+                    int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
+                    int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
+
+                    AOloopControl_compTools_mkSimpleZpokeM(DMxsize, DMysize, "Spoke");
+                    save_fl_fits("Spoke", "!./conf/Spoke.fits");
+                    delete_image_ID("Spoke");
+
+                    load_fits("./conf/RM_DMmask.fits", "RMDMmask", 1);
+                    AOloopControl_computeCalib_mkHadamardModes("RMDMmask", "Hpoke");
+
+                    save_fl_fits("Hpoke", "!./conf/Hpoke.fits");
+                    save_fl_fits("Hpixindex", "!./conf/Hpixindex.fits");
+                    save_fl_fits("Hmat", "!./conf/Hmat.fits");
+
+                    // create compressed files
+                    if(system("gzip -kf ./conf/Hmat.fits") != 0) {
+                        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+                    }
+                    if(system("gzip -kf ./conf/Hpixindex.fits") != 0) {
+                        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+                    }
+                    if(system("gzip -kf ./conf/Hpoke.fits") != 0) {
+                        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+                    }
+
+                    delete_image_ID("RMDMmask");
+
+                    // set back to OFF
+                    fps.parray[fpi_comp_RM_Mpoke].fpflag &= ~FPFLAG_ONOFF;
+                }
+
+
+                if(fps.parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF) {
+                    char fname_Hpoke[200];
+                    functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Hpoke.fits");
+                }
+                else {
+                    functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Spoke.fits");
+                }
+            }
+
+
+
+
+
+            //
+            // Import latency measurements and compute timing parameters
+            //
+            if(fps.parray[fpi_autoTiming].fpflag & FPFLAG_ONOFF) {   // ON state
+                if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparam > 0 ) {
+                    double latfr = functionparameter_GetParamValue_FLOAT64 ( &FPS_mlat, ".out.latencyfr" );
+                    double framerateHz = functionparameter_GetParamValue_FLOAT64 ( &FPS_mlat, ".out.framerateHz" );
+
+                    long delayfr = (long) (1000000.0*latfr);
+
+                    // RMdelay = hardwlaten - 0.5 - excl/2
+                    double RMdelay = latfr - 0.5 - 0.5 * fps.parray[fpi_NBexcl].val.l[0];
+
+                    int RMdelayfr = ((int) (latfr - 0.5 - 0.5 * fps.parray[fpi_NBexcl].val.l[0] + 10.0)) + 1 - 10;
+
+                    int delayRM1us = (int) ((1.0*RMdelayfr - RMdelay)/framerateHz*1000000.0);
+
+                    if(RMdelay > 0) {
+                        fps.parray[fpi_delayfr].val.l[0] = RMdelayfr;
+                        fps.parray[fpi_delayRM1us].val.l[0] = delayRM1us;
+                    }
+                    else
+                    {
+                        fps.parray[fpi_delayfr].val.l[0] = 0;
+                        fps.parray[fpi_delayRM1us].val.l[0] = 0;
+                    }
+                }
+            }
+
+
+
+            functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }
     }
-    
-    if ( FPS_mlat_NBparam > 0 ) {
-		function_parameter_struct_disconnect( &FPS_mlat );
-	}
 
-    if ( FPS_DMcomb_NBparam > 0 ) {
-		function_parameter_struct_disconnect( &FPS_DMcomb );
-	}
-    
+    if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparam > 0 ) {
+        function_parameter_struct_disconnect( &FPS_mlat );
+    }
+
+    if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam > 0 ) {
+        function_parameter_struct_disconnect( &FPS_DMcomb );
+    }
+
     function_parameter_FPCONFexit( &fps );
 
 
