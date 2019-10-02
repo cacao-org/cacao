@@ -80,7 +80,7 @@ echo ""
 echo "$(tput bold) ADDING FPS-ENABLED PROCESSES (OPTIONAL) $(tput sgr0)"
 echo "  Function parameter structures (FPSs) hold values of parameters for frequently used functions."
 echo "  A common interface and fifo allows for the parameters to be set or read."
-echo "  The user may provide an executable script to add FPS-enabled processes that may run, named:"
+echo "  The user may provide an executable script to add custom FPS-enabled processes that may run, named:"
 echo "    ./<loopname>.fpslistadd.bash"
 echo "  The script will add entries to fpslist.txt and issue fps commands."
 echo ""
@@ -137,6 +137,16 @@ if [ -f $1 ]
     touch $1
 fi
 }
+
+function checkFileInfoOptional {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 3)$(tput bold)  INFO  $(tput sgr0)] Optional file $(tput bold)$1$(tput sgr0) not found"
+fi
+}
+
 
 
 
@@ -206,6 +216,7 @@ echo "FIFO: ${fpsCTRLfifo}"
 
 rm fpssetup.setval.combined.conf
 cat ${CURRDIR}/fpssetup.setval.conf ${CURRDIR}/${fpsSETPARAMCONFfile} > fpssetup.setval.combined.conf
+rm ${CURRDIR}/fpssetup.setval.conf
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
     echo "$line"
@@ -305,9 +316,11 @@ echo "====== REQUIRED ENVIRONMENT VARIABLES ====="
 if [[ -z "${CACAO_LOOPNAME}" ]]; then
   echo "CACAO_LOOPNAME   not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
   SETTINGOK="0"
+  LOOPNAMEOK="0"
 else
   echo "CACAO_LOOPNAME   : ${CACAO_LOOPNAME}"
-  echo "$CACAO_LOOPNAME" > LOOPNAME  
+  # echo "$CACAO_LOOPNAME" > LOOPNAME  
+  LOOPNAMEOK="1"
 fi
 
 echo "Set by adding \"export VARNAME=\"VALUE\"\" to file cacaovars.${CACAO_LOOPNAME}.bash"
@@ -359,7 +372,7 @@ if [[ -z "${CACAO_LOOPNUMBER}" ]]; then
 else
   LOOPNUMBER="$CACAO_LOOPNUMBER"
   echo "CACAO_LOOPNUMBER : ${CACAO_LOOPNUMBER}"
-  echo "$LOOPNUMBER" > LOOPNUMBER
+  # echo "$LOOPNUMBER" > LOOPNUMBER
 fi
 
 
@@ -390,20 +403,23 @@ echo ""
 
 
 if [[ ! -z "${CACAO_LOOPNAME}" ]]; then
-
-if [ -f "${CACAO_LOOPNAME}.fpslistadd.bash" ]; then
-echo "Using custom fpslistadd file: ${CACAO_LOOPNAME}.fpslistadd.bash"
-else
-echo "Using template fpslistadd script: $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash"
-cp $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash ${CACAO_LOOPNAME}.fpslistadd.bash
+checkFileInfoOptional ${CACAO_LOOPNAME}.fpslistadd.bash
+#if [ -f "${CACAO_LOOPNAME}.fpslistadd.bash" ]; then
+#echo "Using custom fpslistadd file: ${CACAO_LOOPNAME}.fpslistadd.bash"
+#else
+#echo "Using template fpslistadd script: $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash"
+#cp $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash ${CACAO_LOOPNAME}.fpslistadd.bash
+#fi
 fi
 
-fi
+
 
 fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
 
+if [ ${LOOPNAMEOK} -eq 1 ]; then
 fpsSETPARAMCONFfile="fpssetup.setval.${CACAO_LOOPNAME}.conf"
-checkFileCreate ${fpsSETPARAMCONFfile}
+checkFileInfoOptional ${fpsSETPARAMCONFfile}
+fi
 
 fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
 
@@ -524,11 +540,20 @@ fi
 
 
 ## Run script to insert additional FPS-compatible processes that may be used
+
+
+# cacao-provided default script
+$CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash
+
+# additional custom script
 ./${CACAO_LOOPNAME}.fpslistadd.bash
 
 
-echo "cp fpslist.txt ${WORKDIR}"
-cp fpslist.txt ${WORKDIR}
+
+
+
+echo "mv fpslist.txt ${WORKDIR}"
+mv fpslist.txt ${WORKDIR}
 
 
 cd $WORKDIR

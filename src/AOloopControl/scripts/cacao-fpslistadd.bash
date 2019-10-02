@@ -117,8 +117,8 @@ LINSIMDT="10000"
 
 # copy calibration files
 mkdir ${CACAO_WORKDIR}/simLHS
-cp simLHS/respM.fits ./${CACAO_WORKDIR}/simLHS/simLHS_respM.fits
-cp simLHS/wfsref.fits ./${CACAO_WORKDIR}/simLHS/simLHS_wfsref.fits
+cp simLHS/${CACAO_LOOPNAME}_respM.fits ./${CACAO_WORKDIR}/simLHS/simLHS_respM.fits
+cp simLHS/${CACAO_LOOPNAME}_wfsref.fits ./${CACAO_WORKDIR}/simLHS/simLHS_wfsref.fits
 
 cp ./${CACAO_WORKDIR}/simLHS/simLHS_respM.fits ./${CACAO_WORKDIR}/conf/shmim.aolsimLHSrespM.fits
 cp ./${CACAO_WORKDIR}/simLHS/simLHS_wfsref.fits ./${CACAO_WORKDIR}/conf/shmim.aolsimLHSwfsref.fits
@@ -213,7 +213,7 @@ fi
 
 if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
 # ==============================================================================
-# ========== Acquire Linear Response Matrix ====================================
+# ========== Acquire Linear Response Matrix (ZONAL) ============================
 # ==============================================================================
 
 # FPS name
@@ -267,7 +267,7 @@ fi
 
 if [ "${CACAO_FPSPROC_ACQLINLORM}" = "ON" ]; then
 # ==============================================================================
-# ========== Acquire Linear Response Matrix ====================================
+# ========== Acquire Linear Response Matrix (Low Orders - MODAL) ===============
 # ==============================================================================
 
 # FPS name
@@ -322,15 +322,15 @@ fi
 
 
 
-if [ "${CACAO_FPSPROC_COMPCM}" = "ON" ]; then
+if [ "${CACAO_FPSPROC_COMPFCM}" = "ON" ]; then
 # ==============================================================================
-# ========== Compute Control Matrix ============================================
+# ========== Compute Control Matrix using Fourier modes (spatial frequency) ====
 # ==============================================================================
 
 # FPS name
-fpsname="compCM" 
+fpsname="compfCM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
-outdir="conf-CM-staged"
+outdir="conf-fCM-staged"
 mkdir -p ${CACAO_WORKDIR}/${outdir}
 
 mkdir -p ${CACAO_WORKDIR}/conf_staged
@@ -341,6 +341,7 @@ mkdir -p ${CACAO_WORKDIR}/respM
 mkdir -p ${CACAO_WORKDIR}/contrM
 mkdir -p ${CACAO_WORKDIR}/contrMc
 mkdir -p ${CACAO_WORKDIR}/contrMcact
+
 
 
 
@@ -362,6 +363,43 @@ echo "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}" >> ${FPSCONFFILE}
 
 fi
 fi
+
+
+
+
+
+if [ "${CACAO_FPSPROC_COMPSCM}" = "ON" ]; then
+# ==============================================================================
+# ========== Compute Control Matrix (straight, no modal decomposition) =========
+# ==============================================================================
+
+# FPS name
+fpsname="compsCM" 
+fpsarg0="${CACAO_LOOPNUMBER}"
+outdir="conf-sCM-staged"
+mkdir -p ${CACAO_WORKDIR}/${outdir}
+
+mkdir -p ${CACAO_WORKDIR}/sCM
+
+
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}" 
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echo "Process ${fpsname} already registered - skipping"
+else
+echo "Adding process ${fpsname}"
+echo "${fpsname}         aolRM2CM       ${fpsarg0}" >> fpslist.txt
+
+
+fi
+fi
+
+
+
+
 
 
 
@@ -396,7 +434,7 @@ echo "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_imWFS0" >> ${FPSCONFFIL
 echo "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot" >> ${FPSCONFFILE}
 
 # we use respM for direct MVM as it is already orthonormal set of modes
-echo "setval ${fpsfname}.sname_modes aol0_respM" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.sname_modes aol${CACAO_LOOPNUMBER}_modesWFS" >> ${FPSCONFFILE}
 # TBD: load in shm
 
 echo "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref" >> ${FPSCONFFILE}
