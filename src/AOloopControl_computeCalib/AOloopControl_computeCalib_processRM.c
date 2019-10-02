@@ -106,7 +106,14 @@ long aoconfID_imWFS2_active[100];
 // if images "Hmat" AND "pixindexim" are provided, decode the image
 // TEST: if "RMpokeC" exists, decode it as well
 //
-int_fast8_t AOloopControl_computeCalib_Process_zrespM(long loop, const char *IDzrespm0_name, const char *IDwfsref_name, const char *IDzrespm_name, const char *WFSmap_name, const char *DMmap_name)
+int_fast8_t AOloopControl_computeCalib_Process_zrespM(
+    long loop,
+    const char *IDzrespm0_name,
+    const char *IDwfsref_name,
+    const char *IDzrespm_name,
+    const char *WFSmap_name,
+    const char *DMmap_name
+)
 {
     long NBpoke;
     long IDzrm;
@@ -249,7 +256,15 @@ int_fast8_t AOloopControl_computeCalib_Process_zrespM(long loop, const char *IDz
 // if images "Hmat" AND "pixindexim" are provided, decode the image
 // TEST: if "RMpokeC" exists, decode it as well
 //
-int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(long loop, const char *zrespm_name, const char *WFSref0_name, const char *WFSmap_name, const char *DMmap_name, double rmampl, int normalize)
+int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
+    long loop,
+    const char *zrespm_name,
+    const char *WFSref0_name,
+    const char *WFSmap_name,
+    const char *DMmap_name,
+    double rmampl,
+    int normalize
+)
 {
     long NBmat; // number of matrices to average
     FILE *fp;
@@ -554,27 +569,170 @@ int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(long loop, const
 
 
 
-// make control matrix
-//
-long AOloopControl_computeCalib_mkCM(const char *respm_name, const char *cm_name, float SVDlim)
+
+errno_t AOloopControl_computeCalib_mkCM_FPCONF(
+    char *fpsname,
+    uint32_t CMDmode
+)
 {
+	uint16_t loopstatus;
+	
+    // ===========================
+    // SETUP FPS
+    // ===========================
+
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
 
 
-    // COMPUTE OVERALL CONTROL MATRIX
+    // ===========================
+    // ALLOCATE FPS ENTRIES 
+    // ===========================
 
-    printf("COMPUTE OVERALL CONTROL MATRIX\n");
+    void *pNull = NULL;
+    uint64_t FPFLAG;
+    
+    
+    float SVDlimdefault[4] = { 0.001, 0.0, 1.0, 0.001 };
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
+    long fpi_SVDlim = function_parameter_add_entry(&fps, ".SVDlim", "SVD limit value", 
+                                     FPTYPE_FLOAT64, FPFLAG, &SVDlimdefault);
+    
+    
+    
+    // =====================================
+    // PARAMETER LOGIC AND UPDATE LOOP
+    // =====================================
+
+    while ( loopstatus == 1 )
+    {
+       usleep(50);
+        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        {
+            // here goes the logic
+          
+
+            functionparameter_CheckParametersAll(&fps);  // check all parameter values
+        }       
+
+    }
+    
+    
+
+	function_parameter_FPCONFexit( &fps );
+	    
+	return RETURN_SUCCESS;
+}
+
+
+
+
+errno_t AOloopControl_computeCalib_mkCM_RUN(
+    char *fpsname
+)
+{
+    // ===========================
+    // CONNECT TO FPS
+    // ===========================
+
+    FUNCTION_PARAMETER_STRUCT fps;
+
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
+    {
+        printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
+        return RETURN_FAILURE;
+    }
+
+
+
+    // ===============================
+    // GET FUNCTION PARAMETER VALUES
+    // ===============================
+
+    float SVDlim = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
+
+    char respMname[FUNCTION_PARAMETER_STRMAXLEN+1];
+    strncpy(respMname, functionparameter_GetParamPtr_STRING(&fps, ".respMname"), FUNCTION_PARAMETER_STRMAXLEN);
+
+
+
+
+
+
+    char cm_name[] = "sCMat";
 #ifdef HAVE_MAGMA
-    CUDACOMP_magma_compute_SVDpseudoInverse(respm_name, cm_name, SVDlim, 100000, "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
+    CUDACOMP_magma_compute_SVDpseudoInverse(respMname, cm_name, SVDlim, 100000, "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
 #else
-    linopt_compute_SVDpseudoInverse(respm_name, cm_name, SVDlim, 10000, "VTmat");
+    linopt_compute_SVDpseudoInverse(respMname, cm_name, SVDlim, 10000, "VTmat");
 #endif
 
     //save_fits("VTmat", "!./mkmodestmp/VTmat.fits");
     delete_image_ID("VTmat");
 
+    function_parameter_struct_disconnect( &fps );
 
-    return(image_ID(cm_name));
+
+    // write output
+    char stagedir[] = "conf_fCM_staged";
+
+    // Get time
+    time_t tnow;
+    struct tm *tmnow;
+    char datestring[200];
+
+    time(&tnow);
+    tmnow = gmtime(&tnow);
+
+    printf("TIMESTRING:  %04d %02d %02d  %02d:%02d:%02d\n", 1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
+    sprintf(datestring, "%04d-%02d-%02d_%02d:%02d:%02d", 1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
+
+    char fnamedest[500];
+    sprintf(fnamedest, "sCM/sCM_%s.fits", datestring);
+
+	save_fits(cm_name, fnamedest);
+
+	delete_image_ID(cm_name);
+
+    return RETURN_SUCCESS;
 }
+
+
+
+
+
+
+// make control matrix
+//
+errno_t AOloopControl_computeCalib_mkCM(
+    const char *respm_name,
+    float SVDlim
+)
+{
+    char fpsname[200];
+
+    long pindex = (long) getpid();  // index used to differentiate multiple calls to function
+    // if we don't have anything more informative, we use PID
+
+    FUNCTION_PARAMETER_STRUCT fps;
+
+    // create FPS
+    sprintf(fpsname, "myfunc-%06ld", pindex);
+    AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_FPSINIT);
+
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
+
+    functionparameter_SetParamValue_FLOAT64(&fps, ".SVDlim", SVDlim);
+
+
+    function_parameter_struct_disconnect(&fps);
+
+    AOloopControl_computeCalib_mkCM_RUN(fpsname);
+
+    return RETURN_SUCCESS;
+}
+
+
+
+
 
 
 

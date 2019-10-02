@@ -161,12 +161,13 @@ int_fast8_t AOloopControl_computeCalib_ComputeCM_cli() {
         //
         if(data.processnameflag == 0) { // name fps to something different than the process name
             if(strlen(data.cmdargtoken[2].val.string)>0)
-                sprintf(fpsname, "compCM-%s", data.cmdargtoken[2].val.string);
+                sprintf(fpsname, "compfCM-%s", data.cmdargtoken[2].val.string);
             else
-                sprintf(fpsname, "compCM");
+                sprintf(fpsname, "compfCM");
         } else { // Automatically set fps name to be process name up to first instance of character '.'
             strcpy(fpsname, data.processname0);
         }
+        
         if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS 
             AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, CMDCODE_FPSINIT);
             return RETURN_SUCCESS;
@@ -193,17 +194,83 @@ int_fast8_t AOloopControl_computeCalib_ComputeCM_cli() {
 
 
 
+/** @brief CLI function for AOloopControl_mkCM */
+int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
+    char fpsname[200];
+
+    // First, we try to execute function through FPS interface
+    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string, second arg is int
+        // Set FPS interface name
+        // By convention, if there are optional arguments, they should be appended to the fps name
+        //
+        if(data.processnameflag == 0) {
+            // the process has not been named with -n CLI option
+            // name fps to something different than the process name
+            if(strlen(data.cmdargtoken[2].val.string)>0)
+				sprintf(fpsname, "compsCM-%s", data.cmdargtoken[2].val.string);
+			else
+				sprintf(fpsname, "compsCM");
+            
+        } else {
+            // Automatically set fps name to be process name up to first instance of character '.'
+            // This is the preferred option
+            strcpy(fpsname, data.processname0);
+        }
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_FPSFINIT_") == 0) {  // Initialize FPS and conf process
+            printf("Function parameters configure\n");
+            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_FPSINIT);
+            return RETURN_SUCCESS;
+        }
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
+            printf("Function parameters configure\n");
+            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_CONFSTART);
+            return RETURN_SUCCESS;
+        }
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
+            printf("Function parameters configure\n");
+            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            return RETURN_SUCCESS;
+        }
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+            printf("Run function\n");
+            AOloopControl_computeCalib_mkCM_RUN(fpsname);
+            return RETURN_SUCCESS;
+        }
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+            printf("Run function\n");
+           // AOloopControl_computeCalib_mkCM_STOP();
+            return RETURN_SUCCESS;
+        }
+    }
+
+
+
+    // non FPS implementation - all parameters specified at function launch
+    if(CLI_checkarg(1,4) + CLI_checkarg(2,1) == 0) {
+        AOloopControl_computeCalib_mkCM(data.cmdargtoken[1].val.string, data.cmdargtoken[3].val.numf);
+        return RETURN_SUCCESS;
+    } else {
+        return RETURN_FAILURE;
+    }
+}
+
+
 
 
 
 /** @brief CLI function for AOloopControl_mkCM */
-int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
+/*int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
     if(CLI_checkarg(1,4)+CLI_checkarg(2,3)+CLI_checkarg(3,1)==0) {
         AOloopControl_computeCalib_mkCM(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf);
         return 0;
     }
     else return 1;
-}
+}*/
 
 /** @brief CLI function for AOloopControl_mkModes */
 int_fast8_t AOloopControl_computeCalib_mkModes_cli() {
@@ -747,7 +814,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     char fnamesrc[500];
     char fnamedest[500];
     char fnametxt[500];
-    char stagedir[] = "conf_staged";
+    char stagedir[] = "conf_fCM_staged";
     char command[500];
     FILE *fp;
 

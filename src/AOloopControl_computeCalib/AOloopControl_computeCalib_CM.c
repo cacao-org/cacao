@@ -4,9 +4,6 @@
  * 
  * AO engine uses stream data structure
  *  
- * @author  O. Guyon
- * @date    28 Dec 2017
- *
  * 
  * @bug No known bugs.
  * 
@@ -115,7 +112,15 @@ long aoconfID_imWFS2_active[100];
  *
  */
 
-int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(long loop, long NB_MODE_REMOVED, const char *ID_Rmatrix_name, const char *ID_Cmatrix_name, const char *ID_VTmatrix_name, double Beta, long NB_MODE_REMOVED_STEP, float eigenvlim)
+int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
+    long loop,
+    long NB_MODE_REMOVED,
+    const char *ID_Rmatrix_name,
+    const char *ID_Cmatrix_name,
+    const char *ID_VTmatrix_name,
+    double Beta,
+    long NB_MODE_REMOVED_STEP,
+    float eigenvlim)
 {
     FILE *fp;
     long ii1, jj1, k, ii;
@@ -458,7 +463,14 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(long loop, long NB_
 //
 //
 
-long AOloopControl_computeCalib_compute_CombinedControlMatrix(const char *IDcmat_name, const char *IDmodes_name, const char* IDwfsmask_name, const char *IDdmmask_name, const char *IDcmatc_name, const char *IDcmatc_active_name)
+long AOloopControl_computeCalib_compute_CombinedControlMatrix(
+    const char *IDcmat_name,
+    const char *IDmodes_name,
+    const char* IDwfsmask_name,
+    const char *IDdmmask_name,
+    const char *IDcmatc_name,
+    const char *IDcmatc_active_name
+)
 {
     // long ID;
     struct timespec t1;
@@ -682,7 +694,10 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(const char *IDcmat
 
 
 
-long AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
+long AOloopControl_computeCalib_loadCM(
+    long loop,
+    const char *CMfname
+)
 {
     long ID = -1;
 

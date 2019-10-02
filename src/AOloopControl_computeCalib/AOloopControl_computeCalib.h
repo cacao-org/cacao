@@ -3,9 +3,6 @@
  * @brief   Function prototypes for Adaptive Optics Control loop engine compute calibration
  * 
  * AO engine uses stream data structure
- * 
- * @author  O. Guyon
- * @date    28 Dec 2017
  *
  * @bug No known bugs. 
  * 
@@ -52,7 +49,10 @@ int_fast8_t AOloopControl_computeCalib_Process_zrespM(long loop, const char *IDz
 int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(long loop, const char *zrespm_name, const char *WFSref0_name, const char *WFSmap_name, const char *DMmap_name, double rmampl, int normalize);
 
 
-long AOloopControl_computeCalib_mkCM(const char *respm_name, const char *cm_name, float SVDlim);
+
+errno_t AOloopControl_computeCalib_mkCM_FPCONF(char *fpsname, uint32_t CMDmode);
+errno_t AOloopControl_computeCalib_mkCM_RUN(char *fpsname);
+errno_t AOloopControl_computeCalib_mkCM(const char *respm_name, float SVDlim);
 
 
 long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name, float pixrad, const char *IDout_name);
