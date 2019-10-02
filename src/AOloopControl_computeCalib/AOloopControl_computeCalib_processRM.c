@@ -597,7 +597,9 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     long fpi_SVDlim = function_parameter_add_entry(&fps, ".SVDlim", "SVD limit value", 
                                      FPTYPE_FLOAT64, FPFLAG, &SVDlimdefault);
     
-    
+    // Input file name
+    long fpi_filename_respm        = function_parameter_add_entry(&fps, ".fname_respM", "response matrix",
+                                     FPTYPE_FILENAME, FPFLAG_DEFAULT_INPUT, pNull);
     
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
@@ -651,7 +653,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     float SVDlim = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
 
     char respMname[FUNCTION_PARAMETER_STRMAXLEN+1];
-    strncpy(respMname, functionparameter_GetParamPtr_STRING(&fps, ".respMname"), FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(respMname, functionparameter_GetParamPtr_STRING(&fps, ".fname_respM"), FUNCTION_PARAMETER_STRMAXLEN);
 
 
 
@@ -715,7 +717,7 @@ errno_t AOloopControl_computeCalib_mkCM(
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS
-    sprintf(fpsname, "myfunc-%06ld", pindex);
+    sprintf(fpsname, "compsCM-%06ld", pindex);
     AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_FPSINIT);
 
     function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
@@ -724,6 +726,9 @@ errno_t AOloopControl_computeCalib_mkCM(
 
 
     function_parameter_struct_disconnect(&fps);
+
+
+
 
     AOloopControl_computeCalib_mkCM_RUN(fpsname);
 
