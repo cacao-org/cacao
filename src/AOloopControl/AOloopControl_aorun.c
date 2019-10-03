@@ -373,7 +373,7 @@ int AOloopControl_aorun_RUN(
     int wfsrefON = functionparameter_GetParamValue_ONOFF(&fps, ".wfsrefON");
 
     // This parameter is a ON / OFF toggle
-    int64_t *loopON = functionparameter_GetParamPtr_INT64(&fps, ".loopON");
+    uint64_t *loopONflag = functionparameter_GetParamPtr_fpflag(&fps, ".loopON");
 
     // This parameter value will be tracked during loop run, so we create a pointer for it
     // The corresponding function is functionparameter_GetParamPtr_<TYPE>
@@ -560,8 +560,8 @@ int AOloopControl_aorun_RUN(
             data.image[ID_MVMout].md[0].write = 0;
 
 
-          //  if(*loopON == 1)
-            //{
+            if( *loopONflag & FPFLAG_ONOFF )
+            {
                 data.image[ID_DMout].md[0].write = 1;
                 for(long ii=0; ii<sizeDM; ii++) {
 					float tmpval = data.image[ID_DMout].array.F[ii] - (*loopgain) * data.image[ID_MVMout].array.F[ii];
@@ -579,7 +579,7 @@ int AOloopControl_aorun_RUN(
                 data.image[ID_DMout].md[0].cnt0 ++;
                 data.image[ID_DMout].md[0].cnt1 = WFScnt;
                 data.image[ID_DMout].md[0].write = 0;
-            //}
+            }
 
 
         }
