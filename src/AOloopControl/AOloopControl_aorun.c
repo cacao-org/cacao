@@ -261,10 +261,15 @@ int AOloopControl_aorun_FPCONF(
     long fpi_streamname_wfs       = function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
                                      FPTYPE_STREAMNAME, FPFLAG, "NULL");
     
+    FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
+    long fpi_streamname_cmat       = function_parameter_add_entry(&fps, ".sn_cmat",  "Control Matrix",
+                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");   
     
-    
-    
-    
+    // required to get DM size
+    FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
+    long fpi_streamname_MVMout      = function_parameter_add_entry(&fps, ".sn_MVMout",  "output stream",
+                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");   
+                                         
     
   
     
@@ -272,16 +277,20 @@ int AOloopControl_aorun_FPCONF(
     
     double loopgaindefault[4] = { 0.001, 0.0, 1.5, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
+    FPFLAG |= FPFLAG_WRITERUN;
     long fpi_loopgain = function_parameter_add_entry(&fps, ".loopgain", "Main loop gain", 
                                      FPTYPE_FLOAT64, FPFLAG, &loopgaindefault);
 
     double loopmultdefault[4] = { 0.001, 0.0, 1.5, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
+    FPFLAG |= FPFLAG_WRITERUN;
     long fpi_loopmult = function_parameter_add_entry(&fps, ".loopmult", "Main loop mult coeff", 
                                      FPTYPE_FLOAT64, FPFLAG, &loopmultdefault);
 
+	FPFLAG = FPFLAG_DEFAULT_INPUT;
+	FPFLAG |= FPFLAG_WRITERUN;
 	long fpi_loopON = function_parameter_add_entry(&fps, ".loopON", "loop ON/OFF", 
-                                     FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);       
+                                     FPTYPE_ONOFF, FPFLAG, pNull);       
     
     
     
@@ -343,15 +352,21 @@ int AOloopControl_aorun_RUN(
     char snameWFS[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(snameWFS, functionparameter_GetParamPtr_STRING(&fps, ".sn_wfs"), FUNCTION_PARAMETER_STRMAXLEN);
 
+    char snameCM[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(snameCM, functionparameter_GetParamPtr_STRING(&fps, ".sn_cmat"), FUNCTION_PARAMETER_STRMAXLEN);
+
+    char snameMVMout[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(snameMVMout, functionparameter_GetParamPtr_STRING(&fps, ".sn_MVMout"), FUNCTION_PARAMETER_STRMAXLEN);
+
     long *semwaitindex;
     semwaitindex = functionparameter_GetParamPtr_INT64(&fps, ".semwaitindex");
 
 
 
-	int wfsrefON = functionparameter_GetParamValue_ONOFF(&fps, ".wfsrefON");
+    int wfsrefON = functionparameter_GetParamValue_ONOFF(&fps, ".wfsrefON");
 
     // This parameter is a ON / OFF toggle
-    int gainwrite = functionparameter_GetParamValue_ONOFF(&fps, ".loopON");
+    int64_t *loopON = functionparameter_GetParamPtr_INT64(&fps, ".loopON");
 
     // This parameter value will be tracked during loop run, so we create a pointer for it
     // The corresponding function is functionparameter_GetParamPtr_<TYPE>
@@ -407,16 +422,50 @@ int AOloopControl_aorun_RUN(
     for(int i=0; i<semval; i++)
         sem_trywait(data.image[IDimWFS1].semptr[*semwaitindex]);
 
-	long sizeWFS = data.image[IDimWFS1].md[0].size[0] * data.image[IDimWFS1].md[0].size[1];
+    long sizeWFS = data.image[IDimWFS1].md[0].size[0] * data.image[IDimWFS1].md[0].size[1];
 
-	// create imWFS2
-	
-	long IDimWFS2 = create_image_ID();
-	
-	
-	long IDwfsref = -1;
-	
+    // create imWFS2
+    char imWFS2sname[200];
+    sprintf(imWFS2sname, "aol%ld_imWFS2", loop);
 
+    long naxis = 2;
+    uint32_t *imsizearray;
+    imsizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+    imsizearray[0] = data.image[IDimWFS1].md[0].size[0];
+    imsizearray[1] = data.image[IDimWFS1].md[0].size[1];
+    long IDimWFS2 = create_image_ID(imWFS2sname, naxis, imsizearray, _DATATYPE_FLOAT, 1, 10);
+    free(imsizearray);
+
+
+    // control matrix
+    long ID_CM = read_sharedmem_image(snameCM);
+
+
+    // output DM
+    long ID_DMout = read_sharedmem_image(snameMVMout);
+    long sizeDM;
+    sizeDM = data.image[ID_DMout].md[0].size[0]*data.image[ID_DMout].md[0].size[1];
+
+
+    // output MVM
+    char outMVMsname[200];
+    sprintf(outMVMsname, "aol%ld_outMVM", loop);
+
+    naxis = 2;
+    imsizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+    imsizearray[0] = data.image[ID_DMout].md[0].size[0];
+    imsizearray[1] = data.image[ID_DMout].md[0].size[1];
+    long ID_MVMout = create_image_ID(outMVMsname, naxis, imsizearray, _DATATYPE_FLOAT, 1, 10);
+    free(imsizearray);
+
+
+
+
+
+
+    long IDwfsref = -1;
+
+    float normfloorcoeff = 1.0;
 
     // ==================================
     // STARTING LOOP
@@ -473,24 +522,53 @@ int AOloopControl_aorun_RUN(
 
 
 
-		// Subtract reference 
-		if(wfsrefON == 1) { // if WFS reference is NOT zero
+        processinfo_exec_start(processinfo);
+        if(processinfo_compute_status(processinfo)==1)
+        {
+
+
+
+            // Subtract reference
+            data.image[IDimWFS2].md[0].write = 1;
+            if(wfsrefON == 1) { // if WFS reference is NOT zero
                 for(long ii = 0; ii < sizeWFS; ii++) {
-                    data.image[IDimWFS2].array.F[ii] = data.image[IDimWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff * data.image[IDwfsref].array.F[ii];
+                    data.image[IDimWFS2].array.F[ii] = data.image[IDimWFS1].array.F[ii] - normfloorcoeff * data.image[IDwfsref].array.F[ii];
                 }
             } else {
                 memcpy(data.image[IDimWFS2].array.F, data.image[IDimWFS1].array.F, sizeof(float)*sizeWFS);
             }
+            COREMOD_MEMORY_image_set_sempost_byID(IDimWFS2, -1);
+            data.image[IDimWFS2].md[0].cnt0 ++;
+            data.image[IDimWFS2].md[0].cnt1 = WFScnt;
+            data.image[IDimWFS2].md[0].write = 0;
 
 
+            data.image[ID_MVMout].md[0].write = 1;
+            ControlMatrixMultiply(data.image[ID_CM].array.F, data.image[IDimWFS2].array.F, sizeDM, sizeWFS, data.image[ID_MVMout].array.F);
+            data.image[ID_MVMout].md[0].cnt0 ++;
+            COREMOD_MEMORY_image_set_sempost_byID(ID_MVMout, -1);
+            data.image[ID_MVMout].md[0].cnt0 ++;
+            data.image[ID_MVMout].md[0].cnt1 = WFScnt;
+            data.image[ID_MVMout].md[0].write = 0;
 
 
-        processinfo_exec_start(processinfo);
-        if(processinfo_compute_status(processinfo)==1)
-        {
-            //
-            // computation ....
-            //
+          //  if(*loopON == 1)
+           // {
+
+                data.image[ID_DMout].md[0].write = 1;
+                for(long ii=0; ii<sizeDM; ii++) {
+                    data.image[ID_DMout].array.F[ii] -= *loopgain * data.image[ID_MVMout].array.F[ii];
+                    data.image[ID_DMout].array.F[ii] *= *loopmult;
+                }
+                data.image[ID_DMout].md[0].cnt0 ++;
+                COREMOD_MEMORY_image_set_sempost_byID(ID_DMout, -1);
+                data.image[ID_DMout].md[0].cnt0 ++;
+                data.image[ID_DMout].md[0].cnt1 = WFScnt;
+                data.image[ID_DMout].md[0].write = 0;
+
+           // }
+
+
         }
 
 

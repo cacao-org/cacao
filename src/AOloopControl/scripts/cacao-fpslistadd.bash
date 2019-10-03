@@ -393,6 +393,7 @@ else
 echo "Adding process ${fpsname}"
 echo "${fpsname}         aolRM2CM       ${fpsarg0}" >> fpslist.txt
 
+echo "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.fname_respM conf-zRM-staged/zrespMn.fits" >> ${FPSCONFFILE}
 
 fi
@@ -493,7 +494,8 @@ echo "setval ${fpsfname}.loopgain 0.02" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.loopmult 0.99" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.loopON OFF" >> ${FPSCONFFILE}
 
-
+echo "setval ${fpsfname}.sn_cmat aol${CACAO_LOOPNUMBER}_CMat" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.sn_MVMout aol${CACAO_LOOPNUMBER}_dmC" >> ${FPSCONFFILE}
 
 fi
 fi
