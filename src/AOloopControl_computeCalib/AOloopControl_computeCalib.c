@@ -227,7 +227,7 @@ int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
         }
 
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_FPSFINIT_") == 0) {  // Initialize FPS and conf process
+        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS and conf process
             printf("Function parameters FPSINIT\n");
             AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_FPSINIT);
             return RETURN_SUCCESS;
@@ -265,7 +265,7 @@ int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
         printf("========================================================\n");
         printf("============== RUNNING non-FPS implementation ==========\n");
         printf("========================================================\n");
-        //AOloopControl_computeCalib_mkCM(data.cmdargtoken[1].val.string, data.cmdargtoken[3].val.numf);
+        AOloopControl_computeCalib_mkCM(data.cmdargtoken[1].val.string, data.cmdargtoken[3].val.numf);
         return RETURN_SUCCESS;
     } else {
         return RETURN_FAILURE;

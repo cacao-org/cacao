@@ -592,15 +592,17 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     uint64_t FPFLAG;
     
     
-    float SVDlimdefault[4] = { 0.001, 0.0, 1.0, 0.001 };
+    double SVDlimdefault[4] = { 0.001, 0.0, 1.0, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
     long fpi_SVDlim = function_parameter_add_entry(&fps, ".SVDlim", "SVD limit value", 
                                      FPTYPE_FLOAT64, FPFLAG, &SVDlimdefault);
     
     // Input file name
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
     long fpi_filename_respm        = function_parameter_add_entry(&fps, ".fname_respM", "response matrix",
-                                     FPTYPE_FILENAME, FPFLAG_DEFAULT_INPUT, pNull);
-    
+                                     FPTYPE_FILENAME, FPFLAG, pNull);
+ 
+ 
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
@@ -658,13 +660,13 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
 
 
 
-
+	load_fits(respMname, "respM", 1);
 
     char cm_name[] = "sCMat";
 #ifdef HAVE_MAGMA
-    CUDACOMP_magma_compute_SVDpseudoInverse(respMname, cm_name, SVDlim, 100000, "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
+    CUDACOMP_magma_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 100000, "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
 #else
-    linopt_compute_SVDpseudoInverse(respMname, cm_name, SVDlim, 10000, "VTmat");
+    linopt_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 10000, "VTmat");
 #endif
 
     //save_fits("VTmat", "!./mkmodestmp/VTmat.fits");
