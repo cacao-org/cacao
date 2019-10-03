@@ -495,7 +495,7 @@ echo "setval ${fpsfname}.loopmult 0.99" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.loopON OFF" >> ${FPSCONFFILE}
 
 echo "setval ${fpsfname}.sn_cmat aol${CACAO_LOOPNUMBER}_CMat" >> ${FPSCONFFILE}
-echo "setval ${fpsfname}.sn_MVMout aol${CACAO_LOOPNUMBER}_dmC" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.sn_DMout aol${CACAO_LOOPNUMBER}_dmC" >> ${FPSCONFFILE}
 
 fi
 fi

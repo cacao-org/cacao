@@ -267,7 +267,7 @@ int AOloopControl_aorun_FPCONF(
     
     // required to get DM size
     FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
-    long fpi_streamname_MVMout      = function_parameter_add_entry(&fps, ".sn_MVMout",  "output stream",
+    long fpi_streamname_DMout      = function_parameter_add_entry(&fps, ".sn_DMout",  "output stream",
                                      FPTYPE_STREAMNAME, FPFLAG, "NULL");   
                                          
     
@@ -286,6 +286,13 @@ int AOloopControl_aorun_FPCONF(
     FPFLAG |= FPFLAG_WRITERUN;
     long fpi_loopmult = function_parameter_add_entry(&fps, ".loopmult", "Main loop mult coeff", 
                                      FPTYPE_FLOAT64, FPFLAG, &loopmultdefault);
+
+
+    double maxlimdefault[4] = { 1.0, 0.0, 1000.0, 1.0 };
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
+    FPFLAG |= FPFLAG_WRITERUN;
+    long fpi_maxlim = function_parameter_add_entry(&fps, ".maxlim", "Maximum limit", 
+                                     FPTYPE_FLOAT64, FPFLAG, &maxlimdefault);
 
 	FPFLAG = FPFLAG_DEFAULT_INPUT;
 	FPFLAG |= FPFLAG_WRITERUN;
@@ -355,8 +362,8 @@ int AOloopControl_aorun_RUN(
     char snameCM[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(snameCM, functionparameter_GetParamPtr_STRING(&fps, ".sn_cmat"), FUNCTION_PARAMETER_STRMAXLEN);
 
-    char snameMVMout[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(snameMVMout, functionparameter_GetParamPtr_STRING(&fps, ".sn_MVMout"), FUNCTION_PARAMETER_STRMAXLEN);
+    char snameDMout[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(snameDMout, functionparameter_GetParamPtr_STRING(&fps, ".sn_DMout"), FUNCTION_PARAMETER_STRMAXLEN);
 
     long *semwaitindex;
     semwaitindex = functionparameter_GetParamPtr_INT64(&fps, ".semwaitindex");
@@ -373,6 +380,7 @@ int AOloopControl_aorun_RUN(
     //
     double *loopgain = functionparameter_GetParamPtr_FLOAT64(&fps, ".loopgain");
     double *loopmult = functionparameter_GetParamPtr_FLOAT64(&fps, ".loopmult");
+    double *maxlim = functionparameter_GetParamPtr_FLOAT64(&fps, ".maxlim");
 
 
     int RTpriority = functionparameter_GetParamValue_INT64(&fps, ".RTpriority");
@@ -442,7 +450,7 @@ int AOloopControl_aorun_RUN(
 
 
     // output DM
-    long ID_DMout = read_sharedmem_image(snameMVMout);
+    long ID_DMout = read_sharedmem_image(snameDMout);
     long sizeDM;
     sizeDM = data.image[ID_DMout].md[0].size[0]*data.image[ID_DMout].md[0].size[1];
 
@@ -553,20 +561,25 @@ int AOloopControl_aorun_RUN(
 
 
           //  if(*loopON == 1)
-           // {
-
+            //{
                 data.image[ID_DMout].md[0].write = 1;
                 for(long ii=0; ii<sizeDM; ii++) {
-                    data.image[ID_DMout].array.F[ii] -= *loopgain * data.image[ID_MVMout].array.F[ii];
-                    data.image[ID_DMout].array.F[ii] *= *loopmult;
+					float tmpval = data.image[ID_DMout].array.F[ii] - (*loopgain) * data.image[ID_MVMout].array.F[ii];
+					tmpval *= (*loopmult);
+					if(tmpval > *maxlim) {
+						tmpval = (*maxlim);
+					}
+					if(tmpval < - *maxlim) {
+						tmpval = - (*maxlim);
+					}
+                    data.image[ID_DMout].array.F[ii] = tmpval;
                 }
                 data.image[ID_DMout].md[0].cnt0 ++;
                 COREMOD_MEMORY_image_set_sempost_byID(ID_DMout, -1);
                 data.image[ID_DMout].md[0].cnt0 ++;
                 data.image[ID_DMout].md[0].cnt1 = WFScnt;
                 data.image[ID_DMout].md[0].write = 0;
-
-           // }
+            //}
 
 
         }
