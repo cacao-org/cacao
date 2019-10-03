@@ -231,6 +231,45 @@ int AOloopControl_aorun_FPCONF(
     uint64_t FPFLAG;
     
     
+    // configuration
+    int64_t loopindex_default[4] = { 0, 0, 99, 0 };
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
+    long fpi_loopindex = function_parameter_add_entry(&fps, ".loopindex", "Loop index", 
+                                     FPTYPE_INT64, FPFLAG, &loopindex_default);
+
+    
+    int64_t RTpriority_default[4] = { 90, 0, 99, 90 };
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
+    long fpi_RTpriority = function_parameter_add_entry(&fps, ".RTpriority", "Real Time priority", 
+                                     FPTYPE_INT64, FPFLAG, &RTpriority_default);
+    
+
+    long semwaitindex_default[4] = { 1, 0, 10, 1 };
+    long fpi_semwaitindex = function_parameter_add_entry(&fps, ".semwaitindex",
+                       "input semaphore index",
+                       FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &semwaitindex_default);
+
+
+    long WFSrefON_default[4] = { 0, 0, 1, 0 };
+    long fpi_WFSrefON = function_parameter_add_entry(&fps, ".wfsrefON",
+                       "Use WFS reference",
+                       FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, &WFSrefON_default);
+    
+    
+    // stream that needs to be loaded on startup
+    FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
+    long fpi_streamname_wfs       = function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
+                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");
+    
+    
+    
+    
+    
+    
+  
+    
+    // main control 
+    
     double loopgaindefault[4] = { 0.001, 0.0, 1.5, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
     long fpi_loopgain = function_parameter_add_entry(&fps, ".loopgain", "Main loop gain", 
@@ -275,6 +314,8 @@ int AOloopControl_aorun_FPCONF(
 
 
 
+
+
 int AOloopControl_aorun_RUN(
     char *fpsname
 )
@@ -297,6 +338,18 @@ int AOloopControl_aorun_RUN(
     // GET FUNCTION PARAMETER VALUES
     // ===============================
 
+    long loop = functionparameter_GetParamValue_ONOFF(&fps, ".loopindex");
+
+    char snameWFS[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(snameWFS, functionparameter_GetParamPtr_STRING(&fps, ".sn_wfs"), FUNCTION_PARAMETER_STRMAXLEN);
+
+    long *semwaitindex;
+    semwaitindex = functionparameter_GetParamPtr_INT64(&fps, ".semwaitindex");
+
+
+
+	int wfsrefON = functionparameter_GetParamValue_ONOFF(&fps, ".wfsrefON");
+
     // This parameter is a ON / OFF toggle
     int gainwrite = functionparameter_GetParamValue_ONOFF(&fps, ".loopON");
 
@@ -307,24 +360,156 @@ int AOloopControl_aorun_RUN(
     double *loopmult = functionparameter_GetParamPtr_FLOAT64(&fps, ".loopmult");
 
 
+    int RTpriority = functionparameter_GetParamValue_INT64(&fps, ".RTpriority");
 
+
+
+
+
+    // ===========================
+    // ### processinfo support
+    // ===========================
+
+    PROCESSINFO *processinfo;
+
+
+    char pinfoname[200];
+    sprintf(pinfoname, "aol%ld-aorun", loop);
+
+    char pinfodescr[200];
+    sprintf(pinfodescr, "run AOloop %ld", loop);
+
+    char pinfomsg[200];
+    sprintf(pinfomsg, "Initialize AO loop %ld", loop);
+
+    processinfo = processinfo_setup(
+                      pinfoname,             // short name for the processinfo instance, no spaces, no dot, name should be human-readable
+                      pinfodescr,    // description
+                      pinfomsg,  // message on startup
+                      __FUNCTION__, __FILE__, __LINE__
+                  );
+
+
+    // OPTIONAL SETTINGS
+    processinfo->MeasureTiming = 1; // Measure timing
+    processinfo->RT_priority = RTpriority;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+
+
+
+
+
+    // connect to WFS image
+    long IDimWFS1 = read_sharedmem_image(snameWFS);
+    // set semaphore to 0
+    int          semval;
+    sem_getvalue(data.image[IDimWFS1].semptr[*semwaitindex], &semval);
+    printf("INITIALIZING SEMAPHORE %ld   %s   (%d)\n", *semwaitindex, data.image[IDimWFS1].md[0].name, semval);
+    for(int i=0; i<semval; i++)
+        sem_trywait(data.image[IDimWFS1].semptr[*semwaitindex]);
+
+	long sizeWFS = data.image[IDimWFS1].md[0].size[0] * data.image[IDimWFS1].md[0].size[1];
+
+	// create imWFS2
+	
+	long IDimWFS2 = create_image_ID();
+	
+	
+	long IDwfsref = -1;
+	
+
+
+    // ==================================
+    // STARTING LOOP
+    // ==================================
+    processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
 
     // ===============================
     // RUN LOOP
     // ===============================
-
+    long long WFScnt  = 0;
     int loopOK = 1;
     while( loopOK == 1 )
     {
-        // here we compute what we need...
-        //
+        loopOK = processinfo_loopstep(processinfo);
 
 
-        // Note that some mechanism is required to set loopOK to 0 when MyFunction_Stop() is called
-        // This can use a separate shared memory path
+
+        // ===========================================
+        // WAIT FOR INPUT
+        // ===========================================
+        if(data.image[IDimWFS1].md[0].sem == 0) { // don't use semaphore
+            // use counter to test if new WFS frame is ready
+            while(WFScnt == data.image[IDimWFS1].md[0].cnt0) // test if new frame exists
+                usleep(5);
+        }
+        else
+        {
+            sem_getvalue(data.image[IDimWFS1].semptr[*semwaitindex], &semval);
+            if(semval>0)
+            {
+                if(semval>1) {
+                    printf("\n\033[31;1m WARNING [%d] WFS SEMAPHORE already posted - Missed frame\033[0m\n", semval);
+                }
+                fflush(stdout);
+            }
+
+
+            int rval;
+            rval = ImageStreamIO_semwait(&data.image[IDimWFS1], *semwaitindex);
+
+            if (rval == -1)
+                perror("semwait");
+
+
+            sem_getvalue(data.image[IDimWFS1].semptr[*semwaitindex], &semval);
+            for(int i=0; i<semval; i++)
+            {
+                //			printf("WARNING: [%d] sem_trywait on ID_wfsim\n", (int) (semval - i));
+                //			fflush(stdout);
+                //sem_trywait(data.image[ID_wfsim].semptr[*semindex]);
+                ImageStreamIO_semtrywait(&data.image[IDimWFS1], *semwaitindex);
+            }
+        }
+
+
+
+		// Subtract reference 
+		if(wfsrefON == 1) { // if WFS reference is NOT zero
+                for(long ii = 0; ii < sizeWFS; ii++) {
+                    data.image[IDimWFS2].array.F[ii] = data.image[IDimWFS1].array.F[ii] - aoloopcontrol_var.normfloorcoeff * data.image[IDwfsref].array.F[ii];
+                }
+            } else {
+                memcpy(data.image[IDimWFS2].array.F, data.image[IDimWFS1].array.F, sizeof(float)*sizeWFS);
+            }
+
+
+
+
+        processinfo_exec_start(processinfo);
+        if(processinfo_compute_status(processinfo)==1)
+        {
+            //
+            // computation ....
+            //
+        }
+
+
+
+        // process signals, increment loop counter
+        processinfo_exec_end(processinfo);
+
     }
 
-	return RETURN_SUCCESS;
+    // ==================================
+    // ### ENDING LOOP
+    // ==================================
+
+    processinfo_cleanExit(processinfo);
+
+    function_parameter_struct_disconnect( &fps );
+
+
+    return RETURN_SUCCESS;
 }
 
 
