@@ -651,6 +651,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
     // CONNECT TO FPS
     // ===========================
     FUNCTION_PARAMETER_STRUCT fps;
+    
     if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1) {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
@@ -849,7 +850,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                 rval = ImageStreamIO_semwait(&data.image[ID_wfsim], wfsim_semwaitindex);
 
                 if (rval == -1)
-                    perror("sem_timedwait");
+                    perror("semwait");
             }
             else
             {
