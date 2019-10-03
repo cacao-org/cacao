@@ -591,7 +591,12 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     void *pNull = NULL;
     uint64_t FPFLAG;
     
-    
+    long loop_default[4] = { 0, 0, 10, 0 };
+    long fpi_loop = function_parameter_add_entry(&fps, ".loop",
+                    "loop index",
+                    FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
+ 
+                    
     double SVDlimdefault[4] = { 0.001, 0.0, 1.0, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
     long fpi_SVDlim = function_parameter_add_entry(&fps, ".SVDlim", "SVD limit value", 
@@ -602,6 +607,20 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     long fpi_filename_respm        = function_parameter_add_entry(&fps, ".fname_respM", "response matrix",
                                      FPTYPE_FILENAME, FPFLAG, pNull);
  
+    // Output file name
+    FPFLAG = FPFLAG_DEFAULT_OUTPUT;
+    long fpi_filename_out         = function_parameter_add_entry(&fps, ".outfname", "output name",
+                                     FPTYPE_FILENAME, FPFLAG, pNull);
+ 
+ 
+ 
+    // Actions
+    long fpi_adoptCM = function_parameter_add_entry(&fps, ".adoptCM",
+                              "adopt CM",
+                              FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);	
+	
+	
+	
  
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
@@ -613,7 +632,23 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
         if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
         {
             // here goes the logic
-          
+         //
+            // Action: adopt CM
+            //
+            if(fps.parray[fpi_adoptCM].fpflag & FPFLAG_ONOFF) {
+					FILE *fpconf;
+					char conffname[200];
+					long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
+					sprintf(conffname, "conf/shmim.aol%ld_CMat.fname.txt", loop);
+					fpconf = fopen(conffname, "w");
+					fprintf(fpconf, "%s", functionparameter_GetParamPtr_STRING(&fps, ".outfname") );
+					fclose(fpconf);
+
+                    // set back to OFF
+                    fps.parray[fpi_adoptCM].fpflag &= ~FPFLAG_ONOFF;
+                
+            }
+  
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }       
@@ -652,6 +687,8 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     // GET FUNCTION PARAMETER VALUES
     // ===============================
 
+    long loop        = functionparameter_GetParamValue_INT64(&fps, ".loop");
+
     float SVDlim = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
 
     char respMname[FUNCTION_PARAMETER_STRMAXLEN+1];
@@ -672,7 +709,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     //save_fits("VTmat", "!./mkmodestmp/VTmat.fits");
     delete_image_ID("VTmat");
 
-    function_parameter_struct_disconnect( &fps );
+
 
 
     // write output
@@ -693,8 +730,13 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     sprintf(fnamedest, "sCM/sCM_%s.fits", datestring);
 
 	save_fits(cm_name, fnamedest);
+	functionparameter_SetParamValue_STRING(&fps, ".outfname", fnamedest);
+	
 
 	delete_image_ID(cm_name);
+
+    function_parameter_struct_disconnect( &fps );
+
 
     return RETURN_SUCCESS;
 }
