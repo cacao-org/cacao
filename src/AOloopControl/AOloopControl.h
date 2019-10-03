@@ -542,7 +542,11 @@ int_fast8_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name, const char *
 int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *ID_WFSzp_name, int NBzp, const char *IDwfsref0_name, const char *IDwfsref_name);
 
 /** @brief Main loop function */
+int AOloopControl_aorun_RUN(char *fpsname);
+int AOloopControl_aorun_FPCONF(char *fpsname, uint32_t CMDmode);
 int_fast8_t AOloopControl_aorun();
+
+
 
 /** @brief CPU based matrix-vector multiplication - when no GPU */
 int_fast8_t ControlMatrixMultiply( float *cm_array, float *imarray, long m, long n, float *outvect);

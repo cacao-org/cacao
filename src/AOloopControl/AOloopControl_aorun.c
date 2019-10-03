@@ -209,6 +209,131 @@ int AOloopControl_aorun_GUI(
 
 
 
+int AOloopControl_aorun_FPCONF(
+    char *fpsname,
+    uint32_t CMDmode
+)
+{
+	uint16_t loopstatus;
+	
+    // ===========================
+    // SETUP FPS
+    // ===========================
+
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
+
+
+    // ===========================
+    // ALLOCATE FPS ENTRIES 
+    // ===========================
+
+    void *pNull = NULL;
+    uint64_t FPFLAG;
+    
+    
+    double loopgaindefault[4] = { 0.001, 0.0, 1.5, 0.001 };
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
+    long fpi_loopgain = function_parameter_add_entry(&fps, ".loopgain", "Main loop gain", 
+                                     FPTYPE_FLOAT64, FPFLAG, &loopgaindefault);
+
+    double loopmultdefault[4] = { 0.001, 0.0, 1.5, 0.001 };
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
+    long fpi_loopmult = function_parameter_add_entry(&fps, ".loopmult", "Main loop mult coeff", 
+                                     FPTYPE_FLOAT64, FPFLAG, &loopmultdefault);
+
+	long fpi_loopON = function_parameter_add_entry(&fps, ".loopON", "loop ON/OFF", 
+                                     FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);       
+    
+    
+    
+    // =====================================
+    // PARAMETER LOGIC AND UPDATE LOOP
+    // =====================================
+
+    while ( loopstatus == 1 )
+    {
+       usleep(50);
+        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        {
+            // here goes the logic
+          
+
+            functionparameter_CheckParametersAll(&fps);  // check all parameter values
+        }       
+
+    }
+    
+    
+
+	function_parameter_FPCONFexit( &fps );
+	    
+	return RETURN_SUCCESS;
+}
+
+
+
+
+
+
+int AOloopControl_aorun_RUN(
+    char *fpsname
+)
+{
+    // ===========================
+    // CONNECT TO FPS
+    // ===========================
+
+    FUNCTION_PARAMETER_STRUCT fps;
+
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
+    {
+        printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
+        return RETURN_FAILURE;
+    }
+
+
+
+    // ===============================
+    // GET FUNCTION PARAMETER VALUES
+    // ===============================
+
+    // This parameter is a ON / OFF toggle
+    int gainwrite = functionparameter_GetParamValue_ONOFF(&fps, ".loopON");
+
+    // This parameter value will be tracked during loop run, so we create a pointer for it
+    // The corresponding function is functionparameter_GetParamPtr_<TYPE>
+    //
+    double *loopgain = functionparameter_GetParamPtr_FLOAT64(&fps, ".loopgain");
+    double *loopmult = functionparameter_GetParamPtr_FLOAT64(&fps, ".loopmult");
+
+
+
+
+    // ===============================
+    // RUN LOOP
+    // ===============================
+
+    int loopOK = 1;
+    while( loopOK == 1 )
+    {
+        // here we compute what we need...
+        //
+
+
+        // Note that some mechanism is required to set loopOK to 0 when MyFunction_Stop() is called
+        // This can use a separate shared memory path
+    }
+
+	return RETURN_SUCCESS;
+}
+
+
+
+
+
+
+
+
 /**
  * ## Purpose
  *

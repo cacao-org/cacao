@@ -393,6 +393,7 @@ else
 echo "Adding process ${fpsname}"
 echo "${fpsname}         aolRM2CM       ${fpsarg0}" >> fpslist.txt
 
+echo "setval ${fpsfname}.fname_respM conf-zRM-staged/zrespMn.fits" >> ${FPSCONFFILE}
 
 fi
 fi
@@ -459,6 +460,41 @@ echo "setval ${fpsfname}.option.semwarn ON" >> ${FPSCONFFILE}
 
 fi
 fi
+
+
+
+
+
+
+if [ "${CACAO_FPSPROC_AOLOOP_RUN}" = "ON" ]; then
+# ==============================================================================
+# ========== Run control loop =========
+# ==============================================================================
+
+# FPS name
+fpsname="loopRUN" 
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}" 
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echo "Process ${fpsname} already registered - skipping"
+else
+echo "Adding process ${fpsname}"
+echo "${fpsname}         aolrun       ${fpsarg0}" >> fpslist.txt
+
+echo "setval ${fpsfname}.loopgain 0.02" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.loopmult 0.99" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.loopON OFF" >> ${FPSCONFFILE}
+
+fi
+fi
+
+
+
 
 
 

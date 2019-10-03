@@ -601,13 +601,12 @@ fi
 
 
 
-
 milk-fpsmkcmd                 # (re-)create FPS scripts in `./fpscmd/`
 
 
+
+
 ./fpscmd/fpsinitscript        # (re-)create FPS shared memory structure(s)
-
-
 
 
 

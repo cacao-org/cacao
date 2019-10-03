@@ -294,6 +294,99 @@ int_fast8_t AOloopControl_loadconfigure_cli() {
 
 
 
+
+
+
+
+
+/** @brief CLI function for AOloopControl_mkCM */
+int_fast8_t AOloopControl_aorun_cli() {
+    char fpsname[200];
+
+    // First, we try to execute function through FPS interface
+    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
+        // Set FPS interface name
+        // By convention, if there are optional arguments, they should be appended to the fps name
+        //
+        printf("LINE %d\n", __LINE__);
+
+        if(data.processnameflag == 0) {
+            // the process has not been named with -n CLI option
+            // name fps to something different than the process name
+            if(strlen(data.cmdargtoken[2].val.string)>0) {
+                sprintf(fpsname, "compsCM-%s", data.cmdargtoken[2].val.string);
+                printf("USING %s as fpsname\n", fpsname);
+            }
+            else {
+                sprintf(fpsname, "compsCM");
+                printf("USING %s default fpsname\n", fpsname);
+            }
+
+        } else {
+            // Automatically set fps name to be process name up to first instance of character '.'
+            // This is the preferred option
+            strcpy(fpsname, data.processname0);
+            printf("USING %s auto fpsname\n", fpsname);
+        }
+
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS and conf process
+            printf("Function parameters FPSINIT\n");
+            AOloopControl_aorun_FPCONF(fpsname, CMDCODE_FPSINIT);
+            return RETURN_SUCCESS;
+        }
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
+            printf("Function parameters CONFSTART\n");
+            AOloopControl_aorun_FPCONF(fpsname, CMDCODE_CONFSTART);
+            return RETURN_SUCCESS;
+        }
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
+            printf("Function parameters CONFSTOP\n");
+            AOloopControl_aorun_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            return RETURN_SUCCESS;
+        }
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+            printf("Run function RUNSTART\n");
+            AOloopControl_aorun_RUN(fpsname);
+            return RETURN_SUCCESS;
+        }
+
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+            printf("Run function RUNSTOP\n");
+            // AOloopControl_computeCalib_mkCM_STOP();
+            return RETURN_SUCCESS;
+        }
+    }
+
+    printf("LINE %d\n", __LINE__);
+
+    // non FPS implementation - all parameters specified at function launch
+    if(CLI_checkarg(1,4) + CLI_checkarg(2,1) == 0) {
+        printf("========================================================\n");
+        printf("============== RUNNING non-FPS implementation ==========\n");
+        printf("========================================================\n");
+        AOloopControl_aorun(data.cmdargtoken[1].val.string, data.cmdargtoken[3].val.numf);
+        return RETURN_SUCCESS;
+    } else {
+        return RETURN_FAILURE;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* =============================================================================================== */
 /* =============================================================================================== */
 /** @name AOloopControl - 6. REAL TIME COMPUTING ROUTINES
@@ -963,13 +1056,18 @@ void init_AOloopControl()
 	/* 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET                  */
 	/* =============================================================================================== */
 
-    RegisterCLIcommand("aolrun", __FILE__, AOloopControl_aorun, // Run AO loop
-    "run AO loop", 
-    "no arg", 
-    "aolrun", 
-    "int AOloopControl_aorun()"); 
-    
-    
+
+
+
+	RegisterCLIcommand("aolrun",
+                   __FILE__,
+                   AOloopControl_aorun_cli, // Run AO loop
+                   "run AO loop",
+                   "no arg",
+                   "aolrun",
+                   "int AOloopControl_aorun()");
+
+
      RegisterCLIcommand("aolcompGUI", __FILE__, AOloopControl_AOcompute_GUI_cli, // AOcompute GUI
     "AOcompute GUI", 
     "<loop> <frequ [Hz]>", 
