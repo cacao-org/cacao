@@ -735,7 +735,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
 
 	delete_image_ID(cm_name);
 
-    function_parameter_struct_disconnect( &fps );
+	function_parameter_RUNexit( &fps );
 
 
     return RETURN_SUCCESS;
