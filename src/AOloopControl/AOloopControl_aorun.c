@@ -323,7 +323,7 @@ int AOloopControl_aorun_FPCONF(
 			// zero correction
 			if(fps.parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF) {
 				char dmCsname[200];
-				long loop = functionparameter_GetParamValue_ONOFF(&fps, ".loop");
+				long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
 				sprintf(dmCsname, "aol%ld_dmC", loop);
 				read_sharedmem_image(dmCsname);
 				arith_image_zero(dmCsname);
@@ -374,7 +374,7 @@ int AOloopControl_aorun_RUN(
     // GET FUNCTION PARAMETER VALUES
     // ===============================
 
-    long loop = functionparameter_GetParamValue_ONOFF(&fps, ".loop");
+    long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
 
     char snameWFS[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(snameWFS, functionparameter_GetParamPtr_STRING(&fps, ".sn_wfs"), FUNCTION_PARAMETER_STRMAXLEN);

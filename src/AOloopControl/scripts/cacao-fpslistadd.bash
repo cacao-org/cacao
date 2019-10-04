@@ -487,7 +487,7 @@ else
 echo "Adding process ${fpsname}"
 echo "${fpsname}         aolrun       ${fpsarg0}" >> fpslist.txt
 
-echo "setval ${fpsfname}.loopindex ${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
+echo "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}" >> ${FPSCONFFILE}
 echo "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_imWFS1" >> ${FPSCONFFILE}
 
 echo "setval ${fpsfname}.loopgain 0.02" >> ${FPSCONFFILE}
