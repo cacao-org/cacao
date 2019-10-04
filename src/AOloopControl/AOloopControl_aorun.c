@@ -533,9 +533,6 @@ int AOloopControl_aorun_RUN(
         processinfo_exec_start(processinfo);
         if(processinfo_compute_status(processinfo)==1)
         {
-
-
-
             // Subtract reference
             data.image[IDimWFS2].md[0].write = 1;
             if(wfsrefON == 1) { // if WFS reference is NOT zero
@@ -553,7 +550,6 @@ int AOloopControl_aorun_RUN(
 
             data.image[ID_MVMout].md[0].write = 1;
             ControlMatrixMultiply(data.image[ID_CM].array.F, data.image[IDimWFS2].array.F, sizeDM, sizeWFS, data.image[ID_MVMout].array.F);
-            data.image[ID_MVMout].md[0].cnt0 ++;
             COREMOD_MEMORY_image_set_sempost_byID(ID_MVMout, -1);
             data.image[ID_MVMout].md[0].cnt0 ++;
             data.image[ID_MVMout].md[0].cnt1 = WFScnt;
