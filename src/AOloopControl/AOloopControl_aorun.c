@@ -47,6 +47,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "AOloopControl/AOloopControl.h"
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+#include "COREMOD_arith/COREMOD_arith.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
@@ -234,7 +235,7 @@ int AOloopControl_aorun_FPCONF(
     // configuration
     int64_t loopindex_default[4] = { 0, 0, 99, 0 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
-    long fpi_loopindex = function_parameter_add_entry(&fps, ".loopindex", "Loop index", 
+    long fpi_loop = function_parameter_add_entry(&fps, ".loop", "Loop index", 
                                      FPTYPE_INT64, FPFLAG, &loopindex_default);
 
     
@@ -299,6 +300,12 @@ int AOloopControl_aorun_FPCONF(
 	long fpi_loopON = function_parameter_add_entry(&fps, ".loopON", "loop ON/OFF", 
                                      FPTYPE_ONOFF, FPFLAG, pNull);       
     
+
+	FPFLAG = FPFLAG_DEFAULT_INPUT;
+	FPFLAG |= FPFLAG_WRITERUN;
+	long fpi_loopZERO = function_parameter_add_entry(&fps, ".loopZERO", "Zero correction", 
+                                     FPTYPE_ONOFF, FPFLAG, pNull);     
+
     
     
     // =====================================
@@ -311,6 +318,19 @@ int AOloopControl_aorun_FPCONF(
         if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
         {
             // here goes the logic
+          
+          
+			// zero correction
+			if(fps.parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF) {
+				char dmCsname[200];
+				long loop = functionparameter_GetParamValue_ONOFF(&fps, ".loop");
+				sprintf(dmCsname, "aol%ld_dmC", loop);
+				read_sharedmem_image(dmCsname);
+				arith_image_zero(dmCsname);
+				
+				// set back to OFF
+                fps.parray[fpi_loopZERO].fpflag &= ~FPFLAG_ONOFF;
+			}		
           
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
@@ -354,7 +374,7 @@ int AOloopControl_aorun_RUN(
     // GET FUNCTION PARAMETER VALUES
     // ===============================
 
-    long loop = functionparameter_GetParamValue_ONOFF(&fps, ".loopindex");
+    long loop = functionparameter_GetParamValue_ONOFF(&fps, ".loop");
 
     char snameWFS[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(snameWFS, functionparameter_GetParamPtr_STRING(&fps, ".sn_wfs"), FUNCTION_PARAMETER_STRMAXLEN);
