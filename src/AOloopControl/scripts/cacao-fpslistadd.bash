@@ -116,7 +116,7 @@ echo "${fpsname}      cudaextrmodes       ${fpsarg0}"  >> fpslist.txt
 LINSIMDT="10000" 
 
 # copy calibration files
-mkdir ${CACAO_WORKDIR}/simLHS
+mkdir -p ${CACAO_WORKDIR}/simLHS
 cp simLHS/${CACAO_LOOPNAME}_respM.fits ./${CACAO_WORKDIR}/simLHS/simLHS_respM.fits
 cp simLHS/${CACAO_LOOPNAME}_wfsref.fits ./${CACAO_WORKDIR}/simLHS/simLHS_wfsref.fits
 

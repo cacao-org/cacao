@@ -592,8 +592,7 @@ int AOloopControl_aorun_RUN(
     // ==================================
 
     processinfo_cleanExit(processinfo);
-
-    function_parameter_struct_disconnect( &fps );
+	function_parameter_RUNexit( &fps );
 
 
     return RETURN_SUCCESS;
