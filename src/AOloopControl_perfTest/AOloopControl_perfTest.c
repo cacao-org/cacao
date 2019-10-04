@@ -1266,6 +1266,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     // ENDING LOOP
     // ==================================
     processinfo_cleanExit(processinfo);
+	function_parameter_RUNexit( &fps );
+	
 
 
     return RETURN_SUCCESS;
