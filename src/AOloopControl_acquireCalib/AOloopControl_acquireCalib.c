@@ -2511,8 +2511,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     }
 
 
-
-    function_parameter_struct_disconnect( &fps );
+	function_parameter_RUNexit( &fps );
 
     list_image_ID();
 
