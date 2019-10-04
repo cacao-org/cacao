@@ -1091,9 +1091,8 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
     // ==================================
 
     processinfo_cleanExit(processinfo);
+    function_parameter_RUNexit( &fps );
 
-
-    function_parameter_struct_disconnect( &fps );
 
     if(WFSatype == _DATATYPE_FLOAT) {
         free(arrayftmp);
