@@ -1,5 +1,11 @@
 var NAVTREEINDEX20 =
 {
+"src_2statistic_2statistic_8h_source.html":[8,0,2,31,1],
+"standalone__dependencies_8c.html":[8,0,2,11,12],
+"standalone__dependencies_8c.html#a0aae1e0666127ce8fdce05ccdde714cb":[8,0,2,11,12,5],
+"standalone__dependencies_8c.html#a2845aea27c203af865b377aaf3be08c9":[8,0,2,11,12,2],
+"standalone__dependencies_8c.html#a2dbd50fd3d0f2c6f845410aac789f999":[8,0,2,11,12,9],
+"standalone__dependencies_8c.html#a3e77ac9461466e89a13b467f64a8df67":[8,0,2,11,12,4],
 "standalone__dependencies_8c.html#a4dbe1b91d64a54a8b292bd66c5971b5c":[8,0,2,11,12,6],
 "standalone__dependencies_8c.html#a50b1c01e17893b3c2e735e348df9eba9":[8,0,2,11,12,10],
 "standalone__dependencies_8c.html#a6fb9173b416d4ca64e84793024c86a9e":[8,0,2,11,12,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX20 =
 "structAOLOOPCONTROL__CONF.html#aa74e23cd13599fa8f18a7c18f71bc2cd":[6,1,0,113],
 "structAOLOOPCONTROL__CONF.html#aa7647deac3264f4f3b293164b909c203":[6,1,0,88],
 "structAOLOOPCONTROL__CONF.html#aa86222ff4de50fdced6524e09e538a25":[6,1,0,116],
-"structAOLOOPCONTROL__CONF.html#aa8ad46adbcb53cdfe3eeb48b4d73584a":[6,1,0,3],
-"structAOLOOPCONTROL__CONF.html#aa8b85d6f44cbc4bb0058b8f6beadbd83":[6,1,0,14],
-"structAOLOOPCONTROL__CONF.html#aacc6dbf0c8712ca3b23fa0e0ab527a39":[6,1,0,32],
-"structAOLOOPCONTROL__CONF.html#aae0614696c6b57d88dca70938d74fde1":[6,1,0,91],
-"structAOLOOPCONTROL__CONF.html#ab19e1ec513dfe03aef82717b63466374":[6,1,0,126],
-"structAOLOOPCONTROL__CONF.html#ab4c19320c9bd0dd4150145ba6209802a":[6,1,0,15],
-"structAOLOOPCONTROL__CONF.html#abb4ef87beb97b115a4e60cec143a3970":[6,1,0,110]
+"structAOLOOPCONTROL__CONF.html#aa8ad46adbcb53cdfe3eeb48b4d73584a":[6,1,0,3]
 };

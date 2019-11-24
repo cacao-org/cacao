@@ -4,6 +4,13 @@ var page_coding_standards =
     [ "Documenting Code", "page_DocumentingCode.html", null ],
     [ "Template Souce Code", "page_TemplateSourceCode.html", null ],
     [ "Process Info Structure (processinfo)", "page_ProcessInfoStructure.html", [
+      [ "1. Source Code and Modules", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules", [
+        [ "Synchronization: loading updated modules", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_Synchronization", null ],
+        [ "Editing submodule source code", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_EditingSubmodule", null ],
+        [ "Updating master branches", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_UpdatingMaster", null ],
+        [ "Releasing a new version", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_ReleasingVersion", null ]
+      ] ],
+      [ "2. Source Code Documentation (doxygen)", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeDocumentation", null ],
       [ "1. Overview", "page_ProcessInfoStructure.html#page_ProcessInfoStructure_Overview", null ],
       [ "2. Code Template", "page_ProcessInfoStructure.html#page_ProcessInfoStructure_SampleCode", null ]
     ] ],
