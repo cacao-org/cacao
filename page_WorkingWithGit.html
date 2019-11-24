@@ -89,41 +89,43 @@ $(document).ready(function(){initNavTree('page_WorkingWithGit.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><dl class="section note"><dt>Note</dt><dd>This file: ./src/CommandLineInterface/doc/WorkingWithGit.md</dd></dl>
-<h2>Modules</h2>
+<hr/>
+<h2>1. Source Code and Modules</h2>
 <p>Most of milk's code is in a set of modules. Each module is compiled as a shared object loaded by the main process at runtime.</p>
 <p>In Git, each module has its own repository, linked to the package as a git submodule.</p>
-<h2>Synchronization: loading updated modules</h2>
-<p>To get latest modules (master branches) : </p><pre class="fragment">git submodule foreach "(git checkout master; git pull)"
-</pre><p>To get latest modules (dev branches) : </p><pre class="fragment">git submodule foreach "(git checkout dev; git pull)"
-</pre><h2>Editing submodule source code</h2>
-<p>When developing, work in dev branch and set branch to dev in all submodules and main package: </p><pre class="fragment">git submodule foreach "(git checkout dev; git pull; git push)"
-git checkout dev
-git pull
-git push
-</pre><h2>Updating master branches</h2>
-<p>To synchronize master to latest dev: </p><pre class="fragment">git submodule foreach "(git checkout master; git merge dev)"
-git checkout master
-git merge dev
-git submodule foreach "(git checkout master; git push)"
-git push
-</pre><h2>Releasing a new version</h2>
+<h3>Synchronization: loading updated modules</h3>
+<p>To get latest modules (master branches) : </p><pre class="fragment">$ git submodule foreach "(git checkout master; git pull)"
+</pre><p>To get latest modules (dev branches) : </p><pre class="fragment">$ git submodule foreach "(git checkout dev; git pull)"
+</pre><h3>Editing submodule source code</h3>
+<p>When developing, work in dev branch and set branch to dev in all submodules and main package: </p><pre class="fragment">$ git submodule foreach "(git checkout dev; git pull; git push)"
+$ git checkout dev
+$ git pull
+$ git push
+</pre><h3>Updating master branches</h3>
+<p>To synchronize master to latest dev: </p><pre class="fragment">$ git submodule foreach "(git checkout master; git merge dev)"
+$ git checkout master
+$ git merge dev
+$ git submodule foreach "(git checkout master; git push)"
+$ git push
+</pre><h3>Releasing a new version</h3>
 <p>In dev branch:</p><ul>
 <li>Update version number in the CMakeList.txt</li>
 <li>Edit version number in README.md</li>
 </ul>
 <p>Update master branch to current dev branch.</p>
-<p>Issue a git tag for the version: </p><pre class="fragment">git tag -a vX.YY.ZZ -m "milk version X.YY.ZZ"
-git push origin vX.YY.ZZ
-</pre><p>Issue tags for submodules (optional, but helpful to track which submodule version makes it into package version): </p><pre class="fragment">git submodule foreach git tag -a milk-vX.Y.ZZ -m "milk version X.YY.ZZ"
-git submodule foreach git push origin milk-vX.Y.ZZ
+<p>Issue a git tag for the version: </p><pre class="fragment">$ git tag -a vX.YY.ZZ -m "milk version X.YY.ZZ"
+$ git push origin vX.YY.ZZ
+</pre><p>Issue tags for submodules (optional, but helpful to track which submodule version makes it into package version): </p><pre class="fragment">$ git submodule foreach git tag -a milk-vX.Y.ZZ -m "milk version X.YY.ZZ"
+$ git submodule foreach git push origin milk-vX.Y.ZZ
 </pre><dl class="section note"><dt>Note</dt><dd>Modules inherit version numbers from the package(s) to which they belong. Consequently, modules that are shared between packages can have parallel version number histories. For example, the version history for a module may be: milk-v0.1.01 -&gt; cacao-v0.1.01 -&gt; cacao-v0.1.02 -&gt; cacao-v0.2.00 -&gt; milk-v0.1.02. Any new version, regardless of which package it is associated with, still includes all previous changes: there is a single version thread.</dd></dl>
-<h2>Documentation</h2>
-<p>Documentation tree can be locally built on dev branch with doxygen from main directory : </p><pre class="fragment">git checkout dev
-doxygen
-</pre><p>To push it on the origin : </p><pre class="fragment">cd dochtml/html
-git add *
-git commit -am 'updated doxygen documentation'
-git push
+<hr/>
+<h2>2. Source Code Documentation (doxygen)</h2>
+<p>Documentation tree can be locally built on dev branch with doxygen from main directory : </p><pre class="fragment">$ git checkout dev
+$ doxygen
+</pre><p>To push it on the origin : </p><pre class="fragment">$ cd dochtml/html
+$ git add *
+$ git commit -am 'updated doxygen documentation'
+$ git push
 </pre><dl class="section note"><dt>Note</dt><dd>When switching branches, you may get an error message "The following untracked working tree files would be overwritten by checkout" preventing branch switch. If the error only lists files in the html directory, you can safely use the -f option to force branch change. </dd></dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
@@ -132,7 +134,7 @@ git push
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="page_cacao_topmenu.html">Subpages</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:17:16 for cacao by
+    <li class="footer">Generated on Sun Nov 24 2019 12:19:26 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>
