@@ -78,7 +78,7 @@ var searchData=
   ['rndgen',['rndgen',['../structDATA.html#a3308ac8a12a70a6b558d38db7666c648',1,'DATA']]],
   ['root',['root',['../structkdtree.html#accef3227abac75a5eed239590ce574d9',1,'kdtree']]],
   ['rows',['rows',['../structsImage.html#a7acc75cf6bd1af8be5ac3801bf5a909c',1,'sImage']]],
-  ['rt_5fpriority',['RT_priority',['../structPROCESSINFO.html#a547f4806f0bcb3da0ca25727e9d824de',1,'PROCESSINFO::RT_priority()'],['../structPROCESSINFODISP.html#a12bfddad1afd442bcdeec79e37491e50',1,'PROCESSINFODISP::rt_priority()']]],
+  ['rt_5fpriority',['rt_priority',['../structPROCESSINFODISP.html#a12bfddad1afd442bcdeec79e37491e50',1,'PROCESSINFODISP::rt_priority()'],['../structPROCESSINFO.html#a547f4806f0bcb3da0ca25727e9d824de',1,'PROCESSINFO::RT_priority()']]],
   ['rtlogsize',['RTLOGsize',['../structAOLOOPCONTROL__CONF.html#af962b54c71dadf275ab33d47b43edf52',1,'AOLOOPCONTROL_CONF']]],
   ['rtslogarray',['RTSLOGarray',['../structAOLOOPCONTROL__CONF.html#ae6d475aeeb4f4aac4ffb2ead6e2d6a43',1,'AOLOOPCONTROL_CONF']]],
   ['rtslogarrayinitflag',['RTSLOGarrayInitFlag',['../structAOloopControl__var.html#a9b20c22eca442cca126133d55c3ee4e7',1,'AOloopControl_var']]],

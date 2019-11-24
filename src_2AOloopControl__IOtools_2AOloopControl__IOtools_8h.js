@@ -1,6 +1,10 @@
 var src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h =
 [
+    [ "errno_t", "src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42", null ],
     [ "__attribute__", "src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#ad7f8f6c0f577f5bb99614e4ea06fe6f1", null ],
+    [ "AOcontrolLoop_IOtools_acquireWFSloop", "src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a4673540efeffcc82cdb63b1faa8b73f5", null ],
+    [ "AOcontrolLoop_IOtools_acquireWFSloop_FPCONF", "src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#acabdeb1b808f786f288e519f4a49968a", null ],
+    [ "AOcontrolLoop_IOtools_acquireWFSloop_RUN", "src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a710966c30121ceca1d67b79ee3ea8873", null ],
     [ "AOloopControl_IOtools_2Dloadcreate_shmim", "src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a6d1f06e26db9722ba9ab011277d1e671", null ],
     [ "AOloopControl_IOtools_3Dloadcreate_shmim", "src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a8a4f7d5042ff9d58b43ba2c63b48fa8e", null ],
     [ "AOloopControl_IOtools_AveStream", "src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#af116cd60a4c08151a2000df55aad9d55", null ],

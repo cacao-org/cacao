@@ -1,7 +1,10 @@
 var AOloopControl__computeCalib_8c =
 [
     [ "__attribute__", "AOloopControl__computeCalib_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "AOcontrolLoop_computeCalib_ComputeCM_FPCONF", "AOloopControl__computeCalib_8c.html#ae274df2748400df777de575b80bb3b87", null ],
+    [ "AOcontrolLoop_computeCalib_ComputeCM_RUN", "AOloopControl__computeCalib_8c.html#a9d2d5f6e11cb1e9ddac0af4078a28e11", null ],
     [ "AOloopControl_computeCalib_compute_CombinedControlMatrix_cli", "AOloopControl__computeCalib_8c.html#acd6d4f7c33ab085867e68bd0ed1e2716", null ],
+    [ "AOloopControl_computeCalib_ComputeCM_cli", "AOloopControl__computeCalib_8c.html#a20bbcb74b62b8026ea1fde86fc298ec2", null ],
     [ "AOloopControl_computeCalib_computeCM_cli", "AOloopControl__computeCalib_8c.html#a90bb164169a5f88145ed531034d65b13", null ],
     [ "AOloopControl_computeCalib_Hadamard_decodeRM_cli", "AOloopControl__computeCalib_8c.html#a1e550abf97dffc690d91901e3da865ec", null ],
     [ "AOloopControl_computeCalib_loadCM_cli", "AOloopControl__computeCalib_8c.html#a06a987a4bc8ff47f3f75ac69793b29f5", null ],

@@ -16,6 +16,7 @@ var processtools_8c =
     [ "processinfo_exec_start", "processtools_8c.html#ac7362657ee39e9d45147eaf279ed1c98", null ],
     [ "processinfo_loopstart", "processtools_8c.html#a7c1684f725dca2f03649af3a0de4dfe6", null ],
     [ "processinfo_loopstep", "processtools_8c.html#ad4b2e6d100dbb484529e7b8f6ce29f74", null ],
+    [ "processinfo_procdirname", "processtools_8c.html#aa718e3fd310a4035d7d7cbfc8b4ba5b9", null ],
     [ "processinfo_ProcessSignals", "processtools_8c.html#aa29570be52da95b8ef3911f99b73e7bb", null ],
     [ "processinfo_scan", "processtools_8c.html#a1094e44a07df0c6e44e28847654fccba", null ],
     [ "processinfo_SelectFromList", "processtools_8c.html#aa14763f95a1e13d3c13983f099772dca", null ],

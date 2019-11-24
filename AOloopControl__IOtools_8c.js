@@ -1,6 +1,7 @@
 var AOloopControl__IOtools_8c =
 [
     [ "__attribute__", "AOloopControl__IOtools_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "AOloopControl_IOtools_acquireWFSloop_cli", "AOloopControl__IOtools_8c.html#a6837d1ffa6dd089424300d74c242f9ed", null ],
     [ "AOloopControl_IOtools_AveStream_cli", "AOloopControl__IOtools_8c.html#acd325546902319e99ac79ae161196fa5", null ],
     [ "AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli", "AOloopControl__IOtools_8c.html#aa8290011cb68f3138108f5bd4affdca9", null ],
     [ "AOloopControl_IOtools_frameDelay_cli", "AOloopControl__IOtools_8c.html#ad24854cf77226f9c14c06f69e14dfedb", null ],

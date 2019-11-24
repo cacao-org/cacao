@@ -4,7 +4,7 @@ var searchData=
   ['errmsg',['errmsg',['../image__basic_8c.html#a8bb845778df5ade66dd9af426128a622',1,'image_basic.c']]],
   ['errmsg_5farith',['errmsg_arith',['../COREMOD__arith_8c.html#a25e2c6cb1a390cd8444e09c450f0d50f',1,'COREMOD_arith.c']]],
   ['errmsg_5fmemory',['errmsg_memory',['../COREMOD__memory_8c.html#ac131d1fce1239b90898281924cc65ca0',1,'COREMOD_memory.c']]],
-  ['errno_5ft',['errno_t',['../src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42',1,'errno_t():&#160;CLIcore.h'],['../processtools_8h.html#a46a037236862ac1a534efbe605c10f42',1,'errno_t():&#160;processtools.h'],['../ImageStreamIOError_8h.html#a46a037236862ac1a534efbe605c10f42',1,'errno_t():&#160;ImageStreamIOError.h']]],
+  ['errno_5ft',['errno_t',['../src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42',1,'errno_t():&#160;AOloopControl_IOtools.h'],['../src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42',1,'errno_t():&#160;CLIcore.h'],['../processtools_8h.html#a46a037236862ac1a534efbe605c10f42',1,'errno_t():&#160;processtools.h'],['../ImageStreamIOError_8h.html#a46a037236862ac1a534efbe605c10f42',1,'errno_t():&#160;ImageStreamIOError.h']]],
   ['error',['error',['../cudacomp_8c.html#a2bf00f52622132f94d971b3baac4920c',1,'cudacomp.c']]],
   ['errormessage',['errormessage',['../COREMOD__tools_8c.html#a5d8f2e60f7f536436d04e2f6e5b4d207',1,'COREMOD_tools.c']]],
   ['errormessage_5fiofits',['errormessage_iofits',['../COREMOD__iofits_8c.html#a391171d7e7a82005b7d7c605641c0fdc',1,'COREMOD_iofits.c']]],

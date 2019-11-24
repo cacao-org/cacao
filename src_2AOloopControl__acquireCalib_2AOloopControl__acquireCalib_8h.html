@@ -109,7 +109,7 @@ Functions</h2></td></tr>
 <tr class="memitem:af0b950020a33fbecd354df4534dcd9e9"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#af0b950020a33fbecd354df4534dcd9e9">AOloopControl_acquireCalib_Measure_WFSrespC</a> (long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, uint32_t SequInitMode)</td></tr>
 <tr class="memdesc:af0b950020a33fbecd354df4534dcd9e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire WFS response to a series of DM pattern.  <a href="#af0b950020a33fbecd354df4534dcd9e9">More...</a><br /></td></tr>
 <tr class="separator:af0b950020a33fbecd354df4534dcd9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a526a1855d49330fe11067537cbeb7d4c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#a526a1855d49330fe11067537cbeb7d4c">AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="memitem:a526a1855d49330fe11067537cbeb7d4c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#a526a1855d49330fe11067537cbeb7d4c">AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
 <tr class="memdesc:a526a1855d49330fe11067537cbeb7d4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure linear response to set of DM modes/patterns.  <a href="#a526a1855d49330fe11067537cbeb7d4c">More...</a><br /></td></tr>
 <tr class="separator:a526a1855d49330fe11067537cbeb7d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab478356daf82f906522f489595de47f1"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html#ab478356daf82f906522f489595de47f1">AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN</a> (char *fpsname)</td></tr>
@@ -153,7 +153,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF </td>
+          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>fpsname</em>, </td>
@@ -339,14 +339,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<h2>Purpose</h2>
-<p>Measure the WFS linear response to a set of DM patterns</p>
-<p>This function creates positive and negative maps which are sent by <a class="el" href="AOloopControl__acquireCalib_8c.html#af0b950020a33fbecd354df4534dcd9e9" title="Acquire WFS response to a series of DM pattern. ">AOloopControl_acquireCalib_Measure_WFSrespC()</a> <br />
-Bleeding from one pattern to the next due to limited DM time response is canceled by using two patterns <br />
-</p>
-<p>pattern a sequence : +- +- +- +- ... <br />
-pattern b sequence : +- -+ +- -+ ... <br />
-</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">delayRM1us</td><td>Frame delay [# of frame] </td></tr>
@@ -770,7 +762,7 @@ In each of these RM cubes, the z axis is time, increments by 1 frame<br />
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b9dbe0ab556e115fe806e391623776a6.html">AOloopControl_acquireCalib</a></li><li class="navelem"><a class="el" href="src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html">AOloopControl_acquireCalib.h</a></li>
-    <li class="footer">Generated on Sat Aug 24 2019 11:25:31 for cacao by
+    <li class="footer">Generated on Sun Nov 24 2019 12:17:15 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

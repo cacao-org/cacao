@@ -1,6 +1,8 @@
 var standalone__dependencies_8c =
 [
+    [ "file_exists", "standalone__dependencies_8c.html#a8cc0efbf0483da8ea546063e372111be", null ],
     [ "info_time_diff", "standalone__dependencies_8c.html#a6fb9173b416d4ca64e84793024c86a9e", null ],
+    [ "is_fits_file", "standalone__dependencies_8c.html#a2845aea27c203af865b377aaf3be08c9", null ],
     [ "print_header", "standalone__dependencies_8c.html#a6fbb6ce54648926505877f584969e505", null ],
     [ "printERROR", "standalone__dependencies_8c.html#a3e77ac9461466e89a13b467f64a8df67", null ],
     [ "qs2l", "standalone__dependencies_8c.html#a0aae1e0666127ce8fdce05ccdde714cb", null ],

@@ -2,6 +2,7 @@ var AOloopControl_8c =
 [
     [ "__attribute__", "AOloopControl_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "AOloopControl_AOcompute_GUI_cli", "AOloopControl_8c.html#a23f03f3541caa8852c249cac257d70f6", null ],
+    [ "AOloopControl_aorun_cli", "AOloopControl_8c.html#ad12231e4c0c6d2d4608907c813e4e009", null ],
     [ "AOloopControl_aorun_GUI_cli", "AOloopControl_8c.html#a71d3229ffc59e74e63eec143e3400da3", null ],
     [ "AOloopControl_AutoTune", "AOloopControl_8c.html#ab4875a7b1ba20facd8e0f8a2af632569", null ],
     [ "AOloopControl_AutoTuneGains_cli", "AOloopControl_8c.html#a47f076fa8bc1f33e4c44c80e828de443", null ],

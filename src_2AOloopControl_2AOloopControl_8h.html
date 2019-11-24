@@ -143,8 +143,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a65d72b70aa47177ca3d2dae68ae5a988"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl_2AOloopControl_8h.html#a65d72b70aa47177ca3d2dae68ae5a988">AOloopControl_WFSzeropoint_sum_update_loop</a> (long loopnb, const char *ID_WFSzp_name, int NBzp, const char *IDwfsref0_name, const char *IDwfsref_name)</td></tr>
 <tr class="memdesc:a65d72b70aa47177ca3d2dae68ae5a988"><td class="mdescLeft">&#160;</td><td class="mdescRight">WFS sum zero point update.  <a href="#a65d72b70aa47177ca3d2dae68ae5a988">More...</a><br /></td></tr>
 <tr class="separator:a65d72b70aa47177ca3d2dae68ae5a988"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdd1ce6ab6be7cf01594398725d3c262"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl_2AOloopControl_8h.html#acdd1ce6ab6be7cf01594398725d3c262">AOloopControl_aorun_RUN</a> (char *fpsname)</td></tr>
+<tr class="memdesc:acdd1ce6ab6be7cf01594398725d3c262"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main loop function.  <a href="#acdd1ce6ab6be7cf01594398725d3c262">More...</a><br /></td></tr>
+<tr class="separator:acdd1ce6ab6be7cf01594398725d3c262"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d62d226e3babc17b15e407b2db8fa1d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl_2AOloopControl_8h.html#a8d62d226e3babc17b15e407b2db8fa1d">AOloopControl_aorun_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="separator:a8d62d226e3babc17b15e407b2db8fa1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaa129b7f25164128f0cefa8a003a6b3"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl_2AOloopControl_8h.html#aaaa129b7f25164128f0cefa8a003a6b3">AOloopControl_aorun</a> ()</td></tr>
-<tr class="memdesc:aaaa129b7f25164128f0cefa8a003a6b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main loop function.  <a href="#aaaa129b7f25164128f0cefa8a003a6b3">More...</a><br /></td></tr>
 <tr class="separator:aaaa129b7f25164128f0cefa8a003a6b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3682e64838d25674a308c533631fc2b8"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="src_2AOloopControl_2AOloopControl_8h.html#a3682e64838d25674a308c533631fc2b8">ControlMatrixMultiply</a> (float *cm_array, float *imarray, long m, long n, float *outvect)</td></tr>
 <tr class="memdesc:a3682e64838d25674a308c533631fc2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">CPU based matrix-vector multiplication - when no GPU.  <a href="#a3682e64838d25674a308c533631fc2b8">More...</a><br /></td></tr>
@@ -437,7 +441,33 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Main loop function. </p>
+</div>
+</div>
+<a id="a8d62d226e3babc17b15e407b2db8fa1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d62d226e3babc17b15e407b2db8fa1d">&#9670;&nbsp;</a></span>AOloopControl_aorun_FPCONF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int AOloopControl_aorun_FPCONF </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>CMDmode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -466,6 +496,26 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="acdd1ce6ab6be7cf01594398725d3c262"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdd1ce6ab6be7cf01594398725d3c262">&#9670;&nbsp;</a></span>AOloopControl_aorun_RUN()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int AOloopControl_aorun_RUN </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsname</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Main loop function. </p>
 
 </div>
 </div>
@@ -2732,7 +2782,7 @@ Runs in CPU or GPU.</p>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="src_2AOloopControl_2AOloopControl_8h.html">AOloopControl.h</a></li>
-    <li class="footer">Generated on Sat Aug 24 2019 11:25:31 for cacao by
+    <li class="footer">Generated on Sun Nov 24 2019 12:17:15 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

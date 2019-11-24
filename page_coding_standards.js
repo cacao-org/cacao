@@ -17,7 +17,7 @@ var page_coding_standards =
       [ "4. Writing function prototypes (in <module>.h)", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_WritingPrototypes", null ],
       [ "5. Writing CONF function (in source .c file)", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_WritingCONFfunc", null ],
       [ "6. Writing RUN function (in source .c file)", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_WritingRUNfunc", [
-        [ "6.1. A simple example", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_WritingRUNfunc_simple", null ],
+        [ "6.1. A simple _RUN example", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_WritingRUNfunc_simple", null ],
         [ "6.3. RUN function with FPS and processinfo", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_WritingRUNfunc_processinfo", null ]
       ] ]
     ] ],
