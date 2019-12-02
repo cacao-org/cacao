@@ -175,7 +175,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
 
 
 int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_cli() {
-    char fpsname[200];
+	int stringmaxlen = 200;
+    char fpsname[stringmaxlen];
     
     // First, we try to execute function through FPS interface
     if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
@@ -185,9 +186,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_cli() {
         //
         if(data.processnameflag == 0) { // name fps to something different than the process name
             if(strlen(data.cmdargtoken[2].val.string)>0)
-				sprintf(fpsname, "measlat-%s", data.cmdargtoken[2].val.string);
+				snprintf(fpsname, stringmaxlen, "measlat-%s", data.cmdargtoken[2].val.string);
 			else
-				sprintf(fpsname, "measlat");
+				snprintf(fpsname, stringmaxlen, "measlat");
         } else { // Automatically set fps name to be process name up to first instance of character '.'
             strcpy(fpsname, data.processname0);
         }
@@ -596,6 +597,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     long wfscntstart;
     long wfscntend;
 
+	int stringmaxlen = 500;
+
     struct timespec tstart;
     //    struct timespec tnow;
     struct timespec *tarray;
@@ -604,7 +607,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     double dt, dt1;
     double *dtarray;
     double a, b;
-    char command[200];
+    char command[stringmaxlen];
     long IDdm0, IDdm1; // DM shapes
     long ii, jj;
     float x, y;
@@ -680,12 +683,12 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     PROCESSINFO *processinfo;
 
-    char pinfoname[200];
-    sprintf(pinfoname, "mlat-%s-%s", dmname, wfsname);
-    char descrstring[200];
-    sprintf(descrstring, "lat %s %s", dmname, wfsname);
-    char msgstring[200];
-    sprintf(msgstring, "Measure Latency amp=%f %ld iter", OPDamp, NBiter);
+    char pinfoname[stringmaxlen];
+    snprintf(pinfoname, stringmaxlen, "mlat-%s-%s", dmname, wfsname);
+    char descrstring[stringmaxlen];
+    snprintf(descrstring, stringmaxlen, "lat %s %s", dmname, wfsname);
+    char msgstring[stringmaxlen];
+    snprintf(msgstring, stringmaxlen, "Measure Latency amp=%f %ld iter", OPDamp, NBiter);
 
     processinfo = processinfo_setup(
                       pinfoname,
@@ -712,10 +715,10 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     dmxsize = data.image[IDdm].md[0].size[0];
     dmysize = data.image[IDdm].md[0].size[1];
 
-    sprintf(msgstring, "dmxsize %ld", dmxsize);
+    snprintf(msgstring, stringmaxlen, "dmxsize %ld", dmxsize);
     processinfo_WriteMessage(processinfo, msgstring);
 
-    sprintf(msgstring, "dmysize %ld", dmysize);
+    snprintf(msgstring, stringmaxlen, "dmysize %ld", dmysize);
     processinfo_WriteMessage(processinfo, msgstring);
 
 
@@ -734,7 +737,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     RMStot = sqrt(RMStot / dmxsize / dmysize);
 
 
-    sprintf(msgstring, "RMStot %f", RMStot);
+    snprintf(msgstring, stringmaxlen, "RMStot %f", RMStot);
     processinfo_WriteMessage(processinfo, msgstring);
 
     for(ii = 0; ii < dmxsize; ii++)
@@ -751,11 +754,11 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     save_fits("_testdm1", "!tmp/_testdm1.fits");
 
     IDwfs = image_ID(wfsname);
-    sprintf(msgstring, "Connecting to stream %s %ld", wfsname, IDwfs);
+    snprintf(msgstring, stringmaxlen, "Connecting to stream %s %ld", wfsname, IDwfs);
     processinfo_WriteMessage(processinfo, msgstring);
 
     if(IDwfs == -1) {
-        sprintf(msgstring, "Cannot connect to stream %s", wfsname);
+        snprintf(msgstring, stringmaxlen, "Cannot connect to stream %s", wfsname);
         processinfo_error(processinfo, msgstring);
 
         return RETURN_FAILURE;
@@ -782,7 +785,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     // coarse estimate of frame rate
 
-    sprintf(msgstring, "Measuring approx frame rate over %.1f sec", FrameRateWait);
+    snprintf(msgstring, stringmaxlen, "Measuring approx frame rate over %.1f sec", FrameRateWait);
     processinfo_WriteMessage(processinfo, msgstring);
 
     clock_gettime(CLOCK_REALTIME, &tnow);
@@ -797,12 +800,12 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     printf("wfs dt = %f sec\n", *wfsdt);
 
     if(wfscntend - wfscntstart < 5) {
-        sprintf(msgstring, "Number of frames %ld too small -> cannot proceed", wfscntend - wfscntstart);
+        snprintf(msgstring, stringmaxlen, "Number of frames %ld too small -> cannot proceed", wfscntend - wfscntstart);
         processinfo_error(processinfo, msgstring);
         return RETURN_FAILURE;
     }
 
-    sprintf(msgstring, "frame period wfsdt = %f sec  ( %f Hz )\n", *wfsdt, 1.0 / *wfsdt);
+    snprintf(msgstring, stringmaxlen, "frame period wfsdt = %f sec  ( %f Hz )\n", *wfsdt, 1.0 / *wfsdt);
     processinfo_WriteMessage(processinfo, msgstring);
 
     *framerateHz = 1.0/(*wfsdt); // This is approximate, will be measured more precisely later on
@@ -892,7 +895,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
         loopOK = processinfo_loopstep(processinfo);
 
-        sprintf(msgstring, "iteration %5ld / %5ld", iter, NBiter);
+        snprintf(msgstring, stringmaxlen, "iteration %5ld / %5ld", iter, NBiter);
         processinfo_WriteMessage(processinfo, msgstring);
 
 
@@ -1174,7 +1177,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     free(tarray);
 
 
-    sprintf(msgstring, "Processing Data (%ld iterations)", NBiter);
+    snprintf(msgstring, stringmaxlen, "Processing Data (%ld iterations)", NBiter);
     processinfo_WriteMessage(processinfo, msgstring);
 
     copy_image_ID("_testdm0", dmname, 1);
@@ -1218,8 +1221,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     functionparameter_SaveParam2disk(&fps, ".out.latencyfr");
 
 
-    if(sprintf(command, "echo %8.6f > conf/param_hardwlatency.txt", latencyarray[NBiter / 2]) < 1) {
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    if(snprintf(command, stringmaxlen, "echo %8.6f > conf/param_hardwlatency.txt", latencyarray[NBiter / 2]) < 1) {
+        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
     }
     if(system(command) != 0) {
         printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
@@ -1227,8 +1230,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
 
 
-    if(sprintf(command, "echo %8.6f > conf/param_hardwlatency_frame.txt", latencystepave ) < 1) {
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    if(snprintf(command, stringmaxlen, "echo %8.6f > conf/param_hardwlatency_frame.txt", latencystepave ) < 1) {
+        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
     }
     if(system(command) != 0) {
         printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
@@ -1237,8 +1240,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
 
 
-    if(sprintf(command, "echo %f %f %f %f %f > timingstats/hardwlatencyStats.txt", latencyarray[NBiter / 2], latencyave, minlatency, maxlatency, latencystepave) < 1) {
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    if(snprintf(command, stringmaxlen, "echo %f %f %f %f %f > timingstats/hardwlatencyStats.txt", latencyarray[NBiter / 2], latencyave, minlatency, maxlatency, latencystepave) < 1) {
+        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
     }
 
     if(system(command) != 0) {
@@ -1248,8 +1251,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
 
 
-    if(sprintf(command, "echo %.3f > conf/param_mloopfrequ.txt", 1.0 * (wfscntend - wfscntstart) / dt) < 1) {
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    if(snprintf(command, stringmaxlen, "echo %.3f > conf/param_mloopfrequ.txt", 1.0 * (wfscntend - wfscntstart) / dt) < 1) {
+        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
     }
 
     if(system(command) != 0) {
@@ -1261,7 +1264,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
 
 
-    sprintf(msgstring, "Measured %8.3f ms @ %.3f Hz", latencyave * 1000.0, 1.0 * (wfscntend - wfscntstart));
+    snprintf(msgstring, stringmaxlen, "Measured %8.3f ms @ %.3f Hz", latencyave * 1000.0, 1.0 * (wfscntend - wfscntstart));
     processinfo_WriteMessage(processinfo, msgstring);
 
     // ==================================
@@ -1290,15 +1293,17 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     long NBiter
     ) 
 {
+	int stringmaxlen = 500;
+	
     // ==================================
     // CREATE FPS AND START CONF
     // ==================================
 
-    char fpsname[200];
+    char fpsname[stringmaxlen];
     long pindex = (long) getpid();  // index used to differentiate multiple calls to function
     // if we don't have anything more informative, we use PID
     FUNCTION_PARAMETER_STRUCT fps;
-    sprintf(fpsname, "mlat-%s-%s", dmname, wfsname);
+    snprintf(fpsname, stringmaxlen, "mlat-%s-%s", dmname, wfsname);
     AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_FPSINIT);
 
 
@@ -1347,10 +1352,12 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
 
 long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
 {
+	int stringmaxlen = 200;
+	
     long IDout;
     uint32_t *sizeout;
     long NBmodes;
-    char fname[200];
+    char fname[stringmaxlen];
     long IDmodeval;
     long m, blk, i;
     long cnt;
@@ -1363,8 +1370,8 @@ long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
     float alpha = 0.0001;
 
 
-    if(sprintf(fname, "aol%ld_modeval", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    if(snprintf(fname, 32, "aol%ld_modeval", loop) < 1)
+        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
 
     IDmodeval = read_sharedmem_image(fname);
     NBmodes = data.image[IDmodeval].md[0].size[0];
@@ -1385,8 +1392,8 @@ long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
 		long ID;
 		long n;
 		
-        if(sprintf(fname, "aol%ld_DMmodes%02ld", loop, blk) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        if(snprintf(fname, stringmaxlen, "aol%ld_DMmodes%02ld", loop, blk) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
 
         ID = read_sharedmem_image(fname);
         n = data.image[ID].md[0].size[2];
@@ -1411,14 +1418,14 @@ long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
     sizeout[0] = NBblock;
     sizeout[1] = 1;
 
-    if(sprintf(fname, "aol%ld_blockRMS", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    if(snprintf(fname, stringmaxlen, "aol%ld_blockRMS", loop) < 1)
+        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
 
     IDblockRMS = create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(fname, 10);
 
-    if(sprintf(fname, "aol%ld_blockRMS_ave", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+    if(snprintf(fname, stringmaxlen, "aol%ld_blockRMS_ave", loop) < 1)
+        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
 
     IDblockRMS_ave = create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(fname, 10);
@@ -1472,15 +1479,17 @@ long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
 
 int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
 {
+	int stringmaxlen = 200;
+	
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
     if(aoloopcontrol_var.aoconfID_DMmodes==-1)
     {
-		char name[200];
+		char name[stringmaxlen];
 		
-        if(sprintf(name, "aol%ld_DMmodes", LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        if(snprintf(name, stringmaxlen, "aol%ld_DMmodes", LOOPNUMBER) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_DMmodes = read_sharedmem_image(name);
     }
@@ -1707,21 +1716,23 @@ int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_n
 //
 long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes, long StartMode)
 {
+	int stringmaxlen = 200;
+	
     long IDout;
     long xsize, ysize, xysize;
     long ii, kk;
     float ampl0;
     float ampl;
     float pha0;
-    char name[200];
+    char name[stringmaxlen];
     long m, m1;
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
     if(aoloopcontrol_var.aoconfID_DMmodes==-1)
     {
-        if(sprintf(name, "aol%ld_DMmodes", LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        if(snprintf(name, stringmaxlen, "aol%ld_DMmodes", LOOPNUMBER) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_DMmodes = read_sharedmem_image(name);
     }
@@ -2163,19 +2174,21 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
     double  dtlag
 )
 {
+	int stringmaxlen = 500;
+	
     DIR *d0;
     struct dirent *dir;
-    char datadirstream[500];
+    char datadirstream[stringmaxlen];
     char *ext;
     char *tmpstring;
-    char line[512];
+    char line[stringmaxlen];
 
 
     StreamDataFile *datfile;
     long NBdatFiles;
 
     FILE *fp;
-    char fname[500];
+    char fname[stringmaxlen];
     long cnt;
     double valf1, valf2;
     long vald1, vald2, vald3, vald4;
@@ -2254,13 +2267,13 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
         if(stream==0)
         {
             dtoffset = 0.0; // stream 0 is used as reference
-            sprintf(datadirstream, "%s/%s", datadir, stream0);
+            snprintf(datadirstream, stringmaxlen, "%s/%s", datadir, stream0);
         }
         else
         {
             dtoffset = +dtlag; // stream 1 is lagging behind by dtlag, so we bring it back in time
             // this is achieved by pushing/delaying the output timing window
-            sprintf(datadirstream, "%s/%s", datadir, stream1);
+            snprintf(datadirstream, stringmaxlen, "%s/%s", datadir, stream1);
         }
 
         datfile = (StreamDataFile*) malloc(sizeof(StreamDataFile)*MaxNBdatFiles);
@@ -2299,7 +2312,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                         //
 
                         // Does timing file exist ?
-                        sprintf(fname, "%s/%s.timing", datadirstream, tmpstring);
+                        snprintf(fname, stringmaxlen, "%s/%s.timing", datadirstream, tmpstring);
                         if ( (fp=fopen(fname, "r")) == NULL )
                         {
                             char fnamein[256];
@@ -2307,9 +2320,9 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
                             printf("File %s : No timing info found -> creating\n", fname);
 
                             if(datfileOK == 1)
-                                sprintf(fnamein, "%s/%s.dat", datadirstream, tmpstring);
+                                snprintf(fnamein, stringmaxlen, "%s/%s.dat", datadirstream, tmpstring);
                             else
-                                sprintf(fnamein, "%s/%s.txt", datadirstream, tmpstring);
+                                snprintf(fnamein, stringmaxlen, "%s/%s.txt", datadirstream, tmpstring);
 
                             printf("input  : %s\n", fnamein);
                             printf("output : %s\n", fname);
@@ -2436,7 +2449,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
             // LOAD FITS FILE
             long IDc;
-            sprintf(fname, "%s/%s.fits", datadirstream, datfile[i].name);
+            snprintf(fname, stringmaxlen, "%s/%s.fits", datadirstream, datfile[i].name);
             printf("----------------------[%ld] LOADING FILE %s\n", i, fname);
             IDc = load_fits(fname, "im0C", 2);
 
@@ -2474,12 +2487,12 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
 
             long j;
 
-            sprintf(fname, "%s/%s.dat", datadirstream, datfile[i].name);
+            snprintf(fname, stringmaxlen, "%s/%s.dat", datadirstream, datfile[i].name);
 
 
             if((fp = fopen(fname, "r"))==NULL)
             {
-                sprintf(fname, "%s/%s.txt", datadirstream, datfile[i].name);
+                snprintf(fname, stringmaxlen, "%s/%s.txt", datadirstream, datfile[i].name);
 
                 if((fp = fopen(fname, "r"))==NULL) {
                     printf("Cannot open file \"%s.dat\" or \"%s.txt\"\n", datfile[i].name, datfile[i].name);
@@ -2705,7 +2718,7 @@ int AOloopControl_perfTest_mkSyncStreamFiles2(
             NBmissingFrame++;
 
 
-    sprintf(fname, "exptime.dat");
+    snprintf(fname, stringmaxlen, "exptime.dat");
     fp = fopen(fname, "w");
 
     fprintf(fp, "# Exposure time per output frame, unit = input frame\n");
