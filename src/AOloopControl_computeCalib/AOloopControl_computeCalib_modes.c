@@ -452,7 +452,7 @@ long AOloopControl_computeCalib_mkModes(
                     rms += data.image[ID].array.F[k*msizex*msizey+ii]*data.image[ID].array.F[k*msizex*msizey+ii]*data.image[IDmaskRM].array.F[ii];
                 }
                 rms = sqrt(rms/totm);
-                printf("Mode %ld   RMS = %lf\n", k, rms);
+                printf("[%5d] Mode %ld   RMS = %lf\n", __LINE__, k, rms);
 
                 fprintf(fp, "%5ld  %g ", k, rms);
 
@@ -528,7 +528,7 @@ long AOloopControl_computeCalib_mkModes(
                 long NBciter = 200;
                 for(citer=0; citer<NBciter; citer++)
                 {
-                    printf("Convolution [%3ld/%3ld]\n", citer, NBciter);
+                    printf("[%5d] Convolution [%3ld/%3ld]\n", __LINE__, citer, NBciter);
                     gauss_filter(ID_name, "modeg", 4.0*pow(1.0*(NBciter-citer)/NBciter,0.5), kernsize);
                     long IDg = image_ID("modeg");
                     uint_fast32_t  k;
@@ -555,7 +555,7 @@ long AOloopControl_computeCalib_mkModes(
             // load or create DM mask : union of dmslaved and dmmaskRM
             //IDmask = load_fits("dmmask.fits", "dmmask", 1);
 
-            printf("Create DM mask\n");
+            printf("[%5d] Create DM mask\n", __LINE__);
             fflush(stdout);
 
 
@@ -563,7 +563,7 @@ long AOloopControl_computeCalib_mkModes(
             //if(IDmask == -1)
             //{
             IDmask = create_2Dimage_ID("dmmask", msizex, msizey);
-            printf("IDs: %ld %ld %ld\n", IDmask, IDmaskRM, IDslaved);
+            printf("[%5d] IDs: %ld %ld %ld\n", __LINE__, IDmask, IDmaskRM, IDslaved);
             fflush(stdout);
             for(ii=0; ii<msizex*msizey; ii++)
             {
@@ -576,14 +576,14 @@ long AOloopControl_computeCalib_mkModes(
             //}
 
             // EDGE PIXELS IN IDmaskRM
-            printf("Create dmmaskRMedge\n");
+            printf("[%5d] Create dmmaskRMedge\n", __LINE__);
             fflush(stdout);
             IDmaskRMedge = AOloopControl_computeCalib_DMedgeDetect(data.image[IDmaskRM].md[0].name, "dmmaskRMedge");
             save_fits("dmmaskRMedge", "!dmmaskRMedge.fits");
 
 			
             // IDmaskRM pixels excluding edge
-            printf("Create dmmaskRMin\n");
+            printf("[%5d] Create dmmaskRMin\n", __LINE__);
             fflush(stdout);
             IDmaskRMin = create_2Dimage_ID("dmmaskRMin", msizex, msizey);
             for(ii=0; ii<msizex*msizey; ii++)
@@ -593,12 +593,12 @@ long AOloopControl_computeCalib_mkModes(
 
             save_fits(ID_name, "!./mkmodestmp/_test_fmodes0all00.fits");
 
-			printf("Running AOloopControl_computeCalib_DMextrapolateModes\n");
+			printf("[%5d] Running AOloopControl_computeCalib_DMextrapolateModes\n", __LINE__);
             fflush(stdout);
             IDtmp = AOloopControl_computeCalib_DMextrapolateModes(ID_name, "dmmaskRMin", "modesfreqcpa", "fmodes0test");
             save_fits("fmodes0test", "!fmodes0test.fits");
 
-			printf("Applying DM mask on %ud modes\n", data.image[ID].md[0].size[2]);
+			printf("[%5d] Applying DM mask on %ud modes\n", __LINE__, data.image[ID].md[0].size[2]);
 			fflush(stdout);
             for(m=0; m<data.image[ID].md[0].size[2]; m++)
             {
@@ -626,7 +626,7 @@ long AOloopControl_computeCalib_mkModes(
 
 
 
-        printf("SAVING MODES : %s...\n", ID_name);
+        printf("[%5d] SAVING MODES : %s...\n", __LINE__, ID_name);
         save_fits(ID_name, "!./mkmodestmp/fmodes0all_00.fits");
 
 
@@ -712,7 +712,7 @@ long AOloopControl_computeCalib_mkModes(
 
 
         long IDmodes0all = image_ID(ID_name);
-        printf("DONE SAVING\n");
+        printf("[%5d] DONE SAVING\n", __LINE__);
 
         // time : 0:04
 
@@ -735,7 +735,7 @@ long AOloopControl_computeCalib_mkModes(
         wfssize = wfsxsize*wfsysize;
         IDm = create_3Dimage_ID("fmodesWFS00all", wfsxsize, wfsysize, data.image[ID].md[0].size[2]);
 
-        printf("size: %ld %ld %ld\n", (long) data.image[ID].md[0].size[2], msizexy, wfssize);
+        printf("[%5d] size: %ld %ld %ld\n", __LINE__, (long) data.image[ID].md[0].size[2], msizexy, wfssize);
         printf("\n");
 
         long act1, act2;
@@ -1003,12 +1003,12 @@ long AOloopControl_computeCalib_mkModes(
         // time : 00:42
 
         /// STEP 3: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim00 FOR CUTOFF -> fmodes1all.fits  (DM space)
-        printf("STEP 3: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim00 FOR CUTOFF -> fmodes1all.fits  (DM space)\n");
+        printf("[%5d] STEP 3: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim00 FOR CUTOFF -> fmodes1all.fits  (DM space)\n", __LINE__);
         fflush(stdout);
 
         for(mblock=0; mblock<NBmblock; mblock++)
         {
-            printf("\nMODE BLOCK %ld\n", mblock);
+            printf("\n[%5d] MODE BLOCK %ld\n", __LINE__, mblock);
             fflush(stdout);
 
             if(sprintf(imname, "fmodes0_%02ld", mblock) < 1)
@@ -1018,7 +1018,7 @@ long AOloopControl_computeCalib_mkModes(
             //sprintf(fname, "!./mkmodestmp/fmodes0_%02ld.fits", mblock);
             //save_fits(imname, fname);
 
-            printf("SVD decomp ... (%ld) .... ", (long) data.image[image_ID(imname)].md[0].size[2]);
+            printf("[%5d] SVD decomp ... (%ld) .... ", __LINE__, (long) data.image[image_ID(imname)].md[0].size[2]);
             fflush(stdout);
             linopt_compute_SVDdecomp(imname, "svdmodes", "svdcoeff");
             printf("DONE\n");
@@ -1032,7 +1032,7 @@ long AOloopControl_computeCalib_mkModes(
                 if(data.image[IDSVDcoeff].array.F[m] > SVDlim00*svdcoeff0)
                     cnt++;
             }
-            printf("STEP3  -  BLOCK %ld/%ld: keeping %ld / %ld modes  ( %f %f ) [%ld  %ld %ld]\n", mblock, NBmblock, cnt, m, SVDlim00, svdcoeff0, (long) data.image[IDSVDcoeff].md[0].size[0], msizex, msizey);
+            printf("[%5d] STEP3  -  BLOCK %ld/%ld: keeping %ld / %ld modes  ( %f %f ) [%ld  %ld %ld]\n", __LINE__, mblock, NBmblock, cnt, m, SVDlim00, svdcoeff0, (long) data.image[IDSVDcoeff].md[0].size[0], msizex, msizey);
             fflush(stdout);
 
             if(sprintf(imname1, "fmodes1_%02ld", mblock) < 1)
@@ -1076,7 +1076,7 @@ long AOloopControl_computeCalib_mkModes(
 
         /// STEP 4: REMOVE MODES THAT ARE CONTAINED IN PREVIOUS BLOCKS, AND ENFORCE DM-SPACE ORTHOGONALITY BETWEEN BLOCKS -> fmodes2all.fits  (DM space)
         /// fmodes1all -> fmodes2all
-        printf("STEP 4: REMOVE MODES THAT ARE CONTAINED IN PREVIOUS BLOCKS, AND ENFORCE DM-SPACE ORTHOGONALITY BETWEEN BLOCKS -> fmodes2all.fits  (DM space)\n");
+        printf("[%5d] STEP 4: REMOVE MODES THAT ARE CONTAINED IN PREVIOUS BLOCKS, AND ENFORCE DM-SPACE ORTHOGONALITY BETWEEN BLOCKS -> fmodes2all.fits  (DM space)\n", __LINE__);
         fflush(stdout);
 
         IDSVDmask = create_2Dimage_ID("SVDmask", msizex, msizey);
@@ -1138,14 +1138,14 @@ long AOloopControl_computeCalib_mkModes(
             cnt = 0;
             for(m=0; m<MBLOCK_NBmode[mblock]; m++)
                 cnt += mok[m];
-            printf("====== STEP4  -  BLOCK %ld : keeping %ld / %ld modes\n", mblock, cnt, MBLOCK_NBmode[mblock]);
+            printf("[%5d] ====== STEP4  -  BLOCK %ld : keeping %ld / %ld modes\n", __LINE__, mblock, cnt, MBLOCK_NBmode[mblock]);
             fflush(stdout);
             if(cnt>0)
             {
                 if(sprintf(imname, "fmodes2_%02ld", mblock) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-                printf("saving result %s \n", imname);
+                printf("[%5d] saving result %s \n", __LINE__, imname);
                 fflush(stdout);
                 IDm = create_3Dimage_ID(imname, msizex, msizey, cnt);
                 m1 = 0;
@@ -1155,7 +1155,7 @@ long AOloopControl_computeCalib_mkModes(
                     {
                         for(ii=0; ii<msizexy; ii++)
                             data.image[IDm].array.F[m1*msizex*msizey+ii] = data.image[MBLOCK_ID[mblock]].array.F[m*msizexy+ii];
-                        printf("BLOCK %ld   [%ld]  m1 = %ld / %ld\n", mblock, IDm, m1, cnt);
+                        printf("[%5d] BLOCK %ld   [%ld]  m1 = %ld / %ld\n", __LINE__, mblock, IDm, m1, cnt);
                         fflush(stdout);
                         m1++;
                     }
@@ -1210,16 +1210,16 @@ long AOloopControl_computeCalib_mkModes(
         /// STEP 5: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim01 FOR CUTOFF -> fmodes2ball.fits  (DM space)
         for(mblock=0; mblock<NBmblock; mblock++)
         {
-            printf("====== STEP5  -  MODE BLOCK %ld\n", mblock);
+            printf("[%5d] ====== STEP5  -  MODE BLOCK %ld\n", __LINE__, mblock);
             fflush(stdout);
 
             if(sprintf(imname, "fmodes2_%02ld", mblock) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
-            printf("SVD decomp ...");
+                
+            printf("[%5d] SVD decomp ...", __LINE__);
             fflush(stdout);
             linopt_compute_SVDdecomp(imname, "svdmodes", "svdcoeff");
-            printf("DONE\n");
+            printf("[%5d] DONE\n", __LINE__);
             fflush(stdout);
             cnt = 0;
             IDSVDcoeff = image_ID("svdcoeff");
@@ -1238,7 +1238,7 @@ long AOloopControl_computeCalib_mkModes(
             }
             fclose(fpcoeff);
 
-            printf("BLOCK %ld/%ld: keeping %ld / %ld modes\n", mblock, NBmblock, cnt, m);
+            printf("[%5d] BLOCK %ld/%ld: keeping %ld / %ld modes\n", __LINE__, mblock, NBmblock, cnt, m);
             fflush(stdout);
 
             if(sprintf(imname1, "fmodes2b_%02ld", mblock) < 1)
@@ -1354,7 +1354,7 @@ long AOloopControl_computeCalib_mkModes(
         {   // check size
             if(data.image[IDzrespM].md[0].size[2]!=msizexy)
             {
-                printf("ERROR: zrespM has wrong z size : %ld, should be %ld\n", (long) data.image[IDzrespM].md[0].size[2], (long) msizexy);
+                printf("[%d] ERROR: zrespM has wrong z size : %ld, should be %ld\n", __LINE__, (long) data.image[IDzrespM].md[0].size[2], (long) msizexy);
                 exit(0);
             }
 
@@ -1367,7 +1367,7 @@ long AOloopControl_computeCalib_mkModes(
             long IDwfsmask = image_ID("wfsmask");
             if((wfsxsize!=data.image[IDwfsmask].md[0].size[0])||(wfsysize!=data.image[IDwfsmask].md[0].size[1]))
             {
-                printf("ERROR: File wfsmask has wrong size\n");
+                printf("[%5d] ERROR: File wfsmask has wrong size\n", __LINE__);
                 exit(0);
             }
             if(IDwfsmask==-1)
@@ -1381,7 +1381,7 @@ long AOloopControl_computeCalib_mkModes(
 
             for(mblock=0; mblock<NBmblock; mblock++)
             {
-                printf("BLOCK %ld has %ld modes\n", mblock, MBLOCK_NBmode[mblock]);
+                printf("[%5d] BLOCK %ld has %ld modes\n", __LINE__, mblock, MBLOCK_NBmode[mblock]);
                 fflush(stdout);
 
 
@@ -1415,7 +1415,7 @@ long AOloopControl_computeCalib_mkModes(
                         fpLOcoeff = fopen(fnameLOcoeff, "w");
                         if(fpLOcoeff == NULL)
                         {
-                            printf("ERROR: cannot create file \"LOcoeff1.txt\"\n");
+                            printf("[%d] ERROR: cannot create file \"LOcoeff1.txt\"\n", __LINE__);
                             exit(0);
                         }
 
@@ -1642,7 +1642,7 @@ long AOloopControl_computeCalib_mkModes(
                 cnt = 0;
                 for(m=0; m<MBLOCK_NBmode[mblock]; m++)
                     cnt += mok[m];
-                printf("====== WFS BLOCK %ld : keeping %ld / %ld modes\n", mblock, cnt, MBLOCK_NBmode[mblock]);
+                printf("[%5d] ====== WFS BLOCK %ld : keeping %ld / %ld modes\n", __LINE__,  mblock, cnt, MBLOCK_NBmode[mblock]);
 
                 if(cnt>0)
                 {
@@ -1675,13 +1675,13 @@ long AOloopControl_computeCalib_mkModes(
                     {
                         if(mok[m]==1)
                         {
-                            printf("writing %ld / %ld  ->  %ld / %ld        \n", m, (long) data.image[IDmwfs].md[0].size[2], m1, (long) data.image[IDm].md[0].size[2]);
+                            printf("[%5d] writing %ld / %ld  ->  %ld / %ld        \n", __LINE__, m, (long) data.image[IDmwfs].md[0].size[2], m1, (long) data.image[IDm].md[0].size[2]);
 
-                            printf("max index IDmwfs1 %ld  = %ld / %ld    [ %ld %ld %ld ]\n", (long) m1, (long) (m1*wfssize+wfssize-1), (long) (data.image[IDmwfs1].md[0].size[0]*data.image[IDmwfs1].md[0].size[1]*data.image[IDmwfs1].md[0].size[2]), (long) data.image[IDmwfs1].md[0].size[0], (long) data.image[IDmwfs1].md[0].size[1], (long) data.image[IDmwfs1].md[0].size[2]);
-                            printf("max index IDmwfs  %ld  = %ld / %ld    [ %ld %ld %ld ]\n", (long) m, (long) (m*wfssize+wfssize-1), (long) (data.image[IDmwfs].md[0].size[0]*data.image[IDmwfs].md[0].size[1]*data.image[IDmwfs].md[0].size[2]), (long) data.image[IDmwfs].md[0].size[0], (long) data.image[IDmwfs].md[0].size[1], (long) data.image[IDmwfs].md[0].size[2]);
+                            printf("[%5d] max index IDmwfs1 %ld  = %ld / %ld    [ %ld %ld %ld ]\n", __LINE__, (long) m1, (long) (m1*wfssize+wfssize-1), (long) (data.image[IDmwfs1].md[0].size[0]*data.image[IDmwfs1].md[0].size[1]*data.image[IDmwfs1].md[0].size[2]), (long) data.image[IDmwfs1].md[0].size[0], (long) data.image[IDmwfs1].md[0].size[1], (long) data.image[IDmwfs1].md[0].size[2]);
+                            printf("[%5d] max index IDmwfs  %ld  = %ld / %ld    [ %ld %ld %ld ]\n", __LINE__, (long) m, (long) (m*wfssize+wfssize-1), (long) (data.image[IDmwfs].md[0].size[0]*data.image[IDmwfs].md[0].size[1]*data.image[IDmwfs].md[0].size[2]), (long) data.image[IDmwfs].md[0].size[0], (long) data.image[IDmwfs].md[0].size[1], (long) data.image[IDmwfs].md[0].size[2]);
 
-                            printf("max index IDmdm1  %ld  = %ld / %ld    [ %ld %ld %ld ]\n", (long) m1, (long) (m1*msizexy+msizexy-1), (long) (data.image[IDmdm1].md[0].size[0]*data.image[IDmdm1].md[0].size[1]*data.image[IDmdm1].md[0].size[2]), (long) data.image[IDmdm1].md[0].size[0], (long) data.image[IDmdm1].md[0].size[1], (long) data.image[IDmdm1].md[0].size[2]);
-                            printf("max index IDmdm   %ld  = %ld / %ld    [ %ld %ld %ld ]\n", (long) m, (long) (m*msizexy+msizexy-1), (long) (data.image[IDmdm].md[0].size[0]*data.image[IDmdm].md[0].size[1]*data.image[IDmdm].md[0].size[2]), (long) data.image[IDmdm].md[0].size[0], (long) data.image[IDmdm].md[0].size[1], (long) data.image[IDmdm].md[0].size[2]);
+                            printf("[%5d] max index IDmdm1  %ld  = %ld / %ld    [ %ld %ld %ld ]\n", __LINE__, (long) m1, (long) (m1*msizexy+msizexy-1), (long) (data.image[IDmdm1].md[0].size[0]*data.image[IDmdm1].md[0].size[1]*data.image[IDmdm1].md[0].size[2]), (long) data.image[IDmdm1].md[0].size[0], (long) data.image[IDmdm1].md[0].size[1], (long) data.image[IDmdm1].md[0].size[2]);
+                            printf("[%5d] max index IDmdm   %ld  = %ld / %ld    [ %ld %ld %ld ]\n", __LINE__, (long) m, (long) (m*msizexy+msizexy-1), (long) (data.image[IDmdm].md[0].size[0]*data.image[IDmdm].md[0].size[1]*data.image[IDmdm].md[0].size[2]), (long) data.image[IDmdm].md[0].size[0], (long) data.image[IDmdm].md[0].size[1], (long) data.image[IDmdm].md[0].size[2]);
 
 
                             fflush(stdout);//TEST
@@ -1694,11 +1694,11 @@ long AOloopControl_computeCalib_mkModes(
                         }
                         else
                         {
-                            printf("Skipping %ld / %ld\n", m, (long) data.image[IDmwfs].md[0].size[2]);
+                            printf("[%5d] Skipping %ld / %ld\n", __LINE__, m, (long) data.image[IDmwfs].md[0].size[2]);
                             fflush(stdout);
                         }
                     }
-                    printf("STEP 0000\n");
+                    printf("[%5d] STEP 0000\n", __LINE__);
                     fflush(stdout);//TEST
 
                     if(sprintf(imname1, "fmodesWFS1_%02ld", mblock) < 1)
@@ -1707,12 +1707,12 @@ long AOloopControl_computeCalib_mkModes(
                     if(sprintf(fname1, "!./mkmodestmp/fmodesWFS1_%02ld.fits", mblock) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-                    printf("   saving   %s -> %s\n", imname1, fname1);
+                    printf("[%5d]    saving   %s -> %s\n", __LINE__, imname1, fname1);
                     fflush(stdout);//TEST
 
                     save_fits(imname1, fname1);
 
-                    printf("STEP 0001\n");
+                    printf("[%5d] STEP 0001\n", __LINE__);
                     fflush(stdout);//TEST
 
                     if(sprintf(imname1, "fmodes3_%02ld", mblock) < 1)
@@ -1731,7 +1731,7 @@ long AOloopControl_computeCalib_mkModes(
                     printf("ERROR: keeping no mode in block !!!\n");
                     exit(0);
                 }
-                printf("STEP 0010\n");
+                printf("[%5d] STEP 0010\n", __LINE__);
                 fflush(stdout);//TEST
 
                 MBLOCK_NBmode[mblock] = cnt;
@@ -1740,7 +1740,7 @@ long AOloopControl_computeCalib_mkModes(
             delete_image_ID("SVDmask");
             delete_image_ID("SVDmodein");
 
-            printf("STEP 0020\n");
+            printf("[%5d] STEP 0020\n", __LINE__);
             fflush(stdout);//TEST
 
             free(mok);
@@ -1818,7 +1818,7 @@ long AOloopControl_computeCalib_mkModes(
             fclose(fp);
         }
 
-        printf("%ld blocks\n", NBmblock);
+        printf("[%5d] %ld blocks\n", __LINE__, NBmblock);
 
 
 
@@ -2038,7 +2038,7 @@ long AOloopControl_computeCalib_mkModes(
         /// WFS MODES, MODAL CONTROL MATRICES
         for(mblock=0; mblock<NBmblock; mblock++)
         {
-            printf(".... BLOCK %ld has %ld modes\n", mblock, MBLOCK_NBmode[mblock]);
+            printf("[%5d] .... BLOCK %ld has %ld modes\n", __LINE__, mblock, MBLOCK_NBmode[mblock]);
             fflush(stdout);
 
             if(sprintf(imname, "fmodesWFS_%02ld", mblock) < 1)
@@ -2063,11 +2063,11 @@ long AOloopControl_computeCalib_mkModes(
 
 
 
-                    printf("-- COMPUTE MODAL CONTROL MATRICES\n");
+                    printf("[%5d] -- Bock %ld/%ld COMPUTE MODAL CONTROL MATRICES\n", __LINE__, mblock, NBmblock);
                     fflush(stdout);
 
                     // COMPUTE MODAL CONTROL MATRICES
-                    printf("COMPUTE CONTROL MATRIX\n");
+                    printf("[%5d] Block %ld/%ld COMPUTE CONTROL MATRIX\n", __LINE__, mblock, NBmblock);
                     float SVDlim1 = 0.01; // WFS filtering (ONLY USED FOR FULL SINGLE STEP INVERSION)
 #ifdef HAVE_MAGMA
                     CUDACOMP_magma_compute_SVDpseudoInverse(imname, imnameCM, SVDlim1, 10000, "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
@@ -2082,12 +2082,16 @@ long AOloopControl_computeCalib_mkModes(
 
                     save_fits(imnameCM, fname);
 
-                    printf("-- COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX\n");
+                    printf("[%5d] -- Block %ld/%ld COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX\n", __LINE__, mblock, NBmblock);
                     fflush(stdout);
 
                     // COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX
                     sprintf(imname, "fmodes_%02ld", mblock);
+                    printf("[%5d] Block %ld/%ld : run AOloopControl_computeCalib_compute_CombinedControlMatrix\n", __LINE__, mblock, NBmblock);
+                    fflush(stdout);
                     AOloopControl_computeCalib_compute_CombinedControlMatrix(imnameCM, imname, "wfsmask", "dmmask", imnameCMc, imnameCMcact);
+                    printf("[%5d] Block %ld/%ld : AOloopControl_computeCalib_compute_CombinedControlMatrix DONE\n", __LINE__, mblock, NBmblock);
+                    fflush(stdout);
 
 
                     if(sprintf(fname, "!./mkmodestmp/cmatc_%02ld.fits", mblock) < 1)
@@ -2109,7 +2113,7 @@ long AOloopControl_computeCalib_mkModes(
             }
             else
             {
-                printf("LOADING WFS MODES, MODAL CONTROL MATRICES: block %ld\n", mblock);
+                printf("[%5d] LOADING WFS MODES, MODAL CONTROL MATRICES: block %ld/%ld\n", __LINE__, mblock, NBmblock);
                 fflush(stdout);
 
                 //	list_image_ID();
@@ -2136,6 +2140,11 @@ long AOloopControl_computeCalib_mkModes(
             }
         }
 
+
+
+		printf("[%5d] assembling fmodesWFSall\n", __LINE__);
+		fflush(stdout);
+		
         cnt = 0;
         for(mblock=0; mblock<NBmblock; mblock++)
             cnt += MBLOCK_NBmode[mblock];
@@ -2164,18 +2173,30 @@ long AOloopControl_computeCalib_mkModes(
         save_fits("fmodesWFSall", "!./mkmodestmp/fmodesWFSall.fits");
 
 
+		printf("[%5d] writing ./mkmodestmp/NBmodes.txt\n", __LINE__);
+		fflush(stdout);
+
         fp = fopen("./mkmodestmp/NBmodes.txt", "w");
         fprintf(fp, "%ld\n", cnt);
         fclose(fp);
 
 
+
+
         cnt = 0;
         for(mblock=0; mblock<NBmblock; mblock++)
             cnt += MBLOCK_NBmode[mblock];
+		printf("[%5d] assembling cmatall size %ld %ld %ld\n", __LINE__, wfsxsize, wfsysize, cnt);
+		fflush(stdout);            
+        
+        
         long IDcmatall = create_3Dimage_ID("cmatall", wfsxsize, wfsysize, cnt);
         cnt = 0;
         for(mblock=0; mblock<NBmblock; mblock++)
         {
+			printf("[%5d]   block %ld/%ld  size %ld  %ld\n", __LINE__, mblock, NBmblock, wfssize, MBLOCK_NBmode[mblock]);
+			fflush(stdout);
+			
             if(sprintf(imname, "cmat_%02ld", mblock) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
@@ -2220,9 +2241,15 @@ long AOloopControl_computeCalib_mkModes(
     }
     // time : 07:43
 
+	printf("[%5d] DONE\n", __LINE__);
+	fflush(stdout);   
+
 
     return(ID);
 }
+
+
+
 
 
 /*** \brief Creates control matrices per block, using native modes

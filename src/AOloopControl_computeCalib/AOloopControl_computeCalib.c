@@ -151,7 +151,8 @@ int_fast8_t AOloopControl_computeCalib_mkloDMmodes_cli() {
 /** @brief CLI function for AOloopControl_computeCalib_ComputeCM */
 
 int_fast8_t AOloopControl_computeCalib_ComputeCM_cli() {
-    char fpsname[200];
+    int stringmaxlen = 200;
+    char fpsname[stringmaxlen];
 
     // First, we try to execute function through FPS interface
     if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
@@ -161,9 +162,9 @@ int_fast8_t AOloopControl_computeCalib_ComputeCM_cli() {
         //
         if(data.processnameflag == 0) { // name fps to something different than the process name
             if(strlen(data.cmdargtoken[2].val.string)>0)
-                sprintf(fpsname, "compfCM-%s", data.cmdargtoken[2].val.string);
+                snprintf(fpsname, stringmaxlen, "compfCM-%s", data.cmdargtoken[2].val.string);
             else
-                sprintf(fpsname, "compfCM");
+                snprintf(fpsname, stringmaxlen, "compfCM");
         } else { // Automatically set fps name to be process name up to first instance of character '.'
             strcpy(fpsname, data.processname0);
         }
@@ -196,7 +197,8 @@ int_fast8_t AOloopControl_computeCalib_ComputeCM_cli() {
 
 /** @brief CLI function for AOloopControl_mkCM */
 int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
-    char fpsname[200];
+	int stringmaxlen = 200;
+    char fpsname[stringmaxlen];
 
 
     printf("LINE %d\n", __LINE__);
@@ -211,11 +213,11 @@ int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
             // the process has not been named with -n CLI option
             // name fps to something different than the process name
             if(strlen(data.cmdargtoken[2].val.string)>0) {
-                sprintf(fpsname, "compsCM-%s", data.cmdargtoken[2].val.string);
+                snprintf(fpsname, stringmaxlen, "compsCM-%s", data.cmdargtoken[2].val.string);
                 printf("USING %s as fpsname\n", fpsname);
             }
             else {
-                sprintf(fpsname, "compsCM");
+                snprintf(fpsname, stringmaxlen, "compsCM");
                 printf("USING %s default fpsname\n", fpsname);
             }
 
@@ -816,8 +818,8 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     time(&tnow);
     tmnow = gmtime(&tnow);
 
-    printf("TIMESTRING:  %04d %02d %02d  %02d:%02d:%02d\n", 1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
-    sprintf(datestring, "%04d-%02d-%02d_%02d:%02d:%02d", 1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
+    printf("TIMESTRING:  %04d%02d%02dT%02d%02d%02d\n", 1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
+    sprintf(datestring, "%04d%02d%02dT%02d%02d%02d", 1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
 
     // MaskMode = 0  : tapered masking
     // MaskMode = 1  : STRICT masking
@@ -829,58 +831,95 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
 
 
 
+
     AOloopControl_computeCalib_mkModes("fmodes", DMxsize, DMysize, CPAmax, deltaCPA, align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim);
 
+
+    printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
+    fflush(stdout);
+
     // save results to disk
-    char fnamesrc[500];
-    char fnamedest[500];
-    char fnametxt[500];
-    char stagedir[] = "conf_fCM_staged";
-    char command[500];
+    int maxstringlen = 1000;
+    char fnamesrc[maxstringlen];
+    char fnamedest[maxstringlen];
+    char fnametxt[maxstringlen];
+    char stagedir[] = "conf-fCM-staged";
+    char command[maxstringlen];
     FILE *fp;
 
-    sprintf(fnamesrc, "./mkmodestmp/fmodesall.fits");
-    sprintf(fnamedest, "DMmodes/DMmodes_%s.fits", datestring);
-    sprintf(fnametxt, "./%s/shmim.DMmodes.name.txt", stagedir);
+    printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
+    fflush(stdout);
 
-    sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+    snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodesall.fits");
+    snprintf(fnamedest, maxstringlen, "DMmodes/DMmodes_%s.fits", datestring);
+    snprintf(fnametxt, maxstringlen, "./%s/shmim.DMmodes.name.txt", stagedir);
+
+    printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
+    fflush(stdout);
+
+    snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
+    if(system(command) != 0) {
+        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    }
+
+    fp = fopen(fnametxt, "w");
+    if (fp == NULL) {
+        int errnum = errno;
+        printERROR(__FILE__,__func__,__LINE__, "fopen() returns NULL");
+        fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
+        exit(0);
+    } else {
+        fprintf(fp, "%s", fnamedest);
+        fclose(fp);
+    }
+
+
+    snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodesWFSall.fits");
+    snprintf(fnamedest, maxstringlen, "respM/respM_%s.fits", datestring);
+    snprintf(fnametxt, maxstringlen, "./%s/shmim.respM.name.txt", stagedir);
+
+    snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
     if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
     fp = fopen(fnametxt, "w");
-    fprintf(fp, "%s", fnamedest);
-    fclose(fp);
+    if (fp == NULL) {
+        int errnum = errno;
+        printERROR(__FILE__,__func__,__LINE__, "fopen() returns NULL");
+        fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
+        exit(0);
+    } else {
+        fprintf(fp, "%s", fnamedest);
+        fclose(fp);
+    }
 
 
+    snprintf(fnamesrc, maxstringlen, "./mkmodestmp/cmatall.fits");
+    snprintf(fnamedest, maxstringlen, "contrM/contrM_%s.fits", datestring);
+    snprintf(fnametxt, maxstringlen, "./%s/shmim.contrM.name.txt", stagedir);
 
-    sprintf(fnamesrc, "./mkmodestmp/fmodesWFSall.fits");
-    sprintf(fnamedest, "respM/respM_%s.fits", datestring);
-    sprintf(fnametxt, "./%s/shmim.respM.name.txt", stagedir);
 
-    sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+    snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
     if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
+    printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
+    fflush(stdout);
     fp = fopen(fnametxt, "w");
-    fprintf(fp, "%s", fnamedest);
-    fclose(fp);
-
-
-    sprintf(fnamesrc, "./mkmodestmp/cmatall.fits");
-    sprintf(fnamedest, "contrM/contrM_%s.fits", datestring);
-    sprintf(fnametxt, "./%s/shmim.contrM.name.txt", stagedir);
-
-    sprintf(command, "cp %s %s", fnamesrc, fnamedest);
-    if(system(command) != 0) {
-        printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+    if (fp == NULL) {
+        int errnum = errno;
+        printERROR(__FILE__,__func__,__LINE__, "fopen() returns NULL");
+        fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
+        exit(0);
+    } else {
+        fprintf(fp, "%s", fnamedest);
+        fclose(fp);
     }
-    fp = fopen(fnametxt, "w");
-    fprintf(fp, "%s", fnamedest);
-    fclose(fp);
 
+    printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
+    fflush(stdout);
 
-
-    sprintf(command, "cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt", stagedir);
+    snprintf(command, maxstringlen, "cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt", stagedir);
     if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
@@ -890,71 +929,106 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     int OKloop = 1;
     for (int i=0; i<20; i++)
     {
-        sprintf(fnamesrc, "./mkmodestmp/fmodes_%02d.fits", i);
+
+        snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodes_%02d.fits", i);
 
         if(OKloop==1) {
-            if(is_fits_file(fnamesrc)==1)
+            if(is_fits_file(fnamesrc) == 1)
             {
+                printf("[%s %d] Archive [%d] to disk\n", __FILE__, __LINE__, i);
+                fflush(stdout);
+
                 printf("Found file %s\n", fnamesrc);
 
-                sprintf(fnamesrc, "./mkmodestmp/fmodes_%02d.fits", i);
-                sprintf(fnamedest, "DMmodes/DMmodes%02d_%s.fits", i, datestring);
-                sprintf(fnametxt, "./%s/shmim.DMmodes%02d.name.txt", stagedir, i);
-                sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodes_%02d.fits", i);
+                snprintf(fnamedest, maxstringlen, "DMmodes/DMmodes%02d_%s.fits", i, datestring);
+                snprintf(fnametxt, maxstringlen, "./%s/shmim.DMmodes%02d.name.txt", stagedir, i);
+                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
                     printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
-                fprintf(fp, "%s", fnamedest);
-                fclose(fp);
+                if (fp == NULL) {
+                    int errnum = errno;
+                    printERROR(__FILE__,__func__,__LINE__, "fopen() returns NULL");
+                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
+                    exit(0);
+                } else {
+                    fprintf(fp, "%s", fnamedest);
+                    fclose(fp);
+                }
 
-
-                sprintf(fnamesrc, "./mkmodestmp/fmodesWFS_%02d.fits", i);
-                sprintf(fnamedest, "respM/respM%02d_%s.fits", i, datestring);
-                sprintf(fnametxt, "./%s/shmim.respM%02d.name.txt", stagedir, i);
-                sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodesWFS_%02d.fits", i);
+                snprintf(fnamedest, maxstringlen, "respM/respM%02d_%s.fits", i, datestring);
+                snprintf(fnametxt, maxstringlen, "./%s/shmim.respM%02d.name.txt", stagedir, i);
+                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
                     printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
-                fprintf(fp, "%s", fnamedest);
-                fclose(fp);
+                if (fp == NULL) {
+                    int errnum = errno;
+                    printERROR(__FILE__,__func__,__LINE__, "fopen() returns NULL");
+                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
+                    exit(0);
+                } else {
+                    fprintf(fp, "%s", fnamedest);
+                    fclose(fp);
+                }
 
-
-                sprintf(fnamesrc, "./mkmodestmp/cmat_%02d.fits", i);
-                sprintf(fnamedest, "contrM/contrM%02d_%s.fits", i, datestring);
-                sprintf(fnametxt, "./%s/shmim.contrM%02d.name.txt", stagedir, i);
-                sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/cmat_%02d.fits", i);
+                snprintf(fnamedest, maxstringlen, "contrM/contrM%02d_%s.fits", i, datestring);
+                snprintf(fnametxt, maxstringlen, "./%s/shmim.contrM%02d.name.txt", stagedir, i);
+                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
                     printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
-                fprintf(fp, "%s", fnamedest);
-                fclose(fp);
+                if (fp == NULL) {
+                    int errnum = errno;
+                    printERROR(__FILE__,__func__,__LINE__, "fopen() returns NULL");
+                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
+                    exit(0);
+                } else {
+                    fprintf(fp, "%s", fnamedest);
+                    fclose(fp);
+                }
 
-
-                sprintf(fnamesrc, "./mkmodestmp/cmatc_%02d.fits", i);
-                sprintf(fnamedest, "contrMc/contrMc%02d_%s.fits", i, datestring);
-                sprintf(fnametxt, "./%s/shmim.contrMc%02d.name.txt", stagedir, i);
-                sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/cmatc_%02d.fits", i);
+                snprintf(fnamedest, maxstringlen, "contrMc/contrMc%02d_%s.fits", i, datestring);
+                snprintf(fnametxt, maxstringlen, "./%s/shmim.contrMc%02d.name.txt", stagedir, i);
+                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
                     printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
-                fprintf(fp, "%s", fnamedest);
-                fclose(fp);
+                if (fp == NULL) {
+                    int errnum = errno;
+                    printERROR(__FILE__,__func__,__LINE__, "fopen() returns NULL");
+                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
+                    exit(0);
+                } else {
+                    fprintf(fp, "%s", fnamedest);
+                    fclose(fp);
+                }
 
-
-                sprintf(fnamesrc, "./mkmodestmp/cmatcact_%02d.fits", i);
-                sprintf(fnamedest, "contrMcact/contrMcact%02d_%s.fits", i, datestring);
-                sprintf(fnametxt, "./%s/shmim.contrMcact%02d.name.txt", stagedir, i);
-                sprintf(command, "cp %s %s", fnamesrc, fnamedest);
+                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/cmatcact_%02d.fits", i);
+                snprintf(fnamedest, maxstringlen, "contrMcact/contrMcact%02d_%s.fits", i, datestring);
+                snprintf(fnametxt, maxstringlen, "./%s/shmim.contrMcact%02d.name.txt", stagedir, i);
+                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
                     printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
-                fprintf(fp, "%s", fnamedest);
-                fclose(fp);
+                if (fp == NULL) {
+                    int errnum = errno;
+                    printERROR(__FILE__,__func__,__LINE__, "fopen() returns NULL");
+                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
+                    exit(0);
+                } else {
+                    fprintf(fp, "%s", fnamedest);
+                    fclose(fp);
+                }
             }
             else {
                 OKloop = 0;
@@ -965,10 +1039,10 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     }
 
 
+    printf("[%s %d] DONE - disconnecting from FPS\n", __FILE__, __LINE__);
+    fflush(stdout);
 
-
-    function_parameter_struct_disconnect( &fps );
-
+	function_parameter_RUNexit( &fps );
 
     return RETURN_SUCCESS;
 
