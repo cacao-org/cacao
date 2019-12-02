@@ -3,10 +3,22 @@
 # Setup script
 
 # number of arguments to script
-NBARGS=0
+NBARGS=1
 
 
 # 
+# log messages
+LOGFILEDIR="$PWD/log"
+mkdir $LOGFILEDIR
+LOGFILENAME="${LOGFILEDIR}/$(basename $0).log"
+rm $LOGFILENAME
+
+function echolog {
+	echo $1
+	echo "$(date -u +"%Y%m%dT%H%M%S.%N %s.%N") $1" >> $LOGFILENAME
+}
+
+
 
 
 
@@ -30,13 +42,14 @@ SETTINGOK="1"  # switches to 0 if settings not OK
 
 
 
-
+USAGESTRING="$(basename $0) [-hCpr] <loopname>"
 
 
 
 function printHELP {
 echo "------------------------------------------------------------------------"
 echo "$(tput bold) $pname : cacao setup $(tput sgr0)"
+echo "source : $0"
 echo "------------------------------------------------------------------------"
 echo "  Initial setup for cacao"
 echo "  Will create work directory, install scripts and start DMcomb process and links DM to loop"
@@ -48,33 +61,19 @@ echo "$(tput bold) SUMMARY: HOW TO SETUP AND START CACAO SESSION ? $(tput sgr0)"
 echo ""
 echo "[STEP 1] Set essential environment variables"
 echo "         Create file $(tput bold)$(tput setaf 2) cacaovars.<loopname>.bash$(tput sgr0)"
-echo "         $(tput bold)$(tput setaf 5)\$ source ./cacaovars.<loopname>.bash$(tput sgr0)"
 echo ""
 echo "[STEP 2] OPTIONAL: Set function parameter values in file $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0)"
 echo "         syntax: \"setval <paramfullname> <value>\""
 echo ""
-echo "[STEP 3] Run setup"
-echo "         $(tput bold)$(tput setaf 5)\$ cacao-setup$(tput sgr0)"
+echo "[STEP 3] OPTIONAL: Test setup"
+echo "         $(tput bold)$(tput setaf 5)\$ cacao-setup -t <loopname>$(tput sgr0)"
 echo ""
-echo "[STEP 4] Enter the FPS control TUI to control and start processes."
-echo "         $(tput bold)$(tput setaf 5)\$ fpsCTRL $(tput sgr0)"
+echo "[STEP 4] Run setup"
+echo "         $(tput bold)$(tput setaf 5)\$ cacao-setup <loopname>$(tput sgr0)"
 echo ""
 echo "[STEP 5] Start cacao control TUI screens tmux session from working directory"
 echo "         $(tput bold)$(tput setaf 5)\$ cd <AOloop0> $(tput sgr0)"
 echo "         $(tput bold)$(tput setaf 5)\$ cacao.tmux $(tput sgr0)"
-echo ""
-echo ""
-echo "To review settings :"
-echo "         $(tput bold)$(tput setaf 5)\$ cacao_setup -p$(tput sgr0)"
-echo ""
-echo ""
-echo "$(tput bold) REQUIRED FOR INITIAL SETUP $(tput sgr0)"
-echo "  Essential setup parameters are required prior to setting up the working directory"
-echo "  This script depends on these parameters to be set and will return an error message if they are not."
-echo "  Essential parameters can be set by environment variables:"
-echo "  $ export VAR=\"value\""
-echo "  Run with -p option to list current settings without running script."
-echo "  For convenience, consider creating bash file and source it before running this script."
 echo ""
 echo ""
 echo "$(tput bold) ADDING FPS-ENABLED PROCESSES (OPTIONAL) $(tput sgr0)"
@@ -92,13 +91,13 @@ echo "  Alternate configuration file specified by -c option"
 echo ""
 echo ""
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-hCpr]"
+echo "     $USAGESTRING"
 echo ""
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
 echo "     $(tput bold)-C$(tput sgr0)            (C)lear all memory/files and exit"
-echo "     $(tput bold)-p$(tput sgr0)            (p)rint parameters and exit"
+echo "     $(tput bold)-t$(tput sgr0)            (t)est: print parameters and exit (do not start processes)"
 echo "     $(tput bold)-u$(tput sgr0)            (u)pdate more: do not quit/restart processes"
 echo "     $(tput bold)-r$(tput sgr0)            (r)un fps setval updates and exit"
 echo ""
@@ -188,19 +187,79 @@ fi
 
 function cacaosimCLEAR {
 
-echo "CLEARING"
+echolog "CLEARING"
 cd ${WORKDIR}
 
+
+# Stop RUN processes
+
+# try soft stop first (not implemented for all processes)
 if [ -f "./fpscmd/fpsrunstopscript" ]; then
 ./fpscmd/fpsrunstopscript     # stop all previous FPS run process(es)
 fi
+
+while IFS='' read -r line || [[ -n "$line" ]]; do
+	echo "runstop ${line}" >> ${fpsCTRLfifo}
+done < fpscmd/fpslist.txt
+
+
+
+# Stop CONF processes
 
 if [ -f "./fpscmd/fpsconfstopscript" ]; then
 ./fpscmd/fpsconfstopscript    # stop FPS CONF process(es)
 fi
 
+while IFS='' read -r line || [[ -n "$line" ]]; do
+	echo "confstop ${line}" >> ${fpsCTRLfifo}
+done < fpscmd/fpslist.txt
 
-tmux kill-session -t ${fpsCTRLtmuxname}
+
+# Exit fpsCTRL
+tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m
+tmux send-keys -t ${fpsCTRLtmuxname} "exit" C-m
+### SHOULD NOT BE REQUIRED:
+#tmux kill-session -t ${fpsCTRLtmuxname}
+
+
+# Remove FPS 
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    # Erase fps structures    
+    echolog "ERASING ${MILK_SHM_DIR}/$line.fps.shm"
+	echo "fpsrm $line" >> ${fpsCTRLfifo}
+### SHOULD NOT BE REQUIRED:
+#	rm ${MILK_SHM_DIR}/$line.fps.shm
+done < fpscmd/fpslist.txt
+
+
+
+# Exit tmux sessions 
+while IFS='' read -r line || [[ -n "$line" ]]; do
+tmux send-keys -t ${line}-run "exit" C-m &> /dev/null
+tmux send-keys -t ${line}-conf "exit" C-m
+
+### SHOULD NOT BE REQUIRED:
+#	tmux kill-session -t ${line}-run
+#	tmux kill-session -t ${line}-conf
+done < fpscmd/fpslist.txt
+
+
+
+
+# remove sym link
+rm ${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}
+rm ${MILK_SHM_DIR}/${CACAO_LOOPNAME}_fpsCTRL.fifo
+
+
+
+rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmC.im.shm
+rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmRM.im.shm
+rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmO.im.shm
+rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmdisp.im.shm
+rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmZP*.im.shm
+rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_wfsim.im.shm
+
+tmux send-keys -t cacao-${CACAO_LOOPNAME} "exit" C-m
 
 cd ${CURRDIR}
 
@@ -246,11 +305,11 @@ done
 
 
 CLEAR="0"
-CHECKMODE="0"
+TESTMODE="0"
 FPSSETPARAMCONF="0"
 UPDATEMODE="0"
 
-while getopts :hCpru FLAG; do
+while getopts :hCtru FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -260,8 +319,8 @@ while getopts :hCpru FLAG; do
       fi
       exit
       ;;
-    p) # print
-    CHECKMODE="1"
+    t) # test mode
+    TESTMODE="1"    
     ;;
     C) # clear
     CLEAR="1"
@@ -283,13 +342,18 @@ shift $((OPTIND-1))
 
 
 
-if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
 if [ "$#" -ne $NBARGS ]; then
     echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+	echo "Usage :"
+	echo "  $USAGESTRING"
+	echo ""
+    exit
 fi
-printHELP
-        exit
-fi
+
+CACAO_LOOPNAME="$1"
+
+
+
 
 
 
@@ -306,6 +370,23 @@ checkCommand fpsCTRL
 checkCommand milkStreamLink
 checkCommand milkFits2shm
 checkCommand milk-fpsmkcmd
+
+
+
+checkFile cacaovars.${CACAO_LOOPNAME}.bash
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo "$(tput setaf 1)$(tput bold) -> EXITING $(tput sgr0)"
+exit
+else
+echo ""
+fi
+
+
+export CACAO_LOOPNAME="$CACAO_LOOPNAME"
+
+source cacaovars.${CACAO_LOOPNAME}.bash
+
 
 
 echo ""
@@ -453,21 +534,27 @@ fi
 
 
 
-if [ "${CHECKMODE}" = "1" ]; then
+if [ "${TESTMODE}" = "1" ]; then
 exit
 fi
 
-
+# log messages
+mkdir $LOGFILEDIR
+rm $LOGFILENAME
 
 
 # ======================= SCRIPT CODE STARTS HERE =================================
 
-
-
+echolog "START $(basename $0)"
+echolog "WORKDIR        : ${WORKDIR}"
+echolog "CACAO_LOOPNAME : ${CACAO_LOOPNAME}"
+echolog "LOOPNUMBER     : ${LOOPNUMBER}"
+echolog "CACAO_ROOT     : ${CACAO_ROOT}"
 
 
 # ============ CREATE GENERAL PURPOSE TMUX SESSION ============
 if [ "$UPDATEMODE" = "0" ]; then
+echolog "creating tmux session cacao-${CACAO_LOOPNAME}"
 tmux new -d -s cacao-${CACAO_LOOPNAME}
 fi
 
@@ -477,11 +564,14 @@ fi
 
 
 if [ "$CLEAR" = "1" ]; then
+echolog "starting cacaosimCLEAR"
 cacaosimCLEAR
+echolog "END $(basename $0)"
 exit
 fi
 
 if [ "$FPSSETPARAMCONF" = "1" ]; then
+echolog "starting fpssetparamconf"
 fpssetparamconf
 exit
 fi
@@ -552,7 +642,7 @@ $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash
 
 
 
-echo "mv fpslist.txt ${WORKDIR}"
+echolog "mv fpslist.txt ${WORKDIR}"
 mv fpslist.txt ${WORKDIR}
 
 
@@ -600,12 +690,12 @@ fi
 
 
 
-
+echolog "running milk-fpsmkcmd"
 milk-fpsmkcmd                 # (re-)create FPS scripts in `./fpscmd/`
 
 
 
-
+echolog "running ./fpscmd/fpsinitscript"
 ./fpscmd/fpsinitscript        # (re-)create FPS shared memory structure(s)
 
 
@@ -641,6 +731,8 @@ echo "logsymlink ${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}" >> ${fpsCTRLfifo}
 fi
 
 
+
+
 # ===================================================================================
 # ========= INIT SETTINGS IMPORTED FROM CONF FILE ===================================
 # ===================================================================================
@@ -654,6 +746,8 @@ echo "${CACAO_DMINDEX}" > ./fpsconf/AOCONF/DMindex
 echo "${CACAO_DMxsize}" > ./fpsconf/AOCONF/DMxsize
 echo "${CACAO_DMysize}" > ./fpsconf/AOCONF/DMysize
 fi
+
+
 
 
 # ===================================================================================
@@ -672,6 +766,9 @@ milkStreamLink -p aol${LOOPNUMBER}_ wfsim
 fi
 
 
+
+
+
 # ===================================================================================
 # ======================== START RUN PROCESSES ======================================
 # ===================================================================================
@@ -681,14 +778,26 @@ fi
 # echo "runstart DMcomb-${DMINDEX}" >> ${fpsCTRLfifo}
 
 
-# finished - get back to current directory
-cd $CURRDIR
+
+
+clear 
 
 echo ""
 echo ""
 echo "cacao setup complete"
 echo ""
+echo "Processes :"
+echo ""
+cat fpscmd/fpslist.txt
+echo ""
+echo ""
+echo "To enter control screen: tmux a -t ${CACAO_LOOPNAME}"
+echo ""
 echo ""
 
 
 
+# finished - get back to current directory
+cd $CURRDIR
+
+echolog "END $(basename $0)"
