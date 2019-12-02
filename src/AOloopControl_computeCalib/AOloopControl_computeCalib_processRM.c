@@ -582,7 +582,8 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     // ===========================
 
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
-
+	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
+	fps.md->sourceline = __LINE__;
 
     // ===========================
     // ALLOCATE FPS ENTRIES 
