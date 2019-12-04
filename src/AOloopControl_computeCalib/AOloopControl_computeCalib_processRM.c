@@ -580,8 +580,8 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     // ===========================
     // SETUP FPS
     // ===========================
-
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
+	int SMfd = -1;
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
 	fps.md->sourceline = __LINE__;
 
@@ -658,7 +658,7 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     
     
 
-	function_parameter_FPCONFexit( &fps );
+	function_parameter_FPCONFexit( &fps, &SMfd );
 	    
 	return RETURN_SUCCESS;
 }
@@ -673,10 +673,10 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
-
+	int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
-    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1)
     {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
@@ -736,7 +736,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
 
 	delete_image_ID(cm_name);
 
-	function_parameter_RUNexit( &fps );
+	function_parameter_RUNexit( &fps, &SMfd );
 
 
     return RETURN_SUCCESS;
@@ -759,18 +759,19 @@ errno_t AOloopControl_computeCalib_mkCM(
     long pindex = (long) getpid();  // index used to differentiate multiple calls to function
     // if we don't have anything more informative, we use PID
 
+	int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS
     sprintf(fpsname, "compsCM-%06ld", pindex);
     AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_FPSINIT);
 
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE, &SMfd);
 
     functionparameter_SetParamValue_FLOAT64(&fps, ".SVDlim", SVDlim);
 
 
-    function_parameter_struct_disconnect(&fps);
+    function_parameter_struct_disconnect(&fps, &SMfd);
 
 
 

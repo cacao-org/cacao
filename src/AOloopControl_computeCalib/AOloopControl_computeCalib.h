@@ -67,7 +67,7 @@ long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name, const 
 long AOloopControl_computeCalib_DMslaveExt(const char *IDin_name, const char *IDmask_name, const char *IDsl_name, const char *IDout_name, float r0);
 
 
-long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yx, double r0, double r1, int MaskMode, int BlockNB, float SVDlim);
+long AOloopControl_computeCalib_mkModes(const char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yx, double r0, double r1, int MaskMode, int BlockNB, float SVDlim, char *stagedir);
 
 
 long AOloopControl_computeCalib_mkModes_Simple(const char *IDin_name, long NBmblock, long Cmblock, float SVDlim);

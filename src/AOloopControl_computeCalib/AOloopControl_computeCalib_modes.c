@@ -135,7 +135,8 @@ long AOloopControl_computeCalib_mkModes(
     double r1,
     int MaskMode,
     int BlockNB,
-    float SVDlim
+    float SVDlim,
+    char *stagedir
 )
 {
     FILE *fp;
@@ -1800,7 +1801,7 @@ long AOloopControl_computeCalib_mkModes(
         if(BlockNB<0)
         {
             char command[1000];
-            if(sprintf(command, "echo \"%ld\" > ./conf_staged/param_NBmodeblocks.txt", NBmblock) < 1)
+            if(sprintf(command, "echo \"%ld\" > ./%s/param_NBmodeblocks.txt", NBmblock, stagedir) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
             if(system(command) != 0)
@@ -1810,7 +1811,7 @@ long AOloopControl_computeCalib_mkModes(
         {
             if((fp = fopen("./conf/param_NBmodeblocks.txt", "r"))==NULL)
             {
-                printf("ERROR: cannot read file ./conf_staged/param_NBmodeblocks.txt\n");
+                printf("ERROR: cannot read file ./%s/param_NBmodeblocks.txt\n", stagedir);
                 exit(0);
             }
             if(fscanf(fp, "%50ld", &NBmblock) != 1)
@@ -1865,7 +1866,7 @@ long AOloopControl_computeCalib_mkModes(
                 char command[1000];
 
 
-                if(sprintf(command, "echo \"%f\" > ./conf_staged/block%02ld_SVDlim.txt", SVDlim, mblock) < 1)
+                if(sprintf(command, "echo \"%f\" > ./%s/block%02ld_SVDlim.txt", SVDlim,  stagedir, mblock) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
                 if(system(command) != 0)
@@ -2153,7 +2154,7 @@ long AOloopControl_computeCalib_mkModes(
         for(mblock=0; mblock<NBmblock; mblock++)
         {
             char command[1000];
-            if(sprintf(command, "echo \"%ld\" > ./conf_staged/block%02ld_NBmodes.txt", MBLOCK_NBmode[mblock], mblock) < 1)
+            if(sprintf(command, "echo \"%ld\" > ./%s/block%02ld_NBmodes.txt", MBLOCK_NBmode[mblock], stagedir, mblock) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
             if(system(command) != 0)
