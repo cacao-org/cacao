@@ -82,7 +82,8 @@ int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
 	uint16_t loopstatus;
 	
 	// SETUP FPS
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
+	int SMfd = -1;
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
 	fps.md->sourceline = __LINE__;
 
@@ -105,7 +106,7 @@ int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
 			functionparameter_CheckParametersAll(&fps);  // check all parameter values
 		}		
 	}
-	function_parameter_FPCONFexit( &fps );
+	function_parameter_FPCONFexit( &fps, &SMfd );
 
 
     return RETURN_SUCCESS;
@@ -123,9 +124,11 @@ int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_RUN(
 )
 {
 	FUNCTION_PARAMETER_STRUCT fps;
+	int SMfd = -1;
+	
 	int FPSINTERFACE = 1;
 	
-	if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
+	if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1)
 	{
 		printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
 		FPSINTERFACE = 0;
@@ -137,7 +140,7 @@ int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_RUN(
 
 
 	if(FPSINTERFACE == 1)
-		function_parameter_struct_disconnect(&fps);
+		function_parameter_struct_disconnect(&fps, &SMfd);
 
 
     return(0);
