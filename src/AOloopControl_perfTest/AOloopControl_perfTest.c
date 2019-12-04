@@ -226,44 +226,106 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_cli() {
 
 /** @brief CLI function for AOloopControl_TestDMmodeResp */
 int_fast8_t AOloopControl_perfTest_TestDMmodeResp_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,2)+CLI_checkarg(3,1)+CLI_checkarg(4,1)+CLI_checkarg(5,1)+CLI_checkarg(6,1)+CLI_checkarg(7,1)+CLI_checkarg(8,2)+CLI_checkarg(9,4)+CLI_checkarg(10,4)+CLI_checkarg(11,4)+CLI_checkarg(12,3)==0) {
-        AOloopControl_perfTest_TestDMmodeResp(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numf, data.cmdargtoken[5].val.numf, data.cmdargtoken[6].val.numf, data.cmdargtoken[7].val.numf, data.cmdargtoken[8].val.numl, data.cmdargtoken[9].val.string, data.cmdargtoken[10].val.string, data.cmdargtoken[11].val.string, data.cmdargtoken[12].val.string);
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,2)
+            + CLI_checkarg(3,1)
+            + CLI_checkarg(4,1)
+            + CLI_checkarg(5,1)
+            + CLI_checkarg(6,1)
+            + CLI_checkarg(7,1)
+            + CLI_checkarg(8,2)
+            + CLI_checkarg(9,4)
+            + CLI_checkarg(10,4)
+            + CLI_checkarg(11,4)
+            + CLI_checkarg(12,3)==0) {
+        AOloopControl_perfTest_TestDMmodeResp(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numf,
+            data.cmdargtoken[4].val.numf,
+            data.cmdargtoken[5].val.numf,
+            data.cmdargtoken[6].val.numf,
+            data.cmdargtoken[7].val.numf,
+            data.cmdargtoken[8].val.numl,
+            data.cmdargtoken[9].val.string,
+            data.cmdargtoken[10].val.string,
+            data.cmdargtoken[11].val.string,
+            data.cmdargtoken[12].val.string);
         return 0;
     }
     else return 1;
 }
+
+
 
 /** @brief CLI function for AOloopControl_TestDMmodes_Recovery */
 int_fast8_t AOloopControl_perfTest_TestDMmodes_Recovery_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,1)+CLI_checkarg(3,4)+CLI_checkarg(4,4)+CLI_checkarg(5,4)+CLI_checkarg(6,4)+CLI_checkarg(7,1)+CLI_checkarg(8,2)+CLI_checkarg(9,3)+CLI_checkarg(10,3)+CLI_checkarg(11,3)+CLI_checkarg(12,3)==0) {
-        AOloopControl_perfTest_TestDMmodes_Recovery(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numf, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.string, data.cmdargtoken[6].val.string, data.cmdargtoken[7].val.numf, data.cmdargtoken[8].val.numl, data.cmdargtoken[9].val.string, data.cmdargtoken[10].val.string, data.cmdargtoken[11].val.string, data.cmdargtoken[12].val.string);
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,1)
+            + CLI_checkarg(3,4)
+            + CLI_checkarg(4,4)
+            + CLI_checkarg(5,4)
+            + CLI_checkarg(6,4)
+            + CLI_checkarg(7,1)
+            + CLI_checkarg(8,2)
+            + CLI_checkarg(9,3)
+            + CLI_checkarg(10,3)
+            + CLI_checkarg(11,3)
+            + CLI_checkarg(12,3)==0) {
+        AOloopControl_perfTest_TestDMmodes_Recovery(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numf,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string,
+            data.cmdargtoken[5].val.string,
+            data.cmdargtoken[6].val.string,
+            data.cmdargtoken[7].val.numf,
+            data.cmdargtoken[8].val.numl,
+            data.cmdargtoken[9].val.string,
+            data.cmdargtoken[10].val.string,
+            data.cmdargtoken[11].val.string,
+            data.cmdargtoken[12].val.string);
         return 0;
     }
     else return 1;
 }
+
+
 
 /** @brief CLI function for AOloopControl_blockstats */
 int_fast8_t AOloopControl_perfTest_blockstats_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,5)==0) {
-        AOloopControl_perfTest_blockstats(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.string);
+    if(CLI_checkarg(1,2)
+            + CLI_checkarg(2,5)==0) {
+        AOloopControl_perfTest_blockstats(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.string);
         return 0;
     }
     else return 1;
 }
 
+
 /** @brief CLI function for AOloopControl_InjectMode */
 int_fast8_t AOloopControl_perfTest_InjectMode_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0)    {
-        AOloopControl_perfTest_InjectMode(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
+    if(CLI_checkarg(1,2)
+            + CLI_checkarg(2,1)==0)    {
+        AOloopControl_perfTest_InjectMode(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numf);
         return 0;
     }
     else    return 1;
 }
 
+
 /** @brief CLI function for AOloopControl_loopMonitor */
 int_fast8_t AOloopControl_perfTest_loopMonitor_cli() {
-    if(CLI_checkarg(1,1)+CLI_checkarg(2,2)==0) {
-        AOloopControl_perfTest_loopMonitor(LOOPNUMBER, data.cmdargtoken[1].val.numf, data.cmdargtoken[2].val.numl);
+    if(CLI_checkarg(1,1)
+            + CLI_checkarg(2,2)==0) {
+        AOloopControl_perfTest_loopMonitor(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.numf,
+            data.cmdargtoken[2].val.numl);
         return 0;
     } else {
         AOloopControl_perfTest_loopMonitor(LOOPNUMBER, 1.0, 8);
@@ -271,30 +333,59 @@ int_fast8_t AOloopControl_perfTest_loopMonitor_cli() {
     }
 }
 
+
 /** @brief CLI function for AOloopControl_statusStats */
 int_fast8_t AOloopControl_perfTest_statusStats_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)==0) {
-        AOloopControl_perfTest_statusStats(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl);
+    if(CLI_checkarg(1,2)
+            + CLI_checkarg(2,2)==0) {
+        AOloopControl_perfTest_statusStats(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl);
         return 0;
     }
     else return 1;
 }
 
+
 /** @brief CLI function for AOloopControl_mkTestDynamicModeSeq */
 int_fast8_t AOloopControl_perfTest_mkTestDynamicModeSeq_cli()
 {
-    if(CLI_checkarg(1,3)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)==0) {
-        AOloopControl_perfTest_mkTestDynamicModeSeq(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl);
+    if(CLI_checkarg(1,3)
+            + CLI_checkarg(2,2)
+            + CLI_checkarg(3,2)
+            + CLI_checkarg(4,2)==0) {
+        AOloopControl_perfTest_mkTestDynamicModeSeq(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.numl);
         return 0;
     }
     else  return 1;
 }
 
+
 /** @brief CLI function for AOloopControl_AnalyzeRM_sensitivity */
 int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity_cli()
 {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,4)+CLI_checkarg(4,4)+CLI_checkarg(4,4)+CLI_checkarg(5,4)+CLI_checkarg(6,1)+CLI_checkarg(7,1)+CLI_checkarg(8,3)==0)    {
-        AOloopControl_perfTest_AnalyzeRM_sensitivity(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.string, data.cmdargtoken[6].val.numf, data.cmdargtoken[7].val.numf, data.cmdargtoken[8].val.string);
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,4)
+            + CLI_checkarg(3,4)
+            + CLI_checkarg(4,4)
+            + CLI_checkarg(4,4)
+            + CLI_checkarg(5,4)
+            + CLI_checkarg(6,1)
+            + CLI_checkarg(7,1)
+            + CLI_checkarg(8,3)==0)    {
+        AOloopControl_perfTest_AnalyzeRM_sensitivity(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string,
+            data.cmdargtoken[5].val.string,
+            data.cmdargtoken[6].val.numf,
+            data.cmdargtoken[7].val.numf,
+            data.cmdargtoken[8].val.string);
         return 0;
     }
     else        return 1;
@@ -304,9 +395,14 @@ int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity_cli()
 
 int_fast8_t AOloopControl_LoopTimer_Analysis_cli()
 {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,5)+CLI_checkarg(3,5)==0)    
+    if(CLI_checkarg(1,4)
+    + CLI_checkarg(2,5)
+    + CLI_checkarg(3,5)==0)    
     {	
-		AOloopControl_LoopTimer_Analysis(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string);
+		AOloopControl_LoopTimer_Analysis(
+		data.cmdargtoken[1].val.string, 
+		data.cmdargtoken[2].val.string, 
+		data.cmdargtoken[3].val.string);
 		return 0;
 	}
 	else
@@ -316,47 +412,91 @@ int_fast8_t AOloopControl_LoopTimer_Analysis_cli()
 
 int_fast8_t AOloopControl_perfTest_mkSyncStreamFiles2_cli()
 {
-	if(CLI_checkarg(1,5)+CLI_checkarg(2,5)+CLI_checkarg(3,5)+CLI_checkarg(4,1)+CLI_checkarg(5,1)+CLI_checkarg(6,1)+CLI_checkarg(7,1)==0)    
+    if(CLI_checkarg(1,5)
+            + CLI_checkarg(2,5)
+            + CLI_checkarg(3,5)
+            + CLI_checkarg(4,1)
+            + CLI_checkarg(5,1)
+            + CLI_checkarg(6,1)
+            + CLI_checkarg(7,1)==0)
     {
-		AOloopControl_perfTest_mkSyncStreamFiles2(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.numf, data.cmdargtoken[5].val.numf, data.cmdargtoken[6].val.numf, data.cmdargtoken[7].val.numf);
-		return 0;
-	}
-	else
-		return 1;
+        AOloopControl_perfTest_mkSyncStreamFiles2(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.numf,
+            data.cmdargtoken[5].val.numf,
+            data.cmdargtoken[6].val.numf,
+            data.cmdargtoken[7].val.numf);
+        return 0;
+    }
+    else
+        return 1;
 }
 
 
 int_fast8_t AOloopControl_perfTest_ComputeSimilarityMatrix_cli()
 {
-	if(CLI_checkarg(1,4)+CLI_checkarg(2,5) == 0)
-	{
-		AOloopControl_perfTest_ComputeSimilarityMatrix(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string);
-	}
-	else
-		return 1;
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,5) == 0)
+    {
+        AOloopControl_perfTest_ComputeSimilarityMatrix(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string);
+    }
+    else
+        return 1;
 }
 
 
 
 int_fast8_t AOloopControl_perfTest_StatAnalysis_2streams_cli()
 {
-	if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,4)+CLI_checkarg(4,4)+CLI_checkarg(5,2)+CLI_checkarg(6,2) == 0)
-	{
-		AOloopControl_perfTest_StatAnalysis_2streams(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl);
-	}
-	else
-		return 1;
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,4)
+            + CLI_checkarg(3,4)
+            + CLI_checkarg(4,4)
+            + CLI_checkarg(5,2)
+            + CLI_checkarg(6,2) == 0)
+    {
+        AOloopControl_perfTest_StatAnalysis_2streams(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.numl);
+    }
+    else
+        return 1;
 }
 
 
 int_fast8_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli()
 {
-	if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,1)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,2)+CLI_checkarg(8,2)+CLI_checkarg(9,1) == 0)
-	{
-		AOloopControl_perfTest_SelectWFSframes_from_PSFframes(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.numl, data.cmdargtoken[8].val.numl, data.cmdargtoken[9].val.numf);
-	}
-	else
-		return 1;
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,4)
+            + CLI_checkarg(3,1)
+            + CLI_checkarg(4,2)
+            + CLI_checkarg(5,2)
+            + CLI_checkarg(6,2)
+            + CLI_checkarg(7,2)
+            + CLI_checkarg(8,2)
+            + CLI_checkarg(9,1) == 0)
+    {
+        AOloopControl_perfTest_SelectWFSframes_from_PSFframes(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.numf,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.numl,
+            data.cmdargtoken[7].val.numl,
+            data.cmdargtoken[8].val.numl,
+            data.cmdargtoken[9].val.numf);
+    }
+    else
+        return 1;
 }
 
 
@@ -397,72 +537,159 @@ int_fast8_t init_AOloopControl_perfTest()
 {
     FILE *fp;
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 9. STATUS / TESTING / PERF MEASUREMENT                                   */
-/* =============================================================================================== */
-/* =============================================================================================== */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+    /** @name AOloopControl - 9. STATUS / TESTING / PERF MEASUREMENT                                   */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
 
-    RegisterCLIcommand("aoldmtestsp", __FILE__, AOcontrolLoop_perfTest_TestDMSpeed_cli, "test DM speed by sending circular tip-tilt", "<dmname> <delay us [long]> <NB pts> <ampl>", "aoldmtestsp dmdisp2 100 20 0.1", "long AOcontrolLoop_perfTest_TestDMSpeed(char *dmname, long delayus, long NBpts, float ampl)");
+    RegisterCLIcommand(
+        "aoldmtestsp",
+        __FILE__,
+        AOcontrolLoop_perfTest_TestDMSpeed_cli,
+        "test DM speed by sending circular tip-tilt",
+        "<dmname> <delay us [long]> <NB pts> <ampl>",
+        "aoldmtestsp dmdisp2 100 20 0.1",
+        "long AOcontrolLoop_perfTest_TestDMSpeed(char *dmname, long delayus, long NBpts, float ampl)");
 
-    RegisterCLIcommand("aoltestlat", __FILE__, AOcontrolLoop_perfTest_TestSystemLatency_cli, "test system latency", "<dm stream> <wfs stream> <ampl [um]> <NBiter>", "aoltestlat dmC wfsim 0.1 5000", "long AOcontrolLoop_perfTest_TestSystemLatency(char *dmname, char *wfsname, float OPDamp, long NBiter)");
+    RegisterCLIcommand(
+        "aoltestlat",
+        __FILE__,
+        AOcontrolLoop_perfTest_TestSystemLatency_cli,
+        "test system latency",
+        "<dm stream> <wfs stream> <ampl [um]> <NBiter>",
+        "aoltestlat dmC wfsim 0.1 5000",
+        "long AOcontrolLoop_perfTest_TestSystemLatency(char *dmname, char *wfsname, float OPDamp, long NBiter)");
 
-    RegisterCLIcommand("aoltestmresp", __FILE__, AOloopControl_perfTest_TestDMmodeResp_cli, "Measure system response for a single mode", "<DM modes [3D im]> <mode #> <ampl [um]> <fmin [Hz]> <fmax [Hz]> <fstep> <meas. time [sec]> <time step [us]> <DM mask> <DM in [2D stream]> <DM out [2D stream]>  <output [2D im]>", "aoltestmresp DMmodesC 5 0.05 10.0 100.0 1.2 1.0 1000 dmmask dmdisp3 dmC out", "long AOloopControl_perfTest_TestDMmodeResp(char *DMmodes_name, long index, float ampl, float fmin, float fmax, float fmultstep, float avetime, long dtus, char *DMmask_name, char *DMstream_in_name, char *DMstream_out_name, char *IDout_name)");
+    RegisterCLIcommand(
+        "aoltestmresp",
+        __FILE__,
+        AOloopControl_perfTest_TestDMmodeResp_cli,
+        "Measure system response for a single mode",
+        "<DM modes [3D im]> <mode #> <ampl [um]> <fmin [Hz]> <fmax [Hz]> <fstep> <meas. time [sec]> <time step [us]> <DM mask> <DM in [2D stream]> <DM out [2D stream]>  <output [2D im]>",
+        "aoltestmresp DMmodesC 5 0.05 10.0 100.0 1.2 1.0 1000 dmmask dmdisp3 dmC out",
+        "long AOloopControl_perfTest_TestDMmodeResp(char *DMmodes_name, long index, float ampl, float fmin, float fmax, float fmultstep, float avetime, long dtus, char *DMmask_name, char *DMstream_in_name, char *DMstream_out_name, char *IDout_name)");
 
-    RegisterCLIcommand("aoltestdmrec", __FILE__, AOloopControl_perfTest_TestDMmodes_Recovery_cli, "Test system DM modes recovery", "<DM modes [3D im]> <ampl [um]> <DM mask [2D im]> <DM in [2D stream]> <DM out [2D stream]> <meas out [2D stream]> <lag time [us]>  <NB averages [long]>  <out ave [2D im]> <out rms [2D im]> <out meas ave [2D im]> <out meas rms [2D im]>", "aoltestdmrec DMmodesC 0.05 DMmask dmsisp2 dmoutr 2000  20 outave outrms outmave outmrms", "long AOloopControl_perfTest_TestDMmodes_Recovery(char *DMmodes_name, float ampl, char *DMmask_name, char *DMstream_in_name, char *DMstream_out_name, char *DMstream_meas_name, long tlagus, long NBave, char *IDout_name, char *IDoutrms_name, char *IDoutmeas_name, char *IDoutmeasrms_name)");
+    RegisterCLIcommand(
+        "aoltestdmrec",
+        __FILE__,
+        AOloopControl_perfTest_TestDMmodes_Recovery_cli,
+        "Test system DM modes recovery",
+        "<DM modes [3D im]> <ampl [um]> <DM mask [2D im]> <DM in [2D stream]> <DM out [2D stream]> <meas out [2D stream]> <lag time [us]>  <NB averages [long]>  <out ave [2D im]> <out rms [2D im]> <out meas ave [2D im]> <out meas rms [2D im]>",
+        "aoltestdmrec DMmodesC 0.05 DMmask dmsisp2 dmoutr 2000  20 outave outrms outmave outmrms",
+        "long AOloopControl_perfTest_TestDMmodes_Recovery(char *DMmodes_name, float ampl, char *DMmask_name, char *DMstream_in_name, char *DMstream_out_name, char *DMstream_meas_name, long tlagus, long NBave, char *IDout_name, char *IDoutrms_name, char *IDoutmeas_name, char *IDoutmeasrms_name)");
 
-    RegisterCLIcommand("aolresetrms", __FILE__, AOloopControl_perfTest_resetRMSperf, "reset RMS performance monitor", "no arg", "aolresetrms", "int AOloopControl_perfTest_resetRMSperf()");
+    RegisterCLIcommand(
+        "aolresetrms",
+        __FILE__,
+        AOloopControl_perfTest_resetRMSperf,
+        "reset RMS performance monitor",
+        "no arg",
+        "aolresetrms",
+        "int AOloopControl_perfTest_resetRMSperf()");
 
-    RegisterCLIcommand("aolinjectmode",__FILE__, AOloopControl_perfTest_InjectMode_cli, "inject single mode error into RM channel", "<index> <ampl>", "aolinjectmode 20 0.1", "int AOloopControl_perfTest_InjectMode()");
+    RegisterCLIcommand(
+        "aolinjectmode",
+        __FILE__,
+        AOloopControl_perfTest_InjectMode_cli,
+        "inject single mode error into RM channel",
+        "<index> <ampl>",
+        "aolinjectmode 20 0.1",
+        "int AOloopControl_perfTest_InjectMode()");
 
-    RegisterCLIcommand("aolstatusstats", __FILE__, AOloopControl_perfTest_statusStats_cli, "measures distribution of status values", "<update flag [int]> <NBsample [long]>", "aolstatusstats 0 100000", "int AOloopControl_perfTest_statusStats(int updateconf, long NBsample)");
+    RegisterCLIcommand(
+        "aolstatusstats",
+        __FILE__,
+        AOloopControl_perfTest_statusStats_cli,
+        "measures distribution of status values",
+        "<update flag [int]> <NBsample [long]>",
+        "aolstatusstats 0 100000",
+        "int AOloopControl_perfTest_statusStats(int updateconf, long NBsample)");
 
-    RegisterCLIcommand("aolmon", __FILE__, AOloopControl_perfTest_loopMonitor_cli, "monitor loop", "<frequ> <Nbcols>", "aolmon 10.0 3", "int AOloopControl_perfTest_loopMonitor(long loop, double frequ)");
+    RegisterCLIcommand(
+        "aolmon",
+        __FILE__,
+        AOloopControl_perfTest_loopMonitor_cli,
+        "monitor loop",
+        "<frequ> <Nbcols>",
+        "aolmon 10.0 3",
+        "int AOloopControl_perfTest_loopMonitor(long loop, double frequ)");
 
-    RegisterCLIcommand("aolblockstats", __FILE__, AOloopControl_perfTest_blockstats_cli, "measures mode stats per block", "<loopnb> <outim>", "aolblockstats 2 outstats", "long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)");
+    RegisterCLIcommand(
+        "aolblockstats",
+        __FILE__,
+        AOloopControl_perfTest_blockstats_cli,
+        "measures mode stats per block",
+        "<loopnb> <outim>",
+        "aolblockstats 2 outstats",
+        "long AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)");
 
-    RegisterCLIcommand("aolmktestmseq", __FILE__, AOloopControl_perfTest_mkTestDynamicModeSeq_cli, "make modal periodic test sequence", "<outname> <number of slices> <number of modes> <firstmode>", "aolmktestmseq outmc 100 50 0", "long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes, long StartMode)");
+    RegisterCLIcommand(
+        "aolmktestmseq",
+        __FILE__,
+        AOloopControl_perfTest_mkTestDynamicModeSeq_cli,
+        "make modal periodic test sequence",
+        "<outname> <number of slices> <number of modes> <firstmode>",
+        "aolmktestmseq outmc 100 50 0",
+        "long AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out, long NBpt, long NBmodes, long StartMode)");
 
-    RegisterCLIcommand("aolzrmsens", __FILE__, AOloopControl_perfTest_AnalyzeRM_sensitivity_cli, "Measure zonal RM sensitivity", "<DMmodes> <DMmask> <WFSref> <WFSresp> <WFSmask> <amplitude[nm]> <lambda[nm]> <outname>", "aolzrmsens DMmodes dmmask wfsref0 zrespmat wfsmask 0.1 outfile.txt", "long AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name, const char *IDdmmask_name, const char *IDwfsref_name, const char *IDwfsresp_name, const char *IDwfsmask_name, float amplimitnm, float lambdanm, const char *foutname)");
+    RegisterCLIcommand(
+        "aolzrmsens",
+        __FILE__,
+        AOloopControl_perfTest_AnalyzeRM_sensitivity_cli,
+        "Measure zonal RM sensitivity",
+        "<DMmodes> <DMmask> <WFSref> <WFSresp> <WFSmask> <amplitude[nm]> <lambda[nm]> <outname>",
+        "aolzrmsens DMmodes dmmask wfsref0 zrespmat wfsmask 0.1 outfile.txt",
+        "long AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name, const char *IDdmmask_name, const char *IDwfsref_name, const char *IDwfsresp_name, const char *IDwfsmask_name, float amplimitnm, float lambdanm, const char *foutname)");
 
-	RegisterCLIcommand("aoltimingstat", __FILE__, AOloopControl_LoopTimer_Analysis_cli, "Analysis of loop timing data", "<TimingImage> <TimingTXTfile> <outFile>", "aoltimingstat aol0_looptiming timing.txt outfile.txt", "long AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)");
+    RegisterCLIcommand(
+        "aoltimingstat",
+        __FILE__,
+        AOloopControl_LoopTimer_Analysis_cli,
+        "Analysis of loop timing data",
+        "<TimingImage> <TimingTXTfile> <outFile>", "aoltimingstat aol0_looptiming timing.txt outfile.txt",
+        "long AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)");
 
 
-	RegisterCLIcommand("aolptmksyncs2",
-		__FILE__,
-		AOloopControl_perfTest_mkSyncStreamFiles2_cli,
-		"synchronize two streams from disk telemetry",
-		"<datadir> <stream0name> <stream1name> <tstart> <tend> <dt> <dtlag>",
-		"aolptmksyncs2 \"/media/data/20180701/\" aol2_wfsim aol3_wfsim 1530410732.0 1530410733.0 0.001 0.00001",
-		"int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char *stream1, double tstart, double tend, double dt, double dtlag)");
-		
-		
-	RegisterCLIcommand("aolperfcompsimM",
-		__FILE__,
-		AOloopControl_perfTest_ComputeSimilarityMatrix_cli,
-		"compute similarity matrix from image sequence",
-		"<input cube> <output matrix>",
-		"aolperfcompsimM imc outM",
-		"int AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname, char *IDname_out)");
-		
+    RegisterCLIcommand(
+        "aolptmksyncs2",
+        __FILE__,
+        AOloopControl_perfTest_mkSyncStreamFiles2_cli,
+        "synchronize two streams from disk telemetry",
+        "<datadir> <stream0name> <stream1name> <tstart> <tend> <dt> <dtlag>",
+        "aolptmksyncs2 \"/media/data/20180701/\" aol2_wfsim aol3_wfsim 1530410732.0 1530410733.0 0.001 0.00001",
+        "int AOloopControl_perfTest_mkSyncStreamFiles2(char *datadir, char *stream0, char *stream1, double tstart, double tend, double dt, double dtlag)");
 
-	RegisterCLIcommand("aolperfsimpairs",
-		__FILE__,
-		AOloopControl_perfTest_StatAnalysis_2streams_cli,
-		"Find similarity pairs and perform statistical analysis",
-		"<input stream0 cube> <input stream1 cube> <input simM0> <input simM1> <min frame dt> <NBselected>",
-		"aolperfsimpairs imc0 imc1 simM0 simM1 20 1000",
-		"int AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0, char *IDname_stream1, char *IDname_simM0, char *IDname_simM1, long dtmin, long NBselected)");
 
-	
-	RegisterCLIcommand("aolperfselwfsfpsf",
-		__FILE__,
-		AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli,
-		"select WFS frames from PSF frames (synchronized)",
-		"<input WFS cube> <input PSF cube> <fraction> <x0> <x1> <y0> <y1> <EvalMode> <alpha>",
-		"aolperfselwfsfpsf imwfsC impsfC 100 120 100 120 0 2.0",
-		"int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode, float alpha)");
-	
+    RegisterCLIcommand(
+        "aolperfcompsimM",
+        __FILE__,
+        AOloopControl_perfTest_ComputeSimilarityMatrix_cli,
+        "compute similarity matrix from image sequence",
+        "<input cube> <output matrix>",
+        "aolperfcompsimM imc outM",
+        "int AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname, char *IDname_out)");
+
+
+    RegisterCLIcommand(
+        "aolperfsimpairs",
+        __FILE__,
+        AOloopControl_perfTest_StatAnalysis_2streams_cli,
+        "Find similarity pairs and perform statistical analysis",
+        "<input stream0 cube> <input stream1 cube> <input simM0> <input simM1> <min frame dt> <NBselected>",
+        "aolperfsimpairs imc0 imc1 simM0 simM1 20 1000",
+        "int AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0, char *IDname_stream1, char *IDname_simM0, char *IDname_simM1, long dtmin, long NBselected)");
+
+
+    RegisterCLIcommand(
+        "aolperfselwfsfpsf",
+        __FILE__,
+        AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli,
+        "select WFS frames from PSF frames (synchronized)",
+        "<input WFS cube> <input PSF cube> <fraction> <x0> <x1> <y0> <y1> <EvalMode> <alpha>",
+        "aolperfselwfsfpsf imwfsC impsfC 100 120 100 120 0 2.0",
+        "int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode, float alpha)");
+
 }
 
 
@@ -482,7 +709,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     // ===========================
     // SETUP FPS
     // ===========================
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
+    int SMfd = -1;
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
 	fps.md->sourceline = __LINE__;
 	
@@ -544,7 +772,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }
     }
-    function_parameter_FPCONFexit( &fps );
+    function_parameter_FPCONFexit( &fps, &SMfd );
 
 
     return RETURN_SUCCESS;
@@ -642,8 +870,9 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
+    int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
-    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1) {
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
     }
@@ -1271,7 +1500,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     // ENDING LOOP
     // ==================================
     processinfo_cleanExit(processinfo);
-	function_parameter_RUNexit( &fps );
+	function_parameter_RUNexit( &fps, &SMfd );
 	
 
 
@@ -1303,6 +1532,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     long pindex = (long) getpid();  // index used to differentiate multiple calls to function
     // if we don't have anything more informative, we use PID
     FUNCTION_PARAMETER_STRUCT fps;
+    int SMfd = -1;
     snprintf(fpsname, stringmaxlen, "mlat-%s-%s", dmname, wfsname);
     AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_FPSINIT);
 
@@ -1313,7 +1543,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     // SET PARAMETER VALUES
     // ==================================
 
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE, &SMfd);
 
     functionparameter_SetParamValue_STRING(&fps, ".sn_dm", dmname);
     functionparameter_SetParamValue_STRING(&fps, ".sn_wfs", wfsname);
@@ -1321,7 +1551,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     functionparameter_SetParamValue_FLOAT32(&fps, ".OPDamp", OPDamp);
     functionparameter_SetParamValue_INT64(&fps, ".NBiter", NBiter);
 
-    function_parameter_struct_disconnect(&fps);
+    function_parameter_struct_disconnect(&fps, &SMfd);
 
 
     // ==================================
@@ -1534,7 +1764,15 @@ int_fast8_t AOloopControl_perfTest_InjectMode( long index, float ampl )
 //
 // measure response matrix sensitivity
 //
-int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name, const char *IDdmmask_name, const char *IDwfsref_name, const char *IDwfsresp_name, const char *IDwfsmask_name, float amplimitnm, float lambdanm, const char *foutname)
+int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity(
+    const char *IDdmmodes_name,
+    const char *IDdmmask_name,
+    const char *IDwfsref_name,
+    const char *IDwfsresp_name,
+    const char *IDwfsmask_name,
+    float amplimitnm,
+    float lambdanm, 
+    const char *foutname)
 {
     FILE *fp;
     long IDdmmodes;
@@ -1542,7 +1780,7 @@ int_fast8_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_n
     long IDwfsref;
     long IDwfsresp;
     long IDwfsmask;
-	double dmmodermscnt;
+    double dmmodermscnt;
     long dmxsize, dmysize, dmxysize;
     long NBmodes;
     long wfsxsize, wfsysize, wfsxysize;
