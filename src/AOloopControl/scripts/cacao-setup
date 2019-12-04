@@ -215,17 +215,10 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 done < fpscmd/fpslist.txt
 
 
-# Exit fpsCTRL
-tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m
-tmux send-keys -t ${fpsCTRLtmuxname} "exit" C-m
-### SHOULD NOT BE REQUIRED:
-#tmux kill-session -t ${fpsCTRLtmuxname}
-
-
 # Remove FPS 
 while IFS='' read -r line || [[ -n "$line" ]]; do
     # Erase fps structures    
-    echolog "ERASING ${MILK_SHM_DIR}/$line.fps.shm"
+    echolog "ERASING ${MILK_SHM_DIR}/$line.fps.shm : fpsrm $line ->  ${fpsCTRLfifo}"
 	echo "fpsrm $line" >> ${fpsCTRLfifo}
 ### SHOULD NOT BE REQUIRED:
 #	rm ${MILK_SHM_DIR}/$line.fps.shm
@@ -246,9 +239,6 @@ done < fpscmd/fpslist.txt
 
 
 
-# remove sym link
-rm ${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}
-rm ${MILK_SHM_DIR}/${CACAO_LOOPNAME}_fpsCTRL.fifo
 
 
 
@@ -260,6 +250,24 @@ rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmZP*.im.shm
 rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_wfsim.im.shm
 
 tmux send-keys -t cacao-${CACAO_LOOPNAME} "exit" C-m
+
+sleep 1
+
+# Exit fpsCTRL
+tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m
+tmux send-keys -t ${fpsCTRLtmuxname} "exit" C-m
+### SHOULD NOT BE REQUIRED:
+#tmux kill-session -t ${fpsCTRLtmuxname}
+
+
+# remove sym link
+
+file="${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}"
+rm $(readlink $file)
+rm $file
+#rm ${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}
+#rm ${MILK_SHM_DIR}/${CACAO_LOOPNAME}_fpsCTRL.fifo
+
 
 cd ${CURRDIR}
 

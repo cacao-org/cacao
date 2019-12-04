@@ -384,7 +384,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 outdir="conf-fCM-staged"
 mkdir -p ${CACAO_WORKDIR}/${outdir}
 
-mkdir -p ${CACAO_WORKDIR}/conf_staged
+mkdir -p ${CACAO_WORKDIR}/conf-staged
 mkdir -p ${CACAO_WORKDIR}/mkmodestmp
 
 mkdir -p ${CACAO_WORKDIR}/DMmodes

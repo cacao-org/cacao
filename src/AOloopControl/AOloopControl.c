@@ -301,7 +301,8 @@ int_fast8_t AOloopControl_loadconfigure_cli() {
 
 /** @brief CLI function for AOloopControl_mkCM */
 int_fast8_t AOloopControl_aorun_cli() {
-    char fpsname[200];
+	int stringmaxlen = 200;
+    char fpsname[stringmaxlen];
 
     // First, we try to execute function through FPS interface
     if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
@@ -314,7 +315,7 @@ int_fast8_t AOloopControl_aorun_cli() {
             // the process has not been named with -n CLI option
             // name fps to something different than the process name
             if(strlen(data.cmdargtoken[2].val.string)>0) {
-                sprintf(fpsname, "compsCM-%s", data.cmdargtoken[2].val.string);
+                snprintf(fpsname, stringmaxlen, "compsCM-%s", data.cmdargtoken[2].val.string);
                 printf("USING %s as fpsname\n", fpsname);
             }
             else {
@@ -426,8 +427,16 @@ int_fast8_t AOloopControl_WFSzpupdate_loop_cli() {
 
 /** @brief CLI function for AOloopControl_WFSzeropoint_sum_update_loop */
 int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop_cli() {
-    if(CLI_checkarg(1,3)+CLI_checkarg(2,2)+CLI_checkarg(3,4)+CLI_checkarg(4,4)==0) {
-        AOloopControl_WFSzeropoint_sum_update_loop(LOOPNUMBER, data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string);
+    if(CLI_checkarg(1,3)
+    + CLI_checkarg(2,2)
+    + CLI_checkarg(3,4)
+    + CLI_checkarg(4,4)==0) {
+        AOloopControl_WFSzeropoint_sum_update_loop(
+        LOOPNUMBER, 
+        data.cmdargtoken[1].val.string, 
+        data.cmdargtoken[2].val.numl, 
+        data.cmdargtoken[3].val.string, 
+        data.cmdargtoken[4].val.string);
         return 0;
     }
     else return 1;
@@ -435,8 +444,17 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop_cli() {
 
 /** @brief CLI function for AOloopControl_CompModes_loop */
 int_fast8_t AOloopControl_CompModes_loop_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,4)+CLI_checkarg(4,4)+CLI_checkarg(5,3)==0) {
-        AOloopControl_CompModes_loop(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.string);
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,4)
+            + CLI_checkarg(3,4)
+            + CLI_checkarg(4,4)
+            + CLI_checkarg(5,3)==0) {
+        AOloopControl_CompModes_loop(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string,
+            data.cmdargtoken[5].val.string);
         return 0;
     }
     else return 1;
