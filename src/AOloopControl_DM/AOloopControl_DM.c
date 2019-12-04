@@ -87,7 +87,8 @@ int_fast8_t AOloopControl_DM_CombineChannels_cli() {
     // 16 float DCum
     // 17 float maxvolt
 
-    char fpsname[200];
+	int stringlenmax = 200;
+    char fpsname[stringlenmax];
 
 
 
@@ -96,7 +97,7 @@ int_fast8_t AOloopControl_DM_CombineChannels_cli() {
 
         // FPS interface name
         if(data.processnameflag == 0) { // name fps to something different than the process name
-            sprintf(fpsname, "DMcomb-%s", data.cmdargtoken[2].val.string);
+            snprintf(fpsname, stringlenmax, "DMcomb-%s", data.cmdargtoken[2].val.string);
             //sprintf(fpsname, "DMcomb-%06u", DMindex);
         } else { // Set fps name to be process name up to first instance of character '.'
             strcpy(fpsname, data.processname0);

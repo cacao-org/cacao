@@ -240,15 +240,20 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     long DMindex
 ) {
     uint16_t loopstatus;
-
-
-
+	
+	// ===========================
     // SETUP FPS
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
+    // ===========================
+    int SMfd = -1;
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
 	fps.md->sourceline = __LINE__;
 
+
     // ALLOCATE FPS ENTRIES
+	
+	printf("ALLOCATING ENTRIES (NBparamMAX = %ld) =================\n", fps.md->NBparamMAX);
+	fflush(stdout);
 
     void *pNull = NULL;
     uint64_t FPFLAG;
@@ -381,7 +386,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }
     }
-    function_parameter_FPCONFexit(&fps);
+    function_parameter_FPCONFexit(&fps, &SMfd);
 
 
     return EXIT_SUCCESS;
@@ -484,10 +489,11 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
     AOLOOPCONTROL_DM_LOGEXEC;
-
+	
+	int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
-    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1) {
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
         printf("ERROR: fps \"%s\" does not exist -> Cannot run\n", fpsname);
         return EXIT_FAILURE;
     }
@@ -1024,6 +1030,7 @@ int AOloopControl_DM_CombineChannels_RUN(
     }
     AOLOOPCONTROL_DM_LOGEXEC;
 
+	function_parameter_RUNexit( &fps, &SMfd );
     processinfo_cleanExit(processinfo);
     AOLOOPCONTROL_DM_LOGEXEC;
 
@@ -1105,6 +1112,8 @@ int AOloopControl_DM_CombineChannels(
 )
 {
     char fpsname[200];
+    
+    int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS
@@ -1114,7 +1123,7 @@ int AOloopControl_DM_CombineChannels(
 
 
 
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN);
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd);
 
     functionparameter_SetParamValue_INT64(&fps, ".DMindex", DMindex);
     functionparameter_SetParamValue_INT64(&fps, ".DMxsize", xsize);
@@ -1140,7 +1149,7 @@ int AOloopControl_DM_CombineChannels(
     functionparameter_SetParamValue_FLOAT64(&fps, ".option.maxvolt", maxvolt);
 
 
-    function_parameter_struct_disconnect(&fps);
+    function_parameter_struct_disconnect(&fps, &SMfd);
 
 
 
