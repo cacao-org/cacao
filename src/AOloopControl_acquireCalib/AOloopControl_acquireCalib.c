@@ -176,44 +176,82 @@ extern AOloopControl_var aoloopcontrol_var;
 /* =============================================================================================== */
 
 int_fast8_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli() {
-	if(CLI_checkarg(1,4)+CLI_checkarg(2,2)+CLI_checkarg(3,5)+CLI_checkarg(4,5)==0) {
-		AOloopControl_acquireCalib_mkRandomLinPokeSequence(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string);
-		return 0;
-	}
-	else return 1;	
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,2)
+            + CLI_checkarg(3,5)
+            + CLI_checkarg(4,5)==0) {
+        AOloopControl_acquireCalib_mkRandomLinPokeSequence(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string);
+        return 0;
+    }
+    else return 1;
 }
-
 
 
 
 /** @brief CLI function for AOloopControl_RespMatrix_Fast */
 int_fast8_t AOloopControl_acquireCalib_RespMatrix_Fast_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,4)+CLI_checkarg(4,2)+CLI_checkarg(5,1)+CLI_checkarg(6,1)+CLI_checkarg(7,1)+CLI_checkarg(8,3)==0) {
-        AOloopControl_acquireCalib_RespMatrix_Fast(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numf, data.cmdargtoken[6].val.numf, data.cmdargtoken[7].val.numf, data.cmdargtoken[8].val.string);
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,4)
+            + CLI_checkarg(3,4)
+            + CLI_checkarg(4,2)
+            + CLI_checkarg(5,1)
+            + CLI_checkarg(6,1)
+            + CLI_checkarg(7,1)
+            + CLI_checkarg(8,3)==0) {
+        AOloopControl_acquireCalib_RespMatrix_Fast(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numf,
+            data.cmdargtoken[6].val.numf,
+            data.cmdargtoken[7].val.numf,
+            data.cmdargtoken[8].val.string);
         return 0;
     }
     else return 1;
 }
+
 
 /** @brief CLI function for AOloopControl_Measure_WFSrespC */
 int_fast8_t AOloopControl_acquireCalib_Measure_WFSrespC_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,4)+CLI_checkarg(6,5)+CLI_checkarg(7,2)+CLI_checkarg(8,2)+CLI_checkarg(9,2)+CLI_checkarg(10,2)==0) {
-        AOloopControl_acquireCalib_Measure_WFSrespC(LOOPNUMBER, data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.string, data.cmdargtoken[6].val.string, data.cmdargtoken[7].val.numl, data.cmdargtoken[8].val.numl, data.cmdargtoken[9].val.numl, (uint32_t) data.cmdargtoken[10].val.numl);
+    if(CLI_checkarg(1,2)
+            + CLI_checkarg(2,2)
+            + CLI_checkarg(3,2)
+            + CLI_checkarg(4,2)
+            + CLI_checkarg(5,4)
+            + CLI_checkarg(6,5)
+            + CLI_checkarg(7,2)
+            + CLI_checkarg(8,2)
+            + CLI_checkarg(9,2)
+            + CLI_checkarg(10,2)==0) {
+        AOloopControl_acquireCalib_Measure_WFSrespC(LOOPNUMBER,
+                data.cmdargtoken[1].val.numl,
+                data.cmdargtoken[2].val.numl,
+                data.cmdargtoken[3].val.numl,
+                data.cmdargtoken[4].val.numl,
+                data.cmdargtoken[5].val.string,
+                data.cmdargtoken[6].val.string,
+                data.cmdargtoken[7].val.numl,
+                data.cmdargtoken[8].val.numl,
+                data.cmdargtoken[9].val.numl,
+                (uint32_t) data.cmdargtoken[10].val.numl);
         return 0;
     }
     else return 1;
 }
 
+
+
 /** @brief CLI function for AOloopControl_Measure_WFS_linResponse */
-/*int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
-    if(CLI_checkarg(1,1)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,4)+CLI_checkarg(7,5)+CLI_checkarg(8,5)+CLI_checkarg(9,2)+CLI_checkarg(10,2)+CLI_checkarg(11,2)+CLI_checkarg(12,2)==0) {
-        AOloopControl_acquireCalib_Measure_WFS_linResponse(LOOPNUMBER, data.cmdargtoken[1].val.numf, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.string, data.cmdargtoken[7].val.string, data.cmdargtoken[8].val.string, data.cmdargtoken[9].val.numl, data.cmdargtoken[10].val.numl, data.cmdargtoken[11].val.numl, data.cmdargtoken[12].val.numl);
-        return 0;
-    }
-    else return 1;
-}*/
+
 int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
-    char fpsname[200];
+    int stringmaxlen = 500;
+    char fpsname[stringmaxlen];
 
     // First, we try to execute function through FPS interface
     if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
@@ -223,13 +261,13 @@ int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
         //
         if(data.processnameflag == 0) { // name fps to something different than the process name
             if(strlen(data.cmdargtoken[2].val.string)>0)
-                sprintf(fpsname, "measlinRM-%s", data.cmdargtoken[2].val.string);
+                snprintf(fpsname, stringmaxlen, "measlinRM-%s", data.cmdargtoken[2].val.string);
             else
-                sprintf(fpsname, "measlinRM");
+                snprintf(fpsname, stringmaxlen, "measlinRM");
         } else { // Automatically set fps name to be process name up to first instance of character '.'
             strcpy(fpsname, data.processname0);
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS 
+        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS
             AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, CMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
@@ -251,8 +289,31 @@ int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
         }
     }
     // non FPS implementation - all parameters specified at function launch
-    if(CLI_checkarg(1,1)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,4)+CLI_checkarg(7,5)+CLI_checkarg(8,5)+CLI_checkarg(9,2)+CLI_checkarg(10,2)+CLI_checkarg(11,2)+CLI_checkarg(12,2)==0) {
-        AOloopControl_acquireCalib_Measure_WFS_linResponse(LOOPNUMBER, data.cmdargtoken[1].val.numf, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.string, data.cmdargtoken[7].val.string, data.cmdargtoken[8].val.string, data.cmdargtoken[9].val.numl, data.cmdargtoken[10].val.numl, data.cmdargtoken[11].val.numl, data.cmdargtoken[12].val.numl);
+    if( CLI_checkarg(1,1)
+            + CLI_checkarg(2,2)
+            + CLI_checkarg(3,2)
+            + CLI_checkarg(4,2)
+            + CLI_checkarg(5,2)
+            + CLI_checkarg(6,4)
+            + CLI_checkarg(7,5)
+            + CLI_checkarg(8,5)
+            + CLI_checkarg(9,2)
+            + CLI_checkarg(10,2)
+            + CLI_checkarg(11,2)
+            + CLI_checkarg(12,2)==0) {
+        AOloopControl_acquireCalib_Measure_WFS_linResponse(LOOPNUMBER,
+                data.cmdargtoken[1].val.numf,
+                data.cmdargtoken[2].val.numl,
+                data.cmdargtoken[3].val.numl,
+                data.cmdargtoken[4].val.numl,
+                data.cmdargtoken[5].val.numl,
+                data.cmdargtoken[6].val.string,
+                data.cmdargtoken[7].val.string,
+                data.cmdargtoken[8].val.string,
+                data.cmdargtoken[9].val.numl,
+                data.cmdargtoken[10].val.numl,
+                data.cmdargtoken[11].val.numl,
+                data.cmdargtoken[12].val.numl);
         return RETURN_SUCCESS;
     } else {
         return RETURN_FAILURE;
@@ -264,17 +325,52 @@ int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
 
 /** @brief CLI function for AOloopControl_Measure_zonalRM */
 int_fast8_t AOloopControl_acquireCalib_Measure_zonalRM_cli() {
-    if(CLI_checkarg(1,1)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,3)+CLI_checkarg(7,3)+CLI_checkarg(8,3)+CLI_checkarg(9,3)+CLI_checkarg(10,2)+CLI_checkarg(11,2)+CLI_checkarg(12,2)+CLI_checkarg(13,2)==0) {
-        AOloopControl_acquireCalib_Measure_zonalRM(LOOPNUMBER, data.cmdargtoken[1].val.numf, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.string, data.cmdargtoken[7].val.string, data.cmdargtoken[8].val.string, data.cmdargtoken[9].val.string, data.cmdargtoken[10].val.numl, data.cmdargtoken[11].val.numl, data.cmdargtoken[12].val.numl, data.cmdargtoken[13].val.numl);
+    if(CLI_checkarg(1,1)
+            + CLI_checkarg(2,2)
+            + CLI_checkarg(3,2)
+            + CLI_checkarg(4,2)
+            + CLI_checkarg(5,2)
+            + CLI_checkarg(6,3)
+            + CLI_checkarg(7,3)
+            + CLI_checkarg(8,3)
+            + CLI_checkarg(9,3)
+            + CLI_checkarg(10,2)
+            + CLI_checkarg(11,2)
+            + CLI_checkarg(12,2)
+            + CLI_checkarg(13,2)==0) {
+        AOloopControl_acquireCalib_Measure_zonalRM(LOOPNUMBER,
+                data.cmdargtoken[1].val.numf,
+                data.cmdargtoken[2].val.numl,
+                data.cmdargtoken[3].val.numl,
+                data.cmdargtoken[4].val.numl,
+                data.cmdargtoken[5].val.numl,
+                data.cmdargtoken[6].val.string,
+                data.cmdargtoken[7].val.string,
+                data.cmdargtoken[8].val.string,
+                data.cmdargtoken[9].val.string,
+                data.cmdargtoken[10].val.numl,
+                data.cmdargtoken[11].val.numl,
+                data.cmdargtoken[12].val.numl,
+                data.cmdargtoken[13].val.numl);
         return 0;
     }
     else return 1;
 }
 
+
 /** @brief CLI function for AOloopControl_Measure_Resp_Matrix */
 int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)==0) {
-        AOloopControl_acquireCalib_Measure_Resp_Matrix(LOOPNUMBER, data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl);
+    if(CLI_checkarg(1,2)
+            + CLI_checkarg(2,1)
+            + CLI_checkarg(3,2)
+            + CLI_checkarg(4,2)
+            + CLI_checkarg(5,2)==0) {
+        AOloopControl_acquireCalib_Measure_Resp_Matrix(LOOPNUMBER,
+                data.cmdargtoken[1].val.numl,
+                data.cmdargtoken[2].val.numf,
+                data.cmdargtoken[3].val.numl,
+                data.cmdargtoken[4].val.numl,
+                data.cmdargtoken[5].val.numl);
         return 0;
     }
     else return 1;
@@ -283,11 +379,22 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
 
 
 int_fast8_t AOloopControl_acquireCalib_RMseries_deinterlace_cli() {
-	if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,3)+CLI_checkarg(5,2)+CLI_checkarg(6,2)==0) {
-		AOloopControl_acquireCalib_RMseries_deinterlace(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl);
-		return 0;
-	}
-	else return 1;
+    if(CLI_checkarg(1,2)
+            + CLI_checkarg(2,2)
+            + CLI_checkarg(3,2)
+            + CLI_checkarg(4,3)
+            + CLI_checkarg(5,2)
+            + CLI_checkarg(6,2)==0) {
+        AOloopControl_acquireCalib_RMseries_deinterlace(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.string,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.numl);
+        return 0;
+    }
+    else return 1;
 }
 
 
@@ -313,52 +420,90 @@ int_fast8_t AOloopControl_acquireCalib_RMseries_deinterlace_cli() {
 
 void __attribute__ ((constructor)) libinit_AOloopControl_acquireCalib()
 {
-	if( INITSTATUS_AOloopControl_acquireCalib == 0)
-	{
-		init_AOloopControl_acquireCalib();
-		RegisterModule(__FILE__, "cacao", "AO loop control acquire calibration");
-		INITSTATUS_AOloopControl_acquireCalib = 1;
-	}
+    if( INITSTATUS_AOloopControl_acquireCalib == 0)
+    {
+        init_AOloopControl_acquireCalib();
+        RegisterModule(__FILE__, "cacao", "AO loop control acquire calibration");
+        INITSTATUS_AOloopControl_acquireCalib = 1;
+    }
 }
-            
+
+
+
+
+
 int_fast8_t init_AOloopControl_acquireCalib()
 {
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl_acquireCalib - 1. ACQUIRING CALIBRATION                                                 */
-/* =============================================================================================== */
-/* =============================================================================================== */
-  
-  RegisterCLIcommand(
-	"aolacqmkrlps", 
-	__FILE__, 
-	AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli, 
-	"create sequence of linearly coupled poke maps", 
-	"<poke modes cube> <NBpokemaps> <output poke map> <output poke frames>", 
-	"aolacqmkrlps pokeModesC 50 pokemC pokeC", 
-	"long AOloopControl_acquireCalib_mkRandomLinPokeSequence(char *IDmodeC_name, long NBpokemap, char *IDpokemapC_name, char *IDpokeC_name)");
-  
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+    /** @name AOloopControl_acquireCalib - 1. ACQUIRING CALIBRATION                                                 */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
 
-    RegisterCLIcommand("aolacqresp", __FILE__, AOloopControl_acquireCalib_Measure_Resp_Matrix_cli, "acquire AO response matrix and WFS reference", "<ave# [long]> <ampl [float]> <nbloop [long]> <frameDelay [long]> <NBiter [long]>", "aolacqresp 50 0.1 5 2", "int AOloopControl_acquireCalib_ Measure_Resp_Matrix(long loop, long NbAve, float amp, long nbloop, long fDelay, long NBiter)");
-
-    RegisterCLIcommand("aolmRMfast", __FILE__, AOloopControl_acquireCalib_RespMatrix_Fast_cli, "acquire fast modal response matrix", "<modes> <dm RM stream> <WFS stream> <sem trigger> <hardware latency [s]> <loop frequ [Hz]> <ampl [um]> <outname>", "aolmRMfast DMmodes aol0_dmRM aol0_wfsim 4 0.00112 2000.0 0.03 rm000", "long AOloopControl_acquireCalib_RespMatrix_Fast(char *DMmodes_name, char *dmRM_name, char *imWFS_name, long semtrig, float HardwareLag, float loopfrequ, float ampl, char *outname)");
-
-    RegisterCLIcommand("aolmeasWFSrespC",__FILE__, AOloopControl_acquireCalib_Measure_WFSrespC_cli, "measure WFS resp to DM patterns", "<delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <normalize flag> <AOinitMode> <NBcycle>", "aolmeasWFSrespC 2 135 20 0 dmmodes wfsresp 1 0 5", "long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, uint32_t SequInitMode);");
-
-    RegisterCLIcommand("aolmeaslWFSrespC",__FILE__, AOloopControl_acquireCalib_Measure_WFS_linResponse_cli, "measure linear WFS response to DM patterns", "<ampl [um]> <delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <output reference [string]> <normalize flag> <AOinitMode> <NBcycle>", "aolmeasWFSrespC 0.05 2 135 20 0 dmmodes wfsresp wfsref 1 0 5", "long AOloopControl_acquireCalib_Measure_WFS_linResponse(long loop, float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDrespC_name, char *IDwfsref_name, int normalize, int AOinitMode, long NBcycle, long NBinnerCycle)");
-
-    RegisterCLIcommand("aolmeaszrm",__FILE__, AOloopControl_acquireCalib_Measure_zonalRM_cli, "measure zonal resp mat, WFS ref, DM and WFS response maps", "<ampl [float]> <delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <output image [string]> <output WFS ref [string]>  <output WFS response map [string]>  <output DM response map [string]> <mode> <normalize flag> <AOinitMode> <NBcycle>", "aolmeaszrm 0.05 2 135 20 zrm wfsref wfsmap dmmap 1 0 0 0", "long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, char *zrespm_name, char *WFSref_name, char *WFSmap_name, char *DMmap_name, long mode, int normalize, int AOinitMode, long NBcycle)");
+    RegisterCLIcommand(
+        "aolacqmkrlps",
+        __FILE__,
+        AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli,
+        "create sequence of linearly coupled poke maps",
+        "<poke modes cube> <NBpokemaps> <output poke map> <output poke frames>",
+        "aolacqmkrlps pokeModesC 50 pokemC pokeC",
+        "long AOloopControl_acquireCalib_mkRandomLinPokeSequence(char *IDmodeC_name, long NBpokemap, char *IDpokemapC_name, char *IDpokeC_name)");
 
 
-	RegisterCLIcommand(
-		"aolRMdeinterlace",
-		__FILE__, 
-		AOloopControl_acquireCalib_RMseries_deinterlace_cli, 
-		"process overlapping RMs", 
-		"aolRMdeinterlace <Number RMs> <refstart> <refend> <outname>", 
-		"aolRMdeinterlace 8 4 9 outRMseq", 
-		"long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name)");
+    RegisterCLIcommand(
+        "aolacqresp",
+        __FILE__,
+        AOloopControl_acquireCalib_Measure_Resp_Matrix_cli,
+        "acquire AO response matrix and WFS reference",
+        "<ave# [long]> <ampl [float]> <nbloop [long]> <frameDelay [long]> <NBiter [long]>",
+        "aolacqresp 50 0.1 5 2",
+        "int AOloopControl_acquireCalib_ Measure_Resp_Matrix(long loop, long NbAve, float amp, long nbloop, long fDelay, long NBiter)");
+
+    RegisterCLIcommand(
+        "aolmRMfast",
+        __FILE__,
+        AOloopControl_acquireCalib_RespMatrix_Fast_cli,
+        "acquire fast modal response matrix",
+        "<modes> <dm RM stream> <WFS stream> <sem trigger> <hardware latency [s]> <loop frequ [Hz]> <ampl [um]> <outname>",
+        "aolmRMfast DMmodes aol0_dmRM aol0_wfsim 4 0.00112 2000.0 0.03 rm000",
+        "long AOloopControl_acquireCalib_RespMatrix_Fast(char *DMmodes_name, char *dmRM_name, char *imWFS_name, long semtrig, float HardwareLag, float loopfrequ, float ampl, char *outname)");
+
+    RegisterCLIcommand(
+        "aolmeasWFSrespC",
+        __FILE__,
+        AOloopControl_acquireCalib_Measure_WFSrespC_cli,
+        "measure WFS resp to DM patterns",
+        "<delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <normalize flag> <AOinitMode> <NBcycle>",
+        "aolmeasWFSrespC 2 135 20 0 dmmodes wfsresp 1 0 5",
+        "long AOloopControl_acquireCalib_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, uint32_t SequInitMode);");
+
+    RegisterCLIcommand(
+        "aolmeaslWFSrespC",
+        __FILE__,
+        AOloopControl_acquireCalib_Measure_WFS_linResponse_cli,
+        "measure linear WFS response to DM patterns",
+        "<ampl [um]> <delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <input DM patter cube [string]> <output response [string]> <output reference [string]> <normalize flag> <AOinitMode> <NBcycle>",
+        "aolmeasWFSrespC 0.05 2 135 20 0 dmmodes wfsresp wfsref 1 0 5",
+        "long AOloopControl_acquireCalib_Measure_WFS_linResponse(long loop, float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDrespC_name, char *IDwfsref_name, int normalize, int AOinitMode, long NBcycle, long NBinnerCycle)");
+
+    RegisterCLIcommand(
+        "aolmeaszrm",
+        __FILE__, AOloopControl_acquireCalib_Measure_zonalRM_cli,
+        "measure zonal resp mat, WFS ref, DM and WFS response maps",
+        "<ampl [float]> <delay frames [long]> <DMcommand delay us [long]> <nb frames per position [long]> <nb frames excluded [long]> <output image [string]> <output WFS ref [string]>  <output WFS response map [string]>  <output DM response map [string]> <mode> <normalize flag> <AOinitMode> <NBcycle>",
+        "aolmeaszrm 0.05 2 135 20 zrm wfsref wfsmap dmmap 1 0 0 0",
+        "long AOloopControl_acquireCalib_Measure_zonalRM(long loop, double ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, char *zrespm_name, char *WFSref_name, char *WFSmap_name, char *DMmap_name, long mode, int normalize, int AOinitMode, long NBcycle)");
+
+
+    RegisterCLIcommand(
+        "aolRMdeinterlace",
+        __FILE__,
+        AOloopControl_acquireCalib_RMseries_deinterlace_cli,
+        "process overlapping RMs",
+        "aolRMdeinterlace <Number RMs> <refstart> <refend> <outname>",
+        "aolRMdeinterlace 8 4 9 outRMseq",
+        "long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name)");
 
 
 
@@ -523,7 +668,8 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
     // ===========================
     // SETUP FPS
     // ===========================
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
+    int SMfd = -1;
+    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
 	fps.md->sourceline = __LINE__;
 
@@ -552,7 +698,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }
     }
-    function_parameter_FPCONFexit( &fps );
+    function_parameter_FPCONFexit( &fps, &SMfd );
 
 
     return RETURN_SUCCESS;
@@ -572,8 +718,9 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
+    int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
-    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1)
     {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
@@ -598,6 +745,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
         // This can use a separate shared memory path
     }
 
+	function_parameter_struct_disconnect(&fps, &SMfd);
 
     return RETURN_SUCCESS;
 }
@@ -663,9 +811,11 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     long        NBcycle,
     uint32_t         SequInitMode
 ) {
-    char fname[200];
-    char name[200];
-    char command[200];
+    int stringmaxlen = 500;
+
+    char fname[stringmaxlen];
+    char name[stringmaxlen];
+    char command[stringmaxlen];
     uint32_t *sizearray;
     long IDoutC;
     char *ptr;
@@ -687,7 +837,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     FILE *fp;
 
-	int semindexwfs = 7;
+    int semindexwfs = 7;
 
 
 
@@ -712,17 +862,17 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
     int SAVE_RMACQU_ALL = 1; // save all intermediate results
-  //  int COMP_RMACQU_AVESTEP = 1;  // group images by time delay step and average accordingly -> get time-resolved RM
+    //  int COMP_RMACQU_AVESTEP = 1;  // group images by time delay step and average accordingly -> get time-resolved RM
 
 
-    char pinfoname[200];   // short name for the processinfo instance, no spaces, no dot, name should be human-readable
-    sprintf(pinfoname, "aol%ld-acqRM", loop);
+    char pinfoname[stringmaxlen];   // short name for the processinfo instance, no spaces, no dot, name should be human-readable
+    snprintf(pinfoname, stringmaxlen, "aol%ld-acqRM", loop);
 
-    char pinfodescr[200];
-    sprintf(pinfodescr, "%s", IDpokeC_name);
+    char pinfodescr[stringmaxlen];
+    snprintf(pinfodescr, stringmaxlen, "%s", IDpokeC_name);
 
-    char pinfomsg[200];
-    sprintf(pinfomsg, "delay=%ld+%ldus ave=%ld excl=%ld cyc=%ld", delayfr, delayRM1us, NBave, NBexcl, NBcycle);
+    char pinfomsg[stringmaxlen];
+    snprintf(pinfomsg, stringmaxlen, "delay=%ld+%ldus ave=%ld excl=%ld cyc=%ld", delayfr, delayRM1us, NBave, NBexcl, NBcycle);
 
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
@@ -765,8 +915,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     processinfo_WriteMessage(processinfo, "Initializing/Loading memory");
-    
-    
+
+
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
@@ -775,22 +925,22 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     printf("INITIALIZE MEMORY (mode %d, meminit = %d)....\n", AOinitMode, AOloopcontrol_meminit);
     fflush(stdout);
 
-	AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
-/*    if(AOloopcontrol_meminit == 0) {
-		AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
-        AOloopControl_InitializeMemory(AOinitMode);
-    }
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+    /*    if(AOloopcontrol_meminit == 0) {
+    		AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+            AOloopControl_InitializeMemory(AOinitMode);
+        }
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
-    AOloopControl_loadconfigure(LOOPNUMBER, 1, 2);
-    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
-*/
+        AOloopControl_loadconfigure(LOOPNUMBER, 1, 2);
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+    */
 
 
     processinfo_WriteMessage(processinfo, "Connecting to DM RM channel");
     printf("Importing DM response matrix channel shared memory ...\n");
     fflush(stdout);
-    
+
     char dmRMname[100];
     sprintf(dmRMname, "aol%ld_dmRM", loop);
     long ID_dmRM = read_sharedmem_image(dmRMname);
@@ -799,23 +949,23 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         loopOK = 0;
         return RETURN_FAILURE;
     }
-	long sizexDM = data.image[ID_dmRM].md[0].size[0];
-	long sizeyDM = data.image[ID_dmRM].md[0].size[1];
-	long sizeDM = sizexDM*sizeyDM;
+    long sizexDM = data.image[ID_dmRM].md[0].size[0];
+    long sizeyDM = data.image[ID_dmRM].md[0].size[1];
+    long sizeDM = sizexDM*sizeyDM;
 
 
 
     processinfo_WriteMessage(processinfo, "Connecting to WFS stream");
     printf("Importing WFS camera image shared memory ... \n");
     fflush(stdout);
-    
+
     char WFSname[100];
-    if(normalize == 1){
-		sprintf(WFSname, "aol%ld_imWFS1", loop);
-	}
-	else {
-		sprintf(WFSname, "aol%ld_imWFS0", loop);
-	}
+    if(normalize == 1) {
+        sprintf(WFSname, "aol%ld_imWFS1", loop);
+    }
+    else {
+        sprintf(WFSname, "aol%ld_imWFS0", loop);
+    }
     long ID_wfsim = read_sharedmem_image(WFSname);
     if(ID_wfsim == -1) {
         processinfo_error(processinfo, "ERROR: cannot connect to WFS stream");
@@ -843,12 +993,18 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      */
     IDpokeC = image_ID(IDpokeC_name);
     if(IDpokeC == -1) {
-        sprintf(pinfomsg, "ERROR: Cannot load stream %s", IDpokeC_name);
+        snprintf(pinfomsg, stringmaxlen, "ERROR: Cannot load stream %s", IDpokeC_name);
         processinfo_error(processinfo, pinfomsg);
         loopOK = 0;
         return RETURN_FAILURE;
     } else {
-        sprintf(pinfomsg, "Loaded stream %s [%d %d %d]", IDpokeC_name, data.image[IDpokeC].md[0].size[0], data.image[IDpokeC].md[0].size[1], data.image[IDpokeC].md[0].size[2]);
+        snprintf(pinfomsg,
+                 stringmaxlen,
+                 "Loaded stream %s [%d %d %d]",
+                 IDpokeC_name,
+                 data.image[IDpokeC].md[0].size[0],
+                 data.image[IDpokeC].md[0].size[1],
+                 data.image[IDpokeC].md[0].size[2]);
         processinfo_WriteMessage(processinfo, pinfomsg);
     }
 
@@ -872,12 +1028,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     pokeTime_nsec   = (long *) malloc(sizeof(long) * NBpokeTotal);
     pokeTime_index  = (long *) malloc(sizeof(long) * NBpokeTotal);
 
-	AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
-    
+    AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
     // create one temporary array per time step
     int AveStep;
     long *IDoutCstep = (long *) malloc(sizeof(long) * NBave);
-   // long *IDoutCstepCumul = (long *) malloc(sizeof(long) * NBave); // Cumulative
+    // long *IDoutCstepCumul = (long *) malloc(sizeof(long) * NBave); // Cumulative
     for(AveStep = 0; AveStep < NBave; AveStep++) {
         char imname[100];
         sprintf(imname, "imoutStep%03d", AveStep);
@@ -895,9 +1051,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     }*/
 
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
     // Check that DM size matches poke file
     if(data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1] != data.image[ID_dmRM].md[0].size[0]*data.image[ID_dmRM].md[0].size[1]) {
-        sprintf(pinfomsg, "ERROR: DM [%ld] and Poke [%ld] mismatch", (long) data.image[ID_dmRM].md[0].size[0]*data.image[ID_dmRM].md[0].size[1], (long) data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1]);
+        sprintf(pinfomsg, "ERROR: DM [%ld] and Poke [%ld] mismatch",
+                (long) data.image[ID_dmRM].md[0].size[0]*data.image[ID_dmRM].md[0].size[1],
+                (long) data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1]);
         processinfo_error(processinfo, pinfomsg);
         loopOK = 0;
         list_image_ID();
@@ -922,14 +1081,14 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      * WFS frames will arrive in aol_imWFS1
      *
      */
-/*    if(sprintf(name, "aol%ld_imWFS1", loop) < 1) {
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-    }
-    long ID_imWFS1 = read_sharedmem_image(name);
-    if(ID_imWFS1 == -1){
-		ID_imWFS1 = create_image_ID(name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
-	}
-*/
+    /*    if(sprintf(name, "aol%ld_imWFS1", loop) < 1) {
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
+        long ID_imWFS1 = read_sharedmem_image(name);
+        if(ID_imWFS1 == -1){
+    		ID_imWFS1 = create_image_ID(name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+    	}
+    */
 
 
 
@@ -1073,7 +1232,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         // RE-ORDER POKE SEQUENCE
         // adjacent pairs are swapped between cycles
-        
+
         printf("re-ordering poke sequence ... ");
         fflush(stdout);
 
@@ -1098,7 +1257,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 array_PokeSequ[index1] = tmpPokeMode;
             }
         }
-        
+
         printf("DONE\n");
         fflush(stdout);
 
@@ -1158,14 +1317,14 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         array_PokeIndex1Mapped[imcnt] = PokeIndex1Mapped;
         imcnt ++;
 
-		AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
         //Read_cam_frame(loop, 1, normalize, 0, 0);
-		ImageStreamIO_semwait(&data.image[ID_wfsim], semindexwfs);
-		AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
-		
+        ImageStreamIO_semwait(&data.image[ID_wfsim], semindexwfs);
+        AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
+
         COREMOD_MEMORY_image_set_sempost_byID(ID_dmRM, -1);
         data.image[ID_dmRM].md[0].cnt0++;
-        
+
         AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
 
@@ -1244,9 +1403,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 array_PokeIndex1Mapped[imcnt] = PokeIndex1Mapped;
                 imcnt ++;
 
-                
-                
-                //Read_cam_frame(loop, 1, normalize, 0, 0);                
+
+
+                //Read_cam_frame(loop, 1, normalize, 0, 0);
                 ImageStreamIO_semwait(&data.image[ID_wfsim], semindexwfs);
 
 
@@ -1270,8 +1429,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                     PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
 
                     usleep(delayRM1us);
-                    
-                    
+
+
                     // POKE
                     data.image[ID_dmRM].md[0].write = 1;
                     memcpy((void *)(data.image[ID_dmRM].array.F), (void *)(ptr0 + PokeIndex1Mapped * framesize), sizeof(float)*sizeDM);
@@ -1331,12 +1490,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         array_poke[imcnt] = 1;
 
 
-		printf("Combining results ... ");
-		fflush(stdout);
+        printf("Combining results ... ");
+        fflush(stdout);
 
         for(AveStep = 0; AveStep < NBave; AveStep++) { // sum over all values AveStep
             for(PokeIndexMapped = 0; PokeIndexMapped < NBpoke ; PokeIndexMapped++) {
-                for(ii = 0; ii < sizeWFS; ii++) { 
+                for(ii = 0; ii < sizeWFS; ii++) {
                     data.image[IDoutC].array.F[PokeIndexMapped * sizeWFS + ii] += data.image[IDoutCstep[AveStep]].array.F[PokeIndexMapped * sizeWFS + ii];
                 }
 
@@ -1347,9 +1506,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 }*/
             }
         }
-        
+
         printf("DONE\n");
-        fflush(stdout);        
+        fflush(stdout);
 
 
         AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
@@ -1375,7 +1534,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
             fprintf(fplog, "%-20s  %d\n", "SequInitMode", SequInitMode);
             fclose(fplog);
 
-            
+
             // Save individual time step within averaging for high temporal resolution
             for(AveStep = 0; AveStep < NBave; AveStep++) { // save to disk IDoutCstep[AveStep]
                 char imname[100];
@@ -1389,7 +1548,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 printf("DONE\n");
                 fflush(stdout);
             }
-                        
+
         }
 
         iter++;
@@ -1469,8 +1628,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
-	printf("Writing poke timing to file ... ");
-	fflush(stdout);
+    printf("Writing poke timing to file ... ");
+    fflush(stdout);
 
     fp = fopen("./tmpRMacqu/RMpokeTiming.txt", "w");
     double ftime0 = pokeTime_sec[0] + 1.0e-9 * pokeTime_nsec[0];
@@ -1481,10 +1640,10 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         ftime0 = ftime;
     }
     fclose(fp);
-    
+
     printf("DONE\n");
     fflush(stdout);
-    
+
 
     AOLOOPCONTROL_ACQUIRECALIB_LOGEXEC;
 
@@ -1529,12 +1688,22 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     uint16_t loopstatus;
 
 
+	// TEST
+	static unsigned long connection_count_1 = 0;
+	static unsigned long connection_count_2 = 0;
+
     // ===========================
     // SETUP FPS
     // ===========================
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus);
-	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-	fps.md->sourceline = __LINE__;
+    int SMfd = -1;
+    FUNCTION_PARAMETER_STRUCT fps =
+        function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
+    strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
+    fps.md->sourceline = __LINE__;
+
+	int SMfd_mlat = -1;
+	int SMfd_DMcomb = -1;
+
 
     // ===========================
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
@@ -1666,9 +1835,20 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
     // output files and dir
-    long fpi_dirname_out      = function_parameter_add_entry(&fps, ".out.dir",
+    long fpi_out_dirname      = function_parameter_add_entry(&fps, ".out.dirname",
                                 "output directory",
                                 FPTYPE_DIRNAME, FPFLAG_DEFAULT_OUTPUT, pNull);
+
+    long fpi_out_label      = function_parameter_add_entry(&fps, ".out.label",
+                              "output label",
+                              FPTYPE_STRING, FPFLAG_DEFAULT_OUTPUT, pNull);
+
+    long fpi_out_timestring    = function_parameter_add_entry(&fps, ".out.timestring",
+                                 "output timestring",
+                                 FPTYPE_STRING, FPFLAG_DEFAULT_OUTPUT, pNull);
+
+
+
 
 
     long fpi_filename_respC       = function_parameter_add_entry(&fps, ".out.fn_respC",
@@ -1678,6 +1858,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     long fpi_filename_wfsref      = function_parameter_add_entry(&fps, ".out.fn_wfsref",
                                     "output WFS reference",
                                     FPTYPE_FILENAME, FPFLAG_DEFAULT_OUTPUT, pNull);
+
+
+
 
 
     // on/off parameters
@@ -1735,13 +1918,13 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                         "FPS mlat",
                         FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
     FUNCTION_PARAMETER_STRUCT FPS_mlat;
-    fps.parray[fpi_FPS_mlat].info.fps.FPSNBparam = 0;
+    fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX = 0;
 
     long fpi_FPS_DMcomb = function_parameter_add_entry(&fps, ".FPS_DMcomb",
                           "FPS DMcomb",
                           FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
     FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
-    fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam = 0;
+    fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX = 0;
 
 
     if( loopstatus == 0 ) // stop fps
@@ -1760,18 +1943,31 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
         if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
         {
+			
+			printf("======== connecting to aux FPS ============\n");//TBE
+			fflush(stdout);
+			
             //
             //  Connect to aux FPS
             //
-            
-            
-            if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparam < 1 ) {
-                functionparameter_ConnectExternalFPS(&fps, fpi_FPS_mlat, &FPS_mlat);
+
+
+            if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX < 1 ) {
+                functionparameter_ConnectExternalFPS(&fps, fpi_FPS_mlat, &FPS_mlat, &SMfd_mlat);
+                connection_count_1 ++;
+                printf("---- [%s %d] mlat connection count = %lu\n", __FILE__, __LINE__, connection_count_1);  //TBE
+                fflush(stdout);
             }
-            
-            if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam  < 1 ) {
-				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb);
+
+            if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX  < 1 ) {
+                functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb, &SMfd_DMcomb);
+                connection_count_2 ++;
+                printf("---- [%s %d] DMcomb connection count = %lu\n", __FILE__, __LINE__, connection_count_2); //TBE
+                fflush(stdout);
             }
+
+			printf("======== DONE connecting to aux FPS ============\n");//TBE
+			fflush(stdout);
 
 
 
@@ -1779,7 +1975,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
             // Compute action: make DM RM mask
             //
             if(fps.parray[fpi_comp_RM_DMmask].fpflag & FPFLAG_ONOFF) {
-                if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam > 0 ) {
+                if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0 ) {
                     int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
                     int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
                     int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
@@ -1805,7 +2001,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
             // Compute action: make Spoke and Hpoke
             //
             if(fps.parray[fpi_comp_RM_Mpoke].fpflag & FPFLAG_ONOFF) {
-                if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam > 0 ) {
+                if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0 ) {
                     int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
                     int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
                     int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
@@ -1850,13 +2046,14 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
 
-
+			printf("======== Import parameters ============\n");//TBE
+			fflush(stdout);
 
             //
             // Import latency measurements and compute timing parameters
             //
             if(fps.parray[fpi_autoTiming].fpflag & FPFLAG_ONOFF) {   // ON state
-                if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparam > 0 ) {
+                if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX > 0 ) {
                     double latfr = functionparameter_GetParamValue_FLOAT64 ( &FPS_mlat, ".out.latencyfr" );
                     double framerateHz = functionparameter_GetParamValue_FLOAT64 ( &FPS_mlat, ".out.framerateHz" );
 
@@ -1880,22 +2077,32 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                     }
                 }
             }
+			printf("======== DONE Import parameters ============\n");//TBE
+			fflush(stdout);
+sleep(1);
 
 
-
+			printf("======== Check parameters ============\n");//TBE
+			fflush(stdout);
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
-        }
+
+			printf("LOOP END =================\n");
+			fflush(stdout);
+
+                }
+        
+        
     }
 
-    if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparam > 0 ) {
-        function_parameter_struct_disconnect( &FPS_mlat );
+    if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX > 0 ) {
+        function_parameter_struct_disconnect( &FPS_mlat, &SMfd_mlat );
     }
 
-    if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparam > 0 ) {
-        function_parameter_struct_disconnect( &FPS_DMcomb );
+    if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0 ) {
+        function_parameter_struct_disconnect( &FPS_DMcomb, &SMfd_DMcomb );
     }
 
-    function_parameter_FPCONFexit( &fps );
+    function_parameter_FPCONFexit( &fps, &SMfd );
 
 
     return RETURN_SUCCESS;
@@ -1914,8 +2121,9 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
+    int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
-    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1) {
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
     }
@@ -1990,11 +2198,9 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
 
 	char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),  FUNCTION_PARAMETER_STRMAXLEN);
 
 
-    printf("Entering function %s \n", __FUNCTION__);
-    fflush(stdout);
 
     long NBinnerCycleC;
     if(NBinnerCycle < 1)
@@ -2513,7 +2719,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     }
 
 
-	function_parameter_RUNexit( &fps );
+	function_parameter_RUNexit( &fps, &SMfd );
 
     list_image_ID();
 
@@ -2543,18 +2749,19 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 
     long pindex = (long) getpid();  // index used to differentiate multiple calls to function
     // if we don't have anything more informative, we use PID
-
+	
+	int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS
     sprintf(fpsname, "linresp-%06ld", pindex);
     AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, CMDCODE_FPSINIT);
 
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE, &SMfd);
 
 //    functionparameter_SetParamValue_INT64(&fps, ".arg0", arg0);
 
-    function_parameter_struct_disconnect(&fps);
+    function_parameter_struct_disconnect(&fps, &SMfd);
 
     AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(fpsname);
 
