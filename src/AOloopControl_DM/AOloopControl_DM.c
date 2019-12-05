@@ -14,16 +14,14 @@
 
 #define AOLOOPCONTROL_DM_LOGDEBUG 1
 
-#if defined(AOLOOPCONTROL_DM_LOGDEBUG) && !defined(STANDALONE)
-#define TESTPOINT(...) do { \
-sprintf(data.testpoint_file, "%s", __FILE__); \
-sprintf(data.testpoint_func, "%s", __func__); \
-data.testpoint_line = __LINE__; \
-sprintf(data.testpoint_msg, __VA_ARGS__); \
-} while(0)
-#else
-#define TESTPOINT(...)
-#endif
+
+
+/* =============================================================================================== */
+/* =============================================================================================== */
+/*                                        HEADER FILES                                             */
+/* =============================================================================================== */
+/* =============================================================================================== */
+
 
 
 
@@ -31,6 +29,25 @@ sprintf(data.testpoint_msg, __VA_ARGS__); \
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl_DM/AOloopControl_DM.h"
+
+
+
+
+
+
+/* =============================================================================================== */
+/* =============================================================================================== */
+/*                                      DEFINES, MACROS                                            */
+/* =============================================================================================== */
+/* =============================================================================================== */
+
+#if !defined(AOLOOPCONTROL_DM_LOGDEBUG) || defined(STANDALONE)
+#define TESTPOINT(...)
+#endif
+
+
+
+
 
 
 static int INITSTATUS_AOloopControl_DM = 0;
