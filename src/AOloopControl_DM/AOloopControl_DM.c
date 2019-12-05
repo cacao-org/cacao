@@ -9,6 +9,24 @@
  */
 
 
+
+
+
+#define AOLOOPCONTROL_DM_LOGDEBUG 1
+
+#if defined(AOLOOPCONTROL_DM_LOGDEBUG) && !defined(STANDALONE)
+#define TESTPOINT(...) do { \
+sprintf(data.testpoint_file, "%s", __FILE__); \
+sprintf(data.testpoint_func, "%s", __func__); \
+data.testpoint_line = __LINE__; \
+sprintf(data.testpoint_msg, __VA_ARGS__); \
+} while(0)
+#else
+#define TESTPOINT(...)
+#endif
+
+
+
 #include <string.h>
 
 #include "CommandLineInterface/CLIcore.h"
