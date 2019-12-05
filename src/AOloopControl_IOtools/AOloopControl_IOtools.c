@@ -151,7 +151,8 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
 int_fast8_t AOloopControl_IOtools_acquireWFSloop_cli() {
-    char fpsname[200];
+	int stringmaxlen = 200;
+    char fpsname[stringmaxlen];
 
     // First, we try to execute function through FPS interface
     if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
@@ -161,7 +162,7 @@ int_fast8_t AOloopControl_IOtools_acquireWFSloop_cli() {
         //
         if(data.processnameflag == 0) { // name fps to something different than the process name
             if(strlen(data.cmdargtoken[2].val.string)>0)
-                sprintf(fpsname, "acquWFS-%s", data.cmdargtoken[2].val.string);
+                snprintf(fpsname, stringmaxlen, "acquWFS-%s", data.cmdargtoken[2].val.string);
             else
                 sprintf(fpsname, "acquWFS");
         } else { // Automatically set fps name to be process name up to first instance of character '.'
@@ -204,8 +205,21 @@ int_fast8_t AOloopControl_IOtools_acquireWFSloop_cli() {
 
 /** @brief CLI function for AOloopControl_camimage_extract2D_sharedmem_loop */
 int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,5)+CLI_checkarg(3,3)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,2)==0) {
-        AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string , data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.numl);
+    if(CLI_checkarg(1,4)
+            + CLI_checkarg(2,5)
+            + CLI_checkarg(3,3)
+            + CLI_checkarg(4,2)
+            + CLI_checkarg(5,2)
+            + CLI_checkarg(6,2)
+            + CLI_checkarg(7,2)==0) {
+        AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.numl,
+            data.cmdargtoken[7].val.numl);
         return 0;
     }
     else return 1;
