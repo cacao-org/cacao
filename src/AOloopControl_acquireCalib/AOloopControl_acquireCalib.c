@@ -18,17 +18,6 @@
 
 #define AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG 1
 
-#if defined(AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG) && !defined(STANDALONE)
-#define TESTPOINT(...) do { \
-sprintf(data.testpoint_file, "%s", __FILE__); \
-sprintf(data.testpoint_func, "%s", __func__); \
-data.testpoint_line = __LINE__; \
-sprintf(data.testpoint_msg, __VA_ARGS__); \
-} while(0)
-#else
-#define TESTPOINT(...)
-#endif
-
 
 
 
@@ -88,13 +77,20 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 #include "AOloopControl_compTools/AOloopControl_compTools.h"
 
+
+
+
+
+
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                      DEFINES, MACROS                                            */
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-
+ #if !defined(AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG) || defined(STANDALONE)
+#define TESTPOINT(...)
+#endif
 
 # ifdef _OPENMP
 # include <omp.h>
