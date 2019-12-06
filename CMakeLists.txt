@@ -1,13 +1,37 @@
 # Example, run from _build directory :
+#
+#
+# 
 # cmake ..
 # cmake .. -DCMAKE_INSTALL_PREFIX=../_install
+#
+#
+#
+# USING GPU libraries
+# ===============================
 # cmake .. -DUSE_MAGMA=ON
 # cmake .. -DUSE_QDWHPARTIAL=ON
 #
+#
+#
+# BUILD TYPE
+# ===============================
+# Debug build type turns off optimization
+# cmake -DCMAKE_BUILD_TYPE=Debug ..
+#
+# Release build type turns on optimization flags
+# cmake -DCMAKE_BUILD_TYPE=Release ..
+#
+#
+# COMPILING
+# ================================
 # make clean
 # make
 # sudo make install
 #
+#
+#
+
 
 cmake_minimum_required (VERSION 3.5)
 
@@ -17,8 +41,10 @@ project (cacao C)
 set ( VERSION_MAJOR 0 )
 set ( VERSION_MINOR 1 )
 set ( VERSION_PATCH 03 )
-set ( VERSION_OPTION "-dev" )
+#set ( VERSION_OPTION "-dev" )
 
+# turn VERBOSE ON
+#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 
 
@@ -30,13 +56,33 @@ configure_file (
   )
 
 
-# PERFORMANCE ORIENTED COMPILING OPTIONS
 
-# Adds options to the compiler command line for targets in the current directory and below that are added after this command is invoked
+
+# =======================================
+# PERFORMANCE ORIENTED COMPILING OPTIONS
+# =======================================
+
+# Set Release build flags
+set(CMAKE_C_FLAGS_RELEASE     "-Ofast -DNDEBUG")
+
+# Set a default build type if none was specified
+set(default_build_type "Release")
+if(NOT CMAKE_BUILD_TYPE)
+  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
+  set(CMAKE_BUILD_TYPE "${default_build_type}")
+endif()
+
+message("CMAKE_BUILD_TYPE : ${CMAKE_BUILD_TYPE}")
+
+# Adds options to the compiler command line for targets in the current directory 
+# and below that are added after this command is invoked
 
 add_compile_options(-std=gnu11)
-add_compile_options(-Ofast)
 add_compile_options(-march=native)
+
+
+# NOTE: -fstack-usage is incompatible with link-time optimizer
+#add_compile_options(-fstack-usage)
 
 # runs the standard link-time optimizer
 add_compile_options(-flto)
@@ -52,13 +98,24 @@ endif()
 message("COMPILE_OPTIONS:  ${COMPILE_OPTIONS}")
 
 
-# A common flag is -pipe. This flag has no effect on the generated code, but it makes the compilation process faster. It tells the compiler to use pipes instead of temporary files during the different stages of compilation, which uses more memory. On systems with low memory, GCC might get killed. In those cases do not use this flag. 
+# A common flag is -pipe. This flag has no effect on the generated code, 
+# but it makes the compilation process faster. It tells the compiler 
+# to use pipes instead of temporary files during the different stages 
+# of compilation, which uses more memory. On systems with low memory, 
+# GCC might get killed. In those cases do not use this flag. 
 add_compile_options(-pipe)
+
+
+
+
+# =======================================
+# GPU ACCELERATION
+# =======================================
 
 # options
 option(USE_CUDA  "Use CUDA        library" OFF)
 option(USE_MAGMA "Use MAGMA       library" OFF)
-option(USE_MAGMA "Use QDWHpartial library" OFF)
+option(USE_QDWHPARTIAL  "Use QDWHpartial library" OFF)
 
 
 # MAGMA (optional)
@@ -88,6 +145,10 @@ pkg_check_modules(MAGMA REQUIRED magma)
 message(STATUS ${MAGMA_LIBRARY_DIRS})
 link_directories( ${MAGMA_LIBRARY_DIRS} )
 endif(USE_MAGMA)
+
+
+
+
 
 # ncurses
 SET(CURSES_USE_NCURSES TRUE)
@@ -261,9 +322,19 @@ set_target_properties(cacao PROPERTIES COMPILE_FLAGS "${BUILD_FLAGS}" )
 message("====================================================")
 get_target_property(cacaocompopts cacao COMPILE_OPTIONS)
 
-message("BUILD_FLAGS    :  ${BUILD_FLAGS}")
-message("COMPILE_OPTIONS:  ${cacaocompopts}")
+message("BUILD_FLAGS             :  ${BUILD_FLAGS}")
+message("COMPILE_FLAGS           :  ${COMPILE_FLAGS}")
+message("COMPILE_OPTIONS         :  ${cacaocompopts}")
 message("CMAKE_EXE_LINKER_FLAGS  :  ${CMAKE_EXE_LINKER_FLAGS}")
+
+message("CMAKE_C_FLAGS           :  ${CMAKE_C_FLAGS}")
+message("CMAKE_CXX_FLAGS         :  ${CMAKE_CXX_FLAGS}")
+
+message("CMAKE_C_FLAGS_DEBUG           : ${CMAKE_C_FLAGS_DEBUG}")
+message("CMAKE_C_FLAGS_RELEASE         : ${CMAKE_C_FLAGS_RELEASE}")
+message("CMAKE_C_FLAGS_RELWITHDEBINFO  : ${CMAKE_C_FLAGS_RELWITHDEBINFO}")
+message("CMAKE_C_FLAGS_MINSIZEREL      : ${CMAKE_C_FLAGS_MINSIZEREL}")
+
 message("====================================================")
 
 

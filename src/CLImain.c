@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <sched.h>
 #include <omp.h>
+#include <assert.h>
+
 #include <CommandLineInterface/CLIcore.h>
 
 
@@ -31,7 +33,6 @@
 #include <FPAOloopControl/FPAOloopControl.h>
 
 
-
 #define STYLE_BOLD    "\033[1m"
 #define STYLE_NO_BOLD "\033[22m"
 
@@ -39,18 +40,23 @@
 DATA __attribute__((used)) data;
 
 
+
+
 int main(int argc, char *argv[])
 {
     char *AppName = "cacao";
-
+    int a = 0;
 
     printf(STYLE_BOLD);
     printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
+    #ifndef NDEBUG
+    printf("        === DEBUG MODE : assert() enabled ===========\n");
+    #endif
     printf(STYLE_NO_BOLD);
 
 
     strcpy(data.package_name, PACKAGE_NAME);
-    
+
     char versionstring[200];
     sprintf(versionstring, "%d.%d.%02d%s",  VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_OPTION);
     strcpy(data.package_version, versionstring);
@@ -61,9 +67,9 @@ int main(int argc, char *argv[])
 
     printf("\n");
     printf("        %s version %s\n", data.package_name, data.package_version);
-    #ifdef IMAGESTRUCT_VERSION
+#ifdef IMAGESTRUCT_VERSION
     printf("        Using ImageStreamIO version %s\n", IMAGESTRUCT_VERSION);
-    #endif
+#endif
     printf("        GNU General Public License v3.0\n");
     printf("        Report bugs to : %s\n", PACKAGE_BUGREPORT);
     printf("        Type \"help\" for instructions\n");
@@ -83,6 +89,7 @@ int main(int argc, char *argv[])
     libinit_cudacomp();
 
 
+
     // initialize modules specific to cacao
 
     libinit_AOloopControl();
@@ -93,11 +100,7 @@ int main(int argc, char *argv[])
     libinit_AOloopControl_DM();
     libinit_AOloopControl_compTools();
     libinit_AOloopControl_acquireCalib();
-
-
-
-//    printf("Starting CLI ...\n");
-//    fflush(stdout);
+	
 
     runCLI(argc, argv, AppName);
 
