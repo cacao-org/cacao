@@ -524,16 +524,19 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
     uint32_t CMDmode
 )
 {
-    uint16_t loopstatus;
+    //uint16_t loopstatus;
 
 
     // ===========================
     // SETUP FPS
     // ===========================
-    int SMfd = -1;
+   /* int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
 	fps.md->sourceline = __LINE__;
+	*/
+	FPS_SETUP_INIT(fpsname, CMDmode);
+
 
     // ===========================
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
@@ -593,18 +596,18 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
                        FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT|FPFLAG_WRITERUN, &compnormwfsim_default);
 
 
-    if( loopstatus == 0 ) // stop fps
+    if( fps.loopstatus == 0 ) // stop fps
         return RETURN_SUCCESS;
 
 
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while ( loopstatus == 1 )
+    while ( fps.loopstatus == 1 )
     {
 		usleep(50);
 		
-        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
 
 						
@@ -617,7 +620,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
     
     
     
-    function_parameter_FPCONFexit( &fps, &SMfd );
+    function_parameter_FPCONFexit( &fps );
 
 
     return RETURN_SUCCESS;
@@ -636,13 +639,15 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
-    int SMfd = -1;
+    /*int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
     
     if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
-    }
+    }*/
+    
+    FPS_CONNECT( fpsname, FPSCONNECT_RUN );
 
 
 
@@ -1078,7 +1083,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
     // ==================================
 
     processinfo_cleanExit(processinfo);
-    function_parameter_RUNexit( &fps, &SMfd );
+    function_parameter_RUNexit( &fps );
 
 
     if(WFSatype == _DATATYPE_FLOAT) {
@@ -1120,9 +1125,9 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop)
     sprintf(fpsname, "acquWFS-%06ld", pindex);
     AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, CMDCODE_FPSINIT);
 
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE, &SMfd);
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
 	functionparameter_SetParamValue_INT64(&fps, ".loop", loop);
-    function_parameter_struct_disconnect(&fps, &SMfd);
+    function_parameter_struct_disconnect(&fps);
 
     AOcontrolLoop_IOtools_acquireWFSloop_RUN(fpsname);
     
