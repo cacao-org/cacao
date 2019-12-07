@@ -88,7 +88,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 /* =============================================================================================== */
 /* =============================================================================================== */
 
- #if !defined(AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG) || defined(STANDALONE)
+#if !defined(AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG) || defined(STANDALONE)
 #define TESTPOINT(...)
 #endif
 
@@ -650,10 +650,13 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
     // ===========================
     // SETUP FPS
     // ===========================
-    int SMfd = -1;
+    /*int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
 	fps.md->sourceline = __LINE__;
+	*/
+	FPS_SETUP_INIT(fpsname, CMDmode);
+	
 
 
     // ===========================
@@ -673,14 +676,14 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
     // =====================================
     while ( loopstatus == 1 )
     {
-        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
             // here goes the logic
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }
     }
-    function_parameter_FPCONFexit( &fps, &SMfd );
+    function_parameter_FPCONFexit( &fps );
 
 
     return RETURN_SUCCESS;
@@ -700,13 +703,14 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
-    int SMfd = -1;
+    /*int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
     if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1)
     {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
-    }
+    }*/
+	FPS_CONNECT( fpsname, FPSCONNECT_RUN );
 
 
 
@@ -727,7 +731,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
         // This can use a separate shared memory path
     }
 
-	function_parameter_struct_disconnect(&fps, &SMfd);
+	function_parameter_struct_disconnect(&fps);
 
     return RETURN_SUCCESS;
 }
@@ -823,10 +827,6 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
 
-
-
-
-
     TESTPOINT("%ld %ld %ld %ld %ld %s %s %d %d %ld %d",
              loop,
              delayfr,
@@ -854,13 +854,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     char pinfomsg[stringmaxlen];
     snprintf(pinfomsg, stringmaxlen, "delay=%ld+%ldus ave=%ld excl=%ld cyc=%ld", delayfr, delayRM1us, NBave, NBexcl, NBcycle);
 
-    TESTPOINT(" ");
-
 
     PROCESSINFO *processinfo;
     int loopOK = 1;
-
-    TESTPOINT(" ");
 
     processinfo = processinfo_setup(
                       pinfoname,             // short name for the processinfo instance, no spaces, no dot, name should be human-readable
@@ -868,9 +864,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                       pinfomsg,  // message on startup
                       __FUNCTION__, __FILE__, __LINE__
                   );
-
-    TESTPOINT(" ");
-
+ 
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1; // Measure timing
     processinfo->RT_priority = 80;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
@@ -1665,7 +1659,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     uint32_t CMDmode
 )
 {
-    uint16_t loopstatus;
+   // uint16_t loopstatus;
 
 
 	// TEST
@@ -1675,14 +1669,16 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     // ===========================
     // SETUP FPS
     // ===========================
-    int SMfd = -1;
+/*    int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps =
         function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
     strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-    fps.md->sourceline = __LINE__;
+    fps.md->sourceline = __LINE__;*/
 
-	int SMfd_mlat = -1;
-	int SMfd_DMcomb = -1;
+	FPS_SETUP_INIT(fpsname, CMDmode);
+
+//	int SMfd_mlat = -1;
+//	int SMfd_DMcomb = -1;
 
 
     // ===========================
@@ -1907,7 +1903,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX = 0;
 
 
-    if( loopstatus == 0 ) // stop fps
+    if( fps.loopstatus == 0 ) // stop fps
         return RETURN_SUCCESS;
 
 
@@ -1917,11 +1913,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while ( loopstatus == 1 )
+    while ( fps.loopstatus == 1 )
     {
         usleep(50);
 
-        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
 			
 			printf("======== connecting to aux FPS ============\n");//TBE
@@ -1933,14 +1929,14 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
             if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX < 1 ) {
-                functionparameter_ConnectExternalFPS(&fps, fpi_FPS_mlat, &FPS_mlat, &SMfd_mlat);
+                functionparameter_ConnectExternalFPS(&fps, fpi_FPS_mlat, &FPS_mlat);
                 connection_count_1 ++;
                 printf("---- [%s %d] mlat connection count = %lu\n", __FILE__, __LINE__, connection_count_1);  //TBE
                 fflush(stdout);
             }
 
             if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX  < 1 ) {
-                functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb, &SMfd_DMcomb);
+                functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb);
                 connection_count_2 ++;
                 printf("---- [%s %d] DMcomb connection count = %lu\n", __FILE__, __LINE__, connection_count_2); //TBE
                 fflush(stdout);
@@ -2075,14 +2071,14 @@ sleep(1);
     }
 
     if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX > 0 ) {
-        function_parameter_struct_disconnect( &FPS_mlat, &SMfd_mlat );
+        function_parameter_struct_disconnect( &FPS_mlat );
     }
 
     if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0 ) {
-        function_parameter_struct_disconnect( &FPS_DMcomb, &SMfd_DMcomb );
+        function_parameter_struct_disconnect( &FPS_DMcomb );
     }
 
-    function_parameter_FPCONFexit( &fps, &SMfd );
+    function_parameter_FPCONFexit( &fps );
 
 
     return RETURN_SUCCESS;
@@ -2101,12 +2097,16 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
-    int SMfd = -1;
+/*    int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
     if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
     }
+*/
+	FPS_CONNECT( fpsname, FPSCONNECT_RUN );
+
+
 
 
     printf("TEST POINT LINE %d\n", __LINE__);
@@ -2699,7 +2699,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     }
 
 
-	function_parameter_RUNexit( &fps, &SMfd );
+	function_parameter_RUNexit( &fps );
 
     list_image_ID();
 
@@ -2737,11 +2737,11 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
     sprintf(fpsname, "linresp-%06ld", pindex);
     AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, CMDCODE_FPSINIT);
 
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE, &SMfd);
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
 
 //    functionparameter_SetParamValue_INT64(&fps, ".arg0", arg0);
 
-    function_parameter_struct_disconnect(&fps, &SMfd);
+    function_parameter_struct_disconnect(&fps);
 
     AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(fpsname);
 
