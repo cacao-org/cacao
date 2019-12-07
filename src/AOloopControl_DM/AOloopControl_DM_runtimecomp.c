@@ -119,49 +119,49 @@ int AOloopControl_DM_disp2V(long DMindex)
     long ii;
     float volt;
     long IDvolt;
-    
-	static int qmapinit = 0;
-	static char qmapname[100];
-	static long IDqmap;
 
-    int QUANTIZATION_RANDOM = 2; 
+    static int qmapinit = 0;
+    static char qmapname[100];
+    static long IDqmap;
+
+    int QUANTIZATION_RANDOM = 2;
     // 1: remove quantization error by probabilistic value, recomputed for each new value
-	// 2: remove quantization error by adding an external random map between 0 and 1, named dmXXquant
-	//    USER SHOULD UPDATE THIS MAP WHEN REQUIRED
-	
-	TESTPOINT(" ");
-	
+    // 2: remove quantization error by adding an external random map between 0 and 1, named dmXXquant
+    //    USER SHOULD UPDATE THIS MAP WHEN REQUIRED
+
+    TESTPOINT(" ");
+
     IDvolt = dmdispcombconf[DMindex].IDvolt;
-	if(IDvolt == -1)
-	{
-		printf("IDvolt = -1 -> exiting\n");
-		exit(0);		
-	}
+    if(IDvolt == -1)
+    {
+        printf("IDvolt = -1 -> exiting\n");
+        exit(0);
+    }
 
-	data.image[IDvolt].md[0].write = 1;
-	
+    data.image[IDvolt].md[0].write = 1;
 
-	TESTPOINT(" ");
-	if(QUANTIZATION_RANDOM == 2)
-	{
-		if(qmapinit == 0)
-		{
-			uint32_t *sizearray;
-			
-			sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
-			sizearray[0] = dmdispcombconf[DMindex].xsize;
-			sizearray[1] = dmdispcombconf[DMindex].ysize;
-			sprintf(qmapname, "dm%02ldquant", DMindex);
-			IDqmap = create_image_ID(qmapname, 2, sizearray, _DATATYPE_FLOAT, 1, 10);
-			free(sizearray);
-			
-			printf("ARRAY %s CREATED\n", qmapname);
-			
-			qmapinit = 1;
-		}
-	}
-	
-	TESTPOINT(" ");
+
+    TESTPOINT(" ");
+    if(QUANTIZATION_RANDOM == 2)
+    {
+        if(qmapinit == 0)
+        {
+            uint32_t *sizearray;
+
+            sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+            sizearray[0] = dmdispcombconf[DMindex].xsize;
+            sizearray[1] = dmdispcombconf[DMindex].ysize;
+            sprintf(qmapname, "dm%02ldquant", DMindex);
+            IDqmap = create_image_ID(qmapname, 2, sizearray, _DATATYPE_FLOAT, 1, 10);
+            free(sizearray);
+
+            printf("ARRAY %s CREATED\n", qmapname);
+
+            qmapinit = 1;
+        }
+    }
+
+    TESTPOINT(" ");
     if(dmdispcombconf[DMindex].voltON==1)
     {
         if(dmdispcombconf[DMindex].volttype == 1) // linear bipolar, output is float
@@ -193,18 +193,20 @@ int AOloopControl_DM_disp2V(long DMindex)
                     fval = volt/300.0*16384.0;
                     uval = (unsigned short int) (fval);
                     fracval = fval-uval; // between 0 and 1
-                    
+
                     if(ran1()<fracval)
-						uval++;
-                    
+                        uval++;
+
                     data.image[IDvolt].array.UI16[ii] = uval;
                 }
                 else if (QUANTIZATION_RANDOM == 2)
                 {
-					data.image[IDvolt].array.UI16[ii] = (unsigned short int) (volt/300.0*16384.0 + data.image[IDqmap].array.F[ii]);
-				}
+                    data.image[IDvolt].array.UI16[ii] =
+                        (unsigned short int) (volt/300.0*16384.0 + data.image[IDqmap].array.F[ii]);
+                }
                 else
-                    data.image[IDvolt].array.UI16[ii] = (unsigned short int) volt/300.0*16384.0;
+                    data.image[IDvolt].array.UI16[ii] =
+                        (unsigned short int) volt/300.0*16384.0;
 
             }
         }
@@ -224,7 +226,7 @@ int AOloopControl_DM_disp2V(long DMindex)
         }
     }
 
-	TESTPOINT(" ");
+    TESTPOINT(" ");
     data.image[IDvolt].md[0].write = 0;
     data.image[IDvolt].md[0].cnt0++;
 
@@ -233,7 +235,7 @@ int AOloopControl_DM_disp2V(long DMindex)
     COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
     COREMOD_MEMORY_image_set_sempost_byID(IDvolt, -1);
 
-	TESTPOINT(" ");
+    TESTPOINT(" ");
 
     return 0;
 }
@@ -255,15 +257,19 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     uint32_t CMDmode,
     long DMindex
 ) {
-    uint16_t loopstatus;
+   // uint16_t loopstatus;
 	
 	// ===========================
     // SETUP FPS
     // ===========================
-    int SMfd = -1;
+    /*int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
 	fps.md->sourceline = __LINE__;
+	*/
+	
+	FPS_SETUP_INIT(fpsname, CMDmode);
+
 
 
     // ALLOCATE FPS ENTRIES
@@ -353,15 +359,15 @@ int AOloopControl_DM_CombineChannels_FPCONF(
         function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, FPFLAG_DEFAULT_STATUS, pNull);
 
 
-    if(loopstatus == 0) { // stop fps
-        return EXIT_SUCCESS;
+    if(fps.loopstatus == 0) { // stop fps
+        return RETURN_SUCCESS;
     }
 
 
     // RUN UPDATE LOOP
-    while(loopstatus == 1) {
+    while(fps.loopstatus == 1) {
 		
-        if(function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) { // if update needed
+        if(function_parameter_FPCONFloopstep(&fps) == 1) { // if update needed
             // here goes the logic
             if(fps.parray[fp_dm2dm_mode].fpflag & FPFLAG_ONOFF) {   // ON state
                 fps.parray[fp_dm2dm_DMmodes].fpflag |= FPFLAG_USED;
@@ -402,10 +408,10 @@ int AOloopControl_DM_CombineChannels_FPCONF(
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }
     }
-    function_parameter_FPCONFexit(&fps, &SMfd);
+    function_parameter_FPCONFexit(&fps);
 
 
-    return EXIT_SUCCESS;
+    return RETURN_SUCCESS;
 }
 
 
@@ -505,7 +511,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
     TESTPOINT(" ");
-	
+	/*
 	int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
@@ -513,6 +519,8 @@ int AOloopControl_DM_CombineChannels_RUN(
         printf("ERROR: fps \"%s\" does not exist -> Cannot run\n", fpsname);
         return EXIT_FAILURE;
     }
+    */
+    FPS_CONNECT( fpsname, FPSCONNECT_RUN );
 
 
 
@@ -1046,7 +1054,7 @@ int AOloopControl_DM_CombineChannels_RUN(
     }
     TESTPOINT(" ");
 
-	function_parameter_RUNexit( &fps, &SMfd );
+	function_parameter_RUNexit( &fps );
     processinfo_cleanExit(processinfo);
     TESTPOINT(" ");
 
@@ -1139,7 +1147,7 @@ int AOloopControl_DM_CombineChannels(
 
 
 
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd);
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN);
 
     functionparameter_SetParamValue_INT64(&fps, ".DMindex", DMindex);
     functionparameter_SetParamValue_INT64(&fps, ".DMxsize", xsize);
@@ -1165,7 +1173,7 @@ int AOloopControl_DM_CombineChannels(
     functionparameter_SetParamValue_FLOAT64(&fps, ".option.maxvolt", maxvolt);
 
 
-    function_parameter_struct_disconnect(&fps, &SMfd);
+    function_parameter_struct_disconnect(&fps);
 
 
 
