@@ -712,20 +712,23 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     char *fpsname,
     uint32_t CMDmode
 ) {
-    uint16_t loopstatus;
+    //uint16_t loopstatus;
 
 
     // ===========================
     // SETUP FPS
     // ===========================
-    int SMfd = -1;
+   /* int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-	fps.md->sourceline = __LINE__;
+	fps.md->sourceline = __LINE__;*/
 
-	int SMfd_zRMacqu = -1;
-	int SMfd_loRMacqu = -1;
-	int SMfd_DMcomb = -1;
+	FPS_SETUP_INIT(fpsname, CMDmode);
+
+
+	//int SMfd_zRMacqu = -1;
+	//int SMfd_loRMacqu = -1;
+	//int SMfd_DMcomb = -1;
 	
     // ===========================
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
@@ -855,7 +858,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
 
 
-    if( loopstatus == 0 ) // stop fps
+    if( fps.loopstatus == 0 ) // stop fps
         return RETURN_SUCCESS;
 
 
@@ -863,25 +866,25 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while ( loopstatus == 1 )
+    while ( fps.loopstatus == 1 )
     {
         usleep(50);
 
-        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
             //
             //  Connect to aux FPS
             //
             if ( fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX < 1 ) {
-				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_zRMacqu, &FPS_zRMacqu, &SMfd_zRMacqu);
+				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_zRMacqu, &FPS_zRMacqu);
 //                FPS_zRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_zRMacqu].val.string[0], &FPS_zRMacqu, FPSCONNECT_SIMPLE);
             }
             if ( fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX  < 1 ) {
-				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_loRMacqu, &FPS_loRMacqu, &SMfd_loRMacqu);
+				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_loRMacqu, &FPS_loRMacqu);
                 //FPS_loRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_loRMacqu].val.string[0], &FPS_loRMacqu, FPSCONNECT_SIMPLE);
             }
             if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX  < 1 ) {
-				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb, &SMfd_DMcomb);
+				functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb);
 				//FPS_DMcomb_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_DMcomb].val.string[0], &FPS_DMcomb, FPSCONNECT_SIMPLE);
 			}            
 
@@ -960,19 +963,19 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     }
 
 
-    function_parameter_FPCONFexit( &fps, &SMfd );
+    function_parameter_FPCONFexit( &fps );
 
     if ( fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0 ) {
-        function_parameter_struct_disconnect( &FPS_zRMacqu, &SMfd_zRMacqu );
+        function_parameter_struct_disconnect( &FPS_zRMacqu );
     }
 
 
     if ( fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0 ) {
-        function_parameter_struct_disconnect( &FPS_loRMacqu, &SMfd_loRMacqu );
+        function_parameter_struct_disconnect( &FPS_loRMacqu );
     }
 
     if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0 ) {
-		function_parameter_struct_disconnect( &FPS_DMcomb, &SMfd_DMcomb );
+		function_parameter_struct_disconnect( &FPS_DMcomb );
 	}
     
 
@@ -990,13 +993,16 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
-    int SMfd = -1;
+  /*  int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
     if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
-    }
+    }*/
+
+	FPS_CONNECT( fpsname, FPSCONNECT_RUN );
+
 
     // ===============================
     // GET FUNCTION PARAMETER VALUES
@@ -1281,7 +1287,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     printf("[%s %d] DONE - disconnecting from FPS\n", __FILE__, __LINE__);
     fflush(stdout);
 
-    function_parameter_RUNexit( &fps, &SMfd );
+    function_parameter_RUNexit( &fps );
 
     return RETURN_SUCCESS;
 
