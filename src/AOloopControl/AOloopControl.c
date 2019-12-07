@@ -947,26 +947,26 @@ void __attribute__ ((constructor)) libinit_AOloopControl()
 
 int AOloopControl_bogusfunc()
 {
-	printf("This function does NOTHING !\n");
-	return 0;
+    printf("This function does NOTHING !\n");
+    return 0;
 }
 
 
 // CODING STANDARD NOTE: minimal required documentation for doxygen
 /**
  *  ## Purpose
- * 
+ *
  * Initialization of the AO loop Control with all of the CLI command line interface commands
- * 
- * 
+ *
+ *
  * ## Arguments
- * 
+ *
  * @param[in]
  * mode		INT
  * 			mode sets up what function does
  * -		does nothing
  * -		also does nothing
- * 
+ *
  */
 // CODING STANDARD NOTE: function name start with module name
 
@@ -994,66 +994,66 @@ void init_AOloopControl()
         LOOPNUMBER = 0;
 
 
-	aoloopcontrol_var.AOloopcontrol_meminit = 0;
-	aoloopcontrol_var.init_RM_local = 0;
-	aoloopcontrol_var.init_CM_local = 0;
-	aoloopcontrol_var.init_CMc_local = 0;
-	
-	aoloopcontrol_var.GPU_alpha = 0.0;
-	aoloopcontrol_var.GPU_beta = 0.0;
+    aoloopcontrol_var.AOloopcontrol_meminit = 0;
+    aoloopcontrol_var.init_RM_local = 0;
+    aoloopcontrol_var.init_CM_local = 0;
+    aoloopcontrol_var.init_CMc_local = 0;
 
-	aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
-	aoloopcontrol_var.PIXSTREAM_NBSLICES = 1;
-	aoloopcontrol_var.aoconfID_wfsim = -1;
-	aoloopcontrol_var.aoconfID_dmC = -1;
-	aoloopcontrol_var.aoconfID_dmRM = -1;
-	aoloopcontrol_var.aoconfID_wfsdark = -1;
-	aoloopcontrol_var.aoconfID_imWFS0 = -1;
-	aoloopcontrol_var.aoconfID_imWFS0tot = -1;
-	aoloopcontrol_var.aoconfID_imWFS1 = -1;
-	aoloopcontrol_var.aoconfID_imWFS2 = -1;
-	aoloopcontrol_var.aoconfID_imWFSlinlimit = -1;
-	aoloopcontrol_var.aoconfID_wfsref0 = -1;
-	aoloopcontrol_var.aoconfID_wfsref = -1;
-	aoloopcontrol_var.aoconfcnt0_wfsref_current = -1;
-	aoloopcontrol_var.aoconfID_DMmodes = -1;
-	aoloopcontrol_var.aoconfID_dmdisp = -1;
-	aoloopcontrol_var.aoconfID_cmd_modes = -1;
-	aoloopcontrol_var.aoconfID_meas_modes = -1;
-	aoloopcontrol_var.aoconfID_RMS_modes = -1;
-	aoloopcontrol_var.aoconfID_AVE_modes = -1;
-	aoloopcontrol_var.aoconfID_modeARPFgainAuto = -1;
-	aoloopcontrol_var.aoconfID_modevalPF = -1;
-	aoloopcontrol_var.aoconfID_gainb = -1;
-	aoloopcontrol_var.aoconfID_multfb = -1;
-	aoloopcontrol_var.aoconfID_limitb = -1;
-	aoloopcontrol_var.aoconfID_DMmode_GAIN = -1;
-	aoloopcontrol_var.aoconfID_LIMIT_modes = -1;
-	aoloopcontrol_var.aoconfID_MULTF_modes = -1;
-	aoloopcontrol_var.aoconfID_cmd_modesRM = -1;
-	aoloopcontrol_var.aoconfID_wfsmask = -1;
-	aoloopcontrol_var.aoconfID_dmmask = -1;
-	aoloopcontrol_var.aoconfID_contrM = -1;
-	aoloopcontrol_var.aoconfID_contrMc = -1;
-	aoloopcontrol_var.aoconfID_meas_act = -1;
-	
-	int i;
-	for(i=0;i<100;i++)
-	{	
-		aoloopcontrol_var.aoconfID_contrMcact[i] = -1;
-		aoloopcontrol_var.initcontrMcact_GPU[i] = -1;
-	}
-	
-	aoloopcontrol_var.aoconfID_looptiming = -1;
-	aoloopcontrol_var.AOcontrolNBtimers = 35;
+    aoloopcontrol_var.GPU_alpha = 0.0;
+    aoloopcontrol_var.GPU_beta = 0.0;
 
-	aoloopcontrol_var.aoconfIDlogdata = -1;
-	aoloopcontrol_var.aoconfID_meas_act_active = -1;
+    aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
+    aoloopcontrol_var.PIXSTREAM_NBSLICES = 1;
+    aoloopcontrol_var.aoconfID_wfsim = -1;
+    aoloopcontrol_var.aoconfID_dmC = -1;
+    aoloopcontrol_var.aoconfID_dmRM = -1;
+    aoloopcontrol_var.aoconfID_wfsdark = -1;
+    aoloopcontrol_var.aoconfID_imWFS0 = -1;
+    aoloopcontrol_var.aoconfID_imWFS0tot = -1;
+    aoloopcontrol_var.aoconfID_imWFS1 = -1;
+    aoloopcontrol_var.aoconfID_imWFS2 = -1;
+    aoloopcontrol_var.aoconfID_imWFSlinlimit = -1;
+    aoloopcontrol_var.aoconfID_wfsref0 = -1;
+    aoloopcontrol_var.aoconfID_wfsref = -1;
+    aoloopcontrol_var.aoconfcnt0_wfsref_current = -1;
+    aoloopcontrol_var.aoconfID_DMmodes = -1;
+    aoloopcontrol_var.aoconfID_dmdisp = -1;
+    aoloopcontrol_var.aoconfID_cmd_modes = -1;
+    aoloopcontrol_var.aoconfID_meas_modes = -1;
+    aoloopcontrol_var.aoconfID_RMS_modes = -1;
+    aoloopcontrol_var.aoconfID_AVE_modes = -1;
+    aoloopcontrol_var.aoconfID_modeARPFgainAuto = -1;
+    aoloopcontrol_var.aoconfID_modevalPF = -1;
+    aoloopcontrol_var.aoconfID_gainb = -1;
+    aoloopcontrol_var.aoconfID_multfb = -1;
+    aoloopcontrol_var.aoconfID_limitb = -1;
+    aoloopcontrol_var.aoconfID_DMmode_GAIN = -1;
+    aoloopcontrol_var.aoconfID_LIMIT_modes = -1;
+    aoloopcontrol_var.aoconfID_MULTF_modes = -1;
+    aoloopcontrol_var.aoconfID_cmd_modesRM = -1;
+    aoloopcontrol_var.aoconfID_wfsmask = -1;
+    aoloopcontrol_var.aoconfID_dmmask = -1;
+    aoloopcontrol_var.aoconfID_contrM = -1;
+    aoloopcontrol_var.aoconfID_contrMc = -1;
+    aoloopcontrol_var.aoconfID_meas_act = -1;
 
-	
+    int i;
+    for(i=0; i<100; i++)
+    {
+        aoloopcontrol_var.aoconfID_contrMcact[i] = -1;
+        aoloopcontrol_var.initcontrMcact_GPU[i] = -1;
+    }
 
-	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
-		aoloopcontrol_var.RTSLOGarrayInitFlag[i] = 0;
+    aoloopcontrol_var.aoconfID_looptiming = -1;
+    aoloopcontrol_var.AOcontrolNBtimers = 35;
+
+    aoloopcontrol_var.aoconfIDlogdata = -1;
+    aoloopcontrol_var.aoconfID_meas_act_active = -1;
+
+
+
+    for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+        aoloopcontrol_var.RTSLOGarrayInitFlag[i] = 0;
 
 
 
@@ -1064,260 +1064,654 @@ void init_AOloopControl()
 
 
 
-	/* =============================================================================================== */
+    /* =============================================================================================== */
     /* =============================================================================================== */
     /* 3.   LOOP CONTROL INTERFACE - AOloopControl_loop_ctr.c                                          */
     /* =============================================================================================== */
     /* =============================================================================================== */
 
-	/* =============================================================================================== */
-	/* 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET                  */
-	/* =============================================================================================== */
+    /* =============================================================================================== */
+    /* 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET                  */
+    /* =============================================================================================== */
 
 
 
 
-	RegisterCLIcommand("aolrun",
-                   __FILE__,
-                   AOloopControl_aorun_cli, // Run AO loop
-                   "run AO loop",
-                   "no arg",
-                   "aolrun",
-                   "int AOloopControl_aorun()");
+    RegisterCLIcommand(
+        "aolrun",
+        __FILE__,
+        AOloopControl_aorun_cli, // Run AO loop
+        "run AO loop",
+        "no arg",
+        "aolrun",
+        "int AOloopControl_aorun()");
 
 
-     RegisterCLIcommand("aolcompGUI", __FILE__, AOloopControl_AOcompute_GUI_cli, // AOcompute GUI
-    "AOcompute GUI", 
-    "<loop> <frequ [Hz]>", 
-    "aolcompGUI 0 20", 
-    "int AOloopControl_AOcompute_GUI(long loop, double frequ)"); 
-    
-
-     RegisterCLIcommand("aolrunGUI", __FILE__, AOloopControl_aorun_GUI_cli, // AOcompute GUI
-    "aorun GUI", 
-    "<loop> <frequ [Hz]>", 
-    "aolrunGUI 0 20", 
-    "int AOloopControl_aorun_GUI(long loop, double frequ)"); 
-    
-
-
-
-    RegisterCLIcommand("aolzpwfsloop",__FILE__, AOloopControl_WFSzpupdate_loop_cli, //WFS zero point offset loop
-    "WFS zero point offset loop", 
-    "<dm offset [shared mem]> <zonal resp M [shared mem]> <nominal WFS reference>  <modified WFS reference>", 
-    "aolzpwfsloop dmZP zrespM wfszp", 
-    "int AOloopControl_WFSzpupdate_loop(char *IDzpdm_name, char *IDzrespM_name, char *IDwfszp_name)"); 
-
-    RegisterCLIcommand("aolzpwfscloop", __FILE__, AOloopControl_WFSzeropoint_sum_update_loop_cli, 
-    "WFS zero point offset loop: combine multiple input channels", 
-    "<name prefix> <number of channels> <wfsref0> <wfsref>", 
-    "aolzpwfscloop wfs2zpoffset 4 wfsref0 wfsref", 
-    "int AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, char *ID_WFSzp_name, int NBzp, char *IDwfsref0_name, char *IDwfsref_name)"); //WFS zero point offset loop: combine multiple input channels
-
-    RegisterCLIcommand("aocmlrun", __FILE__, AOloopControl_CompModes_loop_cli, 
-    "run AO compute modes loop", 
-    "<CM> <wfsref> <WFS image stream> <WFS image total stream> <output stream>", 
-    "aocmlrun CM wfsref wfsim wfsimtot aomodeval", 
-    "int AOloopControl_CompModes_loop(char *ID_CM_name, char *ID_WFSref_name, char *ID_WFSim_name, char *ID_WFSimtot, char *ID_coeff_name)"); // run AO compute modes loop
-
-    RegisterCLIcommand("aolmc2dmfilt", __FILE__, AOloopControl_GPUmodecoeffs2dm_filt_loop_cli, "convert mode coefficients to DM map", "<GPUMATMULTindex> <mode coeffs> <DMmodes> <sem trigg number> <out> <GPUindex> <loopnb> <offloadMode>", "aolmc2dmfilt aolmodeval DMmodesC 2 dmmapc 0.2 1 2 1", "int AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex, char *modecoeffs_name, char *DMmodes_name, int semTrigg, char *out_name, int GPUindex, long loop, long offloadMode)"); //convert mode coefficients to DM map
-
-    RegisterCLIcommand("aolsig2mcoeff", __FILE__, AOloopControl_sig2Modecoeff_cli, "convert signals to mode coeffs", "<signal data cube> <reference> <Modes data cube> <output image>", "aolsig2mcoeff wfsdata wfsref wfsmodes outim", "long AOloopControl_sig2Modecoeff(char *WFSim_name, char *IDwfsref_name, char *WFSmodes_name, char *outname)"); // convert signals to mode coeffs
-
-
-
-    
-    RegisterCLIcommand("aolnb", __FILE__, AOloopControl_setLoopNumber_cli, "set AO loop #", "<loop nb>", "AOloopnb 0", "int AOloopControl_setLoopNumber(long loop)"); // set AO loop 
-
-
-
-
-    RegisterCLIcommand("aolsetgain", __FILE__, AOloopControl_setgain_cli, "set gain", "<gain value>", "aolsetgain 0.1", "int AOloopControl_setgain(float gain)");
-
-    RegisterCLIcommand("aolsetARPFgain", __FILE__, AOloopControl_setARPFgain_cli, "set auto-regressive predictive filter gain", "<gain value>", "aolsetARPFgain 0.1", "int AOloopControl_setARPFgain(float gain)");
-
-    RegisterCLIcommand("aolsetARPFgainAmin", __FILE__, AOloopControl_setARPFgainAutoMin_cli, "set ARPF gain min", "<gain value>", "aolsetARPFgainAmin 0.1", "int AOloopControl_setARPFgainAutoMin(float val)");
-
-    RegisterCLIcommand("aolsetARPFgainAmax", __FILE__, AOloopControl_setARPFgainAutoMax_cli, "set ARPF gain max", "<gain value>", "aolsetARPFgainAmax 9.0", "int AOloopControl_setARPFgainAutoMax(float val)");
-
-    RegisterCLIcommand("aolkill", __FILE__, AOloopControl_loopkill, "kill AO loop", "no arg", "aolkill", "int AOloopControl_setLoopNumber()");
-
-    RegisterCLIcommand("aolon", __FILE__, AOloopControl_loopon, "turn loop on", "no arg", "aolon", "int AOloopControl_loopon()");
-
-    RegisterCLIcommand("aoloff", __FILE__, AOloopControl_loopoff, "turn loop off", "no arg", "aoloff", "int AOloopControl_loopoff()");
-
-    RegisterCLIcommand("aolWFScompon", __FILE__, AOloopControl_loopWFScompon, "turn loop WFScomp on", "no arg", "aolWFScompon", "int AOloopControl_loopWFScompon()");
-
-    RegisterCLIcommand("aolWFScompoff", __FILE__, AOloopControl_loopWFScompoff, "turn loop WFScomp off", "no arg", "aolWFScompoff", "int AOloopControl_loopWFScompoff()");
-
-    RegisterCLIcommand("aolstep",__FILE__, AOloopControl_loopstep_cli, "turn loop on for N steps", "<nbstep>", "aolstep", "int AOloopControl_loopstep(long loop, long NBstep)");
-
-    RegisterCLIcommand("aolreset", __FILE__, AOloopControl_loopreset, "reset loop, and turn it off", "no arg", "aolreset", "int AOloopControl_loopreset()");
-
-    RegisterCLIcommand("aolsetmbgain",__FILE__, AOloopControl_set_modeblock_gain_cli, "set modal block gain", "<loop #> <gain> <compute sum flag>", "aolsetmbgain 2 0.2 1", "int AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)");
-
-    RegisterCLIcommand("aolDMprimWon", __FILE__, AOloopControl_DMprimaryWrite_on, "turn DM primary write on", "no arg", "aolDMprimWon", "int AOloopControl_DMprimaryWrite_on()");
-
-    RegisterCLIcommand("aolDMprimWoff", __FILE__, AOloopControl_DMprimaryWrite_off, "turn DM primary write off", "no arg", "aolDMprimWoff", "int AOloopControl_DMprimaryWrite_off()");
-
-    RegisterCLIcommand("aolDMfiltWon", __FILE__, AOloopControl_DMfilteredWrite_on, "turn DM filtered write on", "no arg", "aolDMfiltWon", "int AOloopControl_DMfilteredWrite_on()");
-
-    RegisterCLIcommand("aolDMfiltWoff", __FILE__, AOloopControl_DMfilteredWrite_off, "turn DM filtered write off", "no arg", "aolDMfiltWoff", "int AOloopControl_DMfilteredWrite_off()");
-
-    RegisterCLIcommand("aolAUTOTUNELIMon", __FILE__, AOloopControl_AUTOTUNE_LIMITS_on, "turn auto-tuning modal limits on", "no arg", "aolAUTOTUNELIMon", "int AOloopControl_AUTOTUNE_LIMITS_on()");
-
-    RegisterCLIcommand("aolAUTOTUNELIMoff", __FILE__, AOloopControl_AUTOTUNE_LIMITS_off, "turn auto-tuning modal limits off", "no arg", "aolAUTOTUNELIMoff", "int AOloopControl_AUTOTUNE_LIMITS_off()");
-
-    RegisterCLIcommand("aolsetATlimd", __FILE__, AOloopControl_set_AUTOTUNE_LIMITS_delta_cli, "set auto-tuning modal limits delta", "<delta value [um]>", "aolsetATlimd 0.0001", "int AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta)");
-
-    RegisterCLIcommand("aolsetATlimp", __FILE__, AOloopControl_set_AUTOTUNE_LIMITS_perc_cli, "set auto-tuning modal limits percentile", "<percentile value [percent]>", "aolsetATlimp 1.0", "int AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc)");
-
-    RegisterCLIcommand("aolsetATlimm", __FILE__, AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli, "set auto-tuning modal limits multiplicative coeff", "<multiplicative coeff [float]>", "aolsetATlimm 1.5", "int AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff)");
-
-    RegisterCLIcommand("aolAUTOTUNEGAINon", __FILE__, AOloopControl_AUTOTUNE_GAINS_on, "turn auto-tuning modal gains on", "no arg", "aolAUTOTUNEGAINon", "int AOloopControl_AUTOTUNE_GAINS_on()");
-
-    RegisterCLIcommand("aolAUTOTUNEGAINoff", __FILE__, AOloopControl_AUTOTUNE_GAINS_off, "turn auto-tuning modal gains off", "no arg", "aolAUTOTUNEGAINoff", "int AOloopControl_AUTOTUNE_GAINS_off()");
-
-    RegisterCLIcommand("aolARPFon", __FILE__, AOloopControl_ARPFon, "turn auto-regressive predictive filter on", "no arg", "aolARPFon", "int AOloopControl_ARPFon()");
-
-    RegisterCLIcommand("aolARPFoff", __FILE__, AOloopControl_ARPFoff, "turn auto-regressive predictive filter off", "no arg", "aolARPFoff", "int AOloopControl_ARPFoff()");
-
-
-
-
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 11. PROCESS LOG FILES                                                    */
-/* =============================================================================================== */
-/* =============================================================================================== */
-
-
-
-    RegisterCLIcommand("aolsetloopfrequ",
-                       __FILE__,
-                       AOloopControl_set_loopfrequ_cli,
-                       "set loop frequency",
-                       "<loop frequ [Hz]>",
-                       "aolsetloopfrequ 2000",
-                       "int AOloopControl_set_loopfrequ(float loopfrequ)");
-
-
-
-    RegisterCLIcommand("aolsethlat", __FILE__, AOloopControl_set_hardwlatency_frame_cli, "set hardware latency", "<hardware latency [frame]>", "aolsethlat 2.7", "int AOloopControl_set_hardwlatency_frame(float hardwlatency_frame)");
-
-    RegisterCLIcommand("aolsetclat",__FILE__, AOloopControl_set_complatency_frame_cli,"set computation latency", "<computation latency [frame]>", "aolsetclat 0.6", "int AOloopControl_set_complatency_frame(float complatency_frame)");
-
-    RegisterCLIcommand("aolsetwlat", __FILE__, AOloopControl_set_wfsmextrlatency_frame_cli, "set WFS mode extraction latency", "<latency [frame]>", "aolsetwlat 0.8", "int AOloopControl_set_wfsmextrlatency_frame(float wfsmextrlatency_frame)");
-
-    RegisterCLIcommand("aolsetwfsnormf", __FILE__, AOloopControl_setWFSnormfloor_cli, "set WFS normalization floor", "<floor value (total flux)>", "aolsetwfsnormf 10000.0", "int AOloopControl_setWFSnormfloor(float WFSnormfloor)");
-
-    RegisterCLIcommand("aolsetmaxlim", __FILE__, AOloopControl_setmaxlimit_cli, "set max limit for AO mode correction", "<limit value>", "aolsetmaxlim 0.01", "int AOloopControl_setmaxlimit(float maxlimit)");
-
-    RegisterCLIcommand("aolsetmult", __FILE__, AOloopControl_setmult_cli, "set mult coeff for AO mode correction", "<mult value>", "aolsetmult 0.98", "int AOloopControl_setmult(float multcoeff)");
-
-
-
-    RegisterCLIcommand("aollogprocmodeval",__FILE__, AOloopControl_logprocess_modeval_cli, "process log image modeval", "<modeval image>", "aollogprocmodeval imc", "int AOloopControl_logprocess_modeval(const char *IDname);");
-
-
-
-    RegisterCLIcommand("aolsetgainr", __FILE__, AOloopControl_setgainrange_cli, "set modal gains from m0 to m1 included", "<modemin [long]> <modemax [long]> <gainval>", "aolsetgainr 20 30 0.2", "int AOloopControl_setgainrange(long m0, long m1, float gainval)");
-
-    RegisterCLIcommand("aolsetlimitr",__FILE__, AOloopControl_setlimitrange_cli, "set modal limits", "<modemin [long]> <modemax [long]> <limval>", "aolsetlimitr 20 30 0.02", "int AOloopControl_setlimitrange(long m0, long m1, float gainval)");
-
-    RegisterCLIcommand("aolsetmultfr", __FILE__, AOloopControl_setmultfrange_cli, "set modal multf", "<modemin [long]> <modemax [long]> <multfval>", "aolsetmultfr 10 30 0.98", "int AOloopControl_setmultfrange(long m0, long m1, float multfval)");
-
-    RegisterCLIcommand("aolsetgainb", __FILE__, AOloopControl_setgainblock_cli, "set modal gains by block", "<block [long]> <gainval>", "aolsetgainb 2 0.2", "int AOloopControl_setgainblock(long m0, long m1, float gainval)");
-
-    RegisterCLIcommand("aolsetlimitb",__FILE__, AOloopControl_setlimitblock_cli, "set modal limits by block", "<block [long]> <limval>", "aolsetlimitb 2 0.02", "int AOloopControl_setlimitblock(long mb, float limitval)");
-
-    RegisterCLIcommand("aolsetmultfb", __FILE__, AOloopControl_setmultfblock_cli, "set modal multf by block", "<block [long]> <multfval>", "aolsetmultfb 2 0.98", "int AOloopControl_setmultfblock(long mb, float multfval)");
-
-    RegisterCLIcommand("aolscangainb", __FILE__, AOloopControl_scanGainBlock_cli, "scan gain for block", "<blockNB> <NBAOsteps> <gainstart> <gainend> <NBgainpts>", "aolscangainb", "int AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainStart, float gainEnd, long NBgain)");
-
-    RegisterCLIcommand("aolmkwfsres", __FILE__, AOloopControl_computeWFSresidualimage_cli, "compute WFS residual real time", "<loopnb> <averaging coeff image>", "aolmkwfsres 2 coeffim", "long AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)");
-
-
-
-    RegisterCLIcommand("aolcompolm", __FILE__, AOloopControl_ProcessModeCoefficients_cli, "process mode coefficients, incl open loop mode comp", "<loop #>", "aolcompolm 2", "long AOloopControl_ProcessModeCoefficients(long loop)");
-
-    RegisterCLIcommand("aolautotunegains", __FILE__, AOloopControl_AutoTuneGains_cli, "compute optimal gains", "<loop #> <gain stream> <gaincoeff> <NBsamples>", "aolautotunegains 0 autogain 0.1 20000", "long AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float GainCoeff, long NBsamples)");
-
-    RegisterCLIcommand("aoldm2dmoffload", __FILE__, AOloopControl_dm2dm_offload_cli, "slow offload from dm to dm", "<streamin> <streamout> <timestep[sec]> <offloadcoeff> <multcoeff>", "aoldm2dmoffload dmin dmout 0.5 -0.01 0.999", "long AOloopControl_dm2dm_offload(const char *streamin, const char *streamout, float twait, float offcoeff, float multcoeff)");
-
-    RegisterCLIcommand("aolautotune",  __FILE__, AOloopControl_AutoTune, "auto tuning of loop parameters", "no arg", "aolautotune", "int_fast8_t AOloopControl_AutoTune()");
-
-    RegisterCLIcommand("aolset", __FILE__, AOloopControl_setparam_cli, "set parameter", "<parameter> <value>" , "aolset", "int AOloopControl_setparam(long loop, const char *key, double value)");
-
-    RegisterCLIcommand("aoldmmodAB", __FILE__, AOloopControl_DMmodulateAB_cli, 
-    "module DM with linear combination of probes A and B", 
-    "<probeA> <probeB> <dmstream> <WFS resp mat> <WFS ref stream> <delay [sec]> <NB probes>", 
-    "aoldmmodAB probeA probeB wfsrespmat wfsref 0.1 6",
-    "int AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes)");
-
-
-	/* =============================================================================================== */
-	/* =============================================================================================== */
-	/* 6. REAL-TIME LOGGING - AOloopControl_RTstreamLOG.c                                              */
-	/* =============================================================================================== */
-	/* =============================================================================================== */
-
-
-	RegisterCLIcommand("aolrtloginit", __FILE__, AOloopControl_RTstreamLOG_init_cli,
-	"Init Real-Time logging",
-	"no arg",
-	"aolrtloginit",
-	"AOloopControl_RTstreamLOG_init(int loop)");
-
-	RegisterCLIcommand("aolrtlogstat", __FILE__, AOloopControl_RTstreamLOG_printstatus_cli,
-	"Print status of Real-Time logging",
-	"no arg",
-	"aolrtlogstat",
-	"AOloopControl_RTstreamLOG_printstatus(int loop)");
-	
-	RegisterCLIcommand("aolrtlogGUI", __FILE__, AOloopControl_RTstreamLOG_GUI_cli,
-	"Simple GUI for Real-Time logging",
-	"no arg",
-	"aolrtlogGUI",
-	"AOloopControl_RTstreamLOG_GUI(int loop)");
-	
-
-	RegisterCLIcommand("aolrtlogsavel", __FILE__, AOloopControl_RTstreamLOG_saveloop_cli,
-	"Save files for Real-Time logging",
-	"<directory>",
-	"aolrtlogsavel",
-	"AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)");
-	
-
-	
-	RegisterCLIcommand("aolrtlogsetsaveON", __FILE__, AOloopControl_RTstreamLOG_set_saveON_cli,
-	"Real-Time logging: set save to ON",
-	"<rtlindex>",
-	"aolrtlogsetsaveON 2",
-	"int AOloopControl_RTstreamLOG_set_saveON(int loop, int rtlindex)");
-
-
-	RegisterCLIcommand("aolrtlogsetsaveOFF", __FILE__, AOloopControl_RTstreamLOG_set_saveOFF_cli,
-	"Real-Time logging: set save to OFF",
-	"<rtlindex>",
-	"aolrtlogsetsaveOFF 2",
-	"int AOloopControl_RTstreamLOG_set_saveOFF(int loop, int rtlindex)");
-
-	
-	RegisterCLIcommand("aolrtlogsetON", __FILE__, AOloopControl_RTstreamLOG_set_ON_cli,
-	"Real-Time logging: set to ON",
-	"<rtlindex>",
-	"aolrtlogsetON 2",
-	"int AOloopControl_RTstreamLOG_set_ON(int loop, int rtlindex)");
-
-
-	RegisterCLIcommand("aolrtlogsetOFF", __FILE__, AOloopControl_RTstreamLOG_set_OFF_cli,
-	"Real-Time logging: set to OFF",
-	"<rtlindex>",
-	"aolrtlogsetOFF 2",
-	"int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)");
+    RegisterCLIcommand(
+        "aolcompGUI",
+        __FILE__,
+        AOloopControl_AOcompute_GUI_cli, // AOcompute GUI
+        "AOcompute GUI",
+        "<loop> <frequ [Hz]>",
+        "aolcompGUI 0 20",
+        "int AOloopControl_AOcompute_GUI(long loop, double frequ)");
+
+
+    RegisterCLIcommand(
+        "aolrunGUI",
+        __FILE__,
+        AOloopControl_aorun_GUI_cli, // AOcompute GUI
+        "aorun GUI",
+        "<loop> <frequ [Hz]>",
+        "aolrunGUI 0 20",
+        "int AOloopControl_aorun_GUI(long loop, double frequ)");
+
+
+
+
+    RegisterCLIcommand(
+        "aolzpwfsloop",
+        __FILE__,
+        AOloopControl_WFSzpupdate_loop_cli, //WFS zero point offset loop
+        "WFS zero point offset loop",
+        "<dm offset [shared mem]> <zonal resp M [shared mem]> <nominal WFS reference>  <modified WFS reference>",
+        "aolzpwfsloop dmZP zrespM wfszp",
+        "int AOloopControl_WFSzpupdate_loop(char *IDzpdm_name, char *IDzrespM_name, char *IDwfszp_name)");
+
+
+    RegisterCLIcommand(
+        "aolzpwfscloop", __FILE__,
+        AOloopControl_WFSzeropoint_sum_update_loop_cli,
+        "WFS zero point offset loop: combine multiple input channels",
+        "<name prefix> <number of channels> <wfsref0> <wfsref>",
+        "aolzpwfscloop wfs2zpoffset 4 wfsref0 wfsref",
+        "int AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, char *ID_WFSzp_name, int NBzp, char *IDwfsref0_name, char *IDwfsref_name)"); //WFS zero point offset loop: combine multiple input channels
+
+
+    RegisterCLIcommand(
+        "aocmlrun",
+        __FILE__,
+        AOloopControl_CompModes_loop_cli,
+        "run AO compute modes loop",
+        "<CM> <wfsref> <WFS image stream> <WFS image total stream> <output stream>",
+        "aocmlrun CM wfsref wfsim wfsimtot aomodeval",
+        "int AOloopControl_CompModes_loop(char *ID_CM_name, char *ID_WFSref_name, char *ID_WFSim_name, char *ID_WFSimtot, char *ID_coeff_name)"); // run AO compute modes loop
+
+
+    RegisterCLIcommand(
+        "aolmc2dmfilt",
+        __FILE__,
+        AOloopControl_GPUmodecoeffs2dm_filt_loop_cli,
+        "convert mode coefficients to DM map",
+        "<GPUMATMULTindex> <mode coeffs> <DMmodes> <sem trigg number> <out> <GPUindex> <loopnb> <offloadMode>",
+        "aolmc2dmfilt aolmodeval DMmodesC 2 dmmapc 0.2 1 2 1",
+        "int AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex, char *modecoeffs_name, char *DMmodes_name, int semTrigg, char *out_name, int GPUindex, long loop, long offloadMode)"); //convert mode coefficients to DM map
+
+    RegisterCLIcommand(
+        "aolsig2mcoeff",
+        __FILE__,
+        AOloopControl_sig2Modecoeff_cli,
+        "convert signals to mode coeffs",
+        "<signal data cube> <reference> <Modes data cube> <output image>",
+        "aolsig2mcoeff wfsdata wfsref wfsmodes outim",
+        "long AOloopControl_sig2Modecoeff(char *WFSim_name, char *IDwfsref_name, char *WFSmodes_name, char *outname)"); // convert signals to mode coeffs
+
+
+
+
+    RegisterCLIcommand(
+        "aolnb",
+        __FILE__,
+        AOloopControl_setLoopNumber_cli,
+        "set AO loop #", "<loop nb>",
+        "AOloopnb 0",
+        "int AOloopControl_setLoopNumber(long loop)"); // set AO loop
+
+
+
+
+    RegisterCLIcommand(
+        "aolsetgain",
+        __FILE__,
+        AOloopControl_setgain_cli,
+        "set gain", "<gain value>",
+        "aolsetgain 0.1",
+        "int AOloopControl_setgain(float gain)");
+
+
+    RegisterCLIcommand(
+        "aolsetARPFgain",
+        __FILE__,
+        AOloopControl_setARPFgain_cli,
+        "set auto-regressive predictive filter gain",
+        "<gain value>",
+        "aolsetARPFgain 0.1",
+        "int AOloopControl_setARPFgain(float gain)");
+
+
+    RegisterCLIcommand(
+        "aolsetARPFgainAmin",
+        __FILE__,
+        AOloopControl_setARPFgainAutoMin_cli,
+        "set ARPF gain min",
+        "<gain value>",
+        "aolsetARPFgainAmin 0.1",
+        "int AOloopControl_setARPFgainAutoMin(float val)");
+
+
+    RegisterCLIcommand(
+        "aolsetARPFgainAmax",
+        __FILE__,
+        AOloopControl_setARPFgainAutoMax_cli,
+        "set ARPF gain max",
+        "<gain value>",
+        "aolsetARPFgainAmax 9.0",
+        "int AOloopControl_setARPFgainAutoMax(float val)");
+
+
+    RegisterCLIcommand(
+        "aolkill",
+        __FILE__,
+        AOloopControl_loopkill,
+        "kill AO loop",
+        "no arg",
+        "aolkill",
+        "int AOloopControl_setLoopNumber()");
+
+
+    RegisterCLIcommand(
+        "aolon",
+        __FILE__,
+        AOloopControl_loopon,
+        "turn loop on",
+        "no arg",
+        "aolon",
+        "int AOloopControl_loopon()");
+
+
+    RegisterCLIcommand(
+        "aoloff",
+        __FILE__,
+        AOloopControl_loopoff,
+        "turn loop off",
+        "no arg",
+        "aoloff",
+        "int AOloopControl_loopoff()");
+
+
+    RegisterCLIcommand(
+        "aolWFScompon",
+        __FILE__,
+        AOloopControl_loopWFScompon,
+        "turn loop WFScomp on",
+        "no arg",
+        "aolWFScompon",
+        "int AOloopControl_loopWFScompon()");
+
+    RegisterCLIcommand(
+        "aolWFScompoff",
+        __FILE__,
+        AOloopControl_loopWFScompoff,
+        "turn loop WFScomp off",
+        "no arg",
+        "aolWFScompoff",
+        "int AOloopControl_loopWFScompoff()");
+
+
+    RegisterCLIcommand(
+        "aolstep",
+        __FILE__,
+        AOloopControl_loopstep_cli,
+        "turn loop on for N steps", "<nbstep>",
+        "aolstep",
+        "int AOloopControl_loopstep(long loop, long NBstep)");
+
+
+    RegisterCLIcommand(
+        "aolreset",
+        __FILE__,
+        AOloopControl_loopreset,
+        "reset loop, and turn it off",
+        "no arg",
+        "aolreset",
+        "int AOloopControl_loopreset()");
+
+
+    RegisterCLIcommand(
+        "aolsetmbgain",
+        __FILE__,
+        AOloopControl_set_modeblock_gain_cli,
+        "set modal block gain",
+        "<loop #> <gain> <compute sum flag>",
+        "aolsetmbgain 2 0.2 1",
+        "int AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)");
+
+
+    RegisterCLIcommand(
+        "aolDMprimWon",
+        __FILE__,
+        AOloopControl_DMprimaryWrite_on,
+        "turn DM primary write on",
+        "no arg",
+        "aolDMprimWon",
+        "int AOloopControl_DMprimaryWrite_on()");
+
+
+    RegisterCLIcommand(
+        "aolDMprimWoff",
+        __FILE__,
+        AOloopControl_DMprimaryWrite_off,
+        "turn DM primary write off",
+        "no arg",
+        "aolDMprimWoff",
+        "int AOloopControl_DMprimaryWrite_off()");
+
+
+    RegisterCLIcommand(
+        "aolDMfiltWon",
+        __FILE__,
+        AOloopControl_DMfilteredWrite_on,
+        "turn DM filtered write on", "no arg",
+        "aolDMfiltWon",
+        "int AOloopControl_DMfilteredWrite_on()");
+
+
+    RegisterCLIcommand(
+        "aolDMfiltWoff",
+        __FILE__,
+        AOloopControl_DMfilteredWrite_off,
+        "turn DM filtered write off",
+        "no arg",
+        "aolDMfiltWoff",
+        "int AOloopControl_DMfilteredWrite_off()");
+
+
+    RegisterCLIcommand(
+        "aolAUTOTUNELIMon",
+        __FILE__,
+        AOloopControl_AUTOTUNE_LIMITS_on,
+        "turn auto-tuning modal limits on",
+        "no arg",
+        "aolAUTOTUNELIMon",
+        "int AOloopControl_AUTOTUNE_LIMITS_on()");
+
+
+    RegisterCLIcommand(
+        "aolAUTOTUNELIMoff",
+        __FILE__,
+        AOloopControl_AUTOTUNE_LIMITS_off,
+        "turn auto-tuning modal limits off",
+        "no arg",
+        "aolAUTOTUNELIMoff",
+        "int AOloopControl_AUTOTUNE_LIMITS_off()");
+
+
+    RegisterCLIcommand(
+        "aolsetATlimd",
+        __FILE__,
+        AOloopControl_set_AUTOTUNE_LIMITS_delta_cli,
+        "set auto-tuning modal limits delta",
+        "<delta value [um]>",
+        "aolsetATlimd 0.0001",
+        "int AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta)");
+
+
+    RegisterCLIcommand(
+        "aolsetATlimp",
+        __FILE__,
+        AOloopControl_set_AUTOTUNE_LIMITS_perc_cli,
+        "set auto-tuning modal limits percentile",
+        "<percentile value [percent]>",
+        "aolsetATlimp 1.0",
+        "int AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc)");
+
+
+    RegisterCLIcommand(
+        "aolsetATlimm",
+        __FILE__,
+        AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli,
+        "set auto-tuning modal limits multiplicative coeff",
+        "<multiplicative coeff [float]>", "aolsetATlimm 1.5",
+        "int AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff)");
+
+
+    RegisterCLIcommand(
+        "aolAUTOTUNEGAINon",
+        __FILE__,
+        AOloopControl_AUTOTUNE_GAINS_on,
+        "turn auto-tuning modal gains on",
+        "no arg", "aolAUTOTUNEGAINon",
+        "int AOloopControl_AUTOTUNE_GAINS_on()");
+
+    RegisterCLIcommand(
+        "aolAUTOTUNEGAINoff",
+        __FILE__,
+        AOloopControl_AUTOTUNE_GAINS_off,
+        "turn auto-tuning modal gains off",
+        "no arg",
+        "aolAUTOTUNEGAINoff",
+        "int AOloopControl_AUTOTUNE_GAINS_off()");
+
+    RegisterCLIcommand(
+        "aolARPFon",
+        __FILE__,
+        AOloopControl_ARPFon,
+        "turn auto-regressive predictive filter on",
+        "no arg",
+        "aolARPFon",
+        "int AOloopControl_ARPFon()");
+
+    RegisterCLIcommand(
+        "aolARPFoff",
+        __FILE__,
+        AOloopControl_ARPFoff,
+        "turn auto-regressive predictive filter off",
+        "no arg",
+        "aolARPFoff",
+        "int AOloopControl_ARPFoff()");
+
+
+
+
+
+
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+    /** @name AOloopControl - 11. PROCESS LOG FILES                                                    */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+
+
+
+    RegisterCLIcommand(
+        "aolsetloopfrequ",
+        __FILE__,
+        AOloopControl_set_loopfrequ_cli,
+        "set loop frequency",
+        "<loop frequ [Hz]>",
+        "aolsetloopfrequ 2000",
+        "int AOloopControl_set_loopfrequ(float loopfrequ)");
+
+
+
+    RegisterCLIcommand(
+        "aolsethlat",
+        __FILE__,
+        AOloopControl_set_hardwlatency_frame_cli,
+        "set hardware latency",
+        "<hardware latency [frame]>",
+        "aolsethlat 2.7",
+        "int AOloopControl_set_hardwlatency_frame(float hardwlatency_frame)");
+
+    RegisterCLIcommand(
+        "aolsetclat",
+        __FILE__,
+        AOloopControl_set_complatency_frame_cli,
+        "set computation latency",
+        "<computation latency [frame]>",
+        "aolsetclat 0.6",
+        "int AOloopControl_set_complatency_frame(float complatency_frame)");
+
+    RegisterCLIcommand(
+        "aolsetwlat",
+        __FILE__,
+        AOloopControl_set_wfsmextrlatency_frame_cli,
+        "set WFS mode extraction latency",
+        "<latency [frame]>",
+        "aolsetwlat 0.8",
+        "int AOloopControl_set_wfsmextrlatency_frame(float wfsmextrlatency_frame)");
+
+    RegisterCLIcommand(
+        "aolsetwfsnormf",
+        __FILE__,
+        AOloopControl_setWFSnormfloor_cli,
+        "set WFS normalization floor",
+        "<floor value (total flux)>",
+        "aolsetwfsnormf 10000.0",
+        "int AOloopControl_setWFSnormfloor(float WFSnormfloor)");
+
+    RegisterCLIcommand(
+        "aolsetmaxlim",
+        __FILE__,
+        AOloopControl_setmaxlimit_cli,
+        "set max limit for AO mode correction",
+        "<limit value>",
+        "aolsetmaxlim 0.01",
+        "int AOloopControl_setmaxlimit(float maxlimit)");
+
+    RegisterCLIcommand(
+        "aolsetmult",
+        __FILE__,
+        AOloopControl_setmult_cli,
+        "set mult coeff for AO mode correction",
+        "<mult value>",
+        "aolsetmult 0.98",
+        "int AOloopControl_setmult(float multcoeff)");
+
+
+
+    RegisterCLIcommand(
+        "aollogprocmodeval",
+        __FILE__,
+        AOloopControl_logprocess_modeval_cli,
+        "process log image modeval",
+        "<modeval image>",
+        "aollogprocmodeval imc",
+        "int AOloopControl_logprocess_modeval(const char *IDname);");
+
+
+
+    RegisterCLIcommand(
+        "aolsetgainr",
+        __FILE__,
+        AOloopControl_setgainrange_cli,
+        "set modal gains from m0 to m1 included",
+        "<modemin [long]> <modemax [long]> <gainval>",
+        "aolsetgainr 20 30 0.2", "int AOloopControl_setgainrange(long m0, long m1, float gainval)");
+
+    RegisterCLIcommand(
+        "aolsetlimitr",
+        __FILE__,
+        AOloopControl_setlimitrange_cli,
+        "set modal limits",
+        "<modemin [long]> <modemax [long]> <limval>",
+        "aolsetlimitr 20 30 0.02", "int AOloopControl_setlimitrange(long m0, long m1, float gainval)");
+
+    RegisterCLIcommand(
+        "aolsetmultfr",
+        __FILE__,
+        AOloopControl_setmultfrange_cli,
+        "set modal multf", "<modemin [long]> <modemax [long]> <multfval>",
+        "aolsetmultfr 10 30 0.98",
+        "int AOloopControl_setmultfrange(long m0, long m1, float multfval)");
+
+    RegisterCLIcommand(
+        "aolsetgainb",
+        __FILE__,
+        AOloopControl_setgainblock_cli,
+        "set modal gains by block",
+        "<block [long]> <gainval>",
+        "aolsetgainb 2 0.2", "int AOloopControl_setgainblock(long m0, long m1, float gainval)");
+
+    RegisterCLIcommand(
+        "aolsetlimitb",__FILE__,
+        AOloopControl_setlimitblock_cli,
+        "set modal limits by block",
+        "<block [long]> <limval>",
+        "aolsetlimitb 2 0.02",
+        "int AOloopControl_setlimitblock(long mb, float limitval)");
+
+
+    RegisterCLIcommand(
+        "aolsetmultfb",
+        __FILE__,
+        AOloopControl_setmultfblock_cli,
+        "set modal multf by block", "<block [long]> <multfval>", "aolsetmultfb 2 0.98",
+        "int AOloopControl_setmultfblock(long mb, float multfval)");
+
+
+    RegisterCLIcommand(
+        "aolscangainb",
+        __FILE__,
+        AOloopControl_scanGainBlock_cli,
+        "scan gain for block",
+        "<blockNB> <NBAOsteps> <gainstart> <gainend> <NBgainpts>",
+        "aolscangainb",
+        "int AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainStart, float gainEnd, long NBgain)");
+
+
+    RegisterCLIcommand(
+        "aolmkwfsres",
+        __FILE__,
+        AOloopControl_computeWFSresidualimage_cli,
+        "compute WFS residual real time",
+        "<loopnb> <averaging coeff image>",
+        "aolmkwfsres 2 coeffim",
+        "long AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)");
+
+
+
+    RegisterCLIcommand(
+        "aolcompolm",
+        __FILE__,
+        AOloopControl_ProcessModeCoefficients_cli,
+        "process mode coefficients, incl open loop mode comp",
+        "<loop #>", "aolcompolm 2",
+        "long AOloopControl_ProcessModeCoefficients(long loop)");
+
+
+    RegisterCLIcommand(
+        "aolautotunegains",
+        __FILE__,
+        AOloopControl_AutoTuneGains_cli,
+        "compute optimal gains",
+        "<loop #> <gain stream> <gaincoeff> <NBsamples>",
+        "aolautotunegains 0 autogain 0.1 20000",
+        "long AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float GainCoeff, long NBsamples)");
+
+
+    RegisterCLIcommand(
+        "aoldm2dmoffload",
+        __FILE__,
+        AOloopControl_dm2dm_offload_cli,
+        "slow offload from dm to dm",
+        "<streamin> <streamout> <timestep[sec]> <offloadcoeff> <multcoeff>",
+        "aoldm2dmoffload dmin dmout 0.5 -0.01 0.999",
+        "long AOloopControl_dm2dm_offload(const char *streamin, const char *streamout, float twait, float offcoeff, float multcoeff)");
+
+
+    RegisterCLIcommand(
+        "aolautotune",
+        __FILE__,
+        AOloopControl_AutoTune,
+        "auto tuning of loop parameters", "no arg",
+        "aolautotune",
+        "int_fast8_t AOloopControl_AutoTune()");
+
+
+    RegisterCLIcommand(
+        "aolset",
+        __FILE__,
+        AOloopControl_setparam_cli,
+        "set parameter", "<parameter> <value>",
+        "aolset",
+        "int AOloopControl_setparam(long loop, const char *key, double value)");
+
+
+    RegisterCLIcommand(
+        "aoldmmodAB",
+        __FILE__,
+        AOloopControl_DMmodulateAB_cli,
+        "module DM with linear combination of probes A and B",
+        "<probeA> <probeB> <dmstream> <WFS resp mat> <WFS ref stream> <delay [sec]> <NB probes>",
+        "aoldmmodAB probeA probeB wfsrespmat wfsref 0.1 6",
+        "int AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes)");
+
+
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+    /* 6. REAL-TIME LOGGING - AOloopControl_RTstreamLOG.c                                              */
+    /* =============================================================================================== */
+    /* =============================================================================================== */
+
+
+    RegisterCLIcommand(
+        "aolrtloginit",
+        __FILE__,
+        AOloopControl_RTstreamLOG_init_cli,
+        "Init Real-Time logging",
+        "no arg",
+        "aolrtloginit",
+        "AOloopControl_RTstreamLOG_init(int loop)");
+
+    RegisterCLIcommand(
+        "aolrtlogstat",
+        __FILE__,
+        AOloopControl_RTstreamLOG_printstatus_cli,
+        "Print status of Real-Time logging",
+        "no arg",
+        "aolrtlogstat",
+        "AOloopControl_RTstreamLOG_printstatus(int loop)");
+
+    RegisterCLIcommand(
+        "aolrtlogGUI",
+        __FILE__,
+        AOloopControl_RTstreamLOG_GUI_cli,
+        "Simple GUI for Real-Time logging",
+        "no arg",
+        "aolrtlogGUI",
+        "AOloopControl_RTstreamLOG_GUI(int loop)");
+
+
+    RegisterCLIcommand(
+        "aolrtlogsavel",
+        __FILE__,
+        AOloopControl_RTstreamLOG_saveloop_cli,
+        "Save files for Real-Time logging",
+        "<directory>",
+        "aolrtlogsavel",
+        "AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)");
+
+
+
+    RegisterCLIcommand(
+        "aolrtlogsetsaveON",
+        __FILE__,
+        AOloopControl_RTstreamLOG_set_saveON_cli,
+        "Real-Time logging: set save to ON",
+        "<rtlindex>",
+        "aolrtlogsetsaveON 2",
+        "int AOloopControl_RTstreamLOG_set_saveON(int loop, int rtlindex)");
+
+
+    RegisterCLIcommand(
+        "aolrtlogsetsaveOFF",
+        __FILE__,
+        AOloopControl_RTstreamLOG_set_saveOFF_cli,
+        "Real-Time logging: set save to OFF",
+        "<rtlindex>",
+        "aolrtlogsetsaveOFF 2",
+        "int AOloopControl_RTstreamLOG_set_saveOFF(int loop, int rtlindex)");
+
+
+    RegisterCLIcommand(
+        "aolrtlogsetON",
+        __FILE__,
+        AOloopControl_RTstreamLOG_set_ON_cli,
+        "Real-Time logging: set to ON",
+        "<rtlindex>",
+        "aolrtlogsetON 2",
+        "int AOloopControl_RTstreamLOG_set_ON(int loop, int rtlindex)");
+
+
+    RegisterCLIcommand(
+        "aolrtlogsetOFF",
+        __FILE__,
+        AOloopControl_RTstreamLOG_set_OFF_cli,
+        "Real-Time logging: set to OFF",
+        "<rtlindex>",
+        "aolrtlogsetOFF 2",
+        "int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)");
 
     // add atexit functions here
     // atexit((void*) myfunc); atexit = starts a function once the program exits (only if it is not a crash exit)

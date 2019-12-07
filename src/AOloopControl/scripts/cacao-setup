@@ -713,6 +713,7 @@ echolog "running ./fpscmd/fpsinitscript"
 
 
 if [ "$UPDATEMODE" = "0" ]; then
+#tmux new-session -d -s ${fpsCTRLtmuxname} \;  attach \; detach
 tmux new-session -d -s ${fpsCTRLtmuxname} \; setw force-width 160 \; setw force-height 48 \; attach \; detach
 sleep 1
 tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m
@@ -736,8 +737,8 @@ sleep 1
 if [ "$UPDATEMODE" = "0" ]; then
 # build sym link to output log
 echo "logsymlink ${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}" >> ${fpsCTRLfifo}
+tmux send-keys -t ${fpsCTRLtmuxname} "s" C-m
 fi
-
 
 
 

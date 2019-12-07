@@ -215,15 +215,18 @@ int AOloopControl_aorun_FPCONF(
     uint32_t CMDmode
 )
 {
-	uint16_t loopstatus;
+//	uint16_t loopstatus;
 	
     // ===========================
     // SETUP FPS
     // ===========================
-	int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-	fps.md->sourceline = __LINE__;
+//	int SMfd = -1;
+//    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
+//	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
+//	fps.md->sourceline = __LINE__;
+
+	FPS_SETUP_INIT(fpsname, CMDmode);
+
 
     // ===========================
     // ALLOCATE FPS ENTRIES 
@@ -313,10 +316,10 @@ int AOloopControl_aorun_FPCONF(
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
 
-    while ( loopstatus == 1 )
+    while ( fps.loopstatus == 1 )
     {
        usleep(50);
-        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
             // here goes the logic
           
@@ -341,7 +344,7 @@ int AOloopControl_aorun_FPCONF(
     
     
 
-	function_parameter_FPCONFexit( &fps, &SMfd );
+	function_parameter_FPCONFexit( &fps );
 	    
 	return RETURN_SUCCESS;
 }
@@ -361,14 +364,14 @@ int AOloopControl_aorun_RUN(
     // CONNECT TO FPS
     // ===========================
 
-	int SMfd = -1;
+	/*int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
     if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1)
     {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
-    }
-
+    }*/
+	FPS_CONNECT( fpsname, FPSCONNECT_RUN );
 
 
     // ===============================
@@ -613,7 +616,7 @@ int AOloopControl_aorun_RUN(
     // ==================================
 
     processinfo_cleanExit(processinfo);
-	function_parameter_RUNexit( &fps, &SMfd );
+	function_parameter_RUNexit( &fps );
 
 
     return RETURN_SUCCESS;
