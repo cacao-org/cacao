@@ -172,6 +172,9 @@ streamPSFdir="$logdirectory/$datestr/$streamPSF"
 iter=0
 iter0=0
 
+
+
+
 while :
 do
 let iter++

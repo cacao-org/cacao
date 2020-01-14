@@ -27,16 +27,6 @@
 
 #define AOLOOPCONTROL_PERFTEST_LOGDEBUG 1
 
-#if defined(AOLOOPCONTROL_PERFTEST_LOGDEBUG) && !defined(STANDALONE)
-#define AOLOOPCONTROL_PERFTEST_LOGEXEC do {                      \
-    sprintf(data.execSRCfunc, "%s", __FUNCTION__); \
-    data.execSRCline = __LINE__;                   \
-    } while(0)
-#else
-#define AOLOOPCONTROL_PERFTEST_LOGEXEC 
-#endif
-
-
 
 
 
@@ -69,6 +59,11 @@
 /*                                      DEFINES, MACROS                                            */
 /* =============================================================================================== */
 /* =============================================================================================== */
+
+#if !defined(AOLOOPCONTROL_PERFTEST_LOGDEBUG) || defined(STANDALONE)
+#define TESTPOINT(...)
+#endif
+
 
 # ifdef _OPENMP
 # include <omp.h>
@@ -703,16 +698,19 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     uint32_t CMDmode
 )
 {
-    uint16_t loopstatus;
+    //uint16_t loopstatus;
     
     
     // ===========================
     // SETUP FPS
     // ===========================
-    int SMfd = -1;
+    /*int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
 	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
 	fps.md->sourceline = __LINE__;
+	*/
+	
+	FPS_SETUP_INIT(fpsname, CMDmode);
 	
 
     // ===========================
@@ -756,23 +754,23 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
 	long fpi_outframerateHz = function_parameter_add_entry(&fps, ".out.framerateHz", "WFS frame rate [Hz]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 	long fpi_outHardLatencyfr = function_parameter_add_entry(&fps, ".out.latencyfr", "hardware latency [frame]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    if( loopstatus == 0 ) // stop fps
+    if( fps.loopstatus == 0 ) // stop fps
         return RETURN_SUCCESS;
 
 	
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while ( loopstatus == 1 )
+    while ( fps.loopstatus == 1 )
     {
-        if( function_parameter_FPCONFloopstep(&fps, CMDmode, &loopstatus) == 1) // Apply logic if update is needed
+        if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
             // here goes the logic
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }
     }
-    function_parameter_FPCONFexit( &fps, &SMfd );
+    function_parameter_FPCONFexit( &fps );
 
 
     return RETURN_SUCCESS;
@@ -870,12 +868,15 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
-    int SMfd = -1;
+   /* int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
     if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
-    }
+    }*/
+    
+    FPS_CONNECT( fpsname, FPSCONNECT_RUN );
+    
 
     // ===============================
     // GET FUNCTION PARAMETER VALUES
@@ -1500,7 +1501,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     // ENDING LOOP
     // ==================================
     processinfo_cleanExit(processinfo);
-	function_parameter_RUNexit( &fps, &SMfd );
+	function_parameter_RUNexit( &fps );
 	
 
 
@@ -1543,7 +1544,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     // SET PARAMETER VALUES
     // ==================================
 
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE, &SMfd);
+    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
 
     functionparameter_SetParamValue_STRING(&fps, ".sn_dm", dmname);
     functionparameter_SetParamValue_STRING(&fps, ".sn_wfs", wfsname);
@@ -1551,7 +1552,7 @@ int_fast8_t AOcontrolLoop_perfTest_TestSystemLatency(
     functionparameter_SetParamValue_FLOAT32(&fps, ".OPDamp", OPDamp);
     functionparameter_SetParamValue_INT64(&fps, ".NBiter", NBiter);
 
-    function_parameter_struct_disconnect(&fps, &SMfd);
+    function_parameter_struct_disconnect(&fps);
 
 
     // ==================================
