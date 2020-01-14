@@ -112,6 +112,7 @@ echo "${fpsname}    streamdelay         ${fpsarg0}"  >> fpslist.txt
 fpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
 fpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
 fpscmd "setval ${fpsfname}.delayus 20000"
+fpscmd "setval ${fpsfname}.dtus 10000"
 fpscmd "setval ${fpsfname}.option.timeavemode 1"
 fpscmd "setval ${fpsfname}.option.avedt 0.005"
 fi
@@ -296,7 +297,7 @@ fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
 fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
 fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
 fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
-fpscmd "setval ${fpsfname}.out.dir ${outdir}"
+fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else
@@ -361,7 +362,7 @@ fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
 
 
 #echo "setval ${fpsfname}.out.dir ${outdir}" >> ${FPSCONFFILE}
-fpscmd "setval ${fpsfname}.out.dir ${outdir}"
+fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else

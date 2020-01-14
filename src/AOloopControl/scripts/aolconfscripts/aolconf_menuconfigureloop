@@ -60,7 +60,7 @@ For all configurations files (not including Hardware I/O links) :\n
 "
 
 
-function_configureloop_readparams
+#function_configureloop_readparams
 
 
 confOK=1

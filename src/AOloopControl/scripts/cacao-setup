@@ -9,9 +9,9 @@ NBARGS=1
 # 
 # log messages
 LOGFILEDIR="$PWD/log"
-mkdir $LOGFILEDIR
+mkdir -p $LOGFILEDIR
 LOGFILENAME="${LOGFILEDIR}/$(basename $0).log"
-rm $LOGFILENAME
+rm $LOGFILENAME 2> /dev/null
 
 function echolog {
 	echo $1
@@ -99,6 +99,7 @@ echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
 echo "     $(tput bold)-C$(tput sgr0)            (C)lear all memory/files and exit"
 echo "     $(tput bold)-t$(tput sgr0)            (t)est: print parameters and exit (do not start processes)"
 echo "     $(tput bold)-u$(tput sgr0)            (u)pdate more: do not quit/restart processes"
+echo "     $(tput bold)-e$(tput sgr0)            Create (e)xample cacaovars file and exit"
 echo "     $(tput bold)-r$(tput sgr0)            (r)un fps setval updates and exit"
 echo ""
 echo "------------------------------------------------------------------------"
@@ -179,7 +180,63 @@ fi
 
 
 
+function cacaoCreateExampe_cacaovars {
+echo ""
+echo "Creating example file cacaovars.example.bash"
+echo "Edit and rename file to cacaovars.<loopname>.bash"
+echo "Then run :"
+echo "$ cacao-setup <loopname>"
+echo ""
 
+EXAMPLEFILENAME="cacaovars.example.bash"
+
+echo "# cacao environment variables for setup" >> $EXAMPLEFILENAME
+echo "# source this file to take into effect" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "export CACAO_DMxsize=\"188\"" >> $EXAMPLEFILENAME
+echo "export CACAO_DMysize=\"1\"" >> $EXAMPLEFILENAME
+echo "export CACAO_WORKDIR=\"ao188lhs\"" >> $EXAMPLEFILENAME
+echo "export CACAO_DMINDEX=\"02\"" >> $EXAMPLEFILENAME
+echo "export CACAO_LOOPNUMBER=\"1\"" >> $EXAMPLEFILENAME
+echo "export CACAO_WFSSTREAM=\"aol${CACAO_LOOPNUMBER}_linsimWFS\"" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# ========================================" >> $EXAMPLEFILENAME
+echo "# ======= FPS processes to be set up =====" >> $EXAMPLEFILENAME
+echo "# ========================================" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# DM combination " >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_DMCOMB=\"ON\"" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# delay stream: emulates time lag in hardware" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_STREAMDELAY=\"ON\"" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# MVM lop on GPU: used to simulate hardware" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_SIMMVMGPU=\"ON\"" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# Measure latency" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_MLAT=\"ON\"" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# WFS acquire frames" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_ACQUWFS=\"ON\"" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# Acquire linear RM" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_ACQLINZRM=\"ON\"" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_ACQLINLORM=\"OFF\"" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# Compute Control Matrix and modes" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_COMPSCM=\"ON\"  # straight CM computation" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_COMPFCM=\"OFF\" # Fourier based CM and modes" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# GPU extract modes from WFS image" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_MODESEXTRACTWFSGPU=\"OFF\"" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+echo "# AO run loop" >> $EXAMPLEFILENAME
+echo "export CACAO_FPSPROC_AOLOOP_RUN=\"ON\"" >> $EXAMPLEFILENAME
+echo "" >> $EXAMPLEFILENAME
+
+}
 
 
 
@@ -239,9 +296,6 @@ done < fpscmd/fpslist.txt
 
 
 
-
-
-
 rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmC.im.shm
 rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmRM.im.shm
 rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmO.im.shm
@@ -276,6 +330,9 @@ cd ${CURRDIR}
 
 
 
+
+
+
 function fpssetparamconf {
 
 echo ""
@@ -291,6 +348,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 done < fpssetup.setval.combined.conf
 
 }
+
 
 
 
@@ -317,7 +375,7 @@ TESTMODE="0"
 FPSSETPARAMCONF="0"
 UPDATEMODE="0"
 
-while getopts :hCtru FLAG; do
+while getopts :heCtru FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -327,6 +385,10 @@ while getopts :hCtru FLAG; do
       fi
       exit
       ;;
+    e) # create example
+    cacaoCreateExampe_cacaovars
+    exit
+    ;;
     t) # test mode
     TESTMODE="1"    
     ;;

@@ -116,7 +116,7 @@ fi
 
 loopnb=$( head -1 LOOPNUMBER )
 FPSname=$1
-stageddir=$( head -1 fpsconf/${FPSname}/out/dir.setval.txt | awk '{print $1;}' )
+stageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
 mkdir -p ${stageddir}
 
 pname0=$0

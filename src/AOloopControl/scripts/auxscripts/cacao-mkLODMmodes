@@ -116,9 +116,9 @@ mkdir -p Cmodes
 mkdir -p tmp
 
 
-zRMstageddir=$( head -1 fpsconf/${FPSname}/out/dir.setval.txt | awk '{print $1;}' )
+zRMstageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
 #"conf_zrm_staged"
-loRMstageddir=$( head -1 fpsconf/${FPSname}/out/dir.setval.txt | awk '{print $1;}' )
+loRMstageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
 #"conf_LOrm_staged"
 mkdir -p ${zRMstageddir}
 mkdir -p ${loRMstageddir}
