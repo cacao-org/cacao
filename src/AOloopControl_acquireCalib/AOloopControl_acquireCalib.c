@@ -644,20 +644,8 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
     long optarg00
 )
 {
-    uint16_t loopstatus;
-
-
-    // ===========================
-    // SETUP FPS
-    // ===========================
-    /*int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-	fps.md->sourceline = __LINE__;
-	*/
 	FPS_SETUP_INIT(fpsname, CMDmode);
 	
-
 
     // ===========================
     // ALLOCATE FPS ENTRIES
@@ -668,13 +656,13 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
 
 
 
-    if( loopstatus == 0 ) // stop fps
+    if( fps.loopstatus == 0 ) // stop fps
         return RETURN_SUCCESS;
 
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while ( loopstatus == 1 )
+    while ( fps.loopstatus == 1 )
     {
         if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
@@ -700,16 +688,6 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
     char *fpsname
 )
 {
-    // ===========================
-    // CONNECT TO FPS
-    // ===========================
-    /*int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps;
-    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1)
-    {
-        printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
-        return RETURN_FAILURE;
-    }*/
 	FPS_CONNECT( fpsname, FPSCONNECT_RUN );
 
 
@@ -1894,12 +1872,14 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                         "FPS mlat",
                         FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
     FUNCTION_PARAMETER_STRUCT FPS_mlat;
+    FPS_mlat.SMfd = -1;
     fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX = 0;
 
     long fpi_FPS_DMcomb = function_parameter_add_entry(&fps, ".FPS_DMcomb",
                           "FPS DMcomb",
                           FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
     FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
+    FPS_DMcomb.SMfd = -1;
     fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX = 0;
 
 
@@ -2097,13 +2077,6 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     // ===========================
     // CONNECT TO FPS
     // ===========================
-/*    int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps;
-    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
-        printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
-        return RETURN_FAILURE;
-    }
-*/
 	FPS_CONNECT( fpsname, FPSCONNECT_RUN );
 
 
@@ -2126,8 +2099,6 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     long NBcycle     = functionparameter_GetParamValue_INT64(&fps, ".NBcycle");
     long NBinnerCycle = functionparameter_GetParamValue_INT64(&fps, ".NBinnerCycle");
 
-    printf("TEST POINT LINE %d\n", __LINE__);
-    fflush(stdout);
 
 
 
@@ -2141,9 +2112,6 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     char wfsref_filename[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(wfsref_filename,  functionparameter_GetParamPtr_STRING(&fps, ".out.fn_wfsref"),  FUNCTION_PARAMETER_STRMAXLEN);
     char wfsref_sname[] = "wfsref";
-
-    printf("TEST POINT LINE %d\n", __LINE__);
-    fflush(stdout);
 
 
 
@@ -2189,8 +2157,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
         NBinnerCycleC = NBinnerCycle;
 
 
-    printf("TEST POINT LINE %d\n", __LINE__);
-    fflush(stdout);
+
 
     int SHUFFLE = 1;
 
@@ -2219,8 +2186,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     int *pokearray = (int*) malloc(sizeof(int)*NBpoke); // shuffled array
 
-    printf("TEST POINT LINE %d    NBpoke = %ld\n", __LINE__, NBpoke);
-    fflush(stdout);
+
 
     int p;
     for(p=0; p<NBpoke; p++)
@@ -2250,8 +2216,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
         }
     }
 
-    printf("TEST POINT LINE %d\n", __LINE__);
-    fflush(stdout);
+
 
     // **************************************************************
     // *************** PREPARE POKE CUBES ***************************
