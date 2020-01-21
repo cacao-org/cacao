@@ -63,7 +63,11 @@ configure_file (
 # =======================================
 
 # Set Release build flags
+set(CMAKE_C_FLAGS_DEBUG     "-O0 -g -Wall")
+
+# Set Release build flags
 set(CMAKE_C_FLAGS_RELEASE     "-Ofast -DNDEBUG")
+
 
 # Set a default build type if none was specified
 set(default_build_type "Release")
@@ -344,6 +348,7 @@ set(PROGRAM_PERMISSIONS_DEFAULT
     WORLD_READ WORLD_EXECUTE)
 
 install(TARGETS cacao DESTINATION bin PERMISSIONS ${PROGRAM_PERMISSIONS_DEFAULT} SETUID)
+
 # Note: may need to write "/usr/local/magma/lib" to:
 # /etc/ld.so.conf.d/magma.conf
 

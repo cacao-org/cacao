@@ -71,6 +71,8 @@ sudo make install
 
 ### Post-installation 
 
+Note: We assume that cacao has been installed in directory /home/myname/src/cacao.
+
 You may need to add /usr/local/lib to LD_LIBRARY_PATH environment variable:
 ```bash
 echo "/usr/local/lib" > usrlocal.conf
@@ -86,6 +88,7 @@ sudo ln -s /usr/local/bin/cacao /usr/local/bin/milk
 
 Create local bin directory and sym links to all cacao- scripts:
 ```bash
+cd /home/myname/src/cacao/
 mkdir bin
 cd bin
 find /home/myname/src/cacao/ -executable -type f -name "milk-*" -print0 | xargs -0 -I {} ln -s {} .
@@ -96,8 +99,6 @@ Add milk and cacao executable scripts to PATH environment variable. Add this lin
 ```bash
 export CACAO_ROOT=/home/myname/src/cacao
 export PATH=$PATH:/home/myname/src/cacao/bin
-export PATH=$PATH:/home/myname/src/cacao/src/CommandLineInterface/scripts
-export PATH=$PATH:/home/myname/src/cacao/src/AOloopControl/scripts
 ```
 
 OPTIONAL: Create tmpfs disk for high performance I/O:

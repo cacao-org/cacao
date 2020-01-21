@@ -42,6 +42,12 @@ DATA __attribute__((used)) data;
 
 
 
+
+
+
+
+
+
 int main(int argc, char *argv[])
 {
     char *AppName = "cacao";
@@ -50,7 +56,8 @@ int main(int argc, char *argv[])
     printf(STYLE_BOLD);
     printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
     #ifndef NDEBUG
-    printf("        === DEBUG MODE : assert() enabled ===========\n");
+    printf("        === DEBUG MODE : assert()         enabled ==========\n");
+    printf("        === DEBUG MODE : DEBUG_TRACEPOINT enabled ==========\n");
     #endif
     printf(STYLE_NO_BOLD);
 
@@ -77,7 +84,10 @@ int main(int argc, char *argv[])
 
 
 
+	
+	
     // initialize milk modules for which no function calls is included by default
+
 
     libinit_image_basic();
     libinit_image_format();
@@ -87,7 +97,6 @@ int main(int argc, char *argv[])
     libinit_ZernikePolyn();
     libinit_linopt_imtools();
     libinit_cudacomp();
-
 
 
     // initialize modules specific to cacao
@@ -100,9 +109,10 @@ int main(int argc, char *argv[])
     libinit_AOloopControl_DM();
     libinit_AOloopControl_compTools();
     libinit_AOloopControl_acquireCalib();
+
 	
 
-    runCLI(argc, argv, AppName);
+	runCLI(argc, argv, AppName);
 
     printf("NORMAL EXIT\n");
 
