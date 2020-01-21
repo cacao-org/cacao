@@ -16,10 +16,6 @@
 
 
 
-#define AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG 1
-
-
-
 
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -87,10 +83,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 /*                                      DEFINES, MACROS                                            */
 /* =============================================================================================== */
 /* =============================================================================================== */
-
-#if !defined(AOLOOPCONTROL_ACQUIRECALIB_LOGDEBUG) || defined(STANDALONE)
-#define TESTPOINT(...)
-#endif
 
 # ifdef _OPENMP
 # include <omp.h>
@@ -805,7 +797,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
 
-    TESTPOINT("%ld %ld %ld %ld %ld %s %s %d %d %ld %d",
+    DEBUG_TRACEPOINT("%ld %ld %ld %ld %ld %s %s %d %d %ld %d",
              loop,
              delayfr,
              delayRM1us,
@@ -864,12 +856,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         NBiter = NBcycle;
     }
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     processinfo_WriteMessage(processinfo, "Initializing/Loading memory");
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
 
@@ -877,15 +869,15 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     printf("INITIALIZE MEMORY (mode %d, meminit = %d)....\n", AOinitMode, AOloopcontrol_meminit);
     fflush(stdout);
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
     /*    if(AOloopcontrol_meminit == 0) {
-    		TESTPOINT(" ");
+    		DEBUG_TRACEPOINT(" ");
             AOloopControl_InitializeMemory(AOinitMode);
         }
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         AOloopControl_loadconfigure(LOOPNUMBER, 1, 2);
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
     */
 
 
@@ -928,7 +920,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     long sizeyWFS = data.image[ID_wfsim].md[0].size[1];
     long sizeWFS = sizexWFS*sizeyWFS;
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
 
 
@@ -967,7 +959,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     sizearray[2] = NBpoke;
     IDoutC = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1], sizearray[2]);
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
     // timing info for pokes
     long NBpokeTotal = (4 + delayfr + (NBave + NBexcl) * NBpoke) * NBiter + 4;
     long pokecnt = 0;
@@ -980,7 +972,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     pokeTime_nsec   = (long *) malloc(sizeof(long) * NBpokeTotal);
     pokeTime_index  = (long *) malloc(sizeof(long) * NBpokeTotal);
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     // create one temporary array per time step
     int AveStep;
@@ -1002,7 +994,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         }
     }*/
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     // Check that DM size matches poke file
     if(data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1] != data.image[ID_dmRM].md[0].size[0]*data.image[ID_dmRM].md[0].size[1]) {
@@ -1025,7 +1017,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
             }
         }
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
 
 
@@ -1054,7 +1046,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
 
     iter = 0;
@@ -1104,7 +1096,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     array_PokeIndex1Mapped  = (long *) malloc(sizeof(long) * imcntmax); // Current poke mode on DM, index in poke cube
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     /**
      * Poke sequence defines the sequence of mode poked
@@ -1144,7 +1136,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     imcnt = 0;
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     // ==================================
     // STARTING LOOP
@@ -1163,15 +1155,15 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      */
 
     while(loopOK == 1) {
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         loopOK = processinfo_loopstep(processinfo);
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         processinfo_exec_start(processinfo);
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         printf("NBpoke=%ld # %3ld/%3ld (%6ld/%6ld)\n", NBpoke, iter, NBiter, imcnt, imcntmax);
         fflush(stdout);
@@ -1256,7 +1248,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         array_poke[imcnt] = 1;
 
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         // WAIT FOR LOOP DELAY, PRIMING
 
@@ -1269,15 +1261,15 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         array_PokeIndex1Mapped[imcnt] = PokeIndex1Mapped;
         imcnt ++;
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
         //Read_cam_frame(loop, 1, normalize, 0, 0);
         ImageStreamIO_semwait(&data.image[ID_wfsim], semindexwfs);
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         COREMOD_MEMORY_image_set_sempost_byID(ID_dmRM, -1);
         data.image[ID_dmRM].md[0].cnt0++;
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
 
 
@@ -1336,7 +1328,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         }
 
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         /**
          * First inner loop increment poke mode
@@ -1416,7 +1408,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         }
 
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         // zero DM channel
 
@@ -1463,7 +1455,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         fflush(stdout);
 
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         if(SAVE_RMACQU_ALL == 1) { // Save all intermediate result
             char tmpfname[200];
@@ -1505,7 +1497,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         iter++;
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
 
         // process signals, increment loop counter
@@ -1532,7 +1524,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
             loopOK = 0;
         }
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
     } // end of iteration loop
 
@@ -1542,18 +1534,18 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     free(sizearray);
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     processinfo_cleanExit(processinfo);
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
         for(ii = 0; ii < sizeWFS; ii++) {
             data.image[IDoutC].array.F[PokeIndex * sizeWFS + ii] /= NBave * iter;
         }
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     // print poke log
     int retv;
@@ -1578,7 +1570,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     }
     fclose(fp);
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     printf("Writing poke timing to file ... ");
     fflush(stdout);
@@ -1597,7 +1589,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     fflush(stdout);
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     free(IDoutCstep);
 
@@ -1616,7 +1608,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     free(pokeTime_nsec);
     free(pokeTime_index);
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     return(IDoutC);
 }
