@@ -228,6 +228,7 @@ static double tdiffv;
 /* =============================================================================================== */
 
 static int INITSTATUS_AOloopControl = 0;
+static int DISABLE_CLI_AOloopControl = 0; // set to 1 to disable CLI
 
 #define NB_AOloopcontrol 10 // max number of loops
 long LOOPNUMBER = 0; // current loop index
@@ -274,7 +275,10 @@ AOloopControl_var aoloopcontrol_var;
 /** @brief CLI function for AOloopControl_loadconfigure */
 
 int_fast8_t AOloopControl_loadconfigure_cli() {
-    if(CLI_checkarg(1,2)==0) {
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            == 0 )
+    {
         AOloopControl_loadconfigure(data.cmdargtoken[1].val.numl, 1, 10);
         return 0;
     }
@@ -301,11 +305,14 @@ int_fast8_t AOloopControl_loadconfigure_cli() {
 
 /** @brief CLI function for AOloopControl_mkCM */
 int_fast8_t AOloopControl_aorun_cli() {
-	int stringmaxlen = 200;
+    int stringmaxlen = 200;
     char fpsname[stringmaxlen];
 
     // First, we try to execute function through FPS interface
-    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_STR)
+            == 0)
+    {   // check that first arg is string
         // Set FPS interface name
         // By convention, if there are optional arguments, they should be appended to the fps name
         //
@@ -365,7 +372,11 @@ int_fast8_t AOloopControl_aorun_cli() {
     printf("LINE %d\n", __LINE__);
 
     // non FPS implementation - all parameters specified at function launch
-    if(CLI_checkarg(1,4) + CLI_checkarg(2,1) == 0) {
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_IMG)
+            + CLI_checkarg(2, CLIARG_FLOAT)
+            == 0)
+    {
         printf("========================================================\n");
         printf("============== RUNNING non-FPS implementation ==========\n");
         printf("========================================================\n");
@@ -398,118 +409,247 @@ int_fast8_t AOloopControl_aorun_cli() {
 
 /** @brief CLI function for AOloopControl_AOcompute_GUI */
 int_fast8_t AOloopControl_AOcompute_GUI_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0) {
-        AOloopControl_AOcompute_GUI(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_AOcompute_GUI(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numf
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_aorun_GUI */
 int_fast8_t AOloopControl_aorun_GUI_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0) {
-        AOloopControl_aorun_GUI(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_aorun_GUI(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_WFSzpupdate_loop */
 int_fast8_t AOloopControl_WFSzpupdate_loop_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,4)==0) {
-        AOloopControl_WFSzpupdate_loop(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_IMG)
+            + CLI_checkarg(2, CLIARG_IMG)
+            + CLI_checkarg(3, CLIARG_IMG)
+            == 0 )
+    {
+        AOloopControl_WFSzpupdate_loop(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_WFSzeropoint_sum_update_loop */
 int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop_cli() {
-    if(CLI_checkarg(1,3)
-    + CLI_checkarg(2,2)
-    + CLI_checkarg(3,4)
-    + CLI_checkarg(4,4)==0) {
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_STR_NOT_IMG)
+            + CLI_checkarg(2, CLIARG_LONG)
+            + CLI_checkarg(3, CLIARG_IMG)
+            + CLI_checkarg(4, CLIARG_IMG)
+            == 0 )
+    {
         AOloopControl_WFSzeropoint_sum_update_loop(
-        LOOPNUMBER, 
-        data.cmdargtoken[1].val.string, 
-        data.cmdargtoken[2].val.numl, 
-        data.cmdargtoken[3].val.string, 
-        data.cmdargtoken[4].val.string);
-        return 0;
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_CompModes_loop */
 int_fast8_t AOloopControl_CompModes_loop_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,4)
-            + CLI_checkarg(3,4)
-            + CLI_checkarg(4,4)
-            + CLI_checkarg(5,3)==0) {
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_IMG)
+            + CLI_checkarg(2, CLIARG_IMG)
+            + CLI_checkarg(3, CLIARG_IMG)
+            + CLI_checkarg(4, CLIARG_IMG)
+            + CLI_checkarg(5, CLIARG_STR_NOT_IMG)
+            == 0 )
+    {
         AOloopControl_CompModes_loop(
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.string,
             data.cmdargtoken[3].val.string,
             data.cmdargtoken[4].val.string,
-            data.cmdargtoken[5].val.string);
-        return 0;
+            data.cmdargtoken[5].val.string
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_GPUmodecoeffs2dm_filt */
 int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,4)+CLI_checkarg(3,4)+CLI_checkarg(4,2)+CLI_checkarg(5,4)+CLI_checkarg(6,2)+CLI_checkarg(7,2)+CLI_checkarg(8,2)==0) {
-        AOloopControl_GPUmodecoeffs2dm_filt_loop(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.string, data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.numl, data.cmdargtoken[8].val.numl);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_IMG)
+            + CLI_checkarg(3, CLIARG_IMG)
+            + CLI_checkarg(4, CLIARG_LONG)
+            + CLI_checkarg(5, CLIARG_IMG)
+            + CLI_checkarg(6, CLIARG_LONG)
+            + CLI_checkarg(7, CLIARG_LONG)
+            + CLI_checkarg(8, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_GPUmodecoeffs2dm_filt_loop(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.string,
+            data.cmdargtoken[6].val.numl,
+            data.cmdargtoken[7].val.numl,
+            data.cmdargtoken[8].val.numl
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_computeWFSresidualimage */
 int_fast8_t AOloopControl_computeWFSresidualimage_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,4)==0) {
-        AOloopControl_computeWFSresidualimage(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.string);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_IMG)
+            == 0 )
+    {
+        AOloopControl_computeWFSresidualimage(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.string
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_ProcessModeCoefficients */
 int_fast8_t AOloopControl_ProcessModeCoefficients_cli() {
-    if(CLI_checkarg(1,2)==0) {
-        AOloopControl_ProcessModeCoefficients(data.cmdargtoken[1].val.numl);
-        return 0;
-    } else return 1;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_ProcessModeCoefficients(
+            data.cmdargtoken[1].val.numl
+        );
+        return CLICMD_SUCCESS;
+    } else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_AutoTuneGains */
 int_fast8_t AOloopControl_AutoTuneGains_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,3)+CLI_checkarg(3,1)+CLI_checkarg(4,2)==0) {
-        AOloopControl_AutoTuneGains(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numl);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_STR_NOT_IMG)
+            + CLI_checkarg(3, CLIARG_FLOAT)
+            + CLI_checkarg(4, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_AutoTuneGains(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.numf,
+            data.cmdargtoken[4].val.numl
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_dm2dm_offload */
 int_fast8_t AOloopControl_dm2dm_offload_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,1)+CLI_checkarg(4,1)+CLI_checkarg(5,1)==0) {
-        AOloopControl_dm2dm_offload(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numf, data.cmdargtoken[5].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_IMG)
+            + CLI_checkarg(2, CLIARG_IMG)
+            + CLI_checkarg(3, CLIARG_FLOAT)
+            + CLI_checkarg(4, CLIARG_FLOAT)
+            + CLI_checkarg(5, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_dm2dm_offload(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.numf,
+            data.cmdargtoken[4].val.numf,
+            data.cmdargtoken[5].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_sig2Modecoeff */
 int_fast8_t AOloopControl_sig2Modecoeff_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,4)+CLI_checkarg(4,3)==0) {
-        AOloopControl_sig2Modecoeff(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string,  data.cmdargtoken[4].val.string);
-        return 0;
-    } else return 1;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_IMG)
+            + CLI_checkarg(2, CLIARG_IMG)
+            + CLI_checkarg(3, CLIARG_IMG)
+            + CLI_checkarg(4, CLIARG_STR_NOT_IMG)
+            == 0 )
+    {
+        AOloopControl_sig2Modecoeff(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string
+        );
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -523,11 +663,18 @@ int_fast8_t AOloopControl_sig2Modecoeff_cli() {
 
 /** @brief CLI function for AOloopControl_setLoopNumber */
 int_fast8_t AOloopControl_setLoopNumber_cli() {
-    if(CLI_checkarg(1,2)==0) {
-        AOloopControl_setLoopNumber(data.cmdargtoken[1].val.numl);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_setLoopNumber(
+            data.cmdargtoken[1].val.numl
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -567,147 +714,278 @@ int_fast8_t AOloopControl_setLoopNumber_cli() {
 
 /** @brief CLI function for AOloopControl_set_modeblock_gain */
 int_fast8_t AOloopControl_set_modeblock_gain_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)+CLI_checkarg(3,2)==0) {
-        AOloopControl_set_modeblock_gain(LOOPNUMBER, data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf, data.cmdargtoken[3].val.numl);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_FLOAT)
+            + CLI_checkarg(3, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_set_modeblock_gain(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numf,
+            data.cmdargtoken[3].val.numl
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_loopstep */
 int_fast8_t AOloopControl_loopstep_cli() {
-    if(CLI_checkarg(1,2)==0) {
-        AOloopControl_loopstep(LOOPNUMBER, data.cmdargtoken[1].val.numl);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_loopstep(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.numl
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_set_loopfrequ */
 int_fast8_t AOloopControl_set_loopfrequ_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_set_loopfrequ(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0)
+    {
+        AOloopControl_set_loopfrequ(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_set_hardwlatency_frame */
 int_fast8_t AOloopControl_set_hardwlatency_frame_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_set_hardwlatency_frame(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 ) 
+            {
+        AOloopControl_set_hardwlatency_frame(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_set_complatency_frame */
 int_fast8_t AOloopControl_set_complatency_frame_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_set_complatency_frame(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 ) 
+            {
+        AOloopControl_set_complatency_frame(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_set_wfsmextrlatency_frame */
 int_fast8_t AOloopControl_set_wfsmextrlatency_frame_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_set_wfsmextrlatency_frame(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_set_wfsmextrlatency_frame(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_delta */
 int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_delta_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_set_AUTOTUNE_LIMITS_delta(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_set_AUTOTUNE_LIMITS_delta(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_perc */
 int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_perc_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_set_AUTOTUNE_LIMITS_perc(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_set_AUTOTUNE_LIMITS_perc(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_mcoeff */
 int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 ) {
+        AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setgain */
 int_fast8_t AOloopControl_setgain_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_setgain(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setgain(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setARPFgain */
 int_fast8_t AOloopControl_setARPFgain_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_setARPFgain(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setARPFgain(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setARPFgain */
 int_fast8_t AOloopControl_setARPFgainAutoMin_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_setARPFgainAutoMin(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setARPFgainAutoMin(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setARPFgain */
 int_fast8_t AOloopControl_setARPFgainAutoMax_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_setARPFgainAutoMax(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setARPFgainAutoMax(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
-
 
 
 /** @brief CLI function for AOloopControl_setWFSnormfloor */
 int_fast8_t AOloopControl_setWFSnormfloor_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_setWFSnormfloor(data.cmdargtoken[1].val.numf);
-        return 0;
-    } else return 1;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setWFSnormfloor(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setmaxlimit */
 int_fast8_t AOloopControl_setmaxlimit_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_setmaxlimit(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setmaxlimit(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setmult */
 int_fast8_t AOloopControl_setmult_cli() {
-    if(CLI_checkarg(1,1)==0) {
-        AOloopControl_setmult(data.cmdargtoken[1].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setmult(
+            data.cmdargtoken[1].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -719,72 +997,152 @@ int_fast8_t AOloopControl_setmult_cli() {
     }
     else return 1;
 }
-* 
+*
 */
- 
+
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
+
 
 /** @brief CLI function for AOloopControl_setgainrange */
 int_fast8_t AOloopControl_setgainrange_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,1)==0) {
-        AOloopControl_setgainrange(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_LONG)
+            + CLI_checkarg(3, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setgainrange(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setlimitrange */
 int_fast8_t AOloopControl_setlimitrange_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,1)==0) {
-        AOloopControl_setlimitrange(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_LONG)
+            + CLI_checkarg(3, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setlimitrange(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setmultfrange */
 int_fast8_t AOloopControl_setmultfrange_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,1)==0) {
-        AOloopControl_setmultfrange(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_LONG)
+            + CLI_checkarg(3, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setmultfrange(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setgainblock */
 int_fast8_t AOloopControl_setgainblock_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0) {
-        AOloopControl_setgainblock(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
-        return 0;
+    if( CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_FLOAT)
+            == 0 ) {
+        AOloopControl_setgainblock(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setlimitblock */
 int_fast8_t AOloopControl_setlimitblock_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0) {
-        AOloopControl_setlimitblock(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setlimitblock(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_setmultfblock */
 int_fast8_t AOloopControl_setmultfblock_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0) {
-        AOloopControl_setmultfblock(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_FLOAT)
+            == 0 )
+    {
+        AOloopControl_setmultfblock(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_scanGainBlock */
 int_fast8_t AOloopControl_scanGainBlock_cli() {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,1)+CLI_checkarg(4,1)+CLI_checkarg(5,2)==0) {
-        AOloopControl_scanGainBlock(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numf, data.cmdargtoken[4].val.numf, data.cmdargtoken[5].val.numl);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_LONG)
+            + CLI_checkarg(3, CLIARG_FLOAT)
+            + CLI_checkarg(4, CLIARG_FLOAT)
+            + CLI_checkarg(5, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_scanGainBlock(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numf,
+            data.cmdargtoken[4].val.numf,
+            data.cmdargtoken[5].val.numl
+        );
+        return CLICMD_SUCCESS;
     }
-    else    return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -798,12 +1156,32 @@ int_fast8_t AOloopControl_scanGainBlock_cli() {
 /** @brief CLI function for AOloopControl_DMmodulateAB */
 int_fast8_t AOloopControl_DMmodulateAB_cli()
 {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,4)+CLI_checkarg(4,4)+CLI_checkarg(5,4)+CLI_checkarg(6,1)+CLI_checkarg(7,2)==0)   {
-        AOloopControl_DMmodulateAB(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.string, data.cmdargtoken[6].val.numf, data.cmdargtoken[7].val.numl);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_IMG)
+            + CLI_checkarg(2, CLIARG_IMG)
+            + CLI_checkarg(3, CLIARG_IMG)
+            + CLI_checkarg(4, CLIARG_IMG)
+            + CLI_checkarg(5, CLIARG_IMG)
+            + CLI_checkarg(6, CLIARG_FLOAT)
+            + CLI_checkarg(7, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_DMmodulateAB(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string,
+            data.cmdargtoken[5].val.string,
+            data.cmdargtoken[6].val.numf,
+            data.cmdargtoken[7].val.numl
+        );
+        return CLICMD_SUCCESS;
     }
-    else        return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 
 /* =============================================================================================== */
@@ -814,11 +1192,18 @@ int_fast8_t AOloopControl_DMmodulateAB_cli()
 
 /** @brief CLI function for AOloopControl_logprocess_modeval */
 int_fast8_t AOloopControl_logprocess_modeval_cli() {
-    if(CLI_checkarg(1,4)==0) {
-        AOloopControl_logprocess_modeval(data.cmdargtoken[1].val.string);
-        return 0;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_IMG)
+            == 0 )
+    {
+        AOloopControl_logprocess_modeval(
+            data.cmdargtoken[1].val.string
+        );
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -838,60 +1223,102 @@ int_fast8_t AOloopControl_logprocess_modeval_cli() {
 
 
 int_fast8_t AOloopControl_RTstreamLOG_init_cli() {
-	AOloopControl_RTstreamLOG_init(LOOPNUMBER);
+    AOloopControl_RTstreamLOG_init(LOOPNUMBER);
 }
 
 
 int_fast8_t AOloopControl_RTstreamLOG_printstatus_cli() {
-	AOloopControl_RTstreamLOG_printstatus(LOOPNUMBER);
+    AOloopControl_RTstreamLOG_printstatus(LOOPNUMBER);
 }
 
 
 int_fast8_t AOloopControl_RTstreamLOG_GUI_cli() {
-	AOloopControl_RTstreamLOG_GUI(LOOPNUMBER);
+    AOloopControl_RTstreamLOG_GUI(LOOPNUMBER);
 }
 
 
 int_fast8_t AOloopControl_RTstreamLOG_saveloop_cli() {
-	if(CLI_checkarg(1,5)==0) {
-		AOloopControl_RTstreamLOG_saveloop(LOOPNUMBER, data.cmdargtoken[1].val.string);
-		return 0;
-	}
-	else return 1;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_STR)
+            == 0 )
+    {
+        AOloopControl_RTstreamLOG_saveloop(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.string
+        );
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 int_fast8_t AOloopControl_RTstreamLOG_set_saveON_cli() {
-	if(CLI_checkarg(1,2)==0) {
-		AOloopControl_RTstreamLOG_set_saveON(LOOPNUMBER, data.cmdargtoken[1].val.numl);
-		return 0;
-	}
-	else return 1;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_RTstreamLOG_set_saveON(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.numl
+        );
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
+
 int_fast8_t AOloopControl_RTstreamLOG_set_saveOFF_cli() {
-	if(CLI_checkarg(1,2)==0) {
-		AOloopControl_RTstreamLOG_set_saveOFF(LOOPNUMBER, data.cmdargtoken[1].val.numl);
-		return 0;
-	}
-	else return 1;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_RTstreamLOG_set_saveOFF(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.numl
+        );
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 int_fast8_t AOloopControl_RTstreamLOG_set_ON_cli() {
-	if(CLI_checkarg(1,2)==0) {
-		AOloopControl_RTstreamLOG_set_ON(LOOPNUMBER, data.cmdargtoken[1].val.numl);
-		return 0;
-	}
-	else return 1;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_RTstreamLOG_set_ON
+        (LOOPNUMBER,
+         data.cmdargtoken[1].val.numl
+        );
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
+
 int_fast8_t AOloopControl_RTstreamLOG_set_OFF_cli() {
-	if(CLI_checkarg(1,2)==0) {
-		AOloopControl_RTstreamLOG_set_OFF(LOOPNUMBER, data.cmdargtoken[1].val.numl);
-		return 0;
-	}
-	else return 1;
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_LONG)
+            == 0 )
+    {
+        AOloopControl_RTstreamLOG_set_OFF(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.numl
+        );
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -908,14 +1335,24 @@ int_fast8_t AOloopControl_RTstreamLOG_set_OFF_cli() {
 
 int_fast8_t AOloopControl_setparam_cli()
 {
-    if(CLI_checkarg(1,3)+CLI_checkarg(2,1)==0)
+    if( DISABLE_CLI_AOloopControl
+            + CLI_checkarg(1, CLIARG_STR_NOT_IMG)
+            + CLI_checkarg(2, CLIARG_FLOAT)
+            == 0 )
     {
-        AOloopControl_setparam(LOOPNUMBER, data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numf);
-        return 0;
+        AOloopControl_setparam(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numf
+        );
+        return CLICMD_SUCCESS;
     }
-    else
-        return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
+
 
 
 /* =============================================================================================== */
@@ -932,7 +1369,11 @@ int_fast8_t AOloopControl_setparam_cli()
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-
+/*
+ * Library initialization function.
+ * Called when shared object is loaded
+ * 
+ */ 
 void __attribute__ ((constructor)) libinit_AOloopControl()
 {
 	if( INITSTATUS_AOloopControl == 0)
@@ -942,6 +1383,22 @@ void __attribute__ ((constructor)) libinit_AOloopControl()
 		INITSTATUS_AOloopControl = 1;
 	}
 }
+
+
+
+/*
+ * Library close function.
+ * Called when shared object in unloaded, or program exit.
+ *
+ */
+void __attribute__ ((destructor)) libclose_fft()
+{
+	if( INITSTATUS_AOloopControl == 1)
+	{
+		// nothing to do
+	}
+}
+
 
 
 
@@ -982,7 +1439,7 @@ void init_AOloopControl()
 #endif
 
 
-    if((fp=fopen("LOOPNUMBER","r"))!=NULL)
+    if( (fp = fopen("LOOPNUMBER","r")) != NULL )
     {
         if(fscanf(fp,"%8ld", &LOOPNUMBER) != 1)
             printERROR(__FILE__,__func__,__LINE__, "Cannot read LOOPNUMBER");

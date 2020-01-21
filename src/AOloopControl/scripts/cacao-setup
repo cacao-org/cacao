@@ -666,6 +666,7 @@ echo "${LOOPNUMBER}" > ${WORKDIR}/LOOPNUMBER
 
 # Add cacao scripts
 
+
 mkdir -p $WORKDIR/cacaobin
 find $CACAO_ROOT -executable -type f -name "cacao-*" -print0 | xargs -0 -I {} ln -s {} ./$WORKDIR/cacaobin/
 
