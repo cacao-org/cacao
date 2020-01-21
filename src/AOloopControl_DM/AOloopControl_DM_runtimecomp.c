@@ -9,10 +9,6 @@
  */
 
 
-#define AOLOOPCONTROL_DM_RUNTIMECOMP_LOGDEBUG 1
-
-
-
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                        HEADER FILES                                             */
@@ -72,12 +68,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 /* =============================================================================================== */
 
 
- #if !defined(AOLOOPCONTROL_DM_RUNTIMECOMP_LOGDEBUG) || defined(STANDALONE)
-#define TESTPOINT(...)
-#endif
-
-
-
 
 
 
@@ -129,7 +119,7 @@ int AOloopControl_DM_disp2V(long DMindex)
     // 2: remove quantization error by adding an external random map between 0 and 1, named dmXXquant
     //    USER SHOULD UPDATE THIS MAP WHEN REQUIRED
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     IDvolt = dmdispcombconf[DMindex].IDvolt;
     if(IDvolt == -1)
@@ -141,7 +131,7 @@ int AOloopControl_DM_disp2V(long DMindex)
     data.image[IDvolt].md[0].write = 1;
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
     if(QUANTIZATION_RANDOM == 2)
     {
         if(qmapinit == 0)
@@ -161,7 +151,7 @@ int AOloopControl_DM_disp2V(long DMindex)
         }
     }
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
     if(dmdispcombconf[DMindex].voltON==1)
     {
         if(dmdispcombconf[DMindex].volttype == 1) // linear bipolar, output is float
@@ -226,7 +216,7 @@ int AOloopControl_DM_disp2V(long DMindex)
         }
     }
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
     data.image[IDvolt].md[0].write = 0;
     data.image[IDvolt].md[0].cnt0++;
 
@@ -235,7 +225,7 @@ int AOloopControl_DM_disp2V(long DMindex)
     COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
     COREMOD_MEMORY_image_set_sempost_byID(IDvolt, -1);
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     return 0;
 }
@@ -510,7 +500,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 	/*
 	int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
@@ -576,7 +566,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 	sleep(1);
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     PROCESSINFO *processinfo;
 
@@ -641,7 +631,7 @@ int AOloopControl_DM_CombineChannels_RUN(
     printf("maxvolt = %f\n", maxvolt);
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     size = (uint32_t *) malloc(sizeof(uint32_t) * naxis);
     size[0] = xsize;
@@ -692,7 +682,7 @@ int AOloopControl_DM_CombineChannels_RUN(
     list_image_ID(); //TEST
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     dmdispcombconf[DMindex].wfsrefmode = wfsrefmode;
     if(wfsrefmode == 1) {
@@ -742,7 +732,7 @@ int AOloopControl_DM_CombineChannels_RUN(
         fflush(stdout);
     }
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     printf("Initialize channels\n");
     printf("Max DM stroke = %f um\n", dmdispcombconf[DMindex].stroke100 * dmdispcombconf[DMindex].MAXVOLT / 100.0 * dmdispcombconf[DMindex].MAXVOLT / 100.0);
@@ -766,7 +756,7 @@ int AOloopControl_DM_CombineChannels_RUN(
     dmdispptr = data.image[IDdispt].array.F;
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
 
 
@@ -811,7 +801,7 @@ int AOloopControl_DM_CombineChannels_RUN(
         }
     }
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
 
     cntsumold = 0;
@@ -840,7 +830,7 @@ int AOloopControl_DM_CombineChannels_RUN(
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
     while(dmdispcombconf[DMindex].ON == 1) {
         struct timespec semwaitts;
@@ -849,7 +839,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
         dmdispcombconf[DMindex].status = 2;
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         if(DMtwaitus > 0) {
             usleep(DMtwaitus);
@@ -871,9 +861,9 @@ int AOloopControl_DM_CombineChannels_RUN(
             //
             // this is semaphore that triggers the write to the DM
             //
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
             sem_timedwait(data.image[dmdispcombconf[DMindex].IDdisp].semptr[1], &semwaitts);
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             cntsum = 0;
             for(ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++) {
@@ -892,11 +882,11 @@ int AOloopControl_DM_CombineChannels_RUN(
                 cntold = cnt;
             }
         }
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
         if(DMupdate == 1) {
             clock_gettime(CLOCK_REALTIME, &ttrig);
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             dmdispcombconf[0].status = 3;
             cnt++;
@@ -909,7 +899,7 @@ int AOloopControl_DM_CombineChannels_RUN(
             }
 
             dmdispcombconf[DMindex].status = 4;
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
 
             ave = 0.0;
@@ -920,7 +910,7 @@ int AOloopControl_DM_CombineChannels_RUN(
                 ave /= dmdispcombconf[DMindex].xysize;
             }
             dmdispcombconf[DMindex].status = 5;
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             if(dmdispcombconf[DMindex].AveMode < 2) { // OFFSET BY DClevel
                 for(ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++) {
@@ -934,14 +924,14 @@ int AOloopControl_DM_CombineChannels_RUN(
                 }
             }
             dmdispcombconf[DMindex].status = 6;
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].write = 1;
             memcpy(data.image[dmdispcombconf[DMindex].IDdisp].array.F, data.image[IDdispt].array.F, sizeof(float)*data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement);
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].cnt0++;
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].atime = ttrig;
             data.image[dmdispcombconf[DMindex].IDdisp].md[0].write = 0;
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             /*     for(semnb=0;semnb<data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem;semnb++)
                     {
@@ -952,10 +942,10 @@ int AOloopControl_DM_CombineChannels_RUN(
             COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
             //      sem_post(data.image[dmdispcombconf[DMindex].IDdisp].semptr[0]);
 
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             if(dm2dm_mode == 1) {
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
                 memset(data.image[IDtmpoutdm].array.F, '\0', sizeof(float)*sizexyDMout);
                 for(kk = 0; kk < data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement; kk++) {
                     for(ii = 0; ii < sizexyDMout; ii++) {
@@ -969,12 +959,12 @@ int AOloopControl_DM_CombineChannels_RUN(
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].atime = ttrig;
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].write = 0;
                 sem_post(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].semptr[0]);
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
             }
 
 
             if(wfsrefmode == 1) {
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
                 memset(data.image[IDtmpoutref].array.F, '\0', sizeof(float)*sizexywfsref);
                 list_image_ID();
                 printf("kkmax = %ld\n", data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement);
@@ -988,7 +978,7 @@ int AOloopControl_DM_CombineChannels_RUN(
                         data.image[IDtmpoutref].array.F[ii] += data.image[dmdispcombconf[DMindex].IDdisp].array.F[kk] * data.image[dmdispcombconf[DMindex].ID_wfsref_RespMat].array.F[kk * sizexywfsref + ii];
                     }
                 }
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
                 printf("\n");
                 printf("Updating Zero Point  %ld <- %ld\n", dmdispcombconf[DMindex].ID_wfsref_out, IDtmpoutref);
                 fflush(stdout);
@@ -1000,7 +990,7 @@ int AOloopControl_DM_CombineChannels_RUN(
                 sem_post(data.image[dmdispcombconf[DMindex].ID_wfsref_out].semptr[0]);
                 printf("Done\n");
                 fflush(stdout);
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
             }
 
 
@@ -1010,9 +1000,9 @@ int AOloopControl_DM_CombineChannels_RUN(
 
             clock_gettime(CLOCK_REALTIME, &t1);
             if(dmdispcombconf[DMindex].voltmode == 1) {
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
                 AOloopControl_DM_disp2V(DMindex);
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
             }
 
 
@@ -1022,7 +1012,7 @@ int AOloopControl_DM_CombineChannels_RUN(
             dmdispcombconf[DMindex].updatecnt++;
             *addr_loopcnt = dmdispcombconf[DMindex].updatecnt;
 
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             if(data.processinfo == 1) {
                 processinfo->loopcnt = dmdispcombconf[DMindex].updatecnt;
@@ -1033,30 +1023,30 @@ int AOloopControl_DM_CombineChannels_RUN(
             tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
             dmdispcombconf[DMindex].tdelay = tdiffv;
 
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
 
             tdiff = time_diff(t1, tnow);
             tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
             dmdispcombconf[DMindex].time_disp2V = tdiffv;
 
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
         }
 
 
         if(loopOK == 0) {
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
             dmdispcombconf[DMindex].ON = 0;
             if(data.processinfo == 1) {
                 processinfo->loopstat = 3;
             }
         }
     }
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
 	function_parameter_RUNexit( &fps );
     processinfo_cleanExit(processinfo);
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
 
     printf("LOOP STOPPED\n");
