@@ -14,10 +14,6 @@
 
 
 
-#define AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG 1
-
-
-
 
 
 
@@ -47,10 +43,6 @@
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-
-#if !defined(AOLOOPCONTROL_IOTOOLS_CAMERAINPUT_LOGDEBUG) || defined(STANDALONE)
-#define TESTPOINT(...)
-#endif
 
 
 # ifdef _OPENMP
@@ -904,7 +896,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
 
 
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             switch (WFSatype) {
 
@@ -938,11 +930,11 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
             // ===========================================
             // SUBTRACT DARK -> imWFS0
             // ===========================================
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
             if( (*FPFLAG_COMPUTE_DARKSUBTRACT) & FPFLAG_ONOFF )
             {
 				data.image[ID_imWFS0].md[0].write = 1;
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
                 switch ( WFSatype ) {
 
                 case _DATATYPE_UINT16 :
@@ -995,7 +987,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
             }
 
 
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             // ===========================================
             // COMPUTE TOTAL -> WFSfluxtotal
@@ -1018,7 +1010,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                 *WFSfluxtotal = IMTOTAL;
             }
 
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
 
             // ===========================================
             // NORMALIZE -> imWFS1
@@ -1030,18 +1022,18 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
             if( (*FPFLAG_IMNORMALIZE) & FPFLAG_ONOFF )
             {
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
                 totalinv=1.0/(*WFSfluxtotal + *WFSnormfloor*sizeWFS);
                 normfloorcoeff = *WFSfluxtotal / (*WFSfluxtotal + *WFSnormfloor*sizeWFS);
             }
             else
             {
-                TESTPOINT(" ");
+                DEBUG_TRACEPOINT(" ");
                 totalinv = 1.0;
                 normfloorcoeff = 1.0;
             }
 
-            TESTPOINT(" ");
+            DEBUG_TRACEPOINT(" ");
             *GPU_alpha = totalinv;
 
             *GPU_beta = -normfloorcoeff;
@@ -1063,7 +1055,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
         }
 
-        TESTPOINT(" ");
+        DEBUG_TRACEPOINT(" ");
 
 
         // Post semaphore(s) and counter(s)
@@ -1231,7 +1223,7 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     static long long WFScntRM = 0;
 
 
-    TESTPOINT(" ");
+    DEBUG_TRACEPOINT(" ");
 
 
 
@@ -1293,7 +1285,7 @@ printf("================== TEST POINT LINE %d\n", __LINE__);
 fflush(stdout);
 
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
 /*
 	if(wfsim_semwaitindex == -1)
@@ -1308,7 +1300,7 @@ printf("================== TEST POINT LINE %d\n", __LINE__);
 fflush(stdout);
    
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
     // initialize camera averaging arrays if not already done
  /*   if(avcamarraysInit==0)
@@ -1334,7 +1326,7 @@ fflush(stdout);
         avcamarraysInit = 1;
     }*/
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
     if(InitSem==1)
     {   
@@ -1344,7 +1336,7 @@ fflush(stdout);
             sem_trywait(data.image[ID_wfsim].semptr[wfsim_semwaitindex]);
     }
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
 #ifdef _PRINT_TEST
     printf("TEST - SEMAPHORE INITIALIZED\n");
@@ -1382,7 +1374,7 @@ fflush(stdout);
     // listening for counter or semaphore in wfsim
     // ***********************************************************************************************
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
 printf("================== TEST POINT LINE %d\n", __LINE__);
 fflush(stdout);
@@ -1501,7 +1493,7 @@ fflush(stdout);
     fflush(stdout);
 #endif
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
     if(data.processinfo==1)
         if(data.pinfo->MeasureTiming==1)
@@ -1510,7 +1502,7 @@ fflush(stdout);
 printf("================== TEST POINT LINE %d\n", __LINE__);
 fflush(stdout);
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimerStart);
@@ -1542,7 +1534,7 @@ fflush(stdout);
 printf("================== TEST POINT LINE %d\n", __LINE__);
 fflush(stdout);
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
     switch (WFSatype) {
 
@@ -1586,7 +1578,7 @@ fflush(stdout);
     aoloopcontrol_var.PIXSTREAM_SLICE = data.image[ID_wfsim].md[0].cnt1;
 
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
 
 
@@ -1622,7 +1614,7 @@ fflush(stdout);
 #endif
 
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
 
 printf("================== TEST POINT LINE %d\n", __LINE__);
@@ -1828,7 +1820,7 @@ fflush(stdout);
         AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_imWFS0, tnow);
     }
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
 		printf("================== TEST POINT LINE %d\n", __LINE__);
 		fflush(stdout);
@@ -1854,7 +1846,7 @@ fflush(stdout);
 #endif
 
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
 		printf("================== TEST POINT LINE %d\n", __LINE__);
 		fflush(stdout);
@@ -1958,7 +1950,7 @@ fflush(stdout);
 
 
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 
     if( ((AOconf[loop].AOcompute.GPUall==0)&&(RM==0)) || (RM==1))  // normalize WFS image by totalinv
     {
@@ -1991,7 +1983,7 @@ fflush(stdout);
     fflush(stdout);
 #endif
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 	
    // AOconf[loop].AOtiminginfo.statusM = 2;
     if(RM==0)
@@ -2041,7 +2033,7 @@ fflush(stdout);
         imWaitTimeAve = imWaitTimeAve*(1.0-gain) + gain * tdiffv;
     }
 
-	TESTPOINT(" ");
+	DEBUG_TRACEPOINT(" ");
 	
     //TEST TIMING
     /*
