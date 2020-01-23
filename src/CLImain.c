@@ -51,7 +51,6 @@ DATA __attribute__((used)) data;
 int main(int argc, char *argv[])
 {
     char *AppName = "cacao";
-    int a = 0;
 
     printf(STYLE_BOLD);
     printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
@@ -116,5 +115,5 @@ int main(int argc, char *argv[])
 
     printf("NORMAL EXIT\n");
 
-    return 0;
+    return RETURN_SUCCESS;
 }

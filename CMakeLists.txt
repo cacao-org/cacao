@@ -63,7 +63,7 @@ configure_file (
 # =======================================
 
 # Set Release build flags
-set(CMAKE_C_FLAGS_DEBUG     "-O0 -g -Wall")
+set(CMAKE_C_FLAGS_DEBUG     "-O0 -g -Wall -Wextra")
 
 # Set Release build flags
 set(CMAKE_C_FLAGS_RELEASE     "-Ofast -DNDEBUG")
