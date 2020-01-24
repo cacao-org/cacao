@@ -7,7 +7,7 @@
 #include <sched.h>
 #include <omp.h>
 #include <assert.h>
-
+#include <pthread.h>
 #include <CommandLineInterface/CLIcore.h>
 
 
@@ -114,6 +114,10 @@ int main(int argc, char *argv[])
 	runCLI(argc, argv, AppName);
 
     printf("NORMAL EXIT\n");
+    
+	
+	// clean-up calling thread
+	pthread_exit(NULL);
 
     return RETURN_SUCCESS;
 }

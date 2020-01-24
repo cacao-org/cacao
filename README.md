@@ -98,6 +98,7 @@ find /home/myname/src/cacao/ -executable -type f -name "cacao-*" -print0 | xargs
 Add milk and cacao executable scripts to PATH environment variable. Add this line to the .bashrc or .profile file (change source code location as needed):
 ```bash
 export CACAO_ROOT=/home/myname/src/cacao
+export MILK_ROOT=/home/myname/src/cacao
 export PATH=$PATH:/home/myname/src/cacao/bin
 ```
 

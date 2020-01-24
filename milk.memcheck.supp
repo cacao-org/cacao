@@ -1,0 +1,99 @@
+{
+   readline-rl
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:rl_initialize
+   ...
+}
+
+{
+   readline-rl-history
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:add_history
+   ...
+}
+
+{
+   readline-rl-rl_redisplay
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:rl_redisplay
+   ...
+}
+
+{
+   readline-rl-rl_set_prompt
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:rl_set_prompt
+   ...
+}
+
+{
+   ncurses
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:initscr
+   ...
+}
+
+{
+   ncurses-printw
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:printw
+   ...
+}
+
+{
+   ncurses-printw
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:wrefresh
+   ...
+}
+
+{
+   ncurses-initncurses
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:initncurses*
+   ...
+}
+
+{
+   dlopen
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:dl_open_worker
+   ...
+}
+
+
+{
+   dlinit
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_dl_init
+   ...
+}
+
+{
+   dlclose
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:dlclose
+   ...
+}
