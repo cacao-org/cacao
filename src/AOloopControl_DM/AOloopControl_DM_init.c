@@ -38,7 +38,7 @@ extern int SMturbfd;
 
 
 
-static int AOloopControl_DM_createconf()
+static errno_t AOloopControl_DM_createconf()
 {
     int result;
     int ch;
@@ -116,17 +116,15 @@ static int AOloopControl_DM_createconf()
     }
     AOloopControl_printDMconf();
     
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int AOloopControl_DM_loadconf()
+errno_t AOloopControl_DM_loadconf()
 {
-    int result;
-    char fname[200];
-    char errstr[200];
+    char fname[200];;
 
     sprintf(fname, "%s/dmdispcombconf.conf.shm", data.shmdir);
 
@@ -155,14 +153,14 @@ int AOloopControl_DM_loadconf()
     }
     AOloopControl_printDMconf();
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
 
-int AOloopControl_DM_unloadconf()
+errno_t AOloopControl_DM_unloadconf()
 {
     if( dmdispcomb_loaded == 1 )
     {
@@ -171,7 +169,7 @@ int AOloopControl_DM_unloadconf()
         close(SMfd);
         dmdispcomb_loaded = 0;
     }
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 

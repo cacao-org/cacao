@@ -140,11 +140,11 @@ int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_nam
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-static int AOloopControl_DM_createconf();
+static errno_t AOloopControl_DM_createconf();
 
-int AOloopControl_DM_loadconf();
+errno_t AOloopControl_DM_loadconf();
 
-int AOloopControl_DM_unloadconf();
+errno_t AOloopControl_DM_unloadconf();
 
 
 
