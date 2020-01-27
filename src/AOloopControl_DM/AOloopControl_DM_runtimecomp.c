@@ -17,7 +17,6 @@
 
 
 
-
 #include <malloc.h>
 
 #include <string.h>
@@ -274,7 +273,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     FPFLAG &= ~FPFLAG_WRITECONF;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long DMindex_default[4] = { DMindex, 0, 9, DMindex };
-    long fp_DMindex =
+    __attribute__((unused)) long fp_DMindex =
         function_parameter_add_entry(&fps, ".DMindex", "Deformable mirror index", FPTYPE_INT64, FPFLAG, &DMindex_default);
 
 
@@ -282,26 +281,26 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long DMsize_default[4] = { 1, 1, 1000, 1 };
-    long fp_DMxsize =
+    __attribute__((unused)) long fp_DMxsize =
         function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG, &DMsize_default);
-    long fp_DMysize =
+    __attribute__((unused)) long fp_DMysize =
         function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG, &DMsize_default);
 
 	long DMMODE_default[4] = { 0, 0, 1, 0 };
-    long fp_DMMODE =
+    __attribute__((unused)) long fp_DMMODE =
         function_parameter_add_entry(&fps, ".DMMODE", "0:SquareGrid, 1:Generic", FPTYPE_INT64, FPFLAG, &DMMODE_default);
 
 
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long NBchannel_default[4] = { 12, 1, 20, 12 };
-    long fp_NBchannel =
+    __attribute__((unused)) long fp_NBchannel =
         function_parameter_add_entry(&fps, ".NBchannel", "Number of channels", FPTYPE_INT64, FPFLAG, &NBchannel_default);
 
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
     FPFLAG &= ~FPFLAG_WRITERUN;
     long AveMode_default[4] = { 0, 0, 2, 0 };
-    long fp_AveMode =
+    __attribute__((unused)) long fp_AveMode =
         function_parameter_add_entry(&fps, ".AveMode", "Averaging mode", FPTYPE_INT64, FPFLAG, &AveMode_default);
 
     //long dm2dm_mode_default[4] = { 0, 0, 1, 0 };
@@ -326,11 +325,11 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     long fp_voltmode       =
         function_parameter_add_entry(&fps, ".option.voltmode", "Volt mode", FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fp_volttype       =
+    __attribute__((unused)) long fp_volttype       =
         function_parameter_add_entry(&fps, ".option.volttype", "Volt type", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
 
     double stroke100_default[4] = { 100.0, 0.1, 100.0, 100.0 };
-    long fp_stroke100      =
+    __attribute__((unused)) long fp_stroke100      =
         function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &stroke100_default);
 	
 	FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_STREAM_RUN_REQUIRED;
@@ -338,14 +337,14 @@ int AOloopControl_DM_CombineChannels_FPCONF(
         function_parameter_add_entry(&fps, ".option.voltname", "Stream name for volt output", FPTYPE_STREAMNAME, FPFLAG, pNull);
 
     double DClevel_default[4] = { 0.0, 0.0, 100.0, 0.0 };
-    long fp_DClevel =
+    __attribute__((unused)) long fp_DClevel =
         function_parameter_add_entry(&fps, ".option.DClevel", "DC level [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &DClevel_default);
 
-    long fp_maxvolt =
+    __attribute__((unused)) long fp_maxvolt =
         function_parameter_add_entry(&fps, ".option.maxvolt", "Maximum voltage", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
 
     // status (RO)
-    long fp_loopcnt =
+    __attribute__((unused)) long fp_loopcnt =
         function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, FPFLAG_DEFAULT_STATUS, pNull);
 
 
@@ -460,26 +459,24 @@ int AOloopControl_DM_CombineChannels_RUN(
     long long cntold;
     long long cntsumold;
     long long cntsum;
-    long ii;
-    long IDdisp;
-    long IDvolt;
+    //imageID IDdisp;
+    imageID IDvolt;
     double ave;
-    long ID1;
-    int r;
-    long sizexy;
+    //imageID ID1;
+    //int r;
+    uint64_t sizexy;
     float *dmdispptr;
     float *dmdispptr_array[20];
-    long IDdispt;
+    imageID IDdispt;
 
     int vOK;
     float maxmaxvolt = 150.0;
     char errstr[200];
-    int semnb, semval;
-    long sizexyDMout;
-    long IDtmpoutdm;
-    long kk;
-    long sizexywfsref;
-    long IDtmpoutref;
+    //int semnb, semval;
+    uint64_t sizexyDMout;
+    imageID IDtmpoutdm;
+    uint64_t sizexywfsref;
+    imageID IDtmpoutref;
     long cntch;
 
     long IDvar;
@@ -893,7 +890,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
             memcpy(data.image[IDdispt].array.F, dmdispptr_array[0], sizeof(float)*sizexy);
             for(ch = 1; ch < dmdispcombconf[DMindex].NBchannel; ch++) {
-                for(ii = 0; ii < sizexy; ii++) {
+                for(uint64_t ii = 0; ii < sizexy; ii++) {
                     dmdispptr[ii] += dmdispcombconf[DMindex].dmdispgain[ch] * dmdispptr_array[ch][ii];
                 }
             }
@@ -904,7 +901,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
             ave = 0.0;
             if(dmdispcombconf[DMindex].AveMode == 1) { // REMOVE AVERAGE
-                for(ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++) {
+                for(uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++) {
                     ave += data.image[IDdispt].array.F[ii];
                 }
                 ave /= dmdispcombconf[DMindex].xysize;
@@ -913,7 +910,7 @@ int AOloopControl_DM_CombineChannels_RUN(
             DEBUG_TRACEPOINT(" ");
 
             if(dmdispcombconf[DMindex].AveMode < 2) { // OFFSET BY DClevel
-                for(ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++) {
+                for(uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++) {
                     data.image[IDdispt].array.F[ii] += (dmdispcombconf[DMindex].DClevel - ave);
 
                     // remove negative values
@@ -947,8 +944,8 @@ int AOloopControl_DM_CombineChannels_RUN(
             if(dm2dm_mode == 1) {
                 DEBUG_TRACEPOINT(" ");
                 memset(data.image[IDtmpoutdm].array.F, '\0', sizeof(float)*sizexyDMout);
-                for(kk = 0; kk < data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement; kk++) {
-                    for(ii = 0; ii < sizexyDMout; ii++) {
+                for(uint64_t kk = 0; kk < data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement; kk++) {
+                    for(uint64_t ii = 0; ii < sizexyDMout; ii++) {
                         data.image[IDtmpoutdm].array.F[ii] += data.image[dmdispcombconf[DMindex].IDdisp].array.F[kk] * data.image[dmdispcombconf[DMindex].ID_dm2dm_DMmodes].array.F[kk * sizexyDMout + ii];
                     }
                 }
@@ -972,9 +969,9 @@ int AOloopControl_DM_CombineChannels_RUN(
                 printf("ID RespMat = %ld  (%ld)\n", dmdispcombconf[DMindex].ID_wfsref_RespMat, (data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement - 1)*sizexywfsref + sizexywfsref - 1);
                 fflush(stdout);
                 save_fits(wfsref_WFSRespMat, "!_test_wfsref_WFSRespMat.fits");
-                for(kk = 0; kk < data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement; kk++) {
+                for(uint64_t kk = 0; kk < data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement; kk++) {
                     printf("(%ld %g) ", kk, data.image[dmdispcombconf[DMindex].IDdisp].array.F[kk]);
-                    for(ii = 0; ii < sizexywfsref; ii++) {
+                    for(uint64_t ii = 0; ii < sizexywfsref; ii++) {
                         data.image[IDtmpoutref].array.F[ii] += data.image[dmdispcombconf[DMindex].IDdisp].array.F[kk] * data.image[dmdispcombconf[DMindex].ID_wfsref_RespMat].array.F[kk * sizexywfsref + ii];
                     }
                 }
@@ -1106,9 +1103,9 @@ int AOloopControl_DM_CombineChannels_RUN(
 
 
 int AOloopControl_DM_CombineChannels(
-    long DMindex,
-    long xsize,
-    long ysize,
+    imageID DMindex,
+    long    xsize,
+    long    ysize,
     int NBchannel,
     int AveMode,
     int dm2dm_mode,
@@ -1127,7 +1124,7 @@ int AOloopControl_DM_CombineChannels(
 {
     char fpsname[200];
     
-    int SMfd = -1;
+    //int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS

@@ -81,7 +81,6 @@ int SMturbfd;
 
 
 
-
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                                                                                 */
@@ -92,7 +91,7 @@ int SMturbfd;
 
 
 
-int_fast8_t AOloopControl_DM_CombineChannels_cli() {
+errno_t AOloopControl_DM_CombineChannels_cli() {
     // 1  long DMindex
     // 2  long xsize
     // 3  long ysize
@@ -117,7 +116,7 @@ int_fast8_t AOloopControl_DM_CombineChannels_cli() {
 
 
     if(CLI_checkarg(1, 5) + CLI_checkarg(2, 2) == 0) {
-        unsigned int DMindex = (unsigned int) data.cmdargtoken[2].val.numl;
+        //unsigned int DMindex = (unsigned int) data.cmdargtoken[2].val.numl;
 
         // FPS interface name
         if(data.processnameflag == 0) { // name fps to something different than the process name
@@ -177,7 +176,7 @@ int_fast8_t AOloopControl_DM_CombineChannels_cli() {
 
 
 
-int_fast8_t AOloopControl_DM_dmdispcomboff_cli() {
+errno_t AOloopControl_DM_dmdispcomboff_cli() {
     if(CLI_checkarg(1, 2) == 0) {
         AOloopControl_DM_dmdispcomboff(data.cmdargtoken[1].val.numl);
         return 0;
@@ -186,7 +185,7 @@ int_fast8_t AOloopControl_DM_dmdispcomboff_cli() {
     }
 }
 
-int_fast8_t AOloopControl_DM_dmtrigoff_cli() {
+errno_t AOloopControl_DM_dmtrigoff_cli() {
     if(CLI_checkarg(1, 2) == 0) {
         AOloopControl_DM_dmtrigoff(data.cmdargtoken[1].val.numl);
         return 0;
@@ -205,52 +204,52 @@ int_fast8_t AOloopControl_DM_dmtrigoff_cli() {
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-int_fast8_t AOloopControl_DM_dmdispcombstatus_cli(){
+errno_t AOloopControl_DM_dmdispcombstatus_cli(){
     if(CLI_checkarg(1,2)==0){
         AOloopControl_DM_dmdispcombstatus(data.cmdargtoken[1].val.numl);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_chan_setgain_cli() {
+errno_t AOloopControl_DM_chan_setgain_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,1)==0) {
         AOloopControl_DM_chan_setgain(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numf);
         return 0;}    else      return 1; }
 
-int_fast8_t AOloopControl_DM_setvoltON_cli() {
+errno_t AOloopControl_DM_setvoltON_cli() {
 	if(CLI_checkarg(1,2)==0) {
         AOloopControl_DM_setvoltON(data.cmdargtoken[1].val.numl);
         return 0; }    else       return 1; }
 
-int_fast8_t AOloopControl_DM_setvoltOFF_cli() {
+errno_t AOloopControl_DM_setvoltOFF_cli() {
 	if(CLI_checkarg(1,2)==0) {
         AOloopControl_DM_setvoltOFF(data.cmdargtoken[1].val.numl);
 	return 0;}    else       return 1;}
 
-int_fast8_t AOloopControl_DM_setMAXVOLT_cli() {
+errno_t AOloopControl_DM_setMAXVOLT_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0) {
         AOloopControl_DM_setMAXVOLT(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
 	return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_setDClevel_cli() {
+errno_t AOloopControl_DM_setDClevel_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0) {
         AOloopControl_DM_setDClevel(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_setAveMode_cli() {
+errno_t AOloopControl_DM_setAveMode_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,2)==0) {
         AOloopControl_DM_setAveMode(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl);
         return 0;}    else        return 1;}
         
-int_fast8_t AOloopControl_DM_setTrigMode_cli() {
+errno_t AOloopControl_DM_setTrigMode_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,2)==0) {
         AOloopControl_DM_setTrigMode(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_setTrigChan_cli() {
+errno_t AOloopControl_DM_setTrigChan_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,2)==0) {
         AOloopControl_DM_setTrigChan(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_setTrigSem_cli() {
+errno_t AOloopControl_DM_setTrigSem_cli() {
     if(CLI_checkarg(1,2)+CLI_checkarg(2,2)==0) {
         AOloopControl_DM_setTrigSem(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl);
         return 0;}    else        return 1;}
@@ -267,37 +266,37 @@ int_fast8_t AOloopControl_DM_setTrigSem_cli() {
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-int_fast8_t AOloopControl_DM_dmturb_cli(){
+errno_t AOloopControl_DM_dmturb_cli(){
     if(CLI_checkarg(1,2)==0){
         AOloopControl_DM_dmturb(data.cmdargtoken[1].val.numl, 0, "NULL", 0);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_dmturb2im_cli(){
+errno_t AOloopControl_DM_dmturb2im_cli(){
     if(CLI_checkarg(1,2)+CLI_checkarg(3,2)+CLI_checkarg(3,2)==0){
         AOloopControl_DM_dmturb(data.cmdargtoken[1].val.numl, 1, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numl);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_dmturboff_cli(){
+errno_t AOloopControl_DM_dmturboff_cli(){
     if(CLI_checkarg(1,2)==0){
         AOloopControl_DM_dmturboff(data.cmdargtoken[1].val.numl);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_dmturb_wspeed_cli(){
+errno_t AOloopControl_DM_dmturb_wspeed_cli(){
     if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0){
         AOloopControl_DM_dmturb_wspeed(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_dmturb_ampl_cli(){
+errno_t AOloopControl_DM_dmturb_ampl_cli(){
     if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0){
         AOloopControl_DM_dmturb_ampl(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_dmturb_LOcoeff_cli(){
+errno_t AOloopControl_DM_dmturb_LOcoeff_cli(){
     if(CLI_checkarg(1,2)+CLI_checkarg(2,1)==0){
         AOloopControl_DM_dmturb_LOcoeff(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numf);
         return 0;}    else        return 1;}
 
-int_fast8_t AOloopControl_DM_dmturb_tint_cli(){
+errno_t AOloopControl_DM_dmturb_tint_cli(){
     if(CLI_checkarg(1,2)+CLI_checkarg(2,2)==0){
         AOloopControl_DM_dmturb_tint(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl);
         return 0;}    else        return 1;}
@@ -312,12 +311,12 @@ int_fast8_t AOloopControl_DM_dmturb_tint_cli(){
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-int_fast8_t AOloopControl_mkDM_TT_circle_cli(){
+errno_t AOloopControl_mkDM_TT_circle_cli(){
     if(CLI_checkarg(1,3)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,1)==0){
         AOloopControl_mkDM_TT_circle(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numf);
         return 0;}    else        return 1;}
 
- int_fast8_t AOloopControl_DM_mkAstroGrid_seq_cli(){
+errno_t AOloopControl_DM_mkAstroGrid_seq_cli(){
     if(CLI_checkarg(1,3)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)==0){
         AOloopControl_DM_mkAstroGrid_seq(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl);
         return 0;}    else        return 1;}
