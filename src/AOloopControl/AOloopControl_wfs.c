@@ -17,7 +17,10 @@
 #include <string.h>
 #include <gsl/gsl_blas.h>
 #include <pthread.h>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 57f16ee161930ce2b582dd46c49a7fd34883bbad
 
 
 #include "CommandLineInterface/CLIcore.h"
@@ -28,6 +31,7 @@
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
+#include "info/info.h" 
 
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"

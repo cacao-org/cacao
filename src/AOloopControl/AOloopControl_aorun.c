@@ -38,7 +38,10 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_blas.h>
 #include <pthread.h>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 57f16ee161930ce2b582dd46c49a7fd34883bbad
 
 
 #include "CommandLineInterface/CLIcore.h"
@@ -50,6 +53,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
+#include "info/info.h" 
 
 #include <ncurses.h>
 
