@@ -285,7 +285,7 @@ errno_t AOloopControl_loadconfigure_cli() {
 
 
 /** @brief CLI function for AOloopControl_stream3Dto2D */
-/*int_fast8_t AOloopControl_stream3Dto2D_cli() {
+/*errno_t AOloopControl_stream3Dto2D_cli() {
     if(CLI_checkarg(1,4)+CLI_checkarg(2,3)+CLI_checkarg(3,2)+CLI_checkarg(4,2)==0) {
         AOloopControl_stream3Dto2D(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl);
         return 0;

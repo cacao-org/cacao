@@ -71,7 +71,7 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-
+#ifdef HAVE_CUDA
 errno_t AOloopControl_CompModes_loop(
     const char *ID_CM_name,
     const char *ID_WFSref_name,
@@ -80,8 +80,6 @@ errno_t AOloopControl_CompModes_loop(
     const char *ID_coeff_name
 )
 {
-#ifdef HAVE_CUDA
-
     int *GPUsetM;
     imageID ID_CM;
     imageID ID_WFSref;
@@ -211,11 +209,22 @@ errno_t AOloopControl_CompModes_loop(
 	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 
 
-#endif
-
     return RETURN_SUCCESS;
 }
 
+#else
+
+errno_t AOloopControl_CompModes_loop(
+    __attribute__((unused)) const char *ID_CM_name,
+    __attribute__((unused)) const char *ID_WFSref_name,
+    __attribute__((unused)) const char *ID_WFSim_name,
+    __attribute__((unused)) const char *ID_WFSimtot_name,
+    __attribute__((unused)) const char *ID_coeff_name
+)
+{
+	return RETURN_SUCCESS;
+}
+#endif
 
 
 
