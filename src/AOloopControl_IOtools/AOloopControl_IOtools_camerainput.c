@@ -137,7 +137,7 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 //
 // every time im_name changes (counter increments), crop it to out_name in shared memory
 //
-int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
+errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
     const char *in_name,
     const char *dark_name,
     const char *out_name,
@@ -1163,7 +1163,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop)
  *
  */
 
-int_fast8_t __attribute__((hot)) Read_cam_frame(
+errno_t __attribute__((hot)) Read_cam_frame(
     long loop,
     int RM,
     int normalize,

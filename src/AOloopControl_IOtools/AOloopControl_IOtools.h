@@ -29,7 +29,7 @@ typedef int errno_t;
 void __attribute__ ((constructor)) libinit_AOloopControl_IOtools();
 
 /** @brief Initialize command line interface. */
-int_fast8_t init_AOloopControl_IOtools();
+errno_t init_AOloopControl_IOtools();
 
 
 
@@ -42,7 +42,7 @@ int_fast8_t init_AOloopControl_IOtools();
 /* =============================================================================================== */
 
 
-int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
+errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
     const char *in_name,
     const char *dark_name,
     const char *out_name,
@@ -66,7 +66,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop);
 
 
 /** @brief Read image from WFS camera */
-int_fast8_t Read_cam_frame(
+errno_t Read_cam_frame(
     long loop,
     int  RM,
     int  normalize,
@@ -122,7 +122,7 @@ long AOloopControl_IOtools_3Dloadcreate_shmim(
 
 
 /** @brief Average data stream */
-int_fast8_t AOloopControl_IOtools_AveStream(
+errno_t AOloopControl_IOtools_AveStream(
     const char *IDname,
     double      alpha,
     const char *IDname_out_ave,
@@ -131,7 +131,7 @@ int_fast8_t AOloopControl_IOtools_AveStream(
 );
 
 /** @brief Aligns data stream */
-int_fast8_t AOloopControl_IOtools_imAlignStream(
+errno_t AOloopControl_IOtools_imAlignStream(
     const char    *IDname,
           int      xbox0,
           int      ybox0,
@@ -166,7 +166,7 @@ long AOloopControl_IOtools_stream3Dto2D(
 /* =============================================================================================== */
 
 /** @brief Save telemetry */
-int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname);
+errno_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname);
 
 
 #endif

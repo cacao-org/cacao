@@ -3,9 +3,6 @@
  * @brief   Adaptive Optics Control loop engine I/O tools
  * 
  * AO engine uses stream data structure
- *  
- * 
- * @bug No known bugs.
  * 
  * 
  */
@@ -173,11 +170,17 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
  * 
  */
 
-int_fast8_t AOloopControl_IOtools_AveStream(const char *IDname, double alpha, const char *IDname_out_ave, const char *IDname_out_AC, const char *IDname_out_RMS)
+errno_t AOloopControl_IOtools_AveStream(
+    const char *IDname,
+    double      alpha,
+    const char *IDname_out_ave,
+    const char *IDname_out_AC,
+    const char *IDname_out_RMS
+)
 {
-    long IDin;
-    long IDout_ave;
-    long IDout_AC, IDout_RMS;
+    imageID IDin;
+    imageID IDout_ave;
+    imageID IDout_AC, IDout_RMS;
     long xsize, ysize;
     uint32_t *sizearray;
     long cnt0old = 0;
@@ -269,13 +272,13 @@ int_fast8_t AOloopControl_IOtools_AveStream(const char *IDname, double alpha, co
  */
 
 
-int_fast8_t AOloopControl_IOtools_imAlignStream(
+errno_t AOloopControl_IOtools_imAlignStream(
     const char    *IDname,
-    int      xbox0,
-    int      ybox0,
+    int            xbox0,
+    int            ybox0,
     const char    *IDref_name,
     const char    *IDout_name,
-    int      insem
+    int            insem
 )
 {
     uint32_t IDin, IDref, IDtmp;
@@ -283,7 +286,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
     uint32_t xsize, ysize;
     long cnt;
 
-    long IDdark;
+    imageID IDdark;
 
     float xoffset, yoffset;
 
@@ -470,7 +473,7 @@ int_fast8_t AOloopControl_IOtools_imAlignStream(
 
 
 
-long AOloopControl_IOtools_frameDelay(
+imageID AOloopControl_IOtools_frameDelay(
 	const char *IDin_name, 
 	const char *IDkern_name, 
 	const char *IDout_name, 
@@ -586,9 +589,14 @@ long AOloopControl_IOtools_frameDelay(
 
 
 
-long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const char *out_name, int NBcols, int insem)
+imageID AOloopControl_IOtools_stream3Dto2D(
+    const char *in_name,
+    const char *out_name,
+    int         NBcols,
+    int         insem
+)
 {
-    long IDin, IDout;
+	imageID IDin, IDout;
     uint_fast16_t xsize0, ysize0, zsize0;
     uint_fast32_t xysize0;
     uint_fast16_t xsize1, ysize1;

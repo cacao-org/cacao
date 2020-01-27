@@ -2,9 +2,6 @@
  * @file    AOloopControl_IOtools_RTLOGsave.c
  * @brief   Save realtime buffers
  * 
- * @author  O. Guyon
- *
- * 
  */
 
 
@@ -37,17 +34,23 @@ extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 
 
 
-int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname)
+errno_t AOloopControl_IOtools_RTLOGsave(
+    long        loop,
+    const char *streamname,
+    __attribute__((unused)) const char *dirname
+)
 {
-	// data buffers
+    // data buffers
 	char imnameb0[500];
     char imnameb1[500];
-	long IDinb0, IDinb1;
+	__attribute__((unused)) imageID IDinb0;
+	__attribute__((unused)) imageID IDinb1;
 	
 	// info buffers
 	char imnamebinfo0[500];
     char imnamebinfo1[500];
-	long IDinbinfo0, IDinbinfo1;
+	__attribute__((unused)) imageID IDinbinfo0;
+	__attribute__((unused)) imageID IDinbinfo1;
 	
 
     if(sprintf(imnameb0, "aol%ld_%s_logbuff0", loop, streamname) < 1)
@@ -81,5 +84,6 @@ int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, c
     zsize = data.image[IDinb0].md[0].size[2];
     atype = data.image[IDinb0].md[0].atype;
   */ 
-    return(0);
+  
+    return RETURN_SUCCESS;
 }
