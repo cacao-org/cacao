@@ -8,10 +8,6 @@
  * ## Change log
  * - 20180518	Guyon	File creation (split from AOloopControl_PredictiveControl)
  * 
- *  
- * @author  O. Guyon
- *
- * @bug No known bugs.
  * 
  */
 
@@ -110,31 +106,25 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
  * 
  */
 long AOloopControl_PredictiveControl_builPFloop_WatchInput(
-	long loop, 
-	long PFblock, 
-	long PFblockStart, 
-	long PFblockEnd,
-	long NBbuff
-	)
+    long loop,
+    long PFblock,
+    long PFblockStart,
+    long PFblockEnd,
+    long NBbuff
+)
 {
-    long IDinb0;
-    long IDinb1;
+    imageID IDinb0;
+    imageID IDinb1;
     char imnameb0[500];
     char imnameb1[500];
     long cnt0, cnt1;
     long cnt0_old, cnt1_old;
-    long IDinb;
+    imageID IDinb;
 
     long twaitus = 10000; // 0.01 sec
 
 
     long PFblockSize;
-    long PFblockOrder;
-    float PFblockLag;
-    float PFblockdgain;
-    FILE *fp;
-    char fname[500];
-    int ret;
 
     int Tupdate = 0;
     time_t t;
@@ -157,51 +147,51 @@ long AOloopControl_PredictiveControl_builPFloop_WatchInput(
     long IDinmask;
 
 
-	PROCESSINFO *processinfo;
-	
-	if(data.processinfo==1)
-	{
-     // CREATE PROCESSINFO ENTRY
-     // see processtools.c in module CommandLineInterface for details
-     //
-     
-     char pinfoname[200];  // short name for the processinfo instance
-     // avoid spaces, name should be human-readable
-  
-     sprintf(pinfoname, "PFwatchInput-loop%ld-block%ld", loop, PFblock);
-     processinfo = processinfo_shm_create(pinfoname, 0);
-     processinfo->loopstat = 0; // loop initialization
-     strcpy(processinfo->source_FUNCTION, __FUNCTION__);
-     strcpy(processinfo->source_FILE,     __FILE__);
-     processinfo->source_LINE = __LINE__;
- 
-     char msgstring[200];
-     sprintf(msgstring, "%ld->%ld %ld buffers", PFblockStart, PFblockEnd, NBbuff);
-     processinfo_WriteMessage(processinfo, msgstring);
-	}
+    PROCESSINFO *processinfo;
 
-	// CATCH SIGNALS
+    if(data.processinfo==1)
+    {
+        // CREATE PROCESSINFO ENTRY
+        // see processtools.c in module CommandLineInterface for details
+        //
 
-	if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
-	printf("\ncan't catch SIGTERM\n");
-	
-	if (sigaction(SIGINT, &data.sigact, NULL) == -1)
-	printf("\ncan't catch SIGINT\n");    
+        char pinfoname[200];  // short name for the processinfo instance
+        // avoid spaces, name should be human-readable
 
-if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
-printf("\ncan't catch SIGABRT\n");
+        sprintf(pinfoname, "PFwatchInput-loop%ld-block%ld", loop, PFblock);
+        processinfo = processinfo_shm_create(pinfoname, 0);
+        processinfo->loopstat = 0; // loop initialization
+        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+        strcpy(processinfo->source_FILE,     __FILE__);
+        processinfo->source_LINE = __LINE__;
 
-if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
-printf("\ncan't catch SIGBUS\n");
+        char msgstring[200];
+        sprintf(msgstring, "%ld->%ld %ld buffers", PFblockStart, PFblockEnd, NBbuff);
+        processinfo_WriteMessage(processinfo, msgstring);
+    }
 
-if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
-printf("\ncan't catch SIGSEGV\n");         
+    // CATCH SIGNALS
 
-if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
-printf("\ncan't catch SIGHUP\n");         
+    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGTERM\n");
 
-if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
-printf("\ncan't catch SIGPIPE\n");
+    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGINT\n");
+
+    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGABRT\n");
+
+    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGBUS\n");
+
+    if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGSEGV\n");
+
+    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGHUP\n");
+
+    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+        printf("\ncan't catch SIGPIPE\n");
 
     PFblockSize = PFblockEnd - PFblockStart;
 
@@ -271,19 +261,19 @@ printf("\ncan't catch SIGPIPE\n");
     fflush(stdout);
 
 
-		if(data.processinfo==1)
+    if(data.processinfo==1)
         processinfo->loopstat = 1;  // Notify processinfo that we are entering loop
 
-	long buffindex = 0;
-	long outcnt = 0;
-long loopcnt = 0;
-    
+    long buffindex = 0;
+    long outcnt = 0;
+    long loopcnt = 0;
+
     int loopOK = 1;
-    
+
     while(loopOK==1)
     {
 
-if(data.processinfo==1)
+        if(data.processinfo==1)
         {
             while(processinfo->CTRLval == 1)  // pause
                 usleep(50);
@@ -299,7 +289,7 @@ if(data.processinfo==1)
 
 
 
-		
+
         cnt0 = data.image[IDinb0].md[0].cnt0;
         cnt1 = data.image[IDinb1].md[0].cnt0;
 
@@ -321,31 +311,31 @@ if(data.processinfo==1)
 
         if(Tupdate == 1)
         {
-            data.image[IDout].md[0].write = 1;			
-			long kkin;
+            data.image[IDout].md[0].write = 1;
+            long kkin;
             for(kkin=0; kkin<zsizein; kkin++)
             {
-				kk = buffindex*zsizein + kkin;
+                kk = buffindex*zsizein + kkin;
                 for(ii=0; ii<PFblockSize; ii++)
                     data.image[IDout].array.F[kk*PFblockSize + ii] = data.image[IDinb].array.F[kkin*xysize + (ii+PFblockStart)];
-			}
-			data.image[IDout].md[0].write = 0;
-			
-			printf("[%3ld/%3ld  %d]\n", buffindex, NBbuff, cube);
-			Tupdate = 0;
-			buffindex ++;
-		}
-		
-		
-		if(buffindex == NBbuff) // write output
-		{
+            }
+            data.image[IDout].md[0].write = 0;
+
+            printf("[%3ld/%3ld  %d]\n", buffindex, NBbuff, cube);
+            Tupdate = 0;
+            buffindex ++;
+        }
+
+
+        if(buffindex == NBbuff) // write output
+        {
             t = time(NULL);
             uttime = gmtime(&t);
             clock_gettime(CLOCK_REALTIME, &timenow);
             printf("%02d:%02d:%02ld.%09ld  NEW TELEMETRY BUFFER AVAILABLE [%ld]\n", uttime->tm_hour, uttime->tm_min, timenow.tv_sec % 60, timenow.tv_nsec, outcnt);
-			
-			
-			data.image[IDout].md[0].write = 1;
+
+
+            data.image[IDout].md[0].write = 1;
             for(ii=0; ii<PFblockSize; ii++) // Remove time averaged value
             {
                 ave = 0.0;
@@ -371,60 +361,60 @@ if(data.processinfo==1)
 
 
 
-		// process signals
+        // process signals
 
-		if(data.signal_TERM == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGTERM);
-		}
-     
-		if(data.signal_INT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGINT);
-		}
+        if(data.signal_TERM == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGTERM);
+        }
 
-		if(data.signal_ABRT == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGABRT);
-		}
+        if(data.signal_INT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGINT);
+        }
 
-		if(data.signal_BUS == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGBUS);
-		}
-		
-		if(data.signal_SEGV == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGSEGV);
-		}
-		
-		if(data.signal_HUP == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGHUP);
-		}
-		
-		if(data.signal_PIPE == 1){
-			loopOK = 0;
-			if(data.processinfo==1)
-				processinfo_SIGexit(processinfo, SIGPIPE);
-		}	
-     
+        if(data.signal_ABRT == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGABRT);
+        }
+
+        if(data.signal_BUS == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGBUS);
+        }
+
+        if(data.signal_SEGV == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGSEGV);
+        }
+
+        if(data.signal_HUP == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGHUP);
+        }
+
+        if(data.signal_PIPE == 1) {
+            loopOK = 0;
+            if(data.processinfo==1)
+                processinfo_SIGexit(processinfo, SIGPIPE);
+        }
+
         loopcnt++;
         if(data.processinfo==1)
             processinfo->loopcnt = loopcnt;
 
     }
-    
-	if(data.processinfo==1)
+
+    if(data.processinfo==1)
         processinfo_cleanExit(processinfo);
-        
-        
+
+
     return (IDout);
 }
 
