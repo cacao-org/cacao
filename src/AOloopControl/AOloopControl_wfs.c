@@ -17,12 +17,14 @@
 #include <string.h>
 #include <gsl/gsl_blas.h>
 #include <pthread.h>
-#include "info/info.h" 
+
 
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
 #include "00CORE/00CORE.h"
+
+#include "info/info.h" 
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
