@@ -5,9 +5,6 @@
  * AO engine uses stream data structure
  *  
  * 
- * @bug No known bugs.
- * 
- * 
  */
 
 
@@ -68,37 +65,37 @@
 
 
 
-static sem_t AOLCOMPUTE_TOTAL_ASYNC_sem_name;
+//static sem_t AOLCOMPUTE_TOTAL_ASYNC_sem_name;
 
-static long long imtotalcnt;
-static int AOLCOMPUTE_DARK_SUBTRACT_THREADinit = 0;
-static int COMPUTE_DARK_SUBTRACT_NBTHREADS = 1;
-static sem_t AOLCOMPUTE_DARK_SUBTRACT_sem_name[32];
-static sem_t AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[32];
-
-
-static int avcamarraysInit = 0;
-static unsigned short *arrayutmp;
-
-static char Average_cam_frames_dname[200];
-static long Average_cam_frames_IDdark = -1;
-static long Average_cam_frames_nelem = 1;
+//static long long imtotalcnt;
+//static int AOLCOMPUTE_DARK_SUBTRACT_THREADinit = 0;
+//static int COMPUTE_DARK_SUBTRACT_NBTHREADS = 1;
+//static sem_t AOLCOMPUTE_DARK_SUBTRACT_sem_name[32];
+//static sem_t AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[32];
 
 
-static float *arrayftmp;
+//static int avcamarraysInit = 0;
+//static unsigned short *arrayutmp;
+
+//static char Average_cam_frames_dname[200];
+//static long Average_cam_frames_IDdark = -1;
+//static long Average_cam_frames_nelem = 1;
+
+
+//static float *arrayftmp;
 
 
 // TIMING
-static struct timespec tnow;
-static struct timespec tdiff;
-static double tdiffv;
+//static struct timespec tnow;
+//static struct timespec tdiff;
+//static double tdiffv;
 
 //extern int aoloopcontrol_var.PIXSTREAM_SLICE;
 
-static long ti; // thread index
+//static long ti; // thread index
 
-static int AOLCOMPUTE_TOTAL_ASYNC_THREADinit = 0;
-static int AOLCOMPUTE_TOTAL_INIT = 0; // toggles to 1 AFTER total for first image is computed
+//static int AOLCOMPUTE_TOTAL_ASYNC_THREADinit = 0;
+//static int AOLCOMPUTE_TOTAL_INIT = 0; // toggles to 1 AFTER total for first image is computed
 
 
 //extern float aoloopcontrol_var.normfloorcoeff;
@@ -146,14 +143,14 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
  * 
  */ 
 
-long AOloopControl_IOtools_2Dloadcreate_shmim(
+imageID AOloopControl_IOtools_2Dloadcreate_shmim(
     const char *name,     // stream name
     const char *fname,    // file name
-    long xsize,           // X size
-    long ysize,           // Y size
-    float DefaultValue
+    long        xsize,           // X size
+    long        ysize,           // Y size
+    float       DefaultValue
 ) {
-    long ID;
+    imageID ID;
     int CreateSMim = 0;
     int sizeOK;
     uint32_t *sizearray;
@@ -351,19 +348,20 @@ long AOloopControl_IOtools_2Dloadcreate_shmim(
 
 
 
-long AOloopControl_IOtools_3Dloadcreate_shmim(
+imageID AOloopControl_IOtools_3Dloadcreate_shmim(
     const char *name,
     const char *fname,
-    long xsize,
-    long ysize,
-    long zsize,
+    long        xsize,
+    long        ysize,
+    long        zsize,
     float DefaultValue
-) {
-    long ID;
+) 
+{
+    imageID ID;
     int CreateSMim;
     int sizeOK;
     uint32_t *sizearray;
-    long ID1;
+    imageID ID1;
     int creashmimfromFITS = 0;
     long ii;
 
