@@ -98,28 +98,24 @@ extern AOloopControl_var aoloopcontrol_var;
  * 				number of the loop 
  *
  */ 
-int_fast8_t set_DM_modes(long loop)
+errno_t set_DM_modes(
+    long loop
+)
 {
-    double a;
-    long cnttest;
     int semval;
-
-
-
 	
 
     if(AOconf[loop].AOcompute.GPU1 == 0)
     {
         float *arrayf;
-        long i, j, k;
-
+        
         arrayf = (float*) malloc(sizeof(float)*AOconf[loop].DMctrl.sizeDM);
 
-        for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
+        for(unsigned long j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
             arrayf[j] = 0.0;
 
-        for(i=0; i<AOconf[loop].DMctrl.sizeDM; i++)
-            for(k=0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
+        for(unsigned long i=0; i<AOconf[loop].DMctrl.sizeDM; i++)
+            for(unsigned long k=0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
                 arrayf[i] += data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[k*AOconf[loop].DMctrl.sizeDM+i];
 
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
@@ -160,7 +156,7 @@ int_fast8_t set_DM_modes(long loop)
 
     AOconf[loop].aorun.DMupdatecnt ++;
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
@@ -183,21 +179,21 @@ int_fast8_t set_DM_modes(long loop)
  *
  */ 
 
-int_fast8_t set_DM_modesRM(long loop)
+errno_t set_DM_modesRM(
+    long loop
+)
 {
-    long k;
-    long i, j;
     float *arrayf;
 
 
     arrayf = (float*) malloc(sizeof(float)*AOconf[loop].DMctrl.sizeDM);
 
-    for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
+    for(unsigned long j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
         arrayf[j] = 0.0;
 
-    for(k=0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
+    for(unsigned long k=0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
     {
-        for(i=0; i<AOconf[loop].DMctrl.sizeDM; i++)
+        for(unsigned long i=0; i<AOconf[loop].DMctrl.sizeDM; i++)
             arrayf[i] += data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k] * data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[k*AOconf[loop].DMctrl.sizeDM+i];
     }
 
@@ -210,7 +206,7 @@ int_fast8_t set_DM_modesRM(long loop)
     free(arrayf);
     AOconf[loop].aorun.DMupdatecnt ++;
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
@@ -227,8 +223,8 @@ int_fast8_t set_DM_modesRM(long loop)
  * If offloadMode = 1, apply correction to aol#_dmC
  */
 
-int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
-    const int   GPUMATMULTCONFindex,
+errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
+    const int GPUMATMULTCONFindex,
     const char *modecoeffs_name,
     const char *DMmodes_name,
     int         semTrigg,
@@ -238,30 +234,30 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     int         offloadMode
 ) {
 #ifdef HAVE_CUDA
-    long IDmodecoeffs;
-    int GPUcnt, k;
-    int *GPUsetM;
+    imageID     IDmodecoeffs;
+    int         GPUcnt, k;
+    int        *GPUsetM;
     int_fast8_t GPUstatus[100];
     int_fast8_t status;
-    float alpha = 1.0;
-    float beta = 0.0;
-    int initWFSref = 0;
-    int orientation = 1;
-    int use_sem = 1;
-    long IDout;
-    int write_timing = 0;
-    long NBmodes, m;
+    float       alpha = 1.0;
+    float       beta = 0.0;
+    int         initWFSref = 0;
+    int         orientation = 1;
+    int         use_sem = 1;
+    imageID     IDout;
+    int         write_timing = 0;
+    long        NBmodes, m;
 
-    float x, x2, x4, x8;
-    float gamma;
+    float       x, x2, x4, x8;
+    float       gamma;
 
-    uint32_t *sizearray;
-    char imnameInput[200];
-    long IDmodesC;
+    uint32_t   *sizearray;
+    char        imnameInput[200];
+    imageID     IDmodesC;
 
-    long IDc;
-    long dmxsize, dmysize;
-    long ii;
+    imageID     IDc;
+    long        dmxsize, dmysize;
+    long        ii;
 
 
     int RT_priority = 80; //any number from 0-99
@@ -438,7 +434,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 #endif
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
@@ -447,14 +443,20 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
 
-long AOloopControl_dm2dm_offload(const char *streamin, const char *streamout, float twait, float offcoeff, float multcoeff)
+imageID AOloopControl_dm2dm_offload(
+    const char *streamin,
+    const char *streamout,
+    float twait,
+    float offcoeff,
+    float multcoeff
+)
 {
-    long IDin, IDout;
-    long cnt = 0;
-    long xsize, ysize, xysize;
-    long ii;
+    imageID IDin, IDout;
+    long    cnt = 0;
+    long    xsize, ysize, xysize;
+    long    ii;
     //long IDtmp;
-	char imname[200];
+    char imname[200];
 
     IDin = image_ID(streamin);
     IDout = image_ID(streamout);
@@ -462,16 +464,16 @@ long AOloopControl_dm2dm_offload(const char *streamin, const char *streamout, fl
     xsize = data.image[IDin].md[0].size[0];
     ysize = data.image[IDin].md[0].size[1];
     xysize = xsize*ysize;
-    
 
 
-	if(aoloopcontrol_var.aoconfID_looptiming == -1)
-	{
-		// LOOPiteration is written in cnt1 of loop timing array
-		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
-	}
+
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
+    {
+        // LOOPiteration is written in cnt1 of loop timing array
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
+    }
 
 
     while(1)

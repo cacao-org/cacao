@@ -4,13 +4,11 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  * 
- * @bug No known bugs.
  * 
  */
 
 #define _GNU_SOURCE
 
-#include "AOloopControl.h"
 
 
 
@@ -18,6 +16,9 @@
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
+
+
+#include "AOloopControl.h"
 
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
@@ -34,7 +35,7 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-int_fast8_t AOloopControl_loopon()
+errno_t AOloopControl_loopon()
 {
 	int rtlindex;
 
@@ -51,14 +52,12 @@ int_fast8_t AOloopControl_loopon()
 	
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_loopoff()
+errno_t AOloopControl_loopoff()
 {
-	int rtlindex;
-		
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
@@ -67,11 +66,11 @@ int_fast8_t AOloopControl_loopoff()
 	
 	
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_loopWFScompon()
+errno_t AOloopControl_loopWFScompon()
 {
 	int rtlindex;
 
@@ -88,14 +87,12 @@ int_fast8_t AOloopControl_loopWFScompon()
 	
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_loopWFScompoff()
+errno_t AOloopControl_loopWFScompoff()
 {
-	int rtlindex;
-		
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
@@ -103,13 +100,13 @@ int_fast8_t AOloopControl_loopWFScompoff()
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 	
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int_fast8_t AOloopControl_loopkill()
+errno_t AOloopControl_loopkill()
 {
 
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -117,11 +114,11 @@ int_fast8_t AOloopControl_loopkill()
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.kill = 1;
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_loopstep(long loop, long NBstep)
+errno_t AOloopControl_loopstep(long loop, long NBstep)
 {
 
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -137,15 +134,12 @@ int_fast8_t AOloopControl_loopstep(long loop, long NBstep)
         usleep(100); // THIS WAITING IS OK
 
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_loopreset()
+errno_t AOloopControl_loopreset()
 {
-    long k;
-    long mb;
-
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
@@ -159,15 +153,15 @@ int_fast8_t AOloopControl_loopreset()
     }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 0;
-    for(k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
+    for(unsigned int k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
         data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
 
-    for(mb=0; mb<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; mb)
+    for(unsigned int mb=0; mb<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; mb++)
     {
         AOloopControl_setgainblock(mb, 0.0);
         AOloopControl_setlimitblock(mb, 0.01);
         AOloopControl_setmultfblock(mb, 0.95);
     }
 
-    return 0;
+    return RETURN_SUCCESS;
 }

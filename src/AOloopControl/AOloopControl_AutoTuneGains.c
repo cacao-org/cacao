@@ -4,11 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @author  O. Guyon
- * @date    2018-01-04
- *
- * 
- * @bug No known bugs.
  * 
  */
 
@@ -30,7 +25,7 @@
 #include <pthread.h>
 #include "info/info.h" 
 
-//libraries created by O. Guyon 
+
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
 #include "00CORE/00CORE.h"
@@ -64,14 +59,19 @@ extern AOloopControl_var aoloopcontrol_var;
 // input: modeval_ol
 // APPLIES new gain values if AUTOTUNE_GAINS_ON
 //
-int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float GainCoeff, long NBsamples)
+errno_t AOloopControl_AutoTuneGains(
+    long        loop,
+    const char *IDout_name,
+    float       GainCoeff,
+    long        NBsamples
+)
 {
-    long IDmodevalOL;
-    long IDmodeval;
-    long IDmodeval_dm;
-    long IDmodeval_dm_now;
-    long IDmodeval_dm_now_filt;
-	long IDmodeWFSnoise;
+    imageID IDmodevalOL;
+    imageID IDmodeval;
+    imageID IDmodeval_dm;
+    imageID IDmodeval_dm_now;
+    imageID IDmodeval_dm_now_filt;
+    imageID IDmodeWFSnoise;
 
 
 
@@ -99,7 +99,7 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
     float *stdev;
 
     float gain;
-    long NBgain;
+    long NBgain = 1; // ??
     long kk;
     float *errarray;
     float mingain = 0.01;
@@ -118,7 +118,7 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
     struct sched_param schedpar;
 
 
-    long IDout;
+    imageID IDout;
     uint32_t *sizearray;
 
     float gain0; // corresponds to evolution timescale
@@ -132,7 +132,6 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
 
 
     float *NOISEfactor;
-    long IDsync;
 
 
     int TESTMODE = 0;
@@ -156,8 +155,9 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
 
 
     // read AO loop gain, mult
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0) {
         AOloopControl_InitializeMemory(1);
+	}
 
 
 	AOconf[loop].AOAutoTune.AUTOTUNEGAINS_updateGainCoeff = GainCoeff;
@@ -528,6 +528,6 @@ int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float
 
     free(stdev);
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 

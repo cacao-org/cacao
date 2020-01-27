@@ -5,8 +5,6 @@
  * REAL TIME COMPUTING ROUTINES
  *  
  * 
- * @bug No known bugs.
- * 
  */
  
  
@@ -35,20 +33,22 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-int_fast8_t AOloopControl_logprocess_modeval(const char *IDname)
+errno_t AOloopControl_logprocess_modeval(
+    const char *IDname
+)
 {
-    long ID;
+    imageID ID;
     long NBmodes;
     long NBframes;
 
-    long IDout_ave;
-    long IDout_rms;
+    imageID IDout_ave;
+    imageID IDout_rms;
 
     long m;
-    long ID1dtmp;
+    imageID ID1dtmp;
     FILE *fp;
 
-    long ID1dPSD;
+    imageID ID1dPSD;
     char fname[200];
 
 
@@ -116,15 +116,22 @@ int_fast8_t AOloopControl_logprocess_modeval(const char *IDname)
 
 
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-long AOloopControl_TweakRM(char *ZRMinname, char *DMinCname, char *WFSinCname, char *DMmaskname, char *WFSmaskname, char *RMoutname)
+errno_t AOloopControl_TweakRM(
+    char *ZRMinname,
+    char *DMinCname,
+    char *WFSinCname,
+    char *DMmaskname,
+    char *WFSmaskname,
+    char *RMoutname
+)
 {
-    long IDout, IDzrmin, IDdmin, IDwfsin, IDwfsmask, IDdmmask;
+    imageID IDout, IDzrmin, IDdmin, IDwfsin, IDwfsmask, IDdmmask;
     long wfsxsize, wfsysize, wfssize;
     long dmxsize, dmysize, dmsize;
     long NBframes;
@@ -171,8 +178,5 @@ long AOloopControl_TweakRM(char *ZRMinname, char *DMinCname, char *WFSinCname, c
     // ARRANGE DATA IN MATRICES
 
 
-
-
-
-    return(0);
+    return RETURN_SUCCESS;
 }

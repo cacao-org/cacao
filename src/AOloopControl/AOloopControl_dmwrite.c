@@ -5,8 +5,6 @@
  * REAL TIME COMPUTING ROUTINES
  *
  * 
- * @bug No known bugs.
- * 
  */
 
 
@@ -34,7 +32,7 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-int_fast8_t AOloopControl_DMprimaryWrite_on()
+errno_t AOloopControl_DMprimaryWrite_on()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -42,11 +40,11 @@ int_fast8_t AOloopControl_DMprimaryWrite_on()
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.DMprimaryWriteON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_DMprimaryWrite_off()
+errno_t AOloopControl_DMprimaryWrite_off()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -54,11 +52,11 @@ int_fast8_t AOloopControl_DMprimaryWrite_off()
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.DMprimaryWriteON = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_DMfilteredWrite_on()
+errno_t AOloopControl_DMfilteredWrite_on()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -66,11 +64,11 @@ int_fast8_t AOloopControl_DMfilteredWrite_on()
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.DMfilteredWriteON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_DMfilteredWrite_off()
+errno_t AOloopControl_DMfilteredWrite_off()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -78,6 +76,6 @@ int_fast8_t AOloopControl_DMfilteredWrite_off()
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.DMfilteredWriteON = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 

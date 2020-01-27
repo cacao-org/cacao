@@ -5,8 +5,6 @@
  * Low level compute
  *
  * 
- * @bug No known bugs.
- * 
  */
 
 // uncomment for test print statements to stdout
@@ -54,12 +52,12 @@ static double tdiffv;
 static double tdiffv00;
 static double tdiffv01;
 
-static int initWFSref_GPU[100];
+//static int initWFSref_GPU[100];
 // = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static long long aoconfcnt0_contrM_current= -1; 
 long aoconfID_imWFS2_active[100];
 
-static long contrMcactcnt0[100] = { [ 0 ... 99 ] = -1 };
+//static long contrMcactcnt0[100] = { [ 0 ... 99 ] = -1 };
 
 //{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};;
 //int array[1024] = { [ 0 ... 99 ] = -1 };
@@ -71,7 +69,7 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-static long wfsrefcnt0 = -1; 
+//static long wfsrefcnt0 = -1; 
 
 
 //TEST
@@ -271,45 +269,18 @@ int AOloopControl_AOcompute_GUI(
  * 				normalize
  *
  */
-int_fast8_t __attribute__((hot)) AOcompute(
+errno_t __attribute__((hot)) AOcompute(
     long loop,
-    int normalize)
+    int  normalize
+)
 {
-    long k1, k2;
-    long ii;
-    long i;
-    long m, n;
-    long index;
-    //  long long wcnt;
-    // long long wcntmax;
-    double a;
+    struct    timespec t1;
+    struct    timespec t2;
 
-    float *matrix_cmp;
-    long wfselem, act, mode;
+    int       slice;
+  
+    uint64_t  LOOPiter;
 
-    struct timespec t1;
-    struct timespec t2;
-
-    float *matrix_Mc, *matrix_DMmodes;
-    long n_sizeDM, n_NBDMmodes, n_sizeWFS;
-
-    long IDmask;
-    long act_active, wfselem_active;
-    float *matrix_Mc_active;
-    long IDcmatca_shm;
-    int r;
-    float imtot;
-
-    int slice;
-    int semnb;
-    int semval;
-
-    uint64_t LOOPiter;
-
-
-    double tdiffvlimit = 500.0e-6;
-
-    int ComputeWFSsol_FLAG  = 1; //TEST
 
     struct timespec functionTestTimerStart;
     struct timespec functionTestTimerEnd;
@@ -322,7 +293,7 @@ int_fast8_t __attribute__((hot)) AOcompute(
 
 
     // import processinfo from upstream
-    PROCESSINFO *processinfo = data.pinfo;
+   // PROCESSINFO *processinfo = data.pinfo;
 
 
 #ifdef _PRINT_TEST
@@ -410,7 +381,7 @@ int_fast8_t __attribute__((hot)) AOcompute(
 
             if(AOconf[loop].WFSim.WFSrefzero == 0) { // if WFS reference is NOT zero
 
-                for(ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++) {
+                for(unsigned long ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++) {
 
                     data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] =
                         data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii]
@@ -432,7 +403,7 @@ int_fast8_t __attribute__((hot)) AOcompute(
 
             if(AOcompute_WFSlinlimit == 1) {
                 if(aoloopcontrol_var.aoconfID_imWFSlinlimit != -1) {
-                    for(ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++) {
+                    for(unsigned long ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++) {
                         if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] > data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]) {
                             data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii];
                         } else if(data.image[aoloopcontrol_var.aoconfID_imWFS2].array.F[ii] < -data.image[aoloopcontrol_var.aoconfID_imWFSlinlimit].array.F[ii]) {
@@ -479,7 +450,7 @@ int_fast8_t __attribute__((hot)) AOcompute(
             if(aoloopcontrol_var.aoconfID_wfsmask != -1) {
                 for(slice = 0; slice < aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++) {
                     long ii1 = 0;
-                    for(ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++)
+                    for(unsigned long ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++)
                         if(data.image[aoloopcontrol_var.aoconfID_wfsmask].array.F[ii] > 0.1) {
                             if(slice == 0) {
                                 aoloopcontrol_var.WFS_active_map[slice * AOconf[loop].WFSim.sizeWFS + ii1] = ii;
@@ -516,7 +487,7 @@ int_fast8_t __attribute__((hot)) AOcompute(
             aoloopcontrol_var.DM_active_map = (int *) malloc(sizeof(int) * AOconf[loop].DMctrl.sizeDM);
             if(aoloopcontrol_var.aoconfID_dmmask != -1) {
                 long ii1 = 0;
-                for(ii = 0; ii < AOconf[loop].DMctrl.sizeDM; ii++)
+                for(unsigned long ii = 0; ii < AOconf[loop].DMctrl.sizeDM; ii++)
                     if(data.image[aoloopcontrol_var.aoconfID_dmmask].array.F[ii] > 0.5) {
                         aoloopcontrol_var.DM_active_map[ii1] = ii;
                         ii1++;
@@ -894,15 +865,12 @@ int_fast8_t __attribute__((hot)) AOcompute(
         tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 
-        if(AOconf[loop].aorun.CMMODE == 0) {
-            int block;
-            long k;
-
+        if(AOconf[loop].aorun.CMMODE == 0) {            
 
             clock_gettime(CLOCK_REALTIME, &functionTestTimer00); //TEST timing in function
 
             AOconf[loop].AOpmodecoeffs.RMSmodes = 0;
-            for(k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++) {
+            for(unsigned int k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++) {
                 AOconf[loop].AOpmodecoeffs.RMSmodes +=
                     data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k] * data.image[aoloopcontrol_var.aoconfID_meas_modes].array.F[k];
             }
@@ -915,7 +883,7 @@ int_fast8_t __attribute__((hot)) AOcompute(
             clock_gettime(CLOCK_REALTIME, &functionTestTimer01); //TEST timing in function
 
             //TEST TIMING -> COMMENT THIS SECTION
-            for(k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++) {
+            for(unsigned int k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++) {
 
                 data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k] =
                     0.99 * data.image[aoloopcontrol_var.aoconfID_RMS_modes].array.F[k]
@@ -1109,7 +1077,7 @@ int_fast8_t __attribute__((hot)) AOcompute(
 
 
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 

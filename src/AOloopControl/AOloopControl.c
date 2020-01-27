@@ -40,8 +40,6 @@
  * AOloopControl_sig2Modecoeff.c             ??
  * AOloopControl_fpspeckle_mod.c             Speckle modulation (experimental)
  * 
- *  
- * @bug No known bugs.
  * 
  * @see http://oguyon.github.io/AdaptiveOpticsControl/src/AOloopControl/doc/AOloopControl.html
  *  
@@ -172,10 +170,10 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 // uncomment at compilation time to enable logging of function entry/exit
 //#define AOLOOPCONTROL_LOGFUNC
-static int AOLOOPCONTROL_logfunc_level = 0;
-static int AOLOOPCONTROL_logfunc_level_max = 2; // log all levels equal or below this number
-static char AOLOOPCONTROL_logfunc_fname[] = "AOloopControl.fcall.log";
-static char flogcomment[200];
+//static int AOLOOPCONTROL_logfunc_level = 0;
+//static int AOLOOPCONTROL_logfunc_level_max = 2; // log all levels equal or below this number
+//static char AOLOOPCONTROL_logfunc_fname[] = "AOloopControl.fcall.log";
+//static char flogcomment[200];
 
 
 // GPU MultMat indexes
@@ -204,9 +202,9 @@ static char flogcomment[200];
 
 
 // TIMING
-static struct timespec tnow;
-static struct timespec tdiff;
-static double tdiffv;
+//static struct timespec tnow;
+//static struct timespec tdiff;
+//static double tdiffv;
 
 
 
@@ -234,7 +232,7 @@ static int DISABLE_CLI_AOloopControl = 0; // set to 1 to disable CLI
 long LOOPNUMBER = 0; // current loop index
 
 
-static int AOlooploadconf_init = 0;
+//static int AOlooploadconf_init = 0;
 
 AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 
@@ -274,7 +272,7 @@ AOloopControl_var aoloopcontrol_var;
 
 /** @brief CLI function for AOloopControl_loadconfigure */
 
-int_fast8_t AOloopControl_loadconfigure_cli() {
+errno_t AOloopControl_loadconfigure_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             == 0 )
@@ -304,7 +302,7 @@ int_fast8_t AOloopControl_loadconfigure_cli() {
 
 
 /** @brief CLI function for AOloopControl_mkCM */
-int_fast8_t AOloopControl_aorun_cli() {
+errno_t AOloopControl_aorun_cli() {
     int stringmaxlen = 200;
     char fpsname[stringmaxlen];
 
@@ -408,7 +406,7 @@ int_fast8_t AOloopControl_aorun_cli() {
 
 
 /** @brief CLI function for AOloopControl_AOcompute_GUI */
-int_fast8_t AOloopControl_AOcompute_GUI_cli() {
+errno_t AOloopControl_AOcompute_GUI_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
@@ -428,7 +426,7 @@ int_fast8_t AOloopControl_AOcompute_GUI_cli() {
 
 
 /** @brief CLI function for AOloopControl_aorun_GUI */
-int_fast8_t AOloopControl_aorun_GUI_cli() {
+errno_t AOloopControl_aorun_GUI_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
@@ -447,7 +445,7 @@ int_fast8_t AOloopControl_aorun_GUI_cli() {
 
 
 /** @brief CLI function for AOloopControl_WFSzpupdate_loop */
-int_fast8_t AOloopControl_WFSzpupdate_loop_cli() {
+errno_t AOloopControl_WFSzpupdate_loop_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_IMG)
@@ -468,7 +466,7 @@ int_fast8_t AOloopControl_WFSzpupdate_loop_cli() {
 
 
 /** @brief CLI function for AOloopControl_WFSzeropoint_sum_update_loop */
-int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop_cli() {
+errno_t AOloopControl_WFSzeropoint_sum_update_loop_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_STR_NOT_IMG)
             + CLI_checkarg(2, CLIARG_LONG)
@@ -492,7 +490,7 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop_cli() {
 
 
 /** @brief CLI function for AOloopControl_CompModes_loop */
-int_fast8_t AOloopControl_CompModes_loop_cli() {
+errno_t AOloopControl_CompModes_loop_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_IMG)
@@ -517,7 +515,7 @@ int_fast8_t AOloopControl_CompModes_loop_cli() {
 
 
 /** @brief CLI function for AOloopControl_GPUmodecoeffs2dm_filt */
-int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop_cli() {
+errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_IMG)
@@ -548,7 +546,7 @@ int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop_cli() {
 
 
 /** @brief CLI function for AOloopControl_computeWFSresidualimage */
-int_fast8_t AOloopControl_computeWFSresidualimage_cli() {
+errno_t AOloopControl_computeWFSresidualimage_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_IMG)
@@ -567,7 +565,7 @@ int_fast8_t AOloopControl_computeWFSresidualimage_cli() {
 
 
 /** @brief CLI function for AOloopControl_ProcessModeCoefficients */
-int_fast8_t AOloopControl_ProcessModeCoefficients_cli() {
+errno_t AOloopControl_ProcessModeCoefficients_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             == 0 )
@@ -583,7 +581,7 @@ int_fast8_t AOloopControl_ProcessModeCoefficients_cli() {
 
 
 /** @brief CLI function for AOloopControl_AutoTuneGains */
-int_fast8_t AOloopControl_AutoTuneGains_cli() {
+errno_t AOloopControl_AutoTuneGains_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_STR_NOT_IMG)
@@ -606,7 +604,7 @@ int_fast8_t AOloopControl_AutoTuneGains_cli() {
 
 
 /** @brief CLI function for AOloopControl_dm2dm_offload */
-int_fast8_t AOloopControl_dm2dm_offload_cli() {
+errno_t AOloopControl_dm2dm_offload_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_IMG)
@@ -631,7 +629,7 @@ int_fast8_t AOloopControl_dm2dm_offload_cli() {
 
 
 /** @brief CLI function for AOloopControl_sig2Modecoeff */
-int_fast8_t AOloopControl_sig2Modecoeff_cli() {
+errno_t AOloopControl_sig2Modecoeff_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_IMG)
@@ -662,7 +660,7 @@ int_fast8_t AOloopControl_sig2Modecoeff_cli() {
 
 
 /** @brief CLI function for AOloopControl_setLoopNumber */
-int_fast8_t AOloopControl_setLoopNumber_cli() {
+errno_t AOloopControl_setLoopNumber_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             == 0 )
@@ -713,7 +711,7 @@ int_fast8_t AOloopControl_setLoopNumber_cli() {
 
 
 /** @brief CLI function for AOloopControl_set_modeblock_gain */
-int_fast8_t AOloopControl_set_modeblock_gain_cli() {
+errno_t AOloopControl_set_modeblock_gain_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
@@ -735,7 +733,7 @@ int_fast8_t AOloopControl_set_modeblock_gain_cli() {
 
 
 /** @brief CLI function for AOloopControl_loopstep */
-int_fast8_t AOloopControl_loopstep_cli() {
+errno_t AOloopControl_loopstep_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             == 0 )
@@ -753,7 +751,7 @@ int_fast8_t AOloopControl_loopstep_cli() {
 
 
 /** @brief CLI function for AOloopControl_set_loopfrequ */
-int_fast8_t AOloopControl_set_loopfrequ_cli() {
+errno_t AOloopControl_set_loopfrequ_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0)
@@ -770,7 +768,7 @@ int_fast8_t AOloopControl_set_loopfrequ_cli() {
 
 
 /** @brief CLI function for AOloopControl_set_hardwlatency_frame */
-int_fast8_t AOloopControl_set_hardwlatency_frame_cli() {
+errno_t AOloopControl_set_hardwlatency_frame_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 ) 
@@ -787,7 +785,7 @@ int_fast8_t AOloopControl_set_hardwlatency_frame_cli() {
 
 
 /** @brief CLI function for AOloopControl_set_complatency_frame */
-int_fast8_t AOloopControl_set_complatency_frame_cli() {
+errno_t AOloopControl_set_complatency_frame_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 ) 
@@ -804,7 +802,7 @@ int_fast8_t AOloopControl_set_complatency_frame_cli() {
 
 
 /** @brief CLI function for AOloopControl_set_wfsmextrlatency_frame */
-int_fast8_t AOloopControl_set_wfsmextrlatency_frame_cli() {
+errno_t AOloopControl_set_wfsmextrlatency_frame_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -821,7 +819,7 @@ int_fast8_t AOloopControl_set_wfsmextrlatency_frame_cli() {
 
 
 /** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_delta */
-int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_delta_cli() {
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -838,7 +836,7 @@ int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_delta_cli() {
 
 
 /** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_perc */
-int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_perc_cli() {
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -855,7 +853,7 @@ int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_perc_cli() {
 
 
 /** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_mcoeff */
-int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli() {
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 ) {
@@ -871,7 +869,7 @@ int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli() {
 
 
 /** @brief CLI function for AOloopControl_setgain */
-int_fast8_t AOloopControl_setgain_cli() {
+errno_t AOloopControl_setgain_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -888,7 +886,7 @@ int_fast8_t AOloopControl_setgain_cli() {
 
 
 /** @brief CLI function for AOloopControl_setARPFgain */
-int_fast8_t AOloopControl_setARPFgain_cli() {
+errno_t AOloopControl_setARPFgain_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -905,7 +903,7 @@ int_fast8_t AOloopControl_setARPFgain_cli() {
 
 
 /** @brief CLI function for AOloopControl_setARPFgain */
-int_fast8_t AOloopControl_setARPFgainAutoMin_cli() {
+errno_t AOloopControl_setARPFgainAutoMin_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -922,7 +920,7 @@ int_fast8_t AOloopControl_setARPFgainAutoMin_cli() {
 
 
 /** @brief CLI function for AOloopControl_setARPFgain */
-int_fast8_t AOloopControl_setARPFgainAutoMax_cli() {
+errno_t AOloopControl_setARPFgainAutoMax_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -939,7 +937,7 @@ int_fast8_t AOloopControl_setARPFgainAutoMax_cli() {
 
 
 /** @brief CLI function for AOloopControl_setWFSnormfloor */
-int_fast8_t AOloopControl_setWFSnormfloor_cli() {
+errno_t AOloopControl_setWFSnormfloor_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -956,7 +954,7 @@ int_fast8_t AOloopControl_setWFSnormfloor_cli() {
 
 
 /** @brief CLI function for AOloopControl_setmaxlimit */
-int_fast8_t AOloopControl_setmaxlimit_cli() {
+errno_t AOloopControl_setmaxlimit_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -973,7 +971,7 @@ int_fast8_t AOloopControl_setmaxlimit_cli() {
 
 
 /** @brief CLI function for AOloopControl_setmult */
-int_fast8_t AOloopControl_setmult_cli() {
+errno_t AOloopControl_setmult_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0 )
@@ -990,7 +988,7 @@ int_fast8_t AOloopControl_setmult_cli() {
 
 
 /** @brief CLI function for AOloopControl_setframesAve */
-/*int_fast8_t AOloopControl_setframesAve_cli() {
+/*errno_t AOloopControl_setframesAve_cli() {
     if(CLI_checkarg(1,2)==0) {
         AOloopControl_setframesAve(data.cmdargtoken[1].val.numl);
         return 0;
@@ -1004,7 +1002,7 @@ extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 
 
 /** @brief CLI function for AOloopControl_setgainrange */
-int_fast8_t AOloopControl_setgainrange_cli() {
+errno_t AOloopControl_setgainrange_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_LONG)
@@ -1025,7 +1023,7 @@ int_fast8_t AOloopControl_setgainrange_cli() {
 
 
 /** @brief CLI function for AOloopControl_setlimitrange */
-int_fast8_t AOloopControl_setlimitrange_cli() {
+errno_t AOloopControl_setlimitrange_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_LONG)
@@ -1046,7 +1044,7 @@ int_fast8_t AOloopControl_setlimitrange_cli() {
 
 
 /** @brief CLI function for AOloopControl_setmultfrange */
-int_fast8_t AOloopControl_setmultfrange_cli() {
+errno_t AOloopControl_setmultfrange_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_LONG)
@@ -1067,7 +1065,7 @@ int_fast8_t AOloopControl_setmultfrange_cli() {
 
 
 /** @brief CLI function for AOloopControl_setgainblock */
-int_fast8_t AOloopControl_setgainblock_cli() {
+errno_t AOloopControl_setgainblock_cli() {
     if( CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
             == 0 ) {
@@ -1084,7 +1082,7 @@ int_fast8_t AOloopControl_setgainblock_cli() {
 
 
 /** @brief CLI function for AOloopControl_setlimitblock */
-int_fast8_t AOloopControl_setlimitblock_cli() {
+errno_t AOloopControl_setlimitblock_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
@@ -1103,7 +1101,7 @@ int_fast8_t AOloopControl_setlimitblock_cli() {
 
 
 /** @brief CLI function for AOloopControl_setmultfblock */
-int_fast8_t AOloopControl_setmultfblock_cli() {
+errno_t AOloopControl_setmultfblock_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
@@ -1122,7 +1120,7 @@ int_fast8_t AOloopControl_setmultfblock_cli() {
 
 
 /** @brief CLI function for AOloopControl_scanGainBlock */
-int_fast8_t AOloopControl_scanGainBlock_cli() {
+errno_t AOloopControl_scanGainBlock_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_LONG)
@@ -1154,7 +1152,7 @@ int_fast8_t AOloopControl_scanGainBlock_cli() {
 /* =============================================================================================== */
 
 /** @brief CLI function for AOloopControl_DMmodulateAB */
-int_fast8_t AOloopControl_DMmodulateAB_cli()
+errno_t AOloopControl_DMmodulateAB_cli()
 {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
@@ -1191,7 +1189,7 @@ int_fast8_t AOloopControl_DMmodulateAB_cli()
 /* =============================================================================================== */
 
 /** @brief CLI function for AOloopControl_logprocess_modeval */
-int_fast8_t AOloopControl_logprocess_modeval_cli() {
+errno_t AOloopControl_logprocess_modeval_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             == 0 )
@@ -1222,22 +1220,25 @@ int_fast8_t AOloopControl_logprocess_modeval_cli() {
 
 
 
-int_fast8_t AOloopControl_RTstreamLOG_init_cli() {
+errno_t AOloopControl_RTstreamLOG_init_cli() {
     AOloopControl_RTstreamLOG_init(LOOPNUMBER);
+    return CLICMD_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_RTstreamLOG_printstatus_cli() {
+errno_t AOloopControl_RTstreamLOG_printstatus_cli() {
     AOloopControl_RTstreamLOG_printstatus(LOOPNUMBER);
+    return CLICMD_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_RTstreamLOG_GUI_cli() {
+errno_t AOloopControl_RTstreamLOG_GUI_cli() {
     AOloopControl_RTstreamLOG_GUI(LOOPNUMBER);
+    return CLICMD_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_RTstreamLOG_saveloop_cli() {
+errno_t AOloopControl_RTstreamLOG_saveloop_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_STR)
             == 0 )
@@ -1246,6 +1247,7 @@ int_fast8_t AOloopControl_RTstreamLOG_saveloop_cli() {
             LOOPNUMBER,
             data.cmdargtoken[1].val.string
         );
+        
         return CLICMD_SUCCESS;
     }
     else {
@@ -1254,7 +1256,7 @@ int_fast8_t AOloopControl_RTstreamLOG_saveloop_cli() {
 }
 
 
-int_fast8_t AOloopControl_RTstreamLOG_set_saveON_cli() {
+errno_t AOloopControl_RTstreamLOG_set_saveON_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             == 0 )
@@ -1263,6 +1265,7 @@ int_fast8_t AOloopControl_RTstreamLOG_set_saveON_cli() {
             LOOPNUMBER,
             data.cmdargtoken[1].val.numl
         );
+        
         return CLICMD_SUCCESS;
     }
     else {
@@ -1271,7 +1274,7 @@ int_fast8_t AOloopControl_RTstreamLOG_set_saveON_cli() {
 }
 
 
-int_fast8_t AOloopControl_RTstreamLOG_set_saveOFF_cli() {
+errno_t AOloopControl_RTstreamLOG_set_saveOFF_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             == 0 )
@@ -1280,6 +1283,7 @@ int_fast8_t AOloopControl_RTstreamLOG_set_saveOFF_cli() {
             LOOPNUMBER,
             data.cmdargtoken[1].val.numl
         );
+        
         return CLICMD_SUCCESS;
     }
     else {
@@ -1288,7 +1292,7 @@ int_fast8_t AOloopControl_RTstreamLOG_set_saveOFF_cli() {
 }
 
 
-int_fast8_t AOloopControl_RTstreamLOG_set_ON_cli() {
+errno_t AOloopControl_RTstreamLOG_set_ON_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             == 0 )
@@ -1297,6 +1301,7 @@ int_fast8_t AOloopControl_RTstreamLOG_set_ON_cli() {
         (LOOPNUMBER,
          data.cmdargtoken[1].val.numl
         );
+        
         return CLICMD_SUCCESS;
     }
     else {
@@ -1305,7 +1310,7 @@ int_fast8_t AOloopControl_RTstreamLOG_set_ON_cli() {
 }
 
 
-int_fast8_t AOloopControl_RTstreamLOG_set_OFF_cli() {
+errno_t AOloopControl_RTstreamLOG_set_OFF_cli() {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             == 0 )
@@ -1314,6 +1319,7 @@ int_fast8_t AOloopControl_RTstreamLOG_set_OFF_cli() {
             LOOPNUMBER,
             data.cmdargtoken[1].val.numl
         );
+        
         return CLICMD_SUCCESS;
     }
     else {
@@ -1333,7 +1339,7 @@ int_fast8_t AOloopControl_RTstreamLOG_set_OFF_cli() {
 // OBSOLETE ??
 
 
-int_fast8_t AOloopControl_setparam_cli()
+errno_t AOloopControl_setparam_cli()
 {
     if( DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_STR_NOT_IMG)
@@ -1345,6 +1351,7 @@ int_fast8_t AOloopControl_setparam_cli()
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.numf
         );
+        
         return CLICMD_SUCCESS;
     }
     else {
@@ -1407,6 +1414,8 @@ int AOloopControl_bogusfunc()
     printf("This function does NOTHING !\n");
     return 0;
 }
+
+
 
 
 // CODING STANDARD NOTE: minimal required documentation for doxygen
@@ -1514,7 +1523,14 @@ void init_AOloopControl()
 
 
 
-    RegisterCLIcommand("aolloadconf",__FILE__, AOloopControl_loadconfigure_cli, "load AO loop configuration", "<loop #>", "AOlooploadconf 1", "int AOloopControl_loadconfigure(long loopnb, 1, 10)");
+    RegisterCLIcommand(
+        "aolloadconf",
+        __FILE__,
+        AOloopControl_loadconfigure_cli,
+        "load AO loop configuration",
+        "<loop #>",
+        "AOlooploadconf 1",
+        "int AOloopControl_loadconfigure(long loopnb, 1, 10)");
 
 
 
@@ -2063,7 +2079,7 @@ void init_AOloopControl()
         AOloopControl_AutoTune,
         "auto tuning of loop parameters", "no arg",
         "aolautotune",
-        "int_fast8_t AOloopControl_AutoTune()");
+        "errno_t AOloopControl_AutoTune()");
 
 
     RegisterCLIcommand(
@@ -2190,9 +2206,12 @@ void init_AOloopControl()
 
 
 
-int_fast8_t AOloopControl_setgainrange(long m0, long m1, float gainval) {
-    long k;
-    long kmax;
+errno_t AOloopControl_setgainrange(
+    long m0,
+    long m1,
+    float gainval
+)
+{
 
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
@@ -2207,24 +2226,27 @@ int_fast8_t AOloopControl_setgainrange(long m0, long m1, float gainval) {
         aoloopcontrol_var.aoconfID_DMmode_GAIN = read_sharedmem_image(name);
     }
 
-    kmax = m1 + 1;
+    unsigned long kmax = m1 + 1;
     if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes) {
         kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1;
     }
 
-    for(k = m0; k < kmax; k++) {
+    for(unsigned long k = m0; k < kmax; k++) {
         data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k] = gainval;
     }
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int_fast8_t AOloopControl_setlimitrange(long m0, long m1, float limval) {
-    long k;
-    long kmax;
+errno_t AOloopControl_setlimitrange(
+    long m0,
+    long m1,
+    float limval
+)
+{
 
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
@@ -2239,25 +2261,27 @@ int_fast8_t AOloopControl_setlimitrange(long m0, long m1, float limval) {
         aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(name);
     }
 
-    kmax = m1 + 1;
+    unsigned long kmax = m1 + 1;
     if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes) {
         kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1;
     }
 
-    for(k = m0; k < kmax; k++) {
+    for(unsigned long k = m0; k < kmax; k++) {
         data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k] = limval;
     }
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int_fast8_t AOloopControl_setmultfrange(long m0, long m1, float multfval) {
-    long k;
-    long kmax;
-
+errno_t AOloopControl_setmultfrange(
+    long m0,
+    long m1,
+    float multfval
+)
+{
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
     }
@@ -2271,22 +2295,26 @@ int_fast8_t AOloopControl_setmultfrange(long m0, long m1, float multfval) {
         aoloopcontrol_var.aoconfID_MULTF_modes = read_sharedmem_image(name);
     }
 
-    kmax = m1 + 1;
+    unsigned long kmax = m1 + 1;
     if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes) {
         kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1;
     }
 
-    for(k = m0; k < kmax; k++) {
+    for(unsigned long k = m0; k < kmax; k++) {
         data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[k] = multfval;
     }
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int_fast8_t AOloopControl_setgainblock(long mb, float gainval) {
+errno_t AOloopControl_setgainblock(
+    long mb,
+    float gainval
+)
+{
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
     }
@@ -2301,17 +2329,21 @@ int_fast8_t AOloopControl_setgainblock(long mb, float gainval) {
     }
 
 
-    if(mb < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock) {
+    if(mb < (long) AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock) {
         data.image[aoloopcontrol_var.aoconfID_gainb].array.F[mb] = gainval;
     }
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int_fast8_t AOloopControl_setlimitblock(long mb, float limitval) {
+errno_t AOloopControl_setlimitblock(
+    long mb,
+    float limitval
+)
+{
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
         AOloopControl_InitializeMemory(1);
     }
@@ -2325,17 +2357,20 @@ int_fast8_t AOloopControl_setlimitblock(long mb, float limitval) {
         aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
     }
 
-    if(mb < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock) {
+    if(mb < (long) AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock) {
         data.image[aoloopcontrol_var.aoconfID_limitb].array.F[mb] = limitval;
     }
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int_fast8_t AOloopControl_setmultfblock(long mb, float multfval)
+errno_t AOloopControl_setmultfblock(
+    long mb,
+    float multfval
+)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -2349,20 +2384,19 @@ int_fast8_t AOloopControl_setmultfblock(long mb, float multfval)
         aoloopcontrol_var.aoconfID_multfb = read_sharedmem_image(imname);
     }
 
-    if(mb<AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock)
+    if(mb < (long) AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock)
         data.image[aoloopcontrol_var.aoconfID_multfb].array.F[mb] = multfval;
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int_fast8_t AOloopControl_AutoTune() {
-    long block;
+errno_t AOloopControl_AutoTune() 
+{
     long NBstep = 10000;
     char name[200];
-    long k;
     float bestgain = 0.0;
     float val;
 
@@ -2379,14 +2413,14 @@ int_fast8_t AOloopControl_AutoTune() {
     }
 
     // initialize
-    for(block = 0; block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++) {
+    for(unsigned long block = 0; block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++) {
         AOloopControl_setgainblock(block, 0.0);
         AOloopControl_setlimitblock(block, 0.1);
         AOloopControl_setmultfblock(block, 0.8);
     }
 
 
-    for(block = 0; block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++) {
+    for(unsigned long block = 0; block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++) {
         float gainStart = 0.0;
         float gainEnd = 1.0;
         int gOK = 1;
@@ -2397,7 +2431,7 @@ int_fast8_t AOloopControl_AutoTune() {
         // tune block gain
         gain = gainStart;
         while((gOK == 1) && (gain < gainEnd)) {
-            for(k = 0; k < AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++) {
+            for(unsigned long k = 0; k < AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++) {
                 data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
             }
 
@@ -2422,7 +2456,7 @@ int_fast8_t AOloopControl_AutoTune() {
     }
 
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 

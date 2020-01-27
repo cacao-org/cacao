@@ -520,12 +520,13 @@ char* AOloopControl_readParam_string(char *paramname, char* defaultValue, FILE *
 /* =============================================================================================== */
 
 /** @brief Load configuation parameters from disk - AOloopControl_loadconfigure.c*/
-int_fast8_t AOloopControl_loadconfigure(long loop, int mode, int level);
+errno_t AOloopControl_loadconfigure(long loop, int mode, int level);
 
 
 /** @brief Initialize memory - function called within C code only (no CLI call) */
-int_fast8_t AOloopControl_InitializeMemory();
-
+errno_t AOloopControl_InitializeMemory(
+    int mode
+);
 
 
 /* =============================================================================================== */
@@ -536,35 +537,46 @@ int_fast8_t AOloopControl_InitializeMemory();
 /* =============================================================================================== */
 
 /** @brief WFS zero point update */
-int_fast8_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name, const char *IDzrespM_name, const char *IDwfszp_name);
+errno_t AOloopControl_WFSzpupdate_loop(
+    const char *IDzpdm_name,
+    const char *IDzrespM_name,
+    const char *IDwfszp_name
+);
+
 
 /** @brief WFS sum zero point update */
-int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(long loopnb, const char *ID_WFSzp_name, int NBzp, const char *IDwfsref0_name, const char *IDwfsref_name);
+errno_t AOloopControl_WFSzeropoint_sum_update_loop(
+    long        loopnb,
+    const char *ID_WFSzp_name,
+    int         NBzp,
+    const char *IDwfsref0_name,
+    const char *IDwfsref_name
+);
 
 /** @brief Main loop function */
 int AOloopControl_aorun_RUN(char *fpsname);
 int AOloopControl_aorun_FPCONF(char *fpsname, uint32_t CMDmode);
-int_fast8_t AOloopControl_aorun();
+errno_t AOloopControl_aorun();
 
 
 
 /** @brief CPU based matrix-vector multiplication - when no GPU */
-int_fast8_t ControlMatrixMultiply( float *cm_array, float *imarray, long m, long n, float *outvect);
+errno_t ControlMatrixMultiply( float *cm_array, float *imarray, long m, long n, float *outvect);
 
 /** @brief Sends modal commands to DM by matrix-vector multiplication */
-int_fast8_t set_DM_modes(long loop);
+errno_t set_DM_modes(long loop);
 
 /** @brief Response Matrix DM-WFS */
-int_fast8_t set_DM_modesRM(long loop);
+errno_t set_DM_modesRM(long loop);
 
 /** @brief Main computation function, runs once per loop iteration */
-int_fast8_t AOcompute(long loop, int normalize);
+errno_t AOcompute(long loop, int normalize);
 
 /** @brief Main computation function, runs once per loop iteration */
-int_fast8_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_WFSref_name, const char *ID_WFSim_name, const char *ID_WFSimtot_name, const char *ID_coeff_name);
+errno_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_WFSref_name, const char *ID_WFSim_name, const char *ID_WFSimtot_name, const char *ID_coeff_name);
 
 /** @brief Matrix multiplication on GPU to transfom modes coefficients into DM shape */
-int_fast8_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex, const char *modecoeffs_name, const char *DMmodes_name, int semTrigg, const char *out_name, int GPUindex, long loop, int offloadMode);
+errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex, const char *modecoeffs_name, const char *DMmodes_name, int semTrigg, const char *out_name, int GPUindex, long loop, int offloadMode);
 
 /** @brief CPU matrix multiplication to transfom WFS signal into modes coefficients */
 long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_name, const char *WFSmodes_name, const char *outname);
@@ -576,7 +588,7 @@ long AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name);
 long AOloopControl_ProcessModeCoefficients(long loop);
 
 /** @brief Auto tune gains of the closed loop */
-int_fast8_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float GainCoeff, long NBsamples);
+errno_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float GainCoeff, long NBsamples);
 
 /** @brief Mixes streamin into streamout, in order to make streamout converge to streamin  */
 long AOloopControl_dm2dm_offload(const char *streamin, const char *streamout, float twait, float offcoeff, float multcoeff);
@@ -591,10 +603,10 @@ long AOloopControl_dm2dm_offload(const char *streamin, const char *streamout, fl
 /* =============================================================================================== */
 
 /** @brief Set loop number. Ex : for the Pyramid WFS, loop number = 0  */
-int_fast8_t AOloopControl_setLoopNumber(long loop);
+errno_t AOloopControl_setLoopNumber(long loop);
 
 /** @brief Set one function for many parameters  */
-int_fast8_t AOloopControl_setparam(long loop, const char *key, double value);
+errno_t AOloopControl_setparam(long loop, const char *key, double value);
 
 
 /* =============================================================================================== */
@@ -603,25 +615,25 @@ int_fast8_t AOloopControl_setparam(long loop, const char *key, double value);
 /* =============================================================================================== */
 
 /** @brief Close AO loop : AO on */
-int_fast8_t AOloopControl_loopon();
+errno_t AOloopControl_loopon();
 
 /** @brief  Open AO loop : AO off  */
-int_fast8_t AOloopControl_loopoff();
+errno_t AOloopControl_loopoff();
 
 /** @brief Close AO loop : AO on */
-int_fast8_t AOloopControl_loopWFScompon();
+errno_t AOloopControl_loopWFScompon();
 
 /** @brief  Open AO loop : AO off  */
-int_fast8_t AOloopControl_loopWFScompoff();
+errno_t AOloopControl_loopWFScompoff();
 
 /** @brief Kill AO loop : finish the process of the run */
-int_fast8_t AOloopControl_loopkill();
+errno_t AOloopControl_loopkill();
 
 /** @brief Close loop for finite number of steps */
-int_fast8_t AOloopControl_loopstep(long loop, long NBstep);
+errno_t AOloopControl_loopstep(long loop, long NBstep);
 
 /** @brief Reset the AO loop */
-int_fast8_t AOloopControl_loopreset();
+errno_t AOloopControl_loopreset();
 
 
 /* =============================================================================================== */
@@ -630,10 +642,10 @@ int_fast8_t AOloopControl_loopreset();
 
 // NB : doesn't exist anywhere ?? 
 /** @brief Log on the AO interface */
-int_fast8_t AOloopControl_logon();
+errno_t AOloopControl_logon();
 
 /** @brief Log off AO interface */
-int_fast8_t AOloopControl_logoff();
+errno_t AOloopControl_logoff();
 
 
 /* ============================================================================================================ */
@@ -641,16 +653,16 @@ int_fast8_t AOloopControl_logoff();
 /* ============================================================================================================ */
 
 /** @brief Writing on DM, unfiltered actuators (primary) : on */
-int_fast8_t AOloopControl_DMprimaryWrite_on();
+errno_t AOloopControl_DMprimaryWrite_on();
 
 /** @brief Writing on DM, unfiltered actuators (primary) : off */
-int_fast8_t AOloopControl_DMprimaryWrite_off();
+errno_t AOloopControl_DMprimaryWrite_off();
 
 /** @brief Writing on DM, after filtering : on */
-int_fast8_t AOloopControl_DMfilteredWrite_on();
+errno_t AOloopControl_DMfilteredWrite_on();
 
 /** @brief Writing on DM, after filtering : off */
-int_fast8_t AOloopControl_DMfilteredWrite_off();
+errno_t AOloopControl_DMfilteredWrite_off();
 
 
 /* ====================================================================================================== */
@@ -658,94 +670,94 @@ int_fast8_t AOloopControl_DMfilteredWrite_off();
 /* ====================================================================================================== */
 
 /** @brief Set limit auto tune : on */
-int_fast8_t AOloopControl_AUTOTUNE_LIMITS_on();
+errno_t AOloopControl_AUTOTUNE_LIMITS_on();
 
 /** @brief Set limit auto tune : off */
-int_fast8_t AOloopControl_AUTOTUNE_LIMITS_off();
+errno_t AOloopControl_AUTOTUNE_LIMITS_off();
 
 /** @brief Options auto tune limit 
 * The limit is fixed at the beginning. 
 * When the fraction of mode values higher than the current limit times mcoeff is larger than perc (percentile);
 * then the limit increases by delta. Otherwise, it decreases by delta.
 */
-int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta);
-int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc);
-int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff);
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta);
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc);
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff);
 
 /** @brief Set gain auto tune : on */
-int_fast8_t AOloopControl_AUTOTUNE_GAINS_on();
+errno_t AOloopControl_AUTOTUNE_GAINS_on();
  
 /** @brief Set gain auto tune : off */
-int_fast8_t AOloopControl_AUTOTUNE_GAINS_off();
+errno_t AOloopControl_AUTOTUNE_GAINS_off();
 
 /* ======================================================================================================== */
 /** @name AOloopControl - 3.5. LOOP CONTROL INTERFACE - PREDICTIVE FILTER ON/OFF AOloopControl_arpf_onoff.c */
 /* ======================================================================================================== */
 
 /** @brief ARPF = auto regressive predictive filter: on */
-int_fast8_t AOloopControl_ARPFon();
+errno_t AOloopControl_ARPFon();
 
 /** @brief ARPF = auto regressive predictive filter: off */
-int_fast8_t AOloopControl_ARPFoff();
+errno_t AOloopControl_ARPFoff();
 
 /* =================================================================================================== */
 /** @name AOloopControl - 3.6. LOOP CONTROL INTERFACE - TIMING PARAMETERS - AOloopControl_time_param.c */
 /* =================================================================================================== */
 
 /** @brief Set AO loop frequency */
-int_fast8_t AOloopControl_set_loopfrequ(float loopfrequ);
+errno_t AOloopControl_set_loopfrequ(float loopfrequ);
 
 /** @brief Set hardware latency in unity of frame */
-int_fast8_t AOloopControl_set_hardwlatency_frame(float hardwlatency_frame);
+errno_t AOloopControl_set_hardwlatency_frame(float hardwlatency_frame);
 
 /** @brief Set computation latency of primary DM write in unity of frame */
-int_fast8_t AOloopControl_set_complatency_frame(float complatency_frame);
+errno_t AOloopControl_set_complatency_frame(float complatency_frame);
 
 /** @brief Set computation latency of filtered DM write mode
 * time between the moment where the WF arrives at the WFS, and when it's written in the DM
 */
-int_fast8_t AOloopControl_set_wfsmextrlatency_frame(float wfsmextrlatency_frame);
+errno_t AOloopControl_set_wfsmextrlatency_frame(float wfsmextrlatency_frame);
 
 /* ========================================================================================================= */
 /** @name AOloopControl - 3.7. LOOP CONTROL INTERFACE - CONTROL LOOP PARAMETERS - AOloopControl_loop_param.c */
 /* ========================================================================================================= */
 
-int_fast8_t AOloopControl_setRTLOG_ON();
-int_fast8_t AOloopControl_setRTLOG_OFF();
+errno_t AOloopControl_setRTLOG_ON();
+errno_t AOloopControl_setRTLOG_OFF();
 
 /** @brief Set gain of the loop  */
-int_fast8_t AOloopControl_setgain(float gain);
+errno_t AOloopControl_setgain(float gain);
 
 /** @brief Set ARPF gain (auto regressive predictive filter) 
 * Ex : a gain of 0.5 will correct 50% of the predicted WF
 */
-int_fast8_t AOloopControl_setARPFgain(float gain);
+errno_t AOloopControl_setARPFgain(float gain);
 
 
 /** @brief Set ARPF */
-int_fast8_t AOloopControl_setARPFgainAutoMin(float val);
+errno_t AOloopControl_setARPFgainAutoMin(float val);
 
 /** @brief Set ARPF */
-int_fast8_t AOloopControl_setARPFgainAutoMax(float val);
+errno_t AOloopControl_setARPFgainAutoMax(float val);
 
 
 /** @brief Coefficient attenuates AO correction in low loght level */
-int_fast8_t AOloopControl_setWFSnormfloor(float WFSnormfloor);
+errno_t AOloopControl_setWFSnormfloor(float WFSnormfloor);
 
 /** @brief Set the limit maximum */
-int_fast8_t AOloopControl_setmaxlimit(float maxlimit);
+errno_t AOloopControl_setmaxlimit(float maxlimit);
 
 /** @brief Multiplying coefficient, close to 1, in order to avoid divergence */
-int_fast8_t AOloopControl_setmult(float multcoeff);
+errno_t AOloopControl_setmult(float multcoeff);
 
 /** @brief Set an average of frames */
-int_fast8_t AOloopControl_setframesAve(long nbframes);
+errno_t AOloopControl_setframesAve(long nbframes);
 
 /** @brief Set gain of block of modes */
-int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add);// modal blocks
+errno_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add);// modal blocks
 
 /** @brief Scan block gains */
-int_fast8_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainStart, float gainEnd, long NBgain);
+errno_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainStart, float gainEnd, long NBgain);
 
 
 
@@ -757,10 +769,10 @@ int_fast8_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainSta
 /* =============================================================================================== */
 
 /** @brief Optimize PSF low order */
-int_fast8_t AOloopControl_OptimizePSF_LO(const char *psfstream_name, const char *IDmodes_name, const char *dmstream_name, long delayframe, long NBframes);
+errno_t AOloopControl_OptimizePSF_LO(const char *psfstream_name, const char *IDmodes_name, const char *dmstream_name, long delayframe, long NBframes);
 
 /** @brief Experimental dm modulation  */
-int_fast8_t AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes);
+errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes);
 
 
 
@@ -773,10 +785,19 @@ int_fast8_t AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *ID
 /* =============================================================================================== */
 
 /** @brief Log the process of the mode evaluation  */
-int_fast8_t AOloopControl_logprocess_modeval(const char *IDname);
+errno_t AOloopControl_logprocess_modeval(
+    const char *IDname
+);
 
 /** @brief tweak zonal response matrix in accordance to WFS response to modes */
-long AOloopControl_TweakRM(char *ZRMinname, char *DMinCname, char *WFSinCname, char *DMmaskname, char *WFSmaskname, char *RMoutname);
+errno_t AOloopControl_TweakRM(
+    char *ZRMinname,
+    char *DMinCname,
+    char *WFSinCname,
+    char *DMmaskname,
+    char *WFSmaskname,
+    char *RMoutname
+);
 
 
 
@@ -808,14 +829,14 @@ int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex);
 /* =============================================================================================== */
 
 // "old" blocks (somewhat obsolete)
-int_fast8_t AOloopControl_setgainrange(long m0, long m1, float gainval);
-int_fast8_t AOloopControl_setlimitrange(long m0, long m1, float limval);
-int_fast8_t AOloopControl_setmultfrange(long m0, long m1, float multfval);
-int_fast8_t AOloopControl_setgainblock(long mb, float gainval);
-int_fast8_t AOloopControl_setlimitblock(long mb, float limitval);
-int_fast8_t AOloopControl_setmultfblock(long mb, float multfval);
+errno_t AOloopControl_setgainrange(long m0, long m1, float gainval);
+errno_t AOloopControl_setlimitrange(long m0, long m1, float limval);
+errno_t AOloopControl_setmultfrange(long m0, long m1, float multfval);
+errno_t AOloopControl_setgainblock(long mb, float gainval);
+errno_t AOloopControl_setlimitblock(long mb, float limitval);
+errno_t AOloopControl_setmultfblock(long mb, float multfval);
 
-int_fast8_t AOloopControl_AutoTune();
+errno_t AOloopControl_AutoTune();
 
 
 

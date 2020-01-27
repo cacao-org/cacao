@@ -4,11 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @author  O. Guyon
- * @date    2018-01-04
- *
- * 
- * @bug No known bugs.
  * 
  */
 
@@ -77,14 +72,20 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-int_fast8_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_WFSref_name, const char *ID_WFSim_name, const char *ID_WFSimtot_name, const char *ID_coeff_name)
+errno_t AOloopControl_CompModes_loop(
+    const char *ID_CM_name,
+    const char *ID_WFSref_name,
+    const char *ID_WFSim_name,
+    const char *ID_WFSimtot_name,
+    const char *ID_coeff_name
+)
 {
 #ifdef HAVE_CUDA
 
     int *GPUsetM;
-    long ID_CM;
-    long ID_WFSref;
-    long ID_coeff;
+    imageID ID_CM;
+    imageID ID_WFSref;
+    imageID ID_coeff;
     long GPUcnt;
     int k;
     int_fast8_t GPUstatus[100];
@@ -92,15 +93,15 @@ int_fast8_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_
     long NBmodes;
     uint32_t *sizearray;
 
-    long ID_WFSim;
-    long ID_WFSim_n;
+    imageID ID_WFSim;
+    imageID ID_WFSim_n;
     long wfsxsize, wfsysize;
     int m;
-    long IDcoeff0;
+    imageID IDcoeff0;
 
-    long ID_WFSimtot;
+    imageID ID_WFSimtot;
     double totfluxave;
-    long ID_coefft;
+    imageID ID_coefft;
 
     double alpha = 0.1;
 	char imname[200];
@@ -212,7 +213,7 @@ int_fast8_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_
 
 #endif
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 

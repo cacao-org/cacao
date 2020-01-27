@@ -14,8 +14,12 @@
 
 #define _GNU_SOURCE
 
-#include "AOloopControl.h"
+
+#include "CommandLineInterface/CLIcore.h"
 #include "string.h"
+
+#include "AOloopControl.h"
+
 
 
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
@@ -31,21 +35,23 @@ extern AOloopControl_var aoloopcontrol_var;
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-int_fast8_t AOloopControl_setLoopNumber(long loop)
+errno_t AOloopControl_setLoopNumber(long loop)
 {
-
-
     printf("LOOPNUMBER = %ld\n", loop);
     aoloopcontrol_var.LOOPNUMBER = loop;
 
     /** append process name with loop number */
 
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_setparam(long loop, const char *key, double value)
+errno_t AOloopControl_setparam(
+    long loop,
+    const char *key,
+    double value
+)
 {
     int pOK=0;
     char kstring[200];
@@ -63,7 +69,6 @@ int_fast8_t AOloopControl_setparam(long loop, const char *key, double value)
         printf("Parameter not found\n");
 
 
-
-    return (0);
+    return RETURN_SUCCESS;
 }
 

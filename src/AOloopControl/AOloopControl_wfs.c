@@ -4,7 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @bug No known bugs.
  * 
  */
 
@@ -82,12 +81,16 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-int_fast8_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name, const char *IDzrespM_name, const char *IDwfszp_name)
+errno_t AOloopControl_WFSzpupdate_loop(
+    const char *IDzpdm_name,
+    const char *IDzrespM_name,
+    const char *IDwfszp_name
+)
 {
-    long IDzpdm, IDzrespM, IDwfszp;
+    imageID IDzpdm, IDzrespM, IDwfszp;
     uint32_t dmxsize, dmysize, dmxysize;
     long wfsxsize, wfsysize, wfsxysize;
-    long IDtmp;
+    imageID IDtmp;
     long elem, act;
     long zpcnt = 0;
     long zpcnt0;
@@ -95,8 +98,8 @@ int_fast8_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name, const char *
     struct timespec t1;
     struct timespec t2;
 
-	char imname[200];
-	
+    char imname[200];
+
 
 	if(aoloopcontrol_var.aoconfID_looptiming == -1)
 	{
@@ -204,7 +207,7 @@ int_fast8_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name, const char *
         zpcnt++;
     }
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
@@ -218,17 +221,17 @@ int_fast8_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name, const char *
 //
 //
 //
-int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(
-    long loopnb,
+errno_t AOloopControl_WFSzeropoint_sum_update_loop(
+    long        loopnb,
     const char *ID_WFSzp_name,
-    int NBzp,
+    int         NBzp,
     const char *IDwfsref0_name,
     const char *IDwfsref_name
 )
 {
     long wfsxsize, wfsysize, wfsxysize;
-    long IDwfsref, IDwfsref0;
-    long *IDwfszparray;
+    imageID IDwfsref, IDwfsref0;
+    imageID *IDwfszparray;
     long cntsumold;
     int RT_priority = 95; //any number from 0-99
     struct sched_param schedpar;
@@ -345,19 +348,24 @@ int_fast8_t AOloopControl_WFSzeropoint_sum_update_loop(
     free(IDwfszparray);
 
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
 
-
-int_fast8_t ControlMatrixMultiply( float *cm_array, float *imarray, long m, long n, float *outvect)
+errno_t ControlMatrixMultiply(
+    float *cm_array,
+    float *imarray,
+    long m,
+    long n,
+    float *outvect
+)
 {
     long i;
 
     cblas_sgemv (CblasRowMajor, CblasNoTrans, m, n, 1.0, cm_array, n, imarray, 1, 0.0, outvect, 1);
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
@@ -392,26 +400,29 @@ int_fast8_t ControlMatrixMultiply( float *cm_array, float *imarray, long m, long
  * 
  */
 
-long AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)
+imageID AOloopControl_computeWFSresidualimage(
+    long loop,
+    char *IDalpha_name
+)
 {
-    long IDwfsref, IDwfsmask, IDtot, IDout, IDoutave, IDoutm, IDoutmave, IDoutrms;
+    imageID IDwfsref, IDwfsmask, IDtot, IDout, IDoutave, IDoutm, IDoutmave, IDoutrms;
     char imname[200];
     uint32_t *sizearray;
     long wfsxsize, wfsysize, wfsxysize;
     long cnt;
     long ii;
-	long IDalpha;
+    imageID IDalpha;
 
-	IDalpha = image_ID(IDalpha_name);
-	
+    IDalpha = image_ID(IDalpha_name);
+
 
     if(sprintf(imname, "aol%ld_imWFS0", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-	aoloopcontrol_var.aoconfID_contrM = read_sharedmem_image(imname);
+    aoloopcontrol_var.aoconfID_contrM = read_sharedmem_image(imname);
 
     if(sprintf(imname, "aol%ld_wfsref", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-	
+
     IDwfsref = read_sharedmem_image(imname);
 
     if(sprintf(imname, "aol%ld_wfsmask", loop) < 1)
@@ -423,8 +434,8 @@ long AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
     IDtot = read_sharedmem_image(imname);
-	
-	
+
+
 
     wfsxsize = data.image[aoloopcontrol_var.aoconfID_contrM].md[0].size[0];
     wfsysize = data.image[aoloopcontrol_var.aoconfID_contrM].md[0].size[1];
@@ -479,19 +490,19 @@ long AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)
 
 
 
-	if(aoloopcontrol_var.aoconfID_looptiming == -1)
-	{
-		// LOOPiteration is written in cnt1 of loop timing array
-		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
-	}
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
+    {
+        // LOOPiteration is written in cnt1 of loop timing array
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
+            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
+    }
 
 
-    
+
     for(;;)
     {
-		
+
         if(data.image[aoloopcontrol_var.aoconfID_contrM].md[0].sem==0)
         {
             while(cnt==data.image[aoloopcontrol_var.aoconfID_contrM].md[0].cnt0) // test if new frame exists
@@ -501,14 +512,14 @@ long AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)
         else
         {
             sem_wait(data.image[aoloopcontrol_var.aoconfID_contrM].semptr[3]);
-		}
+        }
 
-		//
-		// instantaneous WFS residual
+        //
+        // instantaneous WFS residual
         // imWFS0/tot0 - WFSref -> out
         //
-		//printf("  %20f\n", data.image[IDtot].array.F[0]);//TEST
-		
+        //printf("  %20f\n", data.image[IDtot].array.F[0]);//TEST
+
         data.image[IDout].md[0].write = 1;
         for(ii=0; ii<wfsxysize; ii++)
             data.image[IDout].array.F[ii] = data.image[aoloopcontrol_var.aoconfID_contrM].array.F[ii]/data.image[IDtot].array.F[0] - data.image[IDwfsref].array.F[ii];

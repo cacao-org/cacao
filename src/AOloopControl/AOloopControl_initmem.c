@@ -6,16 +6,11 @@
  *  
  * 
  * 
- * @bug No known bugs.
- * 
  */
 
 #define _GNU_SOURCE
 
-#include "AOloopControl.h"
 
-
-//libraries created by O. Guyon 
 #include "CommandLineInterface/CLIcore.h"
 #include <unistd.h>
 #include <fcntl.h>
@@ -23,6 +18,7 @@
 
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+#include "AOloopControl.h"
 
 
 #include <sys/mman.h>
@@ -57,14 +53,15 @@ static int GPUcntMax = 100;
 
 /***  */
 
-int_fast8_t AOloopControl_InitializeMemory(int mode)
+errno_t AOloopControl_InitializeMemory(
+    int mode
+)
 {
-    int SM_fd;
-    struct stat file_stat;
-    int create = 0;
-    long loop;
-    int tmpi;
-	char imname[200];
+    int     SM_fd;
+    struct  stat file_stat;
+    int     create = 0;
+    long    loop;
+    int     tmpi;
 
 
 #ifdef AOLOOPCONTROL_LOGFUNC
@@ -134,7 +131,6 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
     if((mode==0)||(create==1))
     {
         char cntname[200];
-		long i;
 
         AOconf[loop].aorun.on = 0;
         AOconf[loop].aorun.DMprimaryWriteON = 0;
@@ -237,9 +233,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 
         aoloopcontrol_var.GPUset0 = (int*) malloc(sizeof(int)*GPUcntMax);
 
-        uint_fast16_t k;
-
-        for(k=0; k<GPUcntMax; k++)
+        for(int k=0; k<GPUcntMax; k++)
         {
             FILE *fp;
             char fname[200];
@@ -261,7 +255,7 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
 
 
         aoloopcontrol_var.GPUset1 = (int*) malloc(sizeof(int)*GPUcntMax);
-        for(k=0; k<GPUcntMax; k++)
+        for(int k=0; k<GPUcntMax; k++)
         {
             FILE *fp;
             char fname[200];
@@ -290,6 +284,6 @@ int_fast8_t AOloopControl_InitializeMemory(int mode)
     CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 1, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 

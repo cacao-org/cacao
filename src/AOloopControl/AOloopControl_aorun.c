@@ -4,8 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @bug No known bugs.
- * 
  */
 
 
@@ -65,7 +63,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 #define NB_AOloopcontrol 10 // max number of loops
 
-static int AOlooploadconf_init = 0;
+//static int AOlooploadconf_init = 0;
 
 
 static int wcol, wrow; // window size
@@ -215,138 +213,149 @@ int AOloopControl_aorun_FPCONF(
     uint32_t CMDmode
 )
 {
-//	uint16_t loopstatus;
-	
+    //	uint16_t loopstatus;
+
     // ===========================
     // SETUP FPS
     // ===========================
-//	int SMfd = -1;
-//    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-//	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-//	fps.md->sourceline = __LINE__;
+    //	int SMfd = -1;
+    //    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
+    //	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
+    //	fps.md->sourceline = __LINE__;
 
-	FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(fpsname, CMDmode);
 
 
     // ===========================
-    // ALLOCATE FPS ENTRIES 
+    // ALLOCATE FPS ENTRIES
     // ===========================
 
     void *pNull = NULL;
     uint64_t FPFLAG;
-    
-    
+
+
     // configuration
     int64_t loopindex_default[4] = { 0, 0, 99, 0 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
-    long fpi_loop = function_parameter_add_entry(&fps, ".loop", "Loop index", 
+    __attribute__((unused)) long fpi_loop =
+        function_parameter_add_entry(&fps, ".loop", "Loop index",
                                      FPTYPE_INT64, FPFLAG, &loopindex_default);
 
-    
+
     int64_t RTpriority_default[4] = { 90, 0, 99, 90 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
-    long fpi_RTpriority = function_parameter_add_entry(&fps, ".RTpriority", "Real Time priority", 
+    __attribute__((unused)) long fpi_RTpriority =
+        function_parameter_add_entry(&fps, ".RTpriority", "Real Time priority",
                                      FPTYPE_INT64, FPFLAG, &RTpriority_default);
-    
+
 
     long semwaitindex_default[4] = { 1, 0, 10, 1 };
-    long fpi_semwaitindex = function_parameter_add_entry(&fps, ".semwaitindex",
-                       "input semaphore index",
-                       FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &semwaitindex_default);
+    __attribute__((unused)) long fpi_semwaitindex =
+        function_parameter_add_entry(&fps, ".semwaitindex",
+                                     "input semaphore index",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &semwaitindex_default);
 
 
     long WFSrefON_default[4] = { 0, 0, 1, 0 };
-    long fpi_WFSrefON = function_parameter_add_entry(&fps, ".wfsrefON",
-                       "Use WFS reference",
-                       FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, &WFSrefON_default);
-    
-    
+    __attribute__((unused)) long fpi_WFSrefON =
+        function_parameter_add_entry(&fps, ".wfsrefON",
+                                     "Use WFS reference",
+                                     FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, &WFSrefON_default);
+
+
     // stream that needs to be loaded on startup
     FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
-    long fpi_streamname_wfs       = function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
+    __attribute__((unused)) long fpi_streamname_wfs       =
+        function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
                                      FPTYPE_STREAMNAME, FPFLAG, "NULL");
-    
+
     FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
-    long fpi_streamname_cmat       = function_parameter_add_entry(&fps, ".sn_cmat",  "Control Matrix",
-                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");   
-    
+    __attribute__((unused)) long fpi_streamname_cmat       =
+        function_parameter_add_entry(&fps, ".sn_cmat",  "Control Matrix",
+                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");
+
     // required to get DM size
     FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
-    long fpi_streamname_DMout      = function_parameter_add_entry(&fps, ".sn_DMout",  "output stream",
-                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");   
-                                         
-    
-  
-    
-    // main control 
-    
+    __attribute__((unused)) long fpi_streamname_DMout      =
+        function_parameter_add_entry(&fps, ".sn_DMout",  "output stream",
+                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");
+
+
+
+
+    // main control
+
     double loopgaindefault[4] = { 0.001, 0.0, 1.5, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
     FPFLAG |= FPFLAG_WRITERUN;
-    long fpi_loopgain = function_parameter_add_entry(&fps, ".loopgain", "Main loop gain", 
+    __attribute__((unused)) long fpi_loopgain =
+        function_parameter_add_entry(&fps, ".loopgain", "Main loop gain",
                                      FPTYPE_FLOAT64, FPFLAG, &loopgaindefault);
 
     double loopmultdefault[4] = { 0.001, 0.0, 1.5, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
     FPFLAG |= FPFLAG_WRITERUN;
-    long fpi_loopmult = function_parameter_add_entry(&fps, ".loopmult", "Main loop mult coeff", 
+    __attribute__((unused)) long fpi_loopmult =
+        function_parameter_add_entry(&fps, ".loopmult", "Main loop mult coeff",
                                      FPTYPE_FLOAT64, FPFLAG, &loopmultdefault);
 
 
     double maxlimdefault[4] = { 1.0, 0.0, 1000.0, 1.0 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
     FPFLAG |= FPFLAG_WRITERUN;
-    long fpi_maxlim = function_parameter_add_entry(&fps, ".maxlim", "Maximum limit", 
+    __attribute__((unused)) long fpi_maxlim =
+        function_parameter_add_entry(&fps, ".maxlim", "Maximum limit",
                                      FPTYPE_FLOAT64, FPFLAG, &maxlimdefault);
 
-	FPFLAG = FPFLAG_DEFAULT_INPUT;
-	FPFLAG |= FPFLAG_WRITERUN;
-	long fpi_loopON = function_parameter_add_entry(&fps, ".loopON", "loop ON/OFF", 
-                                     FPTYPE_ONOFF, FPFLAG, pNull);       
-    
+    FPFLAG = FPFLAG_DEFAULT_INPUT;
+    FPFLAG |= FPFLAG_WRITERUN;
+    __attribute__((unused)) long fpi_loopON =
+        function_parameter_add_entry(&fps, ".loopON", "loop ON/OFF",
+                                     FPTYPE_ONOFF, FPFLAG, pNull);
 
-	FPFLAG = FPFLAG_DEFAULT_INPUT;
-	FPFLAG |= FPFLAG_WRITERUN;
-	long fpi_loopZERO = function_parameter_add_entry(&fps, ".loopZERO", "Zero correction", 
-                                     FPTYPE_ONOFF, FPFLAG, pNull);     
 
-    
-    
+    FPFLAG = FPFLAG_DEFAULT_INPUT;
+    FPFLAG |= FPFLAG_WRITERUN;
+    long fpi_loopZERO = function_parameter_add_entry(&fps, ".loopZERO", "Zero correction",
+                        FPTYPE_ONOFF, FPFLAG, pNull);
+
+
+
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
 
     while ( fps.loopstatus == 1 )
     {
-       usleep(50);
+        usleep(50);
         if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
             // here goes the logic
-          
-          
-			// zero correction
-			if(fps.parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF) {
-				char dmCsname[200];
-				long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
-				sprintf(dmCsname, "aol%ld_dmC", loop);
-				read_sharedmem_image(dmCsname);
-				arith_image_zero(dmCsname);
-				
-				// set back to OFF
+
+
+            // zero correction
+            if(fps.parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF) {
+                char dmCsname[200];
+                long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
+                sprintf(dmCsname, "aol%ld_dmC", loop);
+                read_sharedmem_image(dmCsname);
+                arith_image_zero(dmCsname);
+
+                // set back to OFF
                 fps.parray[fpi_loopZERO].fpflag &= ~FPFLAG_ONOFF;
-			}		
-          
+            }
+
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
-        }       
+        }
 
     }
-    
-    
 
-	function_parameter_FPCONFexit( &fps );
-	    
-	return RETURN_SUCCESS;
+
+
+    function_parameter_FPCONFexit( &fps );
+
+    return RETURN_SUCCESS;
 }
 
 
@@ -507,7 +516,7 @@ int AOloopControl_aorun_RUN(
     // ===============================
     // RUN LOOP
     // ===============================
-    long long WFScnt  = 0;
+    unsigned long long WFScnt  = 0;
     int loopOK = 1;
     while( loopOK == 1 )
     {
@@ -644,25 +653,11 @@ int AOloopControl_aorun_RUN(
  * ## Details
  *
  */
-int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
-    FILE *fp;
-    char fname[200];
+errno_t __attribute__((hot)) AOloopControl_aorun() {
     long loop;
     int vOK;
-    long ii;
-    long ID;
-    long j, m;
-    struct tm *uttime;
-    time_t t;
     struct timespec *thetime = (struct timespec *)malloc(sizeof(struct timespec));
-    char logfname[1000];
-    char command[1000];
-    int r;
     int RT_priority = 90; //any number from 0-99
-    struct sched_param schedpar;
-    double a;
-    long cnttest;
-    float tmpf1;
 
     struct timespec tnow;
     struct timespec t1;
@@ -675,10 +670,10 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
     struct timespec functionTestTimerEnd;
 
     struct timespec functionTestTimer00;
-    struct timespec functionTestTimer01;
-    struct timespec functionTestTimer02;
-    struct timespec functionTestTimer03;
-    struct timespec functionTestTimer04;
+    //struct timespec functionTestTimer01;
+    //struct timespec functionTestTimer02;
+    //struct timespec functionTestTimer03;
+    //struct timespec functionTestTimer04;
 
 
 
@@ -776,10 +771,11 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
         long xsize = data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].md[0].size[0];
         long ysize = data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].md[0].size[1];
         aoloopcontrol_var.PIXSTREAM_NBSLICES = 0;
-        for(ii = 0; ii < xsize * ysize; ii++)
+        for(unsigned int ii = 0; ii < xsize * ysize; ii++) {
             if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].array.UI16[ii] > aoloopcontrol_var.PIXSTREAM_NBSLICES) {
                 aoloopcontrol_var.PIXSTREAM_NBSLICES = data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex].array.UI16[ii];
             }
+		}
         aoloopcontrol_var.PIXSTREAM_NBSLICES++;
         printf("PIXEL STREAMING:   %d image slices\n", aoloopcontrol_var.PIXSTREAM_NBSLICES);
     }
@@ -813,8 +809,6 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
     //    if(AOconf[loop].init_CM==0)
     if(aoloopcontrol_var.init_CM_local == 0) {
-        char msgstring[200];
-
         printf("ERROR: CANNOT RUN LOOP WITHOUT CONTROL MATRIX\n");
         printf("aoloopcontrol_var.init_CM_local = 0\n");
         printf("FILE %s  line %d\n", __FILE__, __LINE__);
@@ -978,7 +972,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
                     if(AOconf[loop].aorun.DMprimaryWriteON == 1) { // if Writing to DM
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
 
-                        for(ii = 0; ii < AOconf[loop].DMctrl.sizeDM; ii++) { //TEST
+                        for(unsigned long ii = 0; ii < AOconf[loop].DMctrl.sizeDM; ii++) { //TEST
                             if(isnan(data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii]) != 0) {
                                 printf("image aol2_meas_act  element %ld is NAN -> replacing by 0\n", ii);
                                 data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii] = 0.0;
@@ -994,7 +988,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
 
                         if(doComputation == 1) {
-                            for(ii = 0; ii < AOconf[loop].DMctrl.sizeDM; ii++) {
+                            for(unsigned long ii = 0; ii < AOconf[loop].DMctrl.sizeDM; ii++) {
                                 data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] -= AOconf[loop].aorun.gain * data.image[aoloopcontrol_var.aoconfID_meas_act].array.F[ii];
 
                                 data.image[aoloopcontrol_var.aoconfID_dmC].array.F[ii] *= AOconf[loop].aorun.mult;
@@ -1061,7 +1055,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
 
                 tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
                 tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
-                double tdiffv02 = tdiffv;
+                //double tdiffv02 = tdiffv;
                 //TEST TIMING
                 /*
                 if(tdiffv > 30.0e-6)
@@ -1108,7 +1102,7 @@ int_fast8_t __attribute__((hot)) AOloopControl_aorun() {
     // LOG function end
     CORE_logFunctionCall(logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 

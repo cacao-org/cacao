@@ -5,8 +5,6 @@
  * REAL TIME COMPUTING ROUTINES
  *  
  * 
- * @bug No known bugs.
- * 
  */
  
  
@@ -30,7 +28,7 @@ extern AOloopControl_var aoloopcontrol_var;
 /** @name AOloopControl - 8.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING                     */
 /* =============================================================================================== */
 
-int_fast8_t AOloopControl_AUTOTUNE_LIMITS_on()
+errno_t AOloopControl_AUTOTUNE_LIMITS_on()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -38,12 +36,12 @@ int_fast8_t AOloopControl_AUTOTUNE_LIMITS_on()
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_ON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
-int_fast8_t AOloopControl_AUTOTUNE_LIMITS_off()
+errno_t AOloopControl_AUTOTUNE_LIMITS_off()
 {
 	int block;
 	int NBblock;
@@ -86,13 +84,13 @@ int_fast8_t AOloopControl_AUTOTUNE_LIMITS_off()
 			fclose(fp);
 		}
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta)
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -100,12 +98,12 @@ int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta)
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_delta = AUTOTUNE_LIMITS_delta;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
-int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc)
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -113,10 +111,10 @@ int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc)
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_perc = AUTOTUNE_LIMITS_perc;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
-int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff)
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -124,10 +122,10 @@ int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoef
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_mcoeff = AUTOTUNE_LIMITS_mcoeff;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
-int_fast8_t AOloopControl_AUTOTUNE_GAINS_on()
+errno_t AOloopControl_AUTOTUNE_GAINS_on()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -135,11 +133,11 @@ int_fast8_t AOloopControl_AUTOTUNE_GAINS_on()
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_GAINS_ON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_AUTOTUNE_GAINS_off()
+errno_t AOloopControl_AUTOTUNE_GAINS_off()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -147,5 +145,5 @@ int_fast8_t AOloopControl_AUTOTUNE_GAINS_off()
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_GAINS_ON = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }

@@ -4,18 +4,19 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- * @bug No known bugs.
  * 
  */
  
  
 #define _GNU_SOURCE
 
-#include "CommandLineInterface/CLIcore.h"
-#include "AOloopControl/AOloopControl.h"
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+
+#include "CommandLineInterface/CLIcore.h"
+#include "AOloopControl/AOloopControl.h"
+
 #include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_arith/COREMOD_arith.h"
@@ -36,7 +37,9 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-int_fast8_t AOloopControl_setgain(float gain)
+errno_t AOloopControl_setgain(
+    float gain
+)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -44,11 +47,13 @@ int_fast8_t AOloopControl_setgain(float gain)
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.gain = gain;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_setARPFgain(float gain)
+errno_t AOloopControl_setARPFgain(
+    float gain
+)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -56,11 +61,13 @@ int_fast8_t AOloopControl_setARPFgain(float gain)
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFgain = gain;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_setARPFgainAutoMin(float val)
+errno_t AOloopControl_setARPFgainAutoMin(
+    float val
+)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -68,10 +75,12 @@ int_fast8_t AOloopControl_setARPFgainAutoMin(float val)
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFgainAutoMin = val;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
-int_fast8_t AOloopControl_setARPFgainAutoMax(float val)
+errno_t AOloopControl_setARPFgainAutoMax(
+    float val
+)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -79,13 +88,15 @@ int_fast8_t AOloopControl_setARPFgainAutoMax(float val)
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFgainAutoMax = val;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
-int_fast8_t AOloopControl_setWFSnormfloor(float WFSnormfloor)
+errno_t AOloopControl_setWFSnormfloor(
+    float WFSnormfloor
+)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -97,11 +108,13 @@ int_fast8_t AOloopControl_setWFSnormfloor(float WFSnormfloor)
     printf("DONE ...\n");
     fflush(stdout);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_setmaxlimit(float maxlimit)
+errno_t AOloopControl_setmaxlimit(
+    float maxlimit
+)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -109,11 +122,13 @@ int_fast8_t AOloopControl_setmaxlimit(float maxlimit)
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.maxlimit = maxlimit;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_setmult(float multcoeff)
+errno_t AOloopControl_setmult(
+    float multcoeff
+)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -121,14 +136,19 @@ int_fast8_t AOloopControl_setmult(float multcoeff)
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.mult = multcoeff;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
 
 
-int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
+errno_t AOloopControl_set_modeblock_gain(
+    long loop,
+    long blocknb,
+    float gain,
+    int add
+)
 {
     long IDcontrM0; // local storage
     char name2[200];
@@ -146,7 +166,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
         fflush(stdout);
     }
     else*/
-     
+
     if (AOconf[loop].AOpmodecoeffs.DMmodesNBblock<2)
     {
         if(sprintf(name2, "aol%ld_contrMc00", loop) < 1)
@@ -175,10 +195,10 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
     }
     else
     {
-		long kk;
-	    char name[200];
-	    long NBmodes = 0;
-        
+        long kk;
+        char name[200];
+        long NBmodes = 0;
+
         for(kk=0; kk<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; kk++)
             NBmodes += AOconf[loop].AOpmodecoeffs.NBmodes_block[kk];
 
@@ -194,10 +214,10 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
 
         if(add==1)
         {
-			long IDcontrMc0; // local storage
-			long IDcontrMcact0; // local storage			
-			
-			
+            long IDcontrMc0; // local storage
+            long IDcontrMcact0; // local storage
+
+
             IDcontrMc0 = image_ID("contrMc0");
             if(IDcontrMc0==-1)
                 IDcontrMc0 = create_3Dimage_ID("contrMc0", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM);
@@ -214,9 +234,9 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
 
             for(kk=0; kk<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; kk++)
             {
-			    double eps=1e-6;
-				
-				
+                double eps=1e-6;
+
+
                 if(sprintf(name2, "aol%ld_contrMc%02ld", loop, kk) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
@@ -225,7 +245,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
 
                 printf("Adding %4ld / %4ld  (%5.3f)   %s   [%ld]\n", kk, AOconf[loop].AOpmodecoeffs.DMmodesNBblock, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk], name, aoloopcontrol_var.aoconfID_gainb);
 
-                
+
 
                 //printf("updating %ld modes  [%ld]\n", data.image[ID].md[0].size[2], aoloopcontrol_var.aoconfID_gainb);
                 //	fflush(stdout); // TEST
@@ -234,8 +254,8 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
 
                 if(data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk]>eps)
                 {
-					long ii;
-					
+                    long ii;
+
                     ID = image_ID(name2);
 # ifdef _OPENMP
                     #pragma omp parallel for
@@ -258,8 +278,8 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
             data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 1;
             memcpy(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F, data.image[IDcontrMc0].array.F, sizeof(float)*AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM);
             data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt0++;
-			data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
-			data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 0;
+            data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 = AOconf[loop].aorun.LOOPiteration;
+            data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].write = 0;
 
 
             // for GPU mode
@@ -274,7 +294,7 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
         }
     }
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
@@ -283,7 +303,13 @@ int_fast8_t AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain
 
 
 
-int_fast8_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainStart, float gainEnd, long NBgain)
+errno_t AOloopControl_scanGainBlock(
+    long NBblock,
+    long NBstep,
+    float gainStart,
+    float gainEnd,
+    long NBgain
+)
 {
     long k, kg;
     float bestgain= 0.0;
@@ -296,8 +322,8 @@ int_fast8_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainSta
 
     if(aoloopcontrol_var.aoconfID_cmd_modes==-1)
     {
-		char name[200];
-		    
+        char name[200];
+
         if(sprintf(name, "aol%ld_DMmode_cmd", aoloopcontrol_var.LOOPNUMBER) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
@@ -309,9 +335,9 @@ int_fast8_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainSta
 
     for(kg=0; kg<NBgain; kg++)
     {
-	    float gain;
-		float val;
-		
+        float gain;
+        float val;
+
         for(k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
 
@@ -331,6 +357,6 @@ int_fast8_t AOloopControl_scanGainBlock(long NBblock, long NBstep, float gainSta
 
     AOloopControl_setgainblock(NBblock, bestgain);
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 

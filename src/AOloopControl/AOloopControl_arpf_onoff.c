@@ -4,9 +4,6 @@
  * 
  * REAL TIME COMPUTING ROUTINES
  *  
- *
- * 
- * @bug No known bugs.
  * 
  */
  
@@ -14,13 +11,14 @@
 #define _GNU_SOURCE
 
 #include "CommandLineInterface/CLIcore.h"
-#include "AOloopControl/AOloopControl.h"
+
 #include "00CORE/00CORE.h"
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
+#include "AOloopControl/AOloopControl.h"
 
 
 // defined in AOloopControl.c
@@ -32,7 +30,7 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
-int_fast8_t AOloopControl_ARPFon()
+errno_t AOloopControl_ARPFon()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -40,11 +38,11 @@ int_fast8_t AOloopControl_ARPFon()
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFon = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_ARPFoff()
+errno_t AOloopControl_ARPFoff()
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
@@ -52,5 +50,5 @@ int_fast8_t AOloopControl_ARPFoff()
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFon = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    return 0;
+    return RETURN_SUCCESS;
 }

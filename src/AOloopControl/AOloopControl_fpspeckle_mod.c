@@ -6,8 +6,6 @@
  *  
  *
  * 
- * @bug No known bugs.
- * 
  */
  
  
@@ -34,12 +32,18 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 // optimize LO - uses simulated downhill simplex
-int_fast8_t AOloopControl_OptimizePSF_LO(const char *psfstream_name, const char *IDmodes_name, const char *dmstream_name, long delayframe, long NBframes)
+errno_t AOloopControl_OptimizePSF_LO(
+    const char *psfstream_name,
+    const char *IDmodes_name,
+    const char *dmstream_name,
+    long        delayframe,
+    long        NBframes
+)
 {
-    long IDmodes;
-    long IDdmstream;
-    long IDdm;
-//    long psfxsize, psfysize;
+    imageID IDmodes;
+    imageID IDdmstream;
+    imageID IDdm;
+    //    long psfxsize, psfysize;
     long dmxsize, dmysize;
     long NBmodes;
     long mode;
@@ -47,12 +51,12 @@ int_fast8_t AOloopControl_OptimizePSF_LO(const char *psfstream_name, const char 
     double x;
     long ii, jj;
 
-    long IDdmbest;
-    long IDpsfarray;
+    imageID IDdmbest;
+    imageID IDpsfarray;
 
-	char imname[200];
-	
-	
+    char imname[200];
+
+
 	if(aoloopcontrol_var.aoconfID_looptiming == -1)
 	{
 		// LOOPiteration is written in cnt1 of loop timing array
@@ -103,7 +107,7 @@ int_fast8_t AOloopControl_OptimizePSF_LO(const char *psfstream_name, const char 
     }
 
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
@@ -113,27 +117,35 @@ int_fast8_t AOloopControl_OptimizePSF_LO(const char *psfstream_name, const char 
 //
 // delay is in sec
 //
-int_fast8_t AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes)
+errno_t AOloopControl_DMmodulateAB(
+    const char *IDprobeA_name,
+    const char *IDprobeB_name,
+    const char *IDdmstream_name,
+    const char *IDrespmat_name,
+    const char *IDwfsrefstream_name,
+    double      delay,
+    long        NBprobes
+)
 {
-    long IDprobeA;
-    long IDprobeB;
-    long dmxsize, dmysize;
-    long dmsize;
-    long IDdmstream;
+    imageID IDprobeA;
+    imageID IDprobeB;
+    long    dmxsize, dmysize;
+    long    dmsize;
+    imageID IDdmstream;
 
-    long IDrespmat;
-    long IDwfsrefstream;
-    long wfsxsize, wfsysize;
-    long wfssize;
+    imageID IDrespmat;
+    imageID IDwfsrefstream;
+    long    wfsxsize, wfsysize;
+    long    wfssize;
 
-    long IDdmC;
-    long IDwfsrefC;
+    imageID IDdmC;
+    imageID IDwfsrefC;
 
     float *coeffA;
     float *coeffB;
     int k;
     long act, wfselem;
-    
+
     char imname[200];
 
     FILE *fp;
@@ -337,7 +349,7 @@ int_fast8_t AOloopControl_DMmodulateAB(const char *IDprobeA_name, const char *ID
     free(coeffB);
 
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
