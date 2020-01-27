@@ -27,7 +27,6 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_blas.h>
 #include <pthread.h>
-#include "info/info.h" 
 
 
 #include "ImageStreamIO/ImageStreamIO.h"
@@ -38,6 +37,7 @@
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
+#include "info/info.h" 
 
 
 

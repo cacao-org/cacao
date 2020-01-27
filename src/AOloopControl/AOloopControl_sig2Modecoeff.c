@@ -29,7 +29,6 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_blas.h>
 #include <pthread.h>
-#include "info/info.h" 
 
 //libraries created by O. Guyon 
 #include "CommandLineInterface/CLIcore.h"
@@ -38,6 +37,7 @@
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
+#include "info/info.h" 
 
 
 
