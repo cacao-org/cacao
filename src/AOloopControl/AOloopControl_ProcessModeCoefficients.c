@@ -27,10 +27,6 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_blas.h>
 #include <pthread.h>
-<<<<<<< HEAD
-
-=======
->>>>>>> 57f16ee161930ce2b582dd46c49a7fd34883bbad
 
 
 #include "ImageStreamIO/ImageStreamIO.h"
