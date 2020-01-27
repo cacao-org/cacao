@@ -85,12 +85,17 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
 
-int_fast8_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname, long delayus, long NBpts, float ampl)
+errno_t AOcontrolLoop_perfTest_TestDMSpeed(
+    const char *dmname,
+    long delayus,
+    long NBpts,
+    float ampl
+)
 {
-    long IDdm;
+    imageID IDdm;
     long dmxsize, dmysize, dmsize;
     long ii, jj, kk;
-    long ID1;
+    imageID ID1;
     float x, y, x1;
     char *ptr;
 
@@ -108,8 +113,8 @@ int_fast8_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname, long delayus,
     ID1 = create_3Dimage_ID("dmpokeseq", dmxsize, dmysize, NBpts);
     for(kk=0; kk<NBpts; kk++)
     {
-		float pha;
-		
+        float pha;
+
         pha = 2.0*M_PI*kk/NBpts;
         for(ii=0; ii<dmxsize; ii++)
             for(jj=0; jj<dmysize; jj++)
@@ -135,24 +140,37 @@ int_fast8_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname, long delayus,
         }
     }
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
 //
 // Measures mode temporal response (measurement and rejection)
 //
-long AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name, long index, float ampl, float fmin, float fmax, float fmultstep, float avetime, long dtus, const char *DMmask_name, const char *DMstream_in_name, const char *DMstream_out_name, const char *IDout_name)
+imageID AOloopControl_perfTest_TestDMmodeResp(
+    const char *DMmodes_name,
+    long index,
+    float ampl,
+    float fmin,
+    float fmax,
+    float fmultstep,
+    float avetime,
+    long dtus,
+    const char *DMmask_name,
+    const char *DMstream_in_name,
+    const char *DMstream_out_name,
+    const char *IDout_name
+)
 {
-    long IDout;
-    long IDmodes, IDdmmask, IDdmin, IDdmout;
+    imageID IDout;
+    imageID IDmodes, IDdmmask, IDdmin, IDdmout;
     long dmxsize, dmysize, dmsize, NBmodes;
     float f;
     struct timespec tstart;
     long nbf;
     long IDrec_dmout;
     long ii, kk, kmax;
-    long IDdmtmp;
+    imageID IDdmtmp;
     float pha, coeff;
     float *timearray;
     char *ptr;
@@ -164,7 +182,7 @@ long AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name, long index,
     FILE *fp;
     char fname[200];
     long kmaxmax = 100000;
-    long ID;
+    imageID ID;
 
 
     kk = index;
@@ -182,37 +200,43 @@ long AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name, long index,
 
     if(data.image[IDdmin].md[0].size[0]!=data.image[IDmodes].md[0].size[0])
     {
-        printf("ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" (%ld)\n", DMstream_in_name, (long) data.image[IDdmin].md[0].size[0], DMmodes_name, (long) data.image[IDmodes].md[0].size[0]);
+        printf("ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" (%ld)\n", 
+        DMstream_in_name, (long) data.image[IDdmin].md[0].size[0], DMmodes_name, (long) data.image[IDmodes].md[0].size[0]);
         exit(0);
     }
 
     if(data.image[IDdmin].md[0].size[1]!=data.image[IDmodes].md[0].size[1])
     {
-        printf("ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" (%ld)\n", DMstream_in_name, (long) data.image[IDdmin].md[0].size[1], DMmodes_name, (long) data.image[IDmodes].md[0].size[1]);
+        printf("ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" (%ld)\n", 
+        DMstream_in_name, (long) data.image[IDdmin].md[0].size[1], DMmodes_name, (long) data.image[IDmodes].md[0].size[1]);
         exit(0);
     }
 
     if(data.image[IDdmout].md[0].size[0]!=data.image[IDmodes].md[0].size[0])
     {
-        printf("ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" (%ld)\n", DMstream_out_name, (long) data.image[IDdmout].md[0].size[0], DMmodes_name, (long) data.image[IDmodes].md[0].size[0]);
+        printf("ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" (%ld)\n", 
+        DMstream_out_name, (long) data.image[IDdmout].md[0].size[0], DMmodes_name, (long) data.image[IDmodes].md[0].size[0]);
         exit(0);
     }
 
     if(data.image[IDdmout].md[0].size[1]!=data.image[IDmodes].md[0].size[1])
     {
-        printf("ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" (%ld)\n", DMstream_out_name, (long) data.image[IDdmout].md[0].size[1], DMmodes_name, (long) data.image[IDmodes].md[0].size[1]);
+        printf("ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" (%ld)\n", 
+        DMstream_out_name, (long) data.image[IDdmout].md[0].size[1], DMmodes_name, (long) data.image[IDmodes].md[0].size[1]);
         exit(0);
     }
 
     if(data.image[IDdmmask].md[0].size[0]!=data.image[IDmodes].md[0].size[0])
     {
-        printf("ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" (%ld)\n", DMmask_name, (long) data.image[IDdmmask].md[0].size[0], DMmodes_name, (long) data.image[IDmodes].md[0].size[0]);
+        printf("ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" (%ld)\n", 
+        DMmask_name, (long) data.image[IDdmmask].md[0].size[0], DMmodes_name, (long) data.image[IDmodes].md[0].size[0]);
         exit(0);
     }
 
     if(data.image[IDdmmask].md[0].size[1]!=data.image[IDmodes].md[0].size[1])
     {
-        printf("ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" (%ld)\n", DMmask_name, (long) data.image[IDdmmask].md[0].size[1], DMmodes_name, (long) data.image[IDmodes].md[0].size[1]);
+        printf("ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" (%ld)\n", 
+        DMmask_name, (long) data.image[IDdmmask].md[0].size[1], DMmodes_name, (long) data.image[IDmodes].md[0].size[1]);
         exit(0);
     }
 
@@ -362,19 +386,32 @@ long AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name, long index,
 
 
 
-long AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name, float ampl, const char *DMmask_name, const char *DMstream_in_name, const char *DMstream_out_name, const char *DMstream_meas_name, long tlagus, long NBave, const char *IDout_name, const char *IDoutrms_name, const char *IDoutmeas_name, const char *IDoutmeasrms_name)
+imageID AOloopControl_perfTest_TestDMmodes_Recovery(
+    const char *DMmodes_name,
+    float ampl,
+    const char *DMmask_name,
+    const char *DMstream_in_name,
+    const char *DMstream_out_name,
+    const char *DMstream_meas_name,
+    long tlagus,
+    long NBave,
+    const char *IDout_name,
+    const char *IDoutrms_name,
+    const char *IDoutmeas_name,
+    const char *IDoutmeasrms_name
+)
 {
-    long IDout, IDoutrms, IDoutmeas, IDoutmeasrms;
-    long IDmodes, IDdmmask, IDdmin, IDmeasout, IDdmout;
-    long dmxsize, dmysize, dmsize, NBmodes;
-    long kk;
-    long IDdmtmp, IDmeastmp;
-    int SVDreuse = 0;
-    float SVDeps = 1.0e-3;
-    long IDcoeffarray;
-    long IDcoeffarraymeas;
-    long IDcoeff;
-    long ii, kk1;
+    imageID IDout, IDoutrms, IDoutmeas, IDoutmeasrms;
+    imageID IDmodes, IDdmmask, IDdmin, IDmeasout, IDdmout;
+    long    dmxsize, dmysize, dmsize, NBmodes;
+    long    kk;
+    imageID IDdmtmp, IDmeastmp;
+    int     SVDreuse = 0;
+    float   SVDeps = 1.0e-3;
+    imageID IDcoeffarray;
+    imageID IDcoeffarraymeas;
+    imageID IDcoeff;
+    long    ii, kk1;
 
 
     IDmodes = image_ID(DMmodes_name);
@@ -462,9 +499,9 @@ long AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name, float
 
     for(kk=0; kk<NBmodes; kk++)
     {
-		long cntdmout;
-		long i;
-		
+        long cntdmout;
+        long i;
+
         printf("\r Mode %5ld / %5ld       ", kk, NBmodes);
         fflush(stdout);
 

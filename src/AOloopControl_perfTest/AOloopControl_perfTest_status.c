@@ -21,7 +21,6 @@
 //#define _PRINT_TEST
 
 
-
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                        HEADER FILES                                             */
@@ -64,8 +63,8 @@
 static int wcol, wrow; // window size
 
 // TIMING
-static struct timespec tnow;
-static struct timespec tdiff;
+//static struct timespec tnow;
+//static struct timespec tdiff;
 
 
 
@@ -95,23 +94,30 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
 
-int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long IDmodeval_dm, long IDmodeval, long IDmodevalave, long IDmodevalrms, long ksize)
+errno_t AOloopControl_perfTest_printloopstatus(
+    long    loop,
+    long    nbcol,
+    __attribute__((unused)) imageID IDmodeval_dm,
+    __attribute__((unused)) imageID IDmodeval,
+    __attribute__((unused)) imageID IDmodevalave,
+    __attribute__((unused)) imageID IDmodevalrms,
+    __attribute__((unused)) long    ksize
+)
 {
-    long k, kmin, kmax;
-    long col;
-//    long nbl = 1;
-    float AVElim = 0.01; // [um]
-    float RMSlim = 0.01; // [um]
+    long kmin, kmax;
+    //long col;
+    //    long nbl = 1;
+    //float AVElim = 0.01; // [um]
+    //float RMSlim = 0.01; // [um]
     char imname[200];
-	float ratio0, ratio;
-	int color;
+    float ratio0, ratio;
+    int color;
     long IDblknb;
     long block;
-    float valPFres, valOL, valWFS;
-	long m;
-	uint32_t *sizeout;
-	float ARPFgainAutob[100];
-	float ARPFgainAutob_tot[100];
+//    float valPFres, valOL, valWFS;
+    uint32_t *sizeout;
+    float ARPFgainAutob[100];
+    float ARPFgainAutob_tot[100];
 
 
     printw("    loop number %ld    ", loop);
@@ -121,8 +127,8 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("loop is ON     ");
     else
         printw("loop is OFF    ");
-        
-     printw(" [%12lu]", AOconf[loop].aorun.LOOPiteration);
+
+    printw(" [%12lu]", AOconf[loop].aorun.LOOPiteration);
 
     /*  if(AOconf[loop].logon == 1)
           printw("log is ON   ");
@@ -140,43 +146,43 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
     if(IDblknb==-1)
         IDblknb = read_sharedmem_image(imname);
 
-	
-	if(AOconf[loop].aorun.ARPFon==1)
-	{
-		if(aoloopcontrol_var.aoconfID_modeARPFgainAuto == -1)
-		{
-			// multiplicative auto ratio on top of gain above
-			sizeout = (uint32_t*) malloc(sizeof(uint32_t)*2);
-			sizeout[0] = AOconf[loop].AOpmodecoeffs.NBDMmodes;
-			sizeout[1] = 1;
-		
-			if(sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1) 
-				printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-			aoloopcontrol_var.aoconfID_modeARPFgainAuto = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
-			COREMOD_MEMORY_image_set_createsem(imname, 10);
-			// initialize the gain to zero for all modes
-			for(m=0;m<AOconf[loop].AOpmodecoeffs.NBDMmodes; m++)
-				data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = 1.0;
-			free(sizeout);
-		}
-		
-		for(k=0; k<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
-			{
-				ARPFgainAutob[k] = 0.0;
-				ARPFgainAutob_tot[k] = 0.0;
-			}
-		
-		for(m=0; m<AOconf[loop].AOpmodecoeffs.NBDMmodes; m++)
-		{
+
+    if(AOconf[loop].aorun.ARPFon==1)
+    {
+        if(aoloopcontrol_var.aoconfID_modeARPFgainAuto == -1)
+        {
+            // multiplicative auto ratio on top of gain above
+            sizeout = (uint32_t*) malloc(sizeof(uint32_t)*2);
+            sizeout[0] = AOconf[loop].AOpmodecoeffs.NBDMmodes;
+            sizeout[1] = 1;
+
+            if(sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1)
+                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            aoloopcontrol_var.aoconfID_modeARPFgainAuto = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
+            COREMOD_MEMORY_image_set_createsem(imname, 10);
+            // initialize the gain to zero for all modes
+            for(unsigned int m=0; m<AOconf[loop].AOpmodecoeffs.NBDMmodes; m++)
+                data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] = 1.0;
+            free(sizeout);
+        }
+
+        for(unsigned int k=0; k<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
+        {
+            ARPFgainAutob[k] = 0.0;
+            ARPFgainAutob_tot[k] = 0.0;
+        }
+
+        for(unsigned int m=0; m<AOconf[loop].AOpmodecoeffs.NBDMmodes; m++)
+        {
             block = data.image[IDblknb].array.UI16[m];
-			ARPFgainAutob[block] += data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m];
-			ARPFgainAutob_tot[block] += 1.0;
-		}
-		
-		for(k=0; k<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
-			ARPFgainAutob[k] /= ARPFgainAutob_tot[k];	
-	}
-	
+            ARPFgainAutob[block] += data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m];
+            ARPFgainAutob_tot[block] += 1.0;
+        }
+
+        for(unsigned int k=0; k<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
+            ARPFgainAutob[k] /= ARPFgainAutob_tot[k];
+    }
+
 
 
     if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
@@ -192,24 +198,24 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
     kmax = (wrow-28)*(nbcol);
 
-	printw("WFS IMAGE TOTAL = %10f -> AVE = %10.3f\n", AOconf[loop].WFSim.WFStotalflux, AOconf[loop].WFSim.WFStotalflux/AOconf[loop].WFSim.sizeWFS);
+    printw("WFS IMAGE TOTAL = %10f -> AVE = %10.3f\n", AOconf[loop].WFSim.WFStotalflux, AOconf[loop].WFSim.WFStotalflux/AOconf[loop].WFSim.sizeWFS);
     printw("    Gain = %5.3f   maxlim = %5.3f     GPU = %d    kmax=%ld\n", AOconf[loop].aorun.gain, AOconf[loop].aorun.maxlimit, AOconf[loop].AOcompute.GPU0, kmax);
-   
-    printw("    DMprimWrite = %d   Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE LIM = %d (perc = %.2f %%  delta = %.3f nm mcoeff=%4.2f) GAIN = %d\n", 
-		AOconf[loop].aorun.DMprimaryWriteON, 
-		AOconf[loop].aorun.ARPFon, 
-		AOconf[loop].aorun.ARPFgain, 
-		AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_ON, 
-		AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_perc, 
-		1000.0*AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta, 
-		AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_mcoeff, 
-		AOconf[loop].AOAutoTune.AUTOTUNE_GAINS_ON);
-    
-    printw(" TIMIMNG :  lfr = %9.3f Hz    hw lat = %5.3f fr   comp lat = %5.3f fr  wfs extr lat = %5.3f fr\n", 
-		AOconf[loop].AOtiminginfo.loopfrequ, 
-		AOconf[loop].AOtiminginfo.hardwlatency_frame, 
-		AOconf[loop].AOtiminginfo.complatency_frame, 
-		AOconf[loop].AOtiminginfo.wfsmextrlatency_frame);
+
+    printw("    DMprimWrite = %d   Predictive control state: %d        ARPF gain = %5.3f   AUTOTUNE LIM = %d (perc = %.2f %%  delta = %.3f nm mcoeff=%4.2f) GAIN = %d\n",
+           AOconf[loop].aorun.DMprimaryWriteON,
+           AOconf[loop].aorun.ARPFon,
+           AOconf[loop].aorun.ARPFgain,
+           AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_ON,
+           AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_perc,
+           1000.0*AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta,
+           AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_mcoeff,
+           AOconf[loop].AOAutoTune.AUTOTUNE_GAINS_ON);
+
+    printw(" TIMIMNG :  lfr = %9.3f Hz    hw lat = %5.3f fr   comp lat = %5.3f fr  wfs extr lat = %5.3f fr\n",
+           AOconf[loop].AOtiminginfo.loopfrequ,
+           AOconf[loop].AOtiminginfo.hardwlatency_frame,
+           AOconf[loop].AOtiminginfo.complatency_frame,
+           AOconf[loop].AOtiminginfo.wfsmextrlatency_frame);
     printw("loop iteration CNT : %lld   ", AOconf[loop].aorun.cnt);
     printw("\n");
 
@@ -218,17 +224,17 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
 
     printw("=========== %6ld modes, %3ld blocks ================|------------ Telemetry [nm] ----------------|    |     LIMITS         |", AOconf[loop].AOpmodecoeffs.NBDMmodes, AOconf[loop].AOpmodecoeffs.DMmodesNBblock);
-	if(AOconf[loop].aorun.ARPFon == 1)
-		printw("---- Predictive Control ----- |");
-	printw("\n");
+    if(AOconf[loop].aorun.ARPFon == 1)
+        printw("---- Predictive Control ----- |");
+    printw("\n");
 
     printw("BLOCK  #modes [ min - max ]    gain   limit   multf  |       dmC  Input[OL] ->    WFS[CL]  Ratio  |    | hits/step    perc  |");
-	if(AOconf[loop].aorun.ARPFon==1)
-		printw("  PFres  |  Ratio | PFautog |");
-	printw("\n");
-	printw("\n");
+    if(AOconf[loop].aorun.ARPFon==1)
+        printw("  PFres  |  Ratio | PFautog |");
+    printw("\n");
+    printw("\n");
 
-    for(k=0; k<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
+    for(unsigned int k=0; k<AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
     {
         if(k==0)
             kmin = 0;
@@ -239,125 +245,125 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
         printw("%3ld", k);
         attroff(A_BOLD);
 
-        printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f", 
-			AOconf[loop].AOpmodecoeffs.NBmodes_block[k], 
-			kmin, 
-			AOconf[loop].AOpmodecoeffs.indexmaxMB[k]-1, 
-			data.image[aoloopcontrol_var.aoconfID_gainb].array.F[k], 
-			data.image[aoloopcontrol_var.aoconfID_limitb].array.F[k], 
-			data.image[aoloopcontrol_var.aoconfID_multfb].array.F[k]);
-        
-        
-        printw("  |  %8.2f  %8.2f  ->  %8.2f", 
-			1000.0*(AOconf[loop].AOpmodecoeffs.blockave_Crms[k]), 
-			1000.0*AOconf[loop].AOpmodecoeffs.blockave_OLrms[k], 
-			1000.0*AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]);
-		
+        printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f",
+               AOconf[loop].AOpmodecoeffs.NBmodes_block[k],
+               kmin,
+               AOconf[loop].AOpmodecoeffs.indexmaxMB[k]-1,
+               data.image[aoloopcontrol_var.aoconfID_gainb].array.F[k],
+               data.image[aoloopcontrol_var.aoconfID_limitb].array.F[k],
+               data.image[aoloopcontrol_var.aoconfID_multfb].array.F[k]);
 
-		
-       
+
+        printw("  |  %8.2f  %8.2f  ->  %8.2f",
+               1000.0*(AOconf[loop].AOpmodecoeffs.blockave_Crms[k]),
+               1000.0*AOconf[loop].AOpmodecoeffs.blockave_OLrms[k],
+               1000.0*AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]);
+
+
+
+
         ratio0 = AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]/AOconf[loop].AOpmodecoeffs.blockave_OLrms[k];
-		if(ratio0>0.999)
-			color=2;
-		else
-			color=3;
-			
-		attron(A_BOLD | COLOR_PAIR(color));
+        if(ratio0>0.999)
+            color=2;
+        else
+            color=3;
+
+        attron(A_BOLD | COLOR_PAIR(color));
         printw("   %5.3f  ", ratio0);
         attroff(A_BOLD | COLOR_PAIR(color));
 
         if( AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01 )
             attron(A_BOLD | COLOR_PAIR(2));
 
-        printw("| %2ld | %9.3f  %6.2f\% |", 
-			k, 
-			AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  
-			100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
+        printw("| %2ld | %9.3f  %6.2f\% |",
+               k,
+               AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],
+               100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
         attroff(A_BOLD | COLOR_PAIR(2));
-        
-        
+
+
         //
-		// PREDICTIVE CONTROL
-		//
-        if(AOconf[loop].aorun.ARPFon==1){
-			printw("%8.2f |", 1000.0*AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]);
-			
-			
-			ratio = AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]/AOconf[loop].AOpmodecoeffs.blockave_OLrms[k];
-			color = 0;
-			if(ratio>1.0)
-				color=2;
-			if(ratio<ratio0)
-				color=3;
-				
-			attron(A_BOLD | COLOR_PAIR(color));
-			printw("  %5.3f |", ratio);
-			attroff(A_BOLD | COLOR_PAIR(color));
-			
-			printw(" %6.4f", ARPFgainAutob[k]);
-		}
-	
+        // PREDICTIVE CONTROL
+        //
+        if(AOconf[loop].aorun.ARPFon==1) {
+            printw("%8.2f |", 1000.0*AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]);
 
 
-		
-		// WFS noise corrected	
-	/*
-		printw("\n");
-		
-		
-		
-		printw("          WFS noise removed ------->               ");
-		
-		valOL = AOconf[loop].AOpmodecoeffs.blockave_OLrms[k]*AOconf[loop].AOpmodecoeffs.blockave_OLrms[k] - AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k];
-		if(valOL>0.0)
-			valOL = sqrt(valOL);
-		else
-			valOL = 0.0;
-		
-		valWFS = AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k] - AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k];
-		if(valWFS>0.0)
-			valWFS = sqrt(valWFS);
-		else
-			valWFS = 0.0;
-			
-		printw("  |            %8.2f  ->  %8.2f", 1000.0*valOL, 1000.0*valWFS);
-		ratio0 = valWFS/valOL;
-		if(ratio0>0.999)
-			color=2;
-		else
-			color=3;
-			
-		attron(A_BOLD | COLOR_PAIR(color));
-        printw("   %5.3f  ", ratio0);
-        attroff(A_BOLD | COLOR_PAIR(color));
+            ratio = AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]/AOconf[loop].AOpmodecoeffs.blockave_OLrms[k];
+            color = 0;
+            if(ratio>1.0)
+                color=2;
+            if(ratio<ratio0)
+                color=3;
 
-        if( AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01 )
-            attron(A_BOLD | COLOR_PAIR(2));
+            attron(A_BOLD | COLOR_PAIR(color));
+            printw("  %5.3f |", ratio);
+            attroff(A_BOLD | COLOR_PAIR(color));
 
-        printw("|    |                    |", k, AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
-        attroff(A_BOLD | COLOR_PAIR(2));
-        
-        if(AOconf[loop].aorun.ARPFon==1){
-			valPFres = AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]*AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k] - AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k];
-			if(valPFres>0.0)
-				valPFres = sqrt(valPFres);
-			else
-				valPFres = 0.0;
-			printw("%8.2f |", 1000.0*valPFres);
-			
-			
-			ratio = valPFres/valOL;
-			color = 0;
-			if(ratio>1.0)
-				color=2;
-			if(ratio<ratio0)
-				color=3;
-				
-			attron(A_BOLD | COLOR_PAIR(color));
-			printw("  %5.3f |", ratio);
-			attroff(A_BOLD | COLOR_PAIR(color));
-		}*/
-		printw("\n");
+            printw(" %6.4f", ARPFgainAutob[k]);
+        }
+
+
+
+
+        // WFS noise corrected
+        /*
+        	printw("\n");
+
+
+
+        	printw("          WFS noise removed ------->               ");
+
+        	valOL = AOconf[loop].AOpmodecoeffs.blockave_OLrms[k]*AOconf[loop].AOpmodecoeffs.blockave_OLrms[k] - AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k];
+        	if(valOL>0.0)
+        		valOL = sqrt(valOL);
+        	else
+        		valOL = 0.0;
+
+        	valWFS = AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k] - AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k];
+        	if(valWFS>0.0)
+        		valWFS = sqrt(valWFS);
+        	else
+        		valWFS = 0.0;
+
+        	printw("  |            %8.2f  ->  %8.2f", 1000.0*valOL, 1000.0*valWFS);
+        	ratio0 = valWFS/valOL;
+        	if(ratio0>0.999)
+        		color=2;
+        	else
+        		color=3;
+
+        	attron(A_BOLD | COLOR_PAIR(color));
+            printw("   %5.3f  ", ratio0);
+            attroff(A_BOLD | COLOR_PAIR(color));
+
+            if( AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01 )
+                attron(A_BOLD | COLOR_PAIR(2));
+
+            printw("|    |                    |", k, AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],  100.0*AOconf[loop].AOpmodecoeffs.blockave_limFrac[k]/AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
+            attroff(A_BOLD | COLOR_PAIR(2));
+
+            if(AOconf[loop].aorun.ARPFon==1){
+        		valPFres = AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]*AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k] - AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k]*AOconf[loop].AOpmodecoeffs.blockave_WFSnoise[k];
+        		if(valPFres>0.0)
+        			valPFres = sqrt(valPFres);
+        		else
+        			valPFres = 0.0;
+        		printw("%8.2f |", 1000.0*valPFres);
+
+
+        		ratio = valPFres/valOL;
+        		color = 0;
+        		if(ratio>1.0)
+        			color=2;
+        		if(ratio<ratio0)
+        			color=3;
+
+        		attron(A_BOLD | COLOR_PAIR(color));
+        		printw("  %5.3f |", ratio);
+        		attroff(A_BOLD | COLOR_PAIR(color));
+        	}*/
+        printw("\n");
 
     }
 
@@ -371,7 +377,7 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
     printw("   %5.3f  ", AOconf[loop].AOpmodecoeffs.ALLave_WFSrms/AOconf[loop].AOpmodecoeffs.ALLave_OLrms);
     attroff(A_BOLD);
 
-    printw("| %2ld | %9.3f  %6.2f\% |\n", k, AOconf[loop].AOpmodecoeffs.ALLave_limFrac,  100.0*AOconf[loop].AOpmodecoeffs.ALLave_limFrac/AOconf[loop].AOpmodecoeffs.NBDMmodes);
+    printw("| %2ld | %9.3f  %6.2f\% |\n", 0, AOconf[loop].AOpmodecoeffs.ALLave_limFrac,  100.0*AOconf[loop].AOpmodecoeffs.ALLave_limFrac/AOconf[loop].AOpmodecoeffs.NBDMmodes);
 
     printw("\n");
 
@@ -379,87 +385,87 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
 
 
 
-	// ====================================================================
-	//                    SHOW INDIVIDUAL MODES
-	// ====================================================================
+    // ====================================================================
+    //                    SHOW INDIVIDUAL MODES
+    // ====================================================================
 
-/*
-    print_header(" [ gain 1000xlimit  mult ] MODES [nm]    DM correction -- WFS value -- WFS average -- WFS RMS     ", '-');
+    /*
+        print_header(" [ gain 1000xlimit  mult ] MODES [nm]    DM correction -- WFS value -- WFS average -- WFS RMS     ", '-');
 
 
-    if(kmax>AOconf[loop].AOpmodecoeffs.NBDMmodes)
-        kmax = AOconf[loop].AOpmodecoeffs.NBDMmodes;
+        if(kmax>AOconf[loop].AOpmodecoeffs.NBDMmodes)
+            kmax = AOconf[loop].AOpmodecoeffs.NBDMmodes;
 
-    col = 0;
-    for(k=0; k<kmax; k++)
-    {
-	    float val;
-		
-		
-        attron(A_BOLD);
-        printw("%4ld ", k);
-        attroff(A_BOLD);
-
-        printw("[%5.3f %8.4f %5.3f] ", AOconf[loop].aorun.gain * data.image[aoloopcontrol_var.aoconfID_gainb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k], 1000.0 * data.image[aoloopcontrol_var.aoconfID_limitb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k], AOconf[loop].aorun.mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[k]);
-
-        // print current value on DM
-        val = data.image[IDmodeval_dm].array.F[k];
-        if(fabs(val)>0.99*AOconf[loop].maxlimit)
+        col = 0;
+        for(k=0; k<kmax; k++)
         {
-            attron(A_BOLD | COLOR_PAIR(2));
-            printw("%+8.3f ", 1000.0*val);
-            attroff(A_BOLD | COLOR_PAIR(2));
-        }
-        else
-        {
-            if(fabs(val)>0.99*AOconf[loop].maxlimit*data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k])
+    	    float val;
+
+
+            attron(A_BOLD);
+            printw("%4ld ", k);
+            attroff(A_BOLD);
+
+            printw("[%5.3f %8.4f %5.3f] ", AOconf[loop].aorun.gain * data.image[aoloopcontrol_var.aoconfID_gainb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k], 1000.0 * data.image[aoloopcontrol_var.aoconfID_limitb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k], AOconf[loop].aorun.mult * data.image[aoloopcontrol_var.aoconfID_multfb].array.F[data.image[IDblknb].array.UI16[k]] * data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[k]);
+
+            // print current value on DM
+            val = data.image[IDmodeval_dm].array.F[k];
+            if(fabs(val)>0.99*AOconf[loop].maxlimit)
             {
-                attron(COLOR_PAIR(1));
+                attron(A_BOLD | COLOR_PAIR(2));
                 printw("%+8.3f ", 1000.0*val);
-                attroff(COLOR_PAIR(1));
+                attroff(A_BOLD | COLOR_PAIR(2));
+            }
+            else
+            {
+                if(fabs(val)>0.99*AOconf[loop].maxlimit*data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k])
+                {
+                    attron(COLOR_PAIR(1));
+                    printw("%+8.3f ", 1000.0*val);
+                    attroff(COLOR_PAIR(1));
+                }
+                else
+                    printw("%+8.3f ", 1000.0*val);
+            }
+
+            // last reading from WFS
+            printw("%+8.3f ", 1000.0*data.image[IDmodeval].array.F[k]);
+
+
+            // Time average
+            val = data.image[IDmodevalave].array.F[(ksize-1)*AOconf[loop].AOpmodecoeffs.NBDMmodes+k];
+            if(fabs(val)>AVElim)
+            {
+                attron(A_BOLD | COLOR_PAIR(2));
+                printw("%+8.3f ", 1000.0*val);
+                attroff(A_BOLD | COLOR_PAIR(2));
             }
             else
                 printw("%+8.3f ", 1000.0*val);
+
+
+            // RMS variation
+            val = sqrt(data.image[IDmodevalrms].array.F[(ksize-1)*AOconf[loop].AOpmodecoeffs.NBDMmodes+k]);
+            if(fabs(val)>RMSlim)
+            {
+                attron(A_BOLD | COLOR_PAIR(2));
+                printw("%8.3f ", 1000.0*val);
+                attroff(A_BOLD | COLOR_PAIR(2));
+            }
+            else
+                printw("%8.3f ", 1000.0*val);
+
+            col++;
+            if(col==nbcol)
+            {
+                col = 0;
+                printw("\n");
+            }
+            else
+                printw(" | ");
         }
-
-        // last reading from WFS
-        printw("%+8.3f ", 1000.0*data.image[IDmodeval].array.F[k]);
-
-
-        // Time average
-        val = data.image[IDmodevalave].array.F[(ksize-1)*AOconf[loop].AOpmodecoeffs.NBDMmodes+k];
-        if(fabs(val)>AVElim)
-        {
-            attron(A_BOLD | COLOR_PAIR(2));
-            printw("%+8.3f ", 1000.0*val);
-            attroff(A_BOLD | COLOR_PAIR(2));
-        }
-        else
-            printw("%+8.3f ", 1000.0*val);
-
-
-        // RMS variation
-        val = sqrt(data.image[IDmodevalrms].array.F[(ksize-1)*AOconf[loop].AOpmodecoeffs.NBDMmodes+k]);
-        if(fabs(val)>RMSlim)
-        {
-            attron(A_BOLD | COLOR_PAIR(2));
-            printw("%8.3f ", 1000.0*val);
-            attroff(A_BOLD | COLOR_PAIR(2));
-        }
-        else
-            printw("%8.3f ", 1000.0*val);
-
-        col++;
-        if(col==nbcol)
-        {
-            col = 0;
-            printw("\n");
-        }
-        else
-            printw(" | ");
-    }
-*/
-    return(0);
+    */
+    return RETURN_SUCCESS;
 }
 
 
@@ -477,21 +483,21 @@ int_fast8_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long I
  * 
  */
 
-int_fast8_t AOloopControl_perfTest_loopMonitor(
-	long loop, 
-	double frequ, 
-	long nbcol
+errno_t AOloopControl_perfTest_loopMonitor(
+	long    loop, 
+	double  frequ, 
+	long    nbcol
 	)
 {
     char name[200];
     // DM mode values
-    long IDmodeval_dm;
+    imageID IDmodeval_dm;
 
     // WFS modes values
-    long IDmodeval;
+    imageID IDmodeval;
     long ksize;
-    long IDmodevalave;
-    long IDmodevalrms;
+    imageID IDmodevalave;
+    imageID IDmodevalrms;
     char fname[200];
 
 
@@ -649,7 +655,7 @@ int_fast8_t AOloopControl_perfTest_loopMonitor(
     }
     endwin();
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
@@ -659,7 +665,10 @@ int_fast8_t AOloopControl_perfTest_loopMonitor(
 
 
 // if updateconf=1, update configuration
-int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
+errno_t AOloopControl_perfTest_statusStats(
+    int  updateconf,
+    long NBsample
+)
 {
     long k;
     long statusmax = 21;
@@ -687,9 +696,6 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     char imname[200];
     long long wfsimcnt;
     long long dmCcnt;
-
-    int ret;
-
 
     float loopfrequ_measured, complatency_measured, wfsmextrlatency_measured;
     float complatency_frame_measured, wfsmextrlatency_frame_measured;
@@ -757,7 +763,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     statusMdef[13] = "";
     statusMdef[14] = "";
     statusMdef[15] = "";
-    statusMdef[16] = ""; 
+    statusMdef[16] = "";
     statusMdef[17] = "";
     statusMdef[18] = "";
     statusMdef[19] = "";
@@ -847,22 +853,22 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     clock_gettime(CLOCK_REALTIME, &t1);
     for(k=0; k<NBsample; k++)
     {
-		int stM;
-		int stM1;
-		
+        int stM;
+        int stM1;
+
         usleep((long) (usec0 + usec1*(1.0*k/NBsample)));
         st = AOconf[LOOPNUMBER].AOtiminginfo.status;
         stM = AOconf[LOOPNUMBER].AOtiminginfo.statusM;
         stM1 = AOconf[LOOPNUMBER].AOtiminginfo.statusM1;
-        
+
         if(st<statusmax)
             statuscnt[st]++;
         if(stM<statusmax)
             statusMcnt[stM]++;
-         if(stM1<statusmax)
-            statusM1cnt[stM1]++;       
-        
-        
+        if(stM1<statusmax)
+            statusM1cnt[stM1]++;
+
+
         for(gpu=0; gpu<AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
         {
             // 1st matrix mult
@@ -895,7 +901,7 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     if(updateconf==1)
         AOconf[LOOPNUMBER].AOtiminginfo.loopfrequ = loopfrequ_measured;
 
-	// Primary control matrix computation latency
+    // Primary control matrix computation latency
     complatency_frame_measured = 1.0-1.0*statuscnt[20]/NBsample;
     if(updateconf==1)
         AOconf[LOOPNUMBER].AOtiminginfo.complatency_frame = complatency_frame_measured;
@@ -965,10 +971,10 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
 
     for(st=0; st<statusmax; st++)
-        printf("STATUS %2d     %5.2f %%    [   %6ld  /  %6ld  ]   [ %9.3f us] %s\n", st, 100.0*statuscnt[st]/NBsample, statuscnt[st], NBsample, loopiterus*statuscnt[st]/NBsample , statusdef[st]);
+        printf("STATUS %2d     %5.2f %%    [   %6ld  /  %6ld  ]   [ %9.3f us] %s\n", st, 100.0*statuscnt[st]/NBsample, statuscnt[st], NBsample, loopiterus*statuscnt[st]/NBsample, statusdef[st]);
 
 
-	
+
 
     if(AOconf[LOOPNUMBER].AOcompute.GPU0!=0)
     {
@@ -1016,18 +1022,22 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     }
 
 
-	printf("\n--------------- MODAL STRING -------------------------------------------------------------\n");
+    printf("\n--------------- MODAL STRING -------------------------------------------------------------\n");
     for(st=0; st<statusmax; st++)
-        if(strlen(statusMdef[st])>0)
-            printf("STATUSM  %2d     %5.2f %%    [   %6ld  /  %6ld  ]   [ %9.3f us] %s\n", st, 100.0*statusMcnt[st]/NBsample, statusMcnt[st], NBsample, loopiterus*statusMcnt[st]/NBsample , statusMdef[st]);
+        if(strlen(statusMdef[st])>0) {
+            printf("STATUSM  %2d     %5.2f %%    [   %6ld  /  %6ld  ]   [ %9.3f us] %s\n",
+                   st, 100.0*statusMcnt[st]/NBsample, statusMcnt[st], NBsample, loopiterus*statusMcnt[st]/NBsample, statusMdef[st]);
+        }
 
 
 
 
-	printf("\n--------------- AUX MODAL STRING ---------------------------------------------------------\n");
+    printf("\n--------------- AUX MODAL STRING ---------------------------------------------------------\n");
     for(st=0; st<statusmax; st++)
-        if(strlen(statusM1def[st])>0)
-            printf("STATUSM1 %2d     %5.2f %%    [   %6ld  /  %6ld  ]   [ %9.3f us] %s\n", st, 100.0*statusM1cnt[st]/NBsample, statusM1cnt[st], NBsample, loopiterus*statusM1cnt[st]/NBsample , statusM1def[st]);
+        if(strlen(statusM1def[st])>0) {
+            printf("STATUSM1 %2d     %5.2f %%    [   %6ld  /  %6ld  ]   [ %9.3f us] %s\n",
+                   st, 100.0*statusM1cnt[st]/NBsample, statusM1cnt[st], NBsample, loopiterus*statusM1cnt[st]/NBsample, statusM1def[st]);
+        }
 
 
 
@@ -1037,18 +1047,13 @@ int_fast8_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     free(statusgpucnt2);
 
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
 
-int_fast8_t AOloopControl_perfTest_resetRMSperf()
+errno_t AOloopControl_perfTest_resetRMSperf()
 {
-    long k;
-    char name[200];
-    long kmin, kmax;
-
-
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
@@ -1056,11 +1061,13 @@ int_fast8_t AOloopControl_perfTest_resetRMSperf()
     AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt = 0;
 
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
-int_fast8_t AOloopControl_perfTest_showparams(long loop)
+errno_t AOloopControl_perfTest_showparams(
+    long loop
+)
 {
 
     printf("loop number %ld\n", loop);
@@ -1080,5 +1087,5 @@ int_fast8_t AOloopControl_perfTest_showparams(long loop)
     printf("wfsmextrlatency_frame   =  %8.2f fr\n", AOconf[loop].AOtiminginfo.wfsmextrlatency_frame);
 
 
-    return 0;
+    return RETURN_SUCCESS;
 }
