@@ -17,7 +17,6 @@
 
 
 
-
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                        HEADER FILES                                             */
@@ -321,11 +320,10 @@ int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
 
 static void *compute_function_imtotal( void *ptr )
 {
-    long ii;
-    long nelem;
-    int semval;
+    long  ii;
+    long  nelem;
     float IMTOTAL;
-    char imname[200];
+    char  imname[200];
 
 
     printf("=========== STARTING compute_function_imtotal loop ===================\n");
@@ -396,6 +394,8 @@ static void *compute_function_imtotal( void *ptr )
 
     // LOG function / process end
     CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+    
+    return NULL;
 }
 
 
@@ -411,7 +411,6 @@ static void *compute_function_dark_subtract( void *ptr )
 {
     long ii, iistart, iiend;
     long *index;
-    int sval;
     long threadindex;
     int semval;
 
@@ -534,56 +533,66 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
     // ===========================
     void *pNull = NULL;
-    uint64_t FPFLAG;
+    //uint64_t FPFLAG;
 
 
     long loop_default[4] = { 0, 0, 10, 0 };
-    long fpi_loop = function_parameter_add_entry(&fps, ".loop",
+    //long fpi_loop = 
+    function_parameter_add_entry(&fps, ".loop",
                        "loop index",
                        FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
 
 
     long semindex_default[4] = { 1, 0, 10, 1 };
-    long fpi_semindex = function_parameter_add_entry(&fps, ".semindex",
+    //long fpi_semindex = 
+    function_parameter_add_entry(&fps, ".semindex",
                        "input semaphore index",
                        FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &semindex_default);
 
-    long fpi_out_fluxtotal = function_parameter_add_entry(&fps, ".out.fluxtotal",
+    //long fpi_out_fluxtotal = 
+    function_parameter_add_entry(&fps, ".out.fluxtotal",
                        "total flux in WFS image",
                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    long fpi_out_GPUalpha = function_parameter_add_entry(&fps, ".out.GPUalpha",
+    //long fpi_out_GPUalpha = 
+    function_parameter_add_entry(&fps, ".out.GPUalpha",
                        "GPU alpha coefficient",
                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
                        
-    long fpi_out_GPUbeta = function_parameter_add_entry(&fps, ".out.GPUbeta",
+    //long fpi_out_GPUbeta = 
+    function_parameter_add_entry(&fps, ".out.GPUbeta",
                        "GPU beta coefficient",
                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);                       
 
     long wfsnormalize_default[4] = { 1, 0, 1, 1 };
-    long fpi_wfsnormalize = function_parameter_add_entry(&fps, ".WFSnormalize",
+    //long fpi_wfsnormalize = 
+    function_parameter_add_entry(&fps, ".WFSnormalize",
                        "normalize WFS frames",
                        FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT|FPFLAG_WRITERUN, &wfsnormalize_default);
 
     double wfsnormfloor_default[4] = { 0.01, 0, 100000, 0.01 };
-    long fpi_wfsnormfloor = function_parameter_add_entry(&fps, ".WFSnormfloor",
+    //long fpi_wfsnormfloor = 
+    function_parameter_add_entry(&fps, ".WFSnormfloor",
                        "WFS flux floor for normalize",
                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT|FPFLAG_WRITERUN, &wfsnormfloor_default);
 
 
 
     long compdark_default[4] = { 1, 0, 1, 1 };
-    long fpi_comp_darksub = function_parameter_add_entry(&fps, ".comp.darksub",
+    //long fpi_comp_darksub = 
+    function_parameter_add_entry(&fps, ".comp.darksub",
                        "Subtract Dark",
                        FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT|FPFLAG_WRITERUN, &compdark_default);
 
     long compimtotal_default[4] = { 1, 0, 1, 1 };
-    long fpi_comp_imtotal = function_parameter_add_entry(&fps, ".comp.imtotal",
+    //long fpi_comp_imtotal = 
+    function_parameter_add_entry(&fps, ".comp.imtotal",
                        "Compute WFS frame total flux",
                        FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT|FPFLAG_WRITERUN, &compimtotal_default);
 
     long compnormwfsim_default[4] = { 1, 0, 1, 1 };
-    long fpi_comp_normwfsim = function_parameter_add_entry(&fps, ".comp.normwfsim",
+    //long fpi_comp_normwfsim = 
+    function_parameter_add_entry(&fps, ".comp.normwfsim",
                        "Compute normalized WFS frame",
                        FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT|FPFLAG_WRITERUN, &compnormwfsim_default);
 
@@ -1110,7 +1119,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop)
     long pindex = (long) getpid();  // index used to differentiate multiple calls to function
     // if we don't have anything more informative, we use PID
 
-	int SMfd = -1;
+	//int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS
@@ -1162,35 +1171,35 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
     int InitSem
 )
 {
-    long         imcnt;
+    //long         imcnt;
     long         ii;
     double       totalinv;
     char         name[200];
     int          slice;
     char        *ptrv;
-    long double  tmplv1;
-    double       tmpf;
-    long         IDdark;
-    char         dname[200];
+    //long double  tmplv1;
+    //double       tmpf;
+    //imageID      IDdark;
+    //char         dname[200];
     long         nelem;
     pthread_t    thread_computetotal_id;
     pthread_t    thread_dark_subtract[20];
-    float        resulttotal;
+    //float        resulttotal;
     int          sval0, sval;
-    void        *status = 0;
+    //void        *status = 0;
     long         i;
     int          semval;
-    int          s;
+    //int          s;
 
     int semindex = 1;
 
     struct timespec functionTestTimerStart;
     struct timespec functionTestTimerEnd;
     struct timespec functionTestTimer00;
-    struct timespec functionTestTimer01;
-    struct timespec functionTestTimer02;
-    struct timespec functionTestTimer03;
-    struct timespec functionTestTimer04;
+    //struct timespec functionTestTimer01;
+    //struct timespec functionTestTimer02;
+    //struct timespec functionTestTimer03;
+    //struct timespec functionTestTimer04;
 
     static long    imWaitTimeAvecnt = 0;
     static long    imWaitTimeAvecnt0 = 1000;
@@ -1250,12 +1259,12 @@ int_fast8_t __attribute__((hot)) Read_cam_frame(
 
 
 
-	if(wfsim_semwaitindex == -1)
-	{
+	if(wfsim_semwaitindex == -1) {
 		wfsim_semwaitindex = ImageStreamIO_getsemwaitindex(&data.image[ID_wfsim], semindex);
 	}
-	if(wfsim_semwaitindex>-1)
+	if(wfsim_semwaitindex>-1) {
 		semindex = wfsim_semwaitindex;
+	}
 
 
 		// initialize camera averaging arrays if not already done
