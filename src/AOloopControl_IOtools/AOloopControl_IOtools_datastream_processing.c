@@ -72,37 +72,38 @@
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
-static sem_t AOLCOMPUTE_TOTAL_ASYNC_sem_name;
+//static sem_t AOLCOMPUTE_TOTAL_ASYNC_sem_name;
 
-static long long imtotalcnt;
-static int AOLCOMPUTE_DARK_SUBTRACT_THREADinit = 0;
-static int COMPUTE_DARK_SUBTRACT_NBTHREADS = 1;
-static sem_t AOLCOMPUTE_DARK_SUBTRACT_sem_name[32];
-static sem_t AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[32];
-
-
-static int avcamarraysInit = 0;
-static unsigned short *arrayutmp;
-
-static char Average_cam_frames_dname[200];
-static long Average_cam_frames_IDdark = -1;
-static long Average_cam_frames_nelem = 1;
+//static long long imtotalcnt;
+//static int AOLCOMPUTE_DARK_SUBTRACT_THREADinit = 0;
+//static int COMPUTE_DARK_SUBTRACT_NBTHREADS = 1;
+//static sem_t AOLCOMPUTE_DARK_SUBTRACT_sem_name[32];
+//static sem_t AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[32];
 
 
-static float *arrayftmp;
+//static int avcamarraysInit = 0;
+//static unsigned short *arrayutmp;
+
+//static char Average_cam_frames_dname[200];
+//static long Average_cam_frames_IDdark = -1;
+//static long Average_cam_frames_nelem = 1;
+
+
+//static float *arrayftmp;
 
 
 // TIMING
-static struct timespec tnow;
-static struct timespec tdiff;
-static double tdiffv;
+//static struct timespec tnow;
+//static struct timespec tdiff;
+//static double tdiffv;
 
 //extern int aoloopcontrol_var.PIXSTREAM_SLICE;
 
-static long ti; // thread index
+//static long ti; // thread index
 
-static int AOLCOMPUTE_TOTAL_ASYNC_THREADinit = 0;
-static int AOLCOMPUTE_TOTAL_INIT = 0; // toggles to 1 AFTER total for first image is computed
+//static int AOLCOMPUTE_TOTAL_ASYNC_THREADinit = 0;
+//static int AOLCOMPUTE_TOTAL_INIT = 0; // toggles to 1 AFTER total for first image is computed
+
 
 
 //extern float aoloopcontrol_var.normfloorcoeff;
@@ -178,12 +179,12 @@ errno_t AOloopControl_IOtools_AveStream(
     const char *IDname_out_RMS
 )
 {
-    imageID IDin;
-    imageID IDout_ave;
-    imageID IDout_AC, IDout_RMS;
-    long xsize, ysize;
+    imageID  IDin;
+    imageID  IDout_ave;
+    imageID  IDout_AC, IDout_RMS;
+    uint32_t xsize, ysize;
     uint32_t *sizearray;
-    long cnt0old = 0;
+    unsigned long cnt0old = 0;
     long delayus = 10;
 
 
@@ -284,7 +285,7 @@ errno_t AOloopControl_IOtools_imAlignStream(
     uint32_t IDin, IDref, IDtmp;
     uint32_t xboxsize, yboxsize;
     uint32_t xsize, ysize;
-    long cnt;
+    unsigned long cnt;
 
     imageID IDdark;
 
@@ -480,19 +481,18 @@ imageID AOloopControl_IOtools_frameDelay(
 	int insem
 	)
 {
-    long IDout;
-    long IDin;
-    long IDkern;
-    long ksize;
-    long IDbuff;
-    long xsize, ysize;
+    imageID IDout;
+    imageID IDin;
+    imageID IDkern;
+    uint32_t ksize;
+    imageID IDbuff;
+    uint32_t xsize, ysize;
     long kindex = 0;
-    long cnt;
+    unsigned long cnt;
     long framesize;
-    long IDtmp;
-    long xysize;
+    imageID IDtmp;
+    uint64_t xysize;
     float eps=1.0e-8;
-    long ii, jj, kk, k1;
     uint32_t *sizearray;
 
 
@@ -503,8 +503,8 @@ imageID AOloopControl_IOtools_frameDelay(
     IDtmp = create_2Dimage_ID("_tmpfr", xsize, ysize);
     xysize = xsize*ysize;
 
-    printf("xsize = %ld\n", xsize);
-    printf("ysize = %ld\n", ysize);
+    printf("xsize = %u\n", xsize);
+    printf("ysize = %u\n", ysize);
     fflush(stdout);
 
 
@@ -513,7 +513,7 @@ imageID AOloopControl_IOtools_frameDelay(
 
     IDkern = image_ID(IDkern_name);
     ksize = data.image[IDkern].md[0].size[0];
-    printf("ksize = %ld\n", ksize);
+    printf("ksize = %u\n", ksize);
     fflush(stdout);
 
 
@@ -557,17 +557,17 @@ imageID AOloopControl_IOtools_frameDelay(
 
         data.image[IDout].md[0].write = 1;
 
-        for(ii=0; ii<xysize; ii++)
+        for(uint32_t ii=0; ii<xysize; ii++)
             data.image[IDtmp].array.F[ii] = 0.0;
-        for(kk=0; kk<ksize; kk++)
+        for(uint32_t kk=0; kk<ksize; kk++)
         {
             if(fabs(data.image[IDkern].array.F[kk])>eps)
             {
-                k1 = kindex-kk;
+                int k1 = kindex-kk;
                 if(k1<0)
                     k1 += ksize;
 
-                for(ii=0; ii<xysize; ii++)
+                for(uint32_t ii=0; ii<xysize; ii++)
                     data.image[IDtmp].array.F[ii] += data.image[IDkern].array.F[kk] * data.image[IDbuff].array.F[k1*xysize + ii];
             }
         }
@@ -603,11 +603,11 @@ imageID AOloopControl_IOtools_stream3Dto2D(
     uint_fast16_t ii0, jj0, kk0, ii1, jj1, kk;
     uint_fast16_t Xindex, Yindex;
     uint_fast16_t iioffset, jjoffset;
-    long long cnt;
+    unsigned long long cnt;
     uint32_t *sizearray;
     uint8_t datatype;
     char out0name[200]; // noise-free image, in contrast
-    long IDout0;
+    imageID IDout0;
 
     float ContrastCoeff = 0.0379;
     float Flux = 5.22e8; // flux per spectral channel [NBph]
@@ -669,7 +669,7 @@ imageID AOloopControl_IOtools_stream3Dto2D(
             while(kk<kk0)
             {
                 Xindex++;
-                if(Xindex==NBcols)
+                if((int) Xindex == NBcols)
                 {
                     Xindex = 0;
                     Yindex++;

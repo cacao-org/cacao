@@ -76,8 +76,8 @@ static unsigned short  *arrayutmp;
 static signed short    *arraystmp;
 
 static char Average_cam_frames_dname[200];
-static long Average_cam_frames_IDdark = -1;
-static long Average_cam_frames_nelem = 1;
+static imageID Average_cam_frames_IDdark = -1;
+static unsigned long Average_cam_frames_nelem = 1;
 
 
 static float *arrayftmp;
@@ -148,14 +148,13 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
 )
 {
     long iiin,jjin, iiout, jjout;
-    long IDin, IDout, IDdark;
+    imageID IDin, IDout, IDdark;
     uint8_t datatype;
     uint8_t datatypeout;
     uint32_t *sizeout;
-    long long cnt0;
-    long IDmask;
-    long sizeoutxy;
-    long ii;
+    unsigned long long cnt0;
+    imageID  IDmask;
+    uint64_t sizeoutxy;
 
 
     sizeout = (uint32_t*) malloc(sizeof(uint32_t)*2);
@@ -222,7 +221,7 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
                             data.image[IDout].array.UI16[jjout*size_x+iiout] = data.image[IDin].array.UI16[jjin*data.image[IDin].md[0].size[0]+iiin];
                         }
                     if(IDmask!=-1)
-                        for(ii=0; ii<sizeoutxy; ii++)
+                        for(uint64_t ii=0; ii<sizeoutxy; ii++)
                             data.image[IDout].array.UI16[ii] *= (int) data.image[IDmask].array.F[ii];
                 }
                 else // FLOAT
@@ -249,7 +248,7 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
                     }
 
                     if(IDmask!=-1)
-                        for(ii=0; ii<sizeoutxy; ii++)
+                        for(uint64_t ii=0; ii<sizeoutxy; ii++)
                             data.image[IDout].array.F[ii] *= data.image[IDmask].array.F[ii];
                 }
 
@@ -289,7 +288,7 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
                 }
 
                 if(IDmask!=-1)
-                    for(ii=0; ii<sizeoutxy; ii++)
+                    for(uint64_t ii=0; ii<sizeoutxy; ii++)
                         data.image[IDout].array.F[ii] *= data.image[IDmask].array.F[ii];
 
                 data.image[IDout].md[0].cnt0 = cnt0;
@@ -318,7 +317,9 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
 
 
 
-static void *compute_function_imtotal( void *ptr )
+static void *compute_function_imtotal(
+    __attribute__((unused)) void *ptr
+)
 {
     long  ii;
     long  nelem;
@@ -751,7 +752,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
     uint32_t sizexWFS = data.image[ID_wfsim].md[0].size[0];
     uint32_t sizeyWFS = data.image[ID_wfsim].md[0].size[1];
     uint64_t sizeWFS = sizexWFS*sizeyWFS;
-    int WFSatype = data.image[ID_wfsim].md[0].datatype;
+    uint8_t  WFSatype = data.image[ID_wfsim].md[0].datatype;
 
     char name[200];
     if(sprintf(name, "aol%ld_imWFS0", loop) < 1)
@@ -805,7 +806,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
 
-    long long WFScnt  = 0;
+    unsigned long long WFScnt  = 0;
     int slice;
 
     while(loopOK==1)
@@ -948,11 +949,11 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
                 case _DATATYPE_UINT16 :
                     if(Average_cam_frames_IDdark == -1) {
-                        for(long ii=0; ii<Average_cam_frames_nelem; ii++)
+                        for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                             data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
                     }
                     else {
-                        for(long ii=0; ii<Average_cam_frames_nelem; ii++)
+                        for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                             data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
                     }
                     break;
@@ -962,11 +963,11 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                 case _DATATYPE_INT16 :
 
                     if(Average_cam_frames_IDdark == -1) {
-                        for(long ii=0; ii<Average_cam_frames_nelem; ii++)
+                        for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                             data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
                     }
                     else {
-                        for(long ii=0; ii<Average_cam_frames_nelem; ii++)
+                        for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                             data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
 
                     }
@@ -978,7 +979,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                         memcpy(data.image[ID_imWFS0].array.F, arrayftmp, sizeof(float)*Average_cam_frames_nelem);
                     }
                     else {
-                        for(long ii=0; ii<Average_cam_frames_nelem; ii++)
+                        for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                             data.image[ID_imWFS0].array.F[ii] = arrayftmp[ii] - data.image[Average_cam_frames_IDdark].array.F[ii];
                     }
                     break;
@@ -1004,16 +1005,16 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
             double IMTOTAL;
             if( (*FPFLAG_COMPUTE_IMTOTAL) & FPFLAG_ONOFF )
             {
-                long nelem = data.image[ID_imWFS0].md[0].size[0]*data.image[ID_imWFS0].md[0].size[1];
+                uint64_t nelem = data.image[ID_imWFS0].md[0].size[0]*data.image[ID_imWFS0].md[0].size[1];
                 IMTOTAL = 0.0;
                 if(aoloopcontrol_var.aoconfID_wfsmask!=-1)
                 {
-                    for(long ii=0; ii<nelem; ii++)
+                    for(uint64_t ii=0; ii<nelem; ii++)
                         IMTOTAL += data.image[ID_imWFS0].array.F[ii]*data.image[aoloopcontrol_var.aoconfID_wfsmask].array.F[ii];
                 }
                 else
                 {
-                    for(long ii=0; ii<nelem; ii++)
+                    for(uint64_t ii=0; ii<nelem; ii++)
                         IMTOTAL += data.image[ID_imWFS0].array.F[ii];
                 }
                 *WFSfluxtotal = IMTOTAL;
@@ -1053,7 +1054,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
                 data.image[ID_imWFS1].md[0].write = 1;
 
-                for(long ii=0; ii<sizeWFS; ii++)
+                for(uint64_t ii=0; ii<sizeWFS; ii++)
                     data.image[ID_imWFS1].array.F[ii] = data.image[ID_imWFS0].array.F[ii]*totalinv;
 
                 COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS1, -1);
@@ -1165,14 +1166,13 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop)
 
 errno_t __attribute__((hot)) Read_cam_frame(
     long loop,
-    int RM,
-    int normalize,
-    int PixelStreamMode,
-    int InitSem
+    int  RM,
+    int  normalize,
+    __attribute__((unused)) int  PixelStreamMode,
+    int  InitSem
 )
 {
-    //long         imcnt;
-    long         ii;
+    //long         imcnt;    
     double       totalinv;
     char         name[200];
     int          slice;
@@ -1181,7 +1181,7 @@ errno_t __attribute__((hot)) Read_cam_frame(
     //double       tmpf;
     //imageID      IDdark;
     //char         dname[200];
-    long         nelem;
+    uint64_t         nelem;
     pthread_t    thread_computetotal_id;
     pthread_t    thread_dark_subtract[20];
     //float        resulttotal;
@@ -1228,8 +1228,8 @@ errno_t __attribute__((hot)) Read_cam_frame(
 
 	static long ID_imWFS0;
 
-    static long long WFScnt = 0;
-    static long long WFScntRM = 0;
+    static unsigned long long WFScnt = 0;
+    static unsigned long long WFScntRM = 0;
 
 
     DEBUG_TRACEPOINT(" ");
@@ -1654,7 +1654,7 @@ fflush(stdout);
 		printf("================== TEST POINT LINE %d\n", __LINE__);
 		fflush(stdout);
 			if(Average_cam_frames_IDdark == -1) {
-				for(ii=0; ii<Average_cam_frames_nelem; ii++)
+				for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
 			}
 			else {
@@ -1666,7 +1666,7 @@ fflush(stdout);
             //# ifdef _OPENMP
             //            #pragma omp for
             //# endif
-            for(ii=0; ii<Average_cam_frames_nelem; ii++)
+            for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
             //# ifdef _OPENMP
             //        }
@@ -1680,7 +1680,7 @@ fflush(stdout);
 		printf("================== TEST POINT LINE %d\n", __LINE__);
 		fflush(stdout);
 		if(Average_cam_frames_IDdark == -1) {
-			for(ii=0; ii<Average_cam_frames_nelem; ii++)
+			for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
 			}
 			else {
@@ -1692,7 +1692,7 @@ fflush(stdout);
             //# ifdef _OPENMP
             //            #pragma omp for
             //# endif
-            for(ii=0; ii<Average_cam_frames_nelem; ii++)
+            for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]) - data.image[Average_cam_frames_IDdark].array.F[ii];
             //# ifdef _OPENMP
             //        }
@@ -1716,7 +1716,7 @@ fflush(stdout);
 //# ifdef _OPENMP
 //            #pragma omp parallel for
 //# endif
-            for(ii=0; ii<Average_cam_frames_nelem; ii++)
+            for(uint64_t ii=0; ii<Average_cam_frames_nelem; ii++)
                 data.image[ID_imWFS0].array.F[ii] = arrayftmp[ii] - data.image[Average_cam_frames_IDdark].array.F[ii];
 //# ifdef _OPENMP
 //        }
@@ -1873,12 +1873,12 @@ fflush(stdout);
             IMTOTAL = 0.0;
             if(aoloopcontrol_var.aoconfID_wfsmask!=-1)
             {
-                for(ii=0; ii<nelem; ii++)
+                for(uint64_t ii=0; ii<nelem; ii++)
                     IMTOTAL += data.image[ID_imWFS0].array.F[ii]*data.image[aoloopcontrol_var.aoconfID_wfsmask].array.F[ii];
             }
             else
             {
-                for(ii=0; ii<nelem; ii++)
+                for(uint64_t ii=0; ii<nelem; ii++)
                     IMTOTAL += data.image[ID_imWFS0].array.F[ii];
             }
 
@@ -1977,7 +1977,7 @@ fflush(stdout);
         //# ifdef _OPENMP
         //            #pragma omp for
         //# endif
-        for(ii=0; ii<nelem; ii++)
+        for(uint64_t ii=0; ii<nelem; ii++)
             data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] = data.image[ID_imWFS0].array.F[ii]*totalinv;
         //# ifdef _OPENMP
         //        }
