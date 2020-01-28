@@ -4,15 +4,6 @@
  * 
  * Used to give more weigth to most recent measurements
  * 
- *
- * 
- * ## Change log
- * - 20180518	Guyon	File created 
- * 
- *  
- * @author  O. Guyon
- *
- * @bug No known bugs.
  * 
  * 
  */
@@ -44,12 +35,12 @@
  * This is used to give more weigth to most recent measurements
  * 
  */
-long AOloopControl_PredictiveControl_setPFsimpleAve(
+imageID AOloopControl_PredictiveControl_setPFsimpleAve(
 	char *IDPF_name, 
 	float DecayCoeff
-	)
+)
 {
-	long IDPF;
+	imageID IDPF;
 	int xsize, ysize; 
 	int FilterOrder;
 	int ii, jj, kk; 

@@ -3,15 +3,6 @@
  * @brief   Test Predictive Control
  * 
  * 
- *
- * 
- * ## Change log
- * - 20180518	Guyon	File created
- * 
- *  
- * @author  O. Guyon
- *
- * @bug No known bugs.
  * 
  * 
  */
@@ -49,30 +40,30 @@
 ///
 double AOloopControl_PredictiveControl_testPredictiveFilter(
 	const char *IDtrace_name, 
-	long modeout, 
-	double delayfr, 
-	long filtsize, 
+	long        modeout, 
+	double      delayfr, 
+	long        filtsize, 
 	const char *IDfilt_name, 
-	double SVDeps
-	)
+	double      SVDeps
+)
 {
-    long IDtrace;
-    long IDmatA;
-    long NBtraceVec; // number of measurement vectors in trace
-    long NBmvec; // number of measurements in measurement matrix
-    long NBch; // number of channels in measurement
-    long IDmatC;
-    long IDfilt;
-    long l,m;
-    float *marray; // measurement array
-    FILE *fp;
-    float tmpv;
-    long delayfr_int;
-    float delayfr_x;
-    long ch, l1;
-    double err0, err1;
-    float v0;
-    float NoiseAmpl = 0.02;
+    imageID  IDtrace;
+    imageID  IDmatA;
+    long     NBtraceVec; // number of measurement vectors in trace
+    long     NBmvec; // number of measurements in measurement matrix
+    long     NBch; // number of channels in measurement
+    imageID  IDmatC;
+    imageID  IDfilt;
+    long     l,m;
+    float   *marray; // measurement array
+    FILE    *fp;
+    float    tmpv;
+    long     delayfr_int;
+    float    delayfr_x;
+    long     ch, l1;
+    double   err0, err1;
+    float    v0;
+    //float    NoiseAmpl = 0.02;
 
 
 

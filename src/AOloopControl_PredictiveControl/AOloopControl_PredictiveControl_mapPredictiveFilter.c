@@ -5,14 +5,6 @@
  * 
  *
  * 
- * ## Change log
- * - 20180518	Guyon	File created 
- * 
- *  
- * @author  O. Guyon
- *
- * @bug No known bugs.
- * 
  * 
  */
 
@@ -43,13 +35,13 @@
 // IDcoeff_name is AO telemetry file
 // size:   #modes, 1, #samples
 //
-int_fast8_t AOloopControl_PredictiveControl_mapPredictiveFilter(
+errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(
 	const char *IDmodecoeff_name, 
-	long modeout, 
-	double delayfr
-	)
+	long        modeout, 
+	double      delayfr
+)
 {
-    long IDmodecoeff;
+    imageID IDmodecoeff;
     long NBsamples;
     long NBmodes;
     double SVDeps = 0.001;
@@ -60,9 +52,8 @@ int_fast8_t AOloopControl_PredictiveControl_mapPredictiveFilter(
     long modeoffset;
     long modeouto;
     long filtsize = 20;
-    double val;
 
-    long ii, jj, m;
+    long ii, m;
 
 
     modeoffset = modeout - (long) (modesize/2);
@@ -81,10 +72,10 @@ int_fast8_t AOloopControl_PredictiveControl_mapPredictiveFilter(
             data.image[IDtrace].array.F[m*NBsamples+ii] = data.image[IDmodecoeff].array.F[ii*NBmodes+m];
 
 
-    val = AOloopControl_PredictiveControl_testPredictiveFilter("trace", modeouto, delayfr, filtsize, "filt", SVDeps);
+    AOloopControl_PredictiveControl_testPredictiveFilter("trace", modeouto, delayfr, filtsize, "filt", SVDeps);
     delete_image_ID("filt");
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 

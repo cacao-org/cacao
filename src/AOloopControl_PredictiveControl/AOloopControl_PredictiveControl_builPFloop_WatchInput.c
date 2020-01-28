@@ -105,7 +105,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
  *          Number of input buffers to merge for each output 
  * 
  */
-long AOloopControl_PredictiveControl_builPFloop_WatchInput(
+imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     long loop,
     long PFblock,
     long PFblockStart,
