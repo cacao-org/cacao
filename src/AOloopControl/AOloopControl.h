@@ -5,7 +5,6 @@
  * 
  * AO engine uses stream data structure
  * 
- * @bug No known bugs. 
  * 
  */
 
@@ -186,8 +185,8 @@ typedef struct
 
 
 // logging
-static int loadcreateshm_log = 0; // 1 if results should be logged in ASCII file
-static FILE *loadcreateshm_fplog;
+//static int loadcreateshm_log = 0; // 1 if results should be logged in ASCII file
+//static FILE *loadcreateshm_fplog;
 
 
 

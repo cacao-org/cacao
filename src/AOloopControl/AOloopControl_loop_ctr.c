@@ -4,9 +4,6 @@
  * 
  * LOOP CONTROL INTERFACE
  *  
- *
- * 
- * @bug No known bugs.
  * 
  */
 
@@ -48,9 +45,9 @@ errno_t AOloopControl_setLoopNumber(long loop)
 
 
 errno_t AOloopControl_setparam(
-    long loop,
+    __attribute__((unused)) long loop,
     const char *key,
-    double value
+    __attribute__((unused)) double value
 )
 {
     int pOK=0;

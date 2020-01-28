@@ -32,7 +32,8 @@ static long aoconfID_respM = -1;
 //aoloopcontrol_var.LOOPNUMBER = 0; // current loop index
 
 
-
+static int loadcreateshm_log = 0; // 1 if results should be logged in ASCII file
+static FILE *loadcreateshm_fplog;
 
 
 /* =============================================================================================== */
