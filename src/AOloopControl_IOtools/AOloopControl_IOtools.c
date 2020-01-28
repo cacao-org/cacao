@@ -252,43 +252,105 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli() {
 
 /** @brief CLI function for AOloopControl_AveStream */
 errno_t AOloopControl_IOtools_AveStream_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,1)+CLI_checkarg(3,3)+CLI_checkarg(4,3)+CLI_checkarg(5,3)==0) {
-        AOloopControl_IOtools_AveStream(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numf, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.string);
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,1) +
+        CLI_checkarg(3,3) +
+        CLI_checkarg(4,3) +
+        CLI_checkarg(5,3)
+        == 0 )
+    {
+        AOloopControl_IOtools_AveStream(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numf,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string,
+            data.cmdargtoken[5].val.string
+        );
+
         return CLICMD_SUCCESS;
     }
-    else return CLICMD_INVALID_ARG;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief Aligns data stream */
 errno_t AOloopControl_IOtools_imAlignStream_cli() {
-	if(CLI_checkarg(1,4)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,4)+CLI_checkarg(5,3)+CLI_checkarg(6,2)==0) {
-		AOloopControl_IOtools_imAlignStream(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.string, data.cmdargtoken[5].val.string, data.cmdargtoken[6].val.numl);
-		return CLICMD_SUCCESS;
-	}
-	else return CLICMD_INVALID_ARG;
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,4) +
+        CLI_checkarg(5,3) +
+        CLI_checkarg(6,2)
+        == 0 )
+    {
+        AOloopControl_IOtools_imAlignStream(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.string,
+            data.cmdargtoken[5].val.string,
+            data.cmdargtoken[6].val.numl
+        );
+
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_frameDelay */
 errno_t AOloopControl_IOtools_frameDelay_cli()
 {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,5)+CLI_checkarg(4,2)==0)    {
-        AOloopControl_IOtools_frameDelay(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string, data.cmdargtoken[4].val.numl);
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,4) +
+        CLI_checkarg(3,5) +
+        CLI_checkarg(4,2)
+        == 0 )
+    {
+        AOloopControl_IOtools_frameDelay(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.numl
+        );
+
         return CLICMD_SUCCESS;
     }
-    else        return CLICMD_INVALID_ARG;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 
 /** @brief CLI function for AOloopControl_stream3Dto2D */
 errno_t AOloopControl_IOtools_stream3Dto2D_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,3)+CLI_checkarg(3,2)+CLI_checkarg(4,2)==0) {
-        AOloopControl_IOtools_stream3Dto2D(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl);
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,3) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,2)
+        == 0 )
+    {
+        AOloopControl_IOtools_stream3Dto2D(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.numl
+        );
+
         return CLICMD_SUCCESS;
     }
-    else return CLICMD_INVALID_ARG;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -302,11 +364,23 @@ errno_t AOloopControl_IOtools_stream3Dto2D_cli() {
 
 /** @brief Save telemetry */
 errno_t AOloopControl_IOtools_RTLOGsave_cli() {
-	if(CLI_checkarg(1,2)+CLI_checkarg(2,5)+CLI_checkarg(3,5)==0) {
-		AOloopControl_IOtools_RTLOGsave(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string);
-		return CLICMD_SUCCESS;
-	}
-	else return CLICMD_INVALID_ARG;
+    if(
+        CLI_checkarg(1,2) +
+        CLI_checkarg(2,5) +
+        CLI_checkarg(3,5)
+        == 0 )
+    {
+        AOloopControl_IOtools_RTLOGsave(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string
+        );
+
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
