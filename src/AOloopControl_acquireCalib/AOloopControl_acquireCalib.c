@@ -5,8 +5,6 @@
  * Acquire AO system calibration assuming linear response
  *  
  * 
- * @bug No known bugs.
- * 
  * 
  */
 
@@ -149,33 +147,43 @@ extern AOloopControl_var aoloopcontrol_var;
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-int_fast8_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,2)
-            + CLI_checkarg(3,5)
-            + CLI_checkarg(4,5)==0) {
+errno_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,5) +
+        CLI_checkarg(4,5)
+        == 0 )
+    {
         AOloopControl_acquireCalib_mkRandomLinPokeSequence(
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.numl,
             data.cmdargtoken[3].val.string,
-            data.cmdargtoken[4].val.string);
-        return 0;
+            data.cmdargtoken[4].val.string
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 
 /** @brief CLI function for AOloopControl_RespMatrix_Fast */
-int_fast8_t AOloopControl_acquireCalib_RespMatrix_Fast_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,4)
-            + CLI_checkarg(3,4)
-            + CLI_checkarg(4,2)
-            + CLI_checkarg(5,1)
-            + CLI_checkarg(6,1)
-            + CLI_checkarg(7,1)
-            + CLI_checkarg(8,3)==0) {
+errno_t AOloopControl_acquireCalib_RespMatrix_Fast_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,4) +
+        CLI_checkarg(3,4) +
+        CLI_checkarg(4,2) +
+        CLI_checkarg(5,1) +
+        CLI_checkarg(6,1) +
+        CLI_checkarg(7,1) +
+        CLI_checkarg(8,3)
+        == 0 )
+    {
         AOloopControl_acquireCalib_RespMatrix_Fast(
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.string,
@@ -184,25 +192,32 @@ int_fast8_t AOloopControl_acquireCalib_RespMatrix_Fast_cli() {
             data.cmdargtoken[5].val.numf,
             data.cmdargtoken[6].val.numf,
             data.cmdargtoken[7].val.numf,
-            data.cmdargtoken[8].val.string);
-        return 0;
+            data.cmdargtoken[8].val.string
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_Measure_WFSrespC */
-int_fast8_t AOloopControl_acquireCalib_Measure_WFSrespC_cli() {
-    if(CLI_checkarg(1,2)
-            + CLI_checkarg(2,2)
-            + CLI_checkarg(3,2)
-            + CLI_checkarg(4,2)
-            + CLI_checkarg(5,4)
-            + CLI_checkarg(6,5)
-            + CLI_checkarg(7,2)
-            + CLI_checkarg(8,2)
-            + CLI_checkarg(9,2)
-            + CLI_checkarg(10,2)==0) {
+errno_t AOloopControl_acquireCalib_Measure_WFSrespC_cli() {
+    if(
+        CLI_checkarg(1,2) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,2) +
+        CLI_checkarg(5,4) +
+        CLI_checkarg(6,5) +
+        CLI_checkarg(7,2) +
+        CLI_checkarg(8,2) +
+        CLI_checkarg(9,2) +
+        CLI_checkarg(10,2)
+        == 0 )
+    {
         AOloopControl_acquireCalib_Measure_WFSrespC(LOOPNUMBER,
                 data.cmdargtoken[1].val.numl,
                 data.cmdargtoken[2].val.numl,
@@ -213,17 +228,21 @@ int_fast8_t AOloopControl_acquireCalib_Measure_WFSrespC_cli() {
                 data.cmdargtoken[7].val.numl,
                 data.cmdargtoken[8].val.numl,
                 data.cmdargtoken[9].val.numl,
-                (uint32_t) data.cmdargtoken[10].val.numl);
-        return 0;
+                (uint32_t) data.cmdargtoken[10].val.numl
+                                                   );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 
 /** @brief CLI function for AOloopControl_Measure_WFS_linResponse */
 
-int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
+errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
     int stringmaxlen = 500;
     char fpsname[stringmaxlen];
 
@@ -263,18 +282,21 @@ int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
         }
     }
     // non FPS implementation - all parameters specified at function launch
-    if( CLI_checkarg(1,1)
-            + CLI_checkarg(2,2)
-            + CLI_checkarg(3,2)
-            + CLI_checkarg(4,2)
-            + CLI_checkarg(5,2)
-            + CLI_checkarg(6,4)
-            + CLI_checkarg(7,5)
-            + CLI_checkarg(8,5)
-            + CLI_checkarg(9,2)
-            + CLI_checkarg(10,2)
-            + CLI_checkarg(11,2)
-            + CLI_checkarg(12,2)==0) {
+    if(
+        CLI_checkarg(1,1) +
+        + CLI_checkarg(2,2) +
+        + CLI_checkarg(3,2) +
+        + CLI_checkarg(4,2) +
+        + CLI_checkarg(5,2) +
+        + CLI_checkarg(6,4) +
+        + CLI_checkarg(7,5) +
+        + CLI_checkarg(8,5) +
+        + CLI_checkarg(9,2) +
+        + CLI_checkarg(10,2) +
+        + CLI_checkarg(11,2) +
+        + CLI_checkarg(12,2)
+        == 0 )
+    {
         AOloopControl_acquireCalib_Measure_WFS_linResponse(LOOPNUMBER,
                 data.cmdargtoken[1].val.numf,
                 data.cmdargtoken[2].val.numl,
@@ -287,10 +309,12 @@ int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
                 data.cmdargtoken[9].val.numl,
                 data.cmdargtoken[10].val.numl,
                 data.cmdargtoken[11].val.numl,
-                data.cmdargtoken[12].val.numl);
+                data.cmdargtoken[12].val.numl
+                );
+                
         return RETURN_SUCCESS;
     } else {
-        return RETURN_FAILURE;
+        return CLICMD_INVALID_ARG;
     }
 }
 
@@ -298,20 +322,23 @@ int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
 
 
 /** @brief CLI function for AOloopControl_Measure_zonalRM */
-int_fast8_t AOloopControl_acquireCalib_Measure_zonalRM_cli() {
-    if(CLI_checkarg(1,1)
-            + CLI_checkarg(2,2)
-            + CLI_checkarg(3,2)
-            + CLI_checkarg(4,2)
-            + CLI_checkarg(5,2)
-            + CLI_checkarg(6,3)
-            + CLI_checkarg(7,3)
-            + CLI_checkarg(8,3)
-            + CLI_checkarg(9,3)
-            + CLI_checkarg(10,2)
-            + CLI_checkarg(11,2)
-            + CLI_checkarg(12,2)
-            + CLI_checkarg(13,2)==0) {
+errno_t AOloopControl_acquireCalib_Measure_zonalRM_cli() {
+    if(
+        CLI_checkarg(1,1) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,2) +
+        CLI_checkarg(5,2) +
+        CLI_checkarg(6,3) +
+        CLI_checkarg(7,3) +
+        CLI_checkarg(8,3) +
+        CLI_checkarg(9,3) +
+        CLI_checkarg(10,2) +
+        CLI_checkarg(11,2) +
+        CLI_checkarg(12,2) +
+        CLI_checkarg(13,2)
+        == 0 )
+    {
         AOloopControl_acquireCalib_Measure_zonalRM(LOOPNUMBER,
                 data.cmdargtoken[1].val.numf,
                 data.cmdargtoken[2].val.numl,
@@ -325,50 +352,68 @@ int_fast8_t AOloopControl_acquireCalib_Measure_zonalRM_cli() {
                 data.cmdargtoken[10].val.numl,
                 data.cmdargtoken[11].val.numl,
                 data.cmdargtoken[12].val.numl,
-                data.cmdargtoken[13].val.numl);
-        return 0;
+                data.cmdargtoken[13].val.numl
+                                                  );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_Measure_Resp_Matrix */
-int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
-    if(CLI_checkarg(1,2)
-            + CLI_checkarg(2,1)
-            + CLI_checkarg(3,2)
-            + CLI_checkarg(4,2)
-            + CLI_checkarg(5,2)==0) {
+errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli() {
+    if(
+        CLI_checkarg(1,2) +
+        CLI_checkarg(2,1) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,2) +
+        CLI_checkarg(5,2)
+        == 0 )
+    {
         AOloopControl_acquireCalib_Measure_Resp_Matrix(LOOPNUMBER,
                 data.cmdargtoken[1].val.numl,
                 data.cmdargtoken[2].val.numf,
                 data.cmdargtoken[3].val.numl,
                 data.cmdargtoken[4].val.numl,
-                data.cmdargtoken[5].val.numl);
-        return 0;
+                data.cmdargtoken[5].val.numl
+                                                      );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 
-int_fast8_t AOloopControl_acquireCalib_RMseries_deinterlace_cli() {
-    if(CLI_checkarg(1,2)
-            + CLI_checkarg(2,2)
-            + CLI_checkarg(3,2)
-            + CLI_checkarg(4,3)
-            + CLI_checkarg(5,2)
-            + CLI_checkarg(6,2)==0) {
+errno_t AOloopControl_acquireCalib_RMseries_deinterlace_cli() {
+    if(
+        CLI_checkarg(1,2) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,3) +
+        CLI_checkarg(5,2) +
+        CLI_checkarg(6,2)
+        == 0 )
+    {
         AOloopControl_acquireCalib_RMseries_deinterlace(
             data.cmdargtoken[1].val.numl,
             data.cmdargtoken[2].val.numl,
             data.cmdargtoken[3].val.numl,
             data.cmdargtoken[4].val.string,
             data.cmdargtoken[5].val.numl,
-            data.cmdargtoken[6].val.numl);
-        return 0;
+            data.cmdargtoken[6].val.numl
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -406,7 +451,7 @@ void __attribute__ ((constructor)) libinit_AOloopControl_acquireCalib()
 
 
 
-int_fast8_t init_AOloopControl_acquireCalib()
+errno_t init_AOloopControl_acquireCalib()
 {
 
     /* =============================================================================================== */
@@ -484,7 +529,7 @@ int_fast8_t init_AOloopControl_acquireCalib()
     // add atexit functions here
     // atexit((void*) myfunc);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
@@ -510,115 +555,111 @@ int_fast8_t init_AOloopControl_acquireCalib()
 
 
 
-long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
-	char *IDmodeC_name,  // input
-	long NBpokemap,  // input	
-	char *IDpokemapC_name,
-	char *IDpokeC_name
+imageID AOloopControl_acquireCalib_mkRandomLinPokeSequence(
+    char  *IDmodeC_name,  // input
+    long   NBpokemap,  // input
+    char  *IDpokemapC_name,
+    char  *IDpokeC_name
 )
 {
-	long IDmodeC;
-	long IDpokemapC;
-	long IDpokeC;
-	
-	long NBpoke;
-	
-	printf("Creating pokes\n");
-	fflush(stdout);
-	
+    imageID IDmodeC;
+    imageID IDpokemapC;
+    imageID IDpokeC;
+
+    long NBpoke;
+
+    printf("Creating pokes\n");
+    fflush(stdout);
+
     IDmodeC = image_ID(IDmodeC_name);
-    long xsize = data.image[IDmodeC].md[0].size[0];
-    long ysize = data.image[IDmodeC].md[0].size[1];
-    long NBmode = data.image[IDmodeC].md[0].size[2];
+    uint32_t xsize = data.image[IDmodeC].md[0].size[0];
+    uint32_t ysize = data.image[IDmodeC].md[0].size[1];
+    uint32_t NBmode = data.image[IDmodeC].md[0].size[2];
 
-	printf("  %ld %ld %ld\n", xsize, ysize, NBmode);
-	fflush(stdout);    
+    printf("  %u %u %u\n", xsize, ysize, NBmode);
+    fflush(stdout);
 
-	printf("Creating image %s\n", IDpokemapC_name);
-	fflush(stdout);
-    IDpokemapC = create_3Dimage_ID(IDpokemapC_name, xsize, ysize, NBpokemap);	
+    printf("Creating image %s\n", IDpokemapC_name);
+    fflush(stdout);
+    IDpokemapC = create_3Dimage_ID(IDpokemapC_name, xsize, ysize, NBpokemap);
 
 
-	NBpoke = NBpokemap*3;
-	IDpokeC = create_3Dimage_ID(IDpokeC_name, xsize, ysize, NBpoke);	
+    NBpoke = NBpokemap*3;
+    IDpokeC = create_3Dimage_ID(IDpokeC_name, xsize, ysize, NBpoke);
 
-	// create direction vectors
-	float *vectarray;
-	vectarray = (float*) malloc(sizeof(float)*NBpokemap*NBmode);
-	
-	// random allocation
-	long pm; // poke map index
-	for(pm=0; pm<NBpokemap; pm++)
-	{
-		long axis;
-		float val = 0.0;
-		for(axis=0; axis<NBmode; axis++)
-		{
-			vectarray[pm*NBmode+axis] = 2.0*ran1()-1.0;
-			val += vectarray[pm*NBmode+axis]*vectarray[pm*NBmode+axis];
-		}
-		// set norm = 1
-		for(axis=0; axis<NBmode; axis++)
-			vectarray[pm*NBmode+axis] /= sqrt(val);
-			
-		printf("Vect #%3ld   ", pm);
-		for(axis=0; axis<NBmode; axis++)
-			printf("  %+5.3f", vectarray[pm*NBmode+axis]);
-		printf("\n");
-	}
-	
-	
-	
-	
-	// Write vectors to disk
-	FILE *fpvect;
-	fpvect = fopen("PokeVect.dat", "w");
-	for(pm=0; pm<NBpokemap; pm++)
-	{
-		fprintf(fpvect, "%3ld   ", pm);
-		long axis;
-		for(axis=0; axis<NBmode; axis++)
-			fprintf(fpvect, "  %+8.6f", vectarray[pm*NBmode+axis]);
-		fprintf(fpvect, "\n");
-	}
-	fclose(fpvect);
-	
-	
-	
-	long pm1 = 0; // poke frame index
-	for(pm=0; pm<NBpokemap; pm++)
-	{	
-		long axis;
-		long ii;
-		
-		for(axis=0; axis<NBmode; axis++)
-		{
-			for(ii=0;ii<xsize*ysize;ii++)
-				data.image[IDpokemapC].array.F[xsize*ysize*pm + ii] += vectarray[pm*NBmode+axis] * data.image[IDmodeC].array.F[axis*xsize*ysize+ii];
-		}
-		
-		
-			for(ii=0;ii<xsize*ysize;ii++)
-				data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = data.image[IDpokemapC].array.F[xsize*ysize*pm + ii];
-			pm1++;
-			
-			for(ii=0;ii<xsize*ysize;ii++)
-				data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = -data.image[IDpokemapC].array.F[xsize*ysize*pm + ii];
-			pm1++;
-			
-			for(ii=0;ii<xsize*ysize;ii++)
-				data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = 0.0;
-			pm1++;			
-		
-	
-	}
-	
-	
-	
-	free(vectarray);
-	
-	
-	return(IDpokeC);
+    // create direction vectors
+    float *vectarray;
+    vectarray = (float*) malloc(sizeof(float)*NBpokemap*NBmode);
+
+    // random allocation
+
+    for(uint32_t pm=0; pm<NBpokemap; pm++) // poke map index
+    {
+        long axis;
+        float val = 0.0;
+        for(axis=0; axis<NBmode; axis++)
+        {
+            vectarray[pm*NBmode+axis] = 2.0*ran1()-1.0;
+            val += vectarray[pm*NBmode+axis]*vectarray[pm*NBmode+axis];
+        }
+        // set norm = 1
+        for(axis=0; axis<NBmode; axis++)
+            vectarray[pm*NBmode+axis] /= sqrt(val);
+
+        printf("Vect #%3u   ", pm);
+        for(axis=0; axis<NBmode; axis++)
+            printf("  %+5.3f", vectarray[pm*NBmode+axis]);
+        printf("\n");
+    }
+
+
+
+
+    // Write vectors to disk
+    FILE *fpvect;
+    fpvect = fopen("PokeVect.dat", "w");
+    for(uint32_t pm=0; pm<NBpokemap; pm++)
+    {
+        fprintf(fpvect, "%3u   ", pm);
+        long axis;
+        for(axis=0; axis<NBmode; axis++)
+            fprintf(fpvect, "  %+8.6f", vectarray[pm*NBmode+axis]);
+        fprintf(fpvect, "\n");
+    }
+    fclose(fpvect);
+
+
+
+    uint32_t pm1 = 0; // poke frame index
+    for(uint32_t pm=0; pm<NBpokemap; pm++)
+    {
+        for(uint32_t axis=0; axis<NBmode; axis++)
+        {
+            for(uint64_t ii=0; ii<xsize*ysize; ii++)
+                data.image[IDpokemapC].array.F[xsize*ysize*pm + ii] += vectarray[pm*NBmode+axis] * data.image[IDmodeC].array.F[axis*xsize*ysize+ii];
+        }
+
+
+        for(uint64_t ii=0; ii<xsize*ysize; ii++)
+            data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = data.image[IDpokemapC].array.F[xsize*ysize*pm + ii];
+        pm1++;
+
+        for(uint64_t ii=0; ii<xsize*ysize; ii++)
+            data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = -data.image[IDpokemapC].array.F[xsize*ysize*pm + ii];
+        pm1++;
+
+        for(uint64_t ii=0; ii<xsize*ysize; ii++)
+            data.image[IDpokeC].array.F[xsize*ysize*pm1 + ii] = 0.0;
+        pm1++;
+
+
+    }
+
+
+    free(vectarray);
+
+
+    return IDpokeC;
 }
 
 
@@ -631,9 +672,9 @@ long AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 // initializes configuration parameters structure
 //
 errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
-    char *fpsname,
-    uint32_t CMDmode,
-    long optarg00
+    char     *fpsname,
+    uint32_t  CMDmode,
+    __attribute__((unused)) long      optarg00
 )
 {
 	FPS_SETUP_INIT(fpsname, CMDmode);
@@ -643,8 +684,8 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
     // ALLOCATE FPS ENTRIES
     // ===========================
 
-    void *pNull = NULL;
-    uint64_t FPFLAG;
+    __attribute__((unused)) void *pNull = NULL;
+    __attribute__((unused)) uint64_t FPFLAG;
 
 
 
@@ -754,42 +795,38 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
  *
  */
 
-long AOloopControl_acquireCalib_Measure_WFSrespC(
+
+imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     long        loop,
     long        delayfr,
     long        delayRM1us,
-    long        NBave,
-    long        NBexcl,
+    uint32_t    NBave,
+    uint32_t    NBexcl,
     const char *IDpokeC_name,
     const char *IDoutC_name,
     int         normalize,
     int         AOinitMode,
-    long        NBcycle,
-    uint32_t         SequInitMode
-) {
-    int stringmaxlen = 500;
-
-    char fname[stringmaxlen];
-    char name[stringmaxlen];
-    char command[stringmaxlen];
+    uint32_t    NBcycle,
+    uint32_t    SequInitMode
+) 
+{
+    int       stringmaxlen = 500;
+    
     uint32_t *sizearray;
-    long IDoutC;
-    char *ptr;
+    imageID   IDoutC;
+    char     *ptr;
 
-    long NBiter = 10000; // runs until USR1 signal received
-    long iter;
-    int r;
-    long IDpokeC;
-    long NBpoke;
+    uint64_t NBiter = 10000; // runs until USR1 signal received
+    uint64_t iter;
+
+    imageID IDpokeC;
+    uint32_t NBpoke;
     long framesize;
     char *ptr0; // source
     float *arrayf;
 
-    int ret;
-    long imcnt;
-    long ii;
-
-    long imcntmax;
+    uint32_t imcnt;
+    uint32_t imcntmax;
 
     FILE *fp;
 
@@ -797,7 +834,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
 
-    DEBUG_TRACEPOINT("%ld %ld %ld %ld %ld %s %s %d %d %ld %d",
+    DEBUG_TRACEPOINT("%ld %ld %ld %u %u %s %s %d %d %u %u",
              loop,
              delayfr,
              delayRM1us,
@@ -822,7 +859,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     snprintf(pinfodescr, stringmaxlen, "%s", IDpokeC_name);
 
     char pinfomsg[stringmaxlen];
-    snprintf(pinfomsg, stringmaxlen, "delay=%ld+%ldus ave=%ld excl=%ld cyc=%ld", delayfr, delayRM1us, NBave, NBexcl, NBcycle);
+    snprintf(pinfomsg, stringmaxlen, "delay=%ld+%ldus ave=%u excl=%u cyc=%u", delayfr, delayRM1us, NBave, NBexcl, NBcycle);
 
 
     PROCESSINFO *processinfo;
@@ -887,15 +924,15 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     char dmRMname[100];
     sprintf(dmRMname, "aol%ld_dmRM", loop);
-    long ID_dmRM = read_sharedmem_image(dmRMname);
+    imageID ID_dmRM = read_sharedmem_image(dmRMname);
     if(ID_dmRM == -1) {
         processinfo_error(processinfo, "ERROR: cannot connect to DM response matrix");
         loopOK = 0;
         return RETURN_FAILURE;
     }
-    long sizexDM = data.image[ID_dmRM].md[0].size[0];
-    long sizeyDM = data.image[ID_dmRM].md[0].size[1];
-    long sizeDM = sizexDM*sizeyDM;
+    uint32_t sizexDM = data.image[ID_dmRM].md[0].size[0];
+    uint32_t sizeyDM = data.image[ID_dmRM].md[0].size[1];
+    uint64_t sizeDM = sizexDM*sizeyDM;
 
 
 
@@ -910,15 +947,16 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     else {
         sprintf(WFSname, "aol%ld_imWFS0", loop);
     }
-    long ID_wfsim = read_sharedmem_image(WFSname);
+    
+    imageID ID_wfsim = read_sharedmem_image(WFSname);
     if(ID_wfsim == -1) {
         processinfo_error(processinfo, "ERROR: cannot connect to WFS stream");
         loopOK = 0;
         return RETURN_FAILURE;
     }
-    long sizexWFS = data.image[ID_wfsim].md[0].size[0];
-    long sizeyWFS = data.image[ID_wfsim].md[0].size[1];
-    long sizeWFS = sizexWFS*sizeyWFS;
+    uint32_t sizexWFS = data.image[ID_wfsim].md[0].size[0];
+    uint32_t sizeyWFS = data.image[ID_wfsim].md[0].size[1];
+    uint64_t sizeWFS = sizexWFS*sizeyWFS;
 
     DEBUG_TRACEPOINT(" ");
 
@@ -953,16 +991,18 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     }
 
 
-    NBpoke = data.image[IDpokeC].md[0].size[2];
+    NBpoke       = data.image[IDpokeC].md[0].size[2];
     sizearray[0] = sizexWFS;
     sizearray[1] = sizeyWFS;
     sizearray[2] = NBpoke;
-    IDoutC = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1], sizearray[2]);
+    IDoutC       = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1], sizearray[2]);
 
     DEBUG_TRACEPOINT(" ");
+    
+    
     // timing info for pokes
-    long NBpokeTotal = (4 + delayfr + (NBave + NBexcl) * NBpoke) * NBiter + 4;
-    long pokecnt = 0;
+    uint64_t NBpokeTotal = (4 + delayfr + (NBave + NBexcl) * NBpoke) * NBiter + 4;
+    uint64_t pokecnt = 0;
     struct timespec poke_ts;
     long *pokeTime_sec;
     long *pokeTime_nsec;
@@ -975,12 +1015,12 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     DEBUG_TRACEPOINT(" ");
 
     // create one temporary array per time step
-    int AveStep;
-    long *IDoutCstep = (long *) malloc(sizeof(long) * NBave);
+    
+    imageID *IDoutCstep = (imageID *) malloc(sizeof(imageID) * NBave);
     // long *IDoutCstepCumul = (long *) malloc(sizeof(long) * NBave); // Cumulative
-    for(AveStep = 0; AveStep < NBave; AveStep++) {
+    for(uint32_t AveStep = 0; AveStep < NBave; AveStep++) {
         char imname[100];
-        sprintf(imname, "imoutStep%03d", AveStep);
+        sprintf(imname, "imoutStep%03u", AveStep);
         IDoutCstep[AveStep] = create_3Dimage_ID(imname, sizearray[0], sizearray[1], sizearray[2]);
         //sprintf(imname, "%s.ave%03d", IDoutC_name, AveStep);
         //IDoutCstepCumul[AveStep] = create_3Dimage_ID(imname, sizearray[0], sizearray[1], sizearray[2]);
@@ -998,9 +1038,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     // Check that DM size matches poke file
     if(data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1] != data.image[ID_dmRM].md[0].size[0]*data.image[ID_dmRM].md[0].size[1]) {
-        sprintf(pinfomsg, "ERROR: DM [%ld] and Poke [%ld] mismatch",
-                (long) data.image[ID_dmRM].md[0].size[0]*data.image[ID_dmRM].md[0].size[1],
-                (long) data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1]);
+        sprintf(pinfomsg, "ERROR: DM [%u] and Poke [%u] mismatch",
+                data.image[ID_dmRM].md[0].size[0]*data.image[ID_dmRM].md[0].size[1],
+                data.image[IDpokeC].md[0].size[0]*data.image[IDpokeC].md[0].size[1]);
         processinfo_error(processinfo, pinfomsg);
         loopOK = 0;
         list_image_ID();
@@ -1008,11 +1048,11 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     }
 
 
-    uint_fast16_t PokeIndex;   // Mode to be poked
-    for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
-        for(ii = 0; ii < sizeWFS; ii++) {
+
+    for(uint32_t PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++) // Mode to be poked
+        for(uint64_t ii = 0; ii < sizeWFS; ii++) {
             data.image[IDoutC].array.F[PokeIndex * sizeWFS + ii] = 0.0;
-            for(AveStep = 0; AveStep < NBave; AveStep++) {
+            for(uint32_t AveStep = 0; AveStep < NBave; AveStep++) {
                 data.image[IDoutCstep[AveStep]].array.F[PokeIndex * sizeWFS + ii] = 0.0;
             }
         }
@@ -1040,7 +1080,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      * A temporary array is created to hold the DM command
      */
     arrayf = (float *) malloc(sizeof(float) * sizeDM);
-    for(ii = 0; ii < sizeDM; ii++) {
+    for(uint64_t ii = 0; ii < sizeDM; ii++) {
         arrayf[ii] = 0.0;
     }
 
@@ -1065,35 +1105,35 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      */
     imcntmax          = (4 + delayfr + (NBave + NBexcl) * NBpoke) * NBiter + 4;
 
-    long *array_iter;
-    array_iter        = (long *) malloc(sizeof(long) * imcntmax); // Cycle number
+    uint64_t *array_iter;
+    array_iter        = (uint64_t *) malloc(sizeof(uint64_t) * imcntmax); // Cycle number
 
-    int  *array_poke;
-    array_poke        = (int *)  malloc(sizeof(int) * imcntmax); // Did we poke DM during this time interval ?
+    uint8_t  *array_poke;
+    array_poke        = (uint8_t *)  malloc(sizeof(uint8_t) * imcntmax); // Did we poke DM during this time interval ?
 
-    int  *array_accum;
-    array_accum       = (int *)  malloc(sizeof(int) * imcntmax); // Does frame count toward accumulated signal ?
+    uint8_t  *array_accum;
+    array_accum       = (uint8_t *)  malloc(sizeof(uint8_t) * imcntmax); // Does frame count toward accumulated signal ?
 
-    long *array_kk;
-    array_kk          = (long *) malloc(sizeof(long) * imcntmax); // frame index within poke mode acquisition
+    uint32_t *array_kk;
+    array_kk          = (uint32_t *) malloc(sizeof(uint32_t) * imcntmax); // frame index within poke mode acquisition
 
     // frame counter within poke mode acquisition, starts negative
     // becomes positive when accumulating signal
-    long *array_kk1;
-    array_kk1         = (long *) malloc(sizeof(long) * imcntmax);
+    int *array_kk1;
+    array_kk1         = (int *) malloc(sizeof(int) * imcntmax);
 
-    long *array_PokeIndex;
-    array_PokeIndex   = (long *) malloc(sizeof(long) * imcntmax); // Poke mode being measured
+    uint32_t *array_PokeIndex;
+    array_PokeIndex   = (uint32_t *) malloc(sizeof(uint32_t) * imcntmax); // Poke mode being measured
 
-    long *array_PokeIndex1;
-    array_PokeIndex1  = (long *) malloc(sizeof(long) * imcntmax); // Current poke mode on DM
+    uint32_t *array_PokeIndex1;
+    array_PokeIndex1  = (uint32_t *) malloc(sizeof(uint32_t) * imcntmax); // Current poke mode on DM
 
 
-    long *array_PokeIndexMapped;
-    array_PokeIndexMapped   = (long *) malloc(sizeof(long) * imcntmax); // Poke mode being measured, index in poke cube
+    uint32_t *array_PokeIndexMapped;
+    array_PokeIndexMapped   = (uint32_t *) malloc(sizeof(uint32_t) * imcntmax); // Poke mode being measured, index in poke cube
 
-    long *array_PokeIndex1Mapped;
-    array_PokeIndex1Mapped  = (long *) malloc(sizeof(long) * imcntmax); // Current poke mode on DM, index in poke cube
+    uint32_t *array_PokeIndex1Mapped;
+    array_PokeIndex1Mapped  = (uint32_t *) malloc(sizeof(uint32_t) * imcntmax); // Current poke mode on DM, index in poke cube
 
 
     DEBUG_TRACEPOINT(" ");
@@ -1102,23 +1142,23 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      * Poke sequence defines the sequence of mode poked
      *
      */
-    long *array_PokeSequ;
-    array_PokeSequ    = (long *) malloc(sizeof(long) * NBpoke);
+    uint32_t *array_PokeSequ;
+    array_PokeSequ    = (uint32_t *) malloc(sizeof(uint32_t) * NBpoke);
 
-    for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++) {
+    for(uint32_t PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++) {
         array_PokeSequ[PokeIndex] = PokeIndex;
     }
     if(SequInitMode & 0x01) { // swap pairs every 4 indices
-        for(PokeIndex = 0; PokeIndex < NBpoke - 1; PokeIndex += 4) {
-            int index0 = PokeIndex;
-            int index1 = PokeIndex + 1;
+        for(uint32_t PokeIndex = 0; PokeIndex < NBpoke - 1; PokeIndex += 4) {
+            uint32_t index0 = PokeIndex;
+            uint32_t index1 = PokeIndex + 1;
 
-            while(index1 > NBpoke - 1) {
+            while(index1 > (uint32_t) (NBpoke - 1)) {
                 index1 -= NBpoke;
             }
 
             // swap sequence pairs
-            long tmpPokeMode;
+            uint32_t tmpPokeMode;
             tmpPokeMode = array_PokeSequ[index0];
             array_PokeSequ[index0] = array_PokeSequ[index1];
             array_PokeSequ[index1] = tmpPokeMode;
@@ -1134,7 +1174,6 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         array_accum[imcnt] = 0;
     }
 
-    imcnt = 0;
 
     DEBUG_TRACEPOINT(" ");
 
@@ -1143,7 +1182,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     // ==================================
     processinfo_loopstart(processinfo); // Notify processinfo that we are entering loop
 
-    sprintf(pinfomsg, "%d  Starting loop, NBcycle = %ld", loopOK, NBcycle);
+    sprintf(pinfomsg, "%d  Starting loop, NBcycle = %u", loopOK, NBcycle);
     processinfo_WriteMessage(processinfo, pinfomsg);
 
     long loopcnt = 0;
@@ -1154,6 +1193,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
      *
      */
 
+	imcnt = 0;
     while(loopOK == 1) {
         DEBUG_TRACEPOINT(" ");
 
@@ -1165,11 +1205,11 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         DEBUG_TRACEPOINT(" ");
 
-        printf("NBpoke=%ld # %3ld/%3ld (%6ld/%6ld)\n", NBpoke, iter, NBiter, imcnt, imcntmax);
+        printf("NBpoke=%u # %3lu/%3lu (%6u/%6u)\n", NBpoke, iter, NBiter, imcnt, imcntmax);
         fflush(stdout);
 
 
-        sprintf(pinfomsg, "NBpoke=%ld # %3ld/%3ld (%6ld/%6ld)", NBpoke, iter, NBiter, imcnt, imcntmax);
+        sprintf(pinfomsg, "NBpoke=%u # %3lu/%3lu (%6u/%6u)", NBpoke, iter, NBiter, imcnt, imcntmax);
         processinfo_WriteMessage(processinfo, pinfomsg);
 
 
@@ -1186,16 +1226,16 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 permut_offset = 0;
             }
 
-            for(PokeIndex = permut_offset; PokeIndex < NBpoke; PokeIndex += 2) {
-                int index0 = PokeIndex;
-                int index1 = PokeIndex + 1;
+            for(uint32_t PokeIndex = permut_offset; PokeIndex < NBpoke; PokeIndex += 2) {
+                uint32_t index0 = PokeIndex;
+                uint32_t index1 = PokeIndex + 1;
 
-                if(index1 > NBpoke - 1) {
+                if(index1 > (uint32_t) (NBpoke - 1)) {
                     index1 -= NBpoke;
                 }
 
                 // swap sequence pairs
-                long tmpPokeMode;
+                uint32_t tmpPokeMode;
                 tmpPokeMode = array_PokeSequ[index0];
                 array_PokeSequ[index0] = array_PokeSequ[index1];
                 array_PokeSequ[index1] = tmpPokeMode;
@@ -1208,20 +1248,20 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         // INITIALIZE WITH FIRST POKE
 
-        long kk  = 0;
-        long kk1 = 0;
+        uint32_t kk  = 0;
+        int      kk1 = 0;
 
-        uint_fast16_t PokeIndex  = 0;    // Poked mode index
-        uint_fast16_t PokeIndex1 = 0;
+        uint32_t PokeIndex  = 0;    // Poked mode index
+        uint32_t PokeIndex1 = 0;
 
-        uint_fast16_t PokeIndexMapped;   // Poked mode index in original poke cube
-        uint_fast16_t PokeIndex1Mapped;
+        uint32_t PokeIndexMapped;   // Poked mode index in original poke cube
+        uint32_t PokeIndex1Mapped;
 
         PokeIndexMapped  = array_PokeSequ[PokeIndex];
         PokeIndex1Mapped = array_PokeSequ[PokeIndex1];
 
-        if((PokeIndex1Mapped < 0) || (PokeIndex1Mapped > NBpoke - 1)) {
-            printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
+        if((PokeIndex1Mapped > (uint32_t) (NBpoke - 1))) {
+            printf("ERROR: PokeIndex1Mapped = %u is outside range 0 - %u\n", PokeIndex1Mapped, NBpoke);
             exit(0);
         }
 
@@ -1288,7 +1328,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
             ImageStreamIO_semwait(&data.image[ID_wfsim], semindexwfs);
 
             kk1++;
-            if(kk1 == NBave) {
+            if(kk1 == (int) NBave) {
                 kk1 = -NBexcl;
                 PokeIndex1++;
 
@@ -1298,8 +1338,8 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
                 PokeIndex1Mapped  = array_PokeSequ[PokeIndex1];
 
-                if((PokeIndex1Mapped < 0) || (PokeIndex1Mapped > NBpoke - 1)) {
-                    printf("ERROR: PokeIndex1Mapped = %ld is outside range 0 - %ld\n", PokeIndex1Mapped, NBpoke);
+                if((PokeIndex1Mapped > (uint32_t) (NBpoke - 1))) {
+                    printf("ERROR: PokeIndex1Mapped = %u is outside range 0 - %u\n", PokeIndex1Mapped, NBpoke);
                     exit(0);
                 }
 
@@ -1362,7 +1402,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                     array_accum[imcnt] = 1;
                 }
                 kk1++;
-                if(kk1 == NBave) { // wait for NBexcl excluded frames. We poke after delayRM1us
+                if(kk1 == (int) NBave) { // wait for NBexcl excluded frames. We poke after delayRM1us
                     kk1 = -NBexcl;
                     PokeIndex1++;
 
@@ -1403,7 +1443,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         }
 
 
-        for(ii = 0; ii < sizeDM; ii++) {
+        for(uint64_t ii = 0; ii < sizeDM; ii++) {
             arrayf[ii] = 0.0;
         }
 
@@ -1437,9 +1477,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         printf("Combining results ... ");
         fflush(stdout);
 
-        for(AveStep = 0; AveStep < NBave; AveStep++) { // sum over all values AveStep
+        for(uint32_t AveStep = 0; AveStep < NBave; AveStep++) { // sum over all values AveStep
             for(PokeIndexMapped = 0; PokeIndexMapped < NBpoke ; PokeIndexMapped++) {
-                for(ii = 0; ii < sizeWFS; ii++) {
+                for(uint64_t ii = 0; ii < sizeWFS; ii++) {
                     data.image[IDoutC].array.F[PokeIndexMapped * sizeWFS + ii] += data.image[IDoutCstep[AveStep]].array.F[PokeIndexMapped * sizeWFS + ii];
                 }
 
@@ -1460,31 +1500,30 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
         if(SAVE_RMACQU_ALL == 1) { // Save all intermediate result
             char tmpfname[200];
             FILE *fplog;
-            int retv;
 
-            retv = system("mkdir -p tmpRMacqu");
+            system("mkdir -p tmpRMacqu");
 
             fplog = fopen("tmpRMacqu/RMacqulog.txt", "w");
             fprintf(fplog, "%-20s  %ld\n", "loop", loop);
             fprintf(fplog, "%-20s  %ld\n", "delayfr", delayfr);
             fprintf(fplog, "%-20s  %ld\n", "delayRM1us", delayRM1us);
-            fprintf(fplog, "%-20s  %ld\n", "NBave", NBave);
-            fprintf(fplog, "%-20s  %ld\n", "NBexcl", NBexcl);
+            fprintf(fplog, "%-20s  %u\n", "NBave", NBave);
+            fprintf(fplog, "%-20s  %u\n", "NBexcl", NBexcl);
             fprintf(fplog, "%-20s  %s\n", "IDpokeC_name", IDpokeC_name);
             fprintf(fplog, "%-20s  %s\n", "IIDoutC_name", IDoutC_name);
             fprintf(fplog, "%-20s  %d\n", "normalize", normalize);
             fprintf(fplog, "%-20s  %d\n", "AOinitMode", AOinitMode);
-            fprintf(fplog, "%-20s  %ld\n", "NBcycle", NBcycle);
-            fprintf(fplog, "%-20s  %d\n", "SequInitMode", SequInitMode);
+            fprintf(fplog, "%-20s  %u\n", "NBcycle", NBcycle);
+            fprintf(fplog, "%-20s  %u\n", "SequInitMode", SequInitMode);
             fclose(fplog);
 
 
             // Save individual time step within averaging for high temporal resolution
-            for(AveStep = 0; AveStep < NBave; AveStep++) { // save to disk IDoutCstep[AveStep]
+            for(uint32_t AveStep = 0; AveStep < NBave; AveStep++) { // save to disk IDoutCstep[AveStep]
                 char imname[100];
-                sprintf(imname, "imoutStep%03d", AveStep);
+                sprintf(imname, "imoutStep%03u", AveStep);
 
-                sprintf(tmpfname, "!tmpRMacqu/%s.tstep%03d.iter%03ld.fits", IDoutC_name, AveStep, iter);
+                sprintf(tmpfname, "!tmpRMacqu/%s.tstep%03u.iter%03lu.fits", IDoutC_name, AveStep, iter);
                 //list_image_ID();
                 printf("SAVING %s -> %s ... ", imname, tmpfname);
                 fflush(stdout);
@@ -1509,7 +1548,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
         if(iter == NBiter) {
-            sprintf(pinfomsg, "Reached iteration %ld -> stop", NBiter);
+            sprintf(pinfomsg, "Reached iteration %lu -> stop", NBiter);
             processinfo_WriteMessage(processinfo, pinfomsg);
             loopOK = 0;
         }
@@ -1540,19 +1579,18 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     DEBUG_TRACEPOINT(" ");
 
-    for(PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
-        for(ii = 0; ii < sizeWFS; ii++) {
+    for(uint32_t PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
+        for(uint64_t ii = 0; ii < sizeWFS; ii++) {
             data.image[IDoutC].array.F[PokeIndex * sizeWFS + ii] /= NBave * iter;
         }
 
     DEBUG_TRACEPOINT(" ");
 
     // print poke log
-    int retv;
-    retv = system("mkdir -p tmpRMacqu");
+    system("mkdir -p tmpRMacqu");
     fp = fopen("./tmpRMacqu/RMpokelog.txt", "w");
     for(imcnt = 0; imcnt < imcntmax; imcnt++) {
-        fprintf(fp, "%6ld %3ld    %1d %1d     %6ld  %6ld     %4ld %4ld   %4ld %4ld     %3ld %3ld %3ld\n",
+        fprintf(fp, "%6u %3lu    %1u %1u     %6u  %6d     %4u %4u   %4u %4u     %3u %3u %3u\n",
                 imcnt,
                 array_iter[imcnt],
                 array_poke[imcnt],
@@ -1578,9 +1616,9 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
     fp = fopen("./tmpRMacqu/RMpokeTiming.txt", "w");
     double ftime0 = pokeTime_sec[0] + 1.0e-9 * pokeTime_nsec[0];
     double ftime;
-    for(ii = 0; ii < pokecnt; ii++) {
+    for(uint64_t ii = 0; ii < pokecnt; ii++) {
         ftime = pokeTime_sec[ii] + 1.0e-9 * pokeTime_nsec[ii];
-        fprintf(fp, "%5ld  %16ld.%09ld  %5ld  %12.9lf\n", ii, pokeTime_sec[ii], pokeTime_nsec[ii], pokeTime_index[ii], ftime - ftime0);
+        fprintf(fp, "%5lu  %16ld.%09ld  %5ld  %12.9lf\n", ii, pokeTime_sec[ii], pokeTime_nsec[ii], pokeTime_index[ii], ftime - ftime0);
         ftime0 = ftime;
     }
     fclose(fp);
@@ -1610,7 +1648,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
     DEBUG_TRACEPOINT(" ");
 
-    return(IDoutC);
+    return IDoutC;
 }
 
 
@@ -1629,26 +1667,26 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     uint32_t CMDmode
 )
 {
-   // uint16_t loopstatus;
+    // uint16_t loopstatus;
 
 
-	// TEST
-	static unsigned long connection_count_1 = 0;
-	static unsigned long connection_count_2 = 0;
+    // TEST
+    static unsigned long connection_count_1 = 0;
+    static unsigned long connection_count_2 = 0;
 
     // ===========================
     // SETUP FPS
     // ===========================
-/*    int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps =
-        function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-    strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-    fps.md->sourceline = __LINE__;*/
+    /*    int SMfd = -1;
+        FUNCTION_PARAMETER_STRUCT fps =
+            function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
+        strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
+        fps.md->sourceline = __LINE__;*/
 
-	FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(fpsname, CMDmode);
 
-//	int SMfd_mlat = -1;
-//	int SMfd_DMcomb = -1;
+    //	int SMfd_mlat = -1;
+    //	int SMfd_DMcomb = -1;
 
 
     // ===========================
@@ -1659,18 +1697,20 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
     long loop_default[4] = { 0, 0, 10, 0 };
-    long fpi_loop = function_parameter_add_entry(&fps, ".loop",
-                    "loop index",
-                    FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
+    __attribute__((unused)) long fpi_loop =
+        function_parameter_add_entry(&fps, ".loop",
+                                     "loop index",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
 
 
 
 
 
     double ampl_default[4] = { 0.01, 0.000001, 1.0, 0.01 };
-    long fpi_ampl = function_parameter_add_entry(&fps, ".ampl",
-                    "RM poke amplitude",
-                    FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &ampl_default);
+    __attribute__((unused)) long fpi_ampl =
+        function_parameter_add_entry(&fps, ".ampl",
+                                     "RM poke amplitude",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &ampl_default);
 
     long delayfr_default[4] = { 2, 0, 10, 2 };
     long fpi_delayfr = function_parameter_add_entry(&fps, ".delayfr",
@@ -1683,9 +1723,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                           FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &delayRM1us_default);
 
     long NBave_default[4] = { 5, 1, 1000, 5 };
-    long fpi_NBave = function_parameter_add_entry(&fps, ".NBave",
-                     "Number of frames averaged for a single poke measurement",
-                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBave_default);
+    __attribute__((unused)) long fpi_NBave =
+        function_parameter_add_entry(&fps, ".NBave",
+                                     "Number of frames averaged for a single poke measurement",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBave_default);
 
     long NBexcl_default[4] = { 1, 0, 100, 1 };
     long fpi_NBexcl = function_parameter_add_entry(&fps, ".NBexcl",
@@ -1693,74 +1734,87 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                       FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBexcl_default);
 
     long NBcycle_default[4] = { 10, 1, 1000, 10 };
-    long fpi_NBcycle = function_parameter_add_entry(&fps, ".NBcycle",
-                       "Number of measurement cycles to be repeated",
-                       FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBcycle_default);
+    __attribute__((unused)) long fpi_NBcycle =
+        function_parameter_add_entry(&fps, ".NBcycle",
+                                     "Number of measurement cycles to be repeated",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBcycle_default);
 
     long NBinnerCycle_default[4] = { 10, 1, 1000, 10 };
-    long fpi_NBinnerCycle = function_parameter_add_entry(&fps, ".NBinnerCycle",
-                            "Number of inner cycles (how many consecutive times should a single +/- poke be repeated)",
-                            FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBinnerCycle_default);
+    __attribute__((unused)) long fpi_NBinnerCycle =
+        function_parameter_add_entry(&fps, ".NBinnerCycle",
+                                     "Number of inner cycles (how many consecutive times should a single +/- poke be repeated)",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBinnerCycle_default);
 
 
     long AOinitMode_default[4] = { 0, 0, 2, 0 };
-    long fpi_AOinitMode = function_parameter_add_entry(&fps, ".AOinitMode",
-                          "AO initialization mode",
-                          FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &AOinitMode_default);
+    __attribute__((unused)) long fpi_AOinitMode =
+        function_parameter_add_entry(&fps, ".AOinitMode",
+                                     "AO initialization mode",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &AOinitMode_default);
 
 
 
 
-    long fpi_MaskMode = function_parameter_add_entry(&fps, ".MaskMode",
-                        "Mask mode, DM and WFS",
-                        FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+    __attribute__((unused)) long fpi_MaskMode =
+        function_parameter_add_entry(&fps, ".MaskMode",
+                                     "Mask mode, DM and WFS",
+                                     FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
     double maskRMp0_default[4] = { 0.2, 0.0, 1.0, 0.2 };
-    long fpi_maskRMp0 = function_parameter_add_entry(&fps, ".DMmask.RMp0",
-                        "DM mask, first percentile point",
-                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp0_default);
+    __attribute__((unused)) long fpi_maskRMp0 =
+        function_parameter_add_entry(&fps, ".DMmask.RMp0",
+                                     "DM mask, first percentile point",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp0_default);
 
     double maskRMc0_default[4] = { 1.0, 0.0, 5.0, 1.0 };
-    long fpi_maskRMc0 = function_parameter_add_entry(&fps, ".DMmask.RMc0",
-                        "DM mask, first percentile value coefficient",
-                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc0_default);
+    __attribute__((unused)) long fpi_maskRMc0 =
+        function_parameter_add_entry(&fps, ".DMmask.RMc0",
+                                     "DM mask, first percentile value coefficient",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc0_default);
 
     double maskRMp1_default[4] = { 0.5, 0.0, 1.0, 0.5 };
-    long fpi_maskRMp1 = function_parameter_add_entry(&fps, ".DMmask.RMp1",
-                        "DM mask, second percentile point",
-                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp1_default);
+    __attribute__((unused)) long fpi_maskRMp1 =
+        function_parameter_add_entry(&fps, ".DMmask.RMp1",
+                                     "DM mask, second percentile point",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMp1_default);
 
     double maskRMc1_default[4] = { 0.5, 0.0, 5.0, 0.5 };
-    long fpi_maskRMc1 = function_parameter_add_entry(&fps, ".DMmask.RMc1",
-                        "DM mask, second percentile value coefficient",
-                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc1_default);
+    __attribute__((unused)) long fpi_maskRMc1 =
+        function_parameter_add_entry(&fps, ".DMmask.RMc1",
+                                     "DM mask, second percentile value coefficient",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskRMc1_default);
 
     double DMproxrad_default[4] = { 2.5, 0.0, 10.0, 2.5 };
-    long fpi_DMproxrad = function_parameter_add_entry(&fps, ".DMmask.proxrad",
-                         "DM actuator proximity radius",
-                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &DMproxrad_default);
+    __attribute__((unused)) long fpi_DMproxrad =
+        function_parameter_add_entry(&fps, ".DMmask.proxrad",
+                                     "DM actuator proximity radius",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &DMproxrad_default);
 
 
 
     double maskWFSp0_default[4] = { 0.2, 0.0, 1.0, 0.2 };
-    long fpi_maskWFSp0 = function_parameter_add_entry(&fps, ".WFSmask.RMp0",
-                         "WFS mask, first percentile point",
-                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp0_default);
+    __attribute__((unused)) long fpi_maskWFSp0 =
+        function_parameter_add_entry(&fps, ".WFSmask.RMp0",
+                                     "WFS mask, first percentile point",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp0_default);
 
     double maskWFSc0_default[4] = { 1.0, 0.0, 5.0, 1.0 };
-    long fpi_maskWFSc0 = function_parameter_add_entry(&fps, ".WFSmask.RMc0",
-                         "WFS mask, first percentile value coefficient",
-                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc0_default);
+    __attribute__((unused)) long fpi_maskWFSc0 =
+        function_parameter_add_entry(&fps, ".WFSmask.RMc0",
+                                     "WFS mask, first percentile value coefficient",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc0_default);
 
     double maskWFSp1_default[4] = { 0.6, 0.0, 1.0, 0.6 };
-    long fpi_maskWFSp1 = function_parameter_add_entry(&fps, ".WFSmask.RMp1",
-                         "WFS mask, second percentile point",
-                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp1_default);
+    __attribute__((unused)) long fpi_maskWFSp1 =
+        function_parameter_add_entry(&fps, ".WFSmask.RMp1",
+                                     "WFS mask, second percentile point",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSp1_default);
 
     double maskWFSc1_default[4] = { 0.6, 0.0, 5.0, 0.6 };
-    long fpi_maskWFSc1 = function_parameter_add_entry(&fps, ".WFSmask.RMc1",
-                         "WFS mask, second percentile value coefficient",
-                         FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc1_default);
+    __attribute__((unused)) long fpi_maskWFSc1 =
+        function_parameter_add_entry(&fps, ".WFSmask.RMc1",
+                                     "WFS mask, second percentile value coefficient",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &maskWFSc1_default);
 
 
 
@@ -1768,51 +1822,59 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
     // input streams
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
-    long fpi_filename_pokeC     = function_parameter_add_entry(&fps, ".fn_pokeC",
-                                  "Poke sequence cube",
-                                  FPTYPE_FITSFILENAME, FPFLAG, pNull);
+    __attribute__((unused)) long fpi_filename_pokeC     =
+        function_parameter_add_entry(&fps, ".fn_pokeC",
+                                     "Poke sequence cube",
+                                     FPTYPE_FITSFILENAME, FPFLAG, pNull);
 
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
-    long fpi_filename_DMRMmask = function_parameter_add_entry(&fps, ".fn_RMDMmask",
-                                 "RM active DM actuators mask",
-                                 FPTYPE_FITSFILENAME, FPFLAG, pNull);
+    __attribute__((unused)) long fpi_filename_DMRMmask =
+        function_parameter_add_entry(&fps, ".fn_RMDMmask",
+                                     "RM active DM actuators mask",
+                                     FPTYPE_FITSFILENAME, FPFLAG, pNull);
     functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask", "./conf/RM_DMmask.fits");
 
 
 
     // output files and dir
-    long fpi_out_dirname      = function_parameter_add_entry(&fps, ".out.dirname",
-                                "output directory",
-                                FPTYPE_DIRNAME, FPFLAG_DEFAULT_OUTPUT, pNull);
+    __attribute__((unused)) long fpi_out_dirname      =
+        function_parameter_add_entry(&fps, ".out.dirname",
+                                     "output directory",
+                                     FPTYPE_DIRNAME, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    long fpi_out_label      = function_parameter_add_entry(&fps, ".out.label",
-                              "output label",
-                              FPTYPE_STRING, FPFLAG_DEFAULT_OUTPUT, pNull);
+    __attribute__((unused)) long fpi_out_label      =
+        function_parameter_add_entry(&fps, ".out.label",
+                                     "output label",
+                                     FPTYPE_STRING, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    long fpi_out_timestring    = function_parameter_add_entry(&fps, ".out.timestring",
-                                 "output timestring",
-                                 FPTYPE_STRING, FPFLAG_DEFAULT_OUTPUT, pNull);
+    __attribute__((unused)) long fpi_out_timestring    =
+        function_parameter_add_entry(&fps, ".out.timestring",
+                                     "output timestring",
+                                     FPTYPE_STRING, FPFLAG_DEFAULT_OUTPUT, pNull);
 
 
 
 
 
-    long fpi_filename_respC       = function_parameter_add_entry(&fps, ".out.fn_respC",
-                                    "output response matrix",
-                                    FPTYPE_FILENAME, FPFLAG_DEFAULT_OUTPUT, pNull);
+    __attribute__((unused)) long fpi_filename_respC       =
+        function_parameter_add_entry(&fps, ".out.fn_respC",
+                                     "output response matrix",
+                                     FPTYPE_FILENAME, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    long fpi_filename_wfsref      = function_parameter_add_entry(&fps, ".out.fn_wfsref",
-                                    "output WFS reference",
-                                    FPTYPE_FILENAME, FPFLAG_DEFAULT_OUTPUT, pNull);
+    __attribute__((unused)) long fpi_filename_wfsref      =
+        function_parameter_add_entry(&fps, ".out.fn_wfsref",
+                                     "output WFS reference",
+                                     FPTYPE_FILENAME, FPFLAG_DEFAULT_OUTPUT, pNull);
 
 
 
 
 
     // on/off parameters
-    long fpi_normalize = function_parameter_add_entry(&fps, ".normalize",
-                         "Normalize WFS frames",
-                         FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+    __attribute__((unused)) long fpi_normalize =
+        function_parameter_add_entry(&fps, ".normalize",
+                                     "Normalize WFS frames",
+                                     FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
 
     long fpi_Hpokemode = function_parameter_add_entry(&fps, ".Hpoke",
                          "Hadamard Poke mode",
@@ -1835,25 +1897,30 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
     double LOmaxCPA_default[4] = { 3.0, 1.0, 30.0, 3.0 };
-    long fpi_LOmaxCPA = function_parameter_add_entry(&fps, ".LOmaxCPA",
-                        "Low orders max CPA",
-                        FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &LOmaxCPA_default);
+    __attribute__((unused)) long fpi_LOmaxCPA =
+        function_parameter_add_entry(&fps, ".LOmaxCPA",
+                                     "Low orders max CPA",
+                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &LOmaxCPA_default);
 
 
     // External scripts (post)
-    long fpi_exec_post_RMdecode = function_parameter_add_entry(&fps, ".exec.RMdecode",
-                                  "RM decode script",
-                                  FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+    __attribute__((unused)) long fpi_exec_post_RMdecode =
+        function_parameter_add_entry(&fps, ".exec.RMdecode",
+                                     "RM decode script",
+                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-    long fpi_exec_post_mkDMWFSmasks = function_parameter_add_entry(&fps, ".exec.mkDMWFSmasks",
-                                      "Make DM and WFS masks",
-                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+    __attribute__((unused)) long fpi_exec_post_mkDMWFSmasks =
+        function_parameter_add_entry(&fps, ".exec.mkDMWFSmasks",
+                                     "Make DM and WFS masks",
+                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-    long fpi_exec_post_mkDMslaveact = function_parameter_add_entry(&fps, ".exec.mkDMslaveact",
-                                      "Make DM slaved actuators",
-                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+    __attribute__((unused)) long fpi_exec_post_mkDMslaveact =
+        function_parameter_add_entry(&fps, ".exec.mkDMslaveact",
+                                     "Make DM slaved actuators",
+                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-    long fpi_exec_post_mkLODMmodes = function_parameter_add_entry(&fps, ".exec.mkLODMmodes",
+    __attribute__((unused)) long fpi_exec_post_mkLODMmodes =
+        function_parameter_add_entry(&fps, ".exec.mkLODMmodes",
                                      "Make DM low order modes",
                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
@@ -1891,10 +1958,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
         if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
-			
-			printf("======== connecting to aux FPS ============\n");//TBE
-			fflush(stdout);
-			
+
+            printf("======== connecting to aux FPS ============\n");//TBE
+            fflush(stdout);
+
             //
             //  Connect to aux FPS
             //
@@ -1914,8 +1981,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                 fflush(stdout);
             }
 
-			printf("======== DONE connecting to aux FPS ============\n");//TBE
-			fflush(stdout);
+            printf("======== DONE connecting to aux FPS ============\n");//TBE
+            fflush(stdout);
 
 
 
@@ -1944,15 +2011,18 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                 }
             }
 
-
             //
             // Compute action: make Spoke and Hpoke
             //
             if(fps.parray[fpi_comp_RM_Mpoke].fpflag & FPFLAG_ONOFF) {
                 if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0 ) {
+
                     int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
+
                     int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
-                    int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
+
+                    __attribute__((unused)) int DMMODE =
+                        functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
 
                     AOloopControl_compTools_mkSimpleZpokeM(DMxsize, DMysize, "Spoke");
                     save_fl_fits("Spoke", "!./conf/Spoke.fits");
@@ -1984,7 +2054,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
                 if(fps.parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF) {
-                    char fname_Hpoke[200];
+                    //char fname_Hpoke[200];
                     functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Hpoke.fits");
                 }
                 else {
@@ -1994,8 +2064,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
 
-			printf("======== Import parameters ============\n");//TBE
-			fflush(stdout);
+            printf("======== Import parameters ============\n");//TBE
+            fflush(stdout);
 
             //
             // Import latency measurements and compute timing parameters
@@ -2005,7 +2075,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                     double latfr = functionparameter_GetParamValue_FLOAT64 ( &FPS_mlat, ".out.latencyfr" );
                     double framerateHz = functionparameter_GetParamValue_FLOAT64 ( &FPS_mlat, ".out.framerateHz" );
 
-                    long delayfr = (long) (1000000.0*latfr);
+                    //long delayfr = (long) (1000000.0*latfr);
 
                     // RMdelay = hardwlaten - 0.5 - excl/2
                     double RMdelay = latfr - 0.5 - 0.5 * fps.parray[fpi_NBexcl].val.l[0];
@@ -2025,21 +2095,21 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                     }
                 }
             }
-			printf("======== DONE Import parameters ============\n");//TBE
-			fflush(stdout);
-sleep(1);
+            printf("======== DONE Import parameters ============\n");//TBE
+            fflush(stdout);
+            sleep(1);
 
 
-			printf("======== Check parameters ============\n");//TBE
-			fflush(stdout);
+            printf("======== Check parameters ============\n");//TBE
+            fflush(stdout);
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
 
-			printf("LOOP END =================\n");
-			fflush(stdout);
+            printf("LOOP END =================\n");
+            fflush(stdout);
 
-                }
-        
-        
+        }
+
+
     }
 
     if ( fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX > 0 ) {
@@ -2114,7 +2184,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     uint64_t *FPFLAG_HPOKE;
     FPFLAG_HPOKE = functionparameter_GetParamPtr_fpflag(&fps, ".Hpoke");
 
-	uint64_t *FPFLAG_MASKMODE;
+	__attribute__((unused)) uint64_t *FPFLAG_MASKMODE;
 	FPFLAG_MASKMODE = functionparameter_GetParamPtr_fpflag(&fps, ".MaskMode");
 	
 	
@@ -2153,16 +2223,15 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     int SHUFFLE = 1;
 
-    uint32_t act;
     char *ptra;
     char *ptrb;
     char *ptra0;
     char *ptrb0;
-    uint64_t pix;
-    long IDwfsresp2a, IDwfsresp2b;
+
+    imageID IDwfsresp2a, IDwfsresp2b;
     uint64_t wfsxsize, wfsysize, wfsxysize;
-    long IDrespC;
-    long IDwfsref;
+    imageID IDrespC;
+    imageID IDwfsref;
 
     char pokeC_name[] = "pokeC";
     long IDpokeC = load_fits(pokeC_filename, pokeC_name, 1);
@@ -2174,31 +2243,28 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     uint32_t dmxsize = data.image[IDpokeC].md[0].size[0];
     uint32_t dmysize = data.image[IDpokeC].md[0].size[1];
     uint32_t dmxysize = dmxsize*dmysize;
-    uint64_t NBpoke = data.image[IDpokeC].md[0].size[2];
+    uint32_t NBpoke = data.image[IDpokeC].md[0].size[2];
 
-    int *pokearray = (int*) malloc(sizeof(int)*NBpoke); // shuffled array
+    uint32_t *pokearray = (uint32_t*) malloc(sizeof(uint32_t)*NBpoke); // shuffled array
 
 
 
-    int p;
-    for(p=0; p<NBpoke; p++)
+    for(uint32_t p=0; p<NBpoke; p++)
         pokearray[p] = p;
     if(SHUFFLE == 1)
     {
-        int rindex;
-
-        for(rindex=0; rindex<NBpoke; rindex++)
+        for(uint32_t rindex=0; rindex<NBpoke; rindex++)
         {
-            int p1;
-            int p2;
-            int tmpp;
+            uint32_t p1;
+            uint32_t p2;
+            uint32_t tmpp;
 
-            p1 = (int) (ran1()*NBpoke);
-            if(p1>NBpoke-1)
+            p1 = (uint32_t) (ran1()*NBpoke);
+            if(p1 > (uint32_t) (NBpoke-1) )
                 p1 = NBpoke-1;
 
-            p2 = (int) (ran1()*NBpoke);
-            if(p2>NBpoke-1)
+            p2 = (uint32_t) (ran1()*NBpoke);
+            if(p2 > (uint32_t) (NBpoke-1))
                 p2 = NBpoke-1;
 
             tmpp = pokearray[p1];
@@ -2223,15 +2289,15 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     uint32_t NBpoke2 = 2*NBpoke*NBinnerCycleC + 4; // add zero frame before and after
 
 
-    long IDpokeC2a = create_3Dimage_ID("dmpokeC2a", dmxsize, dmysize, NBpoke2);
-    long IDpokeC2b = create_3Dimage_ID("dmpokeC2b", dmxsize, dmysize, NBpoke2);
+    imageID IDpokeC2a = create_3Dimage_ID("dmpokeC2a", dmxsize, dmysize, NBpoke2);
+    imageID IDpokeC2b = create_3Dimage_ID("dmpokeC2b", dmxsize, dmysize, NBpoke2);
 
 
 
 
     // set start and end frames to zero
 
-    for(act=0; act<dmxysize; act++)
+    for(uint64_t act=0; act<dmxysize; act++)
     {
         data.image[IDpokeC2a].array.F[act] = 0.0;
         data.image[IDpokeC2a].array.F[dmxysize + act] = 0.0;
@@ -2261,17 +2327,16 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     int pokeindex;
     pokeindex = 2; // accounts for first two zero pokes
 
-    for(int poke=0; poke<NBpoke; poke++)
+    for(uint32_t poke=0; poke<NBpoke; poke++)
     {
-        int innercycle;
-        for(innercycle=0; innercycle < NBinnerCycleC; innercycle++)
+        for(uint32_t innercycle=0; innercycle < NBinnerCycleC; innercycle++)
         {
             // note
             // old indices were 2*poke+2 and 2*poke+3
 
-            for(act=0; act<dmxysize; act++)
+            for(uint64_t act=0; act<dmxysize; act++)
                 data.image[IDpokeC2a].array.F[dmxysize*(pokeindex) + act]   =  ampl*data.image[IDpokeC].array.F[dmxysize*pokearray[poke]+act];
-            for(act=0; act<dmxysize; act++)
+            for(uint64_t act=0; act<dmxysize; act++)
                 data.image[IDpokeC2a].array.F[dmxysize*(pokeindex+1) + act] = -ampl*data.image[IDpokeC].array.F[dmxysize*pokearray[poke]+act];
 
 
@@ -2308,10 +2373,9 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
         //pokesigntmp = 1; // no inversion
     }
 
-    int retv;
     char command[500];
     sprintf(command, "mkdir -p %s/tmpRMacqu", outdirname);
-    retv = system(command);
+    system(command);
 
 	char fname[200];
 	sprintf(fname, "!%s/tmpRMacqu/test_dmpokeC2a.fits", outdirname);
@@ -2321,7 +2385,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     save_fits("dmpokeC2b", fname);
 
 
-    printf("NBpoke = %ld\n", NBpoke);
+    printf("NBpoke = %u\n", NBpoke);
     fflush(stdout);
 
     // ******************************************************************
@@ -2499,16 +2563,15 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             IDwfsref_B = create_2Dimage_ID(imnameout_wfsref_B, wfsxsize, wfsysize);
 
             pokeindex = 2;
-            for(int poke=0; poke<NBpoke; poke++)
+            for(uint32_t poke=0; poke<NBpoke; poke++)
             {
-                int innercycle;
-                for(innercycle=0; innercycle < NBinnerCycleC; innercycle++)
+                for(uint32_t innercycle=0; innercycle < NBinnerCycleC; innercycle++)
                 {
                     float valA;
                     float valB;
 
                     // Sum response
-                    for(pix=0; pix<wfsxysize; pix++)
+                    for(uint64_t pix=0; pix<wfsxysize; pix++)
                     {
                         // pattern A
                         valA = (data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] - data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/2.0/ampl/NBinnerCycleC;
@@ -2522,7 +2585,7 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                     }
 
                     // Sum reference
-                    for(pix=0; pix<wfsxysize; pix++)
+                    for(uint64_t pix=0; pix<wfsxysize; pix++)
                     {
                         // pattern A
                         data.image[IDwfsref].array.F[pix] += (data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex) + pix] + data.image[IDwfsresp2a].array.F[wfsxysize*(pokeindex+1) + pix])/(2*NBpoke)/NBinnerCycleC;
@@ -2666,20 +2729,20 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
 
 
-long AOloopControl_acquireCalib_Measure_WFS_linResponse(
-    long        loop,
-    float       ampl,
-    long        delayfr,          /// Frame delay [# of frame]
-    long        delayRM1us,       /// Sub-frame delay [us]
-    long        NBave,            /// Number of frames averaged for a single poke measurement
-    long        NBexcl,           /// Number of frames excluded
-    const char *IDpokeC_name,
-    const char *IDrespC_name,
-    const char *IDwfsref_name,
-    int         normalize,
-    int         AOinitMode,
-    long        NBcycle,         /// Number of measurement cycles to be repeated
-    long        NBinnerCycle     /// Number of inner cycles (how many consecutive times should a single +/- poke be repeated)
+errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse(
+    __attribute__((unused)) long        loop,
+    __attribute__((unused)) float       ampl,
+    __attribute__((unused)) long        delayfr,          /// Frame delay [# of frame]
+    __attribute__((unused)) long        delayRM1us,       /// Sub-frame delay [us]
+    __attribute__((unused)) long        NBave,            /// Number of frames averaged for a single poke measurement
+    __attribute__((unused)) long        NBexcl,           /// Number of frames excluded
+    __attribute__((unused)) const char *IDpokeC_name,
+    __attribute__((unused)) const char *IDrespC_name,
+    __attribute__((unused)) const char *IDwfsref_name,
+    __attribute__((unused)) int         normalize,
+    __attribute__((unused)) int         AOinitMode,
+    __attribute__((unused)) long        NBcycle,         /// Number of measurement cycles to be repeated
+    __attribute__((unused)) long        NBinnerCycle     /// Number of inner cycles (how many consecutive times should a single +/- poke be repeated)
 )
 {
 	char fpsname[200];
@@ -2687,7 +2750,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
     long pindex = (long) getpid();  // index used to differentiate multiple calls to function
     // if we don't have anything more informative, we use PID
 	
-	int SMfd = -1;
+	//int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS
@@ -2702,7 +2765,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse(
 
     AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(fpsname);
 
-	return(0);
+	return RETURN_SUCCESS;
 }
 
 
@@ -2909,8 +2972,8 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse_old(
         //pokesigntmp = 1; // no inversion
     }
 
-    int retv;
-    retv = system("mkdir -p tmpRMacqu");
+
+    system("mkdir -p tmpRMacqu");
 
 
     save_fits("dmpokeC2a", "!tmpRMacqu/test_dmpokeC2a.fits");
@@ -3160,54 +3223,57 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse_old(
  * AOinitMode = 1:  connect only to AO shared mem struct
  *  */
 
-long AOloopControl_acquireCalib_Measure_zonalRM(
-    long loop,
-    double ampl,
-    long delayfr,
-    long delayRM1us,
-    long NBave,
-    long NBexcl,
+imageID AOloopControl_acquireCalib_Measure_zonalRM(
+    long        loop,
+    double      ampl,
+    long        delayfr,
+    long        delayRM1us,
+    uint32_t    NBave,
+    uint32_t    NBexcl,
     const char *zrespm_name,
     const char *WFSref0_name,
     const char *WFSmap_name,
     const char *DMmap_name,
-    long mode,
-    int normalize,
-    int AOinitMode,
-    long NBcycle
+    long        mode,
+    int         normalize,
+    int         AOinitMode,
+    uint32_t    NBcycle
 )
 {
-    long ID_WFSmap, ID_WFSref0, ID_WFSref2, ID_DMmap, IDmapcube, IDzrespm, IDzrespmn, ID_WFSref0n,  ID_WFSref2n;
-    long act, j, ii, kk;
-    double value;
+    imageID ID_WFSmap;
+    imageID ID_WFSref0;
+    imageID ID_WFSref2;
+    imageID ID_DMmap;
+    imageID IDzrespm;
+    imageID IDzrespmn;
+    imageID ID_WFSref0n;
+    imageID ID_WFSref2n;
+
     float *arrayf;
     char fname[200];
     char name[200];
     char command[200];
-    long IDpos, IDneg;
-    float tot, v1, rms;
+    imageID IDpos, IDneg;
+    float rms;
     uint32_t *sizearray;
 
-    long NBiter = LONG_MAX; // runs until USR1 signal received
-    long iter;
+    uint64_t NBiter = LONG_MAX; // runs until USR1 signal received
+    uint64_t iter;
     float *arraypix;
-    long i;
-    long istart, iend, icnt;
     long cntn;
     double tmpv;
 
-    long ID_WFSmask, ID_DMmask;
+    imageID ID_WFSmask;
+    imageID ID_DMmask;
     float lim;
     double total;
-    int r;
-    long IDzrespfp, IDzrespfm;
-    long IDpokeC;
-    long NBpoke;
+    imageID IDzrespfp;
+    imageID IDzrespfm;
+    imageID IDpokeC;
+    uint32_t NBpoke;
 
     int RT_priority = 80; //any number from 0-99
     struct sched_param schedpar;
-    int ret;
-    long act2;
 
     long *actarray;
     long poke, poke1, poke2;
@@ -3294,9 +3360,9 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
     if(IDpokeC==-1)
     {
         IDpokeC = create_3Dimage_ID("RMpokeCube", AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM, AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM);
-        for(act=0; act<AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM; act++)
+        for(uint64_t act=0; act<AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM; act++)
         {
-            for(ii=0; ii<AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM; ii++)
                 data.image[IDpokeC].array.F[act*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM+ii] = 0.0;
             data.image[IDpokeC].array.F[act*AOconf[loop].DMctrl.sizexDM*AOconf[loop].DMctrl.sizeyDM+act] = 1.0;
         }
@@ -3313,12 +3379,12 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
 
     //    save_fits("RMpokeCube", "!./conf/test1_RMpokeCube.fits");
 
-    if(sprintf(command, "echo \"%ld\" > RM_NBpoke.txt\n", NBpoke) < 1)
+    if(sprintf(command, "echo \"%u\" > RM_NBpoke.txt\n", NBpoke) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     if(system(command) != 0)
         printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
 
-    if(sprintf(command, "echo \"%ld\" > test_RM_NBpoke.txt\n", NBpoke) < 1)
+    if(sprintf(command, "echo \"%u\" > test_RM_NBpoke.txt\n", NBpoke) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
     if(system(command) != 0)
         printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
@@ -3404,11 +3470,11 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
 
 
         for(poke=0; poke<NBpoke; poke++)
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 data.image[IDzrespm].array.F[poke*AOconf[loop].WFSim.sizeWFS+ii] = 0.0;
 
 
-        act = 0;
+        
 
         long kk1 = 0;
         int PokeSign = 1;
@@ -3417,7 +3483,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
 
 
         // initialize with first positive poke
-        for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
+        for(uint32_t j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
             arrayf[j] = ampl*data.image[IDpokeC].array.F[actarray[act1]*AOconf[loop].DMctrl.sizeDM+j];
 
 
@@ -3434,7 +3500,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
         Read_cam_frame(loop, 1, normalize, 0, 1);
 
         // read delayfr frames
-        for(kk=0; kk<delayfr; kk++)
+        for(uint32_t kk=0; kk<delayfr; kk++)
         {
             Read_cam_frame(loop, 1, normalize, 0, 0);
             kk1++;
@@ -3452,7 +3518,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
                 if(act1>NBpoke-1)
                     act1 = NBpoke-1;
                 // POKE
-                for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
+                for(uint32_t j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
                     arrayf[j] = ampl*PokeSign*data.image[IDpokeC].array.F[actarray[act1]*AOconf[loop].DMctrl.sizeDM+j];
 
                 usleep(delayRM1us);
@@ -3467,12 +3533,12 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
 
 
 
-
-        while ((act < NBpoke)&&(data.signal_USR1==0))
+		uint64_t act = 0;
+        while ((act < NBpoke) && (data.signal_USR1==0))
         {
             //	printf("act = %6ld   NBpoke = %6ld\n", act, NBpoke);
             //	fflush(stdout);
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
                 data.image[IDpos].array.F[ii] = 0.0;
                 data.image[IDneg].array.F[ii] = 0.0;
@@ -3481,14 +3547,14 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
             // POSITIVE INTEGRATION
             //  printf("POSITIVE INTEGRATION\n");
             //  fflush(stdout);
-            for(kk=0; kk<NBave+NBexcl; kk++)
+            for(uint32_t kk=0; kk< (uint32_t) (NBave+NBexcl); kk++)
             {
                 Read_cam_frame(loop, 1, normalize, 0, 0);
                 if(kk<NBave)
-                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                    for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         data.image[IDpos].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                 kk1++;
-                if(kk1==NBave)
+                if(kk1 == (int) NBave)
                 {
                     kk1 = -NBexcl;
                     if(PokeSign==1)
@@ -3501,7 +3567,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
                     if(act1>NBpoke-1)
                         act1 = NBpoke-1;
                     // POKE
-                    for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
+                    for(uint32_t j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
                         arrayf[j] = ampl*PokeSign*data.image[IDpokeC].array.F[actarray[act1]*AOconf[loop].DMctrl.sizeDM+j];
 
                     usleep(delayRM1us);
@@ -3514,7 +3580,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
             }
 
 
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
                 data.image[IDzrespm].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii] += data.image[IDpos].array.F[ii];
                 data.image[IDzrespfp].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDpos].array.F[ii];
@@ -3525,11 +3591,11 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
             // NEGATIVE INTEGRATION
             //   printf("NEGATIVE INTEGRATION\n");
             //   fflush(stdout);
-            for(kk=0; kk<NBave+NBexcl; kk++)
+            for(uint32_t kk=0; kk< (uint32_t) (NBave+NBexcl); kk++)
             {
                 Read_cam_frame(loop, 1, normalize, 0, 0);
                 if(kk<NBave)
-                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                    for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         data.image[IDneg].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                 kk1++;
                 if(kk1==NBave)
@@ -3545,7 +3611,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
                     if(act1>NBpoke-1)
                         act1 = NBpoke-1;
                     // POKE
-                    for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
+                    for(uint32_t j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
                         arrayf[j] = ampl*PokeSign*data.image[IDpokeC].array.F[actarray[act1]*AOconf[loop].DMctrl.sizeDM+j];
 
                     usleep(delayRM1us);
@@ -3557,7 +3623,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
                 }
             }
 
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
                 data.image[IDzrespm].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii] -= data.image[IDneg].array.F[ii];
                 data.image[IDzrespfm].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDneg].array.F[ii];
@@ -3570,7 +3636,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
         cntn = 2*NBave; // Number of images
 
 
-        for(j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
+        for(uint32_t j=0; j<AOconf[loop].DMctrl.sizeDM; j++)
             arrayf[j] = 0.0;
 
         usleep(delayRM1us);
@@ -3583,15 +3649,15 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
 
         if(data.signal_USR1==0) // keep looping
         {
-            for(act=0; act<NBpoke; act++)
-                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t act=0; act<NBpoke; act++)
+                for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     data.image[IDzrespmn].array.F[act*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDzrespm].array.F[actarray[act]*AOconf[loop].WFSim.sizeWFS+ii]/ampl/cntn;
             if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", zrespm_name, iter) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
             save_fits(zrespm_name, fname);
 
-            for(act=0; act<NBpoke; act++)
-                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t act=0; act<NBpoke; act++)
+                for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
                     data.image[IDzrespfp].array.F[act*AOconf[loop].WFSim.sizeWFS+ii] /= NBave;
                     data.image[IDzrespfm].array.F[act*AOconf[loop].WFSim.sizeWFS+ii] /= NBave;
@@ -3608,7 +3674,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
             save_fits("zrespfm", fname);
 
             total = 0.0;
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
                 data.image[ID_WFSref2n].array.F[ii] = sqrt((data.image[ID_WFSref2].array.F[ii] - data.image[ID_WFSref0].array.F[ii]*data.image[ID_WFSref0].array.F[ii])/NBave/cntn);
                 data.image[ID_WFSref0n].array.F[ii] = data.image[ID_WFSref0].array.F[ii]/NBave/cntn;
@@ -3619,7 +3685,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
 
             if(normalize==1)
             {
-                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
                     data.image[ID_WFSref0n].array.F[ii] /= total;
                     data.image[ID_WFSref2n].array.F[ii] /= total;
@@ -3627,7 +3693,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
             }
             else
             {
-                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
                     data.image[ID_WFSref0n].array.F[ii] /= NBave;
                     data.image[ID_WFSref2n].array.F[ii] /= NBave;
@@ -3650,7 +3716,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
                 for(poke=0; poke<NBpoke; poke++)
                 {
                     rms = 0.0;
-                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                    for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     {
                         tmpv = data.image[IDzrespmn].array.F[poke*AOconf[loop].WFSim.sizeWFS+ii];
                         rms += tmpv*tmpv;
@@ -3664,7 +3730,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
                 save_fits(DMmap_name, fname);
 
 
-                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
                     rms = 0.0;
                     for(poke=0; poke<NBpoke; poke++)
@@ -3684,7 +3750,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
                 {
                     // WFSmask : select pixels >40% of 85-percentile
                     lim = 0.4*img_percentile(WFSmap_name, 0.7);
-                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                    for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     {
                         if(data.image[ID_WFSmap].array.F[ii]<lim)
                             data.image[ID_WFSmask].array.F[ii] = 0.0;
@@ -3694,7 +3760,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
 
                     // DMmask: select pixels >10% of 50-percentile
                     lim = 0.1*img_percentile(DMmap_name, 0.5);
-                    for(act=0; act<AOconf[loop].DMctrl.sizeDM; act++)
+                    for(uint64_t act=0; act<AOconf[loop].DMctrl.sizeDM; act++)
                     {
                         if(data.image[ID_DMmap].array.F[act]<lim)
                             data.image[ID_DMmask].array.F[act] = 0.0;
@@ -3721,7 +3787,7 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
     delete_image_ID("tmpwfsref0");
 
 
-    return(ID_WFSmap);
+    return ID_WFSmap;
 }
 
 
@@ -3732,58 +3798,45 @@ long AOloopControl_acquireCalib_Measure_zonalRM(
 /** measures response matrix AND reference */
 // scan delay up to fDelay
 
-int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
-    long loop,
-    long NbAve,
-    float amp,
-    long nbloop,
-    long fDelay,
-    long NBiter
+errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
+    long      loop,
+    uint32_t  NbAve,
+    float     amp,
+    long      nbloop,
+    long      fDelay,
+    uint64_t  NBiter
 )
 {
     long NBloops;
     long kloop;
     long delayus = 10000; // delay in us
-    long ii, i, imax;
-    int Verbose = 0;
-    long k1, k, k2;
-    char fname[200];
-    char name0[200];
-    char name[200];
+    int  Verbose = 0;
 
-    long kk;
     long RespMatNBframes;
-    long IDrmc;
-    long kc;
+    imageID IDrmc;
+    uint32_t kc;
 
-    long IDeigenmodes;
-
-    long double RMsig;
-    long double RMsigold;
-    long kc0;
     FILE *fp;
-    long NBexcl = 2; // number of frames excluded between DM mode changes
-    long kc0min, kc0max;
-    long IDrmtest;
-    int vOK;
+    uint32_t NBexcl = 2; // number of frames excluded between DM mode changes
+    imageID IDrmtest;
 
-    long iter;
-    long IDrmi;
+    uint64_t iter;
+    imageID IDrmi;
     float beta = 0.0;
     float gain = 0.0001;
-    long IDrmcumul;
-    long IDrefi;
-    long IDrefcumul;
+    imageID IDrmcumul;
+    imageID IDrefi;
+    imageID IDrefcumul;
 
     uint32_t *sizearray;
 
-    long IDrespM;
-    long IDwfsref0;
+    imageID IDrespM;
+    imageID IDwfsref0;
 
-    long IDoptsignal; // optical signal for each mode, cumulative
-    long IDoptsignaln; // optical signal for each mode, normalize
-    long IDmcoeff; // multiplicative gain to amplify low-oder modes
-    long IDoptcnt;
+    imageID IDoptsignal; // optical signal for each mode, cumulative
+    imageID IDoptsignaln; // optical signal for each mode, normalize
+    imageID IDmcoeff; // multiplicative gain to amplify low-oder modes
+    imageID IDoptcnt;
     double rmsval;
     char signame[200];
 
@@ -3791,17 +3844,16 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
     int AdjustAmplitude = 0;
-    char command[2000];
 
     float valave;
-    long IDrmc1;
+    imageID IDrmc1;
 
 
 
     RMACQUISITION = 1;
 
 
-    printf("ACQUIRE RESPONSE MATRIX - loop = %ld, NbAve = %ld, amp = %f, nbloop = %ld, fDelay = %ld, NBiter = %ld\n", loop, NbAve, amp, nbloop, fDelay, NBiter);
+    printf("ACQUIRE RESPONSE MATRIX - loop = %ld, NbAve = %u, amp = %f, nbloop = %ld, fDelay = %ld, NBiter = %lu\n", loop, NbAve, amp, nbloop, fDelay, NBiter);
 
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*3);
 
@@ -3825,7 +3877,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
     IDmcoeff = create_2Dimage_ID("mcoeff", AOconf[loop].AOpmodecoeffs.NBDMmodes, 1);
     IDoptcnt = create_2Dimage_ID("optsigcnt", AOconf[loop].AOpmodecoeffs.NBDMmodes, 1);
 
-    for(k=0; k<AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
+    for(uint32_t k=0; k<AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
     {
         data.image[IDoptcnt].array.F[k] = 0.0;
         data.image[IDoptsignal].array.F[k] = 0.0;
@@ -3877,10 +3929,10 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
             // initialize reference to zero
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 data.image[IDrefi].array.F[ii] = 0.0;
 
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS*RespMatNBframes; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS*RespMatNBframes; ii++)
                 data.image[IDrmc].array.F[ii] = 0.0;
 
 
@@ -3889,15 +3941,17 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
             //            fflush(stdout);
             //            sleep(1);
 
-            for(k2 = 0; k2 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k2++)
+            for(uint32_t k2 = 0; k2 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k2++)
                 data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k2] = 0.0;
 
 
 
             // set DM to last mode, neg
-            k1 = AOconf[loop].AOpmodecoeffs.NBDMmodes-1;
+            {
+				uint32_t k1 = AOconf[loop].AOpmodecoeffs.NBDMmodes-1;
             data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k1] = -amp*data.image[IDmcoeff].array.F[k1];
             set_DM_modesRM(loop);
+			}
 
 
             usleep(delayus);
@@ -3912,9 +3966,9 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 }
 
 
-                for(k1 = 0; k1 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
+                for(uint32_t k1 = 0; k1 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
                 {
-                    for(k2 = 0; k2 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k2++)
+                    for(uint32_t k2 = 0; k2 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k2++)
                         data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k2] = 0.0;
 
                     // positive
@@ -3924,12 +3978,11 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
 
-                    for(kk=0; kk<NbAve; kk++)
+                    for(uint32_t kk=0; kk<NbAve; kk++)
                     {
                         Read_cam_frame(loop, 1, 1, 0, 0);
 
-
-                        for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                        for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         {
                             data.image[IDrefi].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                             data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
@@ -3944,11 +3997,11 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
 
-                    for(kk=0; kk<NbAve; kk++)
+                    for(uint32_t kk=0; kk<NbAve; kk++)
                     {
                         Read_cam_frame(loop, 1, 1, 0, 0);
 
-                        for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                        for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                         {
                             data.image[IDrefi].array.F[ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
                             data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] += data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii];
@@ -3958,16 +4011,16 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 }
             }
 
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS*RespMatNBframes; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS*RespMatNBframes; ii++)
                 data.image[IDrmc].array.F[ii] /= NBloops;
 
 
             // set DM to zero
-            for(k2 = 0; k2 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k2++)
+            for(uint32_t k2 = 0; k2 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k2++)
                 data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k2] = 0.0;
             set_DM_modesRM(loop);
 
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 data.image[IDrefi].array.F[ii] /= RespMatNBframes*NBloops;
 
 
@@ -3980,13 +4033,13 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
             {
                 IDrmc1 = create_3Dimage_ID("RMcube1", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, RespMatNBframes); // this is the main cube, average removed
 
-                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                 {
                     valave = 0.0;
-                    for(kc=0; kc<RespMatNBframes; kc++)
+                    for(uint32_t kc=0; kc<RespMatNBframes; kc++)
                         valave += data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii];
                     valave /= RespMatNBframes;
-                    for(kc=0; kc<RespMatNBframes; kc++)
+                    for(uint32_t kc=0; kc<RespMatNBframes; kc++)
                         data.image[IDrmc1].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] - valave;
                 }
                 save_fits("RMcube1", "!RMcube1.fits");
@@ -3998,25 +4051,25 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
             IDrmtest = create_3Dimage_ID("rmtest", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS, AOconf[loop].AOpmodecoeffs.NBDMmodes);
 
 
-            kc0 = fDelay;
+            uint32_t kc0 = fDelay;
 
             // initialize RM to zero
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
-                for(k=0; k<AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                for(uint32_t k=0; k<AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
                     data.image[IDrmtest].array.F[k*AOconf[loop].WFSim.sizeWFS+ii] = 0.0;
 
             // initialize reference to zero
             kc = kc0;
 
-            for(k1 = 0; k1 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
+            for(uint32_t k1 = 0; k1 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
             {
                 // positive
                 kc += NBexcl;
                 if(kc > data.image[IDrmc].md[0].size[2]-1)
                     kc -= data.image[IDrmc].md[0].size[2];
-                for(kk=NBexcl; kk<NbAve-NBexcl; kk++)
+                for(uint32_t kk=NBexcl; kk< (uint32_t) (NbAve-NBexcl); kk++)
                 {
-                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                    for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     {
                         data.image[IDrmtest].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] += data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii];
                         //     data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] += 1.0;
@@ -4025,7 +4078,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                     if(kc > data.image[IDrmc].md[0].size[2]-1)
                         kc -= data.image[IDrmc].md[0].size[2];
                 }
-                kc+=NBexcl;
+                kc += NBexcl;
                 if(kc > data.image[IDrmc].md[0].size[2]-1)
                     kc -= data.image[IDrmc].md[0].size[2];
 
@@ -4033,9 +4086,9 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 kc+=NBexcl;
                 if(kc > data.image[IDrmc].md[0].size[2]-1)
                     kc -= data.image[IDrmc].md[0].size[2];
-                for(kk=NBexcl; kk<NbAve-NBexcl; kk++)
+                for(uint32_t kk=NBexcl; kk< (uint32_t) (NbAve-NBexcl); kk++)
                 {
-                    for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                    for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     {
                         data.image[IDrmtest].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] -= data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii];
                         //  data.image[IDrmc].array.F[kc*AOconf[loop].WFSim.sizeWFS+ii] -= 1.0;
@@ -4051,8 +4104,8 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
             //  save_fits("RMcube", "!RMcube2.fits");
             //  exit(0);
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
-                for(k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                for(uint32_t k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
                     data.image[IDrmi].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDrmtest].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii];
 
 
@@ -4066,7 +4119,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
             beta = (1.0-gain)*beta + gain;
-            for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
             {
                 data.image[IDrefcumul].array.F[ii] = (1.0-gain)*data.image[IDrefcumul].array.F[ii] + gain*data.image[IDrefi].array.F[ii];
 
@@ -4074,17 +4127,17 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
 
-                for(k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
+                for(uint32_t k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
                 {
                     data.image[IDrmcumul].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] = (1.0-gain)*data.image[IDrmcumul].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] + gain*data.image[IDrmi].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii];
                     data.image[IDrespM].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii] = data.image[IDrmcumul].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii]/beta;
                 }
             }
 
-            for(k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
+            for(uint32_t k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
             {
                 rmsval = 0.0;
-                for(ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
+                for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizeWFS; ii++)
                     rmsval += data.image[IDrespM].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii]*data.image[IDrespM].array.F[k1*AOconf[loop].WFSim.sizeWFS+ii];
 
                 data.image[IDoptsignal].array.F[k1] += rmsval;
@@ -4099,7 +4152,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
             normcoeff = 0.0;
             normcoeffcnt = 0.0;
-            for(k1=AOconf[loop].AOpmodecoeffs.NBDMmodes/2; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
+            for(uint32_t k1=AOconf[loop].AOpmodecoeffs.NBDMmodes/2; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
             {
                 normcoeff += data.image[IDoptsignaln].array.F[k1];
                 normcoeffcnt += 1.0;
@@ -4109,7 +4162,7 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
             if(AdjustAmplitude==1)
-                for(k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
+                for(uint32_t k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
                 {
                     data.image[IDmcoeff].array.F[k1] = 0.8*data.image[IDmcoeff].array.F[k1] + 0.2/(data.image[IDoptsignaln].array.F[k1]/normcoeff);
                     if(data.image[IDmcoeff].array.F[k1]>5.0)
@@ -4117,8 +4170,8 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 }
 
             fp = fopen(signame, "w");
-            for(k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
-                fprintf(fp, "%ld  %g  %g  %g\n", k1, data.image[IDoptsignaln].array.F[k1], data.image[IDoptcnt].array.F[k1], data.image[IDmcoeff].array.F[k1]*amp);
+            for(uint32_t k1=0; k1<AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
+                fprintf(fp, "%u  %g  %g  %g\n", k1, data.image[IDoptsignaln].array.F[k1], data.image[IDoptcnt].array.F[k1], data.image[IDmcoeff].array.F[k1]*amp);
             fclose(fp);
             if(system("cp ./tmp/RM_outsign%06ld.txt ./tmp/RM_outsign.txt") != 0)
                 printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
@@ -4130,9 +4183,9 @@ int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
     fp = fopen("./tmp/rmparams.txt", "w");
-    fprintf(fp, "%5ld       NbAve: number of WFS frames per averaging\n", NbAve);
+    fprintf(fp, "%5u        NbAve: number of WFS frames per averaging\n", NbAve);
     fprintf(fp, "%f	        amp: nominal DM amplitude (RMS)\n", amp);
-    fprintf(fp, "%ld        iter: number of iterations\n", iter);
+    fprintf(fp, "%lu        iter: number of iterations\n", iter);
     fprintf(fp, "%ld        nbloop: number of loops per iteration\n", nbloop);
     fprintf(fp, "%ld        fDelay: delay number of frames\n", fDelay);
     fclose(fp);
@@ -4163,10 +4216,10 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
     const char *DMmodes_name,
     const char *dmRM_name,
     const char *imWFS_name,
-    long semtrig,
-    float HardwareLag,
-    float loopfrequ,
-    float ampl,
+    long        semtrig,
+    float       HardwareLag,
+    float       loopfrequ,
+    float       ampl,
     const char *outname
 )
 {
@@ -4176,22 +4229,24 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
     long IDdmRM;
     long IDwfs;
     long IDbuff;
-    long ii, kk;
 
-    long HardwareLag_int;
+    long  HardwareLag_int;
     float HardwareLag_frac;
     float WFSperiod;
 
-    long NBmodes;
-    long dmxsize, dmysize, dmxysize, wfsxsize, wfsysize, wfsxysize;
+    uint32_t  NBmodes;
+    uint32_t  dmxsize, dmysize;
+    uint64_t  dmxysize;
+    uint32_t  wfsxsize, wfsysize;
+    uint64_t  wfsxysize;
     long twait;
 
     int RT_priority = 80; //any number from 0-99
     struct sched_param schedpar;
 
     char *ptr0;
-    long dmframesize;
-    long wfsframesize;
+    uint64_t dmframesize;
+    uint64_t wfsframesize;
     char *ptrs0;
     char *ptrs1;
 
@@ -4219,9 +4274,9 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
     if(IDmodes1 == -1)
         IDmodes1 = create_3Dimage_ID("_tmpmodes", dmxsize, dmysize, 2*NBmodes);
 
-    for(kk=0; kk<NBmodes; kk++)
+    for(uint32_t kk=0; kk<NBmodes; kk++)
     {
-        for(ii=0; ii<dmxysize; ii++)
+        for(uint64_t ii=0; ii<dmxysize; ii++)
         {
             data.image[IDmodes1].array.F[2*kk*dmxysize+ii] =  ampl * data.image[IDmodes].array.F[kk*dmxysize+ii];
             data.image[IDmodes1].array.F[(2*kk+1)*dmxysize+ii] =  -ampl * data.image[IDmodes].array.F[kk*dmxysize+ii];
@@ -4246,11 +4301,9 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
 
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
-    int r;
-
-    r = seteuid(data.euid); //This goes up to maximum privileges
+    seteuid(data.euid); //This goes up to maximum privileges
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-    r = seteuid(data.ruid);//Go back to normal privileges
+    seteuid(data.ruid);//Go back to normal privileges
 #endif
 
     ptr0 = (char*) data.image[IDmodes1].array.F;
@@ -4260,7 +4313,7 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
     while(sem_trywait(data.image[IDwfs].semptr[semtrig])==0) {}
 
 
-    for(kk=0; kk<NBmodes; kk++)
+    for(uint32_t kk=0; kk<NBmodes; kk++)
     {
         char *ptr1;
 
@@ -4293,7 +4346,7 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
         data.image[IDdmRM].md[0].write = 0;
     }
 
-    for(kk=0; kk<HardwareLag_int + 1; kk++)
+    for(uint32_t kk=0; kk<HardwareLag_int + 1; kk++)
     {
         sem_wait(data.image[IDwfs].semptr[semtrig]);
         ptrs1 = ptrs0 + wfsxysize*(2*NBmodes+kk);
@@ -4310,20 +4363,22 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
 
 
     IDout = create_3Dimage_ID(outname, wfsxsize, wfsysize, NBmodes);
-    for(kk=0; kk<NBmodes; kk++)
+    for(uint32_t kk=0; kk<NBmodes; kk++)
     {
         long buffindex;
 
         buffindex = 2*kk + HardwareLag_int;
-        for(ii=0; ii<wfsxysize; ii++)
+        for(uint64_t ii=0; ii<wfsxysize; ii++)
         {
             data.image[IDout].array.F[kk*wfsxysize + ii] = ( data.image[IDbuff].array.F[(buffindex)*wfsxysize + ii] - data.image[IDbuff].array.F[(buffindex+1)*wfsxysize + ii] ) / ampl;
         }
 
     }
 
-    return(IDout);
+    return IDout;
 }
+
+
 
 
 
@@ -4344,16 +4399,16 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
  * 
  */
 
-long AOloopControl_acquireCalib_RMseries_deinterlace(
-	int NBRM,         // Number of RM sequences, each offset in time be 1/NBRM frame
-	int refstart,     // start of reference time interval
-	int refend,       // end of reference time interval
+imageID AOloopControl_acquireCalib_RMseries_deinterlace(
+	int   NBRM,         // Number of RM sequences, each offset in time be 1/NBRM frame
+	int   refstart,     // start of reference time interval
+	int   refend,       // end of reference time interval
 	char *IDout_name,
-	int dmode,        // dimension mode. 0: classical, RM is 2D, 3rd dim is time. 1: RM is 3D, integer time step YYY encoded in image name: imrespC_XXX_YYY
-	int NBtstep       // if dmode=1, number of RM time steps YYY
+	int   dmode,        // dimension mode. 0: classical, RM is 2D, 3rd dim is time. 1: RM is 3D, integer time step YYY encoded in image name: imrespC_XXX_YYY
+	int   NBtstep       // if dmode=1, number of RM time steps YYY
 )
 {
-	long IDout;
+	imageID IDout;
 	long xsizeWFS, ysizeWFS, sizeDM;
 	long xsize, ysize, zsize, xysize;
 	long rmCindex;
@@ -4526,7 +4581,7 @@ long AOloopControl_acquireCalib_RMseries_deinterlace(
 	
 	IDout = create_3Dimage_ID(IDout_name, xsize, ysize, zsizeout);
 	
-	float * coeffarray = (float*) malloc(sizeof(float)*zsizeout*NBRM*refstart); 
+	//float * coeffarray = (float*) malloc(sizeof(float)*zsizeout*NBRM*refstart); 
 	
 	
 	for(rmCindex=0; rmCindex<NBRM; rmCindex++)
@@ -4609,7 +4664,7 @@ long AOloopControl_acquireCalib_RMseries_deinterlace(
 	}
 	
 	
-	return(IDout);
+	return IDout;
 }
 
 
