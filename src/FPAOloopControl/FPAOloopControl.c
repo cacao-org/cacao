@@ -5,11 +5,6 @@
  * Wavefront control for high contrast imaging
  * Uses focal plane image(s) as wavefront sensor
  * 
- * @author  O. Guyon
- * @date    10 Jul 2017
- *
- * @bug No known bugs. 
- * 
  */
 
 
@@ -130,7 +125,7 @@ static int FPcamReadInit = 0;
 static long FPaoconfID_wfsim = -1;
 static long FPaoconfID_imWFS0 = -1;
 static long FPaoconfID_imWFS1 = -1;
-static int FPWFSdatatype;
+//static int FPWFSdatatype;
 static long FPaoconfID_wfsdark = -1;
 
 static long FPaoconfID_dmC = -1;
@@ -162,29 +157,108 @@ static FILE *FPAO_loadcreateshm_fplog;
 
 
 
-int_fast8_t FPAOloopControl_loadconfigure_cli() {
-  if(CLI_checkarg(1,2)==0) {
-      FPAOloopControl_loadconfigure(data.cmdargtoken[1].val.numl, 1, 10);
-      return 0;   }  else    return 1;}
+errno_t FPAOloopControl_loadconfigure_cli() {
+    if(
+        CLI_checkarg(1,2)
+        == 0 )
+    {
+        FPAOloopControl_loadconfigure(
+            data.cmdargtoken[1].val.numl,
+            1,
+            10
+        );
 
-int_fast8_t FPAOloopControl_showparams_cli(){
-	FPAOloopControl_showparams(FPLOOPNUMBER);
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
-int_fast8_t FPAOloopControl_set_hardwlatency_frame_cli() {
-  if(CLI_checkarg(1,1)==0)    {
-      FPAOloopControl_set_hardwlatency_frame(data.cmdargtoken[1].val.numf);
-      return 0;    }  else    return 1;}
 
-int_fast8_t FPAOloopControl_MeasureResp_level1_cli(){
-	if(CLI_checkarg(1,1)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,2)+CLI_checkarg(7,2)==0)		{
-			FPAOloopControl_MeasureResp_level1(data.cmdargtoken[1].val.numf, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.numl);
-			return 0;		}	else		return 1;}
 
-int_fast8_t FPAOloopControl_MakeLinComb_seq_cli(){
-	if(CLI_checkarg(1,5)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,3)==0)		{
-			FPAOloopControl_MakeLinComb_seq(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl, data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl, data.cmdargtoken[6].val.string);
-			return 0;		}	else		return 1;}
+
+errno_t FPAOloopControl_showparams_cli(){
+	FPAOloopControl_showparams(FPLOOPNUMBER);
+	return CLICMD_SUCCESS;
+}
+
+
+
+errno_t FPAOloopControl_set_hardwlatency_frame_cli() {
+    if(
+        CLI_checkarg(1,1)
+        == 0 )
+    {
+        FPAOloopControl_set_hardwlatency_frame(
+            data.cmdargtoken[1].val.numf
+        );
+        
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
+}
+
+
+
+errno_t FPAOloopControl_MeasureResp_level1_cli() {
+    if(
+        CLI_checkarg(1,1) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,2) +
+        CLI_checkarg(5,2) +
+        CLI_checkarg(6,2) +
+        CLI_checkarg(7,2)
+        == 0 )
+    {
+        FPAOloopControl_MeasureResp_level1(
+            data.cmdargtoken[1].val.numf,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.numl,
+            data.cmdargtoken[7].val.numl
+        );
+
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
+}
+
+
+
+
+errno_t FPAOloopControl_MakeLinComb_seq_cli() {
+    if(
+        CLI_checkarg(1,5) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,2) +
+        CLI_checkarg(5,2) +
+        CLI_checkarg(6,3)
+        == 0 )
+    {
+        FPAOloopControl_MakeLinComb_seq(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.string
+        );
+
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
+}
 
 //long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0, long NBmaster0, long N, char *IDout_name)
 
@@ -208,36 +282,79 @@ void __attribute__ ((constructor)) libinit_FPAOloopControl()
 }
 
 
-int init_FPAOloopControl()
+
+
+errno_t init_FPAOloopControl()
 {
-	FILE *fp;
-	
+    //FILE *fp;
 
 
-    if((fp=fopen("LOOPNUMBER","r"))!=NULL)
-    {
-        if(fscanf(fp,"%ld", &FPLOOPNUMBER) != 1)
-			printERROR(__FILE__,__func__,__LINE__, "fscanf returns value != 1");
-		
-        printf("LOOP NUMBER = %ld\n", FPLOOPNUMBER);
-        fclose(fp);
-    }
-    else
-        FPLOOPNUMBER = 0;
+    /*
+        if((fp=fopen("LOOPNUMBER","r"))!=NULL)
+        {
+            if(fscanf(fp,"%ld", &FPLOOPNUMBER) != 1)
+    			printERROR(__FILE__,__func__,__LINE__, "fscanf returns value != 1");
+
+            printf("LOOP NUMBER = %ld\n", FPLOOPNUMBER);
+            fclose(fp);
+        }
+        else
+            FPLOOPNUMBER = 0;
+    */
 
 
-	RegisterCLIcommand("FPaolloadconf", __FILE__, FPAOloopControl_loadconfigure_cli, "load FPAO loop configuration", "<loop #>", "FPaolloadconf 1", "int FPAOloopControl_loadconfigure(long loopnb, 1, 10)");
+    RegisterCLIcommand(
+        "FPaolloadconf",
+        __FILE__,
+        FPAOloopControl_loadconfigure_cli,
+        "load FPAO loop configuration", "<loop #>",
+        "FPaolloadconf 1",
+        "int FPAOloopControl_loadconfigure(long loopnb, 1, 10)"
+    );
 
-	RegisterCLIcommand("FPaoconfshow", __FILE__, FPAOloopControl_showparams_cli, "show FPAOconf parameters", "no argument", "FPaoconfshow", "int FPAOloopControl_showparams(long loop)");
 
-	RegisterCLIcommand("FPaolsethlat", __FILE__, FPAOloopControl_set_hardwlatency_frame_cli, "set FPAO hardware latency", "<hardware latency [frame]>", "FPaolsethlat 0.7", "int FPAOloopControl_set_hardwlatency_frame(float hardwlatency_frame)");
+    RegisterCLIcommand(
+        "FPaoconfshow",
+        __FILE__,
+        FPAOloopControl_showparams_cli,
+        "show FPAOconf parameters",
+        "no argument",
+        "FPaoconfshow", "int FPAOloopControl_showparams(long loop)"
+    );
 
-	RegisterCLIcommand("FPaoMeasRespl1", __FILE__, FPAOloopControl_MeasureResp_level1_cli, "measure focal plane response, level 1", "<ampl [um]> <delay frame [long]> <delayus [long]> <NBave> <NB frame excl> <initMode> <NBiter>", "FPaoMeasRespl1 0.05 1 231 5 1 0 10", "long FPAOloopControl_MeasureResp_level1(float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, int FPAOinitMode, long NBiter)");
 
-	RegisterCLIcommand("FPaomklincombs", __FILE__, FPAOloopControl_MakeLinComb_seq_cli, "make linear comb sequence of DM pokes from set of masters", "<master cube (optional)> <xsize> <ysize> <NBmaster> <N (1+2N steps)> <outCube>", "FPaomklincombs masterC 50 50 3 2 outC", "long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0, long NBmaster0, long N, char *IDout_name)");
+    RegisterCLIcommand(
+        "FPaolsethlat",
+        __FILE__,
+        FPAOloopControl_set_hardwlatency_frame_cli,
+        "set FPAO hardware latency",
+        "<hardware latency [frame]>",
+        "FPaolsethlat 0.7",
+        "int FPAOloopControl_set_hardwlatency_frame(float hardwlatency_frame)"
+    );
 
 
-    return 0;
+    RegisterCLIcommand(
+        "FPaoMeasRespl1",
+        __FILE__,
+        FPAOloopControl_MeasureResp_level1_cli,
+        "measure focal plane response, level 1",
+        "<ampl [um]> <delay frame [long]> <delayus [long]> <NBave> <NB frame excl> <initMode> <NBiter>", "FPaoMeasRespl1 0.05 1 231 5 1 0 10",
+        "long FPAOloopControl_MeasureResp_level1(float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, int FPAOinitMode, long NBiter)"
+    );
+
+
+    RegisterCLIcommand(
+        "FPaomklincombs",
+        __FILE__,
+        FPAOloopControl_MakeLinComb_seq_cli,
+        "make linear comb sequence of DM pokes from set of masters",
+        "<master cube (optional)> <xsize> <ysize> <NBmaster> <N (1+2N steps)> <outCube>", "FPaomklincombs masterC 50 50 3 2 outC",
+        "long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0, long NBmaster0, long N, char *IDout_name)"
+    );
+
+
+    return RETURN_SUCCESS;
 }
 
 
@@ -249,19 +366,14 @@ int init_FPAOloopControl()
 /*** mode = 0 or 1. if mode == 1, simply connect */
 
 
-long FPAOloopControl_InitializeMemory(int mode)
+errno_t FPAOloopControl_InitializeMemory(
+    __attribute__((unused)) int mode
+)
 {
     int SM_fd;
     struct stat file_stat;
     int create = 0;
-    long *sizearray;
-    char cntname[200];
-    int k;
-    FILE *fp;
     // FILE *fp1; // testing
-    int tmpi;
-    int ret;
-    char fname[200];
 	int loop;
 	
 	
@@ -275,7 +387,7 @@ long FPAOloopControl_InitializeMemory(int mode)
     {
         fstat(SM_fd, &file_stat);
         printf("File %s size: %zd\n", FPAOconfname, file_stat.st_size);
-        if(file_stat.st_size!=sizeof(FPAOLOOPCONTROL_CONF)*NB_FPAOloopcontrol)
+        if( file_stat.st_size != (int) (sizeof(FPAOLOOPCONTROL_CONF)*NB_FPAOloopcontrol) )
         {
             printf("File \"%s\" size is wrong -> recreating file\n", FPAOconfname);
             create = 1;
@@ -337,7 +449,7 @@ long FPAOloopControl_InitializeMemory(int mode)
 	FPAOloopcontrol_meminit = 1;
 
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
@@ -345,25 +457,17 @@ long FPAOloopControl_InitializeMemory(int mode)
 
 
 
-int FPAOloopControl_loadconfigure(long loop, int mode, int level)
+errno_t FPAOloopControl_loadconfigure(
+    long loop,
+    __attribute__((unused)) int  mode,
+    __attribute__((unused)) int  level
+)
 {
-   FILE *fp;
+    FILE *fp;
     char content[200];
     char name[200];
-    char name1[200];
     char fname[200];
-    long ID;
-    int vOK;
-    int kw;
-    long k;
-    int sizeOK;
-    char command[500];
-    int CreateSMim;
-    long ID1tmp, ID2tmp;
-    long ii;
-    long kk, tmpl;
-    char testdirname[200];
-    
+
     FILE *fplog; // human-readable log of load sequence
 
     if((fplog=fopen("FPloadconf.log", "w"))==NULL)
@@ -406,45 +510,45 @@ int FPAOloopControl_loadconfigure(long loop, int mode, int level)
         printf("ERROR: file ./conf/conf_LOOPNAME.txt missing\n");
         exit(0);
     }
-    
+
     if(fscanf(fp, "%32s", content) != 1)
-		printERROR(__FILE__,__func__,__LINE__, "fscanf returns value != 1");
-    
+        printERROR(__FILE__,__func__,__LINE__, "fscanf returns value != 1");
+
     printf("loop name : %s\n", content);
     fprintf(fplog, "FPAOconf[%ld].name = %s\n", loop, FPAOconf[loop].name);
     fclose(fp);
     fflush(stdout);
     strcpy(FPAOconf[loop].name, content);
 
-    
-   
-   
-	
-	if((fp=fopen("./conf/conf_hardwlatency.txt", "r"))==NULL)
+
+
+
+
+    if((fp=fopen("./conf/conf_hardwlatency.txt", "r"))==NULL)
     {
         printf("WARNING: file ./conf/conf_hardwlatency.txt missing\n");
     }
     else
     {
-		if(fscanf(fp, "%32f", &FPAOconf[loop].hardwlatency) != 1)
-			printERROR(__FILE__,__func__,__LINE__, "fscanf returns value != 1");
+        if(fscanf(fp, "%32f", &FPAOconf[loop].hardwlatency) != 1)
+            printERROR(__FILE__,__func__,__LINE__, "fscanf returns value != 1");
 
 
         printf("hardwlatency : %f\n", FPAOconf[loop].hardwlatency);
         fclose(fp);
         fflush(stdout);
         fprintf(fplog, "AOconf[%ld].hardwlatency = %f\n", loop, FPAOconf[loop].hardwlatency);
-   }
-	
-	FPAOconf[loop].hardwlatency_frame = FPAOconf[loop].hardwlatency * FPAOconf[loop].loopfrequ;
-	
+    }
+
+    FPAOconf[loop].hardwlatency_frame = FPAOconf[loop].hardwlatency * FPAOconf[loop].loopfrequ;
 
 
 
 
 
 
-	if((fp=fopen("./conf/conf_loopfrequ.txt","r"))==NULL)
+
+    if((fp=fopen("./conf/conf_loopfrequ.txt","r"))==NULL)
     {
         printf("WARNING: file ./conf/conf_loopfrequ.txt missing\n");
         printf("Using default loop speed\n");
@@ -454,8 +558,8 @@ int FPAOloopControl_loadconfigure(long loop, int mode, int level)
     else
     {
         if(fscanf(fp, "%32s", content) != 1)
-			printERROR(__FILE__,__func__,__LINE__, "fscanf returns value != 1");
-        
+            printERROR(__FILE__,__func__,__LINE__, "fscanf returns value != 1");
+
         printf("loopfrequ : %f\n", atof(content));
         fclose(fp);
         fflush(stdout);
@@ -493,8 +597,8 @@ int FPAOloopControl_loadconfigure(long loop, int mode, int level)
     sprintf(name, "FPaol%ld_wfsdark", loop);
     sprintf(fname, "./conf/FPaol%ld_wfsdark.fits", loop);
     FPaoconfID_wfsdark = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname, FPAOconf[loop].sizexWFS, FPAOconf[loop].sizeyWFS, 0.0);
-    
-    
+
+
 
 
     // Connect to DM
@@ -516,7 +620,7 @@ int FPAOloopControl_loadconfigure(long loop, int mode, int level)
     FPAOconf[loop].sizexDM = data.image[FPaoconfID_dmC].md[0].size[0];
     FPAOconf[loop].sizeyDM = data.image[FPaoconfID_dmC].md[0].size[1];
     FPAOconf[loop].sizeDM = FPAOconf[loop].sizexDM*FPAOconf[loop].sizeyDM;
-    
+
     fprintf(fplog, "Connected to DM %s, size = %ld x %ld\n", FPAOconf[loop].dmCname, FPAOconf[loop].sizexDM, FPAOconf[loop].sizeyDM);
 
 
@@ -551,13 +655,13 @@ int FPAOloopControl_loadconfigure(long loop, int mode, int level)
 
     list_image_ID();
 
-	FPAOlooploadconf_init = 1;
-    
+    FPAOlooploadconf_init = 1;
+
     FPAO_loadcreateshm_log = 0;
     fclose(fplog);
 
 
-    return(0);
+    return RETURN_SUCCESS;
 
 }
 
@@ -636,20 +740,10 @@ int FPAOloopControl_set_hardwlatency_frame(float hardwlatency_frame)
 
 int FPAOloopControl_Read_cam_frame(long loop, int semindex)
 {
-    long imcnt;
     long ii;
-    double totalinv;
-    char name[200];
     int slice;
     char *ptrv;
-    long double tmplv1;
-    double tmpf;
-    long IDdark;
-    float resulttotal;
-    int sval0, sval;
-    void *status = 0;
     int semval;
-    int s;
     
     int WFSdatatype;
     long nelem;
@@ -681,7 +775,7 @@ int FPAOloopControl_Read_cam_frame(long loop, int semindex)
 
     if(data.image[FPaoconfID_wfsim].md[0].sem==0)
     {
-        while(FPAOconf[loop].WFScnt==data.image[FPaoconfID_wfsim].md[0].cnt0) // test if new frame exists
+        while(FPAOconf[loop].WFScnt == (long long) data.image[FPaoconfID_wfsim].md[0].cnt0) // test if new frame exists
                 usleep(5);
     }
     else
@@ -799,15 +893,11 @@ int FPAOloopControl_Read_cam_frame(long loop, int semindex)
 
 long FPAO_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, char *IDpokeC_name, char *IDoutC_name, int FPAOinitMode, long NBcycle)
 {
-    char fname[200];
-    char name[200];
-    char command[200];
     long *sizearray;
 	long IDoutC;
 
     long NBiter = LONG_MAX; // runs until USR1 signal received
     long iter;
-    int r;
     long IDpokeC;
     long NBpoke;
     long PokeIndex;
@@ -816,7 +906,6 @@ long FPAO_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave,
 	float *arrayf;
     int RT_priority = 80; //any number from 0-99
     struct sched_param schedpar;
-    int ret;
 
 	long ii, kk;
 
@@ -891,7 +980,6 @@ long FPAO_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave,
     {
 		long PokeIndex1;
 		long kk1;
-		long cntn;
 		
         printf("iteration # %8ld    \n", iter);
         fflush(stdout);
@@ -973,7 +1061,7 @@ long FPAO_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave,
 
             PokeIndex++;
         }
-        cntn = NBave; // Number of images
+        //cntn = NBave; // Number of images
             
 
         for(ii=0; ii<FPAOconf[loop].sizeDM; ii++)
@@ -1042,7 +1130,7 @@ long FPAOloopControl_MeasureResp_level1(float ampl, long delayfr, long delayRM1u
 	long NBpokes = 5;
 	long poke;
 	
-	long ii, jj, kk;
+	long ii, jj;
 	
 	
 	

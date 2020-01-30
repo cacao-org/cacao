@@ -39,9 +39,6 @@ typedef struct
 	// Each actuator influence function has the same amplitude, phase is ramp set accordingly to actuator position
 	// to be acquired without coronagraph
 
-	
-	
-	
 } FPAOLOOPCONTROL_CONF;
 
 
@@ -52,9 +49,16 @@ int init_FPAOloopControl();
 
 
 
-long FPAOloopControl_InitializeMemory(int mode);
-int FPAOloopControl_loadconfigure(long loop, int mode, int level);
+errno_t FPAOloopControl_InitializeMemory(
+    int mode
+);
 
+
+errno_t FPAOloopControl_loadconfigure(
+    long loop,
+    int  mode,
+    int  level
+);
 
 
 int FPAOloopControl_showparams(long loop);
