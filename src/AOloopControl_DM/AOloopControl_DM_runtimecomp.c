@@ -103,13 +103,14 @@ extern int SMturbfd;
 //
 
 
-int AOloopControl_DM_disp2V(long DMindex)
+errno_t AOloopControl_DM_disp2V(
+    long DMindex
+)
 {
-    long ii;
-    float volt;
-    long IDvolt;
+    float   volt;
+    imageID IDvolt;
 
-    static int qmapinit = 0;
+    static int  qmapinit = 0;
     static char qmapname[100];
     static long IDqmap;
 
@@ -155,7 +156,7 @@ int AOloopControl_DM_disp2V(long DMindex)
     {
         if(dmdispcombconf[DMindex].volttype == 1) // linear bipolar, output is float
         {
-            for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
+            for(uint64_t ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
             {
                 volt = 100.0*(data.image[dmdispcombconf[DMindex].IDdisp].array.F[ii]/dmdispcombconf[DMindex].stroke100);
                 if(volt>dmdispcombconf[DMindex].MAXVOLT)
@@ -167,7 +168,7 @@ int AOloopControl_DM_disp2V(long DMindex)
         }
         else if (dmdispcombconf[DMindex].volttype == 2) // quadratic unipolar, output is UI16
         {
-            for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
+            for(uint64_t ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
             {
                 volt = 100.0*sqrt(data.image[dmdispcombconf[DMindex].IDdisp].array.F[ii]/dmdispcombconf[DMindex].stroke100);
                 if(volt>dmdispcombconf[DMindex].MAXVOLT)
@@ -204,13 +205,13 @@ int AOloopControl_DM_disp2V(long DMindex)
     {
         if(dmdispcombconf[DMindex].volttype == 1) // linear bipolar, output is float
         {
-            for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
+            for(uint64_t ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
                 data.image[IDvolt].array.F[ii] = 0;
         }
 
         if (dmdispcombconf[DMindex].volttype == 2)
         {
-            for(ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
+            for(uint64_t ii=0; ii<dmdispcombconf[DMindex].xysize; ii++)
                 data.image[IDvolt].array.UI16[ii] = 0;
         }
     }
@@ -226,7 +227,7 @@ int AOloopControl_DM_disp2V(long DMindex)
 
     DEBUG_TRACEPOINT(" ");
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 

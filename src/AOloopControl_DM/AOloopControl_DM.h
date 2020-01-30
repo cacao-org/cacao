@@ -24,9 +24,9 @@ typedef struct
 {
     int ON;
     
-    long xsize;        // DM xsize
-    long ysize;        // DM ysize
-    long xysize;       // total number of actuators
+    uint32_t  xsize;        // DM xsize
+    uint32_t  ysize;        // DM ysize
+    uint64_t  xysize;       // total number of actuators
     long NBchannel;    // number of control channels
     
     long loopcnt;
@@ -125,10 +125,18 @@ int init_AOloopControl_DM();
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-struct timespec time_diff(struct timespec start, struct timespec end);
+struct timespec time_diff(
+    struct timespec start,
+    struct timespec end
+);
 
-int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_name2, long size, float outerscale, float innerscale);
-
+errno_t make_master_turbulence_screen_local(
+    const char *ID_name1,
+    const char *ID_name2,
+    long        size,
+    float       outerscale,
+    float       innerscale
+);
 
 
 
@@ -231,11 +239,11 @@ int AOloopControl_DM_setTrigSem(long DMindex, int sem);
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-int_fast8_t AOloopControl_printDMturbconf();
+errno_t AOloopControl_printDMturbconf();
 
 int AOloopControl_DMturb_createconf();
 
-int AOloopControl_DMturb_loadconf();
+errno_t AOloopControl_DMturb_loadconf();
 
 int AOloopControl_DM_dmturboff(long DMindex);
 

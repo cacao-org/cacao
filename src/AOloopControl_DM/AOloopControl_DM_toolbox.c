@@ -2,10 +2,6 @@
  * @file    AOloopControl_DM_toolbox.c
  * @brief   DM control
  * 
- * To be used for AOloopControl module
- *  
- * @author  O. Guyon
- * @date    22 Dec 2017
  *
  *
  * 
@@ -41,7 +37,10 @@ extern int SMturbfd;
 
 
 
-struct timespec time_diff(struct timespec start, struct timespec end)
+struct timespec time_diff(
+    struct timespec start,
+    struct timespec end
+)
 {
     struct timespec temp;
     if ((end.tv_nsec-start.tv_nsec)<0) {
@@ -62,15 +61,21 @@ struct timespec time_diff(struct timespec start, struct timespec end)
 // innerscale and outerscale in pixel
 // von Karman spectrum
 //
-int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_name2, long size, float outerscale, float innerscale)
+errno_t make_master_turbulence_screen_local(
+    const char *ID_name1,
+    const char *ID_name2,
+    long        size,
+    float       outerscale,
+    float       innerscale
+)
 {
-    long ID,ii,jj;
+    imageID ID;
     float value,C1,C2;
     long cnt;
     long Dlim = 3;
-    long IDv;
+    imageID IDv;
 
-    int OUTERSCALE_MODE = 1; // 1 if outer scale
+    //int OUTERSCALE_MODE = 1; // 1 if outer scale
     double OUTERscale_f0;
     double INNERscale_f0;
     double dx, dy, r;
@@ -102,8 +107,8 @@ int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_nam
     delete_image_ID("tmppha");
     //  make_dist("tmpd",size,size,size/2,size/2);
     ID = create_2Dimage_ID("tmpd",size,size);
-    for(ii=0; ii<size; ii++)
-        for(jj=0; jj<size; jj++)
+    for(uint32_t ii=0; ii<size; ii++)
+        for(uint32_t jj=0; jj<size; jj++)
         {
             dx = 1.0*ii-size/2;
             dy = 1.0*jj-size/2;
@@ -127,8 +132,8 @@ int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_nam
 
     make_rnd("tmpg",size,size,"-gauss");
     ID = image_ID("tmpg");
-    for(ii=0; ii<size; ii++)
-        for(jj=0; jj<size; jj++)
+    for(uint32_t ii=0; ii<size; ii++)
+        for(uint32_t jj=0; jj<size; jj++)
         {
             dx = 1.0*ii-size/2;
             dy = 1.0*jj-size/2;
@@ -156,8 +161,8 @@ int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_nam
     ID = image_ID("strf");
     value = 0.0;
     cnt = 0;
-    for(ii = 1; ii<Dlim; ii++)
-        for(jj = 1; jj<Dlim; jj++)
+    for(uint32_t ii = 1; ii<Dlim; ii++)
+        for(uint32_t jj = 1; jj<Dlim; jj++)
         {
             value += log10(data.image[ID].array.F[jj*size+ii])-5.0/3.0*log10(sqrt(ii*ii+jj*jj));
             cnt++;
@@ -170,8 +175,8 @@ int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_nam
     ID=image_ID("strf");
     value = 0.0;
     cnt = 0;
-    for(ii=1; ii<Dlim; ii++)
-        for(jj=1; jj<Dlim; jj++)
+    for(uint32_t ii=1; ii<Dlim; ii++)
+        for(uint32_t jj=1; jj<Dlim; jj++)
         {
             value += log10(data.image[ID].array.F[jj*size+ii])-5.0/3.0*log10(sqrt(ii*ii+jj*jj));
             cnt++;
@@ -186,5 +191,5 @@ int make_master_turbulence_screen_local(const char *ID_name1, const char *ID_nam
     delete_image_ID("tmpo1");
     delete_image_ID("tmpo2");
 
-    return(0);
+    return RETURN_SUCCESS;
 }

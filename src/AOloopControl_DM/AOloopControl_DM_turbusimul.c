@@ -69,7 +69,7 @@ extern int SMturbfd;
 
 
 
-int_fast8_t AOloopControl_printDMturbconf()
+errno_t AOloopControl_printDMturbconf()
 {
     long DMindex;
     
@@ -94,12 +94,12 @@ int_fast8_t AOloopControl_printDMturbconf()
 // create configuration shared memory structure for moving turbulence screen for DM
 // one configuration per DM
 //
-int AOloopControl_DMturb_createconf()
+errno_t AOloopControl_DMturb_createconf()
 {
     int result;
-    long IDc1;
+//    imageID IDc1;
     char name[200];
-    long DMindex;
+    imageID DMindex;
     char errstr[200];
 
 	printf("ENTERING FUNCTION AOloopControl_DMturb_createconf\n");
@@ -179,7 +179,7 @@ int AOloopControl_DMturb_createconf()
    	printf("EXITING FUNCTION AOloopControl_DMturb_createconf\n");
 	fflush(stdout);
     
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
@@ -189,9 +189,8 @@ int AOloopControl_DMturb_createconf()
 
 
 
-int AOloopControl_DMturb_loadconf(long DMindex)
+errno_t AOloopControl_DMturb_loadconf()
 {
-    int result;
     char errstr[200];
 
     if( dmturb_loaded == 0 )
@@ -218,7 +217,7 @@ int AOloopControl_DMturb_loadconf(long DMindex)
 		}
 	}
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
@@ -374,7 +373,6 @@ int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name, long
 	long k;
 	int turbON;
 	long IDout;
-	FILE *fp;
 	double dX, dY;
 	double wspeedx, wspeedy;
 	double RMSvaltot;
@@ -382,7 +380,6 @@ int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name, long
 
 
 	int tint;
-	long iter;
 
 	if( dmturb_loaded == 0 )
 	{

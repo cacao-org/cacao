@@ -3,9 +3,6 @@
  * @brief   DM control
  * 
  * To be used for AOloopControl module
- *  
- * @author  O. Guyon
- * @date    10 Jul 2017
  *
  *
  * 
@@ -89,50 +86,50 @@ extern int SMturbfd;
 /* =============================================================================================== */
 
 
-int AOloopControl_printDMconf()
+errno_t AOloopControl_printDMconf()
 {
     long DMindex;
     char IDvolt_str[4];
     char maxvolt_str[7];
     char voltname_str[13];
-    
+
     printf("DM | on |  x |  y | Nbch | busy | ave | DClevel | monint  | stat | IDdisp | voltmode | volttype | stroke100 | IDvolt | maxvolt |   voltname  |\n");
     for(DMindex=0; DMindex<NB_DMindex; DMindex++)
+    {
+        if(dmdispcombconf[DMindex].voltmode==1)
         {
-			if(dmdispcombconf[DMindex].voltmode==1)
-				{
-					sprintf(IDvolt_str, "%3ld", dmdispcombconf[DMindex].IDvolt);
-					sprintf(maxvolt_str, "%6.2f", dmdispcombconf[DMindex].MAXVOLT);
-					sprintf(voltname_str, "%11s", dmdispcombconf[DMindex].voltname);
-				}
-				else
-				{
-					sprintf(IDvolt_str, "---");
-					sprintf(maxvolt_str, "------");
-					sprintf(voltname_str, "-----------");
-				}
-				
-			printf("%02ld |  %1d |%3ld |%3ld |  %02ld  |   %1d  |  %1d  | %6.2f  |%8ld |   %02d |   %3ld  |    %4d  |    %4d  | %9.2f |   %3s  |  %6s | %11s |\n", 
-				DMindex, 
-				dmdispcombconf[DMindex].ON, 
-				dmdispcombconf[DMindex].xsize, 
-				dmdispcombconf[DMindex].ysize, 
-				dmdispcombconf[DMindex].NBchannel, 
-				dmdispcombconf[DMindex].busy, 
-				dmdispcombconf[DMindex].AveMode, 
-				dmdispcombconf[DMindex].DClevel, 
-				dmdispcombconf[DMindex].moninterval, 
-				dmdispcombconf[DMindex].status, 
-				dmdispcombconf[DMindex].IDdisp, 
-				dmdispcombconf[DMindex].voltmode,
-				dmdispcombconf[DMindex].volttype,
-				dmdispcombconf[DMindex].stroke100,
-				IDvolt_str, 
-				maxvolt_str, 
-				voltname_str);
+            sprintf(IDvolt_str, "%3ld", dmdispcombconf[DMindex].IDvolt);
+            sprintf(maxvolt_str, "%6.2f", dmdispcombconf[DMindex].MAXVOLT);
+            sprintf(voltname_str, "%11s", dmdispcombconf[DMindex].voltname);
         }
-    
-    return(0);
+        else
+        {
+            sprintf(IDvolt_str, "---");
+            sprintf(maxvolt_str, "------");
+            sprintf(voltname_str, "-----------");
+        }
+
+        printf("%02ld |  %1d |%3u |%3u |  %02ld  |   %1d  |  %1d  | %6.2f  |%8ld |   %02d |   %3ld  |    %4d  |    %4d  | %9.2f |   %3s  |  %6s | %11s |\n",
+               DMindex,
+               dmdispcombconf[DMindex].ON,
+               dmdispcombconf[DMindex].xsize,
+               dmdispcombconf[DMindex].ysize,
+               dmdispcombconf[DMindex].NBchannel,
+               dmdispcombconf[DMindex].busy,
+               dmdispcombconf[DMindex].AveMode,
+               dmdispcombconf[DMindex].DClevel,
+               dmdispcombconf[DMindex].moninterval,
+               dmdispcombconf[DMindex].status,
+               dmdispcombconf[DMindex].IDdisp,
+               dmdispcombconf[DMindex].voltmode,
+               dmdispcombconf[DMindex].volttype,
+               dmdispcombconf[DMindex].stroke100,
+               IDvolt_str,
+               maxvolt_str,
+               voltname_str);
+    }
+
+    return RETURN_SUCCESS;
 }
 
 
@@ -143,13 +140,13 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
 {
     long long mcnt = 0;
     int ch;
-	int wcol, wrow; // window size
+	//int wcol, wrow; // window size
 
 
     AOloopControl_DM_loadconf();
 
     initscr();
-    getmaxyx(stdscr, wrow, wcol);
+//    getmaxyx(stdscr, wrow, wcol);
 
     start_color();
     init_pair(1, COLOR_BLACK, COLOR_WHITE);
