@@ -5,9 +5,6 @@
  * AO engine uses stream data structure
  *  
  * 
- * @bug No known bugs.
- * 
- * 
  */
 
 
@@ -57,32 +54,31 @@
 // Hadamard modes (outname)
 // Hadamard matrix ("Hmat.fits")
 // pixel indexes ("Hpixindex.fits", float, to be converted to long)
-long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const char *outname)
+imageID AOloopControl_computeCalib_mkHadamardModes(
+    const char *DMmask_name,
+    const char *outname
+)
 {
-    long IDout;
-    long xsize, ysize, xysize;
-    //    long IDdisk;
+    imageID  IDout;
     long cnt;
 
-    long Hsize;
-    int n2max;
+    uint32_t Hsize;
+    uint32_t n2max;
 
     long *indexarray;
     long index;
-    long IDmat;
+    imageID IDmat;
     int *Hmat;
-    long k, ii, jj, n, n2, i, j;
-    long IDindex;
+    imageID IDindex;
     uint32_t *sizearray;
 
-    long IDmask;
 
 
 
-    IDmask = image_ID(DMmask_name);
-    xsize = data.image[IDmask].md[0].size[0];
-    ysize = data.image[IDmask].md[0].size[1];
-    xysize = xsize*ysize;
+    imageID IDmask = image_ID(DMmask_name);
+    uint32_t xsize = data.image[IDmask].md[0].size[0];
+    uint32_t ysize = data.image[IDmask].md[0].size[1];
+    uint64_t xysize = xsize*ysize;
 
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
     sizearray[0] = xsize;
@@ -91,7 +87,7 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
     free(sizearray);
 
     cnt = 0;
-    for(ii=0; ii<xysize; ii++)
+    for(uint64_t ii=0; ii<xysize; ii++)
         if(data.image[IDmask].array.F[ii]>0.5)
             cnt++;
 
@@ -104,18 +100,18 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
     }
     n2max++;
 
-    printf("Hsize n2max = %ld  %d\n", Hsize, n2max);
+    printf("Hsize n2max = %u  %u\n", Hsize, n2max);
     fflush(stdout);
 
-    for(ii=0; ii<xysize; ii++)
+    for(uint64_t ii=0; ii<xysize; ii++)
         data.image[IDindex].array.F[ii] = -10.0;
 
     index = 0;
 
     indexarray = (long*) malloc(sizeof(long)*Hsize);
-    for(k=0; k<Hsize; k++)
+    for(uint32_t k=0; k<Hsize; k++)
         indexarray[k] = -1;
-    for(ii=0; ii<xysize; ii++)
+    for(uint64_t ii=0; ii<xysize; ii++)
         if((data.image[IDmask].array.F[ii]>0.5)&&(index<Hsize))
         {
 
@@ -134,14 +130,14 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
 
     // n = 0
 
-    ii = 0;
-    jj = 0;
+    uint32_t ii = 0;
+    uint32_t jj = 0;
     Hmat[jj*Hsize+ii] = 1;
-    n2=1;
-    for(n=1; n<n2max; n++)
+    uint32_t n2 = 1;
+    for(uint32_t n=1; n<n2max; n++)
     {
-        for(ii=0; ii<n2; ii++)
-            for(jj=0; jj<n2; jj++)
+        for(uint32_t ii=0; ii<n2; ii++)
+            for(uint32_t jj=0; jj<n2; jj++)
             {
                 Hmat[ jj*Hsize + (ii+n2)] = Hmat[ jj*Hsize + ii];
                 Hmat[ (jj+n2)*Hsize + (ii+n2)] = -Hmat[ jj*Hsize + ii];
@@ -150,24 +146,24 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
         n2 *= 2;
     }
 
-    printf("n2 = %ld\n", n2);
+    printf("n2 = %u\n", n2);
     fflush(stdout);
 
     IDmat = create_2Dimage_ID("Hmat", Hsize, Hsize);
 
-    for(ii=0; ii<Hsize; ii++)
-        for(jj=0; jj<Hsize; jj++)
+    for(uint32_t ii=0; ii<Hsize; ii++)
+        for(uint32_t jj=0; jj<Hsize; jj++)
             data.image[IDmat].array.F[jj*Hsize+ii] = Hmat[jj*Hsize+ii];
 
 //    save_fits("Htest", "!./conf/Hmat.fits");
 
 
     IDout = create_3Dimage_ID(outname, xsize, ysize, Hsize);
-    for(k=0; k<Hsize; k++)
+    for(uint32_t k=0; k<Hsize; k++)
     {
-        for(index=0; index<Hsize; index++)
+        for(uint32_t index=0; index<Hsize; index++)
         {
-            ii = indexarray[index];
+            uint32_t ii = indexarray[index];
             data.image[IDout].array.F[k*xysize+ii] = Hmat[k*Hsize+index];
         }
     }
@@ -177,16 +173,21 @@ long AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const c
     free(indexarray);
 
 
-    return(IDout);
+    return IDout;
 }
 
 
 
 
-long AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname, const char *Hmatname, const char *indexname, const char *outname)
+imageID AOloopControl_computeCalib_Hadamard_decodeRM(
+    const char *inname,
+    const char *Hmatname,
+    const char *indexname,
+    const char *outname
+)
 {
-    long IDin, IDhad, IDout, IDindex;
-    long NBact, NBframes, sizexwfs, sizeywfs, sizewfs;
+    imageID IDin, IDhad, IDout, IDindex;
+    long NBframes, sizexwfs, sizeywfs, sizewfs;
     long kk, kk1, ii;
     uint32_t zsizeout;
 

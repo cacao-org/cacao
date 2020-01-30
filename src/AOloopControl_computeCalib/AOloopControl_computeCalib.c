@@ -5,8 +5,6 @@
  * AO engine uses stream data structure
  *
  * 
- * @bug No known bugs.
- * 
  * 
  */
 
@@ -126,23 +124,29 @@ long aoconfID_imWFS2_active[100];
 /* =============================================================================================== */
 
 /** @brief CLI function for AOloopControl_mkSlavedAct */
-int_fast8_t AOloopControl_computeCalib_mkSlavedAct_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,1)
-            + CLI_checkarg(3,3)==0) {
+errno_t AOloopControl_computeCalib_mkSlavedAct_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,1) +
+        CLI_checkarg(3,3)
+        == 0 )
+    {
         AOloopControl_computeCalib_mkSlavedAct(
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.numf,
             data.cmdargtoken[3].val.string);
-        return 0;
+
+        return CLICMD_SUCCESS;
     }
-    else	return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 
 /** @brief CLI function for AOloopControl_mkloDMmodes */
-int_fast8_t AOloopControl_computeCalib_mkloDMmodes_cli() {
+errno_t AOloopControl_computeCalib_mkloDMmodes_cli() {
     if(CLI_checkarg(1,3)
             + CLI_checkarg(2,2)
             + CLI_checkarg(3,2)
@@ -164,9 +168,9 @@ int_fast8_t AOloopControl_computeCalib_mkloDMmodes_cli() {
             data.cmdargtoken[8].val.numf,
             data.cmdargtoken[9].val.numf,
             data.cmdargtoken[10].val.numl);
-        return 0;
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else return CLICMD_INVALID_ARG;
 }
 
 
@@ -176,7 +180,7 @@ int_fast8_t AOloopControl_computeCalib_mkloDMmodes_cli() {
 
 /** @brief CLI function for AOloopControl_computeCalib_ComputeCM */
 
-int_fast8_t AOloopControl_computeCalib_ComputeCM_cli() {
+errno_t AOloopControl_computeCalib_ComputeCM_cli() {
     int stringmaxlen = 200;
     char fpsname[stringmaxlen];
 
@@ -222,7 +226,7 @@ int_fast8_t AOloopControl_computeCalib_ComputeCM_cli() {
 
 
 /** @brief CLI function for AOloopControl_mkCM */
-int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
+errno_t AOloopControl_computeCalib_mkCM_cli() {
 	int stringmaxlen = 200;
     char fpsname[stringmaxlen];
 
@@ -305,7 +309,7 @@ int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
 
 
 /** @brief CLI function for AOloopControl_mkCM */
-/*int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
+/*errno_t AOloopControl_computeCalib_mkCM_cli() {
     if(CLI_checkarg(1,4)+CLI_checkarg(2,3)+CLI_checkarg(3,1)==0) {
         AOloopControl_computeCalib_mkCM(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf);
         return 0;
@@ -314,19 +318,22 @@ int_fast8_t AOloopControl_computeCalib_mkCM_cli() {
 }*/
 
 /** @brief CLI function for AOloopControl_mkModes */
-int_fast8_t AOloopControl_computeCalib_mkModes_cli() {
-    if(CLI_checkarg(1,3)
-            + CLI_checkarg(2,2)
-            + CLI_checkarg(3,2)
-            + CLI_checkarg(4,1)
-            + CLI_checkarg(5,1)
-            + CLI_checkarg(6,1)
-            + CLI_checkarg(7,1)
-            + CLI_checkarg(8,1)
-            + CLI_checkarg(9,1)
-            + CLI_checkarg(10,2)
-            + CLI_checkarg(11,2)
-            + CLI_checkarg(12,1)==0) {
+errno_t AOloopControl_computeCalib_mkModes_cli() {
+    if(
+        CLI_checkarg(1,3) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,1) +
+        CLI_checkarg(5,1) +
+        CLI_checkarg(6,1) +
+        CLI_checkarg(7,1) +
+        CLI_checkarg(8,1) +
+        CLI_checkarg(9,1) +
+        CLI_checkarg(10,2) +
+        CLI_checkarg(11,2) +
+        CLI_checkarg(12,1)
+        == 0 )
+    {
         AOloopControl_computeCalib_mkModes(
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.numl,
@@ -340,36 +347,51 @@ int_fast8_t AOloopControl_computeCalib_mkModes_cli() {
             data.cmdargtoken[10].val.numl,
             data.cmdargtoken[11].val.numl,
             data.cmdargtoken[12].val.numf,
-            "NULL");
-        return 0;
+            "NULL"
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
+
 /** @brief CLI function for AOloopControl_mkModes_Simple */
-int_fast8_t AOloopControl_computeCalib_mkModes_Simple_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,2)
-            + CLI_checkarg(3,2)
-            + CLI_checkarg(4,1)==0) {
+errno_t AOloopControl_computeCalib_mkModes_Simple_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,2) +
+        CLI_checkarg(4,1)
+        == 0 )
+    {
         AOloopControl_computeCalib_mkModes_Simple(
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.numl,
             data.cmdargtoken[3].val.numl,
-            data.cmdargtoken[4].val.numf);
-        return 0;
+            data.cmdargtoken[4].val.numf
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /** @brief CLI function for AOloopControl_computeCM */
-int_fast8_t AOloopControl_computeCalib_computeCM_cli() {
-    if(CLI_checkarg(1,2)
-            + CLI_checkarg(2,4)
-            + CLI_checkarg(3,3)
-            + CLI_checkarg(4,1)
-            + CLI_checkarg(5,2)
-            + CLI_checkarg(6,1)==0) {
+errno_t AOloopControl_computeCalib_computeCM_cli() {
+    if(
+        CLI_checkarg(1,2) +
+        CLI_checkarg(2,4) +
+        CLI_checkarg(3,3) +
+        CLI_checkarg(4,1) +
+        CLI_checkarg(5,2) +
+        CLI_checkarg(6,1)
+        == 0 )
+    {
         AOloopControl_computeCalib_compute_ControlMatrix(
             LOOPNUMBER,
             data.cmdargtoken[1].val.numl,
@@ -378,66 +400,97 @@ int_fast8_t AOloopControl_computeCalib_computeCM_cli() {
             "evecM",
             data.cmdargtoken[4].val.numf,
             data.cmdargtoken[5].val.numl,
-            data.cmdargtoken[6].val.numf);
+            data.cmdargtoken[6].val.numf
+        );
         save_fits("evecM","!evecM.fits");
         delete_image_ID("evecM");
-    } else return 1;
+        return CLICMD_SUCCESS;
+    }
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_loadCM */
-int_fast8_t AOloopControl_computeCalib_loadCM_cli() {
-    if(CLI_checkarg(1,3)==0) {
+errno_t AOloopControl_computeCalib_loadCM_cli() {
+    if(
+        CLI_checkarg(1,3)
+        == 0 )
+    {
         AOloopControl_computeCalib_loadCM(
-        LOOPNUMBER, 
-        data.cmdargtoken[1].val.string);
-        return 0;
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.string
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
+
 
 /** @brief CLI function for AOloopControl_mkHadamardModes */
-int_fast8_t AOloopControl_computeCalib_mkHadamardModes_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,3)==0) {
+errno_t AOloopControl_computeCalib_mkHadamardModes_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,3)
+        == 0 )
+    {
         AOloopControl_computeCalib_mkHadamardModes(
             data.cmdargtoken[1].val.string,
-            data.cmdargtoken[2].val.string);
-        return 0;
+            data.cmdargtoken[2].val.string
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
+
 /** @brief CLI function for AOloopControl_Hadamard_decodeRM */
-int_fast8_t AOloopControl_computeCalib_Hadamard_decodeRM_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,4)
-            + CLI_checkarg(3,4)
-            + CLI_checkarg(4,3)==0) {
+errno_t AOloopControl_computeCalib_Hadamard_decodeRM_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,4) +
+        CLI_checkarg(3,4) +
+        CLI_checkarg(4,3)
+        == 0 )
+    {
         AOloopControl_computeCalib_Hadamard_decodeRM(
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.string,
             data.cmdargtoken[3].val.string,
-            data.cmdargtoken[4].val.string);
-        return 0;
+            data.cmdargtoken[4].val.string
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_mkCalib_map_mask */
-int_fast8_t AOloopControl_computeCalib_mkCalib_map_mask_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,3)
-            + CLI_checkarg(3,3)
-            + CLI_checkarg(4,1)
-            + CLI_checkarg(5,1)
-            + CLI_checkarg(6,1)
-            + CLI_checkarg(7,1)
-            + CLI_checkarg(8,1)
-            + CLI_checkarg(9,1)
-            + CLI_checkarg(10,1)
-            + CLI_checkarg(11,1)==0) {
+errno_t AOloopControl_computeCalib_mkCalib_map_mask_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,3) +
+        CLI_checkarg(3,3) +
+        CLI_checkarg(4,1) +
+        CLI_checkarg(5,1) +
+        CLI_checkarg(6,1) +
+        CLI_checkarg(7,1) +
+        CLI_checkarg(8,1) +
+        CLI_checkarg(9,1) +
+        CLI_checkarg(10,1) +
+        CLI_checkarg(11,1)
+        == 0 )
+    {
         AOloopControl_computeCalib_mkCalib_map_mask(
             LOOPNUMBER,
             data.cmdargtoken[1].val.string,
@@ -450,41 +503,55 @@ int_fast8_t AOloopControl_computeCalib_mkCalib_map_mask_cli() {
             data.cmdargtoken[8].val.numf,
             data.cmdargtoken[9].val.numf,
             data.cmdargtoken[10].val.numf,
-            data.cmdargtoken[11].val.numf);
-        return 0;
+            data.cmdargtoken[11].val.numf
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_Process_zrespM */
-int_fast8_t AOloopControl_computeCalib_Process_zrespM_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,4)
-            + CLI_checkarg(3,3)
-            + CLI_checkarg(4,3)
-            + CLI_checkarg(5,3)==0) {
+errno_t AOloopControl_computeCalib_Process_zrespM_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,4) +
+        CLI_checkarg(3,3) +
+        CLI_checkarg(4,3) +
+        CLI_checkarg(5,3)
+        == 0 )
+    {
         AOloopControl_computeCalib_Process_zrespM(
             LOOPNUMBER,
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.string,
             data.cmdargtoken[3].val.string,
             data.cmdargtoken[4].val.string,
-            data.cmdargtoken[5].val.string);
-        return 0;
+            data.cmdargtoken[5].val.string
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_ProcessZrespM */
-int_fast8_t AOloopControl_computeCalib_ProcessZrespM_cli() {
-    if(CLI_checkarg(1,3)
-            + CLI_checkarg(2,3)
-            + CLI_checkarg(3,3)
-            + CLI_checkarg(4,3)
-            + CLI_checkarg(5,1)
-            + CLI_checkarg(6,2)==0) {
+errno_t AOloopControl_computeCalib_ProcessZrespM_cli() {
+    if(
+        CLI_checkarg(1,3) +
+        CLI_checkarg(2,3) +
+        CLI_checkarg(3,3) +
+        CLI_checkarg(4,3) +
+        CLI_checkarg(5,1) +
+        CLI_checkarg(6,2)
+        == 0 )
+    {
         AOloopControl_computeCalib_ProcessZrespM_medianfilt(
             LOOPNUMBER,
             data.cmdargtoken[1].val.string,
@@ -492,31 +559,42 @@ int_fast8_t AOloopControl_computeCalib_ProcessZrespM_cli() {
             data.cmdargtoken[3].val.string,
             data.cmdargtoken[4].val.string,
             data.cmdargtoken[5].val.numf,
-            data.cmdargtoken[6].val.numl);
-        return 0;
+            data.cmdargtoken[6].val.numl
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_compute_CombinedControlMatrix */
-int_fast8_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli() {
-    if(CLI_checkarg(1,4)
-            + CLI_checkarg(2,4)
-            + CLI_checkarg(3,4)
-            + CLI_checkarg(4,4)
-            + CLI_checkarg(5,3)
-            + CLI_checkarg(6,3)==0) {
+errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,4) +
+        CLI_checkarg(3,4) +
+        CLI_checkarg(4,4) +
+        CLI_checkarg(5,3) +
+        CLI_checkarg(6,3)
+        == 0 )
+    {
         AOloopControl_computeCalib_compute_CombinedControlMatrix(
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.string,
             data.cmdargtoken[3].val.string,
             data.cmdargtoken[4].val.string,
             data.cmdargtoken[5].val.string,
-            data.cmdargtoken[6].val.string);
-        return 0;
+            data.cmdargtoken[6].val.string
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -553,7 +631,7 @@ void __attribute__ ((constructor)) libinit_AOloopControl_computeCalib()
 }
 
 
-int_fast8_t init_AOloopControl_computeCalib()
+errno_t init_AOloopControl_computeCalib()
 {
 
     /* =============================================================================================== */
@@ -699,7 +777,7 @@ int_fast8_t init_AOloopControl_computeCalib()
     // add atexit functions here
     // atexit((void*) myfunc);
 
-    return 0;
+    return RETURN_SUCCESS;
 }
 
 
@@ -709,9 +787,10 @@ int_fast8_t init_AOloopControl_computeCalib()
 
 
 errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
-    char *fpsname,
+    char    *fpsname,
     uint32_t CMDmode
-) {
+) 
+{
     //uint16_t loopstatus;
 
 
@@ -734,57 +813,67 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
     // ===========================
     void *pNull = NULL;
-    uint64_t FPFLAG;
+    __attribute__((unused)) uint64_t FPFLAG;
 
 
     long loop_default[4] = { 0, 0, 10, 0 };
-    long fpi_loop = function_parameter_add_entry(&fps, ".loop",
+    __attribute__((unused)) long fpi_loop = 
+    function_parameter_add_entry(&fps, ".loop",
                     "loop index",
                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
 
     double SVDlim_default[4] = { 0.01, 0.000001, 1.0, 0.01 };
-    long fpi_SVDlim = function_parameter_add_entry(&fps, ".SVDlim",
+    __attribute__((unused)) long fpi_SVDlim = 
+    function_parameter_add_entry(&fps, ".SVDlim",
                       "RM poke amplitude",
                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &SVDlim_default);
 
 
     double CPAmax_default[4] = { 10.0, 0.1, 100.0, 10.0 };
-    long fpi_CPAmax = function_parameter_add_entry(&fps, ".CPAmax",
+    __attribute__((unused)) long fpi_CPAmax = 
+    function_parameter_add_entry(&fps, ".CPAmax",
                       "maximum controlled CPA",
                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &CPAmax_default);
 
     double deltaCPA_default[4] = { 0.8, 0.1, 2.0, 0.8 };
-    long fpi_deltaCPA = function_parameter_add_entry(&fps, ".deltaCPA",
+    __attribute__((unused)) long fpi_deltaCPA = 
+    function_parameter_add_entry(&fps, ".deltaCPA",
                       "delta CPA",
                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &deltaCPA_default);
 
     double alignCX_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
-    long fpi_alignCX = function_parameter_add_entry(&fps, ".align.CX",
+    __attribute__((unused)) long fpi_alignCX = 
+    function_parameter_add_entry(&fps, ".align.CX",
                       "DM mask center X (if no DMmaskRM)",
                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignCX_default);
 
     double alignCY_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
-    long fpi_alignCY = function_parameter_add_entry(&fps, ".align.CY",
+    __attribute__((unused)) long fpi_alignCY = 
+    function_parameter_add_entry(&fps, ".align.CY",
                       "DM mask center Y (if no DMmaskRM)",
                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignCY_default);
 
     double alignID_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
-    long fpi_alignID = function_parameter_add_entry(&fps, ".align.ID",
+    __attribute__((unused)) long fpi_alignID = 
+    function_parameter_add_entry(&fps, ".align.ID",
                       "mask I.D. (if no DMmaskRM)",
                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignID_default);
 
     double alignOD_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
-    long fpi_alignOD = function_parameter_add_entry(&fps, ".align.OD",
+    __attribute__((unused)) long fpi_alignOD = 
+    function_parameter_add_entry(&fps, ".align.OD",
                       "mask O.D. (if no DMmaskRM)",
                       FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignOD_default);
 
     long DMxsize_default[4] = { 10, 1, 2000, 10 };
-    long fpi_DMxsize = function_parameter_add_entry(&fps, ".DMxsize",
+    __attribute__((unused)) long fpi_DMxsize = 
+    function_parameter_add_entry(&fps, ".DMxsize",
                       "DM x size",
                       FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &DMxsize_default);
 
     long DMysize_default[4] = { 10, 1, 2000, 10 };
-    long fpi_DMysize = function_parameter_add_entry(&fps, ".DMysize",
+    __attribute__((unused)) long fpi_DMysize = 
+    function_parameter_add_entry(&fps, ".DMysize",
                       "DM y size",
                       FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &DMysize_default);
 
@@ -813,36 +902,44 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
 
 
-    long fpi_fname_dmslaved = function_parameter_add_entry(&fps, ".DMslaved",
+    __attribute__((unused)) long fpi_fname_dmslaved = 
+    function_parameter_add_entry(&fps, ".DMslaved",
                               "DM slaved actuators",
                               FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-    long fpi_fname_zrespM = function_parameter_add_entry(&fps, ".zrespM",
+    __attribute__((unused)) long fpi_fname_zrespM = 
+    function_parameter_add_entry(&fps, ".zrespM",
                             "Zonal response matrix",
                             FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-    long fpi_fname_dmmaskRM = function_parameter_add_entry(&fps, ".DMmaskRM",
+    __attribute__((unused)) long fpi_fname_dmmaskRM = 
+    function_parameter_add_entry(&fps, ".DMmaskRM",
                               "actuators directly controlled",
                               FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-    long fpi_fname_WFSmask = function_parameter_add_entry(&fps, ".WFSmask",
+    __attribute__((unused)) long fpi_fname_WFSmask = 
+    function_parameter_add_entry(&fps, ".WFSmask",
                              "WFS mask",
                              FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-    long fpi_fname_loRM = function_parameter_add_entry(&fps, ".loRM",
+    __attribute__((unused)) long fpi_fname_loRM = 
+    function_parameter_add_entry(&fps, ".loRM",
                           "low order modal response matrix",
                           FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
-    long fpi_fname_loRMmodes = function_parameter_add_entry(&fps, ".loRMmodes",
+    __attribute__((unused)) long fpi_fname_loRMmodes = 
+    function_parameter_add_entry(&fps, ".loRMmodes",
                                "low order RM modes",
                                FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
 
 
-    long fpi_fname_extrablockM = function_parameter_add_entry(&fps, ".option.extrablockM",
+    __attribute__((unused)) long fpi_fname_extrablockM = 
+    function_parameter_add_entry(&fps, ".option.extrablockM",
                                  "extra modes block",
                                  FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
 
-    long fpi_fname_exclmodes = function_parameter_add_entry(&fps, ".option.exclmodes",
+    __attribute__((unused)) long fpi_fname_exclmodes = 
+    function_parameter_add_entry(&fps, ".option.exclmodes",
                                "excluded modes",
                                FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
 
@@ -933,7 +1030,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 				if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX  > 0 ) {
 					int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
 					int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
-					int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
+					__attribute__((unused)) int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
 
 					float cx = 0.5*DMxsize - 0.5;
 					float cy = 0.5*DMysize - 0.5;
@@ -1007,7 +1104,8 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     // ===============================
     // GET FUNCTION PARAMETER VALUES
     // ===============================
-    long loop         = functionparameter_GetParamValue_INT64(&fps, ".loop");
+    __attribute__((unused)) long loop         = 
+    functionparameter_GetParamValue_INT64(&fps, ".loop");
     float SVDlim      = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
     float CPAmax      = functionparameter_GetParamValue_FLOAT64(&fps, ".CPAmax");
     float deltaCPA    = functionparameter_GetParamValue_FLOAT64(&fps, ".deltaCPA");

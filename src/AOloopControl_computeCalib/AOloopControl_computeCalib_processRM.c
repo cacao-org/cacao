@@ -5,8 +5,6 @@
  * AO engine uses stream data structure
  *  
  * 
- * @bug No known bugs.
- * 
  * 
  */
 
@@ -106,25 +104,21 @@ long aoconfID_imWFS2_active[100];
 // if images "Hmat" AND "pixindexim" are provided, decode the image
 // TEST: if "RMpokeC" exists, decode it as well
 //
-int_fast8_t AOloopControl_computeCalib_Process_zrespM(
-    long loop,
+errno_t AOloopControl_computeCalib_Process_zrespM(
+    long        loop,
     const char *IDzrespm0_name,
-    const char *IDwfsref_name,
+    __attribute__((unused)) const char *IDwfsref_name,
     const char *IDzrespm_name,
     const char *WFSmap_name,
     const char *DMmap_name
 )
 {
-    long NBpoke;
-    long IDzrm;
-
-    long sizexWFS, sizeyWFS, sizexDM, sizeyDM;
-    long sizeWFS, sizeDM;
-    long poke, ii;
-    char name[200];
+    imageID  IDzrm;
+    uint64_t sizeWFS;
+    char     name[200];
 
     double rms, tmpv;
-    long IDDMmap, IDWFSmap, IDdm;
+    imageID IDDMmap, IDWFSmap, IDdm;
 
 
 
@@ -153,16 +147,16 @@ int_fast8_t AOloopControl_computeCalib_Process_zrespM(
 
     // create sensitivity maps
 
-    sizexWFS = data.image[IDzrm].md[0].size[0];
-    sizeyWFS = data.image[IDzrm].md[0].size[1];
-    NBpoke = data.image[IDzrm].md[0].size[2];
+    uint32_t sizexWFS = data.image[IDzrm].md[0].size[0];
+    uint32_t sizeyWFS = data.image[IDzrm].md[0].size[1];
+    uint32_t NBpoke = data.image[IDzrm].md[0].size[2];
 
     if(sprintf(name, "aol%ld_dmC", loop) < 1)
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
     IDdm = read_sharedmem_image(name);
-    sizexDM = data.image[IDdm].md[0].size[0];
-    sizeyDM = data.image[IDdm].md[0].size[1];
+    uint32_t sizexDM = data.image[IDdm].md[0].size[0];
+    uint32_t sizeyDM = data.image[IDdm].md[0].size[1];
 
     sizeWFS = sizexWFS*sizeyWFS;
 
@@ -172,10 +166,10 @@ int_fast8_t AOloopControl_computeCalib_Process_zrespM(
 
     printf("Preparing DM map ... ");
     fflush(stdout);
-    for(poke=0; poke<NBpoke; poke++)
+    for(uint32_t poke=0; poke<NBpoke; poke++)
     {
         rms = 0.0;
-        for(ii=0; ii<sizeWFS; ii++)
+        for(uint32_t ii=0; ii<sizeWFS; ii++)
         {
             tmpv = data.image[IDzrm].array.F[poke*sizeWFS+ii];
             rms += tmpv*tmpv;
@@ -189,10 +183,10 @@ int_fast8_t AOloopControl_computeCalib_Process_zrespM(
 
     printf("Preparing WFS map ... ");
     fflush(stdout);
-    for(ii=0; ii<sizeWFS; ii++)
+    for(uint32_t ii=0; ii<sizeWFS; ii++)
     {
         rms = 0.0;
-        for(poke=0; poke<NBpoke; poke++)
+        for(uint32_t poke=0; poke<NBpoke; poke++)
         {
             tmpv = data.image[IDzrm].array.F[poke*sizeWFS+ii];
             rms += tmpv*tmpv;
@@ -240,6 +234,7 @@ int_fast8_t AOloopControl_computeCalib_Process_zrespM(
 
     */
 
+	return RETURN_SUCCESS;
 }
 
 
@@ -256,39 +251,40 @@ int_fast8_t AOloopControl_computeCalib_Process_zrespM(
 // if images "Hmat" AND "pixindexim" are provided, decode the image
 // TEST: if "RMpokeC" exists, decode it as well
 //
-int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
-    long loop,
+errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
+    long        loop,
     const char *zrespm_name,
     const char *WFSref0_name,
     const char *WFSmap_name,
     const char *DMmap_name,
-    double rmampl,
-    int normalize
+    double      rmampl,
+    int         normalize
 )
 {
     long NBmat; // number of matrices to average
     FILE *fp;
-    int r;
+    //int r;
     char name[200];
     char fname[200];
     char zrname[200];
     long kmat;
     long sizexWFS, sizeyWFS, sizeWFS;
-    long *IDzresp_array;
+    imageID *IDzresp_array;
     long ii;
     double fluxpos, fluxneg;
     float *pixvalarray;
     long k, kmin, kmax, kband;
-    long IDzrm;
+    imageID IDzrm;
     float ave;
-    long *IDWFSrefc_array;
-    long IDWFSref;
-    long IDWFSmap, IDDMmap;
-    long IDWFSmask, IDDMmask;
-    float lim, rms;
-    double tmpv;
+    imageID *IDWFSrefc_array;
+    imageID IDWFSref;
+    //imageID IDWFSmap;
+    //imageID IDDMmap;
+    imageID IDWFSmask;
+    //imageID IDDMmask;
+//    float lim, rms;
+//    double tmpv;
     long NBmatlim = 3;
-    long ID1;
     long NBpoke, poke;
     double tot, totm;
 
@@ -323,8 +319,8 @@ int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
 
-    IDzresp_array = (long*) malloc(sizeof(long)*NBmat);
-    IDWFSrefc_array = (long*) malloc(sizeof(long)*NBmat);
+    IDzresp_array = (imageID*) malloc(sizeof(imageID)*NBmat);
+    IDWFSrefc_array = (imageID*) malloc(sizeof(imageID)*NBmat);
 
     // STEP 1: build individually cleaned RM
     for(kmat=0; kmat<NBmat; kmat++)
@@ -390,8 +386,10 @@ int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
                     data.image[IDzrespfp].array.F[poke*sizeWFS+ii] /= fluxpos;
                     data.image[IDzrespfm].array.F[poke*sizeWFS+ii] /= fluxneg;
                 }
-                data.image[IDzresp_array[kmat]].array.F[poke*sizeWFS+ii] = 0.5*(data.image[IDzrespfp].array.F[poke*sizeWFS+ii]-data.image[IDzrespfm].array.F[poke*sizeWFS+ii]);
-                data.image[IDWFSrefc_array[kmat]].array.F[poke*sizeWFS+ii] = 0.5*(data.image[IDzrespfp].array.F[poke*sizeWFS+ii]+data.image[IDzrespfm].array.F[poke*sizeWFS+ii]);
+                data.image[IDzresp_array[kmat]].array.F[poke*sizeWFS+ii] = 
+                0.5*(data.image[IDzrespfp].array.F[poke*sizeWFS+ii]-data.image[IDzrespfm].array.F[poke*sizeWFS+ii]);
+                data.image[IDWFSrefc_array[kmat]].array.F[poke*sizeWFS+ii] = 
+                0.5*(data.image[IDzrespfp].array.F[poke*sizeWFS+ii]+data.image[IDzrespfm].array.F[poke*sizeWFS+ii]);
 
                 if(isnan(data.image[IDzresp_array[kmat]].array.F[poke*sizeWFS+ii])!=0)
                 {
@@ -520,7 +518,9 @@ int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     NBpoke = data.image[IDzrm].md[0].size[2];
 
 
-    AOloopControl_computeCalib_mkCalib_map_mask(loop, zrespm_name, WFSmap_name, DMmap_name, 0.2, 1.0, 0.7, 0.3, 0.05, 1.0, 0.65, 0.3);
+    AOloopControl_computeCalib_mkCalib_map_mask(
+    loop, zrespm_name, WFSmap_name, DMmap_name, 
+    0.2, 1.0, 0.7, 0.3, 0.05, 1.0, 0.65, 0.3);
 
     //	list_image_ID();
     //printf("========== STEP 000 ============\n");
@@ -563,7 +563,7 @@ int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     fclose(fp);
 
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
@@ -575,95 +575,99 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     uint32_t CMDmode
 )
 {
-	//uint16_t loopstatus;
-	
+    //uint16_t loopstatus;
+
     // ===========================
     // SETUP FPS
     // ===========================
-	/*int SMfd = -1;
+    /*int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-	fps.md->sourceline = __LINE__;
-*/
+    strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
+    fps.md->sourceline = __LINE__;
+    */
 
-	FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(fpsname, CMDmode);
 
     // ===========================
-    // ALLOCATE FPS ENTRIES 
+    // ALLOCATE FPS ENTRIES
     // ===========================
 
     void *pNull = NULL;
     uint64_t FPFLAG;
-    
+
     long loop_default[4] = { 0, 0, 10, 0 };
-    long fpi_loop = function_parameter_add_entry(&fps, ".loop",
-                    "loop index",
-                    FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
- 
-                    
+    __attribute__((unused)) long fpi_loop =
+        function_parameter_add_entry(&fps, ".loop",
+                                     "loop index",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
+
+
     double SVDlimdefault[4] = { 0.001, 0.0, 1.0, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
-    long fpi_SVDlim = function_parameter_add_entry(&fps, ".SVDlim", "SVD limit value", 
+    __attribute__((unused)) long fpi_SVDlim =
+        function_parameter_add_entry(&fps, ".SVDlim", "SVD limit value",
                                      FPTYPE_FLOAT64, FPFLAG, &SVDlimdefault);
-    
+
     // Input file name
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
-    long fpi_filename_respm        = function_parameter_add_entry(&fps, ".fname_respM", "response matrix",
+    __attribute__((unused)) long fpi_filename_respm        =
+        function_parameter_add_entry(&fps, ".fname_respM", "response matrix",
                                      FPTYPE_FILENAME, FPFLAG, pNull);
- 
+
     // Output file name
     FPFLAG = FPFLAG_DEFAULT_OUTPUT;
-    long fpi_filename_out         = function_parameter_add_entry(&fps, ".outfname", "output name",
+    __attribute__((unused)) long fpi_filename_out         =
+        function_parameter_add_entry(&fps, ".outfname", "output name",
                                      FPTYPE_FILENAME, FPFLAG, pNull);
- 
- 
- 
+
+
+
     // Actions
     long fpi_adoptCM = function_parameter_add_entry(&fps, ".adoptCM",
-                              "adopt CM",
-                              FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);	
-	
-	
-	
- 
+                       "adopt CM",
+                       FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+
+
+
+
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
 
     while ( fps.loopstatus == 1 )
     {
-       usleep(50);
+        usleep(50);
         if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
         {
             // here goes the logic
-         //
+            //
             // Action: adopt CM
             //
             if(fps.parray[fpi_adoptCM].fpflag & FPFLAG_ONOFF) {
-					FILE *fpconf;
-					char conffname[200];
-					long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
-					sprintf(conffname, "conf/shmim.aol%ld_CMat.fname.txt", loop);
-					fpconf = fopen(conffname, "w");
-					fprintf(fpconf, "%s", functionparameter_GetParamPtr_STRING(&fps, ".outfname") );
-					fclose(fpconf);
+                FILE *fpconf;
+                char conffname[200];
+                long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
+                sprintf(conffname, "conf/shmim.aol%ld_CMat.fname.txt", loop);
+                fpconf = fopen(conffname, "w");
+                fprintf(fpconf, "%s", functionparameter_GetParamPtr_STRING(&fps, ".outfname") );
+                fclose(fpconf);
 
-                    // set back to OFF
-                    fps.parray[fpi_adoptCM].fpflag &= ~FPFLAG_ONOFF;
-                
+                // set back to OFF
+                fps.parray[fpi_adoptCM].fpflag &= ~FPFLAG_ONOFF;
+
             }
-  
+
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
-        }       
+        }
 
     }
-    
-    
 
-	function_parameter_FPCONFexit( &fps );
-	    
-	return RETURN_SUCCESS;
+
+
+    function_parameter_FPCONFexit( &fps );
+
+    return RETURN_SUCCESS;
 }
 
 
@@ -673,19 +677,8 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     char *fpsname
 )
 {
-    // ===========================
-    // CONNECT TO FPS
-    // ===========================
-/*	int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps;
 
-    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1)
-    {
-        printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
-        return RETURN_FAILURE;
-    }*/
-    
-    
+
     FPS_CONNECT( fpsname, FPSCONNECT_RUN );
 
 
@@ -694,7 +687,8 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     // GET FUNCTION PARAMETER VALUES
     // ===============================
 
-    long loop        = functionparameter_GetParamValue_INT64(&fps, ".loop");
+    __attribute__((unused)) long loop        =
+        functionparameter_GetParamValue_INT64(&fps, ".loop");
 
     float SVDlim = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
 
@@ -704,7 +698,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
 
 
 
-	load_fits(respMname, "respM", 1);
+    load_fits(respMname, "respM", 1);
 
     char cm_name[] = "sCMat";
 #ifdef HAVE_MAGMA
@@ -720,7 +714,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
 
 
     // write output
-    char stagedir[] = "conf_fCM_staged";
+    //char stagedir[] = "conf_fCM_staged";
 
     // Get time
     time_t tnow;
@@ -736,13 +730,13 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     char fnamedest[500];
     sprintf(fnamedest, "sCM/sCM_%s.fits", datestring);
 
-	save_fits(cm_name, fnamedest);
-	functionparameter_SetParamValue_STRING(&fps, ".outfname", fnamedest);
-	
+    save_fits(cm_name, fnamedest);
+    functionparameter_SetParamValue_STRING(&fps, ".outfname", fnamedest);
 
-	delete_image_ID(cm_name);
 
-	function_parameter_RUNexit( &fps );
+    delete_image_ID(cm_name);
+
+    function_parameter_RUNexit( &fps );
 
 
     return RETURN_SUCCESS;
@@ -756,8 +750,8 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
 // make control matrix
 //
 errno_t AOloopControl_computeCalib_mkCM(
-    const char *respm_name,
-    float SVDlim
+    __attribute__((unused)) const char *respm_name,
+    float       SVDlim
 )
 {
     char fpsname[200];
@@ -765,7 +759,7 @@ errno_t AOloopControl_computeCalib_mkCM(
     long pindex = (long) getpid();  // index used to differentiate multiple calls to function
     // if we don't have anything more informative, we use PID
 
-	int SMfd = -1;
+	//int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS

@@ -4,11 +4,6 @@
  * 
  * AO engine uses stream data structure
  *  
- * @author  O. Guyon
- * @date    26 Dec 2017
- *
- * 
- * @bug No known bugs.
  * 
  * 
  */
@@ -98,10 +93,13 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 long aoconfID_imWFS2_active[100];
 
-long AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name, const char *IDout_name)
+imageID AOloopControl_computeCalib_DMedgeDetect(
+    const char *IDmaskRM_name,
+    const char *IDout_name
+)
 {
-    long IDout;
-    long IDmaskRM;
+    imageID IDout;
+    imageID IDmaskRM;
     long ii, jj;
     float val1;
     long xsize, ysize;
@@ -174,7 +172,7 @@ long AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name, const ch
             data.image[IDout].array.F[jj*xsize+ii] = val1;
         }
 
-    return(IDout);
+    return IDout;
 }
 
 

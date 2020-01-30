@@ -5,7 +5,6 @@
  * AO engine uses stream data structure
  *  
  * 
- * @bug No known bugs.
  * 
  * 
  */
@@ -112,18 +111,18 @@ long aoconfID_imWFS2_active[100];
  *
  */
 
-int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
-    long loop,
-    long NB_MODE_REMOVED,
+imageID AOloopControl_computeCalib_compute_ControlMatrix(
+    long        loop,
+    __attribute__((unused)) long        NB_MODE_REMOVED,
     const char *ID_Rmatrix_name,
     const char *ID_Cmatrix_name,
     const char *ID_VTmatrix_name,
-    double Beta,
-    long NB_MODE_REMOVED_STEP,
-    float eigenvlim)
+    double      Beta,
+    long        NB_MODE_REMOVED_STEP,
+    float       eigenvlim
+)
 {
     FILE *fp;
-    long ii1, jj1, k, ii;
     gsl_matrix *matrix_D; /* this is the response matrix */
     gsl_matrix *matrix_Ds; /* this is the pseudo inverse of D */
     gsl_matrix *matrix_Dtra;
@@ -137,16 +136,13 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
 
     gsl_matrix *matrix_save;
 
-    long m;
-    long n;
-    long ID_Rmatrix, ID_Cmatrix, ID_VTmatrix;
+    imageID ID_Rmatrix, ID_Cmatrix, ID_VTmatrix;
     uint32_t *arraysizetmp;
 
-    long IDmodes;
+    imageID IDmodes;
 
-    long IDeigenmodesResp;
-    long kk, kk1;
-    long ID_RMmask;
+    imageID IDeigenmodesResp;
+    imageID ID_RMmask;
 
     double *CPAcoeff; /// gain applied to modes to enhance low orders in SVD
 
@@ -162,7 +158,6 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
     long MB_MR_end;
     long MB_MR_step;
 
-    int ret;
     char command[200];
 
 
@@ -176,16 +171,16 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
     ID_Rmatrix = image_ID(ID_Rmatrix_name);
 
 
-    n = data.image[ID_Rmatrix].md[0].size[0]*data.image[ID_Rmatrix].md[0].size[1]; //AOconf[loop].AOpmodecoeffs.NBDMmodes;
-    m = data.image[ID_Rmatrix].md[0].size[2]; //AOconf[loop].WFSim.sizeWFS;
+    uint64_t n = data.image[ID_Rmatrix].md[0].size[0]*data.image[ID_Rmatrix].md[0].size[1]; //AOconf[loop].AOpmodecoeffs.NBDMmodes;
+    uint32_t m = data.image[ID_Rmatrix].md[0].size[2]; //AOconf[loop].WFSim.sizeWFS;
 
 
     ID_RMmask = image_ID("RMmask");
     if(ID_RMmask!=-1) // apply mask to response matrix
     {
-        for(kk=0; kk<m; kk++)
+        for(uint32_t kk=0; kk<m; kk++)
         {
-            for(ii=0; ii<n; ii++)
+            for(uint64_t ii=0; ii<n; ii++)
                 data.image[ID_Rmatrix].array.F[kk*n+ii] *= data.image[ID_RMmask].array.F[ii];
         }
     }
@@ -196,7 +191,7 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
     //  long m = smao[0].NBmode;
     // long n = smao[0].NBwfselem;
 
-    printf("m = %ld actuators (modes), n = %ld sensors\n", m, n);
+    printf("m = %u actuators (modes), n = %lu sensors\n", m, n);
     fflush(stdout);
 
     NB_MODE_REMOVED1 = m-1;
@@ -217,29 +212,29 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
         long ID = load_fits("modesfreqcpa.fits", "modesfreqcpa", 1);
         if(ID==-1)
         {
-            for(k=0; k<m; k++)
+            for(uint32_t k=0; k<m; k++)
                 CPAcoeff[k] = 1.0;
         }
         else
         {
-            for(k=0; k<m; k++)
+            for(uint32_t k=0; k<m; k++)
             {
                 CPAcoeff[k] =  exp(-data.image[ID].array.F[k]*Beta);
-                printf("%5ld %5.3f %g\n", k, data.image[ID].array.F[k], CPAcoeff[k]);
+                printf("%5u %5.3f %g\n", k, data.image[ID].array.F[k], CPAcoeff[k]);
             }
         }
     }
     else
     {
-        for(k=0; k<m; k++)
+        for(uint32_t k=0; k<m; k++)
             CPAcoeff[k] = 1.0;
     }
 
 
     /* write matrix_D */
-    for(k=0; k<m; k++)
+    for(uint32_t k=0; k<m; k++)
     {
-        for(ii=0; ii<n; ii++)
+        for(uint64_t ii=0; ii<n; ii++)
             gsl_matrix_set (matrix_D, ii, k, data.image[ID_Rmatrix].array.F[k*n+ii]*CPAcoeff[k]);
     }
     /* compute DtraD */
@@ -266,16 +261,16 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
         printf("ERROR: cannot create file \"eigenv.dat\"\n");
         exit(0);
     }
-    for(k=0; k<m; k++)
-        fprintf(fp,"%ld %g\n", k, gsl_vector_get(matrix_DtraD_eval,k));
+    for(uint32_t k=0; k<m; k++)
+        fprintf(fp,"%u %g\n", k, gsl_vector_get(matrix_DtraD_eval,k));
     fclose(fp);
 
     eigenvmin = eigenvlim*gsl_vector_get(matrix_DtraD_eval,0);
 
     NBMODES_REMOVED_EIGENVLIM = 0;
-    for(k=0; k<m; k++)
+    for(uint32_t k=0; k<m; k++)
     {
-        printf("Mode %ld eigenvalue = %g\n", k, gsl_vector_get(matrix_DtraD_eval,k));
+        printf("Mode %u eigenvalue = %g\n", k, gsl_vector_get(matrix_DtraD_eval,k));
         if(gsl_vector_get(matrix_DtraD_eval,k) < eigenvmin)
             NBMODES_REMOVED_EIGENVLIM++;
     }
@@ -287,22 +282,27 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
     arraysizetmp[0] = m;
     arraysizetmp[1] = m;
     ID_VTmatrix = create_image_ID(ID_VTmatrix_name, 2, arraysizetmp, _DATATYPE_FLOAT, 0, 0);
-    for(ii=0; ii<m; ii++) // modes
-        for(k=0; k<m; k++) // modes
+    for(uint64_t ii=0; ii<m; ii++) // modes
+        for(uint32_t k=0; k<m; k++) // modes
             data.image[ID_VTmatrix].array.F[k*m+ii] = (float) gsl_matrix_get( matrix_DtraD_evec, k, ii);
 
 
     /// Compute eigenmodes responses
-    IDeigenmodesResp = create_3Dimage_ID("eigenmodesrespM", data.image[ID_Rmatrix].md[0].size[0], data.image[ID_Rmatrix].md[0].size[1], data.image[ID_Rmatrix].md[0].size[2]);
+    IDeigenmodesResp = create_3Dimage_ID(
+                           "eigenmodesrespM",
+                           data.image[ID_Rmatrix].md[0].size[0],
+                           data.image[ID_Rmatrix].md[0].size[1],
+                           data.image[ID_Rmatrix].md[0].size[2]);
     printf("Computing eigenmode responses .... \n");
-    for(kk=0; kk<m; kk++) /// eigen mode index
+    for(uint32_t kk=0; kk<m; kk++) /// eigen mode index
     {
-        printf("\r eigenmode %4ld / %4ld   ", kk, m);
+        printf("\r eigenmode %4u / %4u   ", kk, m);
         fflush(stdout);
-        for(kk1=0; kk1<m; kk1++)
+        for(uint32_t kk1=0; kk1<m; kk1++)
         {
-            for(ii=0; ii<n; ii++)
-                data.image[IDeigenmodesResp].array.F[kk*n + ii] += data.image[ID_VTmatrix].array.F[kk1*m+kk]*data.image[ID_Rmatrix].array.F[kk1*n + ii];
+            for(uint64_t ii=0; ii<n; ii++)
+                data.image[IDeigenmodesResp].array.F[kk*n + ii] +=
+                    data.image[ID_VTmatrix].array.F[kk1*m+kk]*data.image[ID_Rmatrix].array.F[kk1*n + ii];
         }
     }
     if(sprintf(fname, "!eigenmodesrespM_%4.2f.fits", Beta) < 1)
@@ -316,24 +316,24 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
     IDmodes = image_ID("modesM");
     if(IDmodes!=-1)
     {
-        uint32_t xsize_modes, ysize_modes, zsize_modes;
-        xsize_modes = data.image[IDmodes].md[0].size[0];
-        ysize_modes = data.image[IDmodes].md[0].size[1];
-        zsize_modes = data.image[IDmodes].md[0].size[2];
+        uint32_t xsize_modes = data.image[IDmodes].md[0].size[0];
+        uint32_t ysize_modes = data.image[IDmodes].md[0].size[1];
+        uint32_t zsize_modes = data.image[IDmodes].md[0].size[2];
         if(zsize_modes != m)
             printf("ERROR: zsize (%ld) of modesM does not match expected size (%ld)\n", (long) zsize_modes, (long) m);
         else
         {
             long IDeigenmodes = create_3Dimage_ID("eigenmodesM", xsize_modes, ysize_modes, m);
             printf("Computing eigenmodes .... \n");
-            for(kk=0; kk<m; kk++) /// eigen mode index
+            for(uint32_t kk=0; kk<m; kk++) /// eigen mode index
             {
-                printf("\r eigenmode %4ld / %4ld   ", kk, m);
+                printf("\r eigenmode %4u / %4u   ", kk, m);
                 fflush(stdout);
-                for(kk1=0; kk1<m; kk1++)
+                for(uint32_t kk1=0; kk1<m; kk1++)
                 {
-                    for(ii=0; ii<xsize_modes*ysize_modes; ii++)
-                        data.image[IDeigenmodes].array.F[kk*xsize_modes*ysize_modes + ii] += data.image[ID_VTmatrix].array.F[kk1*m+kk]*data.image[IDmodes].array.F[kk1*xsize_modes*ysize_modes + ii];
+                    for(uint64_t ii=0; ii<xsize_modes*ysize_modes; ii++)
+                        data.image[IDeigenmodes].array.F[kk*xsize_modes*ysize_modes + ii] +=
+                            data.image[ID_VTmatrix].array.F[kk1*m+kk]*data.image[IDmodes].array.F[kk1*xsize_modes*ysize_modes + ii];
                 }
             }
             printf("\n");
@@ -376,8 +376,8 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
     {
         printf("\r Number of modes removed : %5ld / %5ld  (step %ld)  ", NB_MR, NB_MODE_REMOVED1, NB_MODE_REMOVED_STEP);
         fflush(stdout);
-        for(ii1=0; ii1<m; ii1++)
-            for(jj1=0; jj1<m; jj1++)
+        for(uint32_t ii1=0; ii1<m; ii1++)
+            for(uint32_t jj1=0; jj1<m; jj1++)
             {
                 if(ii1==jj1)
                 {
@@ -397,11 +397,11 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
         gsl_blas_dgemm (CblasNoTrans, CblasTrans, 1.0, matrix_DtraDinv, matrix_D, 0.0, matrix_Ds);
 
         /* write result */
-        printf("write result to ID %ld   [%ld %ld]\n", ID_Cmatrix, n, m);
+        printf("write result to ID %ld   [%lu %u]\n", ID_Cmatrix, n, m);
         fflush(stdout);
 
-        for(ii=0; ii<n; ii++) // sensors
-            for(k=0; k<m; k++) // actuator modes
+        for(uint64_t ii=0; ii<n; ii++) // sensors
+            for(uint32_t k=0; k<m; k++) // actuator modes
                 data.image[ID_Cmatrix].array.F[k*n+ii] = (float) gsl_matrix_get(matrix_Ds, k, ii)*CPAcoeff[k];
 
 
@@ -415,7 +415,7 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
             if(system(command) != 0)
                 printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
 
-            if(sprintf(command, "echo \"%ld\" > ./cmat.NB_MODES.txt",  m) < 1)
+            if(sprintf(command, "echo \"%u\" > ./cmat.NB_MODES.txt",  m) < 1)
                 printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
             if(system(command) != 0)
@@ -450,8 +450,7 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
     free(CPAcoeff);
 
 
-
-    return(ID_Cmatrix);
+    return ID_Cmatrix;
 }
 
 
@@ -463,7 +462,7 @@ int_fast8_t AOloopControl_computeCalib_compute_ControlMatrix(
 //
 //
 
-long AOloopControl_computeCalib_compute_CombinedControlMatrix(
+errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     const char *IDcmat_name,
     const char *IDmodes_name,
     const char* IDwfsmask_name,
@@ -479,26 +478,19 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(
     double tdiffv;
 
     float *matrix_cmp;
-    long wfselem, act, mode;
-    //    long n_sizeDM, n_NBDMmodes, n_sizeWFS;
     float *matrix_Mc, *matrix_DMmodes;
-    long act_active, wfselem_active;
 
-    long IDwfsmask, IDdmmask;
-    long sizexWFS, sizeyWFS, sizeWFS, sizeWFS_active[100];
-    long ii, ii1;
-    long sizexDM, sizeyDM;
-    long sizeDM_active;
-    uint32_t *sizearray;
-    long IDcmat;
-    long IDcmatc;
-    long IDmodes;
-    long NBDMmodes;
-    long sizeDM;
-    long IDcmatc_active[100];
-    char name[200];
-    char imname[200];
-    int slice;
+    imageID    IDwfsmask;
+    imageID    IDdmmask;
+    uint64_t   sizeWFS_active[100];
+    uint64_t   sizeDM_active;
+    uint32_t  *sizearray;
+    imageID    IDcmat;
+    imageID    IDcmatc;
+    imageID    IDmodes;
+    long       IDcmatc_active[100];
+    //char       name[200];
+    char       imname[200];
 
 
     printf("COMPUTING COMBINED CONTROL MATRIX .... \n");
@@ -509,17 +501,17 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
     // initialize size of arrays
     IDwfsmask = image_ID(IDwfsmask_name);
-    sizexWFS = data.image[IDwfsmask].md[0].size[0];
-    sizeyWFS = data.image[IDwfsmask].md[0].size[1];
-    sizeWFS = sizexWFS*sizeyWFS;
+    uint32_t sizexWFS = data.image[IDwfsmask].md[0].size[0];
+    uint32_t sizeyWFS = data.image[IDwfsmask].md[0].size[1];
+    uint64_t sizeWFS  = sizexWFS*sizeyWFS;
 
     printf("IDwfsmask = %ld\n", IDwfsmask);
     fflush(stdout);
 
     IDdmmask = image_ID(IDdmmask_name);
-    sizexDM = data.image[IDdmmask].md[0].size[0];
-    sizeyDM = data.image[IDdmmask].md[0].size[1];
-    sizeDM = sizexDM*sizeyDM;
+    uint32_t sizexDM = data.image[IDdmmask].md[0].size[0];
+    uint32_t sizeyDM = data.image[IDdmmask].md[0].size[1];
+    uint64_t sizeDM  = sizexDM*sizeyDM;
 
     printf("IDdmmask = %ld\n", IDdmmask);
     fflush(stdout);
@@ -529,7 +521,7 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(
     printf("IDmodes = %ld\n", IDmodes);
     fflush(stdout);
 
-    NBDMmodes = data.image[IDmodes].md[0].size[2];
+    uint32_t NBDMmodes = data.image[IDmodes].md[0].size[2];
 
 
 
@@ -539,7 +531,7 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(
     sizearray[1] = sizeyWFS;
     sizearray[2] = sizeDM;
 
-    printf("Creating 3D image : %ld %ld %ld\n", sizexWFS, sizeyWFS, sizeDM);
+    printf("Creating 3D image : %u %u %lu\n", sizexWFS, sizeyWFS, sizeDM);
     fflush(stdout);
     IDcmatc = create_image_ID(IDcmatc_name, 3, sizearray, _DATATYPE_FLOAT, 0, 0);
     free(sizearray);
@@ -574,11 +566,11 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(
     //  {
     //        #pragma omp for schedule (static)
     //# endif
-    for(mode=0; mode<NBDMmodes; mode++)
+    for(uint32_t mode=0; mode<NBDMmodes; mode++)
     {
-        for(act=0; act<sizeDM; act++)
+        for(uint64_t act=0; act<sizeDM; act++)
         {
-            for(wfselem=0; wfselem<sizeWFS; wfselem++)
+            for(uint64_t wfselem=0; wfselem<sizeWFS; wfselem++)
                 matrix_Mc[act*sizeWFS+wfselem] += matrix_cmp[mode*sizeWFS+wfselem]*matrix_DMmodes[mode*sizeDM+act];
         }
     }
@@ -594,10 +586,10 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
 
     aoloopcontrol_var.WFS_active_map = (int*) malloc(sizeof(int)*sizeWFS*aoloopcontrol_var.PIXSTREAM_NBSLICES);
-    for(slice=0; slice<aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++)
+    for(uint32_t slice=0; slice < (uint32_t) aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++)
     {
-        ii1 = 0;
-        for(ii=0; ii<sizeWFS; ii++)
+        uint64_t ii1 = 0;
+        for(uint64_t ii=0; ii<sizeWFS; ii++)
             if(data.image[IDwfsmask].array.F[ii]>0.1)
             {
                 if(slice==0)
@@ -631,8 +623,8 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
 
     aoloopcontrol_var.DM_active_map = (int*) malloc(sizeof(int)*sizeDM);
-    ii1 = 0;
-    for(ii=0; ii<sizeDM; ii++)
+    uint64_t ii1 = 0;
+    for(uint64_t ii=0; ii<sizeDM; ii++)
         if(data.image[IDdmmask].array.F[ii]>0.1)
         {
             aoloopcontrol_var.DM_active_map[ii1] = ii;
@@ -655,22 +647,24 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
 
     // reduce matrix size to active elements
-    for(slice=0; slice<aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++)
+    for(uint32_t slice=0; slice < (uint32_t) aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++)
     {
         if(sprintf(imname, "%s_%02d", IDcmatc_active_name, slice) < 1)
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
         IDcmatc_active[slice] = create_2Dimage_ID(imname, sizeWFS_active[slice], sizeDM_active);
-        for(act_active=0; act_active<sizeDM_active; act_active++)
+        for(uint64_t act_active=0; act_active<sizeDM_active; act_active++)
         {
-            for(wfselem_active=0; wfselem_active<sizeWFS_active[slice]; wfselem_active++)
+            for(uint64_t wfselem_active=0; wfselem_active<sizeWFS_active[slice]; wfselem_active++)
             {
-                act = aoloopcontrol_var.DM_active_map[act_active];
-                wfselem = aoloopcontrol_var.WFS_active_map[slice*sizeWFS+wfselem_active];
-                data.image[IDcmatc_active[slice]].array.F[act_active*sizeWFS_active[slice]+wfselem_active] = matrix_Mc[act*sizeWFS+wfselem];
+                uint64_t act = aoloopcontrol_var.DM_active_map[act_active];
+                uint64_t wfselem = aoloopcontrol_var.WFS_active_map[slice*sizeWFS+wfselem_active];
+                data.image[IDcmatc_active[slice]].array.F[act_active*sizeWFS_active[slice]+wfselem_active] =
+                    matrix_Mc[act*sizeWFS+wfselem];
             }
         }
-        printf("PIXEL SLICE %d     Keeping only active pixels / actuators : %ld x %ld   ->   %ld x %ld\n", slice, sizeWFS, sizeDM, sizeWFS_active[slice], sizeDM_active);
+        printf("PIXEL SLICE %d     Keeping only active pixels / actuators : %ld x %ld   ->   %ld x %ld\n",
+               slice, sizeWFS, sizeDM, sizeWFS_active[slice], sizeDM_active);
 
 
     }
@@ -686,20 +680,19 @@ long AOloopControl_computeCalib_compute_CombinedControlMatrix(
     printf("\n");
     printf("TIME TO COMPUTE MATRIX = %f sec\n", tdiffv);
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
 
 
 
-
-long AOloopControl_computeCalib_loadCM(
-    long loop,
+imageID AOloopControl_computeCalib_loadCM(
+    long        loop,
     const char *CMfname
 )
 {
-    long ID = -1;
+    imageID ID = -1;
 
 
 
@@ -727,7 +720,8 @@ long AOloopControl_computeCalib_loadCM(
         {
             if(data.image[ID].md[0].size[0]!=AOconf[loop].WFSim.sizexWFS)
             {
-                printf("Control matrix has wrong x size : is %ld, should be %ld\n", (long) data.image[ID].md[0].size[0], (long) AOconf[loop].WFSim.sizexWFS);
+                printf("Control matrix has wrong x size : is %ld, should be %ld\n",
+                       (long) data.image[ID].md[0].size[0], (long) AOconf[loop].WFSim.sizexWFS);
                 vOK = 0;
             }
             if(data.image[ID].md[0].size[1]!=AOconf[loop].WFSim.sizeyWFS)
@@ -755,14 +749,15 @@ long AOloopControl_computeCalib_loadCM(
                 ID = read_sharedmem_image(name);
             long ID0 = image_ID("tmpcontrM");
             data.image[ID].md[0].write  = 1;
-            long ii;
-            for(ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].AOpmodecoeffs.NBDMmodes; ii++)
+
+            for(uint64_t ii=0; ii<AOconf[loop].WFSim.sizexWFS*AOconf[loop].WFSim.sizeyWFS*AOconf[loop].AOpmodecoeffs.NBDMmodes; ii++) {
                 data.image[ID].array.F[ii] = data.image[ID0].array.F[ii];
+            }
             data.image[ID].md[0].write  = 0;
             data.image[ID].md[0].cnt0++;
         }
         delete_image_ID("tmpcontrM");
     }
 
-    return(ID);
+    return ID;
 }

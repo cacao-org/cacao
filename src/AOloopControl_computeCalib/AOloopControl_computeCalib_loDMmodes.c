@@ -4,11 +4,6 @@
  * 
  * AO engine uses stream data structure
  *  
- * @author  O. Guyon
- * @date    26 Dec 2017
- *
- * 
- * @bug No known bugs.
  * 
  * 
  */
@@ -111,12 +106,22 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 
 // make low order DM modes
-long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yc, double r0, double r1, int MaskMode)
+imageID AOloopControl_computeCalib_mkloDMmodes(
+    const char *ID_name,
+    uint32_t    msizex,
+    uint32_t    msizey,
+    float       CPAmax,
+    float       deltaCPA,
+    double      xc,
+    double      yc,
+    double      r0,
+    double      r1,
+    int         MaskMode
+)
 {
-    long IDmask;
-    long ID, ID0, IDtm, IDem, IDtmpg, IDslaved;
-    long ii, jj;
-    double x, y, r, PA, xc1, yc1, totm, offset, rms, sigma;
+    imageID IDmask;
+    imageID ID, ID0, IDtm, IDem, IDslaved;
+    double x, y, r, PA, xc1, yc1, totm, offset, rms;
 
     long NBZ, m;
     long zindex[10];
@@ -126,7 +131,6 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
 
     double coeff;
     long kelim = 20;
-    long conviter;
 
 
 
@@ -162,7 +166,7 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
     zcpa[9] = 1.5;
 
 
-    printf("msizexy = %ld %ld\n", msizex, msizey);
+    printf("msizexy = %u %u\n", msizex, msizey);
     list_image_ID();
     IDmask = image_ID("dmmask");
     if(IDmask==-1)
@@ -174,8 +178,8 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
         double b1=12.0;
 
         IDmask = create_2Dimage_ID("dmmask", msizex, msizey);
-        for(ii=0; ii<msizex; ii++)
-            for(jj=0; jj<msizey; jj++)
+        for(uint32_t ii=0; ii<msizex; ii++)
+            for(uint32_t jj=0; jj<msizey; jj++)
             {
                 x = 1.0*ii-xc;
                 y = 1.0*jj-yc;
@@ -194,8 +198,8 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
         xc1 = 0.0;
         yc1 = 0.0;
         totm = 0.0;
-        for(ii=0; ii<msizex; ii++)
-            for(jj=0; jj<msizey; jj++)
+        for(uint32_t ii=0; ii<msizex; ii++)
+            for(uint32_t jj=0; jj<msizey; jj++)
             {
                 xc1 += 1.0*ii*data.image[IDmask].array.F[jj*msizex+ii];
                 yc1 += 1.0*jj*data.image[IDmask].array.F[jj*msizex+ii];
@@ -212,7 +216,8 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
     totm = arith_image_total("dmmask");
     if((msizex != data.image[IDmask].md[0].size[0])||(msizey != data.image[IDmask].md[0].size[1]))
     {
-        printf("ERROR: file dmmask size (%ld %ld) does not match expected size (%ld %ld)\n", (long) data.image[IDmask].md[0].size[0], (long) data.image[IDmask].md[0].size[1], (long) msizex, (long) msizey);
+        printf("ERROR: file dmmask size (%u %u) does not match expected size (%u %u)\n",
+               data.image[IDmask].md[0].size[0], data.image[IDmask].md[0].size[1], msizex, msizey);
         exit(0);
     }
 
@@ -233,7 +238,7 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
 
 
 
-    printf("  %ld %ld %ld\n", msizex, msizey, (long) data.image[ID0].md[0].size[2]-1 );
+    printf("  %u %u %ld\n", msizex, msizey, (long) data.image[ID0].md[0].size[2]-1 );
     ID = create_3Dimage_ID(ID_name, msizex, msizey, data.image[ID0].md[0].size[2]-1+NBZ);
 
 
@@ -248,8 +253,8 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
     for(k=0; k<NBZ; k++)
     {
         data.image[IDmfcpa].array.F[k] = zcpa[k];
-        for(ii=0; ii<msizex; ii++)
-            for(jj=0; jj<msizey; jj++)
+        for(uint32_t ii=0; ii<msizex; ii++)
+            for(uint32_t jj=0; jj<msizey; jj++)
             {
                 x = 1.0*ii-xc1;
                 y = 1.0*jj-yc1;
@@ -262,15 +267,15 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
 
 
 
-    for(k=0; k<data.image[ID0].md[0].size[2]-1; k++)
+    for(uint32_t k=0; k< (uint32_t) data.image[ID0].md[0].size[2]-1; k++)
     {
         data.image[IDmfcpa].array.F[k+NBZ] = data.image[IDfreq].array.F[k+1];
-        for(ii=0; ii<msizex*msizey; ii++)
+        for(uint64_t ii=0; ii<msizex*msizey; ii++)
             data.image[ID].array.F[(k+NBZ)*msizex*msizey+ii] = data.image[ID0].array.F[(k+1)*msizex*msizey+ii];
     }
 
 
-    for(k=0; k<data.image[ID0].md[0].size[2]-1+NBZ; k++)
+    for(uint32_t k=0; k< (uint32_t ) (data.image[ID0].md[0].size[2]-1+NBZ); k++)
     {
         /// Remove excluded modes
         long IDeModes = image_ID("emodes");
@@ -278,7 +283,7 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
         {
             IDtm = create_2Dimage_ID("tmpmode", msizex, msizey);
 
-            for(ii=0; ii<msizex*msizey; ii++)
+            for(uint64_t ii=0; ii<msizex*msizey; ii++)
                 data.image[IDtm].array.F[ii] = data.image[ID].array.F[k*msizex*msizey+ii];
             linopt_imtools_image_fitModes("tmpmode", "emodes", "dmmask", 1.0e-2, "lcoeff", 0);
             linopt_imtools_image_construct("emodes", "lcoeff", "em00");
@@ -288,7 +293,7 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
             coeff = 1.0-exp(-pow(1.0*k/kelim,6.0));
             if(k>2.0*kelim)
                 coeff = 1.0;
-            for(ii=0; ii<msizex*msizey; ii++)
+            for(uint64_t ii=0; ii<msizex*msizey; ii++)
                 data.image[ID].array.F[k*msizex*msizey+ii] = data.image[IDtm].array.F[ii] - coeff*data.image[IDem].array.F[ii];
 
             delete_image_ID("em00");
@@ -297,32 +302,32 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
 
 
         double totvm = 0.0;
-        for(ii=0; ii<msizex*msizey; ii++)
+        for(uint64_t ii=0; ii<msizex*msizey; ii++)
         {
             //	  data.image[ID].array.F[k*msize*msize+ii] = data.image[ID0].array.F[(k+1)*msize*msize+ii];
             totvm += data.image[ID].array.F[k*msizex*msizey+ii]*data.image[IDmask].array.F[ii];
         }
         offset = totvm/totm;
 
-        for(ii=0; ii<msizex*msizey; ii++)
+        for(uint64_t ii=0; ii<msizex*msizey; ii++)
         {
             data.image[ID].array.F[k*msizex*msizey+ii] -= offset;
             data.image[ID].array.F[k*msizex*msizey+ii] *= data.image[IDmask].array.F[ii];
         }
 
         offset = 0.0;
-        for(ii=0; ii<msizex*msizey; ii++)
+        for(uint64_t ii=0; ii<msizex*msizey; ii++)
             offset += data.image[ID].array.F[k*msizex*msizey+ii];
 
         rms = 0.0;
-        for(ii=0; ii<msizex*msizey; ii++)
+        for(uint64_t ii=0; ii<msizex*msizey; ii++)
         {
             data.image[ID].array.F[k*msizex*msizey+ii] -= offset/msizex/msizey;
             rms += data.image[ID].array.F[k*msizex*msizey+ii]*data.image[ID].array.F[k*msizex*msizey+ii];
         }
         rms = sqrt(rms/totm);
-        printf("Mode %ld   RMS = %lf  (%f)\n", k, rms, totm);
-        for(ii=0; ii<msizex*msizey; ii++)
+        printf("Mode %u   RMS = %lf  (%f)\n", k, rms, totm);
+        for(uint64_t ii=0; ii<msizex*msizey; ii++)
             data.image[ID].array.F[k*msizex*msizey+ii] /= rms;
     }
 
@@ -330,7 +335,7 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
     for(k=0; k<data.image[ID0].md[0].size[2]-1+NBZ; k++)
     {
         rms = 0.0;
-        for(ii=0; ii<msizex*msizey; ii++)
+        for(uint64_t ii=0; ii<msizex*msizey; ii++)
         {
             data.image[ID].array.F[k*msizex*msizey+ii] -= offset/msizex/msizey;
             rms += data.image[ID].array.F[k*msizex*msizey+ii]*data.image[ID].array.F[k*msizex*msizey+ii];
@@ -356,9 +361,9 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
             printf("Convolution [%3ld/%3ld]\n", citer, NBciter);
             gauss_filter(ID_name, "modeg", 4.0*pow(1.0*(NBciter-citer)/NBciter,0.5), kernsize);
             IDg = image_ID("modeg");
-            for(k=0; k<data.image[ID].md[0].size[2]; k++)
+            for(uint32_t k=0; k<data.image[ID].md[0].size[2]; k++)
             {
-                for(ii=0; ii<msizex*msizey; ii++)
+                for(uint64_t ii=0; ii<msizex*msizey; ii++)
                     if(data.image[IDmask].array.F[ii]<0.98)
                         data.image[ID].array.F[k*msizex*msizey+ii] = data.image[IDg].array.F[k*msizex*msizey+ii];
             }
@@ -367,20 +372,18 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
     }
 
 
-
-
     /// SLAVED ACTUATORS
     IDslaved = image_ID("dmslaved");
     ID = image_ID(ID_name);
     if((IDslaved != -1)&&(IDmask!=-1))
     {
-        long IDtmp = create_2Dimage_ID("_tmpinterpol", msizex, msizey);
-        long IDtmp1 = create_2Dimage_ID("_tmpcoeff1", msizex, msizey);
-        long IDtmp2 = create_2Dimage_ID("_tmpcoeff2", msizex, msizey);
+        imageID IDtmp = create_2Dimage_ID("_tmpinterpol", msizex, msizey);
+        imageID IDtmp1 = create_2Dimage_ID("_tmpcoeff1", msizex, msizey);
+        imageID IDtmp2 = create_2Dimage_ID("_tmpcoeff2", msizex, msizey);
         for(m=0; m<data.image[ID].md[0].size[2]; m++)
         {
             // write input DM mode
-            for(ii=0; ii<msizex*msizey; ii++)
+            for(uint64_t ii=0; ii<msizex*msizey; ii++)
             {
                 data.image[IDtmp].array.F[ii] = data.image[ID].array.F[m*msizex*msizey+ii];
                 data.image[IDtmp1].array.F[ii] = data.image[IDmask].array.F[ii] * (1.0-data.image[IDslaved].array.F[ii]);
@@ -394,8 +397,8 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
             while(pixcnt>0)
             {
                 pixcnt = 0;
-                for(ii=1; ii<msizex-1; ii++)
-                    for(jj=1; jj<msizey-1; jj++)
+                for(uint32_t ii=1; ii<(uint32_t ) (msizex-1); ii++)
+                    for(uint32_t jj=1; jj<(uint32_t ) (msizey-1); jj++)
                     {
                         if((data.image[IDtmp1].array.F[jj*msizex+ii]<0.5) && (data.image[IDslaved].array.F[jj*msizex+ii]>0.5))
                         {
@@ -421,10 +424,10 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
                             }
                         }
                     }
-                for(ii=0; ii<msizex*msizey; ii++)
+                for(uint64_t ii=0; ii<msizex*msizey; ii++)
                     data.image[IDtmp1].array.F[ii] = data.image[IDtmp2].array.F[ii];
             }
-            for(ii=0; ii<msizex*msizey; ii++)
+            for(uint64_t ii=0; ii<msizex*msizey; ii++)
                 data.image[ID].array.F[m*msizex*msizey+ii] = data.image[IDtmp].array.F[ii];
 
 
@@ -466,5 +469,5 @@ long AOloopControl_computeCalib_mkloDMmodes(const char *ID_name, long msizex, lo
 
 
 
-    return(ID);
+    return ID;
 }
