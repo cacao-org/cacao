@@ -2678,7 +2678,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
                         snprintf(fname, stringmaxlen, "%s/%s.timing", datadirstream, tmpstring);
                         if ( (fp=fopen(fname, "r")) == NULL )
                         {
-                            char fnamein[256];
+                            char fnamein[stringmaxlen];
 
                             printf("File %s : No timing info found -> creating\n", fname);
 
