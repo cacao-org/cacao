@@ -4,12 +4,6 @@
  * 
  * AO engine uses stream data structure
  *  
- * @author  O. Guyon
- * @date    21 Dec 2017
- *
- * 
- * @bug No known bugs.
- * 
  * 
  */
 
@@ -63,7 +57,7 @@
 
 
 
-static int wcol, wrow; // window size
+//static int wcol, wrow; // window size
 
 // TIMING
 static struct timespec tnow;
@@ -87,37 +81,39 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 errno_t AOcontrolLoop_perfTest_TestDMSpeed(
     const char *dmname,
-    long delayus,
-    long NBpts,
-    float ampl
+    long        delayus,
+    long        NBpts,
+    float       ampl
 )
 {
     imageID IDdm;
-    long dmxsize, dmysize, dmsize;
-    long ii, jj, kk;
+    uint32_t dmxsize;
+    uint32_t dmysize;
+    uint64_t dmsize;
     imageID ID1;
     float x, y, x1;
     char *ptr;
 
-    long IDdm0, IDdm1; // DM shapes
+//    imageID IDdm0;
+//    imageID IDdm1; // DM shapes
 
 
 
-    IDdm = image_ID(dmname);
+    IDdm    = image_ID(dmname);
     dmxsize = data.image[IDdm].md[0].size[0];
     dmysize = data.image[IDdm].md[0].size[1];
-    dmsize = dmxsize*dmysize;
+    dmsize  = dmxsize*dmysize;
 
 
 
     ID1 = create_3Dimage_ID("dmpokeseq", dmxsize, dmysize, NBpts);
-    for(kk=0; kk<NBpts; kk++)
+    for(uint32_t kk=0; kk<NBpts; kk++)
     {
         float pha;
 
         pha = 2.0*M_PI*kk/NBpts;
-        for(ii=0; ii<dmxsize; ii++)
-            for(jj=0; jj<dmysize; jj++)
+        for(uint32_t ii=0; ii<dmxsize; ii++)
+            for(uint32_t jj=0; jj<dmysize; jj++)
             {
                 x = (2.0*ii/dmxsize)-1.0;
                 y = (2.0*jj/dmysize)-1.0;
@@ -128,7 +124,7 @@ errno_t AOcontrolLoop_perfTest_TestDMSpeed(
 
     while(1)
     {
-        for(kk=0; kk<NBpts; kk++)
+        for(uint32_t kk=0; kk<NBpts; kk++)
         {
             ptr = (char*) data.image[ID1].array.F;
             ptr += sizeof(float)*dmsize*kk;
@@ -155,7 +151,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
     float fmax,
     float fmultstep,
     float avetime,
-    long dtus,
+    long  dtus,
     const char *DMmask_name,
     const char *DMstream_in_name,
     const char *DMstream_out_name,
@@ -401,17 +397,19 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
     const char *IDoutmeasrms_name
 )
 {
-    imageID IDout, IDoutrms, IDoutmeas, IDoutmeasrms;
-    imageID IDmodes, IDdmmask, IDdmin, IDmeasout, IDdmout;
-    long    dmxsize, dmysize, dmsize, NBmodes;
-    long    kk;
+    imageID  IDout, IDoutrms, IDoutmeas, IDoutmeasrms;
+    imageID  IDmodes, IDdmmask, IDdmin, IDmeasout, IDdmout;
+    uint32_t dmxsize, dmysize;
+    uint64_t dmsize;
+    uint32_t NBmodes;
+
     imageID IDdmtmp, IDmeastmp;
     int     SVDreuse = 0;
     float   SVDeps = 1.0e-3;
     imageID IDcoeffarray;
     imageID IDcoeffarraymeas;
     imageID IDcoeff;
-    long    ii, kk1;
+
 
 
     IDmodes = image_ID(DMmodes_name);
@@ -497,17 +495,17 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
 
     printf("\n\n");
 
-    for(kk=0; kk<NBmodes; kk++)
+    for(uint32_t kk=0; kk<NBmodes; kk++)
     {
-        long cntdmout;
+        uint64_t cntdmout;
         long i;
 
-        printf("\r Mode %5ld / %5ld       ", kk, NBmodes);
+        printf("\r Mode %5u / %5u       ", kk, NBmodes);
         fflush(stdout);
 
         // APPLY MODE TO DM
         data.image[IDdmin].md[0].write = 1;
-        for(ii=0; ii<dmsize; ii++)
+        for(uint64_t ii=0; ii<dmsize; ii++)
             data.image[IDdmin].array.F[ii] = ampl*data.image[IDmodes].array.F[kk*dmsize+ii];
         COREMOD_MEMORY_image_set_sempost_byID(IDdmin, -1);
         data.image[IDdmin].md[0].cnt0++;
@@ -524,7 +522,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
         i = 0;
         while(i<NBave)
         {
-            while(cntdmout==data.image[IDdmout].md[0].cnt0)
+            while(cntdmout == data.image[IDdmout].md[0].cnt0)
                 usleep(20);
 
             cntdmout =  data.image[IDdmout].md[0].cnt0;
@@ -536,13 +534,13 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
             // decompose in modes
             linopt_imtools_image_fitModes("_tmpdm", DMmodes_name, DMmask_name, SVDeps, "dmcoeffs", SVDreuse);
             IDcoeff = image_ID("dmcoeffs");
-            for(kk1=0; kk1<NBmodes; kk1++)
+            for(uint32_t kk1=0; kk1<NBmodes; kk1++)
                 data.image[IDcoeffarray].array.F[kk1*NBave+i] = 0.5*data.image[IDcoeff].array.F[kk1];
             delete_image_ID("dmcoeffs");
 
             linopt_imtools_image_fitModes("_tmpmeas", DMmodes_name, DMmask_name, SVDeps, "dmcoeffs", SVDreuse);
             IDcoeff = image_ID("dmcoeffs");
-            for(kk1=0; kk1<NBmodes; kk1++)
+            for(uint32_t kk1=0; kk1<NBmodes; kk1++)
                 data.image[IDcoeffarraymeas].array.F[kk1*NBave+i] = 0.5*data.image[IDcoeff].array.F[kk1];
             delete_image_ID("dmcoeffs");
 
@@ -554,7 +552,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
 
         // APPLY MODE TO DM
         data.image[IDdmin].md[0].write = 1;
-        for(ii=0; ii<dmsize; ii++)
+        for(uint64_t ii=0; ii<dmsize; ii++)
             data.image[IDdmin].array.F[ii] = -ampl*data.image[IDmodes].array.F[kk*dmsize+ii];
         COREMOD_MEMORY_image_set_sempost_byID(IDdmin, -1);
         data.image[IDdmin].md[0].cnt0++;
@@ -567,7 +565,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
         i = 0;
         while(i<NBave)
         {
-            while(cntdmout==data.image[IDdmout].md[0].cnt0)
+            while(cntdmout == data.image[IDdmout].md[0].cnt0)
                 usleep(20);
 
             cntdmout =  data.image[IDdmout].md[0].cnt0;
@@ -578,14 +576,14 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
             // decompose in modes
             linopt_imtools_image_fitModes("_tmpdm", DMmodes_name, DMmask_name, SVDeps, "dmcoeffs", SVDreuse);
             IDcoeff = image_ID("dmcoeffs");
-            for(kk1=0; kk1<NBmodes; kk1++)
+            for(uint32_t kk1=0; kk1<NBmodes; kk1++)
                 data.image[IDcoeffarray].array.F[kk1*NBave+i] -= 0.5*data.image[IDcoeff].array.F[kk1];
             delete_image_ID("dmcoeffs");
             i++;
 
             linopt_imtools_image_fitModes("_tmpmeas", DMmodes_name, DMmask_name, SVDeps, "dmcoeffs", SVDreuse);
             IDcoeff = image_ID("dmcoeffs");
-            for(kk1=0; kk1<NBmodes; kk1++)
+            for(uint32_t kk1=0; kk1<NBmodes; kk1++)
                 data.image[IDcoeffarraymeas].array.F[kk1*NBave+i] = 0.5*data.image[IDcoeff].array.F[kk1];
             delete_image_ID("dmcoeffs");
         }
@@ -593,16 +591,16 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
 
         // PROCESSS
 
-        for(kk1=0; kk1<NBmodes; kk1++)
+        for(uint32_t kk1=0; kk1<NBmodes; kk1++)
         {
             data.image[IDout].array.F[kk1*NBmodes+kk] = 0.0;
             data.image[IDoutrms].array.F[kk1*NBmodes+kk] = 0.0;
             data.image[IDoutmeas].array.F[kk1*NBmodes+kk] = 0.0;
             data.image[IDoutmeasrms].array.F[kk1*NBmodes+kk] = 0.0;
         }
-        for(kk1=0; kk1<NBmodes; kk1++)
+        for(uint32_t kk1=0; kk1<NBmodes; kk1++)
         {
-            for(i=0; i<NBave; i++)
+            for(uint32_t i=0; i<NBave; i++)
             {
                 data.image[IDout].array.F[kk1*NBmodes+kk] += data.image[IDcoeffarray].array.F[kk1*NBave+i];
                 data.image[IDoutrms].array.F[kk1*NBmodes+kk] += data.image[IDcoeffarray].array.F[kk1*NBave+i]*data.image[IDcoeffarray].array.F[kk1*NBave+i];

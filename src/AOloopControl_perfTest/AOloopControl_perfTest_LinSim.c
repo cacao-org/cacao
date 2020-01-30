@@ -4,9 +4,6 @@
  * 
  * Uses response matrix for linear simulation
  *  
- *
- * 
- * @bug No known bugs.
  * 
  * 
  */
@@ -74,42 +71,46 @@
 
 
 
-int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
+errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
     const char *fpsname,
-    uint32_t CMDmode
+    uint32_t    CMDmode
 )
 {
-	//uint16_t loopstatus;
-	
-	// SETUP FPS
-	/*int SMfd = -1;
+    //uint16_t loopstatus;
+
+    // SETUP FPS
+    /*int SMfd = -1;
     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-	fps.md->sourceline = __LINE__;
-	*/
-	FPS_SETUP_INIT(fpsname, CMDmode);
+    strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
+    fps.md->sourceline = __LINE__;
+    */
+    FPS_SETUP_INIT(fpsname, CMDmode);
 
 
-	// ALLOCATE ENTRIES
-	void * pNull = NULL;
-    int fpi;  // function parameter index
-    fpi = function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
-    fpi = function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
+    // ALLOCATE ENTRIES
+    void * pNull = NULL;
+
+    __attribute__((unused)) long fpi_DMxsize =
+        function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
+
+    __attribute__((unused)) long fpi_DMysize =
+        function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
 
 
-    if( fps.loopstatus == 0 ) // stop fps
-        return RETURN_SUCCESS;    
+    if( fps.loopstatus == 0 ) {// stop fps
+        return RETURN_SUCCESS;
+    }
 
-	// RUN UPDATE LOOP
-	while( fps.loopstatus == 1 )
-	{
-		if( function_parameter_FPCONFloopstep(&fps) == 1)
-		{
-			// here goes the logic
-			functionparameter_CheckParametersAll(&fps);  // check all parameter values
-		}		
-	}
-	function_parameter_FPCONFexit( &fps );
+    // RUN UPDATE LOOP
+    while( fps.loopstatus == 1 )
+    {
+        if( function_parameter_FPCONFloopstep(&fps) == 1)
+        {
+            // here goes the logic
+            functionparameter_CheckParametersAll(&fps);  // check all parameter values
+        }
+    }
+    function_parameter_FPCONFexit( &fps );
 
 
     return RETURN_SUCCESS;
@@ -122,12 +123,12 @@ int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
 
 
 
-int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_RUN(
+errno_t AOcontrolLoop_perfTest_LinearSimulator_RUN(
 	const char *fpsname
 )
 {
 	FUNCTION_PARAMETER_STRUCT fps;
-	int SMfd = -1;
+	//int SMfd = -1;
 	
 	int FPSINTERFACE = 1;
 	
