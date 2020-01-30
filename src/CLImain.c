@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
     
 	
 	// clean-up calling thread
-	pthread_exit(NULL);
+	//pthread_exit(NULL);
 
     return RETURN_SUCCESS;
 }

@@ -18,9 +18,11 @@
 # ===============================
 # Debug build type turns off optimization
 # cmake -DCMAKE_BUILD_TYPE=Debug ..
+# cmake -DCMAKE_BUILD_TYPE=Debug .. -DUSE_MAGMA=ON
 #
 # Release build type turns on optimization flags
 # cmake -DCMAKE_BUILD_TYPE=Release ..
+#
 #
 #
 # COMPILING
