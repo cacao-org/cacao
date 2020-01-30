@@ -121,6 +121,9 @@ extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
+static int loadcreateshm_log = 0; // 1 if results should be logged in ASCII file
+static FILE *loadcreateshm_fplog;
+
 
 
 /* =============================================================================================== */

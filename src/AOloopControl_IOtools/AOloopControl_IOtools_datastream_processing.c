@@ -23,12 +23,15 @@
 #include <string.h>
 #include <stdint.h>
 #include <math.h>
-#include "statistic/statistic.h"
+
 #include "CommandLineInterface/CLIcore.h"
 #include "00CORE/00CORE.h"
+
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+
+#include "statistic/statistic.h"
 
 #include "fft/fft.h"
 
