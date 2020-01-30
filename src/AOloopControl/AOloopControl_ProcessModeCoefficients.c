@@ -960,7 +960,9 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
                         AOconf[loop].aorun.gain = maxGainVal;
 
                         sprintf(command, "echo \"%6.4f\" > conf/param_loopgain.txt", AOconf[loop].aorun.gain);
-                        system(command);
+                        if(system(command) != 0) {
+							printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+						}
 
 
 
@@ -979,7 +981,9 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
 
                             sprintf(command, "echo \"%6.4f\" > conf/param_gainb%02u.txt", data.image[aoloopcontrol_var.aoconfID_gainb].array.F[block], block);
-                            system(command);
+                            if(system(command) != 0) {
+								printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+							}
                         }
 
                         // Set individual gain
