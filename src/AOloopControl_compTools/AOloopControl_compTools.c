@@ -4,8 +4,6 @@
  * 
  * AO engine uses stream data structure
  * 
- * @bug No known bugs.
- * 
  * 
  */
 
@@ -61,7 +59,7 @@ static int INITSTATUS_AOloopControl_compTools = 0;
 
 
 int AOloopcontrol_meminit = 0;
-static int AOlooploadconf_init = 0;
+//static int AOlooploadconf_init = 0;
 
 
 // defined in AOloopControl.c
@@ -118,23 +116,47 @@ extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 /* =============================================================================================== */
 
 /** @brief CLI function for AOloopControl_CrossProduct */
-int_fast8_t AOloopControl_compTools_CrossProduct_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,4)+CLI_checkarg(3,3)==0) {
-        AOloopControl_compTools_CrossProduct(data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string);
-        return 0;
+errno_t AOloopControl_compTools_CrossProduct_cli() {
+    if(
+        CLI_checkarg(1,4) +
+        CLI_checkarg(2,4) +
+        CLI_checkarg(3,3)
+        == 0 )
+    {
+        AOloopControl_compTools_CrossProduct(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_mkSimpleZpokeM */
-int_fast8_t AOloopControl_compTools_mkSimpleZpokeM_cli()
+errno_t AOloopControl_compTools_mkSimpleZpokeM_cli()
 {
-    if(CLI_checkarg(1,2)+CLI_checkarg(2,2)+CLI_checkarg(3,3)==0)    {
-        AOloopControl_compTools_mkSimpleZpokeM(data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.string);
-        return 0;
+    if(
+        CLI_checkarg(1,2) +
+        CLI_checkarg(2,2) +
+        CLI_checkarg(3,3)
+        == 0 )
+    {
+        AOloopControl_compTools_mkSimpleZpokeM(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.string
+        );
+
+        return CLICMD_SUCCESS;
     }
-    else        return 1;
+    else {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -156,22 +178,37 @@ void __attribute__ ((constructor)) libinit_AOloopControl_compTools()
 
 
 
-int_fast8_t init_AOloopControl_compTools()
+errno_t init_AOloopControl_compTools()
 {
-    FILE *fp;
 
+    /* =============================================================================================== */
+    /** @name AOloopControl_compTools - 1. COMPUTATION UTILITIES & TOOLS                               */
+    /* =============================================================================================== */
 
-/* =============================================================================================== */
-/** @name AOloopControl_compTools - 1. COMPUTATION UTILITIES & TOOLS                               */
-/* =============================================================================================== */
+    RegisterCLIcommand(
+        "aolcrossp",
+        __FILE__,
+        AOloopControl_compTools_CrossProduct_cli,
+        "compute cross product between two cubes. Apply mask if image xpmask exists",
+        "<cube1> <cube2> <output image>",
+        "aolcrossp imc0 imc1 crosspout",
+        "AOloopControl_compTools_CrossProduct(char *ID1_name, char *ID1_name, char *IDout_name)"
+    );
 
-    RegisterCLIcommand("aolcrossp", __FILE__, AOloopControl_compTools_CrossProduct_cli, "compute cross product between two cubes. Apply mask if image xpmask exists", "<cube1> <cube2> <output image>", "aolcrossp imc0 imc1 crosspout", "AOloopControl_compTools_CrossProduct(char *ID1_name, char *ID1_name, char *IDout_name)");
-
-    RegisterCLIcommand("aolmksimplezpM", __FILE__, AOloopControl_compTools_mkSimpleZpokeM_cli, "make simple poke sequence", "<dmsizex> <dmsizey> <output image>", "aolmksimplezpM 50 50 pokeM", "long AOloopControl_compTools_mkSimpleZpokeM( long dmxsize, long dmysize, char *IDout_name)");
+    RegisterCLIcommand(
+        "aolmksimplezpM",
+        __FILE__,
+        AOloopControl_compTools_mkSimpleZpokeM_cli,
+        "make simple poke sequence",
+        "<dmsizex> <dmsizey> <output image>",
+        "aolmksimplezpM 50 50 pokeM",
+        "long AOloopControl_compTools_mkSimpleZpokeM( long dmxsize, long dmysize, char *IDout_name)"
+    );
 
     // add atexit functions here
     // atexit((void*) myfunc);
 
+    return RETURN_SUCCESS;
 }
 
 
@@ -191,16 +228,16 @@ int_fast8_t init_AOloopControl_compTools()
 
 
 // measures cross product between 2 cubes
-long AOloopControl_compTools_CrossProduct(const char *ID1_name, const char *ID2_name, const char *IDout_name)
+imageID AOloopControl_compTools_CrossProduct(
+    const char *ID1_name,
+    const char *ID2_name,
+    const char *IDout_name
+)
 {
-    long ID1, ID2, IDout;
-    long xysize1, xysize2;
-    long zsize1, zsize2;
-    long z1, z2;
-    long ii;
-    long IDmask;
-
-
+    imageID  ID1, ID2, IDout;
+    uint64_t xysize1, xysize2;
+    uint32_t zsize1, zsize2;
+    imageID  IDmask;
 
 
     ID1 = image_ID(ID1_name);
@@ -221,7 +258,7 @@ long AOloopControl_compTools_CrossProduct(const char *ID1_name, const char *ID2_
 
 
     IDout = create_2Dimage_ID(IDout_name, zsize1, zsize2);
-    for(ii=0; ii<zsize1*zsize2; ii++)
+    for(uint64_t ii=0; ii<zsize1*zsize2; ii++)
         data.image[IDout].array.F[ii] = 0.0;
 
     if(IDmask==-1)
@@ -230,10 +267,10 @@ long AOloopControl_compTools_CrossProduct(const char *ID1_name, const char *ID2_
         fflush(stdout);
 
 
-        for(z1=0; z1<zsize1; z1++)
-            for(z2=0; z2<zsize2; z2++)
+        for(uint32_t z1=0; z1<zsize1; z1++)
+            for(uint32_t z2=0; z2<zsize2; z2++)
             {
-                for(ii=0; ii<xysize1; ii++)
+                for(uint64_t ii=0; ii<xysize1; ii++)
                 {
                     data.image[IDout].array.F[z2*zsize1+z1] += data.image[ID1].array.F[z1*xysize1+ii] * data.image[ID2].array.F[z2*xysize2+ii];
                 }
@@ -244,10 +281,10 @@ long AOloopControl_compTools_CrossProduct(const char *ID1_name, const char *ID2_
         printf("Applying mask\n");
         fflush(stdout);
 
-        for(z1=0; z1<zsize1; z1++)
-            for(z2=0; z2<zsize2; z2++)
+        for(uint32_t z1=0; z1<zsize1; z1++)
+            for(uint32_t z2=0; z2<zsize2; z2++)
             {
-                for(ii=0; ii<xysize1; ii++)
+                for(uint64_t ii=0; ii<xysize1; ii++)
                 {
                     data.image[IDout].array.F[z2*zsize1+z1] += data.image[IDmask].array.F[ii]*data.image[IDmask].array.F[ii]*data.image[ID1].array.F[z1*xysize1+ii] * data.image[ID2].array.F[z2*xysize2+ii];
                 }
@@ -255,7 +292,7 @@ long AOloopControl_compTools_CrossProduct(const char *ID1_name, const char *ID2_
     }
 
 
-    return(IDout);
+    return IDout;
 }
 
 
@@ -264,21 +301,23 @@ long AOloopControl_compTools_CrossProduct(const char *ID1_name, const char *ID2_
 
 
 // create simple poke matrix
-long AOloopControl_compTools_mkSimpleZpokeM( long dmxsize, long dmysize, char *IDout_name)
+imageID AOloopControl_compTools_mkSimpleZpokeM(
+    uint32_t  dmxsize,
+    uint32_t  dmysize,
+    char     *IDout_name
+)
 {
-    long IDout;
-    uint_fast16_t dmxysize;
-    uint_fast16_t ii, jj, kk;
-
+    imageID  IDout;
+    uint64_t dmxysize;
 
     dmxysize = dmxsize * dmysize;
 
     IDout = create_3Dimage_ID(IDout_name, dmxsize, dmysize, dmxysize);
 
-    for(kk=0; kk<dmxysize; kk++)
+    for(uint64_t kk=0; kk<dmxysize; kk++)
         data.image[IDout].array.F[kk*dmxysize + kk] = 1.0;
 
-    return(IDout);
+    return IDout;
 }
 
 

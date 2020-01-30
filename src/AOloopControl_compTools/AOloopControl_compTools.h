@@ -3,11 +3,7 @@
  * @brief   Function prototypes for Adaptive Optics Control loop engine misc computation tools
  * 
  * AO engine uses stream data structure
- * 
- * @author  O. Guyon
- * @date    28 Aug 2017
- *
- * @bug No known bugs. 
+ * . 
  * 
  */
 
@@ -19,7 +15,7 @@
 void __attribute__ ((constructor)) libinit_AOloopControl_compTools();
 
 /** @brief Initialize command line interface. */
-int_fast8_t init_AOloopControl_compTools();
+errno_t init_AOloopControl_compTools();
 
 
 
@@ -33,11 +29,19 @@ int_fast8_t init_AOloopControl_compTools();
 
 
 /** @brief compute cross product between two 3D arrays */
-long AOloopControl_compTools_CrossProduct(const char *ID1_name, const char *ID2_name, const char *IDout_name);
+imageID AOloopControl_compTools_CrossProduct(
+    const char *ID1_name,
+    const char *ID2_name,
+    const char *IDout_name
+);
 
 
 /** @brief Create simple zonal poke cube */
-long AOloopControl_compTools_mkSimpleZpokeM( long dmxsize, long dmysize, char *IDout_name);
+imageID AOloopControl_compTools_mkSimpleZpokeM(
+    uint32_t  dmxsize,
+    uint32_t  dmysize,
+    char     *IDout_name
+);
 
 
 
