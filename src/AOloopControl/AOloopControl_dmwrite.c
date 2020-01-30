@@ -18,7 +18,7 @@
 
 #define NB_AOloopcontrol 10 // max number of loops
 
-static int AOlooploadconf_init = 0;
+//static int AOlooploadconf_init = 0;
 
 
 

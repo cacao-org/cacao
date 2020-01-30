@@ -48,7 +48,7 @@
 
 #define NB_AOloopcontrol 10 // max number of loops
 
-static int AOlooploadconf_init = 0;
+//static int AOlooploadconf_init = 0;
 
 
 
@@ -83,29 +83,27 @@ errno_t AOloopControl_CompModes_loop(
     const char *ID_coeff_name
 )
 {
-    int *GPUsetM;
-    imageID ID_CM;
-    imageID ID_WFSref;
-    imageID ID_coeff;
-    long GPUcnt;
-    int k;
-    int_fast8_t GPUstatus[100];
-    int_fast8_t status;
-    long NBmodes;
-    uint32_t *sizearray;
+    int          *GPUsetM;
+    imageID       ID_CM;
+    imageID       ID_WFSref;
+    imageID       ID_coeff;
+    uint32_t      GPUcnt;
+    int_fast8_t   GPUstatus[100];
+    int_fast8_t   status;
+    uint32_t      NBmodes;
+    uint32_t     *sizearray;
 
-    imageID ID_WFSim;
-    imageID ID_WFSim_n;
-    long wfsxsize, wfsysize;
-    int m;
-    imageID IDcoeff0;
+    imageID       ID_WFSim;
+    imageID       ID_WFSim_n;
+    uint32_t      wfsxsize, wfsysize;
+    imageID       IDcoeff0;
 
-    imageID ID_WFSimtot;
-    double totfluxave;
-    imageID ID_coefft;
+    imageID       ID_WFSimtot;
+    double        totfluxave;
+    imageID       ID_coefft;
 
-    double alpha = 0.1;
-	char imname[200];
+    double        alpha = 0.1;
+	char          imname[200];
 
 
 
@@ -130,7 +128,7 @@ errno_t AOloopControl_CompModes_loop(
     GPUcnt = 2;
 
     GPUsetM = (int*) malloc(sizeof(int)*GPUcnt);
-    for(k=0; k<GPUcnt; k++)
+    for(uint32_t k=0; k<GPUcnt; k++)
         GPUsetM[k] = k+5;
 
 
@@ -177,7 +175,7 @@ errno_t AOloopControl_CompModes_loop(
             fflush(stdout);
             memcpy(data.image[ID_WFSim_n].array.F, data.image[ID_WFSref].array.F, sizeof(float)*wfsxsize*wfsysize);
             GPU_loop_MultMat_execute(2, &status, &GPUstatus[0], 1.0, 0.0, 0, 0);
-            for(m=0; m<NBmodes; m++)
+            for(uint32_t m=0; m<NBmodes; m++)
             {
                 data.image[IDcoeff0].array.F[m] = data.image[ID_coefft].array.F[m];
             }
@@ -194,7 +192,7 @@ errno_t AOloopControl_CompModes_loop(
         totfluxave = (1.0-alpha)*totfluxave + alpha*data.image[ID_WFSimtot].array.F[0];
 
         data.image[ID_coeff].md[0].write = 1;
-        for(m=0; m<NBmodes; m++)
+        for(uint32_t m=0; m<NBmodes; m++)
             data.image[ID_coeff].array.F[m] = data.image[ID_coefft].array.F[m]/totfluxave - data.image[IDcoeff0].array.F[m];
         data.image[ID_coeff].md[0].cnt0 ++;
         data.image[ID_coeff].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;

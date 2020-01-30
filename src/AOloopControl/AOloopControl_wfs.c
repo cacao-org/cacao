@@ -9,7 +9,6 @@
 
 
 
-
 #define _GNU_SOURCE
 
 
@@ -40,18 +39,18 @@
 
 #define NB_AOloopcontrol 10 // max number of loops
 
-static int AOlooploadconf_init = 0;
+//static int AOlooploadconf_init = 0;
 
 // TIMING
-static struct timespec tnow;
+//static struct timespec tnow;
 static struct timespec tdiff;
 static double tdiffv;
 
-static int initWFSref_GPU[100] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-static long long aoconfcnt0_contrM_current= -1; 
+//static int initWFSref_GPU[100] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//static long long aoconfcnt0_contrM_current= -1; 
 
-static long wfsrefcnt0 = -1; 
-static long contrMcactcnt0[100] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};;
+//static long wfsrefcnt0 = -1; 
+//static long contrMcactcnt0[100] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};;
 
 
 
@@ -89,14 +88,13 @@ errno_t AOloopControl_WFSzpupdate_loop(
     const char *IDwfszp_name
 )
 {
-    imageID IDzpdm, IDzrespM, IDwfszp;
-    uint32_t dmxsize, dmysize, dmxysize;
-    long wfsxsize, wfsysize, wfsxysize;
-    imageID IDtmp;
-    long elem, act;
-    long zpcnt = 0;
-    long zpcnt0;
-    int semval;
+    imageID   IDzpdm, IDzrespM, IDwfszp;
+    uint32_t  dmxsize, dmysize, dmxysize;
+    uint32_t  wfsxsize, wfsysize;
+    uint64_t  wfsxysize;
+    imageID   IDtmp;
+    unsigned long long zpcnt = 0;
+    unsigned long long zpcnt0;
     struct timespec t1;
     struct timespec t2;
 
@@ -176,19 +174,23 @@ errno_t AOloopControl_WFSzpupdate_loop(
         //  sem_wait(data.image[IDzpdm].semptr[1]);
 
 
-        printf("WFS zero point offset update  # %8ld       (%s -> %s)  ", zpcnt, data.image[IDzpdm].name, data.image[IDwfszp].name);
+        printf("WFS zero point offset update  # %8llu       (%s -> %s)  ", zpcnt, data.image[IDzpdm].name, data.image[IDwfszp].name);
         fflush(stdout);
 
 
         clock_gettime(CLOCK_REALTIME, &t1);
 
+		{
+			uint32_t act;
+			uint64_t elem;
 # ifdef _OPENMP
         #pragma omp parallel for private(elem)
 # endif
         for(act=0; act<dmxysize; act++)
             for(elem=0; elem<wfsxysize; elem++)
                 data.image[IDtmp].array.F[elem] += data.image[IDzpdm].array.F[act]*data.image[IDzrespM].array.F[act*wfsxysize+elem];
-
+		
+		}
 
         clock_gettime(CLOCK_REALTIME, &t2);
         tdiff = info_time_diff(t1, t2);
@@ -224,14 +226,15 @@ errno_t AOloopControl_WFSzpupdate_loop(
 //
 //
 errno_t AOloopControl_WFSzeropoint_sum_update_loop(
-    long        loopnb,
+    __attribute__((unused)) long        loopnb,
     const char *ID_WFSzp_name,
     int         NBzp,
     const char *IDwfsref0_name,
     const char *IDwfsref_name
 )
 {
-    long wfsxsize, wfsysize, wfsxysize;
+    uint32_t wfsxsize, wfsysize;
+    uint64_t wfsxysize;
     imageID IDwfsref, IDwfsref0;
     imageID *IDwfszparray;
     long cntsumold;
@@ -240,10 +243,8 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
     long nsecwait = 10000; // 10 us
     struct timespec semwaitts;
     long ch;
-    long IDtmp;
-    long ii;
+    imageID IDtmp;
     char imname[200];
-    int semval;
 
 
 
@@ -327,7 +328,7 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
             memcpy(data.image[IDtmp].array.F, data.image[IDwfsref0].array.F, sizeof(float)*wfsxysize);
 
             for(ch=0; ch<(NBzp+1); ch++)
-                for(ii=0; ii<wfsxysize; ii++)
+                for(uint64_t ii=0; ii<wfsxysize; ii++)
                     data.image[IDtmp].array.F[ii] += data.image[IDwfszparray[ch]].array.F[ii];
 
             // copy results to IDwfsref
@@ -358,13 +359,11 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
 errno_t ControlMatrixMultiply(
     float *cm_array,
     float *imarray,
-    long m,
-    long n,
+    long   m,
+    long   n,
     float *outvect
 )
 {
-    long i;
-
     cblas_sgemv (CblasRowMajor, CblasNoTrans, m, n, 1.0, cm_array, n, imarray, 1, 0.0, outvect, 1);
 
     return RETURN_SUCCESS;
@@ -411,7 +410,7 @@ imageID AOloopControl_computeWFSresidualimage(
     char imname[200];
     uint32_t *sizearray;
     long wfsxsize, wfsysize, wfsxysize;
-    long cnt;
+    unsigned long long cnt;
     long ii;
     imageID IDalpha;
 

@@ -46,113 +46,113 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
 
-
-int AOloopControl_RTstreamLOG_init(int loop)
+errno_t AOloopControl_RTstreamLOG_init(
+    int loop
+)
 {
-	long i;
-	long SIZEwfsim = 1000;
-	long SIZEdm = 1000;
-	
-	// default
-	AOconf[loop].RTLOGsize = 1000;
-	
-	
-	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
-        {
-			AOconf[loop].RTSLOGarray[i].active = 0;
-			strcpy(AOconf[loop].RTSLOGarray[i].name, "NULL");
-			AOconf[loop].RTSLOGarray[i].ENABLE = 1;
-			AOconf[loop].RTSLOGarray[i].INIT = 0;
-			AOconf[loop].RTSLOGarray[i].SIZE = AOconf[loop].RTLOGsize;
-			AOconf[loop].RTSLOGarray[i].ON = 0;
-			AOconf[loop].RTSLOGarray[i].save = 0;
-			AOconf[loop].RTSLOGarray[i].memcpToggle = 0;
-			AOconf[loop].RTSLOGarray[i].NBcubeSaved = -1;
-			
-			AOconf[loop].RTSLOGarray[i].NBFileBuffer = 30; // number of buffers combined to create large buffer = file to disk
-			AOconf[loop].RTSLOGarray[i].FileBuffer   = 0;
-			
-			AOconf[loop].RTSLOGarray[i].tActive = 0;
-        }
-	
-	    i = RTSLOGindex_wfsim;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "wfsim"); //   U in Read_cam_frame()
-        AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
-     
-     
-        i = RTSLOGindex_imWFS0;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS0");// U in Read_cam_frame()
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
-		AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
-     
-        i = RTSLOGindex_imWFS1;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS1");  // U in Read_cam_frame()
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
-        AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
-     
-        i = RTSLOGindex_imWFS2;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS2"); // U in AOcompute()
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
-        AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
-        
-        
-// managed by AOloopControl_ComputeOpenLoopModes()
+    long SIZEwfsim = 1000;
+    long SIZEdm = 1000;
 
-        i = RTSLOGindex_modeval;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval"); // U
-                
-        i = RTSLOGindex_modeval_ol;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_ol");// U 
-        AOconf[loop].RTSLOGarray[i].save = 1;
-        AOconf[loop].RTSLOGarray[i].ON = 1;                
+    // default
+    AOconf[loop].RTLOGsize = 1000;
 
-        i = RTSLOGindex_modeval_dm;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm");// U
-                
-        i = RTSLOGindex_modeval_dm_corr;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm_corr");// U
-                        
-        i = RTSLOGindex_modeval_dm_now;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm_now");// U
-                                
-        i = RTSLOGindex_modeval_dm_now_filt;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm_now_filt");// U
+	int i;
+    for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+    {
+        AOconf[loop].RTSLOGarray[i].active = 0;
+        strcpy(AOconf[loop].RTSLOGarray[i].name, "NULL");
+        AOconf[loop].RTSLOGarray[i].ENABLE = 1;
+        AOconf[loop].RTSLOGarray[i].INIT = 0;
+        AOconf[loop].RTSLOGarray[i].SIZE = AOconf[loop].RTLOGsize;
+        AOconf[loop].RTSLOGarray[i].ON = 0;
+        AOconf[loop].RTSLOGarray[i].save = 0;
+        AOconf[loop].RTSLOGarray[i].memcpToggle = 0;
+        AOconf[loop].RTSLOGarray[i].NBcubeSaved = -1;
 
-        i = RTSLOGindex_modevalPF;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "modevalPF");// U
-                                        
-        i = RTSLOGindex_modevalPFsync;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "modevalPFsync");// U
-                
-        i = RTSLOGindex_modevalPFres;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "modevalPFres");// U
+        AOconf[loop].RTSLOGarray[i].NBFileBuffer = 30; // number of buffers combined to create large buffer = file to disk
+        AOconf[loop].RTSLOGarray[i].FileBuffer   = 0;
 
-        i = RTSLOGindex_dmC;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "dmC");// U
+        AOconf[loop].RTSLOGarray[i].tActive = 0;
+    }
+
+    i = RTSLOGindex_wfsim;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "wfsim"); //   U in Read_cam_frame()
+    AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
 
 
-        i = RTSLOGindex_dmdisp;
-        AOconf[loop].RTSLOGarray[i].active = 1;
-        strcpy(AOconf[loop].RTSLOGarray[i].name, "dmdisp");// 
-        AOconf[loop].RTSLOGarray[i].ENABLE = 0;
-        AOconf[loop].RTSLOGarray[i].SIZE = SIZEdm;
-	
-	
-	return 0;
+    i = RTSLOGindex_imWFS0;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS0");// U in Read_cam_frame()
+    AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+    AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
+
+    i = RTSLOGindex_imWFS1;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS1");  // U in Read_cam_frame()
+    AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+    AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
+
+    i = RTSLOGindex_imWFS2;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "imWFS2"); // U in AOcompute()
+    AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+    AOconf[loop].RTSLOGarray[i].SIZE = SIZEwfsim;
+
+
+    // managed by AOloopControl_ComputeOpenLoopModes()
+
+    i = RTSLOGindex_modeval;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval"); // U
+
+    i = RTSLOGindex_modeval_ol;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_ol");// U
+    AOconf[loop].RTSLOGarray[i].save = 1;
+    AOconf[loop].RTSLOGarray[i].ON = 1;
+
+    i = RTSLOGindex_modeval_dm;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm");// U
+
+    i = RTSLOGindex_modeval_dm_corr;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm_corr");// U
+
+    i = RTSLOGindex_modeval_dm_now;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm_now");// U
+
+    i = RTSLOGindex_modeval_dm_now_filt;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "modeval_dm_now_filt");// U
+
+    i = RTSLOGindex_modevalPF;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "modevalPF");// U
+
+    i = RTSLOGindex_modevalPFsync;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "modevalPFsync");// U
+
+    i = RTSLOGindex_modevalPFres;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "modevalPFres");// U
+
+    i = RTSLOGindex_dmC;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "dmC");// U
+
+
+    i = RTSLOGindex_dmdisp;
+    AOconf[loop].RTSLOGarray[i].active = 1;
+    strcpy(AOconf[loop].RTSLOGarray[i].name, "dmdisp");//
+    AOconf[loop].RTSLOGarray[i].ENABLE = 0;
+    AOconf[loop].RTSLOGarray[i].SIZE = SIZEdm;
+
+
+    return RETURN_SUCCESS;
 }
 
 
@@ -170,18 +170,21 @@ int AOloopControl_RTstreamLOG_init(int loop)
  * 
  */ 
 
-int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
+errno_t AOloopControl_RTstreamLOG_setup(
+    long  loop,
+    long  rtlindex,
+    char *streamname
+)
 {
         if((AOconf[loop].RTSLOGarray[rtlindex].ENABLE == 1)&&(AOconf[loop].RTSLOGarray[rtlindex].INIT == 0))
         {
-            long IDstream;
+            imageID   IDstream;
             uint32_t *imsize;
-            int retval = 0;
-            char imname[500];
-            uint64_t nelement;
-            long infosize = 5;
-            uint8_t datatype;
-            int SHARED = 1;
+            char      imname[500];
+            uint64_t  nelement;
+            long      infosize = 5;
+            uint8_t   datatype;
+            int       SHARED = 1;
 
             IDstream = image_ID(streamname);
 
@@ -323,14 +326,13 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
             AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo  = AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0;
 
 
-            retval = 1;
             AOconf[loop].RTSLOGarray[rtlindex].INIT = 1;
 
             free(imsize);
 
         }
 
-    return(0);
+    return RETURN_SUCCESS;
 }
 
 
@@ -345,7 +347,11 @@ int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname)
  * This function is called by the process writing to the stream to minimize IPC need and reduce logging latency
  * 
  */
-void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow)
+void AOloopControl_RTstreamLOG_update(
+    long   loop,
+    long   rtlindex,
+    struct timespec tnow
+)
 {
 	
     if(aoloopcontrol_var.RTSLOGarrayInitFlag[rtlindex] == 1) // ensure local ownership
@@ -415,81 +421,83 @@ void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec 
 
 
 
-int AOloopControl_RTstreamLOG_printstatus(int loop)
+int AOloopControl_RTstreamLOG_printstatus(
+    int loop
+)
 {
-	long NBstreams = 0;
-	
-	char ENstring[20];
-	char ONstring[20];
-	char INstring[20];
-	char SAstring[20];
-	int i;
-	
-	
-	printf("INITIALIZING MEMORY\n");
+    long NBstreams = 0;
+
+    char ENstring[20];
+    char ONstring[20];
+    char INstring[20];
+    char SAstring[20];
+    int i;
+
+
+    printf("INITIALIZING MEMORY\n");
     fflush(stdout);
-	
-	if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+
+    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
         AOloopControl_InitializeMemory(1);
 
     printf("MEMORY HAS BEEN INITIALIZED\n");
     fflush(stdout);
-    
-    
-	printf("\n");
-	printf("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
-	printf("%2s  %20s  %3s %3s %3s %6s %4s %10s %10s  %5s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize", "size");
-	printf("---------------------------------------------------------------------------\n");
-	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
-	{
-		if(AOconf[loop].RTSLOGarray[i].active == 1)
-		{
-			
-			if(AOconf[loop].RTSLOGarray[i].ENABLE == 1)
-				sprintf(ENstring, "\033[1;32m ON\033[0m");
-			else
-				sprintf(ENstring, "OFF");
 
-			if(AOconf[loop].RTSLOGarray[i].ON == 1)
-				sprintf(ONstring, "\033[1;32m ON\033[0m");
-			else
-				sprintf(ONstring, "OFF");
-			
-			if(AOconf[loop].RTSLOGarray[i].INIT == 1)
-				sprintf(INstring, "\033[1;32m ON\033[0m");
-			else
-				sprintf(INstring, "OFF");
 
-			if(AOconf[loop].RTSLOGarray[i].save == 1)
-			{
-				if(AOconf[loop].RTSLOGarray[i].memcpToggle!=0)
-					sprintf(SAstring, "\033[1;31m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].memcpToggle);
-				else
-					sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].memcpToggle);
-			}
-			else
-				sprintf(SAstring, "OFF   ");						
-  
-  
-			printf("%2d  %20s  %3s %3s %3s %6s %2d %8ld %8ld %5d x %d\n", i,  
-			AOconf[loop].RTSLOGarray[i].name, 
-			ENstring, 
-			ONstring, 
-			INstring, 
-			SAstring,			
-			AOconf[loop].RTSLOGarray[i].buffindex,
-			AOconf[loop].RTSLOGarray[i].frameindex,
-			AOconf[loop].RTSLOGarray[i].memsize,
-			AOconf[loop].RTSLOGarray[i].SIZE,
-			AOconf[loop].RTSLOGarray[i].NBFileBuffer
-			);
-			NBstreams++;			
-		}
-	}
-	printf("---------------------------------------------------------------------------\n");
-	printf("%ld RTstreamLOGs active\n", NBstreams);
-	
-	return NBstreams;
+    printf("\n");
+    printf("RTLOGsize = %ld\n", AOconf[loop].RTLOGsize);
+    printf("%2s  %20s  %3s %3s %3s %6s %4s %10s %10s  %5s\n", "id", "streamname", "ENA", " ON", "INI", "SAVE", "buff", "frame", "memsize", "size");
+    printf("---------------------------------------------------------------------------\n");
+    for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+    {
+        if(AOconf[loop].RTSLOGarray[i].active == 1)
+        {
+
+            if(AOconf[loop].RTSLOGarray[i].ENABLE == 1)
+                sprintf(ENstring, "\033[1;32m ON\033[0m");
+            else
+                sprintf(ENstring, "OFF");
+
+            if(AOconf[loop].RTSLOGarray[i].ON == 1)
+                sprintf(ONstring, "\033[1;32m ON\033[0m");
+            else
+                sprintf(ONstring, "OFF");
+
+            if(AOconf[loop].RTSLOGarray[i].INIT == 1)
+                sprintf(INstring, "\033[1;32m ON\033[0m");
+            else
+                sprintf(INstring, "OFF");
+
+            if(AOconf[loop].RTSLOGarray[i].save == 1)
+            {
+                if(AOconf[loop].RTSLOGarray[i].memcpToggle!=0)
+                    sprintf(SAstring, "\033[1;31m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].memcpToggle);
+                else
+                    sprintf(SAstring, "\033[1;32m ON[%1d]\033[0m", AOconf[loop].RTSLOGarray[i].memcpToggle);
+            }
+            else
+                sprintf(SAstring, "OFF   ");
+
+
+            printf("%2d  %20s  %3s %3s %3s %6s %2d %8ld %8ld %5d x %d\n", i,
+                   AOconf[loop].RTSLOGarray[i].name,
+                   ENstring,
+                   ONstring,
+                   INstring,
+                   SAstring,
+                   AOconf[loop].RTSLOGarray[i].buffindex,
+                   AOconf[loop].RTSLOGarray[i].frameindex,
+                   AOconf[loop].RTSLOGarray[i].memsize,
+                   AOconf[loop].RTSLOGarray[i].SIZE,
+                   AOconf[loop].RTSLOGarray[i].NBFileBuffer
+                  );
+            NBstreams++;
+        }
+    }
+    printf("---------------------------------------------------------------------------\n");
+    printf("%ld RTstreamLOGs active\n", NBstreams);
+
+    return NBstreams;
 }
 
 
@@ -532,16 +540,17 @@ static int print_header_line(const char *str, char c, int wcol)
 
 int AOloopControl_RTstreamLOG_GUI(int loop)
 {
-    int wrow, wcol;
+    __attribute__((unused)) int wrow;
+    int wcol;
     float frequ = 10.0;
     int ch;
 
 	long NBstreams = 0;
 	
-	char ENstring[20];
-	char ONstring[20];
-	char INstring[20];
-	char SAstring[20];
+	//char ENstring[20];
+	//char ONstring[20];
+	//char INstring[20];
+	//char SAstring[20];
 	int i, j;
 	
 	int selected_entry = 0;
@@ -1304,12 +1313,12 @@ int AOloopControl_RTstreamLOG_saveloop(
                         char *destptrBuff;
                         
                         
-                        
+                       
                         // CHECK INPUT STREAM
                         //
                         ID = image_ID(shmimname);
                         zsizesave = data.image[ID].md[0].size[2];
-                        if(zsizesave>AOconf[loop].RTSLOGarray[rtlindex].SIZE)
+                        if(zsizesave > AOconf[loop].RTSLOGarray[rtlindex].SIZE)
                         {
                             printf("[%s][%d] ERROR: zsizesave>AOconf[loop].RTSLOGarray[rtlindex].SIZE\n", __FILE__, __LINE__);
                             printf("     zsizesave                                = %d\n", zsizesave);

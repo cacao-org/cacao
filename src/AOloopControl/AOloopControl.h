@@ -134,7 +134,7 @@ typedef struct
     int    ENABLE;                  // Is logging enabled ? This needs to be specified at startup, if set to zero, no RT logging will be performed
     int    INIT;                    // 1 if memory is initiated
     int    ON;                      // Is logging ON ?
-    int    SIZE;                    // Max number of samples per buffer
+    uint32_t    SIZE;                    // Max number of samples per buffer
     int    buffindex;               // which buffer (0 or 1)
     long   frameindex;              // frame index
     long   frameindexend0;          // last frame in buffer 0
@@ -584,7 +584,9 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_na
 long AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name);
 
 /** @brief Compute modes in open loop */
-long AOloopControl_ProcessModeCoefficients(long loop);
+imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
+    long loop
+);
 
 /** @brief Auto tune gains of the closed loop */
 errno_t AOloopControl_AutoTuneGains(long loop, const char *IDout_name, float GainCoeff, long NBsamples);
@@ -809,10 +811,27 @@ errno_t AOloopControl_TweakRM(
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-int AOloopControl_RTstreamLOG_init(int loop);
-int AOloopControl_RTstreamLOG_setup(long loop, long rtlindex, char *streamname);
-void AOloopControl_RTstreamLOG_update(long loop, long rtlindex, struct timespec tnow);
-int AOloopControl_RTstreamLOG_printstatus(int loop);
+errno_t AOloopControl_RTstreamLOG_init(
+    int loop
+);
+
+
+errno_t AOloopControl_RTstreamLOG_setup(
+    long  loop,
+    long  rtlindex,
+    char *streamname
+);
+
+void AOloopControl_RTstreamLOG_update(
+    long   loop,
+    long   rtlindex,
+    struct timespec tnow
+);
+
+int AOloopControl_RTstreamLOG_printstatus(
+    int loop
+);
+
 int AOloopControl_RTstreamLOG_GUI(int loop);
 int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname);
 

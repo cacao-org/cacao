@@ -144,17 +144,15 @@ errno_t AOloopControl_setmult(
 
 
 errno_t AOloopControl_set_modeblock_gain(
-    long loop,
-    long blocknb,
+    long  loop,
+    long  blocknb,
     float gain,
-    int add
+    int   add
 )
 {
-    long IDcontrM0; // local storage
     char name2[200];
     char name3[200];
-    long ID;
-    long m1;
+    imageID ID;
 
 
     printf("AOconf[loop].AOpmodecoeffs.DMmodesNBblock = %ld\n", AOconf[loop].AOpmodecoeffs.DMmodesNBblock);
@@ -195,7 +193,7 @@ errno_t AOloopControl_set_modeblock_gain(
     }
     else
     {
-        long kk;
+        uint32_t kk;
         char name[200];
         long NBmodes = 0;
 
@@ -208,7 +206,7 @@ errno_t AOloopControl_set_modeblock_gain(
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_gainb = image_ID(name);
-        if((blocknb<AOconf[loop].AOpmodecoeffs.DMmodesNBblock)&&(blocknb>-1))
+        if( (blocknb< (long) AOconf[loop].AOpmodecoeffs.DMmodesNBblock) && (blocknb>-1) )
             data.image[aoloopcontrol_var.aoconfID_gainb].array.F[blocknb] = gain;
 
 
@@ -237,13 +235,18 @@ errno_t AOloopControl_set_modeblock_gain(
                 double eps=1e-6;
 
 
-                if(sprintf(name2, "aol%ld_contrMc%02ld", loop, kk) < 1)
+                if(sprintf(name2, "aol%ld_contrMc%02u", loop, kk) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-                if(sprintf(name3, "aol%ld_contrMcact%02ld_00", loop, kk) < 1)
+                if(sprintf(name3, "aol%ld_contrMcact%02u_00", loop, kk) < 1)
                     printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-                printf("Adding %4ld / %4ld  (%5.3f)   %s   [%ld]\n", kk, AOconf[loop].AOpmodecoeffs.DMmodesNBblock, data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk], name, aoloopcontrol_var.aoconfID_gainb);
+                printf("Adding %4u / %4ld  (%5.3f)   %s   [%ld]\n", 
+                kk, 
+                AOconf[loop].AOpmodecoeffs.DMmodesNBblock, 
+                data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk], 
+                name, 
+                aoloopcontrol_var.aoconfID_gainb);
 
 
 
@@ -254,7 +257,7 @@ errno_t AOloopControl_set_modeblock_gain(
 
                 if(data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk]>eps)
                 {
-                    long ii;
+                    uint64_t ii;
 
                     ID = image_ID(name2);
 # ifdef _OPENMP
@@ -304,14 +307,14 @@ errno_t AOloopControl_set_modeblock_gain(
 
 
 errno_t AOloopControl_scanGainBlock(
-    long NBblock,
-    long NBstep,
+    long  NBblock,
+    long  NBstep,
     float gainStart,
     float gainEnd,
-    long NBgain
+    long  NBgain
 )
 {
-    long k, kg;
+    long kg;
     float bestgain= 0.0;
     float bestval = 10000000.0;
 
@@ -338,7 +341,7 @@ errno_t AOloopControl_scanGainBlock(
         float gain;
         float val;
 
-        for(k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
+        for(uint32_t k=0; k<AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
 
         gain = gainStart + 1.0*kg/(NBgain-1)*(gainEnd-gainStart);

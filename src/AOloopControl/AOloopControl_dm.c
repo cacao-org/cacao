@@ -60,24 +60,17 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 #define NB_AOloopcontrol 10 // max number of loops
 
-static int AOlooploadconf_init = 0;
+//static int AOlooploadconf_init = 0;
 
 // TIMING
 static struct timespec tnow;
 static struct timespec tdiff;
 static double tdiffv;
 
-static int initWFSref_GPU[100] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-static long long aoconfcnt0_contrM_current= -1; 
-
-static long wfsrefcnt0 = -1; 
-static long contrMcactcnt0[100] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};;
-
 
 
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
-
 
 
 
@@ -214,7 +207,6 @@ errno_t set_DM_modesRM(
 
 
 
-
 /**
  * ## Purpose
  *
@@ -235,7 +227,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     int         offloadMode
 ) {
 #ifdef HAVE_CUDA
-    imageID     IDmodecoeffs;
+    //imageID     IDmodecoeffs;
     int         GPUcnt, k;
     int        *GPUsetM;
     int_fast8_t GPUstatus[100];
@@ -247,14 +239,14 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     int         use_sem = 1;
     imageID     IDout;
     int         write_timing = 0;
-    long        NBmodes, m;
+    //long        NBmodes, m;
 
-    float       x, x2, x4, x8;
-    float       gamma;
+    //float       x, x2, x4, x8;
+    //float       gamma;
 
-    uint32_t   *sizearray;
-    char        imnameInput[200];
-    imageID     IDmodesC;
+    //uint32_t   *sizearray;
+    //char        imnameInput[200];
+    //imageID     IDmodesC;
 
     imageID     IDc;
     long        dmxsize, dmysize;
@@ -318,9 +310,9 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     }
 
     IDout = image_ID(out_name);
-    IDmodecoeffs = image_ID(modecoeffs_name);
+    //IDmodecoeffs = image_ID(modecoeffs_name);
 
-    NBmodes = data.image[IDmodecoeffs].md[0].size[0];
+    //NBmodes = data.image[IDmodecoeffs].md[0].size[0];
 
 
 
@@ -363,7 +355,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     printf("IDout    = %ld\n", IDout);
 
 
-    int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
+    //int loopCTRLexit = 0; // toggles to 1 when loop is set to exit cleanly
 
 
     processinfo_WriteMessage(processinfo, "Setting up complete");

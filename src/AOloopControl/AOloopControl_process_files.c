@@ -38,8 +38,8 @@ errno_t AOloopControl_logprocess_modeval(
 )
 {
     imageID ID;
-    long NBmodes;
-    long NBframes;
+    long    NBmodes;
+    long    NBframes;
 
     imageID IDout_ave;
     imageID IDout_rms;
@@ -49,7 +49,7 @@ errno_t AOloopControl_logprocess_modeval(
     FILE *fp;
 
     imageID ID1dPSD;
-    char fname[200];
+    char    fname[200];
 
 
 
@@ -128,13 +128,17 @@ errno_t AOloopControl_TweakRM(
     char *WFSinCname,
     char *DMmaskname,
     char *WFSmaskname,
-    char *RMoutname
+    __attribute__((unused)) char *RMoutname
 )
 {
-    imageID IDout, IDzrmin, IDdmin, IDwfsin, IDwfsmask, IDdmmask;
-    long wfsxsize, wfsysize, wfssize;
-    long dmxsize, dmysize, dmsize;
-    long NBframes;
+    imageID IDzrmin;
+    imageID IDdmin;
+    imageID IDwfsin;
+    imageID IDdmmask;
+    uint32_t wfsxsize, wfsysize;
+    uint32_t dmxsize, dmysize;
+    uint64_t dmsize;
+    uint32_t NBframes;
 
 
     // input response matrix
@@ -161,7 +165,8 @@ errno_t AOloopControl_TweakRM(
     IDwfsin = image_ID(WFSinCname);
     if((data.image[IDwfsin].md[0].size[0] != wfsxsize) || (data.image[IDwfsin].md[0].size[1] != wfsysize) || (data.image[IDwfsin].md[0].size[2] != NBframes))
     {
-        printf("ERROR: size of WFS mask image \"%s\" (%ld %ld %ld) does not match expected size (%ld %ld %ld)\n", WFSmaskname, (long) data.image[IDwfsin].md[0].size[0], (long) data.image[IDwfsin].md[0].size[1], (long) data.image[IDwfsin].md[0].size[2], wfsxsize, wfsysize, NBframes);
+        printf("ERROR: size of WFS mask image \"%s\" (%u %u %u) does not match expected size (%u %u %u)\n",
+               WFSmaskname, data.image[IDwfsin].md[0].size[0], data.image[IDwfsin].md[0].size[1], data.image[IDwfsin].md[0].size[2], wfsxsize, wfsysize, NBframes);
         exit(0);
     }
 
@@ -169,7 +174,8 @@ errno_t AOloopControl_TweakRM(
     IDdmmask = image_ID(DMmaskname);
     if((data.image[IDdmmask].md[0].size[0] != dmxsize) || (data.image[IDdmmask].md[0].size[1] != dmysize))
     {
-        printf("ERROR: size of DM mask image \"%s\" (%ld %ld) does not match expected size (%ld %ld)\n", DMmaskname, (long) data.image[IDdmmask].md[0].size[0], (long) data.image[IDdmmask].md[0].size[1], dmxsize, dmysize);
+        printf("ERROR: size of DM mask image \"%s\" (%u %u) does not match expected size (%u %u)\n",
+               DMmaskname, data.image[IDdmmask].md[0].size[0], data.image[IDdmmask].md[0].size[1], dmxsize, dmysize);
         exit(0);
     }
 

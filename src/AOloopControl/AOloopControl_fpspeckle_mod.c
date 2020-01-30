@@ -33,26 +33,23 @@ extern AOloopControl_var aoloopcontrol_var;
 
 // optimize LO - uses simulated downhill simplex
 errno_t AOloopControl_OptimizePSF_LO(
-    const char *psfstream_name,
+    __attribute__((unused)) const char *psfstream_name,
     const char *IDmodes_name,
     const char *dmstream_name,
-    long        delayframe,
-    long        NBframes
+    __attribute__((unused)) long        delayframe,
+    __attribute__((unused)) long        NBframes
 )
 {
     imageID IDmodes;
     imageID IDdmstream;
     imageID IDdm;
     //    long psfxsize, psfysize;
-    long dmxsize, dmysize;
-    long NBmodes;
-    long mode;
+    uint32_t dmxsize, dmysize;
+    uint32_t NBmodes;
     double ampl;
     double x;
-    long ii, jj;
-
+   
     imageID IDdmbest;
-    imageID IDpsfarray;
 
     char imname[200];
 
@@ -69,30 +66,32 @@ errno_t AOloopControl_OptimizePSF_LO(
     ampl = 0.01; // modulation amplitude
 
  //   IDpsf = image_ID(psfstream_name);
-    IDmodes = image_ID(IDmodes_name);
+    IDmodes    = image_ID(IDmodes_name);
     IDdmstream = image_ID(dmstream_name);
+
+    dmxsize = data.image[IDdmstream].md[0].size[0];
+    dmysize = data.image[IDdmstream].md[0].size[1];
 
 //    psfxsize = data.image[IDpsf].md[0].size[0];
 //    psfysize = data.image[IDpsf].md[0].size[1];
 
     IDdmbest = create_2Dimage_ID("dmbest", dmxsize, dmysize);
-    IDdm = create_2Dimage_ID("dmcurr", dmxsize, dmysize);
+    IDdm     = create_2Dimage_ID("dmcurr", dmxsize, dmysize);
 
-    dmxsize = data.image[IDdm].md[0].size[0];
-    dmysize = data.image[IDdm].md[0].size[1];
+
 
     NBmodes = data.image[IDmodes].md[0].size[2];
 
-    for(ii=0; ii<dmxsize*dmysize; ii++)
+    for(uint64_t ii=0; ii<dmxsize*dmysize; ii++)
         data.image[IDdmbest].array.F[ii] = data.image[IDdm].array.F[ii];
 
 
-    for(mode=0; mode<NBmodes; mode ++)
+    for(uint32_t mode=0; mode<NBmodes; mode ++)
     {
         for(x=-ampl; x<1.01*ampl; x += ampl)
         {
             // apply DM pattern
-            for(ii=0; ii<dmxsize*dmysize; ii++)
+            for(uint64_t ii=0; ii<dmxsize*dmysize; ii++)
                 data.image[IDdm].array.F[ii] = data.image[IDdmbest].array.F[ii]+ampl*data.image[IDmodes].array.F[dmxsize*dmysize*mode+ii];
 
             data.image[IDdmstream].md[0].write = 1;
