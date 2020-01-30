@@ -4309,9 +4309,13 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
 
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
-    seteuid(data.euid); //This goes up to maximum privileges
+    if( seteuid(data.euid) != 0 ) { //This goes up to maximum privileges
+		printERROR(__FILE__, __func__, __LINE__, "seteuid error");
+	}        
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
-    seteuid(data.ruid);//Go back to normal privileges
+    if( seteuid(data.ruid) != 0 ) { //Go back to normal privileges
+		printERROR(__FILE__, __func__, __LINE__, "seteuid error");
+	}
 #endif
 
     ptr0 = (char*) data.image[IDmodes1].array.F;
