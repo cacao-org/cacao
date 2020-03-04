@@ -146,8 +146,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
         n2 *= 2;
     }
 
-    printf("n2 = %u\n", n2);
-    fflush(stdout);
+    DEBUG_TRACEPOINT("n2 = %u", n2);
 
     IDmat = create_2Dimage_ID("Hmat", Hsize, Hsize);
 
@@ -157,14 +156,21 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
 
 //    save_fits("Htest", "!./conf/Hmat.fits");
 
-
+	
+	DEBUG_TRACEPOINT("image %s size %u %u %u", outname, xsize, ysize, Hsize); 
     IDout = create_3Dimage_ID(outname, xsize, ysize, Hsize);
+    list_image_ID();
+    
     for(uint32_t k=0; k<Hsize; k++)
     {
         for(uint32_t index=0; index<Hsize; index++)
         {
-            uint32_t ii = indexarray[index];
-            data.image[IDout].array.F[k*xysize+ii] = Hmat[k*Hsize+index];
+            long ii = indexarray[index];
+            
+            if(ii >= 0) {
+				DEBUG_TRACEPOINT("%u %u %ld", k, index, indexarray[index]);
+				data.image[IDout].array.F[k*xysize+ii] = Hmat[k*Hsize+index];
+			}
         }
     }
 
@@ -172,6 +178,8 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
 
     free(indexarray);
 
+	DEBUG_TRACEPOINT("exit function");
+	
 
     return IDout;
 }
