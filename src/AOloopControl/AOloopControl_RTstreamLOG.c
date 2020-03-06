@@ -965,7 +965,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 
     int sleeptimeus = 1000; // 1 ms
     long sleepcnt = 0;
-    
+
     int InBuffIndex[MAX_NUMBER_RTLOGSTREAM]; // input buffer index. Usually there are two such files, so value is 0 or 1
     int OutBuffIndex[MAX_NUMBER_RTLOGSTREAM]; // large file buffer index. Usually there are two such files, so value is 0 or 1
 
@@ -989,12 +989,12 @@ int AOloopControl_RTstreamLOG_saveloop(
      *
      */
 
-	int i;
-	for(i=0;i<MAX_NUMBER_RTLOGSTREAM;i++)
-	{
-		InBuffIndex[i] = 0;
-		OutBuffIndex[i] = 0;
-	}
+    int i;
+    for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+    {
+        InBuffIndex[i] = 0;
+        OutBuffIndex[i] = 0;
+    }
 
     tzset();
 
@@ -1120,8 +1120,8 @@ int AOloopControl_RTstreamLOG_saveloop(
         cntsave = 0;
         for(rtlindex=0; rtlindex<MAX_NUMBER_RTLOGSTREAM; rtlindex++) // scan list of RT streams
         {
-			
-			
+
+
             if(AOconf[loop].RTSLOGarray[rtlindex].save == 1)
             {
                 int BUFFERget = 0; // toggle to 1 if input buffer is ready
@@ -1140,20 +1140,20 @@ int AOloopControl_RTstreamLOG_saveloop(
                     if(pthread_tryjoin_np(thread_savefits[rtlindex], NULL) == 0)
                         AOconf[loop].RTSLOGarray[rtlindex].tActive = 0;
                 }
-                
-                
-                
+
+
+
                 // memcpToggle is updated by write process
                 // 0 : no buffer ready
                 // 1 : buffer #0 ready
                 // 2 : buffer #1 ready
-                
+
                 if(AOconf[loop].RTSLOGarray[rtlindex].memcpToggle!=0) // Input buffer ready
                 {
                     BUFFERget = 1;
                     NBframe = AOconf[loop].RTSLOGarray[rtlindex].SIZE;
                     InBuffIndex[rtlindex] = AOconf[loop].RTSLOGarray[rtlindex].memcpToggle - 1; // buffindex to save
-                                        
+
                     //
                     // In case a finite number of full cubes is to be saved
                     //
@@ -1179,11 +1179,13 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                 if(BUFFERget == 1) // input buffer ready, get it
                 {
-                    char shmimname[200];
-                    char shmimnameinfo[200];
+                    size_t STRLEN_info = 1000;
 
-                    char fnameFITS[500];
-                    char fnameinfo[500];
+                    char shmimname[STRINGMAXLEN_STREAMNAME];
+                    char shmimnameinfo[STRLEN_info];
+
+                    char fnameFITS[STRINGMAXLEN_FULLFILENAME];
+                    char fnameinfo[STRLEN_info];
 
                     long IDin, IDininfo;
                     time_t TSsec;
@@ -1191,18 +1193,18 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                     struct tm *uttime;
                     // char timestring[100];
-                    char fulldir0[500];
-                    char fulldir1[500];
-                    char fulldir2[500];
+                    char fulldir0[STRINGMAXLEN_FULLFILENAME];
+                    char fulldir1[STRINGMAXLEN_FULLFILENAME];
+                    char fulldir2[STRINGMAXLEN_FULLFILENAME];
 
                     FILE *fp;
                     long i;
 
-                    
-                    
+
+
                     // CONNECT TO INPUT BUFFERS SHARED MEMORY
 
-                    if(sprintf(shmimname, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex[rtlindex]) < 1)
+                    if(snprintf(shmimname, STRINGMAXLEN_STREAMNAME, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex[rtlindex]) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
                     if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex[rtlindex]) < 1)
                         printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
@@ -1224,8 +1226,8 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
 
-                    // reading first frame timestamp -> defines filename 
-                    
+                    // reading first frame timestamp -> defines filename
+
                     TSsec  = (time_t) data.image[IDininfo].array.UI64[1];
                     TSnsec = data.image[IDininfo].array.UI64[2];
                     uttime = gmtime(&TSsec);
@@ -1235,10 +1237,17 @@ int AOloopControl_RTstreamLOG_saveloop(
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == 0)
                         sprintf(AOconf[loop].RTSLOGarray[rtlindex].timestring0, "%02d:%02d:%02d.%09ld", uttime->tm_hour, uttime->tm_min,  uttime->tm_sec, TSnsec);
 
-                    sprintf(fulldir0, "%s", dirname);
-                    sprintf(fulldir1, "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
-                    sprintf(fulldir2, "%s/aol%d_%s", fulldir1, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
+                    snprintf(fulldir0, STRINGMAXLEN_FULLFILENAME,
+                             "%s", dirname);
 
+                    snprintf(fulldir1, STRINGMAXLEN_FULLFILENAME,
+                             "%s/%04d%02d%02d", dirname, 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday);
+
+                    if(snprintf(fulldir2, STRINGMAXLEN_FULLFILENAME,
+                                "%s/aol%d_%s", fulldir1, loop, AOconf[loop].RTSLOGarray[rtlindex].name) >= STRINGMAXLEN_FULLFILENAME) {
+                        DEBUG_TRACEPOINT("string truncated");
+                        abort();
+                    }
 
                     struct stat st = {0};
 
@@ -1259,24 +1268,26 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                     if(AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer > 1)
                     {
-                        if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat.%03d",
-                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
-                                   AOconf[loop].RTSLOGarray[rtlindex].timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
+                        if(snprintf(fnameinfo, STRLEN_info, "%s/aol%d_%s.%s.dat.%03d",
+                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
+                                    AOconf[loop].RTSLOGarray[rtlindex].timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
                             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-                        if(sprintf(fnameFITS, "%s/aol%d_%s.%s.fits",
-                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
-                                   AOconf[loop].RTSLOGarray[rtlindex].timestring0) < 1)
+                        if(snprintf(fnameFITS, STRINGMAXLEN_FULLFILENAME, "%s/aol%d_%s.%s.fits",
+                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
+                                    AOconf[loop].RTSLOGarray[rtlindex].timestring0) < 1)
                             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
                     }
                     else
                     {
-                        if(sprintf(fnameinfo, "%s/aol%d_%s.%s.dat",
-                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring) < 1)
+                        if(snprintf(fnameinfo, STRLEN_info, "%s/aol%d_%s.%s.dat",
+                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
+                                    AOconf[loop].RTSLOGarray[rtlindex].timestring) < 1)
                             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
 
-                        if(sprintf(fnameFITS, "%s/aol%d_%s.%s.fits",
-                                   fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring) < 1)
+                        if(snprintf(fnameFITS, STRLEN_info, "%s/aol%d_%s.%s.fits",
+                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
+                                    AOconf[loop].RTSLOGarray[rtlindex].timestring) < 1)
                             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
                     }
 
@@ -1311,9 +1322,9 @@ int AOloopControl_RTstreamLOG_saveloop(
                         long IDout;
                         char OutBuffIm[200];
                         char *destptrBuff;
-                        
-                        
-                       
+
+
+
                         // CHECK INPUT STREAM
                         //
                         ID = image_ID(shmimname);
@@ -1420,26 +1431,26 @@ int AOloopControl_RTstreamLOG_saveloop(
 
                         }
                     }
-                    
-                    
-                    
+
+
+
                     // WRITE TIMING FILE (1 file per input buffer)
                     //
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == 0)
                         t0 = data.image[IDininfo].array.UI64[1] + 1.0e-9*data.image[IDininfo].array.UI64[2];
 
                     fp = fopen(fnameinfo, "w");
-                    
+
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer==0)
                     {
-						fprintf(fp, "# 1: Frame index   (i+NBframe*AOconf[loop].RTSLOGarray[rtlindex].FileBuffer)\n");
-						fprintf(fp, "# 2: Loop counter  (data.image[IDininfo].array.UI64[i*5])\n");
-						fprintf(fp, "# 3: Time offset since file origin\n");
-						fprintf(fp, "# 4: Absolute Unix time\n");
-						fprintf(fp, "# 5: counter 0\n");
-						fprintf(fp, "# 6: counter 1\n");
-						fprintf(fp, "#\n");
-					}
+                        fprintf(fp, "# 1: Frame index   (i+NBframe*AOconf[loop].RTSLOGarray[rtlindex].FileBuffer)\n");
+                        fprintf(fp, "# 2: Loop counter  (data.image[IDininfo].array.UI64[i*5])\n");
+                        fprintf(fp, "# 3: Time offset since file origin\n");
+                        fprintf(fp, "# 4: Absolute Unix time\n");
+                        fprintf(fp, "# 5: counter 0\n");
+                        fprintf(fp, "# 6: counter 1\n");
+                        fprintf(fp, "#\n");
+                    }
 
                     for(i=0; i<NBframe; i++)
                     {
@@ -1457,8 +1468,8 @@ int AOloopControl_RTstreamLOG_saveloop(
 
 
                     AOconf[loop].RTSLOGarray[rtlindex].FileBuffer++;
-                    
-                    
+
+
                     // If last buffer, write large buffer to disk and merge small timing files
                     //
                     if(AOconf[loop].RTSLOGarray[rtlindex].FileBuffer == AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer)
@@ -1469,13 +1480,18 @@ int AOloopControl_RTstreamLOG_saveloop(
                         {
                             // save large buffer to file
 
-                            char command[1000];
+                            char command[STRINGMAXLEN_COMMAND];
                             // merge buffer files
-                            sprintf(command, "( cat %s/aol%d_%s.*.dat.0* > %s/aol%d_%s.%s.dat; rm %s/aol%d_%s.*.dat.0* ) &",
-                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
-                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring0,
-                                    fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name
-                                   );
+                            int strlen = snprintf(command, STRINGMAXLEN_COMMAND,
+                                     "( cat %s/aol%d_%s.*.dat.0* > %s/aol%d_%s.%s.dat; rm %s/aol%d_%s.*.dat.0* ) &",
+                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
+                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name, AOconf[loop].RTSLOGarray[rtlindex].timestring0,
+                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name
+                                    );
+                            if(strlen >= STRINGMAXLEN_COMMAND) {
+								DEBUG_TRACEPOINT("string truncated");
+								abort();
+							}
                             if(system(command) != 0)
                                 printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
 
@@ -1495,7 +1511,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                             if(data.processinfo==1)
                             {
                                 char msgstring[200];
-                                sprintf(msgstring, "%s", fnameFITS);
+                                sprintf(msgstring, "%.199s", fnameFITS);
                                 processinfo_WriteMessage(processinfo, msgstring);
                             }
 
@@ -1560,8 +1576,8 @@ int AOloopControl_RTstreamLOG_saveloop(
             }
             else
             {
-				// if save if off, then ensure we are at buffer start when starting to save
-                AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0; 
+                // if save if off, then ensure we are at buffer start when starting to save
+                AOconf[loop].RTSLOGarray[rtlindex].FileBuffer = 0;
             }
 
         }
