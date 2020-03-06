@@ -3,11 +3,6 @@
  * @brief   DM control
  * 
  * To be used for AOloopControl module
- *  
- * @author  O. Guyon
- * @date    10 Jul 2017
- *
- *
  * 
  */
 
@@ -97,34 +92,33 @@ errno_t AOloopControl_printDMturbconf()
 errno_t AOloopControl_DMturb_createconf()
 {
     int result;
-//    imageID IDc1;
-    char name[200];
+    //    imageID IDc1;
     imageID DMindex;
-    char errstr[200];
+    char errstr[STRINGMAXLEN_DEFAULT];
 
-	printf("ENTERING FUNCTION AOloopControl_DMturb_createconf\n");
-	fflush(stdout);
+    printf("ENTERING FUNCTION AOloopControl_DMturb_createconf\n");
+    fflush(stdout);
 
-	if( dmdispcomb_loaded == 0 )
-	{
-		printf("============== AOloopControl_DM_loadconf\n");
-		fflush(stdout);
-		AOloopControl_DM_loadconf();    
-		printf("=====>\n");
-		fflush(stdout);
-	}
-	
+    if( dmdispcomb_loaded == 0 )
+    {
+        printf("============== AOloopControl_DM_loadconf\n");
+        fflush(stdout);
+        AOloopControl_DM_loadconf();
+        printf("=====>\n");
+        fflush(stdout);
+    }
 
-	if( dmturb_loaded == 0 )
-	{
-		printf("=============== AOloopControl_DMturb_loadconf\n");
-		fflush(stdout);
-		AOloopControl_DMturb_loadconf();
-		printf("=====>\n");
-		fflush(stdout);
-	}
-	
-	
+
+    if( dmturb_loaded == 0 )
+    {
+        printf("=============== AOloopControl_DMturb_loadconf\n");
+        fflush(stdout);
+        AOloopControl_DMturb_loadconf();
+        printf("=====>\n");
+        fflush(stdout);
+    }
+
+
     if( dmturb_loaded == 0 )
     {
         printf("Create/read DMturb configuration\n");
@@ -132,7 +126,8 @@ errno_t AOloopControl_DMturb_createconf()
 
         SMturbfd = open(DMTURBCONF_FILENAME, O_RDWR | O_CREAT | O_TRUNC, (mode_t)0600);
         if (SMturbfd == -1) {
-            sprintf(errstr, "Error opening (O_RDWR | O_CREAT | O_TRUNC) file \"%s\"", name);
+            snprintf(errstr, STRINGMAXLEN_DEFAULT,
+                     "Error opening (O_RDWR | O_CREAT | O_TRUNC) file \"%s\"", DMTURBCONF_FILENAME);
             perror(errstr);
             exit(EXIT_FAILURE);
         }
@@ -162,23 +157,23 @@ errno_t AOloopControl_DMturb_createconf()
         for(DMindex=0; DMindex<NB_DMindex; DMindex++)
         {
             dmturbconf[DMindex].on = 0;
-            
-            dmturbconf[DMindex].wspeed = 10.0; // [m/s]            
+
+            dmturbconf[DMindex].wspeed = 10.0; // [m/s]
             dmturbconf[DMindex].ampl = 0.01; // [um]
-            dmturbconf[DMindex].LOcoeff = 0.2;            
-            
+            dmturbconf[DMindex].LOcoeff = 0.2;
+
             dmturbconf[DMindex].tint = 100; // [us]
-            
+
             dmturbconf[DMindex].simtime = 0.0; // sec
         }
         dmturb_loaded = 1;
 
     }
     AOloopControl_printDMturbconf();
-    
-   	printf("EXITING FUNCTION AOloopControl_DMturb_createconf\n");
-	fflush(stdout);
-    
+
+    printf("EXITING FUNCTION AOloopControl_DMturb_createconf\n");
+    fflush(stdout);
+
     return RETURN_SUCCESS;
 }
 
