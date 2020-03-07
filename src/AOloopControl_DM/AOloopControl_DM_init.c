@@ -42,9 +42,9 @@ static errno_t AOloopControl_DM_createconf()
 {
     int result;
     int ch;
-    char fname[200];
+    char fname[STRINGMAXLEN_FULLFILENAME];
     long DMindex;
-    char errstr[200];
+    char errstr[STRINGMAXLEN_ERRORMSG];
 
     sprintf(fname, "%s/dmdispcombconf.conf.shm", data.shmdir);
 
@@ -54,7 +54,15 @@ static errno_t AOloopControl_DM_createconf()
 
         SMfd = open(fname, O_RDWR | O_CREAT | O_TRUNC, (mode_t)0600);
         if (SMfd == -1) {
-            sprintf(errstr, "Error opening (O_RDWR | O_CREAT | O_TRUNC) file \"%s\", function AOloopControl_DM_createconf", fname);
+            int slen = snprintf(errstr, STRINGMAXLEN_ERRORMSG, "Error opening (O_RDWR | O_CREAT | O_TRUNC) file \"%s\", function AOloopControl_DM_createconf", fname);
+            if(slen<1) {
+                print_ERROR("snprintf wrote <1 char");
+                abort(); // can't handle this error any other way
+            }
+            if(slen >= STRINGMAXLEN_ERRORMSG) {
+                print_ERROR("snprintf string truncation");
+                abort(); // can't handle this error any other way
+            }
             perror(errstr);
             exit(EXIT_FAILURE);
         }
