@@ -200,15 +200,15 @@ errno_t AOloopControl_computeCalib_ComputeCM_cli() {
         }
         
         if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS 
-            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, CMDCODE_FPSINIT);
+            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
-            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, CMDCODE_CONFSTART);
+            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
-            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
@@ -261,19 +261,19 @@ errno_t AOloopControl_computeCalib_mkCM_cli() {
 
         if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS and conf process
             printf("Function parameters FPSINIT\n");
-            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_FPSINIT);
+            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
 
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
             printf("Function parameters CONFSTART\n");
-            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_CONFSTART);
+            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
             return RETURN_SUCCESS;
         }
 
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
             printf("Function parameters CONFSTOP\n");
-            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
             return RETURN_SUCCESS;
         }
 

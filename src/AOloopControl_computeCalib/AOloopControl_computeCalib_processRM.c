@@ -764,7 +764,7 @@ errno_t AOloopControl_computeCalib_mkCM(
 
     // create FPS
     sprintf(fpsname, "compsCM-%06ld", pindex);
-    AOloopControl_computeCalib_mkCM_FPCONF(fpsname, CMDCODE_FPSINIT);
+    AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
 
     function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
 
