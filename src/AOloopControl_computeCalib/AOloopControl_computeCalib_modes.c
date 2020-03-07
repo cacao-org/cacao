@@ -163,12 +163,12 @@ imageID AOloopControl_computeCalib_mkModes(
     //char *ptr0;
     //char *ptr1;
 
-    char imname[200];
-    char imname1[200];
+    char imname[STRINGMAXLEN_STREAMNAME];
+    char imname1[STRINGMAXLEN_STREAMNAME];
 
 
-    char fname[200];
-    char fname1[200];
+    char fname[STRINGMAXLEN_FULLFILENAME];
+    char fname1[STRINGMAXLEN_FULLFILENAME];
 
 
     float value1, value1cnt;
@@ -200,7 +200,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
     int reuse;
     imageID IDSVDmodein, IDSVDmode1, IDSVDcoeff, IDSVDmask;
-    
+
     imageID IDtmp;
 
     int MODAL; // 1 if "pixels" of DM are already modes
@@ -227,7 +227,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
     FILE *fpcoeff;
-    char fnameSVDcoeff[400];
+    char fnameSVDcoeff[STRINGMAXLEN_FULLFILENAME];
 
     // extra block
     long extrablockIndex;
@@ -287,7 +287,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
     if(system("mkdir -p mkmodestmp") < 1)
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+        print_ERROR("system() returns non-zero value");
 
     msizexy = msizex*msizey;
 
@@ -921,7 +921,7 @@ imageID AOloopControl_computeCalib_mkModes(
             if(fp != NULL)
             {
                 if(fscanf(fp, "%50ld", &extrablockIndex) != 1)
-                    printERROR(__FILE__, __func__, __LINE__, "cannot read parameter from file");
+                    print_ERROR("cannot read parameter from file");
                 fclose(fp);
             }
         }
@@ -941,8 +941,17 @@ imageID AOloopControl_computeCalib_mkModes(
             else
                 mblock1 = mblock;
 
-            if(sprintf(imname, "fmodes0_%02u", mblock1) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodes0_%02u", mblock1);
+            if(slen<1) {
+                print_ERROR("snprintf wrote <1 char");
+                abort(); // can't handle this error any other way
+            }
+
+            if(slen >= STRINGMAXLEN_IMGNAME) {
+                print_ERROR("snprintf string truncation");
+                abort(); // can't handle this error any other way
+            }
+
 
             MBLOCK_ID[mblock1] = create_3Dimage_ID(imname, msizex, msizey, MBLOCK_NBmode[mblock]);
             MBLOCK_ID[mblock1] = image_ID(imname);
@@ -976,7 +985,8 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
             for(uint64_t ii=0; ii<msizex*msizey; ii++)
-                data.image[MBLOCK_ID[mblock1]].array.F[MBLOCK_NBmode[mblock1]*msizex*msizey+ii] = data.image[ID].array.F[m*msizex*msizey+ii]*data.image[IDmaskRM].array.F[ii];
+                data.image[MBLOCK_ID[mblock1]].array.F[MBLOCK_NBmode[mblock1]*msizex*msizey+ii]
+                    = data.image[ID].array.F[m*msizex*msizey+ii]*data.image[IDmaskRM].array.F[ii];
 
             MBLOCK_NBmode[mblock1]++;
         }
@@ -986,15 +996,26 @@ imageID AOloopControl_computeCalib_mkModes(
         {
             uint32_t mblock = extrablockIndex;
 
-            if(sprintf(imname, "fmodes0_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            int slen = printf(imname, STRINGMAXLEN_IMGNAME, "fmodes0_%02u", mblock);
+            if(slen<1) {
+                print_ERROR("snprintf wrote <1 char");
+                abort(); // can't handle this error any other way
+            }
+
+            if(slen >= STRINGMAXLEN_IMGNAME) {
+                print_ERROR("snprintf string truncation");
+                abort(); // can't handle this error any other way
+            }
+
+
 
             MBLOCK_NBmode[mblock] = data.image[IDextrablock].md[0].size[2];
             MBLOCK_ID[mblock] = create_3Dimage_ID(imname, msizex, msizey, MBLOCK_NBmode[mblock]);
 
             for(uint32_t m=0; m<MBLOCK_NBmode[mblock]; m++)
                 for(uint64_t ii=0; ii<msizex*msizey; ii++)
-                    data.image[MBLOCK_ID[mblock]].array.F[m*msizex*msizey+ii] = data.image[IDextrablock].array.F[m*msizex*msizey+ii]*data.image[IDmaskRM].array.F[ii];
+                    data.image[MBLOCK_ID[mblock]].array.F[m*msizex*msizey+ii]
+                        = data.image[IDextrablock].array.F[m*msizex*msizey+ii]*data.image[IDmaskRM].array.F[ii];
 
             NBmblock++;
         }
@@ -1011,7 +1032,7 @@ imageID AOloopControl_computeCalib_mkModes(
             fflush(stdout);
 
             if(sprintf(imname, "fmodes0_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             //TEST
             //sprintf(fname, "!./mkmodestmp/fmodes0_%02ld.fits", mblock);
@@ -1036,7 +1057,7 @@ imageID AOloopControl_computeCalib_mkModes(
             fflush(stdout);
 
             if(sprintf(imname1, "fmodes1_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             IDm = create_3Dimage_ID(imname1, msizex, msizey, cnt);
             long IDSVDmodes = image_ID("svdmodes");
@@ -1046,8 +1067,7 @@ imageID AOloopControl_computeCalib_mkModes(
             MBLOCK_NBmode[mblock] = cnt;
             MBLOCK_ID[mblock] = IDm;
 
-            if(sprintf(fname1, "!./mkmodestmp/fmodes1_%02u.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            int slen = snprintf(fname1, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodes1_%02u.fits", mblock);
 
             save_fits(imname1, fname1);
 
@@ -1104,7 +1124,7 @@ imageID AOloopControl_computeCalib_mkModes(
                         data.image[IDSVDmodein].array.F[ii] = data.image[MBLOCK_ID[mblock]].array.F[m*msizexy+ii];
 
                     if(sprintf(imname, "fmodes1_%02u", mblock0) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     linopt_imtools_image_fitModes("SVDmodein", imname, "SVDmask", 1.0e-2, "modecoeff", reuse);
 
@@ -1135,9 +1155,9 @@ imageID AOloopControl_computeCalib_mkModes(
                     //					fflush(stdout);
                 }
             }
-            
-            
-            
+
+
+
             uint64_t cnt = 0;
             for(uint32_t m=0; m<MBLOCK_NBmode[mblock]; m++)
                 cnt += mok[m];
@@ -1146,7 +1166,7 @@ imageID AOloopControl_computeCalib_mkModes(
             if(cnt>0)
             {
                 if(sprintf(imname, "fmodes2_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 printf("[%5d] saving result %s \n", __LINE__, imname);
                 fflush(stdout);
@@ -1167,7 +1187,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 char fname2[200];
                 if(sprintf(fname2, "!./mkmodestmp/fmodes2_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 save_fits(imname, fname2);
             }
@@ -1217,7 +1237,7 @@ imageID AOloopControl_computeCalib_mkModes(
             fflush(stdout);
 
             if(sprintf(imname, "fmodes2_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             printf("[%5d] SVD decomp ...", __LINE__);
             fflush(stdout);
@@ -1229,7 +1249,7 @@ imageID AOloopControl_computeCalib_mkModes(
             float svdcoeff0 = data.image[IDSVDcoeff].array.F[0];
 
             if(sprintf(fnameSVDcoeff, "./mkmodestmp/SVDcoeff01_%02u.txt", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             fpcoeff = fopen(fnameSVDcoeff, "w");
             for(uint32_t m=0; m<data.image[IDSVDcoeff].md[0].size[0]; m++)
@@ -1246,7 +1266,7 @@ imageID AOloopControl_computeCalib_mkModes(
             fflush(stdout);
 
             if(sprintf(imname1, "fmodes2b_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             IDm = create_3Dimage_ID(imname1, msizex, msizey, cnt);
             long IDSVDmodes = image_ID("svdmodes");
@@ -1291,7 +1311,7 @@ imageID AOloopControl_computeCalib_mkModes(
             MBLOCK_ID[mblock] = IDm;
 
             if(sprintf(fname1, "!./mkmodestmp/fmodes2b_%02u.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             save_fits(imname1, fname1);
 
@@ -1325,16 +1345,16 @@ imageID AOloopControl_computeCalib_mkModes(
     {
         fp = fopen("./mkmodestmp/NBblocks.txt", "r");
         if(fscanf(fp, "%50u", &NBmblock) != 1)
-            printERROR(__FILE__, __func__, __LINE__, "Cannot read parameter from file");
+            print_ERROR("Cannot read parameter from file");
 
         fclose(fp);
         for(uint32_t mblock=0; mblock<NBmblock; mblock++)
         {
             if(sprintf(fname, "./mkmodestmp/fmodes2b_%02u.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             if(sprintf(imname, "fmodes2b_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             ID = load_fits(fname, imname, 1);
             MBLOCK_NBmode[mblock] = data.image[ID].md[0].size[2];
@@ -1396,15 +1416,15 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
                 if(sprintf(imname, "fmodesWFS0_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 if(MBLOCK_NBmode[mblock]>0)
                 {
                     imageID IDwfsMresp = create_3Dimage_ID(imname, wfsxsize, wfsysize, MBLOCK_NBmode[mblock]);
 
-					
-					uint64_t wfselem;
-					uint64_t act;
+
+                    uint64_t wfselem;
+                    uint64_t act;
                     uint32_t m;
 # ifdef _OPENMP
                     #pragma omp parallel for private(m,act,wfselem)
@@ -1419,13 +1439,13 @@ imageID AOloopControl_computeCalib_mkModes(
                             }
                         }
                     }
-					
+
 
                     if((IDRMMmodes!=-1)&&(IDRMMresp!=-1))
                     {
                         char fnameLOcoeff[200];
                         if(sprintf(fnameLOcoeff, "./mkmodestmp/LOcoeff_%02u.txt", mblock) < 1)
-                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                            print_ERROR("sprintf wrote <1 char");
 
                         fpLOcoeff = fopen(fnameLOcoeff, "w");
                         if(fpLOcoeff == NULL)
@@ -1524,7 +1544,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
                     if(sprintf(fname, "!./mkmodestmp/fmodesWFS0_%02u.fits", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     save_fits(imname, fname);
                 }
@@ -1540,7 +1560,7 @@ imageID AOloopControl_computeCalib_mkModes(
             for(uint32_t mblock=0; mblock<NBmblock; mblock++)
             {
                 if(sprintf(imname, "fmodesWFS0_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 long IDmwfs = image_ID(imname);
                 for(uint32_t m=0; m<MBLOCK_NBmode[mblock]; m++)
@@ -1578,7 +1598,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 for(uint32_t m=0; m<MBLOCK_NBmode[mblock]; m++)
                 {
                     if(sprintf(imname, "fmodesWFS0_%02u", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     long IDmwfs = image_ID(imname);
                     value1 = 0.0;
@@ -1601,12 +1621,12 @@ imageID AOloopControl_computeCalib_mkModes(
                     for(uint32_t m=0; m<MBLOCK_NBmode[mblock]; m++)
                     {
                         if(sprintf(imname, "fmodesWFS0_%02u", mblock) < 1)
-                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                            print_ERROR("sprintf wrote <1 char");
 
                         long IDmwfs = image_ID(imname);
 
                         if(sprintf(imnameDM, "fmodes2b_%02u", mblock) < 1)
-                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                            print_ERROR("sprintf wrote <1 char");
 
                         IDm = image_ID(imnameDM);
 
@@ -1615,10 +1635,10 @@ imageID AOloopControl_computeCalib_mkModes(
                             data.image[IDSVDmodein].array.F[ii] = data.image[IDmwfs].array.F[m*wfssize+ii];
 
                         if(sprintf(imname, "fmodesWFS0_%02u", mblock0) < 1)
-                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                            print_ERROR("sprintf wrote <1 char");
 
                         if(sprintf(imnameDM, "fmodes2b_%02u", mblock0) < 1)
-                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                            print_ERROR("sprintf wrote <1 char");
 
                         linopt_imtools_image_fitModes("SVDmodein", imname, "SVDmask", 1.0e-2, "modecoeff", reuse);
                         IDSVDcoeff = image_ID("modecoeff");
@@ -1662,10 +1682,10 @@ imageID AOloopControl_computeCalib_mkModes(
                 if(cnt>0)
                 {
                     if(sprintf(imname, "fmodesWFS1_%02u", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     if(sprintf(imnameDM, "fmodes3_%02u", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
 
                     imageID IDmwfs1 = create_3Dimage_ID(imname, wfsxsize, wfsysize, cnt);
@@ -1673,12 +1693,12 @@ imageID AOloopControl_computeCalib_mkModes(
                     uint32_t m1 = 0;
 
                     if(sprintf(imname, "fmodesWFS0_%02u", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     imageID IDmwfs = image_ID(imname);
 
                     if(sprintf(imnameDM, "fmodes2b_%02u", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     imageID IDmdm = image_ID(imnameDM);
                     if(IDmdm==-1)
@@ -1717,10 +1737,10 @@ imageID AOloopControl_computeCalib_mkModes(
                     fflush(stdout);//TEST
 
                     if(sprintf(imname1, "fmodesWFS1_%02u", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     if(sprintf(fname1, "!./mkmodestmp/fmodesWFS1_%02u.fits", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     printf("[%5d]    saving   %s -> %s\n", __LINE__, imname1, fname1);
                     fflush(stdout);//TEST
@@ -1731,10 +1751,10 @@ imageID AOloopControl_computeCalib_mkModes(
                     fflush(stdout);//TEST
 
                     if(sprintf(imname1, "fmodes3_%02u", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     if(sprintf(fname1, "!./mkmodestmp/fmodes3_%02u.fits", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     save_fits(imname1, fname1);
                     MBLOCK_ID[mblock] = IDmdm1;
@@ -1777,12 +1797,12 @@ imageID AOloopControl_computeCalib_mkModes(
                 if(MBLOCK_NBmode[mblock]>0)
                 {
                     if(sprintf(imname, "fmodesWFS1_%02u", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     long IDmwfs = image_ID(imname);
 
                     if(sprintf(imnameDM, "fmodes3_%02u", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        print_ERROR("sprintf wrote <1 char");
 
                     long IDmdm = image_ID(imnameDM);
 
@@ -1816,10 +1836,10 @@ imageID AOloopControl_computeCalib_mkModes(
         {
             char command[1000];
             if(sprintf(command, "echo \"%u\" > ./%s/param_NBmodeblocks.txt", NBmblock, stagedir) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             if(system(command) != 0)
-                printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+                print_ERROR("system() returns non-zero value");
         }
         else
         {
@@ -1829,7 +1849,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 exit(0);
             }
             if(fscanf(fp, "%50u", &NBmblock) != 1)
-                printERROR(__FILE__, __func__, __LINE__, "Cannot read parameter from file");
+                print_ERROR("Cannot read parameter from file");
             fclose(fp);
         }
 
@@ -1847,10 +1867,10 @@ imageID AOloopControl_computeCalib_mkModes(
             if(BlockNB>-1) // LOAD & VERIFY SIZE
             {
                 if(sprintf(imname1, "fmodesWFS1_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 if(sprintf(fname1, "./mkmodestmp/fmodesWFS1_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 ID = load_fits(fname1, imname1, 1);
                 wfsxsize = data.image[ID].md[0].size[0];
@@ -1858,10 +1878,10 @@ imageID AOloopControl_computeCalib_mkModes(
                 wfssize = wfsxsize*wfsysize;
 
                 if(sprintf(imname1, "fmodes3_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 if(sprintf(fname1, "./mkmodestmp/fmodes3_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 ID = load_fits(fname1, imname1, 1);
                 if((data.image[ID].md[0].size[0] != msizex) && (msizey != data.image[ID].md[0].size[0]))
@@ -1879,17 +1899,17 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
                 if(sprintf(command, "echo \"%f\" > ./%s/block%02u_SVDlim.txt", SVDlim,  stagedir, mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 if(system(command) != 0)
-                    printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+                    print_ERROR("system() returns non-zero value");
 
 
                 //if(MBLOCK_NBmode[mblock]>-1)
                 //{
 
                 if(sprintf(imname, "fmodesWFS1_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 long IDmwfs = image_ID(imname);
                 if(IDmwfs==-1)
@@ -1899,7 +1919,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 }
 
                 if(sprintf(imnameDM, "fmodes3_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 long IDmdm = image_ID(imnameDM);
                 if(IDmdm==-1)
@@ -1909,7 +1929,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 }
 
                 if(sprintf(imnameDM1, "fmodes_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
 
                 linopt_compute_SVDdecomp(imname, "SVDout", "modecoeff"); // SVD
@@ -1918,10 +1938,10 @@ imageID AOloopControl_computeCalib_mkModes(
                 uint32_t cnt = 0;
 
                 if(sprintf(fnameSVDcoeff, "./mkmodestmp/SVDcoeff_%02u.txt", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 fpcoeff = fopen(fnameSVDcoeff, "w");
-                
+
                 for(uint32_t kk=0; kk<data.image[IDSVDcoeff].md[0].size[0]; kk++)
                 {
                     fprintf(fpcoeff, "%5u   %12g   %12g  %5u     %10.8f  %10.8f\n", kk, data.image[IDSVDcoeff].array.F[kk], data.image[IDSVDcoeff].array.F[0], cnt, data.image[IDSVDcoeff].array.F[kk]/data.image[IDSVDcoeff].array.F[0], SVDlim);
@@ -1936,7 +1956,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 char imnameWFS1[200];
                 if(sprintf(imnameWFS1, "fmodesWFS_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 imageID IDmwfs1 = create_3Dimage_ID(imnameWFS1, wfsxsize, wfsysize, cnt);
                 imageID ID_VTmatrix = image_ID("SVD_VTm");
@@ -1989,12 +2009,12 @@ imageID AOloopControl_computeCalib_mkModes(
                 delete_image_ID("modecoeff");
 
                 if(sprintf(fname, "!./mkmodestmp/fmodes_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 save_fits(imnameDM1, fname);
 
                 if(sprintf(fname, "!./mkmodestmp/fmodesWFS_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 save_fits(imnameWFS1, fname);
                 MBLOCK_ID[mblock] = IDmdm1;
@@ -2005,10 +2025,10 @@ imageID AOloopControl_computeCalib_mkModes(
             else
             {
                 if(sprintf(fname, "./mkmodestmp/fmodes_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 if(sprintf(imnameDM1, "fmodes_%02u", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 long IDmdm1 = load_fits(fname, imnameDM1, 1);
                 MBLOCK_ID[mblock] = IDmdm1;
@@ -2050,23 +2070,46 @@ imageID AOloopControl_computeCalib_mkModes(
         /// WFS MODES, MODAL CONTROL MATRICES
         for(uint32_t mblock=0; mblock<NBmblock; mblock++)
         {
+            int slen;
+
             printf("[%5d] .... BLOCK %u has %u modes\n", __LINE__, mblock, MBLOCK_NBmode[mblock]);
             fflush(stdout);
 
             if(sprintf(imname, "fmodesWFS_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
-            char imnameCM[200]; // modal control matrix
-            if(sprintf(imnameCM, "cmat_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            char imnameCM[STRINGMAXLEN_IMGNAME]; // modal control matrix
+            slen = snprintf(imnameCM, STRINGMAXLEN_IMGNAME, "cmat_%02u", mblock);
+            if(slen<1) {
+                print_ERROR("snprintf wrote <1 char");
+                abort(); // can't handle this error any other way
+            }
+            if(slen >= STRINGMAXLEN_IMGNAME) {
+                print_ERROR("snprintf string truncation");
+                abort(); // can't handle this error any other way
+            }
 
-            char imnameCMc[200]; // zonal ("combined") control matrix
-            if(sprintf(imnameCMc, "cmatc_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            char imnameCMc[STRINGMAXLEN_IMGNAME]; // zonal ("combined") control matrix
+            slen = snprintf(imnameCMc, STRINGMAXLEN_IMGNAME, "cmatc_%02u", mblock);
+            if(slen<1) {
+                print_ERROR("snprintf wrote <1 char");
+                abort(); // can't handle this error any other way
+            }
+            if(slen >= STRINGMAXLEN_IMGNAME) {
+                print_ERROR("snprintf string truncation");
+                abort(); // can't handle this error any other way
+            }
 
-            char imnameCMcact[200]; // zonal control matrix masked
-            if(sprintf(imnameCMcact, "cmatcact_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            char imnameCMcact[STRINGMAXLEN_IMGNAME]; // zonal control matrix masked
+            slen = snprintf(imnameCMcact, STRINGMAXLEN_IMGNAME, "cmatcact_%02u", mblock);
+            if(slen<1) {
+                print_ERROR("snprintf wrote <1 char");
+                abort(); // can't handle this error any other way
+            }
+            if(slen >= STRINGMAXLEN_IMGNAME) {
+                print_ERROR("snprintf string truncation");
+                abort(); // can't handle this error any other way
+            }
 
             if((BlockNB<0) || (BlockNB == (int) mblock))
             {
@@ -2089,8 +2132,15 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     delete_image_ID("VTmat");
 
-                    if(sprintf(fname, "!./mkmodestmp/cmat_%02u.fits", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    slen = snprintf(fname, "!./mkmodestmp/cmat_%02u.fits", mblock);
+                    if(slen<1) {
+                        print_ERROR("snprintf wrote <1 char");
+                        abort(); // can't handle this error any other way
+                    }
+                    if(slen >= STRINGMAXLEN_IMGNAME) {
+                        print_ERROR("snprintf string truncation");
+                        abort(); // can't handle this error any other way
+                    }
 
                     save_fits(imnameCM, fname);
 
@@ -2098,7 +2148,15 @@ imageID AOloopControl_computeCalib_mkModes(
                     fflush(stdout);
 
                     // COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX
-                    sprintf(imname, "fmodes_%02u", mblock);
+                    slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodes_%02u", mblock);
+                    if(slen<1) {
+                        print_ERROR("snprintf wrote <1 char");
+                        abort(); // can't handle this error any other way
+                    }
+                    if(slen >= STRINGMAXLEN_IMGNAME) {
+                        print_ERROR("snprintf string truncation");
+                        abort(); // can't handle this error any other way
+                    }
                     printf("[%5d] Block %u/%u : run AOloopControl_computeCalib_compute_CombinedControlMatrix\n", __LINE__, mblock, NBmblock);
                     fflush(stdout);
                     AOloopControl_computeCalib_compute_CombinedControlMatrix(imnameCM, imname, "wfsmask", "dmmask", imnameCMc, imnameCMcact);
@@ -2106,16 +2164,13 @@ imageID AOloopControl_computeCalib_mkModes(
                     fflush(stdout);
 
 
-                    if(sprintf(fname, "!./mkmodestmp/cmatc_%02u.fits", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    slen = snprintf(fname, STRINGMAXLEN_IMGNAME, "!./mkmodestmp/cmatc_%02u.fits", mblock);
 
                     save_fits(imnameCMc, fname);
 
-                    if(sprintf(fname, "!./mkmodestmp/cmatcact_%02u.fits", mblock) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    slen = snprintf(fname, STRINGMAXLEN_IMGNAME, "!./mkmodestmp/cmatcact_%02u.fits", mblock);
 
-                    if(sprintf(imname1, "%s_00", imnameCMcact) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    slen = snprintf(imname1, "%s_00", imnameCMcact);
 
                     save_fits(imname1, fname);
 
@@ -2131,22 +2186,22 @@ imageID AOloopControl_computeCalib_mkModes(
                 //	list_image_ID();
 
                 if(sprintf(fname, "./mkmodestmp/fmodesWFS_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 load_fits(fname, imname, 1);
 
                 if(sprintf(fname, "./mkmodestmp/cmat_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 load_fits(fname, imnameCM, 1);
 
                 if(sprintf(fname, "./mkmodestmp/cmatc_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 load_fits(fname, imnameCMc, 1);
 
                 if(sprintf(fname, "./mkmodestmp/cmatcact_%02u.fits", mblock) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    print_ERROR("sprintf wrote <1 char");
 
                 load_fits(fname, imnameCMcact, 1);
             }
@@ -2166,13 +2221,13 @@ imageID AOloopControl_computeCalib_mkModes(
         {
             char command[1000];
             if(sprintf(command, "echo \"%u\" > ./%s/block%02u_NBmodes.txt", MBLOCK_NBmode[mblock], stagedir, mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             if(system(command) != 0)
-                printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+                print_ERROR("system() returns non-zero value");
 
             if(sprintf(imname, "fmodesWFS_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             long IDmwfs = image_ID(imname);
             for(uint32_t m=0; m<MBLOCK_NBmode[mblock]; m++)
@@ -2210,7 +2265,7 @@ imageID AOloopControl_computeCalib_mkModes(
             fflush(stdout);
 
             if(sprintf(imname, "cmat_%02u", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             long IDcmat = image_ID(imname);
             for(uint32_t m=0; m<MBLOCK_NBmode[mblock]; m++)
@@ -2244,10 +2299,10 @@ imageID AOloopControl_computeCalib_mkModes(
 
         		char command[1000];
                 if(sprintf(command, "echo \"%ld\" > ./conf_staged/param_NBmodes.txt", cnt) < 1)
-        			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        			print_ERROR("sprintf wrote <1 char");
 
                 if(system(command) != 0)
-        			printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+        			print_ERROR("system() returns non-zero value");
 
             */
     }
@@ -2304,7 +2359,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     fflush(stdout);
 
     if(system("mkdir -p mkmodestmp") != 0)
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+        print_ERROR("system() returns non-zero value");
 
 
 
@@ -2325,7 +2380,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
         MBLOCK_blockend[0] = NBmodes;
 
         if(sprintf(fname, "./conf_staged/param_block00end.txt") < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            print_ERROR("sprintf wrote <1 char");
 
         fp = fopen(fname, "w");
         fprintf(fp, "%03ld\n", NBmodes);
@@ -2336,7 +2391,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
         for(mblock=0; mblock<NBmblock; mblock++)
         {
             if(sprintf(fname, "./conf_staged/param_block%02ldend.txt", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             fp = fopen(fname, "r");
             if(fp==NULL)
@@ -2345,7 +2400,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
                 exit(0);
             }
             if(fscanf(fp, "%50ld", &MBLOCK_blockend[mblock]) != 1)
-                printERROR(__FILE__, __func__, __LINE__, "Cannot read parameter from file");
+                print_ERROR("Cannot read parameter from file");
             fclose(fp);
 
             printf("Block end %ld = %ld\n", mblock, MBLOCK_blockend[mblock]);
@@ -2381,10 +2436,10 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             printf("Reconstructing block %ld\n", mblock);
 
             if(sprintf(command, "echo \"%f\" > ./conf_staged/block%02ld_SVDlim.txt", SVDlim, mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             if(system(command) != 0)
-                printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+                print_ERROR("system() returns non-zero value");
 
 
             IDdmmask = create_2Dimage_ID("dmmask", NBmodes, 1);
@@ -2392,7 +2447,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
                 data.image[IDdmmask].array.F[kk] = 1.0;
 
             if(sprintf(imname, "fmodesWFS_%02ld", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             ID = create_3Dimage_ID(imname, wfsxsize, wfsysize, MBLOCK_NBmode[mblock]);
             for(kk=0; kk<MBLOCK_NBmode[mblock]; kk++)
@@ -2402,19 +2457,19 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             }
 
             if(sprintf(fname, "!./mkmodestmp/fmodesWFS_%02ld.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             save_fits(imname, fname);
 
 
             if(sprintf(imnameCM, "cmat_%02ld", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             if(sprintf(imnameCMc, "cmatc_%02ld", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             if(sprintf(imnameCMcact, "cmatcact_%02ld", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             // COMPUTE MODAL CONTROL MATRICES
             printf("COMPUTE CONTROL MATRIX\n");
@@ -2427,7 +2482,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             delete_image_ID("VTmat");
 
             if(sprintf(fname, "!./mkmodestmp/cmat_%02ld.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             save_fits(imnameCM, fname);
 
@@ -2436,7 +2491,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
             // COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX
             if(sprintf(imname, "fmodes_%02ld", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             IDmodes = create_3Dimage_ID(imname, NBmodes, 1, MBLOCK_NBmode[mblock]);
             list_image_ID();
@@ -2448,7 +2503,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             }
 
             if(sprintf(fname, "!./mkmodestmp/fmodes_%02ld.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             save_fits(imname, fname);
 
@@ -2457,15 +2512,15 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             delete_image_ID("dmmask");
 
             if(sprintf(fname, "!./mkmodestmp/cmatc_%02ld.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             save_fits(imnameCMc, fname);
 
             if(sprintf(fname, "!./mkmodestmp/cmatcact_%02ld.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             if(sprintf(imname1, "%s_00", imnameCMcact) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             save_fits(imname1, fname);
         }
@@ -2476,22 +2531,22 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             fflush(stdout);
 
             if(sprintf(fname, "./mkmodestmp/fmodesWFS_%02ld.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             load_fits(fname, imname, 1);
 
             if(sprintf(fname, "./mkmodestmp/cmat_%02ld.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             load_fits(fname, imnameCM, 1);
 
             if(sprintf(fname, "./mkmodestmp/cmatc_%02ld.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             load_fits(fname, imnameCMc, 1);
 
             if(sprintf(fname, "./mkmodestmp/cmatcact_%02ld.fits", mblock) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                print_ERROR("sprintf wrote <1 char");
 
             load_fits(fname, imnameCMcact, 1);
         }
@@ -2506,13 +2561,13 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     for(mblock=0; mblock<NBmblock; mblock++)
     {
         if(sprintf(command, "echo \"%ld\" > ./conf_staged/block%02ld_NBmodes.txt", MBLOCK_NBmode[mblock], mblock) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            print_ERROR("sprintf wrote <1 char");
 
         if(system(command) != 0)
-            printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+            print_ERROR("system() returns non-zero value");
 
         if(sprintf(imname, "fmodesWFS_%02ld", mblock) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            print_ERROR("sprintf wrote <1 char");
 
         long IDmwfs = image_ID(imname);
         for(m=0; m<MBLOCK_NBmode[mblock]; m++)
@@ -2533,7 +2588,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     for(mblock=0; mblock<NBmblock; mblock++)
     {
         if(sprintf(imname, "cmat_%02ld", mblock) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            print_ERROR("sprintf wrote <1 char");
 
         long IDcmat = image_ID(imname);
         for(m=0; m<MBLOCK_NBmode[mblock]; m++)
@@ -2595,7 +2650,7 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask(
     NBpoke = data.image[IDzrm].md[0].size[2];
 
     if(sprintf(name, "aol%ld_dmC", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        print_ERROR("sprintf wrote <1 char");
 
     IDdm = read_sharedmem_image(name);
     sizexDM = data.image[IDdm].md[0].size[0];
