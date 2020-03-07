@@ -338,19 +338,19 @@ errno_t AOloopControl_aorun_cli() {
 
         if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS and conf process
             printf("Function parameters FPSINIT\n");
-            AOloopControl_aorun_FPCONF(fpsname, CMDCODE_FPSINIT);
+            AOloopControl_aorun_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
 
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
             printf("Function parameters CONFSTART\n");
-            AOloopControl_aorun_FPCONF(fpsname, CMDCODE_CONFSTART);
+            AOloopControl_aorun_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
             return RETURN_SUCCESS;
         }
 
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
             printf("Function parameters CONFSTOP\n");
-            AOloopControl_aorun_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            AOloopControl_aorun_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
             return RETURN_SUCCESS;
         }
 
