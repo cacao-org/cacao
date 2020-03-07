@@ -218,18 +218,19 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_cli() {
         CLI_checkarg(10,2)
         == 0 )
     {
-        AOloopControl_acquireCalib_Measure_WFSrespC(LOOPNUMBER,
-                data.cmdargtoken[1].val.numl,
-                data.cmdargtoken[2].val.numl,
-                data.cmdargtoken[3].val.numl,
-                data.cmdargtoken[4].val.numl,
-                data.cmdargtoken[5].val.string,
-                data.cmdargtoken[6].val.string,
-                data.cmdargtoken[7].val.numl,
-                data.cmdargtoken[8].val.numl,
-                data.cmdargtoken[9].val.numl,
-                (uint32_t) data.cmdargtoken[10].val.numl
-                                                   );
+        AOloopControl_acquireCalib_Measure_WFSrespC(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.string,
+            data.cmdargtoken[6].val.string,
+            data.cmdargtoken[7].val.numl,
+            data.cmdargtoken[8].val.numl,
+            data.cmdargtoken[9].val.numl,
+            (uint32_t) data.cmdargtoken[10].val.numl
+        );
 
         return CLICMD_SUCCESS;
     }
@@ -240,83 +241,155 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_cli() {
 
 
 
+
+
 /** @brief CLI function for AOloopControl_Measure_WFS_linResponse */
 
 errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
-    int stringmaxlen = 500;
-    char fpsname[stringmaxlen];
+
+    // default FPS name
+    char fpsname_default[] = "measlinRM";
+
 
     // First, we try to execute function through FPS interface
-    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
-        // unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
-        // Set FPS interface name
-        // By convention, if there are optional arguments, they should be appended to the fps name
+    uint32_t FPSCMDCODE = 0;
+    if(CLI_checkarg(1, 5) == 0) {
+        // check that first arg is a string
+        // if it isn't, the non-FPS implementation should be called
+
+        // check if recognized FPSCMDCODE
+        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS
+            FPSCMDCODE = FPSCMDCODE_FPSINIT;
+        }
+        else if (strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
+            FPSCMDCODE = FPSCMDCODE_CONFSTART;
+        }
+        else if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
+            FPSCMDCODE = FPSCMDCODE_CONFSTOP;
+        }
+        else if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+            FPSCMDCODE = FPSCMDCODE_RUNSTART;
+        }
+        else if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+            FPSCMDCODE = FPSCMDCODE_RUNSTOP;
+        }
+    }
+
+
+    // if recognized FPSCMDCODE, use FPS implementation
+    if(FPSCMDCODE != 0) {		
+        // ===============================
+        //     SET FPS INTERFACE NAME
+        // ===============================
+		char fpsname[FUNCTION_PARAMETER_STRMAXLEN];
+
+        // By convention, if there is an optional arguments, it should be appended to the default fps name
         //
-        if(data.processnameflag == 0) { // name fps to something different than the process name
-            if(strlen(data.cmdargtoken[2].val.string)>0)
-                snprintf(fpsname, stringmaxlen, "measlinRM-%s", data.cmdargtoken[2].val.string);
-            else
-                snprintf(fpsname, stringmaxlen, "measlinRM");
+        if(data.processnameflag == 0) {
+            // append string to default fps name
+            if(strlen(data.cmdargtoken[2].val.string) > 0) {
+                int slen = snprintf(fpsname, FUNCTION_PARAMETER_STRMAXLEN,
+                                    "%s-%s", fpsname_default, data.cmdargtoken[2].val.string);
+                if(slen < 1) {
+                    print_ERROR("snprintf wrote <1 char");
+                    abort(); // can't handle this error any other way
+                }
+                if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
+                    print_ERROR("snprintf string truncation.\n"
+                                "Full string  : %s-%s\n"
+                                "Truncated to : %s",
+                                fpsstring,
+                                data.cmdargtoken[2].val.string,
+                                fpsname);
+                    abort(); // can't handle this error any other way
+                }
+            } else { // if there is no optional argument, adopt default FPS name
+                int slen = snprintf(fpsname, FUNCTION_PARAMETER_STRMAXLEN, "%s", fpsname_default);
+                if(slen < 1) {
+                    print_ERROR("snprintf wrote <1 char");
+                    abort(); // can't handle this error any other way
+                }
+                if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
+                    print_ERROR("snprintf string truncation.\n"
+                                "Full string  : %s\n"
+                                "Truncated to : %s",
+                                fpsname_default,
+                                fpsstring);
+                    abort(); // can't handle this error any other way
+                }
+            }
         } else { // Automatically set fps name to be process name up to first instance of character '.'
             strcpy(fpsname, data.processname0);
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS
-            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, CMDCODE_FPSINIT);
+
+
+
+
+        if(FPSCMDCODE == FPSCMDCODE_FPSINIT) {  // Initialize FPS
+            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
-            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, CMDCODE_CONFSTART);
+
+        if(FPSCMDCODE == FPSCMDCODE_CONFSTART) {  // Start conf process
+            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
             return RETURN_SUCCESS;
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
-            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, CMDCODE_CONFSTOP);
+
+        if(FPSCMDCODE == FPSCMDCODE_CONFSTOP) { // Stop conf process
+            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
             return RETURN_SUCCESS;
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+
+        if(FPSCMDCODE == FPSCMDCODE_RUNSTART) { // Run process
             AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(fpsname);
             return RETURN_SUCCESS;
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+
+        if(FPSCMDCODE == FPSCMDCODE_RUNSTOP) { // Stop process
             //     AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_STOP(OptionalArg00);
             return RETURN_SUCCESS;
         }
     }
-    // non FPS implementation - all parameters specified at function launch
+
+
+
+    // call non FPS implementation - all parameters specified at function launch
     if(
-        CLI_checkarg(1,1) +
-        + CLI_checkarg(2,2) +
-        + CLI_checkarg(3,2) +
-        + CLI_checkarg(4,2) +
-        + CLI_checkarg(5,2) +
-        + CLI_checkarg(6,4) +
-        + CLI_checkarg(7,5) +
-        + CLI_checkarg(8,5) +
-        + CLI_checkarg(9,2) +
-        + CLI_checkarg(10,2) +
-        + CLI_checkarg(11,2) +
-        + CLI_checkarg(12,2)
-        == 0 )
-    {
-        AOloopControl_acquireCalib_Measure_WFS_linResponse(LOOPNUMBER,
-                data.cmdargtoken[1].val.numf,
-                data.cmdargtoken[2].val.numl,
-                data.cmdargtoken[3].val.numl,
-                data.cmdargtoken[4].val.numl,
-                data.cmdargtoken[5].val.numl,
-                data.cmdargtoken[6].val.string,
-                data.cmdargtoken[7].val.string,
-                data.cmdargtoken[8].val.string,
-                data.cmdargtoken[9].val.numl,
-                data.cmdargtoken[10].val.numl,
-                data.cmdargtoken[11].val.numl,
-                data.cmdargtoken[12].val.numl
-                                                          );
+        CLI_checkarg(1, 1) +
+        + CLI_checkarg(2, 2) +
+        + CLI_checkarg(3, 2) +
+        + CLI_checkarg(4, 2) +
+        + CLI_checkarg(5, 2) +
+        + CLI_checkarg(6, 4) +
+        + CLI_checkarg(7, 5) +
+        + CLI_checkarg(8, 5) +
+        + CLI_checkarg(9, 2) +
+        + CLI_checkarg(10, 2) +
+        + CLI_checkarg(11, 2) +
+        + CLI_checkarg(12, 2)
+        == 0) {
+        AOloopControl_acquireCalib_Measure_WFS_linResponse(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.numf,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.string,
+            data.cmdargtoken[7].val.string,
+            data.cmdargtoken[8].val.string,
+            data.cmdargtoken[9].val.numl,
+            data.cmdargtoken[10].val.numl,
+            data.cmdargtoken[11].val.numl,
+            data.cmdargtoken[12].val.numl
+        );
 
         return RETURN_SUCCESS;
     } else {
         return CLICMD_INVALID_ARG;
     }
 }
+
 
 
 
@@ -339,21 +412,22 @@ errno_t AOloopControl_acquireCalib_Measure_zonalRM_cli() {
         CLI_checkarg(13,2)
         == 0 )
     {
-        AOloopControl_acquireCalib_Measure_zonalRM(LOOPNUMBER,
-                data.cmdargtoken[1].val.numf,
-                data.cmdargtoken[2].val.numl,
-                data.cmdargtoken[3].val.numl,
-                data.cmdargtoken[4].val.numl,
-                data.cmdargtoken[5].val.numl,
-                data.cmdargtoken[6].val.string,
-                data.cmdargtoken[7].val.string,
-                data.cmdargtoken[8].val.string,
-                data.cmdargtoken[9].val.string,
-                data.cmdargtoken[10].val.numl,
-                data.cmdargtoken[11].val.numl,
-                data.cmdargtoken[12].val.numl,
-                data.cmdargtoken[13].val.numl
-                                                  );
+        AOloopControl_acquireCalib_Measure_zonalRM(
+            LOOPNUMBER,
+            data.cmdargtoken[1].val.numf,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.string,
+            data.cmdargtoken[7].val.string,
+            data.cmdargtoken[8].val.string,
+            data.cmdargtoken[9].val.string,
+            data.cmdargtoken[10].val.numl,
+            data.cmdargtoken[11].val.numl,
+            data.cmdargtoken[12].val.numl,
+            data.cmdargtoken[13].val.numl
+        );
 
         return CLICMD_SUCCESS;
     }
@@ -2761,7 +2835,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse(
 
     // create FPS
     sprintf(fpsname, "linresp-%06ld", pindex);
-    AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, CMDCODE_FPSINIT);
+    AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
 
     function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
 
