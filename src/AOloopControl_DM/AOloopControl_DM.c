@@ -128,19 +128,19 @@ errno_t AOloopControl_DM_CombineChannels_cli() {
 
         if((strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) && (CLI_checkarg(2, 2) == 0)) {  // init FPS
             printf("Function parameters configure\n");
-            AOloopControl_DM_CombineChannels_FPCONF(fpsname, CMDCODE_FPSINIT, data.cmdargtoken[2].val.numl);
+            AOloopControl_DM_CombineChannels_FPCONF(fpsname, FPSCMDCODE_FPSINIT, data.cmdargtoken[2].val.numl);
             return 0;
         }
 
         if((strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) && (CLI_checkarg(2, 2) == 0)) {  // Start conf process
             printf("Function parameters configure\n");
-            AOloopControl_DM_CombineChannels_FPCONF(fpsname, CMDCODE_CONFSTART, data.cmdargtoken[2].val.numl);
+            AOloopControl_DM_CombineChannels_FPCONF(fpsname, FPSCMDCODE_CONFSTART, data.cmdargtoken[2].val.numl);
             return 0;
         }
 
         if((strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) && (CLI_checkarg(2, 2) == 0)) { // Stop conf process
             printf("Function parameters configure\n");
-            AOloopControl_DM_CombineChannels_FPCONF(fpsname, CMDCODE_CONFSTOP, data.cmdargtoken[2].val.numl);
+            AOloopControl_DM_CombineChannels_FPCONF(fpsname, FPSCMDCODE_CONFSTOP, data.cmdargtoken[2].val.numl);
             return 0;
         }
 

@@ -1130,7 +1130,7 @@ int AOloopControl_DM_CombineChannels(
 
     // create FPS
     sprintf(fpsname, "DMcomb-%02ld", DMindex);
-    AOloopControl_DM_CombineChannels_FPCONF( fpsname, CMDCODE_FPSINIT, DMindex);
+    AOloopControl_DM_CombineChannels_FPCONF( fpsname, FPSCMDCODE_FPSINIT, DMindex);
 
 
 
