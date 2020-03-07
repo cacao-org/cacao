@@ -190,15 +190,15 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_cli() {
             strcpy(fpsname, data.processname0);
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS and conf process
-            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_FPSINIT);
+            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
-            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_CONFSTART);
+            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
-            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
@@ -1622,7 +1622,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency(
     FUNCTION_PARAMETER_STRUCT fps;
     //int SMfd = -1;
     snprintf(fpsname, stringmaxlen, "mlat-%s-%s", dmname, wfsname);
-    AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, CMDCODE_FPSINIT);
+    AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
 
 
 
