@@ -169,15 +169,15 @@ errno_t AOloopControl_IOtools_acquireWFSloop_cli() {
             strcpy(fpsname, data.processname0);
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS
-            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, CMDCODE_FPSINIT);
+            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
-            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, CMDCODE_CONFSTART);
+            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
-            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, CMDCODE_CONFSTOP);
+            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
             return RETURN_SUCCESS;
         }
         if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process

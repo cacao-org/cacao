@@ -1125,7 +1125,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop)
 
     // create FPS
     sprintf(fpsname, "acquWFS-%06ld", pindex);
-    AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, CMDCODE_FPSINIT);
+    AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
 
     function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
 	functionparameter_SetParamValue_INT64(&fps, ".loop", loop);
