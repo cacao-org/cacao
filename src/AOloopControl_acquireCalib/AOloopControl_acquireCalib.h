@@ -48,8 +48,8 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
 );
 
 /** @brief Measure linear response to set of DM modes/patterns */
-errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(char *fpsname, uint32_t CMDmode);
-int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(char *fpsname);
+errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF();
+errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN();
 
 errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse(
     __attribute__((unused)) long        loop,

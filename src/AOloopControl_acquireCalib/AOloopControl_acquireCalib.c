@@ -245,128 +245,37 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_cli() {
 
 /** @brief CLI function for AOloopControl_Measure_WFS_linResponse */
 
-errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
+errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli()
+{
 
-    // default FPS name
-    char fpsname_default[] = "measlinRM";
-
-
-    // First, we try to execute function through FPS interface
-    uint32_t FPSCMDCODE = 0;
-    if(CLI_checkarg(1, 5) == 0) {
-        // check that first arg is a string
-        // if it isn't, the non-FPS implementation should be called
-
-        // check if recognized FPSCMDCODE
-        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS
-            FPSCMDCODE = FPSCMDCODE_FPSINIT;
-        }
-        else if (strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
-            FPSCMDCODE = FPSCMDCODE_CONFSTART;
-        }
-        else if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
-            FPSCMDCODE = FPSCMDCODE_CONFSTOP;
-        }
-        else if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
-            FPSCMDCODE = FPSCMDCODE_RUNSTART;
-        }
-        else if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
-            FPSCMDCODE = FPSCMDCODE_RUNSTOP;
-        }
-    }
-
-
-    // if recognized FPSCMDCODE, use FPS implementation
-    if(FPSCMDCODE != 0) {		
-        // ===============================
-        //     SET FPS INTERFACE NAME
-        // ===============================
-		char fpsname[FUNCTION_PARAMETER_STRMAXLEN];
-
-        // By convention, if there is an optional arguments, it should be appended to the default fps name
-        //
-        if(data.processnameflag == 0) {
-            // append string to default fps name
-            if(strlen(data.cmdargtoken[2].val.string) > 0) {
-                int slen = snprintf(fpsname, FUNCTION_PARAMETER_STRMAXLEN,
-                                    "%s-%s", fpsname_default, data.cmdargtoken[2].val.string);
-                if(slen < 1) {
-                    print_ERROR("snprintf wrote <1 char");
-                    abort(); // can't handle this error any other way
-                }
-                if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                    print_ERROR("snprintf string truncation.\n"
-                                "Full string  : %s-%s\n"
-                                "Truncated to : %s",
-                                fpsstring,
-                                data.cmdargtoken[2].val.string,
-                                fpsname);
-                    abort(); // can't handle this error any other way
-                }
-            } else { // if there is no optional argument, adopt default FPS name
-                int slen = snprintf(fpsname, FUNCTION_PARAMETER_STRMAXLEN, "%s", fpsname_default);
-                if(slen < 1) {
-                    print_ERROR("snprintf wrote <1 char");
-                    abort(); // can't handle this error any other way
-                }
-                if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                    print_ERROR("snprintf string truncation.\n"
-                                "Full string  : %s\n"
-                                "Truncated to : %s",
-                                fpsname_default,
-                                fpsstring);
-                    abort(); // can't handle this error any other way
-                }
-            }
-        } else { // Automatically set fps name to be process name up to first instance of character '.'
-            strcpy(fpsname, data.processname0);
-        }
-
-
-
-
-        if(FPSCMDCODE == FPSCMDCODE_FPSINIT) {  // Initialize FPS
-            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
-            return RETURN_SUCCESS;
-        }
-
-        if(FPSCMDCODE == FPSCMDCODE_CONFSTART) {  // Start conf process
-            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
-            return RETURN_SUCCESS;
-        }
-
-        if(FPSCMDCODE == FPSCMDCODE_CONFSTOP) { // Stop conf process
-            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
-            return RETURN_SUCCESS;
-        }
-
-        if(FPSCMDCODE == FPSCMDCODE_RUNSTART) { // Run process
-            AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(fpsname);
-            return RETURN_SUCCESS;
-        }
-
-        if(FPSCMDCODE == FPSCMDCODE_RUNSTOP) { // Stop process
-            //     AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_STOP(OptionalArg00);
-            return RETURN_SUCCESS;
-        }
-    }
-
-
+	// try FPS implementation
+    // set data.fpsname, providing default value as first arg, and set data.FPS_CMDCODE value
+    // default FPS name will be used if CLI process has NOT been named
+    // see code in function_parameter.c for detailed rules
+    function_parameter_getFPSname_from_CLIfunc("measlinRM");	
+	
+	if(data.FPS_CMDCODE != 0) {	// use FPS implementation
+		// set pointers to CONF and RUN functions
+		data.FPS_CONFfunc = AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF;
+		data.FPS_RUNfunc  = AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN;
+		function_parameter_execFPScmd();
+		return RETURN_SUCCESS;
+	}
 
     // call non FPS implementation - all parameters specified at function launch
     if(
         CLI_checkarg(1, 1) +
-        + CLI_checkarg(2, 2) +
-        + CLI_checkarg(3, 2) +
-        + CLI_checkarg(4, 2) +
-        + CLI_checkarg(5, 2) +
-        + CLI_checkarg(6, 4) +
-        + CLI_checkarg(7, 5) +
-        + CLI_checkarg(8, 5) +
-        + CLI_checkarg(9, 2) +
-        + CLI_checkarg(10, 2) +
-        + CLI_checkarg(11, 2) +
-        + CLI_checkarg(12, 2)
+        CLI_checkarg(2, 2) +
+        CLI_checkarg(3, 2) +
+        CLI_checkarg(4, 2) +
+        CLI_checkarg(5, 2) +
+        CLI_checkarg(6, 4) +
+        CLI_checkarg(7, 5) +
+        CLI_checkarg(8, 5) +
+        CLI_checkarg(9, 2) +
+        CLI_checkarg(10, 2) +
+        CLI_checkarg(11, 2) +
+        CLI_checkarg(12, 2)
         == 0) {
         AOloopControl_acquireCalib_Measure_WFS_linResponse(
             LOOPNUMBER,
@@ -389,6 +298,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli() {
         return CLICMD_INVALID_ARG;
     }
 }
+
 
 
 
@@ -792,10 +702,9 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
 // run loop process
 //
 errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
-    char *fpsname
 )
 {
-    FPS_CONNECT( fpsname, FPSCONNECT_RUN );
+    FPS_CONNECT( data.FPS_name, FPSCONNECT_RUN );
 
 
 
@@ -2211,13 +2120,12 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
 
-int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
-    char *fpsname
+errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 ) {
     // ===========================
     // CONNECT TO FPS
     // ===========================
-    FPS_CONNECT( fpsname, FPSCONNECT_RUN );
+    FPS_CONNECT( data.FPS_name, FPSCONNECT_RUN );
 
 
 
@@ -2778,22 +2686,22 @@ int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     // run RM decode exec script
     //
 
-    sprintf(command, "%s %s", execRMdecode, fpsname);
+    sprintf(command, "%s %s", execRMdecode, data.FPS_name);
     if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
 
-    sprintf(command, "%s %s", execmkDMWFSmasks, fpsname);
+    sprintf(command, "%s %s", execmkDMWFSmasks, data.FPS_name);
     if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
 
-    sprintf(command, "%s %s", execmkDMslaveact, fpsname);
+    sprintf(command, "%s %s", execmkDMslaveact, data.FPS_name);
     if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
 
-    sprintf(command, "%s %s", execmkLODMmodes, fpsname);
+    sprintf(command, "%s %s", execmkLODMmodes, data.FPS_name);
     if(system(command) != 0) {
         printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
     }
