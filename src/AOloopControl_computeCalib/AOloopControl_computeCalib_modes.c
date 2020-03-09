@@ -1224,18 +1224,8 @@ imageID AOloopControl_computeCalib_mkModes(
                 }
                 MBLOCK_ID[mblock] = IDm;
 
-                char fname2[200];
-                slen = snprintf(fname2, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodes2_%02u.fits", mblock);
-                if(slen<1) {
-                    PRINT_ERROR("snprintf wrote <1 char");
-                    abort(); // can't handle this error any other way
-                }
-                if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    PRINT_ERROR("snprintf string truncation");
-                    abort(); // can't handle this error any other way
-                }
-
-
+                char fname2[STRINGMAXLEN_FULLFILENAME];
+                WRITE_FULLFILENAME(fname2, "!./mkmodestmp/fmodes2_%02u.fits", mblock);
                 save_fits(imname, fname2);
             }
             MBLOCK_NBmode[mblock] = cnt;
@@ -1525,17 +1515,9 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     if((IDRMMmodes!=-1)&&(IDRMMresp!=-1))
                     {
-                        char fnameLOcoeff[200];
-
-                        int slen = snprintf(fnameLOcoeff, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/LOcoeff_%02u.txt", mblock);
-                        if(slen<1) {
-                            PRINT_ERROR("snprintf wrote <1 char");
-                            abort(); // can't handle this error any other way
-                        }
-                        if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                            PRINT_ERROR("snprintf string truncation");
-                            abort(); // can't handle this error any other way
-                        }
+                        char fnameLOcoeff[STRINGMAXLEN_FULLFILENAME];
+                        
+                        WRITE_FULLFILENAME(fnameLOcoeff, "./mkmodestmp/LOcoeff_%02u.txt", mblock);
 
                         fpLOcoeff = fopen(fnameLOcoeff, "w");
                         if(fpLOcoeff == NULL)
