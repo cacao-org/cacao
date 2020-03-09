@@ -912,11 +912,11 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     {   // write image name
         int slen = snprintf(dmRMname, STRINGMAXLEN_IMGNAME, "aol%ld_dmRM", loop);
         if(slen<1) {
-            print_ERROR("snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
             abort(); // can't handle this error any other way
         }
         if(slen >= STRINGMAXLEN_IMGNAME) {
-            print_ERROR("snprintf string truncation");
+            PRINT_ERROR("snprintf string truncation");
             abort(); // can't handle this error any other way
         }
     } // end write image name
@@ -941,22 +941,22 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     if(normalize == 1) {
         int slen = snprintf(WFSname, STRINGMAXLEN_IMGNAME, "aol%ld_imWFS1", loop);
         if(slen<1) {
-            print_ERROR("snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
             abort(); // can't handle this error any other way
         }
         if(slen >= STRINGMAXLEN_IMGNAME) {
-            print_ERROR("snprintf string truncation");
+            PRINT_ERROR("snprintf string truncation");
             abort(); // can't handle this error any other way
         }
     }
     else {
         int slen = snprintf(WFSname, STRINGMAXLEN_IMGNAME, "aol%ld_imWFS0", loop);
         if(slen<1) {
-            print_ERROR("snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
             abort(); // can't handle this error any other way
         }
         if(slen >= STRINGMAXLEN_IMGNAME) {
-            print_ERROR("snprintf string truncation");
+            PRINT_ERROR("snprintf string truncation");
             abort(); // can't handle this error any other way
         }
     }
@@ -1036,11 +1036,11 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
         {   // write image name
         int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "imoutStep%03u", AveStep);
         if(slen<1) {
-            print_ERROR("snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
             abort(); // can't handle this error any other way
         }
         if(slen >= STRINGMAXLEN_IMGNAME) {
-            print_ERROR("snprintf string truncation");
+            PRINT_ERROR("snprintf string truncation");
             abort(); // can't handle this error any other way
         }
     } // end write image name
@@ -1551,11 +1551,11 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
                         {   // write image name
         int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "imoutStep%03u", AveStep);
         if(slen<1) {
-            print_ERROR("snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
             abort(); // can't handle this error any other way
         }
         if(slen >= STRINGMAXLEN_IMGNAME) {
-            print_ERROR("snprintf string truncation");
+            PRINT_ERROR("snprintf string truncation");
             abort(); // can't handle this error any other way
         }
     } // end write image name
@@ -2413,18 +2413,18 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     {
         int slen = snprintf(command, STRINGMAXLEN_COMMAND, "mkdir -p %s/tmpRMacqu", outdirname);
         if(slen<1) {
-            print_ERROR("snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
             abort(); // can't handle this error any other way
         }
         if(slen >= STRINGMAXLEN_COMMAND) {
-            print_ERROR("snprintf string truncation");
+            PRINT_ERROR("snprintf string truncation");
             abort(); // can't handle this error any other way
         }
     }
 
 
     if(system(command) != 0) {
-        print_ERROR("system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
     }
 
 
@@ -2434,11 +2434,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     {
         int slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/test_dmpokeC2a.fits", outdirname);
         if(slen<1) {
-            print_ERROR("snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
             abort(); // can't handle this error any other way
         }
         if(slen >= STRINGMAXLEN_FULLFILENAME) {
-            print_ERROR("snprintf string truncation");
+            PRINT_ERROR("snprintf string truncation");
             abort(); // can't handle this error any other way
         }
     }
@@ -2447,11 +2447,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     {
         int slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/test_dmpokeC2b.fits", outdirname);
         if(slen<1) {
-            print_ERROR("snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
             abort(); // can't handle this error any other way
         }
         if(slen >= STRINGMAXLEN_FULLFILENAME) {
-            print_ERROR("snprintf string truncation");
+            PRINT_ERROR("snprintf string truncation");
             abort(); // can't handle this error any other way
         }
     }
@@ -2471,17 +2471,17 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
         {
             int slen = snprintf(command, STRINGMAXLEN_COMMAND, "cp %s %s/tmpRMacqu/RMpokeCube.fits", pokeC_filename, outdirname);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_COMMAND) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
         }
 
         if(system(command) != 0) {
-            print_ERROR("system() returns non-zero value");
+            PRINT_ERROR("system() returns non-zero value");
         }
 
 
@@ -2489,38 +2489,38 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
         {
             int slen = snprintf(command, STRINGMAXLEN_COMMAND, "cp %s %s/RMpokeCube.fits", pokeC_filename, outdirname);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_COMMAND) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
         }
 
         if(system(command) != 0) {
-            print_ERROR("system() returns non-zero value");
+            PRINT_ERROR("system() returns non-zero value");
         }
 
 
         sprintf(command, "cp conf/Hmat.fits %s/tmpRMacqu/RMmat.fits", outdirname);
         if(system(command) != 0) {
-            print_ERROR("system() returns non-zero value");
+            PRINT_ERROR("system() returns non-zero value");
         }
 
         {
             int slen = snprintf(command, STRINGMAXLEN_COMMAND, "cp conf/Hpixindex.fits %s/tmpRMacqu/RMpixindex.fits", outdirname);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_COMMAND) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
         }
         if(system(command) != 0) {
-            print_ERROR("system() returns non-zero value");
+            PRINT_ERROR("system() returns non-zero value");
         }
 
     }
@@ -2531,34 +2531,34 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
         {
             int slen = snprintf(command, STRINGMAXLEN_COMMAND, "cp %s %s/tmpRMacqu/RMpokeCube.fits", pokeC_filename, outdirname);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_COMMAND) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
         }
 
 
         if(system(command) != 0) {
-            print_ERROR("system() returns non-zero value");
+            PRINT_ERROR("system() returns non-zero value");
         }
 
         {
             int slen = snprintf(command, STRINGMAXLEN_COMMAND, "cp %s %s/RMpokeCube.fits", pokeC_filename, outdirname);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_COMMAND) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
         }
 
         if(system(command) != 0) {
-            print_ERROR("system() returns non-zero value");
+            PRINT_ERROR("system() returns non-zero value");
         }
 
     }
@@ -2629,11 +2629,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_respC, STRINGMAXLEN_IMGNAME, "%s", respC_sname);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             } // end code block
@@ -2642,11 +2642,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_wfsref, STRINGMAXLEN_IMGNAME, "%s", wfsref_sname);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2655,11 +2655,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_respC_A, STRINGMAXLEN_IMGNAME, "%s_A", respC_sname);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2668,11 +2668,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_wfsref_A, STRINGMAXLEN_IMGNAME, "%s_A", wfsref_sname);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2681,11 +2681,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_respC_B, STRINGMAXLEN_IMGNAME, "%s_B", respC_sname);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2693,11 +2693,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_wfsref_B, STRINGMAXLEN_IMGNAME, "%s_B", wfsref_sname);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2716,11 +2716,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(wfsresp2aname, STRINGMAXLEN_IMGNAME, "wfsresp2a.snap");
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2729,11 +2729,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(wfsresp2bname, STRINGMAXLEN_IMGNAME, "wfsresp2b.snap");
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2746,11 +2746,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write full file name
                 int slen = snprintf(tmpfname, STRINGMAXLEN_FULLFILENAME, "%s/tmpRMacqu/wfsresp2a.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2761,11 +2761,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write full file name
                 int slen = snprintf(tmpfname, STRINGMAXLEN_FULLFILENAME, "%s/tmpRMacqu/wfsresp2b.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             } 
@@ -2776,11 +2776,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_respC, STRINGMAXLEN_IMGNAME, "%s.tstep%03d.iter%03d", respC_sname, AveStep, IterNumber);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2789,11 +2789,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_wfsref, STRINGMAXLEN_IMGNAME, "%s.tstep%03d.iter%03d", wfsref_sname, AveStep, IterNumber);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2801,11 +2801,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_respC_A, STRINGMAXLEN_IMGNAME, "%s_A.tstep%03d.iter%03d", respC_sname, AveStep, IterNumber);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2813,11 +2813,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_wfsref_A, STRINGMAXLEN_IMGNAME, "%s_A.tstep%03d.iter%03d", wfsref_sname, AveStep, IterNumber);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2826,11 +2826,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_respC_B, STRINGMAXLEN_IMGNAME, "%s_B.tstep%03d.iter%03d", respC_sname, AveStep, IterNumber);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2839,11 +2839,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             { // code block write image name
                 int slen = snprintf(imnameout_wfsref_B, STRINGMAXLEN_IMGNAME, "%s_B.tstep%03d.iter%03d", wfsref_sname, AveStep, IterNumber);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
             }
@@ -2932,11 +2932,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/respM.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				} 
@@ -2945,11 +2945,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/wfsref.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}                 
@@ -2964,11 +2964,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/respM_A.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}                 
@@ -2977,11 +2977,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/wfsref_A.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}                 
@@ -2995,11 +2995,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/respM_B.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}                 
@@ -3007,11 +3007,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/wfsref_B.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}                 
@@ -3033,11 +3033,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(imnameout_respC, STRINGMAXLEN_IMGNAME, "%s", respC_sname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_IMGNAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}                
@@ -3045,11 +3045,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/respM.fits", outdirname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3059,11 +3059,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/respM.fits", outdirname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3076,11 +3076,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(imnameout_wfsref, STRINGMAXLEN_IMGNAME, "%s", wfsref_sname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_IMGNAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3088,11 +3088,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/wfsref.fits", outdirname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3102,11 +3102,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/wfsref.fits", outdirname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3119,11 +3119,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(imnameout_respC_A, STRINGMAXLEN_IMGNAME, "%s_A", respC_sname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_IMGNAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3131,11 +3131,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/respM_A.fits", outdirname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3145,11 +3145,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(imnameout_wfsref_A, STRINGMAXLEN_IMGNAME, "%s_A", wfsref_sname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_IMGNAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3157,11 +3157,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/wfsref_A.fits", outdirname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3175,11 +3175,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(imnameout_respC_B, STRINGMAXLEN_IMGNAME, "%s_A", respC_sname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_IMGNAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3187,11 +3187,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/respM_A.fits", outdirname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3201,11 +3201,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(imnameout_wfsref_B, STRINGMAXLEN_IMGNAME, "%s_A", wfsref_sname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_IMGNAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3213,11 +3213,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 {
 					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/wfsref_B.fits", outdirname);
 					if(slen<1) {
-						print_ERROR("snprintf wrote <1 char");
+						PRINT_ERROR("snprintf wrote <1 char");
 						abort(); // can't handle this error any other way
 					}
 					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						print_ERROR("snprintf string truncation");
+						PRINT_ERROR("snprintf string truncation");
 						abort(); // can't handle this error any other way
 					}
 				}
@@ -3253,11 +3253,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     {
 		int slen = snprintf(command, STRINGMAXLEN_COMMAND, "%s %s", execRMdecode, data.FPS_name);
 		if(slen<1) {
-			print_ERROR("snprintf wrote <1 char");
+			PRINT_ERROR("snprintf wrote <1 char");
 			abort(); // can't handle this error any other way
 		}
 		if(slen >= STRINGMAXLEN_COMMAND) {
-			print_ERROR("snprintf string truncation");
+			PRINT_ERROR("snprintf string truncation");
 			abort(); // can't handle this error any other way
 		}
 	}
@@ -3271,11 +3271,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     {
 		int slen = snprintf(command, STRINGMAXLEN_COMMAND, "%s %s", execmkDMWFSmasks, data.FPS_name);
 		if(slen<1) {
-			print_ERROR("snprintf wrote <1 char");
+			PRINT_ERROR("snprintf wrote <1 char");
 			abort(); // can't handle this error any other way
 		}
 		if(slen >= STRINGMAXLEN_COMMAND) {
-			print_ERROR("snprintf string truncation");
+			PRINT_ERROR("snprintf string truncation");
 			abort(); // can't handle this error any other way
 		}
 	}
@@ -3286,31 +3286,31 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     {
 		int slen = snprintf(command, STRINGMAXLEN_COMMAND, "%s %s", execmkDMslaveact, data.FPS_name);
 		if(slen<1) {
-			print_ERROR("snprintf wrote <1 char");
+			PRINT_ERROR("snprintf wrote <1 char");
 			abort(); // can't handle this error any other way
 		}
 		if(slen >= STRINGMAXLEN_COMMAND) {
-			print_ERROR("snprintf string truncation");
+			PRINT_ERROR("snprintf string truncation");
 			abort(); // can't handle this error any other way
 		}
 	}
     if(system(command) != 0) {
-        print_ERROR("system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
     }
 
     {
 		int slen = snprintf(command, STRINGMAXLEN_COMMAND, "%s %s", execmkLODMmodes, data.FPS_name);
 		if(slen<1) {
-			print_ERROR("snprintf wrote <1 char");
+			PRINT_ERROR("snprintf wrote <1 char");
 			abort(); // can't handle this error any other way
 		}
 		if(slen >= STRINGMAXLEN_COMMAND) {
-			print_ERROR("snprintf string truncation");
+			PRINT_ERROR("snprintf string truncation");
 			abort(); // can't handle this error any other way
 		}
 	}
     if(system(command) != 0) {
-        print_ERROR("system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
     }
 
 
