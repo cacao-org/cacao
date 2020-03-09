@@ -997,33 +997,33 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
                     slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmslaved.fits", outdir);
                     if(slen<1) {
-                        print_ERROR("sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
                     functionparameter_SetParamValue_STRING(&fps, ".DMslaved", fname);
 
                     slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/zrespM.fits", outdir);
                     if(slen<1) {
-                        print_ERROR("sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
                     functionparameter_SetParamValue_STRING(&fps, ".zrespM", fname);
 
                     slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmmaskRM.fits", outdir);
                     if(slen<1) {
-                        print_ERROR("sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
                     functionparameter_SetParamValue_STRING(&fps, ".DMmaskRM", fname);
@@ -1041,22 +1041,22 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
                     slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/respM.fits", outdir);
                     if(slen<1) {
-                        print_ERROR("sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
                     functionparameter_SetParamValue_STRING(&fps, ".loRM", fname);
 
                     slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/RMpokeCube.fits", outdir);
                     if(slen<1) {
-                        print_ERROR("sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
                     functionparameter_SetParamValue_STRING(&fps, ".loRMmodes", fname);
@@ -1243,13 +1243,13 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
 
     snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
     if(system(command) != 0) {
-        print_ERROR("system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
     }
 
     fp = fopen(fnametxt, "w");
     if (fp == NULL) {
         int errnum = errno;
-        print_ERROR("fopen() returns NULL");
+        PRINT_ERROR("fopen() returns NULL");
         fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
         exit(0);
     } else {
@@ -1264,12 +1264,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
 
     snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
     if(system(command) != 0) {
-        print_ERROR("system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
     }
     fp = fopen(fnametxt, "w");
     if (fp == NULL) {
         int errnum = errno;
-        print_ERROR("fopen() returns NULL");
+        PRINT_ERROR("fopen() returns NULL");
         fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
         exit(0);
     } else {
@@ -1285,14 +1285,14 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
 
     snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
     if(system(command) != 0) {
-        print_ERROR("system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
     }
     printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
     fflush(stdout);
     fp = fopen(fnametxt, "w");
     if (fp == NULL) {
         int errnum = errno;
-        print_ERROR("fopen() returns NULL");
+        PRINT_ERROR("fopen() returns NULL");
         fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
         exit(0);
     } else {
@@ -1305,7 +1305,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
 
     snprintf(command, maxstringlen, "cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt", stagedir);
     if(system(command) != 0) {
-        print_ERROR("system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
     }
 
 
@@ -1329,12 +1329,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
                 snprintf(fnametxt, maxstringlen, "./%s/shmim.DMmodes%02d.name.txt", stagedir, i);
                 snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
-                    print_ERROR("system() returns non-zero value");
+                    PRINT_ERROR("system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
                 if (fp == NULL) {
                     int errnum = errno;
-                    print_ERROR("fopen() returns NULL");
+                    PRINT_ERROR("fopen() returns NULL");
                     fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
                     exit(0);
                 } else {
@@ -1347,12 +1347,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
                 snprintf(fnametxt, maxstringlen, "./%s/shmim.respM%02d.name.txt", stagedir, i);
                 snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
-                    print_ERROR("system() returns non-zero value");
+                    PRINT_ERROR("system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
                 if (fp == NULL) {
                     int errnum = errno;
-                    print_ERROR("fopen() returns NULL");
+                    PRINT_ERROR("fopen() returns NULL");
                     fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
                     exit(0);
                 } else {
@@ -1365,12 +1365,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
                 snprintf(fnametxt, maxstringlen, "./%s/shmim.contrM%02d.name.txt", stagedir, i);
                 snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
-                    print_ERROR("system() returns non-zero value");
+                    PRINT_ERROR("system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
                 if (fp == NULL) {
                     int errnum = errno;
-                    print_ERROR("fopen() returns NULL");
+                    PRINT_ERROR("fopen() returns NULL");
                     fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
                     exit(0);
                 } else {
@@ -1383,12 +1383,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
                 snprintf(fnametxt, maxstringlen, "./%s/shmim.contrMc%02d.name.txt", stagedir, i);
                 snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
-                    print_ERROR("system() returns non-zero value");
+                    PRINT_ERROR("system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
                 if (fp == NULL) {
                     int errnum = errno;
-                    print_ERROR("fopen() returns NULL");
+                    PRINT_ERROR("fopen() returns NULL");
                     fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
                     exit(0);
                 } else {
@@ -1401,12 +1401,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
                 snprintf(fnametxt, maxstringlen, "./%s/shmim.contrMcact%02d.name.txt", stagedir, i);
                 snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
                 if(system(command) != 0) {
-                    print_ERROR("system() returns non-zero value");
+                    PRINT_ERROR("system() returns non-zero value");
                 }
                 fp = fopen(fnametxt, "w");
                 if (fp == NULL) {
                     int errnum = errno;
-                    print_ERROR("fopen() returns NULL");
+                    PRINT_ERROR("fopen() returns NULL");
                     fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
                     exit(0);
                 } else {

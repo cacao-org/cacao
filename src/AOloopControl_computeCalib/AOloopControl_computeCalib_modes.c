@@ -287,7 +287,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
     if(system("mkdir -p mkmodestmp") < 1)
-        print_ERROR("system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
 
     msizexy = msizex*msizey;
 
@@ -921,7 +921,7 @@ imageID AOloopControl_computeCalib_mkModes(
             if(fp != NULL)
             {
                 if(fscanf(fp, "%50ld", &extrablockIndex) != 1)
-                    print_ERROR("cannot read parameter from file");
+                    PRINT_ERROR("cannot read parameter from file");
                 fclose(fp);
             }
         }
@@ -943,11 +943,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodes0_%02u", mblock1);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -997,12 +997,12 @@ imageID AOloopControl_computeCalib_mkModes(
 
             int slen = printf(imname, STRINGMAXLEN_IMGNAME, "fmodes0_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
 
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -1035,11 +1035,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodes0_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -1067,11 +1067,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             slen = snprintf(imname1, STRINGMAXLEN_IMGNAME, "fmodes1_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -1085,11 +1085,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             slen = snprintf(fname1, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodes1_%02u.fits", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -1149,11 +1149,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodes1_%02u", mblock0);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -1198,11 +1198,11 @@ imageID AOloopControl_computeCalib_mkModes(
             {
                 int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodes2_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -1227,11 +1227,11 @@ imageID AOloopControl_computeCalib_mkModes(
                 char fname2[200];
                 slen = snprintf(fname2, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodes2_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -1285,11 +1285,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodes2_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -1304,11 +1304,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             slen = snprintf(fnameSVDcoeff, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/SVDcoeff01_%02u.txt", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -1329,11 +1329,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             slen = snprintf(imname1, STRINGMAXLEN_IMGNAME, "fmodes2b_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -1381,11 +1381,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             slen = snprintf(fname1, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodes2b_%02u.fits", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -1421,7 +1421,7 @@ imageID AOloopControl_computeCalib_mkModes(
     {
         fp = fopen("./mkmodestmp/NBblocks.txt", "r");
         if(fscanf(fp, "%50u", &NBmblock) != 1)
-            print_ERROR("Cannot read parameter from file");
+            PRINT_ERROR("Cannot read parameter from file");
 
         fclose(fp);
         for(uint32_t mblock=0; mblock<NBmblock; mblock++)
@@ -1491,11 +1491,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS0_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -1529,18 +1529,18 @@ imageID AOloopControl_computeCalib_mkModes(
 
                         int slen = snprintf(fnameLOcoeff, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/LOcoeff_%02u.txt", mblock);
                         if(slen<1) {
-                            print_ERROR("snprintf wrote <1 char");
+                            PRINT_ERROR("snprintf wrote <1 char");
                             abort(); // can't handle this error any other way
                         }
                         if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                            print_ERROR("snprintf string truncation");
+                            PRINT_ERROR("snprintf string truncation");
                             abort(); // can't handle this error any other way
                         }
 
                         fpLOcoeff = fopen(fnameLOcoeff, "w");
                         if(fpLOcoeff == NULL)
                         {
-                            print_ERROR("cannot create file \"%s\"", fnameLOcoeff);
+                            PRINT_ERROR("cannot create file \"%s\"", fnameLOcoeff);
                             abort();
                         }
 
@@ -1635,11 +1635,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodesWFS0_%02u.fits", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -1658,11 +1658,11 @@ imageID AOloopControl_computeCalib_mkModes(
             {
                 int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS0_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -1703,11 +1703,11 @@ imageID AOloopControl_computeCalib_mkModes(
                 {
                     int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS0_%02u", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -1733,11 +1733,11 @@ imageID AOloopControl_computeCalib_mkModes(
                     {
                         int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS0_%02u", mblock);
                         if(slen<1) {
-                            print_ERROR("snprintf wrote <1 char");
+                            PRINT_ERROR("snprintf wrote <1 char");
                             abort(); // can't handle this error any other way
                         }
                         if(slen >= STRINGMAXLEN_IMGNAME) {
-                            print_ERROR("snprintf string truncation");
+                            PRINT_ERROR("snprintf string truncation");
                             abort(); // can't handle this error any other way
                         }
 
@@ -1745,11 +1745,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                         slen = snprintf(imnameDM, STRINGMAXLEN_IMGNAME, "fmodes2b_%02u", mblock);
                         if(slen<1) {
-                            print_ERROR("snprintf wrote <1 char");
+                            PRINT_ERROR("snprintf wrote <1 char");
                             abort(); // can't handle this error any other way
                         }
                         if(slen >= STRINGMAXLEN_IMGNAME) {
-                            print_ERROR("snprintf string truncation");
+                            PRINT_ERROR("snprintf string truncation");
                             abort(); // can't handle this error any other way
                         }
 
@@ -1761,21 +1761,21 @@ imageID AOloopControl_computeCalib_mkModes(
 
                         slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS0_%02u", mblock0);
                         if(slen<1) {
-                            print_ERROR("snprintf wrote <1 char");
+                            PRINT_ERROR("snprintf wrote <1 char");
                             abort(); // can't handle this error any other way
                         }
                         if(slen >= STRINGMAXLEN_IMGNAME) {
-                            print_ERROR("snprintf string truncation");
+                            PRINT_ERROR("snprintf string truncation");
                             abort(); // can't handle this error any other way
                         }
 
                         slen = snprintf(imnameDM, STRINGMAXLEN_IMGNAME, "fmodes2b_%02u", mblock0);
                         if(slen<1) {
-                            print_ERROR("snprintf wrote <1 char");
+                            PRINT_ERROR("snprintf wrote <1 char");
                             abort(); // can't handle this error any other way
                         }
                         if(slen >= STRINGMAXLEN_IMGNAME) {
-                            print_ERROR("snprintf string truncation");
+                            PRINT_ERROR("snprintf string truncation");
                             abort(); // can't handle this error any other way
                         }
 
@@ -1822,21 +1822,21 @@ imageID AOloopControl_computeCalib_mkModes(
                 {
                     int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS1_%02u", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
                     slen = snprintf(imnameDM, STRINGMAXLEN_IMGNAME, "fmodes3_%02u", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -1888,21 +1888,21 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     slen = snprintf(imname1, STRINGMAXLEN_IMGNAME, "fmodesWFS1_%02u", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
                     slen = snprintf(fname1, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodesWFS1_%02u.fits", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -1916,21 +1916,21 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     slen = snprintf(imname1, STRINGMAXLEN_IMGNAME, "fmodes3_%02u", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
                     slen = snprintf(fname1, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodes3_%02u.fits", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -1976,11 +1976,11 @@ imageID AOloopControl_computeCalib_mkModes(
                 {
                     int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS1_%02u", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -1988,11 +1988,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     slen = snprintf(imnameDM, STRINGMAXLEN_IMGNAME, "fmodes3_%02u", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
                     long IDmdm = image_ID(imnameDM);
@@ -2028,16 +2028,16 @@ imageID AOloopControl_computeCalib_mkModes(
             char command[1000];
             int slen = snprintf(command, STRINGMAXLEN_COMMAND, "echo \"%u\" > ./%s/param_NBmodeblocks.txt", NBmblock, stagedir);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_COMMAND) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
             if(system(command) != 0)
-                print_ERROR("system() returns non-zero value");
+                PRINT_ERROR("system() returns non-zero value");
         }
         else
         {
@@ -2047,7 +2047,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 exit(0);
             }
             if(fscanf(fp, "%50u", &NBmblock) != 1)
-                print_ERROR("Cannot read parameter from file");
+                PRINT_ERROR("Cannot read parameter from file");
             fclose(fp);
         }
 
@@ -2066,21 +2066,21 @@ imageID AOloopControl_computeCalib_mkModes(
             {
                 int slen = snprintf(imname1, STRINGMAXLEN_IMGNAME, "fmodesWFS1_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
                 slen = snprintf(fname1, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/fmodesWFS1_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2091,21 +2091,21 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(imname1, STRINGMAXLEN_IMGNAME, "fmodes3_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
                 slen = snprintf(fname1, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/fmodes3_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2126,16 +2126,16 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 int slen = snprintf(command, STRINGMAXLEN_COMMAND, "echo \"%f\" > ./%s/block%02u_SVDlim.txt", SVDlim,  stagedir, mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_COMMAND) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
                 if(system(command) != 0)
-                    print_ERROR("system() returns non-zero value");
+                    PRINT_ERROR("system() returns non-zero value");
 
 
                 //if(MBLOCK_NBmode[mblock]>-1)
@@ -2143,11 +2143,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS1_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2160,11 +2160,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(imnameDM, STRINGMAXLEN_IMGNAME, "fmodes3_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2177,11 +2177,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(imnameDM1, STRINGMAXLEN_IMGNAME, "fmodes_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2192,11 +2192,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(fnameSVDcoeff, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/SVDcoeff_%02u.txt", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2217,11 +2217,11 @@ imageID AOloopControl_computeCalib_mkModes(
                 char imnameWFS1[STRINGMAXLEN_IMGNAME];
                 slen = snprintf(imnameWFS1, STRINGMAXLEN_IMGNAME, "fmodesWFS_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2277,11 +2277,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodes_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2289,11 +2289,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodesWFS_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2307,21 +2307,21 @@ imageID AOloopControl_computeCalib_mkModes(
             {
                 int slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/fmodes_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
                 slen = snprintf(imnameDM1, STRINGMAXLEN_IMGNAME, "fmodes_%02u", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_IMGNAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2372,44 +2372,44 @@ imageID AOloopControl_computeCalib_mkModes(
 
             slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
             char imnameCM[STRINGMAXLEN_IMGNAME]; // modal control matrix
             slen = snprintf(imnameCM, STRINGMAXLEN_IMGNAME, "cmat_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
             char imnameCMc[STRINGMAXLEN_IMGNAME]; // zonal ("combined") control matrix
             slen = snprintf(imnameCMc, STRINGMAXLEN_IMGNAME, "cmatc_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
             char imnameCMcact[STRINGMAXLEN_IMGNAME]; // zonal control matrix masked
             slen = snprintf(imnameCMcact, STRINGMAXLEN_IMGNAME, "cmatcact_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -2436,11 +2436,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/cmat_%02u.fits", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -2452,11 +2452,11 @@ imageID AOloopControl_computeCalib_mkModes(
                     // COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX
                     slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodes_%02u", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
                     printf("[%5d] Block %u/%u : run AOloopControl_computeCalib_compute_CombinedControlMatrix\n", __LINE__, mblock, NBmblock);
@@ -2468,11 +2468,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     slen = snprintf(fname, STRINGMAXLEN_IMGNAME, "!./mkmodestmp/cmatc_%02u.fits", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -2480,21 +2480,21 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     slen = snprintf(fname, STRINGMAXLEN_IMGNAME, "!./mkmodestmp/cmatcact_%02u.fits", mblock);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
                     slen = snprintf(imname1, STRINGMAXLEN_IMGNAME, "%s_00", imnameCMcact);
                     if(slen<1) {
-                        print_ERROR("snprintf wrote <1 char");
+                        PRINT_ERROR("snprintf wrote <1 char");
                         abort(); // can't handle this error any other way
                     }
                     if(slen >= STRINGMAXLEN_IMGNAME) {
-                        print_ERROR("snprintf string truncation");
+                        PRINT_ERROR("snprintf string truncation");
                         abort(); // can't handle this error any other way
                     }
 
@@ -2513,11 +2513,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/fmodesWFS_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2525,11 +2525,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/cmat_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2537,11 +2537,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/cmatc_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2549,11 +2549,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "./mkmodestmp/cmatcact_%02u.fits", mblock);
                 if(slen<1) {
-                    print_ERROR("snprintf wrote <1 char");
+                    PRINT_ERROR("snprintf wrote <1 char");
                     abort(); // can't handle this error any other way
                 }
                 if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                    print_ERROR("snprintf string truncation");
+                    PRINT_ERROR("snprintf string truncation");
                     abort(); // can't handle this error any other way
                 }
 
@@ -2578,24 +2578,24 @@ imageID AOloopControl_computeCalib_mkModes(
             int slen = snprintf(command, STRINGMAXLEN_COMMAND,
                                 "echo \"%u\" > ./%s/block%02u_NBmodes.txt", MBLOCK_NBmode[mblock], stagedir, mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_COMMAND) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
             if(system(command) != 0)
-                print_ERROR("system() returns non-zero value");
+                PRINT_ERROR("system() returns non-zero value");
 
             slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -2636,11 +2636,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             int slen =snprintf(imname, STRINGMAXLEN_IMGNAME, "cmat_%02u", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -2676,10 +2676,10 @@ imageID AOloopControl_computeCalib_mkModes(
 
         		char command[1000];
                 if(sprintf(command, "echo \"%ld\" > ./conf_staged/param_NBmodes.txt", cnt) < 1)
-        			print_ERROR("sprintf wrote <1 char");
+        			PRINT_ERROR("sprintf wrote <1 char");
 
                 if(system(command) != 0)
-        			print_ERROR("system() returns non-zero value");
+        			PRINT_ERROR("system() returns non-zero value");
 
             */
     }
@@ -2736,7 +2736,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     fflush(stdout);
 
     if(system("mkdir -p mkmodestmp") != 0)
-        print_ERROR("system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
 
 
 
@@ -2758,11 +2758,11 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
         int slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "./conf_staged/param_block00end.txt");
         if(slen<1) {
-            print_ERROR("snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
             abort(); // can't handle this error any other way
         }
         if(slen >= STRINGMAXLEN_FULLFILENAME) {
-            print_ERROR("snprintf string truncation");
+            PRINT_ERROR("snprintf string truncation");
             abort(); // can't handle this error any other way
         }
 
@@ -2776,11 +2776,11 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
         {
             int slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "./conf_staged/param_block%02ldend.txt", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
             fp = fopen(fname, "r");
@@ -2790,7 +2790,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
                 exit(0);
             }
             if(fscanf(fp, "%50ld", &MBLOCK_blockend[mblock]) != 1)
-                print_ERROR("Cannot read parameter from file");
+                PRINT_ERROR("Cannot read parameter from file");
             fclose(fp);
 
             printf("Block end %ld = %ld\n", mblock, MBLOCK_blockend[mblock]);
@@ -2828,16 +2828,16 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             int slen = snprintf(command, STRINGMAXLEN_COMMAND,
                                 "echo \"%f\" > ./conf_staged/block%02ld_SVDlim.txt", SVDlim, mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_COMMAND) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
             if(system(command) != 0)
-                print_ERROR("system() returns non-zero value");
+                PRINT_ERROR("system() returns non-zero value");
 
 
             IDdmmask = create_2Dimage_ID("dmmask", NBmodes, 1);
@@ -2845,7 +2845,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
                 data.image[IDdmmask].array.F[kk] = 1.0;
 
             if(sprintf(imname, "fmodesWFS_%02ld", mblock) < 1)
-                print_ERROR("sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
 
             ID = create_3Dimage_ID(imname, wfsxsize, wfsysize, MBLOCK_NBmode[mblock]);
             for(kk=0; kk<MBLOCK_NBmode[mblock]; kk++)
@@ -2856,11 +2856,11 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/fmodesWFS_%02ld.fits", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -2869,31 +2869,31 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
             slen = snprintf(imnameCM, STRINGMAXLEN_IMGNAME, "cmat_%02ld", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
             slen = snprintf(imnameCMc, STRINGMAXLEN_IMGNAME, "cmatc_%02ld", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
             slen = snprintf(imnameCMcact, STRINGMAXLEN_IMGNAME, "cmatcact_%02ld", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -2909,11 +2909,11 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/cmat_%02ld.fits", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -2925,11 +2925,11 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             // COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX
             slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodes_%02ld", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -2945,11 +2945,11 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
             slen = snprintf(fname, STRINGMAXLEN_IMGNAME, "!./mkmodestmp/fmodes_%02ld.fits", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -2961,11 +2961,11 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/cmatc_%02ld.fits", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -2973,21 +2973,21 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME, "!./mkmodestmp/cmatcact_%02ld.fits", mblock);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_FULLFILENAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
             slen =snprintf(imname1, STRINGMAXLEN_IMGNAME, "%s_00", imnameCMcact);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_IMGNAME) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
 
@@ -3000,22 +3000,22 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             fflush(stdout);
 
             if(sprintf(fname, "./mkmodestmp/fmodesWFS_%02ld.fits", mblock) < 1)
-                print_ERROR("sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
 
             load_fits(fname, imname, 1);
 
             if(sprintf(fname, "./mkmodestmp/cmat_%02ld.fits", mblock) < 1)
-                print_ERROR("sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
 
             load_fits(fname, imnameCM, 1);
 
             if(sprintf(fname, "./mkmodestmp/cmatc_%02ld.fits", mblock) < 1)
-                print_ERROR("sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
 
             load_fits(fname, imnameCMc, 1);
 
             if(sprintf(fname, "./mkmodestmp/cmatcact_%02ld.fits", mblock) < 1)
-                print_ERROR("sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
 
             load_fits(fname, imnameCMcact, 1);
         }
@@ -3030,13 +3030,13 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     for(mblock=0; mblock<NBmblock; mblock++)
     {
         if(sprintf(command, "echo \"%ld\" > ./conf_staged/block%02ld_NBmodes.txt", MBLOCK_NBmode[mblock], mblock) < 1)
-            print_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         if(system(command) != 0)
-            print_ERROR("system() returns non-zero value");
+            PRINT_ERROR("system() returns non-zero value");
 
         if(sprintf(imname, "fmodesWFS_%02ld", mblock) < 1)
-            print_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         long IDmwfs = image_ID(imname);
         for(m=0; m<MBLOCK_NBmode[mblock]; m++)
@@ -3057,7 +3057,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     for(mblock=0; mblock<NBmblock; mblock++)
     {
         if(sprintf(imname, "cmat_%02ld", mblock) < 1)
-            print_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         long IDcmat = image_ID(imname);
         for(m=0; m<MBLOCK_NBmode[mblock]; m++)
@@ -3119,7 +3119,7 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask(
     NBpoke = data.image[IDzrm].md[0].size[2];
 
     if(sprintf(name, "aol%ld_dmC", loop) < 1)
-        print_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDdm = read_sharedmem_image(name);
     sizexDM = data.image[IDdm].md[0].size[0];

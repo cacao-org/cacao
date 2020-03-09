@@ -306,7 +306,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
         }
     }
     if(sprintf(fname, "!eigenmodesrespM_%4.2f.fits", Beta) < 1)
-        print_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     save_fits("eigenmodesrespM", fname);
     printf("\n");
@@ -340,7 +340,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
         }
 
         if(sprintf(fname, "!eigenmodesM_%4.2f.fits", Beta) < 1)
-            print_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         save_fits("eigenmodesM", fname);
     }
@@ -410,21 +410,21 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
             save_fits(ID_Cmatrix_name, "!cmat.fits");
 
             if(sprintf(command, "echo \"%ld\" > ./cmat.NB_MODES_RM.txt", NBMODES_REMOVED_EIGENVLIM) < 1)
-                print_ERROR("sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
 
             if(system(command) != 0)
-                print_ERROR("system() returns non-zero value");
+                PRINT_ERROR("system() returns non-zero value");
 
             if(sprintf(command, "echo \"%u\" > ./cmat.NB_MODES.txt",  m) < 1)
-                print_ERROR("sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
 
             if(system(command) != 0)
-                print_ERROR("system() returns non-zero value");
+                PRINT_ERROR("system() returns non-zero value");
         }
         else
         {
             if(sprintf(fname, "!cmat_%4.2f_%02ld.fits", Beta, NB_MR) < 1)
-                print_ERROR("sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
 
             printf("  SAVING -> %s\n", fname);
             fflush(stdout);
@@ -609,7 +609,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
         sizeWFS_active[slice] = ii1;
 
         if(sprintf(imname, "aol%ld_imWFS2active_%02d", LOOPNUMBER, slice) < 1)
-            print_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         /* CAN CRASH
                 sizearray = (long*) malloc(sizeof(long)*2);
@@ -650,7 +650,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     for(uint32_t slice=0; slice < (uint32_t) aoloopcontrol_var.PIXSTREAM_NBSLICES; slice++)
     {
         if(sprintf(imname, "%s_%02d", IDcmatc_active_name, slice) < 1)
-            print_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         IDcmatc_active[slice] = create_2Dimage_ID(imname, sizeWFS_active[slice], sizeDM_active);
         for(uint64_t act_active=0; act_active<sizeDM_active; act_active++)
@@ -742,7 +742,7 @@ imageID AOloopControl_computeCalib_loadCM(
             AOconf[loop].aorun.init_CM = 1;
             char name[200];
             if(sprintf(name, "ContrM_%ld", loop) < 1)
-                print_ERROR("sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
 
             ID = image_ID(name);
             if(ID==-1)
