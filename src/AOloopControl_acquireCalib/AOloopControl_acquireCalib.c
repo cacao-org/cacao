@@ -3027,205 +3027,44 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             }
             else // save globals
             {
-                char filename_respC[100];
-                char filename_wfsref[100];
-
-                {
-					int slen = snprintf(imnameout_respC, STRINGMAXLEN_IMGNAME, "%s", respC_sname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_IMGNAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}                
+                char filename_respC[STRINGMAXLEN_FULLFILENAME];
+                char filename_wfsref[STRINGMAXLEN_FULLFILENAME];
                 
-                {
-					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/respM.fits", outdirname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                                
+                WRITE_IMAGENAME(imnameout_respC, "%s", respC_sname);
+				WRITE_FULLFILENAME(filename_respC, "!%s/tmpRMacqu/respM.fits", outdirname);                                                
                 save_fits(imnameout_respC, filename_respC);
                 
-                {
-					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/respM.fits", outdirname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
+                WRITE_FULLFILENAME(filename_respC, "!%s/respM.fits", outdirname);
                 save_fits(imnameout_respC, filename_respC);
 
                 
                 
-                
-                {
-					int slen = snprintf(imnameout_wfsref, STRINGMAXLEN_IMGNAME, "%s", wfsref_sname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_IMGNAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
-                {
-					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/wfsref.fits", outdirname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
+                WRITE_IMAGENAME(imnameout_wfsref, "%s", wfsref_sname);
+                WRITE_FULLFILENAME(filename_wfsref, "!%s/tmpRMacqu/wfsref.fits", outdirname);                              
                 save_fits(imnameout_wfsref, filename_wfsref);
                 
-                {
-					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/wfsref.fits", outdirname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
+                WRITE_FULLFILENAME(filename_wfsref, "!%s/wfsref.fits", outdirname);
                 save_fits(imnameout_wfsref, filename_wfsref);
 
                 
-                
-                
-                {
-					int slen = snprintf(imnameout_respC_A, STRINGMAXLEN_IMGNAME, "%s_A", respC_sname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_IMGNAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
-                {
-					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/respM_A.fits", outdirname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
+                WRITE_IMAGENAME(imnameout_respC_A, "%s_A", respC_sname);
+                WRITE_FULLFILENAME(filename_respC, "!%s/tmpRMacqu/respM_A.fits", outdirname);
                 save_fits(imnameout_respC_A, filename_respC);
 
-                {
-					int slen = snprintf(imnameout_wfsref_A, STRINGMAXLEN_IMGNAME, "%s_A", wfsref_sname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_IMGNAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
-                {
-					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/wfsref_A.fits", outdirname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
+
+				WRITE_IMAGENAME(imnameout_wfsref_A, "%s_A", wfsref_sname);
+                WRITE_FULLFILENAME(filename_wfsref, "!%s/tmpRMacqu/wfsref_A.fits", outdirname);
                 save_fits(imnameout_wfsref_A, filename_wfsref);
 
 
-                
-                
-                
-                {
-					int slen = snprintf(imnameout_respC_B, STRINGMAXLEN_IMGNAME, "%s_A", respC_sname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_IMGNAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
-                {
-					int slen = snprintf(filename_respC, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/respM_A.fits", outdirname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
-                
+                WRITE_IMAGENAME(imnameout_respC_B, "%s_A", respC_sname);
+				WRITE_FULLFILENAME(filename_respC, "!%s/tmpRMacqu/respM_A.fits", outdirname);
                 save_fits(imnameout_respC_B, filename_respC);
-
-                {
-					int slen = snprintf(imnameout_wfsref_B, STRINGMAXLEN_IMGNAME, "%s_A", wfsref_sname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_IMGNAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
                 
-                {
-					int slen = snprintf(filename_wfsref, STRINGMAXLEN_FULLFILENAME, "!%s/tmpRMacqu/wfsref_B.fits", outdirname);
-					if(slen<1) {
-						PRINT_ERROR("snprintf wrote <1 char");
-						abort(); // can't handle this error any other way
-					}
-					if(slen >= STRINGMAXLEN_FULLFILENAME) {
-						PRINT_ERROR("snprintf string truncation");
-						abort(); // can't handle this error any other way
-					}
-				}
                 
+                WRITE_IMAGENAME(imnameout_wfsref_B, "%s_A", wfsref_sname);
+				WRITE_FULLFILENAME(filename_wfsref, "!%s/tmpRMacqu/wfsref_B.fits", outdirname);
                 save_fits(imnameout_wfsref_B, filename_wfsref);
-
-
-
 
                 IterNumber = 0; // start processing iterations
             }
