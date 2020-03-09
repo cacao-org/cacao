@@ -53,10 +53,10 @@ More of cacao's processes are running a loop.
 
 To manage processes and streams, cacao offers a few useful tools, allowing users to quickly inspect complex AO loops. They are included in the directory `src/CommandLineInterface/scripts`, which is included in the path, per installation instructions. cacao users will make frequent use of these tools.
 
-- **procCTRL**, the process controller. See @ref page_ProcessInfoStructure for details.
-- **streamCTRL**, the stream controller. See streamCTRL.c for details.
-- **fpsCTRL**, the function parameter structure controller. See @ref page_FunctionParameterStructure for details.
-- **shmimmon**, the shared memory image monitor, is used to inspect individual streams
+- **milk-procCTRL**, the process controller. See @ref page_ProcessInfoStructure for details.
+- **milk-streamCTRL**, the stream controller. See streamCTRL.c for details.
+- **milk-fpsCTRL**, the function parameter structure controller. See @ref page_FunctionParameterStructure for details.
+- **milk-shmimmon**, the shared memory image monitor, is used to inspect individual streams
 
 
 ---
