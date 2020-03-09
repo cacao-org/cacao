@@ -56,11 +56,11 @@ static errno_t AOloopControl_DM_createconf()
         if (SMfd == -1) {
             int slen = snprintf(errstr, STRINGMAXLEN_ERRORMSG, "Error opening (O_RDWR | O_CREAT | O_TRUNC) file \"%s\", function AOloopControl_DM_createconf", fname);
             if(slen<1) {
-                print_ERROR("snprintf wrote <1 char");
+                PRINT_ERROR("snprintf wrote <1 char");
                 abort(); // can't handle this error any other way
             }
             if(slen >= STRINGMAXLEN_ERRORMSG) {
-                print_ERROR("snprintf string truncation");
+                PRINT_ERROR("snprintf string truncation");
                 abort(); // can't handle this error any other way
             }
             perror(errstr);
