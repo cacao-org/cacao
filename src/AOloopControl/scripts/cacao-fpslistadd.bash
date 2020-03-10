@@ -356,7 +356,7 @@ fpscmd "setval ${fpsfname}.fn_pokeC conf/respM_LOmodes.fits"
 fpscmd "setval ${fpsfname}.MaskMode OFF"
 
 fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-NULL"
-fpscmd  "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL"
+fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL"
 fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
 fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
 
@@ -413,10 +413,13 @@ fpscmd "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}"
 fpscmd "setval ${fpsfname}.FPS_loRMacqu acqlin_loRM-${CACAO_LOOPNUMBER}"
 fpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
 
+fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+
 fi
 else
 echolog "OFF CACAO_FPSPROC_COMPFCM"
 fi
+
 
 
 

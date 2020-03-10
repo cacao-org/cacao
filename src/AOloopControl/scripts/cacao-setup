@@ -42,7 +42,7 @@ SETTINGOK="1"  # switches to 0 if settings not OK
 
 
 
-USAGESTRING="$(basename $0) [-hCpr] <loopname>"
+USAGESTRING="$(basename $0) [-htCpr] <loopname>"
 
 
 
@@ -98,6 +98,7 @@ echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
 echo "     $(tput bold)-C$(tput sgr0)            (C)lear all memory/files and exit"
 echo "     $(tput bold)-t$(tput sgr0)            (t)est: print parameters and exit (do not start processes)"
+echo "     $(tput bold)-y$(tput sgr0) <tty>      start fpsCTRL in tt(y) and keep in foreground"
 echo "     $(tput bold)-u$(tput sgr0)            (u)pdate more: do not quit/restart processes"
 echo "     $(tput bold)-e$(tput sgr0)            Create (e)xample cacaovars file and exit"
 echo "     $(tput bold)-r$(tput sgr0)            (r)un fps setval updates and exit"
@@ -126,6 +127,17 @@ if [ -f $1 ]
     EXITSTATUS=1
 fi
 }
+
+function checkTTY {
+if [ -c $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] TTY $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] TTY $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
 
 
 function checkFileCreate {
@@ -374,8 +386,9 @@ CLEAR="0"
 TESTMODE="0"
 FPSSETPARAMCONF="0"
 UPDATEMODE="0"
+TTYMODE="0"
 
-while getopts :heCtru FLAG; do
+while getopts :heCty:ru FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -394,6 +407,10 @@ while getopts :heCtru FLAG; do
     ;;
     C) # clear
     CLEAR="1"
+    ;;
+    y) # start fpsCTRL in specified tty
+    DEVTTY=$OPTARG
+    TTYMODE="1"
     ;;
     r) # just run fps params setup
     FPSSETPARAMCONF="1"
@@ -441,7 +458,10 @@ checkCommand milkStreamLink
 checkCommand milkFits2shm
 checkCommand milk-fpsmkcmd
 
-
+if [ "${TTYMODE}" = "1" ]; then
+checkTTY ${DEVTTY}
+checkCommand ttyecho
+fi
 
 checkFile cacaovars.${CACAO_LOOPNAME}.bash
 
@@ -451,6 +471,8 @@ exit
 else
 echo ""
 fi
+
+
 
 
 export CACAO_LOOPNAME="$CACAO_LOOPNAME"
@@ -777,7 +799,13 @@ echolog "running ./fpscmd/fpsinitscript"
 
 if [ "$UPDATEMODE" = "0" ]; then
 #tmux new-session -d -s ${fpsCTRLtmuxname} \;  attach \; detach
+
+if [ "$TTYMODE" = "1" ]; then
+ttyecho -n ${DEVTTY} "tmux new-session -s ${fpsCTRLtmuxname}"
+else
 tmux new-session -d -s ${fpsCTRLtmuxname} \; setw force-width 160 \; setw force-height 48 \; attach \; detach
+fi
+
 sleep 1
 tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m
 tmux send-keys -t ${fpsCTRLtmuxname} "TMUX=" C-m   # ensures that tmux sessions can be created from fpsCTRL
