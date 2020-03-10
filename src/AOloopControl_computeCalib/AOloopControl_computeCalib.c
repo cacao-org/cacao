@@ -886,6 +886,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
     fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX = 0;
 
+
     long fpi_FPS_loRMacqu = function_parameter_add_entry(&fps, ".FPS_loRMacqu",
                             "FPS low order modal RM acquisition",
                             FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
@@ -952,6 +953,15 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     long fpi_update_align = function_parameter_add_entry(&fps, ".upAlign",
                             "update default align (if no DMmaskRM)",
                             FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+
+
+
+    // output files and dir
+    
+    __attribute__((unused)) long fpi_out_dirname      =
+        function_parameter_add_entry(&fps, ".out.dirname",
+                                     "output directory",
+                                     FPTYPE_DIRNAME, FPFLAG_DEFAULT_OUTPUT, pNull);
 
 
 
@@ -1183,6 +1193,11 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     strncpy(fname_loRMmodes,  functionparameter_GetParamPtr_STRING(&fps, ".loRMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
     load_fits(fname_loRMmodes, "RMMmodes", 1);
 
+
+
+    char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),  FUNCTION_PARAMETER_STRMAXLEN);
+
     list_image_ID();
 
 
@@ -1211,110 +1226,53 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     int BlockNB = -1;
 
 
-
-
-    char stagedir[] = "conf-fCM-staged";
-
-
-
-    AOloopControl_computeCalib_mkModes("fmodes", DMxsize, DMysize, CPAmax, deltaCPA, align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim, stagedir);
+    AOloopControl_computeCalib_mkModes("fmodes", DMxsize, DMysize, CPAmax, deltaCPA, align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim, outdirname);
 
 
     printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
     fflush(stdout);
 
     // save results to disk
-    int maxstringlen = 1000;
-    char fnamesrc[maxstringlen];
-    char fnamedest[maxstringlen];
-    char fnametxt[maxstringlen];
-    char command[maxstringlen];
-    FILE *fp;
+    char fnamesrc[STRINGMAXLEN_FULLFILENAME];
+    char fnamedest[STRINGMAXLEN_FULLFILENAME];
+    char fnametxt[STRINGMAXLEN_FULLFILENAME];
+
 
     printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
     fflush(stdout);
 
-    snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodesall.fits");
-    snprintf(fnamedest, maxstringlen, "DMmodes/DMmodes_%s.fits", datestring);
-    snprintf(fnametxt, maxstringlen, "./%s/shmim.DMmodes.name.txt", stagedir);
+    WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/fmodesall.fits");
+    WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes_%s.fits", datestring);
+    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes.fname.txt", outdirname);
 
-    printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
-    fflush(stdout);
-
-    snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
-    if(system(command) != 0) {
-        PRINT_ERROR("system() returns non-zero value");
-    }
-
-    fp = fopen(fnametxt, "w");
-    if (fp == NULL) {
-        int errnum = errno;
-        PRINT_ERROR("fopen() returns NULL");
-        fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
-        exit(0);
-    } else {
-        fprintf(fp, "%s", fnamedest);
-        fclose(fp);
-    }
+	EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+	WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
 
-    snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodesWFSall.fits");
-    snprintf(fnamedest, maxstringlen, "respM/respM_%s.fits", datestring);
-    snprintf(fnametxt, maxstringlen, "./%s/shmim.respM.name.txt", stagedir);
+    WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/fmodesWFSall.fits");
+    WRITE_FULLFILENAME(fnamedest, "respM/respM_%s.fits", datestring);
+    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM.fname.txt", outdirname);
 
-    snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
-    if(system(command) != 0) {
-        PRINT_ERROR("system() returns non-zero value");
-    }
-    fp = fopen(fnametxt, "w");
-    if (fp == NULL) {
-        int errnum = errno;
-        PRINT_ERROR("fopen() returns NULL");
-        fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
-        exit(0);
-    } else {
-        fprintf(fp, "%s", fnamedest);
-        fclose(fp);
-    }
+	EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+	WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
+    
 
 
-    snprintf(fnamesrc, maxstringlen, "./mkmodestmp/cmatall.fits");
-    snprintf(fnamedest, maxstringlen, "contrM/contrM_%s.fits", datestring);
-    snprintf(fnametxt, maxstringlen, "./%s/shmim.contrM.name.txt", stagedir);
+    WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/cmatall.fits");
+    WRITE_FULLFILENAME(fnamedest, "contrM/contrM_%s.fits", datestring);
+    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM.fname.txt", outdirname);
 
 
-    snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
-    if(system(command) != 0) {
-        PRINT_ERROR("system() returns non-zero value");
-    }
-    printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
-    fflush(stdout);
-    fp = fopen(fnametxt, "w");
-    if (fp == NULL) {
-        int errnum = errno;
-        PRINT_ERROR("fopen() returns NULL");
-        fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
-        exit(0);
-    } else {
-        fprintf(fp, "%s", fnamedest);
-        fclose(fp);
-    }
+	EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+	WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
-    printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
-    fflush(stdout);
-
-    snprintf(command, maxstringlen, "cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt", stagedir);
-    if(system(command) != 0) {
-        PRINT_ERROR("system() returns non-zero value");
-    }
-
-
+	EXECUTE_SYSTEM_COMMAND("cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt", outdirname);
+   
 
     int OKloop = 1;
     for (int i=0; i<20; i++)
     {
-
-        snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodes_%02d.fits", i);
+        WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/fmodes_%02d.fits", i);
 
         if(OKloop==1) {
             if(is_fits_file(fnamesrc) == 1)
@@ -1324,95 +1282,42 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
 
                 printf("Found file %s\n", fnamesrc);
 
-                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodes_%02d.fits", i);
-                snprintf(fnamedest, maxstringlen, "DMmodes/DMmodes%02d_%s.fits", i, datestring);
-                snprintf(fnametxt, maxstringlen, "./%s/shmim.DMmodes%02d.name.txt", stagedir, i);
-                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
-                if(system(command) != 0) {
-                    PRINT_ERROR("system() returns non-zero value");
-                }
-                fp = fopen(fnametxt, "w");
-                if (fp == NULL) {
-                    int errnum = errno;
-                    PRINT_ERROR("fopen() returns NULL");
-                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
-                    exit(0);
-                } else {
-                    fprintf(fp, "%s", fnamedest);
-                    fclose(fp);
-                }
+                WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/fmodes_%02d.fits", i);
+                WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes%02d_%s.fits", i, datestring);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes%02d.fname.txt", outdirname, i);
+                
+                EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+                WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);                
 
-                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/fmodesWFS_%02d.fits", i);
-                snprintf(fnamedest, maxstringlen, "respM/respM%02d_%s.fits", i, datestring);
-                snprintf(fnametxt, maxstringlen, "./%s/shmim.respM%02d.name.txt", stagedir, i);
-                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
-                if(system(command) != 0) {
-                    PRINT_ERROR("system() returns non-zero value");
-                }
-                fp = fopen(fnametxt, "w");
-                if (fp == NULL) {
-                    int errnum = errno;
-                    PRINT_ERROR("fopen() returns NULL");
-                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
-                    exit(0);
-                } else {
-                    fprintf(fp, "%s", fnamedest);
-                    fclose(fp);
-                }
+                WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/fmodesWFS_%02d.fits", i);
+                WRITE_FULLFILENAME(fnamedest, "respM/respM%02d_%s.fits", i, datestring);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM%02d.fname.txt", outdirname, i);
 
-                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/cmat_%02d.fits", i);
-                snprintf(fnamedest, maxstringlen, "contrM/contrM%02d_%s.fits", i, datestring);
-                snprintf(fnametxt, maxstringlen, "./%s/shmim.contrM%02d.name.txt", stagedir, i);
-                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
-                if(system(command) != 0) {
-                    PRINT_ERROR("system() returns non-zero value");
-                }
-                fp = fopen(fnametxt, "w");
-                if (fp == NULL) {
-                    int errnum = errno;
-                    PRINT_ERROR("fopen() returns NULL");
-                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
-                    exit(0);
-                } else {
-                    fprintf(fp, "%s", fnamedest);
-                    fclose(fp);
-                }
+				EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+				WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);                
 
-                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/cmatc_%02d.fits", i);
-                snprintf(fnamedest, maxstringlen, "contrMc/contrMc%02d_%s.fits", i, datestring);
-                snprintf(fnametxt, maxstringlen, "./%s/shmim.contrMc%02d.name.txt", stagedir, i);
-                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
-                if(system(command) != 0) {
-                    PRINT_ERROR("system() returns non-zero value");
-                }
-                fp = fopen(fnametxt, "w");
-                if (fp == NULL) {
-                    int errnum = errno;
-                    PRINT_ERROR("fopen() returns NULL");
-                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
-                    exit(0);
-                } else {
-                    fprintf(fp, "%s", fnamedest);
-                    fclose(fp);
-                }
+                WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/cmat_%02d.fits", i);
+                WRITE_FULLFILENAME(fnamedest, "contrM/contrM%02d_%s.fits", i, datestring);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM%02d.fname.txt", outdirname, i);
+                
+                EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+                WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
+              
 
-                snprintf(fnamesrc, maxstringlen, "./mkmodestmp/cmatcact_%02d.fits", i);
-                snprintf(fnamedest, maxstringlen, "contrMcact/contrMcact%02d_%s.fits", i, datestring);
-                snprintf(fnametxt, maxstringlen, "./%s/shmim.contrMcact%02d.name.txt", stagedir, i);
-                snprintf(command, maxstringlen, "cp %s %s", fnamesrc, fnamedest);
-                if(system(command) != 0) {
-                    PRINT_ERROR("system() returns non-zero value");
-                }
-                fp = fopen(fnametxt, "w");
-                if (fp == NULL) {
-                    int errnum = errno;
-                    PRINT_ERROR("fopen() returns NULL");
-                    fprintf(stderr, "Error opening file %s: %s\n", fnametxt, strerror( errnum ));
-                    exit(0);
-                } else {
-                    fprintf(fp, "%s", fnamedest);
-                    fclose(fp);
-                }
+                WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/cmatc_%02d.fits", i);
+                WRITE_FULLFILENAME(fnamedest, "contrMc/contrMc%02d_%s.fits", i, datestring);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMc%02d.fname.txt", outdirname, i);
+                
+                EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+                WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
+ 
+
+                WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/cmatcact_%02d.fits", i);
+                WRITE_FULLFILENAME(fnamedest, "contrMcact/contrMcact%02d_%s.fits", i, datestring);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMcact%02d.fname.txt", outdirname, i);
+                
+                EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+                WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
             }
             else {
                 OKloop = 0;
