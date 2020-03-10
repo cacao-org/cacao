@@ -1001,74 +1001,32 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
                 if ( fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0 ) {
                     char outdir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
-                    int slen;
 
                     strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_zRMacqu, ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
-
-                    slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmslaved.fits", outdir);
-                    if(slen<1) {
-                        PRINT_ERROR("sprintf wrote <1 char");
-                        abort(); // can't handle this error any other way
-                    }
-                    if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        PRINT_ERROR("snprintf string truncation");
-                        abort(); // can't handle this error any other way
-                    }
+                    
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmslaved.fits", outdir);
                     functionparameter_SetParamValue_STRING(&fps, ".DMslaved", fname);
 
-                    slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/zrespM.fits", outdir);
-                    if(slen<1) {
-                        PRINT_ERROR("sprintf wrote <1 char");
-                        abort(); // can't handle this error any other way
-                    }
-                    if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        PRINT_ERROR("snprintf string truncation");
-                        abort(); // can't handle this error any other way
-                    }
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/zrespM.fits", outdir);
                     functionparameter_SetParamValue_STRING(&fps, ".zrespM", fname);
 
-                    slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmmaskRM.fits", outdir);
-                    if(slen<1) {
-                        PRINT_ERROR("sprintf wrote <1 char");
-                        abort(); // can't handle this error any other way
-                    }
-                    if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        PRINT_ERROR("snprintf string truncation");
-                        abort(); // can't handle this error any other way
-                    }
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmmaskRM.fits", outdir);
                     functionparameter_SetParamValue_STRING(&fps, ".DMmaskRM", fname);
 
-                    slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/wfsmask.fits", outdir);
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/wfsmask.fits", outdir);
                     functionparameter_SetParamValue_STRING(&fps, ".WFSmask", fname);
                 }
 
                 if ( fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0 ) {
                     char outdir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
-                    int slen;
 
                     strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_loRMacqu, ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
 
-                    slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/respM.fits", outdir);
-                    if(slen<1) {
-                        PRINT_ERROR("sprintf wrote <1 char");
-                        abort(); // can't handle this error any other way
-                    }
-                    if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        PRINT_ERROR("snprintf string truncation");
-                        abort(); // can't handle this error any other way
-                    }
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/respM.fits", outdir);
                     functionparameter_SetParamValue_STRING(&fps, ".loRM", fname);
 
-                    slen = snprintf(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/RMpokeCube.fits", outdir);
-                    if(slen<1) {
-                        PRINT_ERROR("sprintf wrote <1 char");
-                        abort(); // can't handle this error any other way
-                    }
-                    if(slen >= FUNCTION_PARAMETER_STRMAXLEN) {
-                        PRINT_ERROR("snprintf string truncation");
-                        abort(); // can't handle this error any other way
-                    }
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/RMpokeCube.fits", outdir);
                     functionparameter_SetParamValue_STRING(&fps, ".loRMmodes", fname);
                 }
 
