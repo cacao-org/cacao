@@ -44,9 +44,12 @@ DATA __attribute__((used)) data;
 
 
 
-int main(int argc, char *argv[])
+int main(
+int argc, 
+char *argv[]
+)
 {
-char *AppName = "cacao";
+    char *AppName = "cacao";
 
     printf(STYLE_BOLD);
     printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
