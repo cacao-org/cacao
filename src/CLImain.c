@@ -44,7 +44,6 @@ DATA __attribute__((used)) data;
 
 
 
-
 int main(int argc, char *argv[])
 {
     char *AppName = "cacao";
