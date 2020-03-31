@@ -45,17 +45,16 @@ DATA __attribute__((used)) data;
 
 
 
-
 int main(int argc, char *argv[])
 {
     char *AppName = "cacao";
 
     printf(STYLE_BOLD);
     printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
-    #ifndef NDEBUG
+#ifndef NDEBUG
     printf("        === DEBUG MODE : assert()         enabled ==========\n");
     printf("        === DEBUG MODE : DEBUG_TRACEPOINT enabled ==========\n");
-    #endif
+#endif
     printf(STYLE_NO_BOLD);
 
 
@@ -81,8 +80,8 @@ int main(int argc, char *argv[])
 
 
 
-	
-	
+
+
     // initialize milk modules for which no function calls is included by default
 
 
@@ -107,15 +106,15 @@ int main(int argc, char *argv[])
     libinit_AOloopControl_compTools();
     libinit_AOloopControl_acquireCalib();
 
-	
 
-	runCLI(argc, argv, AppName);
+
+    runCLI(argc, argv, AppName);
 
     printf("NORMAL EXIT\n");
-    
-	
-	// clean-up calling thread
-	//pthread_exit(NULL);
+
+
+    // clean-up calling thread
+    //pthread_exit(NULL);
 
     return RETURN_SUCCESS;
 }
