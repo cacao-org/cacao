@@ -62,7 +62,9 @@ int main(
     strcpy(data.package_name, PACKAGE_NAME);
 
     char versionstring[200];
-    sprintf(versionstring, "%d.%d.%02d%s",  VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, VERSION_OPTION);
+    sprintf(versionstring, "%d.%d.%02d%s",  
+    VERSION_MAJOR, VERSION_MINOR,
+            VERSION_PATCH, VERSION_OPTION);
     strcpy(data.package_version, versionstring);
     strcpy(data.sourcedir, SOURCEDIR);
     strcpy(data.configdir, CONFIGDIR);
