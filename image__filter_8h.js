@@ -11,9 +11,9 @@ var image__filter_8h =
     [ "filter_CubePercentileLimit", "image__filter_8h.html#a1a036bd554c496b443924cf2588be7c5", null ],
     [ "filter_fit2DcosKernel", "image__filter_8h.html#a44c9a2b0ba64ba78d95ad0f551bc3b59", null ],
     [ "FILTER_percentile_interpol", "image__filter_8h.html#ac3e86d60a7bcee3e86680b3688d9e348", null ],
-    [ "FILTER_percentile_interpol_fast", "image__filter_8h.html#a6358184954a39bca8cbe58e1dc1078d1", null ],
+    [ "FILTER_percentile_interpol_fast", "image__filter_8h.html#a6bb18605ab4ed618e8d008df0e89bafd", null ],
     [ "gauss_3Dfilter", "image__filter_8h.html#ab20ee902b86ee7d0e192c7c00e843d45", null ],
     [ "gauss_filter", "image__filter_8h.html#aa766cc63e9d9de38824f9a997183eb69", null ],
-    [ "init_image_filter", "image__filter_8h.html#a13ca00099d3f16386c1bd78337c12bc0", null ],
+    [ "init_image_filter", "image__filter_8h.html#ae72fd3d4c32e17c282499cc10fb70922", null ],
     [ "median_filter", "image__filter_8h.html#ab22b31f3ca8d174936a7dc6b1ac2e399", null ]
 ];

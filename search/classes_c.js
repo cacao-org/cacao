@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['processinfo',['PROCESSINFO',['../structPROCESSINFO.html',1,'']]],
-  ['processinfodisp',['PROCESSINFODISP',['../structPROCESSINFODISP.html',1,'']]],
-  ['processinfolist',['PROCESSINFOLIST',['../structPROCESSINFOLIST.html',1,'']]],
-  ['procinfoproc',['PROCINFOPROC',['../structPROCINFOPROC.html',1,'']]],
-  ['pyprocessinfo',['pyPROCESSINFO',['../classpyPROCESSINFO.html',1,'']]]
+  ['tcp_5fbuffer_5fmetadata',['TCP_BUFFER_METADATA',['../structTCP__BUFFER__METADATA.html',1,'']]],
+  ['timespecfixed',['TIMESPECFIXED',['../structTIMESPECFIXED.html',1,'']]]
 ];

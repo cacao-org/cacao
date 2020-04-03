@@ -110,10 +110,10 @@ $(document).ready(function(){initNavTree('page_cacao_predictive_control.html',''
 <p>Predictive control is set up by blocks of modes. A block is configured through the aolconf predictive control sub-panel, which writes to configuration files <code>conf/conf_PFblock_XXX.txt</code>, where XXX is the block number (000, 001, 002 etc...). Configuration files specify the modes within each block (index min to index max), the predictive filter order, time lag and and averaging gain.</p>
 <p>For each block, there are 3 main processes involved in running the predictive control:</p>
 <h3>Collecting input</h3>
-<p><b>Watching input telemetry</b> this process listens to the input telemetry stream and periodically writes data to be used to compute a filter. This runs function <a class="el" href="__install_2include_2AOloopControl__PredictiveControl_8h.html#a55f095e4bc95d0497fdc934d488490eb">AOloopControl_PredictiveControl_builPFloop_WatchInput()</a> in <a class="el" href="AOloopControl__PredictiveControl_8c.html" title="Adaptive Optics Control loop engine Predictive Control. ">AOloopControl_PredictiveControl.c</a>.</p>
+<p><b>Watching input telemetry</b> this process listens to the input telemetry stream and periodically writes data to be used to compute a filter. This runs function <a class="el" href="AOloopControl__PredictiveControl_8h.html#aaf5ebc0d4dcf82b7a811b093d0d8bfff">AOloopControl_PredictiveControl_builPFloop_WatchInput()</a> in <a class="el" href="AOloopControl__PredictiveControl_8c.html" title="Adaptive Optics Control loop engine Predictive Control. ">AOloopControl_PredictiveControl.c</a>.</p>
 <p>Runs in tmux sessions: aol0PFb0watchin, aol0PFb1watchin ...</p>
 <h3>Computing Filter</h3>
-<p><b>Computing filter</b>. Runs CLI command <code>mkARpfilt</code>, which runs function <a class="el" href="__install_2include_2linARfilterPred_8h.html#afc6c7c5f8dbcd1656784dda99c517bde" title="Build predictive filter. ">LINARFILTERPRED_Build_LinPredictor()</a> in <a class="el" href="linARfilterPred_8c.html" title="linear auto-regressive predictive filter ">linARfilterPred.c</a>.</p>
+<p><b>Computing filter</b>. Runs CLI command <code>mkARpfilt</code>, which runs function <a class="el" href="linARfilterPred_8c.html#a20e6212670d07930e440bad6ae088df5">LINARFILTERPRED_Build_LinPredictor()</a> in <a class="el" href="linARfilterPred_8c.html" title="linear auto-regressive predictive filter ">linARfilterPred.c</a>.</p>
 <p>Runs in tmux sessions: aol0PFb0comp, aol1PFb0comp ...</p>
 <h2>Running real-time prediction</h2>
 <p><b>Prediction engine</b> (= apply filter). Runs script <code>./auxscripts/predFiltApplyRT</code>.</p>
@@ -125,7 +125,7 @@ $(document).ready(function(){initNavTree('page_cacao_predictive_control.html',''
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="page_cacao_topmenu.html">Subpages</a></li><li class="navelem"><a class="el" href="page_cacao_top_guide.html">Configuring and Running cacao</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

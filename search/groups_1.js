@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['functions_20with_20high_20priority_20scheduler',['Functions with high priority scheduler',['../group__RTfunctions.html',1,'']]]
+  ['configuration_20function_20for_20function_20parameter_20structure_20_28fps_29',['Configuration function for Function Parameter Structure (FPS)',['../group__FPSconf.html',1,'']]]
 ];

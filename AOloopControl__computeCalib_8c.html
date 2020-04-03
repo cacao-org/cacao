@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__computeCalib_8c.html','
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_computeCalib.c File Reference</div>  </div>
@@ -93,63 +94,113 @@ $(document).ready(function(){initNavTree('AOloopControl__computeCalib_8c.html','
 
 <p>Adaptive Optics Control loop engine compute calibration.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_math.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_eigen.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_blas.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__computeCalib_8h_source.html">AOloopControl_computeCalib/AOloopControl_computeCalib.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_computeCalib.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__computeCalib_8c__incl.png" border="0" usemap="#src_2AOloopControl__computeCalib_2AOloopControl__computeCalib_8c" alt=""/></div>
+<map name="src_2AOloopControl__computeCalib_2AOloopControl__computeCalib_8c" id="src_2AOloopControl__computeCalib_2AOloopControl__computeCalib_8c">
+<area shape="rect" id="node7" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1539,95,1697,136"/>
+<area shape="rect" id="node24" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2203,95,2423,136"/>
+<area shape="rect" id="node25" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2447,95,2648,136"/>
+<area shape="rect" id="node26" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="2672,95,2871,136"/>
+<area shape="rect" id="node27" href="info_8h.html" title="info/info.h" alt="" coords="2895,102,2973,129"/>
+<area shape="rect" id="node28" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2997,102,3140,129"/>
+<area shape="rect" id="node29" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="769,259,976,285"/>
+<area shape="rect" id="node36" href="AOloopControl__computeCalib_8h.html" title="Function prototypes for Adaptive Optics Control loop engine compute calibration. " alt="" coords="3164,95,3373,136"/>
+<area shape="rect" id="node17" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1203,184,1425,211"/>
+<area shape="rect" id="node18" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1619,259,1723,285"/>
+<area shape="rect" id="node21" href="processtools_8h.html" title="Command line interface. " alt="" coords="1941,259,2047,285"/>
+<area shape="rect" id="node22" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1485,259,1593,285"/>
+<area shape="rect" id="node23" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1795,184,1945,211"/>
+<area shape="rect" id="node20" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1596,341,1749,367"/>
+<area shape="rect" id="node30" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node31" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,333,421,375"/>
+<area shape="rect" id="node32" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="446,333,617,375"/>
+<area shape="rect" id="node33" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="641,341,873,367"/>
+<area shape="rect" id="node34" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="897,333,1093,375"/>
+<area shape="rect" id="node35" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1117,333,1313,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74ab1a4f2b0dd3db2eb5408bb3c5f721"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a74ab1a4f2b0dd3db2eb5408bb3c5f721">MAX_MBLOCK</a>&#160;&#160;&#160;20</td></tr>
+<tr class="separator:a74ab1a4f2b0dd3db2eb5408bb3c5f721"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl - 5. COMPUTING CALIBRATION</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Compute control matrix, modes </p>
 </div></td></tr>
-<tr class="memitem:a81e3355412f55f1eabef060120ab38ad"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a81e3355412f55f1eabef060120ab38ad">AOloopControl_computeCalib_mkSlavedAct_cli</a> ()</td></tr>
-<tr class="memdesc:a81e3355412f55f1eabef060120ab38ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkSlavedAct.  <a href="#a81e3355412f55f1eabef060120ab38ad">More...</a><br /></td></tr>
-<tr class="separator:a81e3355412f55f1eabef060120ab38ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a219c811359c4f0ea03dec4db22c83f43"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a219c811359c4f0ea03dec4db22c83f43">AOloopControl_computeCalib_mkloDMmodes_cli</a> ()</td></tr>
-<tr class="memdesc:a219c811359c4f0ea03dec4db22c83f43"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkloDMmodes.  <a href="#a219c811359c4f0ea03dec4db22c83f43">More...</a><br /></td></tr>
-<tr class="separator:a219c811359c4f0ea03dec4db22c83f43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20bbcb74b62b8026ea1fde86fc298ec2"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a20bbcb74b62b8026ea1fde86fc298ec2">AOloopControl_computeCalib_ComputeCM_cli</a> ()</td></tr>
-<tr class="memdesc:a20bbcb74b62b8026ea1fde86fc298ec2"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_computeCalib_ComputeCM.  <a href="#a20bbcb74b62b8026ea1fde86fc298ec2">More...</a><br /></td></tr>
-<tr class="separator:a20bbcb74b62b8026ea1fde86fc298ec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a040ffe86e1ab63e4ce62a03fbd10de94"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a040ffe86e1ab63e4ce62a03fbd10de94">AOloopControl_computeCalib_mkCM_cli</a> ()</td></tr>
-<tr class="memdesc:a040ffe86e1ab63e4ce62a03fbd10de94"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkCM.  <a href="#a040ffe86e1ab63e4ce62a03fbd10de94">More...</a><br /></td></tr>
-<tr class="separator:a040ffe86e1ab63e4ce62a03fbd10de94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb786f719ec5bba4010601ee9998069a"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#adb786f719ec5bba4010601ee9998069a">AOloopControl_computeCalib_mkModes_cli</a> ()</td></tr>
-<tr class="memdesc:adb786f719ec5bba4010601ee9998069a"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkCM.  <a href="#adb786f719ec5bba4010601ee9998069a">More...</a><br /></td></tr>
-<tr class="separator:adb786f719ec5bba4010601ee9998069a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0124d221f93aedba5e2e62ea570854b"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#ad0124d221f93aedba5e2e62ea570854b">AOloopControl_computeCalib_mkModes_Simple_cli</a> ()</td></tr>
-<tr class="memdesc:ad0124d221f93aedba5e2e62ea570854b"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkModes_Simple.  <a href="#ad0124d221f93aedba5e2e62ea570854b">More...</a><br /></td></tr>
-<tr class="separator:ad0124d221f93aedba5e2e62ea570854b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90bb164169a5f88145ed531034d65b13"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a90bb164169a5f88145ed531034d65b13">AOloopControl_computeCalib_computeCM_cli</a> ()</td></tr>
-<tr class="memdesc:a90bb164169a5f88145ed531034d65b13"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_computeCM.  <a href="#a90bb164169a5f88145ed531034d65b13">More...</a><br /></td></tr>
-<tr class="separator:a90bb164169a5f88145ed531034d65b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06a987a4bc8ff47f3f75ac69793b29f5"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a06a987a4bc8ff47f3f75ac69793b29f5">AOloopControl_computeCalib_loadCM_cli</a> ()</td></tr>
-<tr class="memdesc:a06a987a4bc8ff47f3f75ac69793b29f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_loadCM.  <a href="#a06a987a4bc8ff47f3f75ac69793b29f5">More...</a><br /></td></tr>
-<tr class="separator:a06a987a4bc8ff47f3f75ac69793b29f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ee5a958f371b6c0f16983043c4eb184"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a9ee5a958f371b6c0f16983043c4eb184">AOloopControl_computeCalib_mkHadamardModes_cli</a> ()</td></tr>
-<tr class="memdesc:a9ee5a958f371b6c0f16983043c4eb184"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkHadamardModes.  <a href="#a9ee5a958f371b6c0f16983043c4eb184">More...</a><br /></td></tr>
-<tr class="separator:a9ee5a958f371b6c0f16983043c4eb184"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e550abf97dffc690d91901e3da865ec"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a1e550abf97dffc690d91901e3da865ec">AOloopControl_computeCalib_Hadamard_decodeRM_cli</a> ()</td></tr>
-<tr class="memdesc:a1e550abf97dffc690d91901e3da865ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Hadamard_decodeRM.  <a href="#a1e550abf97dffc690d91901e3da865ec">More...</a><br /></td></tr>
-<tr class="separator:a1e550abf97dffc690d91901e3da865ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae73d75a1c20f04ada3e6df8e557f5037"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#ae73d75a1c20f04ada3e6df8e557f5037">AOloopControl_computeCalib_mkCalib_map_mask_cli</a> ()</td></tr>
-<tr class="memdesc:ae73d75a1c20f04ada3e6df8e557f5037"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkCalib_map_mask.  <a href="#ae73d75a1c20f04ada3e6df8e557f5037">More...</a><br /></td></tr>
-<tr class="separator:ae73d75a1c20f04ada3e6df8e557f5037"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a547e0376fa9621c30b2b226d63c01024"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a547e0376fa9621c30b2b226d63c01024">AOloopControl_computeCalib_Process_zrespM_cli</a> ()</td></tr>
-<tr class="memdesc:a547e0376fa9621c30b2b226d63c01024"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Process_zrespM.  <a href="#a547e0376fa9621c30b2b226d63c01024">More...</a><br /></td></tr>
-<tr class="separator:a547e0376fa9621c30b2b226d63c01024"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56699d2f489f63c47267146a8a06927d"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a56699d2f489f63c47267146a8a06927d">AOloopControl_computeCalib_ProcessZrespM_cli</a> ()</td></tr>
-<tr class="memdesc:a56699d2f489f63c47267146a8a06927d"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_ProcessZrespM.  <a href="#a56699d2f489f63c47267146a8a06927d">More...</a><br /></td></tr>
-<tr class="separator:a56699d2f489f63c47267146a8a06927d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd6d4f7c33ab085867e68bd0ed1e2716"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#acd6d4f7c33ab085867e68bd0ed1e2716">AOloopControl_computeCalib_compute_CombinedControlMatrix_cli</a> ()</td></tr>
-<tr class="memdesc:acd6d4f7c33ab085867e68bd0ed1e2716"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_compute_CombinedControlMatrix.  <a href="#acd6d4f7c33ab085867e68bd0ed1e2716">More...</a><br /></td></tr>
-<tr class="separator:acd6d4f7c33ab085867e68bd0ed1e2716"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee00cc8f46facb8389a7e7caa62fe262"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#aee00cc8f46facb8389a7e7caa62fe262">AOloopControl_computeCalib_mkSlavedAct_cli</a> ()</td></tr>
+<tr class="memdesc:aee00cc8f46facb8389a7e7caa62fe262"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkSlavedAct.  <a href="#aee00cc8f46facb8389a7e7caa62fe262">More...</a><br /></td></tr>
+<tr class="separator:aee00cc8f46facb8389a7e7caa62fe262"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ee9ab0d3fa6a90277b1bf04b64c9f3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a9ee9ab0d3fa6a90277b1bf04b64c9f3f">AOloopControl_computeCalib_mkloDMmodes_cli</a> ()</td></tr>
+<tr class="memdesc:a9ee9ab0d3fa6a90277b1bf04b64c9f3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkloDMmodes.  <a href="#a9ee9ab0d3fa6a90277b1bf04b64c9f3f">More...</a><br /></td></tr>
+<tr class="separator:a9ee9ab0d3fa6a90277b1bf04b64c9f3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28c4f2ddfda7a6d3b15bf7747f26f5cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a28c4f2ddfda7a6d3b15bf7747f26f5cd">AOloopControl_computeCalib_ComputeCM_cli</a> ()</td></tr>
+<tr class="memdesc:a28c4f2ddfda7a6d3b15bf7747f26f5cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_computeCalib_ComputeCM.  <a href="#a28c4f2ddfda7a6d3b15bf7747f26f5cd">More...</a><br /></td></tr>
+<tr class="separator:a28c4f2ddfda7a6d3b15bf7747f26f5cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28b07bc4e6d5cec364d503e5a44bb4ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a28b07bc4e6d5cec364d503e5a44bb4ac">AOloopControl_computeCalib_mkCM_cli</a> ()</td></tr>
+<tr class="memdesc:a28b07bc4e6d5cec364d503e5a44bb4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkCM.  <a href="#a28b07bc4e6d5cec364d503e5a44bb4ac">More...</a><br /></td></tr>
+<tr class="separator:a28b07bc4e6d5cec364d503e5a44bb4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaa203b122e74fe868c0a66f3837fe96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#adaa203b122e74fe868c0a66f3837fe96">AOloopControl_computeCalib_mkModes_cli</a> ()</td></tr>
+<tr class="memdesc:adaa203b122e74fe868c0a66f3837fe96"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkCM.  <a href="#adaa203b122e74fe868c0a66f3837fe96">More...</a><br /></td></tr>
+<tr class="separator:adaa203b122e74fe868c0a66f3837fe96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb864e0bdd5afcbfecaa42e1b03fc53a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#aeb864e0bdd5afcbfecaa42e1b03fc53a">AOloopControl_computeCalib_mkModes_Simple_cli</a> ()</td></tr>
+<tr class="memdesc:aeb864e0bdd5afcbfecaa42e1b03fc53a"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkModes_Simple.  <a href="#aeb864e0bdd5afcbfecaa42e1b03fc53a">More...</a><br /></td></tr>
+<tr class="separator:aeb864e0bdd5afcbfecaa42e1b03fc53a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44beefba75fcba7ef72dfd43f71cf226"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a44beefba75fcba7ef72dfd43f71cf226">AOloopControl_computeCalib_computeCM_cli</a> ()</td></tr>
+<tr class="memdesc:a44beefba75fcba7ef72dfd43f71cf226"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_computeCM.  <a href="#a44beefba75fcba7ef72dfd43f71cf226">More...</a><br /></td></tr>
+<tr class="separator:a44beefba75fcba7ef72dfd43f71cf226"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a558e3b425f3269c1f279dd819cbc3d27"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a558e3b425f3269c1f279dd819cbc3d27">AOloopControl_computeCalib_loadCM_cli</a> ()</td></tr>
+<tr class="memdesc:a558e3b425f3269c1f279dd819cbc3d27"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_loadCM.  <a href="#a558e3b425f3269c1f279dd819cbc3d27">More...</a><br /></td></tr>
+<tr class="separator:a558e3b425f3269c1f279dd819cbc3d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc7d1123cae831402a7c8ebd1a1f6d0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#afc7d1123cae831402a7c8ebd1a1f6d0c">AOloopControl_computeCalib_mkHadamardModes_cli</a> ()</td></tr>
+<tr class="memdesc:afc7d1123cae831402a7c8ebd1a1f6d0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkHadamardModes.  <a href="#afc7d1123cae831402a7c8ebd1a1f6d0c">More...</a><br /></td></tr>
+<tr class="separator:afc7d1123cae831402a7c8ebd1a1f6d0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2cfb683117fcabdd8261e309ef3a7fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#aa2cfb683117fcabdd8261e309ef3a7fe">AOloopControl_computeCalib_Hadamard_decodeRM_cli</a> ()</td></tr>
+<tr class="memdesc:aa2cfb683117fcabdd8261e309ef3a7fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Hadamard_decodeRM.  <a href="#aa2cfb683117fcabdd8261e309ef3a7fe">More...</a><br /></td></tr>
+<tr class="separator:aa2cfb683117fcabdd8261e309ef3a7fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b4aaa3bdd6fc2bc3a289c3b3cac0fad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a0b4aaa3bdd6fc2bc3a289c3b3cac0fad">AOloopControl_computeCalib_mkCalib_map_mask_cli</a> ()</td></tr>
+<tr class="memdesc:a0b4aaa3bdd6fc2bc3a289c3b3cac0fad"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkCalib_map_mask.  <a href="#a0b4aaa3bdd6fc2bc3a289c3b3cac0fad">More...</a><br /></td></tr>
+<tr class="separator:a0b4aaa3bdd6fc2bc3a289c3b3cac0fad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40f0ca68724d8f3711ab1b537530c2d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a40f0ca68724d8f3711ab1b537530c2d1">AOloopControl_computeCalib_Process_zrespM_cli</a> ()</td></tr>
+<tr class="memdesc:a40f0ca68724d8f3711ab1b537530c2d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Process_zrespM.  <a href="#a40f0ca68724d8f3711ab1b537530c2d1">More...</a><br /></td></tr>
+<tr class="separator:a40f0ca68724d8f3711ab1b537530c2d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0516d9a6126aa223de9083fd781691ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a0516d9a6126aa223de9083fd781691ad">AOloopControl_computeCalib_ProcessZrespM_cli</a> ()</td></tr>
+<tr class="memdesc:a0516d9a6126aa223de9083fd781691ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_ProcessZrespM.  <a href="#a0516d9a6126aa223de9083fd781691ad">More...</a><br /></td></tr>
+<tr class="separator:a0516d9a6126aa223de9083fd781691ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a683ce4041a645962369cb360c42aa65c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a683ce4041a645962369cb360c42aa65c">AOloopControl_computeCalib_compute_CombinedControlMatrix_cli</a> ()</td></tr>
+<tr class="memdesc:a683ce4041a645962369cb360c42aa65c"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_compute_CombinedControlMatrix.  <a href="#a683ce4041a645962369cb360c42aa65c">More...</a><br /></td></tr>
+<tr class="separator:a683ce4041a645962369cb360c42aa65c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_IOtools functions</div></td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_computeCalib - 1. COMPUTING CALIBRATION</div></td></tr>
-<tr class="memitem:ae274df2748400df777de575b80bb3b87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#ae274df2748400df777de575b80bb3b87">AOcontrolLoop_computeCalib_ComputeCM_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
-<tr class="separator:ae274df2748400df777de575b80bb3b87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d2d5f6e11cb1e9ddac0af4078a28e11"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib_8c.html#a9d2d5f6e11cb1e9ddac0af4078a28e11">AOcontrolLoop_computeCalib_ComputeCM_RUN</a> (char *fpsname)</td></tr>
-<tr class="separator:a9d2d5f6e11cb1e9ddac0af4078a28e11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae274df2748400df777de575b80bb3b87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FPSconf.html#gae274df2748400df777de575b80bb3b87">AOcontrolLoop_computeCalib_ComputeCM_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="memdesc:gae274df2748400df777de575b80bb3b87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for compute calib FPS.  <a href="group__FPSconf.html#gae274df2748400df777de575b80bb3b87">More...</a><br /></td></tr>
+<tr class="separator:gae274df2748400df777de575b80bb3b87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr class="memitem:ga9d2d5f6e11cb1e9ddac0af4078a28e11"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FPSrun.html#ga9d2d5f6e11cb1e9ddac0af4078a28e11">AOcontrolLoop_computeCalib_ComputeCM_RUN</a> (char *fpsname)</td></tr>
+<tr class="memdesc:ga9d2d5f6e11cb1e9ddac0af4078a28e11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute control matrix.  <a href="group__FPSrun.html#ga9d2d5f6e11cb1e9ddac0af4078a28e11">More...</a><br /></td></tr>
+<tr class="separator:ga9d2d5f6e11cb1e9ddac0af4078a28e11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -167,9 +218,37 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Adaptive Optics Control loop engine compute calibration. </p>
-<p>AO engine uses stream data structure</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000047">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+<p>AO engine uses stream data structure </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a74ab1a4f2b0dd3db2eb5408bb3c5f721"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74ab1a4f2b0dd3db2eb5408bb3c5f721">&#9670;&nbsp;</a></span>MAX_MBLOCK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_MBLOCK&#160;&#160;&#160;20</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
 
@@ -177,7 +256,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -190,60 +269,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae274df2748400df777de575b80bb3b87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae274df2748400df777de575b80bb3b87">&#9670;&nbsp;</a></span>AOcontrolLoop_computeCalib_ComputeCM_FPCONF()</h2>
+<a id="a683ce4041a645962369cb360c42aa65c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a683ce4041a645962369cb360c42aa65c">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_compute_CombinedControlMatrix_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_computeCalib_ComputeCM_FPCONF </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>fpsname</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>CMDmode</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9d2d5f6e11cb1e9ddac0af4078a28e11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d2d5f6e11cb1e9ddac0af4078a28e11">&#9670;&nbsp;</a></span>AOcontrolLoop_computeCalib_ComputeCM_RUN()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_computeCalib_ComputeCM_RUN </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>fpsname</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="acd6d4f7c33ab085867e68bd0ed1e2716"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd6d4f7c33ab085867e68bd0ed1e2716">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_compute_CombinedControlMatrix_cli()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_compute_CombinedControlMatrix_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -255,14 +288,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a20bbcb74b62b8026ea1fde86fc298ec2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20bbcb74b62b8026ea1fde86fc298ec2">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_ComputeCM_cli()</h2>
+<a id="a28c4f2ddfda7a6d3b15bf7747f26f5cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28c4f2ddfda7a6d3b15bf7747f26f5cd">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_ComputeCM_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_ComputeCM_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_ComputeCM_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -274,14 +307,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a90bb164169a5f88145ed531034d65b13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a90bb164169a5f88145ed531034d65b13">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_computeCM_cli()</h2>
+<a id="a44beefba75fcba7ef72dfd43f71cf226"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44beefba75fcba7ef72dfd43f71cf226">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_computeCM_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_computeCM_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_computeCM_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -293,14 +326,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1e550abf97dffc690d91901e3da865ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e550abf97dffc690d91901e3da865ec">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_Hadamard_decodeRM_cli()</h2>
+<a id="aa2cfb683117fcabdd8261e309ef3a7fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2cfb683117fcabdd8261e309ef3a7fe">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_Hadamard_decodeRM_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_Hadamard_decodeRM_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_Hadamard_decodeRM_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -312,14 +345,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a06a987a4bc8ff47f3f75ac69793b29f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06a987a4bc8ff47f3f75ac69793b29f5">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_loadCM_cli()</h2>
+<a id="a558e3b425f3269c1f279dd819cbc3d27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a558e3b425f3269c1f279dd819cbc3d27">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_loadCM_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_loadCM_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_loadCM_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -331,14 +364,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae73d75a1c20f04ada3e6df8e557f5037"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae73d75a1c20f04ada3e6df8e557f5037">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkCalib_map_mask_cli()</h2>
+<a id="a0b4aaa3bdd6fc2bc3a289c3b3cac0fad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b4aaa3bdd6fc2bc3a289c3b3cac0fad">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkCalib_map_mask_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_mkCalib_map_mask_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkCalib_map_mask_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -350,14 +383,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a040ffe86e1ab63e4ce62a03fbd10de94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a040ffe86e1ab63e4ce62a03fbd10de94">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkCM_cli()</h2>
+<a id="a28b07bc4e6d5cec364d503e5a44bb4ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28b07bc4e6d5cec364d503e5a44bb4ac">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkCM_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_mkCM_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkCM_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -369,14 +402,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9ee5a958f371b6c0f16983043c4eb184"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ee5a958f371b6c0f16983043c4eb184">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkHadamardModes_cli()</h2>
+<a id="afc7d1123cae831402a7c8ebd1a1f6d0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc7d1123cae831402a7c8ebd1a1f6d0c">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkHadamardModes_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_mkHadamardModes_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkHadamardModes_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -388,14 +421,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a219c811359c4f0ea03dec4db22c83f43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a219c811359c4f0ea03dec4db22c83f43">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkloDMmodes_cli()</h2>
+<a id="a9ee9ab0d3fa6a90277b1bf04b64c9f3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ee9ab0d3fa6a90277b1bf04b64c9f3f">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkloDMmodes_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_mkloDMmodes_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkloDMmodes_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -407,14 +440,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="adb786f719ec5bba4010601ee9998069a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb786f719ec5bba4010601ee9998069a">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkModes_cli()</h2>
+<a id="adaa203b122e74fe868c0a66f3837fe96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adaa203b122e74fe868c0a66f3837fe96">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkModes_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_mkModes_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkModes_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -427,14 +460,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad0124d221f93aedba5e2e62ea570854b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0124d221f93aedba5e2e62ea570854b">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkModes_Simple_cli()</h2>
+<a id="aeb864e0bdd5afcbfecaa42e1b03fc53a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb864e0bdd5afcbfecaa42e1b03fc53a">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkModes_Simple_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_mkModes_Simple_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkModes_Simple_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -446,14 +479,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a81e3355412f55f1eabef060120ab38ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81e3355412f55f1eabef060120ab38ad">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkSlavedAct_cli()</h2>
+<a id="aee00cc8f46facb8389a7e7caa62fe262"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee00cc8f46facb8389a7e7caa62fe262">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkSlavedAct_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_mkSlavedAct_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkSlavedAct_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -465,14 +498,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a547e0376fa9621c30b2b226d63c01024"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a547e0376fa9621c30b2b226d63c01024">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_Process_zrespM_cli()</h2>
+<a id="a40f0ca68724d8f3711ab1b537530c2d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40f0ca68724d8f3711ab1b537530c2d1">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_Process_zrespM_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_Process_zrespM_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_Process_zrespM_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -484,14 +517,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a56699d2f489f63c47267146a8a06927d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56699d2f489f63c47267146a8a06927d">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_ProcessZrespM_cli()</h2>
+<a id="a0516d9a6126aa223de9083fd781691ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0516d9a6126aa223de9083fd781691ad">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_ProcessZrespM_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_ProcessZrespM_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_ProcessZrespM_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -591,7 +624,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0394dae130dd6b4601d7d7032afd608b.html">AOloopControl_computeCalib</a></li><li class="navelem"><a class="el" href="AOloopControl__computeCalib_8c.html">AOloopControl_computeCalib.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__RTstreamLOG_8c.html',''
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,13 +95,62 @@ $(document).ready(function(){initNavTree('AOloopControl__RTstreamLOG_8c.html',''
 
 <p>Logging of real-time streams.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;sys/time.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;ncurses.h&gt;</code><br />
+<code>#include &lt;termios.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ImageStruct_8h_source.html">ImageStreamIO/ImageStruct.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_RTstreamLOG.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__RTstreamLOG_8c__incl.png" border="0" usemap="#src_2AOloopControl_2AOloopControl__RTstreamLOG_8c" alt=""/></div>
+<map name="src_2AOloopControl_2AOloopControl__RTstreamLOG_8c" id="src_2AOloopControl_2AOloopControl__RTstreamLOG_8c">
+<area shape="rect" id="node16" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1969,95,2126,136"/>
+<area shape="rect" id="node24" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1731,259,1835,285"/>
+<area shape="rect" id="node29" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="3473,102,3616,129"/>
+<area shape="rect" id="node30" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="3640,95,3860,136"/>
+<area shape="rect" id="node31" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="3884,95,4085,136"/>
+<area shape="rect" id="node32" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="892,259,1099,285"/>
+<area shape="rect" id="node23" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1713,184,1934,211"/>
+<area shape="rect" id="node26" href="processtools_8h.html" title="Command line interface. " alt="" coords="1979,259,2086,285"/>
+<area shape="rect" id="node27" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1473,259,1581,285"/>
+<area shape="rect" id="node28" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="2369,184,2520,211"/>
+<area shape="rect" id="node25" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1707,341,1860,367"/>
+<area shape="rect" id="node33" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node34" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,333,421,375"/>
+<area shape="rect" id="node35" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="446,333,617,375"/>
+<area shape="rect" id="node36" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="641,341,873,367"/>
+<area shape="rect" id="node37" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="897,333,1093,375"/>
+<area shape="rect" id="node38" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1117,333,1313,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__RTstreamLOG_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7ee0d86e8d2ff9b807a3a18e1dbf10d9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__RTstreamLOG_8c.html#a7ee0d86e8d2ff9b807a3a18e1dbf10d9">AOloopControl_RTstreamLOG_init</a> (int loop)</td></tr>
-<tr class="separator:a7ee0d86e8d2ff9b807a3a18e1dbf10d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8afeaa2381320268e47755011c5faf1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__RTstreamLOG_8c.html#ac8afeaa2381320268e47755011c5faf1">AOloopControl_RTstreamLOG_setup</a> (long loop, long rtlindex, char *streamname)</td></tr>
-<tr class="separator:ac8afeaa2381320268e47755011c5faf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab331aaa11f56f96ff29619cb37f4436a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__RTstreamLOG_8c.html#ab331aaa11f56f96ff29619cb37f4436a">AOloopControl_RTstreamLOG_init</a> (int loop)</td></tr>
+<tr class="separator:ab331aaa11f56f96ff29619cb37f4436a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38550ca1df04ce7cd297c9c17dfee270"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__RTstreamLOG_8c.html#a38550ca1df04ce7cd297c9c17dfee270">AOloopControl_RTstreamLOG_setup</a> (long loop, long rtlindex, char *streamname)</td></tr>
+<tr class="separator:a38550ca1df04ce7cd297c9c17dfee270"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad768dac2c0e1e1b7bb8e7da56043883b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__RTstreamLOG_8c.html#ad768dac2c0e1e1b7bb8e7da56043883b">AOloopControl_RTstreamLOG_update</a> (long loop, long rtlindex, struct timespec <a class="el" href="cudacomp_8c.html#a59d2ab140fff2f63a38f4704a76fc2ec">tnow</a>)</td></tr>
 <tr class="separator:ad768dac2c0e1e1b7bb8e7da56043883b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab270f7984dd6e166e7d0a1c8948c0339"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__RTstreamLOG_8c.html#ab270f7984dd6e166e7d0a1c8948c0339">AOloopControl_RTstreamLOG_printstatus</a> (int loop)</td></tr>
@@ -131,7 +181,22 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Logging of real-time streams. </p>
 <p>Real-time stream logging </p>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="af4b73f9810ffb09eaf9418a6a1cb79b8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af4b73f9810ffb09eaf9418a6a1cb79b8">&#9670;&nbsp;</a></span>AOloopControl_RTstreamLOG_GUI()</h2>
 
@@ -150,14 +215,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a7ee0d86e8d2ff9b807a3a18e1dbf10d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ee0d86e8d2ff9b807a3a18e1dbf10d9">&#9670;&nbsp;</a></span>AOloopControl_RTstreamLOG_init()</h2>
+<a id="ab331aaa11f56f96ff29619cb37f4436a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab331aaa11f56f96ff29619cb37f4436a">&#9670;&nbsp;</a></span>AOloopControl_RTstreamLOG_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int AOloopControl_RTstreamLOG_init </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_RTstreamLOG_init </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>loop</em></td><td>)</td>
@@ -345,14 +410,14 @@ It is controlled by a ncurses-based GUI.<br />
 
 </div>
 </div>
-<a id="ac8afeaa2381320268e47755011c5faf1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8afeaa2381320268e47755011c5faf1">&#9670;&nbsp;</a></span>AOloopControl_RTstreamLOG_setup()</h2>
+<a id="a38550ca1df04ce7cd297c9c17dfee270"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38550ca1df04ce7cd297c9c17dfee270">&#9670;&nbsp;</a></span>AOloopControl_RTstreamLOG_setup()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int AOloopControl_RTstreamLOG_setup </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_RTstreamLOG_setup </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -499,7 +564,7 @@ It is controlled by a ncurses-based GUI.<br />
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__RTstreamLOG_8c.html">AOloopControl_RTstreamLOG.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

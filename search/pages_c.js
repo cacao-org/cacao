@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['setting_20up_20hardware_20interfaces',['Setting up hardware interfaces',['../page_cacao_setting_up_hardware_interfaces.html',1,'page_cacao_top_guide']]],
-  ['step_2dby_2dstep_20example',['STEP-BY-STEP EXAMPLE',['../page_cacao_stepbystep_example.html',1,'page_cacao_top_guide']]],
-  ['subpages',['Subpages',['../page_cacao_topmenu.html',1,'']]]
+  ['template_20souce_20code',['Template Souce Code',['../page_TemplateSourceCode.html',1,'page_coding_standards']]],
+  ['todo_20list',['Todo List',['../todo.html',1,'']]]
 ];

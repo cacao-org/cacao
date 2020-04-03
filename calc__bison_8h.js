@@ -1,6 +1,10 @@
 var calc__bison_8h =
 [
     [ "YYSTYPE", "unionYYSTYPE.html", "unionYYSTYPE" ],
+    [ "YYDEBUG", "calc__bison_8h.html#a853b3bfad6d2b2ff693dce81182e0c2e", null ],
+    [ "YYSTYPE_IS_DECLARED", "calc__bison_8h.html#af0232d21120b2cfc5e5f82f0fbadab3c", null ],
+    [ "YYSTYPE_IS_TRIVIAL", "calc__bison_8h.html#a2e3dbf169c5ee24cf6af37c61cf3995d", null ],
+    [ "YYTOKENTYPE", "calc__bison_8h.html#a69ca0fbcc6d7aa5e8f47b11fc0048208", null ],
     [ "YYSTYPE", "calc__bison_8h.html#ac56824fbd095909aa72c2a98afb4b9f0", null ],
     [ "yytokentype", "calc__bison_8h.html#a15c9f7bd2f0e9686df5d9df4f3314aa9", [
       [ "TKNUMl", "calc__bison_8c.html#a15c9f7bd2f0e9686df5d9df4f3314aa9aa0997abca8c659e982c08f4832d9de07", null ],
@@ -31,6 +35,5 @@ var calc__bison_8h =
       [ "NEG", "calc__bison_8h.html#a15c9f7bd2f0e9686df5d9df4f3314aa9af6ac87750a3d0fb390234808731fd4b3", null ]
     ] ],
     [ "yyparse", "calc__bison_8h.html#a847a2de5c1c28c9d7055a2b89ed7dad7", null ],
-    [ "yydebug", "calc__bison_8h.html#ab138aa8e11f58bcdcc7134adf240ea8c", null ],
     [ "yylval", "calc__bison_8h.html#a539b86ee4bb46824a194f22eb69903d9", null ]
 ];

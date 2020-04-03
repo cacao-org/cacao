@@ -7,7 +7,7 @@ var dir_100645d6fa43bdf6aa49bbcbad19d7c2 =
     [ "calc_bison.h", "calc__bison_8h.html", "calc__bison_8h" ],
     [ "calc_flex.c", "calc__flex_8c.html", "calc__flex_8c" ],
     [ "CLIcore.c", "CLIcore_8c.html", "CLIcore_8c" ],
-    [ "CLIcore.h", "src_2CommandLineInterface_2CLIcore_8h.html", "src_2CommandLineInterface_2CLIcore_8h" ],
+    [ "CLIcore.h", "CLIcore_8h.html", "CLIcore_8h" ],
     [ "function_parameters.c", "function__parameters_8c.html", "function__parameters_8c" ],
     [ "function_parameters.h", "function__parameters_8h.html", "function__parameters_8h" ],
     [ "processtools.c", "processtools_8c.html", "processtools_8c" ],

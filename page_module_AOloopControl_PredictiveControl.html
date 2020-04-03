@@ -118,19 +118,19 @@ $(document).ready(function(){initNavTree('page_module_AOloopControl_PredictiveCo
 <p>All 3 processes work in a chain, and can be turned on/off from the GUI.</p>
 <hr/>
 <h2>Collect data from input telemetry</h2>
-<p>Watching input telemetry this process listens to the input telemetry stream and periodically writes data to be used to compute a filter. This runs function <a class="el" href="__install_2include_2AOloopControl__PredictiveControl_8h.html#a55f095e4bc95d0497fdc934d488490eb">AOloopControl_PredictiveControl_builPFloop_WatchInput()</a> called from <a class="el" href="AOloopControl__PredictiveControl_8c.html" title="Adaptive Optics Control loop engine Predictive Control. ">AOloopControl_PredictiveControl.c</a>.</p>
+<p>Watching input telemetry this process listens to the input telemetry stream and periodically writes data to be used to compute a filter. This runs function <a class="el" href="AOloopControl__PredictiveControl_8h.html#aaf5ebc0d4dcf82b7a811b093d0d8bfff">AOloopControl_PredictiveControl_builPFloop_WatchInput()</a> called from <a class="el" href="AOloopControl__PredictiveControl_8c.html" title="Adaptive Optics Control loop engine Predictive Control. ">AOloopControl_PredictiveControl.c</a>.</p>
 <p>Output is a 3D image, of size: NBmodes x 1 x NBsteps.</p>
 <p>Output is shared memory image stream, named: </p><pre class="fragment">aol&lt;loop&gt;_modevalol_PFb&lt;blocknumber&gt;
 </pre><hr/>
 <h2>Compute filter</h2>
-<p>Computing filter. Runs CLI command mkARpfilt, which runs function <a class="el" href="__install_2include_2linARfilterPred_8h.html#afc6c7c5f8dbcd1656784dda99c517bde" title="Build predictive filter. ">LINARFILTERPRED_Build_LinPredictor()</a> in <a class="el" href="linARfilterPred_8c.html" title="linear auto-regressive predictive filter ">linARfilterPred.c</a>.</p>
+<p>Computing filter. Runs CLI command mkARpfilt, which runs function <a class="el" href="linARfilterPred_8c.html#a20e6212670d07930e440bad6ae088df5">LINARFILTERPRED_Build_LinPredictor()</a> in <a class="el" href="linARfilterPred_8c.html" title="linear auto-regressive predictive filter ">linARfilterPred.c</a>.</p>
 <p>Input to function: aol&lt;loop&gt;_modevalol_PFb&lt;blocknumber&gt;</p>
 <p>Output to function: aol&lt;loop&gt;_modevalol_outPFb&lt;blocknumber&gt;</p>
 <h3>Packaging input data matrix</h3>
 <p>The routine packages a data matrix PFmatD with dimension (size[0] = number of time samples) (size[1] = dimension of each sample). Usually, size[0] &gt; size[1].</p>
-<p>In the column-major matrix representation, PFmatD data array is the transpose of the data matrix. Predictive control requires the pseudoinverse of the transpose of the data matrix to be computed, so the pseudoinverse of PFmatD is computed by calling function <a class="el" href="__install_2include_2cudacomp_8h.html#af2be454fbe2a3f6878745fc524051554" title="Computes matrix pseudo-inverse (AT A)^-1 AT, using eigenvector/eigenvalue decomposition of AT A...">CUDACOMP_magma_compute_SVDpseudoInverse()</a>.</p>
+<p>In the column-major matrix representation, PFmatD data array is the transpose of the data matrix. Predictive control requires the pseudoinverse of the transpose of the data matrix to be computed, so the pseudoinverse of PFmatD is computed by calling function CUDACOMP_magma_compute_SVDpseudoInverse().</p>
 <h3>Computing Pseudoinverse</h3>
-<p>Performed by calling function <a class="el" href="__install_2include_2cudacomp_8h.html#af2be454fbe2a3f6878745fc524051554" title="Computes matrix pseudo-inverse (AT A)^-1 AT, using eigenvector/eigenvalue decomposition of AT A...">CUDACOMP_magma_compute_SVDpseudoInverse()</a>.</p>
+<p>Performed by calling function CUDACOMP_magma_compute_SVDpseudoInverse().</p>
 <h3>Assembling Predictive Filter</h3>
 <hr/>
 <h2>Apply prediction</h2>
@@ -142,7 +142,7 @@ $(document).ready(function(){initNavTree('page_module_AOloopControl_PredictiveCo
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="page_cacao_topmenu.html">Subpages</a></li><li class="navelem"><a class="el" href="page_cacao_Modules.html">cacao modules</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

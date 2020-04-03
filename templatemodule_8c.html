@@ -84,6 +84,8 @@ $(document).ready(function(){initNavTree('templatemodule_8c.html','');});
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">templatemodule.c File Reference</div>  </div>
 </div><!--header-->
@@ -91,7 +93,54 @@ $(document).ready(function(){initNavTree('templatemodule_8c.html','');});
 
 <p>template module  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;strangefile.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="templatemodule_8h_source.html">templatemodule/templatemodule.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for templatemodule.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="templatemodule_8c__incl.png" border="0" usemap="#src_2CommandLineInterface_2doc_2templatemodule_2templatemodule_8c" alt=""/></div>
+<map name="src_2CommandLineInterface_2doc_2templatemodule_2templatemodule_8c" id="src_2CommandLineInterface_2doc_2templatemodule_2templatemodule_8c">
+<area shape="rect" id="node6" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="616,102,695,129"/>
+<area shape="rect" id="node23" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="923,102,1065,129"/>
+<area shape="rect" id="node24" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1089,95,1309,136"/>
+<area shape="rect" id="node25" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="1333,95,1535,136"/>
+<area shape="rect" id="node26" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="1559,95,1760,136"/>
+<area shape="rect" id="node27" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="1784,95,1983,136"/>
+<area shape="rect" id="node28" href="templatemodule_8h.html" title="Function prototypes for templatemodule. " alt="" coords="2007,102,2229,129"/>
+<area shape="rect" id="node16" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="295,184,517,211"/>
+<area shape="rect" id="node17" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="382,259,486,285"/>
+<area shape="rect" id="node20" href="processtools_8h.html" title="Command line interface. " alt="" coords="562,259,669,285"/>
+<area shape="rect" id="node21" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="245,259,353,285"/>
+<area shape="rect" id="node22" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1089,184,1240,211"/>
+<area shape="rect" id="node19" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="356,333,509,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a2a29f20b755397438394433a2498d3c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="templatemodule_8c.html#a2a29f20b755397438394433a2498d3c4">TWOPLUSTWO</a>&#160;&#160;&#160;4</td></tr>
+<tr class="memdesc:a2a29f20b755397438394433a2498d3c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">CODING STANDARD NOTE: code indented by : bash -c "astyle --indent-classes -Y".  <a href="#a2a29f20b755397438394433a2498d3c4">More...</a><br /></td></tr>
+<tr class="separator:a2a29f20b755397438394433a2498d3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6151d0ce31ed402326f6f95da66c920d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="templatemodule_8c.html#a6151d0ce31ed402326f6f95da66c920d">NAME_STRING_MAXSIZE</a>&#160;&#160;&#160;100</td></tr>
+<tr class="separator:a6151d0ce31ed402326f6f95da66c920d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6623ebb6f7701520b308c6714c3d8441"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="templatemodule_8c.html#a6623ebb6f7701520b308c6714c3d8441">FNAME_STRING_MAXSIZE</a>&#160;&#160;&#160;200</td></tr>
+<tr class="separator:a6623ebb6f7701520b308c6714c3d8441"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2990a1a77de827bf65c9bfba6173cb31"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="templatemodule_8c.html#a2990a1a77de827bf65c9bfba6173cb31">COMMAND_STRING_MAXSIZE</a>&#160;&#160;&#160;200</td></tr>
+<tr class="separator:a2990a1a77de827bf65c9bfba6173cb31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a996f7be338ccb40d1a2a5abc1ad61759"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="templatemodule_8c.html#a996f7be338ccb40d1a2a5abc1ad61759">ABS</a>(x)&#160;&#160;&#160;(((x) &lt; 0) ? -(x) : (x))</td></tr>
+<tr class="separator:a996f7be338ccb40d1a2a5abc1ad61759"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa674ce77a6afd5d008f3f2e132b39661"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="templatemodule_8c.html#aa674ce77a6afd5d008f3f2e132b39661">EXAMPLEMODULE_MAX</a>(a,  b)&#160;&#160;&#160;((a &lt; b) ?  (b) : (a))</td></tr>
+<tr class="separator:aa674ce77a6afd5d008f3f2e132b39661"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">CLI bindings</div></td></tr>
@@ -129,8 +178,114 @@ Functions</h2></td></tr>
 <li>20170813 Guyon Added some documentation</li>
 </ul>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000071">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000010">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a996f7be338ccb40d1a2a5abc1ad61759"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a996f7be338ccb40d1a2a5abc1ad61759">&#9670;&nbsp;</a></span>ABS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ABS</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x</td><td>)</td>
+          <td>&#160;&#160;&#160;(((x) &lt; 0) ? -(x) : (x))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2990a1a77de827bf65c9bfba6173cb31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2990a1a77de827bf65c9bfba6173cb31">&#9670;&nbsp;</a></span>COMMAND_STRING_MAXSIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define COMMAND_STRING_MAXSIZE&#160;&#160;&#160;200</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa674ce77a6afd5d008f3f2e132b39661"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa674ce77a6afd5d008f3f2e132b39661">&#9670;&nbsp;</a></span>EXAMPLEMODULE_MAX</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EXAMPLEMODULE_MAX</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">a, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">b&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;((a &lt; b) ?  (b) : (a))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6623ebb6f7701520b308c6714c3d8441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6623ebb6f7701520b308c6714c3d8441">&#9670;&nbsp;</a></span>FNAME_STRING_MAXSIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FNAME_STRING_MAXSIZE&#160;&#160;&#160;200</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6151d0ce31ed402326f6f95da66c920d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6151d0ce31ed402326f6f95da66c920d">&#9670;&nbsp;</a></span>NAME_STRING_MAXSIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NAME_STRING_MAXSIZE&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2a29f20b755397438394433a2498d3c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a29f20b755397438394433a2498d3c4">&#9670;&nbsp;</a></span>TWOPLUSTWO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TWOPLUSTWO&#160;&#160;&#160;4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>CODING STANDARD NOTE: code indented by : bash -c "astyle --indent-classes -Y". </p>
+<p>CODING STANDARD NOTE: document any unusual head file include </p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a1bef27d4d77b64ee13094f18ef05e963"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1bef27d4d77b64ee13094f18ef05e963">&#9670;&nbsp;</a></span>init_templatemodule()</h2>
 
@@ -224,7 +379,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="dir_515114501f7cb690e4b2be657171780b.html">doc</a></li><li class="navelem"><a class="el" href="dir_e6f693fcc493dfaa2a8c806038b8ebe2.html">templatemodule</a></li><li class="navelem"><a class="el" href="templatemodule_8c.html">templatemodule.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

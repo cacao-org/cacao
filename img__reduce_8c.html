@@ -94,39 +94,84 @@ $(document).ready(function(){initNavTree('img__reduce_8c.html','');});
 
 <p>Image analysis functions.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;sys/file.h&gt;</code><br />
+<code>#include &lt;sys/mman.h&gt;</code><br />
+<code>#include &lt;err.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;ncurses.h&gt;</code><br />
+<code>#include &lt;semaphore.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__filter_8h_source.html">image_filter/image_filter.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="fft_8h_source.html">fft/fft.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="img__reduce_8h_source.html">img_reduce/img_reduce.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for img_reduce.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="img__reduce_8c__incl.png" border="0" usemap="#src_2img__reduce_2img__reduce_8c" alt=""/></div>
+<map name="src_2img__reduce_2img__reduce_8c" id="src_2img__reduce_2img__reduce_8c">
+<area shape="rect" id="node18" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="560,95,717,136"/>
+<area shape="rect" id="node30" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2343,102,2486,129"/>
+<area shape="rect" id="node31" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2510,95,2730,136"/>
+<area shape="rect" id="node32" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2754,95,2955,136"/>
+<area shape="rect" id="node33" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="2979,95,3178,136"/>
+<area shape="rect" id="node34" href="image__filter_8h.html" title="image_filter/image\l_filter.h" alt="" coords="3203,95,3331,136"/>
+<area shape="rect" id="node35" href="fft_8h.html" title="fft/fft.h" alt="" coords="3355,102,3416,129"/>
+<area shape="rect" id="node36" href="img__reduce_8h.html" title="img_reduce/img_reduce.h" alt="" coords="3440,102,3611,129"/>
+<area shape="rect" id="node23" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="295,184,516,211"/>
+<area shape="rect" id="node24" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="332,259,436,285"/>
+<area shape="rect" id="node27" href="processtools_8h.html" title="Command line interface. " alt="" coords="460,259,567,285"/>
+<area shape="rect" id="node28" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="143,259,251,285"/>
+<area shape="rect" id="node29" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="937,184,1087,211"/>
+<area shape="rect" id="node26" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="307,333,461,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab0df51fb16473c0db8de60b8d03932e6"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#ab0df51fb16473c0db8de60b8d03932e6">IMG_REDUCE_cubesimplestat_cli</a> ()</td></tr>
-<tr class="separator:ab0df51fb16473c0db8de60b8d03932e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada277c60b981b30114fba2a3be1cf305"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#ada277c60b981b30114fba2a3be1cf305">IMG_REDUCE_cleanbadpix_fast_cli</a> ()</td></tr>
-<tr class="separator:ada277c60b981b30114fba2a3be1cf305"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76fc26c7de8f1934c7cc070bd0ad9cd0"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a76fc26c7de8f1934c7cc070bd0ad9cd0">IMG_REDUCE_cleanbadpix_stream_fast_cli</a> ()</td></tr>
-<tr class="separator:a76fc26c7de8f1934c7cc070bd0ad9cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc8848cdfc12654ba42863d66bc4f361"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#acc8848cdfc12654ba42863d66bc4f361">IMG_REDUCE_centernormim_cli</a> ()</td></tr>
-<tr class="separator:acc8848cdfc12654ba42863d66bc4f361"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11b41674fec238b1d057c26b29f712e7"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a11b41674fec238b1d057c26b29f712e7">IMG_REDUCE_cubeprocess_cli</a> ()</td></tr>
-<tr class="separator:a11b41674fec238b1d057c26b29f712e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32b2cda2b1ad4b4e40e869c78d204e72"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a32b2cda2b1ad4b4e40e869c78d204e72">IMG_REDUCE_cubesimplestat_cli</a> ()</td></tr>
+<tr class="separator:a32b2cda2b1ad4b4e40e869c78d204e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a394fa40588e1675cf6386e8ee0da6d5c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a394fa40588e1675cf6386e8ee0da6d5c">IMG_REDUCE_cleanbadpix_fast_cli</a> ()</td></tr>
+<tr class="separator:a394fa40588e1675cf6386e8ee0da6d5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab53cee378f0e2f0d48594b0801089732"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#ab53cee378f0e2f0d48594b0801089732">IMG_REDUCE_cleanbadpix_stream_fast_cli</a> ()</td></tr>
+<tr class="separator:ab53cee378f0e2f0d48594b0801089732"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfea55a640c92d4bc1b24c0e18b92757"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#abfea55a640c92d4bc1b24c0e18b92757">IMG_REDUCE_centernormim_cli</a> ()</td></tr>
+<tr class="separator:abfea55a640c92d4bc1b24c0e18b92757"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab21892717f9ac542835bf60ca418d7ab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#ab21892717f9ac542835bf60ca418d7ab">IMG_REDUCE_cubeprocess_cli</a> ()</td></tr>
+<tr class="separator:ab21892717f9ac542835bf60ca418d7ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3d15b471345b3248a1f0e1366bdbea9"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#af3d15b471345b3248a1f0e1366bdbea9">init_img_reduce</a> ()</td></tr>
-<tr class="separator:af3d15b471345b3248a1f0e1366bdbea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94b3c5e62355eb83af8352a0f97cbc92"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a94b3c5e62355eb83af8352a0f97cbc92">IMG_REDUCE_cubesimplestat</a> (const char *IDin_name)</td></tr>
-<tr class="separator:a94b3c5e62355eb83af8352a0f97cbc92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12e5edbe0619866fc389e6615412e180"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a12e5edbe0619866fc389e6615412e180">clean_bad_pix</a> (const char *IDin_name, const char *IDbadpix_name)</td></tr>
-<tr class="memdesc:a12e5edbe0619866fc389e6615412e180"><td class="mdescLeft">&#160;</td><td class="mdescRight">removes bad pixels in cube  <a href="#a12e5edbe0619866fc389e6615412e180">More...</a><br /></td></tr>
-<tr class="separator:a12e5edbe0619866fc389e6615412e180"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c2b612e78298827223dc99553f53b56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a2c2b612e78298827223dc99553f53b56">init_img_reduce</a> ()</td></tr>
+<tr class="separator:a2c2b612e78298827223dc99553f53b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac10bf36f873fa1a35fd5212c3a2067ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#ac10bf36f873fa1a35fd5212c3a2067ba">IMG_REDUCE_cubesimplestat</a> (const char *IDin_name)</td></tr>
+<tr class="separator:ac10bf36f873fa1a35fd5212c3a2067ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6066633834a72f5e7df301a91a133985"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a6066633834a72f5e7df301a91a133985">clean_bad_pix</a> (const char *IDin_name, const char *IDbadpix_name)</td></tr>
+<tr class="memdesc:a6066633834a72f5e7df301a91a133985"><td class="mdescLeft">&#160;</td><td class="mdescRight">removes bad pixels in cube  <a href="#a6066633834a72f5e7df301a91a133985">More...</a><br /></td></tr>
+<tr class="separator:a6066633834a72f5e7df301a91a133985"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4a9f056022ae8dae761a0b26367690c"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#af4a9f056022ae8dae761a0b26367690c">IMG_REDUCE_cleanbadpix_fast_precompute</a> (const char *IDmask_name)</td></tr>
 <tr class="separator:af4a9f056022ae8dae761a0b26367690c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8c9a051ee5dcad2734b21bb4c3fb382"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#aa8c9a051ee5dcad2734b21bb4c3fb382">IMG_REDUCE_cleanbadpix_fast</a> (const char *IDname, const char *IDbadpix_name, const char *IDoutname, int streamMode)</td></tr>
-<tr class="separator:aa8c9a051ee5dcad2734b21bb4c3fb382"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a5179709c35c4c2396c40770cef8634"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a4a5179709c35c4c2396c40770cef8634">IMG_REDUCE_correlMatrix</a> (const char *IDin_name, const char *IDmask_name, const char *IDout_name)</td></tr>
-<tr class="separator:a4a5179709c35c4c2396c40770cef8634"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad371c9daa32dd2c8d26393141e15b4cc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#ad371c9daa32dd2c8d26393141e15b4cc">IMG_REDUCE_centernormim</a> (const char *IDin_name, const char *IDref_name, const char *IDout_name, long xcent0, long ycent0, long xcentsize, long ycentsize, int mode, int semtrig)</td></tr>
-<tr class="separator:ad371c9daa32dd2c8d26393141e15b4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa81da45369eb27d714946b96d9d0e604"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#aa81da45369eb27d714946b96d9d0e604">IMG_REDUCE_cubeprocess</a> (const char *IDin_name)</td></tr>
-<tr class="separator:aa81da45369eb27d714946b96d9d0e604"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cb9de04ae2a2703259d8601dd9d13a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a3cb9de04ae2a2703259d8601dd9d13a0">IMG_REDUCE_cleanbadpix_fast</a> (const char *IDname, const char *IDbadpix_name, const char *IDoutname, int streamMode)</td></tr>
+<tr class="separator:a3cb9de04ae2a2703259d8601dd9d13a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19bcb2bca2fba2e76950dec4ef6410f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a19bcb2bca2fba2e76950dec4ef6410f0">IMG_REDUCE_correlMatrix</a> (const char *IDin_name, const char *IDmask_name, const char *IDout_name)</td></tr>
+<tr class="separator:a19bcb2bca2fba2e76950dec4ef6410f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc03b1646651730ddae06d87248a3917"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#abc03b1646651730ddae06d87248a3917">IMG_REDUCE_centernormim</a> (const char *IDin_name, const char *IDref_name, const char *IDout_name, long xcent0, long ycent0, long xcentsize, long ycentsize, int mode, int semtrig)</td></tr>
+<tr class="separator:abc03b1646651730ddae06d87248a3917"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a2e4fd9003faf73c8afa7af6400a996"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="img__reduce_8c.html#a4a2e4fd9003faf73c8afa7af6400a996">IMG_REDUCE_cubeprocess</a> (const char *IDin_name)</td></tr>
+<tr class="separator:a4a2e4fd9003faf73c8afa7af6400a996"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -149,10 +194,7 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Image analysis functions. </p>
-<p>Misc image analysis functions</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>10 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000090">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<p>Misc image analysis functions </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
@@ -161,7 +203,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -174,14 +216,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a12e5edbe0619866fc389e6615412e180"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12e5edbe0619866fc389e6615412e180">&#9670;&nbsp;</a></span>clean_bad_pix()</h2>
+<a id="a6066633834a72f5e7df301a91a133985"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6066633834a72f5e7df301a91a133985">&#9670;&nbsp;</a></span>clean_bad_pix()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int clean_bad_pix </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> clean_bad_pix </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -204,14 +246,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad371c9daa32dd2c8d26393141e15b4cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad371c9daa32dd2c8d26393141e15b4cc">&#9670;&nbsp;</a></span>IMG_REDUCE_centernormim()</h2>
+<a id="abc03b1646651730ddae06d87248a3917"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc03b1646651730ddae06d87248a3917">&#9670;&nbsp;</a></span>IMG_REDUCE_centernormim()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int IMG_REDUCE_centernormim </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> IMG_REDUCE_centernormim </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -277,14 +319,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="acc8848cdfc12654ba42863d66bc4f361"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc8848cdfc12654ba42863d66bc4f361">&#9670;&nbsp;</a></span>IMG_REDUCE_centernormim_cli()</h2>
+<a id="abfea55a640c92d4bc1b24c0e18b92757"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfea55a640c92d4bc1b24c0e18b92757">&#9670;&nbsp;</a></span>IMG_REDUCE_centernormim_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t IMG_REDUCE_centernormim_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> IMG_REDUCE_centernormim_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -294,14 +336,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa8c9a051ee5dcad2734b21bb4c3fb382"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8c9a051ee5dcad2734b21bb4c3fb382">&#9670;&nbsp;</a></span>IMG_REDUCE_cleanbadpix_fast()</h2>
+<a id="a3cb9de04ae2a2703259d8601dd9d13a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cb9de04ae2a2703259d8601dd9d13a0">&#9670;&nbsp;</a></span>IMG_REDUCE_cleanbadpix_fast()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long IMG_REDUCE_cleanbadpix_fast </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> IMG_REDUCE_cleanbadpix_fast </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDname</em>, </td>
@@ -334,14 +376,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ada277c60b981b30114fba2a3be1cf305"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada277c60b981b30114fba2a3be1cf305">&#9670;&nbsp;</a></span>IMG_REDUCE_cleanbadpix_fast_cli()</h2>
+<a id="a394fa40588e1675cf6386e8ee0da6d5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a394fa40588e1675cf6386e8ee0da6d5c">&#9670;&nbsp;</a></span>IMG_REDUCE_cleanbadpix_fast_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t IMG_REDUCE_cleanbadpix_fast_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> IMG_REDUCE_cleanbadpix_fast_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -369,14 +411,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a76fc26c7de8f1934c7cc070bd0ad9cd0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76fc26c7de8f1934c7cc070bd0ad9cd0">&#9670;&nbsp;</a></span>IMG_REDUCE_cleanbadpix_stream_fast_cli()</h2>
+<a id="ab53cee378f0e2f0d48594b0801089732"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab53cee378f0e2f0d48594b0801089732">&#9670;&nbsp;</a></span>IMG_REDUCE_cleanbadpix_stream_fast_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t IMG_REDUCE_cleanbadpix_stream_fast_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> IMG_REDUCE_cleanbadpix_stream_fast_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -386,14 +428,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a4a5179709c35c4c2396c40770cef8634"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a5179709c35c4c2396c40770cef8634">&#9670;&nbsp;</a></span>IMG_REDUCE_correlMatrix()</h2>
+<a id="a19bcb2bca2fba2e76950dec4ef6410f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19bcb2bca2fba2e76950dec4ef6410f0">&#9670;&nbsp;</a></span>IMG_REDUCE_correlMatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int IMG_REDUCE_correlMatrix </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> IMG_REDUCE_correlMatrix </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -420,14 +462,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa81da45369eb27d714946b96d9d0e604"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa81da45369eb27d714946b96d9d0e604">&#9670;&nbsp;</a></span>IMG_REDUCE_cubeprocess()</h2>
+<a id="a4a2e4fd9003faf73c8afa7af6400a996"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a2e4fd9003faf73c8afa7af6400a996">&#9670;&nbsp;</a></span>IMG_REDUCE_cubeprocess()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int IMG_REDUCE_cubeprocess </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> IMG_REDUCE_cubeprocess </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em></td><td>)</td>
@@ -443,14 +485,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a11b41674fec238b1d057c26b29f712e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11b41674fec238b1d057c26b29f712e7">&#9670;&nbsp;</a></span>IMG_REDUCE_cubeprocess_cli()</h2>
+<a id="ab21892717f9ac542835bf60ca418d7ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab21892717f9ac542835bf60ca418d7ab">&#9670;&nbsp;</a></span>IMG_REDUCE_cubeprocess_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t IMG_REDUCE_cubeprocess_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> IMG_REDUCE_cubeprocess_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -460,14 +502,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a94b3c5e62355eb83af8352a0f97cbc92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94b3c5e62355eb83af8352a0f97cbc92">&#9670;&nbsp;</a></span>IMG_REDUCE_cubesimplestat()</h2>
+<a id="ac10bf36f873fa1a35fd5212c3a2067ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac10bf36f873fa1a35fd5212c3a2067ba">&#9670;&nbsp;</a></span>IMG_REDUCE_cubesimplestat()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long IMG_REDUCE_cubesimplestat </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> IMG_REDUCE_cubesimplestat </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em></td><td>)</td>
@@ -479,14 +521,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab0df51fb16473c0db8de60b8d03932e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0df51fb16473c0db8de60b8d03932e6">&#9670;&nbsp;</a></span>IMG_REDUCE_cubesimplestat_cli()</h2>
+<a id="a32b2cda2b1ad4b4e40e869c78d204e72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32b2cda2b1ad4b4e40e869c78d204e72">&#9670;&nbsp;</a></span>IMG_REDUCE_cubesimplestat_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t IMG_REDUCE_cubesimplestat_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> IMG_REDUCE_cubesimplestat_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -496,14 +538,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af3d15b471345b3248a1f0e1366bdbea9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3d15b471345b3248a1f0e1366bdbea9">&#9670;&nbsp;</a></span>init_img_reduce()</h2>
+<a id="a2c2b612e78298827223dc99553f53b56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c2b612e78298827223dc99553f53b56">&#9670;&nbsp;</a></span>init_img_reduce()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t init_img_reduce </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_img_reduce </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -581,7 +623,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>image analysis/reduction routines for astronomy </p>
+<p>Image analysis/reduction routines for astronomy </p>
 
 </div>
 </div>
@@ -642,7 +684,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2023aa0f1a7d7dd6bbe7e3d622e6aa1b.html">img_reduce</a></li><li class="navelem"><a class="el" href="img__reduce_8c.html">img_reduce.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

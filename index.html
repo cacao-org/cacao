@@ -141,10 +141,10 @@ $(document).ready(function(){initNavTree('index.html','');});
 3.3. Key tools</h2>
 <p>To manage processes and streams, cacao offers a few useful tools, allowing users to quickly inspect complex AO loops. They are included in the directory <code>src/CommandLineInterface/scripts</code>, which is included in the path, per installation instructions. cacao users will make frequent use of these tools.</p>
 <ul>
-<li><b>procCTRL</b>, the process controller. See <a class="el" href="page_ProcessInfoStructure.html">Process Info Structure (processinfo)</a> for details.</li>
-<li><b>streamCTRL</b>, the stream controller. See <a class="el" href="streamCTRL_8c.html" title="Data streams control panel. ">streamCTRL.c</a> for details.</li>
-<li><b>fpsCTRL</b>, the function parameter structure controller. See <a class="el" href="page_FunctionParameterStructure.html">Function Parameter Structure (FPS)</a> for details.</li>
-<li><b>shmimmon</b>, the shared memory image monitor, is used to inspect individual streams</li>
+<li><b>milk-procCTRL</b>, the process controller. See <a class="el" href="page_ProcessInfoStructure.html">Process Info Structure (processinfo)</a> for details.</li>
+<li><b>milk-streamCTRL</b>, the stream controller. See <a class="el" href="streamCTRL_8c.html" title="Data streams control panel. ">streamCTRL.c</a> for details.</li>
+<li><b>milk-fpsCTRL</b>, the function parameter structure controller. See <a class="el" href="page_FunctionParameterStructure.html">Function Parameter Structure (FPS)</a> for details.</li>
+<li><b>milk-shmimmon</b>, the shared memory image monitor, is used to inspect individual streams</li>
 </ul>
 <hr/>
 <h1><a class="anchor" id="mainsection_cacaoconfrun"></a>
@@ -193,7 +193,7 @@ $(document).ready(function(){initNavTree('index.html','');});
 <li><a class="el" href="page_TemplateSourceCode.html">Template Souce Code</a></li>
 <li><a class="el" href="page_ProcessInfoStructure.html">Process Info Structure (processinfo)</a></li>
 <li><a class="el" href="page_FunctionParameterStructure.html">Function Parameter Structure (FPS)</a></li>
-<li><a class="el" href="page_exampleBASHscript.html">Example BASH script</a></li>
+<li>page_exampleBASHscript</li>
 </ul>
 </li>
 <li><a class="el" href="page_LoadingModules.html">Loading, Creating Additional Modules</a></li>
@@ -209,47 +209,47 @@ A.1. milk modules</h2>
 <tr>
 <th>Module </th><th>Description </th><th>Souce Code Reference  </th></tr>
 <tr>
-<td>CommandLineInterface </td><td>Command interpreter </td><td><a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html">CLIcore.h</a> </td></tr>
+<td>CommandLineInterface </td><td>Command interpreter </td><td><a class="el" href="CLIcore_8h.html">CLIcore.h</a> </td></tr>
 <tr>
-<td>ImageStreamIO </td><td>Image format and low-level routines </td><td><a class="el" href="src_2ImageStreamIO_2ImageStreamIO_8h.html">ImageStreamIO.h</a> </td></tr>
+<td>ImageStreamIO </td><td>Image format and low-level routines </td><td><a class="el" href="ImageStreamIO_8h.html">ImageStreamIO.h</a> </td></tr>
 <tr>
-<td>00CORE </td><td>Core functions </td><td>00CORE.h </td></tr>
+<td>00CORE </td><td>Core functions </td><td><a class="el" href="00CORE_8h.html" title="Function prototypes for module 00CORE. ">00CORE.h</a> </td></tr>
 <tr>
-<td>COREMOD_memory </td><td>Memory management, image creation </td><td><a class="el" href="src_2COREMOD__memory_2COREMOD__memory_8h.html">COREMOD_memory.h</a> </td></tr>
+<td>COREMOD_memory </td><td>Memory management, image creation </td><td><a class="el" href="COREMOD__memory_8h.html">COREMOD_memory.h</a> </td></tr>
 <tr>
-<td>COREMOD_iofits </td><td>Read and write FITS files </td><td><a class="el" href="src_2COREMOD__iofits_2COREMOD__iofits_8h.html">COREMOD_iofits.h</a> </td></tr>
+<td>COREMOD_iofits </td><td>Read and write FITS files </td><td><a class="el" href="COREMOD__iofits_8h.html">COREMOD_iofits.h</a> </td></tr>
 <tr>
-<td>COREMOD_tools </td><td>Misc frequently used functions </td><td><a class="el" href="src_2COREMOD__tools_2COREMOD__tools_8h.html">COREMOD_tools.h</a> </td></tr>
+<td>COREMOD_tools </td><td>Misc frequently used functions </td><td><a class="el" href="COREMOD__tools_8h.html">COREMOD_tools.h</a> </td></tr>
 <tr>
-<td>COREMOD_arith </td><td>Arithmetic operations on images </td><td><a class="el" href="src_2COREMOD__arith_2COREMOD__arith_8h.html">COREMOD_arith.h</a> </td></tr>
+<td>COREMOD_arith </td><td>Arithmetic operations on images </td><td><a class="el" href="COREMOD__arith_8h.html">COREMOD_arith.h</a> </td></tr>
 <tr>
-<td>info </td><td>Image information </td><td><a class="el" href="src_2info_2info_8h.html">info.h</a> </td></tr>
+<td>info </td><td>Image information </td><td><a class="el" href="info_8h.html">info.h</a> </td></tr>
 <tr>
-<td>image_basic </td><td>Frequently used image functions </td><td><a class="el" href="src_2image__basic_2image__basic_8h.html">image_basic.h</a> </td></tr>
+<td>image_basic </td><td>Frequently used image functions </td><td><a class="el" href="image__basic_8h.html">image_basic.h</a> </td></tr>
 <tr>
-<td>image_filter </td><td>Image filtering, convolution </td><td><a class="el" href="src_2image__filter_2image__filter_8h.html">image_filter.h</a> </td></tr>
+<td>image_filter </td><td>Image filtering, convolution </td><td><a class="el" href="image__filter_8h.html">image_filter.h</a> </td></tr>
 <tr>
-<td>image_format </td><td>Read/write images in several formats </td><td><a class="el" href="src_2image__format_2image__format_8h.html">image_format.h</a> </td></tr>
+<td>image_format </td><td>Read/write images in several formats </td><td><a class="el" href="image__format_8h.html">image_format.h</a> </td></tr>
 <tr>
-<td>image_gen </td><td>Generate useful images </td><td><a class="el" href="src_2image__gen_2image__gen_8h.html">image_gen.h</a> </td></tr>
+<td>image_gen </td><td>Generate useful images </td><td><a class="el" href="image__gen_8h.html">image_gen.h</a> </td></tr>
 <tr>
-<td>img_reduce </td><td>Combine raw images into single image </td><td><a class="el" href="src_2img__reduce_2img__reduce_8h.html">img_reduce.h</a> </td></tr>
+<td>img_reduce </td><td>Combine raw images into single image </td><td><a class="el" href="img__reduce_8h.html">img_reduce.h</a> </td></tr>
 <tr>
-<td>fft </td><td>Wrapper to FFTW and other functions </td><td><a class="el" href="src_2fft_2fft_8h.html">fft.h</a> </td></tr>
+<td>fft </td><td>Wrapper to FFTW and other functions </td><td><a class="el" href="fft_8h.html">fft.h</a> </td></tr>
 <tr>
-<td>statistic </td><td>Statistical tools and analysis </td><td><a class="el" href="src_2statistic_2statistic_8h.html">statistic.h</a> </td></tr>
+<td>statistic </td><td>Statistical tools and analysis </td><td><a class="el" href="statistic_8h.html">statistic.h</a> </td></tr>
 <tr>
-<td>kdtree </td><td>k-d tree </td><td><a class="el" href="src_2kdtree_2kdtree_8h.html">kdtree.h</a> </td></tr>
+<td>kdtree </td><td>k-d tree </td><td><a class="el" href="kdtree_8h.html">kdtree.h</a> </td></tr>
 <tr>
-<td>linARfilterPred </td><td>Linear predictive filtering </td><td><a class="el" href="src_2linARfilterPred_2linARfilterPred_8h.html">linARfilterPred.h</a> </td></tr>
+<td>linARfilterPred </td><td>Linear predictive filtering </td><td><a class="el" href="linARfilterPred_8h.html">linARfilterPred.h</a> </td></tr>
 <tr>
-<td>linopt_imtools.h </td><td>Linear optimization tools </td><td><a class="el" href="src_2linopt__imtools_2linopt__imtools_8h.html">linopt_imtools.h</a> </td></tr>
+<td><a class="el" href="linopt__imtools_8h.html" title="Function prototypes for linear algebra tools. ">linopt_imtools.h</a> </td><td>Linear optimization tools </td><td><a class="el" href="linopt__imtools_8h.html">linopt_imtools.h</a> </td></tr>
 <tr>
-<td>psf </td><td>Point Spread Function analysis </td><td><a class="el" href="src_2psf_2psf_8h.html">psf.h</a> </td></tr>
+<td>psf </td><td>Point Spread Function analysis </td><td><a class="el" href="psf_8h.html">psf.h</a> </td></tr>
 <tr>
-<td>ZernikePolyn </td><td>Zernike Polynomials </td><td><a class="el" href="src_2ZernikePolyn_2ZernikePolyn_8h.html">ZernikePolyn.h</a> </td></tr>
+<td>ZernikePolyn </td><td>Zernike Polynomials </td><td><a class="el" href="ZernikePolyn_8h.html">ZernikePolyn.h</a> </td></tr>
 <tr>
-<td>cudacomp </td><td>Cuda wrapper </td><td><a class="el" href="src_2cudacomp_2cudacomp_8h.html">cudacomp.h</a> </td></tr>
+<td>cudacomp </td><td>Cuda wrapper </td><td><a class="el" href="cudacomp_8h.html">cudacomp.h</a> </td></tr>
 </table>
 <h2><a class="anchor" id="mainsection_modules_cacao"></a>
 A.2. cacao-specific modules</h2>
@@ -257,23 +257,23 @@ A.2. cacao-specific modules</h2>
 <tr>
 <th>Module </th><th>Description </th><th>Souce Code Reference  </th></tr>
 <tr>
-<td>AOloopControl </td><td>Top-level module for AO control </td><td><a class="el" href="src_2AOloopControl_2AOloopControl_8h.html">AOloopControl.h</a> </td></tr>
+<td>AOloopControl </td><td>Top-level module for AO control </td><td><a class="el" href="AOloopControl_8h.html">AOloopControl.h</a> </td></tr>
 <tr>
-<td>AOloopControl_IOtools </td><td>Input-Output tools </td><td><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html">AOloopControl_IOtools.h</a> </td></tr>
+<td>AOloopControl_IOtools </td><td>Input-Output tools </td><td><a class="el" href="AOloopControl__IOtools_8h.html">AOloopControl_IOtools.h</a> </td></tr>
 <tr>
-<td>AOloopControl_acquireCalib </td><td>Acquire AO calibration </td><td><a class="el" href="src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8h.html">AOloopControl_acquireCalib.h</a> </td></tr>
+<td>AOloopControl_acquireCalib </td><td>Acquire AO calibration </td><td><a class="el" href="AOloopControl__acquireCalib_8h.html">AOloopControl_acquireCalib.h</a> </td></tr>
 <tr>
-<td>page_AOloopControl_computeCalib </td><td>Compute AO calibration </td><td><a class="el" href="src_2AOloopControl__computeCalib_2AOloopControl__computeCalib_8h.html">AOloopControl_computeCalib.h</a> </td></tr>
+<td>page_AOloopControl_computeCalib </td><td>Compute AO calibration </td><td><a class="el" href="AOloopControl__computeCalib_8h.html">AOloopControl_computeCalib.h</a> </td></tr>
 <tr>
-<td>AOloopControl_perfTest </td><td>AO performance analysis </td><td><a class="el" href="src_2AOloopControl__perfTest_2AOloopControl__perfTest_8h.html">AOloopControl_perfTest.h</a> </td></tr>
+<td>AOloopControl_perfTest </td><td>AO performance analysis </td><td><a class="el" href="AOloopControl__perfTest_8h.html">AOloopControl_perfTest.h</a> </td></tr>
 <tr>
-<td>AOloopControl_compTools </td><td>AO computation tools </td><td><a class="el" href="src_2AOloopControl__compTools_2AOloopControl__compTools_8h.html">AOloopControl_compTools.h</a> </td></tr>
+<td>AOloopControl_compTools </td><td>AO computation tools </td><td><a class="el" href="AOloopControl__compTools_8h.html">AOloopControl_compTools.h</a> </td></tr>
 <tr>
-<td>AOloopControl_PredictiveControl </td><td>Predictive Control </td><td><a class="el" href="src_2AOloopControl__PredictiveControl_2AOloopControl__PredictiveControl_8h.html">AOloopControl_PredictiveControl.h</a> </td></tr>
+<td>AOloopControl_PredictiveControl </td><td>Predictive Control </td><td><a class="el" href="AOloopControl__PredictiveControl_8h.html">AOloopControl_PredictiveControl.h</a> </td></tr>
 <tr>
-<td>AOloopControl_DM </td><td>Deformable mirror control </td><td><a class="el" href="src_2AOloopControl__DM_2AOloopControl__DM_8h.html">AOloopControl_DM.h</a> </td></tr>
+<td>AOloopControl_DM </td><td>Deformable mirror control </td><td><a class="el" href="AOloopControl__DM_8h.html">AOloopControl_DM.h</a> </td></tr>
 <tr>
-<td>FPAOloopControl </td><td>Focal plane AO control </td><td><a class="el" href="src_2FPAOloopControl_2FPAOloopControl_8h.html">FPAOloopControl.h</a> </td></tr>
+<td>FPAOloopControl </td><td>Focal plane AO control </td><td><a class="el" href="FPAOloopControl_8h.html">FPAOloopControl.h</a> </td></tr>
 </table>
 <hr/>
  </div></div><!-- contents -->
@@ -282,7 +282,7 @@ A.2. cacao-specific modules</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

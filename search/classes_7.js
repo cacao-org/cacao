@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['imagestreamiodatatype',['ImageStreamIODataType',['../structImageStreamIODataType.html',1,'']]],
-  ['imagestreamiotype',['ImageStreamIOType',['../structImageStreamIOType.html',1,'']]]
+  ['logshim_5fconf',['LOGSHIM_CONF',['../structLOGSHIM__CONF.html',1,'']]]
 ];

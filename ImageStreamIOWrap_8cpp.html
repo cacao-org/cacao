@@ -91,7 +91,24 @@ $(document).ready(function(){initNavTree('ImageStreamIOWrap_8cpp.html','');});
 <div class="title">ImageStreamIOWrap.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;pybind11/chrono.h&gt;</code><br />
+<code>#include &lt;pybind11/numpy.h&gt;</code><br />
+<code>#include &lt;pybind11/pybind11.h&gt;</code><br />
+<code>#include &lt;pybind11/stl.h&gt;</code><br />
+<code>#include &lt;ctime&gt;</code><br />
+<code>#include &quot;<a class="el" href="ImageStreamIO_8h_source.html">ImageStreamIO.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ImageStruct_8h_source.html">ImageStruct.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for ImageStreamIOWrap.cpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="ImageStreamIOWrap_8cpp__incl.png" border="0" usemap="#src_2ImageStreamIO_2python__module_2src_2ImageStreamIOWrap_8cpp" alt=""/></div>
+<map name="src_2ImageStreamIO_2python__module_2src_2ImageStreamIOWrap_8cpp" id="src_2ImageStreamIO_2python__module_2src_2ImageStreamIOWrap_8cpp">
+<area shape="rect" id="node7" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="681,95,807,121"/>
+<area shape="rect" id="node8" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="741,169,845,196"/>
+<area shape="rect" id="node16" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1090,244,1243,271"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structImageStreamIOType.html">ImageStreamIOType</a></td></tr>
@@ -101,12 +118,14 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a25ca82808b4d15b459b42a7bbdafed19"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ImageStreamIOWrap_8cpp.html#a25ca82808b4d15b459b42a7bbdafed19">toString</a> (const <a class="el" href="structIMAGE__KEYWORD.html">IMAGE_KEYWORD</a> &amp;kw)</td></tr>
+<tr class="separator:a25ca82808b4d15b459b42a7bbdafed19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a458d32b9b48a62ba98388a155073965f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ImageStreamIOWrap_8cpp.html#a458d32b9b48a62ba98388a155073965f">ImageStreamIODataTypeToPyFormat</a> (<a class="el" href="structImageStreamIODataType.html">ImageStreamIODataType</a> dt)</td></tr>
 <tr class="separator:a458d32b9b48a62ba98388a155073965f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae31da4255f0e155e549e513be8644750"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structImageStreamIODataType.html">ImageStreamIODataType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ImageStreamIOWrap_8cpp.html#ae31da4255f0e155e549e513be8644750">PyFormatToImageStreamIODataType</a> (const std::string &amp;pf)</td></tr>
 <tr class="separator:ae31da4255f0e155e549e513be8644750"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a932aff65cf23d68049432e48f584e2cf"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a932aff65cf23d68049432e48f584e2cf"><td class="memTemplItemLeft" align="right" valign="top">py::array_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="ImageStreamIOWrap_8cpp.html#a932aff65cf23d68049432e48f584e2cf">convert_img</a> (const <a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> &amp;img)</td></tr>
+<tr class="memitem:a932aff65cf23d68049432e48f584e2cf"><td class="memTemplItemLeft" align="right" valign="top">py::array_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="ImageStreamIOWrap_8cpp.html#a932aff65cf23d68049432e48f584e2cf">convert_img</a> (const <a class="el" href="structIMAGE.html">IMAGE</a> &amp;img)</td></tr>
 <tr class="separator:a932aff65cf23d68049432e48f584e2cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f1c6f673606d624b2269c97c3b8d711"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ImageStreamIOWrap_8cpp.html#a0f1c6f673606d624b2269c97c3b8d711">PYBIND11_MODULE</a> (ImageStreamIOWrap, m)</td></tr>
 <tr class="separator:a0f1c6f673606d624b2269c97c3b8d711"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -123,7 +142,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="memname">py::array_t&lt;T&gt; convert_img </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structIMAGE.html">IMAGE</a> &amp;&#160;</td>
           <td class="paramname"><em>img</em></td><td>)</td>
           <td></td>
         </tr>
@@ -196,6 +215,24 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a25ca82808b4d15b459b42a7bbdafed19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25ca82808b4d15b459b42a7bbdafed19">&#9670;&nbsp;</a></span>toString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string toString </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structIMAGE__KEYWORD.html">IMAGE_KEYWORD</a> &amp;&#160;</td>
+          <td class="paramname"><em>kw</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.13-->
@@ -203,7 +240,7 @@ template&lt;typename T &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f9bfd6d7838ce96d8ef51017747ec480.html">ImageStreamIO</a></li><li class="navelem"><a class="el" href="dir_be4f775406fa641bfa853dddf9027160.html">python_module</a></li><li class="navelem"><a class="el" href="dir_ea9a8cdbb2622c513940224b96925ece.html">src</a></li><li class="navelem"><a class="el" href="ImageStreamIOWrap_8cpp.html">ImageStreamIOWrap.cpp</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

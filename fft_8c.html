@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('fft_8c.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,42 +95,91 @@ $(document).ready(function(){initNavTree('fft_8c.html','');});
 
 <p>Fourier Transform.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;fftw3.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="fft_8h_source.html">fft/fft.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for fft.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="fft_8c__incl.png" border="0" usemap="#src_2fft_2fft_8c" alt=""/></div>
+<map name="src_2fft_2fft_8c" id="src_2fft_2fft_8c">
+<area shape="rect" id="node9" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="825,80,982,121"/>
+<area shape="rect" id="node22" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="1058,87,1200,114"/>
+<area shape="rect" id="node23" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1224,80,1444,121"/>
+<area shape="rect" id="node24" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="1468,80,1670,121"/>
+<area shape="rect" id="node25" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="1694,80,1892,121"/>
+<area shape="rect" id="node26" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="1916,80,2118,121"/>
+<area shape="rect" id="node27" href="fft_8h.html" title="fft/fft.h" alt="" coords="2142,87,2204,114"/>
+<area shape="rect" id="node16" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="594,169,816,196"/>
+<area shape="rect" id="node17" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="668,244,772,271"/>
+<area shape="rect" id="node19" href="processtools_8h.html" title="Command line interface. " alt="" coords="861,244,968,271"/>
+<area shape="rect" id="node20" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1094,244,1202,271"/>
+<area shape="rect" id="node21" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1315,169,1466,196"/>
+<area shape="rect" id="node18" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="598,319,751,345"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a598a3330b3c21701223ee0ca14316eca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a598a3330b3c21701223ee0ca14316eca">PI</a>&#160;&#160;&#160;3.14159265358979323846264338328</td></tr>
+<tr class="separator:a598a3330b3c21701223ee0ca14316eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a5897d76a450be92263b1174e6efc7e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a4a5897d76a450be92263b1174e6efc7e">SWAPf</a>(x,  y)</td></tr>
+<tr class="separator:a4a5897d76a450be92263b1174e6efc7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad934256f48432207379410943771c0f1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ad934256f48432207379410943771c0f1">SWAPd</a>(x,  y)</td></tr>
+<tr class="separator:ad934256f48432207379410943771c0f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1055aac2cc54446250d0a8a9b6f8090e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a1055aac2cc54446250d0a8a9b6f8090e">CSWAPcf</a>(x,  y)</td></tr>
+<tr class="separator:a1055aac2cc54446250d0a8a9b6f8090e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a426a3d163661dcaa349273560d5d9d97"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a426a3d163661dcaa349273560d5d9d97">CSWAPcd</a>(x,  y)</td></tr>
+<tr class="separator:a426a3d163661dcaa349273560d5d9d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a856e9c763f542a6a0b78587b2989c159"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a856e9c763f542a6a0b78587b2989c159">SBUFFERSIZE</a>&#160;&#160;&#160;1000</td></tr>
+<tr class="separator:a856e9c763f542a6a0b78587b2989c159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c59fbcd70b859f0821a9aa93a141b00"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a1c59fbcd70b859f0821a9aa93a141b00">FFTWOPTMODE</a>&#160;&#160;&#160;FFTW_ESTIMATE</td></tr>
+<tr class="separator:a1c59fbcd70b859f0821a9aa93a141b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a65786e09c3bd4c1f8f8f311e91c672c6"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a65786e09c3bd4c1f8f8f311e91c672c6">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a65786e09c3bd4c1f8f8f311e91c672c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7069b9e13085029927c28b50e905867b"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a7069b9e13085029927c28b50e905867b">fft_permut_cli</a> ()</td></tr>
-<tr class="separator:a7069b9e13085029927c28b50e905867b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99afbc730a6cce05e05ca4525918eae6"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a99afbc730a6cce05e05ca4525918eae6">fft_do1dfft_cli</a> ()</td></tr>
-<tr class="separator:a99afbc730a6cce05e05ca4525918eae6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ca94c533295239786b0462b9d8bfa57"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a1ca94c533295239786b0462b9d8bfa57">fft_do1drfft_cli</a> ()</td></tr>
-<tr class="separator:a1ca94c533295239786b0462b9d8bfa57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab07e4afd0a7ab62448bb9e4a020eb178"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ab07e4afd0a7ab62448bb9e4a020eb178">fft_do2dfft_cli</a> ()</td></tr>
-<tr class="separator:ab07e4afd0a7ab62448bb9e4a020eb178"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1624de50f0834da8b1df80a7f5a371f7"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a1624de50f0834da8b1df80a7f5a371f7">test_fftspeed_cli</a> ()</td></tr>
-<tr class="separator:a1624de50f0834da8b1df80a7f5a371f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07c8239fbbe3cd4407a7eadc7c7dfc5e"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a07c8239fbbe3cd4407a7eadc7c7dfc5e">fft_image_translate_cli</a> ()</td></tr>
-<tr class="separator:a07c8239fbbe3cd4407a7eadc7c7dfc5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a804d161dd6945337e7bb26082d829102"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a804d161dd6945337e7bb26082d829102">fft_correlation_cli</a> ()</td></tr>
-<tr class="separator:a804d161dd6945337e7bb26082d829102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bc621aafabe7c7b78214f20ca1a9d0e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a8bc621aafabe7c7b78214f20ca1a9d0e">fft_permut_cli</a> ()</td></tr>
+<tr class="separator:a8bc621aafabe7c7b78214f20ca1a9d0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8dbf97a3dffed9c2f35bdebbc64555d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ad8dbf97a3dffed9c2f35bdebbc64555d">fft_do1dfft_cli</a> ()</td></tr>
+<tr class="separator:ad8dbf97a3dffed9c2f35bdebbc64555d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a362cc480df2c0a0c56bbc5defaa11dbd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a362cc480df2c0a0c56bbc5defaa11dbd">fft_do1drfft_cli</a> ()</td></tr>
+<tr class="separator:a362cc480df2c0a0c56bbc5defaa11dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99705fad83229a4d62f417ce898b0b4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a99705fad83229a4d62f417ce898b0b4a">fft_do2dfft_cli</a> ()</td></tr>
+<tr class="separator:a99705fad83229a4d62f417ce898b0b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad45314e392a3cfc9cbc67ff4feab829c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ad45314e392a3cfc9cbc67ff4feab829c">test_fftspeed_cli</a> ()</td></tr>
+<tr class="separator:ad45314e392a3cfc9cbc67ff4feab829c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cd479728b789c0654d2d9ce94c1b425"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a6cd479728b789c0654d2d9ce94c1b425">fft_image_translate_cli</a> ()</td></tr>
+<tr class="separator:a6cd479728b789c0654d2d9ce94c1b425"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a895fde417e620e39ca3069f57fb20117"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a895fde417e620e39ca3069f57fb20117">fft_correlation_cli</a> ()</td></tr>
+<tr class="separator:a895fde417e620e39ca3069f57fb20117"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a2d5a49fa05c8b3ba72c312d32944a5"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a6a2d5a49fa05c8b3ba72c312d32944a5">init_fft</a> ()</td></tr>
-<tr class="separator:a6a2d5a49fa05c8b3ba72c312d32944a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a407aad4a96dd2d7810194e30742a64cd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a407aad4a96dd2d7810194e30742a64cd">free_fft</a> ()</td></tr>
-<tr class="separator:a407aad4a96dd2d7810194e30742a64cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae678e81aedd565168215fbd3fced2ba5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ae678e81aedd565168215fbd3fced2ba5">fft_setNthreads</a> (int nt)</td></tr>
-<tr class="separator:ae678e81aedd565168215fbd3fced2ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0767c4e140bc8498e1984f927c16803f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a0767c4e140bc8498e1984f927c16803f">import_wisdom</a> ()</td></tr>
-<tr class="separator:a0767c4e140bc8498e1984f927c16803f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05727be9438b2cfc5933ff196988f3d2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a05727be9438b2cfc5933ff196988f3d2">export_wisdom</a> ()</td></tr>
-<tr class="separator:a05727be9438b2cfc5933ff196988f3d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc8e520b2e3397a2d1b19c48aa1accd0"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#afc8e520b2e3397a2d1b19c48aa1accd0">init_fftw_plans</a> (int mode)</td></tr>
-<tr class="separator:afc8e520b2e3397a2d1b19c48aa1accd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7bfdbeb0850dbb6d8fd671238b18287"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ab7bfdbeb0850dbb6d8fd671238b18287">init_fftw_plans0</a> ()</td></tr>
-<tr class="separator:ab7bfdbeb0850dbb6d8fd671238b18287"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7e5f5c14ff8ad42e10651503200880c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ad7e5f5c14ff8ad42e10651503200880c">__attribute__</a> ((destructor))</td></tr>
+<tr class="separator:ad7e5f5c14ff8ad42e10651503200880c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a347f101a017e505b0617c7491f46d54b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a347f101a017e505b0617c7491f46d54b">init_fft</a> ()</td></tr>
+<tr class="separator:a347f101a017e505b0617c7491f46d54b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23fac888f28f90fdfb64a88bf16dd6d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a23fac888f28f90fdfb64a88bf16dd6d4">fft_setNthreads</a> (<a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int nt)</td></tr>
+<tr class="separator:a23fac888f28f90fdfb64a88bf16dd6d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8b0cdf6145f0ec9488cceb1d86018cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#aa8b0cdf6145f0ec9488cceb1d86018cf">import_wisdom</a> ()</td></tr>
+<tr class="separator:aa8b0cdf6145f0ec9488cceb1d86018cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f1c794541af3a20978d04ab0cab98af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a7f1c794541af3a20978d04ab0cab98af">export_wisdom</a> ()</td></tr>
+<tr class="separator:a7f1c794541af3a20978d04ab0cab98af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae81cacc047ff7e801eac130de834956"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#aae81cacc047ff7e801eac130de834956">init_fftw_plans</a> (int mode)</td></tr>
+<tr class="separator:aae81cacc047ff7e801eac130de834956"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac170f9bd5ce0d4941563a3e0a5a27f09"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ac170f9bd5ce0d4941563a3e0a5a27f09">init_fftw_plans0</a> ()</td></tr>
+<tr class="separator:ac170f9bd5ce0d4941563a3e0a5a27f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5aceb6604a1db8aa25abb42273b1e828"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a5aceb6604a1db8aa25abb42273b1e828">permut</a> (const char *ID_name)</td></tr>
 <tr class="separator:a5aceb6604a1db8aa25abb42273b1e828"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef49f9202a140629a5d2986860de2a9a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#aef49f9202a140629a5d2986860de2a9a">array_index</a> (long size)</td></tr>
@@ -156,8 +206,8 @@ Functions</h2></td></tr>
 <tr class="separator:aa11a8801237a1b71e61ae767679d4523"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b9a510d962d02168c295430ed177c7f"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a9b9a510d962d02168c295430ed177c7f">do2drffti</a> (const char *in_name, const char *out_name)</td></tr>
 <tr class="separator:a9b9a510d962d02168c295430ed177c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a492ba5c342be96743d1d7d7459c3036c"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a492ba5c342be96743d1d7d7459c3036c">fft_correlation</a> (const char *ID_name1, const char *ID_name2, const char *ID_nameout)</td></tr>
-<tr class="separator:a492ba5c342be96743d1d7d7459c3036c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a915d49f0bf39ae5b3175d4df141d6518"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a915d49f0bf39ae5b3175d4df141d6518">fft_correlation</a> (const char *ID_name1, const char *ID_name2, const char *ID_nameout)</td></tr>
+<tr class="separator:a915d49f0bf39ae5b3175d4df141d6518"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b65ada4e8370e4de4b98f1c8bde6696"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a7b65ada4e8370e4de4b98f1c8bde6696">autocorrelation</a> (const char *ID_name, const char *ID_out)</td></tr>
 <tr class="separator:a7b65ada4e8370e4de4b98f1c8bde6696"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab82e7bdf11e52e96d5656b8e7157872c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ab82e7bdf11e52e96d5656b8e7157872c">fftczoom</a> (const char *ID_name, const char *ID_out, long factor)</td></tr>
@@ -167,36 +217,188 @@ Functions</h2></td></tr>
 <tr class="memitem:ab3fe145c0484fc3b208e8959ac572e40"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#ab3fe145c0484fc3b208e8959ac572e40">test_fftspeed</a> (int nmax)</td></tr>
 <tr class="memdesc:ab3fe145c0484fc3b208e8959ac572e40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test FFT speed (fftw)  <a href="#ab3fe145c0484fc3b208e8959ac572e40">More...</a><br /></td></tr>
 <tr class="separator:ab3fe145c0484fc3b208e8959ac572e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16575523a443239711732edc15f2e62b"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a16575523a443239711732edc15f2e62b">fft_DFT</a> (const char *IDin_name, const char *IDinmask_name, const char *IDout_name, const char *IDoutmask_name, double Zfactor, int dir, long kin)</td></tr>
-<tr class="separator:a16575523a443239711732edc15f2e62b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1afebd5e0629d3e6023d4da73c3be84a"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a1afebd5e0629d3e6023d4da73c3be84a">fft_DFTinsertFPM</a> (const char *pupin_name, const char *fpmz_name, double zfactor, const char *pupout_name)</td></tr>
-<tr class="memdesc:a1afebd5e0629d3e6023d4da73c3be84a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use DFT to insert Focal Plane Mask.  <a href="#a1afebd5e0629d3e6023d4da73c3be84a">More...</a><br /></td></tr>
-<tr class="separator:a1afebd5e0629d3e6023d4da73c3be84a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a197189ccadb76ab42b3a1b5ac67a9d53"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a197189ccadb76ab42b3a1b5ac67a9d53">fft_DFTinsertFPM_re</a> (const char *pupin_name, const char *fpmz_name, double zfactor, const char *pupout_name)</td></tr>
-<tr class="separator:a197189ccadb76ab42b3a1b5ac67a9d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4adc94718dff828af6dba5fb8202a98f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a4adc94718dff828af6dba5fb8202a98f">fft_DFT</a> (const char *IDin_name, const char *IDinmask_name, const char *IDout_name, const char *IDoutmask_name, double Zfactor, int dir, long kin)</td></tr>
+<tr class="separator:a4adc94718dff828af6dba5fb8202a98f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5048abfdd44121dc6c4befd48de30b8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a5048abfdd44121dc6c4befd48de30b8c">fft_DFTinsertFPM</a> (const char *pupin_name, const char *fpmz_name, double zfactor, const char *pupout_name)</td></tr>
+<tr class="memdesc:a5048abfdd44121dc6c4befd48de30b8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use DFT to insert Focal Plane Mask.  <a href="#a5048abfdd44121dc6c4befd48de30b8c">More...</a><br /></td></tr>
+<tr class="separator:a5048abfdd44121dc6c4befd48de30b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d198dfb1182aa3fefe58406bf07f344"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a3d198dfb1182aa3fefe58406bf07f344">fft_DFTinsertFPM_re</a> (const char *pupin_name, const char *fpmz_name, double zfactor, const char *pupout_name)</td></tr>
+<tr class="separator:a3d198dfb1182aa3fefe58406bf07f344"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affd2d42949013541397d1198a668f7a0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#affd2d42949013541397d1198a668f7a0">fft_image_translate</a> (const char *ID_name, const char *ID_out, double xtransl, double ytransl)</td></tr>
 <tr class="separator:affd2d42949013541397d1198a668f7a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:abee840ba74ec4a4c170f19dddfbdf2ca"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#abee840ba74ec4a4c170f19dddfbdf2ca">NB_FFTW_THREADS</a> = 2</td></tr>
-<tr class="separator:abee840ba74ec4a4c170f19dddfbdf2ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a608311664cd92f0ad7b151d796be68ff"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fft_8c.html#a608311664cd92f0ad7b151d796be68ff">INITSTATUS_fft</a> = 0</td></tr>
 <tr class="separator:a608311664cd92f0ad7b151d796be68ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Fourier Transform. </p>
-<p>Wrapper to fftw</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000082">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="afd02bb0f6a745c39d5e3417493995c71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
+<p>Wrapper to fftw </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a426a3d163661dcaa349273560d5d9d97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a426a3d163661dcaa349273560d5d9d97">&#9670;&nbsp;</a></span>CSWAPcd</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">#define CSWAPcd</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">y&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div><div class="line">double swaptmp = (x.re);  \</div><div class="line">x.re = y.re; \</div><div class="line">y.re = swaptmp;    \</div><div class="line">swaptmp = x.im;  \</div><div class="line">x.im = y.im; \</div><div class="line">y.im = swaptmp;    \</div><div class="line">} <span class="keywordflow">while</span>(0)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a1055aac2cc54446250d0a8a9b6f8090e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1055aac2cc54446250d0a8a9b6f8090e">&#9670;&nbsp;</a></span>CSWAPcf</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CSWAPcf</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">y&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div><div class="line">float swaptmp = x.re;  \</div><div class="line">x.re = y.re; \</div><div class="line">y.re = swaptmp;    \</div><div class="line">swaptmp = x.im;  \</div><div class="line">x.im = y.im; \</div><div class="line">y.im = swaptmp;    \</div><div class="line">} <span class="keywordflow">while</span>(0)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a1c59fbcd70b859f0821a9aa93a141b00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c59fbcd70b859f0821a9aa93a141b00">&#9670;&nbsp;</a></span>FFTWOPTMODE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FFTWOPTMODE&#160;&#160;&#160;FFTW_ESTIMATE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a598a3330b3c21701223ee0ca14316eca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a598a3330b3c21701223ee0ca14316eca">&#9670;&nbsp;</a></span>PI</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PI&#160;&#160;&#160;3.14159265358979323846264338328</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a856e9c763f542a6a0b78587b2989c159"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a856e9c763f542a6a0b78587b2989c159">&#9670;&nbsp;</a></span>SBUFFERSIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SBUFFERSIZE&#160;&#160;&#160;1000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad934256f48432207379410943771c0f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad934256f48432207379410943771c0f1">&#9670;&nbsp;</a></span>SWAPd</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SWAPd</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">y&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div><div class="line">double swaptmp = x; \</div><div class="line">x = y;   \</div><div class="line">y = swaptmp;   \</div><div class="line">} <span class="keywordflow">while</span>(0)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a4a5897d76a450be92263b1174e6efc7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a5897d76a450be92263b1174e6efc7e">&#9670;&nbsp;</a></span>SWAPf</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SWAPf</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">y&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div><div class="line">float swaptmp = x; \</div><div class="line">x = y;   \</div><div class="line">y = swaptmp;   \</div><div class="line">} <span class="keywordflow">while</span>(0)</div></div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="afd02bb0f6a745c39d5e3417493995c71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -206,6 +408,24 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initialize module. </p>
+
+</div>
+</div>
+<a id="ad7e5f5c14ff8ad42e10651503200880c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7e5f5c14ff8ad42e10651503200880c">&#9670;&nbsp;</a></span>__attribute__() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void __attribute__ </td>
+          <td>(</td>
+          <td class="paramtype">(destructor)&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -251,42 +471,6 @@ Variables</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a65786e09c3bd4c1f8f8f311e91c672c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65786e09c3bd4c1f8f8f311e91c672c6">&#9670;&nbsp;</a></span>clock_gettime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -487,14 +671,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a05727be9438b2cfc5933ff196988f3d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05727be9438b2cfc5933ff196988f3d2">&#9670;&nbsp;</a></span>export_wisdom()</h2>
+<a id="a7f1c794541af3a20978d04ab0cab98af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f1c794541af3a20978d04ab0cab98af">&#9670;&nbsp;</a></span>export_wisdom()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int export_wisdom </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> export_wisdom </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -504,14 +688,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a492ba5c342be96743d1d7d7459c3036c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a492ba5c342be96743d1d7d7459c3036c">&#9670;&nbsp;</a></span>fft_correlation()</h2>
+<a id="a915d49f0bf39ae5b3175d4df141d6518"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a915d49f0bf39ae5b3175d4df141d6518">&#9670;&nbsp;</a></span>fft_correlation()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long fft_correlation </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> fft_correlation </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name1</em>, </td>
@@ -538,14 +722,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a804d161dd6945337e7bb26082d829102"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a804d161dd6945337e7bb26082d829102">&#9670;&nbsp;</a></span>fft_correlation_cli()</h2>
+<a id="a895fde417e620e39ca3069f57fb20117"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a895fde417e620e39ca3069f57fb20117">&#9670;&nbsp;</a></span>fft_correlation_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t fft_correlation_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> fft_correlation_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -555,14 +739,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a16575523a443239711732edc15f2e62b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16575523a443239711732edc15f2e62b">&#9670;&nbsp;</a></span>fft_DFT()</h2>
+<a id="a4adc94718dff828af6dba5fb8202a98f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4adc94718dff828af6dba5fb8202a98f">&#9670;&nbsp;</a></span>fft_DFT()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long fft_DFT </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> fft_DFT </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -613,14 +797,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1afebd5e0629d3e6023d4da73c3be84a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1afebd5e0629d3e6023d4da73c3be84a">&#9670;&nbsp;</a></span>fft_DFTinsertFPM()</h2>
+<a id="a5048abfdd44121dc6c4befd48de30b8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5048abfdd44121dc6c4befd48de30b8c">&#9670;&nbsp;</a></span>fft_DFTinsertFPM()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long fft_DFTinsertFPM </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> fft_DFTinsertFPM </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>pupin_name</em>, </td>
@@ -659,14 +843,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a197189ccadb76ab42b3a1b5ac67a9d53"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a197189ccadb76ab42b3a1b5ac67a9d53">&#9670;&nbsp;</a></span>fft_DFTinsertFPM_re()</h2>
+<a id="a3d198dfb1182aa3fefe58406bf07f344"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d198dfb1182aa3fefe58406bf07f344">&#9670;&nbsp;</a></span>fft_DFTinsertFPM_re()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long fft_DFTinsertFPM_re </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> fft_DFTinsertFPM_re </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>pupin_name</em>, </td>
@@ -733,14 +917,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a99afbc730a6cce05e05ca4525918eae6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a99afbc730a6cce05e05ca4525918eae6">&#9670;&nbsp;</a></span>fft_do1dfft_cli()</h2>
+<a id="ad8dbf97a3dffed9c2f35bdebbc64555d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8dbf97a3dffed9c2f35bdebbc64555d">&#9670;&nbsp;</a></span>fft_do1dfft_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t fft_do1dfft_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> fft_do1dfft_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -750,14 +934,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1ca94c533295239786b0462b9d8bfa57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ca94c533295239786b0462b9d8bfa57">&#9670;&nbsp;</a></span>fft_do1drfft_cli()</h2>
+<a id="a362cc480df2c0a0c56bbc5defaa11dbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a362cc480df2c0a0c56bbc5defaa11dbd">&#9670;&nbsp;</a></span>fft_do1drfft_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t fft_do1drfft_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> fft_do1drfft_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -801,14 +985,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab07e4afd0a7ab62448bb9e4a020eb178"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab07e4afd0a7ab62448bb9e4a020eb178">&#9670;&nbsp;</a></span>fft_do2dfft_cli()</h2>
+<a id="a99705fad83229a4d62f417ce898b0b4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99705fad83229a4d62f417ce898b0b4a">&#9670;&nbsp;</a></span>fft_do2dfft_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t fft_do2dfft_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> fft_do2dfft_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -892,14 +1076,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a07c8239fbbe3cd4407a7eadc7c7dfc5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a07c8239fbbe3cd4407a7eadc7c7dfc5e">&#9670;&nbsp;</a></span>fft_image_translate_cli()</h2>
+<a id="a6cd479728b789c0654d2d9ce94c1b425"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cd479728b789c0654d2d9ce94c1b425">&#9670;&nbsp;</a></span>fft_image_translate_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t fft_image_translate_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> fft_image_translate_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -909,14 +1093,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a7069b9e13085029927c28b50e905867b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7069b9e13085029927c28b50e905867b">&#9670;&nbsp;</a></span>fft_permut_cli()</h2>
+<a id="a8bc621aafabe7c7b78214f20ca1a9d0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bc621aafabe7c7b78214f20ca1a9d0e">&#9670;&nbsp;</a></span>fft_permut_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t fft_permut_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> fft_permut_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -926,8 +1110,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae678e81aedd565168215fbd3fced2ba5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae678e81aedd565168215fbd3fced2ba5">&#9670;&nbsp;</a></span>fft_setNthreads()</h2>
+<a id="a23fac888f28f90fdfb64a88bf16dd6d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23fac888f28f90fdfb64a88bf16dd6d4">&#9670;&nbsp;</a></span>fft_setNthreads()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -935,7 +1119,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">int fft_setNthreads </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int&#160;</td>
           <td class="paramname"><em>nt</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1012,14 +1196,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a407aad4a96dd2d7810194e30742a64cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a407aad4a96dd2d7810194e30742a64cd">&#9670;&nbsp;</a></span>free_fft()</h2>
+<a id="aa8b0cdf6145f0ec9488cceb1d86018cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8b0cdf6145f0ec9488cceb1d86018cf">&#9670;&nbsp;</a></span>import_wisdom()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int free_fft </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> import_wisdom </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1029,14 +1213,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0767c4e140bc8498e1984f927c16803f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0767c4e140bc8498e1984f927c16803f">&#9670;&nbsp;</a></span>import_wisdom()</h2>
+<a id="a347f101a017e505b0617c7491f46d54b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a347f101a017e505b0617c7491f46d54b">&#9670;&nbsp;</a></span>init_fft()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int import_wisdom </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_fft </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1046,31 +1230,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a6a2d5a49fa05c8b3ba72c312d32944a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a2d5a49fa05c8b3ba72c312d32944a5">&#9670;&nbsp;</a></span>init_fft()</h2>
+<a id="aae81cacc047ff7e801eac130de834956"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae81cacc047ff7e801eac130de834956">&#9670;&nbsp;</a></span>init_fftw_plans()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t init_fft </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afc8e520b2e3397a2d1b19c48aa1accd0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc8e520b2e3397a2d1b19c48aa1accd0">&#9670;&nbsp;</a></span>init_fftw_plans()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int_fast8_t init_fftw_plans </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_fftw_plans </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>mode</em></td><td>)</td>
@@ -1081,14 +1248,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab7bfdbeb0850dbb6d8fd671238b18287"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7bfdbeb0850dbb6d8fd671238b18287">&#9670;&nbsp;</a></span>init_fftw_plans0()</h2>
+<a id="ac170f9bd5ce0d4941563a3e0a5a27f09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac170f9bd5ce0d4941563a3e0a5a27f09">&#9670;&nbsp;</a></span>init_fftw_plans0()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t init_fftw_plans0 </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_fftw_plans0 </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1182,14 +1349,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1624de50f0834da8b1df80a7f5a371f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1624de50f0834da8b1df80a7f5a371f7">&#9670;&nbsp;</a></span>test_fftspeed_cli()</h2>
+<a id="ad45314e392a3cfc9cbc67ff4feab829c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad45314e392a3cfc9cbc67ff4feab829c">&#9670;&nbsp;</a></span>test_fftspeed_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t test_fftspeed_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> test_fftspeed_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1222,28 +1389,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="abee840ba74ec4a4c170f19dddfbdf2ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abee840ba74ec4a4c170f19dddfbdf2ca">&#9670;&nbsp;</a></span>NB_FFTW_THREADS</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int NB_FFTW_THREADS = 2</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.13-->
@@ -1251,7 +1396,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1fbe5abfc91f031908f9b0fcd26c05f0.html">fft</a></li><li class="navelem"><a class="el" href="fft_8c.html">fft.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

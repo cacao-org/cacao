@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__fpspeckle__mod_8c.html'
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,15 +95,51 @@ $(document).ready(function(){initNavTree('AOloopControl__fpspeckle__mod_8c.html'
 
 <p>AO loop control - FOCAL PLANE SPECKLE MODULATION / CONTROL.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__IOtools_8h_source.html">AOloopControl_IOtools/AOloopControl_IOtools.h</a>&quot;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_fpspeckle_mod.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__fpspeckle__mod_8c__incl.png" border="0" usemap="#src_2AOloopControl_2AOloopControl__fpspeckle__mod_8c" alt=""/></div>
+<map name="src_2AOloopControl_2AOloopControl__fpspeckle__mod_8c" id="src_2AOloopControl_2AOloopControl__fpspeckle__mod_8c">
+<area shape="rect" id="node2" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1718,95,1875,136"/>
+<area shape="rect" id="node20" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="895,259,1101,285"/>
+<area shape="rect" id="node23" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="1143,333,1314,375"/>
+<area shape="rect" id="node27" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="1900,102,2043,129"/>
+<area shape="rect" id="node28" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2067,95,2287,136"/>
+<area shape="rect" id="node29" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2311,95,2512,136"/>
+<area shape="rect" id="node13" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1278,184,1499,211"/>
+<area shape="rect" id="node14" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1642,259,1746,285"/>
+<area shape="rect" id="node17" href="processtools_8h.html" title="Command line interface. " alt="" coords="2003,259,2110,285"/>
+<area shape="rect" id="node18" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="2135,259,2243,285"/>
+<area shape="rect" id="node19" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1869,184,2020,211"/>
+<area shape="rect" id="node16" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1543,341,1696,367"/>
+<area shape="rect" id="node21" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="923,333,1119,375"/>
+<area shape="rect" id="node22" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node24" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="226,341,458,367"/>
+<area shape="rect" id="node25" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="483,333,679,375"/>
+<area shape="rect" id="node26" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="703,333,899,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__fpspeckle__mod_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:adfb1e7d884741b9eefc631d15ff93613"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__fpspeckle__mod_8c.html#adfb1e7d884741b9eefc631d15ff93613">AOloopControl_OptimizePSF_LO</a> (const char *psfstream_name, const char *IDmodes_name, const char *dmstream_name, long delayframe, long NBframes)</td></tr>
-<tr class="memdesc:adfb1e7d884741b9eefc631d15ff93613"><td class="mdescLeft">&#160;</td><td class="mdescRight">Optimize PSF low order.  <a href="#adfb1e7d884741b9eefc631d15ff93613">More...</a><br /></td></tr>
-<tr class="separator:adfb1e7d884741b9eefc631d15ff93613"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a8acc15a46ed4ac0ed26263a2955dd8"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__fpspeckle__mod_8c.html#a5a8acc15a46ed4ac0ed26263a2955dd8">AOloopControl_DMmodulateAB</a> (const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes)</td></tr>
-<tr class="memdesc:a5a8acc15a46ed4ac0ed26263a2955dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Experimental dm modulation.  <a href="#a5a8acc15a46ed4ac0ed26263a2955dd8">More...</a><br /></td></tr>
-<tr class="separator:a5a8acc15a46ed4ac0ed26263a2955dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55ea61d698f56fadbdcb6e4750c43f70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__fpspeckle__mod_8c.html#a55ea61d698f56fadbdcb6e4750c43f70">AOloopControl_OptimizePSF_LO</a> (<a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *psfstream_name, const char *IDmodes_name, const char *dmstream_name, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long delayframe, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long NBframes)</td></tr>
+<tr class="separator:a55ea61d698f56fadbdcb6e4750c43f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a213da243847ebddfd59ee08646599042"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__fpspeckle__mod_8c.html#a213da243847ebddfd59ee08646599042">AOloopControl_DMmodulateAB</a> (const char *IDprobeA_name, const char *IDprobeB_name, const char *IDdmstream_name, const char *IDrespmat_name, const char *IDwfsrefstream_name, double delay, long NBprobes)</td></tr>
+<tr class="memdesc:a213da243847ebddfd59ee08646599042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Experimental dm modulation.  <a href="#a213da243847ebddfd59ee08646599042">More...</a><br /></td></tr>
+<tr class="separator:a213da243847ebddfd59ee08646599042"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -114,17 +151,31 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AO loop control - FOCAL PLANE SPECKLE MODULATION / CONTROL. </p>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000030">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a5a8acc15a46ed4ac0ed26263a2955dd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a8acc15a46ed4ac0ed26263a2955dd8">&#9670;&nbsp;</a></span>AOloopControl_DMmodulateAB()</h2>
+<p>REAL TIME COMPUTING ROUTINES </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_DMmodulateAB </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a213da243847ebddfd59ee08646599042"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a213da243847ebddfd59ee08646599042">&#9670;&nbsp;</a></span>AOloopControl_DMmodulateAB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DMmodulateAB </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDprobeA_name</em>, </td>
@@ -177,16 +228,16 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="adfb1e7d884741b9eefc631d15ff93613"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adfb1e7d884741b9eefc631d15ff93613">&#9670;&nbsp;</a></span>AOloopControl_OptimizePSF_LO()</h2>
+<a id="a55ea61d698f56fadbdcb6e4750c43f70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55ea61d698f56fadbdcb6e4750c43f70">&#9670;&nbsp;</a></span>AOloopControl_OptimizePSF_LO()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_OptimizePSF_LO </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_OptimizePSF_LO </td>
           <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *&#160;</td>
           <td class="paramname"><em>psfstream_name</em>, </td>
         </tr>
         <tr>
@@ -204,13 +255,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>delayframe</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>NBframes</em>&#160;</td>
         </tr>
         <tr>
@@ -220,8 +271,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Optimize PSF low order. </p>
 
 </div>
 </div>
@@ -263,7 +312,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__fpspeckle__mod_8c.html">AOloopControl_fpspeckle_mod.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

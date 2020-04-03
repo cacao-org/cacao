@@ -17,7 +17,15 @@ var page_cacao_topmenu =
     ] ],
     [ "Command Line Interface", "page_userinput.html", "page_userinput" ],
     [ "Configuring and Running cacao", "page_cacao_top_guide.html", "page_cacao_top_guide" ],
-    [ "Working with git", "page_WorkingWithGit.html", null ],
+    [ "Working with git", "page_WorkingWithGit.html", [
+      [ "1. Source Code and Modules", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules", [
+        [ "1.1. Synchronization: loading updated modules", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_Synchronization", null ],
+        [ "1.2. Editing submodule source code", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_EditingSubmodule", null ],
+        [ "1.3. Updating master branches", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_UpdatingMaster", null ],
+        [ "1.4. Releasing a new version", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_ReleasingVersion", null ]
+      ] ],
+      [ "2. Source Code Documentation (doxygen)", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeDocumentation", null ]
+    ] ],
     [ "Coding Standards", "page_coding_standards.html", "page_coding_standards" ],
     [ "Loading, Creating Additional Modules", "page_LoadingModules.html", [
       [ "Downloading Optional Modules", "page_LoadingModules.html#page_LoadingModules_download", null ],

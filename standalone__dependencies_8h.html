@@ -85,15 +85,69 @@ $(document).ready(function(){initNavTree('standalone__dependencies_8h.html','');
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">standalone_dependencies.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
+<div class="textblock"><code>#include &lt;<a class="el" href="CLIcore_8h_source.html">CLIcore.h</a>&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="ImageStreamIO_8h_source.html">ImageStreamIO.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for standalone_dependencies.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="standalone__dependencies_8h__incl.png" border="0" usemap="#src_2CommandLineInterface_2standalone__dependencies_8h" alt=""/></div>
+<map name="src_2CommandLineInterface_2standalone__dependencies_8h" id="src_2CommandLineInterface_2standalone__dependencies_8h">
+<area shape="rect" id="node2" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="532,95,611,121"/>
+<area shape="rect" id="node13" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1022,169,1243,196"/>
+<area shape="rect" id="node14" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="793,244,897,271"/>
+<area shape="rect" id="node17" href="processtools_8h.html" title="Command line interface. " alt="" coords="531,244,638,271"/>
+<area shape="rect" id="node18" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="268,244,376,271"/>
+<area shape="rect" id="node19" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="553,169,704,196"/>
+<area shape="rect" id="node16" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="768,319,921,345"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="standalone__dependencies_8h__dep__incl.png" border="0" usemap="#src_2CommandLineInterface_2standalone__dependencies_8hdep" alt=""/></div>
+<map name="src_2CommandLineInterface_2standalone__dependencies_8hdep" id="src_2CommandLineInterface_2standalone__dependencies_8hdep">
+<area shape="rect" id="node2" href="CacaoProcessTools_8cpp.html" title="src/CommandLineInterface\l/python_module/CacaoProcessTools.cpp" alt="" coords="5,95,267,136"/>
+<area shape="rect" id="node3" href="standalone__dependencies_8c.html" title="src/CommandLineInterface\l/standalone_dependencies.c" alt="" coords="291,95,477,136"/>
+</map>
+</div>
+</div>
 <p><a href="standalone__dependencies_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:af8a8c53ed4b0155de9a38ce3424d50aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#af8a8c53ed4b0155de9a38ce3424d50aa">SHAREDSHMDIR</a>&#160;&#160;&#160;&quot;/milk/shm&quot;</td></tr>
+<tr class="separator:af8a8c53ed4b0155de9a38ce3424d50aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b7e64e416b13259113388d1b9045b98"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a2b7e64e416b13259113388d1b9045b98">SHAREDPROCDIR</a>&#160;&#160;&#160;&quot;/milk/proc&quot;</td></tr>
+<tr class="separator:a2b7e64e416b13259113388d1b9045b98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74974d1e5ca4f1d3c5b6c371445abd9d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a74974d1e5ca4f1d3c5b6c371445abd9d">CLIPID</a>&#160;&#160;&#160;getpid()</td></tr>
+<tr class="separator:a74974d1e5ca4f1d3c5b6c371445abd9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d37d43ac2717b06ef7120784465e56f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a9d37d43ac2717b06ef7120784465e56f">RETURN_SUCCESS</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a9d37d43ac2717b06ef7120784465e56f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c984349b6e2ee2e658b9cf9ef2aa2fb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a2c984349b6e2ee2e658b9cf9ef2aa2fb">RETURN_FAILURE</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a2c984349b6e2ee2e658b9cf9ef2aa2fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44ef622b948166d98e3c99ad209529b4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a44ef622b948166d98e3c99ad209529b4">RETURN_MISSINGFILE</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a44ef622b948166d98e3c99ad209529b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a384d2fc04f47473d63f848c5fcbd736d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a384d2fc04f47473d63f848c5fcbd736d">DEBUG_TRACEPOINT</a>(...)</td></tr>
+<tr class="separator:a384d2fc04f47473d63f848c5fcbd736d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a46a037236862ac1a534efbe605c10f42"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td></tr>
+<tr class="separator:a46a037236862ac1a534efbe605c10f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60e74e89b01a4231d84e7a2b2d115794"><td class="memItemLeft" align="right" valign="top">typedef long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a></td></tr>
+<tr class="separator:a60e74e89b01a4231d84e7a2b2d115794"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31887a8787e3ced75064eabee12c7a0a"><td class="memItemLeft" align="right" valign="top">typedef long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a31887a8787e3ced75064eabee12c7a0a">variableID</a></td></tr>
+<tr class="separator:a31887a8787e3ced75064eabee12c7a0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a6fb9173b416d4ca64e84793024c86a9e"><td class="memItemLeft" align="right" valign="top">struct timespec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a6fb9173b416d4ca64e84793024c86a9e">info_time_diff</a> (struct timespec start, struct timespec end)</td></tr>
@@ -106,15 +160,156 @@ Functions</h2></td></tr>
 <tr class="separator:a2dbd50fd3d0f2c6f845410aac789f999"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50b1c01e17893b3c2e735e348df9eba9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a50b1c01e17893b3c2e735e348df9eba9">quick_sort_long</a> (long *array, long count)</td></tr>
 <tr class="separator:a50b1c01e17893b3c2e735e348df9eba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e77ac9461466e89a13b467f64a8df67"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a3e77ac9461466e89a13b467f64a8df67">printERROR</a> (const char *file, const char *func, int <a class="el" href="CLIcore_8c.html#a8adb30f4f6669f927fd9232f686c637b">line</a>, char *errmessage)</td></tr>
-<tr class="memdesc:a3e77ac9461466e89a13b467f64a8df67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print error (in red) and continue.  <a href="#a3e77ac9461466e89a13b467f64a8df67">More...</a><br /></td></tr>
+<tr class="memitem:a3e77ac9461466e89a13b467f64a8df67"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a3e77ac9461466e89a13b467f64a8df67">printERROR</a> (const char *file, const char *func, int <a class="el" href="CLIcore_8c.html#a73f40094347b4f2b86443e09390a723f">line</a>, char *errmessage)</td></tr>
 <tr class="separator:a3e77ac9461466e89a13b467f64a8df67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a9a500d20c5951f1462377328ae5305f5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8h.html#a9a500d20c5951f1462377328ae5305f5">C_ERRNO</a></td></tr>
-<tr class="separator:a9a500d20c5951f1462377328ae5305f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a74974d1e5ca4f1d3c5b6c371445abd9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74974d1e5ca4f1d3c5b6c371445abd9d">&#9670;&nbsp;</a></span>CLIPID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CLIPID&#160;&#160;&#160;getpid()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a384d2fc04f47473d63f848c5fcbd736d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a384d2fc04f47473d63f848c5fcbd736d">&#9670;&nbsp;</a></span>DEBUG_TRACEPOINT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEBUG_TRACEPOINT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2c984349b6e2ee2e658b9cf9ef2aa2fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c984349b6e2ee2e658b9cf9ef2aa2fb">&#9670;&nbsp;</a></span>RETURN_FAILURE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RETURN_FAILURE&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a44ef622b948166d98e3c99ad209529b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44ef622b948166d98e3c99ad209529b4">&#9670;&nbsp;</a></span>RETURN_MISSINGFILE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RETURN_MISSINGFILE&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9d37d43ac2717b06ef7120784465e56f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d37d43ac2717b06ef7120784465e56f">&#9670;&nbsp;</a></span>RETURN_SUCCESS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RETURN_SUCCESS&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2b7e64e416b13259113388d1b9045b98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b7e64e416b13259113388d1b9045b98">&#9670;&nbsp;</a></span>SHAREDPROCDIR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SHAREDPROCDIR&#160;&#160;&#160;&quot;/milk/proc&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8a8c53ed4b0155de9a38ce3424d50aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8a8c53ed4b0155de9a38ce3424d50aa">&#9670;&nbsp;</a></span>SHAREDSHMDIR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SHAREDSHMDIR&#160;&#160;&#160;&quot;/milk/shm&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>default location of file mapped semaphores, can be over-ridden by env variable MILK_SHM_DIR </p>
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a46a037236862ac1a534efbe605c10f42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46a037236862ac1a534efbe605c10f42">&#9670;&nbsp;</a></span>errno_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef int <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a60e74e89b01a4231d84e7a2b2d115794"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60e74e89b01a4231d84e7a2b2d115794">&#9670;&nbsp;</a></span>imageID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef long <a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a31887a8787e3ced75064eabee12c7a0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31887a8787e3ced75064eabee12c7a0a">&#9670;&nbsp;</a></span>variableID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef long <a class="el" href="CLIcore_8h.html#a31887a8787e3ced75064eabee12c7a0a">variableID</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a6fb9173b416d4ca64e84793024c86a9e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6fb9173b416d4ca64e84793024c86a9e">&#9670;&nbsp;</a></span>info_time_diff()</h2>
@@ -209,8 +404,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Print error (in red) and continue. </p>
 <h2>Purpose</h2>
 <p>Print error string</p>
 <h2>Arguments</h2>
@@ -322,21 +515,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a9a500d20c5951f1462377328ae5305f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a500d20c5951f1462377328ae5305f5">&#9670;&nbsp;</a></span>C_ERRNO</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int C_ERRNO</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.13-->
@@ -344,7 +522,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="standalone__dependencies_8h.html">standalone_dependencies.h</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__dmwrite_8c.html','');})
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,26 +95,56 @@ $(document).ready(function(){initNavTree('AOloopControl__dmwrite_8c.html','');})
 
 <p>AO loop Control functions PRIMARY AND FILTERED DM WRITE.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__perfTest_8h_source.html">AOloopControl_perfTest/AOloopControl_perfTest.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_dmwrite.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__dmwrite_8c__incl.png" border="0" usemap="#src_2AOloopControl_2AOloopControl__dmwrite_8c" alt=""/></div>
+<map name="src_2AOloopControl_2AOloopControl__dmwrite_8c" id="src_2AOloopControl_2AOloopControl__dmwrite_8c">
+<area shape="rect" id="node2" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1845,95,2002,136"/>
+<area shape="rect" id="node20" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="892,259,1099,285"/>
+<area shape="rect" id="node27" href="AOloopControl__perfTest_8h.html" title="Function prototypes for Adaptive Optics Control loop engine performance Tests. " alt="" coords="2027,95,2204,136"/>
+<area shape="rect" id="node13" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1589,184,1810,211"/>
+<area shape="rect" id="node14" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1634,259,1738,285"/>
+<area shape="rect" id="node17" href="processtools_8h.html" title="Command line interface. " alt="" coords="1895,259,2002,285"/>
+<area shape="rect" id="node18" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1488,259,1596,285"/>
+<area shape="rect" id="node19" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="2403,184,2553,211"/>
+<area shape="rect" id="node16" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1596,341,1749,367"/>
+<area shape="rect" id="node21" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node22" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,333,421,375"/>
+<area shape="rect" id="node23" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="446,333,617,375"/>
+<area shape="rect" id="node24" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="641,341,873,367"/>
+<area shape="rect" id="node25" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="897,333,1093,375"/>
+<area shape="rect" id="node26" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1117,333,1313,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c5d5a91e62278861bc96ab43c9c44d9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a6c5d5a91e62278861bc96ab43c9c44d9">NB_AOloopcontrol</a>&#160;&#160;&#160;10</td></tr>
+<tr class="separator:a6c5d5a91e62278861bc96ab43c9c44d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a857c19e62e6acda10fca64adfa7fc565"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a857c19e62e6acda10fca64adfa7fc565">AOloopControl_DMprimaryWrite_on</a> ()</td></tr>
-<tr class="memdesc:a857c19e62e6acda10fca64adfa7fc565"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writing on DM, unfiltered actuators (primary) : on.  <a href="#a857c19e62e6acda10fca64adfa7fc565">More...</a><br /></td></tr>
-<tr class="separator:a857c19e62e6acda10fca64adfa7fc565"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a1d9a544f9f193c864f236f04742a54"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a2a1d9a544f9f193c864f236f04742a54">AOloopControl_DMprimaryWrite_off</a> ()</td></tr>
-<tr class="memdesc:a2a1d9a544f9f193c864f236f04742a54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writing on DM, unfiltered actuators (primary) : off.  <a href="#a2a1d9a544f9f193c864f236f04742a54">More...</a><br /></td></tr>
-<tr class="separator:a2a1d9a544f9f193c864f236f04742a54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59be1d3c723cb0c9cd6171e12f3dda1e"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a59be1d3c723cb0c9cd6171e12f3dda1e">AOloopControl_DMfilteredWrite_on</a> ()</td></tr>
-<tr class="memdesc:a59be1d3c723cb0c9cd6171e12f3dda1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writing on DM, after filtering : on.  <a href="#a59be1d3c723cb0c9cd6171e12f3dda1e">More...</a><br /></td></tr>
-<tr class="separator:a59be1d3c723cb0c9cd6171e12f3dda1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab84b73d708efe0ccb1e05d92ab1f15e6"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#ab84b73d708efe0ccb1e05d92ab1f15e6">AOloopControl_DMfilteredWrite_off</a> ()</td></tr>
-<tr class="memdesc:ab84b73d708efe0ccb1e05d92ab1f15e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writing on DM, after filtering : off.  <a href="#ab84b73d708efe0ccb1e05d92ab1f15e6">More...</a><br /></td></tr>
-<tr class="separator:ab84b73d708efe0ccb1e05d92ab1f15e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1569d14cdba5393b584749d48bdbee38"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a1569d14cdba5393b584749d48bdbee38">AOloopControl_DMprimaryWrite_on</a> ()</td></tr>
+<tr class="memdesc:a1569d14cdba5393b584749d48bdbee38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writing on DM, unfiltered actuators (primary) : on.  <a href="#a1569d14cdba5393b584749d48bdbee38">More...</a><br /></td></tr>
+<tr class="separator:a1569d14cdba5393b584749d48bdbee38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6629b89fafea293e743eb268f3689de1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a6629b89fafea293e743eb268f3689de1">AOloopControl_DMprimaryWrite_off</a> ()</td></tr>
+<tr class="memdesc:a6629b89fafea293e743eb268f3689de1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writing on DM, unfiltered actuators (primary) : off.  <a href="#a6629b89fafea293e743eb268f3689de1">More...</a><br /></td></tr>
+<tr class="separator:a6629b89fafea293e743eb268f3689de1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0aaec9f80cf3e0f35ede8cee2917015b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a0aaec9f80cf3e0f35ede8cee2917015b">AOloopControl_DMfilteredWrite_on</a> ()</td></tr>
+<tr class="memdesc:a0aaec9f80cf3e0f35ede8cee2917015b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writing on DM, after filtering : on.  <a href="#a0aaec9f80cf3e0f35ede8cee2917015b">More...</a><br /></td></tr>
+<tr class="separator:a0aaec9f80cf3e0f35ede8cee2917015b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03ed0d2b5ffee0b8eaee9f035f9e8dec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a03ed0d2b5ffee0b8eaee9f035f9e8dec">AOloopControl_DMfilteredWrite_off</a> ()</td></tr>
+<tr class="memdesc:a03ed0d2b5ffee0b8eaee9f035f9e8dec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writing on DM, after filtering : off.  <a href="#a03ed0d2b5ffee0b8eaee9f035f9e8dec">More...</a><br /></td></tr>
+<tr class="separator:a03ed0d2b5ffee0b8eaee9f035f9e8dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a3cab4b1892467d2abeab3bdad99b690c"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a3cab4b1892467d2abeab3bdad99b690c">AOlooploadconf_init</a> = 0</td></tr>
-<tr class="separator:a3cab4b1892467d2abeab3bdad99b690c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f96203c41ad50bad5dd1604a5c069a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAOLOOPCONTROL__CONF.html">AOLOOPCONTROL_CONF</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__dmwrite_8c.html#a1f96203c41ad50bad5dd1604a5c069a8">AOconf</a></td></tr>
 <tr class="memdesc:a1f96203c41ad50bad5dd1604a5c069a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_setframesAve.  <a href="#a1f96203c41ad50bad5dd1604a5c069a8">More...</a><br /></td></tr>
 <tr class="separator:a1f96203c41ad50bad5dd1604a5c069a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,17 +153,45 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AO loop Control functions PRIMARY AND FILTERED DM WRITE. </p>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000029">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="ab84b73d708efe0ccb1e05d92ab1f15e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab84b73d708efe0ccb1e05d92ab1f15e6">&#9670;&nbsp;</a></span>AOloopControl_DMfilteredWrite_off()</h2>
+<p>REAL TIME COMPUTING ROUTINES </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_DMfilteredWrite_off </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6c5d5a91e62278861bc96ab43c9c44d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c5d5a91e62278861bc96ab43c9c44d9">&#9670;&nbsp;</a></span>NB_AOloopcontrol</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NB_AOloopcontrol&#160;&#160;&#160;10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a03ed0d2b5ffee0b8eaee9f035f9e8dec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03ed0d2b5ffee0b8eaee9f035f9e8dec">&#9670;&nbsp;</a></span>AOloopControl_DMfilteredWrite_off()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DMfilteredWrite_off </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -144,14 +203,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a59be1d3c723cb0c9cd6171e12f3dda1e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59be1d3c723cb0c9cd6171e12f3dda1e">&#9670;&nbsp;</a></span>AOloopControl_DMfilteredWrite_on()</h2>
+<a id="a0aaec9f80cf3e0f35ede8cee2917015b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0aaec9f80cf3e0f35ede8cee2917015b">&#9670;&nbsp;</a></span>AOloopControl_DMfilteredWrite_on()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_DMfilteredWrite_on </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DMfilteredWrite_on </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -163,14 +222,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a2a1d9a544f9f193c864f236f04742a54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a1d9a544f9f193c864f236f04742a54">&#9670;&nbsp;</a></span>AOloopControl_DMprimaryWrite_off()</h2>
+<a id="a6629b89fafea293e743eb268f3689de1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6629b89fafea293e743eb268f3689de1">&#9670;&nbsp;</a></span>AOloopControl_DMprimaryWrite_off()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_DMprimaryWrite_off </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DMprimaryWrite_off </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -182,14 +241,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a857c19e62e6acda10fca64adfa7fc565"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a857c19e62e6acda10fca64adfa7fc565">&#9670;&nbsp;</a></span>AOloopControl_DMprimaryWrite_on()</h2>
+<a id="a1569d14cdba5393b584749d48bdbee38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1569d14cdba5393b584749d48bdbee38">&#9670;&nbsp;</a></span>AOloopControl_DMprimaryWrite_on()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_DMprimaryWrite_on </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DMprimaryWrite_on </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -232,28 +291,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3cab4b1892467d2abeab3bdad99b690c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3cab4b1892467d2abeab3bdad99b690c">&#9670;&nbsp;</a></span>AOlooploadconf_init</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int AOlooploadconf_init = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.13-->
@@ -261,7 +298,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__dmwrite_8c.html">AOloopControl_dmwrite.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

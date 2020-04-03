@@ -86,6 +86,7 @@ $(document).ready(function(){initNavTree('processtools_8h.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -95,7 +96,77 @@ $(document).ready(function(){initNavTree('processtools_8h.html','');});
 
 <p>Command line interface.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><code>#include &lt;semaphore.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for processtools.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="processtools_8h__incl.png" border="0" usemap="#src_2CommandLineInterface_2processtools_8h" alt=""/></div>
+<map name="src_2CommandLineInterface_2processtools_8h" id="src_2CommandLineInterface_2processtools_8h">
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="processtools_8h__dep__incl.png" border="0" usemap="#src_2CommandLineInterface_2processtools_8hdep" alt=""/></div>
+<map name="src_2CommandLineInterface_2processtools_8hdep" id="src_2CommandLineInterface_2processtools_8hdep">
+<area shape="rect" id="node2" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="5272,95,5451,136"/>
+<area shape="rect" id="node49" href="processtools_8c.html" title="Tools to manage processes. " alt="" coords="9953,191,10132,233"/>
+<area shape="rect" id="node50" href="CacaoProcessTools_8cpp.html" title="src/CommandLineInterface\l/python_module/CacaoProcessTools.cpp" alt="" coords="10156,191,10417,233"/>
+<area shape="rect" id="node3" href="00CORE_8c.html" title="core functions " alt="" coords="8764,199,8929,225"/>
+<area shape="rect" id="node4" href="AOloopControl_8c.html" title="Adaptive Optics Control loop engine. " alt="" coords="8953,191,9129,233"/>
+<area shape="rect" id="node5" href="AOloopControl__AOcompute_8c.html" title="AO loop Control compute functions. " alt="" coords="9153,191,9329,233"/>
+<area shape="rect" id="node6" href="AOloopControl__aorun_8c.html" title="AO loop Control compute functions. " alt="" coords="9353,191,9529,233"/>
+<area shape="rect" id="node7" href="AOloopControl__arpf__onoff_8c.html" title="AO loop control &#45; Predictive Filter ON/OFF through the ARPF multiplicator. " alt="" coords="9553,191,9729,233"/>
+<area shape="rect" id="node8" href="AOloopControl__autotune_8c.html" title="AO loop control &#45; INTEGRATOR AUTO TUNING. " alt="" coords="9753,191,9929,233"/>
+<area shape="rect" id="node9" href="AOloopControl__AutoTuneGains_8c.html" title="src/AOloopControl/AOloop\lControl_AutoTuneGains.c" alt="" coords="5,191,181,233"/>
+<area shape="rect" id="node10" href="AOloopControl__CompModes__loop_8c.html" title="src/AOloopControl/AOloop\lControl_CompModes_loop.c" alt="" coords="205,191,392,233"/>
+<area shape="rect" id="node11" href="AOloopControl__dm_8c.html" title="AO loop Control functions wave front sensor and deformable mirror. " alt="" coords="416,191,592,233"/>
+<area shape="rect" id="node12" href="AOloopControl__dmwrite_8c.html" title="AO loop Control functions PRIMARY AND FILTERED DM WRITE. " alt="" coords="616,191,792,233"/>
+<area shape="rect" id="node13" href="AOloopControl__fpspeckle__mod_8c.html" title="AO loop control &#45; FOCAL PLANE SPECKLE MODULATION / CONTROL. " alt="" coords="816,191,992,233"/>
+<area shape="rect" id="node14" href="AOloopControl__initmem_8c.html" title="Aload / setup configuration. " alt="" coords="1016,191,1192,233"/>
+<area shape="rect" id="node15" href="AOloopControl__loadconfigure_8c.html" title="Aload / setup configuration. " alt="" coords="1216,191,1392,233"/>
+<area shape="rect" id="node16" href="AOloopControl__loop__ctr_8c.html" title="AO loop Control functions wave front sensor and deformable mirror. " alt="" coords="1416,191,1592,233"/>
+<area shape="rect" id="node17" href="AOloopControl__loop__onoff_8c.html" title="AO loop Control functions wave front sensor and deformable mirror. " alt="" coords="1616,191,1792,233"/>
+<area shape="rect" id="node18" href="AOloopControl__loop__param_8c.html" title="AO loop control &#45; CONTROL LOOP PARAMETERS. " alt="" coords="1816,191,1992,233"/>
+<area shape="rect" id="node19" href="AOloopControl__predfilter__onoff_8c.html" title="AO loop control &#45; Predictive Filter ON/OFF through the ARPF multiplicator. " alt="" coords="2016,191,2192,233"/>
+<area shape="rect" id="node20" href="AOloopControl__process__files_8c.html" title="AO loop control &#45; Process log files. " alt="" coords="2216,191,2392,233"/>
+<area shape="rect" id="node21" href="AOloopControl__ProcessModeCoefficients_8c.html" title="AO loop Control compute functions. " alt="" coords="2416,191,2648,233"/>
+<area shape="rect" id="node22" href="AOloopControl__read__param_8c.html" title="AO loop control : read parameters value &#45; float, char, int. " alt="" coords="2672,191,2848,233"/>
+<area shape="rect" id="node23" href="AOloopControl__RTstreamLOG_8c.html" title="Logging of real&#45;time streams. " alt="" coords="2872,191,3048,233"/>
+<area shape="rect" id="node24" href="AOloopControl__sig2Modecoeff_8c.html" title="src/AOloopControl/AOloop\lControl_sig2Modecoeff.c" alt="" coords="3072,191,3248,233"/>
+<area shape="rect" id="node25" href="AOloopControl__time__param_8c.html" title="AO loop control &#45; Timing Parameter. " alt="" coords="3272,191,3448,233"/>
+<area shape="rect" id="node26" href="AOloopControl__wfs_8c.html" title="AO loop Control functions wave front sensor and deformable mirror. " alt="" coords="3472,191,3648,233"/>
+<area shape="rect" id="node27" href="AOloopControl__acquireCalib_8c.html" title="Adaptive Optics Control loop engine acquire calibration. " alt="" coords="3673,191,3903,233"/>
+<area shape="rect" id="node28" href="AOloopControl__compTools_8c.html" title="Adaptive Optics Control loop engine misc computation tools. " alt="" coords="3928,191,4128,233"/>
+<area shape="rect" id="node29" href="AOloopControl__computeCalib_8c.html" title="Adaptive Optics Control loop engine compute calibration. " alt="" coords="4153,191,4391,233"/>
+<area shape="rect" id="node30" href="AOloopControl__computeCalib__CM_8c.html" title="Adaptive Optics Control loop engine compute calibration. " alt="" coords="4416,191,4683,233"/>
+<area shape="rect" id="node31" href="AOloopControl__computeCalib__dm_8c.html" title="Adaptive Optics Control loop engine compute calibration. " alt="" coords="4707,191,4971,233"/>
+<area shape="rect" id="node32" href="AOloopControl__computeCalib__Hadamard_8c.html" title="Adaptive Optics Control loop engine compute calibration. " alt="" coords="4995,184,5223,240"/>
+<area shape="rect" id="node33" href="AOloopControl__computeCalib__loDMmodes_8c.html" title="Adaptive Optics Control loop engine compute calibration. " alt="" coords="5247,184,5475,240"/>
+<area shape="rect" id="node34" href="AOloopControl__computeCalib__modes_8c.html" title="src/AOloopControl_compute\lCalib/AOloopControl_computeCalib\l_modes.c" alt="" coords="5499,184,5727,240"/>
+<area shape="rect" id="node35" href="AOloopControl__computeCalib__processRM_8c.html" title="Adaptive Optics Control loop engine compute calibration. " alt="" coords="5751,184,5979,240"/>
+<area shape="rect" id="node36" href="AOloopControl__DM_8c.html" title="DM control. " alt="" coords="6004,191,6161,233"/>
+<area shape="rect" id="node37" href="AOloopControl__DM__config_8c.html" title="DM control. " alt="" coords="6185,191,6377,233"/>
+<area shape="rect" id="node38" href="AOloopControl__DM__init_8c.html" title="DM control. " alt="" coords="6402,191,6577,233"/>
+<area shape="rect" id="node39" href="AOloopControl__DM__runtimecomp_8c.html" title="DM control. " alt="" coords="6601,191,6833,233"/>
+<area shape="rect" id="node40" href="AOloopControl__DM__toolbox_8c.html" title="DM control. " alt="" coords="6858,191,7057,233"/>
+<area shape="rect" id="node41" href="AOloopControl__DM__TTcircle__astrogrid_8c.html" title="DM control. " alt="" coords="7081,184,7274,240"/>
+<area shape="rect" id="node42" href="AOloopControl__DM__turbusimul_8c.html" title="DM control. " alt="" coords="7298,191,7515,233"/>
+<area shape="rect" id="node43" href="AOloopControl__IOtools_8c.html" title="Adaptive Optics Control loop engine I/O tools. " alt="" coords="7540,191,7719,233"/>
+<area shape="rect" id="node44" href="AOloopControl__IOtools__camerainput_8c.html" title="Adaptive Optics Control loop engine I/O tools. " alt="" coords="7743,184,7921,240"/>
+<area shape="rect" id="node45" href="AOloopControl__IOtools__datastream__processing_8c.html" title="Adaptive Optics Control loop engine I/O tools. " alt="" coords="7945,184,8124,240"/>
+<area shape="rect" id="node46" href="AOloopControl__IOtools__load__image__sharedmem_8c.html" title="Adaptive Optics Control loop engine I/O tools. " alt="" coords="8148,184,8329,240"/>
+<area shape="rect" id="node47" href="AOloopControl__IOtools__RTLOGsave_8c.html" title="Save realtime buffers. " alt="" coords="8353,184,8532,240"/>
+<area shape="rect" id="node48" href="AOloopControl__perfTest_8c.html" title="Adaptive Optics Control loop engine testing. " alt="" coords="8556,191,8740,233"/>
+</map>
+</div>
+</div>
 <p><a href="processtools_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -111,6 +182,31 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSTRINGLISTENTRY.html">STRINGLISTENTRY</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:aef69b8a63786e578ba8355eba9a1ff82"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#aef69b8a63786e578ba8355eba9a1ff82">PROCESSINFOLISTSIZE</a>&#160;&#160;&#160;10000</td></tr>
+<tr class="separator:aef69b8a63786e578ba8355eba9a1ff82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a538b9c328a3061fe3c95e74db99bdb1d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a538b9c328a3061fe3c95e74db99bdb1d">MAXNBSUBPROCESS</a>&#160;&#160;&#160;50</td></tr>
+<tr class="separator:a538b9c328a3061fe3c95e74db99bdb1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06cd84218b5b80ef86331f06f872ffcd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a06cd84218b5b80ef86331f06f872ffcd">MAXNBCPU</a>&#160;&#160;&#160;100</td></tr>
+<tr class="separator:a06cd84218b5b80ef86331f06f872ffcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fdb2372bfcda94c6b2174bfc31b73ff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a7fdb2372bfcda94c6b2174bfc31b73ff">PROCESSINFO_NBtimer</a>&#160;&#160;&#160;100</td></tr>
+<tr class="separator:a7fdb2372bfcda94c6b2174bfc31b73ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5386efe115ce428c89c7dfe8e033018"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#aa5386efe115ce428c89c7dfe8e033018">STRINGMAXLEN_PROCESSINFO_NAME</a>&#160;&#160;&#160;80</td></tr>
+<tr class="separator:aa5386efe115ce428c89c7dfe8e033018"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e5fe3b3f47b2f3f85d703785e3fe9c7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a2e5fe3b3f47b2f3f85d703785e3fe9c7">STRINGMAXLEN_PROCESSINFO_SRCFUNC</a>&#160;&#160;&#160;200</td></tr>
+<tr class="separator:a2e5fe3b3f47b2f3f85d703785e3fe9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc76a28ce6b8d223718b68e58f383111"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#abc76a28ce6b8d223718b68e58f383111">STRINGMAXLEN_PROCESSINFO_SRCFILE</a>&#160;&#160;&#160;200</td></tr>
+<tr class="separator:abc76a28ce6b8d223718b68e58f383111"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5fe26ad1e76681b2d3797162d3d02d4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#ac5fe26ad1e76681b2d3797162d3d02d4">STRINGMAXLEN_PROCESSINFO_TMUXNAME</a>&#160;&#160;&#160;100</td></tr>
+<tr class="separator:ac5fe26ad1e76681b2d3797162d3d02d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b8f06efe246fab4af6d348f8cdd5159"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a0b8f06efe246fab4af6d348f8cdd5159">STRINGMAXLEN_PROCESSINFO_STATUSMSG</a>&#160;&#160;&#160;200</td></tr>
+<tr class="separator:a0b8f06efe246fab4af6d348f8cdd5159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af48915a0bbb76cce87754124d90ecc0d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#af48915a0bbb76cce87754124d90ecc0d">STRINGMAXLEN_PROCESSINFO_LOGFILENAME</a>&#160;&#160;&#160;250</td></tr>
+<tr class="separator:af48915a0bbb76cce87754124d90ecc0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38a8317766be247af7c7c284d2e153f0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a38a8317766be247af7c7c284d2e153f0">STRINGMAXLEN_PROCESSINFO_DESCRIPTION</a>&#160;&#160;&#160;200</td></tr>
+<tr class="separator:a38a8317766be247af7c7c284d2e153f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a46a037236862ac1a534efbe605c10f42"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td></tr>
@@ -120,9 +216,9 @@ Typedefs</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a9912007733ec7c0b2f4f18a2763fe12b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a9912007733ec7c0b2f4f18a2763fe12b">processinfo_setup</a> (char *pinfoname, char descriptionstring[200], char msgstring[200], const char *functionname, const char *filename, int linenumber)</td></tr>
 <tr class="separator:a9912007733ec7c0b2f4f18a2763fe12b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac299545ba314c71a211102ef2b08ee44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#ac299545ba314c71a211102ef2b08ee44">processinfo_error</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo, char *errmsgstring)</td></tr>
+<tr class="memitem:ac299545ba314c71a211102ef2b08ee44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#ac299545ba314c71a211102ef2b08ee44">processinfo_error</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo, char *errmsgstring)</td></tr>
 <tr class="separator:ac299545ba314c71a211102ef2b08ee44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c1684f725dca2f03649af3a0de4dfe6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a7c1684f725dca2f03649af3a0de4dfe6">processinfo_loopstart</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo)</td></tr>
+<tr class="memitem:a7c1684f725dca2f03649af3a0de4dfe6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a7c1684f725dca2f03649af3a0de4dfe6">processinfo_loopstart</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo)</td></tr>
 <tr class="separator:a7c1684f725dca2f03649af3a0de4dfe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4b2e6d100dbb484529e7b8f6ce29f74"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#ad4b2e6d100dbb484529e7b8f6ce29f74">processinfo_loopstep</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo)</td></tr>
 <tr class="separator:ad4b2e6d100dbb484529e7b8f6ce29f74"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,18 +244,173 @@ Functions</h2></td></tr>
 <tr class="separator:a471b344c1c387b4c4573b1f7a3770b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa29570be52da95b8ef3911f99b73e7bb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#aa29570be52da95b8ef3911f99b73e7bb">processinfo_ProcessSignals</a> (<a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *processinfo)</td></tr>
 <tr class="separator:aa29570be52da95b8ef3911f99b73e7bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51c78bc5ec23c1ad565c27e318ce0d96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a51c78bc5ec23c1ad565c27e318ce0d96">processinfo_CTRLscreen</a> ()</td></tr>
+<tr class="memitem:a51c78bc5ec23c1ad565c27e318ce0d96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="processtools_8h.html#a51c78bc5ec23c1ad565c27e318ce0d96">processinfo_CTRLscreen</a> ()</td></tr>
 <tr class="separator:a51c78bc5ec23c1ad565c27e318ce0d96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Command line interface. </p>
 <p>Command line interface (CLI) definitions and function prototypes</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000073">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000012">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
 <p>Command line interface (CLI) definitions and function prototypes</p>
 <dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>9 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000074">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Typedef Documentation</h2>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000013">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a06cd84218b5b80ef86331f06f872ffcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06cd84218b5b80ef86331f06f872ffcd">&#9670;&nbsp;</a></span>MAXNBCPU</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAXNBCPU&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a538b9c328a3061fe3c95e74db99bdb1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a538b9c328a3061fe3c95e74db99bdb1d">&#9670;&nbsp;</a></span>MAXNBSUBPROCESS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAXNBSUBPROCESS&#160;&#160;&#160;50</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7fdb2372bfcda94c6b2174bfc31b73ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fdb2372bfcda94c6b2174bfc31b73ff">&#9670;&nbsp;</a></span>PROCESSINFO_NBtimer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PROCESSINFO_NBtimer&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef69b8a63786e578ba8355eba9a1ff82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef69b8a63786e578ba8355eba9a1ff82">&#9670;&nbsp;</a></span>PROCESSINFOLISTSIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PROCESSINFOLISTSIZE&#160;&#160;&#160;10000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a38a8317766be247af7c7c284d2e153f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38a8317766be247af7c7c284d2e153f0">&#9670;&nbsp;</a></span>STRINGMAXLEN_PROCESSINFO_DESCRIPTION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STRINGMAXLEN_PROCESSINFO_DESCRIPTION&#160;&#160;&#160;200</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af48915a0bbb76cce87754124d90ecc0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af48915a0bbb76cce87754124d90ecc0d">&#9670;&nbsp;</a></span>STRINGMAXLEN_PROCESSINFO_LOGFILENAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STRINGMAXLEN_PROCESSINFO_LOGFILENAME&#160;&#160;&#160;250</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa5386efe115ce428c89c7dfe8e033018"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5386efe115ce428c89c7dfe8e033018">&#9670;&nbsp;</a></span>STRINGMAXLEN_PROCESSINFO_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STRINGMAXLEN_PROCESSINFO_NAME&#160;&#160;&#160;80</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abc76a28ce6b8d223718b68e58f383111"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc76a28ce6b8d223718b68e58f383111">&#9670;&nbsp;</a></span>STRINGMAXLEN_PROCESSINFO_SRCFILE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STRINGMAXLEN_PROCESSINFO_SRCFILE&#160;&#160;&#160;200</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2e5fe3b3f47b2f3f85d703785e3fe9c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e5fe3b3f47b2f3f85d703785e3fe9c7">&#9670;&nbsp;</a></span>STRINGMAXLEN_PROCESSINFO_SRCFUNC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STRINGMAXLEN_PROCESSINFO_SRCFUNC&#160;&#160;&#160;200</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0b8f06efe246fab4af6d348f8cdd5159"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b8f06efe246fab4af6d348f8cdd5159">&#9670;&nbsp;</a></span>STRINGMAXLEN_PROCESSINFO_STATUSMSG</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STRINGMAXLEN_PROCESSINFO_STATUSMSG&#160;&#160;&#160;200</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac5fe26ad1e76681b2d3797162d3d02d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5fe26ad1e76681b2d3797162d3d02d4">&#9670;&nbsp;</a></span>STRINGMAXLEN_PROCESSINFO_TMUXNAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STRINGMAXLEN_PROCESSINFO_TMUXNAME&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
 <a id="a46a037236862ac1a534efbe605c10f42"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a46a037236862ac1a534efbe605c10f42">&#9670;&nbsp;</a></span>errno_t</h2>
 
@@ -167,7 +418,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef int <a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td>
+          <td class="memname">typedef int <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -235,7 +486,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> processinfo_CTRLscreen </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> processinfo_CTRLscreen </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -258,7 +509,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> processinfo_error </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> processinfo_error </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td>
           <td class="paramname"><em>processinfo</em>, </td>
@@ -322,7 +573,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> processinfo_loopstart </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> processinfo_loopstart </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structPROCESSINFO.html">PROCESSINFO</a> *&#160;</td>
           <td class="paramname"><em>processinfo</em></td><td>)</td>
@@ -570,7 +821,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="processtools_8h.html">processtools.h</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

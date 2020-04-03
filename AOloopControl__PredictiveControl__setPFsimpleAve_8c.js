@@ -1,4 +1,5 @@
 var AOloopControl__PredictiveControl__setPFsimpleAve_8c =
 [
-    [ "AOloopControl_PredictiveControl_setPFsimpleAve", "AOloopControl__PredictiveControl__setPFsimpleAve_8c.html#abc6b58b98430148a29d0f07ad32f0500", null ]
+    [ "_GNU_SOURCE", "AOloopControl__PredictiveControl__setPFsimpleAve_8c.html#a369266c24eacffb87046522897a570d5", null ],
+    [ "AOloopControl_PredictiveControl_setPFsimpleAve", "AOloopControl__PredictiveControl__setPFsimpleAve_8c.html#abedc97ce9e769f9e523772dc22983ddb", null ]
 ];

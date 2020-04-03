@@ -85,7 +85,7 @@ $(document).ready(function(){initNavTree('cudacomp__MVMextractModesLoop_8c.html'
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">cudacomp_MVMextractModesLoop.c File Reference</div>  </div>
 </div><!--header-->
@@ -93,61 +93,83 @@ $(document).ready(function(){initNavTree('cudacomp__MVMextractModesLoop_8c.html'
 
 <p>CUDA functions wrapper.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a2feafbb6f7b1b526939e286d26fbd01c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cudacomp__MVMextractModesLoop_8c.html#a2feafbb6f7b1b526939e286d26fbd01c">CUDACOMP_MVMextractModesLoop_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
-<tr class="separator:a2feafbb6f7b1b526939e286d26fbd01c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92e00ad76f2ba4466cdb10c4ea2afc8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cudacomp__MVMextractModesLoop_8c.html#a92e00ad76f2ba4466cdb10c4ea2afc8f">__attribute__</a> ((hot))</td></tr>
-<tr class="memdesc:a92e00ad76f2ba4466cdb10c4ea2afc8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">extract mode coefficients from data stream (MVM)  <a href="#a92e00ad76f2ba4466cdb10c4ea2afc8f">More...</a><br /></td></tr>
-<tr class="separator:a92e00ad76f2ba4466cdb10c4ea2afc8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
+<code>#include &lt;semaphore.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;sys/file.h&gt;</code><br />
+<code>#include &lt;sys/mman.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="cudacomp_8h_source.html">cudacomp/cudacomp.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linopt__imtools_8h_source.html">linopt_imtools/linopt_imtools.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for cudacomp_MVMextractModesLoop.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="cudacomp__MVMextractModesLoop_8c__incl.png" border="0" usemap="#src_2cudacomp_2cudacomp__MVMextractModesLoop_8c" alt=""/></div>
+<map name="src_2cudacomp_2cudacomp__MVMextractModesLoop_8c" id="src_2cudacomp_2cudacomp__MVMextractModesLoop_8c">
+<area shape="rect" id="node16" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="939,95,1096,136"/>
+<area shape="rect" id="node26" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="1735,102,1878,129"/>
+<area shape="rect" id="node27" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1902,95,2122,136"/>
+<area shape="rect" id="node28" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2146,95,2347,136"/>
+<area shape="rect" id="node29" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="2371,95,2570,136"/>
+<area shape="rect" id="node30" href="info_8h.html" title="info/info.h" alt="" coords="2594,102,2673,129"/>
+<area shape="rect" id="node31" href="cudacomp_8h.html" title="Function prototypes for CUDA/MAGMA wrapper. " alt="" coords="2697,102,2855,129"/>
+<area shape="rect" id="node32" href="linopt__imtools_8h.html" title="Function prototypes for linear algebra tools. " alt="" coords="2879,95,3017,136"/>
+<area shape="rect" id="node20" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="708,184,929,211"/>
+<area shape="rect" id="node21" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="767,259,871,285"/>
+<area shape="rect" id="node23" href="processtools_8h.html" title="Command line interface. " alt="" coords="1004,259,1111,285"/>
+<area shape="rect" id="node24" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="339,259,447,285"/>
+<area shape="rect" id="node25" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="343,184,494,211"/>
+<area shape="rect" id="node22" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="742,333,895,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a3024ccd4a9af5109d24e6c57565d74a1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cudacomp__MVMextractModesLoop_8c.html#a3024ccd4a9af5109d24e6c57565d74a1">_POSIX_C_SOURCE</a>&#160;&#160;&#160;200809L</td></tr>
+<tr class="separator:a3024ccd4a9af5109d24e6c57565d74a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace69ce07cb931589124507dbbdaf6536"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cudacomp__MVMextractModesLoop_8c.html#ace69ce07cb931589124507dbbdaf6536">_PRINT_TEST</a></td></tr>
+<tr class="separator:ace69ce07cb931589124507dbbdaf6536"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>CUDA functions wrapper. </p>
 <p>Requires CUDA library </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a92e00ad76f2ba4466cdb10c4ea2afc8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92e00ad76f2ba4466cdb10c4ea2afc8f">&#9670;&nbsp;</a></span>__attribute__()</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a3024ccd4a9af5109d24e6c57565d74a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3024ccd4a9af5109d24e6c57565d74a1">&#9670;&nbsp;</a></span>_POSIX_C_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
-          <td>(</td>
-          <td class="paramtype">(hot)&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">#define _POSIX_C_SOURCE&#160;&#160;&#160;200809L</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>extract mode coefficients from data stream (MVM) </p>
-
 </div>
 </div>
-<a id="a2feafbb6f7b1b526939e286d26fbd01c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2feafbb6f7b1b526939e286d26fbd01c">&#9670;&nbsp;</a></span>CUDACOMP_MVMextractModesLoop_FPCONF()</h2>
+<a id="ace69ce07cb931589124507dbbdaf6536"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace69ce07cb931589124507dbbdaf6536">&#9670;&nbsp;</a></span>_PRINT_TEST</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> CUDACOMP_MVMextractModesLoop_FPCONF </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>fpsname</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>CMDmode</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">#define _PRINT_TEST</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -161,7 +183,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_dca209fe662ec0d146440db0aa5b9932.html">cudacomp</a></li><li class="navelem"><a class="el" href="cudacomp__MVMextractModesLoop_8c.html">cudacomp_MVMextractModesLoop.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

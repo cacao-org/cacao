@@ -86,6 +86,8 @@ $(document).ready(function(){initNavTree('function__parameters_8c.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -95,26 +97,240 @@ $(document).ready(function(){initNavTree('function__parameters_8c.html','');});
 
 <p>Tools to help expose and control function parameters.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;limits.h&gt;</code><br />
+<code>#include &lt;sys/syscall.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;ncurses.h&gt;</code><br />
+<code>#include &lt;dirent.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;sys/mman.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&gt;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="function__parameters_8h_source.html">function_parameters.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for function_parameters.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="function__parameters_8c__incl.png" border="0" usemap="#src_2CommandLineInterface_2function__parameters_8c" alt=""/></div>
+<map name="src_2CommandLineInterface_2function__parameters_8c" id="src_2CommandLineInterface_2function__parameters_8c">
+<area shape="rect" id="node20" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2616,102,2759,129"/>
+<area shape="rect" id="node21" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="846,95,1003,136"/>
+<area shape="rect" id="node31" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1295,184,1445,211"/>
+<area shape="rect" id="node32" href="info_8h.html" title="info/info.h" alt="" coords="2783,102,2861,129"/>
+<area shape="rect" id="node33" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2885,95,3087,136"/>
+<area shape="rect" id="node34" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="3111,95,3312,136"/>
+<area shape="rect" id="node35" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="3336,95,3556,136"/>
+<area shape="rect" id="node26" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="399,184,621,211"/>
+<area shape="rect" id="node27" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="458,259,562,285"/>
+<area shape="rect" id="node29" href="processtools_8h.html" title="Command line interface. " alt="" coords="746,259,853,285"/>
+<area shape="rect" id="node30" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="979,259,1087,285"/>
+<area shape="rect" id="node28" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="433,333,587,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8a8c53ed4b0155de9a38ce3424d50aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#af8a8c53ed4b0155de9a38ce3424d50aa">SHAREDSHMDIR</a>&#160;&#160;&#160;data.shmdir</td></tr>
+<tr class="separator:af8a8c53ed4b0155de9a38ce3424d50aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb491912c6ddc60b5b9e3184a0f13f05"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#acb491912c6ddc60b5b9e3184a0f13f05">NB_FPS_MAX</a>&#160;&#160;&#160;100</td></tr>
+<tr class="separator:acb491912c6ddc60b5b9e3184a0f13f05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb6dbbf09087a59704f8affb2426fa15"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aeb6dbbf09087a59704f8affb2426fa15">NB_KEYWNODE_MAX</a>&#160;&#160;&#160;10000</td></tr>
+<tr class="separator:aeb6dbbf09087a59704f8affb2426fa15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb2cc46a9e3ffb1b2caded36c4f9fe2a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#acb2cc46a9e3ffb1b2caded36c4f9fe2a">MAXNBLEVELS</a>&#160;&#160;&#160;20</td></tr>
+<tr class="separator:acb2cc46a9e3ffb1b2caded36c4f9fe2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab702106cf3b3e96750b6845ded4e0299"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ab702106cf3b3e96750b6845ded4e0299">RESET</a>&#160;&#160;&#160;&quot;\033[0m&quot;</td></tr>
+<tr class="separator:ab702106cf3b3e96750b6845ded4e0299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b3b25cba33b07c303f3060fe41887f6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a7b3b25cba33b07c303f3060fe41887f6">BLACK</a>&#160;&#160;&#160;&quot;\033[0;30m&quot;      /* Black */</td></tr>
+<tr class="separator:a7b3b25cba33b07c303f3060fe41887f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d23feea868a983c8c2b661e1e16972f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a8d23feea868a983c8c2b661e1e16972f">RED</a>&#160;&#160;&#160;&quot;\033[0;31m&quot;      /* Red */</td></tr>
+<tr class="separator:a8d23feea868a983c8c2b661e1e16972f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfbc006ea433ad708fdee3e82996e721"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#acfbc006ea433ad708fdee3e82996e721">GREEN</a>&#160;&#160;&#160;&quot;\033[0;32m&quot;      /* Green */</td></tr>
+<tr class="separator:acfbc006ea433ad708fdee3e82996e721"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf681265909adf3d3e8116c93c0ba179"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#abf681265909adf3d3e8116c93c0ba179">YELLOW</a>&#160;&#160;&#160;&quot;\033[0;33m&quot;      /* Yellow */</td></tr>
+<tr class="separator:abf681265909adf3d3e8116c93c0ba179"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79d10e672abb49ad63eeaa8aaef57c38"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a79d10e672abb49ad63eeaa8aaef57c38">BLUE</a>&#160;&#160;&#160;&quot;\033[0;34m&quot;      /* Blue */</td></tr>
+<tr class="separator:a79d10e672abb49ad63eeaa8aaef57c38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f699060902f800f12aaae150f3a708e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a6f699060902f800f12aaae150f3a708e">MAGENTA</a>&#160;&#160;&#160;&quot;\033[0;35m&quot;      /* Magenta */</td></tr>
+<tr class="separator:a6f699060902f800f12aaae150f3a708e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad243f93c16bc4c1d3e0a13b84421d760"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ad243f93c16bc4c1d3e0a13b84421d760">CYAN</a>&#160;&#160;&#160;&quot;\033[0;36m&quot;      /* Cyan */</td></tr>
+<tr class="separator:ad243f93c16bc4c1d3e0a13b84421d760"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87b537f5fa5c109d3c05c13d6b18f382"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a87b537f5fa5c109d3c05c13d6b18f382">WHITE</a>&#160;&#160;&#160;&quot;\033[0;37m&quot;      /* White */</td></tr>
+<tr class="separator:a87b537f5fa5c109d3c05c13d6b18f382"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef2fe95894117165b29036718221979f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aef2fe95894117165b29036718221979f">BOLDBLACK</a>&#160;&#160;&#160;&quot;\033[1;30m&quot;      /* Bold Black */</td></tr>
+<tr class="separator:aef2fe95894117165b29036718221979f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab912d02c7998c3d47d05f87be4e2c920"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ab912d02c7998c3d47d05f87be4e2c920">BOLDRED</a>&#160;&#160;&#160;&quot;\033[1;31m&quot;      /* Bold Red */</td></tr>
+<tr class="separator:ab912d02c7998c3d47d05f87be4e2c920"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a6c893a1703c33ede7d702fe5f97c91"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a4a6c893a1703c33ede7d702fe5f97c91">BOLDGREEN</a>&#160;&#160;&#160;&quot;\033[1;32m&quot;      /* Bold Green */</td></tr>
+<tr class="separator:a4a6c893a1703c33ede7d702fe5f97c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cec79108dfc3c61e8e32d390ec28b26"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a8cec79108dfc3c61e8e32d390ec28b26">BOLDYELLOW</a>&#160;&#160;&#160;&quot;\033[1;33m&quot;      /* Bold Yellow */</td></tr>
+<tr class="separator:a8cec79108dfc3c61e8e32d390ec28b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11e77c19555cbd15bcc744ff36a18635"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a11e77c19555cbd15bcc744ff36a18635">BOLDBLUE</a>&#160;&#160;&#160;&quot;\033[1;34m&quot;      /* Bold Blue */</td></tr>
+<tr class="separator:a11e77c19555cbd15bcc744ff36a18635"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4723c5ee12cfca16e2172b57b99cb07"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ac4723c5ee12cfca16e2172b57b99cb07">BOLDMAGENTA</a>&#160;&#160;&#160;&quot;\033[1;35m&quot;      /* Bold Magenta */</td></tr>
+<tr class="separator:ac4723c5ee12cfca16e2172b57b99cb07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae87af5e6363eb1913b17f24dcb60a22d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ae87af5e6363eb1913b17f24dcb60a22d">BOLDCYAN</a>&#160;&#160;&#160;&quot;\033[1;36m&quot;      /* Bold Cyan */</td></tr>
+<tr class="separator:ae87af5e6363eb1913b17f24dcb60a22d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4ef051614aa0bd503b0a18ee158c5d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aa4ef051614aa0bd503b0a18ee158c5d7">BOLDWHITE</a>&#160;&#160;&#160;&quot;\033[1;37m&quot;      /* Bold White */</td></tr>
+<tr class="separator:aa4ef051614aa0bd503b0a18ee158c5d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3193abb955677435425727a9f28d558c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a3193abb955677435425727a9f28d558c">BLINKBLACK</a>&#160;&#160;&#160;&quot;\033[5;30m&quot;      /* Blink Black */</td></tr>
+<tr class="separator:a3193abb955677435425727a9f28d558c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2694b03f66a4378d72da957947647f26"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a2694b03f66a4378d72da957947647f26">BLINKRED</a>&#160;&#160;&#160;&quot;\033[5;31m&quot;      /* Blink  Red */</td></tr>
+<tr class="separator:a2694b03f66a4378d72da957947647f26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a098187077aa8938c879f7296104d2d93"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a098187077aa8938c879f7296104d2d93">BLINKGREEN</a>&#160;&#160;&#160;&quot;\033[5;32m&quot;      /* Blink  Green */</td></tr>
+<tr class="separator:a098187077aa8938c879f7296104d2d93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb85934a35d502b98e0fde36a92a3c24"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#abb85934a35d502b98e0fde36a92a3c24">BLINKYELLOW</a>&#160;&#160;&#160;&quot;\033[5;33m&quot;      /* Blink  Yellow */</td></tr>
+<tr class="separator:abb85934a35d502b98e0fde36a92a3c24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4738663c2ddd5eefdef88918ef81d723"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a4738663c2ddd5eefdef88918ef81d723">BLINKBLUE</a>&#160;&#160;&#160;&quot;\033[5;34m&quot;      /* Blink  Blue */</td></tr>
+<tr class="separator:a4738663c2ddd5eefdef88918ef81d723"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acea19cbe4fdbe8da98effa64117aa10e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#acea19cbe4fdbe8da98effa64117aa10e">BLINKMAGENTA</a>&#160;&#160;&#160;&quot;\033[5;35m&quot;      /* Blink  Magenta */</td></tr>
+<tr class="separator:acea19cbe4fdbe8da98effa64117aa10e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98047779fd14af8a3d31164db1ebe61a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a98047779fd14af8a3d31164db1ebe61a">BLINKCYAN</a>&#160;&#160;&#160;&quot;\033[5;36m&quot;      /* Blink  Cyan */</td></tr>
+<tr class="separator:a98047779fd14af8a3d31164db1ebe61a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27718acb4013b260f8d9698dd654cb7f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a27718acb4013b260f8d9698dd654cb7f">BLINKWHITE</a>&#160;&#160;&#160;&quot;\033[5;37m&quot;      /* Blink  White */</td></tr>
+<tr class="separator:a27718acb4013b260f8d9698dd654cb7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dd61588f0fd0f9a50f1ed8b1f4bdb08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a5dd61588f0fd0f9a50f1ed8b1f4bdb08">BLINKHIBLACK</a>&#160;&#160;&#160;&quot;\033[5;90m&quot;      /* Blink Black */</td></tr>
+<tr class="separator:a5dd61588f0fd0f9a50f1ed8b1f4bdb08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a838fb0176bb859a0422d62c2afc5f700"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a838fb0176bb859a0422d62c2afc5f700">BLINKHIRED</a>&#160;&#160;&#160;&quot;\033[5;91m&quot;      /* Blink  Red */</td></tr>
+<tr class="separator:a838fb0176bb859a0422d62c2afc5f700"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38cbb18ef570adf534375f1b3b9da384"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a38cbb18ef570adf534375f1b3b9da384">BLINKHIGREEN</a>&#160;&#160;&#160;&quot;\033[5;92m&quot;      /* Blink  Green */</td></tr>
+<tr class="separator:a38cbb18ef570adf534375f1b3b9da384"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c6fdb059031c8b82e1eeb50d218d6d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a6c6fdb059031c8b82e1eeb50d218d6d5">BLINKHIYELLOW</a>&#160;&#160;&#160;&quot;\033[5;93m&quot;      /* Blink  Yellow */</td></tr>
+<tr class="separator:a6c6fdb059031c8b82e1eeb50d218d6d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fba586743a385fa11034f22f0d20301"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a8fba586743a385fa11034f22f0d20301">BLINKHIBLUE</a>&#160;&#160;&#160;&quot;\033[5;94m&quot;      /* Blink  Blue */</td></tr>
+<tr class="separator:a8fba586743a385fa11034f22f0d20301"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc930daf9ca750be7cd6c19ad4be1ac6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#acc930daf9ca750be7cd6c19ad4be1ac6">BLINKHIMAGENTA</a>&#160;&#160;&#160;&quot;\033[5;95m&quot;      /* Blink  Magenta */</td></tr>
+<tr class="separator:acc930daf9ca750be7cd6c19ad4be1ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bb7422562dff7397c64eea87d462504"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a7bb7422562dff7397c64eea87d462504">BLINKHICYAN</a>&#160;&#160;&#160;&quot;\033[5;96m&quot;      /* Blink  Cyan */</td></tr>
+<tr class="separator:a7bb7422562dff7397c64eea87d462504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c98f0f542ff0e5979482703510d3243"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a9c98f0f542ff0e5979482703510d3243">BLINKHIWHITE</a>&#160;&#160;&#160;&quot;\033[5;97m&quot;      /* Blink  White */</td></tr>
+<tr class="separator:a9c98f0f542ff0e5979482703510d3243"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7790b7299f70fe41abe85748a88a9f59"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a7790b7299f70fe41abe85748a88a9f59">UNDERLINEBLACK</a>&#160;&#160;&#160;&quot;\033[4;30m&quot;      /* Bold Black */</td></tr>
+<tr class="separator:a7790b7299f70fe41abe85748a88a9f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae27f88cbce488abd2f6008d88f1ab021"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ae27f88cbce488abd2f6008d88f1ab021">UNDERLINERED</a>&#160;&#160;&#160;&quot;\033[4;31m&quot;      /* Bold Red */</td></tr>
+<tr class="separator:ae27f88cbce488abd2f6008d88f1ab021"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b354efbb46b7ff6ea93175e1734244f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a3b354efbb46b7ff6ea93175e1734244f">UNDERLINEGREEN</a>&#160;&#160;&#160;&quot;\033[4;32m&quot;      /* Bold Green */</td></tr>
+<tr class="separator:a3b354efbb46b7ff6ea93175e1734244f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5342bcc58c078ceb90d36eb5a2c75c01"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a5342bcc58c078ceb90d36eb5a2c75c01">UNDERLINEYELLOW</a>&#160;&#160;&#160;&quot;\033[4;33m&quot;      /* Bold Yellow */</td></tr>
+<tr class="separator:a5342bcc58c078ceb90d36eb5a2c75c01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a470feba542fadc7922ed69ef5042bde6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a470feba542fadc7922ed69ef5042bde6">UNDERLINEBLUE</a>&#160;&#160;&#160;&quot;\033[4;34m&quot;      /* Bold Blue */</td></tr>
+<tr class="separator:a470feba542fadc7922ed69ef5042bde6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a728c2a007385315b953d26ed573fd5c8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a728c2a007385315b953d26ed573fd5c8">UNDERLINEMAGENTA</a>&#160;&#160;&#160;&quot;\033[4;35m&quot;      /* Bold Magenta */</td></tr>
+<tr class="separator:a728c2a007385315b953d26ed573fd5c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a579bd55c58e888c9575191b5b73954fa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a579bd55c58e888c9575191b5b73954fa">UNDERLINECYAN</a>&#160;&#160;&#160;&quot;\033[4;36m&quot;      /* Bold Cyan */</td></tr>
+<tr class="separator:a579bd55c58e888c9575191b5b73954fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0673c442349aa391f6f6e10a96cb2ee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ab0673c442349aa391f6f6e10a96cb2ee">UNDERLINEWHITE</a>&#160;&#160;&#160;&quot;\033[4;37m&quot;      /* Bold White */</td></tr>
+<tr class="separator:ab0673c442349aa391f6f6e10a96cb2ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a306697ab0305cb8207bd19afd58d110b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a306697ab0305cb8207bd19afd58d110b">HIBLACK</a>&#160;&#160;&#160;&quot;\033[0;90m&quot;      /* Black */</td></tr>
+<tr class="separator:a306697ab0305cb8207bd19afd58d110b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a140b06908de8fdbc2ae26c9cb183be75"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a140b06908de8fdbc2ae26c9cb183be75">HIRED</a>&#160;&#160;&#160;&quot;\033[0;91m&quot;      /* Red */</td></tr>
+<tr class="separator:a140b06908de8fdbc2ae26c9cb183be75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4f97b984707b112a0b3039425ae97d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aa4f97b984707b112a0b3039425ae97d1">HIGREEN</a>&#160;&#160;&#160;&quot;\033[0;92m&quot;      /* Green */</td></tr>
+<tr class="separator:aa4f97b984707b112a0b3039425ae97d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a966780d8f41d817deb992733e965c6aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a966780d8f41d817deb992733e965c6aa">HIYELLOW</a>&#160;&#160;&#160;&quot;\033[0;93m&quot;      /* Yellow */</td></tr>
+<tr class="separator:a966780d8f41d817deb992733e965c6aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecd2f3a46244499e4112e387537f779d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aecd2f3a46244499e4112e387537f779d">HIBLUE</a>&#160;&#160;&#160;&quot;\033[0;94m&quot;      /* Blue */</td></tr>
+<tr class="separator:aecd2f3a46244499e4112e387537f779d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8a2df736d37005c1c73078be0d299eb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#af8a2df736d37005c1c73078be0d299eb">HIMAGENTA</a>&#160;&#160;&#160;&quot;\033[0;95m&quot;      /* Magenta */</td></tr>
+<tr class="separator:af8a2df736d37005c1c73078be0d299eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a086f5e52f7ad24c34966f2dbee05c81d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a086f5e52f7ad24c34966f2dbee05c81d">HICYAN</a>&#160;&#160;&#160;&quot;\033[0;96m&quot;      /* Cyan */</td></tr>
+<tr class="separator:a086f5e52f7ad24c34966f2dbee05c81d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f5204c4d20538d8015f14903c65ad74"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a6f5204c4d20538d8015f14903c65ad74">HIWHITE</a>&#160;&#160;&#160;&quot;\033[0;97m&quot;      /* White */</td></tr>
+<tr class="separator:a6f5204c4d20538d8015f14903c65ad74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5322ef0d25992115c2d77991d9d36fb6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a5322ef0d25992115c2d77991d9d36fb6">BOLDHIBLACK</a>&#160;&#160;&#160;&quot;\033[1;90m&quot;      /* Black */</td></tr>
+<tr class="separator:a5322ef0d25992115c2d77991d9d36fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3aa56734f93c43659c7c939261262b98"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a3aa56734f93c43659c7c939261262b98">BOLDHIRED</a>&#160;&#160;&#160;&quot;\033[1;91m&quot;      /* Red */</td></tr>
+<tr class="separator:a3aa56734f93c43659c7c939261262b98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfedf21a69993593f9b8311bf3aa3280"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#adfedf21a69993593f9b8311bf3aa3280">BOLDHIGREEN</a>&#160;&#160;&#160;&quot;\033[1;92m&quot;      /* Green */</td></tr>
+<tr class="separator:adfedf21a69993593f9b8311bf3aa3280"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af963aa3373bb71c61142015bd38582e2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#af963aa3373bb71c61142015bd38582e2">BOLDHIYELLOW</a>&#160;&#160;&#160;&quot;\033[1;93m&quot;      /* Yellow */</td></tr>
+<tr class="separator:af963aa3373bb71c61142015bd38582e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7fa52a2ce9d30b54eda3978c4a6db40"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aa7fa52a2ce9d30b54eda3978c4a6db40">BOLDHIBLUE</a>&#160;&#160;&#160;&quot;\033[1;94m&quot;      /* Blue */</td></tr>
+<tr class="separator:aa7fa52a2ce9d30b54eda3978c4a6db40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb7a55f07bf18db4e7174ac9ab309c3b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#abb7a55f07bf18db4e7174ac9ab309c3b">BOLDHIMAGENTA</a>&#160;&#160;&#160;&quot;\033[1;95m&quot;      /* Magenta */</td></tr>
+<tr class="separator:abb7a55f07bf18db4e7174ac9ab309c3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a157f80e9c0c827624afc2e45582c98bf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a157f80e9c0c827624afc2e45582c98bf">BOLDHICYAN</a>&#160;&#160;&#160;&quot;\033[1;96m&quot;      /* Cyan */</td></tr>
+<tr class="separator:a157f80e9c0c827624afc2e45582c98bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a984a302865e23907da6b6290ebc9b308"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a984a302865e23907da6b6290ebc9b308">BOLDHIWHITE</a>&#160;&#160;&#160;&quot;\033[1;97m&quot;      /* White */</td></tr>
+<tr class="separator:a984a302865e23907da6b6290ebc9b308"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b46f00ee934acd41df43916f817a8c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a8b46f00ee934acd41df43916f817a8c4">BACKGROUNDBLACK</a>&#160;&#160;&#160;&quot;\033[40m&quot;      /* Black */</td></tr>
+<tr class="separator:a8b46f00ee934acd41df43916f817a8c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83724d211020140b2fc22a1a66514b1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a83724d211020140b2fc22a1a66514b1c">BACKGROUNDRED</a>&#160;&#160;&#160;&quot;\033[41m&quot;      /* Red */</td></tr>
+<tr class="separator:a83724d211020140b2fc22a1a66514b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89bfb2dc73668b03c0ee8a44ed4032f6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a89bfb2dc73668b03c0ee8a44ed4032f6">BACKGROUNDGREEN</a>&#160;&#160;&#160;&quot;\033[42m&quot;      /* Green */</td></tr>
+<tr class="separator:a89bfb2dc73668b03c0ee8a44ed4032f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a611c6f0f421dc778be8fda3ad6593bfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a611c6f0f421dc778be8fda3ad6593bfa">BACKGROUNDYELLOW</a>&#160;&#160;&#160;&quot;\033[43m&quot;      /* Yellow */</td></tr>
+<tr class="separator:a611c6f0f421dc778be8fda3ad6593bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa152bbf4931c037780d11a9b3775fa4e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aa152bbf4931c037780d11a9b3775fa4e">BACKGROUNDBLUE</a>&#160;&#160;&#160;&quot;\033[44m&quot;      /* Blue */</td></tr>
+<tr class="separator:aa152bbf4931c037780d11a9b3775fa4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8695ce63f0d4822dd90f40fe203c134f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a8695ce63f0d4822dd90f40fe203c134f">BACKGROUNDMAGENTA</a>&#160;&#160;&#160;&quot;\033[45m&quot;      /* Magenta */</td></tr>
+<tr class="separator:a8695ce63f0d4822dd90f40fe203c134f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59efd81251bd908d4698600b7fc54fc3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a59efd81251bd908d4698600b7fc54fc3">BACKGROUNDCYAN</a>&#160;&#160;&#160;&quot;\033[46m&quot;      /* Cyan */</td></tr>
+<tr class="separator:a59efd81251bd908d4698600b7fc54fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c3d829d88593162c0d2296efe7087f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a5c3d829d88593162c0d2296efe7087f2">BACKGROUNDWHITE</a>&#160;&#160;&#160;&quot;\033[47m&quot;      /* White */</td></tr>
+<tr class="separator:a5c3d829d88593162c0d2296efe7087f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a153cc117f1b9834859aaf209e29dd43d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a153cc117f1b9834859aaf209e29dd43d">BACKGROUNDHIBLACK</a>&#160;&#160;&#160;&quot;\033[0;100m&quot;      /* Black */</td></tr>
+<tr class="separator:a153cc117f1b9834859aaf209e29dd43d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e5dcddfe78fae1a6595383a11d1bb74"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a2e5dcddfe78fae1a6595383a11d1bb74">BACKGROUNDHIRED</a>&#160;&#160;&#160;&quot;\033[0;101m&quot;      /* Red */</td></tr>
+<tr class="separator:a2e5dcddfe78fae1a6595383a11d1bb74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6dd4bde6d0986345700dba63d3d6f875"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a6dd4bde6d0986345700dba63d3d6f875">BACKGROUNDHIGREEN</a>&#160;&#160;&#160;&quot;\033[0;102m&quot;      /* Green */</td></tr>
+<tr class="separator:a6dd4bde6d0986345700dba63d3d6f875"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a8a0bd9a98d34d1016e9c79a61acecf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a8a8a0bd9a98d34d1016e9c79a61acecf">BACKGROUNDHIYELLOW</a>&#160;&#160;&#160;&quot;\033[0;103m&quot;      /* Yellow */</td></tr>
+<tr class="separator:a8a8a0bd9a98d34d1016e9c79a61acecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86f6f2e0b11fd03aad95d96211f2da92"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a86f6f2e0b11fd03aad95d96211f2da92">BACKGROUNDHIBLUE</a>&#160;&#160;&#160;&quot;\033[0;104m&quot;      /* Blue */</td></tr>
+<tr class="separator:a86f6f2e0b11fd03aad95d96211f2da92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaa4f0993f500b1b431a15bc96c7ebb7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#adaa4f0993f500b1b431a15bc96c7ebb7">BACKGROUNDHIMAGENTA</a>&#160;&#160;&#160;&quot;\033[0;105m&quot;      /* Magenta */</td></tr>
+<tr class="separator:adaa4f0993f500b1b431a15bc96c7ebb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71389344ce5ba40ae790c33e2cd7948d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a71389344ce5ba40ae790c33e2cd7948d">BACKGROUNDHICYAN</a>&#160;&#160;&#160;&quot;\033[0;106m&quot;      /* Cyan */</td></tr>
+<tr class="separator:a71389344ce5ba40ae790c33e2cd7948d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3a3f1e6f2f563f2fdae8fc907fb2e09"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ac3a3f1e6f2f563f2fdae8fc907fb2e09">BACKGROUNDHIWHITE</a>&#160;&#160;&#160;&quot;\033[0;107m&quot;      /* White */</td></tr>
+<tr class="separator:ac3a3f1e6f2f563f2fdae8fc907fb2e09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35ac9636a010eb4836ec8d78aebd55ee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a35ac9636a010eb4836ec8d78aebd55ee">MAX_NB_CHILD</a>&#160;&#160;&#160;500</td></tr>
+<tr class="separator:a35ac9636a010eb4836ec8d78aebd55ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a46a037236862ac1a534efbe605c10f42"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td></tr>
+<tr class="separator:a46a037236862ac1a534efbe605c10f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a557876b17520802419beca50240c63d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a557876b17520802419beca50240c63d2">function_parameter_struct_shmdirname</a> (char *shmdname)</td></tr>
+<tr class="memitem:a557876b17520802419beca50240c63d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a557876b17520802419beca50240c63d2">function_parameter_struct_shmdirname</a> (char *shmdname)</td></tr>
 <tr class="separator:a557876b17520802419beca50240c63d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a863fd9e44352de076a5c11392ebbcceb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a863fd9e44352de076a5c11392ebbcceb">function_parameter_struct_create</a> (int NBparam, const char *name)</td></tr>
-<tr class="separator:a863fd9e44352de076a5c11392ebbcceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae08ea43e607b4b66e8fc21ae4ee5f37a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ae08ea43e607b4b66e8fc21ae4ee5f37a">function_parameter_getFPSname_from_CLIfunc</a> (char *fpsname_default)</td></tr>
+<tr class="separator:ae08ea43e607b4b66e8fc21ae4ee5f37a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93d950bf9afa9269d500b89473965122"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a93d950bf9afa9269d500b89473965122">function_parameter_execFPScmd</a> ()</td></tr>
+<tr class="separator:a93d950bf9afa9269d500b89473965122"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2aa1cc48f065bcb87059da614573ac37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a2aa1cc48f065bcb87059da614573ac37">function_parameter_struct_create</a> (int NBparamMAX, const char *name)</td></tr>
+<tr class="separator:a2aa1cc48f065bcb87059da614573ac37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4eb2b4db6e7d81a93556e26a0a1df6cc"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a4eb2b4db6e7d81a93556e26a0a1df6cc">function_parameter_struct_connect</a> (const char *name, <a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsconnectmode)</td></tr>
 <tr class="separator:a4eb2b4db6e7d81a93556e26a0a1df6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed1068418a14a370741809bf76bab69b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aed1068418a14a370741809bf76bab69b">function_parameter_struct_disconnect</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *funcparamstruct)</td></tr>
 <tr class="separator:aed1068418a14a370741809bf76bab69b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d41a1ac75662f5cc07c70a2efced1b6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a8d41a1ac75662f5cc07c70a2efced1b6">function_parameter_SetValue_int64</a> (char *keywordfull, long val)</td></tr>
 <tr class="separator:a8d41a1ac75662f5cc07c70a2efced1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0936bcd03b0ac64fdae634ceee6ee816"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a0936bcd03b0ac64fdae634ceee6ee816">function_parameter_printlist</a> (<a class="el" href="structFUNCTION__PARAMETER.html">FUNCTION_PARAMETER</a> *funcparamarray, int NBparam)</td></tr>
-<tr class="separator:a0936bcd03b0ac64fdae634ceee6ee816"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f8c2bb52b35a6fa7a9dfe50866b0ff5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a5f8c2bb52b35a6fa7a9dfe50866b0ff5">function_parameter_printlist</a> (<a class="el" href="structFUNCTION__PARAMETER.html">FUNCTION_PARAMETER</a> *funcparamarray, long NBparamMAX)</td></tr>
+<tr class="separator:a5f8c2bb52b35a6fa7a9dfe50866b0ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89096e7f98759449683f8f8c6685ce59"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a89096e7f98759449683f8f8c6685ce59">functionparameter_GetFileName</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, <a class="el" href="structFUNCTION__PARAMETER.html">FUNCTION_PARAMETER</a> *fparam, char *outfname, char *tagname)</td></tr>
 <tr class="separator:a89096e7f98759449683f8f8c6685ce59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98f6267496eab5f421cc7c5e10bd4cc4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a98f6267496eab5f421cc7c5e10bd4cc4">functionparameter_GetParamIndex</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, const char *paramname)</td></tr>
@@ -147,20 +363,20 @@ Functions</h2></td></tr>
 <tr class="separator:a8f6b642f74bba85a5410c3e9489dedb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75d5133e40513701341cfa78f61ef964"><td class="memItemLeft" align="right" valign="top">uint64_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a75d5133e40513701341cfa78f61ef964">functionparameter_GetParamPtr_fpflag</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, const char *paramname)</td></tr>
 <tr class="separator:a75d5133e40513701341cfa78f61ef964"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d67b4b9f84a3126703acd8bf3edf610"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a5d67b4b9f84a3126703acd8bf3edf610">functionparameter_LoadStream</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int pindex, int fpsconnectmode)</td></tr>
-<tr class="separator:a5d67b4b9f84a3126703acd8bf3edf610"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a232378a13bf463c011dbdf337d87d1b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a232378a13bf463c011dbdf337d87d1b3">functionparameter_LoadStream</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int pindex, int fpsconnectmode)</td></tr>
+<tr class="separator:a232378a13bf463c011dbdf337d87d1b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5fd7ed4766f82b5d24504f5e8b8ebb3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ab5fd7ed4766f82b5d24504f5e8b8ebb3">function_parameter_add_entry</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, const char *keywordstring, const char *descriptionstring, uint64_t type, uint64_t fpflag, void *valueptr)</td></tr>
 <tr class="separator:ab5fd7ed4766f82b5d24504f5e8b8ebb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8047b2c6b4620038cb73c04e7e6271e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ab8047b2c6b4620038cb73c04e7e6271e">function_parameter_FPCONFsetup</a> (const char *fpsname, uint32_t CMDmode, uint16_t *loopstatus)</td></tr>
-<tr class="separator:ab8047b2c6b4620038cb73c04e7e6271e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add95c957426e926bd29c6ded86b87039"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#add95c957426e926bd29c6ded86b87039">function_parameter_FPCONFloopstep</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, uint32_t CMDmode, uint16_t *loopstatus)</td></tr>
-<tr class="separator:add95c957426e926bd29c6ded86b87039"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48ccdb5a942fe0a9418b76d6382bed67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a48ccdb5a942fe0a9418b76d6382bed67">function_parameter_FPCONFsetup</a> (const char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="separator:a48ccdb5a942fe0a9418b76d6382bed67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56167d1be89202070dbe7e419bb4f7e2"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a56167d1be89202070dbe7e419bb4f7e2">function_parameter_FPCONFloopstep</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps)</td></tr>
+<tr class="separator:a56167d1be89202070dbe7e419bb4f7e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08479a6a81375b143610398e4093d78a"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a08479a6a81375b143610398e4093d78a">function_parameter_FPCONFexit</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps)</td></tr>
 <tr class="separator:a08479a6a81375b143610398e4093d78a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0374459635182c10735f6f63c92b2345"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a0374459635182c10735f6f63c92b2345">function_parameter_RUNexit</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps)</td></tr>
 <tr class="separator:a0374459635182c10735f6f63c92b2345"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57321d4280cb8b6bb462a6e32512e7b1"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a57321d4280cb8b6bb462a6e32512e7b1">initncurses</a> ()</td></tr>
-<tr class="separator:a57321d4280cb8b6bb462a6e32512e7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc81c3f9b5aa9ec53e329bd086fe6825"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#adc81c3f9b5aa9ec53e329bd086fe6825">initncurses</a> ()</td></tr>
+<tr class="separator:adc81c3f9b5aa9ec53e329bd086fe6825"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8d3d7852f5c9bcac8bc06acc7aa09ab"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ab8d3d7852f5c9bcac8bc06acc7aa09ab">functionparameter_WriteParameterToDisk</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fpsentry, int pindex, char *tagname, char *commentstr)</td></tr>
 <tr class="separator:ab8d3d7852f5c9bcac8bc06acc7aa09ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c7c20a4a7c0981b9f9804df07715eda"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a0c7c20a4a7c0981b9f9804df07715eda">functionparameter_CheckParameter</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fpsentry, int pindex)</td></tr>
@@ -169,37 +385,54 @@ Functions</h2></td></tr>
 <tr class="separator:a1844480cafd3c9101c8543c338b3e5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a983954fae302bbc9252d0df5d4bd7e4b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a983954fae302bbc9252d0df5d4bd7e4b">functionparameter_ConnectExternalFPS</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *FPS, int pindex, <a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *FPSext)</td></tr>
 <tr class="separator:a983954fae302bbc9252d0df5d4bd7e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b9d8b4708cc2692eadf2636ae2311c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a1b9d8b4708cc2692eadf2636ae2311c9">functionparameter_GetTypeString</a> (uint32_t type, char *typestring)</td></tr>
+<tr class="memitem:a1b9d8b4708cc2692eadf2636ae2311c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a1b9d8b4708cc2692eadf2636ae2311c9">functionparameter_GetTypeString</a> (uint32_t type, char *typestring)</td></tr>
 <tr class="separator:a1b9d8b4708cc2692eadf2636ae2311c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8692ebe0aefc1d8aa508f15f4a88fd6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a8692ebe0aefc1d8aa508f15f4a88fd6a">functionparameter_PrintParameterInfo</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fpsentry, int pindex)</td></tr>
+<tr class="memitem:a8692ebe0aefc1d8aa508f15f4a88fd6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a8692ebe0aefc1d8aa508f15f4a88fd6a">functionparameter_PrintParameterInfo</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fpsentry, int pindex)</td></tr>
 <tr class="separator:a8692ebe0aefc1d8aa508f15f4a88fd6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75c0f4477f45e36ad0138f62b1f1a521"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a75c0f4477f45e36ad0138f62b1f1a521">functionparameter_SaveParam2disk</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fpsentry, const char *paramname)</td></tr>
 <tr class="separator:a75c0f4477f45e36ad0138f62b1f1a521"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f8f2770c86630135112d5a526230ff4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a7f8f2770c86630135112d5a526230ff4">functionparameter_UserInputSetParamValue</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fpsentry, int pindex)</td></tr>
 <tr class="separator:a7f8f2770c86630135112d5a526230ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93646ee1691df589c423450b3a6d65fd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a93646ee1691df589c423450b3a6d65fd">functionparameter_FPSprocess_cmdline</a> (char *FPScmdline, <a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *keywnode, int NBkwn, <a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int verbose)</td></tr>
-<tr class="separator:a93646ee1691df589c423450b3a6d65fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54473730b388d928f4aff79e11e344d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a54473730b388d928f4aff79e11e344d4">functionparameter_read_fpsCMD_fifo</a> (int fpsCTRLfifofd, <a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *keywnode, int NBkwn, <a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int verbose)</td></tr>
-<tr class="separator:a54473730b388d928f4aff79e11e344d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ff74c64a4d11151f24a7865230d485d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a0ff74c64a4d11151f24a7865230d485d">functionparameter_RUNstart</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
+<tr class="memitem:a1a347893150fe11bfd43d772317684d6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a1a347893150fe11bfd43d772317684d6">functionparameter_FPSprocess_cmdline</a> (char *FPScmdline, <a class="el" href="structFPSCTRL__TASK__QUEUE.html">FPSCTRL_TASK_QUEUE</a> *fpsctrlqueuelist, <a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *keywnode, int NBkwn, <a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps)</td></tr>
+<tr class="separator:a1a347893150fe11bfd43d772317684d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a523738dfb4c9e55b98163e6009e6b9e2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a523738dfb4c9e55b98163e6009e6b9e2">functionparameter_read_fpsCMD_fifo</a> (int fpsCTRLfifofd, <a class="el" href="structFPSCTRL__TASK__ENTRY.html">FPSCTRL_TASK_ENTRY</a> *fpsctrltasklist, <a class="el" href="structFPSCTRL__TASK__QUEUE.html">FPSCTRL_TASK_QUEUE</a> *fpsctrlqueuelist)</td></tr>
+<tr class="separator:a523738dfb4c9e55b98163e6009e6b9e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5f08a6e9e46c3ce609e160c1e058fbf"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ac5f08a6e9e46c3ce609e160c1e058fbf">function_parameter_process_fpsCMDarray</a> (<a class="el" href="structFPSCTRL__TASK__ENTRY.html">FPSCTRL_TASK_ENTRY</a> *fpsctrltasklist, <a class="el" href="structFPSCTRL__TASK__QUEUE.html">FPSCTRL_TASK_QUEUE</a> *fpsctrlqueuelist, <a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *keywnode, int NBkwn, <a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps)</td></tr>
+<tr class="separator:ac5f08a6e9e46c3ce609e160c1e058fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ff74c64a4d11151f24a7865230d485d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a0ff74c64a4d11151f24a7865230d485d">functionparameter_RUNstart</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
 <tr class="separator:a0ff74c64a4d11151f24a7865230d485d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf51ed6c67be7f59e126db6c4826c946"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#abf51ed6c67be7f59e126db6c4826c946">functionparameter_RUNstop</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
+<tr class="memitem:abf51ed6c67be7f59e126db6c4826c946"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#abf51ed6c67be7f59e126db6c4826c946">functionparameter_RUNstop</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
 <tr class="separator:abf51ed6c67be7f59e126db6c4826c946"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c7d94e9b8b43b74533f3221adcebf7d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a5c7d94e9b8b43b74533f3221adcebf7d">functionparameter_CONFstart</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
+<tr class="memitem:a5c7d94e9b8b43b74533f3221adcebf7d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a5c7d94e9b8b43b74533f3221adcebf7d">functionparameter_CONFstart</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
 <tr class="separator:a5c7d94e9b8b43b74533f3221adcebf7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1c8e6becaca7ceba3abe7fe51648d8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aa1c8e6becaca7ceba3abe7fe51648d8c">functionparameter_CONFstop</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
+<tr class="memitem:aa1c8e6becaca7ceba3abe7fe51648d8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aa1c8e6becaca7ceba3abe7fe51648d8c">functionparameter_CONFstop</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
 <tr class="separator:aa1c8e6becaca7ceba3abe7fe51648d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0186f0a91438ee67e5de9435c68a5af8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a0186f0a91438ee67e5de9435c68a5af8">functionparameter_FPSremove</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
+<tr class="memitem:a0186f0a91438ee67e5de9435c68a5af8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a0186f0a91438ee67e5de9435c68a5af8">functionparameter_FPSremove</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
 <tr class="separator:a0186f0a91438ee67e5de9435c68a5af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a616e06f39ec4a3d2bbe746c2c68102b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a616e06f39ec4a3d2bbe746c2c68102b8">functionparameter_outlog_file</a> (char *keyw, char *msgstring, FILE *fpout)</td></tr>
+<tr class="memitem:a616e06f39ec4a3d2bbe746c2c68102b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a616e06f39ec4a3d2bbe746c2c68102b8">functionparameter_outlog_file</a> (char *keyw, char *msgstring, FILE *fpout)</td></tr>
 <tr class="separator:a616e06f39ec4a3d2bbe746c2c68102b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88527ef3b9efafacb461e41120569c50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a88527ef3b9efafacb461e41120569c50">functionparameter_outlog</a> (char *keyw, char *msgstring)</td></tr>
+<tr class="memitem:a88527ef3b9efafacb461e41120569c50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a88527ef3b9efafacb461e41120569c50">functionparameter_outlog</a> (char *keyw, char *msgstring)</td></tr>
 <tr class="separator:a88527ef3b9efafacb461e41120569c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a575ce87628e7c31fc67f6dfd12138da0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a575ce87628e7c31fc67f6dfd12138da0">functionparameter_scan_fps</a> (uint32_t mode, char *fpsnamemask, <a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, <a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *keywnode, int *ptr_NBkwn, int *ptr_fpsindex, long *ptr_pindex, int verbose)</td></tr>
-<tr class="separator:a575ce87628e7c31fc67f6dfd12138da0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a479c787abc030b08c212639272a867b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a479c787abc030b08c212639272a867b4">functionparameter_outlog_namelink</a> (const char *fpsname, int cmdcode)</td></tr>
+<tr class="memdesc:a479c787abc030b08c212639272a867b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Establish sym link for convenience.  <a href="#a479c787abc030b08c212639272a867b4">More...</a><br /></td></tr>
+<tr class="separator:a479c787abc030b08c212639272a867b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab961c70843b343d77c1b3da0d70ec3ca"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#ab961c70843b343d77c1b3da0d70ec3ca">functionparameter_scan_fps</a> (uint32_t mode, char *fpsnamemask, <a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, <a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *keywnode, int *ptr_NBkwn, int *ptr_fpsindex, long *ptr_pindex, int verbose)</td></tr>
+<tr class="separator:ab961c70843b343d77c1b3da0d70ec3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7acc759f3b4d54e2849576129a4ce64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aa7acc759f3b4d54e2849576129a4ce64">functionparameter_CTRLscreen_atexit</a> ()</td></tr>
 <tr class="separator:aa7acc759f3b4d54e2849576129a4ce64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a615ef54ad508394716e092d02451424a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a615ef54ad508394716e092d02451424a">functionparameter_CTRLscreen</a> (uint32_t mode, char *fpsnamemask, char *fpsCTRLfifoname)</td></tr>
+<tr class="memitem:aa20dfb02691f8cba00174c661f28c3db"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aa20dfb02691f8cba00174c661f28c3db">print_help_entry</a> (char *key, char *descr)</td></tr>
+<tr class="separator:aa20dfb02691f8cba00174c661f28c3db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22b4418a7616eef64a662c227d9f1a0a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a22b4418a7616eef64a662c227d9f1a0a">fpsCTRLscreen_print_DisplayMode_status</a> (int fpsCTRL_DisplayMode, int NBfps)</td></tr>
+<tr class="separator:a22b4418a7616eef64a662c227d9f1a0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d69f7537042f674292269d593225785"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a4d69f7537042f674292269d593225785">fpsCTRLscreen_print_help</a> ()</td></tr>
+<tr class="separator:a4d69f7537042f674292269d593225785"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2af8891eed4080f1c68769a69fcaa377"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a2af8891eed4080f1c68769a69fcaa377">fpsCTRLscreen_print_nodeinfo</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, <a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *keywnode, int nodeSelected, int fpsindexSelected, int pindexSelected)</td></tr>
+<tr class="separator:a2af8891eed4080f1c68769a69fcaa377"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21ca33cbb9bf79f8862256698162f8dd"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a21ca33cbb9bf79f8862256698162f8dd">fpsCTRLscreen_level0node_summary</a> (<a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, int fpsindex)</td></tr>
+<tr class="separator:a21ca33cbb9bf79f8862256698162f8dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb74c6faadc7aa0571ff40ed6afa26e4"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#aeb74c6faadc7aa0571ff40ed6afa26e4">fpsCTRLscreen_process_user_key</a> (int ch, <a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *fps, <a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *keywnode, <a class="el" href="structFPSCTRL__TASK__ENTRY.html">FPSCTRL_TASK_ENTRY</a> *fpsctrltasklist, <a class="el" href="structFPSCTRL__TASK__QUEUE.html">FPSCTRL_TASK_QUEUE</a> *fpsctrlqueuelist, <a class="el" href="structFPSCTRL__GUIVARS.html">FPSCTRL_GUIVARS</a> *fpsCTRLgui)</td></tr>
+<tr class="separator:aeb74c6faadc7aa0571ff40ed6afa26e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a615ef54ad508394716e092d02451424a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="function__parameters_8c.html#a615ef54ad508394716e092d02451424a">functionparameter_CTRLscreen</a> (uint32_t mode, char *fpsnamemask, char *fpsCTRLfifoname)</td></tr>
 <tr class="separator:a615ef54ad508394716e092d02451424a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -212,7 +445,1340 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tools to help expose and control function parameters. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="page_FunctionParameterStructure.html">Function Parameter Structure (FPS)</a> </dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b46f00ee934acd41df43916f817a8c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b46f00ee934acd41df43916f817a8c4">&#9670;&nbsp;</a></span>BACKGROUNDBLACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDBLACK&#160;&#160;&#160;&quot;\033[40m&quot;      /* Black */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa152bbf4931c037780d11a9b3775fa4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa152bbf4931c037780d11a9b3775fa4e">&#9670;&nbsp;</a></span>BACKGROUNDBLUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDBLUE&#160;&#160;&#160;&quot;\033[44m&quot;      /* Blue */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a59efd81251bd908d4698600b7fc54fc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59efd81251bd908d4698600b7fc54fc3">&#9670;&nbsp;</a></span>BACKGROUNDCYAN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDCYAN&#160;&#160;&#160;&quot;\033[46m&quot;      /* Cyan */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a89bfb2dc73668b03c0ee8a44ed4032f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89bfb2dc73668b03c0ee8a44ed4032f6">&#9670;&nbsp;</a></span>BACKGROUNDGREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDGREEN&#160;&#160;&#160;&quot;\033[42m&quot;      /* Green */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a153cc117f1b9834859aaf209e29dd43d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a153cc117f1b9834859aaf209e29dd43d">&#9670;&nbsp;</a></span>BACKGROUNDHIBLACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDHIBLACK&#160;&#160;&#160;&quot;\033[0;100m&quot;      /* Black */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a86f6f2e0b11fd03aad95d96211f2da92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86f6f2e0b11fd03aad95d96211f2da92">&#9670;&nbsp;</a></span>BACKGROUNDHIBLUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDHIBLUE&#160;&#160;&#160;&quot;\033[0;104m&quot;      /* Blue */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a71389344ce5ba40ae790c33e2cd7948d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71389344ce5ba40ae790c33e2cd7948d">&#9670;&nbsp;</a></span>BACKGROUNDHICYAN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDHICYAN&#160;&#160;&#160;&quot;\033[0;106m&quot;      /* Cyan */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6dd4bde6d0986345700dba63d3d6f875"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6dd4bde6d0986345700dba63d3d6f875">&#9670;&nbsp;</a></span>BACKGROUNDHIGREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDHIGREEN&#160;&#160;&#160;&quot;\033[0;102m&quot;      /* Green */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adaa4f0993f500b1b431a15bc96c7ebb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adaa4f0993f500b1b431a15bc96c7ebb7">&#9670;&nbsp;</a></span>BACKGROUNDHIMAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDHIMAGENTA&#160;&#160;&#160;&quot;\033[0;105m&quot;      /* Magenta */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2e5dcddfe78fae1a6595383a11d1bb74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e5dcddfe78fae1a6595383a11d1bb74">&#9670;&nbsp;</a></span>BACKGROUNDHIRED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDHIRED&#160;&#160;&#160;&quot;\033[0;101m&quot;      /* Red */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac3a3f1e6f2f563f2fdae8fc907fb2e09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3a3f1e6f2f563f2fdae8fc907fb2e09">&#9670;&nbsp;</a></span>BACKGROUNDHIWHITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDHIWHITE&#160;&#160;&#160;&quot;\033[0;107m&quot;      /* White */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8a8a0bd9a98d34d1016e9c79a61acecf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a8a0bd9a98d34d1016e9c79a61acecf">&#9670;&nbsp;</a></span>BACKGROUNDHIYELLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDHIYELLOW&#160;&#160;&#160;&quot;\033[0;103m&quot;      /* Yellow */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8695ce63f0d4822dd90f40fe203c134f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8695ce63f0d4822dd90f40fe203c134f">&#9670;&nbsp;</a></span>BACKGROUNDMAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDMAGENTA&#160;&#160;&#160;&quot;\033[45m&quot;      /* Magenta */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a83724d211020140b2fc22a1a66514b1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83724d211020140b2fc22a1a66514b1c">&#9670;&nbsp;</a></span>BACKGROUNDRED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDRED&#160;&#160;&#160;&quot;\033[41m&quot;      /* Red */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5c3d829d88593162c0d2296efe7087f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c3d829d88593162c0d2296efe7087f2">&#9670;&nbsp;</a></span>BACKGROUNDWHITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDWHITE&#160;&#160;&#160;&quot;\033[47m&quot;      /* White */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a611c6f0f421dc778be8fda3ad6593bfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a611c6f0f421dc778be8fda3ad6593bfa">&#9670;&nbsp;</a></span>BACKGROUNDYELLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BACKGROUNDYELLOW&#160;&#160;&#160;&quot;\033[43m&quot;      /* Yellow */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7b3b25cba33b07c303f3060fe41887f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b3b25cba33b07c303f3060fe41887f6">&#9670;&nbsp;</a></span>BLACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLACK&#160;&#160;&#160;&quot;\033[0;30m&quot;      /* Black */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3193abb955677435425727a9f28d558c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3193abb955677435425727a9f28d558c">&#9670;&nbsp;</a></span>BLINKBLACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKBLACK&#160;&#160;&#160;&quot;\033[5;30m&quot;      /* Blink Black */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4738663c2ddd5eefdef88918ef81d723"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4738663c2ddd5eefdef88918ef81d723">&#9670;&nbsp;</a></span>BLINKBLUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKBLUE&#160;&#160;&#160;&quot;\033[5;34m&quot;      /* Blink  Blue */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a98047779fd14af8a3d31164db1ebe61a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98047779fd14af8a3d31164db1ebe61a">&#9670;&nbsp;</a></span>BLINKCYAN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKCYAN&#160;&#160;&#160;&quot;\033[5;36m&quot;      /* Blink  Cyan */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a098187077aa8938c879f7296104d2d93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a098187077aa8938c879f7296104d2d93">&#9670;&nbsp;</a></span>BLINKGREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKGREEN&#160;&#160;&#160;&quot;\033[5;32m&quot;      /* Blink  Green */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5dd61588f0fd0f9a50f1ed8b1f4bdb08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dd61588f0fd0f9a50f1ed8b1f4bdb08">&#9670;&nbsp;</a></span>BLINKHIBLACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKHIBLACK&#160;&#160;&#160;&quot;\033[5;90m&quot;      /* Blink Black */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8fba586743a385fa11034f22f0d20301"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fba586743a385fa11034f22f0d20301">&#9670;&nbsp;</a></span>BLINKHIBLUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKHIBLUE&#160;&#160;&#160;&quot;\033[5;94m&quot;      /* Blink  Blue */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7bb7422562dff7397c64eea87d462504"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bb7422562dff7397c64eea87d462504">&#9670;&nbsp;</a></span>BLINKHICYAN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKHICYAN&#160;&#160;&#160;&quot;\033[5;96m&quot;      /* Blink  Cyan */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a38cbb18ef570adf534375f1b3b9da384"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38cbb18ef570adf534375f1b3b9da384">&#9670;&nbsp;</a></span>BLINKHIGREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKHIGREEN&#160;&#160;&#160;&quot;\033[5;92m&quot;      /* Blink  Green */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acc930daf9ca750be7cd6c19ad4be1ac6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc930daf9ca750be7cd6c19ad4be1ac6">&#9670;&nbsp;</a></span>BLINKHIMAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKHIMAGENTA&#160;&#160;&#160;&quot;\033[5;95m&quot;      /* Blink  Magenta */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a838fb0176bb859a0422d62c2afc5f700"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a838fb0176bb859a0422d62c2afc5f700">&#9670;&nbsp;</a></span>BLINKHIRED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKHIRED&#160;&#160;&#160;&quot;\033[5;91m&quot;      /* Blink  Red */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c98f0f542ff0e5979482703510d3243"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c98f0f542ff0e5979482703510d3243">&#9670;&nbsp;</a></span>BLINKHIWHITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKHIWHITE&#160;&#160;&#160;&quot;\033[5;97m&quot;      /* Blink  White */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6c6fdb059031c8b82e1eeb50d218d6d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c6fdb059031c8b82e1eeb50d218d6d5">&#9670;&nbsp;</a></span>BLINKHIYELLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKHIYELLOW&#160;&#160;&#160;&quot;\033[5;93m&quot;      /* Blink  Yellow */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acea19cbe4fdbe8da98effa64117aa10e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acea19cbe4fdbe8da98effa64117aa10e">&#9670;&nbsp;</a></span>BLINKMAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKMAGENTA&#160;&#160;&#160;&quot;\033[5;35m&quot;      /* Blink  Magenta */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2694b03f66a4378d72da957947647f26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2694b03f66a4378d72da957947647f26">&#9670;&nbsp;</a></span>BLINKRED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKRED&#160;&#160;&#160;&quot;\033[5;31m&quot;      /* Blink  Red */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a27718acb4013b260f8d9698dd654cb7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27718acb4013b260f8d9698dd654cb7f">&#9670;&nbsp;</a></span>BLINKWHITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKWHITE&#160;&#160;&#160;&quot;\033[5;37m&quot;      /* Blink  White */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abb85934a35d502b98e0fde36a92a3c24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb85934a35d502b98e0fde36a92a3c24">&#9670;&nbsp;</a></span>BLINKYELLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLINKYELLOW&#160;&#160;&#160;&quot;\033[5;33m&quot;      /* Blink  Yellow */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a79d10e672abb49ad63eeaa8aaef57c38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79d10e672abb49ad63eeaa8aaef57c38">&#9670;&nbsp;</a></span>BLUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BLUE&#160;&#160;&#160;&quot;\033[0;34m&quot;      /* Blue */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aef2fe95894117165b29036718221979f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef2fe95894117165b29036718221979f">&#9670;&nbsp;</a></span>BOLDBLACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDBLACK&#160;&#160;&#160;&quot;\033[1;30m&quot;      /* Bold Black */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a11e77c19555cbd15bcc744ff36a18635"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11e77c19555cbd15bcc744ff36a18635">&#9670;&nbsp;</a></span>BOLDBLUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDBLUE&#160;&#160;&#160;&quot;\033[1;34m&quot;      /* Bold Blue */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae87af5e6363eb1913b17f24dcb60a22d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae87af5e6363eb1913b17f24dcb60a22d">&#9670;&nbsp;</a></span>BOLDCYAN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDCYAN&#160;&#160;&#160;&quot;\033[1;36m&quot;      /* Bold Cyan */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4a6c893a1703c33ede7d702fe5f97c91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a6c893a1703c33ede7d702fe5f97c91">&#9670;&nbsp;</a></span>BOLDGREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDGREEN&#160;&#160;&#160;&quot;\033[1;32m&quot;      /* Bold Green */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5322ef0d25992115c2d77991d9d36fb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5322ef0d25992115c2d77991d9d36fb6">&#9670;&nbsp;</a></span>BOLDHIBLACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDHIBLACK&#160;&#160;&#160;&quot;\033[1;90m&quot;      /* Black */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa7fa52a2ce9d30b54eda3978c4a6db40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7fa52a2ce9d30b54eda3978c4a6db40">&#9670;&nbsp;</a></span>BOLDHIBLUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDHIBLUE&#160;&#160;&#160;&quot;\033[1;94m&quot;      /* Blue */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a157f80e9c0c827624afc2e45582c98bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a157f80e9c0c827624afc2e45582c98bf">&#9670;&nbsp;</a></span>BOLDHICYAN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDHICYAN&#160;&#160;&#160;&quot;\033[1;96m&quot;      /* Cyan */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adfedf21a69993593f9b8311bf3aa3280"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfedf21a69993593f9b8311bf3aa3280">&#9670;&nbsp;</a></span>BOLDHIGREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDHIGREEN&#160;&#160;&#160;&quot;\033[1;92m&quot;      /* Green */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abb7a55f07bf18db4e7174ac9ab309c3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb7a55f07bf18db4e7174ac9ab309c3b">&#9670;&nbsp;</a></span>BOLDHIMAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDHIMAGENTA&#160;&#160;&#160;&quot;\033[1;95m&quot;      /* Magenta */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3aa56734f93c43659c7c939261262b98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3aa56734f93c43659c7c939261262b98">&#9670;&nbsp;</a></span>BOLDHIRED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDHIRED&#160;&#160;&#160;&quot;\033[1;91m&quot;      /* Red */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a984a302865e23907da6b6290ebc9b308"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a984a302865e23907da6b6290ebc9b308">&#9670;&nbsp;</a></span>BOLDHIWHITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDHIWHITE&#160;&#160;&#160;&quot;\033[1;97m&quot;      /* White */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af963aa3373bb71c61142015bd38582e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af963aa3373bb71c61142015bd38582e2">&#9670;&nbsp;</a></span>BOLDHIYELLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDHIYELLOW&#160;&#160;&#160;&quot;\033[1;93m&quot;      /* Yellow */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac4723c5ee12cfca16e2172b57b99cb07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4723c5ee12cfca16e2172b57b99cb07">&#9670;&nbsp;</a></span>BOLDMAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDMAGENTA&#160;&#160;&#160;&quot;\033[1;35m&quot;      /* Bold Magenta */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab912d02c7998c3d47d05f87be4e2c920"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab912d02c7998c3d47d05f87be4e2c920">&#9670;&nbsp;</a></span>BOLDRED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDRED&#160;&#160;&#160;&quot;\033[1;31m&quot;      /* Bold Red */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa4ef051614aa0bd503b0a18ee158c5d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4ef051614aa0bd503b0a18ee158c5d7">&#9670;&nbsp;</a></span>BOLDWHITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDWHITE&#160;&#160;&#160;&quot;\033[1;37m&quot;      /* Bold White */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8cec79108dfc3c61e8e32d390ec28b26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cec79108dfc3c61e8e32d390ec28b26">&#9670;&nbsp;</a></span>BOLDYELLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOLDYELLOW&#160;&#160;&#160;&quot;\033[1;33m&quot;      /* Bold Yellow */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad243f93c16bc4c1d3e0a13b84421d760"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad243f93c16bc4c1d3e0a13b84421d760">&#9670;&nbsp;</a></span>CYAN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CYAN&#160;&#160;&#160;&quot;\033[0;36m&quot;      /* Cyan */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acfbc006ea433ad708fdee3e82996e721"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfbc006ea433ad708fdee3e82996e721">&#9670;&nbsp;</a></span>GREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GREEN&#160;&#160;&#160;&quot;\033[0;32m&quot;      /* Green */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a306697ab0305cb8207bd19afd58d110b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a306697ab0305cb8207bd19afd58d110b">&#9670;&nbsp;</a></span>HIBLACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HIBLACK&#160;&#160;&#160;&quot;\033[0;90m&quot;      /* Black */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aecd2f3a46244499e4112e387537f779d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecd2f3a46244499e4112e387537f779d">&#9670;&nbsp;</a></span>HIBLUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HIBLUE&#160;&#160;&#160;&quot;\033[0;94m&quot;      /* Blue */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a086f5e52f7ad24c34966f2dbee05c81d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a086f5e52f7ad24c34966f2dbee05c81d">&#9670;&nbsp;</a></span>HICYAN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HICYAN&#160;&#160;&#160;&quot;\033[0;96m&quot;      /* Cyan */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa4f97b984707b112a0b3039425ae97d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4f97b984707b112a0b3039425ae97d1">&#9670;&nbsp;</a></span>HIGREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HIGREEN&#160;&#160;&#160;&quot;\033[0;92m&quot;      /* Green */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8a2df736d37005c1c73078be0d299eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8a2df736d37005c1c73078be0d299eb">&#9670;&nbsp;</a></span>HIMAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HIMAGENTA&#160;&#160;&#160;&quot;\033[0;95m&quot;      /* Magenta */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a140b06908de8fdbc2ae26c9cb183be75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a140b06908de8fdbc2ae26c9cb183be75">&#9670;&nbsp;</a></span>HIRED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HIRED&#160;&#160;&#160;&quot;\033[0;91m&quot;      /* Red */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6f5204c4d20538d8015f14903c65ad74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f5204c4d20538d8015f14903c65ad74">&#9670;&nbsp;</a></span>HIWHITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HIWHITE&#160;&#160;&#160;&quot;\033[0;97m&quot;      /* White */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a966780d8f41d817deb992733e965c6aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a966780d8f41d817deb992733e965c6aa">&#9670;&nbsp;</a></span>HIYELLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HIYELLOW&#160;&#160;&#160;&quot;\033[0;93m&quot;      /* Yellow */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6f699060902f800f12aaae150f3a708e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f699060902f800f12aaae150f3a708e">&#9670;&nbsp;</a></span>MAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAGENTA&#160;&#160;&#160;&quot;\033[0;35m&quot;      /* Magenta */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a35ac9636a010eb4836ec8d78aebd55ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35ac9636a010eb4836ec8d78aebd55ee">&#9670;&nbsp;</a></span>MAX_NB_CHILD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_NB_CHILD&#160;&#160;&#160;500</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acb2cc46a9e3ffb1b2caded36c4f9fe2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb2cc46a9e3ffb1b2caded36c4f9fe2a">&#9670;&nbsp;</a></span>MAXNBLEVELS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAXNBLEVELS&#160;&#160;&#160;20</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acb491912c6ddc60b5b9e3184a0f13f05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb491912c6ddc60b5b9e3184a0f13f05">&#9670;&nbsp;</a></span>NB_FPS_MAX</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NB_FPS_MAX&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeb6dbbf09087a59704f8affb2426fa15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb6dbbf09087a59704f8affb2426fa15">&#9670;&nbsp;</a></span>NB_KEYWNODE_MAX</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NB_KEYWNODE_MAX&#160;&#160;&#160;10000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8d23feea868a983c8c2b661e1e16972f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d23feea868a983c8c2b661e1e16972f">&#9670;&nbsp;</a></span>RED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RED&#160;&#160;&#160;&quot;\033[0;31m&quot;      /* Red */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab702106cf3b3e96750b6845ded4e0299"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab702106cf3b3e96750b6845ded4e0299">&#9670;&nbsp;</a></span>RESET</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RESET&#160;&#160;&#160;&quot;\033[0m&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8a8c53ed4b0155de9a38ce3424d50aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8a8c53ed4b0155de9a38ce3424d50aa">&#9670;&nbsp;</a></span>SHAREDSHMDIR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SHAREDSHMDIR&#160;&#160;&#160;data.shmdir</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7790b7299f70fe41abe85748a88a9f59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7790b7299f70fe41abe85748a88a9f59">&#9670;&nbsp;</a></span>UNDERLINEBLACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define UNDERLINEBLACK&#160;&#160;&#160;&quot;\033[4;30m&quot;      /* Bold Black */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a470feba542fadc7922ed69ef5042bde6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a470feba542fadc7922ed69ef5042bde6">&#9670;&nbsp;</a></span>UNDERLINEBLUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define UNDERLINEBLUE&#160;&#160;&#160;&quot;\033[4;34m&quot;      /* Bold Blue */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a579bd55c58e888c9575191b5b73954fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a579bd55c58e888c9575191b5b73954fa">&#9670;&nbsp;</a></span>UNDERLINECYAN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define UNDERLINECYAN&#160;&#160;&#160;&quot;\033[4;36m&quot;      /* Bold Cyan */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3b354efbb46b7ff6ea93175e1734244f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b354efbb46b7ff6ea93175e1734244f">&#9670;&nbsp;</a></span>UNDERLINEGREEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define UNDERLINEGREEN&#160;&#160;&#160;&quot;\033[4;32m&quot;      /* Bold Green */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a728c2a007385315b953d26ed573fd5c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a728c2a007385315b953d26ed573fd5c8">&#9670;&nbsp;</a></span>UNDERLINEMAGENTA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define UNDERLINEMAGENTA&#160;&#160;&#160;&quot;\033[4;35m&quot;      /* Bold Magenta */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae27f88cbce488abd2f6008d88f1ab021"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae27f88cbce488abd2f6008d88f1ab021">&#9670;&nbsp;</a></span>UNDERLINERED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define UNDERLINERED&#160;&#160;&#160;&quot;\033[4;31m&quot;      /* Bold Red */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab0673c442349aa391f6f6e10a96cb2ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0673c442349aa391f6f6e10a96cb2ee">&#9670;&nbsp;</a></span>UNDERLINEWHITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define UNDERLINEWHITE&#160;&#160;&#160;&quot;\033[4;37m&quot;      /* Bold White */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5342bcc58c078ceb90d36eb5a2c75c01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5342bcc58c078ceb90d36eb5a2c75c01">&#9670;&nbsp;</a></span>UNDERLINEYELLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define UNDERLINEYELLOW&#160;&#160;&#160;&quot;\033[4;33m&quot;      /* Bold Yellow */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a87b537f5fa5c109d3c05c13d6b18f382"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87b537f5fa5c109d3c05c13d6b18f382">&#9670;&nbsp;</a></span>WHITE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WHITE&#160;&#160;&#160;&quot;\033[0;37m&quot;      /* White */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abf681265909adf3d3e8116c93c0ba179"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf681265909adf3d3e8116c93c0ba179">&#9670;&nbsp;</a></span>YELLOW</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YELLOW&#160;&#160;&#160;&quot;\033[0;33m&quot;      /* Yellow */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a46a037236862ac1a534efbe605c10f42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46a037236862ac1a534efbe605c10f42">&#9670;&nbsp;</a></span>errno_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef int <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a21ca33cbb9bf79f8862256698162f8dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21ca33cbb9bf79f8862256698162f8dd">&#9670;&nbsp;</a></span>fpsCTRLscreen_level0node_summary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void fpsCTRLscreen_level0node_summary </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
+          <td class="paramname"><em>fps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fpsindex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a22b4418a7616eef64a662c227d9f1a0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22b4418a7616eef64a662c227d9f1a0a">&#9670;&nbsp;</a></span>fpsCTRLscreen_print_DisplayMode_status()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void fpsCTRLscreen_print_DisplayMode_status </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fpsCTRL_DisplayMode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>NBfps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4d69f7537042f674292269d593225785"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d69f7537042f674292269d593225785">&#9670;&nbsp;</a></span>fpsCTRLscreen_print_help()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void fpsCTRLscreen_print_help </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2af8891eed4080f1c68769a69fcaa377"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2af8891eed4080f1c68769a69fcaa377">&#9670;&nbsp;</a></span>fpsCTRLscreen_print_nodeinfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void fpsCTRLscreen_print_nodeinfo </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
+          <td class="paramname"><em>fps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *&#160;</td>
+          <td class="paramname"><em>keywnode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nodeSelected</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fpsindexSelected</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>pindexSelected</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeb74c6faadc7aa0571ff40ed6afa26e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb74c6faadc7aa0571ff40ed6afa26e4">&#9670;&nbsp;</a></span>fpsCTRLscreen_process_user_key()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int fpsCTRLscreen_process_user_key </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ch</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
+          <td class="paramname"><em>fps</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *&#160;</td>
+          <td class="paramname"><em>keywnode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structFPSCTRL__TASK__ENTRY.html">FPSCTRL_TASK_ENTRY</a> *&#160;</td>
+          <td class="paramname"><em>fpsctrltasklist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structFPSCTRL__TASK__QUEUE.html">FPSCTRL_TASK_QUEUE</a> *&#160;</td>
+          <td class="paramname"><em>fpsctrlqueuelist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structFPSCTRL__GUIVARS.html">FPSCTRL_GUIVARS</a> *&#160;</td>
+          <td class="paramname"><em>fpsCTRLgui</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab5fd7ed4766f82b5d24504f5e8b8ebb3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab5fd7ed4766f82b5d24504f5e8b8ebb3">&#9670;&nbsp;</a></span>function_parameter_add_entry()</h2>
 
@@ -268,6 +1834,23 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a93d950bf9afa9269d500b89473965122"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93d950bf9afa9269d500b89473965122">&#9670;&nbsp;</a></span>function_parameter_execFPScmd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> function_parameter_execFPScmd </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a08479a6a81375b143610398e4093d78a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a08479a6a81375b143610398e4093d78a">&#9670;&nbsp;</a></span>function_parameter_FPCONFexit()</h2>
 
@@ -286,8 +1869,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="add95c957426e926bd29c6ded86b87039"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add95c957426e926bd29c6ded86b87039">&#9670;&nbsp;</a></span>function_parameter_FPCONFloopstep()</h2>
+<a id="a56167d1be89202070dbe7e419bb4f7e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56167d1be89202070dbe7e419bb4f7e2">&#9670;&nbsp;</a></span>function_parameter_FPCONFloopstep()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -296,32 +1879,16 @@ Variables</h2></td></tr>
           <td class="memname">uint16_t function_parameter_FPCONFloopstep </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
-          <td class="paramname"><em>fps</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>fps</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>CMDmode</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t *&#160;</td>
-          <td class="paramname"><em>loopstatus</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ab8047b2c6b4620038cb73c04e7e6271e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8047b2c6b4620038cb73c04e7e6271e">&#9670;&nbsp;</a></span>function_parameter_FPCONFsetup()</h2>
+<a id="a48ccdb5a942fe0a9418b76d6382bed67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48ccdb5a942fe0a9418b76d6382bed67">&#9670;&nbsp;</a></span>function_parameter_FPCONFsetup()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -336,13 +1903,7 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>CMDmode</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t *&#160;</td>
-          <td class="paramname"><em>loopstatus</em>&#160;</td>
+          <td class="paramname"><em>CMDmode</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -354,8 +1915,28 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0936bcd03b0ac64fdae634ceee6ee816"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0936bcd03b0ac64fdae634ceee6ee816">&#9670;&nbsp;</a></span>function_parameter_printlist()</h2>
+<a id="ae08ea43e607b4b66e8fc21ae4ee5f37a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae08ea43e607b4b66e8fc21ae4ee5f37a">&#9670;&nbsp;</a></span>function_parameter_getFPSname_from_CLIfunc()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> function_parameter_getFPSname_from_CLIfunc </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fpsname_default</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<h2>Purpose</h2>
+<p>Construct FPS name and set FPSCMDCODE from command line function call </p>
+
+</div>
+</div>
+<a id="a5f8c2bb52b35a6fa7a9dfe50866b0ff5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f8c2bb52b35a6fa7a9dfe50866b0ff5">&#9670;&nbsp;</a></span>function_parameter_printlist()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -369,8 +1950,8 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>NBparam</em>&#160;</td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>NBparamMAX</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -378,6 +1959,60 @@ Variables</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac5f08a6e9e46c3ce609e160c1e058fbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5f08a6e9e46c3ce609e160c1e058fbf">&#9670;&nbsp;</a></span>function_parameter_process_fpsCMDarray()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> function_parameter_process_fpsCMDarray </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structFPSCTRL__TASK__ENTRY.html">FPSCTRL_TASK_ENTRY</a> *&#160;</td>
+          <td class="paramname"><em>fpsctrltasklist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structFPSCTRL__TASK__QUEUE.html">FPSCTRL_TASK_QUEUE</a> *&#160;</td>
+          <td class="paramname"><em>fpsctrlqueuelist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *&#160;</td>
+          <td class="paramname"><em>keywnode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>NBkwn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
+          <td class="paramname"><em>fps</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -467,17 +2102,17 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a863fd9e44352de076a5c11392ebbcceb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a863fd9e44352de076a5c11392ebbcceb">&#9670;&nbsp;</a></span>function_parameter_struct_create()</h2>
+<a id="a2aa1cc48f065bcb87059da614573ac37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2aa1cc48f065bcb87059da614573ac37">&#9670;&nbsp;</a></span>function_parameter_struct_create()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> function_parameter_struct_create </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> function_parameter_struct_create </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>NBparam</em>, </td>
+          <td class="paramname"><em>NBparamMAX</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -520,7 +2155,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> function_parameter_struct_shmdirname </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> function_parameter_struct_shmdirname </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>shmdname</em></td><td>)</td>
@@ -584,7 +2219,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_CONFstart </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_CONFstart </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
           <td class="paramname"><em>fps</em>, </td>
@@ -612,7 +2247,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_CONFstop </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_CONFstop </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
           <td class="paramname"><em>fps</em>, </td>
@@ -674,7 +2309,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_CTRLscreen </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_CTRLscreen </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>mode</em>, </td>
@@ -720,8 +2355,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a93646ee1691df589c423450b3a6d65fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93646ee1691df589c423450b3a6d65fd">&#9670;&nbsp;</a></span>functionparameter_FPSprocess_cmdline()</h2>
+<a id="a1a347893150fe11bfd43d772317684d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a347893150fe11bfd43d772317684d6">&#9670;&nbsp;</a></span>functionparameter_FPSprocess_cmdline()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -731,6 +2366,12 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>FPScmdline</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structFPSCTRL__TASK__QUEUE.html">FPSCTRL_TASK_QUEUE</a> *&#160;</td>
+          <td class="paramname"><em>fpsctrlqueuelist</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -748,13 +2389,7 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
-          <td class="paramname"><em>fps</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>verbose</em>&#160;</td>
+          <td class="paramname"><em>fps</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -772,9 +2407,11 @@ Variables</h2></td></tr>
 <li>getval : get value, write to output log</li>
 <li>fwrval : get value, write to file or fifo</li>
 <li>confupdate : update configuration</li>
+<li>confwupdate : update configuration, wait for completion to proceed</li>
 <li>runstart : start RUN process associated with parameter</li>
 <li>runstop : stop RUN process associated with parameter</li>
-<li>fpsrm : remove fps </li>
+<li>fpsrm : remove fps</li>
+<li>queueprio : change queue priority </li>
 </ul>
 
 </div>
@@ -786,7 +2423,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_FPSremove </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_FPSremove </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
           <td class="paramname"><em>fps</em>, </td>
@@ -1134,7 +2771,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_GetTypeString </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_GetTypeString </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>type</em>, </td>
@@ -1155,14 +2792,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5d67b4b9f84a3126703acd8bf3edf610"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d67b4b9f84a3126703acd8bf3edf610">&#9670;&nbsp;</a></span>functionparameter_LoadStream()</h2>
+<a id="a232378a13bf463c011dbdf337d87d1b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a232378a13bf463c011dbdf337d87d1b3">&#9670;&nbsp;</a></span>functionparameter_LoadStream()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long functionparameter_LoadStream </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> functionparameter_LoadStream </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
           <td class="paramname"><em>fps</em>, </td>
@@ -1196,7 +2833,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_outlog </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_outlog </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>keyw</em>, </td>
@@ -1224,7 +2861,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_outlog_file </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_outlog_file </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>keyw</em>, </td>
@@ -1251,6 +2888,39 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a479c787abc030b08c212639272a867b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a479c787abc030b08c212639272a867b4">&#9670;&nbsp;</a></span>functionparameter_outlog_namelink()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_outlog_namelink </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fpsname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>cmdcode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Establish sym link for convenience. </p>
+<p>This is a one-time function when running FPS init.<br />
+Creates a human-readable informative sym link to outlog<br />
+</p>
+
+</div>
+</div>
 <a id="a8692ebe0aefc1d8aa508f15f4a88fd6a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8692ebe0aefc1d8aa508f15f4a88fd6a">&#9670;&nbsp;</a></span>functionparameter_PrintParameterInfo()</h2>
 
@@ -1258,7 +2928,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_PrintParameterInfo </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_PrintParameterInfo </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
           <td class="paramname"><em>fpsentry</em>, </td>
@@ -1279,8 +2949,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a54473730b388d928f4aff79e11e344d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54473730b388d928f4aff79e11e344d4">&#9670;&nbsp;</a></span>functionparameter_read_fpsCMD_fifo()</h2>
+<a id="a523738dfb4c9e55b98163e6009e6b9e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a523738dfb4c9e55b98163e6009e6b9e2">&#9670;&nbsp;</a></span>functionparameter_read_fpsCMD_fifo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1294,26 +2964,14 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structKEYWORD__TREE__NODE.html">KEYWORD_TREE_NODE</a> *&#160;</td>
-          <td class="paramname"><em>keywnode</em>, </td>
+          <td class="paramtype"><a class="el" href="structFPSCTRL__TASK__ENTRY.html">FPSCTRL_TASK_ENTRY</a> *&#160;</td>
+          <td class="paramname"><em>fpsctrltasklist</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>NBkwn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
-          <td class="paramname"><em>fps</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>verbose</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structFPSCTRL__TASK__QUEUE.html">FPSCTRL_TASK_QUEUE</a> *&#160;</td>
+          <td class="paramname"><em>fpsctrlqueuelist</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1332,7 +2990,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_RUNstart </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_RUNstart </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
           <td class="paramname"><em>fps</em>, </td>
@@ -1360,7 +3018,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_RUNstop </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_RUNstop </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structFUNCTION__PARAMETER__STRUCT.html">FUNCTION_PARAMETER_STRUCT</a> *&#160;</td>
           <td class="paramname"><em>fps</em>, </td>
@@ -1409,14 +3067,17 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a575ce87628e7c31fc67f6dfd12138da0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a575ce87628e7c31fc67f6dfd12138da0">&#9670;&nbsp;</a></span>functionparameter_scan_fps()</h2>
+<a id="ab961c70843b343d77c1b3da0d70ec3ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab961c70843b343d77c1b3da0d70ec3ca">&#9670;&nbsp;</a></span>functionparameter_scan_fps()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_scan_fps </td>
+          <td class="memname">static <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> functionparameter_scan_fps </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>mode</em>, </td>
@@ -1469,6 +3130,11 @@ Variables</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1724,8 +3390,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a57321d4280cb8b6bb462a6e32512e7b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57321d4280cb8b6bb462a6e32512e7b1">&#9670;&nbsp;</a></span>initncurses()</h2>
+<a id="adc81c3f9b5aa9ec53e329bd086fe6825"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc81c3f9b5aa9ec53e329bd086fe6825">&#9670;&nbsp;</a></span>initncurses()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1734,7 +3400,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static int initncurses </td>
+          <td class="memname">static <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> initncurses </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1747,6 +3413,42 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>INITIALIZE ncurses </p>
+
+</div>
+</div>
+<a id="aa20dfb02691f8cba00174c661f28c3db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa20dfb02691f8cba00174c661f28c3db">&#9670;&nbsp;</a></span>print_help_entry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void print_help_entry </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>descr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -1802,7 +3504,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="function__parameters_8c.html">function_parameters.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

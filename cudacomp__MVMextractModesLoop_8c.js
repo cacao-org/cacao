@@ -1,5 +1,5 @@
 var cudacomp__MVMextractModesLoop_8c =
 [
-    [ "__attribute__", "cudacomp__MVMextractModesLoop_8c.html#a92e00ad76f2ba4466cdb10c4ea2afc8f", null ],
-    [ "CUDACOMP_MVMextractModesLoop_FPCONF", "cudacomp__MVMextractModesLoop_8c.html#a2feafbb6f7b1b526939e286d26fbd01c", null ]
+    [ "_POSIX_C_SOURCE", "cudacomp__MVMextractModesLoop_8c.html#a3024ccd4a9af5109d24e6c57565d74a1", null ],
+    [ "_PRINT_TEST", "cudacomp__MVMextractModesLoop_8c.html#ace69ce07cb931589124507dbbdaf6536", null ]
 ];

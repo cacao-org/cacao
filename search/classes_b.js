@@ -1,6 +1,11 @@
 var searchData=
 [
-  ['nrlmsise_5fflags',['nrlmsise_flags',['../structnrlmsise__flags.html',1,'']]],
-  ['nrlmsise_5finput',['nrlmsise_input',['../structnrlmsise__input.html',1,'']]],
-  ['nrlmsise_5foutput',['nrlmsise_output',['../structnrlmsise__output.html',1,'']]]
+  ['simage',['sImage',['../structsImage.html',1,'']]],
+  ['streamctrlarg_5fstruct',['streamCTRLarg_struct',['../structstreamCTRLarg__struct.html',1,'']]],
+  ['streamdatafile',['StreamDataFile',['../structStreamDataFile.html',1,'']]],
+  ['streaminfo',['STREAMINFO',['../structSTREAMINFO.html',1,'']]],
+  ['streaminfoproc',['STREAMINFOPROC',['../structSTREAMINFOPROC.html',1,'']]],
+  ['streamsave_5fthread_5fmessage',['STREAMSAVE_THREAD_MESSAGE',['../structSTREAMSAVE__THREAD__MESSAGE.html',1,'']]],
+  ['stringlistentry',['STRINGLISTENTRY',['../structSTRINGLISTENTRY.html',1,'']]],
+  ['symrec',['symrec',['../structsymrec.html',1,'']]]
 ];

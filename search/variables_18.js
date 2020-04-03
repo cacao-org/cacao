@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['year',['year',['../structnrlmsise__input.html#a32893d62ceca558ccfb7e34789ea9536',1,'nrlmsise_input']]],
-  ['ypix',['ypix',['../struct____attribute____.html#a2307ff611d1fd723cb696c3ba8aa2c5b',1,'__attribute__']]],
-  ['ysize',['ysize',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a71c110191b56e16e6119fef949d651f5',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
+  ['ysize',['ysize',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a15e7b396709e9c81c5e877efafc58a90',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['ysizeout',['ysizeout',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a86ed41abdfe7e97373b97b5b180b045f',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['ysizewfsref',['ysizewfsref',['../structAOLOOPCONTROL__DM__DISPCOMB__CONF.html#a3beacc093a52b32e026717775db3ecfa',1,'AOLOOPCONTROL_DM_DISPCOMB_CONF']]],
   ['yy_5faccept',['yy_accept',['../calc__flex_8c.html#ae09dfdbeae0fbf4f2d1804df4d882f1d',1,'calc_flex.c']]],
@@ -42,7 +40,6 @@ var searchData=
   ['yy_5fverify',['yy_verify',['../structyy__trans__info.html#a5c9f61e770deef50bd4e697310342fe9',1,'yy_trans_info']]],
   ['yychar',['yychar',['../calc__bison_8c.html#a9e2c7c7373b818c86b2df7106a92327c',1,'calc_bison.c']]],
   ['yycheck',['yycheck',['../calc__bison_8c.html#af434820fddd4631c08de7a1d9629ff18',1,'calc_bison.c']]],
-  ['yydebug',['yydebug',['../calc__bison_8c.html#ab138aa8e11f58bcdcc7134adf240ea8c',1,'yydebug():&#160;calc_bison.c'],['../calc__bison_8h.html#ab138aa8e11f58bcdcc7134adf240ea8c',1,'yydebug():&#160;calc_bison.h']]],
   ['yydefact',['yydefact',['../calc__bison_8c.html#af80f4a4ea9a69eb19837849cc7083c77',1,'calc_bison.c']]],
   ['yydefgoto',['yydefgoto',['../calc__bison_8c.html#a4947c3c0c6f6ffa0abfd76efd299828a',1,'calc_bison.c']]],
   ['yyin',['yyin',['../calc__flex_8c.html#a87a127afa8f6c307fbfba10390675406',1,'calc_flex.c']]],
@@ -55,13 +52,10 @@ var searchData=
   ['yypgoto',['yypgoto',['../calc__bison_8c.html#a6d39cfd55875de3316f76edb1891c999',1,'calc_bison.c']]],
   ['yyr1',['yyr1',['../calc__bison_8c.html#a0c34e3be3d497abf630697f406f3cc62',1,'calc_bison.c']]],
   ['yyr2',['yyr2',['../calc__bison_8c.html#aa6be1bc256e649b3e922410e291bc7a5',1,'calc_bison.c']]],
-  ['yyrline',['yyrline',['../calc__bison_8c.html#ae7dc8646c71a84786de4a96bde8bcfa1',1,'calc_bison.c']]],
   ['yyss_5falloc',['yyss_alloc',['../unionyyalloc.html#a4800e0520a89a4789afa7b5d82197e65',1,'yyalloc']]],
   ['yystos',['yystos',['../calc__bison_8c.html#abc7e1225b6a8ee7619f19504cbefd97b',1,'calc_bison.c']]],
   ['yytable',['yytable',['../calc__bison_8c.html#aebb94255a7d4c72e6f9eea0a8e755c56',1,'calc_bison.c']]],
   ['yytext',['yytext',['../calc__flex_8c.html#a35b96d819f6a8f8638894c429e68b02a',1,'calc_flex.c']]],
-  ['yytname',['yytname',['../calc__bison_8c.html#ab779f3189fbfd3b164b7802b945d619b',1,'calc_bison.c']]],
-  ['yytoknum',['yytoknum',['../calc__bison_8c.html#a1de5b70b1a55fa6f3e218d7e2218d47b',1,'calc_bison.c']]],
   ['yytranslate',['yytranslate',['../calc__bison_8c.html#a384fb3797a340a5415c03719ebab9c67',1,'calc_bison.c']]],
   ['yyvs_5falloc',['yyvs_alloc',['../unionyyalloc.html#a9326f4fdc6f737a929444427836d8928',1,'yyalloc']]]
 ];

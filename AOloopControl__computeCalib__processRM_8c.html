@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__computeCalib__processRM
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,21 +95,86 @@ $(document).ready(function(){initNavTree('AOloopControl__computeCalib__processRM
 
 <p>Adaptive Optics Control loop engine compute calibration.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_matrix.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_math.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_eigen.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_blas.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linopt__imtools_8h_source.html">linopt_imtools/linopt_imtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="statistic_8h_source.html">statistic/statistic.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ZernikePolyn_8h_source.html">ZernikePolyn/ZernikePolyn.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__filter_8h_source.html">image_filter/image_filter.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__IOtools_8h_source.html">AOloopControl_IOtools/AOloopControl_IOtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__acquireCalib_8h_source.html">AOloopControl_acquireCalib/AOloopControl_acquireCalib.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__computeCalib_8h_source.html">AOloopControl_computeCalib/AOloopControl_computeCalib.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_computeCalib_processRM.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__computeCalib__processRM_8c__incl.png" border="0" usemap="#src_2AOloopControl__computeCalib_2AOloopControl__computeCalib__processRM_8c" alt=""/></div>
+<map name="src_2AOloopControl__computeCalib_2AOloopControl__computeCalib__processRM_8c" id="src_2AOloopControl__computeCalib_2AOloopControl__computeCalib__processRM_8c">
+<area shape="rect" id="node16" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="609,109,766,151"/>
+<area shape="rect" id="node30" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2085,117,2228,143"/>
+<area shape="rect" id="node31" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2252,109,2472,151"/>
+<area shape="rect" id="node32" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2496,109,2697,151"/>
+<area shape="rect" id="node33" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="2721,109,2923,151"/>
+<area shape="rect" id="node34" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="2947,109,3145,151"/>
+<area shape="rect" id="node35" href="info_8h.html" title="info/info.h" alt="" coords="3169,117,3248,143"/>
+<area shape="rect" id="node36" href="linopt__imtools_8h.html" title="Function prototypes for linear algebra tools. " alt="" coords="3272,109,3409,151"/>
+<area shape="rect" id="node37" href="statistic_8h.html" title="Function prototypes for statistic module. " alt="" coords="3433,117,3563,143"/>
+<area shape="rect" id="node38" href="ZernikePolyn_8h.html" title="ZernikePolyn/ZernikePolyn.h" alt="" coords="3587,117,3777,143"/>
+<area shape="rect" id="node39" href="image__filter_8h.html" title="image_filter/image\l_filter.h" alt="" coords="3801,109,3929,151"/>
+<area shape="rect" id="node40" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="2320,273,2527,300"/>
+<area shape="rect" id="node43" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="3005,348,3175,389"/>
+<area shape="rect" id="node47" href="AOloopControl__acquireCalib_8h.html" title="Function prototypes for Adaptive Optics Control loop engine acquire calibration. " alt="" coords="4055,109,4256,151"/>
+<area shape="rect" id="node48" href="AOloopControl__computeCalib_8h.html" title="Function prototypes for Adaptive Optics Control loop engine compute calibration. " alt="" coords="4280,109,4489,151"/>
+<area shape="rect" id="node24" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="661,199,882,225"/>
+<area shape="rect" id="node25" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="719,273,823,300"/>
+<area shape="rect" id="node27" href="processtools_8h.html" title="Command line interface. " alt="" coords="341,273,447,300"/>
+<area shape="rect" id="node28" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1083,273,1191,300"/>
+<area shape="rect" id="node29" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="347,199,497,225"/>
+<area shape="rect" id="node26" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="695,355,848,382"/>
+<area shape="rect" id="node41" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="1867,348,2063,389"/>
+<area shape="rect" id="node42" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="2087,348,2283,389"/>
+<area shape="rect" id="node44" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="2307,355,2539,382"/>
+<area shape="rect" id="node45" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="2564,348,2760,389"/>
+<area shape="rect" id="node46" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="2784,348,2980,389"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5821c6a1b61d153c829976d77cfa97c9"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#a5821c6a1b61d153c829976d77cfa97c9">AOloopControl_computeCalib_Process_zrespM</a> (long loop, const char *IDzrespm0_name, const char *IDwfsref_name, const char *IDzrespm_name, const char *WFSmap_name, const char *DMmap_name)</td></tr>
-<tr class="separator:a5821c6a1b61d153c829976d77cfa97c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade0d65b153ca7fd73554afeed9b62623"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#ade0d65b153ca7fd73554afeed9b62623">AOloopControl_computeCalib_ProcessZrespM_medianfilt</a> (long loop, const char *zrespm_name, const char *WFSref0_name, const char *WFSmap_name, const char *DMmap_name, double rmampl, int normalize)</td></tr>
-<tr class="separator:ade0d65b153ca7fd73554afeed9b62623"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5b35f4c144c2940e65e9922186cd078"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#af5b35f4c144c2940e65e9922186cd078">AOloopControl_computeCalib_mkCM_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="memitem:a99064ab9ca0ec72e1e36aa4dc16fc8da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#a99064ab9ca0ec72e1e36aa4dc16fc8da">AOloopControl_computeCalib_Process_zrespM</a> (long loop, const char *IDzrespm0_name, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *IDwfsref_name, const char *IDzrespm_name, const char *WFSmap_name, const char *DMmap_name)</td></tr>
+<tr class="separator:a99064ab9ca0ec72e1e36aa4dc16fc8da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e2f0cf8054acbfc900da245538619cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#a1e2f0cf8054acbfc900da245538619cb">AOloopControl_computeCalib_ProcessZrespM_medianfilt</a> (long loop, const char *zrespm_name, const char *WFSref0_name, const char *WFSmap_name, const char *DMmap_name, double rmampl, int normalize)</td></tr>
+<tr class="separator:a1e2f0cf8054acbfc900da245538619cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5b35f4c144c2940e65e9922186cd078"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#af5b35f4c144c2940e65e9922186cd078">AOloopControl_computeCalib_mkCM_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
 <tr class="separator:af5b35f4c144c2940e65e9922186cd078"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1b34174dbec180da72e7e79f1397fb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#ae1b34174dbec180da72e7e79f1397fb7">AOloopControl_computeCalib_mkCM_RUN</a> (char *fpsname)</td></tr>
+<tr class="memitem:ae1b34174dbec180da72e7e79f1397fb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#ae1b34174dbec180da72e7e79f1397fb7">AOloopControl_computeCalib_mkCM_RUN</a> (char *fpsname)</td></tr>
 <tr class="separator:ae1b34174dbec180da72e7e79f1397fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5afafa91c08601e5ec6903d7b09b328f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#a5afafa91c08601e5ec6903d7b09b328f">AOloopControl_computeCalib_mkCM</a> (const char *respm_name, float SVDlim)</td></tr>
-<tr class="separator:a5afafa91c08601e5ec6903d7b09b328f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a267d7b2d4c9cb73dbc765836745ba395"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#a267d7b2d4c9cb73dbc765836745ba395">AOloopControl_computeCalib_mkCM</a> (<a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *respm_name, float SVDlim)</td></tr>
+<tr class="separator:a267d7b2d4c9cb73dbc765836745ba395"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5a4d6377e976f9ae6f3e00d16e1f64d"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html#ad5a4d6377e976f9ae6f3e00d16e1f64d">AOloopControl_computeCalib_mkSlavedAct</a> (const char *IDmaskRM_name, float pixrad, const char *IDout_name)</td></tr>
 <tr class="separator:ad5a4d6377e976f9ae6f3e00d16e1f64d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -126,19 +192,33 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Adaptive Optics Control loop engine compute calibration. </p>
-<p>AO engine uses stream data structure</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000054">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a5afafa91c08601e5ec6903d7b09b328f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5afafa91c08601e5ec6903d7b09b328f">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkCM()</h2>
+<p>AO engine uses stream data structure </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkCM </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a267d7b2d4c9cb73dbc765836745ba395"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a267d7b2d4c9cb73dbc765836745ba395">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_mkCM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkCM </td>
           <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *&#160;</td>
           <td class="paramname"><em>respm_name</em>, </td>
         </tr>
         <tr>
@@ -164,7 +244,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkCM_FPCONF </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkCM_FPCONF </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>fpsname</em>, </td>
@@ -192,7 +272,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkCM_RUN </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_mkCM_RUN </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>fpsname</em></td><td>)</td>
@@ -237,14 +317,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5821c6a1b61d153c829976d77cfa97c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5821c6a1b61d153c829976d77cfa97c9">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_Process_zrespM()</h2>
+<a id="a99064ab9ca0ec72e1e36aa4dc16fc8da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99064ab9ca0ec72e1e36aa4dc16fc8da">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_Process_zrespM()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_Process_zrespM </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_Process_zrespM </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -258,7 +338,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *&#160;</td>
           <td class="paramname"><em>IDwfsref_name</em>, </td>
         </tr>
         <tr>
@@ -289,14 +369,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ade0d65b153ca7fd73554afeed9b62623"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade0d65b153ca7fd73554afeed9b62623">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_ProcessZrespM_medianfilt()</h2>
+<a id="a1e2f0cf8054acbfc900da245538619cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e2f0cf8054acbfc900da245538619cb">&#9670;&nbsp;</a></span>AOloopControl_computeCalib_ProcessZrespM_medianfilt()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_computeCalib_ProcessZrespM_medianfilt </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_computeCalib_ProcessZrespM_medianfilt </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -336,34 +416,6 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>normalize</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4686db64ee8970c84b269e0425519dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4686db64ee8970c84b269e0425519dec">&#9670;&nbsp;</a></span>clock_gettime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -441,7 +493,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_0394dae130dd6b4601d7d7032afd608b.html">AOloopControl_computeCalib</a></li><li class="navelem"><a class="el" href="AOloopControl__computeCalib__processRM_8c.html">AOloopControl_computeCalib_processRM.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

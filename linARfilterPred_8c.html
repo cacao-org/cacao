@@ -94,53 +94,104 @@ $(document).ready(function(){initNavTree('linARfilterPred_8c.html','');});
 
 <p>linear auto-regressive predictive filter  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;ctype.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;semaphore.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;assert.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_multimin.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_multifit.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_vector.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_matrix.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_math.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_eigen.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_cblas.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_blas.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="statistic_8h_source.html">statistic/statistic.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linopt__imtools_8h_source.html">linopt_imtools/linopt_imtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linARfilterPred_8h_source.html">linARfilterPred/linARfilterPred.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for linARfilterPred.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="linARfilterPred_8c__incl.png" border="0" usemap="#src_2linARfilterPred_2linARfilterPred_8c" alt=""/></div>
+<map name="src_2linARfilterPred_2linARfilterPred_8c" id="src_2linARfilterPred_2linARfilterPred_8c">
+<area shape="rect" id="node23" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="502,95,660,136"/>
+<area shape="rect" id="node36" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2258,102,2400,129"/>
+<area shape="rect" id="node37" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="2424,95,2626,136"/>
+<area shape="rect" id="node38" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2650,95,2870,136"/>
+<area shape="rect" id="node39" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="2894,95,3092,136"/>
+<area shape="rect" id="node40" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="3116,95,3318,136"/>
+<area shape="rect" id="node41" href="statistic_8h.html" title="Function prototypes for statistic module. " alt="" coords="3342,102,3471,129"/>
+<area shape="rect" id="node42" href="info_8h.html" title="info/info.h" alt="" coords="3495,102,3574,129"/>
+<area shape="rect" id="node43" href="linopt__imtools_8h.html" title="Function prototypes for linear algebra tools. " alt="" coords="3598,95,3735,136"/>
+<area shape="rect" id="node44" href="linARfilterPred_8h.html" title="Function prototypes for linear autoregressive prediction. " alt="" coords="3759,95,3926,136"/>
+<area shape="rect" id="node30" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="646,184,868,211"/>
+<area shape="rect" id="node31" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="705,259,809,285"/>
+<area shape="rect" id="node33" href="processtools_8h.html" title="Command line interface. " alt="" coords="993,259,1100,285"/>
+<area shape="rect" id="node34" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1124,259,1232,285"/>
+<area shape="rect" id="node35" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="282,184,432,211"/>
+<area shape="rect" id="node32" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="680,333,834,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa8f51c708a501884e32f9c62b96b55cd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#aa8f51c708a501884e32f9c62b96b55cd">clock_gettime</a> (int clk_id, struct timespec *t)</td></tr>
-<tr class="separator:aa8f51c708a501884e32f9c62b96b55cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3dc2133c6090f5e5586ca1a05dcacd17"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a3dc2133c6090f5e5586ca1a05dcacd17">LINARFILTERPRED_LoadASCIIfiles_cli</a> ()</td></tr>
-<tr class="separator:a3dc2133c6090f5e5586ca1a05dcacd17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a6052aaa729aef63c99f274389dd2f8"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a8a6052aaa729aef63c99f274389dd2f8">LINARFILTERPRED_SelectBlock_cli</a> ()</td></tr>
-<tr class="separator:a8a6052aaa729aef63c99f274389dd2f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0988872c9825c30c810d96f330b177d1"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a0988872c9825c30c810d96f330b177d1">linARfilterPred_repeat_shift_X_cli</a> ()</td></tr>
-<tr class="separator:a0988872c9825c30c810d96f330b177d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54e73d17ef0ca9a9e8ae022e15f97aa3"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a54e73d17ef0ca9a9e8ae022e15f97aa3">LINARFILTERPRED_Build_LinPredictor_cli</a> ()</td></tr>
-<tr class="separator:a54e73d17ef0ca9a9e8ae022e15f97aa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88ebc5180b33337992c831f01977ae45"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a88ebc5180b33337992c831f01977ae45">LINARFILTERPRED_Apply_LinPredictor_cli</a> ()</td></tr>
-<tr class="separator:a88ebc5180b33337992c831f01977ae45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56cabc1038049a486a7911a5a7026dd9"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a56cabc1038049a486a7911a5a7026dd9">LINARFILTERPRED_ScanGain_cli</a> ()</td></tr>
-<tr class="separator:a56cabc1038049a486a7911a5a7026dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74e85c80839d265958396974c88c66e0"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a74e85c80839d265958396974c88c66e0">LINARFILTERPRED_PF_updatePFmatrix_cli</a> ()</td></tr>
-<tr class="separator:a74e85c80839d265958396974c88c66e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5ef5067fdbd4d50d8384e28a0cba9db"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#aa5ef5067fdbd4d50d8384e28a0cba9db">LINARFILTERPRED_PF_RealTimeApply_cli</a> ()</td></tr>
-<tr class="separator:aa5ef5067fdbd4d50d8384e28a0cba9db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a112dd6bce478db5511f231e9fe318612"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a112dd6bce478db5511f231e9fe318612">LINARFILTERPRED_LoadASCIIfiles_cli</a> ()</td></tr>
+<tr class="separator:a112dd6bce478db5511f231e9fe318612"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bb6677a24793bedd5a674374a111089"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a4bb6677a24793bedd5a674374a111089">LINARFILTERPRED_SelectBlock_cli</a> ()</td></tr>
+<tr class="separator:a4bb6677a24793bedd5a674374a111089"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af87f63a5327448e5151a9aa489666567"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#af87f63a5327448e5151a9aa489666567">linARfilterPred_repeat_shift_X_cli</a> ()</td></tr>
+<tr class="separator:af87f63a5327448e5151a9aa489666567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e44f6d040a55b7775361b9cf5255cef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a7e44f6d040a55b7775361b9cf5255cef">LINARFILTERPRED_Build_LinPredictor_cli</a> ()</td></tr>
+<tr class="separator:a7e44f6d040a55b7775361b9cf5255cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cf5ff64c38701260252384f77bf580a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a6cf5ff64c38701260252384f77bf580a">LINARFILTERPRED_Apply_LinPredictor_cli</a> ()</td></tr>
+<tr class="separator:a6cf5ff64c38701260252384f77bf580a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab392978a5ba58a2fb39284298c2d1c1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#ab392978a5ba58a2fb39284298c2d1c1b">LINARFILTERPRED_ScanGain_cli</a> ()</td></tr>
+<tr class="separator:ab392978a5ba58a2fb39284298c2d1c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abea3e7fbf62b85db36882f0e81aacd75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#abea3e7fbf62b85db36882f0e81aacd75">LINARFILTERPRED_PF_updatePFmatrix_cli</a> ()</td></tr>
+<tr class="separator:abea3e7fbf62b85db36882f0e81aacd75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa75f04a246743a8031987377e2a2b7a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#aa75f04a246743a8031987377e2a2b7a9">LINARFILTERPRED_PF_RealTimeApply_cli</a> ()</td></tr>
+<tr class="separator:aa75f04a246743a8031987377e2a2b7a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affa31abb29f40d65eed5f3b38f286111"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#affa31abb29f40d65eed5f3b38f286111">init_linARfilterPred</a> ()</td></tr>
-<tr class="separator:affa31abb29f40d65eed5f3b38f286111"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97ef522ff0d01a86780971d7f1bb4524"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a97ef522ff0d01a86780971d7f1bb4524">init_linARfilterPred</a> ()</td></tr>
+<tr class="separator:a97ef522ff0d01a86780971d7f1bb4524"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a757c5f80b839ea32731ba61082ffe185"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a757c5f80b839ea32731ba61082ffe185">NBwords</a> (const char sentence[])</td></tr>
 <tr class="separator:a757c5f80b839ea32731ba61082ffe185"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0aafdfb7a580677c336662ccee672a57"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a0aafdfb7a580677c336662ccee672a57">LINARFILTERPRED_LoadASCIIfiles</a> (double tstart, double dt, long NBpt, long NBfr, const char *IDoutname)</td></tr>
 <tr class="memdesc:a0aafdfb7a580677c336662ccee672a57"><td class="mdescLeft">&#160;</td><td class="mdescRight">load ascii file(s) into image cube  <a href="#a0aafdfb7a580677c336662ccee672a57">More...</a><br /></td></tr>
 <tr class="separator:a0aafdfb7a580677c336662ccee672a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59be8ab2a56ad41041af2a353427a1b4"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a59be8ab2a56ad41041af2a353427a1b4">LINARFILTERPRED_SelectBlock</a> (const char *IDin_name, const char *IDblknb_name, long blkNB, const char *IDout_name)</td></tr>
-<tr class="separator:a59be8ab2a56ad41041af2a353427a1b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad91a776994400be840100d64e36b22c8"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#ad91a776994400be840100d64e36b22c8">linARfilterPred_repeat_shift_X</a> (const char *IDin_name, long NBstep, const char *IDout_name)</td></tr>
-<tr class="memdesc:ad91a776994400be840100d64e36b22c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expand 2D image/matrix in X direction by repeat and shift.  <a href="#ad91a776994400be840100d64e36b22c8">More...</a><br /></td></tr>
-<tr class="separator:ad91a776994400be840100d64e36b22c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add51b56afef634b53537ad58e7a6d2d8"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#add51b56afef634b53537ad58e7a6d2d8">LINARFILTERPRED_Build_LinPredictor</a> (const char *IDin_name, long PForder, float PFlag, double SVDeps, double RegLambda, const char *IDoutPF_name, int outMode, int LOOPmode, float LOOPgain, int testmode)</td></tr>
-<tr class="memdesc:add51b56afef634b53537ad58e7a6d2d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build predictive filter.  <a href="#add51b56afef634b53537ad58e7a6d2d8">More...</a><br /></td></tr>
-<tr class="separator:add51b56afef634b53537ad58e7a6d2d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac201b99499e978ca82e0f381503623a8"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#ac201b99499e978ca82e0f381503623a8">LINARFILTERPRED_Apply_LinPredictor_RT</a> (const char *IDfilt_name, const char *IDin_name, const char *IDout_name)</td></tr>
-<tr class="separator:ac201b99499e978ca82e0f381503623a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a246fdcd87d9d68303fac011594d24082"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a246fdcd87d9d68303fac011594d24082">LINARFILTERPRED_Apply_LinPredictor</a> (const char *IDfilt_name, const char *IDin_name, float PFlag, const char *IDout_name)</td></tr>
-<tr class="separator:a246fdcd87d9d68303fac011594d24082"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73b62a08b726755cd53f4a7d08837ea3"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a73b62a08b726755cd53f4a7d08837ea3">LINARFILTERPRED_PF_updatePFmatrix</a> (const char *IDPF_name, const char *IDPFM_name, float alpha)</td></tr>
-<tr class="separator:a73b62a08b726755cd53f4a7d08837ea3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb5e7987d1cdce21e1b3877a93a76da6"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#adb5e7987d1cdce21e1b3877a93a76da6">LINARFILTERPRED_PF_RealTimeApply</a> (const char *IDmodevalIN_name, long IndexOffset, int semtrig, const char *IDPFM_name, long NBPFstep, const char *IDPFout_name, int nbGPU, long loop, long NBiter, int SAVEMODE, float tlag, long PFindex)</td></tr>
-<tr class="separator:adb5e7987d1cdce21e1b3877a93a76da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b71301cb645a1af6feec748b62856cc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a2b71301cb645a1af6feec748b62856cc">LINARFILTERPRED_SelectBlock</a> (const char *IDin_name, const char *IDblknb_name, long blkNB, const char *IDout_name)</td></tr>
+<tr class="separator:a2b71301cb645a1af6feec748b62856cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cc45c049db164361278e2ad9756363c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a1cc45c049db164361278e2ad9756363c">linARfilterPred_repeat_shift_X</a> (const char *IDin_name, long NBstep, const char *IDout_name)</td></tr>
+<tr class="memdesc:a1cc45c049db164361278e2ad9756363c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expand 2D image/matrix in X direction by repeat and shift.  <a href="#a1cc45c049db164361278e2ad9756363c">More...</a><br /></td></tr>
+<tr class="separator:a1cc45c049db164361278e2ad9756363c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20e6212670d07930e440bad6ae088df5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a20e6212670d07930e440bad6ae088df5">LINARFILTERPRED_Build_LinPredictor</a> (const char *IDin_name, long PForder, float PFlag, double SVDeps, double RegLambda, const char *IDoutPF_name, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int outMode, int LOOPmode, float LOOPgain, int testmode)</td></tr>
+<tr class="separator:a20e6212670d07930e440bad6ae088df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f53d26ca4af0d7caa2b6673ce2f78f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a7f53d26ca4af0d7caa2b6673ce2f78f9">LINARFILTERPRED_Apply_LinPredictor_RT</a> (const char *IDfilt_name, const char *IDin_name, const char *IDout_name)</td></tr>
+<tr class="separator:a7f53d26ca4af0d7caa2b6673ce2f78f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1364a97ccef2543fee19ddbbcd42e934"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a1364a97ccef2543fee19ddbbcd42e934">LINARFILTERPRED_Apply_LinPredictor</a> (const char *IDfilt_name, const char *IDin_name, float PFlag, const char *IDout_name)</td></tr>
+<tr class="separator:a1364a97ccef2543fee19ddbbcd42e934"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5c9ed63c7e5db92abd16eaa3fccb3fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#ad5c9ed63c7e5db92abd16eaa3fccb3fe">LINARFILTERPRED_PF_updatePFmatrix</a> (const char *IDPF_name, const char *IDPFM_name, float alpha)</td></tr>
+<tr class="separator:ad5c9ed63c7e5db92abd16eaa3fccb3fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae68b16a50945edb16e26d1baf4942888"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#ae68b16a50945edb16e26d1baf4942888">LINARFILTERPRED_PF_RealTimeApply</a> (const char *IDmodevalIN_name, long IndexOffset, int semtrig, const char *IDPFM_name, long NBPFstep, const char *IDPFout_name, int nbGPU, long loop, long NBiter, int SAVEMODE, float tlag, long PFindex)</td></tr>
+<tr class="separator:ae68b16a50945edb16e26d1baf4942888"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97d7bfb0554348650718fcaa5acb17fb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linARfilterPred_8c.html#a97d7bfb0554348650718fcaa5acb17fb">LINARFILTERPRED_ScanGain</a> (char *IDin_name, float multfact, float framelag)</td></tr>
 <tr class="separator:a97d7bfb0554348650718fcaa5acb17fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -151,10 +202,7 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>linear auto-regressive predictive filter </p>
-<p>Implements Empirical Orthogonal Functions</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>7 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000092">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<p>Implements Empirical Orthogonal Functions </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
@@ -163,7 +211,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -176,42 +224,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa8f51c708a501884e32f9c62b96b55cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8f51c708a501884e32f9c62b96b55cd">&#9670;&nbsp;</a></span>clock_gettime()</h2>
+<a id="a97ef522ff0d01a86780971d7f1bb4524"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97ef522ff0d01a86780971d7f1bb4524">&#9670;&nbsp;</a></span>init_linARfilterPred()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="affa31abb29f40d65eed5f3b38f286111"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#affa31abb29f40d65eed5f3b38f286111">&#9670;&nbsp;</a></span>init_linARfilterPred()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int_fast8_t init_linARfilterPred </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_linARfilterPred </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -221,14 +241,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a246fdcd87d9d68303fac011594d24082"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a246fdcd87d9d68303fac011594d24082">&#9670;&nbsp;</a></span>LINARFILTERPRED_Apply_LinPredictor()</h2>
+<a id="a1364a97ccef2543fee19ddbbcd42e934"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1364a97ccef2543fee19ddbbcd42e934">&#9670;&nbsp;</a></span>LINARFILTERPRED_Apply_LinPredictor()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long LINARFILTERPRED_Apply_LinPredictor </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> LINARFILTERPRED_Apply_LinPredictor </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDfilt_name</em>, </td>
@@ -261,14 +281,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a88ebc5180b33337992c831f01977ae45"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88ebc5180b33337992c831f01977ae45">&#9670;&nbsp;</a></span>LINARFILTERPRED_Apply_LinPredictor_cli()</h2>
+<a id="a6cf5ff64c38701260252384f77bf580a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cf5ff64c38701260252384f77bf580a">&#9670;&nbsp;</a></span>LINARFILTERPRED_Apply_LinPredictor_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t LINARFILTERPRED_Apply_LinPredictor_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> LINARFILTERPRED_Apply_LinPredictor_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -278,14 +298,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac201b99499e978ca82e0f381503623a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac201b99499e978ca82e0f381503623a8">&#9670;&nbsp;</a></span>LINARFILTERPRED_Apply_LinPredictor_RT()</h2>
+<a id="a7f53d26ca4af0d7caa2b6673ce2f78f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f53d26ca4af0d7caa2b6673ce2f78f9">&#9670;&nbsp;</a></span>LINARFILTERPRED_Apply_LinPredictor_RT()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long LINARFILTERPRED_Apply_LinPredictor_RT </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> LINARFILTERPRED_Apply_LinPredictor_RT </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDfilt_name</em>, </td>
@@ -312,14 +332,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="add51b56afef634b53537ad58e7a6d2d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add51b56afef634b53537ad58e7a6d2d8">&#9670;&nbsp;</a></span>LINARFILTERPRED_Build_LinPredictor()</h2>
+<a id="a20e6212670d07930e440bad6ae088df5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20e6212670d07930e440bad6ae088df5">&#9670;&nbsp;</a></span>LINARFILTERPRED_Build_LinPredictor()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long LINARFILTERPRED_Build_LinPredictor </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> LINARFILTERPRED_Build_LinPredictor </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -357,7 +377,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int&#160;</td>
           <td class="paramname"><em>outMode</em>, </td>
         </tr>
         <tr>
@@ -385,8 +405,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Build predictive filter. </p>
 <h2>Purpose</h2>
 <p>Build predictive filter from real-time AO telemetry</p>
 <h2>Masking</h2>
@@ -466,8 +484,8 @@ The data matrix is build from the telemetry. Each column (= time sample) of the 
 <p><em>STEP: Write regularization coefficients (optional)</em></p>
 <h3>Compute pseudo-inverse of PFmatD</h3>
 <p><em>STEP: Compute Pseudo-Inverse of PFmatD</em></p>
-<p>If using MAGMA, call function <a class="el" href="__install_2include_2cudacomp_8h.html#af2be454fbe2a3f6878745fc524051554" title="Computes matrix pseudo-inverse (AT A)^-1 AT, using eigenvector/eigenvalue decomposition of AT A...">CUDACOMP_magma_compute_SVDpseudoInverse()</a><br />
-Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools_8h.html#a94d6b25fcfb460b2363109268210cc31">linopt_compute_SVDpseudoInverse()</a><br />
+<p>If using MAGMA, call function CUDACOMP_magma_compute_SVDpseudoInverse()<br />
+Otherwise, call function <a class="el" href="linopt__imtools_8c.html#a22214ca4211fedcf988af89cd4e01c87">linopt_compute_SVDpseudoInverse()</a><br />
 </p>
 <p>Result (pseudoinverse) is stored in image PFmatC<br />
 </p>
@@ -475,31 +493,17 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 <p>In LOOP mode, LOOP ENDS HERE <br />
 </p>
 <hr/>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">IDin_name</td><td>Input telemetry, a 2D or 3D image </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">PForder</td><td>Number of time steps in output filter </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">PFlag</td><td>Time lag between last measurement and prediction, unit: sampling period </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">SVDeps</td><td>Singular value cutoff limit. Ratio between strongest singular value and limit </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">RegLambda</td><td>Regularization paramater </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">IDoutPF_name</td><td>Output predictive filter name </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">outMode</td><td>Output mode. 0: do not write individual files, 1: write individual files (note: output filter cube is always written) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">LOOPmode</td><td>1 if running in infinite loop waiting for input telemetry </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">LOOPgain</td><td>If running in loop, mixing coefficient between previous and current filter </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
-<a id="a54e73d17ef0ca9a9e8ae022e15f97aa3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54e73d17ef0ca9a9e8ae022e15f97aa3">&#9670;&nbsp;</a></span>LINARFILTERPRED_Build_LinPredictor_cli()</h2>
+<a id="a7e44f6d040a55b7775361b9cf5255cef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e44f6d040a55b7775361b9cf5255cef">&#9670;&nbsp;</a></span>LINARFILTERPRED_Build_LinPredictor_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t LINARFILTERPRED_Build_LinPredictor_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> LINARFILTERPRED_Build_LinPredictor_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -559,14 +563,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="a3dc2133c6090f5e5586ca1a05dcacd17"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3dc2133c6090f5e5586ca1a05dcacd17">&#9670;&nbsp;</a></span>LINARFILTERPRED_LoadASCIIfiles_cli()</h2>
+<a id="a112dd6bce478db5511f231e9fe318612"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a112dd6bce478db5511f231e9fe318612">&#9670;&nbsp;</a></span>LINARFILTERPRED_LoadASCIIfiles_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t LINARFILTERPRED_LoadASCIIfiles_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> LINARFILTERPRED_LoadASCIIfiles_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -576,14 +580,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="adb5e7987d1cdce21e1b3877a93a76da6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb5e7987d1cdce21e1b3877a93a76da6">&#9670;&nbsp;</a></span>LINARFILTERPRED_PF_RealTimeApply()</h2>
+<a id="ae68b16a50945edb16e26d1baf4942888"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae68b16a50945edb16e26d1baf4942888">&#9670;&nbsp;</a></span>LINARFILTERPRED_PF_RealTimeApply()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long LINARFILTERPRED_PF_RealTimeApply </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> LINARFILTERPRED_PF_RealTimeApply </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDmodevalIN_name</em>, </td>
@@ -665,14 +669,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="aa5ef5067fdbd4d50d8384e28a0cba9db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5ef5067fdbd4d50d8384e28a0cba9db">&#9670;&nbsp;</a></span>LINARFILTERPRED_PF_RealTimeApply_cli()</h2>
+<a id="aa75f04a246743a8031987377e2a2b7a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa75f04a246743a8031987377e2a2b7a9">&#9670;&nbsp;</a></span>LINARFILTERPRED_PF_RealTimeApply_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t LINARFILTERPRED_PF_RealTimeApply_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> LINARFILTERPRED_PF_RealTimeApply_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -682,14 +686,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="a73b62a08b726755cd53f4a7d08837ea3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73b62a08b726755cd53f4a7d08837ea3">&#9670;&nbsp;</a></span>LINARFILTERPRED_PF_updatePFmatrix()</h2>
+<a id="ad5c9ed63c7e5db92abd16eaa3fccb3fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5c9ed63c7e5db92abd16eaa3fccb3fe">&#9670;&nbsp;</a></span>LINARFILTERPRED_PF_updatePFmatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long LINARFILTERPRED_PF_updatePFmatrix </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> LINARFILTERPRED_PF_updatePFmatrix </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDPF_name</em>, </td>
@@ -716,14 +720,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="a74e85c80839d265958396974c88c66e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74e85c80839d265958396974c88c66e0">&#9670;&nbsp;</a></span>LINARFILTERPRED_PF_updatePFmatrix_cli()</h2>
+<a id="abea3e7fbf62b85db36882f0e81aacd75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abea3e7fbf62b85db36882f0e81aacd75">&#9670;&nbsp;</a></span>LINARFILTERPRED_PF_updatePFmatrix_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t LINARFILTERPRED_PF_updatePFmatrix_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> LINARFILTERPRED_PF_updatePFmatrix_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -733,14 +737,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="ad91a776994400be840100d64e36b22c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad91a776994400be840100d64e36b22c8">&#9670;&nbsp;</a></span>linARfilterPred_repeat_shift_X()</h2>
+<a id="a1cc45c049db164361278e2ad9756363c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1cc45c049db164361278e2ad9756363c">&#9670;&nbsp;</a></span>linARfilterPred_repeat_shift_X()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linARfilterPred_repeat_shift_X </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linARfilterPred_repeat_shift_X </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -769,14 +773,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="a0988872c9825c30c810d96f330b177d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0988872c9825c30c810d96f330b177d1">&#9670;&nbsp;</a></span>linARfilterPred_repeat_shift_X_cli()</h2>
+<a id="af87f63a5327448e5151a9aa489666567"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af87f63a5327448e5151a9aa489666567">&#9670;&nbsp;</a></span>linARfilterPred_repeat_shift_X_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linARfilterPred_repeat_shift_X_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linARfilterPred_repeat_shift_X_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -820,14 +824,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="a56cabc1038049a486a7911a5a7026dd9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56cabc1038049a486a7911a5a7026dd9">&#9670;&nbsp;</a></span>LINARFILTERPRED_ScanGain_cli()</h2>
+<a id="ab392978a5ba58a2fb39284298c2d1c1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab392978a5ba58a2fb39284298c2d1c1b">&#9670;&nbsp;</a></span>LINARFILTERPRED_ScanGain_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t LINARFILTERPRED_ScanGain_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> LINARFILTERPRED_ScanGain_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -837,14 +841,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="a59be8ab2a56ad41041af2a353427a1b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59be8ab2a56ad41041af2a353427a1b4">&#9670;&nbsp;</a></span>LINARFILTERPRED_SelectBlock()</h2>
+<a id="a2b71301cb645a1af6feec748b62856cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b71301cb645a1af6feec748b62856cc">&#9670;&nbsp;</a></span>LINARFILTERPRED_SelectBlock()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long LINARFILTERPRED_SelectBlock </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> LINARFILTERPRED_SelectBlock </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -877,14 +881,14 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 
 </div>
 </div>
-<a id="a8a6052aaa729aef63c99f274389dd2f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a6052aaa729aef63c99f274389dd2f8">&#9670;&nbsp;</a></span>LINARFILTERPRED_SelectBlock_cli()</h2>
+<a id="a4bb6677a24793bedd5a674374a111089"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bb6677a24793bedd5a674374a111089">&#9670;&nbsp;</a></span>LINARFILTERPRED_SelectBlock_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t LINARFILTERPRED_SelectBlock_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> LINARFILTERPRED_SelectBlock_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -942,7 +946,7 @@ Otherwise, call function <a class="el" href="__install_2include_2linopt__imtools
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b07b29f2a0f54c902d2948f61c128711.html">linARfilterPred</a></li><li class="navelem"><a class="el" href="linARfilterPred_8c.html">linARfilterPred.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

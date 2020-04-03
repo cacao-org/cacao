@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__PredictiveControl__buil
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_PredictiveControl_builPFloop_WatchInput.c File Reference</div>  </div>
@@ -93,31 +94,88 @@ $(document).ready(function(){initNavTree('AOloopControl__PredictiveControl__buil
 
 <p>Assemble input data from telemetry stream.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__PredictiveControl_8h_source.html">AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_PredictiveControl_builPFloop_WatchInput.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__PredictiveControl__builPFloop__WatchInput_8c__incl.png" border="0" usemap="#src_2AOloopControl__PredictiveControl_2AOloopControl__PredictiveControl__builPFloop__WatchInput_8c" alt=""/></div>
+<map name="src_2AOloopControl__PredictiveControl_2AOloopControl__PredictiveControl__builPFloop__WatchInput_8c" id="src_2AOloopControl__PredictiveControl_2AOloopControl__PredictiveControl__builPFloop__WatchInput_8c">
+<area shape="rect" id="node12" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1587,117,1745,158"/>
+<area shape="rect" id="node26" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2296,124,2439,151"/>
+<area shape="rect" id="node27" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2463,117,2683,158"/>
+<area shape="rect" id="node28" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2707,117,2908,158"/>
+<area shape="rect" id="node29" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="892,288,1099,315"/>
+<area shape="rect" id="node36" href="AOloopControl__PredictiveControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine predictive control. " alt="" coords="2932,109,3104,165"/>
+<area shape="rect" id="node20" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="2163,213,2385,240"/>
+<area shape="rect" id="node21" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="2094,288,2198,315"/>
+<area shape="rect" id="node23" href="processtools_8h.html" title="Command line interface. " alt="" coords="1623,288,1730,315"/>
+<area shape="rect" id="node24" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1389,288,1497,315"/>
+<area shape="rect" id="node25" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1887,213,2037,240"/>
+<area shape="rect" id="node22" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="2069,370,2223,397"/>
+<area shape="rect" id="node30" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,363,201,404"/>
+<area shape="rect" id="node31" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,363,421,404"/>
+<area shape="rect" id="node32" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="446,363,617,404"/>
+<area shape="rect" id="node33" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="641,370,873,397"/>
+<area shape="rect" id="node34" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="897,363,1093,404"/>
+<area shape="rect" id="node35" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1117,363,1313,404"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__PredictiveControl__builPFloop__WatchInput_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__PredictiveControl__builPFloop__WatchInput_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06b2d9c5a74920af1f48dc4c18c080ec"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__PredictiveControl__builPFloop__WatchInput_8c.html#a06b2d9c5a74920af1f48dc4c18c080ec">AOloopControl_PredictiveControl_builPFloop_WatchInput</a> (long loop, long PFblock, long PFblockStart, long PFblockEnd, long NBbuff)</td></tr>
-<tr class="separator:a06b2d9c5a74920af1f48dc4c18c080ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf5ebc0d4dcf82b7a811b093d0d8bfff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__PredictiveControl__builPFloop__WatchInput_8c.html#aaf5ebc0d4dcf82b7a811b093d0d8bfff">AOloopControl_PredictiveControl_builPFloop_WatchInput</a> (long loop, long PFblock, long PFblockStart, long PFblockEnd, long NBbuff)</td></tr>
+<tr class="separator:aaf5ebc0d4dcf82b7a811b093d0d8bfff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Assemble input data from telemetry stream. </p>
 <h2>Change log</h2>
 <ul>
-<li>20180518 Guyon File creation (split from AOloopControl_PredictiveControl)</li>
+<li>20180518 Guyon File creation (split from AOloopControl_PredictiveControl) </li>
 </ul>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000066">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a06b2d9c5a74920af1f48dc4c18c080ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06b2d9c5a74920af1f48dc4c18c080ec">&#9670;&nbsp;</a></span>AOloopControl_PredictiveControl_builPFloop_WatchInput()</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_PredictiveControl_builPFloop_WatchInput </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="aaf5ebc0d4dcf82b7a811b093d0d8bfff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf5ebc0d4dcf82b7a811b093d0d8bfff">&#9670;&nbsp;</a></span>AOloopControl_PredictiveControl_builPFloop_WatchInput()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> AOloopControl_PredictiveControl_builPFloop_WatchInput </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -170,34 +228,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a4686db64ee8970c84b269e0425519dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4686db64ee8970c84b269e0425519dec">&#9670;&nbsp;</a></span>clock_gettime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.13-->
@@ -205,7 +235,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b10c1746c5a4bba4901fb465948b1d76.html">AOloopControl_PredictiveControl</a></li><li class="navelem"><a class="el" href="AOloopControl__PredictiveControl__builPFloop__WatchInput_8c.html">AOloopControl_PredictiveControl_builPFloop_WatchInput.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

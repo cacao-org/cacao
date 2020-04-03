@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('FPAOloopControl_8c.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,30 +95,102 @@ $(document).ready(function(){initNavTree('FPAOloopControl_8c.html','');});
 
 <p>Focal Plane AO control.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;limits.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;sys/file.h&gt;</code><br />
+<code>#include &lt;sys/mman.h&gt;</code><br />
+<code>#include &lt;err.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;ncurses.h&gt;</code><br />
+<code>#include &lt;semaphore.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_matrix.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_math.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_eigen.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_blas.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linopt__imtools_8h_source.html">linopt_imtools/linopt_imtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__filter_8h_source.html">image_filter/image_filter.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ZernikePolyn_8h_source.html">ZernikePolyn/ZernikePolyn.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__gen_8h_source.html">image_gen/image_gen.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="statistic_8h_source.html">statistic/statistic.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__IOtools_8h_source.html">AOloopControl_IOtools/AOloopControl_IOtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="FPAOloopControl_8h_source.html">FPAOloopControl/FPAOloopControl.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for FPAOloopControl.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="FPAOloopControl_8c__incl.png" border="0" usemap="#src_2FPAOloopControl_2FPAOloopControl_8c" alt=""/></div>
+<map name="src_2FPAOloopControl_2FPAOloopControl_8c" id="src_2FPAOloopControl_2FPAOloopControl_8c">
+<area shape="rect" id="node26" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1088,95,1245,136"/>
+<area shape="rect" id="node36" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="3670,102,3813,129"/>
+<area shape="rect" id="node37" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="3837,95,4057,136"/>
+<area shape="rect" id="node38" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="4081,95,4282,136"/>
+<area shape="rect" id="node39" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="4306,95,4507,136"/>
+<area shape="rect" id="node40" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="4531,95,4730,136"/>
+<area shape="rect" id="node41" href="linopt__imtools_8h.html" title="Function prototypes for linear algebra tools. " alt="" coords="4754,95,4891,136"/>
+<area shape="rect" id="node42" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="135,259,342,285"/>
+<area shape="rect" id="node44" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="5,333,176,375"/>
+<area shape="rect" id="node45" href="image__filter_8h.html" title="image_filter/image\l_filter.h" alt="" coords="4916,95,5044,136"/>
+<area shape="rect" id="node46" href="info_8h.html" title="info/info.h" alt="" coords="5069,102,5147,129"/>
+<area shape="rect" id="node47" href="ZernikePolyn_8h.html" title="ZernikePolyn/ZernikePolyn.h" alt="" coords="5172,102,5361,129"/>
+<area shape="rect" id="node48" href="image__gen_8h.html" title="image_gen/image_gen.h" alt="" coords="5385,102,5548,129"/>
+<area shape="rect" id="node49" href="statistic_8h.html" title="Function prototypes for statistic module. " alt="" coords="5573,102,5702,129"/>
+<area shape="rect" id="node50" href="FPAOloopControl_8h.html" title="FPAOloopControl/FPAOloop\lControl.h" alt="" coords="5726,95,5914,136"/>
+<area shape="rect" id="node31" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="772,184,993,211"/>
+<area shape="rect" id="node32" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="855,259,959,285"/>
+<area shape="rect" id="node33" href="processtools_8h.html" title="Command line interface. " alt="" coords="1119,259,1225,285"/>
+<area shape="rect" id="node34" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="671,259,779,285"/>
+<area shape="rect" id="node35" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1465,184,1615,211"/>
+<area shape="rect" id="node43" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="201,333,397,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a315edaa82c488ece3d7b895bb3aa8974"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a315edaa82c488ece3d7b895bb3aa8974">FPAOconfname</a>&#160;&#160;&#160;&quot;/tmp/FPAOconf.shm&quot;</td></tr>
+<tr class="separator:a315edaa82c488ece3d7b895bb3aa8974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac64dfaad8cbdb729b2ca4af056704729"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#ac64dfaad8cbdb729b2ca4af056704729">FPAOloopControl_loadconfigure_cli</a> ()</td></tr>
-<tr class="separator:ac64dfaad8cbdb729b2ca4af056704729"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2098a0f9487aac9be3392c401f1c882"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#ac2098a0f9487aac9be3392c401f1c882">FPAOloopControl_showparams_cli</a> ()</td></tr>
-<tr class="separator:ac2098a0f9487aac9be3392c401f1c882"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac6ef230b8d7a2df6e874e9d83cc7961"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#aac6ef230b8d7a2df6e874e9d83cc7961">FPAOloopControl_set_hardwlatency_frame_cli</a> ()</td></tr>
-<tr class="separator:aac6ef230b8d7a2df6e874e9d83cc7961"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3beb3dbb9f56e2c01f9a7666e33c2cd"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#ab3beb3dbb9f56e2c01f9a7666e33c2cd">FPAOloopControl_MeasureResp_level1_cli</a> ()</td></tr>
-<tr class="separator:ab3beb3dbb9f56e2c01f9a7666e33c2cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50a2d0c7fd0369b8bbfed01c68c2125e"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a50a2d0c7fd0369b8bbfed01c68c2125e">FPAOloopControl_MakeLinComb_seq_cli</a> ()</td></tr>
-<tr class="separator:a50a2d0c7fd0369b8bbfed01c68c2125e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97c9ec8842a894bda56ea338922f38f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a97c9ec8842a894bda56ea338922f38f2">FPAOloopControl_loadconfigure_cli</a> ()</td></tr>
+<tr class="separator:a97c9ec8842a894bda56ea338922f38f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd7678e62d955085e5ea132404297e37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#abd7678e62d955085e5ea132404297e37">FPAOloopControl_showparams_cli</a> ()</td></tr>
+<tr class="separator:abd7678e62d955085e5ea132404297e37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4239db5ea94ab4de00d05eba90aea47"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#ad4239db5ea94ab4de00d05eba90aea47">FPAOloopControl_set_hardwlatency_frame_cli</a> ()</td></tr>
+<tr class="separator:ad4239db5ea94ab4de00d05eba90aea47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6e3c3f4bfb45759def7c93486079e68"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#ae6e3c3f4bfb45759def7c93486079e68">FPAOloopControl_MeasureResp_level1_cli</a> ()</td></tr>
+<tr class="separator:ae6e3c3f4bfb45759def7c93486079e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08500087f6911d3d6f9a4d0352029602"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a08500087f6911d3d6f9a4d0352029602">FPAOloopControl_MakeLinComb_seq_cli</a> ()</td></tr>
+<tr class="separator:a08500087f6911d3d6f9a4d0352029602"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a055944b50882c0c6dafdfe19881125e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a055944b50882c0c6dafdfe19881125e5">init_FPAOloopControl</a> ()</td></tr>
-<tr class="separator:a055944b50882c0c6dafdfe19881125e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89334ec8cf4db6240c053b931293c8c6"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a89334ec8cf4db6240c053b931293c8c6">FPAOloopControl_InitializeMemory</a> (int mode)</td></tr>
-<tr class="separator:a89334ec8cf4db6240c053b931293c8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46177cd1ce7bc6278075b3ce75ebdadf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a46177cd1ce7bc6278075b3ce75ebdadf">FPAOloopControl_loadconfigure</a> (long loop, int mode, int level)</td></tr>
-<tr class="separator:a46177cd1ce7bc6278075b3ce75ebdadf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d51c112d1ecfe55d8f3c7447e813e89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a6d51c112d1ecfe55d8f3c7447e813e89">init_FPAOloopControl</a> ()</td></tr>
+<tr class="separator:a6d51c112d1ecfe55d8f3c7447e813e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b8b2c6fb976edc990a83e12c80caa04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a5b8b2c6fb976edc990a83e12c80caa04">FPAOloopControl_InitializeMemory</a> (<a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int mode)</td></tr>
+<tr class="separator:a5b8b2c6fb976edc990a83e12c80caa04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa367162d9c356979d3476a727b239f24"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#aa367162d9c356979d3476a727b239f24">FPAOloopControl_loadconfigure</a> (long loop, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int mode, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int level)</td></tr>
+<tr class="separator:aa367162d9c356979d3476a727b239f24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af951e683e5e742499e84ed41c56bd888"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#af951e683e5e742499e84ed41c56bd888">FPAOloopControl_showparams</a> (long loop)</td></tr>
 <tr class="separator:af951e683e5e742499e84ed41c56bd888"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8df385e3973f7e43c681cb82efd58018"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a8df385e3973f7e43c681cb82efd58018">FPAOloopControl_set_hardwlatency_frame</a> (float hardwlatency_frame)</td></tr>
@@ -157,8 +230,6 @@ Variables</h2></td></tr>
 <tr class="separator:afb83045acc1756ea9a675d53f82af2bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf740ccbaccefc59d58e1df6b47867bb"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#abf740ccbaccefc59d58e1df6b47867bb">FPaoconfID_imWFS1</a> = -1</td></tr>
 <tr class="separator:abf740ccbaccefc59d58e1df6b47867bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6926b527b2a1a2fbef0a1ec98426e56"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#af6926b527b2a1a2fbef0a1ec98426e56">FPWFSdatatype</a></td></tr>
-<tr class="separator:af6926b527b2a1a2fbef0a1ec98426e56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b8dae841fee9288162faad0a372e9e3"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#a8b8dae841fee9288162faad0a372e9e3">FPaoconfID_wfsdark</a> = -1</td></tr>
 <tr class="separator:a8b8dae841fee9288162faad0a372e9e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accebba27191dfef8c413970f7f32200f"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="FPAOloopControl_8c.html#accebba27191dfef8c413970f7f32200f">FPaoconfID_dmC</a> = -1</td></tr>
@@ -172,11 +243,37 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Focal Plane AO control. </p>
-<p>Wavefront control for high contrast imaging Uses focal plane image(s) as wavefront sensor</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>10 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000083">Bug:</a></b></dt><dd>No known bugs. </dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+<p>Wavefront control for high contrast imaging Uses focal plane image(s) as wavefront sensor </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a315edaa82c488ece3d7b895bb3aa8974"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a315edaa82c488ece3d7b895bb3aa8974">&#9670;&nbsp;</a></span>FPAOconfname</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FPAOconfname&#160;&#160;&#160;&quot;/tmp/FPAOconf.shm&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
 
@@ -184,7 +281,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -194,34 +291,6 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initialize module. </p>
-
-</div>
-</div>
-<a id="a4686db64ee8970c84b269e0425519dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4686db64ee8970c84b269e0425519dec">&#9670;&nbsp;</a></span>clock_gettime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -298,16 +367,16 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a89334ec8cf4db6240c053b931293c8c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89334ec8cf4db6240c053b931293c8c6">&#9670;&nbsp;</a></span>FPAOloopControl_InitializeMemory()</h2>
+<a id="a5b8b2c6fb976edc990a83e12c80caa04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b8b2c6fb976edc990a83e12c80caa04">&#9670;&nbsp;</a></span>FPAOloopControl_InitializeMemory()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long FPAOloopControl_InitializeMemory </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> FPAOloopControl_InitializeMemory </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int&#160;</td>
           <td class="paramname"><em>mode</em></td><td>)</td>
           <td></td>
         </tr>
@@ -316,14 +385,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a46177cd1ce7bc6278075b3ce75ebdadf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46177cd1ce7bc6278075b3ce75ebdadf">&#9670;&nbsp;</a></span>FPAOloopControl_loadconfigure()</h2>
+<a id="aa367162d9c356979d3476a727b239f24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa367162d9c356979d3476a727b239f24">&#9670;&nbsp;</a></span>FPAOloopControl_loadconfigure()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int FPAOloopControl_loadconfigure </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> FPAOloopControl_loadconfigure </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -331,13 +400,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int&#160;</td>
           <td class="paramname"><em>mode</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int&#160;</td>
           <td class="paramname"><em>level</em>&#160;</td>
         </tr>
         <tr>
@@ -350,14 +419,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac64dfaad8cbdb729b2ca4af056704729"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac64dfaad8cbdb729b2ca4af056704729">&#9670;&nbsp;</a></span>FPAOloopControl_loadconfigure_cli()</h2>
+<a id="a97c9ec8842a894bda56ea338922f38f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97c9ec8842a894bda56ea338922f38f2">&#9670;&nbsp;</a></span>FPAOloopControl_loadconfigure_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t FPAOloopControl_loadconfigure_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> FPAOloopControl_loadconfigure_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -419,14 +488,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a50a2d0c7fd0369b8bbfed01c68c2125e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50a2d0c7fd0369b8bbfed01c68c2125e">&#9670;&nbsp;</a></span>FPAOloopControl_MakeLinComb_seq_cli()</h2>
+<a id="a08500087f6911d3d6f9a4d0352029602"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08500087f6911d3d6f9a4d0352029602">&#9670;&nbsp;</a></span>FPAOloopControl_MakeLinComb_seq_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t FPAOloopControl_MakeLinComb_seq_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> FPAOloopControl_MakeLinComb_seq_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -494,14 +563,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab3beb3dbb9f56e2c01f9a7666e33c2cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab3beb3dbb9f56e2c01f9a7666e33c2cd">&#9670;&nbsp;</a></span>FPAOloopControl_MeasureResp_level1_cli()</h2>
+<a id="ae6e3c3f4bfb45759def7c93486079e68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6e3c3f4bfb45759def7c93486079e68">&#9670;&nbsp;</a></span>FPAOloopControl_MeasureResp_level1_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t FPAOloopControl_MeasureResp_level1_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> FPAOloopControl_MeasureResp_level1_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -559,14 +628,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aac6ef230b8d7a2df6e874e9d83cc7961"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac6ef230b8d7a2df6e874e9d83cc7961">&#9670;&nbsp;</a></span>FPAOloopControl_set_hardwlatency_frame_cli()</h2>
+<a id="ad4239db5ea94ab4de00d05eba90aea47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4239db5ea94ab4de00d05eba90aea47">&#9670;&nbsp;</a></span>FPAOloopControl_set_hardwlatency_frame_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t FPAOloopControl_set_hardwlatency_frame_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> FPAOloopControl_set_hardwlatency_frame_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -594,14 +663,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac2098a0f9487aac9be3392c401f1c882"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2098a0f9487aac9be3392c401f1c882">&#9670;&nbsp;</a></span>FPAOloopControl_showparams_cli()</h2>
+<a id="abd7678e62d955085e5ea132404297e37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd7678e62d955085e5ea132404297e37">&#9670;&nbsp;</a></span>FPAOloopControl_showparams_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t FPAOloopControl_showparams_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> FPAOloopControl_showparams_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -611,14 +680,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a055944b50882c0c6dafdfe19881125e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a055944b50882c0c6dafdfe19881125e5">&#9670;&nbsp;</a></span>init_FPAOloopControl()</h2>
+<a id="a6d51c112d1ecfe55d8f3c7447e813e89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d51c112d1ecfe55d8f3c7447e813e89">&#9670;&nbsp;</a></span>init_FPAOloopControl()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int init_FPAOloopControl </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_FPAOloopControl </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -951,28 +1020,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af6926b527b2a1a2fbef0a1ec98426e56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6926b527b2a1a2fbef0a1ec98426e56">&#9670;&nbsp;</a></span>FPWFSdatatype</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int FPWFSdatatype</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="adb9a0466a570c33c3658ba3517c39c28"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adb9a0466a570c33c3658ba3517c39c28">&#9670;&nbsp;</a></span>INITSTATUS_FPAOloopcontrol</h2>
 
@@ -1024,7 +1071,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_082996b6bc4308eb49c6a370502af0d1.html">FPAOloopControl</a></li><li class="navelem"><a class="el" href="FPAOloopControl_8c.html">FPAOloopControl.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

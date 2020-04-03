@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__IOtools__camerainput_8c
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,24 +95,63 @@ $(document).ready(function(){initNavTree('AOloopControl__IOtools__camerainput_8c
 
 <p>Adaptive Optics Control loop engine I/O tools.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__IOtools_8h_source.html">AOloopControl_IOtools/AOloopControl_IOtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_IOtools_camerainput.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__IOtools__camerainput_8c__incl.png" border="0" usemap="#src_2AOloopControl__IOtools_2AOloopControl__IOtools__camerainput_8c" alt=""/></div>
+<map name="src_2AOloopControl__IOtools_2AOloopControl__IOtools__camerainput_8c" id="src_2AOloopControl__IOtools_2AOloopControl__IOtools__camerainput_8c">
+<area shape="rect" id="node5" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="559,109,716,151"/>
+<area shape="rect" id="node22" href="info_8h.html" title="info/info.h" alt="" coords="1281,117,1359,143"/>
+<area shape="rect" id="node23" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="1281,273,1487,300"/>
+<area shape="rect" id="node26" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="2195,348,2365,389"/>
+<area shape="rect" id="node30" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1563,109,1783,151"/>
+<area shape="rect" id="node31" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="1807,117,1950,143"/>
+<area shape="rect" id="node15" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="693,199,915,225"/>
+<area shape="rect" id="node16" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="647,273,751,300"/>
+<area shape="rect" id="node19" href="processtools_8h.html" title="Command line interface. " alt="" coords="277,273,384,300"/>
+<area shape="rect" id="node20" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="777,273,885,300"/>
+<area shape="rect" id="node21" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="379,199,530,225"/>
+<area shape="rect" id="node18" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="621,355,774,382"/>
+<area shape="rect" id="node24" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="1057,348,1253,389"/>
+<area shape="rect" id="node25" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="1277,348,1473,389"/>
+<area shape="rect" id="node27" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="1497,355,1729,382"/>
+<area shape="rect" id="node28" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="1754,348,1950,389"/>
+<area shape="rect" id="node29" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1974,348,2170,389"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad13aee4eff60f6ee2544875f9890770f"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#ad13aee4eff60f6ee2544875f9890770f">AOloopControl_IOtools_camimage_extract2D_sharedmem_loop</a> (const char *in_name, const char *dark_name, const char *out_name, long size_x, long size_y, long xstart, long ystart)</td></tr>
-<tr class="separator:ad13aee4eff60f6ee2544875f9890770f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae528115f70c3ee4537c8c6f374ada43f"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#ae528115f70c3ee4537c8c6f374ada43f">compute_function_imtotal</a> (void *ptr)</td></tr>
-<tr class="separator:ae528115f70c3ee4537c8c6f374ada43f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1c1ad40047b021c8f25ad7ab8ac7f26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#ac1c1ad40047b021c8f25ad7ab8ac7f26">AOloopControl_IOtools_camimage_extract2D_sharedmem_loop</a> (const char *in_name, const char *dark_name, const char *out_name, long size_x, long size_y, long xstart, long ystart)</td></tr>
+<tr class="separator:ac1c1ad40047b021c8f25ad7ab8ac7f26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eceec36ed1bfc8b06679bfe92179408"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a7eceec36ed1bfc8b06679bfe92179408">compute_function_imtotal</a> (<a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) void *ptr)</td></tr>
+<tr class="separator:a7eceec36ed1bfc8b06679bfe92179408"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08adf8f45f2ea29016a5afc556a4de37"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a08adf8f45f2ea29016a5afc556a4de37">compute_function_dark_subtract</a> (void *ptr)</td></tr>
 <tr class="separator:a08adf8f45f2ea29016a5afc556a4de37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acabdeb1b808f786f288e519f4a49968a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#acabdeb1b808f786f288e519f4a49968a">AOcontrolLoop_IOtools_acquireWFSloop_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="memitem:acabdeb1b808f786f288e519f4a49968a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#acabdeb1b808f786f288e519f4a49968a">AOcontrolLoop_IOtools_acquireWFSloop_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="memdesc:acabdeb1b808f786f288e519f4a49968a"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute sum of image pixels  <a href="#acabdeb1b808f786f288e519f4a49968a">More...</a><br /></td></tr>
 <tr class="separator:acabdeb1b808f786f288e519f4a49968a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a710966c30121ceca1d67b79ee3ea8873"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a710966c30121ceca1d67b79ee3ea8873">AOcontrolLoop_IOtools_acquireWFSloop_RUN</a> (char *fpsname)</td></tr>
+<tr class="memitem:a710966c30121ceca1d67b79ee3ea8873"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a710966c30121ceca1d67b79ee3ea8873">AOcontrolLoop_IOtools_acquireWFSloop_RUN</a> (char *fpsname)</td></tr>
 <tr class="separator:a710966c30121ceca1d67b79ee3ea8873"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4673540efeffcc82cdb63b1faa8b73f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a4673540efeffcc82cdb63b1faa8b73f5">AOcontrolLoop_IOtools_acquireWFSloop</a> (long loop)</td></tr>
+<tr class="memitem:a4673540efeffcc82cdb63b1faa8b73f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a4673540efeffcc82cdb63b1faa8b73f5">AOcontrolLoop_IOtools_acquireWFSloop</a> (long loop)</td></tr>
 <tr class="separator:a4673540efeffcc82cdb63b1faa8b73f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bdc387d75a84dd14d5a52b1be16d971"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a3bdc387d75a84dd14d5a52b1be16d971">__attribute__</a> ((hot))</td></tr>
-<tr class="memdesc:a3bdc387d75a84dd14d5a52b1be16d971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read image from WFS camera.  <a href="#a3bdc387d75a84dd14d5a52b1be16d971">More...</a><br /></td></tr>
-<tr class="separator:a3bdc387d75a84dd14d5a52b1be16d971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92e00ad76f2ba4466cdb10c4ea2afc8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a92e00ad76f2ba4466cdb10c4ea2afc8f">__attribute__</a> ((hot))</td></tr>
+<tr class="memdesc:a92e00ad76f2ba4466cdb10c4ea2afc8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read image from WFS camera.  <a href="#a92e00ad76f2ba4466cdb10c4ea2afc8f">More...</a><br /></td></tr>
+<tr class="separator:a92e00ad76f2ba4466cdb10c4ea2afc8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -133,10 +173,10 @@ Variables</h2></td></tr>
 <tr class="separator:a14887f68efaf5fff21debefef45c053a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15bf87225e43ca5f1b9d05b1a14b06c0"><td class="memItemLeft" align="right" valign="top">static char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a15bf87225e43ca5f1b9d05b1a14b06c0">Average_cam_frames_dname</a> [200]</td></tr>
 <tr class="separator:a15bf87225e43ca5f1b9d05b1a14b06c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a282b71a3e6ef11808ffd8bc10c9faf12"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a282b71a3e6ef11808ffd8bc10c9faf12">Average_cam_frames_IDdark</a> = -1</td></tr>
-<tr class="separator:a282b71a3e6ef11808ffd8bc10c9faf12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b11e27293cb519d00bc33ee088bf9af"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a9b11e27293cb519d00bc33ee088bf9af">Average_cam_frames_nelem</a> = 1</td></tr>
-<tr class="separator:a9b11e27293cb519d00bc33ee088bf9af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76b2c233735beba6ee83b1f2fc6e726c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a76b2c233735beba6ee83b1f2fc6e726c">Average_cam_frames_IDdark</a> = -1</td></tr>
+<tr class="separator:a76b2c233735beba6ee83b1f2fc6e726c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae49bb797288568b7c7e91b1e4c9c960a"><td class="memItemLeft" align="right" valign="top">static unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#ae49bb797288568b7c7e91b1e4c9c960a">Average_cam_frames_nelem</a> = 1</td></tr>
+<tr class="separator:ae49bb797288568b7c7e91b1e4c9c960a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8ff4c1042b8a554ff3f671ccbfe6c13"><td class="memItemLeft" align="right" valign="top">static float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#ad8ff4c1042b8a554ff3f671ccbfe6c13">arrayftmp</a></td></tr>
 <tr class="separator:ad8ff4c1042b8a554ff3f671ccbfe6c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59d2ab140fff2f63a38f4704a76fc2ec"><td class="memItemLeft" align="right" valign="top">static struct timespec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html#a59d2ab140fff2f63a38f4704a76fc2ec">tnow</a></td></tr>
@@ -161,15 +201,30 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Adaptive Optics Control loop engine I/O tools. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a3bdc387d75a84dd14d5a52b1be16d971"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bdc387d75a84dd14d5a52b1be16d971">&#9670;&nbsp;</a></span>__attribute__()</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a92e00ad76f2ba4466cdb10c4ea2afc8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92e00ad76f2ba4466cdb10c4ea2afc8f">&#9670;&nbsp;</a></span>__attribute__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(hot)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -179,12 +234,15 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Read image from WFS camera. </p>
+<p>Compute modes in open loop.</p>
 <h2>Purpose</h2>
 <p>Reads WFS image and performs some basic processing</p>
 <p>Outputs are : imWFS0, which is dark-subtracted imWFS1, which is dark-subtracted and normalized, but not reference-subtracted.</p>
 <p>supports ring buffer puts image from camera buffer aoloopcontrol_var.aoconfID_wfsim into aoloopcontrol_var.aoconfID_imWFS1 (supplied by user)</p>
 <p>RM = 1 if response matrix</p>
 <p>if normalize == 1, image is normalized by dividing by (total + AOconf[loop].WFSim.WFSnormfloor)*AOconf[loop].WFSim.WFSsize if PixelStreamMode = 1, read on semaphore 1, return slice index </p>
+<h3>STEP 1: Setting up</h3>
+<p>Load arrays</p>
 
 </div>
 </div>
@@ -195,7 +253,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_IOtools_acquireWFSloop </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_IOtools_acquireWFSloop </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em></td><td>)</td>
@@ -213,7 +271,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_IOtools_acquireWFSloop_FPCONF </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_IOtools_acquireWFSloop_FPCONF </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>fpsname</em>, </td>
@@ -232,6 +290,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>compute sum of image pixels </p>
+<p>Subtract dark </p>
+
 </div>
 </div>
 <a id="a710966c30121ceca1d67b79ee3ea8873"></a>
@@ -241,7 +302,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_IOtools_acquireWFSloop_RUN </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_IOtools_acquireWFSloop_RUN </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>fpsname</em></td><td>)</td>
@@ -252,14 +313,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad13aee4eff60f6ee2544875f9890770f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad13aee4eff60f6ee2544875f9890770f">&#9670;&nbsp;</a></span>AOloopControl_IOtools_camimage_extract2D_sharedmem_loop()</h2>
+<a id="ac1c1ad40047b021c8f25ad7ab8ac7f26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1c1ad40047b021c8f25ad7ab8ac7f26">&#9670;&nbsp;</a></span>AOloopControl_IOtools_camimage_extract2D_sharedmem_loop()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_IOtools_camimage_extract2D_sharedmem_loop </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>in_name</em>, </td>
@@ -336,8 +397,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae528115f70c3ee4537c8c6f374ada43f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae528115f70c3ee4537c8c6f374ada43f">&#9670;&nbsp;</a></span>compute_function_imtotal()</h2>
+<a id="a7eceec36ed1bfc8b06679bfe92179408"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7eceec36ed1bfc8b06679bfe92179408">&#9670;&nbsp;</a></span>compute_function_imtotal()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -348,7 +409,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">static void* compute_function_imtotal </td>
           <td>(</td>
-          <td class="paramtype">void *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) void *&#160;</td>
           <td class="paramname"><em>ptr</em></td><td>)</td>
           <td></td>
         </tr>
@@ -613,8 +674,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a282b71a3e6ef11808ffd8bc10c9faf12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a282b71a3e6ef11808ffd8bc10c9faf12">&#9670;&nbsp;</a></span>Average_cam_frames_IDdark</h2>
+<a id="a76b2c233735beba6ee83b1f2fc6e726c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76b2c233735beba6ee83b1f2fc6e726c">&#9670;&nbsp;</a></span>Average_cam_frames_IDdark</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -623,7 +684,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">long Average_cam_frames_IDdark = -1</td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> Average_cam_frames_IDdark = -1</td>
         </tr>
       </table>
   </td>
@@ -635,8 +696,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9b11e27293cb519d00bc33ee088bf9af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b11e27293cb519d00bc33ee088bf9af">&#9670;&nbsp;</a></span>Average_cam_frames_nelem</h2>
+<a id="ae49bb797288568b7c7e91b1e4c9c960a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae49bb797288568b7c7e91b1e4c9c960a">&#9670;&nbsp;</a></span>Average_cam_frames_nelem</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -645,7 +706,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">long Average_cam_frames_nelem = 1</td>
+          <td class="memname">unsigned long Average_cam_frames_nelem = 1</td>
         </tr>
       </table>
   </td>
@@ -810,7 +871,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d2349ba0799e0b6b9785371f379b7b3a.html">AOloopControl_IOtools</a></li><li class="navelem"><a class="el" href="AOloopControl__IOtools__camerainput_8c.html">AOloopControl_IOtools_camerainput.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

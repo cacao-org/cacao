@@ -94,17 +94,46 @@ $(document).ready(function(){initNavTree('AOloopControl__DM__turbusimul_8c.html'
 
 <p>DM control.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;sys/file.h&gt;</code><br />
+<code>#include &lt;sys/mman.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__DM_8h_source.html">AOloopControl_DM/AOloopControl_DM.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__gen_8h_source.html">image_gen/image_gen.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__filter_8h_source.html">image_filter/image_filter.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__basic_8h_source.html">image_basic/image_basic.h</a>&quot;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_DM_turbusimul.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__DM__turbusimul_8c__incl.png" border="0" usemap="#src_2AOloopControl__DM_2AOloopControl__DM__turbusimul_8c" alt=""/></div>
+<map name="src_2AOloopControl__DM_2AOloopControl__DM__turbusimul_8c" id="src_2AOloopControl__DM_2AOloopControl__DM__turbusimul_8c">
+<area shape="rect" id="node5" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="694,95,851,136"/>
+<area shape="rect" id="node23" href="AOloopControl__DM_8h.html" title="AOloopControl_DM/AOloopControl_DM.h" alt="" coords="1126,102,1389,129"/>
+<area shape="rect" id="node24" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1413,95,1633,136"/>
+<area shape="rect" id="node25" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="1657,95,1858,136"/>
+<area shape="rect" id="node26" href="image__gen_8h.html" title="image_gen/image_gen.h" alt="" coords="1883,102,2046,129"/>
+<area shape="rect" id="node27" href="image__filter_8h.html" title="image_filter/image\l_filter.h" alt="" coords="2070,95,2198,136"/>
+<area shape="rect" id="node28" href="image__basic_8h.html" title="image_basic/image_basic.h" alt="" coords="2222,102,2405,129"/>
+<area shape="rect" id="node16" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="408,184,630,211"/>
+<area shape="rect" id="node17" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="438,259,542,285"/>
+<area shape="rect" id="node20" href="processtools_8h.html" title="Command line interface. " alt="" coords="307,259,414,285"/>
+<area shape="rect" id="node21" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="22,259,130,285"/>
+<area shape="rect" id="node22" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="949,184,1100,211"/>
+<area shape="rect" id="node19" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="532,333,685,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__turbusimul_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a785634c9c05b2dd28876dc7270eb53d9"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__turbusimul_8c.html#a785634c9c05b2dd28876dc7270eb53d9">AOloopControl_printDMturbconf</a> ()</td></tr>
-<tr class="separator:a785634c9c05b2dd28876dc7270eb53d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa47c0bcf181141f7016422c4c96c9c23"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__turbusimul_8c.html#aa47c0bcf181141f7016422c4c96c9c23">AOloopControl_DMturb_createconf</a> ()</td></tr>
-<tr class="separator:aa47c0bcf181141f7016422c4c96c9c23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6b6021b0015f3237c9cbab0b27f2dc7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__turbusimul_8c.html#aa6b6021b0015f3237c9cbab0b27f2dc7">AOloopControl_DMturb_loadconf</a> (long DMindex)</td></tr>
-<tr class="separator:aa6b6021b0015f3237c9cbab0b27f2dc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88a0b95a5714e4f187b32082f413d566"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__turbusimul_8c.html#a88a0b95a5714e4f187b32082f413d566">AOloopControl_printDMturbconf</a> ()</td></tr>
+<tr class="separator:a88a0b95a5714e4f187b32082f413d566"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9909d269d623fc0c15d340512d2d1233"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__turbusimul_8c.html#a9909d269d623fc0c15d340512d2d1233">AOloopControl_DMturb_createconf</a> ()</td></tr>
+<tr class="separator:a9909d269d623fc0c15d340512d2d1233"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a159c56d02bfe1d87099f14c01b9099ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__turbusimul_8c.html#a159c56d02bfe1d87099f14c01b9099ec">AOloopControl_DMturb_loadconf</a> ()</td></tr>
+<tr class="separator:a159c56d02bfe1d87099f14c01b9099ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a753ddc180adc194137d12c87beccfd7a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__turbusimul_8c.html#a753ddc180adc194137d12c87beccfd7a">AOloopControl_DM_dmturboff</a> (long DMindex)</td></tr>
 <tr class="separator:a753ddc180adc194137d12c87beccfd7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68344f64ce3863aa1b64fc8b091f8823"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__turbusimul_8c.html#a68344f64ce3863aa1b64fc8b091f8823">AOloopControl_DM_dmturb_wspeed</a> (long DMindex, double wspeed)</td></tr>
@@ -139,9 +168,7 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>DM control. </p>
-<p>To be used for AOloopControl module</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>10 Jul 2017 </dd></dl>
+<p>To be used for AOloopControl module </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a08fe6f8f2374edcc371510574c629e44"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a08fe6f8f2374edcc371510574c629e44">&#9670;&nbsp;</a></span>AOloopControl_DM_dmturb()</h2>
@@ -331,14 +358,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa47c0bcf181141f7016422c4c96c9c23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa47c0bcf181141f7016422c4c96c9c23">&#9670;&nbsp;</a></span>AOloopControl_DMturb_createconf()</h2>
+<a id="a9909d269d623fc0c15d340512d2d1233"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9909d269d623fc0c15d340512d2d1233">&#9670;&nbsp;</a></span>AOloopControl_DMturb_createconf()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int AOloopControl_DMturb_createconf </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DMturb_createconf </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -348,32 +375,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa6b6021b0015f3237c9cbab0b27f2dc7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6b6021b0015f3237c9cbab0b27f2dc7">&#9670;&nbsp;</a></span>AOloopControl_DMturb_loadconf()</h2>
+<a id="a159c56d02bfe1d87099f14c01b9099ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a159c56d02bfe1d87099f14c01b9099ec">&#9670;&nbsp;</a></span>AOloopControl_DMturb_loadconf()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int AOloopControl_DMturb_loadconf </td>
-          <td>(</td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>DMindex</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a785634c9c05b2dd28876dc7270eb53d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a785634c9c05b2dd28876dc7270eb53d9">&#9670;&nbsp;</a></span>AOloopControl_printDMturbconf()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int_fast8_t AOloopControl_printDMturbconf </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DMturb_loadconf </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -383,28 +392,17 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a4686db64ee8970c84b269e0425519dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4686db64ee8970c84b269e0425519dec">&#9670;&nbsp;</a></span>clock_gettime()</h2>
+<a id="a88a0b95a5714e4f187b32082f413d566"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88a0b95a5714e4f187b32082f413d566">&#9670;&nbsp;</a></span>AOloopControl_printDMturbconf()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int clock_gettime </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_printDMturbconf </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -517,7 +515,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_faeaff7292dc281c383047bdabe06a0d.html">AOloopControl_DM</a></li><li class="navelem"><a class="el" href="AOloopControl__DM__turbusimul_8c.html">AOloopControl_DM_turbusimul.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

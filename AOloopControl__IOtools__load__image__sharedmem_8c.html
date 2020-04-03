@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__IOtools__load__image__s
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_IOtools_load_image_sharedmem.c File Reference</div>  </div>
@@ -93,57 +94,57 @@ $(document).ready(function(){initNavTree('AOloopControl__IOtools__load__image__s
 
 <p>Adaptive Optics Control loop engine I/O tools.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;string.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__IOtools_8h_source.html">AOloopControl_IOtools/AOloopControl_IOtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_IOtools_load_image_sharedmem.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__IOtools__load__image__sharedmem_8c__incl.png" border="0" usemap="#src_2AOloopControl__IOtools_2AOloopControl__IOtools__load__image__sharedmem_8c" alt=""/></div>
+<map name="src_2AOloopControl__IOtools_2AOloopControl__IOtools__load__image__sharedmem_8c" id="src_2AOloopControl__IOtools_2AOloopControl__IOtools__load__image__sharedmem_8c">
+<area shape="rect" id="node3" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1666,109,1823,151"/>
+<area shape="rect" id="node21" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="895,273,1101,300"/>
+<area shape="rect" id="node24" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="1143,348,1314,389"/>
+<area shape="rect" id="node28" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1848,109,2068,151"/>
+<area shape="rect" id="node29" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2092,109,2293,151"/>
+<area shape="rect" id="node30" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2317,117,2460,143"/>
+<area shape="rect" id="node14" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1278,199,1499,225"/>
+<area shape="rect" id="node15" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1642,273,1746,300"/>
+<area shape="rect" id="node18" href="processtools_8h.html" title="Command line interface. " alt="" coords="2003,273,2110,300"/>
+<area shape="rect" id="node19" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="2135,273,2243,300"/>
+<area shape="rect" id="node20" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1869,199,2020,225"/>
+<area shape="rect" id="node17" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1543,355,1696,382"/>
+<area shape="rect" id="node22" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="923,348,1119,389"/>
+<area shape="rect" id="node23" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="5,348,201,389"/>
+<area shape="rect" id="node25" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="226,355,458,382"/>
+<area shape="rect" id="node26" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="483,348,679,389"/>
+<area shape="rect" id="node27" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="703,348,899,389"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_IOtools - 2. LOAD DATA STREAMS</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Load 2D and 3D shared memory images </p>
 </div></td></tr>
-<tr class="memitem:a6d1f06e26db9722ba9ab011277d1e671"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a6d1f06e26db9722ba9ab011277d1e671">AOloopControl_IOtools_2Dloadcreate_shmim</a> (const char *name, const char *fname, long xsize, long ysize, float DefaultValue)</td></tr>
-<tr class="memdesc:a6d1f06e26db9722ba9ab011277d1e671"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load 2D image in shared memory.  <a href="#a6d1f06e26db9722ba9ab011277d1e671">More...</a><br /></td></tr>
-<tr class="separator:a6d1f06e26db9722ba9ab011277d1e671"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a4f7d5042ff9d58b43ba2c63b48fa8e"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a8a4f7d5042ff9d58b43ba2c63b48fa8e">AOloopControl_IOtools_3Dloadcreate_shmim</a> (const char *name, const char *fname, long xsize, long ysize, long zsize, float DefaultValue)</td></tr>
-<tr class="memdesc:a8a4f7d5042ff9d58b43ba2c63b48fa8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load 3D image in shared memory.  <a href="#a8a4f7d5042ff9d58b43ba2c63b48fa8e">More...</a><br /></td></tr>
-<tr class="separator:a8a4f7d5042ff9d58b43ba2c63b48fa8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a311396b55ad7fb71d59ad668125a4bf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a311396b55ad7fb71d59ad668125a4bf8">AOloopControl_IOtools_2Dloadcreate_shmim</a> (const char *name, const char *fname, long xsize, long ysize, float DefaultValue)</td></tr>
+<tr class="memdesc:a311396b55ad7fb71d59ad668125a4bf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load 2D image in shared memory.  <a href="#a311396b55ad7fb71d59ad668125a4bf8">More...</a><br /></td></tr>
+<tr class="separator:a311396b55ad7fb71d59ad668125a4bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94204d20f9397579836c285644c1bd8a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a94204d20f9397579836c285644c1bd8a">AOloopControl_IOtools_3Dloadcreate_shmim</a> (const char *name, const char *fname, long xsize, long ysize, long zsize, float DefaultValue)</td></tr>
+<tr class="memdesc:a94204d20f9397579836c285644c1bd8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load 3D image in shared memory.  <a href="#a94204d20f9397579836c285644c1bd8a">More...</a><br /></td></tr>
+<tr class="separator:a94204d20f9397579836c285644c1bd8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a8458f462ccc6c456caefc1b12d97a221"><td class="memItemLeft" align="right" valign="top">static sem_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a8458f462ccc6c456caefc1b12d97a221">AOLCOMPUTE_TOTAL_ASYNC_sem_name</a></td></tr>
-<tr class="separator:a8458f462ccc6c456caefc1b12d97a221"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41033a357e6354f03b158d4bae04c81b"><td class="memItemLeft" align="right" valign="top">static long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a41033a357e6354f03b158d4bae04c81b">imtotalcnt</a></td></tr>
-<tr class="separator:a41033a357e6354f03b158d4bae04c81b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dd0e30a4129989217eb9b3b2ed25187"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a1dd0e30a4129989217eb9b3b2ed25187">AOLCOMPUTE_DARK_SUBTRACT_THREADinit</a> = 0</td></tr>
-<tr class="separator:a1dd0e30a4129989217eb9b3b2ed25187"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae11bc2d35bec63a0a0d850064022ff9f"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#ae11bc2d35bec63a0a0d850064022ff9f">COMPUTE_DARK_SUBTRACT_NBTHREADS</a> = 1</td></tr>
-<tr class="separator:ae11bc2d35bec63a0a0d850064022ff9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bc4b02c2021c0bcd0bf7c0ef8a1316e"><td class="memItemLeft" align="right" valign="top">static sem_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a2bc4b02c2021c0bcd0bf7c0ef8a1316e">AOLCOMPUTE_DARK_SUBTRACT_sem_name</a> [32]</td></tr>
-<tr class="separator:a2bc4b02c2021c0bcd0bf7c0ef8a1316e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a517aeb04849ec7ca55a2f17a0ed39dc2"><td class="memItemLeft" align="right" valign="top">static sem_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a517aeb04849ec7ca55a2f17a0ed39dc2">AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name</a> [32]</td></tr>
-<tr class="separator:a517aeb04849ec7ca55a2f17a0ed39dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff4e5acd229f86129440961b3272ae52"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#aff4e5acd229f86129440961b3272ae52">avcamarraysInit</a> = 0</td></tr>
-<tr class="separator:aff4e5acd229f86129440961b3272ae52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac39858ce68e2199bae5b1e5669cd12f6"><td class="memItemLeft" align="right" valign="top">static unsigned short *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#ac39858ce68e2199bae5b1e5669cd12f6">arrayutmp</a></td></tr>
-<tr class="separator:ac39858ce68e2199bae5b1e5669cd12f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15bf87225e43ca5f1b9d05b1a14b06c0"><td class="memItemLeft" align="right" valign="top">static char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a15bf87225e43ca5f1b9d05b1a14b06c0">Average_cam_frames_dname</a> [200]</td></tr>
-<tr class="separator:a15bf87225e43ca5f1b9d05b1a14b06c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a282b71a3e6ef11808ffd8bc10c9faf12"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a282b71a3e6ef11808ffd8bc10c9faf12">Average_cam_frames_IDdark</a> = -1</td></tr>
-<tr class="separator:a282b71a3e6ef11808ffd8bc10c9faf12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b11e27293cb519d00bc33ee088bf9af"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a9b11e27293cb519d00bc33ee088bf9af">Average_cam_frames_nelem</a> = 1</td></tr>
-<tr class="separator:a9b11e27293cb519d00bc33ee088bf9af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8ff4c1042b8a554ff3f671ccbfe6c13"><td class="memItemLeft" align="right" valign="top">static float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#ad8ff4c1042b8a554ff3f671ccbfe6c13">arrayftmp</a></td></tr>
-<tr class="separator:ad8ff4c1042b8a554ff3f671ccbfe6c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59d2ab140fff2f63a38f4704a76fc2ec"><td class="memItemLeft" align="right" valign="top">static struct timespec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a59d2ab140fff2f63a38f4704a76fc2ec">tnow</a></td></tr>
-<tr class="separator:a59d2ab140fff2f63a38f4704a76fc2ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68e5522665259f4ae254e3bf493c4b18"><td class="memItemLeft" align="right" valign="top">static struct timespec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a68e5522665259f4ae254e3bf493c4b18">tdiff</a></td></tr>
-<tr class="separator:a68e5522665259f4ae254e3bf493c4b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad53086470a2fb4c9e57b950bef50e2c0"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#ad53086470a2fb4c9e57b950bef50e2c0">tdiffv</a></td></tr>
-<tr class="separator:ad53086470a2fb4c9e57b950bef50e2c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05a0158ad83e91489f1c4c831da613d3"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a05a0158ad83e91489f1c4c831da613d3">ti</a></td></tr>
-<tr class="separator:a05a0158ad83e91489f1c4c831da613d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a098842eda9bb99e89b988c597457047b"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a098842eda9bb99e89b988c597457047b">AOLCOMPUTE_TOTAL_ASYNC_THREADinit</a> = 0</td></tr>
-<tr class="separator:a098842eda9bb99e89b988c597457047b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96cee5d0f6b5e68e80b4191a60083dc5"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a96cee5d0f6b5e68e80b4191a60083dc5">AOLCOMPUTE_TOTAL_INIT</a> = 0</td></tr>
-<tr class="separator:a96cee5d0f6b5e68e80b4191a60083dc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc4d319c21df38d7e771591b6934a836"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#afc4d319c21df38d7e771591b6934a836">LOOPNUMBER</a></td></tr>
 <tr class="separator:afc4d319c21df38d7e771591b6934a836"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f96203c41ad50bad5dd1604a5c069a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAOLOOPCONTROL__CONF.html">AOLOOPCONTROL_CONF</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a1f96203c41ad50bad5dd1604a5c069a8">AOconf</a></td></tr>
@@ -151,20 +152,38 @@ Variables</h2></td></tr>
 <tr class="separator:a1f96203c41ad50bad5dd1604a5c069a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a549e693c8df5c527e5e6c9b6508749ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAOloopControl__var.html">AOloopControl_var</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a549e693c8df5c527e5e6c9b6508749ca">aoloopcontrol_var</a></td></tr>
 <tr class="separator:a549e693c8df5c527e5e6c9b6508749ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf72f213eb3c9694c75a9ea54ddb4b4c"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#aaf72f213eb3c9694c75a9ea54ddb4b4c">loadcreateshm_log</a> = 0</td></tr>
+<tr class="separator:aaf72f213eb3c9694c75a9ea54ddb4b4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10851f6142513c8b1b074d564acaeeea"><td class="memItemLeft" align="right" valign="top">static FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html#a10851f6142513c8b1b074d564acaeeea">loadcreateshm_fplog</a></td></tr>
+<tr class="separator:a10851f6142513c8b1b074d564acaeeea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Adaptive Optics Control loop engine I/O tools. </p>
-<p>AO engine uses stream data structure</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000058">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a6d1f06e26db9722ba9ab011277d1e671"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d1f06e26db9722ba9ab011277d1e671">&#9670;&nbsp;</a></span>AOloopControl_IOtools_2Dloadcreate_shmim()</h2>
+<p>AO engine uses stream data structure </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_IOtools_2Dloadcreate_shmim </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a311396b55ad7fb71d59ad668125a4bf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a311396b55ad7fb71d59ad668125a4bf8">&#9670;&nbsp;</a></span>AOloopControl_IOtools_2Dloadcreate_shmim()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> AOloopControl_IOtools_2Dloadcreate_shmim </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>name</em>, </td>
@@ -202,19 +221,19 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Load 2D image in shared memory. </p>
-<p>Implements stream loading policy with optional check on size for 2D images. See CLIcore.h for policy details.</p>
+<p>Implements stream loading policy with optional check on size for 2D images. See <a class="el" href="CLIcore_8h.html" title="Command line interface. ">CLIcore.h</a> for policy details.</p>
 <p>(1) If image already in local memory, and has correct size, upload FITS file to existing array, go to (END-success), otherwise, go to (2) (2) If image already in local memory, but size does not match, go to (END-fail), otherwise, go to (3) (3) Load FITS image to local memory </p>
 
 </div>
 </div>
-<a id="a8a4f7d5042ff9d58b43ba2c63b48fa8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a4f7d5042ff9d58b43ba2c63b48fa8e">&#9670;&nbsp;</a></span>AOloopControl_IOtools_3Dloadcreate_shmim()</h2>
+<a id="a94204d20f9397579836c285644c1bd8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94204d20f9397579836c285644c1bd8a">&#9670;&nbsp;</a></span>AOloopControl_IOtools_3Dloadcreate_shmim()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_IOtools_3Dloadcreate_shmim </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> AOloopControl_IOtools_3Dloadcreate_shmim </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>name</em>, </td>
@@ -278,138 +297,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a517aeb04849ec7ca55a2f17a0ed39dc2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a517aeb04849ec7ca55a2f17a0ed39dc2">&#9670;&nbsp;</a></span>AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">sem_t AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[32]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2bc4b02c2021c0bcd0bf7c0ef8a1316e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2bc4b02c2021c0bcd0bf7c0ef8a1316e">&#9670;&nbsp;</a></span>AOLCOMPUTE_DARK_SUBTRACT_sem_name</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">sem_t AOLCOMPUTE_DARK_SUBTRACT_sem_name[32]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1dd0e30a4129989217eb9b3b2ed25187"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1dd0e30a4129989217eb9b3b2ed25187">&#9670;&nbsp;</a></span>AOLCOMPUTE_DARK_SUBTRACT_THREADinit</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int AOLCOMPUTE_DARK_SUBTRACT_THREADinit = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8458f462ccc6c456caefc1b12d97a221"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8458f462ccc6c456caefc1b12d97a221">&#9670;&nbsp;</a></span>AOLCOMPUTE_TOTAL_ASYNC_sem_name</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">sem_t AOLCOMPUTE_TOTAL_ASYNC_sem_name</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a098842eda9bb99e89b988c597457047b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a098842eda9bb99e89b988c597457047b">&#9670;&nbsp;</a></span>AOLCOMPUTE_TOTAL_ASYNC_THREADinit</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int AOLCOMPUTE_TOTAL_ASYNC_THREADinit = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a96cee5d0f6b5e68e80b4191a60083dc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96cee5d0f6b5e68e80b4191a60083dc5">&#9670;&nbsp;</a></span>AOLCOMPUTE_TOTAL_INIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int AOLCOMPUTE_TOTAL_INIT = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a549e693c8df5c527e5e6c9b6508749ca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a549e693c8df5c527e5e6c9b6508749ca">&#9670;&nbsp;</a></span>aoloopcontrol_var</h2>
 
@@ -424,8 +311,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad8ff4c1042b8a554ff3f671ccbfe6c13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8ff4c1042b8a554ff3f671ccbfe6c13">&#9670;&nbsp;</a></span>arrayftmp</h2>
+<a id="a10851f6142513c8b1b074d564acaeeea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10851f6142513c8b1b074d564acaeeea">&#9670;&nbsp;</a></span>loadcreateshm_fplog</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -434,7 +321,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">float* arrayftmp</td>
+          <td class="memname">FILE* loadcreateshm_fplog</td>
         </tr>
       </table>
   </td>
@@ -446,8 +333,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac39858ce68e2199bae5b1e5669cd12f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac39858ce68e2199bae5b1e5669cd12f6">&#9670;&nbsp;</a></span>arrayutmp</h2>
+<a id="aaf72f213eb3c9694c75a9ea54ddb4b4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf72f213eb3c9694c75a9ea54ddb4b4c">&#9670;&nbsp;</a></span>loadcreateshm_log</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -456,139 +343,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned short* arrayutmp</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aff4e5acd229f86129440961b3272ae52"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff4e5acd229f86129440961b3272ae52">&#9670;&nbsp;</a></span>avcamarraysInit</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int avcamarraysInit = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a15bf87225e43ca5f1b9d05b1a14b06c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15bf87225e43ca5f1b9d05b1a14b06c0">&#9670;&nbsp;</a></span>Average_cam_frames_dname</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">char Average_cam_frames_dname[200]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a282b71a3e6ef11808ffd8bc10c9faf12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a282b71a3e6ef11808ffd8bc10c9faf12">&#9670;&nbsp;</a></span>Average_cam_frames_IDdark</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">long Average_cam_frames_IDdark = -1</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9b11e27293cb519d00bc33ee088bf9af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b11e27293cb519d00bc33ee088bf9af">&#9670;&nbsp;</a></span>Average_cam_frames_nelem</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">long Average_cam_frames_nelem = 1</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae11bc2d35bec63a0a0d850064022ff9f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae11bc2d35bec63a0a0d850064022ff9f">&#9670;&nbsp;</a></span>COMPUTE_DARK_SUBTRACT_NBTHREADS</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int COMPUTE_DARK_SUBTRACT_NBTHREADS = 1</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a41033a357e6354f03b158d4bae04c81b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41033a357e6354f03b158d4bae04c81b">&#9670;&nbsp;</a></span>imtotalcnt</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">long long imtotalcnt</td>
+          <td class="memname">int loadcreateshm_log = 0</td>
         </tr>
       </table>
   </td>
@@ -614,94 +369,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a68e5522665259f4ae254e3bf493c4b18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68e5522665259f4ae254e3bf493c4b18">&#9670;&nbsp;</a></span>tdiff</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct timespec tdiff</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad53086470a2fb4c9e57b950bef50e2c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad53086470a2fb4c9e57b950bef50e2c0">&#9670;&nbsp;</a></span>tdiffv</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double tdiffv</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a05a0158ad83e91489f1c4c831da613d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05a0158ad83e91489f1c4c831da613d3">&#9670;&nbsp;</a></span>ti</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">long ti</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a59d2ab140fff2f63a38f4704a76fc2ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59d2ab140fff2f63a38f4704a76fc2ec">&#9670;&nbsp;</a></span>tnow</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct timespec tnow</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.13-->
@@ -709,7 +376,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d2349ba0799e0b6b9785371f379b7b3a.html">AOloopControl_IOtools</a></li><li class="navelem"><a class="el" href="AOloopControl__IOtools__load__image__sharedmem_8c.html">AOloopControl_IOtools_load_image_sharedmem.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

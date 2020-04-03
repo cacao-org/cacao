@@ -25,7 +25,7 @@ var structRTstreamLOG =
     [ "NBFileBuffer", "structRTstreamLOG.html#a370fa6bf370217584bbe8029f59dff7f", null ],
     [ "ON", "structRTstreamLOG.html#a772e88b5e7a3708732629f8d1a5b2c16", null ],
     [ "save", "structRTstreamLOG.html#a32c422c67ea009ea5097e4eacfc757b6", null ],
-    [ "SIZE", "structRTstreamLOG.html#a7f4691136c4da62bcb875537e435c8e2", null ],
+    [ "SIZE", "structRTstreamLOG.html#aef77897829d7decd3850d5772edb7df8", null ],
     [ "srcptr", "structRTstreamLOG.html#abdb3056449a4f90fbd91b20c98da9250", null ],
     [ "tActive", "structRTstreamLOG.html#aacbf8b05379fa6de243412defff7d218", null ],
     [ "timestring", "structRTstreamLOG.html#aedd9114286ababff64838f77385d62f2", null ],

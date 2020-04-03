@@ -94,15 +94,35 @@ $(document).ready(function(){initNavTree('AOloopControl__DM__init_8c.html','');}
 
 <p>DM control.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;sys/mman.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__DM_8h_source.html">AOloopControl_DM/AOloopControl_DM.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_DM_init.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__DM__init_8c__incl.png" border="0" usemap="#src_2AOloopControl__DM_2AOloopControl__DM__init_8c" alt=""/></div>
+<map name="src_2AOloopControl__DM_2AOloopControl__DM__init_8c" id="src_2AOloopControl__DM_2AOloopControl__DM__init_8c">
+<area shape="rect" id="node5" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="581,95,738,136"/>
+<area shape="rect" id="node23" href="AOloopControl__DM_8h.html" title="AOloopControl_DM/AOloopControl_DM.h" alt="" coords="763,102,1025,129"/>
+<area shape="rect" id="node16" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="249,184,470,211"/>
+<area shape="rect" id="node17" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="322,259,426,285"/>
+<area shape="rect" id="node20" href="processtools_8h.html" title="Command line interface. " alt="" coords="515,259,622,285"/>
+<area shape="rect" id="node21" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="65,259,173,285"/>
+<area shape="rect" id="node22" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1144,184,1295,211"/>
+<area shape="rect" id="node19" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="271,333,424,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae45b5a023f5925091f6a9b6c742b6004"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__init_8c.html#ae45b5a023f5925091f6a9b6c742b6004">AOloopControl_DM_createconf</a> ()</td></tr>
-<tr class="separator:ae45b5a023f5925091f6a9b6c742b6004"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31da92d4a1d8be89f224a5dedaf7da86"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__init_8c.html#a31da92d4a1d8be89f224a5dedaf7da86">AOloopControl_DM_loadconf</a> ()</td></tr>
-<tr class="separator:a31da92d4a1d8be89f224a5dedaf7da86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5bde04cbad9f03840a40acabff1e9a2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__init_8c.html#ac5bde04cbad9f03840a40acabff1e9a2">AOloopControl_DM_unloadconf</a> ()</td></tr>
-<tr class="separator:ac5bde04cbad9f03840a40acabff1e9a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc083e3c014f9597acae35fe85151045"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__init_8c.html#afc083e3c014f9597acae35fe85151045">AOloopControl_DM_createconf</a> ()</td></tr>
+<tr class="separator:afc083e3c014f9597acae35fe85151045"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a829577b69cd95d1f41b1699623e00368"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__init_8c.html#a829577b69cd95d1f41b1699623e00368">AOloopControl_DM_loadconf</a> ()</td></tr>
+<tr class="separator:a829577b69cd95d1f41b1699623e00368"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a14a9359adaa60bd6130a157ce2901b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__init_8c.html#a5a14a9359adaa60bd6130a157ce2901b">AOloopControl_DM_unloadconf</a> ()</td></tr>
+<tr class="separator:a5a14a9359adaa60bd6130a157ce2901b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -125,8 +145,8 @@ Variables</h2></td></tr>
 <div class="textblock"><p>DM control. </p>
 <p>To be used for AOloopControl module </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="ae45b5a023f5925091f6a9b6c742b6004"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae45b5a023f5925091f6a9b6c742b6004">&#9670;&nbsp;</a></span>AOloopControl_DM_createconf()</h2>
+<a id="afc083e3c014f9597acae35fe85151045"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc083e3c014f9597acae35fe85151045">&#9670;&nbsp;</a></span>AOloopControl_DM_createconf()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -135,7 +155,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static int AOloopControl_DM_createconf </td>
+          <td class="memname">static <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DM_createconf </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -150,14 +170,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a31da92d4a1d8be89f224a5dedaf7da86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31da92d4a1d8be89f224a5dedaf7da86">&#9670;&nbsp;</a></span>AOloopControl_DM_loadconf()</h2>
+<a id="a829577b69cd95d1f41b1699623e00368"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a829577b69cd95d1f41b1699623e00368">&#9670;&nbsp;</a></span>AOloopControl_DM_loadconf()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int AOloopControl_DM_loadconf </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DM_loadconf </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -167,14 +187,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac5bde04cbad9f03840a40acabff1e9a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5bde04cbad9f03840a40acabff1e9a2">&#9670;&nbsp;</a></span>AOloopControl_DM_unloadconf()</h2>
+<a id="a5a14a9359adaa60bd6130a157ce2901b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a14a9359adaa60bd6130a157ce2901b">&#9670;&nbsp;</a></span>AOloopControl_DM_unloadconf()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int AOloopControl_DM_unloadconf </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_DM_unloadconf </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -290,7 +310,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_faeaff7292dc281c383047bdabe06a0d.html">AOloopControl_DM</a></li><li class="navelem"><a class="el" href="AOloopControl__DM__init_8c.html">AOloopControl_DM_init.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

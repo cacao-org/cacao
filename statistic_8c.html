@@ -94,7 +94,35 @@ $(document).ready(function(){initNavTree('statistic_8c.html','');});
 
 <p>statistical tools module  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_randist.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="statistic_8h_source.html">statistic/statistic.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for statistic.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="statistic_8c__incl.png" border="0" usemap="#src_2statistic_2statistic_8c" alt=""/></div>
+<map name="src_2statistic_2statistic_8c" id="src_2statistic_2statistic_8c">
+<area shape="rect" id="node9" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="495,80,652,121"/>
+<area shape="rect" id="node23" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="1598,87,1741,114"/>
+<area shape="rect" id="node24" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1765,80,1985,121"/>
+<area shape="rect" id="node25" href="statistic_8h.html" title="Function prototypes for statistic module. " alt="" coords="2009,87,2138,114"/>
+<area shape="rect" id="node17" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="719,169,940,196"/>
+<area shape="rect" id="node18" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="717,244,821,271"/>
+<area shape="rect" id="node20" href="processtools_8h.html" title="Command line interface. " alt="" coords="451,244,557,271"/>
+<area shape="rect" id="node21" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="995,244,1103,271"/>
+<area shape="rect" id="node22" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="442,169,593,196"/>
+<area shape="rect" id="node19" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="746,319,899,345"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structBIRCHCF.html">BIRCHCF</a></td></tr>
@@ -103,16 +131,16 @@ Data Structures</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">CLI bindings</div></td></tr>
-<tr class="memitem:a5536f4a98e2970428387fa813e11c448"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#a5536f4a98e2970428387fa813e11c448">statistic_putphnoise_cli</a> ()</td></tr>
-<tr class="separator:a5536f4a98e2970428387fa813e11c448"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42f79098f976305090856a56430e7bcd"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#a42f79098f976305090856a56430e7bcd">statistic_putgaussnoise_cli</a> ()</td></tr>
-<tr class="separator:a42f79098f976305090856a56430e7bcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32187e71ed001ada3538f2bd59d3a022"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#a32187e71ed001ada3538f2bd59d3a022">statistic_putphnoise_cli</a> ()</td></tr>
+<tr class="separator:a32187e71ed001ada3538f2bd59d3a022"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae926f171901fff8bcd28674932788c00"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#ae926f171901fff8bcd28674932788c00">statistic_putgaussnoise_cli</a> ()</td></tr>
+<tr class="separator:ae926f171901fff8bcd28674932788c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Module initialization</div></td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c83a0d35322da145d178da2f9ec4889"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#a9c83a0d35322da145d178da2f9ec4889">init_statistic</a> ()</td></tr>
-<tr class="separator:a9c83a0d35322da145d178da2f9ec4889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afaa980ca2342ea27842aa2b0eed53c9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#afaa980ca2342ea27842aa2b0eed53c9c">init_statistic</a> ()</td></tr>
+<tr class="separator:afaa980ca2342ea27842aa2b0eed53c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">STATISTIC functions</div></td></tr>
 <tr class="memitem:a0048e34c54d2da14cb96301fc8df1c0e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#a0048e34c54d2da14cb96301fc8df1c0e">ran1</a> ()</td></tr>
 <tr class="memdesc:a0048e34c54d2da14cb96301fc8df1c0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uniform distribution from 0 to 1.  <a href="#a0048e34c54d2da14cb96301fc8df1c0e">More...</a><br /></td></tr>
@@ -138,8 +166,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a3985b53584d8525bec06d55f152f6cf3"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#a3985b53584d8525bec06d55f152f6cf3">put_gauss_noise</a> (const char *ID_in_name, const char *ID_out_name, double ampl)</td></tr>
 <tr class="memdesc:a3985b53584d8525bec06d55f152f6cf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply Gaussian noise to image.  <a href="#a3985b53584d8525bec06d55f152f6cf3">More...</a><br /></td></tr>
 <tr class="separator:a3985b53584d8525bec06d55f152f6cf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad657c73399975437682ef3dce12f1999"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#ad657c73399975437682ef3dce12f1999">statistic_BIRCH_clustering</a> (const char *IDin_name, int B, double epsilon, const char *IDout_name)</td></tr>
-<tr class="separator:ad657c73399975437682ef3dce12f1999"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a009f6a336fd4c11e8a1ce527233cadc2"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="statistic_8c.html#a009f6a336fd4c11e8a1ce527233cadc2">statistic_BIRCH_clustering</a> (<a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *IDin_name, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int B, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) double epsilon, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *IDout_name)</td></tr>
+<tr class="separator:a009f6a336fd4c11e8a1ce527233cadc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -148,10 +176,7 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>statistical tools module </p>
-<p>Random numbers, photon noise</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>Aug 2, 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000096">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<p>Random numbers, photon noise </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
@@ -160,7 +185,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -265,14 +290,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c83a0d35322da145d178da2f9ec4889"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c83a0d35322da145d178da2f9ec4889">&#9670;&nbsp;</a></span>init_statistic()</h2>
+<a id="afaa980ca2342ea27842aa2b0eed53c9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afaa980ca2342ea27842aa2b0eed53c9c">&#9670;&nbsp;</a></span>init_statistic()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t init_statistic </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_statistic </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -393,8 +418,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad657c73399975437682ef3dce12f1999"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad657c73399975437682ef3dce12f1999">&#9670;&nbsp;</a></span>statistic_BIRCH_clustering()</h2>
+<a id="a009f6a336fd4c11e8a1ce527233cadc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a009f6a336fd4c11e8a1ce527233cadc2">&#9670;&nbsp;</a></span>statistic_BIRCH_clustering()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -402,25 +427,25 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">long statistic_BIRCH_clustering </td>
           <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int&#160;</td>
           <td class="paramname"><em>B</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) double&#160;</td>
           <td class="paramname"><em>epsilon</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *&#160;</td>
           <td class="paramname"><em>IDout_name</em>&#160;</td>
         </tr>
         <tr>
@@ -441,14 +466,14 @@ Euclidian distance adopted<br />
 
 </div>
 </div>
-<a id="a42f79098f976305090856a56430e7bcd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42f79098f976305090856a56430e7bcd">&#9670;&nbsp;</a></span>statistic_putgaussnoise_cli()</h2>
+<a id="ae926f171901fff8bcd28674932788c00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae926f171901fff8bcd28674932788c00">&#9670;&nbsp;</a></span>statistic_putgaussnoise_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t statistic_putgaussnoise_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> statistic_putgaussnoise_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -458,14 +483,14 @@ Euclidian distance adopted<br />
 
 </div>
 </div>
-<a id="a5536f4a98e2970428387fa813e11c448"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5536f4a98e2970428387fa813e11c448">&#9670;&nbsp;</a></span>statistic_putphnoise_cli()</h2>
+<a id="a32187e71ed001ada3538f2bd59d3a022"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32187e71ed001ada3538f2bd59d3a022">&#9670;&nbsp;</a></span>statistic_putphnoise_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t statistic_putphnoise_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> statistic_putphnoise_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -505,7 +530,7 @@ Euclidian distance adopted<br />
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_545a73c80b83e1c7812a6808fc9654f7.html">statistic</a></li><li class="navelem"><a class="el" href="statistic_8c.html">statistic.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

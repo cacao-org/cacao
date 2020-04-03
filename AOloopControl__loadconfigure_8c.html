@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__loadconfigure_8c.html',
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,12 +95,50 @@ $(document).ready(function(){initNavTree('AOloopControl__loadconfigure_8c.html',
 
 <p>Aload / setup configuration.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__IOtools_8h_source.html">AOloopControl_IOtools/AOloopControl_IOtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_loadconfigure.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__loadconfigure_8c__incl.png" border="0" usemap="#src_2AOloopControl_2AOloopControl__loadconfigure_8c" alt=""/></div>
+<map name="src_2AOloopControl_2AOloopControl__loadconfigure_8c" id="src_2AOloopControl_2AOloopControl__loadconfigure_8c">
+<area shape="rect" id="node5" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="529,95,687,136"/>
+<area shape="rect" id="node21" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="1198,102,1341,129"/>
+<area shape="rect" id="node22" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1365,95,1585,136"/>
+<area shape="rect" id="node23" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="1609,95,1810,136"/>
+<area shape="rect" id="node24" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="1572,184,1743,225"/>
+<area shape="rect" id="node25" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="1554,273,1761,300"/>
+<area shape="rect" id="node14" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="759,191,980,218"/>
+<area shape="rect" id="node15" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="771,273,875,300"/>
+<area shape="rect" id="node18" href="processtools_8h.html" title="Command line interface. " alt="" coords="547,273,653,300"/>
+<area shape="rect" id="node19" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="973,273,1081,300"/>
+<area shape="rect" id="node20" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="394,191,545,218"/>
+<area shape="rect" id="node17" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="723,355,877,382"/>
+<area shape="rect" id="node26" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="1719,348,1915,389"/>
+<area shape="rect" id="node27" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="1939,348,2135,389"/>
+<area shape="rect" id="node28" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="2160,355,2392,382"/>
+<area shape="rect" id="node29" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="1279,348,1475,389"/>
+<area shape="rect" id="node30" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1499,348,1695,389"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loadconfigure_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga18c9e2ec793ea161e750b86ffbe8672d"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__AOloopControl__streams.html#ga18c9e2ec793ea161e750b86ffbe8672d">AOloopControl_loadconfigure</a> (long loop, int mode, int level)</td></tr>
-<tr class="memdesc:ga18c9e2ec793ea161e750b86ffbe8672d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load / Setup configuration.  <a href="group__AOloopControl__streams.html#ga18c9e2ec793ea161e750b86ffbe8672d">More...</a><br /></td></tr>
-<tr class="separator:ga18c9e2ec793ea161e750b86ffbe8672d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga427f8311363d446400dcf1e3b6e09c13"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__AOloopControl__streams.html#ga427f8311363d446400dcf1e3b6e09c13">AOloopControl_loadconfigure</a> (long loop, int mode, int level)</td></tr>
+<tr class="memdesc:ga427f8311363d446400dcf1e3b6e09c13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load / Setup configuration.  <a href="group__AOloopControl__streams.html#ga427f8311363d446400dcf1e3b6e09c13">More...</a><br /></td></tr>
+<tr class="separator:ga427f8311363d446400dcf1e3b6e09c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -110,12 +149,30 @@ Variables</h2></td></tr>
 <tr class="separator:a549e693c8df5c527e5e6c9b6508749ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf1a23be7ce483054c6db21672e452ff"><td class="memItemLeft" align="right" valign="top">static long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loadconfigure_8c.html#adf1a23be7ce483054c6db21672e452ff">aoconfID_respM</a> = -1</td></tr>
 <tr class="separator:adf1a23be7ce483054c6db21672e452ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf72f213eb3c9694c75a9ea54ddb4b4c"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loadconfigure_8c.html#aaf72f213eb3c9694c75a9ea54ddb4b4c">loadcreateshm_log</a> = 0</td></tr>
+<tr class="separator:aaf72f213eb3c9694c75a9ea54ddb4b4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10851f6142513c8b1b074d564acaeeea"><td class="memItemLeft" align="right" valign="top">static FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loadconfigure_8c.html#a10851f6142513c8b1b074d564acaeeea">loadcreateshm_fplog</a></td></tr>
+<tr class="separator:a10851f6142513c8b1b074d564acaeeea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Aload / setup configuration. </p>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000032">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Variable Documentation</h2>
+<p>REAL TIME COMPUTING ROUTINES </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
 <a id="a1f96203c41ad50bad5dd1604a5c069a8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1f96203c41ad50bad5dd1604a5c069a8">&#9670;&nbsp;</a></span>AOconf</h2>
 
@@ -168,6 +225,50 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a10851f6142513c8b1b074d564acaeeea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10851f6142513c8b1b074d564acaeeea">&#9670;&nbsp;</a></span>loadcreateshm_fplog</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">FILE* loadcreateshm_fplog</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaf72f213eb3c9694c75a9ea54ddb4b4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf72f213eb3c9694c75a9ea54ddb4b4c">&#9670;&nbsp;</a></span>loadcreateshm_log</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int loadcreateshm_log = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.13-->
@@ -175,7 +276,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__loadconfigure_8c.html">AOloopControl_loadconfigure.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

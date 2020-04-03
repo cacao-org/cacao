@@ -5,12 +5,12 @@ var kdtree_8c =
     [ "res_node", "structres__node.html", "structres__node" ],
     [ "kdtree", "structkdtree.html", "structkdtree" ],
     [ "kdres", "structkdres.html", "structkdres" ],
-    [ "alloc_resnode", "kdtree_8c.html#ad08faf9f86b0ff518f2b6929d9448854", null ],
+    [ "alloc_resnode", "kdtree_8c.html#aeb41ddbd68313adcb5129add2c4428d0", null ],
+    [ "free_resnode", "kdtree_8c.html#aa809c41131ed043aab5ea2f7806fa458", null ],
+    [ "SQ", "kdtree_8c.html#ac3644f84794a8bfdacf39c4b2c2495fc", null ],
     [ "clear_rec", "kdtree_8c.html#a3a723ee3fd46c27b848aaee6ddd36642", null ],
     [ "clear_results", "kdtree_8c.html#a2baf19b18d6e4252972b8d59c4d01e03", null ],
     [ "find_nearest", "kdtree_8c.html#a7a7857f6f1a8f5059d95bfdc11f0fa8d", null ],
-    [ "find_nearest_n", "kdtree_8c.html#ae3e7d69b28baf648ad130f5a03612345", null ],
-    [ "free_resnode", "kdtree_8c.html#a3a7b7ddb8a0f1a32786207dfb89adb4d", null ],
     [ "hyperrect_create", "kdtree_8c.html#a6ecffd47a42fc25a3174cfa2fc6cc406", null ],
     [ "hyperrect_dist_sq", "kdtree_8c.html#ac9a5303c073ee4d7a9f653dba8c1865d", null ],
     [ "hyperrect_duplicate", "kdtree_8c.html#a60e33de48594f1c05b8e4fbf0e09c63a", null ],
@@ -45,7 +45,5 @@ var kdtree_8c =
     [ "kd_res_next", "kdtree_8c.html#a83b3badfed2a9a1bf6f36bb69542f2c3", null ],
     [ "kd_res_rewind", "kdtree_8c.html#a929a839b9fbdf7301fd0a0b6500bbf64", null ],
     [ "kd_res_size", "kdtree_8c.html#adb070dde37e9a978f231d730b7a24b53", null ],
-    [ "rlist_insert", "kdtree_8c.html#a733da127e26efe613ad86455614244a3", null ],
-    [ "alloc_mutex", "kdtree_8c.html#a2420ed5f3bdd6b79a569bf108451f603", null ],
-    [ "free_nodes", "kdtree_8c.html#a36fcc7a723160bc0d367c6e616940231", null ]
+    [ "rlist_insert", "kdtree_8c.html#a733da127e26efe613ad86455614244a3", null ]
 ];

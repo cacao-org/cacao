@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__perfTest__LinSim_8c.htm
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_perfTest_LinSim.c File Reference</div>  </div>
@@ -93,27 +94,83 @@ $(document).ready(function(){initNavTree('AOloopControl__perfTest__LinSim_8c.htm
 
 <p>Adaptive Optics Control loop linear simulator.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linopt__imtools_8h_source.html">linopt_imtools/linopt_imtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__perfTest_8h_source.html">AOloopControl_perfTest/AOloopControl_perfTest.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_perfTest_LinSim.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__perfTest__LinSim_8c__incl.png" border="0" usemap="#src_2AOloopControl__perfTest_2AOloopControl__perfTest__LinSim_8c" alt=""/></div>
+<map name="src_2AOloopControl__perfTest_2AOloopControl__perfTest__LinSim_8c" id="src_2AOloopControl__perfTest_2AOloopControl__perfTest__LinSim_8c">
+<area shape="rect" id="node4" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1794,109,1951,151"/>
+<area shape="rect" id="node22" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1976,109,2196,151"/>
+<area shape="rect" id="node23" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2220,109,2421,151"/>
+<area shape="rect" id="node24" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2445,117,2588,143"/>
+<area shape="rect" id="node25" href="linopt__imtools_8h.html" title="Function prototypes for linear algebra tools. " alt="" coords="2612,109,2749,151"/>
+<area shape="rect" id="node26" href="info_8h.html" title="info/info.h" alt="" coords="2773,117,2852,143"/>
+<area shape="rect" id="node27" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="892,273,1099,300"/>
+<area shape="rect" id="node34" href="AOloopControl__perfTest_8h.html" title="Function prototypes for Adaptive Optics Control loop engine performance Tests. " alt="" coords="2876,109,3053,151"/>
+<area shape="rect" id="node15" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1589,199,1810,225"/>
+<area shape="rect" id="node16" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1634,273,1738,300"/>
+<area shape="rect" id="node19" href="processtools_8h.html" title="Command line interface. " alt="" coords="1895,273,2002,300"/>
+<area shape="rect" id="node20" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1488,273,1596,300"/>
+<area shape="rect" id="node21" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="2403,199,2553,225"/>
+<area shape="rect" id="node18" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1596,355,1749,382"/>
+<area shape="rect" id="node28" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,348,201,389"/>
+<area shape="rect" id="node29" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,348,421,389"/>
+<area shape="rect" id="node30" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="446,348,617,389"/>
+<area shape="rect" id="node31" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="641,355,873,382"/>
+<area shape="rect" id="node32" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="897,348,1093,389"/>
+<area shape="rect" id="node33" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1117,348,1313,389"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__perfTest__LinSim_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad456526742acf68e5730b24608623dec"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__perfTest__LinSim_8c.html#ad456526742acf68e5730b24608623dec">AOcontrolLoop_perfTest_LinearSimulator_FPCONF</a> (const char *fpsname, uint32_t CMDmode)</td></tr>
-<tr class="separator:ad456526742acf68e5730b24608623dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3bafdcc7babcaa355592bd8c5b69fe5"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__perfTest__LinSim_8c.html#aa3bafdcc7babcaa355592bd8c5b69fe5">AOcontrolLoop_perfTest_LinearSimulator_RUN</a> (const char *fpsname)</td></tr>
-<tr class="separator:aa3bafdcc7babcaa355592bd8c5b69fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3eaf0cc6c67aed9ff98516837793e570"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__perfTest__LinSim_8c.html#a3eaf0cc6c67aed9ff98516837793e570">AOcontrolLoop_perfTest_LinearSimulator_FPCONF</a> (const char *fpsname, uint32_t CMDmode)</td></tr>
+<tr class="separator:a3eaf0cc6c67aed9ff98516837793e570"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab26186c67a9c8642559eaf7053af2591"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__perfTest__LinSim_8c.html#ab26186c67a9c8642559eaf7053af2591">AOcontrolLoop_perfTest_LinearSimulator_RUN</a> (const char *fpsname)</td></tr>
+<tr class="separator:ab26186c67a9c8642559eaf7053af2591"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Adaptive Optics Control loop linear simulator. </p>
-<p>Uses response matrix for linear simulation</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000062">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="ad456526742acf68e5730b24608623dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad456526742acf68e5730b24608623dec">&#9670;&nbsp;</a></span>AOcontrolLoop_perfTest_LinearSimulator_FPCONF()</h2>
+<p>Uses response matrix for linear simulation </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a3eaf0cc6c67aed9ff98516837793e570"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3eaf0cc6c67aed9ff98516837793e570">&#9670;&nbsp;</a></span>AOcontrolLoop_perfTest_LinearSimulator_FPCONF()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_perfTest_LinearSimulator_FPCONF </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>fpsname</em>, </td>
@@ -134,14 +191,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa3bafdcc7babcaa355592bd8c5b69fe5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3bafdcc7babcaa355592bd8c5b69fe5">&#9670;&nbsp;</a></span>AOcontrolLoop_perfTest_LinearSimulator_RUN()</h2>
+<a id="ab26186c67a9c8642559eaf7053af2591"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab26186c67a9c8642559eaf7053af2591">&#9670;&nbsp;</a></span>AOcontrolLoop_perfTest_LinearSimulator_RUN()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOcontrolLoop_perfTest_LinearSimulator_RUN </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_perfTest_LinearSimulator_RUN </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>fpsname</em></td><td>)</td>
@@ -159,7 +216,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_ca88da18f3effcf0279f64df07f494e2.html">AOloopControl_perfTest</a></li><li class="navelem"><a class="el" href="AOloopControl__perfTest__LinSim_8c.html">AOloopControl_perfTest_LinSim.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

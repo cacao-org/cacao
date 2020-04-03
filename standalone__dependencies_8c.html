@@ -85,13 +85,39 @@ $(document).ready(function(){initNavTree('standalone__dependencies_8c.html','');
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">standalone_dependencies.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="standalone__dependencies_8h_source.html">standalone_dependencies.h</a>&quot;</code><br />
+<code>#include &lt;ncurses.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="streamCTRL_8h_source.html">streamCTRL.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for standalone_dependencies.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="standalone__dependencies_8c__incl.png" border="0" usemap="#src_2CommandLineInterface_2standalone__dependencies_8c" alt=""/></div>
+<map name="src_2CommandLineInterface_2standalone__dependencies_8c" id="src_2CommandLineInterface_2standalone__dependencies_8c">
+<area shape="rect" id="node2" href="standalone__dependencies_8h.html" title="standalone_dependencies.h" alt="" coords="797,95,979,121"/>
+<area shape="rect" id="node19" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1078,319,1186,345"/>
+<area shape="rect" id="node3" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="849,169,927,196"/>
+<area shape="rect" id="node14" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="195,244,416,271"/>
+<area shape="rect" id="node15" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="667,319,771,345"/>
+<area shape="rect" id="node18" href="processtools_8h.html" title="Command line interface. " alt="" coords="896,319,1003,345"/>
+<area shape="rect" id="node20" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="649,244,799,271"/>
+<area shape="rect" id="node17" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="391,393,545,420"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a6fb9173b416d4ca64e84793024c86a9e"><td class="memItemLeft" align="right" valign="top">struct timespec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8c.html#a6fb9173b416d4ca64e84793024c86a9e">info_time_diff</a> (struct timespec start, struct timespec end)</td></tr>
@@ -110,8 +136,7 @@ Functions</h2></td></tr>
 <tr class="separator:a94436a07ca1e1d20dcbdb2684826ef70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50b1c01e17893b3c2e735e348df9eba9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8c.html#a50b1c01e17893b3c2e735e348df9eba9">quick_sort_long</a> (long *array, long count)</td></tr>
 <tr class="separator:a50b1c01e17893b3c2e735e348df9eba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e77ac9461466e89a13b467f64a8df67"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8c.html#a3e77ac9461466e89a13b467f64a8df67">printERROR</a> (const char *file, const char *func, int <a class="el" href="CLIcore_8c.html#a8adb30f4f6669f927fd9232f686c637b">line</a>, char *errmessage)</td></tr>
-<tr class="memdesc:a3e77ac9461466e89a13b467f64a8df67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print error (in red) and continue.  <a href="#a3e77ac9461466e89a13b467f64a8df67">More...</a><br /></td></tr>
+<tr class="memitem:a3e77ac9461466e89a13b467f64a8df67"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8c.html#a3e77ac9461466e89a13b467f64a8df67">printERROR</a> (const char *file, const char *func, int <a class="el" href="CLIcore_8c.html#a73f40094347b4f2b86443e09390a723f">line</a>, char *errmessage)</td></tr>
 <tr class="separator:a3e77ac9461466e89a13b467f64a8df67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cc0efbf0483da8ea546063e372111be"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8c.html#a8cc0efbf0483da8ea546063e372111be">file_exists</a> (const char *restrict file_name)</td></tr>
 <tr class="separator:a8cc0efbf0483da8ea546063e372111be"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,6 +152,21 @@ Variables</h2></td></tr>
 <tr class="memitem:a9a500d20c5951f1462377328ae5305f5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="standalone__dependencies_8c.html#a9a500d20c5951f1462377328ae5305f5">C_ERRNO</a> =0</td></tr>
 <tr class="separator:a9a500d20c5951f1462377328ae5305f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a8cc0efbf0483da8ea546063e372111be"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8cc0efbf0483da8ea546063e372111be">&#9670;&nbsp;</a></span>file_exists()</h2>
@@ -257,8 +297,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Print error (in red) and continue. </p>
 <h2>Purpose</h2>
 <p>Print error string</p>
 <h2>Arguments</h2>
@@ -550,7 +588,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="standalone__dependencies_8c.html">standalone_dependencies.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

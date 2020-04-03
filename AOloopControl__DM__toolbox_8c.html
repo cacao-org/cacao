@@ -94,13 +94,41 @@ $(document).ready(function(){initNavTree('AOloopControl__DM__toolbox_8c.html',''
 
 <p>DM control.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;math.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__gen_8h_source.html">image_gen/image_gen.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="fft_8h_source.html">fft/fft.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__DM_8h_source.html">AOloopControl_DM/AOloopControl_DM.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_DM_toolbox.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__DM__toolbox_8c__incl.png" border="0" usemap="#src_2AOloopControl__DM_2AOloopControl__DM__toolbox_8c" alt=""/></div>
+<map name="src_2AOloopControl__DM_2AOloopControl__DM__toolbox_8c" id="src_2AOloopControl__DM_2AOloopControl__DM__toolbox_8c">
+<area shape="rect" id="node3" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="581,95,738,136"/>
+<area shape="rect" id="node21" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="763,95,983,136"/>
+<area shape="rect" id="node22" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="1007,95,1205,136"/>
+<area shape="rect" id="node23" href="image__gen_8h.html" title="image_gen/image_gen.h" alt="" coords="1230,102,1393,129"/>
+<area shape="rect" id="node24" href="fft_8h.html" title="fft/fft.h" alt="" coords="1417,102,1478,129"/>
+<area shape="rect" id="node25" href="info_8h.html" title="info/info.h" alt="" coords="1503,102,1581,129"/>
+<area shape="rect" id="node26" href="AOloopControl__DM_8h.html" title="AOloopControl_DM/AOloopControl_DM.h" alt="" coords="1605,102,1868,129"/>
+<area shape="rect" id="node14" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="249,184,470,211"/>
+<area shape="rect" id="node15" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="322,259,426,285"/>
+<area shape="rect" id="node18" href="processtools_8h.html" title="Command line interface. " alt="" coords="515,259,622,285"/>
+<area shape="rect" id="node19" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="65,259,173,285"/>
+<area shape="rect" id="node20" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1144,184,1295,211"/>
+<area shape="rect" id="node17" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="271,333,424,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ab99a9aa7e41d1c1fc35848f51f52b76e"><td class="memItemLeft" align="right" valign="top">struct timespec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__toolbox_8c.html#ab99a9aa7e41d1c1fc35848f51f52b76e">time_diff</a> (struct timespec start, struct timespec end)</td></tr>
 <tr class="separator:ab99a9aa7e41d1c1fc35848f51f52b76e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a241d3fd4b55ca1d883ec6bc80a4fbefe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__toolbox_8c.html#a241d3fd4b55ca1d883ec6bc80a4fbefe">make_master_turbulence_screen_local</a> (const char *ID_name1, const char *ID_name2, long size, float outerscale, float innerscale)</td></tr>
-<tr class="separator:a241d3fd4b55ca1d883ec6bc80a4fbefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54664525b67738a5b701337c1c3ebbcb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__toolbox_8c.html#a54664525b67738a5b701337c1c3ebbcb">make_master_turbulence_screen_local</a> (const char *ID_name1, const char *ID_name2, long size, float outerscale, float innerscale)</td></tr>
+<tr class="separator:a54664525b67738a5b701337c1c3ebbcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -121,18 +149,15 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>DM control. </p>
-<p>To be used for AOloopControl module</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>22 Dec 2017 </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a241d3fd4b55ca1d883ec6bc80a4fbefe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a241d3fd4b55ca1d883ec6bc80a4fbefe">&#9670;&nbsp;</a></span>make_master_turbulence_screen_local()</h2>
+<a id="a54664525b67738a5b701337c1c3ebbcb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54664525b67738a5b701337c1c3ebbcb">&#9670;&nbsp;</a></span>make_master_turbulence_screen_local()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int make_master_turbulence_screen_local </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> make_master_turbulence_screen_local </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name1</em>, </td>
@@ -305,7 +330,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_faeaff7292dc281c383047bdabe06a0d.html">AOloopControl_DM</a></li><li class="navelem"><a class="el" href="AOloopControl__DM__toolbox_8c.html">AOloopControl_DM_toolbox.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

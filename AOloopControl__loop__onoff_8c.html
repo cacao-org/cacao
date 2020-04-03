@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__loop__onoff_8c.html',''
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_loop_onoff.c File Reference</div>  </div>
@@ -93,33 +94,67 @@ $(document).ready(function(){initNavTree('AOloopControl__loop__onoff_8c.html',''
 
 <p>AO loop Control functions wave front sensor and deformable mirror.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__perfTest_8h_source.html">AOloopControl_perfTest/AOloopControl_perfTest.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_loop_onoff.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__loop__onoff_8c__incl.png" border="0" usemap="#src_2AOloopControl_2AOloopControl__loop__onoff_8c" alt=""/></div>
+<map name="src_2AOloopControl_2AOloopControl__loop__onoff_8c" id="src_2AOloopControl_2AOloopControl__loop__onoff_8c">
+<area shape="rect" id="node2" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1845,95,2002,136"/>
+<area shape="rect" id="node20" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2027,102,2169,129"/>
+<area shape="rect" id="node21" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2193,95,2413,136"/>
+<area shape="rect" id="node22" href="AOloopControl__perfTest_8h.html" title="Function prototypes for Adaptive Optics Control loop engine performance Tests. " alt="" coords="2437,95,2615,136"/>
+<area shape="rect" id="node23" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="936,259,1055,285"/>
+<area shape="rect" id="node13" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1589,184,1810,211"/>
+<area shape="rect" id="node14" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1634,259,1738,285"/>
+<area shape="rect" id="node17" href="processtools_8h.html" title="Command line interface. " alt="" coords="1895,259,2002,285"/>
+<area shape="rect" id="node18" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1488,259,1596,285"/>
+<area shape="rect" id="node19" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="2403,184,2553,211"/>
+<area shape="rect" id="node16" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1596,341,1749,367"/>
+<area shape="rect" id="node24" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node25" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,333,421,375"/>
+<area shape="rect" id="node26" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="446,333,617,375"/>
+<area shape="rect" id="node27" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="641,341,873,367"/>
+<area shape="rect" id="node28" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="897,333,1093,375"/>
+<area shape="rect" id="node29" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1117,333,1313,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl - 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Set parameters </p>
 </div></td></tr>
-<tr class="memitem:aaa36c0f5676f5945a0d89fdcc1fc881a"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#aaa36c0f5676f5945a0d89fdcc1fc881a">AOloopControl_loopon</a> ()</td></tr>
-<tr class="memdesc:aaa36c0f5676f5945a0d89fdcc1fc881a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close AO loop : AO on.  <a href="#aaa36c0f5676f5945a0d89fdcc1fc881a">More...</a><br /></td></tr>
-<tr class="separator:aaa36c0f5676f5945a0d89fdcc1fc881a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5cb5075877becd5d2bc72cc4d75fcc0"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#ae5cb5075877becd5d2bc72cc4d75fcc0">AOloopControl_loopoff</a> ()</td></tr>
-<tr class="memdesc:ae5cb5075877becd5d2bc72cc4d75fcc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open AO loop : AO off.  <a href="#ae5cb5075877becd5d2bc72cc4d75fcc0">More...</a><br /></td></tr>
-<tr class="separator:ae5cb5075877becd5d2bc72cc4d75fcc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a962198d111620429283b845431300638"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a962198d111620429283b845431300638">AOloopControl_loopWFScompon</a> ()</td></tr>
-<tr class="memdesc:a962198d111620429283b845431300638"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close AO loop : AO on.  <a href="#a962198d111620429283b845431300638">More...</a><br /></td></tr>
-<tr class="separator:a962198d111620429283b845431300638"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ebed92fe826af52e4c4e224b93ea9ad"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a0ebed92fe826af52e4c4e224b93ea9ad">AOloopControl_loopWFScompoff</a> ()</td></tr>
-<tr class="memdesc:a0ebed92fe826af52e4c4e224b93ea9ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open AO loop : AO off.  <a href="#a0ebed92fe826af52e4c4e224b93ea9ad">More...</a><br /></td></tr>
-<tr class="separator:a0ebed92fe826af52e4c4e224b93ea9ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e0c1278a38599e95fe3a80f7f9d81d7"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a7e0c1278a38599e95fe3a80f7f9d81d7">AOloopControl_loopkill</a> ()</td></tr>
-<tr class="memdesc:a7e0c1278a38599e95fe3a80f7f9d81d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kill AO loop : finish the process of the run.  <a href="#a7e0c1278a38599e95fe3a80f7f9d81d7">More...</a><br /></td></tr>
-<tr class="separator:a7e0c1278a38599e95fe3a80f7f9d81d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80e9d045d44ebe3981beb78e32c482c3"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a80e9d045d44ebe3981beb78e32c482c3">AOloopControl_loopstep</a> (long loop, long NBstep)</td></tr>
-<tr class="memdesc:a80e9d045d44ebe3981beb78e32c482c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close loop for finite number of steps.  <a href="#a80e9d045d44ebe3981beb78e32c482c3">More...</a><br /></td></tr>
-<tr class="separator:a80e9d045d44ebe3981beb78e32c482c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a561e18ffa331146fbed2ca53a6c6fdb4"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a561e18ffa331146fbed2ca53a6c6fdb4">AOloopControl_loopreset</a> ()</td></tr>
-<tr class="memdesc:a561e18ffa331146fbed2ca53a6c6fdb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the AO loop.  <a href="#a561e18ffa331146fbed2ca53a6c6fdb4">More...</a><br /></td></tr>
-<tr class="separator:a561e18ffa331146fbed2ca53a6c6fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac624e8073ef97c5f9d44d8a4d1090f03"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#ac624e8073ef97c5f9d44d8a4d1090f03">AOloopControl_loopon</a> ()</td></tr>
+<tr class="memdesc:ac624e8073ef97c5f9d44d8a4d1090f03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close AO loop : AO on.  <a href="#ac624e8073ef97c5f9d44d8a4d1090f03">More...</a><br /></td></tr>
+<tr class="separator:ac624e8073ef97c5f9d44d8a4d1090f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca9c592182bfec9b985bdef960fae187"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#aca9c592182bfec9b985bdef960fae187">AOloopControl_loopoff</a> ()</td></tr>
+<tr class="memdesc:aca9c592182bfec9b985bdef960fae187"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open AO loop : AO off.  <a href="#aca9c592182bfec9b985bdef960fae187">More...</a><br /></td></tr>
+<tr class="separator:aca9c592182bfec9b985bdef960fae187"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a391b08d688c93e997c346bbdd765fdc4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a391b08d688c93e997c346bbdd765fdc4">AOloopControl_loopWFScompon</a> ()</td></tr>
+<tr class="memdesc:a391b08d688c93e997c346bbdd765fdc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close AO loop : AO on.  <a href="#a391b08d688c93e997c346bbdd765fdc4">More...</a><br /></td></tr>
+<tr class="separator:a391b08d688c93e997c346bbdd765fdc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf9b1d2d97709e5df69d9439131ad177"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#adf9b1d2d97709e5df69d9439131ad177">AOloopControl_loopWFScompoff</a> ()</td></tr>
+<tr class="memdesc:adf9b1d2d97709e5df69d9439131ad177"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open AO loop : AO off.  <a href="#adf9b1d2d97709e5df69d9439131ad177">More...</a><br /></td></tr>
+<tr class="separator:adf9b1d2d97709e5df69d9439131ad177"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6983cdf3642a00c425baf26ed6ad9179"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a6983cdf3642a00c425baf26ed6ad9179">AOloopControl_loopkill</a> ()</td></tr>
+<tr class="memdesc:a6983cdf3642a00c425baf26ed6ad9179"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kill AO loop : finish the process of the run.  <a href="#a6983cdf3642a00c425baf26ed6ad9179">More...</a><br /></td></tr>
+<tr class="separator:a6983cdf3642a00c425baf26ed6ad9179"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a450e4551e2b61e05666fad800e4a3a0f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a450e4551e2b61e05666fad800e4a3a0f">AOloopControl_loopstep</a> (long loop, long NBstep)</td></tr>
+<tr class="memdesc:a450e4551e2b61e05666fad800e4a3a0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close loop for finite number of steps.  <a href="#a450e4551e2b61e05666fad800e4a3a0f">More...</a><br /></td></tr>
+<tr class="separator:a450e4551e2b61e05666fad800e4a3a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a945cbcfc2bf0dd3f3f4ddb942d159819"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__loop__onoff_8c.html#a945cbcfc2bf0dd3f3f4ddb942d159819">AOloopControl_loopreset</a> ()</td></tr>
+<tr class="memdesc:a945cbcfc2bf0dd3f3f4ddb942d159819"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the AO loop.  <a href="#a945cbcfc2bf0dd3f3f4ddb942d159819">More...</a><br /></td></tr>
+<tr class="separator:a945cbcfc2bf0dd3f3f4ddb942d159819"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -131,17 +166,31 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AO loop Control functions wave front sensor and deformable mirror. </p>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000034">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a7e0c1278a38599e95fe3a80f7f9d81d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e0c1278a38599e95fe3a80f7f9d81d7">&#9670;&nbsp;</a></span>AOloopControl_loopkill()</h2>
+<p>REAL TIME COMPUTING ROUTINES </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_loopkill </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a6983cdf3642a00c425baf26ed6ad9179"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6983cdf3642a00c425baf26ed6ad9179">&#9670;&nbsp;</a></span>AOloopControl_loopkill()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_loopkill </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -153,14 +202,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae5cb5075877becd5d2bc72cc4d75fcc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae5cb5075877becd5d2bc72cc4d75fcc0">&#9670;&nbsp;</a></span>AOloopControl_loopoff()</h2>
+<a id="aca9c592182bfec9b985bdef960fae187"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca9c592182bfec9b985bdef960fae187">&#9670;&nbsp;</a></span>AOloopControl_loopoff()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_loopoff </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_loopoff </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -172,14 +221,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aaa36c0f5676f5945a0d89fdcc1fc881a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa36c0f5676f5945a0d89fdcc1fc881a">&#9670;&nbsp;</a></span>AOloopControl_loopon()</h2>
+<a id="ac624e8073ef97c5f9d44d8a4d1090f03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac624e8073ef97c5f9d44d8a4d1090f03">&#9670;&nbsp;</a></span>AOloopControl_loopon()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_loopon </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_loopon </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -191,14 +240,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a561e18ffa331146fbed2ca53a6c6fdb4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a561e18ffa331146fbed2ca53a6c6fdb4">&#9670;&nbsp;</a></span>AOloopControl_loopreset()</h2>
+<a id="a945cbcfc2bf0dd3f3f4ddb942d159819"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a945cbcfc2bf0dd3f3f4ddb942d159819">&#9670;&nbsp;</a></span>AOloopControl_loopreset()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_loopreset </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_loopreset </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -210,14 +259,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a80e9d045d44ebe3981beb78e32c482c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80e9d045d44ebe3981beb78e32c482c3">&#9670;&nbsp;</a></span>AOloopControl_loopstep()</h2>
+<a id="a450e4551e2b61e05666fad800e4a3a0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a450e4551e2b61e05666fad800e4a3a0f">&#9670;&nbsp;</a></span>AOloopControl_loopstep()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_loopstep </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_loopstep </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -240,14 +289,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0ebed92fe826af52e4c4e224b93ea9ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ebed92fe826af52e4c4e224b93ea9ad">&#9670;&nbsp;</a></span>AOloopControl_loopWFScompoff()</h2>
+<a id="adf9b1d2d97709e5df69d9439131ad177"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf9b1d2d97709e5df69d9439131ad177">&#9670;&nbsp;</a></span>AOloopControl_loopWFScompoff()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_loopWFScompoff </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_loopWFScompoff </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -259,14 +308,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a962198d111620429283b845431300638"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a962198d111620429283b845431300638">&#9670;&nbsp;</a></span>AOloopControl_loopWFScompon()</h2>
+<a id="a391b08d688c93e997c346bbdd765fdc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a391b08d688c93e997c346bbdd765fdc4">&#9670;&nbsp;</a></span>AOloopControl_loopWFScompon()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_loopWFScompon </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_loopWFScompon </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -316,7 +365,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__loop__onoff_8c.html">AOloopControl_loop_onoff.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

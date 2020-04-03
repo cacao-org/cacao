@@ -1,6 +1,6 @@
 var AOloopControl__DM__toolbox_8c =
 [
-    [ "make_master_turbulence_screen_local", "AOloopControl__DM__toolbox_8c.html#a241d3fd4b55ca1d883ec6bc80a4fbefe", null ],
+    [ "make_master_turbulence_screen_local", "AOloopControl__DM__toolbox_8c.html#a54664525b67738a5b701337c1c3ebbcb", null ],
     [ "time_diff", "AOloopControl__DM__toolbox_8c.html#ab99a9aa7e41d1c1fc35848f51f52b76e", null ],
     [ "dmdispcomb_loaded", "AOloopControl__DM__toolbox_8c.html#a4728552c8d2da32521f2b44a8895420f", null ],
     [ "dmdispcombconf", "AOloopControl__DM__toolbox_8c.html#a1fc05e08226ca90b0429937215cac795", null ],

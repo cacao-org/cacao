@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__aorun_8c.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,11 +95,57 @@ $(document).ready(function(){initNavTree('AOloopControl__aorun_8c.html','');});
 
 <p>AO loop Control compute functions.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_math.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_blas.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__IOtools_8h_source.html">AOloopControl_IOtools/AOloopControl_IOtools.h</a>&quot;</code><br />
+<code>#include &lt;ncurses.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_aorun.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__aorun_8c__incl.png" border="0" usemap="#src_2AOloopControl_2AOloopControl__aorun_8c" alt=""/></div>
+<map name="src_2AOloopControl_2AOloopControl__aorun_8c" id="src_2AOloopControl_2AOloopControl__aorun_8c">
+<area shape="rect" id="node8" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1798,95,1955,136"/>
+<area shape="rect" id="node25" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="1016,259,1223,285"/>
+<area shape="rect" id="node28" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="1143,333,1314,375"/>
+<area shape="rect" id="node32" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2520,102,2663,129"/>
+<area shape="rect" id="node33" href="info_8h.html" title="info/info.h" alt="" coords="2687,102,2765,129"/>
+<area shape="rect" id="node34" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2789,95,3009,136"/>
+<area shape="rect" id="node35" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="3033,95,3232,136"/>
+<area shape="rect" id="node36" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="3256,95,3457,136"/>
+<area shape="rect" id="node19" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1542,184,1763,211"/>
+<area shape="rect" id="node20" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1649,259,1753,285"/>
+<area shape="rect" id="node22" href="processtools_8h.html" title="Command line interface. " alt="" coords="1899,259,2006,285"/>
+<area shape="rect" id="node23" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1400,259,1508,285"/>
+<area shape="rect" id="node24" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="2407,184,2557,211"/>
+<area shape="rect" id="node21" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1603,341,1756,367"/>
+<area shape="rect" id="node26" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node27" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,333,421,375"/>
+<area shape="rect" id="node29" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="446,341,678,367"/>
+<area shape="rect" id="node30" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="703,333,899,375"/>
+<area shape="rect" id="node31" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="923,333,1119,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c5d5a91e62278861bc96ab43c9c44d9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#a6c5d5a91e62278861bc96ab43c9c44d9">NB_AOloopcontrol</a>&#160;&#160;&#160;10</td></tr>
+<tr class="separator:a6c5d5a91e62278861bc96ab43c9c44d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad879cf2596e036b9908b50242f52e57d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#ad879cf2596e036b9908b50242f52e57d">AOloopControl_aorun_ProcessInit</a> ()</td></tr>
 <tr class="separator:ad879cf2596e036b9908b50242f52e57d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a199e559e097644b6c9839bf0a7fbe647"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#a199e559e097644b6c9839bf0a7fbe647">printstatus_AOloopControl_aorun</a> (int loop)</td></tr>
@@ -110,13 +157,12 @@ Functions</h2></td></tr>
 <tr class="memitem:acdd1ce6ab6be7cf01594398725d3c262"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#acdd1ce6ab6be7cf01594398725d3c262">AOloopControl_aorun_RUN</a> (char *fpsname)</td></tr>
 <tr class="memdesc:acdd1ce6ab6be7cf01594398725d3c262"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main loop function.  <a href="#acdd1ce6ab6be7cf01594398725d3c262">More...</a><br /></td></tr>
 <tr class="separator:acdd1ce6ab6be7cf01594398725d3c262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bdc387d75a84dd14d5a52b1be16d971"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#a3bdc387d75a84dd14d5a52b1be16d971">__attribute__</a> ((hot))</td></tr>
-<tr class="separator:a3bdc387d75a84dd14d5a52b1be16d971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92e00ad76f2ba4466cdb10c4ea2afc8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#a92e00ad76f2ba4466cdb10c4ea2afc8f">__attribute__</a> ((hot))</td></tr>
+<tr class="memdesc:a92e00ad76f2ba4466cdb10c4ea2afc8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute modes in open loop.  <a href="#a92e00ad76f2ba4466cdb10c4ea2afc8f">More...</a><br /></td></tr>
+<tr class="separator:a92e00ad76f2ba4466cdb10c4ea2afc8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a3cab4b1892467d2abeab3bdad99b690c"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#a3cab4b1892467d2abeab3bdad99b690c">AOlooploadconf_init</a> = 0</td></tr>
-<tr class="separator:a3cab4b1892467d2abeab3bdad99b690c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6916da9363f105e747ab3cb5af8a4e7"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#ae6916da9363f105e747ab3cb5af8a4e7">wcol</a></td></tr>
 <tr class="separator:ae6916da9363f105e747ab3cb5af8a4e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f438ed4f013a0ff7b10eec4cd8713a5"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__aorun_8c.html#a8f438ed4f013a0ff7b10eec4cd8713a5">wrow</a></td></tr>
@@ -131,29 +177,45 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AO loop Control compute functions. </p>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000023">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2018-01-04</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000026">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2018-01-04</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000027">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2018-01-04</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000040">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a3bdc387d75a84dd14d5a52b1be16d971"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bdc387d75a84dd14d5a52b1be16d971">&#9670;&nbsp;</a></span>__attribute__()</h2>
+<p>REAL TIME COMPUTING ROUTINES </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6c5d5a91e62278861bc96ab43c9c44d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c5d5a91e62278861bc96ab43c9c44d9">&#9670;&nbsp;</a></span>NB_AOloopcontrol</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NB_AOloopcontrol&#160;&#160;&#160;10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a92e00ad76f2ba4466cdb10c4ea2afc8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92e00ad76f2ba4466cdb10c4ea2afc8f">&#9670;&nbsp;</a></span>__attribute__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(hot)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -161,12 +223,14 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Compute modes in open loop. </p>
 <h2>Purpose</h2>
 <p>Main AO loop function</p>
 <h2>Overview</h2>
 <p>Runs the AO loop<br />
-Calls <a class="el" href="__install_2include_2AOloopControl_8h.html#a19a66458a8453e9f5e6ec19a93c3e70a" title="Main computation function, runs once per loop iteration. ">AOcompute()</a>, which computes the correction to the applied.<br />
-Then, the correction is applied by calling <a class="el" href="__install_2include_2AOloopControl_8h.html#a2c297aecabe48d90878ca37428bd0c71" title="Sends modal commands to DM by matrix-vector multiplication. ">set_DM_modes()</a> if modal correction, or by direct write to the DM otherwise.<br />
+Calls <a class="el" href="AOloopControl_8h.html#a73e1a8f34f71311a85cce7899c6e3ddf" title="Main computation function, runs once per loop iteration. ">AOcompute()</a>, which computes the correction to the applied.<br />
+Then, the correction is applied by calling <a class="el" href="AOloopControl_8h.html#ad8622d454a8d8e21a27b63f6a5217f6d" title="Sends modal commands to DM by matrix-vector multiplication. ">set_DM_modes()</a> if modal correction, or by direct write to the DM otherwise.<br />
 </p>
 <h2>Details</h2>
 <h3>STEP 1: Setting up</h3>
@@ -267,34 +331,6 @@ Then, the correction is applied by calling <a class="el" href="__install_2includ
 
 </div>
 </div>
-<a id="a4686db64ee8970c84b269e0425519dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4686db64ee8970c84b269e0425519dec">&#9670;&nbsp;</a></span>clock_gettime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a199e559e097644b6c9839bf0a7fbe647"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a199e559e097644b6c9839bf0a7fbe647">&#9670;&nbsp;</a></span>printstatus_AOloopControl_aorun()</h2>
 
@@ -366,28 +402,6 @@ Then, the correction is applied by calling <a class="el" href="__install_2includ
 
 </div>
 </div>
-<a id="a3cab4b1892467d2abeab3bdad99b690c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3cab4b1892467d2abeab3bdad99b690c">&#9670;&nbsp;</a></span>AOlooploadconf_init</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int AOlooploadconf_init = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="ae6916da9363f105e747ab3cb5af8a4e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae6916da9363f105e747ab3cb5af8a4e7">&#9670;&nbsp;</a></span>wcol</h2>
 
@@ -439,7 +453,7 @@ Then, the correction is applied by calling <a class="el" href="__install_2includ
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__aorun_8c.html">AOloopControl_aorun.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

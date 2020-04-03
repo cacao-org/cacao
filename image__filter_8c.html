@@ -91,26 +91,65 @@ $(document).ready(function(){initNavTree('image__filter_8c.html','');});
 <div class="title">image_filter.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="fft_8h_source.html">fft/fft.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__gen_8h_source.html">image_gen/image_gen.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="statistic_8h_source.html">statistic/statistic.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__filter_8h_source.html">image_filter/image_filter.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for image_filter.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="image__filter_8c__incl.png" border="0" usemap="#src_2image__filter_2image__filter_8c" alt=""/></div>
+<map name="src_2image__filter_2image__filter_8c" id="src_2image__filter_2image__filter_8c">
+<area shape="rect" id="node6" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="517,95,674,136"/>
+<area shape="rect" id="node23" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="961,102,1104,129"/>
+<area shape="rect" id="node24" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="1128,95,1329,136"/>
+<area shape="rect" id="node25" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1353,95,1573,136"/>
+<area shape="rect" id="node26" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="1597,95,1799,136"/>
+<area shape="rect" id="node27" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="1823,95,2021,136"/>
+<area shape="rect" id="node28" href="info_8h.html" title="info/info.h" alt="" coords="2045,102,2124,129"/>
+<area shape="rect" id="node29" href="fft_8h.html" title="fft/fft.h" alt="" coords="2149,102,2210,129"/>
+<area shape="rect" id="node30" href="image__gen_8h.html" title="image_gen/image_gen.h" alt="" coords="2234,102,2397,129"/>
+<area shape="rect" id="node31" href="statistic_8h.html" title="Function prototypes for statistic module. " alt="" coords="2421,102,2551,129"/>
+<area shape="rect" id="node32" href="image__filter_8h.html" title="image_filter/image\l_filter.h" alt="" coords="2575,95,2703,136"/>
+<area shape="rect" id="node16" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="261,184,482,211"/>
+<area shape="rect" id="node17" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="307,259,411,285"/>
+<area shape="rect" id="node20" href="processtools_8h.html" title="Command line interface. " alt="" coords="567,259,674,285"/>
+<area shape="rect" id="node21" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="37,259,145,285"/>
+<area shape="rect" id="node22" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1075,184,1225,211"/>
+<area shape="rect" id="node19" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="271,333,424,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a391ebc98e6c565175ebedb956120c9ac"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#a391ebc98e6c565175ebedb956120c9ac">gauss_filter_cli</a> ()</td></tr>
-<tr class="separator:a391ebc98e6c565175ebedb956120c9ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23b2f9ef65acd5d400c040477d866480"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#a23b2f9ef65acd5d400c040477d866480">fconvolve_cli</a> ()</td></tr>
-<tr class="separator:a23b2f9ef65acd5d400c040477d866480"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7e96a5b8ef946bd921facef9f9aa4e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#af7e96a5b8ef946bd921facef9f9aa4e1">gauss_filter_cli</a> ()</td></tr>
+<tr class="separator:af7e96a5b8ef946bd921facef9f9aa4e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabac55f45c57a71d0078b23cb343ab59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#aabac55f45c57a71d0078b23cb343ab59">fconvolve_cli</a> ()</td></tr>
+<tr class="separator:aabac55f45c57a71d0078b23cb343ab59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13ca00099d3f16386c1bd78337c12bc0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#a13ca00099d3f16386c1bd78337c12bc0">init_image_filter</a> ()</td></tr>
-<tr class="separator:a13ca00099d3f16386c1bd78337c12bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae72fd3d4c32e17c282499cc10fb70922"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#ae72fd3d4c32e17c282499cc10fb70922">init_image_filter</a> ()</td></tr>
+<tr class="separator:ae72fd3d4c32e17c282499cc10fb70922"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab22b31f3ca8d174936a7dc6b1ac2e399"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#ab22b31f3ca8d174936a7dc6b1ac2e399">median_filter</a> (const char *ID_name, const char *out_name, int filter_size)</td></tr>
 <tr class="separator:ab22b31f3ca8d174936a7dc6b1ac2e399"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6358184954a39bca8cbe58e1dc1078d1"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#a6358184954a39bca8cbe58e1dc1078d1">FILTER_percentile_interpol_fast</a> (const char *ID_name, const char *IDout_name, double perc, long boxrad)</td></tr>
-<tr class="separator:a6358184954a39bca8cbe58e1dc1078d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb18605ab4ed618e8d008df0e89bafd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#a6bb18605ab4ed618e8d008df0e89bafd">FILTER_percentile_interpol_fast</a> (const char *ID_name, const char *IDout_name, double perc, long boxrad)</td></tr>
+<tr class="separator:a6bb18605ab4ed618e8d008df0e89bafd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3e86d60a7bcee3e86680b3688d9e348"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#ac3e86d60a7bcee3e86680b3688d9e348">FILTER_percentile_interpol</a> (const char *ID_name, const char *IDout_name, double perc, double sigma)</td></tr>
 <tr class="separator:ac3e86d60a7bcee3e86680b3688d9e348"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa766cc63e9d9de38824f9a997183eb69"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#aa766cc63e9d9de38824f9a997183eb69">gauss_filter</a> (const char *ID_name, const char *out_name, float sigma, int filter_size)</td></tr>
-<tr class="separator:aa766cc63e9d9de38824f9a997183eb69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acde8c2beb0e0522990193dbf8b5b3fc5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#acde8c2beb0e0522990193dbf8b5b3fc5">gauss_filter</a> (const char *ID_name, const char *out_name, float sigma, int filter_size)</td></tr>
+<tr class="separator:acde8c2beb0e0522990193dbf8b5b3fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab20ee902b86ee7d0e192c7c00e843d45"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#ab20ee902b86ee7d0e192c7c00e843d45">gauss_3Dfilter</a> (const char *ID_name, const char *out_name, float sigma, int filter_size)</td></tr>
 <tr class="separator:ab20ee902b86ee7d0e192c7c00e843d45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc20ea5404ca4d631c908de64f8677ca"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="image__filter_8c.html#abc20ea5404ca4d631c908de64f8677ca">f_filter</a> (const char *ID_name, const char *ID_out, float f1, float f2)</td></tr>
@@ -149,7 +188,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -270,14 +309,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a23b2f9ef65acd5d400c040477d866480"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23b2f9ef65acd5d400c040477d866480">&#9670;&nbsp;</a></span>fconvolve_cli()</h2>
+<a id="aabac55f45c57a71d0078b23cb343ab59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabac55f45c57a71d0078b23cb343ab59">&#9670;&nbsp;</a></span>fconvolve_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t fconvolve_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> fconvolve_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -605,14 +644,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a6358184954a39bca8cbe58e1dc1078d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6358184954a39bca8cbe58e1dc1078d1">&#9670;&nbsp;</a></span>FILTER_percentile_interpol_fast()</h2>
+<a id="a6bb18605ab4ed618e8d008df0e89bafd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bb18605ab4ed618e8d008df0e89bafd">&#9670;&nbsp;</a></span>FILTER_percentile_interpol_fast()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long FILTER_percentile_interpol_fast </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> FILTER_percentile_interpol_fast </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -685,14 +724,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa766cc63e9d9de38824f9a997183eb69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa766cc63e9d9de38824f9a997183eb69">&#9670;&nbsp;</a></span>gauss_filter()</h2>
+<a id="acde8c2beb0e0522990193dbf8b5b3fc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acde8c2beb0e0522990193dbf8b5b3fc5">&#9670;&nbsp;</a></span>gauss_filter()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long gauss_filter </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> gauss_filter </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -725,14 +764,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a391ebc98e6c565175ebedb956120c9ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a391ebc98e6c565175ebedb956120c9ac">&#9670;&nbsp;</a></span>gauss_filter_cli()</h2>
+<a id="af7e96a5b8ef946bd921facef9f9aa4e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7e96a5b8ef946bd921facef9f9aa4e1">&#9670;&nbsp;</a></span>gauss_filter_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t gauss_filter_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> gauss_filter_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -742,14 +781,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a13ca00099d3f16386c1bd78337c12bc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13ca00099d3f16386c1bd78337c12bc0">&#9670;&nbsp;</a></span>init_image_filter()</h2>
+<a id="ae72fd3d4c32e17c282499cc10fb70922"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae72fd3d4c32e17c282499cc10fb70922">&#9670;&nbsp;</a></span>init_image_filter()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int init_image_filter </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_image_filter </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -823,7 +862,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_676befcc5933c2bdc27e94a2782f4631.html">image_filter</a></li><li class="navelem"><a class="el" href="image__filter_8c.html">image_filter.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__process__files_8c.html'
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,15 +95,50 @@ $(document).ready(function(){initNavTree('AOloopControl__process__files_8c.html'
 
 <p>AO loop control - Process log files.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="fft_8h_source.html">fft/fft.h</a>&quot;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_process_files.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__process__files_8c__incl.png" border="0" usemap="#src_2AOloopControl_2AOloopControl__process__files_8c" alt=""/></div>
+<map name="src_2AOloopControl_2AOloopControl__process__files_8c" id="src_2AOloopControl_2AOloopControl__process__files_8c">
+<area shape="rect" id="node2" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1845,95,2002,136"/>
+<area shape="rect" id="node20" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="892,259,1099,285"/>
+<area shape="rect" id="node27" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2027,102,2169,129"/>
+<area shape="rect" id="node28" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2193,95,2413,136"/>
+<area shape="rect" id="node29" href="fft_8h.html" title="fft/fft.h" alt="" coords="2438,102,2499,129"/>
+<area shape="rect" id="node13" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1589,184,1810,211"/>
+<area shape="rect" id="node14" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1634,259,1738,285"/>
+<area shape="rect" id="node17" href="processtools_8h.html" title="Command line interface. " alt="" coords="1895,259,2002,285"/>
+<area shape="rect" id="node18" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1488,259,1596,285"/>
+<area shape="rect" id="node19" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="2403,184,2553,211"/>
+<area shape="rect" id="node16" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1596,341,1749,367"/>
+<area shape="rect" id="node21" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node22" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,333,421,375"/>
+<area shape="rect" id="node23" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="446,333,617,375"/>
+<area shape="rect" id="node24" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="641,341,873,367"/>
+<area shape="rect" id="node25" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="897,333,1093,375"/>
+<area shape="rect" id="node26" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1117,333,1313,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__process__files_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a9fc28b4fe0560796be68d45b9b7f713a"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__process__files_8c.html#a9fc28b4fe0560796be68d45b9b7f713a">AOloopControl_logprocess_modeval</a> (const char *IDname)</td></tr>
-<tr class="memdesc:a9fc28b4fe0560796be68d45b9b7f713a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log the process of the mode evaluation.  <a href="#a9fc28b4fe0560796be68d45b9b7f713a">More...</a><br /></td></tr>
-<tr class="separator:a9fc28b4fe0560796be68d45b9b7f713a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a691df3c02a0cb94559dadc8a62c7bb94"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__process__files_8c.html#a691df3c02a0cb94559dadc8a62c7bb94">AOloopControl_TweakRM</a> (char *ZRMinname, char *DMinCname, char *WFSinCname, char *DMmaskname, char *WFSmaskname, char *RMoutname)</td></tr>
-<tr class="memdesc:a691df3c02a0cb94559dadc8a62c7bb94"><td class="mdescLeft">&#160;</td><td class="mdescRight">tweak zonal response matrix in accordance to WFS response to modes  <a href="#a691df3c02a0cb94559dadc8a62c7bb94">More...</a><br /></td></tr>
-<tr class="separator:a691df3c02a0cb94559dadc8a62c7bb94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a352fb46bb3a4ceb880fca05b693bcc94"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__process__files_8c.html#a352fb46bb3a4ceb880fca05b693bcc94">AOloopControl_logprocess_modeval</a> (const char *IDname)</td></tr>
+<tr class="memdesc:a352fb46bb3a4ceb880fca05b693bcc94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log the process of the mode evaluation.  <a href="#a352fb46bb3a4ceb880fca05b693bcc94">More...</a><br /></td></tr>
+<tr class="separator:a352fb46bb3a4ceb880fca05b693bcc94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6a45acb18a1dad5e8afd638d93960d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__process__files_8c.html#af6a45acb18a1dad5e8afd638d93960d3">AOloopControl_TweakRM</a> (char *ZRMinname, char *DMinCname, char *WFSinCname, char *DMmaskname, char *WFSmaskname, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) char *RMoutname)</td></tr>
+<tr class="separator:af6a45acb18a1dad5e8afd638d93960d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -114,17 +150,31 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AO loop control - Process log files. </p>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000037">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a9fc28b4fe0560796be68d45b9b7f713a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9fc28b4fe0560796be68d45b9b7f713a">&#9670;&nbsp;</a></span>AOloopControl_logprocess_modeval()</h2>
+<p>REAL TIME COMPUTING ROUTINES </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_logprocess_modeval </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a352fb46bb3a4ceb880fca05b693bcc94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a352fb46bb3a4ceb880fca05b693bcc94">&#9670;&nbsp;</a></span>AOloopControl_logprocess_modeval()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_logprocess_modeval </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDname</em></td><td>)</td>
@@ -137,14 +187,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a691df3c02a0cb94559dadc8a62c7bb94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a691df3c02a0cb94559dadc8a62c7bb94">&#9670;&nbsp;</a></span>AOloopControl_TweakRM()</h2>
+<a id="af6a45acb18a1dad5e8afd638d93960d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6a45acb18a1dad5e8afd638d93960d3">&#9670;&nbsp;</a></span>AOloopControl_TweakRM()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_TweakRM </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_TweakRM </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>ZRMinname</em>, </td>
@@ -176,7 +226,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) char *&#160;</td>
           <td class="paramname"><em>RMoutname</em>&#160;</td>
         </tr>
         <tr>
@@ -186,8 +236,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>tweak zonal response matrix in accordance to WFS response to modes </p>
 
 </div>
 </div>
@@ -229,7 +277,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__process__files_8c.html">AOloopControl_process_files.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

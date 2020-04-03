@@ -94,13 +94,65 @@ $(document).ready(function(){initNavTree('AOloopControl__DM__config_8c.html','')
 
 <p>DM control.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;sys/file.h&gt;</code><br />
+<code>#include &lt;sys/mman.h&gt;</code><br />
+<code>#include &lt;err.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;ncurses.h&gt;</code><br />
+<code>#include &lt;semaphore.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="fft_8h_source.html">fft/fft.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="statistic_8h_source.html">statistic/statistic.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__filter_8h_source.html">image_filter/image_filter.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__gen_8h_source.html">image_gen/image_gen.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__DM_8h_source.html">AOloopControl_DM/AOloopControl_DM.h</a>&quot;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_DM_config.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__DM__config_8c__incl.png" border="0" usemap="#src_2AOloopControl__DM_2AOloopControl__DM__config_8c" alt=""/></div>
+<map name="src_2AOloopControl__DM_2AOloopControl__DM__config_8c" id="src_2AOloopControl__DM_2AOloopControl__DM__config_8c">
+<area shape="rect" id="node18" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="463,95,621,136"/>
+<area shape="rect" id="node30" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2465,102,2608,129"/>
+<area shape="rect" id="node31" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2632,95,2852,136"/>
+<area shape="rect" id="node32" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2876,95,3077,136"/>
+<area shape="rect" id="node33" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="3101,95,3300,136"/>
+<area shape="rect" id="node34" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="3324,95,3525,136"/>
+<area shape="rect" id="node35" href="fft_8h.html" title="fft/fft.h" alt="" coords="3550,102,3611,129"/>
+<area shape="rect" id="node36" href="info_8h.html" title="info/info.h" alt="" coords="3636,102,3715,129"/>
+<area shape="rect" id="node37" href="statistic_8h.html" title="Function prototypes for statistic module. " alt="" coords="3739,102,3868,129"/>
+<area shape="rect" id="node38" href="image__filter_8h.html" title="image_filter/image\l_filter.h" alt="" coords="3893,95,4021,136"/>
+<area shape="rect" id="node39" href="image__gen_8h.html" title="image_gen/image_gen.h" alt="" coords="4045,102,4207,129"/>
+<area shape="rect" id="node40" href="AOloopControl__DM_8h.html" title="AOloopControl_DM/AOloopControl_DM.h" alt="" coords="4232,102,4495,129"/>
+<area shape="rect" id="node23" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="989,184,1210,211"/>
+<area shape="rect" id="node24" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="899,259,1003,285"/>
+<area shape="rect" id="node27" href="processtools_8h.html" title="Command line interface. " alt="" coords="366,259,473,285"/>
+<area shape="rect" id="node28" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="31,259,139,285"/>
+<area shape="rect" id="node29" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="763,184,913,211"/>
+<area shape="rect" id="node26" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="875,333,1028,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__config_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5deb546c15a3d4cd7dea8db66a30fd2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__config_8c.html#ad5deb546c15a3d4cd7dea8db66a30fd2">AOloopControl_printDMconf</a> ()</td></tr>
-<tr class="separator:ad5deb546c15a3d4cd7dea8db66a30fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5113606fbd2d28d48f415247b57e2510"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__config_8c.html#a5113606fbd2d28d48f415247b57e2510">AOloopControl_printDMconf</a> ()</td></tr>
+<tr class="separator:a5113606fbd2d28d48f415247b57e2510"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4c71850ba018415d4d035fd4b158a49"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__config_8c.html#ae4c71850ba018415d4d035fd4b158a49">AOloopControl_DM_dmdispcombstatus</a> (long DMindex)</td></tr>
 <tr class="separator:ae4c71850ba018415d4d035fd4b158a49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d84b19a6c3085fa15e64aa18d7587ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__DM__config_8c.html#a2d84b19a6c3085fa15e64aa18d7587ec">AOloopControl_DM_chan_setgain</a> (long DMindex, int ch, float gain)</td></tr>
@@ -141,9 +193,7 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>DM control. </p>
-<p>To be used for AOloopControl module</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>10 Jul 2017 </dd></dl>
+<p>To be used for AOloopControl module </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a2d84b19a6c3085fa15e64aa18d7587ec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2d84b19a6c3085fa15e64aa18d7587ec">&#9670;&nbsp;</a></span>AOloopControl_DM_chan_setgain()</h2>
@@ -401,45 +451,17 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad5deb546c15a3d4cd7dea8db66a30fd2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5deb546c15a3d4cd7dea8db66a30fd2">&#9670;&nbsp;</a></span>AOloopControl_printDMconf()</h2>
+<a id="a5113606fbd2d28d48f415247b57e2510"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5113606fbd2d28d48f415247b57e2510">&#9670;&nbsp;</a></span>AOloopControl_printDMconf()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int AOloopControl_printDMconf </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_printDMconf </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4686db64ee8970c84b269e0425519dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4686db64ee8970c84b269e0425519dec">&#9670;&nbsp;</a></span>clock_gettime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -552,7 +574,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_faeaff7292dc281c383047bdabe06a0d.html">AOloopControl_DM</a></li><li class="navelem"><a class="el" href="AOloopControl__DM__config_8c.html">AOloopControl_DM_config.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

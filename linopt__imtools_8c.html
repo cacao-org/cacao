@@ -94,77 +94,127 @@ $(document).ready(function(){initNavTree('linopt__imtools_8c.html','');});
 
 <p>linear optimization tools  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;ctype.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;semaphore.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_multimin.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_multifit.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_vector.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_matrix.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_math.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_eigen.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_cblas.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_blas.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="statistic_8h_source.html">statistic/statistic.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linopt__imtools_8h_source.html">linopt_imtools/linopt_imtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="cudacomp_8h_source.html">cudacomp/cudacomp.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for linopt_imtools.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="linopt__imtools_8c__incl.png" border="0" usemap="#src_2linopt__imtools_2linopt__imtools_8c" alt=""/></div>
+<map name="src_2linopt__imtools_2linopt__imtools_8c" id="src_2linopt__imtools_2linopt__imtools_8c">
+<area shape="rect" id="node21" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="502,95,660,136"/>
+<area shape="rect" id="node34" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2059,102,2202,129"/>
+<area shape="rect" id="node35" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="2226,95,2427,136"/>
+<area shape="rect" id="node36" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2451,95,2671,136"/>
+<area shape="rect" id="node37" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="2695,95,2894,136"/>
+<area shape="rect" id="node38" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2918,95,3119,136"/>
+<area shape="rect" id="node39" href="statistic_8h.html" title="Function prototypes for statistic module. " alt="" coords="3143,102,3272,129"/>
+<area shape="rect" id="node40" href="info_8h.html" title="info/info.h" alt="" coords="3296,102,3375,129"/>
+<area shape="rect" id="node41" href="linopt__imtools_8h.html" title="Function prototypes for linear algebra tools. " alt="" coords="3399,95,3536,136"/>
+<area shape="rect" id="node42" href="cudacomp_8h.html" title="Function prototypes for CUDA/MAGMA wrapper. " alt="" coords="3561,102,3718,129"/>
+<area shape="rect" id="node28" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="646,184,868,211"/>
+<area shape="rect" id="node29" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="705,259,809,285"/>
+<area shape="rect" id="node31" href="processtools_8h.html" title="Command line interface. " alt="" coords="993,259,1100,285"/>
+<area shape="rect" id="node32" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1124,259,1232,285"/>
+<area shape="rect" id="node33" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="282,184,432,211"/>
+<area shape="rect" id="node30" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="680,333,834,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a65786e09c3bd4c1f8f8f311e91c672c6"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a65786e09c3bd4c1f8f8f311e91c672c6">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a65786e09c3bd4c1f8f8f311e91c672c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af08d1bb1ba5f857b6a98bfe958a71dd0"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#af08d1bb1ba5f857b6a98bfe958a71dd0">linopt_imtools_mask_to_pixtable_cli</a> ()</td></tr>
-<tr class="separator:af08d1bb1ba5f857b6a98bfe958a71dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a673a3c215da3149fac551d4c321cf7a2"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a673a3c215da3149fac551d4c321cf7a2">linopt_imtools_Image_to_vec_cli</a> ()</td></tr>
-<tr class="separator:a673a3c215da3149fac551d4c321cf7a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cb4998061fa447f9d7185b3f8ba0742"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a1cb4998061fa447f9d7185b3f8ba0742">linopt_imtools_vec_to_2DImage_cli</a> ()</td></tr>
-<tr class="separator:a1cb4998061fa447f9d7185b3f8ba0742"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acec3a93d969c9429a562dc68c7b06f3c"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#acec3a93d969c9429a562dc68c7b06f3c">linopt_imtools_makeCosRadModes_cli</a> ()</td></tr>
-<tr class="separator:acec3a93d969c9429a562dc68c7b06f3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bc9023541b3f78c9fbb0893cb8d32ba"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a5bc9023541b3f78c9fbb0893cb8d32ba">linopt_imtools_makeCPAmodes_cli</a> ()</td></tr>
-<tr class="separator:a5bc9023541b3f78c9fbb0893cb8d32ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e1b9bcbe3ffe524e2eac86b4f8d8561"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a9e1b9bcbe3ffe524e2eac86b4f8d8561">linopt_imtools_image_construct_cli</a> ()</td></tr>
-<tr class="separator:a9e1b9bcbe3ffe524e2eac86b4f8d8561"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6645f0c32e5a8bbb1f38e5b7db435b04"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a6645f0c32e5a8bbb1f38e5b7db435b04">linopt_imtools_image_construct_stream_cli</a> ()</td></tr>
-<tr class="separator:a6645f0c32e5a8bbb1f38e5b7db435b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abba8776c2ad45f606893b0f3f797c5ca"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#abba8776c2ad45f606893b0f3f797c5ca">linopt_compute_SVDdecomp_cli</a> ()</td></tr>
-<tr class="separator:abba8776c2ad45f606893b0f3f797c5ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f0aba5de9b203a50e74ecd79233cd3c"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a9f0aba5de9b203a50e74ecd79233cd3c">linopt_compute_SVDpseudoInverse_cli</a> ()</td></tr>
-<tr class="separator:a9f0aba5de9b203a50e74ecd79233cd3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac90d4b6933126f3eeae771cac88fced2"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#ac90d4b6933126f3eeae771cac88fced2">linopt_compute_1Dfit_cli</a> ()</td></tr>
-<tr class="separator:ac90d4b6933126f3eeae771cac88fced2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff9fa4e2195319bd11fbf7176c713b8a"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#aff9fa4e2195319bd11fbf7176c713b8a">linopt_imtools_image_fitModes_cli</a> ()</td></tr>
-<tr class="separator:aff9fa4e2195319bd11fbf7176c713b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae73ad0e7c113b521dc0b809828d524a5"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#ae73ad0e7c113b521dc0b809828d524a5">linopt_compute_linRM_from_inout_cli</a> ()</td></tr>
-<tr class="separator:ae73ad0e7c113b521dc0b809828d524a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70ddd9414004fa23ecc845850f70d16a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a70ddd9414004fa23ecc845850f70d16a">linopt_imtools_mask_to_pixtable_cli</a> ()</td></tr>
+<tr class="separator:a70ddd9414004fa23ecc845850f70d16a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b934cc93d8bcd4bc7cb5e0a6edee8fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a1b934cc93d8bcd4bc7cb5e0a6edee8fc">linopt_imtools_Image_to_vec_cli</a> ()</td></tr>
+<tr class="separator:a1b934cc93d8bcd4bc7cb5e0a6edee8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7c23b6687cdce11f80fb372c3293130"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#ae7c23b6687cdce11f80fb372c3293130">linopt_imtools_vec_to_2DImage_cli</a> ()</td></tr>
+<tr class="separator:ae7c23b6687cdce11f80fb372c3293130"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af361a2927b186ad61deae7bbb48c3d2f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#af361a2927b186ad61deae7bbb48c3d2f">linopt_imtools_makeCosRadModes_cli</a> ()</td></tr>
+<tr class="separator:af361a2927b186ad61deae7bbb48c3d2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab634f82657c4b257978bf31db2db401e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#ab634f82657c4b257978bf31db2db401e">linopt_imtools_makeCPAmodes_cli</a> ()</td></tr>
+<tr class="separator:ab634f82657c4b257978bf31db2db401e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2aaeb93356ce94f024e47e47b31644f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a2aaeb93356ce94f024e47e47b31644f8">linopt_imtools_image_construct_cli</a> ()</td></tr>
+<tr class="separator:a2aaeb93356ce94f024e47e47b31644f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd60cfee54313dda68880738e2cbd1dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#acd60cfee54313dda68880738e2cbd1dd">linopt_imtools_image_construct_stream_cli</a> ()</td></tr>
+<tr class="separator:acd60cfee54313dda68880738e2cbd1dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b3d47d2f6d32e17318db05e97814036"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a4b3d47d2f6d32e17318db05e97814036">linopt_compute_SVDdecomp_cli</a> ()</td></tr>
+<tr class="separator:a4b3d47d2f6d32e17318db05e97814036"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b633eab961a6c38e22aa09af918a4f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a9b633eab961a6c38e22aa09af918a4f8">linopt_compute_SVDpseudoInverse_cli</a> ()</td></tr>
+<tr class="separator:a9b633eab961a6c38e22aa09af918a4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ae28b67c8c7915a7088f1e42ed6386d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a0ae28b67c8c7915a7088f1e42ed6386d">linopt_compute_1Dfit_cli</a> ()</td></tr>
+<tr class="separator:a0ae28b67c8c7915a7088f1e42ed6386d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb520fc06f01477e0221d222719e2724"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#acb520fc06f01477e0221d222719e2724">linopt_imtools_image_fitModes_cli</a> ()</td></tr>
+<tr class="separator:acb520fc06f01477e0221d222719e2724"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d507d9228a6938434643c7ddef5e8fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a7d507d9228a6938434643c7ddef5e8fa">linopt_compute_linRM_from_inout_cli</a> ()</td></tr>
+<tr class="separator:a7d507d9228a6938434643c7ddef5e8fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc117916939017260e807f28af155892"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#afc117916939017260e807f28af155892">init_linopt_imtools</a> ()</td></tr>
-<tr class="separator:afc117916939017260e807f28af155892"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed0da078587cf3fd5702d38c2f289b17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#aed0da078587cf3fd5702d38c2f289b17">init_linopt_imtools</a> ()</td></tr>
+<tr class="separator:aed0da078587cf3fd5702d38c2f289b17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae07da255b651c5b9c2dcb8ff8461673e"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#ae07da255b651c5b9c2dcb8ff8461673e">linopt_imtools_mask_to_pixtable</a> (const char *IDmask_name, const char *IDpixindex_name, const char *IDpixmult_name)</td></tr>
 <tr class="separator:ae07da255b651c5b9c2dcb8ff8461673e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdd05675c00002d528cf3527e43d1739"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#acdd05675c00002d528cf3527e43d1739">linopt_imtools_Image_to_vec</a> (const char *ID_name, const char *IDpixindex_name, const char *IDpixmult_name, const char *IDvec_name)</td></tr>
-<tr class="separator:acdd05675c00002d528cf3527e43d1739"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8eb1cda29b603a7e7f8be4f49163f557"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a8eb1cda29b603a7e7f8be4f49163f557">linopt_imtools_vec_to_2DImage</a> (const char *IDvec_name, const char *IDpixindex_name, const char *IDpixmult_name, const char *ID_name, long xsize, long ysize)</td></tr>
-<tr class="separator:a8eb1cda29b603a7e7f8be4f49163f557"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43e68efaddc75fccc20aaddce0ce0e38"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a43e68efaddc75fccc20aaddce0ce0e38">linopt_imtools_make1Dpolynomials</a> (const char *IDout_name, long NBpts, long MaxOrder, float r0pix)</td></tr>
-<tr class="separator:a43e68efaddc75fccc20aaddce0ce0e38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0eafe811d85ff5c8e8eaf06fbee04cff"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a0eafe811d85ff5c8e8eaf06fbee04cff">linopt_imtools_makeCosRadModes</a> (const char *ID_name, long size, long kmax, float radius, float radfactlim)</td></tr>
-<tr class="separator:a0eafe811d85ff5c8e8eaf06fbee04cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90cbb4c7d5fc6ea2b104653e968be826"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a90cbb4c7d5fc6ea2b104653e968be826">linopt_imtools_Image_to_vec</a> (const char *ID_name, const char *IDpixindex_name, const char *IDpixmult_name, const char *IDvec_name)</td></tr>
+<tr class="separator:a90cbb4c7d5fc6ea2b104653e968be826"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05cc0e0b6599cb328a87e956366640b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a05cc0e0b6599cb328a87e956366640b3">linopt_imtools_vec_to_2DImage</a> (const char *IDvec_name, const char *IDpixindex_name, const char *IDpixmult_name, const char *ID_name, long xsize, long ysize)</td></tr>
+<tr class="separator:a05cc0e0b6599cb328a87e956366640b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a526079f06ce7623e41e52fa3c7d15123"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a526079f06ce7623e41e52fa3c7d15123">linopt_imtools_make1Dpolynomials</a> (const char *IDout_name, long NBpts, long MaxOrder, float r0pix)</td></tr>
+<tr class="separator:a526079f06ce7623e41e52fa3c7d15123"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfa2a65c58617a5cf81ff216c7f75fde"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#acfa2a65c58617a5cf81ff216c7f75fde">linopt_imtools_makeCosRadModes</a> (const char *ID_name, long size, long kmax, float radius, float radfactlim)</td></tr>
+<tr class="separator:acfa2a65c58617a5cf81ff216c7f75fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ca85d341c28a35c3cf24f0281544c44"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a7ca85d341c28a35c3cf24f0281544c44">linopt_imtools_makeCPAmodes</a> (const char *ID_name, long size, float CPAmax, float deltaCPA, float radius, float radfactlim, int writeMfile)</td></tr>
 <tr class="separator:a7ca85d341c28a35c3cf24f0281544c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf93e1a4d5711293f1c9f3e4bf6b8787"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#acf93e1a4d5711293f1c9f3e4bf6b8787">linopt_imtools_opt_f</a> (const gsl_vector *v, void *params)</td></tr>
-<tr class="separator:acf93e1a4d5711293f1c9f3e4bf6b8787"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a201f4a7f248737f57d7de703a1b5f973"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a201f4a7f248737f57d7de703a1b5f973">linopt_imtools_opt_f</a> (const gsl_vector *v, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) void *params)</td></tr>
+<tr class="separator:a201f4a7f248737f57d7de703a1b5f973"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b9cd25339d9467d61491fbcd88e3793"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a4b9cd25339d9467d61491fbcd88e3793">linopt_imtools_opt_df</a> (const gsl_vector *v, void *params, gsl_vector *df)</td></tr>
 <tr class="separator:a4b9cd25339d9467d61491fbcd88e3793"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1862ff1dc654d23638cb4f8c3ff5fba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#ab1862ff1dc654d23638cb4f8c3ff5fba">linopt_imtools_opt_fdf</a> (const gsl_vector *x, void *params, double *f, gsl_vector *df)</td></tr>
 <tr class="separator:ab1862ff1dc654d23638cb4f8c3ff5fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af390daa8d42ed3a46884cf54b91acfa1"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#af390daa8d42ed3a46884cf54b91acfa1">linopt_imtools_image_construct</a> (const char *IDmodes_name, const char *IDcoeff_name, const char *ID_name)</td></tr>
-<tr class="separator:af390daa8d42ed3a46884cf54b91acfa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ebbb8cb02d8a7b19abe1dbdcf1bd4af"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a8ebbb8cb02d8a7b19abe1dbdcf1bd4af">linopt_imtools_image_construct_stream</a> (const char *IDmodes_name, const char *IDcoeff_name, const char *IDout_name)</td></tr>
-<tr class="separator:a8ebbb8cb02d8a7b19abe1dbdcf1bd4af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af333dc23263f00e0326f3bde719d1627"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#af333dc23263f00e0326f3bde719d1627">linopt_compute_SVDdecomp</a> (const char *IDin_name, const char *IDout_name, const char *IDcoeff_name)</td></tr>
-<tr class="separator:af333dc23263f00e0326f3bde719d1627"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94d6b25fcfb460b2363109268210cc31"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a94d6b25fcfb460b2363109268210cc31">linopt_compute_SVDpseudoInverse</a> (const char *ID_Rmatrix_name, const char *ID_Cmatrix_name, double SVDeps, long MaxNBmodes, const char *ID_VTmatrix_name)</td></tr>
-<tr class="separator:a94d6b25fcfb460b2363109268210cc31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeed040346b9c664de625ba1a04fed869"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#aeed040346b9c664de625ba1a04fed869">linopt_compute_1Dfit</a> (const char *fnamein, long NBpt, long MaxOrder, const char *fnameout, int MODE)</td></tr>
-<tr class="separator:aeed040346b9c664de625ba1a04fed869"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89de6a37c4046515b5006e2316de3f43"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a89de6a37c4046515b5006e2316de3f43">linopt_imtools_image_fitModes</a> (const char *ID_name, const char *IDmodes_name, const char *IDmask_name, double SVDeps, const char *IDcoeff_name, int reuse)</td></tr>
-<tr class="separator:a89de6a37c4046515b5006e2316de3f43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d7e564147aaa34d4448d4e0eae43b91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a4d7e564147aaa34d4448d4e0eae43b91">linopt_imtools_image_construct</a> (const char *IDmodes_name, const char *IDcoeff_name, const char *ID_name)</td></tr>
+<tr class="separator:a4d7e564147aaa34d4448d4e0eae43b91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60d5da04162703102af782e17f15f330"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a60d5da04162703102af782e17f15f330">linopt_imtools_image_construct_stream</a> (const char *IDmodes_name, const char *IDcoeff_name, const char *IDout_name)</td></tr>
+<tr class="separator:a60d5da04162703102af782e17f15f330"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f4ca880c1486263de124043b58b125a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a5f4ca880c1486263de124043b58b125a">linopt_compute_SVDdecomp</a> (const char *IDin_name, const char *IDout_name, const char *IDcoeff_name)</td></tr>
+<tr class="separator:a5f4ca880c1486263de124043b58b125a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22214ca4211fedcf988af89cd4e01c87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a22214ca4211fedcf988af89cd4e01c87">linopt_compute_SVDpseudoInverse</a> (const char *ID_Rmatrix_name, const char *ID_Cmatrix_name, double SVDeps, long MaxNBmodes, const char *ID_VTmatrix_name)</td></tr>
+<tr class="separator:a22214ca4211fedcf988af89cd4e01c87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a903122b4c49a97607efcfe19ddeabfb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a903122b4c49a97607efcfe19ddeabfb4">linopt_compute_1Dfit</a> (const char *fnamein, long NBpt, long MaxOrder, const char *fnameout, int MODE)</td></tr>
+<tr class="separator:a903122b4c49a97607efcfe19ddeabfb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac56a22d4a6a0a6141d10a7f8537d8f19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#ac56a22d4a6a0a6141d10a7f8537d8f19">linopt_imtools_image_fitModes</a> (const char *ID_name, const char *IDmodes_name, const char *IDmask_name, double SVDeps, const char *IDcoeff_name, int reuse)</td></tr>
+<tr class="separator:ac56a22d4a6a0a6141d10a7f8537d8f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad48e6c29737ad901d4a20484c20b863"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#aad48e6c29737ad901d4a20484c20b863">linopt_imtools_match_slow</a> (const char *ID_name, const char *IDref_name, const char *IDmask_name, const char *IDsol_name, const char *IDout_name)</td></tr>
 <tr class="separator:aad48e6c29737ad901d4a20484c20b863"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58880d72f814fc608aa5c35c91c8a5d1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a58880d72f814fc608aa5c35c91c8a5d1">linopt_imtools_match</a> (const char *ID_name, const char *IDref_name, const char *IDmask_name, const char *IDsol_name, const char *IDout_name)</td></tr>
 <tr class="separator:a58880d72f814fc608aa5c35c91c8a5d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab54ce92e786d475dae79a07cda07a905"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#ab54ce92e786d475dae79a07cda07a905">linopt_compute_linRM_from_inout</a> (const char *IDinput_name, const char *IDinmask_name, const char *IDoutput_name, const char *IDRM_name)</td></tr>
-<tr class="memdesc:ab54ce92e786d475dae79a07cda07a905"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve for response matrix given a series of input and output.  <a href="#ab54ce92e786d475dae79a07cda07a905">More...</a><br /></td></tr>
-<tr class="separator:ab54ce92e786d475dae79a07cda07a905"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c806348728d5258e0b8366a14b06d54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linopt__imtools_8c.html#a7c806348728d5258e0b8366a14b06d54">linopt_compute_linRM_from_inout</a> (const char *IDinput_name, const char *IDinmask_name, const char *IDoutput_name, const char *IDRM_name)</td></tr>
+<tr class="memdesc:a7c806348728d5258e0b8366a14b06d54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve for response matrix given a series of input and output.  <a href="#a7c806348728d5258e0b8366a14b06d54">More...</a><br /></td></tr>
+<tr class="separator:a7c806348728d5258e0b8366a14b06d54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -185,10 +235,7 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>linear optimization tools </p>
-<p>CPU-based lineal algebra tools: decomposition, SVD etc...</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>7 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000094">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
+<p>CPU-based lineal algebra tools: decomposition, SVD etc... </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
@@ -197,7 +244,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -210,50 +257,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a65786e09c3bd4c1f8f8f311e91c672c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a65786e09c3bd4c1f8f8f311e91c672c6">&#9670;&nbsp;</a></span>clock_gettime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afc117916939017260e807f28af155892"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc117916939017260e807f28af155892">&#9670;&nbsp;</a></span>init_linopt_imtools()</h2>
+<a id="aed0da078587cf3fd5702d38c2f289b17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed0da078587cf3fd5702d38c2f289b17">&#9670;&nbsp;</a></span>init_linopt_imtools()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int init_linopt_imtools </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_linopt_imtools </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -263,14 +274,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aeed040346b9c664de625ba1a04fed869"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeed040346b9c664de625ba1a04fed869">&#9670;&nbsp;</a></span>linopt_compute_1Dfit()</h2>
+<a id="a903122b4c49a97607efcfe19ddeabfb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a903122b4c49a97607efcfe19ddeabfb4">&#9670;&nbsp;</a></span>linopt_compute_1Dfit()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_compute_1Dfit </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_compute_1Dfit </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>fnamein</em>, </td>
@@ -309,14 +320,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac90d4b6933126f3eeae771cac88fced2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac90d4b6933126f3eeae771cac88fced2">&#9670;&nbsp;</a></span>linopt_compute_1Dfit_cli()</h2>
+<a id="a0ae28b67c8c7915a7088f1e42ed6386d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ae28b67c8c7915a7088f1e42ed6386d">&#9670;&nbsp;</a></span>linopt_compute_1Dfit_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_compute_1Dfit_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_compute_1Dfit_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -326,14 +337,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab54ce92e786d475dae79a07cda07a905"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab54ce92e786d475dae79a07cda07a905">&#9670;&nbsp;</a></span>linopt_compute_linRM_from_inout()</h2>
+<a id="a7c806348728d5258e0b8366a14b06d54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c806348728d5258e0b8366a14b06d54">&#9670;&nbsp;</a></span>linopt_compute_linRM_from_inout()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_compute_linRM_from_inout </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_compute_linRM_from_inout </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDinput_name</em>, </td>
@@ -369,14 +380,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae73ad0e7c113b521dc0b809828d524a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae73ad0e7c113b521dc0b809828d524a5">&#9670;&nbsp;</a></span>linopt_compute_linRM_from_inout_cli()</h2>
+<a id="a7d507d9228a6938434643c7ddef5e8fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d507d9228a6938434643c7ddef5e8fa">&#9670;&nbsp;</a></span>linopt_compute_linRM_from_inout_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_compute_linRM_from_inout_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_compute_linRM_from_inout_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -386,14 +397,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af333dc23263f00e0326f3bde719d1627"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af333dc23263f00e0326f3bde719d1627">&#9670;&nbsp;</a></span>linopt_compute_SVDdecomp()</h2>
+<a id="a5f4ca880c1486263de124043b58b125a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f4ca880c1486263de124043b58b125a">&#9670;&nbsp;</a></span>linopt_compute_SVDdecomp()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_compute_SVDdecomp </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_compute_SVDdecomp </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -423,14 +434,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="abba8776c2ad45f606893b0f3f797c5ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abba8776c2ad45f606893b0f3f797c5ca">&#9670;&nbsp;</a></span>linopt_compute_SVDdecomp_cli()</h2>
+<a id="a4b3d47d2f6d32e17318db05e97814036"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b3d47d2f6d32e17318db05e97814036">&#9670;&nbsp;</a></span>linopt_compute_SVDdecomp_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_compute_SVDdecomp_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_compute_SVDdecomp_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -440,14 +451,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a94d6b25fcfb460b2363109268210cc31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94d6b25fcfb460b2363109268210cc31">&#9670;&nbsp;</a></span>linopt_compute_SVDpseudoInverse()</h2>
+<a id="a22214ca4211fedcf988af89cd4e01c87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22214ca4211fedcf988af89cd4e01c87">&#9670;&nbsp;</a></span>linopt_compute_SVDpseudoInverse()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int linopt_compute_SVDpseudoInverse </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_compute_SVDpseudoInverse </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_Rmatrix_name</em>, </td>
@@ -486,14 +497,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9f0aba5de9b203a50e74ecd79233cd3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f0aba5de9b203a50e74ecd79233cd3c">&#9670;&nbsp;</a></span>linopt_compute_SVDpseudoInverse_cli()</h2>
+<a id="a9b633eab961a6c38e22aa09af918a4f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b633eab961a6c38e22aa09af918a4f8">&#9670;&nbsp;</a></span>linopt_compute_SVDpseudoInverse_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_compute_SVDpseudoInverse_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_compute_SVDpseudoInverse_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -503,14 +514,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af390daa8d42ed3a46884cf54b91acfa1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af390daa8d42ed3a46884cf54b91acfa1">&#9670;&nbsp;</a></span>linopt_imtools_image_construct()</h2>
+<a id="a4d7e564147aaa34d4448d4e0eae43b91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d7e564147aaa34d4448d4e0eae43b91">&#9670;&nbsp;</a></span>linopt_imtools_image_construct()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_imtools_image_construct </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_imtools_image_construct </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDmodes_name</em>, </td>
@@ -537,14 +548,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9e1b9bcbe3ffe524e2eac86b4f8d8561"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e1b9bcbe3ffe524e2eac86b4f8d8561">&#9670;&nbsp;</a></span>linopt_imtools_image_construct_cli()</h2>
+<a id="a2aaeb93356ce94f024e47e47b31644f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2aaeb93356ce94f024e47e47b31644f8">&#9670;&nbsp;</a></span>linopt_imtools_image_construct_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_imtools_image_construct_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_imtools_image_construct_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -554,14 +565,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a8ebbb8cb02d8a7b19abe1dbdcf1bd4af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ebbb8cb02d8a7b19abe1dbdcf1bd4af">&#9670;&nbsp;</a></span>linopt_imtools_image_construct_stream()</h2>
+<a id="a60d5da04162703102af782e17f15f330"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60d5da04162703102af782e17f15f330">&#9670;&nbsp;</a></span>linopt_imtools_image_construct_stream()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_imtools_image_construct_stream </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_imtools_image_construct_stream </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDmodes_name</em>, </td>
@@ -588,14 +599,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a6645f0c32e5a8bbb1f38e5b7db435b04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6645f0c32e5a8bbb1f38e5b7db435b04">&#9670;&nbsp;</a></span>linopt_imtools_image_construct_stream_cli()</h2>
+<a id="acd60cfee54313dda68880738e2cbd1dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd60cfee54313dda68880738e2cbd1dd">&#9670;&nbsp;</a></span>linopt_imtools_image_construct_stream_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_imtools_image_construct_stream_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_imtools_image_construct_stream_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -605,14 +616,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a89de6a37c4046515b5006e2316de3f43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89de6a37c4046515b5006e2316de3f43">&#9670;&nbsp;</a></span>linopt_imtools_image_fitModes()</h2>
+<a id="ac56a22d4a6a0a6141d10a7f8537d8f19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac56a22d4a6a0a6141d10a7f8537d8f19">&#9670;&nbsp;</a></span>linopt_imtools_image_fitModes()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_imtools_image_fitModes </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_imtools_image_fitModes </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -657,14 +668,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aff9fa4e2195319bd11fbf7176c713b8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff9fa4e2195319bd11fbf7176c713b8a">&#9670;&nbsp;</a></span>linopt_imtools_image_fitModes_cli()</h2>
+<a id="acb520fc06f01477e0221d222719e2724"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb520fc06f01477e0221d222719e2724">&#9670;&nbsp;</a></span>linopt_imtools_image_fitModes_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_imtools_image_fitModes_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_imtools_image_fitModes_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -674,14 +685,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="acdd05675c00002d528cf3527e43d1739"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acdd05675c00002d528cf3527e43d1739">&#9670;&nbsp;</a></span>linopt_imtools_Image_to_vec()</h2>
+<a id="a90cbb4c7d5fc6ea2b104653e968be826"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90cbb4c7d5fc6ea2b104653e968be826">&#9670;&nbsp;</a></span>linopt_imtools_Image_to_vec()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_imtools_Image_to_vec </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_imtools_Image_to_vec </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -714,14 +725,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a673a3c215da3149fac551d4c321cf7a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a673a3c215da3149fac551d4c321cf7a2">&#9670;&nbsp;</a></span>linopt_imtools_Image_to_vec_cli()</h2>
+<a id="a1b934cc93d8bcd4bc7cb5e0a6edee8fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b934cc93d8bcd4bc7cb5e0a6edee8fc">&#9670;&nbsp;</a></span>linopt_imtools_Image_to_vec_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_imtools_Image_to_vec_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_imtools_Image_to_vec_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -731,14 +742,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a43e68efaddc75fccc20aaddce0ce0e38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43e68efaddc75fccc20aaddce0ce0e38">&#9670;&nbsp;</a></span>linopt_imtools_make1Dpolynomials()</h2>
+<a id="a526079f06ce7623e41e52fa3c7d15123"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a526079f06ce7623e41e52fa3c7d15123">&#9670;&nbsp;</a></span>linopt_imtools_make1Dpolynomials()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_imtools_make1Dpolynomials </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_imtools_make1Dpolynomials </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDout_name</em>, </td>
@@ -771,14 +782,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0eafe811d85ff5c8e8eaf06fbee04cff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0eafe811d85ff5c8e8eaf06fbee04cff">&#9670;&nbsp;</a></span>linopt_imtools_makeCosRadModes()</h2>
+<a id="acfa2a65c58617a5cf81ff216c7f75fde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfa2a65c58617a5cf81ff216c7f75fde">&#9670;&nbsp;</a></span>linopt_imtools_makeCosRadModes()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_imtools_makeCosRadModes </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_imtools_makeCosRadModes </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -817,14 +828,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="acec3a93d969c9429a562dc68c7b06f3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acec3a93d969c9429a562dc68c7b06f3c">&#9670;&nbsp;</a></span>linopt_imtools_makeCosRadModes_cli()</h2>
+<a id="af361a2927b186ad61deae7bbb48c3d2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af361a2927b186ad61deae7bbb48c3d2f">&#9670;&nbsp;</a></span>linopt_imtools_makeCosRadModes_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_imtools_makeCosRadModes_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_imtools_makeCosRadModes_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -892,14 +903,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5bc9023541b3f78c9fbb0893cb8d32ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5bc9023541b3f78c9fbb0893cb8d32ba">&#9670;&nbsp;</a></span>linopt_imtools_makeCPAmodes_cli()</h2>
+<a id="ab634f82657c4b257978bf31db2db401e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab634f82657c4b257978bf31db2db401e">&#9670;&nbsp;</a></span>linopt_imtools_makeCPAmodes_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_imtools_makeCPAmodes_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_imtools_makeCPAmodes_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -943,14 +954,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af08d1bb1ba5f857b6a98bfe958a71dd0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af08d1bb1ba5f857b6a98bfe958a71dd0">&#9670;&nbsp;</a></span>linopt_imtools_mask_to_pixtable_cli()</h2>
+<a id="a70ddd9414004fa23ecc845850f70d16a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70ddd9414004fa23ecc845850f70d16a">&#9670;&nbsp;</a></span>linopt_imtools_mask_to_pixtable_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_imtools_mask_to_pixtable_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_imtools_mask_to_pixtable_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1086,8 +1097,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="acf93e1a4d5711293f1c9f3e4bf6b8787"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf93e1a4d5711293f1c9f3e4bf6b8787">&#9670;&nbsp;</a></span>linopt_imtools_opt_f()</h2>
+<a id="a201f4a7f248737f57d7de703a1b5f973"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a201f4a7f248737f57d7de703a1b5f973">&#9670;&nbsp;</a></span>linopt_imtools_opt_f()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1101,7 +1112,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">void *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) void *&#160;</td>
           <td class="paramname"><em>params</em>&#160;</td>
         </tr>
         <tr>
@@ -1154,14 +1165,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a8eb1cda29b603a7e7f8be4f49163f557"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8eb1cda29b603a7e7f8be4f49163f557">&#9670;&nbsp;</a></span>linopt_imtools_vec_to_2DImage()</h2>
+<a id="a05cc0e0b6599cb328a87e956366640b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05cc0e0b6599cb328a87e956366640b3">&#9670;&nbsp;</a></span>linopt_imtools_vec_to_2DImage()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long linopt_imtools_vec_to_2DImage </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> linopt_imtools_vec_to_2DImage </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDvec_name</em>, </td>
@@ -1206,14 +1217,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1cb4998061fa447f9d7185b3f8ba0742"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cb4998061fa447f9d7185b3f8ba0742">&#9670;&nbsp;</a></span>linopt_imtools_vec_to_2DImage_cli()</h2>
+<a id="ae7c23b6687cdce11f80fb372c3293130"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7c23b6687cdce11f80fb372c3293130">&#9670;&nbsp;</a></span>linopt_imtools_vec_to_2DImage_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t linopt_imtools_vec_to_2DImage_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> linopt_imtools_vec_to_2DImage_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1377,7 +1388,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_082a3b8b4397c5d97227e6064a755880.html">linopt_imtools</a></li><li class="navelem"><a class="el" href="linopt__imtools_8c.html">linopt_imtools.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

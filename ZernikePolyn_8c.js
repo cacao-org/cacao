@@ -1,5 +1,7 @@
 var ZernikePolyn_8c =
 [
+    [ "PI", "ZernikePolyn_8c.html#a598a3330b3c21701223ee0ca14316eca", null ],
+    [ "SWAP", "ZernikePolyn_8c.html#a5d9d454d4b9f2ff8106d5199ac0d0186", null ],
     [ "__attribute__", "ZernikePolyn_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "fact", "ZernikePolyn_8c.html#af7524858a2e89eb535d1afe4a573fc48", null ],
     [ "fit_zer", "ZernikePolyn_8c.html#a31a371141d2828faf05365e7eaee52a5", null ],
@@ -7,13 +9,13 @@ var ZernikePolyn_8c =
     [ "get_zer_crop", "ZernikePolyn_8c.html#ae93cd7bd1ea067b76e92a9000df29958", null ],
     [ "get_zern_array", "ZernikePolyn_8c.html#a4cb38a061f9a89a7fd5b6f1fd21a8a3f", null ],
     [ "get_zerns", "ZernikePolyn_8c.html#ab0d279c8b5bde5f10431251c78a70812", null ],
-    [ "init_ZernikePolyn", "ZernikePolyn_8c.html#a1fe2ce39f9bc2169cb9978832ef64fb8", null ],
-    [ "mk_zer", "ZernikePolyn_8c.html#a9c560e3379d16ae5a239ff1ba300b310", null ],
-    [ "mk_zer_cli", "ZernikePolyn_8c.html#a1ffbde69d004277c5845138ecb9394ae", null ],
-    [ "mk_zer_series", "ZernikePolyn_8c.html#a4fc56cafbb9e2796ed3543782d27c64a", null ],
-    [ "mk_zer_seriescube", "ZernikePolyn_8c.html#ab8c8976411c01da5bcc024f5f4c72a3b", null ],
-    [ "mk_zer_unbounded", "ZernikePolyn_8c.html#a9d1b4238d001e5a9b08010138853c8fb", null ],
-    [ "mk_zer_unbounded1", "ZernikePolyn_8c.html#aaa9a17c8f3de4537ab065288009d8c8c", null ],
+    [ "init_ZernikePolyn", "ZernikePolyn_8c.html#add80f253f55c1a0c1ec4086fccd72767", null ],
+    [ "mk_zer", "ZernikePolyn_8c.html#a3dc7c310f9220de6d22d51031027448d", null ],
+    [ "mk_zer_cli", "ZernikePolyn_8c.html#a13fb3023be0be13b4ca4fb0abfa633a3", null ],
+    [ "mk_zer_series", "ZernikePolyn_8c.html#a05b43f0570254ea44645b14c33b10043", null ],
+    [ "mk_zer_seriescube", "ZernikePolyn_8c.html#ab52923d93937685e873c4cbbb7953ad7", null ],
+    [ "mk_zer_unbounded", "ZernikePolyn_8c.html#a830d3bffa5fba1aa5f5e2ffc451f1b3e", null ],
+    [ "mk_zer_unbounded1", "ZernikePolyn_8c.html#a643585c4b1434e50e9b1fbfdc51d9e54", null ],
     [ "remove_TTF", "ZernikePolyn_8c.html#aa1781de65942d370f0aadfc429c27209", null ],
     [ "remove_zerns", "ZernikePolyn_8c.html#aa507e40039561612a2ad2228c4ece264", null ],
     [ "zernike_init", "ZernikePolyn_8c.html#a34e87076be4c021d3b0976438605bce6", null ],
@@ -21,7 +23,7 @@ var ZernikePolyn_8c =
     [ "Zernike_n", "ZernikePolyn_8c.html#a88d525df12aad5d8ed62e9fa788adda2", null ],
     [ "Zernike_value", "ZernikePolyn_8c.html#a651851e4e65b70c8aed8ff5e5471e0fc", null ],
     [ "ZERNIKEPOLYN_rmPiston", "ZernikePolyn_8c.html#a5dbfdca8ba770d4108b8418de82e1104", null ],
-    [ "ZERNIKEPOLYN_rmPiston_cli", "ZernikePolyn_8c.html#aedcbd216b72931511f1531e8b408cc84", null ],
+    [ "ZERNIKEPOLYN_rmPiston_cli", "ZernikePolyn_8c.html#a1f995ea86348f3e984540c0f6757ed8e", null ],
     [ "INITSTATUS_ZernikePolyn", "ZernikePolyn_8c.html#a9b8ca157b7f552c2b4eef89664bdb621", null ],
     [ "Zernike", "ZernikePolyn_8c.html#a756b785b43e264e97a9c0c31ff984411", null ]
 ];

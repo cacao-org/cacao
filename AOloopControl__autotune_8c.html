@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__autotune_8c.html','');}
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_autotune.c File Reference</div>  </div>
@@ -93,29 +94,63 @@ $(document).ready(function(){initNavTree('AOloopControl__autotune_8c.html','');}
 
 <p>AO loop control - INTEGRATOR AUTO TUNING.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__perfTest_8h_source.html">AOloopControl_perfTest/AOloopControl_perfTest.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_autotune.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__autotune_8c__incl.png" border="0" usemap="#src_2AOloopControl_2AOloopControl__autotune_8c" alt=""/></div>
+<map name="src_2AOloopControl_2AOloopControl__autotune_8c" id="src_2AOloopControl_2AOloopControl__autotune_8c">
+<area shape="rect" id="node2" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1845,95,2002,136"/>
+<area shape="rect" id="node20" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="892,259,1099,285"/>
+<area shape="rect" id="node27" href="AOloopControl__perfTest_8h.html" title="Function prototypes for Adaptive Optics Control loop engine performance Tests. " alt="" coords="2027,95,2204,136"/>
+<area shape="rect" id="node28" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2228,102,2371,129"/>
+<area shape="rect" id="node29" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2395,95,2615,136"/>
+<area shape="rect" id="node13" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1589,184,1810,211"/>
+<area shape="rect" id="node14" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1634,259,1738,285"/>
+<area shape="rect" id="node17" href="processtools_8h.html" title="Command line interface. " alt="" coords="1895,259,2002,285"/>
+<area shape="rect" id="node18" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1488,259,1596,285"/>
+<area shape="rect" id="node19" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="2403,184,2553,211"/>
+<area shape="rect" id="node16" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1596,341,1749,367"/>
+<area shape="rect" id="node21" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node22" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,333,421,375"/>
+<area shape="rect" id="node23" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="446,333,617,375"/>
+<area shape="rect" id="node24" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="641,341,873,367"/>
+<area shape="rect" id="node25" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="897,333,1093,375"/>
+<area shape="rect" id="node26" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1117,333,1313,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl - 8.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING</div></td></tr>
-<tr class="memitem:a4b592751014219bf5c8afcb12c0d1a01"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a4b592751014219bf5c8afcb12c0d1a01">AOloopControl_AUTOTUNE_LIMITS_on</a> ()</td></tr>
-<tr class="memdesc:a4b592751014219bf5c8afcb12c0d1a01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set limit auto tune : on.  <a href="#a4b592751014219bf5c8afcb12c0d1a01">More...</a><br /></td></tr>
-<tr class="separator:a4b592751014219bf5c8afcb12c0d1a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fb5c314e68474a374f91a0a716d689d"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a8fb5c314e68474a374f91a0a716d689d">AOloopControl_AUTOTUNE_LIMITS_off</a> ()</td></tr>
-<tr class="memdesc:a8fb5c314e68474a374f91a0a716d689d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set limit auto tune : off.  <a href="#a8fb5c314e68474a374f91a0a716d689d">More...</a><br /></td></tr>
-<tr class="separator:a8fb5c314e68474a374f91a0a716d689d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb01629d624f7fff31e0be7a39325df9"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#acb01629d624f7fff31e0be7a39325df9">AOloopControl_set_AUTOTUNE_LIMITS_delta</a> (float AUTOTUNE_LIMITS_delta)</td></tr>
-<tr class="memdesc:acb01629d624f7fff31e0be7a39325df9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options auto tune limit The limit is fixed at the beginning. When the fraction of mode values higher than the current limit times mcoeff is larger than perc (percentile); then the limit increases by delta. Otherwise, it decreases by delta.  <a href="#acb01629d624f7fff31e0be7a39325df9">More...</a><br /></td></tr>
-<tr class="separator:acb01629d624f7fff31e0be7a39325df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a663727797a7a261b38259bbc69e73a61"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a663727797a7a261b38259bbc69e73a61">AOloopControl_set_AUTOTUNE_LIMITS_perc</a> (float AUTOTUNE_LIMITS_perc)</td></tr>
-<tr class="separator:a663727797a7a261b38259bbc69e73a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2640a90affa01148c4d2082b26e6c9d7"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a2640a90affa01148c4d2082b26e6c9d7">AOloopControl_set_AUTOTUNE_LIMITS_mcoeff</a> (float AUTOTUNE_LIMITS_mcoeff)</td></tr>
-<tr class="separator:a2640a90affa01148c4d2082b26e6c9d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a161f9b2b9cf3fabb48103a880f2dfa32"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a161f9b2b9cf3fabb48103a880f2dfa32">AOloopControl_AUTOTUNE_GAINS_on</a> ()</td></tr>
-<tr class="memdesc:a161f9b2b9cf3fabb48103a880f2dfa32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set gain auto tune : on.  <a href="#a161f9b2b9cf3fabb48103a880f2dfa32">More...</a><br /></td></tr>
-<tr class="separator:a161f9b2b9cf3fabb48103a880f2dfa32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31cadbcb286f552074469a1757fadf37"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a31cadbcb286f552074469a1757fadf37">AOloopControl_AUTOTUNE_GAINS_off</a> ()</td></tr>
-<tr class="memdesc:a31cadbcb286f552074469a1757fadf37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set gain auto tune : off.  <a href="#a31cadbcb286f552074469a1757fadf37">More...</a><br /></td></tr>
-<tr class="separator:a31cadbcb286f552074469a1757fadf37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0a451bd87197a7c5c6edd523f07beba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#ab0a451bd87197a7c5c6edd523f07beba">AOloopControl_AUTOTUNE_LIMITS_on</a> ()</td></tr>
+<tr class="memdesc:ab0a451bd87197a7c5c6edd523f07beba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set limit auto tune : on.  <a href="#ab0a451bd87197a7c5c6edd523f07beba">More...</a><br /></td></tr>
+<tr class="separator:ab0a451bd87197a7c5c6edd523f07beba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af69f4d9e365b73674ec9516ec9bc2b2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#af69f4d9e365b73674ec9516ec9bc2b2a">AOloopControl_AUTOTUNE_LIMITS_off</a> ()</td></tr>
+<tr class="memdesc:af69f4d9e365b73674ec9516ec9bc2b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set limit auto tune : off.  <a href="#af69f4d9e365b73674ec9516ec9bc2b2a">More...</a><br /></td></tr>
+<tr class="separator:af69f4d9e365b73674ec9516ec9bc2b2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28cc6cf6b70cf8a6b4e25f7d1c28ef55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a28cc6cf6b70cf8a6b4e25f7d1c28ef55">AOloopControl_set_AUTOTUNE_LIMITS_delta</a> (float AUTOTUNE_LIMITS_delta)</td></tr>
+<tr class="memdesc:a28cc6cf6b70cf8a6b4e25f7d1c28ef55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options auto tune limit The limit is fixed at the beginning. When the fraction of mode values higher than the current limit times mcoeff is larger than perc (percentile); then the limit increases by delta. Otherwise, it decreases by delta.  <a href="#a28cc6cf6b70cf8a6b4e25f7d1c28ef55">More...</a><br /></td></tr>
+<tr class="separator:a28cc6cf6b70cf8a6b4e25f7d1c28ef55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63d961621f35793dda7ca07970663faf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a63d961621f35793dda7ca07970663faf">AOloopControl_set_AUTOTUNE_LIMITS_perc</a> (float AUTOTUNE_LIMITS_perc)</td></tr>
+<tr class="separator:a63d961621f35793dda7ca07970663faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad92c70936b8ec9b70b8071a4b7193c81"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#ad92c70936b8ec9b70b8071a4b7193c81">AOloopControl_set_AUTOTUNE_LIMITS_mcoeff</a> (float AUTOTUNE_LIMITS_mcoeff)</td></tr>
+<tr class="separator:ad92c70936b8ec9b70b8071a4b7193c81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3755a7dc3fc5bcc856111c3f9c42275f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#a3755a7dc3fc5bcc856111c3f9c42275f">AOloopControl_AUTOTUNE_GAINS_on</a> ()</td></tr>
+<tr class="memdesc:a3755a7dc3fc5bcc856111c3f9c42275f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set gain auto tune : on.  <a href="#a3755a7dc3fc5bcc856111c3f9c42275f">More...</a><br /></td></tr>
+<tr class="separator:a3755a7dc3fc5bcc856111c3f9c42275f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4be4fc78348d31f81cd728e9496d31a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__autotune_8c.html#ad4be4fc78348d31f81cd728e9496d31a">AOloopControl_AUTOTUNE_GAINS_off</a> ()</td></tr>
+<tr class="memdesc:ad4be4fc78348d31f81cd728e9496d31a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set gain auto tune : off.  <a href="#ad4be4fc78348d31f81cd728e9496d31a">More...</a><br /></td></tr>
+<tr class="separator:ad4be4fc78348d31f81cd728e9496d31a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -127,17 +162,31 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>AO loop control - INTEGRATOR AUTO TUNING. </p>
-<p>REAL TIME COMPUTING ROUTINES</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000025">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a31cadbcb286f552074469a1757fadf37"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31cadbcb286f552074469a1757fadf37">&#9670;&nbsp;</a></span>AOloopControl_AUTOTUNE_GAINS_off()</h2>
+<p>REAL TIME COMPUTING ROUTINES </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_AUTOTUNE_GAINS_off </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ad4be4fc78348d31f81cd728e9496d31a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4be4fc78348d31f81cd728e9496d31a">&#9670;&nbsp;</a></span>AOloopControl_AUTOTUNE_GAINS_off()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_AUTOTUNE_GAINS_off </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -149,14 +198,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a161f9b2b9cf3fabb48103a880f2dfa32"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a161f9b2b9cf3fabb48103a880f2dfa32">&#9670;&nbsp;</a></span>AOloopControl_AUTOTUNE_GAINS_on()</h2>
+<a id="a3755a7dc3fc5bcc856111c3f9c42275f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3755a7dc3fc5bcc856111c3f9c42275f">&#9670;&nbsp;</a></span>AOloopControl_AUTOTUNE_GAINS_on()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_AUTOTUNE_GAINS_on </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_AUTOTUNE_GAINS_on </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -168,14 +217,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a8fb5c314e68474a374f91a0a716d689d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fb5c314e68474a374f91a0a716d689d">&#9670;&nbsp;</a></span>AOloopControl_AUTOTUNE_LIMITS_off()</h2>
+<a id="af69f4d9e365b73674ec9516ec9bc2b2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af69f4d9e365b73674ec9516ec9bc2b2a">&#9670;&nbsp;</a></span>AOloopControl_AUTOTUNE_LIMITS_off()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_AUTOTUNE_LIMITS_off </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_AUTOTUNE_LIMITS_off </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -187,14 +236,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a4b592751014219bf5c8afcb12c0d1a01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b592751014219bf5c8afcb12c0d1a01">&#9670;&nbsp;</a></span>AOloopControl_AUTOTUNE_LIMITS_on()</h2>
+<a id="ab0a451bd87197a7c5c6edd523f07beba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0a451bd87197a7c5c6edd523f07beba">&#9670;&nbsp;</a></span>AOloopControl_AUTOTUNE_LIMITS_on()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_AUTOTUNE_LIMITS_on </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_AUTOTUNE_LIMITS_on </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -206,14 +255,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="acb01629d624f7fff31e0be7a39325df9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb01629d624f7fff31e0be7a39325df9">&#9670;&nbsp;</a></span>AOloopControl_set_AUTOTUNE_LIMITS_delta()</h2>
+<a id="a28cc6cf6b70cf8a6b4e25f7d1c28ef55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28cc6cf6b70cf8a6b4e25f7d1c28ef55">&#9670;&nbsp;</a></span>AOloopControl_set_AUTOTUNE_LIMITS_delta()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_delta </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_set_AUTOTUNE_LIMITS_delta </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
           <td class="paramname"><em>AUTOTUNE_LIMITS_delta</em></td><td>)</td>
@@ -226,14 +275,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a2640a90affa01148c4d2082b26e6c9d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2640a90affa01148c4d2082b26e6c9d7">&#9670;&nbsp;</a></span>AOloopControl_set_AUTOTUNE_LIMITS_mcoeff()</h2>
+<a id="ad92c70936b8ec9b70b8071a4b7193c81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad92c70936b8ec9b70b8071a4b7193c81">&#9670;&nbsp;</a></span>AOloopControl_set_AUTOTUNE_LIMITS_mcoeff()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_set_AUTOTUNE_LIMITS_mcoeff </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
           <td class="paramname"><em>AUTOTUNE_LIMITS_mcoeff</em></td><td>)</td>
@@ -244,14 +293,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a663727797a7a261b38259bbc69e73a61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a663727797a7a261b38259bbc69e73a61">&#9670;&nbsp;</a></span>AOloopControl_set_AUTOTUNE_LIMITS_perc()</h2>
+<a id="a63d961621f35793dda7ca07970663faf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63d961621f35793dda7ca07970663faf">&#9670;&nbsp;</a></span>AOloopControl_set_AUTOTUNE_LIMITS_perc()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_set_AUTOTUNE_LIMITS_perc </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_set_AUTOTUNE_LIMITS_perc </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
           <td class="paramname"><em>AUTOTUNE_LIMITS_perc</em></td><td>)</td>
@@ -300,7 +349,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__autotune_8c.html">AOloopControl_autotune.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

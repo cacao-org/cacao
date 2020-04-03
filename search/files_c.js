@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['openmpcheckversion_2ec',['OpenMPCheckVersion.c',['../OpenMPCheckVersion_8c.html',1,'']]],
-  ['openmptryflag_2ec',['OpenMPTryFlag.c',['../OpenMPTryFlag_8c.html',1,'']]],
-  ['opticsmaterials_2ec',['OpticsMaterials.c',['../OpticsMaterials_8c.html',1,'']]],
-  ['opticsmaterials_2eh',['OpticsMaterials.h',['../OpticsMaterials_8h.html',1,'']]]
+  ['setlatency_2ec',['setlatency.c',['../setlatency_8c.html',1,'']]],
+  ['standalone_5fdependencies_2ec',['standalone_dependencies.c',['../standalone__dependencies_8c.html',1,'']]],
+  ['standalone_5fdependencies_2eh',['standalone_dependencies.h',['../standalone__dependencies_8h.html',1,'']]],
+  ['statistic_2ec',['statistic.c',['../statistic_8c.html',1,'']]],
+  ['statistic_2eh',['statistic.h',['../statistic_8h.html',1,'']]],
+  ['streamctrl_2ec',['streamCTRL.c',['../streamCTRL_8c.html',1,'']]],
+  ['streamctrl_2eh',['streamCTRL.h',['../streamCTRL_8h.html',1,'']]]
 ];

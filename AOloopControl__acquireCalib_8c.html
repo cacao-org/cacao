@@ -85,7 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__acquireCalib_8c.html','
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_acquireCalib.c File Reference</div>  </div>
@@ -94,62 +94,122 @@ $(document).ready(function(){initNavTree('AOloopControl__acquireCalib_8c.html','
 
 <p>Adaptive Optics Control loop engine acquire calibration.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="statistic_8h_source.html">statistic/statistic.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__gen_8c.html">image_gen/image_gen.c</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__IOtools_8h_source.html">AOloopControl_IOtools/AOloopControl_IOtools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__acquireCalib_8h_source.html">AOloopControl_acquireCalib/AOloopControl_acquireCalib.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__computeCalib_8h_source.html">AOloopControl_computeCalib/AOloopControl_computeCalib.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__compTools_8h_source.html">AOloopControl_compTools/AOloopControl_compTools.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_acquireCalib.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__acquireCalib_8c__incl.png" border="0" usemap="#src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8c" alt=""/></div>
+<map name="src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8c" id="src_2AOloopControl__acquireCalib_2AOloopControl__acquireCalib_8c">
+<area shape="rect" id="node12" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="2003,184,2161,225"/>
+<area shape="rect" id="node26" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2649,191,2792,218"/>
+<area shape="rect" id="node27" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2816,184,3036,225"/>
+<area shape="rect" id="node28" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="3060,184,3261,225"/>
+<area shape="rect" id="node29" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="3001,95,3203,136"/>
+<area shape="rect" id="node30" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="3285,184,3484,225"/>
+<area shape="rect" id="node31" href="info_8h.html" title="info/info.h" alt="" coords="3227,102,3305,129"/>
+<area shape="rect" id="node32" href="statistic_8h.html" title="Function prototypes for statistic module. " alt="" coords="3508,191,3637,218"/>
+<area shape="rect" id="node33" href="image__gen_8c.html" title="Generate frequently used image(s) " alt="" coords="2306,102,2469,129"/>
+<area shape="rect" id="node35" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="935,348,1141,375"/>
+<area shape="rect" id="node38" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="1143,423,1314,464"/>
+<area shape="rect" id="node42" href="AOloopControl__acquireCalib_8h.html" title="Function prototypes for Adaptive Optics Control loop engine acquire calibration. " alt="" coords="3329,95,3531,136"/>
+<area shape="rect" id="node43" href="AOloopControl__computeCalib_8h.html" title="Function prototypes for Adaptive Optics Control loop engine compute calibration. " alt="" coords="3555,95,3764,136"/>
+<area shape="rect" id="node44" href="AOloopControl__compTools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine misc computation tools. " alt="" coords="3788,95,3981,136"/>
+<area shape="rect" id="node20" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1697,273,1918,300"/>
+<area shape="rect" id="node21" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1782,348,1886,375"/>
+<area shape="rect" id="node23" href="processtools_8h.html" title="Command line interface. " alt="" coords="2094,348,2201,375"/>
+<area shape="rect" id="node24" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1911,348,2019,375"/>
+<area shape="rect" id="node25" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1471,273,1621,300"/>
+<area shape="rect" id="node22" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1757,430,1911,457"/>
+<area shape="rect" id="node34" href="image__gen_8h.html" title="image_gen/image_gen.h" alt="" coords="2326,191,2489,218"/>
+<area shape="rect" id="node36" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="923,423,1119,464"/>
+<area shape="rect" id="node37" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="5,423,201,464"/>
+<area shape="rect" id="node39" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="226,430,458,457"/>
+<area shape="rect" id="node40" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="483,423,679,464"/>
+<area shape="rect" id="node41" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="703,423,899,464"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4686db64ee8970c84b269e0425519dec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a4686db64ee8970c84b269e0425519dec">clock_gettime</a> (int clk_id, struct mach_timespec *t)</td></tr>
-<tr class="separator:a4686db64ee8970c84b269e0425519dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_acquireCalib - 1. ACQUIRING CALIBRATION</div></td></tr>
-<tr class="memitem:a047a5dc36a8fad094682b223388b020e"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a047a5dc36a8fad094682b223388b020e">AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli</a> ()</td></tr>
-<tr class="separator:a047a5dc36a8fad094682b223388b020e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35f7b888324de7646c7aed2b280f6d92"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a35f7b888324de7646c7aed2b280f6d92">AOloopControl_acquireCalib_RespMatrix_Fast_cli</a> ()</td></tr>
-<tr class="memdesc:a35f7b888324de7646c7aed2b280f6d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_RespMatrix_Fast.  <a href="#a35f7b888324de7646c7aed2b280f6d92">More...</a><br /></td></tr>
-<tr class="separator:a35f7b888324de7646c7aed2b280f6d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d04157c95f9df94f6fb5874bc087a15"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a1d04157c95f9df94f6fb5874bc087a15">AOloopControl_acquireCalib_Measure_WFSrespC_cli</a> ()</td></tr>
-<tr class="memdesc:a1d04157c95f9df94f6fb5874bc087a15"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Measure_WFSrespC.  <a href="#a1d04157c95f9df94f6fb5874bc087a15">More...</a><br /></td></tr>
-<tr class="separator:a1d04157c95f9df94f6fb5874bc087a15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1928d62495a4c5a62622461f9d7dd135"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a1928d62495a4c5a62622461f9d7dd135">AOloopControl_acquireCalib_Measure_WFS_linResponse_cli</a> ()</td></tr>
-<tr class="memdesc:a1928d62495a4c5a62622461f9d7dd135"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Measure_WFS_linResponse.  <a href="#a1928d62495a4c5a62622461f9d7dd135">More...</a><br /></td></tr>
-<tr class="separator:a1928d62495a4c5a62622461f9d7dd135"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affcc7108fd76a277fc1a82ec9a38b081"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#affcc7108fd76a277fc1a82ec9a38b081">AOloopControl_acquireCalib_Measure_zonalRM_cli</a> ()</td></tr>
-<tr class="memdesc:affcc7108fd76a277fc1a82ec9a38b081"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Measure_zonalRM.  <a href="#affcc7108fd76a277fc1a82ec9a38b081">More...</a><br /></td></tr>
-<tr class="separator:affcc7108fd76a277fc1a82ec9a38b081"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a314f7ab80661584e75a4dd96e1ecfb7f"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a314f7ab80661584e75a4dd96e1ecfb7f">AOloopControl_acquireCalib_Measure_Resp_Matrix_cli</a> ()</td></tr>
-<tr class="memdesc:a314f7ab80661584e75a4dd96e1ecfb7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Measure_Resp_Matrix.  <a href="#a314f7ab80661584e75a4dd96e1ecfb7f">More...</a><br /></td></tr>
-<tr class="separator:a314f7ab80661584e75a4dd96e1ecfb7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a910017702375d44043d2c3bee4ff4662"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a910017702375d44043d2c3bee4ff4662">AOloopControl_acquireCalib_RMseries_deinterlace_cli</a> ()</td></tr>
-<tr class="separator:a910017702375d44043d2c3bee4ff4662"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8951cde543c27abbeab1cdad1b8f7cc9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a8951cde543c27abbeab1cdad1b8f7cc9">AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli</a> ()</td></tr>
+<tr class="separator:a8951cde543c27abbeab1cdad1b8f7cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fa37402b04374256f3091edd3cbc6b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a0fa37402b04374256f3091edd3cbc6b4">AOloopControl_acquireCalib_RespMatrix_Fast_cli</a> ()</td></tr>
+<tr class="memdesc:a0fa37402b04374256f3091edd3cbc6b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_RespMatrix_Fast.  <a href="#a0fa37402b04374256f3091edd3cbc6b4">More...</a><br /></td></tr>
+<tr class="separator:a0fa37402b04374256f3091edd3cbc6b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a787113da1133b021a5440b8fefc5769b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a787113da1133b021a5440b8fefc5769b">AOloopControl_acquireCalib_Measure_WFSrespC_cli</a> ()</td></tr>
+<tr class="memdesc:a787113da1133b021a5440b8fefc5769b"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Measure_WFSrespC.  <a href="#a787113da1133b021a5440b8fefc5769b">More...</a><br /></td></tr>
+<tr class="separator:a787113da1133b021a5440b8fefc5769b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ebf2bd73f0e3cba701a71f8e6a8ddd7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a4ebf2bd73f0e3cba701a71f8e6a8ddd7">AOloopControl_acquireCalib_Measure_WFS_linResponse_cli</a> ()</td></tr>
+<tr class="memdesc:a4ebf2bd73f0e3cba701a71f8e6a8ddd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Measure_WFS_linResponse.  <a href="#a4ebf2bd73f0e3cba701a71f8e6a8ddd7">More...</a><br /></td></tr>
+<tr class="separator:a4ebf2bd73f0e3cba701a71f8e6a8ddd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a652af251c9b410dcd3ca89fc193c4dcf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a652af251c9b410dcd3ca89fc193c4dcf">AOloopControl_acquireCalib_Measure_zonalRM_cli</a> ()</td></tr>
+<tr class="memdesc:a652af251c9b410dcd3ca89fc193c4dcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Measure_zonalRM.  <a href="#a652af251c9b410dcd3ca89fc193c4dcf">More...</a><br /></td></tr>
+<tr class="separator:a652af251c9b410dcd3ca89fc193c4dcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad2326f49b69eb65e70c27acea44c02d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#aad2326f49b69eb65e70c27acea44c02d">AOloopControl_acquireCalib_Measure_Resp_Matrix_cli</a> ()</td></tr>
+<tr class="memdesc:aad2326f49b69eb65e70c27acea44c02d"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_Measure_Resp_Matrix.  <a href="#aad2326f49b69eb65e70c27acea44c02d">More...</a><br /></td></tr>
+<tr class="separator:aad2326f49b69eb65e70c27acea44c02d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a223f69e2892e47a6acbc933e8cfa9fc2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a223f69e2892e47a6acbc933e8cfa9fc2">AOloopControl_acquireCalib_RMseries_deinterlace_cli</a> ()</td></tr>
+<tr class="separator:a223f69e2892e47a6acbc933e8cfa9fc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_IOtools functions</div></td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl - 4. ACQUIRING CALIBRATION</div></td></tr>
-<tr class="memitem:a6ec44810336fcc7c5c78ff2ef452c919"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a6ec44810336fcc7c5c78ff2ef452c919">AOloopControl_acquireCalib_mkRandomLinPokeSequence</a> (char *IDmodeC_name, long NBpokemap, char *IDpokemapC_name, char *IDpokeC_name)</td></tr>
-<tr class="separator:a6ec44810336fcc7c5c78ff2ef452c919"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9482c1387ee79807262a232406ba6d7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a9482c1387ee79807262a232406ba6d7f">AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF</a> (char *fpsname, uint32_t CMDmode, long optarg00)</td></tr>
-<tr class="separator:a9482c1387ee79807262a232406ba6d7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab250e6d4b0b56051e257cfd6e07dbf6d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#ab250e6d4b0b56051e257cfd6e07dbf6d">AOloopControl_acquireCalib_Measure_WFSrespC_RUN</a> (char *fpsname)</td></tr>
-<tr class="separator:ab250e6d4b0b56051e257cfd6e07dbf6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0b950020a33fbecd354df4534dcd9e9"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#af0b950020a33fbecd354df4534dcd9e9">AOloopControl_acquireCalib_Measure_WFSrespC</a> (long loop, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDoutC_name, int normalize, int AOinitMode, long NBcycle, uint32_t SequInitMode)</td></tr>
-<tr class="memdesc:af0b950020a33fbecd354df4534dcd9e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire WFS response to a series of DM pattern.  <a href="#af0b950020a33fbecd354df4534dcd9e9">More...</a><br /></td></tr>
-<tr class="separator:af0b950020a33fbecd354df4534dcd9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a526a1855d49330fe11067537cbeb7d4c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a526a1855d49330fe11067537cbeb7d4c">AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF</a> (char *fpsname, uint32_t CMDmode)</td></tr>
-<tr class="memdesc:a526a1855d49330fe11067537cbeb7d4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure linear response to set of DM modes/patterns.  <a href="#a526a1855d49330fe11067537cbeb7d4c">More...</a><br /></td></tr>
-<tr class="separator:a526a1855d49330fe11067537cbeb7d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab478356daf82f906522f489595de47f1"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#ab478356daf82f906522f489595de47f1">AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN</a> (char *fpsname)</td></tr>
-<tr class="separator:ab478356daf82f906522f489595de47f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a717b12ffede18da65ae0ca25e29e37d4"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a717b12ffede18da65ae0ca25e29e37d4">AOloopControl_acquireCalib_Measure_WFS_linResponse</a> (long loop, float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDrespC_name, const char *IDwfsref_name, int normalize, int AOinitMode, long NBcycle, long NBinnerCycle)</td></tr>
-<tr class="separator:a717b12ffede18da65ae0ca25e29e37d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27189d95cd8e6f7b972fc199abd3a803"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a27189d95cd8e6f7b972fc199abd3a803">AOloopControl_acquireCalib_mkRandomLinPokeSequence</a> (char *IDmodeC_name, long NBpokemap, char *IDpokemapC_name, char *IDpokeC_name)</td></tr>
+<tr class="separator:a27189d95cd8e6f7b972fc199abd3a803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd2d78a203ae09f2947eccef2bd95267"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#acd2d78a203ae09f2947eccef2bd95267">AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF</a> (char *fpsname, uint32_t CMDmode, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long optarg00)</td></tr>
+<tr class="separator:acd2d78a203ae09f2947eccef2bd95267"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf5c182ccec50802b3f6c8df75cf833a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#aaf5c182ccec50802b3f6c8df75cf833a">AOloopControl_acquireCalib_Measure_WFSrespC_RUN</a> ()</td></tr>
+<tr class="separator:aaf5c182ccec50802b3f6c8df75cf833a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cd92374bc2ea39653075c34f81e9b02"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a8cd92374bc2ea39653075c34f81e9b02">AOloopControl_acquireCalib_Measure_WFSrespC</a> (long loop, long delayfr, long delayRM1us, uint32_t NBave, uint32_t NBexcl, const char *IDpokeC_name, const char *IDoutC_name, int normalize, int AOinitMode, uint32_t NBcycle, uint32_t SequInitMode)</td></tr>
+<tr class="memdesc:a8cd92374bc2ea39653075c34f81e9b02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Acquire WFS response to a series of DM pattern.  <a href="#a8cd92374bc2ea39653075c34f81e9b02">More...</a><br /></td></tr>
+<tr class="separator:a8cd92374bc2ea39653075c34f81e9b02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2befd45c8dc93c3af92732cd170b5650"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a2befd45c8dc93c3af92732cd170b5650">AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF</a> ()</td></tr>
+<tr class="memdesc:a2befd45c8dc93c3af92732cd170b5650"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measure linear response to set of DM modes/patterns.  <a href="#a2befd45c8dc93c3af92732cd170b5650">More...</a><br /></td></tr>
+<tr class="separator:a2befd45c8dc93c3af92732cd170b5650"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab73e519781c272343c4c963f50c756df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#ab73e519781c272343c4c963f50c756df">AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN</a> ()</td></tr>
+<tr class="separator:ab73e519781c272343c4c963f50c756df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95dcba4c03d81eae5d397acd21369457"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a95dcba4c03d81eae5d397acd21369457">AOloopControl_acquireCalib_Measure_WFS_linResponse</a> (<a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long loop, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) float ampl, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long delayfr, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long delayRM1us, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long NBave, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long NBexcl, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *IDpokeC_name, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *IDrespC_name, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *IDwfsref_name, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int normalize, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int AOinitMode, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long NBcycle, <a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long NBinnerCycle)</td></tr>
+<tr class="separator:a95dcba4c03d81eae5d397acd21369457"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ccd39e1d66436ca0f3c78d8ff2a41f1"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a2ccd39e1d66436ca0f3c78d8ff2a41f1">AOloopControl_acquireCalib_Measure_WFS_linResponse_old</a> (long loop, float ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *IDpokeC_name, const char *IDrespC_name, const char *IDwfsref_name, int normalize, int AOinitMode, long NBcycle, long NBinnerCycle)</td></tr>
 <tr class="separator:a2ccd39e1d66436ca0f3c78d8ff2a41f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e32f266b727519079436c5f1260fc19"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a9e32f266b727519079436c5f1260fc19">AOloopControl_acquireCalib_Measure_zonalRM</a> (long loop, double ampl, long delayfr, long delayRM1us, long NBave, long NBexcl, const char *zrespm_name, const char *WFSref0_name, const char *WFSmap_name, const char *DMmap_name, long mode, int normalize, int AOinitMode, long NBcycle)</td></tr>
-<tr class="separator:a9e32f266b727519079436c5f1260fc19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa8bc5995efddb82cdaf491f2df02340"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#aaa8bc5995efddb82cdaf491f2df02340">AOloopControl_acquireCalib_Measure_Resp_Matrix</a> (long loop, long NbAve, float amp, long nbloop, long fDelay, long NBiter)</td></tr>
-<tr class="separator:aaa8bc5995efddb82cdaf491f2df02340"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fe6b240dc1608806c36a5365afd8aec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a6fe6b240dc1608806c36a5365afd8aec">AOloopControl_acquireCalib_Measure_zonalRM</a> (long loop, double ampl, long delayfr, long delayRM1us, uint32_t NBave, uint32_t NBexcl, const char *zrespm_name, const char *WFSref0_name, const char *WFSmap_name, const char *DMmap_name, long mode, int normalize, int AOinitMode, uint32_t NBcycle)</td></tr>
+<tr class="separator:a6fe6b240dc1608806c36a5365afd8aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcae8f267cd8a3665173aab402e764d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#abcae8f267cd8a3665173aab402e764d5">AOloopControl_acquireCalib_Measure_Resp_Matrix</a> (long loop, uint32_t NbAve, float amp, long nbloop, long fDelay, uint64_t NBiter)</td></tr>
+<tr class="separator:abcae8f267cd8a3665173aab402e764d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bea54ad83f480407592abd36dea624d"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a2bea54ad83f480407592abd36dea624d">AOloopControl_acquireCalib_RespMatrix_Fast</a> (const char *DMmodes_name, const char *dmRM_name, const char *imWFS_name, long semtrig, float HardwareLag, float loopfrequ, float ampl, const char *outname)</td></tr>
 <tr class="separator:a2bea54ad83f480407592abd36dea624d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa03168ac066833719f189722cbc4af07"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#aa03168ac066833719f189722cbc4af07">AOloopControl_acquireCalib_RMseries_deinterlace</a> (int NBRM, int refstart, int refend, char *IDout_name, int dmode, int NBtstep)</td></tr>
-<tr class="separator:aa03168ac066833719f189722cbc4af07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0aa8bd1bcf143a7359565446537f7f71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__acquireCalib_8c.html#a0aa8bd1bcf143a7359565446537f7f71">AOloopControl_acquireCalib_RMseries_deinterlace</a> (int NBRM, int refstart, int refend, char *IDout_name, int dmode, int NBtstep)</td></tr>
+<tr class="separator:a0aa8bd1bcf143a7359565446537f7f71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -169,9 +229,23 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Adaptive Optics Control loop engine acquire calibration. </p>
-<p>Acquire AO system calibration assuming linear response</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000043">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+<p>Acquire AO system calibration assuming linear response </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
 
@@ -179,7 +253,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -192,28 +266,17 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a526a1855d49330fe11067537cbeb7d4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a526a1855d49330fe11067537cbeb7d4c">&#9670;&nbsp;</a></span>AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()</h2>
+<a id="a2befd45c8dc93c3af92732cd170b5650"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2befd45c8dc93c3af92732cd170b5650">&#9670;&nbsp;</a></span>AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF </td>
           <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>fpsname</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>CMDmode</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -222,17 +285,16 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab478356daf82f906522f489595de47f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab478356daf82f906522f489595de47f1">&#9670;&nbsp;</a></span>AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN()</h2>
+<a id="ab73e519781c272343c4c963f50c756df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab73e519781c272343c4c963f50c756df">&#9670;&nbsp;</a></span>AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN </td>
           <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>fpsname</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -240,14 +302,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aaa8bc5995efddb82cdaf491f2df02340"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa8bc5995efddb82cdaf491f2df02340">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_Resp_Matrix()</h2>
+<a id="abcae8f267cd8a3665173aab402e764d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcae8f267cd8a3665173aab402e764d5">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_Resp_Matrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_Resp_Matrix </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -255,7 +317,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>NbAve</em>, </td>
         </tr>
         <tr>
@@ -279,7 +341,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint64_t&#160;</td>
           <td class="paramname"><em>NBiter</em>&#160;</td>
         </tr>
         <tr>
@@ -294,14 +356,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a314f7ab80661584e75a4dd96e1ecfb7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a314f7ab80661584e75a4dd96e1ecfb7f">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_Resp_Matrix_cli()</h2>
+<a id="aad2326f49b69eb65e70c27acea44c02d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad2326f49b69eb65e70c27acea44c02d">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_Resp_Matrix_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_Resp_Matrix_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -313,88 +375,88 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a717b12ffede18da65ae0ca25e29e37d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a717b12ffede18da65ae0ca25e29e37d4">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFS_linResponse()</h2>
+<a id="a95dcba4c03d81eae5d397acd21369457"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95dcba4c03d81eae5d397acd21369457">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFS_linResponse()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_acquireCalib_Measure_WFS_linResponse </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_WFS_linResponse </td>
           <td>(</td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) float&#160;</td>
           <td class="paramname"><em>ampl</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>delayfr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>delayRM1us</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>NBave</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>NBexcl</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *&#160;</td>
           <td class="paramname"><em>IDpokeC_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *&#160;</td>
           <td class="paramname"><em>IDrespC_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) const char *&#160;</td>
           <td class="paramname"><em>IDwfsref_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int&#160;</td>
           <td class="paramname"><em>normalize</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) int&#160;</td>
           <td class="paramname"><em>AOinitMode</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>NBcycle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>NBinnerCycle</em>&#160;</td>
         </tr>
         <tr>
@@ -417,14 +479,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1928d62495a4c5a62622461f9d7dd135"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1928d62495a4c5a62622461f9d7dd135">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFS_linResponse_cli()</h2>
+<a id="a4ebf2bd73f0e3cba701a71f8e6a8ddd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ebf2bd73f0e3cba701a71f8e6a8ddd7">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFS_linResponse_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_WFS_linResponse_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -529,7 +591,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <h2>Purpose</h2>
 <p>Measure the WFS linear response to a set of DM patterns</p>
-<p>This function creates positive and negative maps which are sent by <a class="el" href="AOloopControl__acquireCalib_8c.html#af0b950020a33fbecd354df4534dcd9e9" title="Acquire WFS response to a series of DM pattern. ">AOloopControl_acquireCalib_Measure_WFSrespC()</a> <br />
+<p>This function creates positive and negative maps which are sent by <a class="el" href="AOloopControl__acquireCalib_8c.html#a8cd92374bc2ea39653075c34f81e9b02" title="Acquire WFS response to a series of DM pattern. ">AOloopControl_acquireCalib_Measure_WFSrespC()</a> <br />
 Bleeding from one pattern to the next due to limited DM time response is canceled by using two patterns <br />
 </p>
 <p>pattern a sequence : +- +- +- +- ... <br />
@@ -548,14 +610,14 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="af0b950020a33fbecd354df4534dcd9e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0b950020a33fbecd354df4534dcd9e9">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC()</h2>
+<a id="a8cd92374bc2ea39653075c34f81e9b02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cd92374bc2ea39653075c34f81e9b02">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_acquireCalib_Measure_WFSrespC </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> AOloopControl_acquireCalib_Measure_WFSrespC </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -575,13 +637,13 @@ pattern b sequence : +- -+ +- -+ ... <br />
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>NBave</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>NBexcl</em>, </td>
         </tr>
         <tr>
@@ -611,7 +673,7 @@ pattern b sequence : +- -+ +- -+ ... <br />
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>NBcycle</em>, </td>
         </tr>
         <tr>
@@ -665,14 +727,14 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="a1d04157c95f9df94f6fb5874bc087a15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d04157c95f9df94f6fb5874bc087a15">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC_cli()</h2>
+<a id="a787113da1133b021a5440b8fefc5769b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a787113da1133b021a5440b8fefc5769b">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_acquireCalib_Measure_WFSrespC_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_WFSrespC_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -684,14 +746,14 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="a9482c1387ee79807262a232406ba6d7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9482c1387ee79807262a232406ba6d7f">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF()</h2>
+<a id="acd2d78a203ae09f2947eccef2bd95267"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd2d78a203ae09f2947eccef2bd95267">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>fpsname</em>, </td>
@@ -705,7 +767,7 @@ pattern b sequence : +- -+ +- -+ ... <br />
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="ZernikePolyn_8h.html#adeff777d031200df4912549a53807993">__attribute__</a>((unused)) long&#160;</td>
           <td class="paramname"><em>optarg00</em>&#160;</td>
         </tr>
         <tr>
@@ -718,17 +780,16 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="ab250e6d4b0b56051e257cfd6e07dbf6d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab250e6d4b0b56051e257cfd6e07dbf6d">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC_RUN()</h2>
+<a id="aaf5c182ccec50802b3f6c8df75cf833a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf5c182ccec50802b3f6c8df75cf833a">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_WFSrespC_RUN()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_WFSrespC_RUN </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_WFSrespC_RUN </td>
           <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>fpsname</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -736,14 +797,14 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="a9e32f266b727519079436c5f1260fc19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e32f266b727519079436c5f1260fc19">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_zonalRM()</h2>
+<a id="a6fe6b240dc1608806c36a5365afd8aec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fe6b240dc1608806c36a5365afd8aec">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_zonalRM()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_acquireCalib_Measure_zonalRM </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> AOloopControl_acquireCalib_Measure_zonalRM </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -769,13 +830,13 @@ pattern b sequence : +- -+ +- -+ ... <br />
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>NBave</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>NBexcl</em>, </td>
         </tr>
         <tr>
@@ -823,7 +884,7 @@ pattern b sequence : +- -+ +- -+ ... <br />
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>NBcycle</em>&#160;</td>
         </tr>
         <tr>
@@ -840,14 +901,14 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="affcc7108fd76a277fc1a82ec9a38b081"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#affcc7108fd76a277fc1a82ec9a38b081">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_zonalRM_cli()</h2>
+<a id="a652af251c9b410dcd3ca89fc193c4dcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a652af251c9b410dcd3ca89fc193c4dcf">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_Measure_zonalRM_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_acquireCalib_Measure_zonalRM_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_Measure_zonalRM_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -859,14 +920,14 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="a6ec44810336fcc7c5c78ff2ef452c919"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ec44810336fcc7c5c78ff2ef452c919">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_mkRandomLinPokeSequence()</h2>
+<a id="a27189d95cd8e6f7b972fc199abd3a803"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27189d95cd8e6f7b972fc199abd3a803">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_mkRandomLinPokeSequence()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_acquireCalib_mkRandomLinPokeSequence </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> AOloopControl_acquireCalib_mkRandomLinPokeSequence </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>IDmodeC_name</em>, </td>
@@ -899,14 +960,14 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="a047a5dc36a8fad094682b223388b020e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a047a5dc36a8fad094682b223388b020e">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli()</h2>
+<a id="a8951cde543c27abbeab1cdad1b8f7cc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8951cde543c27abbeab1cdad1b8f7cc9">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -980,14 +1041,14 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="a35f7b888324de7646c7aed2b280f6d92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35f7b888324de7646c7aed2b280f6d92">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_RespMatrix_Fast_cli()</h2>
+<a id="a0fa37402b04374256f3091edd3cbc6b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fa37402b04374256f3091edd3cbc6b4">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_RespMatrix_Fast_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_acquireCalib_RespMatrix_Fast_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_RespMatrix_Fast_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -999,14 +1060,14 @@ pattern b sequence : +- -+ +- -+ ... <br />
 
 </div>
 </div>
-<a id="aa03168ac066833719f189722cbc4af07"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa03168ac066833719f189722cbc4af07">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_RMseries_deinterlace()</h2>
+<a id="a0aa8bd1bcf143a7359565446537f7f71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0aa8bd1bcf143a7359565446537f7f71">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_RMseries_deinterlace()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_acquireCalib_RMseries_deinterlace </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> AOloopControl_acquireCalib_RMseries_deinterlace </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>NBRM</em>, </td>
@@ -1058,45 +1119,17 @@ In each of these RM cubes, the z axis is time, increments by 1 frame<br />
 
 </div>
 </div>
-<a id="a910017702375d44043d2c3bee4ff4662"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a910017702375d44043d2c3bee4ff4662">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_RMseries_deinterlace_cli()</h2>
+<a id="a223f69e2892e47a6acbc933e8cfa9fc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a223f69e2892e47a6acbc933e8cfa9fc2">&#9670;&nbsp;</a></span>AOloopControl_acquireCalib_RMseries_deinterlace_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_acquireCalib_RMseries_deinterlace_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_acquireCalib_RMseries_deinterlace_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4686db64ee8970c84b269e0425519dec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4686db64ee8970c84b269e0425519dec">&#9670;&nbsp;</a></span>clock_gettime()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct mach_timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1213,7 +1246,7 @@ In each of these RM cubes, the z axis is time, increments by 1 frame<br />
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b9dbe0ab556e115fe806e391623776a6.html">AOloopControl_acquireCalib</a></li><li class="navelem"><a class="el" href="AOloopControl__acquireCalib_8c.html">AOloopControl_acquireCalib.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

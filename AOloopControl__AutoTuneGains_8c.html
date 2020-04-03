@@ -85,18 +85,62 @@ $(document).ready(function(){initNavTree('AOloopControl__AutoTuneGains_8c.html',
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_AutoTuneGains.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_math.h&gt;</code><br />
+<code>#include &lt;gsl/gsl_blas.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__IOtools_8h_source.html">AOloopControl_IOtools/AOloopControl_IOtools.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_AutoTuneGains.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__AutoTuneGains_8c__incl.png" border="0" usemap="#src_2AOloopControl_2AOloopControl__AutoTuneGains_8c" alt=""/></div>
+<map name="src_2AOloopControl_2AOloopControl__AutoTuneGains_8c" id="src_2AOloopControl_2AOloopControl__AutoTuneGains_8c">
+<area shape="rect" id="node8" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1798,95,1955,136"/>
+<area shape="rect" id="node25" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="1016,259,1223,285"/>
+<area shape="rect" id="node28" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="1143,333,1314,375"/>
+<area shape="rect" id="node32" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2520,102,2663,129"/>
+<area shape="rect" id="node33" href="info_8h.html" title="info/info.h" alt="" coords="2687,102,2765,129"/>
+<area shape="rect" id="node34" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2789,95,3009,136"/>
+<area shape="rect" id="node35" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="3033,95,3235,136"/>
+<area shape="rect" id="node19" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1542,184,1763,211"/>
+<area shape="rect" id="node20" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1649,259,1753,285"/>
+<area shape="rect" id="node22" href="processtools_8h.html" title="Command line interface. " alt="" coords="1899,259,2006,285"/>
+<area shape="rect" id="node23" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1400,259,1508,285"/>
+<area shape="rect" id="node24" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="2407,184,2557,211"/>
+<area shape="rect" id="node21" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1603,341,1756,367"/>
+<area shape="rect" id="node26" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node27" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,333,421,375"/>
+<area shape="rect" id="node29" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="446,341,678,367"/>
+<area shape="rect" id="node30" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="703,333,899,375"/>
+<area shape="rect" id="node31" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="923,333,1119,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__AutoTuneGains_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a03c86e084459742d5e4f5873f3e1fb86"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__AutoTuneGains_8c.html#a03c86e084459742d5e4f5873f3e1fb86">AOloopControl_AutoTuneGains</a> (long loop, const char *IDout_name, float GainCoeff, long NBsamples)</td></tr>
-<tr class="memdesc:a03c86e084459742d5e4f5873f3e1fb86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Auto tune gains of the closed loop.  <a href="#a03c86e084459742d5e4f5873f3e1fb86">More...</a><br /></td></tr>
-<tr class="separator:a03c86e084459742d5e4f5873f3e1fb86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b8e40aedd83e244d7c8bf776601e8ea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__AutoTuneGains_8c.html#a4b8e40aedd83e244d7c8bf776601e8ea">AOloopControl_AutoTuneGains</a> (long loop, const char *IDout_name, float GainCoeff, long NBsamples)</td></tr>
+<tr class="memdesc:a4b8e40aedd83e244d7c8bf776601e8ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Auto tune gains of the closed loop.  <a href="#a4b8e40aedd83e244d7c8bf776601e8ea">More...</a><br /></td></tr>
+<tr class="separator:a4b8e40aedd83e244d7c8bf776601e8ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -106,15 +150,30 @@ Variables</h2></td></tr>
 <tr class="memitem:a549e693c8df5c527e5e6c9b6508749ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAOloopControl__var.html">AOloopControl_var</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__AutoTuneGains_8c.html#a549e693c8df5c527e5e6c9b6508749ca">aoloopcontrol_var</a></td></tr>
 <tr class="separator:a549e693c8df5c527e5e6c9b6508749ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a03c86e084459742d5e4f5873f3e1fb86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03c86e084459742d5e4f5873f3e1fb86">&#9670;&nbsp;</a></span>AOloopControl_AutoTuneGains()</h2>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_AutoTuneGains </td>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a4b8e40aedd83e244d7c8bf776601e8ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b8e40aedd83e244d7c8bf776601e8ea">&#9670;&nbsp;</a></span>AOloopControl_AutoTuneGains()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_AutoTuneGains </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
           <td class="paramname"><em>loop</em>, </td>
@@ -187,7 +246,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d5a2859eb17c388050a5486842ace10c.html">AOloopControl</a></li><li class="navelem"><a class="el" href="AOloopControl__AutoTuneGains_8c.html">AOloopControl_AutoTuneGains.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

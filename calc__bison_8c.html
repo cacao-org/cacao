@@ -86,6 +86,7 @@ $(document).ready(function(){initNavTree('calc__bison_8c.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
@@ -94,7 +95,37 @@ $(document).ready(function(){initNavTree('calc__bison_8c.html','');});
 <div class="title">calc_bison.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &lt;stddef.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for calc_bison.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="calc__bison_8c__incl.png" border="0" usemap="#src_2CommandLineInterface_2calc__bison_8c" alt=""/></div>
+<map name="src_2CommandLineInterface_2calc__bison_8c" id="src_2CommandLineInterface_2calc__bison_8c">
+<area shape="rect" id="node6" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="824,102,903,129"/>
+<area shape="rect" id="node22" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="927,102,1069,129"/>
+<area shape="rect" id="node23" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1093,95,1313,136"/>
+<area shape="rect" id="node24" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="1337,95,1539,136"/>
+<area shape="rect" id="node25" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="1563,95,1761,136"/>
+<area shape="rect" id="node26" href="info_8h.html" title="info/info.h" alt="" coords="1785,102,1864,129"/>
+<area shape="rect" id="node15" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="679,184,901,211"/>
+<area shape="rect" id="node16" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="753,259,857,285"/>
+<area shape="rect" id="node19" href="processtools_8h.html" title="Command line interface. " alt="" coords="946,259,1053,285"/>
+<area shape="rect" id="node20" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1179,259,1287,285"/>
+<area shape="rect" id="node21" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="504,184,655,211"/>
+<area shape="rect" id="node18" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="685,333,839,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionYYSTYPE.html">YYSTYPE</a></td></tr>
@@ -102,18 +133,151 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionyyalloc.html">yyalloc</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a9f092f5b1dca6a6249fb2c7c8065b031"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a9f092f5b1dca6a6249fb2c7c8065b031">YYBISON</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a9f092f5b1dca6a6249fb2c7c8065b031"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72ebd0ca5807efcc6a5ae4fb72dd1553"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a72ebd0ca5807efcc6a5ae4fb72dd1553">YYBISON_VERSION</a>&#160;&#160;&#160;&quot;3.4.1&quot;</td></tr>
+<tr class="separator:a72ebd0ca5807efcc6a5ae4fb72dd1553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50db5aef8c2b6f13961b2480b37f84c0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a50db5aef8c2b6f13961b2480b37f84c0">YYSKELETON_NAME</a>&#160;&#160;&#160;&quot;yacc.c&quot;</td></tr>
+<tr class="separator:a50db5aef8c2b6f13961b2480b37f84c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fa797a1f3c4fc9b12d1e4d569612767"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a9fa797a1f3c4fc9b12d1e4d569612767">YYPURE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a9fa797a1f3c4fc9b12d1e4d569612767"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3aa6e4af11755f8cf8e5ddb26833e918"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a3aa6e4af11755f8cf8e5ddb26833e918">YYPUSH</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a3aa6e4af11755f8cf8e5ddb26833e918"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90f059b8a9d6c30a1e44e1b80d3fd6c8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a90f059b8a9d6c30a1e44e1b80d3fd6c8">YYPULL</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a90f059b8a9d6c30a1e44e1b80d3fd6c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a6c82f7ce4ad9cc8c6c08b7a2de5b84"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a5a6c82f7ce4ad9cc8c6c08b7a2de5b84">YY_NULLPTR</a>&#160;&#160;&#160;((void*)0)</td></tr>
+<tr class="separator:a5a6c82f7ce4ad9cc8c6c08b7a2de5b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0943f558a560b9b5fa0593d7e36496c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a0943f558a560b9b5fa0593d7e36496c1">YYERROR_VERBOSE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a0943f558a560b9b5fa0593d7e36496c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f0d6ff1008966c448c33a416a864701"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a4f0d6ff1008966c448c33a416a864701">YY_YY_HOME_OGUYON_SRC_CACAO_SRC_COMMANDLINEINTERFACE_CALC_BISON_H_INCLUDED</a></td></tr>
+<tr class="separator:a4f0d6ff1008966c448c33a416a864701"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a853b3bfad6d2b2ff693dce81182e0c2e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a853b3bfad6d2b2ff693dce81182e0c2e">YYDEBUG</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a853b3bfad6d2b2ff693dce81182e0c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69ca0fbcc6d7aa5e8f47b11fc0048208"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a69ca0fbcc6d7aa5e8f47b11fc0048208">YYTOKENTYPE</a></td></tr>
+<tr class="separator:a69ca0fbcc6d7aa5e8f47b11fc0048208"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e3dbf169c5ee24cf6af37c61cf3995d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a2e3dbf169c5ee24cf6af37c61cf3995d">YYSTYPE_IS_TRIVIAL</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a2e3dbf169c5ee24cf6af37c61cf3995d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0232d21120b2cfc5e5f82f0fbadab3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af0232d21120b2cfc5e5f82f0fbadab3c">YYSTYPE_IS_DECLARED</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:af0232d21120b2cfc5e5f82f0fbadab3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d535939e93253736c6eeda569d24de5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a7d535939e93253736c6eeda569d24de5">YYSIZE_T</a>&#160;&#160;&#160;size_t</td></tr>
+<tr class="separator:a7d535939e93253736c6eeda569d24de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4bb7ad82d4a7e2df49ff6a8fb484109"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ab4bb7ad82d4a7e2df49ff6a8fb484109">YYSIZE_MAXIMUM</a>&#160;&#160;&#160;((<a class="el" href="calc__bison_8c.html#a7d535939e93253736c6eeda569d24de5">YYSIZE_T</a>) -1)</td></tr>
+<tr class="separator:ab4bb7ad82d4a7e2df49ff6a8fb484109"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25298af10c853371e8da3227e3feaaa0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a25298af10c853371e8da3227e3feaaa0">YY_</a>(Msgid)&#160;&#160;&#160;Msgid</td></tr>
+<tr class="separator:a25298af10c853371e8da3227e3feaaa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b07478214400ec2e160dffd1d945266"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a9b07478214400ec2e160dffd1d945266">YY_ATTRIBUTE</a>(Spec)&#160;&#160;&#160;/* empty */</td></tr>
+<tr class="separator:a9b07478214400ec2e160dffd1d945266"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1405f082b8df6353a9d53c9709c4d03"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ad1405f082b8df6353a9d53c9709c4d03">YY_ATTRIBUTE_PURE</a>&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a9b07478214400ec2e160dffd1d945266">YY_ATTRIBUTE</a> ((__pure__))</td></tr>
+<tr class="separator:ad1405f082b8df6353a9d53c9709c4d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab312a884bd41ff11bbd1aa6c1a0e1b0a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ab312a884bd41ff11bbd1aa6c1a0e1b0a">YY_ATTRIBUTE_UNUSED</a>&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a9b07478214400ec2e160dffd1d945266">YY_ATTRIBUTE</a> ((__unused__))</td></tr>
+<tr class="separator:ab312a884bd41ff11bbd1aa6c1a0e1b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33c61e326f5675cc74eb9e1a6906595c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a33c61e326f5675cc74eb9e1a6906595c">YYUSE</a>(E)&#160;&#160;&#160;((void) (E))</td></tr>
+<tr class="separator:a33c61e326f5675cc74eb9e1a6906595c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d890db48971847b837a6a1397c9059a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a6d890db48971847b837a6a1397c9059a">YY_INITIAL_VALUE</a>(Value)&#160;&#160;&#160;Value</td></tr>
+<tr class="separator:a6d890db48971847b837a6a1397c9059a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a145ddbb780f86b5f35ddfffb23e62d4d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a145ddbb780f86b5f35ddfffb23e62d4d">YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN</a></td></tr>
+<tr class="separator:a145ddbb780f86b5f35ddfffb23e62d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b2abbe8d335b7933a69ac2f05a015d2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a2b2abbe8d335b7933a69ac2f05a015d2">YY_IGNORE_MAYBE_UNINITIALIZED_END</a></td></tr>
+<tr class="separator:a2b2abbe8d335b7933a69ac2f05a015d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a241dcdf729a571c0b4660df767e95598"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a241dcdf729a571c0b4660df767e95598">YY_ASSERT</a>(E)&#160;&#160;&#160;((void) (0 &amp;&amp; (E)))</td></tr>
+<tr class="separator:a241dcdf729a571c0b4660df767e95598"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af45042ce56e04d634420d76caeb2ee73"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af45042ce56e04d634420d76caeb2ee73">YYSTACK_ALLOC</a>&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a573b05852d8f080c907dfba725773d7a">YYMALLOC</a></td></tr>
+<tr class="separator:af45042ce56e04d634420d76caeb2ee73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a9dc526fd390d4808252bd631c4c2f7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a1a9dc526fd390d4808252bd631c4c2f7">YYSTACK_FREE</a>&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#ac8adfd73c006c1926f387feb1eced3ca">YYFREE</a></td></tr>
+<tr class="separator:a1a9dc526fd390d4808252bd631c4c2f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e55d995c7458f2f4af94a426d0adde8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a7e55d995c7458f2f4af94a426d0adde8">YYSTACK_ALLOC_MAXIMUM</a>&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#ab4bb7ad82d4a7e2df49ff6a8fb484109">YYSIZE_MAXIMUM</a></td></tr>
+<tr class="separator:a7e55d995c7458f2f4af94a426d0adde8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a573b05852d8f080c907dfba725773d7a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a573b05852d8f080c907dfba725773d7a">YYMALLOC</a>&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a5faf6a2d99f50a4655dd390199a8db7b">malloc</a></td></tr>
+<tr class="separator:a573b05852d8f080c907dfba725773d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8adfd73c006c1926f387feb1eced3ca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ac8adfd73c006c1926f387feb1eced3ca">YYFREE</a>&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#af07d89f5ceaea0c7c8252cc41fd75f37">free</a></td></tr>
+<tr class="separator:ac8adfd73c006c1926f387feb1eced3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcd15dd0fa87ffba0371c6d6a0cc9631"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#afcd15dd0fa87ffba0371c6d6a0cc9631">YYSTACK_GAP_MAXIMUM</a>&#160;&#160;&#160;(sizeof (union <a class="el" href="unionyyalloc.html">yyalloc</a>) - 1)</td></tr>
+<tr class="separator:afcd15dd0fa87ffba0371c6d6a0cc9631"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40beb355f2cf230a99e2e2bb54909a5a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a40beb355f2cf230a99e2e2bb54909a5a">YYSTACK_BYTES</a>(N)</td></tr>
+<tr class="separator:a40beb355f2cf230a99e2e2bb54909a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b270b13a13550fb9cefc929dad206ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a3b270b13a13550fb9cefc929dad206ac">YYCOPY_NEEDED</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a3b270b13a13550fb9cefc929dad206ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae780b90b638f37309f20dc07f94e8221"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ae780b90b638f37309f20dc07f94e8221">YYSTACK_RELOCATE</a>(Stack_alloc,  Stack)</td></tr>
+<tr class="separator:ae780b90b638f37309f20dc07f94e8221"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afade70b6df3e9712582bb8dc3bec185d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#afade70b6df3e9712582bb8dc3bec185d">YYCOPY</a>(Dst,  Src,  Count)</td></tr>
+<tr class="separator:afade70b6df3e9712582bb8dc3bec185d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6419f3fd69ecb6b7e063410fd4e73b2f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a6419f3fd69ecb6b7e063410fd4e73b2f">YYFINAL</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a6419f3fd69ecb6b7e063410fd4e73b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae67923760a28e3b7ed3aa2cfaef7f9a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ae67923760a28e3b7ed3aa2cfaef7f9a2">YYLAST</a>&#160;&#160;&#160;658</td></tr>
+<tr class="separator:ae67923760a28e3b7ed3aa2cfaef7f9a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75d260730a6c379a94ea28f63a7b9275"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a75d260730a6c379a94ea28f63a7b9275">YYNTOKENS</a>&#160;&#160;&#160;26</td></tr>
+<tr class="separator:a75d260730a6c379a94ea28f63a7b9275"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af54ae9e588f0ecc32eabbfdf1959df10"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af54ae9e588f0ecc32eabbfdf1959df10">YYNNTS</a>&#160;&#160;&#160;6</td></tr>
+<tr class="separator:af54ae9e588f0ecc32eabbfdf1959df10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aceaba8997dc3867478ae3b816647eb7c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#aceaba8997dc3867478ae3b816647eb7c">YYNRULES</a>&#160;&#160;&#160;86</td></tr>
+<tr class="separator:aceaba8997dc3867478ae3b816647eb7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c387ba2caaade8bf8f78ed30023f79f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a2c387ba2caaade8bf8f78ed30023f79f">YYNSTATES</a>&#160;&#160;&#160;205</td></tr>
+<tr class="separator:a2c387ba2caaade8bf8f78ed30023f79f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a926181abd06b6d1df27b6133971c24ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a926181abd06b6d1df27b6133971c24ce">YYUNDEFTOK</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a926181abd06b6d1df27b6133971c24ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3f5ed4bc4517eff0ef1b17541192a58"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af3f5ed4bc4517eff0ef1b17541192a58">YYMAXUTOK</a>&#160;&#160;&#160;270</td></tr>
+<tr class="separator:af3f5ed4bc4517eff0ef1b17541192a58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad19ee88e33c02c4e720b28f78249bd7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#aad19ee88e33c02c4e720b28f78249bd7">YYTRANSLATE</a>(YYX)&#160;&#160;&#160;((unsigned) (YYX) &lt;= <a class="el" href="calc__bison_8c.html#af3f5ed4bc4517eff0ef1b17541192a58">YYMAXUTOK</a> ? <a class="el" href="calc__bison_8c.html#a384fb3797a340a5415c03719ebab9c67">yytranslate</a>[YYX] : <a class="el" href="calc__bison_8c.html#a926181abd06b6d1df27b6133971c24ce">YYUNDEFTOK</a>)</td></tr>
+<tr class="separator:aad19ee88e33c02c4e720b28f78249bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62bf0ed0c4360b077071b5cf3177823b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a62bf0ed0c4360b077071b5cf3177823b">YYPACT_NINF</a>&#160;&#160;&#160;-22</td></tr>
+<tr class="separator:a62bf0ed0c4360b077071b5cf3177823b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e2101757251d6084a66a33bcd68df0f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a3e2101757251d6084a66a33bcd68df0f">yypact_value_is_default</a>(Yystate)&#160;&#160;&#160;(!!((Yystate) == (-22)))</td></tr>
+<tr class="separator:a3e2101757251d6084a66a33bcd68df0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a504faa93b92f37fcc147f68e8d111a1d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a504faa93b92f37fcc147f68e8d111a1d">YYTABLE_NINF</a>&#160;&#160;&#160;-1</td></tr>
+<tr class="separator:a504faa93b92f37fcc147f68e8d111a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af325a12ad294897b19b9d5ef665772f6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af325a12ad294897b19b9d5ef665772f6">yytable_value_is_error</a>(Yytable_value)&#160;&#160;&#160;0</td></tr>
+<tr class="separator:af325a12ad294897b19b9d5ef665772f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20bf055e53dc4fd5afddfd752a4d1adb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a20bf055e53dc4fd5afddfd752a4d1adb">yyerrok</a>&#160;&#160;&#160;(yyerrstatus = 0)</td></tr>
+<tr class="separator:a20bf055e53dc4fd5afddfd752a4d1adb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5035d59933b3f5388c44f596145db047"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a5035d59933b3f5388c44f596145db047">yyclearin</a>&#160;&#160;&#160;(<a class="el" href="calc__bison_8c.html#a9e2c7c7373b818c86b2df7106a92327c">yychar</a> = <a class="el" href="calc__bison_8c.html#ae59196b3765411a06cf234cf9bcae2e7">YYEMPTY</a>)</td></tr>
+<tr class="separator:a5035d59933b3f5388c44f596145db047"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae59196b3765411a06cf234cf9bcae2e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ae59196b3765411a06cf234cf9bcae2e7">YYEMPTY</a>&#160;&#160;&#160;(-2)</td></tr>
+<tr class="separator:ae59196b3765411a06cf234cf9bcae2e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b1e3628411fabac03abe0a337322016"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a3b1e3628411fabac03abe0a337322016">YYEOF</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a3b1e3628411fabac03abe0a337322016"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6c7a65b580c214b2ea832fd7bdd472e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#aa6c7a65b580c214b2ea832fd7bdd472e">YYACCEPT</a>&#160;&#160;&#160;goto yyacceptlab</td></tr>
+<tr class="separator:aa6c7a65b580c214b2ea832fd7bdd472e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bcde0b05b9aa4ec5169092d9d211dbd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a3bcde0b05b9aa4ec5169092d9d211dbd">YYABORT</a>&#160;&#160;&#160;goto yyabortlab</td></tr>
+<tr class="separator:a3bcde0b05b9aa4ec5169092d9d211dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1eef6197be78122699013d0784acc80"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af1eef6197be78122699013d0784acc80">YYERROR</a>&#160;&#160;&#160;goto yyerrorlab</td></tr>
+<tr class="separator:af1eef6197be78122699013d0784acc80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad860e18ca4b79fc589895b531bdb7948"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ad860e18ca4b79fc589895b531bdb7948">YYRECOVERING</a>()&#160;&#160;&#160;(!!yyerrstatus)</td></tr>
+<tr class="separator:ad860e18ca4b79fc589895b531bdb7948"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfcaf974b837e3efc130377e9837b4fd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#adfcaf974b837e3efc130377e9837b4fd">YYBACKUP</a>(Token,  Value)</td></tr>
+<tr class="separator:adfcaf974b837e3efc130377e9837b4fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2b58b1851184ddb3b60fede50bc7946"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ad2b58b1851184ddb3b60fede50bc7946">YYTERROR</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:ad2b58b1851184ddb3b60fede50bc7946"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a552f295255821fa7dea11b0237e1d61a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a552f295255821fa7dea11b0237e1d61a">YYERRCODE</a>&#160;&#160;&#160;256</td></tr>
+<tr class="separator:a552f295255821fa7dea11b0237e1d61a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6d6ca80e87922f90264f1a4a802ea04"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af6d6ca80e87922f90264f1a4a802ea04">YYDPRINTF</a>(Args)</td></tr>
+<tr class="separator:af6d6ca80e87922f90264f1a4a802ea04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c510d33cb388afc9411141ba3076a36"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a1c510d33cb388afc9411141ba3076a36">YY_SYMBOL_PRINT</a>(Title,  Type,  Value,  Location)</td></tr>
+<tr class="separator:a1c510d33cb388afc9411141ba3076a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a52157fbe194e3a347afc4ef750af77"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a7a52157fbe194e3a347afc4ef750af77">YY_STACK_PRINT</a>(Bottom,  Top)</td></tr>
+<tr class="separator:a7a52157fbe194e3a347afc4ef750af77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49ad456240785266cadae498ddae9310"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a49ad456240785266cadae498ddae9310">YY_REDUCE_PRINT</a>(Rule)</td></tr>
+<tr class="separator:a49ad456240785266cadae498ddae9310"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb1508a3a38ec5d64c27e8eca25330b5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#aeb1508a3a38ec5d64c27e8eca25330b5">YYINITDEPTH</a>&#160;&#160;&#160;200</td></tr>
+<tr class="separator:aeb1508a3a38ec5d64c27e8eca25330b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14ba2b263c446ffed1c888c4b42ae40c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a14ba2b263c446ffed1c888c4b42ae40c">YYMAXDEPTH</a>&#160;&#160;&#160;10000</td></tr>
+<tr class="separator:a14ba2b263c446ffed1c888c4b42ae40c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2f9773cd9c031026b2ef4c1ee7be1be"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ad2f9773cd9c031026b2ef4c1ee7be1be">YYPOPSTACK</a>(N)&#160;&#160;&#160;(yyvsp -= (N), yyssp -= (N))</td></tr>
+<tr class="separator:ad2f9773cd9c031026b2ef4c1ee7be1be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ac56824fbd095909aa72c2a98afb4b9f0"><td class="memItemLeft" align="right" valign="top">typedef union <a class="el" href="unionYYSTYPE.html">YYSTYPE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ac56824fbd095909aa72c2a98afb4b9f0">YYSTYPE</a></td></tr>
 <tr class="separator:ac56824fbd095909aa72c2a98afb4b9f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79c09f9dcfd0f7a32f598ea3910d2206"><td class="memItemLeft" align="right" valign="top">typedef YYTYPE_UINT8&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a79c09f9dcfd0f7a32f598ea3910d2206">yytype_uint8</a></td></tr>
+<tr class="memitem:a79c09f9dcfd0f7a32f598ea3910d2206"><td class="memItemLeft" align="right" valign="top">typedef unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a79c09f9dcfd0f7a32f598ea3910d2206">yytype_uint8</a></td></tr>
 <tr class="separator:a79c09f9dcfd0f7a32f598ea3910d2206"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed557a488f2c08c0956e2237f8eba464"><td class="memItemLeft" align="right" valign="top">typedef YYTYPE_INT8&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#aed557a488f2c08c0956e2237f8eba464">yytype_int8</a></td></tr>
+<tr class="memitem:aed557a488f2c08c0956e2237f8eba464"><td class="memItemLeft" align="right" valign="top">typedef signed char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#aed557a488f2c08c0956e2237f8eba464">yytype_int8</a></td></tr>
 <tr class="separator:aed557a488f2c08c0956e2237f8eba464"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00c27c9da5ed06a830b216c8934e6b28"><td class="memItemLeft" align="right" valign="top">typedef YYTYPE_UINT16&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a00c27c9da5ed06a830b216c8934e6b28">yytype_uint16</a></td></tr>
-<tr class="separator:a00c27c9da5ed06a830b216c8934e6b28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade5b97f0021a4f6c5922ead3744ab297"><td class="memItemLeft" align="right" valign="top">typedef YYTYPE_INT16&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a></td></tr>
-<tr class="separator:ade5b97f0021a4f6c5922ead3744ab297"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add1eb32dbafc168be3462180f741af64"><td class="memItemLeft" align="right" valign="top">typedef unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#add1eb32dbafc168be3462180f741af64">yytype_uint16</a></td></tr>
+<tr class="separator:add1eb32dbafc168be3462180f741af64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33032314af14de925471bbd792c4bd92"><td class="memItemLeft" align="right" valign="top">typedef short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a></td></tr>
+<tr class="separator:a33032314af14de925471bbd792c4bd92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -162,26 +326,10 @@ Functions</h2></td></tr>
 <tr class="separator:a773aa2e81b4feec63f60f490265169a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a847a2de5c1c28c9d7055a2b89ed7dad7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse</a> (void)</td></tr>
 <tr class="separator:a847a2de5c1c28c9d7055a2b89ed7dad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5faf6a2d99f50a4655dd390199a8db7b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a5faf6a2d99f50a4655dd390199a8db7b">malloc</a> (YYSIZE_T)</td></tr>
+<tr class="memitem:a5faf6a2d99f50a4655dd390199a8db7b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a5faf6a2d99f50a4655dd390199a8db7b">malloc</a> (<a class="el" href="calc__bison_8c.html#a7d535939e93253736c6eeda569d24de5">YYSIZE_T</a>)</td></tr>
 <tr class="separator:a5faf6a2d99f50a4655dd390199a8db7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af07d89f5ceaea0c7c8252cc41fd75f37"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af07d89f5ceaea0c7c8252cc41fd75f37">free</a> (void *)</td></tr>
 <tr class="separator:af07d89f5ceaea0c7c8252cc41fd75f37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75e93dcf72bf2d3cfd48f1ddc80b6364"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a75e93dcf72bf2d3cfd48f1ddc80b6364">yy_symbol_value_print</a> (FILE *yyoutput, int yytype, <a class="el" href="unionYYSTYPE.html">YYSTYPE</a> const *const yyvaluep)</td></tr>
-<tr class="separator:a75e93dcf72bf2d3cfd48f1ddc80b6364"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0e60e36a5d6bd2677f1c59ee270778a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#aa0e60e36a5d6bd2677f1c59ee270778a">yy_symbol_print</a> (FILE *yyoutput, int yytype, <a class="el" href="unionYYSTYPE.html">YYSTYPE</a> const *const yyvaluep)</td></tr>
-<tr class="separator:aa0e60e36a5d6bd2677f1c59ee270778a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a289ccf7ef43d1af713c6e68e20d9a165"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a289ccf7ef43d1af713c6e68e20d9a165">yy_stack_print</a> (<a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> *yybottom, <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> *yytop)</td></tr>
-<tr class="separator:a289ccf7ef43d1af713c6e68e20d9a165"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8075fcffa0796f4695376a916de29b2f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a8075fcffa0796f4695376a916de29b2f">yy_reduce_print</a> (<a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> *yyssp, <a class="el" href="unionYYSTYPE.html">YYSTYPE</a> *yyvsp, int yyrule)</td></tr>
-<tr class="separator:a8075fcffa0796f4695376a916de29b2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab16a52d178a34ea4df3b55f9ad16588a"><td class="memItemLeft" align="right" valign="top">static YYSIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ab16a52d178a34ea4df3b55f9ad16588a">yystrlen</a> (const char *yystr)</td></tr>
-<tr class="separator:ab16a52d178a34ea4df3b55f9ad16588a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79c0cbb33ee2f626ebdf5933080ea385"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a79c0cbb33ee2f626ebdf5933080ea385">yystpcpy</a> (char *yydest, const char *yysrc)</td></tr>
-<tr class="separator:a79c0cbb33ee2f626ebdf5933080ea385"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4bdbe6f524e68778be5e1717fda3bc3"><td class="memItemLeft" align="right" valign="top">static YYSIZE_T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ac4bdbe6f524e68778be5e1717fda3bc3">yytnamerr</a> (char *yyres, const char *yystr)</td></tr>
-<tr class="separator:ac4bdbe6f524e68778be5e1717fda3bc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7bce4884c238b92c88006a17478d37c"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ae7bce4884c238b92c88006a17478d37c">yysyntax_error</a> (YYSIZE_T *yymsg_alloc, char **yymsg, <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> *yyssp, int yytoken)</td></tr>
-<tr class="separator:ae7bce4884c238b92c88006a17478d37c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e9efad8ad3dc078ec7c32b7f44be01d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a6e9efad8ad3dc078ec7c32b7f44be01d">yydestruct</a> (const char *yymsg, int yytype, <a class="el" href="unionYYSTYPE.html">YYSTYPE</a> *yyvaluep)</td></tr>
 <tr class="separator:a6e9efad8ad3dc078ec7c32b7f44be01d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -189,29 +337,21 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a5f4566d37ec53f74821f22df71a6fb93"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a5f4566d37ec53f74821f22df71a6fb93">calctmpimname</a> [200]</td></tr>
 <tr class="separator:a5f4566d37ec53f74821f22df71a6fb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab138aa8e11f58bcdcc7134adf240ea8c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ab138aa8e11f58bcdcc7134adf240ea8c">yydebug</a></td></tr>
-<tr class="separator:ab138aa8e11f58bcdcc7134adf240ea8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a539b86ee4bb46824a194f22eb69903d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="unionYYSTYPE.html">YYSTYPE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a539b86ee4bb46824a194f22eb69903d9">yylval</a></td></tr>
 <tr class="separator:a539b86ee4bb46824a194f22eb69903d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a384fb3797a340a5415c03719ebab9c67"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a79c09f9dcfd0f7a32f598ea3910d2206">yytype_uint8</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a384fb3797a340a5415c03719ebab9c67">yytranslate</a> []</td></tr>
 <tr class="separator:a384fb3797a340a5415c03719ebab9c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7dc8646c71a84786de4a96bde8bcfa1"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a79c09f9dcfd0f7a32f598ea3910d2206">yytype_uint8</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ae7dc8646c71a84786de4a96bde8bcfa1">yyrline</a> []</td></tr>
-<tr class="separator:ae7dc8646c71a84786de4a96bde8bcfa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab779f3189fbfd3b164b7802b945d619b"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#ab779f3189fbfd3b164b7802b945d619b">yytname</a> []</td></tr>
-<tr class="separator:ab779f3189fbfd3b164b7802b945d619b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1de5b70b1a55fa6f3e218d7e2218d47b"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a00c27c9da5ed06a830b216c8934e6b28">yytype_uint16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a1de5b70b1a55fa6f3e218d7e2218d47b">yytoknum</a> []</td></tr>
-<tr class="separator:a1de5b70b1a55fa6f3e218d7e2218d47b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52c12de9f634391f03b1680c3b680852"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a52c12de9f634391f03b1680c3b680852">yypact</a> []</td></tr>
+<tr class="memitem:a52c12de9f634391f03b1680c3b680852"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a52c12de9f634391f03b1680c3b680852">yypact</a> []</td></tr>
 <tr class="separator:a52c12de9f634391f03b1680c3b680852"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af80f4a4ea9a69eb19837849cc7083c77"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a79c09f9dcfd0f7a32f598ea3910d2206">yytype_uint8</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af80f4a4ea9a69eb19837849cc7083c77">yydefact</a> []</td></tr>
 <tr class="separator:af80f4a4ea9a69eb19837849cc7083c77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d39cfd55875de3316f76edb1891c999"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a6d39cfd55875de3316f76edb1891c999">yypgoto</a> []</td></tr>
+<tr class="memitem:a6d39cfd55875de3316f76edb1891c999"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a6d39cfd55875de3316f76edb1891c999">yypgoto</a> []</td></tr>
 <tr class="separator:a6d39cfd55875de3316f76edb1891c999"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4947c3c0c6f6ffa0abfd76efd299828a"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a4947c3c0c6f6ffa0abfd76efd299828a">yydefgoto</a> []</td></tr>
+<tr class="memitem:a4947c3c0c6f6ffa0abfd76efd299828a"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a4947c3c0c6f6ffa0abfd76efd299828a">yydefgoto</a> []</td></tr>
 <tr class="separator:a4947c3c0c6f6ffa0abfd76efd299828a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebb94255a7d4c72e6f9eea0a8e755c56"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a79c09f9dcfd0f7a32f598ea3910d2206">yytype_uint8</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#aebb94255a7d4c72e6f9eea0a8e755c56">yytable</a> []</td></tr>
 <tr class="separator:aebb94255a7d4c72e6f9eea0a8e755c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af434820fddd4631c08de7a1d9629ff18"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af434820fddd4631c08de7a1d9629ff18">yycheck</a> []</td></tr>
+<tr class="memitem:af434820fddd4631c08de7a1d9629ff18"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#af434820fddd4631c08de7a1d9629ff18">yycheck</a> []</td></tr>
 <tr class="separator:af434820fddd4631c08de7a1d9629ff18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc7e1225b6a8ee7619f19504cbefd97b"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="calc__bison_8c.html#a79c09f9dcfd0f7a32f598ea3910d2206">yytype_uint8</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#abc7e1225b6a8ee7619f19504cbefd97b">yystos</a> []</td></tr>
 <tr class="separator:abc7e1225b6a8ee7619f19504cbefd97b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -224,6 +364,1064 @@ Variables</h2></td></tr>
 <tr class="memitem:a0ea9e3b522e448ac462274fe70e1be82"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="calc__bison_8c.html#a0ea9e3b522e448ac462274fe70e1be82">yynerrs</a></td></tr>
 <tr class="separator:a0ea9e3b522e448ac462274fe70e1be82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a25298af10c853371e8da3227e3feaaa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25298af10c853371e8da3227e3feaaa0">&#9670;&nbsp;</a></span>YY_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Msgid</td><td>)</td>
+          <td>&#160;&#160;&#160;Msgid</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a241dcdf729a571c0b4660df767e95598"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a241dcdf729a571c0b4660df767e95598">&#9670;&nbsp;</a></span>YY_ASSERT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_ASSERT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">E</td><td>)</td>
+          <td>&#160;&#160;&#160;((void) (0 &amp;&amp; (E)))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9b07478214400ec2e160dffd1d945266"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b07478214400ec2e160dffd1d945266">&#9670;&nbsp;</a></span>YY_ATTRIBUTE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_ATTRIBUTE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Spec</td><td>)</td>
+          <td>&#160;&#160;&#160;/* empty */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad1405f082b8df6353a9d53c9709c4d03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1405f082b8df6353a9d53c9709c4d03">&#9670;&nbsp;</a></span>YY_ATTRIBUTE_PURE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_ATTRIBUTE_PURE&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a9b07478214400ec2e160dffd1d945266">YY_ATTRIBUTE</a> ((__pure__))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab312a884bd41ff11bbd1aa6c1a0e1b0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab312a884bd41ff11bbd1aa6c1a0e1b0a">&#9670;&nbsp;</a></span>YY_ATTRIBUTE_UNUSED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_ATTRIBUTE_UNUSED&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a9b07478214400ec2e160dffd1d945266">YY_ATTRIBUTE</a> ((__unused__))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a145ddbb780f86b5f35ddfffb23e62d4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a145ddbb780f86b5f35ddfffb23e62d4d">&#9670;&nbsp;</a></span>YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2b2abbe8d335b7933a69ac2f05a015d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b2abbe8d335b7933a69ac2f05a015d2">&#9670;&nbsp;</a></span>YY_IGNORE_MAYBE_UNINITIALIZED_END</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_IGNORE_MAYBE_UNINITIALIZED_END</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6d890db48971847b837a6a1397c9059a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d890db48971847b837a6a1397c9059a">&#9670;&nbsp;</a></span>YY_INITIAL_VALUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_INITIAL_VALUE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Value</td><td>)</td>
+          <td>&#160;&#160;&#160;Value</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5a6c82f7ce4ad9cc8c6c08b7a2de5b84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a6c82f7ce4ad9cc8c6c08b7a2de5b84">&#9670;&nbsp;</a></span>YY_NULLPTR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_NULLPTR&#160;&#160;&#160;((void*)0)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a49ad456240785266cadae498ddae9310"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49ad456240785266cadae498ddae9310">&#9670;&nbsp;</a></span>YY_REDUCE_PRINT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_REDUCE_PRINT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Rule</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7a52157fbe194e3a347afc4ef750af77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a52157fbe194e3a347afc4ef750af77">&#9670;&nbsp;</a></span>YY_STACK_PRINT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_STACK_PRINT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Bottom, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Top&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1c510d33cb388afc9411141ba3076a36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c510d33cb388afc9411141ba3076a36">&#9670;&nbsp;</a></span>YY_SYMBOL_PRINT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_SYMBOL_PRINT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Title, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Type, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Value, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Location&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4f0d6ff1008966c448c33a416a864701"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f0d6ff1008966c448c33a416a864701">&#9670;&nbsp;</a></span>YY_YY_HOME_OGUYON_SRC_CACAO_SRC_COMMANDLINEINTERFACE_CALC_BISON_H_INCLUDED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YY_YY_HOME_OGUYON_SRC_CACAO_SRC_COMMANDLINEINTERFACE_CALC_BISON_H_INCLUDED</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3bcde0b05b9aa4ec5169092d9d211dbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3bcde0b05b9aa4ec5169092d9d211dbd">&#9670;&nbsp;</a></span>YYABORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYABORT&#160;&#160;&#160;goto yyabortlab</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa6c7a65b580c214b2ea832fd7bdd472e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6c7a65b580c214b2ea832fd7bdd472e">&#9670;&nbsp;</a></span>YYACCEPT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYACCEPT&#160;&#160;&#160;goto yyacceptlab</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adfcaf974b837e3efc130377e9837b4fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfcaf974b837e3efc130377e9837b4fd">&#9670;&nbsp;</a></span>YYBACKUP</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYBACKUP</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Token, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Value&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code" href="calc__flex_8c.html#ad4a65b873df5c05570846b5413b41dfd">do                                                              \</a></div><div class="line"><a class="code" href="calc__flex_8c.html#ad4a65b873df5c05570846b5413b41dfd">    if</a> (<a class="code" href="calc__bison_8c.html#a9e2c7c7373b818c86b2df7106a92327c">yychar</a> == <a class="code" href="calc__bison_8c.html#ae59196b3765411a06cf234cf9bcae2e7">YYEMPTY</a>)                                        \</div><div class="line">      {                                                           \</div><div class="line">        yychar = (Token);                                         \</div><div class="line">        yylval = (Value);                                         \</div><div class="line">        YYPOPSTACK (yylen);                                       \</div><div class="line">        yystate = *yyssp;                                         \</div><div class="line">        goto yybackup;                                            \</div><div class="line">      }                                                           \</div><div class="line">    else                                                          \</div><div class="line">      {                                                           \</div><div class="line">        yyerror (<a class="code" href="calc__bison_8c.html#a25298af10c853371e8da3227e3feaaa0">YY_</a>(<span class="stringliteral">&quot;syntax error: cannot back up&quot;</span>)); \</div><div class="line">        YYERROR;                                                  \</div><div class="line">      }                                                           \</div><div class="line">  while (0)</div><div class="ttc" id="calc__bison_8c_html_a9e2c7c7373b818c86b2df7106a92327c"><div class="ttname"><a href="calc__bison_8c.html#a9e2c7c7373b818c86b2df7106a92327c">yychar</a></div><div class="ttdeci">int yychar</div><div class="ttdef"><b>Definition:</b> calc_bison.c:1216</div></div>
+<div class="ttc" id="calc__bison_8c_html_ae59196b3765411a06cf234cf9bcae2e7"><div class="ttname"><a href="calc__bison_8c.html#ae59196b3765411a06cf234cf9bcae2e7">YYEMPTY</a></div><div class="ttdeci">#define YYEMPTY</div><div class="ttdef"><b>Definition:</b> calc_bison.c:788</div></div>
+<div class="ttc" id="calc__bison_8c_html_a25298af10c853371e8da3227e3feaaa0"><div class="ttname"><a href="calc__bison_8c.html#a25298af10c853371e8da3227e3feaaa0">YY_</a></div><div class="ttdeci">#define YY_(Msgid)</div><div class="ttdef"><b>Definition:</b> calc_bison.c:235</div></div>
+<div class="ttc" id="calc__flex_8c_html_ad4a65b873df5c05570846b5413b41dfd"><div class="ttname"><a href="calc__flex_8c.html#ad4a65b873df5c05570846b5413b41dfd">if</a></div><div class="ttdeci">if(!(yy_init))</div><div class="ttdef"><b>Definition:</b> calc_flex.c:721</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a9f092f5b1dca6a6249fb2c7c8065b031"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f092f5b1dca6a6249fb2c7c8065b031">&#9670;&nbsp;</a></span>YYBISON</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYBISON&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a72ebd0ca5807efcc6a5ae4fb72dd1553"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72ebd0ca5807efcc6a5ae4fb72dd1553">&#9670;&nbsp;</a></span>YYBISON_VERSION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYBISON_VERSION&#160;&#160;&#160;&quot;3.4.1&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5035d59933b3f5388c44f596145db047"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5035d59933b3f5388c44f596145db047">&#9670;&nbsp;</a></span>yyclearin</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yyclearin&#160;&#160;&#160;(<a class="el" href="calc__bison_8c.html#a9e2c7c7373b818c86b2df7106a92327c">yychar</a> = <a class="el" href="calc__bison_8c.html#ae59196b3765411a06cf234cf9bcae2e7">YYEMPTY</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afade70b6df3e9712582bb8dc3bec185d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afade70b6df3e9712582bb8dc3bec185d">&#9670;&nbsp;</a></span>YYCOPY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYCOPY</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Dst, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Src, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Count&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span>                                        \</div><div class="line">        {                                       \</div><div class="line">          YYSIZE_T yyi;                         \</div><div class="line">          for (yyi = 0; yyi &lt; (Count); yyi++)   \</div><div class="line">            (Dst)[yyi] = (Src)[yyi];            \</div><div class="line">        }                                       \</div><div class="line">      while (0)</div></div><!-- fragment -->
+</div>
+</div>
+<a id="a3b270b13a13550fb9cefc929dad206ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b270b13a13550fb9cefc929dad206ac">&#9670;&nbsp;</a></span>YYCOPY_NEEDED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYCOPY_NEEDED&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a853b3bfad6d2b2ff693dce81182e0c2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a853b3bfad6d2b2ff693dce81182e0c2e">&#9670;&nbsp;</a></span>YYDEBUG</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYDEBUG&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af6d6ca80e87922f90264f1a4a802ea04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6d6ca80e87922f90264f1a4a802ea04">&#9670;&nbsp;</a></span>YYDPRINTF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYDPRINTF</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Args</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae59196b3765411a06cf234cf9bcae2e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae59196b3765411a06cf234cf9bcae2e7">&#9670;&nbsp;</a></span>YYEMPTY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYEMPTY&#160;&#160;&#160;(-2)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3b1e3628411fabac03abe0a337322016"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b1e3628411fabac03abe0a337322016">&#9670;&nbsp;</a></span>YYEOF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYEOF&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a552f295255821fa7dea11b0237e1d61a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a552f295255821fa7dea11b0237e1d61a">&#9670;&nbsp;</a></span>YYERRCODE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYERRCODE&#160;&#160;&#160;256</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a20bf055e53dc4fd5afddfd752a4d1adb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20bf055e53dc4fd5afddfd752a4d1adb">&#9670;&nbsp;</a></span>yyerrok</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yyerrok&#160;&#160;&#160;(yyerrstatus = 0)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af1eef6197be78122699013d0784acc80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1eef6197be78122699013d0784acc80">&#9670;&nbsp;</a></span>YYERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYERROR&#160;&#160;&#160;goto yyerrorlab</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0943f558a560b9b5fa0593d7e36496c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0943f558a560b9b5fa0593d7e36496c1">&#9670;&nbsp;</a></span>YYERROR_VERBOSE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYERROR_VERBOSE&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6419f3fd69ecb6b7e063410fd4e73b2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6419f3fd69ecb6b7e063410fd4e73b2f">&#9670;&nbsp;</a></span>YYFINAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYFINAL&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac8adfd73c006c1926f387feb1eced3ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8adfd73c006c1926f387feb1eced3ca">&#9670;&nbsp;</a></span>YYFREE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYFREE&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#af07d89f5ceaea0c7c8252cc41fd75f37">free</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeb1508a3a38ec5d64c27e8eca25330b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb1508a3a38ec5d64c27e8eca25330b5">&#9670;&nbsp;</a></span>YYINITDEPTH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYINITDEPTH&#160;&#160;&#160;200</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae67923760a28e3b7ed3aa2cfaef7f9a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae67923760a28e3b7ed3aa2cfaef7f9a2">&#9670;&nbsp;</a></span>YYLAST</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYLAST&#160;&#160;&#160;658</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a573b05852d8f080c907dfba725773d7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a573b05852d8f080c907dfba725773d7a">&#9670;&nbsp;</a></span>YYMALLOC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYMALLOC&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a5faf6a2d99f50a4655dd390199a8db7b">malloc</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a14ba2b263c446ffed1c888c4b42ae40c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14ba2b263c446ffed1c888c4b42ae40c">&#9670;&nbsp;</a></span>YYMAXDEPTH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYMAXDEPTH&#160;&#160;&#160;10000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af3f5ed4bc4517eff0ef1b17541192a58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3f5ed4bc4517eff0ef1b17541192a58">&#9670;&nbsp;</a></span>YYMAXUTOK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYMAXUTOK&#160;&#160;&#160;270</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af54ae9e588f0ecc32eabbfdf1959df10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af54ae9e588f0ecc32eabbfdf1959df10">&#9670;&nbsp;</a></span>YYNNTS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYNNTS&#160;&#160;&#160;6</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aceaba8997dc3867478ae3b816647eb7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aceaba8997dc3867478ae3b816647eb7c">&#9670;&nbsp;</a></span>YYNRULES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYNRULES&#160;&#160;&#160;86</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2c387ba2caaade8bf8f78ed30023f79f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c387ba2caaade8bf8f78ed30023f79f">&#9670;&nbsp;</a></span>YYNSTATES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYNSTATES&#160;&#160;&#160;205</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a75d260730a6c379a94ea28f63a7b9275"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75d260730a6c379a94ea28f63a7b9275">&#9670;&nbsp;</a></span>YYNTOKENS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYNTOKENS&#160;&#160;&#160;26</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a62bf0ed0c4360b077071b5cf3177823b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62bf0ed0c4360b077071b5cf3177823b">&#9670;&nbsp;</a></span>YYPACT_NINF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYPACT_NINF&#160;&#160;&#160;-22</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3e2101757251d6084a66a33bcd68df0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e2101757251d6084a66a33bcd68df0f">&#9670;&nbsp;</a></span>yypact_value_is_default</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yypact_value_is_default</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Yystate</td><td>)</td>
+          <td>&#160;&#160;&#160;(!!((Yystate) == (-22)))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2f9773cd9c031026b2ef4c1ee7be1be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2f9773cd9c031026b2ef4c1ee7be1be">&#9670;&nbsp;</a></span>YYPOPSTACK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYPOPSTACK</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">N</td><td>)</td>
+          <td>&#160;&#160;&#160;(yyvsp -= (N), yyssp -= (N))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a90f059b8a9d6c30a1e44e1b80d3fd6c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90f059b8a9d6c30a1e44e1b80d3fd6c8">&#9670;&nbsp;</a></span>YYPULL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYPULL&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9fa797a1f3c4fc9b12d1e4d569612767"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fa797a1f3c4fc9b12d1e4d569612767">&#9670;&nbsp;</a></span>YYPURE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYPURE&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3aa6e4af11755f8cf8e5ddb26833e918"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3aa6e4af11755f8cf8e5ddb26833e918">&#9670;&nbsp;</a></span>YYPUSH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYPUSH&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad860e18ca4b79fc589895b531bdb7948"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad860e18ca4b79fc589895b531bdb7948">&#9670;&nbsp;</a></span>YYRECOVERING</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYRECOVERING</td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td>&#160;&#160;&#160;(!!yyerrstatus)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab4bb7ad82d4a7e2df49ff6a8fb484109"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4bb7ad82d4a7e2df49ff6a8fb484109">&#9670;&nbsp;</a></span>YYSIZE_MAXIMUM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSIZE_MAXIMUM&#160;&#160;&#160;((<a class="el" href="calc__bison_8c.html#a7d535939e93253736c6eeda569d24de5">YYSIZE_T</a>) -1)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7d535939e93253736c6eeda569d24de5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d535939e93253736c6eeda569d24de5">&#9670;&nbsp;</a></span>YYSIZE_T</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSIZE_T&#160;&#160;&#160;size_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a50db5aef8c2b6f13961b2480b37f84c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50db5aef8c2b6f13961b2480b37f84c0">&#9670;&nbsp;</a></span>YYSKELETON_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSKELETON_NAME&#160;&#160;&#160;&quot;yacc.c&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af45042ce56e04d634420d76caeb2ee73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af45042ce56e04d634420d76caeb2ee73">&#9670;&nbsp;</a></span>YYSTACK_ALLOC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSTACK_ALLOC&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a573b05852d8f080c907dfba725773d7a">YYMALLOC</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7e55d995c7458f2f4af94a426d0adde8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e55d995c7458f2f4af94a426d0adde8">&#9670;&nbsp;</a></span>YYSTACK_ALLOC_MAXIMUM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSTACK_ALLOC_MAXIMUM&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#ab4bb7ad82d4a7e2df49ff6a8fb484109">YYSIZE_MAXIMUM</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a40beb355f2cf230a99e2e2bb54909a5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40beb355f2cf230a99e2e2bb54909a5a">&#9670;&nbsp;</a></span>YYSTACK_BYTES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSTACK_BYTES</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">N</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">((N) * (<span class="keyword">sizeof</span> (<a class="code" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a>) + <span class="keyword">sizeof</span> (<a class="code" href="calc__bison_8c.html#ac56824fbd095909aa72c2a98afb4b9f0">YYSTYPE</a>)) \</div><div class="line">      + <a class="code" href="calc__bison_8c.html#afcd15dd0fa87ffba0371c6d6a0cc9631">YYSTACK_GAP_MAXIMUM</a>)</div><div class="ttc" id="calc__bison_8c_html_ac56824fbd095909aa72c2a98afb4b9f0"><div class="ttname"><a href="calc__bison_8c.html#ac56824fbd095909aa72c2a98afb4b9f0">YYSTYPE</a></div><div class="ttdeci">union YYSTYPE YYSTYPE</div><div class="ttdef"><b>Definition:</b> calc_bison.c:170</div></div>
+<div class="ttc" id="calc__bison_8c_html_a33032314af14de925471bbd792c4bd92"><div class="ttname"><a href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a></div><div class="ttdeci">short yytype_int16</div><div class="ttdef"><b>Definition:</b> calc_bison.c:209</div></div>
+<div class="ttc" id="calc__bison_8c_html_afcd15dd0fa87ffba0371c6d6a0cc9631"><div class="ttname"><a href="calc__bison_8c.html#afcd15dd0fa87ffba0371c6d6a0cc9631">YYSTACK_GAP_MAXIMUM</a></div><div class="ttdeci">#define YYSTACK_GAP_MAXIMUM</div><div class="ttdef"><b>Definition:</b> calc_bison.c:366</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a1a9dc526fd390d4808252bd631c4c2f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a9dc526fd390d4808252bd631c4c2f7">&#9670;&nbsp;</a></span>YYSTACK_FREE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSTACK_FREE&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#ac8adfd73c006c1926f387feb1eced3ca">YYFREE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afcd15dd0fa87ffba0371c6d6a0cc9631"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcd15dd0fa87ffba0371c6d6a0cc9631">&#9670;&nbsp;</a></span>YYSTACK_GAP_MAXIMUM</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSTACK_GAP_MAXIMUM&#160;&#160;&#160;(sizeof (union <a class="el" href="unionyyalloc.html">yyalloc</a>) - 1)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae780b90b638f37309f20dc07f94e8221"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae780b90b638f37309f20dc07f94e8221">&#9670;&nbsp;</a></span>YYSTACK_RELOCATE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSTACK_RELOCATE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Stack_alloc, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Stack&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span>                                                                  \</div><div class="line">      {                                                                 \</div><div class="line">        YYSIZE_T yynewbytes;                                            \</div><div class="line">        YYCOPY (&amp;yyptr-&gt;Stack_alloc, Stack, yysize);                    \</div><div class="line">        Stack = &amp;yyptr-&gt;Stack_alloc;                                    \</div><div class="line">        yynewbytes = yystacksize * <span class="keyword">sizeof</span> (*Stack) + <a class="code" href="calc__bison_8c.html#afcd15dd0fa87ffba0371c6d6a0cc9631">YYSTACK_GAP_MAXIMUM</a>; \</div><div class="line">        yyptr += yynewbytes / <span class="keyword">sizeof</span> (*yyptr);                          \</div><div class="line">      }                                                                 \</div><div class="line">    while (0)</div><div class="ttc" id="calc__bison_8c_html_afcd15dd0fa87ffba0371c6d6a0cc9631"><div class="ttname"><a href="calc__bison_8c.html#afcd15dd0fa87ffba0371c6d6a0cc9631">YYSTACK_GAP_MAXIMUM</a></div><div class="ttdeci">#define YYSTACK_GAP_MAXIMUM</div><div class="ttdef"><b>Definition:</b> calc_bison.c:366</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="af0232d21120b2cfc5e5f82f0fbadab3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0232d21120b2cfc5e5f82f0fbadab3c">&#9670;&nbsp;</a></span>YYSTYPE_IS_DECLARED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSTYPE_IS_DECLARED&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2e3dbf169c5ee24cf6af37c61cf3995d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e3dbf169c5ee24cf6af37c61cf3995d">&#9670;&nbsp;</a></span>YYSTYPE_IS_TRIVIAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYSTYPE_IS_TRIVIAL&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a504faa93b92f37fcc147f68e8d111a1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a504faa93b92f37fcc147f68e8d111a1d">&#9670;&nbsp;</a></span>YYTABLE_NINF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYTABLE_NINF&#160;&#160;&#160;-1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af325a12ad294897b19b9d5ef665772f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af325a12ad294897b19b9d5ef665772f6">&#9670;&nbsp;</a></span>yytable_value_is_error</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define yytable_value_is_error</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Yytable_value</td><td>)</td>
+          <td>&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2b58b1851184ddb3b60fede50bc7946"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2b58b1851184ddb3b60fede50bc7946">&#9670;&nbsp;</a></span>YYTERROR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYTERROR&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a69ca0fbcc6d7aa5e8f47b11fc0048208"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69ca0fbcc6d7aa5e8f47b11fc0048208">&#9670;&nbsp;</a></span>YYTOKENTYPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYTOKENTYPE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aad19ee88e33c02c4e720b28f78249bd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad19ee88e33c02c4e720b28f78249bd7">&#9670;&nbsp;</a></span>YYTRANSLATE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYTRANSLATE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">YYX</td><td>)</td>
+          <td>&#160;&#160;&#160;((unsigned) (YYX) &lt;= <a class="el" href="calc__bison_8c.html#af3f5ed4bc4517eff0ef1b17541192a58">YYMAXUTOK</a> ? <a class="el" href="calc__bison_8c.html#a384fb3797a340a5415c03719ebab9c67">yytranslate</a>[YYX] : <a class="el" href="calc__bison_8c.html#a926181abd06b6d1df27b6133971c24ce">YYUNDEFTOK</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a926181abd06b6d1df27b6133971c24ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a926181abd06b6d1df27b6133971c24ce">&#9670;&nbsp;</a></span>YYUNDEFTOK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYUNDEFTOK&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a33c61e326f5675cc74eb9e1a6906595c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33c61e326f5675cc74eb9e1a6906595c">&#9670;&nbsp;</a></span>YYUSE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define YYUSE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">E</td><td>)</td>
+          <td>&#160;&#160;&#160;((void) (E))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="ac56824fbd095909aa72c2a98afb4b9f0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac56824fbd095909aa72c2a98afb4b9f0">&#9670;&nbsp;</a></span>YYSTYPE</h2>
@@ -239,14 +1437,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ade5b97f0021a4f6c5922ead3744ab297"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade5b97f0021a4f6c5922ead3744ab297">&#9670;&nbsp;</a></span>yytype_int16</h2>
+<a id="a33032314af14de925471bbd792c4bd92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33032314af14de925471bbd792c4bd92">&#9670;&nbsp;</a></span>yytype_int16</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef short int <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a></td>
+          <td class="memname">typedef short <a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -267,14 +1465,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a00c27c9da5ed06a830b216c8934e6b28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00c27c9da5ed06a830b216c8934e6b28">&#9670;&nbsp;</a></span>yytype_uint16</h2>
+<a id="add1eb32dbafc168be3462180f741af64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add1eb32dbafc168be3462180f741af64">&#9670;&nbsp;</a></span>yytype_uint16</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef unsigned short int <a class="el" href="calc__bison_8c.html#a00c27c9da5ed06a830b216c8934e6b28">yytype_uint16</a></td>
+          <td class="memname">typedef unsigned short <a class="el" href="calc__bison_8c.html#add1eb32dbafc168be3462180f741af64">yytype_uint16</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -366,173 +1564,11 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void* malloc </td>
           <td>(</td>
-          <td class="paramtype">YYSIZE_T&#160;</td>
+          <td class="paramtype"><a class="el" href="calc__bison_8c.html#a7d535939e93253736c6eeda569d24de5">YYSIZE_T</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8075fcffa0796f4695376a916de29b2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8075fcffa0796f4695376a916de29b2f">&#9670;&nbsp;</a></span>yy_reduce_print()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void yy_reduce_print </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> *&#160;</td>
-          <td class="paramname"><em>yyssp</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="unionYYSTYPE.html">YYSTYPE</a> *&#160;</td>
-          <td class="paramname"><em>yyvsp</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>yyrule</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a289ccf7ef43d1af713c6e68e20d9a165"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a289ccf7ef43d1af713c6e68e20d9a165">&#9670;&nbsp;</a></span>yy_stack_print()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void yy_stack_print </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> *&#160;</td>
-          <td class="paramname"><em>yybottom</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> *&#160;</td>
-          <td class="paramname"><em>yytop</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa0e60e36a5d6bd2677f1c59ee270778a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0e60e36a5d6bd2677f1c59ee270778a">&#9670;&nbsp;</a></span>yy_symbol_print()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void yy_symbol_print </td>
-          <td>(</td>
-          <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>yyoutput</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>yytype</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="unionYYSTYPE.html">YYSTYPE</a> const *const&#160;</td>
-          <td class="paramname"><em>yyvaluep</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a75e93dcf72bf2d3cfd48f1ddc80b6364"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75e93dcf72bf2d3cfd48f1ddc80b6364">&#9670;&nbsp;</a></span>yy_symbol_value_print()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void yy_symbol_value_print </td>
-          <td>(</td>
-          <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>yyoutput</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>yytype</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="unionYYSTYPE.html">YYSTYPE</a> const *const&#160;</td>
-          <td class="paramname"><em>yyvaluep</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -632,152 +1668,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a79c0cbb33ee2f626ebdf5933080ea385"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79c0cbb33ee2f626ebdf5933080ea385">&#9670;&nbsp;</a></span>yystpcpy()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static char* yystpcpy </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>yydest</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>yysrc</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab16a52d178a34ea4df3b55f9ad16588a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab16a52d178a34ea4df3b55f9ad16588a">&#9670;&nbsp;</a></span>yystrlen()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static YYSIZE_T yystrlen </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>yystr</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae7bce4884c238b92c88006a17478d37c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7bce4884c238b92c88006a17478d37c">&#9670;&nbsp;</a></span>yysyntax_error()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int yysyntax_error </td>
-          <td>(</td>
-          <td class="paramtype">YYSIZE_T *&#160;</td>
-          <td class="paramname"><em>yymsg_alloc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char **&#160;</td>
-          <td class="paramname"><em>yymsg</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> *&#160;</td>
-          <td class="paramname"><em>yyssp</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>yytoken</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac4bdbe6f524e68778be5e1717fda3bc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4bdbe6f524e68778be5e1717fda3bc3">&#9670;&nbsp;</a></span>yytnamerr()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static YYSIZE_T yytnamerr </td>
-          <td>(</td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>yyres</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>yystr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Variable Documentation</h2>
 <a id="a5f4566d37ec53f74821f22df71a6fb93"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5f4566d37ec53f74821f22df71a6fb93">&#9670;&nbsp;</a></span>calctmpimname</h2>
@@ -817,7 +1707,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> yycheck[]</td>
+          <td class="memname">const <a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a> yycheck[]</td>
         </tr>
       </table>
   </td>
@@ -825,20 +1715,6 @@ Variables</h2></td></tr>
 <span class="mlabels"><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ab138aa8e11f58bcdcc7134adf240ea8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab138aa8e11f58bcdcc7134adf240ea8c">&#9670;&nbsp;</a></span>yydebug</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int yydebug</td>
-        </tr>
-      </table>
 </div><div class="memdoc">
 
 </div>
@@ -875,7 +1751,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> yydefgoto[]</td>
+          <td class="memname">const <a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a> yydefgoto[]</td>
         </tr>
       </table>
   </td>
@@ -925,7 +1801,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> yypact[]</td>
+          <td class="memname">const <a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a> yypact[]</td>
         </tr>
       </table>
   </td>
@@ -947,7 +1823,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="calc__bison_8c.html#ade5b97f0021a4f6c5922ead3744ab297">yytype_int16</a> yypgoto[]</td>
+          <td class="memname">const <a class="el" href="calc__bison_8c.html#a33032314af14de925471bbd792c4bd92">yytype_int16</a> yypgoto[]</td>
         </tr>
       </table>
   </td>
@@ -1003,28 +1879,6 @@ Variables</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div><div class="line">{</div><div class="line">       0,     2,     0,     2,     1,     2,     2,     2,     2,     1,</div><div class="line">       3,     3,     3,     2,     3,     3,     1,     1,     3,     3,</div><div class="line">       3,     3,     3,     3,     3,     3,     3,     3,     3,     3,</div><div class="line">       3,     3,     3,     3,     3,     2,     3,     3,     3,     3,</div><div class="line">       3,     5,     5,     5,     5,     7,     7,     7,     7,     7,</div><div class="line">       7,     7,     7,     3,     5,     3,     1,     1,     1,     3,</div><div class="line">       3,     3,     3,     3,     3,     3,     3,     3,     3,     3,</div><div class="line">       3,     3,     3,     3,     3,     3,     3,     3,     3,     3,</div><div class="line">       3,     3,     3,     3,     5,     7,     3</div><div class="line">}</div></div><!-- fragment -->
 </div>
 </div>
-<a id="ae7dc8646c71a84786de4a96bde8bcfa1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7dc8646c71a84786de4a96bde8bcfa1">&#9670;&nbsp;</a></span>yyrline</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="calc__bison_8c.html#a79c09f9dcfd0f7a32f598ea3910d2206">yytype_uint8</a> yyrline[]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div><div class="line">{</div><div class="line">       0,    66,    66,    67,    71,    72,    77,    82,    86,    89,</div><div class="line">      90,    91,    92,    93,    94,    95,    98,    99,   100,   101,</div><div class="line">     102,   103,   104,   105,   106,   107,   108,   109,   110,   111,</div><div class="line">     112,   113,   114,   115,   116,   117,   118,   119,   120,   121,</div><div class="line">     122,   123,   124,   125,   126,   127,   128,   129,   130,   131,</div><div class="line">     132,   133,   134,   135,   136,   137,   141,   142,   143,   144,</div><div class="line">     145,   146,   147,   148,   149,   150,   151,   152,   153,   154,</div><div class="line">     155,   156,   157,   158,   159,   160,   161,   162,   163,   164,</div><div class="line">     165,   166,   167,   168,   169,   170,   171</div><div class="line">}</div></div><!-- fragment -->
-</div>
-</div>
 <a id="abc7e1225b6a8ee7619f19504cbefd97b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abc7e1225b6a8ee7619f19504cbefd97b">&#9670;&nbsp;</a></span>yystos</h2>
 
@@ -1069,50 +1923,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab779f3189fbfd3b164b7802b945d619b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab779f3189fbfd3b164b7802b945d619b">&#9670;&nbsp;</a></span>yytname</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const yytname[]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div><div class="line">{</div><div class="line">  <span class="stringliteral">&quot;$end&quot;</span>, <span class="stringliteral">&quot;error&quot;</span>, <span class="stringliteral">&quot;$undefined&quot;</span>, <span class="stringliteral">&quot;TKNUMl&quot;</span>, <span class="stringliteral">&quot;TKNUMf&quot;</span>, <span class="stringliteral">&quot;TKNUMd&quot;</span>, <span class="stringliteral">&quot;TKVAR&quot;</span>,</div><div class="line">  <span class="stringliteral">&quot;TKNVAR&quot;</span>, <span class="stringliteral">&quot;TKIMAGE&quot;</span>, <span class="stringliteral">&quot;TKCOMMAND&quot;</span>, <span class="stringliteral">&quot;TKFUNC_d_d&quot;</span>, <span class="stringliteral">&quot;TKFUNC_dd_d&quot;</span>,</div><div class="line">  <span class="stringliteral">&quot;TKFUNC_ddd_d&quot;</span>, <span class="stringliteral">&quot;TKFUNC_im_d&quot;</span>, <span class="stringliteral">&quot;TKFUNC_imd_d&quot;</span>, <span class="stringliteral">&quot;&#39;=&#39;&quot;</span>, <span class="stringliteral">&quot;&#39;-&#39;&quot;</span>, <span class="stringliteral">&quot;&#39;+&#39;&quot;</span>,</div><div class="line">  <span class="stringliteral">&quot;&#39;*&#39;&quot;</span>, <span class="stringliteral">&quot;&#39;/&#39;&quot;</span>, <span class="stringliteral">&quot;NEG&quot;</span>, <span class="stringliteral">&quot;&#39;^&#39;&quot;</span>, <span class="stringliteral">&quot;&#39;\\n&#39;&quot;</span>, <span class="stringliteral">&quot;&#39;(&#39;&quot;</span>, <span class="stringliteral">&quot;&#39;)&#39;&quot;</span>, <span class="stringliteral">&quot;&#39;,&#39;&quot;</span>, <span class="stringliteral">&quot;$accept&quot;</span>,</div><div class="line">  <span class="stringliteral">&quot;input&quot;</span>, <span class="stringliteral">&quot;line&quot;</span>, <span class="stringliteral">&quot;expl&quot;</span>, <span class="stringliteral">&quot;expd&quot;</span>, <span class="stringliteral">&quot;exps&quot;</span>, YY_NULLPTR</div><div class="line">}</div></div><!-- fragment -->
-</div>
-</div>
-<a id="a1de5b70b1a55fa6f3e218d7e2218d47b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1de5b70b1a55fa6f3e218d7e2218d47b">&#9670;&nbsp;</a></span>yytoknum</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="calc__bison_8c.html#a00c27c9da5ed06a830b216c8934e6b28">yytype_uint16</a> yytoknum[]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div><div class="line">{</div><div class="line">       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,</div><div class="line">     265,   266,   267,   268,   269,    61,    45,    43,    42,    47,</div><div class="line">     270,    94,    10,    40,    41,    44</div><div class="line">}</div></div><!-- fragment -->
-</div>
-</div>
 <a id="a384fb3797a340a5415c03719ebab9c67"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a384fb3797a340a5415c03719ebab9c67">&#9670;&nbsp;</a></span>yytranslate</h2>
 
@@ -1142,7 +1952,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="calc__bison_8c.html">calc_bison.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

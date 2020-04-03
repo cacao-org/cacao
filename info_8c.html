@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('info_8c.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,88 +95,139 @@ $(document).ready(function(){initNavTree('info_8c.html','');});
 
 <p>Information about images.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;sys/file.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;sys/mman.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;termios.h&gt;</code><br />
+<code>#include &lt;sys/wait.h&gt;</code><br />
+<code>#include &lt;ncurses.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="fft_8h_source.html">fft/fft.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for info.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="info_8c__incl.png" border="0" usemap="#src_2info_2info_8c" alt=""/></div>
+<map name="src_2info_2info_8c" id="src_2info_2info_8c">
+<area shape="rect" id="node21" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="909,80,1066,121"/>
+<area shape="rect" id="node32" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="1989,87,2132,114"/>
+<area shape="rect" id="node33" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="2156,80,2357,121"/>
+<area shape="rect" id="node34" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2381,80,2601,121"/>
+<area shape="rect" id="node35" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="2625,80,2824,121"/>
+<area shape="rect" id="node36" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="2848,80,3049,121"/>
+<area shape="rect" id="node37" href="fft_8h.html" title="fft/fft.h" alt="" coords="3074,87,3135,114"/>
+<area shape="rect" id="node38" href="info_8h.html" title="info/info.h" alt="" coords="3160,87,3239,114"/>
+<area shape="rect" id="node26" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="651,169,873,196"/>
+<area shape="rect" id="node27" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="857,244,961,271"/>
+<area shape="rect" id="node29" href="processtools_8h.html" title="Command line interface. " alt="" coords="1078,244,1185,271"/>
+<area shape="rect" id="node30" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1364,244,1472,271"/>
+<area shape="rect" id="node31" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1220,169,1371,196"/>
+<area shape="rect" id="node28" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="789,319,943,345"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa8f51c708a501884e32f9c62b96b55cd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#aa8f51c708a501884e32f9c62b96b55cd">clock_gettime</a> (int clk_id, struct timespec *t)</td></tr>
-<tr class="separator:aa8f51c708a501884e32f9c62b96b55cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ee634b76b9b8a4d82f5835d26d5e3f5"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a1ee634b76b9b8a4d82f5835d26d5e3f5">info_image_monitor</a> (const char *ID_name, double frequ)</td></tr>
-<tr class="separator:a1ee634b76b9b8a4d82f5835d26d5e3f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9de05ab62f4c7d6efe48bc424825050"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ac9de05ab62f4c7d6efe48bc424825050">info_profile_cli</a> ()</td></tr>
-<tr class="separator:ac9de05ab62f4c7d6efe48bc424825050"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b8f52e95c4feb6615aba01669afcd83"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a3b8f52e95c4feb6615aba01669afcd83">info_image_monitor_cli</a> ()</td></tr>
-<tr class="separator:a3b8f52e95c4feb6615aba01669afcd83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bb90ba2677e51691443eb48dd7208fc"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a3bb90ba2677e51691443eb48dd7208fc">info_image_stats_cli</a> ()</td></tr>
-<tr class="separator:a3bb90ba2677e51691443eb48dd7208fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1a0908720dc501d6c16c5fb07a0bc13"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ac1a0908720dc501d6c16c5fb07a0bc13">info_cubestats_cli</a> ()</td></tr>
-<tr class="separator:ac1a0908720dc501d6c16c5fb07a0bc13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03816c0a5278f39664fcceca936464d0"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a03816c0a5278f39664fcceca936464d0">info_image_statsf_cli</a> ()</td></tr>
-<tr class="separator:a03816c0a5278f39664fcceca936464d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fb7dce094ea149c580d1ac4a4f80e8a"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a3fb7dce094ea149c580d1ac4a4f80e8a">info_cubeMatchMatrix_cli</a> ()</td></tr>
-<tr class="separator:a3fb7dce094ea149c580d1ac4a4f80e8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfa674b9e94846b1b31fbfbaa8b865d1"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#acfa674b9e94846b1b31fbfbaa8b865d1">info_image_monitor</a> (const char *ID_name, double frequ)</td></tr>
+<tr class="separator:acfa674b9e94846b1b31fbfbaa8b865d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1412dcf3830e8bbe7b21e10a3b2e794d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a1412dcf3830e8bbe7b21e10a3b2e794d">info_profile_cli</a> ()</td></tr>
+<tr class="separator:a1412dcf3830e8bbe7b21e10a3b2e794d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d87e90dc5a0f62247ab5930b94e9484"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a2d87e90dc5a0f62247ab5930b94e9484">info_image_monitor_cli</a> ()</td></tr>
+<tr class="separator:a2d87e90dc5a0f62247ab5930b94e9484"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4c02dd89f76cecd4c43e6cf4c12d341"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#aa4c02dd89f76cecd4c43e6cf4c12d341">info_image_stats_cli</a> ()</td></tr>
+<tr class="separator:aa4c02dd89f76cecd4c43e6cf4c12d341"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc64c1f4c37c910102426d6ad0a8beed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#acc64c1f4c37c910102426d6ad0a8beed">info_cubestats_cli</a> ()</td></tr>
+<tr class="separator:acc64c1f4c37c910102426d6ad0a8beed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8c13eee817027e8696b64a9fbc51e49"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#aa8c13eee817027e8696b64a9fbc51e49">info_image_statsf_cli</a> ()</td></tr>
+<tr class="separator:aa8c13eee817027e8696b64a9fbc51e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61c01139b04d04488dfe66f093f593c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a61c01139b04d04488dfe66f093f593c9">info_cubeMatchMatrix_cli</a> ()</td></tr>
+<tr class="separator:a61c01139b04d04488dfe66f093f593c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d7396f5ecc59232d638504c96aeb2ce"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a5d7396f5ecc59232d638504c96aeb2ce">init_info</a> ()</td></tr>
-<tr class="separator:a5d7396f5ecc59232d638504c96aeb2ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf87a8fb634c27e2d3d4800eb6fdc4a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#adf87a8fb634c27e2d3d4800eb6fdc4a6">init_info</a> ()</td></tr>
+<tr class="separator:adf87a8fb634c27e2d3d4800eb6fdc4a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fb9173b416d4ca64e84793024c86a9e"><td class="memItemLeft" align="right" valign="top">struct timespec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a6fb9173b416d4ca64e84793024c86a9e">info_time_diff</a> (struct timespec start, struct timespec end)</td></tr>
 <tr class="separator:a6fb9173b416d4ca64e84793024c86a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add1a5530fadf86f97cc5a4ba3e47c4a4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#add1a5530fadf86f97cc5a4ba3e47c4a4">kbdhit</a> (void)</td></tr>
-<tr class="separator:add1a5530fadf86f97cc5a4ba3e47c4a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fbb6ce54648926505877f584969e505"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a6fbb6ce54648926505877f584969e505">print_header</a> (const char *str, char c)</td></tr>
-<tr class="separator:a6fbb6ce54648926505877f584969e505"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76b8a14ec907f1d2e4b828553c1c1b34"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a76b8a14ec907f1d2e4b828553c1c1b34">printstatus</a> (long ID)</td></tr>
-<tr class="separator:a76b8a14ec907f1d2e4b828553c1c1b34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61aa4a9be8463a003d00ac9be49f7bbb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a61aa4a9be8463a003d00ac9be49f7bbb">info_pixelstats_smallImage</a> (long ID, long NBpix)</td></tr>
-<tr class="separator:a61aa4a9be8463a003d00ac9be49f7bbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a795d4c32b7799389d8f7630322a115ad"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a795d4c32b7799389d8f7630322a115ad">info_image_streamtiming_stats_disp</a> (double *tdiffvarray, long NBsamples, float *percarray, long *percNarray, long NBperccnt, long percMedianIndex, long cntdiff, long part, long NBpart, double tdiffvmax, long tdiffcntmax)</td></tr>
-<tr class="separator:a795d4c32b7799389d8f7630322a115ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada90baeed3dc221f0c0ca8353c5c41ff"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ada90baeed3dc221f0c0ca8353c5c41ff">info_image_streamtiming_stats</a> (const char *ID_name, int sem, long NBsamples, long part, long NBpart)</td></tr>
-<tr class="separator:ada90baeed3dc221f0c0ca8353c5c41ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8a7e1ed7a99d3fb47bace8c1bbe9ba0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#af8a7e1ed7a99d3fb47bace8c1bbe9ba0">kbdhit</a> (void)</td></tr>
+<tr class="separator:af8a7e1ed7a99d3fb47bace8c1bbe9ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7971060d50a34c3e5a33d5367b6ece0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ae7971060d50a34c3e5a33d5367b6ece0">print_header</a> (const char *str, char c)</td></tr>
+<tr class="separator:ae7971060d50a34c3e5a33d5367b6ece0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68a7739aacd3ad6dc6b94be48d9730ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a68a7739aacd3ad6dc6b94be48d9730ed">printstatus</a> (<a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> ID)</td></tr>
+<tr class="separator:a68a7739aacd3ad6dc6b94be48d9730ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7126e4c848487394acac0090e0bf60ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a7126e4c848487394acac0090e0bf60ef">info_pixelstats_smallImage</a> (<a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> ID, unsigned long NBpix)</td></tr>
+<tr class="separator:a7126e4c848487394acac0090e0bf60ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea0e7a881c099c1f4d822eb1423c8d6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#aea0e7a881c099c1f4d822eb1423c8d6b">info_image_streamtiming_stats_disp</a> (double *tdiffvarray, long NBsamples, float *percarray, long *percNarray, long NBperccnt, long percMedianIndex, long cntdiff, long part, long NBpart, double tdiffvmax, long tdiffcntmax)</td></tr>
+<tr class="separator:aea0e7a881c099c1f4d822eb1423c8d6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f429aa3a87e3f9de82bad5175e523bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a6f429aa3a87e3f9de82bad5175e523bb">info_image_streamtiming_stats</a> (const char *ID_name, int sem, long NBsamples, long part, long NBpart)</td></tr>
+<tr class="separator:a6f429aa3a87e3f9de82bad5175e523bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1ad3fd57f62decf7ee1952a35e70bea"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#af1ad3fd57f62decf7ee1952a35e70bea">brighter</a> (const char *ID_name, double value)</td></tr>
 <tr class="separator:af1ad3fd57f62decf7ee1952a35e70bea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab64b87414c5bdf5730eea75a4a51a33c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ab64b87414c5bdf5730eea75a4a51a33c">img_nbpix_flux</a> (const char *ID_name)</td></tr>
-<tr class="separator:ab64b87414c5bdf5730eea75a4a51a33c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a987bb057d65e3cd1112895a7263f36a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a987bb057d65e3cd1112895a7263f36a7">img_nbpix_flux</a> (const char *ID_name)</td></tr>
+<tr class="separator:a987bb057d65e3cd1112895a7263f36a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6d1cdebee4d693793a848b040f1d57e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ad6d1cdebee4d693793a848b040f1d57e">img_percentile_float</a> (const char *ID_name, float p)</td></tr>
 <tr class="separator:ad6d1cdebee4d693793a848b040f1d57e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24171cb88adfb6b576a33a1cc3500e2d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a24171cb88adfb6b576a33a1cc3500e2d">img_percentile_double</a> (const char *ID_name, double p)</td></tr>
 <tr class="separator:a24171cb88adfb6b576a33a1cc3500e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1039f41559c2429c6db90981725780ed"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a1039f41559c2429c6db90981725780ed">img_percentile</a> (const char *ID_name, double p)</td></tr>
 <tr class="separator:a1039f41559c2429c6db90981725780ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abad24e6ead17be3f4a4c82074a4ab3ea"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#abad24e6ead17be3f4a4c82074a4ab3ea">img_histoc_float</a> (const char *ID_name, const char *fname)</td></tr>
-<tr class="separator:abad24e6ead17be3f4a4c82074a4ab3ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a01ab464bbae9daef1ee5dffd23bcc1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a3a01ab464bbae9daef1ee5dffd23bcc1">img_histoc_double</a> (const char *ID_name, const char *fname)</td></tr>
-<tr class="separator:a3a01ab464bbae9daef1ee5dffd23bcc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2f1e5b448f5f7f366367bb62235e835"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#af2f1e5b448f5f7f366367bb62235e835">make_histogram</a> (const char *ID_name, const char *ID_out_name, double min, double max, long nbsteps)</td></tr>
-<tr class="separator:af2f1e5b448f5f7f366367bb62235e835"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af03733fff42badd45d18dde065708220"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#af03733fff42badd45d18dde065708220">img_histoc_float</a> (const char *ID_name, const char *fname)</td></tr>
+<tr class="separator:af03733fff42badd45d18dde065708220"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3128746e7c208f766fb73d9b4f13de32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a3128746e7c208f766fb73d9b4f13de32">img_histoc_double</a> (const char *ID_name, const char *fname)</td></tr>
+<tr class="separator:a3128746e7c208f766fb73d9b4f13de32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b4e6c3f453b8fba69fe04dbf046589f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a8b4e6c3f453b8fba69fe04dbf046589f">make_histogram</a> (const char *ID_name, const char *ID_out_name, double <a class="el" href="cudacomp_8c.html#ac6afabdc09a49a433ee19d8a9486056d">min</a>, double <a class="el" href="cudacomp_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a>, long nbsteps)</td></tr>
+<tr class="separator:a8b4e6c3f453b8fba69fe04dbf046589f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9df84723bfaaabc262e2059262818ba3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a9df84723bfaaabc262e2059262818ba3">ssquare</a> (const char *ID_name)</td></tr>
 <tr class="separator:a9df84723bfaaabc262e2059262818ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab61d8deac2a6b06579a7cb02a063d31a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ab61d8deac2a6b06579a7cb02a063d31a">rms_dev</a> (const char *ID_name)</td></tr>
 <tr class="separator:ab61d8deac2a6b06579a7cb02a063d31a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5af15f10d196e17adf43d6f5ffb4d2cb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a5af15f10d196e17adf43d6f5ffb4d2cb">info_image_stats</a> (const char *ID_name, const char *options)</td></tr>
-<tr class="separator:a5af15f10d196e17adf43d6f5ffb4d2cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c68c820eab317d6a249e839c65584e4"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a9c68c820eab317d6a249e839c65584e4">info_cubestats</a> (const char *ID_name, const char *IDmask_name, const char *outfname)</td></tr>
-<tr class="separator:a9c68c820eab317d6a249e839c65584e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa34a1fb4df4f650e78e7adbb552ffa6c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#aa34a1fb4df4f650e78e7adbb552ffa6c">info_image_stats</a> (const char *ID_name, const char *options)</td></tr>
+<tr class="separator:aa34a1fb4df4f650e78e7adbb552ffa6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c5c15ec78ba14058d11b116d95d74a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a1c5c15ec78ba14058d11b116d95d74a3">info_cubestats</a> (const char *ID_name, const char *IDmask_name, const char *outfname)</td></tr>
+<tr class="separator:a1c5c15ec78ba14058d11b116d95d74a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07ea64e23cf20479d2d720fb2914bf7a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a07ea64e23cf20479d2d720fb2914bf7a">img_min</a> (const char *ID_name)</td></tr>
 <tr class="separator:a07ea64e23cf20479d2d720fb2914bf7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e4a1c27ccee47fc4ce8eb9c917bd453"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a5e4a1c27ccee47fc4ce8eb9c917bd453">img_max</a> (const char *ID_name)</td></tr>
 <tr class="separator:a5e4a1c27ccee47fc4ce8eb9c917bd453"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a241ccde2b381ced2d2148d84a3a856a0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a241ccde2b381ced2d2148d84a3a856a0">profile</a> (const char *ID_name, const char *outfile, double xcenter, double ycenter, double step, long nb_step)</td></tr>
-<tr class="separator:a241ccde2b381ced2d2148d84a3a856a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10786d1e1b7ec84abccd161883fadaf6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a10786d1e1b7ec84abccd161883fadaf6">profile2im</a> (const char *profile_name, long nbpoints, long size, double xcenter, double ycenter, double radius, const char *out)</td></tr>
-<tr class="separator:a10786d1e1b7ec84abccd161883fadaf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b987270414c857aa824646c3ee22953"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a2b987270414c857aa824646c3ee22953">printpix</a> (const char *ID_name, const char *filename)</td></tr>
-<tr class="separator:a2b987270414c857aa824646c3ee22953"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d8fe5930e4dbb029e27f6b7cf55dc15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a4d8fe5930e4dbb029e27f6b7cf55dc15">profile</a> (const char *ID_name, const char *outfile, double xcenter, double ycenter, double step, long nb_step)</td></tr>
+<tr class="separator:a4d8fe5930e4dbb029e27f6b7cf55dc15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9669de8fffdac678c9be5d52450b4aea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a9669de8fffdac678c9be5d52450b4aea">profile2im</a> (const char *profile_name, long nbpoints, unsigned long size, double xcenter, double ycenter, double radius, const char *out)</td></tr>
+<tr class="separator:a9669de8fffdac678c9be5d52450b4aea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a212d0ce6ac31e114012fa3b58d2a9aec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a212d0ce6ac31e114012fa3b58d2a9aec">printpix</a> (const char *ID_name, const char *filename)</td></tr>
+<tr class="separator:a212d0ce6ac31e114012fa3b58d2a9aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3be3dc812a758c20124d83094785232"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ad3be3dc812a758c20124d83094785232">background_photon_noise</a> (const char *ID_name)</td></tr>
 <tr class="separator:ad3be3dc812a758c20124d83094785232"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1152c89cc87eaa3cd1738eb21ee0b7a9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a1152c89cc87eaa3cd1738eb21ee0b7a9">test_structure_function</a> (const char *ID_name, long NBpoints, const char *ID_out)</td></tr>
-<tr class="separator:a1152c89cc87eaa3cd1738eb21ee0b7a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac02cdc06d81f15987e62b17f1acb31f7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ac02cdc06d81f15987e62b17f1acb31f7">full_structure_function</a> (const char *ID_name, long NBpoints, const char *ID_out)</td></tr>
-<tr class="separator:ac02cdc06d81f15987e62b17f1acb31f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5437731cf2d331ff77efba193d2d9377"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a5437731cf2d331ff77efba193d2d9377">fft_structure_function</a> (const char *ID_in, const char *ID_out)</td></tr>
-<tr class="separator:a5437731cf2d331ff77efba193d2d9377"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f47af1043069f2396b06bacc5401d06"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a1f47af1043069f2396b06bacc5401d06">info_cubeMatchMatrix</a> (const char *IDin_name, const char *IDout_name)</td></tr>
-<tr class="separator:a1f47af1043069f2396b06bacc5401d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae412ba28fd115afac42d2ec295d2bc30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#ae412ba28fd115afac42d2ec295d2bc30">test_structure_function</a> (const char *ID_name, long NBpoints, const char *ID_out)</td></tr>
+<tr class="separator:ae412ba28fd115afac42d2ec295d2bc30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59a0e454dfb6882aa52ff02494cabebe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a59a0e454dfb6882aa52ff02494cabebe">full_structure_function</a> (const char *ID_name, long NBpoints, const char *ID_out)</td></tr>
+<tr class="separator:a59a0e454dfb6882aa52ff02494cabebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bc8dd249b959764d2c95da5fd075d48"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#a8bc8dd249b959764d2c95da5fd075d48">fft_structure_function</a> (const char *ID_in, const char *ID_out)</td></tr>
+<tr class="separator:a8bc8dd249b959764d2c95da5fd075d48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acec3b68071099ed6e6f7749d72d532ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="info_8c.html#acec3b68071099ed6e6f7749d72d532ae">info_cubeMatchMatrix</a> (const char *IDin_name, const char *IDout_name)</td></tr>
+<tr class="separator:acec3b68071099ed6e6f7749d72d532ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -192,11 +244,23 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Information about images. </p>
-<p>Computes information about images</p>
-<dl class="section author"><dt>Author</dt><dd>O. Guyon </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>7 Jul 2017</dd></dl>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000091">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+<p>Computes information about images </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
 
@@ -204,7 +268,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -263,42 +327,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa8f51c708a501884e32f9c62b96b55cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa8f51c708a501884e32f9c62b96b55cd">&#9670;&nbsp;</a></span>clock_gettime()</h2>
+<a id="a8bc8dd249b959764d2c95da5fd075d48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bc8dd249b959764d2c95da5fd075d48">&#9670;&nbsp;</a></span>fft_structure_function()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int clock_gettime </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>clk_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct timespec *&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5437731cf2d331ff77efba193d2d9377"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5437731cf2d331ff77efba193d2d9377">&#9670;&nbsp;</a></span>fft_structure_function()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int fft_structure_function </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> fft_structure_function </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_in</em>, </td>
@@ -319,14 +355,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac02cdc06d81f15987e62b17f1acb31f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac02cdc06d81f15987e62b17f1acb31f7">&#9670;&nbsp;</a></span>full_structure_function()</h2>
+<a id="a59a0e454dfb6882aa52ff02494cabebe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59a0e454dfb6882aa52ff02494cabebe">&#9670;&nbsp;</a></span>full_structure_function()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int full_structure_function </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> full_structure_function </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -353,14 +389,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3a01ab464bbae9daef1ee5dffd23bcc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a01ab464bbae9daef1ee5dffd23bcc1">&#9670;&nbsp;</a></span>img_histoc_double()</h2>
+<a id="a3128746e7c208f766fb73d9b4f13de32"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3128746e7c208f766fb73d9b4f13de32">&#9670;&nbsp;</a></span>img_histoc_double()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int img_histoc_double </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> img_histoc_double </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -381,14 +417,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="abad24e6ead17be3f4a4c82074a4ab3ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abad24e6ead17be3f4a4c82074a4ab3ea">&#9670;&nbsp;</a></span>img_histoc_float()</h2>
+<a id="af03733fff42badd45d18dde065708220"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af03733fff42badd45d18dde065708220">&#9670;&nbsp;</a></span>img_histoc_float()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int img_histoc_float </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> img_histoc_float </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -445,14 +481,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab64b87414c5bdf5730eea75a4a51a33c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab64b87414c5bdf5730eea75a4a51a33c">&#9670;&nbsp;</a></span>img_nbpix_flux()</h2>
+<a id="a987bb057d65e3cd1112895a7263f36a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a987bb057d65e3cd1112895a7263f36a7">&#9670;&nbsp;</a></span>img_nbpix_flux()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int img_nbpix_flux </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> img_nbpix_flux </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em></td><td>)</td>
@@ -547,14 +583,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1f47af1043069f2396b06bacc5401d06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f47af1043069f2396b06bacc5401d06">&#9670;&nbsp;</a></span>info_cubeMatchMatrix()</h2>
+<a id="acec3b68071099ed6e6f7749d72d532ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acec3b68071099ed6e6f7749d72d532ae">&#9670;&nbsp;</a></span>info_cubeMatchMatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long info_cubeMatchMatrix </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> info_cubeMatchMatrix </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>IDin_name</em>, </td>
@@ -575,14 +611,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3fb7dce094ea149c580d1ac4a4f80e8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3fb7dce094ea149c580d1ac4a4f80e8a">&#9670;&nbsp;</a></span>info_cubeMatchMatrix_cli()</h2>
+<a id="a61c01139b04d04488dfe66f093f593c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61c01139b04d04488dfe66f093f593c9">&#9670;&nbsp;</a></span>info_cubeMatchMatrix_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t info_cubeMatchMatrix_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_cubeMatchMatrix_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -592,14 +628,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c68c820eab317d6a249e839c65584e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c68c820eab317d6a249e839c65584e4">&#9670;&nbsp;</a></span>info_cubestats()</h2>
+<a id="a1c5c15ec78ba14058d11b116d95d74a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c5c15ec78ba14058d11b116d95d74a3">&#9670;&nbsp;</a></span>info_cubestats()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long info_cubestats </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> info_cubestats </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -626,14 +662,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac1a0908720dc501d6c16c5fb07a0bc13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1a0908720dc501d6c16c5fb07a0bc13">&#9670;&nbsp;</a></span>info_cubestats_cli()</h2>
+<a id="acc64c1f4c37c910102426d6ad0a8beed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc64c1f4c37c910102426d6ad0a8beed">&#9670;&nbsp;</a></span>info_cubestats_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t info_cubestats_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_cubestats_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -643,8 +679,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1ee634b76b9b8a4d82f5835d26d5e3f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ee634b76b9b8a4d82f5835d26d5e3f5">&#9670;&nbsp;</a></span>info_image_monitor()</h2>
+<a id="acfa674b9e94846b1b31fbfbaa8b865d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acfa674b9e94846b1b31fbfbaa8b865d1">&#9670;&nbsp;</a></span>info_image_monitor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -653,7 +689,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int info_image_monitor </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_image_monitor </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -679,14 +715,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3b8f52e95c4feb6615aba01669afcd83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b8f52e95c4feb6615aba01669afcd83">&#9670;&nbsp;</a></span>info_image_monitor_cli()</h2>
+<a id="a2d87e90dc5a0f62247ab5930b94e9484"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d87e90dc5a0f62247ab5930b94e9484">&#9670;&nbsp;</a></span>info_image_monitor_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t info_image_monitor_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_image_monitor_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -696,14 +732,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5af15f10d196e17adf43d6f5ffb4d2cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5af15f10d196e17adf43d6f5ffb4d2cb">&#9670;&nbsp;</a></span>info_image_stats()</h2>
+<a id="aa34a1fb4df4f650e78e7adbb552ffa6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa34a1fb4df4f650e78e7adbb552ffa6c">&#9670;&nbsp;</a></span>info_image_stats()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int info_image_stats </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_image_stats </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -724,14 +760,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3bb90ba2677e51691443eb48dd7208fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bb90ba2677e51691443eb48dd7208fc">&#9670;&nbsp;</a></span>info_image_stats_cli()</h2>
+<a id="aa4c02dd89f76cecd4c43e6cf4c12d341"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4c02dd89f76cecd4c43e6cf4c12d341">&#9670;&nbsp;</a></span>info_image_stats_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t info_image_stats_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_image_stats_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -741,14 +777,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a03816c0a5278f39664fcceca936464d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03816c0a5278f39664fcceca936464d0">&#9670;&nbsp;</a></span>info_image_statsf_cli()</h2>
+<a id="aa8c13eee817027e8696b64a9fbc51e49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8c13eee817027e8696b64a9fbc51e49">&#9670;&nbsp;</a></span>info_image_statsf_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t info_image_statsf_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_image_statsf_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -758,14 +794,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ada90baeed3dc221f0c0ca8353c5c41ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada90baeed3dc221f0c0ca8353c5c41ff">&#9670;&nbsp;</a></span>info_image_streamtiming_stats()</h2>
+<a id="a6f429aa3a87e3f9de82bad5175e523bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f429aa3a87e3f9de82bad5175e523bb">&#9670;&nbsp;</a></span>info_image_streamtiming_stats()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int info_image_streamtiming_stats </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_image_streamtiming_stats </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -804,14 +840,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a795d4c32b7799389d8f7630322a115ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a795d4c32b7799389d8f7630322a115ad">&#9670;&nbsp;</a></span>info_image_streamtiming_stats_disp()</h2>
+<a id="aea0e7a881c099c1f4d822eb1423c8d6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea0e7a881c099c1f4d822eb1423c8d6b">&#9670;&nbsp;</a></span>info_image_streamtiming_stats_disp()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int info_image_streamtiming_stats_disp </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_image_streamtiming_stats_disp </td>
           <td>(</td>
           <td class="paramtype">double *&#160;</td>
           <td class="paramname"><em>tdiffvarray</em>, </td>
@@ -886,22 +922,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a61aa4a9be8463a003d00ac9be49f7bbb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61aa4a9be8463a003d00ac9be49f7bbb">&#9670;&nbsp;</a></span>info_pixelstats_smallImage()</h2>
+<a id="a7126e4c848487394acac0090e0bf60ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7126e4c848487394acac0090e0bf60ef">&#9670;&nbsp;</a></span>info_pixelstats_smallImage()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int info_pixelstats_smallImage </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_pixelstats_smallImage </td>
           <td>(</td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td>
           <td class="paramname"><em>ID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">unsigned long&#160;</td>
           <td class="paramname"><em>NBpix</em>&#160;</td>
         </tr>
         <tr>
@@ -914,14 +950,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac9de05ab62f4c7d6efe48bc424825050"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9de05ab62f4c7d6efe48bc424825050">&#9670;&nbsp;</a></span>info_profile_cli()</h2>
+<a id="a1412dcf3830e8bbe7b21e10a3b2e794d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1412dcf3830e8bbe7b21e10a3b2e794d">&#9670;&nbsp;</a></span>info_profile_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t info_profile_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> info_profile_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -959,14 +995,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5d7396f5ecc59232d638504c96aeb2ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d7396f5ecc59232d638504c96aeb2ce">&#9670;&nbsp;</a></span>init_info()</h2>
+<a id="adf87a8fb634c27e2d3d4800eb6fdc4a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf87a8fb634c27e2d3d4800eb6fdc4a6">&#9670;&nbsp;</a></span>init_info()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int init_info </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_info </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -976,14 +1012,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="add1a5530fadf86f97cc5a4ba3e47c4a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add1a5530fadf86f97cc5a4ba3e47c4a4">&#9670;&nbsp;</a></span>kbdhit()</h2>
+<a id="af8a7e1ed7a99d3fb47bace8c1bbe9ba0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8a7e1ed7a99d3fb47bace8c1bbe9ba0">&#9670;&nbsp;</a></span>kbdhit()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int kbdhit </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> kbdhit </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -994,14 +1030,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af2f1e5b448f5f7f366367bb62235e835"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2f1e5b448f5f7f366367bb62235e835">&#9670;&nbsp;</a></span>make_histogram()</h2>
+<a id="a8b4e6c3f453b8fba69fe04dbf046589f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b4e6c3f453b8fba69fe04dbf046589f">&#9670;&nbsp;</a></span>make_histogram()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int make_histogram </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> make_histogram </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -1040,14 +1076,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a6fbb6ce54648926505877f584969e505"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fbb6ce54648926505877f584969e505">&#9670;&nbsp;</a></span>print_header()</h2>
+<a id="ae7971060d50a34c3e5a33d5367b6ece0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7971060d50a34c3e5a33d5367b6ece0">&#9670;&nbsp;</a></span>print_header()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int print_header </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> print_header </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>str</em>, </td>
@@ -1068,14 +1104,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a2b987270414c857aa824646c3ee22953"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b987270414c857aa824646c3ee22953">&#9670;&nbsp;</a></span>printpix()</h2>
+<a id="a212d0ce6ac31e114012fa3b58d2a9aec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a212d0ce6ac31e114012fa3b58d2a9aec">&#9670;&nbsp;</a></span>printpix()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int printpix </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> printpix </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -1096,16 +1132,16 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a76b8a14ec907f1d2e4b828553c1c1b34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76b8a14ec907f1d2e4b828553c1c1b34">&#9670;&nbsp;</a></span>printstatus()</h2>
+<a id="a68a7739aacd3ad6dc6b94be48d9730ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68a7739aacd3ad6dc6b94be48d9730ed">&#9670;&nbsp;</a></span>printstatus()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int printstatus </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> printstatus </td>
           <td>(</td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td>
           <td class="paramname"><em>ID</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1114,14 +1150,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a241ccde2b381ced2d2148d84a3a856a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a241ccde2b381ced2d2148d84a3a856a0">&#9670;&nbsp;</a></span>profile()</h2>
+<a id="a4d8fe5930e4dbb029e27f6b7cf55dc15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d8fe5930e4dbb029e27f6b7cf55dc15">&#9670;&nbsp;</a></span>profile()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int profile </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> profile </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -1166,14 +1202,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a10786d1e1b7ec84abccd161883fadaf6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10786d1e1b7ec84abccd161883fadaf6">&#9670;&nbsp;</a></span>profile2im()</h2>
+<a id="a9669de8fffdac678c9be5d52450b4aea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9669de8fffdac678c9be5d52450b4aea">&#9670;&nbsp;</a></span>profile2im()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int profile2im </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> profile2im </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>profile_name</em>, </td>
@@ -1187,7 +1223,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">unsigned long&#160;</td>
           <td class="paramname"><em>size</em>, </td>
         </tr>
         <tr>
@@ -1260,14 +1296,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1152c89cc87eaa3cd1738eb21ee0b7a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1152c89cc87eaa3cd1738eb21ee0b7a9">&#9670;&nbsp;</a></span>test_structure_function()</h2>
+<a id="ae412ba28fd115afac42d2ec295d2bc30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae412ba28fd115afac42d2ec295d2bc30">&#9670;&nbsp;</a></span>test_structure_function()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int test_structure_function </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> test_structure_function </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -1412,7 +1448,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_4b9d01165433dba703e06bc6af058de1.html">info</a></li><li class="navelem"><a class="el" href="info_8c.html">info.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

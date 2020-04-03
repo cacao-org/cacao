@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('COREMOD__arith_8c.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,50 +95,88 @@ $(document).ready(function(){initNavTree('COREMOD__arith_8c.html','');});
 
 <p>Arithmeric operations on images.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;ctype.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for COREMOD_arith.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="COREMOD__arith_8c__incl.png" border="0" usemap="#src_2COREMOD__arith_2COREMOD__arith_8c" alt=""/></div>
+<map name="src_2COREMOD__arith_2COREMOD__arith_8c" id="src_2COREMOD__arith_2COREMOD__arith_8c">
+<area shape="rect" id="node10" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="575,95,732,136"/>
+<area shape="rect" id="node24" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="1678,102,1821,129"/>
+<area shape="rect" id="node25" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1845,95,2065,136"/>
+<area shape="rect" id="node26" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="2089,95,2290,136"/>
+<area shape="rect" id="node27" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="2314,95,2513,136"/>
+<area shape="rect" id="node17" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="157,184,379,211"/>
+<area shape="rect" id="node18" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="307,259,411,285"/>
+<area shape="rect" id="node21" href="processtools_8h.html" title="Command line interface. " alt="" coords="555,259,661,285"/>
+<area shape="rect" id="node22" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="854,259,962,285"/>
+<area shape="rect" id="node23" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="865,184,1015,211"/>
+<area shape="rect" id="node20" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="262,333,415,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ae71449b1cc6e6250b91f539153a7a0d3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ae71449b1cc6e6250b91f539153a7a0d3">M_PI</a>&#160;&#160;&#160;3.14159265358979323846</td></tr>
+<tr class="separator:ae71449b1cc6e6250b91f539153a7a0d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a856e9c763f542a6a0b78587b2989c159"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a856e9c763f542a6a0b78587b2989c159">SBUFFERSIZE</a>&#160;&#160;&#160;1000</td></tr>
+<tr class="separator:a856e9c763f542a6a0b78587b2989c159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4bef7ae0764ba7141424922379b495eb"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a4bef7ae0764ba7141424922379b495eb">arith_image_extract2D_cli</a> ()</td></tr>
-<tr class="separator:a4bef7ae0764ba7141424922379b495eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0a19ade7adeef77cfe243f5951feacb"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#af0a19ade7adeef77cfe243f5951feacb">arith_image_extract3D_cli</a> ()</td></tr>
-<tr class="separator:af0a19ade7adeef77cfe243f5951feacb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a132bd046f131775c6367da9964ff7830"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a132bd046f131775c6367da9964ff7830">arith_set_pixel_cli</a> ()</td></tr>
-<tr class="separator:a132bd046f131775c6367da9964ff7830"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20b7a1c63b2d11d2463809f8aca774a8"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a20b7a1c63b2d11d2463809f8aca774a8">arith_set_pixel_1Drange_cli</a> ()</td></tr>
-<tr class="separator:a20b7a1c63b2d11d2463809f8aca774a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa51024eb36e743057165634279a8f1ba"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#aa51024eb36e743057165634279a8f1ba">arith_set_row_cli</a> ()</td></tr>
-<tr class="separator:aa51024eb36e743057165634279a8f1ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09ca929e41a2ff8c29f5aba5083a5fae"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a09ca929e41a2ff8c29f5aba5083a5fae">arith_set_col_cli</a> ()</td></tr>
-<tr class="separator:a09ca929e41a2ff8c29f5aba5083a5fae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0298b74f8f5a726d66bb241716a22e51"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a0298b74f8f5a726d66bb241716a22e51">arith_image_zero_cli</a> ()</td></tr>
-<tr class="separator:a0298b74f8f5a726d66bb241716a22e51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add2ada1e1181b5d553b4e5fa53969f49"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#add2ada1e1181b5d553b4e5fa53969f49">arith_image_trunc_cli</a> ()</td></tr>
-<tr class="separator:add2ada1e1181b5d553b4e5fa53969f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ce26d8b7a92d9f7516f931e8372f4b1"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a1ce26d8b7a92d9f7516f931e8372f4b1">arith_image_merge3D_cli</a> ()</td></tr>
-<tr class="separator:a1ce26d8b7a92d9f7516f931e8372f4b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bb70ba3e057fa57bd1ba280d7676cb1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a2bb70ba3e057fa57bd1ba280d7676cb1">arith_image_extract2D_cli</a> ()</td></tr>
+<tr class="separator:a2bb70ba3e057fa57bd1ba280d7676cb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac32fec0778c77b324cd4a718cd30d57"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#aac32fec0778c77b324cd4a718cd30d57">arith_image_extract3D_cli</a> ()</td></tr>
+<tr class="separator:aac32fec0778c77b324cd4a718cd30d57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b2ff37df70f3c46e9cf7638a08d6ac0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a3b2ff37df70f3c46e9cf7638a08d6ac0">arith_set_pixel_cli</a> ()</td></tr>
+<tr class="separator:a3b2ff37df70f3c46e9cf7638a08d6ac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b0bd768b1e8ff32c782f8bd4e476a28"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a8b0bd768b1e8ff32c782f8bd4e476a28">arith_set_pixel_1Drange_cli</a> ()</td></tr>
+<tr class="separator:a8b0bd768b1e8ff32c782f8bd4e476a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f24255060850cf533604dc184a313bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a7f24255060850cf533604dc184a313bc">arith_set_row_cli</a> ()</td></tr>
+<tr class="separator:a7f24255060850cf533604dc184a313bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f29b17d6ef85b85ff18a18749855253"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a2f29b17d6ef85b85ff18a18749855253">arith_set_col_cli</a> ()</td></tr>
+<tr class="separator:a2f29b17d6ef85b85ff18a18749855253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9548a3cbe3513c81e8aca457b05163f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a9548a3cbe3513c81e8aca457b05163f5">arith_image_zero_cli</a> ()</td></tr>
+<tr class="separator:a9548a3cbe3513c81e8aca457b05163f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab16e359e5acc406b73a645a392673257"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ab16e359e5acc406b73a645a392673257">arith_image_trunc_cli</a> ()</td></tr>
+<tr class="separator:ab16e359e5acc406b73a645a392673257"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1314863f2113fa5368593d282991b6d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ae1314863f2113fa5368593d282991b6d">arith_image_merge3D_cli</a> ()</td></tr>
+<tr class="separator:ae1314863f2113fa5368593d282991b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad706f48989cfc1124c5ab2394569951a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ad706f48989cfc1124c5ab2394569951a">init_COREMOD_arith</a> ()</td></tr>
-<tr class="separator:ad706f48989cfc1124c5ab2394569951a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8934d4f99beefab067cf0c44d598878"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ab8934d4f99beefab067cf0c44d598878">arith_set_pixel</a> (const char *ID_name, double value, long x, long y)</td></tr>
-<tr class="separator:ab8934d4f99beefab067cf0c44d598878"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac97524650f70bf93a7df455a53028474"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ac97524650f70bf93a7df455a53028474">arith_set_pixel_1Drange</a> (const char *ID_name, double value, long x, long y)</td></tr>
-<tr class="separator:ac97524650f70bf93a7df455a53028474"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69d131ba42946e38259e333df7446e76"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a69d131ba42946e38259e333df7446e76">arith_set_row</a> (const char *ID_name, double value, long y)</td></tr>
-<tr class="separator:a69d131ba42946e38259e333df7446e76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a253f7bf2e20200997e0300ffc0197ac8"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a253f7bf2e20200997e0300ffc0197ac8">arith_set_col</a> (const char *ID_name, double value, long x)</td></tr>
-<tr class="separator:a253f7bf2e20200997e0300ffc0197ac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f8c08c80ce47978f9c3ee047d5b1314"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a3f8c08c80ce47978f9c3ee047d5b1314">arith_image_zero</a> (const char *ID_name)</td></tr>
-<tr class="separator:a3f8c08c80ce47978f9c3ee047d5b1314"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec3b2347935ffa08848bc9a7cc486ce7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#aec3b2347935ffa08848bc9a7cc486ce7">arith_image_crop</a> (const char *ID_name, const char *ID_out, long *start, long *end, long cropdim)</td></tr>
-<tr class="separator:aec3b2347935ffa08848bc9a7cc486ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d2feed4cc52e61d381015684af75308"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a0d2feed4cc52e61d381015684af75308">arith_image_extract2D</a> (const char *in_name, const char *out_name, long size_x, long size_y, long xstart, long ystart)</td></tr>
-<tr class="separator:a0d2feed4cc52e61d381015684af75308"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f69880e071c50be114a53e1bd6f5f51"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a5f69880e071c50be114a53e1bd6f5f51">arith_image_extract3D</a> (const char *in_name, const char *out_name, long size_x, long size_y, long size_z, long xstart, long ystart, long zstart)</td></tr>
-<tr class="separator:a5f69880e071c50be114a53e1bd6f5f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82acbd514dbe59726d4e019d2b23f83f"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a82acbd514dbe59726d4e019d2b23f83f">arith_image_merge3D</a> (const char *ID_name1, const char *ID_name2, const char *IDout_name)</td></tr>
-<tr class="separator:a82acbd514dbe59726d4e019d2b23f83f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a501205b8bbdba41c175d99eb3f750592"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a501205b8bbdba41c175d99eb3f750592">init_COREMOD_arith</a> ()</td></tr>
+<tr class="separator:a501205b8bbdba41c175d99eb3f750592"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcce3e6387eeb554863768380f219f37"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#adcce3e6387eeb554863768380f219f37">arith_set_pixel</a> (const char *ID_name, double value, long x, long y)</td></tr>
+<tr class="separator:adcce3e6387eeb554863768380f219f37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7660193c8479518d6d621e0a682340ce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a7660193c8479518d6d621e0a682340ce">arith_set_pixel_1Drange</a> (const char *ID_name, double value, long x, long y)</td></tr>
+<tr class="separator:a7660193c8479518d6d621e0a682340ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcf48d7f193e0d01681fbbc03026ec69"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#afcf48d7f193e0d01681fbbc03026ec69">arith_set_row</a> (const char *ID_name, double value, long y)</td></tr>
+<tr class="separator:afcf48d7f193e0d01681fbbc03026ec69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d04431a729ff96b12ce4f51bf7f5608"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a8d04431a729ff96b12ce4f51bf7f5608">arith_set_col</a> (const char *ID_name, double value, long x)</td></tr>
+<tr class="separator:a8d04431a729ff96b12ce4f51bf7f5608"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54b1a1af4d45cf2a5ba48b6e7ce86bd4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a54b1a1af4d45cf2a5ba48b6e7ce86bd4">arith_image_zero</a> (const char *ID_name)</td></tr>
+<tr class="separator:a54b1a1af4d45cf2a5ba48b6e7ce86bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9869eeaac5bd1b9b6ed42b144ae7422"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ab9869eeaac5bd1b9b6ed42b144ae7422">arith_image_crop</a> (const char *ID_name, const char *ID_out, long *start, long *end, long cropdim)</td></tr>
+<tr class="separator:ab9869eeaac5bd1b9b6ed42b144ae7422"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f0276a0f5778b11c72b431e8de83edb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a3f0276a0f5778b11c72b431e8de83edb">arith_image_extract2D</a> (const char *in_name, const char *out_name, long size_x, long size_y, long xstart, long ystart)</td></tr>
+<tr class="separator:a3f0276a0f5778b11c72b431e8de83edb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3305ae8f3f194a51bde256926b59eeb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a3305ae8f3f194a51bde256926b59eeb4">arith_image_extract3D</a> (const char *in_name, const char *out_name, long size_x, long size_y, long size_z, long xstart, long ystart, long zstart)</td></tr>
+<tr class="separator:a3305ae8f3f194a51bde256926b59eeb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d466e494ded2a2e3db5b5483a3ff0a1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a7d466e494ded2a2e3db5b5483a3ff0a1">arith_image_merge3D</a> (const char *ID_name1, const char *ID_name2, const char *IDout_name)</td></tr>
+<tr class="separator:a7d466e494ded2a2e3db5b5483a3ff0a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaafa8d92d2b117939c4cf48fe2a5a9a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#aeaafa8d92d2b117939c4cf48fe2a5a9a">arith_image_total</a> (const char *ID_name)</td></tr>
 <tr class="separator:aeaafa8d92d2b117939c4cf48fe2a5a9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3133c629ce2cdf896489e79732eeb64f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a3133c629ce2cdf896489e79732eeb64f">arith_image_mean</a> (const char *ID_name)</td></tr>
@@ -154,20 +193,20 @@ Functions</h2></td></tr>
 <tr class="separator:acdccd6f1e1fa4c86b9e850499fbc3ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2028d29dca515a1955424fb1744ec43"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ab2028d29dca515a1955424fb1744ec43">arith_image_dy</a> (const char *ID_name, const char *IDout_name)</td></tr>
 <tr class="separator:ab2028d29dca515a1955424fb1744ec43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c4d80435fee4bc9081eea48bde2bde5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a6c4d80435fee4bc9081eea48bde2bde5">arith_image_function_im_im__d_d</a> (const char *ID_name, const char *ID_out, double(*pt2function)(double))</td></tr>
-<tr class="separator:a6c4d80435fee4bc9081eea48bde2bde5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7088c9c111a0e19bb66b2043f859b472"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a7088c9c111a0e19bb66b2043f859b472">arith_image_function_imd_im__dd_d</a> (const char *ID_name, double v0, const char *ID_out, double(*pt2function)(double, double))</td></tr>
-<tr class="separator:a7088c9c111a0e19bb66b2043f859b472"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28b3aa09ddddce74a33ebdbcf985b47a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a28b3aa09ddddce74a33ebdbcf985b47a">arith_image_function_imdd_im__ddd_d</a> (const char *ID_name, double v0, double v1, const char *ID_out, double(*pt2function)(double, double, double))</td></tr>
-<tr class="separator:a28b3aa09ddddce74a33ebdbcf985b47a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79ce9da8eba2647481fba442e077e776"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a79ce9da8eba2647481fba442e077e776">arith_image_function_1_1_byID</a> (long ID, long IDout, double(*pt2function)(double))</td></tr>
-<tr class="separator:a79ce9da8eba2647481fba442e077e776"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8a86f8065af357c55a7e38145f3ecb0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ae8a86f8065af357c55a7e38145f3ecb0">arith_image_function_1_1</a> (const char *ID_name, const char *ID_out, double(*pt2function)(double))</td></tr>
-<tr class="separator:ae8a86f8065af357c55a7e38145f3ecb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0af6da84d6709294ed4a73842e139fd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ae0af6da84d6709294ed4a73842e139fd">arith_image_function_1_1_inplace_byID</a> (long ID, double(*pt2function)(double))</td></tr>
-<tr class="separator:ae0af6da84d6709294ed4a73842e139fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af37ff7bd65021784b71892997807ca15"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#af37ff7bd65021784b71892997807ca15">arith_image_function_1_1_inplace</a> (const char *ID_name, double(*pt2function)(double))</td></tr>
-<tr class="separator:af37ff7bd65021784b71892997807ca15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f76268d3aa148eb2c1eb50bad687842"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a1f76268d3aa148eb2c1eb50bad687842">arith_image_function_im_im__d_d</a> (const char *ID_name, const char *ID_out, double(*pt2function)(double))</td></tr>
+<tr class="separator:a1f76268d3aa148eb2c1eb50bad687842"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a360483860afa5182d5d0e0e2431305a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a360483860afa5182d5d0e0e2431305a4">arith_image_function_imd_im__dd_d</a> (const char *ID_name, double v0, const char *ID_out, double(*pt2function)(double, double))</td></tr>
+<tr class="separator:a360483860afa5182d5d0e0e2431305a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a766e0c2e8274f5915c7898b385097f7b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a766e0c2e8274f5915c7898b385097f7b">arith_image_function_imdd_im__ddd_d</a> (const char *ID_name, double v0, double v1, const char *ID_out, double(*pt2function)(double, double, double))</td></tr>
+<tr class="separator:a766e0c2e8274f5915c7898b385097f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32e14b1e901be2e3da49175139557332"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a32e14b1e901be2e3da49175139557332">arith_image_function_1_1_byID</a> (<a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> ID, <a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> IDout, double(*pt2function)(double))</td></tr>
+<tr class="separator:a32e14b1e901be2e3da49175139557332"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac171551586b1bc99b33db9295ac6605c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ac171551586b1bc99b33db9295ac6605c">arith_image_function_1_1</a> (const char *ID_name, const char *ID_out, double(*pt2function)(double))</td></tr>
+<tr class="separator:ac171551586b1bc99b33db9295ac6605c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a906a23778eae40491ac1828f81e9f56b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a906a23778eae40491ac1828f81e9f56b">arith_image_function_1_1_inplace_byID</a> (<a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> ID, double(*pt2function)(double))</td></tr>
+<tr class="separator:a906a23778eae40491ac1828f81e9f56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71dd24917aa4dc2188748fe93f3aa3b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a71dd24917aa4dc2188748fe93f3aa3b8">arith_image_function_1_1_inplace</a> (const char *ID_name, double(*pt2function)(double))</td></tr>
+<tr class="separator:a71dd24917aa4dc2188748fe93f3aa3b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbc0c6a10142c07dc34d9fffdcd1b177"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#abbc0c6a10142c07dc34d9fffdcd1b177">Pacos</a> (double a)</td></tr>
 <tr class="separator:abbc0c6a10142c07dc34d9fffdcd1b177"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ef5b5f4043605229d876ca041823386"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a7ef5b5f4043605229d876ca041823386">Pasin</a> (double a)</td></tr>
@@ -338,12 +377,12 @@ Functions</h2></td></tr>
 <tr class="separator:aa2d2bf69bd2de4ad64a4a2ab0de7eb2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9528aa4ed5e04c453c41a167fd957e0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#ac9528aa4ed5e04c453c41a167fd957e0">arith_image_positive_inplace</a> (const char *ID_name)</td></tr>
 <tr class="separator:ac9528aa4ed5e04c453c41a167fd957e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2394febbc1096c2488ef077acfa6d428"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a2394febbc1096c2488ef077acfa6d428">arith_image_function_2_1</a> (const char *ID_name1, const char *ID_name2, const char *ID_out, double(*pt2function)(double, double))</td></tr>
-<tr class="separator:a2394febbc1096c2488ef077acfa6d428"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc1671c252e83276a3320db4e3b120db"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#acc1671c252e83276a3320db4e3b120db">arith_image_function_2_1_inplace_byID</a> (long ID1, long ID2, double(*pt2function)(double, double))</td></tr>
-<tr class="separator:acc1671c252e83276a3320db4e3b120db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec11f1ec0e4c510154d2d2189b30775a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#aec11f1ec0e4c510154d2d2189b30775a">arith_image_function_2_1_inplace</a> (const char *ID_name1, const char *ID_name2, double(*pt2function)(double, double))</td></tr>
-<tr class="separator:aec11f1ec0e4c510154d2d2189b30775a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10c85f4a6d8ca4fc2e9f8daa117cb317"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a10c85f4a6d8ca4fc2e9f8daa117cb317">arith_image_function_2_1</a> (const char *ID_name1, const char *ID_name2, const char *ID_out, double(*pt2function)(double, double))</td></tr>
+<tr class="separator:a10c85f4a6d8ca4fc2e9f8daa117cb317"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4781ad2bab1ff32047443d9e257528dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a4781ad2bab1ff32047443d9e257528dc">arith_image_function_2_1_inplace_byID</a> (<a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> ID1, <a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> ID2, double(*pt2function)(double, double))</td></tr>
+<tr class="separator:a4781ad2bab1ff32047443d9e257528dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1935c6bbf773ad96e57e26d95ef176f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a1935c6bbf773ad96e57e26d95ef176f4">arith_image_function_2_1_inplace</a> (const char *ID_name1, const char *ID_name2, double(*pt2function)(double, double))</td></tr>
+<tr class="separator:a1935c6bbf773ad96e57e26d95ef176f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48f35d5c684b77d75565f34c7182fb5c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a48f35d5c684b77d75565f34c7182fb5c">Pfmod</a> (double a, double b)</td></tr>
 <tr class="separator:a48f35d5c684b77d75565f34c7182fb5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b744fca72c3cc6dec3dc813a7c48b05"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a5b744fca72c3cc6dec3dc813a7c48b05">Ppow</a> (double a, double b)</td></tr>
@@ -428,10 +467,10 @@ Functions</h2></td></tr>
 <tr class="separator:a3bf6bd7a42ddff0d66cd90c7c2f65082"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58b695e3e0534d3511d4a05b031dffbe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a58b695e3e0534d3511d4a05b031dffbe">arith_image_testmt_inplace_byID</a> (long ID1, long ID2)</td></tr>
 <tr class="separator:a58b695e3e0534d3511d4a05b031dffbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23d22164dae17b531020fd7d63405dfc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a23d22164dae17b531020fd7d63405dfc">arith_image_function_CF_CF__CF</a> (const char *ID_name1, const char *ID_name2, const char *ID_out, <a class="el" href="structcomplex__float.html">complex_float</a>(*pt2function)(<a class="el" href="structcomplex__float.html">complex_float</a>, <a class="el" href="structcomplex__float.html">complex_float</a>))</td></tr>
-<tr class="separator:a23d22164dae17b531020fd7d63405dfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b4cfda331cb8e09f14ef63f22d6f347"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a1b4cfda331cb8e09f14ef63f22d6f347">arith_image_function_CD_CD__CD</a> (const char *ID_name1, const char *ID_name2, const char *ID_out, <a class="el" href="structcomplex__double.html">complex_double</a>(*pt2function)(<a class="el" href="structcomplex__double.html">complex_double</a>, <a class="el" href="structcomplex__double.html">complex_double</a>))</td></tr>
-<tr class="separator:a1b4cfda331cb8e09f14ef63f22d6f347"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af53caf72b2328e285c1c027497eaa95f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#af53caf72b2328e285c1c027497eaa95f">arith_image_function_CF_CF__CF</a> (const char *ID_name1, const char *ID_name2, const char *ID_out, <a class="el" href="structcomplex__float.html">complex_float</a>(*pt2function)(<a class="el" href="structcomplex__float.html">complex_float</a>, <a class="el" href="structcomplex__float.html">complex_float</a>))</td></tr>
+<tr class="separator:af53caf72b2328e285c1c027497eaa95f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a352527f625004783f2c3a8ef2fc015bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a352527f625004783f2c3a8ef2fc015bf">arith_image_function_CD_CD__CD</a> (const char *ID_name1, const char *ID_name2, const char *ID_out, <a class="el" href="structcomplex__double.html">complex_double</a>(*pt2function)(<a class="el" href="structcomplex__double.html">complex_double</a>, <a class="el" href="structcomplex__double.html">complex_double</a>))</td></tr>
+<tr class="separator:a352527f625004783f2c3a8ef2fc015bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c9121b0f3754e8151bb0569203b6c8a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcomplex__double.html">complex_double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a9c9121b0f3754e8151bb0569203b6c8a">CPadd_CD_CD</a> (<a class="el" href="structcomplex__double.html">complex_double</a> a, <a class="el" href="structcomplex__double.html">complex_double</a> b)</td></tr>
 <tr class="separator:a9c9121b0f3754e8151bb0569203b6c8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67571873862132fd2896c766f2132e41"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcomplex__double.html">complex_double</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a67571873862132fd2896c766f2132e41">CPsub_CD_CD</a> (<a class="el" href="structcomplex__double.html">complex_double</a> a, <a class="el" href="structcomplex__double.html">complex_double</a> b)</td></tr>
@@ -448,12 +487,12 @@ Functions</h2></td></tr>
 <tr class="separator:a524674d762f3285e2cc46bac48235281"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addfb75a6b7d29f6a187ed01bc55fed2f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcomplex__float.html">complex_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#addfb75a6b7d29f6a187ed01bc55fed2f">CPdiv_CF_CF</a> (<a class="el" href="structcomplex__float.html">complex_float</a> a, <a class="el" href="structcomplex__float.html">complex_float</a> b)</td></tr>
 <tr class="separator:addfb75a6b7d29f6a187ed01bc55fed2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9452dde57c567cebb3f530e15cf01edd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a9452dde57c567cebb3f530e15cf01edd">arith_image_Cadd</a> (const char *ID1_name, const char *ID2_name, const char *ID_out)</td></tr>
-<tr class="separator:a9452dde57c567cebb3f530e15cf01edd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91a3b7587db455598c49b9acd1223450"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a91a3b7587db455598c49b9acd1223450">arith_image_Csub</a> (const char *ID1_name, const char *ID2_name, const char *ID_out)</td></tr>
-<tr class="separator:a91a3b7587db455598c49b9acd1223450"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2733bcdb107912fc168648ae43dfe935"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a2733bcdb107912fc168648ae43dfe935">arith_image_Cmult</a> (const char *ID1_name, const char *ID2_name, const char *ID_out)</td></tr>
-<tr class="separator:a2733bcdb107912fc168648ae43dfe935"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3da06cdc5fac722a7569b695cbd7b024"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a3da06cdc5fac722a7569b695cbd7b024">arith_image_Cadd</a> (const char *ID1_name, const char *ID2_name, const char *ID_out)</td></tr>
+<tr class="separator:a3da06cdc5fac722a7569b695cbd7b024"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a092c734906cfa74424f3283c04f693a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a092c734906cfa74424f3283c04f693a6">arith_image_Csub</a> (const char *ID1_name, const char *ID2_name, const char *ID_out)</td></tr>
+<tr class="separator:a092c734906cfa74424f3283c04f693a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b0e2e277e10bf4d9d0de5d4e3e6f3a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a8b0e2e277e10bf4d9d0de5d4e3e6f3a5">arith_image_Cmult</a> (const char *ID1_name, const char *ID2_name, const char *ID_out)</td></tr>
+<tr class="separator:a8b0e2e277e10bf4d9d0de5d4e3e6f3a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9476595c75f6521ff7a643b9834cec8d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a9476595c75f6521ff7a643b9834cec8d">arith_image_Cdiv</a> (const char *ID1_name, const char *ID2_name, const char *ID_out)</td></tr>
 <tr class="separator:a9476595c75f6521ff7a643b9834cec8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2845cd3ed200cc7cc9759452475e653c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a2845cd3ed200cc7cc9759452475e653c">arith_image_function_1f_1</a> (const char *ID_name, double f1, const char *ID_out, double(*pt2function)(double, double))</td></tr>
@@ -561,14 +600,42 @@ Functions</h2></td></tr>
 Variables</h2></td></tr>
 <tr class="memitem:a54c9b14b2ff818e2bf21045471f66d9b"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a54c9b14b2ff818e2bf21045471f66d9b">INITSTATUS_COREMOD_arith</a> = 0</td></tr>
 <tr class="separator:a54c9b14b2ff818e2bf21045471f66d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25e2c6cb1a390cd8444e09c450f0d50f"><td class="memItemLeft" align="right" valign="top">static char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a25e2c6cb1a390cd8444e09c450f0d50f">errmsg_arith</a> [SBUFFERSIZE]</td></tr>
+<tr class="memitem:a25e2c6cb1a390cd8444e09c450f0d50f"><td class="memItemLeft" align="right" valign="top">static char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="COREMOD__arith_8c.html#a25e2c6cb1a390cd8444e09c450f0d50f">errmsg_arith</a> [<a class="el" href="image__basic_8c.html#a856e9c763f542a6a0b78587b2989c159">SBUFFERSIZE</a>]</td></tr>
 <tr class="separator:a25e2c6cb1a390cd8444e09c450f0d50f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Arithmeric operations on images. </p>
-<p>Addition, multiplication and much more</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000075">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+<p>Addition, multiplication and much more </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ae71449b1cc6e6250b91f539153a7a0d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae71449b1cc6e6250b91f539153a7a0d3">&#9670;&nbsp;</a></span>M_PI</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define M_PI&#160;&#160;&#160;3.14159265358979323846</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a856e9c763f542a6a0b78587b2989c159"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a856e9c763f542a6a0b78587b2989c159">&#9670;&nbsp;</a></span>SBUFFERSIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SBUFFERSIZE&#160;&#160;&#160;1000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
 
@@ -576,7 +643,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -955,14 +1022,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9452dde57c567cebb3f530e15cf01edd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9452dde57c567cebb3f530e15cf01edd">&#9670;&nbsp;</a></span>arith_image_Cadd()</h2>
+<a id="a3da06cdc5fac722a7569b695cbd7b024"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3da06cdc5fac722a7569b695cbd7b024">&#9670;&nbsp;</a></span>arith_image_Cadd()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_Cadd </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_Cadd </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID1_name</em>, </td>
@@ -1115,14 +1182,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a2733bcdb107912fc168648ae43dfe935"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2733bcdb107912fc168648ae43dfe935">&#9670;&nbsp;</a></span>arith_image_Cmult()</h2>
+<a id="a8b0e2e277e10bf4d9d0de5d4e3e6f3a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b0e2e277e10bf4d9d0de5d4e3e6f3a5">&#9670;&nbsp;</a></span>arith_image_Cmult()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_Cmult </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_Cmult </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID1_name</em>, </td>
@@ -1333,14 +1400,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aec3b2347935ffa08848bc9a7cc486ce7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec3b2347935ffa08848bc9a7cc486ce7">&#9670;&nbsp;</a></span>arith_image_crop()</h2>
+<a id="ab9869eeaac5bd1b9b6ed42b144ae7422"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9869eeaac5bd1b9b6ed42b144ae7422">&#9670;&nbsp;</a></span>arith_image_crop()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_crop </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> arith_image_crop </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -2403,14 +2470,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a91a3b7587db455598c49b9acd1223450"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91a3b7587db455598c49b9acd1223450">&#9670;&nbsp;</a></span>arith_image_Csub()</h2>
+<a id="a092c734906cfa74424f3283c04f693a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a092c734906cfa74424f3283c04f693a6">&#9670;&nbsp;</a></span>arith_image_Csub()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_Csub </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_Csub </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID1_name</em>, </td>
@@ -2675,14 +2742,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0d2feed4cc52e61d381015684af75308"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d2feed4cc52e61d381015684af75308">&#9670;&nbsp;</a></span>arith_image_extract2D()</h2>
+<a id="a3f0276a0f5778b11c72b431e8de83edb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f0276a0f5778b11c72b431e8de83edb">&#9670;&nbsp;</a></span>arith_image_extract2D()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_extract2D </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> arith_image_extract2D </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>in_name</em>, </td>
@@ -2727,14 +2794,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a4bef7ae0764ba7141424922379b495eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bef7ae0764ba7141424922379b495eb">&#9670;&nbsp;</a></span>arith_image_extract2D_cli()</h2>
+<a id="a2bb70ba3e057fa57bd1ba280d7676cb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bb70ba3e057fa57bd1ba280d7676cb1">&#9670;&nbsp;</a></span>arith_image_extract2D_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t arith_image_extract2D_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_extract2D_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -2744,14 +2811,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a5f69880e071c50be114a53e1bd6f5f51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f69880e071c50be114a53e1bd6f5f51">&#9670;&nbsp;</a></span>arith_image_extract3D()</h2>
+<a id="a3305ae8f3f194a51bde256926b59eeb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3305ae8f3f194a51bde256926b59eeb4">&#9670;&nbsp;</a></span>arith_image_extract3D()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_extract3D </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> arith_image_extract3D </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>in_name</em>, </td>
@@ -2808,14 +2875,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af0a19ade7adeef77cfe243f5951feacb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0a19ade7adeef77cfe243f5951feacb">&#9670;&nbsp;</a></span>arith_image_extract3D_cli()</h2>
+<a id="aac32fec0778c77b324cd4a718cd30d57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac32fec0778c77b324cd4a718cd30d57">&#9670;&nbsp;</a></span>arith_image_extract3D_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t arith_image_extract3D_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_extract3D_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -3099,14 +3166,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae8a86f8065af357c55a7e38145f3ecb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8a86f8065af357c55a7e38145f3ecb0">&#9670;&nbsp;</a></span>arith_image_function_1_1()</h2>
+<a id="ac171551586b1bc99b33db9295ac6605c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac171551586b1bc99b33db9295ac6605c">&#9670;&nbsp;</a></span>arith_image_function_1_1()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_1_1 </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_1_1 </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -3133,22 +3200,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a79ce9da8eba2647481fba442e077e776"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79ce9da8eba2647481fba442e077e776">&#9670;&nbsp;</a></span>arith_image_function_1_1_byID()</h2>
+<a id="a32e14b1e901be2e3da49175139557332"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32e14b1e901be2e3da49175139557332">&#9670;&nbsp;</a></span>arith_image_function_1_1_byID()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_1_1_byID </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_1_1_byID </td>
           <td>(</td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td>
           <td class="paramname"><em>ID</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td>
           <td class="paramname"><em>IDout</em>, </td>
         </tr>
         <tr>
@@ -3167,14 +3234,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="af37ff7bd65021784b71892997807ca15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af37ff7bd65021784b71892997807ca15">&#9670;&nbsp;</a></span>arith_image_function_1_1_inplace()</h2>
+<a id="a71dd24917aa4dc2188748fe93f3aa3b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71dd24917aa4dc2188748fe93f3aa3b8">&#9670;&nbsp;</a></span>arith_image_function_1_1_inplace()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_1_1_inplace </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_1_1_inplace </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -3195,16 +3262,16 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ae0af6da84d6709294ed4a73842e139fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0af6da84d6709294ed4a73842e139fd">&#9670;&nbsp;</a></span>arith_image_function_1_1_inplace_byID()</h2>
+<a id="a906a23778eae40491ac1828f81e9f56b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a906a23778eae40491ac1828f81e9f56b">&#9670;&nbsp;</a></span>arith_image_function_1_1_inplace_byID()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_1_1_inplace_byID </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_1_1_inplace_byID </td>
           <td>(</td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td>
           <td class="paramname"><em>ID</em>, </td>
         </tr>
         <tr>
@@ -3457,14 +3524,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a2394febbc1096c2488ef077acfa6d428"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2394febbc1096c2488ef077acfa6d428">&#9670;&nbsp;</a></span>arith_image_function_2_1()</h2>
+<a id="a10c85f4a6d8ca4fc2e9f8daa117cb317"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10c85f4a6d8ca4fc2e9f8daa117cb317">&#9670;&nbsp;</a></span>arith_image_function_2_1()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_2_1 </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_2_1 </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name1</em>, </td>
@@ -3497,14 +3564,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aec11f1ec0e4c510154d2d2189b30775a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec11f1ec0e4c510154d2d2189b30775a">&#9670;&nbsp;</a></span>arith_image_function_2_1_inplace()</h2>
+<a id="a1935c6bbf773ad96e57e26d95ef176f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1935c6bbf773ad96e57e26d95ef176f4">&#9670;&nbsp;</a></span>arith_image_function_2_1_inplace()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_2_1_inplace </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_2_1_inplace </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name1</em>, </td>
@@ -3531,22 +3598,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="acc1671c252e83276a3320db4e3b120db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc1671c252e83276a3320db4e3b120db">&#9670;&nbsp;</a></span>arith_image_function_2_1_inplace_byID()</h2>
+<a id="a4781ad2bab1ff32047443d9e257528dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4781ad2bab1ff32047443d9e257528dc">&#9670;&nbsp;</a></span>arith_image_function_2_1_inplace_byID()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_2_1_inplace_byID </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_2_1_inplace_byID </td>
           <td>(</td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td>
           <td class="paramname"><em>ID1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td>
           <td class="paramname"><em>ID2</em>, </td>
         </tr>
         <tr>
@@ -3565,14 +3632,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1b4cfda331cb8e09f14ef63f22d6f347"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b4cfda331cb8e09f14ef63f22d6f347">&#9670;&nbsp;</a></span>arith_image_function_CD_CD__CD()</h2>
+<a id="a352527f625004783f2c3a8ef2fc015bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a352527f625004783f2c3a8ef2fc015bf">&#9670;&nbsp;</a></span>arith_image_function_CD_CD__CD()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_CD_CD__CD </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_CD_CD__CD </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name1</em>, </td>
@@ -3605,14 +3672,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a23d22164dae17b531020fd7d63405dfc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23d22164dae17b531020fd7d63405dfc">&#9670;&nbsp;</a></span>arith_image_function_CF_CF__CF()</h2>
+<a id="af53caf72b2328e285c1c027497eaa95f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af53caf72b2328e285c1c027497eaa95f">&#9670;&nbsp;</a></span>arith_image_function_CF_CF__CF()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_CF_CF__CF </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_CF_CF__CF </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name1</em>, </td>
@@ -3645,14 +3712,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a6c4d80435fee4bc9081eea48bde2bde5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c4d80435fee4bc9081eea48bde2bde5">&#9670;&nbsp;</a></span>arith_image_function_im_im__d_d()</h2>
+<a id="a1f76268d3aa148eb2c1eb50bad687842"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f76268d3aa148eb2c1eb50bad687842">&#9670;&nbsp;</a></span>arith_image_function_im_im__d_d()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_im_im__d_d </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_im_im__d_d </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -3679,14 +3746,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a7088c9c111a0e19bb66b2043f859b472"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7088c9c111a0e19bb66b2043f859b472">&#9670;&nbsp;</a></span>arith_image_function_imd_im__dd_d()</h2>
+<a id="a360483860afa5182d5d0e0e2431305a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a360483860afa5182d5d0e0e2431305a4">&#9670;&nbsp;</a></span>arith_image_function_imd_im__dd_d()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_imd_im__dd_d </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_imd_im__dd_d </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -3719,14 +3786,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a28b3aa09ddddce74a33ebdbcf985b47a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28b3aa09ddddce74a33ebdbcf985b47a">&#9670;&nbsp;</a></span>arith_image_function_imdd_im__ddd_d()</h2>
+<a id="a766e0c2e8274f5915c7898b385097f7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a766e0c2e8274f5915c7898b385097f7b">&#9670;&nbsp;</a></span>arith_image_function_imdd_im__ddd_d()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int arith_image_function_imdd_im__ddd_d </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_function_imdd_im__ddd_d </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -4093,14 +4160,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a82acbd514dbe59726d4e019d2b23f83f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82acbd514dbe59726d4e019d2b23f83f">&#9670;&nbsp;</a></span>arith_image_merge3D()</h2>
+<a id="a7d466e494ded2a2e3db5b5483a3ff0a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d466e494ded2a2e3db5b5483a3ff0a1">&#9670;&nbsp;</a></span>arith_image_merge3D()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long arith_image_merge3D </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> arith_image_merge3D </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name1</em>, </td>
@@ -4127,14 +4194,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1ce26d8b7a92d9f7516f931e8372f4b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ce26d8b7a92d9f7516f931e8372f4b1">&#9670;&nbsp;</a></span>arith_image_merge3D_cli()</h2>
+<a id="ae1314863f2113fa5368593d282991b6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1314863f2113fa5368593d282991b6d">&#9670;&nbsp;</a></span>arith_image_merge3D_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t arith_image_merge3D_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_merge3D_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5340,14 +5407,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="add2ada1e1181b5d553b4e5fa53969f49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add2ada1e1181b5d553b4e5fa53969f49">&#9670;&nbsp;</a></span>arith_image_trunc_cli()</h2>
+<a id="ab16e359e5acc406b73a645a392673257"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab16e359e5acc406b73a645a392673257">&#9670;&nbsp;</a></span>arith_image_trunc_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t arith_image_trunc_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_trunc_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5425,14 +5492,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3f8c08c80ce47978f9c3ee047d5b1314"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f8c08c80ce47978f9c3ee047d5b1314">&#9670;&nbsp;</a></span>arith_image_zero()</h2>
+<a id="a54b1a1af4d45cf2a5ba48b6e7ce86bd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54b1a1af4d45cf2a5ba48b6e7ce86bd4">&#9670;&nbsp;</a></span>arith_image_zero()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long arith_image_zero </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> arith_image_zero </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em></td><td>)</td>
@@ -5443,14 +5510,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a0298b74f8f5a726d66bb241716a22e51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0298b74f8f5a726d66bb241716a22e51">&#9670;&nbsp;</a></span>arith_image_zero_cli()</h2>
+<a id="a9548a3cbe3513c81e8aca457b05163f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9548a3cbe3513c81e8aca457b05163f5">&#9670;&nbsp;</a></span>arith_image_zero_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t arith_image_zero_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_image_zero_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5506,14 +5573,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a253f7bf2e20200997e0300ffc0197ac8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a253f7bf2e20200997e0300ffc0197ac8">&#9670;&nbsp;</a></span>arith_set_col()</h2>
+<a id="a8d04431a729ff96b12ce4f51bf7f5608"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d04431a729ff96b12ce4f51bf7f5608">&#9670;&nbsp;</a></span>arith_set_col()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long arith_set_col </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> arith_set_col </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -5540,14 +5607,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a09ca929e41a2ff8c29f5aba5083a5fae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09ca929e41a2ff8c29f5aba5083a5fae">&#9670;&nbsp;</a></span>arith_set_col_cli()</h2>
+<a id="a2f29b17d6ef85b85ff18a18749855253"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f29b17d6ef85b85ff18a18749855253">&#9670;&nbsp;</a></span>arith_set_col_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t arith_set_col_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_set_col_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5557,14 +5624,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab8934d4f99beefab067cf0c44d598878"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8934d4f99beefab067cf0c44d598878">&#9670;&nbsp;</a></span>arith_set_pixel()</h2>
+<a id="adcce3e6387eeb554863768380f219f37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcce3e6387eeb554863768380f219f37">&#9670;&nbsp;</a></span>arith_set_pixel()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long arith_set_pixel </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> arith_set_pixel </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -5597,14 +5664,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ac97524650f70bf93a7df455a53028474"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac97524650f70bf93a7df455a53028474">&#9670;&nbsp;</a></span>arith_set_pixel_1Drange()</h2>
+<a id="a7660193c8479518d6d621e0a682340ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7660193c8479518d6d621e0a682340ce">&#9670;&nbsp;</a></span>arith_set_pixel_1Drange()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long arith_set_pixel_1Drange </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> arith_set_pixel_1Drange </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -5637,14 +5704,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a20b7a1c63b2d11d2463809f8aca774a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20b7a1c63b2d11d2463809f8aca774a8">&#9670;&nbsp;</a></span>arith_set_pixel_1Drange_cli()</h2>
+<a id="a8b0bd768b1e8ff32c782f8bd4e476a28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b0bd768b1e8ff32c782f8bd4e476a28">&#9670;&nbsp;</a></span>arith_set_pixel_1Drange_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t arith_set_pixel_1Drange_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_set_pixel_1Drange_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5654,14 +5721,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a132bd046f131775c6367da9964ff7830"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a132bd046f131775c6367da9964ff7830">&#9670;&nbsp;</a></span>arith_set_pixel_cli()</h2>
+<a id="a3b2ff37df70f3c46e9cf7638a08d6ac0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b2ff37df70f3c46e9cf7638a08d6ac0">&#9670;&nbsp;</a></span>arith_set_pixel_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t arith_set_pixel_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_set_pixel_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5671,14 +5738,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a69d131ba42946e38259e333df7446e76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69d131ba42946e38259e333df7446e76">&#9670;&nbsp;</a></span>arith_set_row()</h2>
+<a id="afcf48d7f193e0d01681fbbc03026ec69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcf48d7f193e0d01681fbbc03026ec69">&#9670;&nbsp;</a></span>arith_set_row()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long arith_set_row </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> arith_set_row </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -5705,14 +5772,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aa51024eb36e743057165634279a8f1ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa51024eb36e743057165634279a8f1ba">&#9670;&nbsp;</a></span>arith_set_row_cli()</h2>
+<a id="a7f24255060850cf533604dc184a313bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f24255060850cf533604dc184a313bc">&#9670;&nbsp;</a></span>arith_set_row_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t arith_set_row_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> arith_set_row_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5964,14 +6031,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad706f48989cfc1124c5ab2394569951a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad706f48989cfc1124c5ab2394569951a">&#9670;&nbsp;</a></span>init_COREMOD_arith()</h2>
+<a id="a501205b8bbdba41c175d99eb3f750592"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a501205b8bbdba41c175d99eb3f750592">&#9670;&nbsp;</a></span>init_COREMOD_arith()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int init_COREMOD_arith </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_COREMOD_arith </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -6740,7 +6807,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">char errmsg_arith[SBUFFERSIZE]</td>
+          <td class="memname">char errmsg_arith[<a class="el" href="image__basic_8c.html#a856e9c763f542a6a0b78587b2989c159">SBUFFERSIZE</a>]</td>
         </tr>
       </table>
   </td>
@@ -6781,7 +6848,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_f5f134f34101966cba03a4b456ebe294.html">COREMOD_arith</a></li><li class="navelem"><a class="el" href="COREMOD__arith_8c.html">COREMOD_arith.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

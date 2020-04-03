@@ -85,24 +85,64 @@ $(document).ready(function(){initNavTree('ZernikePolyn_8c.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">ZernikePolyn.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &lt;fitsio.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__iofits_8h_source.html">COREMOD_iofits/COREMOD_iofits.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__arith_8h_source.html">COREMOD_arith/COREMOD_arith.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="image__gen_8h_source.html">image_gen/image_gen.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ZernikePolyn_8h_source.html">ZernikePolyn/ZernikePolyn.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for ZernikePolyn.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="ZernikePolyn_8c__incl.png" border="0" usemap="#src_2ZernikePolyn_2ZernikePolyn_8c" alt=""/></div>
+<map name="src_2ZernikePolyn_2ZernikePolyn_8c" id="src_2ZernikePolyn_2ZernikePolyn_8c">
+<area shape="rect" id="node7" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="644,95,801,136"/>
+<area shape="rect" id="node23" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="1089,95,1309,136"/>
+<area shape="rect" id="node24" href="COREMOD__iofits_8h.html" title="COREMOD_iofits/COREMOD\l_iofits.h" alt="" coords="1333,95,1534,136"/>
+<area shape="rect" id="node25" href="COREMOD__arith_8h.html" title="COREMOD_arith/COREMOD\l_arith.h" alt="" coords="1558,95,1757,136"/>
+<area shape="rect" id="node26" href="info_8h.html" title="info/info.h" alt="" coords="1781,102,1859,129"/>
+<area shape="rect" id="node27" href="image__gen_8h.html" title="image_gen/image_gen.h" alt="" coords="1884,102,2047,129"/>
+<area shape="rect" id="node28" href="ZernikePolyn_8h.html" title="ZernikePolyn/ZernikePolyn.h" alt="" coords="2071,102,2260,129"/>
+<area shape="rect" id="node16" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="227,184,448,211"/>
+<area shape="rect" id="node17" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="284,259,388,285"/>
+<area shape="rect" id="node20" href="processtools_8h.html" title="Command line interface. " alt="" coords="463,259,569,285"/>
+<area shape="rect" id="node21" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="746,259,854,285"/>
+<area shape="rect" id="node22" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="1091,184,1242,211"/>
+<area shape="rect" id="node19" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="262,333,415,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a5d9d454d4b9f2ff8106d5199ac0d0186"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a5d9d454d4b9f2ff8106d5199ac0d0186">SWAP</a>(x,  y)&#160;&#160;&#160;tmp=(x);x=(y);y=tmp;</td></tr>
+<tr class="separator:a5d9d454d4b9f2ff8106d5199ac0d0186"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a598a3330b3c21701223ee0ca14316eca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a598a3330b3c21701223ee0ca14316eca">PI</a>&#160;&#160;&#160;3.14159265358979323846264338328</td></tr>
+<tr class="separator:a598a3330b3c21701223ee0ca14316eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1ffbde69d004277c5845138ecb9394ae"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a1ffbde69d004277c5845138ecb9394ae">mk_zer_cli</a> ()</td></tr>
-<tr class="separator:a1ffbde69d004277c5845138ecb9394ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedcbd216b72931511f1531e8b408cc84"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#aedcbd216b72931511f1531e8b408cc84">ZERNIKEPOLYN_rmPiston_cli</a> ()</td></tr>
-<tr class="separator:aedcbd216b72931511f1531e8b408cc84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13fb3023be0be13b4ca4fb0abfa633a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a13fb3023be0be13b4ca4fb0abfa633a3">mk_zer_cli</a> ()</td></tr>
+<tr class="separator:a13fb3023be0be13b4ca4fb0abfa633a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f995ea86348f3e984540c0f6757ed8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a1f995ea86348f3e984540c0f6757ed8e">ZERNIKEPOLYN_rmPiston_cli</a> ()</td></tr>
+<tr class="separator:a1f995ea86348f3e984540c0f6757ed8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fe2ce39f9bc2169cb9978832ef64fb8"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a1fe2ce39f9bc2169cb9978832ef64fb8">init_ZernikePolyn</a> ()</td></tr>
-<tr class="separator:a1fe2ce39f9bc2169cb9978832ef64fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add80f253f55c1a0c1ec4086fccd72767"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#add80f253f55c1a0c1ec4086fccd72767">init_ZernikePolyn</a> ()</td></tr>
+<tr class="separator:add80f253f55c1a0c1ec4086fccd72767"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7524858a2e89eb535d1afe4a573fc48"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#af7524858a2e89eb535d1afe4a573fc48">fact</a> (int n)</td></tr>
 <tr class="separator:af7524858a2e89eb535d1afe4a573fc48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34e87076be4c021d3b0976438605bce6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a34e87076be4c021d3b0976438605bce6">zernike_init</a> ()</td></tr>
@@ -113,16 +153,16 @@ Functions</h2></td></tr>
 <tr class="separator:aa6e618809fd141131d7bcf5b4461148f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a651851e4e65b70c8aed8ff5e5471e0fc"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a651851e4e65b70c8aed8ff5e5471e0fc">Zernike_value</a> (long j, double r, double PA)</td></tr>
 <tr class="separator:a651851e4e65b70c8aed8ff5e5471e0fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c560e3379d16ae5a239ff1ba300b310"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a9c560e3379d16ae5a239ff1ba300b310">mk_zer</a> (const char *ID_name, long SIZE, long zer_nb, float rpix)</td></tr>
-<tr class="separator:a9c560e3379d16ae5a239ff1ba300b310"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d1b4238d001e5a9b08010138853c8fb"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a9d1b4238d001e5a9b08010138853c8fb">mk_zer_unbounded</a> (const char *ID_name, long SIZE, long zer_nb, float rpix)</td></tr>
-<tr class="separator:a9d1b4238d001e5a9b08010138853c8fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa9a17c8f3de4537ab065288009d8c8c"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#aaa9a17c8f3de4537ab065288009d8c8c">mk_zer_unbounded1</a> (const char *ID_name, long SIZE, long zer_nb, float rpix)</td></tr>
-<tr class="separator:aaa9a17c8f3de4537ab065288009d8c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fc56cafbb9e2796ed3543782d27c64a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a4fc56cafbb9e2796ed3543782d27c64a">mk_zer_series</a> (const char *ID_name, long SIZE, long zer_nb, float rpix)</td></tr>
-<tr class="separator:a4fc56cafbb9e2796ed3543782d27c64a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8c8976411c01da5bcc024f5f4c72a3b"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#ab8c8976411c01da5bcc024f5f4c72a3b">mk_zer_seriescube</a> (const char *ID_namec, long SIZE, long zer_nb, float rpix)</td></tr>
-<tr class="separator:ab8c8976411c01da5bcc024f5f4c72a3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dc7c310f9220de6d22d51031027448d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a3dc7c310f9220de6d22d51031027448d">mk_zer</a> (const char *ID_name, long SIZE, long zer_nb, float rpix)</td></tr>
+<tr class="separator:a3dc7c310f9220de6d22d51031027448d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a830d3bffa5fba1aa5f5e2ffc451f1b3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a830d3bffa5fba1aa5f5e2ffc451f1b3e">mk_zer_unbounded</a> (const char *ID_name, long SIZE, long zer_nb, float rpix)</td></tr>
+<tr class="separator:a830d3bffa5fba1aa5f5e2ffc451f1b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a643585c4b1434e50e9b1fbfdc51d9e54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a643585c4b1434e50e9b1fbfdc51d9e54">mk_zer_unbounded1</a> (const char *ID_name, long SIZE, long zer_nb, float rpix)</td></tr>
+<tr class="separator:a643585c4b1434e50e9b1fbfdc51d9e54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05b43f0570254ea44645b14c33b10043"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a05b43f0570254ea44645b14c33b10043">mk_zer_series</a> (const char *ID_name, long SIZE, long zer_nb, float rpix)</td></tr>
+<tr class="separator:a05b43f0570254ea44645b14c33b10043"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab52923d93937685e873c4cbbb7953ad7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#ab52923d93937685e873c4cbbb7953ad7">mk_zer_seriescube</a> (const char *ID_namec, long SIZE, long zer_nb, float rpix)</td></tr>
+<tr class="separator:ab52923d93937685e873c4cbbb7953ad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cf12aeb4b9f9f6cdea6a61ddf110720"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a7cf12aeb4b9f9f6cdea6a61ddf110720">get_zer</a> (const char *ID_name, long zer_nb, double radius)</td></tr>
 <tr class="separator:a7cf12aeb4b9f9f6cdea6a61ddf110720"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae93cd7bd1ea067b76e92a9000df29958"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#ae93cd7bd1ea067b76e92a9000df29958">get_zer_crop</a> (const char *ID_name, long zer_nb, double radius, double radius1)</td></tr>
@@ -147,6 +187,49 @@ Variables</h2></td></tr>
 <tr class="memitem:a756b785b43e264e97a9c0c31ff984411"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structZERNIKE.html">ZERNIKE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ZernikePolyn_8c.html#a756b785b43e264e97a9c0c31ff984411">Zernike</a></td></tr>
 <tr class="separator:a756b785b43e264e97a9c0c31ff984411"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a598a3330b3c21701223ee0ca14316eca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a598a3330b3c21701223ee0ca14316eca">&#9670;&nbsp;</a></span>PI</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PI&#160;&#160;&#160;3.14159265358979323846264338328</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5d9d454d4b9f2ff8106d5199ac0d0186"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d9d454d4b9f2ff8106d5199ac0d0186">&#9670;&nbsp;</a></span>SWAP</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SWAP</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">y&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;tmp=(x);x=(y);y=tmp;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
@@ -155,7 +238,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -380,14 +463,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1fe2ce39f9bc2169cb9978832ef64fb8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fe2ce39f9bc2169cb9978832ef64fb8">&#9670;&nbsp;</a></span>init_ZernikePolyn()</h2>
+<a id="add80f253f55c1a0c1ec4086fccd72767"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add80f253f55c1a0c1ec4086fccd72767">&#9670;&nbsp;</a></span>init_ZernikePolyn()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t init_ZernikePolyn </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> init_ZernikePolyn </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -397,14 +480,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c560e3379d16ae5a239ff1ba300b310"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c560e3379d16ae5a239ff1ba300b310">&#9670;&nbsp;</a></span>mk_zer()</h2>
+<a id="a3dc7c310f9220de6d22d51031027448d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dc7c310f9220de6d22d51031027448d">&#9670;&nbsp;</a></span>mk_zer()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long mk_zer </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> mk_zer </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -437,14 +520,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a1ffbde69d004277c5845138ecb9394ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ffbde69d004277c5845138ecb9394ae">&#9670;&nbsp;</a></span>mk_zer_cli()</h2>
+<a id="a13fb3023be0be13b4ca4fb0abfa633a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13fb3023be0be13b4ca4fb0abfa633a3">&#9670;&nbsp;</a></span>mk_zer_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t mk_zer_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> mk_zer_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -454,14 +537,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a4fc56cafbb9e2796ed3543782d27c64a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4fc56cafbb9e2796ed3543782d27c64a">&#9670;&nbsp;</a></span>mk_zer_series()</h2>
+<a id="a05b43f0570254ea44645b14c33b10043"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05b43f0570254ea44645b14c33b10043">&#9670;&nbsp;</a></span>mk_zer_series()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int mk_zer_series </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> mk_zer_series </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -494,14 +577,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ab8c8976411c01da5bcc024f5f4c72a3b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8c8976411c01da5bcc024f5f4c72a3b">&#9670;&nbsp;</a></span>mk_zer_seriescube()</h2>
+<a id="ab52923d93937685e873c4cbbb7953ad7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab52923d93937685e873c4cbbb7953ad7">&#9670;&nbsp;</a></span>mk_zer_seriescube()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long mk_zer_seriescube </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> mk_zer_seriescube </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_namec</em>, </td>
@@ -534,14 +617,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a9d1b4238d001e5a9b08010138853c8fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9d1b4238d001e5a9b08010138853c8fb">&#9670;&nbsp;</a></span>mk_zer_unbounded()</h2>
+<a id="a830d3bffa5fba1aa5f5e2ffc451f1b3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a830d3bffa5fba1aa5f5e2ffc451f1b3e">&#9670;&nbsp;</a></span>mk_zer_unbounded()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long mk_zer_unbounded </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> mk_zer_unbounded </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -574,14 +657,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aaa9a17c8f3de4537ab065288009d8c8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa9a17c8f3de4537ab065288009d8c8c">&#9670;&nbsp;</a></span>mk_zer_unbounded1()</h2>
+<a id="a643585c4b1434e50e9b1fbfdc51d9e54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a643585c4b1434e50e9b1fbfdc51d9e54">&#9670;&nbsp;</a></span>mk_zer_unbounded1()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long mk_zer_unbounded1 </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> mk_zer_unbounded1 </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID_name</em>, </td>
@@ -803,14 +886,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aedcbd216b72931511f1531e8b408cc84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aedcbd216b72931511f1531e8b408cc84">&#9670;&nbsp;</a></span>ZERNIKEPOLYN_rmPiston_cli()</h2>
+<a id="a1f995ea86348f3e984540c0f6757ed8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f995ea86348f3e984540c0f6757ed8e">&#9670;&nbsp;</a></span>ZERNIKEPOLYN_rmPiston_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t ZERNIKEPOLYN_rmPiston_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> ZERNIKEPOLYN_rmPiston_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -864,7 +947,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_79cde7c2c2a1e8c6935a72a82b7ac777.html">ZernikePolyn</a></li><li class="navelem"><a class="el" href="ZernikePolyn_8c.html">ZernikePolyn.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

@@ -86,6 +86,8 @@ $(document).ready(function(){initNavTree('streamCTRL_8c.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -95,20 +97,85 @@ $(document).ready(function(){initNavTree('streamCTRL_8c.html','');});
 
 <p>Data streams control panel.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;sys/file.h&gt;</code><br />
+<code>#include &lt;malloc.h&gt;</code><br />
+<code>#include &lt;sys/mman.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;signal.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;ncurses.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;ctype.h&gt;</code><br />
+<code>#include &lt;dirent.h&gt;</code><br />
+<code>#include &lt;wchar.h&gt;</code><br />
+<code>#include &lt;locale.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;pthread.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CLIcore.h</a>&quot;</code><br />
+<code>#include &lt;<a class="el" href="00CORE_8h_source.html">00CORE/00CORE.h</a>&gt;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__tools_8h_source.html">COREMOD_tools/COREMOD_tools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="info_8h_source.html">info/info.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="streamCTRL_8h_source.html">streamCTRL.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for streamCTRL.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="streamCTRL_8c__incl.png" border="0" usemap="#src_2CommandLineInterface_2streamCTRL_8c" alt=""/></div>
+<map name="src_2CommandLineInterface_2streamCTRL_8c" id="src_2CommandLineInterface_2streamCTRL_8c">
+<area shape="rect" id="node21" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="921,102,1000,129"/>
+<area shape="rect" id="node30" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1149,259,1257,285"/>
+<area shape="rect" id="node32" href="00CORE_8h.html" title="Function prototypes for module 00CORE. " alt="" coords="2741,102,2884,129"/>
+<area shape="rect" id="node33" href="COREMOD__tools_8h.html" title="COREMOD_tools/COREMOD\l_tools.h" alt="" coords="2908,95,3109,136"/>
+<area shape="rect" id="node34" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="3133,95,3353,136"/>
+<area shape="rect" id="node35" href="info_8h.html" title="info/info.h" alt="" coords="3377,102,3456,129"/>
+<area shape="rect" id="node26" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="525,184,746,211"/>
+<area shape="rect" id="node27" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="598,259,702,285"/>
+<area shape="rect" id="node29" href="processtools_8h.html" title="Command line interface. " alt="" coords="791,259,898,285"/>
+<area shape="rect" id="node31" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="349,184,500,211"/>
+<area shape="rect" id="node28" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="529,333,683,360"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structarg__struct.html">arg_struct</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structstreamCTRLarg__struct.html">streamCTRLarg_struct</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a290bc730160da093db9382e8de40c99b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a290bc730160da093db9382e8de40c99b">STREAMCTRL_LOGDEBUG</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a290bc730160da093db9382e8de40c99b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8a8c53ed4b0155de9a38ce3424d50aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#af8a8c53ed4b0155de9a38ce3424d50aa">SHAREDSHMDIR</a>&#160;&#160;&#160;data.shmdir</td></tr>
+<tr class="separator:af8a8c53ed4b0155de9a38ce3424d50aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a306748fa89c9df88326433afd1e19287"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a306748fa89c9df88326433afd1e19287">STRINGLENMAX</a>&#160;&#160;&#160;32</td></tr>
+<tr class="separator:a306748fa89c9df88326433afd1e19287"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4de987c32413ae3f89882658428891e2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a4de987c32413ae3f89882658428891e2">streamOpenNBpid_MAX</a>&#160;&#160;&#160;100</td></tr>
+<tr class="separator:a4de987c32413ae3f89882658428891e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb00611e5a82273ead16b0f2e286351b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#abb00611e5a82273ead16b0f2e286351b">nameNBchar</a>&#160;&#160;&#160;100</td></tr>
+<tr class="separator:abb00611e5a82273ead16b0f2e286351b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a190cd9f8d4bcda66fa210250cef90e0c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a190cd9f8d4bcda66fa210250cef90e0c">PIDnameStringLen</a>&#160;&#160;&#160;12</td></tr>
+<tr class="separator:a190cd9f8d4bcda66fa210250cef90e0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a46a037236862ac1a534efbe605c10f42"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td></tr>
+<tr class="separator:a46a037236862ac1a534efbe605c10f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a57321d4280cb8b6bb462a6e32512e7b1"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a57321d4280cb8b6bb462a6e32512e7b1">initncurses</a> ()</td></tr>
 <tr class="separator:a57321d4280cb8b6bb462a6e32512e7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40b4a3fa534313c896930e708a0938be"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a40b4a3fa534313c896930e708a0938be">image_ID_from_images</a> (<a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *images, const char *name)</td></tr>
-<tr class="separator:a40b4a3fa534313c896930e708a0938be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a085981c13cbf5811e2d0f6a456e6d514"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a085981c13cbf5811e2d0f6a456e6d514">image_get_first_ID_available_from_images</a> (<a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *images)</td></tr>
-<tr class="separator:a085981c13cbf5811e2d0f6a456e6d514"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac88dc29a2e19cf8ba670517997bf6b91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#ac88dc29a2e19cf8ba670517997bf6b91">image_ID_from_images</a> (<a class="el" href="structIMAGE.html">IMAGE</a> *images, const char *restrict name)</td></tr>
+<tr class="separator:ac88dc29a2e19cf8ba670517997bf6b91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dd94de2cd296e69c17d28b2dfd4afdc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a4dd94de2cd296e69c17d28b2dfd4afdc">image_get_first_ID_available_from_images</a> (<a class="el" href="structIMAGE.html">IMAGE</a> *images)</td></tr>
+<tr class="separator:a4dd94de2cd296e69c17d28b2dfd4afdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13c2e099f2e2df780754da98e92d1275"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a13c2e099f2e2df780754da98e92d1275">get_process_name_by_pid</a> (const int pid, char *pname)</td></tr>
 <tr class="separator:a13c2e099f2e2df780754da98e92d1275"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86f200e5c8ce512ba17c51954f944e8a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a86f200e5c8ce512ba17c51954f944e8a">streamCTRL_CatchSignals</a> ()</td></tr>
@@ -117,7 +184,7 @@ Functions</h2></td></tr>
 <tr class="separator:a1f4c321eb13a9ead016a0495f2cd8a1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95adb4c2ba2ce77d4139fef3ef8c3db1"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#a95adb4c2ba2ce77d4139fef3ef8c3db1">streamCTRL_scan</a> (void *argptr)</td></tr>
 <tr class="separator:a95adb4c2ba2ce77d4139fef3ef8c3db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae47e701b56c205e55ee6353b99ed39e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#ae47e701b56c205e55ee6353b99ed39e1">streamCTRL_CTRLscreen</a> ()</td></tr>
+<tr class="memitem:ae47e701b56c205e55ee6353b99ed39e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="streamCTRL_8c.html#ae47e701b56c205e55ee6353b99ed39e1">streamCTRL_CTRLscreen</a> ()</td></tr>
 <tr class="separator:ae47e701b56c205e55ee6353b99ed39e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -130,7 +197,122 @@ Variables</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Data streams control panel. </p>
 <p>Manages data streams </p>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abb00611e5a82273ead16b0f2e286351b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb00611e5a82273ead16b0f2e286351b">&#9670;&nbsp;</a></span>nameNBchar</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define nameNBchar&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a190cd9f8d4bcda66fa210250cef90e0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a190cd9f8d4bcda66fa210250cef90e0c">&#9670;&nbsp;</a></span>PIDnameStringLen</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PIDnameStringLen&#160;&#160;&#160;12</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8a8c53ed4b0155de9a38ce3424d50aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8a8c53ed4b0155de9a38ce3424d50aa">&#9670;&nbsp;</a></span>SHAREDSHMDIR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SHAREDSHMDIR&#160;&#160;&#160;data.shmdir</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>default location of file mapped semaphores, can be over-ridden by env variable MILK_SHM_DIR </p>
+
+</div>
+</div>
+<a id="a290bc730160da093db9382e8de40c99b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a290bc730160da093db9382e8de40c99b">&#9670;&nbsp;</a></span>STREAMCTRL_LOGDEBUG</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STREAMCTRL_LOGDEBUG&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4de987c32413ae3f89882658428891e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4de987c32413ae3f89882658428891e2">&#9670;&nbsp;</a></span>streamOpenNBpid_MAX</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define streamOpenNBpid_MAX&#160;&#160;&#160;100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a306748fa89c9df88326433afd1e19287"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a306748fa89c9df88326433afd1e19287">&#9670;&nbsp;</a></span>STRINGLENMAX</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STRINGLENMAX&#160;&#160;&#160;32</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a46a037236862ac1a534efbe605c10f42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46a037236862ac1a534efbe605c10f42">&#9670;&nbsp;</a></span>errno_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef int <a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a1f4c321eb13a9ead016a0495f2cd8a1b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1f4c321eb13a9ead016a0495f2cd8a1b">&#9670;&nbsp;</a></span>get_PIDmax()</h2>
 
@@ -181,19 +363,20 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>INITIALIZE ncurses </p>
 
 </div>
 </div>
-<a id="a085981c13cbf5811e2d0f6a456e6d514"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a085981c13cbf5811e2d0f6a456e6d514">&#9670;&nbsp;</a></span>image_get_first_ID_available_from_images()</h2>
+<a id="a4dd94de2cd296e69c17d28b2dfd4afdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4dd94de2cd296e69c17d28b2dfd4afdc">&#9670;&nbsp;</a></span>image_get_first_ID_available_from_images()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long image_get_first_ID_available_from_images </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> image_get_first_ID_available_from_images </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structIMAGE.html">IMAGE</a> *&#160;</td>
           <td class="paramname"><em>images</em></td><td>)</td>
           <td></td>
         </tr>
@@ -202,22 +385,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a40b4a3fa534313c896930e708a0938be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40b4a3fa534313c896930e708a0938be">&#9670;&nbsp;</a></span>image_ID_from_images()</h2>
+<a id="ac88dc29a2e19cf8ba670517997bf6b91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac88dc29a2e19cf8ba670517997bf6b91">&#9670;&nbsp;</a></span>image_ID_from_images()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long image_ID_from_images </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> image_ID_from_images </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="src_2ImageStreamIO_2ImageStruct_8h.html#aa3cd29ddf485973b5912d49deb5866b1">IMAGE</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structIMAGE.html">IMAGE</a> *&#160;</td>
           <td class="paramname"><em>images</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype">const char *restrict&#160;</td>
           <td class="paramname"><em>name</em>&#160;</td>
         </tr>
         <tr>
@@ -280,7 +463,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="src_2AOloopControl__IOtools_2AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> streamCTRL_CTRLscreen </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> streamCTRL_CTRLscreen </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -365,7 +548,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_100645d6fa43bdf6aa49bbcbad19d7c2.html">CommandLineInterface</a></li><li class="navelem"><a class="el" href="streamCTRL_8c.html">streamCTRL.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

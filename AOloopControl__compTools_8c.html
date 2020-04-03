@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('AOloopControl__compTools_8c.html','');
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AOloopControl_compTools.c File Reference</div>  </div>
@@ -93,25 +94,60 @@ $(document).ready(function(){initNavTree('AOloopControl__compTools_8c.html','');
 
 <p>Adaptive Optics Control loop engine misc computation tools.  
 <a href="#details">More...</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;string.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="CLIcore_8h_source.html">CommandLineInterface/CLIcore.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl_8h_source.html">AOloopControl/AOloopControl.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="AOloopControl__compTools_8h_source.html">AOloopControl_compTools/AOloopControl_compTools.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="COREMOD__memory_8h_source.html">COREMOD_memory/COREMOD_memory.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for AOloopControl_compTools.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="AOloopControl__compTools_8c__incl.png" border="0" usemap="#src_2AOloopControl__compTools_2AOloopControl__compTools_8c" alt=""/></div>
+<map name="src_2AOloopControl__compTools_2AOloopControl__compTools_8c" id="src_2AOloopControl__compTools_2AOloopControl__compTools_8c">
+<area shape="rect" id="node3" href="CLIcore_8h.html" title="Command line interface. " alt="" coords="1819,95,1977,136"/>
+<area shape="rect" id="node21" href="AOloopControl_8h.html" title="Function prototypes for Adaptive Optics Control loop engine. " alt="" coords="892,259,1099,285"/>
+<area shape="rect" id="node28" href="AOloopControl__compTools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine misc computation tools. " alt="" coords="2001,95,2195,136"/>
+<area shape="rect" id="node29" href="COREMOD__memory_8h.html" title="Function prototypes for milk memory functions. " alt="" coords="2219,95,2439,136"/>
+<area shape="rect" id="node14" href="ImageStreamIO_8h.html" title="Function prototypes for ImageStreamIO. " alt="" coords="1589,184,1810,211"/>
+<area shape="rect" id="node15" href="ImageStruct_8h.html" title="Image structure definition. " alt="" coords="1634,259,1738,285"/>
+<area shape="rect" id="node18" href="processtools_8h.html" title="Command line interface. " alt="" coords="1895,259,2002,285"/>
+<area shape="rect" id="node19" href="streamCTRL_8h.html" title="Data streams control panel. " alt="" coords="1488,259,1596,285"/>
+<area shape="rect" id="node20" href="function__parameters_8h.html" title="Tools to help expose and control function parameters. " alt="" coords="2403,184,2553,211"/>
+<area shape="rect" id="node17" href="ImageStreamIOError_8h.html" title="ImageStreamIOError.h" alt="" coords="1596,341,1749,367"/>
+<area shape="rect" id="node22" href="AOloopControl__AOcompute_8h.html" title="AOloopControl/AOloopControl\l_AOcompute.h" alt="" coords="5,333,201,375"/>
+<area shape="rect" id="node23" href="AOloopControl__aorun_8h.html" title="AOloopControl/AOloopControl\l_aorun.h" alt="" coords="225,333,421,375"/>
+<area shape="rect" id="node24" href="AOloopControl__IOtools_8h.html" title="Function prototypes for Adaptive Optics Control loop engine I/O tools. " alt="" coords="446,333,617,375"/>
+<area shape="rect" id="node25" href="AOloopControl__dm_8h.html" title="AOloopControl/AOloopControl_dm.h" alt="" coords="641,341,873,367"/>
+<area shape="rect" id="node26" href="AOloopControl__ProcessModeCoefficients_8h.html" title="AOloopControl/AOloopControl\l_ProcessModeCoefficients.h" alt="" coords="897,333,1093,375"/>
+<area shape="rect" id="node27" href="AOloopControl__autotune_8h.html" title="AOloopControl/AOloopControl\l_autotune.h" alt="" coords="1117,333,1313,375"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a369266c24eacffb87046522897a570d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#a369266c24eacffb87046522897a570d5">_GNU_SOURCE</a></td></tr>
+<tr class="separator:a369266c24eacffb87046522897a570d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c5d5a91e62278861bc96ab43c9c44d9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#a6c5d5a91e62278861bc96ab43c9c44d9">NB_AOloopcontrol</a>&#160;&#160;&#160;10</td></tr>
+<tr class="separator:a6c5d5a91e62278861bc96ab43c9c44d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">AOloopControl_compTools - 1. COMPUTATION UTILITIES &amp; TOOLS</div></td></tr>
-<tr class="memitem:ad8d916c25875a4fe182252c3765756a8"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#ad8d916c25875a4fe182252c3765756a8">AOloopControl_compTools_CrossProduct_cli</a> ()</td></tr>
-<tr class="memdesc:ad8d916c25875a4fe182252c3765756a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_CrossProduct.  <a href="#ad8d916c25875a4fe182252c3765756a8">More...</a><br /></td></tr>
-<tr class="separator:ad8d916c25875a4fe182252c3765756a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b72a3ced686b0380e28860c541bf5f3"><td class="memItemLeft" align="right" valign="top">int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#a2b72a3ced686b0380e28860c541bf5f3">AOloopControl_compTools_mkSimpleZpokeM_cli</a> ()</td></tr>
-<tr class="memdesc:a2b72a3ced686b0380e28860c541bf5f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkSimpleZpokeM.  <a href="#a2b72a3ced686b0380e28860c541bf5f3">More...</a><br /></td></tr>
-<tr class="separator:a2b72a3ced686b0380e28860c541bf5f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af09608bf6feb685fa8b78863f1168ffe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#af09608bf6feb685fa8b78863f1168ffe">AOloopControl_compTools_CrossProduct_cli</a> ()</td></tr>
+<tr class="memdesc:af09608bf6feb685fa8b78863f1168ffe"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_CrossProduct.  <a href="#af09608bf6feb685fa8b78863f1168ffe">More...</a><br /></td></tr>
+<tr class="separator:af09608bf6feb685fa8b78863f1168ffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbe1f0c8511bf04871bd7c43a476806e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#acbe1f0c8511bf04871bd7c43a476806e">AOloopControl_compTools_mkSimpleZpokeM_cli</a> ()</td></tr>
+<tr class="memdesc:acbe1f0c8511bf04871bd7c43a476806e"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_mkSimpleZpokeM.  <a href="#acbe1f0c8511bf04871bd7c43a476806e">More...</a><br /></td></tr>
+<tr class="separator:acbe1f0c8511bf04871bd7c43a476806e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd02bb0f6a745c39d5e3417493995c71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#afd02bb0f6a745c39d5e3417493995c71">__attribute__</a> ((constructor))</td></tr>
 <tr class="memdesc:afd02bb0f6a745c39d5e3417493995c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize module.  <a href="#afd02bb0f6a745c39d5e3417493995c71">More...</a><br /></td></tr>
 <tr class="separator:afd02bb0f6a745c39d5e3417493995c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5483ed26451cf8bdd9a909f3ce31c7e"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#ad5483ed26451cf8bdd9a909f3ce31c7e">AOloopControl_compTools_CrossProduct</a> (const char *ID1_name, const char *ID2_name, const char *IDout_name)</td></tr>
-<tr class="memdesc:ad5483ed26451cf8bdd9a909f3ce31c7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute cross product between two 3D arrays  <a href="#ad5483ed26451cf8bdd9a909f3ce31c7e">More...</a><br /></td></tr>
-<tr class="separator:ad5483ed26451cf8bdd9a909f3ce31c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f80ee0b40ecdca148055d0cb588379a"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#a4f80ee0b40ecdca148055d0cb588379a">AOloopControl_compTools_mkSimpleZpokeM</a> (long dmxsize, long dmysize, char *IDout_name)</td></tr>
-<tr class="memdesc:a4f80ee0b40ecdca148055d0cb588379a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create simple zonal poke cube.  <a href="#a4f80ee0b40ecdca148055d0cb588379a">More...</a><br /></td></tr>
-<tr class="separator:a4f80ee0b40ecdca148055d0cb588379a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94df83bc4981bcc1c8fb259d38428d53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#a94df83bc4981bcc1c8fb259d38428d53">AOloopControl_compTools_CrossProduct</a> (const char *ID1_name, const char *ID2_name, const char *IDout_name)</td></tr>
+<tr class="memdesc:a94df83bc4981bcc1c8fb259d38428d53"><td class="mdescLeft">&#160;</td><td class="mdescRight">compute cross product between two 3D arrays  <a href="#a94df83bc4981bcc1c8fb259d38428d53">More...</a><br /></td></tr>
+<tr class="separator:a94df83bc4981bcc1c8fb259d38428d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b0ba1934cd05ebae564811430940289"><td class="memItemLeft" align="right" valign="top"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#a4b0ba1934cd05ebae564811430940289">AOloopControl_compTools_mkSimpleZpokeM</a> (uint32_t dmxsize, uint32_t dmysize, char *IDout_name)</td></tr>
+<tr class="memdesc:a4b0ba1934cd05ebae564811430940289"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create simple zonal poke cube.  <a href="#a4b0ba1934cd05ebae564811430940289">More...</a><br /></td></tr>
+<tr class="separator:a4b0ba1934cd05ebae564811430940289"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -119,17 +155,43 @@ Variables</h2></td></tr>
 <tr class="separator:ab985484db8772c364c77d0d59edf4f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8a65ca6927b57d697b359281dd5ff24"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#ac8a65ca6927b57d697b359281dd5ff24">AOloopcontrol_meminit</a> = 0</td></tr>
 <tr class="separator:ac8a65ca6927b57d697b359281dd5ff24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cab4b1892467d2abeab3bdad99b690c"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#a3cab4b1892467d2abeab3bdad99b690c">AOlooploadconf_init</a> = 0</td></tr>
-<tr class="separator:a3cab4b1892467d2abeab3bdad99b690c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f96203c41ad50bad5dd1604a5c069a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAOLOOPCONTROL__CONF.html">AOLOOPCONTROL_CONF</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="AOloopControl__compTools_8c.html#a1f96203c41ad50bad5dd1604a5c069a8">AOconf</a></td></tr>
 <tr class="memdesc:a1f96203c41ad50bad5dd1604a5c069a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">CLI function for AOloopControl_setframesAve.  <a href="#a1f96203c41ad50bad5dd1604a5c069a8">More...</a><br /></td></tr>
 <tr class="separator:a1f96203c41ad50bad5dd1604a5c069a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Adaptive Optics Control loop engine misc computation tools. </p>
-<p>AO engine uses stream data structure</p>
-<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000045">Bug:</a></b></dt><dd>No known bugs.</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+<p>AO engine uses stream data structure </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a369266c24eacffb87046522897a570d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369266c24eacffb87046522897a570d5">&#9670;&nbsp;</a></span>_GNU_SOURCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _GNU_SOURCE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6c5d5a91e62278861bc96ab43c9c44d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c5d5a91e62278861bc96ab43c9c44d9">&#9670;&nbsp;</a></span>NB_AOloopcontrol</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NB_AOloopcontrol&#160;&#160;&#160;10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="afd02bb0f6a745c39d5e3417493995c71"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd02bb0f6a745c39d5e3417493995c71">&#9670;&nbsp;</a></span>__attribute__()</h2>
 
@@ -137,7 +199,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="struct____attribute____.html">__attribute__</a> </td>
+          <td class="memname">void __attribute__ </td>
           <td>(</td>
           <td class="paramtype">(constructor)&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -150,14 +212,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad5483ed26451cf8bdd9a909f3ce31c7e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5483ed26451cf8bdd9a909f3ce31c7e">&#9670;&nbsp;</a></span>AOloopControl_compTools_CrossProduct()</h2>
+<a id="a94df83bc4981bcc1c8fb259d38428d53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94df83bc4981bcc1c8fb259d38428d53">&#9670;&nbsp;</a></span>AOloopControl_compTools_CrossProduct()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_compTools_CrossProduct </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> AOloopControl_compTools_CrossProduct </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ID1_name</em>, </td>
@@ -186,14 +248,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ad8d916c25875a4fe182252c3765756a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8d916c25875a4fe182252c3765756a8">&#9670;&nbsp;</a></span>AOloopControl_compTools_CrossProduct_cli()</h2>
+<a id="af09608bf6feb685fa8b78863f1168ffe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af09608bf6feb685fa8b78863f1168ffe">&#9670;&nbsp;</a></span>AOloopControl_compTools_CrossProduct_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_compTools_CrossProduct_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_compTools_CrossProduct_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -205,22 +267,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a4f80ee0b40ecdca148055d0cb588379a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f80ee0b40ecdca148055d0cb588379a">&#9670;&nbsp;</a></span>AOloopControl_compTools_mkSimpleZpokeM()</h2>
+<a id="a4b0ba1934cd05ebae564811430940289"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b0ba1934cd05ebae564811430940289">&#9670;&nbsp;</a></span>AOloopControl_compTools_mkSimpleZpokeM()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long AOloopControl_compTools_mkSimpleZpokeM </td>
+          <td class="memname"><a class="el" href="CLIcore_8h.html#a60e74e89b01a4231d84e7a2b2d115794">imageID</a> AOloopControl_compTools_mkSimpleZpokeM </td>
           <td>(</td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>dmxsize</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">long&#160;</td>
+          <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>dmysize</em>, </td>
         </tr>
         <tr>
@@ -241,14 +303,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a2b72a3ced686b0380e28860c541bf5f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b72a3ced686b0380e28860c541bf5f3">&#9670;&nbsp;</a></span>AOloopControl_compTools_mkSimpleZpokeM_cli()</h2>
+<a id="acbe1f0c8511bf04871bd7c43a476806e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbe1f0c8511bf04871bd7c43a476806e">&#9670;&nbsp;</a></span>AOloopControl_compTools_mkSimpleZpokeM_cli()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int_fast8_t AOloopControl_compTools_mkSimpleZpokeM_cli </td>
+          <td class="memname"><a class="el" href="AOloopControl__IOtools_8h.html#a46a037236862ac1a534efbe605c10f42">errno_t</a> AOloopControl_compTools_mkSimpleZpokeM_cli </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -291,28 +353,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a3cab4b1892467d2abeab3bdad99b690c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3cab4b1892467d2abeab3bdad99b690c">&#9670;&nbsp;</a></span>AOlooploadconf_init</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int AOlooploadconf_init = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="ab985484db8772c364c77d0d59edf4f17"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab985484db8772c364c77d0d59edf4f17">&#9670;&nbsp;</a></span>INITSTATUS_AOloopControl_compTools</h2>
 
@@ -342,7 +382,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_980d29ffcb52c99a96c5b3099517b030.html">AOloopControl_compTools</a></li><li class="navelem"><a class="el" href="AOloopControl__compTools_8c.html">AOloopControl_compTools.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

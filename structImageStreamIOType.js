@@ -13,7 +13,7 @@ var structImageStreamIOType =
     ] ],
     [ "ImageStreamIOType", "structImageStreamIOType.html#ab8d9916109ed64c3108db2da5504156f", null ],
     [ "ImageStreamIOType", "structImageStreamIOType.html#a46b0213015ad23c3b2538f97f3c7d1af", null ],
-    [ "get_axis", "structImageStreamIOType.html#a10ae030105b2c8df769e116334fe4cc9", null ],
-    [ "get_type", "structImageStreamIOType.html#a1008f3fd2c9dd763b7696b26d23d94b9", null ],
+    [ "get_axis", "structImageStreamIOType.html#a6230bc44813e6be506234acc3026f117", null ],
+    [ "get_type", "structImageStreamIOType.html#a6fd9d8a824f5bbadf40144a18c757342", null ],
     [ "type", "structImageStreamIOType.html#a4a15f0d270a59dacb0aaae919e117ea7", null ]
 ];

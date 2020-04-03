@@ -1,16 +1,23 @@
 var page_coding_standards =
 [
     [ "Module Files", "page_ModuleFiles.html", null ],
-    [ "Documenting Code", "page_DocumentingCode.html", null ],
+    [ "Documenting Code", "page_DocumentingCode.html", [
+      [ "1. Building documentation", "page_DocumentingCode.html#documentation_building", [
+        [ "1.1. Initial setup", "page_DocumentingCode.html#documentation_building_initialsetup", null ],
+        [ "1.2. Updating documentation", "page_DocumentingCode.html#documentation_updating", null ]
+      ] ],
+      [ "2. Doxygen input files", "page_DocumentingCode.html#documentation_input", [
+        [ "2.1. Sources", "page_DocumentingCode.html#documentation_input_sources", null ],
+        [ "2.2. Auxillary files", "page_DocumentingCode.html#documentation_input_aux", null ],
+        [ "2.3. Summary table", "page_DocumentingCode.html#documentation_input_table", null ]
+      ] ],
+      [ "3. Documentation Style and Practices", "page_DocumentingCode.html#documentation_style", [
+        [ "3.1. Documenting Functions", "page_DocumentingCode.html#documentation_style_functions", null ],
+        [ "3.2. Doxygen Grouping (modules)", "page_DocumentingCode.html#documentation_style_grouping", null ]
+      ] ]
+    ] ],
     [ "Template Souce Code", "page_TemplateSourceCode.html", null ],
     [ "Process Info Structure (processinfo)", "page_ProcessInfoStructure.html", [
-      [ "1. Source Code and Modules", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules", [
-        [ "Synchronization: loading updated modules", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_Synchronization", null ],
-        [ "Editing submodule source code", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_EditingSubmodule", null ],
-        [ "Updating master branches", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_UpdatingMaster", null ],
-        [ "Releasing a new version", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeAndModules_ReleasingVersion", null ]
-      ] ],
-      [ "2. Source Code Documentation (doxygen)", "page_WorkingWithGit.html#page_WorkingWithGit_SourceCodeDocumentation", null ],
       [ "1. Overview", "page_ProcessInfoStructure.html#page_ProcessInfoStructure_Overview", null ],
       [ "2. Code Template", "page_ProcessInfoStructure.html#page_ProcessInfoStructure_SampleCode", null ]
     ] ],
@@ -27,6 +34,5 @@ var page_coding_standards =
         [ "6.1. A simple _RUN example", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_WritingRUNfunc_simple", null ],
         [ "6.3. RUN function with FPS and processinfo", "page_FunctionParameterStructure.html#page_FunctionParameterStructure_WritingRUNfunc_processinfo", null ]
       ] ]
-    ] ],
-    [ "Example BASH script", "page_exampleBASHscript.html", null ]
+    ] ]
 ];

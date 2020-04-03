@@ -86,13 +86,26 @@ $(document).ready(function(){initNavTree('kdtree_8c.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">kdtree.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="kdtree_8h_source.html">kdtree/kdtree.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for kdtree.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="kdtree_8c__incl.png" border="0" usemap="#src_2kdtree_2kdtree_8c" alt=""/></div>
+<map name="src_2kdtree_2kdtree_8c" id="src_2kdtree_2kdtree_8c">
+<area shape="rect" id="node6" href="kdtree_8h.html" title="kdtree/kdtree.h" alt="" coords="356,80,465,107"/>
+</map>
+</div>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkdhyperrect.html">kdhyperrect</a></td></tr>
@@ -106,17 +119,26 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkdres.html">kdres</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ac3644f84794a8bfdacf39c4b2c2495fc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#ac3644f84794a8bfdacf39c4b2c2495fc">SQ</a>(x)&#160;&#160;&#160;((x) * (x))</td></tr>
+<tr class="separator:ac3644f84794a8bfdacf39c4b2c2495fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb41ddbd68313adcb5129add2c4428d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#aeb41ddbd68313adcb5129add2c4428d0">alloc_resnode</a>()&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a5faf6a2d99f50a4655dd390199a8db7b">malloc</a>(sizeof(struct <a class="el" href="structres__node.html">res_node</a>))</td></tr>
+<tr class="separator:aeb41ddbd68313adcb5129add2c4428d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa809c41131ed043aab5ea2f7806fa458"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#aa809c41131ed043aab5ea2f7806fa458">free_resnode</a>(n)&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#af07d89f5ceaea0c7c8252cc41fd75f37">free</a>(n)</td></tr>
+<tr class="separator:aa809c41131ed043aab5ea2f7806fa458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a3a723ee3fd46c27b848aaee6ddd36642"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a3a723ee3fd46c27b848aaee6ddd36642">clear_rec</a> (struct <a class="el" href="structkdnode.html">kdnode</a> *node, void(*destr)(void *))</td></tr>
 <tr class="separator:a3a723ee3fd46c27b848aaee6ddd36642"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af66eaa308d53bca4aba8149b78f43864"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#af66eaa308d53bca4aba8149b78f43864">insert_rec</a> (struct <a class="el" href="structkdnode.html">kdnode</a> **node, const double *pos, void *<a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>, int dir, int dim)</td></tr>
+<tr class="memitem:af66eaa308d53bca4aba8149b78f43864"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#af66eaa308d53bca4aba8149b78f43864">insert_rec</a> (struct <a class="el" href="structkdnode.html">kdnode</a> **node, const double *pos, void *<a class="el" href="CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>, int dir, int dim)</td></tr>
 <tr class="separator:af66eaa308d53bca4aba8149b78f43864"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a733da127e26efe613ad86455614244a3"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a733da127e26efe613ad86455614244a3">rlist_insert</a> (struct <a class="el" href="structres__node.html">res_node</a> *list, struct <a class="el" href="structkdnode.html">kdnode</a> *item, double dist_sq)</td></tr>
 <tr class="separator:a733da127e26efe613ad86455614244a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2baf19b18d6e4252972b8d59c4d01e03"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a2baf19b18d6e4252972b8d59c4d01e03">clear_results</a> (struct <a class="el" href="structkdres.html">kdres</a> *set)</td></tr>
 <tr class="separator:a2baf19b18d6e4252972b8d59c4d01e03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ecffd47a42fc25a3174cfa2fc6cc406"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structkdhyperrect.html">kdhyperrect</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a6ecffd47a42fc25a3174cfa2fc6cc406">hyperrect_create</a> (int dim, const double *min, const double *max)</td></tr>
+<tr class="memitem:a6ecffd47a42fc25a3174cfa2fc6cc406"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structkdhyperrect.html">kdhyperrect</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a6ecffd47a42fc25a3174cfa2fc6cc406">hyperrect_create</a> (int dim, const double *<a class="el" href="cudacomp_8c.html#ac6afabdc09a49a433ee19d8a9486056d">min</a>, const double *<a class="el" href="cudacomp_8c.html#affe776513b24d84b39af8ab0930fef7f">max</a>)</td></tr>
 <tr class="separator:a6ecffd47a42fc25a3174cfa2fc6cc406"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b2f9e214225dc2584f43e5da6b4cda6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a3b2f9e214225dc2584f43e5da6b4cda6">hyperrect_free</a> (struct <a class="el" href="structkdhyperrect.html">kdhyperrect</a> *rect)</td></tr>
 <tr class="separator:a3b2f9e214225dc2584f43e5da6b4cda6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,10 +148,6 @@ Functions</h2></td></tr>
 <tr class="separator:ae40ba7676a399077d5f3ea087206ce99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9a5303c073ee4d7a9f653dba8c1865d"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#ac9a5303c073ee4d7a9f653dba8c1865d">hyperrect_dist_sq</a> (struct <a class="el" href="structkdhyperrect.html">kdhyperrect</a> *rect, const double *pos)</td></tr>
 <tr class="separator:ac9a5303c073ee4d7a9f653dba8c1865d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad08faf9f86b0ff518f2b6929d9448854"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structres__node.html">res_node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#ad08faf9f86b0ff518f2b6929d9448854">alloc_resnode</a> (void)</td></tr>
-<tr class="separator:ad08faf9f86b0ff518f2b6929d9448854"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a7b7ddb8a0f1a32786207dfb89adb4d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a3a7b7ddb8a0f1a32786207dfb89adb4d">free_resnode</a> (struct <a class="el" href="structres__node.html">res_node</a> *)</td></tr>
-<tr class="separator:a3a7b7ddb8a0f1a32786207dfb89adb4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3786e783ecc937350056466a1237208b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a3786e783ecc937350056466a1237208b">init_kdtree</a> ()</td></tr>
 <tr class="separator:a3786e783ecc937350056466a1237208b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0267f17ca84a70322af662b16a625c16"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structkdtree.html">kdtree</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a0267f17ca84a70322af662b16a625c16">kd_create</a> (int k)</td></tr>
@@ -140,18 +158,16 @@ Functions</h2></td></tr>
 <tr class="separator:a354bb35c5b031992cd0972dc53ad5d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2b7a413e4a0daf4add90cf982b954ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#af2b7a413e4a0daf4add90cf982b954ec">kd_data_destructor</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *tree, void(*destr)(void *))</td></tr>
 <tr class="separator:af2b7a413e4a0daf4add90cf982b954ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afafddbe0ccd0ca2c41917fb6d79f3392"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#afafddbe0ccd0ca2c41917fb6d79f3392">kd_insert</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *tree, const double *pos, void *<a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>)</td></tr>
+<tr class="memitem:afafddbe0ccd0ca2c41917fb6d79f3392"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#afafddbe0ccd0ca2c41917fb6d79f3392">kd_insert</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *tree, const double *pos, void *<a class="el" href="CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>)</td></tr>
 <tr class="separator:afafddbe0ccd0ca2c41917fb6d79f3392"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab64899a430280fc8affa205d82d07d10"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#ab64899a430280fc8affa205d82d07d10">kd_insertf</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *tree, const float *pos, void *<a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>)</td></tr>
+<tr class="memitem:ab64899a430280fc8affa205d82d07d10"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#ab64899a430280fc8affa205d82d07d10">kd_insertf</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *tree, const float *pos, void *<a class="el" href="CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>)</td></tr>
 <tr class="separator:ab64899a430280fc8affa205d82d07d10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a354954a360619c49f086402676b36e35"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a354954a360619c49f086402676b36e35">kd_insert3</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *tree, double x, double y, double z, void *<a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>)</td></tr>
+<tr class="memitem:a354954a360619c49f086402676b36e35"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a354954a360619c49f086402676b36e35">kd_insert3</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *tree, double x, double y, double z, void *<a class="el" href="CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>)</td></tr>
 <tr class="separator:a354954a360619c49f086402676b36e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9875b355df53d4545843f7471abb04f4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a9875b355df53d4545843f7471abb04f4">kd_insert3f</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *tree, float x, float y, float z, void *<a class="el" href="src_2CommandLineInterface_2CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>)</td></tr>
+<tr class="memitem:a9875b355df53d4545843f7471abb04f4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a9875b355df53d4545843f7471abb04f4">kd_insert3f</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *tree, float x, float y, float z, void *<a class="el" href="CLIcore_8h.html#a9842752e03b4de9b4593f1a3b34364ab">data</a>)</td></tr>
 <tr class="separator:a9875b355df53d4545843f7471abb04f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a7857f6f1a8f5059d95bfdc11f0fa8d"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a7a7857f6f1a8f5059d95bfdc11f0fa8d">find_nearest</a> (struct <a class="el" href="structkdnode.html">kdnode</a> *node, const double *pos, double range, struct <a class="el" href="structres__node.html">res_node</a> *list, int ordered, int dim)</td></tr>
 <tr class="separator:a7a7857f6f1a8f5059d95bfdc11f0fa8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3e7d69b28baf648ad130f5a03612345"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#ae3e7d69b28baf648ad130f5a03612345">find_nearest_n</a> (struct <a class="el" href="structkdnode.html">kdnode</a> *node, const double *pos, double range, int num, struct rheap *heap, int dim)</td></tr>
-<tr class="separator:ae3e7d69b28baf648ad130f5a03612345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc5807b69b6c90f9557129fff977157b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#abc5807b69b6c90f9557129fff977157b">kd_nearest_i</a> (struct <a class="el" href="structkdnode.html">kdnode</a> *node, const double *pos, struct <a class="el" href="structkdnode.html">kdnode</a> **result, double *result_dist_sq, struct <a class="el" href="structkdhyperrect.html">kdhyperrect</a> *rect)</td></tr>
 <tr class="separator:abc5807b69b6c90f9557129fff977157b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ef52ad10ed0e7a1cf7b773165810361"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structkdres.html">kdres</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a0ef52ad10ed0e7a1cf7b773165810361">kd_nearest</a> (struct <a class="el" href="structkdtree.html">kdtree</a> *kd, const double *pos)</td></tr>
@@ -190,41 +206,62 @@ Functions</h2></td></tr>
 <tr class="separator:afd9a5a7217f76209cff1504d7fc687fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbff3a82caa304688020bc050d474d30"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#abbff3a82caa304688020bc050d474d30">kd_res_item_data</a> (struct <a class="el" href="structkdres.html">kdres</a> *set)</td></tr>
 <tr class="separator:abbff3a82caa304688020bc050d474d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a36fcc7a723160bc0d367c6e616940231"><td class="memItemLeft" align="right" valign="top">static struct <a class="el" href="structres__node.html">res_node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a36fcc7a723160bc0d367c6e616940231">free_nodes</a></td></tr>
-<tr class="separator:a36fcc7a723160bc0d367c6e616940231"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2420ed5f3bdd6b79a569bf108451f603"><td class="memItemLeft" align="right" valign="top">static pthread_mutex_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kdtree_8c.html#a2420ed5f3bdd6b79a569bf108451f603">alloc_mutex</a> = PTHREAD_MUTEX_INITIALIZER</td></tr>
-<tr class="separator:a2420ed5f3bdd6b79a569bf108451f603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ad08faf9f86b0ff518f2b6929d9448854"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad08faf9f86b0ff518f2b6929d9448854">&#9670;&nbsp;</a></span>alloc_resnode()</h2>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="aeb41ddbd68313adcb5129add2c4428d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb41ddbd68313adcb5129add2c4428d0">&#9670;&nbsp;</a></span>alloc_resnode</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static struct <a class="el" href="structres__node.html">res_node</a> * alloc_resnode </td>
+          <td class="memname">#define alloc_resnode</td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td>&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#a5faf6a2d99f50a4655dd390199a8db7b">malloc</a>(sizeof(struct <a class="el" href="structres__node.html">res_node</a>))</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
 </div>
+<a id="aa809c41131ed043aab5ea2f7806fa458"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa809c41131ed043aab5ea2f7806fa458">&#9670;&nbsp;</a></span>free_resnode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define free_resnode</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">n</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="calc__bison_8c.html#af07d89f5ceaea0c7c8252cc41fd75f37">free</a>(n)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac3644f84794a8bfdacf39c4b2c2495fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3644f84794a8bfdacf39c4b2c2495fc">&#9670;&nbsp;</a></span>SQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SQ</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x</td><td>)</td>
+          <td>&#160;&#160;&#160;((x) * (x))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="a3a723ee3fd46c27b848aaee6ddd36642"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a723ee3fd46c27b848aaee6ddd36642">&#9670;&nbsp;</a></span>clear_rec()</h2>
 
@@ -336,92 +373,6 @@ Variables</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae3e7d69b28baf648ad130f5a03612345"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3e7d69b28baf648ad130f5a03612345">&#9670;&nbsp;</a></span>find_nearest_n()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int find_nearest_n </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structkdnode.html">kdnode</a> *&#160;</td>
-          <td class="paramname"><em>node</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double *&#160;</td>
-          <td class="paramname"><em>pos</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>range</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>num</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct rheap *&#160;</td>
-          <td class="paramname"><em>heap</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>dim</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3a7b7ddb8a0f1a32786207dfb89adb4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a7b7ddb8a0f1a32786207dfb89adb4d">&#9670;&nbsp;</a></span>free_resnode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void free_resnode </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="structres__node.html">res_node</a> *&#160;</td>
-          <td class="paramname"><em>node</em></td><td>)</td>
-          <td></td>
         </tr>
       </table>
   </td>
@@ -1548,51 +1499,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a2420ed5f3bdd6b79a569bf108451f603"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2420ed5f3bdd6b79a569bf108451f603">&#9670;&nbsp;</a></span>alloc_mutex</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">pthread_mutex_t alloc_mutex = PTHREAD_MUTEX_INITIALIZER</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a36fcc7a723160bc0d367c6e616940231"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36fcc7a723160bc0d367c6e616940231">&#9670;&nbsp;</a></span>free_nodes</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct <a class="el" href="structres__node.html">res_node</a>* free_nodes</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.13-->
@@ -1600,7 +1506,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_dc6f6ebb17638330358f8ce659751398.html">kdtree</a></li><li class="navelem"><a class="el" href="kdtree_8c.html">kdtree.c</a></li>
-    <li class="footer">Generated on Sun Nov 24 2019 12:25:48 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 15:40:18 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>
