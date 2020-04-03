@@ -1,6 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"structKEYWORD__TREE__NODE.html#adb0502ba6475a0f6ef2c5e7065797c0e":[6,0,37,2],
 "structKEYWORD__TREE__NODE.html#af5c125b39f672b931ab53a5c2f879002":[6,0,37,1],
 "structKEYWORD__TREE__NODE.html#aff9be58dbaecd597dff4182c6efc62c5":[6,0,37,3],
 "structLOGSHIM__CONF.html":[6,0,38],
@@ -249,5 +248,6 @@ var NAVTREEINDEX19 =
 "structkdtree.html#accef3227abac75a5eed239590ce574d9":[6,0,36,3],
 "structres__node.html":[6,0,45],
 "structres__node.html#a218ec7f9710d71366f6ee1bcd647897b":[6,0,45,2],
-"structres__node.html#a6d1e853ec1f48f263c277344f37f8cc3":[6,0,45,1]
+"structres__node.html#a6d1e853ec1f48f263c277344f37f8cc3":[6,0,45,1],
+"structres__node.html#ac291090c8cb9b8ec553c1eeee9c64882":[6,0,45,0]
 };

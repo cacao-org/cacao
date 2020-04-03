@@ -1,6 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"structAOLOOPCONF__WFSim.html#a17fda09324ae68e30f33e06edc9f124f":[6,0,5,4],
 "structAOLOOPCONF__WFSim.html#a226391ec67b27e2dad6ceede79d798d9":[6,0,5,10],
 "structAOLOOPCONF__WFSim.html#a3273d805bf9c5f2c892593dfdab62a5a":[6,0,5,7],
 "structAOLOOPCONF__WFSim.html#a53e8f60de30e7580c8482cdb50fc518d":[6,0,5,8],
@@ -249,5 +248,6 @@ var NAVTREEINDEX17 =
 "structDATA.html#a64b7b04b56aac63d3bfbf2a8ad21f8ed":[6,0,18,19],
 "structDATA.html#a64bae9d671e98229a54fea43d5d4f9b5":[6,0,18,58],
 "structDATA.html#a64d5b0ed5d5cedf11ff69ebf8d30dc20":[6,0,18,47],
-"structDATA.html#a6facd114f508ec4fcb52003b9f93d123":[6,0,18,8]
+"structDATA.html#a6facd114f508ec4fcb52003b9f93d123":[6,0,18,8],
+"structDATA.html#a700e0a489eabf7785da7361c2135f159":[6,0,18,57]
 };

@@ -32,7 +32,7 @@
   <td id="projectlogo"><img alt="Logo" src="cacao-logo-small.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">cacao
-   &#160;<span id="projectnumber">Alpha Release 0.1.0</span>
+   &#160;<span id="projectnumber">Release 0.1.03-dev</span>
    </div>
    <div id="projectbrief">Compute And Control For Adaptive Optics</div>
   </td>
@@ -89,12 +89,18 @@ $(document).ready(function(){initNavTree('md_src_CommandLineInterface_doc_Downlo
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#page_installation">Install</a></li>
-<li class="level1"><a href="#page_installation_details">Details</a><ul><li class="level2"><a href="#page_installation_details_libraries">Libraries</a><ul><li class="level3"><a href="#page_installation_details_libraries_fitsio">FITSIO install</a></li>
+<ul><li class="level1"><a href="#page_installation">Installation</a></li>
+<li class="level1"><a href="#milkinstall">1. Download and install milk</a><ul><li class="level2"><a href="#milkinstall_downloadcompile">1.1. Download and compile</a></li>
+<li class="level2"><a href="#milkinstall_postinstall">1.2. Post-installation</a></li>
+<li class="level2"><a href="#milkinstall_tmpfs">1.3. tmpfs (optional)</a></li>
 </ul>
 </li>
-<li class="level2"><a href="#page_installation_details_gpuacceleration">GPU acceleration (optional, but highly recommended)</a></li>
-<li class="level2"><a href="#page_installation_details_sharedmemviewer">Shared Memory Image Stream Viewer</a></li>
+<li class="level1"><a href="#page_installation_details">2. Dependancies</a><ul><li class="level2"><a href="#page_installation_details_libraries">2.1. Libraries</a></li>
+<li class="level2"><a href="#page_installation_details_libraries_fitsio">2.2. FITSIO install</a></li>
+<li class="level2"><a href="#page_installation_details_gpuacceleration">2.3. GPU acceleration (optional, but highly recommended)</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#milkinstall_relatedtools">3. Related Tools</a><ul><li class="level2"><a href="#page_installation_details_sharedmemviewer">3.1. Shared Memory Image Stream Viewer</a></li>
 <li class="level2"><a href="#page_installation_details_compilation">Compilation</a><ul><li class="level3"><a href="#page_installation_details_compilation_installingcmake">Installing cmake</a></li>
 <li class="level3"><a href="#page_installation_details_compilation_compilesourcecode">Compile source code</a></li>
 <li class="level3"><a href="#page_installation_details_compilation_postinstall">Post-installation configuration</a></li>
@@ -105,20 +111,40 @@ $(document).ready(function(){initNavTree('md_src_CommandLineInterface_doc_Downlo
 </li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="page_installation"></a>
-Install</h1>
-<dl class="section note"><dt>Note</dt><dd>This file: ./src/CommandLineInterface/doc/DownloadCompile.md</dd></dl>
-<p>To compile : </p><pre class="fragment">cd cacao
+<div class="textblock"><dl class="section note"><dt>Note</dt><dd>This file: ./src/CommandLineInterface/doc/DownloadCompile.md</dd></dl>
+<hr/>
+<h1><a class="anchor" id="page_installation"></a>
+Installation</h1>
+<h1><a class="anchor" id="milkinstall"></a>
+1. Download and install milk</h1>
+<dl class="section warning"><dt>Warning</dt><dd>This page describes installation of the core package milk. If you install application package (cacao or coffee), replace "milk" with "cacao" in these instructions.</dd></dl>
+<h2><a class="anchor" id="milkinstall_downloadcompile"></a>
+1.1. Download and compile</h2>
+<pre class="fragment">git clone --recursive https://github.com/cacao-org/milk milk
+cd milk
 mkdir _build
 cd _build
 cmake ..
+# If you use NVIDIA GPUs, install cuda and magma libraries, and use "cmake .. -DUSE_MAGMA=ON"
 make
 sudo make install
+</pre><h2><a class="anchor" id="milkinstall_postinstall"></a>
+1.2. Post-installation</h2>
+<p>You may need to add /usr/local/lib to LD_LIBRARY_PATH environment variable:</p>
+<pre class="fragment">echo "/usr/local/lib" &gt; usrlocal.conf
+sudo mv usrlocal.conf /etc/ld.so.conf.d/
+sudo ldconfig -v
+</pre><h2><a class="anchor" id="milkinstall_tmpfs"></a>
+1.3. tmpfs (optional)</h2>
+<p>OPTIONAL: Create tmpfs disk for high performance I/O:</p>
+<pre class="fragment">echo "tmpfs /milk/shm tmpfs rw,nosuid,nodev" | sudo tee -a /etc/fstab
+sudo mkdir -p /milk/shm
+sudo mount /milk/shm
 </pre><hr/>
 <h1><a class="anchor" id="page_installation_details"></a>
-Details</h1>
+2. Dependancies</h1>
 <h2><a class="anchor" id="page_installation_details_libraries"></a>
-Libraries</h2>
+2.1. Libraries</h2>
 <p>Libraries required :</p>
 <ul>
 <li><b>gcc</b></li>
@@ -135,8 +161,8 @@ Libraries</h2>
 </ul>
 <p>Install above libraries (centOS): </p><pre class="fragment">    sudo yum install readline-devel flex bison-devel fftw3-devel gsl-devel
 </pre><p>Install above libraries (Ubuntu): </p><pre class="fragment">    sudo apt-get install libcfitsio3 libcfitsio3-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison
-</pre><h3><a class="anchor" id="page_installation_details_libraries_fitsio"></a>
-FITSIO install</h3>
+</pre><h2><a class="anchor" id="page_installation_details_libraries_fitsio"></a>
+2.2. FITSIO install</h2>
 <p>For reading and writing FITS image files</p>
 <ul>
 <li>Visit <a href="https://heasarc.gsfc.nasa.gov/fitsio/fitsio.html">https://heasarc.gsfc.nasa.gov/fitsio/fitsio.html</a> and download the file Unix .tar file cfitsio3410.tar.gz</li>
@@ -147,7 +173,7 @@ FITSIO install</h3>
 </ul>
 <hr/>
 <h2><a class="anchor" id="page_installation_details_gpuacceleration"></a>
-GPU acceleration (optional, but highly recommended)</h2>
+2.3. GPU acceleration (optional, but highly recommended)</h2>
 <p>Required libraries:</p>
 <ul>
 <li>install <b>NVIDIA driver</b></li>
@@ -155,8 +181,10 @@ GPU acceleration (optional, but highly recommended)</h2>
 <li>install <b>MAGMA</b></li>
 </ul>
 <hr/>
+<h1><a class="anchor" id="milkinstall_relatedtools"></a>
+3. Related Tools</h1>
 <h2><a class="anchor" id="page_installation_details_sharedmemviewer"></a>
-Shared Memory Image Stream Viewer</h2>
+3.1. Shared Memory Image Stream Viewer</h2>
 <p>Two options:</p>
 <ul>
 <li>shared memory image viewer (<code>shmimview</code> or similar)</li>
@@ -171,7 +199,7 @@ Installing cmake</h3>
 <p>To install cmake on centOS system (cmake executable will be cmake3): </p><pre class="fragment">sudo yum install cmake3
 </pre><h3><a class="anchor" id="page_installation_details_compilation_compilesourcecode"></a>
 Compile source code</h3>
-<p>To compile using cmake </p><pre class="fragment">cd cacao
+<p>To compile using cmake </p><pre class="fragment">cd milk
 mkdir _build
 cd _build
 cmake ..
@@ -182,7 +210,7 @@ Post-installation configuration</h3>
 <p>You may need to add /usr/local/lib to LD_LIBRARY_PATH environment variable: </p><pre class="fragment">echo "/usr/local/lib" &gt; usrlocal.conf
 sudo mv usrlocal.conf /etc/ld.so.conf.d/
 sudo ldconfig -v
-</pre><p>Add milk executable scripts to PATH environment variable. Add this line to the .bashrc file (change source code location as needed): </p><pre class="fragment">export PATH=$PATH:/home/myname/src/cacao/src/CommandLineInterface/scripts
+</pre><p>Add milk executable scripts to PATH environment variable. Add this line to the .bashrc file (change source code location as needed): </p><pre class="fragment">export PATH=$PATH:/home/myname/src/milk/src/CommandLineInterface/scripts
 </pre><hr/>
 <h2><a class="anchor" id="page_installation_details_troubleshooting"></a>
 Troubleshooting and FAQs</h2>
@@ -193,7 +221,7 @@ Troubleshooting and FAQs</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Dec 30 2018 12:53:17 for cacao by
+    <li class="footer">Generated on Thu Apr 2 2020 16:02:07 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

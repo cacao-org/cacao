@@ -1,19 +1,17 @@
 var page_cacao_topmenu =
 [
-    [ "Install", "page_installation.html", [
-      [ "Details", "page_installation.html#page_installation_details", [
-        [ "Libraries", "page_installation.html#page_installation_details_libraries", [
-          [ "FITSIO install", "page_installation.html#page_installation_details_libraries_fitsio", null ]
-        ] ],
-        [ "GPU acceleration (optional, but highly recommended)", "page_installation.html#page_installation_details_gpuacceleration", null ],
-        [ "Shared Memory Image Stream Viewer", "page_installation.html#page_installation_details_sharedmemviewer", null ],
-        [ "Compilation", "page_installation.html#page_installation_details_compilation", [
-          [ "Installing cmake", "page_installation.html#page_installation_details_compilation_installingcmake", null ],
-          [ "Compile source code", "page_installation.html#page_installation_details_compilation_compilesourcecode", null ],
-          [ "Post-installation configuration", "page_installation.html#page_installation_details_compilation_postinstall", null ]
-        ] ],
-        [ "Troubleshooting and FAQs", "page_installation.html#page_installation_details_troubleshooting", null ]
-      ] ]
+    [ "Installation", "page_installation.html", [
+      [ "1. Download and install milk", "page_installation.html#milkinstall", [
+        [ "1.1. Download and compile", "page_installation.html#milkinstall_downloadcompile", null ],
+        [ "1.2. Post-installation", "page_installation.html#milkinstall_postinstall", null ],
+        [ "1.3. tmpfs (optional)", "page_installation.html#milkinstall_tmpfs", null ]
+      ] ],
+      [ "2. Dependancies", "page_installation.html#page_installation_details", [
+        [ "2.1. Libraries", "page_installation.html#page_installation_details_libraries", null ],
+        [ "2.2. FITSIO install", "page_installation.html#page_installation_details_libraries_fitsio", null ],
+        [ "2.3. GPU acceleration (optional, but highly recommended)", "page_installation.html#page_installation_details_gpuacceleration", null ]
+      ] ],
+      [ "3. Running multiple versions", "page_installation.html#milk_multipleversions", null ]
     ] ],
     [ "Command Line Interface", "page_userinput.html", "page_userinput" ],
     [ "Configuring and Running cacao", "page_cacao_top_guide.html", "page_cacao_top_guide" ],

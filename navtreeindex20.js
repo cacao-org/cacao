@@ -1,6 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"structres__node.html#ac291090c8cb9b8ec553c1eeee9c64882":[6,0,45,0],
 "structsImage.html":[6,0,47],
 "structsImage.html#a7acc75cf6bd1af8be5ac3801bf5a909c":[6,0,47,2],
 "structsImage.html#a8afe7b8cf4e980a69f07b4173d05a456":[6,0,47,0],

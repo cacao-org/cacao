@@ -306,5 +306,5 @@ var searchData=
   ['isfunction_5fsev_5fvar',['isfunction_sev_var',['../COREMOD__arith_8c.html#a90ebf7655e29cbfd616366805cca80d8',1,'COREMOD_arith.c']]],
   ['isoperand',['isoperand',['../COREMOD__arith_8c.html#a31e8d5a699f05053cfe28c7bea908af7',1,'COREMOD_arith.c']]],
   ['item',['item',['../structres__node.html#a6d1e853ec1f48f263c277344f37f8cc3',1,'res_node']]],
-  ['install',['Install',['../page_installation.html',1,'page_cacao_topmenu']]]
+  ['installation',['Installation',['../page_installation.html',1,'page_cacao_topmenu']]]
 ];
