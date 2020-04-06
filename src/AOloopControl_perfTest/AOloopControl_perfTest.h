@@ -1,14 +1,14 @@
 /**
  * @file    AOloopControl_perfTest.h
  * @brief   Function prototypes for Adaptive Optics Control loop engine performance Tests
- * 
+ *
  * AO engine uses stream data structure
- * 
+ *
  * @author  O. Guyon
  * @date    27 Aug 2017
  *
- * @bug No known bugs. 
- * 
+ * @bug No known bugs.
+ *
  */
 
 #ifndef _AOLOOPCONTROL_PERFTEST_H
@@ -16,7 +16,7 @@
 
 
 /** @brief Initialize module. */
-void __attribute__ ((constructor)) libinit_AOloopControl_perfTest();
+void __attribute__((constructor)) libinit_AOloopControl_perfTest();
 
 
 
@@ -31,7 +31,9 @@ void __attribute__ ((constructor)) libinit_AOloopControl_perfTest();
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-errno_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol, long IDmodeval_dm, long IDmodeval, long IDmodevalave, long IDmodevalrms, long ksize);
+errno_t AOloopControl_perfTest_printloopstatus(long loop, long nbcol,
+        long IDmodeval_dm, long IDmodeval, long IDmodevalave, long IDmodevalrms,
+        long ksize);
 
 errno_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbcol);
 
@@ -41,7 +43,8 @@ errno_t AOloopControl_perfTest_resetRMSperf();
 
 errno_t AOloopControl_perfTest_showparams(long loop);
 
-errno_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname, long delayus, long NBpts, float ampl);
+errno_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname, long delayus,
+        long NBpts, float ampl);
 
 
 
@@ -118,7 +121,7 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(
     const char *IDwfsresp_name,
     const char *IDwfsmask_name,
     float amplimitnm,
-    float lambdanm, 
+    float lambdanm,
     const char *foutname
 );
 
@@ -157,12 +160,12 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(
 );
 
 int AOloopControl_perfTest_StatAnalysis_2streams(
-	char *IDname_stream0,
-	char *IDname_stream1,
-	char *IDname_simM0,
-	char *IDname_simM1,
-	long  dtmin,
-	unsigned long  NBselected
+    char *IDname_stream0,
+    char *IDname_stream1,
+    char *IDname_simM0,
+    char *IDname_simM1,
+    long  dtmin,
+    unsigned long  NBselected
 );
 
 
