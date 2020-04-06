@@ -1,11 +1,11 @@
 /**
  * @file    AOloopControl_computeCalib.h
  * @brief   Function prototypes for Adaptive Optics Control loop engine compute calibration
- * 
+ *
  * AO engine uses stream data structure
  *
- * @bug No known bugs. 
- * 
+ * @bug No known bugs.
+ *
  */
 
 #ifndef _AOLOOPCONTROL_COMPUTECALIB_H
@@ -13,7 +13,7 @@
 
 
 /** @brief Initialize module */
-void __attribute__ ((constructor)) libinit_AOloopControl_computeCalib();
+void __attribute__((constructor)) libinit_AOloopControl_computeCalib();
 
 
 
@@ -55,7 +55,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
 );
 
 
-errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(char *fpsname, uint32_t CMDmode);
+errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(char *fpsname,
+        uint32_t CMDmode);
 errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(char *fpsname);
 
 
@@ -100,16 +101,21 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(char *fpsname);
 errno_t AOloopControl_computeCalib_mkCM(const char *respm_name, float SVDlim);
 
 
-long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name, float pixrad, const char *IDout_name);
+long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name,
+        float pixrad, const char *IDout_name);
 
 
-long AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name, const char *IDout_name);
+long AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name,
+        const char *IDout_name);
 
 
-long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name, const char *IDmask_name, const char *IDcpa_name, const char *IDout_name);
+long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name,
+        const char *IDmask_name, const char *IDcpa_name, const char *IDout_name);
 
 
-long AOloopControl_computeCalib_DMslaveExt(const char *IDin_name, const char *IDmask_name, const char *IDsl_name, const char *IDout_name, float r0);
+long AOloopControl_computeCalib_DMslaveExt(const char *IDin_name,
+        const char *IDmask_name, const char *IDsl_name, const char *IDout_name,
+        float r0);
 
 
 imageID AOloopControl_computeCalib_mkModes(
@@ -152,7 +158,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     const char *IDcmat_name,
     const char *IDmodes_name,
-    const char* IDwfsmask_name,
+    const char *IDwfsmask_name,
     const char *IDdmmask_name,
     const char *IDcmatc_name,
     const char *IDcmatc_active_name

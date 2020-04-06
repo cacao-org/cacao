@@ -1,11 +1,11 @@
 /**
  * @file    AOloopControl_computeCalib.c
  * @brief   Adaptive Optics Control loop engine compute calibration
- * 
+ *
  * AO engine uses stream data structure
  *
- * 
- * 
+ *
+ *
  */
 
 
@@ -14,7 +14,7 @@
 // if set to "", then calls use <funcname>
 #define MODULE_SHORTNAME_DEFAULT ""
 
-// Module short description 
+// Module short description
 #define MODULE_DESCRIPTION       "AO loop control compute calibration"
 
 // Application to which module belongs
@@ -155,12 +155,13 @@ INIT_MODULE_LIB(AOloopControl_computeCalib)
 /* =============================================================================================== */
 
 /** @brief CLI function for AOloopControl_mkSlavedAct */
-errno_t AOloopControl_computeCalib_mkSlavedAct_cli() {
+errno_t AOloopControl_computeCalib_mkSlavedAct_cli()
+{
     if(
-        CLI_checkarg(1,4) +
-        CLI_checkarg(2,1) +
-        CLI_checkarg(3,3)
-        == 0 )
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 1) +
+        CLI_checkarg(3, 3)
+        == 0)
     {
         AOloopControl_computeCalib_mkSlavedAct(
             data.cmdargtoken[1].val.string,
@@ -169,7 +170,8 @@ errno_t AOloopControl_computeCalib_mkSlavedAct_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -177,17 +179,19 @@ errno_t AOloopControl_computeCalib_mkSlavedAct_cli() {
 
 
 /** @brief CLI function for AOloopControl_mkloDMmodes */
-errno_t AOloopControl_computeCalib_mkloDMmodes_cli() {
-    if(CLI_checkarg(1,3)
-            + CLI_checkarg(2,2)
-            + CLI_checkarg(3,2)
-            + CLI_checkarg(4,1)
-            + CLI_checkarg(5,1)
-            + CLI_checkarg(6,1)
-            + CLI_checkarg(7,1)
-            + CLI_checkarg(8,1)
-            + CLI_checkarg(9,1)
-            + CLI_checkarg(10,2)==0) {
+errno_t AOloopControl_computeCalib_mkloDMmodes_cli()
+{
+    if(CLI_checkarg(1, 3)
+            + CLI_checkarg(2, 2)
+            + CLI_checkarg(3, 2)
+            + CLI_checkarg(4, 1)
+            + CLI_checkarg(5, 1)
+            + CLI_checkarg(6, 1)
+            + CLI_checkarg(7, 1)
+            + CLI_checkarg(8, 1)
+            + CLI_checkarg(9, 1)
+            + CLI_checkarg(10, 2) == 0)
+    {
         AOloopControl_computeCalib_mkloDMmodes(
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.numl,
@@ -201,7 +205,10 @@ errno_t AOloopControl_computeCalib_mkloDMmodes_cli() {
             data.cmdargtoken[10].val.numl);
         return CLICMD_SUCCESS;
     }
-    else return CLICMD_INVALID_ARG;
+    else
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
@@ -211,78 +218,103 @@ errno_t AOloopControl_computeCalib_mkloDMmodes_cli() {
 
 /** @brief CLI function for AOloopControl_computeCalib_ComputeCM */
 
-errno_t AOloopControl_computeCalib_ComputeCM_cli() {
+errno_t AOloopControl_computeCalib_ComputeCM_cli()
+{
     int stringmaxlen = 200;
     char fpsname[stringmaxlen];
 
     // First, we try to execute function through FPS interface
-    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
+    if(CLI_checkarg(1, 5) == 0)   // check that first arg is string
+    {
         // unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
         // Set FPS interface name
         // By convention, if there are optional arguments, they should be appended to the fps name
         //
-        if(data.processnameflag == 0) { // name fps to something different than the process name
-            if(strlen(data.cmdargtoken[2].val.string)>0)
+        if(data.processnameflag ==
+                0)   // name fps to something different than the process name
+        {
+            if(strlen(data.cmdargtoken[2].val.string) > 0)
+            {
                 snprintf(fpsname, stringmaxlen, "compfCM-%s", data.cmdargtoken[2].val.string);
+            }
             else
+            {
                 snprintf(fpsname, stringmaxlen, "compfCM");
-        } else { // Automatically set fps name to be process name up to first instance of character '.'
+            }
+        }
+        else     // Automatically set fps name to be process name up to first instance of character '.'
+        {
             strcpy(fpsname, data.processname0);
         }
-        
-        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS 
+
+        if(strcmp(data.cmdargtoken[1].val.string,
+                  "_FPSINIT_") == 0)    // Initialize FPS
+        {
             AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
+        if(strcmp(data.cmdargtoken[1].val.string,
+                  "_CONFSTART_") == 0)    // Start conf process
+        {
             AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
             return RETURN_SUCCESS;
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
+        if(strcmp(data.cmdargtoken[1].val.string,
+                  "_CONFSTOP_") == 0)   // Stop conf process
+        {
             AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
             return RETURN_SUCCESS;
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)   // Run process
+        {
             AOcontrolLoop_computeCalib_ComputeCM_RUN(fpsname);
             return RETURN_SUCCESS;
         }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)   // Stop process
+        {
             //     AOcontrolLoop__STOP(OptionalArg00);
             return RETURN_SUCCESS;
         }
-    }    
-     return RETURN_FAILURE;
+    }
+    return RETURN_FAILURE;
 }
 
 
 
 /** @brief CLI function for AOloopControl_mkCM */
-errno_t AOloopControl_computeCalib_mkCM_cli() {
-	int stringmaxlen = 200;
+errno_t AOloopControl_computeCalib_mkCM_cli()
+{
+    int stringmaxlen = 200;
     char fpsname[stringmaxlen];
 
 
     printf("LINE %d\n", __LINE__);
     // First, we try to execute function through FPS interface
-    if(CLI_checkarg(1, 5) == 0) { // check that first arg is string
+    if(CLI_checkarg(1, 5) == 0)   // check that first arg is string
+    {
         // Set FPS interface name
         // By convention, if there are optional arguments, they should be appended to the fps name
         //
         printf("LINE %d\n", __LINE__);
 
-        if(data.processnameflag == 0) {
+        if(data.processnameflag == 0)
+        {
             // the process has not been named with -n CLI option
             // name fps to something different than the process name
-            if(strlen(data.cmdargtoken[2].val.string)>0) {
+            if(strlen(data.cmdargtoken[2].val.string) > 0)
+            {
                 snprintf(fpsname, stringmaxlen, "compsCM-%s", data.cmdargtoken[2].val.string);
                 printf("USING %s as fpsname\n", fpsname);
             }
-            else {
+            else
+            {
                 snprintf(fpsname, stringmaxlen, "compsCM");
                 printf("USING %s default fpsname\n", fpsname);
             }
 
-        } else {
+        }
+        else
+        {
             // Automatically set fps name to be process name up to first instance of character '.'
             // This is the preferred option
             strcpy(fpsname, data.processname0);
@@ -290,31 +322,39 @@ errno_t AOloopControl_computeCalib_mkCM_cli() {
         }
 
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS and conf process
+        if(strcmp(data.cmdargtoken[1].val.string,
+                  "_FPSINIT_") == 0)    // Initialize FPS and conf process
+        {
             printf("Function parameters FPSINIT\n");
             AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
+        if(strcmp(data.cmdargtoken[1].val.string,
+                  "_CONFSTART_") == 0)    // Start conf process
+        {
             printf("Function parameters CONFSTART\n");
             AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
             return RETURN_SUCCESS;
         }
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
+        if(strcmp(data.cmdargtoken[1].val.string,
+                  "_CONFSTOP_") == 0)   // Stop conf process
+        {
             printf("Function parameters CONFSTOP\n");
             AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
             return RETURN_SUCCESS;
         }
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)   // Run process
+        {
             printf("Run function RUNSTART\n");
             AOloopControl_computeCalib_mkCM_RUN(fpsname);
             return RETURN_SUCCESS;
         }
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)   // Stop process
+        {
             printf("Run function RUNSTOP\n");
             // AOloopControl_computeCalib_mkCM_STOP();
             return RETURN_SUCCESS;
@@ -324,13 +364,17 @@ errno_t AOloopControl_computeCalib_mkCM_cli() {
     printf("LINE %d\n", __LINE__);
 
     // non FPS implementation - all parameters specified at function launch
-    if(CLI_checkarg(1,4) + CLI_checkarg(2,1) == 0) {
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 1) == 0)
+    {
         printf("========================================================\n");
         printf("============== RUNNING non-FPS implementation ==========\n");
         printf("========================================================\n");
-        AOloopControl_computeCalib_mkCM(data.cmdargtoken[1].val.string, data.cmdargtoken[3].val.numf);
+        AOloopControl_computeCalib_mkCM(data.cmdargtoken[1].val.string,
+                                        data.cmdargtoken[3].val.numf);
         return RETURN_SUCCESS;
-    } else {
+    }
+    else
+    {
         return RETURN_FAILURE;
     }
 }
@@ -349,21 +393,22 @@ errno_t AOloopControl_computeCalib_mkCM_cli() {
 }*/
 
 /** @brief CLI function for AOloopControl_mkModes */
-errno_t AOloopControl_computeCalib_mkModes_cli() {
+errno_t AOloopControl_computeCalib_mkModes_cli()
+{
     if(
-        CLI_checkarg(1,3) +
-        CLI_checkarg(2,2) +
-        CLI_checkarg(3,2) +
-        CLI_checkarg(4,1) +
-        CLI_checkarg(5,1) +
-        CLI_checkarg(6,1) +
-        CLI_checkarg(7,1) +
-        CLI_checkarg(8,1) +
-        CLI_checkarg(9,1) +
-        CLI_checkarg(10,2) +
-        CLI_checkarg(11,2) +
-        CLI_checkarg(12,1)
-        == 0 )
+        CLI_checkarg(1, 3) +
+        CLI_checkarg(2, 2) +
+        CLI_checkarg(3, 2) +
+        CLI_checkarg(4, 1) +
+        CLI_checkarg(5, 1) +
+        CLI_checkarg(6, 1) +
+        CLI_checkarg(7, 1) +
+        CLI_checkarg(8, 1) +
+        CLI_checkarg(9, 1) +
+        CLI_checkarg(10, 2) +
+        CLI_checkarg(11, 2) +
+        CLI_checkarg(12, 1)
+        == 0)
     {
         AOloopControl_computeCalib_mkModes(
             data.cmdargtoken[1].val.string,
@@ -383,20 +428,22 @@ errno_t AOloopControl_computeCalib_mkModes_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_mkModes_Simple */
-errno_t AOloopControl_computeCalib_mkModes_Simple_cli() {
+errno_t AOloopControl_computeCalib_mkModes_Simple_cli()
+{
     if(
-        CLI_checkarg(1,4) +
-        CLI_checkarg(2,2) +
-        CLI_checkarg(3,2) +
-        CLI_checkarg(4,1)
-        == 0 )
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 2) +
+        CLI_checkarg(3, 2) +
+        CLI_checkarg(4, 1)
+        == 0)
     {
         AOloopControl_computeCalib_mkModes_Simple(
             data.cmdargtoken[1].val.string,
@@ -407,21 +454,23 @@ errno_t AOloopControl_computeCalib_mkModes_Simple_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 /** @brief CLI function for AOloopControl_computeCM */
-errno_t AOloopControl_computeCalib_computeCM_cli() {
+errno_t AOloopControl_computeCalib_computeCM_cli()
+{
     if(
-        CLI_checkarg(1,2) +
-        CLI_checkarg(2,4) +
-        CLI_checkarg(3,3) +
-        CLI_checkarg(4,1) +
-        CLI_checkarg(5,2) +
-        CLI_checkarg(6,1)
-        == 0 )
+        CLI_checkarg(1, 2) +
+        CLI_checkarg(2, 4) +
+        CLI_checkarg(3, 3) +
+        CLI_checkarg(4, 1) +
+        CLI_checkarg(5, 2) +
+        CLI_checkarg(6, 1)
+        == 0)
     {
         AOloopControl_computeCalib_compute_ControlMatrix(
             LOOPNUMBER,
@@ -433,21 +482,23 @@ errno_t AOloopControl_computeCalib_computeCM_cli() {
             data.cmdargtoken[5].val.numl,
             data.cmdargtoken[6].val.numf
         );
-        save_fits("evecM","!evecM.fits");
+        save_fits("evecM", "!evecM.fits");
         delete_image_ID("evecM");
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_loadCM */
-errno_t AOloopControl_computeCalib_loadCM_cli() {
+errno_t AOloopControl_computeCalib_loadCM_cli()
+{
     if(
-        CLI_checkarg(1,3)
-        == 0 )
+        CLI_checkarg(1, 3)
+        == 0)
     {
         AOloopControl_computeCalib_loadCM(
             LOOPNUMBER,
@@ -456,18 +507,20 @@ errno_t AOloopControl_computeCalib_loadCM_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_mkHadamardModes */
-errno_t AOloopControl_computeCalib_mkHadamardModes_cli() {
+errno_t AOloopControl_computeCalib_mkHadamardModes_cli()
+{
     if(
-        CLI_checkarg(1,4) +
-        CLI_checkarg(2,3)
-        == 0 )
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 3)
+        == 0)
     {
         AOloopControl_computeCalib_mkHadamardModes(
             data.cmdargtoken[1].val.string,
@@ -476,20 +529,22 @@ errno_t AOloopControl_computeCalib_mkHadamardModes_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_Hadamard_decodeRM */
-errno_t AOloopControl_computeCalib_Hadamard_decodeRM_cli() {
+errno_t AOloopControl_computeCalib_Hadamard_decodeRM_cli()
+{
     if(
-        CLI_checkarg(1,4) +
-        CLI_checkarg(2,4) +
-        CLI_checkarg(3,4) +
-        CLI_checkarg(4,3)
-        == 0 )
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 4) +
+        CLI_checkarg(3, 4) +
+        CLI_checkarg(4, 3)
+        == 0)
     {
         AOloopControl_computeCalib_Hadamard_decodeRM(
             data.cmdargtoken[1].val.string,
@@ -500,27 +555,29 @@ errno_t AOloopControl_computeCalib_Hadamard_decodeRM_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_mkCalib_map_mask */
-errno_t AOloopControl_computeCalib_mkCalib_map_mask_cli() {
+errno_t AOloopControl_computeCalib_mkCalib_map_mask_cli()
+{
     if(
-        CLI_checkarg(1,4) +
-        CLI_checkarg(2,3) +
-        CLI_checkarg(3,3) +
-        CLI_checkarg(4,1) +
-        CLI_checkarg(5,1) +
-        CLI_checkarg(6,1) +
-        CLI_checkarg(7,1) +
-        CLI_checkarg(8,1) +
-        CLI_checkarg(9,1) +
-        CLI_checkarg(10,1) +
-        CLI_checkarg(11,1)
-        == 0 )
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 3) +
+        CLI_checkarg(3, 3) +
+        CLI_checkarg(4, 1) +
+        CLI_checkarg(5, 1) +
+        CLI_checkarg(6, 1) +
+        CLI_checkarg(7, 1) +
+        CLI_checkarg(8, 1) +
+        CLI_checkarg(9, 1) +
+        CLI_checkarg(10, 1) +
+        CLI_checkarg(11, 1)
+        == 0)
     {
         AOloopControl_computeCalib_mkCalib_map_mask(
             LOOPNUMBER,
@@ -539,21 +596,23 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_Process_zrespM */
-errno_t AOloopControl_computeCalib_Process_zrespM_cli() {
+errno_t AOloopControl_computeCalib_Process_zrespM_cli()
+{
     if(
-        CLI_checkarg(1,4) +
-        CLI_checkarg(2,4) +
-        CLI_checkarg(3,3) +
-        CLI_checkarg(4,3) +
-        CLI_checkarg(5,3)
-        == 0 )
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 4) +
+        CLI_checkarg(3, 3) +
+        CLI_checkarg(4, 3) +
+        CLI_checkarg(5, 3)
+        == 0)
     {
         AOloopControl_computeCalib_Process_zrespM(
             LOOPNUMBER,
@@ -566,22 +625,24 @@ errno_t AOloopControl_computeCalib_Process_zrespM_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_ProcessZrespM */
-errno_t AOloopControl_computeCalib_ProcessZrespM_cli() {
+errno_t AOloopControl_computeCalib_ProcessZrespM_cli()
+{
     if(
-        CLI_checkarg(1,3) +
-        CLI_checkarg(2,3) +
-        CLI_checkarg(3,3) +
-        CLI_checkarg(4,3) +
-        CLI_checkarg(5,1) +
-        CLI_checkarg(6,2)
-        == 0 )
+        CLI_checkarg(1, 3) +
+        CLI_checkarg(2, 3) +
+        CLI_checkarg(3, 3) +
+        CLI_checkarg(4, 3) +
+        CLI_checkarg(5, 1) +
+        CLI_checkarg(6, 2)
+        == 0)
     {
         AOloopControl_computeCalib_ProcessZrespM_medianfilt(
             LOOPNUMBER,
@@ -595,22 +656,24 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_compute_CombinedControlMatrix */
-errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli() {
+errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli()
+{
     if(
-        CLI_checkarg(1,4) +
-        CLI_checkarg(2,4) +
-        CLI_checkarg(3,4) +
-        CLI_checkarg(4,4) +
-        CLI_checkarg(5,3) +
-        CLI_checkarg(6,3)
-        == 0 )
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 4) +
+        CLI_checkarg(3, 4) +
+        CLI_checkarg(4, 4) +
+        CLI_checkarg(5, 3) +
+        CLI_checkarg(6, 3)
+        == 0)
     {
         AOloopControl_computeCalib_compute_CombinedControlMatrix(
             data.cmdargtoken[1].val.string,
@@ -623,7 +686,8 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -721,7 +785,8 @@ static errno_t init_module_CLI()
         "aolmkmodes",
         __FILE__,
         AOloopControl_computeCalib_mkModes_cli,
-        "make control modes", "<output modes> <sizex> <sizey> <max CPA> <delta CPA> <cx> <cy> <r0> <r1> <masking mode> <block> <SVDlim>",
+        "make control modes",
+        "<output modes> <sizex> <sizey> <max CPA> <delta CPA> <cx> <cy> <r0> <r1> <masking mode> <block> <SVDlim>",
         "aolmkmodes modes 50 50 5.0 0.8 1 2 0.01",
         "long AOloopControl_computeCalib_mkModes(char *ID_name, long msizex, long msizey, float CPAmax, float deltaCPA, double xc, double yx, double r0, double r1, int MaskMode, int BlockNB, float SVDlim, char *stagedir)");
 
@@ -731,7 +796,8 @@ static errno_t init_module_CLI()
         __FILE__,
         AOloopControl_computeCalib_mkModes_Simple_cli,
         "make control modes in modal DM mode",
-        "<input WFS modes> <NBmblock> <block> <SVDlim>", "aolmkmodesM wfsallmodes 5 2 0.01",
+        "<input WFS modes> <NBmblock> <block> <SVDlim>",
+        "aolmkmodesM wfsallmodes 5 2 0.01",
         "long AOloopControl_computeCalib_mkModes_Simple(char *IDin_name, long NBmblock, long Cmblock, float SVDlim)");
 
 
@@ -770,7 +836,8 @@ static errno_t init_module_CLI()
         AOloopControl_computeCalib_compute_CombinedControlMatrix_cli,
         "compute combined control matrix",
         "<modal control matrix> <modes> <wfs mask> <dm mask> <combined cmat> <combined cmat, only active elements>",
-        "aolcompcmatc cmat fmodes wfsmask dmmask cmatc cmatcact", "long AOloopControl_computeCalib_compute_CombinedControlMatrix(char *IDcmat_name, char *IDmodes_name, char* IDwfsmask_name, char *IDdmmask_name, char *IDcmatc_name, char *IDcmatc_active_name)");
+        "aolcompcmatc cmat fmodes wfsmask dmmask cmatc cmatcact",
+        "long AOloopControl_computeCalib_compute_CombinedControlMatrix(char *IDcmat_name, char *IDmodes_name, char* IDwfsmask_name, char *IDdmmask_name, char *IDcmatc_name, char *IDcmatc_active_name)");
 
     RegisterCLIcommand(
         "aolcmmake",
@@ -806,13 +873,13 @@ static errno_t init_module_CLI()
 
 /**
  * @ingroup FPSconf
- * 
+ *
  * @brief Configuration for compute calib FPS
- * 
+ *
  * Calls #FPS_SETUP_INIT to perform initialization
- * 
+ *
  * @{
- */ 
+ */
 errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     char    *fpsname,
     uint32_t CMDmode
@@ -909,21 +976,21 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
     long fpi_FPS_zRMacqu = function_parameter_add_entry(&fps, ".FPS_zRMacqu",
                            "FPS zonal RM acquisition",
-                           FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
+                           FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED, pNull);
     FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
     fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX = 0;
 
 
     long fpi_FPS_loRMacqu = function_parameter_add_entry(&fps, ".FPS_loRMacqu",
                             "FPS low order modal RM acquisition",
-                            FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
+                            FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED, pNull);
     FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
     fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX = 0;
 
 
     long fpi_FPS_DMcomb = function_parameter_add_entry(&fps, ".FPS_DMcomb",
                           "FPS DMcomb",
-                          FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FPS_RUN_REQUIRED, pNull);
+                          FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED, pNull);
     FUNCTION_PARAMETER_STRUCT FPS_DMcomb;;
     fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX = 0;
 
@@ -933,32 +1000,32 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     __attribute__((unused)) long fpi_fname_dmslaved =
         function_parameter_add_entry(&fps, ".DMslaved",
                                      "DM slaved actuators",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
 
     __attribute__((unused)) long fpi_fname_zrespM =
         function_parameter_add_entry(&fps, ".zrespM",
                                      "Zonal response matrix",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
 
     __attribute__((unused)) long fpi_fname_dmmaskRM =
         function_parameter_add_entry(&fps, ".DMmaskRM",
                                      "actuators directly controlled",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
 
     __attribute__((unused)) long fpi_fname_WFSmask =
         function_parameter_add_entry(&fps, ".WFSmask",
                                      "WFS mask",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
 
     __attribute__((unused)) long fpi_fname_loRM =
         function_parameter_add_entry(&fps, ".loRM",
                                      "low order modal response matrix",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
 
     __attribute__((unused)) long fpi_fname_loRMmodes =
         function_parameter_add_entry(&fps, ".loRMmodes",
                                      "low order RM modes",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT|FPFLAG_FILE_RUN_REQUIRED, pNull);
+                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
 
 
     __attribute__((unused)) long fpi_fname_extrablockM =
@@ -984,7 +1051,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
 
     // output files and dir
-    
+
     __attribute__((unused)) long fpi_out_dirname      =
         function_parameter_add_entry(&fps, ".out.dirname",
                                      "output directory",
@@ -992,45 +1059,54 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
 
 
-    if( fps.loopstatus == 0 ) // stop fps
+    if(fps.loopstatus == 0)   // stop fps
+    {
         return RETURN_SUCCESS;
+    }
 
 
 
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while ( fps.loopstatus == 1 )
+    while(fps.loopstatus == 1)
     {
         usleep(50);
 
-        if( function_parameter_FPCONFloopstep(&fps) == 1) // Apply logic if update is needed
+        if(function_parameter_FPCONFloopstep(&fps) ==
+                1)  // Apply logic if update is needed
         {
             //
             //  Connect to aux FPS
             //
-            if ( fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX < 1 ) {
+            if(fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX < 1)
+            {
                 functionparameter_ConnectExternalFPS(&fps, fpi_FPS_zRMacqu, &FPS_zRMacqu);
                 //                FPS_zRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_zRMacqu].val.string[0], &FPS_zRMacqu, FPSCONNECT_SIMPLE);
             }
-            if ( fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX  < 1 ) {
+            if(fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX  < 1)
+            {
                 functionparameter_ConnectExternalFPS(&fps, fpi_FPS_loRMacqu, &FPS_loRMacqu);
                 //FPS_loRMacqu_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_loRMacqu].val.string[0], &FPS_loRMacqu, FPSCONNECT_SIMPLE);
             }
-            if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX  < 1 ) {
+            if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX  < 1)
+            {
                 functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb);
                 //FPS_DMcomb_NBparam = function_parameter_struct_connect(fps.parray[fpi_FPS_DMcomb].val.string[0], &FPS_DMcomb, FPSCONNECT_SIMPLE);
             }
 
             // Update RM files
-            if(fps.parray[fpi_update_RMfiles].fpflag & FPFLAG_ONOFF) {
+            if(fps.parray[fpi_update_RMfiles].fpflag & FPFLAG_ONOFF)
+            {
 
-                if ( fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0 ) {
+                if(fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0)
+                {
                     char outdir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
 
-                    strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_zRMacqu, ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
-                    
+                    strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_zRMacqu, ".out.dir"),
+                            FUNCTION_PARAMETER_STRMAXLEN);
+
                     SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmslaved.fits", outdir);
                     functionparameter_SetParamValue_STRING(&fps, ".DMslaved", fname);
 
@@ -1044,73 +1120,82 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
                     functionparameter_SetParamValue_STRING(&fps, ".WFSmask", fname);
                 }
 
-                if ( fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0 ) {
+                if(fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0)
+                {
                     char outdir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
 
-                    strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_loRMacqu, ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
+                    strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_loRMacqu,
+                            ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
 
                     SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/respM.fits", outdir);
                     functionparameter_SetParamValue_STRING(&fps, ".loRM", fname);
 
-                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/RMpokeCube.fits", outdir);
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/RMpokeCube.fits",
+                                   outdir);
                     functionparameter_SetParamValue_STRING(&fps, ".loRMmodes", fname);
                 }
 
                 // set back to OFF
                 fps.parray[fpi_update_RMfiles].fpflag &= ~FPFLAG_ONOFF;
             }
-            
-            
+
+
             // update align params for auto mask
-            if(fps.parray[fpi_update_align].fpflag & FPFLAG_ONOFF) {
-				if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX  > 0 ) {
-					int DMxsize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMxsize" );
-					int DMysize = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMysize" );
-					__attribute__((unused)) int DMMODE = functionparameter_GetParamValue_INT64 ( &FPS_DMcomb, ".DMMODE" );
+            if(fps.parray[fpi_update_align].fpflag & FPFLAG_ONOFF)
+            {
+                if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX  > 0)
+                {
+                    int DMxsize = functionparameter_GetParamValue_INT64(&FPS_DMcomb, ".DMxsize");
+                    int DMysize = functionparameter_GetParamValue_INT64(&FPS_DMcomb, ".DMysize");
+                    __attribute__((unused)) int DMMODE = functionparameter_GetParamValue_INT64(
+                            &FPS_DMcomb, ".DMMODE");
 
-					float cx = 0.5*DMxsize - 0.5;
-					float cy = 0.5*DMysize - 0.5;
-					float od = 0.45*DMxsize;
-					float id = 0.05*DMxsize;
-					
-					functionparameter_SetParamValue_INT64(&fps, ".DMxsize", DMxsize);
-					functionparameter_SetParamValue_INT64(&fps, ".DMysize", DMysize);
-					functionparameter_SetParamValue_FLOAT64(&fps, ".align.CX", cx);
-					functionparameter_SetParamValue_FLOAT64(&fps, ".align.CY", cy);
-					functionparameter_SetParamValue_FLOAT64(&fps, ".align.OD", od);
-					functionparameter_SetParamValue_FLOAT64(&fps, ".align.ID", id);
-				}
-				fps.parray[fpi_update_align].fpflag &= ~FPFLAG_ONOFF;
-			}
-				
-				
+                    float cx = 0.5 * DMxsize - 0.5;
+                    float cy = 0.5 * DMysize - 0.5;
+                    float od = 0.45 * DMxsize;
+                    float id = 0.05 * DMxsize;
 
-            
-            
+                    functionparameter_SetParamValue_INT64(&fps, ".DMxsize", DMxsize);
+                    functionparameter_SetParamValue_INT64(&fps, ".DMysize", DMysize);
+                    functionparameter_SetParamValue_FLOAT64(&fps, ".align.CX", cx);
+                    functionparameter_SetParamValue_FLOAT64(&fps, ".align.CY", cy);
+                    functionparameter_SetParamValue_FLOAT64(&fps, ".align.OD", od);
+                    functionparameter_SetParamValue_FLOAT64(&fps, ".align.ID", id);
+                }
+                fps.parray[fpi_update_align].fpflag &= ~FPFLAG_ONOFF;
+            }
+
+
+
+
+
             // update align parameters
-            
+
 
             functionparameter_CheckParametersAll(&fps);  // check all parameter values
         }
     }
 
 
-    function_parameter_FPCONFexit( &fps );
+    function_parameter_FPCONFexit(&fps);
 
-    if ( fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0 ) {
-        function_parameter_struct_disconnect( &FPS_zRMacqu );
+    if(fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0)
+    {
+        function_parameter_struct_disconnect(&FPS_zRMacqu);
     }
 
 
-    if ( fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0 ) {
-        function_parameter_struct_disconnect( &FPS_loRMacqu );
+    if(fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0)
+    {
+        function_parameter_struct_disconnect(&FPS_loRMacqu);
     }
 
-    if ( fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0 ) {
-		function_parameter_struct_disconnect( &FPS_DMcomb );
-	}
-    
+    if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0)
+    {
+        function_parameter_struct_disconnect(&FPS_DMcomb);
+    }
+
 
     return RETURN_SUCCESS;
 
@@ -1121,34 +1206,35 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
 /**
  * @ingroup FPSrun
- * 
+ *
  * @brief Compute control matrix
- * 
- * 
+ *
+ *
  * @{
- */ 
+ */
 errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     char *fpsname
-) {
+)
+{
     // ===========================
     // CONNECT TO FPS
     // ===========================
-  /*  int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps;
+    /*  int SMfd = -1;
+      FUNCTION_PARAMETER_STRUCT fps;
 
-    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
-        printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
-        return RETURN_FAILURE;
-    }*/
+      if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) == -1) {
+          printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
+          return RETURN_FAILURE;
+      }*/
 
-	FPS_CONNECT( fpsname, FPSCONNECT_RUN );
+    FPS_CONNECT(fpsname, FPSCONNECT_RUN);
 
 
     // ===============================
     // GET FUNCTION PARAMETER VALUES
     // ===============================
-    __attribute__((unused)) long loop         = 
-    functionparameter_GetParamValue_INT64(&fps, ".loop");
+    __attribute__((unused)) long loop         =
+        functionparameter_GetParamValue_INT64(&fps, ".loop");
     float SVDlim      = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
     float CPAmax      = functionparameter_GetParamValue_FLOAT64(&fps, ".CPAmax");
     float deltaCPA    = functionparameter_GetParamValue_FLOAT64(&fps, ".deltaCPA");
@@ -1162,33 +1248,40 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     long DMysize    = functionparameter_GetParamValue_INT64(&fps, ".DMysize");
 
     char fname_dmslaved[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(fname_dmslaved,  functionparameter_GetParamPtr_STRING(&fps, ".DMslaved"),  FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(fname_dmslaved,  functionparameter_GetParamPtr_STRING(&fps,
+            ".DMslaved"),  FUNCTION_PARAMETER_STRMAXLEN);
     load_fits(fname_dmslaved, "dmslaved", 1);
 
     char fname_zrespM[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(fname_zrespM,  functionparameter_GetParamPtr_STRING(&fps, ".zrespM"),  FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(fname_zrespM,  functionparameter_GetParamPtr_STRING(&fps, ".zrespM"),
+            FUNCTION_PARAMETER_STRMAXLEN);
     load_fits(fname_zrespM, "zrespM", 1);
 
     char fname_DMmaskRM[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(fname_DMmaskRM,  functionparameter_GetParamPtr_STRING(&fps, ".DMmaskRM"),  FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(fname_DMmaskRM,  functionparameter_GetParamPtr_STRING(&fps,
+            ".DMmaskRM"),  FUNCTION_PARAMETER_STRMAXLEN);
     load_fits(fname_DMmaskRM, "dmmaskRM", 1);
 
     char fname_WFSmask[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(fname_WFSmask,  functionparameter_GetParamPtr_STRING(&fps, ".WFSmask"),  FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(fname_WFSmask,  functionparameter_GetParamPtr_STRING(&fps, ".WFSmask"),
+            FUNCTION_PARAMETER_STRMAXLEN);
     load_fits(fname_WFSmask, "wfsmask", 1);
 
     char fname_loRM[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(fname_loRM,  functionparameter_GetParamPtr_STRING(&fps, ".loRM"),  FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(fname_loRM,  functionparameter_GetParamPtr_STRING(&fps, ".loRM"),
+            FUNCTION_PARAMETER_STRMAXLEN);
     load_fits(fname_loRM, "LOrespM", 1);
 
     char fname_loRMmodes[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(fname_loRMmodes,  functionparameter_GetParamPtr_STRING(&fps, ".loRMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(fname_loRMmodes,  functionparameter_GetParamPtr_STRING(&fps,
+            ".loRMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
     load_fits(fname_loRMmodes, "RMMmodes", 1);
 
 
 
     char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),  FUNCTION_PARAMETER_STRMAXLEN);
+    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),
+            FUNCTION_PARAMETER_STRMAXLEN);
 
     list_image_ID();
 
@@ -1203,10 +1296,10 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     tmnow = gmtime(&tnow);
 
     printf("TIMESTRING:  %04d%02d%02dT%02d%02d%02d\n",
-           1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday,
+           1900 + tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday,
            tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
     sprintf(datestring, "%04d%02d%02dT%02d%02d%02d",
-            1900+tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday,
+            1900 + tmnow->tm_year, tmnow->tm_mon, tmnow->tm_mday,
             tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
 
     // MaskMode = 0  : tapered masking
@@ -1218,7 +1311,8 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     int BlockNB = -1;
 
 
-    AOloopControl_computeCalib_mkModes("fmodes", DMxsize, DMysize, CPAmax, deltaCPA, align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim, outdirname);
+    AOloopControl_computeCalib_mkModes("fmodes", DMxsize, DMysize, CPAmax, deltaCPA,
+                                       align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim, outdirname);
 
 
     printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
@@ -1237,17 +1331,17 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes_%s.fits", datestring);
     WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes.fname.txt", outdirname);
 
-	EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
-	WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
+    EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+    WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
 
     WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/fmodesWFSall.fits");
     WRITE_FULLFILENAME(fnamedest, "respM/respM_%s.fits", datestring);
     WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM.fname.txt", outdirname);
 
-	EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
-	WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
-    
+    EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+    WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
+
 
 
     WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/cmatall.fits");
@@ -1255,18 +1349,20 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM.fname.txt", outdirname);
 
 
-	EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
-	WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
+    EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+    WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
-	EXECUTE_SYSTEM_COMMAND("cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt", outdirname);
-   
+    EXECUTE_SYSTEM_COMMAND("cp ./mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt",
+                           outdirname);
+
 
     int OKloop = 1;
-    for (int i=0; i<20; i++)
+    for(int i = 0; i < 20; i++)
     {
         WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/fmodes_%02d.fits", i);
 
-        if(OKloop==1) {
+        if(OKloop == 1)
+        {
             if(is_fits_file(fnamesrc) == 1)
             {
                 printf("[%s %d] Archive [%d] to disk\n", __FILE__, __LINE__, i);
@@ -1277,41 +1373,44 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
                 WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/fmodes_%02d.fits", i);
                 WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes%02d_%s.fits", i, datestring);
                 WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes%02d.fname.txt", outdirname, i);
-                
+
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
-                WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);                
+                WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
                 WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/fmodesWFS_%02d.fits", i);
                 WRITE_FULLFILENAME(fnamedest, "respM/respM%02d_%s.fits", i, datestring);
                 WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM%02d.fname.txt", outdirname, i);
 
-				EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
-				WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);                
+                EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
+                WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
                 WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/cmat_%02d.fits", i);
                 WRITE_FULLFILENAME(fnamedest, "contrM/contrM%02d_%s.fits", i, datestring);
                 WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM%02d.fname.txt", outdirname, i);
-                
+
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
-              
+
 
                 WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/cmatc_%02d.fits", i);
                 WRITE_FULLFILENAME(fnamedest, "contrMc/contrMc%02d_%s.fits", i, datestring);
                 WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMc%02d.fname.txt", outdirname, i);
-                
+
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
- 
+
 
                 WRITE_FULLFILENAME(fnamesrc, "./mkmodestmp/cmatcact_%02d.fits", i);
-                WRITE_FULLFILENAME(fnamedest, "contrMcact/contrMcact%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMcact%02d.fname.txt", outdirname, i);
-                
+                WRITE_FULLFILENAME(fnamedest, "contrMcact/contrMcact%02d_%s.fits", i,
+                                   datestring);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMcact%02d.fname.txt", outdirname,
+                                   i);
+
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
             }
-            else {
+            else
+            {
                 OKloop = 0;
                 printf("Cannot find file %s -> stopping\n", fnamesrc);
             }
@@ -1323,7 +1422,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     printf("[%s %d] DONE - disconnecting from FPS\n", __FILE__, __LINE__);
     fflush(stdout);
 
-    function_parameter_RUNexit( &fps );
+    function_parameter_RUNexit(&fps);
 
     return RETURN_SUCCESS;
 
