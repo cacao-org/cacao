@@ -113,8 +113,6 @@ typedef struct
 
 void __attribute__ ((constructor)) libinit_AOloopControl_DM();
 
-int init_AOloopControl_DM();
-
 
 
 /* =============================================================================================== */

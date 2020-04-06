@@ -9,6 +9,27 @@
  */
 
 
+/* ================================================================== */
+/* ================================================================== */
+/*            MODULE INFO                                             */
+/* ================================================================== */
+/* ================================================================== */
+
+// module default short name
+// all CLI calls to this module functions will be <shortname>.<funcname>
+// if set to "", then calls use <funcname>
+#define MODULE_SHORTNAME_DEFAULT ""
+
+// Module short description 
+#define MODULE_DESCRIPTION       "AO loop Control DM operation"
+
+// Application to which module belongs
+#define MODULE_APPLICATION       "cacao"
+
+
+
+
+
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                        HEADER FILES                                             */
@@ -39,7 +60,6 @@
 
 
 
-static int INITSTATUS_AOloopControl_DM = 0;
 
 long NB_DMindex = 9;
 
@@ -54,19 +74,27 @@ int SMturbfd;
 
 
 
-// CLI commands
+
+
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            INITIALIZE LIBRARY                                      */
+/* ================================================================== */
+/* ================================================================== */
+
+// Module initialization macro in CLIcore.h
+// macro argument defines module name for bindings
 //
-// function CLI_checkarg used to check arguments
-// 1: float
-// 2: long
-// 3: string, not existing image
-// 4: existing image
-// 5: string or existing image
+INIT_MODULE_LIB(AOloopControl_DM)
 
 
-
-
-
+/* ================================================================== */
+/* ================================================================== */
+/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
+/* ================================================================== */
+/* ================================================================== */
 
 
 
@@ -333,19 +361,7 @@ errno_t AOloopControl_DM_mkAstroGrid_seq_cli(){
 
 
 
-
-void __attribute__ ((constructor)) libinit_AOloopControl_DM()
-{
-	if ( INITSTATUS_AOloopControl_DM == 0)
-	{
-		init_AOloopControl_DM();
-		RegisterModule(__FILE__, "cacao", "AO loop Control DM operation");
-		INITSTATUS_AOloopControl_DM = 1;
-	}
-}
-
-
-errno_t init_AOloopControl_DM()
+static errno_t init_module_CLI()
 {
 
 /* =============================================================================================== */
