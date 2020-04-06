@@ -9,6 +9,29 @@
 
 
 
+
+/* ================================================================== */
+/* ================================================================== */
+/*            MODULE INFO                                             */
+/* ================================================================== */
+/* ================================================================== */
+
+// module default short name
+// all CLI calls to this module functions will be <shortname>.<funcname>
+// if set to "", then calls use <funcname>
+#define MODULE_SHORTNAME_DEFAULT ""
+
+// Module short description 
+#define MODULE_DESCRIPTION       "Focal place AO loop control"
+
+// Application to which module belongs
+#define MODULE_APPLICATION       "cacao"
+
+
+
+
+
+
 #define _GNU_SOURCE
 
 #include <stdint.h>
@@ -99,7 +122,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t){
 
 
 
-static int INITSTATUS_FPAOloopcontrol = 0;
 
 
 
@@ -143,15 +165,24 @@ static FILE *FPAO_loadcreateshm_fplog;
 
 
 
+/* ================================================================== */
+/* ================================================================== */
+/*            INITIALIZE LIBRARY                                      */
+/* ================================================================== */
+/* ================================================================== */
 
-// CLI commands
+// Module initialization macro in CLIcore.h
+// macro argument defines module name for bindings
 //
-// function CLI_checkarg used to check arguments
-// 1: float
-// 2: long
-// 3: string, not existing image
-// 4: existing image
-// 5: string 
+INIT_MODULE_LIB(FPAOloopControl)
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
+/* ================================================================== */
+/* ================================================================== */
+
 
 
 
@@ -271,20 +302,8 @@ errno_t FPAOloopControl_MakeLinComb_seq_cli() {
 
 
 
-void __attribute__ ((constructor)) libinit_FPAOloopControl()
-{
-	if ( INITSTATUS_FPAOloopcontrol == 0 )
-	{
-		init_FPAOloopControl();
-		RegisterModule(__FILE__, "cacao", "Focal place AO loop control");
-		INITSTATUS_FPAOloopcontrol = 1;
-	}
-}
 
-
-
-
-errno_t init_FPAOloopControl()
+static errno_t init_module_CLI()
 {
     //FILE *fp;
 
