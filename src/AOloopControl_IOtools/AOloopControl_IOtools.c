@@ -11,6 +11,27 @@
 
 
 
+/* ================================================================== */
+/* ================================================================== */
+/*            MODULE INFO                                             */
+/* ================================================================== */
+/* ================================================================== */
+
+// module default short name
+// all CLI calls to this module functions will be <shortname>.<funcname>
+// if set to "", then calls use <funcname>
+#define MODULE_SHORTNAME_DEFAULT ""
+
+// Module short description 
+#define MODULE_DESCRIPTION       "AO loop control IO tools"
+
+// Application to which module belongs
+#define MODULE_APPLICATION       "cacao"
+
+
+
+
+
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
@@ -104,7 +125,6 @@
 /*                                     MAIN DATA STRUCTURES                                        */
 /* =============================================================================================== */
 
-static int INITSTATUS_AOloopControl_IOtools = 0;
 
 extern long LOOPNUMBER; // current loop index
 
@@ -121,21 +141,23 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
 
+/* ================================================================== */
+/* ================================================================== */
+/*            INITIALIZE LIBRARY                                      */
+/* ================================================================== */
+/* ================================================================== */
+
+// Module initialization macro in CLIcore.h
+// macro argument defines module name for bindings
+//
+INIT_MODULE_LIB(AOloopControl_IOtools)
 
 
-
-// CLI commands
-//
-// function CLI_checkarg used to check arguments
-// CLI_checkarg ( CLI argument index , type code )
-//
-// type codes:
-// 1: float
-// 2: long
-// 3: string, not existing image
-// 4: existing image
-// 5: string
-//
+/* ================================================================== */
+/* ================================================================== */
+/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
+/* ================================================================== */
+/* ================================================================== */
 
 
 
@@ -401,18 +423,8 @@ errno_t AOloopControl_IOtools_RTLOGsave_cli() {
 /** @name AOloopControl_IOtools functions */
 
 
-void __attribute__ ((constructor)) libinit_AOloopControl_IOtools()
-{
-	if ( INITSTATUS_AOloopControl_IOtools == 0)
-	{
-		init_AOloopControl_IOtools();
-		RegisterModule(__FILE__, "cacao", "AO loop control IO tools");
-		INITSTATUS_AOloopControl_IOtools = 1;
-	}
-}
 
-
-errno_t init_AOloopControl_IOtools()
+static errno_t init_module_CLI()
 {
 
 
