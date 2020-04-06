@@ -10,6 +10,30 @@
 
 
 
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            MODULE INFO                                             */
+/* ================================================================== */
+/* ================================================================== */
+
+// module default short name
+// all CLI calls to this module functions will be <shortname>.<funcname>
+// if set to "", then calls use <funcname>
+#define MODULE_SHORTNAME_DEFAULT ""
+
+// Module short description 
+#define MODULE_DESCRIPTION       "AO loop control predictive control"
+
+// Application to which module belongs
+#define MODULE_APPLICATION       "cacao"
+
+
+
+
+
+
 #define _GNU_SOURCE
 
 
@@ -35,14 +59,23 @@
 
 
 
-static int INITSTATUS_AOloopControl_PredictiveControl = 0;
+/* ================================================================== */
+/* ================================================================== */
+/*            INITIALIZE LIBRARY                                      */
+/* ================================================================== */
+/* ================================================================== */
+
+// Module initialization macro in CLIcore.h
+// macro argument defines module name for bindings
+//
+INIT_MODULE_LIB(AOloopControl_PredictiveControl)
 
 
-
-
-
-
-
+/* ================================================================== */
+/* ================================================================== */
+/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
+/* ================================================================== */
+/* ================================================================== */
 
 
 
@@ -159,18 +192,7 @@ errno_t AOloopControl_PredictiveControl_setPFsimpleAve_cli() {
 /** @name AOloopControl_PredictiveControl functions */
 
 
-void __attribute__ ((constructor)) libinit_AOloopControl_PredictiveControl()
-{
-	if(INITSTATUS_AOloopControl_PredictiveControl == 0)
-	{
-		init_AOloopControl_PredictiveControl();
-		RegisterModule(__FILE__, "cacao", "AO loop control predictive control");
-		INITSTATUS_AOloopControl_PredictiveControl = 1;
-	}
-}
-
-
-errno_t init_AOloopControl_PredictiveControl()
+static errno_t init_module_CLI()
 {
 
     /* =============================================================================================== */
