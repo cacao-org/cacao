@@ -1,12 +1,12 @@
 /**
  * @file    AOloopControl_IOtools.h
  * @brief   Function prototypes for Adaptive Optics Control loop engine I/O tools
- * 
- * AO engine uses stream data structure
- * 
  *
- * @bug No known bugs. 
- * 
+ * AO engine uses stream data structure
+ *
+ *
+ * @bug No known bugs.
+ *
  */
 
 #ifndef _AOLOOPCONTROL_IOTOOLS_H
@@ -26,7 +26,7 @@ typedef int errno_t;
 
 
 /** @brief Initialize module. */
-void __attribute__ ((constructor)) libinit_AOloopControl_IOtools();
+void __attribute__((constructor)) libinit_AOloopControl_IOtools();
 
 
 
@@ -56,7 +56,8 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
 //static void *compute_function_dark_subtract( void *ptr );
 
 
-errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(char *fpsname, uint32_t CMDmode);
+errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(char *fpsname,
+        uint32_t CMDmode);
 errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(char *fpsname);
 errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop);
 
@@ -78,7 +79,7 @@ errno_t Read_cam_frame(
 
 /* =============================================================================================== */
 /* =============================================================================================== */
-/** @name AOloopControl_IOtools - 2. LOAD DATA STREAMS     
+/** @name AOloopControl_IOtools - 2. LOAD DATA STREAMS
  *  Load 2D and 3D shared memory images */
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -111,7 +112,7 @@ long AOloopControl_IOtools_3Dloadcreate_shmim(
 
 /* =============================================================================================== */
 /* =============================================================================================== */
-/** @name AOloopControl_IOtools - 3. DATA STREAMS PROCESSING      
+/** @name AOloopControl_IOtools - 3. DATA STREAMS PROCESSING
  *  Data streams real-time processing */
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -129,11 +130,11 @@ errno_t AOloopControl_IOtools_AveStream(
 /** @brief Aligns data stream */
 errno_t AOloopControl_IOtools_imAlignStream(
     const char    *IDname,
-          int      xbox0,
-          int      ybox0,
+    int      xbox0,
+    int      ybox0,
     const char    *IDref_name,
     const char    *IDout_name,
-          int      insem
+    int      insem
 );
 
 /** @brief Induces temporal offset between input and output streams */
@@ -162,7 +163,8 @@ long AOloopControl_IOtools_stream3Dto2D(
 /* =============================================================================================== */
 
 /** @brief Save telemetry */
-errno_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname);
+errno_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname,
+                                        const char *dirname);
 
 
 #endif
