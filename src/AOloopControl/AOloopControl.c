@@ -49,6 +49,31 @@
  */
 
 
+
+
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            MODULE INFO                                             */
+/* ================================================================== */
+/* ================================================================== */
+
+// module default short name
+// all CLI calls to this module functions will be <shortname>.<funcname>
+// if set to "", then calls use <funcname>
+#define MODULE_SHORTNAME_DEFAULT ""
+
+// Module short description 
+#define MODULE_DESCRIPTION       "AO loop control"
+
+// Application to which module belongs
+#define MODULE_APPLICATION       "cacao"
+
+
+
+
+
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
@@ -225,7 +250,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 /*                                     MAIN DATA STRUCTURES                                        */
 /* =============================================================================================== */
 
-static int INITSTATUS_AOloopControl = 0;
 static int DISABLE_CLI_AOloopControl = 0; // set to 1 to disable CLI
 
 #define NB_AOloopcontrol 10 // max number of loops
@@ -244,18 +268,26 @@ AOloopControl_var aoloopcontrol_var;
 
 
 
-// CLI commands
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            INITIALIZE LIBRARY                                      */
+/* ================================================================== */
+/* ================================================================== */
+
+// Module initialization macro in CLIcore.h
+// macro argument defines module name for bindings
 //
-// function CLI_checkarg used to check arguments
-// CLI_checkarg ( CLI argument index , type code )
-//
-// type codes:
-// 1: float
-// 2: long
-// 3: string, not existing image
-// 4: existing image
-// 5: string
-//
+INIT_MODULE_LIB(AOloopControl)
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
+/* ================================================================== */
+/* ================================================================== */
+
 
 
 
@@ -1376,35 +1408,7 @@ errno_t AOloopControl_setparam_cli()
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-/*
- * Library initialization function.
- * Called when shared object is loaded
- * 
- */ 
-void __attribute__ ((constructor)) libinit_AOloopControl()
-{
-	if( INITSTATUS_AOloopControl == 0)
-	{
-		init_AOloopControl();
-		RegisterModule(__FILE__, "cacao", "AO loop control");
-		INITSTATUS_AOloopControl = 1;
-	}
-}
 
-
-
-/*
- * Library close function.
- * Called when shared object in unloaded, or program exit.
- *
- */
-void __attribute__ ((destructor)) libclose_fft()
-{
-	if( INITSTATUS_AOloopControl == 1)
-	{
-		// nothing to do
-	}
-}
 
 
 
@@ -1437,7 +1441,7 @@ int AOloopControl_bogusfunc()
 // CODING STANDARD NOTE: function name start with module name
 
 
-void init_AOloopControl()
+static errno_t init_module_CLI()
 {
     FILE *fp;
 

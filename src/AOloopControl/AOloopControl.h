@@ -474,8 +474,6 @@ typedef struct
 
 void __attribute__ ((constructor)) libinit_AOloopControl();
 
-/** @brief Initialize AOloopControl command line interface. */
-void init_AOloopControl();
 
 int AOloopControl_bogusfunc();
 

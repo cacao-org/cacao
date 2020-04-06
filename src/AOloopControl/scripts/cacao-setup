@@ -102,6 +102,7 @@ echo "     $(tput bold)-y$(tput sgr0) <tty>      start fpsCTRL in tt(y) and keep
 echo "     $(tput bold)-u$(tput sgr0)            (u)pdate more: do not quit/restart processes"
 echo "     $(tput bold)-e$(tput sgr0)            Create (e)xample cacaovars file and exit"
 echo "     $(tput bold)-r$(tput sgr0)            (r)un fps setval updates and exit"
+echo "     $(tput bold)-l$(tput sgr0)            (l)ist processes"
 echo ""
 echo "------------------------------------------------------------------------"
 }
@@ -252,9 +253,22 @@ echo "" >> $EXAMPLEFILENAME
 
 
 
+function cacaosetupLISTprocesses {
+
+echolog "LIST PROCESSES"
+cd ${WORKDIR}
+
+while IFS='' read -r line || [[ -n "$line" ]]; do
+	echo "    ${line}"
+done < fpscmd/fpslist.txt
+
+cd ${CURRDIR}
+}
 
 
-function cacaosimCLEAR {
+
+
+function cacaosetupCLEAR {
 
 echolog "CLEARING"
 cd ${WORKDIR}
@@ -387,8 +401,9 @@ TESTMODE="0"
 FPSSETPARAMCONF="0"
 UPDATEMODE="0"
 TTYMODE="0"
+LISTPROCESSES="0"
 
-while getopts :heCty:ru FLAG; do
+while getopts :heCty:rul FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -417,6 +432,9 @@ while getopts :heCty:ru FLAG; do
     ;;
     u)
     UPDATEMODE="1"
+    ;;
+    l)
+    LISTPROCESSES="1"
     ;;
     \?) #unrecognized option - show help
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
@@ -654,10 +672,17 @@ fi
 
 
 
+if [ "$LISTPROCESSES" = "1" ]; then
+echolog "starting cacaosetupLISTprocesses"
+cacaosetupLISTprocesses
+echolog "END $(basename $0)"
+exit
+fi
+
 
 if [ "$CLEAR" = "1" ]; then
-echolog "starting cacaosimCLEAR"
-cacaosimCLEAR
+echolog "starting cacaosetupCLEAR"
+cacaosetupCLEAR
 echolog "END $(basename $0)"
 exit
 fi
