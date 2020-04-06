@@ -1,11 +1,11 @@
 /**
  * @file    AOloopControl_PredictiveControl.c
  * @brief   Adaptive Optics Control loop engine Predictive Control
- * 
+ *
  * Adaptive Optics predictive control
  *
- * 
- * 
+ *
+ *
  */
 
 
@@ -23,7 +23,7 @@
 // if set to "", then calls use <funcname>
 #define MODULE_SHORTNAME_DEFAULT ""
 
-// Module short description 
+// Module short description
 #define MODULE_DESCRIPTION       "AO loop control predictive control"
 
 // Application to which module belongs
@@ -88,14 +88,15 @@ INIT_MODULE_LIB(AOloopControl_PredictiveControl)
 /* =============================================================================================== */
 
 /** @brief CLI function for AOloopControl_builPFloop_WatchInput */
-errno_t AOloopControl_PredictiveControl_builPFloop_WatchInput_cli() {
+errno_t AOloopControl_PredictiveControl_builPFloop_WatchInput_cli()
+{
     if(
-        CLI_checkarg(1,2)+
-        CLI_checkarg(2,2)+
-        CLI_checkarg(3,2)+
-        CLI_checkarg(4,2)+
-        CLI_checkarg(5,2)
-        == 0 )
+        CLI_checkarg(1, 2) +
+        CLI_checkarg(2, 2) +
+        CLI_checkarg(3, 2) +
+        CLI_checkarg(4, 2) +
+        CLI_checkarg(5, 2)
+        == 0)
     {
         AOloopControl_PredictiveControl_builPFloop_WatchInput(
             data.cmdargtoken[1].val.numl,
@@ -107,41 +108,47 @@ errno_t AOloopControl_PredictiveControl_builPFloop_WatchInput_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_mapPredictiveFilter */
-errno_t AOloopControl_PredictiveControl_mapPredictiveFilter_cli() {
+errno_t AOloopControl_PredictiveControl_mapPredictiveFilter_cli()
+{
     if(
-    CLI_checkarg(1,4)+
-    CLI_checkarg(2,2)+
-    CLI_checkarg(3,1)
-    == 0 ) 
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 2) +
+        CLI_checkarg(3, 1)
+        == 0)
     {
         AOloopControl_PredictiveControl_mapPredictiveFilter(
-        data.cmdargtoken[1].val.string, 
-        data.cmdargtoken[2].val.numl, 
-        data.cmdargtoken[3].val.numf
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numf
         );
-        
+
         return CLICMD_SUCCESS;
     }
-    else return CLICMD_INVALID_ARG;
+    else
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 
 /** @brief CLI function for AOloopControl_testPredictiveFilter */
-errno_t AOloopControl_PredictiveControl_testPredictiveFilter_cli() {
+errno_t AOloopControl_PredictiveControl_testPredictiveFilter_cli()
+{
     if(
-        CLI_checkarg(1,4) +
-        CLI_checkarg(2,2) +
-        CLI_checkarg(3,1) +
-        CLI_checkarg(4,2) +
-        CLI_checkarg(5,3)
-        == 0 )
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 2) +
+        CLI_checkarg(3, 1) +
+        CLI_checkarg(4, 2) +
+        CLI_checkarg(5, 3)
+        == 0)
     {
         AOloopControl_PredictiveControl_testPredictiveFilter(
             data.cmdargtoken[1].val.string,
@@ -154,18 +161,20 @@ errno_t AOloopControl_PredictiveControl_testPredictiveFilter_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 
-errno_t AOloopControl_PredictiveControl_setPFsimpleAve_cli() {
+errno_t AOloopControl_PredictiveControl_setPFsimpleAve_cli()
+{
     if(
-        CLI_checkarg(1,4) +
-        CLI_checkarg(2,1)
-        == 0 )
+        CLI_checkarg(1, 4) +
+        CLI_checkarg(2, 1)
+        == 0)
     {
         AOloopControl_PredictiveControl_setPFsimpleAve(
             data.cmdargtoken[1].val.string,
@@ -174,7 +183,8 @@ errno_t AOloopControl_PredictiveControl_setPFsimpleAve_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -225,7 +235,8 @@ static errno_t init_module_CLI()
         AOloopControl_PredictiveControl_testPredictiveFilter_cli,
         "test predictive filter",
         "<trace im> <mode number> <delay [frames]> <filter size> <out filter name>",
-        "aolmkpfilt traceim 23 2.4 20 filt23","long AOloopControl_testPredictiveFilter(char *IDtrace_name, long mode, double delayfr, long filtsize, char *IDfilt_name, double SVDeps)"
+        "aolmkpfilt traceim 23 2.4 20 filt23",
+        "long AOloopControl_testPredictiveFilter(char *IDtrace_name, long mode, double delayfr, long filtsize, char *IDfilt_name, double SVDeps)"
     );
 
 
