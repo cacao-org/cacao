@@ -1,13 +1,13 @@
 /**
  * @file    AOloopControl.c
  * @brief   Adaptive Optics Control loop engine
- * 
+ *
  * AO engine uses stream data structure
- * 
+ *
  * # Files
- * 
+ *
  * ## Main files
- * 
+ *
  * AOloopControl_initmem.c                   Initialize memory
  * AOloopControl_loadconfigure.c             Load and save configuration
  * AOloopControl_aorun.c                     Main level loop function, calls AOcompute
@@ -21,31 +21,31 @@
  * AOloopControl_read_param.c                Read parameters
  * AOloopControl_ProcessModeCoefficients.c   Modal control
  * AOloopControl_CompModes_loop.c            Compute modes (loop)
- * 
- * 
+ *
+ *
  * ## I/O, telemetry
- * 
+ *
  * AOloopControl_RTstreamLOG.c               Log real-time telemetry
- * 
- * 
+ *
+ *
  * ## Performance tuning / optimization
- * 
+ *
  * AOloopControl_arpf_onoff.c                Autoregressive predictive control On/Off
  * AOloopControl_predfilter_onoff.c          Turn predictive control on/off
  * AOloopControl_autotune.c                  Automatic loop tuning (mostly gain values)
  * AOloopControl_process_files.c             -- EXPERIMENTAL -- RM optimization from telemetry
- * 
- * 
+ *
+ *
  * AOloopControl_time_param.c                ??
  * AOloopControl_sig2Modecoeff.c             ??
  * AOloopControl_fpspeckle_mod.c             Speckle modulation (experimental)
- * 
- * 
+ *
+ *
  * @see http://oguyon.github.io/AdaptiveOpticsControl/src/AOloopControl/doc/AOloopControl.html
- *  
+ *
  * @defgroup AOloopControl_streams Image streams
  * @defgroup AOloopControl_AOLOOPCONTROL_CONF AOloopControl main data structure
- * 
+ *
  */
 
 
@@ -64,7 +64,7 @@
 // if set to "", then calls use <funcname>
 #define MODULE_SHORTNAME_DEFAULT ""
 
-// Module short description 
+// Module short description
 #define MODULE_DESCRIPTION       "AO loop control"
 
 // Application to which module belongs
@@ -103,13 +103,16 @@
 //#include <mach/mach_time.h>
 //#define CLOCK_REALTIME 0
 //#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct mach_timespec *t) {
+int clock_gettime(int clk_id, struct mach_timespec *t)
+{
     mach_timebase_info_data_t timebase;
     mach_timebase_info(&timebase);
     uint64_t time;
     time = mach_absolute_time();
-    double nseconds = ((double)time * (double)timebase.numer)/((double)timebase.denom);
-    double seconds = ((double)time * (double)timebase.numer)/((double)timebase.denom * 1e9);
+    double nseconds = ((double)time * (double)timebase.numer) / ((
+                          double)timebase.denom);
+    double seconds = ((double)time * (double)timebase.numer) / ((
+                         double)timebase.denom * 1e9);
     t->tv_sec = seconds;
     t->tv_nsec = nseconds;
     return 0;
@@ -304,15 +307,19 @@ INIT_MODULE_LIB(AOloopControl)
 
 /** @brief CLI function for AOloopControl_loadconfigure */
 
-errno_t AOloopControl_loadconfigure_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_loadconfigure_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_loadconfigure(data.cmdargtoken[1].val.numl, 1, 10);
         return 0;
     }
-    else return 1;
+    else
+    {
+        return 1;
+    }
 }
 
 
@@ -334,33 +341,40 @@ errno_t AOloopControl_loadconfigure_cli() {
 
 
 /** @brief CLI function for AOloopControl_mkCM */
-errno_t AOloopControl_aorun_cli() {
+errno_t AOloopControl_aorun_cli()
+{
     int stringmaxlen = 200;
     char fpsname[stringmaxlen];
 
     // First, we try to execute function through FPS interface
-    if( DISABLE_CLI_AOloopControl
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_STR)
             == 0)
-    {   // check that first arg is string
+    {
+        // check that first arg is string
         // Set FPS interface name
         // By convention, if there are optional arguments, they should be appended to the fps name
         //
         printf("LINE %d\n", __LINE__);
 
-        if(data.processnameflag == 0) {
+        if(data.processnameflag == 0)
+        {
             // the process has not been named with -n CLI option
             // name fps to something different than the process name
-            if(strlen(data.cmdargtoken[2].val.string)>0) {
+            if(strlen(data.cmdargtoken[2].val.string) > 0)
+            {
                 snprintf(fpsname, stringmaxlen, "compsCM-%s", data.cmdargtoken[2].val.string);
                 printf("USING %s as fpsname\n", fpsname);
             }
-            else {
+            else
+            {
                 sprintf(fpsname, "compsCM");
                 printf("USING %s default fpsname\n", fpsname);
             }
 
-        } else {
+        }
+        else
+        {
             // Automatically set fps name to be process name up to first instance of character '.'
             // This is the preferred option
             strcpy(fpsname, data.processname0);
@@ -368,31 +382,39 @@ errno_t AOloopControl_aorun_cli() {
         }
 
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0) {  // Initialize FPS and conf process
+        if(strcmp(data.cmdargtoken[1].val.string,
+                  "_FPSINIT_") == 0)    // Initialize FPS and conf process
+        {
             printf("Function parameters FPSINIT\n");
             AOloopControl_aorun_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
             return RETURN_SUCCESS;
         }
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0) {  // Start conf process
+        if(strcmp(data.cmdargtoken[1].val.string,
+                  "_CONFSTART_") == 0)    // Start conf process
+        {
             printf("Function parameters CONFSTART\n");
             AOloopControl_aorun_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
             return RETURN_SUCCESS;
         }
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0) { // Stop conf process
+        if(strcmp(data.cmdargtoken[1].val.string,
+                  "_CONFSTOP_") == 0)   // Stop conf process
+        {
             printf("Function parameters CONFSTOP\n");
             AOloopControl_aorun_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
             return RETURN_SUCCESS;
         }
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0) { // Run process
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)   // Run process
+        {
             printf("Run function RUNSTART\n");
             AOloopControl_aorun_RUN(fpsname);
             return RETURN_SUCCESS;
         }
 
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0) { // Stop process
+        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)   // Stop process
+        {
             printf("Run function RUNSTOP\n");
             // AOloopControl_computeCalib_mkCM_STOP();
             return RETURN_SUCCESS;
@@ -402,7 +424,7 @@ errno_t AOloopControl_aorun_cli() {
     printf("LINE %d\n", __LINE__);
 
     // non FPS implementation - all parameters specified at function launch
-    if( DISABLE_CLI_AOloopControl
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_FLOAT)
             == 0)
@@ -410,9 +432,12 @@ errno_t AOloopControl_aorun_cli() {
         printf("========================================================\n");
         printf("============== RUNNING non-FPS implementation ==========\n");
         printf("========================================================\n");
-        AOloopControl_aorun(data.cmdargtoken[1].val.string, data.cmdargtoken[3].val.numf);
+        AOloopControl_aorun(data.cmdargtoken[1].val.string,
+                            data.cmdargtoken[3].val.numf);
         return RETURN_SUCCESS;
-    } else {
+    }
+    else
+    {
         return RETURN_FAILURE;
     }
 }
@@ -438,11 +463,12 @@ errno_t AOloopControl_aorun_cli() {
 
 
 /** @brief CLI function for AOloopControl_AOcompute_GUI */
-errno_t AOloopControl_AOcompute_GUI_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_AOcompute_GUI_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_AOcompute_GUI(
             data.cmdargtoken[1].val.numl,
@@ -451,18 +477,20 @@ errno_t AOloopControl_AOcompute_GUI_cli() {
 
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_aorun_GUI */
-errno_t AOloopControl_aorun_GUI_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_aorun_GUI_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_aorun_GUI(
             data.cmdargtoken[1].val.numl,
@@ -470,19 +498,21 @@ errno_t AOloopControl_aorun_GUI_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_WFSzpupdate_loop */
-errno_t AOloopControl_WFSzpupdate_loop_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_WFSzpupdate_loop_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_IMG)
             + CLI_checkarg(3, CLIARG_IMG)
-            == 0 )
+            == 0)
     {
         AOloopControl_WFSzpupdate_loop(
             data.cmdargtoken[1].val.string,
@@ -491,20 +521,22 @@ errno_t AOloopControl_WFSzpupdate_loop_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_WFSzeropoint_sum_update_loop */
-errno_t AOloopControl_WFSzeropoint_sum_update_loop_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_WFSzeropoint_sum_update_loop_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_STR_NOT_IMG)
             + CLI_checkarg(2, CLIARG_LONG)
             + CLI_checkarg(3, CLIARG_IMG)
             + CLI_checkarg(4, CLIARG_IMG)
-            == 0 )
+            == 0)
     {
         AOloopControl_WFSzeropoint_sum_update_loop(
             LOOPNUMBER,
@@ -515,21 +547,23 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_CompModes_loop */
-errno_t AOloopControl_CompModes_loop_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_CompModes_loop_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_IMG)
             + CLI_checkarg(3, CLIARG_IMG)
             + CLI_checkarg(4, CLIARG_IMG)
             + CLI_checkarg(5, CLIARG_STR_NOT_IMG)
-            == 0 )
+            == 0)
     {
         AOloopControl_CompModes_loop(
             data.cmdargtoken[1].val.string,
@@ -540,15 +574,17 @@ errno_t AOloopControl_CompModes_loop_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_GPUmodecoeffs2dm_filt */
-errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_IMG)
             + CLI_checkarg(3, CLIARG_IMG)
@@ -557,7 +593,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop_cli() {
             + CLI_checkarg(6, CLIARG_LONG)
             + CLI_checkarg(7, CLIARG_LONG)
             + CLI_checkarg(8, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_GPUmodecoeffs2dm_filt_loop(
             data.cmdargtoken[1].val.numl,
@@ -571,18 +607,20 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_computeWFSresidualimage */
-errno_t AOloopControl_computeWFSresidualimage_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_computeWFSresidualimage_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_IMG)
-            == 0 )
+            == 0)
     {
         AOloopControl_computeWFSresidualimage(
             data.cmdargtoken[1].val.numl,
@@ -590,36 +628,41 @@ errno_t AOloopControl_computeWFSresidualimage_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_ProcessModeCoefficients */
-errno_t AOloopControl_ProcessModeCoefficients_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_ProcessModeCoefficients_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_ProcessModeCoefficients(
             data.cmdargtoken[1].val.numl
         );
         return CLICMD_SUCCESS;
-    } else {
+    }
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_AutoTuneGains */
-errno_t AOloopControl_AutoTuneGains_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_AutoTuneGains_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_STR_NOT_IMG)
             + CLI_checkarg(3, CLIARG_FLOAT)
             + CLI_checkarg(4, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_AutoTuneGains(
             data.cmdargtoken[1].val.numl,
@@ -629,21 +672,23 @@ errno_t AOloopControl_AutoTuneGains_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_dm2dm_offload */
-errno_t AOloopControl_dm2dm_offload_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_dm2dm_offload_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_IMG)
             + CLI_checkarg(3, CLIARG_FLOAT)
             + CLI_checkarg(4, CLIARG_FLOAT)
             + CLI_checkarg(5, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_dm2dm_offload(
             data.cmdargtoken[1].val.string,
@@ -654,20 +699,22 @@ errno_t AOloopControl_dm2dm_offload_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_sig2Modecoeff */
-errno_t AOloopControl_sig2Modecoeff_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_sig2Modecoeff_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_IMG)
             + CLI_checkarg(3, CLIARG_IMG)
             + CLI_checkarg(4, CLIARG_STR_NOT_IMG)
-            == 0 )
+            == 0)
     {
         AOloopControl_sig2Modecoeff(
             data.cmdargtoken[1].val.string,
@@ -677,7 +724,8 @@ errno_t AOloopControl_sig2Modecoeff_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -692,17 +740,19 @@ errno_t AOloopControl_sig2Modecoeff_cli() {
 
 
 /** @brief CLI function for AOloopControl_setLoopNumber */
-errno_t AOloopControl_setLoopNumber_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setLoopNumber_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_setLoopNumber(
             data.cmdargtoken[1].val.numl
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -743,12 +793,13 @@ errno_t AOloopControl_setLoopNumber_cli() {
 
 
 /** @brief CLI function for AOloopControl_set_modeblock_gain */
-errno_t AOloopControl_set_modeblock_gain_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_set_modeblock_gain_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
             + CLI_checkarg(3, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_set_modeblock_gain(
             LOOPNUMBER,
@@ -758,17 +809,19 @@ errno_t AOloopControl_set_modeblock_gain_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_loopstep */
-errno_t AOloopControl_loopstep_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_loopstep_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_loopstep(
             LOOPNUMBER,
@@ -776,15 +829,17 @@ errno_t AOloopControl_loopstep_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_set_loopfrequ */
-errno_t AOloopControl_set_loopfrequ_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_set_loopfrequ_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
             == 0)
     {
@@ -793,227 +848,255 @@ errno_t AOloopControl_set_loopfrequ_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_set_hardwlatency_frame */
-errno_t AOloopControl_set_hardwlatency_frame_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_set_hardwlatency_frame_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 ) 
-            {
+            == 0)
+    {
         AOloopControl_set_hardwlatency_frame(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_set_complatency_frame */
-errno_t AOloopControl_set_complatency_frame_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_set_complatency_frame_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 ) 
-            {
+            == 0)
+    {
         AOloopControl_set_complatency_frame(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_set_wfsmextrlatency_frame */
-errno_t AOloopControl_set_wfsmextrlatency_frame_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_set_wfsmextrlatency_frame_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_set_wfsmextrlatency_frame(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_delta */
-errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_set_AUTOTUNE_LIMITS_delta(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_perc */
-errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_set_AUTOTUNE_LIMITS_perc(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_mcoeff */
-errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 ) {
+            == 0)
+    {
         AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setgain */
-errno_t AOloopControl_setgain_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setgain_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setgain(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setARPFgain */
-errno_t AOloopControl_setARPFgain_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setARPFgain_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setARPFgain(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setARPFgain */
-errno_t AOloopControl_setARPFgainAutoMin_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setARPFgainAutoMin_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setARPFgainAutoMin(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setARPFgain */
-errno_t AOloopControl_setARPFgainAutoMax_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setARPFgainAutoMax_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setARPFgainAutoMax(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setWFSnormfloor */
-errno_t AOloopControl_setWFSnormfloor_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setWFSnormfloor_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setWFSnormfloor(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setmaxlimit */
-errno_t AOloopControl_setmaxlimit_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setmaxlimit_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setmaxlimit(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setmult */
-errno_t AOloopControl_setmult_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setmult_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setmult(
             data.cmdargtoken[1].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -1034,12 +1117,13 @@ extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 
 
 /** @brief CLI function for AOloopControl_setgainrange */
-errno_t AOloopControl_setgainrange_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setgainrange_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_LONG)
             + CLI_checkarg(3, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setgainrange(
             data.cmdargtoken[1].val.numl,
@@ -1048,19 +1132,21 @@ errno_t AOloopControl_setgainrange_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setlimitrange */
-errno_t AOloopControl_setlimitrange_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setlimitrange_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_LONG)
             + CLI_checkarg(3, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setlimitrange(
             data.cmdargtoken[1].val.numl,
@@ -1069,19 +1155,21 @@ errno_t AOloopControl_setlimitrange_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setmultfrange */
-errno_t AOloopControl_setmultfrange_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setmultfrange_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_LONG)
             + CLI_checkarg(3, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setmultfrange(
             data.cmdargtoken[1].val.numl,
@@ -1090,35 +1178,40 @@ errno_t AOloopControl_setmultfrange_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setgainblock */
-errno_t AOloopControl_setgainblock_cli() {
-    if( CLI_checkarg(1, CLIARG_LONG)
+errno_t AOloopControl_setgainblock_cli()
+{
+    if(CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
-            == 0 ) {
+            == 0)
+    {
         AOloopControl_setgainblock(
             data.cmdargtoken[1].val.numl,
             data.cmdargtoken[2].val.numf
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setlimitblock */
-errno_t AOloopControl_setlimitblock_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setlimitblock_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setlimitblock(
             data.cmdargtoken[1].val.numl,
@@ -1126,18 +1219,20 @@ errno_t AOloopControl_setlimitblock_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_setmultfblock */
-errno_t AOloopControl_setmultfblock_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_setmultfblock_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setmultfblock(
             data.cmdargtoken[1].val.numl,
@@ -1145,21 +1240,23 @@ errno_t AOloopControl_setmultfblock_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
 /** @brief CLI function for AOloopControl_scanGainBlock */
-errno_t AOloopControl_scanGainBlock_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_scanGainBlock_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_LONG)
             + CLI_checkarg(3, CLIARG_FLOAT)
             + CLI_checkarg(4, CLIARG_FLOAT)
             + CLI_checkarg(5, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_scanGainBlock(
             data.cmdargtoken[1].val.numl,
@@ -1170,7 +1267,8 @@ errno_t AOloopControl_scanGainBlock_cli() {
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -1186,7 +1284,7 @@ errno_t AOloopControl_scanGainBlock_cli() {
 /** @brief CLI function for AOloopControl_DMmodulateAB */
 errno_t AOloopControl_DMmodulateAB_cli()
 {
-    if( DISABLE_CLI_AOloopControl
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_IMG)
             + CLI_checkarg(3, CLIARG_IMG)
@@ -1194,7 +1292,7 @@ errno_t AOloopControl_DMmodulateAB_cli()
             + CLI_checkarg(5, CLIARG_IMG)
             + CLI_checkarg(6, CLIARG_FLOAT)
             + CLI_checkarg(7, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_DMmodulateAB(
             data.cmdargtoken[1].val.string,
@@ -1207,7 +1305,8 @@ errno_t AOloopControl_DMmodulateAB_cli()
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -1221,17 +1320,19 @@ errno_t AOloopControl_DMmodulateAB_cli()
 /* =============================================================================================== */
 
 /** @brief CLI function for AOloopControl_logprocess_modeval */
-errno_t AOloopControl_logprocess_modeval_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_logprocess_modeval_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
-            == 0 )
+            == 0)
     {
         AOloopControl_logprocess_modeval(
             data.cmdargtoken[1].val.string
         );
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -1252,109 +1353,122 @@ errno_t AOloopControl_logprocess_modeval_cli() {
 
 
 
-errno_t AOloopControl_RTstreamLOG_init_cli() {
+errno_t AOloopControl_RTstreamLOG_init_cli()
+{
     AOloopControl_RTstreamLOG_init(LOOPNUMBER);
     return CLICMD_SUCCESS;
 }
 
 
-errno_t AOloopControl_RTstreamLOG_printstatus_cli() {
+errno_t AOloopControl_RTstreamLOG_printstatus_cli()
+{
     AOloopControl_RTstreamLOG_printstatus(LOOPNUMBER);
     return CLICMD_SUCCESS;
 }
 
 
-errno_t AOloopControl_RTstreamLOG_GUI_cli() {
+errno_t AOloopControl_RTstreamLOG_GUI_cli()
+{
     AOloopControl_RTstreamLOG_GUI(LOOPNUMBER);
     return CLICMD_SUCCESS;
 }
 
 
-errno_t AOloopControl_RTstreamLOG_saveloop_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_RTstreamLOG_saveloop_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_STR)
-            == 0 )
+            == 0)
     {
         AOloopControl_RTstreamLOG_saveloop(
             LOOPNUMBER,
             data.cmdargtoken[1].val.string
         );
-        
+
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
-errno_t AOloopControl_RTstreamLOG_set_saveON_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_RTstreamLOG_set_saveON_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_RTstreamLOG_set_saveON(
             LOOPNUMBER,
             data.cmdargtoken[1].val.numl
         );
-        
+
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
-errno_t AOloopControl_RTstreamLOG_set_saveOFF_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_RTstreamLOG_set_saveOFF_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_RTstreamLOG_set_saveOFF(
             LOOPNUMBER,
             data.cmdargtoken[1].val.numl
         );
-        
+
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
-errno_t AOloopControl_RTstreamLOG_set_ON_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_RTstreamLOG_set_ON_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_RTstreamLOG_set_ON
         (LOOPNUMBER,
          data.cmdargtoken[1].val.numl
         );
-        
+
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
 
 
-errno_t AOloopControl_RTstreamLOG_set_OFF_cli() {
-    if( DISABLE_CLI_AOloopControl
+errno_t AOloopControl_RTstreamLOG_set_OFF_cli()
+{
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_LONG)
-            == 0 )
+            == 0)
     {
         AOloopControl_RTstreamLOG_set_OFF(
             LOOPNUMBER,
             data.cmdargtoken[1].val.numl
         );
-        
+
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -1373,20 +1487,21 @@ errno_t AOloopControl_RTstreamLOG_set_OFF_cli() {
 
 errno_t AOloopControl_setparam_cli()
 {
-    if( DISABLE_CLI_AOloopControl
+    if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_STR_NOT_IMG)
             + CLI_checkarg(2, CLIARG_FLOAT)
-            == 0 )
+            == 0)
     {
         AOloopControl_setparam(
             LOOPNUMBER,
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.numf
         );
-        
+
         return CLICMD_SUCCESS;
     }
-    else {
+    else
+    {
         return CLICMD_INVALID_ARG;
     }
 }
@@ -1448,20 +1563,25 @@ static errno_t init_module_CLI()
 
 
 #ifdef AOLOOPCONTROL_LOGFUNC
-    CORE_logFunctionCall( AOLOOPCONTROL_logfunc_level, AOLOOPCONTROL_logfunc_level_max, 0, __FILE__, __FUNCTION__, __LINE__, "");
+    CORE_logFunctionCall(AOLOOPCONTROL_logfunc_level,
+                         AOLOOPCONTROL_logfunc_level_max, 0, __FILE__, __FUNCTION__, __LINE__, "");
 #endif
 
 
-    if( (fp = fopen("LOOPNUMBER","r")) != NULL )
+    if((fp = fopen("LOOPNUMBER", "r")) != NULL)
     {
-        if(fscanf(fp,"%8ld", &LOOPNUMBER) != 1)
-            printERROR(__FILE__,__func__,__LINE__, "Cannot read LOOPNUMBER");
+        if(fscanf(fp, "%8ld", &LOOPNUMBER) != 1)
+        {
+            printERROR(__FILE__, __func__, __LINE__, "Cannot read LOOPNUMBER");
+        }
 
         printf("LOOP NUMBER = %ld\n", LOOPNUMBER);
         fclose(fp);
     }
     else
+    {
         LOOPNUMBER = 0;
+    }
 
 
     aoloopcontrol_var.AOloopcontrol_meminit = 0;
@@ -1508,7 +1628,7 @@ static errno_t init_module_CLI()
     aoloopcontrol_var.aoconfID_meas_act = -1;
 
     int i;
-    for(i=0; i<100; i++)
+    for(i = 0; i < 100; i++)
     {
         aoloopcontrol_var.aoconfID_contrMcact[i] = -1;
         aoloopcontrol_var.initcontrMcact_GPU[i] = -1;
@@ -1522,8 +1642,10 @@ static errno_t init_module_CLI()
 
 
 
-    for(i=0; i<MAX_NUMBER_RTLOGSTREAM; i++)
+    for(i = 0; i < MAX_NUMBER_RTLOGSTREAM; i++)
+    {
         aoloopcontrol_var.RTSLOGarrayInitFlag[i] = 0;
+    }
 
 
 
@@ -1984,7 +2106,8 @@ static errno_t init_module_CLI()
         AOloopControl_setgainrange_cli,
         "set modal gains from m0 to m1 included",
         "<modemin [long]> <modemax [long]> <gainval>",
-        "aolsetgainr 20 30 0.2", "int AOloopControl_setgainrange(long m0, long m1, float gainval)");
+        "aolsetgainr 20 30 0.2",
+        "int AOloopControl_setgainrange(long m0, long m1, float gainval)");
 
     RegisterCLIcommand(
         "aolsetlimitr",
@@ -1992,7 +2115,8 @@ static errno_t init_module_CLI()
         AOloopControl_setlimitrange_cli,
         "set modal limits",
         "<modemin [long]> <modemax [long]> <limval>",
-        "aolsetlimitr 20 30 0.02", "int AOloopControl_setlimitrange(long m0, long m1, float gainval)");
+        "aolsetlimitr 20 30 0.02",
+        "int AOloopControl_setlimitrange(long m0, long m1, float gainval)");
 
     RegisterCLIcommand(
         "aolsetmultfr",
@@ -2008,10 +2132,11 @@ static errno_t init_module_CLI()
         AOloopControl_setgainblock_cli,
         "set modal gains by block",
         "<block [long]> <gainval>",
-        "aolsetgainb 2 0.2", "int AOloopControl_setgainblock(long m0, long m1, float gainval)");
+        "aolsetgainb 2 0.2",
+        "int AOloopControl_setgainblock(long m0, long m1, float gainval)");
 
     RegisterCLIcommand(
-        "aolsetlimitb",__FILE__,
+        "aolsetlimitb", __FILE__,
         AOloopControl_setlimitblock_cli,
         "set modal limits by block",
         "<block [long]> <limval>",
@@ -2217,13 +2342,16 @@ errno_t AOloopControl_setgainrange(
 )
 {
 
-    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
     }
 
-    if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1) {
+    if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
+    {
         char name[200];
-        if(sprintf(name, "aol%ld_DMmode_GAIN", LOOPNUMBER) < 1) {
+        if(sprintf(name, "aol%ld_DMmode_GAIN", LOOPNUMBER) < 1)
+        {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         }
 
@@ -2231,11 +2359,13 @@ errno_t AOloopControl_setgainrange(
     }
 
     unsigned long kmax = m1 + 1;
-    if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes) {
+    if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes)
+    {
         kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1;
     }
 
-    for(unsigned long k = m0; k < kmax; k++) {
+    for(unsigned long k = m0; k < kmax; k++)
+    {
         data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k] = gainval;
     }
 
@@ -2252,13 +2382,16 @@ errno_t AOloopControl_setlimitrange(
 )
 {
 
-    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
     }
 
-    if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1) {
+    if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
+    {
         char name[200];
-        if(sprintf(name, "aol%ld_DMmode_LIMIT", LOOPNUMBER) < 1) {
+        if(sprintf(name, "aol%ld_DMmode_LIMIT", LOOPNUMBER) < 1)
+        {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         }
 
@@ -2266,11 +2399,13 @@ errno_t AOloopControl_setlimitrange(
     }
 
     unsigned long kmax = m1 + 1;
-    if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes) {
+    if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes)
+    {
         kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1;
     }
 
-    for(unsigned long k = m0; k < kmax; k++) {
+    for(unsigned long k = m0; k < kmax; k++)
+    {
         data.image[aoloopcontrol_var.aoconfID_LIMIT_modes].array.F[k] = limval;
     }
 
@@ -2286,13 +2421,16 @@ errno_t AOloopControl_setmultfrange(
     float multfval
 )
 {
-    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
     }
 
-    if(aoloopcontrol_var.aoconfID_MULTF_modes == -1) {
+    if(aoloopcontrol_var.aoconfID_MULTF_modes == -1)
+    {
         char name[200];
-        if(sprintf(name, "aol%ld_DMmode_MULTF", LOOPNUMBER) < 1) {
+        if(sprintf(name, "aol%ld_DMmode_MULTF", LOOPNUMBER) < 1)
+        {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         }
 
@@ -2300,11 +2438,13 @@ errno_t AOloopControl_setmultfrange(
     }
 
     unsigned long kmax = m1 + 1;
-    if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes) {
+    if(kmax > AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes)
+    {
         kmax = AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1;
     }
 
-    for(unsigned long k = m0; k < kmax; k++) {
+    for(unsigned long k = m0; k < kmax; k++)
+    {
         data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[k] = multfval;
     }
 
@@ -2319,13 +2459,16 @@ errno_t AOloopControl_setgainblock(
     float gainval
 )
 {
-    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
     }
 
-    if(aoloopcontrol_var.aoconfID_gainb == -1) {
+    if(aoloopcontrol_var.aoconfID_gainb == -1)
+    {
         char imname[200];
-        if(sprintf(imname, "aol%ld_gainb", LOOPNUMBER) < 1) {
+        if(sprintf(imname, "aol%ld_gainb", LOOPNUMBER) < 1)
+        {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         }
 
@@ -2333,7 +2476,8 @@ errno_t AOloopControl_setgainblock(
     }
 
 
-    if(mb < (long) AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock) {
+    if(mb < (long) AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock)
+    {
         data.image[aoloopcontrol_var.aoconfID_gainb].array.F[mb] = gainval;
     }
 
@@ -2348,20 +2492,24 @@ errno_t AOloopControl_setlimitblock(
     float limitval
 )
 {
-    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
     }
 
-    if(aoloopcontrol_var.aoconfID_limitb == -1) {
+    if(aoloopcontrol_var.aoconfID_limitb == -1)
+    {
         char imname[200];
-        if(sprintf(imname, "aol%ld_limitb", LOOPNUMBER) < 1) {
+        if(sprintf(imname, "aol%ld_limitb", LOOPNUMBER) < 1)
+        {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
     }
 
-    if(mb < (long) AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock) {
+    if(mb < (long) AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock)
+    {
         data.image[aoloopcontrol_var.aoconfID_limitb].array.F[mb] = limitval;
     }
 
@@ -2376,20 +2524,26 @@ errno_t AOloopControl_setmultfblock(
     float multfval
 )
 {
-    if(aoloopcontrol_var.AOloopcontrol_meminit==0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     if(aoloopcontrol_var.aoconfID_multfb == -1)
     {
         char imname[200];
         if(sprintf(imname, "aol%ld_multfb", LOOPNUMBER) < 1)
+        {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        }
 
         aoloopcontrol_var.aoconfID_multfb = read_sharedmem_image(imname);
     }
 
     if(mb < (long) AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock)
+    {
         data.image[aoloopcontrol_var.aoconfID_multfb].array.F[mb] = multfval;
+    }
 
     return RETURN_SUCCESS;
 }
@@ -2397,19 +2551,22 @@ errno_t AOloopControl_setmultfblock(
 
 
 
-errno_t AOloopControl_AutoTune() 
+errno_t AOloopControl_AutoTune()
 {
     long NBstep = 10000;
     char name[200];
     float bestgain = 0.0;
     float val;
 
-    if(aoloopcontrol_var.AOloopcontrol_meminit == 0) {
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
     }
 
-    if(aoloopcontrol_var.aoconfID_cmd_modes == -1) {
-        if(sprintf(name, "aol%ld_DMmode_cmd", LOOPNUMBER) < 1) {
+    if(aoloopcontrol_var.aoconfID_cmd_modes == -1)
+    {
+        if(sprintf(name, "aol%ld_DMmode_cmd", LOOPNUMBER) < 1)
+        {
             printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
         }
 
@@ -2417,14 +2574,18 @@ errno_t AOloopControl_AutoTune()
     }
 
     // initialize
-    for(unsigned long block = 0; block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++) {
+    for(unsigned long block = 0;
+            block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++)
+    {
         AOloopControl_setgainblock(block, 0.0);
         AOloopControl_setlimitblock(block, 0.1);
         AOloopControl_setmultfblock(block, 0.8);
     }
 
 
-    for(unsigned long block = 0; block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++) {
+    for(unsigned long block = 0;
+            block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; block++)
+    {
         float gainStart = 0.0;
         float gainEnd = 1.0;
         int gOK = 1;
@@ -2434,8 +2595,10 @@ errno_t AOloopControl_AutoTune()
 
         // tune block gain
         gain = gainStart;
-        while((gOK == 1) && (gain < gainEnd)) {
-            for(unsigned long k = 0; k < AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++) {
+        while((gOK == 1) && (gain < gainEnd))
+        {
+            for(unsigned long k = 0; k < AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
+            {
                 data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
             }
 
@@ -2444,13 +2607,17 @@ errno_t AOloopControl_AutoTune()
 
             AOloopControl_setgainblock(block, gain);
             AOloopControl_loopstep(LOOPNUMBER, NBstep);
-            val = sqrt(AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul / AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt);
+            val = sqrt(AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul /
+                       AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt);
             printf("%6.4f  %10.8lf\n", gain, val);
 
-            if(val < bestval) {
+            if(val < bestval)
+            {
                 bestval = val;
                 bestgain = gain;
-            } else {
+            }
+            else
+            {
                 gOK = 0;
             }
         }
