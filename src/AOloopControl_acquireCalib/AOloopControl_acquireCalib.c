@@ -85,7 +85,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
 #include "info/info.h"
 
 #include "statistic/statistic.h"
-#include "image_gen/image_gen.c"
+#include "image_gen/image_gen.h"
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
