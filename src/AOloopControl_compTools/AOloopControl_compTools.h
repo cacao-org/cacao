@@ -1,10 +1,10 @@
 /**
  * @file    AOloopControl_compTools.h
  * @brief   Function prototypes for Adaptive Optics Control loop engine misc computation tools
- * 
+ *
  * AO engine uses stream data structure
- * . 
- * 
+ * .
+ *
  */
 
 #ifndef _AOLOOPCONTROL_COMPTOOLS_H
@@ -12,14 +12,14 @@
 
 
 /** @brief Initialize module. */
-void __attribute__ ((constructor)) libinit_AOloopControl_compTools();
+void __attribute__((constructor)) libinit_AOloopControl_compTools();
 
 
 
 
 /* =============================================================================================== */
 /* =============================================================================================== */
-/** @name AOloopControl_compTools - 1. COMPUTATION UTILITIES & TOOLS      
+/** @name AOloopControl_compTools - 1. COMPUTATION UTILITIES & TOOLS
  *  Useful tools */
 /* =============================================================================================== */
 /* =============================================================================================== */
