@@ -16,8 +16,6 @@
 /** @brief Initialize module. */
 void __attribute__ ((constructor)) libinit_AOloopControl_PredictiveControl();
 
-/** @brief Initialize command line interface. */
-errno_t init_AOloopControl_PredictiveControl();
 
 
 /* =============================================================================================== */
