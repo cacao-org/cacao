@@ -1,9 +1,9 @@
 /**
  * @file    AOloopControl_acquireCalib.h
  * @brief   Function prototypes for Adaptive Optics Control loop engine acquire calibration
- * 
+ *
  * AO engine uses stream data structure
- * 
+ *
  */
 
 #ifndef _AOLOOPCONTROL_ACQUIRECALIB_H
@@ -11,7 +11,7 @@
 
 
 /** @brief Initialize module. */
-void __attribute__ ((constructor)) libinit_AOloopControl_acquireCalib();
+void __attribute__((constructor)) libinit_AOloopControl_acquireCalib();
 
 
 
@@ -53,17 +53,22 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN();
 errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse(
     __attribute__((unused)) long        loop,
     __attribute__((unused)) float       ampl,
-    __attribute__((unused)) long        delayfr,          /// Frame delay [# of frame]
+    __attribute__((unused)) long
+    delayfr,          /// Frame delay [# of frame]
     __attribute__((unused)) long        delayRM1us,       /// Sub-frame delay [us]
-    __attribute__((unused)) long        NBave,            /// Number of frames averaged for a single poke measurement
-    __attribute__((unused)) long        NBexcl,           /// Number of frames excluded
+    __attribute__((unused)) long
+    NBave,            /// Number of frames averaged for a single poke measurement
+    __attribute__((unused)) long
+    NBexcl,           /// Number of frames excluded
     __attribute__((unused)) const char *IDpokeC_name,
     __attribute__((unused)) const char *IDrespC_name,
     __attribute__((unused)) const char *IDwfsref_name,
     __attribute__((unused)) int         normalize,
     __attribute__((unused)) int         AOinitMode,
-    __attribute__((unused)) long        NBcycle,         /// Number of measurement cycles to be repeated
-    __attribute__((unused)) long        NBinnerCycle     /// Number of inner cycles (how many consecutive times should a single +/- poke be repeated)
+    __attribute__((unused)) long
+    NBcycle,         /// Number of measurement cycles to be repeated
+    __attribute__((unused)) long
+    NBinnerCycle     /// Number of inner cycles (how many consecutive times should a single +/- poke be repeated)
 );
 
 imageID AOloopControl_acquireCalib_Measure_zonalRM(
@@ -103,7 +108,8 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
     const char *outname
 );
 
-long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name, int dmode, int NBtstep);
+long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart,
+        int refend, char *IDout_name, int dmode, int NBtstep);
 
 
 #endif
