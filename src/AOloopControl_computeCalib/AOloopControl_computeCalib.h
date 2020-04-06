@@ -15,8 +15,6 @@
 /** @brief Initialize module */
 void __attribute__ ((constructor)) libinit_AOloopControl_computeCalib();
 
-/** @brief Initialize command line interface. */
-errno_t init_AOloopControl_computeCalib();
 
 
 /* =============================================================================================== */

@@ -9,6 +9,21 @@
  */
 
 
+// module default short name
+// all CLI calls to this module functions will be <shortname>.<funcname>
+// if set to "", then calls use <funcname>
+#define MODULE_SHORTNAME_DEFAULT ""
+
+// Module short description 
+#define MODULE_DESCRIPTION       "AO loop control compute calibration"
+
+// Application to which module belongs
+#define MODULE_APPLICATION       "cacao"
+
+
+
+
+
 
 #define _GNU_SOURCE
 
@@ -82,8 +97,6 @@
 /* =============================================================================================== */
 
 
-static int INITSTATUS_AOloopControl_computeCalib = 0;
-
 extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
@@ -97,6 +110,24 @@ long aoconfID_imWFS2_active[100];
 
 
 
+
+/* ================================================================== */
+/* ================================================================== */
+/*            INITIALIZE LIBRARY                                      */
+/* ================================================================== */
+/* ================================================================== */
+
+// Module initialization macro in CLIcore.h
+// macro argument defines module name for bindings
+//
+INIT_MODULE_LIB(AOloopControl_computeCalib)
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
+/* ================================================================== */
+/* ================================================================== */
 
 
 
@@ -620,18 +651,8 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli() {
 /** @name AOloopControl_IOtools functions */
 
 
-void __attribute__ ((constructor)) libinit_AOloopControl_computeCalib()
-{
-	if ( INITSTATUS_AOloopControl_computeCalib == 0)
-	{
-		init_AOloopControl_computeCalib();
-		RegisterModule(__FILE__, "cacao", "AO loop control compute calibration");
-		INITSTATUS_AOloopControl_computeCalib = 1;
-	}
-}
 
-
-errno_t init_AOloopControl_computeCalib()
+static errno_t init_module_CLI()
 {
 
     /* =============================================================================================== */
@@ -783,9 +804,15 @@ errno_t init_AOloopControl_computeCalib()
 
 
 
-
-
-
+/**
+ * @ingroup FPSconf
+ * 
+ * @brief Configuration for compute calib FPS
+ * 
+ * Calls #FPS_SETUP_INIT to perform initialization
+ * 
+ * @{
+ */ 
 errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     char    *fpsname,
     uint32_t CMDmode
@@ -1088,11 +1115,18 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     return RETURN_SUCCESS;
 
 }
+/** @} */ // end of group
 
 
 
-
-
+/**
+ * @ingroup FPSrun
+ * 
+ * @brief Compute control matrix
+ * 
+ * 
+ * @{
+ */ 
 errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     char *fpsname
 ) {
@@ -1294,7 +1328,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
     return RETURN_SUCCESS;
 
 }
-
+/** @} */ // end of group
 
 
 
