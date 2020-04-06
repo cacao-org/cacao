@@ -16,6 +16,29 @@
 
 
 
+/* ================================================================== */
+/* ================================================================== */
+/*            MODULE INFO                                             */
+/* ================================================================== */
+/* ================================================================== */
+
+// module default short name
+// all CLI calls to this module functions will be <shortname>.<funcname>
+// if set to "", then calls use <funcname>
+#define MODULE_SHORTNAME_DEFAULT ""
+
+// Module short description 
+#define MODULE_DESCRIPTION       "AO loop control performance monitoring and testing"
+
+// Application to which module belongs
+#define MODULE_APPLICATION       "cacao"
+
+
+
+
+
+
+
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
@@ -104,8 +127,6 @@ typedef struct {
 /*                                     MAIN DATA STRUCTURES                                        */
 /* =============================================================================================== */
 
-static int INITSTATUS_AOloopControl_perfTest = 0;
-
 extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
@@ -113,18 +134,27 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
 
-// CLI commands
+
+
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            INITIALIZE LIBRARY                                      */
+/* ================================================================== */
+/* ================================================================== */
+
+// Module initialization macro in CLIcore.h
+// macro argument defines module name for bindings
 //
-// function CLI_checkarg used to check arguments
-// CLI_checkarg ( CLI argument index , type code )
-//
-// type codes:
-// 1: float
-// 2: long
-// 3: string, not existing image
-// 4: existing image
-// 5: string
-//
+INIT_MODULE_LIB(AOloopControl_perfTest)
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
+/* ================================================================== */
+/* ================================================================== */
 
 
 
@@ -133,15 +163,6 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 /** @name AOloopControl - 9. STATUS / TESTING / PERF MEASUREMENT                                   */
 /* =============================================================================================== */
 /* =============================================================================================== */
-
-
-
-
-
-
-
-
-
 
 
 
@@ -588,18 +609,7 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli()
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-void __attribute__ ((constructor)) libinit_AOloopControl_perfTest()
-{
-	if ( INITSTATUS_AOloopControl_perfTest == 0 )
-	{
-		init_AOloopControl_perfTest();
-		RegisterModule(__FILE__, "cacao", "AO loop control performance monitoring and testing");
-		INITSTATUS_AOloopControl_perfTest = 1;
-	}
-}
-
-
-errno_t init_AOloopControl_perfTest()
+static errno_t init_module_CLI()
 {
     /* =============================================================================================== */
     /* =============================================================================================== */

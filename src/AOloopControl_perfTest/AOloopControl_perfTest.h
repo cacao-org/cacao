@@ -18,8 +18,7 @@
 /** @brief Initialize module. */
 void __attribute__ ((constructor)) libinit_AOloopControl_perfTest();
 
-/** @brief Initialize command line interface. */
-errno_t init_AOloopControl_perfTest();
+
 
 
 
