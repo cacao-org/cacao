@@ -9,6 +9,30 @@
 
 
 
+
+/* ================================================================== */
+/* ================================================================== */
+/*            MODULE INFO                                             */
+/* ================================================================== */
+/* ================================================================== */
+
+// module default short name
+// all CLI calls to this module functions will be <shortname>.<funcname>
+// if set to "", then calls use <funcname>
+#define MODULE_SHORTNAME_DEFAULT ""
+
+// Module short description 
+#define MODULE_DESCRIPTION       "AO loop control - computation tools"
+
+// Application to which module belongs
+#define MODULE_APPLICATION       "cacao"
+
+
+
+
+
+
+
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout
@@ -52,8 +76,6 @@
 /* =============================================================================================== */
 
 
-static int INITSTATUS_AOloopControl_compTools = 0;
-
 
 #define NB_AOloopcontrol 10 // max number of loops
 
@@ -73,39 +95,26 @@ extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 
 
 
+/* ================================================================== */
+/* ================================================================== */
+/*            INITIALIZE LIBRARY                                      */
+/* ================================================================== */
+/* ================================================================== */
 
-
-
-// CLI commands
+// Module initialization macro in CLIcore.h
+// macro argument defines module name for bindings
 //
-// function CLI_checkarg used to check arguments
-// CLI_checkarg ( CLI argument index , type code )
-//
-// type codes:
-// 1: float
-// 2: long
-// 3: string, not existing image
-// 4: existing image
-// 5: string
-//
+INIT_MODULE_LIB(AOloopControl_compTools)
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
+/* ================================================================== */
+/* ================================================================== */
 
 
 
-
-
-
-
-
-
-
-
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/*                                    FUNCTIONS SOURCE CODE                                        */
-/* =============================================================================================== */
-/* =============================================================================================== */
 /** @name AOloopControl functions */
 
 
@@ -166,19 +175,8 @@ errno_t AOloopControl_compTools_mkSimpleZpokeM_cli()
 
 
 
-void __attribute__ ((constructor)) libinit_AOloopControl_compTools()
-{
-	if( INITSTATUS_AOloopControl_compTools == 0)
-	{
-		init_AOloopControl_compTools();
-		RegisterModule(__FILE__, "cacao", "AO loop control - computation tools");
-		INITSTATUS_AOloopControl_compTools = 1;
-	}
-}
 
-
-
-errno_t init_AOloopControl_compTools()
+static errno_t init_module_CLI()
 {
 
     /* =============================================================================================== */
