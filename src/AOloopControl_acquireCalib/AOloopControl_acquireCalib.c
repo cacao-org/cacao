@@ -9,6 +9,25 @@
  */
 
 
+/* ================================================================== */
+/* ================================================================== */
+/*            MODULE INFO                                             */
+/* ================================================================== */
+/* ================================================================== */
+
+// module default short name
+// all CLI calls to this module functions will be <shortname>.<funcname>
+// if set to "", then calls use <funcname>
+#define MODULE_SHORTNAME_DEFAULT ""
+
+// Module short description 
+#define MODULE_DESCRIPTION       "AO loop control acquire calibration"
+
+// Application to which module belongs
+#define MODULE_APPLICATION       "cacao"
+
+
+
 
 #define _GNU_SOURCE
 
@@ -104,7 +123,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 //extern long aoloopcontrol_var.aoconfID_cmd_modesRM;
 
 static int RMACQUISITION = 0;  // toggles to 1 when resp matrix is being acquired
-static int INITSTATUS_AOloopControl_acquireCalib = 0;
 
 extern long LOOPNUMBER; // current loop index
 extern int AOloopcontrol_meminit; // declared in AOloopControl_compTools.c
@@ -122,6 +140,25 @@ extern AOloopControl_var aoloopcontrol_var;
 
 
 
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            INITIALIZE LIBRARY                                      */
+/* ================================================================== */
+/* ================================================================== */
+
+// Module initialization macro in CLIcore.h
+// macro argument defines module name for bindings
+//
+INIT_MODULE_LIB(AOloopControl_acquireCalib)
+
+
+/* ================================================================== */
+/* ================================================================== */
+/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
+/* ================================================================== */
+/* ================================================================== */
 
 
 
@@ -421,21 +458,11 @@ errno_t AOloopControl_acquireCalib_RMseries_deinterlace_cli() {
 /* =============================================================================================== */
 /** @name AOloopControl_IOtools functions */
 
-void __attribute__ ((constructor)) libinit_AOloopControl_acquireCalib()
-{
-    if( INITSTATUS_AOloopControl_acquireCalib == 0)
-    {
-        init_AOloopControl_acquireCalib();
-        RegisterModule(__FILE__, "cacao", "AO loop control acquire calibration");
-        INITSTATUS_AOloopControl_acquireCalib = 1;
-    }
-}
 
 
 
 
-
-errno_t init_AOloopControl_acquireCalib()
+static errno_t init_module_CLI()
 {
 
     /* =============================================================================================== */

@@ -13,8 +13,7 @@
 /** @brief Initialize module. */
 void __attribute__ ((constructor)) libinit_AOloopControl_acquireCalib();
 
-/** @brief Initialize command line interface. */
-errno_t init_AOloopControl_acquireCalib();
+
 
 
 
