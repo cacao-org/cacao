@@ -1,9 +1,11 @@
 var image__gen_8c =
 [
+    [ "MODULE_APPLICATION", "image__gen_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "image__gen_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "image__gen_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "OMP_NELEMENT_LIMIT", "image__gen_8c.html#a2a847307a407427b42689ebaa39aacad", null ],
     [ "PI", "image__gen_8c.html#a598a3330b3c21701223ee0ca14316eca", null ],
     [ "SWAP", "image__gen_8c.html#a5d9d454d4b9f2ff8106d5199ac0d0186", null ],
-    [ "__attribute__", "image__gen_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "gen_image_EZdisk", "image__gen_8c.html#a4f1ad2337b14bf6477c4381e020e6b32", null ],
     [ "image_gen_im2coord", "image__gen_8c.html#ab92db1de425ee795fbc7ef7451eadf39", null ],
     [ "image_gen_im2coord_cli", "image__gen_8c.html#a998fdf7ef35445ddb4dd775b555595bb", null ],
@@ -11,7 +13,7 @@ var image__gen_8c =
     [ "image_gen_make_voronoi_map_cli", "image__gen_8c.html#a42d6adb18ab496f0aae143d159e82a69", null ],
     [ "IMAGE_gen_segments2WFmodes", "image__gen_8c.html#a5be8ba1e0a7f3660554745268ecc2c9c", null ],
     [ "IMAGE_gen_segments2WFmodes_cli", "image__gen_8c.html#a0a3f0a57e8eff080fff388775b8c57de", null ],
-    [ "init_image_gen", "image__gen_8c.html#af5acda2663165ae7b948fcf44b1382ba", null ],
+    [ "init_module_CLI", "image__gen_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "make_2axis_gauss", "image__gen_8c.html#a83c8230a5bce4b96ce990c7184b9644b", null ],
     [ "make_2Dgridpix", "image__gen_8c.html#a529a83e1dad5c9561ea0a0a648ccea19", null ],
     [ "make_2Dgridpix_cli", "image__gen_8c.html#abc108c7b77fb60c7913f6a898bccacf8", null ],
@@ -50,6 +52,5 @@ var image__gen_8c =
     [ "make_subpixdisk", "image__gen_8c.html#aaef4d72ab44e90e9f2c65a8260df326d", null ],
     [ "make_subpixdisk_cli", "image__gen_8c.html#ad876664b8aaf1d26fe9c15f899637ceb", null ],
     [ "make_subpixdisk_perturb", "image__gen_8c.html#ad3c601f6180d1eb998581785fef328d6", null ],
-    [ "make_tile", "image__gen_8c.html#a3ae5d3ebd45b88b172a936cfba3804ca", null ],
-    [ "INITSTATUS_image_gen", "image__gen_8c.html#a1d6321c766f9d8668c68750621a13cd8", null ]
+    [ "make_tile", "image__gen_8c.html#a3ae5d3ebd45b88b172a936cfba3804ca", null ]
 ];

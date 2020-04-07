@@ -6,5 +6,6 @@ var structCMD =
     [ "info", "structCMD.html#a008f20bb66a74f15dc4e9536ca19dd9a", null ],
     [ "key", "structCMD.html#ab3aedae0ea688867922c5db16e0c136f", null ],
     [ "module", "structCMD.html#a9bcb0d3986a5b395888154f852e9c816", null ],
+    [ "modulesrc", "structCMD.html#a87790a1f8015a51bc649b0a529c5209e", null ],
     [ "syntax", "structCMD.html#af841a2189f9e693dd3ec530d368d3e92", null ]
 ];

@@ -103,7 +103,6 @@ var AOloopControl_8h =
     [ "AOloopControl_WFSzeropoint_sum_update_loop", "AOloopControl_8h.html#a80b3b31ca815cff191098d7fb8a3a9db", null ],
     [ "AOloopControl_WFSzpupdate_loop", "AOloopControl_8h.html#a4b9a67eb541e6102087f60f8b5e2f31a", null ],
     [ "ControlMatrixMultiply", "AOloopControl_8h.html#ae891b2c48f8b75c0e26345cfa8f4011e", null ],
-    [ "init_AOloopControl", "AOloopControl_8h.html#ad8763259308684e99f1dc999f08e429d", null ],
     [ "set_DM_modes", "AOloopControl_8h.html#ad8622d454a8d8e21a27b63f6a5217f6d", null ],
     [ "set_DM_modesRM", "AOloopControl_8h.html#ac41908c29c6ca8f7fd05d99df15e200b", null ]
 ];

@@ -9,6 +9,5 @@ var AOloopControl__acquireCalib_8h =
     [ "AOloopControl_acquireCalib_Measure_zonalRM", "AOloopControl__acquireCalib_8h.html#a6fe6b240dc1608806c36a5365afd8aec", null ],
     [ "AOloopControl_acquireCalib_mkRandomLinPokeSequence", "AOloopControl__acquireCalib_8h.html#a27189d95cd8e6f7b972fc199abd3a803", null ],
     [ "AOloopControl_acquireCalib_RespMatrix_Fast", "AOloopControl__acquireCalib_8h.html#a2bea54ad83f480407592abd36dea624d", null ],
-    [ "AOloopControl_acquireCalib_RMseries_deinterlace", "AOloopControl__acquireCalib_8h.html#aa03168ac066833719f189722cbc4af07", null ],
-    [ "init_AOloopControl_acquireCalib", "AOloopControl__acquireCalib_8h.html#a8d7dfe6d9069e525fef0fcaf116d7964", null ]
+    [ "AOloopControl_acquireCalib_RMseries_deinterlace", "AOloopControl__acquireCalib_8h.html#aa03168ac066833719f189722cbc4af07", null ]
 ];

@@ -4,6 +4,5 @@ var AOloopControl__PredictiveControl_8h =
     [ "AOloopControl_PredictiveControl_builPFloop_WatchInput", "AOloopControl__PredictiveControl_8h.html#aaf5ebc0d4dcf82b7a811b093d0d8bfff", null ],
     [ "AOloopControl_PredictiveControl_mapPredictiveFilter", "AOloopControl__PredictiveControl_8h.html#ac57bc13e2c0442ac6154a18a00b97235", null ],
     [ "AOloopControl_PredictiveControl_setPFsimpleAve", "AOloopControl__PredictiveControl_8h.html#abedc97ce9e769f9e523772dc22983ddb", null ],
-    [ "AOloopControl_PredictiveControl_testPredictiveFilter", "AOloopControl__PredictiveControl_8h.html#ad7db374105274c437eae4f3274429b80", null ],
-    [ "init_AOloopControl_PredictiveControl", "AOloopControl__PredictiveControl_8h.html#aee7e6c0c463f0ff334bc1b1e01993fed", null ]
+    [ "AOloopControl_PredictiveControl_testPredictiveFilter", "AOloopControl__PredictiveControl_8h.html#ad7db374105274c437eae4f3274429b80", null ]
 ];

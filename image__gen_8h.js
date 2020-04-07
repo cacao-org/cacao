@@ -5,7 +5,6 @@ var image__gen_8h =
     [ "image_gen_im2coord", "image__gen_8h.html#ab92db1de425ee795fbc7ef7451eadf39", null ],
     [ "image_gen_make_voronoi_map", "image__gen_8h.html#ad6fcb61fa81ad301afd14444f0b8a056", null ],
     [ "IMAGE_gen_segments2WFmodes", "image__gen_8h.html#a5be8ba1e0a7f3660554745268ecc2c9c", null ],
-    [ "init_image_gen", "image__gen_8h.html#af5acda2663165ae7b948fcf44b1382ba", null ],
     [ "make_2axis_gauss", "image__gen_8h.html#a83c8230a5bce4b96ce990c7184b9644b", null ],
     [ "make_2Dgridpix", "image__gen_8h.html#a529a83e1dad5c9561ea0a0a648ccea19", null ],
     [ "make_cluster", "image__gen_8h.html#a353a6e9167acfa21d8043109da8224e1", null ],

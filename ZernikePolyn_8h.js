@@ -8,7 +8,6 @@ var ZernikePolyn_8h =
     [ "get_zer_crop", "ZernikePolyn_8h.html#ae93cd7bd1ea067b76e92a9000df29958", null ],
     [ "get_zern_array", "ZernikePolyn_8h.html#a4cb38a061f9a89a7fd5b6f1fd21a8a3f", null ],
     [ "get_zerns", "ZernikePolyn_8h.html#ab0d279c8b5bde5f10431251c78a70812", null ],
-    [ "init_ZernikePolyn", "ZernikePolyn_8h.html#add80f253f55c1a0c1ec4086fccd72767", null ],
     [ "mk_zer", "ZernikePolyn_8h.html#a3dc7c310f9220de6d22d51031027448d", null ],
     [ "mk_zer_series", "ZernikePolyn_8h.html#a05b43f0570254ea44645b14c33b10043", null ],
     [ "mk_zer_seriescube", "ZernikePolyn_8h.html#ab52923d93937685e873c4cbbb7953ad7", null ],

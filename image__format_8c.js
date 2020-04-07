@@ -8,11 +8,13 @@ var image__format_8c =
     [ "BMP_BIG_ENDIAN", "image__format_8c.html#a08a17405df23646d216f43bd0d3d0db9", null ],
     [ "BMP_FALSE", "image__format_8c.html#a70899c666d24e6e7a2c74f41c5c78f2b", null ],
     [ "BMP_TRUE", "image__format_8c.html#a11bfbf131748b402316341801411daee", null ],
+    [ "MODULE_APPLICATION", "image__format_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "image__format_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "image__format_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "PI", "image__format_8c.html#a598a3330b3c21701223ee0ca14316eca", null ],
     [ "SWAP", "image__format_8c.html#a5d9d454d4b9f2ff8106d5199ac0d0186", null ],
     [ "uint16", "image__format_8c.html#afc4adc9111e54b3163b6126ce951ecc3", null ],
     [ "uint32", "image__format_8c.html#a9695cf1104606879c5d3f0221635a069", null ],
-    [ "__attribute__", "image__format_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "convert_rawbayerFITStorgbFITS_simple", "image__format_8c.html#a07ef920c9f96b9260dbb684f363b6267", null ],
     [ "CR2toFITS", "image__format_8c.html#a7e823fa737991c7086050e35c0658bd6", null ],
     [ "CR2toFITS_cli", "image__format_8c.html#a3cf872a1424109b307db3b612bde07a3", null ],
@@ -37,7 +39,7 @@ var image__format_8c =
     [ "image_writeBMP", "image__format_8c.html#a13d54a9fadf18f475a900e1b64cc9aa4", null ],
     [ "image_writeBMP_auto", "image__format_8c.html#a713bf27861059ffb45b5f8548f1416cc", null ],
     [ "image_writeBMP_auto_cli", "image__format_8c.html#a29ffda2ee41ad67f76d8d5bf6603eee3", null ],
-    [ "init_image_format", "image__format_8c.html#a9bf487e53de5b8343f976edb3f2a5488", null ],
+    [ "init_module_CLI", "image__format_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "loadCR2", "image__format_8c.html#a8725f5cb98f9e9c03b98706481ce53e5", null ],
     [ "loadCR2toFITSRGB", "image__format_8c.html#a3996fcc390185a70968b6ff8fd1be318", null ],
     [ "read_ASCIIimage", "image__format_8c.html#a3b37825a6a8902961416ac7a87271c53", null ],
@@ -48,6 +50,5 @@ var image__format_8c =
     [ "setUint32", "image__format_8c.html#a0b57531c5d234fdfd2effcfaae392fab", null ],
     [ "write24BitBmpFile", "image__format_8c.html#a1221459651e3bb55246e540c83e2eab6", null ],
     [ "CR2toFITS_NORM", "image__format_8c.html#ac442ae73a4d2edb8a0a196b1c5a4b133", null ],
-    [ "FLUXFACTOR", "image__format_8c.html#a7628212b40e2db5559a6a46417b2c7ca", null ],
-    [ "INITSTATUS_image_format", "image__format_8c.html#af09493238fc6f38009359150cce6cb2b", null ]
+    [ "FLUXFACTOR", "image__format_8c.html#a7628212b40e2db5559a6a46417b2c7ca", null ]
 ];

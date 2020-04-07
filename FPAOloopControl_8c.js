@@ -2,7 +2,9 @@ var FPAOloopControl_8c =
 [
     [ "_GNU_SOURCE", "FPAOloopControl_8c.html#a369266c24eacffb87046522897a570d5", null ],
     [ "FPAOconfname", "FPAOloopControl_8c.html#a315edaa82c488ece3d7b895bb3aa8974", null ],
-    [ "__attribute__", "FPAOloopControl_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "MODULE_APPLICATION", "FPAOloopControl_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "FPAOloopControl_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "FPAOloopControl_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "FPAO_Measure_WFSrespC", "FPAOloopControl_8c.html#a63686d7e9997643d115ab9e81c84d47d", null ],
     [ "FPAOloopControl_InitializeMemory", "FPAOloopControl_8c.html#a5b8b2c6fb976edc990a83e12c80caa04", null ],
     [ "FPAOloopControl_loadconfigure", "FPAOloopControl_8c.html#aa367162d9c356979d3476a727b239f24", null ],
@@ -16,7 +18,7 @@ var FPAOloopControl_8c =
     [ "FPAOloopControl_set_hardwlatency_frame_cli", "FPAOloopControl_8c.html#ad4239db5ea94ab4de00d05eba90aea47", null ],
     [ "FPAOloopControl_showparams", "FPAOloopControl_8c.html#af951e683e5e742499e84ed41c56bd888", null ],
     [ "FPAOloopControl_showparams_cli", "FPAOloopControl_8c.html#abd7678e62d955085e5ea132404297e37", null ],
-    [ "init_FPAOloopControl", "FPAOloopControl_8c.html#a6d51c112d1ecfe55d8f3c7447e813e89", null ],
+    [ "init_module_CLI", "FPAOloopControl_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "arrayftmp", "FPAOloopControl_8c.html#ad8ff4c1042b8a554ff3f671ccbfe6c13", null ],
     [ "arrayutmp", "FPAOloopControl_8c.html#ac39858ce68e2199bae5b1e5669cd12f6", null ],
     [ "FPAO_loadcreateshm_fplog", "FPAOloopControl_8c.html#ae38b80dd8fb551e89cb3e3c338258dba", null ],
@@ -32,6 +34,5 @@ var FPAOloopControl_8c =
     [ "FPAOlooploadconf_init", "FPAOloopControl_8c.html#a0da067dba807011d1091f3113424ac95", null ],
     [ "FPcamReadInit", "FPAOloopControl_8c.html#acdf17d8f2ddbc2c3b5a421c28146e64a", null ],
     [ "FPLOOPNUMBER", "FPAOloopControl_8c.html#a6351dbcff0684d3e828a8f6ad1e3a13c", null ],
-    [ "INITSTATUS_FPAOloopcontrol", "FPAOloopControl_8c.html#adb9a0466a570c33c3658ba3517c39c28", null ],
     [ "NB_FPAOloopcontrol", "FPAOloopControl_8c.html#a0ad8e237b4cbe145c63971905b7931a3", null ]
 ];

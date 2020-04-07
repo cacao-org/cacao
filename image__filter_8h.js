@@ -14,6 +14,5 @@ var image__filter_8h =
     [ "FILTER_percentile_interpol_fast", "image__filter_8h.html#a6bb18605ab4ed618e8d008df0e89bafd", null ],
     [ "gauss_3Dfilter", "image__filter_8h.html#ab20ee902b86ee7d0e192c7c00e843d45", null ],
     [ "gauss_filter", "image__filter_8h.html#aa766cc63e9d9de38824f9a997183eb69", null ],
-    [ "init_image_filter", "image__filter_8h.html#ae72fd3d4c32e17c282499cc10fb70922", null ],
     [ "median_filter", "image__filter_8h.html#ab22b31f3ca8d174936a7dc6b1ac2e399", null ]
 ];

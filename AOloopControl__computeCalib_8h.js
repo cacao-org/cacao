@@ -20,6 +20,5 @@ var AOloopControl__computeCalib_8h =
     [ "AOloopControl_computeCalib_mkModes_Simple", "AOloopControl__computeCalib_8h.html#a927ef0ab4366f867960768f65b25a943", null ],
     [ "AOloopControl_computeCalib_mkSlavedAct", "AOloopControl__computeCalib_8h.html#ad5a4d6377e976f9ae6f3e00d16e1f64d", null ],
     [ "AOloopControl_computeCalib_Process_zrespM", "AOloopControl__computeCalib_8h.html#aa3723197e31c469c799b8f68e496a5b4", null ],
-    [ "AOloopControl_computeCalib_ProcessZrespM_medianfilt", "AOloopControl__computeCalib_8h.html#a1e2f0cf8054acbfc900da245538619cb", null ],
-    [ "init_AOloopControl_computeCalib", "AOloopControl__computeCalib_8h.html#a401192ce5c6e39522b6e5c22685b2bfe", null ]
+    [ "AOloopControl_computeCalib_ProcessZrespM_medianfilt", "AOloopControl__computeCalib_8h.html#a1e2f0cf8054acbfc900da245538619cb", null ]
 ];

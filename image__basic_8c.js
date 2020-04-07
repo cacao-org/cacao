@@ -1,9 +1,11 @@
 var image__basic_8c =
 [
     [ "M_PI", "image__basic_8c.html#ae71449b1cc6e6250b91f539153a7a0d3", null ],
+    [ "MODULE_APPLICATION", "image__basic_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "image__basic_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "image__basic_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "SBUFFERSIZE", "image__basic_8c.html#a856e9c763f542a6a0b78587b2989c159", null ],
     [ "SWAP", "image__basic_8c.html#a5d9d454d4b9f2ff8106d5199ac0d0186", null ],
-    [ "__attribute__", "image__basic_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "basic_2Dextrapolate_nearestpixel", "image__basic_8c.html#a066cc75bd28fb5e935e155d465b9fcfa", null ],
     [ "basic_add", "image__basic_8c.html#a232f60d1f4dbd637095e815676ff837d", null ],
     [ "basic_add3D", "image__basic_8c.html#a931dcc2eb4040a6674f56e272b20aa96", null ],
@@ -75,9 +77,8 @@ var image__basic_8c =
     [ "IMAGE_BASIC_streamrecord_cli", "image__basic_8c.html#a2f6c760c2be47e3be4c93167c1dc5842", null ],
     [ "image_basic_SwapAxis2D", "image__basic_8c.html#a14f55aa44729f2bf1dd7bd8bf814611e", null ],
     [ "image_basic_SwapAxis2D_cli", "image__basic_8c.html#afe8d09ea1f1a88968b2a906028817caf", null ],
-    [ "init_image_basic", "image__basic_8c.html#ad40596b51a85eb8fb54a17b41229490f", null ],
+    [ "init_module_CLI", "image__basic_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "load_fitsimages", "image__basic_8c.html#a569f6c5550944ba0a2fbc71900996b45", null ],
     [ "load_fitsimages_cube", "image__basic_8c.html#a4eb60c41877a6f39ea3f35a61a5b99de", null ],
-    [ "errmsg", "image__basic_8c.html#a8bb845778df5ade66dd9af426128a622", null ],
-    [ "INITSTATUS_image_basic", "image__basic_8c.html#a5417eea66e528f44b6387b63b286f798", null ]
+    [ "errmsg", "image__basic_8c.html#a8bb845778df5ade66dd9af426128a622", null ]
 ];

@@ -1,7 +1,9 @@
 var AOloopControl__acquireCalib_8c =
 [
     [ "_GNU_SOURCE", "AOloopControl__acquireCalib_8c.html#a369266c24eacffb87046522897a570d5", null ],
-    [ "__attribute__", "AOloopControl__acquireCalib_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "MODULE_APPLICATION", "AOloopControl__acquireCalib_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "AOloopControl__acquireCalib_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "AOloopControl__acquireCalib_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF", "AOloopControl__acquireCalib_8c.html#a2befd45c8dc93c3af92732cd170b5650", null ],
     [ "AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN", "AOloopControl__acquireCalib_8c.html#ab73e519781c272343c4c963f50c756df", null ],
     [ "AOloopControl_acquireCalib_Measure_Resp_Matrix", "AOloopControl__acquireCalib_8c.html#abcae8f267cd8a3665173aab402e764d5", null ],
@@ -24,7 +26,6 @@ var AOloopControl__acquireCalib_8c =
     [ "AOconf", "AOloopControl__acquireCalib_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "AOloopcontrol_meminit", "AOloopControl__acquireCalib_8c.html#ac8a65ca6927b57d697b359281dd5ff24", null ],
     [ "aoloopcontrol_var", "AOloopControl__acquireCalib_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
-    [ "INITSTATUS_AOloopControl_acquireCalib", "AOloopControl__acquireCalib_8c.html#afd59685cce055a6f78d872797f093317", null ],
     [ "LOOPNUMBER", "AOloopControl__acquireCalib_8c.html#afc4d319c21df38d7e771591b6934a836", null ],
     [ "RMACQUISITION", "AOloopControl__acquireCalib_8c.html#a56a6de7b23fbb757ba760bf7fe2d0278", null ]
 ];

@@ -10,7 +10,6 @@ var psf_8h =
     [ "fast_center_PSF", "psf_8h.html#a963cae7f730697f106d7a8ec54f9b533", null ],
     [ "get_sigma", "psf_8h.html#a7affb6e8e0be40f15c3689a6ab30f8cd", null ],
     [ "get_sigma_alone", "psf_8h.html#a1acb7b19d7340fd6419f1b718981dd31", null ],
-    [ "init_psf", "psf_8h.html#a1952bef043a6905a49629c8f80ac21f5", null ],
     [ "measure_enc_NRJ", "psf_8h.html#af3abea5e0e28eb1de427bbe7934bf2e0", null ],
     [ "measure_enc_NRJ1", "psf_8h.html#ac469efd2a066441d1690fef84556edc1", null ],
     [ "measure_FWHM", "psf_8h.html#a5334002f97c8582b738094e81251f762", null ],

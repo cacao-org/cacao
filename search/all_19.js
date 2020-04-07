@@ -46,7 +46,7 @@ var searchData=
   ['yy_5fend_5fof_5fbuffer_5fchar',['YY_END_OF_BUFFER_CHAR',['../calc__flex_8c.html#ab866a64da164ed2d4d444df1ef1fc9b3',1,'calc_flex.c']]],
   ['yy_5fexit_5ffailure',['YY_EXIT_FAILURE',['../calc__flex_8c.html#ae93e67b85c44f6bd31ead14a552a35c8',1,'calc_flex.c']]],
   ['yy_5fextra_5ftype',['YY_EXTRA_TYPE',['../calc__flex_8c.html#a26938d921de835f6183c02e54cf08828',1,'calc_flex.c']]],
-  ['yy_5ffatal_5ferror',['YY_FATAL_ERROR',['../calc__flex_8c.html#ac0586b8b0b092d02f4ba7d45abe328f2',1,'YY_FATAL_ERROR():&#160;calc_flex.c'],['../calc__flex_8c.html#a25d1992696acab2c6c3b6a6b45d2f487',1,'yy_fatal_error(const char *msg):&#160;calc_flex.c']]],
+  ['yy_5ffatal_5ferror',['yy_fatal_error',['../calc__flex_8c.html#a25d1992696acab2c6c3b6a6b45d2f487',1,'yy_fatal_error(const char *msg):&#160;calc_flex.c'],['../calc__flex_8c.html#ac0586b8b0b092d02f4ba7d45abe328f2',1,'YY_FATAL_ERROR():&#160;calc_flex.c']]],
   ['yy_5ffill_5fbuffer',['yy_fill_buffer',['../structyy__buffer__state.html#a63d2afbb1d79a3fc63df9e12626f827d',1,'yy_buffer_state']]],
   ['yy_5fflex_5fdebug',['yy_flex_debug',['../calc__flex_8c.html#a7411c3bab9eca1afee90113c2d22da37',1,'calc_flex.c']]],
   ['yy_5fflex_5fmajor_5fversion',['YY_FLEX_MAJOR_VERSION',['../calc__flex_8c.html#a243ca1d30872935faf05ea5118ed6fdc',1,'calc_flex.c']]],

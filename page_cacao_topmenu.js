@@ -26,20 +26,24 @@ var page_cacao_topmenu =
     ] ],
     [ "Coding Standards", "page_coding_standards.html", "page_coding_standards" ],
     [ "Loading, Creating Additional Modules", "page_LoadingModules.html", [
-      [ "Downloading Optional Modules", "page_LoadingModules.html#page_LoadingModules_download", null ],
-      [ "Linking Modules to CLI", "page_LoadingModules.html#page_LoadingModules_linking", [
-        [ "Automatic linking from `./lib/` directory", "page_LoadingModules.html#page_LoadingModules_linking_libdir", null ],
-        [ "Linking module from within CLI with soload", "page_LoadingModules.html#page_LoadingModules_linking_soload", null ],
-        [ "Linking module from within CLI with mload", "page_LoadingModules.html#page_LoadingModules_linking_mload", null ],
-        [ "Using environment variable `CLI_ADD_LIBS` to link shared objects", "page_LoadingModules.html#page_LoadingModules_linking_envvar", null ]
+      [ "1. Overview", "page_LoadingModules.html#page_LoadingModules_overview", [
+        [ "1.1. Compiling", "page_LoadingModules.html#page_LoadingModules_overview_compiling", null ],
+        [ "1.2. Runtime linking", "page_LoadingModules.html#page_LoadingModules_overview_linking", null ],
+        [ "1.3. A simple example", "page_LoadingModules.html#page_LoadingModules_overview_example", null ]
       ] ],
-      [ "Writing and Compiling Modules", "page_LoadingModules.html#page_LoadingModules_compiling", [
-        [ "Principles", "page_LoadingModules.html#page_LoadingModules_compiling_principles", null ],
-        [ "Adding modules to the main package compilation", "page_LoadingModules.html#page_LoadingModules_compiling_compiling_cmake", null ],
-        [ "Automatic loading", "page_LoadingModules.html#page_LoadingModules_compiling_autoloading", null ],
-        [ "Adding new module to github", "page_LoadingModules.html#page_LoadingModules_compiling_addingmodulegithub", null ],
-        [ "Custom compilation: Example code", "page_LoadingModules.html#page_LoadingModules_compiling_examplecode", null ]
-      ] ]
+      [ "2. Linking Modules to CLI", "page_LoadingModules.html#page_LoadingModules_linking", [
+        [ "2.1. Automatic linking from `./lib/` directory", "page_LoadingModules.html#page_LoadingModules_linking_libdir", null ],
+        [ "2.2. Linking module from within CLI with soload", "page_LoadingModules.html#page_LoadingModules_linking_soload", null ],
+        [ "2.3. Linking module from within CLI with mload", "page_LoadingModules.html#page_LoadingModules_linking_mload", null ],
+        [ "2.4. Using environment variable `CLI_ADD_LIBS` to link shared objects", "page_LoadingModules.html#page_LoadingModules_linking_envvar", null ]
+      ] ],
+      [ "3. Writing and Compiling Modules", "page_LoadingModules.html#page_LoadingModules_compiling", [
+        [ "3.1. Principles", "page_LoadingModules.html#page_LoadingModules_compiling_principles", null ],
+        [ "3.2. Adding modules to the main package compilation", "page_LoadingModules.html#page_LoadingModules_compiling_compiling_cmake", null ],
+        [ "3.3. Automatic loading", "page_LoadingModules.html#page_LoadingModules_compiling_autoloading", null ],
+        [ "3.4. Adding new module to github", "page_LoadingModules.html#page_LoadingModules_compiling_addingmodulegithub", null ]
+      ] ],
+      [ "4. Custom modules", "page_LoadingModules.html#page_LoadingModules_custom", null ]
     ] ],
     [ "CommandLineInterface Change Log", "page_CommandLineInterface_ChangeLog.html", null ],
     [ "milk modules", "page_milk_Modules.html", null ],

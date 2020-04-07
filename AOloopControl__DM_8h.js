@@ -37,7 +37,6 @@ var AOloopControl__DM_8h =
     [ "AOloopControl_mkDM_TT_circle", "AOloopControl__DM_8h.html#a6fcd293aae715d8bb815765d957061ab", null ],
     [ "AOloopControl_printDMconf", "AOloopControl__DM_8h.html#ad5deb546c15a3d4cd7dea8db66a30fd2", null ],
     [ "AOloopControl_printDMturbconf", "AOloopControl__DM_8h.html#a88a0b95a5714e4f187b32082f413d566", null ],
-    [ "init_AOloopControl_DM", "AOloopControl__DM_8h.html#a59c2210415bf5dcf30636d77230bcef5", null ],
     [ "make_master_turbulence_screen_local", "AOloopControl__DM_8h.html#a54664525b67738a5b701337c1c3ebbcb", null ],
     [ "time_diff", "AOloopControl__DM_8h.html#ab99a9aa7e41d1c1fc35848f51f52b76e", null ]
 ];

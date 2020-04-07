@@ -16,7 +16,6 @@ var info_8h =
     [ "info_cubestats", "info_8h.html#a1c5c15ec78ba14058d11b116d95d74a3", null ],
     [ "info_image_stats", "info_8h.html#aa34a1fb4df4f650e78e7adbb552ffa6c", null ],
     [ "info_time_diff", "info_8h.html#a6fb9173b416d4ca64e84793024c86a9e", null ],
-    [ "init_info", "info_8h.html#a5d7396f5ecc59232d638504c96aeb2ce", null ],
     [ "kbdhit", "info_8h.html#add1a5530fadf86f97cc5a4ba3e47c4a4", null ],
     [ "make_histogram", "info_8h.html#a8b4e6c3f453b8fba69fe04dbf046589f", null ],
     [ "print_header", "info_8h.html#a6fbb6ce54648926505877f584969e505", null ],

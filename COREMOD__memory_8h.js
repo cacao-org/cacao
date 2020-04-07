@@ -80,7 +80,6 @@ var COREMOD__memory_8h =
     [ "image_write_keyword_D", "COREMOD__memory_8h.html#a9c4f1c42015da7cecf5a45be0c1eec87", null ],
     [ "image_write_keyword_L", "COREMOD__memory_8h.html#a5fe7d496b8f5636b7e4e50a1635057b7", null ],
     [ "image_write_keyword_S", "COREMOD__memory_8h.html#aefab44344cd6c762ce475612f457b4d9", null ],
-    [ "init_COREMOD_memory", "COREMOD__memory_8h.html#a16d46181f20fd3129e3f81e5a49c2410", null ],
     [ "init_list_image_ID_ncurses", "COREMOD__memory_8h.html#a810dfa0c08e10dfe49f9d2139da8bcb2", null ],
     [ "list_image_ID", "COREMOD__memory_8h.html#a262b89dbc55b90edd082e43b62d406d8", null ],
     [ "list_image_ID_file", "COREMOD__memory_8h.html#a44c248d10a00f9c71970e17932c62017", null ],

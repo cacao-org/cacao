@@ -52,7 +52,6 @@ var image__basic_8h =
     [ "IMAGE_BASIC_streamfeed", "image__basic_8h.html#a2cc69bf5e17e8f8d2bf4243f815bdd75", null ],
     [ "IMAGE_BASIC_streamrecord", "image__basic_8h.html#adbcc6e65f201719298cc55027bd1f36f", null ],
     [ "image_basic_SwapAxis2D", "image__basic_8h.html#a14f55aa44729f2bf1dd7bd8bf814611e", null ],
-    [ "init_image_basic", "image__basic_8h.html#ad40596b51a85eb8fb54a17b41229490f", null ],
     [ "load_fitsimages", "image__basic_8h.html#a569f6c5550944ba0a2fbc71900996b45", null ],
     [ "load_fitsimages_cube", "image__basic_8h.html#a4eb60c41877a6f39ea3f35a61a5b99de", null ]
 ];

@@ -19,7 +19,6 @@ var fft_8h =
     [ "fftczoom", "fft_8h.html#ab82e7bdf11e52e96d5656b8e7157872c", null ],
     [ "fftzoom", "fft_8h.html#a67ed0902cebc562ac52085c35649a2cc", null ],
     [ "import_wisdom", "fft_8h.html#aa8b0cdf6145f0ec9488cceb1d86018cf", null ],
-    [ "init_fft", "fft_8h.html#a347f101a017e505b0617c7491f46d54b", null ],
     [ "init_fftw_plans", "fft_8h.html#aae81cacc047ff7e801eac130de834956", null ],
     [ "init_fftw_plans0", "fft_8h.html#ac170f9bd5ce0d4941563a3e0a5a27f09", null ],
     [ "permut", "fft_8h.html#a5aceb6604a1db8aa25abb42273b1e828", null ],

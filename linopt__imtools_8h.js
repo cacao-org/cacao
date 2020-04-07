@@ -1,7 +1,6 @@
 var linopt__imtools_8h =
 [
     [ "__attribute__", "linopt__imtools_8h.html#abef3c13c720a81abd1a92c511654c10e", null ],
-    [ "init_linopt_imtools", "linopt__imtools_8h.html#afc117916939017260e807f28af155892", null ],
     [ "linopt_compute_1Dfit", "linopt__imtools_8h.html#a903122b4c49a97607efcfe19ddeabfb4", null ],
     [ "linopt_compute_linRM_from_inout", "linopt__imtools_8h.html#ab54ce92e786d475dae79a07cda07a905", null ],
     [ "linopt_compute_SVDdecomp", "linopt__imtools_8h.html#af333dc23263f00e0326f3bde719d1627", null ],

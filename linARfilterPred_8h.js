@@ -1,7 +1,6 @@
 var linARfilterPred_8h =
 [
     [ "__attribute__", "linARfilterPred_8h.html#a1e88dc47f7bdcb5788e9dcafa0de7067", null ],
-    [ "init_linARfilterPred", "linARfilterPred_8h.html#a97ef522ff0d01a86780971d7f1bb4524", null ],
     [ "LINARFILTERPRED_Apply_LinPredictor", "linARfilterPred_8h.html#a1364a97ccef2543fee19ddbbcd42e934", null ],
     [ "LINARFILTERPRED_Apply_LinPredictor_RT", "linARfilterPred_8h.html#a7f53d26ca4af0d7caa2b6673ce2f78f9", null ],
     [ "LINARFILTERPRED_Build_LinPredictor", "linARfilterPred_8h.html#ae05972026922e2baeba739101c8ec3eb", null ],

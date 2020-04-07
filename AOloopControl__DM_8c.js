@@ -1,6 +1,8 @@
 var AOloopControl__DM_8c =
 [
-    [ "__attribute__", "AOloopControl__DM_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "MODULE_APPLICATION", "AOloopControl__DM_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "AOloopControl__DM_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "AOloopControl__DM_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "AOloopControl_DM_chan_setgain_cli", "AOloopControl__DM_8c.html#a69aa107f7a9a6e4442043db4d78aeebf", null ],
     [ "AOloopControl_DM_CombineChannels_cli", "AOloopControl__DM_8c.html#a0c641c6a601449ea3af72d1a8bc715a0", null ],
     [ "AOloopControl_DM_dmdispcomboff_cli", "AOloopControl__DM_8c.html#a92ba81a313c41f0c7c78d77ef025d884", null ],
@@ -23,10 +25,9 @@ var AOloopControl__DM_8c =
     [ "AOloopControl_DM_setvoltOFF_cli", "AOloopControl__DM_8c.html#aa060c001cb4aa1da021c12ddf8d7efe0", null ],
     [ "AOloopControl_DM_setvoltON_cli", "AOloopControl__DM_8c.html#a377212fe5e8d6ee7873821c5637f878a", null ],
     [ "AOloopControl_mkDM_TT_circle_cli", "AOloopControl__DM_8c.html#a5efc5de9cef3a385f1daa1457ea4959c", null ],
-    [ "init_AOloopControl_DM", "AOloopControl__DM_8c.html#aed06f11f167c40b57953756376bb3135", null ],
+    [ "init_module_CLI", "AOloopControl__DM_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "dmdispcomb_loaded", "AOloopControl__DM_8c.html#a4728552c8d2da32521f2b44a8895420f", null ],
     [ "dmturb_loaded", "AOloopControl__DM_8c.html#a7b2a11ec6d4b0abdc6f15be21e49b6cf", null ],
-    [ "INITSTATUS_AOloopControl_DM", "AOloopControl__DM_8c.html#a9b92f765f951e9509ae4650b7e1a35c2", null ],
     [ "NB_DMindex", "AOloopControl__DM_8c.html#a976c30efd013f84a164a7f557415ea5c", null ],
     [ "SMfd", "AOloopControl__DM_8c.html#ad3fefa8c187fe37b7835f882acb21dda", null ],
     [ "SMturbfd", "AOloopControl__DM_8c.html#aa733da67de0ae3ba855ec77c80a1c73c", null ]

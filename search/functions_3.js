@@ -20,6 +20,7 @@ var searchData=
   ['cli_5fcompletion',['CLI_completion',['../CLIcore_8c.html#a870c2ec969838f5be1e506df66b8f9d5',1,'CLI_completion(const char *, int, int):&#160;CLIcore.c'],['../CLIcore_8c.html#acde7ed1f31c4b3dbb5ec18b36c96eea3',1,'CLI_completion(const char *text, int start, int __attribute__((unused)) end):&#160;CLIcore.c']]],
   ['cli_5fexecute_5fline',['CLI_execute_line',['../CLIcore_8c.html#af6673b952b7e95ab08b4f94e5dd2efc1',1,'CLIcore.c']]],
   ['cli_5fgenerator',['CLI_generator',['../CLIcore_8c.html#a000ddfcf96caf86a1900c586fbeb0b1c',1,'CLIcore.c']]],
+  ['clicore_5f_5fload_5fmodule_5fas_5f_5fcli',['CLIcore__load_module_as__cli',['../CLIcore_8c.html#a65b2296b0119778ab168f3a3f7c61823',1,'CLIcore.c']]],
   ['cliinfoprint',['CLIinfoPrint',['../00CORE_8c.html#ae838278c08c0e2a86eaabaa30a51ed1c',1,'00CORE.c']]],
   ['cliwritepid',['CLIWritePid',['../00CORE_8c.html#ad2eef847a9eb4e38bd371170f5fdcf93',1,'CLIWritePid():&#160;00CORE.c'],['../00CORE_8h.html#ad2eef847a9eb4e38bd371170f5fdcf93',1,'CLIWritePid():&#160;00CORE.c']]],
   ['close',['close',['../classpyPROCESSINFO.html#a0404d7bc664f4cd7556d3be486982eba',1,'pyPROCESSINFO']]],

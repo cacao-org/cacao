@@ -2,8 +2,10 @@ var COREMOD__iofits_8c =
 [
     [ "COREMOD_IOFITS_DEBUG", "COREMOD__iofits_8c.html#a75311a5df69c0cfdd7b2f65dea2e2826", null ],
     [ "COREMOD_IOFITS_PRINTDEBUG", "COREMOD__iofits_8c.html#acdacb6c1db076ba3545279fbeaa784e8", null ],
+    [ "MODULE_APPLICATION", "COREMOD__iofits_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "COREMOD__iofits_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "COREMOD__iofits_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "SBUFFERSIZE", "COREMOD__iofits_8c.html#a856e9c763f542a6a0b78587b2989c159", null ],
-    [ "__attribute__", "COREMOD__iofits_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "break_cube", "COREMOD__iofits_8c.html#aa8832a8af1c75ec5662f76d0737a849a", null ],
     [ "break_cube_cli", "COREMOD__iofits_8c.html#a4c00db696e7c16a449b6c5d042737b50", null ],
     [ "check_FITSIO_status", "COREMOD__iofits_8c.html#a387f1e0afdb5fb057e167936ff6947bb", null ],
@@ -12,7 +14,7 @@ var COREMOD__iofits_8c =
     [ "file_exists", "COREMOD__iofits_8c.html#a8cc0efbf0483da8ea546063e372111be", null ],
     [ "images_to_cube", "COREMOD__iofits_8c.html#a3d47a6b7086a2fea833ced42fd010d8e", null ],
     [ "images_to_cube_cli", "COREMOD__iofits_8c.html#ad88c7b2249fa8eda5c60241a2997de26", null ],
-    [ "init_COREMOD_iofits", "COREMOD__iofits_8c.html#adadf99429ac331f4da244cc3b20c1d4c", null ],
+    [ "init_module_CLI", "COREMOD__iofits_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "is_fits_file", "COREMOD__iofits_8c.html#a2845aea27c203af865b377aaf3be08c9", null ],
     [ "load_fits", "COREMOD__iofits_8c.html#af227bf0c215a4bc98e55abf236c806ef", null ],
     [ "load_fits_cli", "COREMOD__iofits_8c.html#aae2f33af0e8ea491c4e54b024ef912b5", null ],
@@ -33,6 +35,5 @@ var COREMOD__iofits_8c =
     [ "save_ush16_fits", "COREMOD__iofits_8c.html#afb1b0d175709e76aed9607443238e947", null ],
     [ "saveall_fits", "COREMOD__iofits_8c.html#aaa22d56dad1a2d3472569ea81604c790", null ],
     [ "errormessage_iofits", "COREMOD__iofits_8c.html#a391171d7e7a82005b7d7c605641c0fdc", null ],
-    [ "FITSIO_status", "COREMOD__iofits_8c.html#a6c2cc8d105d4821fd2f03c00125c9e86", null ],
-    [ "INITSTATUS_COREMOD_iofits", "COREMOD__iofits_8c.html#a676cd28bee684731edbf99aecc0dbd5a", null ]
+    [ "FITSIO_status", "COREMOD__iofits_8c.html#a6c2cc8d105d4821fd2f03c00125c9e86", null ]
 ];

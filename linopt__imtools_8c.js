@@ -1,7 +1,9 @@
 var linopt__imtools_8c =
 [
-    [ "__attribute__", "linopt__imtools_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
-    [ "init_linopt_imtools", "linopt__imtools_8c.html#aed0da078587cf3fd5702d38c2f289b17", null ],
+    [ "MODULE_APPLICATION", "linopt__imtools_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "linopt__imtools_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "linopt__imtools_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
+    [ "init_module_CLI", "linopt__imtools_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "linopt_compute_1Dfit", "linopt__imtools_8c.html#a903122b4c49a97607efcfe19ddeabfb4", null ],
     [ "linopt_compute_1Dfit_cli", "linopt__imtools_8c.html#a0ae28b67c8c7915a7088f1e42ed6386d", null ],
     [ "linopt_compute_linRM_from_inout", "linopt__imtools_8c.html#a7c806348728d5258e0b8366a14b06d54", null ],
@@ -35,7 +37,6 @@ var linopt__imtools_8c =
     [ "C0", "linopt__imtools_8c.html#a8e16486e94e2fd7d44c5548e907d392b", null ],
     [ "dfcnt", "linopt__imtools_8c.html#a31fa525e1d9b569475e55062f6d16a96", null ],
     [ "fmInit", "linopt__imtools_8c.html#a867bce46990afb113a1ab42430a9e888", null ],
-    [ "INITSTATUS_linopt_imtools", "linopt__imtools_8c.html#a8fff557d9f50fec41b81a28459ff908d", null ],
     [ "NBPARAM", "linopt__imtools_8c.html#aa073a770f3d31757fd3886715dc30c66", null ],
     [ "polycoeff1", "linopt__imtools_8c.html#a3cbf724daa6ced25bc4ddf7d17a05f0a", null ],
     [ "polycoeff2", "linopt__imtools_8c.html#a05e6847679b5d1fedf8b5f13bd37417c", null ]

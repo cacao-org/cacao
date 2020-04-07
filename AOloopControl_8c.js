@@ -2,10 +2,11 @@ var AOloopControl_8c =
 [
     [ "_GNU_SOURCE", "AOloopControl_8c.html#a369266c24eacffb87046522897a570d5", null ],
     [ "likely", "AOloopControl_8c.html#a217a0bd562b98ae8c2ffce44935351e1", null ],
+    [ "MODULE_APPLICATION", "AOloopControl_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "AOloopControl_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "AOloopControl_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "NB_AOloopcontrol", "AOloopControl_8c.html#a6c5d5a91e62278861bc96ab43c9c44d9", null ],
     [ "unlikely", "AOloopControl_8c.html#ac6c45889010c1bd68631771b64f18101", null ],
-    [ "__attribute__", "AOloopControl_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
-    [ "__attribute__", "AOloopControl_8c.html#ad7e5f5c14ff8ad42e10651503200880c", null ],
     [ "AOloopControl_AOcompute_GUI_cli", "AOloopControl_8c.html#a2de671ed0bee8f7db8741ca8862492ab", null ],
     [ "AOloopControl_aorun_cli", "AOloopControl_8c.html#a42f2c0fe357d6f565b3abbf370c06fbc", null ],
     [ "AOloopControl_aorun_GUI_cli", "AOloopControl_8c.html#abed36ddad38d85c48fbae5d8ac740505", null ],
@@ -65,6 +66,5 @@ var AOloopControl_8c =
     [ "AOconf", "AOloopControl_8c.html#aa3f87f243d7521618a548e589b7698bd", null ],
     [ "aoloopcontrol_var", "AOloopControl_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
     [ "DISABLE_CLI_AOloopControl", "AOloopControl_8c.html#a5939cd8fb9e518505d30603445c9518b", null ],
-    [ "INITSTATUS_AOloopControl", "AOloopControl_8c.html#a8d7eebfd86e5cdcafff2b28b6da77ce6", null ],
     [ "LOOPNUMBER", "AOloopControl_8c.html#afc4d319c21df38d7e771591b6934a836", null ]
 ];

@@ -1,7 +1,9 @@
 var info_8c =
 [
     [ "_GNU_SOURCE", "info_8c.html#a369266c24eacffb87046522897a570d5", null ],
-    [ "__attribute__", "info_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "MODULE_APPLICATION", "info_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "info_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "info_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "background_photon_noise", "info_8c.html#ad3be3dc812a758c20124d83094785232", null ],
     [ "brighter", "info_8c.html#af1ad3fd57f62decf7ee1952a35e70bea", null ],
     [ "fft_structure_function", "info_8c.html#a8bc8dd249b959764d2c95da5fd075d48", null ],
@@ -28,7 +30,7 @@ var info_8c =
     [ "info_pixelstats_smallImage", "info_8c.html#a7126e4c848487394acac0090e0bf60ef", null ],
     [ "info_profile_cli", "info_8c.html#a1412dcf3830e8bbe7b21e10a3b2e794d", null ],
     [ "info_time_diff", "info_8c.html#a6fb9173b416d4ca64e84793024c86a9e", null ],
-    [ "init_info", "info_8c.html#adf87a8fb634c27e2d3d4800eb6fdc4a6", null ],
+    [ "init_module_CLI", "info_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "kbdhit", "info_8c.html#af8a7e1ed7a99d3fb47bace8c1bbe9ba0", null ],
     [ "make_histogram", "info_8c.html#a8b4e6c3f453b8fba69fe04dbf046589f", null ],
     [ "print_header", "info_8c.html#ae7971060d50a34c3e5a33d5367b6ece0", null ],
@@ -40,7 +42,6 @@ var info_8c =
     [ "ssquare", "info_8c.html#a9df84723bfaaabc262e2059262818ba3", null ],
     [ "test_structure_function", "info_8c.html#ae412ba28fd115afac42d2ec295d2bc30", null ],
     [ "cntlast", "info_8c.html#af317519ddbdd0c94d26509de6402ef18", null ],
-    [ "INITSTATUS_info", "info_8c.html#a9abfdec4a9b6e1bb035c1786abfde18d", null ],
     [ "tlast", "info_8c.html#a60ac265155d44da3a9d8e3ede2e03972", null ],
     [ "wcol", "info_8c.html#ae6916da9363f105e747ab3cb5af8a4e7", null ],
     [ "wrow", "info_8c.html#a8f438ed4f013a0ff7b10eec4cd8713a5", null ]

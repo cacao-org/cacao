@@ -1,15 +1,17 @@
 var ZernikePolyn_8c =
 [
+    [ "MODULE_APPLICATION", "ZernikePolyn_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "ZernikePolyn_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "ZernikePolyn_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "PI", "ZernikePolyn_8c.html#a598a3330b3c21701223ee0ca14316eca", null ],
     [ "SWAP", "ZernikePolyn_8c.html#a5d9d454d4b9f2ff8106d5199ac0d0186", null ],
-    [ "__attribute__", "ZernikePolyn_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "fact", "ZernikePolyn_8c.html#af7524858a2e89eb535d1afe4a573fc48", null ],
     [ "fit_zer", "ZernikePolyn_8c.html#a31a371141d2828faf05365e7eaee52a5", null ],
     [ "get_zer", "ZernikePolyn_8c.html#a7cf12aeb4b9f9f6cdea6a61ddf110720", null ],
     [ "get_zer_crop", "ZernikePolyn_8c.html#ae93cd7bd1ea067b76e92a9000df29958", null ],
     [ "get_zern_array", "ZernikePolyn_8c.html#a4cb38a061f9a89a7fd5b6f1fd21a8a3f", null ],
     [ "get_zerns", "ZernikePolyn_8c.html#ab0d279c8b5bde5f10431251c78a70812", null ],
-    [ "init_ZernikePolyn", "ZernikePolyn_8c.html#add80f253f55c1a0c1ec4086fccd72767", null ],
+    [ "init_module_CLI", "ZernikePolyn_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "mk_zer", "ZernikePolyn_8c.html#a3dc7c310f9220de6d22d51031027448d", null ],
     [ "mk_zer_cli", "ZernikePolyn_8c.html#a13fb3023be0be13b4ca4fb0abfa633a3", null ],
     [ "mk_zer_series", "ZernikePolyn_8c.html#a05b43f0570254ea44645b14c33b10043", null ],
@@ -24,6 +26,5 @@ var ZernikePolyn_8c =
     [ "Zernike_value", "ZernikePolyn_8c.html#a651851e4e65b70c8aed8ff5e5471e0fc", null ],
     [ "ZERNIKEPOLYN_rmPiston", "ZernikePolyn_8c.html#a5dbfdca8ba770d4108b8418de82e1104", null ],
     [ "ZERNIKEPOLYN_rmPiston_cli", "ZernikePolyn_8c.html#a1f995ea86348f3e984540c0f6757ed8e", null ],
-    [ "INITSTATUS_ZernikePolyn", "ZernikePolyn_8c.html#a9b8ca157b7f552c2b4eef89664bdb621", null ],
     [ "Zernike", "ZernikePolyn_8c.html#a756b785b43e264e97a9c0c31ff984411", null ]
 ];

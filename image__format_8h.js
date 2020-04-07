@@ -8,6 +8,5 @@ var image__format_8h =
     [ "IMAGE_FORMAT_im_to_ASCII", "image__format_8h.html#ac2d4c1bf0eb2ad0b79bcb5bf6d26352d", null ],
     [ "IMAGE_FORMAT_read_binary32f", "image__format_8h.html#af533719db56131d67cccf633755fc598", null ],
     [ "image_writeBMP_auto", "image__format_8h.html#a713bf27861059ffb45b5f8548f1416cc", null ],
-    [ "init_image_format", "image__format_8h.html#a9bf487e53de5b8343f976edb3f2a5488", null ],
     [ "loadCR2toFITSRGB", "image__format_8h.html#a3996fcc390185a70968b6ff8fd1be318", null ]
 ];

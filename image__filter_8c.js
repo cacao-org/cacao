@@ -1,6 +1,8 @@
 var image__filter_8c =
 [
-    [ "__attribute__", "image__filter_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "MODULE_APPLICATION", "image__filter_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "image__filter_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "image__filter_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "f_filter", "image__filter_8c.html#abc20ea5404ca4d631c908de64f8677ca", null ],
     [ "fconvolve", "image__filter_8c.html#a8932e1b8cb2de28c639605a36d68bc26", null ],
     [ "fconvolve_1", "image__filter_8c.html#a35a50c8f0a4850f645ecf19c89316f03", null ],
@@ -18,7 +20,6 @@ var image__filter_8c =
     [ "gauss_3Dfilter", "image__filter_8c.html#ab20ee902b86ee7d0e192c7c00e843d45", null ],
     [ "gauss_filter", "image__filter_8c.html#acde8c2beb0e0522990193dbf8b5b3fc5", null ],
     [ "gauss_filter_cli", "image__filter_8c.html#af7e96a5b8ef946bd921facef9f9aa4e1", null ],
-    [ "init_image_filter", "image__filter_8c.html#ae72fd3d4c32e17c282499cc10fb70922", null ],
-    [ "median_filter", "image__filter_8c.html#ab22b31f3ca8d174936a7dc6b1ac2e399", null ],
-    [ "INITSTATUS_image_filter", "image__filter_8c.html#a44be09b45e2848df3a380ec8cc33db35", null ]
+    [ "init_module_CLI", "image__filter_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
+    [ "median_filter", "image__filter_8c.html#ab22b31f3ca8d174936a7dc6b1ac2e399", null ]
 ];

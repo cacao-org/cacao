@@ -89,83 +89,143 @@ $(document).ready(function(){initNavTree('page_LoadingModules.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#page_LoadingModules_download">Downloading Optional Modules</a></li>
-<li class="level1"><a href="#page_LoadingModules_linking">Linking Modules to CLI</a><ul><li class="level2"><a href="#page_LoadingModules_linking_libdir">Automatic linking from `./lib/` directory</a></li>
-<li class="level2"><a href="#page_LoadingModules_linking_soload">Linking module from within CLI with soload</a></li>
-<li class="level2"><a href="#page_LoadingModules_linking_mload">Linking module from within CLI with mload</a></li>
-<li class="level2"><a href="#page_LoadingModules_linking_envvar">Using environment variable `CLI_ADD_LIBS` to link shared objects</a></li>
+<ul><li class="level1"><a href="#page_LoadingModules_overview">1. Overview</a><ul><li class="level2"><a href="#page_LoadingModules_overview_compiling">1.1. Compiling</a></li>
+<li class="level2"><a href="#page_LoadingModules_overview_linking">1.2. Runtime linking</a></li>
+<li class="level2"><a href="#page_LoadingModules_overview_example">1.3. A simple example</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#page_LoadingModules_compiling">Writing and Compiling Modules</a><ul><li class="level2"><a href="#page_LoadingModules_compiling_principles">Principles</a></li>
-<li class="level2"><a href="#page_LoadingModules_compiling_compiling_cmake">Adding modules to the main package compilation</a></li>
-<li class="level2"><a href="#page_LoadingModules_compiling_autoloading">Automatic loading</a></li>
-<li class="level2"><a href="#page_LoadingModules_compiling_addingmodulegithub">Adding new module to github</a></li>
-<li class="level2"><a href="#page_LoadingModules_compiling_examplecode">Custom compilation: Example code</a></li>
+<li class="level1"><a href="#page_LoadingModules_linking">2. Linking Modules to CLI</a><ul><li class="level2"><a href="#page_LoadingModules_linking_libdir">2.1. Automatic linking from `./lib/` directory</a></li>
+<li class="level2"><a href="#page_LoadingModules_linking_soload">2.2. Linking module from within CLI with soload</a></li>
+<li class="level2"><a href="#page_LoadingModules_linking_mload">2.3. Linking module from within CLI with mload</a></li>
+<li class="level2"><a href="#page_LoadingModules_linking_envvar">2.4. Using environment variable `CLI_ADD_LIBS` to link shared objects</a></li>
 </ul>
 </li>
+<li class="level1"><a href="#page_LoadingModules_compiling">3. Writing and Compiling Modules</a><ul><li class="level2"><a href="#page_LoadingModules_compiling_principles">3.1. Principles</a></li>
+<li class="level2"><a href="#page_LoadingModules_compiling_compiling_cmake">3.2. Adding modules to the main package compilation</a></li>
+<li class="level2"><a href="#page_LoadingModules_compiling_autoloading">3.3. Automatic loading</a></li>
+<li class="level2"><a href="#page_LoadingModules_compiling_addingmodulegithub">3.4. Adding new module to github</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#page_LoadingModules_custom">4. Custom modules</a></li>
 </ul>
 </div>
 <div class="textblock"><dl class="section note"><dt>Note</dt><dd>This file: ./src/CommandLineInterface/doc/LoadingModules.md</dd></dl>
 <hr/>
 <p>Users can create additional modules, and following a few milk-specific conventions, link their functions to the milk CLI. Additional modules can be added to the existing build process or compiled separately and then loaded at runtime.</p>
 <hr/>
-<h1><a class="anchor" id="page_LoadingModules_download"></a>
-Downloading Optional Modules</h1>
-<pre class="fragment">cd ./src
-git clone https://github.com/milk-org/ModuleName
+<h1><a class="anchor" id="page_LoadingModules_overview"></a>
+1. Overview</h1>
+<p>milk is oganized in modules, each compiled as a shared object and loaded at runtime.</p>
+<h2><a class="anchor" id="page_LoadingModules_overview_compiling"></a>
+1.1. Compiling</h2>
+<p>While milk comes with its own set of modules, others can be added at runtime. Modules that conform to milk specifications can be downloaded and added by following these steps: </p><pre class="fragment"># execute these commands from the source root directory (for example ~./milk/)
+# move to source subdir, where module directories are located
+$ cd ./src
+
+# Download a new module
+$ git clone https://github.com/milk-org/NewModuleName
+
+# move to build directory
+$ cd ../_build
+
+# Add new module to compile script
+$ cmake .. -DEXTRAMODULES="NewModuleName"
+
+# compile and install
+$ sudo make install
+</pre><h2><a class="anchor" id="page_LoadingModules_overview_linking"></a>
+1.2. Runtime linking</h2>
+<p>Note that the commands above will compile the module into a shared object, but it will not be loaded by default at runtime. There are 4 options to load the module into the milk executable, detailed in the following section. For example, the new module may be loaded within the milk command line interface as follows: </p><pre class="fragment"># start milk
+$ milk
+
+# load module from command line interface
+milk&gt; mload NewModuleName 
+
+# check list of modules. NewModuleName should appear
+milk&gt; m?
+</pre><h2><a class="anchor" id="page_LoadingModules_overview_example"></a>
+1.3. A simple example</h2>
+<p>milk includes an example module, which is not compiled or linked by default, to demonstrate how to write and add modules.</p>
+<p>The example module is in directory 'src/milk_module_example' : </p><pre class="fragment">$ cd src/milk_module_example
+$ ls
+CMakeLists.txt
+create_example_image.c
+create_example_image.h
+milk_module_example.c
+milk_module_example.h
+</pre><p>Check the source code (well documented) to see how modules are written. To compile : </p><pre class="fragment">$ cd _build
+$ cmake .. -DEXTRAMODULES="milk_module_example"
+$ sudo make install
+</pre><p>Lets run it : </p><pre class="fragment"># start milk
+$ milk
+
+# load module as "mex" (short for module example)
+milk&gt; mloadas milk_module_example mex
+
+# check we have it
+milk&gt; m?
+
+# run the test function, which creates an image
+# note you can tab complete after typying "mex." to list functions
+milk&gt; mex.func1 im1 1.2
+
+# check the image is in memory
+milk&gt; listim
 </pre><hr/>
 <h1><a class="anchor" id="page_LoadingModules_linking"></a>
-Linking Modules to CLI</h1>
+2. Linking Modules to CLI</h1>
 <h2><a class="anchor" id="page_LoadingModules_linking_libdir"></a>
-Automatic linking from `./lib/` directory</h2>
+2.1. Automatic linking from `./lib/` directory</h2>
 <p>Any shared object in the <code>./lib/</code> subdirectory of source code will be loaded upon startup.</p>
 <h2><a class="anchor" id="page_LoadingModules_linking_soload"></a>
-Linking module from within CLI with soload</h2>
+2.2. Linking module from within CLI with soload</h2>
 <p>Pre-compiled modules can be linked with the <code>soload</code> command within the CLI: </p><pre class="fragment">milk&gt; soload &lt;fullsoname&gt;
 </pre><p>The <code>fullsoname</code> is the shared object file name, path relative to current directory. For example "../mylib/myodule.so".</p>
 <p>Provided that the module follows milk conventions, linking the module will add the corresponding functions to the CLI. This can be checked by probing the module functions: </p><pre class="fragment">milk&gt; m?                # lists linked modules
 milk&gt; m? &lt;modulename&gt;   # lists CLI commands in the module
 </pre><h2><a class="anchor" id="page_LoadingModules_linking_mload"></a>
-Linking module from within CLI with mload</h2>
+2.3. Linking module from within CLI with mload</h2>
 <p>By default, modules shared objects are installed in <code>/usr/local/lib</code>, and are named <code>lib&lt;ModuleName&gt;.so</code>. With these assumptions satisfied, modules can be linked from within the CLI with the <code>mload</code> command: </p><pre class="fragment">milk&gt; mload &lt;modulename&gt;
+</pre><p>Alternatively, a short name can be specified </p><pre class="fragment">milk&gt; mloadas &lt;modulename&gt; &lt;shortname&gt;
+</pre><p>Module functions are called from the command line interface prompt: </p><pre class="fragment">milk&gt; &lt;shortname&gt;.&lt;functionname&gt; &lt;arguments...&gt;
 </pre><h2><a class="anchor" id="page_LoadingModules_linking_envvar"></a>
-Using environment variable `CLI_ADD_LIBS` to link shared objects</h2>
+2.4. Using environment variable `CLI_ADD_LIBS` to link shared objects</h2>
 <p>Upon startup, milk will read the CLI_ADD_LIBS environment variable to link shared objects. For example: </p><pre class="fragment">CLI_ADD_LIBS="/usr/local/libs/libMyFirstModule.so /usr/local/libs/libMySecondModule.so" milk
 </pre><p>will link modules <code>MyFirstModule</code> and <code>MySecondModule</code>.</p>
 <dl class="section note"><dt>Note</dt><dd>Shared object names can be separated by space, semicolumn, or comma.</dd></dl>
 <hr/>
 <h1><a class="anchor" id="page_LoadingModules_compiling"></a>
-Writing and Compiling Modules</h1>
+3. Writing and Compiling Modules</h1>
 <h2><a class="anchor" id="page_LoadingModules_compiling_principles"></a>
-Principles</h2>
+3.1. Principles</h2>
 <p>Modules that are always loaded upon startup are explicitely listed in <a class="el" href="CLImain_8c.html">CLImain.c</a>. Additional modules may be loaded using the C dlopen() command. The library should include a function <code>initlib_&lt;modulename&gt;</code> to be executed when the module is loaded. This function should register functions to the command line interface, as done for all other modules that are part of the distribution.</p>
 <dl class="section see"><dt>See also</dt><dd><a href="http://www.linux-mag.com/id/1028/">http://www.linux-mag.com/id/1028/</a> for instructions to create shared libraries that can be loaded as modules. </dd>
 <dd>
 <a href="https://www.gnu.org/software/automake/manual/html_node/Libtool-Convenience-Libraries.html">https://www.gnu.org/software/automake/manual/html_node/Libtool-Convenience-Libraries.html</a></dd></dl>
 <h2><a class="anchor" id="page_LoadingModules_compiling_compiling_cmake"></a>
-Adding modules to the main package compilation</h2>
+3.2. Adding modules to the main package compilation</h2>
 <p>The preferred way to add modules is to have them within the main source code directory alongside default modules, following the same conventions and locations as the default modules. A new module should then have the following files in the <code>./src/&lt;ModuleName&gt;/</code> directory:</p>
 <ul>
 <li><code>CMakeLists.txt</code> file</li>
 <li>source code files (.c and .h files)</li>
 </ul>
 <p>The <code>EXTRAMODULES</code> option is then used to add entry(ies) to the list of compiled modules. For example: </p><pre class="fragment">cmake .. -DEXTRAMODULES="WFpropagate;OpticsMaterials"
-</pre><p>will compile modules <code>WFpropagate</code> and <code>OpticsMaterials</code> in addition to default modules. The extra modules shared objects will be <code>/usr/local/lib/libWFpropagate.so</code> and <code>/usr/local/lib/libOpticsMaterials.so</code>, and can be loaded with any of the methods described in <a class="el" href="page_LoadingModules.html#page_LoadingModules_linking">Linking Modules to CLI</a>.</p>
-<dl class="section attention"><dt>Attention</dt><dd>Adding entries with the EXTRAMODULES option will compile the corresponding shared objects, but will not have them loaded upon execution of the main executable. See section <a class="el" href="page_LoadingModules.html#page_LoadingModules_compiling_autoloading">Automatic loading</a>.</dd></dl>
+</pre><p>will compile modules <code>WFpropagate</code> and <code>OpticsMaterials</code> in addition to default modules. The extra modules shared objects will be <code>/usr/local/lib/libWFpropagate.so</code> and <code>/usr/local/lib/libOpticsMaterials.so</code>, and can be loaded with any of the methods described in the linking section.</p>
+<dl class="section attention"><dt>Attention</dt><dd>Adding entries with the EXTRAMODULES option will compile the corresponding shared objects, but will not have them loaded upon execution of the main executable. See section <a class="el" href="page_LoadingModules.html#page_LoadingModules_compiling_autoloading">3.3. Automatic loading</a>.</dd></dl>
 <h2><a class="anchor" id="page_LoadingModules_compiling_autoloading"></a>
-Automatic loading</h2>
+3.3. Automatic loading</h2>
 <p>Several options are available to have the additional module(s) automatically loaded every time:</p>
 <ul>
-<li>Copy or link the shared object to the <code>./lib/</code> directory (see <a class="el" href="page_LoadingModules.html#page_LoadingModules_linking_libdir">Automatic linking from `./lib/` directory</a>).</li>
+<li>Copy or link the shared object to the <code>./lib/</code> directory (see <a class="el" href="page_LoadingModules.html#page_LoadingModules_linking_libdir">2.1. Automatic linking from `./lib/` directory</a>).</li>
 </ul>
 <p>For example: </p><pre class="fragment">ln -s /usr/local/lib/libWFpropagate.so ~./lib/libWFpropagate.so
 </pre><ul>
-<li>Create a system-wide environment variable CLI_ADD_LIBS in <code>~/.bashrc</code> (see <a class="el" href="page_LoadingModules.html#page_LoadingModules_linking_envvar">Using environment variable `CLI_ADD_LIBS` to link shared objects</a>)</li>
+<li>Create a system-wide environment variable CLI_ADD_LIBS in <code>~/.bashrc</code> (see <a class="el" href="page_LoadingModules.html#page_LoadingModules_linking_envvar">2.4. Using environment variable `CLI_ADD_LIBS` to link shared objects</a>)</li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>Several versions of the executable can also be defined, each with its own set of automatically loaded modules. For example, the following line can be saved as an executable script: <pre class="fragment">CLI_ADD_LIBS="/usr/local/libs/libWFpropagate.so" milk
 </pre></dd></dl>
 <h2><a class="anchor" id="page_LoadingModules_compiling_addingmodulegithub"></a>
-Adding new module to github</h2>
+3.4. Adding new module to github</h2>
 <p>We assume here that you have created a module and you would like to push it to the main github package org (we assume here milk-org). </p><pre class="fragment"># First, create the repo in github, then run the following commands:
 cd ./MyModuleName/
 git init
@@ -177,11 +237,10 @@ git push --set-upstream origin master
 # Now we create dev branch
 git checkout -b dev
 git push --set-upstream origin dev
-</pre><h2><a class="anchor" id="page_LoadingModules_compiling_examplecode"></a>
-Custom compilation: Example code</h2>
-<p>Additional modules may also be compiled independently from the main compile process. This is not the preferred option, and there is a performance hit, as the benefits of link-time optimization will be lost.</p>
-<p>An example module is included in milk, in directory exampleModule.</p>
-<p>To compile it: </p><pre class="fragment">cd exampleModule
+</pre><h1><a class="anchor" id="page_LoadingModules_custom"></a>
+4. Custom modules</h1>
+<p>Additional custom modules may also be compiled independently from the main compile process. This is not the preferred option, and there is a performance hit, as the benefits of link-time optimization will be lost.</p>
+<p>To compile a custom module : </p><pre class="fragment">cd exampleModule
 gcc -c -I.. -fPIC exampleModule.c
 gcc -c -fPIC compute_pi.c -Ofast
 gcc -shared -I.. -fPIC exampleModule.o compute_pi.o -o libexamplemodule.so -lc
@@ -196,7 +255,7 @@ ln -s ../src/exampleModule/libexamplemodule.so libexamplemodule.so
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="page_cacao_topmenu.html">Subpages</a></li>
-    <li class="footer">Generated on Thu Apr 2 2020 16:50:24 for cacao by
+    <li class="footer">Generated on Tue Apr 7 2020 11:54:17 for cacao by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

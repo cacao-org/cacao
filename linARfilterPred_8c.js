@@ -1,7 +1,9 @@
 var linARfilterPred_8c =
 [
-    [ "__attribute__", "linARfilterPred_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
-    [ "init_linARfilterPred", "linARfilterPred_8c.html#a97ef522ff0d01a86780971d7f1bb4524", null ],
+    [ "MODULE_APPLICATION", "linARfilterPred_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "linARfilterPred_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "linARfilterPred_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
+    [ "init_module_CLI", "linARfilterPred_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "LINARFILTERPRED_Apply_LinPredictor", "linARfilterPred_8c.html#a1364a97ccef2543fee19ddbbcd42e934", null ],
     [ "LINARFILTERPRED_Apply_LinPredictor_cli", "linARfilterPred_8c.html#a6cf5ff64c38701260252384f77bf580a", null ],
     [ "LINARFILTERPRED_Apply_LinPredictor_RT", "linARfilterPred_8c.html#a7f53d26ca4af0d7caa2b6673ce2f78f9", null ],
@@ -19,6 +21,5 @@ var linARfilterPred_8c =
     [ "LINARFILTERPRED_ScanGain_cli", "linARfilterPred_8c.html#ab392978a5ba58a2fb39284298c2d1c1b", null ],
     [ "LINARFILTERPRED_SelectBlock", "linARfilterPred_8c.html#a2b71301cb645a1af6feec748b62856cc", null ],
     [ "LINARFILTERPRED_SelectBlock_cli", "linARfilterPred_8c.html#a4bb6677a24793bedd5a674374a111089", null ],
-    [ "NBwords", "linARfilterPred_8c.html#a757c5f80b839ea32731ba61082ffe185", null ],
-    [ "INITSTATUS_linARfilterPred", "linARfilterPred_8c.html#a6fb4543431f6f680e91dd4279227e3a7", null ]
+    [ "NBwords", "linARfilterPred_8c.html#a757c5f80b839ea32731ba61082ffe185", null ]
 ];

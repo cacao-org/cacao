@@ -2,7 +2,9 @@ var AOloopControl__computeCalib_8c =
 [
     [ "_GNU_SOURCE", "AOloopControl__computeCalib_8c.html#a369266c24eacffb87046522897a570d5", null ],
     [ "MAX_MBLOCK", "AOloopControl__computeCalib_8c.html#a74ab1a4f2b0dd3db2eb5408bb3c5f721", null ],
-    [ "__attribute__", "AOloopControl__computeCalib_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "MODULE_APPLICATION", "AOloopControl__computeCalib_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "AOloopControl__computeCalib_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "AOloopControl__computeCalib_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "AOcontrolLoop_computeCalib_ComputeCM_FPCONF", "group__FPSconf.html#gae274df2748400df777de575b80bb3b87", null ],
     [ "AOcontrolLoop_computeCalib_ComputeCM_RUN", "group__FPSrun.html#ga9d2d5f6e11cb1e9ddac0af4078a28e11", null ],
     [ "AOloopControl_computeCalib_compute_CombinedControlMatrix_cli", "AOloopControl__computeCalib_8c.html#a683ce4041a645962369cb360c42aa65c", null ],
@@ -22,6 +24,5 @@ var AOloopControl__computeCalib_8c =
     [ "AOconf", "AOloopControl__computeCalib_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "aoconfID_imWFS2_active", "AOloopControl__computeCalib_8c.html#a0afbb1623e71964eafbdd2f699c44552", null ],
     [ "aoloopcontrol_var", "AOloopControl__computeCalib_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
-    [ "INITSTATUS_AOloopControl_computeCalib", "AOloopControl__computeCalib_8c.html#a7bc2cff562406d22807bc097e4bc1857", null ],
     [ "LOOPNUMBER", "AOloopControl__computeCalib_8c.html#afc4d319c21df38d7e771591b6934a836", null ]
 ];

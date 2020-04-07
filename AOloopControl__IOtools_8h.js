@@ -13,6 +13,5 @@ var AOloopControl__IOtools_8h =
     [ "AOloopControl_IOtools_imAlignStream", "group__RTfunctions.html#gaa9660f3a83487a1bcab58ea16ae80967", null ],
     [ "AOloopControl_IOtools_RTLOGsave", "AOloopControl__IOtools_8h.html#ac94cfd7d7ef0c541c231e8090dc65037", null ],
     [ "AOloopControl_IOtools_stream3Dto2D", "AOloopControl__IOtools_8h.html#a56556fb495048e4f21199392e1df7912", null ],
-    [ "init_AOloopControl_IOtools", "AOloopControl__IOtools_8h.html#aa60e629e758c0d123c1d3ad6b9dd3593", null ],
     [ "Read_cam_frame", "AOloopControl__IOtools_8h.html#a104cf1c1011929dd4477782fa0b2f72d", null ]
 ];

@@ -6,7 +6,6 @@ var statistic_8h =
     [ "gammaln", "statistic_8h.html#a73469985ca65317217867ea002b4f189", null ],
     [ "gauss", "statistic_8h.html#a61ccd72f7e2d2f65912807eda4c8643c", null ],
     [ "gauss_trc", "statistic_8h.html#a37fe6b362a86eaa232c07dd86b3c21cf", null ],
-    [ "init_statistic", "statistic_8h.html#afaa980ca2342ea27842aa2b0eed53c9c", null ],
     [ "poisson", "statistic_8h.html#a17397c70ca495597e8232ffa61c9e605", null ],
     [ "put_gauss_noise", "statistic_8h.html#a3985b53584d8525bec06d55f152f6cf3", null ],
     [ "put_poisson_noise", "statistic_8h.html#ad84dae9cad55950b3f92d17f748be1e8", null ],

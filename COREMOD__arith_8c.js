@@ -1,8 +1,10 @@
 var COREMOD__arith_8c =
 [
     [ "M_PI", "COREMOD__arith_8c.html#ae71449b1cc6e6250b91f539153a7a0d3", null ],
+    [ "MODULE_APPLICATION", "COREMOD__arith_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "COREMOD__arith_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "COREMOD__arith_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "SBUFFERSIZE", "COREMOD__arith_8c.html#a856e9c763f542a6a0b78587b2989c159", null ],
-    [ "__attribute__", "COREMOD__arith_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "arith_image_acos", "COREMOD__arith_8c.html#a378d285225cef59907673ed50ae70ab9", null ],
     [ "arith_image_acos_byID", "COREMOD__arith_8c.html#af448fbbf3a4c409b5907ba0d9b4e0a4e", null ],
     [ "arith_image_acos_inplace", "COREMOD__arith_8c.html#a3b79d991433a97594cb6fec2356cf595", null ],
@@ -197,6 +199,7 @@ var COREMOD__arith_8c =
     [ "CPsub_CF_CF", "COREMOD__arith_8c.html#abe480f992487a61d9acba905ccbf5982", null ],
     [ "execute_arith", "COREMOD__arith_8c.html#adc4dd5cfb118d97eaf42407c619a43ab", null ],
     [ "init_COREMOD_arith", "COREMOD__arith_8c.html#a501205b8bbdba41c175d99eb3f750592", null ],
+    [ "init_module_CLI", "COREMOD__arith_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "isanumber", "COREMOD__arith_8c.html#a399f3477d227de6457faa5144812bad9", null ],
     [ "isfunction", "COREMOD__arith_8c.html#a6a43ca4dfdfe28dbfcdd210d44c1728d", null ],
     [ "isfunction_sev_var", "COREMOD__arith_8c.html#a90ebf7655e29cbfd616366805cca80d8", null ],
@@ -231,6 +234,5 @@ var COREMOD__arith_8c =
     [ "Ptestlt", "COREMOD__arith_8c.html#a669f287d900166951a3d3dec60d859cd", null ],
     [ "Ptestmt", "COREMOD__arith_8c.html#acc7da2406b697521b13f3e476453d308", null ],
     [ "Ptrunc", "COREMOD__arith_8c.html#af6427f827bed4e0526cf80a1e1f54956", null ],
-    [ "errmsg_arith", "COREMOD__arith_8c.html#a25e2c6cb1a390cd8444e09c450f0d50f", null ],
-    [ "INITSTATUS_COREMOD_arith", "COREMOD__arith_8c.html#a54c9b14b2ff818e2bf21045471f66d9b", null ]
+    [ "errmsg_arith", "COREMOD__arith_8c.html#a25e2c6cb1a390cd8444e09c450f0d50f", null ]
 ];

@@ -3,7 +3,9 @@ var AOloopControl__perfTest_8c =
     [ "StreamDataFile", "structStreamDataFile.html", "structStreamDataFile" ],
     [ "_GNU_SOURCE", "AOloopControl__perfTest_8c.html#a369266c24eacffb87046522897a570d5", null ],
     [ "MaxNBdatFiles", "AOloopControl__perfTest_8c.html#ad7c2ea0c5f43b82c6db9ba810960c062", null ],
-    [ "__attribute__", "AOloopControl__perfTest_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
+    [ "MODULE_APPLICATION", "AOloopControl__perfTest_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "AOloopControl__perfTest_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "AOloopControl__perfTest_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "AOcontrolLoop_perfTest_TestDMSpeed_cli", "AOloopControl__perfTest_8c.html#a3c852d2c4d12dfe79c5a1d3849f8ccbd", null ],
     [ "AOcontrolLoop_perfTest_TestSystemLatency", "AOloopControl__perfTest_8c.html#af3b5757faeeabbf500c084e11f7c4cab", null ],
     [ "AOcontrolLoop_perfTest_TestSystemLatency_cli", "AOloopControl__perfTest_8c.html#ad751182c185dca477472663a9a4347ce", null ],
@@ -36,7 +38,6 @@ var AOloopControl__perfTest_8c =
     [ "remove_ext", "AOloopControl__perfTest_8c.html#a997fd714366f8ea139d01b07464e6681", null ],
     [ "AOconf", "AOloopControl__perfTest_8c.html#a1f96203c41ad50bad5dd1604a5c069a8", null ],
     [ "aoloopcontrol_var", "AOloopControl__perfTest_8c.html#a549e693c8df5c527e5e6c9b6508749ca", null ],
-    [ "INITSTATUS_AOloopControl_perfTest", "AOloopControl__perfTest_8c.html#a87e546268d00641f0bd3c2c227e36cea", null ],
     [ "LOOPNUMBER", "AOloopControl__perfTest_8c.html#afc4d319c21df38d7e771591b6934a836", null ],
     [ "tnow", "AOloopControl__perfTest_8c.html#a59d2ab140fff2f63a38f4704a76fc2ec", null ]
 ];

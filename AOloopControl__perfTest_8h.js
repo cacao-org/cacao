@@ -20,6 +20,5 @@ var AOloopControl__perfTest_8h =
     [ "AOloopControl_perfTest_StatAnalysis_2streams", "AOloopControl__perfTest_8h.html#a4c8d72305abea59213e0a345450e584a", null ],
     [ "AOloopControl_perfTest_statusStats", "AOloopControl__perfTest_8h.html#aa082bf5d31a9d570551558d3f6f0c6b6", null ],
     [ "AOloopControl_perfTest_TestDMmodeResp", "AOloopControl__perfTest_8h.html#ae2b7c7aa2d3aa638c33d618703d2fa45", null ],
-    [ "AOloopControl_perfTest_TestDMmodes_Recovery", "AOloopControl__perfTest_8h.html#ab73ef826690ee1294ce39040e5123bdf", null ],
-    [ "init_AOloopControl_perfTest", "AOloopControl__perfTest_8h.html#a1edf035d3f15156b14a948c141fbf96a", null ]
+    [ "AOloopControl_perfTest_TestDMmodes_Recovery", "AOloopControl__perfTest_8h.html#ab73ef826690ee1294ce39040e5123bdf", null ]
 ];

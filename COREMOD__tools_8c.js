@@ -1,7 +1,9 @@
 var COREMOD__tools_8c =
 [
+    [ "MODULE_APPLICATION", "COREMOD__tools_8c.html#a205b3ef5e31a32b6795f01c3d87ba844", null ],
+    [ "MODULE_DESCRIPTION", "COREMOD__tools_8c.html#a5b62e7184a709de637eae6370501dac3", null ],
+    [ "MODULE_SHORTNAME_DEFAULT", "COREMOD__tools_8c.html#a5b10534f5a2bc061d385478136c531be", null ],
     [ "SBUFFERSIZE", "COREMOD__tools_8c.html#a856e9c763f542a6a0b78587b2989c159", null ],
-    [ "__attribute__", "COREMOD__tools_8c.html#afd02bb0f6a745c39d5e3417493995c71", null ],
     [ "bubble_sort", "COREMOD__tools_8c.html#aa9f4e556041204c501da9691dd2c23ca", null ],
     [ "COREMOD_TOOLS_imgdisplay3D", "COREMOD__tools_8c.html#a63b8aa5cbc094db64babe592107a7c84", null ],
     [ "COREMOD_TOOLS_imgdisplay3D_cli", "COREMOD__tools_8c.html#ace8a16fa708b83bca540edbddf7d7ba3", null ],
@@ -11,7 +13,7 @@ var COREMOD__tools_8c =
     [ "COREMOD_TOOLS_statusStat_cli", "COREMOD__tools_8c.html#a60557a7ecbd1468836cc70863b2c9c04", null ],
     [ "create_counter_file", "COREMOD__tools_8c.html#abd2acdadc48e781f0b72ee702d653755", null ],
     [ "file_number_lines", "COREMOD__tools_8c.html#aa7c784791136915e4011ace353c86033", null ],
-    [ "init_COREMOD_tools", "COREMOD__tools_8c.html#a9383571be0026fd23ec4464fa50aba26", null ],
+    [ "init_module_CLI", "COREMOD__tools_8c.html#ae7133e80a22451d9d2cc88f143a90b55", null ],
     [ "lin_regress", "COREMOD__tools_8c.html#aed91273a7a0fed8bb667f5eaa3a21a6c", null ],
     [ "open_file_r", "COREMOD__tools_8c.html#ae726276b59abb39bfcfe60b8966a3351", null ],
     [ "open_file_w", "COREMOD__tools_8c.html#a59ef7b963abdd93cf2785e809ddb9518", null ],
@@ -55,6 +57,5 @@ var COREMOD__tools_8c =
     [ "write_flot_file_cli", "COREMOD__tools_8c.html#a5aa75fdbacc30b294c942a633ac26d51", null ],
     [ "write_int_file", "COREMOD__tools_8c.html#aa902082903404826e99280fbdb49b629", null ],
     [ "errormessage", "COREMOD__tools_8c.html#a5d8f2e60f7f536436d04e2f6e5b4d207", null ],
-    [ "fpgnuplot", "COREMOD__tools_8c.html#a7a9031c756cc5a1da42cffc862eb783a", null ],
-    [ "INITSTATUS_COREMOD_tools", "COREMOD__tools_8c.html#a8c42e77b6c85f41a9312af4681eef2c2", null ]
+    [ "fpgnuplot", "COREMOD__tools_8c.html#a7a9031c756cc5a1da42cffc862eb783a", null ]
 ];

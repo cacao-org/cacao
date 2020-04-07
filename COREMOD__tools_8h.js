@@ -7,7 +7,6 @@ var COREMOD__tools_8h =
     [ "COREMOD_TOOLS_statusStat", "COREMOD__tools_8h.html#a9be8bd76dd3c551a8c53b952411260c0", null ],
     [ "create_counter_file", "COREMOD__tools_8h.html#abd2acdadc48e781f0b72ee702d653755", null ],
     [ "file_number_lines", "COREMOD__tools_8h.html#aa7c784791136915e4011ace353c86033", null ],
-    [ "init_COREMOD_tools", "COREMOD__tools_8h.html#a9383571be0026fd23ec4464fa50aba26", null ],
     [ "lin_regress", "COREMOD__tools_8h.html#aed91273a7a0fed8bb667f5eaa3a21a6c", null ],
     [ "open_file_r", "COREMOD__tools_8h.html#ae726276b59abb39bfcfe60b8966a3351", null ],
     [ "open_file_w", "COREMOD__tools_8h.html#a59ef7b963abdd93cf2785e809ddb9518", null ],
