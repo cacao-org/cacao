@@ -31,7 +31,6 @@
 
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "ImageStreamIO/ImageStruct.h"
@@ -197,11 +196,11 @@ errno_t AOloopControl_RTstreamLOG_setup(
 
 
             if(sprintf(imname, "aol%ld_%s_logbuff0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize, datatype, SHARED, 0);
 
             if(sprintf(imname, "aol%ld_%s_logbuff1", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize, datatype, SHARED, 0);
 
             // nelement for a SINGLE SLICE
@@ -309,11 +308,11 @@ errno_t AOloopControl_RTstreamLOG_setup(
             imsize[2] = 1;
 
             if(sprintf(imname, "aol%ld_%s_logbuffinfo0", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0 = create_image_ID(imname, 2, imsize, _DATATYPE_UINT64, 1, 0);
 
             if(sprintf(imname, "aol%ld_%s_logbuffinfo1", loop, AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo1 = create_image_ID(imname, 2, imsize, _DATATYPE_UINT64, 1, 0);
 
 
@@ -1205,9 +1204,9 @@ int AOloopControl_RTstreamLOG_saveloop(
                     // CONNECT TO INPUT BUFFERS SHARED MEMORY
 
                     if(snprintf(shmimname, STRINGMAXLEN_STREAMNAME, "aol%d_%s_logbuff%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex[rtlindex]) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
                     if(sprintf(shmimnameinfo, "aol%d_%s_logbuffinfo%d", loop, AOconf[loop].RTSLOGarray[rtlindex].name, InBuffIndex[rtlindex]) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
 
 
                     if((IDin = image_ID(shmimname))==-1)
@@ -1271,24 +1270,24 @@ int AOloopControl_RTstreamLOG_saveloop(
                         if(snprintf(fnameinfo, STRLEN_info, "%s/aol%d_%s.%s.dat.%03d",
                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
                                     AOconf[loop].RTSLOGarray[rtlindex].timestring, AOconf[loop].RTSLOGarray[rtlindex].FileBuffer) < 1)
-                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                            PRINT_ERROR("sprintf wrote <1 char");
 
                         if(snprintf(fnameFITS, STRINGMAXLEN_FULLFILENAME, "%s/aol%d_%s.%s.fits",
                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
                                     AOconf[loop].RTSLOGarray[rtlindex].timestring0) < 1)
-                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                            PRINT_ERROR("sprintf wrote <1 char");
                     }
                     else
                     {
                         if(snprintf(fnameinfo, STRLEN_info, "%s/aol%d_%s.%s.dat",
                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
                                     AOconf[loop].RTSLOGarray[rtlindex].timestring) < 1)
-                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                            PRINT_ERROR("sprintf wrote <1 char");
 
                         if(snprintf(fnameFITS, STRLEN_info, "%s/aol%d_%s.%s.fits",
                                     fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name,
                                     AOconf[loop].RTSLOGarray[rtlindex].timestring) < 1)
-                            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                            PRINT_ERROR("sprintf wrote <1 char");
                     }
 
 
@@ -1493,7 +1492,7 @@ int AOloopControl_RTstreamLOG_saveloop(
 								abort();
 							}
                             if(system(command) != 0)
-                                printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+                                PRINT_ERROR("system() returns non-zero value");
 
                             //   sprintf(command, "rm %s/aol%d_%s.*.dat.0*", fulldir2, loop, AOconf[loop].RTSLOGarray[rtlindex].name);
                             //   system(command);

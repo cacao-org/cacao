@@ -16,8 +16,6 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
@@ -168,10 +166,10 @@ errno_t AOloopControl_set_modeblock_gain(
     if (AOconf[loop].AOpmodecoeffs.DMmodesNBblock<2)
     {
         if(sprintf(name2, "aol%ld_contrMc00", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         if(sprintf(name3, "aol%ld_contrMcact00_00", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         // for CPU mode
         printf("UPDATING Mc matrix (CPU mode)\n");
@@ -203,7 +201,7 @@ errno_t AOloopControl_set_modeblock_gain(
 
 
         if(sprintf(name, "aol%ld_gainb", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_gainb = image_ID(name);
         if( (blocknb< (long) AOconf[loop].AOpmodecoeffs.DMmodesNBblock) && (blocknb>-1) )
@@ -236,10 +234,10 @@ errno_t AOloopControl_set_modeblock_gain(
 
 
                 if(sprintf(name2, "aol%ld_contrMc%02u", loop, kk) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    PRINT_ERROR("sprintf wrote <1 char");
 
                 if(sprintf(name3, "aol%ld_contrMcact%02u_00", loop, kk) < 1)
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    PRINT_ERROR("sprintf wrote <1 char");
 
                 printf("Adding %4u / %4ld  (%5.3f)   %s   [%ld]\n", 
                 kk, 
@@ -328,7 +326,7 @@ errno_t AOloopControl_scanGainBlock(
         char name[200];
 
         if(sprintf(name, "aol%ld_DMmode_cmd", aoloopcontrol_var.LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
     }

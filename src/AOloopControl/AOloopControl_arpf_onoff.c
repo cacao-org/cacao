@@ -12,7 +12,6 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
-#include "00CORE/00CORE.h"
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 #include "COREMOD_memory/COREMOD_memory.h"

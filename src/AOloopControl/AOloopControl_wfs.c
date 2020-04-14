@@ -20,7 +20,6 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-#include "00CORE/00CORE.h"
 
 #include "info/info.h" 
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -105,7 +104,7 @@ errno_t AOloopControl_WFSzpupdate_loop(
 	{
 		// LOOPiteration is written in cnt1 of loop timing array
 		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+			PRINT_ERROR("sprintf wrote <1 char");
 		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
 	}
 
@@ -252,7 +251,7 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
     {
         // LOOPiteration is written in cnt1 of loop timing array
         if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
     }
 
@@ -260,12 +259,12 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
     schedpar.sched_priority = RT_priority;
 #ifndef __MACH__
     if(seteuid(data.euid) != 0) // This goes up to maximum privileges
-        printERROR(__FILE__, __func__, __LINE__, "seteuid() returns non-zero value");
+        PRINT_ERROR("seteuid() returns non-zero value");
 
     sched_setscheduler(0, SCHED_FIFO, &schedpar); //other option is SCHED_RR, might be faster
 
     if(seteuid(data.ruid) != 0) // Go back to normal privileges
-        printERROR(__FILE__, __func__, __LINE__, "seteuid() returns non-zero value");
+        PRINT_ERROR("seteuid() returns non-zero value");
 #endif
 
     IDwfsref = image_ID(IDwfsref_name);
@@ -289,7 +288,7 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
     for(ch=0; ch<NBzp; ch++)
     {
         if(sprintf(imname, "%s%ld", ID_WFSzp_name, ch) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         AOloopControl_IOtools_2Dloadcreate_shmim(imname, "", wfsxsize, wfsysize, 0.0);
         COREMOD_MEMORY_image_set_createsem(imname, 10);
@@ -298,7 +297,7 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
     // extra special zp channel
     ch = NBzp;
     if(sprintf(imname, "%s_00", ID_WFSzp_name) < 1)
-		printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+		PRINT_ERROR("sprintf wrote <1 char");
     AOloopControl_IOtools_2Dloadcreate_shmim(imname, "", wfsxsize, wfsysize, 0.0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     IDwfszparray[ch] = image_ID(imname);
@@ -418,21 +417,21 @@ imageID AOloopControl_computeWFSresidualimage(
 
 
     if(sprintf(imname, "aol%ld_imWFS0", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+       PRINT_ERROR("sprintf wrote <1 char");
     aoloopcontrol_var.aoconfID_contrM = read_sharedmem_image(imname);
 
     if(sprintf(imname, "aol%ld_wfsref", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDwfsref = read_sharedmem_image(imname);
 
     if(sprintf(imname, "aol%ld_wfsmask", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDwfsmask = read_sharedmem_image(imname);
 
     if(sprintf(imname, "aol%ld_imWFS0tot", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDtot = read_sharedmem_image(imname);
 
@@ -448,14 +447,14 @@ imageID AOloopControl_computeWFSresidualimage(
 
 
     if(sprintf(imname, "aol%ld_wfsres", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+       PRINT_ERROR("sprintf wrote <1 char");
 
     IDout = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 
 
     if(sprintf(imname, "aol%ld_wfsres_ave", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDoutave = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
@@ -464,14 +463,14 @@ imageID AOloopControl_computeWFSresidualimage(
 
 
     if(sprintf(imname, "aol%ld_wfsresm", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDoutm = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 
 
     if(sprintf(imname, "aol%ld_wfsresm_ave", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDoutmave = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
@@ -480,7 +479,7 @@ imageID AOloopControl_computeWFSresidualimage(
 
 
     if(sprintf(imname, "aol%ld_wfsres_rms", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDoutrms = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
@@ -495,7 +494,7 @@ imageID AOloopControl_computeWFSresidualimage(
     {
         // LOOPiteration is written in cnt1 of loop timing array
         if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
     }
 

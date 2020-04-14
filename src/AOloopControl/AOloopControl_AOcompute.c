@@ -27,7 +27,6 @@
 
 #include "info/info.h" 
 #include "AOloopControl/AOloopControl.h"
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
@@ -468,7 +467,7 @@ errno_t __attribute__((hot)) AOcompute(
 
                     char imname[200];
                     if(sprintf(imname, "aol%ld_imWFS2active_%02d", aoloopcontrol_var.LOOPNUMBER, slice) < 1) {
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
                     }
 
                     uint32_t *sizearray;
@@ -508,7 +507,7 @@ errno_t __attribute__((hot)) AOcompute(
 
             char imname[200];
             if(sprintf(imname, "aol%ld_meas_act_active", aoloopcontrol_var.LOOPNUMBER) < 1) {
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             }
 
             aoloopcontrol_var.aoconfID_meas_act_active = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
@@ -522,7 +521,7 @@ errno_t __attribute__((hot)) AOcompute(
                 sizearray[1] = AOconf[loop].DMctrl.sizeyDM;
 
                 if(sprintf(imname, "aol%ld_meas_act", aoloopcontrol_var.LOOPNUMBER) < 1) {
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    PRINT_ERROR("sprintf wrote <1 char");
                 }
 
                 aoloopcontrol_var.aoconfID_meas_act = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);

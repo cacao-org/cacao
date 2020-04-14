@@ -29,8 +29,6 @@
 //libraries created by O. Guyon 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-#include "00CORE/00CORE.h"
-
 #include "info/info.h" 
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -120,7 +118,7 @@ errno_t AOloopControl_CompModes_loop(
 	{
 		// LOOPiteration is written in cnt1 of loop timing array
 		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+			PRINT_ERROR("sprintf wrote <1 char");
 		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
 	}
 

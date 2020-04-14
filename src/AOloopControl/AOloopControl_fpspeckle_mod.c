@@ -13,7 +13,6 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
@@ -58,7 +57,7 @@ errno_t AOloopControl_OptimizePSF_LO(
 	{
 		// LOOPiteration is written in cnt1 of loop timing array
 		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+			PRINT_ERROR("sprintf wrote <1 char");
 		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
 	}
 
@@ -164,7 +163,7 @@ errno_t AOloopControl_DMmodulateAB(
 	{
 		// LOOPiteration is written in cnt1 of loop timing array
 		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+			PRINT_ERROR("sprintf wrote <1 char");
 		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
 	}
 
@@ -214,7 +213,7 @@ errno_t AOloopControl_DMmodulateAB(
     t = time(NULL);
     uttime = gmtime(&t);
     if(sprintf(flogname, "logfpwfs_%04d-%02d-%02d_%02d:%02d:%02d.txt", 1900+uttime->tm_year, 1+uttime->tm_mon, uttime->tm_mday, uttime->tm_hour, uttime->tm_min, uttime->tm_sec) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     if((fp=fopen(flogname,"w"))==NULL)
     {
@@ -301,7 +300,7 @@ errno_t AOloopControl_DMmodulateAB(
         clock_gettime(CLOCK_REALTIME, thetime);
 
         if(sprintf(timestr, "%02d %02d %02d.%09ld", uttime->tm_hour, uttime->tm_min, uttime->tm_sec, thetime->tv_nsec) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         printf("time = %s\n", timestr);
         if((fp = fopen(flogname, "a"))==NULL)

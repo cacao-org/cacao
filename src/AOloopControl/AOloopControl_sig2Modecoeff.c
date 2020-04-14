@@ -29,7 +29,6 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-#include "00CORE/00CORE.h"
 
 #include "info/info.h" 
 #include "COREMOD_memory/COREMOD_memory.h"

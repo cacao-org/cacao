@@ -16,7 +16,6 @@
 #include <fcntl.h>
 #include <string.h>
 
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "AOloopControl.h"
 
@@ -149,7 +148,7 @@ errno_t AOloopControl_InitializeMemory(
         AOconf[loop].aorun.init_CMc = 0;
 
         if(sprintf(cntname, "aol%ld_logdata", loop) < 1) // contains loop count (cnt0) and loop gain
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         if((aoloopcontrol_var.aoconfIDlogdata = image_ID(cntname))==-1)
         {
@@ -239,12 +238,12 @@ errno_t AOloopControl_InitializeMemory(
             char fname[200];
 
             if(sprintf(fname, "./conf/param_GPUset0dev%d.txt", (int) k) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             fp = fopen(fname, "r");
             if(fp!=NULL)
             {
                 if(fscanf(fp, "%50d" , &tmpi) != 1)
-                    printERROR(__FILE__, __func__, __LINE__, "Cannot read parameter from file");
+                    PRINT_ERROR("Cannot read parameter from file");
 
                 fclose(fp);
                 aoloopcontrol_var.GPUset0[k] = tmpi;
@@ -261,12 +260,12 @@ errno_t AOloopControl_InitializeMemory(
             char fname[200];
 
             if(sprintf(fname, "./conf/param_GPUset1dev%d.txt", (int) k) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             fp = fopen(fname, "r");
             if(fp!=NULL)
             {
                 if(fscanf(fp, "%50d" , &tmpi) != 1)
-                    printERROR(__FILE__, __func__, __LINE__, "Cannot read parameter from file");
+                   PRINT_ERROR("Cannot read parameter from file");
 
                 fclose(fp);
                 aoloopcontrol_var.GPUset1[k] = tmpi;

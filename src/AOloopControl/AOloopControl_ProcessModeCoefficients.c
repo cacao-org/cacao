@@ -32,8 +32,6 @@
 #include "ImageStreamIO/ImageStreamIO.h"
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-#include "00CORE/00CORE.h"
-
 #include "info/info.h" 
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -229,7 +227,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // INPUT
     if(sprintf(imname, "aol%ld_modeval", loop) < 1)// measured from WFS
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDmodeval = read_sharedmem_image(imname);
     int modeval_semwaitindex = ImageStreamIO_getsemwaitindex(&data.image[IDmodeval], 4);
     //data.image[IDmodeval].semReadPID[modeval_semwaitindex] = getpid();
@@ -253,7 +251,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     {
         // LOOPiteration is written in cnt1 of loop timing array
         if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
     }
 
@@ -261,7 +259,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // CONNECT to dm control channel
     if(sprintf(imname, "aol%ld_dmC", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     if(aoloopcontrol_var.aoconfID_dmC == -1)
         aoloopcontrol_var.aoconfID_dmC = read_sharedmem_image(imname);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_dmC, imname);
@@ -273,7 +271,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     if(aoloopcontrol_var.aoconfID_gainb == -1)
     {
         if(sprintf(imname, "aol%ld_gainb", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_gainb = read_sharedmem_image(imname);
     }
@@ -281,7 +279,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     if(aoloopcontrol_var.aoconfID_multfb == -1)
     {
         if(sprintf(imname, "aol%ld_multfb", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_multfb = read_sharedmem_image(imname);
     }
@@ -289,7 +287,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     if(aoloopcontrol_var.aoconfID_limitb == -1)
     {
         if(sprintf(imname, "aol%ld_limitb", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
     }
@@ -300,7 +298,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
     {
         if(sprintf(imname, "aol%ld_DMmode_GAIN", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_DMmode_GAIN = read_sharedmem_image(imname);
     }
@@ -309,7 +307,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
     {
         if(sprintf(imname, "aol%ld_DMmode_LIMIT", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(imname);
     }
@@ -320,7 +318,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     if(aoloopcontrol_var.aoconfID_MULTF_modes == -1)
     {
         if(sprintf(imname, "aol%ld_DMmode_MULTF", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_MULTF_modes = read_sharedmem_image(imname);
     }
@@ -341,7 +339,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     {
 
         if(sprintf(imname, "aol%ld_modevalPF", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_modevalPF = read_sharedmem_image(imname);
 
 
@@ -370,7 +368,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // load/create aol_modeval_ol (pseudo-open loop mode values)
     if(sprintf(imname, "aol%ld_modeval_ol", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDout = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 20);
 
@@ -383,14 +381,14 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // load/create aol_mode_blknb (block index for each mode)
     if(sprintf(imname, "aol%ld_mode_blknb", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDblknb = create_image_ID(imname, 2, sizeout, _DATATYPE_UINT16, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 
 
     // load/create aol_modeval_dm_corr (current modal DM correction)
     if(sprintf(imname, "aol%ld_modeval_dm_corr", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDmodevalDMcorr = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_corr, imname);
@@ -399,7 +397,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // load/create aol_modeval_dm_now (current modal DM correction after mixing with predicitiv control)
     if(sprintf(imname, "aol%ld_modeval_dm_now", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDmodevalDMnow = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_now, imname);
@@ -408,7 +406,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // load/create aol_modeval_dm_now_filt (current modal DM correction, filtered)
     if(sprintf(imname, "aol%ld_modeval_dm_now_filt", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDmodevalDMnowfilt = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_now_filt, imname);
@@ -417,7 +415,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // load/create aol_modeval_dm (modal DM correction at time of currently available WFS measurement)
     if(sprintf(imname, "aol%ld_modeval_dm", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDmodevalDM = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm, imname);
@@ -426,7 +424,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // load/create aol_modeval_dm (modal DM correction at time of currently available WFS measurement)
     if(sprintf(imname, "aol%ld_modevalPFsync", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDmodevalPFsync = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPFsync, imname);
@@ -435,7 +433,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // load/create aol_modeval_dm (modal DM correction at time of currently available WFS measurement)
     if(sprintf(imname, "aol%ld_modevalPFres", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDmodevalPFres = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPFres, imname);
@@ -444,7 +442,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     // load/create WFS noise estimate
     if(sprintf(imname, "aol%ld_modeWFSnoise", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDmodeWFSnoise = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 
@@ -460,7 +458,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     // set to 1 (or intermediate value) when predictive filter for corresponding mode is on
     //
     if(sprintf(imname, "aol%ld_mode_ARPFgain", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     IDmodeARPFgain = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     // initialize the gain to zero for all modes
@@ -471,7 +469,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     {
         // multiplicative auto ratio on top of gain above
         if(sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_modeARPFgainAuto = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
         COREMOD_MEMORY_image_set_createsem(imname, 10);
         // initialize the gain to zero for all modes
@@ -481,7 +479,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
     sizeout[1] = modeval_bsize;
     if(sprintf(imname, "aol%ld_modeval_dm_C", loop) < 1) // modal DM correction, circular buffer
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDmodevalDM_C = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
@@ -491,7 +489,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     // modal prediction, circular buffer
     sizeout[1] = modeval_bsize;
     if(sprintf(imname, "aol%ld_modevalPF_C", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDmodevalPF_C = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
@@ -504,7 +502,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
     sizeout[0] = AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
     sizeout[1] = 1;
     if(sprintf(imname, "aol%ld_autotune_lim_bcoeff", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDatlimbcoeff = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
@@ -524,7 +522,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
         imageID ID;
 
         if(sprintf(imname, "aol%ld_DMmodes%02u", loop, blk) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         printf("Loading %s  (%2u/%2u)\n", imname, m, NBmodes);
         fflush(stdout);
@@ -762,7 +760,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
                 if(aoloopcontrol_var.aoconfID_modevalPF == -1)
                 {
                     if(sprintf(imname, "aol%ld_modevalPF", loop) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
 
                     aoloopcontrol_var.aoconfID_modevalPF = read_sharedmem_image(imname);
                 }
@@ -928,7 +926,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
                 if(IDautogain == -1)
                 {
                     if(sprintf(imname, "aol%ld_autogain", loop) < 1)
-                        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                        PRINT_ERROR("sprintf wrote <1 char");
 
                     IDautogain = read_sharedmem_image(imname);
                 }
@@ -961,7 +959,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
                         sprintf(command, "echo \"%6.4f\" > conf/param_loopgain.txt", AOconf[loop].aorun.gain);
                         if(system(command) != 0) {
-							printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+							PRINT_ERROR("system() returns non-zero value");
 						}
 
 
@@ -982,7 +980,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(
 
                             sprintf(command, "echo \"%6.4f\" > conf/param_gainb%02u.txt", data.image[aoloopcontrol_var.aoconfID_gainb].array.F[block], block);
                             if(system(command) != 0) {
-								printERROR(__FILE__,__func__,__LINE__, "system() returns non-zero value");
+								PRINT_ERROR("system() returns non-zero value");
 							}
                         }
 

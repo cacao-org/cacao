@@ -12,7 +12,6 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "fft/fft.h"
 
@@ -64,7 +63,7 @@ errno_t AOloopControl_logprocess_modeval(
     ID1dPSD = create_2Dimage_ID("modevalPSD", data.image[ID].md[0].size[2]/2, 1);
 
     if(system("mkdir -p modePSD") != 0)
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
 
     fp = fopen("moveval_stats.dat", "w");
     for(m=0; m<NBmodes; m++)
@@ -98,7 +97,7 @@ errno_t AOloopControl_logprocess_modeval(
         IDft = image_ID("modeval1d_FT");
 
         if(sprintf(fname, "./modePSD/modevalPSD_%04ld.dat", m) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         fpPSD = fopen(fname, "w");
         for(kk=0; kk<NBframes/2; kk++)

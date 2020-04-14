@@ -13,7 +13,6 @@
 
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 

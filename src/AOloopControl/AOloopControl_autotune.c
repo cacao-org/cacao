@@ -13,7 +13,6 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 
@@ -59,7 +58,7 @@ errno_t AOloopControl_AUTOTUNE_LIMITS_off()
 		char imname[200];
 		
         if(sprintf(imname, "aol%ld_limitb", aoloopcontrol_var.LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
     }
@@ -75,7 +74,7 @@ errno_t AOloopControl_AUTOTUNE_LIMITS_off()
 			sprintf(fname, "conf/param_limitb%02d.txt", block);
 			
 			if((fp=fopen(fname, "w"))==NULL)
-				printERROR(__FILE__, __func__, __LINE__, "Cannot open file");
+				PRINT_ERROR("Cannot open file");
 			else
 			{
 				fprintf(fp, "%7.5f\n", data.image[aoloopcontrol_var.aoconfID_limitb].array.F[block]);

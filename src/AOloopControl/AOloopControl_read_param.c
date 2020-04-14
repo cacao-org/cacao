@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "00CORE/00CORE.h"
 
 #include <sys/mman.h>
 
@@ -79,7 +78,7 @@ float AOloopControl_readParam_float(
     else
     {
         if(fscanf(fp, "%50f", &value) != 1) {
-            printERROR(__FILE__,__func__,__LINE__, "Cannot read parameter for file");
+            PRINT_ERROR("Cannot read parameter for file");
             value = defaultValue;
             wParamFile = 1;
         }
@@ -144,7 +143,7 @@ int AOloopControl_readParam_int(
     else
     {
         if(fscanf(fp, "%50d", &value) != 1){
-            printERROR(__FILE__,__func__,__LINE__, "Cannot read parameter for file");
+            PRINT_ERROR("Cannot read parameter for file");
 			value = defaultValue;
 			wParamFile = 1;
 		}
@@ -209,7 +208,7 @@ char* AOloopControl_readParam_string(
     else
     {
         if(fscanf(fp, "%200s", value) != 1) {
-            printERROR(__FILE__,__func__,__LINE__, "Cannot read parameter for file");
+            PRINT_ERROR("Cannot read parameter for file");
             strcpy(value, defaultValue);
             wParamFile = 1;
         }

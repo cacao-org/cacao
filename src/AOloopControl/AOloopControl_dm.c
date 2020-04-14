@@ -41,7 +41,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-#include "00CORE/00CORE.h"
 
 #include "info/info.h" 
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -289,7 +288,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     if(aoloopcontrol_var.aoconfID_looptiming == -1) {
         // LOOPiteration is written in cnt1 of loop timing array
         if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1) {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
         aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
     }
@@ -337,7 +336,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
 
         if(sprintf(imnamedmC, "aol%ld_dmC", loop) < 1) {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
 
         IDc = image_ID(imnamedmC);
@@ -464,7 +463,7 @@ imageID AOloopControl_dm2dm_offload(
     {
         // LOOPiteration is written in cnt1 of loop timing array
         if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
     }
 

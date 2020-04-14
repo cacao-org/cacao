@@ -27,8 +27,6 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-#include "00CORE/00CORE.h"
-
 #include "info/info.h" 
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -177,14 +175,14 @@ errno_t AOloopControl_AutoTuneGains(
     if(aoloopcontrol_var.aoconfID_gainb == -1)
     {
         if(sprintf(imname, "aol%ld_gainb", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_gainb = read_sharedmem_image(imname);
     }
 
     if(aoloopcontrol_var.aoconfID_multfb == -1)
     {
         if(sprintf(imname, "aol%ld_multfb", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_multfb = read_sharedmem_image(imname);
     }
 
@@ -193,7 +191,7 @@ errno_t AOloopControl_AutoTuneGains(
     if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
     {
         if(sprintf(imname, "aol%ld_DMmode_GAIN", aoloopcontrol_var.LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_DMmode_GAIN = read_sharedmem_image(imname);
     }
     printf("aoloopcontrol_var.aoconfID_DMmode_GAIN = %ld\n", aoloopcontrol_var.aoconfID_DMmode_GAIN);
@@ -201,7 +199,7 @@ errno_t AOloopControl_AutoTuneGains(
     if(aoloopcontrol_var.aoconfID_MULTF_modes == -1)
     {
         if(sprintf(imname, "aol%ld_DMmode_MULTF", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_MULTF_modes = read_sharedmem_image(imname);
     }
 
@@ -209,28 +207,28 @@ errno_t AOloopControl_AutoTuneGains(
 
     // INPUT
     if(sprintf(imname, "aol%ld_modeval_ol", loop) < 1) // measured from WFS
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDmodevalOL = read_sharedmem_image(imname);
     NBmodes = data.image[IDmodevalOL].md[0].size[0];
 
     if(sprintf(imname, "aol%ld_modeval", loop) < 1) // measured from WFS
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDmodeval = read_sharedmem_image(imname);
 
     if(sprintf(imname, "aol%ld_modeval_dm", loop) < 1) // measured from WFS
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDmodeval_dm = read_sharedmem_image(imname);
 
     if(sprintf(imname, "aol%ld_modeval_dm_now", loop) < 1) // current modal DM correction
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDmodeval_dm_now = read_sharedmem_image(imname);
 
     if(sprintf(imname, "aol%ld_modeval_dm_now_filt", loop) < 1) // current modal DM correction, filtered
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDmodeval_dm_now_filt = read_sharedmem_image(imname);
 
@@ -241,14 +239,14 @@ errno_t AOloopControl_AutoTuneGains(
 	sizearray[0] = NBmodes;
 	sizearray[1] = 1;
 	if(sprintf(imname, "aol%ld_modeWFSnoise", loop) < 1) 
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 	IDmodeWFSnoise = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 	free(sizearray);
 
     // blocks
     if(sprintf(imname, "aol%ld_mode_blknb", loop) < 1) // block indices
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDblk = read_sharedmem_image(imname);
 
