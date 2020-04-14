@@ -34,7 +34,6 @@
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-#include "00CORE/00CORE.h"
 
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -337,14 +336,14 @@ static void *compute_function_imtotal(
     int logfunc_level_max = 1;
     char commentstring[200];
     sprintf(commentstring, "Compute image total flux, loop %ld", LOOPNUMBER);
-    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
+    //CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 
 
     if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
         // LOOPiteration is written in cnt1 of loop timing array
         if(sprintf(imname, "aol%ld_looptiming", LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
     }
 
@@ -394,7 +393,7 @@ static void *compute_function_imtotal(
     }
 
     // LOG function / process end
-    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+    //CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
     
     return NULL;
 }
@@ -459,7 +458,7 @@ static void *compute_function_dark_subtract( void *ptr )
     int logfunc_level_max = 1;
     char commentstring[200];
     sprintf(commentstring, "Dark subtract WFS image, loop %ld", LOOPNUMBER);
-    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
+    //CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 
 
     while(1)
@@ -492,7 +491,7 @@ static void *compute_function_dark_subtract( void *ptr )
     }
 
     // LOG function / process end
-    CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+    //CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
 }
 
 
@@ -756,10 +755,10 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
     char name[200];
     if(sprintf(name, "aol%ld_imWFS0", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     long ID_imWFS0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
     if(sprintf(name, "aol%ld_imWFS1", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     long ID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
 
 
@@ -783,7 +782,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
 
     if(sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     Average_cam_frames_IDdark = image_ID(Average_cam_frames_dname);
     Average_cam_frames_nelem = sizeWFS;
@@ -1254,7 +1253,7 @@ errno_t __attribute__((hot)) Read_cam_frame(
 
 
         if(sprintf(name, "aol%ld_imWFS0", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         ID_imWFS0 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
 
 
@@ -1273,7 +1272,7 @@ errno_t __attribute__((hot)) Read_cam_frame(
         arraystmp = (signed short*)   malloc(sizeof(signed short) *   sizeWFS);  
 
         if(sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         Average_cam_frames_IDdark = image_ID(Average_cam_frames_dname);
         Average_cam_frames_nelem = sizeWFS; 
@@ -1319,7 +1318,7 @@ fflush(stdout);
         arraystmp = (signed short*)   malloc(sizeof(signed short) *   sizeWFS);  
 
         if(sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         Average_cam_frames_IDdark = image_ID(Average_cam_frames_dname);
         Average_cam_frames_nelem = sizeWFS; 

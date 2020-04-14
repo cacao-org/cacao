@@ -25,7 +25,6 @@
 #include <math.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
@@ -637,7 +636,7 @@ imageID AOloopControl_IOtools_stream3Dto2D(
     ysize1 = ysize0*(1 + (long) (1.0*zsize0/NBcols-0.00001));
 
     if(sprintf(out0name, "%sc", out_name) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     datatype = _DATATYPE_FLOAT;
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);

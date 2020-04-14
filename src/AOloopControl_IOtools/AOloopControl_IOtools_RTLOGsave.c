@@ -15,7 +15,6 @@
 #include <math.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
 
 #include "statistic/statistic.h"
 #include "AOloopControl/AOloopControl.h"

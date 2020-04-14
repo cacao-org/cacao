@@ -29,7 +29,6 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
-#include "00CORE/00CORE.h"
 
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -225,14 +224,8 @@ imageID AOloopControl_IOtools_2Dloadcreate_shmim(
 
                 printf("\n========== EXISTING %s HAS WRONG SIZE -> CREATING BLANK %s ===========\n\n", name, name);
                 delete_image_ID(name);
-
-                if(sprintf(command, "rm %s/%s.im.shm", data.shmdir, name) < 1) {
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-                }
-
-                if(system(command) != 0) {
-                    printERROR(__FILE__, __func__, __LINE__, "system() error");
-                }
+                
+				EXECUTE_SYSTEM_COMMAND("rm %s/%s.im.shm", data.shmdir, name);
 
                 CreateSMim = 1;
                 loadcreatestatus = 0;
@@ -417,14 +410,8 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(
                 fflush(stdout);
 
                 delete_image_ID(name);
-
-                if(sprintf(command, "rm %s/%s.im.shm", data.shmdir, name) < 1) {
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-                }
-
-                if(system(command) != 0) {
-                    printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-                }
+                
+                EXECUTE_SYSTEM_COMMAND("rm %s/%s.im.shm", data.shmdir, name);
 
                 CreateSMim = 1;
                 loadcreatestatus = 0;
