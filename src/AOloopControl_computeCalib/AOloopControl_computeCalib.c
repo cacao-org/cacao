@@ -51,7 +51,6 @@
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "info/info.h"
-#include "00CORE/00CORE.h"
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 
