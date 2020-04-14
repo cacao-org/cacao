@@ -77,7 +77,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
 #include <fitsio.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_tools/COREMOD_tools.h"
@@ -1180,7 +1179,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
      *
      */
     /*    if(sprintf(name, "aol%ld_imWFS1", loop) < 1) {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
         long ID_imWFS1 = read_sharedmem_image(name);
         if(ID_imWFS1 == -1){
@@ -1667,7 +1666,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
 
             if(system("mkdir -p tmpRMacqu") != 0)
             {
-                printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+                PRINT_ERROR("system() returns non-zero value");
             }
 
             fplog = fopen("tmpRMacqu/RMacqulog.txt", "w");
@@ -1776,7 +1775,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     // print poke log
     if(system("mkdir -p tmpRMacqu") != 0)
     {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
     }
     fp = fopen("./tmpRMacqu/RMpokelog.txt", "w");
     for(imcnt = 0; imcnt < imcntmax; imcnt++)
@@ -2246,15 +2245,15 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                     // create compressed files
                     if(system("gzip -kf ./conf/Hmat.fits") != 0)
                     {
-                        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+                        PRINT_ERROR("system() returns non-zero value");
                     }
                     if(system("gzip -kf ./conf/Hpixindex.fits") != 0)
                     {
-                        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+                        PRINT_ERROR("system() returns non-zero value");
                     }
                     if(system("gzip -kf ./conf/Hpoke.fits") != 0)
                     {
-                        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+                        PRINT_ERROR("system() returns non-zero value");
                     }
 
                     delete_image_ID("RMDMmask");
@@ -3276,7 +3275,7 @@ long AOloopControl_acquireCalib_Measure_WFS_linResponse_old(
 
     if(system("mkdir -p tmpRMacqu") != 0)
     {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+        PRINT_ERROR("system() returns non-zero value");
     }
 
 
@@ -3685,7 +3684,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
     if(sprintf(name, "aol%ld_imWFS1RM", loop) < 1)
     {
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
     }
 
     sizearray[0] = AOconf[loop].WFSim.sizexWFS;
@@ -3742,23 +3741,9 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
     //    save_fits("RMpokeCube", "!./conf/test1_RMpokeCube.fits");
 
-    if(sprintf(command, "echo \"%u\" > RM_NBpoke.txt\n", NBpoke) < 1)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-    }
-    if(system(command) != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
-
-    if(sprintf(command, "echo \"%u\" > test_RM_NBpoke.txt\n", NBpoke) < 1)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-    }
-    if(system(command) != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
+    EXECUTE_SYSTEM_COMMAND("echo \"%u\" > RM_NBpoke.txt\n", NBpoke);
+   
+    EXECUTE_SYSTEM_COMMAND("echo \"%u\" > test_RM_NBpoke.txt\n", NBpoke);
 
     //    sleep(10);
 
@@ -3805,27 +3790,12 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
     fflush(stdout);
 
     //    for(iter=0; iter<NBiter; iter++)
-    if(system("mkdir -p zresptmp") != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
+    EXECUTE_SYSTEM_COMMAND("mkdir -p zresptmp");
 
-    if(system("rm ./zresptmp/LO*.fits") != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
+    EXECUTE_SYSTEM_COMMAND("rm ./zresptmp/LO*.fits");
 
-    if(sprintf(command, "echo %ld > ./zresptmp/%s_nbiter.txt", iter,
-               zrespm_name) < 1)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-    }
-
-    if(system(command) != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
-
+    EXECUTE_SYSTEM_COMMAND("echo %ld > ./zresptmp/%s_nbiter.txt", iter,
+               zrespm_name);
 
     printf("STARTING RM...\n");
     fflush(stdout);
@@ -4093,7 +4063,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
                 }
             if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", zrespm_name, iter) < 1)
             {
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             }
             save_fits(zrespm_name, fname);
 
@@ -4106,14 +4076,14 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
             if(sprintf(fname, "!./zresptmp/%s_pos_%03ld.fits", zrespm_name, iter) < 1)
             {
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             }
 
             save_fits("zrespfp", fname);
 
             if(sprintf(fname, "!./zresptmp/%s_neg_%03ld.fits", zrespm_name, iter) < 1)
             {
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             }
 
             save_fits("zrespfm", fname);
@@ -4150,14 +4120,14 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
             if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", WFSref0_name, iter) < 1)
             {
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             }
 
             save_fits(WFSref0_name, fname);
 
             if(sprintf(fname, "!./zresptmp/wfsimRMS.fits") < 1)
             {
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             }
 
             save_fits("wfsimrms", fname);
@@ -4178,7 +4148,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
                 if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", DMmap_name, iter) < 1)
                 {
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    PRINT_ERROR("sprintf wrote <1 char");
                 }
 
                 save_fits(DMmap_name, fname);
@@ -4197,7 +4167,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
                 if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", zrespm_name, iter) < 1)
                 {
-                    printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                    PRINT_ERROR("sprintf wrote <1 char");
                 }
 
                 save_fits(WFSmap_name, fname);
@@ -4234,16 +4204,8 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
                 }
             }
             iter++;
-            if(sprintf(command, "echo %ld > ./zresptmp/%s_nbiter.txt", iter,
-                       zrespm_name) < 1)
-            {
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-            }
-
-            if(system(command) != 0)
-            {
-                printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-            }
+            EXECUTE_SYSTEM_COMMAND("echo %ld > ./zresptmp/%s_nbiter.txt", iter,
+                       zrespm_name);
         }
     } // end of iteration loop
 
@@ -4406,11 +4368,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
     {
         if(file_exists("stopRM.txt"))
         {
-            if(system("rm stopRM.txt") != 0)
-            {
-                printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-            }
-
+			EXECUTE_SYSTEM_COMMAND("rm stopRM.txt");
             iter = NBiter;
         }
         else
@@ -4695,7 +4653,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
             if(sprintf(signame, "./tmp/RM_optsign_%06ld.txt", iter) < 1)
             {
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+                PRINT_ERROR("sprintf wrote <1 char");
             }
 
             normcoeff = 0.0;
@@ -4730,7 +4688,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
             fclose(fp);
             if(system("cp ./tmp/RM_outsign%06ld.txt ./tmp/RM_outsign.txt") != 0)
             {
-                printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+                PRINT_ERROR("system() returns non-zero value");
             }
 
             save_fits("refwfsacq", "!./tmp/refwfs.fits");
@@ -4867,13 +4825,13 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
 #ifndef __MACH__
     if(seteuid(data.euid) != 0)     //This goes up to maximum privileges
     {
-        printERROR(__FILE__, __func__, __LINE__, "seteuid error");
+        PRINT_ERROR("seteuid error");
     }
     sched_setscheduler(0, SCHED_FIFO,
                        &schedpar); //other option is SCHED_RR, might be faster
     if(seteuid(data.ruid) != 0)     //Go back to normal privileges
     {
-        printERROR(__FILE__, __func__, __LINE__, "seteuid error");
+        PRINT_ERROR("seteuid error");
     }
 #endif
 
