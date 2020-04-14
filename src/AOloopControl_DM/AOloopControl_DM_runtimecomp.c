@@ -32,7 +32,6 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
-#include "00CORE/00CORE.h"
 #include "statistic/statistic.h"
 
 #include "AOloopControl_DM/AOloopControl_DM.h"
