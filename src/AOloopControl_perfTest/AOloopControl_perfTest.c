@@ -63,7 +63,6 @@
 
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
 #include "COREMOD_tools/COREMOD_tools.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -1149,11 +1148,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
             data.image[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
         }
 
-
-    if(system("mkdir -p tmp") != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
+	EXECUTE_SYSTEM_COMMAND("mkdir -p tmp");
 
     save_fits("_testdm0", "!tmp/_testdm0.fits");
     save_fits("_testdm1", "!tmp/_testdm1.fits");
@@ -1235,11 +1230,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     tarray = (struct timespec *) malloc(sizeof(struct timespec) * wfs_NBframesmax);
     dtarray = (double *) malloc(sizeof(double) * wfs_NBframesmax);
 
-    if(system("mkdir -p timingstats") != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
-
+	EXECUTE_SYSTEM_COMMAND("mkdir -p timingstats");
+   
     if((fp = fopen("timingstats/hardwlatency.txt", "w")) == NULL)
     {
         printf("ERROR: cannot create file \"timingstats/hardwlatency.txt\"\\n");
@@ -1689,57 +1681,17 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     functionparameter_SaveParam2disk(&fps, ".out.latencyfr");
 
 
-    if(snprintf(command, stringmaxlen, "echo %8.6f > conf/param_hardwlatency.txt",
-                latencyarray[NBiter / 2]) < 1)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
-    }
-    if(system(command) != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
+	EXECUTE_SYSTEM_COMMAND("echo %8.6f > conf/param_hardwlatency.txt",
+                latencyarray[NBiter / 2]);
+                
+	EXECUTE_SYSTEM_COMMAND("echo %8.6f > conf/param_hardwlatency_frame.txt", latencystepave);
 
-
-
-    if(snprintf(command, stringmaxlen,
-                "echo %8.6f > conf/param_hardwlatency_frame.txt", latencystepave) < 1)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
-    }
-    if(system(command) != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
-
-
-
-
-    if(snprintf(command, stringmaxlen,
-                "echo %f %f %f %f %f > timingstats/hardwlatencyStats.txt",
+	EXECUTE_SYSTEM_COMMAND("echo %f %f %f %f %f > timingstats/hardwlatencyStats.txt",
                 latencyarray[NBiter / 2], latencyave, minlatency, maxlatency,
-                latencystepave) < 1)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
-    }
+                latencystepave);
 
-    if(system(command) != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
-
-
-
-
-    if(snprintf(command, stringmaxlen, "echo %.3f > conf/param_mloopfrequ.txt",
-                1.0 * (wfscntend - wfscntstart) / dt) < 1)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
-    }
-
-    if(system(command) != 0)
-    {
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
-    }
+	EXECUTE_SYSTEM_COMMAND("echo %.3f > conf/param_mloopfrequ.txt",
+                1.0 * (wfscntend - wfscntstart) / dt);
 
     free(latencyarray);
     free(latencysteparray);
@@ -1860,7 +1812,7 @@ imageID AOloopControl_perfTest_blockstats(
 
     if(snprintf(fname, 32, "aol%ld_modeval", loop) < 1)
     {
-        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     IDmodeval = read_sharedmem_image(fname);
@@ -1884,7 +1836,7 @@ imageID AOloopControl_perfTest_blockstats(
 
         if(snprintf(fname, stringmaxlen, "aol%ld_DMmodes%02ld", loop, blk) < 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
         }
 
         ID = read_sharedmem_image(fname);
@@ -1914,7 +1866,7 @@ imageID AOloopControl_perfTest_blockstats(
 
     if(snprintf(fname, stringmaxlen, "aol%ld_blockRMS", loop) < 1)
     {
-        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     IDblockRMS = create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
@@ -1922,7 +1874,7 @@ imageID AOloopControl_perfTest_blockstats(
 
     if(snprintf(fname, stringmaxlen, "aol%ld_blockRMS_ave", loop) < 1)
     {
-        printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     IDblockRMS_ave = create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
@@ -1994,7 +1946,7 @@ errno_t AOloopControl_perfTest_InjectMode(
     float ampl
 )
 {
-    int stringmaxlen = 200;
+   // int stringmaxlen = 200;
 
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
@@ -2003,12 +1955,9 @@ errno_t AOloopControl_perfTest_InjectMode(
 
     if(aoloopcontrol_var.aoconfID_DMmodes == -1)
     {
-        char name[stringmaxlen];
+        char name[STRINGMAXLEN_IMGNAME];
 
-        if(snprintf(name, stringmaxlen, "aol%ld_DMmodes", LOOPNUMBER) < 1)
-        {
-            printERROR(__FILE__, __func__, __LINE__, "snprintf wrote <1 char");
-        }
+		WRITE_IMAGENAME(name, "aol%ld_DMmodes", LOOPNUMBER);
 
         aoloopcontrol_var.aoconfID_DMmodes = read_sharedmem_image(name);
     }

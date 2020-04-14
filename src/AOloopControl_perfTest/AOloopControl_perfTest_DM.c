@@ -26,7 +26,6 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
-#include "00CORE/00CORE.h"
 #include "linopt_imtools/linopt_imtools.h"
 #include "info/info.h"
 #include "AOloopControl/AOloopControl.h"
@@ -176,7 +175,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
     long IDcoeffarray;
     long m;
     FILE *fp;
-    char fname[200];
+    char fname[STRINGMAXLEN_FILENAME];
     long kmaxmax = 100000;
     imageID ID;
 
@@ -262,8 +261,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
 
     IDcoeffarray = create_2Dimage_ID("_tmpcoeffarray", kmax, NBmodes);
 
-    if(sprintf(fname, "mode%03ld_PSD.txt", kk) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+	WRITE_FILENAME(fname, "mode%03ld_PSD.txt", kk);
 
     if( (fp = fopen(fname, "w"))==NULL)
     {

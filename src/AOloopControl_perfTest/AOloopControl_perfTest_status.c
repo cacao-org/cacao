@@ -39,7 +39,6 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-#include "00CORE/00CORE.h"
 
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -109,7 +108,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
     //    long nbl = 1;
     //float AVElim = 0.01; // [um]
     //float RMSlim = 0.01; // [um]
-    char imname[200];
+    char imname[STRINGMAXLEN_IMGNAME];
     float ratio0, ratio;
     int color;
     long IDblknb;
@@ -137,10 +136,8 @@ errno_t AOloopControl_perfTest_printloopstatus(
 
     */
 
-
-    if(sprintf(imname, "aol%ld_mode_blknb", loop) < 1) // block indices
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+	
+    WRITE_IMAGENAME(imname, "aol%ld_mode_blknb", loop);
     IDblknb = image_ID(imname);
 
     if(IDblknb==-1)
@@ -156,8 +153,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
             sizeout[0] = AOconf[loop].AOpmodecoeffs.NBDMmodes;
             sizeout[1] = 1;
 
-            if(sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1)
-                printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+			WRITE_IMAGENAME(imname, "aol%ld_mode_ARPFgainAuto", loop);
             aoloopcontrol_var.aoconfID_modeARPFgainAuto = create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0);
             COREMOD_MEMORY_image_set_createsem(imname, 10);
             // initialize the gain to zero for all modes
@@ -186,10 +182,8 @@ errno_t AOloopControl_perfTest_printloopstatus(
 
 
     if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
-    {
-        if(sprintf(imname, "aol%ld_DMmode_LIMIT", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+    {		
+        WRITE_IMAGENAME(imname, "aol%ld_DMmode_LIMIT", loop);
         aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(imname);
     }
 
@@ -489,7 +483,7 @@ errno_t AOloopControl_perfTest_loopMonitor(
 	long    nbcol
 	)
 {
-    char name[200];
+    char name[STRINGMAXLEN_IMGNAME];
     // DM mode values
     imageID IDmodeval_dm;
 
@@ -498,7 +492,7 @@ errno_t AOloopControl_perfTest_loopMonitor(
     long ksize;
     imageID IDmodevalave;
     imageID IDmodevalrms;
-    char fname[200];
+    char fname[STRINGMAXLEN_FILENAME];
 
 
     if(aoloopcontrol_var.AOloopcontrol_meminit==0)
@@ -510,34 +504,26 @@ errno_t AOloopControl_perfTest_loopMonitor(
     // load arrays that are required
     if(aoloopcontrol_var.aoconfID_cmd_modes==-1)
     {
-        if(sprintf(name, "aol%ld_DMmode_cmd", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_DMmode_cmd", loop);
         aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
     }
 
     if(aoloopcontrol_var.aoconfID_meas_modes==-1)
     {
-        if(sprintf(name, "aol%ld_DMmode_meas", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_DMmode_meas", loop);
         aoloopcontrol_var.aoconfID_meas_modes = read_sharedmem_image(name);
     }
 
 
     if(aoloopcontrol_var.aoconfID_RMS_modes==-1)
     {
-        if(sprintf(name, "aol%ld_DMmode_RMS", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_DMmode_RMS", loop);
         aoloopcontrol_var.aoconfID_RMS_modes = read_sharedmem_image(name);
     }
 
     if(aoloopcontrol_var.aoconfID_AVE_modes==-1)
     {
-        if(sprintf(name, "aol%ld_DMmode_AVE", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_DMmode_AVE", loop);
         aoloopcontrol_var.aoconfID_AVE_modes = read_sharedmem_image(name);
     }
 
@@ -545,25 +531,19 @@ errno_t AOloopControl_perfTest_loopMonitor(
     // blocks
     if(aoloopcontrol_var.aoconfID_gainb == -1)
     {
-        if(sprintf(name, "aol%ld_gainb", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_gainb", loop);
         aoloopcontrol_var.aoconfID_gainb = read_sharedmem_image(name);
     }
 
     if(aoloopcontrol_var.aoconfID_multfb == -1)
     {
-        if(sprintf(name, "aol%ld_multfb", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_multfb", loop);
         aoloopcontrol_var.aoconfID_multfb = read_sharedmem_image(name);
     }
 
     if(aoloopcontrol_var.aoconfID_limitb == -1)
     {
-        if(sprintf(name, "aol%ld_limitb", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_limitb", loop);
         aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(name);
     }
 
@@ -572,25 +552,19 @@ errno_t AOloopControl_perfTest_loopMonitor(
 
     if(aoloopcontrol_var.aoconfID_DMmode_GAIN==-1)
     {
-        if(sprintf(name, "aol%ld_DMmode_GAIN", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_DMmode_GAIN", loop);
         aoloopcontrol_var.aoconfID_DMmode_GAIN = read_sharedmem_image(name);
     }
 
     if(aoloopcontrol_var.aoconfID_LIMIT_modes==-1)
     {
-        if(sprintf(name, "aol%ld_DMmode_LIMIT", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_DMmode_LIMIT", loop);
         aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(name);
     }
 
     if(aoloopcontrol_var.aoconfID_MULTF_modes==-1)
     {
-        if(sprintf(name, "aol%ld_DMmode_MULTF", loop) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+        WRITE_IMAGENAME(name, "aol%ld_DMmode_MULTF", loop);
         aoloopcontrol_var.aoconfID_MULTF_modes = read_sharedmem_image(name);
     }
 
@@ -603,29 +577,21 @@ errno_t AOloopControl_perfTest_loopMonitor(
 
     // real-time DM mode value
 
-    if(sprintf(fname, "aol%ld_modeval_dm_now", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
-    IDmodeval_dm = read_sharedmem_image(fname);
+    WRITE_IMAGENAME(name, "aol%ld_modeval_dm_now", loop);
+    IDmodeval_dm = read_sharedmem_image(name);
 
     // real-time WFS mode value
-    if(sprintf(fname, "aol%ld_modeval", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
-    IDmodeval = read_sharedmem_image(fname);
+    WRITE_IMAGENAME(name, "aol%ld_modeval", loop);
+    IDmodeval = read_sharedmem_image(name);
 
     // averaged WFS residual modes, computed by CUDACOMP_extractModesLoop
-    if(sprintf(fname, "aol%ld_modeval_ave", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
-    IDmodevalave = read_sharedmem_image(fname);
+    WRITE_IMAGENAME(name, "aol%ld_modeval_ave", loop);
+    IDmodevalave = read_sharedmem_image(name);
     ksize = data.image[IDmodevalave].md[0].size[1]; // number of averaging line, each line is 2x averaged of previous line
 
     // averaged WFS residual modes RMS, computed by CUDACOMP_extractModesLoop
-    if(sprintf(fname, "aol%ld_modeval_rms", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
-    IDmodevalrms = read_sharedmem_image(fname);
+    WRITE_IMAGENAME(name, "aol%ld_modeval_rms", loop);
+    IDmodevalrms = read_sharedmem_image(name);
 
 
 	
@@ -693,7 +659,7 @@ errno_t AOloopControl_perfTest_statusStats(
     double loopiterus;
 
     long long loopcnt;
-    char imname[200];
+    char imname[STRINGMAXLEN_IMGNAME];
     long long wfsimcnt;
     long long dmCcnt;
 
@@ -833,14 +799,10 @@ errno_t AOloopControl_perfTest_statusStats(
     }
 
 
-    if(sprintf(imname, "aol%ld_wfsim", LOOPNUMBER) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+    WRITE_IMAGENAME(imname, "aol%ld_wfsim", LOOPNUMBER);
     aoloopcontrol_var.aoconfID_wfsim = read_sharedmem_image(imname);
 
-    if(sprintf(imname, "aol%ld_dmC", LOOPNUMBER) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
-
+    WRITE_IMAGENAME(imname, "aol%ld_dmC", LOOPNUMBER);
     aoloopcontrol_var.aoconfID_dmC = read_sharedmem_image(imname);
 
 
@@ -935,7 +897,7 @@ errno_t AOloopControl_perfTest_statusStats(
     else
     {
         if(fscanf(fp, "%50f", &AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency) != 1)
-            printERROR(__FILE__, __func__, __LINE__, "Cannot read parameter from file");
+            PRINT_ERROR("Cannot read parameter from file");
 
         printf("hardware latency = %f\n", AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency);
         fclose(fp);
