@@ -1,6 +1,0 @@
-lib_LTLIBRARIES = libaoloopcontrolpredictivecontrol.la
-libaoloopcontrolpredictivecontrol_la_SOURCES = AOloopControl_PredictiveControl.c AOloopControl_PredictiveControl.h AOloopControl_PredictiveControl_builPFloop_WatchInput.c AOloopControl_PredictiveControl_testPredictiveFilter.c AOloopControl_PredictiveControl_setPFsimpleAve.c AOloopControl_PredictiveControl_mapPredictiveFilter.c
-
-EXTRA_DIST = doc
-
-AM_CPPFLAGS = -I@abs_top_srcdir@/src -fopenmp
