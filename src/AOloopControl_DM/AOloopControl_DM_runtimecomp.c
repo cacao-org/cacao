@@ -649,8 +649,7 @@ int AOloopControl_DM_CombineChannels_RUN(
         dmdispcombconf[DMindex].ID_dm2dm_DMmodes = image_ID(dm2dm_DMmodes);
         sprintf(dmdispcombconf[DMindex].dm2dm_DMmodes_name, "%s", dm2dm_DMmodes);
         if(data.image[dmdispcombconf[DMindex].ID_dm2dm_DMmodes].md[0].naxis != 3) {
-            sprintf(errstr, "image \"%s\" should have naxis = 3", dm2dm_DMmodes);
-            printERROR(__FILE__, __func__, __LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have naxis = 3", dm2dm_DMmodes);
             exit(0);
         }
         dmdispcombconf[DMindex].xsizeout = data.image[dmdispcombconf[DMindex].ID_dm2dm_DMmodes].md[0].size[0];
@@ -658,13 +657,11 @@ int AOloopControl_DM_CombineChannels_RUN(
 
         dmdispcombconf[DMindex].ID_dm2dm_outdisp = image_ID(dm2dm_outdisp);
         if(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].size[0] != dmdispcombconf[DMindex].xsizeout) {
-            sprintf(errstr, "image \"%s\" should have x axis = %ld", dm2dm_outdisp, dmdispcombconf[DMindex].xsizeout);
-            printERROR(__FILE__, __func__, __LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have x axis = %ld", dm2dm_outdisp, dmdispcombconf[DMindex].xsizeout);
             exit(0);
         }
         if(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].size[1] != dmdispcombconf[DMindex].ysizeout) {
-            sprintf(errstr, "image \"%s\" should have y axis = %ld", dm2dm_outdisp, dmdispcombconf[DMindex].ysizeout);
-            printERROR(__FILE__, __func__, __LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have y axis = %ld", dm2dm_outdisp, dmdispcombconf[DMindex].ysizeout);
             exit(0);
         }
 
@@ -696,8 +693,7 @@ int AOloopControl_DM_CombineChannels_RUN(
         }
 
         if(data.image[dmdispcombconf[DMindex].ID_wfsref_RespMat].md[0].naxis != 3) {
-            sprintf(errstr, "image \"%s\" should have naxis = 3", wfsref_WFSRespMat);
-            printERROR(__FILE__, __func__, __LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have naxis = 3", wfsref_WFSRespMat);
             exit(0);
         }
         dmdispcombconf[DMindex].xsizewfsref = data.image[dmdispcombconf[DMindex].ID_wfsref_RespMat].md[0].size[0];
@@ -709,13 +705,11 @@ int AOloopControl_DM_CombineChannels_RUN(
 
         dmdispcombconf[DMindex].ID_wfsref_out = image_ID(wfsref_out);
         if(data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].size[0] != dmdispcombconf[DMindex].xsizewfsref) {
-            sprintf(errstr, "image \"%s\" should have x axis = %ld", wfsref_out, dmdispcombconf[DMindex].xsizewfsref);
-            printERROR(__FILE__, __func__, __LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have x axis = %ld", wfsref_out, dmdispcombconf[DMindex].xsizewfsref);
             exit(0);
         }
         if(data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].size[1] != dmdispcombconf[DMindex].ysizewfsref) {
-            sprintf(errstr, "image \"%s\" should have y axis = %ld", wfsref_out, dmdispcombconf[DMindex].ysizewfsref);
-            printERROR(__FILE__, __func__, __LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have y axis = %ld", wfsref_out, dmdispcombconf[DMindex].ysizewfsref);
             exit(0);
         }
         printf("Creating image %s   %ld x %ld\n", "_tmpoutref", dmdispcombconf[DMindex].xsizewfsref, dmdispcombconf[DMindex].ysizewfsref);
@@ -1319,8 +1313,7 @@ int AOloopControl_DM_CombineChannels(
         sprintf(dmdispcombconf[DMindex].dm2dm_DMmodes_name, "%s", dm2dm_DMmodes);
         if(data.image[dmdispcombconf[DMindex].ID_dm2dm_DMmodes].md[0].naxis != 3)
         {
-            sprintf(errstr, "image \"%s\" should have naxis = 3", dm2dm_DMmodes);
-            printERROR(__FILE__,__func__,__LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have naxis = 3", dm2dm_DMmodes);
             exit(0);
         }
         dmdispcombconf[DMindex].xsizeout = data.image[dmdispcombconf[DMindex].ID_dm2dm_DMmodes].md[0].size[0];
@@ -1329,14 +1322,12 @@ int AOloopControl_DM_CombineChannels(
         dmdispcombconf[DMindex].ID_dm2dm_outdisp = image_ID(dm2dm_outdisp);
         if(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].size[0] != dmdispcombconf[DMindex].xsizeout)
         {
-            sprintf(errstr, "image \"%s\" should have x axis = %ld", dm2dm_outdisp, dmdispcombconf[DMindex].xsizeout);
-            printERROR(__FILE__,__func__,__LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have x axis = %ld", dm2dm_outdisp, dmdispcombconf[DMindex].xsizeout);
             exit(0);
         }
         if(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp].md[0].size[1] != dmdispcombconf[DMindex].ysizeout)
         {
-            sprintf(errstr, "image \"%s\" should have y axis = %ld", dm2dm_outdisp, dmdispcombconf[DMindex].ysizeout);
-            printERROR(__FILE__,__func__,__LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have y axis = %ld", dm2dm_outdisp, dmdispcombconf[DMindex].ysizeout);
             exit(0);
         }
 
@@ -1368,8 +1359,7 @@ int AOloopControl_DM_CombineChannels(
 
         if(data.image[dmdispcombconf[DMindex].ID_wfsref_RespMat].md[0].naxis != 3)
         {
-            sprintf(errstr, "image \"%s\" should have naxis = 3", wfsref_WFSRespMat);
-            printERROR(__FILE__,__func__,__LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have naxis = 3", wfsref_WFSRespMat);
             exit(0);
         }
         dmdispcombconf[DMindex].xsizewfsref = data.image[dmdispcombconf[DMindex].ID_wfsref_RespMat].md[0].size[0];
@@ -1382,14 +1372,12 @@ int AOloopControl_DM_CombineChannels(
         dmdispcombconf[DMindex].ID_wfsref_out = image_ID(wfsref_out);
         if(data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].size[0] != dmdispcombconf[DMindex].xsizewfsref)
         {
-            sprintf(errstr, "image \"%s\" should have x axis = %ld", wfsref_out, dmdispcombconf[DMindex].xsizewfsref);
-            printERROR(__FILE__,__func__,__LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have x axis = %ld", wfsref_out, dmdispcombconf[DMindex].xsizewfsref);
             exit(0);
         }
         if(data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].size[1] != dmdispcombconf[DMindex].ysizewfsref)
         {
-            sprintf(errstr, "image \"%s\" should have y axis = %ld", wfsref_out, dmdispcombconf[DMindex].ysizewfsref);
-            printERROR(__FILE__,__func__,__LINE__, errstr);
+            PRINT_ERROR("image \"%s\" should have y axis = %ld", wfsref_out, dmdispcombconf[DMindex].ysizewfsref);
             exit(0);
         }
         printf("Creating image %s   %ld x %ld\n", "_tmpoutref", dmdispcombconf[DMindex].xsizewfsref, dmdispcombconf[DMindex].ysizewfsref);
