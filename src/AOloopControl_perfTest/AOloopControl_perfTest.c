@@ -3320,7 +3320,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
 
                         default :
                             list_image_ID();
-                            PRINT_ERROR(""datatype value not recognised");
+                            PRINT_ERROR("datatype value not recognised");
                             printf("ID %ld  datatype = %d\n", IDc, data.image[IDc].md[0].datatype);
                             exit(0);
                             break;
