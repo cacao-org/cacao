@@ -1,9 +1,12 @@
-project(lib_AOloopControl_acquireCalib_project)
+set(LIBNAME "cacaoAOloopControlacquireCalib")
+set(SRCNAME "AOloopControl_acquireCalib")
+
+project(lib_${LIBNAME}_project)
 
 include_directories ("${PROJECT_SOURCE_DIR}/src")
 include_directories ("${PROJECT_SOURCE_DIR}/..")
-add_library(AOloopControl_acquireCalib SHARED AOloopControl_acquireCalib.c)
+add_library(${LIBNAME} SHARED ${SRCNAME}.c)
 
-install(TARGETS AOloopControl_acquireCalib DESTINATION lib)
-install(FILES AOloopControl_acquireCalib.h DESTINATION include)
+install(TARGETS ${LIBNAME} DESTINATION lib)
+install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})
 
