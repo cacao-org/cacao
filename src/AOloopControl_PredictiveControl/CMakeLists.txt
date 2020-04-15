@@ -1,17 +1,21 @@
-project(lib_AOloopControl_PredictiveControl_project)
+set(LIBNAME "cacaoAOloopControlPredictiveControl")
+set(SRCNAME "AOloopControl_PredictiveControl")
+
+
+project(lib_${LIBNAME}_project)
 
 include_directories ("${PROJECT_SOURCE_DIR}/src")
 include_directories ("${PROJECT_SOURCE_DIR}/..")
 
-add_library(AOloopControl_PredictiveControl SHARED 
-AOloopControl_PredictiveControl.c 
-AOloopControl_PredictiveControl.h 
+add_library(${LIBNAME} SHARED 
+/${SRCNAME}).c 
+/${SRCNAME}).h 
 AOloopControl_PredictiveControl_builPFloop_WatchInput.c 
 AOloopControl_PredictiveControl_testPredictiveFilter.c 
 AOloopControl_PredictiveControl_setPFsimpleAve.c
 AOloopControl_PredictiveControl_mapPredictiveFilter.c
 )
 
-install(TARGETS AOloopControl_PredictiveControl DESTINATION lib)
-install(FILES AOloopControl_PredictiveControl.h DESTINATION include)
+install(TARGETS ${LIBNAME} DESTINATION lib)
+install(FILES /${SRCNAME}).h DESTINATION include/${SRCNAME})
 
