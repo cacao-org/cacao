@@ -196,10 +196,10 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
 
     if(sprintf(imnameb0, "aol%ld_modeval_ol_logbuff0", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     if(sprintf(imnameb1, "aol%ld_modeval_ol_logbuff1", loop) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDinb0 = read_sharedmem_image(imnameb0);
     IDinb1 = read_sharedmem_image(imnameb1);
@@ -217,12 +217,10 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     list_image_ID();
 
-
-    if(system("mkdir -p PredictiveControl") != 0)
-        printERROR(__FILE__, __func__, __LINE__, "system() returns non-zero value");
+	EXECUTE_SYSTEM_COMMAND("mkdir -p PredictiveControl");
 
     if(sprintf(inmaskname, "inmaskPFb%ld", PFblock) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDinmask = create_2Dimage_ID(inmaskname, xysize, 1);
     for(ii=0; ii<xysize; ii++)
@@ -231,11 +229,11 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
         data.image[IDinmask].array.F[ii] = 1.0;
 
     if(sprintf(inmaskfname, "!./PredictiveControl/inmaskPF%ld.fits", PFblock) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     save_fits(inmaskname, inmaskfname);
     if(sprintf(outmaskfname, "!./PredictiveControl/outmaskPF%ld.fits", PFblock) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     save_fits(inmaskname, outmaskfname);
 
@@ -251,7 +249,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     imsizearray[2] = zsize;
 
     if(sprintf(imnameout, "aol%ld_modevalol_PFb%ld", loop, PFblock) < 1)
-        printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+        PRINT_ERROR("sprintf wrote <1 char");
 
     IDout = create_image_ID(imnameout, 3, imsizearray, datatype, 1, 1);
     free(imsizearray);
