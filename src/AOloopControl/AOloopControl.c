@@ -1571,7 +1571,7 @@ static errno_t init_module_CLI()
     {
         if(fscanf(fp, "%8ld", &LOOPNUMBER) != 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "Cannot read LOOPNUMBER");
+            PRINT_ERROR("Cannot read LOOPNUMBER");
         }
 
         printf("LOOP NUMBER = %ld\n", LOOPNUMBER);
@@ -2351,7 +2351,7 @@ errno_t AOloopControl_setgainrange(
         char name[200];
         if(sprintf(name, "aol%ld_DMmode_GAIN", LOOPNUMBER) < 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_DMmode_GAIN = read_sharedmem_image(name);
@@ -2391,7 +2391,7 @@ errno_t AOloopControl_setlimitrange(
         char name[200];
         if(sprintf(name, "aol%ld_DMmode_LIMIT", LOOPNUMBER) < 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(name);
@@ -2430,7 +2430,7 @@ errno_t AOloopControl_setmultfrange(
         char name[200];
         if(sprintf(name, "aol%ld_DMmode_MULTF", LOOPNUMBER) < 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_MULTF_modes = read_sharedmem_image(name);
@@ -2468,7 +2468,7 @@ errno_t AOloopControl_setgainblock(
         char imname[200];
         if(sprintf(imname, "aol%ld_gainb", LOOPNUMBER) < 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_gainb = read_sharedmem_image(imname);
@@ -2501,7 +2501,7 @@ errno_t AOloopControl_setlimitblock(
         char imname[200];
         if(sprintf(imname, "aol%ld_limitb", LOOPNUMBER) < 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
@@ -2533,7 +2533,7 @@ errno_t AOloopControl_setmultfblock(
         char imname[200];
         if(sprintf(imname, "aol%ld_multfb", LOOPNUMBER) < 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_multfb = read_sharedmem_image(imname);
@@ -2566,7 +2566,7 @@ errno_t AOloopControl_AutoTune()
     {
         if(sprintf(name, "aol%ld_DMmode_cmd", LOOPNUMBER) < 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);

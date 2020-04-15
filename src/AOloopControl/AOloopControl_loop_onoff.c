@@ -146,7 +146,7 @@ errno_t AOloopControl_loopreset()
     {
         char name[200];
         if(sprintf(name, "DMmode_cmd_%ld", aoloopcontrol_var.LOOPNUMBER) < 1)
-            printERROR(__FILE__, __func__, __LINE__, "sprintf wrote <1 char");
+            PRINT_ERROR("sprintf wrote <1 char");
 
         aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
     }
