@@ -1148,7 +1148,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
             data.image[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
         }
 
-	EXECUTE_SYSTEM_COMMAND("mkdir -p tmp");
+    EXECUTE_SYSTEM_COMMAND("mkdir -p tmp");
 
     save_fits("_testdm0", "!tmp/_testdm0.fits");
     save_fits("_testdm1", "!tmp/_testdm1.fits");
@@ -1230,8 +1230,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     tarray = (struct timespec *) malloc(sizeof(struct timespec) * wfs_NBframesmax);
     dtarray = (double *) malloc(sizeof(double) * wfs_NBframesmax);
 
-	EXECUTE_SYSTEM_COMMAND("mkdir -p timingstats");
-   
+    EXECUTE_SYSTEM_COMMAND("mkdir -p timingstats");
+
     if((fp = fopen("timingstats/hardwlatency.txt", "w")) == NULL)
     {
         printf("ERROR: cannot create file \"timingstats/hardwlatency.txt\"\\n");
@@ -1681,17 +1681,18 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     functionparameter_SaveParam2disk(&fps, ".out.latencyfr");
 
 
-	EXECUTE_SYSTEM_COMMAND("echo %8.6f > conf/param_hardwlatency.txt",
-                latencyarray[NBiter / 2]);
-                
-	EXECUTE_SYSTEM_COMMAND("echo %8.6f > conf/param_hardwlatency_frame.txt", latencystepave);
+    EXECUTE_SYSTEM_COMMAND("echo %8.6f > conf/param_hardwlatency.txt",
+                           latencyarray[NBiter / 2]);
 
-	EXECUTE_SYSTEM_COMMAND("echo %f %f %f %f %f > timingstats/hardwlatencyStats.txt",
-                latencyarray[NBiter / 2], latencyave, minlatency, maxlatency,
-                latencystepave);
+    EXECUTE_SYSTEM_COMMAND("echo %8.6f > conf/param_hardwlatency_frame.txt",
+                           latencystepave);
 
-	EXECUTE_SYSTEM_COMMAND("echo %.3f > conf/param_mloopfrequ.txt",
-                1.0 * (wfscntend - wfscntstart) / dt);
+    EXECUTE_SYSTEM_COMMAND("echo %f %f %f %f %f > timingstats/hardwlatencyStats.txt",
+                           latencyarray[NBiter / 2], latencyave, minlatency, maxlatency,
+                           latencystepave);
+
+    EXECUTE_SYSTEM_COMMAND("echo %.3f > conf/param_mloopfrequ.txt",
+                           1.0 * (wfscntend - wfscntstart) / dt);
 
     free(latencyarray);
     free(latencysteparray);
@@ -1946,7 +1947,7 @@ errno_t AOloopControl_perfTest_InjectMode(
     float ampl
 )
 {
-   // int stringmaxlen = 200;
+    // int stringmaxlen = 200;
 
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
@@ -1957,7 +1958,7 @@ errno_t AOloopControl_perfTest_InjectMode(
     {
         char name[STRINGMAXLEN_IMGNAME];
 
-		WRITE_IMAGENAME(name, "aol%ld_DMmodes", LOOPNUMBER);
+        WRITE_IMAGENAME(name, "aol%ld_DMmodes", LOOPNUMBER);
 
         aoloopcontrol_var.aoconfID_DMmodes = read_sharedmem_image(name);
     }
