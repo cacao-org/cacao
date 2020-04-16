@@ -18,7 +18,7 @@
 // module default short name
 // all CLI calls to this module functions will be <shortname>.<funcname>
 // if set to "", then calls use <funcname>
-#define MODULE_SHORTNAME_DEFAULT ""
+#define MODULE_SHORTNAME_DEFAULT "cacaoac"
 
 // Module short description
 #define MODULE_DESCRIPTION       "AO loop control acquire calibration"
