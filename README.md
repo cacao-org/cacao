@@ -41,6 +41,7 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 
 cacao runs on Linux/x86 systems.
 
+&#26A0;
 **cacao requires milk**: Install milk-package prior to installing cacao. See instructions on the [milk page](https://github.com/milk-org/milk-package).
 
 
