@@ -39,9 +39,9 @@ cmake_minimum_required (VERSION 3.5)
 project (cacao C)
 
 # Version number
-set ( VERSION_MAJOR 0 )
+set ( VERSION_MAJOR 1 )
 set ( VERSION_MINOR 1 )
-set ( VERSION_PATCH 03 )
+set ( VERSION_PATCH 01 )
 #set ( VERSION_OPTION "-dev" )
 
 # turn VERBOSE ON
@@ -122,24 +122,12 @@ add_compile_options(-pipe)
 # options
 option(USE_CUDA  "Use CUDA        library" OFF)
 option(USE_MAGMA "Use MAGMA       library" OFF)
-option(USE_QDWHPARTIAL  "Use QDWHpartial library" OFF)
 
 
 # MAGMA (optional)
 if(USE_MAGMA)
 set(USE_CUDA ON)
 endif(USE_MAGMA)
-
-
-# QDWH (optional)
-if(USE_QDWHPARTIAL)
-set(USE_QDWHPARTIAL ON)
-set(USE_CUDA ON)
-set(USE_MAGMA ON)
-endif(USE_QDWHPARTIAL)
-set( QDWHPARTIAL_INCLUDE_PATH "/home/guyon/src/subaru/qdwhpartial-svd/magma" )
-set( QDWHPARTIAL_LIBRARIES "psinv" )
-
 
 
 if(USE_CUDA)
@@ -190,33 +178,13 @@ message("EXTRAMODULES             = ${EXTRAMODULES}")
 message("====================================================")
 
 
-
+link_directories("/usr/local/milk/lib")
+include_directories("/usr/local/milk/include")
 
 #                               
 # recursively add libraries to be compiled
 # each library compile as SHARED
 #
-add_subdirectory ( "src/ImageStreamIO" )
-add_subdirectory ( "src/CommandLineInterface" )
-add_subdirectory ( "src/00CORE" )
-add_subdirectory ( "src/COREMOD_arith" )
-add_subdirectory ( "src/COREMOD_iofits" )
-add_subdirectory ( "src/COREMOD_memory" )
-add_subdirectory ( "src/COREMOD_tools" )
-add_subdirectory ( "src/info" )
-add_subdirectory ( "src/fft" )
-add_subdirectory ( "src/statistic" )
-add_subdirectory ( "src/linopt_imtools" )
-add_subdirectory ( "src/image_gen" )
-add_subdirectory ( "src/image_filter" )
-add_subdirectory ( "src/image_basic" )
-add_subdirectory ( "src/ZernikePolyn" )
-add_subdirectory ( "src/image_format" )
-add_subdirectory ( "src/img_reduce" )
-add_subdirectory ( "src/psf" )
-add_subdirectory ( "src/cudacomp" )
-add_subdirectory ( "src/kdtree" )
-add_subdirectory ( "src/linARfilterPred" ) 
 
 add_subdirectory ( "src/AOloopControl" )
 add_subdirectory ( "src/AOloopControl_acquireCalib" )
@@ -226,7 +194,7 @@ add_subdirectory ( "src/AOloopControl_DM" )
 add_subdirectory ( "src/AOloopControl_IOtools" )
 add_subdirectory ( "src/AOloopControl_perfTest" )
 add_subdirectory ( "src/AOloopControl_PredictiveControl" )
-add_subdirectory ( "src/FPAOloopControl" )
+
 
 
 #
@@ -265,31 +233,33 @@ set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_D
 
 target_link_libraries (cacao PUBLIC
 CLIcore
-00CORE;COREMOD_arith;COREMOD_memory;ImageStreamIO;COREMOD_tools 
-info 
-fft 
-image_basic
-COREMOD_iofits 
-ZernikePolyn
-image_filter
-image_gen
-statistic
-image_format 
-img_reduce 
-psf
-cudacomp
-kdtree 
-linARfilterPred
-AOloopControl
-AOloopControl_acquireCalib
-AOloopControl_compTools
-AOloopControl_computeCalib
-AOloopControl_DM
-AOloopControl_IOtools
-AOloopControl_perfTest
-AOloopControl_PredictiveControl
-FPAOloopControl
-linopt_imtools
+milkarith
+milkmemory
+ImageStreamIO
+milktools 
+milkimagebasic
+milkiofits 
+milkZernikePolyn
+milkimagefilter
+milkimagegen
+milkstatistic
+milkimageformat 
+milkimgreduce 
+milkfft
+milkpsf
+milkcudacomp
+milkkdtree 
+milklinARfilterPred
+cacaoAOloopControl
+cacaoAOloopControlacquireCalib
+cacaoAOloopControlcompTools
+cacaoAOloopControlcomputeCalib
+cacaoAOloopControlDM
+cacaoAOloopControlIOtools
+cacaoAOloopControlperfTest
+cacaoAOloopControlPredictiveControl
+milklinoptimtools
+milkinfo
 ${EXTRAMODULES}
 m
 readline
@@ -298,8 +268,6 @@ cfitsio
 dl
 rt
 ${GSL_LIBRARIES} 
-${FFTW_LIBRARIES}
-${FFTWF_LIBRARIES}
 ${CMAKE_THREAD_LIBS_INIT}
 -fopenmp
 )

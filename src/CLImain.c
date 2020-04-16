@@ -104,7 +104,7 @@ int main(
     libinit_AOloopControl_PredictiveControl();
     libinit_linARfilterPred();
     libinit_AOloopControl_computeCalib();
-    libinit_FPAOloopControl();
+//    libinit_FPAOloopControl();
     libinit_AOloopControl_DM();
     libinit_AOloopControl_compTools();
     libinit_AOloopControl_acquireCalib();
