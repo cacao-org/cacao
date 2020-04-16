@@ -6,7 +6,7 @@ project(lib_${LIBNAME}_project)
 include_directories ("${PROJECT_SOURCE_DIR}/src")
 include_directories ("${PROJECT_SOURCE_DIR}/..")
 
-add_library(AOloopControl SHARED ${SRCNAME}.c 
+add_library(${LIBNAME} SHARED ${SRCNAME}.c 
 ${SRCNAME}.h
 AOloopControl_AOcompute.c
 AOloopControl_AOcompute.h
@@ -57,7 +57,7 @@ message("---- MAGMA_LIBRARY_DIRS =  ${MAGMA_LIBRARY_DIRS}")
 message("---- MAGMA_LIBRARIES    =  ${MAGMA_LIBRARIES}" )   
 message("---- MAGMA_CFLAGS_OTHER =  ${MAGMA_CFLAGS_OTHER}" ) 
 target_include_directories(${LIBNAME} PUBLIC ${MAGMA_INCLUDE_DIRS})
-target_link_libraries(${LIBNAME} PRIVATE ${MAGMA_LIBRARIES}) 
+target_link_libraries(${LIBNAME} PRIVATE ${MAGMA_LIBRARIES})
 target_compile_options(${LIBNAME} PUBLIC -DHAVE_CUDA -DHAVE_MAGMA -DUSE_MAGMA ${MAGMA_CFLAGS_OTHER})
 endif(USE_MAGMA)
 
