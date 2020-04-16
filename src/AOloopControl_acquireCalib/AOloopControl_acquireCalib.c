@@ -3742,7 +3742,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
     //    save_fits("RMpokeCube", "!./conf/test1_RMpokeCube.fits");
 
     EXECUTE_SYSTEM_COMMAND("echo \"%u\" > RM_NBpoke.txt\n", NBpoke);
-   
+
     EXECUTE_SYSTEM_COMMAND("echo \"%u\" > test_RM_NBpoke.txt\n", NBpoke);
 
     //    sleep(10);
@@ -3795,7 +3795,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
     EXECUTE_SYSTEM_COMMAND("rm ./zresptmp/LO*.fits");
 
     EXECUTE_SYSTEM_COMMAND("echo %ld > ./zresptmp/%s_nbiter.txt", iter,
-               zrespm_name);
+                           zrespm_name);
 
     printf("STARTING RM...\n");
     fflush(stdout);
@@ -4205,7 +4205,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
             }
             iter++;
             EXECUTE_SYSTEM_COMMAND("echo %ld > ./zresptmp/%s_nbiter.txt", iter,
-                       zrespm_name);
+                                   zrespm_name);
         }
     } // end of iteration loop
 
@@ -4368,7 +4368,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
     {
         if(file_exists("stopRM.txt"))
         {
-			EXECUTE_SYSTEM_COMMAND("rm stopRM.txt");
+            EXECUTE_SYSTEM_COMMAND("rm stopRM.txt");
             iter = NBiter;
         }
         else
