@@ -34,16 +34,6 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 
 
 
----
-
-## Installing cacao
-
-
-cacao runs on Linux/x86 systems.
-
-&#x26A0;
-**cacao requires milk**: Install milk-package prior to installing cacao. See instructions on the [milk page](https://github.com/milk-org/milk-package).
-
 
 ### Source code status
 
@@ -55,6 +45,19 @@ cacao runs on Linux/x86 systems.
 |------------------|-----------------------|-----------------------------|---------------|
 **master** | [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/cacao-org/cacao/tree/master) | [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao) | ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/master.svg)
 [**dev**](https://github.com/cacao-org/cacao/tree/dev) | | [![Build Status dev](https://travis-ci.org/cacao-org/cacao.svg?branch=dev)](https://travis-ci.org/cacao-org/cacao) | ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)
+
+
+
+
+---
+
+## Installing cacao
+
+
+cacao runs on Linux/x86 systems.
+
+&#x26A0;
+**cacao requires milk**: Install milk-package prior to installing cacao. See instructions on the [milk page](https://github.com/milk-org/milk-package).
 
 
 
