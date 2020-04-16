@@ -47,6 +47,7 @@ set ( VERSION_PATCH 03 )
 # turn VERBOSE ON
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
+set(CMAKE_INSTALL_PREFIX "/usr/local/cacao-${VERSION_MAJOR}.${VERSION_MINOR}")
 
 
 # Configure a header file to pass some of the CMake settings
@@ -89,8 +90,9 @@ add_compile_options(-march=native)
 # NOTE: -fstack-usage is incompatible with link-time optimizer
 #add_compile_options(-fstack-usage)
 
-# runs the standard link-time optimizer
+# link-time optimizer
 add_compile_options(-flto)
+add_compile_options(-fwhole-program)
 
 
 # OpenMP
@@ -167,6 +169,9 @@ message("====================================================")
 
 message("PROJECT_SOURCE_DIR       = ${PROJECT_SOURCE_DIR}")
 message("PROJECT_BINARY_DIR       = ${PROJECT_BINARY_DIR}")
+
+
+message("CMAKE_INSTALL_PREFIX     = ${CMAKE_INSTALL_PREFIX}")
 
 message("USE_CUDA                 = ${USE_CUDA}")
 

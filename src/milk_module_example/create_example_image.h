@@ -1,6 +1,6 @@
 /**
  * @file    create_example_image.h
- * 
+ *
  */
 
 

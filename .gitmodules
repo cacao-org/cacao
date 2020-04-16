@@ -18,26 +18,6 @@
 	path = src/img_reduce
 	url = https://github.com/milk-org/img_reduce
     branch = dev
-[submodule "src/00CORE"]
-	path = src/00CORE
-	url = https://github.com/milk-org/00CORE
-    branch = dev
-[submodule "src/COREMOD_arith"]
-	path = src/COREMOD_arith
-	url = https://github.com/milk-org/COREMOD_arith
-    branch = dev
-[submodule "src/COREMOD_iofits"]
-	path = src/COREMOD_iofits
-	url = https://github.com/milk-org/COREMOD_iofits
-    branch = dev
-[submodule "src/COREMOD_memory"]
-	path = src/COREMOD_memory
-	url = https://github.com/milk-org/COREMOD_memory
-    branch = dev
-[submodule "src/COREMOD_tools"]
-	path = src/COREMOD_tools
-	url = https://github.com/milk-org/COREMOD_tools
-    branch = dev
 [submodule "src/linopt_imtools"]
 	path = src/linopt_imtools
 	url = https://github.com/milk-org/linopt_imtools
