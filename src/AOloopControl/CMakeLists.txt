@@ -63,5 +63,12 @@ endif(USE_MAGMA)
 
 
 install(TARGETS ${LIBNAME} DESTINATION lib)
+
+install(PROGRAMS scripts/cacao-setup
+	scripts/cacao.tmux
+	scripts/cacao-fpslistadd.bash
+	scripts/cacao_simLHS
+	DESTINATION bin)
+
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})
 
