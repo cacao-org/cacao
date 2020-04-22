@@ -42,7 +42,7 @@ before_script:
 script: 
 - pwd
 - ls -l
-- more build.sh
+
 
 
 
