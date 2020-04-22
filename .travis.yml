@@ -40,8 +40,9 @@ before_script:
 
 
 script: 
+- cd cacao-org/cacao
 - cmake ..
-- make
+
 
 
 
