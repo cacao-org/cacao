@@ -15,6 +15,8 @@ notification:
     url: "https://webhooks.gitter.im/e/072068cc9fea29c15521"
 
 before_script:
+- pwd
+- ls -l
 - echo "tmpfs /milk/shm tmpfs rw,nosuid,nodev" | sudo tee -a /etc/fstab
 - sudo mkdir -p /milk/shm
 - sudo mount /milk/shm
@@ -39,7 +41,8 @@ before_script:
 
 script: 
 - pwd
-- ls
+- ls -l
+- more build.sh
 
 
 
