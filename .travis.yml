@@ -40,8 +40,9 @@ before_script:
 
 
 script: 
-- pwd
-- ls -l
+- cmake ..
+- make
+
 
 
 
