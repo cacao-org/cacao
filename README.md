@@ -83,7 +83,7 @@ cacao runs on Linux/x86 systems.
 
 	sudo make install
 
-Will install milk in /usr/local/milk-&lt;version&gt;. Multiple versions of milk can coexist in separate milk-&lt;version&gt; directories. To select the version to be used:
+Will install milk in /usr/local/milk-&lt;version&gt;. Multiple versions of cacao can coexist in separate cacao-&lt;version&gt; directories. To select the version to be used:
 
 	sudo ln -s /usr/local/cacao-<version> /usr/local/cacao
 

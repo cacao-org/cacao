@@ -7,10 +7,9 @@
 #
 #
 #
-# USING GPU libraries
+# USING GPU libraries is inherited from milk
 # ===============================
 # cmake .. -DUSE_MAGMA=ON
-# cmake .. -DUSE_QDWHPARTIAL=ON
 #
 #
 #
@@ -40,8 +39,8 @@ project (cacao C)
 
 # Version number
 set ( VERSION_MAJOR 1 )
-set ( VERSION_MINOR 1 )
-set ( VERSION_PATCH 01 )
+set ( VERSION_MINOR 01 )
+set ( VERSION_PATCH 02 )
 #set ( VERSION_OPTION "-dev" )
 
 # turn VERBOSE ON
@@ -53,9 +52,15 @@ set(CMAKE_INSTALL_PREFIX "/usr/local/cacao-${VERSION_MAJOR}.${VERSION_MINOR}")
 # Configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
-  "${PROJECT_SOURCE_DIR}/src/Config.h.in"
-  "${PROJECT_SOURCE_DIR}/src/Config.h"
+  "${PROJECT_SOURCE_DIR}/src/cacao_config.h.in"
+  "${PROJECT_SOURCE_DIR}/src/cacao_config.h"
   )
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/config.h.in"
+  "${PROJECT_SOURCE_DIR}/src/config.h"
+  )
+
 
 
 
@@ -114,15 +119,16 @@ add_compile_options(-pipe)
 
 
 
-
 # =======================================
 # GPU ACCELERATION
 # =======================================
 
-# options
-option(USE_CUDA  "Use CUDA        library" OFF)
-option(USE_MAGMA "Use MAGMA       library" OFF)
 
+
+
+# =======================================
+# GPU ACCELERATION
+# =======================================
 
 # MAGMA (optional)
 if(USE_MAGMA)
@@ -142,12 +148,42 @@ link_directories( ${MAGMA_LIBRARY_DIRS} )
 endif(USE_MAGMA)
 
 
-
-
-
 # ncurses
 SET(CURSES_USE_NCURSES TRUE)
 
+find_package( Threads )
+
+
+# FIND MILK
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(MILK REQUIRED milk>=1.01)
+link_directories(${MILK_LIBRARY_DIRS})
+include_directories(${MILK_INCLUDE_DIRS})
+message("MILK_VERSION = ${MILK_VERSION}")
+
+
+string(FIND "${MILK_CFLAGS}" "MILK_USE_CUDA=ON" sresult)
+if(${sresult} GREATER 0)
+message("milk was compiled with cuda")
+message("milk will use cuda")
+set(USE_CUDA ON)
+else()
+message("milk was NOT compiled with cuda")
+message(WARNING "cacao will NOT use cuda")
+set(USE_CUDA OFF)
+endif()
+
+
+string(FIND "${MILK_CFLAGS}" "MILK_USE_MAGMA=ON" sresult)
+if(${sresult} GREATER 0)
+message("milk was compiled with magma")
+message("cacao will use magma")
+set(USE_MAGMA ON)
+else()
+message("milk was NOT compiled with magma")
+message(WARNING "cacao will NOT use magma")
+set(USE_MAGMA OFF)
+endif()
 
 
 
@@ -168,18 +204,12 @@ if(USE_MAGMA)
 message("   MAGMA_LIBRARIES       = ${MAGMA_LIBRARIES}")
 endif(USE_MAGMA)
 
-message("USE QDWHPARTIAL          = ${USE_QDWHPARTIAL}")
-if(USE_QDWHPARTIAL)
-message("   QDWHPARTIAL_LIBRARIES = ${QDWHPARTIAL_LIBRARIES}")
-endif(USE_QDWHPARTIAL)
-
 message("EXTRAMODULES             = ${EXTRAMODULES}")
 
 message("====================================================")
 
 
-link_directories("/usr/local/milk/lib")
-include_directories("/usr/local/milk/include")
+
 
 #                               
 # recursively add libraries to be compiled
@@ -232,24 +262,6 @@ set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_D
 
 
 target_link_libraries (cacao PUBLIC
-CLIcore
-milkarith
-milkmemory
-ImageStreamIO
-milktools 
-milkimagebasic
-milkiofits 
-milkZernikePolyn
-milkimagefilter
-milkimagegen
-milkstatistic
-milkimageformat 
-milkimgreduce 
-milkfft
-milkpsf
-milkcudacomp
-milkkdtree 
-milklinARfilterPred
 cacaoAOloopControl
 cacaoAOloopControlacquireCalib
 cacaoAOloopControlcompTools
@@ -258,15 +270,8 @@ cacaoAOloopControlDM
 cacaoAOloopControlIOtools
 cacaoAOloopControlperfTest
 cacaoAOloopControlPredictiveControl
-milklinoptimtools
-milkinfo
 ${EXTRAMODULES}
-m
-readline
-ncurses
-cfitsio
-dl
-rt
+${MILK_LIBRARIES}
 ${GSL_LIBRARIES} 
 ${CMAKE_THREAD_LIBS_INIT}
 -fopenmp
@@ -286,12 +291,6 @@ endif(USE_MAGMA)
 
 
 
-if(USE_QDWHPARTIAL)
-target_link_libraries (cacao PUBLIC ${QDWHPARTIAL_LIBRARIES})
-target_include_directories(cacao PUBLIC ${QDWHPARTIAL_INCLUDE_PATH} )
-set(BUILD_FLAGS "${BUILD_FLAGS} -DHAVE_QDWHpartial" )
-endif(USE_QDWHPARTIAL)
-
 
 set_target_properties(cacao PROPERTIES COMPILE_FLAGS "${BUILD_FLAGS}" )
 
@@ -300,6 +299,7 @@ set_target_properties(cacao PROPERTIES COMPILE_FLAGS "${BUILD_FLAGS}" )
 message("====================================================")
 get_target_property(cacaocompopts cacao COMPILE_OPTIONS)
 
+message("CMAKE_THREAD_LIBS_INIT  :  ${CMAKE_THREAD_LIBS_INIT}")
 message("BUILD_FLAGS             :  ${BUILD_FLAGS}")
 message("COMPILE_FLAGS           :  ${COMPILE_FLAGS}")
 message("COMPILE_OPTIONS         :  ${cacaocompopts}")
