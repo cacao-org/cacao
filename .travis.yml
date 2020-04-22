@@ -12,8 +12,9 @@ before_install:
 - cd milk
 - mkdir _build
 - cd _build
-- cmake ..
+- cmake .. -DEXTRAMODULES="milk_module_example"
 - sudo make install
+- ctest -D experimental
 - ls -l /usr/local/
 - sudo ln -s /usr/local/milk-1.01 /usr/local/milk
 - export MILK_ROOT=${HOME}/src/milk
