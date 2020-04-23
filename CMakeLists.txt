@@ -46,7 +46,7 @@ set ( VERSION_PATCH 02 )
 # turn VERBOSE ON
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(CMAKE_INSTALL_PREFIX "/usr/local/cacao-${VERSION_MAJOR}.${VERSION_MINOR}")
+set(CMAKE_INSTALL_PREFIX "/usr/local/${PROJECT_NAME}-${VERSION_MAJOR}.${VERSION_MINOR}")
 
 
 # Configure a header file to pass some of the CMake settings
@@ -322,6 +322,14 @@ set(PROGRAM_PERMISSIONS_DEFAULT
     WORLD_READ WORLD_EXECUTE)
 
 install(TARGETS cacao DESTINATION bin PERMISSIONS ${PROGRAM_PERMISSIONS_DEFAULT} SETUID)
+
+
+set(CMAKE_INSTALL_PREFIX_LINK "/usr/local/${PROJECT_NAME}")
+if(INSTALLMAKEDEFAULT)
+    install(CODE "
+    EXECUTE_PROCESS(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIX_LINK})
+    ")
+endif(INSTALLMAKEDEFAULT)
 
 # Note: may need to write "/usr/local/magma/lib" to:
 # /etc/ld.so.conf.d/magma.conf
