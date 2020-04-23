@@ -42,6 +42,7 @@ script:
 - make 
 - sudo make install
 - export PATH=${PATH}:/usr/local/cacao/bin
+- ctest -D Experimental
 
 
 
