@@ -38,7 +38,7 @@ script:
 - pwd
 - mkdir _build
 - cd _build
-- cmake ..-DINSTALLMAKEDEFAULT=ON
+- cmake .. -DINSTALLMAKEDEFAULT=ON
 - make 
 - sudo make install
 
