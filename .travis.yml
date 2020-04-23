@@ -3,27 +3,29 @@ dist: bionic
 language: C
 
 before_install: 
-- "sudo apt-get update -qq"
-- "sudo apt-get install -qq libcfitsio-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison"
+- sudo apt-get update -qq
+- sudo apt-get install -qq libcfitsio-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison
 - echo "tmpfs /milk/shm tmpfs rw,nosuid,nodev" | sudo tee -a /etc/fstab
 - sudo mkdir -p /milk/shm
 - sudo mount /milk/shm
 - git clone --recursive https://github.com/milk-org/milk-package milk
-- cd milk
+- pushd milk
 - mkdir _build
-- cd _build
+- pushd _build
 - cmake .. -DEXTRAMODULES="milk_module_example"
 - sudo make install
 - sudo ln -s /usr/local/milk-1.01 /usr/local/milk
 - export MILK_ROOT=${HOME}/src/milk
 - export MILK_INSTALLDIR=/usr/local/milk
 - export PATH=${PATH}:${MILK_INSTALLDIR}/bin
-- ctest -D Experimental
+#- ctest -D Experimental
 - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${MILK_INSTALLDIR}/lib/pkgconfig
 - export MILK_SHM_DIR=/milk/shm
 - echo "/usr/local/milk/lib" > milklibs.conf
 - sudo mv milklibs.conf /etc/ld.so.conf.d/
 - sudo ldconfig
+- popd
+- popd
 
 notification: 
   webhook: 
