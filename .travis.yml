@@ -44,7 +44,6 @@ script:
 - echo "/usr/local/cacao/lib" > cacaolibs.conf
 - sudo mv cacaolibs.conf /etc/ld.so.conf.d/
 - sudo ldconfig
-- popd
 - export PATH=${PATH}:/usr/local/cacao/bin
 - ctest -D Experimental
 
