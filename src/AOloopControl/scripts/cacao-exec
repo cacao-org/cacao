@@ -1,0 +1,109 @@
+#!/bin/bash
+
+
+# number of arguments to script
+NBARGS=1
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+echo "pname = $pname"
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : execute cacao command  $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Execute command string within cacao command line interface (CLI)"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-hT] <cmdstring>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-T$(tput sgr0)          (T)est mode"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+	printf "%20s       Execute cacao command\n" "$0" 
+}
+
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+while getopts :hT FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    T) # run as a test
+	echo "CTEST_FULL_OUTPUT"
+    ;;
+    \?) 
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+### End getopts code ###
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+IFS=';' read -r -a array <<< "$1"
+
+
+pname="cacaoexec"
+fifoname="cacaoCLIfifo.${pname}"
+SF="cacaoCLIstartup.${pname}"
+echo "" > $SF
+for cmdstring in "${array[@]}"
+do
+    echo "${cmdstring}" >> $SF
+done
+echo "exitCLI" >> $SF
+
+cacao -n ${pname} -f ${fifoname} -s ${SF}
+
+rm ${SF}
+
+
