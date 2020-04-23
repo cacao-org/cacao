@@ -17,7 +17,6 @@ before_install:
 - export MILK_ROOT=${HOME}/src/milk
 - export MILK_INSTALLDIR=/usr/local/milk
 - export PATH=${PATH}:${MILK_INSTALLDIR}/bin
-- ctest -D Experimental
 - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${MILK_INSTALLDIR}/lib/pkgconfig
 - export MILK_SHM_DIR=/milk/shm
 - echo "/usr/local/milk/lib" > milklibs.conf
@@ -42,8 +41,7 @@ script:
 - cmake .. -DINSTALLMAKEDEFAULT=ON
 - make 
 - sudo make install
-
-
+- export PATH=${PATH}:/usr/local/cacao/bin
 
 
 

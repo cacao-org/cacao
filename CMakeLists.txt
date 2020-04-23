@@ -338,6 +338,16 @@ endif(INSTALLMAKEDEFAULT)
 
 
 
+# ====================================
+# TESTING
+# ====================================
+
+include(CTest)
+
+
+# test that milk CLI launches and list modules
+add_test(cacaoCLIlaunch cacao-exec "-T" "m?")
+set_tests_properties(cacaoCLIlaunch PROPERTIES TIMEOUT 120)
 
 
 
