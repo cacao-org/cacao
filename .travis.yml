@@ -5,13 +5,13 @@ language: C
 before_install: 
 - sudo apt-get update -qq
 - sudo apt-get install -qq libcfitsio-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison
+- pwd
 - echo "tmpfs /milk/shm tmpfs rw,nosuid,nodev" | sudo tee -a /etc/fstab
 - sudo mkdir -p /milk/shm
 - sudo mount /milk/shm
 - git clone --recursive https://github.com/milk-org/milk-package milk
-- pushd milk
-- mkdir _build
-- pushd _build
+- mkdir milk/_build
+- pushd milk/_build
 - cmake .. -DEXTRAMODULES="milk_module_example"
 - sudo make install
 - sudo ln -s /usr/local/milk-1.01 /usr/local/milk
@@ -25,7 +25,6 @@ before_install:
 - sudo mv milklibs.conf /etc/ld.so.conf.d/
 - sudo ldconfig
 - popd
-- popd
 
 notification: 
   webhook: 
@@ -37,7 +36,8 @@ notification:
 before_script:
 
 
-script: 
+script:
+- pwd
 - cmake ..
 - make 
 - sudo make install
