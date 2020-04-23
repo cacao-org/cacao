@@ -12,7 +12,7 @@ before_install:
 - git clone --recursive https://github.com/milk-org/milk-package milk
 - mkdir milk/_build
 - pushd milk/_build
-- cmake .. -DEXTRAMODULES="milk_module_example"-DINSTALLMAKEDEFAULT=ON
+- cmake .. -DEXTRAMODULES="milk_module_example" -DINSTALLMAKEDEFAULT=ON
 - sudo make install
 - export MILK_ROOT=${HOME}/src/milk
 - export MILK_INSTALLDIR=/usr/local/milk
