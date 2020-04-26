@@ -49,8 +49,8 @@ set(CMAKE_INSTALL_PREFIX "/usr/local/${PROJECT_NAME}-${VERSION_MAJOR}.${VERSION_
 # Configure a header file to pass some of the CMake settings
 # to the source code
 configure_file (
-  "${PROJECT_SOURCE_DIR}/src/cacao_config.h.in"
-  "${PROJECT_SOURCE_DIR}/src/cacao_config.h"
+  "${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}_config.h.in"
+  "${PROJECT_SOURCE_DIR}/src/${PROJECT_NAME}_config.h"
   )
 
 configure_file (
@@ -82,7 +82,7 @@ list(APPEND modulelist AOloopControl_PredictiveControl )
 foreach(mname IN LISTS modulelist)
 string(REPLACE "_" "" mname1 "${mname}")
 list(APPEND libsrcdir src/${mname})
-list(APPEND libname cacao${mname1})
+list(APPEND libname ${PROJECT_NAME}${mname1})
 message("======= adding module  ${mname}")
 endforeach()
 
@@ -196,11 +196,11 @@ message("MILK_VERSION = ${MILK_VERSION}")
 string(FIND "${MILK_CFLAGS}" "MILK_USE_CUDA=ON" sresult)
 if(${sresult} GREATER 0)
 message("milk was compiled with cuda")
-message("milk will use cuda")
+message("${PROJECT_NAME} will use cuda")
 set(USE_CUDA ON)
 else()
 message("milk was NOT compiled with cuda")
-message("cacao will NOT use cuda")
+message("${PROJECT_NAME} will NOT use cuda")
 set(USE_CUDA OFF)
 endif()
 
@@ -208,11 +208,11 @@ endif()
 string(FIND "${MILK_CFLAGS}" "MILK_USE_MAGMA=ON" sresult)
 if(${sresult} GREATER 0)
 message("milk was compiled with magma")
-message("cacao will use magma")
+message("${PROJECT_NAME} will use magma")
 set(USE_MAGMA ON)
 else()
 message("milk was NOT compiled with magma")
-message("cacao will NOT use magma")
+message("${PROJECT_NAME} will NOT use magma")
 set(USE_MAGMA OFF)
 endif()
 
@@ -267,11 +267,11 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # main
-add_executable(cacao 
+add_executable(${PROJECT_NAME} 
 src/CLImain.c)
 
 
-target_include_directories(cacao PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
 ${PROJECT_SOURCE_DIR}/src
 ${GSL_INCLUDE_DIRS}
 ${FFTW_INCLUDE_DIRS}
@@ -280,13 +280,13 @@ ${CURSES_INCLUDE_DIR}
 )
 
 # adds the options to all targets within the directory and its sub-directories
-target_compile_options(cacao PUBLIC 
+target_compile_options(${PROJECT_NAME} PUBLIC 
 ${FFTW_CFLAGS_OTHER}
 ${FFTWF_CFLAGS_OTHER}
 -fopenmp
 )
 
-set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/cacao-org/cacao/issues\\\"" )
+set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"${PROJECT_NAME}\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/${PROJECT_NAME}-org/${PROJECT_NAME}/issues\\\"" )
 
 
 #
@@ -297,13 +297,13 @@ set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_D
 # recursively add libraries to be compiled
 
 foreach(lname IN LISTS libname)
-target_link_libraries (cacao PUBLIC "${lname}" )
+target_link_libraries (${PROJECT_NAME} PUBLIC "${lname}" )
 endforeach()
 
 
 
 
-target_link_libraries (cacao PUBLIC
+target_link_libraries (${PROJECT_NAME} PUBLIC
 ${EXTRAMODULES}
 ${MILK_LIBRARIES}
 m
@@ -322,30 +322,30 @@ ${CMAKE_THREAD_LIBS_INIT}
 
 
 if(USE_CUDA)
-target_link_libraries (cacao PUBLIC ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
+target_link_libraries (${PROJECT_NAME} PUBLIC ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
 set(BUILD_FLAGS "${BUILD_FLAGS} -DHAVE_CUDA" )
 endif(USE_CUDA)
 
 
 if(USE_MAGMA)
-target_link_libraries (cacao PUBLIC ${MAGMA_LIBRARIES})
+target_link_libraries (${PROJECT_NAME} PUBLIC ${MAGMA_LIBRARIES})
 set(BUILD_FLAGS "${BUILD_FLAGS} -DHAVE_CUDA -DHAVE_MAGMA" )
 endif(USE_MAGMA)
 
 
 
 
-set_target_properties(cacao PROPERTIES COMPILE_FLAGS "${BUILD_FLAGS}" )
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "${BUILD_FLAGS}" )
 
 
 
 message("====================================================")
-get_target_property(cacaocompopts cacao COMPILE_OPTIONS)
+get_target_property(compopts ${PROJECT_NAME} COMPILE_OPTIONS)
 
 message("CMAKE_THREAD_LIBS_INIT  :  ${CMAKE_THREAD_LIBS_INIT}")
 message("BUILD_FLAGS             :  ${BUILD_FLAGS}")
 message("COMPILE_FLAGS           :  ${COMPILE_FLAGS}")
-message("COMPILE_OPTIONS         :  ${cacaocompopts}")
+message("COMPILE_OPTIONS         :  ${compopts}")
 message("CMAKE_EXE_LINKER_FLAGS  :  ${CMAKE_EXE_LINKER_FLAGS}")
 
 message("CMAKE_C_FLAGS           :  ${CMAKE_C_FLAGS}")
@@ -364,7 +364,7 @@ set(PROGRAM_PERMISSIONS_DEFAULT
     GROUP_READ GROUP_EXECUTE
     WORLD_READ WORLD_EXECUTE)
 
-install(TARGETS cacao DESTINATION bin PERMISSIONS ${PROGRAM_PERMISSIONS_DEFAULT} SETUID)
+install(TARGETS ${PROJECT_NAME} DESTINATION bin PERMISSIONS ${PROGRAM_PERMISSIONS_DEFAULT} SETUID)
 
 
 set(CMAKE_INSTALL_PREFIX_LINK "/usr/local/${PROJECT_NAME}")
