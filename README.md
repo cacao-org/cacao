@@ -92,35 +92,10 @@ Add environment variables. Add to .bashrc file or similar :
 
 	export CACAO_ROOT=${HOME}/src/cacao  # point to source code directory. Edit as needed.
 	export CACAO_INSTALLDIR=/usr/local/cacao
-	export PATH=${PATH}:${MILK_INSTALLDIR}/bin
-
-
-Ensure linker finds milk libraries :
-
-	echo "/usr/local/cacao/lib" > cacaolibs.conf
-	sudo mv cacaolibs.conf /etc/ld.so.conf.d/
-	sudo ldconfig -v
-
-Note: Use the above method instead of setting up LD_LIBRARY_PATH environment variable. cacao is installed with setuid bit. LD_LIBRARY_PATH is ignored at runtime for executables that have their setuid or setgid bit set. In addition, holding library locations in cache is faster than searching LD_LIBRARY_PATH directories.
+	export PATH=${PATH}:${CACAO_INSTALLDIR}/bin
 
 
 
-
-
-
-### Post-installation 
-
-Note: We assume that cacao has been installed in directory /home/myname/src/cacao.
-
-
-Create local bin directory and sym links to all cacao- scripts:
-```bash
-cd /home/myname/src/cacao/
-mkdir bin
-cd bin
-find /home/myname/src/cacao/ -executable -type f -name "milk-*" -print0 | xargs -0 -I {} ln -s {} .
-find /home/myname/src/cacao/ -executable -type f -name "cacao-*" -print0 | xargs -0 -I {} ln -s {} .
-```
 
 
 
