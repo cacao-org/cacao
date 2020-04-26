@@ -1,17 +1,12 @@
 # Example, run from _build directory :
 #
-#
-# 
 # cmake ..
 # cmake .. -DCMAKE_INSTALL_PREFIX=../_install
-#
 #
 #
 # USING GPU libraries is inherited from milk
 # ===============================
 # cmake .. -DUSE_MAGMA=ON
-#
-#
 #
 # BUILD TYPE
 # ===============================
@@ -22,15 +17,11 @@
 # Release build type turns on optimization flags
 # cmake -DCMAKE_BUILD_TYPE=Release ..
 #
-#
-#
 # COMPILING
 # ================================
 # make clean
 # make
 # sudo make install
-#
-#
 #
 
 cmake_minimum_required (VERSION 3.5)
@@ -40,13 +31,19 @@ project (cacao C)
 # Version number
 set ( VERSION_MAJOR 1 )
 set ( VERSION_MINOR 01 )
-set ( VERSION_PATCH 02 )
-#set ( VERSION_OPTION "-dev" )
+set ( VERSION_PATCH 03 )
+set ( VERSION_OPTION "-dev" )
+set ( PROJECT_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
+set ( PROJECT_DESCRIPTION "Compute and Control for Adaptive Optics" )
+
+option ( INSTALLMAKEDEFAULT "Make this installation the system default" ON )
+
+
 
 # turn VERBOSE ON
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(CMAKE_INSTALL_PREFIX "/usr/local/${PROJECT_NAME}-${VERSION_MAJOR}.${VERSION_MINOR}")
+set(CMAKE_INSTALL_PREFIX "/usr/local/${PROJECT_NAME}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 
 # Configure a header file to pass some of the CMake settings
@@ -66,7 +63,37 @@ configure_file (
 
 
 # =======================================
-# PERFORMANCE ORIENTED COMPILING OPTIONS
+# MODULES INCLUDED
+# =======================================
+# modules are added to two lists:
+# libsrcdir : source code directory
+# libname   : shared object name
+
+
+list(APPEND modulelist AOloopControl )
+list(APPEND modulelist AOloopControl_acquireCalib )
+list(APPEND modulelist AOloopControl_compTools )
+list(APPEND modulelist AOloopControl_computeCalib )
+list(APPEND modulelist AOloopControl_DM )
+list(APPEND modulelist AOloopControl_IOtools )
+list(APPEND modulelist AOloopControl_perfTest )
+list(APPEND modulelist AOloopControl_PredictiveControl )
+
+foreach(mname IN LISTS modulelist)
+string(REPLACE "_" "" mname1 "${mname}")
+list(APPEND libsrcdir src/${mname})
+list(APPEND libname cacao${mname1})
+message("======= adding module  ${mname}")
+endforeach()
+
+
+
+
+
+
+
+# =======================================
+# BUILD TYPE
 # =======================================
 
 # Set Release build flags
@@ -85,20 +112,15 @@ endif()
 
 message("CMAKE_BUILD_TYPE : ${CMAKE_BUILD_TYPE}")
 
-# Adds options to the compiler command line for targets in the current directory 
-# and below that are added after this command is invoked
+
+
+
+# =======================================
+# COMPILE OPTIONS
+# =======================================
 
 add_compile_options(-std=gnu11)
 add_compile_options(-march=native)
-
-
-# NOTE: -fstack-usage is incompatible with link-time optimizer
-#add_compile_options(-fstack-usage)
-
-# link-time optimizer
-add_compile_options(-flto)
-add_compile_options(-fwhole-program)
-
 
 # OpenMP
 find_package(OpenMP)
@@ -107,7 +129,11 @@ message("Found OpenMP")
 add_compile_options(-fopenmp)
 endif()
 
-message("COMPILE_OPTIONS:  ${COMPILE_OPTIONS}")
+# link-time optimizer
+add_compile_options(-flto)
+add_compile_options(-fwhole-program)
+# NOTE: -fstack-usage is incompatible with link-time optimizer
+#add_compile_options(-fstack-usage)
 
 
 # A common flag is -pipe. This flag has no effect on the generated code, 
@@ -118,10 +144,8 @@ message("COMPILE_OPTIONS:  ${COMPILE_OPTIONS}")
 add_compile_options(-pipe)
 
 
+message("COMPILE_OPTIONS:  ${COMPILE_OPTIONS}")
 
-# =======================================
-# GPU ACCELERATION
-# =======================================
 
 
 
@@ -148,6 +172,13 @@ link_directories( ${MAGMA_LIBRARY_DIRS} )
 endif(USE_MAGMA)
 
 
+
+
+
+# =======================================
+# DEPENDENCIES
+# =======================================
+
 # ncurses
 SET(CURSES_USE_NCURSES TRUE)
 
@@ -169,7 +200,7 @@ message("milk will use cuda")
 set(USE_CUDA ON)
 else()
 message("milk was NOT compiled with cuda")
-message(WARNING "cacao will NOT use cuda")
+message("cacao will NOT use cuda")
 set(USE_CUDA OFF)
 endif()
 
@@ -181,7 +212,7 @@ message("cacao will use magma")
 set(USE_MAGMA ON)
 else()
 message("milk was NOT compiled with magma")
-message(WARNING "cacao will NOT use magma")
+message("cacao will NOT use magma")
 set(USE_MAGMA OFF)
 endif()
 
@@ -211,19 +242,14 @@ message("====================================================")
 
 
 
-#                               
+# ADD SOURCE DIRECTORIES
 # recursively add libraries to be compiled
-# each library compile as SHARED
-#
 
-add_subdirectory ( "src/AOloopControl" )
-add_subdirectory ( "src/AOloopControl_acquireCalib" )
-add_subdirectory ( "src/AOloopControl_compTools" )
-add_subdirectory ( "src/AOloopControl_computeCalib" )
-add_subdirectory ( "src/AOloopControl_DM" )
-add_subdirectory ( "src/AOloopControl_IOtools" )
-add_subdirectory ( "src/AOloopControl_perfTest" )
-add_subdirectory ( "src/AOloopControl_PredictiveControl" )
+foreach(lsrcdir IN LISTS libsrcdir)
+add_subdirectory ( "${lsrcdir}" )
+endforeach()
+
+
 
 
 
@@ -237,11 +263,13 @@ add_subdirectory ( "src/${extramodule}" )
 ENDFOREACH()
 
 
-
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # main
 add_executable(cacao 
 src/CLImain.c)
+
 
 target_include_directories(cacao PUBLIC
 ${PROJECT_SOURCE_DIR}/src
@@ -261,21 +289,36 @@ ${FFTWF_CFLAGS_OTHER}
 set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"cacao\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/cacao-org/cacao/issues\\\"" )
 
 
+#
+# link order must satisfy dependancies
+# 
+
+# ADD SOURCE DIRECTORIES
+# recursively add libraries to be compiled
+
+foreach(lname IN LISTS libname)
+target_link_libraries (cacao PUBLIC "${lname}" )
+endforeach()
+
+
+
+
 target_link_libraries (cacao PUBLIC
-cacaoAOloopControl
-cacaoAOloopControlacquireCalib
-cacaoAOloopControlcompTools
-cacaoAOloopControlcomputeCalib
-cacaoAOloopControlDM
-cacaoAOloopControlIOtools
-cacaoAOloopControlperfTest
-cacaoAOloopControlPredictiveControl
 ${EXTRAMODULES}
 ${MILK_LIBRARIES}
+m
+readline
+ncurses
+cfitsio
+dl
+rt
 ${GSL_LIBRARIES} 
+${FFTW_LIBRARIES}
+${FFTWF_LIBRARIES}
 ${CMAKE_THREAD_LIBS_INIT}
 -fopenmp
 )
+
 
 
 if(USE_CUDA)
@@ -327,7 +370,7 @@ install(TARGETS cacao DESTINATION bin PERMISSIONS ${PROGRAM_PERMISSIONS_DEFAULT}
 set(CMAKE_INSTALL_PREFIX_LINK "/usr/local/${PROJECT_NAME}")
 if(INSTALLMAKEDEFAULT)
     install(CODE "
-    EXECUTE_PROCESS(COMMAND ln -sf ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIX_LINK})
+    EXECUTE_PROCESS(COMMAND ln -snf ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIX_LINK})
     ")
 endif(INSTALLMAKEDEFAULT)
 
