@@ -150,26 +150,6 @@ message("COMPILE_OPTIONS:  ${COMPILE_OPTIONS}")
 
 
 
-# =======================================
-# GPU ACCELERATION
-# =======================================
-
-# MAGMA (optional)
-if(USE_MAGMA)
-set(USE_CUDA ON)
-endif(USE_MAGMA)
-
-
-if(USE_CUDA)
-find_package( CUDA REQUIRED )
-endif(USE_CUDA)
-
-if(USE_MAGMA)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(MAGMA REQUIRED magma)
-message(STATUS ${MAGMA_LIBRARY_DIRS})
-link_directories( ${MAGMA_LIBRARY_DIRS} )
-endif(USE_MAGMA)
 
 
 
@@ -191,6 +171,17 @@ pkg_check_modules(MILK REQUIRED milk>=1.01)
 link_directories(${MILK_LIBRARY_DIRS})
 include_directories(${MILK_INCLUDE_DIRS})
 message("MILK_VERSION = ${MILK_VERSION}")
+
+
+
+# =======================================
+# GPU ACCELERATION
+# =======================================
+
+# options
+option(USE_CUDA  "Use CUDA        library" OFF)
+option(USE_MAGMA "Use MAGMA       library" OFF)
+
 
 
 string(FIND "${MILK_CFLAGS}" "MILK_USE_CUDA=ON" sresult)
@@ -215,6 +206,34 @@ message("milk was NOT compiled with magma")
 message("${PROJECT_NAME} will NOT use magma")
 set(USE_MAGMA OFF)
 endif()
+
+
+# MAGMA (optional)
+if(USE_MAGMA)
+set(USE_CUDA ON)
+endif(USE_MAGMA)
+
+
+if(USE_CUDA)
+find_package(CUDA 9.0 REQUIRED)
+message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
+message("---- CUDA_INCLUDE_DIRS   = ${CUDA_INCLUDE_DIRS}")
+message("---- CUDA_LIBRARIES      = ${CUDA_LIBRARIES} ${CUDA_cusolver_LIBRARY}" )   
+message("---- CUDA_CUBLAS_LIBRARIES    = ${CUDA_CUBLAS_LIBRARIES}" )   
+endif(USE_CUDA)
+
+if(USE_MAGMA)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(MAGMA REQUIRED magma)
+message(STATUS ${MAGMA_LIBRARY_DIRS})
+link_directories( ${MAGMA_LIBRARY_DIRS} )
+message("MAGMA_LIBRARY_DIRS  : ${MAGMA_LIBRARY_DIRS}" )
+endif(USE_MAGMA)
+
+
+
+
+
 
 
 
@@ -271,6 +290,16 @@ add_executable(${PROJECT_NAME}
 src/CLImain.c)
 
 
+
+
+# =======================================
+# INCLUDES
+# =======================================
+
+if(USE_CUDA)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CUDA_INCLUDE_DIRS})
+endif(USE_CUDA)
+
 target_include_directories(${PROJECT_NAME} PUBLIC
 ${PROJECT_SOURCE_DIR}/src
 ${GSL_INCLUDE_DIRS}
@@ -278,6 +307,16 @@ ${FFTW_INCLUDE_DIRS}
 ${FFTWF_INCLUDE_DIRS}
 ${CURSES_INCLUDE_DIR}
 )
+
+
+
+
+
+
+# =======================================
+# COMPILE OPTIONS
+# =======================================
+
 
 # adds the options to all targets within the directory and its sub-directories
 target_compile_options(${PROJECT_NAME} PUBLIC 
@@ -288,6 +327,14 @@ ${FFTWF_CFLAGS_OTHER}
 
 set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"${PROJECT_NAME}\\\" -DCONFIGDIR=\\\"${PROJECT_SOURCE_DIR}/config\\\" -DSOURCEDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DABSSRCTOPDIR=\\\"${PROJECT_SOURCE_DIR}\\\" -DPACKAGE_BUGREPORT=\\\"https://github.com/${PROJECT_NAME}-org/${PROJECT_NAME}/issues\\\"" )
 
+
+
+
+
+
+# =======================================
+# LINKING
+# =======================================
 
 #
 # link order must satisfy dependancies
@@ -331,6 +378,7 @@ if(USE_MAGMA)
 target_link_libraries (${PROJECT_NAME} PUBLIC ${MAGMA_LIBRARIES})
 set(BUILD_FLAGS "${BUILD_FLAGS} -DHAVE_CUDA -DHAVE_MAGMA" )
 endif(USE_MAGMA)
+
 
 
 
