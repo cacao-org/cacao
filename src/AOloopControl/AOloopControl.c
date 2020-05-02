@@ -2296,7 +2296,7 @@ static errno_t init_module_CLI()
     // add atexit functions here
     // atexit((void*) myfunc); atexit = starts a function once the program exits (only if it is not a crash exit)
 
-	return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }
 
 

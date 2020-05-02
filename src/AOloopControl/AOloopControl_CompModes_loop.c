@@ -1,10 +1,10 @@
 /**
- * @file    AOloopControl_aorun.c 
- * @brief   AO loop Control compute functions 
- * 
+ * @file    AOloopControl_aorun.c
+ * @brief   AO loop Control compute functions
+ *
  * REAL TIME COMPUTING ROUTINES
- *  
- * 
+ *
+ *
  */
 
 
@@ -26,15 +26,15 @@
 #include <pthread.h>
 
 
-//libraries created by O. Guyon 
+//libraries created by O. Guyon
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
-#include "info/info.h" 
+#include "info/info.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_tools/COREMOD_tools.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
-#include "info/info.h" 
+#include "info/info.h"
 
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
@@ -102,33 +102,40 @@ errno_t AOloopControl_CompModes_loop(
     imageID       ID_coefft;
 
     double        alpha = 0.1;
-	char          imname[200];
+    char          imname[200];
 
 
 
-	// LOG function start
-	int logfunc_level = 0;
-	int logfunc_level_max = 1;
-	char commentstring[200];
-	sprintf(commentstring, "loop %ld", aoloopcontrol_var.LOOPNUMBER);
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
-	
-	
-	
-	if(aoloopcontrol_var.aoconfID_looptiming == -1)
-	{
-		// LOOPiteration is written in cnt1 of loop timing array
-		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			PRINT_ERROR("sprintf wrote <1 char");
-		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
-	}
+    // LOG function start
+    int logfunc_level = 0;
+    int logfunc_level_max = 1;
+    char commentstring[200];
+    sprintf(commentstring, "loop %ld", aoloopcontrol_var.LOOPNUMBER);
+    CORE_logFunctionCall(logfunc_level, logfunc_level_max, 0, __FILE__, __func__,
+                         __LINE__, commentstring);
+
+
+
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
+    {
+        // LOOPiteration is written in cnt1 of loop timing array
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
+        {
+            PRINT_ERROR("sprintf wrote <1 char");
+        }
+        aoloopcontrol_var.aoconfID_looptiming =
+            AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ",
+                    aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
+    }
 
 
     GPUcnt = 2;
 
-    GPUsetM = (int*) malloc(sizeof(int)*GPUcnt);
-    for(uint32_t k=0; k<GPUcnt; k++)
-        GPUsetM[k] = k+5;
+    GPUsetM = (int *) malloc(sizeof(int) * GPUcnt);
+    for(uint32_t k = 0; k < GPUcnt; k++)
+    {
+        GPUsetM[k] = k + 5;
+    }
 
 
     ID_CM = image_ID(ID_CM_name);
@@ -139,7 +146,7 @@ errno_t AOloopControl_CompModes_loop(
     ID_WFSref = image_ID(ID_WFSref_name);
 
 
-    sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+    sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
     sizearray[0] = NBmodes;
     sizearray[1] = 1;
 
@@ -162,19 +169,21 @@ errno_t AOloopControl_CompModes_loop(
     ID_WFSimtot = image_ID(ID_WFSimtot_name);
 
 
-    GPU_loop_MultMat_setup(2, ID_CM_name, "wfsim_n", "coefftmp", GPUcnt, GPUsetM, 0, 1, 1, 0);
+    GPU_loop_MultMat_setup(2, ID_CM_name, "wfsim_n", "coefftmp", GPUcnt, GPUsetM, 0,
+                           1, 1, 0);
 
     totfluxave = 1.0;
     int initWFSref;
     for(;;)
     {
-        if(initWFSref==0)
+        if(initWFSref == 0)
         {
             printf("Computing reference\n");
             fflush(stdout);
-            memcpy(data.image[ID_WFSim_n].array.F, data.image[ID_WFSref].array.F, sizeof(float)*wfsxsize*wfsysize);
+            memcpy(data.image[ID_WFSim_n].array.F, data.image[ID_WFSref].array.F,
+                   sizeof(float)*wfsxsize * wfsysize);
             GPU_loop_MultMat_execute(2, &status, &GPUstatus[0], 1.0, 0.0, 0, 0);
-            for(uint32_t m=0; m<NBmodes; m++)
+            for(uint32_t m = 0; m < NBmodes; m++)
             {
                 data.image[IDcoeff0].array.F[m] = data.image[ID_coefft].array.F[m];
             }
@@ -184,17 +193,23 @@ errno_t AOloopControl_CompModes_loop(
             fflush(stdout);
         }
 
-        memcpy(data.image[ID_WFSim_n].array.F, data.image[ID_WFSim].array.F, sizeof(float)*wfsxsize*wfsysize);
+        memcpy(data.image[ID_WFSim_n].array.F, data.image[ID_WFSim].array.F,
+               sizeof(float)*wfsxsize * wfsysize);
         COREMOD_MEMORY_image_set_semwait(ID_WFSim_name, 0);
 
         GPU_loop_MultMat_execute(2, &status, &GPUstatus[0], 1.0, 0.0, 0, 0);
-        totfluxave = (1.0-alpha)*totfluxave + alpha*data.image[ID_WFSimtot].array.F[0];
+        totfluxave = (1.0 - alpha) * totfluxave + alpha *
+                     data.image[ID_WFSimtot].array.F[0];
 
         data.image[ID_coeff].md[0].write = 1;
-        for(uint32_t m=0; m<NBmodes; m++)
-            data.image[ID_coeff].array.F[m] = data.image[ID_coefft].array.F[m]/totfluxave - data.image[IDcoeff0].array.F[m];
+        for(uint32_t m = 0; m < NBmodes; m++)
+        {
+            data.image[ID_coeff].array.F[m] = data.image[ID_coefft].array.F[m] / totfluxave
+                                              - data.image[IDcoeff0].array.F[m];
+        }
         data.image[ID_coeff].md[0].cnt0 ++;
-        data.image[ID_coeff].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
+        data.image[ID_coeff].md[0].cnt1 =
+            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
         data.image[ID_coeff].md[0].write = 0;
     }
 
@@ -205,8 +220,9 @@ errno_t AOloopControl_CompModes_loop(
     free(GPUsetM);
 
 
-	// LOG function start
-	CORE_logFunctionCall( logfunc_level, logfunc_level_max, 1, __FILE__, __func__, __LINE__, commentstring);
+    // LOG function start
+    CORE_logFunctionCall(logfunc_level, logfunc_level_max, 1, __FILE__, __func__,
+                         __LINE__, commentstring);
 
 
     return RETURN_SUCCESS;
@@ -222,7 +238,7 @@ errno_t AOloopControl_CompModes_loop(
     __attribute__((unused)) const char *ID_coeff_name
 )
 {
-	return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }
 #endif
 
