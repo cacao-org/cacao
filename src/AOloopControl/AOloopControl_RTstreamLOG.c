@@ -33,6 +33,7 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
+#include "COREMOD_tools/COREMOD_tools.h"
 #include "ImageStreamIO/ImageStruct.h"
 
 #include "AOloopControl/AOloopControl.h"

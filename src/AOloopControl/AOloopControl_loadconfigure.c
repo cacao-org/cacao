@@ -18,6 +18,8 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
+#include "COREMOD_tools/COREMOD_tools.h"
+
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
 #include "AOloopControl.h"
@@ -84,10 +86,10 @@ errno_t AOloopControl_loadconfigure(
 
 
     // LOG function start
-    int logfunc_level = 0;
-    int logfunc_level_max = 1;
-    char commentstring[200];
-    sprintf(commentstring, "loop=%ld mode=%d level=%d", loop, mode, level);
+//    int logfunc_level = 0;
+//    int logfunc_level_max = 1;
+//    char commentstring[200];
+//    sprintf(commentstring, "loop=%ld mode=%d level=%d", loop, mode, level);
     //CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 
 
