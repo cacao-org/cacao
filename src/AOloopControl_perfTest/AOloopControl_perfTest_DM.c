@@ -26,6 +26,7 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
+#include "COREMOD_tools/COREMOD_tools.h"
 #include "linopt_imtools/linopt_imtools.h"
 #include "info/info.h"
 #include "AOloopControl/AOloopControl.h"
@@ -287,8 +288,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
         while((runtime < avetime)&&(k<kmax))
         {
             clock_gettime(CLOCK_REALTIME, &tnow);
-            tdiff = info_time_diff(tstart, tnow); 
-            runtime = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+            runtime = timespec_diff_double(tstart, tnow); 
             pha = 2.0*M_PI*runtime*f;
             coeff = ampl*cos(pha);
 

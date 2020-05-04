@@ -1973,7 +1973,7 @@ errno_t AOloopControl_perfTest_InjectMode(
     if((index < 0)
             || (index > (long) AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1))
     {
-        printf("Invalid mode index... must be between 0 and %ld\n",
+        printf("Invalid mode index... must be between 0 and %u\n",
                AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes);
     }
     else

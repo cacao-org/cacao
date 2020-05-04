@@ -39,6 +39,7 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+#include "COREMOD_tools/COREMOD_tools.h"
 
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -847,8 +848,7 @@ errno_t AOloopControl_perfTest_statusStats(
     dmCcnt = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0 - dmCcnt;
 
     clock_gettime(CLOCK_REALTIME, &t2);
-    tdiff = info_time_diff(t1, t2);
-    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv = timespec_diff_double(t1, t2);
     printf("\n");
     loopiterus = 1.0e6*tdiffv/loopcnt;
     printf("Time diff = %f sec \n", tdiffv);
