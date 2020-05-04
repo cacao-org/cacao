@@ -218,9 +218,9 @@ errno_t AOloopControl_InitializeMemory(
             {
                 printf("LIST OF ACTIVE LOOPS:\n");
                 printf("----- Loop %ld   (%s) ----------\n", loop, AOconf[loop].name);
-                printf("  WFS:  %s  [%ld]  %ld x %ld\n", AOconf[loop].WFSim.WFSname, aoloopcontrol_var.aoconfID_wfsim, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
-                printf("   DM:  %s  [%ld]  %ld x %ld\n", AOconf[loop].DMctrl.dmCname, aoloopcontrol_var.aoconfID_dmC, AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM);
-                printf("DM RM:  %s  [%ld]  %ld x %ld\n", AOconf[loop].DMctrl.dmRMname, aoloopcontrol_var.aoconfID_dmC, AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM);
+                printf("  WFS:  %s  [%ld]  %u x %u\n", AOconf[loop].WFSim.WFSname, aoloopcontrol_var.aoconfID_wfsim, AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
+                printf("   DM:  %s  [%ld]  %u x %u\n", AOconf[loop].DMctrl.dmCname, aoloopcontrol_var.aoconfID_dmC, AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM);
+                printf("DM RM:  %s  [%ld]  %u x %u\n", AOconf[loop].DMctrl.dmRMname, aoloopcontrol_var.aoconfID_dmC, AOconf[loop].DMctrl.sizexDM, AOconf[loop].DMctrl.sizeyDM);
             }
     }
 

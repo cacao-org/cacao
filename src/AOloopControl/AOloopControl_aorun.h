@@ -14,37 +14,37 @@ typedef struct
     char             respMname[80];
     char             contrMname[80];	
     char             name[80];
-	int_fast8_t      CMMODE;                     /**< Combined matrix. 0: matrix is WFS pixels -> modes, 1: matrix is WFS pixels -> DM actuators */
+	int             CMMODE;                     /**< Combined matrix. 0: matrix is WFS pixels -> modes, 1: matrix is WFS pixels -> DM actuators */
 
 
 	/* STATUS ******************************************************** */
 	
-	int_fast8_t      init;                       /**< Has the structure been initialized ? */
-    uint_fast64_t    cnt;                        /**<  loop step counter, set to zero every time loop is stopped */
-    uint_fast64_t    cntmax;                     /**<  max value of counter, used to step loop */
-    uint_fast64_t    DMupdatecnt;                /**<  number of DM updates */
+	int         init;                       /**< Has the structure been initialized ? */
+    uint64_t    cnt;                        /**<  loop step counter, set to zero every time loop is stopped */
+    uint64_t    cntmax;                     /**<  max value of counter, used to step loop */
+    uint64_t    DMupdatecnt;                /**<  number of DM updates */
 
-    int_fast8_t      init_RM;                    /**< Response Matrix loaded */
-    int_fast8_t      init_CM;                    /**< Control Matrix loaded */
-    int_fast8_t      init_CMc;                   /**< Combined control matrix computed */
-    int_fast8_t      init_wfsref0;               /**< WFS reference image loaded */
-    int_fast8_t      initmapping;
+    int      init_RM;                    /**< Response Matrix loaded */
+    int      init_CM;                    /**< Control Matrix loaded */
+    int      init_CMc;                   /**< Combined control matrix computed */
+    int      init_wfsref0;               /**< WFS reference image loaded */
+    int      initmapping;
 	uint64_t         LOOPiteration;              /**< Loop iteration - set to zero on creation on aolrun start */
 	
 	
 	/* CONTROL ******************************************************** */
 	
-	int_fast8_t      kill;                       /**<  set to 1 to kill computation loop */
-	int_fast8_t      on;                         /**< goes to 1 when loop starts, put to 0 to turn loop off */
-	int_fast8_t      DMprimaryWriteON;           /**< primary DM write */
-	int_fast8_t      DMfilteredWriteON;          /**< Filtered write to DM */
+	int      kill;                       /**<  set to 1 to kill computation loop */
+	int      on;                         /**< goes to 1 when loop starts, put to 0 to turn loop off */
+	int      DMprimaryWriteON;           /**< primary DM write */
+	int      DMfilteredWriteON;          /**< Filtered write to DM */
 	
 	float            maxlimit;                   /**< maximum absolute value for mode values */
     float            mult;                       /**< multiplication coefficient to be applied at each loop iteration */
 	float            gain;                       /**< overall loop gain */
 
 	// predictive control (auto-regressive predictive filter)
-	int_fast8_t      ARPFon;                     /**< 1 if auto-regressive predictive filter is ON */
+	int      ARPFon;                     /**< 1 if auto-regressive predictive filter is ON */
 	float            ARPFgain; 
 	float            ARPFgainAutoMin;
 	float            ARPFgainAutoMax;
@@ -73,12 +73,12 @@ typedef struct
     float            wfsmextrlatency;            /**< WFS mode extraction latency [sec] */
     float            wfsmextrlatency_frame;      /**< WFS mode extraction latency [frame] */
 
-    int_fast8_t      status;                     /**< loop status for main loop */
-    int_fast8_t      statusM;                    /**< loop status for modal loop */
-    int_fast8_t      statusM1;                   /**< loop status for modal loop */
+    int      status;                     /**< loop status for main loop */
+    int      statusM;                    /**< loop status for modal loop */
+    int      statusM1;                   /**< loop status for modal loop */
 
-    int_fast8_t      GPUstatus[50];              /**<  GPU status index */
-    uint_fast16_t    NBtimer;                    /**<  Number of active timers - 1 timer per status value */
+    int      GPUstatus[50];              /**<  GPU status index */
+    int      NBtimer;                    /**<  Number of active timers - 1 timer per status value */
     struct timespec  timer[MAX_NUMBER_TIMER];    /**<  Timers */
 
 } AOloopTimingInfo;
@@ -90,16 +90,16 @@ typedef struct
 {
     char WFSname[80];                        
     
-    uint_fast32_t    sizexWFS;                   /**< WFS image x size */
-    uint_fast32_t    sizeyWFS;                   /**< WFS image y size */
-    uint_fast32_t    sizeWFS;                    /**< WFS total image (= x size * y size) */
-    uint_fast32_t    activeWFScnt;               /**< Number of active WFS pixels */
-    uint_fast32_t    sizeWFS_active[100];        /**< Only takes into account WFS pixels in use/active for each slice */
-    uint_fast64_t    WFScnt;                     /**< WFS stream counter 0 value at WFS image read */
-    uint_fast64_t    WFScntRM;                   /**< WFS stream counter 0 value at WFS image read (RM acqu mode) */
+    uint32_t    sizexWFS;                   /**< WFS image x size */
+    uint32_t    sizeyWFS;                   /**< WFS image y size */
+    uint32_t    sizeWFS;                    /**< WFS total image (= x size * y size) */
+    uint32_t    activeWFScnt;               /**< Number of active WFS pixels */
+    uint32_t    sizeWFS_active[100];        /**< Only takes into account WFS pixels in use/active for each slice */
+    uint64_t    WFScnt;                     /**< WFS stream counter 0 value at WFS image read */
+    uint64_t    WFScntRM;                   /**< WFS stream counter 0 value at WFS image read (RM acqu mode) */
 
-    int_fast8_t      WFSnormalize;               /**< 1 if each WFS frame should be normalized to 1 */
-    int_fast8_t      WFSrefzero;                 /**< 1 if WFS reference is zero */
+    int      WFSnormalize;               /**< 1 if each WFS frame should be normalized to 1 */
+    int      WFSrefzero;                 /**< 1 if WFS reference is zero */
     float            WFSnormfloor;               /**< normalized by dividing by (total + AOconf[loop].WFSnormfloor)*AOconf[loop].WFSsize */
     float            WFStotalflux;               /**< Total WFS flux after dark subtraction */
 

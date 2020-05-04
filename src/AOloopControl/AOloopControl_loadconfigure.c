@@ -755,7 +755,7 @@ errno_t AOloopControl_loadconfigure(
     AOconf[loop].DMctrl.sizeDM = AOconf[loop].DMctrl.sizexDM *
                                  AOconf[loop].DMctrl.sizeyDM;
 
-    fprintf(fplog, "Connected to DM %s, size = %ld x %ld\n",
+    fprintf(fplog, "Connected to DM %s, size = %u x %u\n",
             AOconf[loop].DMctrl.dmCname, AOconf[loop].DMctrl.sizexDM,
             AOconf[loop].DMctrl.sizeyDM);
 
@@ -806,7 +806,7 @@ errno_t AOloopControl_loadconfigure(
                 AOconf[loop].AOpmodecoeffs.DMmodesname, aoloopcontrol_var.aoconfID_DMmodes);
         AOconf[loop].AOpmodecoeffs.NBDMmodes =
             data.image[aoloopcontrol_var.aoconfID_DMmodes].md[0].size[2];
-        printf("NBmodes = %ld\n", AOconf[loop].AOpmodecoeffs.NBDMmodes);
+        printf("NBmodes = %u\n", AOconf[loop].AOpmodecoeffs.NBDMmodes);
     }
 
 
@@ -873,19 +873,19 @@ errno_t AOloopControl_loadconfigure(
             }
             if(data.image[ID1tmp].md[0].size[0] != AOconf[loop].DMctrl.sizexDM)
             {
-                printf("ERROR: File \"%s\" has wrong x size: should be %ld, is %ld\n", fname,
-                       AOconf[loop].DMctrl.sizexDM, (long) data.image[ID1tmp].md[0].size[0]);
+                printf("ERROR: File \"%s\" has wrong x size: should be %u, is %u\n", fname,
+                       AOconf[loop].DMctrl.sizexDM, data.image[ID1tmp].md[0].size[0]);
                 exit(0);
             }
             if(data.image[ID1tmp].md[0].size[1] != AOconf[loop].DMctrl.sizeyDM)
             {
-                printf("ERROR: File \"%s\" has wrong y size: should be %ld, is %ld\n", fname,
-                       AOconf[loop].DMctrl.sizeyDM, (long) data.image[ID1tmp].md[0].size[1]);
+                printf("ERROR: File \"%s\" has wrong y size: should be %u, is %u\n", fname,
+                       AOconf[loop].DMctrl.sizeyDM, data.image[ID1tmp].md[0].size[1]);
                 exit(0);
             }
             AOconf[loop].AOpmodecoeffs.NBDMmodes = data.image[ID1tmp].md[0].size[2];
 
-            printf("NUMBER OF MODES = %ld\n", AOconf[loop].AOpmodecoeffs.NBDMmodes);
+            printf("NUMBER OF MODES = %u\n", AOconf[loop].AOpmodecoeffs.NBDMmodes);
 
             // try to read it from shared memory
             ID2tmp = read_sharedmem_image(AOconf[loop].AOpmodecoeffs.DMmodesname);
@@ -901,23 +901,23 @@ errno_t AOloopControl_loadconfigure(
                 }
                 if(data.image[ID2tmp].md[0].size[0] != AOconf[loop].DMctrl.sizexDM)
                 {
-                    printf("ERROR: Shared memory File %s has wrong x size: should be %ld, is %ld\n",
+                    printf("ERROR: Shared memory File %s has wrong x size: should be %u, is %u\n",
                            AOconf[loop].AOpmodecoeffs.DMmodesname, AOconf[loop].DMctrl.sizexDM,
-                           (long) data.image[ID2tmp].md[0].size[0]);
+                           data.image[ID2tmp].md[0].size[0]);
                     vOK = 0;
                 }
                 if(data.image[ID2tmp].md[0].size[1] != AOconf[loop].DMctrl.sizeyDM)
                 {
-                    printf("ERROR: Shared memory File %s has wrong y size: should be %ld, is %ld\n",
+                    printf("ERROR: Shared memory File %s has wrong y size: should be %u, is %u\n",
                            AOconf[loop].AOpmodecoeffs.DMmodesname, AOconf[loop].DMctrl.sizeyDM,
-                           (long) data.image[ID2tmp].md[0].size[1]);
+                           data.image[ID2tmp].md[0].size[1]);
                     vOK = 0;
                 }
                 if(data.image[ID2tmp].md[0].size[2] != AOconf[loop].AOpmodecoeffs.NBDMmodes)
                 {
-                    printf("ERROR: Shared memory File %s has wrong y size: should be %ld, is %ld\n",
+                    printf("ERROR: Shared memory File %s has wrong y size: should be %u, is %u\n",
                            AOconf[loop].AOpmodecoeffs.DMmodesname, AOconf[loop].AOpmodecoeffs.NBDMmodes,
-                           (long) data.image[ID2tmp].md[0].size[2]);
+                           data.image[ID2tmp].md[0].size[2]);
                     vOK = 0;
                 }
 
@@ -976,7 +976,7 @@ errno_t AOloopControl_loadconfigure(
         }
 
         fprintf(fplog,
-                "stream %s loaded as ID = %ld, size %ld %ld %ld\n",
+                "stream %s loaded as ID = %ld, size %u %u %u\n",
                 AOconf[loop].AOpmodecoeffs.DMmodesname,
                 aoloopcontrol_var.aoconfID_DMmodes,
                 AOconf[loop].DMctrl.sizexDM,
@@ -1007,7 +1007,7 @@ errno_t AOloopControl_loadconfigure(
         AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] = 0.0;
     }
 
-    printf("%ld modes\n", AOconf[loop].AOpmodecoeffs.NBDMmodes);
+    printf("%u modes\n", AOconf[loop].AOpmodecoeffs.NBDMmodes);
 
 
     if(level >= 10)
@@ -1103,9 +1103,9 @@ errno_t AOloopControl_loadconfigure(
             }
         }
 
-        printf(" AOconf[loop].WFSim.activeWFScnt = %ld\n",
+        printf(" AOconf[loop].WFSim.activeWFScnt = %u\n",
                AOconf[loop].WFSim.activeWFScnt);
-        printf(" AOconf[loop].WFSim.activeDMcnt = %ld\n",
+        printf(" AOconf[loop].WFSim.activeDMcnt = %u\n",
                AOconf[loop].DMctrl.activeDMcnt);
 
 
@@ -1342,7 +1342,7 @@ errno_t AOloopControl_loadconfigure(
                 PRINT_ERROR("sprintf wrote <1 char");
             }
             //   sprintf(fname, "conf/shmim.contrMcact%02ld_00", kk);
-            printf("====== LOADING %s to %s  size %ld %ld\n", fname, name,
+            printf("====== LOADING %s to %s  size %u %u\n", fname, name,
                    AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt);
             ID = AOloopControl_IOtools_2Dloadcreate_shmim(name, fname,
                     AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt, 0.0);
@@ -1393,7 +1393,7 @@ errno_t AOloopControl_loadconfigure(
     }
     fp = fopen(fname, "w");
     fprintf(fp, "   0\n");
-    fprintf(fp, "%4ld\n", AOconf[loop].AOpmodecoeffs.NBmodes_block[0]);
+    fprintf(fp, "%4u\n", AOconf[loop].AOpmodecoeffs.NBmodes_block[0]);
     fclose(fp);
     for(unsigned int k = 1; k < AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
     {
@@ -1402,8 +1402,8 @@ errno_t AOloopControl_loadconfigure(
             PRINT_ERROR("sprintf wrote <1 char");
         }
         fp = fopen(fname, "w");
-        fprintf(fp, "%4ld\n", AOconf[loop].AOpmodecoeffs.indexmaxMB[k - 1]);
-        fprintf(fp, "%4ld\n", AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
+        fprintf(fp, "%4u\n", AOconf[loop].AOpmodecoeffs.indexmaxMB[k - 1]);
+        fprintf(fp, "%4u\n", AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
         fclose(fp);
     }
 
@@ -1413,9 +1413,9 @@ errno_t AOloopControl_loadconfigure(
 
 
     list_image_ID();
-    printf(" AOconf[loop].WFSim.activeWFScnt = %ld\n",
+    printf(" AOconf[loop].WFSim.activeWFScnt = %u\n",
            AOconf[loop].WFSim.activeWFScnt);
-    printf(" AOconf[loop].DMctrl.activeDMcnt = %ld\n",
+    printf(" AOconf[loop].DMctrl.activeDMcnt = %u\n",
            AOconf[loop].DMctrl.activeDMcnt);
     printf("   init_WFSref0    %d\n", AOconf[loop].aorun.init_wfsref0);
     printf("   init_RM        %d\n", AOconf[loop].aorun.init_RM);

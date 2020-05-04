@@ -153,7 +153,7 @@ errno_t AOloopControl_set_modeblock_gain(
     imageID ID;
 
 
-    printf("AOconf[loop].AOpmodecoeffs.DMmodesNBblock = %ld\n", AOconf[loop].AOpmodecoeffs.DMmodesNBblock);
+    printf("AOconf[loop].AOpmodecoeffs.DMmodesNBblock = %u\n", AOconf[loop].AOpmodecoeffs.DMmodesNBblock);
     fflush(stdout);
 
     /*if(AOconf[loop].CMMODE==0)
@@ -239,7 +239,7 @@ errno_t AOloopControl_set_modeblock_gain(
                 if(sprintf(name3, "aol%ld_contrMcact%02u_00", loop, kk) < 1)
                     PRINT_ERROR("sprintf wrote <1 char");
 
-                printf("Adding %4u / %4ld  (%5.3f)   %s   [%ld]\n", 
+                printf("Adding %4u / %4u  (%5.3f)   %s   [%ld]\n", 
                 kk, 
                 AOconf[loop].AOpmodecoeffs.DMmodesNBblock, 
                 data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk], 

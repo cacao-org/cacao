@@ -290,10 +290,9 @@ typedef struct
 
     int AOloopcontrol_meminit;
     // local copies to avoid reset to zero by other process
-    int_fast8_t init_RM_local;                      /**< Response Matrix loaded */
-    int_fast8_t init_CM_local;                      /**< Control Matrix loaded */
-    int_fast8_t
-    init_CMc_local;                     /**< Combined control matrix computed */
+    int init_RM_local;                      /**< Response Matrix loaded */
+    int init_CM_local;                      /**< Control Matrix loaded */
+    int init_CMc_local;                     /**< Combined control matrix computed */
 
 
     int COMPUTE_PIXELSTREAMING; // static. multiple pixel groups

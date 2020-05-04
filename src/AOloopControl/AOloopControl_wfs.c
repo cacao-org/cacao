@@ -24,6 +24,7 @@
 #include "info/info.h" 
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
+#include "COREMOD_tools/COREMOD_tools.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "info/info.h" 
 
@@ -42,7 +43,6 @@
 
 // TIMING
 //static struct timespec tnow;
-static struct timespec tdiff;
 static double tdiffv;
 
 //static int initWFSref_GPU[100] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -192,8 +192,7 @@ errno_t AOloopControl_WFSzpupdate_loop(
 		}
 
         clock_gettime(CLOCK_REALTIME, &t2);
-        tdiff = info_time_diff(t1, t2);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(t1, t2);
 
         printf(" [ %10.3f ms]\n", 1e3*tdiffv);
         fflush(stdout);

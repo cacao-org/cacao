@@ -87,8 +87,8 @@ errno_t AOloopControl_CompModes_loop(
     imageID       ID_WFSref;
     imageID       ID_coeff;
     uint32_t      GPUcnt;
-    int_fast8_t   GPUstatus[100];
-    int_fast8_t   status;
+    int           GPUstatus[100];
+    int           status;
     uint32_t      NBmodes;
     uint32_t     *sizearray;
 

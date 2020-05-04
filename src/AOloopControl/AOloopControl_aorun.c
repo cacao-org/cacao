@@ -710,7 +710,6 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
     struct timespec tnow;
     struct timespec t1;
     struct timespec t2;
-    struct timespec tdiff;
     int semval;
 
 
@@ -953,8 +952,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
             }
             clock_gettime(CLOCK_REALTIME, &t2);
 
-            tdiff = info_time_diff(t1, t2);
-            double tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+            double tdiffv = timespec_diff_double(t1, t2);
 
             printf(" WAITING     %20.3lf sec         \r", tdiffv);
             fflush(stdout);
@@ -1042,9 +1040,8 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
 
                 AOconf[loop].AOtiminginfo.status = 12; // 12
                 clock_gettime(CLOCK_REALTIME, &tnow);
-                tdiff = info_time_diff(
+                tdiffv = timespec_diff_double(
                             data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[19] = tdiffv;
 
 
@@ -1080,9 +1077,8 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
 
                         AOconf[loop].AOtiminginfo.status = 13; // enforce limits
                         clock_gettime(CLOCK_REALTIME, &tnow);
-                        tdiff = info_time_diff(
+                        tdiffv = timespec_diff_double(
                                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[20] = tdiffv;
 
 
@@ -1114,9 +1110,8 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
 
                         AOconf[loop].AOtiminginfo.status = 14; // write to DM
                         clock_gettime(CLOCK_REALTIME, &tnow);
-                        tdiff = info_time_diff(
+                        tdiffv = timespec_diff_double(
                                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[21] = tdiffv;
 
                         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmC, -1);
@@ -1141,9 +1136,8 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
 
                 AOconf[loop].AOtiminginfo.status = 18; // 18
                 clock_gettime(CLOCK_REALTIME, &tnow);
-                tdiff = info_time_diff(
+                tdiffv = timespec_diff_double(
                             data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[22] = tdiffv;
 
                 AOconf[loop].aorun.cnt++;
@@ -1173,8 +1167,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd);
 
 
-                tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
-                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+                tdiffv = timespec_diff_double(functionTestTimerStart, functionTestTimerEnd);
                 //double tdiffv02 = tdiffv;
                 //TEST TIMING
                 /*
@@ -1184,8 +1177,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 	fflush(stdout);
                 }*/
 
-                tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
-                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+                tdiffv = timespec_diff_double(functionTestTimer00, functionTestTimerEnd);
 
                 //TEST TIMING
                 /*

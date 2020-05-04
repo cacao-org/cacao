@@ -29,6 +29,7 @@
 #include "AOloopControl/AOloopControl.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
+#include "COREMOD_tools/COREMOD_tools.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "info/info.h" 
 
@@ -48,7 +49,7 @@
 
 // TIMING
 static struct timespec tnow;
-static struct timespec tdiff;
+//static struct timespec tdiff;
 
 static double tdiffv;
 static double tdiffv00;
@@ -317,8 +318,7 @@ errno_t __attribute__((hot)) AOcompute(
     // waiting for dark-subtracted image
     AOconf[loop].AOtiminginfo.status = 19;  //  19: WAITING FOR IMAGE
     clock_gettime(CLOCK_REALTIME, &tnow);
-    tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-    tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+    tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[23] = tdiffv;
 
 
@@ -363,8 +363,7 @@ errno_t __attribute__((hot)) AOcompute(
 
     AOconf[loop].AOtiminginfo.status = 4;  // 4: REMOVING REF
     clock_gettime(CLOCK_REALTIME, &tnow);
-    tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-    tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+    tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
     data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[15] = tdiffv;
 
 
@@ -432,8 +431,7 @@ errno_t __attribute__((hot)) AOcompute(
 
         AOconf[loop].AOtiminginfo.status = 5; // 5 MULTIPLYING BY CONTROL MATRIX -> MODE VALUES
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
 
 
@@ -530,8 +528,7 @@ errno_t __attribute__((hot)) AOcompute(
             }
 
             clock_gettime(CLOCK_REALTIME, &t2);
-            tdiff = info_time_diff(t1, t2);
-            tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+            tdiffv = timespec_diff_double(t1, t2);
             printf("\n");
             printf("TIME TO COMPUTE MAPPING ARRAYS = %f sec\n", tdiffv);
             AOconf[loop].aorun.initmapping = 1;
@@ -671,8 +668,7 @@ errno_t __attribute__((hot)) AOcompute(
 
                 AOconf[loop].AOtiminginfo.status = 6; // 6 execute
                 clock_gettime(CLOCK_REALTIME, &tnow);
-                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+                tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
 
 #ifdef _PRINT_TEST
@@ -719,8 +715,7 @@ errno_t __attribute__((hot)) AOcompute(
                                 GPU_loop_MultMat_setup(0, data.image[aoloopcontrol_var.aoconfID_contrMc].name, data.image[aoloopcontrol_var.aoconfID_imWFS2].name, data.image[aoloopcontrol_var.aoconfID_meas_act].name, AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0, AOconf[loop].AOcompute.GPUusesem, 1, loop);
                                 AOconf[loop].AOtiminginfo.status = 6;
                                 clock_gettime(CLOCK_REALTIME, &tnow);
-                                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                                tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+                                tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[6] = tdiffv;
 
                                 GPU_loop_MultMat_execute(0, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], 1.0, 0.0, 1);
@@ -816,8 +811,7 @@ errno_t __attribute__((hot)) AOcompute(
 
                 AOconf[loop].AOtiminginfo.status = 6; // 6 execute
                 clock_gettime(CLOCK_REALTIME, &tnow);
-                tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-                tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+                tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[17] = tdiffv;
 
 
@@ -868,8 +862,7 @@ errno_t __attribute__((hot)) AOcompute(
 
         AOconf[loop].AOtiminginfo.status = 11; // 11 MULTIPLYING BY GAINS
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 
         if(AOconf[loop].aorun.CMMODE == 0) {            
@@ -963,8 +956,7 @@ errno_t __attribute__((hot)) AOcompute(
 
         AOconf[loop].AOtiminginfo.status = 11;
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[16] = tdiffv;
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[18] = tdiffv;
 
@@ -1015,8 +1007,7 @@ errno_t __attribute__((hot)) AOcompute(
     //TEST
 
     clock_gettime(CLOCK_REALTIME, &functionTestTimerEnd); //TEST timing in function
-    tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
-    tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+    tdiffv = timespec_diff_double(functionTestTimerStart, functionTestTimerEnd);
     tdiffv01 = tdiffv;
     //TEST TIMING
     /*
@@ -1025,20 +1016,16 @@ errno_t __attribute__((hot)) AOcompute(
     	printf("TIMING WARNING: %12.3f us  %10ld   AOcompute() after Read_cam_frame()\n", tdiffv*1.0e6, (long) LOOPiter);
     	fflush(stdout);
 
-    	tdiff = info_time_diff(functionTestTimerStart, functionTestTimer00);
-    	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    	tdiffv = timespec_diff_double(functionTestTimerStart, functionTestTimer00);
     	printf("Timer 00 : %12.3f us\n", tdiffv*1.0e6);
 
-    	tdiff = info_time_diff(functionTestTimerStart, functionTestTimer01);
-    	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    	tdiffv = timespec_diff_double(functionTestTimerStart, functionTestTimer01);
     	printf("Timer 01 : %12.3f us\n", tdiffv*1.0e6);
 
-    	tdiff = info_time_diff(functionTestTimerStart, functionTestTimer02);
-    	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    	tdiffv = timespec_diff_double(functionTestTimerStart, functionTestTimer02);
     	printf("Timer 02 : %12.3f us\n", tdiffv*1.0e6);
 
-    	tdiff = info_time_diff(functionTestTimerStart, functionTestTimer03);
-    	tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    	tdiffv = timespec_diff_double(functionTestTimerStart, functionTestTimer03);
     	printf("Timer 03 : %12.3f us\n", tdiffv*1.0e6);
 
 
@@ -1070,8 +1057,7 @@ errno_t __attribute__((hot)) AOcompute(
         }*/
 
 
-    tdiff = info_time_diff(functionTestTimer04, functionTestTimerStart);
-    tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+    tdiffv = timespec_diff_double(functionTestTimer04, functionTestTimerStart);
     tdiffv00 = tdiffv;
 
     //TEST TIMING

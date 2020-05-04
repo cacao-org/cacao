@@ -45,6 +45,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 #include "info/info.h" 
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
+#include "COREMOD_tools/COREMOD_tools.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "info/info.h" 
 
@@ -63,7 +64,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 // TIMING
 static struct timespec tnow;
-static struct timespec tdiff;
 static double tdiffv;
 
 
@@ -129,8 +129,7 @@ errno_t set_DM_modes(
         GPU_loop_MultMat_setup(1, data.image[aoloopcontrol_var.aoconfID_DMmodes].name, data.image[aoloopcontrol_var.aoconfID_cmd_modes].name, data.image[aoloopcontrol_var.aoconfID_dmC].name, AOconf[loop].AOcompute.GPU1, aoloopcontrol_var.GPUset1, 1, AOconf[loop].AOcompute.GPUusesem, 1, loop);
         AOconf[loop].AOtiminginfo.status = 12;
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[32] = tdiffv;
 
         GPU_loop_MultMat_execute(1, &AOconf[loop].AOtiminginfo.status, &AOconf[loop].AOtiminginfo.GPUstatus[0], 1.0, 0.0, 1, 30);
@@ -229,8 +228,8 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     //imageID     IDmodecoeffs;
     int         GPUcnt, k;
     int        *GPUsetM;
-    int_fast8_t GPUstatus[100];
-    int_fast8_t status;
+    int         GPUstatus[100];
+    int         status;
     float       alpha = 1.0;
     float       beta = 0.0;
     int         initWFSref = 0;
@@ -383,8 +382,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
 
         AOconf[loop].AOtiminginfo.statusM = 10;
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[7] = tdiffv;
 
 
@@ -412,8 +410,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
         //		if(GPUMATMULTCONFindex==0)
         AOconf[loop].AOtiminginfo.statusM = 20;
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
 
         processinfo_exec_end(processinfo);
