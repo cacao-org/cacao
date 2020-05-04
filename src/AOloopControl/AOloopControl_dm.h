@@ -14,7 +14,7 @@ typedef struct
     uint32_t sizeDM;                     /**< DM total image (= x size * y size) */
     uint32_t activeDMcnt;                /**< number of active actuators */
     uint32_t sizeDM_active;              /**< only takes into account DM actuators that are active/in use */
-	
+
 } AOLOOPCONF_DMctrl;
 
 

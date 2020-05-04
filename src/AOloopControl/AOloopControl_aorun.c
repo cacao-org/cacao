@@ -1041,7 +1041,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 AOconf[loop].AOtiminginfo.status = 12; // 12
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiffv = timespec_diff_double(
-                            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
+                             data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[19] = tdiffv;
 
 
@@ -1078,7 +1078,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                         AOconf[loop].AOtiminginfo.status = 13; // enforce limits
                         clock_gettime(CLOCK_REALTIME, &tnow);
                         tdiffv = timespec_diff_double(
-                                    data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
+                                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[20] = tdiffv;
 
 
@@ -1111,7 +1111,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                         AOconf[loop].AOtiminginfo.status = 14; // write to DM
                         clock_gettime(CLOCK_REALTIME, &tnow);
                         tdiffv = timespec_diff_double(
-                                    data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
+                                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[21] = tdiffv;
 
                         COREMOD_MEMORY_image_set_sempost_byID(aoloopcontrol_var.aoconfID_dmC, -1);
@@ -1137,7 +1137,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 AOconf[loop].AOtiminginfo.status = 18; // 18
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiffv = timespec_diff_double(
-                            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
+                             data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[22] = tdiffv;
 
                 AOconf[loop].aorun.cnt++;
