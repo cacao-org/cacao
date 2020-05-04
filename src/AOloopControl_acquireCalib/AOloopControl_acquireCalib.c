@@ -3689,7 +3689,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
     sizearray[0] = AOconf[loop].WFSim.sizexWFS;
     sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
-    printf("WFS size = %ld %ld\n", AOconf[loop].WFSim.sizexWFS,
+    printf("WFS size = %u %u\n", AOconf[loop].WFSim.sizexWFS,
            AOconf[loop].WFSim.sizeyWFS);
     fflush(stdout);
     aoloopcontrol_var.aoconfID_imWFS1 = create_image_ID(name, 2, sizearray,
