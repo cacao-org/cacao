@@ -8,8 +8,6 @@
  * 
  */
 
-
-
 #include <stdint.h>
 #include <unistd.h>
 #include <malloc.h>
@@ -33,6 +31,7 @@
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "COREMOD_tools/COREMOD_tools.h"
+
 #include "fft/fft.h"
 #include "info/info.h"
 #include "statistic/statistic.h"
@@ -41,24 +40,8 @@
 
 #include "AOloopControl_DM/AOloopControl_DM.h"
 
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct mach_timespec *t){
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t time;
-    time = mach_absolute_time();
-    double nseconds = ((double)time * (double)timebase.numer)/((double)timebase.denom);
-    double seconds = ((double)time * (double)timebase.numer)/((double)timebase.denom * 1e9);
-    t->tv_sec = seconds;
-    t->tv_nsec = nseconds;
-    return 0;
-}
-#else
+
 #include <time.h>
-#endif
 
 
 
