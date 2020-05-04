@@ -674,8 +674,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
 
     clock_gettime(CLOCK_REALTIME, &t2);
-    tdiff = info_time_diff(t1, t2);
-    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv = timespec_diff_double(t1, t2);
     printf("\n");
     printf("TIME TO COMPUTE MATRIX = %f sec\n", tdiffv);
 
