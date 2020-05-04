@@ -28,7 +28,7 @@
 #include <pthread.h>
 
 #include "CommandLineInterface/CLIcore.h"
-
+#include "COREMOD_tools/COREMOD_tools.h"
 #include "info/info.h"
 
 #include "AOloopControl/AOloopControl.h"
@@ -1359,8 +1359,7 @@ fflush(stdout);
     {
       //  AOconf[loop].AOtiminginfo.status = 20;  // 020: WAIT FOR IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[24] = tdiffv;
     }
     else
@@ -1603,8 +1602,7 @@ fflush(stdout);
     {
         AOconf[loop].AOtiminginfo.status = 1;  // 3->001: DARK SUBTRACT
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[0] = tdiffv;
 
         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].write = 1;
@@ -1843,8 +1841,7 @@ fflush(stdout);
     {
         AOconf[loop].AOtiminginfo.status = 2; // 4 -> 002 : COMPUTE TOTAL OF IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[1] = tdiffv;
     }
 
@@ -1932,8 +1929,7 @@ fflush(stdout);
     {
 //        AOconf[loop].AOtiminginfo.status = 3;  // 5 -> 003: NORMALIZE WFS IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[14] = tdiffv;
     }
 
@@ -1997,8 +1993,7 @@ fflush(stdout);
     if(RM==0)
     {
         clock_gettime(CLOCK_REALTIME, &tnow);
-        tdiff = info_time_diff(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime, tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[2] = tdiffv;
 
         if(AOconf[loop].AOcompute.GPUall==0)
@@ -2013,8 +2008,7 @@ fflush(stdout);
 
 
     // processing time
-    tdiff = info_time_diff(functionTestTimerStart, functionTestTimerEnd);
-    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv = timespec_diff_double(functionTestTimerStart, functionTestTimerEnd);
     //TEST TIMING
     /*
         if(tdiffv > 100.0e-6)
@@ -2025,8 +2019,7 @@ fflush(stdout);
     */
 
     // Total time
-    tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
-    tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+    tdiffv = timespec_diff_double(functionTestTimer00, functionTestTimerEnd);
 
 
     // Cam wait time
@@ -2046,8 +2039,7 @@ fflush(stdout);
     //TEST TIMING
     /*
     	// Total time
-        tdiff = info_time_diff(functionTestTimer00, functionTestTimerEnd);
-        tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
+        tdiffv = timespec_diff_double(functionTestTimer00, functionTestTimerEnd);
 
             if(tdiffv > 600.0e-6) //imWaitTimeAve*1.2)
             {
