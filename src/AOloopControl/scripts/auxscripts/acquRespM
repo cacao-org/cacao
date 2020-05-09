@@ -128,7 +128,7 @@ loopnb=$( head -1 LOOPNUMBER )
 
 
 ./AOloopControl -n aolacqresp-$loopnb << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 readshmim aol${loopnb}_wfsdark
 aolacqresp $NBave $ampl $NBloops $fdelay $NBmat
 exitCLI

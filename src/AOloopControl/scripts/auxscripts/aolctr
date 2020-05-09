@@ -89,7 +89,7 @@ fi
 
 echo "pname = $pname"
 
-echo "aolnb ${loopnb}" > aol${loopnb}startup.txt
+echo "cacao.aolnb ${loopnb}" > aol${loopnb}startup.txt
 echo "readshmim aol${loopnb}_wfsref" >> aol${loopnb}startup.txt
 echo "readshmim aol${loopnb}_respM" >> aol${loopnb}startup.txt
 echo "readshmim aol${loopnb}_contrM" >> aol${loopnb}startup.txt

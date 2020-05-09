@@ -146,7 +146,7 @@ dir="conf_staged"
 
 
 $execnamestring -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 loadfits "./conf/extrablockM.fits" extrablockM
 loadfits "./${dir}/dmslaved.fits" dmslaved
 loadfits "./${dir}/zrespM.fits" zrespM
@@ -156,7 +156,7 @@ loadfits "./${dir}/LOrespM.fits" RMMresp
 loadfits "./${dir}/LODMmodes.fits" RMMmodes
 loadfits "./${dir}/ExcludedModes.fits" emodes
 readshmim aol${loopnb}_dmC
-imstats aol${loopnb}_dmC
+info.imstats aol${loopnb}_dmC
 cx=0.5*imsize0-0.5
 cy=0.5*imsize1-0.5
 od=0.42*imsize0

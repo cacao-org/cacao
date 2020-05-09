@@ -139,7 +139,7 @@ pname="aol${loopnb}zrespM"
 
 
 ./AOloopControl -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 csetpmove ${CPUset}
 loadfits "./conf/RMpokeCube.fits" RMpokeCube
 aolmeaszrm $1 $2 ${delayRM1us} $3 $4 zrespmat wfsref0 wfsmap dmmap 1 $5 ${AOinitMode} ${NBpokeCycle}

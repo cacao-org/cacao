@@ -16,6 +16,7 @@
 
 See @ref page_installation for detailed instructions.
 
+[milk-package](https://github.com/milk-org/milk-package) must be installed first, and is not factored in cacao anymore.
 
 After installing the required packages, the main steps will be:
 
@@ -31,13 +32,10 @@ After installing the required packages, the main steps will be:
 
 
 
-## Post installation configuration {#page_cacaoSetup_postinstall}
+## Post-installation configuration {#page_cacaoSetup_postinstall}
 
 
-If milk is not installed, create sym link milk->cacao
-
-	sudo ln -s /usr/local/bin/cacao /usr/local/bin/milk
-
+If you're managing multiple versions on the same machine, as for milk-package, ensure simlink folders '/usr/local/cacao' and '/usr/local/milk' are appropriate.
 
 
 ---

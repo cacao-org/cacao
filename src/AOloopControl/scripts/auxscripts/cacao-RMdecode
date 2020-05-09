@@ -125,14 +125,14 @@ pname="aol${loopnb}zrespM"
 
 
 OMP_NUM_THREADS=6 ./AOloopControl -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 loadfits "./${stageddir}/tmpRMacqu/RMpokeCube.fits" RMpokeC
 loadfits "./${stageddir}/tmpRMacqu/RMmat.fits" RMmat
 loadfits "./${stageddir}/tmpRMacqu/RMpixindex.fits" pixindexim
 loadfits "./${stageddir}/tmpRMacqu/respM.fits" respm
 loadfits "./${stageddir}/tmpRMacqu/wfsref.fits" wfsref0
 
-aolproczrm respm wfsref0 zrespm wfsmap dmmap
+cacaocc.aolproczrm respm wfsref0 zrespm wfsmap dmmap
 
 savefits zrespm "!./${stageddir}/tmpRMacqu/zrespM.fits"
 savefits wfsmap "!./${stageddir}/tmpRMacqu/wfsmap.fits"
@@ -161,14 +161,14 @@ if [ -f "$zrespM_filename" ]; then
 
 
 OMP_NUM_THREADS=6 ./AOloopControl -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 loadfits "./${stageddir}/tmpRMacqu/RMpokeCube.fits" RMpokeC
 loadfits "./${stageddir}/tmpRMacqu/RMmat.fits" RMmat
 loadfits "./${stageddir}/tmpRMacqu/RMpixindex.fits" pixindexim
 loadfits "$zrespM_filename" zrespmat0
 loadfits "$wfsref_filename" wfsref00
 
-aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
+cacaocc.aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
 
 savefits zrespmat "!./${stageddir}/tmpRMacqu/zrespM.ave${cntnum}.fits"
 listim

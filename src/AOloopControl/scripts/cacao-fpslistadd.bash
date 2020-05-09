@@ -144,7 +144,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}      cudaextrmodes       ${fpsarg0}"  >> fpslist.txt
+echo "${fpsname}      cuda.cudaextrmodes       ${fpsarg0}"  >> fpslist.txt
 
 # time delay [us]
 LINSIMDT="10000" 
@@ -203,7 +203,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}           aoltestlat     ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}           cacaopt.aoltestlat     ${fpsarg0}" >> fpslist.txt
 
 fpscmd "setval ${fpsfname}.NBiter 20"
 fpscmd "setval ${fpsfname}.sn_dm aol${CACAO_LOOPNUMBER}_dmRM"
@@ -234,7 +234,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}           aolacquireWFSloop     ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}           cacaoio.aolacquireWFSloop     ${fpsarg0}" >> fpslist.txt
 
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
@@ -273,7 +273,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}           aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
@@ -328,7 +328,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}           aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
@@ -405,7 +405,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}         aolcomputeCM       ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}         cacaocc.aolcomputeCM       ${fpsarg0}" >> fpslist.txt
 
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
@@ -488,7 +488,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}         cudaextrmodes       ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}         cuda.cudaextrmodes       ${fpsarg0}" >> fpslist.txt
 
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
@@ -549,7 +549,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}         aolrun       ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}         cacao.aolrun       ${fpsarg0}" >> fpslist.txt
 
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 fpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_imWFS1"

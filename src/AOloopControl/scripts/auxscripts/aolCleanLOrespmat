@@ -95,7 +95,7 @@ pname="aol${loopnb}cLOrespM"
 
 
 ./AOloopControl -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 loadfits "respM_LOmodes.fits" RMpokeC
 aolcleanzrm LOrespmat wfsref0 wfsmap dmmap $1 $2
 savefits LOrespmat "!LOrespmat.fits"

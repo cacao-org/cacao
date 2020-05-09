@@ -128,14 +128,14 @@ pname="aol${loopnb}zrespM"
 
 
 OMP_NUM_THREADS=6 ./AOloopControl -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 loadfits "./conf/RMpokeCube.fits" RMpokeC
 loadfits "./conf/RMmat.fits" RMmat
 loadfits "./conf/RMpixindex.fits" pixindexim
 loadfits zrespmat0.fits zrespmat0
 loadfits wfsref00.fits wfsref00
 
-aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
+cacaocc.aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
 
 savefits zrespmat "!zrespM.fits"
 savefits wfsmap "!wfsmap.fits"
@@ -158,14 +158,14 @@ if [ -f "$zrespM_filename" ]; then
 
 
 OMP_NUM_THREADS=6 ./AOloopControl -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 loadfits "./conf/RMpokeCube.fits" RMpokeC
 loadfits "./conf/RMmat.fits" RMmat
 loadfits "./conf/RMpixindex.fits" pixindexim
 loadfits "$zrespM_filename" zrespmat0
 loadfits "$wfsref_filename" wfsref00
 
-aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
+cacaocc.aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
 
 savefits zrespmat "!./tmpRMacquZ/zrespM.ave${cntnum}.fits"
 listim

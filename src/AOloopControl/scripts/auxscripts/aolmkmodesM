@@ -131,7 +131,7 @@ execnamestring="./AOloopControl"
 NBmblock=$( head -1 conf/conf_NBmodeblocks.txt )
 
 $execnamestring -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 loadfits "./conf/aol${loopnb}_zrespM.fits" zrespM
 loadfits "./conf/aol${loopnb}_wfsmask.fits" wfsmask
 aolmkmodesM zrespM ${NBmblock} ${Cmblock} $2

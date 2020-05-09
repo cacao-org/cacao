@@ -146,10 +146,10 @@ pname="aol${loopnb}LOrespM"
 rm ./tmpRMacqu/*
 
 ./AOloopControl -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 csetpmove ${CPUset}
 loadfits respM_LOmodes.fits RMpokeCube
-aolmeaslWFSrespC ${PokeAmpl} ${PokeDelay_fr} ${delayRM1us} ${PokeAveNB_fr} ${PokeNBExcl_fr} RMpokeCube LOwfsresp LOwfsref ${normalize_flag} ${AOinitMode} ${NBpokeCycle} ${NBpokeCycleInner}
+cacaoac.aolmeaslWFSrespC ${PokeAmpl} ${PokeDelay_fr} ${delayRM1us} ${PokeAveNB_fr} ${PokeNBExcl_fr} RMpokeCube LOwfsresp LOwfsref ${normalize_flag} ${AOinitMode} ${NBpokeCycle} ${NBpokeCycleInner}
 savefits LOwfsresp "!LOrespM.fits"
 savefits LOwfsref "!LOwfsref0.fits"
 listim

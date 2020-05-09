@@ -141,7 +141,7 @@ mkdir -p Cmodes
 mkdir -p tmp
 
 $execnamestring -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 loadfits "./conf/extrablockM.fits" extrablockM
 loadfits "./conf/aol${loopnb}_dmslaved.fits" dmslaved
 loadfits "./conf/aol${loopnb}_zrespM.fits" zrespM
@@ -151,7 +151,7 @@ loadfits "./conf/aol${loopnb}_LOrespM.fits" RMMresp
 loadfits "./conf/aol${loopnb}_LODMmodes.fits" RMMmodes
 loadfits "./conf/ExcludedModes.fits" emodes
 readshmim aol${loopnb}_dmC
-imstats aol${loopnb}_dmC
+info.imstats aol${loopnb}_dmC
 cx=0.5*imsize0-0.5
 cy=0.5*imsize1-0.5
 od=0.42*imsize0

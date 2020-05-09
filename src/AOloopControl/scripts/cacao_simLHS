@@ -387,8 +387,8 @@ fi
 # col3: optional arg to ensure uniqueness and pass argument to process
 echo "DMcomb         aolcontrolDMcomb    $DMINDEX"  > fpslist.txt
 echo "streamDelay    streamdelay         $DMINDEX"  >> fpslist.txt
-echo "simmvmgpu      cudaextrmodes       $LOOPNUMBER"  >> fpslist.txt
-echo "mlat           aoltestlat" >> fpslist.txt
+echo "simmvmgpu      cuda.cudaextrmodes       $LOOPNUMBER"  >> fpslist.txt
+echo "mlat           cacaopt.aoltestlat" >> fpslist.txt
 
 
 

@@ -133,7 +133,7 @@ pname0=$0
 pname="aol${loopnb}LOrespM"
 
 ./AOloopControl -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 csetpmove ${CPUset}
 loadfits respM_LOmodes.fits RMpokeCube
 aolmeaszrm $1 $2 ${delayRM1us} $3 $4 LOrespmat LOwfsref0 wfsmap dmmap 1 $5 ${AOinitMode} ${NBpokeCycle}

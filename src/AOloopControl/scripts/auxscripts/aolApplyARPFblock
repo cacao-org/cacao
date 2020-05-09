@@ -159,8 +159,8 @@ applyARpfilt Pfilt olwfsmeasblk $4 outrec
 savefits outrec "!./PredictiveControl/outPFrec.$3.fits"
 savefits outf "!./PredictiveControl/outPFf.$3.fits"
 res=outrec-outf
-imstats res
-imstats olwfsmeasblk
+info.imstats res
+info.imstats olwfsmeasblk
 exitCLI
 EOF
 

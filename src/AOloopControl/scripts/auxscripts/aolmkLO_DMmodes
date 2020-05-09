@@ -114,13 +114,13 @@ mkdir -p tmp
 zrmstageddir="./conf_zrm_staged"
 
 ./AOloopControl -n $pname << EOF
-aolnb $loopnb
+cacao.aolnb $loopnb
 loadfits "dmslaved.fits" dmslaved0
 imtrunc dmslaved0 0.0 1.0 dmslaved
 loadfits "dmmask.fits" dmmask
 loadfits "./conf/TPind.fits" emodes
 readshmim aol${loopnb}_dmC
-imstats aol${loopnb}_dmC
+info.imstats aol${loopnb}_dmC
 cx=0.5*imsize0-0.5
 cy=0.5*imsize1-0.5
 od=0.42*imsize0

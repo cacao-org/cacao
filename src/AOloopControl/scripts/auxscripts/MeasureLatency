@@ -105,7 +105,7 @@ loopnb=$( head -1 LOOPNUMBER )
 readshmim aol${loopnb}_wfsim
 readshmim aol${loopnb}_dmC
 listim
-aoltestlat aol${loopnb}_dmC aol${loopnb}_wfsim $1 $2
+cacaopt.aoltestlat aol${loopnb}_dmC aol${loopnb}_wfsim $1 $2
 savefits _testwfsc "!./timingstats/test_latencyC.fits"
 exitCLI
 EOF

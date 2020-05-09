@@ -472,8 +472,8 @@ checkFile $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash
 
 checkCommand tmux
 checkCommand milk-fpsCTRL
-checkCommand milkStreamLink
-checkCommand milkFits2shm
+checkCommand milk-streamlink
+checkCommand milk-FITS2shm
 checkCommand milk-fpsmkcmd
 
 if [ "${TTYMODE}" = "1" ]; then
@@ -886,7 +886,7 @@ if [ "$UPDATEMODE" = "0" ]; then
 
 # link WFS
 echo "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
-milkStreamLink -p aol${LOOPNUMBER}_ wfsim
+milk-streamlink -p aol${LOOPNUMBER}_ wfsim
 
 fi
 
