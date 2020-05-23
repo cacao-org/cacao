@@ -346,6 +346,7 @@ set(BUILD_FLAGS "-DPACKAGE_NAME=\\\"${PROJECT_NAME}\\\" -DCONFIGDIR=\\\"${PROJEC
 
 foreach(lname IN LISTS libname)
 target_link_libraries (${PROJECT_NAME} PUBLIC "${lname}" )
+message( "TARGET LINK LIBRARY  : ${lname}" )
 endforeach()
 
 
