@@ -265,6 +265,7 @@ message("====================================================")
 # recursively add libraries to be compiled
 
 foreach(lsrcdir IN LISTS libsrcdir)
+message( "===== ADDING SUBDIRECTORY  ${lsrcdir}" )
 add_subdirectory ( "${lsrcdir}" )
 endforeach()
 
