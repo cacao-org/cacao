@@ -1,0 +1,47 @@
+#!/bin/bash
+
+
+# FATAL exit code
+CACAOTASK_EXITCODE_NOTCACAOTASK=64
+
+#
+# Check that this script is executed from cacaotask
+# If not, print error message and exit
+#
+function taskerrormsg {
+echo "ERROR: This is a cacaotask script"
+echo "       It is meant to be executed as part of a deployment script"
+echo "       Check cacaotask script for details"
+}
+
+#echo "cacaotaskENV : ${cacaotaskENV}"
+if [ ! "${cacaotaskENV:-}" = "OK" ]; then
+taskerrormsg
+exit ${CACAOTASK_EXITCODE_NOTCACAOTASK}
+fi
+
+# ======================================================================
+
+cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
+
+cd ${WORKDIRECTORY}
+
+cacao-setup -t ${LOOPNAME}
+
+# check if successful
+if [ "$?" = 0 ]; then
+	cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
+else
+	cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
+fi
+
+
+echo "rm -f $WORKDIRECTORY/log/*.log" >> ${CLEANSCRIPT}
+echo "rmdir $WORKDIRECTORY/log" >> ${CLEANSCRIPT}
+
+cd ${CURRENTDIR}
+
+
+
+
+

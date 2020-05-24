@@ -69,6 +69,11 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao.tmux
 	scripts/cacao-fpslistadd.bash
 	scripts/cacao_simLHS
+	scripts/cacaotask-INITSETUP
+	scripts/cacaotask-GETSIMCONFFILES
+	scripts/cacaotask-TESTCONFIG
+	scripts/cacaotask-CACAOSETUP
+	scripts/cacaotask-STARTDMCOMB
 	DESTINATION bin)
 
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})

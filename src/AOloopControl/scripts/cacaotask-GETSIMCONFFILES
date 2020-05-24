@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+mkdir -p $WORKDIRECTORY/simLHS
+cd $CONFDIR/simLHS/
+FLIST=($(ls *.get.bash))
+for gfile in "${FLIST[@]}"
+do
+source $gfile
+done
+
+cd ${CURRENTDIR}
+cp $CONFDIR/simLHS/*.fits $WORKDIRECTORY/simLHS/
+
+echo "rm $WORKDIRECTORY/simLHS/*" >> ${CLEANSCRIPT}
+echo "rmdir $WORKDIRECTORY/simLHS" >> ${CLEANSCRIPT}
+
+# copy test configuration files to work directory
+cp $CONFDIR/cacaovars.${LOOPNAME}.bash $WORKDIRECTORY/
+echo "rm $WORKDIRECTORY/cacaovars.${LOOPNAME}.bash" >> ${CLEANSCRIPT}
+
+cp $CONFDIR/fpssetup.setval.${LOOPNAME}.conf $WORKDIRECTORY/
+echo "rm $WORKDIRECTORY/fpssetup.setval.${LOOPNAME}.conf" >> ${CLEANSCRIPT}
