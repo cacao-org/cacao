@@ -21,3 +21,4 @@ echo "rm $WORKDIRECTORY/cacaovars.${LOOPNAME}.bash" >> ${CLEANSCRIPT}
 
 cp $CONFDIR/fpssetup.setval.${LOOPNAME}.conf $WORKDIRECTORY/
 echo "rm $WORKDIRECTORY/fpssetup.setval.${LOOPNAME}.conf" >> ${CLEANSCRIPT}
+

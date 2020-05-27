@@ -74,6 +74,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacaotask-TESTCONFIG
 	scripts/cacaotask-CACAOSETUP
 	scripts/cacaotask-STARTDMCOMB
+	scripts/cacaotask-STARTSTREAMDELAY
 	DESTINATION bin)
 
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})

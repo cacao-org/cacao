@@ -27,3 +27,4 @@ cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
 
 echo "runstart DMcomb-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
 echo "echo \"runstop DMcomb-01\" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo" >> ${CLEANSCRIPT}
+echo "milk-shmimpurge" >> ${CLEANSCRIPT}

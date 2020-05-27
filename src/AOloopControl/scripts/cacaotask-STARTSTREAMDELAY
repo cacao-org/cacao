@@ -14,7 +14,6 @@ echo "       It is meant to be executed as part of a deployment script"
 echo "       Check cacaotask script for details"
 }
 
-#echo "cacaotaskENV : ${cacaotaskENV}"
 if [ ! "${cacaotaskENV:-}" = "OK" ]; then
 taskerrormsg
 exit ${CACAOTASK_EXITCODE_NOTCACAOTASK}
@@ -22,23 +21,10 @@ fi
 
 # ======================================================================
 
+cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
 
-# Perform action(s)
-mkdir -p ${WORKDIRECTORY}
+echo "confwupdate streamDelay-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
+echo "runstart streamDelay-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
 
-# check if successful
-if [ "$?" = 0 ]; then
-	cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
-else
-	cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
-fi
-
-# Write cleanup script for this step
-echo "rmdir ${WORKDIRECTORY}" >> ${CLEANSCRIPT}
-
-
-# store output environment variable
-
-# NEWVAR_INITSETUP=2
-# echo "NEWVAR_INITSETUP=${NEWVAR_INITSETUP}" >> ${ENVOUTFILE}
-
+echo "echo \"runstop streamDelay-01\" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo" >> ${CLEANSCRIPT}
+echo "milk-shmimpurge" >> ${CLEANSCRIPT}
