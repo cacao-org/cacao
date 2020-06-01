@@ -1179,7 +1179,16 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 array_PokeIndex1Mapped[imcnt] = PokeIndex1Mapped;
                 imcnt ++;
 
-                Read_cam_frame(loop, 1, normalize, 0, 0);
+                int NBmissedframe = Read_cam_frame(loop, 1, normalize, 0, 0);
+                if(NBmissedframe > 0) {
+					printf("Warning: missed %d frame(s)\n", NBmissedframe);
+					printf("     PokeIndex   %d / %d\n", (int) Pokeindex, (int) NBpoke);
+					printf("     kk          %d\n", kk);
+					printf("     NBave       %d\n", NBave);
+					printf("     kk1         %d\n", kk1);
+					printf("     PokeIndex1  %d\n", PokeIndex1);
+				}
+                
 
 
                 if(kk < NBave) { // Capture signal
@@ -1187,7 +1196,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                     //     data.image[IDoutC].array.F[PokeIndexMapped*sizeWFS+ii] += data.image[ID_imWFS1].array.F[ii];
                     ptr = (char *) data.image[IDoutCstep[kk]].array.F;
                     ptr += sizeof(float) * PokeIndexMapped * sizeWFS;
-                    memcpy(ptr, data.image[ID_imWFS1].array.F, sizeof(float)*sizeWFS); //NEW
+                    memcpy(ptr, data.image[ID_imWFS1].array.F, sizeof(float)*sizeWFS); 
                     array_accum[imcnt] = 1;
                 }
                 kk1++;
