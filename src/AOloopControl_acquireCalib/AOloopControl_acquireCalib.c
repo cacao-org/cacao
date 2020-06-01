@@ -1375,7 +1375,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
                 if(NBmissedframe > 0)
                 {
                     printf("Warning: missed %d frame(s)\n", NBmissedframe);
-                    printf("     PokeIndex   %d / %d\n", (int) Pokeindex, (int) NBpoke);
+                    printf("     PokeIndex   %d / %d\n", (int) PokeIndex, (int) NBpoke);
                     printf("     kk          %d\n", kk);
                     printf("     NBave       %d\n", NBave);
                     printf("     kk1         %d\n", kk1);
