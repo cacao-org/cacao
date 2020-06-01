@@ -42,6 +42,7 @@
 
 
 #include <math.h>
+#include <assert.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <malloc.h>
@@ -50,27 +51,8 @@
 #include <sys/stat.h>
 #include <pthread.h>
 
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct mach_timespec *t)
-{
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t time;
-    time = mach_absolute_time();
-    double nseconds = ((double)time * (double)timebase.numer) / ((
-                          double)timebase.denom);
-    double seconds = ((double)time * (double)timebase.numer) / ((
-                         double)timebase.denom * 1e9);
-    t->tv_sec = seconds;
-    t->tv_nsec = nseconds;
-    return 0;
-}
-#else
+
 #include <time.h>
-#endif
 
 
 
@@ -124,8 +106,8 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
 //extern long aoloopcontrol_var.aoconfID_imWFS1;
 //extern long aoloopcontrol_var.aoconfID_cmd_modesRM;
 
-static int RMACQUISITION =
-    0;  // toggles to 1 when resp matrix is being acquired
+static int RMACQUISITION = 0;  
+ // toggles to 1 when resp matrix is being acquired
 
 extern long LOOPNUMBER; // current loop index
 extern int AOloopcontrol_meminit; // declared in AOloopControl_compTools.c
@@ -190,10 +172,10 @@ INIT_MODULE_LIB(AOloopControl_acquireCalib)
 errno_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli()
 {
     if(
-        CLI_checkarg(1, 4) +
-        CLI_checkarg(2, 2) +
-        CLI_checkarg(3, 5) +
-        CLI_checkarg(4, 5)
+        CLI_checkarg(1, CLIARG_IMG) +
+        CLI_checkarg(2, CLIARG_LONG) +
+        CLI_checkarg(3, CLIARG_STR) +
+        CLI_checkarg(4, CLIARG_STR)
         == 0)
     {
         AOloopControl_acquireCalib_mkRandomLinPokeSequence(
@@ -217,14 +199,14 @@ errno_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli()
 errno_t AOloopControl_acquireCalib_RespMatrix_Fast_cli()
 {
     if(
-        CLI_checkarg(1, 4) +
-        CLI_checkarg(2, 4) +
-        CLI_checkarg(3, 4) +
-        CLI_checkarg(4, 2) +
-        CLI_checkarg(5, 1) +
-        CLI_checkarg(6, 1) +
-        CLI_checkarg(7, 1) +
-        CLI_checkarg(8, 3)
+        CLI_checkarg(1, CLIARG_IMG) +
+        CLI_checkarg(2, CLIARG_IMG) +
+        CLI_checkarg(3, CLIARG_IMG) +
+        CLI_checkarg(4, CLIARG_LONG) +
+        CLI_checkarg(5, CLIARG_FLOAT) +
+        CLI_checkarg(6, CLIARG_FLOAT) +
+        CLI_checkarg(7, CLIARG_FLOAT) +
+        CLI_checkarg(8, CLIARG_STR_NOT_IMG)
         == 0)
     {
         AOloopControl_acquireCalib_RespMatrix_Fast(
@@ -251,16 +233,16 @@ errno_t AOloopControl_acquireCalib_RespMatrix_Fast_cli()
 errno_t AOloopControl_acquireCalib_Measure_WFSrespC_cli()
 {
     if(
-        CLI_checkarg(1, 2) +
-        CLI_checkarg(2, 2) +
-        CLI_checkarg(3, 2) +
-        CLI_checkarg(4, 2) +
-        CLI_checkarg(5, 4) +
-        CLI_checkarg(6, 5) +
-        CLI_checkarg(7, 2) +
-        CLI_checkarg(8, 2) +
-        CLI_checkarg(9, 2) +
-        CLI_checkarg(10, 2)
+        CLI_checkarg(1, CLIARG_LONG) +
+        CLI_checkarg(2, CLIARG_LONG) +
+        CLI_checkarg(3, CLIARG_LONG) +
+        CLI_checkarg(4, CLIARG_LONG) +
+        CLI_checkarg(5, CLIARG_IMG) +
+        CLI_checkarg(6, CLIARG_STR) +
+        CLI_checkarg(7, CLIARG_LONG) +
+        CLI_checkarg(8, CLIARG_LONG) +
+        CLI_checkarg(9, CLIARG_LONG) +
+        CLI_checkarg(10, CLIARG_LONG)
         == 0)
     {
         AOloopControl_acquireCalib_Measure_WFSrespC(
@@ -311,18 +293,18 @@ errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli()
 
     // call non FPS implementation - all parameters specified at function launch
     if(
-        CLI_checkarg(1, 1) +
-        CLI_checkarg(2, 2) +
-        CLI_checkarg(3, 2) +
-        CLI_checkarg(4, 2) +
-        CLI_checkarg(5, 2) +
-        CLI_checkarg(6, 4) +
-        CLI_checkarg(7, 5) +
-        CLI_checkarg(8, 5) +
-        CLI_checkarg(9, 2) +
-        CLI_checkarg(10, 2) +
-        CLI_checkarg(11, 2) +
-        CLI_checkarg(12, 2)
+        CLI_checkarg(1, CLIARG_FLOAT) +
+        CLI_checkarg(2, CLIARG_LONG) +
+        CLI_checkarg(3, CLIARG_LONG) +
+        CLI_checkarg(4, CLIARG_LONG) +
+        CLI_checkarg(5, CLIARG_LONG) +
+        CLI_checkarg(6, CLIARG_IMG) +
+        CLI_checkarg(7, CLIARG_STR) +
+        CLI_checkarg(8, CLIARG_STR) +
+        CLI_checkarg(9, CLIARG_LONG) +
+        CLI_checkarg(10, CLIARG_LONG) +
+        CLI_checkarg(11, CLIARG_LONG) +
+        CLI_checkarg(12, CLIARG_LONG)
         == 0)
     {
         AOloopControl_acquireCalib_Measure_WFS_linResponse(
@@ -358,19 +340,19 @@ errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli()
 errno_t AOloopControl_acquireCalib_Measure_zonalRM_cli()
 {
     if(
-        CLI_checkarg(1, 1) +
-        CLI_checkarg(2, 2) +
-        CLI_checkarg(3, 2) +
-        CLI_checkarg(4, 2) +
-        CLI_checkarg(5, 2) +
-        CLI_checkarg(6, 3) +
-        CLI_checkarg(7, 3) +
-        CLI_checkarg(8, 3) +
-        CLI_checkarg(9, 3) +
-        CLI_checkarg(10, 2) +
-        CLI_checkarg(11, 2) +
-        CLI_checkarg(12, 2) +
-        CLI_checkarg(13, 2)
+        CLI_checkarg(1, CLIARG_FLOAT) +
+        CLI_checkarg(2, CLIARG_LONG) +
+        CLI_checkarg(3, CLIARG_LONG) +
+        CLI_checkarg(4, CLIARG_LONG) +
+        CLI_checkarg(5, CLIARG_LONG) +
+        CLI_checkarg(6, CLIARG_STR_NOT_IMG) +
+        CLI_checkarg(7, CLIARG_STR_NOT_IMG) +
+        CLI_checkarg(8, CLIARG_STR_NOT_IMG) +
+        CLI_checkarg(9, CLIARG_STR_NOT_IMG) +
+        CLI_checkarg(10, CLIARG_LONG) +
+        CLI_checkarg(11, CLIARG_LONG) +
+        CLI_checkarg(12, CLIARG_LONG) +
+        CLI_checkarg(13, CLIARG_LONG)
         == 0)
     {
         AOloopControl_acquireCalib_Measure_zonalRM(
@@ -403,11 +385,11 @@ errno_t AOloopControl_acquireCalib_Measure_zonalRM_cli()
 errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli()
 {
     if(
-        CLI_checkarg(1, 2) +
-        CLI_checkarg(2, 1) +
-        CLI_checkarg(3, 2) +
-        CLI_checkarg(4, 2) +
-        CLI_checkarg(5, 2)
+        CLI_checkarg(1, CLIARG_LONG) +
+        CLI_checkarg(2, CLIARG_FLOAT) +
+        CLI_checkarg(3, CLIARG_LONG) +
+        CLI_checkarg(4, CLIARG_LONG) +
+        CLI_checkarg(5, CLIARG_LONG)
         == 0)
     {
         AOloopControl_acquireCalib_Measure_Resp_Matrix(LOOPNUMBER,
@@ -431,12 +413,12 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli()
 errno_t AOloopControl_acquireCalib_RMseries_deinterlace_cli()
 {
     if(
-        CLI_checkarg(1, 2) +
-        CLI_checkarg(2, 2) +
-        CLI_checkarg(3, 2) +
-        CLI_checkarg(4, 3) +
-        CLI_checkarg(5, 2) +
-        CLI_checkarg(6, 2)
+        CLI_checkarg(1, CLIARG_LONG) +
+        CLI_checkarg(2, CLIARG_LONG) +
+        CLI_checkarg(3, CLIARG_LONG) +
+        CLI_checkarg(4, CLIARG_STR_NOT_IMG) +
+        CLI_checkarg(5, CLIARG_LONG) +
+        CLI_checkarg(6, CLIARG_LONG)
         == 0)
     {
         AOloopControl_acquireCalib_RMseries_deinterlace(
@@ -1865,6 +1847,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     static unsigned long connection_count_1 = 0;
     static unsigned long connection_count_2 = 0;
 
+
+
+
     // ===========================
     // SETUP FPS
     // ===========================
@@ -1875,17 +1860,20 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
         fps.md->sourceline = __LINE__;*/
 
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
-
+	printf("TIME TO START\n");//TEST
     //	int SMfd_mlat = -1;
     //	int SMfd_DMcomb = -1;
 
 
-    // ===========================
+    // =========================================
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
-    // ===========================
+    // =========================================
     void *pNull = NULL;
     uint64_t FPFLAG;
 
+
+    struct timespec tt0; //TEST	
+    clock_gettime(CLOCK_REALTIME, &tt0); //TEST
 
     long loop_default[4] = { 0, 0, 10, 0 };
     __attribute__((unused)) long fpi_loop =
@@ -2062,7 +2050,6 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
 
-
     // on/off parameters
     __attribute__((unused)) long fpi_normalize =
         function_parameter_add_entry(&fps, ".normalize",
@@ -2096,6 +2083,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                                      FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &LOmaxCPA_default);
 
 
+	struct timespec tt1; //TEST
+    clock_gettime(CLOCK_REALTIME, &tt1); //TEST
+
     // External scripts (post)
     __attribute__((unused)) long fpi_exec_post_RMdecode =
         function_parameter_add_entry(&fps, ".exec.RMdecode",
@@ -2118,6 +2108,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
 
 
+	struct timespec tt2;
+    clock_gettime(CLOCK_REALTIME, &tt2); //TEST
 
 
     long fpi_FPS_mlat = function_parameter_add_entry(&fps, ".FPS_mlat",
@@ -2135,13 +2127,48 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX = 0;
 
 
-    if(fps.loopstatus == 0)   // stop fps
+
+
+
+	struct timespec tt3; //TEST
+    clock_gettime(CLOCK_REALTIME, &tt3); //TEST
+
+
+
+    
+
     {
-        return RETURN_SUCCESS;
+		struct timespec tdiff;
+		double tdiffv;
+		
+        FILE *fptest;
+        fptest = fopen("timing.txt", "w");
+        
+        fprintf(fptest, "%s  %d\n", data.FPS_name, data.FPS_CMDCODE);
+
+		tdiff =  timespec_diff(tt0, tt1);
+		tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        fprintf(fptest, "%6.3f s \n", tdiffv);
+
+		tdiff =  timespec_diff(tt1, tt2);
+		tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        fprintf(fptest, "%6.3f s \n", tdiffv);
+
+		tdiff =  timespec_diff(tt2, tt3);
+		tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        fprintf(fptest, "%6.3f s \n", tdiffv);
+
+        fclose(fptest);
     }
 
 
 
+
+    if(fps.loopstatus == 0)   // stop fps
+    {
+		printf("TIME TO RETURN\n");//TEST
+        return RETURN_SUCCESS;
+    }
 
 
     // =====================================
@@ -2155,7 +2182,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                 1)  // Apply logic if update is needed
         {
 
-            printf("======== connecting to aux FPS ============\n");//TBE
+            printf("======== connecting to aux FPS %s %d ============\n", __FILE__, __LINE__);//TBE
             fflush(stdout);
 
             //
@@ -2326,8 +2353,6 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
             fflush(stdout);
 
         }
-
-
     }
 
     if(fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX > 0)
@@ -3592,7 +3617,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
     float *arrayf;
     char fname[200];
     char name[200];
-    char command[200];
+//    char command[200];
     imageID IDpos, IDneg;
     float rms;
     uint32_t *sizearray;
@@ -4382,7 +4407,8 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 data.image[IDrefi].array.F[ii] = 0.0;
             }
 
-            for(uint64_t ii = 0; ii < AOconf[loop].WFSim.sizeWFS * RespMatNBframes; ii++)
+			assert(RespMatNBframes > 0);
+            for(uint64_t ii = 0; ii < AOconf[loop].WFSim.sizeWFS * (unsigned long) RespMatNBframes; ii++)
             {
                 data.image[IDrmc].array.F[ii] = 0.0;
             }
@@ -4473,8 +4499,9 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                     }
                 }
             }
-
-            for(uint64_t ii = 0; ii < AOconf[loop].WFSim.sizeWFS * RespMatNBframes; ii++)
+			
+			assert(RespMatNBframes>0);
+            for(uint64_t ii = 0; ii < AOconf[loop].WFSim.sizeWFS * (unsigned long) RespMatNBframes; ii++)
             {
                 data.image[IDrmc].array.F[ii] /= NBloops;
             }
