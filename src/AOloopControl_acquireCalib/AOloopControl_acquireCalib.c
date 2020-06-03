@@ -697,8 +697,138 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
  * ## Purpose
  *
  * Acquire WFS response to a series of DM patterns.\n
+ * Called by AOloopControl_acquireCalib_Measure_WFS_linResponse()\n
  *
- *
+ * 
+ * ## Description
+ * 
+ * 
+ * ### Overview
+ * 
+ * The function's main input is a set of actuator poke maps (IDpokeC_name),
+ * and its main output is the corresponding output sensor response 
+ * (IDoutC_name).
+ * 
+ * 
+ * ### Timing
+ * 
+ * Timing offset betwen actuator and sensor is specificed as a delay in unit
+ * of sensor frames. The delay is the sum of an integer number of sensor
+ * frames (delayfr) and an additional time delay in microsecond (delayRM1us).
+ * 
+ * NBave consecutive sensor frame(s) are averaged for each poke. NBexcl fram(s)
+ * are ignored between pokes to allow for actuator and sensor finite time
+ * responses and timing jitter.
+ * 
+ * If normalise is set to 1, then each sensor frame is normalized (its sum
+ * is set to unity). This is passed to the camera acquisition routine.
+ * 
+ * 
+ * ### Number of cycles
+ * 
+ * The measurement is repeated NBcycle times for averaging. If SequInitMode
+ * bitmask is zero, the same sequence of pokes is ran NBcycle times. Alternatively,
+ * if bit 0 is set, then pairs are swapped every 4 pokes. If bit 1 is set, 
+ * then adjacent pairs are swapped between cycles.
+ * 
+ * ### Example poke sequences
+ * 
+ * Numbers shows are index in the input poke cube
+ * 
+ * not bit set
+ *            00 01 02 03 04 05 06 07 08 09 10 11 12 ...
+ * cycle 0 :  00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 ...
+ * cycle 1 :  00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 ...
+ * -- each cycle is the same sequence of pokes ---
+ * 
+ * Following sequential pokes for index 07 :
+ * 
+ * ... 05 06 07 08 09 ...
+ * ... 05 06 07 08 09 ...
+ * 
+ * 
+ * bit 0 set (0x01)
+ *            00 01 02 03 04 05 06 07 08 09 10 11 12 ...
+ * swaps       <->         <->         <->         <->
+ * cycle 0 :  01 00 02 03 05 04 06 07 09 08 10 11 13 ...
+ * cycle 1 :  01 00 02 03 05 04 06 07 09 08 10 11 13 ...
+ * cycle 2 :  01 00 02 03 05 04 06 07 09 08 10 11 13 ...
+ * 
+ * Following sequential pokes for index 07 :
+ * 
+ * cycle 0 : ... 04 06 07 09 08 ...
+ * cycle 1 : ... 04 06 07 09 08 ...
+ * cycle 2 : ... 04 06 07 09 08 ... 
+ * 
+ * 
+ * 
+ * 
+ * bit 1 set (0x02)
+ *            00 01 02 03 04 05 06 07 08 09 10 11 12 ...
+ * swaps          <->   <->   <->   <->   <->   <->  
+ * cycle 0 :  00 02 01 04 03 06 05 08 07 10 09 12 11 ...
+ * swaps       <->   <->   <->   <->   <->   <->  
+ * cycle 1 :  02 00 04 01 06 03 08 05 10 07 12 09 14 ...
+ * swaps          <->   <->   <->   <->   <->   <->  
+ * cycle 2 :  02 04 00 06 01 08 03 10 05 12 07 14 09
+ * 
+ * Even poke indices more to the left, while odd ones move to the right.
+ * (except for poke 00, which moves to the right).
+ * 
+ * 
+ * Following sequential pokes for index 07 :
+ * 
+ * cycle 0 : ... 05 08 07 10 09 ...
+ * cycle 1 : ... 05 10 07 12 09 ...
+ * cycle 2 : ... 05 12 07 14 09 ...
+ * 
+ * before 07 : 08 10 12 14 16 18 ...
+ * k odd : (k+1)+2n 
+ * k even: (k-3)-2n
+ * 
+ * after  07 : 10 12 14 16 18 20 ...
+ * k odd : (k+3)+2n
+ * k even: (k-2)-2n
+ * 
+ * 
+ * bits 0 and 1 set (0x03)
+ *            00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22
+ * swaps       <->         <->         <->         <->         <->         <->
+ *            01 00 02 03 05 04 06 07 09 08 10 11 13 12 14 15 17 16 18 19 21 20 22
+ * swaps          <->   <->   <->   <->   <->   <->   <->   <->   <->   <->   <->
+ * cycle 0 :  01 02 00 05 03 06 04 09 07 10 08 13 11 14 12 17 15 18 16 21 19 22 20
+ * swaps       <->   <->   <->   <->   <->   <->   <->   <->   <->   <->   <->   <->
+ * cycle 1 :  02 01 05 00 06 03 09 04 10 07 13 08 12 11 17 12 18 15 21 16 22 19 
+ * swaps          <->   <->   <->   <->   <->   <->   <->   <->   <->   <->   <->
+ * cycle 2 :  02 05 01 06 00 09 03 10 04 13 07 12 08 17 11 18 12 21 15 22 16 
+ * swaps       <->   <->   <->   <->   <->   <->   <->   <->   <->   <->
+ * cycle 3 :  05 02 06 01 09 00 10 03 13 04 12 07 17 08 18 11 21 12 22 15
+ * swaps          <->   <->   <->   <->   <->   <->   <->   <->   <->   <->
+ * cycle 4 :  05 06 02 09 01 10 00 13 03 12 04 17 07 18 08 21 11 22 12
+ * swaps       <->   <->   <->   <->   <->   <->   <->   <->   <->   <->
+ * cycle 5 :  06 05 09 02 10 01 13 00 12 03 17 04 18 07 21 08 22 11 
+ * 
+ * Following sequential pokes for index 07 :
+ * 
+ * cycle 0 : ... 04 09 07 10 08 ...
+ * cycle 1 : ... 04 10 07 13 08 ...
+ * cycle 2 : ... 04 13 07 12 08 ...
+ * cycle 3 : ... 04 12 07 17 08 ...
+ * cycle 4 : ... 04 17 07 18 08 ...
+ * cycle 5 : ... 04 18 07 21 08 ...
+ * 
+ * before 07 : (09 10 13 12) (17 18
+ * (k+2 k+3 k+6 k+5) +8 each 4
+ * 
+ * after  07 : (10 13 12 17) (18 21
+ * (k+3 k+6 k+5 k+10) +8 each 4
+ * 
+ * 
+ * 
+ * ### Optional output
+ * 
+ * 
+ * 
  * ## Arguments
  *
  * @param[in]  loop            Loop index
@@ -712,18 +842,18 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
  * @param[in]  AOinitMode      AO structure initialization flag
  * @param[in]  NBcycle         Number of cycles averaged (outer)
  * @param[in]  SequInitMode    Sequence initialization mode bitmask
- *                             0x01  swap pairs every 4 indices
+ *                             0x01  swap pairs every 4 indices once
  *                             0x02 adjacent pairs are swapped between cycles
  *
  * AOinitMode = 0:  create AO shared mem struct
  * AOinitMode = 1:  connect only to AO shared mem struct
  *
- * INPUT : DMpoke_name : set of DM patterns
- * OUTPUT : WFSmap_name : WFS response maps
  *
  * USR1 signal will stop acquisition immediately
  * USR2 signal completes current cycles and stops acquisition
  *
+ * @note TODO: Issue DM command to be sent at a specified time in the future.
+ * 
  * @return IDoutC
  *
  */
@@ -1191,6 +1321,7 @@ long AOloopControl_acquireCalib_Measure_WFSrespC(
 
         if(SequInitMode & 0x02)
         {
+			// permut_offset switches between 0 and 1 between cycles
             permut_offset ++;
             if(permut_offset == 2)
             {
