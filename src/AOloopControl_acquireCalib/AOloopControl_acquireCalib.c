@@ -712,27 +712,10 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
     __attribute__((unused)) uint64_t FPFLAG;
 
 
+    FPS_CONFLOOP_START  // macro in function_parameter.h
 
-    if(fps.loopstatus == 0)   // stop fps
-    {
-        return RETURN_SUCCESS;
-    }
 
-    // =====================================
-    // PARAMETER LOGIC AND UPDATE LOOP
-    // =====================================
-    while(fps.loopstatus == 1)
-    {
-        if(function_parameter_FPCONFloopstep(&fps) ==
-                1)  // Apply logic if update is needed
-        {
-            // here goes the logic
-
-            functionparameter_CheckParametersAll(&fps);  // check all parameter values
-        }
-    }
-    function_parameter_FPCONFexit(&fps);
-
+    FPS_CONFLOOP_END  // macro in function_parameter.h
 
     return RETURN_SUCCESS;
 }
@@ -918,7 +901,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
  *
  *
  * ### Optional output
- * 
+ *
  * ## Arguments
  *
  * @param[in]  loop            Loop index
@@ -943,7 +926,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
  * USR2 signal completes current cycles and stops acquisition
  *
  * @note TODO: Issue DM command to be sent at a specified time in the future.
- * 
+ *
  * @return IDoutC
  *
  */
@@ -1028,8 +1011,8 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
 
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1; // Measure timing
-    processinfo->RT_priority = 80;  
-        // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+    processinfo->RT_priority = 80;
+    // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
 
 
     /** ## DETAILS, STEPS */
@@ -2290,8 +2273,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
 
+	
 
-    if(fps.loopstatus == 0)   // stop fps
+
+    if( ! fps.localstatus & FPS_LOCALSTATUS_CONFLOOP )   // stop fps
     {
         printf("TIME TO RETURN\n");//TEST
         return RETURN_SUCCESS;
@@ -2301,7 +2286,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while(fps.loopstatus == 1)
+    while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP )
     {
         usleep(50);
 
@@ -2494,6 +2479,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     }
 
     function_parameter_FPCONFexit(&fps);
+
+
 
 
     return RETURN_SUCCESS;
