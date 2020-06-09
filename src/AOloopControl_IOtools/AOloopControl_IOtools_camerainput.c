@@ -640,9 +640,9 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
 
 
 
-	FPS_CONFLOOP_START  // macro in function_parameter.h
+    FPS_CONFLOOP_START  // macro in function_parameter.h
 
-	FPS_CONFLOOP_END  // macro in function_parameter.h
+    FPS_CONFLOOP_END  // macro in function_parameter.h
 
     return RETURN_SUCCESS;
 }
