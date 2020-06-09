@@ -1,30 +1,32 @@
 #!/bin/bash
 
+# check environment
+source cacaotask-check
 
-# FATAL exit code
-CACAOTASK_EXITCODE_NOTCACAOTASK=64
-
-#
-# Check that this script is executed from cacaotask
-# If not, print error message and exit
-#
-function taskerrormsg {
-echo "ERROR: This is a cacaotask script"
-echo "       It is meant to be executed as part of a deployment script"
-echo "       Check cacaotask script for details"
-}
-
-if [ ! "${cacaotaskENV:-}" = "OK" ]; then
-taskerrormsg
-exit ${CACAOTASK_EXITCODE_NOTCACAOTASK}
-fi
 
 # ======================================================================
+# PERFORM ACTIONS FOR THIS TASK
+# ======================================================================
+
 
 cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
 
-echo "confwupdate streamDelay-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
 echo "runstart streamDelay-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
 
-echo "echo \"runstop streamDelay-01\" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo" >> ${CLEANSCRIPT}
-echo "milk-shmimpurge" >> ${CLEANSCRIPT}
+
+
+# ======================================================================
+# WRITE CLEANUP SCRIPT FOR THIS TASK
+# ======================================================================
+
+
+# Inside cat <<EOT section :
+# ${VAR} will be resolved prior to writing to destination
+# \${VAR} will not be resolved, and will appear as ${VAR} in the destination
+
+cat <<EOT >>  ${CLEANSCRIPT}
+
+echo "runstop streamDelay-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
+milk-shmimpurge
+
+EOT

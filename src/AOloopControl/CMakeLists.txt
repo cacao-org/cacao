@@ -67,8 +67,9 @@ install(TARGETS ${LIBNAME} DESTINATION lib)
 install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-exec
 	scripts/cacao.tmux
-	scripts/cacao-fpslistadd.bash
+	scripts/cacao-fpslistadd
 	scripts/cacao_simLHS
+	scripts/cacaotask-check
 	scripts/cacaotask-INITSETUP
 	scripts/cacaotask-GETSIMCONFFILES
 	scripts/cacaotask-TESTCONFIG

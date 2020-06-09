@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# check environment
+source cacaotask-check
+
+# ======================================================================
+# PERFORM ACTIONS FOR THIS TASK
+# ======================================================================
+
 
 mkdir -p $WORKDIRECTORY/simLHS
 cd $CONFDIR/simLHS/
@@ -12,13 +19,34 @@ done
 cd ${CURRENTDIR}
 cp $CONFDIR/simLHS/*.fits $WORKDIRECTORY/simLHS/
 
-echo "rm $WORKDIRECTORY/simLHS/*" >> ${CLEANSCRIPT}
-echo "rmdir $WORKDIRECTORY/simLHS" >> ${CLEANSCRIPT}
 
 # copy test configuration files to work directory
 cp $CONFDIR/cacaovars.${LOOPNAME}.bash $WORKDIRECTORY/
-echo "rm $WORKDIRECTORY/cacaovars.${LOOPNAME}.bash" >> ${CLEANSCRIPT}
 
 cp $CONFDIR/fpssetup.setval.${LOOPNAME}.conf $WORKDIRECTORY/
-echo "rm $WORKDIRECTORY/fpssetup.setval.${LOOPNAME}.conf" >> ${CLEANSCRIPT}
 
+
+
+
+# ======================================================================
+# WRITE CLEANUP SCRIPT FOR THIS TASK
+# ======================================================================
+
+# Inside cat <<EOT section :
+# ${VAR} will be resolved prior to writing to destination
+# \${VAR} will not be resolved, and will appear as ${VAR} in the destination
+
+cat <<EOT >>  ${CLEANSCRIPT}
+
+rm $WORKDIRECTORY/simLHS/*
+rmdir $WORKDIRECTORY/simLHS
+
+rm $WORKDIRECTORY/cacaovars.${LOOPNAME}.bash
+rm $WORKDIRECTORY/fpssetup.setval.${LOOPNAME}.conf
+
+EOT
+
+
+# ======================================================================
+# STORE OUTPUT ENVIRONMENT VARIABLES
+# ======================================================================

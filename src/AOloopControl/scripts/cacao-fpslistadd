@@ -7,7 +7,7 @@
 # - parameters setup added to file fpssetup.setval.conf
 
 
-FPSCONFFILE="fpssetup.setval.conf"
+#FPSCONFFILE="fpssetup.setval.conf"
 
 touch fpslist.txt
 touch ${FPSCONFFILE}
@@ -33,9 +33,13 @@ function runstrcmd {
 	eval "$1"
 }
 
+
+# write entry to fpssetup file
+#
 function fpscmd {
 	echolog "FPS CMD TO ${FPSCONFFILE} : $1"
-	echo "$1" >> ${FPSCONFFILE}
+	#echo "$1" >> ${FPSCONFFILE}
+	echo "$1" >> fpssetup.${fpsfname}.conf
 }
 
 
@@ -73,7 +77,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}      aolcontrolDMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
+echo "${fpsname}      cacaodm.aolcontrolDMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
 
 fpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
 fpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
@@ -344,7 +348,6 @@ fpscmd "setval ${fpsfname}.compDMmask OFF"
 fpscmd "setval ${fpsfname}.compMpoke OFF"
 
 
-#echo "setval ${fpsfname}.NBave 1" >> ${FPSCONFFILE}
 fpscmd "setval ${fpsfname}.NBave 1"
 fpscmd "setval ${fpsfname}.NBcycle 4"
 fpscmd "setval ${fpsfname}.NBinnerCycle 1"
@@ -361,7 +364,6 @@ fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
 fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
 
 
-#echo "setval ${fpsfname}.out.dir ${outdir}" >> ${FPSCONFFILE}
 fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi

@@ -224,16 +224,9 @@ int AOloopControl_aorun_FPCONF(
     uint32_t CMDmode
 )
 {
-    //	uint16_t loopstatus;
-
     // ===========================
     // SETUP FPS
     // ===========================
-    //	int SMfd = -1;
-    //    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-    //	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-    //	fps.md->sourceline = __LINE__;
-
     FPS_SETUP_INIT(fpsname, CMDmode);
 
 
@@ -340,7 +333,7 @@ int AOloopControl_aorun_FPCONF(
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
 
-    while(fps.loopstatus == 1)
+    while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
     {
         usleep(50);
         if(function_parameter_FPCONFloopstep(&fps) ==

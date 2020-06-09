@@ -16,11 +16,14 @@ echo "------------------------------------------------------------------------"
 echo "  Execute command string within cacao command line interface (CLI)"
 echo "   "
 echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-hT] <cmdstring>"
+echo "     $0 [-hTn] <cmdstring>"
 echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-T$(tput sgr0)          (T)est mode"
+echo "     $(tput bold)-n$(tput sgr0) <pname>     (n)ame process"
 echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "     $0 \"imgen.mkdisk d1 100 100 50 50 20;listim\""
 echo "------------------------------------------------------------------------"
 }
 
@@ -51,8 +54,9 @@ done
 
 
 
+pname="cacaoexec"
 
-while getopts :hT FLAG; do
+while getopts :hTn: FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -64,6 +68,9 @@ while getopts :hT FLAG; do
       ;;
     T) # run as a test
 	echo "CTEST_FULL_OUTPUT"
+    ;;
+    n) # name process
+    pname="${OPTARG}"
     ;;
     \?) 
       echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
@@ -92,17 +99,17 @@ fi
 IFS=';' read -r -a array <<< "$1"
 
 
-pname="cacaoexec"
-fifoname="cacaoCLIfifo.${pname}"
-SF="cacaoCLIstartup.${pname}"
+
+#fifoname="cacaoCLIfifo.${pname}"
+SF="cacaoCLIstartup.${pname}.$$"
 echo "" > $SF
 for cmdstring in "${array[@]}"
 do
-    echo "${cmdstring}" >> $SF
+    echo "${cmdstring}" >> ${SF}
 done
-echo "exitCLI" >> $SF
+echo "exitCLI" >> ${SF}
 
-cacao -n ${pname} -f ${fifoname} -s ${SF}
+cacao -n ${pname} -f -s ${SF}
 
 rm ${SF}
 

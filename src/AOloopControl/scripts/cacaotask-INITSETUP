@@ -1,29 +1,14 @@
 #!/bin/bash
 
+# check environment
+source cacaotask-check
 
-# FATAL exit code
-CACAOTASK_EXITCODE_NOTCACAOTASK=64
 
-#
-# Check that this script is executed from cacaotask
-# If not, print error message and exit
-#
-function taskerrormsg {
-echo "ERROR: This is a cacaotask script"
-echo "       It is meant to be executed as part of a deployment script"
-echo "       Check cacaotask script for details"
-}
-
-#echo "cacaotaskENV : ${cacaotaskENV}"
-if [ ! "${cacaotaskENV:-}" = "OK" ]; then
-taskerrormsg
-exit ${CACAOTASK_EXITCODE_NOTCACAOTASK}
-fi
 
 # ======================================================================
+# PERFORM ACTIONS FOR THIS TASK
+# ======================================================================
 
-
-# Perform action(s)
 mkdir -p ${WORKDIRECTORY}
 
 # check if successful
@@ -33,11 +18,32 @@ else
 	cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
 fi
 
-# Write cleanup script for this step
-echo "rmdir ${WORKDIRECTORY}" >> ${CLEANSCRIPT}
 
 
-# store output environment variable
+# ======================================================================
+# WRITE CLEANUP SCRIPT FOR THIS TASK
+# ======================================================================
+
+# Inside cat <<EOT section :
+# ${VAR} will be resolved prior to writing to destination
+# \${VAR} will not be resolved, and will appear as ${VAR} in the destination
+#
+cat <<EOT >>  ${CLEANSCRIPT}
+
+read -p "REMOVING directory ./\${WORKDIRECTORYLOCAL}. Are you sure? " -n 1 -r
+echo
+if [[ \${REPLY} =~ ^[Yy]$ ]]
+then
+    rm -r ./\${WORKDIRECTORYLOCAL}
+fi
+
+EOT
+
+
+
+# ======================================================================
+# STORE OUTPUT ENVIRONMENT VARIABLES
+# ======================================================================
 
 # NEWVAR_INITSETUP=2
 # echo "NEWVAR_INITSETUP=${NEWVAR_INITSETUP}" >> ${ENVOUTFILE}

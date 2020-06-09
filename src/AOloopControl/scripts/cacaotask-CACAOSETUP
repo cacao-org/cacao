@@ -1,58 +1,44 @@
 #!/bin/bash
 
+# check environment
+source cacaotask-check
 
-# FATAL exit code
-CACAOTASK_EXITCODE_NOTCACAOTASK=64
-
-#
-# Check that this script is executed from cacaotask
-# If not, print error message and exit
-#
-function taskerrormsg {
-echo "ERROR: This is a cacaotask script"
-echo "       It is meant to be executed as part of a deployment script"
-echo "       Check cacaotask script for details"
-}
-
-#echo "cacaotaskENV : ${cacaotaskENV}"
-if [ ! "${cacaotaskENV:-}" = "OK" ]; then
-taskerrormsg
-exit ${CACAOTASK_EXITCODE_NOTCACAOTASK}
-fi
 
 # ======================================================================
+# PERFORM ACTIONS FOR THIS TASK
+# ======================================================================
+
 
 cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
 
-
-# open xterm, write tty and PID to files
 cd ${WORKDIRECTORY}
-xterm -geometry 160x40 -e 'tty > cacaoFPStty.dat; bash' &
-xtermPID="$!"
-echo "PID = $xtermPID"
+cacao-setup ${LOOPNAME}
 
-# wait for tty file to appear
-FILENAME="$WORKDIRECTORY/cacaoFPStty.dat"
-echo -n "waiting for file $FILENAME ... "
-while [ ! -f $FILENAME ]; do sleep 0.01; done
-echo "OK"
 
-# read tty from file
-echo "tty = $(<$WORKDIRECTORY/cacaoFPStty.dat)"
 
-cacao-setup -y $(<$WORKDIRECTORY/cacaoFPStty.dat) ${LOOPNAME}
-echo "cd $WORKDIRECTORY" >> ${CLEANSCRIPT}
-echo "cacao-setup -C ${LOOPNAME}" >> ${CLEANSCRIPT}
-echo "cd -" >> ${CLEANSCRIPT}
 
-# Adding cmds to cleanup
-echo "rm $WORKDIRECTORY/cacaoFPStty.dat" >> ${CLEANSCRIPT}
-echo "kill $xtermPID" >> ${CLEANSCRIPT}
+# ======================================================================
+# WRITE CLEANUP SCRIPT FOR THIS TASK
+# ======================================================================
+
+# Inside cat <<EOT section :
+# ${VAR} will be resolved prior to writing to destination
+# \${VAR} will not be resolved, and will appear as ${VAR} in the destination
+
+cat <<EOT >>  ${CLEANSCRIPT}
+
+cd ${WORKDIRECTORY}
+cacao-setup -C ${LOOPNAME}
+cd -
+
+EOT
+
 
 cd ${CURRENTDIR}
 
 
 
 
-
-
+# ======================================================================
+# STORE OUTPUT ENVIRONMENT VARIABLES
+# ======================================================================
