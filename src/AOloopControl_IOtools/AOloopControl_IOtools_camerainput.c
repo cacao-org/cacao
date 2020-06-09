@@ -563,17 +563,9 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
     uint32_t CMDmode
 )
 {
-    //uint16_t loopstatus;
-
-
     // ===========================
     // SETUP FPS
     // ===========================
-    /* int SMfd = -1;
-     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-    strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-    fps.md->sourceline = __LINE__;
-    */
     FPS_SETUP_INIT(fpsname, CMDmode);
 
 
@@ -645,36 +637,12 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
                                  FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, &compnormwfsim_default);
 
 
-    if(fps.loopstatus == 0)   // stop fps
-    {
-        return RETURN_SUCCESS;
-    }
-
-
-    // =====================================
-    // PARAMETER LOGIC AND UPDATE LOOP
-    // =====================================
-    while(fps.loopstatus == 1)
-    {
-        usleep(50);
-
-        if(function_parameter_FPCONFloopstep(&fps) ==
-                1)  // Apply logic if update is needed
-        {
 
 
 
-            functionparameter_CheckParametersAll(
-                &fps);  // check all parameter values
-        }
-    }
+	FPS_CONFLOOP_START  // macro in function_parameter.h
 
-
-
-
-
-    function_parameter_FPCONFexit(&fps);
-
+	FPS_CONFLOOP_END  // macro in function_parameter.h
 
     return RETURN_SUCCESS;
 }
