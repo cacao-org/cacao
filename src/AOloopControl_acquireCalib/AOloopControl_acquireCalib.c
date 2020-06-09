@@ -2273,10 +2273,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
 
-	
 
 
-    if( ! fps.localstatus & FPS_LOCALSTATUS_CONFLOOP )   // stop fps
+
+    if(! fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)     // stop fps
     {
         printf("TIME TO RETURN\n");//TEST
         return RETURN_SUCCESS;
@@ -2286,7 +2286,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP )
+    while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
     {
         usleep(50);
 
