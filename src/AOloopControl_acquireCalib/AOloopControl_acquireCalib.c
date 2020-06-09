@@ -106,8 +106,8 @@
 //extern long aoloopcontrol_var.aoconfID_imWFS1;
 //extern long aoloopcontrol_var.aoconfID_cmd_modesRM;
 
-static int RMACQUISITION = 0;  
- // toggles to 1 when resp matrix is being acquired
+static int RMACQUISITION = 0;
+// toggles to 1 when resp matrix is being acquired
 
 extern long LOOPNUMBER; // current loop index
 extern int AOloopcontrol_meminit; // declared in AOloopControl_compTools.c
@@ -1860,7 +1860,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
         fps.md->sourceline = __LINE__;*/
 
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
-	printf("TIME TO START\n");//TEST
+    printf("TIME TO START\n");//TEST
     //	int SMfd_mlat = -1;
     //	int SMfd_DMcomb = -1;
 
@@ -1872,7 +1872,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     uint64_t FPFLAG;
 
 
-    struct timespec tt0; //TEST	
+    struct timespec tt0; //TEST
     clock_gettime(CLOCK_REALTIME, &tt0); //TEST
 
     long loop_default[4] = { 0, 0, 10, 0 };
@@ -2083,7 +2083,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                                      FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &LOmaxCPA_default);
 
 
-	struct timespec tt1; //TEST
+    struct timespec tt1; //TEST
     clock_gettime(CLOCK_REALTIME, &tt1); //TEST
 
     // External scripts (post)
@@ -2108,7 +2108,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
 
 
-	struct timespec tt2;
+    struct timespec tt2;
     clock_gettime(CLOCK_REALTIME, &tt2); //TEST
 
 
@@ -2130,32 +2130,32 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
 
 
-	struct timespec tt3; //TEST
+    struct timespec tt3; //TEST
     clock_gettime(CLOCK_REALTIME, &tt3); //TEST
 
 
 
-    
+
 
     {
-		struct timespec tdiff;
-		double tdiffv;
-		
+        struct timespec tdiff;
+        double tdiffv;
+
         FILE *fptest;
         fptest = fopen("timing.txt", "w");
-        
+
         fprintf(fptest, "%s  %d\n", data.FPS_name, data.FPS_CMDCODE);
 
-		tdiff =  timespec_diff(tt0, tt1);
-		tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        tdiff =  timespec_diff(tt0, tt1);
+        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         fprintf(fptest, "%6.3f s \n", tdiffv);
 
-		tdiff =  timespec_diff(tt1, tt2);
-		tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        tdiff =  timespec_diff(tt1, tt2);
+        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         fprintf(fptest, "%6.3f s \n", tdiffv);
 
-		tdiff =  timespec_diff(tt2, tt3);
-		tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+        tdiff =  timespec_diff(tt2, tt3);
+        tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
         fprintf(fptest, "%6.3f s \n", tdiffv);
 
         fclose(fptest);
@@ -2166,7 +2166,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
 
     if(fps.loopstatus == 0)   // stop fps
     {
-		printf("TIME TO RETURN\n");//TEST
+        printf("TIME TO RETURN\n");//TEST
         return RETURN_SUCCESS;
     }
 
@@ -2182,7 +2182,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
                 1)  // Apply logic if update is needed
         {
 
-            printf("======== connecting to aux FPS %s %d ============\n", __FILE__, __LINE__);//TBE
+            printf("======== connecting to aux FPS %s %d ============\n", __FILE__,
+                   __LINE__);//TBE
             fflush(stdout);
 
             //
@@ -4407,8 +4408,9 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 data.image[IDrefi].array.F[ii] = 0.0;
             }
 
-			assert(RespMatNBframes > 0);
-            for(uint64_t ii = 0; ii < AOconf[loop].WFSim.sizeWFS * (unsigned long) RespMatNBframes; ii++)
+            assert(RespMatNBframes > 0);
+            for(uint64_t ii = 0;
+                    ii < AOconf[loop].WFSim.sizeWFS * (unsigned long) RespMatNBframes; ii++)
             {
                 data.image[IDrmc].array.F[ii] = 0.0;
             }
@@ -4499,9 +4501,10 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                     }
                 }
             }
-			
-			assert(RespMatNBframes>0);
-            for(uint64_t ii = 0; ii < AOconf[loop].WFSim.sizeWFS * (unsigned long) RespMatNBframes; ii++)
+
+            assert(RespMatNBframes > 0);
+            for(uint64_t ii = 0;
+                    ii < AOconf[loop].WFSim.sizeWFS * (unsigned long) RespMatNBframes; ii++)
             {
                 data.image[IDrmc].array.F[ii] /= NBloops;
             }
