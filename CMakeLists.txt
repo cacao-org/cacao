@@ -97,6 +97,7 @@ endforeach()
 # =======================================
 
 # Set Release build flags
+# Note: could add -fanalyzer on gcc 10+
 set(CMAKE_C_FLAGS_DEBUG     "-O0 -g -Wall -Wextra")
 
 # Set Release build flags

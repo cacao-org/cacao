@@ -50,14 +50,26 @@ int main(
 {
     char *AppName = "cacao";
 
-    printf(STYLE_BOLD);
-    printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
-#ifndef NDEBUG
-    printf("        === DEBUG MODE : assert()         enabled ==========\n");
-    printf("        === DEBUG MODE : DEBUG_TRACEPOINT enabled ==========\n");
-#endif
-    printf(STYLE_NO_BOLD);
+    if(getenv("MILK_QUIET"))
+    {
+        data.quiet = 1;
+    }
+    else
+    {
+        data.quiet = 0;
+    }
 
+
+    if(data.quiet == 0)
+    {
+        printf(STYLE_BOLD);
+        printf("\n        Compute And Control for Adaptive Optics (cacao)\n");
+#ifndef NDEBUG
+        printf("        === DEBUG MODE : assert()         enabled ==========\n");
+        printf("        === DEBUG MODE : DEBUG_TRACEPOINT enabled ==========\n");
+#endif
+        printf(STYLE_NO_BOLD);
+    }
 
     strcpy(data.package_name, PACKAGE_NAME);
 
@@ -70,17 +82,18 @@ int main(
     strcpy(data.configdir, CONFIGDIR);
 
 
-
-    printf("\n");
-    printf("        %s version %s\n", data.package_name, data.package_version);
+    if(data.quiet == 0)
+    {
+        printf("\n");
+        printf("        %s version %s\n", data.package_name, data.package_version);
 #ifdef IMAGESTRUCT_VERSION
-    printf("        Using ImageStreamIO version %s\n", IMAGESTRUCT_VERSION);
+        printf("        Using ImageStreamIO version %s\n", IMAGESTRUCT_VERSION);
 #endif
-    printf("        GNU General Public License v3.0\n");
-    printf("        Report bugs to : %s\n", PACKAGE_BUGREPORT);
-    printf("        Type \"help\" for instructions\n");
-    printf("        \n");
-
+        printf("        GNU General Public License v3.0\n");
+        printf("        Report bugs to : %s\n", PACKAGE_BUGREPORT);
+        printf("        Type \"help\" for instructions\n");
+        printf("        \n");
+    }
 
 
 
@@ -104,7 +117,7 @@ int main(
     libinit_AOloopControl_PredictiveControl();
     libinit_linARfilterPred();
     libinit_AOloopControl_computeCalib();
-//    libinit_FPAOloopControl();
+    //    libinit_FPAOloopControl();
     libinit_AOloopControl_DM();
     libinit_AOloopControl_compTools();
     libinit_AOloopControl_acquireCalib();
@@ -113,8 +126,10 @@ int main(
 
     runCLI(argc, argv, AppName);
 
-    printf("NORMAL EXIT\n");
-
+    if(data.quiet == 0)
+    {
+        printf("NORMAL EXIT\n");
+    }
 
     // clean-up calling thread
     //pthread_exit(NULL);
