@@ -884,17 +884,9 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     uint32_t CMDmode
 )
 {
-    //uint16_t loopstatus;
-
-
     // ===========================
     // SETUP FPS
     // ===========================
-    /* int SMfd = -1;
-     FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-    strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-    fps.md->sourceline = __LINE__;*/
-
     FPS_SETUP_INIT(fpsname, CMDmode);
 
 
@@ -1058,7 +1050,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
 
 
-    if(fps.loopstatus == 0)   // stop fps
+    if( ! fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)   // stop fps
     {
         return RETURN_SUCCESS;
     }
@@ -1068,7 +1060,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while(fps.loopstatus == 1)
+    while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
     {
         usleep(50);
 

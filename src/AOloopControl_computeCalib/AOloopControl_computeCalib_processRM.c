@@ -632,17 +632,9 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     uint32_t CMDmode
 )
 {
-    //uint16_t loopstatus;
-
     // ===========================
     // SETUP FPS
     // ===========================
-    /*int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-    strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-    fps.md->sourceline = __LINE__;
-    */
-
     FPS_SETUP_INIT(fpsname, CMDmode);
 
     // ===========================
@@ -691,41 +683,33 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
+    FPS_CONFLOOP_START  // macro in function_parameter.h
 
-    while(fps.loopstatus == 1)
+    // here goes the logic
+    //
+    // Action: adopt CM
+    //
+    if(fps.parray[fpi_adoptCM].fpflag & FPFLAG_ONOFF)
     {
-        usleep(50);
-        if(function_parameter_FPCONFloopstep(&fps) ==
-                1)  // Apply logic if update is needed
-        {
-            // here goes the logic
-            //
-            // Action: adopt CM
-            //
-            if(fps.parray[fpi_adoptCM].fpflag & FPFLAG_ONOFF)
-            {
-                FILE *fpconf;
-                char conffname[200];
-                long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
-                sprintf(conffname, "conf/shmim.aol%ld_CMat.fname.txt", loop);
-                fpconf = fopen(conffname, "w");
-                fprintf(fpconf, "%s", functionparameter_GetParamPtr_STRING(&fps, ".outfname"));
-                fclose(fpconf);
+        FILE *fpconf;
+        char conffname[200];
+        long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
+        sprintf(conffname, "conf/shmim.aol%ld_CMat.fname.txt", loop);
+        fpconf = fopen(conffname, "w");
+        fprintf(fpconf, "%s", functionparameter_GetParamPtr_STRING(&fps, ".outfname"));
+        fclose(fpconf);
 
-                // set back to OFF
-                fps.parray[fpi_adoptCM].fpflag &= ~FPFLAG_ONOFF;
-
-            }
-
-
-            functionparameter_CheckParametersAll(&fps);  // check all parameter values
-        }
+        // set back to OFF
+        fps.parray[fpi_adoptCM].fpflag &= ~FPFLAG_ONOFF;
 
     }
 
 
 
-    function_parameter_FPCONFexit(&fps);
+
+
+
+    FPS_CONFLOOP_END  // macro in function_parameter.h
 
     return RETURN_SUCCESS;
 }
