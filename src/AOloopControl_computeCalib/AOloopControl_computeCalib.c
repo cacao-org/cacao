@@ -1050,7 +1050,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
 
 
 
-    if( ! fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)   // stop fps
+    if(! fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)    // stop fps
     {
         return RETURN_SUCCESS;
     }
