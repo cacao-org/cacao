@@ -199,6 +199,12 @@ fpscmd "setval ${fpsfname}.option.twait ${LINSIMDT}"
 
 fpscmd "setval ${fpsfname}.option.sname_refout aolsimLHSwfsref"
 
+fpscmd "setval ${fpsfname}.option.sname_intot NULL"
+fpscmd "setval ${fpsfname}.option.sname_refin NULL"
+fpscmd "setval ${fpsfname}.option.PROCESS OFF"
+fpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+fpscmd "setval ${fpsfname}.option.MODENORM OFF"
+fpscmd "setval ${fpsfname}.option.semwarn OFF"
 fpscmd "setval ${fpsfname}.option.insem 6"
 fpscmd "setval ${fpsfname}.option.axmode 1"
 fi
