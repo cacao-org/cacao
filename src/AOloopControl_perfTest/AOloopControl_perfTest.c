@@ -195,68 +195,36 @@ errno_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
 
 errno_t AOcontrolLoop_perfTest_TestSystemLatency_cli()
 {
-    int stringmaxlen = 200;
-    char fpsname[stringmaxlen];
+    // Try FPS implementation
 
-    // First, we try to execute function through FPS interface
-    if(CLI_checkarg(1, 5) == 0)   // check that first arg is string
+    // Set data.fpsname, providing default value as first arg, and set data.FPS_CMDCODE value.
+    // Default FPS name will be used if CLI process has NOT been named.
+    // See code in function_parameter.c for detailed rules.
+    function_parameter_getFPSname_from_CLIfunc("measlat");
+
+    if(data.FPS_CMDCODE != 0)   // use FPS implementation
     {
-        //unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
-        // Set FPS interface name
-        // By convention, if there are optional arguments, they should be appended to the fps name
-        //
-        if(data.processnameflag ==
-                0)   // name fps to something different than the process name
-        {
-            if(strlen(data.cmdargtoken[2].val.string) > 0)
-            {
-                snprintf(fpsname, stringmaxlen, "measlat-%s", data.cmdargtoken[2].val.string);
-            }
-            else
-            {
-                snprintf(fpsname, stringmaxlen, "measlat");
-            }
-        }
-        else     // Automatically set fps name to be process name up to first instance of character '.'
-        {
-            strcpy(fpsname, data.processname0);
-        }
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_FPSINIT_") == 0)    // Initialize FPS and conf process
-        {
-            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTART_") == 0)    // Start conf process
-        {
-            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTOP_") == 0)   // Stop conf process
-        {
-            AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)   // Run process
-        {
-            AOcontrolLoop_perfTest_TestSystemLatency_RUN(fpsname);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)   // Stop process
-        {
-            //     AOcontrolLoop_perfTest_TestSystemLatency_STOP(OptionalArg00);
-            return RETURN_SUCCESS;
-        }
+        // set pointers to CONF and RUN functions
+        data.FPS_CONFfunc = AOcontrolLoop_perfTest_TestSystemLatency_FPCONF;
+        data.FPS_RUNfunc  = AOcontrolLoop_perfTest_TestSystemLatency_RUN;
+        function_parameter_execFPScmd();
+        return RETURN_SUCCESS;
     }
+
     // non FPS implementation - all parameters specified at function launch
-    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3,
-            1) + CLI_checkarg(4, 2) == 0)
+    if(0
+            + CLI_checkarg(1, 4)
+            + CLI_checkarg(2, 4)
+            + CLI_checkarg(3, 1)
+            + CLI_checkarg(4, 2)
+            == 0)
     {
-        AOcontrolLoop_perfTest_TestSystemLatency(data.cmdargtoken[1].val.string,
-                data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf,
-                data.cmdargtoken[4].val.numl);
+        AOcontrolLoop_perfTest_TestSystemLatency(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.numf,
+            data.cmdargtoken[4].val.numl
+        );
         return CLICMD_SUCCESS;
     }
     else
@@ -819,23 +787,13 @@ static errno_t init_module_CLI()
 
 
 errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
-    char *fpsname,
-    uint32_t CMDmode
 )
 {
-    //uint16_t loopstatus;
-
 
     // ===========================
     // SETUP FPS
     // ===========================
-    /*int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-    strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-    fps.md->sourceline = __LINE__;
-    */
-
-    FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
 
     // ===========================
@@ -845,89 +803,82 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     uint64_t FPFLAG;
 
     double frameratewait_default[4] = { 5, 1, 100, 5 };
-    __attribute__((unused)) long fpi_frameratewait =
-        function_parameter_add_entry(&fps, ".frameratewait",
-                                     "time period for frame rate measurement", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT,
-                                     &frameratewait_default);
+    // long fpi_frameratewait =
+    function_parameter_add_entry(&fps, ".frameratewait",
+                                 "time period for frame rate measurement", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT,
+                                 &frameratewait_default);
 
     double OPDamp_default[4] = { 0.1, 0.1, 1.0, 0.1 };
-    __attribute__((unused)) long fpi_OPDamp =
-        function_parameter_add_entry(&fps, ".OPDamp", "poke amplitude [um]",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &OPDamp_default);
+    // long fpi_OPDamp =
+    function_parameter_add_entry(&fps, ".OPDamp", "poke amplitude [um]",
+                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &OPDamp_default);
 
     long NBiter_default[4] = { 100, 10, 100000, 100 };
-    __attribute__((unused)) long fpi_NBiter =
-        function_parameter_add_entry(&fps, ".NBiter", "Number of iteration",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBiter_default);
+    // long fpi_NBiter =
+    function_parameter_add_entry(&fps, ".NBiter", "Number of iteration",
+                                 FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBiter_default);
 
 
     // input stream
     FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM;
 
-    __attribute__((unused)) long fp_streamname_dm       =
-        function_parameter_add_entry(&fps, ".sn_dm",  "DM stream name",
-                                     FPTYPE_STREAMNAME, FPFLAG, pNull);
+    // long fp_streamname_dm       =
+    function_parameter_add_entry(&fps, ".sn_dm",  "DM stream name",
+                                 FPTYPE_STREAMNAME, FPFLAG, pNull);
 
-    __attribute__((unused)) long fp_streamname_wfs       =
-        function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
-                                     FPTYPE_STREAMNAME, FPFLAG, pNull);
+    // long fp_streamname_wfs       =
+    function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
+                                 FPTYPE_STREAMNAME, FPFLAG, pNull);
 
 
 
     long wfsNBframesmax_default[4] = { 50, 10, 100000, 50 };
 
-    __attribute__((unused)) long fpi_status_wfsNBframesmax =
-        function_parameter_add_entry(&fps, ".status.wfsNBframemax",
-                                     "Number frames in measurement sequence", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT,
-                                     &wfsNBframesmax_default);
+    // long fpi_status_wfsNBframesmax =
+    function_parameter_add_entry(&fps, ".status.wfsNBframemax",
+                                 "Number frames in measurement sequence", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT,
+                                 &wfsNBframesmax_default);
 
 
     // status
-    __attribute__((unused)) long fpi_wfsdt        =
-        function_parameter_add_entry(&fps, ".status.wfsdt", "WFS frame interval",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    // long fpi_wfsdt        =
+    function_parameter_add_entry(&fps, ".status.wfsdt", "WFS frame interval",
+                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    __attribute__((unused)) long fpi_twaitus      =
-        function_parameter_add_entry(&fps, ".status.twaitus", "initial wait [us]",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    // long fpi_twaitus      =
+    function_parameter_add_entry(&fps, ".status.twaitus", "initial wait [us]",
+                                 FPTYPE_INT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    __attribute__((unused)) long fpi_refdtoffset  =
-        function_parameter_add_entry(&fps, ".status.refdtoffset",
-                                     "baseline time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    // long fpi_refdtoffset  =
+    function_parameter_add_entry(&fps, ".status.refdtoffset",
+                                 "baseline time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    __attribute__((unused)) long fpi_dtoffset     =
-        function_parameter_add_entry(&fps, ".status.dtoffset",
-                                     "actual time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    // long fpi_dtoffset     =
+    function_parameter_add_entry(&fps, ".status.dtoffset",
+                                 "actual time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
     // output
-    __attribute__((unused)) long fpi_outframerateHz =
-        function_parameter_add_entry(&fps, ".out.framerateHz", "WFS frame rate [Hz]",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+	// long fpi_outframerateHz =
+    function_parameter_add_entry(&fps, ".out.framerateHz", "WFS frame rate [Hz]",
+                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-    __attribute__((unused)) long fpi_outHardLatencyfr =
-        function_parameter_add_entry(&fps, ".out.latencyfr", "hardware latency [frame]",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
-
-    if(fps.loopstatus == 0)   // stop fps
-    {
-        return RETURN_SUCCESS;
-    }
+	// long fpi_outHardLatencyfr =
+    function_parameter_add_entry(&fps, ".out.latencyfr", "hardware latency [frame]",
+                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
 
-    // =====================================
-    // PARAMETER LOGIC AND UPDATE LOOP
-    // =====================================
-    while(fps.loopstatus == 1)
-    {
-        if(function_parameter_FPCONFloopstep(&fps) ==
-                1)  // Apply logic if update is needed
-        {
-            // here goes the logic
+    // ==============================================
+    // ======== START FPS CONF LOOP =================
+    // ==============================================
+    FPS_CONFLOOP_START  // macro in function_parameter.h
 
-            functionparameter_CheckParametersAll(&fps);  // check all parameter values
-        }
-    }
-    function_parameter_FPCONFexit(&fps);
+
+
+    // ==============================================
+    // ======== STOP FPS CONF LOOP ==================
+    // ==============================================
+    FPS_CONFLOOP_END  // macro in function_parameter.h
+
 
 
     return RETURN_SUCCESS;

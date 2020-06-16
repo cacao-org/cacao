@@ -75,14 +75,6 @@ errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
     uint32_t    CMDmode
 )
 {
-    //uint16_t loopstatus;
-
-    // SETUP FPS
-    /*int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-    strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-    fps.md->sourceline = __LINE__;
-    */
     FPS_SETUP_INIT(fpsname, CMDmode);
 
 
@@ -96,20 +88,9 @@ errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
         function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
 
 
-    if( fps.loopstatus == 0 ) {// stop fps
-        return RETURN_SUCCESS;
-    }
+	FPS_CONFLOOP_START  // macro in function_parameter.h
 
-    // RUN UPDATE LOOP
-    while( fps.loopstatus == 1 )
-    {
-        if( function_parameter_FPCONFloopstep(&fps) == 1)
-        {
-            // here goes the logic
-            functionparameter_CheckParametersAll(&fps);  // check all parameter values
-        }
-    }
-    function_parameter_FPCONFexit( &fps );
+	FPS_CONFLOOP_END  // macro in function_parameter.h
 
 
     return RETURN_SUCCESS;
