@@ -177,12 +177,12 @@ LINSIMDT="10000"
 
 # copy calibration files
 
-runstrcmd "mkdir -p ${CACAO_WORKDIR}/simLHS"
-runstrcmd "cp simLHS/${CACAO_LOOPNAME}.respM.fits ./${CACAO_WORKDIR}/simLHS/simLHS.respM.fits"
-runstrcmd "cp simLHS/${CACAO_LOOPNAME}.wfsref.fits ./${CACAO_WORKDIR}/simLHS/simLHS.wfsref.fits"
+runstrcmd "mkdir -p ${LOOPWORKDIR}/simLHS"
+runstrcmd "cp simLHS/${LOOPWORKDIR}.respM.fits ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits"
+runstrcmd "cp simLHS/${LOOPWORKDIR}.wfsref.fits ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits"
 
-runstrcmd "cp ./${CACAO_WORKDIR}/simLHS/simLHS.respM.fits ./${CACAO_WORKDIR}/conf/shmim.aolsimLHSrespM.fits"
-runstrcmd "cp ./${CACAO_WORKDIR}/simLHS/simLHS.wfsref.fits ./${CACAO_WORKDIR}/conf/shmim.aolsimLHSwfsref.fits"
+runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSrespM.fits"
+runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSwfsref.fits"
 
 
 fpscmdheader
@@ -297,7 +297,7 @@ echolog "ON  CACAO_FPSPROC_ACQLINZRM"
 fpsname="acqlin_zRM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
 outdir="conf-zRM-staged"
-mkdir -p ${CACAO_WORKDIR}/${outdir}
+mkdir -p ${LOOPWORKDIR}/${outdir}
 
 # FPS full name
 fpsfname="${fpsname}-${fpsarg0}" 
@@ -354,7 +354,7 @@ echolog "ON  CACAO_FPSPROC_ACQLINLORM"
 fpsname="acqlin_loRM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
 outdir="conf-loRM-staged"
-mkdir -p ${CACAO_WORKDIR}/${outdir}
+mkdir -p ${LOOPWORKDIR}/${outdir}
 
 # FPS full name
 fpsfname="${fpsname}-${fpsarg0}" 
@@ -418,16 +418,16 @@ echolog "ON  CACAO_FPSPROC_COMPFCM"
 fpsname="compfCM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
 outdir="conf-fCM-staged"
-mkdir -p ${CACAO_WORKDIR}/${outdir}
+mkdir -p ${LOOPWORKDIR}/${outdir}
 
-mkdir -p ${CACAO_WORKDIR}/conf-staged
-mkdir -p ${CACAO_WORKDIR}/mkmodestmp
+mkdir -p ${LOOPWORKDIR}/conf-staged
+mkdir -p ${LOOPWORKDIR}/mkmodestmp
 
-mkdir -p ${CACAO_WORKDIR}/DMmodes
-mkdir -p ${CACAO_WORKDIR}/respM
-mkdir -p ${CACAO_WORKDIR}/contrM
-mkdir -p ${CACAO_WORKDIR}/contrMc
-mkdir -p ${CACAO_WORKDIR}/contrMcact
+mkdir -p ${LOOPWORKDIR}/DMmodes
+mkdir -p ${LOOPWORKDIR}/respM
+mkdir -p ${LOOPWORKDIR}/contrM
+mkdir -p ${LOOPWORKDIR}/contrMc
+mkdir -p ${LOOPWORKDIR}/contrMcact
 
 
 
@@ -471,9 +471,9 @@ echolog "ON  CACAO_FPSPROC_COMPSCM"
 fpsname="compsCM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
 outdir="conf-sCM-staged"
-mkdir -p ${CACAO_WORKDIR}/${outdir}
+mkdir -p ${LOOPWORKDIR}/${outdir}
 
-mkdir -p ${CACAO_WORKDIR}/sCM
+mkdir -p ${LOOPWORKDIR}/sCM
 
 
 
@@ -543,7 +543,7 @@ fpscmd "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref"
 fpscmd "setval ${fpsfname}.sname_outmodesval aol${CACAO_LOOPNUMBER}_modeval"
 fpscmd "setval ${fpsfname}.outinit ON"
 
-fpscmd "setval ${fpsfname}.option.GPindex 0"
+fpscmd "setval ${fpsfname}.option.GPUindex 0"
 fpscmd "setval ${fpsfname}.option.PROCESS ON"
 fpscmd "setval ${fpsfname}.option.TRACEMODE ON"
 fpscmd "setval ${fpsfname}.option.MODENORM ON"
