@@ -858,11 +858,11 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
                                  "actual time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
     // output
-	// long fpi_outframerateHz =
+    // long fpi_outframerateHz =
     function_parameter_add_entry(&fps, ".out.framerateHz", "WFS frame rate [Hz]",
                                  FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 
-	// long fpi_outHardLatencyfr =
+    // long fpi_outHardLatencyfr =
     function_parameter_add_entry(&fps, ".out.latencyfr", "hardware latency [frame]",
                                  FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
 

@@ -1,11 +1,11 @@
 /**
  * @file    AOloopControl_perfTest_LinSim.c
  * @brief   Adaptive Optics Control loop linear simulator
- * 
+ *
  * Uses response matrix for linear simulation
- *  
- * 
- * 
+ *
+ *
+ *
  */
 
 
@@ -79,18 +79,20 @@ errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
 
 
     // ALLOCATE ENTRIES
-    void * pNull = NULL;
+    void *pNull = NULL;
 
     __attribute__((unused)) long fpi_DMxsize =
-        function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
+        function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
 
     __attribute__((unused)) long fpi_DMysize =
-        function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
+        function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
 
 
-	FPS_CONFLOOP_START  // macro in function_parameter.h
+    FPS_CONFLOOP_START  // macro in function_parameter.h
 
-	FPS_CONFLOOP_END  // macro in function_parameter.h
+    FPS_CONFLOOP_END  // macro in function_parameter.h
 
 
     return RETURN_SUCCESS;
@@ -104,27 +106,30 @@ errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
 
 
 errno_t AOcontrolLoop_perfTest_LinearSimulator_RUN(
-	const char *fpsname
+    const char *fpsname
 )
 {
-	FUNCTION_PARAMETER_STRUCT fps;
-	//int SMfd = -1;
-	
-	int FPSINTERFACE = 1;
-	
-	if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
-	{
-		printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
-		FPSINTERFACE = 0;
-	}
-	else
-	{
-		FPSINTERFACE = 1;
-	}
+    FUNCTION_PARAMETER_STRUCT fps;
+    //int SMfd = -1;
+
+    int FPSINTERFACE = 1;
+
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
+    {
+        printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n",
+               fpsname);
+        FPSINTERFACE = 0;
+    }
+    else
+    {
+        FPSINTERFACE = 1;
+    }
 
 
-	if(FPSINTERFACE == 1)
-		function_parameter_struct_disconnect(&fps);
+    if(FPSINTERFACE == 1)
+    {
+        function_parameter_struct_disconnect(&fps);
+    }
 
 
     return(0);
