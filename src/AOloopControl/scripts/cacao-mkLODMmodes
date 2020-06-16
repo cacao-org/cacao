@@ -1,0 +1,146 @@
+#! /bin/bash
+# args: <confindex> <maxCPA>
+
+
+NBARGS=1
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CREATE LO DM MODES FOR AO LOOP  $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  CREATE LO DM MODES FOR AO LOOP "
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <FPSname>"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <FPSname>      Function Parameter Structure (FPS) name"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo ""
+echo " $(tput bold) NOTES:$(tput sgr0)"
+echo "  USES (OPTIONAL) : ./conf/aol<loopnb>_dmmask.fits"
+echo "  USES (OPTIONAL) : ./conf/aol<loopnb>_dmslaved.fits"
+echo "                  Telescope pupil mask and slaved actuators"
+echo "  USES (OPTIONAL) : ./conf/TPind.fits"
+echo "                  Modes to be excluded"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Create LO DM modes for AO loop\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+FPSname=$1
+LOmaxCPA=$( head -1 fpsconf/${FPSname}/LOmaxCPA.setval.txt | awk '{print $1;}' )
+
+
+
+pname0=$0
+pname=${pname0#"./"}-$loopnb
+
+
+mkdir -p Cmodes
+mkdir -p tmp
+
+
+zRMstageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
+#"conf_zrm_staged"
+loRMstageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
+#"conf_LOrm_staged"
+mkdir -p ${zRMstageddir}
+mkdir -p ${loRMstageddir}
+
+
+./AOloopControl -n $pname << EOF
+cacao.aolnb $loopnb
+loadfits "${zRMstageddir}/dmslaved.fits" dmslaved0
+imtrunc dmslaved0 0.0 1.0 dmslaved
+loadfits "${zRMstageddir}/dmmask.fits" dmmask
+loadfits "./conf/TPind.fits" emodes
+readshmim aol${loopnb}_dmC
+info.imstats aol${loopnb}_dmC
+cx=0.5*imsize0-0.5
+cy=0.5*imsize1-0.5
+od=0.42*imsize0
+id=0.13*imsize0
+if=0
+aolmklodmmodes fmodes imsize0 imsize1 ${LOmaxCPA} 0.8 cx cy od id 0 
+savefits fmodes "!${loRMstageddir}/respM_LOmodes.fits"
+exitCLI
+EOF
+
+cp ${loRMstageddir}/respM_LOmodes.fits ./conf/respM_LOmodes.fits
+

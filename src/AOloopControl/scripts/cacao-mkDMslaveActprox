@@ -1,0 +1,191 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=1
+
+
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CREATE DM SLAVED ACTUATORS MAP $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Created DM slaved actuators map based on proximity"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <FPSname>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <FPSname>      Function Parameter Structure (FPS) name"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "     dmslaved.fits     DM slaved actuators map"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Create DM slaved actuators map\n" "$0" 
+}
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+FPSname=$1
+stageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
+
+
+
+echo "##########################################"
+echo "# MAKE MASKS                              "
+echo "##########################################"
+# 
+# MAKE SLAVED ACTUATOR DM MASK: dmmaskRM.fits -> dmslaved.fits, dmmask.fits
+# 
+# INPUT:
+#	dmmaskRM.fits
+# OUTPUT:
+#	dmslaved.fits  
+#	dmmask.fits    
+#
+
+
+
+actproxrad=$( head -1 fpsconf/${FPSname}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
+
+
+./AOloopControl << EOF
+loadfits "${stageddir}/dmmaskRM.fits" DMmaskRM
+aolmkslact DMmaskRM ${actproxrad} DMslavedact
+savefits DMslavedact "!${stageddir}/dmslaved.fits"
+exitCLI
+EOF
+
+
+./AOloopControl << EOF
+loadfits "${stageddir}/dmmaskRM.fits" dmmRM
+loadfits "${stageddir}/dmslaved.fits" dmsl
+imtrunc dmsl 0.0 1.0 dmsl1
+dmm=1.0-(1.0-dmmRM)*(1.0-dmsl1)
+savefits dmm "!${stageddir}/dmmask.fits"
+exitCLI
+EOF
+
+
+
+
+
+echo "#################################################################"
+echo "# UPDATE wfsref00, zrespM TO NORMALIZE FLUX OVER wfsmask    "
+echo "#################################################################"
+# 
+# INPUT
+#	wfsref00.fits
+#	wfsmask.fits
+#   zrespM.fits
+#  
+# OUTPUT
+#	wfsref0.fits
+#   zrespM.fits
+#
+
+
+./AOloopControl << EOF
+loadfits "${stageddir}/wfsref00.fits" im0
+loadfits "${stageddir}/wfsmask.fits" wfm
+im0m=wfm*im0
+a=itot(im0)/itot(im0m)
+# a is fraction of flux inside mask
+im1=im0*a/itot(im0)
+savefits im1 "!${stageddir}/wfsref0.fits"
+loadfits "${stageddir}/zrespM.fits" zrespm
+zrespm1=zrespm*a
+savefits zrespm1 "!${stageddir}/zrespMn.fits"
+listim
+exitCLI
+EOF
+
+#cp wfsref0.fits rmtest_wfsref0.fits
+
+
+
+
+
+
+
+
+
+#stageddir="conf_zrm_staged"
+#cp dmslavedact.fits ./${stageddir}/
+#cp dmmask.fits ./${stageddir}/
