@@ -246,25 +246,17 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     uint32_t CMDmode,
     long DMindex
 ) {
-   // uint16_t loopstatus;
-	
-	// ===========================
+    // ===========================
     // SETUP FPS
     // ===========================
-    /*int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps = function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-	strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-	fps.md->sourceline = __LINE__;
-	*/
-	
-	FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(fpsname, CMDmode);
 
 
 
     // ALLOCATE FPS ENTRIES
-	
-	printf("ALLOCATING ENTRIES (NBparamMAX = %ld) =================\n", fps.md->NBparamMAX);
-	fflush(stdout);
+
+    printf("ALLOCATING ENTRIES (NBparamMAX = %ld) =================\n", fps.md->NBparamMAX);
+    fflush(stdout);
 
     void *pNull = NULL;
     uint64_t FPFLAG;
@@ -286,7 +278,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     __attribute__((unused)) long fp_DMysize =
         function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG, &DMsize_default);
 
-	long DMMODE_default[4] = { 0, 0, 1, 0 };
+    long DMMODE_default[4] = { 0, 0, 1, 0 };
     __attribute__((unused)) long fp_DMMODE =
         function_parameter_add_entry(&fps, ".DMMODE", "0:SquareGrid, 1:Generic", FPTYPE_INT64, FPFLAG, &DMMODE_default);
 
@@ -331,8 +323,8 @@ int AOloopControl_DM_CombineChannels_FPCONF(
     double stroke100_default[4] = { 100.0, 0.1, 100.0, 100.0 };
     __attribute__((unused)) long fp_stroke100      =
         function_parameter_add_entry(&fps, ".option.stroke100", "Stroke for 100 V [um]", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &stroke100_default);
-	
-	FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_STREAM_RUN_REQUIRED;
+
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_STREAM_RUN_REQUIRED;
     long fp_voltname       =
         function_parameter_add_entry(&fps, ".option.voltname", "Stream name for volt output", FPTYPE_STREAMNAME, FPFLAG, pNull);
 
@@ -348,14 +340,19 @@ int AOloopControl_DM_CombineChannels_FPCONF(
         function_parameter_add_entry(&fps, ".status.loopcnt", "Loop counter", FPTYPE_INT64, FPFLAG_DEFAULT_STATUS, pNull);
 
 
-    if(fps.loopstatus == 0) { // stop fps
+   
+
+
+
+
+    if( ! fps.localstatus & FPS_LOCALSTATUS_CONFLOOP) { // stop fps
         return RETURN_SUCCESS;
     }
 
 
     // RUN UPDATE LOOP
-    while(fps.loopstatus == 1) {
-		
+    while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP) {
+
         if(function_parameter_FPCONFloopstep(&fps) == 1) { // if update needed
             // here goes the logic
             if(fps.parray[fp_dm2dm_mode].fpflag & FPFLAG_ONOFF) {   // ON state
@@ -730,9 +727,15 @@ int AOloopControl_DM_CombineChannels_RUN(
     fflush(stdout);
 
     for(ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++) {
+		imageID chID;
+		
         sprintf(name, "dm%02lddisp%02ld", DMindex, ch);
         printf("Channel %ld \n", ch);
-        dmdispcombconf[DMindex].dmdispID[ch] = create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 1, 10);
+        
+        chID = create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 1, 10);
+        data.image[chID].md[0].ownerPID = getpid();
+        dmdispcombconf[DMindex].dmdispID[ch] = chID;
+        
         COREMOD_MEMORY_image_set_createsem(name, 10);
         dmdispptr_array[ch] = data.image[dmdispcombconf[DMindex].dmdispID[ch]].array.F;
     }
@@ -740,10 +743,12 @@ int AOloopControl_DM_CombineChannels_RUN(
 
     sprintf(name, "dm%02lddisp", DMindex);
     dmdispcombconf[DMindex].IDdisp = create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 1, 10);
+    data.image[dmdispcombconf[DMindex].IDdisp].md[0].ownerPID = getpid();
     COREMOD_MEMORY_image_set_createsem(name, 10);
 
     sprintf(name, "dm%02lddispt", DMindex);
     IDdispt = create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 0, 0);
+    data.image[IDdispt].md[0].ownerPID = getpid();
     dmdispptr = data.image[IDdispt].array.F;
 
 
@@ -786,6 +791,7 @@ int AOloopControl_DM_CombineChannels_RUN(
                 printf("CREATING stream %s  %d axis, size = %u x %u\n", dmdispcombconf[DMindex].voltname, naxis, size[0], size[1]);
                 dmdispcombconf[DMindex].IDvolt = create_image_ID(dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_UINT16, 1, 10);
             }
+            data.image[dmdispcombconf[DMindex].IDvolt].md[0].ownerPID = getpid();
             COREMOD_MEMORY_image_set_createsem(dmdispcombconf[DMindex].voltname, 10);
         } else {
             dmdispcombconf[DMindex].IDvolt = image_ID(dmdispcombconf[DMindex].voltname);

@@ -144,7 +144,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
 
 
 
-    if(CLI_checkarg(1, 5) + CLI_checkarg(2, 2) == 0)
+    if(CLI_checkarg(1, CLIARG_STR) + CLI_checkarg(2, CLIARG_LONG) == 0)
     {
         //unsigned int DMindex = (unsigned int) data.cmdargtoken[2].val.numl;
 
@@ -161,7 +161,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
         }
 
         if((strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0)
-                && (CLI_checkarg(2, 2) == 0))    // init FPS
+                && (CLI_checkarg(2, CLIARG_LONG) == 0))    // init FPS
         {
             printf("Function parameters configure\n");
             AOloopControl_DM_CombineChannels_FPCONF(fpsname, FPSCMDCODE_FPSINIT,
@@ -170,7 +170,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
         }
 
         if((strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0)
-                && (CLI_checkarg(2, 2) == 0))    // Start conf process
+                && (CLI_checkarg(2, CLIARG_LONG) == 0))    // Start conf process
         {
             printf("Function parameters configure\n");
             AOloopControl_DM_CombineChannels_FPCONF(fpsname, FPSCMDCODE_CONFSTART,
@@ -179,7 +179,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
         }
 
         if((strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0)
-                && (CLI_checkarg(2, 2) == 0))   // Stop conf process
+                && (CLI_checkarg(2, CLIARG_LONG) == 0))   // Stop conf process
         {
             printf("Function parameters configure\n");
             AOloopControl_DM_CombineChannels_FPCONF(fpsname, FPSCMDCODE_CONFSTOP,
@@ -188,7 +188,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
         }
 
         if((strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)
-                && (CLI_checkarg(2, 2) == 0))   // Run process
+                && (CLI_checkarg(2, CLIARG_LONG) == 0))   // Run process
         {
             printf("Run function\n");
             AOloopControl_DM_CombineChannels_RUN(fpsname);
@@ -196,31 +196,54 @@ errno_t AOloopControl_DM_CombineChannels_cli()
         }
 
         if((strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)
-                && (CLI_checkarg(2, 2) == 0))   // Run process
+                && (CLI_checkarg(2, CLIARG_LONG) == 0))   // Run process
         {
-            printf("Run function\n");
+            printf("Run function STOP\n");
             AOloopControl_DM_dmdispcomboff(data.cmdargtoken[2].val.numl);
             return 0;
         }
     }
 
     // FPS-free implementation - all parameters specified at function launch
-    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 2) + CLI_checkarg(3,
-            2) + CLI_checkarg(4, 2) + CLI_checkarg(5, 2) + CLI_checkarg(6,
-                    2) + CLI_checkarg(7, 5) + CLI_checkarg(8, 5) + CLI_checkarg(9,
-                            2) + CLI_checkarg(10, 5) + CLI_checkarg(11, 5) + CLI_checkarg(12,
-                                    2) + CLI_checkarg(13, 2) + CLI_checkarg(14, 1) + CLI_checkarg(15,
-                                            5) + CLI_checkarg(16, 1) + CLI_checkarg(17, 1) == 0)
+    if(0
+            + CLI_checkarg(1, CLIARG_LONG)
+            + CLI_checkarg(2, CLIARG_LONG)
+            + CLI_checkarg(3, CLIARG_LONG)
+            + CLI_checkarg(4, CLIARG_LONG)
+            + CLI_checkarg(5, CLIARG_LONG)
+            + CLI_checkarg(6, CLIARG_LONG)
+            + CLI_checkarg(7, CLIARG_STR)
+            + CLI_checkarg(8, CLIARG_STR)
+            + CLI_checkarg(9, CLIARG_LONG)
+            + CLI_checkarg(10, CLIARG_STR)
+            + CLI_checkarg(11, CLIARG_STR)
+            + CLI_checkarg(12, CLIARG_LONG)
+            + CLI_checkarg(13, CLIARG_LONG)
+            + CLI_checkarg(14, CLIARG_FLOAT)
+            + CLI_checkarg(15, CLIARG_STR)
+            + CLI_checkarg(16, CLIARG_FLOAT)
+            + CLI_checkarg(17, CLIARG_FLOAT)
+            == 0)
     {
-        AOloopControl_DM_CombineChannels(data.cmdargtoken[1].val.numl,
-                                         data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numl,
-                                         data.cmdargtoken[4].val.numl, data.cmdargtoken[5].val.numl,
-                                         data.cmdargtoken[6].val.numl, data.cmdargtoken[7].val.string,
-                                         data.cmdargtoken[8].val.string, data.cmdargtoken[9].val.numl,
-                                         data.cmdargtoken[10].val.string, data.cmdargtoken[11].val.string,
-                                         data.cmdargtoken[12].val.numl, data.cmdargtoken[13].val.numl,
-                                         data.cmdargtoken[14].val.numf, data.cmdargtoken[15].val.string,
-                                         data.cmdargtoken[16].val.numf, data.cmdargtoken[17].val.numf);
+        AOloopControl_DM_CombineChannels(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.numl,
+            data.cmdargtoken[7].val.string,
+            data.cmdargtoken[8].val.string,
+            data.cmdargtoken[9].val.numl,
+            data.cmdargtoken[10].val.string,
+            data.cmdargtoken[11].val.string,
+            data.cmdargtoken[12].val.numl,
+            data.cmdargtoken[13].val.numl,
+            data.cmdargtoken[14].val.numf,
+            data.cmdargtoken[15].val.string,
+            data.cmdargtoken[16].val.numf,
+            data.cmdargtoken[17].val.numf
+        );
         return 0;
     }
     else
@@ -577,15 +600,6 @@ errno_t AOloopControl_DM_mkAstroGrid_seq_cli()
 static errno_t init_module_CLI()
 {
 
-    /* =============================================================================================== */
-    /* =============================================================================================== */
-    /*                                                                                                 */
-    /* 1. INITIALIZATION, LOAD/CREATE                                                                  */
-    /*                                                                                                 */
-    /* =============================================================================================== */
-    /* =============================================================================================== */
-
-
 
 
 
@@ -597,38 +611,34 @@ static errno_t init_module_CLI()
     /* =============================================================================================== */
     /* =============================================================================================== */
 
+    RegisterCLIcommand(
+        "aolcontrolDMcomb",
+        __FILE__,
+        AOloopControl_DM_CombineChannels_cli,
+        "create and combine DM channels",
+        "<DMindex (0-9)> <xsize> <ysize> <NBchannel> <AveMode (1=if average level removed)> <dm2dm mode> <DMmodes> <outdm stream> <wfsref mode> <WFS resp mat> <wfsref stream> <voltmode (1=dmvolt computed)> <dmvolttype> <dmstroke100> <dmvoltname> <DClevel> <maxvolt [V]>",
+        "aoloopcontrolDMcomb 0 50 50 8 0 1 dmmodes outdm 1 wfsrm wfsrefout 1 1 1.0 dmvolt 0.78 120.0",
+        "int AOloopControl_DM_CombineChannels(long DMindex, long xsize, long ysize, int NBchannel, int AveMode, int dm2dm_mode, const char *dm2dm_DMmodes, const char *dm2dm_outdisp, int wfsrefmode, const char *wfsref_WFSRespMat, const char *wfsref_out, int voltmode, int volttype, float stroke100,const char *IDvolt_name, float DClevel, float maxvolt)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aolcontrolDMcomb");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_CombineChannels_cli;
-    strcpy(data.cmd[data.NBcmd].info, "create and combine DM channels");
-    strcpy(data.cmd[data.NBcmd].syntax,
-           "<DMindex (0-9)> <xsize> <ysize> <NBchannel> <AveMode (1=if average level removed)> <dm2dm mode> <DMmodes> <outdm stream> <wfsref mode> <WFS resp mat> <wfsref stream> <voltmode (1=dmvolt computed)> <dmvolttype> <dmstroke100> <dmvoltname> <DClevel> <maxvolt [V]>");
-    strcpy(data.cmd[data.NBcmd].example,
-           "aoloopcontrolDMcomb 0 50 50 8 0 1 dmmodes outdm 1 wfsrm wfsrefout 1 1 1.0 dmvolt 0.78 120.0");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_CombineChannels(long DMindex, long xsize, long ysize, int NBchannel, int AveMode, int dm2dm_mode, const char *dm2dm_DMmodes, const char *dm2dm_outdisp, int wfsrefmode, const char *wfsref_WFSRespMat, const char *wfsref_out, int voltmode, int volttype, float stroke100,const char *IDvolt_name, float DClevel, float maxvolt)");
-    data.NBcmd++;
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmcomboff");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp =  AOloopControl_DM_dmdispcomboff_cli;
-    strcpy(data.cmd[data.NBcmd].info, "turn off DM combine");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmcomboff 0");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmdispcomboff(long DMindex)");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aoloopcontroldmcomboff",
+        __FILE__,
+        AOloopControl_DM_dmdispcomboff_cli,
+        "turn off DM combine",
+        "<DMindex (0-9)>",
+        "aoloopcontroldmcomboff 0",
+        "int AOloopControl_DM_dmdispcomboff(long DMindex)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmtrigoff");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp =  AOloopControl_DM_dmtrigoff_cli;
-    strcpy(data.cmd[data.NBcmd].info, "turn off DM trigger");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmtrigoff 0");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmtrigoff(long DMindex)");
-    data.NBcmd++;
+
+    RegisterCLIcommand(
+        "aoloopcontroldmtrigoff",
+        __FILE__,
+        AOloopControl_DM_dmtrigoff_cli,
+        "turn off DM trigger",
+        "<DMindex (0-9)>",
+        "aoloopcontroldmtrigoff 0",
+        "int AOloopControl_DM_dmtrigoff(long DMindex)");
 
 
 
@@ -640,107 +650,104 @@ static errno_t init_module_CLI()
     /* =============================================================================================== */
     /* =============================================================================================== */
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmcombmon");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp =  AOloopControl_DM_dmdispcombstatus_cli;
-    strcpy(data.cmd[data.NBcmd].info, "monitor DM comb program");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmcombmon 0");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmdispcombstatus(long DMindex)");
-    data.NBcmd++;
 
-    strcpy(data.cmd[data.NBcmd].key, "aolcontroldmchgain");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_chan_setgain_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set gain for DM displacement channel");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <chan#> <gain>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmchgain 0 3 0.2");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_chan_setgain(long DMindex, int ch, float gain)");
-    data.NBcmd++;
 
-    strcpy(data.cmd[data.NBcmd].key, "aoldmvoltON");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_setvoltON_cli;
-    strcpy(data.cmd[data.NBcmd].info, "turn on DM voltage");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)>");
-    strcpy(data.cmd[data.NBcmd].example, "aoldmvoltON 0");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_setvoltON(long DMindex)");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aoloopcontroldmcombmon",
+        __FILE__,
+        AOloopControl_DM_dmdispcombstatus_cli,
+        "monitor DM comb program",
+        "<DMindex (0-9)>",
+        "aoloopcontroldmcombmon 0",
+        "int AOloopControl_DM_dmdispcombstatus(long DMindex)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aoldmvoltOFF");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_setvoltOFF_cli;
-    strcpy(data.cmd[data.NBcmd].info, "turn off DM voltage");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)>");
-    strcpy(data.cmd[data.NBcmd].example, "aoldmvoltOFF 0");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_setvoltOFF(long DMindex)");
-    data.NBcmd++;
 
-    strcpy(data.cmd[data.NBcmd].key, "aolsetdmvoltmax");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_setMAXVOLT_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set maximum DM voltage");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <max voltage [V]>");
-    strcpy(data.cmd[data.NBcmd].example, "aolsetdmvoltmax 120.0");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_setMAXVOLT(long DMindex, float maxvolt)");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aolcontroldmchgain",
+        __FILE__,
+        AOloopControl_DM_chan_setgain_cli,
+        "set gain for DM displacement channel",
+        "<DMindex (0-9)> <chan#> <gain>",
+        "aoloopcontroldmchgain 0 3 0.2",
+        "int AOloopControl_DM_chan_setgain(long DMindex, int ch, float gain)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aolsetdmDC");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_setDClevel_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set DM DC level [um]");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <DC level [um]>");
-    strcpy(data.cmd[data.NBcmd].example, "aolsetdmDC 0.5");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_setDClevel(long DMindex, float DClevel)");
-    data.NBcmd++;
 
-    strcpy(data.cmd[data.NBcmd].key, "aolsetdmAveM");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_setAveMode_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set DM averaging mode [0,1 or 2]");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <AveMode>");
-    strcpy(data.cmd[data.NBcmd].example, "aolsetdmAveM 00 1");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_setAveMode(long DMindex, int AveMode)");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aoldmvoltON",
+        __FILE__,
+        AOloopControl_DM_setvoltON_cli,
+        "turn on DM voltage",
+        "<DMindex (0-9)>",
+        "aoldmvoltON 0",
+        "int AOloopControl_DM_setvoltON(long DMindex)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aolsetdmTrigMode");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_setTrigMode_cli;
-    strcpy(data.cmd[data.NBcmd].info,
-           "set DM trigger mode (0:std, 1:use single channel)");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <TrigMode [0, 1]>");
-    strcpy(data.cmd[data.NBcmd].example, "aolsetdmTrigMode 0 1");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_setTrigMode(long DMindex, int mode)");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aoldmvoltOFF",
+        __FILE__,
+        AOloopControl_DM_setvoltOFF_cli,
+        "turn off DM voltage",
+        "<DMindex (0-9)>",
+        "aoldmvoltOFF 0",
+        "int AOloopControl_DM_setvoltOFF(long DMindex)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aolsetdmTrigChan");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_setTrigChan_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set DM trigger channel");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <TrigChan>");
-    strcpy(data.cmd[data.NBcmd].example, "aolsetdmTrigChan 0 3");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_setTrigChan(long DMindex, int chan)");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aolsetdmvoltmax",
+        __FILE__,
+        AOloopControl_DM_setMAXVOLT_cli,
+        "set maximum DM voltage",
+        "<DMindex (0-9)> <max voltage [V]>",
+        "aolsetdmvoltmax 120.0",
+        "int AOloopControl_DM_setMAXVOLT(long DMindex, float maxvolt)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aolsetdmTrigSem");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_setTrigSem_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set DM trigger semaphore");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <TrigSem [0-9]>");
-    strcpy(data.cmd[data.NBcmd].example, "aolsetdmTrigSem 0 4");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_setTrigSem(long DMindex, int sem)");
-    data.NBcmd++;
 
+    RegisterCLIcommand(
+        "aolsetdmDC",
+        __FILE__,
+        AOloopControl_DM_setDClevel_cli,
+        "set DM DC level [um]",
+        "<DMindex (0-9)> <DC level [um]>",
+        "aolsetdmDC 0.5",
+        "int AOloopControl_DM_setDClevel(long DMindex, float DClevel)");
+
+
+    RegisterCLIcommand(
+        "aolsetdmAveM",
+        __FILE__,
+        AOloopControl_DM_setAveMode_cli,
+        "set DM averaging mode [0,1 or 2]",
+        "<DMindex (0-9)> <AveMode>",
+        "aolsetdmAveM 00 1",
+        "int AOloopControl_DM_setAveMode(long DMindex, int AveMode)");
+
+
+    RegisterCLIcommand(
+        "aolsetdmTrigMode",
+        __FILE__,
+        AOloopControl_DM_setTrigMode_cli,
+        "set DM trigger mode (0:std, 1:use single channel)",
+        "<DMindex (0-9)> <TrigMode [0, 1]>",
+        "aolsetdmTrigMode 0 1",
+        "int AOloopControl_DM_setTrigMode(long DMindex, int mode)");
+
+
+    RegisterCLIcommand(
+        "aolsetdmTrigChan",
+        __FILE__,
+        AOloopControl_DM_setTrigChan_cli,
+        "set DM trigger channel",
+        "<DMindex (0-9)> <TrigChan>",
+        "aolsetdmTrigChan 0 3",
+        "int AOloopControl_DM_setTrigChan(long DMindex, int chan)");
+
+
+    RegisterCLIcommand(
+        "aolsetdmTrigSem",
+        __FILE__,
+        AOloopControl_DM_setTrigSem_cli,
+        "set DM trigger semaphore",
+        "<DMindex (0-9)> <TrigSem [0-9]>",
+        "aolsetdmTrigSem 0 4",
+        "int AOloopControl_DM_setTrigSem(long DMindex, int sem)");
 
 
 
@@ -752,85 +759,86 @@ static errno_t init_module_CLI()
     /* =============================================================================================== */
     /* =============================================================================================== */
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmturbprint");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp =  AOloopControl_printDMturbconf;
-    strcpy(data.cmd[data.NBcmd].info, "print DM turb configuration");
-    strcpy(data.cmd[data.NBcmd].syntax, "no arg");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmturbprint");
-    strcpy(data.cmd[data.NBcmd].Ccall, "int AOloopControl_printDMturbconf()");
-    data.NBcmd++;
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmturb");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_dmturb_cli;
-    strcpy(data.cmd[data.NBcmd].info, "DM turbulence");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmturb 0");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name, long NBsamples)");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aoloopcontroldmturbprint",
+        __FILE__,
+        AOloopControl_printDMturbconf,
+        "print DM turb configuration",
+        "no arg",
+        "aoloopcontroldmturbprint",
+        "int AOloopControl_printDMturbconf()");
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmturb2im");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_dmturb2im_cli;
-    strcpy(data.cmd[data.NBcmd].info, "DM turbulence to image");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (00-09) <imoutname> <NBsamples>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmturb2im 00 wftout 100000");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name, long NBsamples)");
-    data.NBcmd++;
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmturboff");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp =  AOloopControl_DM_dmturboff_cli;
-    strcpy(data.cmd[data.NBcmd].info, "turn off DM turbulence");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmturboff 0");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmturboff(long DMindex)");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aoloopcontroldmturb",
+        __FILE__,
+        AOloopControl_DM_dmturb_cli,
+        "DM turbulence",
+        "<DMindex (0-9)>",
+        "aoloopcontroldmturb 0",
+        "int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name, long NBsamples)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmturws");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_dmturb_wspeed_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set turbulence wind speed");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <wind speed [m/s]>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmturws 0 5.2");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmturb_wspeed(long DMindex, double wspeed);");
-    data.NBcmd++;
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmturampl");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_dmturb_ampl_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set turbulence amplitude");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <amplitude [um]>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmturampl 0 0.1");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmturb_ampl(long DMindex, double ampl);");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aoloopcontroldmturb2im",
+        __FILE__,
+        AOloopControl_DM_dmturb2im_cli,
+        "DM turbulence to image",
+        "<DMindex (00-09) <imoutname> <NBsamples>",
+        "aoloopcontroldmturb2im 00 wftout 100000",
+        "int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name, long NBsamples)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmturlo");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_dmturb_LOcoeff_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set turbulence low order coefficient");
-    strcpy(data.cmd[data.NBcmd].syntax, "<DMindex (0-9)> <coeff>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmturlo 0 0.2");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmturb_LOcoeff(long DMindex, double LOcoeff);");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aoloopcontroldmturboff",
+        __FILE__,
+        AOloopControl_DM_dmturboff_cli,
+        "turn off DM turbulence",
+        "<DMindex (0-9)>",
+        "aoloopcontroldmturboff 0",
+        "int AOloopControl_DM_dmturboff(long DMindex)");
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmturtint");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_dmturb_tint_cli;
-    strcpy(data.cmd[data.NBcmd].info, "set turbulence interval time");
-    strcpy(data.cmd[data.NBcmd].syntax,
-           "<DMindex (0-9)> <interval time [us] long>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmturtint 0 200");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "int AOloopControl_DM_dmturb_tint(long DMindex, long tint);");
-    data.NBcmd++;
+
+
+    RegisterCLIcommand(
+        "aoloopcontroldmturws",
+        __FILE__,
+        AOloopControl_DM_dmturb_wspeed_cli,
+        "set turbulence wind speed",
+        "<DMindex (0-9)> <wind speed [m/s]>",
+        "aoloopcontroldmturws 0 5.2",
+        "int AOloopControl_DM_dmturb_wspeed(long DMindex, double wspeed)");
+
+
+    RegisterCLIcommand(
+        "aoloopcontroldmturampl",
+        __FILE__,
+        AOloopControl_DM_dmturb_ampl_cli,
+        "set turbulence amplitude",
+        "<DMindex (0-9)> <amplitude [um]>",
+        "aoloopcontroldmturampl 0 0.1",
+        "int AOloopControl_DM_dmturb_ampl(long DMindex, double ampl)");
+
+
+    RegisterCLIcommand(
+        "aoloopcontroldmturlo",
+        __FILE__,
+        AOloopControl_DM_dmturb_LOcoeff_cli,
+        "set turbulence low order coefficient",
+        "<DMindex (0-9)> <coeff>",
+        "aoloopcontroldmturlo 0 0.2",
+        "int AOloopControl_DM_dmturb_LOcoeff(long DMindex, double LOcoeff)");
+
+
+    RegisterCLIcommand(
+        "aoloopcontroldmturtint",
+        __FILE__,
+        AOloopControl_DM_dmturb_tint_cli,
+        "set turbulence interval time",
+        "<DMindex (0-9)> <interval time [us] long>",
+        "aoloopcontroldmturtint 0 200",
+        "int AOloopControl_DM_dmturb_tint(long DMindex, long tint)");
+
 
 
     /* =============================================================================================== */
@@ -841,28 +849,25 @@ static errno_t init_module_CLI()
     /* =============================================================================================== */
     /* =============================================================================================== */
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmmkttcirc");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_mkDM_TT_circle_cli;
-    strcpy(data.cmd[data.NBcmd].info, "make DM TT circle file");
-    strcpy(data.cmd[data.NBcmd].syntax, "<outfname> <DMindex (0-9)> <NBpt> <ampl>");
-    strcpy(data.cmd[data.NBcmd].example, "aoloopcontroldmmkttcirc ttcirc 0 20 0.5");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "long AOloopControl_mkDM_TT_circle(char *IDoutname, long DMindex, long NBpts, float ampl)");
-    data.NBcmd++;
+
+    RegisterCLIcommand(
+        "aoloopcontroldmmkttcirc",
+        __FILE__,
+        AOloopControl_mkDM_TT_circle_cli,
+        "make DM TT circle file",
+        "<outfname> <DMindex (0-9)> <NBpt> <ampl>",
+        "aoloopcontroldmmkttcirc ttcirc 0 20 0.5",
+        "long AOloopControl_mkDM_TT_circle(char *IDoutname, long DMindex, long NBpts, float ampl)");
 
 
-    strcpy(data.cmd[data.NBcmd].key, "aoloopcontroldmastrogseq");
-    strcpy(data.cmd[data.NBcmd].module, __FILE__);
-    data.cmd[data.NBcmd].fp = AOloopControl_DM_mkAstroGrid_seq_cli;
-    strcpy(data.cmd[data.NBcmd].info, "make astrogrid sequence");
-    strcpy(data.cmd[data.NBcmd].syntax,
-           "<outfname> <DMindex (0-9)> <mode (0-6)> <bin(>1)> <NBcycle>");
-    strcpy(data.cmd[data.NBcmd].example,
-           "aoloopcontroldmastrogseq astrogridseq 0 0 1 1");
-    strcpy(data.cmd[data.NBcmd].Ccall,
-           "long AOloopControl_DM_mkAstroGrid_seq(char *IDoutname, long DMindex, int XYmode, int bin, long NBcycle)");
-    data.NBcmd++;
+    RegisterCLIcommand(
+        "aoloopcontroldmastrogseq",
+        __FILE__,
+        AOloopControl_DM_mkAstroGrid_seq_cli,
+        "make astrogrid sequence",
+        "<outfname> <DMindex (0-9)> <mode (0-6)> <bin(>1)> <NBcycle>",
+        "aoloopcontroldmastrogseq astrogridseq 0 0 1 1",
+        "long AOloopControl_DM_mkAstroGrid_seq(char *IDoutname, long DMindex, int XYmode, int bin, long NBcycle)");
 
 
 
