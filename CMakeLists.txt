@@ -168,7 +168,7 @@ find_package( Threads )
 
 # FIND MILK
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(MILK REQUIRED milk>=1.01)
+pkg_check_modules(MILK REQUIRED milk>=1.01.02)
 link_directories(${MILK_LIBRARY_DIRS})
 include_directories(${MILK_INCLUDE_DIRS})
 message("MILK_VERSION = ${MILK_VERSION}")
