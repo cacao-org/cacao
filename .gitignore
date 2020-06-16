@@ -49,3 +49,5 @@ src/cacao
 dochtml/
 build/
 .vscode
+src/cacao_config.h
+src/config.h

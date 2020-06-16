@@ -133,8 +133,9 @@ Additional software is required to view real-time data streams. Several options 
 
 Python users can read/write milk/cacao's data streams using additional packages:
 
-  * [pyImageStreamIO](https://github.com/milk-org/pyImageStreamIO) provides an interface to data streams.
+  * [pyMilk](https://github.com/milk-org/pyMilk) provides an interface to data streams.
   * [xaosim](https://github.com/fmartinache/xaosim) includes a python interface to data streams.. and much more
+Both stream interfaces above are cross-compatible.
 
 
 
