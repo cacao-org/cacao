@@ -99,6 +99,7 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}      cacaodm.aolcontrolDMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
 
+fpscmdheader
 fpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
 fpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
 fi
@@ -133,6 +134,7 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}    streamdelay         ${fpsarg0}"  >> fpslist.txt
 
+fpscmdheader
 fpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
 fpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
 fpscmd "setval ${fpsfname}.delayus 20000"
@@ -183,7 +185,7 @@ runstrcmd "cp ./${CACAO_WORKDIR}/simLHS/simLHS.respM.fits ./${CACAO_WORKDIR}/con
 runstrcmd "cp ./${CACAO_WORKDIR}/simLHS/simLHS.wfsref.fits ./${CACAO_WORKDIR}/conf/shmim.aolsimLHSwfsref.fits"
 
 
-
+fpscmdheader
 fpscmd "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_dmdispD"
 
 fpscmd "setval ${fpsfname}.sname_modes aolsimLHSrespM"
@@ -229,6 +231,7 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}           cacaopt.aoltestlat     ${fpsarg0}" >> fpslist.txt
 
+fpscmdheader
 fpscmd "setval ${fpsfname}.NBiter 20"
 fpscmd "setval ${fpsfname}.sn_dm aol${CACAO_LOOPNUMBER}_dmRM"
 fpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_wfsim"
@@ -260,6 +263,7 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}           cacaoio.aolacquireWFSloop     ${fpsarg0}" >> fpslist.txt
 
+fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
 fpscmd "setval ${fpsfname}.WFSnormalize ON"
@@ -299,6 +303,8 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
+
+fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
 fpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
@@ -354,6 +360,7 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
+fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
 fpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
@@ -429,6 +436,7 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}         cacaocc.aolcomputeCM       ${fpsarg0}" >> fpslist.txt
 
+fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
 fpscmd "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}"
@@ -473,6 +481,7 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}         aolRM2CM       ${fpsarg0}" >> fpslist.txt
 
+fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 fpscmd "setval ${fpsfname}.fname_respM conf-zRM-staged/zrespMn.fits"
 
@@ -512,6 +521,7 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}         cuda.cudaextrmodes       ${fpsarg0}" >> fpslist.txt
 
+fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
 # input frame
@@ -573,6 +583,7 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}         cacao.aolrun       ${fpsarg0}" >> fpslist.txt
 
+fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 fpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_imWFS1"
 

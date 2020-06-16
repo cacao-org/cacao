@@ -293,11 +293,10 @@ function cacaosetupLISTprocesses {
 # send command to all FPSs
 # example: 
 # allFPScmd confstart
+# 
+# also feeds to fpsCTRL fps.conf/fpssetup.<cmd>.<fpsname>.conf if exists
 #
-
-
 function allFPScmd {
-	echo "START 07" > testfile.$1.log #TEST
 	echolog "STARTING ALL CONF PROCESSES"
 	echo "running command $1 on all FPSs"
 
@@ -305,22 +304,17 @@ function allFPScmd {
 	  getfpsname_fromline "${line}"
 	  echolog "command $1 for FPS ${fpsname}"
 	  echo "$1 ${fpsname}" >> ${fpsCTRLfifo}
-	  echo "$1 ${fpsname}" >> testfile.$1.log	  
 
 	  # if there is a taskfile associated with command, load it
 	  taskflist="fps.conf/fpssetup.$1.${fpsname}.conf"
-	  echo "${taskflist}" >> testfile.$1.log
 	  if [ -f ${fpstaskfname} ]; then
-	    echo "taskfile ${taskflist}" >> testfile.$1.log #TEST
 	    while IFS='' read -r taskline || [[ -n "${taskline}" ]]; do
 	      echolog "${taskline}"
 	      echo "${taskline}" >> ${fpsCTRLfifo}
 	    done < ${taskflist}
 	  fi	  
 
-	done < ${LOOPWORKDIR}/fpslist.txt
-	
-	echo "tasklistdone" >> ${fpsCTRLfifo}
+	done < ${LOOPWORKDIR}/fpslist.txt	
 } 
 
 
@@ -437,7 +431,6 @@ CLEAR="0"
 TESTMODE="0"
 FPSSETPARAMCONF="0"
 UPDATEMODE="0"
-#TTYMODE="0"
 LISTPROCESSES="0"
 
 while getopts :heCtrul FLAG; do
@@ -460,10 +453,6 @@ while getopts :heCtrul FLAG; do
     C) # clear
     CLEAR="1"
     ;;
-#    y) # start fpsCTRL in specified tty
-#    DEVTTY=$OPTARG
-#    TTYMODE="1"
-#    ;;
     r) # just run fps params setup
     FPSSETPARAMCONF="1"
     ;;
@@ -880,7 +869,7 @@ fi
 
 if [ "$UPDATEMODE" = "0" ]; then
 	# link DM index to loop number
-	./aolfuncs/aolfunc_setDMnolink &>> ${LOGFILENAME}
+	cacao-setDMnolink &>> ${LOGFILENAME}
 
 	# link WFS
 	echo "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
