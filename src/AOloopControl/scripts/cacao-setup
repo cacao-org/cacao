@@ -53,6 +53,14 @@ function printHELP {
 	echo "  Will create work directory, install scripts and start DMcomb process and links DM to loop"
 	echo "  Each cacao loop has a unique ASCII name, referred to as <loopname> in this manual."
 	echo ""
+	echo "Main steps :"
+	echo "  - Reads cacaovars"
+	echo "  - Calls cacao-fpslistadd:  create fpslist.txt (list of FPSs) and fpssetup.<fpsname>.conf files"
+	echo "  - Calls milk-fpsinit to setup FPSs"
+	echo "  - Start milk-fpsCTRL process in tmux session"
+	echo "  - Start conf process for each FPS"
+	echo "  - Send fpssetup tasks to milk-fpsCTRL"
+	echo ""
 	echo ""
 	echo ""
 	echo "$(tput bold) SUMMARY: HOW TO SETUP AND START CACAO SESSION ? $(tput sgr0)"
@@ -281,21 +289,40 @@ function cacaosetupLISTprocesses {
 
 
 
+
 # send command to all FPSs
 # example: 
 # allFPScmd confstart
 #
+
+
 function allFPScmd {
+	echo "START 07" > testfile.$1.log #TEST
 	echolog "STARTING ALL CONF PROCESSES"
 	echo "running command $1 on all FPSs"
+
 	while IFS='' read -r line || [[ -n "$line" ]]; do
 	  getfpsname_fromline "${line}"
 	  echolog "command $1 for FPS ${fpsname}"
 	  echo "$1 ${fpsname}" >> ${fpsCTRLfifo}
+	  echo "$1 ${fpsname}" >> testfile.$1.log	  
+
+	  # if there is a taskfile associated with command, load it
+	  taskflist="fps.conf/fpssetup.$1.${fpsname}.conf"
+	  echo "${taskflist}" >> testfile.$1.log
+	  if [ -f ${fpstaskfname} ]; then
+	    echo "taskfile ${taskflist}" >> testfile.$1.log #TEST
+	    while IFS='' read -r taskline || [[ -n "${taskline}" ]]; do
+	      echolog "${taskline}"
+	      echo "${taskline}" >> ${fpsCTRLfifo}
+	    done < ${taskflist}
+	  fi	  
+
 	done < ${LOOPWORKDIR}/fpslist.txt
+	
+	echo "tasklistdone" >> ${fpsCTRLfifo}
+} 
 
-
-}
 
 
 
@@ -505,11 +532,14 @@ export CACAO_LOOPNAME="$CACAO_LOOPNAME"
 echolog "START $(basename $0)"
 
 
+# Call script to read loop setup parameters (cacaovars) as env variables
+#
 source cacaovars.${CACAO_LOOPNAME}.bash
 
 
 
-
+# read and check the env variables that have been written above
+#
 echo ""
 echo ""
 echo "====== REQUIRED ENVIRONMENT VARIABLES ====="
@@ -767,9 +797,15 @@ cacao-fpslistadd &>> ${LOGFILENAME}
 ./${CACAO_LOOPNAME}.fpslistadd &>> ${LOGFILENAME}
 
 
+
+# copy files to LOOPWORKDIR
+
+# list of FPSs
 echolog "mv fpslist.txt ${LOOPWORKDIR}"
 mv fpslist.txt ${LOOPWORKDIR}
 
+# fpssetup config files
+mv fps.conf ${LOOPWORKDIR}/
 
 
 
@@ -822,7 +858,7 @@ fi
 
 
 # ===================================================================================
-# ========= START CONF PROCESSES  ===================================================
+# ========= START ALL CONF PROCESSES  ===============================================
 # ===================================================================================
 
 allFPScmd confstart
@@ -853,10 +889,6 @@ fi
 
 
 
-
-# ===================================================================================
-# ======================== START RUN PROCESSES ======================================
-# ===================================================================================
 
 
 echo ""

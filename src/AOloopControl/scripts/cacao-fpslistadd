@@ -23,6 +23,8 @@ mkdir $LOGFILEDIR
 LOGFILENAME="${LOGFILEDIR}/$(basename $0).log"
 rm $LOGFILENAME
 
+mkdir -p fps.conf
+
 function echolog {
 	echo $1
 	echo "$(date -u +"%Y%m%dT%H%M%S.%N %s.%N") $1" >> $LOGFILENAME
@@ -34,13 +36,31 @@ function runstrcmd {
 }
 
 
+
+# write header to fpssetup file
+#
+function fpscmdheader {
+	taskfname="fps.conf/fpssetup.confstart.${fpsfname}.conf"
+	echo "# Function Parameter Structure (FPS) setup configuration" >> ${taskfname}
+	echo "# Written by $0 - edits will be overwritten and lost when re-running $0" >> ${taskfname}
+	echo "# These are the default initial values for FPS entries" >> ${taskfname}
+	echo "# This file is read by fpsCTRL upon launching FPS conf process" >> ${taskfname}
+	echo "# " >> ${taskfname}
+}
+
+
+
 # write entry to fpssetup file
 #
 function fpscmd {
+	taskfname="fps.conf/fpssetup.confstart.${fpsfname}.conf"
 	echolog "FPS CMD TO ${FPSCONFFILE} : $1"
 	#echo "$1" >> ${FPSCONFFILE}
-	echo "$1" >> fpssetup.${fpsfname}.conf
+	echo "$1" >> ${taskfname}
 }
+
+
+
 
 
 
