@@ -286,7 +286,6 @@ fi
 
 
 
-
 if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
 echolog "ON  CACAO_FPSPROC_ACQLINZRM"
 # ==============================================================================
@@ -298,6 +297,14 @@ fpsname="acqlin_zRM"
 fpsarg0="${CACAO_LOOPNUMBER}"
 outdir="conf-zRM-staged"
 mkdir -p ${LOOPWORKDIR}/${outdir}
+
+# get scripts that will be used
+mkdir -p ${LOOPWORKDIR}/cacaobin
+ln -s $(which cacao-RMdecode) ${LOOPWORKDIR}/cacaobin/cacao-RMdecode 
+ln -s $(which cacao-mkDMWFSmasks) ${LOOPWORKDIR}/cacaobin/cacao-mkDMWFSmasks
+ln -s $(which cacao-mkDMslaveActprox) ${LOOPWORKDIR}/cacaobin/cacao-mkDMslaveActprox
+ln -s $(which cacao-mkLODMmodes) ${LOOPWORKDIR}/cacaobin/cacao-mkLODMmodes
+ln -s $(which cacao-NULL) ${LOOPWORKDIR}/cacaobin/cacao-NULL
 
 # FPS full name
 fpsfname="${fpsname}-${fpsarg0}" 

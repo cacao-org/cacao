@@ -66,6 +66,10 @@ install(TARGETS ${LIBNAME} DESTINATION lib)
 
 install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-RMdecode
+	scripts/cacao-mkDMWFSmasks
+	scripts/cacao-mkDMslaveActprox
+	scripts/cacao-mkLODMmodes
+	scripts/cacao-NULL
 	scripts/cacao-exec
 	scripts/cacao.tmux
 	scripts/cacao-fpslistadd
