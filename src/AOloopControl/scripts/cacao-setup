@@ -780,7 +780,7 @@ fi
 
 # cacao-provided default script
 # writes in fpslist.txt and fpssetup.setval.conf
-cacao-fpslistadd &>> ${LOGFILENAME}
+source cacao-fpslistadd &>> ${LOGFILENAME}
 
 # optional additional custom script
 ./${CACAO_LOOPNAME}.fpslistadd &>> ${LOGFILENAME}

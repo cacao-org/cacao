@@ -65,11 +65,13 @@ endif(USE_MAGMA)
 install(TARGETS ${LIBNAME} DESTINATION lib)
 
 install(PROGRAMS scripts/cacao-setup
+	scripts/cacao-RMdecode
 	scripts/cacao-exec
 	scripts/cacao.tmux
 	scripts/cacao-fpslistadd
 	scripts/cacao-setDMnolink
 	scripts/cacao_simLHS
+	scripts/cacao-task-manager
 	scripts/cacaotask-check
 	scripts/cacaotask-INITSETUP
 	scripts/cacaotask-GETSIMCONFFILES

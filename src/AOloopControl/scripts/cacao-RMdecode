@@ -1,0 +1,183 @@
+#! /bin/bash
+
+NBARGS=1
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : Decode zonal resp matrix $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "Cleans zonal response matrices in ./tmpRMacqu/ directory"
+echo "if images conf/RMpixindex.fits conf/RMmat.fits exist, use them for coding/decoding"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <FPSname>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <FPSname>      Function Parameter Structure (FPS) name"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "  zrespmat.fits    : zonal response matrix"
+echo "  wfsref0.fits     : wfs reference"
+echo "  wfsmap.fits      : WFS response map"
+echo "  dmmap.fits       : DM response map"
+echo "     wfsmask.fits"
+echo "     dmmaskRM.fits"
+echo "     dmslaved.fits"
+echo "     dmmask.fits" 
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Cleans zonal resp matrix\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+FPSname=$1
+stageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
+mkdir -p ${stageddir}
+
+pname0=$0
+pname="aol${loopnb}zrespM"
+
+
+
+OMP_NUM_THREADS=6 cacao -n $pname << EOF
+cacao.aolnb $loopnb
+loadfits "./${stageddir}/tmpRMacqu/RMpokeCube.fits" RMpokeC
+loadfits "./${stageddir}/tmpRMacqu/RMmat.fits" RMmat
+loadfits "./${stageddir}/tmpRMacqu/RMpixindex.fits" pixindexim
+loadfits "./${stageddir}/tmpRMacqu/respM.fits" respm
+loadfits "./${stageddir}/tmpRMacqu/wfsref.fits" wfsref0
+
+cacaocc.aolproczrm respm wfsref0 zrespm wfsmap dmmap
+
+savefits zrespm "!./${stageddir}/tmpRMacqu/zrespM.fits"
+savefits wfsmap "!./${stageddir}/tmpRMacqu/wfsmap.fits"
+savefits dmmap "!./${stageddir}/tmpRMacqu/dmmap.fits"
+listim
+exitCLI
+EOF
+
+
+# copy to staged dir
+
+cp ./${stageddir}/tmpRMacqu/zrespM.fits ${stageddir}/zrespM.fits
+cp ./${stageddir}/tmpRMacqu/wfsref.fits ${stageddir}/wfsref00.fits
+
+
+# Process time sampled slices
+
+AVEFILECOUNTER=0
+while [  $AVEFILECOUNTER -lt 100 ]; do
+cntnum=$( echo ${AVEFILECOUNTER} | awk '{printf("%03d", $1)}')
+zrespM_filename="./${stageddir}/tmpRMacqu/respM.ave${cntnum}.fits"
+wfsref_filename="./${stageddir}/tmpRMacqu/wfsref.ave${cntnum}.fits"
+
+if [ -f "$zrespM_filename" ]; then
+    
+
+
+OMP_NUM_THREADS=6 cacao -n $pname << EOF
+cacao.aolnb $loopnb
+loadfits "./${stageddir}/tmpRMacqu/RMpokeCube.fits" RMpokeC
+loadfits "./${stageddir}/tmpRMacqu/RMmat.fits" RMmat
+loadfits "./${stageddir}/tmpRMacqu/RMpixindex.fits" pixindexim
+loadfits "$zrespM_filename" zrespmat0
+loadfits "$wfsref_filename" wfsref00
+
+cacaocc.aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
+
+savefits zrespmat "!./${stageddir}/tmpRMacqu/zrespM.ave${cntnum}.fits"
+listim
+exitCLI
+EOF
+
+fi
+
+let AVEFILECOUNTER=AVEFILECOUNTER+1 
+done
+
+

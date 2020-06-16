@@ -17,13 +17,13 @@ source $gfile
 done
 
 cd ${CURRENTDIR}
-cp $CONFDIR/simLHS/*.fits $WORKDIRECTORY/simLHS/
+cp ${CONFDIR}/simLHS/*.fits ${WORKDIRECTORY}/simLHS/
 
 
 # copy test configuration files to work directory
-cp $CONFDIR/cacaovars.${LOOPNAME}.bash $WORKDIRECTORY/
+cp ${CONFDIR}/cacaovars.${LOOPNAME}.bash ${WORKDIRECTORY}/
 
-cp $CONFDIR/fpssetup.setval.${LOOPNAME}.conf $WORKDIRECTORY/
+cp ${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf ${WORKDIRECTORY}/
 
 
 

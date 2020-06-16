@@ -178,8 +178,8 @@ LINSIMDT="10000"
 # copy calibration files
 
 runstrcmd "mkdir -p ${LOOPWORKDIR}/simLHS"
-runstrcmd "cp simLHS/${LOOPWORKDIR}.respM.fits ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits"
-runstrcmd "cp simLHS/${LOOPWORKDIR}.wfsref.fits ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits"
+runstrcmd "cp simLHS/${CACAO_LOOPNAME}.respM.fits ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits"
+runstrcmd "cp simLHS/${CACAO_LOOPNAME}.wfsref.fits ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits"
 
 runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSrespM.fits"
 runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSwfsref.fits"
@@ -329,10 +329,10 @@ fpscmd "setval ${fpsfname}.NBinnerCycle 1"
 fpscmd "setval ${fpsfname}.NBexcl 0"
 
 fpscmd "setval ${fpsfname}.MaskMode ON"
-fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
-fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
-fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
-fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
+fpscmd "setval ${fpsfname}.exec.RMdecode cacao-RMdecode"
+fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacao-mkDMWFSmasks"
+fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacao-mkDMslaveActprox"
+fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacao-mkLODMmodes"
 fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
@@ -391,10 +391,10 @@ fpscmd "setval ${fpsfname}.fn_pokeC conf/respM_LOmodes.fits"
 
 fpscmd "setval ${fpsfname}.MaskMode OFF"
 
-fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-NULL"
-fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL"
-fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
-fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
+fpscmd "setval ${fpsfname}.exec.RMdecode cacao-NULL"
+fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacao-NULL"
+fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacao-NULL"
+fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacao-NULL"
 
 
 fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
