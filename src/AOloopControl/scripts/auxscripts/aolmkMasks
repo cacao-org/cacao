@@ -159,7 +159,7 @@ stageddir="conf_zrm_staged"
 ./AOloopControl << EOF
 cacao.aolnb $loopnb
 loadfits "./${stageddir}/zrespM.fits" zrespm
-aolRMmkmasks zrespm wfsmap dmmap ${DMmaskRMp0} ${DMmaskRMc0} ${DMmaskRMp1} ${DMmaskRMc1} ${WFSmaskRMp0} ${WFSmaskRMc0} ${WFSmaskRMp1} ${WFSmaskRMc1}
+cacaocc.aolRMmkmasks zrespm wfsmap dmmap ${DMmaskRMp0} ${DMmaskRMc0} ${DMmaskRMp1} ${DMmaskRMc1} ${WFSmaskRMp0} ${WFSmaskRMc0} ${WFSmaskRMp1} ${WFSmaskRMc1}
 savefits wfsmask "!wfsmask.fits"
 savefits dmmask "!dmmaskRM.fits"
 exitCLI

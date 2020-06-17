@@ -160,7 +160,7 @@ LOOPNUMBER_file="LOOPNUMBER"
 CPUconfRT="1"  # use CPU sets
 LOADexit="0"
 
-execname="./AOloopControl"
+execname="/usr/local/cacao/bin/cacao"
 
 mkdir -p logdir
 
@@ -233,8 +233,8 @@ while getopts :hH:l:CcL:N:xe:n FLAG; do
 	LOADexit="1"
 	;;
     e) # set executable
-    execnameFile=$OPTARG
-    ln -s $execnameFile ./AOloopControl
+    execname=$OPTARG
+    ln -s $execname ./AOloopControl
     ;;
     n) # do not load configuration upon startup
     LOADMEM=0

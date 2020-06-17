@@ -127,7 +127,7 @@ actproxrad=$( head -1 fpsconf/${FPSname}/DMmask/proxrad.setval.txt | awk '{print
 
 ./AOloopControl << EOF
 loadfits "${stageddir}/dmmaskRM.fits" DMmaskRM
-aolmkslact DMmaskRM ${actproxrad} DMslavedact
+cacaocc.aolmkslact DMmaskRM ${actproxrad} DMslavedact
 savefits DMslavedact "!${stageddir}/dmslaved.fits"
 exitCLI
 EOF
