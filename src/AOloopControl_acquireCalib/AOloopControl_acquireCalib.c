@@ -2802,7 +2802,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     {
         EXECUTE_SYSTEM_COMMAND("cp %s %s/tmpRMacqu/RMpokeCube.fits", pokeC_filename,
                                outdirname);
-        EXECUTE_SYSTEM_COMMAND("p %s %s/RMpokeCube.fits", pokeC_filename, outdirname);
+        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename, outdirname);
     }
 
 
