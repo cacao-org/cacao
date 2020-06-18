@@ -317,6 +317,14 @@ TASKLISTFILE="${CONFDIR}/tasklist.txt"
 checkFile ${TASKLISTFILE}
 
 
+CACAOVARSFILE="${CONFDIR}/cacaovars.${LOOPNAME}.bash"
+checkFile ${CACAOVARSFILE}
+
+
+FPSSETUPFILE="${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf"
+checkFile ${FPSSETUPFILE}
+
+
 
 if [ $EXITSTATUS = 1 ]; then
 exit
