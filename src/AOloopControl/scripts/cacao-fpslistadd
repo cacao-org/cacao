@@ -492,7 +492,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}         aolRM2CM       ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}         cacaocc.aolRM2CM       ${fpsarg0}" >> fpslist.txt
 
 fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
