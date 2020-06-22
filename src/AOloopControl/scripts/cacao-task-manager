@@ -615,7 +615,7 @@ for i in ${!TASKCODEARRAY[@]};
 do
 	TASKCODE="${TASKCODEARRAY[$i]}"
 	
-	if [ "${TASKINDEX}" -ge "${LASTTASK}" ]; then
+	if [ "${TASKINDEX}" -gt "${LASTTASK}" ]; then
 		EXECMODE=0
 	fi
 	
