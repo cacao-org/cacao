@@ -121,10 +121,10 @@ echo ""
 echo " $(tput bold)OPTIONS:$(tput sgr0)"
 echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
 echo "     $(tput bold)-x$(tput sgr0)            e(x)ecute next ready task"
-echo "     $(tput bold)-X$(tput sgr0)            e(X)ecute all ready task"
+echo "     $(tput bold)-X$(tput sgr0) <step>     e(X)ecute all ready task up to and including step"
 echo "     $(tput bold)-c$(tput sgr0)            (c)clean/undo last task"
 echo "     $(tput bold)-C$(tput sgr0)            (C)lean/undo all tasks"
-echo "     $(tput bold)-f$(tput sgr0) #          (f)orce task to run/clean: ignore status"
+echo "     $(tput bold)-f$(tput sgr0) <step>     (f)orce task to run/clean: ignore status"
 echo ""
 echo "------------------------------------------------------------------------"
 }
@@ -235,8 +235,10 @@ EXECMODE=0
 SINGLETASK=0
 FORCE=0
 FORCEINDEX=0
+LASTTASK=0
 
-while getopts :hxXcCf: FLAG; do
+
+while getopts :hxX:cCf: FLAG; do
   case $FLAG in
     h)  #show help
       if [ "$singlelinehelp" -eq "0" ]; then
@@ -250,8 +252,9 @@ while getopts :hxXcCf: FLAG; do
     EXECMODE=1
     SINGLETASK=1
     ;;
-    X) # run all tasks
+    X) # run all tasks    
     EXECMODE=1
+    LASTTASK=${OPTARG}
     ;;
     c) # clean single task
     CLEANMODE=1
@@ -611,8 +614,12 @@ let TASKINDEX=0
 for i in ${!TASKCODEARRAY[@]};
 do
 	TASKCODE="${TASKCODEARRAY[$i]}"
-	if [ ${EXECMODE} = 1 ]; then
-		
+	
+	if [ "${TASKINDEX}" -ge "${LASTTASK}" ]; then
+		EXECMODE=0
+	fi
+	
+	if [ ${EXECMODE} = 1 ]; then				
 		if [ "${RUNSTATUSARRAY[$i]}" = "DONE" ]; then
 			ENVOUTFILE="${LOGDIR}/task.${TASKCODE}.ENVOUT.bash"	
 			printf "%s %20s  sourcing %s\n"  "   $(tput bold)SKIP$(tput sgr0)" "$TASKCODE" "${ENVOUTFILE} "

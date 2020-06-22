@@ -603,6 +603,8 @@ fpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_imWFS1"
 fpscmd "setval ${fpsfname}.loopgain 0.02"
 fpscmd "setval ${fpsfname}.loopmult 0.99"
 fpscmd "setval ${fpsfname}.loopON OFF"
+fpscmd "setval ${fpsfname}.loopZERO OFF"
+fpscmd "setval ${fpsfname}.wfsrefON OFF"
 
 fpscmd "setval ${fpsfname}.sn_cmat aol${CACAO_LOOPNUMBER}_CMat"
 fpscmd "setval ${fpsfname}.sn_DMout aol${CACAO_LOOPNUMBER}_dmC"
