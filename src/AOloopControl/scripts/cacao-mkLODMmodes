@@ -116,20 +116,21 @@ mkdir -p Cmodes
 mkdir -p tmp
 
 
-zRMstageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
+
+#zRMstageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
 #"conf_zrm_staged"
-loRMstageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
+#loRMstageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
 #"conf_LOrm_staged"
-mkdir -p ${zRMstageddir}
-mkdir -p ${loRMstageddir}
+#mkdir -p ${zRMstageddir}
+#mkdir -p ${loRMstageddir}
 
 
-./AOloopControl -n $pname << EOF
-cacao.aolnb $loopnb
-loadfits "${zRMstageddir}/dmslaved.fits" dmslaved0
+cacao -n $pname << EOF
+cacao.aolnb ${loopnb}
+loadfits "dmslaved.fits" dmslaved0
 imtrunc dmslaved0 0.0 1.0 dmslaved
-loadfits "${zRMstageddir}/dmmask.fits" dmmask
-loadfits "./conf/TPind.fits" emodes
+loadfits "dmmask.fits" dmmask
+loadfits "TPind.fits" emodes
 readshmim aol${loopnb}_dmC
 info.imstats aol${loopnb}_dmC
 cx=0.5*imsize0-0.5
@@ -138,7 +139,7 @@ od=0.42*imsize0
 id=0.13*imsize0
 if=0
 cacaocc.aolmklodmmodes fmodes imsize0 imsize1 ${LOmaxCPA} 0.8 cx cy od id 0 
-savefits fmodes "!${loRMstageddir}/respM_LOmodes.fits"
+savefits fmodes "!respM_LOmodes.fits"
 exitCLI
 EOF
 
