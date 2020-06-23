@@ -787,7 +787,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
  *
  * ### Timing
  *
- * Timing offset betwen actuator and sensor is specificed as a delay in unit
+ * Timing offset between actuator and sensor is specified as a delay in unit
  * of sensor frames. The delay is the sum of an integer number of sensor
  * frames (delayfr) and an additional time delay in microsecond (delayRM1us).
  *
