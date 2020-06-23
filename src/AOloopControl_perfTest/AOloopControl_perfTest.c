@@ -1047,9 +1047,10 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
                   );
 
     // OPTIONAL SETTINGS
-    processinfo->MeasureTiming = 1; // Measure timing
-    processinfo->RT_priority =
-        80;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+    // Measure timing
+    processinfo->MeasureTiming = 1;
+    // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+    processinfo->RT_priority = 80;
     processinfo->loopcntMax = NBiter;
     int loopOK = 1;
 
