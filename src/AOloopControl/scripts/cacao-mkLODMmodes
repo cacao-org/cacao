@@ -97,11 +97,6 @@ fi
 
 
 
-
-
-
-
-
 loopnb=$( head -1 LOOPNUMBER )
 FPSname=$1
 LOmaxCPA=$( head -1 fpsconf/${FPSname}/LOmaxCPA.setval.txt | awk '{print $1;}' )
