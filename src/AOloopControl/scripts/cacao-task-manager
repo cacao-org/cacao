@@ -251,6 +251,7 @@ while getopts :hxX:cC:f: FLAG; do
     x) # run next task
     EXECMODE=1
     SINGLETASK=1
+    LASTTASK=1000
     ;;
     X) # run all tasks    
     EXECMODE=1
@@ -259,6 +260,7 @@ while getopts :hxX:cC:f: FLAG; do
     c) # clean single task
     CLEANMODE=1
     SINGLETASK=1
+    LASTTASK=0
     ;;
     C) # clean all tasks
     CLEANMODE=1
