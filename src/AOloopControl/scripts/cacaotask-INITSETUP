@@ -19,6 +19,14 @@ else
 fi
 
 
+# copy test configuration files to work directory
+cp ${CONFDIR}/cacaovars.${LOOPNAME}.bash ${WORKDIRECTORY}/
+
+cp ${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf ${WORKDIRECTORY}/
+
+
+
+
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
@@ -29,6 +37,9 @@ fi
 # \${VAR} will not be resolved, and will appear as ${VAR} in the destination
 #
 cat <<EOT >>  ${CLEANSCRIPT}
+
+rm ${WORKDIRECTORY}/cacaovars.${LOOPNAME}.bash
+rm ${WORKDIRECTORY}/fpssetup.setval.${LOOPNAME}.conf
 
 read -p "REMOVING directory ./\${WORKDIRECTORYLOCAL}. Are you sure? " -n 1 -r
 echo

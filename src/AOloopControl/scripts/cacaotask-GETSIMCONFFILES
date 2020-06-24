@@ -20,12 +20,6 @@ cd ${CURRENTDIR}
 cp ${CONFDIR}/simLHS/*.fits ${WORKDIRECTORY}/simLHS/
 
 
-# copy test configuration files to work directory
-cp ${CONFDIR}/cacaovars.${LOOPNAME}.bash ${WORKDIRECTORY}/
-
-cp ${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf ${WORKDIRECTORY}/
-
-
 
 
 # ======================================================================
@@ -40,9 +34,6 @@ cat <<EOT >>  ${CLEANSCRIPT}
 
 rm $WORKDIRECTORY/simLHS/*
 rmdir $WORKDIRECTORY/simLHS
-
-rm $WORKDIRECTORY/cacaovars.${LOOPNAME}.bash
-rm $WORKDIRECTORY/fpssetup.setval.${LOOPNAME}.conf
 
 EOT
 
