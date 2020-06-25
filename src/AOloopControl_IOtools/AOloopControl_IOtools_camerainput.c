@@ -732,8 +732,10 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1; // Measure timing
-    processinfo->RT_priority =
-        20;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+    
+    // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
+    processinfo->RT_priority = 20;
+    
     processinfo->loopcntMax = -1; // max number of iterations. -1 if infinite
 
 
@@ -750,12 +752,6 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
     long    imWaitTimeAvecnt = 0;
     long    imWaitTimeAvecnt0 = 1000;
     double  imWaitTimeAve = 0.0;
-
-    int FORCE_REG_TIMING =
-        0;       // force regular timing: proceed if WFS frame is late
-    float REG_TIMING_frac =
-        1.1;    // how long to wait beyond expected time (fraction)
-    int FORCE_REG_TIMING_val;
 
     char        *ptrv;
 
@@ -841,6 +837,9 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
 
 
+	// Specify input stream trigger
+    processinfo_waitoninputstream_init(processinfo, ID_wfsim,
+		PROCESSINFO_TRIGGERMODE_SEMAPHORE, -1);
 
 
     // ===========================
@@ -857,8 +856,8 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
     while(loopOK == 1)
     {
         loopOK = processinfo_loopstep(processinfo);
-
-
+		processinfo_waitoninputstream(processinfo);
+/*
         // ===========================================
         // WAIT FOR INPUT
         // ===========================================
@@ -883,17 +882,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                 fflush(stdout);
             }
 
-            if(imWaitTimeAvecnt < imWaitTimeAvecnt0)
-            {
-                FORCE_REG_TIMING_val = 0;
-            }
-            else
-            {
-                FORCE_REG_TIMING_val = FORCE_REG_TIMING;
-            }
 
-            if(FORCE_REG_TIMING_val == 0)
-            {
                 int rval;
                 rval = ImageStreamIO_semwait(&data.image[ID_wfsim], wfsim_semwaitindex);
 
@@ -901,39 +890,8 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                 {
                     perror("semwait");
                 }
-            }
-            else
-            {
-                struct timespec semwaitts;
 
-                if(clock_gettime(CLOCK_REALTIME, &semwaitts) == -1)
-                {
-                    perror("clock_gettime");
-                    exit(EXIT_FAILURE);
-                }
-                semwaitts.tv_nsec += (long)(1.0e9 * imWaitTimeAve * REG_TIMING_frac);
-                while(semwaitts.tv_nsec >= 1000000000)
-                {
-                    semwaitts.tv_nsec -= 1000000000;
-                    semwaitts.tv_sec = semwaitts.tv_sec + 1;
-                }
-
-                int rval;
-                rval = ImageStreamIO_semtimedwait(&data.image[ID_wfsim], wfsim_semwaitindex,
-                                                  &semwaitts);
-                //rval = sem_timedwait(data.image[ID_wfsim].semptr[*semindex], &semwaitts);
-                if(rval == -1)
-                {
-                    if(errno == ETIMEDOUT)
-                    {
-                        printf("sem_timedwait() timed out\n");
-                    }
-                    else
-                    {
-                        perror("sem_timedwait");
-                    }
-                }
-            }
+          
 
             sem_getvalue(data.image[ID_wfsim].semptr[*semindex], &semval);
             for(int i = 0; i < semval; i++)
@@ -944,7 +902,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                 ImageStreamIO_semtrywait(&data.image[ID_wfsim], wfsim_semwaitindex);
             }
         }
-
+*/
 
 
 
@@ -1077,10 +1035,11 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                         exit(0);
                         break;
                 }
+                processinfo_update_output_stream(processinfo, ID_imWFS0);
                 //data.image[ID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
-                COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS0, -1);
-                data.image[ID_imWFS0].md[0].cnt0 ++;
-                data.image[ID_imWFS0].md[0].write = 0;
+//                COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS0, -1);
+//                data.image[ID_imWFS0].md[0].cnt0 ++;
+//                data.image[ID_imWFS0].md[0].write = 0;
             }
 
 
@@ -1153,10 +1112,12 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                     data.image[ID_imWFS1].array.F[ii] = data.image[ID_imWFS0].array.F[ii] *
                                                         totalinv;
                 }
+                
+                processinfo_update_output_stream(processinfo, ID_imWFS1);
 
-                COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS1, -1);
-                data.image[ID_imWFS1].md[0].cnt0 ++;
-                data.image[ID_imWFS1].md[0].write = 0;
+//                COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS1, -1);
+//                data.image[ID_imWFS1].md[0].cnt0 ++;
+//                data.image[ID_imWFS1].md[0].write = 0;
             }
 
 
@@ -1306,12 +1267,6 @@ errno_t __attribute__((hot)) Read_cam_frame(
     static long    imWaitTimeAvecnt0 = 1000;
     static double  imWaitTimeAve = 0.0;
 
-
-    int FORCE_REG_TIMING =
-        0;       // force regular timing: proceed if WFS frame is late
-    float REG_TIMING_frac =
-        1.1;    // how long to wait beyond expected time (fraction)
-    int FORCE_REG_TIMING_val;
 
     if(RM == 0)
     {
@@ -1563,20 +1518,6 @@ errno_t __attribute__((hot)) Read_cam_frame(
         }
 
 
-        //sprintf(pmsg, "sem %d = %d [%d]", semindex, semval, FORCE_REG_TIMING);
-        //processinfo_WriteMessage(data.pinfo, pmsg);
-
-        if(imWaitTimeAvecnt < imWaitTimeAvecnt0)
-        {
-            FORCE_REG_TIMING_val = 0;
-        }
-        else
-        {
-            FORCE_REG_TIMING_val = FORCE_REG_TIMING;
-        }
-
-        if(FORCE_REG_TIMING_val == 0)
-        {
             int rval;
             rval = ImageStreamIO_semwait(&data.image[ID_wfsim], wfsim_semwaitindex);
 
@@ -1584,39 +1525,10 @@ errno_t __attribute__((hot)) Read_cam_frame(
             {
                 perror("sem_timedwait");
             }
-        }
-        else
-        {
-            struct timespec semwaitts;
 
-            if(clock_gettime(CLOCK_REALTIME, &semwaitts) == -1)
-            {
-                perror("clock_gettime");
-                exit(EXIT_FAILURE);
-            }
-            semwaitts.tv_nsec += (long)(1.0e9 * imWaitTimeAve * REG_TIMING_frac);
-            while(semwaitts.tv_nsec >= 1000000000)
-            {
-                semwaitts.tv_nsec -= 1000000000;
-                semwaitts.tv_sec = semwaitts.tv_sec + 1;
-            }
 
-            int rval;
-            rval = ImageStreamIO_semtimedwait(&data.image[ID_wfsim], wfsim_semwaitindex,
-                                              &semwaitts);
-            //rval = sem_timedwait(data.image[ID_wfsim].semptr[semindex], &semwaitts);
-            if(rval == -1)
-            {
-                if(errno == ETIMEDOUT)
-                {
-                    printf("sem_timedwait() timed out\n");
-                }
-                else
-                {
-                    perror("sem_timedwait");
-                }
-            }
-        }
+
+     
 
         sem_getvalue(data.image[ID_wfsim].semptr[semindex], &semval);
         for(i = 0; i < semval; i++)
