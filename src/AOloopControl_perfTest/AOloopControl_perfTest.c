@@ -860,11 +860,11 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     // output
     // long fpi_outframerateHz =
     function_parameter_add_entry(&fps, ".out.framerateHz", "WFS frame rate [Hz]",
-                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
 
     // long fpi_outHardLatencyfr =
     function_parameter_add_entry(&fps, ".out.latencyfr", "hardware latency [frame]",
-                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
 
 
     // ==============================================
