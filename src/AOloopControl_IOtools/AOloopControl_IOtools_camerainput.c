@@ -732,10 +732,10 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1; // Measure timing
-    
+
     // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
     processinfo->RT_priority = 20;
-    
+
     processinfo->loopcntMax = -1; // max number of iterations. -1 if infinite
 
 
@@ -837,9 +837,9 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
 
 
 
-	// Specify input stream trigger
+    // Specify input stream trigger
     processinfo_waitoninputstream_init(processinfo, ID_wfsim,
-		PROCESSINFO_TRIGGERMODE_SEMAPHORE, -1);
+                                       PROCESSINFO_TRIGGERMODE_SEMAPHORE, -1);
 
 
     // ===========================
@@ -856,53 +856,53 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
     while(loopOK == 1)
     {
         loopOK = processinfo_loopstep(processinfo);
-		processinfo_waitoninputstream(processinfo);
-/*
-        // ===========================================
-        // WAIT FOR INPUT
-        // ===========================================
-        if(data.image[ID_wfsim].md[0].sem == 0)   // don't use semaphore
-        {
-            // use counter to test if new WFS frame is ready
-            while(WFScnt == data.image[ID_wfsim].md[0].cnt0) // test if new frame exists
-            {
-                usleep(5);
-            }
-        }
-        else
-        {
-            sem_getvalue(data.image[ID_wfsim].semptr[*semindex], &semval);
-            if(semval > 0)
-            {
-                if(semval > 1)
+        processinfo_waitoninputstream(processinfo);
+        /*
+                // ===========================================
+                // WAIT FOR INPUT
+                // ===========================================
+                if(data.image[ID_wfsim].md[0].sem == 0)   // don't use semaphore
                 {
-                    printf("\n\033[31;1m WARNING [%d] WFS SEMAPHORE already posted - Missed frame\033[0m\n",
-                           semval);
+                    // use counter to test if new WFS frame is ready
+                    while(WFScnt == data.image[ID_wfsim].md[0].cnt0) // test if new frame exists
+                    {
+                        usleep(5);
+                    }
                 }
-                fflush(stdout);
-            }
-
-
-                int rval;
-                rval = ImageStreamIO_semwait(&data.image[ID_wfsim], wfsim_semwaitindex);
-
-                if(rval == -1)
+                else
                 {
-                    perror("semwait");
+                    sem_getvalue(data.image[ID_wfsim].semptr[*semindex], &semval);
+                    if(semval > 0)
+                    {
+                        if(semval > 1)
+                        {
+                            printf("\n\033[31;1m WARNING [%d] WFS SEMAPHORE already posted - Missed frame\033[0m\n",
+                                   semval);
+                        }
+                        fflush(stdout);
+                    }
+
+
+                        int rval;
+                        rval = ImageStreamIO_semwait(&data.image[ID_wfsim], wfsim_semwaitindex);
+
+                        if(rval == -1)
+                        {
+                            perror("semwait");
+                        }
+
+
+
+                    sem_getvalue(data.image[ID_wfsim].semptr[*semindex], &semval);
+                    for(int i = 0; i < semval; i++)
+                    {
+                        //			printf("WARNING: [%d] sem_trywait on ID_wfsim\n", (int) (semval - i));
+                        //			fflush(stdout);
+                        //sem_trywait(data.image[ID_wfsim].semptr[*semindex]);
+                        ImageStreamIO_semtrywait(&data.image[ID_wfsim], wfsim_semwaitindex);
+                    }
                 }
-
-          
-
-            sem_getvalue(data.image[ID_wfsim].semptr[*semindex], &semval);
-            for(int i = 0; i < semval; i++)
-            {
-                //			printf("WARNING: [%d] sem_trywait on ID_wfsim\n", (int) (semval - i));
-                //			fflush(stdout);
-                //sem_trywait(data.image[ID_wfsim].semptr[*semindex]);
-                ImageStreamIO_semtrywait(&data.image[ID_wfsim], wfsim_semwaitindex);
-            }
-        }
-*/
+        */
 
 
 
@@ -1112,7 +1112,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
                     data.image[ID_imWFS1].array.F[ii] = data.image[ID_imWFS0].array.F[ii] *
                                                         totalinv;
                 }
-                
+
                 processinfo_update_output_stream(processinfo, ID_imWFS1);
 
 //                COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS1, -1);
@@ -1518,17 +1518,17 @@ errno_t __attribute__((hot)) Read_cam_frame(
         }
 
 
-            int rval;
-            rval = ImageStreamIO_semwait(&data.image[ID_wfsim], wfsim_semwaitindex);
+        int rval;
+        rval = ImageStreamIO_semwait(&data.image[ID_wfsim], wfsim_semwaitindex);
 
-            if(rval == -1)
-            {
-                perror("sem_timedwait");
-            }
+        if(rval == -1)
+        {
+            perror("sem_timedwait");
+        }
 
 
 
-     
+
 
         sem_getvalue(data.image[ID_wfsim].semptr[semindex], &semval);
         for(i = 0; i < semval; i++)
