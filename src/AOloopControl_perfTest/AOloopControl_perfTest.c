@@ -1661,7 +1661,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
              latencyave * 1000.0, 1.0 * (wfscntend - wfscntstart));
     processinfo_WriteMessage(processinfo, msgstring);
 
-	
+
 
     // ==================================
     // ENDING LOOP
