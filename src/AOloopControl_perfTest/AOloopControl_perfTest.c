@@ -1661,10 +1661,13 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
              latencyave * 1000.0, 1.0 * (wfscntend - wfscntstart));
     processinfo_WriteMessage(processinfo, msgstring);
 
+	
+
     // ==================================
     // ENDING LOOP
     // ==================================
     processinfo_cleanExit(processinfo);
+    functionparameter_SaveFPS2disk(&fps);
     function_parameter_RUNexit(&fps);
 
 
