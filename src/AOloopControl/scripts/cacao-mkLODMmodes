@@ -1,6 +1,4 @@
 #! /bin/bash
-# args: <confindex> <maxCPA>
-
 
 NBARGS=1
 pname=`echo "$0" | sed "s/\.\///g"`
@@ -97,18 +95,19 @@ fi
 
 
 
+LOOPNAME=$( head -1 LOOPNAME )
 loopnb=$( head -1 LOOPNUMBER )
 FPSname=$1
-LOmaxCPA=$( head -1 fpsconf/${FPSname}/LOmaxCPA.setval.txt | awk '{print $1;}' )
-
-
+#LOmaxCPA=$( head -1 fpsconf/${FPSname}/LOmaxCPA.setval.txt | awk '{print $1;}' )
+stageddir=$( grep out.dirname fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
+LOmaxCPA=$( grep LOmaxCPA fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
 
 pname0=$0
 pname=${pname0#"./"}-$loopnb
 
 
-mkdir -p Cmodes
-mkdir -p tmp
+#mkdir -p Cmodes
+#mkdir -p tmp
 
 
 
@@ -122,10 +121,10 @@ mkdir -p tmp
 
 cacao -n $pname << EOF
 cacao.aolnb ${loopnb}
-loadfits "dmslaved.fits" dmslaved0
+loadfits "${stageddir}/dmslaved.fits" dmslaved0
 imtrunc dmslaved0 0.0 1.0 dmslaved
-loadfits "dmmask.fits" dmmask
-loadfits "TPind.fits" emodes
+loadfits "${stageddir}/dmmask_mksl.fits" dmmask
+loadfits "${stageddir}/TPind.fits" emodes
 readshmim aol${loopnb}_dmC
 info.imstats aol${loopnb}_dmC
 cx=0.5*imsize0-0.5
@@ -134,9 +133,17 @@ od=0.42*imsize0
 id=0.13*imsize0
 if=0
 cacaocc.aolmklodmmodes fmodes imsize0 imsize1 ${LOmaxCPA} 0.8 cx cy od id 0 
-savefits fmodes "!respM_LOmodes.fits"
+savefits fmodes "!${stageddir}/respM_LOmodes.fits"
 exitCLI
 EOF
 
-cp ${loRMstageddir}/respM_LOmodes.fits ./conf/respM_LOmodes.fits
+echo "setval acqlin_loRM-${loopnb}.fn_pokeC ./${stageddir}/respM_LOmodes.fits" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
+
+
+# register output files to be logged
+echo "respM_LOmodes.fits" >> "${stageddir}/loglist.dat"
+
+
+
+#cp ${loRMstageddir}/respM_LOmodes.fits ./conf/respM_LOmodes.fits
 

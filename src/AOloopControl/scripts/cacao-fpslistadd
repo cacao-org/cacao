@@ -226,6 +226,8 @@ echolog "ON  CACAO_FPSPROC_MLAT"
 # FPS name
 fpsname="mlat" 
 fpsarg0="${CACAO_LOOPNUMBER}"
+outdir="conf-mlat-staged"
+mkdir -p ${LOOPWORKDIR}/${outdir}
 
 # FPS full name
 fpsfname="${fpsname}-${fpsarg0}" 
@@ -241,6 +243,7 @@ fpscmdheader
 fpscmd "setval ${fpsfname}.NBiter 20"
 fpscmd "setval ${fpsfname}.sn_dm aol${CACAO_LOOPNUMBER}_dmRM"
 fpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_wfsim"
+fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 fi
 else
 echolog "CACAO_FPSPROC_MLAT = OFF"
@@ -330,10 +333,10 @@ fpscmd "setval ${fpsfname}.autoTiming ON"
 fpscmd "setval ${fpsfname}.compDMmask ON"
 fpscmd "setval ${fpsfname}.compMpoke ON"
 
-fpscmd "setval ${fpsfname}.NBave 1"
-fpscmd "setval ${fpsfname}.NBcycle 2"
-fpscmd "setval ${fpsfname}.NBinnerCycle 1"
-fpscmd "setval ${fpsfname}.NBexcl 0"
+fpscmd "setval ${fpsfname}.timing.NBave 1"
+fpscmd "setval ${fpsfname}.timing.NBcycle 2"
+fpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
+fpscmd "setval ${fpsfname}.timing.NBexcl 0"
 
 fpscmd "setval ${fpsfname}.MaskMode ON"
 fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
@@ -388,13 +391,13 @@ fpscmd "setval ${fpsfname}.compDMmask OFF"
 fpscmd "setval ${fpsfname}.compMpoke OFF"
 
 
-fpscmd "setval ${fpsfname}.NBave 1"
-fpscmd "setval ${fpsfname}.NBcycle 4"
-fpscmd "setval ${fpsfname}.NBinnerCycle 1"
-fpscmd "setval ${fpsfname}.NBexcl 0"
+fpscmd "setval ${fpsfname}.timing.NBave 1"
+fpscmd "setval ${fpsfname}.timing.NBcycle 4"
+fpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
+fpscmd "setval ${fpsfname}.timing.NBexcl 0"
 
 
-fpscmd "setval ${fpsfname}.fn_pokeC conf/respM_LOmodes.fits"
+fpscmd "setval ${fpsfname}.fn_pokeC conf-zRM-staged/respM_LOmodes.fits"
 
 fpscmd "setval ${fpsfname}.MaskMode OFF"
 
@@ -496,7 +499,9 @@ echo "${fpsname}         cacaocc.aolRM2CM       ${fpsarg0}" >> fpslist.txt
 
 fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
-fpscmd "setval ${fpsfname}.fname_respM conf-zRM-staged/zrespMn.fits"
+fpscmd "setval ${fpsfname}.fname_respM conf-zRM-staged/zrespM_mn.fits"
+
+fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else

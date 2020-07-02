@@ -106,17 +106,12 @@ fi
 
 
 
-
-
-
-
-
-
-
-
 loopnb=$( head -1 LOOPNUMBER )
 FPSname=$1
-stageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
+stageddir=$( grep out.dirname fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
+
+
+
 mkdir -p ${stageddir}
 
 pname0=$0
@@ -124,28 +119,33 @@ pname="aol${loopnb}zrespM"
 
 
 
+
+
+
 OMP_NUM_THREADS=6 cacao -n $pname << EOF
 cacao.aolnb $loopnb
-loadfits "./${stageddir}/tmpRMacqu/RMpokeCube.fits" RMpokeC
-loadfits "./${stageddir}/tmpRMacqu/RMmat.fits" RMmat
-loadfits "./${stageddir}/tmpRMacqu/RMpixindex.fits" pixindexim
-loadfits "./${stageddir}/tmpRMacqu/respM.fits" respm
-loadfits "./${stageddir}/tmpRMacqu/wfsref.fits" wfsref0
+loadfits "./${stageddir}/RMpokeCube.fits" RMpokeC
+loadfits "./${stageddir}/RMmat.fits" RMmat
+loadfits "./${stageddir}/RMpixindex.fits" pixindexim
+loadfits "./${stageddir}/respM.fits" respm
+loadfits "./${stageddir}/wfsref.fits" wfsref0
 
 cacaocc.aolproczrm respm wfsref0 zrespm wfsmap dmmap
 
-savefits zrespm "!./${stageddir}/tmpRMacqu/zrespM.fits"
-savefits wfsmap "!./${stageddir}/tmpRMacqu/wfsmap.fits"
-savefits dmmap "!./${stageddir}/tmpRMacqu/dmmap.fits"
+savefits zrespm "!./${stageddir}/zrespM.fits"
+savefits wfsmap "!./${stageddir}/wfsmap.fits"
+savefits dmmap "!./${stageddir}/dmmap.fits"
 listim
 exitCLI
 EOF
 
+# register output files to be logged
+echo "zrespM.fits" >> "${stageddir}/loglist.dat"
+echo "wfsmap.fits" >> "${stageddir}/loglist.dat"
+echo "dmmap.fits" >> "${stageddir}/loglist.dat"
 
-# copy to staged dir
 
-cp ./${stageddir}/tmpRMacqu/zrespM.fits ${stageddir}/zrespM.fits
-cp ./${stageddir}/tmpRMacqu/wfsref.fits ${stageddir}/wfsref00.fits
+
 
 
 # Process time sampled slices
@@ -153,8 +153,8 @@ cp ./${stageddir}/tmpRMacqu/wfsref.fits ${stageddir}/wfsref00.fits
 AVEFILECOUNTER=0
 while [  $AVEFILECOUNTER -lt 100 ]; do
 cntnum=$( echo ${AVEFILECOUNTER} | awk '{printf("%03d", $1)}')
-zrespM_filename="./${stageddir}/tmpRMacqu/respM.ave${cntnum}.fits"
-wfsref_filename="./${stageddir}/tmpRMacqu/wfsref.ave${cntnum}.fits"
+zrespM_filename="./${stageddir}/respM.ave${cntnum}.fits"
+wfsref_filename="./${stageddir}/wfsref.ave${cntnum}.fits"
 
 if [ -f "$zrespM_filename" ]; then
     
@@ -162,15 +162,15 @@ if [ -f "$zrespM_filename" ]; then
 
 OMP_NUM_THREADS=6 cacao -n $pname << EOF
 cacao.aolnb $loopnb
-loadfits "./${stageddir}/tmpRMacqu/RMpokeCube.fits" RMpokeC
-loadfits "./${stageddir}/tmpRMacqu/RMmat.fits" RMmat
-loadfits "./${stageddir}/tmpRMacqu/RMpixindex.fits" pixindexim
-loadfits "$zrespM_filename" zrespmat0
-loadfits "$wfsref_filename" wfsref00
+loadfits "./${stageddir}/RMpokeCube.fits" RMpokeC
+loadfits "./${stageddir}/RMmat.fits" RMmat
+loadfits "./${stageddir}/RMpixindex.fits" pixindexim
+loadfits "${zrespM_filename}" zrespmat0
+loadfits "${wfsref_filename}" wfsref00
 
 cacaocc.aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
 
-savefits zrespmat "!./${stageddir}/tmpRMacqu/zrespM.ave${cntnum}.fits"
+savefits zrespmat "!./${stageddir}/zrespM.ave${cntnum}.fits"
 listim
 exitCLI
 EOF

@@ -101,77 +101,85 @@ fi
 
 
 
+
+
+
 loopnb=$( head -1 LOOPNUMBER )
 FPSname=$1
-stageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
-
+#stageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
+stageddir=$( grep out.dirname fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
 
 
 echo "##########################################"
 echo "# MAKE MASKS                              "
 echo "##########################################"
 # 
-# MAKE SLAVED ACTUATOR DM MASK: dmmaskRM.fits -> dmslaved.fits, dmmask.fits
+# MAKE SLAVED ACTUATOR DM MASK: dmmask_mkm.fits -> dmslaved.fits, dmmask.fits
 # 
 # INPUT:
-#	dmmaskRM.fits
+#	dmmask_mkm.fits
 # OUTPUT:
 #	dmslaved.fits  
-#	dmmask.fits    
+#	dmmask_mksl.fits    
 #
 
 
 
-actproxrad=$( head -1 fpsconf/${FPSname}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
+#actproxrad=$( head -1 fpsconf/${FPSname}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
+actproxrad=$( grep DMmask.proxrad fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
 
-
-./AOloopControl << EOF
-loadfits "${stageddir}/dmmaskRM.fits" DMmaskRM
+cacao << EOF
+loadfits "${stageddir}/dmmask_mkm.fits" DMmaskRM
 cacaocc.aolmkslact DMmaskRM ${actproxrad} DMslavedact
 savefits DMslavedact "!${stageddir}/dmslaved.fits"
 exitCLI
 EOF
 
 
-./AOloopControl << EOF
-loadfits "${stageddir}/dmmaskRM.fits" dmmRM
+
+
+cacao << EOF
+loadfits "${stageddir}/dmmask_mkm.fits" dmmRM
 loadfits "${stageddir}/dmslaved.fits" dmsl
 imtrunc dmsl 0.0 1.0 dmsl1
 dmm=1.0-(1.0-dmmRM)*(1.0-dmsl1)
-savefits dmm "!${stageddir}/dmmask.fits"
+savefits dmm "!${stageddir}/dmmask_mksl.fits"
 exitCLI
 EOF
 
 
+# register output files to be logged
+echo "dmslaved.fits" >> "${stageddir}/loglist.dat"
+echo "dmmask_mksl.fits" >> "${stageddir}/loglist.dat"
 
 
 
 echo "#################################################################"
-echo "# UPDATE wfsref00, zrespM TO NORMALIZE FLUX OVER wfsmask    "
+echo "# NORMALIZE FLUX OVER wfsmask    "
 echo "#################################################################"
 # 
 # INPUT
-#	wfsref00.fits
-#	wfsmask.fits
-#   zrespM.fits
+#	wfsref.fits  (measured reference, normalized over whole image)
+#	wfsmask_mkm.fits (wfs pixel mask)
+#   zrespM.fits  (measured response matrix)
 #  
 # OUTPUT
-#	wfsref0.fits
-#   zrespM.fits
+#	wfsref_mn.fits (WFS reference normalized over mask)
+#   zrespM_mn.fits (response matrix normalized over mask)
 #
 
 
-./AOloopControl << EOF
-loadfits "${stageddir}/wfsref00.fits" im0
-loadfits "${stageddir}/wfsmask.fits" wfm
+cacao << EOF
+loadfits "${stageddir}/wfsref.fits" im0
+loadfits "${stageddir}/wfsmask_mkm.fits" wfm
 im0m=wfm*im0
 a=itot(im0)/itot(im0m)
-# a is fraction of flux inside mask
+# 1/a is fraction of flux inside mask
 im1=im0*a/itot(im0)
-savefits im1 "!${stageddir}/wfsref0.fits"
+savefits im1 "!${stageddir}/wfsref_mn.fits"
 loadfits "${stageddir}/zrespM.fits" zrespm
 zrespm1=zrespm*a
-savefits zrespm1 "!${stageddir}/zrespMn.fits"
+savefits zrespm1 "!${stageddir}/zrespM_mn.fits"
 listim
 exitCLI
 EOF
@@ -181,7 +189,9 @@ EOF
 
 
 
-
+# register output files to be logged
+echo "wfsref_mn.fits" >> "${stageddir}/loglist.dat"
+echo "zrespM_mn.fits" >> "${stageddir}/loglist.dat"
 
 
 

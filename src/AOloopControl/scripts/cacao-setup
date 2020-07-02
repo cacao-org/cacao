@@ -256,18 +256,19 @@ function cacaoCreateExampe_cacaovars {
 # output : fpsname
 #
 function getfpsname_fromline {
-	IFS=' ' read -r -a array <<< "$1"
-	for index in "${!array[@]}"; do
+  IFS=' ' read -r -a array <<< "$1"
+
+  for index in "${!array[@]}"; do
+
+    if [ ${index} = 0 ]; then
+	  fpsname="${array[0]}"
+	fi
 	    
-	    if [ ${index} = 0 ]; then
-	      fpsname="${array[0]}"
-	    fi
+	if [ ${index} -gt 1 ]; then
+	  fpsname="${fpsname}-${array[index]}"
+	fi
 	    
-	    if [ ${index} -gt 1 ]; then
-	      fpsname="${fpsname}-${array[index]}"
-	    fi
-	    
-	  done	
+  done	
 }
 
 
@@ -740,7 +741,11 @@ mkdir -p ${LOOPWORKDIR}/conf/
 echo "${CACAO_LOOPNAME}" > ${LOOPWORKDIR}/LOOPNAME
 echo "${LOOPNUMBER}" > ${LOOPWORKDIR}/LOOPNUMBER
 
-
+# create symlink to data storage
+if [ ! -d ${CACAO_LOOPDATALOGDIR} ]; then
+  mkdir -p ${CACAO_LOOPDATALOGDIR}
+fi
+ln -s ${CACAO_LOOPDATALOGDIR} ${LOOPWORKDIR}/aoldatadir
 
 
 
@@ -803,6 +808,8 @@ mv fps.conf ${LOOPWORKDIR}/
 cd ${LOOPWORKDIR}
 # update LOOPWORKDIR to full path
 LOOPWORKDIR=$( pwd )
+
+
 
 
 # SETUP ALL FPS

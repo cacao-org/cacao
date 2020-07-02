@@ -11,6 +11,7 @@ source cacaotask-check
 
 mkdir -p ${WORKDIRECTORY}
 
+
 # check if successful
 if [ "$?" = 0 ]; then
 	cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
