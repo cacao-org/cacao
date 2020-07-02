@@ -672,7 +672,7 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
         function_parameter_add_entry(&fps, ".GPUmode",
                                      "Using GPU ?",
                                      FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &GPUmode_default);
-	(void) fpi_GPUmode;
+    (void) fpi_GPUmode;
 
 
 
@@ -752,7 +752,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
 
     float SVDlim = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
 
-	long GPUmode        =
+    long GPUmode        =
         functionparameter_GetParamValue_INT64(&fps, ".GPUmode");
 
 
@@ -771,26 +771,26 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     load_fits(respMname, "respM", 1);
 
     char cm_name[] = "sCMat";
-	
-	int usingGPU = 0;
-	#ifdef HAVE_MAGMA
-	usingGPU = 1;
-	#endif
-	if ( GPUmode == 0 )
-	{
-		usingGPU = 0;
-	}
-	
 
-	if( usingGPU == 1)
-	{
-		CUDACOMP_magma_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 100000,
-                                            "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
+    int usingGPU = 0;
+#ifdef HAVE_MAGMA
+    usingGPU = 1;
+#endif
+    if(GPUmode == 0)
+    {
+        usingGPU = 0;
+    }
+
+
+    if(usingGPU == 1)
+    {
+        CUDACOMP_magma_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 100000,
+                                                "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
     }
     else
     {
-		linopt_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 10000, "VTmat");
-	}
+        linopt_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 10000, "VTmat");
+    }
 
     //save_fits("VTmat", "!./mkmodestmp/VTmat.fits");
     delete_image_ID("VTmat");
