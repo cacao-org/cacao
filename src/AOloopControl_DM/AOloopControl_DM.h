@@ -33,8 +33,8 @@ typedef struct
     long updatecnt;    // DM update counter
     int busy;          // if set to 1, hold off and wait
 
-    int voltmode;      // 1 if DM drives voltmap
-    long IDvolt;
+    int      voltmode;      // 1 if DM drives voltmap
+    imageID  IDvolt;
     char voltname[12];
     int voltON;        // 1 if applying voltage
     int volttype;      // 1: linear bipolar, 2: quadratic uniplolar
@@ -48,7 +48,7 @@ typedef struct
     int TrigSem;  // if TrigMode = 1, use this semaphore for trigger
 
 
-    long nsecwait; // inner wait loop duration, interrupted if sem[1] of disp posted
+    long   nsecwait; // inner wait loop duration, interrupted if sem[1] of disp posted
     struct timespec tstart;
     struct timespec tend;
     double tdelay;
@@ -56,10 +56,10 @@ typedef struct
 
 
 
-    long dmdispID[DM_NUMBER_CHANMAX];
+    long  dmdispID[DM_NUMBER_CHANMAX];
     float dmdispgain[DM_NUMBER_CHANMAX];
-    long dmdispcnt[DM_NUMBER_CHANMAX];
-    long IDdisp;
+    long    dmdispcnt[DM_NUMBER_CHANMAX];
+    imageID IDdisp;
 
     int dm2dm_mode; // 1 if output disp should be remapped to output DM disp
     // following only applies of dm2dm_mode = 1

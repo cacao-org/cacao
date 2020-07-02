@@ -509,11 +509,8 @@ int AOloopControl_DM_CombineChannels_RUN(
     long long cntold;
     long long cntsumold;
     long long cntsum;
-    //imageID IDdisp;
     imageID IDvolt;
     double ave;
-    //imageID ID1;
-    //int r;
     uint64_t sizexy;
     float *dmdispptr;
     float *dmdispptr_array[20];
@@ -522,7 +519,6 @@ int AOloopControl_DM_CombineChannels_RUN(
     int vOK;
     float maxmaxvolt = 150.0;
     char errstr[200];
-    //int semnb, semval;
     uint64_t sizexyDMout;
     imageID IDtmpoutdm;
     uint64_t sizexywfsref;
@@ -840,6 +836,7 @@ int AOloopControl_DM_CombineChannels_RUN(
 
         COREMOD_MEMORY_image_set_createsem(name, 10);
         dmdispptr_array[ch] = data.image[dmdispcombconf[DMindex].dmdispID[ch]].array.F;
+        
     }
 
 
@@ -952,12 +949,27 @@ int AOloopControl_DM_CombineChannels_RUN(
     AOloopControl_printDMconf();
 
 
+	// custom triggering
+	processinfo->triggermode = PROCESSINFO_TRIGGERMODE_CNT0;
+	
+	// initialize fo channel 0 - will update 
+	imageID trigID = dmdispcombconf[DMindex].dmdispID[0];
+	processinfo->triggerstreamID = trigID;
+	processinfo->triggerstreaminode = data.image[trigID].md[0].inode;
+
+	processinfo->triggermissedframe_cumul = 0;
+	processinfo->trigggertimeoutcnt = 0;
+	processinfo->triggerstatus = 0;
+
+
     int loopOK = 1;
-    processinfo_loopstart(
-        processinfo); // Notify processinfo that we are entering loop
+    // Notify processinfo that we are entering loop
+    processinfo_loopstart(processinfo);
 
 
     DEBUG_TRACEPOINT(" ");
+
+
 
     while(dmdispcombconf[DMindex].ON == 1)
     {
@@ -993,6 +1005,8 @@ int AOloopControl_DM_CombineChannels_RUN(
             //
             // this is semaphore that triggers the write to the DM
             //
+            processinfo->triggerstatus = PROCESSINFO_TRIGGERSTATUS_WAITING;
+            
             DEBUG_TRACEPOINT(" ");
             sem_timedwait(data.image[dmdispcombconf[DMindex].IDdisp].semptr[1], &semwaitts);
             DEBUG_TRACEPOINT(" ");
@@ -1000,13 +1014,27 @@ int AOloopControl_DM_CombineChannels_RUN(
             cntsum = 0;
             for(ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++)
             {
+                
                 cntch = data.image[dmdispcombconf[DMindex].dmdispID[ch]].md[0].cnt0;
-                dmdispcombconf[DMindex].dmdispcnt[ch] = cntch;
+                
+                if(dmdispcombconf[DMindex].dmdispcnt[ch] != cntch)
+                {
+					dmdispcombconf[DMindex].dmdispcnt[ch] = cntch;
+					trigID = dmdispcombconf[DMindex].dmdispID[ch];
+					processinfo->triggerstreamID = trigID;
+					processinfo->triggerstreaminode = data.image[trigID].md[0].inode;
+				}
+                
+                
                 cntsum += data.image[dmdispcombconf[DMindex].dmdispID[ch]].md[0].cnt0;
             }
             if(cntsum != cntsumold)
             {
                 DMupdate = 1;
+				// update trigger counter
+				processinfo->triggerstreamcnt = data.image[processinfo->triggerstreamID].md[trigID].cnt0;
+				
+				processinfo->triggerstatus = PROCESSINFO_TRIGGERSTATUS_RECEIVED;
             }
         }
         else
@@ -1022,6 +1050,10 @@ int AOloopControl_DM_CombineChannels_RUN(
             }
         }
         DEBUG_TRACEPOINT(" ");
+
+
+
+		processinfo_exec_start(processinfo);
 
         if(DMupdate == 1)
         {
@@ -1078,9 +1110,14 @@ int AOloopControl_DM_CombineChannels_RUN(
             memcpy(data.image[dmdispcombconf[DMindex].IDdisp].array.F,
                    data.image[IDdispt].array.F,
                    sizeof(float)*data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement);
-            data.image[dmdispcombconf[DMindex].IDdisp].md[0].cnt0++;
-            data.image[dmdispcombconf[DMindex].IDdisp].md[0].atime = ttrig;
-            data.image[dmdispcombconf[DMindex].IDdisp].md[0].write = 0;
+                   
+            processinfo_update_output_stream(processinfo, dmdispcombconf[DMindex].IDdisp);
+            //data.image[dmdispcombconf[DMindex].IDdisp].md[0].cnt0++;
+            //data.image[dmdispcombconf[DMindex].IDdisp].md[0].atime = ttrig;
+            //data.image[dmdispcombconf[DMindex].IDdisp].md[0].write = 0;
+            //COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
+         
+         
             DEBUG_TRACEPOINT(" ");
 
             /*     for(semnb=0;semnb<data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem;semnb++)
@@ -1089,8 +1126,11 @@ int AOloopControl_DM_CombineChannels_RUN(
                         if(semval<SEMAPHORE_MAXVAL)
                         sem_post(data.image[dmdispcombconf[DMindex].IDdisp].semptr[semnb]);
                      }*/
-            COREMOD_MEMORY_image_set_sempost_byID(dmdispcombconf[DMindex].IDdisp, -1);
+            
             //      sem_post(data.image[dmdispcombconf[DMindex].IDdisp].semptr[0]);
+
+
+
 
             DEBUG_TRACEPOINT(" ");
 
@@ -1185,10 +1225,10 @@ int AOloopControl_DM_CombineChannels_RUN(
 
             DEBUG_TRACEPOINT(" ");
 
-            if(data.processinfo == 1)
-            {
-                processinfo->loopcnt = dmdispcombconf[DMindex].updatecnt;
-            }
+          //  if(data.processinfo == 1)
+          //  {
+          //      processinfo->loopcnt = dmdispcombconf[DMindex].updatecnt;
+          //  }
 
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiff = time_diff(ttrig, tnow);
@@ -1205,6 +1245,7 @@ int AOloopControl_DM_CombineChannels_RUN(
             DEBUG_TRACEPOINT(" ");
         }
 
+		processinfo_exec_end(processinfo);
 
         if(loopOK == 0)
         {
