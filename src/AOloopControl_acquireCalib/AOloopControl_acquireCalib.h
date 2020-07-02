@@ -43,7 +43,8 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     int         normalize,
     int         AOinitMode,
     uint32_t    NBcycle,
-    uint32_t    SequInitMode
+    uint32_t    SequInitMode,
+    const char* outdir
 );
 
 /** @brief Measure linear response to set of DM modes/patterns */
