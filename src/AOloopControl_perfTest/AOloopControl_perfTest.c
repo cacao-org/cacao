@@ -60,7 +60,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h> /* strrchr */
-
+#include <sys/stat.h>
 
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_tools/COREMOD_tools.h"
@@ -873,6 +873,36 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
                                  FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
 
 
+    // settings for output files and dir
+
+    long fpi_out_dirname      =
+        function_parameter_add_entry(&fps, ".out.dirname",
+                                     "output directory",
+                                     FPTYPE_DIRNAME, FPFLAG_DEFAULT_INPUT, pNull);
+    (void) fpi_out_dirname;
+
+
+    __attribute__((unused)) long fpi_out_label      =
+        function_parameter_add_entry(&fps, ".out.label",
+                                     "output label",
+                                     FPTYPE_STRING, FPFLAG_DEFAULT_INPUT, pNull);
+
+    long fpi_out_timestring    =
+        function_parameter_add_entry(&fps, ".out.timestring",
+                                     "output timestring",
+                                     FPTYPE_STRING, FPFLAG_DEFAULT_INPUT, pNull);
+    (void) fpi_out_timestring;
+
+
+
+    // External scripts (post)
+    long fpi_exec_logdata =
+        function_parameter_add_entry(&fps, ".log2fs",
+                                     "log to filesystem",
+                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT , pNull);
+	(void) fpi_exec_logdata;
+
+
     // ==============================================
     // ======== START FPS CONF LOOP =================
     // ==============================================
@@ -993,6 +1023,16 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
 
     FPS_CONNECT(fpsname, FPSCONNECT_RUN);
 
+    // Write time string
+    char timestring[100];
+    mkUTtimestring_millisec(timestring);
+    functionparameter_SetParamValue_STRING(
+        &fps,
+        ".out.timestring",
+        timestring);
+
+
+
 
     // ===============================
     // GET FUNCTION PARAMETER VALUES
@@ -1029,6 +1069,13 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
                           ".out.framerateHz");
     double *latencyfr = functionparameter_GetParamPtr_FLOAT64(&fps,
                         ".out.latencyfr");
+
+
+    char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),
+            FUNCTION_PARAMETER_STRMAXLEN);
+	EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirname);
+
 
 
     // ===========================
@@ -1106,10 +1153,11 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
             data.image[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
         }
 
-    EXECUTE_SYSTEM_COMMAND("mkdir -p tmp");
-
-    save_fits("_testdm0", "!tmp/_testdm0.fits");
-    save_fits("_testdm1", "!tmp/_testdm1.fits");
+	char ffname[STRINGMAXLEN_FULLFILENAME];
+	WRITE_FULLFILENAME(ffname, "!%s/pokedm0.fits", outdirname);
+    save_fits("_testdm0", ffname);
+    WRITE_FULLFILENAME(ffname, "!%s/pokedm1.fits", outdirname);
+    save_fits("_testdm1", ffname);
 
     IDwfs = image_ID(wfsname);
     snprintf(msgstring, stringmaxlen, "Connecting to stream %s %ld", wfsname,
@@ -1188,11 +1236,11 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     tarray = (struct timespec *) malloc(sizeof(struct timespec) * wfs_NBframesmax);
     dtarray = (double *) malloc(sizeof(double) * wfs_NBframesmax);
 
-    EXECUTE_SYSTEM_COMMAND("mkdir -p timingstats");
-
-    if((fp = fopen("timingstats/hardwlatency.txt", "w")) == NULL)
+	
+	WRITE_FULLFILENAME(ffname, "%s/hardwlatency.txt", outdirname);
+    if((fp = fopen(ffname, "w")) == NULL)
     {
-        printf("ERROR: cannot create file \"timingstats/hardwlatency.txt\"\\n");
+        printf("ERROR: cannot create file \"%s/hardwlatency.txt\"\\n", outdirname);
         exit(0);
     }
 
@@ -1565,7 +1613,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
         if(latency > latencymax)
         {
             latencymax = latency;
-            save_fl_fits("_testwfsc", "!./timingstats/maxlatencyseq.fits");
+            WRITE_FULLFILENAME(ffname, "!%s/maxlatencyseq.fits", outdirname);
+            save_fl_fits("_testwfsc", ffname);
         }
 
         fprintf(fp, "# %5ld  %8.6f\n", iter, (valmaxdt - *dtoffset));
@@ -1639,18 +1688,18 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     functionparameter_SaveParam2disk(&fps, ".out.latencyfr");
 
 
-    EXECUTE_SYSTEM_COMMAND("echo %8.6f > conf/param_hardwlatency.txt",
-                           latencyarray[NBiter / 2]);
+    EXECUTE_SYSTEM_COMMAND("echo %8.6f > %s/param_hardwlatency.txt",
+                           latencyarray[NBiter / 2], outdirname);
 
-    EXECUTE_SYSTEM_COMMAND("echo %8.6f > conf/param_hardwlatency_frame.txt",
-                           latencystepave);
+    EXECUTE_SYSTEM_COMMAND("echo %8.6f > %s/param_hardwlatency_frame.txt",
+                           latencystepave, outdirname);
 
-    EXECUTE_SYSTEM_COMMAND("echo %f %f %f %f %f > timingstats/hardwlatencyStats.txt",
+    EXECUTE_SYSTEM_COMMAND("echo %f %f %f %f %f > %s/hardwlatencyStats.txt",
                            latencyarray[NBiter / 2], latencyave, minlatency, maxlatency,
-                           latencystepave);
+                           latencystepave, outdirname);
 
-    EXECUTE_SYSTEM_COMMAND("echo %.3f > conf/param_mloopfrequ.txt",
-                           1.0 * (wfscntend - wfscntstart) / dt);
+    EXECUTE_SYSTEM_COMMAND("echo %.3f > %s/param_mloopfrequ.txt",
+                           1.0 * (wfscntend - wfscntstart) / dt, outdirname);
 
     free(latencyarray);
     free(latencysteparray);
@@ -1668,8 +1717,20 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     // ==================================
     processinfo_cleanExit(processinfo);
     functionparameter_SaveFPS2disk(&fps);
-    function_parameter_RUNexit(&fps);
 
+
+	
+    functionparameter_SaveFPS2disk_dir(&fps, outdirname);
+    
+	// create archive script
+    EXECUTE_SYSTEM_COMMAND("echo \"hardwlatency.txt\" > %s/loglist.dat", outdirname);
+    EXECUTE_SYSTEM_COMMAND("echo \"pokedm0.fits\" >> %s/loglist.dat", outdirname);
+    EXECUTE_SYSTEM_COMMAND("echo \"pokedm1.fits\" >> %s/loglist.dat", outdirname);
+    functionparameter_write_archivescript(&fps, "../aoldatadir");
+
+	
+	
+    function_parameter_RUNexit(&fps);
 
 
     return RETURN_SUCCESS;
