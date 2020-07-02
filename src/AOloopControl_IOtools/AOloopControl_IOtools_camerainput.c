@@ -610,7 +610,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
                                  "normalize WFS frames",
                                  FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, &wfsnormalize_default);
 
-    double wfsnormfloor_default[4] = { 0.01, 0, 100000, 0.01 };
+    double wfsnormfloor_default[4] = { 0.0, 0, 100000, 0.01 };
     //long fpi_wfsnormfloor =
     function_parameter_add_entry(&fps, ".WFSnormfloor",
                                  "WFS flux floor for normalize",
