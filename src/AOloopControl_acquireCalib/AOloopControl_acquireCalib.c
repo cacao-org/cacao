@@ -945,7 +945,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     int         AOinitMode,
     uint32_t    NBcycle,
     uint32_t    SequInitMode,
-    const char* outdir
+    const char *outdir
 )
 {
     int       stringmaxlen = 500;
@@ -978,7 +978,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
                      delayRM1us,
                      NBave,
                      NBexcl,
-                     IDpokeC_name,                    
+                     IDpokeC_name,
                      normalize,
                      AOinitMode,
                      NBcycle,
@@ -987,10 +987,10 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
 
-	EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdir);
+    EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdir);
     int SAVE_RMACQU_ALL = 1; // save all intermediate results
     //  int COMP_RMACQU_AVESTEP = 1;  // group images by time delay step and average accordingly -> get time-resolved RM
-	char tmpfname[STRINGMAXLEN_FULLFILENAME];
+    char tmpfname[STRINGMAXLEN_FULLFILENAME];
 
 
     char pinfoname[stringmaxlen];   // short name for the processinfo instance, no spaces, no dot, name should be human-readable
@@ -1886,15 +1886,15 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     DEBUG_TRACEPOINT(" ");
 
     // print poke log
-	if(strlen(outdir)>0)
-	{
-		WRITE_FULLFILENAME(tmpfname, "%s/RMpokelog.txt", outdir);
-	}
-	else
-	{
-		WRITE_FULLFILENAME(tmpfname, "RMpokelog.txt");
-	}
-	
+    if(strlen(outdir) > 0)
+    {
+        WRITE_FULLFILENAME(tmpfname, "%s/RMpokelog.txt", outdir);
+    }
+    else
+    {
+        WRITE_FULLFILENAME(tmpfname, "RMpokelog.txt");
+    }
+
     fp = fopen(tmpfname, "w");
     for(imcnt = 0; imcnt < imcntmax; imcnt++)
     {
@@ -2274,8 +2274,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     long fpi_exec_logdata =
         function_parameter_add_entry(&fps, ".log2fs",
                                      "log to filesystem",
-                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT , pNull);
-	(void) fpi_exec_logdata;
+                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
+    (void) fpi_exec_logdata;
 
 
 
@@ -2330,9 +2330,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
     {
         usleep(50);
 
-        if(function_parameter_FPCONFloopstep(&fps) == 1) 
+        if(function_parameter_FPCONFloopstep(&fps) == 1)
         {
-			// Apply logic if update is needed
+            // Apply logic if update is needed
 
             printf("======== connecting to aux FPS %s %d ============\n", __FILE__,
                    __LINE__);//TBE
@@ -2564,11 +2564,15 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     long loop        = functionparameter_GetParamValue_INT64(&fps, ".loop");
     float ampl       = functionparameter_GetParamValue_FLOAT64(&fps, ".ampl");
-    long delayfr     = functionparameter_GetParamValue_INT64(&fps, ".timing.delayfr");
-    long delayRM1us  = functionparameter_GetParamValue_INT64(&fps, ".timing.delayRM1us");
+    long delayfr     = functionparameter_GetParamValue_INT64(&fps,
+                       ".timing.delayfr");
+    long delayRM1us  = functionparameter_GetParamValue_INT64(&fps,
+                       ".timing.delayRM1us");
     long NBave       = functionparameter_GetParamValue_INT64(&fps, ".timing.NBave");
-    long NBexcl      = functionparameter_GetParamValue_INT64(&fps, ".timing.NBexcl");
-    long NBcycle     = functionparameter_GetParamValue_INT64(&fps, ".timing.NBcycle");
+    long NBexcl      = functionparameter_GetParamValue_INT64(&fps,
+                       ".timing.NBexcl");
+    long NBcycle     = functionparameter_GetParamValue_INT64(&fps,
+                       ".timing.NBcycle");
     long NBinnerCycle = functionparameter_GetParamValue_INT64(&fps,
                         ".NBinnerCycle");
 
@@ -2858,13 +2862,13 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     char fname[STRINGMAXLEN_FULLFILENAME];
 
 
-	char outdirnameA[STRINGMAXLEN_DIRNAME];
-	WRITE_DIRNAME(outdirnameA, "%s/acquA", outdirname);
-	
-	EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirnameA);
+    char outdirnameA[STRINGMAXLEN_DIRNAME];
+    WRITE_DIRNAME(outdirnameA, "%s/acquA", outdirname);
+
+    EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirnameA);
     WRITE_FULLFILENAME(fname, "!%s/dmpokeC.fits", outdirnameA);
     save_fits("dmpokeC2a", fname);
-    	
+
     AOloopControl_acquireCalib_Measure_WFSrespC(
         loop,
         delayfr,
@@ -2886,9 +2890,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     // Negative direction sequence
     char outdirnameB[STRINGMAXLEN_DIRNAME];
-	WRITE_DIRNAME(outdirnameB, "%s/acquB", outdirname);    
+    WRITE_DIRNAME(outdirnameB, "%s/acquB", outdirname);
 
-	EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirnameB);
+    EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirnameB);
     WRITE_FULLFILENAME(fname, "!%s/dmpokeC.fits", outdirnameB);
     save_fits("dmpokeC2b", fname);
 
@@ -2897,7 +2901,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
         delayfr,
         delayRM1us,
         NBave,
-        NBexcl, 
+        NBexcl,
         "dmpokeC2b",
         "wfsresp2b",
         normalizeflag,
@@ -3053,9 +3057,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                     {
                         // pattern A
                         data.image[IDwfsref].array.F[pix] += 0.5 *
-                            (data.image[IDwfsresp2a].array.F[wfsxysize * (pokeindex) + pix] +
-                             data.image[IDwfsresp2a].array.F[wfsxysize * (pokeindex + 1) + pix]) /
-                            (2 * NBpoke) / NBinnerCycleC;
+                                                             (data.image[IDwfsresp2a].array.F[wfsxysize * (pokeindex) + pix] +
+                                                              data.image[IDwfsresp2a].array.F[wfsxysize * (pokeindex + 1) + pix]) /
+                                                             (2 * NBpoke) / NBinnerCycleC;
 
                         data.image[IDwfsref_A].array.F[pix] += 1.0 *
                                                                (data.image[IDwfsresp2a].array.F[wfsxysize * (pokeindex) + pix] +
@@ -3064,9 +3068,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
                         // pattern B
                         data.image[IDwfsref].array.F[pix] += 0.5 *
-                            (data.image[IDwfsresp2b].array.F[wfsxysize * (pokeindex) + pix] +
-                             data.image[IDwfsresp2b].array.F[wfsxysize * (pokeindex + 1) + pix]) /
-                            (2 * NBpoke) / NBinnerCycleC;
+                                                             (data.image[IDwfsresp2b].array.F[wfsxysize * (pokeindex) + pix] +
+                                                              data.image[IDwfsresp2b].array.F[wfsxysize * (pokeindex + 1) + pix]) /
+                                                             (2 * NBpoke) / NBinnerCycleC;
 
                         data.image[IDwfsref_B].array.F[pix] += 1.0 *
                                                                (data.image[IDwfsresp2b].array.F[wfsxysize * (pokeindex) + pix] +
@@ -3179,29 +3183,31 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     functionparameter_SaveFPS2disk(&fps);
 
-	// Run RM decode exec script
+    // Run RM decode exec script
     // Will perform task(s) unless set to cacao-NULL script
-	
-	
-	EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat", outdirname);
+
+
+    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat", outdirname);
     EXECUTE_SYSTEM_COMMAND("echo \"acquA\" >> %s/loglist.dat", outdirname);
-    EXECUTE_SYSTEM_COMMAND("echo \"acquB\" >> %s/loglist.dat", outdirname);	
+    EXECUTE_SYSTEM_COMMAND("echo \"acquB\" >> %s/loglist.dat", outdirname);
     EXECUTE_SYSTEM_COMMAND("echo \"respM.fits\" >> %s/loglist.dat", outdirname);
     EXECUTE_SYSTEM_COMMAND("echo \"RMmat.fits\" >> %s/loglist.dat", outdirname);
-    EXECUTE_SYSTEM_COMMAND("echo \"RMpixindex.fits\" >> %s/loglist.dat", outdirname);
-    EXECUTE_SYSTEM_COMMAND("echo \"RMpokeCube.fits\" >> %s/loglist.dat", outdirname);
+    EXECUTE_SYSTEM_COMMAND("echo \"RMpixindex.fits\" >> %s/loglist.dat",
+                           outdirname);
+    EXECUTE_SYSTEM_COMMAND("echo \"RMpokeCube.fits\" >> %s/loglist.dat",
+                           outdirname);
     EXECUTE_SYSTEM_COMMAND("echo \"wfsref.fits\" >> %s/loglist.dat", outdirname);
 
 
-	
-	
+
+
     EXECUTE_SYSTEM_COMMAND("%s %s", execRMdecode,     data.FPS_name);
     // output:
     //	zrespM      : decoded (zonal) response matrix
     //	wfsmap      : WFS response map
     //	dmmap       : DM  response map
-    //	
-    
+    //
+
     // input:
     //	zrespM      : decoded (zonal) response matix
     EXECUTE_SYSTEM_COMMAND("%s %s", execmkDMWFSmasks, data.FPS_name);
@@ -3210,7 +3216,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	dmmap_mkm   : DM  pixel map ((re-)recomputed by execmkDMWFSmasks)
     //	wfsmask_mkm : WFS pixel mask
     //	dmmask_mkm  : DM  pixel mask
-    
+
     // input:
     //	wfsref
     //	zrespM
@@ -3222,22 +3228,22 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	dmmask_mksl : DM pixel mask, includes control of slaved actuators
     //	wfsref_mn   : WFS reference, masked and normalized to dmmask_mksl
     //	zrespM_mn   : zonal RM, masked and normalized to dmmask_mksl
-    
-     
+
+
     // input:
     //	dmslaved
     //	dmmask_mksl
-    //	
+    //
     EXECUTE_SYSTEM_COMMAND("%s %s", execmkLODMmodes,  data.FPS_name);
-	// output
-	//	respM_LOmodes
-	
-	
-
-	functionparameter_SaveFPS2disk_dir(&fps, outdirname);
+    // output
+    //	respM_LOmodes
 
 
-	// create archive script
+
+    functionparameter_SaveFPS2disk_dir(&fps, outdirname);
+
+
+    // create archive script
     functionparameter_write_archivescript(&fps, "../aoldatadir");
 
 
