@@ -899,8 +899,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
     long fpi_exec_logdata =
         function_parameter_add_entry(&fps, ".log2fs",
                                      "log to filesystem",
-                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT , pNull);
-	(void) fpi_exec_logdata;
+                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
+    (void) fpi_exec_logdata;
 
 
     // ==============================================
@@ -1074,7 +1074,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),
             FUNCTION_PARAMETER_STRMAXLEN);
-	EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirname);
+    EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirname);
 
 
 
@@ -1153,8 +1153,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
             data.image[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
         }
 
-	char ffname[STRINGMAXLEN_FULLFILENAME];
-	WRITE_FULLFILENAME(ffname, "!%s/pokedm0.fits", outdirname);
+    char ffname[STRINGMAXLEN_FULLFILENAME];
+    WRITE_FULLFILENAME(ffname, "!%s/pokedm0.fits", outdirname);
     save_fits("_testdm0", ffname);
     WRITE_FULLFILENAME(ffname, "!%s/pokedm1.fits", outdirname);
     save_fits("_testdm1", ffname);
@@ -1236,8 +1236,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     tarray = (struct timespec *) malloc(sizeof(struct timespec) * wfs_NBframesmax);
     dtarray = (double *) malloc(sizeof(double) * wfs_NBframesmax);
 
-	
-	WRITE_FULLFILENAME(ffname, "%s/hardwlatency.txt", outdirname);
+
+    WRITE_FULLFILENAME(ffname, "%s/hardwlatency.txt", outdirname);
     if((fp = fopen(ffname, "w")) == NULL)
     {
         printf("ERROR: cannot create file \"%s/hardwlatency.txt\"\\n", outdirname);
@@ -1719,17 +1719,18 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
     functionparameter_SaveFPS2disk(&fps);
 
 
-	
+
     functionparameter_SaveFPS2disk_dir(&fps, outdirname);
-    
-	// create archive script
-    EXECUTE_SYSTEM_COMMAND("echo \"hardwlatency.txt\" > %s/loglist.dat", outdirname);
+
+    // create archive script
+    EXECUTE_SYSTEM_COMMAND("echo \"hardwlatency.txt\" > %s/loglist.dat",
+                           outdirname);
     EXECUTE_SYSTEM_COMMAND("echo \"pokedm0.fits\" >> %s/loglist.dat", outdirname);
     EXECUTE_SYSTEM_COMMAND("echo \"pokedm1.fits\" >> %s/loglist.dat", outdirname);
     functionparameter_write_archivescript(&fps, "../aoldatadir");
 
-	
-	
+
+
     function_parameter_RUNexit(&fps);
 
 
