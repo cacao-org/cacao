@@ -667,6 +667,14 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
                                      FPTYPE_FILENAME, FPFLAG, pNull);
 
 
+    long GPUmode_default[4] = { 0, 0, 1, 0 };
+    long fpi_GPUmode =
+        function_parameter_add_entry(&fps, ".GPUmode",
+                                     "Using GPU ?",
+                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &GPUmode_default);
+	(void) fpi_GPUmode;
+
+
 
 
     // settings for output files and dir
@@ -695,8 +703,8 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     long fpi_exec_logdata =
         function_parameter_add_entry(&fps, ".log2fs",
                                      "log to filesystem",
-                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT , pNull);
-	(void) fpi_exec_logdata;
+                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
+    (void) fpi_exec_logdata;
 
 
 
@@ -744,6 +752,10 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
 
     float SVDlim = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
 
+	long GPUmode        =
+        functionparameter_GetParamValue_INT64(&fps, ".GPUmode");
+
+
     char respMname[FUNCTION_PARAMETER_STRMAXLEN + 1];
     strncpy(respMname, functionparameter_GetParamPtr_STRING(&fps, ".fname_respM"),
             FUNCTION_PARAMETER_STRMAXLEN);
@@ -752,39 +764,54 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),
             FUNCTION_PARAMETER_STRMAXLEN);
-	EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirname);
+    EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirname);
 
 
 
     load_fits(respMname, "respM", 1);
 
     char cm_name[] = "sCMat";
-#ifdef HAVE_MAGMA
-    CUDACOMP_magma_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 100000,
+	
+	int usingGPU = 0;
+	#ifdef HAVE_MAGMA
+	usingGPU = 1;
+	#endif
+	if ( GPUmode == 0 )
+	{
+		usingGPU = 0;
+	}
+	
+
+	if( usingGPU == 1)
+	{
+		CUDACOMP_magma_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 100000,
                                             "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
-#else
-    linopt_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 10000, "VTmat");
-#endif
+    }
+    else
+    {
+		linopt_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 10000, "VTmat");
+	}
 
     //save_fits("VTmat", "!./mkmodestmp/VTmat.fits");
     delete_image_ID("VTmat");
 
 
 
-	char ffname[STRINGMAXLEN_FULLFILENAME];
-	WRITE_FULLFILENAME(ffname, "!%s/sCMat", outdirname);
+    char ffname[STRINGMAXLEN_FULLFILENAME];
+    WRITE_FULLFILENAME(ffname, "!%s/sCMat.fits", outdirname);
+    save_fits(cm_name, ffname);
 
 
     functionparameter_SaveFPS2disk(&fps);
 
 
 
-	functionparameter_SaveFPS2disk_dir(&fps, outdirname);
-	EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat", outdirname);
+    functionparameter_SaveFPS2disk_dir(&fps, outdirname);
+    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat 2> /dev/null", outdirname);
     EXECUTE_SYSTEM_COMMAND("echo \"sCMat.fits\" >> %s/loglist.dat", outdirname);
-	
 
-	// create archive script
+
+    // create archive script
     functionparameter_write_archivescript(&fps, "../aoldatadir");
 
 
