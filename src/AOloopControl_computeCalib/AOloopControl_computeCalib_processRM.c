@@ -129,7 +129,7 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
     if((image_ID("RMmat") != -1)
             && (image_ID("pixindexim") != -1)) // start decoding
     {
-        save_fits(IDzrespm0_name, "!./tmpRMacqu/zrespm_Hadamard.fits");
+        //save_fits(IDzrespm0_name, "!zrespm_Hadamard.fits");
 
         AOloopControl_computeCalib_Hadamard_decodeRM(IDzrespm0_name, "RMmat",
                 "pixindexim", IDzrespm_name);
@@ -627,6 +627,8 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
 
 
 
+
+
 errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     char *fpsname,
     uint32_t CMDmode
@@ -664,18 +666,37 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
         function_parameter_add_entry(&fps, ".fname_respM", "response matrix",
                                      FPTYPE_FILENAME, FPFLAG, pNull);
 
-    // Output file name
-    FPFLAG = FPFLAG_DEFAULT_OUTPUT;
-    __attribute__((unused)) long fpi_filename_out         =
-        function_parameter_add_entry(&fps, ".outfname", "output name",
-                                     FPTYPE_FILENAME, FPFLAG, pNull);
 
 
 
-    // Actions
-    long fpi_adoptCM = function_parameter_add_entry(&fps, ".adoptCM",
-                       "adopt CM",
-                       FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+    // settings for output files and dir
+
+    long fpi_out_dirname      =
+        function_parameter_add_entry(&fps, ".out.dirname",
+                                     "output directory",
+                                     FPTYPE_DIRNAME, FPFLAG_DEFAULT_INPUT, pNull);
+    (void) fpi_out_dirname;
+
+
+    __attribute__((unused)) long fpi_out_label      =
+        function_parameter_add_entry(&fps, ".out.label",
+                                     "output label",
+                                     FPTYPE_STRING, FPFLAG_DEFAULT_INPUT, pNull);
+
+    long fpi_out_timestring    =
+        function_parameter_add_entry(&fps, ".out.timestring",
+                                     "output timestring",
+                                     FPTYPE_STRING, FPFLAG_DEFAULT_INPUT, pNull);
+    (void) fpi_out_timestring;
+
+
+
+    // External scripts (post)
+    long fpi_exec_logdata =
+        function_parameter_add_entry(&fps, ".log2fs",
+                                     "log to filesystem",
+                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT , pNull);
+	(void) fpi_exec_logdata;
 
 
 
@@ -684,25 +705,6 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
     FPS_CONFLOOP_START  // macro in function_parameter.h
-
-    // here goes the logic
-    //
-    // Action: adopt CM
-    //
-    if(fps.parray[fpi_adoptCM].fpflag & FPFLAG_ONOFF)
-    {
-        FILE *fpconf;
-        char conffname[200];
-        long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
-        sprintf(conffname, "conf/shmim.aol%ld_CMat.fname.txt", loop);
-        fpconf = fopen(conffname, "w");
-        fprintf(fpconf, "%s", functionparameter_GetParamPtr_STRING(&fps, ".outfname"));
-        fclose(fpconf);
-
-        // set back to OFF
-        fps.parray[fpi_adoptCM].fpflag &= ~FPFLAG_ONOFF;
-
-    }
 
 
 
@@ -721,9 +723,15 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     char *fpsname
 )
 {
-
-
     FPS_CONNECT(fpsname, FPSCONNECT_RUN);
+
+    // Write time string
+    char timestring[100];
+    mkUTtimestring_millisec(timestring);
+    functionparameter_SetParamValue_STRING(
+        &fps,
+        ".out.timestring",
+        timestring);
 
 
 
@@ -740,6 +748,11 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
     strncpy(respMname, functionparameter_GetParamPtr_STRING(&fps, ".fname_respM"),
             FUNCTION_PARAMETER_STRMAXLEN);
 
+
+    char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
+    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),
+            FUNCTION_PARAMETER_STRMAXLEN);
+	EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirname);
 
 
 
@@ -758,34 +771,25 @@ errno_t AOloopControl_computeCalib_mkCM_RUN(
 
 
 
-
-    // write output
-    //char stagedir[] = "conf_fCM_staged";
-
-    // Get time
-    time_t tnow;
-    struct tm *tmnow;
-    char datestring[200];
-
-    time(&tnow);
-    tmnow = gmtime(&tnow);
-
-    printf("TIMESTRING:  %04d %02d %02d  %02d:%02d:%02d\n", 1900 + tmnow->tm_year,
-           tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
-    sprintf(datestring, "%04d-%02d-%02d_%02d:%02d:%02d", 1900 + tmnow->tm_year,
-            tmnow->tm_mon, tmnow->tm_mday, tmnow->tm_hour, tmnow->tm_min, tmnow->tm_sec);
-
-    char fnamedest[500];
-    sprintf(fnamedest, "sCM/sCM_%s.fits", datestring);
-
-    save_fits(cm_name, fnamedest);
-    functionparameter_SetParamValue_STRING(&fps, ".outfname", fnamedest);
+	char ffname[STRINGMAXLEN_FULLFILENAME];
+	WRITE_FULLFILENAME(ffname, "!%s/sCMat", outdirname);
 
 
-    delete_image_ID(cm_name);
+    functionparameter_SaveFPS2disk(&fps);
+
+
+
+	functionparameter_SaveFPS2disk_dir(&fps, outdirname);
+	EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat", outdirname);
+    EXECUTE_SYSTEM_COMMAND("echo \"sCMat.fits\" >> %s/loglist.dat", outdirname);
+	
+
+	// create archive script
+    functionparameter_write_archivescript(&fps, "../aoldatadir");
+
 
     function_parameter_RUNexit(&fps);
-
+    delete_image_ID(cm_name);
 
     return RETURN_SUCCESS;
 }
