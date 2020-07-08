@@ -281,7 +281,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli()
     // set data.fpsname, providing default value as first arg, and set data.FPS_CMDCODE value
     // default FPS name will be used if CLI process has NOT been named
     // see code in function_parameter.c for detailed rules
-    function_parameter_getFPSname_from_CLIfunc("measlinRM");
+    function_parameter_getFPSargs_from_CLIfunc("measlinRM");
 
     if(data.FPS_CMDCODE != 0)  	// use FPS implementation
     {
@@ -696,13 +696,9 @@ imageID AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 // manages configuration parameters
 // initializes configuration parameters structure
 //
-errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
-    char     *fpsname,
-    uint32_t  CMDmode,
-    __attribute__((unused)) long      optarg00
-)
+errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF()
 {
-    FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
 
     // ===========================
@@ -728,8 +724,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_FPCONF(
 //
 // run loop process
 //
-errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN(
-)
+errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN()
 {
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
@@ -1975,8 +1970,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
 
 
 
-errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF(
-)
+errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 {
     // uint16_t loopstatus;
 
