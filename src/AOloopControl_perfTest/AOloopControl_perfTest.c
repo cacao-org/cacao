@@ -200,7 +200,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_cli()
     // Set data.fpsname, providing default value as first arg, and set data.FPS_CMDCODE value.
     // Default FPS name will be used if CLI process has NOT been named.
     // See code in function_parameter.c for detailed rules.
-    function_parameter_getFPSname_from_CLIfunc("measlat");
+    function_parameter_getFPSargs_from_CLIfunc("measlat");
 
     if(data.FPS_CMDCODE != 0)   // use FPS implementation
     {
@@ -786,8 +786,7 @@ static errno_t init_module_CLI()
 
 
 
-errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
-)
+errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF()
 {
 
     // ===========================
@@ -953,9 +952,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(
  * 			Number of poke cycles
  *
  */
-errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
-    char *fpsname
-)
+errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 {
     imageID IDdm;
     long dmxsize, dmysize;
@@ -1021,7 +1018,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
          return RETURN_FAILURE;
      }*/
 
-    FPS_CONNECT(fpsname, FPSCONNECT_RUN);
+    FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
     // Write time string
     char timestring[100];
@@ -1752,21 +1749,15 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency(
     long NBiter
 )
 {
-    int stringmaxlen = 500;
-
     // ==================================
     // CREATE FPS AND START CONF
     // ==================================
 
-    char fpsname[stringmaxlen];
-    __attribute__((unused)) long pindex = (long)
-                                          getpid();  // index used to differentiate multiple calls to function
-    // if we don't have anything more informative, we use PID
     FUNCTION_PARAMETER_STRUCT fps;
-    //int SMfd = -1;
-    snprintf(fpsname, stringmaxlen, "mlat-%s-%s", dmname, wfsname);
-    AOcontrolLoop_perfTest_TestSystemLatency_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
 
+    snprintf(data.FPS_name, STRINGMAXLEN_FPS_NAME, "mlat-%s-%s", dmname, wfsname);
+    data.FPS_CMDCODE = FPSCMDCODE_FPSINIT;
+    AOcontrolLoop_perfTest_TestSystemLatency_FPCONF();
 
 
 
@@ -1774,7 +1765,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency(
     // SET PARAMETER VALUES
     // ==================================
 
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
+    function_parameter_struct_connect(data.FPS_name, &fps, FPSCONNECT_SIMPLE);
 
     functionparameter_SetParamValue_STRING(&fps, ".sn_dm", dmname);
     functionparameter_SetParamValue_STRING(&fps, ".sn_wfs", wfsname);
@@ -1789,7 +1780,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency(
     // START RUN PROCESS
     // ==================================
 
-    AOcontrolLoop_perfTest_TestSystemLatency_RUN(fpsname);
+    AOcontrolLoop_perfTest_TestSystemLatency_RUN();
 
     return RETURN_SUCCESS;
 }

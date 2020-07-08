@@ -88,9 +88,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
 
 errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF();
 
-errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN(
-    char *fpsname
-);
+errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN();
 
 errno_t AOcontrolLoop_perfTest_TestSystemLatency(
     const char *dmname,
