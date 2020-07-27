@@ -494,6 +494,8 @@ CACAO_LOOPNAME="$1"
 echo ""
 
 checkCommand tmux
+
+checkCommand milk-fpsinit
 checkCommand milk-fpsCTRL
 checkCommand milk-streamlink
 checkCommand milk-FITS2shm
@@ -812,7 +814,7 @@ LOOPWORKDIR=$( pwd )
 
 
 
-# SETUP ALL FPS
+# SETUP ALL (-C) FPS, using cacao as executable (-e cacao)
 
 milk-fpsinit -e cacao -C
 
