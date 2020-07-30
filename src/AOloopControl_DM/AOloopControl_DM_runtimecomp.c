@@ -266,9 +266,9 @@ int AOloopControl_DM_CombineChannels_FPCONF()
     // ===========================
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
-	long DMindex = data.cmdargtoken[2].val.numl;
+    long DMindex = data.cmdargtoken[2].val.numl;
 
-	
+
 
     // ALLOCATE FPS ENTRIES
 
