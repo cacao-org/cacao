@@ -139,72 +139,26 @@ errno_t AOloopControl_DM_CombineChannels_cli()
     // 16 float DCum
     // 17 float maxvolt
 
-    int stringlenmax = 200;
-    char fpsname[stringlenmax];
 
 
+    // Try FPS implementation
 
-    if(CLI_checkarg(1, CLIARG_STR) + CLI_checkarg(2, CLIARG_LONG) == 0)
-    {
-        //unsigned int DMindex = (unsigned int) data.cmdargtoken[2].val.numl;
+    // Set data.fpsname, providing default value as first arg, and set data.FPS_CMDCODE value.
+    // Default FPS name will be used if CLI process has NOT been named.
+    // See code in function_parameter.c for detailed rules.
 
-        // FPS interface name
-        if(data.processnameflag ==
-                0)   // name fps to something different than the process name
-        {
-            snprintf(fpsname, stringlenmax, "DMcomb-%s", data.cmdargtoken[2].val.string);
-            //sprintf(fpsname, "DMcomb-%06u", DMindex);
-        }
-        else     // Set fps name to be process name up to first instance of character '.'
-        {
-            strcpy(fpsname, data.processname0);
-        }
+    function_parameter_getFPSargs_from_CLIfunc("DMcomb");
 
-        if((strcmp(data.cmdargtoken[1].val.string, "_FPSINIT_") == 0)
-                && (CLI_checkarg(2, CLIARG_LONG) == 0))    // init FPS
-        {
-            printf("Function parameters configure\n");
-            AOloopControl_DM_CombineChannels_FPCONF(fpsname, FPSCMDCODE_FPSINIT,
-                                                    data.cmdargtoken[2].val.numl);
-            return 0;
-        }
-
-        if((strcmp(data.cmdargtoken[1].val.string, "_CONFSTART_") == 0)
-                && (CLI_checkarg(2, CLIARG_LONG) == 0))    // Start conf process
-        {
-            printf("Function parameters configure\n");
-            AOloopControl_DM_CombineChannels_FPCONF(fpsname, FPSCMDCODE_CONFSTART,
-                                                    data.cmdargtoken[2].val.numl);
-            return 0;
-        }
-
-        if((strcmp(data.cmdargtoken[1].val.string, "_CONFSTOP_") == 0)
-                && (CLI_checkarg(2, CLIARG_LONG) == 0))   // Stop conf process
-        {
-            printf("Function parameters configure\n");
-            AOloopControl_DM_CombineChannels_FPCONF(fpsname, FPSCMDCODE_CONFSTOP,
-                                                    data.cmdargtoken[2].val.numl);
-            return 0;
-        }
-
-        if((strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)
-                && (CLI_checkarg(2, CLIARG_LONG) == 0))   // Run process
-        {
-            printf("Run function\n");
-            AOloopControl_DM_CombineChannels_RUN(fpsname);
-            return 0;
-        }
-
-        if((strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)
-                && (CLI_checkarg(2, CLIARG_LONG) == 0))   // Run process
-        {
-            printf("Run function STOP\n");
-            AOloopControl_DM_dmdispcomboff(data.cmdargtoken[2].val.numl);
-            return 0;
-        }
+    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+        // set pointers to CONF and RUN functions
+        data.FPS_CONFfunc = AOloopControl_DM_CombineChannels_FPCONF;
+        data.FPS_RUNfunc  = AOloopControl_DM_CombineChannels_RUN;
+        function_parameter_execFPScmd();
+        return RETURN_SUCCESS;
     }
 
-    // FPS-free implementation - all parameters specified at function launch
+
+    // call non FPS implementation - all parameters specified at function launch
     if(0
             + CLI_checkarg(1, CLIARG_LONG)
             + CLI_checkarg(2, CLIARG_LONG)
@@ -244,7 +198,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
             data.cmdargtoken[16].val.numf,
             data.cmdargtoken[17].val.numf
         );
-        return 0;
+        return RETURN_SUCCESS;
     }
     else
     {
