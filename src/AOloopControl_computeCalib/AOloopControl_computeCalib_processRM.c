@@ -838,8 +838,8 @@ errno_t AOloopControl_computeCalib_mkCM(
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS
-    sprintf(data.FPS_name , "compsCM-%06ld", pindex);
-	data.FPS_CMDCODE = FPSCMDCODE_FPSINIT;
+    sprintf(data.FPS_name, "compsCM-%06ld", pindex);
+    data.FPS_CMDCODE = FPSCMDCODE_FPSINIT;
     AOloopControl_computeCalib_mkCM_FPCONF();
 
     function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
