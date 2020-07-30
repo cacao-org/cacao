@@ -95,8 +95,8 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
 );
 
 
-errno_t AOloopControl_computeCalib_mkCM_FPCONF(char *fpsname, uint32_t CMDmode);
-errno_t AOloopControl_computeCalib_mkCM_RUN(char *fpsname);
+errno_t AOloopControl_computeCalib_mkCM_FPCONF();
+errno_t AOloopControl_computeCalib_mkCM_RUN();
 errno_t AOloopControl_computeCalib_mkCM(const char *respm_name, float SVDlim);
 
 

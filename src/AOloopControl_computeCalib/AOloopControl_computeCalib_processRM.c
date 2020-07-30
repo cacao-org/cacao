@@ -629,15 +629,12 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
 
 
 
-errno_t AOloopControl_computeCalib_mkCM_FPCONF(
-    char *fpsname,
-    uint32_t CMDmode
-)
+errno_t AOloopControl_computeCalib_mkCM_FPCONF()
 {
     // ===========================
     // SETUP FPS
     // ===========================
-    FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
     // ===========================
     // ALLOCATE FPS ENTRIES
@@ -727,11 +724,9 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF(
 
 
 
-errno_t AOloopControl_computeCalib_mkCM_RUN(
-    char *fpsname
-)
+errno_t AOloopControl_computeCalib_mkCM_RUN()
 {
-    FPS_CONNECT(fpsname, FPSCONNECT_RUN);
+    FPS_CONNECT(data.FPS_name, data.FPS_CMDCODE);
 
     // Write time string
     char timestring[100];
@@ -843,8 +838,9 @@ errno_t AOloopControl_computeCalib_mkCM(
     FUNCTION_PARAMETER_STRUCT fps;
 
     // create FPS
-    sprintf(fpsname, "compsCM-%06ld", pindex);
-    AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
+    sprintf(data.FPS_name , "compsCM-%06ld", pindex);
+	data.FPS_CMDCODE = FPSCMDCODE_FPSINIT;
+    AOloopControl_computeCalib_mkCM_FPCONF();
 
     function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
 
@@ -856,7 +852,7 @@ errno_t AOloopControl_computeCalib_mkCM(
 
 
 
-    AOloopControl_computeCalib_mkCM_RUN(fpsname);
+    AOloopControl_computeCalib_mkCM_RUN();
 
     return RETURN_SUCCESS;
 }
