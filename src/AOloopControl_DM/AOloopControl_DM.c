@@ -149,7 +149,8 @@ errno_t AOloopControl_DM_CombineChannels_cli()
 
     function_parameter_getFPSargs_from_CLIfunc("DMcomb");
 
-    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+    if(data.FPS_CMDCODE != 0)   // use FPS implementation
+    {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOloopControl_DM_CombineChannels_FPCONF;
         data.FPS_RUNfunc  = AOloopControl_DM_CombineChannels_RUN;
