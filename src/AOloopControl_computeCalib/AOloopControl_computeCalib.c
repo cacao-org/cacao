@@ -220,63 +220,25 @@ errno_t AOloopControl_computeCalib_mkloDMmodes_cli()
 
 errno_t AOloopControl_computeCalib_ComputeCM_cli()
 {
-    int stringmaxlen = 200;
-    char fpsname[stringmaxlen];
+    // Try FPS implementation
 
-    // First, we try to execute function through FPS interface
-    if(CLI_checkarg(1, 5) == 0)   // check that first arg is string
-    {
-        // unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
-        // Set FPS interface name
-        // By convention, if there are optional arguments, they should be appended to the fps name
-        //
-        if(data.processnameflag ==
-                0)   // name fps to something different than the process name
-        {
-            if(strlen(data.cmdargtoken[2].val.string) > 0)
-            {
-                snprintf(fpsname, stringmaxlen, "compfCM-%s", data.cmdargtoken[2].val.string);
-            }
-            else
-            {
-                snprintf(fpsname, stringmaxlen, "compfCM");
-            }
-        }
-        else     // Automatically set fps name to be process name up to first instance of character '.'
-        {
-            strcpy(fpsname, data.processname0);
-        }
+    // Set data.fpsname, providing default value as first arg, and set data.FPS_CMDCODE value.
+    // Default FPS name will be used if CLI process has NOT been named.
+    // See code in function_parameter.c for detailed rules.
 
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_FPSINIT_") == 0)    // Initialize FPS
-        {
-            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTART_") == 0)    // Start conf process
-        {
-            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTOP_") == 0)   // Stop conf process
-        {
-            AOcontrolLoop_computeCalib_ComputeCM_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)   // Run process
-        {
-            AOcontrolLoop_computeCalib_ComputeCM_RUN(fpsname);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)   // Stop process
-        {
-            //     AOcontrolLoop__STOP(OptionalArg00);
-            return RETURN_SUCCESS;
-        }
+    function_parameter_getFPSargs_from_CLIfunc("compfCM");
+
+    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+        // set pointers to CONF and RUN functions
+        data.FPS_CONFfunc = AOcontrolLoop_computeCalib_ComputeCM_FPCONF;
+        data.FPS_RUNfunc  = AOcontrolLoop_computeCalib_ComputeCM_RUN;
+        function_parameter_execFPScmd();
+        return RETURN_SUCCESS;
     }
-    return RETURN_FAILURE;
+    else
+    {
+		return RETURN_FAILURE;
+	}
 }
 
 
@@ -284,98 +246,29 @@ errno_t AOloopControl_computeCalib_ComputeCM_cli()
 /** @brief CLI function for AOloopControl_mkCM */
 errno_t AOloopControl_computeCalib_mkCM_cli()
 {
-    int stringmaxlen = 200;
-    char fpsname[stringmaxlen];
+    function_parameter_getFPSargs_from_CLIfunc("compsCM");
 
-
-    printf("LINE %d\n", __LINE__);
-    // First, we try to execute function through FPS interface
-    if(CLI_checkarg(1, 5) == 0)   // check that first arg is string
-    {
-        // Set FPS interface name
-        // By convention, if there are optional arguments, they should be appended to the fps name
-        //
-        printf("LINE %d\n", __LINE__);
-
-        if(data.processnameflag == 0)
-        {
-            // the process has not been named with -n CLI option
-            // name fps to something different than the process name
-            if(strlen(data.cmdargtoken[2].val.string) > 0)
-            {
-                snprintf(fpsname, stringmaxlen, "compsCM-%s", data.cmdargtoken[2].val.string);
-                printf("USING %s as fpsname\n", fpsname);
-            }
-            else
-            {
-                snprintf(fpsname, stringmaxlen, "compsCM");
-                printf("USING %s default fpsname\n", fpsname);
-            }
-
-        }
-        else
-        {
-            // Automatically set fps name to be process name up to first instance of character '.'
-            // This is the preferred option
-            strcpy(fpsname, data.processname0);
-            printf("USING %s auto fpsname\n", fpsname);
-        }
-
-
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_FPSINIT_") == 0)    // Initialize FPS and conf process
-        {
-            printf("Function parameters FPSINIT\n");
-            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
-            return RETURN_SUCCESS;
-        }
-
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTART_") == 0)    // Start conf process
-        {
-            printf("Function parameters CONFSTART\n");
-            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
-            return RETURN_SUCCESS;
-        }
-
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTOP_") == 0)   // Stop conf process
-        {
-            printf("Function parameters CONFSTOP\n");
-            AOloopControl_computeCalib_mkCM_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
-            return RETURN_SUCCESS;
-        }
-
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)   // Run process
-        {
-            printf("Run function RUNSTART\n");
-            AOloopControl_computeCalib_mkCM_RUN(fpsname);
-            return RETURN_SUCCESS;
-        }
-
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)   // Stop process
-        {
-            printf("Run function RUNSTOP\n");
-            // AOloopControl_computeCalib_mkCM_STOP();
-            return RETURN_SUCCESS;
-        }
+    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+        // set pointers to CONF and RUN functions
+        data.FPS_CONFfunc = AOloopControl_computeCalib_mkCM_FPCONF;
+        data.FPS_RUNfunc  = AOloopControl_computeCalib_mkCM_RUN;
+        function_parameter_execFPScmd();
+        return RETURN_SUCCESS;
     }
 
-    printf("LINE %d\n", __LINE__);
 
-    // non FPS implementation - all parameters specified at function launch
+    // call non FPS implementation - all parameters specified at function launch
+
     if(CLI_checkarg(1, 4) + CLI_checkarg(2, 1) == 0)
     {
-        printf("========================================================\n");
-        printf("============== RUNNING non-FPS implementation ==========\n");
-        printf("========================================================\n");
+
         AOloopControl_computeCalib_mkCM(data.cmdargtoken[1].val.string,
                                         data.cmdargtoken[3].val.numf);
         return RETURN_SUCCESS;
     }
     else
     {
-        return RETURN_FAILURE;
+        return CLICMD_INVALID_ARG;
     }
 }
 
@@ -880,15 +773,12 @@ static errno_t init_module_CLI()
  *
  * @{
  */
-errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
-    char    *fpsname,
-    uint32_t CMDmode
-)
+errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
 {
     // ===========================
     // SETUP FPS
     // ===========================
-    FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
 
     //int SMfd_zRMacqu = -1;
@@ -1237,9 +1127,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(
  *
  * @{
  */
-errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
-    char *fpsname
-)
+errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
 {
     // ===========================
     // CONNECT TO FPS
@@ -1252,7 +1140,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(
           return RETURN_FAILURE;
       }*/
 
-    FPS_CONNECT(fpsname, FPSCONNECT_RUN);
+    FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
     // Write time string
     char timestring[100];

@@ -55,9 +55,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
 );
 
 
-errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF(char *fpsname,
-        uint32_t CMDmode);
-errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN(char *fpsname);
+errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF();
+errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN();
 
 
 errno_t AOloopControl_computeCalib_mkCalib_map_mask(
