@@ -558,15 +558,12 @@ static void *compute_function_dark_subtract(void *ptr)
 
 
 
-errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
-    char *fpsname,
-    uint32_t CMDmode
-)
+errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF()
 {
     // ===========================
     // SETUP FPS
     // ===========================
-    FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
 
     // ===========================
@@ -653,9 +650,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(
 
 
 
-errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
-    char *fpsname
-)
+errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
 {
     // ===========================
     // CONNECT TO FPS
@@ -668,7 +663,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
         return RETURN_FAILURE;
     }*/
 
-    FPS_CONNECT(fpsname, FPSCONNECT_RUN);
+    FPS_CONNECT(data.FPS_name, data.FPS_CMDCODE);
 
 
 
@@ -724,7 +719,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(
     sprintf(pinfodescr, "process aol%ld_wfsim", loop);
 
     processinfo = processinfo_setup(
-                      fpsname,                 // re-use fpsname as processinfo name
+                      data.FPS_name,                 // re-use fpsname as processinfo name
                       pinfodescr,    // description
                       "writes imWFS0 imWFS1",  // message on startup
                       __FUNCTION__, __FILE__, __LINE__

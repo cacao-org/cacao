@@ -56,9 +56,8 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
 //static void *compute_function_dark_subtract( void *ptr );
 
 
-errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(char *fpsname,
-        uint32_t CMDmode);
-errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN(char *fpsname);
+errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF();
+errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN();
 errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop);
 
 

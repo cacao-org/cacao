@@ -174,66 +174,21 @@ INIT_MODULE_LIB(AOloopControl_IOtools)
 
 errno_t AOloopControl_IOtools_acquireWFSloop_cli()
 {
-    int stringmaxlen = 200;
-    char fpsname[stringmaxlen];
+    // Try FPS implementation
 
-    // First, we try to execute function through FPS interface
-    if(CLI_checkarg(1, 5) == 0)   // check that first arg is string
-    {
-        // unsigned int OptionalArg00 = data.cmdargtoken[2].val.numl;
-        // Set FPS interface name
-        // By convention, if there are optional arguments, they should be appended to the fps name
-        //
-        if(data.processnameflag ==
-                0)   // name fps to something different than the process name
-        {
-            if(strlen(data.cmdargtoken[2].val.string) > 0)
-            {
-                snprintf(fpsname, stringmaxlen, "acquWFS-%s", data.cmdargtoken[2].val.string);
-            }
-            else
-            {
-                sprintf(fpsname, "acquWFS");
-            }
-        }
-        else     // Automatically set fps name to be process name up to first instance of character '.'
-        {
-            strcpy(fpsname, data.processname0);
-        }
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_FPSINIT_") == 0)    // Initialize FPS
-        {
-            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTART_") == 0)    // Start conf process
-        {
-            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTOP_") == 0)   // Stop conf process
-        {
-            AOcontrolLoop_IOtools_acquireWFSloop_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)   // Run process
-        {
-            AOcontrolLoop_IOtools_acquireWFSloop_RUN(fpsname);
-            return RETURN_SUCCESS;
-        }
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)   // Stop process
-        {
-            //
-            return RETURN_SUCCESS;
-        }
-        //}
-        // non FPS implementation - all parameters specified at function launch
-        //if(CLI_checkarg(1,1)+CLI_checkarg(2,2)+CLI_checkarg(3,2)+CLI_checkarg(4,2)+CLI_checkarg(5,2)+CLI_checkarg(6,4)+CLI_checkarg(7,5)+CLI_checkarg(8,5)+CLI_checkarg(9,2)+CLI_checkarg(10,2)+CLI_checkarg(11,2)+CLI_checkarg(12,2)==0) {
-        //AOloopControl_Otools_acquireWFSloop();
+    // Set data.fpsname, providing default value as first arg, and set data.FPS_CMDCODE value.
+    // Default FPS name will be used if CLI process has NOT been named.
+    // See code in function_parameter.c for detailed rules.
+
+    function_parameter_getFPSargs_from_CLIfunc("acquWFS");
+
+    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+        // set pointers to CONF and RUN functions
+        data.FPS_CONFfunc = AOcontrolLoop_IOtools_acquireWFSloop_FPCONF;
+        data.FPS_RUNfunc  = AOcontrolLoop_IOtools_acquireWFSloop_RUN;
+        function_parameter_execFPScmd();
         return RETURN_SUCCESS;
-    }
+	}
     else
     {
         return RETURN_FAILURE;
