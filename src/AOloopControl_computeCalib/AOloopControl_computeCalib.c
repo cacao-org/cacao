@@ -228,7 +228,8 @@ errno_t AOloopControl_computeCalib_ComputeCM_cli()
 
     function_parameter_getFPSargs_from_CLIfunc("compfCM");
 
-    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+    if(data.FPS_CMDCODE != 0)   // use FPS implementation
+    {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOcontrolLoop_computeCalib_ComputeCM_FPCONF;
         data.FPS_RUNfunc  = AOcontrolLoop_computeCalib_ComputeCM_RUN;
@@ -237,8 +238,8 @@ errno_t AOloopControl_computeCalib_ComputeCM_cli()
     }
     else
     {
-		return RETURN_FAILURE;
-	}
+        return RETURN_FAILURE;
+    }
 }
 
 
@@ -248,7 +249,8 @@ errno_t AOloopControl_computeCalib_mkCM_cli()
 {
     function_parameter_getFPSargs_from_CLIfunc("compsCM");
 
-    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+    if(data.FPS_CMDCODE != 0)   // use FPS implementation
+    {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOloopControl_computeCalib_mkCM_FPCONF;
         data.FPS_RUNfunc  = AOloopControl_computeCalib_mkCM_RUN;
