@@ -182,13 +182,14 @@ errno_t AOloopControl_IOtools_acquireWFSloop_cli()
 
     function_parameter_getFPSargs_from_CLIfunc("acquWFS");
 
-    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+    if(data.FPS_CMDCODE != 0)   // use FPS implementation
+    {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOcontrolLoop_IOtools_acquireWFSloop_FPCONF;
         data.FPS_RUNfunc  = AOcontrolLoop_IOtools_acquireWFSloop_RUN;
         function_parameter_execFPScmd();
         return RETURN_SUCCESS;
-	}
+    }
     else
     {
         return RETURN_FAILURE;
