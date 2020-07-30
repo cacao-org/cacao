@@ -166,9 +166,8 @@ errno_t AOloopControl_DM_unloadconf();
 
 int AOloopControl_DM_disp2V(long DMindex);
 
-int AOloopControl_DM_CombineChannels_FPCONF(char *fpsname, uint32_t CMDmode,
-        long DMindex);
-int AOloopControl_DM_CombineChannels_RUN(char *fpsname);
+int AOloopControl_DM_CombineChannels_FPCONF();
+int AOloopControl_DM_CombineChannels_RUN();
 
 int AOloopControl_DM_CombineChannels(long DMindex,
                                      long xsize,

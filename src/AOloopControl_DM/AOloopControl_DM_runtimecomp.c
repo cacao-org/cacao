@@ -259,18 +259,16 @@ errno_t AOloopControl_DM_disp2V(
 // manages configuration parameters
 // initializes configuration parameters structure
 //
-int AOloopControl_DM_CombineChannels_FPCONF(
-    char *fpsname,
-    uint32_t CMDmode,
-    long DMindex
-)
+int AOloopControl_DM_CombineChannels_FPCONF()
 {
     // ===========================
     // SETUP FPS
     // ===========================
-    FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
+	long DMindex = data.cmdargtoken[2].val.numl;
 
+	
 
     // ALLOCATE FPS ENTRIES
 
@@ -497,9 +495,7 @@ int AOloopControl_DM_CombineChannels_FPCONF(
 //
 
 
-int AOloopControl_DM_CombineChannels_RUN(
-    char *fpsname
-)
+int AOloopControl_DM_CombineChannels_RUN()
 {
     uint8_t naxis = 2;
     uint32_t *size;
@@ -553,7 +549,7 @@ int AOloopControl_DM_CombineChannels_RUN(
         return EXIT_FAILURE;
     }
     */
-    FPS_CONNECT(fpsname, FPSCONNECT_RUN);
+    FPS_CONNECT(data.FPS_name, data.FPS_CMDCODE);
 
 
 
