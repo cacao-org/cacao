@@ -219,15 +219,12 @@ int AOloopControl_aorun_GUI(
 
 
 
-int AOloopControl_aorun_FPCONF(
-    char *fpsname,
-    uint32_t CMDmode
-)
+int AOloopControl_aorun_FPCONF()
 {
     // ===========================
     // SETUP FPS
     // ===========================
-    FPS_SETUP_INIT(fpsname, CMDmode);
+    FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
 
     // ===========================
@@ -375,9 +372,7 @@ int AOloopControl_aorun_FPCONF(
 
 
 
-int AOloopControl_aorun_RUN(
-    char *fpsname
-)
+int AOloopControl_aorun_RUN()
 {
     // ===========================
     // CONNECT TO FPS
@@ -390,7 +385,7 @@ int AOloopControl_aorun_RUN(
         printf("ERROR: fps \"%s\" does not exist -> running without FPS interface\n", fpsname);
         return RETURN_FAILURE;
     }*/
-    FPS_CONNECT(fpsname, FPSCONNECT_RUN);
+    FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
 
     // ===============================

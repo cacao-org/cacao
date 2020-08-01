@@ -561,8 +561,8 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
 );
 
 /** @brief Main loop function */
-int AOloopControl_aorun_RUN(char *fpsname);
-int AOloopControl_aorun_FPCONF(char *fpsname, uint32_t CMDmode);
+int AOloopControl_aorun_RUN();
+int AOloopControl_aorun_FPCONF();
 errno_t AOloopControl_aorun();
 
 

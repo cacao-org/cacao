@@ -318,105 +318,33 @@ errno_t AOloopControl_loadconfigure_cli()
 
 
 
-/** @brief CLI function for AOloopControl_mkCM */
+/** @brief CLI function for AOloopControl_aorun*/
 errno_t AOloopControl_aorun_cli()
 {
-    int stringmaxlen = 200;
-    char fpsname[stringmaxlen];
+    function_parameter_getFPSargs_from_CLIfunc("aorun");
 
-    // First, we try to execute function through FPS interface
-    if(DISABLE_CLI_AOloopControl
-            + CLI_checkarg(1, CLIARG_STR)
-            == 0)
-    {
-        // check that first arg is string
-        // Set FPS interface name
-        // By convention, if there are optional arguments, they should be appended to the fps name
-        //
-        printf("LINE %d\n", __LINE__);
-
-        if(data.processnameflag == 0)
-        {
-            // the process has not been named with -n CLI option
-            // name fps to something different than the process name
-            if(strlen(data.cmdargtoken[2].val.string) > 0)
-            {
-                snprintf(fpsname, stringmaxlen, "compsCM-%s", data.cmdargtoken[2].val.string);
-                printf("USING %s as fpsname\n", fpsname);
-            }
-            else
-            {
-                sprintf(fpsname, "compsCM");
-                printf("USING %s default fpsname\n", fpsname);
-            }
-
-        }
-        else
-        {
-            // Automatically set fps name to be process name up to first instance of character '.'
-            // This is the preferred option
-            strcpy(fpsname, data.processname0);
-            printf("USING %s auto fpsname\n", fpsname);
-        }
-
-
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_FPSINIT_") == 0)    // Initialize FPS and conf process
-        {
-            printf("Function parameters FPSINIT\n");
-            AOloopControl_aorun_FPCONF(fpsname, FPSCMDCODE_FPSINIT);
-            return RETURN_SUCCESS;
-        }
-
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTART_") == 0)    // Start conf process
-        {
-            printf("Function parameters CONFSTART\n");
-            AOloopControl_aorun_FPCONF(fpsname, FPSCMDCODE_CONFSTART);
-            return RETURN_SUCCESS;
-        }
-
-        if(strcmp(data.cmdargtoken[1].val.string,
-                  "_CONFSTOP_") == 0)   // Stop conf process
-        {
-            printf("Function parameters CONFSTOP\n");
-            AOloopControl_aorun_FPCONF(fpsname, FPSCMDCODE_CONFSTOP);
-            return RETURN_SUCCESS;
-        }
-
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTART_") == 0)   // Run process
-        {
-            printf("Run function RUNSTART\n");
-            AOloopControl_aorun_RUN(fpsname);
-            return RETURN_SUCCESS;
-        }
-
-        if(strcmp(data.cmdargtoken[1].val.string, "_RUNSTOP_") == 0)   // Stop process
-        {
-            printf("Run function RUNSTOP\n");
-            // AOloopControl_computeCalib_mkCM_STOP();
-            return RETURN_SUCCESS;
-        }
+    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+        // set pointers to CONF and RUN functions
+        data.FPS_CONFfunc = AOloopControl_aorun_FPCONF;
+        data.FPS_RUNfunc  = AOloopControl_aorun_RUN;
+        function_parameter_execFPScmd();
+        return RETURN_SUCCESS;
     }
 
-    printf("LINE %d\n", __LINE__);
 
-    // non FPS implementation - all parameters specified at function launch
+    // call non FPS implementation - all parameters specified at function launch
     if(DISABLE_CLI_AOloopControl
             + CLI_checkarg(1, CLIARG_IMG)
             + CLI_checkarg(2, CLIARG_FLOAT)
             == 0)
     {
-        printf("========================================================\n");
-        printf("============== RUNNING non-FPS implementation ==========\n");
-        printf("========================================================\n");
         AOloopControl_aorun(data.cmdargtoken[1].val.string,
                             data.cmdargtoken[3].val.numf);
         return RETURN_SUCCESS;
     }
     else
     {
-        return RETURN_FAILURE;
+        return CLICMD_INVALID_ARG;
     }
 }
 

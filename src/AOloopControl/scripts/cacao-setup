@@ -298,7 +298,7 @@ function cacaosetupLISTprocesses {
 # also feeds to fpsCTRL fps.conf/fpssetup.<cmd>.<fpsname>.conf if exists
 #
 function allFPScmd {
-	echolog "STARTING ALL CONF PROCESSES"
+	echolog "SENDING CMD $1 TO ALL CONF PROCESSES"
 	echo "running command $1 on all FPSs"
 
 	while IFS='' read -r line || [[ -n "$line" ]]; do
@@ -815,7 +815,8 @@ LOOPWORKDIR=$( pwd )
 
 
 # SETUP ALL (-C) FPS, using cacao as executable (-e cacao)
-
+# this will create FPS shared mems and tmux sessions
+#
 milk-fpsinit -e cacao -C
 
 
