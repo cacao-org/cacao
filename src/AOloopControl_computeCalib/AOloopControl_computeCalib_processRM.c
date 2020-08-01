@@ -726,7 +726,7 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
 
 errno_t AOloopControl_computeCalib_mkCM_RUN()
 {
-    FPS_CONNECT(data.FPS_name, data.FPS_CMDCODE);
+    FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
     // Write time string
     char timestring[100];
