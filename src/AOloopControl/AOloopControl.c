@@ -323,7 +323,8 @@ errno_t AOloopControl_aorun_cli()
 {
     function_parameter_getFPSargs_from_CLIfunc("aorun");
 
-    if(data.FPS_CMDCODE != 0) { // use FPS implementation
+    if(data.FPS_CMDCODE != 0)   // use FPS implementation
+    {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOloopControl_aorun_FPCONF;
         data.FPS_RUNfunc  = AOloopControl_aorun_RUN;
