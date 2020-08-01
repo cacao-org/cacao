@@ -265,7 +265,9 @@ int AOloopControl_DM_CombineChannels_FPCONF()
     // SETUP FPS
     // ===========================
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
+	fps_add_processinfo_entries(&fps);
 
+    
     long DMindex = data.cmdargtoken[2].val.numl;
 
 
@@ -549,7 +551,7 @@ int AOloopControl_DM_CombineChannels_RUN()
         return EXIT_FAILURE;
     }
     */
-    FPS_CONNECT(data.FPS_name, data.FPS_CMDCODE);
+    FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
 
 
@@ -643,6 +645,7 @@ int AOloopControl_DM_CombineChannels_RUN()
     processinfo->RT_priority =
         95;  // RT_priority, 0-99. Larger number = higher priority. If <0, ignore
 
+	fps_to_processinfo(&fps, processinfo);
 
 
     if(DMindex > NB_DMindex - 1)
