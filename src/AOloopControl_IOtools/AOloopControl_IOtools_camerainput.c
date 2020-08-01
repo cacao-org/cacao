@@ -663,7 +663,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
         return RETURN_FAILURE;
     }*/
 
-    FPS_CONNECT(data.FPS_name, data.FPS_CMDCODE);
+    FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
 
 
