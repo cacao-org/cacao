@@ -2545,7 +2545,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     // Write time string
     char timestring[100];
-    mkUTtimestring_millisec(timestring);
+    mkUTtimestring_millisec_now(timestring);
     functionparameter_SetParamValue_STRING(
         &fps,
         ".out.timestring",
