@@ -730,7 +730,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
     // Write time string
     char timestring[100];
-    mkUTtimestring_millisec(timestring);
+    mkUTtimestring_millisec_now(timestring);
     functionparameter_SetParamValue_STRING(
         &fps,
         ".out.timestring",
