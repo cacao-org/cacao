@@ -730,13 +730,13 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
     // Write time string
-/*    char timestring[100];
-    mkUTtimestring_millisec_now(timestring);
-    functionparameter_SetParamValue_STRING(
-        &fps,
-        ".out.timestring",
-        timestring);
-*/
+    /*    char timestring[100];
+        mkUTtimestring_millisec_now(timestring);
+        functionparameter_SetParamValue_STRING(
+            &fps,
+            ".out.timestring",
+            timestring);
+    */
 
 
     // ===============================
