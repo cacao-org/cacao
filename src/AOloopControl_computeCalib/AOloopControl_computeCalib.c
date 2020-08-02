@@ -781,7 +781,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
     // SETUP FPS
     // ===========================
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
-
+	fps_add_processinfo_entries(&fps);
 
     //int SMfd_zRMacqu = -1;
     //int SMfd_loRMacqu = -1;
@@ -1144,14 +1144,6 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
 
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
-    // Write time string
-    char timestring[100];
-    mkUTtimestring_millisec_now(timestring);
-    functionparameter_SetParamValue_STRING(
-        &fps,
-        ".out.timestring",
-        timestring);
-
 
     // ===============================
     // GET FUNCTION PARAMETER VALUES
@@ -1241,6 +1233,9 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
                                        align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim, outdirname);
 
 
+
+
+
     printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
     fflush(stdout);
 
@@ -1253,39 +1248,39 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
     printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
     fflush(stdout);
 
-    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesall.fits", outdirname);
-    WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes_%s.fits", datestring);
-    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes.fname.txt", outdirname);
+    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesall.fits", fps.md->outdir);
+    WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes_%s.fits", fps.md->outdir);
+    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes.fname.txt", fps.md->outdir);
 
     EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
     WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
 
-    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesWFSall.fits", outdirname);
-    WRITE_FULLFILENAME(fnamedest, "respM/respM_%s.fits", datestring);
-    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM.fname.txt", outdirname);
+    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesWFSall.fits", fps.md->outdir);
+    WRITE_FULLFILENAME(fnamedest, "respM/respM_%s.fits", fps.md->outdir);
+    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM.fname.txt", fps.md->outdir);
 
     EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
     WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
 
 
-    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatall.fits", outdirname);
-    WRITE_FULLFILENAME(fnamedest, "contrM/contrM_%s.fits", datestring);
-    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM.fname.txt", outdirname);
+    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatall.fits", fps.md->outdir);
+    WRITE_FULLFILENAME(fnamedest, "contrM/contrM_%s.fits", fps.md->outdir);
+    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM.fname.txt", fps.md->outdir);
 
 
     EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
     WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
     EXECUTE_SYSTEM_COMMAND("cp ./%s/mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt",
-                           outdirname, outdirname);
+                           fps.md->outdir, fps.md->outdir);
 
 
     int OKloop = 1;
     for(int i = 0; i < 20; i++)
     {
-        WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", outdirname, i);
+        WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", fps.md->outdir, i);
 
         if(OKloop == 1)
         {
@@ -1296,42 +1291,42 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
 
                 printf("Found file %s\n", fnamesrc);
 
-                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", outdirname, i);
+                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", fps.md->outdir, i);
                 WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes%02d.fname.txt", outdirname, i);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes%02d.fname.txt", fps.md->outdir, i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
-                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesWFS_%02d.fits", outdirname,
+                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesWFS_%02d.fits", fps.md->outdir,
                                    i);
                 WRITE_FULLFILENAME(fnamedest, "respM/respM%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM%02d.fname.txt", outdirname, i);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM%02d.fname.txt", fps.md->outdir, i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
-                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmat_%02d.fits", outdirname, i);
+                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmat_%02d.fits", fps.md->outdir, i);
                 WRITE_FULLFILENAME(fnamedest, "contrM/contrM%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM%02d.fname.txt", outdirname, i);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM%02d.fname.txt", fps.md->outdir, i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
 
-                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatc_%02d.fits", outdirname, i);
+                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatc_%02d.fits", fps.md->outdir, i);
                 WRITE_FULLFILENAME(fnamedest, "contrMc/contrMc%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMc%02d.fname.txt", outdirname, i);
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMc%02d.fname.txt", fps.md->outdir, i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
 
-                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatcact_%02d.fits", outdirname,
+                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatcact_%02d.fits", fps.md->outdir,
                                    i);
                 WRITE_FULLFILENAME(fnamedest, "contrMcact/contrMcact%02d_%s.fits", i,
                                    datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMcact%02d.fname.txt", outdirname,
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMcact%02d.fname.txt", fps.md->outdir,
                                    i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
@@ -1350,13 +1345,13 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
 
 
 
-    functionparameter_SaveFPS2disk_dir(&fps, outdirname);
-    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat 2> /dev/null", outdirname);
+    functionparameter_SaveFPS2disk_dir(&fps, fps.md->outdir);
+    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat 2> /dev/null", fps.md->outdir);
     //EXECUTE_SYSTEM_COMMAND("echo \"sCMat.fits\" >> %s/loglist.dat", outdirname);
 
 
     // create archive script
-    functionparameter_write_archivescript(&fps, "../aoldatadir");
+    functionparameter_write_archivescript(&fps);
 
 
     printf("[%s %d] DONE - disconnecting from FPS\n", __FILE__, __LINE__);

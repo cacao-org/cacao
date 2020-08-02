@@ -635,6 +635,7 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
     // SETUP FPS
     // ===========================
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
+    fps_add_processinfo_entries(&fps);
 
     // ===========================
     // ALLOCATE FPS ENTRIES
@@ -729,13 +730,13 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
     // Write time string
-    char timestring[100];
+/*    char timestring[100];
     mkUTtimestring_millisec_now(timestring);
     functionparameter_SetParamValue_STRING(
         &fps,
         ".out.timestring",
         timestring);
-
+*/
 
 
     // ===============================
@@ -793,7 +794,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
 
     char ffname[STRINGMAXLEN_FULLFILENAME];
-    WRITE_FULLFILENAME(ffname, "!%s/sCMat.fits", outdirname);
+    WRITE_FULLFILENAME(ffname, "!%s/sCMat00.fits", outdirname);
     save_fits(cm_name, ffname);
 
 
@@ -801,13 +802,13 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
 
 
-    functionparameter_SaveFPS2disk_dir(&fps, outdirname);
-    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat 2> /dev/null", outdirname);
-    EXECUTE_SYSTEM_COMMAND("echo \"sCMat.fits\" >> %s/loglist.dat", outdirname);
+//    functionparameter_SaveFPS2disk_dir(&fps, outdirname);
+//    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat 2> /dev/null", outdirname);
+//    EXECUTE_SYSTEM_COMMAND("echo \"sCMat.fits\" >> %s/loglist.dat", outdirname);
 
 
     // create archive script
-    functionparameter_write_archivescript(&fps, "../aoldatadir");
+//    functionparameter_write_archivescript(&fps, "../aoldatadir");
 
 
     function_parameter_RUNexit(&fps);
