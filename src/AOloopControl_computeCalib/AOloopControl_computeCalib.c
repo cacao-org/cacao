@@ -1248,40 +1248,40 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
     printf("[%s %d] Save to disk\n", __FILE__, __LINE__);
     fflush(stdout);
 
-    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesall.fits", fps.md->outdir);
-    WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes_%s.fits", fps.md->outdir);
-    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes.fname.txt", fps.md->outdir);
+    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesall.fits", fps.md->datadir);
+    WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes_%s.fits", fps.md->datadir);
+    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes.fname.txt", fps.md->datadir);
 
     EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
     WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
 
     WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesWFSall.fits",
-                       fps.md->outdir);
-    WRITE_FULLFILENAME(fnamedest, "respM/respM_%s.fits", fps.md->outdir);
-    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM.fname.txt", fps.md->outdir);
+                       fps.md->datadir);
+    WRITE_FULLFILENAME(fnamedest, "respM/respM_%s.fits", fps.md->datadir);
+    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM.fname.txt", fps.md->datadir);
 
     EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
     WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
 
 
-    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatall.fits", fps.md->outdir);
-    WRITE_FULLFILENAME(fnamedest, "contrM/contrM_%s.fits", fps.md->outdir);
-    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM.fname.txt", fps.md->outdir);
+    WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatall.fits", fps.md->datadir);
+    WRITE_FULLFILENAME(fnamedest, "contrM/contrM_%s.fits", fps.md->datadir);
+    WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM.fname.txt", fps.md->datadir);
 
 
     EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
     WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
     EXECUTE_SYSTEM_COMMAND("cp ./%s/mkmodestmp/NBmodes.txt ./%s/param_NBmodes.txt",
-                           fps.md->outdir, fps.md->outdir);
+                           fps.md->datadir, fps.md->datadir);
 
 
     int OKloop = 1;
     for(int i = 0; i < 20; i++)
     {
-        WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", fps.md->outdir,
+        WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", fps.md->datadir,
                            i);
 
         if(OKloop == 1)
@@ -1293,39 +1293,39 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
 
                 printf("Found file %s\n", fnamesrc);
 
-                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", fps.md->outdir,
+                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", fps.md->datadir,
                                    i);
                 WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes%02d.fname.txt", fps.md->outdir,
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes%02d.fname.txt", fps.md->datadir,
                                    i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
                 WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodesWFS_%02d.fits",
-                                   fps.md->outdir,
+                                   fps.md->datadir,
                                    i);
                 WRITE_FULLFILENAME(fnamedest, "respM/respM%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM%02d.fname.txt", fps.md->outdir,
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.respM%02d.fname.txt", fps.md->datadir,
                                    i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
-                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmat_%02d.fits", fps.md->outdir,
+                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmat_%02d.fits", fps.md->datadir,
                                    i);
                 WRITE_FULLFILENAME(fnamedest, "contrM/contrM%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM%02d.fname.txt", fps.md->outdir,
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrM%02d.fname.txt", fps.md->datadir,
                                    i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
                 WRITE_STRING_TO_FILE(fnametxt, "%s", fnamedest);
 
 
-                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatc_%02d.fits", fps.md->outdir,
+                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatc_%02d.fits", fps.md->datadir,
                                    i);
                 WRITE_FULLFILENAME(fnamedest, "contrMc/contrMc%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMc%02d.fname.txt", fps.md->outdir,
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMc%02d.fname.txt", fps.md->datadir,
                                    i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
@@ -1333,12 +1333,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
 
 
                 WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatcact_%02d.fits",
-                                   fps.md->outdir,
+                                   fps.md->datadir,
                                    i);
                 WRITE_FULLFILENAME(fnamedest, "contrMcact/contrMcact%02d_%s.fits", i,
                                    datestring);
                 WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMcact%02d.fname.txt",
-                                   fps.md->outdir,
+                                   fps.md->datadir,
                                    i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
@@ -1357,8 +1357,8 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
 
 
 
-    functionparameter_SaveFPS2disk_dir(&fps, fps.md->outdir);
-    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat 2> /dev/null", fps.md->outdir);
+    functionparameter_SaveFPS2disk_dir(&fps, fps.md->datadir);
+    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat 2> /dev/null", fps.md->datadir);
     //EXECUTE_SYSTEM_COMMAND("echo \"sCMat.fits\" >> %s/loglist.dat", outdirname);
 
 
