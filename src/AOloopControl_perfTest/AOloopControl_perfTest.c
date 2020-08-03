@@ -1115,9 +1115,9 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
             data.image[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
         }
 
-	// save output
-	fps_write_RUNoutput_image(&fps, "_testdm0", "pokeDM0");
-	fps_write_RUNoutput_image(&fps, "_testdm1", "pokeDM1");
+    // save output
+    fps_write_RUNoutput_image(&fps, "_testdm0", "pokeDM0");
+    fps_write_RUNoutput_image(&fps, "_testdm1", "pokeDM1");
 
 
 
@@ -1201,14 +1201,14 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
 
 
-	FILE *fphwlat = fps_write_RUNoutput_file(&fps, "hardwlatency", "dat");
-/*    WRITE_FULLFILENAME(ffname, "%s/hardwlatency.txt", outdirname);
-    if((fp = fopen(ffname, "w")) == NULL)
-    {
-        printf("ERROR: cannot create file \"%s/hardwlatency.txt\"\\n", outdirname);
-        exit(0);
-    }
-*/
+    FILE *fphwlat = fps_write_RUNoutput_file(&fps, "hardwlatency", "dat");
+    /*    WRITE_FULLFILENAME(ffname, "%s/hardwlatency.txt", outdirname);
+        if((fp = fopen(ffname, "w")) == NULL)
+        {
+            printf("ERROR: cannot create file \"%s/hardwlatency.txt\"\\n", outdirname);
+            exit(0);
+        }
+    */
 
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
@@ -1576,7 +1576,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
         // latencystep = kkmax;
 
         printf("... Hardware latency = %f ms  = %ld frames\n", 1000.0 * latency, kkmax);
-        
+
         if(latency > latencymax)
         {
             latencymax = latency;
@@ -1658,22 +1658,23 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
 
     FILE *fpout;
-    
+
     fpout = fps_write_RUNoutput_file(&fps, "param_hardwlatency", "txt");
     fprintf(fpout, "%8.6f", latencyarray[NBiter / 2]);
     fclose(fpout);
-    
+
     fpout = fps_write_RUNoutput_file(&fps, "param_hardwlatency_frame", "txt");
     fprintf(fpout, "%8.6f", latencystepave);
     fclose(fpout);
 
     fpout = fps_write_RUNoutput_file(&fps, "hardwlatencyStats", "txt");
-    fprintf(fpout, "%f %f %f %f %f", latencyarray[NBiter / 2], latencyave, minlatency, maxlatency, latencystepave);
+    fprintf(fpout, "%f %f %f %f %f", latencyarray[NBiter / 2], latencyave,
+            minlatency, maxlatency, latencystepave);
     fclose(fpout);
 
     fpout = fps_write_RUNoutput_file(&fps, "param_mloopfrequ", "txt");
     fprintf(fpout, "%.3f", 1.0 * (wfscntend - wfscntstart) / dt);
-    fclose(fpout);    
+    fclose(fpout);
 
     free(latencyarray);
     free(latencysteparray);
