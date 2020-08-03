@@ -1281,7 +1281,8 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
     int OKloop = 1;
     for(int i = 0; i < 20; i++)
     {
-        WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", fps.md->datadir,
+        WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits",
+                           fps.md->datadir,
                            i);
 
         if(OKloop == 1)
@@ -1293,10 +1294,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
 
                 printf("Found file %s\n", fnamesrc);
 
-                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits", fps.md->datadir,
+                WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/fmodes_%02d.fits",
+                                   fps.md->datadir,
                                    i);
                 WRITE_FULLFILENAME(fnamedest, "DMmodes/DMmodes%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes%02d.fname.txt", fps.md->datadir,
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.DMmodes%02d.fname.txt",
+                                   fps.md->datadir,
                                    i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
@@ -1325,7 +1328,8 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
                 WRITE_FULLFILENAME(fnamesrc, "./%s/mkmodestmp/cmatc_%02d.fits", fps.md->datadir,
                                    i);
                 WRITE_FULLFILENAME(fnamedest, "contrMc/contrMc%02d_%s.fits", i, datestring);
-                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMc%02d.fname.txt", fps.md->datadir,
+                WRITE_FULLFILENAME(fnametxt, "./%s/shmim.contrMc%02d.fname.txt",
+                                   fps.md->datadir,
                                    i);
 
                 EXECUTE_SYSTEM_COMMAND("cp %s %s", fnamesrc, fnamedest);
