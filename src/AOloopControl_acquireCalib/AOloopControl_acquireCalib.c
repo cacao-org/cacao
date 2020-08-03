@@ -276,7 +276,6 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_cli()
 
 errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli()
 {
-
     // try FPS implementation
     // set data.fpsname, providing default value as first arg, and set data.FPS_CMDCODE value
     // default FPS name will be used if CLI process has NOT been named
@@ -1981,21 +1980,16 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 
 
 
-
     // ===========================
     // SETUP FPS
     // ===========================
-    /*    int SMfd = -1;
-        FUNCTION_PARAMETER_STRUCT fps =
-            function_parameter_FPCONFsetup(fpsname, CMDmode, &loopstatus, &SMfd);
-        strncpy(fps.md->sourcefname, __FILE__, FPS_SRCDIR_STRLENMAX);
-        fps.md->sourceline = __LINE__;*/
 
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
-    printf("TIME TO START\n");//TEST
-    //	int SMfd_mlat = -1;
-    //	int SMfd_DMcomb = -1;
-
+    fps_add_processinfo_entries(&fps);
+  
+  
+	DEBUG_TRACEPOINT("datadir : %s", fps.md->datadir);
+	abort();
 
     // =========================================
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
@@ -2286,7 +2280,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
         double tdiffv;
 
         FILE *fptest;
-        fptest = fopen("timing.txt", "w");
+        
+        fptest = fps_write_RUNoutput_file(&fps, "timing", "txt");
 
         fprintf(fptest, "%s  %d\n", data.FPS_name, data.FPS_CMDCODE);
 
@@ -2381,8 +2376,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                         make_disk("RMDMmask", DMxsize, DMysize, 0.5 * DMxsize, 0.5 * DMysize,
                                   (DMxsize + DMysize));
                     }
+                    
+                    fps_write_RUNoutput_image(&fps, "RMDMmask", "RM_DMmask");
 
-                    save_fl_fits("RMDMmask", "!./conf/RM_DMmask.fits");
+                    //save_fl_fits("RMDMmask", "!./conf/RM_DMmask.fits");
                     delete_image_ID("RMDMmask");
 
                     // set back to OFF
@@ -2406,18 +2403,35 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                         functionparameter_GetParamValue_INT64(&FPS_DMcomb, ".DMMODE");
 
                     AOloopControl_compTools_mkSimpleZpokeM(DMxsize, DMysize, "Spoke");
-                    save_fl_fits("Spoke", "!./conf/Spoke.fits");
+                    fps_write_RUNoutput_image(&fps, "Spoke", "Spoke");
+                    //save_fl_fits("Spoke", "!./conf/Spoke.fits");
                     delete_image_ID("Spoke");
 
-                    load_fits("./conf/RM_DMmask.fits", "RMDMmask", 1);
+                    {
+						char fnameRMDMmask[200];
+						sprintf(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
+						load_fits(fnameRMDMmask, "RMDMmask", 1);
+					}
+//                    load_fits("./conf/RM_DMmask.fits", "RMDMmask", 1);
                     AOloopControl_computeCalib_mkHadamardModes("RMDMmask", "Hpoke");
+                    
+                    
+                    
+					fps_write_RUNoutput_image(&fps, "Hpoke", "Hpoke");
+//                    save_fl_fits("Hpoke", "!./conf/Hpoke.fits");
 
-                    save_fl_fits("Hpoke", "!./conf/Hpoke.fits");
-                    save_fl_fits("Hpixindex", "!./conf/Hpixindex.fits");
-                    save_fl_fits("Hmat", "!./conf/Hmat.fits");
+					fps_write_RUNoutput_image(&fps, "Hpixindex", "Hpixindex");
+                    //save_fl_fits("Hpixindex", "!./conf/Hpixindex.fits");
+                    
+                    fps_write_RUNoutput_image(&fps, "Hmat", "Hmat");
+                    //save_fl_fits("Hmat", "!./conf/Hmat.fits");
 
                     // create compressed files
-                    if(system("gzip -kf ./conf/Hmat.fits") != 0)
+                    EXECUTE_SYSTEM_COMMAND("gzip -kf ./%s/Hmat.fits", fps.md->datadir);
+                    EXECUTE_SYSTEM_COMMAND("gzip -kf ./%s/Hpixindex.fits", fps.md->datadir);
+                    EXECUTE_SYSTEM_COMMAND("gzip -kf ./%s/Hpoke.fits", fps.md->datadir);
+                    
+/*                    if(system("gzip -kf ./conf/Hmat.fits") != 0)
                     {
                         PRINT_ERROR("system() returns non-zero value");
                     }
@@ -2429,7 +2443,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     {
                         PRINT_ERROR("system() returns non-zero value");
                     }
-
+*/
                     delete_image_ID("RMDMmask");
 
                     // set back to OFF
@@ -2439,12 +2453,15 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 
                 if(fps.parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF)
                 {
-                    //char fname_Hpoke[200];
-                    functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Hpoke.fits");
+                    char fname_Hpoke[200];
+                    sprintf(fname_Hpoke, "./%s/Hpoke.fits", fps.md->datadir);
+                    functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", fname_Hpoke);
                 }
                 else
                 {
-                    functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", "./conf/Spoke.fits");
+					char fname_Spoke[200];
+					sprintf(fname_Spoke, "./%s/Spoke.fits", fps.md->datadir);
+                    functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", fname_Spoke);
                 }
             }
 
@@ -3238,7 +3255,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
 
     // create archive script
-    functionparameter_write_archivescript(&fps, "../aoldatadir");
+    functionparameter_write_archivescript(&fps);
 
 
     function_parameter_RUNexit(&fps);
