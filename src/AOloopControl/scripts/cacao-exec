@@ -101,7 +101,7 @@ IFS=';' read -r -a array <<< "$1"
 
 
 #fifoname="cacaoCLIfifo.${pname}"
-SF="cacaoCLIstartup.${pname}.$$"
+SF="${MILK_SHM_DIR}/.cacaoCLIstartup.${pname}.$$"
 echo "" > $SF
 for cmdstring in "${array[@]}"
 do

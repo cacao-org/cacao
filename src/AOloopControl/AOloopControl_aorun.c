@@ -225,6 +225,8 @@ int AOloopControl_aorun_FPCONF()
     // SETUP FPS
     // ===========================
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
+    fps_add_processinfo_entries(&fps); // include real-time settings
+
 
 
     // ===========================

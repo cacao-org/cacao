@@ -48,6 +48,22 @@ printHELP1 ()
 
 
 
+EXITSTATUS=0
+
+
+function checkFile {
+	if [ -f $1 ]; then
+		echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+	else
+		echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+		EXITSTATUS=1
+	fi
+}
+
+
+
+
+
 # Transform long options to short ones
 singlelinehelp=0
 for arg in "$@"; do
@@ -101,6 +117,12 @@ fi
 
 
 
+
+
+
+# READ PARAMETERS FROM FPS
+
+checkFile $1
 
 
 

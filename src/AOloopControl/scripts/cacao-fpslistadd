@@ -226,8 +226,6 @@ echolog "ON  CACAO_FPSPROC_MLAT"
 # FPS name
 fpsname="mlat" 
 fpsarg0="${CACAO_LOOPNUMBER}"
-outdir="conf-mlat-staged"
-mkdir -p ${LOOPWORKDIR}/${outdir}
 
 # FPS full name
 fpsfname="${fpsname}-${fpsarg0}" 
@@ -243,7 +241,7 @@ fpscmdheader
 fpscmd "setval ${fpsfname}.NBiter 20"
 fpscmd "setval ${fpsfname}.sn_dm aol${CACAO_LOOPNUMBER}_dmRM"
 fpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_wfsim"
-fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+#fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 fi
 else
 echolog "CACAO_FPSPROC_MLAT = OFF"
@@ -298,8 +296,6 @@ echolog "ON  CACAO_FPSPROC_ACQLINZRM"
 # FPS name
 fpsname="acqlin_zRM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
-outdir="conf-zRM-staged"
-mkdir -p ${LOOPWORKDIR}/${outdir}
 
 # get scripts that will be used
 mkdir -p ${LOOPWORKDIR}/cacaobin
@@ -343,7 +339,7 @@ fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
 fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
 fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
 fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
-fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+#fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else
@@ -363,8 +359,6 @@ echolog "ON  CACAO_FPSPROC_ACQLINLORM"
 # FPS name
 fpsname="acqlin_loRM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
-outdir="conf-loRM-staged"
-mkdir -p ${LOOPWORKDIR}/${outdir}
 
 # FPS full name
 fpsfname="${fpsname}-${fpsarg0}" 
@@ -407,7 +401,7 @@ fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
 fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
 
 
-fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+#fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else
@@ -427,17 +421,15 @@ echolog "ON  CACAO_FPSPROC_COMPFCM"
 # FPS name
 fpsname="compfCM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
-outdir="conf-fCM-staged"
-mkdir -p ${LOOPWORKDIR}/${outdir}
 
-mkdir -p ${LOOPWORKDIR}/conf-staged
-mkdir -p ${LOOPWORKDIR}/mkmodestmp
+#mkdir -p ${LOOPWORKDIR}/conf-staged
+#mkdir -p ${LOOPWORKDIR}/mkmodestmp
 
-mkdir -p ${LOOPWORKDIR}/DMmodes
-mkdir -p ${LOOPWORKDIR}/respM
-mkdir -p ${LOOPWORKDIR}/contrM
-mkdir -p ${LOOPWORKDIR}/contrMc
-mkdir -p ${LOOPWORKDIR}/contrMcact
+#mkdir -p ${LOOPWORKDIR}/DMmodes
+#mkdir -p ${LOOPWORKDIR}/respM
+#mkdir -p ${LOOPWORKDIR}/contrM
+#mkdir -p ${LOOPWORKDIR}/contrMc
+#mkdir -p ${LOOPWORKDIR}/contrMcact
 
 
 
@@ -459,7 +451,7 @@ fpscmd "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}"
 fpscmd "setval ${fpsfname}.FPS_loRMacqu acqlin_loRM-${CACAO_LOOPNUMBER}"
 fpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
 
-fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+#fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else
@@ -480,10 +472,8 @@ echolog "ON  CACAO_FPSPROC_COMPSCM"
 # FPS name
 fpsname="compsCM" 
 fpsarg0="${CACAO_LOOPNUMBER}"
-outdir="conf-sCM-staged"
-mkdir -p ${LOOPWORKDIR}/${outdir}
 
-mkdir -p ${LOOPWORKDIR}/sCM
+#mkdir -p ${LOOPWORKDIR}/sCM
 
 
 
@@ -501,7 +491,7 @@ fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 fpscmd "setval ${fpsfname}.fname_respM conf-zRM-staged/zrespM_mn.fits"
 
-fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+#fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else
