@@ -8,7 +8,7 @@ before_install:
 - echo "tmpfs /milk/shm tmpfs rw,nosuid,nodev" | sudo tee -a /etc/fstab
 - sudo mkdir -p /milk/shm
 - sudo mount /milk/shm
-- git clone --recursive https://github.com/milk-org/milk-package milk
+- git clone -b dev --recursive https://github.com/milk-org/milk-package milk
 - mkdir milk/_build
 - pushd milk/_build
 - cmake .. -DEXTRAMODULES="milk_module_example" -DINSTALLMAKEDEFAULT=ON
