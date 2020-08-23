@@ -72,6 +72,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-NULL
 	scripts/cacao-exec
 	scripts/cacao.tmux
+	scripts/cacao-fpsarchive
 	scripts/cacao-fpslistadd
 	scripts/cacao-setDMnolink
 	scripts/cacao_simLHS

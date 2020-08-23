@@ -60,6 +60,14 @@ function checkFile {
 	fi
 }
 
+function checkDir {
+	if [ -d $1 ]; then
+		echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
+	else
+		echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
+		EXITSTATUS=1
+	fi
+}
 
 
 
@@ -117,58 +125,114 @@ fi
 
 
 
-
+# ======================= CHECK REQUIRED FILES =================================
 
 
 # READ PARAMETERS FROM FPS
-
 checkFile $1
+
+if [ ${EXITSTATUS} -eq 1 ]; then
+	echo "$(tput setaf 1)$(tput bold) -> EXITING $(tput sgr0)"
+	exit ${EXITSTATUS}
+else
+	echo ""
+fi
+
+
+
 
 
 
 
 
 loopnb=$( head -1 LOOPNUMBER )
-FPSname=$1
-stageddir=$( grep out.dirname fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
+
+FPSfilename=$1
+FPSname="$(basename ${FPSfilename} .fps)"
+
+
+# Read parameters from FPS file
+# note that ^ ensures grep matches beginning of line, and trailing space ensures exact match
+#
+datadir=$( grep "^${FPSname}.conf.datadir " ${FPSfilename} |  awk '{print $3;}' )
+HpokeMode=$( grep "^${FPSname}.Hpoke " ${FPSfilename} |  awk '{print $3;}' )
+FPStimestring=$( grep "^${FPSname}.conf.timestring " ${FPSfilename} |  awk '{print $3;}' )
+
+echo "datadir       : ${datadir}"
+echo "HpokeMode     : ${HpokeMode}"
+echo "FPStimestring : ${FPStimestring}"
+
+checkDir ${datadir}
+
+if [ ${EXITSTATUS} -eq 1 ]; then
+	echo "$(tput setaf 1)$(tput bold) -> EXITING $(tput sgr0)"
+	exit ${EXITSTATUS}
+fi
 
 
 
-mkdir -p ${stageddir}
+
+
+if [ ${HpokeMode} = "ON" ]; then
+  echo "Using Hadamard encoding"
+  fileRMmat="${datadir}/Hmat.fits"
+  fileRMpixindex="${datadir}/Hpixindex.fits"
+else
+  echo "Using straight encoding"
+  fileRMmat="${datadir}/RMmat.fits"
+  fileRMpixindex="${datadir}/RMpixindex.fits"
+fi
+
 
 pname0=$0
 pname="aol${loopnb}zrespM"
 
 
 
+fileRMpokeCube="${datadir}/RMpokeCube.fits"
+filerespM="./${datadir}/respM.fits" 
+filewfsref="./${datadir}/wfsref.fits"
+
+
+checkFile ${fileRMpokeCube}
+checkFile ${fileRMmat}
+checkFile ${fileRMpixindex}
+checkFile ${filerespM}
+checkFile ${filewfsref}
 
 
 
 OMP_NUM_THREADS=6 cacao -n $pname << EOF
 cacao.aolnb $loopnb
-loadfits "./${stageddir}/RMpokeCube.fits" RMpokeC
-loadfits "./${stageddir}/RMmat.fits" RMmat
-loadfits "./${stageddir}/RMpixindex.fits" pixindexim
-loadfits "./${stageddir}/respM.fits" respm
-loadfits "./${stageddir}/wfsref.fits" wfsref0
+loadfits "${fileRMpokeCube}" RMpokeC
+loadfits "${fileRMmat}" RMmat
+loadfits "${fileRMpixindex}" pixindexim
+loadfits "${filerespM}" respm
+loadfits "${filewfsref}" wfsref0
 
 cacaocc.aolproczrm respm wfsref0 zrespm wfsmap dmmap
 
-savefits zrespm "!./${stageddir}/zrespM.fits"
-savefits wfsmap "!./${stageddir}/wfsmap.fits"
-savefits dmmap "!./${stageddir}/dmmap.fits"
+savefits zrespm "!./${datadir}/zrespM.fits"
+savefits wfsmap "!./${datadir}/wfsmap.fits"
+savefits dmmap "!./${datadir}/dmmap.fits"
 listim
 exitCLI
 EOF
 
+
 # register output files to be logged
-echo "zrespM.fits" >> "${stageddir}/loglist.dat"
-echo "wfsmap.fits" >> "${stageddir}/loglist.dat"
-echo "dmmap.fits" >> "${stageddir}/loglist.dat"
+
+# time at which files are written
+timestring=$( date -u +%Y%m%dT%H%M%S.%6N )
+
+echo "${FPStimestring} ${timestring} zrespM fits" > ${datadir}/zrespM.outlog
+echo "${FPStimestring} ${timestring} wfsmap fits" > ${datadir}/wfsmap.outlog
+echo "${FPStimestring} ${timestring} dmmap fits" > ${datadir}/dmmap.outlog
 
 
 
 
+exit
 
 # Process time sampled slices
 
