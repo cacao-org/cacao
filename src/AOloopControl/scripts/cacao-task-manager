@@ -341,7 +341,7 @@ fi
 # log directory
 # keeps track of what has been executed
 #
-LOGDIR="${CURRENTDIR}/${LOOPNAME}-log"
+LOGDIR="${CURRENTDIR}/.${LOOPNAME}-cacaotaskmanager-log"
 mkdir -p $LOGDIR
 
 
