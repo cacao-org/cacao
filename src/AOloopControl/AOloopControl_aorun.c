@@ -45,6 +45,8 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
 
 
 #include "CommandLineInterface/CLIcore.h"
+#include "CommandLineInterface/timeutils.h"
+
 #include "AOloopControl/AOloopControl.h"
 
 #include "COREMOD_memory/COREMOD_memory.h"

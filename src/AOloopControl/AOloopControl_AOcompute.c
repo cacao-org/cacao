@@ -24,6 +24,7 @@
 
 #include "ImageStreamIO/ImageStreamIO.h"
 #include "CommandLineInterface/CLIcore.h"
+#include "CommandLineInterface/timeutils.h"
 
 #include "info/info.h"
 #include "AOloopControl/AOloopControl.h"
