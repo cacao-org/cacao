@@ -59,6 +59,9 @@
 #include <fitsio.h>
 
 #include "CommandLineInterface/CLIcore.h"
+#include "CommandLineInterface/timeutils.h"
+
+
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_tools/COREMOD_tools.h"
@@ -1971,15 +1974,6 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
 
 errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 {
-    // uint16_t loopstatus;
-
-
-    // TEST
-    static unsigned long connection_count_1 = 0;
-    static unsigned long connection_count_2 = 0;
-
-
-
     // ===========================
     // SETUP FPS
     // ===========================
@@ -1987,9 +1981,6 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
     fps_add_processinfo_entries(&fps);
 
-
-    DEBUG_TRACEPOINT("datadir : %s", fps.md->datadir);
-    abort();
 
     // =========================================
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
@@ -2137,9 +2128,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
         function_parameter_add_entry(&fps, ".fn_RMDMmask",
                                      "RM active DM actuators mask",
                                      FPTYPE_FITSFILENAME, FPFLAG, pNull);
-    functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask",
+   /* functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask",
                                            "./conf/RM_DMmask.fits");
-
+*/
 
 
     // settings for output files and dir
@@ -2335,19 +2326,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
             if(fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX < 1)
             {
                 functionparameter_ConnectExternalFPS(&fps, fpi_FPS_mlat, &FPS_mlat);
-                connection_count_1 ++;
-                printf("---- [%s %d] mlat connection count = %lu\n", __FILE__, __LINE__,
-                       connection_count_1);  //TBE
-                fflush(stdout);
             }
 
             if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX  < 1)
             {
                 functionparameter_ConnectExternalFPS(&fps, fpi_FPS_DMcomb, &FPS_DMcomb);
-                connection_count_2 ++;
-                printf("---- [%s %d] DMcomb connection count = %lu\n", __FILE__, __LINE__,
-                       connection_count_2); //TBE
-                fflush(stdout);
             }
 
             printf("======== DONE connecting to aux FPS ============\n");//TBE
@@ -2378,6 +2361,12 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     }
 
                     fps_write_RUNoutput_image(&fps, "RMDMmask", "RM_DMmask");
+                    
+                    {
+                        char fnameRMDMmask[200];
+                        sprintf(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
+                        functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask", fnameRMDMmask);
+                    }                    
 
                     //save_fl_fits("RMDMmask", "!./conf/RM_DMmask.fits");
                     delete_image_ID("RMDMmask");
@@ -2560,15 +2549,6 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
 
-    // Write time string
-    char timestring[100];
-    mkUTtimestring_millisec_now(timestring);
-    functionparameter_SetParamValue_STRING(
-        &fps,
-        ".out.timestring",
-        timestring);
-
-
     // ===============================
     // GET FUNCTION PARAMETER VALUES
     // ===============================
@@ -2638,11 +2618,6 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     strncpy(execmkLODMmodes, functionparameter_GetParamPtr_STRING(&fps,
             ".exec.mkLODMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
 
-
-
-    char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),
-            FUNCTION_PARAMETER_STRMAXLEN);
 
     char tmpfname[STRINGMAXLEN_FULLFILENAME];
 
@@ -2845,16 +2820,16 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     if((*FPFLAG_HPOKE) & FPFLAG_ONOFF)
     {
-        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename, outdirname);
-        EXECUTE_SYSTEM_COMMAND("cp conf/Hmat.fits %s/RMmat.fits", outdirname);
+        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename, fps.md->datadir);
+        EXECUTE_SYSTEM_COMMAND("cp conf/Hmat.fits %s/RMmat.fits", fps.md->datadir);
         EXECUTE_SYSTEM_COMMAND("cp conf/Hpixindex.fits %s/RMpixindex.fits",
-                               outdirname);
+                               fps.md->datadir);
     }
     else
     {
 //        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename,
 //                               outdirname);
-        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename, outdirname);
+        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename, fps.md->datadir);
     }
 
 
@@ -2874,7 +2849,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
 
     char outdirnameA[STRINGMAXLEN_DIRNAME];
-    WRITE_DIRNAME(outdirnameA, "%s/acquA", outdirname);
+    WRITE_DIRNAME(outdirnameA, "%s/acquA", fps.md->datadir);
 
     EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirnameA);
     WRITE_FULLFILENAME(fname, "!%s/dmpokeC.fits", outdirnameA);
@@ -2901,7 +2876,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     // Negative direction sequence
     char outdirnameB[STRINGMAXLEN_DIRNAME];
-    WRITE_DIRNAME(outdirnameB, "%s/acquB", outdirname);
+    WRITE_DIRNAME(outdirnameB, "%s/acquB", fps.md->datadir);
 
     EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirnameB);
     WRITE_FULLFILENAME(fname, "!%s/dmpokeC.fits", outdirnameB);
@@ -2989,11 +2964,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             delete_image_ID(wfsresp2bname);
 
             WRITE_FULLFILENAME(tmpfname, "%s/acquA/wfsresp.tstep%03d.iter%03d.fits",
-                               outdirname, AveStep, IterNumber);
+                               fps.md->datadir, AveStep, IterNumber);
             IDwfsresp2a = load_fits(tmpfname, wfsresp2aname, 1);
 
             WRITE_FULLFILENAME(tmpfname, "%s/acquB/wfsresp.tstep%03d.iter%03d.fits",
-                               outdirname, AveStep, IterNumber);
+                               fps.md->datadir, AveStep, IterNumber);
             IDwfsresp2b = load_fits(tmpfname, wfsresp2bname, 1);
 
             WRITE_IMAGENAME(imnameout_respC, "%s.tstep%03d.iter%03d", respC_sname, AveStep,
@@ -3105,9 +3080,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 fflush(stdout);
 
                 WRITE_FULLFILENAME(filename_respC,
-                                   "!%s/respM.tstep%03d.iter%03d.fits", outdirname, AveStep, IterNumber);
+                                   "!%s/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep, IterNumber);
                 WRITE_FULLFILENAME(filename_wfsref,
-                                   "!%s/wfsref.tstep%03d.iter%03d.fits", outdirname, AveStep,
+                                   "!%s/wfsref.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 save_fits(imnameout_respC, filename_respC);
                 save_fits(imnameout_wfsref, filename_wfsref);
@@ -3115,10 +3090,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 delete_image_ID(imnameout_wfsref);
 
                 WRITE_FULLFILENAME(filename_respC,
-                                   "!%s/acquA/respM.tstep%03d.iter%03d.fits", outdirname, AveStep,
+                                   "!%s/acquA/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 WRITE_FULLFILENAME(filename_wfsref,
-                                   "!%s/acquA/wfsref.tstep%03d.iter%03d.fits", outdirname, AveStep,
+                                   "!%s/acquA/wfsref.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 save_fits(imnameout_respC_A, filename_respC);
                 save_fits(imnameout_wfsref_A, filename_wfsref);
@@ -3126,10 +3101,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 delete_image_ID(imnameout_wfsref_A);
 
                 WRITE_FULLFILENAME(filename_respC,
-                                   "!%s/acquB/respM.tstep%03d.iter%03d.fits", outdirname, AveStep,
+                                   "!%s/acquB/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 WRITE_FULLFILENAME(filename_wfsref,
-                                   "!%s/acquB/wfsref.tstep%03d.iter%03d.fits", outdirname, AveStep,
+                                   "!%s/acquB/wfsref.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 save_fits(imnameout_respC_B, filename_respC);
                 save_fits(imnameout_wfsref_B, filename_wfsref);
@@ -3146,32 +3121,32 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 char filename_wfsref[STRINGMAXLEN_FULLFILENAME];
 
                 WRITE_IMAGENAME(imnameout_respC, "%s", respC_sname);
-                WRITE_FULLFILENAME(filename_respC, "!%s/respM.fits", outdirname);
+                WRITE_FULLFILENAME(filename_respC, "!%s/respM.fits", fps.md->datadir);
                 save_fits(imnameout_respC, filename_respC);
 
 
                 WRITE_IMAGENAME(imnameout_wfsref, "%s", wfsref_sname);
-                WRITE_FULLFILENAME(filename_wfsref, "!%s/wfsref.fits", outdirname);
+                WRITE_FULLFILENAME(filename_wfsref, "!%s/wfsref.fits", fps.md->datadir);
                 save_fits(imnameout_wfsref, filename_wfsref);
 
 
                 WRITE_IMAGENAME(imnameout_respC_A, "%s_A", respC_sname);
-                WRITE_FULLFILENAME(filename_respC, "!%s/acquA/respM_A.fits", outdirname);
+                WRITE_FULLFILENAME(filename_respC, "!%s/acquA/respM_A.fits", fps.md->datadir);
                 save_fits(imnameout_respC_A, filename_respC);
 
 
                 WRITE_IMAGENAME(imnameout_wfsref_A, "%s_A", wfsref_sname);
-                WRITE_FULLFILENAME(filename_wfsref, "!%s/acquA/wfsref_A.fits", outdirname);
+                WRITE_FULLFILENAME(filename_wfsref, "!%s/acquA/wfsref_A.fits", fps.md->datadir);
                 save_fits(imnameout_wfsref_A, filename_wfsref);
 
 
                 WRITE_IMAGENAME(imnameout_respC_B, "%s_B", respC_sname);
-                WRITE_FULLFILENAME(filename_respC, "!%s/acquB/respM_B.fits", outdirname);
+                WRITE_FULLFILENAME(filename_respC, "!%s/acquB/respM_B.fits", fps.md->datadir);
                 save_fits(imnameout_respC_B, filename_respC);
 
 
                 WRITE_IMAGENAME(imnameout_wfsref_B, "%s_B", wfsref_sname);
-                WRITE_FULLFILENAME(filename_wfsref, "!%s/acquB/wfsref_B.fits", outdirname);
+                WRITE_FULLFILENAME(filename_wfsref, "!%s/acquB/wfsref_B.fits", fps.md->datadir);
                 save_fits(imnameout_wfsref_B, filename_wfsref);
 
                 IterNumber = 0; // start processing iterations
@@ -3198,21 +3173,21 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     // Will perform task(s) unless set to cacao-NULL script
 
 
-    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat", outdirname);
-    EXECUTE_SYSTEM_COMMAND("echo \"acquA\" >> %s/loglist.dat", outdirname);
-    EXECUTE_SYSTEM_COMMAND("echo \"acquB\" >> %s/loglist.dat", outdirname);
-    EXECUTE_SYSTEM_COMMAND("echo \"respM.fits\" >> %s/loglist.dat", outdirname);
-    EXECUTE_SYSTEM_COMMAND("echo \"RMmat.fits\" >> %s/loglist.dat", outdirname);
+    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat", fps.md->datadir);
+    EXECUTE_SYSTEM_COMMAND("echo \"acquA\" >> %s/loglist.dat", fps.md->datadir);
+    EXECUTE_SYSTEM_COMMAND("echo \"acquB\" >> %s/loglist.dat", fps.md->datadir);
+    EXECUTE_SYSTEM_COMMAND("echo \"respM.fits\" >> %s/loglist.dat", fps.md->datadir);
+    EXECUTE_SYSTEM_COMMAND("echo \"RMmat.fits\" >> %s/loglist.dat", fps.md->datadir);
     EXECUTE_SYSTEM_COMMAND("echo \"RMpixindex.fits\" >> %s/loglist.dat",
-                           outdirname);
+                           fps.md->datadir);
     EXECUTE_SYSTEM_COMMAND("echo \"RMpokeCube.fits\" >> %s/loglist.dat",
-                           outdirname);
-    EXECUTE_SYSTEM_COMMAND("echo \"wfsref.fits\" >> %s/loglist.dat", outdirname);
+                           fps.md->datadir);
+    EXECUTE_SYSTEM_COMMAND("echo \"wfsref.fits\" >> %s/loglist.dat", fps.md->datadir);
 
 
 
 
-    EXECUTE_SYSTEM_COMMAND("%s %s", execRMdecode,     data.FPS_name);
+    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execRMdecode, fps.md->datadir, data.FPS_name);
     // output:
     //	zrespM      : decoded (zonal) response matrix
     //	wfsmap      : WFS response map
@@ -3221,7 +3196,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     // input:
     //	zrespM      : decoded (zonal) response matix
-    EXECUTE_SYSTEM_COMMAND("%s %s", execmkDMWFSmasks, data.FPS_name);
+    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execmkDMWFSmasks, fps.md->datadir, data.FPS_name);
     // output:
     //	wfsmap_mkm  : WFS pixel map ((re-)computed by execmkDMWFSmasks)
     //	dmmap_mkm   : DM  pixel map ((re-)recomputed by execmkDMWFSmasks)
@@ -3233,7 +3208,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	zrespM
     //	wfsmask_mkm
     //	dmmask_mkm
-    EXECUTE_SYSTEM_COMMAND("%s %s", execmkDMslaveact, data.FPS_name);
+    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execmkDMslaveact, fps.md->datadir, data.FPS_name);
     // output:
     //	dmslaved    : Slaved DM actuators
     //	dmmask_mksl : DM pixel mask, includes control of slaved actuators
@@ -3245,13 +3220,13 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	dmslaved
     //	dmmask_mksl
     //
-    EXECUTE_SYSTEM_COMMAND("%s %s", execmkLODMmodes,  data.FPS_name);
+    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execmkLODMmodes, fps.md->datadir, data.FPS_name);
     // output
     //	respM_LOmodes
 
 
 
-    functionparameter_SaveFPS2disk_dir(&fps, outdirname);
+    functionparameter_SaveFPS2disk_dir(&fps, fps.md->datadir);
 
 
     // create archive script
@@ -3264,6 +3239,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     return RETURN_SUCCESS;
 }
+
 
 
 
