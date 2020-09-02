@@ -2128,9 +2128,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
         function_parameter_add_entry(&fps, ".fn_RMDMmask",
                                      "RM active DM actuators mask",
                                      FPTYPE_FITSFILENAME, FPFLAG, pNull);
-   /* functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask",
-                                           "./conf/RM_DMmask.fits");
-*/
+    /* functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask",
+                                            "./conf/RM_DMmask.fits");
+    */
 
 
     // settings for output files and dir
@@ -2361,12 +2361,12 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     }
 
                     fps_write_RUNoutput_image(&fps, "RMDMmask", "RM_DMmask");
-                    
+
                     {
                         char fnameRMDMmask[200];
                         sprintf(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
                         functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask", fnameRMDMmask);
-                    }                    
+                    }
 
                     //save_fl_fits("RMDMmask", "!./conf/RM_DMmask.fits");
                     delete_image_ID("RMDMmask");
@@ -2820,7 +2820,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     if((*FPFLAG_HPOKE) & FPFLAG_ONOFF)
     {
-        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename, fps.md->datadir);
+        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename,
+                               fps.md->datadir);
         EXECUTE_SYSTEM_COMMAND("cp conf/Hmat.fits %s/RMmat.fits", fps.md->datadir);
         EXECUTE_SYSTEM_COMMAND("cp conf/Hpixindex.fits %s/RMpixindex.fits",
                                fps.md->datadir);
@@ -2829,7 +2830,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     {
 //        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename,
 //                               outdirname);
-        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename, fps.md->datadir);
+        EXECUTE_SYSTEM_COMMAND("cp %s %s/RMpokeCube.fits", pokeC_filename,
+                               fps.md->datadir);
     }
 
 
@@ -3176,18 +3178,22 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat", fps.md->datadir);
     EXECUTE_SYSTEM_COMMAND("echo \"acquA\" >> %s/loglist.dat", fps.md->datadir);
     EXECUTE_SYSTEM_COMMAND("echo \"acquB\" >> %s/loglist.dat", fps.md->datadir);
-    EXECUTE_SYSTEM_COMMAND("echo \"respM.fits\" >> %s/loglist.dat", fps.md->datadir);
-    EXECUTE_SYSTEM_COMMAND("echo \"RMmat.fits\" >> %s/loglist.dat", fps.md->datadir);
+    EXECUTE_SYSTEM_COMMAND("echo \"respM.fits\" >> %s/loglist.dat",
+                           fps.md->datadir);
+    EXECUTE_SYSTEM_COMMAND("echo \"RMmat.fits\" >> %s/loglist.dat",
+                           fps.md->datadir);
     EXECUTE_SYSTEM_COMMAND("echo \"RMpixindex.fits\" >> %s/loglist.dat",
                            fps.md->datadir);
     EXECUTE_SYSTEM_COMMAND("echo \"RMpokeCube.fits\" >> %s/loglist.dat",
                            fps.md->datadir);
-    EXECUTE_SYSTEM_COMMAND("echo \"wfsref.fits\" >> %s/loglist.dat", fps.md->datadir);
+    EXECUTE_SYSTEM_COMMAND("echo \"wfsref.fits\" >> %s/loglist.dat",
+                           fps.md->datadir);
 
 
 
 
-    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execRMdecode, fps.md->datadir, data.FPS_name);
+    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execRMdecode, fps.md->datadir,
+                           data.FPS_name);
     // output:
     //	zrespM      : decoded (zonal) response matrix
     //	wfsmap      : WFS response map
@@ -3196,7 +3202,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     // input:
     //	zrespM      : decoded (zonal) response matix
-    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execmkDMWFSmasks, fps.md->datadir, data.FPS_name);
+    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execmkDMWFSmasks, fps.md->datadir,
+                           data.FPS_name);
     // output:
     //	wfsmap_mkm  : WFS pixel map ((re-)computed by execmkDMWFSmasks)
     //	dmmap_mkm   : DM  pixel map ((re-)recomputed by execmkDMWFSmasks)
@@ -3208,7 +3215,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	zrespM
     //	wfsmask_mkm
     //	dmmask_mkm
-    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execmkDMslaveact, fps.md->datadir, data.FPS_name);
+    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execmkDMslaveact, fps.md->datadir,
+                           data.FPS_name);
     // output:
     //	dmslaved    : Slaved DM actuators
     //	dmmask_mksl : DM pixel mask, includes control of slaved actuators
@@ -3220,7 +3228,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	dmslaved
     //	dmmask_mksl
     //
-    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execmkLODMmodes, fps.md->datadir, data.FPS_name);
+    EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execmkLODMmodes, fps.md->datadir,
+                           data.FPS_name);
     // output
     //	respM_LOmodes
 
