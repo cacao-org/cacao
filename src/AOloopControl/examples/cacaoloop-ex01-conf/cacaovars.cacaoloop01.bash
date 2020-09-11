@@ -15,8 +15,11 @@ export CACAO_DMysize="50"
 export CACAO_LOOPWORKDIR="cacaoloop01dir"
 export CACAO_DMINDEX="01"
 export CACAO_LOOPNUMBER="2"
+
+# input WFS stream
 export CACAO_WFSSTREAM="aol2_linsimWFS"
 
+export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
 # ========================================
 #       FPS processes to be set up 
@@ -52,9 +55,15 @@ export CACAO_FPSPROC_ACQLINZRM="ON"
 #
 export CACAO_FPSPROC_ACQLINLORM="ON"
 
-# Compute control matrix
+
+# Compute control matrix - Fourier
 #
 export CACAO_FPSPROC_COMPFCM="ON"
+
+# Compute control matrix - straight
+#
+export CACAO_FPSPROC_COMPSCM="ON"
+
 
 # Extract control modes
 #
