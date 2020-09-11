@@ -102,8 +102,8 @@ static long aoconfID_imWFS2_active[100];
 
 
 /** @brief Process response matrix
- * 
- * 
+ *
+ *
  * If images "Hmat" AND "pixindexim" are provided, decode the image
  *  TEST: if "RMpokeC" exists, decode it as well
  */
