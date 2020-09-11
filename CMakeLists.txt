@@ -78,6 +78,8 @@ list(APPEND modulelist AOloopControl_DM )
 list(APPEND modulelist AOloopControl_IOtools )
 list(APPEND modulelist AOloopControl_perfTest )
 list(APPEND modulelist AOloopControl_PredictiveControl )
+list(APPEND modulelist WFS_ShackHartmann )
+
 
 foreach(mname IN LISTS modulelist)
 string(REPLACE "_" "" mname1 "${mname}")
