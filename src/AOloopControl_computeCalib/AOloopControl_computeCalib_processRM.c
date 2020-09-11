@@ -101,11 +101,12 @@ static long aoconfID_imWFS2_active[100];
 
 
 
-
-//
-// if images "Hmat" AND "pixindexim" are provided, decode the image
-// TEST: if "RMpokeC" exists, decode it as well
-//
+/** @brief Process response matrix
+ * 
+ * 
+ * If images "Hmat" AND "pixindexim" are provided, decode the image
+ *  TEST: if "RMpokeC" exists, decode it as well
+ */
 errno_t AOloopControl_computeCalib_Process_zrespM(
     long        loop,
     const char *IDzrespm0_name,
