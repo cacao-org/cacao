@@ -1,0 +1,107 @@
+#!/bin/bash
+
+
+# Run script for cacao scheduler
+#
+
+# get configuration parameters
+
+CACAOWORKDIR="cacaoloop01wd"
+LOOPNAME="cacaoloop01"
+source ${CACAOWORKDIR}/cacaovars.${LOOPNAME}.bash
+
+
+
+
+
+
+
+
+
+
+function sendFPScmd {
+echo "SENDING: $1"
+echo "$1" >> ${MILK_SHM_DIR}/cacaoloop01_fpsCTRL.fifo
+}
+
+
+# tasksets and NB thread
+#taskset_DMcomb="3"
+#sendFPScmd "setval DMcomb-${CACAO_DMINDEX}.conf.taskset ${taskset_DMcomb}"
+
+
+
+sendFPScmd "runstart DMcomb-${CACAO_DMINDEX}"
+
+# Fill up execution queue 2
+
+# set queue to #2
+sendFPScmd "setqindex 2"
+# put execution queue on hold (priority = 0)
+sendFPScmd "setqprio 0"
+sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
+
+
+# Fill up execution queue 0
+sendFPScmd "setqindex 0"
+# run tasks with priority = 1 (highest priority first)
+sendFPScmd "setqprio 1"
+
+
+sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
+
+sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
+
+sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
+
+# launch queue 2
+sendFPScmd "queueprio 2 1"
+
+sendFPScmd "confwupdate mlat-${CACAO_LOOPNUMBER}"
+
+
+# wait until RUN process complete to proceed to next task
+# marks start of sequential operation
+sendFPScmd "waitonrunON"
+
+
+sendFPScmd "runstart mlat-${CACAO_LOOPNUMBER}"
+sendFPScmd "exec mlat-${CACAO_LOOPNUMBER}.log2fs"
+
+# take zonal response matrix
+sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acqlin_zRM-${CACAO_LOOPNUMBER}"
+sendFPScmd "exec acqlin_zRM-${CACAO_LOOPNUMBER}.log2fs"
+
+
+
+
+# take low-order modal RM
+sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acqlin_loRM-${CACAO_LOOPNUMBER}"
+sendFPScmd "exec acqlin_loRM-${CACAO_LOOPNUMBER}.log2fs"
+
+
+
+# compute straight CM
+sendFPScmd "confwupdate compsCM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart compsCM-${CACAO_LOOPNUMBER}"
+sendFPScmd "exec compsCM-${CACAO_LOOPNUMBER}.log2fs"
+
+
+
+# compute Fourier control matrix
+sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.upAlign ON"
+sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.upRMfiles ON"
+sendFPScmd "confwupdate compfCM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart compfCM-${CACAO_LOOPNUMBER}"
+
+
+sendFPScmd "waitonrunOFF"
+
+exit
+
+
+sendFPScmd "confwupdate loopRUN-${CACAO_LOOPNUMBER}"
