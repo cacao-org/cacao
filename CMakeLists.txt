@@ -78,7 +78,7 @@ list(APPEND modulelist AOloopControl_DM )
 list(APPEND modulelist AOloopControl_IOtools )
 list(APPEND modulelist AOloopControl_perfTest )
 list(APPEND modulelist AOloopControl_PredictiveControl )
-#list(APPEND modulelist WFS_ShackHartmann )
+
 
 
 
@@ -93,16 +93,17 @@ endforeach()
 
 
 
-#FOREACH(extramodule ${EXTRAMODULES})
-#string(REPLACE "_" "" mname1 "${mname}")
-#list(APPEND libsrcdir src/${mname})
-#list(APPEND libname ${PROJECT_NAME}${mname1})
-#message("======= adding EXTRA module  ${mname}")
-#ENDFOREACH()
 
-
-
-
+FOREACH(mname ${EXTRAMODULES})
+string(REPLACE "_" "" mname1 "${mname}")
+if(IS_DIRECTORY "src/${mname}")
+list(APPEND libsrcdir src/${mname})
+list(APPEND libname ${PROJECT_NAME}${mname1})
+message("======= adding EXTRA module  ${mname}")
+else()
+message("Directory  src/${mname}  not found")
+endif()
+ENDFOREACH()
 
 
 
