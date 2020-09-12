@@ -123,7 +123,7 @@ int main(
     libinit_AOloopControl_compTools();
     libinit_AOloopControl_acquireCalib();
 
-    libinit_WFS_ShackHartmann();
+    //libinit_WFS_ShackHartmann();
 
 
     runCLI(argc, argv, AppName);
