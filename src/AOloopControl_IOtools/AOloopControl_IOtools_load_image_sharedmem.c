@@ -220,8 +220,6 @@ imageID AOloopControl_IOtools_2Dloadcreate_shmim(
             fflush(stdout);
 
             if(sizeOK == 0) { // if size is different, delete stream -> create new one
-                char command[500];
-
                 printf("\n========== EXISTING %s HAS WRONG SIZE -> CREATING BLANK %s ===========\n\n", name, name);
                 delete_image_ID(name);
                 
@@ -403,8 +401,6 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(
 
             sizeOK = COREMOD_MEMORY_check_3Dsize(name, xsize, ysize, zsize);
             if(sizeOK == 0) {
-                char command[500];
-
                 //               printf("\n========== EXISTING %s HAS WRONG SIZE -> CREATING BLANK %s ===========\n\n", name, name);
                 printf("        AOloopControl_3Dloadcreate_shmim: ===== EXISTING %s HAS WRONG SIZE -> CREATING BLANK %s\n", name, name);
                 fflush(stdout);
