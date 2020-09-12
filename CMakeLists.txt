@@ -81,12 +81,25 @@ list(APPEND modulelist AOloopControl_PredictiveControl )
 #list(APPEND modulelist WFS_ShackHartmann )
 
 
+
+
+
 foreach(mname IN LISTS modulelist)
 string(REPLACE "_" "" mname1 "${mname}")
 list(APPEND libsrcdir src/${mname})
 list(APPEND libname ${PROJECT_NAME}${mname1})
 message("======= adding module  ${mname}")
 endforeach()
+
+
+
+#FOREACH(extramodule ${EXTRAMODULES})
+#string(REPLACE "_" "" mname1 "${mname}")
+#list(APPEND libsrcdir src/${mname})
+#list(APPEND libname ${PROJECT_NAME}${mname1})
+#message("======= adding EXTRA module  ${mname}")
+#ENDFOREACH()
+
 
 
 
@@ -281,9 +294,12 @@ endforeach()
 # separator character ";"
 #
 
-FOREACH(extramodule ${EXTRAMODULES})
-add_subdirectory ( "src/${extramodule}" )
-ENDFOREACH()
+#FOREACH(extramodule ${EXTRAMODULES})
+#add_subdirectory ( "src/${extramodule}" )
+#ENDFOREACH()
+
+
+
 
 
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
@@ -354,9 +370,9 @@ endforeach()
 
 
 
+#${EXTRAMODULES}
 
 target_link_libraries (${PROJECT_NAME} PUBLIC
-${EXTRAMODULES}
 ${MILK_LIBRARIES}
 m
 readline
