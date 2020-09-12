@@ -23,7 +23,11 @@
 /* =============================================================================================== */
 #include <string.h>
 #include <math.h>
+
 #include "CommandLineInterface/CLIcore.h"
+#include "CommandLineInterface/timeutils.h"
+
+
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_tools/COREMOD_tools.h"
@@ -61,7 +65,7 @@
 
 // TIMING
 static struct timespec tnow;
-static struct timespec tdiff;
+//static struct timespec tdiff;
 
 
 
@@ -287,7 +291,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
 
     for(f = fmin; f < fmax; f *= fmultstep)
     {
-        float runtime = 0.0;
+        double runtime = 0.0;
         long k = 0;
         long k1;
         float coscoeff, sincoeff;

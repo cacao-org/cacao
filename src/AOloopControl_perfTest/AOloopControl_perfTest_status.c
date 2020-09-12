@@ -4,11 +4,7 @@
  *
  * AO engine uses stream data structure
  *
- * @author  O. Guyon
- * @date    21 Dec 2017
  *
- *
- * @bug No known bugs.
  *
  *
  */
@@ -33,6 +29,8 @@
 #include <ncurses.h>
 
 #include "CommandLineInterface/CLIcore.h"
+#include "CommandLineInterface/timeutils.h"
+
 #include "info/info.h"
 
 #include "AOloopControl/AOloopControl.h"
@@ -542,7 +540,7 @@ errno_t AOloopControl_perfTest_loopMonitor(
     long ksize;
     imageID IDmodevalave;
     imageID IDmodevalrms;
-    char fname[STRINGMAXLEN_FILENAME];
+//    char fname[STRINGMAXLEN_FILENAME];
 
 
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
@@ -705,7 +703,7 @@ errno_t AOloopControl_perfTest_statusStats(
     int nbgpu;
     struct timespec t1;
     struct timespec t2;
-    struct timespec tdiff;
+//    struct timespec tdiff;
     double tdiffv;
     long *statusgpucnt;
     long *statusgpucnt2;
