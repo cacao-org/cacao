@@ -93,7 +93,7 @@ extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
-static long aoconfID_imWFS2_active[100];
+//static long aoconfID_imWFS2_active[100];
 
 imageID AOloopControl_computeCalib_DMedgeDetect(
     const char *IDmaskRM_name,
@@ -224,10 +224,14 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
 
 
 
-long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name,
-        const char *IDmask_name, const char *IDcpa_name, const char *IDout_name)
+long AOloopControl_computeCalib_DMextrapolateModes(
+    const char *IDin_name,
+    const char *IDmask_name,
+    const char *IDcpa_name,
+    const char *IDout_name
+)
 {
-    long IDin, IDmask, IDcpa, IDout;
+    imageID IDin, IDmask, IDcpa, IDout;
     long xsize, ysize, zsize, xysize;
     long IDpixdist;
     long ii, jj, ii1, jj1, dii, djj, dii2, djj2;

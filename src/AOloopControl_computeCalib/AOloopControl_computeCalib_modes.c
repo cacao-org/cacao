@@ -94,7 +94,7 @@ extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 
-static long aoconfID_imWFS2_active[100];
+//static long aoconfID_imWFS2_active[100];
 
 #define MAX_MBLOCK 20
 
@@ -2485,7 +2485,7 @@ imageID AOloopControl_computeCalib_mkModes(
         /// WFS MODES, MODAL CONTROL MATRICES
         for(uint32_t mblock = 0; mblock < NBmblock; mblock++)
         {
-            int slen;
+            //int slen;
 
             printf("[%5d] .... BLOCK %u has %u modes\n", __LINE__, mblock,
                    MBLOCK_NBmode[mblock]);
