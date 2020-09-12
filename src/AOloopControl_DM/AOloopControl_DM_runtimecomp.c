@@ -516,7 +516,7 @@ int AOloopControl_DM_CombineChannels_RUN()
 
     int vOK;
     float maxmaxvolt = 150.0;
-    char errstr[200];
+//    char errstr[200];
     uint64_t sizexyDMout;
     imageID IDtmpoutdm;
     uint64_t sizexywfsref;
