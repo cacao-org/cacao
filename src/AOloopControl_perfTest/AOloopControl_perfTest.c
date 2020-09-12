@@ -957,7 +957,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     //double dt1;
     double *dtarray;
     //double a, b;
-    char command[stringmaxlen];
+//    char command[stringmaxlen];
     long IDdm0, IDdm1; // DM shapes
     long ii, jj;
     float x, y;
@@ -1121,7 +1121,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
 
 
-    char ffname[STRINGMAXLEN_FULLFILENAME];
+    //char ffname[STRINGMAXLEN_FULLFILENAME];
     IDwfs = image_ID(wfsname);
     snprintf(msgstring, stringmaxlen, "Connecting to stream %s %ld", wfsname,
              IDwfs);
