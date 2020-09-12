@@ -84,6 +84,7 @@ errno_t AOloopControl_loadconfigure(
 
     FILE *fplog; // human-readable log of load sequence
 
+	(void) mode;
 
     // LOG function start
 //    int logfunc_level = 0;
