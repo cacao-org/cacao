@@ -28,6 +28,8 @@
 #include <pthread.h>
 
 #include "CommandLineInterface/CLIcore.h"
+#include "CommandLineInterface/timeutils.h"
+
 #include "COREMOD_tools/COREMOD_tools.h"
 #include "info/info.h"
 
@@ -84,7 +86,7 @@ static float *arrayftmp;
 
 // TIMING
 static struct timespec tnow;
-static struct timespec tdiff;
+//static struct timespec tdiff;
 static double tdiffv;
 
 //extern int aoloopcontrol_var.PIXSTREAM_SLICE;
@@ -351,8 +353,8 @@ static void *compute_function_imtotal(
 
 
     // LOG function / process start
-    int logfunc_level = 0;
-    int logfunc_level_max = 1;
+    //int logfunc_level = 0;
+    //int logfunc_level_max = 1;
     char commentstring[200];
     sprintf(commentstring, "Compute image total flux, loop %ld", LOOPNUMBER);
     //CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
@@ -489,8 +491,8 @@ static void *compute_function_dark_subtract(void *ptr)
     iiend = (long)((threadindex + 1) * nelem / COMPUTE_DARK_SUBTRACT_NBTHREADS);
 
     // LOG function / process start
-    int logfunc_level = 0;
-    int logfunc_level_max = 1;
+    //int logfunc_level = 0;
+    //int logfunc_level_max = 1;
     char commentstring[200];
     sprintf(commentstring, "Dark subtract WFS image, loop %ld", LOOPNUMBER);
     //CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
@@ -745,9 +747,9 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
     unsigned short *arrayutmp;
     signed short *arraystmp;
 
-    long    imWaitTimeAvecnt = 0;
-    long    imWaitTimeAvecnt0 = 1000;
-    double  imWaitTimeAve = 0.0;
+    //long    imWaitTimeAvecnt = 0;
+    //long    imWaitTimeAvecnt0 = 1000;
+    //double  imWaitTimeAve = 0.0;
 
     char        *ptrv;
 
@@ -846,7 +848,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
     processinfo_loopstart(
         processinfo); // Notify processinfo that we are entering loop
 
-    unsigned long long WFScnt  = 0;
+    //unsigned long long WFScnt  = 0;
     int slice;
 
     while(loopOK == 1)
@@ -953,7 +955,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
                     break;
             }
 
-            WFScnt = data.image[ID_wfsim].md[0].cnt0;
+            //WFScnt = data.image[ID_wfsim].md[0].cnt0;
 
 
             // ===========================================
