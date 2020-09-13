@@ -92,11 +92,13 @@ message("======= adding module  ${mname}")
 endforeach()
 
 
-
-
+#
+# Add extra optional modules (list provided by user)
+# separator character ";"
+#
 FOREACH(mname ${EXTRAMODULES})
 string(REPLACE "_" "" mname1 "${mname}")
-if(IS_DIRECTORY "src/${mname}")
+if(IS_DIRECTORY "../src/${mname}")
 list(APPEND libsrcdir src/${mname})
 list(APPEND libname ${PROJECT_NAME}${mname1})
 message("======= adding EXTRA module  ${mname}")
@@ -290,19 +292,6 @@ endforeach()
 
 
 
-#
-# Add extra optional modules (list provided by user)
-# separator character ";"
-#
-
-#FOREACH(extramodule ${EXTRAMODULES})
-#add_subdirectory ( "src/${extramodule}" )
-#ENDFOREACH()
-
-
-
-
-
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
@@ -369,9 +358,6 @@ target_link_libraries (${PROJECT_NAME} PUBLIC "${lname}" )
 message( "TARGET LINK LIBRARY  : ${lname}" )
 endforeach()
 
-
-
-#${EXTRAMODULES}
 
 target_link_libraries (${PROJECT_NAME} PUBLIC
 ${MILK_LIBRARIES}
