@@ -959,12 +959,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
 
 
     // External scripts (post)
-/*    long fpi_exec_logdata =
-        function_parameter_add_entry(&fps, ".log2fs",
-                                     "log to filesystem",
-                                     FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
-    (void) fpi_exec_logdata;
-*/
+    /*    long fpi_exec_logdata =
+            function_parameter_add_entry(&fps, ".log2fs",
+                                         "log to filesystem",
+                                         FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
+        (void) fpi_exec_logdata;
+    */
 
 
 
@@ -1016,10 +1016,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                     char datadir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
 
-                    strncpy(datadir,  functionparameter_GetParamPtr_STRING(&FPS_zRMacqu, ".conf.datadir"),
+                    strncpy(datadir,  functionparameter_GetParamPtr_STRING(&FPS_zRMacqu,
+                            ".conf.datadir"),
                             FUNCTION_PARAMETER_STRMAXLEN);
 
-                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmslaved.fits", datadir);
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmslaved.fits",
+                                   datadir);
                     functionparameter_SetParamValue_STRING(&fps, ".DMslaved", fname);
 
                     SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/zrespM_mn.fits",
