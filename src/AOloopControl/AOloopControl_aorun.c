@@ -246,13 +246,13 @@ int AOloopControl_aorun_FPCONF()
         function_parameter_add_entry(&fps, ".loop", "Loop index",
                                      FPTYPE_INT64, FPFLAG, &loopindex_default);
 
-/*
-    int64_t RTpriority_default[4] = { 90, 0, 99, 90 };
-    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
-    __attribute__((unused)) long fpi_RTpriority =
-        function_parameter_add_entry(&fps, ".RTpriority", "Real Time priority",
-                                     FPTYPE_INT64, FPFLAG, &RTpriority_default);
-*/
+    /*
+        int64_t RTpriority_default[4] = { 90, 0, 99, 90 };
+        FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
+        __attribute__((unused)) long fpi_RTpriority =
+            function_parameter_add_entry(&fps, ".RTpriority", "Real Time priority",
+                                         FPTYPE_INT64, FPFLAG, &RTpriority_default);
+    */
 
     long semwaitindex_default[4] = { 1, 0, 10, 1 };
     __attribute__((unused)) long fpi_semwaitindex =
@@ -428,7 +428,8 @@ int AOloopControl_aorun_RUN()
     double *maxlim = functionparameter_GetParamPtr_FLOAT64(&fps, ".maxlim");
 
 
-    int RTpriority = functionparameter_GetParamValue_INT64(&fps, ".conf.procinfo.RTprio");
+    int RTpriority = functionparameter_GetParamValue_INT64(&fps,
+                     ".conf.procinfo.RTprio");
 
 
 
