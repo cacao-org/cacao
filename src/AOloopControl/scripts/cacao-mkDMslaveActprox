@@ -136,7 +136,7 @@ echo "##########################################"
 
 
 
-actproxrad=$( grep "^${FPSname}.DMmask.proxrad " fpslog/fps.${FPSfilename}.dat | awk '{print $3;}' )
+actproxrad=$( grep "^${FPSname}.DMmask.proxrad " ${FPSfilename} | awk '{print $3;}' )
 
 cacao << EOF
 loadfits "${datadir}/dmmask_mkm.fits" DMmaskRM
