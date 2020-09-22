@@ -105,9 +105,20 @@ fi
 
 
 loopnb=$( head -1 LOOPNUMBER )
-FPSname=$1
-#stageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
-stageddir=$( grep out.dirname fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
+
+FPSfilename=$1
+FPSname="$(basename ${FPSfilename} .fps)"
+
+# Read parameters from FPS file
+# note that ^ ensures grep matches beginning of line, and trailing space ensures exact match
+#
+datadir=$( grep "^${FPSname}.conf.datadir " ${FPSfilename} |  awk '{print $3;}' )
+
+echo "datadir       : ${datadir}"
+
+
+
+
 
 
 echo "##########################################"
@@ -125,13 +136,12 @@ echo "##########################################"
 
 
 
-#actproxrad=$( head -1 fpsconf/${FPSname}/DMmask/proxrad.setval.txt | awk '{print $1;}' )
-actproxrad=$( grep DMmask.proxrad fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
+actproxrad=$( grep "^${FPSname}.DMmask.proxrad " fpslog/fps.${FPSfilename}.dat | awk '{print $3;}' )
 
 cacao << EOF
-loadfits "${stageddir}/dmmask_mkm.fits" DMmaskRM
+loadfits "${datadir}/dmmask_mkm.fits" DMmaskRM
 cacaocc.aolmkslact DMmaskRM ${actproxrad} DMslavedact
-savefits DMslavedact "!${stageddir}/dmslaved.fits"
+savefits DMslavedact "!${datadir}/dmslaved.fits"
 exitCLI
 EOF
 
@@ -139,18 +149,18 @@ EOF
 
 
 cacao << EOF
-loadfits "${stageddir}/dmmask_mkm.fits" dmmRM
-loadfits "${stageddir}/dmslaved.fits" dmsl
+loadfits "${datadir}/dmmask_mkm.fits" dmmRM
+loadfits "${datadir}/dmslaved.fits" dmsl
 imtrunc dmsl 0.0 1.0 dmsl1
 dmm=1.0-(1.0-dmmRM)*(1.0-dmsl1)
-savefits dmm "!${stageddir}/dmmask_mksl.fits"
+savefits dmm "!${datadir}/dmmask_mksl.fits"
 exitCLI
 EOF
 
 
 # register output files to be logged
-echo "dmslaved.fits" >> "${stageddir}/loglist.dat"
-echo "dmmask_mksl.fits" >> "${stageddir}/loglist.dat"
+echo "dmslaved.fits" >> "${datadir}/loglist.dat"
+echo "dmmask_mksl.fits" >> "${datadir}/loglist.dat"
 
 
 
@@ -170,16 +180,16 @@ echo "#################################################################"
 
 
 cacao << EOF
-loadfits "${stageddir}/wfsref.fits" im0
-loadfits "${stageddir}/wfsmask_mkm.fits" wfm
+loadfits "${datadir}/wfsref.fits" im0
+loadfits "${datadir}/wfsmask_mkm.fits" wfm
 im0m=wfm*im0
 a=itot(im0)/itot(im0m)
 # 1/a is fraction of flux inside mask
 im1=im0*a/itot(im0)
-savefits im1 "!${stageddir}/wfsref_mn.fits"
-loadfits "${stageddir}/zrespM.fits" zrespm
+savefits im1 "!${datadir}/wfsref_mn.fits"
+loadfits "${datadir}/zrespM.fits" zrespm
 zrespm1=zrespm*a
-savefits zrespm1 "!${stageddir}/zrespM_mn.fits"
+savefits zrespm1 "!${datadir}/zrespM_mn.fits"
 listim
 exitCLI
 EOF
@@ -190,12 +200,12 @@ EOF
 
 
 # register output files to be logged
-echo "wfsref_mn.fits" >> "${stageddir}/loglist.dat"
-echo "zrespM_mn.fits" >> "${stageddir}/loglist.dat"
+echo "wfsref_mn.fits" >> "${datadir}/loglist.dat"
+echo "zrespM_mn.fits" >> "${datadir}/loglist.dat"
 
 
 
 
-#stageddir="conf_zrm_staged"
-#cp dmslavedact.fits ./${stageddir}/
-#cp dmmask.fits ./${stageddir}/
+#datadir="conf_zrm_staged"
+#cp dmslavedact.fits ./${datadir}/
+#cp dmmask.fits ./${datadir}/

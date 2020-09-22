@@ -32,7 +32,8 @@ echo "$(tput bold) $pname : cacao archive $(tput sgr0)"
 echo "source : $0"
 echo "------------------------------------------------------------------------"
 echo ""
-echo "Archive data."
+echo "Archive data contained in Function Parameter Structure (FPS)"
+echo "Archive entries listed in <filter>.outlog"
 echo ""
 echo ""
 echo " $(tput bold)USAGE:$(tput sgr0)"
@@ -246,13 +247,16 @@ function archivefile {
 	if [ ${TESTMODE} = 0 ]; then
 		mkdir -p ${outdirname}
 		cp ${inputdirname}/${inputfname}.${inputextname} ${outdirname}/${outfilename}
+	else
+		echo "TEST MODE - COMMAND NOT EXECUTED : mkdir -p ${outdirname}"
+		echo "TEST MODE - COMMAND NOT EXECUTED : cp ${inputdirname}/${inputfname}.${inputextname} ${outdirname}/${outfilename}"
 	fi 
 	
 	echo ""
 }
 
 
-
+echo "Searching for $1.outlog"
 find . -wholename "$1.outlog" -print0 | 
     while IFS= read -r -d '' fname; do 
         archivefile "${fname}"

@@ -97,10 +97,22 @@ fi
 
 LOOPNAME=$( head -1 LOOPNAME )
 loopnb=$( head -1 LOOPNUMBER )
-FPSname=$1
-#LOmaxCPA=$( head -1 fpsconf/${FPSname}/LOmaxCPA.setval.txt | awk '{print $1;}' )
-stageddir=$( grep out.dirname fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
-LOmaxCPA=$( grep LOmaxCPA fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
+
+
+FPSfilename=$1
+FPSname="$(basename ${FPSfilename} .fps)"
+
+
+# Read parameters from FPS file
+# note that ^ ensures grep matches beginning of line, and trailing space ensures exact match
+#
+datadir=$( grep "^${FPSname}.conf.datadir " ${FPSfilename} |  awk '{print $3;}' )
+LOmaxCPA=$( grep "^${FPSname}.LOmaxCPA " ${FPSfilename} |  awk '{print $3;}' )
+
+echo "datadir       : ${datadir}"
+echo "LOmaxCPA      : ${LOmaxCPA}"
+
+#=$( grep LOmaxCPA fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
 
 pname0=$0
 pname=${pname0#"./"}-$loopnb
@@ -121,10 +133,10 @@ pname=${pname0#"./"}-$loopnb
 
 cacao -n $pname << EOF
 cacao.aolnb ${loopnb}
-loadfits "${stageddir}/dmslaved.fits" dmslaved0
+loadfits "${datadir}/dmslaved.fits" dmslaved0
 imtrunc dmslaved0 0.0 1.0 dmslaved
-loadfits "${stageddir}/dmmask_mksl.fits" dmmask
-loadfits "${stageddir}/TPind.fits" emodes
+loadfits "${datadir}/dmmask_mksl.fits" dmmask
+loadfits "${datadir}/TPind.fits" emodes
 readshmim aol${loopnb}_dmC
 info.imstats aol${loopnb}_dmC
 cx=0.5*imsize0-0.5
@@ -133,15 +145,15 @@ od=0.42*imsize0
 id=0.13*imsize0
 if=0
 cacaocc.aolmklodmmodes fmodes imsize0 imsize1 ${LOmaxCPA} 0.8 cx cy od id 0 
-savefits fmodes "!${stageddir}/respM_LOmodes.fits"
+savefits fmodes "!${datadir}/respM_LOmodes.fits"
 exitCLI
 EOF
 
-echo "setval acqlin_loRM-${loopnb}.fn_pokeC ./${stageddir}/respM_LOmodes.fits" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
-
+echo "setval acqlin_loRM-${loopnb}.fn_pokeC ./${datadir}/respM_LOmodes.fits" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
+echo "setval acqlin_loRM-${loopnb}.fn_RMDMmask ./${datadir}/dmmask_mkm.fits" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
 
 # register output files to be logged
-echo "respM_LOmodes.fits" >> "${stageddir}/loglist.dat"
+echo "respM_LOmodes.fits" >> "${datadir}/loglist.dat"
 
 
 

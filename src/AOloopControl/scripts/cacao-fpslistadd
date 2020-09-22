@@ -391,7 +391,7 @@ fpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
 fpscmd "setval ${fpsfname}.timing.NBexcl 0"
 
 
-fpscmd "setval ${fpsfname}.fn_pokeC conf-zRM-staged/respM_LOmodes.fits"
+fpscmd "setval ${fpsfname}.fn_pokeC respM_LOmodes.fits"
 
 fpscmd "setval ${fpsfname}.MaskMode OFF"
 
@@ -489,7 +489,7 @@ echo "${fpsname}         cacaocc.aolRM2CM       ${fpsarg0}" >> fpslist.txt
 
 fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
-fpscmd "setval ${fpsfname}.fname_respM conf-zRM-staged/zrespM_mn.fits"
+fpscmd "setval ${fpsfname}.fname_respM fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/zrespM_mn.fits"
 
 #fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 

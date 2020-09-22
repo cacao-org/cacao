@@ -123,24 +123,33 @@ fi
 
 
 loopnb=$( head -1 LOOPNUMBER )
-FPSname=$1
-#stageddir=$( head -1 fpsconf/${FPSname}/out/dirname.setval.txt | awk '{print $1;}' )
-stageddir=$( grep out.dirname fpslog/fps.${FPSname}.dat |  awk '{print $3;}' )
+
+FPSfilename=$1
+FPSname="$(basename ${FPSfilename} .fps)"
+
+# Read parameters from FPS file
+# note that ^ ensures grep matches beginning of line, and trailing space ensures exact match
+#
+datadir=$( grep "^${FPSname}.conf.datadir " ${FPSfilename} |  awk '{print $3;}' )
+
+echo "datadir       : ${datadir}"
+
+
 
 
 datestr=`date -u +%Y%m%dT%H%M%S`
 
-DMmaskRMp0=$( grep DMmask.RMp0 fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
-DMmaskRMc0=$( grep DMmask.RMc0 fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
-DMmaskRMp1=$( grep DMmask.RMp1 fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
-DMmaskRMc1=$( grep DMmask.RMc1 fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
+
+DMmaskRMp0=$( grep "^${FPSname}.DMmask.RMp0 " ${FPSfilename} |  awk '{print $3;}' )
+DMmaskRMc0=$( grep "^${FPSname}.DMmask.RMc0 " ${FPSfilename} |  awk '{print $3;}' )
+DMmaskRMp1=$( grep "^${FPSname}.DMmask.RMp1 " ${FPSfilename} |  awk '{print $3;}' )
+DMmaskRMc1=$( grep "^${FPSname}.DMmask.RMc1 " ${FPSfilename} |  awk '{print $3;}' )
 
 
-
-WFSmaskRMp0=$( grep WFSmask.RMp0 fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
-WFSmaskRMc0=$( grep WFSmask.RMc0 fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
-WFSmaskRMp1=$( grep WFSmask.RMp1 fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
-WFSmaskRMc1=$( grep WFSmask.RMc1 fpslog/fps.${FPSname}.dat | awk '{print $3;}' )
+WFSmaskRMp0=$( grep "^${FPSname}.WFSmask.RMp0 " ${FPSfilename} |  awk '{print $3;}' )
+WFSmaskRMc0=$( grep "^${FPSname}.WFSmask.RMc0 " ${FPSfilename} |  awk '{print $3;}' )
+WFSmaskRMp1=$( grep "^${FPSname}.WFSmask.RMp1 " ${FPSfilename} |  awk '{print $3;}' )
+WFSmaskRMc1=$( grep "^${FPSname}.WFSmask.RMc1 " ${FPSfilename} |  awk '{print $3;}' )
 
 
 
@@ -151,22 +160,22 @@ echo "LOOP: ${loopnb}"
 
 cacao << EOF
 cacao.aolnb $loopnb
-loadfits "./${stageddir}/zrespM.fits" zrespm
+loadfits "./${datadir}/zrespM.fits" zrespm
 cacaocc.aolRMmkmasks zrespm wfsmap dmmap ${DMmaskRMp0} ${DMmaskRMc0} ${DMmaskRMp1} ${DMmaskRMc1} ${WFSmaskRMp0} ${WFSmaskRMc0} ${WFSmaskRMp1} ${WFSmaskRMc1}
 listim
-savefits wfsmap "!${stageddir}/wfsmap_mkm.fits"
-savefits dmmap "!${stageddir}/dmmap_mkm.fits"
-savefits wfsmask "!${stageddir}/wfsmask_mkm.fits"
-savefits dmmask "!${stageddir}/dmmask_mkm.fits"
+savefits wfsmap "!${datadir}/wfsmap_mkm.fits"
+savefits dmmap "!${datadir}/dmmap_mkm.fits"
+savefits wfsmask "!${datadir}/wfsmask_mkm.fits"
+savefits dmmask "!${datadir}/dmmask_mkm.fits"
 exitCLI
 EOF
 
 
 # register output files to be logged
-echo "wfsmap_mkm.fits" >> "${stageddir}/loglist.dat"
-echo "dmmap_mkm.fits" >> "${stageddir}/loglist.dat"
-echo "wfsmask_mkm.fits" >> "${stageddir}/loglist.dat"
-echo "dmmask_mkm.fits" >> "${stageddir}/loglist.dat"
+echo "wfsmap_mkm.fits" >> "${datadir}/loglist.dat"
+echo "dmmap_mkm.fits" >> "${datadir}/loglist.dat"
+echo "wfsmask_mkm.fits" >> "${datadir}/loglist.dat"
+echo "dmmask_mkm.fits" >> "${datadir}/loglist.dat"
 
 
 
