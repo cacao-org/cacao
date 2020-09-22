@@ -678,11 +678,11 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
 
     // settings for output files and dir
 
-    long fpi_out_dirname      =
+ /*   long fpi_out_dirname      =
         function_parameter_add_entry(&fps, ".out.dirname",
                                      "output directory",
                                      FPTYPE_DIRNAME, FPFLAG_DEFAULT_INPUT, pNull);
-    (void) fpi_out_dirname;
+    (void) fpi_out_dirname;*/
 
 
     __attribute__((unused)) long fpi_out_label      =
@@ -699,12 +699,12 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
 
 
     // External scripts (post)
-    long fpi_exec_logdata =
+/*    long fpi_exec_logdata =
         function_parameter_add_entry(&fps, ".log2fs",
                                      "log to filesystem",
                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
     (void) fpi_exec_logdata;
-
+*/
 
 
 
@@ -759,7 +759,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
 
     char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
-    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".out.dirname"),
+    strncpy(outdirname, functionparameter_GetParamPtr_STRING(&fps, ".conf.datadir"),
             FUNCTION_PARAMETER_STRMAXLEN);
     EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirname);
 

@@ -959,12 +959,12 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
 
 
     // External scripts (post)
-    long fpi_exec_logdata =
+/*    long fpi_exec_logdata =
         function_parameter_add_entry(&fps, ".log2fs",
                                      "log to filesystem",
                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
     (void) fpi_exec_logdata;
-
+*/
 
 
 
@@ -1013,41 +1013,41 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
 
                 if(fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0)
                 {
-                    char outdir[FUNCTION_PARAMETER_STRMAXLEN];
+                    char datadir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
 
-                    strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_zRMacqu, ".out.dir"),
+                    strncpy(datadir,  functionparameter_GetParamPtr_STRING(&FPS_zRMacqu, ".conf.datadir"),
                             FUNCTION_PARAMETER_STRMAXLEN);
 
-                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmslaved.fits", outdir);
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmslaved.fits", datadir);
                     functionparameter_SetParamValue_STRING(&fps, ".DMslaved", fname);
 
                     SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/zrespM_mn.fits",
-                                   outdir);
+                                   datadir);
                     functionparameter_SetParamValue_STRING(&fps, ".zrespM", fname);
 
                     SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/dmmask_mksl.fits",
-                                   outdir);
+                                   datadir);
                     functionparameter_SetParamValue_STRING(&fps, ".DMmaskRM", fname);
 
                     SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/wfsmask_mkm.fits",
-                                   outdir);
+                                   datadir);
                     functionparameter_SetParamValue_STRING(&fps, ".WFSmask", fname);
                 }
 
                 if(fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0)
                 {
-                    char outdir[FUNCTION_PARAMETER_STRMAXLEN];
+                    char datadir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
 
-                    strncpy(outdir,  functionparameter_GetParamPtr_STRING(&FPS_loRMacqu,
-                            ".out.dir"),  FUNCTION_PARAMETER_STRMAXLEN);
+                    strncpy(datadir,  functionparameter_GetParamPtr_STRING(&FPS_loRMacqu,
+                            ".conf.datadir"),  FUNCTION_PARAMETER_STRMAXLEN);
 
-                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/respM.fits", outdir);
+                    SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/respM.fits", datadir);
                     functionparameter_SetParamValue_STRING(&fps, ".loRM", fname);
 
                     SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/RMpokeCube.fits",
-                                   outdir);
+                                   datadir);
                     functionparameter_SetParamValue_STRING(&fps, ".loRMmodes", fname);
                 }
 
