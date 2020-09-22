@@ -2363,8 +2363,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     fps_write_RUNoutput_image(&fps, "RMDMmask", "RM_DMmask");
 
                     {
-                        char fnameRMDMmask[200];
-                        sprintf(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
+                        char fnameRMDMmask[STRINGMAXLEN_FULLFILENAME];
+                        WRITE_FULLFILENAME(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
+                        //sprintf(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
                         functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask", fnameRMDMmask);
                     }
 
@@ -2397,8 +2398,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     delete_image_ID("Spoke");
 
                     {
-                        char fnameRMDMmask[200];
-                        sprintf(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
+                        char fnameRMDMmask[STRINGMAXLEN_FULLFILENAME];
+                        WRITE_FULLFILENAME(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
+//                        sprintf(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
                         load_fits(fnameRMDMmask, "RMDMmask", 1);
                     }
 //                    load_fits("./conf/RM_DMmask.fits", "RMDMmask", 1);
@@ -2442,14 +2444,14 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 
                 if(fps.parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF)
                 {
-                    char fname_Hpoke[200];
-                    sprintf(fname_Hpoke, "./%s/Hpoke.fits", fps.md->datadir);
+                    char fname_Hpoke[STRINGMAXLEN_FULLFILENAME];
+                    WRITE_FULLFILENAME(fname_Hpoke, "./%s/Hpoke.fits", fps.md->datadir);
                     functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", fname_Hpoke);
                 }
                 else
                 {
-                    char fname_Spoke[200];
-                    sprintf(fname_Spoke, "./%s/Spoke.fits", fps.md->datadir);
+                    char fname_Spoke[STRINGMAXLEN_FULLFILENAME];
+                    WRITE_FULLFILENAME(fname_Spoke, "./%s/Spoke.fits", fps.md->datadir);
                     functionparameter_SetParamValue_STRING(&fps, ".fn_pokeC", fname_Spoke);
                 }
             }
@@ -2619,7 +2621,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             ".exec.mkLODMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
 
 
-    char tmpfname[STRINGMAXLEN_FULLFILENAME];
+//    char tmpfname[STRINGMAXLEN_FULLFILENAME];
 
 
 
