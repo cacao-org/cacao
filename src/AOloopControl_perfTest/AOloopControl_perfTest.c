@@ -876,11 +876,12 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF()
 
 
     // External scripts (post)
-    long fpi_exec_logdata =
+/*    long fpi_exec_logdata =
         function_parameter_add_entry(&fps, ".log2fs",
                                      "log to filesystem",
                                      FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
     (void) fpi_exec_logdata;
+*/
 
 
     // ==============================================
