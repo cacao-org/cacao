@@ -109,6 +109,7 @@ do
 done
 echo "exitCLI" >> ${SF}
 
+echo "SF = ${SF}"
 cacao -n ${pname} -f -s ${SF}
 
 rm ${SF}
