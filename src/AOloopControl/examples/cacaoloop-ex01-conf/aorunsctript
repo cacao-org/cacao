@@ -1,0 +1,273 @@
+
+#!/usr/bin/env bash
+
+MSdescr="Example AO loop execution script"
+
+source milk-script-std-config
+
+# prerequisites
+RequiredCommands=( tmux milk )
+RequiredFiles=()
+RequiredDirs=()
+
+# parse arguments
+source milk-argparse
+
+
+
+
+
+# Run script for cacao scheduler
+#
+
+# get configuration parameters
+#
+CACAOWORKDIR="cacaoloop01wd"
+LOOPNAME="cacaoloop01"
+source ${CACAOWORKDIR}/cacaovars.${LOOPNAME}.bash
+
+
+
+
+
+
+
+
+
+
+function sendFPScmd {
+echo "SENDING: $1"
+echo "$1" >> ${MILK_SHM_DIR}/cacaoloop01_fpsCTRL.fifo
+}
+
+
+
+
+# ======================================================================
+# Starting DM combination process
+# ======================================================================
+
+stepFile="step.aorunscript.DMCOMB"
+if [ ! -f "$stepFile" ]; then 
+
+# Start DM comb
+taskset_DMcomb="3"
+sendFPScmd "setval DMcomb-${CACAO_DMINDEX}.conf.taskset ${taskset_DMcomb}"
+sendFPScmd "runstart DMcomb-${CACAO_DMINDEX}"
+
+touch ${stepFile}
+exit
+else
+echo "found ${stepFile} -> skipping"
+fi
+
+
+
+
+# ======================================================================
+# Acquire WFS image from camera
+#
+# This step loads execution queue #2, which is kept on hold for
+# later execution
+#
+# Example shows how to change execution queue and set its priority
+# Note that priority 0 means "on hold"
+# For all priority values > 0, the task with the highest priority
+# is run first
+#
+# ======================================================================
+
+stepFile="step.aorunscript.ACQWFS"
+if [ ! -f "$stepFile" ]; then
+
+# Fill up execution queue 2
+# set queue to #2
+sendFPScmd "setqindex 2"
+# put execution queue on hold (priority = 0)
+sendFPScmd "setqprio 0"
+sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
+# Return to execution queue 0
+sendFPScmd "setqindex 0"
+# run tasks with priority = 1 (highest priority first)
+sendFPScmd "setqprio 1"
+
+touch ${stepFile}
+exit
+else
+echo "found ${stepFile} -> skipping"
+fi
+
+
+
+
+
+
+
+# ======================================================================
+# Starting streamdelay process
+# ======================================================================
+
+stepFile="step.aorunscript.STREMDELAY"
+if [ ! -f "$stepFile" ]; then
+
+sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
+sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
+
+touch ${stepFile}
+exit
+else
+echo "found ${stepFile} -> skipping"
+fi
+
+
+
+
+# ======================================================================
+# Starting simulation MVM GPU process
+# ======================================================================
+
+stepFile="step.aorunscript.SIMMVGPU"
+if [ ! -f "$stepFile" ]; then
+
+sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
+
+touch ${stepFile}
+exit
+else
+echo "found ${stepFile} -> skipping"
+fi
+
+
+
+
+# ======================================================================
+# Start WFS acquisition and measure latency
+# ======================================================================
+
+stepFile="step.aorunscript.MLAT"
+if [ ! -f "$stepFile" ]; then
+
+# launch queue 2
+sendFPScmd "queueprio 2 1"
+
+sendFPScmd "confwupdate mlat-${CACAO_LOOPNUMBER}"
+
+
+# wait until RUN process complete to proceed to next task
+# marks start of sequential operation
+sendFPScmd "waitonrunON"
+
+sendFPScmd "runstart mlat-${CACAO_LOOPNUMBER}"
+
+touch ${stepFile}
+exit
+else
+echo "found ${stepFile} -> skipping"
+fi
+
+
+
+
+
+# ======================================================================
+# Measure zonal response matrix
+# ======================================================================
+
+stepFile="step.aorunscript.ZRM"
+if [ ! -f "$stepFile" ]; then
+
+# take zonal response matrix
+sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acqlin_zRM-${CACAO_LOOPNUMBER}"
+
+touch ${stepFile}
+exit
+else
+echo "found ${stepFile} -> skipping"
+fi
+
+
+
+
+# ======================================================================
+# Measure low order response matrix
+# ======================================================================
+
+stepFile="step.aorunscript.LORM"
+if [ ! -f "$stepFile" ]; then
+
+# take low-order modal RM
+sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acqlin_loRM-${CACAO_LOOPNUMBER}"
+
+touch ${stepFile}
+exit
+else
+echo "found ${stepFile} -> skipping"
+fi
+
+
+
+
+# ======================================================================
+# Compute control matrix
+# ======================================================================
+
+stepFile="step.aorunscript.CM"
+if [ ! -f "$stepFile" ]; then
+
+# compute straight CM
+sendFPScmd "setval compsCM-2.SVDlim 0.01"
+sendFPScmd "confwupdate compsCM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart compsCM-${CACAO_LOOPNUMBER}"
+
+touch ${stepFile}
+exit
+else
+echo "found ${stepFile} -> skipping"
+fi
+
+
+
+
+
+
+# compute Fourier control matrix
+#sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.upAlign ON"
+#sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.upRMfiles ON"
+#sendFPScmd "confwupdate compfCM-${CACAO_LOOPNUMBER}"
+#sendFPScmd "runstart compfCM-${CACAO_LOOPNUMBER}"
+
+
+
+
+# ======================================================================
+# Close AO loop
+# ======================================================================
+
+stepFile="step.aorunscript.LOOPRUN"
+if [ ! -f "$stepFile" ]; then
+
+sendFPScmd "waitonrunOFF"
+
+
+cd $CACAOWORKDIR/${LOOPNAME}dir
+pwd
+cacao << EOF
+loadfits "fps.compsCM-${CACAO_LOOPNUMBER}.datadir/sCMat00.fits" im
+cpsh im cmat
+listim
+exitCLI
+EOF
+cd ../..
+
+sendFPScmd "setval loopRUN-${CACAO_LOOPNUMBER}.sn_cmat cmat"
+sendFPScmd "confwupdate loopRUN-${CACAO_LOOPNUMBER}"
+
+touch ${stepFile}
+exit
+else
+echo "found ${stepFile} -> skipping"
+fi
