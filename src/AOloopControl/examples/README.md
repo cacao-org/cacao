@@ -1,14 +1,12 @@
-# Running example
+# 1. Running example
 
 
-## Set up configuration files on disk
+## 1.1. Set up configuration files on disk
 
-copy cacaoloop-ex01-conf directory to local dir
-
-
+copy cacaoloop-ex01-conf directory to local work directory
 
 
-## Deploy tasks
+## 1.2. Deploy tasks
 
 
 	cacao-task-manager -X 3 cacaoloop-ex01
@@ -21,14 +19,17 @@ Interactive FPS control GUI runs in tmux session cacaoloop01_fpsCTRL
 
 
 
-## Run execution script
+## 1.3. Run execution script
 
+
+    cp cacaoloop-ex01-conf/aorunscript .
 	./aorunscript
 
+The execution script will run one step forward each time it is called, so call it multiple time to advance through the example.
 
 
 
-# Notes
+# 2. Notes
 
 
 Three directories are associated to each fps:
@@ -51,3 +52,14 @@ Communication between FPSs can be achieved in multiple ways:
 
 - A FPS entry can point to another FPS. This allows real-time exchange of parameter values.
  
+
+
+After each step, to archive results:
+
+cacao-fpsarchive
+
+To adopt results :
+
+cacao-fpsconfadopt
+
+
