@@ -346,8 +346,9 @@ int AOloopControl_aorun_FPCONF()
     while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
     {
         usleep(50);
-        if(function_parameter_FPCONFloopstep(&fps) == 1)  
-        { // Apply logic if update is needed
+        if(function_parameter_FPCONFloopstep(&fps) == 1)
+        {
+            // Apply logic if update is needed
             // here goes the logic
 
 
@@ -427,7 +428,7 @@ int AOloopControl_aorun_RUN()
 
     // This parameter is a ON / OFF toggle
     uint64_t *loopONflag = functionparameter_GetParamPtr_fpflag(&fps, ".loopON");
-    
+
     // if -1, run loop forever, if >0, run for number of steps
     int64_t *loopNBstep = functionparameter_GetParamPtr_fpflag(&fps, ".loopNBstep");
 
@@ -638,18 +639,18 @@ int AOloopControl_aorun_RUN()
 
             if(*loopONflag & FPFLAG_ONOFF)
             {
-				if(*loopNBstep>0)
-				{
-					*loopNBstep --;
-					if(*loopNBstep == 0)
-					{
-						// turn loop OFF
-						*loopONflag &= ~FPFLAG_ONOFF;
-					}
-				}
-				
+                if(*loopNBstep > 0)
+                {
+                    *loopNBstep --;
+                    if(*loopNBstep == 0)
+                    {
+                        // turn loop OFF
+                        *loopONflag &= ~FPFLAG_ONOFF;
+                    }
+                }
+
                 data.image[ID_DMout].md[0].write = 1;
-                
+
                 for(long ii = 0; ii < sizeDM; ii++)
                 {
                     float tmpval = data.image[ID_DMout].array.F[ii] - (*loopgain) *
@@ -665,7 +666,7 @@ int AOloopControl_aorun_RUN()
                     }
                     data.image[ID_DMout].array.F[ii] = tmpval;
                 }
-                
+
                 data.image[ID_DMout].md[0].cnt0 ++;
                 COREMOD_MEMORY_image_set_sempost_byID(ID_DMout, -1);
                 data.image[ID_DMout].md[0].cnt0 ++;
