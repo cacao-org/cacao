@@ -322,6 +322,15 @@ int AOloopControl_aorun_FPCONF()
                                      FPTYPE_ONOFF, FPFLAG, pNull);
 
 
+    int64_t loopNBstep_default[4] = { 0, -1, 0, 0 };
+    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT ;
+    FPFLAG |= FPFLAG_WRITERUN;
+    __attribute__((unused)) long fpi_loopNBstep =
+        function_parameter_add_entry(&fps, ".loopNBstep", "Loop number steps",
+                                     FPTYPE_INT64, FPFLAG, &loopNBstep_default);
+
+
+
     FPFLAG = FPFLAG_DEFAULT_INPUT;
     FPFLAG |= FPFLAG_WRITERUN;
     long fpi_loopZERO = function_parameter_add_entry(&fps, ".loopZERO",
@@ -337,9 +346,8 @@ int AOloopControl_aorun_FPCONF()
     while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
     {
         usleep(50);
-        if(function_parameter_FPCONFloopstep(&fps) ==
-                1)  // Apply logic if update is needed
-        {
+        if(function_parameter_FPCONFloopstep(&fps) == 1)  
+        { // Apply logic if update is needed
             // here goes the logic
 
 
@@ -419,6 +427,9 @@ int AOloopControl_aorun_RUN()
 
     // This parameter is a ON / OFF toggle
     uint64_t *loopONflag = functionparameter_GetParamPtr_fpflag(&fps, ".loopON");
+    
+    // if -1, run loop forever, if >0, run for number of steps
+    int64_t *loopNBstep = functionparameter_GetParamPtr_fpflag(&fps, ".loopNBstep");
 
     // This parameter value will be tracked during loop run, so we create a pointer for it
     // The corresponding function is functionparameter_GetParamPtr_<TYPE>
@@ -627,7 +638,18 @@ int AOloopControl_aorun_RUN()
 
             if(*loopONflag & FPFLAG_ONOFF)
             {
+				if(*loopNBstep>0)
+				{
+					*loopNBstep --;
+					if(*loopNBstep == 0)
+					{
+						// turn loop OFF
+						*loopONflag &= ~FPFLAG_ONOFF;
+					}
+				}
+				
                 data.image[ID_DMout].md[0].write = 1;
+                
                 for(long ii = 0; ii < sizeDM; ii++)
                 {
                     float tmpval = data.image[ID_DMout].array.F[ii] - (*loopgain) *
@@ -643,6 +665,7 @@ int AOloopControl_aorun_RUN()
                     }
                     data.image[ID_DMout].array.F[ii] = tmpval;
                 }
+                
                 data.image[ID_DMout].md[0].cnt0 ++;
                 COREMOD_MEMORY_image_set_sempost_byID(ID_DMout, -1);
                 data.image[ID_DMout].md[0].cnt0 ++;
