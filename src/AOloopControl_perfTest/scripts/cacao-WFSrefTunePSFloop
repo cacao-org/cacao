@@ -3,10 +3,20 @@
 MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
 
 MSextdescr="Select WFS frames from times at which PSF is best
-Requires synchronized data cubes created by cacao-syncStreams"
+Requires synchronized data cubes created by cacao-syncStreams
+
+Evaluation modes:
+  0: optimize flux concentration
+  1: maximize flux
+  2: minimize flux
+"
 
 
+# Defaults
+timespan="100" # second
 timestart=$(date "+%s")
+
+
 
 source milk-script-std-config
 
@@ -14,7 +24,24 @@ RequiredCommands=( cacao )
 RequiredFiles=()
 RequiredDirs=()
 
+
+
+
+# SCRIPT ARGUMENTS (mandatory)
+# syntax: "name:type(s)/test(s):description"
 MSarg+=( "logdir:string:telemetry directory" )
+MSarg+=( "streamWFS:string:WFS stream" ) 
+MSarg+=( "streamPSF:string:PSF stream" ) 
+MSarg+=( "selfrac:float:selection fraction" )
+MSarg+=( "x0:long:selection window x start" )
+MSarg+=( "x1:long:selection window x end" )
+MSarg+=( "y0:long:selection window y start" )
+MSarg+=( "y1:long:selection window x end" )
+MSarg+=( "emode:long:Evaluation mode" )
+MSarg+=( "texp:float:exposure time in sec" )
+MSarg+=( "dtlag:float:time offset between streams in sec" )
+
+
 
 # SCRIPT OPTIONS
 # syntax: "short:long:functioncall:args[types]:description"
@@ -22,6 +49,12 @@ MSopt+=( "t:starttime:setstarttime:time[unixsec]:set start time in unix time" )
 function setstarttime()
 {
 	timestart=$1
+}
+
+MSopt+=( "s:timespan:settimespan:span[sec]:set time span" )
+function setstarttime()
+{
+	timespan=$1
 }
 
 
