@@ -1,9 +1,29 @@
 #!/bin/bash
 
 
-# number of arguments to script
-NBARGS=8
 
+
+MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
+
+MSextdescr="Select WFS frames from times at which PSF is best
+Requires synchronized data cubes created by cacao-syncStreams
+
+Evaluation modes:
+  0: optimize flux concentration
+  1: maximize flux
+  2: minimize flux
+
+EXAMPLE:
+$0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001
+
+
+OUTPUT:
+     impsfbest.fits     Average of selected PSF frames
+     impsfall.fits      Average of all PSF frames
+     imwfsbest.fits     Average of selected WFS frames
+     imwfsall.fits      Average of all WFS frames
+
+"
 
 
 #streamWFScube="$1"
@@ -41,6 +61,17 @@ windowy0="${inputMSargARRAY[6]}"
 windowy1="${inputMSargARRAY[7]}"
 evalMode="${inputMSargARRAY[8]}"
 
+
+
+ALPHAnorm="2.0"
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+MSopt+=( "a:ALPHAnorm:setALPHAnorm:norm[int]:set alpha norm" )
+function setALPHAnorm()
+{
+	ALPHAnorm=$1
+}
 
 
 
@@ -115,7 +146,6 @@ done
 
 
 
-ALPHAnorm="2.0"
 
 #Parse command line flags
 #If an option should be followed by an argument, it should be followed by a ":".
@@ -153,22 +183,6 @@ done
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 ### End getopts code ###
-
-
-
-
-
-
-
-
-if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
-if [ "$#" -ne $NBARGS ]; then
-    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
-fi
-printHELP
-        exit
-fi
-
 
 
 
