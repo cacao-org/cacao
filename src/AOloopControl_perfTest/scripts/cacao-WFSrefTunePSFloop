@@ -9,14 +9,25 @@ Evaluation modes:
   0: optimize flux concentration
   1: maximize flux
   2: minimize flux
+
+EXAMPLE:
+$0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001
+
+
+OUTPUT:
+     impsfbest.fits     Average of selected PSF frames
+     impsfall.fits      Average of all PSF frames
+     imwfsbest.fits     Average of selected WFS frames
+     imwfsall.fits      Average of all WFS frames
+
 "
 
 
 # Defaults
 timespan="100" # second
 timestart=$(date "+%s")
-
-
+ALPHAnorm="2.0"
+NBiter=0
 
 source milk-script-std-config
 
@@ -93,153 +104,15 @@ checkDir ${streamWFSdir}
 checkDir ${streamPSFdir}
 
 
-exit
-
-streamWFS="$1"
-streamPSF="$2"
-
-# number of arguments to script
-NBARGS=11
 
 
 
 
-
-# ======================= PROCESS NAME =================================
-pname=`echo "$0" | sed "s/\.\///g"`
-echo "pname = $pname"
-
-
-function printHELP {
-echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname : SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP) $(tput sgr0)"
-echo "------------------------------------------------------------------------"
-echo "  Select WFS frames from times at which PSF is best"
-echo "  Requires synchronized data cubes created by cacao-syncStreams"
-echo "   "
-echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-hst] <logdirectory> <streamWFS> <streamPSF> <Selection fraction> <x0> <x1> <y0> <y1> <evalMode> <texp> <dtlag>"
-echo ""
-echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-h$(tput sgr0)          help"
-echo "     $(tput bold)-n$(tput sgr0)          number of iteration (default 0=inf)"
-echo "     $(tput bold)-s$(tput sgr0)          time (s)pan (default 100s)"
-echo "     $(tput bold)-t$(tput sgr0)          start (t)ime (default=now)"
-echo "     $(tput bold)-a$(tput sgr0)          alpha norm (default=2.0)"
-echo ""
-echo " $(tput bold)INPUT:$(tput sgr0)"
-echo "     <streamWFS>         WFC stream name"
-echo "     <streamPSF>         PSF stream name"
-echo "     <x0><x1><y0><y1>    PSF evaluation window"
-echo "     <evalMode>            0: optimize flux concentration"
-echo "                           1: maximize flux"
-echo "                           2: minimize flux"
-echo "     <texp>              resampled exposure time"
-echo "     <dtlag>             lag time"
-echo ""
-echo " $(tput bold)EXAMPLE:$(tput sgr0)"
-echo "     $0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001"
-echo ""
-echo " $(tput bold)OUTPUT:$(tput sgr0)"
-echo "     impsfbest.fits     Average of selected PSF frames"
-echo "     impsfall.fits      Average of all PSF frames"
-echo "     imwfsbest.fits     Average of selected WFS frames"
-echo "     imwfsall.fits      Average of all WFS frames"
-echo ""
-echo "------------------------------------------------------------------------"
-}
-
-
-
-printHELP1 ()
-{
-	printf "%20s       Select WFS frames from best PSF frames\n" "$0" 
-}
-
-
-# ================= OPTIONS =============================
-
-
-
-
-# Transform long options to short ones
-singlelinehelp=0
-for arg in "$@"; do
-  shift
-  case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    "--help1") 
-set -- "$@" "-h" 
-singlelinehelp=1;
-;;
-    *)        set -- "$@" "$arg"
-  esac
-done
-
-
-timespan="100" # second
-timestart=$(date "+%s")
-NBiter="0" # infinite loop
-
-ALPHAnorm="2.0"
-
-#Parse command line flags
-#If an option should be followed by an argument, it should be followed by a ":".
-#Notice there is no ":" after "h". The leading ":" suppresses error messages from
-#getopts. This is required to get unrecognized option code to work.
-
-while getopts :hH:s:t:n:a: FLAG; do
-  case $FLAG in
-    H) # detailed help
-    if [ "$OPTARG" == "cf" ]; then
-    printHELP_confFILES
-    exit
-    fi
-    echo "ERROR: choice $OPTARG not recognized"
-    exit
-    ;;
-    s)
-    timespan=$OPTARG
-    ;;
-    t)
-    timestart=$OPTARG
-    ;;
-    n)
-    NBiter=$OPTARG
-    ;;
-    a)
-    ALPHAnorm="$OPTARG"
-    ;;
-    h)  #show help
-      if [ "$singlelinehelp" -eq "0" ]; then
-      printHELP
-      else
-      printHELP1
-      fi
-      exit
-      ;;
-    \?) #unrecognized option - show help
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      printHELP
-      ;;
-  esac
-done
-
-shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
-
-### End getopts code ###
-
-
-
-
-
-if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
-if [ "$#" -ne $NBARGS ]; then
-    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
-fi
-printHELP
-        exit
-fi
+#    n)number of iteration (default 0=inf)
+#    NBiter=$OPTARG
+ 
+#    a)alpha norm (default=2.0)
+#    ALPHAnorm="$OPTARG"
 
 
 
@@ -247,33 +120,6 @@ fi
 
 
 
-logdirectory="$1"
-streamWFS="$2"
-streamPSF="$3"
-selFrac="$4"
-windowx0="$5"
-windowx1="$6"
-windowy0="$7"
-windowy1="$8"
-evalMode="$9"
-texp="${10}"
-dtlag="${11}"
-
-datestr=`date -u +%Y%m%d`
-streamWFSdir="$logdirectory/$datestr/$streamWFS"
-streamPSFdir="$logdirectory/$datestr/$streamPSF"
-
-
-iter=0
-iter0=0
-
-echo "streamWFSdir : ${streamWFSdir}"
-echo "streamPSFdir : ${streamPSFdir}"
-
-checkDir ${streamWFSdir}
-checkDir ${streamPSFdir}
-
-exit
 
 
 
@@ -281,16 +127,16 @@ while :
 do
 let iter++
 
-echo "WFSdir = $streamWFSdir"
-ls $streamWFSdir/*.dat $streamWFSdir/*.txt 2> /dev/null | tail -n 1
-lastLogFileWFS=$(ls $streamWFSdir/*.dat $streamWFSdir/*.txt 2> /dev/null | tail -n 1)
-echo "Last WFS file = $lastLogFileWFS"
+echo "WFSdir = ${streamWFSdir}"
+ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFileWFS=$(ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1)
+echo "Last WFS file = ${lastLogFileWFS}"
 cp $lastLogFileWFS _lastlogfileWFS
 
-echo "PSFdir = $streamPSFdir"
-ls $streamPSFdir/*.dat $streamPSFdir/*.txt 2> /dev/null | tail -n 1
-lastLogFilePSF=$(ls $streamPSFdir/*.dat $streamPSFdir/*.txt 2> /dev/null | tail -n 1)
-echo "Last PSF file = $lastLogFilePSF"
+echo "PSFdir = ${streamPSFdir}"
+ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFilePSF=$(ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1)
+echo "Last PSF file = ${lastLogFilePSF}"
 cp $lastLogFilePSF _lastlogfilePSF
 
 timeend=$((timestart + timespan))
