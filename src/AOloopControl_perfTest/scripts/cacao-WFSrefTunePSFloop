@@ -180,8 +180,8 @@ echo "=================================================================== PROCES
 
 # generate synchronized cubes
 
-echo "cacao-syncStreams \"$logdirectory/$datestr\" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag}"
-#cacao-syncStreams "$logdirectory/$datestr" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag}
+echo "cacao-syncStreams \"$logdirectory\" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag}"
+#cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag}
 
 exit
 
