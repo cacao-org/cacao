@@ -148,7 +148,7 @@ cp $lastLogFilePSF _lastlogfilePSF
 
 let "timeend = timestart + timespan"
 
-echo "TIME : ${timestart} -> ${timeend} ====================================="
+echo "TIME : ${timestart} + ${timespan} -> ${timeend} ====================================="
 
 
 
