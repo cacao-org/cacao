@@ -40,7 +40,7 @@ OUTPUT:
 
 
 # Defaults
-dtsample="100" # second
+timespan="100" # second
 tstart=$(date "+%s")
 
 
@@ -58,7 +58,6 @@ RequiredDirs=()
 MSarg+=( "logdir:string:telemetry directory" )
 MSarg+=( "streamWFS:string:WFS stream" ) 
 MSarg+=( "streamPSF:string:PSF stream" ) 
-
 MSarg+=( "tstart:float: start time" )
 MSarg+=( "tstop:float:stop time" )
 MSarg+=( "dtsample:float:exposure time per output frame" )
@@ -71,22 +70,21 @@ source milk-argparse
 
 
 # load arguments
-directory="$1"
-streamWFS="$2"
-streamPSF="$3"
-tstart="$4"
-tstop="$5"
-dtsample="$6"
-dtlag="$7"
-
+directory="${inputMSargARRAY[0]}"
+streamWFS="${inputMSargARRAY[1]}"
+streamPSF="${inputMSargARRAY[2]}"
+tstart="${inputMSargARRAY[3]}"
+tstop="${inputMSargARRAY[4]}"
+dtsample="${inputMSargARRAY[5]}"
+dtlag="${inputMSargARRAY[6]}"
 
 
 
 
 cacao << EOF
-cacaopt.aolptmksyncs2 "$directory" ${stream0} ${stream1} ${tstart} ${tstop} ${dtsample} ${dtlag}
-savefits outC0 "!${stream0}.sync.fits"
-savefits outC1 "!${stream1}.sync.fits"
+cacaopt.aolptmksyncs2 "$directory" ${streamWFS} ${streamPSF} ${tstart} ${tstop} ${dtsample} ${dtlag}
+savefits outC0 "!${streamWFS}.sync.fits"
+savefits outC1 "!${streamPSF}.sync.fits"
 listim
 exitCLI
 EOF
@@ -98,25 +96,25 @@ EOF
 
 if [ -f "${stream0}.dark.fits" ]; then
 cacao << EOF
-loadfits "${stream0}.dark.fits" stream0dark
-loadfits "${stream0}.sync.fits" outC0
-outC0c=outC0-stream0dark
-savefits outC0c "!${stream0}.syncC.fits"
+loadfits "${streamWFS}.dark.fits" stream0dark
+loadfits "${streamWFS}.sync.fits" outC0
+outC0c=outC0-streamWFSdark
+savefits outC0c "!${streamWFS}.syncC.fits"
 exitCLI
 EOF
-mv ${stream0}.syncC.fits ${stream0}.sync.fits
+mv ${streamWFS}.syncC.fits ${streamWFS}.sync.fits
 fi
 
 
 if [ -f "${stream1}.dark.fits" ]; then
 cacao << EOF
-loadfits "${stream1}.dark.fits" stream1dark
-loadfits "${stream1}.sync.fits" outC1
-outC1c=outC1-stream0dark
-savefits outC1c "!${stream1}.syncC.fits"
+loadfits "${streamPSF}.dark.fits" stream1dark
+loadfits "${streamPSF}.sync.fits" outC1
+outC1c=outC1-streamWFSdark
+savefits outC1c "!${streamPSF}.syncC.fits"
 exitCLI
 EOF
-mv ${stream1}.syncC.fits ${stream1}.sync.fits
+mv ${streamPSF}.syncC.fits ${streamPSF}.sync.fits
 fi
 
 
