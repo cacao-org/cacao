@@ -127,7 +127,7 @@ echo "HERE WE GO >>>>>"
 
 iter=1
 
-while [ ${iter} -nq ${NBiter} ] ; do
+while [ ${iter} -ne ${NBiter} ] ; do
 
 echo "ITERATION ${iter}"
 let iter++
