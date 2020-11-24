@@ -63,7 +63,7 @@ function setstarttime()
 }
 
 MSopt+=( "s:timespan:settimespan:span[sec]:set time span" )
-function setstarttime()
+function settimespan()
 {
 	timespan=$1
 }
