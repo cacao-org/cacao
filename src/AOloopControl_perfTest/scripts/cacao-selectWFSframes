@@ -4,6 +4,48 @@
 # number of arguments to script
 NBARGS=8
 
+
+
+#streamWFScube="$1"
+#streamPSFcube="$2"
+#selFrac="$3"
+
+#x0="$4"
+#x1="$5"
+#y0="$6"
+#y1="$7"
+#evalMode="$8" 
+
+
+# SCRIPT ARGUMENTS (mandatory)
+# syntax: "name:type(s)/test(s):description"
+MSarg+=( "logdir:string:telemetry directory" )
+MSarg+=( "streamWFS:string:WFS stream" ) 
+MSarg+=( "streamPSF:string:PSF stream" ) 
+MSarg+=( "selfrac:float:selection fraction" )
+MSarg+=( "x0:long:selection window x start" )
+MSarg+=( "x1:long:selection window x end" )
+MSarg+=( "y0:long:selection window y start" )
+MSarg+=( "y1:long:selection window x end" )
+MSarg+=( "emode:long:Evaluation mode" )
+
+
+# load arguments
+logdirectory="${inputMSargARRAY[0]}"
+streamWFS="${inputMSargARRAY[1]}"
+streamPSF="${inputMSargARRAY[2]}"
+selFrac="${inputMSargARRAY[3]}"
+windowx0="${inputMSargARRAY[4]}"
+windowx1="${inputMSargARRAY[5]}"
+windowy0="${inputMSargARRAY[6]}"
+windowy1="${inputMSargARRAY[7]}"
+evalMode="${inputMSargARRAY[8]}"
+
+
+
+
+
+
 # ======================= PROCESS NAME =================================
 pname=`echo "$0" | sed "s/\.\///g"`
 echo "pname = $pname"
@@ -128,15 +170,7 @@ printHELP
 fi
 
 
-streamWFScube="$1"
-streamPSFcube="$2"
-selFrac="$3"
 
-x0="$4"
-x1="$5"
-y0="$6"
-y1="$7"
-evalMode="$8"
 
 
 cacao << EOF
