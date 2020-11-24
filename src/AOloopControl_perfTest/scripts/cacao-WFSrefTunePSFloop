@@ -187,7 +187,11 @@ cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timee
 
 
 # generate selection
+echo "cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}"
+exit
+
 cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}
+
 
 
 cacao << EOF

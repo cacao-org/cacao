@@ -55,7 +55,7 @@ RequiredDirs=()
 
 # SCRIPT ARGUMENTS (mandatory)
 # syntax: "name:type(s)/test(s):description"
-MSarg+=( "logdir:string:telemetry directory" )
+#MSarg+=( "logdir:string:telemetry directory" )
 MSarg+=( "streamWFS:string:WFS stream" ) 
 MSarg+=( "streamPSF:string:PSF stream" ) 
 MSarg+=( "selfrac:float:selection fraction" )
