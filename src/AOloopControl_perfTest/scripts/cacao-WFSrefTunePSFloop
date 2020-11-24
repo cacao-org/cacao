@@ -132,6 +132,8 @@ while [ ${iter} -ne ${NBiter} ] ; do
 echo "ITERATION ${iter}"
 let iter++
 
+# find last timing files in telemetry directories
+
 echo "WFSdir = ${streamWFSdir}"
 ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFileWFS=$( ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
@@ -144,9 +146,11 @@ lastLogFilePSF=$( ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | 
 echo "Last PSF file = ${lastLogFilePSF}"
 cp $lastLogFilePSF _lastlogfilePSF
 
-timeend=$((timestart + timespan))
+let "timeend = timestart + timespan"
 
-echo "TIME : $timestart -> $timeend ====================================="
+echo "TIME : ${timestart} -> ${timeend} ====================================="
+
+
 
 
 vOK="1"
@@ -155,16 +159,16 @@ vOK="1"
 lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
 echo "WFS last log at $lastLogTimeWFS"
 
-if [ "$lastLogTimeWFS" -lt "$timeend" ]; then
-vOK="0"
+if [ "${lastLogTimeWFS}" -lt "${timeend}" ]; then
+	vOK="0"
 fi
 
 
 lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
 echo "PSF last log at $lastLogTimePSF"
 
-if [ "$lastLogTimePSF" -lt "$timeend" ]; then
-vOK="0"
+if [ "${lastLogTimePSF}" -lt "${timeend}" ]; then
+	vOK="0"
 fi
 
 
@@ -175,7 +179,7 @@ echo "=================================================================== PROCES
 
 
 # generate synchronized cubes
-cacao-syncStreams "$logdirectory/$datestr" $streamWFS $streamPSF $timestart $timeend  $texp $dtlag
+cacao-syncStreams "$logdirectory/$datestr" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag}
 
 # generate selection
 cacao-selectWFSframes -a $ALPHAnorm $streamWFS.sync.fits $streamPSF.sync.fits $selFrac $windowx0 $windowx1 $windowy0 $windowy1 $evalMode
