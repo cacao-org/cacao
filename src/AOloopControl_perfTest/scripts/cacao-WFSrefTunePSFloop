@@ -121,7 +121,7 @@ checkDir ${streamPSFdir}
 
 
 
-
+echo "HERE WE GO >>>>>"
 
 while :
 do
