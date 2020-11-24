@@ -122,7 +122,7 @@ checkDir ${streamPSFdir}
 
 
 echo "HERE WE GO >>>>>"
-
+set +o errexit
 
 
 iter=1
@@ -134,13 +134,13 @@ let iter++
 
 echo "WFSdir = ${streamWFSdir}"
 ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
-lastLogFileWFS=$(ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1)
+lastLogFileWFS=$( ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last WFS file = ${lastLogFileWFS}"
 cp $lastLogFileWFS _lastlogfileWFS
 
 echo "PSFdir = ${streamPSFdir}"
 ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
-lastLogFilePSF=$(ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1)
+lastLogFilePSF=$( ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last PSF file = ${lastLogFilePSF}"
 cp $lastLogFilePSF _lastlogfilePSF
 
