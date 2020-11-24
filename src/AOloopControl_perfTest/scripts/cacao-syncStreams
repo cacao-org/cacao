@@ -123,7 +123,7 @@ printHELP
         exit
 fi
 
-
+# load arguments
 directory="$1"
 stream0="$2"
 stream1="$3"
