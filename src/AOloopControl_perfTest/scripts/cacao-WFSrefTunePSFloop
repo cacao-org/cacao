@@ -5,6 +5,9 @@ MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
 MSextdescr="Select WFS frames from times at which PSF is best
 Requires synchronized data cubes created by cacao-syncStreams"
 
+
+timestart=$(date "+%s")
+
 source milk-script-std-config
 
 RequiredCommands=( cacao )
@@ -13,9 +16,19 @@ RequiredDirs=()
 
 MSarg+=( "logdir:string:telemetry directory" )
 
-MSopt+=( "c:create:confcreate::create configuration file and exit" )
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+MSopt+=( "t:starttime:setstarttime:time[unixsec]:set start time in unix time" )
+function setstarttime()
+{
+	timestart=$1
+}
+
+
 
 source milk-argparse
+
+echo "start time : ${timestart}"
 
 exit
 
