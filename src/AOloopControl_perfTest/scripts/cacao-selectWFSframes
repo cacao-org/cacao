@@ -8,20 +8,27 @@ MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
 MSextdescr="Select WFS frames from times at which PSF is best
 Requires synchronized data cubes created by cacao-syncStreams
 
-Evaluation modes:
-  0: optimize flux concentration
-  1: maximize flux
-  2: minimize flux
+default alpha norm = 2.0 
 
-EXAMPLE:
-$0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001
+<streamWFScube>     WFC stream name
+<streamPSFcube>     PSF stream name
+<x0><x1><y0><y1>    PSF evaluation window
+    
+Evaluation Modes:         
+	0: optimize flux concentration
+	1: maximize flux
+    2: minimize flux
+
+EXAMPLE
+    $0 aol0_wfsim.sync.fits aol0_psf.sync.fits 0 64 0 64 0
 
 
-OUTPUT:
-     impsfbest.fits     Average of selected PSF frames
-     impsfall.fits      Average of all PSF frames
-     imwfsbest.fits     Average of selected WFS frames
-     imwfsall.fits      Average of all WFS frames
+OUTPUT
+	impsfbest.fits     Average of selected PSF frames
+	impsfall.fits      Average of all PSF frames
+	imwfsbest.fits     Average of selected WFS frames
+	imwfsall.fits      Average of all WFS frames
+
 
 "
 
@@ -37,6 +44,15 @@ OUTPUT:
 #evalMode="$8" 
 
 
+
+ALPHAnorm="2.0"
+
+source milk-script-std-config
+
+RequiredCommands=( cacao )
+RequiredFiles=()
+RequiredDirs=()
+
 # SCRIPT ARGUMENTS (mandatory)
 # syntax: "name:type(s)/test(s):description"
 MSarg+=( "logdir:string:telemetry directory" )
@@ -48,6 +64,18 @@ MSarg+=( "x1:long:selection window x end" )
 MSarg+=( "y0:long:selection window y start" )
 MSarg+=( "y1:long:selection window x end" )
 MSarg+=( "emode:long:Evaluation mode" )
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+MSopt+=( "a:ALPHAnorm:setALPHAnorm:norm[int]:set alpha norm" )
+function setALPHAnorm()
+{
+	ALPHAnorm=$1
+}
+
+
+source milk-argparse
 
 
 # load arguments
@@ -63,135 +91,11 @@ evalMode="${inputMSargARRAY[8]}"
 
 
 
-ALPHAnorm="2.0"
-
-# SCRIPT OPTIONS
-# syntax: "short:long:functioncall:args[types]:description"
-MSopt+=( "a:ALPHAnorm:setALPHAnorm:norm[int]:set alpha norm" )
-function setALPHAnorm()
-{
-	ALPHAnorm=$1
-}
-
-
-
-
-
-# ======================= PROCESS NAME =================================
-pname=`echo "$0" | sed "s/\.\///g"`
-echo "pname = $pname"
-
-
-function printHELP {
-echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname : SELECT WFS FRAMES FROM PSF TELEMETRY $(tput sgr0)"
-echo "------------------------------------------------------------------------"
-echo "  Select WFS frames from times at which PSF is best"
-echo "  Requires synchronized data cubes created by cacao-syncStreams"
-echo "   "
-echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h] <streamWFScube> <streamPSFcube> <Selection fraction> <x0> <x1> <y0> <y1> <Mode>"
-echo ""
-echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-h$(tput sgr0)          help"
-echo "     $(tput bold)-a$(tput sgr0)          alpha norm (default=2.0)"
-echo ""
-echo " $(tput bold)INPUT:$(tput sgr0)"
-echo "     <streamWFScube>     WFC stream name"
-echo "     <streamPSFcube>     PSF stream name"
-echo "     <x0><x1><y0><y1>    PSF evaluation window"
-echo "     <evalMode>          0: optimize flux concentration"
-echo "                         1: maximize flux"
-echo "                         2: minimize flux"
-echo ""
-echo " $(tput bold)EXAMPLE:$(tput sgr0)"
-echo "     $0 aol0_wfsim.sync.fits aol0_psf.sync.fits 0 64 0 64 0"
-echo ""
-echo " $(tput bold)OUTPUT:$(tput sgr0)"
-echo "     impsfbest.fits     Average of selected PSF frames"
-echo "     impsfall.fits      Average of all PSF frames"
-echo "     imwfsbest.fits     Average of selected WFS frames"
-echo "     imwfsall.fits      Average of all WFS frames"
-echo ""
-echo "------------------------------------------------------------------------"
-}
-
-
-
-printHELP1 ()
-{
-	printf "%20s       Select WFS frames from best PSF frames\n" "$0" 
-}
-
-
-
-# ================= OPTIONS =============================
-
-
-
-
-# Transform long options to short ones
-singlelinehelp=0
-for arg in "$@"; do
-  shift
-  case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    "--help1") 
-set -- "$@" "-h" 
-singlelinehelp=1;
-;;
-    *)        set -- "$@" "$arg"
-  esac
-done
-
-
-
-
-#Parse command line flags
-#If an option should be followed by an argument, it should be followed by a ":".
-#Notice there is no ":" after "h". The leading ":" suppresses error messages from
-#getopts. This is required to get unrecognized option code to work.
-
-while getopts :hH:a: FLAG; do
-  case $FLAG in
-    H) # detailed help
-    if [ "$OPTARG" == "cf" ]; then
-    printHELP_confFILES
-    exit
-    fi
-    echo "ERROR: choice $OPTARG not recognized"
-    exit
-    ;;
-    h)  #show help
-      if [ "$singlelinehelp" -eq "0" ]; then
-      printHELP
-      else
-      printHELP1
-      fi
-      exit
-      ;;
-    a)
-    ALPHAnorm="$OPTARG"
-    ;;
-    \?) #unrecognized option - show help
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      printHELP
-      ;;
-  esac
-done
-
-shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
-
-### End getopts code ###
-
-
-
-
 cacao << EOF
 loadfits "$streamWFScube" imwfsC
 loadfits "$streamPSFcube" impsfC
 
-aolperfselwfsfpsf imwfsC impsfC $selFrac $x0 $x1 $y0 $y1 $evalMode $ALPHAnorm
+cacaopt.aolperfselwfsfpsf imwfsC impsfC $selFrac $x0 $x1 $y0 $y1 $evalMode $ALPHAnorm
 
 savefits imwfsbest "!imwfsbest.fits"
 savefits imwfsall "!imwfsall.fits"
