@@ -1,5 +1,24 @@
 #!/bin/bash
 
+MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
+
+MSextdescr="Select WFS frames from times at which PSF is best
+Requires synchronized data cubes created by cacao-syncStreams"
+
+source milk-script-std-config
+
+RequiredCommands=( cacao )
+RequiredFiles=()
+RequiredDirs=()
+
+MSarg+=( "logdir:string:telemetry directory" )
+
+MSopt+=( "c:create:confcreate::create configuration file and exit" )
+
+source milk-argparse
+
+exit
+
 streamWFS="$1"
 streamPSF="$2"
 
@@ -172,6 +191,13 @@ streamPSFdir="$logdirectory/$datestr/$streamPSF"
 iter=0
 iter0=0
 
+echo "streamWFSdir : ${streamWFSdir}"
+echo "streamPSFdir : ${streamPSFdir}"
+
+checkDir ${streamWFSdir}
+checkDir ${streamPSFdir}
+
+exit
 
 
 
