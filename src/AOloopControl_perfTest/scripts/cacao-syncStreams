@@ -2,135 +2,85 @@
 
 
 # number of arguments to script
-NBARGS=7
-
-# ======================= PROCESS NAME =================================
-pname=`echo "$0" | sed "s/\.\///g"`
-echo "pname = $pname"
 
 
-function printHELP {
-echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname : SYNCHRONIZE DATA STREAMS $(tput sgr0)"
-echo "------------------------------------------------------------------------"
-echo "  Synchronize and resample streams (postprocessing)"
-echo "   "
-echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h] <logdirectory> <stream0> <stream1> <tstart> <tend> <dtsample> <dtlag>"
-echo ""
-echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-h$(tput sgr0)          help"
-echo ""
-echo " $(tput bold)INPUT:$(tput sgr0)"
-echo "     <directory>   data directory, will look for files in /dir/streamname/"
-echo "     <stream0>     stream 0 name"
-echo "     <stream1>     stream 1 name"
-echo "     <tstart>      start time, Unix second"
-echo "     <tend>        end time, Unix second"
-echo "     <dtsample>    output sample interval"
-echo "     <dtlag>       Lag between stream0 and stream1. stream1 later"
-echo ""
-echo " $(tput bold)OPTIONAL INPUT:$(tput sgr0)"
-echo " file: <stream0>.dark.fits"
-echo " file: <stream1>.dark.fits"
-echo ""
-echo " $(tput bold)EXAMPLE:$(tput sgr0)"
-echo "     $0 \"/media/data/20180628/\" stream0 stream1 1530180589.0 1530180589.8 0.0002 0.000556"
-echo ""
-echo " $(tput bold)OUTPUT:$(tput sgr0)"
-echo "     stream0-sync.fits     output file"
-echo ""
-echo "------------------------------------------------------------------------"
-}
+MSdescr="SYNCHRONIZE DATA STREAMS"
+
+MSextdescr="Synchronize and resample streams (postprocessing)
+
+Evaluation modes:
+  0: optimize flux concentration
+  1: maximize flux
+  2: minimize flux
+
+EXAMPLE:
+$0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001
 
 
+INPUT
+	directory   data directory, will look for files in /dir/streamname/
+	streamWFS 
+	streamPSF
+	tstart      start time, Unix seconds
+	tend        end time, Unix second 
+	dtsample    output sample interval 
+	dtlag 		Lag between streamWFS and streamPSF. streamPSF later
+	
+OPTIONAL INPUT 
+	<streamWFS>.dark.fits
+	<streamPSF>.fark.fits 
+	
+EXAMPLE 
+	$0 \"/media/data/20180628/\" streamWFS streamPSF 1530180589.0 1530180589.8 0.0002 0.000556
 
-printHELP1 ()
-{
-	printf "%20s       Synchronize streams from telemetry files\n" "$0" 
-}
+OUTPUT:
+     streamWFS-sync.fits 		Synchronized WFS cube file
+
+"
 
 
+# Defaults
+dtsample="100" # second
+tstart=$(date "+%s")
 
-# ================= OPTIONS =============================
+
+source milk-script-std-config
+
+RequiredCommands=( cacao )
+RequiredFiles=()
+RequiredDirs=()
 
 
 
 
-# Transform long options to short ones
-singlelinehelp=0
-for arg in "$@"; do
-  shift
-  case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    "--help1") 
-set -- "$@" "-h" 
-singlelinehelp=1;
-;;
-    *)        set -- "$@" "$arg"
-  esac
-done
+# SCRIPT ARGUMENTS (mandatory)
+# syntax: "name:type(s)/test(s):description"
+MSarg+=( "logdir:string:telemetry directory" )
+MSarg+=( "streamWFS:string:WFS stream" ) 
+MSarg+=( "streamPSF:string:PSF stream" ) 
+
+MSarg+=( "tstart:float: start time" )
+MSarg+=( "tstop:float:stop time" )
+MSarg+=( "dtsample:float:exposure time per output frame" )
+MSarg+=( "dtlag:float:time offset between streams in sec" )
 
 
 
 
-#Parse command line flags
-#If an option should be followed by an argument, it should be followed by a ":".
-#Notice there is no ":" after "h". The leading ":" suppresses error messages from
-#getopts. This is required to get unrecognized option code to work.
+source milk-argparse
 
-while getopts :hH:L:N:Cc FLAG; do
-  case $FLAG in
-    H) # detailed help
-    if [ "$OPTARG" == "cf" ]; then
-    printHELP_confFILES
-    exit
-    fi
-    echo "ERROR: choice $OPTARG not recognized"
-    exit
-    ;;
-    h)  #show help
-      if [ "$singlelinehelp" -eq "0" ]; then
-      printHELP
-      else
-      printHELP1
-      fi
-      exit
-      ;;
-    \?) #unrecognized option - show help
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      printHELP
-      ;;
-  esac
-done
-
-shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
-
-### End getopts code ###
-
-
-
-
-
-
-
-
-if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
-if [ "$#" -ne $NBARGS ]; then
-    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
-fi
-printHELP
-        exit
-fi
 
 # load arguments
 directory="$1"
-stream0="$2"
-stream1="$3"
+streamWFS="$2"
+streamPSF="$3"
 tstart="$4"
 tstop="$5"
 dtsample="$6"
 dtlag="$7"
+
+
+
 
 
 cacao << EOF

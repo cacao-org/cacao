@@ -187,8 +187,6 @@ cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timee
 
 
 # generate selection
-echo "cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}"
-exit
 
 cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}
 
@@ -224,6 +222,9 @@ cp impsfall.fits $fname
 
 timestart=${timeend}
 let iter0++
+
+# exit here for just one loop iteration for testing 
+exit 
 
 else
 echo "WAITING. .."
