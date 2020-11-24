@@ -94,7 +94,7 @@ EOF
 
 # subtract dark if it exists
 
-if [ -f "${stream0}.dark.fits" ]; then
+if [ -f "${streamWFS}.dark.fits" ]; then
 cacao << EOF
 loadfits "${streamWFS}.dark.fits" stream0dark
 loadfits "${streamWFS}.sync.fits" outC0
@@ -106,7 +106,7 @@ mv ${streamWFS}.syncC.fits ${streamWFS}.sync.fits
 fi
 
 
-if [ -f "${stream1}.dark.fits" ]; then
+if [ -f "${streamPSF}.dark.fits" ]; then
 cacao << EOF
 loadfits "${streamPSF}.dark.fits" stream1dark
 loadfits "${streamPSF}.sync.fits" outC1
