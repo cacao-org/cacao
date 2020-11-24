@@ -123,8 +123,13 @@ checkDir ${streamPSFdir}
 
 echo "HERE WE GO >>>>>"
 
-while :
-do
+
+
+iter=1
+
+while [ ${iter} -nq ${NBiter} ] ; do
+
+echo "ITERATION ${iter}"
 let iter++
 
 echo "WFSdir = ${streamWFSdir}"
@@ -212,10 +217,6 @@ echo "WAITING. .."
 sleep 2
 fi
 
-
-if [ "$iter" -eq "$NBiter" ]; then
-exit
-fi
 
 
 done
