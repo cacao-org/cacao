@@ -79,8 +79,8 @@ dtlag="${inputMSargARRAY[10]}"
 
 
 datestr=`date -u +%Y%m%d`
-streamWFSdir="${logdirectory}/${datestr}/${streamWFS}"
-streamPSFdir="${logdirectory}/${datestr}/${streamPSF}"
+streamWFSdir="${logdirectory}/${streamWFS}"
+streamPSFdir="${logdirectory}/${streamPSF}"
 
 
 iter=0
