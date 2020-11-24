@@ -63,6 +63,36 @@ source milk-argparse
 
 echo "start time : ${timestart}"
 
+# load arguments
+logdirectory="${inputMSargARRAY[0]}"
+streamWFS="${inputMSargARRAY[1]}"
+streamPSF="${inputMSargARRAY[2]}"
+selFrac="${inputMSargARRAY[3]}"
+windowx0="${inputMSargARRAY[4]}"
+windowx1="${inputMSargARRAY[5]}"
+windowy0="${inputMSargARRAY[6]}"
+windowy1="${inputMSargARRAY[7]}"
+evalMode="${inputMSargARRAY[8]}"
+texp="${inputMSargARRAY[9]}"
+dtlag="${inputMSargARRAY[10]}"
+
+
+
+datestr=`date -u +%Y%m%d`
+streamWFSdir="${logdirectory}/${datestr}/${streamWFS}"
+streamPSFdir="${logdirectory}/${datestr}/${streamPSF}"
+
+
+iter=0
+iter0=0
+
+echo "streamWFSdir : ${streamWFSdir}"
+echo "streamPSFdir : ${streamPSFdir}"
+
+checkDir ${streamWFSdir}
+checkDir ${streamPSFdir}
+
+
 exit
 
 streamWFS="$1"
