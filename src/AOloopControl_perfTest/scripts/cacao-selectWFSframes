@@ -56,14 +56,14 @@ RequiredDirs=()
 # SCRIPT ARGUMENTS (mandatory)
 # syntax: "name:type(s)/test(s):description"
 #MSarg+=( "logdir:string:telemetry directory" )
-MSarg+=( "streamWFS:string:WFS stream" ) 
-MSarg+=( "streamPSF:string:PSF stream" ) 
+MSarg+=( "streamWFScube:string:WFS telemetry cube" ) 
+MSarg+=( "streamPSFcube:string:PSF telemetry cube" ) 
 MSarg+=( "selfrac:float:selection fraction" )
 MSarg+=( "x0:long:selection window x start" )
 MSarg+=( "x1:long:selection window x end" )
 MSarg+=( "y0:long:selection window y start" )
 MSarg+=( "y1:long:selection window x end" )
-MSarg+=( "emode:long:Evaluation mode" )
+MSarg+=( "evalMode:long:Evaluation mode" )
 
 
 # SCRIPT OPTIONS
@@ -79,15 +79,14 @@ source milk-argparse
 
 
 # load arguments
-logdirectory="${inputMSargARRAY[0]}"
-streamWFS="${inputMSargARRAY[1]}"
-streamPSF="${inputMSargARRAY[2]}"
-selFrac="${inputMSargARRAY[3]}"
-windowx0="${inputMSargARRAY[4]}"
-windowx1="${inputMSargARRAY[5]}"
-windowy0="${inputMSargARRAY[6]}"
-windowy1="${inputMSargARRAY[7]}"
-evalMode="${inputMSargARRAY[8]}"
+streamWFScube="${inputMSargARRAY[0]}"
+streamPSFcube="${inputMSargARRAY[1]}"
+selFrac="${inputMSargARRAY[2]}"
+windowx0="${inputMSargARRAY[3]}"
+windowx1="${inputMSargARRAY[4]}"
+windowy0="${inputMSargARRAY[5]}"
+windowy1="${inputMSargARRAY[6]}"
+evalMode="${inputMSargARRAY[7]}"
 
 
 
@@ -95,7 +94,7 @@ cacao << EOF
 loadfits "$streamWFScube" imwfsC
 loadfits "$streamPSFcube" impsfC
 
-cacaopt.aolperfselwfsfpsf imwfsC impsfC $selFrac $x0 $x1 $y0 $y1 $evalMode $ALPHAnorm
+cacaopt.aolperfselwfsfpsf imwfsC impsfC $selFrac ${windowx0} ${windowx1} ${windowy0} ${windowy1} $evalMode $ALPHAnorm
 
 savefits imwfsbest "!imwfsbest.fits"
 savefits imwfsall "!imwfsall.fits"

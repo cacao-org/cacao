@@ -24,7 +24,7 @@ OUTPUT:
 
 
 # Defaults
-timespan="100" # second
+timespan="30" # in second
 timestart=$(date "+%s")
 ALPHAnorm="2.0"
 NBiter=0
@@ -66,6 +66,12 @@ MSopt+=( "s:timespan:settimespan:span[sec]:set time span" )
 function settimespan()
 {
 	timespan=$1
+}
+
+MSopt+=( "n:NBiter:setNBiter:nbiter[int]:set number of iterations of DrWHO loop" )
+function setNBiter()
+{
+	NBiter=$1
 }
 
 
@@ -152,7 +158,8 @@ echo "TIME : ${timestart} + ${timespan} -> ${timeend} ==========================
 
 
 
-
+# vOK is 1 if files need to be processed
+# 0 if no input files to be processed
 vOK="1"
 
 
@@ -173,6 +180,7 @@ fi
 
 
 if [ "$vOK" = "1" ]; then
+# there are files to process
 
 
 echo "=================================================================== PROCESSING -> "
@@ -186,12 +194,17 @@ cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timee
 
 
 
-# generate selection
+# generate selection with Dr WHO
+
+echo "cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}"
+
 
 cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}
 
 
-
+# this writes the shared memory of the WFS referene
+WFSrefUpdate="OFF"
+if [ ${WFSrefUpdate} = "ON" ]; then
 cacao << EOF
 readshmim aol0_wfsmask
 loadfits "imwfsbest.fits" imwfs
@@ -207,7 +220,7 @@ savefits imwfs0n "!imwfs0n.fits"
 cpsh imwfs0n aol0_wfsref
 exitCLI
 EOF
-
+fi
 
 
 fname="$(printf "imwfsbest.%06d.fits" $iter0 )"
@@ -224,9 +237,9 @@ timestart=${timeend}
 let iter0++
 
 # exit here for just one loop iteration for testing 
-exit 
 
-else
+else # if there are no file to process
+# waiting for new data to come. 
 echo "WAITING. .."
 sleep 2
 fi
