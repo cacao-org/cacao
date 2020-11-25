@@ -1,8 +1,6 @@
 #!/bin/bash
 
 
-
-
 MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
 
 MSextdescr="Select WFS frames from times at which PSF is best
