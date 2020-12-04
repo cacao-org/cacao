@@ -25,13 +25,14 @@ INPUT
 	tend        end time, Unix second 
 	dtsample    output sample interval 
 	dtlag 		Lag between streamWFS and streamPSF. streamPSF later
+	timespan    length in seconds of the synchronized final cube = lenght of Dr WHO loop
 	
 OPTIONAL INPUT 
 	<streamWFS>.dark.fits
 	<streamPSF>.fark.fits 
 	
 EXAMPLE 
-	$0 \"/media/data/20180628/\" streamWFS streamPSF 1530180589.0 1530180589.8 0.0002 0.000556
+	$0 \"/media/data/20180628/\" streamWFS streamPSF 1530180589.0 1530180589.8 0.0002 0.000556 30
 
 OUTPUT:
      streamWFS-sync.fits 		Synchronized WFS cube file
@@ -40,7 +41,7 @@ OUTPUT:
 
 
 # Defaults
-timespan="100" # second
+timespan="30" # second
 tstart=$(date "+%s")
 
 
@@ -63,6 +64,8 @@ MSarg+=( "tstop:float:stop time" )
 MSarg+=( "dtsample:float:exposure time per output frame" )
 MSarg+=( "dtlag:float:time offset between streams in sec" )
 
+MSarg+=( "timespan:float:time span of the algorithm" )
+
 
 
 
@@ -78,11 +81,11 @@ tstop="${inputMSargARRAY[4]}"
 dtsample="${inputMSargARRAY[5]}"
 dtlag="${inputMSargARRAY[6]}"
 
-
+timespan="${inputMSargARRAY[7]}"
 
 
 cacao << EOF
-cacaopt.aolptmksyncs2 "$directory" ${streamWFS} ${streamPSF} ${tstart} ${tstop} ${dtsample} ${dtlag}
+cacaopt.aolptmksyncs2 "$directory" ${streamWFS} ${streamPSF} ${tstart} ${tstop} ${dtsample} ${dtlag} ${timespan}
 savefits outC0 "!${streamWFS}.sync.fits"
 savefits outC1 "!${streamPSF}.sync.fits"
 listim

@@ -11,7 +11,7 @@ Evaluation modes:
   2: minimize flux
 
 EXAMPLE:
-$0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001
+$0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001 30
 
 
 OUTPUT:
@@ -37,7 +37,6 @@ RequiredDirs=()
 
 
 
-
 # SCRIPT ARGUMENTS (mandatory)
 # syntax: "name:type(s)/test(s):description"
 MSarg+=( "logdir:string:telemetry directory" )
@@ -51,7 +50,7 @@ MSarg+=( "y1:long:selection window x end" )
 MSarg+=( "emode:long:Evaluation mode" )
 MSarg+=( "texp:float:exposure time in sec" )
 MSarg+=( "dtlag:float:time offset between streams in sec" )
-
+MSarg+=( "timespan:float:time span of the algorithm in sec" )
 
 
 # SCRIPT OPTIONS
@@ -62,11 +61,11 @@ function setstarttime()
 	timestart=$1
 }
 
-MSopt+=( "s:timespan:settimespan:span[sec]:set time span" )
-function settimespan()
-{
-	timespan=$1
-}
+#MSopt+=( "s:timespan:settimespan:span[sec]:set time span" )
+#function settimespan()
+#{
+#	timespan=$1
+#}
 
 MSopt+=( "n:NBiter:setNBiter:nbiter[int]:set number of iterations of DrWHO loop" )
 function setNBiter()
@@ -74,11 +73,10 @@ function setNBiter()
 	NBiter=$1
 }
 
-
-
 source milk-argparse
 
 echo "start time : ${timestart}"
+
 
 # load arguments
 logdirectory="${inputMSargARRAY[0]}"
@@ -92,25 +90,23 @@ windowy1="${inputMSargARRAY[7]}"
 evalMode="${inputMSargARRAY[8]}"
 texp="${inputMSargARRAY[9]}"
 dtlag="${inputMSargARRAY[10]}"
-
-
+timespan="${inputMSargARRAY[11]}"
 
 datestr=`date -u +%Y%m%d`
 streamWFSdir="${logdirectory}/${streamWFS}"
 streamPSFdir="${logdirectory}/${streamPSF}"
-
 
 iter=0
 iter0=0
 
 echo "streamWFSdir : ${streamWFSdir}"
 echo "streamPSFdir : ${streamPSFdir}"
+echo "timespan : ${timespan}"
+
+#sexit
 
 checkDir ${streamWFSdir}
 checkDir ${streamPSFdir}
-
-
-
 
 
 
@@ -119,11 +115,6 @@ checkDir ${streamPSFdir}
  
 #    a)alpha norm (default=2.0)
 #    ALPHAnorm="$OPTARG"
-
-
-
-
-
 
 
 
@@ -188,17 +179,14 @@ echo "=================================================================== PROCES
 
 # generate synchronized cubes
 
-echo "cacao-syncStreams \"$logdirectory\" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag}"
-cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag}
+echo "cacao-syncStreams \"$logdirectory\" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}"
+cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}
 
 
 
-
-# generate selection with Dr WHO
+# generate frame selection with Dr WHO
 
 echo "cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}"
-
-
 cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}
 
 
