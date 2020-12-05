@@ -3093,7 +3093,9 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
             long j;
 
             snprintf(fname, stringmaxlen, "%s/%s.dat", datadirstream, datfile[i].name);
-
+            
+            printf("READING file \"%s\" ... ", fname);
+            fflush(stdout);
 
             if((fp = fopen(fname, "r")) == NULL)
             {
@@ -3107,7 +3109,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
                 }
             }
 
-            printf("READING file \"%s\" ...", fname);
+            printf("DONE\n", fname);
             fflush(stdout);
 
 
