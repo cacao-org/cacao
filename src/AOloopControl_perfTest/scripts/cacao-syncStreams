@@ -120,4 +120,5 @@ EOF
 mv ${streamPSF}.syncC.fits ${streamPSF}.sync.fits
 fi
 
+sleep 1000
 

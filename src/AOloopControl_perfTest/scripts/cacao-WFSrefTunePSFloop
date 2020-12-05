@@ -96,8 +96,8 @@ datestr=`date -u +%Y%m%d`
 streamWFSdir="${logdirectory}/${streamWFS}"
 streamPSFdir="${logdirectory}/${streamPSF}"
 
-iter=0
-iter0=0
+iter=0 # directory scanning iteration
+iter0=0 # Dr WHO loop processing iteration
 
 echo "streamWFSdir : ${streamWFSdir}"
 echo "streamPSFdir : ${streamPSFdir}"
@@ -124,7 +124,7 @@ set +o errexit
 
 iter=1
 
-while [ ${iter} -ne ${NBiter} ] ; do
+while [ ${iter0} -ne ${NBiter} ] ; do
 
 echo "ITERATION ${iter}"
 let iter++
@@ -159,6 +159,8 @@ echo "WFS last log at $lastLogTimeWFS"
 
 if [ "${lastLogTimeWFS}" -lt "${timeend}" ]; then
 	vOK="0"
+	echo "last WFS has not reached time end yet!"
+	echo "${lastLogTimeWFS} < ${timeend}"
 fi
 
 
@@ -167,6 +169,8 @@ echo "PSF last log at $lastLogTimePSF"
 
 if [ "${lastLogTimePSF}" -lt "${timeend}" ]; then
 	vOK="0"
+	echo "last PSF has not reached time end yet!"
+	echo "${lastLogTimePSF} < ${timeend}"
 fi
 
 
@@ -179,6 +183,7 @@ echo "=================================================================== PROCES
 
 # generate synchronized cubes
 
+rm imwfsbest.fits # for testing 
 echo "cacao-syncStreams \"$logdirectory\" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}"
 cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}
 
@@ -189,28 +194,7 @@ cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timee
 echo "cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}"
 cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}
 
-
-
-# this goes on scexao 5 
-# this writes the shared memory of the WFS referene
-#WFSrefUpdate="OFF"
-#if [ ${WFSrefUpdate} = "ON" ]; then
-#cacao << EOF
-#readshmim aol0_wfsmask
-#loadfits "imwfsbest.fits" imwfs
-#readshmim aol0_wfsdark
-#imwfs0=imwfs-aol0_wfsdark
-#imwfs0m=imwfs0*aol0_wfsmask
-#totm=itot(aol0_wfsmask)
-#totm=itot(imwfs0m)
-#imwfs0n=imwfs0/totm
-#readshmim aol0_wfsref
-#savefits aol0_wfsref "!aol0_wfsref.fits"
-#savefits imwfs0n "!imwfs0n.fits"
-#cpsh imwfs0n aol0_wfsref
-#exitCLI
-#EOF
-#fi
+exit
 
 
 #instead run a command doing ref update 
@@ -218,11 +202,15 @@ cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.f
 
 fname="$(printf "imwfsbest.%06d.fits" $iter0 )"
 cp imwfsbest.fits $fname
+echo "saving last reference to send it to scexao5 - iter0 = ${iter0}"
+
 # send it to SCExAO5
 scp imwfsbest.fits scexao@10.20.70.1:/home/scexao/AOloop/DrWHO 
+echo "sending the WFS reference to scexao5"
 
 # then run the script on scexao5 with the command to apply the new ref :
 ssh 10.20.70.1 ./AOloop/DrWHO/cacao-WFSref
+echo "running the cacao-WFSref script to update the ref shm and apply it"
 
 fname="$(printf "imwfsall.%06d.fits" $iter0 )"
 cp imwfsall.fits $fname
