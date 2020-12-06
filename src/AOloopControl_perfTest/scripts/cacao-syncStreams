@@ -92,6 +92,7 @@ listim
 exitCLI
 EOF
 
+echo "dealing with sync files"
 
 
 
@@ -120,5 +121,5 @@ EOF
 mv ${streamPSF}.syncC.fits ${streamPSF}.sync.fits
 fi
 
-sleep 1000
+#sleep 1000
 
