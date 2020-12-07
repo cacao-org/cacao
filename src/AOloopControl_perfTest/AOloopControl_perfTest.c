@@ -2800,7 +2800,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
     // double dtlagarray[10]; // maximum 10 streams
     double medianexptimearray[10];
 
-	
+
 
 
     // compute exposure start for each slice of output
