@@ -41,7 +41,7 @@ OUTPUT:
 
 
 # Defaults
-timespan="30" # second
+#timespan="20" # second
 tstart=$(date "+%s")
 
 

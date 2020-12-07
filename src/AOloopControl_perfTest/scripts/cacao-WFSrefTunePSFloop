@@ -78,11 +78,7 @@ echo "so far so good"
 
 source milk-argparse
 
-echo "doesn't echo anymore here"
-
 echo "start time : ${timestart}"
-
-
 
 # load arguments
 logdirectory="${inputMSargARRAY[0]}"
@@ -194,6 +190,9 @@ echo "=================================================================== PROCES
 echo "cacao-syncStreams \"$logdirectory\" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}"
 cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}
 
+echo "."
+echo "."
+echo "."
 echo "MAKE SURE IT MAKES THE .sync.fits FILES ???"
 echo "."
 echo "."
@@ -211,13 +210,16 @@ fname="$(printf "imwfsbest.%06d.fits" $iter0 )"
 cp imwfsbest.fits $fname
 echo "saving last reference in order to send it to scexao5 - iter0 = ${iter0}"
 
+# remove previous imwfsbest on SCExAO5
+# ssh 10.20.70.1 rm /home/scexao/AOloop/DrWHO/imwfsbest.fits 
+
 # send it to SCExAO5
 scp imwfsbest.fits scexao@10.20.70.1:/home/scexao/AOloop/DrWHO 
 echo "sending the WFS reference to scexao5"
 
 # then run the script on scexao5 with the command to apply the new ref :
-ssh 10.20.70.1 ./AOloop/DrWHO/cacao-WFSref
-echo "running the cacao-WFSref script to update the ref shm and apply it"
+#ssh 10.20.70.1 ./AOloop/DrWHO/cacao-WFSref
+#echo "running the cacao-WFSref script to update the ref shm and apply it"
 
 fname="$(printf "imwfsall.%06d.fits" $iter0 )"
 cp imwfsall.fits $fname
