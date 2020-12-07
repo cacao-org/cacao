@@ -2800,6 +2800,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
     // double dtlagarray[10]; // maximum 10 streams
     double medianexptimearray[10];
 
+	
 
 
     // compute exposure start for each slice of output
@@ -3056,7 +3057,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
             long IDc;
             snprintf(fname, stringmaxlen, "%s/%s.fits", datadirstream, datfile[i].name);
             printf("----------------------[%ld] LOADING FILE %s\n", i, fname);
-            IDc = load_fits(fname, "im0C", 2);
+            IDc = load_fits(fname, "im0C", 1);
 
 
             // CREATE OUTPUT CUBE IF FIRST FILE
@@ -3470,8 +3471,8 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
     delete_image_ID("out0");
     delete_image_ID("out1");
 
-	printf("function %s end\n", __FUNCTION__);
-	list_image_ID();
+    printf("function %s end\n", __FUNCTION__);
+    list_image_ID();
 
     return RETURN_SUCCESS;
 }
