@@ -3470,6 +3470,8 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
     delete_image_ID("out0");
     delete_image_ID("out1");
 
+	printf("function %s end\n", __FUNCTION__);
+	list_image_ID();
 
     return RETURN_SUCCESS;
 }
