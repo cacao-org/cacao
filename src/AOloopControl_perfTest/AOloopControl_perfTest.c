@@ -3361,8 +3361,8 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
         
         if(fabs(exptmedian) < 0.0000001)
         {
-			exit(0);
 			printf("Median Exp Time = 0 , exiting the process: check your data and times");
+			exit(0);
 		}
 
         if(stream == 0)
