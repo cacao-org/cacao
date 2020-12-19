@@ -3358,6 +3358,12 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
         exptmedian = exparray[zsize / 2];
         medianexptimearray[stream] = exptmedian;
         printf("Median Exp Time = %6.3f\n", exptmedian);
+        
+        if(fabs(exptmedian) < 0.0000001)
+        {
+			exit(0);
+			printf("Median Exp Time = 0 , exiting the process: check your data and times");
+		}
 
         if(stream == 0)
         {

@@ -62,6 +62,7 @@ MSarg+=( "x1:long:selection window x end" )
 MSarg+=( "y0:long:selection window y start" )
 MSarg+=( "y1:long:selection window x end" )
 MSarg+=( "evalMode:long:Evaluation mode" )
+MSarg+=( "timespan:float:time span of the algorithm in sec" )
 
 
 # SCRIPT OPTIONS
@@ -85,7 +86,7 @@ windowx1="${inputMSargARRAY[4]}"
 windowy0="${inputMSargARRAY[5]}"
 windowy1="${inputMSargARRAY[6]}"
 evalMode="${inputMSargARRAY[7]}"
-
+timespan="${inputMSargARRAY[8]}"
 
 
 cacao << EOF

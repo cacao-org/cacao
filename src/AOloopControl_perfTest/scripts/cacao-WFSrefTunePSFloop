@@ -105,7 +105,7 @@ echo "streamWFSdir : ${streamWFSdir}"
 echo "streamPSFdir : ${streamPSFdir}"
 echo "timespan : ${timespan}"
 
-#sexit
+#exit
 
 checkDir ${streamWFSdir}
 echo "WFS directory : ${streamWFSdir}"
@@ -186,7 +186,8 @@ echo "=================================================================== PROCES
 
 # generate synchronized cubes
 
-#rm imwfsbest.fits # for testing 
+#rm imwfsbest.fits # for testing
+# here I comment the syncStreams for doing the block test without regenerating sync files 
 echo "cacao-syncStreams \"$logdirectory\" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}"
 cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}
 
@@ -201,8 +202,7 @@ echo "."
 # generate frame selection with Dr WHO
 
 echo "cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}"
-cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}
-
+cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode} ${timespan}
 
 
 
@@ -213,6 +213,8 @@ echo "saving last reference in order to send it to scexao5 - iter0 = ${iter0}"
 # remove previous imwfsbest on SCExAO5
 # ssh 10.20.70.1 rm /home/scexao/AOloop/DrWHO/imwfsbest.fits 
 
+
+# commenting below for the blocks tests
 # send it to SCExAO5
 scp imwfsbest.fits scexao@10.20.70.1:/home/scexao/AOloop/DrWHO 
 echo "sending the WFS reference to scexao5"
