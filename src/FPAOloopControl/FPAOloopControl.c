@@ -87,7 +87,6 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
 #include <fitsio.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "00CORE/00CORE.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_tools/COREMOD_tools.h"
@@ -1440,6 +1439,3 @@ long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0,
 
     return(IDout);
 }
-
-
-
