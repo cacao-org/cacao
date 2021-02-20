@@ -1,7 +1,7 @@
 # list source files (.c) other than modulename.c
 set(SOURCEFILES
-	AOloopControl_perfTest_DM.c  
-	AOloopControl_perfTest_status.c 
+	AOloopControl_perfTest_DM.c
+	AOloopControl_perfTest_status.c
 	AOloopControl_perfTest_LinSim.c
 )
 
@@ -17,7 +17,7 @@ set(SCRIPTFILES
 )
 
 
-# DEFAULT SETTINGS 
+# DEFAULT SETTINGS
 # Do not change unless needed
 # =====================================================================
 
@@ -42,8 +42,10 @@ include_directories ("${PROJECT_SOURCE_DIR}/..")
 
 # Library can be compiled from multiple source files
 # Convention: the main souce file is named <libname>.c
-# 
+#
 add_library(${LIBNAME} SHARED ${SRCNAME}.c ${SOURCEFILES})
+
+target_link_libraries(${LIBNAME} PUBLIC CLIcore)
 
 install(TARGETS ${LIBNAME} DESTINATION lib)
 install(FILES ${SRCNAME}.h ${INCLUDEFILES} DESTINATION include/${SRCNAME})
@@ -60,11 +62,11 @@ install(PROGRAMS
 
 #include_directories ("${PROJECT_SOURCE_DIR}/src")
 #include_directories ("${PROJECT_SOURCE_DIR}/..")
-#add_library(${LIBNAME} SHARED 
-#${SRCNAME}.c 
-#${SRCNAME}.h 
-#AOloopControl_perfTest_DM.c  
-#AOloopControl_perfTest_status.c 
+#add_library(${LIBNAME} SHARED
+#${SRCNAME}.c
+#${SRCNAME}.h
+#AOloopControl_perfTest_DM.c
+#AOloopControl_perfTest_status.c
 #AOloopControl_perfTest_LinSim.c
 #)
 
