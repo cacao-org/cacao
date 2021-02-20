@@ -2476,22 +2476,22 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     //long delayfr = (long) (1000000.0*latfr);
 
                     // RMdelay = hardwlaten - 0.5 - excl/2
-                    double RMdelay = latfr - 0.5 - 0.5 * fps.parray[fpi_NBexcl].val.l[0];
+                    double RMdelay = latfr - 0.5 - 0.5 * fps.parray[fpi_NBexcl].val.i64[0];
 
-                    int RMdelayfr = ((int)(latfr - 0.5 - 0.5 * fps.parray[fpi_NBexcl].val.l[0] +
+                    int RMdelayfr = ((int)(latfr - 0.5 - 0.5 * fps.parray[fpi_NBexcl].val.i64[0] +
                                            10.0)) + 1 - 10;
 
                     int delayRM1us = (int)((1.0 * RMdelayfr - RMdelay) / framerateHz * 1000000.0);
 
                     if(RMdelay > 0)
                     {
-                        fps.parray[fpi_delayfr].val.l[0] = RMdelayfr;
-                        fps.parray[fpi_delayRM1us].val.l[0] = delayRM1us;
+                        fps.parray[fpi_delayfr].val.i64[0] = RMdelayfr;
+                        fps.parray[fpi_delayRM1us].val.i64[0] = delayRM1us;
                     }
                     else
                     {
-                        fps.parray[fpi_delayfr].val.l[0] = 0;
-                        fps.parray[fpi_delayRM1us].val.l[0] = 0;
+                        fps.parray[fpi_delayfr].val.i64[0] = 0;
+                        fps.parray[fpi_delayRM1us].val.i64[0] = 0;
                     }
                 }
             }
@@ -4995,10 +4995,3 @@ imageID AOloopControl_acquireCalib_RMseries_deinterlace(
 
     return IDout;
 }
-
-
-
-
-
-
-
