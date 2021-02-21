@@ -1,3 +1,5 @@
+set(PROJECTNAME "cacao")
+
 # list source files (.c) other than modulename.c
 set(SOURCEFILES
 	AOloopControl_perfTest_DM.c
@@ -29,7 +31,7 @@ string(REGEX MATCH "[a-zA-Z0-9_]+$" SRCNAME "${NAME0}")
 message(" SRCNAME = ${SRCNAME}")
 
 # LIBNAME constructed by removing spaces
-string(REPLACE "_" "" LIBNAME "${PROJECT_NAME}${SRCNAME}")
+string(REPLACE "_" "" LIBNAME "${PROJECTNAME}${SRCNAME}")
 message(" LIBNAME = ${LIBNAME}")
 
 
