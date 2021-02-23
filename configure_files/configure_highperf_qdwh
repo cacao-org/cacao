@@ -1,9 +1,0 @@
-export QDWHpartial_INSTALL_PATH='/home/guyon/src/subaru/qdwhpartial-svd/magma'
-
-LIBS="-lpsinv" \
-LDFLAGS="-L/home/guyon/src/subaru/qdwhpartial-svd/magma -lm" \
-./configure CC='gcc-7' CFLAGS='-Ofast -march=native' --enable-cuda --enable-magma --enable-qdwhpartial
-
-
-
-

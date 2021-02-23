@@ -1,5 +1,0 @@
-./configure CFLAGS='-Ofast -march=native' --enable-cuda --enable-magma
-
-
-
-
