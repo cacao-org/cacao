@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+echo ""
+echo "${bold}List of commands/scripts in current directory"
+echo "Run script with -h option to print help ${normal}"
+echo ""
+
+find . -maxdepth 1 ! -name "listcommands" ! -name "." -executable -exec sh -c 'echo "$( $1 --help1 )"' _ {} \;   
+
+echo ""
+

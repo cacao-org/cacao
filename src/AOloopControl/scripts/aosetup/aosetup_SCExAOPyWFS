@@ -1,0 +1,326 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=0
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+echo "pname = $pname"
+
+
+
+
+
+
+LOOPNAME="SCExAOPyWFS"
+LOOPNUMBER="0"
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CONFIGURE AO LOOP FOR SCExAO PyWFS $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Configures AO loop custom scripts and variables for SCExAO PyWFS"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+
+EXITSTATUS=0
+
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function checkDir {
+if [ -d $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function cmdexists()
+{
+  command -v "$1" >/dev/null 2>&1
+}
+
+
+function checkCommand {
+if cmdexists $1; then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+fi
+
+}
+
+
+# ================= OPTIONS =============================
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      printHELP
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+### End getopts code ###
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+# ======================= FILE NAMES ===========================================
+aoAlign_file="aocscripts/aoAlign_${LOOPNAME}.bash" 
+takedark_file="aocscripts/takedark_${LOOPNAME}"
+cpuconfig_file="aocscripts/cpuconfig_${LOOPNAME}"
+
+# ======================= CHECK REQUIRED FILES =================================
+echo ""
+checkFile $aoAlign_file
+checkFile $takedark_file
+checkFile $cpuconfig_file
+
+
+
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+echo ""
+exit
+else
+echo ""
+fi
+
+
+
+
+
+echo $LOOPNAME > LOOPNAME
+echo $LOOPNUMBER > LOOPNUMBER
+
+
+rm aocscripts/aoAlign.bash &> /dev/null
+ln -s $PWD/$aoAlign_file aocscripts/aoAlign.bash 
+
+rm aocscripts/takedark &> /dev/null
+ln -s $PWD/$takedark_file aocscripts/takedark 
+
+rm aocscripts/cpuconfig &> /dev/null
+ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig 
+
+
+# ================== CPU config =============================
+./aocscripts/cpuconfig
+
+
+
+
+# =================== set DM ===================
+mkdir -p conf
+DMindex="00"
+echo "$DMindex" > ./conf/param_DMindex.txt
+echo "50" > ./conf/param_DMxsize.txt
+echo "50" > ./conf/param_DMysize.txt
+echo "1" > ./conf/param_DMvolt_mode.txt
+
+echo "125.0" > ./conf/instconf_dmVmax.txt
+echo "0.5469" > ./conf/instconf_dmDCum.txt
+
+ln -s /home/scexao/bin/dmrestart dm00restart
+./aolfuncs/aolfunc_initDM -fu
+./aolfuncs/aolfunc_setDMnolink 
+
+
+
+# =================== set WFS image ================
+echo "ocam2d" > ./conf/streamlink_wfsim.name.txt
+./aolfuncs/aolfunc_StreamLink wfsim
+
+
+# ============ Response Matrix settings ==================
+echo "0.02" >./conf/param_RMamplum.txt    
+echo "1" >./conf/param_RMdelayfr.txt
+echo "2" >./conf/param_RMfrave.txt 
+echo "1" >./conf/param_RMexfr.txt      
+echo "1" >./conf/param_RMpokeMode.txt # use Hadamard poke mode
+
+echo "1" > ./conf/param_RMpokeMode.txt
+./auxscripts/mkHpoke 
+ln -s $PWD/conf/Hpoke.fits.gz $PWD/conf/RMpokeCube.fits.gz
+ln -s $PWD/conf/Hpixindex.fits.gz $PWD/conf/RMpixindex.fits.gz
+ln -s $PWD/conf/Hmat.fits.gz $PWD/conf/RMmat.fits.gz 
+
+
+echo "1" > ./conf/param_WFSnorm.txt # normalize WFS frames
+
+echo " ON" > ./conf/param_RMmodal.txt  
+echo "0.02" >./conf/param_RMMamplum.txt   
+echo "3" >./conf/param_RMMcpa.txt      
+
+# ============ Control Matrix ==============
+
+echo "0.003" > ./conf/param_SVDlimall.txt
+
+
+# ============ Control loop =================
+
+# GPU use
+
+# 0 [1080 Ti]: general purpose computations (non real-time)
+# 1 [ 980 Ti]: zero point offset
+# 2 [ 980 Ti]: Predictice control block #1
+# 3 [ 980 Ti]: Predictive control block #2
+# 4 [ 980 Ti]: Predictive control block #3
+# 5 [ 980 Ti]: Predictice control block #4
+# 6 [1080 Ti]: WFS -> mode extraction 
+# 7 [1080   ]: WFS -> mode extraction
+# 8 [ 980 Ti]: 
+# 9 [ K40   ]: modes -> DM actuators
+
+
+echo "2" > ./conf/param_GPU0.txt
+echo "6" > ./conf/param_GPUset0dev0.txt
+echo "7" > ./conf/param_GPUset0dev1.txt
+echo "0" > ./conf/param_GPU1.txt
+echo "3" > ./conf/param_GPUmodesextrwfs.txt
+echo "9" > ./conf/param_GPUdmfw.txt
+echo "1" > ./conf/param_GPUzpoffsetZ.txt
+
+echo "0" > ./conf/param_CMMODE.txt
+echo "0" > ./conf/param_GPUall.txt
+echo "1" > ./conf/param_DMfilteredWriteON.txt
+
+echo "0.980" > ./conf/param_loopmultcoeff.txt
+
+echo "4" > ./conf/param_AUTOTUNELIMITperc.txt
+echo "1.8" > ./conf/param_AUTOTUNELIMITmcoeff.txt
+echo "0.0005" > ./conf/param_AUTOTUNELIMITdelta.txt
+
+
+
+# ============= Data logging =====================
+
+
+echo "100000" > ./conf/param_LogCubeSize.txt
+echo "/media/data" > ./conf/param_savedir.txt
+
+
+# ============ Predictive Control =================
+
+echo "0" > param_PFb0start.txt
+echo "2" > param_PFb0end.txt
+echo "20" > ./conf/param_PFb0order.txt
+echo "0.003" > ./conf/param_PFb0SVDe.txt
+echo "0.5" > ./conf/param_PFb0dgain.txt
+echo "1" > ./conf/param_PFb0nbGPU.txt
+echo "2" > ./conf/param_PFb0GPU0device.txt
+
+echo "2" > param_PFb1start.txt
+echo "100" > param_PFb1end.txt
+echo "10" > ./conf/param_PFb1order.txt
+echo "0.003" > ./conf/param_PFb1SVDe.txt
+echo "0.3" > ./conf/param_PFb1dgain.txt
+echo "1" > ./conf/param_PFb1nbGPU.txt
+echo "3" > ./conf/param_PFb1GPU0device.txt
+
+echo "100" > param_PFb2start.txt
+echo "200" > param_PFb2end.txt
+echo "10" > ./conf/param_PFb2order.txt
+echo "0.003" > ./conf/param_PFb2SVDe.txt
+echo "0.3" > ./conf/param_PFb2dgain.txt
+echo "1" > ./conf/param_PFb2nbGPU.txt
+echo "4" > ./conf/param_PFb2GPU0device.txt
+
+echo "200" > param_PFb3start.txt
+echo "300" > param_PFb3end.txt
+echo "10" > ./conf/param_PFb3order.txt
+echo "0.003" > ./conf/param_PFb3SVDe.txt
+echo "0.3" > ./conf/param_PFb3dgain.txt
+echo "1" > ./conf/param_PFb3nbGPU.txt
+echo "5" > ./conf/param_PFb3GPU0device.txt
+
+
+
+
+
+
+# ================ user-provided scripts ==================
+
+rm setupAOloopON
+echo "#!/bin/bash" > setupAOloopON
+echo "" >> setupAOloopON
+echo "# Turn on pupil alignment" >> setupAOloopON
+echo "" >> setupAOloopON
+echo "LOOPNAME=\"SCExAOPyWFS\"" >> setupAOloopON
+echo "" >> setupAOloopON
+echo "rm status/stop_PyAlignCam.txt &> /dev/null" >> setupAOloopON
+echo "rm status/pause_PyAlignCam.txt &> /dev/null" >> setupAOloopON
+echo "tmux kill-session -t alignPcam" >> setupAOloopON
+echo "tmux new-session -d -s alignPcam" >> setupAOloopON
+echo "tmux send-keys -t alignPcam \"./aocscripts/alignPcam_\${LOOPNAME}\" C-m" >> setupAOloopON
+echo "echo \" ON\" > ./status/status_alignPcam.txt" >> setupAOloopON
+echo "" >> setupAOloopON
+echo "# Turn off TT align" >> setupAOloopON
+echo "touch status/stop_PyAlignTT.txt" >> setupAOloopON
+echo "tmux kill-session -t alignPyrTT" >> setupAOloopON
+echo "echo \"OFF\" > ./status/status_alignTT.txt" >> setupAOloopON
+chmod +x setupAOloopON
+
+
+
+
+rm setupAOloopOFF
+echo "#!/bin/bash" > setupAOloopOFF
+# Turn off pupil alignment
+echo "touch status/stop_PyAlignCam.txt"
+echo "echo \"OFF\" > ./status/status_alignPcam.txt" >> setupAOloopOFF
+echo "tmux kill-session -t alignPcam" >> setupAOloopOFF
+chmod +x setupAOloopOFF
+
+
+
+
+
+
+

@@ -1,0 +1,212 @@
+% Making control modes (aolmkmodes)
+% Olivier Guyon
+% July 9, 2016
+
+
+# Making AO control modes
+
+## Overview
+
+Script ``aolmkmodes`` creates control modes from system response matrix.
+
+
+~~~ {.bash}
+#! /bin/bash
+# args: <confindex> <maxCPA>
+
+
+
+NBARGS=4
+pname=`echo "$0" | sed "s/\.\///g"`
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CREATE MODES FOR AO LOOP$(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  CREATE MODES FOR AO LOOP"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <maxCPA> <Block> <SVDlim> <skip DMmodes>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "   <maxCPA>       : maximum spatial frequency in cycles per aperture"
+echo "   <Block>        : if -1, perform full comp. Otherwise, update block number only"
+echo "   <SVDlim>       : SVD limit, relative to strongest mode"
+echo "   <skip DMmodes> : 1 if re-using previous DM modes, 0 otherwise"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "   ./mkmodestmp/fmodesall.fits"
+echo "   ./mkmodestmp/fmodesWFSall.fits"
+echo "   ./mkmodestmp/cmat.fits"
+echo "   ./mkmodestmp/fmodes_xx.fits.fits"
+echo "   ./mkmodestmp/respM_xx.fits.fits"
+echo "   ./mkmodestmp/contrM_xx.fits.fits"
+echo "   ./mkmodestmp/contrMc_xx.fits.fits"
+echo "   ./mkmodestmp/contrMcact_xx.fits.fits"
+echo "   dmmask.fits"
+echo ""
+echo " $(tput bold)NOTES:$(tput sgr0)"
+echo "  USES (OPTIONAL) : ./conf/ExcludedModes.fits  Modes to be excluded"
+echo "       (OPTIONAL) : ./conf/extrablockM.fits    extra block of modes"
+echo ""
+echo "  READS: "
+echo "  INPUT: ./conf/aol#_dmslaved.fits"
+echo "  INPUT: ./conf/aol#_zrepM.fits"
+echo "  INPUT: ./conf/aol#_dmmaskRM.fits"
+echo "  INPUT: ./conf/aol#_wfsmask.fits"
+echo "  INPUT: ./conf/aol#_LOrespM.fits"
+echo "  INPUT: ./conf/aol#_LODMmodes.fits"echo ""
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Create modes for AO loop\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+pname0=$0
+pname=${pname0#"./"}-$loopnb
+
+pid=$$
+
+startupfile="clistartup$pid.txt"
+echo "a=1" > $startupfile
+fifoname="clififo$pid"
+
+
+
+execnamestring="./AOloopControl -s $startupfile -f $fifoname"
+
+if [ "$4" -eq "1" ]; then
+echo "loadfits \"./mkmodestmp/fmodes2ball.fits\" fmodes2ball" >> $startupfile
+fi
+
+
+
+mkdir -p Cmodes
+mkdir -p tmp
+
+$execnamestring -n $pname << EOF
+aolnb $loopnb
+loadfits "./conf/extrablockM.fits" extrablockM
+loadfits "./conf/aol${loopnb}_dmslaved.fits" dmslaved
+loadfits "./conf/aol${loopnb}_zrespM.fits" zrespM
+loadfits "./conf/aol${loopnb}_dmmaskRM.fits" dmmaskRM
+loadfits "./conf/aol${loopnb}_wfsmask.fits" wfsmask
+loadfits "./conf/aol${loopnb}_LOrespM.fits" RMMresp
+loadfits "./conf/aol${loopnb}_LODMmodes.fits" RMMmodes
+loadfits "./conf/ExcludedModes.fits" emodes
+readshmim aol${loopnb}_dmC
+imstats aol${loopnb}_dmC
+cx=0.5*imsize0-0.5
+cy=0.5*imsize1-0.5
+od=0.42*imsize0
+id=0.13*imsize0
+aolmkmodes fmodes imsize0 imsize1 $1 0.8 cx cy od id 0 $2 $3
+exitCLI
+EOF
+
+#rm $startupfile
+#rm $fifoname
+
+~~~
+
+
+## Algorithm
+
+![Control Modes](AOloopControl_figs-3.jpg "Control Modes")
+
+Takes response matrix (zrespM)
+
+The first steps are done in DM space:
+
+* computes Zernike / Fourier mode basis for dm mask -> ./mkmodestmp/fmodes0all.fits
+* compute WFS response to modes -> ./mkmodestmp/fmodesWFS00all.fits
+* separate DM modes into blocks
+* REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim0 FOR CUTOFF -> ./mkmodestmp/fmodes1_xx.fits ./mkmodestmp/fmodes1all.fits
+* REMOVE MODES THAT ARE CONTAINED IN PREVIOUS BLOCKS, AND ENFORCE DM-SPACE ORTHOGONALITY BETWEEN BLOCKS -> fmodes2all.fits
+* STEP 5: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim0 FOR CUTOFF -> fmodes2ball.fits  (DM space)
+
+
+Followed by WFS space computations:
+
+* STEP 6: COMPUTE WFS RESPONSE TO MODES:  fmodes2ball -> fmodesWFS0all.fits
+* STEP 7: REMOVE WFS MODES THAT ARE CONTAINED IN PREVIOUS BLOCKS, AND ENFORCE WFS-SPACE ORTHOGONALITY BETWEEN BLOCKS: fmodesWFS0all (corresponding to fmodes2ball) -> fmodesWFS1all / fmodes3all
+* STEP 8: SVD WFS SPACE IN EACH BLOCK : fmodesWFS1all, fmodes3 -> fmodes4all
+* STEP 9: REMOVE MODES THAT ARE CONTAINED IN PREVIOUS BLOCKS, AND ENFORCE DM-SPACE ORTHOGONALITY BETWEEN BLOCKS -> fmodes5all.fits  (DM space)
+* STEP 10: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim0 FOR CUTOFF -> fmodes5ball.fits  (DM space)
+
+
+
+
+
+
+
+

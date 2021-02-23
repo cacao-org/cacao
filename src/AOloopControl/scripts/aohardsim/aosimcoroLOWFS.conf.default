@@ -1,0 +1,36 @@
+
+# ============== AOsim: coro LOWFS process =============================
+# LOWFS process is triggered by WF OPD
+
+# ============== INPUT & TRIGGER (OPD unit = um) ===============
+INMODE                   0                 # 0:stream, 1:file system (FITS)
+INAMPSTREAMNAME          wf1amp            # input AMP stream
+INOPDSTREAMNAME          wf1opd            # input OPD stream
+INAMPFITSFILENAME        wf1amp.fits       # input FITS file name
+INOPDFITSFILENAME        wf1opd.fits       # input FITS file name
+INTRIGSTREAMNAME         wf1opd            # input trigger stream
+INTRIGSEMCHAN            4                 # input semaphore channel (using OPD input)
+INTRIGGERFILE            inwf.txt          # input trigger file
+INPHYSTIME               aosim_phystime    # physical time
+
+# ============== OUTPUT TYPE ===================================
+OUTMODE                  0                       # 0: stream, 1: file system
+OUTLOWFSARRAYSIZE        16                      # output LOWFS array size, pix
+OUTLOWFSSTREAMNAME       aosim_imcamLOWFS        # output WF stream name 
+OUTLOWFSFITSFILENAME     aosim_imcamLOWFS.fits   # FITS file name output [um]
+OUTTRIGGERFILE           outLOWFS.txt            # output trigger file
+
+# ============== GEOMETRY, OPTICAL DESIGN =============================
+LAMBDAum                 1.65              # wavelength [um]
+ARRAYSIZE                256               # array size, pix, used for internal computations
+COROFPMAMP               corofpmamp        # coronagraph focal plane mask amplitude
+COROFPMPHA               corofpmpha        # coronagraph focal plane mask amplitude
+LYOTSTOPREFLAMP          lyotstopreflamp   # LYOT stop reflectivity map (amp)
+LYOTSTOPREFLPHA          lyotstopreflpha   # LYOT stop reflectivity map (pha)
+LYOTSTOPTRANSMAMP        lyotstoptransmamp # LYOT stop transmission map (amp)
+LYOTSTOPTRANSMPHA        lyotstoptransmpha # LYOT stop transmission map (pha)
+
+# ============== LOWFS =============================
+LOWFSOPDMAP              lowfsopdmap       # LOWFS defocus map [um]
+LOWFSCAMETIME            0.01              # LOWFS camera exposure time [s]
+

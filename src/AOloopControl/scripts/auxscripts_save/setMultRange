@@ -1,0 +1,37 @@
+#! /bin/bash
+
+
+EXPECTED_ARGS=3
+
+
+if [ $# -ne $EXPECTED_ARGS ] || [ "$1" == "help" ]
+then
+  echo
+  echo "------ Set multiplicative factors for range of modes ------"
+  echo 
+  echo "Usage: $0 <start index> <end index> <mult factor>"
+  echo 
+  echo " INPUT <start index>   : First mode" 
+  echo " INPUT <end index>     : Last mode" 
+  echo " INPUT <mult factor>   : mult factor" 
+  echo 
+  echo "Example: $0 5 43 0.1"
+  echo 
+  exit
+fi
+
+
+
+loopnb=$(cat LOOPNUMBER)
+
+pname="aol${loopnb}_Mmult"
+
+
+
+Cfits -n $pname << EOF
+csetpmove system
+readshmim aol${loopnb}_mfiltmult
+setpix1Drange aol${loopnb}_mfiltmult $3 $1 $2
+exit
+EOF
+

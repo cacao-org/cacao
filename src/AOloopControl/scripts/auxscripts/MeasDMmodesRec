@@ -1,0 +1,136 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=3
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : TEST DM MODE RECOVERY $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  AO system: measure DM mode recovery"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <ampl [um]> <delay [us]> <nbave>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "  INPUT <ampl [um]>   : mode amplitude [um]"
+echo "  INPUT <delay [us]>  : delay from DM command to measurement start"
+echo "  INPUT <nbave>       : Number of frames averaged for measurement"
+echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "     $0 0.05 30000 50"
+echo "" 
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "        test_DMmodesRec.fits        Average DM input - DM output (applied on DM)"
+echo "        test_DMmodesRec_RMS.fits    RMS DM input - DM ouput (applied on DM)"
+echo "        test_DMmodesRec_m.fits      Average DM input - Measured (measured by WFS)"
+echo "        test_DMmodesRec_m_RMS.fits  RMS DM input - Measured (measured by WFS)"
+echo ""
+echo "NOTES :"
+echo "  Loop must be running"
+echo "  If loop gain is high, then most signal is in DM output"
+echo "  If loop gain is low, then most signal is in measurement"
+echo "  All values are normalized to input amplitude, so recovery fractions are computed"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Measure AO loop DM modes recovery\n" "$0" 
+}
+
+
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+
+ampl=$1
+tlagus=$2
+nbave=$3
+
+./AOloopControl << EOF
+readshmim aol${loopnb}_DMmodes
+readshmim aol${loopnb}_dmmaskRM
+readshmim aol${loopnb}_dmRM
+readshmim aol${loopnb}_dmC
+readshmim aol${loopnb}_meas_act
+listim
+aoltestdmrec aol${loopnb}_DMmodes ${ampl} aol${loopnb}_dmmaskRM aol${loopnb}_dmRM aol${loopnb}_dmC aol${loopnb}_meas_act ${tlagus} ${nbave} outave outrms outmave outmrms
+savefits outave "!test_DMmodesRec.fits"
+savefits outrms "!test_DMmodesRec_RMS.fits"
+savefits outmave "!test_DMmodesRec_m.fits"
+savefits outmrms "!test_DMmodesRec_m_RMS.fits"
+exitCLI
+EOF

@@ -1,0 +1,217 @@
+#!/bin/bash
+
+NBARGS=0
+ERRORSTATUS="0"
+
+
+
+
+printHELP ()
+{
+echo
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : SET DM CHANNELS, NO LINK MODE $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo " "
+echo " "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [options]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "   --help -h             print (h)elp and exit"
+echo "   --help1               print 1 line summary" 
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+	printf "%20s       Setup DM channels, no link mode\n" "$0" 
+}
+
+
+
+
+EXITSTATUS=0
+
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function checkDir {
+if [ -d $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
+    EXITSTATUS=1
+fi
+}
+
+function cmdexists()
+{
+  command -v "$1" >/dev/null 2>&1
+}
+
+function checkCommand {
+if cmdexists $1; then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+fi
+}
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+### Start getopts code ###
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+	if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo -e \\n"Illegal number of parameters ($NBARGS params required, $# entered)"\\n
+fi
+printHELP
+        exit
+fi
+
+
+
+
+# ======================= CHECK REQUIRED DIRS & FILES =================================
+echo ""
+
+
+# ============================= CHECK IF COMMAND EXISTS ==========================
+
+
+
+
+
+
+
+
+
+##########################################
+# READ REQUIRED PARAMETERS
+##########################################
+
+DMindex="$CACAO_DMINDEX"
+#$( head -1 fpsconf/AOCONF/DMindex  | awk '{printf("%02d",$1);}' )
+
+
+
+
+##########################################
+# SETTING UP CONFIGURATION
+##########################################
+
+DMMODE="0"
+DMMODEfile="conf/param_DMMODE.txt"
+echo "$DMMODE" > ${DMMODEfile}
+
+
+mkdir -p conf
+
+#echo "0" > "./conf/param_DM2DM_mode.txt"
+#echo "0" > "./conf/param_DMwfsref_mode.txt"
+#echo "1" > "./conf/param_DMvolt_mode.txt"
+#echo "0" > "./conf/param_DMcombave_mode.txt"
+
+
+
+# READ LOOP NUMBER
+if [ -f LOOPNUMBER ]; then
+LOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+LOOPNUMBER="7"
+fi
+
+
+
+echo "dm${DMindex}disp03" > ./conf/streamlink.dmC.name.txt # DM control channel
+milk-streamlink -p aol${LOOPNUMBER}_ dmC
+
+echo "dm${DMindex}disp00" > ./conf/streamlink.dmO.name.txt # DM offset channel (flat) 
+milk-streamlink -p aol${LOOPNUMBER}_ dmO
+
+echo "dm${DMindex}disp04" > ./conf/streamlink.dmZP0.name.txt
+milk-streamlink -p aol${LOOPNUMBER}_ dmZP0
+
+echo "dm${DMindex}disp05" > ./conf/streamlink.dmZP1.name.txt
+milk-streamlink -p aol${LOOPNUMBER}_ dmZP1
+
+echo "dm${DMindex}disp06" > ./conf/streamlink.dmZP2.name.txt
+milk-streamlink -p aol${LOOPNUMBER}_ dmZP2
+
+echo "dm${DMindex}disp07" > ./conf/streamlink.dmZP3.name.txt
+milk-streamlink -p aol${LOOPNUMBER}_ dmZP3
+
+echo "dm${DMindex}disp08" > ./conf/streamlink.dmZP4.name.txt
+milk-streamlink -p aol${LOOPNUMBER}_ dmZP4
+
+echo "dm${DMindex}disp09" > ./conf/streamlink.dmZP5.name.txt
+milk-streamlink -p aol${LOOPNUMBER}_ dmZP5
+
+echo "dm${DMindex}disp10" > ./conf/streamlink.dmZP6.name.txt
+milk-streamlink -p aol${LOOPNUMBER}_ dmZP6
+
+echo "dm${DMindex}disp11" > ./conf/streamlink.dmZP7.name.txt
+milk-streamlink -p aol${LOOPNUMBER}_ dmZP7
+
+echo "dm${DMindex}disp" > ./conf/streamlink.dmdisp.name.txt # total DM displacement channel
+milk-streamlink -p aol${LOOPNUMBER}_ dmdisp
+
+echo "dm${DMindex}disp02" > ./conf/streamlink.dmRM.name.txt # DM actuation channel for RM matrix
+milk-streamlink -p aol${LOOPNUMBER}_ dmRM
+
+# remove pre-existing poke patterns
+rm ./conf/RMpokeCubeZ.fits.gz
+rm ./conf/RMpokeCube.fits.gz
+rm respM_LOmodes.fits
+
+
+

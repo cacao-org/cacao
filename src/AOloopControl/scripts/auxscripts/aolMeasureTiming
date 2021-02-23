@@ -1,0 +1,102 @@
+#!/bin/bash
+
+NBARGS=1
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : Measure Loop Timing $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Measures loop timing"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <NBsamples>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo "     $(tput bold)-p$(tput sgr0)          print to screen only - do not update configuration"
+echo ""
+echo " $(tput bold)FILES UPDATED:$(tput sgr0)"
+echo "      conf/conf_hardwlatency_frame.txt"
+echo "      conf/conf_complatency.txt"
+echo "      conf/conf_complatency_frame.txt"
+echo "      conf/conf_wfsmextrlatency.txt"
+echo "      conf/conf_wfsmextrlatency_frame.txt"
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Measure loop timing\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+UPDATECONF="1"
+while getopts :hp FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    p)
+    UPDATECONF="0"
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+
+pname0=$0
+pname=${pname0#"./"}-$loopnb
+
+
+./AOloopControl -n pname << EOF
+aolstatusstats $UPDATECONF $1
+exitCLI
+EOF

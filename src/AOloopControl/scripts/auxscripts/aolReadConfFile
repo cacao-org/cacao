@@ -1,0 +1,112 @@
+#!/bin/bash
+
+
+# number of arguments to script
+NBARGS=1
+
+pname=`echo "$0" | sed "s/\.\///g"`
+#echo "pname = $pname"
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : AOloop load file $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  reads file to load from ./conf/conf_<streamname>_name.txt"
+echo "  copies the corresponding file to ./conf/aol<loop>_<streamname>.fits"
+echo "  loads the file to shared memory stream aol<loop>_<streamname>"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <stream name>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <file>     first"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       AOloop load file to stream\n" "$0" 
+}
+
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :hH:L:N:Cc FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+
+shift $((OPTIND-1))
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+file="./conf/conf_$1_name.txt"
+if [ -a $file ]
+	then
+	fname=$(echo "$( head -1 $file )")
+	else
+	fname="$1.fits" #default
+fi
+aoconflog "linking $1 to ${fname}" 
+Fits2shm ${fname} aol${loopnb}_$1
+rm conf/aol${loopnb}_$1.fits
+ln -s $PWD/${fname} conf/aol${loopnb}_$1.fits

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+EXPECTED_ARGS=2
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo
+  echo "-------- ZERO A DM DISPLACEMENT CHANNEL ---------"
+ echo " "
+ echo "Usage: $0 <dmnumber> <channel>"
+ echo " "
+ echo "  INPUT <dmnumber>  : DM to control (it is probably 0)"
+ echo "  INPUT <channel>   : DM channel to be set to zero"
+ echo " "
+ echo "EXAMPLE :  $0 00 01"
+ echo " "
+ exit
+fi
+
+
+cacao << EOF
+readshmim dm$1disp$2
+imzero dm$1disp$2
+exit
+EOF

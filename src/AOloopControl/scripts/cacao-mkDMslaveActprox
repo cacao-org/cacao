@@ -1,0 +1,211 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=1
+
+
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : CREATE DM SLAVED ACTUATORS MAP $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Created DM slaved actuators map based on proximity"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <FPSname>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <FPSname>      Function Parameter Structure (FPS) name"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+echo "     dmslaved.fits     DM slaved actuators map"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Create DM slaved actuators map\n" "$0" 
+}
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+
+
+
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+FPSfilename=$1
+FPSname="$(basename ${FPSfilename} .fps)"
+
+# Read parameters from FPS file
+# note that ^ ensures grep matches beginning of line, and trailing space ensures exact match
+#
+datadir=$( grep "^${FPSname}.conf.datadir " ${FPSfilename} |  awk '{print $3;}' )
+
+echo "datadir       : ${datadir}"
+
+
+
+
+
+
+echo "##########################################"
+echo "# MAKE MASKS                              "
+echo "##########################################"
+# 
+# MAKE SLAVED ACTUATOR DM MASK: dmmask_mkm.fits -> dmslaved.fits, dmmask.fits
+# 
+# INPUT:
+#	dmmask_mkm.fits
+# OUTPUT:
+#	dmslaved.fits  
+#	dmmask_mksl.fits    
+#
+
+
+
+actproxrad=$( grep "^${FPSname}.DMmask.proxrad " ${FPSfilename} | awk '{print $3;}' )
+
+cacao << EOF
+loadfits "${datadir}/dmmask_mkm.fits" DMmaskRM
+cacaocc.aolmkslact DMmaskRM ${actproxrad} DMslavedact
+savefits DMslavedact "!${datadir}/dmslaved.fits"
+exitCLI
+EOF
+
+
+
+
+cacao << EOF
+loadfits "${datadir}/dmmask_mkm.fits" dmmRM
+loadfits "${datadir}/dmslaved.fits" dmsl
+imtrunc dmsl 0.0 1.0 dmsl1
+dmm=1.0-(1.0-dmmRM)*(1.0-dmsl1)
+savefits dmm "!${datadir}/dmmask_mksl.fits"
+exitCLI
+EOF
+
+
+# register output files to be logged
+echo "dmslaved.fits" >> "${datadir}/loglist.dat"
+echo "dmmask_mksl.fits" >> "${datadir}/loglist.dat"
+
+
+
+echo "#################################################################"
+echo "# NORMALIZE FLUX OVER wfsmask    "
+echo "#################################################################"
+# 
+# INPUT
+#	wfsref.fits  (measured reference, normalized over whole image)
+#	wfsmask_mkm.fits (wfs pixel mask)
+#   zrespM.fits  (measured response matrix)
+#  
+# OUTPUT
+#	wfsref_mn.fits (WFS reference normalized over mask)
+#   zrespM_mn.fits (response matrix normalized over mask)
+#
+
+
+cacao << EOF
+loadfits "${datadir}/wfsref.fits" im0
+loadfits "${datadir}/wfsmask_mkm.fits" wfm
+im0m=wfm*im0
+a=itot(im0)/itot(im0m)
+# 1/a is fraction of flux inside mask
+im1=im0*a/itot(im0)
+savefits im1 "!${datadir}/wfsref_mn.fits"
+loadfits "${datadir}/zrespM.fits" zrespm
+zrespm1=zrespm*a
+savefits zrespm1 "!${datadir}/zrespM_mn.fits"
+listim
+exitCLI
+EOF
+
+#cp wfsref0.fits rmtest_wfsref0.fits
+
+
+
+
+# register output files to be logged
+echo "wfsref_mn.fits" >> "${datadir}/loglist.dat"
+echo "zrespM_mn.fits" >> "${datadir}/loglist.dat"
+
+
+
+
+#datadir="conf_zrm_staged"
+#cp dmslavedact.fits ./${datadir}/
+#cp dmmask.fits ./${datadir}/

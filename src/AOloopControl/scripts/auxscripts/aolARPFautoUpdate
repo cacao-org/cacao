@@ -1,0 +1,193 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=3
+
+
+pname="aolARPFautoUpdate"
+
+
+
+updatecoeff="0.1"
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : Automatic update of AR linear predictive filter $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  Uses pseudo-open loop telemetry"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <block> <latency> <PForder>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo "     $(tput bold)-a$(tput sgr0)          compute all blocks"
+echo "     $(tput bold)-u <coeff>$(tput sgr0)  set update coefficient (default = ${updatecoff})"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <block>            block number (ignored if -a option)"
+echo "     <latency>          latency [frame]"
+echo "     <PForder>          filter order"
+echo ""
+echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+echo "    $0 0 2.36 6"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr0)"
+
+echo ""
+echo " $(tput bold)NOTES:$(tput sgr0)"
+
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       Automatic update of AR linear predictive filter\n" "$0" 
+}
+
+
+EXITSTATUS=0
+
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+ALLBLOCKS=0
+
+while getopts :hau: FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    a) # all blocks
+    ALLBLOCKS=1
+    ;;
+    u) # update coeff
+    updatecoeff="$OPTARG"
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+echo ""
+exit
+else
+echo ""
+fi
+
+
+echo "Update Coefficient = ${updatecoeff}"
+
+loopnb=$( head -1 LOOPNUMBER )
+block="$1"
+latency="$2"
+PForder="$3"
+
+
+cnt=0
+filestop="aolARPFautoUpdate.STOP"
+
+oldfname=""
+updatecoeff1="1.0"
+while [ ! -f "$filestop" ]; do
+
+./auxscripts/selectLatestTelemetry &> /dev/null
+fname=$( head -1 ./conf/conf_PF_lastOL.txt )
+printf "[%6ld] latest file = %s\n" "$cnt" "$fname" 
+
+if [ -f "$fname" ]; then
+if [ ! "$fname" = "$oldfname" ]; then
+echo "Updating PF matrix ..."
+oldfname="$fname"
+
+# Compute outPF 3D filter
+if [ "$ALLBLOCKS" = "1" ]; then 
+time ./auxscripts/aolARPF "./PredictiveControl/modeval_ol.fits" $latency $PForder &> /dev/null
+PFkern="./PredictiveControl/outPF.fits"
+PFmat="PFmat${loopnb}"
+else
+time ./auxscripts/aolARPFblock "./PredictiveControl/modeval_ol.fits"  $block $latency $PForder &> /dev/null
+PFkern="./PredictiveControl/outPF.${block}.fits"
+PFmat="PFmat${loopnb}_$block"
+fi
+
+printf "NEW 3D predictive kernel :  "
+ls -l $PFkern
+
+./AOloopControl << EOF
+loadfits "${PFkern}" PFkern
+readshmim $PFmat
+linARPFMupdate PFkern ${PFmat} ${updatecoeff1}
+savefits ${PFmat} "!./PredictiveControl/PFmat_test.fits"
+exitCLI
+EOF
+printf "NEW PF matrix           : "
+ls -l ./PredictiveControl/PFmat_test.fits
+updatecoeff1="$updatecoeff"
+
+else
+sleep 30
+fi 
+fi
+
+
+let cnt=cnt+1
+
+done
+rm $filestop
+

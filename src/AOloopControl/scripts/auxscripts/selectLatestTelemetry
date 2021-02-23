@@ -1,0 +1,146 @@
+#!/bin/bash
+
+
+# number of arguments to script
+NBARGS=0
+
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+
+
+
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : SELECT LATEST TELEMETRY FOR PREDICTIVE CONTROL  $(tput sgr 0)"
+echo "------------------------------------------------------------------------"
+echo "  Select latest telemetry stream for predictive control"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr 0)"
+echo "     $0 [-hc]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr 0)"
+echo "     $(tput bold)-h$(tput sgr 0)          help"
+echo "     $(tput bold)-c$(tput sgr 0)          select for correction (not filter estimation)"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr 0)"
+echo ""
+echo " $(tput bold)OUTPUT:$(tput sgr 0)"
+echo "    PredictiveControl/modeval_ol.fits"
+echo "    PredictiveControl/modeval_cl.fits"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr 0)       Compute real-time WFS residual image\n" "$0" 
+}
+
+
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+selCORR=0
+
+# ================= OPTIONS =============================
+
+while getopts :hc FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    c) #select for correction
+    selCORR=1
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))  
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr 0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+
+
+
+# select most recent files -> sym link to modeval_ol.fits, modeval_cl.fits
+
+datestr=`date -u +%Y%m%d`
+logdir=$( head -1 ./conf/param_savedir.txt )
+
+OLdir="$logdir/$datestr/aol${loopnb}_modeval_ol"
+CLdir="$logdir/$datestr/aol${loopnb}_modeval"
+
+OLfn=$( ls -t $OLdir/*.fits | head -n1 )
+CLfn=$( ls -t $CLdir/*.fits | head -n1 )
+
+
+
+echo "$OLfn" > ./conf/conf_PF_lastOL.txt
+
+if [ -f "$OLfn" ]; then
+mkdir -p PredictiveControl
+
+if [ "$selCORR" = "1" ]; then
+echo "OL file : $OLfn  -> PredictiveControl/modeval_ol_C.fits"
+echo "CL file : $CLfn  -> PredictiveControl/modeval_cl_C.fits"
+rm PredictiveControl/modeval_ol_C.fits
+ln -s $OLfn PredictiveControl/modeval_ol_C.fits
+rm PredictiveControl/modeval_cl_C.fits
+ln -s $CLfn PredictiveControl/modeval_cl_C.fits
+else
+echo "OL file : $OLfn  -> PredictiveControl/modeval_ol.fits"
+echo "CL file : $CLfn  -> PredictiveControl/modeval_cl.fits"
+rm PredictiveControl/modeval_ol.fits
+ln -s $OLfn PredictiveControl/modeval_ol.fits
+rm PredictiveControl/modeval_cl.fits
+ln -s $CLfn PredictiveControl/modeval_cl.fits
+fi
+else
+echo "No OL telemetry file found"
+fi

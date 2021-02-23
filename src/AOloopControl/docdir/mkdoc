@@ -1,0 +1,6 @@
+#!/bin/bash
+
+./rundoc
+
+unoconv -f pdf AOloopControl_figs.ppt
+pdftoppm AOloopControl_figs.pdf figProcesses -f 13 -singlefile

@@ -1,0 +1,47 @@
+# ======== AO simulation : creating atmospheric wavefronts stream =================
+# script relies on pre-computed physical atmospheric wavefronts
+
+
+MODE             0                # 0: read pre-computed WFs, 1: empty WFs
+WFDIR            ./atmwf          # atmospheric wavefronts directory
+
+LAMBDANM         1650             # wavelength [nm]
+
+# ============== OUTPUT TYPE (OPD unit = um) ====================
+OUT0FITSFILE         0                 # 0: none, 1 if FITS file output OPD only, 2 if OPD+AMP
+OUT0FITSFILENAMEOPD  wf0opd.fits       # FITS file name output (OPD)
+OUT0FITSFILENAMEAMP  wf0amp.fits       # FITS file name output (AMP)
+OUTPHYSTIME          aosim_phystime    # physical time [s]
+OUT0STREAM           2                 # 1 if shared memory stream OPD only, 2 if OPD+AMP 
+OUT0STREAMNAMEOPD    wf0opd            # output WF stream name (OPD)
+OUT0STREAMNAMEAMP    wf0amp            # output WF stream name (AMP)
+
+# ============== PROCESS TRIGGER ==================================
+TRIGGERMODE           2                # 0: file, 1: semaphore from stream, 2: time interval
+TRIGGERFILE           wfup.txt         # update file name (TRIGGERMODE=0,1
+TRIGGERDT             0.01             # update interval (TRIGGERMODE=0,2)
+TRIGGER0STREAM        WFSinst          # trigger stream
+TRIGGER0SEM           5                # trigger semaphore in TRIGGERSTREAM
+TRIGGER1STREAM        dm05dispmap      # trigger stream
+TRIGGER1SEM           5                # trigger semaphore in TRIGGERSTREAM
+
+# ============== PARAMETERS ======================================
+DT                    0.0000625        # time interval between computed wavefronts
+OPDMFACT              1.0              # OPD multiplicative factor
+AMPMFACT              1.0              # AMP multiplicative factor
+ARRAYSIZE             128              # output size [pix]
+PIXSCALEMODE          2                # 0: adopt input WF pixel scale, 1: custom pixel scale, 2: bin
+PIXSCALECUSTOM        0.1              # custom pixel size
+PIXBINFACTOR          4                # bin factor
+PUPDIAMM              8                # Pupil diameter [m]
+
+# ============== POST-PROCESSING =============================
+DM0MODE               1                # 0 if no DM0, 1 if OPD DMn
+DM0NAME               dm05dispmap      # DM displacement map stream
+OUT1FITSFILENAMEOPD   wf1opd.fits      # FITS file name output (OPD)
+OUT1FITSFILENAMEAMP   wf1amp.fits      # FITS file name output (AMP)
+OUT1STREAM            1                # 1 if shared memory stream OPD only, 2 if OPD+AMP 
+OUT1STREAMNAMEOPD     wf1opd           # output WF stream name (OPD)
+OUT1STREAMNAMEAMP     wf1amp           # output WF stream name (AMP)
+
+

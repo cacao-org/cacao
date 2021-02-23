@@ -1,0 +1,98 @@
+#!/bin/bash
+
+NBARGS=1
+pname=`echo "$0" | sed "s/\.\///g"`
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : AO Linear Simulator $(tput sgr0)"
+echo "------------------------------------------------------------------------"
+echo "  AO Linear Simulator"
+echo "uses response matrix to simulate linear AO system"
+echo "Usage: $0 <GPUindex> <time interval>"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr0)"
+echo "     $0 [-h] <GPUindex>"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr0)"
+echo "     $(tput bold)-h$(tput sgr0)          help"
+echo ""
+echo " $(tput bold)INPUT:$(tput sgr0)"
+echo "     <GPUindex>        : GPU index"
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+printHELP1 ()
+{
+    printf "     $(tput bold)%-25s$(tput sgr0)       AO Linear Simulator\n" "$0" 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "--help") set -- "$@" "-h" ;;
+    "--help1") 
+set -- "$@" "-h" 
+singlelinehelp=1;
+;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ "$singlelinehelp" -eq "0" ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+GPUindex=$1
+
+./AOloopControl -n aol${loopnb}latency << EOF
+readshmim aol${loopnb}_wfsim
+readshmim aol${loopnb}_dmdisp
+readshmim aol${loopnb}_zrespM
+readshmim aol${loopnb}_wfsref
+listim
+cudacoeffo2map aol${loopnb}_zrespM aol${loopnb}_dmdisp ${GPUindex} aol${loopnb}_wfsim aol${loopnb}_wfsref
+exitCLI
+EOF

@@ -1,0 +1,232 @@
+#!/bin/bash
+
+
+
+# number of arguments to script
+NBARGS=0
+
+srcdir="aohardsim"
+
+# ======================= PROCESS NAME =================================
+pname=`echo "$0" | sed "s/\.\///g"`
+echo "pname = $pname"
+
+
+
+# ======================= LOGGING =================================
+LOGGING=0 # set to 1 if logging 
+function scriptlog {
+echo "$@" >> $0.log
+}
+
+
+
+function printHELP {
+echo "------------------------------------------------------------------------"
+echo "$(tput bold) $pname : AO HARDWARE SIMULATION $(tput sgr 0)"
+echo "------------------------------------------------------------------------"
+echo "  Launches AO hardware simulation processes"
+echo "  Processes are launched inside tmux sessions:"
+echo "   aosimDMcomb     DM comb process"
+echo "   aosimDMrun      DM hardware simulation"
+echo "   aosimmkWF       create WF"
+echo "   aosimPyrWFS     pyramid WFS simulation"
+echo "   aosimcoroLOWFS  coronagraph + LOWFS"
+echo "   "
+echo " $(tput bold)USAGE:$(tput sgr 0)"
+echo "     $0 [-hk]"
+echo ""
+echo " $(tput bold)OPTIONS:$(tput sgr 0)"
+echo "     $(tput bold)-h$(tput sgr 0)          help"
+echo "     $(tput bold)-k$(tput sgr 0)          kill processes"
+echo ""
+echo ""
+echo "------------------------------------------------------------------------"
+}
+
+
+EXITSTATUS=0
+
+
+function checkFile {
+if [ -f $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr 0)] File $1 found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr 0)] File $1 not found"
+    EXITSTATUS=1
+fi
+}
+
+function checkDir {
+if [ -d $1 ]
+  then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr 0)] Directory $1 found"
+   else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr 0)] Directory $1 not found"
+    EXITSTATUS=1
+fi
+}
+
+function cmdexists()
+{
+  command -v "$1" >/dev/null 2>&1
+}
+
+
+function checkCommand {
+if cmdexists $1; then
+    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+else
+    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+fi
+}
+
+
+
+
+
+KILLPROCESSES=0
+
+# ================= OPTIONS =============================
+
+while getopts :hk FLAG; do
+  case $FLAG in
+    h) # help
+    printHELP
+    exit
+    ;;
+    k)  #  kill processes
+      KILLPROCESSES=1
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+
+
+
+
+
+
+if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
+if [ "$#" -ne $NBARGS ]; then
+    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr 0)"
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+# ======================= CHECK REQUIRED FILES =================================
+echo ""
+checkCommand tmux
+checkFile $srcdir/aosimDMrun
+checkFile $srcdir/aosimDMstart
+checkFile $srcdir/aosimmkWF
+checkFile $srcdir/aosimcoroLOWFS
+checkFile $srcdir/aosimPyrWFS
+
+checkDir atmwf
+checkFile "atmwf/WFsim.conf"
+
+
+if [ $EXITSTATUS -eq 1 ]; then
+echo ""
+echo "$(tput setaf 1)$(tput bold) REQUIRED FILES NOT FOUND: EXITING $(tput sgr 0)"
+echo ""
+exit
+else
+echo ""
+fi
+
+
+
+# ======================= CREATE CONFIGURATION FILES =================================
+
+echo ""
+
+
+
+
+tmuxname="aosimDMcomb"
+tmux send-keys -t $tmuxname C-c 2> /dev/null
+tmux kill-session -t $tmuxname 2> /dev/null
+
+tmuxname="aosimDMrun"
+tmux send-keys -t $tmuxname C-c 2> /dev/null
+tmux kill-session -t $tmuxname 2> /dev/null
+
+tmuxname="aosimmkWF"
+tmux send-keys -t $tmuxname C-c 2> /dev/null
+tmux kill-session -t $tmuxname 2> /dev/null
+
+tmuxname="aosimPyrWFS"
+tmux send-keys -t $tmuxname C-c 2> /dev/null
+tmux kill-session -t $tmuxname 2> /dev/null
+
+tmuxname="aosimcoroLOWFS"
+tmux send-keys -t $tmuxname C-c 2> /dev/null
+tmux kill-session -t $tmuxname 2> /dev/null
+
+
+if [ "$KILLPROCESSES" -eq "1" ]; then
+exit
+fi 
+
+
+
+tmuxname="aosimDMcomb"
+echo "Executing aosimDMstart in tmux session $tmuxname"
+tmux new -d -s $tmuxname
+tmux send-keys -t $tmuxname "./$srcdir/aosimDMstart" C-M
+
+tmuxname="aosimDMrun"
+echo "Executing aosimDMrun in tmux session $tmuxname"
+tmux new -d -s $tmuxname
+tmux send-keys -t $tmuxname "./$srcdir/aosimDMrun" C-M
+
+sleep 1  # give time to create dm05dispmap
+
+
+
+tmuxname="aosimmkWF"
+echo "Executing aosimmkWF in tmux session $tmuxname"
+tmux new -d -s $tmuxname
+tmux send-keys -t $tmuxname "./$srcdir/aosimmkWF" C-M
+
+
+
+tmuxname="aosimPyrWFS"
+echo "Executing aosimPyrWFS in tmux session $tmuxname"
+tmux new -d -s $tmuxname
+tmux send-keys -t $tmuxname "./$srcdir/aosimPyrWFS" C-M
+
+
+
+tmuxname="aosimcoroLOWFS"
+echo "Executing aosimcoroLOWFS in tmux session $tmuxname"
+tmux new -d -s $tmuxname
+tmux send-keys -t $tmuxname "./$srcdir/aosimcoroLOWFS" C-M
+
+
+echo ""
+
+
+
+
+
+
+
+
+
+
+

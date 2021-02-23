@@ -1,0 +1,3 @@
+readshmim dm01disp
+imgmon dm01disp 10
+exit

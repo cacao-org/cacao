@@ -1,0 +1,15 @@
+digraph aosim {
+#        size="8,5"
+#		rankdir="LR"
+
+
+        node [style=filled, fillcolor=grey70, fontcolor=black, fontname="bold", shape = box, color = black];
+
+        "Top menu" -> "Loop Configuration";
+	"Top menu" -> "Control Matrix";
+	"Top menu" -> "Control Loop";
+	"Top menu" -> "Test mode";
+	"Top menu" -> "View/monitor";
+	"Top menu" -> "Record/analyze";
+	"Top menu" -> "Align";
+}

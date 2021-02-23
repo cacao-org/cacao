@@ -1,0 +1,47 @@
+digraph aosim {
+#        size="8,5"
+#		rankdir="LR"
+
+# shared mem stream nodes
+        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];  
+        wf1opd; wf1amp; "aosim_foc0_amp/pha"; 
+        "aosim_pup1_amp/pha";
+        "aosim_pup1t_amp/pha";
+        "aosim_pup1r_amp/pha";
+		"aosim_foc1_amp/pha";
+		"aosim_foc2_amp/pha";
+		"aosim_foclowfs_amp/pha";
+		"aosim_imlowfs"; "aosim_imcamLOWFS";
+		"aosim_imcoro";
+		"aosim_phystime";
+		
+# images
+		node [style=filled, fillcolor=grey90, fontcolor=black, fontname="bold", shape = box, color = black]; 
+		"corofpmamp/pha";
+		"lyotstopreflamp/pha";
+		"lyotstoptransmamp/pha";
+		"lowfsopdmap";
+		
+# processess nodes
+        node [style=filled, fillcolor=plum1, fontcolor=red, fontname="bold", shape=ellipse, color=red]; aosimcoroLOWFS;
+
+
+
+# streams inputs and triggers to processes
+edge[arrowhead=vee, arrowtail=inv, arrowsize=1.5, color=black, fontsize=10, fontcolor=darkgreen]
+        wf1opd -> aosimcoroLOWFS       [ label="sem04" ];
+		wf1amp -> aosimcoroLOWFS
+
+# process output
+edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, color=black, fontsize=10, fontcolor=black]
+        aosimcoroLOWFS -> "aosim_foc0_amp/pha";
+		{ "aosim_foc0_amp/pha" "corofpmamp/pha" } -> "aosim_foc1_amp/pha"
+		"aosim_foc1_amp/pha" -> "aosim_pup1_amp/pha";
+        { "aosim_pup1_amp/pha" "lyotstoptransmamp/pha" } -> "aosim_pup1t_amp/pha";
+        { "aosim_pup1_amp/pha" "lyotstopreflamp/pha" } -> "aosim_pup1r_amp/pha";
+		"aosim_pup1t_amp/pha" -> "aosim_foc2_amp/pha" -> "aosim_imcoro";
+		"aosim_pup1r_amp/pha" -> "aosim_foclowfs_amp/pha" -> "aosim_imlowfs";
+		"lowfsopdmap" -> "aosim_pup1r_amp/pha";
+		"aosim_imlowfs" -> "aosim_imcamLOWFS";
+		"aosim_phystime" -> "aosim_imcamLOWFS";
+}

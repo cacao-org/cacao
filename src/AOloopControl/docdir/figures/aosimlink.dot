@@ -1,0 +1,30 @@
+digraph aosim {
+#        size="8,5"
+#		rankdir="LR"
+
+# shared mem stream nodes
+        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];  WFSinst; wf0opd; wf1opd; dm05dispmap; dm05disp; pWFSim;
+	aosim_phystime;
+
+# processess nodes
+        node [style=filled, fillcolor=plum1, fontcolor=red, fontname="bold", shape=ellipse, color=red]; aosimmkWF; aosimDMrun; aosimWFS;
+
+# streams inputs and triggers to processes
+edge[arrowhead=vee, arrowtail=inv, arrowsize=1.5, color=black, fontsize=10, fontcolor=darkgreen]
+        WFSinst -> aosimmkWF       [ label="sem05" ];
+        dm05dispmap -> aosimmkWF   [ label="sem05" ];
+        wf1opd -> aosimWFS         [ label="sem05" ];
+        wf1opd -> aosimDMrun       [ label="sem06" ];
+
+# process output
+edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, color=black, fontsize=10, fontcolor=black]
+        aosimmkWF -> wf0opd;
+        aosimmkWF -> wf1opd;
+        wf0opd -> wf1opd;
+        dm05dispmap -> wf1opd;
+        aosimWFS -> WFSinst;
+        aosimDMrun -> dm05dispmap;
+	WFSinst -> pWFSim;
+        dm05disp -> aosimDMrun; 
+	aosimmkWF -> aosim_phystime;
+}

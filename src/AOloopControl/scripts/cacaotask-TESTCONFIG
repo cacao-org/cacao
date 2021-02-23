@@ -1,0 +1,49 @@
+#!/bin/bash
+
+
+# check environment
+source cacaotask-check
+
+
+# ======================================================================
+# PERFORM ACTIONS FOR THIS TASK
+# ======================================================================
+
+
+cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
+
+cd ${WORKDIRECTORY}
+
+cacao-setup -t ${LOOPNAME}
+
+# check if successful
+if [ "$?" = 0 ]; then
+	cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
+else
+	cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
+fi
+
+
+
+# ======================================================================
+# WRITE CLEANUP SCRIPT FOR THIS TASK
+# ======================================================================
+
+# Inside cat <<EOT section :
+# ${VAR} will be resolved prior to writing to destination
+# \${VAR} will not be resolved, and will appear as ${VAR} in the destination
+
+cat <<EOT >>  ${CLEANSCRIPT}
+
+rm -f ${WORKDIRECTORY}/log/*.log
+rmdir ${WORKDIRECTORY}/log
+
+cd ${CURRENTDIR}
+
+EOT
+
+
+
+# ======================================================================
+# STORE OUTPUT ENVIRONMENT VARIABLES
+# ======================================================================

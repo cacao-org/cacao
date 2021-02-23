@@ -1,0 +1,48 @@
+#! /bin/bash
+
+EXPECTED_ARGS=4
+
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo
+  echo "------ fit actmap to simple pupil ------"
+  echo
+  echo "  INPUT <xc>"
+  echo "  INPUT <yc>"
+  echo "  INPUT <r0>"
+  echo "  INPUT <r1>"
+  echo
+  echo "example"
+  echo " $0 24.0 23.1 6.5 22.1"
+  exit
+fi
+
+
+Cfits << EOF
+loadfits "./conf/actmap.fits" actmap
+xc=$1
+yc=$2
+r0=$3
+r1=$4
+mkspdisk d1 50 50 xc yc r1
+mkspdisk d2 50 50 xc yc r0
+disk=d1-d2
+imstats actmap
+a=vp10
+b=vp80
+actmapn=(actmap-a)/(b-a)
+savefits actmapn "!./tmp/actmapn.fits"
+imdiff=actmapn-disk
+imdiff2=imdiff*imdiff
+itot(imdiff2/50/50)
+savefits imdiff "!./tmp/imdiff.fits"
+
+r1c=r1+0.5
+r0c=r0-0.5
+mkdisk d1c 50 50 xc yc r1c
+mkdisk d2c 50 50 xc yc r0c
+diskc=d1c-d2c
+savefits diskc "!./conf/TPmask.fits"
+exit
+EOF
+

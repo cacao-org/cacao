@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# check environment
+source cacaotask-check
+
+# ======================================================================
+# PERFORM ACTIONS FOR THIS TASK
+# ======================================================================
+
+
+mkdir -p $WORKDIRECTORY/simLHS
+cd $CONFDIR/simLHS/
+FLIST=($(ls *.get.bash))
+for gfile in "${FLIST[@]}"
+do
+source $gfile
+done
+
+cd ${CURRENTDIR}
+cp ${CONFDIR}/simLHS/*.fits ${WORKDIRECTORY}/simLHS/
+
+
+
+
+# ======================================================================
+# WRITE CLEANUP SCRIPT FOR THIS TASK
+# ======================================================================
+
+# Inside cat <<EOT section :
+# ${VAR} will be resolved prior to writing to destination
+# \${VAR} will not be resolved, and will appear as ${VAR} in the destination
+
+cat <<EOT >>  ${CLEANSCRIPT}
+
+rm $WORKDIRECTORY/simLHS/*
+rmdir $WORKDIRECTORY/simLHS
+
+EOT
+
+
+# ======================================================================
+# STORE OUTPUT ENVIRONMENT VARIABLES
+# ======================================================================

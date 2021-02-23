@@ -1,0 +1,108 @@
+digraph aosim {
+#        size="8,5"
+		rankdir="TB"
+
+# shared mem stream nodes
+        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];  
+        "aolx_wfsim";
+        "aolx_imWFS0";
+        "aolx_imWFS1";
+        "aolx_imWFS2";
+        "aolx_imWFS2active";
+        "aolx_meas_act_active";
+        "aolx_meas_act";
+        "aolx_DMmode_meas";
+        "aolx_DMmode_cmd";
+		"aolx_wfsdark";
+		"aolx_wfsref";
+		"aolx_wfsref0";
+		"aolx_dmC";
+		"aolx_dmdisp";
+		"A";
+		"B";
+		"C";
+		"D";
+		"E";
+		"F";
+
+
+
+
+
+# images
+		node [style=filled, fillcolor=grey90, fontcolor=black, fontname="bold", shape = box, color = black]; 
+		
+		
+# processess / operations
+        node [style=filled, fillcolor=plum1, fontcolor=red, fontname="bold", shape=ellipse, color=red];
+		"dark subtract";
+		"normalize";
+		"remove reference";
+		
+
+
+
+
+
+# CMmode = 0 (separate matrices), CPU
+edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, style=solid, penwidth=3, color=blue, fontsize=10, fontcolor=black]
+	"A" -> "B" [label="Separate Matrix, CPU"];
+	
+subgraph cluster1 {
+    fontsize = 20;
+    label = "Main";
+    rank=same;
+    "aolx_wfsim" -> "dark subtract"; 
+    "dark subtract" -> "aolx_imWFS0"; 
+    "aolx_imWFS0" -> "normalize"; 
+    "normalize" -> "aolx_imWFS1"; 
+    "aolx_imWFS1" -> "remove reference"; 
+    "remove reference"-> "aolx_imWFS2";
+     "aolx_imWFS2" -> "aolx_dmC";
+     "aolx_dmC" -> "aolx_dmdisp";
+    style = "dashed";
+  }
+
+
+
+# 
+edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, color=black, fontsize=10, fontcolor=black]
+	"aolx_wfsref0" -> "aolx_wfsref";
+	"aolx_wfsref" -> "remove reference";
+	"aolx_wfsdark" -> "dark subtract";
+	"aolx_imWFS0" -> "aolx_imWFS2active" -> "aolx_meas_act_active" -> "aolx_meas_act" -> "aolx_dmC";
+	"aolx_imWFS2" -> "aolx_DMmode_meas" -> "aolx_DMmode_cmd" -> "aolx_dmC";
+	
+	
+	
+
+# CMmode = 0 (combined matrix), GPU
+edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, style=dashed, penwidth=3, color=blue, fontsize=10, fontcolor=black]
+
+	"B" -> "C" [label="Separate Matrix, GPU"];
+	
+      
+      
+        
+# CMmode = 1 (combined matrix), CPU
+edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, style=solid, penwidth=3, color=red, fontsize=10, fontcolor=black]
+
+	"C" -> "D" [label="Combined Matrix, CPU"];
+      
+      
+         
+# CMmode = 1 (combined matrix), GPU
+edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, style=dashed, penwidth=3, color=red, fontsize=10, fontcolor=black]
+
+	"D" -> "E" [label="Combined Matrix, GPU"];
+
+
+# CMmode = 1 (combined matrix), GPU, GPUall
+edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, style=dashed, penwidth=3, color=darkgreen, fontsize=10, fontcolor=black]
+
+	"E" -> "F" [label="Combined Matrix, GPU, GPUall"];
+
+
+
+        
+}

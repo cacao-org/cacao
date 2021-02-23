@@ -1,0 +1,3185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Olivier Guyon" />
+  <title>AOloopControl</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; background-color: #dddddd; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { font-weight: bold; } /* Keyword */
+code > span.dt { color: #800000; } /* DataType */
+code > span.dv { color: #0000ff; } /* DecVal */
+code > span.bn { color: #0000ff; } /* BaseN */
+code > span.fl { color: #800080; } /* Float */
+code > span.ch { color: #ff00ff; } /* Char */
+code > span.st { color: #dd0000; } /* String */
+code > span.co { color: #808080; font-style: italic; } /* Comment */
+code > span.al { color: #00ff00; font-weight: bold; } /* Alert */
+code > span.fu { color: #000080; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #ff0000; font-weight: bold; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #ff00ff; } /* SpecialChar */
+code > span.vs { color: #dd0000; } /* VerbatimString */
+code > span.ss { color: #dd0000; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { } /* ControlFlow */
+code > span.op { } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #808080; font-style: italic; } /* Documentation */
+code > span.an { color: #808080; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #808080; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="/home/olivier/.css/pandoc.css" type="text/css" />
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+</head>
+<body>
+<div id="header">
+<h1 class="title">AOloopControl</h1>
+<h2 class="author">Olivier Guyon</h2>
+<h3 class="date">Oct 1, 2017</h3>
+</div>
+<div id="TOC">
+<ul>
+<li><a href="#initial-setup"><span class="toc-section-number">1</span> Initial Setup</a><ul>
+<li><a href="#scope"><span class="toc-section-number">1.1</span> Scope</a></li>
+<li><a href="#pre-requisites"><span class="toc-section-number">1.2</span> Pre-requisites</a></li>
+<li><a href="#installing-the-adaptiveopticscontrol-package"><span class="toc-section-number">1.3</span> Installing the AdaptiveOpticsControl package</a></li>
+<li><a href="#setting-up-the-work-directory"><span class="toc-section-number">1.4</span> Setting up the work directory</a></li>
+</ul></li>
+<li><a href="#software-overview"><span class="toc-section-number">2</span> Software Overview</a><ul>
+<li><a href="#high-level-gui"><span class="toc-section-number">2.1</span> High-level GUI</a></li>
+<li><a href="#supporting-scripts"><span class="toc-section-number">2.2</span> Supporting Scripts</a></li>
+<li><a href="#main-executable"><span class="toc-section-number">2.3</span> Main executable</a></li>
+<li><a href="#memory-storage-and-configuration-parameters"><span class="toc-section-number">2.4</span> Memory storage and Configuration Parameters</a></li>
+</ul></li>
+<li><a href="#hardware-simulation"><span class="toc-section-number">3</span> Hardware Simulation</a><ul>
+<li><a href="#overview"><span class="toc-section-number">3.1</span> Overview</a></li>
+<li><a href="#method-1-provide-an-external-simulation-that-adheres-to-aoloopcontrol-inputoutput-conventions"><span class="toc-section-number">3.2</span> METHOD 1: Provide an external simulation that adheres to AOloopControl input/output conventions</a></li>
+<li><a href="#method-2-physical-hardware-simulation"><span class="toc-section-number">3.3</span> METHOD 2: Physical hardware simulation</a><ul>
+<li><a href="#running-method-2"><span class="toc-section-number">3.3.1</span> Running Method 2</a></li>
+<li><a href="#method-2-output-streams"><span class="toc-section-number">3.3.2</span> Method 2 output streams</a></li>
+<li><a href="#processes-and-scripts-details"><span class="toc-section-number">3.3.3</span> Processes and scripts details</a></li>
+<li><a href="#ao-loop-control"><span class="toc-section-number">3.3.4</span> AO loop control</a></li>
+<li><a href="#processes-and-scripts-system-ouput"><span class="toc-section-number">3.3.5</span> Processes and scripts: system ouput</a></li>
+</ul></li>
+<li><a href="#method-3-linear-hardware-simulation"><span class="toc-section-number">3.4</span> METHOD 3: Linear Hardware Simulation</a><ul>
+<li><a href="#overview-1"><span class="toc-section-number">3.4.1</span> Overview</a></li>
+<li><a href="#setup"><span class="toc-section-number">3.4.2</span> Setup</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#aoloopcontrol-setup-and-overview"><span class="toc-section-number">4</span> AOloopControl setup and overview</a><ul>
+<li><a href="#gui-description"><span class="toc-section-number">4.1</span> GUI description</a></li>
+<li><a href="#commands-log"><span class="toc-section-number">4.2</span> Commands log</a><ul>
+<li><a href="#automatically-generated-internal-command-log-very-detailed"><span class="toc-section-number">4.2.1</span> Automatically generated internal command log (very detailed)</a></li>
+<li><a href="#user-provided-usexternal-log-less-verbose"><span class="toc-section-number">4.2.2</span> User-provided UsExternal log (less verbose)</a></li>
+<li><a href="#interactive-user-log"><span class="toc-section-number">4.2.3</span> Interactive user log</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#setting-up-the-hardware-interfaces"><span class="toc-section-number">5</span> Setting up the hardware interfaces</a><ul>
+<li><a href="#top-level-script"><span class="toc-section-number">5.1</span> Top level script</a></li>
+<li><a href="#setting-the-dm-interface"><span class="toc-section-number">5.2</span> Setting the DM interface</a><ul>
+<li><a href="#mode-a-connecting-to-an-existing-dm"><span class="toc-section-number">5.2.1</span> Mode [A]: Connecting to an existing DM</a></li>
+<li><a href="#mode-b-creating-and-connecting-to-a-dm"><span class="toc-section-number">5.2.2</span> Mode [B]: Creating and Connecting to a DM</a></li>
+<li><a href="#mode-c-create-a-new-modal-dm-mapped-to-an-existing-dm-using-another-loops-control-modes"><span class="toc-section-number">5.2.3</span> Mode [C]: Create a new modal DM, mapped to an existing DM using another loop's control modes</a></li>
+<li><a href="#mode-d-create-a-new-modal-dm-mapped-to-an-existing-dm-channel-using-a-custom-set-of-modes"><span class="toc-section-number">5.2.4</span> Mode [D]: Create a new modal DM, mapped to an existing DM channel using a custom set of modes</a></li>
+<li><a href="#option-wfs-zero-point-offset"><span class="toc-section-number">5.2.5</span> Option: WFS Zero point offset</a></li>
+<li><a href="#notes"><span class="toc-section-number">5.2.6</span> Notes</a></li>
+</ul></li>
+<li><a href="#setting-the-camera-interface"><span class="toc-section-number">5.3</span> Setting the camera interface</a></li>
+<li><a href="#setup-script"><span class="toc-section-number">5.4</span> Setup script</a></li>
+</ul></li>
+<li><a href="#calibration"><span class="toc-section-number">6</span> Calibration</a><ul>
+<li><a href="#acquiring-a-zonal-response-matrix"><span class="toc-section-number">6.1</span> Acquiring a zonal response matrix</a></li>
+<li><a href="#acquiring-a-modal-response-matrix-optional-for-zonal-dm-only"><span class="toc-section-number">6.2</span> Acquiring a modal response matrix (optional, for ZONAL DM only)</a></li>
+<li><a href="#automatic-system-calibration-recommended"><span class="toc-section-number">6.3</span> Automatic system calibration (recommended)</a></li>
+<li><a href="#managing-configurations"><span class="toc-section-number">6.4</span> Managing configurations</a></li>
+</ul></li>
+<li><a href="#building-control-matrix"><span class="toc-section-number">7</span> Building control matrix</a></li>
+<li><a href="#running-the-loop-choosing-hardware-mode-cpugpu"><span class="toc-section-number">8</span> Running the loop: Choosing hardware mode (CPU/GPU)</a></li>
+<li><a href="#auxilliary-processes"><span class="toc-section-number">9</span> Auxilliary processes</a><ul>
+<li><a href="#extract-wfs-modes"><span class="toc-section-number">9.1</span> Extract WFS modes</a></li>
+<li><a href="#extract-open-loop-modes"><span class="toc-section-number">9.2</span> Extract open loop modes</a></li>
+<li><a href="#running-average-of-dmc"><span class="toc-section-number">9.3</span> Running average of dmC</a></li>
+<li><a href="#compute-and-average-wfsres"><span class="toc-section-number">9.4</span> Compute and average wfsres</a></li>
+</ul></li>
+<li><a href="#offsetting"><span class="toc-section-number">10</span> Offsetting</a><ul>
+<li><a href="#converting-dm-offsets-to-wfs-offsets-zonal-cpu-mode"><span class="toc-section-number">10.1</span> Converting DM offsets to WFS offsets (zonal, CPU mode)</a></li>
+<li><a href="#converting-dm-offsets-to-wfs-offsets-zonal-gpu-mode"><span class="toc-section-number">10.2</span> Converting DM offsets to WFS offsets (zonal, GPU mode)</a></li>
+<li><a href="#modal-offsetting-from-another-loop"><span class="toc-section-number">10.3</span> Modal offsetting from another loop</a></li>
+<li><a href="#summing-and-applying-wfs-offsets-to-aoln_wfsref"><span class="toc-section-number">10.4</span> Summing and applying WFS offsets to aolN_wfsref</a></li>
+<li><a href="#wfs-average-offset"><span class="toc-section-number">10.5</span> WFS average offset</a></li>
+</ul></li>
+<li><a href="#controlling-offsets-from-another-loop"><span class="toc-section-number">11</span> Controlling offsets from another loop</a><ul>
+<li><a href="#running-the-loop"><span class="toc-section-number">11.1</span> Running the loop</a></li>
+</ul></li>
+<li><a href="#predictive-control-experimental"><span class="toc-section-number">12</span> Predictive control (experimental)</a><ul>
+<li><a href="#overview-2"><span class="toc-section-number">12.1</span> Overview</a></li>
+<li><a href="#scripts"><span class="toc-section-number">12.2</span> Scripts</a></li>
+<li><a href="#data-flow"><span class="toc-section-number">12.3</span> Data flow</a></li>
+</ul></li>
+<li><a href="#appendix-a-shared-memory-streams"><span class="toc-section-number">13</span> APPENDIX A: SHARED MEMORY STREAMS</a><ul>
+<li><a href="#linking-to-existing-stream"><span class="toc-section-number">13.1</span> Linking to existing stream</a></li>
+<li><a href="#loading-images-from-fits-to-shared-memory-stream"><span class="toc-section-number">13.2</span> Loading images from FITS to shared memory stream</a><ul>
+<li><a href="#overview-3"><span class="toc-section-number">13.2.1</span> Overview</a></li>
+<li><a href="#detailed-description"><span class="toc-section-number">13.2.2</span> Detailed description</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#appendix-b-conf-directory"><span class="toc-section-number">14</span> APPENDIX B: CONF DIRECTORY</a><ul>
+<li><a href="#overview-4"><span class="toc-section-number">14.1</span> Overview</a></li>
+<li><a href="#parameters"><span class="toc-section-number">14.2</span> Parameters</a><ul>
+<li><a href="#overall-and-misc"><span class="toc-section-number">14.2.1</span> Overall and misc</a></li>
+<li><a href="#linear-hardware-simulator"><span class="toc-section-number">14.2.2</span> Linear Hardware Simulator</a></li>
+<li><a href="#dm"><span class="toc-section-number">14.2.3</span> DM</a></li>
+<li><a href="#timing"><span class="toc-section-number">14.2.4</span> Timing</a></li>
+<li><a href="#response-matrix-acquisition"><span class="toc-section-number">14.2.5</span> Response Matrix acquisition</a></li>
+<li><a href="#modess-and-control-matrix-computation"><span class="toc-section-number">14.2.6</span> Modess and Control Matrix computation</a></li>
+<li><a href="#loop-control"><span class="toc-section-number">14.2.7</span> Loop Control</a></li>
+</ul></li>
+<li><a href="#stream-links"><span class="toc-section-number">14.3</span> Stream Links</a></li>
+<li><a href="#shared-memory-fits-file-initializations-to-streams"><span class="toc-section-number">14.4</span> Shared memory FITS file initializations to streams</a></li>
+<li><a href="#fits-files"><span class="toc-section-number">14.5</span> FITS files</a></li>
+</ul></li>
+<li><a href="#reference-content-of-.status-directory"><span class="toc-section-number">15</span> REFERENCE: Content of ./status directory</a></li>
+<li><a href="#appendix-c-step-by-step-example"><span class="toc-section-number">16</span> APPENDIX C: STEP-BY-STEP EXAMPLE</a><ul>
+<li><a href="#starting-the-linear-hardware-simulator"><span class="toc-section-number">16.1</span> Starting the linear hardware simulator</a></li>
+<li><a href="#acquiring-calibration-compute-control-matrix"><span class="toc-section-number">16.2</span> Acquiring calibration, compute control matrix</a></li>
+</ul></li>
+<li><a href="#appendix-d-managing-multiple-processes"><span class="toc-section-number">17</span> APPENDIX D: Managing multiple processes</a><ul>
+<li><a href="#queued-process"><span class="toc-section-number">17.1</span> Queued process</a></li>
+<li><a href="#active-process"><span class="toc-section-number">17.2</span> Active process</a></li>
+<li><a href="#lockingunlocking-processes"><span class="toc-section-number">17.3</span> Locking/unlocking processes</a></li>
+</ul></li>
+</ul>
+</div>
+<div id="initial-setup" class="section level1">
+<h1><span class="header-section-number">1</span> Initial Setup</h1>
+<div id="scope" class="section level2">
+<h2><span class="header-section-number">1.1</span> Scope</h2>
+<p>AO loop control package. Includes high-performance CPU/GPU computation engine and higher level scripts.</p>
+</div>
+<div id="pre-requisites" class="section level2">
+<h2><span class="header-section-number">1.2</span> Pre-requisites</h2>
+<p>Libraries required :</p>
+<ul>
+<li>gcc</li>
+<li>openMP</li>
+<li>fitsio</li>
+<li>fftw (single and double precision)</li>
+<li>gsl</li>
+<li>readline</li>
+<li>tmux</li>
+<li>bash dialog, version 1.2 minimum</li>
+</ul>
+<p>Recommended:</p>
+<ul>
+<li>CUDA</li>
+<li>Magma</li>
+<li>shared memory image viewer (<code>shmimview</code> or similar)</li>
+</ul>
+</div>
+<div id="installing-the-adaptiveopticscontrol-package" class="section level2">
+<h2><span class="header-section-number">1.3</span> Installing the AdaptiveOpticsControl package</h2>
+<p>Source code is available on the <a href="https://github.com/oguyon/AdaptiveOpticsControl">AdaptiveOpticsControl git hub repository</a>.</p>
+<p>Download the latest tar ball (.tar.gz file), uncompress, untar and execute in the source directory (<code>./AdaptiveOpticsControl-&lt;version&gt;/</code>)</p>
+<pre><code>./configure</code></pre>
+<p>Include recommended high performance compile flags for faster execution speed:</p>
+<pre><code>./configure CFLAGS=&#39;-Ofast -march=native&#39;</code></pre>
+<p>If you have installed CUDA and MAGMA libraries:</p>
+<pre><code>./configure CFLAGS=&#39;-Ofast -march=native&#39; --enable-cuda --enable-magma</code></pre>
+<p>The executable is built with:</p>
+<pre><code>make
+make install</code></pre>
+<p>The executable is <code>./AdaptiveOpticsControl-&lt;version&gt;/bin/AdaptiveOpticsControl</code></p>
+<p>Add <code>&lt;srcdir&gt;/scripts</code> to PATH environment variable. This is best done in the .bashrc file.</p>
+</div>
+<div id="setting-up-the-work-directory" class="section level2">
+<h2><span class="header-section-number">1.4</span> Setting up the work directory</h2>
+<p>Conventions:</p>
+<ul>
+<li><code>&lt;srcdir&gt;</code> is the source code directory, usually <code>.../AdaptiveOpticsControl-&lt;version&gt;</code></li>
+<li><code>&lt;workdir&gt;</code> is the work directory where the program and scripts will be executed. Note that the full path should end with <code>.../AOloop&lt;#&gt;</code> where <code>&lt;#&gt;</code> ranges from 0 to 9. For example, <code>AOloop2</code>.</li>
+</ul>
+<p>The work directory is where all scripts and high level commands should be run from. You will first need to create the work directory and then load scripts from the source directory to the work directory.</p>
+<p>First, execute from the source directory the 'syncscript -e' command to export key install scripts:</p>
+<pre><code>mkdir /&lt;workdir&gt;
+cd &lt;srcdir&gt;/src/AOloopControl/scripts
+./syncscripts -e /&lt;workdir&gt;</code></pre>
+<p>The 'syncscript' script should now be in the work directory. Execute it to copy all scripts to the work directory:</p>
+<pre><code>cd /&lt;workdir&gt;
+./syncscripts</code></pre>
+<p>Symbolic links to the source scripts and executable are now installed in the work directory (exact links / directories may vary) :</p>
+<pre><code>olivier@ubuntu:/data/AOloopControl/AOloopTest$ ls -l
+total 32
+drwxrwxr-x 2 olivier olivier 4096 Sep 29 19:27 aocscripts
+drwxrwxr-x 2 olivier olivier 4096 Sep 29 19:27 aohardsim
+lrwxrwxrwx 1 olivier olivier   57 Sep 29 19:27 aolconf -&gt; /home/olivier/src/Cfits/src/AOloopControl/scripts/aolconf
+drwxrwxr-x 2 olivier olivier 4096 Sep 29 19:27 aolconfscripts
+drwxrwxr-x 2 olivier olivier 4096 Sep 29 19:27 aolfuncs
+lrwxrwxrwx 1 olivier olivier   70 Sep 29 19:26 AOloopControl -&gt; /home/olivier/src/Cfits/src/AOloopControl/scripts/../../../bin/cfitsTK
+drwxrwxr-x 2 olivier olivier 4096 Sep 29 19:27 aosetup
+drwxrwxr-x 2 olivier olivier 4096 Sep 29 19:27 auxscripts
+lrwxrwxrwx 1 olivier olivier   61 Sep 29 19:26 syncscripts -&gt; /home/olivier/src/Cfits/src/AOloopControl/scripts/syncscripts</code></pre>
+<p>If new scripts are added in the source directory, running <code>./syncscripts</code> again from the work directory will add them to the work directory.</p>
+</div>
+</div>
+<div id="software-overview" class="section level1">
+<h1><span class="header-section-number">2</span> Software Overview</h1>
+<p>At the low level, most operations are performed by calls to the <a href="#main-executable">main executable</a> which is precompiled C code. The user interacts with a <a href="#high-level-GUI">high level ASCII-based GUI</a>, which performs calls to individual <a href="#supporting-scripts">scripts</a> or directly execute instances of the main executable.</p>
+<p>The standard code layers are : <a href="#high-level-gui">GUI</a> calls <a href="#supporting-scripts">SCRIPT</a> calls <a href="#main-executable">PRECOMPILED EXECUTABLE</a></p>
+<div id="high-level-gui" class="section level2">
+<h2><span class="header-section-number">2.1</span> High-level GUI</h2>
+<p>The top level script is <code>aolconf</code>. Run it with <code>-h</code> option for a quick help</p>
+<pre><code>./aolconf -h</code></pre>
+<p>The <code>aolconf</code> script starts the main GUI screen from which sub-screens can be accessed. ASCII control GUI scripts are in the <code>aolconfscripts</code> directory.</p>
+<p>The scripts are listed below in the order they appear in the GUI menu. Boldface scripts corresponds to GUI screens. Supporting scripts (holding frequently used functions) are boldface italic.</p>
+<table>
+<colgroup>
+<col width="38%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Script</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>aolconf_menutop</strong></td>
+<td align="left"><strong>GUI</strong>: Top level menu</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><em>aolconf_funcs</em></strong></td>
+<td align="left">Misc functions</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><em>aolconf_DMfuncs</em></strong></td>
+<td align="left">DM Functions</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><em>aolconf_readconf</em></strong></td>
+<td align="left">Configuration read functions</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><em>aolconf_menuview</em></strong></td>
+<td align="left"><strong>GUI</strong>: Data view menu</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><em>aolconf_template</em></strong></td>
+<td align="left">Template (use to create additional GUI screens)</td>
+</tr>
+<tr class="odd">
+<td align="left">----CONFIGURATION-------------------</td>
+<td align="left">setup configuration, links to hardware</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>aolconf_menuconfigureloop</strong></td>
+<td align="left"><strong>GUI</strong>: Configure loop menu. Called from main menu</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><em>aolconf_configureloop_funcs</em></strong></td>
+<td align="left">Functions used within the configureloop GUI screen</td>
+</tr>
+<tr class="even">
+<td align="left">----CONTROL MATRIX------------------</td>
+<td align="left">compute control matrix</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>aolconf_menucontrolmatrix</strong></td>
+<td align="left"><strong>GUI</strong>: Control matrix menu. Called from main menu</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><em>aolconf_controlmatrix_funcs</em></strong></td>
+<td align="left">Functions used within the controlmatrix GUI screen</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><em>aolconf_menu_mkFModes</em></strong></td>
+<td align="left">Make modes</td>
+</tr>
+<tr class="even">
+<td align="left">----LOOP CONTROL--------------------</td>
+<td align="left">control AO loop</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>aolconf_menucontrolloop</strong></td>
+<td align="left"><strong>GUI</strong>: Control loop menu. Called from main menu</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><em>aolconf_controlloop_funcs</em></strong></td>
+<td align="left">Functions used within the controlloop GUI screen</td>
+</tr>
+<tr class="odd">
+<td align="left">----PREDICTIVE CONTROL--------------</td>
+<td align="left">WFS telemetry prediction and related AO control</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><em>aolconf_menupredictivecontrol</em></strong></td>
+<td align="left"><strong>GUI</strong>:Predictive control</td>
+</tr>
+<tr class="odd">
+<td align="left">----TESTING-------------------------</td>
+<td align="left">AO loop tests</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>aolconf_menutestmode</strong></td>
+<td align="left"><strong>GUI</strong>: test mode menu</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong><em>aolconf_DMturb</em></strong></td>
+<td align="left">DM turbulence functions</td>
+</tr>
+<tr class="even">
+<td align="left">----LOGGING-------------------------</td>
+<td align="left">Log telemetry</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>aolconf_menurecord</strong></td>
+<td align="left"><strong>GUI</strong>: Record / log telemetry</td>
+</tr>
+<tr class="even">
+<td align="left"><strong><em>aolconf_logfuncs</em></strong></td>
+<td align="left">Data and command logging</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="supporting-scripts" class="section level2">
+<h2><span class="header-section-number">2.2</span> Supporting Scripts</h2>
+<p>Scripts are organized in directories according to their purpose</p>
+<table>
+<colgroup>
+<col width="34%" />
+<col width="65%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Directory</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">aolconfscripts</td>
+<td align="left">GUI scripts (see previous section)</td>
+</tr>
+<tr class="even">
+<td align="left">aolfuncs</td>
+<td align="left">Frequently used functions</td>
+</tr>
+<tr class="odd">
+<td align="left">auxscripts</td>
+<td align="left">Auxillary scripts. Essential high level scripts in this directory.</td>
+</tr>
+<tr class="even">
+<td align="left">aohardsim</td>
+<td align="left">Hardware simulation</td>
+</tr>
+<tr class="odd">
+<td align="left">aocscripts</td>
+<td align="left">Custom user-provided scripts to interact with non real-time hardware</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>auxscripts</code> directory are called by aolconf to perform various tasks. To list all commands, type in the <code>auxscripts</code> directory :</p>
+<pre><code>./listcommands</code></pre>
+<p>For each script, the <code>-h</code> option will print help.</p>
+</div>
+<div id="main-executable" class="section level2">
+<h2><span class="header-section-number">2.3</span> Main executable</h2>
+<p>The main precompiled executable is <code>./AOloopControl</code>, which provides a command line interface (CLI) to all compiled code. Type <code>AOloopControl -h</code> for help. You can enter the CLI and list the available libraries (also called modules) that are linked to the CLI. You can also list the functions available within each module (<code>m? &lt;module.c&gt;</code>) and help for each function (<code>cmd? &lt;functionname&gt;</code>). Type <code>help</code> within the CLI for additional directions, and <code>exit</code> or <code>exitCLI</code> to exit the command line.</p>
+<pre><code>olivier@ubuntu:/data/AOloopControl/AOloop1$ ./AOloopControl 
+type &quot;help&quot; for instructions
+Running with openMP, max threads = 8  (defined by environment variable OMP_NUM_THREADS)
+LOADED: 21 modules, 269 commands
+./AOloopControl &gt; exitCLI
+Closing PID 5291 (prompt process)</code></pre>
+</div>
+<div id="memory-storage-and-configuration-parameters" class="section level2">
+<h2><span class="header-section-number">2.4</span> Memory storage and Configuration Parameters</h2>
+<p>AOCCE adopts a common shared memory data format for all data streams. The data structure is defined in file <code>&lt;srcdir&gt;/src/ImageStruct.h</code>.</p>
+<p>Configurations parameters are stored in directory <code>&lt;workdir&gt;/conf</code> as ASCII files. When AOCCEE is launched, it can load all required parameters and populate required shared memory streams from information contained in the <code>&lt;workdir&gt;/conf</code> directory.</p>
+</div>
+</div>
+<div id="hardware-simulation" class="section level1">
+<h1><span class="header-section-number">3</span> Hardware Simulation</h1>
+<div id="overview" class="section level2">
+<h2><span class="header-section-number">3.1</span> Overview</h2>
+<p>There are 3 methods for users to simulate hardware</p>
+<ul>
+<li><p>METHOD 1: Provide an external simulation that adheres to AOloopControl input/output conventions</p></li>
+<li><p>METHOD 2: Use the physical hardware simulation provided by the package</p></li>
+<li><p>METHOD 3: Use the linear hardware simulation: this option is fastest, but only captures linear relationships between DM actuators and WFS signals</p></li>
+</ul>
+</div>
+<div id="method-1-provide-an-external-simulation-that-adheres-to-aoloopcontrol-inputoutput-conventions" class="section level2">
+<h2><span class="header-section-number">3.2</span> METHOD 1: Provide an external simulation that adheres to AOloopControl input/output conventions</h2>
+<p>The user runs a loop that updates the wavefront sensor image when the DM input changes. Both the DM and WFS are represented as shared memory image streams. When a new DM shape is written, the DM stream semaphores are posted by the user, triggering the WFS image computation. When the WFS image is computed, its semaphores are posted.</p>
+</div>
+<div id="method-2-physical-hardware-simulation" class="section level2">
+<h2><span class="header-section-number">3.3</span> METHOD 2: Physical hardware simulation</h2>
+<p>The AOsim simulation architecture relies on individual processes that simulate subsystems. Each process is launched by a bash script. ASCII configuration files are read by each process. Data I/O can be done with low latency using shared memory and semaphores: a process operation (for example, the wavefront sensor process computing WFS signals) is typically triggered by a semaphore contained in the shared memory wavefront stream. A low-speed file system based alternative to shared memory and semaphores is also provided.</p>
+<p>Method 2 simulates incoming atmospheric WFs, a pyramid WFS based loop feeding a DM, a coronagraphic LOWFS and coronagraphic PSFs.</p>
+<div id="running-method-2" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Running Method 2</h3>
+<p>Launch the simulator with the following steps:</p>
+<ul>
+<li><p>Create a series of atmospheric wavefronts (do this only once, this step can take several hrs):</p>
+<pre><code>./aohardsim/aosimmkwfser</code></pre>
+<p>Stop the process when a few wavefront files have been created (approximately 10 minimum). The AO code will loop through the list of files created, so a long list is preferable to reduce the frequency at which the end-of-sequence discontinuity occurs. The current wavefront file index is displayed as the process runs; in this example, the process is working on file #2:</p>
+<pre><code>Layer  0/ 7, Frame   99/ 100, File      0/100000000  [TIME =     0.0990 s]  WRITING SCIENCE WAVEFRONT ... - 
+Layer  0/ 7, Frame   99/ 100, File      1/100000000  [TIME =     0.1990 s]  WRITING SCIENCE WAVEFRONT ... - 
+Layer  1/ 7, Frame   42/ 100, File      2/100000000  [TIME =     0.2420 s]  </code></pre>
+<p>Type <code>CTRL-C</code> to stop the process. Note that you can relaunch the script later to build additional wavefront files.</p>
+<p>By default, the wavefront files are stored in the work directory. You may choose to move them to another location (useful if you have multiple work directories sharing the same wavefront files). You can then create a symbolic link <code>atmwf</code> to an existing atmospheric wavefront simulation directory. For example:</p>
+<pre><code>ln -s /data/AtmWF/wdir00/ atmwf</code></pre></li>
+<li><p>Execute master script <code>./aohardsim/runAOhsim</code></p></li>
+<li><p>To stop the physical simulator: <code>./aohardsim/runAOhsim -k</code></p></li>
+</ul>
+<p>Important notes:</p>
+<ul>
+<li><p>Parameters for the simulation can be changed by editing the <code>.conf</code> files in the <code>aohardsim</code> directory</p></li>
+<li><p>You may need to kill and relaunch the main script twice after changing parameters</p></li>
+</ul>
+</div>
+<div id="method-2-output-streams" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Method 2 output streams</h3>
+<table>
+<colgroup>
+<col width="26%" />
+<col width="73%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Stream</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>wf0opd</strong></td>
+<td align="left">Atmospheric WF OPD</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>wf0amp</strong></td>
+<td align="left">Atmospheric WF amplitude</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>wf1opd</strong></td>
+<td align="left">Wavefront OPD after correction [um] ( = wf0opd - 2 x dm05dispmap )</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>dm05disp</strong></td>
+<td align="left">DM actuators positions</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>dm05dispmap</strong></td>
+<td align="left">DM OPD map</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>WFSinst</strong></td>
+<td align="left">Instantaneous WFS intensity</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>pWFSint</strong></td>
+<td align="left">WFS intensity frame, time averaged to WFS frame rate and sampled to WFS camera pixels</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>aosim_foc0_amp</strong></td>
+<td align="left">First focal plane (before coronagraph), amplitude</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>aosim_foc0_pha</strong></td>
+<td align="left">First focal plane (before coronagraph), phase</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>aosim_foc1_amp</strong></td>
+<td align="left">First focal plane (after coronagraph), amplitude</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>aosim_foc1_pha</strong></td>
+<td align="left">First focal plane (after coronagraph), phase</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>aosim_foc2_amp</strong></td>
+<td align="left">Post-coronagraphic focal plane, amplitude</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>aosim_foc2_pha</strong></td>
+<td align="left">Post-coronagraphic focal plane, phase</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="processes-and-scripts-details" class="section level3">
+<h3><span class="header-section-number">3.3.3</span> Processes and scripts details</h3>
+<div id="process-aosimmkwf" class="section level4">
+<h4><span class="header-section-number">3.3.3.1</span> Process <code>aosimmkWF</code></h4>
+<p><code>aosimmkWF</code> reads precomputed wavefronts and formats them for the simulation parameters (pixel scale, temporal sampling).</p>
+<p>Parameters for <code>aosimmkWF</code> are stored in configuration file:</p>
+<p>File <code>aosimmkWF.conf.default</code> :</p>
+<div class="sourceCode"><table class="sourceCode numberLines"><tr class="sourceCode"><td class="lineNumbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+</pre></td><td class="sourceCode"><pre><code class="sourceCode"># ======== AO simulation : creating atmospheric wavefronts stream =================
+# script relies on pre-computed physical atmospheric wavefronts
+
+
+MODE             0                # 0: read pre-computed WFs, 1: empty WFs
+WFDIR            ./atmwf          # atmospheric wavefronts directory
+
+LAMBDANM         1650             # wavelength [nm]
+
+# ============== OUTPUT TYPE (OPD unit = um) ====================
+OUT0FITSFILE         0                 # 0: none, 1 if FITS file output OPD only, 2 if OPD+AMP
+OUT0FITSFILENAMEOPD  wf0opd.fits       # FITS file name output (OPD)
+OUT0FITSFILENAMEAMP  wf0amp.fits       # FITS file name output (AMP)
+OUTPHYSTIME          aosim_phystime    # physical time [s]
+OUT0STREAM           2                 # 1 if shared memory stream OPD only, 2 if OPD+AMP 
+OUT0STREAMNAMEOPD    wf0opd            # output WF stream name (OPD)
+OUT0STREAMNAMEAMP    wf0amp            # output WF stream name (AMP)
+
+# ============== PROCESS TRIGGER ==================================
+TRIGGERMODE           2                # 0: file, 1: semaphore from stream, 2: time interval
+TRIGGERFILE           wfup.txt         # update file name (TRIGGERMODE=0,1
+TRIGGERDT             0.01             # update interval (TRIGGERMODE=0,2)
+TRIGGER0STREAM        WFSinst          # trigger stream
+TRIGGER0SEM           5                # trigger semaphore in TRIGGERSTREAM
+TRIGGER1STREAM        dm05dispmap      # trigger stream
+TRIGGER1SEM           5                # trigger semaphore in TRIGGERSTREAM
+
+# ============== PARAMETERS ======================================
+DT                    0.0000625        # time interval between computed wavefronts
+OPDMFACT              1.0              # OPD multiplicative factor
+AMPMFACT              1.0              # AMP multiplicative factor
+ARRAYSIZE             128              # output size [pix]
+PIXSCALEMODE          2                # 0: adopt input WF pixel scale, 1: custom pixel scale, 2: bin
+PIXSCALECUSTOM        0.1              # custom pixel size
+PIXBINFACTOR          4                # bin factor
+PUPDIAMM              8                # Pupil diameter [m]
+
+# ============== POST-PROCESSING =============================
+DM0MODE               1                # 0 if no DM0, 1 if OPD DMn
+DM0NAME               dm05dispmap      # DM displacement map stream
+OUT1FITSFILENAMEOPD   wf1opd.fits      # FITS file name output (OPD)
+OUT1FITSFILENAMEAMP   wf1amp.fits      # FITS file name output (AMP)
+OUT1STREAM            1                # 1 if shared memory stream OPD only, 2 if OPD+AMP 
+OUT1STREAMNAMEOPD     wf1opd           # output WF stream name (OPD)
+OUT1STREAMNAMEAMP     wf1amp           # output WF stream name (AMP)
+</code></pre></td></tr></table></div>
+</div>
+<div id="process-aosimdmrun" class="section level4">
+<h4><span class="header-section-number">3.3.3.2</span> Process <code>aosimDMrun</code></h4>
+<p>File <code>aosimDMrun.conf.default</code> :</p>
+<div class="sourceCode"><table class="sourceCode numberLines"><tr class="sourceCode"><td class="lineNumbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="sourceCode"><pre><code class="sourceCode">
+# ============== AOsim: DM process =============================
+# DM process is triggered by WF OPD, not by DM command
+
+# ============== INPUT &amp; TRIGGER (OPD unit = um) ===============
+INMODE                   0                 # 0:stream, 1:file system (FITS)
+INSTREAMNAMEDM           dm05disp          # input DM command stream
+INFITSFILENAMEDM         dm05disp.fits     # input FITS file name (DM command)
+INTRIGSTREAMNAME         wf1opd            # input trigger stream
+INTRIGSEMCHAN            6                 # input semaphore channel (using OPD input)
+INTRIGGERFILE            inwf.txt          # input trigger file
+
+# ============== OUTPUT TYPE ===================================
+OUTMODE                  0                 # 0: stream, 1: file system
+OUTSTREAMNAMEDM          dm05dispmap       # output WF stream name 
+OUTFITSFILENAMEDM        dm05dispmap.fits  # FITS file name output [um]
+OUTTRIGGERFILE           outdm.txt         # output trigger file
+
+# ============== GEOMETRY, TIME =============================
+ARRAYSIZE                128               # array size, pix
+DMRAD                    52                # DM radius on array
+DMDT                     0.0003            # DM time sampling
+NBTSAMPLES               100               # number of time samples
+DMLAGSTART               0.0003            # time lag start
+DMTIMECST                0.0001            # DM time constant</code></pre></td></tr></table></div>
+</div>
+<div id="process-aosimpyrwfs" class="section level4">
+<h4><span class="header-section-number">3.3.3.3</span> Process <code>aosimPyrWFS</code></h4>
+<p>File <code>aosimPyrWFS.conf.default</code> :</p>
+<div class="sourceCode"><table class="sourceCode numberLines"><tr class="sourceCode"><td class="lineNumbers"><pre></pre></td><td class="sourceCode"><pre><code class="sourceCode"></code></pre></td></tr></table></div>
+</div>
+</div>
+<div id="ao-loop-control" class="section level3">
+<h3><span class="header-section-number">3.3.4</span> AO loop control</h3>
+<p>The <code>aolconf</code> script is used to configure and launch the AO control loop. It can be configured with input/output from real hardware or a simulation of real hardware.</p>
+<div id="shared-memory-streams" class="section level4">
+<h4><span class="header-section-number">3.3.4.1</span> Shared memory streams</h4>
+<table>
+<colgroup>
+<col width="34%" />
+<col width="65%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Script</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>wf0opd</strong></td>
+<td align="left">Wavefront OPD prior to wavefront correction [um]</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>wf1opd</strong></td>
+<td align="left">Wavefront OPD after correction [um] ( = wf0opd - 2 x dm05dispmap )</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>dm05disp</strong></td>
+<td align="left">DM actuators positions</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>dm05dispmap</strong></td>
+<td align="left">DM OPD map</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>WFSinst</strong></td>
+<td align="left">Instantaneous WFS intensity</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>pWFSint</strong></td>
+<td align="left">WFS intensity frame, time averaged to WFS frame rate and sampled to WFS camera pixels</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="hardware-simulation-architecture" class="section level4">
+<h4><span class="header-section-number">3.3.4.2</span> Hardware simulation architecture</h4>
+<div class="figure">
+<img src="./figures/aosimlink.jpg" title="aosim data flow" alt="data flow" />
+<p class="caption">data flow</p>
+</div>
+<p>Close-loop simulation requires the following scripts to be launched to simulate the hardware, in the following order :</p>
+<ul>
+<li><code>aosimDMstart</code>: This script creates DM channels (uses dm index 5 for simulation). Shared memory arrays <code>dm05disp00</code> to <code>dm05disp11</code> are created, along with the total displacement <code>dm05disp</code>. Also creates the <code>wf1opd</code> shared memory stream which is needed by <code>aosimDMrun</code> and will be updated by runWF. <code>wf1opd</code> is the master clock for the whole simulation, as it triggers DM shape computation and WFS image computation.</li>
+<li><code>aosimDMrun</code>: Simulates physical deformable mirror (DM)</li>
+<li><code>aosimmkWF</code>: Creates atmospheric wavefronts</li>
+<li><code>aosimWFS</code>: Simulates WFS</li>
+</ul>
+<p>Some key script variables need to coordinated between scripts. The following WF array size should match :</p>
+<ul>
+<li><code>WFsize</code> in script <code>aosimDMstart</code></li>
+<li><code>ARRAYSIZE</code> in <code>aosimmkWF.conf</code></li>
+<li><code>ARRAYSIZE</code> in <code>aosimDMrun.conf</code></li>
+</ul>
+<p>The main hardware loop is between <code>aosimmkWF</code> and <code>aosimWFS</code>: computation of a wavefront by <code>aosimmkWF</code> is <em>triggered</em> by completion of a WFS instantaneous image computation by <code>aosimWFS</code>. The configuration files are configured for this link.</p>
+</div>
+<div id="dm-temporal-response" class="section level4">
+<h4><span class="header-section-number">3.3.4.3</span> DM temporal response</h4>
+<p>The DM temporal response is assumed to be such that the distance between the current position <span class="math inline">\(p\)</span> and desired displacement <span class="math inline">\(c\)</span> values is multiplided by coefficient <span class="math inline">\(a&lt;1\)</span> at each time step <span class="math inline">\(dt\)</span>. The corresponding step response is :</p>
+<p><span class="math inline">\(c - p((k+1) dt) = (c - p(k dt)) a\)</span></p>
+<p><span class="math inline">\(c - p(k dt) = (c-p0) a^k\)</span></p>
+<p><span class="math inline">\(p(k dt) = 1-a^k\)</span></p>
+<p>The corresponding time constant is</p>
+<p><span class="math inline">\(a^{\frac{t0}{dt}} = 0.5\)</span></p>
+<p><span class="math inline">\(\frac{t0}{dt} ln(a) = ln(0.5)\)</span></p>
+<p><span class="math inline">\(ln(a) = ln(0.5) dt/t0\)</span></p>
+<p><span class="math inline">\(a = 0.5^{\frac{dt}{t0}}\)</span></p>
+</div>
+</div>
+<div id="processes-and-scripts-system-ouput" class="section level3">
+<h3><span class="header-section-number">3.3.5</span> Processes and scripts: system ouput</h3>
+<p>The output (corrected) wavefront is processed to compute ouput focal plane images, and optionally LOWFS image.</p>
+<div id="process-aosimcorolowfs" class="section level4">
+<h4><span class="header-section-number">3.3.5.1</span> Process <code>aosimcoroLOWFS</code></h4>
+<p>Computes coronagraphic image output and LOWFS image</p>
+<p>File <code>aosimcoroLOWFS.conf.default</code>:</p>
+<div class="sourceCode"><table class="sourceCode numberLines"><tr class="sourceCode"><td class="lineNumbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+</pre></td><td class="sourceCode"><pre><code class="sourceCode">
+# ============== AOsim: coro LOWFS process =============================
+# LOWFS process is triggered by WF OPD
+
+# ============== INPUT &amp; TRIGGER (OPD unit = um) ===============
+INMODE                   0                 # 0:stream, 1:file system (FITS)
+INAMPSTREAMNAME          wf1amp            # input AMP stream
+INOPDSTREAMNAME          wf1opd            # input OPD stream
+INAMPFITSFILENAME        wf1amp.fits       # input FITS file name
+INOPDFITSFILENAME        wf1opd.fits       # input FITS file name
+INTRIGSTREAMNAME         wf1opd            # input trigger stream
+INTRIGSEMCHAN            4                 # input semaphore channel (using OPD input)
+INTRIGGERFILE            inwf.txt          # input trigger file
+INPHYSTIME               aosim_phystime    # physical time
+
+# ============== OUTPUT TYPE ===================================
+OUTMODE                  0                       # 0: stream, 1: file system
+OUTLOWFSARRAYSIZE        16                      # output LOWFS array size, pix
+OUTLOWFSSTREAMNAME       aosim_imcamLOWFS        # output WF stream name 
+OUTLOWFSFITSFILENAME     aosim_imcamLOWFS.fits   # FITS file name output [um]
+OUTTRIGGERFILE           outLOWFS.txt            # output trigger file
+
+# ============== GEOMETRY, OPTICAL DESIGN =============================
+LAMBDAum                 1.65              # wavelength [um]
+ARRAYSIZE                256               # array size, pix, used for internal computations
+COROFPMAMP               corofpmamp        # coronagraph focal plane mask amplitude
+COROFPMPHA               corofpmpha        # coronagraph focal plane mask amplitude
+LYOTSTOPREFLAMP          lyotstopreflamp   # LYOT stop reflectivity map (amp)
+LYOTSTOPREFLPHA          lyotstopreflpha   # LYOT stop reflectivity map (pha)
+LYOTSTOPTRANSMAMP        lyotstoptransmamp # LYOT stop transmission map (amp)
+LYOTSTOPTRANSMPHA        lyotstoptransmpha # LYOT stop transmission map (pha)
+
+# ============== LOWFS =============================
+LOWFSOPDMAP              lowfsopdmap       # LOWFS defocus map [um]
+LOWFSCAMETIME            0.01              # LOWFS camera exposure time [s]</code></pre></td></tr></table></div>
+</div>
+<div id="ouput-simulation-architecture" class="section level4">
+<h4><span class="header-section-number">3.3.5.2</span> Ouput simulation architecture</h4>
+<div class="figure">
+<img src="./figures/aosimlink_coroLOWFS.jpg" title="coroLOWFS data flow" alt="coroLOWFS data flow" />
+<p class="caption">coroLOWFS data flow</p>
+</div>
+</div>
+</div>
+</div>
+<div id="method-3-linear-hardware-simulation" class="section level2">
+<h2><span class="header-section-number">3.4</span> METHOD 3: Linear Hardware Simulation</h2>
+<div id="overview-1" class="section level3">
+<h3><span class="header-section-number">3.4.1</span> Overview</h3>
+<p>The Linear Hardware Simulation (LHS) uses a linear response matrix to compute the WFS image from the DM state. It is significantly faster than the Physical Hardware Simulation (PHS) but does not capture non-linear effects.</p>
+</div>
+<div id="setup" class="section level3">
+<h3><span class="header-section-number">3.4.2</span> Setup</h3>
+<ul>
+<li>Create directory LHScalib:</li>
+</ul>
+<pre><code>mkdir LHScalib</code></pre>
+<ul>
+<li><p>Download response matrix and reference, place them in directory <code>LHScalib</code>.</p></li>
+<li><p>Start GUI, loop 5, name simLHS</p></li>
+</ul>
+<pre><code>./aolconf -L 5 -N simLHS</code></pre>
+<ul>
+<li><p>Start DM: index 04, 50 x 50; Auto-configure: main DM (no link); STOP -&gt; (re-)START DM comb process</p></li>
+<li><p>Go to <code>TEST MODE</code> GUI</p></li>
+<li><p>Enter linear simulation zonal response matrix and linear simulation WFS reference (<code>zrespMlinsim</code> and <code>wfsref0linsim</code> selections at top of screen).</p></li>
+<li><p><strong>Start linear simulator</strong> (<code>lsimon</code> selection). The simulator reacts to changes in aol5_dmdisp (= dm04disp)</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="aoloopcontrol-setup-and-overview" class="section level1">
+<h1><span class="header-section-number">4</span> AOloopControl setup and overview</h1>
+<div id="gui-description" class="section level2">
+<h2><span class="header-section-number">4.1</span> GUI description</h2>
+<p>The script <code>aolconf</code> starts the main GUI, from which all setup and control can be done. The GUI consists of several main screens, as shown below.</p>
+<div class="figure">
+<img src="./figures/aolconfGUIscreens.jpg" title="GUI screens" alt="aolconf GUI screens" />
+<p class="caption">aolconf GUI screens</p>
+</div>
+</div>
+<div id="commands-log" class="section level2">
+<h2><span class="header-section-number">4.2</span> Commands log</h2>
+<p>ALL commands are logged by the script :</p>
+<pre><code>./aolconfscripts/aollog</code></pre>
+<div id="automatically-generated-internal-command-log-very-detailed" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Automatically generated internal command log (very detailed)</h3>
+<p><code>aolconf</code> uses the script <code>aolconfscripts/aollog</code> to log commands and status into file <code>./logdir/&lt;UTDATE&gt;/logging/&lt;LOOPNAME&gt;.log</code>. A sym link to <code>aolconf.log</code> is created for convenience, so the log content can be viewed with:</p>
+<pre><code>tail -f aolconf.log</code></pre>
+<p>Inside the bash script, function <code>aoconflog</code> is used to call <code>aolconfscripts/aollog</code> with the proper loop name, as defined in the main <code>aolconf</code> script:</p>
+<pre><code># internal log - logs EVERYTHING
+function aoconflog {
+./aolconfscripts/aollog &quot;$LOOPNAME&quot; &quot;$@&quot;
+}</code></pre>
+</div>
+<div id="user-provided-usexternal-log-less-verbose" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> User-provided UsExternal log (less verbose)</h3>
+<p>More important commands are logged simultaneously to the internal log and an external log. The user provides the command to externally log commands. The executable should be in the path, and named <code>aollogext</code>. The syntax is:</p>
+<pre><code>./aollogext &lt;string&gt;</code></pre>
+<p>The string usually consists of the loop name followed by comments.</p>
+<p>Inside the bash script, function <code>aoconflogext</code> is used to call <code>aolconfscripts/aollog</code> with the proper loop name, as defined in the main <code>aolconf</code> script:</p>
+<pre><code># external log, use for less verbose log
+function aoconflogext {
+./aolconfscripts/aollog -e &quot;$LOOPNAME&quot; &quot;$@&quot;
+}</code></pre>
+</div>
+<div id="interactive-user-log" class="section level3">
+<h3><span class="header-section-number">4.2.3</span> Interactive user log</h3>
+<p>To start the interactive log script:</p>
+<pre><code>./aolconfscripts/aollog -i &lt;LOOPNAME&gt; NULL</code></pre>
+<p>Entries will be logged in the <code>./logdir/&lt;UTDATE&gt;/logging/&lt;LOOPNAME&gt;.log</code> file (with sym link to <code>aolconf.log</code>).</p>
+<p>It is also common practice to start a <code>MISC</code> log for misc comments, also to be included in the external log:</p>
+<pre><code>./aolconfscripts/aollog -ie MISC NULL</code></pre>
+<p>The corresponding log can be viewed by:</p>
+<pre><code>tail -f logdit/&lt;UTDATE&gt;/logging/MISC.log</code></pre>
+</div>
+</div>
+</div>
+<div id="setting-up-the-hardware-interfaces" class="section level1">
+<h1><span class="header-section-number">5</span> Setting up the hardware interfaces</h1>
+<div id="top-level-script" class="section level2">
+<h2><span class="header-section-number">5.1</span> Top level script</h2>
+<p>Start aolconf with loop number and loop name (you can ommit these arguments when launching the script again):</p>
+<pre><code>./aolconf -L 3 -N testsim</code></pre>
+<p>The loop name (<code>testsim</code> in the above example) will both allocate a name for the loop and execute an optional custom setup script. The software package comes with a few such pre-made custom scripts for specific systems / examples. When the <code>-N</code> option is specified, the custom setup script <code>./setup/setup_&lt;name&gt;</code> is ran. The script may make some of the steps described below optional.</p>
+<p>You can check the current loop number and name settings with:</p>
+<pre><code>./aolconf -h</code></pre>
+<p>The script can also launch a pre-written CPU/OS configuration script named <code>./aocscripts/cpuconfig_&lt;LOOPNAME&gt;</code> :</p>
+<pre><code>./aolconf -C</code></pre>
+</div>
+<div id="setting-the-dm-interface" class="section level2">
+<h2><span class="header-section-number">5.2</span> Setting the DM interface</h2>
+<p>There are four options for setting up the DM:</p>
+<ul>
+<li><p>[A] Connect to an existing DM</p></li>
+<li><p>[B] Create a new DM and connect to it</p></li>
+<li><p>[C] Create a new modal DM, mapped to an existing DM using another loop's control modes</p></li>
+<li><p>[D] Create a new modal DM, mapped to an existing DM channel using a custom set of modes</p></li>
+</ul>
+<p>Before choosing an option, select if the DM to be controlled is <code>MODAL</code> or <code>ZONAL</code>. A zonal DM is one where the DM pixel locations map to physical actuator locations on the DM, allowing spatial filtering when creating control modes. With a zonal DM, each pixel of the DM map corresponds to a wavefront control mode, and spatial filtering functions are turned off.</p>
+<p>Options [C] and [D] are <code>MODAL</code> options, as the DM does not represent physical spatial actuators. These options build a virtual DM which controls another DM.</p>
+<div id="mode-a-connecting-to-an-existing-dm" class="section level3">
+<h3><span class="header-section-number">5.2.1</span> Mode [A]: Connecting to an existing DM</h3>
+<ol style="list-style-type: decimal">
+<li><p><strong>Set DM number</strong> (<code>S</code> command in <code>Top Menu</code> screen). You should see its x and y size in the two lines below. If not, the DM does not exist yet (see next section).</p></li>
+<li><strong>autoconfigure DM: main DM (nolink)</strong> (<code>nolink</code> in <code>Top Menu</code> screen). This command automactically sets up the following symbolic links:
+<ul>
+<li>dm##disp00 is linked to aol#_dmO (flat offset channel)</li>
+<li>dm##disp02 is linked to aol#_dmRM (response matrix actuation channel)</li>
+<li>dm##disp03 is linked to aol#_dmC (loop dm control channel)</li>
+<li>dm##disp04 is linked to aol#_dmZP0 (zero point offset 0 actuation channel)</li>
+<li>dm##disp05 is linked to aol#_dmZP1 (zero point offset 1 actuation channel)</li>
+<li>dm##disp06 is linked to aol#_dmZP2 (zero point offset 2 actuation channel)</li>
+<li>dm##disp07 is linked to aol#_dmZP3 (zero point offset 3 actuation channel)</li>
+<li>dm##disp08 is linked to aol#_dmZP4 (zero point offset 4 actuation channel)</li>
+<li>dm##disp is linked to aol#_dmdisp (total dm displacement channel)</li>
+</ul></li>
+<li><p><strong>load Memory</strong> (<code>M</code> in <code>Top Menu</code> screen). The dm performs the symbolic links to the DM channels.</p></li>
+</ol>
+</div>
+<div id="mode-b-creating-and-connecting-to-a-dm" class="section level3">
+<h3><span class="header-section-number">5.2.2</span> Mode [B]: Creating and Connecting to a DM</h3>
+<ol style="list-style-type: decimal">
+<li><p>Set <strong>DM number</strong> (<code>S</code> command in <code>Top Menu</code> screen).</p></li>
+<li><p>Enter the desired <strong>DM size</strong> with the <code>dmxs</code> and <code>dmys</code> commands.</p></li>
+</ol>
+<ul>
+<li>OPTIONAL: <strong>set DM delay</strong> ('setDMdelayON' and 'setDMdelayval' in <code>Top Menu</code> screen)</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li><p><strong>Create the DM streams</strong> with the <code>initDM</code> command in the <code>Top Menu</code>. You may need to run the <code>stopDM</code> command first.</p></li>
+<li><strong>autoconfigure DM: main DM (nolink)</strong> (<code>nolink</code> in <code>Top Menu</code> screen). This command automactically sets up the following symbolic links:
+<ul>
+<li>dm##disp00 is linked to aol#_dmO (flat offset channel)</li>
+<li>dm##disp02 is linked to aol#_dmRM (response matrix actuation channel)</li>
+<li>dm##disp03 is linked to aol#_dmC (loop dm control channel)</li>
+<li>dm##disp04 is linked to aol#_dmZP0 (zero point offset 0 actuation channel)</li>
+<li>dm##disp05 is linked to aol#_dmZP1 (zero point offset 1 actuation channel)</li>
+<li>dm##disp06 is linked to aol#_dmZP2 (zero point offset 2 actuation channel)</li>
+<li>dm##disp07 is linked to aol#_dmZP3 (zero point offset 3 actuation channel)</li>
+<li>dm##disp08 is linked to aol#_dmZP4 (zero point offset 4 actuation channel)</li>
+<li>dm##disp is linked to aol#_dmdisp (total dm displacement channel)</li>
+</ul></li>
+<li><p><strong>Load Memory</strong> (<code>M</code> in <code>Top Menu</code> screen). The dm performs the symbolic links to the DM channels.</p></li>
+</ol>
+</div>
+<div id="mode-c-create-a-new-modal-dm-mapped-to-an-existing-dm-using-another-loops-control-modes" class="section level3">
+<h3><span class="header-section-number">5.2.3</span> Mode [C]: Create a new modal DM, mapped to an existing DM using another loop's control modes</h3>
+<p>In this mode, the AO loop controls a virtual DM. The virtual actuators are correspond to modes controlling the zero point offset of another loop. In this section, I assume that <strong>loopA</strong> is the main loop (directly controls a physical DM) and that <strong>loopB</strong> is the virtual loop (this is the loop we are setting up).</p>
+<ol style="list-style-type: decimal">
+<li><p>Select <strong>MODAL</strong> DM (<code>DMmodeZ</code> in <code>Top Menu</code> screen)</p></li>
+<li><p>Set <strong>DM number</strong> (<code>S</code> command in <code>Top Menu</code> screen). This is the DM index for loopB.</p></li>
+<li><p>Set <strong>DM x size</strong> to the number of modes of loop A to be addressed by loop B's virtual DM</p></li>
+<li><p>Set <strong>DM y size</strong> to 1</p></li>
+<li><strong>Auto-configure: DM output linked to other loop</strong> (<code>dmolink</code> in <code>Top Menu</code> screen).
+<ol style="list-style-type: decimal">
+<li>choose loop index from which modes will be extracted (loop A index)</li>
+<li>choose offset channel in output loop This will set up several key parameters and files:</li>
+</ol>
+<ul>
+<li><strong>DM-to-DM</strong> mode will be set to 1, and associated streams:
+<ul>
+<li><strong>dm2dmM</strong> : <strong>loopA</strong> modes controlled by <strong>loopB</strong></li>
+<li><strong>dm2dmO</strong> : symbolic link to <strong>loopA</strong> DM channel controlled by <strong>loopB</strong></li>
+</ul></li>
+<li><strong>CPU-based dmcomb output WFS ref</strong> will be set to 1, and associated streams:
+<ul>
+<li><strong>dmwrefRM</strong> : <strong>loopA</strong> WFS response to modes controlled by <strong>loopB</strong></li>
+<li><strong>dmwrefO</strong> : <strong>loopA</strong> WFS zero point offset</li>
+</ul></li>
+</ul></li>
+</ol>
+<ul>
+<li><strong>OPTIONAL: set DM delay</strong> ('setDMdelayON' and 'setDMdelayval' in <code>Top Menu</code> screen)</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li><p><strong>Create the DM streams</strong> with the <code>initDM</code> command in the <code>Top Menu</code>.</p></li>
+<li><p><strong>Load Memory</strong> (<code>M</code> in <code>Top Menu</code> screen). The dm performs the symbolic links to the DM channels.</p></li>
+</ol>
+</div>
+<div id="mode-d-create-a-new-modal-dm-mapped-to-an-existing-dm-channel-using-a-custom-set-of-modes" class="section level3">
+<h3><span class="header-section-number">5.2.4</span> Mode [D]: Create a new modal DM, mapped to an existing DM channel using a custom set of modes</h3>
+<p>In this mode, the AO loop controls a virtual DM. The virtual actuators correspond to modes controlling another DM stream. In this section, I assume that <strong>loop A</strong> is the main loop (directly controls a physical DM) and that <strong>loop B</strong> is the virtual (higher level) loop.</p>
+<ol style="list-style-type: decimal">
+<li><p>Choose DM index number (<code>S</code>) for loop B</p></li>
+<li><p>Select number of loop A modes controlled by loop B. The number is entered as DM x size (<code>dmxs</code> in <code>Top menu</code>)</p></li>
+<li><p>Enter 1 for DM y size (<code>dmys</code> in <code>Top menu</code>)</p></li>
+<li>Set <strong>DM-to-DM</strong> mode to 1, and associated streams:
+<ul>
+<li><strong>dm2dmM</strong> : loop A modes controlled by loop B</li>
+<li><strong>dm2dmO</strong> : symbolic link to loop A DM channel controlled by loop B</li>
+</ul></li>
+<li><p>Set <strong>CPU-based dmcomb output WFS ref</strong> to 0 (see section below more enabling this option)</p></li>
+<li><p><strong>(Re)-create DM streams and run DMcomb process</strong> (<code>initDM</code>)</p></li>
+<li><p><strong>Load Memory</strong> (<code>M</code> in <code>Top Menu</code> screen). The dm performs the symbolic links to the DM channels.</p></li>
+</ol>
+<p>Commands to the loop B DM should now propagate to modal commands to loop A.</p>
+</div>
+<div id="option-wfs-zero-point-offset" class="section level3">
+<h3><span class="header-section-number">5.2.5</span> Option: WFS Zero point offset</h3>
+<p>It is possible to add a zero point offset to mode D. Every write to the loop B's modal DM then generate both a write to loop A's DM (described above) and a write to the reference of a wavefront sensor (presumably loop A's wavefront sensor). This optional feature is refered to as a CPU-based WFS zero point offset.</p>
+<p>To enable this feature, add between steps 4 and 5:</p>
+<ol style="list-style-type: decimal">
+<li>set <strong>CPU-based dmcomb output WFS ref</strong> to 1, and associated streams:
+<ul>
+<li><strong>dmwrefRM</strong> : <strong>loopA</strong> WFS response to modes controlled by <strong>loopB</strong></li>
+<li><strong>dmwrefO</strong> : <strong>loopA</strong> WFS zero point offset</li>
+</ul></li>
+</ol>
+</div>
+<div id="notes" class="section level3">
+<h3><span class="header-section-number">5.2.6</span> Notes</h3>
+<p>You can (Re-)Start DM comb to re-initialize arrays and links ('stopDM' and 'initDM' commands in <code>Top Menu</code> screen). The <code>initDM</code> command will</p>
+<ul>
+<li>(re-)create shared memory streams dm##disp00 to dm##disp11</li>
+<li>start the dmcomb process, which adds the dm##disp## channels to create the overall dm##disp displacement</li>
+<li>create poke mask and maps</li>
+</ul>
+</div>
+</div>
+<div id="setting-the-camera-interface" class="section level2">
+<h2><span class="header-section-number">5.3</span> Setting the camera interface</h2>
+<ul>
+<li><strong>link to WFS camera</strong> (<code>wfs</code> to <code>Loop Configuration</code> screen). Select the WFS shared memory stream.</li>
+</ul>
+</div>
+<div id="setup-script" class="section level2">
+<h2><span class="header-section-number">5.4</span> Setup script</h2>
+<p>An <code>aosetup</code> script may be used to perform all these operations. Inspect the content of directory <code>aosetup</code> to see such scripts. You may use or modify as needed. If you use a <code>aosetup</code> script, execute it from the working directory, and then start aolconf:</p>
+<pre><code>./aosetup/aosetup_&lt;myLoop&gt;
+./aolconf</code></pre>
+</div>
+</div>
+<div id="calibration" class="section level1">
+<h1><span class="header-section-number">6</span> Calibration</h1>
+<div id="acquiring-a-zonal-response-matrix" class="section level2">
+<h2><span class="header-section-number">6.1</span> Acquiring a zonal response matrix</h2>
+<ul>
+<li><p><strong>set response matrix parameters</strong> in <code>Loop Configure</code> screen: amplitude, time delay, frame averaging, excluded frames</p></li>
+<li><p><strong>set normalization and Hadmard modes</strong> in <code>Loop Configure</code> screen. Normalization should probably be set to 1.</p></li>
+<li><p><strong>start zonal response matrix acquisition</strong> (<code>zrespon</code> in <code>Loop Configure</code> screen). The process runs in tmux session aol#zrepM.</p></li>
+<li><p><strong>stop zonal response matrix acquistion</strong> (<code>zrespoff</code> in <code>Loop Configure</code> screen).</p></li>
+</ul>
+<p>The following files are then created:</p>
+<table>
+<colgroup>
+<col width="23%" />
+<col width="29%" />
+<col width="46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Archived location</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>zrespmat.fits</strong></td>
+<td align="left">zrespM/zrespM_${datestr}.fits</td>
+<td align="left">zonal response matrix</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>wfsref0.fits</strong></td>
+<td align="left">wfsref0/wfsref0_${datestr}.fits</td>
+<td align="left">WFS reference (time-averaged image)</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>wfsmap.fits</strong></td>
+<td align="left">wfsmap/wfsmap_${datestr}.fits</td>
+<td align="left">Map of WFS elements sensitivity</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>dmmap.fits</strong></td>
+<td align="left">dmmap/dmmap_${datestr}.fits</td>
+<td align="left">Map of DM elements sensitivity</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>wfsmask.fits</strong></td>
+<td align="left">wfsmask/wfsmask_${datestr}.fits</td>
+<td align="left">WFS pixel mask, derived from wfsmap</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>dmmaskRM.fits</strong></td>
+<td align="left">dmmaskRM/dmmaskRM_${datestr}.fits</td>
+<td align="left">DM actuator mask, derived from dmmap by selecting actuators with strong response</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>dmslaved.fits</strong></td>
+<td align="left">dmslaved/dmslaved_${datestr}.fits</td>
+<td align="left">slaved DM actuators: actuators near active actuators in dmmaskRM</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>dmmask.fits</strong></td>
+<td align="left">dmmask/dmmask_${datestr}.fits</td>
+<td align="left">DM mask: all actuators controlled (union of dmmaskRM and dmslaved)</td>
+</tr>
+</tbody>
+</table>
+<p>Note that at this point, the files are NOT loaded in shared memory, but the archieved file names are stored in the staging area &quot;conf_zrm_staged/conf_streamname.txt&quot; for future loading.</p>
+<ul>
+<li><p><strong>Adopt staged configuration</strong> (<code>upzrm</code> in <code>Loop Configure</code> screen)</p></li>
+<li><p><strong>Load zrespm files into shared memory</strong> (<code>SMloadzrm</code> in <code>Loop Configure</code> screen)</p></li>
+</ul>
+</div>
+<div id="acquiring-a-modal-response-matrix-optional-for-zonal-dm-only" class="section level2">
+<h2><span class="header-section-number">6.2</span> Acquiring a modal response matrix (optional, for ZONAL DM only)</h2>
+<p>In addition to the zonal response matrix, a modal response matrix can be acquired to improve sensitivity to low-oder modes.</p>
+<p>To do so:</p>
+<ul>
+<li><p>activate <code>RMMon</code> to <strong>toggle the modal RM on</strong>.</p></li>
+<li><p><strong>select RM amplitude and maximum cycles per aperture (CPA)</strong></p></li>
+<li><p><strong>start the acquisiton</strong> (<code>LOresp_on</code>)</p></li>
+<li><p><strong>stop the acquisiton</strong> (<code>LOresp_off</code>)</p></li>
+</ul>
+<p>The following files are then created:</p>
+<table>
+<colgroup>
+<col width="23%" />
+<col width="29%" />
+<col width="46%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Archived location</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>LOrespmat.fits</strong></td>
+<td align="left">LOrespM/LOrespM_${datestr}.fits</td>
+<td align="left">Modal response matrix</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>respM_LOmodes.fits</strong></td>
+<td align="left">LODMmodes/LODMmodes_${datestr}.fits</td>
+<td align="left">Low-order modes</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>LOwfsref0.fits</strong></td>
+<td align="left">LOwfsref0/LOwfsref0_${datestr}.fits</td>
+<td align="left">WFS reference measured during LO RM acquisition</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>LOwfsmap.fits</strong></td>
+<td align="left">LOwfsmap/LOwfsmap_${datestr}.fits</td>
+<td align="left">Map of WFS elements sensitivity</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>LOdmmap.fits</strong></td>
+<td align="left">LOdmmap/LOdmmap_${datestr}.fits</td>
+<td align="left">Map of DM elements sensitivity</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>LOwfsmask.fits</strong></td>
+<td align="left">LOwfsmask/LOwfsmask_${datestr}.fits</td>
+<td align="left">WFS pixel mask, derived from wfsmap</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>LOdmmask.fits</strong></td>
+<td align="left">LOdmmask/LOdmmask_${datestr}.fits</td>
+<td align="left">DM actuator mask, derived from dmmap by selecting actuators with strong response</td>
+</tr>
+</tbody>
+</table>
+<p>Note that at this point, the files are NOT loaded in shared memory, but the archieved file names are stored in the staging area &quot;conf_mrm_staged//conf_streamname.txt&quot; for future loading.</p>
+<ul>
+<li><p><strong>Adopt staged configuration</strong> (<code>upmrm</code> in <code>Loop Configure</code> screen)</p></li>
+<li><p><strong>Load LOrespm files into shared memory</strong> (<code>SMloadmrm</code> in <code>Loop Configure</code> screen)</p></li>
+</ul>
+</div>
+<div id="automatic-system-calibration-recommended" class="section level2">
+<h2><span class="header-section-number">6.3</span> Automatic system calibration (recommended)</h2>
+<p>The automatic system calibration performs all steps listed above under zonal and modal response matrix acquisition.</p>
+<p>The old calibrations are archived as follows:</p>
+<ul>
+<li><p>&quot;conf_zrm_staged&quot; and &quot;conf_mrm_staged&quot; hold the new configuration (zonal and modal respectively)</p></li>
+<li><p>&quot;conf_zrm_staged.000&quot; and &quot;conf_mrm_staged.000&quot; hold the previous configuration (previously &quot;conf_zrm_staged&quot; and &quot;conf_mrm_staged&quot;)</p></li>
+<li><p>&quot;conf_zrm_staged.001&quot; and &quot;conf_mrm_staged.001&quot; hold the configuration previously named &quot;conf_zrm_staged.000&quot; and &quot;conf_mrm_staged.000&quot;</p></li>
+<li><p>etc for a total of 20 configuration</p></li>
+</ul>
+</div>
+<div id="managing-configurations" class="section level2">
+<h2><span class="header-section-number">6.4</span> Managing configurations</h2>
+<p>At any given time, the current configuration (including control matrices if they have been computed) can be saved using the <code>SAVE CURRENT SYSTEM CALIBRATION</code> command. Saving a configuration will save all files in the conf directory into a user-specified directory.</p>
+<p>Previously saved configurations can be loaded with the <code>LOAD SAVED SYSTEM CALIBRATION</code> command. This will load saved files into the conf directory and load all files into shared memory.</p>
+</div>
+</div>
+<div id="building-control-matrix" class="section level1">
+<h1><span class="header-section-number">7</span> Building control matrix</h1>
+<ul>
+<li><p><strong>set SVDlimit</strong> (<code>SVDla</code> in <code>Control Matrix</code> screen). Set value is 0.1 as a starting point for a stable loop.</p></li>
+<li><p><strong>perform full CM computation</strong> (<code>mkModes0</code> in <code>Control Matrix</code> screen). Enter first the number of CPA blocks you wish to use. Computation takes a few minutes, and takes place in tmux session <code>aol#mkmodes</code>.</p></li>
+</ul>
+<p>The following files are created:</p>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="32%" />
+<col width="45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Archived location</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>aolN_DMmodes</strong></td>
+<td align="left">Mmodes/DMmodes_${datestr}.fits</td>
+<td align="left">DM modes</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>aolN_respM</strong></td>
+<td align="left">respM/respM_${datestr}.fits</td>
+<td align="left">WFS response to DM modes</td>
+</tr>
+</tbody>
+</table>
+<p>Block-specific files:</p>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="32%" />
+<col width="45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Archived location</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>aolN_DMmodesbb</strong></td>
+<td align="left">DMmodes/DMmodesbb_${datestr}.fits</td>
+<td align="left">DM modes for block bb</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>aolN_respMbb</strong></td>
+<td align="left">respM/respMbb_${datestr}.fits</td>
+<td align="left">WFS response to DM modes for block bb</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>aolN_contrMbb.fits</strong></td>
+<td align="left">contrM/contrMbb_${datestr}.fits</td>
+<td align="left">Control matrix for block bb</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>aolN_contrMcbb.fits</strong></td>
+<td align="left">contrMc/contrMcbb_${datestr}.fits</td>
+<td align="left">Collapsed control matrix for block bb</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>aolN_contrMcactbb.fits</strong></td>
+<td align="left">contrMcact/contrMcactbb_${datestr}.fits</td>
+<td align="left">Collabsed control matrix for block bb, only active actuators</td>
+</tr>
+</tbody>
+</table>
+<p>Note that at this point, the files are NOT loaded in shared memory, but the archieved file names are stored in &quot;conf/conf_<streamname>.txt&quot; for future loading.</p>
+<ul>
+<li><strong>Load CM files into shared memory</strong> (<code>SMloadCM</code> in <code>Control Matrix</code> screen)</li>
+</ul>
+</div>
+<div id="running-the-loop-choosing-hardware-mode-cpugpu" class="section level1">
+<h1><span class="header-section-number">8</span> Running the loop: Choosing hardware mode (CPU/GPU)</h1>
+<p>There are multiple ways to perform the computations on CPU and/or GPUs. The main 3 parameters are:</p>
+<ul>
+<li><p><strong>GPU</strong> : 0 if matrix multiplication(s) done on CPU, &gt;0 for GPU use. This is the number GPUs to use for matrix mult.</p></li>
+<li><p><strong>CMmode</strong> : 1 if using a combined matrix between WFS pixels and DM actuators, skipping intermediate computation of modes</p></li>
+<li><p><strong>GPUall</strong> : if using GPUall, then the WFS reference subtraction is wrapped inside the GPU matrix multiplication</p></li>
+</ul>
+<table>
+<colgroup>
+<col width="6%" />
+<col width="7%" />
+<col width="7%" />
+<col width="9%" />
+<col width="8%" />
+<col width="60%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">GPU</th>
+<th align="left">CMmode</th>
+<th align="left">GPUall</th>
+<th align="left">Matrix</th>
+<th align="left">Features</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">&gt;0</td>
+<td align="left">ON</td>
+<td align="left">ON</td>
+<td align="left">contrMcact</td>
+<td align="left">fastest no mcoeff</td>
+<td align="left">dark-subtracted WFS frame imWFS0 is multiplited by collapsed control matrix (only active pixels). normalization and WFS reference subtraction are wrapped in this GPU operation as subtraction of pre-computed vector output. This is the fastest mode.</td>
+</tr>
+<tr class="even">
+<td align="left">&gt;0</td>
+<td align="left">ON</td>
+<td align="left">OFF</td>
+<td align="left">contrMcact</td>
+<td align="left"></td>
+<td align="left">WFS reference is subtracted from imWFS0 in CPU, yielding imWFS2. imWFS2 is multiplied by control matrix (only active pixels) in GPU.</td>
+</tr>
+<tr class="odd">
+<td align="left">&gt;0</td>
+<td align="left">OFF</td>
+<td align="left">OFF</td>
+<td align="left">contrM</td>
+<td align="left"></td>
+<td align="left">MWFS reference is subtracted from imWFS0 in CPU, yiedling imWFS2. imWFS2 is multiplied (GPU) by control matrix to yield mode values. Mode coefficients then multiplied (GPU) by modes.</td>
+</tr>
+<tr class="even">
+<td align="left">0</td>
+<td align="left">ON</td>
+<td align="left">-</td>
+<td align="left">contrMcact</td>
+<td align="left"></td>
+<td align="left">imWFS2 is multiplied by control matrix (only active pixels) in CPU</td>
+</tr>
+<tr class="odd">
+<td align="left">0</td>
+<td align="left">OFF</td>
+<td align="left">-</td>
+<td align="left">contrM</td>
+<td align="left"></td>
+<td align="left">imWFS2 multiplied by modal control matrix</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="auxilliary-processes" class="section level1">
+<h1><span class="header-section-number">9</span> Auxilliary processes</h1>
+<p>A number of auxilliary processes can be running in addition to the main loop operation.</p>
+<div id="extract-wfs-modes" class="section level2">
+<h2><span class="header-section-number">9.1</span> Extract WFS modes</h2>
+<p>Launches script <code>./auxscripts/modesextractwfs</code> :</p>
+<div class="sourceCode"><table class="sourceCode numberLines"><tr class="sourceCode"><td class="lineNumbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+</pre></td><td class="sourceCode"><pre><code class="sourceCode">#! /bin/bash
+
+
+# number of arguments to script
+NBARGS=1
+
+# ======================= PROCESS NAME =================================
+loopnb=$( head -1 LOOPNUMBER 2&gt; /dev/null)
+pname=&quot;aol${loopnb}mexwfs&quot;
+
+
+
+function printHELP {
+echo &quot;------------------------------------------------------------------------&quot;
+echo &quot;$(tput bold) $pname : EXTRACT MODE VALUES FROM WFS IMAGES $(tput sgr0)&quot;
+echo &quot;------------------------------------------------------------------------&quot;
+echo &quot;  computes mode coefficients from WFS image stream&quot;
+echo &quot;   &quot;
+echo &quot; $(tput bold)USAGE:$(tput sgr0)&quot;
+echo &quot;     $0 [-hr] &lt;GPUdevice&gt;&quot;
+echo &quot;&quot;
+echo &quot; $(tput bold)OPTIONS:$(tput sgr0)&quot;
+echo &quot;     $(tput bold)-h$(tput sgr0)          help&quot;
+echo &quot;     $(tput bold)-r$(tput sgr0)          read from aol${loopnb}_DMmode_meas instead of computing&quot;
+echo &quot;&quot;
+echo &quot; $(tput bold)INPUT:$(tput sgr0)&quot;
+echo &quot;     &lt;GPUdevice&gt;     GPU device&quot;
+echo &quot;&quot;
+echo &quot; $(tput bold)OUTPUT:$(tput sgr0)&quot;
+echo &quot;     aol${loopnb}_modeval      Mode coefficient values&quot;
+echo &quot;&quot;
+echo &quot;------------------------------------------------------------------------&quot;
+}
+
+
+
+
+printHELP1 ()
+{
+    printf &quot;     $(tput bold)%-25s$(tput sgr0)       Extract mode values from WFS images\n&quot; &quot;$0&quot; 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in &quot;$@&quot;; do
+  shift
+  case &quot;$arg&quot; in
+    &quot;--help&quot;) set -- &quot;$@&quot; &quot;-h&quot; ;;
+    &quot;--help1&quot;) 
+set -- &quot;$@&quot; &quot;-h&quot; 
+singlelinehelp=1;
+;;
+    *)        set -- &quot;$@&quot; &quot;$arg&quot;
+  esac
+done
+
+
+
+
+# ================= OPTIONS =============================
+IMPORTmodeval=&quot;0&quot;
+while getopts :hr FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ &quot;$singlelinehelp&quot; -eq &quot;0&quot; ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    r)
+    IMPORTmodeval=&quot;1&quot;
+    ;;
+    \?) #unrecognized option - show help
+      echo -e \\n&quot;Option -${BOLD}$OPTARG${NORM} not allowed.&quot;
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+
+if [ &quot;$1&quot; = &quot;help&quot; ] || [ &quot;$#&quot; -ne $NBARGS ]; then
+if [ &quot;$#&quot; -ne $NBARGS ]; then
+    echo &quot;$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)&quot;
+fi
+printHELP
+        exit
+fi
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+# this version does not use masking (yet)
+
+if [ &quot;$IMPORTmodeval&quot; = &quot;0&quot; ]; then
+
+./AOloopControl -n $pname &lt;&lt; EOF
+csetpmove aol${loopnb}RT1
+readshmim aol${loopnb}_respM
+readshmim aol${loopnb}_imWFS0
+readshmim aol${loopnb}_imWFS0tot
+readshmim aol${loopnb}_wfsref
+readshmim aol${loopnb}_wfsmask
+listim
+cudaextrmodes aol${loopnb}_imWFS0 aol${loopnb}_imWFS0tot aol${loopnb}_respM aol${loopnb}_wfsref nullim aol${loopnb}_modeval $1 1 1 1 2 0 0
+exitCLI
+EOF
+
+else
+
+#echo &quot;Linking    /tmp/aol${loopnb}_DMmode_meas.im.shm  - /tmp/aol${loopnb}_modeval.im.shm&quot;
+#rm /tmp/aol${loopnb}_modeval.im.shm
+#ln -s /tmp/aol${loopnb}_DMmode_meas.im.shm /tmp/aol${loopnb}_modeval.im.shm
+
+./AOloopControl -n $pname &lt;&lt; EOF
+csetpmove aol${loopnb}RT1
+readshmim aol${loopnb}_respM
+readshmim aol${loopnb}_imWFS0
+readshmim aol${loopnb}_imWFS0tot
+readshmim aol${loopnb}_wfsref
+readshmim aol${loopnb}_modeval
+readshmim aol${loopnb}_wfsmask
+listim
+cudaextrmodes aol${loopnb}_imWFS0 aol${loopnb}_imWFS0tot aol${loopnb}_respM aol${loopnb}_wfsref nullim aol${loopnb}_modeval $1 1 1 1 2 0 0
+exitCLI
+EOF
+
+fi</code></pre></td></tr></table></div>
+<p>Converts WFS residuals into modes.</p>
+</div>
+<div id="extract-open-loop-modes" class="section level2">
+<h2><span class="header-section-number">9.2</span> Extract open loop modes</h2>
+<p>Launches script C function (CPU-based):</p>
+<pre><code>key       :    aolcompolm
+module    :    AOloopControl.c
+info      :    compute open loop mode values
+syntax    :    &lt;loop #&gt;
+example   :    aolcompolm 2
+C call    :    long AOloopControl_ComputeOpenLoopModes(long loop)</code></pre>
+<p>This function is entirely modal, and assumes that the WFS modes (see section above) are computed. The key input to the function is <code>aolN_modeval</code>, the WFS residual mode values. The function uses this telemetry and knowledge of loop gain and mult factor to track open loop mode values.</p>
+<p>Optionally, it also includes <code>aolN_modeval_pC</code>, the predictive control mode values that are added to the correction in predictive mode.</p>
+</div>
+<div id="running-average-of-dmc" class="section level2">
+<h2><span class="header-section-number">9.3</span> Running average of dmC</h2>
+<p>Launches script <code>./auxscripts/aol_dmCave 0.0005</code> :</p>
+<div class="sourceCode"><table class="sourceCode numberLines"><tr class="sourceCode"><td class="lineNumbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+</pre></td><td class="sourceCode"><pre><code class="sourceCode">#!/bin/bash
+
+NBARGS=1
+pname=`echo &quot;$0&quot; | sed &quot;s/\.\///g&quot;`
+
+
+
+
+
+
+function printHELP {
+echo &quot;------------------------------------------------------------------------&quot;
+echo &quot;$(tput bold) $pname : dmC temporal averaging $(tput sgr0)&quot;
+echo &quot;------------------------------------------------------------------------&quot;
+echo &quot;  dmC temporal averaging&quot;
+echo &quot;temporal averaging of zonal correction in AO system&quot;
+echo &quot;   &quot;
+echo &quot; $(tput bold)USAGE:$(tput sgr0)&quot;
+echo &quot;     $0 [-h] &lt;coeff&gt;&quot;
+echo &quot;&quot;
+echo &quot; $(tput bold)OPTIONS:$(tput sgr0)&quot;
+echo &quot;     $(tput bold)-h$(tput sgr0)          help&quot;
+echo &quot;&quot;
+echo &quot; $(tput bold)INPUT:$(tput sgr0)&quot;
+echo &quot;     &lt;coeff&gt;   time interval&quot;
+echo &quot;&quot;
+echo &quot; $(tput bold)EXAMPLE:$(tput sgr0)&quot;
+echo &quot;     $0 0.001&quot;
+echo &quot;&quot;
+echo &quot;------------------------------------------------------------------------&quot;
+}
+
+
+printHELP1 ()
+{
+    printf &quot;     $(tput bold)%-25s$(tput sgr0)       dmC temporal averaging\n&quot; &quot;$0&quot; 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in &quot;$@&quot;; do
+  shift
+  case &quot;$arg&quot; in
+    &quot;--help&quot;) set -- &quot;$@&quot; &quot;-h&quot; ;;
+    &quot;--help1&quot;) 
+set -- &quot;$@&quot; &quot;-h&quot; 
+singlelinehelp=1;
+;;
+    *)        set -- &quot;$@&quot; &quot;$arg&quot;
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ &quot;$singlelinehelp&quot; -eq &quot;0&quot; ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n&quot;Option -${BOLD}$OPTARG${NORM} not allowed.&quot;
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ &quot;$1&quot; = &quot;help&quot; ] || [ &quot;$#&quot; -ne $NBARGS ]; then
+if [ &quot;$#&quot; -ne $NBARGS ]; then
+    echo &quot;$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)&quot;
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+pname=&quot;aol${loopnb}-$0&quot;
+
+./AOloopControl -n $pname &lt;&lt; EOF
+readshmim aol${loopnb}_dmC
+aveACshmim aol${loopnb}_dmC $1 aol${loopnb}_dmC_ave aol${loopnb}_dmC_AC aol${loopnb}_dmC_rms
+exitCLI
+EOF</code></pre></td></tr></table></div>
+</div>
+<div id="compute-and-average-wfsres" class="section level2">
+<h2><span class="header-section-number">9.4</span> Compute and average wfsres</h2>
+<p>Launches script <code>./auxscripts/aolmkWFSres 0.0005</code> :</p>
+<div class="sourceCode"><table class="sourceCode numberLines"><tr class="sourceCode"><td class="lineNumbers"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+</pre></td><td class="sourceCode"><pre><code class="sourceCode">#!/bin/bash
+
+
+NBARGS=1
+pname=`echo &quot;$0&quot; | sed &quot;s/\.\///g&quot;`
+
+
+
+
+function printHELP {
+echo &quot;------------------------------------------------------------------------&quot;
+echo &quot;$(tput bold) $pname : Compute real-time WFS residual image $(tput sgr0)&quot;
+echo &quot;------------------------------------------------------------------------&quot;
+echo &quot;  Compute real-time residual image&quot;
+echo &quot;   &quot;
+echo &quot; $(tput bold)USAGE:$(tput sgr0)&quot;
+echo &quot;     $0 [-h] &lt;averaging coeff&gt;&quot;
+echo &quot;&quot;
+echo &quot; $(tput bold)OPTIONS:$(tput sgr0)&quot;
+echo &quot;     $(tput bold)-h$(tput sgr0)          help&quot;
+echo &quot;&quot;
+echo &quot; $(tput bold)INPUT:$(tput sgr0)&quot;
+echo &quot;   &lt;averaging coeff&gt;    averaging coefficient&quot;
+echo &quot;&quot;
+echo &quot; $(tput bold)OUTPUT:$(tput sgr0)&quot;
+echo &quot;creates streams :&quot;
+echo &quot;        aol&lt;loop&gt;_wfsres&quot;
+echo &quot;        aol&lt;loop&gt;_wfsres_ave&quot;
+echo &quot;        aol&lt;loop&gt;_wfsres_rms&quot;
+echo &quot;&quot;
+echo &quot;------------------------------------------------------------------------&quot;
+}
+
+
+printHELP1 ()
+{
+    printf &quot;     $(tput bold)%-25s$(tput sgr0)       Compute real-time WFS residual image\n&quot; &quot;$0&quot; 
+}
+
+
+
+
+# Transform long options to short ones
+singlelinehelp=0
+for arg in &quot;$@&quot;; do
+  shift
+  case &quot;$arg&quot; in
+    &quot;--help&quot;) set -- &quot;$@&quot; &quot;-h&quot; ;;
+    &quot;--help1&quot;) 
+set -- &quot;$@&quot; &quot;-h&quot; 
+singlelinehelp=1;
+;;
+    *)        set -- &quot;$@&quot; &quot;$arg&quot;
+  esac
+done
+
+
+while getopts :h FLAG; do
+  case $FLAG in
+    h)  #show help
+      if [ &quot;$singlelinehelp&quot; -eq &quot;0&quot; ]; then
+      printHELP
+      else
+      printHELP1
+      fi
+      exit
+      ;;
+    \?) #unrecognized option - show help
+      echo -e \\n&quot;Option -${BOLD}$OPTARG${NORM} not allowed.&quot;
+      printHELP
+      ;;
+  esac
+done
+
+shift $((OPTIND-1)) 
+
+
+
+
+
+
+
+if [ &quot;$1&quot; = &quot;help&quot; ] || [ &quot;$#&quot; -ne $NBARGS ]; then
+if [ &quot;$#&quot; -ne $NBARGS ]; then
+    echo &quot;$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)&quot;
+fi
+printHELP
+        exit
+fi
+
+
+
+
+
+
+
+
+
+loopnb=$( head -1 LOOPNUMBER )
+
+./AOloopControl -n aol${loopnb}latency &lt;&lt; EOF
+creaimshm aol${loopnb}_wfsavecoeff 1 1
+setpix aol${loopnb}_wfsavecoeff $1 0 0
+aolmkwfsres ${loopnb} aol${loopnb}_wfsavecoeff
+exitCLI
+EOF</code></pre></td></tr></table></div>
+</div>
+</div>
+<div id="offsetting" class="section level1">
+<h1><span class="header-section-number">10</span> Offsetting</h1>
+<p>Input channels are provided to offset the AO loop convergence point. By default, <strong>DM channels 04-11 can be dedicated to zero-point offsetting</strong>. The DM channels are sym-linked to <code>aolN_dmZP0</code> - <code>aolN_dmZP7</code>.</p>
+<div class="figure">
+<img src="./figures/aoloopctr_offset.jpg" title="WFS zero point offsetting" alt="WFS zero point offsetting" />
+<p class="caption">WFS zero point offsetting</p>
+</div>
+<p>Zero-point offsetting relies on two separate processes :</p>
+<ul>
+<li>Converting DM offsets to WFS offsets (can be done by CPU or GPU): aolN_dmZP -&gt; aolN_wfszpo</li>
+<li>Summing and applying WFS offsets aolN_wfszpo to aolN_wfsref</li>
+</ul>
+<div id="converting-dm-offsets-to-wfs-offsets-zonal-cpu-mode" class="section level2">
+<h2><span class="header-section-number">10.1</span> Converting DM offsets to WFS offsets (zonal, CPU mode)</h2>
+<p>CPU-based zero point offsets will compute WFS offsets from the zero point offset DM channels (04-11) and apply them to the <code>aolN_wfszpo#</code> stream.</p>
+<ul>
+<li><strong>Activate CPU individual zero point offset channels</strong> (<code>zplon0</code> to <code>zplon7</code>) to convert dm zero point displacements to wfs offsets.</li>
+</ul>
+<p>Every time one of the activated DM channel changes, the corresponding wfs <code>aolN_wfszpo#</code> zero point offset is CPU-computed.</p>
+<p>The process runs inside tmux session <code>aolNzploop#</code></p>
+</div>
+<div id="converting-dm-offsets-to-wfs-offsets-zonal-gpu-mode" class="section level2">
+<h2><span class="header-section-number">10.2</span> Converting DM offsets to WFS offsets (zonal, GPU mode)</h2>
+<p>A faster GPU-based zero point offset from DM to WFS is provided for each of the 8 offset channels. GPU-based and CPU-based offsetting for a single channel are mutually exclusive.</p>
+<ul>
+<li><strong>Activate GPU individual zero point offset channels</strong> (<code>GPUzplon0</code> to <code>GPUzplon7</code>) to convert dm zero point displacements to wfs offsets.</li>
+</ul>
+<p>Every time one of the activated DM channel changes, the corresponding wfs <code>aolN_wfszpo#</code> zero point offset is GPU-computed.</p>
+<p>The process runs inside tmux session <code>aolNGPUzploop#</code></p>
+</div>
+<div id="modal-offsetting-from-another-loop" class="section level2">
+<h2><span class="header-section-number">10.3</span> Modal offsetting from another loop</h2>
+<p>The two methods above are zonal offsetting: the DM map is multiplied by the zonal WFS response to compute WFS offset.</p>
+<p>Modal offsetting, instead, relies on a pre-computed set of WFS modal offets. This is most useful when a separate control loop is driving modal offsets to the current loop.</p>
+<p>To implement modal offsetting from a separate loop (refered to as the offsetting loop) :</p>
+<ul>
+<li><p>Configure the DM of the offsetting loop to write WFS zero point offsets to the current loop (see setting up DM section)</p></li>
+<li><p>Do not activate either of the previous two zonal offsetting schemes</p></li>
+<li><p>Activate the WFS offsets process (see next subsection)</p></li>
+</ul>
+</div>
+<div id="summing-and-applying-wfs-offsets-to-aoln_wfsref" class="section level2">
+<h2><span class="header-section-number">10.4</span> Summing and applying WFS offsets to aolN_wfsref</h2>
+<p>To activate WFS offsets to aolN_wfsref, the user needs to :</p>
+<ul>
+<li><strong>Toggle the zero point offset loop process ON</strong> (<code>LPzpo</code>) prior to starting the loop.</li>
+</ul>
+<p>Command <code>aolzpwfscloop</code> (C function <code>AOloopControl_WFSzeropoint_sum_update_loop</code>) launches a loop that monitors shared memory streams <code>aolN_wfszpo0</code> to <code>aolN_wfszpo7</code>, and updates the WFS reference when one of these has changed.</p>
+<p>The loop is running inside tmux session <code>aolNwfszpo</code>, and is launched when the loop is closed (<code>Floopon</code>) if the loop zero point offset flag is toggled on (<code>LPzpo</code>)</p>
+</div>
+<div id="wfs-average-offset" class="section level2">
+<h2><span class="header-section-number">10.5</span> WFS average offset</h2>
+<p>Measures average WFS residual with script :</p>
+<pre><code>./auxscripts/aolmkWFSres 0.0005</code></pre>
+<p>Running average is in stresm aol_wfsres_ave</p>
+</div>
+</div>
+<div id="controlling-offsets-from-another-loop" class="section level1">
+<h1><span class="header-section-number">11</span> Controlling offsets from another loop</h1>
+<div id="running-the-loop" class="section level2">
+<h2><span class="header-section-number">11.1</span> Running the loop</h2>
+<p>The next steps are similar to the ones previously described, with the following important differences:</p>
+<ul>
+<li>The control matrix should be computed in zonal mode (no modal CPA block decomposition)</li>
+</ul>
+</div>
+</div>
+<div id="predictive-control-experimental" class="section level1">
+<h1><span class="header-section-number">12</span> Predictive control (experimental)</h1>
+<div id="overview-2" class="section level2">
+<h2><span class="header-section-number">12.1</span> Overview</h2>
+<p>Predictive control is implemented in two processes:</p>
+<ul>
+<li><p>The optimal auto-regressive (AR) filter predicting the current state from previous states is computed. The AR filter is computed from open-loop estimates, so the processes computing open-loop telemetry need to be running.</p></li>
+<li><p>the AR filter is applied to write a prediction buffer, which can be written asynchronously from the main loop steps.</p></li>
+</ul>
+<p>The predictive filter is modal, and adopts the same modes as the main control loop.</p>
+</div>
+<div id="scripts" class="section level2">
+<h2><span class="header-section-number">12.2</span> Scripts</h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="66%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>aolARPF</strong></td>
+<td align="left">find auto-regressive predictive filter</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>aolARPFblock</strong></td>
+<td align="left">AO find optimal AR linear predictive filter</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="data-flow" class="section level2">
+<h2><span class="header-section-number">12.3</span> Data flow</h2>
+<p>Predictive control is set up by blocks of modes. A block is configured through the aolconf predictive control sub-panel, which writes to configuration files <code>conf/conf_PFblock_XXX.txt</code>, where XXX is the block number (000, 001, 002 etc...). Configuration files specify the modes within each block (index min to index max), the predictive filter order, time lag and and averaging gain.</p>
+<p>For each block, there are 3 main processes involved in running the predictive control:</p>
+<ul>
+<li><p><strong>Watching input telemetry</strong> this process listens to the input telemetry stream and periodically writes data to be used to compute a filter. This runs function <code>long AOloopControl_builPFloop_WatchInput(long loop, long PFblock)</code> in <code>AOloopControl.c</code>.</p></li>
+<li><p><strong>Computing filter</strong>. Runs CLI command <code>mkARpfilt</code>, which runs function <code>LINARFILTERPRED_Build_LinPredictor</code> in <code>linARfilterPred.c</code>.</p></li>
+<li><p><strong>Prediction engine</strong> (= apply filter). Runs script <code>./auxscripts/predFiltApplyRT</code>.</p></li>
+</ul>
+<p>All 3 processes work in a chain, and can be turned on/off from the GUI.</p>
+</div>
+</div>
+<div id="appendix-a-shared-memory-streams" class="section level1">
+<h1><span class="header-section-number">13</span> APPENDIX A: SHARED MEMORY STREAMS</h1>
+<div id="linking-to-existing-stream" class="section level2">
+<h2><span class="header-section-number">13.1</span> Linking to existing stream</h2>
+<p>Creates a sym link from an existing stream to a new stream. This is frequently used to connect to hardware (for example pointing aol8_wfsim to the WFS camera stream).</p>
+<p>Within AOCCE, setting (new) stream aol#_&lt;deststream&gt; to point to &lt;srcstream&gt; involves:</p>
+<ul>
+<li>writing &quot;&lt;srcstream&gt;&quot; to file conf/streamlink_&lt;deststream&gt;.name.txt</li>
+<li>removing any existing aol#_&lt;deststream&gt; stream</li>
+<li>establishing sym link from &lt;srcstream&gt; to aol#_&lt;deststream&gt;</li>
+</ul>
+<p>The corresponding commands, to point aol8_wfsim to imcam, would be:</p>
+<pre><code>echo &quot;imcam&quot; &gt; conf/streamlink_wfsim.name.txt
+rm /tmp/aol8_wfsim.im.shm
+ln -s /tmp/imcam.im.shm /tmp/aol8_wfsim.im.shm</code></pre>
+<p>This is implemented in script :</p>
+<pre><code>./aolfuncs/aolfunc_StreamLink</code></pre>
+</div>
+<div id="loading-images-from-fits-to-shared-memory-stream" class="section level2">
+<h2><span class="header-section-number">13.2</span> Loading images from FITS to shared memory stream</h2>
+<div id="overview-3" class="section level3">
+<h3><span class="header-section-number">13.2.1</span> Overview</h3>
+<p>Loading FITS file into a new or existing stream.</p>
+<p>The recommended command to load a FITS image to shared memory in AOCCE is for example:</p>
+<pre><code>echo &quot;./wfsref0/wfsref0_today.fits&quot; &gt; ./conf/shmim_wfsref0.name.txt
+Fits2shm -c -p aol${LOOPNUMBER}_ wfsref0</code></pre>
+<p>This command will skip loading if the stream does not need to be updated from the last load command. Add the -f option to force loading.</p>
+<p>Options used:</p>
+<pre><code> -c           read FITS file name from ./conf/shmim_&lt;streamname&gt;.name.txt directory
+ -p &lt;pref&gt;    stream prefix</code></pre>
+</div>
+<div id="detailed-description" class="section level3">
+<h3><span class="header-section-number">13.2.2</span> Detailed description</h3>
+<p>File name can be :</p>
+<ul>
+<li>option A: read from ./conf/shmim_&lt;stream&gt;.name.txt</li>
+<li>option B: specfied and written to ./conf/shmim_&lt;stream&gt;.name.txt</li>
+</ul>
+<p>Command for option A:</p>
+<pre><code>Fits2shm &lt;FITS file&gt; &lt;stream&gt;</code></pre>
+<p>Command for option B:</p>
+<pre><code>Fits2shm -c &lt;stream&gt;</code></pre>
+<p>A prefix is usually added to the shared memory file with the -p option:</p>
+<pre><code>Fits2shm -c -p aol8_ &lt;stream&gt;</code></pre>
+<p>The -r removes/clears any previous instance of the stream and associated files: it is a stronger option than -f.</p>
+<p>Fits2shm is located in the src/scripts/ directory of the AOCCE source code.</p>
+<p>For both options, FITS files and shared memory files are inspected to assess need to load the image. If repetitive load requests are issued on the same file and shared memory, the script may decide that no action is required as the shared memory is already up-to-date.</p>
+<p>Local directory ./loadedSM/ is used to keep track of streams loaded from FITS files.</p>
+<p>Important files:</p>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">./loadedSM/&lt;stream&gt;.FITSinfo</td>
+<td align="left">FITS file name, size, time of last modification</td>
+</tr>
+<tr class="even">
+<td align="left">./loadedSM/&lt;stream&gt;.FITSinfo.old</td>
+<td align="left">previous version of above file - to be used for comparison</td>
+</tr>
+<tr class="odd">
+<td align="left">./loadedSM/&lt;stream&gt;.FITSsame</td>
+<td align="left">File exists if the two FITS files are identical</td>
+</tr>
+<tr class="even">
+<td align="left">./loadedSM/&lt;stream&gt;.FITSchanged</td>
+<td align="left">File exists if the two FITS files are different</td>
+</tr>
+<tr class="odd">
+<td align="left">./loadedSM/&lt;stream&gt;.SMinfo</td>
+<td align="left">stream file name, size, time of last modfification</td>
+</tr>
+<tr class="even">
+<td align="left">./loadedSM/&lt;stream&gt;.SMinfo.old</td>
+<td align="left">previous version of above file - to be used for comparison</td>
+</tr>
+<tr class="odd">
+<td align="left">./loadedSM/&lt;stream&gt;.SMsame</td>
+<td align="left">File exists if the two SM files are identical</td>
+</tr>
+<tr class="even">
+<td align="left">./loadedSM/&lt;stream&gt;.SMchanged</td>
+<td align="left">File exists if the two SM files are different</td>
+</tr>
+<tr class="odd">
+<td align="left">./loadedSM/&lt;stream&gt;.imsize</td>
+<td align="left">Image size - updated upon SM load</td>
+</tr>
+<tr class="even">
+<td align="left">./loadedSM/&lt;stream&gt;.new</td>
+<td align="left">File exists if last load request updated or created stream</td>
+</tr>
+<tr class="odd">
+<td align="left">./loadedSM/&lt;stream&gt;.kept</td>
+<td align="left">File exists if last load request kept stream unchanged</td>
+</tr>
+<tr class="even">
+<td align="left">./loadedSM/&lt;stream&gt;.missing</td>
+<td align="left">File exists if last load request created new stream (stream was missing)</td>
+</tr>
+<tr class="odd">
+<td align="left">./conf/shmim_&lt;stream&gt;.name.txt</td>
+<td align="left">FITS file name for stream</td>
+</tr>
+<tr class="even">
+<td align="left">./conf/shmim_&lt;stream&gt;.imsize.txt</td>
+<td align="left">Stream size</td>
+</tr>
+<tr class="odd">
+<td align="left">./conf/shmim_&lt;stream&gt;.fits</td>
+<td align="left">(symbolic link to) FITS file</td>
+</tr>
+<tr class="even">
+<td align="left">./tmp/&lt;prefix&gt;&lt;stream&gt;.im.shm</td>
+<td align="left">File-mapped shared memory</td>
+</tr>
+</tbody>
+</table>
+<p>The logic behind Fits2shm is as follows:</p>
+<ul>
+<li>Assume LOAD=0 (do not load FITS file in memory)</li>
+<li>Check if FITS file has changed. If yes, set LOAD=1</li>
+<li>Check if SM file has changed. If yes, set LOAD=1</li>
+<li>Check if SM file exists, if not:
+<ul>
+<li>set LOAD=1</li>
+<li>create &lt;stream&gt;.missing file (otherwise, rm &lt;stream&gt;.missing file)</li>
+</ul></li>
+<li>Check if FORCE option, if yes, set LOAD=1</li>
+<li>If LOAD=1:
+<ul>
+<li>load file to shared memory</li>
+</ul></li>
+</ul>
+<p>When loading :</p>
+<ul>
+<li>OPTION A only: update ./conf/shmim_&lt;stream&gt;_name.txt to the FITS file name<br />
+</li>
+<li>update ./loadedSM/&lt;stream&gt;.FITSinfo file</li>
+<li>update ./loadedSM/&lt;stream&gt;.SMinfo file</li>
+<li>create ./loadedSM/&lt;stream&gt;.kept OR ./loadedSM/&lt;stream&gt;.new file, remove the other one</li>
+<li>create ./loadedSM/&lt;stream&gt;.missing file if the SM file did not exist, otherwise remove ./loadedSM/&lt;stream&gt;.missing</li>
+<li>copy ./loadedSM/&lt;stream&gt;.imsize file to ./conf/shmim_&lt;stream&gt;.imsize.txt</li>
+<li>load FITS file to ./tmp/&lt;prefix&gt;&lt;stream&gt;.im.shm</li>
+<li>create sym link ./conf/shmim_&lt;stream&gt;.fits pointing to FITS file</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="appendix-b-conf-directory" class="section level1">
+<h1><span class="header-section-number">14</span> APPENDIX B: CONF DIRECTORY</h1>
+<div id="overview-4" class="section level2">
+<h2><span class="header-section-number">14.1</span> Overview</h2>
+<p>The conf directory contains the following file types:</p>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">conf_XXXX.txt</td>
+<td align="left">Information about the configuration (name etc...)</td>
+</tr>
+<tr class="even">
+<td align="left">param_XXXXX.txt</td>
+<td align="left">AOCCE parameter, usually written by GUI</td>
+</tr>
+<tr class="odd">
+<td align="left">streamlink_XXXX.txt</td>
+<td align="left">shared memory link name for AOCCE stream XXXX</td>
+</tr>
+<tr class="even">
+<td align="left">shmim_XXXX.name.txt</td>
+<td align="left">Name of FITS file to be loaded to shared memory</td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_XXXX.imsize.txt</td>
+<td align="left">Image size of FITS file loaded to shared memory (written by Fits2shm)</td>
+</tr>
+<tr class="even">
+<td align="left">shmim_XXXX.fits</td>
+<td align="left">Sym link to FITS file loaded to shared memory (created by Fits2shm)</td>
+</tr>
+<tr class="odd">
+<td align="left">instconf_XXXXX.txt</td>
+<td align="left">Instrument-specific configuration (filter wheels, stages.. )</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="parameters" class="section level2">
+<h2><span class="header-section-number">14.2</span> Parameters</h2>
+<div id="overall-and-misc" class="section level3">
+<h3><span class="header-section-number">14.2.1</span> Overall and misc</h3>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">param_CPUset_mode.txt</td>
+<td align="left">1 if using CPUset</td>
+</tr>
+<tr class="even">
+<td align="left">param_wfslambdanm.txt</td>
+<td align="left">WFS wavelength [nm]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="linear-hardware-simulator" class="section level3">
+<h3><span class="header-section-number">14.2.2</span> Linear Hardware Simulator</h3>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">param_linsimDelay.txt</td>
+<td align="left">Linear Hardware Simulator (LHS) hardware latency [us]</td>
+</tr>
+<tr class="even">
+<td align="left">param_linsimdt.txt</td>
+<td align="left">Linear Hardware Simulator (LHS) loop interval [us]</td>
+</tr>
+<tr class="odd">
+<td align="left">param_GPUlinsim.txt</td>
+<td align="left">Linear Hardware Simulator (LHS) GPU index</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="dm" class="section level3">
+<h3><span class="header-section-number">14.2.3</span> DM</h3>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">param_DMindex.txt</td>
+<td align="left">DM index (00, 01, 02 ... )</td>
+</tr>
+<tr class="even">
+<td align="left">param_DMMODE.txt</td>
+<td align="left">ZONAL (default) or MODAL</td>
+</tr>
+<tr class="odd">
+<td align="left">param_DMxsize.txt</td>
+<td align="left">DM x size</td>
+</tr>
+<tr class="even">
+<td align="left">param_DMysize.txt</td>
+<td align="left">DM y size</td>
+</tr>
+<tr class="odd">
+<td align="left">param_DM2DM_mode.txt</td>
+<td align="left">DM-to-DM more. 1 if this DM drives another DM, 0 otherwise</td>
+</tr>
+<tr class="even">
+<td align="left">param_DMwfsref_mode.txt</td>
+<td align="left">1 for CPU-based dmcomb DM ouput applied as WFS offset</td>
+</tr>
+<tr class="odd">
+<td align="left">param_DMvolt_mode.txt</td>
+<td align="left">1 if DM voltages applied (requires stream &quot;dmvolt&quot;)</td>
+</tr>
+<tr class="even">
+<td align="left">param_DMcombave_mode.txt</td>
+<td align="left">DM averaging mode (default = 0)</td>
+</tr>
+<tr class="odd">
+<td align="left">param_DMdelayON.txt</td>
+<td align="left">1 if DM delay introduced</td>
+</tr>
+<tr class="even">
+<td align="left">param_DMdelayus.txt</td>
+<td align="left">DM delay value [us]</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="timing" class="section level3">
+<h3><span class="header-section-number">14.2.4</span> Timing</h3>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">param_loopfrequ.txt</td>
+<td align="left">WFS camera frequency [Hz]</td>
+</tr>
+<tr class="even">
+<td align="left">param_hardwlatency.txt</td>
+<td align="left">Hardware latency [s]</td>
+</tr>
+<tr class="odd">
+<td align="left">param_hardwlatency_frame.txt</td>
+<td align="left">Hardware latency [frame]</td>
+</tr>
+<tr class="even">
+<td align="left">param_complatency.txt</td>
+<td align="left">Computation latency [s]</td>
+</tr>
+<tr class="odd">
+<td align="left">param_complatency_frame.txt</td>
+<td align="left">Computation latency [frame]</td>
+</tr>
+<tr class="even">
+<td align="left">param_wfsmextrlatency.txt</td>
+<td align="left">Modal reconstruction latency [s]</td>
+</tr>
+<tr class="odd">
+<td align="left">param_wfsmextrlatency_frame.txt</td>
+<td align="left">Modal reconstruction latency [frame]</td>
+</tr>
+<tr class="even">
+<td align="left">param_nblatm.txt</td>
+<td align="left">Number of cycles in latency measurement</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="response-matrix-acquisition" class="section level3">
+<h3><span class="header-section-number">14.2.5</span> Response Matrix acquisition</h3>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">param_ACzrmtime.txt</td>
+<td align="left">Max running time for zonal RM acquisition [s]</td>
+</tr>
+<tr class="even">
+<td align="left">param_ACzrmNBcycle.txt</td>
+<td align="left">Max number of cycles for zonal RM acquition</td>
+</tr>
+<tr class="odd">
+<td align="left">param_ACmrmtime.txt</td>
+<td align="left">Max running time for monal RM acquisition [s]</td>
+</tr>
+<tr class="even">
+<td align="left">param_ACmrmNBcycle.txt</td>
+<td align="left">Max number of cycles for modal RM acquition</td>
+</tr>
+<tr class="odd">
+<td align="left">param_RMdelayfr.txt</td>
+<td align="left">RM acquisition delay [frame]</td>
+</tr>
+<tr class="even">
+<td align="left">param_RMfrave.txt</td>
+<td align="left">RM acquisition number of frames averaged per poke</td>
+</tr>
+<tr class="odd">
+<td align="left">param_RMexft.txt</td>
+<td align="left">RM acquisition number of frames excluded during poke transition</td>
+</tr>
+<tr class="even">
+<td align="left">param_RMamplum.txt</td>
+<td align="left">RM acquisition amplitude [um]</td>
+</tr>
+<tr class="odd">
+<td align="left">param_delayRM1us.txt</td>
+<td align="left">RM acquisition delay 1 [s]</td>
+</tr>
+<tr class="even">
+<td align="left">param_RMpokeMode.txt</td>
+<td align="left">RM poking mode. 0=zonal, 1=Hadamard.</td>
+</tr>
+<tr class="odd">
+<td align="left">param_RMMamplum.txt</td>
+<td align="left">RM Low Order Modal acquisition amplitude [um]</td>
+</tr>
+<tr class="even">
+<td align="left">param_RMMcpa.txt</td>
+<td align="left">RM Low Order Modal max CPA</td>
+</tr>
+<tr class="odd">
+<td align="left">param_WFSnorm.txt</td>
+<td align="left">Normalize WFS frames</td>
+</tr>
+<tr class="even">
+<td align="left">param_DMmaskRMp0.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">param_DMmaskRMc0.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">param_DMmaskRMp1.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">param_DMmaskRMc1.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">param_WFSmaskRMp0.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">param_WFSmaskRMc0.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">param_WFSmaskRMp1.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">param_WFSmaskRMc1.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">param_WFSmaskSNRr.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">param_RMCalibReuseMasks.txt</td>
+<td align="left">1 if calibration masks reused (0 if re-computed)</td>
+</tr>
+<tr class="even">
+<td align="left">param_.txt</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="modess-and-control-matrix-computation" class="section level3">
+<h3><span class="header-section-number">14.2.6</span> Modess and Control Matrix computation</h3>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">param_MASKS_LOCK.txt</td>
+<td align="left">1 if WFS and DM masks are locked</td>
+</tr>
+<tr class="even">
+<td align="left">param_NBmodeblocks.txt</td>
+<td align="left">Number of mode blocks (default=1)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="loop-control" class="section level3">
+<h3><span class="header-section-number">14.2.7</span> Loop Control</h3>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">param_DMprimWriteON.txt</td>
+<td align="left">Primary Write ON/OFF (0 or 1)</td>
+</tr>
+<tr class="even">
+<td align="left">param_CMMODE.txt</td>
+<td align="left">Combined Matrix (0 or 1)</td>
+</tr>
+<tr class="odd">
+<td align="left">param_GPU.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">param_GPUmodesextrwfs.txt</td>
+<td align="left">WFS mode coefficients extraction: GPU device</td>
+</tr>
+<tr class="odd">
+<td align="left">param_GPUdmfwb.txt</td>
+<td align="left">DM modal write (post-filtering): GPU device</td>
+</tr>
+<tr class="even">
+<td align="left">param_GPUzpoffsetZ.txt</td>
+<td align="left">Zonal WFS zero point offset loop: GPU device</td>
+</tr>
+<tr class="odd">
+<td align="left">param_GPUzpoffsetM.txt</td>
+<td align="left">Modal WFS zero point offset loop: GPU device</td>
+</tr>
+<tr class="even">
+<td align="left">param_LOOPPROCESS_EXTRWFSMODES.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">param_LOOPPROCESS_EXTROLMODES.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">param_LOOPPROCESS_DMFILTWB.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">param_LOOPPROCESS_ZPO.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">param_LOOPPROCESS_DMCAVE.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">param_LOOPPROCESS_WFSRESAVE.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">param_AUTOTUNELIMITS_ON.txt</td>
+<td align="left">Autotuning ON/OFF (ON or OFF)</td>
+</tr>
+<tr class="odd">
+<td align="left">param_AUTOTUNELIMITmcoeff.txt</td>
+<td align="left">Autotuning limits</td>
+</tr>
+<tr class="even">
+<td align="left">param_AUTOTUNELIMITdelta.txt</td>
+<td align="left">Autotuning limits</td>
+</tr>
+<tr class="odd">
+<td align="left">param_AUTOTUNEGAINS_ON.txt</td>
+<td align="left">Autotuning gain (ON or OFF)</td>
+</tr>
+<tr class="even">
+<td align="left">param_ARPFon.txt</td>
+<td align="left">Auto-regressive predictive filter (ON or OFF)</td>
+</tr>
+<tr class="odd">
+<td align="left">param_ARPFg.txt</td>
+<td align="left">Auto-regressive predictive filter gain</td>
+</tr>
+<tr class="even">
+<td align="left">param_loopgain.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">param_loopmmultcoeff.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">param_loopmaxlim.txt</td>
+<td align="left">Limit of DM actuators (direct write only)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="stream-links" class="section level2">
+<h2><span class="header-section-number">14.3</span> Stream Links</h2>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">streamlink_dmC.name.txt</td>
+<td align="left">DM correction stream</td>
+</tr>
+<tr class="even">
+<td align="left">streamlink_dmO.name.txt</td>
+<td align="left">DM offset stream (DM flat channel)</td>
+</tr>
+<tr class="odd">
+<td align="left">streamlink_dmZP0.name.txt</td>
+<td align="left">DM zero point offset #0 stream</td>
+</tr>
+<tr class="even">
+<td align="left">streamlink_dmZP1.name.txt</td>
+<td align="left">DM zero point offset #1 stream</td>
+</tr>
+<tr class="odd">
+<td align="left">streamlink_dmZP2.name.txt</td>
+<td align="left">DM zero point offset #2 stream</td>
+</tr>
+<tr class="even">
+<td align="left">streamlink_dmZP3.name.txt</td>
+<td align="left">DM zero point offset #3 stream</td>
+</tr>
+<tr class="odd">
+<td align="left">streamlink_dmZP4.name.txt</td>
+<td align="left">DM zero point offset #4 stream</td>
+</tr>
+<tr class="even">
+<td align="left">streamlink_dmZP5.name.txt</td>
+<td align="left">DM zero point offset #5 stream</td>
+</tr>
+<tr class="odd">
+<td align="left">streamlink_dmZP6.name.txt</td>
+<td align="left">DM zero point offset #6 stream</td>
+</tr>
+<tr class="even">
+<td align="left">streamlink_dmZP7.name.txt</td>
+<td align="left">DM zero point offset #7 stream</td>
+</tr>
+<tr class="odd">
+<td align="left">streamlink_dmdisp.name.txt</td>
+<td align="left">DM total displacement stream</td>
+</tr>
+<tr class="even">
+<td align="left">streamlink_dmRM.name.txt</td>
+<td align="left">DM response matrix stream</td>
+</tr>
+<tr class="odd">
+<td align="left">streamlink_dm2dmM.name.txt</td>
+<td align="left">DM modes controlled in DM-to-DM mode (optional)</td>
+</tr>
+<tr class="even">
+<td align="left">streamlink_dm2dmO.name.txt</td>
+<td align="left">DM modes output in DM-to-DM mode (optional)</td>
+</tr>
+<tr class="odd">
+<td align="left">streamlink_dmwrefRM.name.txt</td>
+<td align="left">WFS ref RM (optional)</td>
+</tr>
+<tr class="even">
+<td align="left">streamlink_dmwrefO.name.txt</td>
+<td align="left">WFS output (optional)</td>
+</tr>
+<tr class="odd">
+<td align="left">streamlink_wfsim.name.txt</td>
+<td align="left">WFS image</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="shared-memory-fits-file-initializations-to-streams" class="section level2">
+<h2><span class="header-section-number">14.4</span> Shared memory FITS file initializations to streams</h2>
+<p>File shmim_&lt;stream&gt;.name.txt contain the FITS file names that are loaded into shared memory streams aol&lt;loop&gt;_&lt;stream&gt;.</p>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">shmim_wfsdark.name.txt</td>
+<td align="left">WFS dark</td>
+</tr>
+<tr class="even">
+<td align="left">shmim_wfsmap.name.txt</td>
+<td align="left">WFS response map</td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_wfsmask.name.txt</td>
+<td align="left">WFS mask</td>
+</tr>
+<tr class="even">
+<td align="left">shmim_dmmap.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_dmmaskRM.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">shmim_dmslaved.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_dmmask.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">shmim_wfsref0.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_zrespM.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">shmim_LODMmodes.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_LOrespM.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">shmim_DModes.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_respM.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">shmim_contrM.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_DMmodesXX.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">shmim_respMXX.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_contrMXX.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">shmim_contrMcXX.name.txt</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">shmim_contrMcactXX_00.name.txt</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="fits-files" class="section level2">
+<h2><span class="header-section-number">14.5</span> FITS files</h2>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">RMpokeCubeZ.fits.gz</td>
+<td align="left">Simple Zonal poke mode</td>
+</tr>
+<tr class="even">
+<td align="left">RM_DMmask.fits.gz</td>
+<td align="left">mask for creating RM Hadamard pokes</td>
+</tr>
+<tr class="odd">
+<td align="left">Hpoke.fits.gz</td>
+<td align="left">Hadamard poke modes</td>
+</tr>
+<tr class="even">
+<td align="left">Hmat.fits.gz</td>
+<td align="left">Hadamard-zonal transformation matrix</td>
+</tr>
+<tr class="odd">
+<td align="left">Hpixindex.fits.gz</td>
+<td align="left">Hadamard DM pixel index</td>
+</tr>
+<tr class="even">
+<td align="left">RMmat.fits.gz</td>
+<td align="left">Current poke transformation matrix (optional)</td>
+</tr>
+<tr class="odd">
+<td align="left">RMpixindex.fits.gz</td>
+<td align="left">Current DM pixel index</td>
+</tr>
+<tr class="even">
+<td align="left">RMpokeCube.fits.gz</td>
+<td align="left">Current poke modes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="reference-content-of-.status-directory" class="section level1">
+<h1><span class="header-section-number">15</span> REFERENCE: Content of ./status directory</h1>
+<p>The status directories contrains the current state of the AOCCE processes.</p>
+<table>
+<colgroup>
+<col width="48%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">stat_DMcombON.txt</td>
+<td align="left">&quot; ON&quot; if DMcomb is running, &quot;OFF&quot; otherwise</td>
+</tr>
+<tr class="even">
+<td align="left">stat_lsimON.txt</td>
+<td align="left">&quot; ON&quot; if linear hardware simulator is running, &quot;OFF&quot; otherwise</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="appendix-c-step-by-step-example" class="section level1">
+<h1><span class="header-section-number">16</span> APPENDIX C: STEP-BY-STEP EXAMPLE</h1>
+<div id="starting-the-linear-hardware-simulator" class="section level2">
+<h2><span class="header-section-number">16.1</span> Starting the linear hardware simulator</h2>
+<p><strong>STEP 1</strong>: Create directory <code>&lt;workdir&gt;</code></p>
+<p><strong>STEP 2</strong>: Install scripts into <code>&lt;workdir&gt;</code>:</p>
+<pre><code>cd &lt;srcdir&gt;/src/AOloopControl/scripts
+syncscripts -e &lt;workdir&gt;
+cd &lt;workdir&gt;
+./syncscripts</code></pre>
+<p><strong>STEP 3</strong>: Download a calibration, consisting of zonal response matrix and a WFS reference. Place the file in a new directory <code>&lt;workdir&gt;/simLHS</code></p>
+<p><strong>STEP 4</strong>: Launch aolconf, loop number 5, loop name simtest:</p>
+<pre><code>./aolconf -L 5 -N simtest</code></pre>
+<p>Note that you subsequent calls to aolconf should then be without the -L and -N options.</p>
+<p><strong>STEP 5</strong>: Set DM size to match the calibration. <code>dmxs</code> and <code>dmys</code> GUI top menu.</p>
+<p><strong>STEP 6</strong>: Autoconfigure DM: <code>dmnolink</code> in GUI top menu.</p>
+<p><strong>STEP 7</strong>: Turn off dmvolt: <code>dmvolt0</code> in GUI top menu.</p>
+<p><strong>STEP 8</strong>: Set DM averaging mode to 2: <code>dmcombam</code> in GUI top menu.</p>
+<p><strong>STEP 9</strong>: Start DMcomb. <code>initDM</code> in GUI top menu.</p>
+<p><strong>STEP 10</strong>: Load all memory. <code>M</code> in GUI top menu</p>
+<p><strong>STEP 11</strong>: Link LHS files</p>
+<p><strong>STEP 12</strong>: Start the LHS process</p>
+</div>
+<div id="acquiring-calibration-compute-control-matrix" class="section level2">
+<h2><span class="header-section-number">16.2</span> Acquiring calibration, compute control matrix</h2>
+<p>Under configuration GUI menu :</p>
+<ul>
+<li>Measure hardware timing: <code>mlat</code></li>
+<li>set Hadamard mode to ON: <code>Hon</code></li>
+<li>set RM modal to ON: <code>RMMon</code></li>
+<li>Acquire automatic calibration: <code>nAUTOc</code></li>
+</ul>
+<p>Under control matrix GUI menu :</p>
+<ul>
+<li>Select maximum control spatial frequency: <code>modeCPA</code></li>
+<li>Create modes and control matrix: <code>mkModes0</code></li>
+<li>update configuration: <code>confUp</code></li>
+</ul>
+<p>Load and manage configuration :</p>
+<ul>
+<li>load configuration</li>
+<li>save configuration</li>
+</ul>
+</div>
+</div>
+<div id="appendix-d-managing-multiple-processes" class="section level1">
+<h1><span class="header-section-number">17</span> APPENDIX D: Managing multiple processes</h1>
+<p>Note: Here, a process can consist of any operation or set of operations, as defined by the user. In this appendix, a process does not strictly correspond to a CPU process.</p>
+<p>AOCCE's bash script includes tools to manage logical links between processes. A process can be <strong>queued</strong>, waiting to start until some condition is met, and its status (running, waiting to be launched, or completed) can be checked.</p>
+<p>The command <code>l</code> under the GUI top menu will launch a window displaying processes status.</p>
+<div id="queued-process" class="section level2">
+<h2><span class="header-section-number">17.1</span> Queued process</h2>
+<p>A queued process is a process that has been sent to a tmux session but is awaiting previous operations, within the same tmux session, to be completed. The process is logged as queued when the corresponding command is sent to the tmux session. When the tmux session reaches the command, it will move it from queued to active.</p>
+<p>To log queued processes as such, follow this bash template:</p>
+<pre><code>logRunningProcessQ &quot;&lt;process_tag&gt;&quot; &lt;tmux_session_name&gt;
+tmux send-keys -t &lt;tmux_session_name&gt; &quot;process_command&quot; C-m</code></pre>
+<p>or</p>
+<pre><code>logRunningProcessQ0 &quot;&lt;process_tag&gt;&quot; &lt;tmux_session_name&gt; &quot;&lt;comments&gt;&quot;
+tmux send-keys -t &lt;tmux_session_name&gt; &quot;mv runproc/&lt;process_tag&gt;.runprocQ runproc/&lt;process_tag&gt;.runproc&quot; C-m
+tmux send-keys -t &lt;tmux_session_name&gt; &quot;process_command&quot; C-m</code></pre>
+<p><code>process_tag</code> is a name chosen to represent the operations performed. The second option can be used when writing to a script, so it is more flexible.</p>
+</div>
+<div id="active-process" class="section level2">
+<h2><span class="header-section-number">17.2</span> Active process</h2>
+<p>To mark a process as active, it can either be queued as described above, or the user can include at the time the process starts:</p>
+<pre><code>touch runproc/&lt;process_tag&gt;.runproc</code></pre>
+<p>Once the process is completed, it needs to be removed from the active process list :</p>
+<pre><code>rm runproc/&lt;process_tag&gt;.runproc</code></pre>
+</div>
+<div id="lockingunlocking-processes" class="section level2">
+<h2><span class="header-section-number">17.3</span> Locking/unlocking processes</h2>
+<p>The command <code>./auxscripts/waitforfilek</code> in <code>&lt;srcdir&gt;/scripts</code> locks the bash script execution until a file <code>&lt;tagname&gt;.unlock</code> appears. The command will remove the unlock file once it appears, and continue execution. It can take a timeout option. Typical use:</p>
+<pre><code>tmux send-keys -t &lt;tmux_session_name&gt; &quot;command_that_needs_to_be_completed_before_non-tmux_script_commands&quot; C-m
+tmux send-keys -t &lt;tmux_session_name&gt; &quot;touch &lt;tagname&gt;.unlock&quot; C-m  # command will unlock the script once the unlock file appears
+./auxscripts/waitforfilek -t &lt;timeout_sec&gt; &lt;tagname&gt;
+&lt;non-tmux_script_commands_to_be_executed_AFTER_tmux_commands&gt;</code></pre>
+<p>The command creates a &quot;<tagname>.lock&quot; file, and waits for a &quot;<tagname>.unlock&quot; to appear. When the unlock file is detected, both lock and unlock files are removed. The lock file indicates that a process is currently locked. This scheme can be employed to synchronize multiple scripts.</p>
+<p>The lower level <code>./auxscripts/waitonfile</code> command allows users to manually setup locks between proceses, by waiting for a file to disappear. Typical use:</p>
+<pre><code>touch fname.lock
+&lt;some other process here, will remove fname.lock file when done&gt;
+./auxscripts/waitonfile fname.lock
+&lt;more bash instructions here&gt;</code></pre>
+</div>
+</div>
+</body>
+</html>
