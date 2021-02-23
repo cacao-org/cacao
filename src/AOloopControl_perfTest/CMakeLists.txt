@@ -38,16 +38,12 @@ message(" LIBNAME = ${LIBNAME}")
 
 project(lib_${LIBNAME}_project)
 
-include_directories ("${PROJECT_SOURCE_DIR}/src")
-include_directories ("${PROJECT_SOURCE_DIR}/..")
-
-
 # Library can be compiled from multiple source files
 # Convention: the main souce file is named <libname>.c
 #
 add_library(${LIBNAME} SHARED ${SRCNAME}.c ${SOURCEFILES})
 
-target_link_libraries(${LIBNAME} PUBLIC CLIcore)
+target_link_libraries(${LIBNAME} PUBLIC CLIcore milkstatistic cacaoAOloopControl)
 
 install(TARGETS ${LIBNAME} DESTINATION lib)
 install(FILES ${SRCNAME}.h ${INCLUDEFILES} DESTINATION include/${SRCNAME})
@@ -55,30 +51,3 @@ install(FILES ${SRCNAME}.h ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 install(PROGRAMS
 	${SCRIPTFILES}
 	DESTINATION bin)
-
-
-
-
-
-#project(lib_${LIBNAME}_project)
-
-#include_directories ("${PROJECT_SOURCE_DIR}/src")
-#include_directories ("${PROJECT_SOURCE_DIR}/..")
-#add_library(${LIBNAME} SHARED
-#${SRCNAME}.c
-#${SRCNAME}.h
-#AOloopControl_perfTest_DM.c
-#AOloopControl_perfTest_status.c
-#AOloopControl_perfTest_LinSim.c
-#)
-
-#install(TARGETS ${LIBNAME} DESTINATION lib)
-#install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})
-
-
-#install(PROGRAMS
-#	${SCRIPTFILES}
-#	DESTINATION bin)
-
-#set(LIBNAME "cacaoAOloopControlperfTest")
-#set(SRCNAME "AOloopControl_perfTest")
