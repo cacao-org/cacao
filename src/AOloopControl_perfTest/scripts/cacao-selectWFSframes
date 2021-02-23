@@ -1,0 +1,106 @@
+#!/bin/bash
+
+
+MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
+
+MSextdescr="Select WFS frames from times at which PSF is best
+Requires synchronized data cubes created by cacao-syncStreams
+
+default alpha norm = 2.0 
+
+<streamWFScube>     WFC stream name
+<streamPSFcube>     PSF stream name
+<x0><x1><y0><y1>    PSF evaluation window
+    
+Evaluation Modes:         
+	0: optimize flux concentration
+	1: maximize flux
+    2: minimize flux
+
+EXAMPLE
+    $0 aol0_wfsim.sync.fits aol0_psf.sync.fits 0 64 0 64 0
+
+
+OUTPUT
+	impsfbest.fits     Average of selected PSF frames
+	impsfall.fits      Average of all PSF frames
+	imwfsbest.fits     Average of selected WFS frames
+	imwfsall.fits      Average of all WFS frames
+
+
+"
+
+
+#streamWFScube="$1"
+#streamPSFcube="$2"
+#selFrac="$3"
+
+#x0="$4"
+#x1="$5"
+#y0="$6"
+#y1="$7"
+#evalMode="$8" 
+
+
+
+ALPHAnorm="2.0"
+
+source milk-script-std-config
+
+RequiredCommands=( cacao )
+RequiredFiles=()
+RequiredDirs=()
+
+# SCRIPT ARGUMENTS (mandatory)
+# syntax: "name:type(s)/test(s):description"
+#MSarg+=( "logdir:string:telemetry directory" )
+MSarg+=( "streamWFScube:string:WFS telemetry cube" ) 
+MSarg+=( "streamPSFcube:string:PSF telemetry cube" ) 
+MSarg+=( "selfrac:float:selection fraction" )
+MSarg+=( "x0:long:selection window x start" )
+MSarg+=( "x1:long:selection window x end" )
+MSarg+=( "y0:long:selection window y start" )
+MSarg+=( "y1:long:selection window x end" )
+MSarg+=( "evalMode:long:Evaluation mode" )
+MSarg+=( "timespan:float:time span of the algorithm in sec" )
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+MSopt+=( "a:ALPHAnorm:setALPHAnorm:norm[int]:set alpha norm" )
+function setALPHAnorm()
+{
+	ALPHAnorm=$1
+}
+
+
+source milk-argparse
+
+
+# load arguments
+streamWFScube="${inputMSargARRAY[0]}"
+streamPSFcube="${inputMSargARRAY[1]}"
+selFrac="${inputMSargARRAY[2]}"
+windowx0="${inputMSargARRAY[3]}"
+windowx1="${inputMSargARRAY[4]}"
+windowy0="${inputMSargARRAY[5]}"
+windowy1="${inputMSargARRAY[6]}"
+evalMode="${inputMSargARRAY[7]}"
+timespan="${inputMSargARRAY[8]}"
+
+
+cacao << EOF
+loadfits "$streamWFScube" imwfsC
+loadfits "$streamPSFcube" impsfC
+
+cacaopt.aolperfselwfsfpsf imwfsC impsfC $selFrac ${windowx0} ${windowx1} ${windowy0} ${windowy1} $evalMode $ALPHAnorm
+
+savefits imwfsbest "!imwfsbest.fits"
+savefits imwfsall "!imwfsall.fits"
+
+savefits impsfbest "!impsfbest.fits"
+savefits impsfall "!impsfall.fits"
+
+listim
+exit
+EOF

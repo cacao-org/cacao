@@ -1,0 +1,249 @@
+#!/bin/bash
+
+MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
+
+MSextdescr="Select WFS frames from times at which PSF is best
+Requires synchronized data cubes created by cacao-syncStreams
+
+Evaluation modes:
+  0: optimize flux concentration
+  1: maximize flux
+  2: minimize flux
+
+EXAMPLE:
+$0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001 30
+
+
+OUTPUT:
+     impsfbest.fits     Average of selected PSF frames
+     impsfall.fits      Average of all PSF frames
+     imwfsbest.fits     Average of selected WFS frames
+     imwfsall.fits      Average of all WFS frames
+
+"
+
+
+# Defaults
+timespan="30" # in second
+timestart=$(date "+%s")
+echo "time sart ${timestart}"
+ALPHAnorm="2.0"
+NBiter=0
+
+source milk-script-std-config
+
+RequiredCommands=( cacao )
+RequiredFiles=()
+RequiredDirs=()
+
+
+# SCRIPT ARGUMENTS (mandatory)
+# syntax: "name:type(s)/test(s):description"
+MSarg+=( "logdir:string:telemetry directory" )
+MSarg+=( "streamWFS:string:WFS stream" ) 
+MSarg+=( "streamPSF:string:PSF stream" ) 
+MSarg+=( "selfrac:float:selection fraction" )
+MSarg+=( "x0:long:selection window x start" )
+MSarg+=( "x1:long:selection window x end" )
+MSarg+=( "y0:long:selection window y start" )
+MSarg+=( "y1:long:selection window x end" )
+MSarg+=( "emode:long:Evaluation mode" )
+MSarg+=( "texp:float:exposure time in sec" )
+MSarg+=( "dtlag:float:time offset between streams in sec" )
+MSarg+=( "timespan:float:time span of the algorithm in sec" )
+
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+MSopt+=( "t:starttime:setstarttime:time[unixsec]:set start time in unix time" )
+function setstarttime()
+{
+	timestart=$1
+}
+
+
+#MSopt+=( "s:timespan:settimespan:span[sec]:set time span" )
+#function settimespan()
+#{
+#	timespan=$1
+#}
+
+MSopt+=( "n:NBiter:setNBiter:nbiter[int]:set number of iterations of DrWHO loop" )
+function setNBiter()
+{
+	NBiter=$1
+}
+echo "so far so good"
+
+source milk-argparse
+
+echo "start time : ${timestart}"
+
+# load arguments
+logdirectory="${inputMSargARRAY[0]}"
+streamWFS="${inputMSargARRAY[1]}"
+streamPSF="${inputMSargARRAY[2]}"
+selFrac="${inputMSargARRAY[3]}"
+windowx0="${inputMSargARRAY[4]}"
+windowx1="${inputMSargARRAY[5]}"
+windowy0="${inputMSargARRAY[6]}"
+windowy1="${inputMSargARRAY[7]}"
+evalMode="${inputMSargARRAY[8]}"
+texp="${inputMSargARRAY[9]}"
+dtlag="${inputMSargARRAY[10]}"
+timespan="${inputMSargARRAY[11]}"
+
+datestr=`date -u +%Y%m%d`
+streamWFSdir="${logdirectory}/${streamWFS}"
+streamPSFdir="${logdirectory}/${streamPSF}"
+
+iter=0 # directory scanning iteration
+iter0=0 # Dr WHO loop processing iteration
+
+echo "streamWFSdir : ${streamWFSdir}"
+echo "streamPSFdir : ${streamPSFdir}"
+echo "timespan : ${timespan}"
+
+#exit
+
+checkDir ${streamWFSdir}
+echo "WFS directory : ${streamWFSdir}"
+checkDir ${streamPSFdir}
+echo "PSF directory : ${streamPSFdir}"
+
+
+#    n)number of iteration (default 0=inf)
+#    NBiter=$OPTARG
+ 
+#    a)alpha norm (default=2.0)
+#    ALPHAnorm="$OPTARG"
+
+
+
+echo "HERE WE GO >>>>>"
+set +o errexit
+
+
+iter=1
+
+while [ ${iter0} -ne ${NBiter} ] ; do
+
+echo "ITERATION ${iter}"
+let iter++
+
+# find last timing files in telemetry directories
+
+#echo "WFSdir = ${streamWFSdir}"
+ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFileWFS=$( ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
+echo "Last WFS file = ${lastLogFileWFS}"
+
+cp $lastLogFileWFS _lastlogfileWFS
+
+#echo "PSFdir = ${streamPSFdir}"
+ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFilePSF=$( ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
+echo "Last PSF file = ${lastLogFilePSF}"
+
+cp $lastLogFilePSF _lastlogfilePSF
+
+let "timeend = timestart + timespan"
+
+echo "TIME : ${timestart} + ${timespan} -> ${timeend} ====================================="
+
+
+
+# vOK is 1 if files need to be processed
+# 0 if no input files to be processed
+vOK="1"
+
+
+lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
+echo "WFS last log at $lastLogTimeWFS"
+
+if [ "${lastLogTimeWFS}" -lt "${timeend}" ]; then
+	vOK="0"
+	echo "last WFS has not reached time end yet!"
+	echo "${lastLogTimeWFS} < ${timeend}"
+fi
+
+
+lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
+echo "PSF last log at $lastLogTimePSF"
+
+if [ "${lastLogTimePSF}" -lt "${timeend}" ]; then
+	vOK="0"
+	echo "last PSF has not reached time end yet!"
+	echo "${lastLogTimePSF} < ${timeend}"
+fi
+
+
+if [ "$vOK" = "1" ]; then
+# there are files to process
+echo "=================================================================== PROCESSING -> "
+
+
+# generate synchronized cubes
+
+#rm imwfsbest.fits # for testing
+# here I comment the syncStreams for doing the block test without regenerating sync files 
+echo "cacao-syncStreams \"$logdirectory\" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}"
+cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}
+
+echo "."
+echo "."
+echo "."
+echo "MAKE SURE IT MAKES THE .sync.fits FILES ???"
+echo "."
+echo "."
+echo "."
+
+# generate frame selection with Dr WHO
+
+echo "cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode}"
+cacao-selectWFSframes -a ${ALPHAnorm} ${streamWFS}.sync.fits ${streamPSF}.sync.fits ${selFrac} ${windowx0} ${windowx1} ${windowy0} ${windowy1} ${evalMode} ${timespan}
+
+
+
+fname="$(printf "imwfsbest.%06d.fits" $iter0 )"
+cp imwfsbest.fits $fname
+echo "saving last reference in order to send it to scexao5 - iter0 = ${iter0}"
+
+# remove previous imwfsbest on SCExAO5
+# ssh 10.20.70.1 rm /home/scexao/AOloop/DrWHO/imwfsbest.fits 
+
+
+# commenting below for the blocks tests
+# send it to SCExAO5
+scp imwfsbest.fits scexao@10.20.70.1:/home/scexao/AOloop/DrWHO 
+echo "sending the WFS reference to scexao5"
+
+# then run the script on scexao5 with the command to apply the new ref :
+#ssh 10.20.70.1 ./AOloop/DrWHO/cacao-WFSref
+#echo "running the cacao-WFSref script to update the ref shm and apply it"
+
+fname="$(printf "imwfsall.%06d.fits" $iter0 )"
+cp imwfsall.fits $fname
+
+fname="$(printf "impsfbest.%06d.fits" $iter0 )"
+cp impsfbest.fits $fname
+fname="$(printf "impsfall.%06d.fits" $iter0 )"
+cp impsfall.fits $fname
+
+timestart=${timeend}
+let iter0++
+
+# exit here for just one loop iteration for testing 
+
+else # if there are no file to process
+# waiting for new data to come. 
+echo "WAITING. .."
+sleep 2
+fi
+
+
+
+done
+
+

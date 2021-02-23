@@ -1,0 +1,125 @@
+#!/bin/bash
+
+
+# number of arguments to script
+
+
+MSdescr="SYNCHRONIZE DATA STREAMS"
+
+MSextdescr="Synchronize and resample streams (postprocessing)
+
+Evaluation modes:
+  0: optimize flux concentration
+  1: maximize flux
+  2: minimize flux
+
+EXAMPLE:
+$0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001
+
+
+INPUT
+	directory   data directory, will look for files in /dir/streamname/
+	streamWFS 
+	streamPSF
+	tstart      start time, Unix seconds
+	tend        end time, Unix second 
+	dtsample    output sample interval 
+	dtlag 		Lag between streamWFS and streamPSF. streamPSF later
+	timespan    length in seconds of the synchronized final cube = lenght of Dr WHO loop
+	
+OPTIONAL INPUT 
+	<streamWFS>.dark.fits
+	<streamPSF>.fark.fits 
+	
+EXAMPLE 
+	$0 \"/media/data/20180628/\" streamWFS streamPSF 1530180589.0 1530180589.8 0.0002 0.000556 30
+
+OUTPUT:
+     streamWFS-sync.fits 		Synchronized WFS cube file
+
+"
+
+
+# Defaults
+#timespan="20" # second
+tstart=$(date "+%s")
+
+
+source milk-script-std-config
+
+RequiredCommands=( cacao )
+RequiredFiles=()
+RequiredDirs=()
+
+
+
+
+# SCRIPT ARGUMENTS (mandatory)
+# syntax: "name:type(s)/test(s):description"
+MSarg+=( "logdir:string:telemetry directory" )
+MSarg+=( "streamWFS:string:WFS stream" ) 
+MSarg+=( "streamPSF:string:PSF stream" ) 
+MSarg+=( "tstart:float: start time" )
+MSarg+=( "tstop:float:stop time" )
+MSarg+=( "dtsample:float:exposure time per output frame" )
+MSarg+=( "dtlag:float:time offset between streams in sec" )
+
+MSarg+=( "timespan:float:time span of the algorithm" )
+
+
+
+
+source milk-argparse
+
+
+# load arguments
+directory="${inputMSargARRAY[0]}"
+streamWFS="${inputMSargARRAY[1]}"
+streamPSF="${inputMSargARRAY[2]}"
+tstart="${inputMSargARRAY[3]}"
+tstop="${inputMSargARRAY[4]}"
+dtsample="${inputMSargARRAY[5]}"
+dtlag="${inputMSargARRAY[6]}"
+
+timespan="${inputMSargARRAY[7]}"
+
+
+cacao << EOF
+cacaopt.aolptmksyncs2 "$directory" ${streamWFS} ${streamPSF} ${tstart} ${tstop} ${dtsample} ${dtlag} ${timespan}
+savefits outC0 "!${streamWFS}.sync.fits"
+savefits outC1 "!${streamPSF}.sync.fits"
+listim
+exitCLI
+EOF
+
+echo "dealing with sync files"
+
+
+
+# subtract dark if it exists
+
+if [ -f "${streamWFS}.dark.fits" ]; then
+cacao << EOF
+loadfits "${streamWFS}.dark.fits" stream0dark
+loadfits "${streamWFS}.sync.fits" outC0
+outC0c=outC0-streamWFSdark
+savefits outC0c "!${streamWFS}.syncC.fits"
+exitCLI
+EOF
+mv ${streamWFS}.syncC.fits ${streamWFS}.sync.fits
+fi
+
+
+if [ -f "${streamPSF}.dark.fits" ]; then
+cacao << EOF
+loadfits "${streamPSF}.dark.fits" stream1dark
+loadfits "${streamPSF}.sync.fits" outC1
+outC1c=outC1-streamWFSdark
+savefits outC1c "!${streamPSF}.syncC.fits"
+exitCLI
+EOF
+mv ${streamPSF}.syncC.fits ${streamPSF}.sync.fits
+fi
+
+#sleep 1000
+
