@@ -3,9 +3,6 @@ set(SRCNAME "AOloopControl_computeCalib")
 
 project(lib_${LIBNAME}_project)
 
-include_directories ("${PROJECT_SOURCE_DIR}/src")
-include_directories ("${PROJECT_SOURCE_DIR}/..")
-
 add_library(${LIBNAME} SHARED
 ${SRCNAME}.c
 AOloopControl_computeCalib.h
@@ -38,7 +35,7 @@ endif(USE_MAGMA)
 endif(USE_CUDA)
 
 target_include_directories(${LIBNAME} PUBLIC ${CUDA_INCLUDE_DIRS} ${MAGMA_INCLUDE_DIRS})
-target_link_libraries(${LIBNAME} PUBLIC CLIcore ${CUDA_LIBRARIES} ${MAGMA_LIBRARIES})
+target_link_libraries(${LIBNAME} PUBLIC CLIcore milkinfo cacaoAOloopControl ${CUDA_LIBRARIES} ${MAGMA_LIBRARIES})
 
 
 
