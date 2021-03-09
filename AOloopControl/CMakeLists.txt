@@ -32,6 +32,7 @@ AOloopControl_time_param.c
 AOloopControl_wfs.c
 )
 
+
 if(USE_CUDA)
 find_package(CUDA 9.0 REQUIRED)
 message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
@@ -50,7 +51,13 @@ endif(USE_MAGMA)
 
 endif(USE_CUDA)
 
-target_include_directories(${LIBNAME} PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR} ${CUDA_INCLUDE_DIRS} ${MAGMA_INCLUDE_DIRS})
+target_include_directories(${LIBNAME} PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}/..
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CUDA_INCLUDE_DIRS}
+	${MAGMA_INCLUDE_DIRS}
+)
+
 target_link_libraries(${LIBNAME} PUBLIC CLIcore milklinoptimtools ${CUDA_LIBRARIES} ${MAGMA_LIBRARIES})
 
 install(TARGETS ${LIBNAME} DESTINATION lib)
