@@ -63,6 +63,7 @@ target_link_libraries(${LIBNAME} PUBLIC CLIcore milklinoptimtools ${CUDA_LIBRARI
 install(TARGETS ${LIBNAME} DESTINATION lib)
 
 install(PROGRAMS scripts/cacao-setup
+	scripts/cacao
 	scripts/cacao-RMdecode
 	scripts/cacao-mkDMWFSmasks
 	scripts/cacao-mkDMslaveActprox
