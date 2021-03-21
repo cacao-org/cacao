@@ -44,7 +44,7 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl_DM/AOloopControl_DM.h"
 
-#include "WFpropagate/WFpropagate.h"
+//#include "WFpropagate/WFpropagate.h"
 
 
 
