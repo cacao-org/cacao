@@ -324,7 +324,7 @@ static errno_t init_module_CLI()
         if((fp=fopen("LOOPNUMBER","r"))!=NULL)
         {
             if(fscanf(fp,"%ld", &FPLOOPNUMBER) != 1)
-    			printERROR(__FILE__,__func__,__LINE__, "fscanf returns value != 1");
+    			PRINT_ERROR("fscanf returns value != 1");
 
             printf("LOOP NUMBER = %ld\n", FPLOOPNUMBER);
             fclose(fp);
@@ -555,7 +555,7 @@ errno_t FPAOloopControl_loadconfigure(
 
     if(fscanf(fp, "%32s", content) != 1)
     {
-        printERROR(__FILE__, __func__, __LINE__, "fscanf returns value != 1");
+        PRINT_ERROR("fscanf returns value != 1");
     }
 
     printf("loop name : %s\n", content);
@@ -576,7 +576,7 @@ errno_t FPAOloopControl_loadconfigure(
     {
         if(fscanf(fp, "%32f", &FPAOconf[loop].hardwlatency) != 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "fscanf returns value != 1");
+            PRINT_ERROR("fscanf returns value != 1");
         }
 
 
@@ -608,7 +608,7 @@ errno_t FPAOloopControl_loadconfigure(
     {
         if(fscanf(fp, "%32s", content) != 1)
         {
-            printERROR(__FILE__, __func__, __LINE__, "fscanf returns value != 1");
+            PRINT_ERROR("fscanf returns value != 1");
         }
 
         printf("loopfrequ : %f\n", atof(content));

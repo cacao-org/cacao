@@ -3110,7 +3110,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
                 }
             }
 
-            printf("DONE\n", fname);
+            printf("DONE\n");
             fflush(stdout);
 
 
