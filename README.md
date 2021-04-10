@@ -1,3 +1,18 @@
+Latest Version: [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/milk-org/cacao/tree/main)
+
+
+| Branch    | Build   | Docker Deployment    | Travis-CI    | Activity   |
+|-------------|-------------|-------------|-------------|-------------|
+**main**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|[![Build Status](https://www.travis-ci.com/cacao-org/cacao.svg?branch=main)](https://www.travis-ci.com/cacao-org/cacao)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/main.svg)|
+**dev**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|[![Build Status dev](https://www.travis-ci.com/cacao-org/cacao.svg?branch=dev)](https://www.travis-ci.com/cacao-org/cacao)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)|
+
+
+Code metrics (dev branch) :
+[![CodeScene Code Health](https://codescene.io/projects/14777/status-badges/code-health)](https://codescene.io/projects/14777)
+[![CodeScene System Mastery](https://codescene.io/projects/14777/status-badges/system-mastery)](https://codescene.io/projects/14777)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1c9a67a8529340359a2047eba5c971bf)](https://www.codacy.com/gh/cacao-org/cacao/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cacao-org/cacao&amp;utm_campaign=Badge_Grade)
+[![CodeFactor](https://www.codefactor.io/repository/github/cacao-org/cacao/badge)](https://www.codefactor.io/repository/github/cacao-org/cacao)
+
 
 
 # cacao : Compute And Control for Adaptive Optics
@@ -53,48 +68,12 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 
 ## Installing cacao
 
+cacao is a plugin of [milk page](https://github.com/milk-org/milk-package).
 
-cacao runs on Linux/x86 systems.
-
-&#x26A0;
-**cacao requires milk**: Install milk-package prior to installing cacao. See instructions on the [milk page](https://github.com/milk-org/milk-package).
-
-
-
-
-
-
-### Download
-
-	git clone --recursive https://github.com/cacao-org/cacao cacao
-
-
-### Compile
-
-	cd cacao
-	mkdir _build; cd _build
-	cmake ..
-	# If you use NVIDIA GPUs, install cuda and magma libraries, and use "cmake .. -DUSE_MAGMA=ON"
-	make
-	
-
-### Install
-
-
-	sudo make install
-
-Will install milk in /usr/local/milk-&lt;version&gt;. Multiple versions of cacao can coexist in separate cacao-&lt;version&gt; directories. To select the version to be used:
-
-	sudo ln -s /usr/local/cacao-<version> /usr/local/cacao
-
-	
-Add environment variables. Add to .bashrc file or similar :
-
-	export CACAO_ROOT=${HOME}/src/cacao  # point to source code directory. Edit as needed.
-	export CACAO_INSTALLDIR=/usr/local/cacao
-	export PATH=${PATH}:${CACAO_INSTALLDIR}/bin
-
-
+	git clone https://github.com/milk-org/milk.git
+	cd milk
+	./fetch_cacao_dev.sh
+	./compile.sh $PWD/local
 
 
 
