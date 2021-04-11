@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 
 
 # exit on error
@@ -132,7 +131,7 @@ echo "------------------------------------------------------------------------"
 
 printHELP1 ()
 {
-    printf "%20s       run CACAO example\n" "$0" 
+    printf "%20s       run CACAO example\n" "$0"
 }
 
 
@@ -221,7 +220,7 @@ for arg in "$@"; do
   case "$arg" in
     "--help") set -- "$@" "-h" ;;
     "--help1") 
-set -- "$@" "-h" 
+set -- "$@" "-h"
 singlelinehelp=1;
 ;;
     *)        set -- "$@" "$arg"
@@ -253,7 +252,7 @@ while getopts :hxX:cC:f: FLAG; do
     SINGLETASK=1
     LASTTASK=1000
     ;;
-    X) # run all tasks    
+    X) # run all tasks
     EXECMODE=1
     LASTTASK=${OPTARG}
     ;;
@@ -276,7 +275,7 @@ while getopts :hxX:cC:f: FLAG; do
       ;;
   esac
 done
-shift $((OPTIND-1))  
+shift $((OPTIND-1))
 
 
 
@@ -359,17 +358,17 @@ mkdir -p $LOGDIR
 #
 function task_EXEC {
 	LOGRUNFILE="${LOGDIR}/task.${TASKCODE}.RUN"
-	
-	ENVOUTFILE="${LOGDIR}/task.${TASKCODE}.ENVOUT.bash"	
+
+	ENVOUTFILE="${LOGDIR}/task.${TASKCODE}.ENVOUT.bash"
 	touch ${ENVOUTFILE}
-	
+
 	CLEANSCRIPT="${LOGDIR}/task.${TASKCODE}.CLEAN.bash"
 	echo "#!/bin/bash" > ${CLEANSCRIPT}
 	chmod a+x ${CLEANSCRIPT}
 	sleep 0.1
-	
+
 	source ${EXECfile}
-	
+
 	if [ ${cacaotask_RETURNCODE} = ${CACAOTASK_RUN_SUCCESS} ]; then
 		# success
 		touch "${LOGDIR}/task.${TASKCODE}.RUN.DONE"
@@ -377,7 +376,7 @@ function task_EXEC {
 		# failure
 		echo "${CACAOTASK_RUN_SUCCESS}" > "${LOGDIR}/task.${TASKCODE}.RUN.FAILED"
 	fi
-	
+
 	mv -f ${LOGDIR}/task.${TASKCODE}.CLEAN.DONE ${LOGDIR}/task.${TASKCODE}.CLEAN.DONE.arch &> /dev/null
 	mv -f ${LOGDIR}/task.${TASKCODE}.CLEAN.FAILED ${LOGDIR}/task.${TASKCODE}.CLEAN.FAILED.arch &> /dev/null
 }
@@ -392,15 +391,15 @@ function task_SKIP {
 function task_CLEAN {
 	LOGCLEANFILE="${LOGDIR}/task.${TASKCODE}.CLEAN"
 	#CLEANTASK="NULL"
-	
+
 	source ${LOGDIR}/task.${TASKCODE}.CLEAN.bash
-	
-	rm ${LOGDIR}/task.${TASKCODE}.RUN.DONE &> /dev/null	
+
+	rm ${LOGDIR}/task.${TASKCODE}.RUN.DONE &> /dev/null
 	rm ${LOGDIR}/task.${TASKCODE}.RUN.FAILED &> /dev/null
-	
+
 	# success
 	touch ${LOGDIR}/task.${TASKCODE}.CLEAN.DONE
-	
+
 	# failure
 	#touch "${LOGDIR}/task.${TASKCODE}.CLEAN.FAILED"
 }
@@ -470,7 +469,7 @@ function READ_STATUS {
 	# RUN file exists ?
 	#
 	RUNSCRIPT="cacaotask-${TASKCODE}"
-	STATUS="???"	
+	STATUS="???"
 	checkCommand ${RUNSCRIPT}
 	#if [ ! -f ${RUNSCRIPT} ]; then
 	if [ ${COMMAND_FOUND} = 0 ]; then
@@ -478,22 +477,22 @@ function READ_STATUS {
 		echo "$(tput setaf 1)$(tput bold) ERROR NOSCRIPT $(tput sgr0)cannot find script ${RUNSCRIPT}. Ensure it is in PATH"
 	else
 		STATUS="READY"  # default
-	
+
 		RUNLOGFILE="${LOGDIR}/task.${TASKCODE}.RUN.DONE"
 		if [ -f ${RUNLOGFILE} ]; then
 			STATUS="DONE"
 		fi
-		
+
 		RUNLOGFILE="${LOGDIR}/task.${TASKCODE}.RUN.FAILED"
 		if [ -f ${RUNLOGFILE} ]; then
 			STATUS="FAILED"
 		fi
-		
+
 		if [ ${FORCE} = 1 ]; then
 			if [ "${STATUS}" != "READY" ]; then
 				if [ ${tindex} = ${FORCEINDEX} ]; then
 					STATUS="FORCE"
-				fi	
+				fi
 			fi
 		fi
 	fi
@@ -511,24 +510,24 @@ function READ_STATUS {
 	STATUS="???"
 	if [ ! -f ${CLEANSCRIPT} ]; then
 		STATUS="NOSCRIPT"
-	else		
+	else
 		STATUS="READY"  # default
-		
+
 		CLEANLOGFILE="${LOGDIR}/task.${TASKCODE}.CLEAN.DONE"
 		if [ -f ${CLEANLOGFILE} ]; then
 			STATUS="DONE"
 		fi
-		
+
 		CLEANLOGFILE="${LOGDIR}/task.${TASKCODE}.CLEAN.FAILED"
 		if [ -f ${CLEANLOGFILE} ]; then
 			STATUS="FAILED"
 		fi
-		
+
 		if [ ${FORCE} = 1 ]; then
 			if [ "${STATUS}" != "READY" ]; then
 				if [ ${tindex} = ${FORCEINDEX} ]; then
 					STATUS="FORCE"
-				fi	
+				fi
 			fi
 		fi
 	fi
@@ -554,7 +553,7 @@ function PRINT_STATUS {
 	do
 	TASKCODE="${TASKCODEARRAY[$i]}"
 	CLEANSTAT="${CLEANSTATUSARRAY[$i]}"
-	
+
 	RUNSTAT="${RUNSTATUSARRAY[$i]}"
 	RUNSTATSTRING="${RUNSTAT}"
 	if [ "${RUNSTAT}" = "DONE" ]; then
@@ -572,8 +571,8 @@ function PRINT_STATUS {
 	if [ "${RUNSTAT}" = "FORCE" ]; then
 		RUNSTATSTRING="${STRING_RUN_FORCE}"
 	fi
-	
-	
+
+
 	CLEANSTAT="${CLEANSTATUSARRAY[$i]}"
 	CLEANSTATSTRING="${CLEANSTAT}"
 	if [ "${CLEANSTAT}" = "DONE" ]; then
@@ -581,17 +580,17 @@ function PRINT_STATUS {
 	fi
 	if [ "${CLEANSTAT}" = "READY" ]; then
 		CLEANSTATSTRING="${STRING_CLEAN_READY}"
-	fi	
+	fi
 	if [ "${CLEANSTAT}" = "NOSCRIPT" ]; then
 		CLEANSTATSTRING="${STRING_CLEAN_NOSCRIPT}"
-	fi	
+	fi
 	if [ "${CLEANSTAT}" = "FAILED" ]; then
 		CLEANSTATSTRING="${STRING_CLEAN_FAILED}"
-	fi	
+	fi
 	if [ "${CLEANSTAT}" = "FORCE" ]; then
 		CLEANSTATSTRING="${STRING_CLEAN_FORCE}"
 	fi
-		
+
 	printf "%2d  %18s    %8s  %8s   ${TASKDESCRARRAY[$i]}\n" "${i}" "${TASKCODE}" "${RUNSTATSTRING}" "${CLEANSTATSTRING}"
  done
 }
@@ -617,18 +616,18 @@ let TASKINDEX=0
 for i in ${!TASKCODEARRAY[@]};
 do
 	TASKCODE="${TASKCODEARRAY[$i]}"
-	
+
 	if [ "${TASKINDEX}" -gt "${LASTTASK}" ]; then
 		EXECMODE=0
 	fi
-	
-	if [ ${EXECMODE} = 1 ]; then				
+
+	if [ ${EXECMODE} = 1 ]; then
 		if [ "${RUNSTATUSARRAY[$i]}" = "DONE" ]; then
-			ENVOUTFILE="${LOGDIR}/task.${TASKCODE}.ENVOUT.bash"	
+			ENVOUTFILE="${LOGDIR}/task.${TASKCODE}.ENVOUT.bash"
 			printf "%s %20s  sourcing %s\n"  "   $(tput bold)SKIP$(tput sgr0)" "$TASKCODE" "${ENVOUTFILE} "
 			task_SKIP
 		fi
-		
+
 		if [ "${RUNSTATUSARRAY[$i]}" = "READY" ] || [ "${RUNSTATUSARRAY[$i]}" = "FAILED" ]|| [ "${RUNSTATUSARRAY[$i]}" = "FORCE" ]; then
 			EXECfile=$( which cacaotask-${TASKCODE} )
 			printf "%s %20s  executing %s\n"  "$(tput rev)EXECUTE$(tput sgr0)" "$TASKCODE" "${EXECfile} "
@@ -638,7 +637,7 @@ do
 				EXECMODE=0
 			fi
 		fi
-	
+
 	fi
 	let TASKINDEX+=1
 done
