@@ -1,10 +1,10 @@
 /**
  * @file    AOloopControl_DM_toolbox.c
  * @brief   DM control
- * 
  *
  *
- * 
+ *
+ *
  */
 
 #include <math.h>
@@ -15,6 +15,13 @@
 #include "fft/fft.h"
 #include "info/info.h"
 #include "AOloopControl_DM/AOloopControl_DM.h"
+
+
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846264338327950288419716939937510
+#endif
+
 
 extern long NB_DMindex ;
 
@@ -43,12 +50,15 @@ struct timespec time_diff(
 )
 {
     struct timespec temp;
-    if ((end.tv_nsec-start.tv_nsec)<0) {
-        temp.tv_sec = end.tv_sec-start.tv_sec-1;
-        temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
-    } else {
-        temp.tv_sec = end.tv_sec-start.tv_sec;
-        temp.tv_nsec = end.tv_nsec-start.tv_nsec;
+    if((end.tv_nsec - start.tv_nsec) < 0)
+    {
+        temp.tv_sec = end.tv_sec - start.tv_sec - 1;
+        temp.tv_nsec = 1000000000 + end.tv_nsec - start.tv_nsec;
+    }
+    else
+    {
+        temp.tv_sec = end.tv_sec - start.tv_sec;
+        temp.tv_nsec = end.tv_nsec - start.tv_nsec;
     }
     return temp;
 }
@@ -70,7 +80,7 @@ errno_t make_master_turbulence_screen_local(
 )
 {
     imageID ID;
-    float value,C1,C2;
+    float value, C1, C2;
     long cnt;
     long Dlim = 3;
     imageID IDv;
@@ -92,37 +102,45 @@ errno_t make_master_turbulence_screen_local(
      */
 
     IDv = variable_ID("RLIM");
-    if(IDv!=-1)
+    if(IDv != -1)
     {
         RLIMMODE = 1;
         rlim = data.variable[IDv].value.f;
-        printf("R limit = %f pix\n",rlim);
+        printf("R limit = %f pix\n", rlim);
     }
 
-    OUTERscale_f0 = 1.0*size/outerscale; // [1/pix] in F plane
-    INNERscale_f0 = (5.92/(2.0*M_PI))*size/innerscale;
+    OUTERscale_f0 = 1.0 * size / outerscale; // [1/pix] in F plane
+    INNERscale_f0 = (5.92 / (2.0 * M_PI)) * size / innerscale;
 
-    make_rnd("tmppha",size,size,"");
-    arith_image_cstmult("tmppha", 2.0*PI,"tmppha1");
+    make_rnd("tmppha", size, size, "");
+    arith_image_cstmult("tmppha", 2.0 * PI, "tmppha1");
     delete_image_ID("tmppha");
     //  make_dist("tmpd",size,size,size/2,size/2);
-    ID = create_2Dimage_ID("tmpd",size,size);
-    for(uint32_t ii=0; ii<size; ii++)
-        for(uint32_t jj=0; jj<size; jj++)
+    ID = create_2Dimage_ID("tmpd", size, size);
+    for(uint32_t ii = 0; ii < size; ii++)
+        for(uint32_t jj = 0; jj < size; jj++)
         {
-            dx = 1.0*ii-size/2;
-            dy = 1.0*jj-size/2;
+            dx = 1.0 * ii - size / 2;
+            dy = 1.0 * jj - size / 2;
 
-            if(RLIMMODE==1)
+            if(RLIMMODE == 1)
             {
-                r = sqrt(dx*dx + dy*dy);
-                if(r<rlim)
-                    data.image[ID].array.F[jj*size+ii] = 0.0;
+                r = sqrt(dx * dx + dy * dy);
+                if(r < rlim)
+                {
+                    data.image[ID].array.F[jj * size + ii] = 0.0;
+                }
                 else
-                    data.image[ID].array.F[jj*size+ii] = sqrt(dx*dx + dy*dy + OUTERscale_f0*OUTERscale_f0);
+                {
+                    data.image[ID].array.F[jj * size + ii] = sqrt(dx * dx + dy * dy + OUTERscale_f0
+                            * OUTERscale_f0);
+                }
             }
             else
-                data.image[ID].array.F[jj*size+ii] = sqrt(dx*dx + dy*dy + OUTERscale_f0*OUTERscale_f0);
+            {
+                data.image[ID].array.F[jj * size + ii] = sqrt(dx * dx + dy * dy + OUTERscale_f0
+                        * OUTERscale_f0);
+            }
         }
     //  data.image[ID].array.F[size/2*size+size/2+10] = 1.0;
 
@@ -130,28 +148,29 @@ errno_t make_master_turbulence_screen_local(
     // f [1/pix] = sqrt(dx*dx+dy*dy)/size
     // f [1/pix] * size = sqrt(dx*dx+dy*dy)
 
-    make_rnd("tmpg",size,size,"-gauss");
+    make_rnd("tmpg", size, size, "-gauss");
     ID = image_ID("tmpg");
-    for(uint32_t ii=0; ii<size; ii++)
-        for(uint32_t jj=0; jj<size; jj++)
+    for(uint32_t ii = 0; ii < size; ii++)
+        for(uint32_t jj = 0; jj < size; jj++)
         {
-            dx = 1.0*ii-size/2;
-            dy = 1.0*jj-size/2;
-            iscoeff = exp(-(dx*dx+dy*dy)/INNERscale_f0/INNERscale_f0);
-            data.image[ID].array.F[jj*size+ii] *= sqrt(iscoeff); // power -> amplitude : sqrt 
+            dx = 1.0 * ii - size / 2;
+            dy = 1.0 * jj - size / 2;
+            iscoeff = exp(-(dx * dx + dy * dy) / INNERscale_f0 / INNERscale_f0);
+            data.image[ID].array.F[jj * size + ii] *= sqrt(
+                        iscoeff); // power -> amplitude : sqrt
         }
 
-    arith_image_cstpow("tmpd", 11.0/6.0, "tmpd1");
+    arith_image_cstpow("tmpd", 11.0 / 6.0, "tmpd1");
     delete_image_ID("tmpd");
     arith_image_div("tmpg", "tmpd1", "tmpamp");
     delete_image_ID("tmpg");
     delete_image_ID("tmpd1");
-    arith_set_pixel("tmpamp", 0.0, size/2, size/2);
+    arith_set_pixel("tmpamp", 0.0, size / 2, size / 2);
     mk_complex_from_amph("tmpamp", "tmppha1", "tmpc", 0);
     delete_image_ID("tmpamp");
     delete_image_ID("tmppha1");
     permut("tmpc");
-    do2dfft("tmpc","tmpcf");
+    do2dfft("tmpc", "tmpcf");
     delete_image_ID("tmpc");
     mk_reim_from_complex("tmpcf", "tmpo1", "tmpo2", 0);
     delete_image_ID("tmpcf");
@@ -161,33 +180,35 @@ errno_t make_master_turbulence_screen_local(
     ID = image_ID("strf");
     value = 0.0;
     cnt = 0;
-    for(uint32_t ii = 1; ii<Dlim; ii++)
-        for(uint32_t jj = 1; jj<Dlim; jj++)
+    for(uint32_t ii = 1; ii < Dlim; ii++)
+        for(uint32_t jj = 1; jj < Dlim; jj++)
         {
-            value += log10(data.image[ID].array.F[jj*size+ii])-5.0/3.0*log10(sqrt(ii*ii+jj*jj));
+            value += log10(data.image[ID].array.F[jj * size + ii]) - 5.0 / 3.0 * log10(sqrt(
+                         ii * ii + jj * jj));
             cnt++;
         }
     // save_fl_fits("strf","!strf.fits");
     delete_image_ID("strf");
-    C1 = pow(10.0,value/cnt);
+    C1 = pow(10.0, value / cnt);
 
     fft_structure_function("tmpo2", "strf");
-    ID=image_ID("strf");
+    ID = image_ID("strf");
     value = 0.0;
     cnt = 0;
-    for(uint32_t ii=1; ii<Dlim; ii++)
-        for(uint32_t jj=1; jj<Dlim; jj++)
+    for(uint32_t ii = 1; ii < Dlim; ii++)
+        for(uint32_t jj = 1; jj < Dlim; jj++)
         {
-            value += log10(data.image[ID].array.F[jj*size+ii])-5.0/3.0*log10(sqrt(ii*ii+jj*jj));
+            value += log10(data.image[ID].array.F[jj * size + ii]) - 5.0 / 3.0 * log10(sqrt(
+                         ii * ii + jj * jj));
             cnt++;
         }
     delete_image_ID("strf");
-    C2 = pow(10.0,value/cnt);
+    C2 = pow(10.0, value / cnt);
 
     printf("%f %f\n", C1, C2);
 
-    arith_image_cstmult("tmpo1",1.0/sqrt(C1),ID_name1);
-    arith_image_cstmult("tmpo2",1.0/sqrt(C2),ID_name2);
+    arith_image_cstmult("tmpo1", 1.0 / sqrt(C1), ID_name1);
+    arith_image_cstmult("tmpo2", 1.0 / sqrt(C2), ID_name2);
     delete_image_ID("tmpo1");
     delete_image_ID("tmpo2");
 
