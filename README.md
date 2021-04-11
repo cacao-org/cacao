@@ -1,15 +1,12 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
-Latest Version: [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/milk-org/cacao/tree/main)
-
+Latest Version (off main branch): [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/milk-org/cacao/tree/main)
 
 | Branch    | Build   | Docker Deployment    | Travis-CI    | Activity   |
 |-------------|-------------|-------------|-------------|-------------|
 **main**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|[![Build Status](https://www.travis-ci.com/cacao-org/cacao.svg?branch=main)](https://www.travis-ci.com/cacao-org/cacao)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/main.svg)|
 **dev**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|[![Build Status dev](https://www.travis-ci.com/cacao-org/cacao.svg?branch=dev)](https://www.travis-ci.com/cacao-org/cacao)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)|
 
-
-[![Build Status](https://www.travis-ci.com/cacao-org/cacao.svg?branch=main)](https://www.travis-ci.com/cacao-org/cacao)
 
 Code metrics (dev branch) :
 [![CodeScene Code Health](https://codescene.io/projects/14780/status-badges/code-health)](https://codescene.io/projects/14780)
