@@ -48,9 +48,6 @@ Software development         | [![Gitter](https://badges.gitter.im/cacao-org/cod
 Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues ) and discuss them on the [Developers chat](https://gitter.im/cacao-org/codedev).
 
 
-
-
-
 ---
 
 ## Installing cacao
@@ -61,8 +58,6 @@ cacao is a plugin of [milk page](https://github.com/milk-org/milk-package).
 	cd milk
 	./fetch_cacao_dev.sh
 	./compile.sh $PWD/local
-
-
 
 
 ---
