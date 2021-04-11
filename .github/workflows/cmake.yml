@@ -1,0 +1,34 @@
+name: CMake
+
+on: [push]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Install Dependencies
+      run: sudo apt-get install -qq libcfitsio-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison
+
+    - name: get milk and cacao
+      run: |
+        git clone https://github.com/milk-org/milk.git
+        cd milk
+        ./fetch_cacao_dev.sh
+        mkdir _build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/milk/_build
+      run: cmake .. -DINSTALLMAKEDEFAULT=ON -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+    - name: Build
+      working-directory: ${{github.workspace}}/_build
+      shell: bash
+      run: make
+
