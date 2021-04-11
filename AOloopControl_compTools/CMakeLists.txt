@@ -1,6 +1,9 @@
 set(LIBNAME "cacaoAOloopControlcompTools")
 set(SRCNAME "AOloopControl_compTools")
 
+message("")
+message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
+
 project(lib_${LIBNAME}_project)
 
 add_library(${LIBNAME} SHARED ${SRCNAME}.c)

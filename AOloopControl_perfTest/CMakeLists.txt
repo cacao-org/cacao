@@ -28,12 +28,14 @@ set(SCRIPTFILES
 set(NAME0 "${CMAKE_CURRENT_SOURCE_DIR}")
 string(REPLACE "/" " " NAME1 ${NAME0})
 string(REGEX MATCH "[a-zA-Z0-9_]+$" SRCNAME "${NAME0}")
-message(" SRCNAME = ${SRCNAME}")
+
 
 # LIBNAME constructed by removing spaces
 string(REPLACE "_" "" LIBNAME "${PROJECTNAME}${SRCNAME}")
-message(" LIBNAME = ${LIBNAME}")
 
+
+message("")
+message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 
 
 project(lib_${LIBNAME}_project)

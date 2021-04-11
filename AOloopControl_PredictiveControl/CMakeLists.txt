@@ -1,6 +1,8 @@
 set(LIBNAME "cacaoAOloopControlPredictiveControl")
 set(SRCNAME "AOloopControl_PredictiveControl")
 
+message("")
+message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 
 project(lib_${LIBNAME}_project)
 

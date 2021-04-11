@@ -1,6 +1,8 @@
 set(LIBNAME "cacaoAOloopControlDM")
 set(SRCNAME "AOloopControl_DM")
 
+message("")
+message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 
 
 set(SOURCEFILES

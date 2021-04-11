@@ -1,6 +1,10 @@
 set(LIBNAME "cacaoAOloopControlacquireCalib")
 set(SRCNAME "AOloopControl_acquireCalib")
 
+message("")
+message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
+
+
 project(lib_${LIBNAME}_project)
 
 add_library(${LIBNAME} SHARED ${SRCNAME}.c)
