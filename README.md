@@ -1,3 +1,4 @@
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 Latest Version: [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/milk-org/cacao/tree/main)
 
 
@@ -10,9 +11,8 @@ Latest Version: [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.
 Code metrics (dev branch) :
 [![CodeScene Code Health](https://codescene.io/projects/14780/status-badges/code-health)](https://codescene.io/projects/14780)
 [![CodeScene System Mastery](https://codescene.io/projects/14780/status-badges/system-mastery)](https://codescene.io/projects/14780)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/1c9a67a8529340359a2047eba5c971bf)](https://www.codacy.com/gh/cacao-org/cacao/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cacao-org/cacao&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6eefa0e1c1254889b1e2f6fda55930ca)](https://www.codacy.com/gh/cacao-org/cacao/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cacao-org/cacao&amp;utm_campaign=Badge_Grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/cacao-org/cacao/badge)](https://www.codefactor.io/repository/github/cacao-org/cacao)
-
 
 
 # cacao : Compute And Control for Adaptive Optics
@@ -47,19 +47,6 @@ Software development         | [![Gitter](https://badges.gitter.im/cacao-org/cod
 
 Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues ) and discuss them on the [Developers chat](https://gitter.im/cacao-org/codedev).
 
-
-
-
-### Source code status
-
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8fc93c97bde340078b02340e71b10580)](https://app.codacy.com/organization/cacao-org)
-
-
-|     branch       |   version             |  status                     | latest        |
-|------------------|-----------------------|-----------------------------|---------------|
-**master** | [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/cacao-org/cacao/tree/master) | [![Build Status](https://travis-ci.org/cacao-org/cacao.svg?branch=master)](https://travis-ci.org/cacao-org/cacao) | ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/master.svg)
-[**dev**](https://github.com/cacao-org/cacao/tree/dev) | | [![Build Status dev](https://travis-ci.org/cacao-org/cacao.svg?branch=dev)](https://travis-ci.org/cacao-org/cacao) | ![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)
 
 
 

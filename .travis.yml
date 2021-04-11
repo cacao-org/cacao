@@ -1,0 +1,32 @@
+dist: focal
+
+language: C
+
+before_install:
+- sudo apt-get update -qq
+- sudo apt-get install -qq libcfitsio-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison
+
+before_script:
+- echo "tmpfs /milk/shm tmpfs rw,nosuid,nodev" | sudo tee -a /etc/fstab
+- sudo mkdir -p /milk/shm
+- sudo mount /milk/shm
+- export MILK_SHM_DIR=/milk/shm
+
+
+script:
+- git clone https://github.com/milk-org/milk.git
+- cd milk
+- ./fetch_cacao_dev.sh
+- mkdir _build
+- cd _build
+- cmake --version
+- cmake .. -DEXTRAMODULES="milk_module_example" -DINSTALLMAKEDEFAULT=ON
+- make
+- sudo make install
+- export MILK_ROOT=${HOME}/src/milk
+- export MILK_INSTALLDIR=/usr/local/milk
+- export PATH=${PATH}:${MILK_INSTALLDIR}/bin
+- export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${MILK_INSTALLDIR}/lib/pkgconfig
+- ls -l /usr/local/milk/bin/
+
+
