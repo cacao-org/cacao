@@ -30,5 +30,6 @@ jobs:
     - name: Build
       working-directory: ${{github.workspace}}/_build
       shell: bash
-      run: make
+      run: cmake --build . --config $BUILD_TYPE
+
 
