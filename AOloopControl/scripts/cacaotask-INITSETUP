@@ -1,16 +1,11 @@
-#!/bin/bash
-
-# check environment
-source cacaotask-check
-
-
+#!/usr/bin/env bash
+CACAOTASK_SCRIPT_FNAME=$0
+source cacaotask-check # check environment
 
 # ======================================================================
 # PERFORM ACTIONS FOR THIS TASK
 # ======================================================================
-
 mkdir -p ${WORKDIRECTORY}
-
 
 # check if successful
 if [ "$?" = 0 ]; then
@@ -19,15 +14,10 @@ else
 	cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
 fi
 
-
 # copy test configuration files to work directory
 cp ${CONFDIR}/cacaovars.${LOOPNAME}.bash ${WORKDIRECTORY}/
 
 cp ${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf ${WORKDIRECTORY}/
-
-
-
-
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
@@ -50,7 +40,6 @@ then
 fi
 
 EOT
-
 
 
 # ======================================================================

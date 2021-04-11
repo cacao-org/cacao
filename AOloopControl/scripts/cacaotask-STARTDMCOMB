@@ -1,26 +1,16 @@
-#!/bin/bash
-
-# check environment
-source cacaotask-check
-
+#!/usr/bin/env bash
+CACAOTASK_SCRIPT_FNAME=$0
+source cacaotask-check # check environment
 
 # ======================================================================
 # PERFORM ACTIONS FOR THIS TASK
 # ======================================================================
-
-
-
 cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
-
 echo "runstart DMcomb-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
-
-
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
 # ======================================================================
-
-
 # Inside cat <<EOT section :
 # ${VAR} will be resolved prior to writing to destination
 # \${VAR} will not be resolved, and will appear as ${VAR} in the destination

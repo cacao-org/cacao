@@ -1,13 +1,10 @@
 #!/bin/bash
-
-# check environment
-source cacaotask-check
+CACAOTASK_SCRIPT_FNAME=$0
+source cacaotask-check # check environment
 
 # ======================================================================
 # PERFORM ACTIONS FOR THIS TASK
 # ======================================================================
-
-
 mkdir -p $WORKDIRECTORY/simLHS
 cd $CONFDIR/simLHS/
 FLIST=($(ls *.get.bash))
@@ -18,9 +15,6 @@ done
 
 cd ${CURRENTDIR}
 cp ${CONFDIR}/simLHS/*.fits ${WORKDIRECTORY}/simLHS/
-
-
-
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
@@ -36,7 +30,6 @@ rm $WORKDIRECTORY/simLHS/*
 rmdir $WORKDIRECTORY/simLHS
 
 EOT
-
 
 # ======================================================================
 # STORE OUTPUT ENVIRONMENT VARIABLES

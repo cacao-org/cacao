@@ -1,19 +1,12 @@
-#!/bin/bash
-
-
-# check environment
-source cacaotask-check
-
+#!/usr/bin/env bash
+CACAOTASK_SCRIPT_FNAME=$0
+source cacaotask-check # check environment
 
 # ======================================================================
 # PERFORM ACTIONS FOR THIS TASK
 # ======================================================================
-
-
 cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
-
 cd ${WORKDIRECTORY}
-
 cacao-setup -t ${LOOPNAME}
 
 # check if successful
@@ -22,7 +15,6 @@ if [ "$?" = 0 ]; then
 else
 	cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
 fi
-
 
 
 # ======================================================================
@@ -41,7 +33,6 @@ rmdir ${WORKDIRECTORY}/log
 cd ${CURRENTDIR}
 
 EOT
-
 
 
 # ======================================================================
