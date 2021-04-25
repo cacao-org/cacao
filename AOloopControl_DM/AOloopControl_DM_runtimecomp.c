@@ -15,7 +15,7 @@
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-
+#define _GNU_SOURCE
 
 #include <malloc.h>
 
@@ -27,6 +27,8 @@
 
 #include <sys/types.h>
 #include <unistd.h>
+#include <semaphore.h>
+#include <time.h>
 
 
 #include "CommandLineInterface/CLIcore.h"
@@ -982,7 +984,11 @@ int AOloopControl_DM_CombineChannels_RUN()
 
         if(DMtwaitus > 0)
         {
-            usleep(DMtwaitus);
+            struct timespec tim;
+            tim.tv_sec = 0;
+            tim.tv_nsec = (long)(1000 * DMtwaitus);
+            //usleep(DMtwaitus);
+            nanosleep(&tim, NULL);
         }
 
         if(clock_gettime(CLOCK_REALTIME, &semwaitts) == -1)
