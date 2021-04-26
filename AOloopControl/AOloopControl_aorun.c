@@ -430,7 +430,7 @@ int AOloopControl_aorun_RUN()
     uint64_t *loopONflag = functionparameter_GetParamPtr_fpflag(&fps, ".loopON");
 
     // if -1, run loop forever, if >0, run for number of steps
-    int64_t *loopNBstep = functionparameter_GetParamPtr_fpflag(&fps, ".loopNBstep");
+    uint64_t *loopNBstep = functionparameter_GetParamPtr_fpflag(&fps, ".loopNBstep");
 
     // This parameter value will be tracked during loop run, so we create a pointer for it
     // The corresponding function is functionparameter_GetParamPtr_<TYPE>
@@ -641,7 +641,7 @@ int AOloopControl_aorun_RUN()
             {
                 if(*loopNBstep > 0)
                 {
-                    *loopNBstep --;
+                    (*loopNBstep) --;
                     if(*loopNBstep == 0)
                     {
                         // turn loop OFF
