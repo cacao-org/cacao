@@ -71,8 +71,8 @@ errno_t AOloopControl_InitializeMemory(
 
     loop = aoloopcontrol_var.LOOPNUMBER;
 
-    char AOconfnamefull[200];
-    sprintf(AOconfnamefull, "%s/%s", data.shmdir, AOconfname);
+    char AOconfnamefull[STRINGMAXLEN_FULLFILENAME];
+    WRITE_FULLFILENAME(AOconfnamefull, "%s/%s", data.shmdir, AOconfname);
     SM_fd = open(AOconfnamefull, O_RDWR);
     if(SM_fd == -1)
     {
