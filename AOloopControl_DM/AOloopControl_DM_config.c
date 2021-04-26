@@ -138,7 +138,14 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
 
     while(!kbdhit())
     {
-        usleep(dmdispcombconf[DMindex].moninterval);
+        {
+            struct timespec tim;
+            tim.tv_sec = 0;
+            tim.tv_nsec = (long) (1000*dmdispcombconf[DMindex].moninterval);
+            nanosleep(&tim, NULL);
+            //usleep(dmdispcombconf[DMindex].moninterval);
+        }
+
         clear();
         attron(A_BOLD);
         print_header(" PRESS ANY KEY TO STOP MONITOR ", '-');

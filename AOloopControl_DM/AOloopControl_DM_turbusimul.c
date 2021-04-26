@@ -543,7 +543,13 @@ int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name,
 
         if(mode == 0)
         {
-            usleep(dmturbconf[DMindex].tint);
+            struct timespec tim;
+
+            tim.tv_sec = 0;
+            tim.tv_nsec = (long)(1000 * dmturbconf[DMindex].tint);
+
+            nanosleep(&tim, NULL);
+            //usleep(dmturbconf[DMindex].tint);
 
             tlast = dmturbconf[DMindex].tend;
             clock_gettime(CLOCK_REALTIME, &dmturbconf[DMindex].tend);
