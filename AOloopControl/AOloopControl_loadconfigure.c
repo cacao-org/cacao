@@ -945,7 +945,7 @@ errno_t AOloopControl_loadconfigure(
                        (long) sizearray[1], (long) sizearray[2]);
                 fflush(stdout);
                 aoloopcontrol_var.aoconfID_DMmodes = create_image_ID(
-                        AOconf[loop].AOpmodecoeffs.DMmodesname, 3, sizearray, _DATATYPE_FLOAT, 1, 0);
+                        AOconf[loop].AOpmodecoeffs.DMmodesname, 3, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
             }
 
             // put modes into shared memory

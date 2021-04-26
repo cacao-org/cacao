@@ -83,7 +83,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
     sizearray[0] = xsize;
     sizearray[1] = ysize;
-    IDindex = create_image_ID("Hpixindex", 2, sizearray, _DATATYPE_FLOAT, 0, 0);
+    IDindex = create_image_ID("Hpixindex", 2, sizearray, _DATATYPE_FLOAT, 0, 0, 0);
     free(sizearray);
 
     cnt = 0;

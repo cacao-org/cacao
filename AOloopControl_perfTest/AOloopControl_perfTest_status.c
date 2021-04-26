@@ -160,7 +160,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
 
             WRITE_IMAGENAME(imname, "aol%ld_mode_ARPFgainAuto", loop);
             aoloopcontrol_var.aoconfID_modeARPFgainAuto = create_image_ID(imname, 2,
-                    sizeout, _DATATYPE_FLOAT, 1, 0);
+                    sizeout, _DATATYPE_FLOAT, 1, 0, 0);
             COREMOD_MEMORY_image_set_createsem(imname, 10);
             // initialize the gain to zero for all modes
             for(unsigned int m = 0; m < AOconf[loop].AOpmodecoeffs.NBDMmodes; m++)

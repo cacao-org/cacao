@@ -200,13 +200,13 @@ errno_t AOloopControl_IOtools_AveStream(
     sizearray[0] = xsize;
     sizearray[1] = ysize;
 
-    IDout_ave = create_image_ID(IDname_out_ave, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+    IDout_ave = create_image_ID(IDname_out_ave, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
     COREMOD_MEMORY_image_set_createsem(IDname_out_ave, 10);
 
-    IDout_AC = create_image_ID(IDname_out_AC, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+    IDout_AC = create_image_ID(IDname_out_AC, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
     COREMOD_MEMORY_image_set_createsem(IDname_out_ave, 10);
 
-    IDout_RMS = create_image_ID(IDname_out_RMS, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+    IDout_RMS = create_image_ID(IDname_out_RMS, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
     COREMOD_MEMORY_image_set_createsem(IDname_out_RMS, 10);
 
 
@@ -320,7 +320,7 @@ errno_t AOloopControl_IOtools_imAlignStream(
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
     sizearray[0] = xsize;
     sizearray[1] = ysize;
-    IDout = create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+    IDout = create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
     COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
     free(sizearray);
 
@@ -524,7 +524,7 @@ imageID AOloopControl_IOtools_frameDelay(
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
     sizearray[0] = xsize;
     sizearray[1] = ysize;
-    IDout = create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0);
+    IDout = create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
     COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
     free(sizearray);
 
@@ -642,8 +642,8 @@ imageID AOloopControl_IOtools_stream3Dto2D(
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
     sizearray[0] = xsize1;
     sizearray[1] = ysize1;
-    IDout = create_image_ID(out_name, 2, sizearray, datatype, 1, 0);
-    IDout0 = create_image_ID(out0name, 2, sizearray, datatype, 1, 0);
+    IDout = create_image_ID(out_name, 2, sizearray, datatype, 1, 0, 0);
+    IDout0 = create_image_ID(out0name, 2, sizearray, datatype, 1, 0, 0);
     free(sizearray);
 
     for(;;)

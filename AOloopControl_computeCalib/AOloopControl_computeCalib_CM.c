@@ -305,7 +305,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     arraysizetmp[0] = m;
     arraysizetmp[1] = m;
     ID_VTmatrix = create_image_ID(ID_VTmatrix_name, 2, arraysizetmp,
-                                  _DATATYPE_FLOAT, 0, 0);
+                                  _DATATYPE_FLOAT, 0, 0, 0);
     for(uint64_t ii = 0; ii < m; ii++) // modes
         for(uint32_t k = 0; k < m; k++) // modes
         {
@@ -392,7 +392,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     arraysizetmp[1] = AOconf[loop].WFSim.sizeyWFS;
     arraysizetmp[2] = m;
     ID_Cmatrix = create_image_ID(ID_Cmatrix_name, 3, arraysizetmp, _DATATYPE_FLOAT,
-                                 0, 0);
+                                 0, 0, 0);
 
     printf("COMPUTING CMAT .... \n");
 
@@ -596,7 +596,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
     printf("Creating 3D image : %u %u %lu\n", sizexWFS, sizeyWFS, sizeDM);
     fflush(stdout);
-    IDcmatc = create_image_ID(IDcmatc_name, 3, sizearray, _DATATYPE_FLOAT, 0, 0);
+    IDcmatc = create_image_ID(IDcmatc_name, 3, sizearray, _DATATYPE_FLOAT, 0, 0, 0);
     free(sizearray);
 
 

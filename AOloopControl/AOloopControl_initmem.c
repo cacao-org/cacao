@@ -169,7 +169,7 @@ errno_t AOloopControl_InitializeMemory(
             sizearray[0] = 1;
             sizearray[1] = 1;
             aoloopcontrol_var.aoconfIDlogdata = create_image_ID(cntname, 2, sizearray,
-                                                _DATATYPE_FLOAT, 1, 0);
+                                                _DATATYPE_FLOAT, 1, 0, 0);
             free(sizearray);
         }
 

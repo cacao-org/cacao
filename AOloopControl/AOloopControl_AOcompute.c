@@ -528,7 +528,7 @@ errno_t __attribute__((hot)) AOcompute(
                     sizearray[0] =  AOconf[loop].WFSim.sizeWFS_active[slice];
                     sizearray[1] =  1;
                     aoconfID_imWFS2_active[slice] = create_image_ID(imname, 2, sizearray,
-                                                    _DATATYPE_FLOAT, 1, 0);
+                                                    _DATATYPE_FLOAT, 1, 0, 0);
                     free(sizearray);
                     //aoconfID_imWFS2_active[slice] = create_2Dimage_ID(imname, AOconf[loop].WFSim.sizeWFS_active[slice], 1);
                 }
@@ -571,7 +571,7 @@ errno_t __attribute__((hot)) AOcompute(
             }
 
             aoloopcontrol_var.aoconfID_meas_act_active = create_image_ID(imname, 2,
-                    sizearray, _DATATYPE_FLOAT, 1, 0);
+                    sizearray, _DATATYPE_FLOAT, 1, 0, 0);
             free(sizearray);
 
 
@@ -588,7 +588,7 @@ errno_t __attribute__((hot)) AOcompute(
                 }
 
                 aoloopcontrol_var.aoconfID_meas_act = create_image_ID(imname, 2, sizearray,
-                                                      _DATATYPE_FLOAT, 1, 0);
+                                                      _DATATYPE_FLOAT, 1, 0, 0);
                 COREMOD_MEMORY_image_set_createsem(imname, 10);
                 free(sizearray);
             }

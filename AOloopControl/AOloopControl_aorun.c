@@ -505,7 +505,7 @@ int AOloopControl_aorun_RUN()
     imsizearray[0] = data.image[IDimWFS1].md[0].size[0];
     imsizearray[1] = data.image[IDimWFS1].md[0].size[1];
     long IDimWFS2 = create_image_ID(imWFS2sname, naxis, imsizearray,
-                                    _DATATYPE_FLOAT, 1, 10);
+                                    _DATATYPE_FLOAT, 1, 10, 0);
     free(imsizearray);
 
 
@@ -529,7 +529,7 @@ int AOloopControl_aorun_RUN()
     imsizearray[0] = data.image[ID_DMout].md[0].size[0];
     imsizearray[1] = data.image[ID_DMout].md[0].size[1];
     long ID_MVMout = create_image_ID(outMVMsname, naxis, imsizearray,
-                                     _DATATYPE_FLOAT, 1, 10);
+                                     _DATATYPE_FLOAT, 1, 10, 0);
     free(imsizearray);
 
 
