@@ -155,6 +155,10 @@ errno_t AOloopControl_perfTest_printloopstatus(
         {
             // multiplicative auto ratio on top of gain above
             sizeout = (uint32_t *) malloc(sizeof(uint32_t) * 2);
+            if(sizeout == NULL) {
+                PRINT_ERROR("malloc returns NULL pointer");
+                abort();
+            }
             sizeout[0] = AOconf[loop].AOpmodecoeffs.NBDMmodes;
             sizeout[1] = 1;
 
@@ -832,11 +836,34 @@ errno_t AOloopControl_perfTest_statusStats(
     fflush(stdout);
 
     statuscnt = (long *) malloc(sizeof(long) * statusmax);
-    statusMcnt = (long *) malloc(sizeof(long) * statusmax);
-    statusM1cnt = (long *) malloc(sizeof(long) * statusmax);
-    statusgpucnt = (long *) malloc(sizeof(long) * nbgpu * 10);
-    statusgpucnt2 = (long *) malloc(sizeof(long) * nbgpu * 10);
+    if(statuscnt == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
+    statusMcnt = (long *) malloc(sizeof(long) * statusmax);
+    if(statusMcnt == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
+    statusM1cnt = (long *) malloc(sizeof(long) * statusmax);
+    if(statusM1cnt == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
+    statusgpucnt = (long *) malloc(sizeof(long) * nbgpu * 10);
+    if(statusgpucnt == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
+    statusgpucnt2 = (long *) malloc(sizeof(long) * nbgpu * 10);
+    if(statusgpucnt2 == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     for(st = 0; st < statusmax; st++)
     {

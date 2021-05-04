@@ -1286,6 +1286,10 @@ imageID AOloopControl_computeCalib_mkModes(
         IDSVDmodein = create_2Dimage_ID("SVDmodein", msizex, msizey);
 
         mok = (int *) malloc(sizeof(int) * NBmm);
+        if(mok == NULL) {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort();
+        }
         for(uint32_t m = 0; m < NBmm; m++)
         {
             mok[m] = 1;
@@ -1889,6 +1893,10 @@ imageID AOloopControl_computeCalib_mkModes(
             IDSVDmodein = create_2Dimage_ID("SVDmodein", wfsxsize, wfsysize);
 
             mok = (int *) malloc(sizeof(int) * NBmm);
+            if(mok == NULL) {
+                PRINT_ERROR("malloc returns NULL pointer");
+                abort();
+            }
             for(uint32_t m = 0; m < NBmm; m++)
             {
                 mok[m] = 1;
@@ -1900,6 +1908,10 @@ imageID AOloopControl_computeCalib_mkModes(
             {
                 float *rmsarray;
                 rmsarray = (float *) malloc(sizeof(float) * MBLOCK_NBmode[mblock]);
+                if(rmsarray == NULL) {
+                    PRINT_ERROR("malloc returns NULL pointer");
+                    abort();
+                }
                 for(uint32_t m = 0; m < MBLOCK_NBmode[mblock]; m++)
                 {
                     int slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS0_%02u", mblock);
@@ -2753,8 +2765,20 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
 
     MBLOCK_NBmode = (long *) malloc(sizeof(long) * NBmblock);
+    if(MBLOCK_NBmode == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     MBLOCK_blockstart = (long *) malloc(sizeof(long) * NBmblock);
+    if(MBLOCK_blockstart == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     MBLOCK_blockend = (long *) malloc(sizeof(long) * NBmblock);
+    if(MBLOCK_blockend == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
 
     IDin = image_ID(IDin_name);

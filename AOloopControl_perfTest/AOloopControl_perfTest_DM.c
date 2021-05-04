@@ -274,6 +274,11 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
     }
 
     timearray = (float *) malloc(sizeof(float) * kmax);
+    if(timearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
     IDrec_dmout = create_3Dimage_ID("_tmprecdmout", dmxsize, dmysize, kmax);
 
     IDcoeffarray = create_2Dimage_ID("_tmpcoeffarray", kmax, NBmodes);
@@ -285,6 +290,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
         printf("ERROR: cannot create file \"%s\"", fname);
         exit(0);
     }
+    fclose(fp);
 
     IDout = create_2Dimage_ID(IDout_name, nbf, NBmodes);
     IDdmtmp = create_2Dimage_ID("_tmpdm", dmxsize, dmysize);

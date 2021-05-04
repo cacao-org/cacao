@@ -1,10 +1,10 @@
 /**
  * @file    AOloopControl_IOtools_datastream_processing.c
  * @brief   Adaptive Optics Control loop engine I/O tools
- * 
+ *
  * AO engine uses stream data structure
- * 
- * 
+ *
+ *
  */
 
 
@@ -136,41 +136,41 @@ extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
 
 /* =============================================================================================== */
 /* =============================================================================================== */
-/** @name AOloopControl_IOtools - 3. DATA STREAMS PROCESSING      
+/** @name AOloopControl_IOtools - 3. DATA STREAMS PROCESSING
  *  Data streams real-time processing */
 /* =============================================================================================== */
 /* =============================================================================================== */
 
 /**
  * ## Purpose
- * 
+ *
  * Averages input image stream
- * 
+ *
  * ## Arguments
- * 
+ *
  * @param[in]
  * IDname	CHAR*
  * 			Input stream name
- * 
+ *
  * @param[in]
  * alpha	DOUBLE
  * 			Averaging coefficient
  * 			new average = old average * (1-alpha) + alpha * new image
- * 
+ *
  * @param[out]
  * fIDname_out_ave	CHAR*
  * 			Stream name for output average image
- * 
+ *
  * @param[in]
  * IDname_out_AC	CHAR*
  * 			Stream name for output AC component (average-subtracted)
- * 
+ *
  * @param[in]
  * IDname_out_RMS	CHAR*
  * 			Stream name for output RMS component
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
 errno_t AOloopControl_IOtools_AveStream(
@@ -197,6 +197,10 @@ errno_t AOloopControl_IOtools_AveStream(
     ysize = data.image[IDin].md[0].size[1];
 
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+        if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     sizearray[0] = xsize;
     sizearray[1] = ysize;
 
@@ -248,29 +252,29 @@ errno_t AOloopControl_IOtools_AveStream(
 
 /**
  * ## Purpose
- * 
+ *
  * Align image stream in real-time\n
- * 
+ *
  * ## Arguments
- * 
+ *
  * IDname is input stream \n
  * The alignment is computed using a rectangular box of starting at (xbox0,ybox0)\n
  * Reference image used for alignment is provided by IDref_name\n
- * 
- * 
+ *
+ *
  * ## Use
- * 
+ *
  * Function runs a loop. Reacts to updates to stream IDname\n
- * 
- * 
+ *
+ *
  * ## Details
- * 
- * 
+ *
+ *
  * @return number of iteration [int]
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  * \ingroup RTfunctions
  */
 
@@ -314,10 +318,14 @@ errno_t AOloopControl_IOtools_imAlignStream(
     uint8_t datatype;
     datatype = data.image[IDin].md[0].datatype;
 
-	// create output stream
-	uint32_t IDout;
-	uint32_t *sizearray;
+    // create output stream
+    uint32_t IDout;
+    uint32_t *sizearray;
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+    if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     sizearray[0] = xsize;
     sizearray[1] = ysize;
     IDout = create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
@@ -438,7 +446,7 @@ errno_t AOloopControl_IOtools_imAlignStream(
                 }
             xoffset = tmpxs/tmps;
             yoffset = tmpys/tmps;
-          //  printf("%2d center = %4.2f %4.2f\n", kiter, xoffset, yoffset);
+            //  printf("%2d center = %4.2f %4.2f\n", kiter, xoffset, yoffset);
         }
         delete_image_ID("tmpCorr");
 
@@ -446,11 +454,11 @@ errno_t AOloopControl_IOtools_imAlignStream(
         xoffset = - (xoffset - 0.5*xboxsize);
         yoffset = - (yoffset - 0.5*yboxsize);
 
-       // printf("offset = %4.2f %4.2f\n", xoffset, yoffset);
-       // fflush(stdout);
+        // printf("offset = %4.2f %4.2f\n", xoffset, yoffset);
+        // fflush(stdout);
 
         fft_image_translate("alignintmpim", "alignouttmp", xoffset, yoffset);
-        
+
         // write to IDout
         long IDouttmp;
         long framesize = sizeof(float)*xsize*ysize;
@@ -477,11 +485,11 @@ errno_t AOloopControl_IOtools_imAlignStream(
 
 
 imageID AOloopControl_IOtools_frameDelay(
-	const char *IDin_name, 
-	const char *IDkern_name, 
-	const char *IDout_name, 
-	int insem
-	)
+    const char *IDin_name,
+    const char *IDkern_name,
+    const char *IDout_name,
+    int insem
+)
 {
     imageID IDout;
     imageID IDin;
@@ -522,6 +530,10 @@ imageID AOloopControl_IOtools_frameDelay(
     IDbuff = create_3Dimage_ID("_tmpbuff", xsize, ysize, ksize);
 
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+    if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     sizearray[0] = xsize;
     sizearray[1] = ysize;
     IDout = create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
@@ -598,7 +610,7 @@ imageID AOloopControl_IOtools_stream3Dto2D(
     int         insem
 )
 {
-	imageID IDin, IDout;
+    imageID IDin, IDout;
     uint_fast16_t xsize0, ysize0, zsize0;
     uint_fast32_t xysize0;
     uint_fast16_t xsize1, ysize1;
@@ -640,6 +652,11 @@ imageID AOloopControl_IOtools_stream3Dto2D(
 
     datatype = _DATATYPE_FLOAT;
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
+    if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
     sizearray[0] = xsize1;
     sizearray[1] = ysize1;
     IDout = create_image_ID(out_name, 2, sizearray, datatype, 1, 0, 0);

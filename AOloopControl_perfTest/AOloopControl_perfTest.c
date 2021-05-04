@@ -1076,7 +1076,16 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     processinfo_WriteMessage(processinfo, "Allocating memory");
 
     latencyarray = (float *) malloc(sizeof(float) * NBiter);
+    if(latencyarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     latencysteparray = (float *) malloc(sizeof(float) * NBiter);
+    if(latencysteparray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
     IDdm = image_ID(dmname);
     dmxsize = data.image[IDdm].md[0].size[0];
@@ -1198,8 +1207,16 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
 
     tarray = (struct timespec *) malloc(sizeof(struct timespec) * wfs_NBframesmax);
-    dtarray = (double *) malloc(sizeof(double) * wfs_NBframesmax);
+    if(tarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
+    dtarray = (double *) malloc(sizeof(double) * wfs_NBframesmax);
+    if(dtarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
 
     FILE *fphwlat = fps_write_RUNoutput_file(&fps, "hardwlatency", "dat");
@@ -1472,6 +1489,11 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
 
         valarray = (double *) malloc(sizeof(double) * NBwfsframe);
+        if(valarray == NULL) {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort(); // or handle error in other ways
+        }
+
         double valmax = 0.0;
         double valmaxdt = 0.0;
         for(kk = 1; kk < NBwfsframe; kk++)
@@ -1804,6 +1826,10 @@ imageID AOloopControl_perfTest_blockstats(
     NBmodes = data.image[IDmodeval].md[0].size[0];
 
     sizeout = (uint32_t *) malloc(sizeof(uint32_t) * 2);
+    if(sizeout == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
     sizeout[0] = NBmodes;
     sizeout[1] = 1;
     IDout = create_image_ID(IDout_name, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0);
@@ -1836,9 +1862,18 @@ imageID AOloopControl_perfTest_blockstats(
     NBblock = blk;
 
     rmsarray = (float *) malloc(sizeof(float) * NBblock);
+    if(rmsarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
 
     indexarray = (int *) malloc(sizeof(int) * NBmodes);
+    if(indexarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     for(m = 0; m < NBmodes; m++)
     {
         indexarray[m] = (int)(0.1 + data.image[IDout].array.F[m]);
@@ -1965,6 +2000,10 @@ errno_t AOloopControl_perfTest_InjectMode(
         float *arrayf;
 
         arrayf = (float *) malloc(sizeof(float) * AOconf[LOOPNUMBER].DMctrl.sizeDM);
+        if(arrayf == NULL) {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort(); // or handle error in other ways
+        }
 
         for(unsigned int i = 0; i < AOconf[LOOPNUMBER].DMctrl.sizeDM; i++)
         {
@@ -2310,13 +2349,53 @@ errno_t AOloopControl_LoopTimer_Analysis(
     fflush(stdout);
 
     cnt0array = (uint64_t *) malloc(sizeof(uint64_t) * NBsample);
+    if(cnt0array == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     cnt1array = (uint64_t *) malloc(sizeof(uint64_t) * NBsample);
+    if(cnt1array == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     frameTimearray = (double *) malloc(sizeof(double) * NBsample);
+    if(frameTimearray == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
     timer_ave = (double *) malloc(sizeof(double) * NBtimer);
+    if(timer_ave == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     timer_min = (double *) malloc(sizeof(double) * NBtimer);
+    if(timer_min == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     timer_max = (double *) malloc(sizeof(double) * NBtimer);
+    if(timer_max == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     timer_dev = (double *) malloc(sizeof(double) * NBtimer);
+    if(timer_dev == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
     double f1;
     long l1, l2;
@@ -2369,6 +2448,15 @@ errno_t AOloopControl_LoopTimer_Analysis(
                 fprintf(stderr,
                         "Error: fscanf reached end of file, no matching characters, no matching failure\n");
             }
+            fclose(fptxt);
+            fclose(fpout);
+            free(timer_ave);
+            free(timer_min);
+            free(timer_max);
+            free(timer_dev);
+            free(cnt0array);
+            free(cnt1array);
+            free(frameTimearray);
             return RETURN_FAILURE;
         }
         else if(fscanfcnt != 4)
@@ -2376,6 +2464,15 @@ errno_t AOloopControl_LoopTimer_Analysis(
             fprintf(stderr,
                     "Error: fscanf successfully matched and assigned %i input items, 2 expected\n",
                     fscanfcnt);
+            fclose(fptxt);
+            fclose(fpout);
+            free(timer_ave);
+            free(timer_min);
+            free(timer_max);
+            free(timer_dev);
+            free(cnt0array);
+            free(cnt1array);
+            free(frameTimearray);
             return RETURN_FAILURE;
         }
 
@@ -2417,6 +2514,7 @@ errno_t AOloopControl_LoopTimer_Analysis(
         fprintf(fpout, "\n");
     }
 
+
     missedFrames = (cnt1array[NBsample - 1] - cnt1array[0]) - NBsample;
 
 
@@ -2450,13 +2548,12 @@ errno_t AOloopControl_LoopTimer_Analysis(
     }
     printf("-------------------------------------------------\n");
 
+    fclose(fptxt);
     fclose(fpout);
-
     free(timer_ave);
     free(timer_min);
     free(timer_max);
     free(timer_dev);
-
     free(cnt0array);
     free(cnt1array);
     free(frameTimearray);
@@ -2642,6 +2739,11 @@ errno_t AOloopControl_perfTest_mkTimingFile(
 
 
         tarray = (double *) malloc(sizeof(double) * MaxNBsample);
+        if(tarray == NULL)
+        {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort(); // or handle error in other ways
+        }
 
         cnt = 0;
 
@@ -2721,7 +2823,7 @@ errno_t AOloopControl_perfTest_mkTimingFile(
         fprintf(fpout, "%s   %20.9f %20.9f   %10ld  %10.3f\n", tmpstring,
                 datfile.tstart, datfile.tend, datfile.cnt,
                 datfile.cnt / (datfile.tend - datfile.tstart));
-        fclose(fp);
+        fclose(fpout);
     }
 
 
@@ -2814,16 +2916,50 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
     // Should frame be kept or not ?
     int *frameOKarray;
     frameOKarray = (int *) malloc(sizeof(double) * zsize);
+    if(frameOKarray == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
 
     // Allocate Working arrays and populate timing arrays
 
     tstartarray = (double *) malloc(sizeof(double) * zsize);
+    if(tstartarray == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     tendarray   = (double *) malloc(sizeof(double) * zsize);
+    if(tendarray == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     exparray    = (double *) malloc(sizeof(double) *
                                     zsize); // exposure time accumulated, in unit of input frame(s)
+    if(exparray == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     exparray0   = (double *) malloc(sizeof(double) * zsize);
+    if(exparray0 == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     exparray1   = (double *) malloc(sizeof(double) * zsize);
+    if(exparray1 == NULL)
+    {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
     for(tstep = 0; tstep < zsize; tstep++)
     {
         tstartarray[tstep] = tstart + 1.0 * tstep * (tend - tstart) / zsize;
@@ -2863,6 +2999,11 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
         }
 
         datfile = (StreamDataFile *) malloc(sizeof(StreamDataFile) * MaxNBdatFiles);
+        if(datfile == NULL)
+        {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort(); // or handle error in other ways
+        }
         //
         // Identify relevant files in directory
         //
@@ -3087,8 +3228,25 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
 
             // start and end time for input exposures
             intarray_start = (double *) malloc(sizeof(double) * datfile[i].cnt);
+            if(intarray_start == NULL)
+            {
+                PRINT_ERROR("malloc returns NULL pointer");
+                abort(); // or handle error in other ways
+            }
+
             intarray_end   = (double *) malloc(sizeof(double) * datfile[i].cnt);
+            if(intarray_end == NULL)
+            {
+                PRINT_ERROR("malloc returns NULL pointer");
+                abort(); // or handle error in other ways
+            }
+
             dtarray = (double *) malloc(sizeof(double) * datfile[i].cnt);
+            if(dtarray == NULL)
+            {
+                PRINT_ERROR("malloc returns NULL pointer");
+                abort(); // or handle error in other ways
+            }
 
 
             long j;
@@ -3226,92 +3384,92 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
 
                     switch(data.image[IDc].md[0].datatype)
                     {
-                        case _DATATYPE_UINT8 :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.UI8[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_UINT8 :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.UI8[xysize * j + ii];
+                        }
+                        break;
 
-                        case _DATATYPE_INT8 :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.SI8[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_INT8 :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.SI8[xysize * j + ii];
+                        }
+                        break;
 
-                        case _DATATYPE_UINT16 :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.UI16[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_UINT16 :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.UI16[xysize * j + ii];
+                        }
+                        break;
 
-                        case _DATATYPE_INT16 :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.SI16[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_INT16 :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.SI16[xysize * j + ii];
+                        }
+                        break;
 
-                        case _DATATYPE_UINT32 :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.UI32[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_UINT32 :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.UI32[xysize * j + ii];
+                        }
+                        break;
 
-                        case _DATATYPE_INT32 :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.SI32[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_INT32 :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.SI32[xysize * j + ii];
+                        }
+                        break;
 
-                        case _DATATYPE_UINT64 :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.UI64[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_UINT64 :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.UI64[xysize * j + ii];
+                        }
+                        break;
 
-                        case _DATATYPE_INT64 :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.SI64[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_INT64 :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.SI64[xysize * j + ii];
+                        }
+                        break;
 
-                        case _DATATYPE_FLOAT :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.F[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_FLOAT :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.F[xysize * j + ii];
+                        }
+                        break;
 
-                        case _DATATYPE_DOUBLE :
-                            for(ii = 0; ii < xysize; ii++)
-                            {
-                                data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
-                                        data.image[IDc].array.D[xysize * j + ii];
-                            }
-                            break;
+                    case _DATATYPE_DOUBLE :
+                        for(ii = 0; ii < xysize; ii++)
+                        {
+                            data.image[IDout].array.F[xysize * tstep + ii] += expfrac *
+                                    data.image[IDc].array.D[xysize * j + ii];
+                        }
+                        break;
 
-                        default :
-                            list_image_ID();
-                            PRINT_ERROR("datatype value not recognised");
-                            printf("ID %ld  datatype = %d\n", IDc, data.image[IDc].md[0].datatype);
-                            exit(0);
-                            break;
+                    default :
+                        list_image_ID();
+                        PRINT_ERROR("datatype value not recognised");
+                        printf("ID %ld  datatype = %d\n", IDc, data.image[IDc].md[0].datatype);
+                        exit(0);
+                        break;
                     }
                     j++;
                 }
@@ -3358,12 +3516,12 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
         exptmedian = exparray[zsize / 2];
         medianexptimearray[stream] = exptmedian;
         printf("Median Exp Time = %6.3f\n", exptmedian);
-        
+
         if(fabs(exptmedian) < 0.0000001)
         {
-			printf("Median Exp Time = 0 , exiting the process: check your data and times");
-			exit(0);
-		}
+            printf("Median Exp Time = 0 , exiting the process: check your data and times");
+            exit(0);
+        }
 
         if(stream == 0)
         {
@@ -3517,7 +3675,16 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(
     zsize = data.image[ID].md[0].size[2];
 
     array1 = (float *) malloc(sizeof(float) * xysize);
+    if(array1 == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     array2 = (float *) malloc(sizeof(float) * xysize);
+    if(array2 == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
 
     IDout = create_2Dimage_ID(IDname_out, zsize, zsize);
@@ -3710,13 +3877,40 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(
 
 
     sim0pair_k1 = (unsigned long *) malloc(sizeof(unsigned long) * NBpairMax);
+    if(sim0pair_k1 == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     sim0pair_k2 = (unsigned long *) malloc(sizeof(unsigned long) * NBpairMax);
+    if(sim0pair_k2 == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     sim0pair_val = (double *) malloc(sizeof(double) * NBpairMax);
+    if(sim0pair_val == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
     sim1pair_k1 = (unsigned long *) malloc(sizeof(unsigned long) * NBpairMax);
-    sim1pair_k2 = (unsigned long *) malloc(sizeof(unsigned long) * NBpairMax);
-    sim1pair_val = (double *) malloc(sizeof(double) * NBpairMax);
+    if(sim1pair_k1 == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
+    sim1pair_k2 = (unsigned long *) malloc(sizeof(unsigned long) * NBpairMax);
+    if(sim1pair_k2 == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
+    sim1pair_val = (double *) malloc(sizeof(double) * NBpairMax);
+    if(sim1pair_val == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
     paircnt = 0;
     for(k1 = 0; k1 < NBframe0; k1++)
@@ -4014,7 +4208,16 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(
     NBframe = data.image[IDwfs].md[0].size[2];
 
     evalarray = (double *) malloc(sizeof(double) * NBframe);
+    if(evalarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
+
     indexarray = (long *) malloc(sizeof(long) * NBframe);
+    if(indexarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort(); // or handle error in other ways
+    }
 
     long x0t, y0t, x1t, y1t;
     x0t = x0;
@@ -4084,21 +4287,21 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(
         // best frame
         switch(EvalMode)
         {
-            case 0 :
-                evalarray[kk] = -(ssum / (pow(sum, alpha)));
-                break;
+        case 0 :
+            evalarray[kk] = -(ssum / (pow(sum, alpha)));
+            break;
 
-            case 1 :
-                evalarray[kk] = -sum;
-                break;
+        case 1 :
+            evalarray[kk] = -sum;
+            break;
 
-            case 2 :
-                evalarray[kk] = sum;
-                break;
+        case 2 :
+            evalarray[kk] = sum;
+            break;
 
-            default:
-                evalarray[kk] = -sum;
-                break;
+        default:
+            evalarray[kk] = -sum;
+            break;
         }
     }
 

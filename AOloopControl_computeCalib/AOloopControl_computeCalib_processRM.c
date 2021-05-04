@@ -336,7 +336,15 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
 
 
     IDzresp_array = (imageID *) malloc(sizeof(imageID) * NBmat);
+    if(IDzresp_array == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     IDWFSrefc_array = (imageID *) malloc(sizeof(imageID) * NBmat);
+    if(IDWFSrefc_array == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     // STEP 1: build individually cleaned RM
     for(kmat = 0; kmat < NBmat; kmat++)

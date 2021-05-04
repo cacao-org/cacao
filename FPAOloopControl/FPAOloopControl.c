@@ -828,8 +828,16 @@ int FPAOloopControl_Read_cam_frame(long loop, int semindex)
         long i;
 
         arrayftmp = (float *) malloc(sizeof(float) * FPAOconf[loop].sizeWFS);
+        if(arrayftmp == NULL) {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort();
+        }
         arrayutmp = (unsigned short *) malloc(sizeof(unsigned short) *
                                               FPAOconf[loop].sizeWFS);
+        if(arrayutmp == NULL) {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort();
+        }
 
         sprintf(fname, "FPaol%ld_wfsdark", loop);
         FPaoconfID_wfsdark = image_ID(fname);
@@ -875,20 +883,20 @@ int FPAOloopControl_Read_cam_frame(long loop, int semindex)
 
     switch(WFSdatatype)
     {
-        case _DATATYPE_FLOAT :
-            ptrv = (char *) data.image[FPaoconfID_wfsim].array.F;
-            ptrv += sizeof(float) * slice * FPAOconf[loop].sizeWFS;
-            memcpy(arrayftmp, ptrv,  sizeof(float)*FPAOconf[loop].sizeWFS);
-            break;
-        case _DATATYPE_UINT16 :
-            ptrv = (char *) data.image[FPaoconfID_wfsim].array.UI16;
-            ptrv += sizeof(unsigned short) * slice * FPAOconf[loop].sizeWFS;
-            memcpy(arrayutmp, ptrv, sizeof(unsigned short)*FPAOconf[loop].sizeWFS);
-            break;
-        default :
-            printf("ERROR: DATA TYPE NOT SUPPORTED\n");
-            exit(0);
-            break;
+    case _DATATYPE_FLOAT :
+        ptrv = (char *) data.image[FPaoconfID_wfsim].array.F;
+        ptrv += sizeof(float) * slice * FPAOconf[loop].sizeWFS;
+        memcpy(arrayftmp, ptrv,  sizeof(float)*FPAOconf[loop].sizeWFS);
+        break;
+    case _DATATYPE_UINT16 :
+        ptrv = (char *) data.image[FPaoconfID_wfsim].array.UI16;
+        ptrv += sizeof(unsigned short) * slice * FPAOconf[loop].sizeWFS;
+        memcpy(arrayutmp, ptrv, sizeof(unsigned short)*FPAOconf[loop].sizeWFS);
+        break;
+    default :
+        printf("ERROR: DATA TYPE NOT SUPPORTED\n");
+        exit(0);
+        break;
     }
 
 
@@ -901,46 +909,46 @@ int FPAOloopControl_Read_cam_frame(long loop, int semindex)
 
     switch(WFSdatatype)
     {
-        case _DATATYPE_UINT16 :
+    case _DATATYPE_UINT16 :
 # ifdef _OPENMP
-            #pragma omp parallel num_threads(8) if (nelem>OMP_NELEMENT_LIMIT)
-        {
+        #pragma omp parallel num_threads(8) if (nelem>OMP_NELEMENT_LIMIT)
+    {
 # endif
 
 # ifdef _OPENMP
-            #pragma omp for
+        #pragma omp for
 # endif
-            for(ii = 0; ii < nelem; ii++)
-            {
-                data.image[FPaoconfID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) -
-                        data.image[FPaoconfID_wfsdark].array.F[ii];
-            }
-# ifdef _OPENMP
-        }
-# endif
-        break;
-        case _DATATYPE_FLOAT :
-# ifdef _OPENMP
-            #pragma omp parallel num_threads(8) if (nelem>OMP_NELEMENT_LIMIT)
+        for(ii = 0; ii < nelem; ii++)
         {
+            data.image[FPaoconfID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]) -
+                    data.image[FPaoconfID_wfsdark].array.F[ii];
+        }
+# ifdef _OPENMP
+    }
+# endif
+    break;
+    case _DATATYPE_FLOAT :
+# ifdef _OPENMP
+        #pragma omp parallel num_threads(8) if (nelem>OMP_NELEMENT_LIMIT)
+    {
 # endif
 
 # ifdef _OPENMP
-            #pragma omp for
+        #pragma omp for
 # endif
-            for(ii = 0; ii < nelem; ii++)
-            {
-                data.image[FPaoconfID_imWFS0].array.F[ii] = arrayftmp[ii] -
-                        data.image[FPaoconfID_wfsdark].array.F[ii];
-            }
-# ifdef _OPENMP
+        for(ii = 0; ii < nelem; ii++)
+        {
+            data.image[FPaoconfID_imWFS0].array.F[ii] = arrayftmp[ii] -
+                    data.image[FPaoconfID_wfsdark].array.F[ii];
         }
+# ifdef _OPENMP
+    }
 # endif
+    break;
+    default :
+        printf("ERROR: WFS data type not recognized\n");
+        exit(0);
         break;
-        default :
-            printf("ERROR: WFS data type not recognized\n");
-            exit(0);
-            break;
     }
 
     data.image[FPaoconfID_imWFS0].md[0].cnt0 ++;
@@ -1021,6 +1029,10 @@ long FPAO_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave,
 
 
     sizearray = (long *) malloc(sizeof(long) * 3);
+    if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
 
     printf("INITIALIZE MEMORY (mode %d)....\n", FPAOinitMode);
@@ -1053,6 +1065,10 @@ long FPAO_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave,
 
 
     arrayf = (float *) malloc(sizeof(float) * FPAOconf[loop].sizeDM);
+    if(arrayf == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     for(ii = 0; ii < FPAOconf[loop].sizeDM; ii++)
     {
         arrayf[ii] = 0.0;
@@ -1364,6 +1380,10 @@ long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0,
     {
         N1 = 2;
         N1array = (float *) malloc(sizeof(float) * 2);
+        if(N1array == NULL) {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort();
+        }
         N1array[0] = -1.0;
         N1array[1] = 1.0;
     }
@@ -1371,6 +1391,10 @@ long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0,
     {
         N1 = 1 + 2 * N;
         N1array = (float *) malloc(sizeof(float) * N1);
+        if(N1array == NULL) {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort();
+        }
         for(n = 0; n < N1; n++)
         {
             N1array[n] = -1.0 + (2.0 * n / (N1 - 1));
@@ -1386,6 +1410,10 @@ long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0,
     IDout = create_3Dimage_ID(IDout_name, xsize, ysize, kksize);
 
     narray = (long *) malloc(sizeof(long) * NBmaster);
+    if(narray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     for(k = 0; k < NBmaster; k++)
     {
         narray[k] = 0;

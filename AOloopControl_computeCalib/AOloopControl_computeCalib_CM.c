@@ -172,6 +172,11 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 
 
     arraysizetmp = (uint32_t *) malloc(sizeof(uint32_t) * 3);
+    if(arraysizetmp == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
 
 
     ID_Rmatrix = image_ID(ID_Rmatrix_name);
@@ -216,6 +221,10 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 
 
     CPAcoeff = (double *) malloc(sizeof(double) * m);
+    if(CPAcoeff == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     if(Beta > 0.000001)
     {
@@ -590,6 +599,10 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
     // allocate array for combined matrix
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
+    if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     sizearray[0] = sizexWFS;
     sizearray[1] = sizeyWFS;
     sizearray[2] = sizeDM;
@@ -607,17 +620,31 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
     // init matrix_Mc
     matrix_Mc = (float *) malloc(sizeof(float) * sizeWFS * sizeDM);
+    if(matrix_Mc == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     memcpy(matrix_Mc, data.image[IDcmatc].array.F, sizeof(float)*sizeWFS * sizeDM);
 
     // copy modal control matrix to matrix_cmp
     IDcmat = image_ID(IDcmat_name);
     matrix_cmp = (float *) malloc(sizeof(float) * sizeWFS * NBDMmodes);
-    memcpy(matrix_cmp, data.image[IDcmat].array.F,
+    if(matrix_cmp == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+    memcpy(matrix_cmp,
+           data.image[IDcmat].array.F,
            sizeof(float)*sizeWFS * NBDMmodes);
 
     // copy modes matrix to matrix_DMmodes
     matrix_DMmodes = (float *) malloc(sizeof(float) * NBDMmodes * sizeDM);
-    memcpy(matrix_DMmodes, data.image[IDmodes].array.F,
+    if(matrix_DMmodes == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+    memcpy(matrix_DMmodes,
+           data.image[IDmodes].array.F,
            sizeof(float)*NBDMmodes * sizeDM);
 
     printf("START MATRIX MULT\n");
@@ -653,8 +680,12 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
 
 
-    aoloopcontrol_var.WFS_active_map = (int *) malloc(sizeof(
-                                           int) * sizeWFS * aoloopcontrol_var.PIXSTREAM_NBSLICES);
+    aoloopcontrol_var.WFS_active_map =
+        (int *) malloc(sizeof(int) * sizeWFS * aoloopcontrol_var.PIXSTREAM_NBSLICES);
+    if(aoloopcontrol_var.WFS_active_map == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     for(uint32_t slice = 0; slice < (uint32_t) aoloopcontrol_var.PIXSTREAM_NBSLICES;
             slice++)
     {
@@ -696,6 +727,11 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
 
     aoloopcontrol_var.DM_active_map = (int *) malloc(sizeof(int) * sizeDM);
+    if(aoloopcontrol_var.DM_active_map == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
     uint64_t ii1 = 0;
     for(uint64_t ii = 0; ii < sizeDM; ii++)
         if(data.image[IDdmmask].array.F[ii] > 0.1)

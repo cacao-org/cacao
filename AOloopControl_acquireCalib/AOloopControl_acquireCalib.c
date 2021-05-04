@@ -605,6 +605,10 @@ imageID AOloopControl_acquireCalib_mkRandomLinPokeSequence(
     // create direction vectors
     float *vectarray;
     vectarray = (float *) malloc(sizeof(float) * NBpokemap * NBmode);
+    if(vectarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     // random allocation
 
@@ -1044,6 +1048,10 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     DEBUG_TRACEPOINT(" ");
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
+    if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
 
     printf("INITIALIZE MEMORY (mode %d, meminit = %d)....\n", AOinitMode,
@@ -1087,6 +1095,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     {
         processinfo_error(processinfo, "ERROR: cannot connect to DM response matrix");
         loopOK = 0;
+        free(sizearray);
         return RETURN_FAILURE;
     }
     uint32_t sizexDM = data.image[ID_dmRM].md[0].size[0];
@@ -1134,6 +1143,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     {
         processinfo_error(processinfo, "ERROR: cannot connect to WFS stream");
         loopOK = 0;
+        free(sizearray);
         return RETURN_FAILURE;
     }
     uint32_t sizexWFS = data.image[ID_wfsim].md[0].size[0];
@@ -1161,6 +1171,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
         snprintf(pinfomsg, stringmaxlen, "ERROR: Cannot load stream %s", IDpokeC_name);
         processinfo_error(processinfo, pinfomsg);
         loopOK = 0;
+        free(sizearray);
         return RETURN_FAILURE;
     }
     else
@@ -1195,14 +1206,30 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     long *pokeTime_index;
 
     pokeTime_sec    = (long *) malloc(sizeof(long) * NBpokeTotal);
+    if(pokeTime_sec == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     pokeTime_nsec   = (long *) malloc(sizeof(long) * NBpokeTotal);
+    if(pokeTime_nsec == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     pokeTime_index  = (long *) malloc(sizeof(long) * NBpokeTotal);
+    if(pokeTime_index == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     DEBUG_TRACEPOINT(" ");
 
     // create one temporary array per time step
 
     imageID *IDoutCstep = (imageID *) malloc(sizeof(imageID) * NBave);
+    if(IDoutCstep == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     // long *IDoutCstepCumul = (long *) malloc(sizeof(long) * NBave); // Cumulative
     for(uint32_t AveStep = 0; AveStep < NBave; AveStep++)
     {
@@ -1287,6 +1314,10 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
      * A temporary array is created to hold the DM command
      */
     arrayf = (float *) malloc(sizeof(float) * sizeDM);
+    if(arrayf == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     for(uint64_t ii = 0; ii < sizeDM; ii++)
     {
         arrayf[ii] = 0.0;
@@ -1316,41 +1347,76 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     uint64_t *array_iter;
     array_iter        = (uint64_t *) malloc(sizeof(uint64_t) *
                                             imcntmax); // Cycle number
+    if(array_iter == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
 
     uint8_t  *array_poke;
     array_poke        = (uint8_t *)  malloc(sizeof(uint8_t) *
                                             imcntmax); // Did we poke DM during this time interval ?
+    if(array_poke == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     uint8_t  *array_accum;
     array_accum       = (uint8_t *)  malloc(sizeof(uint8_t) *
                                             imcntmax); // Does frame count toward accumulated signal ?
+    if(array_accum == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     uint32_t *array_kk;
     array_kk          = (uint32_t *) malloc(sizeof(uint32_t) *
                                             imcntmax); // frame index within poke mode acquisition
+    if(array_kk == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     // frame counter within poke mode acquisition, starts negative
     // becomes positive when accumulating signal
     int *array_kk1;
     array_kk1         = (int *) malloc(sizeof(int) * imcntmax);
+    if(array_kk1 == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     uint32_t *array_PokeIndex;
     array_PokeIndex   = (uint32_t *) malloc(sizeof(uint32_t) *
                                             imcntmax); // Poke mode being measured
+    if(array_PokeIndex == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     uint32_t *array_PokeIndex1;
     array_PokeIndex1  = (uint32_t *) malloc(sizeof(uint32_t) *
                                             imcntmax); // Current poke mode on DM
-
+    if(array_PokeIndex1 == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     uint32_t *array_PokeIndexMapped;
     array_PokeIndexMapped   = (uint32_t *) malloc(sizeof(uint32_t) *
                               imcntmax); // Poke mode being measured, index in poke cube
+    if(array_PokeIndexMapped == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     uint32_t *array_PokeIndex1Mapped;
     array_PokeIndex1Mapped  = (uint32_t *) malloc(sizeof(uint32_t) *
                               imcntmax); // Current poke mode on DM, index in poke cube
-
+    if(array_PokeIndex1Mapped == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     DEBUG_TRACEPOINT(" ");
 
@@ -1360,6 +1426,10 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
      */
     uint32_t *array_PokeSequ;
     array_PokeSequ    = (uint32_t *) malloc(sizeof(uint32_t) * NBpoke);
+    if(array_PokeSequ == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     for(uint32_t PokeIndex = 0; PokeIndex < NBpoke; PokeIndex++)
     {
@@ -2665,7 +2735,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     uint32_t *pokearray = (uint32_t *) malloc(sizeof(uint32_t) *
                           NBpoke); // shuffled array
-
+    if(pokearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
 
     for(uint32_t p = 0; p < NBpoke; p++)
@@ -2749,6 +2822,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
 
     int *pokesign = (int *) malloc(sizeof(int) * NBpoke);
+    if(pokesign == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     int pokesigntmp = 1;
 
@@ -3399,7 +3476,15 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
 
     arraypix = (float *) malloc(sizeof(float) * NBiter);
+    if(arraypix == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
+    if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
 
 
@@ -3457,6 +3542,10 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
 
     arrayf = (float *) malloc(sizeof(float) * AOconf[loop].DMctrl.sizeDM);
+    if(arrayf == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     sizearray[0] = AOconf[loop].DMctrl.sizexDM;
     sizearray[1] = AOconf[loop].DMctrl.sizeyDM;
@@ -3512,6 +3601,10 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
     sizearray[2] = NBpoke; //AOconf[loop].DMctrl.sizeDM;
 
     actarray = (long *) malloc(sizeof(long) * NBpoke);
+    if(actarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     ID_WFSmap = create_image_ID(WFSmap_name, 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0);
     ID_WFSref0 = create_image_ID("tmpwfsref0", 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0);
@@ -4048,6 +4141,10 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
            loop, NbAve, amp, nbloop, fDelay, NBiter);
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
+    if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
 
 
@@ -4710,6 +4807,10 @@ imageID AOloopControl_acquireCalib_RMseries_deinterlace(
 
 
     long *IDRMarray = (long *) malloc(sizeof(long) * NBRM);
+    if(IDRMarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
     if(dmode == 1)
     {
@@ -4786,6 +4887,10 @@ imageID AOloopControl_acquireCalib_RMseries_deinterlace(
     // Set RMS to 1
     double *RMSarray;
     RMSarray = (double *) malloc(sizeof(double) * NBRM);
+    if(RMSarray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     for(rmCindex = 0; rmCindex < NBRM; rmCindex++)
     {
         RMSarray[rmCindex] = 0;
