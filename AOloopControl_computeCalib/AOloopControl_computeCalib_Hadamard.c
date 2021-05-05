@@ -115,7 +115,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     indexarray = (long*) malloc(sizeof(long)*Hsize);
     if(indexarray == NULL) {
         PRINT_ERROR("malloc returns NULL pointer");
-        abort(); // or handle error in other ways
+        abort();
     }
     for(uint32_t k=0; k<Hsize; k++)
         indexarray[k] = -1;
@@ -135,7 +135,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     Hmat = (int*) malloc(sizeof(int)*Hsize*Hsize);
     if(Hmat == NULL) {
         PRINT_ERROR("malloc returns NULL pointer");
-        abort(); // or handle error in other ways
+        abort();
     }
 
 

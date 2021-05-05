@@ -1,14 +1,14 @@
 /**
  * @file    AOloopControl_PredictiveControl_builPFloop_WatchInput.c
  * @brief   Assemble input data from telemetry stream
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  * ## Change log
  * - 20180518	Guyon	File creation (split from AOloopControl_PredictiveControl)
- * 
- * 
+ *
+ *
  */
 
 
@@ -74,35 +74,35 @@ int clock_gettime(int clk_id, struct mach_timespec *t) {
 
 /**
  *  ## Purpose
- * 
- * Listens to real-time telemetry streams buffers aol<loop>_modeval_ol_logbuff0 
+ *
+ * Listens to real-time telemetry streams buffers aol<loop>_modeval_ol_logbuff0
  * and aol<loop>_modeval_ol_logbuff1
- * 
+ *
  * When new buffer is complete, extract the requested values from it
  * and write to aol<loop>_modevalol_PFb<PFblock>
- * 
+ *
  * ## Arguments
- * 
+ *
  * @param[in]
  * loop 		LONG
  * 			loop index
- * 
+ *
  * @param[in]
  * PFblock		LONG
  * 			Block number
- * 
+ *
  * @param[in]
  * PFblockStart	LONG
  * 			Block start index
- * 
+ *
  * @param[in]
  * PFblockEnd	LONG
  * 			Block end index
- * 
+ *
  * #param[in]
  * NBbuff       LONG
- *          Number of input buffers to merge for each output 
- * 
+ *          Number of input buffers to merge for each output
+ *
  */
 imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     long loop,
@@ -217,7 +217,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     list_image_ID();
 
-	EXECUTE_SYSTEM_COMMAND("mkdir -p PredictiveControl");
+    EXECUTE_SYSTEM_COMMAND("mkdir -p PredictiveControl");
 
     if(sprintf(inmaskname, "inmaskPFb%ld", PFblock) < 1)
         PRINT_ERROR("sprintf wrote <1 char");
@@ -244,6 +244,10 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     printf("Create aol%ld_modevalol_PFb%ld  : %ld x 1 x %ld\n", loop, PFblock, PFblockSize, zsize);
     fflush(stdout);
     imsizearray = (uint32_t*) malloc(sizeof(uint32_t)*3);
+    if(imsizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     imsizearray[0] = PFblockSize;
     imsizearray[1] = 1;
     imsizearray[2] = zsize;

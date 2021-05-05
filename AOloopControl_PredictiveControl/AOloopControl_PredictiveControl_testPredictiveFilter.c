@@ -1,10 +1,10 @@
 /**
  * @file    AOloopControl_PredictiveControl_testPredictiveFilter.c
  * @brief   Test Predictive Control
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  */
 
 
@@ -39,12 +39,12 @@
 ///     filtsize [number of samples in filter]
 ///
 double AOloopControl_PredictiveControl_testPredictiveFilter(
-	const char *IDtrace_name, 
-	long        modeout, 
-	double      delayfr, 
-	long        filtsize, 
-	const char *IDfilt_name, 
-	double      SVDeps
+    const char *IDtrace_name,
+    long        modeout,
+    double      delayfr,
+    long        filtsize,
+    const char *IDfilt_name,
+    double      SVDeps
 )
 {
     imageID  IDtrace;
@@ -105,6 +105,10 @@ double AOloopControl_PredictiveControl_testPredictiveFilter(
     delayfr_x = delayfr - delayfr_int;
     printf("%f  = %ld + %f\n", delayfr, delayfr_int, delayfr_x);
     marray = (float*) malloc(sizeof(float)*NBmvec);
+    if(marray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     fp = fopen("tracepts1.txt","w");
     for(m=0; m<NBmvec; m++)
     {

@@ -313,6 +313,10 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
     }
 
     IDwfszparray = (long *) malloc(sizeof(long) * (NBzp + 1));
+    if(IDwfszparray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
     // create / read the zero point WFS channels
     for(ch = 0; ch < NBzp; ch++)
     {
@@ -495,6 +499,11 @@ imageID AOloopControl_computeWFSresidualimage(
     wfsxysize = wfsxsize * wfsysize;
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
+    if(sizearray == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
     sizearray[0] = wfsxsize;
     sizearray[1] = wfsysize;
 

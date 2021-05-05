@@ -1,10 +1,10 @@
 /**
- * @file    AOloopControl_aorun.c 
- * @brief   AO loop Control compute functions 
- * 
+ * @file    AOloopControl_aorun.c
+ * @brief   AO loop Control compute functions
+ *
  * REAL TIME COMPUTING ROUTINES
- *  
- * 
+ *
+ *
  */
 
 
@@ -30,11 +30,11 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
 
-#include "info/info.h" 
+#include "info/info.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
-#include "info/info.h" 
+#include "info/info.h"
 
 
 
@@ -89,7 +89,16 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_na
     NBmodes = data.image[IDmodes].md[0].size[2];
 
     mcoeff_ave = (double*) malloc(sizeof(double)*NBmodes);
+    if(mcoeff_ave == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
+
     mcoeff_rms = (double*) malloc(sizeof(double)*NBmodes);
+    if(mcoeff_rms == NULL) {
+        PRINT_ERROR("malloc returns NULL pointer");
+        abort();
+    }
 
 
 
@@ -104,8 +113,8 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_na
 
     for(kk=0; kk<NBframes; kk++)
     {
-		double totim = 0.0;
-		
+        double totim = 0.0;
+
         for(ii=0; ii<wfssize; ii++)
             totim += data.image[IDwfs].array.F[kk*wfssize+ii];
         for(ii=0; ii<wfssize; ii++)
