@@ -143,6 +143,11 @@ errno_t AOloopControl_DM_disp2V(
             uint32_t *sizearray;
 
             sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
+            if (sizearray == NULL)
+            {
+                PRINT_ERROR("malloc error");
+                abort();
+            }
             sizearray[0] = dmdispcombconf[DMindex].xsize;
             sizearray[1] = dmdispcombconf[DMindex].ysize;
             sprintf(qmapname, "dm%02ldquant", DMindex);
