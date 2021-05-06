@@ -35,7 +35,7 @@ typedef struct
 
     int      voltmode;      // 1 if DM drives voltmap
     imageID  IDvolt;
-    char voltname[12];
+    char voltname[64];
     int voltON;        // 1 if applying voltage
     int volttype;      // 1: linear bipolar, 2: quadratic uniplolar
     float stroke100;   // displacement [um] for 100 V

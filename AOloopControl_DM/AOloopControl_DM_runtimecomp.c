@@ -686,7 +686,7 @@ int AOloopControl_DM_CombineChannels_RUN()
     dmdispcombconf[DMindex].voltON      = 1;
     dmdispcombconf[DMindex].MAXVOLT     = maxvolt;
     dmdispcombconf[DMindex].AveMode     = AveMode;
-    sprintf(dmdispcombconf[DMindex].voltname, "%s", IDvolt_name);
+    snprintf(dmdispcombconf[DMindex].voltname, 64, "%s", IDvolt_name);
     dmdispcombconf[DMindex].status = 0;
 
     dmdispcombconf[DMindex].DClevel =

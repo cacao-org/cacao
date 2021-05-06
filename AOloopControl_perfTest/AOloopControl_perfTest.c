@@ -1084,7 +1084,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     latencysteparray = (float *) malloc(sizeof(float) * NBiter);
     if(latencysteparray == NULL) {
         PRINT_ERROR("malloc returns NULL pointer");
-        abort(); // or handle error in other ways
+        abort();
     }
 
     IDdm = image_ID(dmname);
@@ -1141,7 +1141,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     {
         snprintf(msgstring, stringmaxlen, "Cannot connect to stream %s", wfsname);
         processinfo_error(processinfo, msgstring);
-
+        free(latencyarray);
+        free(latencysteparray);
         return RETURN_FAILURE;
     }
 
@@ -1188,6 +1189,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
         snprintf(msgstring, stringmaxlen,
                  "Number of frames %ld too small -> cannot proceed", wfscntend - wfscntstart);
         processinfo_error(processinfo, msgstring);
+        free(latencyarray);
+        free(latencysteparray);
         return RETURN_FAILURE;
     }
 
@@ -1491,7 +1494,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
         valarray = (double *) malloc(sizeof(double) * NBwfsframe);
         if(valarray == NULL) {
             PRINT_ERROR("malloc returns NULL pointer");
-            abort(); // or handle error in other ways
+            abort();
         }
 
         double valmax = 0.0;
@@ -1828,7 +1831,7 @@ imageID AOloopControl_perfTest_blockstats(
     sizeout = (uint32_t *) malloc(sizeof(uint32_t) * 2);
     if(sizeout == NULL) {
         PRINT_ERROR("malloc returns NULL pointer");
-        abort(); // or handle error in other ways
+        abort();
     }
     sizeout[0] = NBmodes;
     sizeout[1] = 1;
@@ -1864,14 +1867,14 @@ imageID AOloopControl_perfTest_blockstats(
     rmsarray = (float *) malloc(sizeof(float) * NBblock);
     if(rmsarray == NULL) {
         PRINT_ERROR("malloc returns NULL pointer");
-        abort(); // or handle error in other ways
+        abort();
     }
 
 
     indexarray = (int *) malloc(sizeof(int) * NBmodes);
     if(indexarray == NULL) {
         PRINT_ERROR("malloc returns NULL pointer");
-        abort(); // or handle error in other ways
+        abort();
     }
 
     for(m = 0; m < NBmodes; m++)

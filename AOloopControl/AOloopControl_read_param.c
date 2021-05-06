@@ -187,18 +187,19 @@ int AOloopControl_readParam_int(
  * 				log file. If NULL, do not log
  *
  */
-char* AOloopControl_readParam_string(
+char * AOloopControl_readParam_string(
     char *paramname,
     char* defaultValue,
     FILE *fplog
 )
 {
     FILE *fp;
-    char fname[200];
-    char *value = " ";
+    static char value[200];
     int wParamFile = 0;
 
-    sprintf(fname, "./conf/param_%s.txt", paramname);
+
+    char fname[STRINGMAXLEN_FILENAME];
+    WRITE_FILENAME(fname, "./conf/param_%s.txt", paramname);
     if((fp=fopen(fname, "r"))==NULL)
     {
         printf("WARNING: file %s missing\n", fname);
@@ -207,9 +208,9 @@ char* AOloopControl_readParam_string(
     }
     else
     {
+        strcpy(value, defaultValue);
         if(fscanf(fp, "%200s", value) != 1) {
             PRINT_ERROR("Cannot read parameter for file");
-            strcpy(value, defaultValue);
             wParamFile = 1;
         }
         fclose(fp);

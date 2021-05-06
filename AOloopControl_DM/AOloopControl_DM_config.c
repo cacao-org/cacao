@@ -73,7 +73,7 @@ errno_t AOloopControl_printDMconf()
     long DMindex;
     char IDvolt_str[4];
     char maxvolt_str[7];
-    char voltname_str[13];
+    char voltname_str[64];
 
     printf("DM | on |  x |  y | Nbch | busy | ave | DClevel | monint  | stat | IDdisp | voltmode | volttype | stroke100 | IDvolt | maxvolt |   voltname  |\n");
     for(DMindex = 0; DMindex < NB_DMindex; DMindex++)
@@ -82,7 +82,7 @@ errno_t AOloopControl_printDMconf()
         {
             sprintf(IDvolt_str, "%3ld", dmdispcombconf[DMindex].IDvolt);
             sprintf(maxvolt_str, "%6.2f", dmdispcombconf[DMindex].MAXVOLT);
-            sprintf(voltname_str, "%11s", dmdispcombconf[DMindex].voltname);
+            sprintf(voltname_str, "%s", dmdispcombconf[DMindex].voltname);
         }
         else
         {
