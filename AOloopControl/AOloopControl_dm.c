@@ -472,7 +472,18 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(
     processinfo_cleanExit(processinfo);
 
     free(GPUsetM);
+#else
+    (void) tnow;
+    (void) tdiffv;
 
+    (void) GPUMATMULTCONFindex;
+    (void) modecoeffs_name;
+    (void) DMmodes_name;
+    (void) semTrigg;
+    (void) out_name;
+    (void) GPUindex;
+    (void) loop;
+    (void) offloadMode;
 #endif
 
     return RETURN_SUCCESS;
