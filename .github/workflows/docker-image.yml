@@ -9,6 +9,8 @@ on:
     branches:
       - dev
       - main
+  schedule:
+  - cron: "0 13 * * 1"
 
 jobs:
 
