@@ -10,7 +10,7 @@ on:
       - dev
       - main
   schedule:
-  - cron: "0 13 * * 1"
+  - cron: '0 13 * * 1'
 
 jobs:
 
