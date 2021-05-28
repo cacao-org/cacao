@@ -52,6 +52,10 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 
 ## Installing cacao
 
+Install pre-requisite packages as needed. For example, under Ubuntu :
+
+	sudo apt install git make dpkg-dev libc6-dev cmake pkg-config python3-dev libcfitsio-dev pybind11-dev python3-pybind11 libgsl-dev libfftw3-dev libncurses-dev libbison-dev libfl-dev libreadline-dev pkg-config gcc-10 g++-10 
+
 cacao is a plugin of [milk page](https://github.com/milk-org/milk-package).
 
 	git clone https://github.com/milk-org/milk.git
