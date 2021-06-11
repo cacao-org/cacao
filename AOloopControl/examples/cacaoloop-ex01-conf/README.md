@@ -35,39 +35,24 @@ Note that **WORKDIR** and **CONFNAME**, and **LOOPNAME** may or may not be the s
 
 # Description of files
 
-## LOOPNAME
-
-Name of cacao loop.
-
-## WORKDIR
-
-Directory in which configuration will run.
-
-## tasklist.txt
-
-List of tasks that will be managed by cacao-task-manager.
-
-## cacaovars.LOOPNAME.bash
-
-Variables (cacaovars) that define the configuration.
-Defines which processes will be setup by cacao-setup.
-
-## fpssetup.setval.LOOPNAME.conf
-
-Initialization read by milk-fpsCTRL after lauch.
+- **LOOPNAME**: Name of cacao loop.
+- **WORKDIR**: Directory in which configuration will run.
+- **tasklist.txt**: List of tasks that will be managed by cacao-task-manager.
+- **cacaovars.LOOPNAME.bash**: Variables (cacaovars) that define the configuration. Defines which processes will be setup by cacao-setup.
+- **fpssetup.setval.LOOPNAME.conf**: Initialization read by milk-fpsCTRL after lauch.
 
 ---
 
 # Deploying a cacao instance
 
 
-## Copy this directory to the root work directory
+Copy this directory to the root work directory :
 
-    cp cacaoloop-ex01-conf <rootworkdir>
+    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-ex01-conf <rootworkdir>
 
-## Run deployment script
+Run deployment script :
 
-    cacao-task-manager -X 3 <CONFNAME>
+    $ cacao-task-manager -X 3 <CONFNAME>
 
 The cacao-task-manager script reads the configuration files, and deploys necessary processes and tmux sessions.
 
@@ -80,9 +65,9 @@ The main opertion performed are:
 
 To get more info about the task manager script, run it with help option:
 
-    cacao-task-manager -h
+    cacao-task-manager -h cacaoloop-ex01
 
-## Run execution script
+Run execution script
 
     ./aorunscript
 
