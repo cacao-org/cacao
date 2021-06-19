@@ -882,7 +882,7 @@ imageID AOloopControl_computeCalib_loadCM(
             data.image[ID].md[0].write  = 0;
             data.image[ID].md[0].cnt0++;
         }
-        delete_image_ID("tmpcontrM");
+        delete_image_ID("tmpcontrM", DELETE_IMAGE_ERRMODE_WARNING);
     }
 
     return ID;

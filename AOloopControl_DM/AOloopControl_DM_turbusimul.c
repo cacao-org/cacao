@@ -444,7 +444,7 @@ int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name,
             data.image[IDk].array.F[ii] /= totim;
         }
         IDs2 = fconvolve("screen1", "kernim", "screen2");
-        delete_image_ID("kernim");
+        delete_image_ID("kernim", DELETE_IMAGE_ERRMODE_WARNING);
         save_fits("screen1", "!turbscreen1.fits");
         save_fits("screen2", "!turbscreen2.fits");
     }

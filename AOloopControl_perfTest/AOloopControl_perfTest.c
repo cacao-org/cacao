@@ -3479,7 +3479,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
             }
 
 
-            delete_image_ID("im0C");
+            delete_image_ID("im0C", DELETE_IMAGE_ERRMODE_WARNING);
 
             free(intarray_start);
             free(intarray_end);
@@ -3635,8 +3635,8 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
         memcpy(data.image[IDoutc1].array.F, data.image[IDout1].array.F,
                sizeof(float)*xysize1 * NBframeOK);
     }
-    delete_image_ID("out0");
-    delete_image_ID("out1");
+    delete_image_ID("out0", DELETE_IMAGE_ERRMODE_WARNING);
+    delete_image_ID("out1", DELETE_IMAGE_ERRMODE_WARNING);
 
     printf("function %s end\n", __FUNCTION__);
     list_image_ID();

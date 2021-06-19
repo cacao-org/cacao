@@ -378,7 +378,7 @@ errno_t AOloopControl_computeCalib_computeCM_cli()
             data.cmdargtoken[6].val.numf
         );
         save_fits("evecM", "!evecM.fits");
-        delete_image_ID("evecM");
+        delete_image_ID("evecM", DELETE_IMAGE_ERRMODE_WARNING);
         return CLICMD_SUCCESS;
     }
     else

@@ -1,13 +1,13 @@
 /**
  * @file    AOloopControl_process_files.c
- * @brief   AO loop control - Process log files   
- * 
+ * @brief   AO loop control - Process log files
+ *
  * REAL TIME COMPUTING ROUTINES
- *  
- * 
+ *
+ *
  */
- 
- 
+
+
 #define _GNU_SOURCE
 
 #include "CommandLineInterface/CLIcore.h"
@@ -71,8 +71,8 @@ errno_t AOloopControl_logprocess_modeval(
         double ave = 0.0;
         double rms;
         long kk;
-		FILE *fpPSD;
-		long IDft;
+        FILE *fpPSD;
+        long IDft;
 
 
         for(kk=0; kk<NBframes; kk++)
@@ -82,8 +82,8 @@ errno_t AOloopControl_logprocess_modeval(
         rms = 0.0;
         for(kk=0; kk<NBframes; kk++)
         {
-			double tmpv;
-			
+            double tmpv;
+
             tmpv = (data.image[ID].array.F[kk*NBmodes+m]-ave);
             rms += tmpv*tmpv;
         }
@@ -105,7 +105,7 @@ errno_t AOloopControl_logprocess_modeval(
             data.image[ID1dPSD].array.F[kk] = data.image[IDft].array.CF[kk].re*data.image[IDft].array.CF[kk].re + data.image[IDft].array.CF[kk].im*data.image[IDft].array.CF[kk].im;
             fprintf(fpPSD, "%03ld %g\n", kk, data.image[ID1dPSD].array.F[kk]);
         }
-        delete_image_ID("modeval1d_FT");
+        delete_image_ID("modeval1d_FT", DELETE_IMAGE_ERRMODE_WARNING);
         fclose(fpPSD);
 
 

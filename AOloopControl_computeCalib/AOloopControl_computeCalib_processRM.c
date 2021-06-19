@@ -444,8 +444,8 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
             }
         }
 
-        delete_image_ID("zrespfp");
-        delete_image_ID("zrespfm");
+        delete_image_ID("zrespfp", DELETE_IMAGE_ERRMODE_WARNING);
+        delete_image_ID("zrespfm", DELETE_IMAGE_ERRMODE_WARNING);
     }
 
     // STEP 2: average / median each pixel
@@ -556,7 +556,7 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
 
         AOloopControl_computeCalib_Hadamard_decodeRM("tmprm", "Hmat", "pixindexim",
                 zrespm_name);
-        delete_image_ID("tmprm");
+        delete_image_ID("tmprm", DELETE_IMAGE_ERRMODE_WARNING);
 
         IDzrm = image_ID(zrespm_name);
 
@@ -800,7 +800,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
     }
 
     //save_fits("VTmat", "!./mkmodestmp/VTmat.fits");
-    delete_image_ID("VTmat");
+    delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
 
 
 
@@ -823,7 +823,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
 
     function_parameter_RUNexit(&fps);
-    delete_image_ID(cm_name);
+    delete_image_ID(cm_name, DELETE_IMAGE_ERRMODE_WARNING);
 
     return RETURN_SUCCESS;
 }

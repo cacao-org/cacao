@@ -287,7 +287,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
                 data.image[IDtm].array.F[ii] = data.image[ID].array.F[k*msizex*msizey+ii];
             linopt_imtools_image_fitModes("tmpmode", "emodes", "dmmask", 1.0e-2, "lcoeff", 0);
             linopt_imtools_image_construct("emodes", "lcoeff", "em00");
-            delete_image_ID("lcoeff");
+            delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
             IDem = image_ID("em00");
 
             coeff = 1.0-exp(-pow(1.0*k/kelim,6.0));
@@ -296,8 +296,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
             for(uint64_t ii=0; ii<msizex*msizey; ii++)
                 data.image[ID].array.F[k*msizex*msizey+ii] = data.image[IDtm].array.F[ii] - coeff*data.image[IDem].array.F[ii];
 
-            delete_image_ID("em00");
-            delete_image_ID("tmpmode");
+            delete_image_ID("em00", DELETE_IMAGE_ERRMODE_WARNING);
+            delete_image_ID("tmpmode", DELETE_IMAGE_ERRMODE_WARNING);
         }
 
 
@@ -367,7 +367,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
                     if(data.image[IDmask].array.F[ii]<0.98)
                         data.image[ID].array.F[k*msizex*msizey+ii] = data.image[IDg].array.F[k*msizex*msizey+ii];
             }
-            delete_image_ID("modeg");
+            delete_image_ID("modeg", DELETE_IMAGE_ERRMODE_WARNING);
         }
     }
 
@@ -455,16 +455,16 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
                                 else
                                     data.image[IDtmp].array.F[ii] = data.image[IDtmpg].array.F[ii];
                             }
-                            delete_image_ID("_tmpinterpolg");
+                            delete_image_ID("_tmpinterpolg", DELETE_IMAGE_ERRMODE_WARNING);
                         }
                         for(ii=0; ii<msizex*msizey; ii++)
                             if(data.image[IDmask].array.F[ii]>0.5)
                                 data.image[ID].array.F[m*msizex*msizey+ii] = data.image[IDtmp].array.F[ii];
                     */
         }
-        delete_image_ID("_tmpinterpol");
-        delete_image_ID("_tmpcoeff1");
-        delete_image_ID("_tmpcoeff2");
+        delete_image_ID("_tmpinterpol", DELETE_IMAGE_ERRMODE_WARNING);
+        delete_image_ID("_tmpcoeff1", DELETE_IMAGE_ERRMODE_WARNING);
+        delete_image_ID("_tmpcoeff2", DELETE_IMAGE_ERRMODE_WARNING);
     }
 
 

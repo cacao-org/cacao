@@ -448,7 +448,7 @@ errno_t AOloopControl_IOtools_imAlignStream(
             yoffset = tmpys/tmps;
             //  printf("%2d center = %4.2f %4.2f\n", kiter, xoffset, yoffset);
         }
-        delete_image_ID("tmpCorr");
+        delete_image_ID("tmpCorr", DELETE_IMAGE_ERRMODE_WARNING);
 
 
         xoffset = - (xoffset - 0.5*xboxsize);
@@ -470,10 +470,10 @@ errno_t AOloopControl_IOtools_imAlignStream(
         data.image[IDout].md[0].write = 0;
 
 
-        delete_image_ID("alignouttmp");
+        delete_image_ID("alignouttmp", DELETE_IMAGE_ERRMODE_WARNING);
     }
-    delete_image_ID("alignintmpim");
-    delete_image_ID("imAlign_tmp");
+    delete_image_ID("alignintmpim", DELETE_IMAGE_ERRMODE_WARNING);
+    delete_image_ID("imAlign_tmp", DELETE_IMAGE_ERRMODE_WARNING);
 
     return 0;
 }

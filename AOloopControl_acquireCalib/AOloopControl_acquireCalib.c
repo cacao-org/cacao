@@ -2440,7 +2440,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     }
 
                     //save_fl_fits("RMDMmask", "!./conf/RM_DMmask.fits");
-                    delete_image_ID("RMDMmask");
+                    delete_image_ID("RMDMmask", DELETE_IMAGE_ERRMODE_WARNING);
 
                     // set back to OFF
                     fps.parray[fpi_comp_RM_DMmask].fpflag &= ~FPFLAG_ONOFF;
@@ -2465,7 +2465,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     AOloopControl_compTools_mkSimpleZpokeM(DMxsize, DMysize, "Spoke");
                     fps_write_RUNoutput_image(&fps, "Spoke", "Spoke");
                     //save_fl_fits("Spoke", "!./conf/Spoke.fits");
-                    delete_image_ID("Spoke");
+                    delete_image_ID("Spoke", DELETE_IMAGE_ERRMODE_WARNING);
 
                     {
                         char fnameRMDMmask[STRINGMAXLEN_FULLFILENAME];
@@ -2505,7 +2505,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                                             PRINT_ERROR("system() returns non-zero value");
                                         }
                     */
-                    delete_image_ID("RMDMmask");
+                    delete_image_ID("RMDMmask", DELETE_IMAGE_ERRMODE_WARNING);
 
                     // set back to OFF
                     fps.parray[fpi_comp_RM_Mpoke].fpflag &= ~FPFLAG_ONOFF;
@@ -3042,8 +3042,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
             WRITE_IMAGENAME(wfsresp2aname, "wfsresp2a.snap");
             WRITE_IMAGENAME(wfsresp2bname, "wfsresp2b.snap");
-            delete_image_ID(wfsresp2aname);
-            delete_image_ID(wfsresp2bname);
+            delete_image_ID(wfsresp2aname, DELETE_IMAGE_ERRMODE_WARNING);
+            delete_image_ID(wfsresp2bname, DELETE_IMAGE_ERRMODE_WARNING);
 
             WRITE_FULLFILENAME(tmpfname, "%s/acquA/wfsresp.tstep%03d.iter%03d.fits",
                                fps.md->datadir, AveStep, IterNumber);
@@ -3168,8 +3168,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                                    IterNumber);
                 save_fits(imnameout_respC, filename_respC);
                 save_fits(imnameout_wfsref, filename_wfsref);
-                delete_image_ID(imnameout_respC);
-                delete_image_ID(imnameout_wfsref);
+                delete_image_ID(imnameout_respC, DELETE_IMAGE_ERRMODE_WARNING);
+                delete_image_ID(imnameout_wfsref, DELETE_IMAGE_ERRMODE_WARNING);
 
                 WRITE_FULLFILENAME(filename_respC,
                                    "!%s/acquA/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
@@ -3179,8 +3179,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                                    IterNumber);
                 save_fits(imnameout_respC_A, filename_respC);
                 save_fits(imnameout_wfsref_A, filename_wfsref);
-                delete_image_ID(imnameout_respC_A);
-                delete_image_ID(imnameout_wfsref_A);
+                delete_image_ID(imnameout_respC_A, DELETE_IMAGE_ERRMODE_WARNING);
+                delete_image_ID(imnameout_wfsref_A, DELETE_IMAGE_ERRMODE_WARNING);
 
                 WRITE_FULLFILENAME(filename_respC,
                                    "!%s/acquB/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
@@ -3190,8 +3190,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                                    IterNumber);
                 save_fits(imnameout_respC_B, filename_respC);
                 save_fits(imnameout_wfsref_B, filename_wfsref);
-                delete_image_ID(imnameout_respC_B);
-                delete_image_ID(imnameout_wfsref_B);
+                delete_image_ID(imnameout_respC_B, DELETE_IMAGE_ERRMODE_WARNING);
+                delete_image_ID(imnameout_wfsref_B, DELETE_IMAGE_ERRMODE_WARNING);
 
                 printf("done] \n");
                 fflush(stdout);
@@ -4069,7 +4069,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
     free(actarray);
 
-    delete_image_ID("tmpwfsref0");
+    delete_image_ID("tmpwfsref0", DELETE_IMAGE_ERRMODE_WARNING);
 
 
     return ID_WFSmap;
@@ -4468,7 +4468,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
             //        save_fl_fits("rmtest", "!rmtest.fits");
-            delete_image_ID("rmtest");
+            delete_image_ID("rmtest", DELETE_IMAGE_ERRMODE_WARNING);
 
 
 
@@ -4866,7 +4866,7 @@ imageID AOloopControl_acquireCalib_RMseries_deinterlace(
                                                                 jj * xsizeWFS * ysizeWFS + ii] = data.image[ID].array.F[xsizeWFS * ysizeWFS * jj
                                                                         + ii];
                     }
-                delete_image_ID(rmCname1);
+                delete_image_ID(rmCname1, DELETE_IMAGE_ERRMODE_WARNING);
             }
 
             //save_fits(rmCname, rmCfname);

@@ -888,7 +888,7 @@ int AOloopControl_DM_CombineChannels_RUN()
                 }
                 if(vOK == 0)
                 {
-                    delete_image_ID(dmdispcombconf[DMindex].voltname);
+                    delete_image_ID(dmdispcombconf[DMindex].voltname, DELETE_IMAGE_ERRMODE_WARNING);
                 }
             }
         }

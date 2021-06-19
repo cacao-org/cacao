@@ -929,7 +929,7 @@ errno_t AOloopControl_loadconfigure(
                 else // if not, erase shared memory
                 {
                     printf("SHARED MEM IMAGE HAS WRONG SIZE -> erasing it\n");
-                    delete_image_ID(AOconf[loop].AOpmodecoeffs.DMmodesname);
+                    delete_image_ID(AOconf[loop].AOpmodecoeffs.DMmodesname, DELETE_IMAGE_ERRMODE_WARNING);
                 }
             }
 
@@ -973,7 +973,7 @@ errno_t AOloopControl_loadconfigure(
                     break;
             }
 
-            delete_image_ID("tmp3Dim");
+            delete_image_ID("tmp3Dim", DELETE_IMAGE_ERRMODE_WARNING);
         }
 
         fprintf(fplog,

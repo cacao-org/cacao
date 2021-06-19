@@ -114,7 +114,7 @@ errno_t make_master_turbulence_screen_local(
 
     make_rnd("tmppha", size, size, "");
     arith_image_cstmult("tmppha", 2.0 * PI, "tmppha1");
-    delete_image_ID("tmppha");
+    delete_image_ID("tmppha", DELETE_IMAGE_ERRMODE_WARNING);
     //  make_dist("tmpd",size,size,size/2,size/2);
     ID = create_2Dimage_ID("tmpd", size, size);
     for(uint32_t ii = 0; ii < size; ii++)
@@ -161,19 +161,19 @@ errno_t make_master_turbulence_screen_local(
         }
 
     arith_image_cstpow("tmpd", 11.0 / 6.0, "tmpd1");
-    delete_image_ID("tmpd");
+    delete_image_ID("tmpd", DELETE_IMAGE_ERRMODE_WARNING);
     arith_image_div("tmpg", "tmpd1", "tmpamp");
-    delete_image_ID("tmpg");
-    delete_image_ID("tmpd1");
+    delete_image_ID("tmpg", DELETE_IMAGE_ERRMODE_WARNING);
+    delete_image_ID("tmpd1", DELETE_IMAGE_ERRMODE_WARNING);
     arith_set_pixel("tmpamp", 0.0, size / 2, size / 2);
     mk_complex_from_amph("tmpamp", "tmppha1", "tmpc", 0);
-    delete_image_ID("tmpamp");
-    delete_image_ID("tmppha1");
+    delete_image_ID("tmpamp", DELETE_IMAGE_ERRMODE_WARNING);
+    delete_image_ID("tmppha1", DELETE_IMAGE_ERRMODE_WARNING);
     permut("tmpc");
     do2dfft("tmpc", "tmpcf");
-    delete_image_ID("tmpc");
+    delete_image_ID("tmpc", DELETE_IMAGE_ERRMODE_WARNING);
     mk_reim_from_complex("tmpcf", "tmpo1", "tmpo2", 0);
-    delete_image_ID("tmpcf");
+    delete_image_ID("tmpcf", DELETE_IMAGE_ERRMODE_WARNING);
 
     /* compute the scaling factor in the power law of the structure function */
     fft_structure_function("tmpo1", "strf");
@@ -188,7 +188,7 @@ errno_t make_master_turbulence_screen_local(
             cnt++;
         }
     // save_fl_fits("strf","!strf.fits");
-    delete_image_ID("strf");
+    delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
     C1 = pow(10.0, value / cnt);
 
     fft_structure_function("tmpo2", "strf");
@@ -202,15 +202,15 @@ errno_t make_master_turbulence_screen_local(
                          ii * ii + jj * jj));
             cnt++;
         }
-    delete_image_ID("strf");
+    delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
     C2 = pow(10.0, value / cnt);
 
     printf("%f %f\n", C1, C2);
 
     arith_image_cstmult("tmpo1", 1.0 / sqrt(C1), ID_name1);
     arith_image_cstmult("tmpo2", 1.0 / sqrt(C2), ID_name2);
-    delete_image_ID("tmpo1");
-    delete_image_ID("tmpo2");
+    delete_image_ID("tmpo1", DELETE_IMAGE_ERRMODE_WARNING);
+    delete_image_ID("tmpo2", DELETE_IMAGE_ERRMODE_WARNING);
 
     return RETURN_SUCCESS;
 }

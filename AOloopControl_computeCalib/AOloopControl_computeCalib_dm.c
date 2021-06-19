@@ -304,7 +304,7 @@ long AOloopControl_computeCalib_DMextrapolateModes(
                         data.image[IDin].array.F[kk * xysize + index] * coeff;
             }
     }
-    delete_image_ID("pixmaskdist");
+    delete_image_ID("pixmaskdist", DELETE_IMAGE_ERRMODE_WARNING);
 
 
     return(IDout);

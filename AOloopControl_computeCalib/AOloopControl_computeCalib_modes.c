@@ -476,7 +476,7 @@ imageID AOloopControl_computeCalib_mkModes(
                                   data.image[IDtm].array.F[ii] = data.image[ID].array.F[k*msizex*msizey+ii];
                               linopt_imtools_image_fitModes("tmpmode", "emodes", "dmmaskRM", 1.0e-3, "lcoeff", 0);
                               linopt_imtools_image_construct("emodes", "lcoeff", "em00");
-                              delete_image_ID("lcoeff");
+                              delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
                               IDem = image_ID("em00");
 
                 //					coeff = 1.0-exp(-pow(1.0*k/kelim,6.0));
@@ -490,8 +490,8 @@ imageID AOloopControl_computeCalib_mkModes(
                               for(ii=0; ii<msizex*msizey; ii++)
                                   data.image[ID].array.F[k*msizex*msizey+ii] = data.image[IDtm].array.F[ii] - coeff*data.image[IDem].array.F[ii];
 
-                              delete_image_ID("em00");
-                              delete_image_ID("tmpmode");
+                              delete_image_ID("em00", DELETE_IMAGE_ERRMODE_WARNING);
+                              delete_image_ID("tmpmode", DELETE_IMAGE_ERRMODE_WARNING);
                           }*/
 
 
@@ -565,7 +565,7 @@ imageID AOloopControl_computeCalib_mkModes(
                                         msizex * msizey + ii];
                             }
                     }
-                    delete_image_ID("modeg");
+                    delete_image_ID("modeg", DELETE_IMAGE_ERRMODE_WARNING);
                 }
             }
 
@@ -707,7 +707,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 linopt_imtools_image_fitModes("tmpmode", "emodes", "dmmask", 1.0e-3, "lcoeff",
                                               0);
                 linopt_imtools_image_construct("emodes", "lcoeff", "em00");
-                delete_image_ID("lcoeff");
+                delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
                 long IDem = image_ID("em00");
 
                 double coeff = 1.0 - exp(-pow(1.0 * k / kelim, 6.0));
@@ -728,8 +728,8 @@ imageID AOloopControl_computeCalib_mkModes(
                             - coeff * data.image[IDem].array.F[ii];
                 }
 
-                delete_image_ID("em00");
-                delete_image_ID("tmpmode");
+                delete_image_ID("em00", DELETE_IMAGE_ERRMODE_WARNING);
+                delete_image_ID("tmpmode", DELETE_IMAGE_ERRMODE_WARNING);
             }
 
             // Compute total of image over mask -> totvm
@@ -921,7 +921,7 @@ imageID AOloopControl_computeCalib_mkModes(
                             data.image[IDRMM_coeff].array.F[jj];
                 }
 
-                delete_image_ID("testrc");
+                delete_image_ID("testrc", DELETE_IMAGE_ERRMODE_WARNING);
 
 
                 LOcoeff = 1.0 / (1.0 + pow(10.0 * res, 4.0));
@@ -958,11 +958,11 @@ imageID AOloopControl_computeCalib_mkModes(
                 }
             }
 
-            delete_image_ID("linfitcoeff");
-            delete_image_ID("imfitim");
-            delete_image_ID("wfsimtmp");
+            delete_image_ID("linfitcoeff", DELETE_IMAGE_ERRMODE_WARNING);
+            delete_image_ID("imfitim", DELETE_IMAGE_ERRMODE_WARNING);
+            delete_image_ID("wfsimtmp", DELETE_IMAGE_ERRMODE_WARNING);
             save_fits("imfitmat", "!imfitmat.fits");
-            delete_image_ID("imfitmat");
+            delete_image_ID("imfitmat", DELETE_IMAGE_ERRMODE_WARNING);
         }
         fclose(fpLOcoeff);
 
@@ -1242,8 +1242,8 @@ imageID AOloopControl_computeCalib_mkModes(
                                mblock);
             save_fits(imname1, ffname);
 
-            delete_image_ID("svdmodes");
-            delete_image_ID("svdcoeff");
+            delete_image_ID("svdmodes", DELETE_IMAGE_ERRMODE_WARNING);
+            delete_image_ID("svdcoeff", DELETE_IMAGE_ERRMODE_WARNING);
         }
 
 
@@ -1334,7 +1334,7 @@ imageID AOloopControl_computeCalib_mkModes(
                     reuse = 1;
                     linopt_imtools_image_construct(imname, "modecoeff", "SVDmode1");
                     IDSVDmode1 = image_ID("SVDmode1");
-                    delete_image_ID("modecoeff");
+                    delete_image_ID("modecoeff", DELETE_IMAGE_ERRMODE_WARNING);
                     value1 = 0.0;
                     for(uint64_t ii = 0; ii < msizexy; ii++)
                     {
@@ -1343,7 +1343,7 @@ imageID AOloopControl_computeCalib_mkModes(
                         value1 += data.image[MBLOCK_ID[mblock]].array.F[m * msizexy + ii] *
                                   data.image[MBLOCK_ID[mblock]].array.F[m * msizexy + ii];
                     }
-                    delete_image_ID("SVDmode1");
+                    delete_image_ID("SVDmode1", DELETE_IMAGE_ERRMODE_WARNING);
 
                     rms = sqrt(value1 / totm);
                     float rmslim0 = 0.01;
@@ -1415,8 +1415,8 @@ imageID AOloopControl_computeCalib_mkModes(
             MBLOCK_NBmode[mblock] = cnt;
         }
 
-        delete_image_ID("SVDmask");
-        delete_image_ID("SVDmodein");
+        delete_image_ID("SVDmask", DELETE_IMAGE_ERRMODE_WARNING);
+        delete_image_ID("SVDmodein", DELETE_IMAGE_ERRMODE_WARNING);
 
         free(mok);
 
@@ -1553,7 +1553,7 @@ imageID AOloopControl_computeCalib_mkModes(
                     data.image[IDm].array.F[m * msizexy + ii] = data.image[IDtmp].array.F[m *
                             msizexy + ii];
                 }
-            delete_image_ID("fmodesext");
+            delete_image_ID("fmodesext", DELETE_IMAGE_ERRMODE_WARNING);
 
 
             MBLOCK_NBmode[mblock] = cnt;
@@ -1564,8 +1564,8 @@ imageID AOloopControl_computeCalib_mkModes(
                                mblock);
             save_fits(imname1, fname1);
 
-            delete_image_ID("svdmodes");
-            delete_image_ID("svdcoeff");
+            delete_image_ID("svdmodes", DELETE_IMAGE_ERRMODE_WARNING);
+            delete_image_ID("svdcoeff", DELETE_IMAGE_ERRMODE_WARNING);
         }
 
         WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/NBblocks.txt", outdir);
@@ -1791,7 +1791,7 @@ imageID AOloopControl_computeCalib_mkModes(
                                         data.image[IDRMM_coeff].array.F[jj];
                             }
 
-                            delete_image_ID("testrc");
+                            delete_image_ID("testrc", DELETE_IMAGE_ERRMODE_WARNING);
 
 
                             LOcoeff = 1.0 / (1.0 + pow(10.0 * res, 4.0));
@@ -1828,11 +1828,11 @@ imageID AOloopControl_computeCalib_mkModes(
                             }
                         }
 
-                        delete_image_ID("linfitcoeff");
-                        delete_image_ID("imfitim");
+                        delete_image_ID("linfitcoeff", DELETE_IMAGE_ERRMODE_WARNING);
+                        delete_image_ID("imfitim", DELETE_IMAGE_ERRMODE_WARNING);
 
                         save_fits("imfitmat", "!imfitmat.fits");
-                        delete_image_ID("imfitmat");
+                        delete_image_ID("imfitmat", DELETE_IMAGE_ERRMODE_WARNING);
 
                         fclose(fpLOcoeff);
                     }
@@ -2020,7 +2020,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
                         long IDSVDmode1DM = image_ID("SVDmode1DM");
 
-                        delete_image_ID("modecoeff");
+                        delete_image_ID("modecoeff", DELETE_IMAGE_ERRMODE_WARNING);
 
                         value1 = 0.0;
                         for(uint64_t ii = 0; ii < wfssize; ii++)
@@ -2037,8 +2037,8 @@ imageID AOloopControl_computeCalib_mkModes(
                         }
 
 
-                        delete_image_ID("SVDmode1");
-                        delete_image_ID("SVDmode1DM");
+                        delete_image_ID("SVDmode1", DELETE_IMAGE_ERRMODE_WARNING);
+                        delete_image_ID("SVDmode1DM", DELETE_IMAGE_ERRMODE_WARNING);
 
                         rms = sqrt(value1 / wfssize);
 
@@ -2187,8 +2187,8 @@ imageID AOloopControl_computeCalib_mkModes(
                 MBLOCK_NBmode[mblock] = cnt;
                 free(rmsarray);
             }
-            delete_image_ID("SVDmask");
-            delete_image_ID("SVDmodein");
+            delete_image_ID("SVDmask", DELETE_IMAGE_ERRMODE_WARNING);
+            delete_image_ID("SVDmodein", DELETE_IMAGE_ERRMODE_WARNING);
 
             printf("[%5d] STEP 0020\n", __LINE__);
             fflush(stdout);//TEST
@@ -2427,8 +2427,8 @@ imageID AOloopControl_computeCalib_mkModes(
                     // for(uint64_t ii=0; ii<msizexy; ii++)
                     //     data.image[IDmdm1].array.F[kk*msizexy + ii] /= rms;
                 }
-                delete_image_ID("SVDout");
-                delete_image_ID("modecoeff");
+                delete_image_ID("SVDout", DELETE_IMAGE_ERRMODE_WARNING);
+                delete_image_ID("modecoeff", DELETE_IMAGE_ERRMODE_WARNING);
 
                 WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes_%02u.fits", outdir, mblock);
                 save_fits(imnameDM1, ffname);
@@ -2536,7 +2536,7 @@ imageID AOloopControl_computeCalib_mkModes(
                     linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim1, 10000, "VTmat");
 #endif
 
-                    delete_image_ID("VTmat");
+                    delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
 
                     WRITE_FULLFILENAME(fname, "!./%s/mkmodestmp/cmat_%02u.fits", outdir, mblock);
                     save_fits(imnameCM, fname);
@@ -2976,7 +2976,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000, "VTmat");
 #endif
 
-            delete_image_ID("VTmat");
+            delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME,
                             "!./mkmodestmp/cmat_%02ld.fits", mblock);
@@ -3040,7 +3040,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
             AOloopControl_computeCalib_compute_CombinedControlMatrix(imnameCM, imname,
                     "wfsmask", "dmmask", imnameCMc, imnameCMcact);
-            delete_image_ID("dmmask");
+            delete_image_ID("dmmask", DELETE_IMAGE_ERRMODE_WARNING);
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME,
                             "!./mkmodestmp/cmatc_%02ld.fits", mblock);
@@ -3323,7 +3323,7 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask(
             data.image[IDDMmask].array.F[poke] = 1.0;
         }
     }
-    delete_image_ID("_tmpdmmap");
+    delete_image_ID("_tmpdmmap", DELETE_IMAGE_ERRMODE_WARNING);
     printf("done\n");
     fflush(stdout);
 
@@ -3352,7 +3352,7 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask(
             data.image[IDWFSmask].array.F[ii] = 1.0;
         }
     }
-    delete_image_ID("_tmpwfsmap");
+    delete_image_ID("_tmpwfsmap", DELETE_IMAGE_ERRMODE_WARNING);
     printf("done\n");
     fflush(stdout);
 

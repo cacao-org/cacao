@@ -374,7 +374,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
                 data.image[IDcoeffarray].array.F[m * kmax + k] =
                     data.image[IDcoeff].array.F[m];
             }
-            delete_image_ID("dmcoeffs");
+            delete_image_ID("dmcoeffs", DELETE_IMAGE_ERRMODE_WARNING);
 
         }
         printf("\n\n");
@@ -400,7 +400,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
         fclose(fp);
     }
 
-    delete_image_ID("_tmpdm");
+    delete_image_ID("_tmpdm", DELETE_IMAGE_ERRMODE_WARNING);
 
     free(timearray);
 
@@ -594,7 +594,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
                 data.image[IDcoeffarray].array.F[kk1 * NBave + i] = 0.5 *
                         data.image[IDcoeff].array.F[kk1];
             }
-            delete_image_ID("dmcoeffs");
+            delete_image_ID("dmcoeffs", DELETE_IMAGE_ERRMODE_WARNING);
 
             linopt_imtools_image_fitModes("_tmpmeas", DMmodes_name, DMmask_name, SVDeps,
                                           "dmcoeffs", SVDreuse);
@@ -604,7 +604,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
                 data.image[IDcoeffarraymeas].array.F[kk1 * NBave + i] = 0.5 *
                         data.image[IDcoeff].array.F[kk1];
             }
-            delete_image_ID("dmcoeffs");
+            delete_image_ID("dmcoeffs", DELETE_IMAGE_ERRMODE_WARNING);
 
 
             i++;
@@ -651,7 +651,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
                 data.image[IDcoeffarray].array.F[kk1 * NBave + i] -= 0.5 *
                         data.image[IDcoeff].array.F[kk1];
             }
-            delete_image_ID("dmcoeffs");
+            delete_image_ID("dmcoeffs", DELETE_IMAGE_ERRMODE_WARNING);
             i++;
 
             linopt_imtools_image_fitModes("_tmpmeas", DMmodes_name, DMmask_name, SVDeps,
@@ -662,7 +662,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
                 data.image[IDcoeffarraymeas].array.F[kk1 * NBave + i] = 0.5 *
                         data.image[IDcoeff].array.F[kk1];
             }
-            delete_image_ID("dmcoeffs");
+            delete_image_ID("dmcoeffs", DELETE_IMAGE_ERRMODE_WARNING);
         }
 
 
@@ -701,9 +701,9 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
     printf("\n\n");
     fflush(stdout);
 
-    delete_image_ID("_tmpdm");
-    delete_image_ID("_tmpmeas");
-    delete_image_ID("_coeffarray");
+    delete_image_ID("_tmpdm", DELETE_IMAGE_ERRMODE_WARNING);
+    delete_image_ID("_tmpmeas", DELETE_IMAGE_ERRMODE_WARNING);
+    delete_image_ID("_coeffarray", DELETE_IMAGE_ERRMODE_WARNING);
 
 
 

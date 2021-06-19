@@ -235,7 +235,7 @@ imageID AOloopControl_IOtools_2Dloadcreate_shmim(
             {
                 printf("\n========== EXISTING %s HAS WRONG SIZE -> CREATING BLANK %s ===========\n\n",
                        name, name);
-                delete_image_ID(name);
+                delete_image_ID(name, DELETE_IMAGE_ERRMODE_WARNING);
 
                 EXECUTE_SYSTEM_COMMAND("rm %s/%s.im.shm", data.shmdir, name);
 
@@ -310,7 +310,7 @@ imageID AOloopControl_IOtools_2Dloadcreate_shmim(
                        (long) data.image[ID1].md[0].size[0], (long) data.image[ID1].md[0].size[1]);
                 loadcreatestatus = 3;
             }
-            delete_image_ID("tmp2Dim");
+            delete_image_ID("tmp2Dim", DELETE_IMAGE_ERRMODE_WARNING);
         }
         else
         {
@@ -470,7 +470,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(
                        name, name);
                 fflush(stdout);
 
-                delete_image_ID(name);
+                delete_image_ID(name, DELETE_IMAGE_ERRMODE_WARNING);
 
                 EXECUTE_SYSTEM_COMMAND("rm %s/%s.im.shm", data.shmdir, name);
 
@@ -584,7 +584,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(
 
             loadcreatestatus = 2;
         }
-        delete_image_ID("tmp3Dim");
+        delete_image_ID("tmp3Dim", DELETE_IMAGE_ERRMODE_WARNING);
     }
     else
     {

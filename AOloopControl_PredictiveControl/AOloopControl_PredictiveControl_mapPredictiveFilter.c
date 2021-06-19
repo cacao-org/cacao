@@ -73,7 +73,7 @@ errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(
 
 
     AOloopControl_PredictiveControl_testPredictiveFilter("trace", modeouto, delayfr, filtsize, "filt", SVDeps);
-    delete_image_ID("filt");
+    delete_image_ID("filt", DELETE_IMAGE_ERRMODE_WARNING);
 
     return RETURN_SUCCESS;
 }
