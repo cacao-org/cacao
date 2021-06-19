@@ -354,14 +354,16 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
-        long IDzrespfp = load_fits(fname, "zrespfp", 2);
+        imageID IDzrespfp = -1;
+        load_fits(fname, "zrespfp", 2, &IDzrespfp);
 
         if(sprintf(fname, "./zresptmp/%s_neg_%03ld.fits", zrespm_name, kmat) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
-        long IDzrespfm = load_fits(fname, "zrespfm", 2);
+        imageID IDzrespfm = -1;
+        load_fits(fname, "zrespfm", 2, &IDzrespfm);
 
         sizexWFS = data.image[IDzrespfp].md[0].size[0];
         sizeyWFS = data.image[IDzrespfp].md[0].size[1];
@@ -773,7 +775,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
 
 
-    load_fits(respMname, "respM", 1);
+    load_fits(respMname, "respM", 1, NULL);
 
     char cm_name[] = "sCMat";
 

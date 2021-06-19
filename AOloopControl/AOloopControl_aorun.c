@@ -825,7 +825,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
     if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 1)
     {
         aoloopcontrol_var.aoconfID_pixstream_wfspixindex =
-            load_fits("pixstream_wfspixindex.fits", "pixstream", 1);
+            load_fits("pixstream_wfspixindex.fits", "pixstream", 1, NULL);
     }
 
     if(aoloopcontrol_var.aoconfID_pixstream_wfspixindex == -1)

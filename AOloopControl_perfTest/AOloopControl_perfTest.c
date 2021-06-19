@@ -3201,7 +3201,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
             long IDc;
             snprintf(fname, stringmaxlen, "%s/%s.fits", datadirstream, datfile[i].name);
             printf("----------------------[%ld] LOADING FILE %s\n", i, fname);
-            IDc = load_fits(fname, "im0C", 1);
+            load_fits(fname, "im0C", 1, &IDc);
 
 
             // CREATE OUTPUT CUBE IF FIRST FILE

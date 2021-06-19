@@ -847,7 +847,7 @@ errno_t AOloopControl_loadconfigure(
             printf("Checking file \"%s\"\n", fname);
 
             // GET SIZE FROM FILE
-            ID1tmp = load_fits(fname, "tmp3Dim", 1);
+            load_fits(fname, "tmp3Dim", 1, &ID1tmp);
             if(ID1tmp == -1)
             {
                 printf("WARNING: no file \"%s\" -> loading zonal modes\n", fname);
@@ -857,7 +857,7 @@ errno_t AOloopControl_loadconfigure(
                     PRINT_ERROR("sprintf wrote <1 char");
                 }
 
-                ID1tmp = load_fits(fname, "tmp3Dim", 1);
+                load_fits(fname, "tmp3Dim", 1, &ID1tmp);
                 if(ID1tmp == -1)
                 {
                     printf("ERROR: cannot read zonal modes \"%s\"\n", fname);

@@ -2471,7 +2471,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                         char fnameRMDMmask[STRINGMAXLEN_FULLFILENAME];
                         WRITE_FULLFILENAME(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
 //                        sprintf(fnameRMDMmask, "%s/RM_DMmask.fits", fps.md->datadir);
-                        load_fits(fnameRMDMmask, "RMDMmask", 1);
+                        load_fits(fnameRMDMmask, "RMDMmask", 1, NULL);
                     }
 //                    load_fits("./conf/RM_DMmask.fits", "RMDMmask", 1);
                     AOloopControl_computeCalib_mkHadamardModes("RMDMmask", "Hpoke");
@@ -2721,7 +2721,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     imageID IDwfsref;
 
     char pokeC_name[] = "pokeC";
-    long IDpokeC = load_fits(pokeC_filename, pokeC_name, 1);
+    imageID IDpokeC = -1;
+    load_fits(pokeC_filename, pokeC_name, 1, &IDpokeC);
     if(IDpokeC == -1)
     {
         printf("ERROR: cannot load image %s\n", pokeC_filename);
@@ -3046,11 +3047,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
             WRITE_FULLFILENAME(tmpfname, "%s/acquA/wfsresp.tstep%03d.iter%03d.fits",
                                fps.md->datadir, AveStep, IterNumber);
-            IDwfsresp2a = load_fits(tmpfname, wfsresp2aname, 1);
+            load_fits(tmpfname, wfsresp2aname, 1, &IDwfsresp2a);
 
             WRITE_FULLFILENAME(tmpfname, "%s/acquB/wfsresp.tstep%03d.iter%03d.fits",
                                fps.md->datadir, AveStep, IterNumber);
-            IDwfsresp2b = load_fits(tmpfname, wfsresp2bname, 1);
+            load_fits(tmpfname, wfsresp2bname, 1, &IDwfsresp2b);
 
             WRITE_IMAGENAME(imnameout_respC, "%s.tstep%03d.iter%03d", respC_sname, AveStep,
                             IterNumber);

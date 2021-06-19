@@ -425,8 +425,8 @@ int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name,
         fflush(stdout);
     }
 
-    IDs1 = load_fits("turbscreen1.fits", "screen1", 1);
-    IDs2 = load_fits("turbscreen2.fits", "screen2", 1);
+    load_fits("turbscreen1.fits", "screen1", 1, &IDs1);
+    load_fits("turbscreen2.fits", "screen2", 1, &IDs2);
     list_image_ID();
 
     if(IDs1 == -1)

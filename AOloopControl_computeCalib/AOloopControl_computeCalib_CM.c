@@ -228,7 +228,8 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 
     if(Beta > 0.000001)
     {
-        long ID = load_fits("modesfreqcpa.fits", "modesfreqcpa", 1);
+        imageID ID = -1;
+        load_fits("modesfreqcpa.fits", "modesfreqcpa", 1, &ID);
         if(ID == -1)
         {
             for(uint32_t k = 0; k < m; k++)
@@ -816,7 +817,8 @@ imageID AOloopControl_computeCalib_loadCM(
         AOloopControl_InitializeMemory(0);
     }
 
-    if((ID = load_fits(CMfname, "tmpcontrM", 1)) != -1)
+    load_fits(CMfname, "tmpcontrM", 1, &ID);
+    if(ID != -1)
     {
 
         // check size is OK

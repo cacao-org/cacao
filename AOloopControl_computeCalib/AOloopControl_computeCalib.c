@@ -1167,32 +1167,32 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
     char fname_dmslaved[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(fname_dmslaved,  functionparameter_GetParamPtr_STRING(&fps,
             ".DMslaved"),  FUNCTION_PARAMETER_STRMAXLEN);
-    load_fits(fname_dmslaved, "dmslaved", 1);
+    load_fits(fname_dmslaved, "dmslaved", 1, NULL);
 
     char fname_zrespM[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(fname_zrespM,  functionparameter_GetParamPtr_STRING(&fps, ".zrespM"),
             FUNCTION_PARAMETER_STRMAXLEN);
-    load_fits(fname_zrespM, "zrespM", 1);
+    load_fits(fname_zrespM, "zrespM", 1, NULL);
 
     char fname_DMmaskRM[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(fname_DMmaskRM,  functionparameter_GetParamPtr_STRING(&fps,
             ".DMmaskRM"),  FUNCTION_PARAMETER_STRMAXLEN);
-    load_fits(fname_DMmaskRM, "dmmaskRM", 1);
+    load_fits(fname_DMmaskRM, "dmmaskRM", 1, NULL);
 
     char fname_WFSmask[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(fname_WFSmask,  functionparameter_GetParamPtr_STRING(&fps, ".WFSmask"),
             FUNCTION_PARAMETER_STRMAXLEN);
-    load_fits(fname_WFSmask, "wfsmask", 1);
+    load_fits(fname_WFSmask, "wfsmask", 1, NULL);
 
     char fname_loRM[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(fname_loRM,  functionparameter_GetParamPtr_STRING(&fps, ".loRM"),
             FUNCTION_PARAMETER_STRMAXLEN);
-    load_fits(fname_loRM, "LOrespM", 1);
+    load_fits(fname_loRM, "LOrespM", 1, NULL);
 
     char fname_loRMmodes[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(fname_loRMmodes,  functionparameter_GetParamPtr_STRING(&fps,
             ".loRMmodes"),  FUNCTION_PARAMETER_STRMAXLEN);
-    load_fits(fname_loRMmodes, "RMMmodes", 1);
+    load_fits(fname_loRMmodes, "RMMmodes", 1, NULL);
 
 
 

@@ -289,9 +289,9 @@ imageID AOloopControl_IOtools_2Dloadcreate_shmim(
     }
     else
     {
-        long ID1;
+        imageID ID1 = -1;
 
-        ID1 = load_fits(fname, "tmp2Dim", 3);
+        load_fits(fname, "tmp2Dim", 3, &ID1);
 
         if(ID1 != -1)
         {
@@ -525,7 +525,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(
         exit(0);
     }
 
-    ID1 = load_fits(fname, "tmp3Dim", 3);
+    load_fits(fname, "tmp3Dim", 3, &ID1);
     printf("        AOloopControl_3Dloadcreate_shmim: ===== ID1 = %ld\n", ID1);
     fflush(stdout);
     if(ID1 != -1)

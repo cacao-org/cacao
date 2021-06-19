@@ -1611,7 +1611,7 @@ imageID AOloopControl_computeCalib_mkModes(
             WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes2b_%02u.fits", outdir,
                                mblock);
             WRITE_IMAGENAME(imname, "fmodes2b_%02u", mblock);
-            ID = load_fits(ffname, imname, 1);
+            load_fits(ffname, imname, 1, &ID);
             MBLOCK_NBmode[mblock] = data.image[ID].md[0].size[2];
             MBLOCK_ID[mblock] = ID;
         }
@@ -2287,14 +2287,14 @@ imageID AOloopControl_computeCalib_mkModes(
                 WRITE_IMAGENAME(imname1, "fmodesWFS1_%02u", mblock);
                 WRITE_FULLFILENAME(fname1, "./%s/mkmodestmp/fmodesWFS1_%02u.fits", outdir,
                                    mblock);
-                ID = load_fits(fname1, imname1, 1);
+                load_fits(fname1, imname1, 1, &ID);
                 wfsxsize = data.image[ID].md[0].size[0];
                 wfsysize = data.image[ID].md[0].size[1];
                 wfssize = wfsxsize * wfsysize;
 
                 WRITE_IMAGENAME(imname1, "fmodes3_%02u", mblock);
                 WRITE_FULLFILENAME(fname1, "./%s/mkmodestmp/fmodes3_%02u.fits", outdir, mblock);
-                ID = load_fits(fname1, imname1, 1);
+                load_fits(fname1, imname1, 1, &ID);
                 if((data.image[ID].md[0].size[0] != msizex)
                         && (msizey != data.image[ID].md[0].size[0]))
                 {
@@ -2445,7 +2445,8 @@ imageID AOloopControl_computeCalib_mkModes(
             {
                 WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes_%02u.fits", outdir, mblock);
                 WRITE_IMAGENAME(imnameDM1, "fmodes_%02u", mblock);
-                imageID IDmdm1 = load_fits(ffname, imnameDM1, 1);
+                imageID IDmdm1 = -1;
+                load_fits(ffname, imnameDM1, 1, &IDmdm1);
                 MBLOCK_ID[mblock] = IDmdm1;
                 //MBLOCK_IDwfs[mblock] = IDmwfs1;
                 MBLOCK_NBmode[mblock] = data.image[IDmdm1].md[0].size[2];
@@ -2576,16 +2577,16 @@ imageID AOloopControl_computeCalib_mkModes(
                 //	list_image_ID();
                 WRITE_FULLFILENAME(fname, "./%s/mkmodestmp/fmodesWFS_%02u.fits", outdir,
                                    mblock);
-                load_fits(fname, imname, 1);
+                load_fits(fname, imname, 1, NULL);
 
                 WRITE_FULLFILENAME(fname, "./%s/mkmodestmp/cmat_%02u.fits", outdir, mblock);
-                load_fits(fname, imnameCM, 1);
+                load_fits(fname, imnameCM, 1, NULL);
 
                 WRITE_FULLFILENAME(fname, "./%s/mkmodestmp/cmatc_%02u.fits", outdir, mblock);
-                load_fits(fname, imnameCMc, 1);
+                load_fits(fname, imnameCMc, 1, NULL);
 
                 WRITE_FULLFILENAME(fname, "./%s/mkmodestmp/cmatcact_%02u.fits", outdir, mblock);
-                load_fits(fname, imnameCMcact, 1);
+                load_fits(fname, imnameCMcact, 1, NULL);
             }
         }
 
@@ -3094,28 +3095,28 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
-            load_fits(fname, imname, 1);
+            load_fits(fname, imname, 1, NULL);
 
             if(sprintf(fname, "./mkmodestmp/cmat_%02ld.fits", mblock) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
-            load_fits(fname, imnameCM, 1);
+            load_fits(fname, imnameCM, 1, NULL);
 
             if(sprintf(fname, "./mkmodestmp/cmatc_%02ld.fits", mblock) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
-            load_fits(fname, imnameCMc, 1);
+            load_fits(fname, imnameCMc, 1, NULL);
 
             if(sprintf(fname, "./mkmodestmp/cmatcact_%02ld.fits", mblock) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
-            load_fits(fname, imnameCMcact, 1);
+            load_fits(fname, imnameCMcact, 1, NULL);
         }
     }
 
