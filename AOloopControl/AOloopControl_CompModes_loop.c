@@ -214,7 +214,7 @@ errno_t AOloopControl_CompModes_loop(
     }
 
 
-    delete_image_ID("coeff0");
+    delete_image_ID("coeff0", DELETE_IMAGE_ERRMODE_WARNING);
     free(sizearray);
 
     free(GPUsetM);
