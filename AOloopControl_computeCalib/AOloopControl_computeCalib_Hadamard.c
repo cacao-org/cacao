@@ -87,7 +87,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     }
     sizearray[0] = xsize;
     sizearray[1] = ysize;
-    IDindex = create_image_ID("Hpixindex", 2, sizearray, _DATATYPE_FLOAT, 0, 0, 0);
+    create_image_ID("Hpixindex", 2, sizearray, _DATATYPE_FLOAT, 0, 0, 0, &IDindex);
     free(sizearray);
 
     cnt = 0;

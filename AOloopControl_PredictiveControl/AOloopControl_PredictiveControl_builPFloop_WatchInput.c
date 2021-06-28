@@ -255,7 +255,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     if(sprintf(imnameout, "aol%ld_modevalol_PFb%ld", loop, PFblock) < 1)
         PRINT_ERROR("sprintf wrote <1 char");
 
-    IDout = create_image_ID(imnameout, 3, imsizearray, datatype, 1, 1, 0);
+    create_image_ID(imnameout, 3, imsizearray, datatype, 1, 1, 0, &IDout);
     free(imsizearray);
     COREMOD_MEMORY_image_set_semflush(imnameout, -1);
     printf("Done\n");

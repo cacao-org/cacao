@@ -150,15 +150,15 @@ errno_t AOloopControl_CompModes_loop(
     sizearray[0] = NBmodes;
     sizearray[1] = 1;
 
-    ID_coeff = create_image_ID(ID_coeff_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(ID_coeff_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &ID_coeff);
     COREMOD_MEMORY_image_set_createsem(ID_coeff_name, 10);
     data.image[ID_coeff].md[0].cnt0 = 0;
 
-    ID_coefft = create_image_ID("coefftmp", 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID("coefftmp", 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &ID_coefft);
     COREMOD_MEMORY_image_set_createsem("coefftmp", 10);
 
 
-    IDcoeff0 = create_image_ID("coeff0", 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID("coeff0", 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDcoeff0);
     ID_WFSim_n = create_2Dimage_ID("wfsim_n", wfsxsize, wfsysize);
     COREMOD_MEMORY_image_set_createsem("wfsim_n", 10);
 

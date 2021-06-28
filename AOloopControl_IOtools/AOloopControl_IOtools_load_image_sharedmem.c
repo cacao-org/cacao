@@ -259,7 +259,7 @@ imageID AOloopControl_IOtools_2Dloadcreate_shmim(
             sizearray[1] =  ysize;
             if(xsize * ysize > 0)
             {
-                ID = create_image_ID(name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+                create_image_ID(name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &ID);
             }
             for(ii = 0; ii < xsize * ysize; ii++)
             {
@@ -500,7 +500,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(
             {
                 printf("        AOloopControl_3Dloadcreate_shmim: ===== create_image_ID\n");
                 fflush(stdout);
-                ID = create_image_ID(name, 3, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+                create_image_ID(name, 3, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &ID);
                 for(ii = 0; ii < xsize * ysize * zsize; ii++)
                 {
                     data.image[ID].array.F[ii] = DefaultValue;
@@ -546,7 +546,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(
                 sizearray[0] = xsize1;
                 sizearray[1] = ysize1;
                 sizearray[2] = zsize1;
-                ID = create_image_ID(name, 3, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+                create_image_ID(name, 3, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &ID);
 
                 printf("        AOloopControl_3Dloadcreate_shmim: ===== [1] memcpy  %ld %ld %ld\n",
                        xsize1, ysize1, zsize1);

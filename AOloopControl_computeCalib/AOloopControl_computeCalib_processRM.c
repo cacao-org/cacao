@@ -791,8 +791,9 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
     if(usingGPU == 1)
     {
-        CUDACOMP_magma_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 100000,
-                                                "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
+        CUDACOMP_magma_compute_SVDpseudoInverse(
+            "respM", cm_name, SVDlim, 100000,
+            "VTmat", 0, 0, 1.e-4, 1.e-7, 0, 64);
     }
     else
     {

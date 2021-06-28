@@ -285,8 +285,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
 
             for(uint64_t ii=0; ii<msizex*msizey; ii++)
                 data.image[IDtm].array.F[ii] = data.image[ID].array.F[k*msizex*msizey+ii];
-            linopt_imtools_image_fitModes("tmpmode", "emodes", "dmmask", 1.0e-2, "lcoeff", 0);
-            linopt_imtools_image_construct("emodes", "lcoeff", "em00");
+            linopt_imtools_image_fitModes("tmpmode", "emodes", "dmmask", 1.0e-2, "lcoeff", 0, NULL);
+            linopt_imtools_image_construct("emodes", "lcoeff", "em00", NULL);
             delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
             IDem = image_ID("em00");
 

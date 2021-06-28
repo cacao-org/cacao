@@ -265,8 +265,8 @@ errno_t AOloopControl_AutoTuneGains(
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
-    IDmodeWFSnoise = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0,
-                                     0);
+    create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0,
+                                     0, &IDmodeWFSnoise);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     free(sizearray);
 
@@ -290,7 +290,7 @@ errno_t AOloopControl_AutoTuneGains(
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
     sizearray[0] = NBmodes;
     sizearray[1] = 1;
-    IDout = create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+     create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDout);
     COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
     free(sizearray);
 

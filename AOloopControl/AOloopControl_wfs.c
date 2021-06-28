@@ -513,7 +513,7 @@ imageID AOloopControl_computeWFSresidualimage(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    IDout = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDout);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 
 
@@ -522,7 +522,7 @@ imageID AOloopControl_computeWFSresidualimage(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    IDoutave = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDoutave);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     for(ii = 0; ii < wfsxysize; ii++)
     {
@@ -535,7 +535,7 @@ imageID AOloopControl_computeWFSresidualimage(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    IDoutm = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDoutm);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 
 
@@ -544,7 +544,7 @@ imageID AOloopControl_computeWFSresidualimage(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    IDoutmave = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDoutmave);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     for(ii = 0; ii < wfsxysize; ii++)
     {
@@ -557,7 +557,7 @@ imageID AOloopControl_computeWFSresidualimage(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    IDoutrms = create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDoutrms);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     for(ii = 0; ii < wfsxysize; ii++)
     {

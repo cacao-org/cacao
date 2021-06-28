@@ -366,7 +366,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
             memcpy(data.image[IDdmtmp].array.F, ptr, sizeof(float)*dmsize);
             // decompose in modes
             linopt_imtools_image_fitModes("_tmpdm", DMmodes_name, DMmask_name, SVDeps,
-                                          "dmcoeffs", SVDreuse);
+                                          "dmcoeffs", SVDreuse, NULL);
             SVDreuse = 1;
             IDcoeff = image_ID("dmcoeffs");
             for(m = 0; m < NBmodes; m++)
@@ -535,7 +535,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
     printf("Initialize SVD ... ");
     fflush(stdout);
     linopt_imtools_image_fitModes("_tmpdm", DMmodes_name, DMmask_name, SVDeps,
-                                  "dmcoeffs", SVDreuse);
+                                  "dmcoeffs", SVDreuse, NULL);
     SVDreuse = 1;
     printf("done\n");
     fflush(stdout);
@@ -587,7 +587,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
 
             // decompose in modes
             linopt_imtools_image_fitModes("_tmpdm", DMmodes_name, DMmask_name, SVDeps,
-                                          "dmcoeffs", SVDreuse);
+                                          "dmcoeffs", SVDreuse, NULL);
             IDcoeff = image_ID("dmcoeffs");
             for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
             {
@@ -597,7 +597,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
             delete_image_ID("dmcoeffs", DELETE_IMAGE_ERRMODE_WARNING);
 
             linopt_imtools_image_fitModes("_tmpmeas", DMmodes_name, DMmask_name, SVDeps,
-                                          "dmcoeffs", SVDreuse);
+                                          "dmcoeffs", SVDreuse, NULL);
             IDcoeff = image_ID("dmcoeffs");
             for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
             {
@@ -644,7 +644,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
 
             // decompose in modes
             linopt_imtools_image_fitModes("_tmpdm", DMmodes_name, DMmask_name, SVDeps,
-                                          "dmcoeffs", SVDreuse);
+                                          "dmcoeffs", SVDreuse, NULL);
             IDcoeff = image_ID("dmcoeffs");
             for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
             {
@@ -655,7 +655,7 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
             i++;
 
             linopt_imtools_image_fitModes("_tmpmeas", DMmodes_name, DMmask_name, SVDeps,
-                                          "dmcoeffs", SVDreuse);
+                                          "dmcoeffs", SVDreuse, NULL);
             IDcoeff = image_ID("dmcoeffs");
             for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
             {

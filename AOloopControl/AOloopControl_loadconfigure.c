@@ -944,33 +944,34 @@ errno_t AOloopControl_loadconfigure(
                        AOconf[loop].AOpmodecoeffs.DMmodesname, (long) sizearray[0],
                        (long) sizearray[1], (long) sizearray[2]);
                 fflush(stdout);
-                aoloopcontrol_var.aoconfID_DMmodes = create_image_ID(
-                        AOconf[loop].AOpmodecoeffs.DMmodesname, 3, sizearray, _DATATYPE_FLOAT, 1, 0, 0);
+                create_image_ID(
+                    AOconf[loop].AOpmodecoeffs.DMmodesname, 3, sizearray, _DATATYPE_FLOAT, 1, 0, 0,
+                    &(aoloopcontrol_var.aoconfID_DMmodes));
             }
 
             // put modes into shared memory
 
             switch(data.image[ID1tmp].md[0].datatype)
             {
-                case _DATATYPE_FLOAT :
-                    memcpy(data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F,
-                           data.image[ID1tmp].array.F,
-                           sizeof(float)*AOconf[loop].DMctrl.sizexDM * AOconf[loop].DMctrl.sizeyDM *
-                           AOconf[loop].AOpmodecoeffs.NBDMmodes);
-                    break;
-                case _DATATYPE_DOUBLE :
-                    for(unsigned long ii = 0;
-                            ii < AOconf[loop].DMctrl.sizexDM * AOconf[loop].DMctrl.sizeyDM *
-                            AOconf[loop].AOpmodecoeffs.NBDMmodes; ii++)
-                    {
-                        data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[ii] =
-                            data.image[ID1tmp].array.D[ii];
-                    }
-                    break;
-                default :
-                    printf("ERROR: TYPE NOT RECOGNIZED FOR MODES\n");
-                    exit(0);
-                    break;
+            case _DATATYPE_FLOAT :
+                memcpy(data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F,
+                       data.image[ID1tmp].array.F,
+                       sizeof(float)*AOconf[loop].DMctrl.sizexDM * AOconf[loop].DMctrl.sizeyDM *
+                       AOconf[loop].AOpmodecoeffs.NBDMmodes);
+                break;
+            case _DATATYPE_DOUBLE :
+                for(unsigned long ii = 0;
+                        ii < AOconf[loop].DMctrl.sizexDM * AOconf[loop].DMctrl.sizeyDM *
+                        AOconf[loop].AOpmodecoeffs.NBDMmodes; ii++)
+                {
+                    data.image[aoloopcontrol_var.aoconfID_DMmodes].array.F[ii] =
+                        data.image[ID1tmp].array.D[ii];
+                }
+                break;
+            default :
+                printf("ERROR: TYPE NOT RECOGNIZED FOR MODES\n");
+                exit(0);
+                break;
             }
 
             delete_image_ID("tmp3Dim", DELETE_IMAGE_ERRMODE_WARNING);

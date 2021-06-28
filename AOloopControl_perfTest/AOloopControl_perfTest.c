@@ -1163,7 +1163,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     naxes[0] = wfsxsize;
     naxes[1] = wfsysize;
     naxes[2] = wfs_NBframesmax;
-    IDwfsc = create_image_ID("_testwfsc", 3, naxes, datatype, 0, 0, 0);
+    create_image_ID("_testwfsc", 3, naxes, datatype, 0, 0, 0, &IDwfsc);
 
 
 
@@ -1835,7 +1835,7 @@ imageID AOloopControl_perfTest_blockstats(
     }
     sizeout[0] = NBmodes;
     sizeout[1] = 1;
-    IDout = create_image_ID(IDout_name, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(IDout_name, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0, &IDout);
     COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
 
     printf("%ld modes\n", NBmodes);
@@ -1892,7 +1892,7 @@ imageID AOloopControl_perfTest_blockstats(
         PRINT_ERROR("snprintf wrote <1 char");
     }
 
-    IDblockRMS = create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0, &IDblockRMS);
     COREMOD_MEMORY_image_set_createsem(fname, 10);
 
     if(snprintf(fname, stringmaxlen, "aol%ld_blockRMS_ave", loop) < 1)
@@ -1900,7 +1900,7 @@ imageID AOloopControl_perfTest_blockstats(
         PRINT_ERROR("snprintf wrote <1 char");
     }
 
-    IDblockRMS_ave = create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0, &IDblockRMS_ave);
     COREMOD_MEMORY_image_set_createsem(fname, 10);
 
 

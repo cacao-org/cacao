@@ -3538,8 +3538,9 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
     printf("WFS size = %u %u\n", AOconf[loop].WFSim.sizexWFS,
            AOconf[loop].WFSim.sizeyWFS);
     fflush(stdout);
-    aoloopcontrol_var.aoconfID_imWFS1 = create_image_ID(name, 2, sizearray,
-                                        _DATATYPE_FLOAT, 1, 0, 0);
+    create_image_ID(name, 2, sizearray,
+                    _DATATYPE_FLOAT, 1, 0, 0,
+                    &(aoloopcontrol_var.aoconfID_imWFS1));
 
 
     arrayf = (float *) malloc(sizeof(float) * AOconf[loop].DMctrl.sizeDM);
@@ -3550,7 +3551,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
 
     sizearray[0] = AOconf[loop].DMctrl.sizexDM;
     sizearray[1] = AOconf[loop].DMctrl.sizeyDM;
-    ID_DMmap = create_image_ID(DMmap_name, 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0);
+    create_image_ID(DMmap_name, 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0, &ID_DMmap);
 
 
     IDpos = create_2Dimage_ID("wfsposim", AOconf[loop].WFSim.sizexWFS,
@@ -3607,32 +3608,32 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
         abort();
     }
 
-    ID_WFSmap = create_image_ID(WFSmap_name, 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0);
-    ID_WFSref0 = create_image_ID("tmpwfsref0", 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0);
-    ID_WFSref2 = create_image_ID("tmpwfsref2", 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0);
-    ID_WFSref0n = create_image_ID(WFSref0_name, 2, sizearray, _DATATYPE_FLOAT, 1,
-                                  5, 0);
-    ID_WFSref2n = create_image_ID("tmpwfsimrms", 2, sizearray, _DATATYPE_FLOAT, 1,
-                                  5, 0);
-    IDzrespm = create_image_ID("zrespm", 3, sizearray, _DATATYPE_FLOAT, 0,
-                               5, 0); // Zonal response matrix
-    IDzrespmn = create_image_ID(zrespm_name, 3, sizearray, _DATATYPE_FLOAT, 0,
-                                5, 0); // Zonal response matrix normalized
+    create_image_ID(WFSmap_name, 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0, &ID_WFSmap);
+    create_image_ID("tmpwfsref0", 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0, &ID_WFSref0);
+    create_image_ID("tmpwfsref2", 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0, &ID_WFSref2);
+    create_image_ID(WFSref0_name, 2, sizearray, _DATATYPE_FLOAT, 1,
+                    5, 0, &ID_WFSref0n);
+    create_image_ID("tmpwfsimrms", 2, sizearray, _DATATYPE_FLOAT, 1,
+                    5, 0, &ID_WFSref2n);
+    create_image_ID("zrespm", 3, sizearray, _DATATYPE_FLOAT, 0,
+                    5, 0, &IDzrespm); // Zonal response matrix
+    create_image_ID(zrespm_name, 3, sizearray, _DATATYPE_FLOAT, 0,
+                    5, 0, &IDzrespmn); // Zonal response matrix normalized
 
-    IDzrespfp = create_image_ID("zrespfp", 3, sizearray, _DATATYPE_FLOAT, 0,
-                                5, 0); // positive poke image
-    IDzrespfm = create_image_ID("zrespfm", 3, sizearray, _DATATYPE_FLOAT, 0,
-                                5, 0); // negative poke image
+    create_image_ID("zrespfp", 3, sizearray, _DATATYPE_FLOAT, 0,
+                    5, 0, &IDzrespfp); // positive poke image
+    create_image_ID("zrespfm", 3, sizearray, _DATATYPE_FLOAT, 0,
+                    5, 0, &IDzrespfm); // negative poke image
 
     if(mode > 0)
     {
         sizearray[0] = AOconf[loop].WFSim.sizexWFS;
         sizearray[1] = AOconf[loop].WFSim.sizeyWFS;
-        ID_WFSmask = create_image_ID("wfsmask", 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0);
+        create_image_ID("wfsmask", 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0, &ID_WFSmask);
 
         sizearray[0] = AOconf[loop].DMctrl.sizexDM;
         sizearray[1] = AOconf[loop].DMctrl.sizeyDM;
-        ID_DMmask = create_image_ID("dmmask", 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0);
+        create_image_ID("dmmask", 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0, &ID_DMmask);
     }
 
 

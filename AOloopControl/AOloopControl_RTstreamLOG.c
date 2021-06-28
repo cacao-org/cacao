@@ -208,16 +208,18 @@ errno_t AOloopControl_RTstreamLOG_setup(
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
-        AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 = create_image_ID(imname, 3, imsize,
-                datatype, SHARED, 0, 0);
+        create_image_ID(imname, 3, imsize,
+                        datatype, SHARED, 0, 0,
+                        &(AOconf[loop].RTSLOGarray[rtlindex].IDbuff0 ));
 
         if(sprintf(imname, "aol%ld_%s_logbuff1", loop,
                    AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
-        AOconf[loop].RTSLOGarray[rtlindex].IDbuff1 = create_image_ID(imname, 3, imsize,
-                datatype, SHARED, 0, 0);
+        create_image_ID(imname, 3, imsize,
+                        datatype, SHARED, 0, 0,
+                        &(AOconf[loop].RTSLOGarray[rtlindex].IDbuff1));
 
         // nelement for a SINGLE SLICE
         nelement = (uint64_t) imsize[0];
@@ -376,16 +378,18 @@ errno_t AOloopControl_RTstreamLOG_setup(
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
-        AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0 = create_image_ID(imname, 2,
-                imsize, _DATATYPE_UINT64, 1, 0, 0);
+        create_image_ID(imname, 2,
+                        imsize, _DATATYPE_UINT64, 1, 0, 0,
+                        &(AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo0 ));
 
         if(sprintf(imname, "aol%ld_%s_logbuffinfo1", loop,
                    AOconf[loop].RTSLOGarray[rtlindex].name) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
-        AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo1 = create_image_ID(imname, 2,
-                imsize, _DATATYPE_UINT64, 1, 0, 0);
+        create_image_ID(imname, 2,
+                        imsize, _DATATYPE_UINT64, 1, 0, 0,
+                        &(AOconf[loop].RTSLOGarray[rtlindex].IDbuffinfo1));
 
 
 
@@ -1613,7 +1617,7 @@ int AOloopControl_RTstreamLOG_saveloop(
                             imsize[2] = AOconf[loop].RTSLOGarray[rtlindex].SIZE *
                                         AOconf[loop].RTSLOGarray[rtlindex].NBFileBuffer;
                             datatype = data.image[ID].md[0].datatype;
-                            IDout = create_image_ID(OutBuffIm, 3, imsize, datatype, SHARED, 0, 0);
+                            create_image_ID(OutBuffIm, 3, imsize, datatype, SHARED, 0, 0, &IDout);
                             free(imsize);
                         }
 

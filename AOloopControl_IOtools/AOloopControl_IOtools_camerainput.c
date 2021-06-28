@@ -208,7 +208,7 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
 
 
     // Create shared memory output image
-    IDout = create_image_ID(out_name, 2, sizeout, datatypeout, 1, 0, 0);
+    create_image_ID(out_name, 2, sizeout, datatypeout, 1, 0, 0, &IDout);
 
     cnt0 = -1;
 

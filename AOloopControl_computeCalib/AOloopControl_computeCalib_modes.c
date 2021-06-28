@@ -705,8 +705,8 @@ imageID AOloopControl_computeCalib_mkModes(
                                                    ii];
                 }
                 linopt_imtools_image_fitModes("tmpmode", "emodes", "dmmask", 1.0e-3, "lcoeff",
-                                              0);
-                linopt_imtools_image_construct("emodes", "lcoeff", "em00");
+                                              0, NULL);
+                linopt_imtools_image_construct("emodes", "lcoeff", "em00", NULL);
                 delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
                 long IDem = image_ID("em00");
 
@@ -885,7 +885,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 }
 
                 linopt_imtools_image_fitModes("imfitim", "RMMmodes", "dmmaskRM", 1.0e-2,
-                                              "linfitcoeff", linfitreuse);
+                                              "linfitcoeff", linfitreuse, NULL);
                 linfitreuse = 1;
 
                 for(uint32_t jj = 0; jj < linfitsize; jj++)
@@ -1328,11 +1328,11 @@ imageID AOloopControl_computeCalib_mkModes(
                     }
 
                     linopt_imtools_image_fitModes("SVDmodein", imname, "SVDmask", 1.0e-2,
-                                                  "modecoeff", reuse);
+                                                  "modecoeff", reuse, NULL);
 
 
                     reuse = 1;
-                    linopt_imtools_image_construct(imname, "modecoeff", "SVDmode1");
+                    linopt_imtools_image_construct(imname, "modecoeff", "SVDmode1", NULL);
                     IDSVDmode1 = image_ID("SVDmode1");
                     delete_image_ID("modecoeff", DELETE_IMAGE_ERRMODE_WARNING);
                     value1 = 0.0;
@@ -1752,7 +1752,7 @@ imageID AOloopControl_computeCalib_mkModes(
                             }
 
                             linopt_imtools_image_fitModes("imfitim", "RMMmodes", "dmmaskRM", 1.0e-2,
-                                                          "linfitcoeff", linfitreuse);
+                                                          "linfitcoeff", linfitreuse, NULL);
                             linfitreuse = 1;
 
                             for(uint32_t jj = 0; jj < linfitsize; jj++)
@@ -2011,14 +2011,14 @@ imageID AOloopControl_computeCalib_mkModes(
                         }
 
                         linopt_imtools_image_fitModes("SVDmodein", imname, "SVDmask", 1.0e-2,
-                                                      "modecoeff", reuse);
+                                                      "modecoeff", reuse, NULL);
                         IDSVDcoeff = image_ID("modecoeff");
                         reuse = 1;
-                        linopt_imtools_image_construct(imname, "modecoeff", "SVDmode1");
-                        linopt_imtools_image_construct(imnameDM, "modecoeff", "SVDmode1DM");
+                        linopt_imtools_image_construct(imname, "modecoeff", "SVDmode1", NULL);
+                        linopt_imtools_image_construct(imnameDM, "modecoeff", "SVDmode1DM", NULL);
                         IDSVDmode1 = image_ID("SVDmode1");
 
-                        long IDSVDmode1DM = image_ID("SVDmode1DM");
+                        imageID IDSVDmode1DM = image_ID("SVDmode1DM");
 
                         delete_image_ID("modecoeff", DELETE_IMAGE_ERRMODE_WARNING);
 
@@ -2530,8 +2530,9 @@ imageID AOloopControl_computeCalib_mkModes(
                     float SVDlim1 =
                         0.01; // WFS filtering (ONLY USED FOR FULL SINGLE STEP INVERSION)
 #ifdef HAVE_MAGMA
-                    CUDACOMP_magma_compute_SVDpseudoInverse(imname, imnameCM, SVDlim1, 10000,
-                                                            "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
+                    CUDACOMP_magma_compute_SVDpseudoInverse(
+                        imname, imnameCM, SVDlim1, 10000,
+                        "VTmat", 0, 0, 1.e-4, 1.e-7, 0, 64);
 #else
                     linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim1, 10000, "VTmat");
 #endif
@@ -2970,8 +2971,9 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             // COMPUTE MODAL CONTROL MATRICES
             printf("COMPUTE CONTROL MATRIX\n");
 #ifdef HAVE_MAGMA
-            CUDACOMP_magma_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000,
-                                                    "VTmat", 0, 0, 1.e-4, 1.e-7, 0);
+            CUDACOMP_magma_compute_SVDpseudoInverse(
+                imname, imnameCM, SVDlim, 10000,
+                "VTmat", 0, 0, 1.e-4, 1.e-7, 0, 64);
 #else
             linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000, "VTmat");
 #endif

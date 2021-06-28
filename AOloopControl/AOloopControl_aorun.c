@@ -182,20 +182,20 @@ int AOloopControl_aorun_GUI(
 
         switch(ch)
         {
-            case 'f':
-                if(freeze == 0)
-                {
-                    freeze = 1;
-                }
-                else
-                {
-                    freeze = 0;
-                }
-                break;
+        case 'f':
+            if(freeze == 0)
+            {
+                freeze = 1;
+            }
+            else
+            {
+                freeze = 0;
+            }
+            break;
 
-            case 'x':
-                loopOK = 0;
-                break;
+        case 'x':
+            loopOK = 0;
+            break;
         }
 
         if(freeze == 0)
@@ -504,17 +504,18 @@ int AOloopControl_aorun_RUN()
     imsizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
     imsizearray[0] = data.image[IDimWFS1].md[0].size[0];
     imsizearray[1] = data.image[IDimWFS1].md[0].size[1];
-    long IDimWFS2 = create_image_ID(imWFS2sname, naxis, imsizearray,
-                                    _DATATYPE_FLOAT, 1, 10, 0);
+    imageID IDimWFS2;
+    create_image_ID(imWFS2sname, naxis, imsizearray,
+                    _DATATYPE_FLOAT, 1, 10, 0, &IDimWFS2);
     free(imsizearray);
 
 
     // control matrix
-    long ID_CM = read_sharedmem_image(snameCM);
+    imageID ID_CM = read_sharedmem_image(snameCM);
 
 
     // output DM
-    long ID_DMout = read_sharedmem_image(snameDMout);
+    imageID ID_DMout = read_sharedmem_image(snameDMout);
     long sizeDM;
     sizeDM = data.image[ID_DMout].md[0].size[0] *
              data.image[ID_DMout].md[0].size[1];
@@ -528,8 +529,9 @@ int AOloopControl_aorun_RUN()
     imsizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
     imsizearray[0] = data.image[ID_DMout].md[0].size[0];
     imsizearray[1] = data.image[ID_DMout].md[0].size[1];
-    long ID_MVMout = create_image_ID(outMVMsname, naxis, imsizearray,
-                                     _DATATYPE_FLOAT, 1, 10, 0);
+    imageID ID_MVMout;
+    create_image_ID(outMVMsname, naxis, imsizearray,
+                    _DATATYPE_FLOAT, 1, 10, 0, &ID_MVMout);
     free(imsizearray);
 
 
@@ -537,7 +539,7 @@ int AOloopControl_aorun_RUN()
 
 
 
-    long IDwfsref = -1;
+    imageID IDwfsref = -1;
 
     float normfloorcoeff = 1.0;
 

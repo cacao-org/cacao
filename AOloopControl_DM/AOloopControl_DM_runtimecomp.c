@@ -151,7 +151,7 @@ errno_t AOloopControl_DM_disp2V(
             sizearray[0] = dmdispcombconf[DMindex].xsize;
             sizearray[1] = dmdispcombconf[DMindex].ysize;
             sprintf(qmapname, "dm%02ldquant", DMindex);
-            IDqmap = create_image_ID(qmapname, 2, sizearray, _DATATYPE_FLOAT, 1, 10, 0);
+            create_image_ID(qmapname, 2, sizearray, _DATATYPE_FLOAT, 1, 10, 0, &IDqmap);
             free(sizearray);
 
             printf("ARRAY %s CREATED\n", qmapname);
@@ -836,7 +836,7 @@ int AOloopControl_DM_CombineChannels_RUN()
         sprintf(name, "dm%02lddisp%02ld", DMindex, ch);
         printf("Channel %ld \n", ch);
 
-        chID = create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 1, 10, 0);
+        create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 1, 10, 0, &chID);
         data.image[chID].md[0].ownerPID = getpid();
         dmdispcombconf[DMindex].dmdispID[ch] = chID;
 
@@ -847,13 +847,14 @@ int AOloopControl_DM_CombineChannels_RUN()
 
 
     sprintf(name, "dm%02lddisp", DMindex);
-    dmdispcombconf[DMindex].IDdisp = create_image_ID(name, naxis, size,
-                                     _DATATYPE_FLOAT, 1, 10, 0);
+    create_image_ID(name, naxis, size,
+                    _DATATYPE_FLOAT, 1, 10, 0,
+                    &(dmdispcombconf[DMindex].IDdisp));
     data.image[dmdispcombconf[DMindex].IDdisp].md[0].ownerPID = getpid();
     COREMOD_MEMORY_image_set_createsem(name, 10);
 
     sprintf(name, "dm%02lddispt", DMindex);
-    IDdispt = create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 0, 0, 0);
+    create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 0, 0, 0, &IDdispt);
     data.image[IDdispt].md[0].ownerPID = getpid();
     dmdispptr = data.image[IDdispt].array.F;
 
@@ -907,16 +908,18 @@ int AOloopControl_DM_CombineChannels_RUN()
             {
                 printf("CREATING stream %s  %d axis, size = %u x %u\n",
                        dmdispcombconf[DMindex].voltname, naxis, size[0], size[1]);
-                dmdispcombconf[DMindex].IDvolt = create_image_ID(
-                                                     dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_FLOAT, 1, 10, 0);
+                create_image_ID(
+                    dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_FLOAT, 1, 10, 0,
+                    &(dmdispcombconf[DMindex].IDvolt));
             }
 
             if(dmdispcombconf[DMindex].volttype == 2)
             {
                 printf("CREATING stream %s  %d axis, size = %u x %u\n",
                        dmdispcombconf[DMindex].voltname, naxis, size[0], size[1]);
-                dmdispcombconf[DMindex].IDvolt = create_image_ID(
-                                                     dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_UINT16, 1, 10, 0);
+                create_image_ID(
+                    dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_UINT16, 1, 10, 0,
+                    &(dmdispcombconf[DMindex].IDvolt));
             }
             data.image[dmdispcombconf[DMindex].IDvolt].md[0].ownerPID = getpid();
             COREMOD_MEMORY_image_set_createsem(dmdispcombconf[DMindex].voltname, 10);
