@@ -232,7 +232,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
 
 
 
-    linopt_imtools_makeCPAmodes("CPAmodes", msizex, CPAmax, deltaCPA, 0.5*msizex, 1.2, 0);
+    linopt_imtools_makeCPAmodes("CPAmodes", msizex, CPAmax, deltaCPA, 0.5*msizex, 1.2, 0, NULL);
     ID0 = image_ID("CPAmodes");
     IDfreq = image_ID("cpamodesfreq");
 

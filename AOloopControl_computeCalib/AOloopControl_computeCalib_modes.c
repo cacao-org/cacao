@@ -34,27 +34,8 @@
 #include <sys/stat.h>
 #include <pthread.h>
 
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct mach_timespec *t)
-{
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t time;
-    time = mach_absolute_time();
-    double nseconds = ((double)time * (double)timebase.numer) / ((
-                          double)timebase.denom);
-    double seconds = ((double)time * (double)timebase.numer) / ((
-                         double)timebase.denom * 1e9);
-    t->tv_sec = seconds;
-    t->tv_nsec = nseconds;
-    return 0;
-}
-#else
+
 #include <time.h>
-#endif
 
 
 #include <gsl/gsl_matrix.h>
@@ -138,6 +119,8 @@ imageID AOloopControl_computeCalib_mkModes(
     char       *outdir
 )
 {
+    DEBUG_TRACE_FSTART();
+
     FILE    *fp;
 
 
@@ -399,7 +382,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
             // here we create simple Fourier modes
             linopt_imtools_makeCPAmodes("CPAmodes", msizex, CPAmax, deltaCPA, 0.5 * msizex,
-                                        1.2, 0);
+                                        1.2, 0, NULL);
             ID0 = image_ID("CPAmodes");
 
             imageID IDfreq = image_ID("cpamodesfreq");
@@ -1205,7 +1188,7 @@ imageID AOloopControl_computeCalib_mkModes(
             printf("[%5d] SVD decomp ... (%u) .... ", __LINE__,
                    data.image[image_ID(imname)].md[0].size[2]);
             fflush(stdout);
-            linopt_compute_SVDdecomp(imname, "svdmodes", "svdcoeff");
+            linopt_compute_SVDdecomp(imname, "svdmodes", "svdcoeff", NULL);
             printf("DONE\n");
             fflush(stdout);
             uint32_t cnt = 0;
@@ -1480,7 +1463,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
             printf("[%5d] SVD decomp ...", __LINE__);
             fflush(stdout);
-            linopt_compute_SVDdecomp(imname, "svdmodes", "svdcoeff");
+            linopt_compute_SVDdecomp(imname, "svdmodes", "svdcoeff", NULL);
             printf("[%5d] DONE\n", __LINE__);
             fflush(stdout);
             cnt = 0;
@@ -2353,7 +2336,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 WRITE_IMAGENAME(imnameDM1, "fmodes_%02u", mblock);
 
 
-                linopt_compute_SVDdecomp(imname, "SVDout", "modecoeff"); // SVD
+                linopt_compute_SVDdecomp(imname, "SVDout", "modecoeff", NULL); // SVD
                 IDSVDcoeff = image_ID("modecoeff");
 
                 uint32_t cnt = 0;
@@ -2559,9 +2542,9 @@ imageID AOloopControl_computeCalib_mkModes(
 #ifdef HAVE_MAGMA
                     CUDACOMP_magma_compute_SVDpseudoInverse(
                         imname, imnameCM, SVDlim1, 10000,
-                        "VTmat", 0, 0, 1.e-4, 1.e-7, 0, 64);
+                        "VTmat", 0, 0, 1.e-4, 1.e-7, 0, 64, NULL);
 #else
-                    linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim1, 10000, "VTmat");
+                    linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim1, 10000, "VTmat", NULL);
 #endif
 
                     delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
@@ -2733,7 +2716,7 @@ imageID AOloopControl_computeCalib_mkModes(
     printf("[%5d] DONE\n", __LINE__);
     fflush(stdout);
 
-
+    DEBUG_TRACE_FEXIT();
     return ID;
 }
 
@@ -2758,6 +2741,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     float       SVDlim
 )
 {
+    DEBUG_TRACE_FSTART();
     imageID IDin; // input WFS responses
     FILE   *fp;
     long    mblock;
@@ -3003,9 +2987,9 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 #ifdef HAVE_MAGMA
             CUDACOMP_magma_compute_SVDpseudoInverse(
                 imname, imnameCM, SVDlim, 10000,
-                "VTmat", 0, 0, 1.e-4, 1.e-7, 0, 64);
+                "VTmat", 0, 0, 1.e-4, 1.e-7, 0, 64, NULL);
 #else
-            linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000, "VTmat");
+            linopt_compute_SVDpseudoInverse(imname, imnameCM, SVDlim, 10000, "VTmat", NULL);
 #endif
 
             delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
@@ -3227,7 +3211,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     free(MBLOCK_blockstart);
     free(MBLOCK_blockend);
 
-
+    DEBUG_TRACE_FEXIT();
     return IDin;
 }
 

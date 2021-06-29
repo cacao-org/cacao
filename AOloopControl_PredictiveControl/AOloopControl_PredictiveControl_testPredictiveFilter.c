@@ -22,6 +22,7 @@
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
 #include "linopt_imtools/linopt_imtools.h"
+#include "linopt_imtools/compute_SVDpseudoInverse.h"
 
 
 
@@ -118,7 +119,7 @@ double AOloopControl_PredictiveControl_testPredictiveFilter(
     fclose(fp);
 
 
-    linopt_compute_SVDpseudoInverse("WFPmatA", "WFPmatC", SVDeps, 10000, "WFP_VTmat");
+    linopt_compute_SVDpseudoInverse("WFPmatA", "WFPmatC", SVDeps, 10000, "WFP_VTmat", NULL);
 
     save_fits("WFPmatA", "!WFPmatA.fits");
     save_fits("WFPmatC", "!WFPmatC.fits");

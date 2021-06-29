@@ -72,7 +72,9 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
 #include "COREMOD_tools/COREMOD_tools.h"
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "info/info.h"
+
 #include "linopt_imtools/linopt_imtools.h"
+#include "linopt_imtools/compute_SVDpseudoInverse.h"
 #include "statistic/statistic.h"
 #include "ZernikePolyn/ZernikePolyn.h"
 #include "image_filter/image_filter.h"
@@ -793,11 +795,11 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
     {
         CUDACOMP_magma_compute_SVDpseudoInverse(
             "respM", cm_name, SVDlim, 100000,
-            "VTmat", 0, 0, 1.e-4, 1.e-7, 0, 64);
+            "VTmat", 0, 0, 1.e-4, 1.e-7, 0, 64, NULL);
     }
     else
     {
-        linopt_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 10000, "VTmat");
+        linopt_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 10000, "VTmat", NULL);
     }
 
     //save_fits("VTmat", "!./mkmodestmp/VTmat.fits");
