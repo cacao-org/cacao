@@ -596,11 +596,11 @@ imageID AOloopControl_acquireCalib_mkRandomLinPokeSequence(
 
     printf("Creating image %s\n", IDpokemapC_name);
     fflush(stdout);
-    IDpokemapC = create_3Dimage_ID(IDpokemapC_name, xsize, ysize, NBpokemap);
+    create_3Dimage_ID(IDpokemapC_name, xsize, ysize, NBpokemap, &IDpokemapC);
 
 
     NBpoke = NBpokemap * 3;
-    IDpokeC = create_3Dimage_ID(IDpokeC_name, xsize, ysize, NBpoke);
+    create_3Dimage_ID(IDpokeC_name, xsize, ysize, NBpoke, &IDpokeC);
 
     // create direction vectors
     float *vectarray;
@@ -1191,8 +1191,8 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
     sizearray[0] = sizexWFS;
     sizearray[1] = sizeyWFS;
     sizearray[2] = NBpoke;
-    IDoutC       = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1],
-                                     sizearray[2]);
+    create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1],
+                      sizearray[2], &IDoutC);
 
     DEBUG_TRACEPOINT(" ");
 
@@ -1250,8 +1250,11 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
         } // end write image name
 
 
-        IDoutCstep[AveStep] = create_3Dimage_ID(imname, sizearray[0], sizearray[1],
-                                                sizearray[2]);
+        create_3Dimage_ID(imname,
+                          sizearray[0],
+                          sizearray[1],
+                          sizearray[2],
+                          &(IDoutCstep[AveStep]));
         //sprintf(imname, "%s.ave%03d", IDoutC_name, AveStep);
         //IDoutCstepCumul[AveStep] = create_3Dimage_ID(imname, sizearray[0], sizearray[1], sizearray[2]);
     }
@@ -2789,8 +2792,11 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                        4; // add zero frame before and after
 
 
-    imageID IDpokeC2a = create_3Dimage_ID("dmpokeC2a", dmxsize, dmysize, NBpoke2);
-    imageID IDpokeC2b = create_3Dimage_ID("dmpokeC2b", dmxsize, dmysize, NBpoke2);
+    imageID IDpokeC2a;
+    create_3Dimage_ID("dmpokeC2a", dmxsize, dmysize, NBpoke2, &IDpokeC2a);
+
+    imageID IDpokeC2b;
+    create_3Dimage_ID("dmpokeC2b", dmxsize, dmysize, NBpoke2, &IDpokeC2b);
 
 
 
@@ -3085,14 +3091,14 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
             wfsysize = data.image[IDwfsresp2a].md[0].size[1];
             wfsxysize = wfsxsize * wfsysize;
 
-            IDrespC = create_3Dimage_ID(imnameout_respC, wfsxsize, wfsysize, NBpoke);
-            IDwfsref = create_2Dimage_ID(imnameout_wfsref, wfsxsize, wfsysize);
+            create_3Dimage_ID(imnameout_respC, wfsxsize, wfsysize, NBpoke, &IDrespC);
+            create_2Dimage_ID(imnameout_wfsref, wfsxsize, wfsysize, &IDwfsref);
 
-            IDrespC_A = create_3Dimage_ID(imnameout_respC_A, wfsxsize, wfsysize, NBpoke);
-            IDwfsref_A = create_2Dimage_ID(imnameout_wfsref_A, wfsxsize, wfsysize);
+            create_3Dimage_ID(imnameout_respC_A, wfsxsize, wfsysize, NBpoke, &IDrespC_A);
+            create_2Dimage_ID(imnameout_wfsref_A, wfsxsize, wfsysize, &IDwfsref_A);
 
-            IDrespC_B = create_3Dimage_ID(imnameout_respC_B, wfsxsize, wfsysize, NBpoke);
-            IDwfsref_B = create_2Dimage_ID(imnameout_wfsref_B, wfsxsize, wfsysize);
+            create_3Dimage_ID(imnameout_respC_B, wfsxsize, wfsysize, NBpoke, &IDrespC_B);
+            create_2Dimage_ID(imnameout_wfsref_B, wfsxsize, wfsysize, &IDwfsref_B);
 
             pokeindex = 2;
             for(uint32_t poke = 0; poke < NBpoke; poke++)
@@ -3554,19 +3560,21 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
     create_image_ID(DMmap_name, 2, sizearray, _DATATYPE_FLOAT, 1, 5, 0, &ID_DMmap);
 
 
-    IDpos = create_2Dimage_ID("wfsposim", AOconf[loop].WFSim.sizexWFS,
-                              AOconf[loop].WFSim.sizeyWFS);
-    IDneg = create_2Dimage_ID("wfsnegim", AOconf[loop].WFSim.sizexWFS,
-                              AOconf[loop].WFSim.sizeyWFS);
+    create_2Dimage_ID("wfsposim", AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS, &IDpos);
+
+    create_2Dimage_ID("wfsnegim", AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS, &IDneg);
 
 
 
     IDpokeC = image_ID("RMpokeCube");
     if(IDpokeC == -1)
     {
-        IDpokeC = create_3Dimage_ID("RMpokeCube", AOconf[loop].DMctrl.sizexDM,
-                                    AOconf[loop].DMctrl.sizeyDM,
-                                    AOconf[loop].DMctrl.sizexDM * AOconf[loop].DMctrl.sizeyDM);
+        create_3Dimage_ID("RMpokeCube", AOconf[loop].DMctrl.sizexDM,
+                          AOconf[loop].DMctrl.sizeyDM,
+                          AOconf[loop].DMctrl.sizexDM * AOconf[loop].DMctrl.sizeyDM,
+                          &IDpokeC);
         for(uint64_t act = 0;
                 act < AOconf[loop].DMctrl.sizexDM * AOconf[loop].DMctrl.sizeyDM; act++)
         {
@@ -4159,21 +4167,37 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
     // create output
-    IDwfsref0 = create_2Dimage_ID("refwfsacq", AOconf[loop].WFSim.sizexWFS,
-                                  AOconf[loop].WFSim.sizeyWFS);
-    IDrespM = create_3Dimage_ID("respmacq", AOconf[loop].WFSim.sizexWFS,
-                                AOconf[loop].WFSim.sizeyWFS, AOconf[loop].AOpmodecoeffs.NBDMmodes);
+    create_2Dimage_ID("refwfsacq",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      &IDwfsref0);
+
+    create_3Dimage_ID("respmacq",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      AOconf[loop].AOpmodecoeffs.NBDMmodes,
+                      &IDrespM);
 
 
+    create_2Dimage_ID("optsig",
+                      AOconf[loop].AOpmodecoeffs.NBDMmodes,
+                      1,
+                      &IDoptsignal);
 
+    create_2Dimage_ID("optsign",
+                      AOconf[loop].AOpmodecoeffs.NBDMmodes,
+                      1,
+                      &IDoptsignaln);
 
-    IDoptsignal = create_2Dimage_ID("optsig", AOconf[loop].AOpmodecoeffs.NBDMmodes,
-                                    1);
-    IDoptsignaln = create_2Dimage_ID("optsign",
-                                     AOconf[loop].AOpmodecoeffs.NBDMmodes, 1);
-    IDmcoeff = create_2Dimage_ID("mcoeff", AOconf[loop].AOpmodecoeffs.NBDMmodes, 1);
-    IDoptcnt = create_2Dimage_ID("optsigcnt", AOconf[loop].AOpmodecoeffs.NBDMmodes,
-                                 1);
+    create_2Dimage_ID("mcoeff",
+                      AOconf[loop].AOpmodecoeffs.NBDMmodes,
+                      1,
+                      &IDmcoeff);
+
+    create_2Dimage_ID("optsigcnt",
+                      AOconf[loop].AOpmodecoeffs.NBDMmodes,
+                      1,
+                      &IDoptcnt);
 
     for(uint32_t k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
     {
@@ -4188,39 +4212,63 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
     printf("%ld frames total\n", RespMatNBframes);
     fflush(stdout);
 
-    IDrmc = create_3Dimage_ID("RMcube", AOconf[loop].WFSim.sizexWFS,
-                              AOconf[loop].WFSim.sizeyWFS, RespMatNBframes); // this is the main cube
+    create_3Dimage_ID("RMcube",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      RespMatNBframes,
+                      &IDrmc); // this is the main cube
 
 
 
 
 
-    IDrmi = create_3Dimage_ID("RMiter", AOconf[loop].WFSim.sizexWFS,
-                              AOconf[loop].WFSim.sizeyWFS,
-                              AOconf[loop].AOpmodecoeffs.NBDMmodes);    // Response matrix for 1 iteration
-    IDrmcumul = create_3Dimage_ID("RMcumul", AOconf[loop].WFSim.sizexWFS,
-                                  AOconf[loop].WFSim.sizeyWFS,
-                                  AOconf[loop].AOpmodecoeffs.NBDMmodes);  // Cumulative Response matrix
+    create_3Dimage_ID("RMiter",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      AOconf[loop].AOpmodecoeffs.NBDMmodes,
+                      &IDrmi);    // Response matrix for 1 iteration
 
-    IDrefi = create_2Dimage_ID("REFiter", AOconf[loop].WFSim.sizexWFS,
-                               AOconf[loop].WFSim.sizeyWFS);
-    IDrefcumul = create_2Dimage_ID("REFcumul", AOconf[loop].WFSim.sizexWFS,
-                                   AOconf[loop].WFSim.sizeyWFS);
+    create_3Dimage_ID("RMcumul",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      AOconf[loop].AOpmodecoeffs.NBDMmodes,
+                      &IDrmcumul);  // Cumulative Response matrix
+
+
+    create_2Dimage_ID("REFiter",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      &IDrefi);
+
+    create_2Dimage_ID("REFcumul",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      &IDrefcumul);
 
 
 
     /// local arrays for image acquision
     //	aoloopcontrol_var.aoconfID_wfsim = create_2Dimage_ID("RMwfs", AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
-    aoloopcontrol_var.aoconfID_imWFS0 = create_2Dimage_ID("RMwfs0",
-                                        AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
-    aoloopcontrol_var.aoconfID_imWFS1 = create_2Dimage_ID("RMwfs1",
-                                        AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
-    aoloopcontrol_var.aoconfID_imWFS1 = create_2Dimage_ID("RMwfs2",
-                                        AOconf[loop].WFSim.sizexWFS, AOconf[loop].WFSim.sizeyWFS);
+    create_2Dimage_ID("RMwfs0",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      &(aoloopcontrol_var.aoconfID_imWFS0));
+
+    create_2Dimage_ID("RMwfs1",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      &(aoloopcontrol_var.aoconfID_imWFS1));
+
+    create_2Dimage_ID("RMwfs2",
+                      AOconf[loop].WFSim.sizexWFS,
+                      AOconf[loop].WFSim.sizeyWFS,
+                      &(aoloopcontrol_var.aoconfID_imWFS1));
 
 
-    aoloopcontrol_var.aoconfID_cmd_modesRM = create_2Dimage_ID("RMmodesloc",
-            AOconf[loop].AOpmodecoeffs.NBDMmodes, 1);
+    create_2Dimage_ID("RMmodesloc",
+                      AOconf[loop].AOpmodecoeffs.NBDMmodes,
+                      1,
+                      &(aoloopcontrol_var.aoconfID_cmd_modesRM));
 
 
     for(iter = 0; iter < NBiter; iter++)
@@ -4363,9 +4411,12 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
             // remove average
             if(1)
             {
-                IDrmc1 = create_3Dimage_ID("RMcube1", AOconf[loop].WFSim.sizexWFS,
-                                           AOconf[loop].WFSim.sizeyWFS,
-                                           RespMatNBframes); // this is the main cube, average removed
+                create_3Dimage_ID(
+                    "RMcube1",
+                    AOconf[loop].WFSim.sizexWFS,
+                    AOconf[loop].WFSim.sizeyWFS,
+                    RespMatNBframes,
+                    &IDrmc1); // this is the main cube, average removed
 
                 for(uint64_t ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++)
                 {
@@ -4387,8 +4438,11 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
 
-            IDrmtest = create_3Dimage_ID("rmtest", AOconf[loop].WFSim.sizexWFS,
-                                         AOconf[loop].WFSim.sizeyWFS, AOconf[loop].AOpmodecoeffs.NBDMmodes);
+            create_3Dimage_ID("rmtest",
+                              AOconf[loop].WFSim.sizexWFS,
+                              AOconf[loop].WFSim.sizeyWFS,
+                              AOconf[loop].AOpmodecoeffs.NBDMmodes,
+                              &IDrmtest);
 
 
             uint32_t kc0 = fDelay;
@@ -4651,7 +4705,10 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
     IDmodes1 = image_ID("_tmpmodes");
     if(IDmodes1 == -1)
     {
-        IDmodes1 = create_3Dimage_ID("_tmpmodes", dmxsize, dmysize, 2 * NBmodes);
+        create_3Dimage_ID("_tmpmodes",
+                          dmxsize,
+                          dmysize, 2 * NBmodes,
+                          &IDmodes1);
     }
 
     for(uint32_t kk = 0; kk < NBmodes; kk++)
@@ -4677,8 +4734,11 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
     IDbuff = image_ID("RMbuff");
     if(IDbuff == -1)
     {
-        IDbuff = create_3Dimage_ID("RMbuff", wfsxsize, wfsysize,
-                                   2 * NBmodes + HardwareLag_int + 1);
+        create_3Dimage_ID("RMbuff",
+                          wfsxsize,
+                          wfsysize,
+                          2 * NBmodes + HardwareLag_int + 1,
+                          &IDbuff);
     }
 
     dmframesize = sizeof(float) * dmxysize;
@@ -4754,7 +4814,7 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(
     }
 
 
-    IDout = create_3Dimage_ID(outname, wfsxsize, wfsysize, NBmodes);
+    create_3Dimage_ID(outname, wfsxsize, wfsysize, NBmodes, &IDout);
     for(uint32_t kk = 0; kk < NBmodes; kk++)
     {
         long buffindex;
@@ -4840,8 +4900,11 @@ imageID AOloopControl_acquireCalib_RMseries_deinterlace(
 
             sprintf(rmCfname, "!imrespC_%03ld.fits", rmCindex);
 
-            IDRMarray[rmCindex] = create_3Dimage_ID(rmCname, xsizeWFS * ysizeWFS, sizeDM,
-                                                    NBtstep);
+            create_3Dimage_ID(rmCname,
+                              xsizeWFS * ysizeWFS,
+                              sizeDM,
+                              NBtstep,
+                              &(IDRMarray[rmCindex]));
             int tstep;
             for(tstep = 0; tstep < NBtstep; tstep++)
             {
@@ -4934,7 +4997,9 @@ imageID AOloopControl_acquireCalib_RMseries_deinterlace(
 
 
     // Compute reference and measure RMS
-    long IDref = create_2Dimage_ID("imrespRef", xsize, ysize);
+    imageID IDref;
+    create_2Dimage_ID("imrespRef", xsize, ysize, &IDref);
+
     long cntref = 0;
 
     for(rmCindex = 0; rmCindex < NBRM; rmCindex++)
@@ -4996,7 +5061,7 @@ imageID AOloopControl_acquireCalib_RMseries_deinterlace(
 
     long zsizeout = NBRM * refstart;
 
-    IDout = create_3Dimage_ID(IDout_name, xsize, ysize, zsizeout);
+    create_3Dimage_ID(IDout_name, xsize, ysize, zsizeout, &IDout);
 
     //float * coeffarray = (float*) malloc(sizeof(float)*zsizeout*NBRM*refstart);
 
@@ -5085,7 +5150,7 @@ imageID AOloopControl_acquireCalib_RMseries_deinterlace(
         long act = 820;
         long IDactRM;
 
-        IDactRM = create_3Dimage_ID("actRM", xsizeWFS, ysizeWFS, zsizeout);
+        create_3Dimage_ID("actRM", xsizeWFS, ysizeWFS, zsizeout, &IDactRM);
         long kk;
         for(kk = 0; kk < zsizeout; kk++)
         {

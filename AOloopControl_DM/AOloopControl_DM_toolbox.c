@@ -116,7 +116,7 @@ errno_t make_master_turbulence_screen_local(
     arith_image_cstmult("tmppha", 2.0 * PI, "tmppha1");
     delete_image_ID("tmppha", DELETE_IMAGE_ERRMODE_WARNING);
     //  make_dist("tmpd",size,size,size/2,size/2);
-    ID = create_2Dimage_ID("tmpd", size, size);
+    create_2Dimage_ID("tmpd", size, size, &ID);
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
         {

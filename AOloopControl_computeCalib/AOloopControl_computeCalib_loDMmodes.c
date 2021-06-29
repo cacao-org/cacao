@@ -1,11 +1,11 @@
 /**
  * @file    AOloopControl_computeCalib_loDMmodes.c
  * @brief   Adaptive Optics Control loop engine compute calibration
- * 
+ *
  * AO engine uses stream data structure
- *  
- * 
- * 
+ *
+ *
+ *
  */
 
 
@@ -177,7 +177,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
         double a1=1.2;
         double b1=12.0;
 
-        IDmask = create_2Dimage_ID("dmmask", msizex, msizey);
+        create_2Dimage_ID("dmmask", msizex, msizey, &IDmask);
         for(uint32_t ii=0; ii<msizex; ii++)
             for(uint32_t jj=0; jj<msizey; jj++)
             {
@@ -239,13 +239,13 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
 
 
     printf("  %u %u %ld\n", msizex, msizey, (long) data.image[ID0].md[0].size[2]-1 );
-    ID = create_3Dimage_ID(ID_name, msizex, msizey, data.image[ID0].md[0].size[2]-1+NBZ);
+    create_3Dimage_ID(ID_name, msizex, msizey, data.image[ID0].md[0].size[2]-1+NBZ, &ID);
 
 
 
 
 
-    IDmfcpa = create_2Dimage_ID("modesfreqcpa", data.image[ID0].md[0].size[2]-1+NBZ, 1);
+    create_2Dimage_ID("modesfreqcpa", data.image[ID0].md[0].size[2]-1+NBZ, 1, &IDmfcpa);
 
     /*** Create TTF first */
     zernike_init();
@@ -281,7 +281,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
         long IDeModes = image_ID("emodes");
         if(IDeModes!=-1)
         {
-            IDtm = create_2Dimage_ID("tmpmode", msizex, msizey);
+            create_2Dimage_ID("tmpmode", msizex, msizey, &IDtm);
 
             for(uint64_t ii=0; ii<msizex*msizey; ii++)
                 data.image[IDtm].array.F[ii] = data.image[ID].array.F[k*msizex*msizey+ii];
@@ -377,9 +377,15 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
     ID = image_ID(ID_name);
     if((IDslaved != -1)&&(IDmask!=-1))
     {
-        imageID IDtmp = create_2Dimage_ID("_tmpinterpol", msizex, msizey);
-        imageID IDtmp1 = create_2Dimage_ID("_tmpcoeff1", msizex, msizey);
-        imageID IDtmp2 = create_2Dimage_ID("_tmpcoeff2", msizex, msizey);
+        imageID IDtmp;
+        create_2Dimage_ID("_tmpinterpol", msizex, msizey, &IDtmp);
+
+        imageID IDtmp1;
+        create_2Dimage_ID("_tmpcoeff1", msizex, msizey, &IDtmp1);
+
+        imageID IDtmp2;
+        create_2Dimage_ID("_tmpcoeff2", msizex, msizey, &IDtmp2);
+
         for(m=0; m<data.image[ID].md[0].size[2]; m++)
         {
             // write input DM mode

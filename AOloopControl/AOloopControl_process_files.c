@@ -56,11 +56,11 @@ errno_t AOloopControl_logprocess_modeval(
     NBmodes = data.image[ID].md[0].size[0]*data.image[ID].md[0].size[1];
     NBframes = data.image[ID].md[0].size[2];
 
-    IDout_ave = create_2Dimage_ID("modeval_ol_ave", data.image[ID].md[0].size[0], data.image[ID].md[0].size[1]);
-    IDout_rms = create_2Dimage_ID("modeval_ol_rms", data.image[ID].md[0].size[0], data.image[ID].md[0].size[1]);
+    create_2Dimage_ID("modeval_ol_ave", data.image[ID].md[0].size[0], data.image[ID].md[0].size[1], &IDout_ave);
+    create_2Dimage_ID("modeval_ol_rms", data.image[ID].md[0].size[0], data.image[ID].md[0].size[1], &IDout_rms);
 
-    ID1dtmp = create_2Dimage_ID("modeval1d", data.image[ID].md[0].size[2], 1);
-    ID1dPSD = create_2Dimage_ID("modevalPSD", data.image[ID].md[0].size[2]/2, 1);
+    create_2Dimage_ID("modeval1d", data.image[ID].md[0].size[2], 1, &ID1dtmp);
+    create_2Dimage_ID("modevalPSD", data.image[ID].md[0].size[2]/2, 1, &ID1dPSD);
 
     if(system("mkdir -p modePSD") != 0)
         PRINT_ERROR("system() returns non-zero value");

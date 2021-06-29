@@ -1,14 +1,14 @@
 /**
  * @file    AOloopControl_fpspeckle_mod.c
- * @brief   AO loop control - FOCAL PLANE SPECKLE MODULATION / CONTROL   
- * 
- * REAL TIME COMPUTING ROUTINES
- *  
+ * @brief   AO loop control - FOCAL PLANE SPECKLE MODULATION / CONTROL
  *
- * 
+ * REAL TIME COMPUTING ROUTINES
+ *
+ *
+ *
  */
- 
- 
+
+
 #define _GNU_SOURCE
 
 #include "CommandLineInterface/CLIcore.h"
@@ -47,24 +47,24 @@ errno_t AOloopControl_OptimizePSF_LO(
     uint32_t NBmodes;
     double ampl;
     double x;
-   
+
     imageID IDdmbest;
 
     char imname[200];
 
 
-	if(aoloopcontrol_var.aoconfID_looptiming == -1)
-	{
-		// LOOPiteration is written in cnt1 of loop timing array
-		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			PRINT_ERROR("sprintf wrote <1 char");
-		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
-	}
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
+    {
+        // LOOPiteration is written in cnt1 of loop timing array
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
+            PRINT_ERROR("sprintf wrote <1 char");
+        aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
+    }
 
 
     ampl = 0.01; // modulation amplitude
 
- //   IDpsf = image_ID(psfstream_name);
+//   IDpsf = image_ID(psfstream_name);
     IDmodes    = image_ID(IDmodes_name);
     IDdmstream = image_ID(dmstream_name);
 
@@ -74,8 +74,8 @@ errno_t AOloopControl_OptimizePSF_LO(
 //    psfxsize = data.image[IDpsf].md[0].size[0];
 //    psfysize = data.image[IDpsf].md[0].size[1];
 
-    IDdmbest = create_2Dimage_ID("dmbest", dmxsize, dmysize);
-    IDdm     = create_2Dimage_ID("dmcurr", dmxsize, dmysize);
+    create_2Dimage_ID("dmbest", dmxsize, dmysize, &IDdmbest);
+    create_2Dimage_ID("dmcurr", dmxsize, dmysize, &IDdm);
 
 
 
@@ -96,7 +96,7 @@ errno_t AOloopControl_OptimizePSF_LO(
             data.image[IDdmstream].md[0].write = 1;
             memcpy(data.image[IDdmstream].array.F, data.image[IDdm].array.F, sizeof(float)*dmxsize*dmysize);
             data.image[IDdmstream].md[0].cnt0++;
-			data.image[IDdmstream].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
+            data.image[IDdmstream].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
             data.image[IDdmstream].md[0].write = 0;
 
 
@@ -159,13 +159,13 @@ errno_t AOloopControl_DMmodulateAB(
 
 
 
-	if(aoloopcontrol_var.aoconfID_looptiming == -1)
-	{
-		// LOOPiteration is written in cnt1 of loop timing array
-		if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
-			PRINT_ERROR("sprintf wrote <1 char");
-		aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
-	}
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
+    {
+        // LOOPiteration is written in cnt1 of loop timing array
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
+            PRINT_ERROR("sprintf wrote <1 char");
+        aoloopcontrol_var.aoconfID_looptiming = AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
+    }
 
 
     IDprobeA = image_ID(IDprobeA_name);
@@ -184,8 +184,8 @@ errno_t AOloopControl_DMmodulateAB(
     coeffA = (float*) malloc(sizeof(float)*NBprobes);
     coeffB = (float*) malloc(sizeof(float)*NBprobes);
 
-    IDdmC = create_3Dimage_ID("MODdmC", dmxsize, dmysize, NBprobes);
-    IDwfsrefC = create_3Dimage_ID("WFSrefC", wfsxsize, wfsysize, NBprobes);
+    create_3Dimage_ID("MODdmC", dmxsize, dmysize, NBprobes, &IDdmC);
+    create_3Dimage_ID("WFSrefC", wfsxsize, wfsysize, NBprobes, &IDwfsrefC);
 
     coeffA[0] = 0.0;
     coeffB[0] = 0.0;

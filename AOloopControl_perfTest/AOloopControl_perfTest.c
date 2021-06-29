@@ -1098,8 +1098,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     processinfo_WriteMessage(processinfo, msgstring);
 
 
-    IDdm0 = create_2Dimage_ID("_testdm0", dmxsize, dmysize);
-    IDdm1 = create_2Dimage_ID("_testdm1", dmxsize, dmysize);
+    create_2Dimage_ID("_testdm0", dmxsize, dmysize, &IDdm0);
+    create_2Dimage_ID("_testdm1", dmxsize, dmysize, &IDdm1);
 
     float RMStot = 0.0;
     for(ii = 0; ii < dmxsize; ii++)
@@ -2199,7 +2199,7 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(
 
 
     // computing DM space cross-product
-    IDoutXP = create_2Dimage_ID("DMmodesXP", NBmodes, NBmodes);
+    create_2Dimage_ID("DMmodesXP", NBmodes, NBmodes, &IDoutXP);
 
     for(mode = 0; mode < NBmodes; mode++)
         for(mode1 = 0; mode1 < mode + 1; mode1++)
@@ -2217,7 +2217,7 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(
 
 
     // computing WFS space cross-product
-    IDoutXP_WFS = create_2Dimage_ID("WFSmodesXP", NBmodes, NBmodes);
+    create_2Dimage_ID("WFSmodesXP", NBmodes, NBmodes, &IDoutXP_WFS);
     for(mode = 0; mode < NBmodes; mode++)
         for(mode1 = 0; mode1 < mode + 1; mode1++)
         {
@@ -2276,7 +2276,7 @@ imageID AOloopControl_perfTest_mkTestDynamicModeSeq(
     ysize = data.image[aoloopcontrol_var.aoconfID_DMmodes].md[0].size[1];
     xysize = xsize * ysize;
 
-    IDout = create_3Dimage_ID(IDname_out, xsize, ysize, NBpt);
+    create_3Dimage_ID(IDname_out, xsize, ysize, NBpt, &IDout);
 
     for(kk = 0; kk < NBpt; kk++)
     {
@@ -3212,7 +3212,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
                 xysize = xsize * ysize;
                 if(stream == 0)
                 {
-                    IDout = create_3Dimage_ID("out0", xsize, ysize, zsize);
+                    create_3Dimage_ID("out0", xsize, ysize, zsize, &IDout);
                     IDout0 = IDout;
                     xysize0 = xysize;
                     xsize0 = xsize;
@@ -3220,7 +3220,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
                 }
                 else
                 {
-                    IDout = create_3Dimage_ID("out1", xsize, ysize, zsize);
+                    create_3Dimage_ID("out1", xsize, ysize, zsize, &IDout);
                     IDout1 = IDout;
                     xysize1 = xysize;
                     xsize1 = xsize;
@@ -3625,13 +3625,15 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
 
     if(NBframeOK > 0)
     {
-        long IDoutc0;
-        IDoutc0 = create_3Dimage_ID("outC0", xsize0, ysize0, NBframeOK);
+        imageID IDoutc0;
+        create_3Dimage_ID("outC0", xsize0, ysize0, NBframeOK, &IDoutc0);
+
         memcpy(data.image[IDoutc0].array.F, data.image[IDout0].array.F,
                sizeof(float)*xysize0 * NBframeOK);
 
-        long IDoutc1;
-        IDoutc1 = create_3Dimage_ID("outC1", xsize1, ysize1, NBframeOK);
+        imageID IDoutc1;
+        create_3Dimage_ID("outC1", xsize1, ysize1, NBframeOK, &IDoutc1);
+
         memcpy(data.image[IDoutc1].array.F, data.image[IDout1].array.F,
                sizeof(float)*xysize1 * NBframeOK);
     }
@@ -3690,7 +3692,7 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(
     }
 
 
-    IDout = create_2Dimage_ID(IDname_out, zsize, zsize);
+    create_2Dimage_ID(IDname_out, zsize, zsize, &IDout);
     printf("\n");
     for(k1 = 0; k1 < zsize; k1++)
     {
@@ -4001,8 +4003,9 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(
     uint32_t xsize2Ddistrib = 512;
     uint32_t ysize2Ddistrib = 512;
 
-    long IDsim2Ddistrib = create_2Dimage_ID("sim2Ddistrib", xsize2Ddistrib,
-                                            ysize2Ddistrib);
+    imageID IDsim2Ddistrib;
+    create_2Dimage_ID("sim2Ddistrib", xsize2Ddistrib,
+                      ysize2Ddistrib, &IDsim2Ddistrib);
 
     for(k1 = 0; k1 < NBframe0; k1++)
         for(k2 = 0; k2 < k1; k2++)
@@ -4026,13 +4029,18 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(
         }
 
 
-    long IDsim0diff0 = create_3Dimage_ID("sim0diff0", xsize0, ysize0, NBselected);
-    long IDsim0diff1 = create_3Dimage_ID("sim0diff1", xsize1, ysize1, NBselected);
+    imageID IDsim0diff0;
+    create_3Dimage_ID("sim0diff0", xsize0, ysize0, NBselected, &IDsim0diff0);
 
-    long IDsim0pair0 = create_3Dimage_ID("sim0pair0", xsize0 * 3, ysize0,
-                                         NBselected);
-    long IDsim0pair1 = create_3Dimage_ID("sim0pair1", xsize1 * 3, ysize1,
-                                         NBselected);
+    imageID IDsim0diff1;
+    create_3Dimage_ID("sim0diff1", xsize1, ysize1, NBselected, &IDsim0diff1);
+
+    imageID IDsim0pair0;
+    create_3Dimage_ID("sim0pair0", xsize0 * 3, ysize0,
+                      NBselected, &IDsim0pair0);
+    imageID IDsim0pair1;
+    create_3Dimage_ID("sim0pair1", xsize1 * 3, ysize1,
+                      NBselected, &IDsim0pair1);
 
     for(pair = 0; pair < NBselected; pair++)
     {
@@ -4081,13 +4089,18 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(
     }
 
 
-    long IDsim1diff0 = create_3Dimage_ID("sim1diff0", xsize0, ysize0, NBselected);
-    long IDsim1diff1 = create_3Dimage_ID("sim1diff1", xsize1, ysize1, NBselected);
+    imageID IDsim1diff0;
+    create_3Dimage_ID("sim1diff0", xsize0, ysize0, NBselected, &IDsim1diff0);
 
-    long IDsim1pair0 = create_3Dimage_ID("sim1pair0", xsize0 * 3, ysize0,
-                                         NBselected);
-    long IDsim1pair1 = create_3Dimage_ID("sim1pair1", xsize1 * 3, ysize1,
-                                         NBselected);
+    imageID IDsim1diff1;
+    create_3Dimage_ID("sim1diff1", xsize1, ysize1, NBselected, &IDsim1diff1);
+
+    imageID IDsim1pair0;
+    create_3Dimage_ID("sim1pair0", xsize0 * 3, ysize0,
+                      NBselected, &IDsim1pair0);
+    imageID IDsim1pair1;
+    create_3Dimage_ID("sim1pair1", xsize1 * 3, ysize1,
+                      NBselected, &IDsim1pair1);
 
     for(pair = 0; pair < NBselected; pair++)
     {
@@ -4316,11 +4329,11 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(
     long IDwfsbest, IDwfsall;
     long IDpsfbest, IDpsfall;
 
-    IDwfsbest = create_2Dimage_ID("imwfsbest", xsizewfs, ysizewfs);
-    IDwfsall  = create_2Dimage_ID("imwfsall", xsizewfs, ysizewfs);
+    create_2Dimage_ID("imwfsbest", xsizewfs, ysizewfs, &IDwfsbest);
+    create_2Dimage_ID("imwfsall", xsizewfs, ysizewfs, &IDwfsall);
 
-    IDpsfbest = create_2Dimage_ID("impsfbest", xsizepsf, ysizepsf);
-    IDpsfall  = create_2Dimage_ID("impsfall", xsizepsf, ysizepsf);
+    create_2Dimage_ID("impsfbest", xsizepsf, ysizepsf, &IDpsfbest);
+    create_2Dimage_ID("impsfall", xsizepsf, ysizepsf, &IDpsfall);
 
 
 

@@ -747,8 +747,10 @@ int AOloopControl_DM_CombineChannels_RUN()
             exit(0);
         }
 
-        IDtmpoutdm = create_2Dimage_ID("_tmpoutdm", dmdispcombconf[DMindex].xsizeout,
-                                       dmdispcombconf[DMindex].ysizeout);
+        create_2Dimage_ID("_tmpoutdm",
+                          dmdispcombconf[DMindex].xsizeout,
+                          dmdispcombconf[DMindex].ysizeout,
+                          &IDtmpoutdm);
         sizexyDMout = dmdispcombconf[DMindex].xsizeout *
                       dmdispcombconf[DMindex].ysizeout;
         printf("done\n\n");
@@ -810,8 +812,10 @@ int AOloopControl_DM_CombineChannels_RUN()
         printf("Creating image %s   %ld x %ld\n", "_tmpoutref",
                dmdispcombconf[DMindex].xsizewfsref, dmdispcombconf[DMindex].ysizewfsref);
         fflush(stdout);
-        IDtmpoutref = create_2Dimage_ID("_tmpoutref",
-                                        dmdispcombconf[DMindex].xsizewfsref, dmdispcombconf[DMindex].ysizewfsref);
+        create_2Dimage_ID("_tmpoutref",
+                          dmdispcombconf[DMindex].xsizewfsref,
+                          dmdispcombconf[DMindex].ysizewfsref,
+                          &IDtmpoutref);
         sizexywfsref = dmdispcombconf[DMindex].xsizewfsref *
                        dmdispcombconf[DMindex].ysizewfsref;
 

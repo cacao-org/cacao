@@ -474,13 +474,13 @@ int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name,
         dmturbconf[DMindex].on = 1;
     }
 
-    IDturbs1 = create_2Dimage_ID("turbs1", DM_Xsize, DM_Ysize);
-    IDturb = create_2Dimage_ID("turbs", DM_Xsize, DM_Ysize);
+    create_2Dimage_ID("turbs1", DM_Xsize, DM_Ysize, &IDturbs1);
+    create_2Dimage_ID("turbs", DM_Xsize, DM_Ysize, &IDturb);
 
 
     if(mode == 1)
     {
-        IDout = create_3Dimage_ID(IDout_name, DM_Xsize, DM_Ysize, NBsamples);
+        create_3Dimage_ID(IDout_name, DM_Xsize, DM_Ysize, NBsamples, &IDout);
     }
 
 

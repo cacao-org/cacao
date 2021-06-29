@@ -102,7 +102,7 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_na
 
 
 
-    IDout = create_2Dimage_ID(outname, NBframes, NBmodes);
+    create_2Dimage_ID(outname, NBframes, NBmodes, &IDout);
 
     totref = 0.0;
 

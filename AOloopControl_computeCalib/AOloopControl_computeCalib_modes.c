@@ -308,7 +308,7 @@ imageID AOloopControl_computeCalib_mkModes(
             double a1 = 1.2;
             double b1 = 12.0;
 
-            IDmaskRM = create_2Dimage_ID("dmmaskRM", msizex, msizey);
+            create_2Dimage_ID("dmmaskRM", msizex, msizey, &IDmaskRM);
             for(uint32_t ii = 0; ii < msizex; ii++)
                 for(uint32_t jj = 0; jj < msizey; jj++)
                 {
@@ -408,11 +408,11 @@ imageID AOloopControl_computeCalib_mkModes(
 
             printf("  %u %u %ld\n", msizex, msizey,
                    (long)(data.image[ID0].md[0].size[2] - 1));
-            ID = create_3Dimage_ID(ID_name, msizex, msizey,
-                                   data.image[ID0].md[0].size[2] - 1 + NBZ);
+            create_3Dimage_ID(ID_name, msizex, msizey,
+                              data.image[ID0].md[0].size[2] - 1 + NBZ, &ID);
 
-            IDmfcpa = create_2Dimage_ID("modesfreqcpa",
-                                        data.image[ID0].md[0].size[2] - 1 + NBZ, 1);
+            create_2Dimage_ID("modesfreqcpa",
+                              data.image[ID0].md[0].size[2] - 1 + NBZ, 1, &IDmfcpa);
 
 
             zernike_init();
@@ -589,7 +589,7 @@ imageID AOloopControl_computeCalib_mkModes(
             //IDmask = -1;
             //if(IDmask == -1)
             //{
-            IDmask = create_2Dimage_ID("dmmask", msizex, msizey);
+            create_2Dimage_ID("dmmask", msizex, msizey, &IDmask);
             printf("[%5d] IDs: %ld %ld %ld\n", __LINE__, IDmask, IDmaskRM, IDslaved);
             fflush(stdout);
             for(uint64_t ii = 0; ii < msizex * msizey; ii++)
@@ -620,7 +620,7 @@ imageID AOloopControl_computeCalib_mkModes(
             //
             printf("[%5d] Create dmmaskRMin\n", __LINE__);
             fflush(stdout);
-            IDmaskRMin = create_2Dimage_ID("dmmaskRMin", msizex, msizey);
+            create_2Dimage_ID("dmmaskRMin", msizex, msizey, &IDmaskRMin);
             for(uint64_t ii = 0; ii < msizex * msizey; ii++)
             {
                 data.image[IDmaskRMin].array.F[ii] = data.image[IDmaskRM].array.F[ii] *
@@ -654,8 +654,8 @@ imageID AOloopControl_computeCalib_mkModes(
         }
         else
         {
-            ID = create_3Dimage_ID(ID_name, msizex, msizey, msizex);
-            IDmfcpa = create_2Dimage_ID("modesfreqcpa", msizex, 1);
+            create_3Dimage_ID(ID_name, msizex, msizey, msizex, &ID);
+            create_2Dimage_ID("modesfreqcpa", msizex, 1, &IDmfcpa);
 
             for(uint32_t m = 0; m < data.image[ID].md[0].size[2]; m++)
             {
@@ -697,7 +697,8 @@ imageID AOloopControl_computeCalib_mkModes(
             if(IDeModes != -1)
             {
                 long kelim = 5;
-                long IDtm = create_2Dimage_ID("tmpmode", msizex, msizey);
+                imageID IDtm;
+                create_2Dimage_ID("tmpmode", msizex, msizey, &IDtm);
 
                 for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                 {
@@ -708,7 +709,7 @@ imageID AOloopControl_computeCalib_mkModes(
                                               0, NULL);
                 linopt_imtools_image_construct("emodes", "lcoeff", "em00", NULL);
                 delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
-                long IDem = image_ID("em00");
+                imageID IDem = image_ID("em00");
 
                 double coeff = 1.0 - exp(-pow(1.0 * k / kelim, 6.0));
 
@@ -810,8 +811,8 @@ imageID AOloopControl_computeCalib_mkModes(
         wfsxsize = data.image[IDzrespM].md[0].size[0];
         wfsysize = data.image[IDzrespM].md[0].size[1];
         wfssize = wfsxsize * wfsysize;
-        IDm = create_3Dimage_ID("fmodesWFS00all", wfsxsize, wfsysize,
-                                data.image[ID].md[0].size[2]);
+        create_3Dimage_ID("fmodesWFS00all", wfsxsize, wfsysize,
+                          data.image[ID].md[0].size[2], &IDm);
 
         printf("[%5d] size: %u %lu %lu\n", __LINE__, data.image[ID].md[0].size[2],
                msizexy, wfssize);
@@ -865,16 +866,16 @@ imageID AOloopControl_computeCalib_mkModes(
         if((IDRMMmodes != -1) && (IDRMMresp != -1))
         {
             linfitsize = data.image[IDRMMmodes].md[0].size[2];
-            IDRMM_coeff = create_2Dimage_ID("linfitcoeff", linfitsize, 1);
+            create_2Dimage_ID("linfitcoeff", linfitsize, 1, &IDRMM_coeff);
 
-            ID_imfit = create_2Dimage_ID("imfitim", msizex, msizey);
+            create_2Dimage_ID("imfitim", msizex, msizey, &ID_imfit);
 
-            IDcoeffmat = create_2Dimage_ID("imfitmat", linfitsize,
-                                           data.image[ID].md[0].size[2]);
+            create_2Dimage_ID("imfitmat", linfitsize,
+                              data.image[ID].md[0].size[2], &IDcoeffmat);
 
             linfitreuse = 0;
 
-            IDwfstmp = create_2Dimage_ID("wfsimtmp", wfsxsize, wfsysize);
+            create_2Dimage_ID("wfsimtmp", wfsxsize, wfsysize, &IDwfstmp);
 
             for(uint32_t m = 0; m < data.image[IDmodes0all].md[0].size[2]; m++)
             {
@@ -895,7 +896,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 }
 
                 // construct linear fit result (DM)
-                IDtmp = create_2Dimage_ID("testrc", msizex, msizey);
+                create_2Dimage_ID("testrc", msizex, msizey, &IDtmp);
                 for(uint32_t jj = 0; jj < linfitsize; jj++)
                     for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                     {
@@ -1079,8 +1080,13 @@ imageID AOloopControl_computeCalib_mkModes(
             }
 
 
-            MBLOCK_ID[mblock1] = create_3Dimage_ID(imname, msizex, msizey,
-                                                   MBLOCK_NBmode[mblock]);
+            create_3Dimage_ID(
+                imname,
+                msizex,
+                msizey,
+                MBLOCK_NBmode[mblock],
+                &(MBLOCK_ID[mblock1]));
+
             MBLOCK_ID[mblock1] = image_ID(imname);
         }
 
@@ -1149,8 +1155,12 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
             MBLOCK_NBmode[mblock] = data.image[IDextrablock].md[0].size[2];
-            MBLOCK_ID[mblock] = create_3Dimage_ID(imname, msizex, msizey,
-                                                  MBLOCK_NBmode[mblock]);
+
+            create_3Dimage_ID(imname,
+                              msizex,
+                              msizey,
+                              MBLOCK_NBmode[mblock],
+                              &(MBLOCK_ID[mblock]));
 
             for(uint32_t m = 0; m < MBLOCK_NBmode[mblock]; m++)
                 for(uint64_t ii = 0; ii < msizex * msizey; ii++)
@@ -1226,7 +1236,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 abort(); // can't handle this error any other way
             }
 
-            IDm = create_3Dimage_ID(imname1, msizex, msizey, cnt);
+            create_3Dimage_ID(imname1, msizex, msizey, cnt, &IDm);
             long IDSVDmodes = image_ID("svdmodes");
             for(uint64_t ii = 0; ii < cnt * msizex * msizey; ii++)
             {
@@ -1252,7 +1262,7 @@ imageID AOloopControl_computeCalib_mkModes(
         {
             cnt += MBLOCK_NBmode[mblock];
         }
-        IDm = create_3Dimage_ID("fmodes1all", msizex, msizey, cnt);
+        create_3Dimage_ID("fmodes1all", msizex, msizey, cnt, &IDm);
         cnt = 0;
         for(uint32_t mblock = 0; mblock < NBmblock; mblock++)
         {
@@ -1278,12 +1288,12 @@ imageID AOloopControl_computeCalib_mkModes(
                __LINE__);
         fflush(stdout);
 
-        IDSVDmask = create_2Dimage_ID("SVDmask", msizex, msizey);
+        create_2Dimage_ID("SVDmask", msizex, msizey, &IDSVDmask);
         for(uint64_t ii = 0; ii < msizexy; ii++)
         {
             data.image[IDSVDmask].array.F[ii] = data.image[IDmaskRM].array.F[ii];
         }
-        IDSVDmodein = create_2Dimage_ID("SVDmodein", msizex, msizey);
+        create_2Dimage_ID("SVDmodein", msizex, msizey, &IDSVDmodein);
 
         mok = (int *) malloc(sizeof(int) * NBmm);
         if(mok == NULL) {
@@ -1389,7 +1399,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 printf("[%5d] saving result %s \n", __LINE__, imname);
                 fflush(stdout);
-                IDm = create_3Dimage_ID(imname, msizex, msizey, cnt);
+                create_3Dimage_ID(imname, msizex, msizey, cnt, &IDm);
                 uint64_t m1 = 0;
                 for(uint32_t m = 0; m < MBLOCK_NBmode[mblock]; m++)
                 {
@@ -1426,7 +1436,7 @@ imageID AOloopControl_computeCalib_mkModes(
         {
             cnt += MBLOCK_NBmode[mblock];
         }
-        IDm = create_3Dimage_ID("fmodes2all", msizex, msizey, cnt);
+        create_3Dimage_ID("fmodes2all", msizex, msizey, cnt, &IDm);
 
 
         cnt = 0;
@@ -1504,7 +1514,7 @@ imageID AOloopControl_computeCalib_mkModes(
             fflush(stdout);
 
             WRITE_IMAGENAME(imname1, "fmodes2b_%02u", mblock);
-            IDm = create_3Dimage_ID(imname1, msizex, msizey, cnt);
+            create_3Dimage_ID(imname1, msizex, msizey, cnt, &IDm);
             long IDSVDmodes = image_ID("svdmodes");
             for(uint64_t ii = 0; ii < cnt * msizex * msizey; ii++)
             {
@@ -1578,7 +1588,7 @@ imageID AOloopControl_computeCalib_mkModes(
         {
             cnt += MBLOCK_NBmode[mblock];
         }
-        IDm = create_3Dimage_ID("fmodes2ball", msizex, msizey, cnt);
+        create_3Dimage_ID("fmodes2ball", msizex, msizey, cnt, &IDm);
         cnt = 0;
         for(uint32_t mblock = 0; mblock < NBmblock; mblock++)
         {
@@ -1660,7 +1670,7 @@ imageID AOloopControl_computeCalib_mkModes(
             }
             if(IDwfsmask == -1)
             {
-                IDwfsmask = create_2Dimage_ID("wfsmask", wfsxsize, wfsysize);
+                create_2Dimage_ID("wfsmask", wfsxsize, wfsysize, &IDwfsmask);
                 for(uint64_t ii = 0; ii < wfssize; ii++)
                 {
                     data.image[IDwfsmask].array.F[ii] = 1.0;
@@ -1691,8 +1701,10 @@ imageID AOloopControl_computeCalib_mkModes(
 
                 if(MBLOCK_NBmode[mblock] > 0)
                 {
-                    imageID IDwfsMresp = create_3Dimage_ID(imname, wfsxsize, wfsysize,
-                                                           MBLOCK_NBmode[mblock]);
+                    imageID IDwfsMresp;
+                    create_3Dimage_ID(imname, wfsxsize, wfsysize,
+                                      MBLOCK_NBmode[mblock],
+                                      &IDwfsMresp);
 
 
                     uint64_t wfselem;
@@ -1732,16 +1744,18 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
                         linfitsize = data.image[IDRMMmodes].md[0].size[2];
-                        IDRMM_coeff = create_2Dimage_ID("linfitcoeff", linfitsize, 1);
+                        create_2Dimage_ID("linfitcoeff", linfitsize, 1, &IDRMM_coeff);
 
-                        ID_imfit = create_2Dimage_ID("imfitim", msizex, msizey);
+                        create_2Dimage_ID("imfitim", msizex, msizey, &ID_imfit);
 
-                        IDcoeffmat = create_2Dimage_ID("imfitmat", linfitsize,
-                                                       data.image[ID].md[0].size[2]);
+                        create_2Dimage_ID("imfitmat",
+                                          linfitsize,
+                                          data.image[ID].md[0].size[2],
+                                          &IDcoeffmat);
 
                         linfitreuse = 0;
 
-                        IDwfstmp = create_2Dimage_ID("wfsimtmp", wfsxsize, wfsysize);
+                        create_2Dimage_ID("wfsimtmp", wfsxsize, wfsysize, &IDwfstmp);
 
                         for(uint32_t m = 0; m < MBLOCK_NBmode[mblock]; m++)
                         {
@@ -1765,7 +1779,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
                             // construct linear fit result (DM)
-                            IDtmp = create_2Dimage_ID("testrc", msizex, msizey);
+                            create_2Dimage_ID("testrc", msizex, msizey, &IDtmp);
                             for(uint32_t jj = 0; jj < linfitsize; jj++)
                                 for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                                 {
@@ -1856,7 +1870,7 @@ imageID AOloopControl_computeCalib_mkModes(
             {
                 cnt += MBLOCK_NBmode[mblock];
             }
-            IDm = create_3Dimage_ID("fmodesWFS0all", wfsxsize, wfsysize, cnt);
+            create_3Dimage_ID("fmodesWFS0all", wfsxsize, wfsysize, cnt, &IDm);
             cnt = 0;
 
 
@@ -1885,12 +1899,12 @@ imageID AOloopControl_computeCalib_mkModes(
             /// Input: fmodesWFS0all (corresponding to fmodes2ball)
             /// Output -> fmodesWFS1all / fmodes3all
 
-            IDSVDmask = create_2Dimage_ID("SVDmask", wfsxsize, wfsysize);
+            create_2Dimage_ID("SVDmask", wfsxsize, wfsysize, &IDSVDmask);
             for(uint64_t ii = 0; ii < wfssize; ii++)
             {
                 data.image[IDSVDmask].array.F[ii] = 1.0;
             }
-            IDSVDmodein = create_2Dimage_ID("SVDmodein", wfsxsize, wfsysize);
+            create_2Dimage_ID("SVDmodein", wfsxsize, wfsysize, &IDSVDmodein);
 
             mok = (int *) malloc(sizeof(int) * NBmm);
             if(mok == NULL) {
@@ -2084,8 +2098,12 @@ imageID AOloopControl_computeCalib_mkModes(
                         abort(); // can't handle this error any other way
                     }
 
-                    imageID IDmwfs1 = create_3Dimage_ID(imname, wfsxsize, wfsysize, cnt);
-                    imageID IDmdm1 = create_3Dimage_ID(imnameDM, msizex, msizey, cnt);
+                    imageID IDmwfs1;
+                    create_3Dimage_ID(imname, wfsxsize, wfsysize, cnt, &IDmwfs1);
+
+                    imageID IDmdm1;
+                    create_3Dimage_ID(imnameDM, msizex, msizey, cnt, &IDmdm1);
+
                     uint32_t m1 = 0;
 
                     slen = snprintf(imname, STRINGMAXLEN_IMGNAME, "fmodesWFS0_%02u", mblock);
@@ -2205,8 +2223,10 @@ imageID AOloopControl_computeCalib_mkModes(
             {
                 cnt += MBLOCK_NBmode[mblock];
             }
-            IDm = create_3Dimage_ID("fmodesWFS1all", wfsxsize, wfsysize, cnt);
-            long IDmdm1 = create_3Dimage_ID("fmodes3all", msizex, msizey, cnt);
+            create_3Dimage_ID("fmodesWFS1all", wfsxsize, wfsysize, cnt, &IDm);
+
+            imageID IDmdm1;
+            create_3Dimage_ID("fmodes3all", msizex, msizey, cnt, &IDmdm1);
 
             cnt = 0;
             for(uint32_t mblock = 0; mblock < NBmblock; mblock++)
@@ -2357,11 +2377,15 @@ imageID AOloopControl_computeCalib_mkModes(
                 fclose(fpcoeff);
 
 
-                imageID IDmdm1 = create_3Dimage_ID(imnameDM1, msizex, msizey, cnt);
+                imageID IDmdm1;
+                create_3Dimage_ID(imnameDM1, msizex, msizey, cnt, &IDmdm1);
 
                 char imnameWFS1[STRINGMAXLEN_IMGNAME];
                 WRITE_IMAGENAME(imnameWFS1, "fmodesWFS_%02u", mblock);
-                imageID IDmwfs1 = create_3Dimage_ID(imnameWFS1, wfsxsize, wfsysize, cnt);
+
+                imageID IDmwfs1;
+                create_3Dimage_ID(imnameWFS1, wfsxsize, wfsysize, cnt, &IDmwfs1);
+
                 imageID ID_VTmatrix = image_ID("SVD_VTm");
 
 
@@ -2458,8 +2482,11 @@ imageID AOloopControl_computeCalib_mkModes(
         {
             cnt += MBLOCK_NBmode[mblock];
         }
-        IDm = create_3Dimage_ID("fmodesall", msizex, msizey, cnt);
-        imageID IDwfs = create_3Dimage_ID("fmodesWFSall", wfsxsize, wfsysize, cnt);
+        create_3Dimage_ID("fmodesall", msizex, msizey, cnt, &IDm);
+
+        imageID IDwfs;
+        create_3Dimage_ID("fmodesWFSall", wfsxsize, wfsysize, cnt, &IDwfs);
+
         cnt = 0;
         long cnt1 = 0;
         for(uint32_t mblock = 0; mblock < NBmblock; mblock++)
@@ -2601,7 +2628,8 @@ imageID AOloopControl_computeCalib_mkModes(
         {
             cnt += MBLOCK_NBmode[mblock];
         }
-        IDm = create_3Dimage_ID("fmodesWFSall", wfsxsize, wfsysize, cnt);
+        create_3Dimage_ID("fmodesWFSall", wfsxsize, wfsysize, cnt, &IDm);
+
         cnt = 0;
         for(uint32_t mblock = 0; mblock < NBmblock; mblock++)
         {
@@ -2646,7 +2674,9 @@ imageID AOloopControl_computeCalib_mkModes(
         fflush(stdout);
 
 
-        imageID IDcmatall = create_3Dimage_ID("cmatall", wfsxsize, wfsysize, cnt);
+        imageID IDcmatall;
+        create_3Dimage_ID("cmatall", wfsxsize, wfsysize, cnt, &IDcmatall);
+
         cnt = 0;
         for(uint32_t mblock = 0; mblock < NBmblock; mblock++)
         {
@@ -2856,7 +2886,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
 
 
 
-    IDmodes = create_3Dimage_ID("fmodesall", NBmodes, 1, NBmodes);
+    create_3Dimage_ID("fmodesall", NBmodes, 1, NBmodes, &IDmodes);
     for(kk = 0; kk < NBmodes * NBmodes; kk++)
     {
         data.image[IDmodes].array.F[kk] = 0.0;
@@ -2895,7 +2925,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             }
 
 
-            IDdmmask = create_2Dimage_ID("dmmask", NBmodes, 1);
+            create_2Dimage_ID("dmmask", NBmodes, 1, &IDdmmask);
             for(kk = 0; kk < NBmodes; kk++)
             {
                 data.image[IDdmmask].array.F[kk] = 1.0;
@@ -2906,7 +2936,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
-            ID = create_3Dimage_ID(imname, wfsxsize, wfsysize, MBLOCK_NBmode[mblock]);
+            create_3Dimage_ID(imname, wfsxsize, wfsysize, MBLOCK_NBmode[mblock], &ID);
             for(kk = 0; kk < MBLOCK_NBmode[mblock]; kk++)
             {
                 for(ii = 0; ii < wfssize; ii++)
@@ -3012,7 +3042,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             }
 
 
-            IDmodes = create_3Dimage_ID(imname, NBmodes, 1, MBLOCK_NBmode[mblock]);
+            create_3Dimage_ID(imname, NBmodes, 1, MBLOCK_NBmode[mblock], &IDmodes);
             list_image_ID();
             for(kk = 0; kk < MBLOCK_NBmode[mblock]; kk++)
             {
@@ -3128,7 +3158,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     {
         cnt += MBLOCK_NBmode[mblock];
     }
-    IDm = create_3Dimage_ID("fmodesWFSall", wfsxsize, wfsysize, cnt);
+    create_3Dimage_ID("fmodesWFSall", wfsxsize, wfsysize, cnt, &IDm);
     cnt = 0;
     for(mblock = 0; mblock < NBmblock; mblock++)
     {
@@ -3167,7 +3197,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     {
         cnt += MBLOCK_NBmode[mblock];
     }
-    IDcmatall = create_3Dimage_ID("cmatall", wfsxsize, wfsysize, cnt);
+    create_3Dimage_ID("cmatall", wfsxsize, wfsysize, cnt, &IDcmatall);
     cnt = 0;
     for(mblock = 0; mblock < NBmblock; mblock++)
     {
@@ -3253,10 +3283,10 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask(
 
     sizeWFS = sizexWFS * sizeyWFS;
 
-    IDWFSmap = create_2Dimage_ID(WFSmap_name, sizexWFS, sizeyWFS);
-    IDDMmap = create_2Dimage_ID(DMmap_name, sizexDM, sizeyDM);
-    IDWFSmask = create_2Dimage_ID("wfsmask", sizexWFS, sizeyWFS);
-    IDDMmask = create_2Dimage_ID("dmmask", sizexDM, sizeyDM);
+    create_2Dimage_ID(WFSmap_name, sizexWFS, sizeyWFS, &IDWFSmap);
+    create_2Dimage_ID(DMmap_name, sizexDM, sizeyDM, &IDDMmap);
+    create_2Dimage_ID("wfsmask", sizexWFS, sizeyWFS, &IDWFSmask);
+    create_2Dimage_ID("dmmask", sizexDM, sizeyDM, &IDDMmask);
 
 
 
@@ -3307,7 +3337,7 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask(
 
     // DMmask: select pixels
     lim0 = dmmask_coefflow * img_percentile(DMmap_name, dmmask_perclow);
-    IDtmp = create_2Dimage_ID("_tmpdmmap", sizexDM, sizeyDM);
+    create_2Dimage_ID("_tmpdmmap", sizexDM, sizeyDM, &IDtmp);
     for(ii = 0; ii < sizexDM * sizeyDM; ii++)
     {
         data.image[IDtmp].array.F[ii] = data.image[IDDMmap].array.F[ii] - lim0;
@@ -3336,7 +3366,7 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask(
     fflush(stdout);
 
     lim0 = wfsmask_coefflow * img_percentile(WFSmap_name, wfsmask_perclow);
-    IDtmp = create_2Dimage_ID("_tmpwfsmap", sizexWFS, sizeyWFS);
+    create_2Dimage_ID("_tmpwfsmap", sizexWFS, sizeyWFS, &IDtmp);
     for(ii = 0; ii < sizexWFS * sizeyWFS; ii++)
     {
         data.image[IDtmp].array.F[ii] = data.image[IDWFSmap].array.F[ii] - lim0;

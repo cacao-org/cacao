@@ -259,7 +259,7 @@ imageID AOloopControl_compTools_CrossProduct(
     IDmask = image_ID("xpmask");
 
 
-    IDout = create_2Dimage_ID(IDout_name, zsize1, zsize2);
+    create_2Dimage_ID(IDout_name, zsize1, zsize2, &IDout);
     for(uint64_t ii = 0; ii < zsize1 * zsize2; ii++)
     {
         data.image[IDout].array.F[ii] = 0.0;
@@ -319,7 +319,7 @@ imageID AOloopControl_compTools_mkSimpleZpokeM(
 
     dmxysize = dmxsize * dmysize;
 
-    IDout = create_3Dimage_ID(IDout_name, dmxsize, dmysize, dmxysize);
+    create_3Dimage_ID(IDout_name, dmxsize, dmysize, dmxysize, &IDout);
 
     for(uint64_t kk = 0; kk < dmxysize; kk++)
     {

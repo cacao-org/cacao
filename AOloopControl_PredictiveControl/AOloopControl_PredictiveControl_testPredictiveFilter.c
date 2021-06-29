@@ -81,7 +81,7 @@ double AOloopControl_PredictiveControl_testPredictiveFilter(
     // build measurement matrix
 
     fp = fopen("tracepts.txt","w");
-    IDmatA = create_2Dimage_ID("WFPmatA", NBmvec, filtsize*NBch);
+    create_2Dimage_ID("WFPmatA", NBmvec, filtsize*NBch, &IDmatA);
     // each column is a measurement
     for(m=0; m<NBmvec; m++) // column index
     {
@@ -124,7 +124,7 @@ double AOloopControl_PredictiveControl_testPredictiveFilter(
     save_fits("WFPmatC", "!WFPmatC.fits");
     IDmatC = image_ID("WFPmatC");
 
-    IDfilt = create_2Dimage_ID(IDfilt_name, filtsize, NBch);
+    create_2Dimage_ID(IDfilt_name, filtsize, NBch, &IDfilt);
     for(l=0; l<filtsize; l++)
         for(ch=0; ch<NBch; ch++)
         {

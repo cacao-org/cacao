@@ -160,7 +160,7 @@ errno_t AOloopControl_WFSzpupdate_loop(
     }
 
 
-    IDtmp = create_2Dimage_ID("wfsrefoffset", wfsxsize, wfsysize);
+    create_2Dimage_ID("wfsrefoffset", wfsxsize, wfsysize, &IDtmp);
 
 
     zpcnt0 = 0;
@@ -300,7 +300,7 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(
     wfsxsize = data.image[IDwfsref].md[0].size[0];
     wfsysize = data.image[IDwfsref].md[0].size[1];
     wfsxysize = wfsxsize * wfsysize;
-    IDtmp = create_2Dimage_ID("wfsrefoffset", wfsxsize, wfsysize);
+    create_2Dimage_ID("wfsrefoffset", wfsxsize, wfsysize, &IDtmp);
     IDwfsref0 = image_ID(IDwfsref0_name);
 
 

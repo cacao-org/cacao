@@ -222,7 +222,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     if(sprintf(inmaskname, "inmaskPFb%ld", PFblock) < 1)
         PRINT_ERROR("sprintf wrote <1 char");
 
-    IDinmask = create_2Dimage_ID(inmaskname, xysize, 1);
+     create_2Dimage_ID(inmaskname, xysize, 1, &IDinmask);
     for(ii=0; ii<xysize; ii++)
         data.image[IDinmask].array.F[ii] = 0.0;
     for(ii=PFblockStart; ii<PFblockEnd; ii++)

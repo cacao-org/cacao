@@ -250,17 +250,23 @@ errno_t AOloopControl_set_modeblock_gain(
             IDcontrMc0 = image_ID("contrMc0");
             if(IDcontrMc0 == -1)
             {
-                IDcontrMc0 = create_3Dimage_ID("contrMc0", AOconf[loop].WFSim.sizexWFS,
-                                               AOconf[loop].WFSim.sizeyWFS,
-                                               AOconf[loop].DMctrl.sizexDM * AOconf[loop].DMctrl.sizeyDM);
+                create_3Dimage_ID(
+                    "contrMc0",
+                    AOconf[loop].WFSim.sizexWFS,
+                    AOconf[loop].WFSim.sizeyWFS,
+                    AOconf[loop].DMctrl.sizexDM * AOconf[loop].DMctrl.sizeyDM,
+                    &IDcontrMc0);
             }
 
 
             IDcontrMcact0 = image_ID("contrMcact0");
             if(IDcontrMcact0 == -1)
             {
-                IDcontrMcact0 = create_2Dimage_ID("contrMcact0",
-                                                  AOconf[loop].WFSim.activeWFScnt, AOconf[loop].DMctrl.activeDMcnt);
+                create_2Dimage_ID(
+                    "contrMcact0",
+                    AOconf[loop].WFSim.activeWFScnt,
+                    AOconf[loop].DMctrl.activeDMcnt,
+                    &IDcontrMcact0);
             }
 
             //arith_image_zero("contrM0");

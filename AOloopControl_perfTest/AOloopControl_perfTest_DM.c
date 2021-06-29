@@ -110,7 +110,7 @@ errno_t AOcontrolLoop_perfTest_TestDMSpeed(
 
 
 
-    ID1 = create_3Dimage_ID("dmpokeseq", dmxsize, dmysize, NBpts);
+    create_3Dimage_ID("dmpokeseq", dmxsize, dmysize, NBpts, &ID1);
     for(uint32_t kk = 0; kk < NBpts; kk++)
     {
         float pha;
@@ -258,7 +258,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
 
     // TEST
     // Save DM mode
-    ID = create_2Dimage_ID("testmrespm", dmxsize, dmysize);
+    create_2Dimage_ID("testmrespm", dmxsize, dmysize, &ID);
     for(ii = 0; ii < dmsize; ii++)
     {
         data.image[ID].array.F[ii] = data.image[IDmodes].array.F[kk * dmsize + ii];
@@ -279,9 +279,9 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
         abort();
     }
 
-    IDrec_dmout = create_3Dimage_ID("_tmprecdmout", dmxsize, dmysize, kmax);
+    create_3Dimage_ID("_tmprecdmout", dmxsize, dmysize, kmax, &IDrec_dmout);
 
-    IDcoeffarray = create_2Dimage_ID("_tmpcoeffarray", kmax, NBmodes);
+    create_2Dimage_ID("_tmpcoeffarray", kmax, NBmodes, &IDcoeffarray);
 
     WRITE_FILENAME(fname, "mode%03ld_PSD.txt", kk);
 
@@ -292,8 +292,8 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
     }
     fclose(fp);
 
-    IDout = create_2Dimage_ID(IDout_name, nbf, NBmodes);
-    IDdmtmp = create_2Dimage_ID("_tmpdm", dmxsize, dmysize);
+    create_2Dimage_ID(IDout_name, nbf, NBmodes, &IDout);
+    create_2Dimage_ID("_tmpdm", dmxsize, dmysize, &IDdmtmp);
 
     for(f = fmin; f < fmax; f *= fmultstep)
     {
@@ -522,15 +522,15 @@ imageID AOloopControl_perfTest_TestDMmodes_Recovery(
     }
 
 
-    IDout = create_2Dimage_ID(IDout_name, NBmodes, NBmodes);
-    IDoutrms = create_2Dimage_ID(IDoutrms_name, NBmodes, NBmodes);
-    IDoutmeas = create_2Dimage_ID(IDoutmeas_name, NBmodes, NBmodes);
-    IDoutmeasrms = create_2Dimage_ID(IDoutmeasrms_name, NBmodes, NBmodes);
-    IDdmtmp = create_2Dimage_ID("_tmpdm", dmxsize, dmysize);
-    IDmeastmp = create_2Dimage_ID("_tmpmeas", dmxsize, dmysize);
+    create_2Dimage_ID(IDout_name, NBmodes, NBmodes, &IDout);
+    create_2Dimage_ID(IDoutrms_name, NBmodes, NBmodes, &IDoutrms);
+    create_2Dimage_ID(IDoutmeas_name, NBmodes, NBmodes, &IDoutmeas);
+    create_2Dimage_ID(IDoutmeasrms_name, NBmodes, NBmodes, &IDoutmeasrms);
+    create_2Dimage_ID("_tmpdm", dmxsize, dmysize, &IDdmtmp);
+    create_2Dimage_ID("_tmpmeas", dmxsize, dmysize, &IDmeastmp);
 
-    IDcoeffarray = create_2Dimage_ID("_coeffarray", NBmodes, NBave);
-    IDcoeffarraymeas = create_2Dimage_ID("_coeffarraymeas", NBmodes, NBave);
+    create_2Dimage_ID("_coeffarray", NBmodes, NBave, &IDcoeffarray);
+    create_2Dimage_ID("_coeffarraymeas", NBmodes, NBave, &IDcoeffarraymeas);
 
     printf("Initialize SVD ... ");
     fflush(stdout);

@@ -309,11 +309,11 @@ errno_t AOloopControl_IOtools_imAlignStream(
     IDdark = image_ID("dark");
 
 
-    IDtmp = create_2Dimage_ID("imAlign_tmp", xboxsize, yboxsize);
+    create_2Dimage_ID("imAlign_tmp", xboxsize, yboxsize, &IDtmp);
 
     // dark-subtracted full frame image
-    uint32_t IDin1;
-    IDin1 = create_2Dimage_ID("alignintmpim", xsize, ysize);
+    imageID IDin1;
+    create_2Dimage_ID("alignintmpim", xsize, ysize, &IDin1);
 
     uint8_t datatype;
     datatype = data.image[IDin].md[0].datatype;
@@ -510,7 +510,7 @@ imageID AOloopControl_IOtools_frameDelay(
     IDin = image_ID(IDin_name);
     xsize = data.image[IDin].md[0].size[0];
     ysize = data.image[IDin].md[0].size[1];
-    IDtmp = create_2Dimage_ID("_tmpfr", xsize, ysize);
+    create_2Dimage_ID("_tmpfr", xsize, ysize, &IDtmp);
     xysize = xsize*ysize;
 
     printf("xsize = %u\n", xsize);
@@ -527,7 +527,7 @@ imageID AOloopControl_IOtools_frameDelay(
     fflush(stdout);
 
 
-    IDbuff = create_3Dimage_ID("_tmpbuff", xsize, ysize, ksize);
+    create_3Dimage_ID("_tmpbuff", xsize, ysize, ksize, &IDbuff);
 
     sizearray = (uint32_t*) malloc(sizeof(uint32_t)*2);
     if(sizearray == NULL) {

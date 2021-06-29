@@ -314,9 +314,14 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     /** Write rotation matrix to go from DM modes to eigenmodes */
     arraysizetmp[0] = m;
     arraysizetmp[1] = m;
-    create_image_ID(ID_VTmatrix_name, 2, arraysizetmp,
-                    _DATATYPE_FLOAT, 0, 0, 0,
-                    &ID_VTmatrix);
+
+    create_image_ID(
+        ID_VTmatrix_name,
+        2,
+        arraysizetmp,
+        _DATATYPE_FLOAT, 0, 0, 0,
+        &ID_VTmatrix);
+
     for(uint64_t ii = 0; ii < m; ii++) // modes
         for(uint32_t k = 0; k < m; k++) // modes
         {
@@ -326,11 +331,13 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 
 
     /// Compute eigenmodes responses
-    IDeigenmodesResp = create_3Dimage_ID(
-                           "eigenmodesrespM",
-                           data.image[ID_Rmatrix].md[0].size[0],
-                           data.image[ID_Rmatrix].md[0].size[1],
-                           data.image[ID_Rmatrix].md[0].size[2]);
+    create_3Dimage_ID(
+        "eigenmodesrespM",
+        data.image[ID_Rmatrix].md[0].size[0],
+        data.image[ID_Rmatrix].md[0].size[1],
+        data.image[ID_Rmatrix].md[0].size[2],
+        &IDeigenmodesResp);
+
     printf("Computing eigenmode responses .... \n");
     for(uint32_t kk = 0; kk < m; kk++) /// eigen mode index
     {
@@ -367,8 +374,10 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
         }
         else
         {
-            long IDeigenmodes = create_3Dimage_ID("eigenmodesM", xsize_modes, ysize_modes,
-                                                  m);
+            imageID IDeigenmodes;
+            create_3Dimage_ID("eigenmodesM", xsize_modes, ysize_modes,
+                              m, &IDeigenmodes);
+
             printf("Computing eigenmodes .... \n");
             for(uint32_t kk = 0; kk < m; kk++) /// eigen mode index
             {
@@ -767,8 +776,8 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
-        IDcmatc_active[slice] = create_2Dimage_ID(imname, sizeWFS_active[slice],
-                                sizeDM_active);
+        create_2Dimage_ID(imname, sizeWFS_active[slice],
+                          sizeDM_active, &(IDcmatc_active[slice]));
         for(uint64_t act_active = 0; act_active < sizeDM_active; act_active++)
         {
             for(uint64_t wfselem_active = 0; wfselem_active < sizeWFS_active[slice];

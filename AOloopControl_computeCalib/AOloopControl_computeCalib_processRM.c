@@ -168,8 +168,8 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
 
     sizeWFS = sizexWFS * sizeyWFS;
 
-    IDWFSmap = create_2Dimage_ID(WFSmap_name, sizexWFS, sizeyWFS);
-    IDDMmap = create_2Dimage_ID(DMmap_name, sizexDM, sizeyDM);
+    create_2Dimage_ID(WFSmap_name, sizexWFS, sizeyWFS, &IDWFSmap);
+    create_2Dimage_ID(DMmap_name, sizexDM, sizeyDM, &IDDMmap);
 
 
     printf("Preparing DM map ... ");
@@ -375,14 +375,14 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
-        IDWFSrefc_array[kmat] = create_3Dimage_ID(name, sizexWFS, sizeyWFS, NBpoke);
+        create_3Dimage_ID(name, sizexWFS, sizeyWFS, NBpoke, &(IDWFSrefc_array[kmat]));
 
         if(sprintf(zrname, "zrespm%03ld", kmat) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
-        IDzresp_array[kmat] = create_3Dimage_ID(zrname, sizexWFS, sizeyWFS, NBpoke);
+        create_3Dimage_ID(zrname, sizexWFS, sizeyWFS, NBpoke, &(IDzresp_array[kmat]));
 
 
 
@@ -449,8 +449,8 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     }
 
     // STEP 2: average / median each pixel
-    IDzrm = create_3Dimage_ID(zrespm_name, sizexWFS, sizeyWFS, NBpoke);
-    IDWFSref = create_2Dimage_ID(WFSref0_name, sizexWFS, sizeyWFS);
+    create_3Dimage_ID(zrespm_name, sizexWFS, sizeyWFS, NBpoke, &IDzrm);
+    create_2Dimage_ID(WFSref0_name, sizexWFS, sizeyWFS, &IDWFSref);
 
 
 
@@ -899,7 +899,7 @@ long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name,
 
     pixradl = (long) pixrad + 1;
 
-    IDout = create_2Dimage_ID(IDout_name, xsize, ysize);
+    create_2Dimage_ID(IDout_name, xsize, ysize, &IDout);
     for(ii = 0; ii < xsize * ysize; ii++)
     {
         data.image[IDout].array.F[ii] = xsize + ysize;

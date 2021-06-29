@@ -1060,8 +1060,11 @@ long FPAO_Measure_WFSrespC(long loop, long delayfr, long delayRM1us, long NBave,
     sizearray[1] = FPAOconf[loop].sizeyWFS;
     sizearray[2] = NBpoke;
 
-    IDoutC = create_3Dimage_ID(IDoutC_name, sizearray[0], sizearray[1],
-                               sizearray[2]);
+    create_3Dimage_ID(IDoutC_name,
+                      sizearray[0],
+                      sizearray[1],
+                      sizearray[2],
+                      &IDoutC);
 
 
     arrayf = (float *) malloc(sizeof(float) * FPAOconf[loop].sizeDM);
@@ -1277,8 +1280,11 @@ long FPAOloopControl_MeasureResp_level1(float ampl, long delayfr,
 
 
     // CREATE POKE CUBE
-    IDpokeC = create_3Dimage_ID("pokeC", FPAOconf[loop].sizexDM,
-                                FPAOconf[loop].sizeyDM, NBpokes);
+    create_3Dimage_ID("pokeC",
+                      FPAOconf[loop].sizexDM,
+                      FPAOconf[loop].sizeyDM,
+                      NBpokes,
+                      &IDpokeC);
 
     poke = 0;
     for(ii = 0; ii < FPAOconf[loop].sizexDM; ii++)
@@ -1362,7 +1368,7 @@ long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0,
         xsize = xsize0;
         ysize = ysize0;
         NBmaster = NBmaster0;
-        IDpC = create_3Dimage_ID("materPatternC", xsize, ysize, NBmaster);
+        create_3Dimage_ID("materPatternC", xsize, ysize, NBmaster, &IDpC);
         for(ii = 0; ii < xsize * ysize * NBmaster; ii++)
         {
             data.image[IDpC].array.F[ii] = 1.0 - 2.0 * ran1();
@@ -1407,7 +1413,7 @@ long FPAOloopControl_MakeLinComb_seq(char *IDpC_name, long xsize0, long ysize0,
         kksize *= N1;
     }
 
-    IDout = create_3Dimage_ID(IDout_name, xsize, ysize, kksize);
+    create_3Dimage_ID(IDout_name, xsize, ysize, kksize, &IDout);
 
     narray = (long *) malloc(sizeof(long) * NBmaster);
     if(narray == NULL) {

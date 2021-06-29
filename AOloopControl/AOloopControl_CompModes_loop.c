@@ -159,7 +159,7 @@ errno_t AOloopControl_CompModes_loop(
 
 
     create_image_ID("coeff0", 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDcoeff0);
-    ID_WFSim_n = create_2Dimage_ID("wfsim_n", wfsxsize, wfsysize);
+    create_2Dimage_ID("wfsim_n", wfsxsize, wfsysize, &ID_WFSim_n);
     COREMOD_MEMORY_image_set_createsem("wfsim_n", 10);
 
 

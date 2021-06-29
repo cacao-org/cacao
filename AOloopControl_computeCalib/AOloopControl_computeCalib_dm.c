@@ -111,7 +111,7 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
     xsize = data.image[IDmaskRM].md[0].size[0];
     ysize = data.image[IDmaskRM].md[0].size[1];
 
-    IDout = create_2Dimage_ID(IDout_name, xsize, ysize);
+    create_2Dimage_ID(IDout_name, xsize, ysize, &IDout);
 
     for(ii = 1; ii < xsize - 1; ii++)
         for(jj = 1; jj < ysize - 1; jj++)
@@ -247,12 +247,12 @@ long AOloopControl_computeCalib_DMextrapolateModes(
     if(data.image[IDin].md[0].naxis == 3)
     {
         zsize = data.image[IDin].md[0].size[2];
-        IDout = create_3Dimage_ID(IDout_name, xsize, ysize, zsize);
+        create_3Dimage_ID(IDout_name, xsize, ysize, zsize, &IDout);
     }
     else
     {
         zsize = 1;
-        IDout = create_2Dimage_ID(IDout_name, xsize, ysize);
+        create_2Dimage_ID(IDout_name, xsize, ysize, &IDout);
     }
     xysize = xsize * ysize;
 
@@ -261,7 +261,7 @@ long AOloopControl_computeCalib_DMextrapolateModes(
 
 
     // measure pixel distance to mask
-    IDpixdist = create_2Dimage_ID("pixmaskdist", xsize, ysize);
+    create_2Dimage_ID("pixmaskdist", xsize, ysize, &IDpixdist);
     for(ii = 0; ii < xsize; ii++)
         for(jj = 0; jj < ysize; jj++)
         {
@@ -336,12 +336,12 @@ long AOloopControl_computeCalib_DMslaveExt(const char *IDin_name,
     if(data.image[IDin].md[0].naxis == 3)
     {
         zsize = data.image[IDin].md[0].size[2];
-        IDout = create_3Dimage_ID(IDout_name, xsize, ysize, zsize);
+        create_3Dimage_ID(IDout_name, xsize, ysize, zsize, &IDout);
     }
     else
     {
         zsize = 1;
-        IDout = create_2Dimage_ID(IDout_name, xsize, ysize);
+        create_2Dimage_ID(IDout_name, xsize, ysize, &IDout);
     }
     xysize = xsize * ysize;
 

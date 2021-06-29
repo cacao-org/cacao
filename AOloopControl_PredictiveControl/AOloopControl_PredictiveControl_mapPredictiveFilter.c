@@ -1,11 +1,11 @@
 /**
  * @file    AOloopControl_PredictiveControl_mapPredictiveFilter.c
  * @brief   Adaptive Optics Control loop engine Predictive Control
- * 
- * 
  *
- * 
- * 
+ *
+ *
+ *
+ *
  */
 
 
@@ -36,9 +36,9 @@
 // size:   #modes, 1, #samples
 //
 errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(
-	const char *IDmodecoeff_name, 
-	long        modeout, 
-	double      delayfr
+    const char *IDmodecoeff_name,
+    long        modeout,
+    double      delayfr
 )
 {
     imageID IDmodecoeff;
@@ -65,7 +65,7 @@ errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(
 
 
     // reformat measurements
-    IDtrace = create_2Dimage_ID("trace", NBsamples, modesize);
+    create_2Dimage_ID("trace", NBsamples, modesize, &IDtrace);
 
     for(ii=0; ii<NBsamples; ii++)
         for(m=0; m<modesize; m++)

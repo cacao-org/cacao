@@ -160,7 +160,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
 
     DEBUG_TRACEPOINT("n2 = %u", n2);
 
-    IDmat = create_2Dimage_ID("Hmat", Hsize, Hsize);
+    create_2Dimage_ID("Hmat", Hsize, Hsize, &IDmat);
 
     for(uint32_t ii=0; ii<Hsize; ii++)
         for(uint32_t jj=0; jj<Hsize; jj++)
@@ -170,7 +170,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
 
 
     DEBUG_TRACEPOINT("image %s size %u %u %u", outname, xsize, ysize, Hsize);
-    IDout = create_3Dimage_ID(outname, xsize, ysize, Hsize);
+    create_3Dimage_ID(outname, xsize, ysize, Hsize, &IDout);
     list_image_ID();
 
     for(uint32_t k=0; k<Hsize; k++)
@@ -231,7 +231,7 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(
     }
 
     zsizeout = data.image[IDindex].md[0].size[0]*data.image[IDindex].md[0].size[1];
-    IDout = create_3Dimage_ID(outname, sizexwfs, sizeywfs, zsizeout);
+    create_3Dimage_ID(outname, sizexwfs, sizeywfs, zsizeout, &IDout);
 
     long kk0;
 # ifdef _OPENMP
