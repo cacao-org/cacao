@@ -576,69 +576,104 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF()
     // ===========================
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
     // ===========================
-    void *pNull = NULL;
-    //uint64_t FPFLAG;
-
 
     long loop_default[4] = { 0, 0, 10, 0 };
     //long fpi_loop =
-    function_parameter_add_entry(&fps, ".loop",
+    function_parameter_add_entry(&fps,
+                                 ".loop",
                                  "loop index",
-                                 FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
+                                 FPTYPE_INT64, FPFLAG_DEFAULT_INPUT,
+                                 &loop_default,
+                                 NULL);
 
 
     long semindex_default[4] = { 1, 0, 10, 1 };
     //long fpi_semindex =
-    function_parameter_add_entry(&fps, ".semindex",
+    function_parameter_add_entry(&fps,
+                                 ".semindex",
                                  "input semaphore index",
-                                 FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &semindex_default);
+                                 FPTYPE_INT64, FPFLAG_DEFAULT_INPUT,
+                                 &semindex_default,
+                                 NULL);
 
     //long fpi_out_fluxtotal =
-    function_parameter_add_entry(&fps, ".out.fluxtotal",
+    function_parameter_add_entry(&fps,
+                                 ".out.fluxtotal",
                                  "total flux in WFS image",
-                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_OUTPUT,
+                                 NULL,
+                                 NULL);
 
     //long fpi_out_GPUalpha =
-    function_parameter_add_entry(&fps, ".out.GPUalpha",
+    function_parameter_add_entry(&fps,
+                                 ".out.GPUalpha",
                                  "GPU alpha coefficient",
-                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_OUTPUT,
+                                 NULL,
+                                 NULL);
 
     //long fpi_out_GPUbeta =
-    function_parameter_add_entry(&fps, ".out.GPUbeta",
+    function_parameter_add_entry(&fps,
+                                 ".out.GPUbeta",
                                  "GPU beta coefficient",
-                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_OUTPUT,
+                                 NULL,
+                                 NULL);
 
     long wfsnormalize_default[4] = { 1, 0, 1, 1 };
     //long fpi_wfsnormalize =
-    function_parameter_add_entry(&fps, ".WFSnormalize",
+    function_parameter_add_entry(&fps,
+                                 ".WFSnormalize",
                                  "normalize WFS frames",
-                                 FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, &wfsnormalize_default);
+                                 FPTYPE_ONOFF,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,
+                                 &wfsnormalize_default,
+                                 NULL);
 
     double wfsnormfloor_default[4] = { 0.0, 0, 100000, 0.01 };
     //long fpi_wfsnormfloor =
-    function_parameter_add_entry(&fps, ".WFSnormfloor",
+    function_parameter_add_entry(&fps,
+                                 ".WFSnormfloor",
                                  "WFS flux floor for normalize",
-                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, &wfsnormfloor_default);
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,
+                                 &wfsnormfloor_default,
+                                 NULL);
 
 
 
     long compdark_default[4] = { 1, 0, 1, 1 };
     //long fpi_comp_darksub =
-    function_parameter_add_entry(&fps, ".comp.darksub",
+    function_parameter_add_entry(&fps,
+                                 ".comp.darksub",
                                  "Subtract Dark",
-                                 FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, &compdark_default);
+                                 FPTYPE_ONOFF,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,
+                                 &compdark_default,
+                                 NULL);
 
     long compimtotal_default[4] = { 1, 0, 1, 1 };
     //long fpi_comp_imtotal =
-    function_parameter_add_entry(&fps, ".comp.imtotal",
+    function_parameter_add_entry(&fps,
+                                 ".comp.imtotal",
                                  "Compute WFS frame total flux",
-                                 FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, &compimtotal_default);
+                                 FPTYPE_ONOFF,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,
+                                 &compimtotal_default,
+                                 NULL);
 
     long compnormwfsim_default[4] = { 1, 0, 1, 1 };
     //long fpi_comp_normwfsim =
-    function_parameter_add_entry(&fps, ".comp.normwfsim",
+    function_parameter_add_entry(&fps,
+                                 ".comp.normwfsim",
                                  "Compute normalized WFS frame",
-                                 FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, &compnormwfsim_default);
+                                 FPTYPE_ONOFF,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,
+                                 &compnormwfsim_default,
+                                 NULL);
 
 
 

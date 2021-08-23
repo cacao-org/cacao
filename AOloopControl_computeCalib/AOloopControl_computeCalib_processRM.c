@@ -658,32 +658,50 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
     uint64_t FPFLAG;
 
     long loop_default[4] = { 0, 0, 10, 0 };
-    __attribute__((unused)) long fpi_loop =
-        function_parameter_add_entry(&fps, ".loop",
-                                     "loop index",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
+    // __attribute__((unused)) long fpi_loop =
+    function_parameter_add_entry(&fps,
+                                 ".loop",
+                                 "loop index",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &loop_default,
+                                 NULL);
 
 
     double SVDlimdefault[4] = { 0.001, 0.0, 1.0, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT |
              FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
-    __attribute__((unused)) long fpi_SVDlim =
-        function_parameter_add_entry(&fps, ".SVDlim", "SVD limit value",
-                                     FPTYPE_FLOAT64, FPFLAG, &SVDlimdefault);
+    //__attribute__((unused)) long fpi_SVDlim =
+    function_parameter_add_entry(&fps,
+                                 ".SVDlim",
+                                 "SVD limit value",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG,
+                                 &SVDlimdefault,
+                                 NULL);
 
     // Input file name
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
-    __attribute__((unused)) long fpi_filename_respm        =
-        function_parameter_add_entry(&fps, ".fname_respM", "response matrix",
-                                     FPTYPE_FILENAME, FPFLAG, pNull);
+    // __attribute__((unused)) long fpi_filename_respm        =
+    function_parameter_add_entry(&fps,
+                                 ".fname_respM",
+                                 "response matrix",
+                                 FPTYPE_FILENAME,
+                                 FPFLAG,
+                                 pNull,
+                                 NULL);
 
 
     long GPUmode_default[4] = { 0, 0, 1, 0 };
-    long fpi_GPUmode =
-        function_parameter_add_entry(&fps, ".GPUmode",
-                                     "Using GPU ?",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &GPUmode_default);
-    (void) fpi_GPUmode;
+    //  long fpi_GPUmode = 0;
+    function_parameter_add_entry(&fps,
+                                 ".GPUmode",
+                                 "Using GPU ?",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &GPUmode_default,
+                                 NULL);
+//    (void) fpi_GPUmode;
 
 
 
@@ -697,17 +715,23 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
        (void) fpi_out_dirname;*/
 
 
-    __attribute__((unused)) long fpi_out_label      =
-        function_parameter_add_entry(&fps, ".out.label",
-                                     "output label",
-                                     FPTYPE_STRING, FPFLAG_DEFAULT_INPUT, pNull);
+    //__attribute__((unused)) long fpi_out_label      =
+    function_parameter_add_entry(&fps,
+                                 ".out.label",
+                                 "output label",
+                                 FPTYPE_STRING,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 pNull,
+                                 NULL);
 
-    long fpi_out_timestring    =
-        function_parameter_add_entry(&fps, ".out.timestring",
-                                     "output timestring",
-                                     FPTYPE_STRING, FPFLAG_DEFAULT_INPUT, pNull);
-    (void) fpi_out_timestring;
-
+    long fpi_out_timestring = 0;
+    function_parameter_add_entry(&fps,
+                                 ".out.timestring",
+                                 "output timestring",
+                                 FPTYPE_STRING,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 pNull,
+                                 &fpi_out_timestring);
 
 
     // External scripts (post)

@@ -791,146 +791,238 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
     // ALLOCATE FPS ENTRIES IF NOT ALREADY EXIST
     // ===========================
     void *pNull = NULL;
-    __attribute__((unused)) uint64_t FPFLAG;
+    // __attribute__((unused)) uint64_t FPFLAG;
 
 
     long loop_default[4] = { 0, 0, 10, 0 };
-    __attribute__((unused)) long fpi_loop =
-        function_parameter_add_entry(&fps, ".loop",
-                                     "loop index",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &loop_default);
+    //__attribute__((unused)) long fpi_loop =
+    function_parameter_add_entry(&fps,
+                                 ".loop",
+                                 "loop index",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &loop_default,
+                                 NULL);
 
     double SVDlim_default[4] = { 0.01, 0.000001, 1.0, 0.01 };
-    __attribute__((unused)) long fpi_SVDlim =
-        function_parameter_add_entry(&fps, ".SVDlim",
-                                     "RM poke amplitude",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &SVDlim_default);
+    //__attribute__((unused)) long fpi_SVDlim =
+    function_parameter_add_entry(&fps,
+                                 ".SVDlim",
+                                 "RM poke amplitude",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &SVDlim_default,
+                                 NULL);
 
 
     double CPAmax_default[4] = { 10.0, 0.1, 100.0, 10.0 };
-    __attribute__((unused)) long fpi_CPAmax =
-        function_parameter_add_entry(&fps, ".CPAmax",
-                                     "maximum controlled CPA",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &CPAmax_default);
+    //__attribute__((unused)) long fpi_CPAmax =
+    function_parameter_add_entry(&fps,
+                                 ".CPAmax",
+                                 "maximum controlled CPA",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &CPAmax_default,
+                                 NULL);
 
     double deltaCPA_default[4] = { 0.8, 0.1, 2.0, 0.8 };
-    __attribute__((unused)) long fpi_deltaCPA =
-        function_parameter_add_entry(&fps, ".deltaCPA",
-                                     "delta CPA",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &deltaCPA_default);
+    //__attribute__((unused)) long fpi_deltaCPA =
+    function_parameter_add_entry(&fps, ".deltaCPA",
+                                 "delta CPA",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &deltaCPA_default,
+                                 NULL);
 
     double alignCX_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
-    __attribute__((unused)) long fpi_alignCX =
-        function_parameter_add_entry(&fps, ".align.CX",
-                                     "DM mask center X (if no DMmaskRM)",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignCX_default);
+    //__attribute__((unused)) long fpi_alignCX =
+    function_parameter_add_entry(&fps,
+                                 ".align.CX",
+                                 "DM mask center X (if no DMmaskRM)",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &alignCX_default,
+                                 NULL);
 
     double alignCY_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
-    __attribute__((unused)) long fpi_alignCY =
-        function_parameter_add_entry(&fps, ".align.CY",
-                                     "DM mask center Y (if no DMmaskRM)",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignCY_default);
+    //__attribute__((unused)) long fpi_alignCY =
+    function_parameter_add_entry(&fps,
+                                 ".align.CY",
+                                 "DM mask center Y (if no DMmaskRM)",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &alignCY_default,
+                                 NULL);
 
     double alignID_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
-    __attribute__((unused)) long fpi_alignID =
-        function_parameter_add_entry(&fps, ".align.ID",
-                                     "mask I.D. (if no DMmaskRM)",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignID_default);
+    //__attribute__((unused)) long fpi_alignID =
+    function_parameter_add_entry(&fps,
+                                 ".align.ID",
+                                 "mask I.D. (if no DMmaskRM)",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &alignID_default,
+                                 NULL);
 
     double alignOD_default[4] = { 0.0, 0.0, 2000.0, 0.0 };
-    __attribute__((unused)) long fpi_alignOD =
-        function_parameter_add_entry(&fps, ".align.OD",
-                                     "mask O.D. (if no DMmaskRM)",
-                                     FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &alignOD_default);
+    //__attribute__((unused)) long fpi_alignOD =
+    function_parameter_add_entry(&fps,
+                                 ".align.OD",
+                                 "mask O.D. (if no DMmaskRM)",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &alignOD_default,
+                                 NULL);
 
     long DMxsize_default[4] = { 10, 1, 2000, 10 };
-    __attribute__((unused)) long fpi_DMxsize =
-        function_parameter_add_entry(&fps, ".DMxsize",
-                                     "DM x size",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &DMxsize_default);
+    //__attribute__((unused)) long fpi_DMxsize =
+    function_parameter_add_entry(&fps,
+                                 ".DMxsize",
+                                 "DM x size",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &DMxsize_default,
+                                 NULL);
 
     long DMysize_default[4] = { 10, 1, 2000, 10 };
-    __attribute__((unused)) long fpi_DMysize =
-        function_parameter_add_entry(&fps, ".DMysize",
-                                     "DM y size",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &DMysize_default);
+    //__attribute__((unused)) long fpi_DMysize =
+    function_parameter_add_entry(&fps,
+                                 ".DMysize",
+                                 "DM y size",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &DMysize_default,
+                                 NULL);
 
 
     // FPS
 
-    long fpi_FPS_zRMacqu = function_parameter_add_entry(&fps, ".FPS_zRMacqu",
-                           "FPS zonal RM acquisition",
-                           FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED, pNull);
+    long fpi_FPS_zRMacqu = 0;
+    function_parameter_add_entry(&fps,
+                                 ".FPS_zRMacqu",
+                                 "FPS zonal RM acquisition",
+                                 FPTYPE_FPSNAME,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                                 pNull,
+                                 &fpi_FPS_zRMacqu);
     FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
     fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX = 0;
 
 
-    long fpi_FPS_loRMacqu = function_parameter_add_entry(&fps, ".FPS_loRMacqu",
-                            "FPS low order modal RM acquisition",
-                            FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED, pNull);
+    long fpi_FPS_loRMacqu = 0;
+    function_parameter_add_entry(&fps,
+                                 ".FPS_loRMacqu",
+                                 "FPS low order modal RM acquisition",
+                                 FPTYPE_FPSNAME,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                                 pNull,
+                                 &fpi_FPS_loRMacqu);
     FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
     fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX = 0;
 
 
-    long fpi_FPS_DMcomb = function_parameter_add_entry(&fps, ".FPS_DMcomb",
-                          "FPS DMcomb",
-                          FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED, pNull);
+    long fpi_FPS_DMcomb = 0;
+    function_parameter_add_entry(&fps,
+                                 ".FPS_DMcomb",
+                                 "FPS DMcomb",
+                                 FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                                 pNull,
+                                 &fpi_FPS_DMcomb);
     FUNCTION_PARAMETER_STRUCT FPS_DMcomb;;
     fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX = 0;
 
 
 
 
-    __attribute__((unused)) long fpi_fname_dmslaved =
-        function_parameter_add_entry(&fps, ".DMslaved",
-                                     "DM slaved actuators",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
+    //__attribute__((unused)) long fpi_fname_dmslaved =
+    function_parameter_add_entry(&fps,
+                                 ".DMslaved",
+                                 "DM slaved actuators",
+                                 FPTYPE_FITSFILENAME,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+                                 pNull,
+                                 NULL);
 
-    __attribute__((unused)) long fpi_fname_zrespM =
-        function_parameter_add_entry(&fps, ".zrespM",
-                                     "Zonal response matrix",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
+    //__attribute__((unused)) long fpi_fname_zrespM =
+    function_parameter_add_entry(&fps, ".zrespM",
+                                 "Zonal response matrix",
+                                 FPTYPE_FITSFILENAME,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+                                 pNull,
+                                 NULL);
 
-    __attribute__((unused)) long fpi_fname_dmmaskRM =
-        function_parameter_add_entry(&fps, ".DMmaskRM",
-                                     "actuators directly controlled",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
+    //__attribute__((unused)) long fpi_fname_dmmaskRM =
+    function_parameter_add_entry(&fps, ".DMmaskRM",
+                                 "actuators directly controlled",
+                                 FPTYPE_FITSFILENAME,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+                                 pNull,
+                                 NULL);
 
-    __attribute__((unused)) long fpi_fname_WFSmask =
-        function_parameter_add_entry(&fps, ".WFSmask",
-                                     "WFS mask",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
+    //__attribute__((unused)) long fpi_fname_WFSmask =
+    function_parameter_add_entry(&fps, ".WFSmask",
+                                 "WFS mask",
+                                 FPTYPE_FITSFILENAME,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+                                 pNull,
+                                 NULL);
 
-    __attribute__((unused)) long fpi_fname_loRM =
-        function_parameter_add_entry(&fps, ".loRM",
-                                     "low order modal response matrix",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
+    //__attribute__((unused)) long fpi_fname_loRM =
+    function_parameter_add_entry(&fps,
+                                 ".loRM",
+                                 "low order modal response matrix",
+                                 FPTYPE_FITSFILENAME,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+                                 pNull,
+                                 NULL);
 
-    __attribute__((unused)) long fpi_fname_loRMmodes =
-        function_parameter_add_entry(&fps, ".loRMmodes",
-                                     "low order RM modes",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, pNull);
+    //__attribute__((unused)) long fpi_fname_loRMmodes =
+    function_parameter_add_entry(&fps,
+                                 ".loRMmodes",
+                                 "low order RM modes",
+                                 FPTYPE_FITSFILENAME,
+                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+                                 pNull,
+                                 NULL);
 
 
-    __attribute__((unused)) long fpi_fname_extrablockM =
-        function_parameter_add_entry(&fps, ".option.extrablockM",
-                                     "extra modes block",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
+    //__attribute__((unused)) long fpi_fname_extrablockM =
+    function_parameter_add_entry(&fps,
+                                 ".option.extrablockM",
+                                 "extra modes block",
+                                 FPTYPE_FITSFILENAME,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 pNull,
+                                 NULL);
 
-    __attribute__((unused)) long fpi_fname_exclmodes =
-        function_parameter_add_entry(&fps, ".option.exclmodes",
-                                     "excluded modes",
-                                     FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT, pNull);
+    //__attribute__((unused)) long fpi_fname_exclmodes =
+    function_parameter_add_entry(&fps,
+                                 ".option.exclmodes",
+                                 "excluded modes",
+                                 FPTYPE_FITSFILENAME,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 pNull,
+                                 NULL);
 
 
     // Update Actions
-    long fpi_update_RMfiles = function_parameter_add_entry(&fps, ".upRMfiles",
-                              "update RM files",
-                              FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+    long fpi_update_RMfiles = 0;
+    function_parameter_add_entry(&fps,
+                                 ".upRMfiles",
+                                 "update RM files",
+                                 FPTYPE_ONOFF,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 pNull,
+                                 &fpi_update_RMfiles);
 
-    long fpi_update_align = function_parameter_add_entry(&fps, ".upAlign",
-                            "update default align (if no DMmaskRM)",
-                            FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, pNull);
+    long fpi_update_align = 0;
+    function_parameter_add_entry(&fps,
+                                 ".upAlign",
+                                 "update default align (if no DMmaskRM)",
+                                 FPTYPE_ONOFF,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 pNull,
+                                 &fpi_update_align);
 
 
 
@@ -938,23 +1030,35 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
 
     // settings for output files and dir
 
-    long fpi_out_dirname      =
-        function_parameter_add_entry(&fps, ".out.dirname",
-                                     "output directory",
-                                     FPTYPE_DIRNAME, FPFLAG_DEFAULT_INPUT, pNull);
-    (void) fpi_out_dirname;
+    //long fpi_out_dirname      =
+    function_parameter_add_entry(&fps,
+                                 ".out.dirname",
+                                 "output directory",
+                                 FPTYPE_DIRNAME,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 pNull,
+                                 NULL);
+    //(void) fpi_out_dirname;
 
 
-    __attribute__((unused)) long fpi_out_label      =
-        function_parameter_add_entry(&fps, ".out.label",
-                                     "output label",
-                                     FPTYPE_STRING, FPFLAG_DEFAULT_INPUT, pNull);
+    //__attribute__((unused)) long fpi_out_label      =
+    function_parameter_add_entry(&fps,
+                                 ".out.label",
+                                 "output label",
+                                 FPTYPE_STRING,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 pNull,
+                                 NULL);
 
-    long fpi_out_timestring    =
-        function_parameter_add_entry(&fps, ".out.timestring",
-                                     "output timestring",
-                                     FPTYPE_STRING, FPFLAG_DEFAULT_INPUT, pNull);
-    (void) fpi_out_timestring;
+    //long fpi_out_timestring = 0;
+    function_parameter_add_entry(&fps,
+                                 ".out.timestring",
+                                 "output timestring",
+                                 FPTYPE_STRING,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 pNull,
+                                 NULL);
+//    (void) fpi_out_timestring;
 
 
 

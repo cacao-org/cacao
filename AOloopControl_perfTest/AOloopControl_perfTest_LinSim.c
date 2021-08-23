@@ -78,16 +78,21 @@ errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(
     FPS_SETUP_INIT(fpsname, CMDmode);
 
 
-    // ALLOCATE ENTRIES
-    void *pNull = NULL;
+    function_parameter_add_entry(&fps,
+                                 ".DMxsize",
+                                 "Deformable mirror X size",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 NULL,
+                                 NULL);
 
-    __attribute__((unused)) long fpi_DMxsize =
-        function_parameter_add_entry(&fps, ".DMxsize", "Deformable mirror X size",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
-
-    __attribute__((unused)) long fpi_DMysize =
-        function_parameter_add_entry(&fps, ".DMysize", "Deformable mirror Y size",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, pNull);
+    function_parameter_add_entry(&fps,
+                                 ".DMysize",
+                                 "Deformable mirror Y size",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 NULL,
+                                 NULL);
 
 
     FPS_CONFLOOP_START  // macro in function_parameter.h

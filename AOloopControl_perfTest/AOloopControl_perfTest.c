@@ -800,63 +800,106 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF()
     // ===========================
     // ALLOCATE FPS ENTRIES
     // ===========================
-    void *pNull = NULL;
     uint64_t FPFLAG;
 
     double frameratewait_default[4] = { 5, 1, 100, 5 };
     // long fpi_frameratewait =
-    function_parameter_add_entry(&fps, ".frameratewait",
-                                 "time period for frame rate measurement", FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT,
-                                 &frameratewait_default);
+    function_parameter_add_entry(&fps,
+                                 ".frameratewait",
+                                 "time period for frame rate measurement",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &frameratewait_default,
+                                 NULL);
 
     double OPDamp_default[4] = { 0.1, 0.1, 1.0, 0.1 };
     // long fpi_OPDamp =
-    function_parameter_add_entry(&fps, ".OPDamp", "poke amplitude [um]",
-                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, &OPDamp_default);
+    function_parameter_add_entry(&fps,
+                                 ".OPDamp",
+                                 "poke amplitude [um]",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &OPDamp_default,
+                                 NULL);
 
     long NBiter_default[4] = { 100, 10, 100000, 100 };
     // long fpi_NBiter =
-    function_parameter_add_entry(&fps, ".NBiter", "Number of iteration",
-                                 FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &NBiter_default);
+    function_parameter_add_entry(&fps,
+                                 ".NBiter",
+                                 "Number of iteration",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &NBiter_default,
+                                 NULL);
 
 
     // input stream
     FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM;
 
     // long fp_streamname_dm       =
-    function_parameter_add_entry(&fps, ".sn_dm",  "DM stream name",
-                                 FPTYPE_STREAMNAME, FPFLAG, pNull);
+    function_parameter_add_entry(&fps,
+                                 ".sn_dm",
+                                 "DM stream name",
+                                 FPTYPE_STREAMNAME,
+                                 FPFLAG,
+                                 NULL,
+                                 NULL);
 
     // long fp_streamname_wfs       =
-    function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
-                                 FPTYPE_STREAMNAME, FPFLAG, pNull);
+    function_parameter_add_entry(&fps,
+                                 ".sn_wfs",
+                                 "WFS stream name",
+                                 FPTYPE_STREAMNAME,
+                                 FPFLAG,
+                                 NULL,
+                                 NULL);
 
 
 
     long wfsNBframesmax_default[4] = { 50, 10, 100000, 50 };
 
-    // long fpi_status_wfsNBframesmax =
-    function_parameter_add_entry(&fps, ".status.wfsNBframemax",
-                                 "Number frames in measurement sequence", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT,
-                                 &wfsNBframesmax_default);
+    long fpi_status_wfsNBframesmax = 0;
+    function_parameter_add_entry(&fps,
+                                 ".status.wfsNBframemax",
+                                 "Number frames in measurement sequence",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 &wfsNBframesmax_default,
+                                 &fpi_status_wfsNBframesmax);
 
 
     // status
-    // long fpi_wfsdt        =
+    long fpi_wfsdt = 0;
     function_parameter_add_entry(&fps, ".status.wfsdt", "WFS frame interval",
-                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, NULL,
+                                 &fpi_wfsdt);
 
     // long fpi_twaitus      =
-    function_parameter_add_entry(&fps, ".status.twaitus", "initial wait [us]",
-                                 FPTYPE_INT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    function_parameter_add_entry(&fps,
+                                 ".status.twaitus",
+                                 "initial wait [us]",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_OUTPUT,
+                                 NULL,
+                                 NULL);
 
     // long fpi_refdtoffset  =
-    function_parameter_add_entry(&fps, ".status.refdtoffset",
-                                 "baseline time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    function_parameter_add_entry(&fps,
+                                 ".status.refdtoffset",
+                                 "baseline time offset to poke",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_OUTPUT,
+                                 NULL,
+                                 NULL);
 
     // long fpi_dtoffset     =
-    function_parameter_add_entry(&fps, ".status.dtoffset",
-                                 "actual time offset to poke", FPTYPE_FLOAT64, FPFLAG_DEFAULT_OUTPUT, pNull);
+    function_parameter_add_entry(&fps,
+                                 ".status.dtoffset",
+                                 "actual time offset to poke",
+                                 FPTYPE_FLOAT64,
+                                 FPFLAG_DEFAULT_OUTPUT,
+                                 NULL,
+                                 NULL);
 
     // output
     // long fpi_outframerateHz =
@@ -866,12 +909,18 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF()
         "WFS frame rate [Hz]",
         FPTYPE_FLOAT64,
         FPFLAG_DEFAULT_INPUT,
-        pNull
-    );
+        NULL,
+        NULL);
 
     // long fpi_outHardLatencyfr =
-    function_parameter_add_entry(&fps, ".out.latencyfr", "hardware latency [frame]",
-                                 FPTYPE_FLOAT64, FPFLAG_DEFAULT_INPUT, pNull);
+    function_parameter_add_entry(
+        &fps,
+        ".out.latencyfr",
+        "hardware latency [frame]",
+        FPTYPE_FLOAT64,
+        FPFLAG_DEFAULT_INPUT,
+        NULL,
+        NULL);
 
 
 

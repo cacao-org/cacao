@@ -242,48 +242,48 @@ int AOloopControl_aorun_FPCONF()
     // configuration
     int64_t loopindex_default[4] = { 0, 0, 99, 0 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
-    __attribute__((unused)) long fpi_loop =
-        function_parameter_add_entry(&fps, ".loop", "Loop index",
-                                     FPTYPE_INT64, FPFLAG, &loopindex_default);
+    long fpi_loop = 0;
+    function_parameter_add_entry(&fps, ".loop", "Loop index",
+                                 FPTYPE_INT64, FPFLAG, &loopindex_default, &fpi_loop);
 
     /*
         int64_t RTpriority_default[4] = { 90, 0, 99, 90 };
         FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
-        __attribute__((unused)) long fpi_RTpriority =
+        long fpi_RTpriority = 0;
             function_parameter_add_entry(&fps, ".RTpriority", "Real Time priority",
-                                         FPTYPE_INT64, FPFLAG, &RTpriority_default);
+                                         FPTYPE_INT64, FPFLAG, &RTpriority_default &fpi_RTpriority);
     */
 
     long semwaitindex_default[4] = { 1, 0, 10, 1 };
-    __attribute__((unused)) long fpi_semwaitindex =
-        function_parameter_add_entry(&fps, ".semwaitindex",
-                                     "input semaphore index",
-                                     FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &semwaitindex_default);
+    long fpi_semwaitindex = 0;
+    function_parameter_add_entry(&fps, ".semwaitindex",
+                                 "input semaphore index",
+                                 FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, &semwaitindex_default, &fpi_semwaitindex);
 
 
     long WFSrefON_default[4] = { 0, 0, 1, 0 };
-    __attribute__((unused)) long fpi_WFSrefON =
-        function_parameter_add_entry(&fps, ".wfsrefON",
-                                     "Use WFS reference",
-                                     FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, &WFSrefON_default);
+    long fpi_WFSrefON = 0;
+    function_parameter_add_entry(&fps, ".wfsrefON",
+                                 "Use WFS reference",
+                                 FPTYPE_ONOFF, FPFLAG_DEFAULT_INPUT, &WFSrefON_default, &fpi_WFSrefON);
 
 
     // stream that needs to be loaded on startup
     FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
-    __attribute__((unused)) long fpi_streamname_wfs       =
-        function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
-                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");
+    long fpi_streamname_wfs = 0;
+    function_parameter_add_entry(&fps, ".sn_wfs",  "WFS stream name",
+                                 FPTYPE_STREAMNAME, FPFLAG, "NULL", &fpi_streamname_wfs);
 
     FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
-    __attribute__((unused)) long fpi_streamname_cmat       =
-        function_parameter_add_entry(&fps, ".sn_cmat",  "Control Matrix",
-                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");
+    long fpi_streamname_cmat = 0;
+    function_parameter_add_entry(&fps, ".sn_cmat",  "Control Matrix",
+                                 FPTYPE_STREAMNAME, FPFLAG, "NULL", &fpi_streamname_cmat);
 
     // required to get DM size
     FPFLAG = FPFLAG_DEFAULT_INPUT_STREAM | FPFLAG_STREAM_RUN_REQUIRED;
-    __attribute__((unused)) long fpi_streamname_DMout      =
-        function_parameter_add_entry(&fps, ".sn_DMout",  "output stream",
-                                     FPTYPE_STREAMNAME, FPFLAG, "NULL");
+    long fpi_streamname_DMout = 0;
+    function_parameter_add_entry(&fps, ".sn_DMout",  "output stream",
+                                 FPTYPE_STREAMNAME, FPFLAG, "NULL", &fpi_streamname_DMout);
 
 
 
@@ -294,48 +294,49 @@ int AOloopControl_aorun_FPCONF()
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT |
              FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
     FPFLAG |= FPFLAG_WRITERUN;
-    __attribute__((unused)) long fpi_loopgain =
-        function_parameter_add_entry(&fps, ".loopgain", "Main loop gain",
-                                     FPTYPE_FLOAT64, FPFLAG, &loopgaindefault);
+    long fpi_loopgain = 0;
+    function_parameter_add_entry(&fps, ".loopgain", "Main loop gain",
+                                 FPTYPE_FLOAT64, FPFLAG, &loopgaindefault, &fpi_loopgain);
 
     double loopmultdefault[4] = { 0.001, 0.0, 1.5, 0.001 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT |
              FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
     FPFLAG |= FPFLAG_WRITERUN;
-    __attribute__((unused)) long fpi_loopmult =
-        function_parameter_add_entry(&fps, ".loopmult", "Main loop mult coeff",
-                                     FPTYPE_FLOAT64, FPFLAG, &loopmultdefault);
+    long fpi_loopmult = 0;
+    function_parameter_add_entry(&fps, ".loopmult", "Main loop mult coeff",
+                                 FPTYPE_FLOAT64, FPFLAG, &loopmultdefault, &fpi_loopmult);
 
 
     double maxlimdefault[4] = { 1.0, 0.0, 1000.0, 1.0 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT |
              FPFLAG_MAXLIMIT;  // required to enforce the min and max limits
     FPFLAG |= FPFLAG_WRITERUN;
-    __attribute__((unused)) long fpi_maxlim =
-        function_parameter_add_entry(&fps, ".maxlim", "Maximum limit",
-                                     FPTYPE_FLOAT64, FPFLAG, &maxlimdefault);
+    long fpi_maxlim = 0;
+    function_parameter_add_entry(&fps, ".maxlim", "Maximum limit",
+                                 FPTYPE_FLOAT64, FPFLAG, &maxlimdefault, &fpi_maxlim);
 
     FPFLAG = FPFLAG_DEFAULT_INPUT;
     FPFLAG |= FPFLAG_WRITERUN;
-    __attribute__((unused)) long fpi_loopON =
-        function_parameter_add_entry(&fps, ".loopON", "loop ON/OFF",
-                                     FPTYPE_ONOFF, FPFLAG, pNull);
+    long fpi_loopON = 0;
+    function_parameter_add_entry(&fps, ".loopON", "loop ON/OFF",
+                                 FPTYPE_ONOFF, FPFLAG, pNull, &fpi_loopON);
 
 
     int64_t loopNBstep_default[4] = { 0, -1, 0, 0 };
     FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT ;
     FPFLAG |= FPFLAG_WRITERUN;
-    __attribute__((unused)) long fpi_loopNBstep =
-        function_parameter_add_entry(&fps, ".loopNBstep", "Loop number steps",
-                                     FPTYPE_INT64, FPFLAG, &loopNBstep_default);
+    long fpi_loopNBstep = 0;
+    function_parameter_add_entry(&fps, ".loopNBstep", "Loop number steps",
+                                 FPTYPE_INT64, FPFLAG, &loopNBstep_default, &fpi_loopNBstep);
 
 
 
     FPFLAG = FPFLAG_DEFAULT_INPUT;
     FPFLAG |= FPFLAG_WRITERUN;
-    long fpi_loopZERO = function_parameter_add_entry(&fps, ".loopZERO",
-                        "Zero correction",
-                        FPTYPE_ONOFF, FPFLAG, pNull);
+    long fpi_loopZERO = 0;
+    function_parameter_add_entry(&fps, ".loopZERO",
+                                 "Zero correction",
+                                 FPTYPE_ONOFF, FPFLAG, pNull, &fpi_loopZERO);
 
 
 
