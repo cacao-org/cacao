@@ -61,8 +61,10 @@ cacao is a plugin of [milk page](https://github.com/milk-org/milk-package).
 	git clone https://github.com/milk-org/milk.git
 	cd milk
 	./fetch_cacao_dev.sh
-	./compile.sh $PWD/local
+	MILK_PYTHON="OFF" ./compile.sh
+	cd _build; sudo make install
 
+Check compilation options with compile.sh -h option.
 
 ---
 
