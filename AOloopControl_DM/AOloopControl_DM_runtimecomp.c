@@ -546,7 +546,7 @@ int AOloopControl_DM_CombineChannels_RUN()
     int DMupdate;
 
 
-
+    read_sharedmem_image("dmvolt"); // temporary patch
 
     DEBUG_TRACEPOINT(" ");
     /*
