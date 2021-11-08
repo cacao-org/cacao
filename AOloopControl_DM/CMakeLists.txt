@@ -8,6 +8,7 @@ message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 set(SOURCEFILES
 	${SRCNAME}.c
     ${SRCNAME}.h
+    AOloopControl_DM_comb.c
     AOloopControl_DM_config.c
     AOloopControl_DM_init.c
     AOloopControl_DM_runtimecomp.c
@@ -18,6 +19,7 @@ set(SOURCEFILES
 
 set(INCLUDEFILES
 	${SRCNAME}.h
+    AOloopControl_DM_comb.h
 )
 
 
