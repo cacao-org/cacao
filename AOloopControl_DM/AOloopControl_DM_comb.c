@@ -27,23 +27,19 @@ static CLICMDARGDEF farg[] =
 {
     {
         CLIARG_UINT32, ".DMindex", "Deformable mirror index", "5",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &DMindex
+        CLIARG_VISIBLE_DEFAULT, (void **) &DMindex
     },
     {
         CLIARG_UINT32, ".DMxsize", "x size", "20",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &DMxsize
+        CLIARG_VISIBLE_DEFAULT, (void **) &DMxsize
     },
     {
         CLIARG_UINT32, ".DMysize", "y size", "20",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &DMysize
+        CLIARG_VISIBLE_DEFAULT, (void **) &DMysize
     },
     {
         CLIARG_UINT32, ".NBchannel", "number of DM channels", "12",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &NBchannel
+        CLIARG_HIDDEN_DEFAULT, (void **) &NBchannel
     }
 };
 
@@ -53,8 +49,6 @@ static CLICMDARGDEF farg[] =
 //
 static errno_t customCONFsetup()
 {
-    printf(">>>>>>>>>>>>>>>>>>> customCONFsetup\n");
-//    *DMysize = 45;
 
     return RETURN_SUCCESS;
 }
@@ -64,7 +58,6 @@ static errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-    printf("customCONFcheck >>>>>>>>>>>>>>>>>\n");
     *DMysize = 45;
 
     return RETURN_SUCCESS;
@@ -112,6 +105,7 @@ INSERT_STD_FPSCLIfunctions
 // Register function in CLI
 errno_t CLIADDCMD_AOloopControl_DM__comb()
 {
+
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC

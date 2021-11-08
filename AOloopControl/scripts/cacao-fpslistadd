@@ -44,7 +44,7 @@ function fpscmdheader {
 	echo "# Function Parameter Structure (FPS) setup configuration" >> ${taskfname}
 	echo "# Written by $0 - edits will be overwritten and lost when re-running $0" >> ${taskfname}
 	echo "# These are the default initial values for FPS entries" >> ${taskfname}
-	echo "# This file is read by fpsCTRL upon launching FPS conf process" >> ${taskfname}
+	echo "# This file is read by milk-fpsCTRL upon launching FPS conf process" >> ${taskfname}
 	echo "# " >> ${taskfname}
 }
 
@@ -97,7 +97,8 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}      cacaodm.aolcontrolDMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
+#echo "${fpsname}      cacaodm.aolcontrolDMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
+echo "${fpsname}      cacaodm.DMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
 
 fpscmdheader
 fpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
