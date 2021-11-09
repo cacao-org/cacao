@@ -283,7 +283,7 @@ static errno_t compute_function()
     }
 
     // Create temporaray storage
-
+    float *dmdisptmp = (float *) malloc(sizeof(float) * (*DMxsize) * (*DMysize));
 
     //TODO voltmode clause
 
@@ -309,19 +309,55 @@ static errno_t compute_function()
             DMupdate = 1;
         }
     }
-/*
-    memcpy(data.image[IDdispt].array.F, dmdispptr_array[0], sizeof(float)*sizexy);
-    for(ch = 1; ch < dmdispcombconf[DMindex].NBchannel; ch++)
+
+    if(DMupdate == 1)
     {
-        for(uint64_t ii = 0; ii < sizexy; ii++)
+        // Update DM disp
+
+        // Sum channels
+        memcpy(dmdisptmp, imgch[0].im->array.F, sizeof(float) *  (*DMxsize) * (*DMysize));
+        for(uint32_t ch = 1; ch < *NBchannel; ch++)
         {
-            dmdispptr[ii] += dmdispcombconf[DMindex].dmdispgain[ch] *
-                             dmdispptr_array[ch][ii];
+            for(uint_fast64_t ii = 0; ii <  (*DMxsize) * (*DMysize); ii++)
+            {
+                dmdisptmp[ii] += imgch[ch].im->array.F[ii];
+            }
         }
+
+        // Remove average
+        double ave = 0.0;
+        if(*AveMode == 1)
+        {
+            for(uint_fast64_t ii = 0; ii <  (*DMxsize) * (*DMysize); ii++)
+            {
+                ave += dmdisptmp[ii];
+            }
+            ave /= (*DMxsize) * (*DMysize);
+        }
+        if(*AveMode < 2)   // OFFSET BY DClevel
+        {
+            for(uint_fast64_t ii = 0; ii <  (*DMxsize) * (*DMysize); ii++)
+            {
+                dmdisptmp[ii] += (*DClevel - ave);
+
+                // remove negative values
+                if(*voltmode == 1)
+                    if(dmdisptmp[ii] < 0.0)
+                    {
+                        dmdisptmp[ii] = 0.0;
+                    }
+            }
+        }
+
+        memcpy(img.im->array.F, dmdisptmp, sizeof(float) *  (*DMxsize) * (*DMysize));
+
+        processinfo_update_output_stream(processinfo, img.ID);
     }
-*/
+
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    free(dmdisptmp);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
