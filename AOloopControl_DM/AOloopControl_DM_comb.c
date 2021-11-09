@@ -10,6 +10,13 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
+// includes AOLOOPCONTROL_DM_DISPCOMB_CONF
+#include "AOloopControl_DM.h"
+
+
+#include <time.h>
+
+
 
 
 // Local variables pointers
@@ -157,9 +164,11 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_DMindex].fpflag = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
         data.fpsptr->parray[fpi_DMindex].fpflag &= ~FPFLAG_WRITECONF;
         data.fpsptr->parray[fpi_DMindex].fpflag &= ~FPFLAG_WRITERUN;
-
-
+        data.fpsptr->parray[fpi_DMindex].val.ui32[1] = 0; // min value
+        data.fpsptr->parray[fpi_DMindex].val.ui32[2] = 9; // max value
     }
+
+
 
     return RETURN_SUCCESS;
 }
@@ -246,11 +255,71 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
+    // Create DM channel streams
+    //
+    IMGID imgch[*NBchannel];
+    printf("This is DM comb, index = %ld\n", (long) *DMindex);
+    printf("Initialize channels\n");
+    for(uint32_t ch = 0; ch < *NBchannel; ch++)
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "dm%02udisp%02u", *DMindex, ch);
+        imgch[ch] = makeIMGID_2D(name, *DMxsize, *DMysize);
+        imgch[ch].shared = 1;
+
+        // Create image if needed
+        imcreateIMGID(&imgch[ch]);
+    }
+
+    // Create combined DM channel
+    //
+    IMGID img;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "dm%02udisp", *DMindex);
+        img = makeIMGID_2D(name, *DMxsize, *DMysize);
+        img.shared = 1;
+        imcreateIMGID(&img);
+    }
+
+    // Create temporaray storage
+
+
+    //TODO voltmode clause
+
+    long cntsumref = 0;
+
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
-    printf("This is DM comb, index = %ld\n", (long) *DMindex);
 
+    int DMupdate = 0; // toggles to 1 is DM must be updated
+    {
+        long cnt0sum = 0;
+
+        for(uint32_t ch = 0; ch < *NBchannel; ch++)
+        {
+            cnt0sum += imgch[ch].md->cnt0;
+        }
+
+        if(cnt0sum != cntsumref)
+        {
+            printf("cnt0sum = %ld\n", cnt0sum);
+            cntsumref = cnt0sum;
+            DMupdate = 1;
+        }
+    }
+/*
+    memcpy(data.image[IDdispt].array.F, dmdispptr_array[0], sizeof(float)*sizexy);
+    for(ch = 1; ch < dmdispcombconf[DMindex].NBchannel; ch++)
+    {
+        for(uint64_t ii = 0; ii < sizexy; ii++)
+        {
+            dmdispptr[ii] += dmdispcombconf[DMindex].dmdispgain[ch] *
+                             dmdispptr_array[ch][ii];
+        }
+    }
+*/
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
