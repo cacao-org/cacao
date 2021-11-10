@@ -368,14 +368,11 @@ static errno_t compute_function()
             long kkoffset = 0;
             long kkmax = 0;
 
+            
 
-            loopOK = processinfo_loopstep(processinfo);
 
             snprintf(msgstring, stringmaxlen, "iteration %5u / %5u", iter, *NBiter);
             processinfo_WriteMessage(processinfo, msgstring);
-
-
-            processinfo_exec_start(processinfo);
 
             printf(" - ITERATION %u / %u\n", iter, *NBiter);
             fflush(stdout);
@@ -715,7 +712,7 @@ static errno_t compute_function()
             if(latency > latencymax)
             {
                 latencymax = latency;
-                //WRITE_FULLFILENAME(ffname, "!%s/maxlatencyseq.fits", outdirname);
+                //WRITE_FULLFILENAME(ffname, "%s/maxlatencyseq.fits", outdirname);
                 //save_fl_fits("_testwfsc", ffname);
             }
 
@@ -726,8 +723,11 @@ static errno_t compute_function()
 
 
             // process signals, increment loop counter
-            processinfo_exec_end(processinfo);
             iter++;
+            if(iter == (*NBiter))
+            {
+                loopOK = 0;
+            }
         }
         fclose(fphwlat);
 
