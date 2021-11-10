@@ -133,6 +133,8 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
 
+    printf(">>>>>>>>>>>> %d\n", __LINE__);
+
     // connect to WFS image
     char WFSname[100];
     sprintf(WFSname, "aol%u_wfsim", *loop);
