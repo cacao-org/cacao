@@ -226,7 +226,21 @@ static errno_t compute_function()
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
         wfscntstart = imgwfs.md->cnt0;
-        usleep( (long)  (1000000 * (*frameratewait)) );
+
+        {
+            long nsec = (long) (1000000000 * (*frameratewait));
+            long nsec_remaining = nsec % 1000000000;
+            long sec = nsec / 1000000000;
+
+            struct timespec timesleep;
+            timesleep.tv_sec = sec;
+            timesleep.tv_nsec = nsec_remaining;
+
+            nanosleep(&timesleep, NULL);
+        }
+
+//        usleep( (long)  (1000000 * (*frameratewait)) );
+
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
         wfscntend = imgwfs.md->cnt0;
@@ -334,7 +348,21 @@ static errno_t compute_function()
             unsigned int dmstate = 0;
 
             // waiting time
-            usleep(*twaitus);
+            //usleep(*twaitus);
+
+            {
+                long nsec = (long) (1000 * (*twaitus));
+
+                long nsec_remaining = nsec % 1000000000;
+                long sec = nsec / 1000000000;
+
+                struct timespec timesleep;
+                timesleep.tv_sec = sec;
+                timesleep.tv_nsec = nsec_remaining;
+
+                nanosleep(&timesleep, NULL);
+            }
+
 
             // and waiting frames
             wfscnt0 = imgwfs.md->cnt0;
@@ -342,7 +370,16 @@ static errno_t compute_function()
             {
                 while(wfscnt0 == imgwfs.md->cnt0)
                 {
-                    usleep(50);
+                    long nsec = (long) (1000 * 50); // 50 usec
+
+                    long nsec_remaining = nsec % 1000000000;
+                    long sec = nsec / 1000000000;
+
+                    struct timespec timesleep;
+                    timesleep.tv_sec = sec;
+                    timesleep.tv_nsec = nsec_remaining;
+
+                    nanosleep(&timesleep, NULL);
                 }
                 wfscnt0 = imgwfs.md->cnt0;
             }
@@ -363,7 +400,16 @@ static errno_t compute_function()
                 // WAITING for image
                 while(wfscnt0 == imgwfs.md->cnt0)
                 {
-                    usleep(2);
+                    long nsec = (long) (1000 * 2); // 2 usec
+
+                    long nsec_remaining = nsec % 1000000000;
+                    long sec = nsec / 1000000000;
+
+                    struct timespec timesleep;
+                    timesleep.tv_sec = sec;
+                    timesleep.tv_nsec = nsec_remaining;
+
+                    nanosleep(&timesleep, NULL);
                 }
 
                 wfscnt0 = imgwfs.md->cnt0;
@@ -474,7 +520,21 @@ static errno_t compute_function()
                 // apply DM pattern #1
                 if((dmstate == 0) && (dt > *refdtoffset) && (wfsframe > wfsframeoffset))
                 {
-                    usleep((long)(ran1() * 1000000.0 * *wfsdt));
+//                    usleep((long)(ran1() * 1000000.0 * *wfsdt));
+                    {
+                        long nsec = (long) (1000000000.0 * ran1() * (*wfsdt));
+
+                        long nsec_remaining = nsec % 1000000000;
+                        long sec = nsec / 1000000000;
+
+                        struct timespec timesleep;
+                        timesleep.tv_sec = sec;
+                        timesleep.tv_nsec = nsec_remaining;
+
+                        nanosleep(&timesleep, NULL);
+                    }
+
+
                     printf("\nDM STATE CHANGED ON ITERATION %ld   / %ld\n\n", wfsframe,
                            wfsframeoffset);
                     kkoffset = wfsframe;
