@@ -263,7 +263,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
     {
         data.image[ID].array.F[ii] = data.image[IDmodes].array.F[kk * dmsize + ii];
     }
-    save_fits("testmrespm", "!testmrespm.fits");
+    save_fits("testmrespm", "testmrespm.fits");
 
 
     // SET UP RECORDING CUBES
@@ -350,7 +350,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
 
 
         k1 = k;
-        //    save_fits("_tmprecdmout", "!_tmprecdmout.fits");
+        //    save_fits("_tmprecdmout", _tmprecdmout.fits");
 
 
         printf("\n\n");
@@ -379,7 +379,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(
         }
         printf("\n\n");
 
-        save_fits("_tmpcoeffarray", "!_tmpcoeffarray.fits");
+        save_fits("_tmpcoeffarray", "_tmpcoeffarray.fits");
 
         // EXTRACT AMPLITUDE AND PHASE
         coscoeff = 0.0;

@@ -351,7 +351,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
                     data.image[ID_Rmatrix].array.F[kk1 * n + ii];
         }
     }
-    if(sprintf(fname, "!eigenmodesrespM_%4.2f.fits", Beta) < 1)
+    if(sprintf(fname, "eigenmodesrespM_%4.2f.fits", Beta) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -394,7 +394,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
             printf("\n");
         }
 
-        if(sprintf(fname, "!eigenmodesM_%4.2f.fits", Beta) < 1)
+        if(sprintf(fname, "eigenmodesM_%4.2f.fits", Beta) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -480,7 +480,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 
         if(NB_MODE_REMOVED_STEP == 0)
         {
-            save_fits(ID_Cmatrix_name, "!cmat.fits");
+            save_fits(ID_Cmatrix_name, "cmat.fits");
 
             if(sprintf(command, "echo \"%ld\" > ./cmat.NB_MODES_RM.txt",
                        NBMODES_REMOVED_EIGENVLIM) < 1)
@@ -505,7 +505,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
         }
         else
         {
-            if(sprintf(fname, "!cmat_%4.2f_%02ld.fits", Beta, NB_MR) < 1)
+            if(sprintf(fname, "cmat_%4.2f_%02ld.fits", Beta, NB_MR) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }

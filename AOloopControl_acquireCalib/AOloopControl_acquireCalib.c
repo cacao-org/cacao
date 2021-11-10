@@ -1887,7 +1887,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
                     }
                 } // end write image name
 
-                sprintf(tmpfname, "!%s/wfsresp.tstep%03u.iter%03lu.fits", outdir,
+                sprintf(tmpfname, "%s/wfsresp.tstep%03u.iter%03lu.fits", outdir,
                         AveStep, iter);
                 //list_image_ID();
                 printf("SAVING %s -> %s ... ", imname, tmpfname);
@@ -2601,7 +2601,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                         functionparameter_SetParamValue_STRING(&fps, ".fn_RMDMmask", fnameRMDMmask);
                     }
 
-                    //save_fl_fits("RMDMmask", "!./conf/RM_DMmask.fits");
+                    //save_fl_fits("RMDMmask", "./conf/RM_DMmask.fits");
                     delete_image_ID("RMDMmask", DELETE_IMAGE_ERRMODE_WARNING);
 
                     // set back to OFF
@@ -2626,7 +2626,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 
                     AOloopControl_compTools_mkSimpleZpokeM(DMxsize, DMysize, "Spoke");
                     fps_write_RUNoutput_image(&fps, "Spoke", "Spoke");
-                    //save_fl_fits("Spoke", "!./conf/Spoke.fits");
+                    //save_fl_fits("Spoke", "./conf/Spoke.fits");
                     delete_image_ID("Spoke", DELETE_IMAGE_ERRMODE_WARNING);
 
                     {
@@ -2641,13 +2641,13 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 
 
                     fps_write_RUNoutput_image(&fps, "Hpoke", "Hpoke");
-//                    save_fl_fits("Hpoke", "!./conf/Hpoke.fits");
+//                    save_fl_fits("Hpoke", "./conf/Hpoke.fits");
 
                     fps_write_RUNoutput_image(&fps, "Hpixindex", "Hpixindex");
-                    //save_fl_fits("Hpixindex", "!./conf/Hpixindex.fits");
+                    //save_fl_fits("Hpixindex", "./conf/Hpixindex.fits");
 
                     fps_write_RUNoutput_image(&fps, "Hmat", "Hmat");
-                    //save_fl_fits("Hmat", "!./conf/Hmat.fits");
+                    //save_fl_fits("Hmat", "./conf/Hmat.fits");
 
                     // create compressed files
                     EXECUTE_SYSTEM_COMMAND("gzip -kf ./%s/Hmat.fits", fps.md->datadir);
@@ -3099,7 +3099,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     WRITE_DIRNAME(outdirnameA, "%s/acquA", fps.md->datadir);
 
     EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirnameA);
-    WRITE_FULLFILENAME(fname, "!%s/dmpokeC.fits", outdirnameA);
+    WRITE_FULLFILENAME(fname, "%s/dmpokeC.fits", outdirnameA);
     save_fits("dmpokeC2a", fname);
 
     AOloopControl_acquireCalib_Measure_WFSrespC(
@@ -3116,7 +3116,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
         (uint32_t) 0x02,
         outdirnameA);
 
-    WRITE_FULLFILENAME(fname, "!%s/wfsrespC.fits", outdirnameA);
+    WRITE_FULLFILENAME(fname, "%s/wfsrespC.fits", outdirnameA);
     save_fits("wfsresp2a", fname);
 
 
@@ -3126,7 +3126,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     WRITE_DIRNAME(outdirnameB, "%s/acquB", fps.md->datadir);
 
     EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirnameB);
-    WRITE_FULLFILENAME(fname, "!%s/dmpokeC.fits", outdirnameB);
+    WRITE_FULLFILENAME(fname, "%s/dmpokeC.fits", outdirnameB);
     save_fits("dmpokeC2b", fname);
 
     AOloopControl_acquireCalib_Measure_WFSrespC(
@@ -3143,7 +3143,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
         (uint32_t) 0x02,
         outdirnameB);
 
-    WRITE_FULLFILENAME(fname, "!%s/wfsrespC.fits", outdirnameB);
+    WRITE_FULLFILENAME(fname, "%s/wfsrespC.fits", outdirnameB);
     save_fits("wfsresp2b", fname);
 
 
@@ -3153,7 +3153,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
 
 
-    //	save_fits("wfsresp2", "!tmp/test_wfsresp2.fits");
+    //	save_fits("wfsresp2", "tmp/test_wfsresp2.fits");
 
 
 
@@ -3327,9 +3327,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 fflush(stdout);
 
                 WRITE_FULLFILENAME(filename_respC,
-                                   "!%s/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep, IterNumber);
+                                   "%s/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep, IterNumber);
                 WRITE_FULLFILENAME(filename_wfsref,
-                                   "!%s/wfsref.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
+                                   "%s/wfsref.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 save_fits(imnameout_respC, filename_respC);
                 save_fits(imnameout_wfsref, filename_wfsref);
@@ -3337,10 +3337,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 delete_image_ID(imnameout_wfsref, DELETE_IMAGE_ERRMODE_WARNING);
 
                 WRITE_FULLFILENAME(filename_respC,
-                                   "!%s/acquA/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
+                                   "%s/acquA/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 WRITE_FULLFILENAME(filename_wfsref,
-                                   "!%s/acquA/wfsref.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
+                                   "%s/acquA/wfsref.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 save_fits(imnameout_respC_A, filename_respC);
                 save_fits(imnameout_wfsref_A, filename_wfsref);
@@ -3348,10 +3348,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 delete_image_ID(imnameout_wfsref_A, DELETE_IMAGE_ERRMODE_WARNING);
 
                 WRITE_FULLFILENAME(filename_respC,
-                                   "!%s/acquB/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
+                                   "%s/acquB/respM.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 WRITE_FULLFILENAME(filename_wfsref,
-                                   "!%s/acquB/wfsref.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
+                                   "%s/acquB/wfsref.tstep%03d.iter%03d.fits", fps.md->datadir, AveStep,
                                    IterNumber);
                 save_fits(imnameout_respC_B, filename_respC);
                 save_fits(imnameout_wfsref_B, filename_wfsref);
@@ -3368,32 +3368,32 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                 char filename_wfsref[STRINGMAXLEN_FULLFILENAME];
 
                 WRITE_IMAGENAME(imnameout_respC, "%s", respC_sname);
-                WRITE_FULLFILENAME(filename_respC, "!%s/respM.fits", fps.md->datadir);
+                WRITE_FULLFILENAME(filename_respC, "%s/respM.fits", fps.md->datadir);
                 save_fits(imnameout_respC, filename_respC);
 
 
                 WRITE_IMAGENAME(imnameout_wfsref, "%s", wfsref_sname);
-                WRITE_FULLFILENAME(filename_wfsref, "!%s/wfsref.fits", fps.md->datadir);
+                WRITE_FULLFILENAME(filename_wfsref, "%s/wfsref.fits", fps.md->datadir);
                 save_fits(imnameout_wfsref, filename_wfsref);
 
 
                 WRITE_IMAGENAME(imnameout_respC_A, "%s_A", respC_sname);
-                WRITE_FULLFILENAME(filename_respC, "!%s/acquA/respM_A.fits", fps.md->datadir);
+                WRITE_FULLFILENAME(filename_respC, "%s/acquA/respM_A.fits", fps.md->datadir);
                 save_fits(imnameout_respC_A, filename_respC);
 
 
                 WRITE_IMAGENAME(imnameout_wfsref_A, "%s_A", wfsref_sname);
-                WRITE_FULLFILENAME(filename_wfsref, "!%s/acquA/wfsref_A.fits", fps.md->datadir);
+                WRITE_FULLFILENAME(filename_wfsref, "%s/acquA/wfsref_A.fits", fps.md->datadir);
                 save_fits(imnameout_wfsref_A, filename_wfsref);
 
 
                 WRITE_IMAGENAME(imnameout_respC_B, "%s_B", respC_sname);
-                WRITE_FULLFILENAME(filename_respC, "!%s/acquB/respM_B.fits", fps.md->datadir);
+                WRITE_FULLFILENAME(filename_respC, "%s/acquB/respM_B.fits", fps.md->datadir);
                 save_fits(imnameout_respC_B, filename_respC);
 
 
                 WRITE_IMAGENAME(imnameout_wfsref_B, "%s_B", wfsref_sname);
-                WRITE_FULLFILENAME(filename_wfsref, "!%s/acquB/wfsref_B.fits", fps.md->datadir);
+                WRITE_FULLFILENAME(filename_wfsref, "%s/acquB/wfsref_B.fits", fps.md->datadir);
                 save_fits(imnameout_wfsref_B, filename_wfsref);
 
                 IterNumber = 0; // start processing iterations
@@ -3746,8 +3746,8 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
             data.image[IDpokeC].array.F[act * AOconf[loop].DMctrl.sizexDM *
                                         AOconf[loop].DMctrl.sizeyDM + act] = 1.0;
         }
-        //        save_fits("RMpokeCube", "!./conf/RMpokeCube.fits");
-        save_fits("RMpokeCube", "!./conf/zRMpokeCube.fits");
+        //        save_fits("RMpokeCube", "./conf/RMpokeCube.fits");
+        save_fits("RMpokeCube", "./conf/zRMpokeCube.fits");
 
         NBpoke = data.image[IDpokeC].md[0].size[2];
     }
@@ -3757,7 +3757,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
         NBpoke = data.image[IDpokeC].md[0].size[2];
     }
 
-    //    save_fits("RMpokeCube", "!./conf/test1_RMpokeCube.fits");
+    //    save_fits("RMpokeCube", "./conf/test1_RMpokeCube.fits");
 
     EXECUTE_SYSTEM_COMMAND("echo \"%u\" > RM_NBpoke.txt\n", NBpoke);
 
@@ -4083,7 +4083,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
                         data.image[IDzrespm].array.F[actarray[act] * AOconf[loop].WFSim.sizeWFS + ii] /
                         ampl / cntn;
                 }
-            if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", zrespm_name, iter) < 1)
+            if(sprintf(fname, "./zresptmp/%s_%03ld.fits", zrespm_name, iter) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
@@ -4096,14 +4096,14 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
                     data.image[IDzrespfm].array.F[act * AOconf[loop].WFSim.sizeWFS + ii] /= NBave;
                 }
 
-            if(sprintf(fname, "!./zresptmp/%s_pos_%03ld.fits", zrespm_name, iter) < 1)
+            if(sprintf(fname, "./zresptmp/%s_pos_%03ld.fits", zrespm_name, iter) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
             save_fits("zrespfp", fname);
 
-            if(sprintf(fname, "!./zresptmp/%s_neg_%03ld.fits", zrespm_name, iter) < 1)
+            if(sprintf(fname, "./zresptmp/%s_neg_%03ld.fits", zrespm_name, iter) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
@@ -4140,14 +4140,14 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
                 }
             }
 
-            if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", WFSref0_name, iter) < 1)
+            if(sprintf(fname, "./zresptmp/%s_%03ld.fits", WFSref0_name, iter) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
             save_fits(WFSref0_name, fname);
 
-            if(sprintf(fname, "!./zresptmp/wfsimRMS.fits") < 1)
+            if(sprintf(fname, "./zresptmp/wfsimRMS.fits") < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
@@ -4168,7 +4168,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
                     data.image[ID_DMmap].array.F[act] = rms;
                 }
 
-                if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", DMmap_name, iter) < 1)
+                if(sprintf(fname, "./zresptmp/%s_%03ld.fits", DMmap_name, iter) < 1)
                 {
                     PRINT_ERROR("sprintf wrote <1 char");
                 }
@@ -4187,7 +4187,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(
                     data.image[ID_WFSmap].array.F[ii] = rms;
                 }
 
-                if(sprintf(fname, "!./zresptmp/%s_%03ld.fits", zrespm_name, iter) < 1)
+                if(sprintf(fname, "./zresptmp/%s_%03ld.fits", zrespm_name, iter) < 1)
                 {
                     PRINT_ERROR("sprintf wrote <1 char");
                 }
@@ -4565,7 +4565,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
 
 
             // SAVE RMCUBE
-            //    save_fits("RMcube", "!RMcube.fits");
+            //    save_fits("RMcube", "RMcube.fits");
 
             // remove average
             if(1)
@@ -4591,7 +4591,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                             data.image[IDrmc].array.F[kc * AOconf[loop].WFSim.sizeWFS + ii] - valave;
                     }
                 }
-                save_fits("RMcube1", "!RMcube1.fits");
+                save_fits("RMcube1", "RMcube1.fits");
             }
 
 
@@ -4671,7 +4671,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 }
             }
 
-            //  save_fits("RMcube", "!RMcube2.fits");
+            //  save_fits("RMcube", "RMcube2.fits");
             //  exit(0);
             for(uint64_t ii = 0; ii < AOconf[loop].WFSim.sizeWFS; ii++)
                 for(uint32_t k1 = 0; k1 < AOconf[loop].AOpmodecoeffs.NBDMmodes; k1++)
@@ -4681,7 +4681,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 }
 
 
-            //        save_fl_fits("rmtest", "!rmtest.fits");
+            //        save_fl_fits("rmtest", "rmtest.fits");
             delete_image_ID("rmtest", DELETE_IMAGE_ERRMODE_WARNING);
 
 
@@ -4725,7 +4725,7 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 data.image[IDoptsignaln].array.F[k1] = data.image[IDoptsignal].array.F[k1] /
                                                        data.image[IDoptcnt].array.F[k1];
             }
-            save_fits("optsignaln", "!./tmp/RM_optsign.fits");
+            save_fits("optsignaln", "./tmp/RM_optsign.fits");
 
             if(sprintf(signame, "./tmp/RM_optsign_%06ld.txt", iter) < 1)
             {
@@ -4767,8 +4767,8 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(
                 PRINT_ERROR("system() returns non-zero value");
             }
 
-            save_fits("refwfsacq", "!./tmp/refwfs.fits");
-            save_fits("respmacq", "!./tmp/respM.fits");
+            save_fits("refwfsacq", "./tmp/refwfs.fits");
+            save_fits("respmacq", "./tmp/respM.fits");
         }
     }
 
@@ -5057,7 +5057,7 @@ imageID AOloopControl_acquireCalib_RMseries_deinterlace(
             char rmCfname[100];
 
 
-            sprintf(rmCfname, "!imrespC_%03ld.fits", rmCindex);
+            sprintf(rmCfname, "imrespC_%03ld.fits", rmCindex);
 
             create_3Dimage_ID(rmCname,
                               xsizeWFS * ysizeWFS,

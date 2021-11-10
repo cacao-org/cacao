@@ -374,6 +374,7 @@ static errno_t compute_function()
             exit(0);
             break;
         }
+
         processinfo_update_output_stream(processinfo, ID_imWFS0);
         //data.image[ID_imWFS0].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
 //                COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS0, -1);

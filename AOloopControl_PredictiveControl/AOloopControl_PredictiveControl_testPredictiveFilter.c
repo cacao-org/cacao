@@ -121,8 +121,8 @@ double AOloopControl_PredictiveControl_testPredictiveFilter(
 
     linopt_compute_SVDpseudoInverse("WFPmatA", "WFPmatC", SVDeps, 10000, "WFP_VTmat", NULL);
 
-    save_fits("WFPmatA", "!WFPmatA.fits");
-    save_fits("WFPmatC", "!WFPmatC.fits");
+    save_fits("WFPmatA", "WFPmatA.fits");
+    save_fits("WFPmatC", "WFPmatC.fits");
     IDmatC = image_ID("WFPmatC");
 
     create_2Dimage_ID(IDfilt_name, filtsize, NBch, &IDfilt);

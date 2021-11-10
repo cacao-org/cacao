@@ -445,8 +445,8 @@ int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name,
         }
         IDs2 = fconvolve("screen1", "kernim", "screen2");
         delete_image_ID("kernim", DELETE_IMAGE_ERRMODE_WARNING);
-        save_fits("screen1", "!turbscreen1.fits");
-        save_fits("screen2", "!turbscreen2.fits");
+        save_fits("screen1", "turbscreen1.fits");
+        save_fits("screen2", "turbscreen2.fits");
     }
 
 
@@ -718,8 +718,8 @@ int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name,
             //	copy_image_ID("turbs", name, 0);
         }
 
-        //     save_fits("turbs", "!turbs.fits");
-        //     save_fits("turbs1", "!turbs1.fits");
+        //     save_fits("turbs", "turbs.fits");
+        //     save_fits("turbs1", "turbs1.fits");
 
 
         if(mode == 0)

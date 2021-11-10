@@ -132,7 +132,7 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
     if((image_ID("RMmat") != -1)
             && (image_ID("pixindexim") != -1)) // start decoding
     {
-        //save_fits(IDzrespm0_name, "!zrespm_Hadamard.fits");
+        //save_fits(IDzrespm0_name, "zrespm_Hadamard.fits");
 
         AOloopControl_computeCalib_Hadamard_decodeRM(IDzrespm0_name, "RMmat",
                 "pixindexim", IDzrespm_name);
@@ -142,7 +142,7 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
         {
             AOloopControl_computeCalib_Hadamard_decodeRM("RMpokeC", "RMmat", "pixindexim",
                     "RMpokeC1");
-            //save_fits("RMpokeC1", "!tmp/test_RMpokeC1.fits");
+            //save_fits("RMpokeC1", "tmp/test_RMpokeC1.fits");
         }
     }
     else // NO DECODING
@@ -554,7 +554,7 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     if((image_ID("Hmat") != -1) && (image_ID("pixindexim") != -1))
     {
         chname_image_ID(zrespm_name, "tmprm");
-        save_fits("tmprm", "!zrespm_Hadamard.fits");
+        save_fits("tmprm", "zrespm_Hadamard.fits");
 
         AOloopControl_computeCalib_Hadamard_decodeRM("tmprm", "Hmat", "pixindexim",
                 zrespm_name);
@@ -566,7 +566,7 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(
         {
             AOloopControl_computeCalib_Hadamard_decodeRM("RMpokeC", "Hmat", "pixindexim",
                     "RMpokeC1");
-            save_fits("RMpokeC1", "!test_RMpokeC1.fits");
+            save_fits("RMpokeC1", "test_RMpokeC1.fits");
         }
     }
 
@@ -826,13 +826,13 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
         linopt_compute_SVDpseudoInverse("respM", cm_name, SVDlim, 10000, "VTmat", NULL);
     }
 
-    //save_fits("VTmat", "!./mkmodestmp/VTmat.fits");
+    //save_fits("VTmat", "./mkmodestmp/VTmat.fits");
     delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
 
 
 
     char ffname[STRINGMAXLEN_FULLFILENAME];
-    WRITE_FULLFILENAME(ffname, "!%s/sCMat00.fits", outdirname);
+    WRITE_FULLFILENAME(ffname, "%s/sCMat00.fits", outdirname);
     save_fits(cm_name, ffname);
 
 

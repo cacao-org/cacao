@@ -228,11 +228,11 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     for(ii=PFblockStart; ii<PFblockEnd; ii++)
         data.image[IDinmask].array.F[ii] = 1.0;
 
-    if(sprintf(inmaskfname, "!./PredictiveControl/inmaskPF%ld.fits", PFblock) < 1)
+    if(sprintf(inmaskfname, "./PredictiveControl/inmaskPF%ld.fits", PFblock) < 1)
         PRINT_ERROR("sprintf wrote <1 char");
 
     save_fits(inmaskname, inmaskfname);
-    if(sprintf(outmaskfname, "!./PredictiveControl/outmaskPF%ld.fits", PFblock) < 1)
+    if(sprintf(outmaskfname, "./PredictiveControl/outmaskPF%ld.fits", PFblock) < 1)
         PRINT_ERROR("sprintf wrote <1 char");
 
     save_fits(inmaskname, outmaskfname);

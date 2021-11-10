@@ -1191,7 +1191,7 @@ int AOloopControl_DM_CombineChannels_RUN()
                        (data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement - 1)*sizexywfsref +
                        sizexywfsref - 1);
                 fflush(stdout);
-                save_fits(wfsref_WFSRespMat, "!_test_wfsref_WFSRespMat.fits");
+                save_fits(wfsref_WFSRespMat, "_test_wfsref_WFSRespMat.fits");
                 for(uint64_t kk = 0;
                         kk < data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement; kk++)
                 {
@@ -1859,7 +1859,7 @@ int AOloopControl_DM_CombineChannels(
                 printf("iimax = %ld\n", sizexywfsref);
                 printf("ID RespMat = %ld  (%ld)\n", dmdispcombconf[DMindex].ID_wfsref_RespMat, (data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement-1)*sizexywfsref + sizexywfsref-1);
                 fflush(stdout);
-                save_fits(wfsref_WFSRespMat, "!_test_wfsref_WFSRespMat.fits");
+                save_fits(wfsref_WFSRespMat, "_test_wfsref_WFSRespMat.fits");
                 for(kk=0; kk<data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement; kk++)
                 {
                     printf("(%ld %g) ", kk, data.image[dmdispcombconf[DMindex].IDdisp].array.F[kk]);

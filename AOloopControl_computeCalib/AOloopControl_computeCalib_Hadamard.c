@@ -130,7 +130,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
 
             index++;
         }
-    //save_fits("Hpixindex", "!./conf/Hpixindex.fits");
+    //save_fits("Hpixindex", "./conf/Hpixindex.fits");
 
     Hmat = (int*) malloc(sizeof(int)*Hsize*Hsize);
     if(Hmat == NULL) {
@@ -166,7 +166,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
         for(uint32_t jj=0; jj<Hsize; jj++)
             data.image[IDmat].array.F[jj*Hsize+ii] = Hmat[jj*Hsize+ii];
 
-//    save_fits("Htest", "!./conf/Hmat.fits");
+//    save_fits("Htest", "./conf/Hmat.fits");
 
 
     DEBUG_TRACEPOINT("image %s size %u %u %u", outname, xsize, ysize, Hsize);

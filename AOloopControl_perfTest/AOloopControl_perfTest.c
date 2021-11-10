@@ -1643,7 +1643,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
         if(latency > latencymax)
         {
             latencymax = latency;
-            //WRITE_FULLFILENAME(ffname, "!%s/maxlatencyseq.fits", outdirname);
+            //WRITE_FULLFILENAME(ffname, "%s/maxlatencyseq.fits", outdirname);
             //save_fl_fits("_testwfsc", ffname);
         }
 
@@ -2250,7 +2250,7 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(
 
             data.image[IDoutXP].array.F[mode * NBmodes + mode1] = XPval / dmmodermscnt;
         }
-    save_fits("DMmodesXP", "!DMmodesXP.fits");
+    save_fits("DMmodesXP", "DMmodesXP.fits");
 
 
     // computing WFS space cross-product
@@ -2267,7 +2267,7 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(
 
             data.image[IDoutXP_WFS].array.F[mode * NBmodes + mode1] = XPval / wfsxysize;
         }
-    save_fits("WFSmodesXP", "!WFSmodesXP.fits");
+    save_fits("WFSmodesXP", "WFSmodesXP.fits");
 
 
     return RETURN_SUCCESS;

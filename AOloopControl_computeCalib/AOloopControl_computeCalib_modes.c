@@ -303,7 +303,7 @@ imageID AOloopControl_computeCalib_mkModes(
                     val0 = exp(-pow(a0 * r, b0));
                     data.image[IDmaskRM].array.F[jj * msizex + ii] = val0 * val1;
                 }
-            save_fits("dmmaskRM", "!dmmaskRM.fits");
+            save_fits("dmmaskRM", "dmmaskRM.fits");
             xc1 = xc;
             yc1 = yc;
         }
@@ -585,7 +585,7 @@ imageID AOloopControl_computeCalib_mkModes(
                     data.image[IDmask].array.F[ii] = 1.0;
                 }
             }
-            save_fits("dmmask", "!dmmask.fits");
+            save_fits("dmmask", "dmmask.fits");
             //}
 
             //
@@ -595,7 +595,7 @@ imageID AOloopControl_computeCalib_mkModes(
             fflush(stdout);
             IDmaskRMedge = AOloopControl_computeCalib_DMedgeDetect(
                                data.image[IDmaskRM].md[0].name, "dmmaskRMedge");
-            save_fits("dmmaskRMedge", "!dmmaskRMedge.fits");
+            save_fits("dmmaskRMedge", "dmmaskRMedge.fits");
 
 
             //
@@ -609,10 +609,10 @@ imageID AOloopControl_computeCalib_mkModes(
                 data.image[IDmaskRMin].array.F[ii] = data.image[IDmaskRM].array.F[ii] *
                                                      (1.0 - data.image[IDmaskRMedge].array.F[ii]);
             }
-            save_fits("dmmaskRMin", "!dmmaskRMin.fits");
+            save_fits("dmmaskRMin", "dmmaskRMin.fits");
 
 
-            WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/_test_fmodes0all00.fits", outdir);
+            WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/_test_fmodes0all00.fits", outdir);
             save_fits(ID_name, ffname);
 
 
@@ -621,7 +621,7 @@ imageID AOloopControl_computeCalib_mkModes(
             fflush(stdout);
             IDtmp = AOloopControl_computeCalib_DMextrapolateModes(ID_name, "dmmaskRMin",
                     "modesfreqcpa", "fmodes0test");
-            save_fits("fmodes0test", "!fmodes0test.fits");
+            save_fits("fmodes0test", "fmodes0test.fits");
 
             printf("[%5d] Applying DM mask on %ud modes\n", __LINE__,
                    data.image[ID].md[0].size[2]);
@@ -662,7 +662,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
         printf("[%5d] SAVING MODES : %s...\n", __LINE__, ID_name);
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes0all_00.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes0all_00.fits", outdir);
         save_fits(ID_name, ffname);
 
 
@@ -760,7 +760,7 @@ imageID AOloopControl_computeCalib_mkModes(
             }
         }
 
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes0all.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes0all.fits", outdir);
         save_fits(ID_name, ffname);
 
 
@@ -782,8 +782,8 @@ imageID AOloopControl_computeCalib_mkModes(
         msizexy = msizex * msizey;
         ID = image_ID(ID_name);
         IDzrespM = image_ID("zrespM");
-        save_fits("zrespM", "!_test_zrespM.fits");
-        save_fits(ID_name, "!_test_name.fits");
+        save_fits("zrespM", "_test_zrespM.fits");
+        save_fits(ID_name, "_test_name.fits");
         if(data.image[IDzrespM].md[0].size[2] != msizexy)
         {
             printf("ERROR: zrespM has wrong z size : %u, should be %lu\n",
@@ -843,7 +843,7 @@ imageID AOloopControl_computeCalib_mkModes(
             printf("ERROR: cannot create file \"LOcoeff.txt\"\n");
             exit(0);
         }
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodesWFS00all.HO.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodesWFS00all.HO.fits", outdir);
         save_fits("fmodesWFS00all", ffname);
 
         if((IDRMMmodes != -1) && (IDRMMresp != -1))
@@ -945,13 +945,13 @@ imageID AOloopControl_computeCalib_mkModes(
             delete_image_ID("linfitcoeff", DELETE_IMAGE_ERRMODE_WARNING);
             delete_image_ID("imfitim", DELETE_IMAGE_ERRMODE_WARNING);
             delete_image_ID("wfsimtmp", DELETE_IMAGE_ERRMODE_WARNING);
-            save_fits("imfitmat", "!imfitmat.fits");
+            save_fits("imfitmat", "imfitmat.fits");
             delete_image_ID("imfitmat", DELETE_IMAGE_ERRMODE_WARNING);
         }
         fclose(fpLOcoeff);
 
         printf("\n");
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodesWFS00all.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodesWFS00all.fits", outdir);
         save_fits("fmodesWFS00all", ffname);
 
 
@@ -1182,7 +1182,7 @@ imageID AOloopControl_computeCalib_mkModes(
             }
 
             //TEST
-            //sprintf(fname, "!./mkmodestmp/fmodes0_%02ld.fits", mblock);
+            //sprintf(fname, "./mkmodestmp/fmodes0_%02ld.fits", mblock);
             //save_fits(imname, fname);
 
             printf("[%5d] SVD decomp ... (%u) .... ", __LINE__,
@@ -1231,7 +1231,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
 
 
-            WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes1_%02u.fits", outdir,
+            WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes1_%02u.fits", outdir,
                                mblock);
             save_fits(imname1, ffname);
 
@@ -1261,7 +1261,7 @@ imageID AOloopControl_computeCalib_mkModes(
             }
         }
 
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes1all.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes1all.fits", outdir);
         save_fits("fmodes1all", ffname);
 
 
@@ -1401,7 +1401,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 }
                 MBLOCK_ID[mblock] = IDm;
 
-                WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes2_%02u.fits", outdir,
+                WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes2_%02u.fits", outdir,
                                    mblock);
                 save_fits(imname, ffname);
             }
@@ -1436,7 +1436,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 cnt++;
             }
         }
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes2all.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes2all.fits", outdir);
         save_fits("fmodes2all", ffname);
 
 
@@ -1553,7 +1553,7 @@ imageID AOloopControl_computeCalib_mkModes(
             MBLOCK_ID[mblock] = IDm;
 
 
-            WRITE_FULLFILENAME(fname1, "!./%s/mkmodestmp/fmodes2b_%02u.fits", outdir,
+            WRITE_FULLFILENAME(fname1, "./%s/mkmodestmp/fmodes2b_%02u.fits", outdir,
                                mblock);
             save_fits(imname1, fname1);
 
@@ -1586,7 +1586,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 cnt++;
             }
         }
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes2ball.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes2ball.fits", outdir);
         save_fits("fmodes2ball", ffname);
     }
     else
@@ -1828,7 +1828,7 @@ imageID AOloopControl_computeCalib_mkModes(
                         delete_image_ID("linfitcoeff", DELETE_IMAGE_ERRMODE_WARNING);
                         delete_image_ID("imfitim", DELETE_IMAGE_ERRMODE_WARNING);
 
-                        save_fits("imfitmat", "!imfitmat.fits");
+                        save_fits("imfitmat", "imfitmat.fits");
                         delete_image_ID("imfitmat", DELETE_IMAGE_ERRMODE_WARNING);
 
                         fclose(fpLOcoeff);
@@ -1842,7 +1842,7 @@ imageID AOloopControl_computeCalib_mkModes(
                                 data.image[IDwfsmask].array.F[wfselem];
                         }
 
-                    WRITE_FULLFILENAME(fname, "!./%s/mkmodestmp/fmodesWFS0_%02u.fits", outdir,
+                    WRITE_FULLFILENAME(fname, "./%s/mkmodestmp/fmodesWFS0_%02u.fits", outdir,
                                        mblock);
                     save_fits(imname, fname);
                 }
@@ -1871,7 +1871,7 @@ imageID AOloopControl_computeCalib_mkModes(
                     cnt++;
                 }
             }
-            WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodesWFS0all.fits", outdir);
+            WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodesWFS0all.fits", outdir);
             save_fits("fmodesWFS0all", ffname);
 
 
@@ -2159,7 +2159,7 @@ imageID AOloopControl_computeCalib_mkModes(
                     fflush(stdout);//TEST
 
                     WRITE_IMAGENAME(imname1, "fmodesWFS1_%02u", mblock);
-                    WRITE_FULLFILENAME(fname1, "!./%s/mkmodestmp/fmodesWFS1_%02u.fits", outdir,
+                    WRITE_FULLFILENAME(fname1, "./%s/mkmodestmp/fmodesWFS1_%02u.fits", outdir,
                                        mblock);
                     printf("[%5d]    saving   %s -> %s\n", __LINE__, imname1, fname1);
                     fflush(stdout);//TEST
@@ -2170,7 +2170,7 @@ imageID AOloopControl_computeCalib_mkModes(
                     fflush(stdout);//TEST
 
                     WRITE_IMAGENAME(imname1, "fmodes3_%02u", mblock);
-                    WRITE_FULLFILENAME(fname1, "!./%s/mkmodestmp/fmodes3_%02u.fits", outdir,
+                    WRITE_FULLFILENAME(fname1, "./%s/mkmodestmp/fmodes3_%02u.fits", outdir,
                                        mblock);
                     save_fits(imname1, fname1);
                     MBLOCK_ID[mblock] = IDmdm1;
@@ -2245,9 +2245,9 @@ imageID AOloopControl_computeCalib_mkModes(
                     }
                 }
             }
-            WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodesWFS1all.fits", outdir);
+            WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodesWFS1all.fits", outdir);
             save_fits("fmodesWFS1all", ffname);
-            WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes3all.fits", outdir);
+            WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes3all.fits", outdir);
             save_fits("fmodes3all", ffname);
         }
 
@@ -2437,10 +2437,10 @@ imageID AOloopControl_computeCalib_mkModes(
                 delete_image_ID("SVDout", DELETE_IMAGE_ERRMODE_WARNING);
                 delete_image_ID("modecoeff", DELETE_IMAGE_ERRMODE_WARNING);
 
-                WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodes_%02u.fits", outdir, mblock);
+                WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodes_%02u.fits", outdir, mblock);
                 save_fits(imnameDM1, ffname);
 
-                WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodesWFS_%02u.fits", outdir,
+                WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodesWFS_%02u.fits", outdir,
                                    mblock);
                 save_fits(imnameWFS1, ffname);
                 MBLOCK_ID[mblock] = IDmdm1;
@@ -2497,9 +2497,9 @@ imageID AOloopControl_computeCalib_mkModes(
             }
         }
 
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodesall.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodesall.fits", outdir);
         save_fits("fmodesall", ffname);
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodesWFSall.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodesWFSall.fits", outdir);
         save_fits("fmodesWFSall", ffname);
 
         NBmblock = cnt1;
@@ -2549,7 +2549,7 @@ imageID AOloopControl_computeCalib_mkModes(
 
                     delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
 
-                    WRITE_FULLFILENAME(fname, "!./%s/mkmodestmp/cmat_%02u.fits", outdir, mblock);
+                    WRITE_FULLFILENAME(fname, "./%s/mkmodestmp/cmat_%02u.fits", outdir, mblock);
                     save_fits(imnameCM, fname);
 
                     printf("[%5d] -- Block %u/%u COMPUTE ZONAL CONTROL MATRIX FROM MODAL CONTROL MATRIX\n",
@@ -2567,10 +2567,10 @@ imageID AOloopControl_computeCalib_mkModes(
                            __LINE__, mblock, NBmblock);
                     fflush(stdout);
 
-                    WRITE_FULLFILENAME(fname, "!./%s/mkmodestmp/cmatc_%02u.fits", outdir, mblock);
+                    WRITE_FULLFILENAME(fname, "./%s/mkmodestmp/cmatc_%02u.fits", outdir, mblock);
                     save_fits(imnameCMc, fname);
 
-                    WRITE_FULLFILENAME(fname, "!./%s/mkmodestmp/cmatcact_%02u.fits", outdir,
+                    WRITE_FULLFILENAME(fname, "./%s/mkmodestmp/cmatcact_%02u.fits", outdir,
                                        mblock);
                     WRITE_IMAGENAME(imname1, "%s_00", imnameCMcact);
                     save_fits(imname1, fname);
@@ -2632,7 +2632,7 @@ imageID AOloopControl_computeCalib_mkModes(
             }
         }
 
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/fmodesWFSall.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/fmodesWFSall.fits", outdir);
         save_fits("fmodesWFSall", ffname);
 
 
@@ -2679,7 +2679,7 @@ imageID AOloopControl_computeCalib_mkModes(
                 cnt++;
             }
         }
-        WRITE_FULLFILENAME(ffname, "!./%s/mkmodestmp/cmatall.fits", outdir);
+        WRITE_FULLFILENAME(ffname, "./%s/mkmodestmp/cmatall.fits", outdir);
         save_fits("cmatall", ffname);
 
 
@@ -2698,7 +2698,7 @@ imageID AOloopControl_computeCalib_mkModes(
         		#endif
 
                 delete_image_ID("VTmat");
-                save_fits("cmat", "!./mkmodestmp/cmat.fits");
+                save_fits("cmat", ./mkmodestmp/cmat.fits");
 
         	}
 
@@ -2879,7 +2879,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
     {
         data.image[IDmodes].array.F[kk * NBmodes + kk] = 1.0;
     }
-    save_fits("fmodesall", "!./mkmodestmp/fmodesall.fits");
+    save_fits("fmodesall", "./mkmodestmp/fmodesall.fits");
 
     for(mblock = 0; mblock < NBmblock; mblock++)
     {
@@ -2931,7 +2931,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             }
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME,
-                            "!./mkmodestmp/fmodesWFS_%02ld.fits", mblock);
+                            "./mkmodestmp/fmodesWFS_%02ld.fits", mblock);
             if(slen < 1)
             {
                 PRINT_ERROR("snprintf wrote <1 char");
@@ -2995,7 +2995,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME,
-                            "!./mkmodestmp/cmat_%02ld.fits", mblock);
+                            "./mkmodestmp/cmat_%02ld.fits", mblock);
             if(slen < 1)
             {
                 PRINT_ERROR("snprintf wrote <1 char");
@@ -3038,7 +3038,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
                     1.0;
             }
 
-            slen = snprintf(fname, STRINGMAXLEN_IMGNAME, "!./mkmodestmp/fmodes_%02ld.fits",
+            slen = snprintf(fname, STRINGMAXLEN_IMGNAME, "./mkmodestmp/fmodes_%02ld.fits",
                             mblock);
             if(slen < 1)
             {
@@ -3059,7 +3059,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             delete_image_ID("dmmask", DELETE_IMAGE_ERRMODE_WARNING);
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME,
-                            "!./mkmodestmp/cmatc_%02ld.fits", mblock);
+                            "./mkmodestmp/cmatc_%02ld.fits", mblock);
             if(slen < 1)
             {
                 PRINT_ERROR("snprintf wrote <1 char");
@@ -3074,7 +3074,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             save_fits(imnameCMc, fname);
 
             slen = snprintf(fname, STRINGMAXLEN_FULLFILENAME,
-                            "!./mkmodestmp/cmatcact_%02ld.fits", mblock);
+                            "./mkmodestmp/cmatcact_%02ld.fits", mblock);
             if(slen < 1)
             {
                 PRINT_ERROR("snprintf wrote <1 char");
@@ -3173,7 +3173,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             cnt++;
         }
     }
-    save_fits("fmodesWFSall", "!./mkmodestmp/fmodesWFSall.fits");
+    save_fits("fmodesWFSall", "./mkmodestmp/fmodesWFSall.fits");
 
 
     cnt = 0;
@@ -3201,7 +3201,7 @@ imageID AOloopControl_computeCalib_mkModes_Simple(
             cnt++;
         }
     }
-    save_fits("cmatall", "!./mkmodestmp/cmatall.fits");
+    save_fits("cmatall", "./mkmodestmp/cmatall.fits");
 
 
 

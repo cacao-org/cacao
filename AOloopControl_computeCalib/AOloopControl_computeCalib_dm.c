@@ -284,8 +284,8 @@ long AOloopControl_computeCalib_DMextrapolateModes(
                 }
             data.image[IDpixdist].array.F[jj * xsize + ii] = dist;
         }
-    //save_fits("pixmaskdist", "!_tmp_pixmaskdist.fits");
-    //save_fits(IDcpa_name, "!_tmp_cpa.fits");
+    //save_fits("pixmaskdist", "_tmp_pixmaskdist.fits");
+    //save_fits(IDcpa_name, "_tmp_cpa.fits");
     for(kk = 0; kk < zsize; kk++)
     {
         for(ii = 0; ii < xsize; ii++)

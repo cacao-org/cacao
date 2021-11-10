@@ -1330,7 +1330,7 @@ long FPAOloopControl_MeasureResp_level1(float ampl, long delayfr,
     FPAO_Measure_WFSrespC(loop, delayfr, delayRM1us, NBave, NBexcl, "pokeC",
                           "wfsRespC", FPAOinitMode, NBiter);
 
-    save_fits("wfsRespC", "!wfsRespC.fits");
+    save_fits("wfsRespC", "wfsRespC.fits");
 
 
     return 0;

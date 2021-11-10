@@ -187,7 +187,7 @@ errno_t make_master_turbulence_screen_local(
                          ii * ii + jj * jj));
             cnt++;
         }
-    // save_fl_fits("strf","!strf.fits");
+    // save_fl_fits("strf","strf.fits");
     delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
     C1 = pow(10.0, value / cnt);
 

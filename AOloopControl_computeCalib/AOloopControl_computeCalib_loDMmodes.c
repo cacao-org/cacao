@@ -189,7 +189,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(
                 val0 = exp(-pow(a0*r,b0));
                 data.image[IDmask].array.F[jj*msizex+ii] = val0*val1;
             }
-        save_fits("dmmask", "!dmmask.fits");
+        save_fits("dmmask", "dmmask.fits");
         xc1 = xc;
         yc1 = yc;
     }
