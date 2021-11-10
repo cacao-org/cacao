@@ -3059,7 +3059,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     printf("NBpoke = %u\n", NBpoke);
     fflush(stdout);
 
- 
+
 
 
     // ******************************************************************
@@ -3109,7 +3109,6 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     save_fits("dmpokeC2a", fname);
 
 
-    printf(">>>>>>>>>>>>>>>>>> loop = %ld\n", AOloopindex);
 
     AOloopControl_acquireCalib_Measure_WFSrespC(
         AOloopindex,
@@ -3131,8 +3130,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     printf("Saving to > %s\n", fname);
 
-    
-if(0){ //TBE
+
 
     // Negative direction sequence
     char outdirnameB[STRINGMAXLEN_DIRNAME];
@@ -3163,6 +3161,7 @@ if(0){ //TBE
 
     printf("Acquisition complete\n");
     fflush(stdout);
+
 
 
 
@@ -3498,7 +3497,7 @@ if(0){ //TBE
 
     // create archive script
     functionparameter_write_archivescript(&fps);
-}//TBE
+
 
     function_parameter_RUNexit(&fps);
 
