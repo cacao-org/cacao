@@ -797,7 +797,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
     long loop_default[4] = { 0, 0, 10, 0 };
     //__attribute__((unused)) long fpi_loop =
     function_parameter_add_entry(&fps,
-                                 ".loop",
+                                 ".AOloopindex",
                                  "loop index",
                                  FPTYPE_INT64,
                                  FPFLAG_DEFAULT_INPUT,
