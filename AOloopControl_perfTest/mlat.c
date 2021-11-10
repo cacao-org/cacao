@@ -168,7 +168,7 @@ static errno_t compute_function()
     //uint32_t dmysize;
 
     // connect to DM
-    IMGID imgdm = makeIMGID(wfsstream);
+    IMGID imgdm = makeIMGID(dmstream);
     resolveIMGID(&imgdm, ERRMODE_ABORT);
     printf("DM size : %u %u\n", imgdm.md->size[0], imgdm.md->size[1]);
 
@@ -308,8 +308,7 @@ static errno_t compute_function()
         }
     }
 
-    list_image_ID();
-    if(framerateOK == 2)
+    if(framerateOK == 1)
     {
         // Measure latency
         double tdouble_start;
