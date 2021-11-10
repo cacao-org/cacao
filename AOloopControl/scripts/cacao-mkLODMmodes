@@ -94,7 +94,6 @@ fi
 
 
 
-
 LOOPNAME=$( head -1 LOOPNAME )
 loopnb=$( head -1 LOOPNUMBER )
 
@@ -132,6 +131,7 @@ pname=${pname0#"./"}-$loopnb
 
 
 cacao -n $pname << EOF
+mload milkZernikePolyn
 cacao.aolnb ${loopnb}
 loadfits "${datadir}/dmslaved.fits" dmslaved0
 imtrunc dmslaved0 0.0 1.0 dmslaved
