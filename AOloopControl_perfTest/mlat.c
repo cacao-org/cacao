@@ -308,7 +308,7 @@ static errno_t compute_function()
         }
     }
 
-
+    list_image_ID();
     if(framerateOK == 2)
     {
         // Measure latency
@@ -343,7 +343,6 @@ static errno_t compute_function()
         tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
         long wfscntstart = imgwfs.md->cnt0;
         long wfsframeoffset = (long)(0.1 * (*wfsNBframemax) );
-
 
 
         // Measurement loop
