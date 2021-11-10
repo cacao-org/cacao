@@ -124,14 +124,14 @@ echo "datadir       : ${datadir}"
 echo "##########################################"
 echo "# MAKE MASKS                              "
 echo "##########################################"
-# 
+#
 # MAKE SLAVED ACTUATOR DM MASK: dmmask_mkm.fits -> dmslaved.fits, dmmask.fits
-# 
+#
 # INPUT:
 #	dmmask_mkm.fits
 # OUTPUT:
-#	dmslaved.fits  
-#	dmmask_mksl.fits    
+#	dmslaved.fits
+#	dmmask_mksl.fits
 #
 
 
@@ -141,7 +141,7 @@ actproxrad=$( grep "^${FPSname}.DMmask.proxrad " ${FPSfilename} | awk '{print $3
 cacao << EOF
 loadfits "${datadir}/dmmask_mkm.fits" DMmaskRM
 cacaocc.aolmkslact DMmaskRM ${actproxrad} DMslavedact
-savefits DMslavedact "!${datadir}/dmslaved.fits"
+savefits DMslavedact "${datadir}/dmslaved.fits"
 exitCLI
 EOF
 
@@ -153,7 +153,7 @@ loadfits "${datadir}/dmmask_mkm.fits" dmmRM
 loadfits "${datadir}/dmslaved.fits" dmsl
 imtrunc dmsl 0.0 1.0 dmsl1
 dmm=1.0-(1.0-dmmRM)*(1.0-dmsl1)
-savefits dmm "!${datadir}/dmmask_mksl.fits"
+savefits dmm "${datadir}/dmmask_mksl.fits"
 exitCLI
 EOF
 
@@ -167,12 +167,12 @@ echo "dmmask_mksl.fits" >> "${datadir}/loglist.dat"
 echo "#################################################################"
 echo "# NORMALIZE FLUX OVER wfsmask    "
 echo "#################################################################"
-# 
+#
 # INPUT
 #	wfsref.fits  (measured reference, normalized over whole image)
 #	wfsmask_mkm.fits (wfs pixel mask)
 #   zrespM.fits  (measured response matrix)
-#  
+#
 # OUTPUT
 #	wfsref_mn.fits (WFS reference normalized over mask)
 #   zrespM_mn.fits (response matrix normalized over mask)
@@ -186,10 +186,10 @@ im0m=wfm*im0
 a=itot(im0)/itot(im0m)
 # 1/a is fraction of flux inside mask
 im1=im0*a/itot(im0)
-savefits im1 "!${datadir}/wfsref_mn.fits"
+savefits im1 "${datadir}/wfsref_mn.fits"
 loadfits "${datadir}/zrespM.fits" zrespm
 zrespm1=zrespm*a
-savefits zrespm1 "!${datadir}/zrespM_mn.fits"
+savefits zrespm1 "${datadir}/zrespM_mn.fits"
 listim
 exitCLI
 EOF

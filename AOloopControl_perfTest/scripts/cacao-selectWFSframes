@@ -54,8 +54,8 @@ RequiredDirs=()
 # SCRIPT ARGUMENTS (mandatory)
 # syntax: "name:type(s)/test(s):description"
 #MSarg+=( "logdir:string:telemetry directory" )
-MSarg+=( "streamWFScube:string:WFS telemetry cube" ) 
-MSarg+=( "streamPSFcube:string:PSF telemetry cube" ) 
+MSarg+=( "streamWFScube:string:WFS telemetry cube" )
+MSarg+=( "streamPSFcube:string:PSF telemetry cube" )
 MSarg+=( "selfrac:float:selection fraction" )
 MSarg+=( "x0:long:selection window x start" )
 MSarg+=( "x1:long:selection window x end" )
@@ -95,11 +95,11 @@ loadfits "$streamPSFcube" impsfC
 
 cacaopt.aolperfselwfsfpsf imwfsC impsfC $selFrac ${windowx0} ${windowx1} ${windowy0} ${windowy1} $evalMode $ALPHAnorm
 
-savefits imwfsbest "!imwfsbest.fits"
-savefits imwfsall "!imwfsall.fits"
+savefits imwfsbest "imwfsbest.fits"
+savefits imwfsall "imwfsall.fits"
 
-savefits impsfbest "!impsfbest.fits"
-savefits impsfall "!impsfall.fits"
+savefits impsfbest "impsfbest.fits"
+savefits impsfall "impsfall.fits"
 
 listim
 exit

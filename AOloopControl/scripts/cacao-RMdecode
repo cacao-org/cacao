@@ -190,7 +190,7 @@ pname="aol${loopnb}zrespM"
 
 
 fileRMpokeCube="${datadir}/RMpokeCube.fits"
-filerespM="./${datadir}/respM.fits" 
+filerespM="./${datadir}/respM.fits"
 filewfsref="./${datadir}/wfsref.fits"
 
 
@@ -212,9 +212,9 @@ loadfits "${filewfsref}" wfsref0
 
 cacaocc.aolproczrm respm wfsref0 zrespm wfsmap dmmap
 
-savefits zrespm "!./${datadir}/zrespM.fits"
-savefits wfsmap "!./${datadir}/wfsmap.fits"
-savefits dmmap "!./${datadir}/dmmap.fits"
+savefits zrespm "./${datadir}/zrespM.fits"
+savefits wfsmap "./${datadir}/wfsmap.fits"
+savefits dmmap "./${datadir}/dmmap.fits"
 listim
 exitCLI
 EOF
@@ -243,7 +243,6 @@ zrespM_filename="./${stageddir}/respM.ave${cntnum}.fits"
 wfsref_filename="./${stageddir}/wfsref.ave${cntnum}.fits"
 
 if [ -f "$zrespM_filename" ]; then
-    
 
 
 OMP_NUM_THREADS=6 cacao -n $pname << EOF
@@ -256,7 +255,7 @@ loadfits "${wfsref_filename}" wfsref00
 
 cacaocc.aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
 
-savefits zrespmat "!./${stageddir}/zrespM.ave${cntnum}.fits"
+savefits zrespmat "./${stageddir}/zrespM.ave${cntnum}.fits"
 listim
 exitCLI
 EOF

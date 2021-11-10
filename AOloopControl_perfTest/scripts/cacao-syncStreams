@@ -57,8 +57,8 @@ RequiredDirs=()
 # SCRIPT ARGUMENTS (mandatory)
 # syntax: "name:type(s)/test(s):description"
 MSarg+=( "logdir:string:telemetry directory" )
-MSarg+=( "streamWFS:string:WFS stream" ) 
-MSarg+=( "streamPSF:string:PSF stream" ) 
+MSarg+=( "streamWFS:string:WFS stream" )
+MSarg+=( "streamPSF:string:PSF stream" )
 MSarg+=( "tstart:float: start time" )
 MSarg+=( "tstop:float:stop time" )
 MSarg+=( "dtsample:float:exposure time per output frame" )
@@ -86,8 +86,8 @@ timespan="${inputMSargARRAY[7]}"
 
 cacao << EOF
 cacaopt.aolptmksyncs2 "$directory" ${streamWFS} ${streamPSF} ${tstart} ${tstop} ${dtsample} ${dtlag} ${timespan}
-savefits outC0 "!${streamWFS}.sync.fits"
-savefits outC1 "!${streamPSF}.sync.fits"
+savefits outC0 "${streamWFS}.sync.fits"
+savefits outC1 "${streamPSF}.sync.fits"
 listim
 exitCLI
 EOF
@@ -103,7 +103,7 @@ cacao << EOF
 loadfits "${streamWFS}.dark.fits" stream0dark
 loadfits "${streamWFS}.sync.fits" outC0
 outC0c=outC0-streamWFSdark
-savefits outC0c "!${streamWFS}.syncC.fits"
+savefits outC0c "${streamWFS}.syncC.fits"
 exitCLI
 EOF
 mv ${streamWFS}.syncC.fits ${streamWFS}.sync.fits
@@ -115,7 +115,7 @@ cacao << EOF
 loadfits "${streamPSF}.dark.fits" stream1dark
 loadfits "${streamPSF}.sync.fits" outC1
 outC1c=outC1-streamWFSdark
-savefits outC1c "!${streamPSF}.syncC.fits"
+savefits outC1c "${streamPSF}.syncC.fits"
 exitCLI
 EOF
 mv ${streamPSF}.syncC.fits ${streamPSF}.sync.fits

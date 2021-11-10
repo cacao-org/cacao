@@ -163,10 +163,10 @@ cacao.aolnb $loopnb
 loadfits "./${datadir}/zrespM.fits" zrespm
 cacaocc.aolRMmkmasks zrespm wfsmap dmmap ${DMmaskRMp0} ${DMmaskRMc0} ${DMmaskRMp1} ${DMmaskRMc1} ${WFSmaskRMp0} ${WFSmaskRMc0} ${WFSmaskRMp1} ${WFSmaskRMc1}
 listim
-savefits wfsmap "!${datadir}/wfsmap_mkm.fits"
-savefits dmmap "!${datadir}/dmmap_mkm.fits"
-savefits wfsmask "!${datadir}/wfsmask_mkm.fits"
-savefits dmmask "!${datadir}/dmmask_mkm.fits"
+savefits wfsmap "${datadir}/wfsmap_mkm.fits"
+savefits dmmap "${datadir}/dmmap_mkm.fits"
+savefits wfsmask "${datadir}/wfsmask_mkm.fits"
+savefits dmmask "${datadir}/dmmask_mkm.fits"
 exitCLI
 EOF
 
@@ -195,7 +195,7 @@ lim=perc(imr1,a2)
 imr2=imr1/lim
 imtrunc imr2 0.0 1.001 imr3
 imr4=floor(imr3)
-savefits imr4 "!wfsmask_SNRfilt.fits"  
+savefits imr4 "wfsmask_SNRfilt.fits"
 exitCLI
 EOF
 cp wfsmask_SNRfilt.fits wfsmask.fits
