@@ -309,7 +309,7 @@ static errno_t compute_function()
     }
 
 
-    if(framerateOK == 1)
+    if(framerateOK == 2)
     {
         // Measure latency
         double tdouble_start;
@@ -368,7 +368,7 @@ static errno_t compute_function()
             long kkoffset = 0;
             long kkmax = 0;
 
-            
+
 
 
             snprintf(msgstring, stringmaxlen, "iteration %5u / %5u", iter, *NBiter);
