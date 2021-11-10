@@ -133,7 +133,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
 
-    printf(">>>>>>>>>>>> %d\n", __LINE__);
+    printf(">>>>>>>>>>>> [%u] %d\n", *loop, __LINE__);
 
     // connect to WFS image
     char WFSname[100];
@@ -141,7 +141,7 @@ static errno_t compute_function()
     long ID_wfsim = read_sharedmem_image(WFSname);
     if(ID_wfsim == -1)
     {
-        printf("ERROR: no WFS input");
+        printf("ERROR: no WFS input\n");
         return RETURN_FAILURE;
     }
     uint32_t sizexWFS = data.image[ID_wfsim].md[0].size[0];
