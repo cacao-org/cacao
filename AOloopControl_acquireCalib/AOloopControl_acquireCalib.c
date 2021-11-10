@@ -3128,6 +3128,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     WRITE_FULLFILENAME(fname, "%s/wfsrespC.fits", outdirnameA);
     save_fits("wfsresp2a", fname);
 
+
+    printf("Saving to > %s\n", fname);
+
+    
 if(0){ //TBE
 
     // Negative direction sequence
