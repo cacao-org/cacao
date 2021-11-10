@@ -3062,6 +3062,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     printf("NBpoke = %u\n", NBpoke);
     fflush(stdout);
 
+    printf("LINE %d\n", __LINE__);
+    sleep(5);
+
+
     // ******************************************************************
     // *************** COPY POKE INFO ***********************************
     // ******************************************************************
