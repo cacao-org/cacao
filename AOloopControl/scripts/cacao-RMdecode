@@ -212,9 +212,9 @@ loadfits "${filewfsref}" wfsref0
 
 cacaocc.aolproczrm respm wfsref0 zrespm wfsmap dmmap
 
-savefits zrespm "./${datadir}/zrespM.fits"
-savefits wfsmap "./${datadir}/wfsmap.fits"
-savefits dmmap "./${datadir}/dmmap.fits"
+saveFITS zrespm "./${datadir}/zrespM.fits"
+saveFITS wfsmap "./${datadir}/wfsmap.fits"
+saveFITS dmmap "./${datadir}/dmmap.fits"
 listim
 exitCLI
 EOF
@@ -255,7 +255,7 @@ loadfits "${wfsref_filename}" wfsref00
 
 cacaocc.aolproczrm zrespmat0 wfsref00 zrespmat wfsmap dmmap
 
-savefits zrespmat "./${stageddir}/zrespM.ave${cntnum}.fits"
+saveFITS zrespmat "./${stageddir}/zrespM.ave${cntnum}.fits"
 listim
 exitCLI
 EOF

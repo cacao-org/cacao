@@ -145,7 +145,7 @@ od=0.42*imsize0
 id=0.13*imsize0
 if=0
 cacaocc.aolmklodmmodes fmodes imsize0 imsize1 ${LOmaxCPA} 0.8 cx cy od id 0 
-savefits fmodes "${datadir}/respM_LOmodes.fits"
+saveFITS fmodes "${datadir}/respM_LOmodes.fits"
 exitCLI
 EOF
 

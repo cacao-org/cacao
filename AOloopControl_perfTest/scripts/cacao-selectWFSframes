@@ -95,11 +95,11 @@ loadfits "$streamPSFcube" impsfC
 
 cacaopt.aolperfselwfsfpsf imwfsC impsfC $selFrac ${windowx0} ${windowx1} ${windowy0} ${windowy1} $evalMode $ALPHAnorm
 
-savefits imwfsbest "imwfsbest.fits"
-savefits imwfsall "imwfsall.fits"
+saveFITS imwfsbest "imwfsbest.fits"
+saveFITS imwfsall "imwfsall.fits"
 
-savefits impsfbest "impsfbest.fits"
-savefits impsfall "impsfall.fits"
+saveFITS impsfbest "impsfbest.fits"
+saveFITS impsfall "impsfall.fits"
 
 listim
 exit
