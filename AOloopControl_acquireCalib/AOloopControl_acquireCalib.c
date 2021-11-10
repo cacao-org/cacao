@@ -2698,12 +2698,15 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
             //
             if(fps.parray[fpi_autoTiming].fpflag & FPFLAG_ONOFF)     // ON state
             {
+                printf("UPDATE TIMING >>>>>>>>>\n");
                 if(fps.parray[fpi_FPS_mlat].info.fps.FPSNBparamMAX > 0)
                 {
                     double latfr = functionparameter_GetParamValue_FLOAT64(&FPS_mlat,
                                    ".out.latencyfr");
                     double framerateHz = functionparameter_GetParamValue_FLOAT64(&FPS_mlat,
                                          ".out.framerateHz");
+
+                    printf(">>>>>>>>>>>> latency = %f\n", latfr);
 
                     //long delayfr = (long) (1000000.0*latfr);
 
