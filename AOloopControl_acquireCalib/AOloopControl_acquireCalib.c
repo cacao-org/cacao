@@ -3461,7 +3461,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	dmmap       : DM  response map
     //
 
-/*
+
 
 
     // input:
@@ -3473,6 +3473,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	dmmap_mkm   : DM  pixel map ((re-)recomputed by execmkDMWFSmasks)
     //	wfsmask_mkm : WFS pixel mask
     //	dmmask_mkm  : DM  pixel mask
+
+
+/*
 
     // input:
     //	wfsref
