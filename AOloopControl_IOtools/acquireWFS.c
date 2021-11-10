@@ -227,12 +227,12 @@ static errno_t compute_function()
 
 
     // LOAD DARK
-    long IDwfsdark = -1;
+    imageID IDwfsdark = -1;
     {
         char wfsdarkname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloop);
         IDwfsdark = image_ID(wfsdarkname);
-        //Average_cam_frames_nelem = sizeWFS;
+        printf("IDwfsdark = %ld\n", IDwfsdark);
     }
 
 
@@ -464,7 +464,6 @@ static errno_t compute_function()
 
 
 
-    printf(">>>>>>>>>>>>>>>>>>>> acquire WFS iteration done\n");
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
