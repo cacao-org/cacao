@@ -3451,7 +3451,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
 
 
-    printf("EXECUTING : "%s %s/%s.fps", execRMdecode, fps.md->datadir,
+    printf("EXECUTING : %s %s/%s.fps", execRMdecode, fps.md->datadir,
                            data.FPS_name);
     EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execRMdecode, fps.md->datadir,
                            data.FPS_name);
