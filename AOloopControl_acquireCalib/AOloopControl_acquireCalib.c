@@ -2065,15 +2065,15 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
     struct timespec tt0; //TEST
     clock_gettime(CLOCK_REALTIME, &tt0); //TEST
 
-    long loop_default[4] = { 0, 0, 10, 0 };
-    long fpi_loop = 0;
+    long AOloopindex_default[4] = { 0, 0, 10, 0 };
+    long fpi_AOloopindex = 0;
     function_parameter_add_entry(&fps,
-                                 ".loop",
+                                 ".AOloopindex",
                                  "loop index",
                                  FPTYPE_INT64,
                                  FPFLAG_DEFAULT_INPUT,
-                                 &loop_default,
-                                 &fpi_loop);
+                                 &AOloopindex_default,
+                                 &fpi_AOloopindex);
 
 
 
@@ -2787,7 +2787,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     // GET FUNCTION PARAMETER VALUES
     // ===============================
 
-    long loop        = functionparameter_GetParamValue_INT64(&fps, ".loop");
+    long AOloopindex        = functionparameter_GetParamValue_INT64(&fps, ".AOloopindex");
     float ampl       = functionparameter_GetParamValue_FLOAT64(&fps, ".ampl");
     long delayfr     = functionparameter_GetParamValue_INT64(&fps,
                        ".timing.delayfr");
@@ -3109,10 +3109,10 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     save_fits("dmpokeC2a", fname);
 
 
-    printf(">>>>>>>>>>>>>>>>>> loop = %ld\n", loop);
+    printf(">>>>>>>>>>>>>>>>>> loop = %ld\n", AOloopindex);
 
     AOloopControl_acquireCalib_Measure_WFSrespC(
-        loop,
+        AOloopindex,
         delayfr,
         delayRM1us,
         NBave,
@@ -3139,7 +3139,7 @@ if(0){ //TBE
     save_fits("dmpokeC2b", fname);
 
     AOloopControl_acquireCalib_Measure_WFSrespC(
-        loop,
+        AOloopindex,
         delayfr,
         delayRM1us,
         NBave,
