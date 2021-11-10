@@ -511,6 +511,8 @@ static errno_t init_module_CLI()
         "int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname)"
     );
 
+    CLIADDCMD_AOloopControl_IOtools__acquireWFS();
+
 
     // add atexit functions here
     // atexit((void*) myfunc);
