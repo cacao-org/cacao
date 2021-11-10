@@ -3490,7 +3490,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	wfsref_mn   : WFS reference, masked and normalized to dmmask_mksl
     //	zrespM_mn   : zonal RM, masked and normalized to dmmask_mksl
 
-/*
+
     // input:
     //	dmslaved
     //	dmmask_mksl
@@ -3501,7 +3501,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	respM_LOmodes
 
 
-*/
+
     functionparameter_SaveFPS2disk_dir(&fps, fps.md->datadir);
 
 
