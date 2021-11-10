@@ -133,8 +133,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
 
-    printf(">>>>>>>>>>>> [%u] %d\n", *AOloop, __LINE__);
-
     // connect to WFS image
     char WFSname[100];
     sprintf(WFSname, "aol%u_wfsim", *AOloop);
@@ -149,7 +147,6 @@ static errno_t compute_function()
     uint64_t sizeWFS = sizexWFS * sizeyWFS;
     uint8_t  WFSatype = data.image[ID_wfsim].md[0].datatype;
 
-    printf(">>>>>>>>>>>> %d\n", __LINE__);
 
     // create/read images
     imageID ID_imWFS0 = -1;
@@ -171,16 +168,15 @@ static errno_t compute_function()
         // ID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
     }
 
-    printf(">>>>>>>>>>>> %d\n", __LINE__);
 
-    long IDwfsmask;
+    long IDwfsmask = -1;
     {
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%u_wfsmask", *AOloop);
         IDwfsmask = read_sharedmem_image(name);
+        printf("reading image %s -> ID = %ld\n", name, IDwfsmask);
     }
 
-    printf(">>>>>>>>>>>> %d\n", __LINE__);
 
     list_image_ID();
 
