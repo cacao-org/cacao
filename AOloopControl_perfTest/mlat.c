@@ -8,6 +8,8 @@
  */
 
 #include <math.h>
+
+#define _BSD_SOURCE
 #include <unistd.h>
 
 #include "CommandLineInterface/CLIcore.h"
