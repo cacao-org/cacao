@@ -2782,9 +2782,6 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     // ===========================
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
-    printf("LINE %d\n", __LINE__);
-    sleep(5);
-
 
     // ===============================
     // GET FUNCTION PARAMETER VALUES
@@ -3062,8 +3059,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     printf("NBpoke = %u\n", NBpoke);
     fflush(stdout);
 
-    printf("LINE %d\n", __LINE__);
-    sleep(5);
+ 
 
 
     // ******************************************************************
@@ -3086,6 +3082,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                                fps.md->datadir);
     }
 
+
+
+if(0){ //TBE
 
     // ******************************************************************
     // *************** EXECUTE POKE SEQUENCES ***************************
@@ -3492,7 +3491,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
     // create archive script
     functionparameter_write_archivescript(&fps);
-
+}//TBE
 
     function_parameter_RUNexit(&fps);
 
