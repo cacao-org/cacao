@@ -3450,8 +3450,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
                            fps.md->datadir);
 
 
-/*
 
+    printf("EXECUTING : "%s %s/%s.fps", execRMdecode, fps.md->datadir,
+                           data.FPS_name);
     EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execRMdecode, fps.md->datadir,
                            data.FPS_name);
     // output:
@@ -3459,6 +3460,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     //	wfsmap      : WFS response map
     //	dmmap       : DM  response map
     //
+
+/*
+
 
     // input:
     //	zrespM      : decoded (zonal) response matix
