@@ -2782,6 +2782,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     // ===========================
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
+    printf("LINE %d\n", __LINE__);
+    sleep(5);
+
 
     // ===============================
     // GET FUNCTION PARAMETER VALUES
