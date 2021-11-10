@@ -1255,7 +1255,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
     // GET FUNCTION PARAMETER VALUES
     // ===============================
     __attribute__((unused)) long loop         =
-        functionparameter_GetParamValue_INT64(&fps, ".loop");
+        functionparameter_GetParamValue_INT64(&fps, ".AOloopindex");
     float SVDlim      = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
     float CPAmax      = functionparameter_GetParamValue_FLOAT64(&fps, ".CPAmax");
     float deltaCPA    = functionparameter_GetParamValue_FLOAT64(&fps, ".deltaCPA");
