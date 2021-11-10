@@ -72,6 +72,8 @@
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
+#include "mlat.h"
+
 /* =============================================================================================== */
 /* =============================================================================================== */
 /*                                      DEFINES, MACROS                                            */
@@ -604,24 +606,8 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli()
 
 
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/*                                    FUNCTIONS SOURCE CODE                                        */
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl functions */
 
 
-
-
-
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/** @name AOloopControl - 1. INITIALIZATION, configurations                                        */
-/* =============================================================================================== */
-/* =============================================================================================== */
 
 static errno_t init_module_CLI()
 {
@@ -778,6 +764,8 @@ static errno_t init_module_CLI()
         "<input WFS cube> <input PSF cube> <fraction> <x0> <x1> <y0> <y1> <EvalMode> <alpha>",
         "aolperfselwfsfpsf imwfsC impsfC 100 120 100 120 0 2.0",
         "int AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS, char *IDnamePSF, float frac, long x0, long x1, long y0, long y1, int EvalMode, float alpha)");
+
+    CLIADDCMD_AOloopControl_perfTest__mlat();
 
     return RETURN_SUCCESS;
 }

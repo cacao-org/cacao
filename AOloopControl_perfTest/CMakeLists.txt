@@ -5,11 +5,13 @@ set(SOURCEFILES
 	AOloopControl_perfTest_DM.c
 	AOloopControl_perfTest_status.c
 	AOloopControl_perfTest_LinSim.c
+	mlat.c
 )
 
 # list include files (.h) that should be installed on system
 set(INCLUDEFILES
-	)
+	mlat.h
+)
 
 # list scripts that should be installed on system
 set(SCRIPTFILES
