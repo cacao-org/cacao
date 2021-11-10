@@ -8,6 +8,7 @@
  */
 
 #include <math.h>
+#include <unistd.h>
 
 #include "CommandLineInterface/CLIcore.h"
 
@@ -516,7 +517,7 @@ static errno_t compute_function()
                     for(uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         float tmp = data.image[IDwfsc].array.F[kk * wfssize + ii] -
-                              data.image[IDwfsc].array.F[(kk - 1) * wfssize + ii];
+                                    data.image[IDwfsc].array.F[(kk - 1) * wfssize + ii];
                         valarray[kk] += tmp * tmp;
                     }
 
@@ -524,7 +525,7 @@ static errno_t compute_function()
                     for(uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         double tmp = data.image[IDwfsc].array.D[kk * wfssize + ii] -
-                              data.image[IDwfsc].array.D[(kk - 1) * wfssize + ii];
+                                     data.image[IDwfsc].array.D[(kk - 1) * wfssize + ii];
                         valarray[kk] += tmp * tmp;
                     }
 
@@ -532,7 +533,7 @@ static errno_t compute_function()
                     for(uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         int tmp = data.image[IDwfsc].array.UI16[kk * wfssize + ii] -
-                              data.image[IDwfsc].array.UI16[(kk - 1) * wfssize + ii];
+                                  data.image[IDwfsc].array.UI16[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
@@ -540,7 +541,7 @@ static errno_t compute_function()
                     for(uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         int tmp = data.image[IDwfsc].array.SI16[kk * wfssize + ii] -
-                              data.image[IDwfsc].array.SI16[(kk - 1) * wfssize + ii];
+                                  data.image[IDwfsc].array.SI16[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
@@ -548,7 +549,7 @@ static errno_t compute_function()
                     for(uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         long tmp = data.image[IDwfsc].array.UI32[kk * wfssize + ii] -
-                              data.image[IDwfsc].array.UI32[(kk - 1) * wfssize + ii];
+                                   data.image[IDwfsc].array.UI32[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
@@ -556,7 +557,7 @@ static errno_t compute_function()
                     for(uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         long tmp = data.image[IDwfsc].array.SI32[kk * wfssize + ii] -
-                              data.image[IDwfsc].array.SI32[(kk - 1) * wfssize + ii];
+                                   data.image[IDwfsc].array.SI32[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
@@ -564,7 +565,7 @@ static errno_t compute_function()
                     for(uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         long tmp = data.image[IDwfsc].array.UI64[kk * wfssize + ii] -
-                              data.image[IDwfsc].array.UI64[(kk - 1) * wfssize + ii];
+                                   data.image[IDwfsc].array.UI64[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
@@ -572,7 +573,7 @@ static errno_t compute_function()
                     for(uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         long tmp = data.image[IDwfsc].array.SI64[kk * wfssize + ii] -
-                              data.image[IDwfsc].array.SI64[(kk - 1) * wfssize + ii];
+                                   data.image[IDwfsc].array.SI64[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
