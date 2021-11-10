@@ -175,8 +175,8 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
-    // coarse estimate of frame rate
-
+    // Measure coarse estimate of frame rate
+    int framerateOK = 0;
     {
         double tdouble_start;
         double tdouble_end;
@@ -205,20 +205,65 @@ static errno_t compute_function()
             snprintf(msgstring, stringmaxlen,
                      "Number of frames %ld too small -> cannot proceed", wfscntend - wfscntstart);
             processinfo_error(processinfo, msgstring);
-//        free(latencyarray);
-//        free(latencysteparray);
-            DEBUG_TRACE_FEXIT();
-            return RETURN_FAILURE;
+            printf("%s\n", msgstring);
         }
+        else
+        {
+            framerateOK = 1;
+            snprintf(msgstring, stringmaxlen, "frame period wfsdt = %f sec  ( %f Hz )\n",
+                     *wfsdt, 1.0 / *wfsdt);
+            processinfo_WriteMessage(processinfo, msgstring);
 
-        snprintf(msgstring, stringmaxlen, "frame period wfsdt = %f sec  ( %f Hz )\n",
-                 *wfsdt, 1.0 / *wfsdt);
-        processinfo_WriteMessage(processinfo, msgstring);
-
-        // This is approximate, will be measured more precisely later on
-        *framerateHz = 1.0 / (*wfsdt);
+            // This is approximate, will be measured more precisely later on
+            *framerateHz = 1.0 / (*wfsdt);
+        }
     }
 
+
+    if(framerateOK == 1)
+    {
+        // Measure latency
+
+
+        double dtmax; // Max running time per iteration
+
+        // update timing parameters for poke test
+        dtmax = *wfsdt * (*wfsNBframemax) * 1.2 + 0.5;
+        *twaitus = 1000000.0 * *wfsdt * 3.0;   // wait 3 frames
+        *refdtoffset = 0.5 * *wfsdt;
+
+        struct timespec *tarray;
+        tarray = (struct timespec *) malloc(sizeof(struct timespec) * (*wfsNBframemax) );
+        if(tarray == NULL) {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort(); // or handle error in other ways
+        }
+
+        double *dtarray;
+        dtarray = (double *) malloc(sizeof(double) * (*wfsNBframemax) );
+        if(dtarray == NULL) {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort(); // or handle error in other ways
+        }
+
+        //FILE *fphwlat = fps_write_RUNoutput_file(&fps, "hardwlatency", "dat");
+
+        struct timespec tnow;
+        clock_gettime(CLOCK_REALTIME, &tnow);
+        double tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
+        long wfscntstart = imgwfs.md->cnt0;
+        long wfsframeoffset = (long)(0.1 * (*wfsNBframemax) );
+
+
+        free(tarray);
+        free(dtarray);
+
+
+        FILE *fpout;
+        fpout = fps_write_RUNoutput_file(data.fpsptr, "param_hardwlatency", "txt");
+        fprintf(fpout, "%8.6f", 1.01);
+        fclose(fpout);
+    }
 
 
 
