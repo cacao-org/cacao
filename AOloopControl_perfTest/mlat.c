@@ -13,6 +13,7 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
+#include "COREMOD_tools/COREMOD_tools.h" // quicksort
 #include "statistic/statistic.h" // ran1()
 
 
@@ -734,11 +735,67 @@ static errno_t compute_function()
         long wfscntend = imgwfs.md->cnt0;
 
 
-
-
-
         free(tarray);
         free(dtarray);
+
+
+
+
+        // PROCESS RESULTS
+
+        {
+            int stringmaxlen = 500;
+            char msgstring[stringmaxlen];
+
+            snprintf(msgstring, stringmaxlen, "Processing Data (%u iterations)", (*NBiter));
+            processinfo_WriteMessage(processinfo, msgstring);
+        }
+
+        copy_image_ID("_testdm0", dmstream, 1);
+
+        float latencyave = 0.0;
+        float latencystepave = 0.0;
+        float minlatency = latencyarray[0];
+        float maxlatency = latencyarray[0];
+        for(uint32_t iter = 0; iter < (*NBiter); iter++)
+        {
+            if(latencyarray[iter] > maxlatency)
+            {
+                maxlatency = latencyarray[iter];
+            }
+
+            if(latencyarray[iter] < minlatency)
+            {
+                minlatency = latencyarray[iter];
+            }
+
+            latencyave += latencyarray[iter];
+            latencystepave += latencysteparray[iter];
+        }
+        latencyave /= (*NBiter);
+        latencystepave /= (*NBiter);
+
+        // measure precise frame rate
+        double dt = tdouble_end - tdouble_start;
+        printf("FRAME RATE = %.3f Hz\n", 1.0 * (wfscntend - wfscntstart) / dt);
+        *framerateHz = 1.0 * (wfscntend - wfscntstart) / dt;
+        functionparameter_SaveParam2disk(data.fpsptr, ".out.framerateHz");
+
+
+
+        // update latencystepave from framerate
+        latencystepave = latencyave * (1.0 * (wfscntend - wfscntstart) / dt);
+
+        quick_sort_float(latencyarray, (*NBiter));
+
+        printf("AVERAGE LATENCY = %8.3f ms   %f frames\n", latencyave * 1000.0,
+               latencystepave);
+        printf("min / max over %u measurements: %8.3f ms / %8.3f ms\n", (*NBiter),
+               minlatency * 1000.0, maxlatency * 1000.0);
+
+        *latencyfr = latencystepave;
+        functionparameter_SaveParam2disk(data.fpsptr, ".out.latencyfr");
+
 
 
         FILE *fpout;
