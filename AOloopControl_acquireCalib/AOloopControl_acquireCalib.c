@@ -2570,6 +2570,16 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 
 
 
+            if(fps.parray[fpi_MaskMode].fpflag & FPFLAG_ONOFF)
+            {
+                fps.parray[fpi_filename_DMRMmask].fpflag |= FPFLAG_FILE_RUN_REQUIRED;
+            }
+            else
+            {
+                fps.parray[fpi_filename_DMRMmask].fpflag &= ~FPFLAG_FILE_RUN_REQUIRED;
+            }
+
+
             //
             // Compute action: make DM RM mask
             //
@@ -3452,7 +3462,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
 
 
     printf("EXECUTING : %s %s/%s.fps", execRMdecode, fps.md->datadir,
-                           data.FPS_name);
+           data.FPS_name);
     EXECUTE_SYSTEM_COMMAND("%s %s/%s.fps", execRMdecode, fps.md->datadir,
                            data.FPS_name);
     // output:
