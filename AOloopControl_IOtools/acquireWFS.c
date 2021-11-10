@@ -228,6 +228,10 @@ static errno_t compute_function()
         char wfsdarkname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloop);
         IDwfsdark = image_ID(wfsdarkname);
+        if(IDwfsdark == -1)
+        {
+            IDwfsdark = read_sharedmem_image(wfsdarkname);
+        }
         printf("IDwfsdark = %ld\n", IDwfsdark);
     }
 
