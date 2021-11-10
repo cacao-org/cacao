@@ -9,8 +9,7 @@
 
 #include <math.h>
 
-#define _BSD_SOURCE
-#include <unistd.h>
+#include <time.h>
 
 #include "CommandLineInterface/CLIcore.h"
 
