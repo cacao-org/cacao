@@ -3108,6 +3108,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN(
     WRITE_FULLFILENAME(fname, "%s/dmpokeC.fits", outdirnameA);
     save_fits("dmpokeC2a", fname);
 
+
+    printf(">>>>>>>>>>>>>>>>>> loop = %ld\n", loop);
+
     AOloopControl_acquireCalib_Measure_WFSrespC(
         loop,
         delayfr,
