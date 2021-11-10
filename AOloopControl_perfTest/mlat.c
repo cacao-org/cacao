@@ -205,6 +205,47 @@ static errno_t compute_function()
 
 
 
+    // Create DM patterns
+    long IDdm0 = -1;
+    long IDdm1 = -1;
+    {
+        uint32_t dmxsize = imgdm.md->size[0];
+        uint32_t dmysize = imgdm.md->size[1];
+
+        create_2Dimage_ID("_testdm0", dmxsize, dmysize, &IDdm0);
+        create_2Dimage_ID("_testdm1", dmxsize, dmysize, &IDdm1);
+
+        float RMStot = 0.0;
+        for(uint32_t ii = 0; ii < dmxsize; ii++)
+            for(uint32_t jj = 0; jj < dmysize; jj++)
+            {
+                float x = (2.0 * ii - 1.0 * dmxsize) / dmxsize;
+                float y = (2.0 * jj - 1.0 * dmxsize) / dmysize;
+                data.image[IDdm0].array.F[jj * dmxsize + ii] = 0.0;
+                data.image[IDdm1].array.F[jj * dmxsize + ii] = (*OPDamp) * (sin(8.0 * x) * sin(8.0 * y));
+                RMStot += data.image[IDdm1].array.F[jj * dmxsize + ii] *
+                          data.image[IDdm1].array.F[jj * dmxsize + ii];
+            }
+        RMStot = sqrt(RMStot / dmxsize / dmysize);
+
+
+        printf("RMStot = %f", RMStot);
+
+        for(uint32_t ii = 0; ii < dmxsize; ii++)
+            for(uint32_t jj = 0; jj < dmysize; jj++)
+            {
+                data.image[IDdm1].array.F[jj * dmxsize + ii] *= (*OPDamp) / RMStot;
+            }
+
+        // save output
+        fps_write_RUNoutput_image(data.fpsptr, "_testdm0", "pokeDM0");
+        fps_write_RUNoutput_image(data.fpsptr, "_testdm1", "pokeDM1");
+    }
+
+
+
+
+
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
