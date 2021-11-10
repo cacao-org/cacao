@@ -12,8 +12,8 @@
 
 
 // Local variables pointers
-static uint32_t *loop;
-long fpi_loop;
+static uint32_t *AOloop;
+long fpi_AOloop;
 
 static uint32_t *semindex;
 long fpi_semindex;
@@ -47,8 +47,8 @@ long fpi_compnormwfsim;
 static CLICMDARGDEF farg[] =
 {
     {
-        CLIARG_UINT32, ".loop", "loop index", "0",
-        CLIARG_VISIBLE_DEFAULT, (void **) &loop, &fpi_loop
+        CLIARG_UINT32, ".AOloop", "loop index", "0",
+        CLIARG_VISIBLE_DEFAULT, (void **) &AOloop, &fpi_AOloop
     },
     {
         CLIARG_UINT32, ".semindex", "input semaphore index", "1",
@@ -133,11 +133,11 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
 
-    printf(">>>>>>>>>>>> [%u] %d\n", *loop, __LINE__);
+    printf(">>>>>>>>>>>> [%u] %d\n", *AOloop, __LINE__);
 
     // connect to WFS image
     char WFSname[100];
-    sprintf(WFSname, "aol%u_wfsim", *loop);
+    sprintf(WFSname, "aol%u_wfsim", *AOloop);
     long ID_wfsim = read_sharedmem_image(WFSname);
     if(ID_wfsim == -1)
     {
@@ -160,10 +160,10 @@ static errno_t compute_function()
         naxes[0] = sizexWFS;
         naxes[1] = sizeyWFS;
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS0", *loop);
+        WRITE_IMAGENAME(name, "aol%u_imWFS0", *AOloop);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS0);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS1", *loop);
+        WRITE_IMAGENAME(name, "aol%u_imWFS1", *AOloop);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS1);
 
 
@@ -176,7 +176,7 @@ static errno_t compute_function()
     long IDwfsmask;
     {
         char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%u_wfsmask", *loop);
+        WRITE_IMAGENAME(name, "aol%u_wfsmask", *AOloop);
         IDwfsmask = read_sharedmem_image(name);
     }
 
@@ -230,7 +230,7 @@ static errno_t compute_function()
     long IDwfsdark = -1;
     {
         char wfsdarkname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *loop);
+        WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloop);
         IDwfsdark = image_ID(wfsdarkname);
         //Average_cam_frames_nelem = sizeWFS;
     }
