@@ -157,5 +157,5 @@ echo "respM_LOmodes.fits" >> "${datadir}/loglist.dat"
 
 
 
-#cp ${loRMstageddir}/respM_LOmodes.fits ./conf/respM_LOmodes.fits
+cp ${datadir}/respM_LOmodes.fits ./conf/respM_LOmodes.fits
 
