@@ -446,7 +446,7 @@ echolog "Adding process ${fpsname}"
 echo "${fpsname}         cacaocc.aolcomputeCM       ${fpsarg0}" >> fpslist.txt
 
 fpscmdheader
-fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+fpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
 fpscmd "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}"
 fpscmd "setval ${fpsfname}.FPS_loRMacqu acqlin_loRM-${CACAO_LOOPNUMBER}"

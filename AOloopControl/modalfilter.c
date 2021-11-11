@@ -34,6 +34,12 @@ long fpi_galpha;
 static uint32_t *mimax;
 long fpi_mimax;
 
+static uint32_t *avets;
+long fpi_avets;
+
+static uint32_t *aftgain;
+long fpi_aftgain;
+
 
 static CLICMDARGDEF farg[] =
 {
@@ -64,6 +70,14 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_UINT32, ".mimax", "maximum mode index", "100",
         CLIARG_HIDDEN_DEFAULT, (void **) &mimax, &fpi_mimax
+    },
+    {
+        CLIARG_FLOAT32, ".avets", "averaging timescale [nb fr]", "10000.0",
+        CLIARG_HIDDEN_DEFAULT, (void **) &avets, &fpi_avets
+    },
+    {
+        CLIARG_FLOAT32, ".aftgain", "afterburner gain", "0.0",
+        CLIARG_HIDDEN_DEFAULT, (void **) &aftgain, &fpi_aftgain
     }
 };
 
@@ -80,6 +94,8 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_vlimit].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_galpha].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_mimax].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_avets].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_aftgain].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -131,6 +147,8 @@ static errno_t compute_function()
 
     float *mvalout = (float *) malloc(sizeof(float) * NBmode);
 
+    float *avemval = (float *) malloc(sizeof(float) * NBmode);
+
     // create output mode coeffs
     imageID IDmodevalDM;
     {
@@ -145,6 +163,7 @@ static errno_t compute_function()
     {
         data.image[IDmodevalDM].array.F[mi] = 0.0;
         mvalout[mi] = 0.0;
+        avemval[mi] = 0.0;
     }
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
@@ -168,7 +187,11 @@ static errno_t compute_function()
         float mult = (*loopmult);
         float limitval = (*vlimit);
 
-        mvalout[mi] = (1.0-gain)*mvalout[mi] - gain * imgin.im->array.F[mi];
+
+        float avegain = 1.0/ (*avets);
+        avemval[mi] = (1.0-avegain) * avemval[mi] + avegain * imgin.im->array.F[mi];;
+
+        mvalout[mi] = (1.0-gain)*mvalout[mi] - gain * (imgin.im->array.F[mi] - (*aftgain)*avemval[mi]);
         mvalout[mi] *= mult;
 
         if(mvalout[mi] > limitval)
@@ -189,6 +212,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(mvalout);
+    free(avemval);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
