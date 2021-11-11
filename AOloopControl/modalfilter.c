@@ -160,6 +160,10 @@ static errno_t compute_function()
         {
             gain = 0.0;
         }
+        else
+        {
+            gain *= 1.0e-6; //TODO figure out why necessary
+        }
 
         float mult = (*loopmult);
         float limitval = (*vlimit);
