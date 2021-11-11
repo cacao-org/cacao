@@ -1305,7 +1305,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
             FUNCTION_PARAMETER_STRMAXLEN);
 
 
-    EXECUTE_SYSTEM_COMMAND("mkdir -p %s/mkmodestmp", outdirname);
+    EXECUTE_SYSTEM_COMMAND("mkdir -p ./%s/mkmodestmp", fps.md->datadir);
 
     list_image_ID();
 
