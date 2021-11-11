@@ -31,6 +31,8 @@ long fpi_vlimit;
 static float *galpha;
 long fpi_galpha;
 
+static uint32_t *mimax;
+long fpi_mimax;
 
 
 static CLICMDARGDEF farg[] =
@@ -59,6 +61,10 @@ static CLICMDARGDEF farg[] =
         CLIARG_FLOAT32, ".galpha", "loop gain alpha (1=flat)", "0.5",
         CLIARG_HIDDEN_DEFAULT, (void **) &galpha, &fpi_galpha
     },
+    {
+        CLIARG_UINT32, ".mimax", "maximum mode index", "100",
+        CLIARG_HIDDEN_DEFAULT, (void **) &mimax, &fpi_mimax
+    }
 };
 
 
@@ -73,6 +79,7 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_vlimit].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_galpha].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_mimax].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -144,10 +151,15 @@ static errno_t compute_function()
 
     for(uint32_t mi=0; mi<NBmode; mi++)
     {
-        float x = 1.0*mi/NBmode;
+        float x = 1.0*mi / NBmode;
 
         float gain = (*loopgain);
         gain *= pow( (*galpha), x);
+
+        if(mi > (*mimax))
+        {
+            gain = 0.0;
+        }
 
         float mult = (*loopmult);
         float limitval = (*vlimit);
