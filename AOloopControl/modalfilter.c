@@ -168,7 +168,7 @@ static errno_t compute_function()
         float mult = (*loopmult);
         float limitval = (*vlimit);
 
-        mvalout[mi] = (1.0-gain)*mvalout[mi] + gain * imgin.im->array.F[mi];
+        mvalout[mi] = (1.0-gain)*mvalout[mi] - gain * imgin.im->array.F[mi];
         mvalout[mi] *= mult;
 
         if(mvalout[mi] > limitval)
