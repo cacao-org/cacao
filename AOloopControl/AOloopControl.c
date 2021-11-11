@@ -2223,9 +2223,9 @@ static errno_t init_module_CLI()
         "aolrtlogsetOFF 2",
         "int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)");
 
-
+#ifdef HAVE_CUDA
     CLIADDCMD_AOloopControl__modalfilter();
-
+#endif
     // add atexit functions here
     // atexit((void*) myfunc); atexit = starts a function once the program exits (only if it is not a crash exit)
 
