@@ -194,7 +194,7 @@ static errno_t compute_function()
 
         if((mi==0) || (mi==1))
         {
-            gain *= 2.0;
+            gain *= 4.0;
         }
 
 
