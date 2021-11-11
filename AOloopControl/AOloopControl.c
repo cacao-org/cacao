@@ -123,6 +123,7 @@
 #include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
+#include "modalfilter.h"
 
 
 #ifdef HAVE_CUDA
@@ -2221,6 +2222,9 @@ static errno_t init_module_CLI()
         "<rtlindex>",
         "aolrtlogsetOFF 2",
         "int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex)");
+
+
+    CLIADDCMD_AOloopControl__modalfilter();
 
     // add atexit functions here
     // atexit((void*) myfunc); atexit = starts a function once the program exits (only if it is not a crash exit)

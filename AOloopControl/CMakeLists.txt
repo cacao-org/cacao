@@ -4,6 +4,15 @@ set(SRCNAME "AOloopControl")
 message("")
 message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 
+
+
+
+
+
+
+
+
+
 project(lib_${LIBNAME}_project)
 
 add_library(${LIBNAME} SHARED ${SRCNAME}.c
@@ -33,30 +42,32 @@ AOloopControl_RTstreamLOG.c
 AOloopControl_sig2Modecoeff.c
 AOloopControl_time_param.c
 AOloopControl_wfs.c
+modalfilter.c
+modalfilter.h
 )
 
 
-if(USE_CUDA)
-find_package(CUDA 9.0 REQUIRED)
-message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
-message("---- CUDA_INCLUDE_DIRS = ${CUDA_INCLUDE_DIRS}")
-message("---- CUDA_LIBRARIES    = ${CUDA_LIBRARIES}" )
-target_compile_options(${LIBNAME} PUBLIC -DHAVE_CUDA)
-target_link_libraries(${LIBNAME} PUBLIC ${CUDA_LIBRARIES})
+#if(USE_CUDA)
+#find_package(CUDA 9.0 REQUIRED)
+#message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
+#message("---- CUDA_INCLUDE_DIRS = ${CUDA_INCLUDE_DIRS}")
+#message("---- CUDA_LIBRARIES    = ${CUDA_LIBRARIES}" )
+#target_compile_options(${LIBNAME} PUBLIC -DHAVE_CUDA)
+#target_link_libraries(${LIBNAME} PUBLIC ${CUDA_LIBRARIES})
 
-if(USE_MAGMA)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(MAGMA REQUIRED magma)
-message("---- MAGMA_LIBRARY_DIRS =  ${MAGMA_LIBRARY_DIRS}")
-message("---- MAGMA_LIBRARIES    =  ${MAGMA_LIBRARIES}" )
-message("---- MAGMA_CFLAGS_OTHER =  ${MAGMA_CFLAGS_OTHER}" )
-target_include_directories(${LIBNAME} PUBLIC ${MAGMA_INCLUDE_DIRS})
-target_link_directories(${LIBNAME} PUBLIC ${MAGMA_LIBRARY_DIRS})
-target_link_libraries(${LIBNAME} PUBLIC ${MAGMA_LIBRARIES})
-target_compile_options(${LIBNAME} PUBLIC -DHAVE_MAGMA ${MAGMA_CFLAGS_OTHER})
-endif(USE_MAGMA)
+#if(USE_MAGMA)
+#find_package(PkgConfig REQUIRED)
+#pkg_check_modules(MAGMA REQUIRED magma)
+#message("---- MAGMA_LIBRARY_DIRS =  ${MAGMA_LIBRARY_DIRS}")
+#message("---- MAGMA_LIBRARIES    =  ${MAGMA_LIBRARIES}" )
+#message("---- MAGMA_CFLAGS_OTHER =  ${MAGMA_CFLAGS_OTHER}" )
+#target_include_directories(${LIBNAME} PUBLIC ${MAGMA_INCLUDE_DIRS})
+#target_link_directories(${LIBNAME} PUBLIC ${MAGMA_LIBRARY_DIRS})
+#target_link_libraries(${LIBNAME} PUBLIC ${MAGMA_LIBRARIES})
+#target_compile_options(${LIBNAME} PUBLIC -DHAVE_MAGMA ${MAGMA_CFLAGS_OTHER})
+#endif(USE_MAGMA)
 
-endif(USE_CUDA)
+#endif(USE_CUDA)
 
 target_include_directories(${LIBNAME} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/..
