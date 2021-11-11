@@ -38,11 +38,11 @@ long fpi_mimax;
 static CLICMDARGDEF farg[] =
 {
     {
-        CLIARG_STREAM, ".inWFSstream", "input WFS stream", "null",
+        CLIARG_STREAM, ".inWFSstream", "input WFS stream", "aol0_modeval",
         CLIARG_VISIBLE_DEFAULT, (void **) &inWFSstream, &fpi_inWFSstream
     },
     {
-        CLIARG_STREAM, ".modevalDM", "DM mode coefficient values", "null",
+        CLIARG_STREAM, ".modevalDM", "DM mode coefficient values", "aol0_modevalDM",
         CLIARG_VISIBLE_DEFAULT, (void **) &modevalDM, &fpi_modevalDM
     },
     {
