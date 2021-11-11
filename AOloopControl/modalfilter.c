@@ -162,7 +162,7 @@ static errno_t compute_function()
         }
         else
         {
-            gain *= 1.0; //TODO figure out why necessary
+            gain *= 1.0e-4; //TODO figure out why necessary
         }
 
         float mult = (*loopmult);
