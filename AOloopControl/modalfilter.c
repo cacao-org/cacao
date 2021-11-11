@@ -7,6 +7,7 @@
  */
 
 
+#include <math.h>
 
 #include "CommandLineInterface/CLIcore.h"
 
@@ -23,6 +24,12 @@ long fpi_loopgain;
 
 static float *loopmult;
 long fpi_loopmult;
+
+static float *vlimit;
+long fpi_vlimit;
+
+static float *galpha;
+long fpi_galpha;
 
 
 
@@ -43,6 +50,14 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_FLOAT32, ".loopmult", "loop mult", "0.95",
         CLIARG_HIDDEN_DEFAULT, (void **) &loopmult, &fpi_loopmult
+    },
+    {
+        CLIARG_FLOAT32, ".vlimit", "value limit", "0.2",
+        CLIARG_HIDDEN_DEFAULT, (void **) &vlimit, &fpi_vlimit
+    },
+    {
+        CLIARG_FLOAT32, ".galpha", "loop gain alpha (1=flat)", "0.5",
+        CLIARG_HIDDEN_DEFAULT, (void **) &galpha, &fpi_galpha
     },
 };
 
@@ -127,11 +142,26 @@ static errno_t compute_function()
 
     for(uint32_t mi=0; mi<NBmode; mi++)
     {
+        float x = 1.0*mi/NBmode;
+
         float gain = (*loopgain);
+        gain *= pow( (*galpha), x);
+
         float mult = (*loopmult);
+        float limitval = (*vlimit);
 
         mvalout[mi] = (1.0-gain)*mvalout[mi] + gain * imgin.im->array.F[mi];
         mvalout[mi] *= mult;
+
+        if(mvalout[mi] > limitval)
+        {
+            mvalout[mi] = limitval;
+        }
+
+        if(mvalout[mi] < -limitval)
+        {
+            mvalout[mi] = -limitval;
+        }
     }
 
     memcpy(data.image[IDmodevalDM].array.F, mvalout, sizeof(float) * NBmode);
