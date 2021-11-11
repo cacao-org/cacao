@@ -166,8 +166,13 @@ static errno_t compute_function()
         avemval[mi] = 0.0;
     }
 
+    float avegain = 1.0 / (*avets);
+    printf("avegain = %f\n", avegain);
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
+
+    avegain = 1.0 / (*avets);
     for(uint32_t mi=0; mi<NBmode; mi++)
     {
         float x = 1.0*mi / NBmode;
@@ -188,10 +193,10 @@ static errno_t compute_function()
         float limitval = (*vlimit);
 
 
-        float avegain = 1.0/ (*avets);
-        avemval[mi] = (1.0-avegain) * avemval[mi] + avegain * imgin.im->array.F[mi];;
+        avemval[mi] = (1.0-avegain)*avemval[mi] + avegain * (imgin.im->array.F[mi] * gain);
 
-        mvalout[mi] = (1.0-gain)*mvalout[mi] - gain * (imgin.im->array.F[mi] - (*aftgain)*avemval[mi]);
+        // update long term average if input mode values
+        mvalout[mi] = (1.0-gain)*mvalout[mi] - gain * (imgin.im->array.F[mi] - (*aftgain)*avemval[mi] );
         mvalout[mi] *= mult;
 
         if(mvalout[mi] > limitval)
