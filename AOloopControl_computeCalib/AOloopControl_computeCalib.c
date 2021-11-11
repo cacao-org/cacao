@@ -1336,7 +1336,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
 
 
     AOloopControl_computeCalib_mkModes("fmodes", DMxsize, DMysize, CPAmax, deltaCPA,
-                                       align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim, outdirname);
+                                       align_CX, align_CY, align_ID, align_OD, MaskMode, BlockNB, SVDlim, fps.md->datadir);
 
 
 
