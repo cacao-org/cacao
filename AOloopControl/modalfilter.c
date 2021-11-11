@@ -54,6 +54,8 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
+        data.fpsptr->parray[fpi_loopgain].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;

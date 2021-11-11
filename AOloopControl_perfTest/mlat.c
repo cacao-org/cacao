@@ -179,7 +179,7 @@ static errno_t compute_function()
     printf("WFS size : %u %u\n", imgwfs.md->size[0], imgwfs.md->size[1]);
 
     // create wfs image cube for storage
-    long IDwfsc;
+    imageID IDwfsc;
     {
         uint32_t naxes[3];
         naxes[0] = imgwfs.md->size[0];
