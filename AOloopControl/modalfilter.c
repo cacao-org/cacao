@@ -71,6 +71,8 @@ static errno_t customCONFsetup()
     {
         data.fpsptr->parray[fpi_loopgain].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_vlimit].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_galpha].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
