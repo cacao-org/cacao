@@ -50,26 +50,61 @@ Copy this directory to the root work directory :
 
     $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-ex01-conf <rootworkdir>
 
-Run deployment script :
 
-    $ cacao-task-manager -X 3 <CONFNAME>
+## Running Setup Tasks
 
-The cacao-task-manager script reads the configuration files, and deploys necessary processes and tmux sessions.
-
-The main opertion performed are:
-
-- create **WORKDIR** directory
-- Prepare tmux sessions and windows
-- Launch all conf processes
-- Launch milk-fpsCTRL instance in tmux session. This will be used to manage processes.
+cacao-task-manager is a high level script that runs a sequence of tasks, reading configuration files, and deploying necessary processes and tmux sessions.
 
 To get more info about the task manager script, run it with help option:
 
-    cacao-task-manager -h cacaoloop-ex01
+    $ cacao-task-manager -h <CONFNAME>
 
-Run execution script
 
-    ./aorunscript
+To list the tasks and their status, run the command as follows:
+
+    $ cacao-task-manager <CONFNAME>
+
+The following tasks should be listed :
+
+~~~
+ 0           INITSETUP             DONE        READY   Initial setup:
+ 1     GETSIMCONFFILES             DONE        READY   Get simulation files:
+ 2          TESTCONFIG             DONE        READY   Test configuration:
+ 3          CACAOSETUP             DONE        READY   Run cacao-setup:
+~~~
+Subsequent tasks perform specific parts of the AO loop.
+
+The INITSETUP task creates the **WORKDIR** directory.
+
+The GETSIMCONFFILES task downloads calibration file to simulate an AO system for test purposes.
+
+The TESTCONFIG task performs tests.
+
+The CACAOSETUP task runs cacao-setup within **WORKDIR**, which :
+
+- Reads cacaovars.LOOPNAME.bash to collect information about main loop parameters and which processes should be run
+- Prepares tmux sessions and windows
+- Launches all conf processes
+- Launches milk-fpsCTRL instance in tmux session. This will be used to manage and communicate with processes.
+
+
+To run tasks 0, 1, 2 and 3 :
+
+    $ cacao-task-manager -X 3 <CONFNAME>
+
+
+## Configuring and controlling processes through milk-fpsCTRL fifo: aorunscript
+
+The cacao-setup task (task 3 above) will start an instance of milk-fpsCTRL within a dedicated tmux session. This instance is processing commands sent to a fifo named **/milk/shm/cacaoloop01_fpsCTRL.fifo**.
+
+From this point on, scripts can send commands to the fifo to change parameters, and run/stop processes. Alternatively, users can also use milk-fpsCTRL as an interactive GUI to perform these operations.
+
+The script **aorunscript** performs these steps.
+
+    $ ./aorunscript
+
+Each time aorunscript runs, it performs one step. Run it several times until done. Users are encouraged to read the script content as a template for writing custom scripts.
+
 
 
 ---
@@ -98,7 +133,7 @@ The directories are managed by the following scripts:
 Not all files in fps._fpsname_.data should be saved to configuration of archived.
 
 - fps._fpsname_.dat : values of all fields in the FPS
-- to be written
+- blahblah
 
 
 ## Communication between FPSs
