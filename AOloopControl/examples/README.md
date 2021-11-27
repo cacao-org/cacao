@@ -51,7 +51,7 @@ FPS actions include:
 Communication between FPSs can be achieved in multiple ways:
 
 - A FPS entry can point to another FPS. This allows real-time exchange of parameter values.
- 
+
 
 
 After each step, to archive results:

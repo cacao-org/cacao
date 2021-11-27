@@ -2,7 +2,7 @@
 # Each task is identified by a code
 # This file is read by cacaotask
 # Each code must correspond to an executable cacaotask-<code> in the PATH
-# 
+#
 # Optional comments/description follow the code
 # Add "#" to task to exclude
 #

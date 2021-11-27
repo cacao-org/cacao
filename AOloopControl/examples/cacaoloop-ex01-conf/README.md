@@ -98,7 +98,7 @@ The directories are managed by the following scripts:
 Not all files in fps._fpsname_.data should be saved to configuration of archived.
 
 - fps._fpsname_.dat : values of all fields in the FPS
-- d
+- to be written
 
 
 ## Communication between FPSs
