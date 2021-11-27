@@ -97,10 +97,10 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-#echo "${fpsname}      cacaodm.aolcontrolDMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
 echo "${fpsname}      cacaodm.DMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
 
 fpscmdheader
+fpscmd "setval ${fpsfname}.DMindex ${CACAO_DMINDEX}"
 fpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
 fpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
 fi
