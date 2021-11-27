@@ -162,7 +162,6 @@ static errno_t customCONFsetup()
     {
 
         data.fpsptr->parray[fpi_DMindex].fpflag = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
-        data.fpsptr->parray[fpi_DMindex].fpflag &= ~FPFLAG_WRITECONF;
         data.fpsptr->parray[fpi_DMindex].fpflag &= ~FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_DMindex].val.ui32[1] = 0; // min value
         data.fpsptr->parray[fpi_DMindex].val.ui32[2] = 9; // max value
