@@ -41,6 +41,7 @@ function runstrcmd {
 #
 function fpscmdheader {
 	taskfname="fps.conf/fpssetup.confstart.${fpsfname}.conf"
+	rm ${taskfname}
 	echo "# Function Parameter Structure (FPS) setup configuration" >> ${taskfname}
 	echo "# Written by $0 - edits will be overwritten and lost when re-running $0" >> ${taskfname}
 	echo "# These are the default initial values for FPS entries" >> ${taskfname}

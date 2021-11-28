@@ -53,9 +53,10 @@ function printHELP {
 	echo "  Will create work directory, install scripts and start DMcomb process and links DM to loop"
 	echo "  Each cacao loop has a unique ASCII name, referred to as <loopname> in this manual."
 	echo ""
-	echo "Main steps :"
-	echo "  - Reads cacaovars"
-	echo "  - Calls cacao-fpslistadd:  create fpslist.txt (list of FPSs) and fpssetup.<fpsname>.conf files"
+	echo "Main steps performed by cacao-setup:"
+	echo "  - Reads cacaovars from file cacaovars.<loopname>.bash"
+	echo "  - Calls cacao-fpslistadd: create fpslist.txt (list of FPSs) and fps.conf/fpssetup.confstart.<fpsname>.conf files"
+	echo "  - create work directory, move fpslist.txt and fps.conf dir within it"
 	echo "  - Calls milk-fpsinit to setup FPSs"
 	echo "  - Start milk-fpsCTRL process in tmux session"
 	echo "  - Start conf process for each FPS"
@@ -67,8 +68,11 @@ function printHELP {
 	echo ""
 	echo "[STEP 1] Set essential environment variables"
 	echo "         Create file $(tput bold)$(tput setaf 2) cacaovars.<loopname>.bash$(tput sgr0)"
+	echo "         The cacaovars file sets environment variables that define key parameters for the AO loop,"
+	echo "         and which processes should be deployed."
+	echo "         Run cacao-setup with -e option to create example cacavars file."
 	echo ""
-	echo "[STEP 2] OPTIONAL: Set function parameter values in file $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0)"
+	echo "[STEP 2] OPTIONAL: Set function custom parameter values in file $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0)"
 	echo "         syntax: \"setval <paramfullname> <value>\""
 	echo ""
 	echo "[STEP 3] OPTIONAL: Test setup"
@@ -77,9 +81,6 @@ function printHELP {
 	echo "[STEP 4] Run setup"
 	echo "         $(tput bold)$(tput setaf 5)\$ cacao-setup <loopname>$(tput sgr0)"
 	echo ""
-	echo "[STEP 5] Start cacao control TUI screens tmux session from working directory"
-	echo "         $(tput bold)$(tput setaf 5)\$ cd <AOloop0> $(tput sgr0)"
-	echo "         $(tput bold)$(tput setaf 5)\$ cacao.tmux $(tput sgr0)"
 	echo ""
 	echo ""
 	echo "$(tput bold) ADDING FPS-ENABLED PROCESSES (OPTIONAL) $(tput sgr0)"
@@ -308,6 +309,7 @@ function allFPScmd {
 
 	  # if there is a taskfile associated with command, load it
 	  taskflist="fps.conf/fpssetup.$1.${fpsname}.conf"
+	  echo "FILE : $PWD > ${taskflist}"
 	  if [ -f ${fpstaskfname} ]; then
 	    while IFS='' read -r taskline || [[ -n "${taskline}" ]]; do
 	      echolog "${taskline}"
@@ -801,9 +803,10 @@ echolog "mv fpslist.txt ${LOOPWORKDIR}"
 mv fpslist.txt ${LOOPWORKDIR}
 
 # fpssetup config files
+echo "Current dir: $PWD"
+echo "mv fps.conf ${LOOPWORKDIR}/"
+rm -rf ${LOOPWORKDIR}/fps.conf
 mv fps.conf ${LOOPWORKDIR}/
-
-
 
 
 
