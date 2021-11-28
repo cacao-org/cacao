@@ -91,7 +91,14 @@ To run tasks 0, 1, 2 and 3 :
     $ cacao-task-manager -X 3 <CONFNAME>
 
 
-## 3.2. Configuring and controlling processes through milk-fpsCTRL fifo: aorunscript
+## 3.2. cacao-setup
+
+cacao-setup is the main setup script, which calls other scripts and sets parameters for processes. The help option lists the main operations performed by cacao-setup :
+
+    $ cacao-setup -h
+
+
+## 3.3. Configuring and controlling processes through milk-fpsCTRL fifo: aorunscript
 
 The cacao-setup task (task 3 above) will start an instance of milk-fpsCTRL within a dedicated tmux session. This instance is processing commands sent to a fifo named **/milk/shm/cacaoloop01_fpsCTRL.fifo**.
 
