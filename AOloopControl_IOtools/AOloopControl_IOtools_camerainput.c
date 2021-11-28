@@ -2,7 +2,8 @@
  * @file    AOloopControl_IOtools_camerainput.c
  * @brief   Adaptive Optics Control loop engine I/O tools
  *
- *
+ * OBSOLETE CODE
+ * new code in acquireWFS
  */
 
 
@@ -14,14 +15,6 @@
 
 
 
-
-
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/*                                        HEADER FILES                                             */
-/* =============================================================================================== */
-/* =============================================================================================== */
 
 #include <string.h>
 #include <stdio.h>
@@ -37,12 +30,6 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/*                                      DEFINES, MACROS                                            */
-/* =============================================================================================== */
-/* =============================================================================================== */
-
 
 
 # ifdef _OPENMP
@@ -52,12 +39,6 @@
 
 
 
-
-/* =============================================================================================== */
-/* =============================================================================================== */
-/*                                  GLOBAL DATA DECLARATION                                        */
-/* =============================================================================================== */
-/* =============================================================================================== */
 
 
 
@@ -86,23 +67,15 @@ static float *arrayftmp;
 
 // TIMING
 static struct timespec tnow;
-//static struct timespec tdiff;
 static double tdiffv;
 
-//extern int aoloopcontrol_var.PIXSTREAM_SLICE;
 
 static long ti; // thread index
 
 static int AOLCOMPUTE_TOTAL_ASYNC_THREADinit = 0;
-static int AOLCOMPUTE_TOTAL_INIT =
-    0; // toggles to 1 AFTER total for first image is computed
 
-
-//extern float aoloopcontrol_var.normfloorcoeff;
-
-
-//extern float aoloopcontrol_var.GPU_alpha;
-//extern float aoloopcontrol_var.GPU_beta;
+static int AOLCOMPUTE_TOTAL_INIT =0;
+// toggles to 1 AFTER total for first image is computed
 
 
 
@@ -674,8 +647,6 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF()
                                  FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,
                                  &compnormwfsim_default,
                                  NULL);
-
-
 
 
 
