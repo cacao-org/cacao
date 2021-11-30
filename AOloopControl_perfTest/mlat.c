@@ -106,7 +106,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_OUTPUT_DEFAULT, (void **) &framerateHz, &fpi_framerateHz
     },
     {
-        CLIARG_FLOAT32, ".out.latencyfr", "WFS frame rate [Hz]", "0",
+        CLIARG_FLOAT32, ".out.latencyfr", "hardware latency [frame]", "0",
         CLIARG_OUTPUT_DEFAULT, (void **) &latencyfr, &fpi_latencyfr
     }
 };

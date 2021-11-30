@@ -77,7 +77,7 @@
 #include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 #include "AOloopControl_compTools/AOloopControl_compTools.h"
 
-
+#include "AOloopControl_acquireCalib/acquireWFSlincalib.h"
 
 
 
@@ -102,12 +102,7 @@
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-//extern long aoloopcontrol_var.aoconfID_dmRM;
-//extern long aoloopcontrol_var.aoconfID_wfsim;
-//extern long aoloopcontrol_var.aoconfID_imWFS0;
-//extern long aoloopcontrol_var.aoconfID_imWFS1;
-//extern long aoloopcontrol_var.aoconfID_imWFS1;
-//extern long aoloopcontrol_var.aoconfID_cmd_modesRM;
+
 
 static int RMACQUISITION = 0;
 // toggles to 1 when resp matrix is being acquired
@@ -540,6 +535,7 @@ static errno_t init_module_CLI()
         "long AOloopControl_acquireCalib_RMseries_deinterlace(int NBRM, int refstart, int refend, char *IDout_name)");
 
 
+    CLIADDCMD_milk_AOloopControl_acquireCalib__acquireWFSlincalib();
 
     // add atexit functions here
     // atexit((void*) myfunc);
