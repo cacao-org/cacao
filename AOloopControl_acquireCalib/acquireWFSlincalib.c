@@ -22,13 +22,20 @@ static uint32_t *NBinnerCycle;
 static uint32_t *AOinitMode;
 static uint64_t *MaskMode;
 
-static float    *maskRMp0;
-static float    *maskRMc0;
-static float    *maskRMp1;
-static float    *maskRMc1;
+static float    *maskDMp0;
+static float    *maskDMc0;
+static float    *maskDMp1;
+static float    *maskDMc1;
 
 static float    *DMproxrad;
 
+static float    *maskWFSp0;
+static float    *maskWFSc0;
+static float    *maskWFSp1;
+static float    *maskWFSc1;
+
+static uint64_t *normalize;
+static uint64_t *autotiming;
 
 
 static CLICMDARGDEF farg[] =
@@ -86,27 +93,63 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_FLOAT32, ".DMmask.RMp0", "DM mask, point0 percentile point", "0.2",
         CLIARG_HIDDEN_DEFAULT,
-        (void **) &maskRMp0, NULL
+        (void **) &maskDMp0, NULL
     },
     {
         CLIARG_FLOAT32, ".DMmask.RMc0", "DM mask, point0 coefficient", "1.0",
         CLIARG_HIDDEN_DEFAULT,
-        (void **) &maskRMc0, NULL
+        (void **) &maskDMc0, NULL
     },
     {
         CLIARG_FLOAT32, ".DMmask.RMp1", "DM mask, point1 percentile point", "0.2",
         CLIARG_HIDDEN_DEFAULT,
-        (void **) &maskRMp1, NULL
+        (void **) &maskDMp1, NULL
     },
     {
         CLIARG_FLOAT32, ".DMmask.RMc1", "DM mask, point1 coefficient", "1.0",
         CLIARG_HIDDEN_DEFAULT,
-        (void **) &maskRMc1, NULL
+        (void **) &maskDMc1, NULL
     },
     {
         CLIARG_FLOAT32, ".DMmask.proxrad", "DM actuator proximity radius", "2.5",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &DMproxrad, NULL
+    },
+    {
+        CLIARG_FLOAT32, ".WFSmask.RMp0", "WFS mask, point0 percentile point", "0.2",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &maskWFSp0, NULL
+    },
+    {
+        CLIARG_FLOAT32, ".WFSmask.RMc0", "WFS mask, point0 coefficient", "1.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &maskWFSc0, NULL
+    },
+    {
+        CLIARG_FLOAT32, ".WFSmask.RMp1", "WFS mask, point1 percentile point", "0.2",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &maskWFSp1, NULL
+    },
+    {
+        CLIARG_FLOAT32, ".WFSmask.RMc1", "WFS mask, point1 coefficient", "1.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &maskWFSc1, NULL
+    },
+    {
+        CLIARG_ONOFF, ".normalize", "Normalize WFS frames", "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &normalize, NULL
+    },
+    {
+        CLIARG_ONOFF, ".Hpoke", "Normalize WFS frames", "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &normalize, NULL
+    }
+    ,
+    {
+        CLIARG_ONOFF, ".autoTiming", "Auto Timing", "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &autotiming, NULL
     }
 };
 
@@ -154,6 +197,7 @@ INSERT_STD_FPSCLIfunctions
 // Register function in CLI
 errno_t CLIADDCMD_milk_AOloopControl_acquireCalib__acquireWFSlincalib()
 {
+
     INSERT_STD_CLIREGISTERFUNC
 
     return RETURN_SUCCESS;

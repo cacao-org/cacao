@@ -464,6 +464,8 @@ errno_t AOloopControl_acquireCalib_RMseries_deinterlace_cli()
 static errno_t init_module_CLI()
 {
 
+    DEBUG_TRACE_FSTART();
+
     /* =============================================================================================== */
     /* =============================================================================================== */
     /** @name AOloopControl_acquireCalib - 1. ACQUIRING CALIBRATION                                                 */
@@ -539,6 +541,9 @@ static errno_t init_module_CLI()
 
     // add atexit functions here
     // atexit((void*) myfunc);
+
+    DEBUG_TRACE_FEXIT();
+
 
     return RETURN_SUCCESS;
 }
