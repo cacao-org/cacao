@@ -101,6 +101,10 @@ echolog "Adding process ${fpsname}"
 echo "${fpsname}      cacaodm.DMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
 
 fpscmdheader
+# infinite loop
+fpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+fpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+fpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
 fpscmd "setval ${fpsfname}.DMindex ${CACAO_DMINDEX}"
 fpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
 fpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
@@ -137,6 +141,12 @@ echolog "Adding process ${fpsname}"
 echo "${fpsname}    streamdelay         ${fpsarg0}"  >> fpslist.txt
 
 fpscmdheader
+
+# run simulator at finite frame rate
+fpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+fpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+fpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_dmdisp"
+
 fpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
 fpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
 fpscmd "setval ${fpsfname}.delayus 20000"
@@ -172,10 +182,12 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
-echo "${fpsname}      cuda.cudaextrmodes       ${fpsarg0}"  >> fpslist.txt
+#echo "${fpsname}      cuda.cudaextrmodes       ${fpsarg0}"  >> fpslist.txt
+echo "+milkcudacomp" >> fpslist.txt
+echo "${fpsname}      cuda.MVMmextrmodes       ${fpsarg0}"  >> fpslist.txt
 
-# time delay [us]
-LINSIMDT="10000"
+# time delay [s]
+LINSIMDT="0.001"
 
 # copy calibration files
 
@@ -188,27 +200,25 @@ runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits ./${LOOPWORKDIR}/conf/s
 
 
 fpscmdheader
-fpscmd "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_dmdispD"
-
-fpscmd "setval ${fpsfname}.sname_modes aolsimLHSrespM"
-
-fpscmd "setval ${fpsfname}.sname_outmodesval aol${CACAO_LOOPNUMBER}_linsimWFS"
-
+fpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_dmdispD"
+fpscmd "setval ${fpsfname}.immodes aolsimLHSrespM"
+fpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_linsimWFS"
 fpscmd "setval ${fpsfname}.outinit ON"
 
 # run simulator at finite frame rate
-fpscmd "setval ${fpsfname}.option.twait ${LINSIMDT}"
+fpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+fpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+fpscmd "setval ${fpsfname}.procinfo.triggerdelay ${LINSIMDT}"
+fpscmd "setval ${fpsfname}.procinfo.triggertimeout 0.0"
 
-fpscmd "setval ${fpsfname}.option.sname_refout aolsimLHSwfsref"
-
-fpscmd "setval ${fpsfname}.option.sname_intot NULL"
-fpscmd "setval ${fpsfname}.option.sname_refin NULL"
+fpscmd "setval ${fpsfname}.option.axmode 1"
 fpscmd "setval ${fpsfname}.option.PROCESS OFF"
 fpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
 fpscmd "setval ${fpsfname}.option.MODENORM OFF"
-fpscmd "setval ${fpsfname}.option.semwarn OFF"
-fpscmd "setval ${fpsfname}.option.insem 6"
-fpscmd "setval ${fpsfname}.option.axmode 1"
+fpscmd "setval ${fpsfname}.option.sname_intot NULL"
+fpscmd "setval ${fpsfname}.option.sname_refin NULL"
+fpscmd "setval ${fpsfname}.option.sname_refout aolsimLHSwfsref"
+
 fi
 else
 echolog "CACAO_FPSPROC_SIMMVMGPU = OFF"
@@ -241,8 +251,8 @@ echo "${fpsname}           cacaopt.mlat     ${fpsarg0}" >> fpslist.txt
 
 fpscmdheader
 fpscmd "setval ${fpsfname}.NBiter 20"
-fpscmd "setval ${fpsfname}.sn_dm aol${CACAO_LOOPNUMBER}_dmRM"
-fpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_wfsim"
+fpscmd "setval ${fpsfname}.dmstream aol${CACAO_LOOPNUMBER}_dmRM"
+fpscmd "setval ${fpsfname}.wfsstream aol${CACAO_LOOPNUMBER}_wfsim"
 #fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 fi
 else
