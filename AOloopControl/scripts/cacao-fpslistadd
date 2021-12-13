@@ -142,17 +142,19 @@ echo "${fpsname}    streamdelay         ${fpsarg0}"  >> fpslist.txt
 
 fpscmdheader
 
-# run simulator at finite frame rate
+# Run simulator at finite frame rate
 fpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-fpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-fpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_dmdisp"
+# tigger mode is delay
+fpscmd "setval ${fpsfname}.procinfo.triggermode 4"
+# set delay to 100us = 10 kHz
+fpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.0001"
 
 fpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
 fpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
-fpscmd "setval ${fpsfname}.delayus 20000"
+fpscmd "setval ${fpsfname}.delaysec 0.01"
 fpscmd "setval ${fpsfname}.dtus 10000"
-fpscmd "setval ${fpsfname}.option.timeavemode 1"
-fpscmd "setval ${fpsfname}.option.avedt 0.005"
+#fpscmd "setval ${fpsfname}.timebuffsize 1000"
+#fpscmd "setval ${fpsfname}.option.avedt 0.005"
 fi
 else
 echolog "OFF CACAO_FPSPROC_STREAMDELAY"
@@ -284,6 +286,12 @@ echo "${fpsname}           cacaoio.acquireWFS     ${fpsarg0}" >> fpslist.txt
 
 fpscmdheader
 fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+
+# run simulator at finite frame rate
+fpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+fpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
+fpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
+
 
 fpscmd "setval ${fpsfname}.WFSnormalize ON"
 fpscmd "setval ${fpsfname}.comp.darksub ON"
