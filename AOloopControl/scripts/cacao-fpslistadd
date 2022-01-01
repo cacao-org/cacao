@@ -310,7 +310,7 @@ fi
 if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
 echolog "ON  CACAO_FPSPROC_ACQLINZRM"
 # ==============================================================================
-# ========== Acquire Linear Response Matrix (ZONAL) ============================
+# ========== [OLD] Acquire Linear Response Matrix (ZONAL) ============================
 # ==============================================================================
 
 # FPS name
@@ -365,6 +365,71 @@ fi
 else
 echolog "OFF CACAO_FPSPROC_ACQLINZRM"
 fi
+
+
+
+
+
+if [ "${CACAO_FPSPROC_ACQQFSLINCALZ}" = "ON" ]; then
+echolog "ON  CACAO_FPSPROC_ACQWFSLINCALZ"
+# ==============================================================================
+# ========== [NEW] Acquire Linear Response Matrix (ZONAL) ============================
+# ==============================================================================
+
+# FPS name
+fpsname="acqWFSlincal_z"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# get scripts that will be used
+mkdir -p ${LOOPWORKDIR}/cacaobin
+ln -s $(which cacao-RMdecode) ${LOOPWORKDIR}/cacaobin/cacao-RMdecode
+ln -s $(which cacao-mkDMWFSmasks) ${LOOPWORKDIR}/cacaobin/cacao-mkDMWFSmasks
+ln -s $(which cacao-mkDMslaveActprox) ${LOOPWORKDIR}/cacaobin/cacao-mkDMslaveActprox
+ln -s $(which cacao-mkLODMmodes) ${LOOPWORKDIR}/cacaobin/cacao-mkLODMmodes
+ln -s $(which cacao-NULL) ${LOOPWORKDIR}/cacaobin/cacao-NULL
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echolog "Process ${fpsname} already registered - skipping"
+else
+echolog "Adding process ${fpsname}"
+echo "${fpsname}           cacaoac.acqWFSlincal     ${fpsarg0}" >> fpslist.txt
+
+
+fpscmdheader
+fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+
+fpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
+fpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+
+# default startup values
+fpscmd "setval ${fpsfname}.normalize ON"
+fpscmd "setval ${fpsfname}.Hpoke ON"
+fpscmd "setval ${fpsfname}.autoTiming ON"
+fpscmd "setval ${fpsfname}.compDMmask ON"
+fpscmd "setval ${fpsfname}.compMpoke ON"
+
+fpscmd "setval ${fpsfname}.timing.NBave 1"
+fpscmd "setval ${fpsfname}.timing.NBcycle 2"
+fpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
+fpscmd "setval ${fpsfname}.timing.NBexcl 0"
+
+fpscmd "setval ${fpsfname}.MaskMode ON"
+fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
+fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
+fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
+fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
+#fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+
+fi
+else
+echolog "OFF CACAO_FPSPROC_ACQQFSLINCALZ"
+fi
+
+
 
 
 
