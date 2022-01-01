@@ -34,6 +34,9 @@ static float    *maskWFSc0;
 static float    *maskWFSp1;
 static float    *maskWFSc1;
 
+static char     *fn_pokeC;
+static char     *fn_RMDMmask;
+
 static uint64_t *normalize;
 static uint64_t *autotiming;
 
@@ -136,6 +139,16 @@ static CLICMDARGDEF farg[] =
         (void **) &maskWFSc1, NULL
     },
     {
+        CLIARG_STR, ".fn_pokeC", "Poke sequence cube", "null",
+        CLICMDARG_FLAG_NOCLI, FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT,
+        (void **) &fn_pokeC, NULL
+    },
+    {
+        CLIARG_STR, "fn_RMDMmask", "RM active DM actuators mask", "null",
+        CLICMDARG_FLAG_NOCLI, FPTYPE_FITSFILENAME, FPFLAG_DEFAULT_INPUT,
+        (void **) &fn_RMDMmask, NULL
+    },
+    {
         CLIARG_ONOFF, ".normalize", "Normalize WFS frames", "0",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &normalize, NULL
@@ -144,8 +157,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_ONOFF, ".Hpoke", "Normalize WFS frames", "0",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &normalize, NULL
-    }
-    ,
+    },
     {
         CLIARG_ONOFF, ".autoTiming", "Auto Timing", "0",
         CLIARG_HIDDEN_DEFAULT,
