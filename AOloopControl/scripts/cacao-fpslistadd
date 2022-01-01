@@ -370,7 +370,7 @@ fi
 
 
 
-if [ "${CACAO_FPSPROC_ACQQFSLINCALZ}" = "ON" ]; then
+if [ "${CACAO_FPSPROC_ACQWFSLINCALZ}" = "ON" ]; then
 echolog "ON  CACAO_FPSPROC_ACQWFSLINCALZ"
 # ==============================================================================
 # ========== [NEW] Acquire Linear Response Matrix (ZONAL) ============================
@@ -426,7 +426,7 @@ fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
 
 fi
 else
-echolog "OFF CACAO_FPSPROC_ACQQFSLINCALZ"
+echolog "OFF CACAO_FPSPROC_ACQWFSLINCALZ"
 fi
 
 
