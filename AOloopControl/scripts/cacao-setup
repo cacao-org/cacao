@@ -50,7 +50,7 @@ function printHELP {
 	echo "source : $0"
 	echo "------------------------------------------------------------------------"
 	echo "  Initial setup for cacao instance"
-	echo "  Creates work directory, install scripts and start DMcomb process and links DM to loop"
+	echo "  Creates work directory, install scripts and start conf processes in tmux sessions"
 	echo "  Each cacao loop has a unique ASCII name, referred to as <loopname> in this manual."
 	echo ""
 	echo "Main steps performed by cacao-setup:"
@@ -59,7 +59,7 @@ function printHELP {
 	echo "  - Create work directory, move fpslist.txt and fps.conf dir within it"
 	echo "  - From within work directory :"
 	echo "  	- Call milk-fpsinit to setup FPSs"
-	echo "  	- Start milk-fpsCTRL process in tmux session"
+	echo "  	- Start milk-fpsCTRL process in tmux session named <loopname>_fpsCTRL"
 	echo "  	- Start conf process for each FPS"
 	echo "  	- Send fpssetup tasks from fps.conf directory to milk-fpsCTRL"
 	echo ""
@@ -693,10 +693,10 @@ mkdir -p ${LOGFILEDIR}
 # ======================= SCRIPT CODE STARTS HERE =================================
 
 echolog "START $(basename $0)"
-echolog "LOOPWORKDIR    : ${LOOPWORKDIR}"
-echolog "CACAO_LOOPNAME : ${CACAO_LOOPNAME}"
-echolog "LOOPNUMBER     : ${LOOPNUMBER}"
-echolog "CACAO_ROOT     : ${CACAO_ROOT}"
+echolog "LOOPWORKDIR       : ${LOOPWORKDIR}"
+echolog "CACAO_LOOPNAME    : ${CACAO_LOOPNAME}"
+echolog "LOOPNUMBER        : ${LOOPNUMBER}"
+echolog "CACAO_ROOT        : ${CACAO_ROOT}"
 
 
 
@@ -864,6 +864,9 @@ fi
 # ========= START ALL CONF PROCESSES  ===============================================
 # ===================================================================================
 
+# stop CONF processes in case already running
+allFPScmd confstop
+
 allFPScmd confstart
 
 
@@ -903,7 +906,7 @@ echo ""
 cat ${LOOPWORKDIR}/fpslist.txt | column -t
 echo ""
 echo ""
-echo "To enter control screen: tmux a -t ${CACAO_LOOPNAME}"
+echo "To enter control screen: tmux a -t ${CACAO_LOOPNAME}_fpsCTRL"
 echo ""
 echo ""
 
