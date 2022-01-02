@@ -60,8 +60,10 @@ function printHELP {
 	echo "  - From within work directory :"
 	echo "  	- Call milk-fpsinit to setup FPSs"
 	echo "  	- Start milk-fpsCTRL process in tmux session named <loopname>_fpsCTRL"
-	echo "  	- Start conf process for each FPS"
-	echo "  	- Send fpssetup tasks from fps.conf directory to milk-fpsCTRL"
+	echo "  	- For each FPS :"
+	echo "  		- start conf process"
+	echo "  		- Send fpssetup tasks from fps.conf directory to milk-fpsCTRL"
+	echo "      - Send optional $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0) tasks to fpsCTRL"
 	echo ""
 	echo ""
 	echo ""
@@ -73,7 +75,7 @@ function printHELP {
 	echo "         and which processes should be deployed."
 	echo "         Run cacao-setup with -e option to create example cacavars file."
 	echo ""
-	echo "[STEP 2] OPTIONAL: Set function custom parameter values in file $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0)"
+	echo "[STEP 2] OPTIONAL: Write function custom parameter values in file $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0)"
 	echo "         syntax: \"setval <paramfullname> <value>\""
 	echo ""
 	echo "[STEP 3] OPTIONAL: Test setup"
@@ -789,7 +791,7 @@ fi
 
 
 # cacao-provided default script
-# writes in fpslist.txt and fpssetup.setval.conf
+# writes in fpslist.txt and fps.conf/fpssetup.confstart.<fpsname>.conf
 source cacao-fpslistadd &>> ${LOGFILENAME}
 
 # optional additional custom script
