@@ -527,6 +527,7 @@ then
 echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
+echo "+milkZernikePolyn;milkcudacomp" >> fpslist.txt
 echo "${fpsname}         cacaocc.aolcomputeCM       ${fpsarg0}" >> fpslist.txt
 
 fpscmdheader
