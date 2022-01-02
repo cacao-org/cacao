@@ -39,11 +39,11 @@ function runstrcmd {
 
 # write header to fpssetup file
 #
-function fpscmdheader {
+function addfpscmdheader {
 	taskfname="fps.conf/fpssetup.confstart.${fpsfname}.conf"
 	rm ${taskfname}
 	echo "# Function Parameter Structure (FPS) setup configuration" >> ${taskfname}
-	echo "# Written by $0 - edits will be overwritten and lost when re-running $0" >> ${taskfname}
+	echo "# Written by cacao-fpslistadd - edits will be overwritten and lost when re-running $0" >> ${taskfname}
 	echo "# These are the default initial values for FPS entries" >> ${taskfname}
 	echo "# This file is read by milk-fpsCTRL upon launching FPS conf process" >> ${taskfname}
 	echo "# " >> ${taskfname}
@@ -53,7 +53,7 @@ function fpscmdheader {
 
 # write entry to fpssetup file
 #
-function fpscmd {
+function addfpscmd {
 	taskfname="fps.conf/fpssetup.confstart.${fpsfname}.conf"
 	echolog "FPS CMD TO ${FPSCONFFILE} : $1"
 	#echo "$1" >> ${FPSCONFFILE}
@@ -100,14 +100,14 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}      cacaodm.DMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
 
-fpscmdheader
+addfpscmdheader
 # infinite loop
-fpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-fpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
-fpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
-fpscmd "setval ${fpsfname}.DMindex ${CACAO_DMINDEX}"
-fpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
-fpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
+addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
+addfpscmd "setval ${fpsfname}.DMindex ${CACAO_DMINDEX}"
+addfpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
+addfpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
 fi
 else
 echolog "CACAO_FPSPROC_DMCOMB = OFF"
@@ -140,21 +140,21 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}    streamdelay         ${fpsarg0}"  >> fpslist.txt
 
-fpscmdheader
+addfpscmdheader
 
 # Run simulator at finite frame rate
-fpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
 # tigger mode is delay
-fpscmd "setval ${fpsfname}.procinfo.triggermode 4"
+addfpscmd "setval ${fpsfname}.procinfo.triggermode 4"
 # set delay to 100us = 10 kHz
-fpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.0001"
+addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.0001"
 
-fpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
-fpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
-fpscmd "setval ${fpsfname}.delaysec 0.01"
-fpscmd "setval ${fpsfname}.dtus 10000"
-#fpscmd "setval ${fpsfname}.timebuffsize 1000"
-#fpscmd "setval ${fpsfname}.option.avedt 0.005"
+addfpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
+addfpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
+addfpscmd "setval ${fpsfname}.delaysec 0.01"
+addfpscmd "setval ${fpsfname}.dtus 10000"
+#addfpscmd "setval ${fpsfname}.timebuffsize 1000"
+#addfpscmd "setval ${fpsfname}.option.avedt 0.005"
 fi
 else
 echolog "OFF CACAO_FPSPROC_STREAMDELAY"
@@ -201,25 +201,25 @@ runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits ./${LOOPWORKDIR}/conf/sh
 runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSwfsref.fits"
 
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_dmdispD"
-fpscmd "setval ${fpsfname}.immodes aolsimLHSrespM"
-fpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_linsimWFS"
-fpscmd "setval ${fpsfname}.outinit ON"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_dmdispD"
+addfpscmd "setval ${fpsfname}.immodes aolsimLHSrespM"
+addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_linsimWFS"
+addfpscmd "setval ${fpsfname}.outinit ON"
 
 # run simulator at finite frame rate
-fpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-fpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
-fpscmd "setval ${fpsfname}.procinfo.triggerdelay ${LINSIMDT}"
-fpscmd "setval ${fpsfname}.procinfo.triggertimeout 0.0"
+addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+addfpscmd "setval ${fpsfname}.procinfo.triggerdelay ${LINSIMDT}"
+addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 0.0"
 
-fpscmd "setval ${fpsfname}.option.axmode 1"
-fpscmd "setval ${fpsfname}.option.PROCESS OFF"
-fpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
-fpscmd "setval ${fpsfname}.option.MODENORM OFF"
-fpscmd "setval ${fpsfname}.option.sname_intot NULL"
-fpscmd "setval ${fpsfname}.option.sname_refin NULL"
-fpscmd "setval ${fpsfname}.option.sname_refout aolsimLHSwfsref"
+addfpscmd "setval ${fpsfname}.option.axmode 1"
+addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
+addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
+addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
+addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+addfpscmd "setval ${fpsfname}.option.sname_refout aolsimLHSwfsref"
 
 fi
 else
@@ -251,10 +251,10 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}           cacaopt.mlat     ${fpsarg0}" >> fpslist.txt
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.NBiter 20"
-fpscmd "setval ${fpsfname}.dmstream aol${CACAO_LOOPNUMBER}_dmRM"
-fpscmd "setval ${fpsfname}.wfsstream aol${CACAO_LOOPNUMBER}_wfsim"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.NBiter 20"
+addfpscmd "setval ${fpsfname}.dmstream aol${CACAO_LOOPNUMBER}_dmRM"
+addfpscmd "setval ${fpsfname}.wfsstream aol${CACAO_LOOPNUMBER}_wfsim"
 #fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 fi
 else
@@ -284,19 +284,19 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}           cacaoio.acquireWFS     ${fpsarg0}" >> fpslist.txt
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
 # run simulator at finite frame rate
-fpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-fpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
-fpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
+addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
+addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
 
 
-fpscmd "setval ${fpsfname}.WFSnormalize ON"
-fpscmd "setval ${fpsfname}.comp.darksub ON"
-fpscmd "setval ${fpsfname}.comp.imtotal ON"
-fpscmd "setval ${fpsfname}.comp.normwfsim ON"
+addfpscmd "setval ${fpsfname}.WFSnormalize ON"
+addfpscmd "setval ${fpsfname}.comp.darksub ON"
+addfpscmd "setval ${fpsfname}.comp.imtotal ON"
+addfpscmd "setval ${fpsfname}.comp.normwfsim ON"
 fi
 else
 echolog "OFF CACAO_FPSPROC_ACQUWFS"
@@ -336,30 +336,30 @@ echolog "Adding process ${fpsname}"
 echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
-fpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-fpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
+addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
 
 # default startup values
-fpscmd "setval ${fpsfname}.normalize ON"
-fpscmd "setval ${fpsfname}.Hpoke ON"
-fpscmd "setval ${fpsfname}.autoTiming ON"
-fpscmd "setval ${fpsfname}.compDMmask ON"
-fpscmd "setval ${fpsfname}.compMpoke ON"
+addfpscmd "setval ${fpsfname}.normalize ON"
+addfpscmd "setval ${fpsfname}.Hpoke ON"
+addfpscmd "setval ${fpsfname}.autoTiming ON"
+addfpscmd "setval ${fpsfname}.compDMmask ON"
+addfpscmd "setval ${fpsfname}.compMpoke ON"
 
-fpscmd "setval ${fpsfname}.timing.NBave 1"
-fpscmd "setval ${fpsfname}.timing.NBcycle 2"
-fpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
-fpscmd "setval ${fpsfname}.timing.NBexcl 0"
+addfpscmd "setval ${fpsfname}.timing.NBave 1"
+addfpscmd "setval ${fpsfname}.timing.NBcycle 2"
+addfpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
+addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
 
-fpscmd "setval ${fpsfname}.MaskMode ON"
-fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
-fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
-fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
-fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
-#fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+addfpscmd "setval ${fpsfname}.MaskMode ON"
+addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
+addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
+addfpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
+addfpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
+#addfpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else
@@ -399,29 +399,29 @@ echolog "Adding process ${fpsname}"
 echo "${fpsname}           cacaoac.acqWFSlincal     ${fpsarg0}" >> fpslist.txt
 
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
-fpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-fpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
+addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
 
 # default startup values
-fpscmd "setval ${fpsfname}.normalize ON"
-fpscmd "setval ${fpsfname}.Hpoke ON"
-fpscmd "setval ${fpsfname}.autoTiming ON"
-fpscmd "setval ${fpsfname}.compDMmask ON"
-fpscmd "setval ${fpsfname}.compMpoke ON"
+addfpscmd "setval ${fpsfname}.normalize ON"
+addfpscmd "setval ${fpsfname}.Hpoke ON"
+addfpscmd "setval ${fpsfname}.autoTiming ON"
+addfpscmd "setval ${fpsfname}.compDMmask ON"
+addfpscmd "setval ${fpsfname}.compMpoke ON"
 
-fpscmd "setval ${fpsfname}.timing.NBave 1"
-fpscmd "setval ${fpsfname}.timing.NBcycle 2"
-fpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
-fpscmd "setval ${fpsfname}.timing.NBexcl 0"
+addfpscmd "setval ${fpsfname}.timing.NBave 1"
+addfpscmd "setval ${fpsfname}.timing.NBcycle 2"
+addfpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
+addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
 
-fpscmd "setval ${fpsfname}.MaskMode ON"
-fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
-fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
-fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
-fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
+addfpscmd "setval ${fpsfname}.MaskMode ON"
+addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
+addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
+addfpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
+addfpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
 #fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
@@ -455,38 +455,38 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
-fpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-fpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
+addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
 
 
 # default startup values
-fpscmd "setval ${fpsfname}.normalize ON"
-fpscmd "setval ${fpsfname}.Hpoke OFF"
-fpscmd "setval ${fpsfname}.autoTiming ON"
-fpscmd "setval ${fpsfname}.compDMmask OFF"
-fpscmd "setval ${fpsfname}.compMpoke OFF"
+addfpscmd "setval ${fpsfname}.normalize ON"
+addfpscmd "setval ${fpsfname}.Hpoke OFF"
+addfpscmd "setval ${fpsfname}.autoTiming ON"
+addfpscmd "setval ${fpsfname}.compDMmask OFF"
+addfpscmd "setval ${fpsfname}.compMpoke OFF"
 
 
-fpscmd "setval ${fpsfname}.timing.NBave 1"
-fpscmd "setval ${fpsfname}.timing.NBcycle 4"
-fpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
-fpscmd "setval ${fpsfname}.timing.NBexcl 0"
+addfpscmd "setval ${fpsfname}.timing.NBave 1"
+addfpscmd "setval ${fpsfname}.timing.NBcycle 4"
+addfpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
+addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
 
 
-fpscmd "setval ${fpsfname}.fn_pokeC respM_LOmodes.fits"
+addfpscmd "setval ${fpsfname}.fn_pokeC respM_LOmodes.fits"
 
-fpscmd "setval ${fpsfname}.MaskMode OFF"
+addfpscmd "setval ${fpsfname}.MaskMode OFF"
 
-fpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-NULL"
-fpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL"
-fpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
-fpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
+addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-NULL"
+addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL"
+addfpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
+addfpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
 
 
-#fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+#addfpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else
@@ -530,14 +530,14 @@ echolog "Adding process ${fpsname}"
 echo "+milkZernikePolyn;milkcudacomp" >> fpslist.txt
 echo "${fpsname}         cacaocc.aolcomputeCM       ${fpsarg0}" >> fpslist.txt
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
-fpscmd "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}"
-fpscmd "setval ${fpsfname}.FPS_loRMacqu acqlin_loRM-${CACAO_LOOPNUMBER}"
-fpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+addfpscmd "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}"
+addfpscmd "setval ${fpsfname}.FPS_loRMacqu acqlin_loRM-${CACAO_LOOPNUMBER}"
+addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
 
-#fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+#addfpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
 fi
 else
@@ -573,9 +573,9 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}         cacaocc.aolRM2CM       ${fpsarg0}" >> fpslist.txt
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
-fpscmd "setval ${fpsfname}.fname_respM fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/zrespM_mn.fits"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+addfpscmd "setval ${fpsfname}.fname_respM fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/zrespM_mn.fits"
 
 #fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
@@ -615,36 +615,36 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}         cuda.cudaextrmodes       ${fpsarg0}" >> fpslist.txt
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
 
 # input frame
-fpscmd "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_imWFS0"
-fpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
+addfpscmd "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_imWFS0"
+addfpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
 
 # we use respM for direct MVM as it is already orthonormal set of modes
-fpscmd "setval ${fpsfname}.sname_modes aol${CACAO_LOOPNUMBER}_modesWFS"
+addfpscmd "setval ${fpsfname}.sname_modes aol${CACAO_LOOPNUMBER}_modesWFS"
 # TBD: load in shm
 
-fpscmd "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref"
+addfpscmd "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref"
 
-fpscmd "setval ${fpsfname}.sname_outmodesval aol${CACAO_LOOPNUMBER}_modeval"
-fpscmd "setval ${fpsfname}.outinit ON"
+addfpscmd "setval ${fpsfname}.sname_outmodesval aol${CACAO_LOOPNUMBER}_modeval"
+addfpscmd "setval ${fpsfname}.outinit ON"
 
-fpscmd "setval ${fpsfname}.option.GPUindex 0"
-fpscmd "setval ${fpsfname}.option.PROCESS ON"
-fpscmd "setval ${fpsfname}.option.TRACEMODE ON"
-fpscmd "setval ${fpsfname}.option.MODENORM ON"
+addfpscmd "setval ${fpsfname}.option.GPUindex 0"
+addfpscmd "setval ${fpsfname}.option.PROCESS ON"
+addfpscmd "setval ${fpsfname}.option.TRACEMODE ON"
+addfpscmd "setval ${fpsfname}.option.MODENORM ON"
 
 
-fpscmd "setval ${fpsfname}.option.insem 2"
+addfpscmd "setval ${fpsfname}.option.insem 2"
 
-fpscmd "setval ${fpsfname}.option.axmode 0"
+addfpscmd "setval ${fpsfname}.option.axmode 0"
 
 # run GPU full speed
-fpscmd "setval ${fpsfname}.option.twait 0"
+addfpscmd "setval ${fpsfname}.option.twait 0"
 
-fpscmd "setval ${fpsfname}.option.semwarn ON"
+addfpscmd "setval ${fpsfname}.option.semwarn ON"
 
 fi
 else
@@ -677,18 +677,18 @@ else
 echolog "Adding process ${fpsname}"
 echo "${fpsname}         cacao.aolrun       ${fpsarg0}" >> fpslist.txt
 
-fpscmdheader
-fpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
-fpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_imWFS1"
+addfpscmdheader
+addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+addfpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_imWFS1"
 
-fpscmd "setval ${fpsfname}.loopgain 0.02"
-fpscmd "setval ${fpsfname}.loopmult 0.99"
-fpscmd "setval ${fpsfname}.loopON OFF"
-fpscmd "setval ${fpsfname}.loopZERO OFF"
-fpscmd "setval ${fpsfname}.wfsrefON OFF"
+addfpscmd "setval ${fpsfname}.loopgain 0.02"
+addfpscmd "setval ${fpsfname}.loopmult 0.99"
+addfpscmd "setval ${fpsfname}.loopON OFF"
+addfpscmd "setval ${fpsfname}.loopZERO OFF"
+addfpscmd "setval ${fpsfname}.wfsrefON OFF"
 
-fpscmd "setval ${fpsfname}.sn_cmat aol${CACAO_LOOPNUMBER}_CMat"
-fpscmd "setval ${fpsfname}.sn_DMout aol${CACAO_LOOPNUMBER}_dmC"
+addfpscmd "setval ${fpsfname}.sn_cmat aol${CACAO_LOOPNUMBER}_CMat"
+addfpscmd "setval ${fpsfname}.sn_DMout aol${CACAO_LOOPNUMBER}_dmC"
 
 fi
 else
