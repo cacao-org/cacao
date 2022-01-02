@@ -139,12 +139,12 @@ static CLICMDARGDEF farg[] =
         (void **) &maskWFSc1, NULL
     },
     {
-        CLIARG_FITSFILENAME, ".fn_pokeC", "Poke sequence cube", "nullfitsfn",
+        CLIARG_FITSFILENAME, ".fn_pokeC", "Poke sequence cube", "null",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &fn_pokeC, NULL
     },
     {
-        CLIARG_FITSFILENAME, ".fn_RMDMmask", "RM active DM actuators mask", "nullfitsfn",
+        CLIARG_FITSFILENAME, ".fn_RMDMmask", "RM active DM actuators mask", "null",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &fn_RMDMmask, NULL
     },
