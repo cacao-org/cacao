@@ -719,7 +719,7 @@ echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
 echo "+milkcudacomp" >> fpslist.txt
-echo "${fpsname}         cuda.cudaextrmodes       ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}         cuda.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
 
 addfpscmdheader
 
@@ -776,7 +776,7 @@ echolog "Process ${fpsname} already registered - skipping"
 else
 echolog "Adding process ${fpsname}"
 echo "+milkcudacomp" >> fpslist.txt
-echo "${fpsname}         cuda.cudaextrmodes       ${fpsarg0}" >> fpslist.txt
+echo "${fpsname}         cuda.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
 
 addfpscmdheader
 
