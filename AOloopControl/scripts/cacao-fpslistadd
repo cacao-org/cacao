@@ -837,9 +837,9 @@ addfpscmd "setval ${fpsfname}.outinit OFF"
 addfpscmd "setval ${fpsfname}.GPUindex 3"
 
 addfpscmd "setval ${fpsfname}.option.axmode 1"
-addfpscmd "setval ${fpsfname}.option.PROCESS ON"
+addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
 addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
-addfpscmd "setval ${fpsfname}.option.MODENORM ON"
+addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
 
 addfpscmd "setval ${fpsfname}.option.twait 0"
 addfpscmd "setval ${fpsfname}.option.semwarn OFF"
