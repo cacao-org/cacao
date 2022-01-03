@@ -725,17 +725,17 @@ addfpscmdheader
 
 
 addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS0"
+addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS2"
 
 
-addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_imWFS0"
+addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_imWFS1"
 addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_modesWFS"
 addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_modeval"
 
 addfpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
 
-
-addfpscmd "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref"
+#TODO : populate wfsref
+addfpscmd "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref" 
 
 addfpscmd "setval ${fpsfname}.outinit ON"
 
@@ -752,6 +752,41 @@ fi
 else
 echolog "OFF CACAO_FPSPROC_MVM_WFS2CMODEVAL"
 fi
+
+
+
+
+if [ "${CACAO_FPSPROC_MODALFILTERING}" = "ON" ]; then
+echolog "ON  CACAO_FPSPROC_MODALFILTERING"
+# ======================================================================
+# ========== Modal control filtering ===================================
+# ======================================================================
+
+# FPS name
+fpsname="mfilt"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echolog "Process ${fpsname} already registered - skipping"
+else
+echolog "Adding process ${fpsname}"
+echo "${fpsname}         cacao.modalfilter       ${fpsarg0}" >> fpslist.txt
+
+addfpscmdheader
+
+
+addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+
+fi
+else
+echolog "OFF CACAO_FPSPROC_MODALFILTERING"
+fi
+
 
 
 
@@ -812,37 +847,6 @@ fi
 
 
 
-
-if [ "${CACAO_FPSPROC_MODALFILTERING}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_MODALFILTERING"
-# ======================================================================
-# ========== Modal control filtering ===================================
-# ======================================================================
-
-# FPS name
-fpsname="mfilt"
-fpsarg0="${CACAO_LOOPNUMBER}"
-
-
-# FPS full name
-fpsfname="${fpsname}-${fpsarg0}"
-
-if grep -q "${fpsname}" fpslist.txt
-then
-echolog "Process ${fpsname} already registered - skipping"
-else
-echolog "Adding process ${fpsname}"
-echo "${fpsname}         cacao.modalfilter       ${fpsarg0}" >> fpslist.txt
-
-addfpscmdheader
-
-
-addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-
-fi
-else
-echolog "OFF CACAO_FPSPROC_MODALFILTERING"
-fi
 
 
 
