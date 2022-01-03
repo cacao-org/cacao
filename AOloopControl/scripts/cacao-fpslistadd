@@ -696,6 +696,163 @@ echolog "OFF CACAO_FPSPROC_AOLOOP_RUN"
 fi
 
 
+
+
+
+if [ "${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}" = "ON" ]; then
+echolog "ON  CACAO_FPSPROC_MVM_WFS2CMODEVAL"
+# ======================================================================
+# ========== MVM-compute control modes values from WFS =================
+# ======================================================================
+
+# FPS name
+fpsname="wfs2cmodeval"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echolog "Process ${fpsname} already registered - skipping"
+else
+echolog "Adding process ${fpsname}"
+echo "+milkcudacomp" >> fpslist.txt
+echo "${fpsname}         cuda.cudaextrmodes       ${fpsarg0}" >> fpslist.txt
+
+addfpscmdheader
+
+
+addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS0"
+
+
+addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_imWFS0"
+addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_modeval"
+addfpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
+
+addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_modesWFS"
+addfpscmd "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref"
+
+addfpscmd "setval ${fpsfname}.outinit ON"
+
+addfpscmd "setval ${fpsfname}.GPUindex 0"
+
+addfpscmd "setval ${fpsfname}.option.PROCESS ON"
+addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+addfpscmd "setval ${fpsfname}.option.MODENORM ON"
+
+addfpscmd "setval ${fpsfname}.option.twait 0"
+addfpscmd "setval ${fpsfname}.option.semwarn ON"
+
+fi
+else
+echolog "OFF CACAO_FPSPROC_MVM_WFS2CMODEVAL"
+fi
+
+
+
+
+if [ "${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}" = "ON" ]; then
+echolog "ON  CACAO_FPSPROC_MVM_CMODEVAL2DM"
+# ======================================================================
+# ========== MVM-compute DM command from control modes =================
+# ======================================================================
+
+# FPS name
+fpsname="cmodeval2dm"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echolog "Process ${fpsname} already registered - skipping"
+else
+echolog "Adding process ${fpsname}"
+echo "+milkcudacomp" >> fpslist.txt
+echo "${fpsname}         cuda.cudaextrmodes       ${fpsarg0}" >> fpslist.txt
+
+addfpscmdheader
+
+
+addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modeval"
+
+
+addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_modeval"
+addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_dmCC"
+addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
+
+addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_DMmodes"
+addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+
+addfpscmd "setval ${fpsfname}.outinit OFF"
+
+addfpscmd "setval ${fpsfname}.GPUindex 3"
+
+addfpscmd "setval ${fpsfname}.option.axmode 1"
+addfpscmd "setval ${fpsfname}.option.PROCESS ON"
+addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+addfpscmd "setval ${fpsfname}.option.MODENORM ON"
+
+addfpscmd "setval ${fpsfname}.option.twait 0"
+addfpscmd "setval ${fpsfname}.option.semwarn OFF"
+
+fi
+else
+echolog "OFF CACAO_FPSPROC_MVM_WFS2CMODEVAL"
+fi
+
+
+
+
+
+if [ "${CACAO_FPSPROC_MODALFILTERING}" = "ON" ]; then
+echolog "ON  CACAO_FPSPROC_MODALFILTERING"
+# ======================================================================
+# ========== Modal control filtering ===================================
+# ======================================================================
+
+# FPS name
+fpsname="mfilt"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+if grep -q "${fpsname}" fpslist.txt
+then
+echolog "Process ${fpsname} already registered - skipping"
+else
+echolog "Adding process ${fpsname}"
+echo "${fpsname}         cacao.modalfilter       ${fpsarg0}" >> fpslist.txt
+
+addfpscmdheader
+
+
+addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+
+fi
+else
+echolog "OFF CACAO_FPSPROC_MODALFILTERING"
+fi
+
+
+
+
+
+
+
+
+
+
+
+
 echolog "END"
 
 
