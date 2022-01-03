@@ -44,11 +44,11 @@ long fpi_aftgain;
 static CLICMDARGDEF farg[] =
 {
     {
-        CLIARG_STREAM, ".inmvalWFS", "input mode values from WFS", "aol0_modevalWFS",
+        CLIARG_STREAM, ".inmval", "input mode values from WFS", "aol0_modevalWFS",
         CLIARG_VISIBLE_DEFAULT, (void **) &inmval, &fpi_inmval
     },
     {
-        CLIARG_STREAM, ".outmvalDM", "output mode values to DM", "aol0_modevalDM",
+        CLIARG_STREAM, ".outmval", "output mode values to DM", "aol0_modevalDM",
         CLIARG_VISIBLE_DEFAULT, (void **) &outmval, &fpi_outmval
     },
     {
