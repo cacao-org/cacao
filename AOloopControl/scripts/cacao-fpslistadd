@@ -724,13 +724,14 @@ echo "${fpsname}         cuda.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
 addfpscmdheader
 
 
+addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
 addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS2"
+addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS1"
 
 
 addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_imWFS1"
 addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_modesWFS"
-addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_modeval"
+addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_modevalWFS"
 
 addfpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
 
@@ -779,8 +780,12 @@ echo "${fpsname}         cacao.modalfilter       ${fpsarg0}" >> fpslist.txt
 
 addfpscmdheader
 
-
+addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
 addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalWFS"
+
+addfpscmd "setval ${fpsfname}.inmval aol${CACAO_LOOPNUMBER}_modevalWFS"
+addfpscmd "setval ${fpsfname}.outmval aol${CACAO_LOOPNUMBER}_modevalDM"
 
 fi
 else
