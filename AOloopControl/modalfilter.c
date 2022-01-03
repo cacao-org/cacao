@@ -194,11 +194,11 @@ static errno_t compute_function()
         float mult = (*loopmult);
         float limitval = (*vlimit);
 
-        if((mi==0) || (mi==1))
+/*        if((mi==0) || (mi==1))
         {
             gain *= 4.0;
         }
-
+*/
 
         avemval[mi] = (1.0-avegain)*avemval[mi] + avegain * (imgin.im->array.F[mi] * gain);
 
@@ -206,6 +206,11 @@ static errno_t compute_function()
         // update long term average if input mode values
         mvalout[mi] = (1.0-gain)*mvalout[mi] - gain * (imgin.im->array.F[mi] - (*aftgain)*avemval[mi] );
         mvalout[mi] *= mult;
+
+        if(mi > (*mimax))
+        {
+            mvalout[mi] = 0.0;
+        }
 
         if(mvalout[mi] > limitval)
         {
