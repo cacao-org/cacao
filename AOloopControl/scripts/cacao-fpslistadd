@@ -820,13 +820,13 @@ echo "${fpsname}         cuda.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
 
 addfpscmdheader
 
-
+addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
 addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modeval"
+addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalDM"
 
-addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_modeval"
+addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_modevalDM"
 addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_DMmodes"
-addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_dmCC"
+addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_dmC"
 addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
 
 
