@@ -728,11 +728,11 @@ addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
 addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS0"
 
 
-addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_imWFS0"
+addfpscmd "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_imWFS0"
 addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_modeval"
 addfpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
 
-addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_modesWFS"
+addfpscmd "setval ${fpsfname}.sname_outmodesval aol${CACAO_LOOPNUMBER}_modesWFS"
 addfpscmd "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref"
 
 addfpscmd "setval ${fpsfname}.outinit ON"
