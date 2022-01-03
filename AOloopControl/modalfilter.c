@@ -13,11 +13,11 @@
 
 
 // Local variables pointers
-static char *inWFSstream;
-long fpi_inWFSstream;
+static char *inmval;
+long fpi_inmval;
 
-static char *modevalDM;
-long fpi_modevalDM;
+static char *outmval;
+long fpi_outmval;
 
 static float *loopgain;
 long fpi_loopgain;
@@ -44,12 +44,12 @@ long fpi_aftgain;
 static CLICMDARGDEF farg[] =
 {
     {
-        CLIARG_STREAM, ".inWFSstream", "input WFS stream", "aol0_modeval",
-        CLIARG_VISIBLE_DEFAULT, (void **) &inWFSstream, &fpi_inWFSstream
+        CLIARG_STREAM, ".inmvalWFS", "input mode values from WFS", "aol0_modevalWFS",
+        CLIARG_VISIBLE_DEFAULT, (void **) &inmval, &fpi_inmval
     },
     {
-        CLIARG_STREAM, ".modevalDM", "DM mode coefficient values", "aol0_modevalDM",
-        CLIARG_VISIBLE_DEFAULT, (void **) &modevalDM, &fpi_modevalDM
+        CLIARG_STREAM, ".outmvalDM", "output mode values to DM", "aol0_modevalDM",
+        CLIARG_VISIBLE_DEFAULT, (void **) &outmval, &fpi_outmval
     },
     {
         CLIARG_FLOAT32, ".loopgain", "loop gain", "0.01",
@@ -139,8 +139,10 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
-    // connect to WFS modes
-    IMGID imgin = makeIMGID(inWFSstream);
+
+    // connect to input mode values array and get number of modes
+    //
+    IMGID imgin = makeIMGID(inmval);
     resolveIMGID(&imgin, ERRMODE_ABORT);
     printf("%u modes\n", imgin.md->size[0]);
     uint32_t NBmode = imgin.md->size[0];
@@ -150,18 +152,18 @@ static errno_t compute_function()
     float *avemval = (float *) malloc(sizeof(float) * NBmode);
 
     // create output mode coeffs
-    imageID IDmodevalDM;
+    imageID IDoutmval;
     {
         uint32_t naxes[2];
         naxes[0] = imgin.md->size[0];
         naxes[1] = 1;
 
-        create_image_ID( modevalDM, 2, naxes, imgin.datatype, 1, 0, 0, &IDmodevalDM);
+        create_image_ID( outmval, 2, naxes, imgin.datatype, 1, 0, 0, &IDoutmval);
     }
 
     for(uint32_t mi=0; mi<NBmode; mi++)
     {
-        data.image[IDmodevalDM].array.F[mi] = 0.0;
+        data.image[IDoutmval].array.F[mi] = 0.0;
         mvalout[mi] = 0.0;
         avemval[mi] = 0.0;
     }
@@ -226,8 +228,8 @@ static errno_t compute_function()
         }
     }
 
-    memcpy(data.image[IDmodevalDM].array.F, mvalout, sizeof(float) * NBmode);
-    processinfo_update_output_stream(processinfo, IDmodevalDM);
+    memcpy(data.image[IDoutmval].array.F, mvalout, sizeof(float) * NBmode);
+    processinfo_update_output_stream(processinfo, IDoutmval);
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
