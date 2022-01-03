@@ -207,7 +207,7 @@ static errno_t compute_function()
         mvalout[mi] = (1.0-gain)*mvalout[mi] - gain * (imgin.im->array.F[mi] - (*aftgain)*avemval[mi] );
         mvalout[mi] *= mult;
 
-        if(mi > 2) //(*mimax))
+        if(mi > (*mimax))
         {
             mvalout[mi] = 0.0;
         }
