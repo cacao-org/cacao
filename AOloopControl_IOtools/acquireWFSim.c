@@ -130,6 +130,17 @@ static CLICMDARGDEF farg[] =
 //
 static errno_t customCONFsetup()
 {
+    if(data.fpsptr != NULL)
+    {
+        data.fpsptr->parray[fpi_WFStaveragegain].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_WFStaveragemult].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_WFSnormfloor].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_compWFSsubdark].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_compWFSnormalize].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_compWFSrefsub].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_compWFSsigav].fpflag |= FPFLAG_WRITERUN;
+    }
+
     return RETURN_SUCCESS;
 }
 
