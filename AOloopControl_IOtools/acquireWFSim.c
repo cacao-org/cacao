@@ -610,7 +610,7 @@ static errno_t compute_function()
         }
         for(uint64_t ii = 0; ii < sizeWFS; ii++)
         {
-            data.image[IDwfsrefc].array.F[ii] -= refcgain * data.image[ID_imWFS3].array.F[ii];
+            data.image[IDwfsrefc].array.F[ii] += refcgain * data.image[ID_imWFS3].array.F[ii];
         }
 
 
