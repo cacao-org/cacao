@@ -491,9 +491,9 @@ static errno_t compute_function()
     // ===========================================
 
     if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag  &
-            FPFLAG_ONOFF)    // normalize WFS image by totalinv
+            FPFLAG_ONOFF)    // subtract reference
     {
-        if(IDwfsref == -1)
+        if(IDwfsref != -1)
         {
             data.image[ID_imWFS2].md[0].write = 1;
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
