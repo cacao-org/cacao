@@ -28,14 +28,21 @@ long fpi_GPUalpha;
 static float *GPUbeta;
 long fpi_GPUbeta;
 
-static int64_t *WFSnormalize;
-long fpi_WFSnormalize;
-
 static float *WFSnormfloor;
 long fpi_WFSnormfloor;
 
-static int64_t *compdark;
-long fpi_compdark;
+
+
+static int64_t *compWFSnormalize;
+long fpi_compWFSnormalize;
+
+static int64_t *compWFSrefsub;
+long fpi_compWFSrefsub;
+
+static int64_t *compWFSsubdark;
+long fpi_compWFSsubdark;
+
+
 
 static int64_t *compimtotal;
 long fpi_compimtotal;
@@ -67,16 +74,20 @@ static CLICMDARGDEF farg[] =
         CLIARG_OUTPUT_DEFAULT, (void **) &GPUbeta, &fpi_GPUbeta
     },
     {
-        CLIARG_ONOFF, ".WFSnormalize", "normalize WFS frames", "1",
-        CLIARG_HIDDEN_DEFAULT, (void **) &WFSnormalize, &fpi_WFSnormalize
-    },
-    {
         CLIARG_FLOAT32, ".WFSnormfloor", "WFS flux floor for normalize", "0.0",
         CLIARG_HIDDEN_DEFAULT, (void **) &WFSnormfloor, &fpi_WFSnormfloor
     },
     {
-        CLIARG_ONOFF, ".comp.darksub", "Subtract Dark", "1",
-        CLIARG_HIDDEN_DEFAULT, (void **) &compdark, &fpi_compdark
+        CLIARG_ONOFF, ".comp.darksub", "Subtract Dark aolX_wfsdark", "1",
+        CLIARG_HIDDEN_DEFAULT, (void **) &compWFSsubdark, &fpi_compWFSsubdark
+    },
+    {
+        CLIARG_ONOFF, ".comp.WFSnormalize", "normalize WFS frames", "1",
+        CLIARG_HIDDEN_DEFAULT, (void **) &compWFSnormalize, &fpi_compWFSnormalize
+    },
+    {
+        CLIARG_ONOFF, ".comp.WFSrefsub", "subtract WFS reference aol0_wfsref", "1",
+        CLIARG_HIDDEN_DEFAULT, (void **) &compWFSrefsub, &fpi_compWFSrefsub
     },
     {
         CLIARG_ONOFF, ".comp.imtotal", "Compute WFS frame total flux", "1",
@@ -151,6 +162,7 @@ static errno_t compute_function()
     // create/read images
     imageID ID_imWFS0 = -1;
     imageID ID_imWFS1 = -1;
+    imageID ID_imWFS2 = -1;
     {
         char name[STRINGMAXLEN_STREAMNAME];
         uint32_t naxes[2];
@@ -163,19 +175,22 @@ static errno_t compute_function()
         WRITE_IMAGENAME(name, "aol%u_imWFS1", *AOloop);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS1);
 
+        WRITE_IMAGENAME(name, "aol%u_imWFS2", *AOloop);
+        create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS2);
 
         //        AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
         // ID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
     }
 
 
-    long IDwfsmask = -1;
+    imageID IDwfsmask = -1;
     {
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%u_wfsmask", *AOloop);
         IDwfsmask = read_sharedmem_image(name);
         printf("reading image %s -> ID = %ld\n", name, IDwfsmask);
     }
+
 
 
     list_image_ID();
@@ -233,6 +248,16 @@ static errno_t compute_function()
             IDwfsdark = read_sharedmem_image(wfsdarkname);
         }
         printf("IDwfsdark = %ld\n", IDwfsdark);
+    }
+
+
+    // LOAD REFERENCE
+    imageID IDwfsref = -1;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%u_wfsref", *AOloop);
+        IDwfsref = read_sharedmem_image(name);
+        printf("reading image %s -> ID = %ld\n", name, IDwfsref);
     }
 
 
@@ -303,7 +328,7 @@ static errno_t compute_function()
     // SUBTRACT DARK -> imWFS0
     // ===========================================
     DEBUG_TRACEPOINT(" ");
-    if( data.fpsptr->parray[fpi_compdark].fpflag & FPFLAG_ONOFF)
+    if( data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF)
     {
         data.image[ID_imWFS0].md[0].write = 1;
         DEBUG_TRACEPOINT(" ");
@@ -422,7 +447,7 @@ static errno_t compute_function()
     double totalinv;
     double normfloorcoeff;
 
-    if(data.fpsptr->parray[fpi_WFSnormalize].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
     {
         DEBUG_TRACEPOINT(" ");
         totalinv = 1.0 / (*fluxtotal + *WFSnormfloor * sizeWFS);
@@ -461,8 +486,24 @@ static errno_t compute_function()
     }
 
 
+    // ===========================================
+    // REFERENCE SUBTRACT -> imWFS2
+    // ===========================================
 
-
+    if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag  &
+            FPFLAG_ONOFF)    // normalize WFS image by totalinv
+    {
+        if(IDwfsref == -1)
+        {
+            data.image[ID_imWFS2].md[0].write = 1;
+            for(uint64_t ii = 0; ii < sizeWFS; ii++)
+            {
+                data.image[ID_imWFS2].array.F[ii] = data.image[ID_imWFS1].array.F[ii] -
+                                                    data.image[IDwfsref].array.F[ii];
+            }
+            processinfo_update_output_stream(processinfo, ID_imWFS2);
+        }
+    }
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
