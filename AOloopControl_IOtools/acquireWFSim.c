@@ -158,6 +158,7 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_compWFSnormalize].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_compWFSrefsub].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_compWFSsigav].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_compWFSrefc].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -601,7 +602,7 @@ static errno_t compute_function()
         {
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
-                data.image[IDwfsrefc].array.F[ii] = refcmult * data.image[IDwfsrefc].array.F[ii];
+                data.image[IDwfsrefc].array.F[ii] = refcmult * data.image[IDwfsref].array.F[ii];
             }
         }
         for(uint64_t ii = 0; ii < sizeWFS; ii++)
