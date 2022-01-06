@@ -31,7 +31,15 @@ long fpi_GPUbeta;
 static float *WFSnormfloor;
 long fpi_WFSnormfloor;
 
+static float *WFStaveragegain;
+long fpi_WFStaveragegain;
 
+static float *WFStaveragemult;
+long fpi_WFStaveragemult;
+
+
+static int64_t *compWFSsubdark;
+long fpi_compWFSsubdark;
 
 static int64_t *compWFSnormalize;
 long fpi_compWFSnormalize;
@@ -39,8 +47,9 @@ long fpi_compWFSnormalize;
 static int64_t *compWFSrefsub;
 long fpi_compWFSrefsub;
 
-static int64_t *compWFSsubdark;
-long fpi_compWFSsubdark;
+static int64_t *compWFSsigav;
+long fpi_compWFSsigav;
+
 
 
 
@@ -60,6 +69,14 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_UINT32, ".semindex", "input semaphore index", "1",
         CLIARG_HIDDEN_DEFAULT, (void **) &semindex, &fpi_semindex
+    },
+    {
+        CLIARG_FLOAT32, ".out.WFStaveragegain", "time averaging gain", "0.01",
+        CLIARG_HIDDEN_DEFAULT, (void **) &WFStaveragegain, &fpi_WFStaveragegain
+    },
+    {
+        CLIARG_FLOAT32, ".out.WFStaveragemult", "time averaging mult", "0.999",
+        CLIARG_HIDDEN_DEFAULT, (void **) &WFStaveragemult, &fpi_WFStaveragemult
     },
     {
         CLIARG_FLOAT32, ".out.fluxtotal", "total flux", "0.0",
@@ -88,6 +105,10 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF, ".comp.WFSrefsub", "subtract WFS reference aol0_wfsref", "1",
         CLIARG_HIDDEN_DEFAULT, (void **) &compWFSrefsub, &fpi_compWFSrefsub
+    },
+    {
+        CLIARG_ONOFF, ".comp.WFSsigav", "average WFS signal", "1",
+        CLIARG_HIDDEN_DEFAULT, (void **) &compWFSsigav, &fpi_compWFSsigav
     },
     {
         CLIARG_ONOFF, ".comp.imtotal", "Compute WFS frame total flux", "1",
@@ -163,6 +184,7 @@ static errno_t compute_function()
     imageID ID_imWFS0 = -1;
     imageID ID_imWFS1 = -1;
     imageID ID_imWFS2 = -1;
+    imageID ID_imWFS3 = -1;
     {
         char name[STRINGMAXLEN_STREAMNAME];
         uint32_t naxes[2];
@@ -177,6 +199,9 @@ static errno_t compute_function()
 
         WRITE_IMAGENAME(name, "aol%u_imWFS2", *AOloop);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS2);
+
+        WRITE_IMAGENAME(name, "aol%u_imWFS3", *AOloop);
+        create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS3);
 
         //        AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
         // ID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
@@ -493,17 +518,39 @@ static errno_t compute_function()
     if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag  &
             FPFLAG_ONOFF)    // subtract reference
     {
+        data.image[ID_imWFS2].md[0].write = 1;
         if(IDwfsref != -1)
         {
-            data.image[ID_imWFS2].md[0].write = 1;
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
                 data.image[ID_imWFS2].array.F[ii] = data.image[ID_imWFS1].array.F[ii] -
                                                     data.image[IDwfsref].array.F[ii];
             }
-            processinfo_update_output_stream(processinfo, ID_imWFS2);
         }
+        processinfo_update_output_stream(processinfo, ID_imWFS2);
     }
+
+
+
+    // ===========================================
+    // AVERAGE -> imWFS3
+    // ===========================================
+
+    if(data.fpsptr->parray[fpi_compWFSsigav].fpflag  &
+            FPFLAG_ONOFF)    // subtract reference
+    {
+        data.image[ID_imWFS2].md[0].write = 1;
+        float tave_gain = *WFStaveragegain;
+        float tave_mult = *WFStaveragemult;
+        for(uint64_t ii = 0; ii < sizeWFS; ii++)
+        {
+            data.image[ID_imWFS3].array.F[ii] = tave_mult *
+                                                ((1.0-tave_gain) * data.image[ID_imWFS3].array.F[ii]
+                                                 + tave_gain * data.image[ID_imWFS2].array.F[ii]);
+        }
+        processinfo_update_output_stream(processinfo, ID_imWFS2);
+    }
+
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
