@@ -71,11 +71,11 @@ static CLICMDARGDEF farg[] =
         CLIARG_HIDDEN_DEFAULT, (void **) &semindex, &fpi_semindex
     },
     {
-        CLIARG_FLOAT32, ".out.WFStaveragegain", "time averaging gain", "0.01",
+        CLIARG_FLOAT32, ".WFStaveragegain", "time averaging gain", "0.01",
         CLIARG_HIDDEN_DEFAULT, (void **) &WFStaveragegain, &fpi_WFStaveragegain
     },
     {
-        CLIARG_FLOAT32, ".out.WFStaveragemult", "time averaging mult", "0.999",
+        CLIARG_FLOAT32, ".WFStaveragemult", "time averaging mult", "0.999",
         CLIARG_HIDDEN_DEFAULT, (void **) &WFStaveragemult, &fpi_WFStaveragemult
     },
     {
