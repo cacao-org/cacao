@@ -604,8 +604,8 @@ static errno_t compute_function()
         {
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
-                data.image[IDwfsrefc].array.F[ii] = refcmult * data.image[IDwfsref].array.F[ii] 
-                + (1.0 - refcmult) * data.image[IDwfsrefc].array.F[ii];
+                data.image[IDwfsrefc].array.F[ii] = refcmult * data.image[IDwfsref].array.F[ii]
+                                                    + (1.0 - refcmult) * data.image[IDwfsrefc].array.F[ii];
             }
         }
         for(uint64_t ii = 0; ii < sizeWFS; ii++)
