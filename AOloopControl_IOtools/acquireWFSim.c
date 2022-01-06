@@ -529,7 +529,7 @@ static errno_t compute_function()
     if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag  &
             FPFLAG_ONOFF)    // subtract reference
     {
-        data.image[ID_imWFS3].md[0].write = 1;
+        data.image[ID_imWFS2].md[0].write = 1;
         if(IDwfsref != -1)
         {
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
@@ -538,7 +538,7 @@ static errno_t compute_function()
                                                     data.image[IDwfsref].array.F[ii];
             }
         }
-        processinfo_update_output_stream(processinfo, ID_imWFS3);
+        processinfo_update_output_stream(processinfo, ID_imWFS2);
     }
 
 
@@ -550,7 +550,7 @@ static errno_t compute_function()
     if(data.fpsptr->parray[fpi_compWFSsigav].fpflag  &
             FPFLAG_ONOFF)    // subtract reference
     {
-        data.image[ID_imWFS2].md[0].write = 1;
+        data.image[ID_imWFS3].md[0].write = 1;
         float tave_gain = *WFStaveragegain;
         float tave_mult = *WFStaveragemult;
         for(uint64_t ii = 0; ii < sizeWFS; ii++)
@@ -559,7 +559,7 @@ static errno_t compute_function()
                                                 ((1.0-tave_gain) * data.image[ID_imWFS3].array.F[ii]
                                                  + tave_gain * data.image[ID_imWFS2].array.F[ii]);
         }
-        processinfo_update_output_stream(processinfo, ID_imWFS2);
+        processinfo_update_output_stream(processinfo, ID_imWFS3);
     }
 
 
