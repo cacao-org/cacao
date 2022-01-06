@@ -159,6 +159,8 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_compWFSrefsub].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_compWFSsigav].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_compWFSrefc].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_WFSrefcgain].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_WFSrefcmult].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
