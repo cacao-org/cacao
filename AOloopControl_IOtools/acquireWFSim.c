@@ -37,6 +37,11 @@ long fpi_WFStaveragegain;
 static float *WFStaveragemult;
 long fpi_WFStaveragemult;
 
+static float *WFSrefcgain;
+long fpi_WFSrefcgain;
+
+static float *WFSrefcmult;
+long fpi_WFSrefcmult;
 
 static int64_t *compWFSsubdark;
 long fpi_compWFSsubdark;
@@ -50,7 +55,9 @@ long fpi_compWFSrefsub;
 static int64_t *compWFSsigav;
 long fpi_compWFSsigav;
 
-
+// compute corrected WFS reference
+static int64_t *compWFSrefc;
+long fpi_compWFSrefc;
 
 
 static int64_t *compimtotal;
@@ -77,6 +84,14 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_FLOAT32, ".WFStaveragemult", "time averaging mult", "0.999",
         CLIARG_HIDDEN_DEFAULT, (void **) &WFStaveragemult, &fpi_WFStaveragemult
+    },
+    {
+        CLIARG_FLOAT32, ".WFSrefcgain", "reference correction gain", "0.00",
+        CLIARG_HIDDEN_DEFAULT, (void **) &WFSrefcgain, &fpi_WFSrefcgain
+    },
+    {
+        CLIARG_FLOAT32, ".WFSrefcmult", "reference correction mult", "1.0",
+        CLIARG_HIDDEN_DEFAULT, (void **) &WFSrefcmult, &fpi_WFSrefcmult
     },
     {
         CLIARG_FLOAT32, ".out.fluxtotal", "total flux", "0.0",
@@ -109,6 +124,10 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF, ".comp.WFSsigav", "average WFS signal", "1",
         CLIARG_HIDDEN_DEFAULT, (void **) &compWFSsigav, &fpi_compWFSsigav
+    },
+    {
+        CLIARG_ONOFF, ".comp.WFSrefc", "WFS reference correction", "1",
+        CLIARG_HIDDEN_DEFAULT, (void **) &compWFSrefc, &fpi_compWFSrefc
     },
     {
         CLIARG_ONOFF, ".comp.imtotal", "Compute WFS frame total flux", "1",
@@ -196,6 +215,7 @@ static errno_t compute_function()
     imageID ID_imWFS1 = -1;
     imageID ID_imWFS2 = -1;
     imageID ID_imWFS3 = -1;
+    imageID IDwfsrefc = -1;
     {
         char name[STRINGMAXLEN_STREAMNAME];
         uint32_t naxes[2];
@@ -213,6 +233,9 @@ static errno_t compute_function()
 
         WRITE_IMAGENAME(name, "aol%u_imWFS3", *AOloop);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS3);
+
+        WRITE_IMAGENAME(name, "aol%u_wfsrefc", *AOloop);
+        create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &IDwfsrefc);
 
         //        AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
         // ID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS, sizeyWFS, 0.0);
@@ -530,12 +553,13 @@ static errno_t compute_function()
             FPFLAG_ONOFF)    // subtract reference
     {
         data.image[ID_imWFS2].md[0].write = 1;
-        if(IDwfsref != -1)
+
+        if(IDwfsrefc != -1)
         {
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
                 data.image[ID_imWFS2].array.F[ii] = data.image[ID_imWFS1].array.F[ii] -
-                                                    data.image[IDwfsref].array.F[ii];
+                                                    data.image[IDwfsrefc].array.F[ii];
             }
         }
         processinfo_update_output_stream(processinfo, ID_imWFS2);
@@ -548,7 +572,7 @@ static errno_t compute_function()
     // ===========================================
 
     if(data.fpsptr->parray[fpi_compWFSsigav].fpflag  &
-            FPFLAG_ONOFF)    // subtract reference
+            FPFLAG_ONOFF)
     {
         data.image[ID_imWFS3].md[0].write = 1;
         float tave_gain = *WFStaveragegain;
@@ -560,6 +584,33 @@ static errno_t compute_function()
                                                  + tave_gain * data.image[ID_imWFS2].array.F[ii]);
         }
         processinfo_update_output_stream(processinfo, ID_imWFS3);
+    }
+
+
+    // ===========================================
+    // UPDATE wfsrefc
+    // ===========================================
+
+    if(data.fpsptr->parray[fpi_compWFSrefc].fpflag  &
+            FPFLAG_ONOFF)
+    {
+        data.image[IDwfsrefc].md[0].write = 1;
+        float refcgain = *WFSrefcgain;
+        float refcmult = *WFSrefcmult;
+        if(IDwfsref != -1)
+        {
+            for(uint64_t ii = 0; ii < sizeWFS; ii++)
+            {
+                data.image[IDwfsrefc].array.F[ii] = refcmult * data.image[IDwfsrefc].array.F[ii];
+            }
+        }
+        for(uint64_t ii = 0; ii < sizeWFS; ii++)
+        {
+            data.image[IDwfsrefc].array.F[ii] -= refcgain * data.image[ID_imWFS3].array.F[ii];
+        }
+
+
+        processinfo_update_output_stream(processinfo, IDwfsrefc);
     }
 
 
