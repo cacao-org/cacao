@@ -9,48 +9,83 @@
 
 // Local variables pointers
 
+static uint32_t  *AOloopindex;
+
+static float     *svdlim;
+static float     *CPAmax;
+static float     *deltaCPA;
+
+static float     *alignCX; // X center
+static float     *alignCY; // Y center
+static float     *alignID; // Inner diameter
+static float     *alignOD; // Outer diameter
+
+static uint32_t  *DMxsize;
+static uint32_t  *DMysize;
+
+static char      *FPS_zRMacqu;
 
 
-static float  *svdlim0;
-static double *svdlim1;
-
-static int32_t  *i32;
-static int64_t  *i64;
-static uint32_t *ui32;
-static uint64_t *ui64;
 
 
 static CLICMDARGDEF farg[] =
 {
     {
-        CLIARG_FLOAT32, ".svdlim0", "SVD limit 0", "0.01",
+        CLIARG_INT32, ".AOloopindex", "AO loop index", "0",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &svdlim0, NULL
+        (void **) &AOloopindex, NULL
     },
     {
-        CLIARG_FLOAT64, ".svdlim1", "SVD limit 1", "0.01",
+        CLIARG_FLOAT32, ".svdlim", "SVD limit", "0.01",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &svdlim1, NULL
+        (void **) &svdlim, NULL
     },
     {
-        CLIARG_INT32, ".int32", "int 32", "1",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &i32, NULL
+        CLIARG_FLOAT32, ".CPAmax", "max cycles per aperture (CPA)", "20.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &CPAmax, NULL
     },
     {
-        CLIARG_INT64, ".int64", "int 64", "1",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &i64, NULL
+        CLIARG_FLOAT32, ".deltaCPA", "CPA increment", "0.8",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &deltaCPA, NULL
     },
     {
-        CLIARG_UINT32, ".uint32", "uint 32", "1",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &ui32, NULL
+        CLIARG_FLOAT32, ".align,CX", "beam X center on DM", "10.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &alignCX, NULL
     },
     {
-        CLIARG_UINT64, ".uint64", "uint 64", "1",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &ui64, NULL
+        CLIARG_FLOAT32, ".align,CY", "beam Y center on DM", "10.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &alignCY, NULL
+    },
+    {
+        CLIARG_FLOAT32, ".align,ID", "beam inner diameter", "5.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &alignID, NULL
+    },
+    {
+        CLIARG_FLOAT32, ".align,OD", "beam outer diameter", "10.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &alignOD, NULL
+    },
+    {
+        CLIARG_UINT32, ".DMxsize", "DM x size", "32",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &DMxsize, NULL
+    },
+    {
+        CLIARG_UINT32, ".DMysize", "DM y size", "32",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &DMysize, NULL
+    },
+    {
+        CLIARG_STR, ".FPS_zRMacqu", "FPS zonal RM acquisition", " ",
+        CLICMDARG_FLAG_NOCLI,
+        FPTYPE_FPSNAME,
+        FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+        (void **) &FPS_zRMacqu, NULL
     }
 };
 
@@ -133,15 +168,6 @@ static errno_t compute_function()
     }
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
-
-    printf("svdlim0 = %f\n", (float) *svdlim0);
-    printf("svdlim1 = %f\n", (float) *svdlim1);
-
-    printf("i32     = %d\n", (int) *i32);
-    printf("i64     = %d\n", (int) *i64);
-
-    printf("ui32    = %d\n", (int) *ui32);
-    printf("ui64    = %d\n", (int) *ui64);
 
     //streamprocess(inimg, outimg);
     //processinfo_update_output_stream(processinfo, outimg.ID);

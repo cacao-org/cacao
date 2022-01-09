@@ -134,7 +134,7 @@ datadir=$( grep "^${FPSname}.conf.datadir " ${FPSfilename} |  awk '{print $3;}' 
 
 echo "datadir       : ${datadir}"
 
-
+echo "FPSfilename = ${FPSfilename}"
 
 
 datestr=`date -u +%Y%m%dT%H%M%S`

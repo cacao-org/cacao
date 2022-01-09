@@ -279,12 +279,20 @@ imageID AOloopControl_computeCalib_mkModes(
 
     /// STEP 1: CREATE STARTING POINT : ZERNIKES + FOURIER MODES
 
+    // load/create dmmaskRM
+    // This is the support over which DM modes are computed.
+    // dmmaskRM should include all actuators that create a WFS response
+    //
     /// if Mmask exists, use it, otherwise create it
     if(MODAL == 0)
     {
+        // For modal DMs, actuator coordinates have no spatial meaning, so we don't compute the mask
+        //
         IDmaskRM = image_ID("dmmaskRM");
         if(IDmaskRM == -1)
         {
+            printf("dmmaskRM does not exist -> creating one\n");
+            // If the mask does not already exist, create one
             double val0, val1;
             double a0 = 0.88;
             double b0 = 40.0;
@@ -309,6 +317,7 @@ imageID AOloopControl_computeCalib_mkModes(
         }
         else /// extract xc and yc from mask
         {
+            printf("extracting beam center from dmmaskRM\n");
             xc1 = 0.0;
             yc1 = 0.0;
             totm = 0.0;
@@ -334,6 +343,7 @@ imageID AOloopControl_computeCalib_mkModes(
                    msizey);
             exit(0);
         }
+        printf("beam center : %.2f x %.2f\n", xc1, yc1);
     }
     else
     {
