@@ -55,7 +55,7 @@
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 
-
+#include "compute_control_modes.h"
 
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
@@ -755,6 +755,7 @@ static errno_t init_module_CLI()
         "long AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)");
 
 
+    CLIADDCMD_cacao_computeCalib__compute_control_modes();
 
 
     // add atexit functions here

@@ -602,6 +602,8 @@ static errno_t compute_function()
         float refcmult = *WFSrefcmult;
         if(IDwfsref != -1)
         {
+            // refcmult is pulling refc toward ref
+            // if refcmult = 1, then refc=ref
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
                 data.image[IDwfsrefc].array.F[ii] = refcmult * data.image[IDwfsref].array.F[ii]
@@ -610,6 +612,8 @@ static errno_t compute_function()
         }
         for(uint64_t ii = 0; ii < sizeWFS; ii++)
         {
+            // refcgain is pulling refc to imWFS3
+            //
             data.image[IDwfsrefc].array.F[ii] += refcgain * data.image[ID_imWFS3].array.F[ii];
         }
 

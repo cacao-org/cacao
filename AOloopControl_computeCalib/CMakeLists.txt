@@ -15,6 +15,8 @@ AOloopControl_computeCalib_Hadamard.c
 AOloopControl_computeCalib_loDMmodes.c
 AOloopControl_computeCalib_modes.c
 AOloopControl_computeCalib_processRM.c
+compute_control_modes.c
+compute_control_modes.h
 )
 
 

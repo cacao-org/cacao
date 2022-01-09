@@ -1236,6 +1236,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop)
  * imWFS0  dark-subtracted
  * imWFS1  dark-subtracted and normalized, but not reference-subtracted.
  * imWFS2  dark-subtracted, normzlized and reference-subtracted
+ * imWFS3 time-averaged
  *
  * supports ring buffer
  * puts image from camera buffer aoloopcontrol_var.aoconfID_wfsim into aoloopcontrol_var.aoconfID_imWFS1 (supplied by user)
