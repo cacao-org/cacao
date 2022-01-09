@@ -634,7 +634,7 @@ static errno_t compute_function()
 INSERT_STD_FPSCLIfunctions
 
 // Register function in CLI
-errno_t CLIADDCMD_AOloopControl_IOtools__acquireWFS()
+errno_t CLIADDCMD_AOloopControl_IOtools__acquireWFSim()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;

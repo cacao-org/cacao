@@ -11,14 +11,46 @@
 
 
 
-static float *svdlim;
+static float  *svdlim0;
+static double *svdlim1;
+
+static int32_t  *i32;
+static int64_t  *i64;
+static uint32_t *ui32;
+static uint64_t *ui64;
+
 
 static CLICMDARGDEF farg[] =
 {
     {
-        CLIARG_FLOAT32, ".svdlim", "SVD limit", "0.01",
+        CLIARG_FLOAT32, ".svdlim0", "SVD limit 0", "0.01",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &svdlim, NULL
+        (void **) &svdlim0, NULL
+    },
+    {
+        CLIARG_FLOAT64, ".svdlim1", "SVD limit 1", "0.01",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &svdlim1, NULL
+    },
+    {
+        CLIARG_INT32, ".int32", "int 32", "1",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &i32, NULL
+    },
+    {
+        CLIARG_INT64, ".int64", "int 64", "1",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &i64, NULL
+    },
+    {
+        CLIARG_UINT32, ".uint32", "uint 32", "1",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &ui32, NULL
+    },
+    {
+        CLIARG_UINT64, ".uint64", "uint 64", "1",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &ui64, NULL
     }
 };
 
@@ -91,7 +123,7 @@ static errno_t compute_function()
 
     IMGID outimg = makeIMGID(outimname);
     resolveIMGID(&outimg, ERRMODE_ABORT);
-*/
+    */
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
     // custom initialization
@@ -102,7 +134,15 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
 
-    printf("svdlim = %f\n", *svdlim);
+    printf("svdlim0 = %f\n", (float) *svdlim0);
+    printf("svdlim1 = %f\n", (float) *svdlim1);
+
+    printf("i32     = %d\n", (int) *i32);
+    printf("i64     = %d\n", (int) *i64);
+
+    printf("ui32    = %d\n", (int) *ui32);
+    printf("ui64    = %d\n", (int) *ui64);
+
     //streamprocess(inimg, outimg);
     //processinfo_update_output_stream(processinfo, outimg.ID);
 

@@ -49,7 +49,7 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
-
+#include "acquireWFSim.h"
 
 
 /* =============================================================================================== */
@@ -511,7 +511,7 @@ static errno_t init_module_CLI()
         "int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, const char *dirname)"
     );
 
-    CLIADDCMD_AOloopControl_IOtools__acquireWFS();
+    CLIADDCMD_AOloopControl_IOtools__acquireWFSim();
 
 
     // add atexit functions here
