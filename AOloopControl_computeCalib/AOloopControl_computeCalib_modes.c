@@ -858,7 +858,10 @@ imageID AOloopControl_computeCalib_mkModes(
 
         if((IDRMMmodes != -1) && (IDRMMresp != -1))
         {
+            printf("Using low-order modal response [%ld %ld]\n", IDRMMmodes, IDRMMresp);
+
             linfitsize = data.image[IDRMMmodes].md[0].size[2];
+
             create_2Dimage_ID("linfitcoeff", linfitsize, 1, &IDRMM_coeff);
 
             create_2Dimage_ID("imfitim", msizex, msizey, &ID_imfit);
@@ -952,11 +955,16 @@ imageID AOloopControl_computeCalib_mkModes(
                 }
             }
 
+
             delete_image_ID("linfitcoeff", DELETE_IMAGE_ERRMODE_WARNING);
             delete_image_ID("imfitim", DELETE_IMAGE_ERRMODE_WARNING);
             delete_image_ID("wfsimtmp", DELETE_IMAGE_ERRMODE_WARNING);
             save_fits("imfitmat", "imfitmat.fits");
             delete_image_ID("imfitmat", DELETE_IMAGE_ERRMODE_WARNING);
+        }
+        else
+        {
+            printf("NOT using low-order modal response\n");
         }
         fclose(fpLOcoeff);
 
@@ -965,7 +973,7 @@ imageID AOloopControl_computeCalib_mkModes(
         save_fits("fmodesWFS00all", ffname);
 
 
-        //    exit(0);
+
 
 
 

@@ -1292,7 +1292,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
     char fname_loRM[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(fname_loRM,  functionparameter_GetParamPtr_STRING(&fps, ".loRM"),
             FUNCTION_PARAMETER_STRMAXLEN);
-    load_fits(fname_loRM, "LOrespM", 1, NULL);
+    load_fits(fname_loRM, "RMMresp", 1, NULL);
 
     char fname_loRMmodes[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(fname_loRMmodes,  functionparameter_GetParamPtr_STRING(&fps,
