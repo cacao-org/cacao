@@ -13,6 +13,8 @@
 
 
 // Local variables pointers
+static int AOloopindex = 0;
+
 static char *inmval;
 long fpi_inmval;
 
@@ -153,12 +155,17 @@ static errno_t compute_function()
 
     // create output mode coeffs
     imageID IDoutmval;
+    imageID IDmodegainfact;
     {
         uint32_t naxes[2];
         naxes[0] = imgin.md->size[0];
         naxes[1] = 1;
 
+        char modegfname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(modegfname, "aol%d_modevalgain", AOloopindex);
+
         create_image_ID( outmval, 2, naxes, imgin.datatype, 1, 0, 0, &IDoutmval);
+        create_image_ID( modegfname, 2, naxes, imgin.datatype, 1, 0, 0, &IDmodegainfact);
     }
 
     for(uint32_t mi=0; mi<NBmode; mi++)
@@ -166,6 +173,7 @@ static errno_t compute_function()
         data.image[IDoutmval].array.F[mi] = 0.0;
         mvalout[mi] = 0.0;
         avemval[mi] = 0.0;
+        data.image[IDmodegainfact].array.F[mi] = 1.0;
     }
 
     float avegain = 1.0 / (*avets);
@@ -181,6 +189,7 @@ static errno_t compute_function()
 
         float gain = (*loopgain);
         gain *= pow( (*galpha), x);
+        gain *= data.image[IDmodegainfact].array.F[mi];
 
         if(mi > (*mimax))
         {
@@ -199,6 +208,7 @@ static errno_t compute_function()
             gain *= 4.0;
         }
 */
+
 
         avemval[mi] = (1.0-avegain)*avemval[mi] + avegain * (imgin.im->array.F[mi] * gain);
 
