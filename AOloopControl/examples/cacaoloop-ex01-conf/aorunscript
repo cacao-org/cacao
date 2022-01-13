@@ -51,7 +51,7 @@ if [ ! -f "$stepFile" ]; then
 
 # Start DM comb
 taskset_DMcomb="3"
-sendFPScmd "setval DMcomb-${CACAO_DMINDEX}.conf.taskset ${taskset_DMcomb}"
+sendFPScmd "setval DMcomb-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMcomb}"
 sendFPScmd "runstart DMcomb-${CACAO_DMINDEX}"
 
 touch ${stepFile}

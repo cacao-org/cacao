@@ -442,7 +442,7 @@ int AOloopControl_aorun_RUN()
 
 
     int RTpriority = functionparameter_GetParamValue_INT64(&fps,
-                     ".conf.procinfo.RTprio");
+                     ".procinfo.RTprio");
 
 
 
