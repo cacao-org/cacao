@@ -19,18 +19,18 @@ LOOPNAME="SCExAOPyWFS"
 LOOPNUMBER="0"
 
 function printHELP {
-echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname : CONFIGURE AO LOOP FOR SCExAO PyWFS $(tput sgr0)"
-echo "------------------------------------------------------------------------"
-echo "  Configures AO loop custom scripts and variables for SCExAO PyWFS"
-echo "   "
-echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h]"
-echo ""
-echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-h$(tput sgr0)          help"
-echo ""
-echo "------------------------------------------------------------------------"
+    echo "------------------------------------------------------------------------"
+    echo "$(tput bold) $pname : CONFIGURE AO LOOP FOR SCExAO PyWFS $(tput sgr0)"
+    echo "------------------------------------------------------------------------"
+    echo "  Configures AO loop custom scripts and variables for SCExAO PyWFS"
+    echo "   "
+    echo " $(tput bold)USAGE:$(tput sgr0)"
+    echo "     $0 [-h]"
+    echo ""
+    echo " $(tput bold)OPTIONS:$(tput sgr0)"
+    echo "     $(tput bold)-h$(tput sgr0)          help"
+    echo ""
+    echo "------------------------------------------------------------------------"
 }
 
 
@@ -39,37 +39,37 @@ echo "------------------------------------------------------------------------"
 EXITSTATUS=0
 
 function checkFile {
-if [ -f $1 ]
-  then
-    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
-   else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
-    EXITSTATUS=1
-fi
+    if [ -f $1 ]
+    then
+        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+    else
+        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+        EXITSTATUS=1
+    fi
 }
 
 function checkDir {
-if [ -d $1 ]
-  then
-    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
-   else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
-    EXITSTATUS=1
-fi
+    if [ -d $1 ]
+    then
+        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
+    else
+        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
+        EXITSTATUS=1
+    fi
 }
 
 function cmdexists()
 {
-  command -v "$1" >/dev/null 2>&1
+    command -v "$1" >/dev/null 2>&1
 }
 
 
 function checkCommand {
-if cmdexists $1; then
-    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
-else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
-fi
+    if cmdexists $1; then
+        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+    else
+        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+    fi
 
 }
 
@@ -77,19 +77,19 @@ fi
 # ================= OPTIONS =============================
 
 while getopts :h FLAG; do
-  case $FLAG in
-    h)  #show help
-      printHELP
-      exit
-      ;;
-    \?) #unrecognized option - show help
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      printHELP
-      ;;
-  esac
+    case $FLAG in
+        h)  #show help
+            printHELP
+            exit
+            ;;
+        \?) #unrecognized option - show help
+            echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+            printHELP
+            ;;
+    esac
 done
 
-shift $((OPTIND-1)) 
+shift $((OPTIND-1))
 
 ### End getopts code ###
 
@@ -101,16 +101,16 @@ shift $((OPTIND-1))
 
 
 if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
-if [ "$#" -ne $NBARGS ]; then
-    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
-fi
-printHELP
-        exit
+    if [ "$#" -ne $NBARGS ]; then
+        echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+    fi
+    printHELP
+    exit
 fi
 
 
 # ======================= FILE NAMES ===========================================
-aoAlign_file="aocscripts/aoAlign_${LOOPNAME}.bash" 
+aoAlign_file="aocscripts/aoAlign_${LOOPNAME}.bash"
 takedark_file="aocscripts/takedark_${LOOPNAME}"
 cpuconfig_file="aocscripts/cpuconfig_${LOOPNAME}"
 
@@ -124,12 +124,12 @@ checkFile $cpuconfig_file
 
 
 if [ $EXITSTATUS -eq 1 ]; then
-echo ""
-echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
-echo ""
-exit
+    echo ""
+    echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+    echo ""
+    exit
 else
-echo ""
+    echo ""
 fi
 
 
@@ -141,13 +141,13 @@ echo $LOOPNUMBER > LOOPNUMBER
 
 
 rm aocscripts/aoAlign.bash &> /dev/null
-ln -s $PWD/$aoAlign_file aocscripts/aoAlign.bash 
+ln -s $PWD/$aoAlign_file aocscripts/aoAlign.bash
 
 rm aocscripts/takedark &> /dev/null
-ln -s $PWD/$takedark_file aocscripts/takedark 
+ln -s $PWD/$takedark_file aocscripts/takedark
 
 rm aocscripts/cpuconfig &> /dev/null
-ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig 
+ln -s $PWD/$cpuconfig_file aocscripts/cpuconfig
 
 
 # ================== CPU config =============================
@@ -169,7 +169,7 @@ echo "0.5469" > ./conf/instconf_dmDCum.txt
 
 ln -s /home/scexao/bin/dmrestart dm00restart
 ./aolfuncs/aolfunc_initDM -fu
-./aolfuncs/aolfunc_setDMnolink 
+./aolfuncs/aolfunc_setDMnolink
 
 
 
@@ -179,24 +179,24 @@ echo "ocam2d" > ./conf/streamlink_wfsim.name.txt
 
 
 # ============ Response Matrix settings ==================
-echo "0.02" >./conf/param_RMamplum.txt    
+echo "0.02" >./conf/param_RMamplum.txt
 echo "1" >./conf/param_RMdelayfr.txt
-echo "2" >./conf/param_RMfrave.txt 
-echo "1" >./conf/param_RMexfr.txt      
+echo "2" >./conf/param_RMfrave.txt
+echo "1" >./conf/param_RMexfr.txt
 echo "1" >./conf/param_RMpokeMode.txt # use Hadamard poke mode
 
 echo "1" > ./conf/param_RMpokeMode.txt
-./auxscripts/mkHpoke 
+./auxscripts/mkHpoke
 ln -s $PWD/conf/Hpoke.fits.gz $PWD/conf/RMpokeCube.fits.gz
 ln -s $PWD/conf/Hpixindex.fits.gz $PWD/conf/RMpixindex.fits.gz
-ln -s $PWD/conf/Hmat.fits.gz $PWD/conf/RMmat.fits.gz 
+ln -s $PWD/conf/Hmat.fits.gz $PWD/conf/RMmat.fits.gz
 
 
 echo "1" > ./conf/param_WFSnorm.txt # normalize WFS frames
 
-echo " ON" > ./conf/param_RMmodal.txt  
-echo "0.02" >./conf/param_RMMamplum.txt   
-echo "3" >./conf/param_RMMcpa.txt      
+echo " ON" > ./conf/param_RMmodal.txt
+echo "0.02" >./conf/param_RMMamplum.txt
+echo "3" >./conf/param_RMMcpa.txt
 
 # ============ Control Matrix ==============
 
@@ -213,9 +213,9 @@ echo "0.003" > ./conf/param_SVDlimall.txt
 # 3 [ 980 Ti]: Predictive control block #2
 # 4 [ 980 Ti]: Predictive control block #3
 # 5 [ 980 Ti]: Predictice control block #4
-# 6 [1080 Ti]: WFS -> mode extraction 
+# 6 [1080 Ti]: WFS -> mode extraction
 # 7 [1080   ]: WFS -> mode extraction
-# 8 [ 980 Ti]: 
+# 8 [ 980 Ti]:
 # 9 [ K40   ]: modes -> DM actuators
 
 
@@ -317,10 +317,3 @@ echo "touch status/stop_PyAlignCam.txt"
 echo "echo \"OFF\" > ./status/status_alignPcam.txt" >> setupAOloopOFF
 echo "tmux kill-session -t alignPcam" >> setupAOloopOFF
 chmod +x setupAOloopOFF
-
-
-
-
-
-
-

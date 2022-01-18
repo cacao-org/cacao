@@ -9,37 +9,37 @@ pname="aolARPF"
 
 
 function printHELP {
-echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname :  Inspect DM map $(tput sgr0)"
-echo "------------------------------------------------------------------------"
-echo "  Uses AO loop RM/CM to inspect DM map"
-echo "   "
-echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h] <DMmap>"
-echo ""
-echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-h$(tput sgr0)          help"
-echo ""
-echo " $(tput bold)INPUT:$(tput sgr0)"
-echo "     <DMmap>             DM map [FITS file]"
-echo ""
-echo " $(tput bold)EXAMPLE:$(tput sgr0)"
-echo "    $0 dmmap.fits"
-echo ""
-echo " $(tput bold)OUTPUT:$(tput sgr0)"
-echo "       ./tmp/dmmap_fitModes.fits        part of DM map that is contained in control modes"
-echo "       ./tmp/dmmap_resModes.fits        part of DM map that is NOT contained in control modes"
-echo ""
-echo " $(tput bold)NOTES:$(tput sgr0)"
-echo ""
-echo "------------------------------------------------------------------------"
+    echo "------------------------------------------------------------------------"
+    echo "$(tput bold) $pname :  Inspect DM map $(tput sgr0)"
+    echo "------------------------------------------------------------------------"
+    echo "  Uses AO loop RM/CM to inspect DM map"
+    echo "   "
+    echo " $(tput bold)USAGE:$(tput sgr0)"
+    echo "     $0 [-h] <DMmap>"
+    echo ""
+    echo " $(tput bold)OPTIONS:$(tput sgr0)"
+    echo "     $(tput bold)-h$(tput sgr0)          help"
+    echo ""
+    echo " $(tput bold)INPUT:$(tput sgr0)"
+    echo "     <DMmap>             DM map [FITS file]"
+    echo ""
+    echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+    echo "    $0 dmmap.fits"
+    echo ""
+    echo " $(tput bold)OUTPUT:$(tput sgr0)"
+    echo "       ./tmp/dmmap_fitModes.fits        part of DM map that is contained in control modes"
+    echo "       ./tmp/dmmap_resModes.fits        part of DM map that is NOT contained in control modes"
+    echo ""
+    echo " $(tput bold)NOTES:$(tput sgr0)"
+    echo ""
+    echo "------------------------------------------------------------------------"
 }
 
 
 
 printHELP1 ()
 {
-    printf "     $(tput bold)%-25s$(tput sgr0)       Inspect DM map\n" "$0" 
+    printf "     $(tput bold)%-25s$(tput sgr0)       Inspect DM map\n" "$0"
 }
 
 
@@ -48,13 +48,13 @@ EXITSTATUS=0
 
 
 function checkFile {
-if [ -f $1 ]
-  then
-    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
-   else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
-    EXITSTATUS=1
-fi
+    if [ -f $1 ]
+    then
+        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+    else
+        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+        EXITSTATUS=1
+    fi
 }
 
 
@@ -63,37 +63,37 @@ fi
 # Transform long options to short ones
 singlelinehelp=0
 for arg in "$@"; do
-  shift
-  case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    "--help1") 
-set -- "$@" "-h" 
-singlelinehelp=1;
-;;
-    *)        set -- "$@" "$arg"
-  esac
+    shift
+    case "$arg" in
+        "--help") set -- "$@" "-h" ;;
+        "--help1")
+            set -- "$@" "-h"
+            singlelinehelp=1;
+            ;;
+        *)        set -- "$@" "$arg"
+    esac
 done
 
 
 
 while getopts :h FLAG; do
-  case $FLAG in
-    h)  #show help
-      if [ "$singlelinehelp" -eq "0" ]; then
-      printHELP
-      else
-      printHELP1
-      fi
-      exit
-      ;;
-    \?) #unrecognized option - show help
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      printHELP
-      ;;
-  esac
+    case $FLAG in
+        h)  #show help
+            if [ "$singlelinehelp" -eq "0" ]; then
+                printHELP
+            else
+                printHELP1
+            fi
+            exit
+            ;;
+        \?) #unrecognized option - show help
+            echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+            printHELP
+            ;;
+    esac
 done
 
-shift $((OPTIND-1))  
+shift $((OPTIND-1))
 
 
 
@@ -103,11 +103,11 @@ shift $((OPTIND-1))
 
 
 if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
-if [ "$#" -ne $NBARGS ]; then
-    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
-fi
-printHELP
-        exit
+    if [ "$#" -ne $NBARGS ]; then
+        echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+    fi
+    printHELP
+    exit
 fi
 
 
@@ -121,12 +121,12 @@ checkFile $1
 
 
 if [ $EXITSTATUS -eq 1 ]; then
-echo ""
-echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
-echo ""
-exit
+    echo ""
+    echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+    echo ""
+    exit
 else
-echo ""
+    echo ""
 fi
 
 
@@ -160,4 +160,3 @@ imlinconstruct aol${loopnb}_respM lcoeffs outimWFS
 savefits outimWFS "!./tmp/dmmap_WFSresp.fits"
 exitCLI
 EOF
-

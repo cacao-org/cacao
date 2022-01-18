@@ -15,30 +15,30 @@ LHSzrespM_FITS=$( head -1 $LHSzrepMnamefile )
 
 printHELP ()
 {
-echo
-echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname : STOP LINEAR HARDWARE SIMULATOR $(tput sgr0)"
-echo "------------------------------------------------------------------------"
-echo " "
-echo "Current values:"
-echo " $(tput bold)LHS wfsref0 :$(tput sgr0)  $LHSwfsref0_FITS"
-echo " $(tput bold)LHS zrespM  :$(tput sgr0)  $LHSzrespM_FITS"
-echo " "
-echo " "
-echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [options]"
-echo ""
-echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "   --help -h             print (h)elp and exit"
-echo "   --help1               print 1 line summary" 
-echo ""
-echo "------------------------------------------------------------------------"
+    echo
+    echo "------------------------------------------------------------------------"
+    echo "$(tput bold) $pname : STOP LINEAR HARDWARE SIMULATOR $(tput sgr0)"
+    echo "------------------------------------------------------------------------"
+    echo " "
+    echo "Current values:"
+    echo " $(tput bold)LHS wfsref0 :$(tput sgr0)  $LHSwfsref0_FITS"
+    echo " $(tput bold)LHS zrespM  :$(tput sgr0)  $LHSzrespM_FITS"
+    echo " "
+    echo " "
+    echo " $(tput bold)USAGE:$(tput sgr0)"
+    echo "     $0 [options]"
+    echo ""
+    echo " $(tput bold)OPTIONS:$(tput sgr0)"
+    echo "   --help -h             print (h)elp and exit"
+    echo "   --help1               print 1 line summary"
+    echo ""
+    echo "------------------------------------------------------------------------"
 }
 
 
 printHELP1 ()
 {
-	printf "%20s       AO Stop linear hardware simulator\n" "$0" 
+    printf "%20s       AO Stop linear hardware simulator\n" "$0"
 }
 
 
@@ -49,36 +49,36 @@ printHELP1 ()
 EXITSTATUS=0
 
 function checkFile {
-if [ -f $1 ]
-  then
-    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
-   else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
-    EXITSTATUS=1
-fi
+    if [ -f $1 ]
+    then
+        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+    else
+        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+        EXITSTATUS=1
+    fi
 }
 
 function checkDir {
-if [ -d $1 ]
-  then
-    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
-   else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
-    EXITSTATUS=1
-fi
+    if [ -d $1 ]
+    then
+        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
+    else
+        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
+        EXITSTATUS=1
+    fi
 }
 
 function cmdexists()
 {
-  command -v "$1" >/dev/null 2>&1
+    command -v "$1" >/dev/null 2>&1
 }
 
 function checkCommand {
-if cmdexists $1; then
-    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
-else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
-fi
+    if cmdexists $1; then
+        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+    else
+        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+    fi
 }
 
 
@@ -86,49 +86,49 @@ fi
 # Transform long options to short ones
 singlelinehelp=0
 for arg in "$@"; do
-  shift
-  case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    "--help1") 
-set -- "$@" "-h" 
-singlelinehelp=1;
-;;
-    *)        set -- "$@" "$arg"
-  esac
+    shift
+    case "$arg" in
+        "--help") set -- "$@" "-h" ;;
+        "--help1")
+            set -- "$@" "-h"
+            singlelinehelp=1;
+            ;;
+        *)        set -- "$@" "$arg"
+    esac
 done
 
 
 
 ### Start getopts code ###
 while getopts :h FLAG; do
-  case $FLAG in
-    h)  #show help
-	if [ "$singlelinehelp" -eq "0" ]; then
-      printHELP
-      else
-      printHELP1
-      fi
-      exit
-      ;;
-    \?) #unrecognized option - show help
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      printHELP
-      ;;
-  esac
+    case $FLAG in
+        h)  #show help
+            if [ "$singlelinehelp" -eq "0" ]; then
+                printHELP
+            else
+                printHELP1
+            fi
+            exit
+            ;;
+        \?) #unrecognized option - show help
+            echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+            printHELP
+            ;;
+    esac
 done
 
-shift $((OPTIND-1)) 
+shift $((OPTIND-1))
 
 
 
 
 
 if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
-if [ "$#" -ne $NBARGS ]; then
-    echo -e \\n"Illegal number of parameters ($NBARGS params required, $# entered)"\\n
-fi
-printHELP
-        exit
+    if [ "$#" -ne $NBARGS ]; then
+        echo -e \\n"Illegal number of parameters ($NBARGS params required, $# entered)"\\n
+    fi
+    printHELP
+    exit
 fi
 
 
@@ -167,17 +167,17 @@ checkFile $execname
 ##############################################
 # arg 1: parameter name
 # arg 2: default value
-# 
+#
 # param value is stored in variable "paramvalue"
 function StatReadStat {
-mkdir -p status
-file="./status/stat_$1.txt"
-if [ -f "$file" ]; then
-statusvalue=$( head -1 $file )
-else
-statusvalue="$2"
-echo "$2" > $file
-fi
+    mkdir -p status
+    file="./status/stat_$1.txt"
+    if [ -f "$file" ]; then
+        statusvalue=$( head -1 $file )
+    else
+        statusvalue="$2"
+        echo "$2" > $file
+    fi
 }
 
 ##############################################
@@ -185,16 +185,16 @@ fi
 ##############################################
 # arg 1: parameter name
 # arg 2: default value
-# 
+#
 # param value is stored in variable "paramvalue"
 function ConfReadParam {
-file="./conf/param_$1.txt"
-if [ -f "$file" ]; then
-paramvalue=$( head -1 $file )
-else
-paramvalue="$2"
-echo "$2" > $file
-fi
+    file="./conf/param_$1.txt"
+    if [ -f "$file" ]; then
+        paramvalue=$( head -1 $file )
+    else
+        paramvalue="$2"
+        echo "$2" > $file
+    fi
 }
 
 
@@ -203,16 +203,16 @@ fi
 ##############################################
 # arg 1: parameter name
 # arg 2: default value
-# 
+#
 # param value is stored in variable "instconfvalue"
 function ConfReadInstConf {
-file="./conf/instconf_$1.txt"
-if [ -f "$file" ]; then
-instconfvalue=$( head -1 $file )
-else
-instconfvalue="$2"
-echo "$2" > $file
-fi
+    file="./conf/instconf_$1.txt"
+    if [ -f "$file" ]; then
+        instconfvalue=$( head -1 $file )
+    else
+        instconfvalue="$2"
+        echo "$2" > $file
+    fi
 }
 
 
@@ -239,9 +239,9 @@ fi
 StatReadStat lsimON "OFF"; lsimONstat="$statusvalue"
 
 if [ "$lsimONstat" = "OFF" ]; then
-echo "LHS already OFF"
-echo "set ./status/stat_lsimON.txt to \" ON\" to force"
-exit
+    echo "LHS already OFF"
+    echo "set ./status/stat_lsimON.txt to \" ON\" to force"
+    exit
 fi
 
 
@@ -255,13 +255,13 @@ fi
 
 # READ LOOP NUMBER
 if [ -f LOOPNUMBER ]; then
-LOOPNUMBER=$( head -1 LOOPNUMBER )
+    LOOPNUMBER=$( head -1 LOOPNUMBER )
 else
-LOOPNUMBER="7"
-echo "$LOOPNUMBER" > LOOPNUMBER
+    LOOPNUMBER="7"
+    echo "$LOOPNUMBER" > LOOPNUMBER
 fi
 
-ConfReadParam DMindex "00"; DMindex="$paramvalue" # DM index 
+ConfReadParam DMindex "00"; DMindex="$paramvalue" # DM index
 
 
 
@@ -312,5 +312,3 @@ EOF
 
 
 echo "OFF" > ./status/stat_lsimON.txt
-
-

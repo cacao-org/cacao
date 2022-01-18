@@ -16,7 +16,7 @@ The predictive filter is modal, and adopts the same modes as the main control lo
 File                       | Description
 ---------------------------|-----------------------------------------------------------
 aolARPF                    | find auto-regressive predictive filter
-aolARPFblock               | AO find optimal AR linear predictive filter 
+aolARPFblock               | AO find optimal AR linear predictive filter
 
 
 ---
@@ -48,5 +48,3 @@ Runs in tmux sessions: aol0PFb0comp, aol1PFb0comp ...
 **Prediction engine** (= apply filter). Runs script `./auxscripts/predFiltApplyRT`.
 
 All 3 processes work in a chain, and can be turned on/off from the GUI.
-
-

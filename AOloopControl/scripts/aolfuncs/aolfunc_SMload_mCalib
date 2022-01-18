@@ -19,18 +19,18 @@ RMMODALCALIBlist="LODMmodes LOrespM LOwfsref0"
 mkdir -p status
 statfile="./status/stat_SMload_mCalib_ON.txt"
 if [ -a $statfile ]; then
-	SMload_mCalib_ON_stat=$( head -1 $statfile )
+    SMload_mCalib_ON_stat=$( head -1 $statfile )
 else
-	SMload_mCalib_ON_stat="OFF"
-	echo "$SMload_mCalib_ON_stat" > $statfile
+    SMload_mCalib_ON_stat="OFF"
+    echo "$SMload_mCalib_ON_stat" > $statfile
 fi
 
 
 
 
 if [ "$SMload_mCalib_ON_stat" = " ON" ]; then
-echo "$0 already running"
-exit
+    echo "$0 already running"
+    exit
 fi
 
 
@@ -42,10 +42,10 @@ fi
 
 # READ LOOP NUMBER
 if [ -f LOOPNUMBER ]; then
-LOOPNUMBER=$( head -1 LOOPNUMBER )
+    LOOPNUMBER=$( head -1 LOOPNUMBER )
 else
-LOOPNUMBER="7"
-echo "$LOOPNUMBER" > LOOPNUMBER
+    LOOPNUMBER="7"
+    echo "$LOOPNUMBER" > LOOPNUMBER
 fi
 
 
@@ -56,7 +56,7 @@ fi
 #done
 
 for imname in $RMMODALCALIBlist; do
-Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}
+    Fits2shm -c -p aol${LOOPNUMBER}_ ${imname}
 done
 
 

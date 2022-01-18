@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
     apt-get install -y \
         git \
-	make \        
+	make \
 	dpkg-dev \
 	libc6-dev \
         cmake \
@@ -21,7 +21,7 @@ RUN apt-get update && \
         libreadline-dev \
 	pkg-config \
 	gcc-10 \
-	g++-10 
+	g++-10
 
 RUN rm /usr/bin/gcc /usr/bin/g++
 RUN ln /usr/bin/gcc-10 /usr/bin/gcc

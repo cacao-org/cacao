@@ -12,7 +12,7 @@ INTRIGGERFILE            inwf.txt          # input trigger file
 
 # ============== OUTPUT TYPE ===================================
 OUTMODE                  0                 # 0: stream, 1: file system
-OUTSTREAMNAMEDM          dm05dispmap       # output WF stream name 
+OUTSTREAMNAMEDM          dm05dispmap       # output WF stream name
 OUTFITSFILENAMEDM        dm05dispmap.fits  # FITS file name output [um]
 OUTTRIGGERFILE           outdm.txt         # output trigger file
 
@@ -23,4 +23,3 @@ DMDT                     0.0003            # DM time sampling
 NBTSAMPLES               100               # number of time samples
 DMLAGSTART               0.0003            # time lag start
 DMTIMECST                0.0001            # DM time constant
-

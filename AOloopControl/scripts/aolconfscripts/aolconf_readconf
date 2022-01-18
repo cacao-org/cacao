@@ -4,8 +4,8 @@ echo "accessing aolconf_readconf"
 
 
 if [ ! -v aolconfFLAG ]; then
-echo "ERROR: This script should be called from aolconf main script"
-exit
+    echo "ERROR: This script should be called from aolconf main script"
+    exit
 fi
 
 
@@ -15,12 +15,12 @@ fi
 LOOPNUMBER_file="LOOPNUMBER"
 if [ ! -f $LOOPNUMBER_file ]
 then
-	aoconflog "creating loop number $LOOPNUMBER_default"
-	echo "$LOOPNUMBER_default" > $LOOPNUMBER_file
-	LOOPNUMBER=$LOOPNUMBER_default
+    aoconflog "creating loop number $LOOPNUMBER_default"
+    echo "$LOOPNUMBER_default" > $LOOPNUMBER_file
+    LOOPNUMBER=$LOOPNUMBER_default
 else
-	LOOPNUMBER=$( head -1 $LOOPNUMBER_file)
-	aoconflog "LOOPNUMBER = $LOOPNUMBER"
+    LOOPNUMBER=$( head -1 $LOOPNUMBER_file)
+    aoconflog "LOOPNUMBER = $LOOPNUMBER"
 fi
 
 
@@ -28,11 +28,11 @@ fi
 LOOPNAME_file="LOOPNAME"
 if [ ! -f $LOOPNAME_file ]
 then
-	aoconflog "creating loop name loop$LOOPNUMBER"
-	echo "loop$LOOPNUMBER" > $LOOPNAME_file
+    aoconflog "creating loop name loop$LOOPNUMBER"
+    echo "loop$LOOPNUMBER" > $LOOPNAME_file
 else
-	LOOPNAME=$( head -1 $LOOPNAME_file)
-	aoconflog "LOOPNAME = $LOOPNAME"
+    LOOPNAME=$( head -1 $LOOPNAME_file)
+    aoconflog "LOOPNAME = $LOOPNAME"
 fi
 
 
@@ -44,23 +44,12 @@ fi
 
 
 function SelectConfFile {
-name="$1"
-ffname="./conf/shmim.${name}.name.txt"
-fname=$( head -1 $ffname )
-echo "fname = $fname"
-fname=$(dialog --title "Select  Matrix" --stdout --title "Select ${name}" --fselect ${fname} $nbwlines $nbwcols)
-echo "$fname" > $ffname
-aoconflog "select configuration file ${name} : ${fname}"
-Fits2shm -c -p aol${LOOPNUMBER}_ $name
+    name="$1"
+    ffname="./conf/shmim.${name}.name.txt"
+    fname=$( head -1 $ffname )
+    echo "fname = $fname"
+    fname=$(dialog --title "Select  Matrix" --stdout --title "Select ${name}" --fselect ${fname} $nbwlines $nbwcols)
+    echo "$fname" > $ffname
+    aoconflog "select configuration file ${name} : ${fname}"
+    Fits2shm -c -p aol${LOOPNUMBER}_ $name
 }
-
-
-
-
-
-
-
-
-
-
-

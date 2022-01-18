@@ -2,7 +2,7 @@
 
 
 - @subpage AOloopControl_DM_init.c \n
-Initialize the deformable mirror 
+Initialize the deformable mirror
 
 - @subpage AOloopControl_DM_config.c \n
 
@@ -13,5 +13,3 @@ Initialize the deformable mirror
 - @subpage AOloopControl_DM_astrogrid.c \n
 
 - @subpage AOloopControl_DM_turbusimul.c \n
-
-

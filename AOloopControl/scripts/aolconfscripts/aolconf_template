@@ -2,8 +2,6 @@
 
 
 if [ ! -v aolconfFLAG ]; then
-echo "ERROR: This script should be called from aolconf main script"
-exit
+    echo "ERROR: This script should be called from aolconf main script"
+    exit
 fi
-
-

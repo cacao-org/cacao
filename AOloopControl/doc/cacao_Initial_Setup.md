@@ -6,7 +6,7 @@
 
 ---
 
-@note <srcdir> is the directory where cacao should be installed. For example: `/home/cacaouser/src`. 
+@note <srcdir> is the directory where cacao should be installed. For example: `/home/cacaouser/src`.
 
 
 # Installing cacao {#page_cacaoSetup_install}
@@ -50,7 +50,7 @@ If you're managing multiple versions on the same machine, as for milk-package, e
 Conventions:
 
 - `<srcdir>` is the source code directory, for example `/home/cacaouser/src`
-- `<workdir>` is the work directory where the program and scripts will be executed. Note that the full 
+- `<workdir>` is the work directory where the program and scripts will be executed. Note that the full
 path should end with `/AOloop<#>` where `<#>` ranges from 0 to 9. For example, `<workdir>` could be `/home/cacaouser/AOloop/AOloop2`.
 
 
@@ -92,4 +92,3 @@ If new scripts are added in the source directory, running `./syncscripts` again 
 A system configuration script can be created so that it is executed upon cacao AO loop startup. The script should be in the work directory, and should be named `SystemConfig`. A template is provided and can be edited:
 
 	cp ./aocscripts/SystemConfig_generic SystemConfig
-

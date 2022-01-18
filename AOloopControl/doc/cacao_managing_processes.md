@@ -3,9 +3,9 @@
 
 Note: Here, a process can consist of any operation or set of operations, as defined by the user. In this appendix, a process does not strictly correspond to a CPU process.
 
-cacao's bash script includes tools to manage logical links between processes. A process can be **queued**, waiting to start until some condition is met, and its status (running, waiting to be launched, or completed) can be checked. 
+cacao's bash script includes tools to manage logical links between processes. A process can be **queued**, waiting to start until some condition is met, and its status (running, waiting to be launched, or completed) can be checked.
 
-The command `l` under the GUI top menu will launch a window displaying processes status. 
+The command `l` under the GUI top menu will launch a window displaying processes status.
 
 ## Queued process
 
@@ -45,7 +45,7 @@ The command `./auxscripts/waitforfilek` in `<srcdir>/scripts` locks the bash scr
 	./auxscripts/waitforfilek -t <timeout_sec> <tagname>
 	<non-tmux_script_commands_to_be_executed_AFTER_tmux_commands>
 
-The command creates a "<tagname>.lock" file, and waits for a "<tagname>.unlock" to appear. When the unlock file is detected, both lock and unlock files are removed. The lock file indicates that a process is currently locked. This scheme can be employed to synchronize multiple scripts. 
+The command creates a "<tagname>.lock" file, and waits for a "<tagname>.unlock" to appear. When the unlock file is detected, both lock and unlock files are removed. The lock file indicates that a process is currently locked. This scheme can be employed to synchronize multiple scripts.
 
 The lower level `./auxscripts/waitonfile` command allows users to manually setup locks between proceses, by waiting for a file to disappear. Typical use:
 

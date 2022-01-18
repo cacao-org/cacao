@@ -23,16 +23,16 @@ mkdir -p $outDir
 ##############################################
 # arg 1: parameter name
 # arg 2: default value
-# 
+#
 # param value is stored in variable "paramvalue"
 function ConfReadParam {
-file="./conf/param_$1.txt"
-if [ -f "$file" ]; then
-paramvalue=$( head -1 $file )
-else
-paramvalue="$2"
-echo "$2" > $file
-fi
+    file="./conf/param_$1.txt"
+    if [ -f "$file" ]; then
+        paramvalue=$( head -1 $file )
+    else
+        paramvalue="$2"
+        echo "$2" > $file
+    fi
 }
 
 
@@ -42,10 +42,10 @@ echo "##########################################"
 
 # READ LOOP NUMBER
 if [ -f LOOPNUMBER ]; then
-LOOPNUMBER=$( head -1 LOOPNUMBER )
+    LOOPNUMBER=$( head -1 LOOPNUMBER )
 else
-LOOPNUMBER="7"
-echo "$LOOPNUMBER" > LOOPNUMBER
+    LOOPNUMBER="7"
+    echo "$LOOPNUMBER" > LOOPNUMBER
 fi
 
 ConfReadParam DMMODE "0"; DMMODE="$paramvalue"
@@ -72,17 +72,17 @@ ConfReadParam WFSnorm "1"; WFSnorm="$paramvalue"
 
 
 if [ "$DMMODE" = "0" ]; then
-	ConfReadParam ACmrmtime "60.0"
-	ACmrmtime="$paramvalue"
+    ConfReadParam ACmrmtime "60.0"
+    ACmrmtime="$paramvalue"
 
-	ConfReadParam ACmrmNBcycle "5"
-	ACmrmNBcycle="$paramvalue"
-	
+    ConfReadParam ACmrmNBcycle "5"
+    ACmrmNBcycle="$paramvalue"
+
     ConfReadParam RMMcpa "1.0"
     RMMcpa="$paramvalue"
-    
-	ConfReadParam RMMamplum "0.1"
-	RMMamplum="$paramvalue"
+
+    ConfReadParam RMMamplum "0.1"
+    RMMamplum="$paramvalue"
 fi
 
 
@@ -98,97 +98,97 @@ ACmrmNBcycle="200"
 while true
 do
 
-for RMamp in "0.01" "0.03" "0.05"
-do
+    for RMamp in "0.01" "0.03" "0.05"
+    do
 
 
-echo "Running $RMamp"
-
-
-
-RMamplum="$RMamp"
-RMMamplum="$RMamp"
+        echo "Running $RMamp"
 
 
 
-echo "./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}"
-
-echo "./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}"
-
+        RMamplum="$RMamp"
+        RMMamplum="$RMamp"
 
 
 
+        echo "./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}"
 
-
-aCALIBdatestr=`date -u +%Y-%m-%d_%H:%M:%S`
-
-
-echo "##########################################"
-echo "# ACQUIRE ZONAL RESPONSE MATRIX           "
-echo "##########################################"
-
-
-# ACQUIRE HIGH ORDER WFS RESPONSE: 
-#
-# INPUT:
-# 	conf/RMpokeCube.fits.gz  (poke sequence)
-#		if file does not exist, create straight poke sequence (one actuator at a time) 
-#
-# OUTPUT: 
-# 	zrespmat0.fits
-#	wfsref00.fits
-#
-if pgrep "aol${LOOPNUMBER}run" > /dev/null  # is aolrun running ?
-then # use option -r to re-use AO shared memory configuration
-	./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
-else
-    ./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
-fi
-
-echo "####################################################"
-echo "# COPY TO ARCHIVE DIRECTORIES                       "
-echo "####################################################"
-cp zrespmat0.fits ${outDir}/zrespmat0_${aCALIBdatestr}.${RMamplum}.fits
-cp wfsref00.fits ${outDir}/wfsref00_${aCALIBdatestr}.${RMamplum}.fits
+        echo "./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}"
 
 
 
 
 
 
+        aCALIBdatestr=`date -u +%Y-%m-%d_%H:%M:%S`
 
 
-echo "##############################################"
-echo "# ACQUIRE MODAL LO RESPONSE MATRIX            "
-echo "##############################################"
+        echo "##########################################"
+        echo "# ACQUIRE ZONAL RESPONSE MATRIX           "
+        echo "##########################################"
 
 
-#
-# INPUT:
-#	respM_LOmodes.fits (for aolMeasureLOrespmat2)
-#
-# OUTPUT:
-#	LOrespM.fits
-#	LOwfsref0.fits
-#   respM_LOmodes.fits
+        # ACQUIRE HIGH ORDER WFS RESPONSE:
+        #
+        # INPUT:
+        # 	conf/RMpokeCube.fits.gz  (poke sequence)
+        #		if file does not exist, create straight poke sequence (one actuator at a time)
+        #
+        # OUTPUT:
+        # 	zrespmat0.fits
+        #	wfsref00.fits
+        #
+        if pgrep "aol${LOOPNUMBER}run" > /dev/null  # is aolrun running ?
+        then # use option -r to re-use AO shared memory configuration
+            ./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+        else
+            ./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+        fi
+
+        echo "####################################################"
+        echo "# COPY TO ARCHIVE DIRECTORIES                       "
+        echo "####################################################"
+        cp zrespmat0.fits ${outDir}/zrespmat0_${aCALIBdatestr}.${RMamplum}.fits
+        cp wfsref00.fits ${outDir}/wfsref00_${aCALIBdatestr}.${RMamplum}.fits
 
 
-if pgrep "aol${LOOPNUMBER}run" > /dev/null # is aolrun running ?
-then # use option -r to re-use AO shared memory configuration
-    ./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
-else
-    ./auxscripts/aolMeasureLOrespmat2 -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
-fi
-
-echo "####################################################"
-echo "# COPY TO ARCHIVE DIRECTORIES                       "
-echo "####################################################"
-cp LOrespM.fits   ${outDir}/LOrespM_${aCALIBdatestr}.${RMamplum}.fits
-cp LOwfsref0.fits     ${outDir}/LOwfsref0_${aCALIBdatestr}.${RMamplum}.fits
-cp respM_LOmodes.fits ${outDir}/respM_LOmodes_${aCALIBdatestr}.${RMamplum}.fits
 
 
 
-done
+
+
+
+        echo "##############################################"
+        echo "# ACQUIRE MODAL LO RESPONSE MATRIX            "
+        echo "##############################################"
+
+
+        #
+        # INPUT:
+        #	respM_LOmodes.fits (for aolMeasureLOrespmat2)
+        #
+        # OUTPUT:
+        #	LOrespM.fits
+        #	LOwfsref0.fits
+        #   respM_LOmodes.fits
+
+
+        if pgrep "aol${LOOPNUMBER}run" > /dev/null # is aolrun running ?
+        then # use option -r to re-use AO shared memory configuration
+            ./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+        else
+            ./auxscripts/aolMeasureLOrespmat2 -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+        fi
+
+        echo "####################################################"
+        echo "# COPY TO ARCHIVE DIRECTORIES                       "
+        echo "####################################################"
+        cp LOrespM.fits   ${outDir}/LOrespM_${aCALIBdatestr}.${RMamplum}.fits
+        cp LOwfsref0.fits     ${outDir}/LOwfsref0_${aCALIBdatestr}.${RMamplum}.fits
+        cp respM_LOmodes.fits ${outDir}/respM_LOmodes_${aCALIBdatestr}.${RMamplum}.fits
+
+
+
+    done
 
 done

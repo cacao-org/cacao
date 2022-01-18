@@ -4,14 +4,14 @@
 
 
 
-## Linking to existing stream 
+## Linking to existing stream
 
 Creates a sym link from an existing stream to a new stream. This is frequently used to connect to hardware (for example pointing aol8_wfsim to the WFS camera stream).
 
 Within AOCCE, setting (new) stream aol#_\<deststream\> to point to \<srcstream\> involves:
 
 - writing "\<srcstream\>" to file conf/streamlink_\<deststream\>.name.txt
-- removing any existing aol#_\<deststream\> stream 
+- removing any existing aol#_\<deststream\> stream
 - establishing sym link from \<srcstream\> to aol#_\<deststream\>
 
 The corresponding commands, to point aol8_wfsim to imcam, would be:
@@ -74,7 +74,7 @@ Fits2shm is located in the src/scripts/ directory of the AOCCE source code.
 
 For both options, FITS files and shared memory files are inspected to assess need to load the image. If repetitive load requests are issued on the same file and shared memory, the script may decide that no action is required as the shared memory is already up-to-date.
 
-Local directory ./loadedSM/ is used to keep track of streams loaded from FITS files. 
+Local directory ./loadedSM/ is used to keep track of streams loaded from FITS files.
 
 
 Important files:
@@ -130,11 +130,11 @@ The logic behind Fits2shm is as follows:
 - Check if FORCE option, if yes, set LOAD=1
 - If LOAD=1:
 	- load file to shared memory
-	
-	
-When loading :	
 
-- OPTION A only: update ./conf/shmim_\<stream\>_name.txt to the FITS file name 	
+
+When loading :
+
+- OPTION A only: update ./conf/shmim_\<stream\>_name.txt to the FITS file name
 - update ./loadedSM/\<stream\>.FITSinfo file
 - update ./loadedSM/\<stream\>.SMinfo file
 - create ./loadedSM/\<stream\>.kept OR ./loadedSM/\<stream\>.new file, remove the other one
@@ -142,6 +142,3 @@ When loading :
 - copy ./loadedSM/\<stream\>.imsize file to ./conf/shmim_\<stream\>.imsize.txt
 - load FITS file to ./tmp/\<prefix\>\<stream\>.im.shm
 - create sym link ./conf/shmim_\<stream\>.fits pointing to FITS file
-	
-
-

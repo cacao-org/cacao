@@ -4,12 +4,12 @@ EXPECTED_ARGS=0
 
 if [ $# -ne $EXPECTED_ARGS ]
 then
-  echo
-  echo "------ Align Pyramid camera -------"
-  echo
-  echo "   no argument"
-  echo
-  exit
+    echo
+    echo "------ Align Pyramid camera -------"
+    echo
+    echo "   no argument"
+    echo
+    exit
 fi
 
 loopnb=$( head -1 LOOPNUMBER)
@@ -32,5 +32,3 @@ imdiff=imwfs-imref
 #savefits imdiff "!./tmp/imdiff.fits"
 exitCLI
 EOF
-
-

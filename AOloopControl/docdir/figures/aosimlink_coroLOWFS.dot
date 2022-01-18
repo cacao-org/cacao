@@ -3,8 +3,8 @@ digraph aosim {
 #		rankdir="LR"
 
 # shared mem stream nodes
-        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];  
-        wf1opd; wf1amp; "aosim_foc0_amp/pha"; 
+        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];
+        wf1opd; wf1amp; "aosim_foc0_amp/pha";
         "aosim_pup1_amp/pha";
         "aosim_pup1t_amp/pha";
         "aosim_pup1r_amp/pha";
@@ -14,14 +14,14 @@ digraph aosim {
 		"aosim_imlowfs"; "aosim_imcamLOWFS";
 		"aosim_imcoro";
 		"aosim_phystime";
-		
+
 # images
-		node [style=filled, fillcolor=grey90, fontcolor=black, fontname="bold", shape = box, color = black]; 
+		node [style=filled, fillcolor=grey90, fontcolor=black, fontname="bold", shape = box, color = black];
 		"corofpmamp/pha";
 		"lyotstopreflamp/pha";
 		"lyotstoptransmamp/pha";
 		"lowfsopdmap";
-		
+
 # processess nodes
         node [style=filled, fillcolor=plum1, fontcolor=red, fontname="bold", shape=ellipse, color=red]; aosimcoroLOWFS;
 

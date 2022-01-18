@@ -22,7 +22,7 @@ Code metrics (dev branch) :
 
 cacao is a computation engine for adaptive optics control.
 
-**Compute Performance**: Uses multi-core CPUs and GPGPUs for [high computing throughput](https://github.com/cacao-org/cacao/wiki/Compute-Performance-Benchmarks). Written in C, optimized for performance. Holds images in RAM, with image stream support (shared memory with low-latency IPC support). cacao uses [milk](https://github.com/milk-org/milk). 
+**Compute Performance**: Uses multi-core CPUs and GPGPUs for [high computing throughput](https://github.com/cacao-org/cacao/wiki/Compute-Performance-Benchmarks). Written in C, optimized for performance. Holds images in RAM, with image stream support (shared memory with low-latency IPC support). cacao uses [milk](https://github.com/milk-org/milk).
 
 
 **User input**: Executable launches a [command line interface (CLI)](https://cacao-org.github.io/cacao/page_userinput.html) from which functions are accessible. Type "help" in the CLI to get started.
@@ -37,7 +37,7 @@ cacao is a computation engine for adaptive optics control.
 
 ## Getting help, Documentation
 
-Topic                        |  Chat room                             |  Documentation             | 
+Topic                        |  Chat room                             |  Documentation             |
 -----------------------------|----------------------------------------|--------------------|
 How to use cacao ?           | [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community)  Community | [Online documentation]( http://CACAO-org.github.io/cacao/index.html )  |
 Configuring computer system  | [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig)  Hardware / OS setup | [RTC setup]( https://github.com/cacao-org/cacao/wiki/Seeting-up-a-RTC-system ) |
@@ -54,7 +54,7 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 
 Install pre-requisite packages as needed. For example, under Ubuntu :
 
-	sudo apt install git make dpkg-dev libc6-dev cmake pkg-config python3-dev libcfitsio-dev pybind11-dev python3-pybind11 libgsl-dev libfftw3-dev libncurses-dev libbison-dev libfl-dev libreadline-dev pkg-config gcc-10 g++-10 
+	sudo apt install git make dpkg-dev libc6-dev cmake pkg-config python3-dev libcfitsio-dev pybind11-dev python3-pybind11 libgsl-dev libfftw3-dev libncurses-dev libbison-dev libfl-dev libreadline-dev pkg-config gcc-10 g++-10
 
 cacao is a plugin of [milk page](https://github.com/milk-org/milk-package).
 
@@ -95,7 +95,7 @@ Additional software is required to view real-time data streams. Several options 
   * [rtimv](https://github.com/jaredmales/rtimv), a qt-based image viewer, higher performance than ds9 option
   * [shmimviewqt](https://github.com/milk-org/shmimviewqt), another qt-based option (less polished than rtimv)
   * [xaosim](https://github.com/fmartinache/xaosim)'s shmview image viewer, using python qt interface
-  
+
 ### Python interface to data streams
 
 Python users can read/write milk/cacao's data streams using additional packages:
@@ -107,5 +107,3 @@ Both stream interfaces above are cross-compatible.
 
 
 ---
-
-

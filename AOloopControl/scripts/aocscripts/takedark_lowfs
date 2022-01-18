@@ -4,12 +4,12 @@ EXPECTED_ARGS=0
 
 if [ $# -ne $EXPECTED_ARGS ]
 then
-  echo
-  echo "------ Take Dark Image ------"
-  echo
-#  echo "  INPUT : Number of frames" 
-  echo "  OUTPUT: dark.fits"
-  exit
+    echo
+    echo "------ Take Dark Image ------"
+    echo
+    #  echo "  INPUT : Number of frames"
+    echo "  OUTPUT: dark.fits"
+    exit
 fi
 
 NBframes=10000
@@ -34,6 +34,3 @@ EOF
 echo "wfsdark/wfsdark_${datestr}.fits" > conf/shmim.wfsdark.name.txt
 
 ssh scexao@scexaoCTRL "/home/scexao/bin/devices/lowfs_block"
-
-
-

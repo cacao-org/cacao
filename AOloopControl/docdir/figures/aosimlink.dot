@@ -25,6 +25,6 @@ edge[arrowhead=normal, arrowtail=none, arrowsize=1.5, color=black, fontsize=10, 
         aosimWFS -> WFSinst;
         aosimDMrun -> dm05dispmap;
 	WFSinst -> pWFSim;
-        dm05disp -> aosimDMrun; 
+        dm05disp -> aosimDMrun;
 	aosimmkWF -> aosim_phystime;
 }

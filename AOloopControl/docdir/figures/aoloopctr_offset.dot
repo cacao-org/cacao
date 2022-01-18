@@ -3,7 +3,7 @@ digraph aosim {
 #		rankdir="LR"
 
 # shared mem stream nodes
-        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];  
+        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];
         "aolN_wfsref";
         "aolN_wfsref0";
         "aolN_wfszpo0";
@@ -22,17 +22,17 @@ digraph aosim {
         "aolN_dmZP5";
         "aolN_dmZP6";
         "aolN_dmZP7";
-	
 
-		
+
+
 # processess nodes
-        node [style=filled, fillcolor=plum1, fontcolor=red, fontname="bold", shape=ellipse, color=red]; 
+        node [style=filled, fillcolor=plum1, fontcolor=red, fontname="bold", shape=ellipse, color=red];
         "aolNzploop0";
         "aolNzploop1";
         "aolNzploop2";
         "aolNzploop3";
         "aolNzploop4";
-        "aolNzploop5";        
+        "aolNzploop5";
         "aolNzploop6";
         "aolNzploop7";
         "aolzpwfscloop";

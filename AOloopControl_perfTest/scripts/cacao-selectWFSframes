@@ -6,26 +6,26 @@ MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
 MSextdescr="Select WFS frames from times at which PSF is best
 Requires synchronized data cubes created by cacao-syncStreams
 
-default alpha norm = 2.0 
+default alpha norm = 2.0
 
 <streamWFScube>     WFC stream name
 <streamPSFcube>     PSF stream name
 <x0><x1><y0><y1>    PSF evaluation window
-    
-Evaluation Modes:         
-	0: optimize flux concentration
-	1: maximize flux
-    2: minimize flux
+
+Evaluation Modes:
+0: optimize flux concentration
+1: maximize flux
+2: minimize flux
 
 EXAMPLE
-    $0 aol0_wfsim.sync.fits aol0_psf.sync.fits 0 64 0 64 0
+$0 aol0_wfsim.sync.fits aol0_psf.sync.fits 0 64 0 64 0
 
 
 OUTPUT
-	impsfbest.fits     Average of selected PSF frames
-	impsfall.fits      Average of all PSF frames
-	imwfsbest.fits     Average of selected WFS frames
-	imwfsall.fits      Average of all WFS frames
+impsfbest.fits     Average of selected PSF frames
+impsfall.fits      Average of all PSF frames
+imwfsbest.fits     Average of selected WFS frames
+imwfsall.fits      Average of all WFS frames
 
 
 "
@@ -39,7 +39,7 @@ OUTPUT
 #x1="$5"
 #y0="$6"
 #y1="$7"
-#evalMode="$8" 
+#evalMode="$8"
 
 
 

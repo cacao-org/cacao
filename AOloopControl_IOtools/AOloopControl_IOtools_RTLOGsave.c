@@ -1,45 +1,25 @@
 /**
  * @file    AOloopControl_IOtools_RTLOGsave.c
  * @brief   Save realtime buffers
- * 
+ *
  */
-
-
 
 #define _GNU_SOURCE
 
-
-
-#include <string.h>
-#include <stdint.h>
 #include <math.h>
+#include <stdint.h>
+#include <string.h>
 
 #include "CommandLineInterface/CLIcore.h"
 
-#include "statistic/statistic.h"
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-
-
-
-
-
-
-
+#include "statistic/statistic.h"
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 
-
-
-
-
-
-errno_t AOloopControl_IOtools_RTLOGsave(
-    long        loop,
-    const char *streamname,
-    __attribute__((unused)) const char *dirname
-)
+errno_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, __attribute__((unused)) const char *dirname)
 {
     // data buffers
     char imnameb0[STRINGMAXLEN_IMGNAME];
@@ -52,7 +32,6 @@ errno_t AOloopControl_IOtools_RTLOGsave(
     char imnamebinfo1[STRINGMAXLEN_IMGNAME];
     __attribute__((unused)) imageID IDinbinfo0;
     __attribute__((unused)) imageID IDinbinfo1;
-
 
     WRITE_IMAGENAME(imnameb0, "aol%ld_%s_logbuff0", loop, streamname);
 

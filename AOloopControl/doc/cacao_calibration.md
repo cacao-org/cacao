@@ -2,7 +2,7 @@
 # Calibration {#page_cacao_calibration}
 
 
-## Acquiring a zonal response matrix 
+## Acquiring a zonal response matrix
 
 - **set response matrix parameters** in `Loop Configure` screen: amplitude, time delay, frame averaging, excluded frames
 
@@ -10,7 +10,7 @@
 
 - **start zonal response matrix acquisition** (`zrespon` in `Loop Configure` screen). The process runs in tmux session aol#zrepM.
 
-- **stop zonal response matrix acquistion** (`zrespoff` in `Loop Configure` screen). 
+- **stop zonal response matrix acquistion** (`zrespoff` in `Loop Configure` screen).
 
 
 The following files are then created:
@@ -43,12 +43,12 @@ Note that at this point, the files are NOT loaded in shared memory, but the arch
 - **Load zrespm files into shared memory** (`SMloadzrm` in `Loop Configure` screen)
 
 
-	
+
 ## Acquiring a modal response matrix (optional, for ZONAL DM only)
 
 In addition to the zonal response matrix, a modal response matrix can be acquired to improve sensitivity to low-oder modes.
 
-To do so: 
+To do so:
 
 - activate `RMMon` to **toggle the modal RM on**.
 
@@ -102,12 +102,10 @@ The old calibrations are archived as follows:
 
 
 
-  
+
 
 ## Managing configurations
 
 At any given time, the current configuration (including control matrices if they have been computed) can be saved using the `SAVE CURRENT SYSTEM CALIBRATION` command. Saving a configuration will save all files in the conf directory into a user-specified directory.
 
 Previously saved configurations can be loaded with the `LOAD SAVED SYSTEM CALIBRATION` command. This will load saved files into the conf directory and load all files into shared memory.
-
-

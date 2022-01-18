@@ -1,0 +1,32 @@
+exclude: "^.github/"
+repos:
+-   repo: https://github.com/pre-commit/mirrors-yapf.git
+    rev: v0.32.0
+    hooks:
+    -   id: yapf
+        additional_dependencies: [toml]
+-   repo: https://github.com/pre-commit/mirrors-clang-format.git
+    rev: v13.0.0
+    hooks:
+    -   id: clang-format
+-   repo: https://github.com/pre-commit/pre-commit-hooks.git
+    rev: v4.1.0
+    hooks:
+    -   id: trailing-whitespace
+        exclude: \.fits
+    -   id: end-of-file-fixer
+        exclude: \.fits
+    -   id: check-yaml
+    -   id: debug-statements
+    -   id: requirements-txt-fixer
+    -   id: check-added-large-files
+    -   id: check-ast
+    -   id: check-merge-conflict
+#-   repo: git://github.com/detailyang/pre-commit-shell
+#    rev: v1.0.6
+#    hooks:
+#    - id: shell-lint
+#-   repo: https://github.com/lovesegfault/beautysh.git
+#    rev: v6.2.1
+#    hooks:
+#    -   id: beautysh

@@ -81,4 +81,3 @@ install(PROGRAMS ${SCRIPTS} DESTINATION bin)
 
 #install(TARGETS ${LIBNAME} DESTINATION lib)
 #install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})
-

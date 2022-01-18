@@ -10,27 +10,27 @@ echo "pname = $pname"
 
 
 function printHELP {
-echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname : execute cacao command  $(tput sgr0)"
-echo "------------------------------------------------------------------------"
-echo "  Execute command string within cacao command line interface (CLI)"
-echo "   "
-echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-hTn] <cmdstring>"
-echo ""
-echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-T$(tput sgr0)          (T)est mode"
-echo "     $(tput bold)-n$(tput sgr0) <pname>     (n)ame process"
-echo ""
-echo " $(tput bold)EXAMPLE:$(tput sgr0)"
-echo "     $0 \"imgen.mkdisk d1 100 100 50 50 20;listim\""
-echo "------------------------------------------------------------------------"
+    echo "------------------------------------------------------------------------"
+    echo "$(tput bold) $pname : execute cacao command  $(tput sgr0)"
+    echo "------------------------------------------------------------------------"
+    echo "  Execute command string within cacao command line interface (CLI)"
+    echo "   "
+    echo " $(tput bold)USAGE:$(tput sgr0)"
+    echo "     $0 [-hTn] <cmdstring>"
+    echo ""
+    echo " $(tput bold)OPTIONS:$(tput sgr0)"
+    echo "     $(tput bold)-T$(tput sgr0)          (T)est mode"
+    echo "     $(tput bold)-n$(tput sgr0) <pname>     (n)ame process"
+    echo ""
+    echo " $(tput bold)EXAMPLE:$(tput sgr0)"
+    echo "     $0 \"imgen.mkdisk d1 100 100 50 50 20;listim\""
+    echo "------------------------------------------------------------------------"
 }
 
 
 printHELP1 ()
 {
-	printf "%20s       Execute cacao command\n" "$0" 
+    printf "%20s       Execute cacao command\n" "$0"
 }
 
 
@@ -41,15 +41,15 @@ printHELP1 ()
 # Transform long options to short ones
 singlelinehelp=0
 for arg in "$@"; do
-  shift
-  case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    "--help1") 
-set -- "$@" "-h" 
-singlelinehelp=1;
-;;
-    *)        set -- "$@" "$arg"
-  esac
+    shift
+    case "$arg" in
+        "--help") set -- "$@" "-h" ;;
+        "--help1")
+            set -- "$@" "-h"
+            singlelinehelp=1;
+            ;;
+        *)        set -- "$@" "$arg"
+    esac
 done
 
 
@@ -57,29 +57,29 @@ done
 pname="cacaoexec"
 
 while getopts :hTn: FLAG; do
-  case $FLAG in
-    h)  #show help
-      if [ "$singlelinehelp" -eq "0" ]; then
-      printHELP
-      else
-      printHELP1
-      fi
-      exit
-      ;;
-    T) # run as a test
-	echo "CTEST_FULL_OUTPUT"
-    ;;
-    n) # name process
-    pname="${OPTARG}"
-    ;;
-    \?) 
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      printHELP
-      ;;
-  esac
+    case $FLAG in
+        h)  #show help
+            if [ "$singlelinehelp" -eq "0" ]; then
+                printHELP
+            else
+                printHELP1
+            fi
+            exit
+            ;;
+        T) # run as a test
+            echo "CTEST_FULL_OUTPUT"
+            ;;
+        n) # name process
+            pname="${OPTARG}"
+            ;;
+        \?)
+            echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+            printHELP
+            ;;
+    esac
 done
 
-shift $((OPTIND-1))  
+shift $((OPTIND-1))
 
 ### End getopts code ###
 
@@ -89,11 +89,11 @@ shift $((OPTIND-1))
 
 
 if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
-if [ "$#" -ne $NBARGS ]; then
-    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
-fi
-printHELP
-        exit
+    if [ "$#" -ne $NBARGS ]; then
+        echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+    fi
+    printHELP
+    exit
 fi
 
 IFS=';' read -r -a array <<< "$1"
@@ -113,5 +113,3 @@ echo "SF = ${SF}"
 cacao -n ${pname} -f -s ${SF}
 
 rm ${SF}
-
-

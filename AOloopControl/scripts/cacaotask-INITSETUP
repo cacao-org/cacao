@@ -9,9 +9,9 @@ mkdir -p ${WORKDIRECTORY}
 
 # check if successful
 if [ "$?" = 0 ]; then
-	cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
+    cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
 else
-	cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
+    cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
 fi
 
 # copy test configuration files to work directory
@@ -48,4 +48,3 @@ EOT
 
 # NEWVAR_INITSETUP=2
 # echo "NEWVAR_INITSETUP=${NEWVAR_INITSETUP}" >> ${ENVOUTFILE}
-

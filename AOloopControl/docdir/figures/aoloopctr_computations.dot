@@ -3,7 +3,7 @@ digraph aosim {
 #		rankdir="LR"
 
 # shared mem stream nodes
-        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];  
+        node [style=filled, fillcolor=grey70, fontcolor=blue, fontname="bold", shape = box, color = blue];
         "aol#_wfsim";
         "aol#_imWFS0";
         "AOconf#.WFStotalflux";
@@ -11,14 +11,14 @@ digraph aosim {
         "aol#_imWFS2";
         "aol#_DMmode_meas";
         "aol#_DMmode_cmd";
-		
+
 # images
-		node [style=filled, fillcolor=grey90, fontcolor=black, fontname="bold", shape = box, color = black]; 
+		node [style=filled, fillcolor=grey90, fontcolor=black, fontname="bold", shape = box, color = black];
 		"corofpmamp/pha";
 		"lyotstopreflamp/pha";
 		"lyotstoptransmamp/pha";
 		"lowfsopdmap";
-		
+
 # processess nodes
         node [style=filled, fillcolor=plum1, fontcolor=red, fontname="bold", shape=ellipse, color=red]; aosimcoroLOWFS;
 

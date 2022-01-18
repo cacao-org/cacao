@@ -4,17 +4,17 @@ EXPECTED_ARGS=4
 
 if [ $# -ne $EXPECTED_ARGS ]
 then
-  echo
-  echo "------ fit actmap to simple pupil ------"
-  echo
-  echo "  INPUT <xc>"
-  echo "  INPUT <yc>"
-  echo "  INPUT <r0>"
-  echo "  INPUT <r1>"
-  echo
-  echo "example"
-  echo " $0 24.0 23.1 6.5 22.1"
-  exit
+    echo
+    echo "------ fit actmap to simple pupil ------"
+    echo
+    echo "  INPUT <xc>"
+    echo "  INPUT <yc>"
+    echo "  INPUT <r0>"
+    echo "  INPUT <r1>"
+    echo
+    echo "example"
+    echo " $0 24.0 23.1 6.5 22.1"
+    exit
 fi
 
 
@@ -45,4 +45,3 @@ diskc=d1c-d2c
 savefits diskc "!./conf/TPmask.fits"
 exit
 EOF
-

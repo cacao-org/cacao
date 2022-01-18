@@ -10,13 +10,8 @@
 #ifndef _AOLOOPCONTROL_PREDICTIVECONTROL_H
 #define _AOLOOPCONTROL_PREDICTIVECONTROL_H
 
-
-
-
 /** @brief Initialize module. */
 void __attribute__((constructor)) libinit_AOloopControl_PredictiveControl();
-
-
 
 /* =============================================================================================== */
 /* =============================================================================================== */
@@ -25,34 +20,15 @@ void __attribute__((constructor)) libinit_AOloopControl_PredictiveControl();
 /* =============================================================================================== */
 /* =============================================================================================== */
 
-errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(
-    const char *IDmodecoeff_name,
-    long        modeout,
-    double      delayfr
-);
+errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(const char *IDmodecoeff_name, long modeout, double delayfr);
 
-double AOloopControl_PredictiveControl_testPredictiveFilter(
-    const char *IDtrace_name,
-    long        modeout,
-    double      delayfr,
-    long        filtsize,
-    const char *IDfilt_name,
-    double      SVDeps
-);
+double AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name, long modeout, double delayfr,
+                                                            long filtsize, const char *IDfilt_name, double SVDeps);
 
-imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
-    long loop,
-    long PFblock,
-    long PFblockStart,
-    long PFblockEnd,
-    long NBbuff
-);
+imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop, long PFblock, long PFblockStart,
+                                                              long PFblockEnd, long NBbuff);
 
 /** @brief Set predictive filter to simple average of previous measures */
-imageID AOloopControl_PredictiveControl_setPFsimpleAve(
-    char *IDPF_name,
-    float DecayCoeff
-);
-
+imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name, float DecayCoeff);
 
 #endif

@@ -5,10 +5,10 @@ EXPECTED_ARGS=1
 
 if [ $# -ne $EXPECTED_ARGS ]
 then
-  echo "------- EXTRACT MODE VALUES FROM CM OUTPUT ---------"
-  echo 
-  echo "Usage:  $0 <GPUdevice>"
-  echo
+    echo "------- EXTRACT MODE VALUES FROM CM OUTPUT ---------"
+    echo
+    echo "Usage:  $0 <GPUdevice>"
+    echo
 fi
 
 loopnb=$(cat LOOPNUMBER)
@@ -25,4 +25,3 @@ readshmim aol${loopnb}_dmmask
 cudaextrmodes aol${loopnb}_meas_act DMmodes aol${loopnb}_gainarray aol${loopnb}_modeval $1 0 empty empty aol${loopnb}_dmmask
 exit
 EOF
-

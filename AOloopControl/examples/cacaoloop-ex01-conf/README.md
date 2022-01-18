@@ -145,4 +145,3 @@ Not all files in fps._fpsname_.data should be saved to configuration of archived
 ## Communication between FPSs
 
 Tools are provided to manage dependencies between different FPSs.
-

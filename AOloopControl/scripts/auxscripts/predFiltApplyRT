@@ -11,38 +11,38 @@ pname=`echo "$0" | sed "s/\.\///g"`
 
 
 function printHELP {
-echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname : Apply predictive filter to stream $(tput sgr0)"
-echo "------------------------------------------------------------------------"
-echo "  Apply linear predictive filter to stream"
-echo "   "
-echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-hnsrigo] <instrem> <filtstream> <outstream>"
-echo ""
-echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-h$(tput sgr0)            help"
-echo "     $(tput bold)-n$(tput sgr0) <NBiter>   run for NBiter iterations (default = 1000 in savemode)"
-echo "     $(tput bold)-s$(tput sgr0)            save ascii and FITS output"
-echo "     $(tput bold)-r$(tput sgr0)            replace measurements by predictions -> FITS output"
-echo "     $(tput bold)-i$(tput sgr0) <index>    read inmask<index>.fits and outmask<index>.fits"
-echo "     $(tput bold)-g$(tput sgr0) <nbGPU>    number of GPUs"
-echo "     $(tput bold)-o$(tput sgr0)            Write results in master output stream aol${loopnb}_modevalPF. Requires outmask"
-echo ""
-echo " $(tput bold)INPUT:$(tput sgr0)"
-echo "      <instream>     input stream"
-echo "      <filter>       filter stream"
-echo "      <outstream>    output stream"
-echo ""
-echo " $(tput bold)OUTPUT:$(tput sgr0)"
-echo "      "
-echo ""
-echo "------------------------------------------------------------------------"
+    echo "------------------------------------------------------------------------"
+    echo "$(tput bold) $pname : Apply predictive filter to stream $(tput sgr0)"
+    echo "------------------------------------------------------------------------"
+    echo "  Apply linear predictive filter to stream"
+    echo "   "
+    echo " $(tput bold)USAGE:$(tput sgr0)"
+    echo "     $0 [-hnsrigo] <instrem> <filtstream> <outstream>"
+    echo ""
+    echo " $(tput bold)OPTIONS:$(tput sgr0)"
+    echo "     $(tput bold)-h$(tput sgr0)            help"
+    echo "     $(tput bold)-n$(tput sgr0) <NBiter>   run for NBiter iterations (default = 1000 in savemode)"
+    echo "     $(tput bold)-s$(tput sgr0)            save ascii and FITS output"
+    echo "     $(tput bold)-r$(tput sgr0)            replace measurements by predictions -> FITS output"
+    echo "     $(tput bold)-i$(tput sgr0) <index>    read inmask<index>.fits and outmask<index>.fits"
+    echo "     $(tput bold)-g$(tput sgr0) <nbGPU>    number of GPUs"
+    echo "     $(tput bold)-o$(tput sgr0)            Write results in master output stream aol${loopnb}_modevalPF. Requires outmask"
+    echo ""
+    echo " $(tput bold)INPUT:$(tput sgr0)"
+    echo "      <instream>     input stream"
+    echo "      <filter>       filter stream"
+    echo "      <outstream>    output stream"
+    echo ""
+    echo " $(tput bold)OUTPUT:$(tput sgr0)"
+    echo "      "
+    echo ""
+    echo "------------------------------------------------------------------------"
 }
 
 
 printHELP1 ()
 {
-    printf "     $(tput bold)%-25s$(tput sgr0)       Apply predictive filter to stream\n" "$0" 
+    printf "     $(tput bold)%-25s$(tput sgr0)       Apply predictive filter to stream\n" "$0"
 }
 
 
@@ -52,27 +52,27 @@ printHELP1 ()
 EXITSTATUS=0
 
 function checkFile {
-if [ -f $1 ]
-  then
-    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
-   else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
-    EXITSTATUS=1
-fi
+    if [ -f $1 ]
+    then
+        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
+    else
+        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
+        EXITSTATUS=1
+    fi
 }
 
 function cmdexists()
 {
-  command -v "$1" >/dev/null 2>&1
+    command -v "$1" >/dev/null 2>&1
 }
 
 
 function checkCommand {
-if cmdexists $1; then
-    echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
-else
-    echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
-fi
+    if cmdexists $1; then
+        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
+    else
+        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."; EXITSTATUS=1;
+    fi
 
 }
 
@@ -84,15 +84,15 @@ fi
 # Transform long options to short ones
 singlelinehelp=0
 for arg in "$@"; do
-  shift
-  case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    "--help1") 
-set -- "$@" "-h" 
-singlelinehelp=1;
-;;
-    *)        set -- "$@" "$arg"
-  esac
+    shift
+    case "$arg" in
+        "--help") set -- "$@" "-h" ;;
+        "--help1")
+            set -- "$@" "-h"
+            singlelinehelp=1;
+            ;;
+        *)        set -- "$@" "$arg"
+    esac
 done
 
 
@@ -105,43 +105,43 @@ nbGPU="0"
 MASTEROUTPUT="0"
 
 while getopts :hn:sri:g:o FLAG; do
-  case $FLAG in
-    h)  #show help
-      if [ "$singlelinehelp" -eq "0" ]; then
-      printHELP
-      else
-      printHELP1
-      fi
-      exit
-      ;;
-       n)  #  set number of iterations
-      NBiter="$OPTARG"
-      NBiterENTRY="1"
-      echo "Setting number of iterations to $NBiter"
-      ;;
-      i) # mask index
-      PFINDEX="$OPTARG"
-      ;;
-      s)
-      SAVEMODE="1"
-      ;;
-      r)
-      SAVEMODE="2"
-      ;;
-      g) # number of GPUs
-      nbGPU="$OPTARG"
-      ;;
-      o)
-      MASTEROUTPUT="1"
-      ;;
-    \?) 
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      printHELP
-      ;;
-  esac
+    case $FLAG in
+        h)  #show help
+            if [ "$singlelinehelp" -eq "0" ]; then
+                printHELP
+            else
+                printHELP1
+            fi
+            exit
+            ;;
+        n)  #  set number of iterations
+            NBiter="$OPTARG"
+            NBiterENTRY="1"
+            echo "Setting number of iterations to $NBiter"
+            ;;
+        i) # mask index
+            PFINDEX="$OPTARG"
+            ;;
+        s)
+            SAVEMODE="1"
+            ;;
+        r)
+            SAVEMODE="2"
+            ;;
+        g) # number of GPUs
+            nbGPU="$OPTARG"
+            ;;
+        o)
+            MASTEROUTPUT="1"
+            ;;
+        \?)
+            echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+            printHELP
+            ;;
+    esac
 done
 
-shift $((OPTIND-1))  
+shift $((OPTIND-1))
 ### End getopts code ###
 
 
@@ -150,11 +150,11 @@ shift $((OPTIND-1))
 
 
 if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
-if [ "$#" -ne $NBARGS ]; then
-    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
-fi
-printHELP
-        exit
+    if [ "$#" -ne $NBARGS ]; then
+        echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+    fi
+    printHELP
+    exit
 fi
 
 
@@ -163,10 +163,10 @@ fi
 # check if MILK_SHM_DIR exists
 
 if [[ -z "${MILK_SHM_DIR}" ]]; then
-  echo "ERROR: MILK_SHM_DIR environment variable does not exist: cannot find/access shared memory"
-  exit
+    echo "ERROR: MILK_SHM_DIR environment variable does not exist: cannot find/access shared memory"
+    exit
 else
-  SHMDIR="${MILK_SHM_DIR}"
+    SHMDIR="${MILK_SHM_DIR}"
 fi
 
 
@@ -184,12 +184,12 @@ checkCommand "./AOloopControl"
 
 
 if [ $EXITSTATUS -eq 1 ]; then
-echo ""
-echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
-echo ""
-exit
+    echo ""
+    echo "$(tput setaf 1)$(tput bold) REQUIRED FILES, COMMANDS NOT FOUND: EXITING $(tput sgr0)"
+    echo ""
+    exit
 else
-echo ""
+    echo ""
 fi
 
 
@@ -202,9 +202,9 @@ fi
 
 
 if [ "$SAVEMODE" = "0" ]; then
-if [ "${NBiterENTRY}" = "0" ]; then
-NBiter="-1"
-fi
+    if [ "${NBiterENTRY}" = "0" ]; then
+        NBiter="-1"
+    fi
 fi
 
 tlag="1.8"
@@ -234,7 +234,7 @@ EOF
 
 if [ "$MASTEROUTPUT" = "0" ]; then
 
-./AOloopControl << EOF
+    ./AOloopControl << EOF
 readshmim $1
 loadfits "${inmaskname}" inmask
 loadfits "${outmaskname}" outmask
@@ -248,7 +248,7 @@ EOF
 
 else
 
-./AOloopControl << EOF
+    ./AOloopControl << EOF
 readshmim $1
 loadfits "${inmaskname}" inmask
 loadfits "${outmaskname}" outmask
@@ -272,10 +272,3 @@ exitCLI
 EOF
 
 fi
-
-
-
-
-
-
-

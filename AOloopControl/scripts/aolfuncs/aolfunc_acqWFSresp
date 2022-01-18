@@ -23,17 +23,17 @@ execname="./AOloopControl"
 mkdir -p status
 file="./status/stat_acqWFSON.txt"
 if [ -a $file ]; then
-	acqWFSONstat=$( head -1 $file )
+    acqWFSONstat=$( head -1 $file )
 else
-	acqWFSONstat="OFF"
-	echo "$acqWFSONstat" > $file
+    acqWFSONstat="OFF"
+    echo "$acqWFSONstat" > $file
 fi
 
 
 if [ "$acqWFSONstat" = " ON" ]; then
-echo "WFS RM acquisition already running"
-echo "remove $file to force"
-exit
+    echo "WFS RM acquisition already running"
+    echo "remove $file to force"
+    exit
 fi
 
 
@@ -68,16 +68,16 @@ dir_conf_staged="conf_staged"
 ##############################################
 # arg 1: parameter name
 # arg 2: default value
-# 
+#
 # param value is stored in variable "paramvalue"
 function ConfReadParam {
-file="./conf/param_$1.txt"
-if [ -f "$file" ]; then
-paramvalue=$( head -1 $file )
-else
-paramvalue="$2"
-echo "$2" > $file
-fi
+    file="./conf/param_$1.txt"
+    if [ -f "$file" ]; then
+        paramvalue=$( head -1 $file )
+    else
+        paramvalue="$2"
+        echo "$2" > $file
+    fi
 }
 
 
@@ -89,10 +89,10 @@ echo "##########################################"
 
 # READ LOOP NUMBER
 if [ -f LOOPNUMBER ]; then
-LOOPNUMBER=$( head -1 LOOPNUMBER )
+    LOOPNUMBER=$( head -1 LOOPNUMBER )
 else
-LOOPNUMBER="7"
-echo "$LOOPNUMBER" > LOOPNUMBER
+    LOOPNUMBER="7"
+    echo "$LOOPNUMBER" > LOOPNUMBER
 fi
 
 ConfReadParam DMMODE "0"; DMMODE="$paramvalue"
@@ -123,29 +123,29 @@ RMCalibReuseMasks="$paramvalue"
 
 
 if [ "$DMMODE" = "0" ]; then
-	ConfReadParam ACmrmtime "60.0"
-	ACmrmtime="$paramvalue"
+    ConfReadParam ACmrmtime "60.0"
+    ACmrmtime="$paramvalue"
 
-	ConfReadParam ACmrmNBcycle "5"
-	ACmrmNBcycle="$paramvalue"
-	
+    ConfReadParam ACmrmNBcycle "5"
+    ACmrmNBcycle="$paramvalue"
+
     ConfReadParam RMMcpa "1.0"
     RMMcpa="$paramvalue"
-    
-	ConfReadParam RMMamplum "0.1"
-	RMMamplum="$paramvalue"
+
+    ConfReadParam RMMamplum "0.1"
+    RMMamplum="$paramvalue"
 fi
 
 
 # IF MODAL DM, SET MODES TO SIMPLE IDENTITY MATRIX
 if [ "$DMMODE" = "1" ]; then
-#DMxsize=$( head -1 ./conf/param_DMxsize.txt )
-#DMysize=$( head -1 ./conf/param_DMysize.txt )
+    #DMxsize=$( head -1 ./conf/param_DMxsize.txt )
+    #DMysize=$( head -1 ./conf/param_DMysize.txt )
 
-DMxsize=$( head -1 fpsconf/AOCONF/DMxsize | awk '{print $1;}' )
-DMysize=$( head -1 fpsconf/AOCONF/DMysize | awk '{print $1;}' )
+    DMxsize=$( head -1 fpsconf/AOCONF/DMxsize | awk '{print $1;}' )
+    DMysize=$( head -1 fpsconf/AOCONF/DMysize | awk '{print $1;}' )
 
-./AOloopControl << EOF
+    ./AOloopControl << EOF
 aolmksimplezpM ${DMxsize} ${DMysize} pokeM
 savefits pokeM "!./conf/pokeM.fits"
 exitCLI
@@ -169,14 +169,14 @@ fi
 #
 function function_acqWFSresp_LOmodes {
 
-./auxscripts/aolmkLO_DMmodes ${RMMcpa}
+    ./auxscripts/aolmkLO_DMmodes ${RMMcpa}
 
-if pgrep "aol${LOOPNUMBER}run" > /dev/null # is aolrun running ?
-then # use option -r to re-use AO shared memory configuration
-    ./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
-else
-    ./auxscripts/aolMeasureLOrespmat2 -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
-fi
+    if pgrep "aol${LOOPNUMBER}run" > /dev/null # is aolrun running ?
+    then # use option -r to re-use AO shared memory configuration
+        ./auxscripts/aolMeasureLOrespmat2 -r -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+    else
+        ./auxscripts/aolMeasureLOrespmat2 -n ${ACmrmNBcycle} -d ${delayRM1us} ${RMMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+    fi
 }
 
 
@@ -202,20 +202,20 @@ echo "##########################################"
 echo "# ACQUIRE ZONAL RESPONSE MATRIX           "
 echo "##########################################"
 
-# ACQUIRE HIGH ORDER WFS RESPONSE: 
+# ACQUIRE HIGH ORDER WFS RESPONSE:
 #
 # INPUT:
 # 	conf/RMpokeCube.fits.gz  (poke sequence)
-#		if file does not exist, create straight poke sequence (one actuator at a time) 
+#		if file does not exist, create straight poke sequence (one actuator at a time)
 #
-# OUTPUT: 
+# OUTPUT:
 # 	zrespmat0.fits		# Raw RM, prior to decoding
 #	wfsref00.fits       # Raw reference
 #
 
 if pgrep "aol${LOOPNUMBER}run" > /dev/null  # is aolrun running ?
 then # use option -r to re-use AO shared memory configuration
-	./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
+    ./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -r -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
 else
     ./auxscripts/aolMeasureZrespmat2 -c aol${LOOPNUMBER}RT2 -n ${ACzrmNBcycle} -d ${delayRM1us} ${RMamplum} ${RMdelayfr} ${RMfrave} ${RMexfr} ${WFSnorm}
 fi
@@ -226,17 +226,17 @@ fi
 
 ### This is usually not executed, as the standard procedure is to have RMCalibReuseMasks set to 0
 if [ "$RMmodal" = " ON" ]; then
-if [ "$DMMODE" = "0" ]; then
-echo "##########################################"
-echo "# ACQUIRE MODAL LO RESPONSE MATRIX        "
-echo "##########################################"
+    if [ "$DMMODE" = "0" ]; then
+        echo "##########################################"
+        echo "# ACQUIRE MODAL LO RESPONSE MATRIX        "
+        echo "##########################################"
 
 
-	if [ "$RMCalibReuseMasks" = "1" ]; then
-	# reuse modes
-	function_acqWFSresp_LOmodes
-	fi
-fi
+        if [ "$RMCalibReuseMasks" = "1" ]; then
+            # reuse modes
+            function_acqWFSresp_LOmodes
+        fi
+    fi
 fi
 
 
@@ -250,18 +250,18 @@ echo "##########################################"
 #
 # INPUT:
 #	zrespmat0.fits
-#	wfsref00.fits 
-#	
+#	wfsref00.fits
+#
 # OPTIONAL INPUT:
 # 	./conf/RMpokeCube.fits
 #	./conf/RMmat.fits
 #	./conf/RMpixindex.fits
 #		if these 3 files exist, use them to decode the zrespmat0.fits
-#	
+#
 # OUTPUT:
 #	zrespM.fits  ... copied to   ./conf_zrm_staged/zrespM.fits
 #	wfsmap.fits  ... copied to   ./conf_zrm_staged/wfsmap.fits
-#	dmmap.fits   ... copied to   ./conf_zrm_staged/dmmap.fits   
+#	dmmap.fits   ... copied to   ./conf_zrm_staged/dmmap.fits
 #
 ./auxscripts/aolCleanZrespmat2
 stageddir="conf_zrm_staged"
@@ -278,45 +278,45 @@ cp dmmap.fits $stageddir
 
 if [ "$RMCalibReuseMasks" = "0" ]; then
 
-echo "##########################################"
-echo "# MAKE MASKS                              "
-echo "##########################################"
-# 
-# INPUT:
-#     ./conf_zrm_staged/zrespM.fits
-# OUTPUT:
-#     wfsmask.fits  (overwrite)  ... will be copied to ./wfsmask/
-#     dmmaskRM.fits (overwrite)  ... will be copied to ./dmmaskRM/
-#
-./auxscripts/aolmkMasks
+    echo "##########################################"
+    echo "# MAKE MASKS                              "
+    echo "##########################################"
+    #
+    # INPUT:
+    #     ./conf_zrm_staged/zrespM.fits
+    # OUTPUT:
+    #     wfsmask.fits  (overwrite)  ... will be copied to ./wfsmask/
+    #     dmmaskRM.fits (overwrite)  ... will be copied to ./dmmaskRM/
+    #
+    ./auxscripts/aolmkMasks
 
 
 
 
 
-if [ "$DMmaskMode" = "0" ]; then  # set dmmaskRM.fits to 1.0 over all pixels
-$execname << EOF
+    if [ "$DMmaskMode" = "0" ]; then  # set dmmaskRM.fits to 1.0 over all pixels
+        $execname << EOF
 readshmim aol${LOOPNUMBER}_dmC
 im0=0*aol${LOOPNUMBER}_dmC
 dmmaskRM=1.0+im0
 savefits dmmaskRM "!dmmaskRM.fits"
 exitCLI
 EOF
-fi
+    fi
 
-# MAKE SLAVED ACTUATOR DM MASK: dmmaskRM.fits -> dmslaved.fits, dmmask.fits
-# 
-# INPUT:
-#	dmmaskRM.fits
-# OUTPUT:
-#	dmslaved.fits  (overwrite)  ... will be copied to ./dmslaved/
-#	dmmask.fits    (overwrite)  ... will be copied to ./dmmask/
-#
+    # MAKE SLAVED ACTUATOR DM MASK: dmmaskRM.fits -> dmslaved.fits, dmmask.fits
+    #
+    # INPUT:
+    #	dmmaskRM.fits
+    # OUTPUT:
+    #	dmslaved.fits  (overwrite)  ... will be copied to ./dmslaved/
+    #	dmmask.fits    (overwrite)  ... will be copied to ./dmmask/
+    #
 
-if [ "$DMmaskMode" = "1" ]; then
-./auxscripts/mkDMslaveActprox dmmaskRM.fits 2.5
-else # set dmmask to 1, dmslaved to 0
-$execname << EOF
+    if [ "$DMmaskMode" = "1" ]; then
+        ./auxscripts/mkDMslaveActprox dmmaskRM.fits 2.5
+    else # set dmmask to 1, dmslaved to 0
+        $execname << EOF
 readshmim aol${LOOPNUMBER}_dmC
 im0=0*aol${LOOPNUMBER}_dmC
 dmmask=1.0+im0
@@ -324,7 +324,7 @@ savefits dmmask "!dmmask.fits"
 savefits im0 "!dmslaved.fits"
 exitCLI
 EOF
-fi
+    fi
 
 fi  # end of if [ "$RMCalibReuseMasks" = "0" ]; then
 
@@ -337,12 +337,12 @@ fi  # end of if [ "$RMCalibReuseMasks" = "0" ]; then
 echo "#################################################################"
 echo "# UPDATE wfsref00, zrespM TO NORMALIZE FLUX OVER wfsmask    "
 echo "#################################################################"
-# 
+#
 # INPUT
 #	wfsref00.fits
 #	wfsmask.fits
 #   zrespM.fits
-#  
+#
 # OUTPUT
 #	wfsref0.fits
 #   zrespM.fits
@@ -371,8 +371,8 @@ echo "####################################################"
 
 for imname in $RMZONALCALIBlist
 do
-	mkdir -p ${imname}
-	cp ${imname}.fits ${imname}/${imname}_${aCALIBdatestr}.fits
+    mkdir -p ${imname}
+    cp ${imname}.fits ${imname}/${imname}_${aCALIBdatestr}.fits
 done
 
 
@@ -383,43 +383,43 @@ done
 
 
 if [ "$DMMODE" = "0" ]; then # zonal DM
-if [ "$RMmodal" = " ON" ]; then
+    if [ "$RMmodal" = " ON" ]; then
 
-echo "####################################################"
-echo "# ACQUIRE LOW ORDER RESPONSE                        "
-echo "####################################################"
-#
-# INPUT:
-#	respM_LOmodes.fits
-#
-# OUTPUT:
-#	LOrespM.fits
-#	LOwfsref0.fits
-#
+        echo "####################################################"
+        echo "# ACQUIRE LOW ORDER RESPONSE                        "
+        echo "####################################################"
+        #
+        # INPUT:
+        #	respM_LOmodes.fits
+        #
+        # OUTPUT:
+        #	LOrespM.fits
+        #	LOwfsref0.fits
+        #
 
-if [ "$RMCalibReuseMasks" = "0" ]; then
-# don't reuse modes
-function_acqWFSresp_LOmodes
-fi
-
-
+        if [ "$RMCalibReuseMasks" = "0" ]; then
+            # don't reuse modes
+            function_acqWFSresp_LOmodes
+        fi
 
 
 
-echo "################################################################"
-echo "# UPDATE LOwfsref0 LOrespmat0 TO NORMALIZE FLUX OVER wfsmask    "
-echo "#################################################################"
-# 
-# INPUT
-#	LOrespM.fits
-#	wfsmask.fits
-#   LOwfsref0.fits
-#  
-# OUTPUT
-#	LOwfsref0.fits
-#   LOrespM.fits
-#
-$execname << EOF
+
+
+        echo "################################################################"
+        echo "# UPDATE LOwfsref0 LOrespmat0 TO NORMALIZE FLUX OVER wfsmask    "
+        echo "#################################################################"
+        #
+        # INPUT
+        #	LOrespM.fits
+        #	wfsmask.fits
+        #   LOwfsref0.fits
+        #
+        # OUTPUT
+        #	LOwfsref0.fits
+        #   LOrespM.fits
+        #
+        $execname << EOF
 loadfits LOwfsref0.fits im0
 loadfits wfsmask.fits wfm
 a=itot(im0)/itot(im0*wfm)
@@ -439,16 +439,16 @@ EOF
 
 
 
-echo "####################################################"
-echo "# COPY LOW ORDER RESPONSE TO ARCHIVE                "
-echo "####################################################"
-for imname in $RMMODALCALIBlist
-do
-	mkdir -p ${imname}
-	cp ${imname}.fits ${imname}/${imname}_${aCALIBdatestr}.fits
-done
+        echo "####################################################"
+        echo "# COPY LOW ORDER RESPONSE TO ARCHIVE                "
+        echo "####################################################"
+        for imname in $RMMODALCALIBlist
+        do
+            mkdir -p ${imname}
+            cp ${imname}.fits ${imname}/${imname}_${aCALIBdatestr}.fits
+        done
 
-fi
+    fi
 fi # end of if [ "$DMMODE" = "0" ]; then
 
 
@@ -465,17 +465,17 @@ dir="$dir_conf_staged"
 mkdir -p $dir
 
 if [ "$DMMODE" = "0" ]; then
-	for imname in $RMZONALCALIBlist $RMMODALCALIBlist
-	do
-		echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim.${imname}.name.txt
-		cp ${imname}.fits ./${dir}/
-	done
+    for imname in $RMZONALCALIBlist $RMMODALCALIBlist
+    do
+        echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim.${imname}.name.txt
+        cp ${imname}.fits ./${dir}/
+    done
 else
-	for imname in $RMZONALCALIBlist
-	do
-		echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim.${imname}.name.txt
-		cp ${imname}.fits ./${dir}/
-	done
+    for imname in $RMZONALCALIBlist
+    do
+        echo "${imname}/${imname}_${aCALIBdatestr}.fits" > ./${dir}/shmim.${imname}.name.txt
+        cp ${imname}.fits ./${dir}/
+    done
 fi
 
 
@@ -493,5 +493,3 @@ fi
 
 
 echo "OFF" > "./status/stat_acqWFSON.txt"
-
-

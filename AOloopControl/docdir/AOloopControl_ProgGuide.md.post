@@ -27,7 +27,3 @@ Key functions (located in `aolconfscripts/aolconf_funcs`):
 - Function `logRunningProcess` to log process
 - Function `logRunningProcessQ0` to log queued process (waiting)
 - Function `logRunningProcessQ` to log that queued process becomes active. The command is sent to a tmux session
-
-
-
-

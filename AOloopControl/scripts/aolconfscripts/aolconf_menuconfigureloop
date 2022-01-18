@@ -2,37 +2,37 @@
 
 
 if [ ! -v aolconfFLAG ]; then
-echo "ERROR: This script should be called from aolconf main script"
-exit
+    echo "ERROR: This script should be called from aolconf main script"
+    exit
 fi
 
 
 
 
 function updateRMtiming {
-# update RM timing
-#
-# RMdelay = hardwlaten - 0.5 - excl/2
-#           0.798 - 0.5 - 1 = -0.702
+    # update RM timing
+    #
+    # RMdelay = hardwlaten - 0.5 - excl/2
+    #           0.798 - 0.5 - 1 = -0.702
 
-echo "$hardwlatency_frame $RMexfr $mloopfrequ" > tmpfile.txt
+    echo "$hardwlatency_frame $RMexfr $mloopfrequ" > tmpfile.txt
 
-RMdelay=$( awk '{ printf("%f\n", $1-0.5-0.5*$2) }' tmpfile.txt )
+    RMdelay=$( awk '{ printf("%f\n", $1-0.5-0.5*$2) }' tmpfile.txt )
 
-if (( $(echo "$RMdelay < 0" |bc -l) )); then
+    if (( $(echo "$RMdelay < 0" |bc -l) )); then
 
-RMdelayfr="0"
-delayRM1us="0"
+        RMdelayfr="0"
+        delayRM1us="0"
 
-else
+    else
 
-RMdelayfr=$( awk '{ printf("%d\n", int($1-0.5-0.5*$2+10)+1-10) }' tmpfile.txt )
-delayRM1us=$( awk '{ printf("%d\n", (int($1-0.5-0.5*$2+10)+1-10-($1-0.5-0.5*$2))/$3*1000000) }' tmpfile.txt )
+        RMdelayfr=$( awk '{ printf("%d\n", int($1-0.5-0.5*$2+10)+1-10) }' tmpfile.txt )
+        delayRM1us=$( awk '{ printf("%d\n", (int($1-0.5-0.5*$2+10)+1-10-($1-0.5-0.5*$2))/$3*1000000) }' tmpfile.txt )
 
-fi
+    fi
 
-echo "$RMdelayfr" > ./conf/param_RMdelayfr.txt
-echo "$delayRM1us" > ./conf/param_delayRM1us.txt
+    echo "$RMdelayfr" > ./conf/param_RMdelayfr.txt
+    echo "$delayRM1us" > ./conf/param_delayRM1us.txt
 }
 
 
@@ -44,20 +44,20 @@ echo "$delayRM1us" > ./conf/param_delayRM1us.txt
 # =====================================================
 
 if [ $state = "menuconfigureloop" ]; then
-stateok=1
-dateUTC=$( date -u )
-#aoconflog "$0 state = ${state}"
-menuname="\Zb\Zu LOOP CONFIGURATION, GPU ALLOCATION\Zn  [ $dateUTC ]\n 
-Notations: \n      
-  \Z4shared memory stream\Zn\n
-  \Zufile system FITS file\Zn\n   
-  \Z1missing file or stream\Zn\n
-\n
-For all configurations files (not including Hardware I/O links) :\n
-  File \Zbconf/streamlink.<name>_name.txt\Zn contains the original .fits file path and name\n
-  A symbolic link to the FITS file is written as \Zuconf/aol${LOOPNUMBER}_<name>.fits\Zn\n
-  File is loaded in shared memory as $SHMDIR/\Z4aol${LOOPNUMBER}_<name>\Zn.im.shm\n
-"
+    stateok=1
+    dateUTC=$( date -u )
+    #aoconflog "$0 state = ${state}"
+    menuname="\Zb\Zu LOOP CONFIGURATION, GPU ALLOCATION\Zn  [ $dateUTC ]\n
+    Notations: \n
+    \Z4shared memory stream\Zn\n
+    \Zufile system FITS file\Zn\n
+    \Z1missing file or stream\Zn\n
+    \n
+    For all configurations files (not including Hardware I/O links) :\n
+    File \Zbconf/streamlink.<name>_name.txt\Zn contains the original .fits file path and name\n
+    A symbolic link to the FITS file is written as \Zuconf/aol${LOOPNUMBER}_<name>.fits\Zn\n
+    File is loaded in shared memory as $SHMDIR/\Z4aol${LOOPNUMBER}_<name>\Zn.im.shm\n
+    "
 
 
 #function_configureloop_readparams
@@ -266,7 +266,7 @@ menuitems+=( "swfsl" "[${wfslambdanm} nm] WFS lambda" )
 menuitems+=( " " " " )
 stringcenter "I/O PRE-PROCESSING [FITS files] "
 menuitems+=( "2 ->" "\Zb\Zr$string\Zn" )
- 
+
 
 makemenuitemstringaolshm "wfsdark" "WFS dark"
 menuitems+=( "wfsdark" "$menustring" )
@@ -529,13 +529,13 @@ fi
 
 if [ "${RMmodal}" = " ON" ];
 then
-   
+
     menuitems+=( "RMMoff" "           RM modal is currently ON. Select to toggle to OFF" )
-     
+
 ConfReadParam RMMamplum "0"; RMMamplum="$paramvalue"
     menuitems+=( "rmMamp" "            Modal RM amplitude                ${RMMamplum} um" )
 
-ConfReadParam RMMcpa "0"; RMMcpa="$paramvalue"   
+ConfReadParam RMMcpa "0"; RMMcpa="$paramvalue"
     menuitems+=( "rmMcpa" "            Modal RM CPA max                  ${RMMcpa}" )
 
     makemenuitemstringaolshm "LOrespM" "Modal Resp Mat"
@@ -544,7 +544,7 @@ ConfReadParam RMMcpa "0"; RMMcpa="$paramvalue"
 
 fi
 
-fi # end of DMMODE loop 
+fi # end of DMMODE loop
 
 
 
@@ -719,7 +719,7 @@ milkStreamLink-p aol${LOOPNUMBER}_ dmO
 esac
 ;;
 
-	
+
 	dmZP0)
 case $amode in
 	0)
@@ -735,7 +735,7 @@ milkStreamLink-p aol${LOOPNUMBER}_ dmZP0
 esac
 ;;
 
-	
+
 	dmZP1)
 case $amode in
 	0)
@@ -750,7 +750,7 @@ milkStreamLink-p aol${LOOPNUMBER}_ dmZP1
 	1)shmimmon aol${LOOPNUMBER}_dmZP1;;
 esac
 ;;
-	
+
 	dmZP2)
 case $amode in
 	0)
@@ -967,7 +967,7 @@ cp ./conf/shmim.dmmask.name.txt ./conf/shmim.dmmask.name.LOCK.txt
 cp $fname ./conf/dmmask.LOCK.fits
 
 fname=$( head -1 ./conf/shmim.dmmaskRM.name.txt )
-cp ./conf/shmim.dmmaskRM.name.txt ./conf/shmim.dmmaskRM.name.LOCK.txt 
+cp ./conf/shmim.dmmaskRM.name.txt ./conf/shmim.dmmaskRM.name.LOCK.txt
 cp $fname ./conf/dmmaskRM.LOCK.fits
 
 fname=$( head -1 ./conf/shmim.dmslaved.name.txt )
@@ -995,7 +995,7 @@ aoconflogext "MASKS_LOCK = $MASKS_LOCK"
 cp ./conf/shmim.dmmask.name.LOCK.txt ./conf/shmim.dmmask.name.txt
 cp ./conf/dmmask.LOCK.fits ./conf/dmmask.fits #Q
 
-cp ./conf/shmim.dmmaskRM.name.LOCK.txt ./conf/shmim.dmmaskRM.name.txt 
+cp ./conf/shmim.dmmaskRM.name.LOCK.txt ./conf/shmim.dmmaskRM.name.txt
 cp ./conf/dmmaskRM.LOCK.fits ./conf/dmmaskRM.fits #Q
 
 cp ./conf/shmim.dmslaved.name.LOCK.txt ./conf/shmim.dmslaved.name.txt
@@ -1209,7 +1209,7 @@ echo "${confname}" > ./status/confname.txt
 echo "confname = $confname"
 
 
-# overwrite conflastloaded 
+# overwrite conflastloaded
 # set up .txt1 as temporary storage
 echo "$confname" > conf/param_conflastloaded_name.txt1
 conflastloaded_time=$( date -u )
@@ -1217,7 +1217,7 @@ echo "$conflastloaded_time" > conf/param_conflastloaded_time.txt1
 
 case $retval in
    0) # button
-   
+
 if [ -d ${confname} ]; then
 cp "${confname}"/*.txt ./conf/
 cp "${confname}"/*.fits.gz ./conf/
@@ -1254,7 +1254,7 @@ cp conf/param_conflastloaded_time.txt1 conf/param_conflastloaded_time.txt
 #	cp ${confname}/shmim.${name}.name.txt ./conf/shmim.${name}.name.txt
 #	Fits2shm -cr -p aol${LOOPNUMBER}_ ${name}
 #	else
-#	echo "MISSING FILE: $fname1" 
+#	echo "MISSING FILE: $fname1"
 #	fi
 #done
 
@@ -1350,7 +1350,7 @@ echo "$nblatm" > ./conf/param_nblatm.txt
 aoconflogext "Measuring system hardware latency"
 ./auxscripts/MeasureLatency "$RMamplum" "$nblatm"
 hardwlatency=$( awk '{print $1}' conf/param_hardwlatency.txt )
-mloopfrequ=$( awk '{print $1}' conf/param_mloopfrequ.txt ) 
+mloopfrequ=$( awk '{print $1}' conf/param_mloopfrequ.txt )
 echo "$hardwlatency $mloopfrequ" > tmpfile.txt
 
 hardwlatency_frame=$( awk '{ printf("%05.3f\n", $1*$2) }' tmpfile.txt )
@@ -1362,7 +1362,7 @@ rm tmpfile.txt
 echo "$hardwlatency1" > ./conf/param_hardwlatency1.txt
 echo "$hardwlatency_frame" > ./conf/param_hardwlatency_frame.txt
 
-loopfrequ=$( awk '{print $1}' conf/param_loopfrequ.txt ) 
+loopfrequ=$( awk '{print $1}' conf/param_loopfrequ.txt )
 cp ./conf/param_mloopfrequ.txt ./conf/param_mloopfrequ.${loopfrequ}.txt
 cp ./conf/param_hardwlatency1.txt ./conf/param_hardwlatency1.${loopfrequ}.txt
 cp ./conf/param_hardwlatency_frame.txt ./conf/param_hardwlatency_frame.${loopfrequ}.txt
@@ -1421,10 +1421,10 @@ esac
 
 	Hon)
 echo "1" > ./conf/param_RMpokeMode.txt
-./auxscripts/mkHpoke 
+./auxscripts/mkHpoke
 ln -s $PWD/conf/Hpoke.fits.gz $PWD/conf/RMpokeCube.fits.gz
 ln -s $PWD/conf/Hpixindex.fits.gz $PWD/conf/RMpixindex.fits.gz
-ln -s $PWD/conf/Hmat.fits.gz $PWD/conf/RMmat.fits.gz 
+ln -s $PWD/conf/Hmat.fits.gz $PWD/conf/RMmat.fits.gz
 aoconflogext "RM: set Hadamard ON"
 menucontrolloop_default="Hoff"
 ;;
@@ -1632,7 +1632,7 @@ aoconflogext "set WFSmakSNRr $WFSmaskSNRr"
 
 mkAOmasks)
 aoconflogext "(re-)create masks"
-./auxscripts/aolmkMasks 
+./auxscripts/aolmkMasks
 
 stageddir="conf_staged"
 cp wfsmask.fits ./${stageddir}/
@@ -2022,7 +2022,7 @@ state="menuconfigureloop"
 
 
 
-upmrm) # update modal  matrix calibration to latest 
+upmrm) # update modal  matrix calibration to latest
 tmuxname="aol${LOOPNUMBER}LOrespMc"
 function_upmrm_tmux ${tmuxname}
 #cp ${dir_conf_staged}/conf_*.txt ./conf/
@@ -2041,7 +2041,7 @@ function_SMloadmrm_tmux ${tmuxname}
 
 
 	esac;;
-   1) state="menutop";;   
+   1) state="menutop";;
    2) state="menuexit";;
    3)
 case $actionmode in
@@ -2059,5 +2059,3 @@ esac
 
 
 fi
-
-

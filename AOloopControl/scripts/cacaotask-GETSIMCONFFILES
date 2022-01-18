@@ -10,7 +10,7 @@ cd $CONFDIR/simLHS/
 FLIST=($(ls *.get.bash))
 for gfile in "${FLIST[@]}"
 do
-source $gfile
+    source $gfile
 done
 
 cd ${CURRENTDIR}

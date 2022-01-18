@@ -16,7 +16,7 @@ INPHYSTIME               aosim_phystime    # physical time
 # ============== OUTPUT TYPE ===================================
 OUTMODE                  0                       # 0: stream, 1: file system
 OUTLOWFSARRAYSIZE        16                      # output LOWFS array size, pix
-OUTLOWFSSTREAMNAME       aosim_imcamLOWFS        # output WF stream name 
+OUTLOWFSSTREAMNAME       aosim_imcamLOWFS        # output WF stream name
 OUTLOWFSFITSFILENAME     aosim_imcamLOWFS.fits   # FITS file name output [um]
 OUTTRIGGERFILE           outLOWFS.txt            # output trigger file
 
@@ -33,4 +33,3 @@ LYOTSTOPTRANSMPHA        lyotstoptransmpha # LYOT stop transmission map (pha)
 # ============== LOWFS =============================
 LOWFSOPDMAP              lowfsopdmap       # LOWFS defocus map [um]
 LOWFSCAMETIME            0.01              # LOWFS camera exposure time [s]
-

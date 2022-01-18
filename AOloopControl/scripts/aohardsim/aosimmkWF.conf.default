@@ -12,7 +12,7 @@ OUT0FITSFILE         0                 # 0: none, 1 if FITS file output OPD only
 OUT0FITSFILENAMEOPD  wf0opd.fits       # FITS file name output (OPD)
 OUT0FITSFILENAMEAMP  wf0amp.fits       # FITS file name output (AMP)
 OUTPHYSTIME          aosim_phystime    # physical time [s]
-OUT0STREAM           2                 # 1 if shared memory stream OPD only, 2 if OPD+AMP 
+OUT0STREAM           2                 # 1 if shared memory stream OPD only, 2 if OPD+AMP
 OUT0STREAMNAMEOPD    wf0opd            # output WF stream name (OPD)
 OUT0STREAMNAMEAMP    wf0amp            # output WF stream name (AMP)
 
@@ -40,8 +40,6 @@ DM0MODE               1                # 0 if no DM0, 1 if OPD DMn
 DM0NAME               dm05dispmap      # DM displacement map stream
 OUT1FITSFILENAMEOPD   wf1opd.fits      # FITS file name output (OPD)
 OUT1FITSFILENAMEAMP   wf1amp.fits      # FITS file name output (AMP)
-OUT1STREAM            1                # 1 if shared memory stream OPD only, 2 if OPD+AMP 
+OUT1STREAM            1                # 1 if shared memory stream OPD only, 2 if OPD+AMP
 OUT1STREAMNAMEOPD     wf1opd           # output WF stream name (OPD)
 OUT1STREAMNAMEAMP     wf1amp           # output WF stream name (AMP)
-
-

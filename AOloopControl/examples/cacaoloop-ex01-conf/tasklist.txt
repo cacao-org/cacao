@@ -13,5 +13,3 @@ TESTCONFIG      Test configuration
 CACAOSETUP      Run cacao-setup
 STARTDMCOMB     Start DM comb
 STARTSTREAMDELAY  WFS stream delay
-
-

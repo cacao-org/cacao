@@ -6,19 +6,19 @@ MSextdescr="Select WFS frames from times at which PSF is best
 Requires synchronized data cubes created by cacao-syncStreams
 
 Evaluation modes:
-  0: optimize flux concentration
-  1: maximize flux
-  2: minimize flux
+0: optimize flux concentration
+1: maximize flux
+2: minimize flux
 
 EXAMPLE:
 $0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001 30
 
 
 OUTPUT:
-     impsfbest.fits     Average of selected PSF frames
-     impsfall.fits      Average of all PSF frames
-     imwfsbest.fits     Average of selected WFS frames
-     imwfsall.fits      Average of all WFS frames
+impsfbest.fits     Average of selected PSF frames
+impsfall.fits      Average of all PSF frames
+imwfsbest.fits     Average of selected WFS frames
+imwfsall.fits      Average of all WFS frames
 
 "
 
@@ -40,8 +40,8 @@ RequiredDirs=()
 # SCRIPT ARGUMENTS (mandatory)
 # syntax: "name:type(s)/test(s):description"
 MSarg+=( "logdir:string:telemetry directory" )
-MSarg+=( "streamWFS:string:WFS stream" ) 
-MSarg+=( "streamPSF:string:PSF stream" ) 
+MSarg+=( "streamWFS:string:WFS stream" )
+MSarg+=( "streamPSF:string:PSF stream" )
 MSarg+=( "selfrac:float:selection fraction" )
 MSarg+=( "x0:long:selection window x start" )
 MSarg+=( "x1:long:selection window x end" )
@@ -115,7 +115,7 @@ echo "PSF directory : ${streamPSFdir}"
 
 #    n)number of iteration (default 0=inf)
 #    NBiter=$OPTARG
- 
+
 #    a)alpha norm (default=2.0)
 #    ALPHAnorm="$OPTARG"
 
@@ -187,7 +187,7 @@ echo "=================================================================== PROCES
 # generate synchronized cubes
 
 #rm imwfsbest.fits # for testing
-# here I comment the syncStreams for doing the block test without regenerating sync files 
+# here I comment the syncStreams for doing the block test without regenerating sync files
 echo "cacao-syncStreams \"$logdirectory\" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}"
 cacao-syncStreams "$logdirectory" ${streamWFS} ${streamPSF} ${timestart} ${timeend} ${texp} ${dtlag} ${timespan}
 
@@ -211,12 +211,12 @@ cp imwfsbest.fits $fname
 echo "saving last reference in order to send it to scexao5 - iter0 = ${iter0}"
 
 # remove previous imwfsbest on SCExAO5
-# ssh 10.20.70.1 rm /home/scexao/AOloop/DrWHO/imwfsbest.fits 
+# ssh 10.20.70.1 rm /home/scexao/AOloop/DrWHO/imwfsbest.fits
 
 
 # commenting below for the blocks tests
 # send it to SCExAO5
-scp imwfsbest.fits scexao@10.20.70.1:/home/scexao/AOloop/DrWHO 
+scp imwfsbest.fits scexao@10.20.70.1:/home/scexao/AOloop/DrWHO
 echo "sending the WFS reference to scexao5"
 
 # then run the script on scexao5 with the command to apply the new ref :
@@ -234,10 +234,10 @@ cp impsfall.fits $fname
 timestart=${timeend}
 let iter0++
 
-# exit here for just one loop iteration for testing 
+# exit here for just one loop iteration for testing
 
 else # if there are no file to process
-# waiting for new data to come. 
+# waiting for new data to come.
 echo "WAITING. .."
 sleep 2
 fi
@@ -245,5 +245,3 @@ fi
 
 
 done
-
-

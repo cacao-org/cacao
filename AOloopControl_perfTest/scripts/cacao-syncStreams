@@ -9,33 +9,33 @@ MSdescr="SYNCHRONIZE DATA STREAMS"
 MSextdescr="Synchronize and resample streams (postprocessing)
 
 Evaluation modes:
-  0: optimize flux concentration
-  1: maximize flux
-  2: minimize flux
+0: optimize flux concentration
+1: maximize flux
+2: minimize flux
 
 EXAMPLE:
 $0 \"/media/data\" aol0_wfsim aol0_psf 0 64 0 64 0 0.001 0.001
 
 
 INPUT
-	directory   data directory, will look for files in /dir/streamname/
-	streamWFS 
-	streamPSF
-	tstart      start time, Unix seconds
-	tend        end time, Unix second 
-	dtsample    output sample interval 
-	dtlag 		Lag between streamWFS and streamPSF. streamPSF later
-	timespan    length in seconds of the synchronized final cube = lenght of Dr WHO loop
-	
-OPTIONAL INPUT 
-	<streamWFS>.dark.fits
-	<streamPSF>.fark.fits 
-	
-EXAMPLE 
-	$0 \"/media/data/20180628/\" streamWFS streamPSF 1530180589.0 1530180589.8 0.0002 0.000556 30
+directory   data directory, will look for files in /dir/streamname/
+streamWFS
+streamPSF
+tstart      start time, Unix seconds
+tend        end time, Unix second
+dtsample    output sample interval
+dtlag 		Lag between streamWFS and streamPSF. streamPSF later
+timespan    length in seconds of the synchronized final cube = lenght of Dr WHO loop
+
+OPTIONAL INPUT
+<streamWFS>.dark.fits
+<streamPSF>.fark.fits
+
+EXAMPLE
+$0 \"/media/data/20180628/\" streamWFS streamPSF 1530180589.0 1530180589.8 0.0002 0.000556 30
 
 OUTPUT:
-     streamWFS-sync.fits 		Synchronized WFS cube file
+streamWFS-sync.fits 		Synchronized WFS cube file
 
 "
 
@@ -122,4 +122,3 @@ mv ${streamPSF}.syncC.fits ${streamPSF}.sync.fits
 fi
 
 #sleep 1000
-

@@ -38,11 +38,3 @@ Followed by WFS space computations:
 * STEP 8: SVD WFS SPACE IN EACH BLOCK : fmodesWFS1all, fmodes3 -> fmodes4all
 * STEP 9: REMOVE MODES THAT ARE CONTAINED IN PREVIOUS BLOCKS, AND ENFORCE DM-SPACE ORTHOGONALITY BETWEEN BLOCKS -> fmodes5all.fits  (DM space)
 * STEP 10: REMOVE NULL SPACE WITHIN EACH BLOCK - USE SVDlim0 FOR CUTOFF -> fmodes5ball.fits  (DM space)
-
-
-
-
-
-
-
-

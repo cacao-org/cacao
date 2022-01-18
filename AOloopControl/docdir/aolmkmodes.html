@@ -119,7 +119,7 @@ code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Inf
 
 <span class="fu">printHELP1 ()</span>
 <span class="kw">{</span>
-    <span class="kw">printf</span> <span class="st">&quot;     </span><span class="ot">$(</span><span class="kw">tput</span> bold<span class="ot">)</span><span class="st">%-25s</span><span class="ot">$(</span><span class="kw">tput</span> sgr0<span class="ot">)</span><span class="st">       Create modes for AO loop\n&quot;</span> <span class="st">&quot;</span><span class="ot">$0</span><span class="st">&quot;</span> 
+    <span class="kw">printf</span> <span class="st">&quot;     </span><span class="ot">$(</span><span class="kw">tput</span> bold<span class="ot">)</span><span class="st">%-25s</span><span class="ot">$(</span><span class="kw">tput</span> sgr0<span class="ot">)</span><span class="st">       Create modes for AO loop\n&quot;</span> <span class="st">&quot;</span><span class="ot">$0</span><span class="st">&quot;</span>
 <span class="kw">}</span>
 
 
@@ -131,8 +131,8 @@ code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Inf
   <span class="kw">shift</span>
   <span class="kw">case</span> <span class="st">&quot;</span><span class="ot">$arg</span><span class="st">&quot;</span><span class="kw"> in</span>
     <span class="st">&quot;--help&quot;</span><span class="kw">)</span> <span class="kw">set</span> <span class="kw">--</span> <span class="st">&quot;</span><span class="ot">$@</span><span class="st">&quot;</span> <span class="st">&quot;-h&quot;</span> <span class="kw">;;</span>
-    <span class="st">&quot;--help1&quot;</span>) 
-<span class="kw">set</span> <span class="kw">--</span> <span class="st">&quot;</span><span class="ot">$@</span><span class="st">&quot;</span> <span class="st">&quot;-h&quot;</span> 
+    <span class="st">&quot;--help1&quot;</span>)
+<span class="kw">set</span> <span class="kw">--</span> <span class="st">&quot;</span><span class="ot">$@</span><span class="st">&quot;</span> <span class="st">&quot;-h&quot;</span>
 <span class="ot">singlelinehelp=</span>1;
 <span class="kw">;;</span>
     *<span class="kw">)</span>        <span class="kw">set</span> <span class="kw">--</span> <span class="st">&quot;</span><span class="ot">$@</span><span class="st">&quot;</span> <span class="st">&quot;</span><span class="ot">$arg</span><span class="st">&quot;</span>
@@ -157,7 +157,7 @@ code > span.in { color: #808080; font-weight: bold; font-style: italic; } /* Inf
   <span class="kw">esac</span>
 <span class="kw">done</span>
 
-<span class="kw">shift</span> <span class="ot">$((</span>OPTIND-1<span class="ot">))</span> 
+<span class="kw">shift</span> <span class="ot">$((</span>OPTIND-1<span class="ot">))</span>
 
 
 

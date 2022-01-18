@@ -7,8 +7,8 @@ The conf directory contains the following file types:
 File Type                            | Description
 -------------------------------------|----------------------------------------
 conf_XXXX.txt                        | Information about the configuration (name etc...)
-param_XXXXX.txt                      | cacao parameter, usually written by GUI            
-streamlink_XXXX.txt                  | shared memory link name for AOCCE stream XXXX     
+param_XXXXX.txt                      | cacao parameter, usually written by GUI
+streamlink_XXXX.txt                  | shared memory link name for AOCCE stream XXXX
 shmim_XXXX.name.txt                  | Name of FITS file to be loaded to shared memory
 shmim_XXXX.imsize.txt                | Image size of FITS file loaded to shared memory (written by Fits2shm)
 shmim_XXXX.fits                      | Sym link to FITS file loaded to shared memory (created by Fits2shm)
@@ -34,7 +34,7 @@ This page does not list instconf type files, as they are instrument-specific.
 
 
 
-### DM 
+### DM
 
 	param_DMindex.txt                     DM index (00, 01, 02 ... )
 	param_DMMODE.txt                      ZONAL (default) or MODAL
@@ -76,16 +76,16 @@ This page does not list instconf type files, as they are instrument-specific.
 	param_RMMamplum.txt                   RM Low Order Modal acquisition amplitude [um]
 	param_RMMcpa.txt                      RM Low Order Modal max CPA
 	param_WFSnorm.txt                     Normalize WFS frames
-	param_DMmaskRMp0.txt                     
-	param_DMmaskRMc0.txt                     
-	param_DMmaskRMp1.txt                     
-	param_DMmaskRMc1.txt                     
-	param_WFSmaskRMp0.txt                     
-	param_WFSmaskRMc0.txt                     
-	param_WFSmaskRMp1.txt                     
-	param_WFSmaskRMc1.txt                     
-	param_WFSmaskSNRr.txt                     
-	param_RMCalibReuseMasks.txt            1 if calibration masks reused (0 if re-computed)                     
+	param_DMmaskRMp0.txt
+	param_DMmaskRMc0.txt
+	param_DMmaskRMp1.txt
+	param_DMmaskRMc1.txt
+	param_WFSmaskRMp0.txt
+	param_WFSmaskRMc0.txt
+	param_WFSmaskRMp1.txt
+	param_WFSmaskRMc1.txt
+	param_WFSmaskSNRr.txt
+	param_RMCalibReuseMasks.txt            1 if calibration masks reused (0 if re-computed)
 
 
 ### Modess and Control Matrix computation
@@ -106,12 +106,12 @@ This page does not list instconf type files, as they are instrument-specific.
 	param_GPUdmfwb.txt                    DM modal write (post-filtering): GPU device
 	param_GPUzpoffsetZ.txt                Zonal WFS zero point offset loop: GPU device
 	param_GPUzpoffsetM.txt                Modal WFS zero point offset loop: GPU device
-	param_LOOPPROCESS_EXTRWFSMODES.txt 
-	param_LOOPPROCESS_EXTROLMODES.txt 
-	param_LOOPPROCESS_DMFILTWB.txt 
-	param_LOOPPROCESS_ZPO.txt 
-	param_LOOPPROCESS_DMCAVE.txt 
-	param_LOOPPROCESS_WFSRESAVE.txt 
+	param_LOOPPROCESS_EXTRWFSMODES.txt
+	param_LOOPPROCESS_EXTROLMODES.txt
+	param_LOOPPROCESS_DMFILTWB.txt
+	param_LOOPPROCESS_ZPO.txt
+	param_LOOPPROCESS_DMCAVE.txt
+	param_LOOPPROCESS_WFSRESAVE.txt
 	param_AUTOTUNELIMITS_ON.txt           Autotuning ON/OFF (ON or OFF)
 	param_AUTOTUNELIMITmcoeff.txt         Autotuning limits
 	param_AUTOTUNELIMITdelta.txt          Autotuning limits
@@ -151,22 +151,22 @@ File shmim_\<stream\>.name.txt contain the FITS file names that are loaded into 
 	shmim_wfsdark.name.txt                WFS dark
 	shmim_wfsmap.name.txt                 WFS response map
 	shmim_wfsmask.name.txt                WFS mask
-	shmim_dmmap.name.txt                
-	shmim_dmmaskRM.name.txt                
-	shmim_dmslaved.name.txt                
-	shmim_dmmask.name.txt                
-	shmim_wfsref0.name.txt                
-	shmim_zrespM.name.txt                
-	shmim_LODMmodes.name.txt                
-	shmim_LOrespM.name.txt                
-	shmim_DModes.name.txt                
-	shmim_respM.name.txt                
-	shmim_contrM.name.txt                
-	shmim_DMmodesXX.name.txt                
-	shmim_respMXX.name.txt                
-	shmim_contrMXX.name.txt                
-	shmim_contrMcXX.name.txt                
-	shmim_contrMcactXX_00.name.txt                
+	shmim_dmmap.name.txt
+	shmim_dmmaskRM.name.txt
+	shmim_dmslaved.name.txt
+	shmim_dmmask.name.txt
+	shmim_wfsref0.name.txt
+	shmim_zrespM.name.txt
+	shmim_LODMmodes.name.txt
+	shmim_LOrespM.name.txt
+	shmim_DModes.name.txt
+	shmim_respM.name.txt
+	shmim_contrM.name.txt
+	shmim_DMmodesXX.name.txt
+	shmim_respMXX.name.txt
+	shmim_contrMXX.name.txt
+	shmim_contrMcXX.name.txt
+	shmim_contrMcactXX_00.name.txt
 
 
 
@@ -176,7 +176,7 @@ File shmim_\<stream\>.name.txt contain the FITS file names that are loaded into 
 	RM_DMmask.fits.gz                     mask for creating RM Hadamard pokes
 	Hpoke.fits.gz                         Hadamard poke modes
 	Hmat.fits.gz                          Hadamard-zonal transformation matrix
-	Hpixindex.fits.gz                     Hadamard DM pixel index 
+	Hpixindex.fits.gz                     Hadamard DM pixel index
 	RMmat.fits.gz                         Current poke transformation matrix (optional)
 	RMpixindex.fits.gz                    Current DM pixel index
 	RMpokeCube.fits.gz                    Current poke modes
@@ -190,4 +190,3 @@ The status directories contrains the current state of the cacao processes.
 
 	stat_DMcombON.txt                     " ON" if DMcomb is running, "OFF" otherwise
 	stat_lsimON.txt                       " ON" if linear hardware simulator is running, "OFF" otherwise
-

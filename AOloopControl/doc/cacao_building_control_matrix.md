@@ -36,4 +36,3 @@ File                          Archived location                         Descript
 Note that at this point, the files are NOT loaded in shared memory, but the archieved file names are stored in "conf/conf_<streamname>.txt" for future loading.
 
 - **Load CM files into shared memory** (`SMloadCM` in `Control Matrix` screen)
-

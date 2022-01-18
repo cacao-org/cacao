@@ -36,17 +36,17 @@ Method 2 simulates incoming atmospheric WFs, a pyramid WFS based loop feeding a 
 Launch the simulator with the following steps:
 
 - Create a series of atmospheric wavefronts (do this only once, this step can take several hrs):
-	
+
 		./aohardsim/aosimmkwfser
 
 	Stop the process when a few wavefront files have been created (approximately 10 minimum). The AO code will loop through the list of files created, so a long list is preferable to reduce the frequency at which the end-of-sequence discontinuity occurs. The current wavefront file index is displayed as the process runs; in this example, the process is working on file #2:
-	
-		Layer  0/ 7, Frame   99/ 100, File      0/100000000  [TIME =     0.0990 s]  WRITING SCIENCE WAVEFRONT ... - 
-		Layer  0/ 7, Frame   99/ 100, File      1/100000000  [TIME =     0.1990 s]  WRITING SCIENCE WAVEFRONT ... - 
-		Layer  1/ 7, Frame   42/ 100, File      2/100000000  [TIME =     0.2420 s]  
+
+		Layer  0/ 7, Frame   99/ 100, File      0/100000000  [TIME =     0.0990 s]  WRITING SCIENCE WAVEFRONT ... -
+		Layer  0/ 7, Frame   99/ 100, File      1/100000000  [TIME =     0.1990 s]  WRITING SCIENCE WAVEFRONT ... -
+		Layer  1/ 7, Frame   42/ 100, File      2/100000000  [TIME =     0.2420 s]
 
 	Type `CTRL-C` to stop the process. Note that you can relaunch the script later to build additional wavefront files.
-	
+
 	By default, the wavefront files are stored in the work directory. You may choose to move them to another location (useful if you have multiple work directories sharing the same wavefront files). You can then create a symbolic link `atmwf` to an existing atmospheric wavefront simulation directory. For example:
 
 		ln -s /data/AtmWF/wdir00/ atmwf
@@ -273,11 +273,6 @@ mkdir LHScalib
 
 - Go to `TEST MODE` GUI
 
-- Enter linear simulation zonal response matrix and linear simulation WFS reference (`zrespMlinsim` and `wfsref0linsim` selections at top of screen). 
+- Enter linear simulation zonal response matrix and linear simulation WFS reference (`zrespMlinsim` and `wfsref0linsim` selections at top of screen).
 
 - **Start linear simulator** (`lsimon` selection). The simulator reacts to changes in aol5_dmdisp (= dm04disp)
-
-
-
-
-

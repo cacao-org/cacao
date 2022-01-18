@@ -1,7 +1,7 @@
 # cacao Software Overview {#page_cacao_Software_Overview}
 
 
-At the low level, most operations are performed by calls to the [main executable](#main-executable) which is precompiled C code. The user interacts with a [high level ASCII-based GUI](#high-level-GUI), which performs calls to individual [scripts](#supporting-scripts) or directly execute instances of the main executable. 
+At the low level, most operations are performed by calls to the [main executable](#main-executable) which is precompiled C code. The user interacts with a [high level ASCII-based GUI](#high-level-GUI), which performs calls to individual [scripts](#supporting-scripts) or directly execute instances of the main executable.
 
 The standard code layers are : [GUI](#high-level-gui) calls [SCRIPT](#supporting-scripts) calls [PRECOMPILED EXECUTABLE](#main-executable)
 
@@ -14,7 +14,7 @@ The top level script is `aolconf`. Run it with `-h` option for a quick help
 
 	./aolconf -h
 
-The `aolconf` script starts the main GUI screen from which sub-screens can be accessed. ASCII control GUI scripts are in the `aolconfscripts` directory. 
+The `aolconf` script starts the main GUI screen from which sub-screens can be accessed. ASCII control GUI scripts are in the `aolconfscripts` directory.
 
 The scripts are listed below in the order they appear in the GUI menu. Boldface scripts corresponds to GUI screens. Supporting scripts (holding frequently used functions) are boldface italic.
 
@@ -74,7 +74,7 @@ Script                               Description
 
 ## Supporting Scripts
 
-Scripts are organized in directories according to their purpose 
+Scripts are organized in directories according to their purpose
 
 
 ------------------------------ -----------------------------------------------------------
@@ -95,7 +95,7 @@ aocscripts                     Custom user-provided scripts to interact with non
 The `auxscripts` directory are called by aolconf to perform various tasks. To list all commands, type in the `auxscripts` directory :
 
 	./listcommands
-	
+
 For each script, the `-h` option will print help.
 
 
@@ -106,7 +106,7 @@ For each script, the `-h` option will print help.
 The main precompiled executable is `./AOloopControl`, which provides a command line interface (CLI) to all compiled code. Type `AOloopControl -h` for help. You can enter the CLI and list the available libraries (also called modules) that are linked to the CLI. You can also list the functions available within each module (`m? <module.c>`) and help for each function (`cmd? <functionname>`). Type `help` within the CLI for additional directions, and `exit` or `exitCLI` to exit the command line.
 
 ~~~
-olivier@ubuntu:/data/AOloopControl/AOloop1$ ./AOloopControl 
+olivier@ubuntu:/data/AOloopControl/AOloop1$ ./AOloopControl
 type "help" for instructions
 Running with openMP, max threads = 8  (defined by environment variable OMP_NUM_THREADS)
 LOADED: 21 modules, 269 commands
@@ -118,11 +118,6 @@ Closing PID 5291 (prompt process)
 
 ## Memory storage and Configuration Parameters
 
-AOCCE adopts a common shared memory data format for all data streams. The data structure is defined in file `<srcdir>/src/ImageStruct.h`. 
+AOCCE adopts a common shared memory data format for all data streams. The data structure is defined in file `<srcdir>/src/ImageStruct.h`.
 
 Configurations parameters are stored in directory `<workdir>/conf` as ASCII files. When AOCCEE is launched, it can load all required parameters and populate required shared memory streams from information contained in the `<workdir>/conf` directory.
-
-
-
-
-

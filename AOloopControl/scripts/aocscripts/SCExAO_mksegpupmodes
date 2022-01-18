@@ -9,4 +9,3 @@ exit
 EOF
 
 mv pupsegmodes.fits extrablockM.fits
-

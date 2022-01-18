@@ -66,9 +66,9 @@ Input to function: aol<loop>_modevalol_PFb<blocknumber>
 Output to function: aol<loop>_modevalol_outPFb<blocknumber>
 
 
-### Packaging input data matrix 
+### Packaging input data matrix
 
-The routine packages a data matrix PFmatD with dimension (size[0] = number of time samples) (size[1] = dimension of each sample). Usually, size[0] > size[1]. 
+The routine packages a data matrix PFmatD with dimension (size[0] = number of time samples) (size[1] = dimension of each sample). Usually, size[0] > size[1].
 
 In the column-major matrix representation, PFmatD data array is the transpose of the data matrix. Predictive control requires the pseudoinverse of the transpose of the data matrix to be computed, so the pseudoinverse of PFmatD is computed by calling function CUDACOMP_magma_compute_SVDpseudoInverse().
 
@@ -89,4 +89,3 @@ Performed by calling function CUDACOMP_magma_compute_SVDpseudoInverse().
 Prediction engine (= apply filter). Runs script ./auxscripts/predFiltApplyRT.
 
 ---
-

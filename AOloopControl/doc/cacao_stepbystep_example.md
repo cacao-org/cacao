@@ -1,6 +1,6 @@
 # STEP-BY-STEP EXAMPLE {#page_cacao_stepbystep_example}
 
-File 
+File
 
 ## 1. Important tips before getting started
 
@@ -13,7 +13,7 @@ cacao uses shared memory streams to store real-time data and communicate through
 You can also view the stream :
 
 	shmimview /tmp/<streamname>.im.shm
-	
+
 As you go through the example below, you will make frequent use of these commands to check status.
 
 
@@ -24,11 +24,11 @@ As you go through the example below, you will make frequent use of these command
 Processes run in tmux sessions. To list all tmux sessions:
 
 	tmux ls
-	
+
 To enter a tmux session
 
 	tmux a -t <sessionname>
-	
+
 To detach from the session, type CTRL-B and then D. Do not type CTRL-C or exit, this will kill the process.
 
 
@@ -50,14 +50,14 @@ In this example, we will set a hardware simulator of the AO system. The simulato
 	./syncscripts -e <workdir>
 	cd <workdir>
 	./syncscripts
-	
+
 Note: on scexao computer, <srcdir> = /home/scexao/src/cacao
 
 
 **STEP 3**: Download a calibration, consisting of zonal response matrix and a WFS reference. Place the file in a new directory `<workdir>/simLHS`
 
-Calibration files : 
-- WFS reference: https://drive.google.com/file/d/1LnYfc8mKYyERc9cNMCiVTvwX-3wRsdFU 
+Calibration files :
+- WFS reference: https://drive.google.com/file/d/1LnYfc8mKYyERc9cNMCiVTvwX-3wRsdFU
 - WFS zonal response: https://drive.google.com/open?id=1rBkLllb6rR0z-D9YfysHedAWFE_Umwil
 
 On scexao computer, files are in /home/scexao/conf directory:
@@ -69,7 +69,7 @@ On scexao computer, files are in /home/scexao/conf directory:
 **STEP 4**: Launch aolconf, loop number 5, loop name simtest:
 
 	./aolconf -L 5 -N simtest
-	
+
 Note that you subsequent calls to aolconf should then be without the -L and -N options.
 
 **STEP 5**: Set DM :
@@ -95,7 +95,7 @@ Select GPU device and start LHS process.\n
 To check that output WFS image is updating:
 
 	shmimmon aol5_linsimWFS
-	
+
 You should see counter cnt0 increment and the corresponsing frame rate should show the update rate.
 
 To check GPU useage:
@@ -112,7 +112,7 @@ You should see that the GPU selected for linear simulation is somewhat busy.
 
 Under configuration GUI menu (Configure/link AO loop):
 
-- Measure hardware timing: `mlat`. You will bye asked how many frames to use for sampling. Keep the default value (100). This command will update timing parameters (measured loop frequ, hardware latency). 
+- Measure hardware timing: `mlat`. You will bye asked how many frames to use for sampling. Keep the default value (100). This command will update timing parameters (measured loop frequ, hardware latency).
 - set Hadamard mode to ON: `Hon`
 - set modal RM to ON: `RMMon`
 - set modal RM amplitude to 0.05um: `rmMamp`
@@ -166,9 +166,3 @@ You can view the following streams:
 
 - aol5_dmC
 - aol5_wfsim
-
-
-
-
-
-

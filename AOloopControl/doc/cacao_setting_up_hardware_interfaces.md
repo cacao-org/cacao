@@ -37,7 +37,7 @@ There are four options for setting up the DM:
 
 - [D] Create a new modal DM, mapped to an existing DM channel using a custom set of modes
 
-Before choosing an option, select if the DM to be controlled is `MODAL` or `ZONAL`. A zonal DM is one where the DM pixel locations map to physical actuator locations on the DM, allowing spatial filtering when creating control modes. With a zonal DM, each pixel of the DM map corresponds to a wavefront control mode, and spatial filtering functions are turned off. 
+Before choosing an option, select if the DM to be controlled is `MODAL` or `ZONAL`. A zonal DM is one where the DM pixel locations map to physical actuator locations on the DM, allowing spatial filtering when creating control modes. With a zonal DM, each pixel of the DM map corresponds to a wavefront control mode, and spatial filtering functions are turned off.
 
 Options [C] and [D] are `MODAL` options, as the DM does not represent physical spatial actuators. These options build a virtual DM which controls another DM.
 
@@ -64,7 +64,7 @@ Options [C] and [D] are `MODAL` options, as the DM does not represent physical s
 
 ### Mode [B]: Creating and Connecting to a DM
 
-1. Set **DM number** (`S` command in `Top Menu` screen). 
+1. Set **DM number** (`S` command in `Top Menu` screen).
 
 2. Enter the desired **DM size** with the `dmxs` and `dmys` commands.
 
@@ -82,7 +82,7 @@ Options [C] and [D] are `MODAL` options, as the DM does not represent physical s
 	- dm##disp07 is linked to aol#_dmZP3    (zero point offset 3 actuation channel)
 	- dm##disp08 is linked to aol#_dmZP4    (zero point offset 4 actuation channel)
 	- dm##disp   is linked to aol#_dmdisp   (total dm displacement channel)
-	
+
 5. **Load Memory** (`M` in `Top Menu` screen). The dm performs the symbolic links to the DM channels.
 
 
@@ -96,7 +96,7 @@ In this mode, the AO loop controls a virtual DM. The virtual actuators are corre
 
 3. Set **DM x size** to the number of modes of loop A to be addressed by loop B's virtual DM
 
-4. Set **DM y size** to 1 
+4. Set **DM y size** to 1
 
 5. **Auto-configure: DM output linked to other loop** (`dmolink` in `Top Menu` screen).
 	1. choose loop index from which modes will be extracted (loop A index)
@@ -132,7 +132,7 @@ In this mode, the AO loop controls a virtual DM. The virtual actuators correspon
 
 5. Set **CPU-based dmcomb output WFS ref** to 0 (see section below more enabling this option)
 
-6. **(Re)-create DM streams and run DMcomb process** (`initDM`) 
+6. **(Re)-create DM streams and run DMcomb process** (`initDM`)
 
 7. **Load Memory** (`M` in `Top Menu` screen). The dm performs the symbolic links to the DM channels.
 
@@ -148,11 +148,11 @@ To enable this feature, add between steps 4 and 5:
 1. set **CPU-based dmcomb output WFS ref** to 1, and associated streams:
 	- **dmwrefRM**  : **loopA** WFS response to modes controlled by **loopB**
 	- **dmwrefO**   : **loopA** WFS zero point offset
- 
- 
+
+
 
 ### Notes
-	
+
 You can (Re-)Start DM comb to re-initialize arrays and links ('stopDM' and 'initDM' commands in `Top Menu` screen). The `initDM` command will
 
 - (re-)create shared memory streams dm##disp00 to dm##disp11
@@ -165,7 +165,7 @@ You can (Re-)Start DM comb to re-initialize arrays and links ('stopDM' and 'init
 
 ## Setting the camera interface
 
-- **link to WFS camera** (`wfs` to `Loop Configuration` screen). Select the WFS shared memory stream. 
+- **link to WFS camera** (`wfs` to `Loop Configuration` screen). Select the WFS shared memory stream.
 
 
 ## Setup script

@@ -12,34 +12,34 @@ pname="aol${loopnb}mRMfast"
 
 
 function printHELP {
-echo "------------------------------------------------------------------------"
-echo "$(tput bold) $pname : Acquire fast modal RM $(tput sgr0)"
-echo "------------------------------------------------------------------------"
-echo "  Acquire fast modal RM"
-echo "   "
-echo " $(tput bold)USAGE:$(tput sgr0)"
-echo "     $0 [-h] <semtrig> <hardwarelatency[s]> <loopfreq>  <ampl[um]> "
-echo ""
-echo " $(tput bold)OPTIONS:$(tput sgr0)"
-echo "     $(tput bold)-h$(tput sgr0)            help"
-echo ""
-echo " $(tput bold)INPUT:$(tput sgr0)"
-echo "      <semtrig>              semaphore trigger index on aol{loopnb}_imWFS0"
-echo "      <hardwarelatency>      hardware latency [s]"
-echo "      <loopfreq>             loop frequency [Hz]"
-echo "      <ampl[um]>             modal pole amplitude [um]"
-echo "      <>"
-echo ""
-echo " $(tput bold)OUTPUT:$(tput sgr0)"
-echo "      "
-echo ""
-echo "------------------------------------------------------------------------"
+    echo "------------------------------------------------------------------------"
+    echo "$(tput bold) $pname : Acquire fast modal RM $(tput sgr0)"
+    echo "------------------------------------------------------------------------"
+    echo "  Acquire fast modal RM"
+    echo "   "
+    echo " $(tput bold)USAGE:$(tput sgr0)"
+    echo "     $0 [-h] <semtrig> <hardwarelatency[s]> <loopfreq>  <ampl[um]> "
+    echo ""
+    echo " $(tput bold)OPTIONS:$(tput sgr0)"
+    echo "     $(tput bold)-h$(tput sgr0)            help"
+    echo ""
+    echo " $(tput bold)INPUT:$(tput sgr0)"
+    echo "      <semtrig>              semaphore trigger index on aol{loopnb}_imWFS0"
+    echo "      <hardwarelatency>      hardware latency [s]"
+    echo "      <loopfreq>             loop frequency [Hz]"
+    echo "      <ampl[um]>             modal pole amplitude [um]"
+    echo "      <>"
+    echo ""
+    echo " $(tput bold)OUTPUT:$(tput sgr0)"
+    echo "      "
+    echo ""
+    echo "------------------------------------------------------------------------"
 }
 
 
 printHELP1 ()
 {
-    printf "%25s       Acquire fast modal RM\n" "$0" 
+    printf "%25s       Acquire fast modal RM\n" "$0"
 }
 
 
@@ -53,40 +53,40 @@ printHELP1 ()
 # Transform long options to short ones
 singlelinehelp=0
 for arg in "$@"; do
-  shift
-  case "$arg" in
-    "--help") set -- "$@" "-h" ;;
-    "--help1") 
-set -- "$@" "-h" 
-singlelinehelp=1;
-;;
-    *)        set -- "$@" "$arg"
-  esac
+    shift
+    case "$arg" in
+        "--help") set -- "$@" "-h" ;;
+        "--help1")
+            set -- "$@" "-h"
+            singlelinehelp=1;
+            ;;
+        *)        set -- "$@" "$arg"
+    esac
 done
 
 
 offsetus="0"
 while getopts :hn:sri:g:o FLAG; do
-  case $FLAG in
-    h)  #show help
-      if [ "$singlelinehelp" -eq "0" ]; then
-      printHELP
-      else
-      printHELP1
-      fi
-      exit
-      ;;
-      o) # offset [us]
-      offsetus="$OPTARG"
-      ;;
-    \?) 
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      printHELP
-      ;;
-  esac
+    case $FLAG in
+        h)  #show help
+            if [ "$singlelinehelp" -eq "0" ]; then
+                printHELP
+            else
+                printHELP1
+            fi
+            exit
+            ;;
+        o) # offset [us]
+            offsetus="$OPTARG"
+            ;;
+        \?)
+            echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+            printHELP
+            ;;
+    esac
 done
 
-shift $((OPTIND-1))  
+shift $((OPTIND-1))
 ### End getopts code ###
 
 
@@ -95,11 +95,11 @@ shift $((OPTIND-1))
 
 
 if [ "$1" = "help" ] || [ "$#" -ne $NBARGS ]; then
-if [ "$#" -ne $NBARGS ]; then
-    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
-fi
-printHELP
-        exit
+    if [ "$#" -ne $NBARGS ]; then
+        echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
+    fi
+    printHELP
+    exit
 fi
 
 
@@ -122,9 +122,3 @@ savefits mRMout "!_mRMout.fits"
 
 exit
 EOF
-
-
-
-
-
-

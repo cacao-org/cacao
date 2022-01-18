@@ -401,7 +401,7 @@ lrwxrwxrwx 1 olivier olivier   61 Sep 29 19:26 syncscripts -&gt; /home/olivier/s
 <div id="main-executable" class="section level2">
 <h2><span class="header-section-number">2.3</span> Main executable</h2>
 <p>The main precompiled executable is <code>./AOloopControl</code>, which provides a command line interface (CLI) to all compiled code. Type <code>AOloopControl -h</code> for help. You can enter the CLI and list the available libraries (also called modules) that are linked to the CLI. You can also list the functions available within each module (<code>m? &lt;module.c&gt;</code>) and help for each function (<code>cmd? &lt;functionname&gt;</code>). Type <code>help</code> within the CLI for additional directions, and <code>exit</code> or <code>exitCLI</code> to exit the command line.</p>
-<pre><code>olivier@ubuntu:/data/AOloopControl/AOloop1$ ./AOloopControl 
+<pre><code>olivier@ubuntu:/data/AOloopControl/AOloop1$ ./AOloopControl
 type &quot;help&quot; for instructions
 Running with openMP, max threads = 8  (defined by environment variable OMP_NUM_THREADS)
 LOADED: 21 modules, 269 commands
@@ -440,8 +440,8 @@ Closing PID 5291 (prompt process)</code></pre>
 <li><p>Create a series of atmospheric wavefronts (do this only once, this step can take several hrs):</p>
 <pre><code>./aohardsim/aosimmkwfser</code></pre>
 <p>Stop the process when a few wavefront files have been created (approximately 10 minimum). The AO code will loop through the list of files created, so a long list is preferable to reduce the frequency at which the end-of-sequence discontinuity occurs. The current wavefront file index is displayed as the process runs; in this example, the process is working on file #2:</p>
-<pre><code>Layer  0/ 7, Frame   99/ 100, File      0/100000000  [TIME =     0.0990 s]  WRITING SCIENCE WAVEFRONT ... - 
-Layer  0/ 7, Frame   99/ 100, File      1/100000000  [TIME =     0.1990 s]  WRITING SCIENCE WAVEFRONT ... - 
+<pre><code>Layer  0/ 7, Frame   99/ 100, File      0/100000000  [TIME =     0.0990 s]  WRITING SCIENCE WAVEFRONT ... -
+Layer  0/ 7, Frame   99/ 100, File      1/100000000  [TIME =     0.1990 s]  WRITING SCIENCE WAVEFRONT ... -
 Layer  1/ 7, Frame   42/ 100, File      2/100000000  [TIME =     0.2420 s]  </code></pre>
 <p>Type <code>CTRL-C</code> to stop the process. Note that you can relaunch the script later to build additional wavefront files.</p>
 <p>By default, the wavefront files are stored in the work directory. You may choose to move them to another location (useful if you have multiple work directories sharing the same wavefront files). You can then create a symbolic link <code>atmwf</code> to an existing atmospheric wavefront simulation directory. For example:</p>
@@ -591,7 +591,7 @@ OUT0FITSFILE         0                 # 0: none, 1 if FITS file output OPD only
 OUT0FITSFILENAMEOPD  wf0opd.fits       # FITS file name output (OPD)
 OUT0FITSFILENAMEAMP  wf0amp.fits       # FITS file name output (AMP)
 OUTPHYSTIME          aosim_phystime    # physical time [s]
-OUT0STREAM           2                 # 1 if shared memory stream OPD only, 2 if OPD+AMP 
+OUT0STREAM           2                 # 1 if shared memory stream OPD only, 2 if OPD+AMP
 OUT0STREAMNAMEOPD    wf0opd            # output WF stream name (OPD)
 OUT0STREAMNAMEAMP    wf0amp            # output WF stream name (AMP)
 
@@ -619,7 +619,7 @@ DM0MODE               1                # 0 if no DM0, 1 if OPD DMn
 DM0NAME               dm05dispmap      # DM displacement map stream
 OUT1FITSFILENAMEOPD   wf1opd.fits      # FITS file name output (OPD)
 OUT1FITSFILENAMEAMP   wf1amp.fits      # FITS file name output (AMP)
-OUT1STREAM            1                # 1 if shared memory stream OPD only, 2 if OPD+AMP 
+OUT1STREAM            1                # 1 if shared memory stream OPD only, 2 if OPD+AMP
 OUT1STREAMNAMEOPD     wf1opd           # output WF stream name (OPD)
 OUT1STREAMNAMEAMP     wf1amp           # output WF stream name (AMP)
 </code></pre></td></tr></table></div>
@@ -666,7 +666,7 @@ INTRIGGERFILE            inwf.txt          # input trigger file
 
 # ============== OUTPUT TYPE ===================================
 OUTMODE                  0                 # 0: stream, 1: file system
-OUTSTREAMNAMEDM          dm05dispmap       # output WF stream name 
+OUTSTREAMNAMEDM          dm05dispmap       # output WF stream name
 OUTFITSFILENAMEDM        dm05dispmap.fits  # FITS file name output [um]
 OUTTRIGGERFILE           outdm.txt         # output trigger file
 
@@ -822,7 +822,7 @@ INPHYSTIME               aosim_phystime    # physical time
 # ============== OUTPUT TYPE ===================================
 OUTMODE                  0                       # 0: stream, 1: file system
 OUTLOWFSARRAYSIZE        16                      # output LOWFS array size, pix
-OUTLOWFSSTREAMNAME       aosim_imcamLOWFS        # output WF stream name 
+OUTLOWFSSTREAMNAME       aosim_imcamLOWFS        # output WF stream name
 OUTLOWFSFITSFILENAME     aosim_imcamLOWFS.fits   # FITS file name output [um]
 OUTTRIGGERFILE           outLOWFS.txt            # output trigger file
 
@@ -1572,7 +1572,7 @@ echo &quot;---------------------------------------------------------------------
 
 printHELP1 ()
 {
-    printf &quot;     $(tput bold)%-25s$(tput sgr0)       Extract mode values from WFS images\n&quot; &quot;$0&quot; 
+    printf &quot;     $(tput bold)%-25s$(tput sgr0)       Extract mode values from WFS images\n&quot; &quot;$0&quot;
 }
 
 
@@ -1584,8 +1584,8 @@ for arg in &quot;$@&quot;; do
   shift
   case &quot;$arg&quot; in
     &quot;--help&quot;) set -- &quot;$@&quot; &quot;-h&quot; ;;
-    &quot;--help1&quot;) 
-set -- &quot;$@&quot; &quot;-h&quot; 
+    &quot;--help1&quot;)
+set -- &quot;$@&quot; &quot;-h&quot;
 singlelinehelp=1;
 ;;
     *)        set -- &quot;$@&quot; &quot;$arg&quot;
@@ -1617,7 +1617,7 @@ while getopts :hr FLAG; do
   esac
 done
 
-shift $((OPTIND-1)) 
+shift $((OPTIND-1))
 
 
 
@@ -1829,7 +1829,7 @@ echo &quot;---------------------------------------------------------------------
 
 printHELP1 ()
 {
-    printf &quot;     $(tput bold)%-25s$(tput sgr0)       dmC temporal averaging\n&quot; &quot;$0&quot; 
+    printf &quot;     $(tput bold)%-25s$(tput sgr0)       dmC temporal averaging\n&quot; &quot;$0&quot;
 }
 
 
@@ -1841,8 +1841,8 @@ for arg in &quot;$@&quot;; do
   shift
   case &quot;$arg&quot; in
     &quot;--help&quot;) set -- &quot;$@&quot; &quot;-h&quot; ;;
-    &quot;--help1&quot;) 
-set -- &quot;$@&quot; &quot;-h&quot; 
+    &quot;--help1&quot;)
+set -- &quot;$@&quot; &quot;-h&quot;
 singlelinehelp=1;
 ;;
     *)        set -- &quot;$@&quot; &quot;$arg&quot;
@@ -1867,7 +1867,7 @@ while getopts :h FLAG; do
   esac
 done
 
-shift $((OPTIND-1)) 
+shift $((OPTIND-1))
 
 
 
@@ -2043,7 +2043,7 @@ echo &quot;---------------------------------------------------------------------
 
 printHELP1 ()
 {
-    printf &quot;     $(tput bold)%-25s$(tput sgr0)       Compute real-time WFS residual image\n&quot; &quot;$0&quot; 
+    printf &quot;     $(tput bold)%-25s$(tput sgr0)       Compute real-time WFS residual image\n&quot; &quot;$0&quot;
 }
 
 
@@ -2055,8 +2055,8 @@ for arg in &quot;$@&quot;; do
   shift
   case &quot;$arg&quot; in
     &quot;--help&quot;) set -- &quot;$@&quot; &quot;-h&quot; ;;
-    &quot;--help1&quot;) 
-set -- &quot;$@&quot; &quot;-h&quot; 
+    &quot;--help1&quot;)
+set -- &quot;$@&quot; &quot;-h&quot;
 singlelinehelp=1;
 ;;
     *)        set -- &quot;$@&quot; &quot;$arg&quot;
@@ -2081,7 +2081,7 @@ while getopts :h FLAG; do
   esac
 done
 
-shift $((OPTIND-1)) 
+shift $((OPTIND-1))
 
 
 

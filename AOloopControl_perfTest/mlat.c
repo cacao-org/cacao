@@ -14,8 +14,7 @@
 #include "CommandLineInterface/CLIcore.h"
 
 #include "COREMOD_tools/COREMOD_tools.h" // quicksort
-#include "statistic/statistic.h" // ran1()
-
+#include "statistic/statistic.h"         // ran1()
 
 // Local variables pointers
 static char *dmstream;
@@ -23,7 +22,6 @@ long fpi_dmstream;
 
 static char *wfsstream;
 long fpi_wfsstream;
-
 
 static float *frameratewait;
 long fpi_frameratewait;
@@ -55,81 +53,40 @@ long fpi_framerateHz;
 static float *latencyfr;
 long fpi_latencyfr;
 
-
-
-
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_STREAM, ".dmstream", "DM stream", "null",
-        CLIARG_VISIBLE_DEFAULT, (void **) &dmstream, &fpi_dmstream
-    },
-    {
-        CLIARG_STREAM, ".wfsstream", "WFS stream", "null",
-        CLIARG_VISIBLE_DEFAULT, (void **) &wfsstream, &fpi_wfsstream
-    },
-    {
-        CLIARG_FLOAT32, ".OPDamp", "poke amplitude [um]", "0.1",
-        CLIARG_VISIBLE_DEFAULT, (void **) &OPDamp, &fpi_OPDamp
-    },
-    {
-        CLIARG_FLOAT32, ".frameratewait", "time period for frame rate measurement", "5",
-        CLIARG_HIDDEN_DEFAULT, (void **) &frameratewait, &fpi_frameratewait
-    },
-    {
-        CLIARG_UINT32, ".NBiter", "Number of iteration", "100",
-        CLIARG_HIDDEN_DEFAULT, (void **) &NBiter, &fpi_NBiter
-    },
-    {
-        CLIARG_UINT32, ".wfsNBframemax", "Number frames in measurement sequence", "50",
-        CLIARG_HIDDEN_DEFAULT, (void **) &wfsNBframemax, &fpi_wfsNBframemax
-    },
-    {
-        CLIARG_FLOAT32, ".status.wfsdt", "WFS frame interval", "0",
-        CLIARG_OUTPUT_DEFAULT, (void **) &wfsdt, &fpi_wfsdt
-    },
-    {
-        CLIARG_FLOAT32, ".status.twaitus", "initial wait [us]", "0",
-        CLIARG_OUTPUT_DEFAULT, (void **) &twaitus, &fpi_twaitus
-    },
-    {
-        CLIARG_FLOAT32, ".status.refdtoffset", "baseline time offset to poke", "0",
-        CLIARG_OUTPUT_DEFAULT, (void **) &refdtoffset, &fpi_refdtoffset
-    },
-    {
-        CLIARG_FLOAT32, ".status.dtoffset", "actual time offset to poke", "0",
-        CLIARG_OUTPUT_DEFAULT, (void **) &dtoffset, &fpi_dtoffset
-    },
-    {
-        CLIARG_FLOAT32, ".out.framerateHz", "WFS frame rate [Hz]", "0",
-        CLIARG_OUTPUT_DEFAULT, (void **) &framerateHz, &fpi_framerateHz
-    },
-    {
-        CLIARG_FLOAT32, ".out.latencyfr", "hardware latency [frame]", "0",
-        CLIARG_OUTPUT_DEFAULT, (void **) &latencyfr, &fpi_latencyfr
-    }
-};
-
-
-
+static CLICMDARGDEF farg[] = {
+    {CLIARG_STREAM, ".dmstream", "DM stream", "null", CLIARG_VISIBLE_DEFAULT, (void **)&dmstream, &fpi_dmstream},
+    {CLIARG_STREAM, ".wfsstream", "WFS stream", "null", CLIARG_VISIBLE_DEFAULT, (void **)&wfsstream, &fpi_wfsstream},
+    {CLIARG_FLOAT32, ".OPDamp", "poke amplitude [um]", "0.1", CLIARG_VISIBLE_DEFAULT, (void **)&OPDamp, &fpi_OPDamp},
+    {CLIARG_FLOAT32, ".frameratewait", "time period for frame rate measurement", "5", CLIARG_HIDDEN_DEFAULT,
+     (void **)&frameratewait, &fpi_frameratewait},
+    {CLIARG_UINT32, ".NBiter", "Number of iteration", "100", CLIARG_HIDDEN_DEFAULT, (void **)&NBiter, &fpi_NBiter},
+    {CLIARG_UINT32, ".wfsNBframemax", "Number frames in measurement sequence", "50", CLIARG_HIDDEN_DEFAULT,
+     (void **)&wfsNBframemax, &fpi_wfsNBframemax},
+    {CLIARG_FLOAT32, ".status.wfsdt", "WFS frame interval", "0", CLIARG_OUTPUT_DEFAULT, (void **)&wfsdt, &fpi_wfsdt},
+    {CLIARG_FLOAT32, ".status.twaitus", "initial wait [us]", "0", CLIARG_OUTPUT_DEFAULT, (void **)&twaitus,
+     &fpi_twaitus},
+    {CLIARG_FLOAT32, ".status.refdtoffset", "baseline time offset to poke", "0", CLIARG_OUTPUT_DEFAULT,
+     (void **)&refdtoffset, &fpi_refdtoffset},
+    {CLIARG_FLOAT32, ".status.dtoffset", "actual time offset to poke", "0", CLIARG_OUTPUT_DEFAULT, (void **)&dtoffset,
+     &fpi_dtoffset},
+    {CLIARG_FLOAT32, ".out.framerateHz", "WFS frame rate [Hz]", "0", CLIARG_OUTPUT_DEFAULT, (void **)&framerateHz,
+     &fpi_framerateHz},
+    {CLIARG_FLOAT32, ".out.latencyfr", "hardware latency [frame]", "0", CLIARG_OUTPUT_DEFAULT, (void **)&latencyfr,
+     &fpi_latencyfr}};
 
 // Optional custom configuration setup.
 // Runs once at conf startup
 //
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if (data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_dmstream].fpflag |= FPFLAG_STREAM_RUN_REQUIRED|FPFLAG_CHECKSTREAM;
-        data.fpsptr->parray[fpi_wfsstream].fpflag |= FPFLAG_STREAM_RUN_REQUIRED|FPFLAG_CHECKSTREAM;
+        data.fpsptr->parray[fpi_dmstream].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+        data.fpsptr->parray[fpi_wfsstream].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
     }
-
-
 
     return RETURN_SUCCESS;
 }
-
 
 // Optional custom configuration checks.
 // Runs at every configuration check loop iteration
@@ -137,29 +94,17 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.fpsptr != NULL)
+    if (data.fpsptr != NULL)
     {
-
     }
 
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata =
-{
-    "mlat",
-    "measure latency between DM and WFS",
-    CLICMD_FIELDS_DEFAULTS
-};
-
+static CLICMDDATA CLIcmddata = {"mlat", "measure latency between DM and WFS", CLICMD_FIELDS_DEFAULTS};
 
 // detailed help
-static errno_t help_function()
-{
-    return RETURN_SUCCESS;
-}
-
-
+static errno_t help_function() { return RETURN_SUCCESS; }
 
 static errno_t compute_function()
 {
@@ -189,22 +134,19 @@ static errno_t compute_function()
         create_image_ID("_testwfsc", 3, naxes, imgwfs.datatype, 0, 0, 0, &IDwfsc);
     }
 
-
-    float *latencyarray = (float *) malloc(sizeof(float) * *NBiter);
-    if(latencyarray == NULL) {
+    float *latencyarray = (float *)malloc(sizeof(float) * *NBiter);
+    if (latencyarray == NULL)
+    {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
-    float *latencysteparray = (float *) malloc(sizeof(float) * *NBiter);
-    if(latencysteparray == NULL) {
+    float *latencysteparray = (float *)malloc(sizeof(float) * *NBiter);
+    if (latencysteparray == NULL)
+    {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
-
-
-
-
 
     // Create DM patterns
     long IDdm0 = -1;
@@ -217,23 +159,21 @@ static errno_t compute_function()
         create_2Dimage_ID("_testdm1", dmxsize, dmysize, &IDdm1);
 
         float RMStot = 0.0;
-        for(uint32_t ii = 0; ii < dmxsize; ii++)
-            for(uint32_t jj = 0; jj < dmysize; jj++)
+        for (uint32_t ii = 0; ii < dmxsize; ii++)
+            for (uint32_t jj = 0; jj < dmysize; jj++)
             {
                 float x = (2.0 * ii - 1.0 * dmxsize) / dmxsize;
                 float y = (2.0 * jj - 1.0 * dmxsize) / dmysize;
                 data.image[IDdm0].array.F[jj * dmxsize + ii] = 0.0;
                 data.image[IDdm1].array.F[jj * dmxsize + ii] = (*OPDamp) * (sin(8.0 * x) * sin(8.0 * y));
-                RMStot += data.image[IDdm1].array.F[jj * dmxsize + ii] *
-                          data.image[IDdm1].array.F[jj * dmxsize + ii];
+                RMStot += data.image[IDdm1].array.F[jj * dmxsize + ii] * data.image[IDdm1].array.F[jj * dmxsize + ii];
             }
         RMStot = sqrt(RMStot / dmxsize / dmysize);
 
-
         printf("RMStot = %f", RMStot);
 
-        for(uint32_t ii = 0; ii < dmxsize; ii++)
-            for(uint32_t jj = 0; jj < dmysize; jj++)
+        for (uint32_t ii = 0; ii < dmxsize; ii++)
+            for (uint32_t jj = 0; jj < dmysize; jj++)
             {
                 data.image[IDdm1].array.F[jj * dmxsize + ii] *= (*OPDamp) / RMStot;
             }
@@ -242,12 +182,6 @@ static errno_t compute_function()
         fps_write_RUNoutput_image(data.fpsptr, "_testdm0", "pokeDM0");
         fps_write_RUNoutput_image(data.fpsptr, "_testdm1", "pokeDM1");
     }
-
-
-
-
-
-
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
@@ -270,7 +204,7 @@ static errno_t compute_function()
         wfscntstart = imgwfs.md->cnt0;
 
         {
-            long nsec = (long) (1000000000 * (*frameratewait));
+            long nsec = (long)(1000000000 * (*frameratewait));
             long nsec_remaining = nsec % 1000000000;
             long sec = nsec / 1000000000;
 
@@ -281,7 +215,7 @@ static errno_t compute_function()
             nanosleep(&timesleep, NULL);
         }
 
-//        usleep( (long)  (1000000 * (*frameratewait)) );
+        //        usleep( (long)  (1000000 * (*frameratewait)) );
 
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
@@ -290,18 +224,17 @@ static errno_t compute_function()
 
         printf("wfs dt = %f sec\n", *wfsdt);
 
-        if(wfscntend - wfscntstart < 5)
+        if (wfscntend - wfscntstart < 5)
         {
-            snprintf(msgstring, stringmaxlen,
-                     "Number of frames %ld too small -> cannot proceed", wfscntend - wfscntstart);
+            snprintf(msgstring, stringmaxlen, "Number of frames %ld too small -> cannot proceed",
+                     wfscntend - wfscntstart);
             processinfo_error(processinfo, msgstring);
             printf("%s\n", msgstring);
         }
         else
         {
             framerateOK = 1;
-            snprintf(msgstring, stringmaxlen, "frame period wfsdt = %f sec  ( %f Hz )\n",
-                     *wfsdt, 1.0 / *wfsdt);
+            snprintf(msgstring, stringmaxlen, "frame period wfsdt = %f sec  ( %f Hz )\n", *wfsdt, 1.0 / *wfsdt);
             processinfo_WriteMessage(processinfo, msgstring);
 
             // This is approximate, will be measured more precisely later on
@@ -309,7 +242,7 @@ static errno_t compute_function()
         }
     }
 
-    if(framerateOK == 1)
+    if (framerateOK == 1)
     {
         // Measure latency
         double tdouble_start;
@@ -319,19 +252,21 @@ static errno_t compute_function()
 
         // update timing parameters for poke test
         dtmax = *wfsdt * (*wfsNBframemax) * 1.2 + 0.5;
-        *twaitus = 1000000.0 * *wfsdt * 3.0;   // wait 3 frames
+        *twaitus = 1000000.0 * *wfsdt * 3.0; // wait 3 frames
         *refdtoffset = 0.5 * *wfsdt;
 
         struct timespec *tarray;
-        tarray = (struct timespec *) malloc(sizeof(struct timespec) * (*wfsNBframemax) );
-        if(tarray == NULL) {
+        tarray = (struct timespec *)malloc(sizeof(struct timespec) * (*wfsNBframemax));
+        if (tarray == NULL)
+        {
             PRINT_ERROR("malloc returns NULL pointer");
             abort(); // or handle error in other ways
         }
 
         double *dtarray;
-        dtarray = (double *) malloc(sizeof(double) * (*wfsNBframemax) );
-        if(dtarray == NULL) {
+        dtarray = (double *)malloc(sizeof(double) * (*wfsNBframemax));
+        if (dtarray == NULL)
+        {
             PRINT_ERROR("malloc returns NULL pointer");
             abort(); // or handle error in other ways
         }
@@ -342,14 +277,13 @@ static errno_t compute_function()
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
         long wfscntstart = imgwfs.md->cnt0;
-        long wfsframeoffset = (long)(0.1 * (*wfsNBframemax) );
-
+        long wfsframeoffset = (long)(0.1 * (*wfsNBframemax));
 
         // Measurement loop
 
         uint32_t iter = 0;
         int loopOK = 1;
-        while(loopOK == 1)
+        while (loopOK == 1)
         {
             //double tlastdouble;
             double tstartdouble;
@@ -361,22 +295,17 @@ static errno_t compute_function()
             int stringmaxlen = 500;
             char msgstring[stringmaxlen];
 
-            uint64_t wfssize = imgwfs.md->size[0]*imgwfs.md->size[1];
+            uint64_t wfssize = imgwfs.md->size[0] * imgwfs.md->size[1];
 
             struct timespec tstart;
             long kkoffset = 0;
             long kkmax = 0;
-
-
-
 
             snprintf(msgstring, stringmaxlen, "iteration %5u / %5u", iter, *NBiter);
             processinfo_WriteMessage(processinfo, msgstring);
 
             printf(" - ITERATION %u / %u\n", iter, *NBiter);
             fflush(stdout);
-
-
 
             printf("write to %s\n", dmstream);
             fflush(stdout);
@@ -388,7 +317,7 @@ static errno_t compute_function()
             //usleep(*twaitus);
 
             {
-                long nsec = (long) (1000 * (*twaitus));
+                long nsec = (long)(1000 * (*twaitus));
 
                 long nsec_remaining = nsec % 1000000000;
                 long sec = nsec / 1000000000;
@@ -400,14 +329,13 @@ static errno_t compute_function()
                 nanosleep(&timesleep, NULL);
             }
 
-
             // and waiting frames
             wfscnt0 = imgwfs.md->cnt0;
-            for(uint32_t wfsframe = 0; wfsframe < *wfsNBframemax; wfsframe++)
+            for (uint32_t wfsframe = 0; wfsframe < *wfsNBframemax; wfsframe++)
             {
-                while(wfscnt0 == imgwfs.md->cnt0)
+                while (wfscnt0 == imgwfs.md->cnt0)
                 {
-                    long nsec = (long) (1000 * 50); // 50 usec
+                    long nsec = (long)(1000 * 50); // 50 usec
 
                     long nsec_remaining = nsec % 1000000000;
                     long sec = nsec / 1000000000;
@@ -426,18 +354,16 @@ static errno_t compute_function()
             tstartdouble = 1.0 * tstart.tv_sec + 1.0e-9 * tstart.tv_nsec;
             //    tlastdouble = tstartdouble;
 
-
-
             long wfsframe = 0;
             int wfsslice = 0;
             wfscnt0 = imgwfs.md->cnt0;
             printf("\n");
-            while((dt < dtmax) && (wfsframe < *wfsNBframemax))
+            while ((dt < dtmax) && (wfsframe < *wfsNBframemax))
             {
                 // WAITING for image
-                while(wfscnt0 == imgwfs.md->cnt0)
+                while (wfscnt0 == imgwfs.md->cnt0)
                 {
-                    long nsec = (long) (1000 * 2); // 2 usec
+                    long nsec = (long)(1000 * 2); // 2 usec
 
                     long nsec_remaining = nsec % 1000000000;
                     long sec = nsec / 1000000000;
@@ -463,88 +389,85 @@ static errno_t compute_function()
                 wfsslice = 0;
                 //}
 
-
-                if(imgwfs.datatype == _DATATYPE_FLOAT)
+                if (imgwfs.datatype == _DATATYPE_FLOAT)
                 {
-                    char * ptr0 = (char *) imgwfs.im->array.F;
+                    char *ptr0 = (char *)imgwfs.im->array.F;
                     ptr0 += SIZEOF_DATATYPE_FLOAT * wfsslice * wfssize;
                     // copy image to cube slice
-                    char * ptr = (char *) data.image[IDwfsc].array.F;
+                    char *ptr = (char *)data.image[IDwfsc].array.F;
                     ptr += sizeof(float) * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(float)*wfssize);
+                    memcpy(ptr, ptr0, sizeof(float) * wfssize);
                 }
 
-                if(imgwfs.datatype == _DATATYPE_DOUBLE)
+                if (imgwfs.datatype == _DATATYPE_DOUBLE)
                 {
-                    char * ptr0 = (char *) imgwfs.im->array.D;
+                    char *ptr0 = (char *)imgwfs.im->array.D;
                     ptr0 += SIZEOF_DATATYPE_DOUBLE * wfsslice * wfssize;
                     // copy image to cube slice
-                    char * ptr = (char *) data.image[IDwfsc].array.D;
+                    char *ptr = (char *)data.image[IDwfsc].array.D;
                     ptr += sizeof(float) * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(float)*wfssize);
+                    memcpy(ptr, ptr0, sizeof(float) * wfssize);
                 }
 
-
-                if(imgwfs.datatype == _DATATYPE_UINT16)
+                if (imgwfs.datatype == _DATATYPE_UINT16)
                 {
-                    char * ptr0 = (char *) imgwfs.im->array.UI16;
+                    char *ptr0 = (char *)imgwfs.im->array.UI16;
                     ptr0 += SIZEOF_DATATYPE_UINT16 * wfsslice * wfssize;
                     // copy image to cube slice
-                    char * ptr = (char *) data.image[IDwfsc].array.UI16;
+                    char *ptr = (char *)data.image[IDwfsc].array.UI16;
                     ptr += SIZEOF_DATATYPE_UINT16 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short)*wfssize);
+                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
                 }
 
-                if(imgwfs.datatype == _DATATYPE_INT16)
+                if (imgwfs.datatype == _DATATYPE_INT16)
                 {
-                    char * ptr0 = (char *) imgwfs.im->array.SI16;
+                    char *ptr0 = (char *)imgwfs.im->array.SI16;
                     ptr0 += SIZEOF_DATATYPE_INT16 * wfsslice * wfssize;
                     // copy image to cube slice
-                    char * ptr = (char *) data.image[IDwfsc].array.SI16;
+                    char *ptr = (char *)data.image[IDwfsc].array.SI16;
                     ptr += SIZEOF_DATATYPE_INT16 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short)*wfssize);
+                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
                 }
 
-                if(imgwfs.datatype == _DATATYPE_UINT32)
+                if (imgwfs.datatype == _DATATYPE_UINT32)
                 {
-                    char * ptr0 = (char *) imgwfs.im->array.UI32;
+                    char *ptr0 = (char *)imgwfs.im->array.UI32;
                     ptr0 += SIZEOF_DATATYPE_UINT32 * wfsslice * wfssize;
                     // copy image to cube slice
-                    char * ptr = (char *) data.image[IDwfsc].array.UI32;
+                    char *ptr = (char *)data.image[IDwfsc].array.UI32;
                     ptr += SIZEOF_DATATYPE_UINT32 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short)*wfssize);
+                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
                 }
 
-                if(imgwfs.datatype == _DATATYPE_INT32)
+                if (imgwfs.datatype == _DATATYPE_INT32)
                 {
-                    char * ptr0 = (char *) imgwfs.im->array.SI32;
+                    char *ptr0 = (char *)imgwfs.im->array.SI32;
                     ptr0 += SIZEOF_DATATYPE_INT32 * wfsslice * wfssize;
                     // copy image to cube slice
-                    char * ptr = (char *) data.image[IDwfsc].array.SI32;
+                    char *ptr = (char *)data.image[IDwfsc].array.SI32;
                     ptr += SIZEOF_DATATYPE_INT32 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short)*wfssize);
+                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
                 }
 
-                if(imgwfs.datatype == _DATATYPE_UINT64)
+                if (imgwfs.datatype == _DATATYPE_UINT64)
                 {
-                    char * ptr0 = (char *) imgwfs.im->array.UI64;
+                    char *ptr0 = (char *)imgwfs.im->array.UI64;
                     ptr0 += SIZEOF_DATATYPE_UINT64 * wfsslice * wfssize;
                     // copy image to cube slice
-                    char * ptr = (char *) data.image[IDwfsc].array.UI64;
+                    char *ptr = (char *)data.image[IDwfsc].array.UI64;
                     ptr += SIZEOF_DATATYPE_UINT64 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short)*wfssize);
+                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
                 }
 
-                if(imgwfs.datatype == _DATATYPE_INT64)
+                if (imgwfs.datatype == _DATATYPE_INT64)
                 {
-                    char * ptr0 = (char *) imgwfs.im->array.SI64;
+                    char *ptr0 = (char *)imgwfs.im->array.SI64;
                     ptr0 += SIZEOF_DATATYPE_INT64 * wfsslice * wfssize;
                     // copy image to cube slice
-                    char * ptr = (char *) data.image[IDwfsc].array.SI64;
+                    char *ptr = (char *)data.image[IDwfsc].array.SI64;
                     ptr += SIZEOF_DATATYPE_INT64 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short)*wfssize);
+                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
                 }
-
 
                 clock_gettime(CLOCK_REALTIME, &tarray[wfsframe]);
 
@@ -555,11 +478,11 @@ static errno_t compute_function()
                 //     tlastdouble = tdouble;
 
                 // apply DM pattern #1
-                if((dmstate == 0) && (dt > *refdtoffset) && (wfsframe > wfsframeoffset))
+                if ((dmstate == 0) && (dt > *refdtoffset) && (wfsframe > wfsframeoffset))
                 {
-//                    usleep((long)(ran1() * 1000000.0 * *wfsdt));
+                    //                    usleep((long)(ran1() * 1000000.0 * *wfsdt));
                     {
-                        long nsec = (long) (1000000000.0 * ran1() * (*wfsdt));
+                        long nsec = (long)(1000000000.0 * ran1() * (*wfsdt));
 
                         long nsec_remaining = nsec % 1000000000;
                         long sec = nsec / 1000000000;
@@ -571,9 +494,7 @@ static errno_t compute_function()
                         nanosleep(&timesleep, NULL);
                     }
 
-
-                    printf("\nDM STATE CHANGED ON ITERATION %ld   / %ld\n\n", wfsframe,
-                           wfsframeoffset);
+                    printf("\nDM STATE CHANGED ON ITERATION %ld   / %ld\n\n", wfsframe, wfsframeoffset);
                     kkoffset = wfsframe;
 
                     dmstate = 1;
@@ -590,96 +511,92 @@ static errno_t compute_function()
             printf("\n\n %ld frames recorded\n", wfsframe);
             fflush(stdout);
 
-
             copy_image_ID("_testdm0", dmstream, 1);
             dmstate = 0;
-
 
             // Computing difference between consecutive images
             NBwfsframe = wfsframe;
 
-
-            double * valarray = (double *) malloc(sizeof(double) * NBwfsframe);
-            if(valarray == NULL) {
+            double *valarray = (double *)malloc(sizeof(double) * NBwfsframe);
+            if (valarray == NULL)
+            {
                 PRINT_ERROR("malloc returns NULL pointer");
                 abort();
             }
 
             double valmax = 0.0;
             double valmaxdt = 0.0;
-            for(long kk = 1; kk < NBwfsframe; kk++)
+            for (long kk = 1; kk < NBwfsframe; kk++)
             {
                 valarray[kk] = 0.0;
 
-                if(imgwfs.datatype == _DATATYPE_FLOAT)
-                    for(uint64_t ii = 0; ii < wfssize; ii++)
+                if (imgwfs.datatype == _DATATYPE_FLOAT)
+                    for (uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         float tmp = data.image[IDwfsc].array.F[kk * wfssize + ii] -
                                     data.image[IDwfsc].array.F[(kk - 1) * wfssize + ii];
                         valarray[kk] += tmp * tmp;
                     }
 
-                if(imgwfs.datatype == _DATATYPE_DOUBLE)
-                    for(uint64_t ii = 0; ii < wfssize; ii++)
+                if (imgwfs.datatype == _DATATYPE_DOUBLE)
+                    for (uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         double tmp = data.image[IDwfsc].array.D[kk * wfssize + ii] -
                                      data.image[IDwfsc].array.D[(kk - 1) * wfssize + ii];
                         valarray[kk] += tmp * tmp;
                     }
 
-                if(imgwfs.datatype == _DATATYPE_UINT16)
-                    for(uint64_t ii = 0; ii < wfssize; ii++)
+                if (imgwfs.datatype == _DATATYPE_UINT16)
+                    for (uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         int tmp = data.image[IDwfsc].array.UI16[kk * wfssize + ii] -
                                   data.image[IDwfsc].array.UI16[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
-                if(imgwfs.datatype == _DATATYPE_INT16)
-                    for(uint64_t ii = 0; ii < wfssize; ii++)
+                if (imgwfs.datatype == _DATATYPE_INT16)
+                    for (uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         int tmp = data.image[IDwfsc].array.SI16[kk * wfssize + ii] -
                                   data.image[IDwfsc].array.SI16[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
-                if(imgwfs.datatype == _DATATYPE_UINT32)
-                    for(uint64_t ii = 0; ii < wfssize; ii++)
+                if (imgwfs.datatype == _DATATYPE_UINT32)
+                    for (uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         long tmp = data.image[IDwfsc].array.UI32[kk * wfssize + ii] -
                                    data.image[IDwfsc].array.UI32[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
-                if(imgwfs.datatype == _DATATYPE_INT32)
-                    for(uint64_t ii = 0; ii < wfssize; ii++)
+                if (imgwfs.datatype == _DATATYPE_INT32)
+                    for (uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         long tmp = data.image[IDwfsc].array.SI32[kk * wfssize + ii] -
                                    data.image[IDwfsc].array.SI32[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
-                if(imgwfs.datatype == _DATATYPE_UINT64)
-                    for(uint64_t ii = 0; ii < wfssize; ii++)
+                if (imgwfs.datatype == _DATATYPE_UINT64)
+                    for (uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         long tmp = data.image[IDwfsc].array.UI64[kk * wfssize + ii] -
                                    data.image[IDwfsc].array.UI64[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
-                if(imgwfs.datatype == _DATATYPE_INT64)
-                    for(uint64_t ii = 0; ii < wfssize; ii++)
+                if (imgwfs.datatype == _DATATYPE_INT64)
+                    for (uint64_t ii = 0; ii < wfssize; ii++)
                     {
                         long tmp = data.image[IDwfsc].array.SI64[kk * wfssize + ii] -
                                    data.image[IDwfsc].array.SI64[(kk - 1) * wfssize + ii];
                         valarray[kk] += 1.0 * tmp * tmp;
                     }
 
-
-
                 valarray[kk] = sqrt(valarray[kk] / wfssize / 2);
 
-                if(valarray[kk] > valmax)
+                if (valarray[kk] > valmax)
                 {
                     valmax = valarray[kk];
                     valmaxdt = 0.5 * (dtarray[kk - 1] + dtarray[kk]);
@@ -687,15 +604,13 @@ static errno_t compute_function()
                 }
             }
 
-
             //
             //
             //
-            for(wfsframe = 1; wfsframe < NBwfsframe; wfsframe++)
+            for (wfsframe = 1; wfsframe < NBwfsframe; wfsframe++)
             {
                 fprintf(fphwlat, "%ld   %10.2f     %g\n", wfsframe - kkoffset,
-                        1.0e6 * (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - *dtoffset),
-                        valarray[wfsframe]);
+                        1.0e6 * (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - *dtoffset), valarray[wfsframe]);
             }
 
             printf("mean interval =  %10.2f ns\n", 1.0e9 * (dt - *dtoffset) / NBwfsframe);
@@ -708,7 +623,7 @@ static errno_t compute_function()
 
             printf("... Hardware latency = %f ms  = %ld frames\n", 1000.0 * latency, kkmax);
 
-            if(latency > latencymax)
+            if (latency > latencymax)
             {
                 latencymax = latency;
                 //WRITE_FULLFILENAME(ffname, "%s/maxlatencyseq.fits", outdirname);
@@ -720,10 +635,9 @@ static errno_t compute_function()
             latencysteparray[iter] = 1.0 * kkmax;
             latencyarray[iter] = (valmaxdt - *dtoffset);
 
-
             // process signals, increment loop counter
             iter++;
-            if(iter == (*NBiter))
+            if (iter == (*NBiter))
             {
                 loopOK = 0;
             }
@@ -734,12 +648,8 @@ static errno_t compute_function()
         tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
         long wfscntend = imgwfs.md->cnt0;
 
-
         free(tarray);
         free(dtarray);
-
-
-
 
         // PROCESS RESULTS
 
@@ -757,14 +667,14 @@ static errno_t compute_function()
         float latencystepave = 0.0;
         float minlatency = latencyarray[0];
         float maxlatency = latencyarray[0];
-        for(uint32_t iter = 0; iter < (*NBiter); iter++)
+        for (uint32_t iter = 0; iter < (*NBiter); iter++)
         {
-            if(latencyarray[iter] > maxlatency)
+            if (latencyarray[iter] > maxlatency)
             {
                 maxlatency = latencyarray[iter];
             }
 
-            if(latencyarray[iter] < minlatency)
+            if (latencyarray[iter] < minlatency)
             {
                 minlatency = latencyarray[iter];
             }
@@ -781,22 +691,17 @@ static errno_t compute_function()
         *framerateHz = 1.0 * (wfscntend - wfscntstart) / dt;
         functionparameter_SaveParam2disk(data.fpsptr, ".out.framerateHz");
 
-
-
         // update latencystepave from framerate
         latencystepave = latencyave * (1.0 * (wfscntend - wfscntstart) / dt);
 
         quick_sort_float(latencyarray, (*NBiter));
 
-        printf("AVERAGE LATENCY = %8.3f ms   %f frames\n", latencyave * 1000.0,
-               latencystepave);
-        printf("min / max over %u measurements: %8.3f ms / %8.3f ms\n", (*NBiter),
-               minlatency * 1000.0, maxlatency * 1000.0);
+        printf("AVERAGE LATENCY = %8.3f ms   %f frames\n", latencyave * 1000.0, latencystepave);
+        printf("min / max over %u measurements: %8.3f ms / %8.3f ms\n", (*NBiter), minlatency * 1000.0,
+               maxlatency * 1000.0);
 
         *latencyfr = latencystepave;
         functionparameter_SaveParam2disk(data.fpsptr, ".out.latencyfr");
-
-
 
         FILE *fpout;
         fpout = fps_write_RUNoutput_file(data.fpsptr, "param_hardwlatency", "txt");
@@ -804,14 +709,9 @@ static errno_t compute_function()
         fclose(fpout);
     }
 
-
-
-
-
     printf(">>>>>>>>>>>>>>>>>>>> mlat iteration done\n");
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
-
 
     free(latencyarray);
     free(latencysteparray);
@@ -820,11 +720,11 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
-
 INSERT_STD_FPSCLIfunctions
 
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_perfTest__mlat()
+    // Register function in CLI
+    errno_t
+    CLIADDCMD_AOloopControl_perfTest__mlat()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
@@ -833,7 +733,3 @@ errno_t CLIADDCMD_AOloopControl_perfTest__mlat()
 
     return RETURN_SUCCESS;
 }
-
-
-
-

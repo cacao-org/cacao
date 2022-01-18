@@ -14,7 +14,7 @@ Zero-point offsetting relies on two separate processes :
 - Converting DM offsets to WFS offsets (can be done by CPU or GPU): aolN_dmZP -> aolN_wfszpo
 - Summing and applying WFS offsets aolN_wfszpo to aolN_wfsref
 
-Zonal offsetting takes a DM map, multiplies it by the response matrix (in CPU or GPU). 
+Zonal offsetting takes a DM map, multiplies it by the response matrix (in CPU or GPU).
 With Modal offsetting, this multiplication is pre-computed.
 
 
@@ -25,7 +25,7 @@ With Modal offsetting, this multiplication is pre-computed.
 
 ## 1. Converting DM offsets to WFS offsets (zonal, CPU mode)
 
-CPU-based zero point offsets will compute WFS offsets from the zero point offset DM channels (04-11) and apply them to the `aolN_wfszpo#` stream. 
+CPU-based zero point offsets will compute WFS offsets from the zero point offset DM channels (04-11) and apply them to the `aolN_wfszpo#` stream.
 
 - **Activate CPU individual zero point offset channels** (`zplon0` to `zplon7`) to convert dm zero point displacements to wfs offsets.
 
@@ -54,11 +54,11 @@ The process runs inside tmux session `aolNGPUzploop#`
 
 ## 3. Modal offsetting from another loop
 
-The two methods above are zonal offsetting: the DM map is multiplied by the zonal WFS response to compute WFS offset. 
+The two methods above are zonal offsetting: the DM map is multiplied by the zonal WFS response to compute WFS offset.
 
 Modal offsetting, instead, relies on a pre-computed set of WFS modal offets. This is most useful when a separate control loop is driving modal offsets to the current loop.
 
-To implement modal offsetting from a separate loop (refered to as the offsetting loop) : 
+To implement modal offsetting from a separate loop (refered to as the offsetting loop) :
 
 - Configure the DM of the offsetting loop to write WFS zero point offsets to the current loop (see setting up DM section)
 
@@ -77,7 +77,7 @@ To implement modal offsetting from a separate loop (refered to as the offsetting
 
 To activate WFS offsets to aolN_wfsref, the user needs to :
 
-- **Toggle the zero point offset loop process ON** (`LPzpo`) prior to starting the loop. 
+- **Toggle the zero point offset loop process ON** (`LPzpo`) prior to starting the loop.
 
 Command `aolzpwfscloop` (function AOloopControl_WFSzeropoint_sum_update_loop() ) launches a loop that monitors shared memory streams `aolN_wfszpo0` to `aolN_wfszpo7`, and updates the WFS reference when one of these has changed.
 
@@ -97,7 +97,7 @@ The loop is running inside tmux session `aolNwfszpo`, and is launched when the l
 Measures average WFS residual with script :
 
 	./auxscripts/aolmkWFSres 0.0005
-	
+
 Running average is in stresm aol_wfsres_ave
 
 
@@ -114,11 +114,10 @@ Running average is in stresm aol_wfsres_ave
 
 
 ## Controlling offsets from another loop
- 
+
 
 ## Running the loop
 
 The next steps are similar to the ones previously described, with the following important differences:
 
 - The control matrix should be computed in zonal mode (no modal CPA block decomposition)
-

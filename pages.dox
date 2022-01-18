@@ -21,7 +21,7 @@ The compute and control for adaptive optics (cacao) package is a collection of t
 
 # 2. Installing cacao and running command line interface {#mainsection_gettingstarted}
 
-- @ref page_installation : Downloading and Installing cacao  
+- @ref page_installation : Downloading and Installing cacao
 
 - @ref page_userinput : Using cacao's command line interface (CLI)
 	- @ref page_CLI_Overview
@@ -44,9 +44,9 @@ Synchronization and communication between processes is achieved by the data **st
 
 ## 3.2. Building an AO control loop {#mainsection_fundamentals_buildingloop}
 
-Under cacao's framework, the AO control loop is assembled from **streams** and **processes**. Each process typically reads (= listens) to a stream. Once the stream is updated, the process will start computations and will usually update other stream(s). Long chains of processes can thus be built, with multiple branches (several processes can listen to the same stream). 
+Under cacao's framework, the AO control loop is assembled from **streams** and **processes**. Each process typically reads (= listens) to a stream. Once the stream is updated, the process will start computations and will usually update other stream(s). Long chains of processes can thus be built, with multiple branches (several processes can listen to the same stream).
 
-More of cacao's processes are running a loop. 
+More of cacao's processes are running a loop.
 
 
 ## 3.3. Key tools {#mainsection_fundamentals_keytools}
@@ -68,7 +68,7 @@ To manage processes and streams, cacao offers a few useful tools, allowing users
 
 ## 4.1. Step-by-step instructions {#mainsection_cacao_example}
 
-- @ref page_cacao_stepbystep_example 
+- @ref page_cacao_stepbystep_example
 
 
 Users guide:
@@ -169,7 +169,7 @@ cudacomp                | Cuda wrapper                         |   @ref cudacomp
 
 ## A.2. cacao-specific modules {#mainsection_modules_cacao}
 
-Module                               | Description                          | Souce Code Reference                     |      
+Module                               | Description                          | Souce Code Reference                     |
 -------------------------------------|--------------------------------------|------------------------------------------|
 AOloopControl                        | Top-level module for AO control      |   @ref AOloopControl.h                   |
 AOloopControl_IOtools                | Input-Output tools                   |   @ref AOloopControl_IOtools.h           |
@@ -185,5 +185,3 @@ FPAOloopControl                      | Focal plane AO control               |   
 ---
 
 */
-
-

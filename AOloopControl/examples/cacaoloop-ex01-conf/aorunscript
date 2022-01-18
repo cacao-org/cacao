@@ -35,8 +35,8 @@ source ${CACAOWORKDIR}/cacaovars.${LOOPNAME}.bash
 
 
 function sendFPScmd {
-echo "SENDING: $1"
-echo "$1" >> ${MILK_SHM_DIR}/cacaoloop01_fpsCTRL.fifo
+    echo "SENDING: $1"
+    echo "$1" >> ${MILK_SHM_DIR}/cacaoloop01_fpsCTRL.fifo
 }
 
 
@@ -47,17 +47,17 @@ echo "$1" >> ${MILK_SHM_DIR}/cacaoloop01_fpsCTRL.fifo
 # ======================================================================
 
 stepFile="step.aorunscript.DMCOMB"
-if [ ! -f "$stepFile" ]; then 
+if [ ! -f "$stepFile" ]; then
 
-# Start DM comb
-taskset_DMcomb="3"
-sendFPScmd "setval DMcomb-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMcomb}"
-sendFPScmd "runstart DMcomb-${CACAO_DMINDEX}"
+    # Start DM comb
+    taskset_DMcomb="3"
+    sendFPScmd "setval DMcomb-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMcomb}"
+    sendFPScmd "runstart DMcomb-${CACAO_DMINDEX}"
 
-touch ${stepFile}
-exit
+    touch ${stepFile}
+    exit
 else
-echo "found ${stepFile} -> skipping"
+    echo "found ${stepFile} -> skipping"
 fi
 
 
@@ -79,22 +79,22 @@ fi
 stepFile="step.aorunscript.ACQWFS"
 if [ ! -f "$stepFile" ]; then
 
-# Fill up execution queue 2
-# set queue to #2
-sendFPScmd "setqindex 2"
-# put execution queue on hold (priority = 0)
-sendFPScmd "setqprio 0"
-sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
-# Return to execution queue 0
-sendFPScmd "setqindex 0"
-# run tasks with priority = 1 (highest priority first)
-sendFPScmd "setqprio 1"
+    # Fill up execution queue 2
+    # set queue to #2
+    sendFPScmd "setqindex 2"
+    # put execution queue on hold (priority = 0)
+    sendFPScmd "setqprio 0"
+    sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
+    sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
+    # Return to execution queue 0
+    sendFPScmd "setqindex 0"
+    # run tasks with priority = 1 (highest priority first)
+    sendFPScmd "setqprio 1"
 
-touch ${stepFile}
-exit
+    touch ${stepFile}
+    exit
 else
-echo "found ${stepFile} -> skipping"
+    echo "found ${stepFile} -> skipping"
 fi
 
 
@@ -110,13 +110,13 @@ fi
 stepFile="step.aorunscript.STREMDELAY"
 if [ ! -f "$stepFile" ]; then
 
-sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
-sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
+    sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
+    sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
 
-touch ${stepFile}
-exit
+    touch ${stepFile}
+    exit
 else
-echo "found ${stepFile} -> skipping"
+    echo "found ${stepFile} -> skipping"
 fi
 
 
@@ -129,13 +129,13 @@ fi
 stepFile="step.aorunscript.SIMMVGPU"
 if [ ! -f "$stepFile" ]; then
 
-sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
+    sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
+    sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
 
-touch ${stepFile}
-exit
+    touch ${stepFile}
+    exit
 else
-echo "found ${stepFile} -> skipping"
+    echo "found ${stepFile} -> skipping"
 fi
 
 
@@ -148,22 +148,22 @@ fi
 stepFile="step.aorunscript.MLAT"
 if [ ! -f "$stepFile" ]; then
 
-# launch queue 2
-sendFPScmd "queueprio 2 1"
+    # launch queue 2
+    sendFPScmd "queueprio 2 1"
 
-sendFPScmd "confwupdate mlat-${CACAO_LOOPNUMBER}"
+    sendFPScmd "confwupdate mlat-${CACAO_LOOPNUMBER}"
 
 
-# wait until RUN process complete to proceed to next task
-# marks start of sequential operation
-sendFPScmd "waitonrunON"
+    # wait until RUN process complete to proceed to next task
+    # marks start of sequential operation
+    sendFPScmd "waitonrunON"
 
-sendFPScmd "runstart mlat-${CACAO_LOOPNUMBER}"
+    sendFPScmd "runstart mlat-${CACAO_LOOPNUMBER}"
 
-touch ${stepFile}
-exit
+    touch ${stepFile}
+    exit
 else
-echo "found ${stepFile} -> skipping"
+    echo "found ${stepFile} -> skipping"
 fi
 
 
@@ -177,14 +177,14 @@ fi
 stepFile="step.aorunscript.ZRM"
 if [ ! -f "$stepFile" ]; then
 
-# take zonal response matrix
-sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart acqlin_zRM-${CACAO_LOOPNUMBER}"
+    # take zonal response matrix
+    sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
+    sendFPScmd "runstart acqlin_zRM-${CACAO_LOOPNUMBER}"
 
-touch ${stepFile}
-exit
+    touch ${stepFile}
+    exit
 else
-echo "found ${stepFile} -> skipping"
+    echo "found ${stepFile} -> skipping"
 fi
 
 
@@ -197,14 +197,14 @@ fi
 stepFile="step.aorunscript.LORM"
 if [ ! -f "$stepFile" ]; then
 
-# take low-order modal RM
-sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart acqlin_loRM-${CACAO_LOOPNUMBER}"
+    # take low-order modal RM
+    sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
+    sendFPScmd "runstart acqlin_loRM-${CACAO_LOOPNUMBER}"
 
-touch ${stepFile}
-exit
+    touch ${stepFile}
+    exit
 else
-echo "found ${stepFile} -> skipping"
+    echo "found ${stepFile} -> skipping"
 fi
 
 
@@ -217,15 +217,15 @@ fi
 stepFile="step.aorunscript.CM"
 if [ ! -f "$stepFile" ]; then
 
-# compute straight CM
-sendFPScmd "setval compsCM-2.SVDlim 0.01"
-sendFPScmd "confwupdate compsCM-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart compsCM-${CACAO_LOOPNUMBER}"
+    # compute straight CM
+    sendFPScmd "setval compsCM-2.SVDlim 0.01"
+    sendFPScmd "confwupdate compsCM-${CACAO_LOOPNUMBER}"
+    sendFPScmd "runstart compsCM-${CACAO_LOOPNUMBER}"
 
-touch ${stepFile}
-exit
+    touch ${stepFile}
+    exit
 else
-echo "found ${stepFile} -> skipping"
+    echo "found ${stepFile} -> skipping"
 fi
 
 
@@ -249,24 +249,24 @@ fi
 stepFile="step.aorunscript.LOOPRUN"
 if [ ! -f "$stepFile" ]; then
 
-sendFPScmd "waitonrunOFF"
+    sendFPScmd "waitonrunOFF"
 
 
-cd $CACAOWORKDIR/${LOOPNAME}dir
-pwd
-cacao << EOF
+    cd $CACAOWORKDIR/${LOOPNAME}dir
+    pwd
+    cacao << EOF
 loadfits "fps.compsCM-${CACAO_LOOPNUMBER}.datadir/sCMat00.fits" im
 cpsh im cmat
 listim
 exitCLI
 EOF
-cd ../..
+    cd ../..
 
-sendFPScmd "setval loopRUN-${CACAO_LOOPNUMBER}.sn_cmat cmat"
-sendFPScmd "confwupdate loopRUN-${CACAO_LOOPNUMBER}"
+    sendFPScmd "setval loopRUN-${CACAO_LOOPNUMBER}.sn_cmat cmat"
+    sendFPScmd "confwupdate loopRUN-${CACAO_LOOPNUMBER}"
 
-touch ${stepFile}
-exit
+    touch ${stepFile}
+    exit
 else
-echo "found ${stepFile} -> skipping"
+    echo "found ${stepFile} -> skipping"
 fi

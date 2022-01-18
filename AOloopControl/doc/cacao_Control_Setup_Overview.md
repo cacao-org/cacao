@@ -25,7 +25,7 @@ A Typical cacao control screen will include the following panels:
 ## 2. Commands logs
 
 
-ALL commands are logged by the script : 
+ALL commands are logged by the script :
 
 	./aolconfscripts/aollog
 
@@ -55,7 +55,7 @@ function aoconflog {
 ### User-provided UsExternal log (less verbose)
 
 
-More important commands are logged simultaneously to the internal log and an external log. The user provides the command to externally log commands. 
+More important commands are logged simultaneously to the internal log and an external log. The user provides the command to externally log commands.
 
 Inside the bash script, function `aoconflogext` is used to call `aolconfscripts/aollog` with the proper loop name, as defined in the main `aolconf` script:
 
@@ -94,4 +94,3 @@ tail -f logdir/<UTDATE>/logging/MISC.log
 ~~~
 
 In the remote machine, entries are logged in the `comments` log.
-
