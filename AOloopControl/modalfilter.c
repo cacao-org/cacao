@@ -41,17 +41,37 @@ static uint32_t *aftgain;
 long fpi_aftgain;
 
 static CLICMDARGDEF farg[] = {
-    {CLIARG_STREAM, ".inmval", "input mode values from WFS", "aol0_modevalWFS", CLIARG_VISIBLE_DEFAULT,
-     (void **)&inmval, &fpi_inmval},
-    {CLIARG_STREAM, ".outmval", "output mode values to DM", "aol0_modevalDM", CLIARG_VISIBLE_DEFAULT, (void **)&outmval,
+    {CLIARG_STREAM,
+     ".inmval",
+     "input mode values from WFS",
+     "aol0_modevalWFS",
+     CLIARG_VISIBLE_DEFAULT,
+     (void **)&inmval,
+     &fpi_inmval},
+    {CLIARG_STREAM,
+     ".outmval",
+     "output mode values to DM",
+     "aol0_modevalDM",
+     CLIARG_VISIBLE_DEFAULT,
+     (void **)&outmval,
      &fpi_outmval},
     {CLIARG_FLOAT32, ".loopgain", "loop gain", "0.01", CLIARG_HIDDEN_DEFAULT, (void **)&loopgain, &fpi_loopgain},
     {CLIARG_FLOAT32, ".loopmult", "loop mult", "0.95", CLIARG_HIDDEN_DEFAULT, (void **)&loopmult, &fpi_loopmult},
     {CLIARG_FLOAT32, ".vlimit", "value limit", "0.2", CLIARG_HIDDEN_DEFAULT, (void **)&vlimit, &fpi_vlimit},
-    {CLIARG_FLOAT32, ".galpha", "loop gain alpha (1=flat)", "0.5", CLIARG_HIDDEN_DEFAULT, (void **)&galpha,
+    {CLIARG_FLOAT32,
+     ".galpha",
+     "loop gain alpha (1=flat)",
+     "0.5",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **)&galpha,
      &fpi_galpha},
     {CLIARG_UINT32, ".mimax", "maximum mode index", "100", CLIARG_HIDDEN_DEFAULT, (void **)&mimax, &fpi_mimax},
-    {CLIARG_FLOAT32, ".avets", "averaging timescale [nb fr]", "10000.0", CLIARG_HIDDEN_DEFAULT, (void **)&avets,
+    {CLIARG_FLOAT32,
+     ".avets",
+     "averaging timescale [nb fr]",
+     "10000.0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **)&avets,
      &fpi_avets},
     {CLIARG_FLOAT32, ".aftgain", "afterburner gain", "0.0", CLIARG_HIDDEN_DEFAULT, (void **)&aftgain, &fpi_aftgain}};
 
@@ -61,15 +81,15 @@ static CLICMDARGDEF farg[] = {
 static errno_t customCONFsetup()
 {
     if (data.fpsptr != NULL)
-    {
-        data.fpsptr->parray[fpi_loopgain].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_vlimit].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_galpha].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_mimax].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_avets].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_aftgain].fpflag |= FPFLAG_WRITERUN;
-    }
+        {
+            data.fpsptr->parray[fpi_loopgain].fpflag |= FPFLAG_WRITERUN;
+            data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
+            data.fpsptr->parray[fpi_vlimit].fpflag |= FPFLAG_WRITERUN;
+            data.fpsptr->parray[fpi_galpha].fpflag |= FPFLAG_WRITERUN;
+            data.fpsptr->parray[fpi_mimax].fpflag |= FPFLAG_WRITERUN;
+            data.fpsptr->parray[fpi_avets].fpflag |= FPFLAG_WRITERUN;
+            data.fpsptr->parray[fpi_aftgain].fpflag |= FPFLAG_WRITERUN;
+        }
 
     return RETURN_SUCCESS;
 }
@@ -81,8 +101,8 @@ static errno_t customCONFcheck()
 {
 
     if (data.fpsptr != NULL)
-    {
-    }
+        {
+        }
 
     return RETURN_SUCCESS;
 }
@@ -123,12 +143,12 @@ static errno_t compute_function()
     }
 
     for (uint32_t mi = 0; mi < NBmode; mi++)
-    {
-        data.image[IDoutmval].array.F[mi] = 0.0;
-        mvalout[mi] = 0.0;
-        avemval[mi] = 0.0;
-        data.image[IDmodegainfact].array.F[mi] = 1.0;
-    }
+        {
+            data.image[IDoutmval].array.F[mi] = 0.0;
+            mvalout[mi] = 0.0;
+            avemval[mi] = 0.0;
+            data.image[IDmodegainfact].array.F[mi] = 1.0;
+        }
 
     float avegain = 1.0 / (*avets);
     printf("avegain = %f\n", avegain);
@@ -137,62 +157,62 @@ static errno_t compute_function()
 
     avegain = 1.0 / (*avets);
     for (uint32_t mi = 0; mi < NBmode; mi++)
-    {
-        float x = 1.0 * mi / NBmode;
-
-        float gain = (*loopgain);
-        gain *= pow((*galpha), x);
-        gain *= data.image[IDmodegainfact].array.F[mi];
-
-        if (mi > (*mimax))
         {
-            gain = 0.0;
-        }
-        /*        else
-        {
-            gain *= 1.0e-4; //TODO figure out why necessary
-        }
-*/
-        float mult = (*loopmult);
-        float limitval = (*vlimit);
+            float x = 1.0 * mi / NBmode;
 
-        /*        if((mi==0) || (mi==1))
-        {
-            gain *= 4.0;
+            float gain = (*loopgain);
+            gain *= pow((*galpha), x);
+            gain *= data.image[IDmodegainfact].array.F[mi];
+
+            if (mi > (*mimax))
+                {
+                    gain = 0.0;
+                }
+            /*        else
+      {
+      gain *= 1.0e-4; //TODO figure out why necessary
+      }
+      */
+            float mult = (*loopmult);
+            float limitval = (*vlimit);
+
+            /*        if((mi==0) || (mi==1))
+      {
+      gain *= 4.0;
+      }
+      */
+
+            avemval[mi] = (1.0 - avegain) * avemval[mi] + avegain * (imgin.im->array.F[mi] * gain);
+
+            // update long term average if input mode values
+            mvalout[mi] = (1.0 - gain) * mvalout[mi] - gain * (imgin.im->array.F[mi] - (*aftgain) * avemval[mi]);
+            mvalout[mi] *= mult;
+
+            if (mi > (*mimax))
+                {
+                    mvalout[mi] = 0.0;
+                }
+
+            if (mvalout[mi] > limitval)
+                {
+                    mvalout[mi] = limitval;
+                }
+
+            if (mvalout[mi] < -limitval)
+                {
+                    mvalout[mi] = -limitval;
+                }
+
+            if (avemval[mi] > limitval)
+                {
+                    avemval[mi] = limitval;
+                }
+
+            if (avemval[mi] < -limitval)
+                {
+                    avemval[mi] = -limitval;
+                }
         }
-*/
-
-        avemval[mi] = (1.0 - avegain) * avemval[mi] + avegain * (imgin.im->array.F[mi] * gain);
-
-        // update long term average if input mode values
-        mvalout[mi] = (1.0 - gain) * mvalout[mi] - gain * (imgin.im->array.F[mi] - (*aftgain) * avemval[mi]);
-        mvalout[mi] *= mult;
-
-        if (mi > (*mimax))
-        {
-            mvalout[mi] = 0.0;
-        }
-
-        if (mvalout[mi] > limitval)
-        {
-            mvalout[mi] = limitval;
-        }
-
-        if (mvalout[mi] < -limitval)
-        {
-            mvalout[mi] = -limitval;
-        }
-
-        if (avemval[mi] > limitval)
-        {
-            avemval[mi] = limitval;
-        }
-
-        if (avemval[mi] < -limitval)
-        {
-            avemval[mi] = -limitval;
-        }
-    }
 
     memcpy(data.image[IDoutmval].array.F, mvalout, sizeof(float) * NBmode);
     processinfo_update_output_stream(processinfo, IDoutmval);

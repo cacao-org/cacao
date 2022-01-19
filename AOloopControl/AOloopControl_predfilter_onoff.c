@@ -1,6 +1,7 @@
 /**
  * @file    AOloopControl_predfilter_onoff.c
- * @brief   AO loop control - Predictive Filter ON/OFF through the ARPF multiplicator
+ * @brief   AO loop control - Predictive Filter ON/OFF through the ARPF
+ * multiplicator
  *
  * REAL TIME COMPUTING ROUTINES
  *
@@ -10,8 +11,9 @@
 
 #define _GNU_SOURCE
 
-#include "AOloopControl/AOloopControl.h"
 #include "CommandLineInterface/CLIcore.h"
+
+#include "AOloopControl/AOloopControl.h"
 
 // defined in AOloopControl.c
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array

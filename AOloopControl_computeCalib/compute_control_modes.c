@@ -35,8 +35,15 @@ static CLICMDARGDEF farg[] = {
     {CLIARG_FLOAT32, ".align,OD", "beam outer diameter", "10.0", CLIARG_HIDDEN_DEFAULT, (void **)&alignOD, NULL},
     {CLIARG_UINT32, ".DMxsize", "DM x size", "32", CLIARG_HIDDEN_DEFAULT, (void **)&DMxsize, NULL},
     {CLIARG_UINT32, ".DMysize", "DM y size", "32", CLIARG_HIDDEN_DEFAULT, (void **)&DMysize, NULL},
-    {CLIARG_STR, ".FPS_zRMacqu", "FPS zonal RM acquisition", " ", CLICMDARG_FLAG_NOCLI, FPTYPE_FPSNAME,
-     FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED, (void **)&FPS_zRMacqu, NULL}};
+    {CLIARG_STR,
+     ".FPS_zRMacqu",
+     "FPS zonal RM acquisition",
+     " ",
+     CLICMDARG_FLAG_NOCLI,
+     FPTYPE_FPSNAME,
+     FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+     (void **)&FPS_zRMacqu,
+     NULL}};
 
 // Optional custom configuration setup
 // Runs once at conf startup
@@ -59,14 +66,14 @@ static errno_t customCONFsetup() { return RETURN_SUCCESS; }
 static errno_t customCONFcheck()
 {
     if (data.fpsptr != NULL)
-    {
-    }
+        {
+        }
 
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata = {"compctrlmodes", "compute AO control modes in WFS and DM space",
-                                CLICMD_FIELDS_DEFAULTS};
+static CLICMDDATA CLIcmddata = {
+    "compctrlmodes", "compute AO control modes in WFS and DM space", CLICMD_FIELDS_DEFAULTS};
 
 // detailed help
 static errno_t help_function() { return RETURN_SUCCESS; }
@@ -76,23 +83,23 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     /*IMGID inimg = makeIMGID(inimname);
-    resolveIMGID(&inimg, ERRMODE_ABORT);
+  resolveIMGID(&inimg, ERRMODE_ABORT);
 
-    IMGID outimg = makeIMGID(outimname);
-    resolveIMGID(&outimg, ERRMODE_ABORT);
-    */
+  IMGID outimg = makeIMGID(outimname);
+  resolveIMGID(&outimg, ERRMODE_ABORT);
+  */
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
     // custom initialization
     if (CLIcmddata.cmdsettings->flags & CLICMDFLAG_PROCINFO)
-    {
-        // procinfo is accessible here
-    }
+        {
+            // procinfo is accessible here
+        }
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
 
-    //streamprocess(inimg, outimg);
-    //processinfo_update_output_stream(processinfo, outimg.ID);
+    // streamprocess(inimg, outimg);
+    // processinfo_update_output_stream(processinfo, outimg.ID);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

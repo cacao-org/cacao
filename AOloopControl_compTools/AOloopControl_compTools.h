@@ -1,6 +1,7 @@
 /**
  * @file    AOloopControl_compTools.h
- * @brief   Function prototypes for Adaptive Optics Control loop engine misc computation tools
+ * @brief   Function prototypes for Adaptive Optics Control loop engine misc
+ * computation tools
  *
  * AO engine uses stream data structure
  * .
@@ -13,12 +14,16 @@
 /** @brief Initialize module. */
 void __attribute__((constructor)) libinit_AOloopControl_compTools();
 
-/* =============================================================================================== */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/* ===============================================================================================
+ */
 /** @name AOloopControl_compTools - 1. COMPUTATION UTILITIES & TOOLS
  *  Useful tools */
-/* =============================================================================================== */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/* ===============================================================================================
+ */
 
 /** @brief compute cross product between two 3D arrays */
 imageID AOloopControl_compTools_CrossProduct(const char *ID1_name, const char *ID2_name, const char *IDout_name);

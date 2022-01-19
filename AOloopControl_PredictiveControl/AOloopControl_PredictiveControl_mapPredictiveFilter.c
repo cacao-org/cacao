@@ -10,8 +10,9 @@
 
 #define _GNU_SOURCE
 
-#include "COREMOD_memory/COREMOD_memory.h"
 #include "CommandLineInterface/CLIcore.h"
+
+#include "COREMOD_memory/COREMOD_memory.h"
 
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
 

@@ -17,12 +17,16 @@
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
 
-/* =============================================================================================== */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/* ===============================================================================================
+ */
 /** @name AOloopControl - 3.   LOOP CONTROL INTERFACE - AOloopControl_loop_ctr.c
  *  Set parameters */
-/* =============================================================================================== */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/* ===============================================================================================
+ */
 
 errno_t AOloopControl_setLoopNumber(long loop)
 {
@@ -41,10 +45,10 @@ errno_t AOloopControl_setparam(__attribute__((unused)) long loop, const char *ke
 
     strcpy(kstring, "PEperiod");
     if ((strncmp(key, kstring, strlen(kstring)) == 0) && (pOK == 0))
-    {
-        //AOconf[loop].WFScamPEcorr_period = (long double) value;
-        pOK = 1;
-    }
+        {
+            // AOconf[loop].WFScamPEcorr_period = (long double) value;
+            pOK = 1;
+        }
 
     if (pOK == 0)
         printf("Parameter not found\n");

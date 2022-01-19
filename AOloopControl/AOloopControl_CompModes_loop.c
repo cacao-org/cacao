@@ -20,13 +20,13 @@
 #include <sched.h>
 #include <string.h>
 
-//libraries created by O. Guyon
+#include "CommandLineInterface/CLIcore.h"
+
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_tools/COREMOD_tools.h"
-#include "CommandLineInterface/CLIcore.h"
 #include "info/info.h"
 
 #ifdef HAVE_CUDA
@@ -40,14 +40,17 @@
 
 #define NB_AOloopcontrol 10 // max number of loops
 
-//static int AOlooploadconf_init = 0;
+// static int AOlooploadconf_init = 0;
 
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
 
 #ifdef HAVE_CUDA
-errno_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_WFSref_name, const char *ID_WFSim_name,
-                                     const char *ID_WFSimtot_name, const char *ID_coeff_name)
+errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
+                                     const char *ID_WFSref_name,
+                                     const char *ID_WFSim_name,
+                                     const char *ID_WFSimtot_name,
+                                     const char *ID_coeff_name)
 {
     int *GPUsetM;
     imageID ID_CM;
@@ -79,23 +82,23 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_WFSr
     CORE_logFunctionCall(logfunc_level, logfunc_level_max, 0, __FILE__, __func__, __LINE__, commentstring);
 
     if (aoloopcontrol_var.aoconfID_looptiming == -1)
-    {
-        // LOOPiteration is written in cnt1 of loop timing array
-        if (sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
         {
-            PRINT_ERROR("sprintf wrote <1 char");
+            // LOOPiteration is written in cnt1 of loop timing array
+            if (sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) < 1)
+                {
+                    PRINT_ERROR("sprintf wrote <1 char");
+                }
+            aoloopcontrol_var.aoconfID_looptiming =
+                AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
         }
-        aoloopcontrol_var.aoconfID_looptiming =
-            AOloopControl_IOtools_2Dloadcreate_shmim(imname, " ", aoloopcontrol_var.AOcontrolNBtimers, 1, 0.0);
-    }
 
     GPUcnt = 2;
 
     GPUsetM = (int *)malloc(sizeof(int) * GPUcnt);
     for (uint32_t k = 0; k < GPUcnt; k++)
-    {
-        GPUsetM[k] = k + 5;
-    }
+        {
+            GPUsetM[k] = k + 5;
+        }
 
     ID_CM = image_ID(ID_CM_name);
     wfsxsize = data.image[ID_CM].md[0].size[0];
@@ -127,39 +130,41 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name, const char *ID_WFSr
     totfluxave = 1.0;
     int initWFSref;
     for (;;)
-    {
-        if (initWFSref == 0)
         {
-            printf("Computing reference\n");
-            fflush(stdout);
-            memcpy(data.image[ID_WFSim_n].array.F, data.image[ID_WFSref].array.F, sizeof(float) * wfsxsize * wfsysize);
+            if (initWFSref == 0)
+                {
+                    printf("Computing reference\n");
+                    fflush(stdout);
+                    memcpy(data.image[ID_WFSim_n].array.F,
+                           data.image[ID_WFSref].array.F,
+                           sizeof(float) * wfsxsize * wfsysize);
+                    GPU_loop_MultMat_execute(2, &status, &GPUstatus[0], 1.0, 0.0, 0, 0);
+                    for (uint32_t m = 0; m < NBmodes; m++)
+                        {
+                            data.image[IDcoeff0].array.F[m] = data.image[ID_coefft].array.F[m];
+                        }
+                    printf("\n");
+                    initWFSref = 1;
+                    printf("reference computed\n");
+                    fflush(stdout);
+                }
+
+            memcpy(data.image[ID_WFSim_n].array.F, data.image[ID_WFSim].array.F, sizeof(float) * wfsxsize * wfsysize);
+            COREMOD_MEMORY_image_set_semwait(ID_WFSim_name, 0);
+
             GPU_loop_MultMat_execute(2, &status, &GPUstatus[0], 1.0, 0.0, 0, 0);
+            totfluxave = (1.0 - alpha) * totfluxave + alpha * data.image[ID_WFSimtot].array.F[0];
+
+            data.image[ID_coeff].md[0].write = 1;
             for (uint32_t m = 0; m < NBmodes; m++)
-            {
-                data.image[IDcoeff0].array.F[m] = data.image[ID_coefft].array.F[m];
-            }
-            printf("\n");
-            initWFSref = 1;
-            printf("reference computed\n");
-            fflush(stdout);
+                {
+                    data.image[ID_coeff].array.F[m] =
+                        data.image[ID_coefft].array.F[m] / totfluxave - data.image[IDcoeff0].array.F[m];
+                }
+            data.image[ID_coeff].md[0].cnt0++;
+            data.image[ID_coeff].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
+            data.image[ID_coeff].md[0].write = 0;
         }
-
-        memcpy(data.image[ID_WFSim_n].array.F, data.image[ID_WFSim].array.F, sizeof(float) * wfsxsize * wfsysize);
-        COREMOD_MEMORY_image_set_semwait(ID_WFSim_name, 0);
-
-        GPU_loop_MultMat_execute(2, &status, &GPUstatus[0], 1.0, 0.0, 0, 0);
-        totfluxave = (1.0 - alpha) * totfluxave + alpha * data.image[ID_WFSimtot].array.F[0];
-
-        data.image[ID_coeff].md[0].write = 1;
-        for (uint32_t m = 0; m < NBmodes; m++)
-        {
-            data.image[ID_coeff].array.F[m] =
-                data.image[ID_coefft].array.F[m] / totfluxave - data.image[IDcoeff0].array.F[m];
-        }
-        data.image[ID_coeff].md[0].cnt0++;
-        data.image[ID_coeff].md[0].cnt1 = data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
-        data.image[ID_coeff].md[0].write = 0;
-    }
 
     delete_image_ID("coeff0", DELETE_IMAGE_ERRMODE_WARNING);
     free(sizearray);

@@ -9,11 +9,12 @@ typedef struct
 
     char DMmodesname[80];
     // BLOCKS OF MODES
-    uint32_t DMmodesNBblock; /**< number of mode blocks (read from parameter) */
-    uint32_t NBmodes_block
-        [100]; /**< number of modes within each block (computed from files by AOloopControl_loadconfigure) */
-    uint32_t modeBlockIndex
-        [MAXNBMODES]; /**< block index to which each mode belongs (computed by AOloopControl_loadconfigure) */
+    uint32_t DMmodesNBblock;             /**< number of mode blocks (read from parameter) */
+    uint32_t NBmodes_block[100];         /**< number of modes within each block (computed
+                                  from files by AOloopControl_loadconfigure) */
+    uint32_t modeBlockIndex[MAXNBMODES]; /**< block index to which each mode
+                                          belongs (computed by
+                                          AOloopControl_loadconfigure) */
     uint32_t indexmaxMB[maxNBMB];
     uint32_t NBDMmodes;
 

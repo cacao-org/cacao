@@ -9,21 +9,24 @@
 
 #define _GNU_SOURCE
 
+#include "CommandLineInterface/CLIcore.h"
+
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-#include "CommandLineInterface/CLIcore.h"
 
 #include "AOloopControl.h"
 
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var aoloopcontrol_var;
 
-//aoloopcontrol_var.LOOPNUMBER = 0; // current loop index
+// aoloopcontrol_var.LOOPNUMBER = 0; // current loop index
 
-/* =============================================================================================== */
-/** @name AOloopControl - 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP ON/OFF START/STOP/STEP/RESET
- *  Set parameters */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/** @name AOloopControl - 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP
+ * ON/OFF START/STOP/STEP/RESET Set parameters */
+/* ===============================================================================================
+ */
 
 errno_t AOloopControl_loopon()
 {
@@ -122,24 +125,24 @@ errno_t AOloopControl_loopreset()
         AOloopControl_InitializeMemory(1);
 
     if (aoloopcontrol_var.aoconfID_cmd_modes == -1)
-    {
-        char name[200];
-        if (sprintf(name, "DMmode_cmd_%ld", aoloopcontrol_var.LOOPNUMBER) < 1)
-            PRINT_ERROR("sprintf wrote <1 char");
+        {
+            char name[200];
+            if (sprintf(name, "DMmode_cmd_%ld", aoloopcontrol_var.LOOPNUMBER) < 1)
+                PRINT_ERROR("sprintf wrote <1 char");
 
-        aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
-    }
+            aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
+        }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 0;
     for (unsigned int k = 0; k < AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes; k++)
         data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
 
     for (unsigned int mb = 0; mb < AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock; mb++)
-    {
-        AOloopControl_setgainblock(mb, 0.0);
-        AOloopControl_setlimitblock(mb, 0.01);
-        AOloopControl_setmultfblock(mb, 0.95);
-    }
+        {
+            AOloopControl_setgainblock(mb, 0.0);
+            AOloopControl_setlimitblock(mb, 0.01);
+            AOloopControl_setmultfblock(mb, 0.95);
+        }
 
     return RETURN_SUCCESS;
 }

@@ -9,13 +9,14 @@
 
 #define _GNU_SOURCE
 
+#include "CommandLineInterface/CLIcore.h"
+
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
-#include "CommandLineInterface/CLIcore.h"
 
 #define NB_AOloopcontrol 10 // max number of loops
 
-//static int AOlooploadconf_init = 0;
+// static int AOlooploadconf_init = 0;
 
 // defined in AOloopControl.c
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array

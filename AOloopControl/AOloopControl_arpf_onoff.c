@@ -1,6 +1,7 @@
 /**
  * @file    AOloopControl_arpf_onoff.c
- * @brief   AO loop control - Predictive Filter ON/OFF through the ARPF multiplicator
+ * @brief   AO loop control - Predictive Filter ON/OFF through the ARPF
+ * multiplicator
  *
  * REAL TIME COMPUTING ROUTINES
  *

@@ -11,8 +11,10 @@ typedef struct
     float AUTOTUNE_LIMITS_delta;  // autotune loop increment
 
     int_fast8_t AUTOTUNE_GAINS_ON;
-    float AUTOTUNEGAINS_updateGainCoeff; /**< Averaging coefficient (usually about 0.1) */
-    float AUTOTUNEGAINS_evolTimescale;   /**< Evolution timescale, beyond which errors stop growing */
+    float AUTOTUNEGAINS_updateGainCoeff; /**< Averaging coefficient (usually about
+                                          0.1) */
+    float AUTOTUNEGAINS_evolTimescale;   /**< Evolution timescale, beyond which
+                                          errors stop growing */
     long AUTOTUNEGAINS_NBsamples;        /**< Number of samples */
 } AOLOOPCONF_AutoTune;
 

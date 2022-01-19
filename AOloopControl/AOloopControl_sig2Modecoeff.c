@@ -20,8 +20,9 @@
 #include <sched.h>
 #include <string.h>
 
-#include "AOloopControl/AOloopControl.h"
 #include "CommandLineInterface/CLIcore.h"
+
+#include "AOloopControl/AOloopControl.h"
 
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -35,7 +36,9 @@ extern AOloopControl_var aoloopcontrol_var;
 // assumes the WFS mode basis is already orthogonal
 // removes reference from each frame
 //
-long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_name, const char *WFSmodes_name,
+long AOloopControl_sig2Modecoeff(const char *WFSim_name,
+                                 const char *IDwfsref_name,
+                                 const char *WFSmodes_name,
                                  const char *outname)
 {
     long IDout;
@@ -61,17 +64,17 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_na
 
     mcoeff_ave = (double *)malloc(sizeof(double) * NBmodes);
     if (mcoeff_ave == NULL)
-    {
-        PRINT_ERROR("malloc returns NULL pointer");
-        abort();
-    }
+        {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort();
+        }
 
     mcoeff_rms = (double *)malloc(sizeof(double) * NBmodes);
     if (mcoeff_rms == NULL)
-    {
-        PRINT_ERROR("malloc returns NULL pointer");
-        abort();
-    }
+        {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort();
+        }
 
     create_2Dimage_ID(outname, NBframes, NBmodes, &IDout);
 
@@ -83,35 +86,36 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name, const char *IDwfsref_na
         data.image[IDwfsref].array.F[ii] /= totref;
 
     for (kk = 0; kk < NBframes; kk++)
-    {
-        double totim = 0.0;
-
-        for (ii = 0; ii < wfssize; ii++)
-            totim += data.image[IDwfs].array.F[kk * wfssize + ii];
-        for (ii = 0; ii < wfssize; ii++)
         {
-            data.image[IDwfs].array.F[kk * wfssize + ii] /= totim;
-            data.image[IDwfs].array.F[kk * wfssize + ii] -= data.image[IDwfsref].array.F[ii];
-        }
+            double totim = 0.0;
 
-        for (m = 0; m < NBmodes; m++)
-        {
-            coeff = 0.0;
             for (ii = 0; ii < wfssize; ii++)
-                coeff += data.image[IDmodes].array.F[m * wfssize + ii] * data.image[IDwfs].array.F[kk * wfssize + ii];
-            data.image[IDout].array.F[m * NBframes + kk] = coeff;
-            mcoeff_ave[m] += coeff;
-            mcoeff_rms[m] += coeff * coeff;
+                totim += data.image[IDwfs].array.F[kk * wfssize + ii];
+            for (ii = 0; ii < wfssize; ii++)
+                {
+                    data.image[IDwfs].array.F[kk * wfssize + ii] /= totim;
+                    data.image[IDwfs].array.F[kk * wfssize + ii] -= data.image[IDwfsref].array.F[ii];
+                }
+
+            for (m = 0; m < NBmodes; m++)
+                {
+                    coeff = 0.0;
+                    for (ii = 0; ii < wfssize; ii++)
+                        coeff += data.image[IDmodes].array.F[m * wfssize + ii] *
+                                 data.image[IDwfs].array.F[kk * wfssize + ii];
+                    data.image[IDout].array.F[m * NBframes + kk] = coeff;
+                    mcoeff_ave[m] += coeff;
+                    mcoeff_rms[m] += coeff * coeff;
+                }
         }
-    }
 
     fp = fopen("mode_stats.txt", "w");
     for (m = 0; m < NBmodes; m++)
-    {
-        mcoeff_rms[m] = sqrt(mcoeff_rms[m] / NBframes);
-        mcoeff_ave[m] /= NBframes;
-        fprintf(fp, "%4ld  %12g %12g\n", m, mcoeff_ave[m], mcoeff_rms[m]);
-    }
+        {
+            mcoeff_rms[m] = sqrt(mcoeff_rms[m] / NBframes);
+            mcoeff_ave[m] /= NBframes;
+            fprintf(fp, "%4ld  %12g %12g\n", m, mcoeff_ave[m], mcoeff_rms[m]);
+        }
     fclose(fp);
 
     free(mcoeff_ave);

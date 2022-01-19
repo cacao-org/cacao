@@ -7,10 +7,12 @@
  *
  */
 
+#include "CommandLineInterface/CLIcore.h"
+
 #include "AOloopControl_DM/AOloopControl_DM.h"
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-#include "CommandLineInterface/CLIcore.h"
+
 #include "fft/fft.h"
 #include "image_gen/image_gen.h"
 #include "info/info.h"
@@ -30,27 +32,31 @@ extern AOLOOPCONTROL_DMTURBCONF *dmturbconf; // DM turbulence configuration
 extern int dmturb_loaded;
 extern int SMturbfd;
 
-/* =============================================================================================== */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/* ===============================================================================================
+ */
 /*                                                                                                 */
-/*  TOOLBOX                                                                                        */
+/*  TOOLBOX */
 /*                                                                                                 */
-/* =============================================================================================== */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/* ===============================================================================================
+ */
 
 struct timespec time_diff(struct timespec start, struct timespec end)
 {
     struct timespec temp;
     if ((end.tv_nsec - start.tv_nsec) < 0)
-    {
-        temp.tv_sec = end.tv_sec - start.tv_sec - 1;
-        temp.tv_nsec = 1000000000 + end.tv_nsec - start.tv_nsec;
-    }
+        {
+            temp.tv_sec = end.tv_sec - start.tv_sec - 1;
+            temp.tv_nsec = 1000000000 + end.tv_nsec - start.tv_nsec;
+        }
     else
-    {
-        temp.tv_sec = end.tv_sec - start.tv_sec;
-        temp.tv_nsec = end.tv_nsec - start.tv_nsec;
-    }
+        {
+            temp.tv_sec = end.tv_sec - start.tv_sec;
+            temp.tv_nsec = end.tv_nsec - start.tv_nsec;
+        }
     return temp;
 }
 
@@ -60,8 +66,8 @@ struct timespec time_diff(struct timespec start, struct timespec end)
 // innerscale and outerscale in pixel
 // von Karman spectrum
 //
-errno_t make_master_turbulence_screen_local(const char *ID_name1, const char *ID_name2, long size, float outerscale,
-                                            float innerscale)
+errno_t make_master_turbulence_screen_local(
+    const char *ID_name1, const char *ID_name2, long size, float outerscale, float innerscale)
 {
     imageID ID;
     float value, C1, C2;
@@ -69,7 +75,7 @@ errno_t make_master_turbulence_screen_local(const char *ID_name1, const char *ID
     long Dlim = 3;
     imageID IDv;
 
-    //int OUTERSCALE_MODE = 1; // 1 if outer scale
+    // int OUTERSCALE_MODE = 1; // 1 if outer scale
     double OUTERscale_f0;
     double INNERscale_f0;
     double dx, dy, r;
@@ -78,20 +84,20 @@ errno_t make_master_turbulence_screen_local(const char *ID_name1, const char *ID
     double iscoeff;
 
     /*  IDv = variable_ID("OUTERSCALE");
-      if(IDv!=-1)
-        {
-          outerscale = data.variable[IDv].value.f;
-          printf("Outer scale = %f pix\n", outerscale);
-        }
-     */
+    if(IDv!=-1)
+      {
+        outerscale = data.variable[IDv].value.f;
+        printf("Outer scale = %f pix\n", outerscale);
+      }
+   */
 
     IDv = variable_ID("RLIM");
     if (IDv != -1)
-    {
-        RLIMMODE = 1;
-        rlim = data.variable[IDv].value.f;
-        printf("R limit = %f pix\n", rlim);
-    }
+        {
+            RLIMMODE = 1;
+            rlim = data.variable[IDv].value.f;
+            printf("R limit = %f pix\n", rlim);
+        }
 
     OUTERscale_f0 = 1.0 * size / outerscale; // [1/pix] in F plane
     INNERscale_f0 = (5.92 / (2.0 * M_PI)) * size / innerscale;
@@ -103,27 +109,29 @@ errno_t make_master_turbulence_screen_local(const char *ID_name1, const char *ID
     create_2Dimage_ID("tmpd", size, size, &ID);
     for (uint32_t ii = 0; ii < size; ii++)
         for (uint32_t jj = 0; jj < size; jj++)
-        {
-            dx = 1.0 * ii - size / 2;
-            dy = 1.0 * jj - size / 2;
+            {
+                dx = 1.0 * ii - size / 2;
+                dy = 1.0 * jj - size / 2;
 
-            if (RLIMMODE == 1)
-            {
-                r = sqrt(dx * dx + dy * dy);
-                if (r < rlim)
-                {
-                    data.image[ID].array.F[jj * size + ii] = 0.0;
-                }
+                if (RLIMMODE == 1)
+                    {
+                        r = sqrt(dx * dx + dy * dy);
+                        if (r < rlim)
+                            {
+                                data.image[ID].array.F[jj * size + ii] = 0.0;
+                            }
+                        else
+                            {
+                                data.image[ID].array.F[jj * size + ii] =
+                                    sqrt(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
+                            }
+                    }
                 else
-                {
-                    data.image[ID].array.F[jj * size + ii] = sqrt(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
-                }
+                    {
+                        data.image[ID].array.F[jj * size + ii] =
+                            sqrt(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
+                    }
             }
-            else
-            {
-                data.image[ID].array.F[jj * size + ii] = sqrt(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
-            }
-        }
     //  data.image[ID].array.F[size/2*size+size/2+10] = 1.0;
 
     // period [pix] = size/sqrt(dx*dx+dy*dy)
@@ -134,12 +142,12 @@ errno_t make_master_turbulence_screen_local(const char *ID_name1, const char *ID
     ID = image_ID("tmpg");
     for (uint32_t ii = 0; ii < size; ii++)
         for (uint32_t jj = 0; jj < size; jj++)
-        {
-            dx = 1.0 * ii - size / 2;
-            dy = 1.0 * jj - size / 2;
-            iscoeff = exp(-(dx * dx + dy * dy) / INNERscale_f0 / INNERscale_f0);
-            data.image[ID].array.F[jj * size + ii] *= sqrt(iscoeff); // power -> amplitude : sqrt
-        }
+            {
+                dx = 1.0 * ii - size / 2;
+                dy = 1.0 * jj - size / 2;
+                iscoeff = exp(-(dx * dx + dy * dy) / INNERscale_f0 / INNERscale_f0);
+                data.image[ID].array.F[jj * size + ii] *= sqrt(iscoeff); // power -> amplitude : sqrt
+            }
 
     arith_image_cstpow("tmpd", 11.0 / 6.0, "tmpd1");
     delete_image_ID("tmpd", DELETE_IMAGE_ERRMODE_WARNING);
@@ -163,10 +171,10 @@ errno_t make_master_turbulence_screen_local(const char *ID_name1, const char *ID
     cnt = 0;
     for (uint32_t ii = 1; ii < Dlim; ii++)
         for (uint32_t jj = 1; jj < Dlim; jj++)
-        {
-            value += log10(data.image[ID].array.F[jj * size + ii]) - 5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
-            cnt++;
-        }
+            {
+                value += log10(data.image[ID].array.F[jj * size + ii]) - 5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
+                cnt++;
+            }
     // save_fl_fits("strf","strf.fits");
     delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
     C1 = pow(10.0, value / cnt);
@@ -177,10 +185,10 @@ errno_t make_master_turbulence_screen_local(const char *ID_name1, const char *ID
     cnt = 0;
     for (uint32_t ii = 1; ii < Dlim; ii++)
         for (uint32_t jj = 1; jj < Dlim; jj++)
-        {
-            value += log10(data.image[ID].array.F[jj * size + ii]) - 5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
-            cnt++;
-        }
+            {
+                value += log10(data.image[ID].array.F[jj * size + ii]) - 5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
+                cnt++;
+            }
     delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
     C2 = pow(10.0, value / cnt);
 

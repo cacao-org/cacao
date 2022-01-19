@@ -9,10 +9,11 @@
 
 #define _GNU_SOURCE
 
+#include "CommandLineInterface/CLIcore.h"
+
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-#include "CommandLineInterface/CLIcore.h"
 
 // defined in AOloopControl.c
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
@@ -20,9 +21,12 @@ extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 // defined in AOloopControl.c
 extern AOloopControl_var aoloopcontrol_var;
 
-/* =============================================================================================== */
-/** @name AOloopControl - 8.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING                     */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/** @name AOloopControl - 8.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING
+ */
+/* ===============================================================================================
+ */
 
 errno_t AOloopControl_AUTOTUNE_LIMITS_on()
 {
@@ -47,34 +51,34 @@ errno_t AOloopControl_AUTOTUNE_LIMITS_off()
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     if (aoloopcontrol_var.aoconfID_limitb == -1)
-    {
-        char imname[200];
+        {
+            char imname[200];
 
-        if (sprintf(imname, "aol%ld_limitb", aoloopcontrol_var.LOOPNUMBER) < 1)
-            PRINT_ERROR("sprintf wrote <1 char");
+            if (sprintf(imname, "aol%ld_limitb", aoloopcontrol_var.LOOPNUMBER) < 1)
+                PRINT_ERROR("sprintf wrote <1 char");
 
-        aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
-    }
+            aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
+        }
 
     NBblock = data.image[aoloopcontrol_var.aoconfID_limitb].md[0].size[0];
 
     // Save Limits
     for (block = 0; block < NBblock; block++)
-    {
-        FILE *fp;
-        char fname[200];
-
-        sprintf(fname, "conf/param_limitb%02d.txt", block);
-
-        if ((fp = fopen(fname, "w")) == NULL)
-            PRINT_ERROR("Cannot open file");
-        else
         {
-            fprintf(fp, "%7.5f\n", data.image[aoloopcontrol_var.aoconfID_limitb].array.F[block]);
-        }
+            FILE *fp;
+            char fname[200];
 
-        fclose(fp);
-    }
+            sprintf(fname, "conf/param_limitb%02d.txt", block);
+
+            if ((fp = fopen(fname, "w")) == NULL)
+                PRINT_ERROR("Cannot open file");
+            else
+                {
+                    fprintf(fp, "%7.5f\n", data.image[aoloopcontrol_var.aoconfID_limitb].array.F[block]);
+                }
+
+            fclose(fp);
+        }
 
     return RETURN_SUCCESS;
 }

@@ -52,14 +52,14 @@ errno_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, __att
     list_image_ID();
 
     /*    cnt0_old = data.image[IDinb0].md[0].cnt0;
-        cnt1_old = data.image[IDinb1].md[0].cnt0;
+      cnt1_old = data.image[IDinb1].md[0].cnt0;
 
-        xsize = data.image[IDinb0].md[0].size[0];
-        ysize = data.image[IDinb0].md[0].size[1];
-        xysize = xsize*ysize;
-        zsize = data.image[IDinb0].md[0].size[2];
-        atype = data.image[IDinb0].md[0].atype;
-      */
+      xsize = data.image[IDinb0].md[0].size[0];
+      ysize = data.image[IDinb0].md[0].size[1];
+      xysize = xsize*ysize;
+      zsize = data.image[IDinb0].md[0].size[2];
+      atype = data.image[IDinb0].md[0].atype;
+    */
 
     return RETURN_SUCCESS;
 }

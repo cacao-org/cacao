@@ -6,18 +6,23 @@
  *
  *
  * ## Change log
- * - 20180518	Guyon	File creation (split from AOloopControl_PredictiveControl)
+ * - 20180518	Guyon	File creation (split from
+ * AOloopControl_PredictiveControl)
  *
  *
  */
 
 #define _GNU_SOURCE
 
-/* =============================================================================================== */
-/* =============================================================================================== */
-/*                                        HEADER FILES                                             */
-/* =============================================================================================== */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/* ===============================================================================================
+ */
+/*                                        HEADER FILES */
+/* ===============================================================================================
+ */
+/* ===============================================================================================
+ */
 
 #include <malloc.h>
 #include <math.h>
@@ -50,9 +55,10 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
 
 #include <fitsio.h>
 
+#include "CommandLineInterface/CLIcore.h"
+
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-#include "CommandLineInterface/CLIcore.h"
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
@@ -89,8 +95,8 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
  *          Number of input buffers to merge for each output
  *
  */
-imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop, long PFblock, long PFblockStart,
-                                                              long PFblockEnd, long NBbuff)
+imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
+    long loop, long PFblock, long PFblockStart, long PFblockEnd, long NBbuff)
 {
     imageID IDinb0;
     imageID IDinb1;
@@ -127,25 +133,25 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop, long PF
     PROCESSINFO *processinfo;
 
     if (data.processinfo == 1)
-    {
-        // CREATE PROCESSINFO ENTRY
-        // see processtools.c in module CommandLineInterface for details
-        //
+        {
+            // CREATE PROCESSINFO ENTRY
+            // see processtools.c in module CommandLineInterface for details
+            //
 
-        char pinfoname[200]; // short name for the processinfo instance
-        // avoid spaces, name should be human-readable
+            char pinfoname[200]; // short name for the processinfo instance
+            // avoid spaces, name should be human-readable
 
-        sprintf(pinfoname, "PFwatchInput-loop%ld-block%ld", loop, PFblock);
-        processinfo = processinfo_shm_create(pinfoname, 0);
-        processinfo->loopstat = 0; // loop initialization
-        strcpy(processinfo->source_FUNCTION, __FUNCTION__);
-        strcpy(processinfo->source_FILE, __FILE__);
-        processinfo->source_LINE = __LINE__;
+            sprintf(pinfoname, "PFwatchInput-loop%ld-block%ld", loop, PFblock);
+            processinfo = processinfo_shm_create(pinfoname, 0);
+            processinfo->loopstat = 0; // loop initialization
+            strcpy(processinfo->source_FUNCTION, __FUNCTION__);
+            strcpy(processinfo->source_FILE, __FILE__);
+            processinfo->source_LINE = __LINE__;
 
-        char msgstring[200];
-        sprintf(msgstring, "%ld->%ld %ld buffers", PFblockStart, PFblockEnd, NBbuff);
-        processinfo_WriteMessage(processinfo, msgstring);
-    }
+            char msgstring[200];
+            sprintf(msgstring, "%ld->%ld %ld buffers", PFblockStart, PFblockEnd, NBbuff);
+            processinfo_WriteMessage(processinfo, msgstring);
+        }
 
     // CATCH SIGNALS
 
@@ -217,10 +223,10 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop, long PF
     fflush(stdout);
     imsizearray = (uint32_t *)malloc(sizeof(uint32_t) * 3);
     if (imsizearray == NULL)
-    {
-        PRINT_ERROR("malloc returns NULL pointer");
-        abort();
-    }
+        {
+            PRINT_ERROR("malloc returns NULL pointer");
+            abort();
+        }
     imsizearray[0] = PFblockSize;
     imsizearray[1] = 1;
     imsizearray[2] = zsize;
@@ -244,144 +250,148 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop, long PF
     int loopOK = 1;
 
     while (loopOK == 1)
-    {
-
-        if (data.processinfo == 1)
         {
-            while (processinfo->CTRLval == 1) // pause
-                usleep(50);
 
-            if (processinfo->CTRLval == 2) // single iteration
-                processinfo->CTRLval = 1;
-
-            if (processinfo->CTRLval == 3) // exit loop
-            {
-                loopOK = 0;
-            }
-        }
-
-        cnt0 = data.image[IDinb0].md[0].cnt0;
-        cnt1 = data.image[IDinb1].md[0].cnt0;
-
-        if (cnt0 != cnt0_old)
-        {
-            cube = 0;
-            cnt0_old = cnt0;
-            IDinb = IDinb0;
-            Tupdate = 1;
-        }
-
-        if (cnt1 != cnt1_old)
-        {
-            cube = 1;
-            cnt1_old = cnt1;
-            IDinb = IDinb1;
-            Tupdate = 1;
-        }
-
-        if (Tupdate == 1)
-        {
-            data.image[IDout].md[0].write = 1;
-            long kkin;
-            for (kkin = 0; kkin < zsizein; kkin++)
-            {
-                kk = buffindex * zsizein + kkin;
-                for (ii = 0; ii < PFblockSize; ii++)
-                    data.image[IDout].array.F[kk * PFblockSize + ii] =
-                        data.image[IDinb].array.F[kkin * xysize + (ii + PFblockStart)];
-            }
-            data.image[IDout].md[0].write = 0;
-
-            printf("[%3ld/%3ld  %d]\n", buffindex, NBbuff, cube);
-            Tupdate = 0;
-            buffindex++;
-        }
-
-        if (buffindex == NBbuff) // write output
-        {
-            t = time(NULL);
-            uttime = gmtime(&t);
-            clock_gettime(CLOCK_REALTIME, &timenow);
-            printf("%02d:%02d:%02ld.%09ld  NEW TELEMETRY BUFFER AVAILABLE [%ld]\n", uttime->tm_hour, uttime->tm_min,
-                   timenow.tv_sec % 60, timenow.tv_nsec, outcnt);
-
-            data.image[IDout].md[0].write = 1;
-            for (ii = 0; ii < PFblockSize; ii++) // Remove time averaged value
-            {
-                ave = 0.0;
-                for (kk = 0; kk < zsize; kk++)
-                    ave += data.image[IDout].array.F[kk * PFblockSize + ii];
-
-                ave /= zsize;
-                for (kk = 0; kk < zsize; kk++)
-                    data.image[IDout].array.F[kk * PFblockSize + ii] -= ave;
-            }
-
-            COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
-            data.image[IDout].md[0].cnt0++;
-            data.image[IDout].md[0].write = 0;
-
-            buffindex = 0;
-            outcnt++;
-        }
-
-        usleep(twaitus);
-
-        // process signals
-
-        if (data.signal_TERM == 1)
-        {
-            loopOK = 0;
             if (data.processinfo == 1)
-                processinfo_SIGexit(processinfo, SIGTERM);
-        }
+                {
+                    while (processinfo->CTRLval == 1) // pause
+                        usleep(50);
 
-        if (data.signal_INT == 1)
-        {
-            loopOK = 0;
+                    if (processinfo->CTRLval == 2) // single iteration
+                        processinfo->CTRLval = 1;
+
+                    if (processinfo->CTRLval == 3) // exit loop
+                        {
+                            loopOK = 0;
+                        }
+                }
+
+            cnt0 = data.image[IDinb0].md[0].cnt0;
+            cnt1 = data.image[IDinb1].md[0].cnt0;
+
+            if (cnt0 != cnt0_old)
+                {
+                    cube = 0;
+                    cnt0_old = cnt0;
+                    IDinb = IDinb0;
+                    Tupdate = 1;
+                }
+
+            if (cnt1 != cnt1_old)
+                {
+                    cube = 1;
+                    cnt1_old = cnt1;
+                    IDinb = IDinb1;
+                    Tupdate = 1;
+                }
+
+            if (Tupdate == 1)
+                {
+                    data.image[IDout].md[0].write = 1;
+                    long kkin;
+                    for (kkin = 0; kkin < zsizein; kkin++)
+                        {
+                            kk = buffindex * zsizein + kkin;
+                            for (ii = 0; ii < PFblockSize; ii++)
+                                data.image[IDout].array.F[kk * PFblockSize + ii] =
+                                    data.image[IDinb].array.F[kkin * xysize + (ii + PFblockStart)];
+                        }
+                    data.image[IDout].md[0].write = 0;
+
+                    printf("[%3ld/%3ld  %d]\n", buffindex, NBbuff, cube);
+                    Tupdate = 0;
+                    buffindex++;
+                }
+
+            if (buffindex == NBbuff) // write output
+                {
+                    t = time(NULL);
+                    uttime = gmtime(&t);
+                    clock_gettime(CLOCK_REALTIME, &timenow);
+                    printf("%02d:%02d:%02ld.%09ld  NEW TELEMETRY BUFFER AVAILABLE [%ld]\n",
+                           uttime->tm_hour,
+                           uttime->tm_min,
+                           timenow.tv_sec % 60,
+                           timenow.tv_nsec,
+                           outcnt);
+
+                    data.image[IDout].md[0].write = 1;
+                    for (ii = 0; ii < PFblockSize; ii++) // Remove time averaged value
+                        {
+                            ave = 0.0;
+                            for (kk = 0; kk < zsize; kk++)
+                                ave += data.image[IDout].array.F[kk * PFblockSize + ii];
+
+                            ave /= zsize;
+                            for (kk = 0; kk < zsize; kk++)
+                                data.image[IDout].array.F[kk * PFblockSize + ii] -= ave;
+                        }
+
+                    COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
+                    data.image[IDout].md[0].cnt0++;
+                    data.image[IDout].md[0].write = 0;
+
+                    buffindex = 0;
+                    outcnt++;
+                }
+
+            usleep(twaitus);
+
+            // process signals
+
+            if (data.signal_TERM == 1)
+                {
+                    loopOK = 0;
+                    if (data.processinfo == 1)
+                        processinfo_SIGexit(processinfo, SIGTERM);
+                }
+
+            if (data.signal_INT == 1)
+                {
+                    loopOK = 0;
+                    if (data.processinfo == 1)
+                        processinfo_SIGexit(processinfo, SIGINT);
+                }
+
+            if (data.signal_ABRT == 1)
+                {
+                    loopOK = 0;
+                    if (data.processinfo == 1)
+                        processinfo_SIGexit(processinfo, SIGABRT);
+                }
+
+            if (data.signal_BUS == 1)
+                {
+                    loopOK = 0;
+                    if (data.processinfo == 1)
+                        processinfo_SIGexit(processinfo, SIGBUS);
+                }
+
+            if (data.signal_SEGV == 1)
+                {
+                    loopOK = 0;
+                    if (data.processinfo == 1)
+                        processinfo_SIGexit(processinfo, SIGSEGV);
+                }
+
+            if (data.signal_HUP == 1)
+                {
+                    loopOK = 0;
+                    if (data.processinfo == 1)
+                        processinfo_SIGexit(processinfo, SIGHUP);
+                }
+
+            if (data.signal_PIPE == 1)
+                {
+                    loopOK = 0;
+                    if (data.processinfo == 1)
+                        processinfo_SIGexit(processinfo, SIGPIPE);
+                }
+
+            loopcnt++;
             if (data.processinfo == 1)
-                processinfo_SIGexit(processinfo, SIGINT);
+                processinfo->loopcnt = loopcnt;
         }
-
-        if (data.signal_ABRT == 1)
-        {
-            loopOK = 0;
-            if (data.processinfo == 1)
-                processinfo_SIGexit(processinfo, SIGABRT);
-        }
-
-        if (data.signal_BUS == 1)
-        {
-            loopOK = 0;
-            if (data.processinfo == 1)
-                processinfo_SIGexit(processinfo, SIGBUS);
-        }
-
-        if (data.signal_SEGV == 1)
-        {
-            loopOK = 0;
-            if (data.processinfo == 1)
-                processinfo_SIGexit(processinfo, SIGSEGV);
-        }
-
-        if (data.signal_HUP == 1)
-        {
-            loopOK = 0;
-            if (data.processinfo == 1)
-                processinfo_SIGexit(processinfo, SIGHUP);
-        }
-
-        if (data.signal_PIPE == 1)
-        {
-            loopOK = 0;
-            if (data.processinfo == 1)
-                processinfo_SIGexit(processinfo, SIGPIPE);
-        }
-
-        loopcnt++;
-        if (data.processinfo == 1)
-            processinfo->loopcnt = loopcnt;
-    }
 
     if (data.processinfo == 1)
         processinfo_cleanExit(processinfo);

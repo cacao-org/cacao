@@ -9,21 +9,25 @@
  *
  * @bug No known bugs.
  *
- * @see http://oguyon.github.io/AdaptiveOpticsControl/src/AOloopControl/doc/AOloopControl.html
+ * @see
+ * http://oguyon.github.io/AdaptiveOpticsControl/src/AOloopControl/doc/AOloopControl.html
  *
  * @defgroup AOloopControl_streams Image streams
  * @defgroup AOloopControl_AOLOOPCONTROL_CONF AOloopControl main data structure
  *
  */
 
-/* =============================================================================================== */
-/** @brief Load / Setup configuration                                                              */
-/* =============================================================================================== */
+/* ===============================================================================================
+ */
+/** @brief Load / Setup configuration */
+/* ===============================================================================================
+ */
 
 /**
  * ## Purpose
  *
- * load / setup configuration - amazingly loooong function, I am proud of you Boss !
+ * load / setup configuration - amazingly loooong function, I am proud of you
+ * Boss !
  *
  * ## Arguments
  *
@@ -50,10 +54,10 @@
 int_fast8_t AOloopControl_loadconfigure_cli()
 {
     if (CLI_checkarg(1, 2) == 0)
-    {
-        AOloopControl_loadconfigure(data.cmdargtoken[1].val.numl, 1, 10);
-        return 0;
-    }
+        {
+            AOloopControl_loadconfigure(data.cmdargtoken[1].val.numl, 1, 10);
+            return 0;
+        }
     else
         return 1;
 }
