@@ -192,7 +192,7 @@ static errno_t compute_function()
                 {
                     mvalout[mi] = 0.0;
                 }
-
+            /*
             if (mvalout[mi] > limitval)
                 {
                     mvalout[mi] = limitval;
@@ -212,6 +212,7 @@ static errno_t compute_function()
                 {
                     avemval[mi] = -limitval;
                 }
+                */
         }
 
     memcpy(data.image[IDoutmval].array.F, mvalout, sizeof(float) * NBmode);
