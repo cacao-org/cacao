@@ -161,8 +161,8 @@ static errno_t compute_function()
             float x = 1.0 * mi / NBmode;
 
             float gain = (*loopgain);
-            gain *= pow((*galpha), x);
-            gain *= data.image[IDmodegainfact].array.F[mi];
+            //            gain *= pow((*galpha), x);
+            //            gain *= data.image[IDmodegainfact].array.F[mi];
 
             if (mi > (*mimax))
                 {
