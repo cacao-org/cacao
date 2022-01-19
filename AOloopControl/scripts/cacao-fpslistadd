@@ -853,7 +853,103 @@ fi
 
 
 
+CACAO_CMDMINDEX="2"
 
+
+if [ "${CACAO_FPSPROC_CMDMCOMB}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_CMDMCOMB"
+    # ==============================================================================
+    # ==========  DM combination (control modes) ===================================
+    # ==============================================================================
+
+    # FPS name
+    fpsname="DMcomb"
+    fpsarg0="cm${CACAO_DMINDEX}"
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "${fpsname}      cacaodm.DMcomb       cm${CACAO_DMINDEX}"  >> fpslist.txt
+
+        addfpscmdheader
+        # infinite loop
+        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+        addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+        addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
+        addfpscmd "setval ${fpsfname}.DMindex ${CACAO_CMDMINDEX}"
+        addfpscmd "setval ${fpsfname}.DMxsize 100"
+        addfpscmd "setval ${fpsfname}.DMysize 1"
+    fi
+else
+    echolog "CACAO_FPSPROC_CMDMCOMB = OFF"
+fi
+
+
+
+
+
+if [ "${CACAO_FPSPROC_ACQLINCMRM}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_ACQLINCMRM"
+    # ==============================================================================
+    # ========== Acquire Linear Response Matrix (control modes - MODAL) ===============
+    # ==============================================================================
+
+    # FPS name
+    fpsname="acqlin_cmRM"
+    fpsarg0="cm${CACAO_LOOPNUMBER}"
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
+
+        addfpscmdheader
+        addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+
+        addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-cm${CACAO_DMINDEX}"
+
+
+        # default startup values
+        addfpscmd "setval ${fpsfname}.normalize ON"
+        addfpscmd "setval ${fpsfname}.Hpoke OFF"
+        addfpscmd "setval ${fpsfname}.autoTiming ON"
+        addfpscmd "setval ${fpsfname}.compDMmask OFF"
+        addfpscmd "setval ${fpsfname}.compMpoke OFF"
+
+
+        addfpscmd "setval ${fpsfname}.timing.NBave 1"
+        addfpscmd "setval ${fpsfname}.timing.NBcycle 4"
+        addfpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
+        addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
+
+
+        addfpscmd "setval ${fpsfname}.fn_pokeC respM_LOmodes.fits"
+
+        addfpscmd "setval ${fpsfname}.MaskMode OFF"
+
+        addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-NULL"
+        addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL"
+        addfpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
+        addfpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
+
+
+        #addfpscmd "setval ${fpsfname}.out.dirname ${outdir}"
+
+    fi
+else
+    echolog "OFF CACAO_FPSPROC_ACQLINCMRM"
+fi
 
 
 
