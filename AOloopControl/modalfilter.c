@@ -182,7 +182,7 @@ static errno_t compute_function()
       }
       */
 
-            avemval[mi] = (1.0 - avegain) * avemval[mi] + avegain * (imgin.im->array.F[mi] * gain);
+            //avemval[mi] = (1.0 - avegain) * avemval[mi] + avegain * (imgin.im->array.F[mi] * gain);
 
             // update long term average if input mode values
             mvalout[mi] = (1.0 - gain) * mvalout[mi] - gain * (imgin.im->array.F[mi]);
