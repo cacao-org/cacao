@@ -7,8 +7,8 @@
 #include "CommandLineInterface/CLIcore.h"
 
 // Local variables pointers
-static uint32_t *AOloop;
-long fpi_AOloop;
+static uint32_t *AOloopindex;
+long fpi_AOloopindex;
 
 static uint32_t *semindex;
 long fpi_semindex;
@@ -60,7 +60,7 @@ static int64_t *compnormwfsim;
 long fpi_compnormwfsim;
 
 static CLICMDARGDEF farg[] = {
-    {CLIARG_UINT32, ".AOloop", "loop index", "0", CLIARG_VISIBLE_DEFAULT, (void **)&AOloop, &fpi_AOloop},
+    {CLIARG_UINT32, ".AOloopindex", "loop index", "0", CLIARG_VISIBLE_DEFAULT, (void **)&AOloopindex, &fpi_AOloopindex},
     {CLIARG_UINT32,
      ".semindex",
      "input semaphore index",
@@ -206,7 +206,7 @@ static errno_t compute_function()
 
     // connect to WFS image
     char WFSname[100];
-    sprintf(WFSname, "aol%u_wfsim", *AOloop);
+    sprintf(WFSname, "aol%u_wfsim", *AOloopindex);
     long ID_wfsim = read_sharedmem_image(WFSname);
     if (ID_wfsim == -1)
         {
@@ -230,19 +230,19 @@ static errno_t compute_function()
         naxes[0] = sizexWFS;
         naxes[1] = sizeyWFS;
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS0", *AOloop);
+        WRITE_IMAGENAME(name, "aol%u_imWFS0", *AOloopindex);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS0);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS1", *AOloop);
+        WRITE_IMAGENAME(name, "aol%u_imWFS1", *AOloopindex);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS1);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS2", *AOloop);
+        WRITE_IMAGENAME(name, "aol%u_imWFS2", *AOloopindex);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS2);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS3", *AOloop);
+        WRITE_IMAGENAME(name, "aol%u_imWFS3", *AOloopindex);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS3);
 
-        WRITE_IMAGENAME(name, "aol%u_wfsrefc", *AOloop);
+        WRITE_IMAGENAME(name, "aol%u_wfsrefc", *AOloopindex);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &IDwfsrefc);
 
         //        AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS,
@@ -254,7 +254,7 @@ static errno_t compute_function()
     imageID IDwfsmask = -1;
     {
         char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%u_wfsmask", *AOloop);
+        WRITE_IMAGENAME(name, "aol%u_wfsmask", *AOloopindex);
         IDwfsmask = read_sharedmem_image(name);
         printf("reading image %s -> ID = %ld\n", name, IDwfsmask);
     }
@@ -305,7 +305,7 @@ static errno_t compute_function()
     imageID IDwfsdark = -1;
     {
         char wfsdarkname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloop);
+        WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloopindex);
         IDwfsdark = image_ID(wfsdarkname);
         if (IDwfsdark == -1)
             {
@@ -318,7 +318,7 @@ static errno_t compute_function()
     imageID IDwfsref = -1;
     {
         char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%u_wfsref", *AOloop);
+        WRITE_IMAGENAME(name, "aol%u_wfsref", *AOloopindex);
         IDwfsref = read_sharedmem_image(name);
         printf("reading image %s -> ID = %ld\n", name, IDwfsref);
     }

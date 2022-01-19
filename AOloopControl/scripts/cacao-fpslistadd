@@ -285,7 +285,7 @@ if [ "${CACAO_FPSPROC_ACQUWFS}" = "ON" ]; then
         echo "${fpsname}           cacaoio.acquireWFS     ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.AOloop ${CACAO_LOOPNUMBER}"
 
         # run simulator at finite frame rate
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
@@ -337,7 +337,7 @@ if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
 
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
@@ -400,7 +400,7 @@ if [ "${CACAO_FPSPROC_ACQWFSLINCALZ}" = "ON" ]; then
 
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
@@ -456,7 +456,7 @@ if [ "${CACAO_FPSPROC_ACQLINLORM}" = "ON" ]; then
         echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
@@ -574,7 +574,7 @@ if [ "${CACAO_FPSPROC_COMPSCM}" = "ON" ]; then
         echo "${fpsname}         cacaocc.aolRM2CM       ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.fname_respM fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/zrespM_mn.fits"
 
         #fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
@@ -616,7 +616,7 @@ if [ "${CACAO_FPSPROC_MODESEXTRACTWFSGPU}" = "ON" ]; then
         echo "${fpsname}         cuda.cudaextrmodes       ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
         # input frame
         addfpscmd "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_imWFS0"
@@ -678,7 +678,7 @@ if [ "${CACAO_FPSPROC_AOLOOP_RUN}" = "ON" ]; then
         echo "${fpsname}         cacao.aolrun       ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_imWFS1"
 
         addfpscmd "setval ${fpsfname}.loopgain 0.02"
@@ -916,7 +916,7 @@ if [ "${CACAO_FPSPROC_ACQLINCMRM}" = "ON" ]; then
         echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.loop ${CACAO_CMLOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_CMLOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-cm${CACAO_DMINDEX}"
