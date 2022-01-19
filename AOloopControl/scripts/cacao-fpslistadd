@@ -901,7 +901,9 @@ if [ "${CACAO_FPSPROC_ACQLINCMRM}" = "ON" ]; then
 
     # FPS name
     fpsname="acqlin_cmRM"
-    fpsarg0="cm${CACAO_LOOPNUMBER}"
+    fpsarg0="${CACAO_LOOPNUMBER}"
+
+	CACAO_CMLOOPNUMBER="2"
 
     # FPS full name
     fpsfname="${fpsname}-${fpsarg0}"
@@ -914,7 +916,7 @@ if [ "${CACAO_FPSPROC_ACQLINCMRM}" = "ON" ]; then
         echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.loop ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.loop ${CACAO_CMLOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-cm${CACAO_DMINDEX}"
