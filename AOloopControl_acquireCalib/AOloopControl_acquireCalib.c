@@ -2760,6 +2760,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN()
             normalizeflag = 1;
         }
 
+    EXECUTE_SYSTEM_COMMAND("echo %d > NORMALIZE.dat", normalizeflag);
+
     char fname[STRINGMAXLEN_FULLFILENAME];
 
     char outdirnameA[STRINGMAXLEN_DIRNAME];
