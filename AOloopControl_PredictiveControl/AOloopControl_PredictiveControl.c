@@ -73,71 +73,80 @@ INIT_MODULE_LIB(AOloopControl_PredictiveControl)
 /** @brief CLI function for AOloopControl_builPFloop_WatchInput */
 errno_t AOloopControl_PredictiveControl_builPFloop_WatchInput_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) + CLI_checkarg(4, 2) + CLI_checkarg(5, 2) == 0)
-        {
-            AOloopControl_PredictiveControl_builPFloop_WatchInput(data.cmdargtoken[1].val.numl,
-                                                                  data.cmdargtoken[2].val.numl,
-                                                                  data.cmdargtoken[3].val.numl,
-                                                                  data.cmdargtoken[4].val.numl,
-                                                                  data.cmdargtoken[5].val.numl);
+    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+            CLI_checkarg(4, 2) + CLI_checkarg(5, 2) ==
+        0)
+    {
+        AOloopControl_PredictiveControl_builPFloop_WatchInput(
+            data.cmdargtoken[1].val.numl,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numl,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numl);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /** @brief CLI function for AOloopControl_mapPredictiveFilter */
 errno_t AOloopControl_PredictiveControl_mapPredictiveFilter_cli()
 {
     if (CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) == 0)
-        {
-            AOloopControl_PredictiveControl_mapPredictiveFilter(
-                data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.numf);
+    {
+        AOloopControl_PredictiveControl_mapPredictiveFilter(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numf);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /** @brief CLI function for AOloopControl_testPredictiveFilter */
 errno_t AOloopControl_PredictiveControl_testPredictiveFilter_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) + CLI_checkarg(4, 2) + CLI_checkarg(5, 3) == 0)
-        {
-            AOloopControl_PredictiveControl_testPredictiveFilter(data.cmdargtoken[1].val.string,
-                                                                 data.cmdargtoken[2].val.numl,
-                                                                 data.cmdargtoken[3].val.numf,
-                                                                 data.cmdargtoken[4].val.numl,
-                                                                 data.cmdargtoken[5].val.string,
-                                                                 1e-10);
+    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) +
+            CLI_checkarg(4, 2) + CLI_checkarg(5, 3) ==
+        0)
+    {
+        AOloopControl_PredictiveControl_testPredictiveFilter(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numl,
+            data.cmdargtoken[3].val.numf,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.string,
+            1e-10);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 errno_t AOloopControl_PredictiveControl_setPFsimpleAve_cli()
 {
     if (CLI_checkarg(1, 4) + CLI_checkarg(2, 1) == 0)
-        {
-            AOloopControl_PredictiveControl_setPFsimpleAve(data.cmdargtoken[1].val.string,
-                                                           data.cmdargtoken[2].val.numf);
+    {
+        AOloopControl_PredictiveControl_setPFsimpleAve(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.numf);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /* ===============================================================================================
@@ -164,15 +173,16 @@ static errno_t init_module_CLI()
     /* ===============================================================================================
    */
 
-    RegisterCLIcommand("aolPFwatchin",
-                       __FILE__,
-                       AOloopControl_PredictiveControl_builPFloop_WatchInput_cli,
-                       "watch telemetry for predictive filter input",
-                       "<loop #> <PFblock #> <start> <end>",
-                       "aolPFwatchin 0 2",
-                       "long AOloopControl_builPFloop_WatchInput(long loop, long PFblock, "
-                       "long PFblockStart, long "
-                       "PFblockEnd, long NBbuff)");
+    RegisterCLIcommand(
+        "aolPFwatchin",
+        __FILE__,
+        AOloopControl_PredictiveControl_builPFloop_WatchInput_cli,
+        "watch telemetry for predictive filter input",
+        "<loop #> <PFblock #> <start> <end>",
+        "aolPFwatchin 0 2",
+        "long AOloopControl_builPFloop_WatchInput(long loop, long PFblock, "
+        "long PFblockStart, long "
+        "PFblockEnd, long NBbuff)");
 
     RegisterCLIcommand("aolmappfilt",
                        __FILE__,
@@ -194,14 +204,15 @@ static errno_t init_module_CLI()
                        "*IDtrace_name, long mode, double delayfr, long "
                        "filtsize, char *IDfilt_name, double SVDeps)");
 
-    RegisterCLIcommand("aolpfsetave",
-                       __FILE__,
-                       AOloopControl_PredictiveControl_setPFsimpleAve_cli,
-                       "set predictive filter to integrator",
-                       "<PredFilter> <DecayCoeff>",
-                       "aolpfsetave outPFb0 0.5",
-                       "long AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name, "
-                       "float DecayCoeff)");
+    RegisterCLIcommand(
+        "aolpfsetave",
+        __FILE__,
+        AOloopControl_PredictiveControl_setPFsimpleAve_cli,
+        "set predictive filter to integrator",
+        "<PredFilter> <DecayCoeff>",
+        "aolpfsetave outPFb0 0.5",
+        "long AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name, "
+        "float DecayCoeff)");
 
     // add atexit functions here
     // atexit((void*) myfunc);

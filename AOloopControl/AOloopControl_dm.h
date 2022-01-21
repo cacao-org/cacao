@@ -3,10 +3,10 @@
 
 typedef struct
 {
-    char dmCname[80];
-    char dmdispname[80];
-    char dmRMname[80];
-    int DMMODE;             /**< 0: zonal DM, 1: modal DM */
+    char     dmCname[80];
+    char     dmdispname[80];
+    char     dmRMname[80];
+    int      DMMODE;        /**< 0: zonal DM, 1: modal DM */
     uint32_t sizexDM;       /**< DM x size*/
     uint32_t sizeyDM;       /**< DM y size*/
     uint32_t sizeDM;        /**< DM total image (= x size * y size) */

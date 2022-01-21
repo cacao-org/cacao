@@ -2,7 +2,7 @@
 #define _AOLOOPCONTROL_DM_H
 
 #define DISPCOMB_FILENAME_CONF "/tmp/dmdispcombconf.conf.shm"
-#define DMTURBCONF_FILENAME "/tmp/dmturb.conf.shm"
+#define DMTURBCONF_FILENAME    "/tmp/dmturb.conf.shm"
 
 #define DM_NUMBER_CHANMAX 20 // max number of channel per DM
 
@@ -21,24 +21,24 @@ typedef struct
 {
     int ON;
 
-    uint32_t xsize;  // DM xsize
-    uint32_t ysize;  // DM ysize
-    uint64_t xysize; // total number of actuators
-    long NBchannel;  // number of control channels
+    uint32_t xsize;     // DM xsize
+    uint32_t ysize;     // DM ysize
+    uint64_t xysize;    // total number of actuators
+    long     NBchannel; // number of control channels
 
     long loopcnt;
     long updatecnt; // DM update counter
-    int busy;       // if set to 1, hold off and wait
+    int  busy;      // if set to 1, hold off and wait
 
-    int voltmode; // 1 if DM drives voltmap
+    int     voltmode; // 1 if DM drives voltmap
     imageID IDvolt;
-    char voltname[64];
-    int voltON;      // 1 if applying voltage
-    int volttype;    // 1: linear bipolar, 2: quadratic uniplolar
-    float stroke100; // displacement [um] for 100 V
-    float MAXVOLT;   // maximum voltage on DM
-    int AveMode;
-    float DClevel;
+    char    voltname[64];
+    int     voltON;    // 1 if applying voltage
+    int     volttype;  // 1: linear bipolar, 2: quadratic uniplolar
+    float   stroke100; // displacement [um] for 100 V
+    float   MAXVOLT;   // maximum voltage on DM
+    int     AveMode;
+    float   DClevel;
 
     int TrigMode; // 0 (std) : any channel update triggers disp update, 1: use
                   // specific channel and semaphore
@@ -49,12 +49,12 @@ typedef struct
                    // posted
     struct timespec tstart;
     struct timespec tend;
-    double tdelay;
-    double time_disp2V;
+    double          tdelay;
+    double          time_disp2V;
 
-    long dmdispID[DM_NUMBER_CHANMAX];
-    float dmdispgain[DM_NUMBER_CHANMAX];
-    long dmdispcnt[DM_NUMBER_CHANMAX];
+    long    dmdispID[DM_NUMBER_CHANMAX];
+    float   dmdispgain[DM_NUMBER_CHANMAX];
+    long    dmdispcnt[DM_NUMBER_CHANMAX];
     imageID IDdisp;
 
     int dm2dm_mode; // 1 if output disp should be remapped to output DM disp
@@ -66,7 +66,7 @@ typedef struct
     long ID_dm2dm_outdisp;
     char dm2dm_outdisp_name[200];
 
-    int wfsrefmode; // 1 if wfsref offset should be computed
+    int  wfsrefmode; // 1 if wfsref offset should be computed
     long xsizewfsref;
     long ysizewfsref;
     long ID_wfsref_RespMat;
@@ -74,14 +74,14 @@ typedef struct
     long ID_wfsref_out;
     char wfsref_out_name[200];
 
-    int status;
+    int  status;
     long moninterval; // [us]
 
 } AOLOOPCONTROL_DM_DISPCOMB_CONF;
 
 typedef struct
 {
-    int on;
+    int  on;
     long cnt;
 
     double wspeed;  // wind speed [m/s]
@@ -113,8 +113,11 @@ void __attribute__((constructor)) libinit_AOloopControl_DM();
 
 struct timespec time_diff(struct timespec start, struct timespec end);
 
-errno_t make_master_turbulence_screen_local(
-    const char *ID_name1, const char *ID_name2, long size, float outerscale, float innerscale);
+errno_t make_master_turbulence_screen_local(const char *ID_name1,
+                                            const char *ID_name2,
+                                            long        size,
+                                            float       outerscale,
+                                            float       innerscale);
 
 /* ===============================================================================================
  */
@@ -151,23 +154,23 @@ int AOloopControl_DM_disp2V(long DMindex);
 int AOloopControl_DM_CombineChannels_FPCONF();
 int AOloopControl_DM_CombineChannels_RUN();
 
-int AOloopControl_DM_CombineChannels(long DMindex,
-                                     long xsize,
-                                     long ysize,
-                                     int NBchannel,
-                                     int AveMode,
-                                     int dm2dm_mode,
+int AOloopControl_DM_CombineChannels(long        DMindex,
+                                     long        xsize,
+                                     long        ysize,
+                                     int         NBchannel,
+                                     int         AveMode,
+                                     int         dm2dm_mode,
                                      const char *dm2dm_DMmodes,
                                      const char *dm2dm_outdisp,
-                                     int wfsrefmode,
+                                     int         wfsrefmode,
                                      const char *wfsref_WFSRespMat,
                                      const char *wfsref_out,
-                                     int voltmode,
-                                     int volttype,
-                                     float stroke100,
+                                     int         voltmode,
+                                     int         volttype,
+                                     float       stroke100,
                                      const char *IDvolt_name,
-                                     float DClevel,
-                                     float maxvolt);
+                                     float       DClevel,
+                                     float       maxvolt);
 
 int AOloopControl_DM_dmdispcomboff(long DMindex);
 
@@ -237,7 +240,10 @@ int AOloopControl_DM_dmturb_tint(long DMindex, long tint);
 
 int AOloopControl_DM_dmturb_printstatus(long DMindex);
 
-int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name, long NBsamples);
+int AOloopControl_DM_dmturb(long        DMindex,
+                            int         mode,
+                            const char *IDout_name,
+                            long        NBsamples);
 
 /* ===============================================================================================
  */
@@ -251,8 +257,12 @@ int AOloopControl_DM_dmturb(long DMindex, int mode, const char *IDout_name, long
 /* ===============================================================================================
  */
 
-long AOloopControl_mkDM_TT_circle(char *IDoutname, long DMindex, long NBpts, float ampl);
+long AOloopControl_mkDM_TT_circle(char *IDoutname,
+                                  long  DMindex,
+                                  long  NBpts,
+                                  float ampl);
 
-long AOloopControl_DM_mkAstroGrid_seq(char *IDoutname, long DMindex, int XYmode, int bin, long NBcycle);
+long AOloopControl_DM_mkAstroGrid_seq(
+    char *IDoutname, long DMindex, int XYmode, int bin, long NBcycle);
 
 #endif

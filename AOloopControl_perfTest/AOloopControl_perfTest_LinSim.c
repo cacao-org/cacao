@@ -67,15 +67,26 @@
 /* ===============================================================================================
  */
 
-errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(const char *fpsname, uint32_t CMDmode)
+errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(const char *fpsname,
+                                                      uint32_t    CMDmode)
 {
     FPS_SETUP_INIT(fpsname, CMDmode);
 
-    function_parameter_add_entry(
-        &fps, ".DMxsize", "Deformable mirror X size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, NULL, NULL);
+    function_parameter_add_entry(&fps,
+                                 ".DMxsize",
+                                 "Deformable mirror X size",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 NULL,
+                                 NULL);
 
-    function_parameter_add_entry(
-        &fps, ".DMysize", "Deformable mirror Y size", FPTYPE_INT64, FPFLAG_DEFAULT_INPUT, NULL, NULL);
+    function_parameter_add_entry(&fps,
+                                 ".DMysize",
+                                 "Deformable mirror Y size",
+                                 FPTYPE_INT64,
+                                 FPFLAG_DEFAULT_INPUT,
+                                 NULL,
+                                 NULL);
 
     FPS_CONFLOOP_START // macro in function_parameter.h
 
@@ -92,21 +103,22 @@ errno_t AOcontrolLoop_perfTest_LinearSimulator_RUN(const char *fpsname)
     int FPSINTERFACE = 1;
 
     if (function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
-        {
-            printf("ERROR: fps \"%s\" does not exist -> running without FPS "
-                   "interface\n",
-                   fpsname);
-            FPSINTERFACE = 0;
-        }
+    {
+        printf(
+            "ERROR: fps \"%s\" does not exist -> running without FPS "
+            "interface\n",
+            fpsname);
+        FPSINTERFACE = 0;
+    }
     else
-        {
-            FPSINTERFACE = 1;
-        }
+    {
+        FPSINTERFACE = 1;
+    }
 
     if (FPSINTERFACE == 1)
-        {
-            function_parameter_struct_disconnect(&fps);
-        }
+    {
+        function_parameter_struct_disconnect(&fps);
+    }
 
     return (0);
 }

@@ -117,8 +117,8 @@
 
 extern long LOOPNUMBER; // current loop index
 
-extern AOLOOPCONTROL_CONF *AOconf;          // declared in AOloopControl.c
-extern AOloopControl_var aoloopcontrol_var; // declared in AOloopControl.c
+extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
+extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 /* ================================================================== */
 /* ================================================================== */
@@ -159,39 +159,41 @@ errno_t AOloopControl_IOtools_acquireWFSloop_cli()
     function_parameter_getFPSargs_from_CLIfunc("acquWFS");
 
     if (data.FPS_CMDCODE != 0) // use FPS implementation
-        {
-            // set pointers to CONF and RUN functions
-            data.FPS_CONFfunc = AOcontrolLoop_IOtools_acquireWFSloop_FPCONF;
-            data.FPS_RUNfunc = AOcontrolLoop_IOtools_acquireWFSloop_RUN;
-            function_parameter_execFPScmd();
-            return RETURN_SUCCESS;
-        }
+    {
+        // set pointers to CONF and RUN functions
+        data.FPS_CONFfunc = AOcontrolLoop_IOtools_acquireWFSloop_FPCONF;
+        data.FPS_RUNfunc  = AOcontrolLoop_IOtools_acquireWFSloop_RUN;
+        function_parameter_execFPScmd();
+        return RETURN_SUCCESS;
+    }
     else
-        {
-            return RETURN_FAILURE;
-        }
+    {
+        return RETURN_FAILURE;
+    }
 }
 
 /** @brief CLI function for AOloopControl_camimage_extract2D_sharedmem_loop */
 errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 5) + CLI_checkarg(3, 3) + CLI_checkarg(4, 2) + CLI_checkarg(5, 2) +
-            CLI_checkarg(6, 2) + CLI_checkarg(7, 2) ==
+    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 5) + CLI_checkarg(3, 3) +
+            CLI_checkarg(4, 2) + CLI_checkarg(5, 2) + CLI_checkarg(6, 2) +
+            CLI_checkarg(7, 2) ==
         0)
-        {
-            AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(data.cmdargtoken[1].val.string,
-                                                                    data.cmdargtoken[2].val.string,
-                                                                    data.cmdargtoken[3].val.string,
-                                                                    data.cmdargtoken[4].val.numl,
-                                                                    data.cmdargtoken[5].val.numl,
-                                                                    data.cmdargtoken[6].val.numl,
-                                                                    data.cmdargtoken[7].val.numl);
-            return CLICMD_SUCCESS;
-        }
+    {
+        AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.numl,
+            data.cmdargtoken[5].val.numl,
+            data.cmdargtoken[6].val.numl,
+            data.cmdargtoken[7].val.numl);
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /* ===============================================================================================
@@ -221,78 +223,84 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli()
 /** @brief CLI function for AOloopControl_AveStream */
 errno_t AOloopControl_IOtools_AveStream_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 1) + CLI_checkarg(3, 3) + CLI_checkarg(4, 3) + CLI_checkarg(5, 3) == 0)
-        {
-            AOloopControl_IOtools_AveStream(data.cmdargtoken[1].val.string,
-                                            data.cmdargtoken[2].val.numf,
-                                            data.cmdargtoken[3].val.string,
-                                            data.cmdargtoken[4].val.string,
-                                            data.cmdargtoken[5].val.string);
+    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 1) + CLI_checkarg(3, 3) +
+            CLI_checkarg(4, 3) + CLI_checkarg(5, 3) ==
+        0)
+    {
+        AOloopControl_IOtools_AveStream(data.cmdargtoken[1].val.string,
+                                        data.cmdargtoken[2].val.numf,
+                                        data.cmdargtoken[3].val.string,
+                                        data.cmdargtoken[4].val.string,
+                                        data.cmdargtoken[5].val.string);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /** @brief Aligns data stream */
 errno_t AOloopControl_IOtools_imAlignStream_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) + CLI_checkarg(4, 4) + CLI_checkarg(5, 3) +
-            CLI_checkarg(6, 2) ==
+    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+            CLI_checkarg(4, 4) + CLI_checkarg(5, 3) + CLI_checkarg(6, 2) ==
         0)
-        {
-            AOloopControl_IOtools_imAlignStream(data.cmdargtoken[1].val.string,
-                                                data.cmdargtoken[2].val.numl,
-                                                data.cmdargtoken[3].val.numl,
-                                                data.cmdargtoken[4].val.string,
-                                                data.cmdargtoken[5].val.string,
-                                                data.cmdargtoken[6].val.numl);
+    {
+        AOloopControl_IOtools_imAlignStream(data.cmdargtoken[1].val.string,
+                                            data.cmdargtoken[2].val.numl,
+                                            data.cmdargtoken[3].val.numl,
+                                            data.cmdargtoken[4].val.string,
+                                            data.cmdargtoken[5].val.string,
+                                            data.cmdargtoken[6].val.numl);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /** @brief CLI function for AOloopControl_frameDelay */
 errno_t AOloopControl_IOtools_frameDelay_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 5) + CLI_checkarg(4, 2) == 0)
-        {
-            AOloopControl_IOtools_frameDelay(data.cmdargtoken[1].val.string,
-                                             data.cmdargtoken[2].val.string,
-                                             data.cmdargtoken[3].val.string,
-                                             data.cmdargtoken[4].val.numl);
+    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 5) +
+            CLI_checkarg(4, 2) ==
+        0)
+    {
+        AOloopControl_IOtools_frameDelay(data.cmdargtoken[1].val.string,
+                                         data.cmdargtoken[2].val.string,
+                                         data.cmdargtoken[3].val.string,
+                                         data.cmdargtoken[4].val.numl);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /** @brief CLI function for AOloopControl_stream3Dto2D */
 errno_t AOloopControl_IOtools_stream3Dto2D_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 3) + CLI_checkarg(3, 2) + CLI_checkarg(4, 2) == 0)
-        {
-            AOloopControl_IOtools_stream3Dto2D(data.cmdargtoken[1].val.string,
-                                               data.cmdargtoken[2].val.string,
-                                               data.cmdargtoken[3].val.numl,
-                                               data.cmdargtoken[4].val.numl);
+    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 3) + CLI_checkarg(3, 2) +
+            CLI_checkarg(4, 2) ==
+        0)
+    {
+        AOloopControl_IOtools_stream3Dto2D(data.cmdargtoken[1].val.string,
+                                           data.cmdargtoken[2].val.string,
+                                           data.cmdargtoken[3].val.numl,
+                                           data.cmdargtoken[4].val.numl);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /* ===============================================================================================
@@ -310,16 +318,17 @@ errno_t AOloopControl_IOtools_stream3Dto2D_cli()
 errno_t AOloopControl_IOtools_RTLOGsave_cli()
 {
     if (CLI_checkarg(1, 2) + CLI_checkarg(2, 5) + CLI_checkarg(3, 5) == 0)
-        {
-            AOloopControl_IOtools_RTLOGsave(
-                data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string);
+    {
+        AOloopControl_IOtools_RTLOGsave(data.cmdargtoken[1].val.numl,
+                                        data.cmdargtoken[2].val.string,
+                                        data.cmdargtoken[3].val.string);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /* ===============================================================================================
@@ -355,17 +364,18 @@ static errno_t init_module_CLI()
                        "aolacquireWFSloop 2",
                        "int AOloopControl_IOtools_acquireWFSloop(long loop)");
 
-    RegisterCLIcommand("cropshim",
-                       __FILE__,
-                       AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli,
-                       "crop shared mem image",
-                       "<input image> <optional dark> <output image> <sizex> <sizey> <xstart> "
-                       "<ystart>",
-                       "cropshim imin null imout 32 32 153 201",
-                       "int AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(char "
-                       "*in_name, const char "
-                       "*dark_name, char *out_name, long size_x, long size_y, long xstart, "
-                       "long ystart)");
+    RegisterCLIcommand(
+        "cropshim",
+        __FILE__,
+        AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli,
+        "crop shared mem image",
+        "<input image> <optional dark> <output image> <sizex> <sizey> <xstart> "
+        "<ystart>",
+        "cropshim imin null imout 32 32 153 201",
+        "int AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(char "
+        "*in_name, const char "
+        "*dark_name, char *out_name, long size_x, long size_y, long xstart, "
+        "long ystart)");
 
     /* ===============================================================================================
    */
@@ -378,15 +388,16 @@ static errno_t init_module_CLI()
     /* ===============================================================================================
    */
 
-    RegisterCLIcommand("aveACshmim",
-                       __FILE__,
-                       AOloopControl_IOtools_AveStream_cli,
-                       "average and AC shared mem image",
-                       "<input image> <coeff> <output image ave> <output AC> <output RMS>",
-                       "aveACshmim imin 0.01 outave outAC outRMS",
-                       "int AOloopControl_IOtools_AveStream(char *IDname, double alpha, char "
-                       "*IDname_out_ave, char "
-                       "*IDname_out_AC, char *IDname_out_RMS)");
+    RegisterCLIcommand(
+        "aveACshmim",
+        __FILE__,
+        AOloopControl_IOtools_AveStream_cli,
+        "average and AC shared mem image",
+        "<input image> <coeff> <output image ave> <output AC> <output RMS>",
+        "aveACshmim imin 0.01 outave outAC outRMS",
+        "int AOloopControl_IOtools_AveStream(char *IDname, double alpha, char "
+        "*IDname_out_ave, char "
+        "*IDname_out_AC, char *IDname_out_RMS)");
 
     RegisterCLIcommand("alignshmim",
                        __FILE__,
@@ -409,14 +420,15 @@ static errno_t init_module_CLI()
                        "*IDin_name, const char *IDkern_name, const "
                        "char *IDout_name, int insem)");
 
-    RegisterCLIcommand("aolstream3Dto2D",
-                       __FILE__,
-                       AOloopControl_IOtools_stream3Dto2D_cli,
-                       "remaps 3D cube into 2D image",
-                       "<input 3D stream> <output 2D stream> <# cols> <sem trigger>",
-                       "aolstream3Dto2D in3dim out2dim 4 1",
-                       "long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const "
-                       "char *out_name, int NBcols, int insem)");
+    RegisterCLIcommand(
+        "aolstream3Dto2D",
+        __FILE__,
+        AOloopControl_IOtools_stream3Dto2D_cli,
+        "remaps 3D cube into 2D image",
+        "<input 3D stream> <output 2D stream> <# cols> <sem trigger>",
+        "aolstream3Dto2D in3dim out2dim 4 1",
+        "long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const "
+        "char *out_name, int NBcols, int insem)");
 
     /* ===============================================================================================
    */

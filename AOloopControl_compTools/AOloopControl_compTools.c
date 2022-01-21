@@ -100,32 +100,34 @@ INIT_MODULE_LIB(AOloopControl_compTools)
 errno_t AOloopControl_compTools_CrossProduct_cli()
 {
     if (CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 3) == 0)
-        {
-            AOloopControl_compTools_CrossProduct(
-                data.cmdargtoken[1].val.string, data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.string);
+    {
+        AOloopControl_compTools_CrossProduct(data.cmdargtoken[1].val.string,
+                                             data.cmdargtoken[2].val.string,
+                                             data.cmdargtoken[3].val.string);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 /** @brief CLI function for AOloopControl_mkSimpleZpokeM */
 errno_t AOloopControl_compTools_mkSimpleZpokeM_cli()
 {
     if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) + CLI_checkarg(3, 3) == 0)
-        {
-            AOloopControl_compTools_mkSimpleZpokeM(
-                data.cmdargtoken[1].val.numl, data.cmdargtoken[2].val.numl, data.cmdargtoken[3].val.string);
+    {
+        AOloopControl_compTools_mkSimpleZpokeM(data.cmdargtoken[1].val.numl,
+                                               data.cmdargtoken[2].val.numl,
+                                               data.cmdargtoken[3].val.string);
 
-            return CLICMD_SUCCESS;
-        }
+        return CLICMD_SUCCESS;
+    }
     else
-        {
-            return CLICMD_INVALID_ARG;
-        }
+    {
+        return CLICMD_INVALID_ARG;
+    }
 }
 
 static errno_t init_module_CLI()
@@ -169,76 +171,85 @@ static errno_t init_module_CLI()
  */
 
 // measures cross product between 2 cubes
-imageID AOloopControl_compTools_CrossProduct(const char *ID1_name, const char *ID2_name, const char *IDout_name)
+imageID AOloopControl_compTools_CrossProduct(const char *ID1_name,
+                                             const char *ID2_name,
+                                             const char *IDout_name)
 {
-    imageID ID1, ID2, IDout;
+    imageID  ID1, ID2, IDout;
     uint64_t xysize1, xysize2;
     uint32_t zsize1, zsize2;
-    imageID IDmask;
+    imageID  IDmask;
 
     ID1 = image_ID(ID1_name);
     ID2 = image_ID(ID2_name);
 
     xysize1 = data.image[ID1].md[0].size[0] * data.image[ID1].md[0].size[1];
     xysize2 = data.image[ID2].md[0].size[0] * data.image[ID2].md[0].size[1];
-    zsize1 = data.image[ID1].md[0].size[2];
-    zsize2 = data.image[ID2].md[0].size[2];
+    zsize1  = data.image[ID1].md[0].size[2];
+    zsize2  = data.image[ID2].md[0].size[2];
 
     if (xysize1 != xysize2)
-        {
-            printf("ERROR: cubes %s and %s have different xysize: %ld %ld\n", ID1_name, ID2_name, xysize1, xysize2);
-            exit(0);
-        }
+    {
+        printf("ERROR: cubes %s and %s have different xysize: %ld %ld\n",
+               ID1_name,
+               ID2_name,
+               xysize1,
+               xysize2);
+        exit(0);
+    }
 
     IDmask = image_ID("xpmask");
 
     create_2Dimage_ID(IDout_name, zsize1, zsize2, &IDout);
     for (uint64_t ii = 0; ii < zsize1 * zsize2; ii++)
-        {
-            data.image[IDout].array.F[ii] = 0.0;
-        }
+    {
+        data.image[IDout].array.F[ii] = 0.0;
+    }
 
     if (IDmask == -1)
-        {
-            printf("No mask\n");
-            fflush(stdout);
+    {
+        printf("No mask\n");
+        fflush(stdout);
 
-            for (uint32_t z1 = 0; z1 < zsize1; z1++)
-                for (uint32_t z2 = 0; z2 < zsize2; z2++)
-                    {
-                        for (uint64_t ii = 0; ii < xysize1; ii++)
-                            {
-                                data.image[IDout].array.F[z2 * zsize1 + z1] +=
-                                    data.image[ID1].array.F[z1 * xysize1 + ii] *
-                                    data.image[ID2].array.F[z2 * xysize2 + ii];
-                            }
-                    }
-        }
+        for (uint32_t z1 = 0; z1 < zsize1; z1++)
+            for (uint32_t z2 = 0; z2 < zsize2; z2++)
+            {
+                for (uint64_t ii = 0; ii < xysize1; ii++)
+                {
+                    data.image[IDout].array.F[z2 * zsize1 + z1] +=
+                        data.image[ID1].array.F[z1 * xysize1 + ii] *
+                        data.image[ID2].array.F[z2 * xysize2 + ii];
+                }
+            }
+    }
     else
-        {
-            printf("Applying mask\n");
-            fflush(stdout);
+    {
+        printf("Applying mask\n");
+        fflush(stdout);
 
-            for (uint32_t z1 = 0; z1 < zsize1; z1++)
-                for (uint32_t z2 = 0; z2 < zsize2; z2++)
-                    {
-                        for (uint64_t ii = 0; ii < xysize1; ii++)
-                            {
-                                data.image[IDout].array.F[z2 * zsize1 + z1] +=
-                                    data.image[IDmask].array.F[ii] * data.image[IDmask].array.F[ii] *
-                                    data.image[ID1].array.F[z1 * xysize1 + ii] *
-                                    data.image[ID2].array.F[z2 * xysize2 + ii];
-                            }
-                    }
-        }
+        for (uint32_t z1 = 0; z1 < zsize1; z1++)
+            for (uint32_t z2 = 0; z2 < zsize2; z2++)
+            {
+                for (uint64_t ii = 0; ii < xysize1; ii++)
+                {
+                    data.image[IDout].array.F[z2 * zsize1 + z1] +=
+                        data.image[IDmask].array.F[ii] *
+                        data.image[IDmask].array.F[ii] *
+                        data.image[ID1].array.F[z1 * xysize1 + ii] *
+                        data.image[ID2].array.F[z2 * xysize2 + ii];
+                }
+            }
+    }
 
     return IDout;
 }
 
 // create simple poke matrix
-imageID AOloopControl_compTools_mkSimpleZpokeM(uint32_t dmxsize, uint32_t dmysize, char *IDout_name)
+imageID AOloopControl_compTools_mkSimpleZpokeM(uint32_t dmxsize,
+                                               uint32_t dmysize,
+                                               char    *IDout_name)
 {
-    imageID IDout;
+    imageID  IDout;
     uint64_t dmxysize;
 
     dmxysize = dmxsize * dmysize;
@@ -246,9 +257,9 @@ imageID AOloopControl_compTools_mkSimpleZpokeM(uint32_t dmxsize, uint32_t dmysiz
     create_3Dimage_ID(IDout_name, dmxsize, dmysize, dmxysize, &IDout);
 
     for (uint64_t kk = 0; kk < dmxysize; kk++)
-        {
-            data.image[IDout].array.F[kk * dmxysize + kk] = 1.0;
-        }
+    {
+        data.image[IDout].array.F[kk * dmxysize + kk] = 1.0;
+    }
 
     return IDout;
 }

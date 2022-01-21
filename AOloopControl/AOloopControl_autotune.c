@@ -51,34 +51,37 @@ errno_t AOloopControl_AUTOTUNE_LIMITS_off()
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     if (aoloopcontrol_var.aoconfID_limitb == -1)
-        {
-            char imname[200];
+    {
+        char imname[200];
 
-            if (sprintf(imname, "aol%ld_limitb", aoloopcontrol_var.LOOPNUMBER) < 1)
-                PRINT_ERROR("sprintf wrote <1 char");
+        if (sprintf(imname, "aol%ld_limitb", aoloopcontrol_var.LOOPNUMBER) < 1)
+            PRINT_ERROR("sprintf wrote <1 char");
 
-            aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
-        }
+        aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
+    }
 
     NBblock = data.image[aoloopcontrol_var.aoconfID_limitb].md[0].size[0];
 
     // Save Limits
     for (block = 0; block < NBblock; block++)
+    {
+        FILE *fp;
+        char  fname[200];
+
+        sprintf(fname, "conf/param_limitb%02d.txt", block);
+
+        if ((fp = fopen(fname, "w")) == NULL)
+            PRINT_ERROR("Cannot open file");
+        else
         {
-            FILE *fp;
-            char fname[200];
-
-            sprintf(fname, "conf/param_limitb%02d.txt", block);
-
-            if ((fp = fopen(fname, "w")) == NULL)
-                PRINT_ERROR("Cannot open file");
-            else
-                {
-                    fprintf(fp, "%7.5f\n", data.image[aoloopcontrol_var.aoconfID_limitb].array.F[block]);
-                }
-
-            fclose(fp);
+            fprintf(
+                fp,
+                "%7.5f\n",
+                data.image[aoloopcontrol_var.aoconfID_limitb].array.F[block]);
         }
+
+        fclose(fp);
+    }
 
     return RETURN_SUCCESS;
 }
@@ -88,7 +91,8 @@ errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta)
     if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_delta = AUTOTUNE_LIMITS_delta;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_delta =
+        AUTOTUNE_LIMITS_delta;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return RETURN_SUCCESS;
@@ -99,7 +103,8 @@ errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc)
     if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_perc = AUTOTUNE_LIMITS_perc;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_perc =
+        AUTOTUNE_LIMITS_perc;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return RETURN_SUCCESS;
@@ -110,7 +115,8 @@ errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff)
     if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
         AOloopControl_InitializeMemory(1);
 
-    AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_mcoeff = AUTOTUNE_LIMITS_mcoeff;
+    AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_mcoeff =
+        AUTOTUNE_LIMITS_mcoeff;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
     return RETURN_SUCCESS;

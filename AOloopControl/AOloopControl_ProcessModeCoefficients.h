@@ -1,7 +1,7 @@
 #ifndef _AOLOOPCONTROL_ProcessModeCoefficients_H
 #define _AOLOOPCONTROL_ProcessModeCoefficients_H
 
-#define maxNBMB 100      // maximum number of mode blocks
+#define maxNBMB    100   // maximum number of mode blocks
 #define MAXNBMODES 10000 // maximum number of control modes
 
 typedef struct
@@ -9,8 +9,9 @@ typedef struct
 
     char DMmodesname[80];
     // BLOCKS OF MODES
-    uint32_t DMmodesNBblock;             /**< number of mode blocks (read from parameter) */
-    uint32_t NBmodes_block[100];         /**< number of modes within each block (computed
+    uint32_t DMmodesNBblock; /**< number of mode blocks (read from parameter) */
+    uint32_t
+        NBmodes_block[100]; /**< number of modes within each block (computed
                                   from files by AOloopControl_loadconfigure) */
     uint32_t modeBlockIndex[MAXNBMODES]; /**< block index to which each mode
                                           belongs (computed by
@@ -19,8 +20,8 @@ typedef struct
     uint32_t NBDMmodes;
 
     // COMPUTED BY OPEN LOOP RETRIEVAL PROCESS
-    double RMSmodes;
-    double RMSmodesCumul;
+    double   RMSmodes;
+    double   RMSmodesCumul;
     uint64_t RMSmodesCumulcnt;
 
     // block statistics (instantaneous)
@@ -38,13 +39,14 @@ typedef struct
     double ALL_limFrac;  // fraction of mode coefficients exceeding limit
 
     // averaged
-    uint32_t AveStats_NBpt;        // averaging interval
-    double blockave_PFresrms[100]; // open loop RMS
-    double blockave_OLrms[100];    // open loop RMS
-    double blockave_Crms[100];     // correction RMS
-    double blockave_WFSrms[100];   // WFS residual RMS
-    double blockave_WFSnoise[100]; // WFS noise
-    double blockave_limFrac[100];  // fraction of mode coefficients exceeding limit
+    uint32_t AveStats_NBpt;          // averaging interval
+    double   blockave_PFresrms[100]; // open loop RMS
+    double   blockave_OLrms[100];    // open loop RMS
+    double   blockave_Crms[100];     // correction RMS
+    double   blockave_WFSrms[100];   // WFS residual RMS
+    double   blockave_WFSnoise[100]; // WFS noise
+    double
+        blockave_limFrac[100]; // fraction of mode coefficients exceeding limit
 
     double ALLave_OLrms;    // open loop RMS
     double ALLave_Crms;     // correction RMS

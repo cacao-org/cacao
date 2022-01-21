@@ -19,17 +19,20 @@
 
 extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 
-errno_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, __attribute__((unused)) const char *dirname)
+errno_t AOloopControl_IOtools_RTLOGsave(long        loop,
+                                        const char *streamname,
+                                        __attribute__((unused))
+                                        const char *dirname)
 {
     // data buffers
-    char imnameb0[STRINGMAXLEN_IMGNAME];
-    char imnameb1[STRINGMAXLEN_IMGNAME];
+    char                            imnameb0[STRINGMAXLEN_IMGNAME];
+    char                            imnameb1[STRINGMAXLEN_IMGNAME];
     __attribute__((unused)) imageID IDinb0;
     __attribute__((unused)) imageID IDinb1;
 
     // info buffers
-    char imnamebinfo0[STRINGMAXLEN_IMGNAME];
-    char imnamebinfo1[STRINGMAXLEN_IMGNAME];
+    char                            imnamebinfo0[STRINGMAXLEN_IMGNAME];
+    char                            imnamebinfo1[STRINGMAXLEN_IMGNAME];
     __attribute__((unused)) imageID IDinbinfo0;
     __attribute__((unused)) imageID IDinbinfo1;
 
@@ -44,8 +47,8 @@ errno_t AOloopControl_IOtools_RTLOGsave(long loop, const char *streamname, __att
     printf("DATA buffers:  %s  %s\n", imnameb0, imnameb1);
     printf("INFO buffers:  %s  %s\n", imnamebinfo0, imnamebinfo1);
 
-    IDinb0 = read_sharedmem_image(imnameb0);
-    IDinb1 = read_sharedmem_image(imnameb1);
+    IDinb0     = read_sharedmem_image(imnameb0);
+    IDinb1     = read_sharedmem_image(imnameb1);
     IDinbinfo0 = read_sharedmem_image(imnamebinfo0);
     IDinbinfo1 = read_sharedmem_image(imnamebinfo1);
 
