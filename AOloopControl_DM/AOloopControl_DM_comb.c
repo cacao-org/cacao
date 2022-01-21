@@ -257,7 +257,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
-    int DMupdate = 0; // toggles to 1 is DM must be updated
+    int DMupdate = 0; // toggles to 1 if DM must be updated
     {
         long cnt0sum = 0;
 
