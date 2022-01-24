@@ -778,16 +778,8 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
     char cm_name[] = "sCMat";
 
-    int usingGPU = 0;
-#ifdef HAVE_MAGMA
-    usingGPU = 1;
-#endif
-    if (GPUmode == 0)
-    {
-        usingGPU = 0;
-    }
-
-    if (usingGPU == 1)
+#ifdef HAVE_CUDA
+    if (GPUmode)
     {
         CUDACOMP_magma_compute_SVDpseudoInverse("respM",
                                                 cm_name,
@@ -804,13 +796,16 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
     }
     else
     {
+#endif
         linopt_compute_SVDpseudoInverse("respM",
                                         cm_name,
                                         SVDlim,
                                         10000,
                                         "VTmat",
                                         NULL);
+#ifdef HAVE_CUDA
     }
+#endif
 
     // save_fits("VTmat", "./mkmodestmp/VTmat.fits");
     delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
