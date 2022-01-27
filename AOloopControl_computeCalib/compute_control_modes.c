@@ -22,7 +22,10 @@ static float *alignOD; // Outer diameter
 static uint32_t *DMxsize;
 static uint32_t *DMysize;
 
-static char *FPS_zRMacqu;
+static long fpi_FPS_zRMacqu;
+static long fpi_FPS_loRMacqu;
+static long fpi_FPS_DMcomb;
+
 
 static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                ".AOloopindex",
@@ -53,28 +56,28 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                (void **) &deltaCPA,
                                NULL},
                               {CLIARG_FLOAT32,
-                               ".align,CX",
+                               ".align.CX",
                                "beam X center on DM",
                                "10.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &alignCX,
                                NULL},
                               {CLIARG_FLOAT32,
-                               ".align,CY",
+                               ".align.CY",
                                "beam Y center on DM",
                                "10.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &alignCY,
                                NULL},
                               {CLIARG_FLOAT32,
-                               ".align,ID",
+                               ".align.ID",
                                "beam inner diameter",
                                "5.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &alignID,
                                NULL},
                               {CLIARG_FLOAT32,
-                               ".align,OD",
+                               ".align.OD",
                                "beam outer diameter",
                                "10.0",
                                CLIARG_HIDDEN_DEFAULT,
@@ -101,42 +104,60 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                CLICMDARG_FLAG_NOCLI,
                                FPTYPE_FPSNAME,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
-                               (void **) &FPS_zRMacqu,
+                               (void **) &fpi_FPS_zRMacqu,
+                               NULL},
+                              {CLIARG_STR,
+                               ".FPS_loRMacqu",
+                               "FPS low order modal RM acquisition",
+                               " ",
+                               CLICMDARG_FLAG_NOCLI,
+                               FPTYPE_FPSNAME,
+                               FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                               (void **) &fpi_FPS_loRMacqu,
+                               NULL},
+                              {CLIARG_STR,
+                               ".FPS_DMcomb",
+                               "FPS DM comb",
+                               " ",
+                               CLICMDARG_FLAG_NOCLI,
+                               FPTYPE_FPSNAME,
+                               FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                               (void **) &fpi_FPS_DMcomb,
                                NULL}};
 
-// Optional custom configuration setup
-// Runs once at conf startup
-//
-// To use this function, set :
-// CLIcmddata.FPS_customCONFsetup = customCONFsetup
-// when registering function
-// (see end of this file)
-//
+
+
+
 static errno_t customCONFsetup()
 {
     return RETURN_SUCCESS;
 }
 
-// Optional custom configuration checks
-// Runs at every configuration check loop iteration
-//
-// To use this function, set :
-// CLIcmddata.FPS_customCONFcheck = customCONFcheck
-// when registering function
-// (see end of this file)
-//
+
+
+
 static errno_t customCONFcheck()
 {
     if (data.fpsptr != NULL)
     {
+        /* if (fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX < 1)
+        {
+            functionparameter_ConnectExternalFPS(&fps,
+                                                 fpi_FPS_DMcomb,
+                                                 &FPS_DMcomb);
+        }*/
     }
 
     return RETURN_SUCCESS;
 }
 
+
+
+
 static CLICMDDATA CLIcmddata = {"compctrlmodes",
                                 "compute AO control modes in WFS and DM space",
                                 CLICMD_FIELDS_DEFAULTS};
+
 
 // detailed help
 static errno_t help_function()
@@ -144,16 +165,19 @@ static errno_t help_function()
     return RETURN_SUCCESS;
 }
 
+
+
+
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     /*IMGID inimg = makeIMGID(inimname);
-  resolveIMGID(&inimg, ERRMODE_ABORT);
+    resolveIMGID(&inimg, ERRMODE_ABORT);
 
-  IMGID outimg = makeIMGID(outimname);
-  resolveIMGID(&outimg, ERRMODE_ABORT);
-  */
+    IMGID outimg = makeIMGID(outimname);
+    resolveIMGID(&outimg, ERRMODE_ABORT);
+    */
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
     // custom initialization
