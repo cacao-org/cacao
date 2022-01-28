@@ -212,18 +212,18 @@ static errno_t compute_function()
             gain = 0.0;
         }
         /*        else
-      {
-      gain *= 1.0e-4; //TODO figure out why necessary
-      }
-      */
+        {
+        gain *= 1.0e-4; //TODO figure out why necessary
+        }
+        */
         float mult     = (*loopmult);
         float limitval = (*vlimit);
 
         /*        if((mi==0) || (mi==1))
-      {
-      gain *= 4.0;
-      }
-      */
+        {
+        gain *= 4.0;
+        }
+        */
 
         avemval[mi] = (1.0 - avegain) * avemval[mi] +
                       avegain * (imgin.im->array.F[mi] * gain);
