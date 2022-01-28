@@ -839,7 +839,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  pNull,
                                  &fpi_FPS_DMcomb);
     FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
-    ;
+
     fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX = 0;
 
     //__attribute__((unused)) long fpi_fname_dmslaved =
