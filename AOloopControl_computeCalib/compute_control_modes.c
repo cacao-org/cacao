@@ -26,6 +26,15 @@ static long fpi_FPS_zRMacqu;
 static long fpi_FPS_loRMacqu;
 static long fpi_FPS_DMcomb;
 
+static char *fname_DMslaved;
+static char *fname_zrespM;
+static char *fname_DMmaskRM;
+static char *fname_WFSmask;
+static char *fname_loRM;
+static char *fname_loRMmodes;
+
+
+
 
 static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                ".AOloopindex",
@@ -100,7 +109,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                               {CLIARG_STR,
                                ".FPS_zRMacqu",
                                "FPS zonal RM acquisition",
-                               " ",
+                               "NULL",
                                CLICMDARG_FLAG_NOCLI,
                                FPTYPE_FPSNAME,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
@@ -109,7 +118,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                               {CLIARG_STR,
                                ".FPS_loRMacqu",
                                "FPS low order modal RM acquisition",
-                               " ",
+                               "NULL",
                                CLICMDARG_FLAG_NOCLI,
                                FPTYPE_FPSNAME,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
@@ -118,12 +127,68 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                               {CLIARG_STR,
                                ".FPS_DMcomb",
                                "FPS DM comb",
-                               " ",
+                               "NULL",
                                CLICMDARG_FLAG_NOCLI,
                                FPTYPE_FPSNAME,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
                                (void **) &fpi_FPS_DMcomb,
-                               NULL}};
+                               NULL},
+                              {CLIARG_STR,
+                               ".DMslaved",
+                               "DM slaved actuators",
+                               "NULL",
+                               CLICMDARG_FLAG_NOCLI,
+                               FPTYPE_FITSFILENAME,
+                               FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                               (void **) &fname_DMslaved,
+                               NULL},
+                              {CLIARG_STR,
+                               ".zrespM",
+                               "zonal response matrix",
+                               "NULL",
+                               CLICMDARG_FLAG_NOCLI,
+                               FPTYPE_FITSFILENAME,
+                               FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                               (void **) &fname_zrespM,
+                               NULL},
+                              {CLIARG_STR,
+                               ".DMmaskRM",
+                               "actuators directly controlled",
+                               "NULL",
+                               CLICMDARG_FLAG_NOCLI,
+                               FPTYPE_FITSFILENAME,
+                               FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                               (void **) &fname_DMmaskRM,
+                               NULL},
+                              {CLIARG_STR,
+                               ".WFSmask",
+                               "WFS mask",
+                               "NULL",
+                               CLICMDARG_FLAG_NOCLI,
+                               FPTYPE_FITSFILENAME,
+                               FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                               (void **) &fname_WFSmask,
+                               NULL},
+                              {CLIARG_STR,
+                               ".loRM",
+                               "low order modal response matrix",
+                               "NULL",
+                               CLICMDARG_FLAG_NOCLI,
+                               FPTYPE_FITSFILENAME,
+                               FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                               (void **) &fname_loRM,
+                               NULL},
+                              {CLIARG_STR,
+                               ".loRMmodes",
+                               "low order RM modes",
+                               "NULL",
+                               CLICMDARG_FLAG_NOCLI,
+                               FPTYPE_FITSFILENAME,
+                               FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                               (void **) &fname_loRMmodes,
+                               NULL}
+
+};
 
 
 

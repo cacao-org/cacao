@@ -171,7 +171,10 @@ static errno_t compute_function()
         char modegfname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(modegfname, "aol%d_modevalgain", AOloopindex);
 
+        printf("Create %s size %ld %ld\n", outmval, naxes[0], naxes[1]);
+
         create_image_ID(outmval, 2, naxes, imgin.datatype, 1, 0, 0, &IDoutmval);
+
         create_image_ID(modegfname,
                         2,
                         naxes,
