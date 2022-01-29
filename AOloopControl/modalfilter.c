@@ -278,33 +278,36 @@ static errno_t compute_function()
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
 
-        // grab input value
-        double mval0 = imgin.im->array.F[mi];
+        // grab input value from WFS
+        double mvalWFS = imgin.im->array.F[mi];
 
         // offset from mval to zp
-        double dmval = imgmzeropoint.im->array.F[mi] - mval0;
-
+        double dmval = imgmzeropoint.im->array.F[mi] - mvalWFS;
 
         // GAIN
         dmval *= imgmgain.im->array.F[mi];
 
+        double mvalDM = imgout.im->array.F[mi];
+        // TODO apply offset
+
+        mvalDM += dmval;
         // MULT
-        dmval *= imgmmult.im->array.F[mi];
+        mvalDM *= imgmmult.im->array.F[mi];
 
 
         // LIMIT
         float limit = imgmlimit.im->array.F[mi];
-        if (dmval > limit)
+        if (mvalDM > limit)
         {
-            dmval = limit;
+            mvalDM = limit;
         }
-        if (dmval < -limit)
+        if (mvalDM < -limit)
         {
-            dmval = -limit;
+            mvalDM = -limit;
         }
         //double mval2 = imgmzeropoint.im->array.F[mi] + dmval;
 
-        mvalout[mi] = dmval;
+        mvalout[mi] = mvalDM;
     }
 
     memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
