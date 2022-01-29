@@ -184,12 +184,12 @@ static errno_t compute_function()
     // uint32_t dmysize;
 
     // connect to DM
-    IMGID imgdm = makeIMGID(dmstream);
+    IMGID imgdm = mkIMGID_from_name(dmstream);
     resolveIMGID(&imgdm, ERRMODE_ABORT);
     printf("DM size : %u %u\n", imgdm.md->size[0], imgdm.md->size[1]);
 
     // connect to WFS
-    IMGID imgwfs = makeIMGID(wfsstream);
+    IMGID imgwfs = mkIMGID_from_name(wfsstream);
     resolveIMGID(&imgwfs, ERRMODE_ABORT);
     printf("WFS size : %u %u\n", imgwfs.md->size[0], imgwfs.md->size[1]);
 

@@ -147,6 +147,11 @@ static errno_t help_function()
 
 
 
+/**
+ * @brief Modal filtering AO processing
+ *
+ * @return errno_t
+ */
 
 static errno_t compute_function()
 {
@@ -154,14 +159,19 @@ static errno_t compute_function()
 
     // connect to input mode values array and get number of modes
     //
-    IMGID imgin = makeIMGID(inmval);
+    IMGID imgin = mkIMGID_from_name(inmval);
     resolveIMGID(&imgin, ERRMODE_ABORT);
     printf("%u modes\n", imgin.md->size[0]);
     uint32_t NBmode = imgin.md->size[0];
 
+    // allocate memory for output mode values
     float *mvalout = (float *) malloc(sizeof(float) * NBmode);
 
+
+    // time-averaged mode vales
     float *avemval = (float *) malloc(sizeof(float) * NBmode);
+
+
 
     // create output mode coeffs
     imageID IDoutmval;
@@ -177,6 +187,7 @@ static errno_t compute_function()
         printf("Create %s size %ld %ld\n", outmval, naxes[0], naxes[1]);
 
         create_image_ID(outmval, 2, naxes, imgin.datatype, 1, 0, 0, &IDoutmval);
+
 
         create_image_ID(modegfname,
                         2,
