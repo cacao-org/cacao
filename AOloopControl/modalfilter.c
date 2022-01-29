@@ -312,7 +312,7 @@ static errno_t compute_function()
     memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
     processinfo_update_output_stream(processinfo, imgout.ID);
 
-    /*
+
     // Update individual gain, mult and limit values
     // This is done AFTER computing mode values to minimize latency
     //
@@ -336,7 +336,7 @@ static errno_t compute_function()
             imgmlimitfact.im->array.F[mi] * (*looplimit);
     }
     processinfo_update_output_stream(processinfo, imgmlimit.ID);
-*/
+
 
 
 
