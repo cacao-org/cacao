@@ -11,7 +11,7 @@
 #include "CommandLineInterface/CLIcore.h"
 
 // Local variables pointers
-static int AOloopindex = 0;
+static uint64_t AOloopindex;
 
 static char *inmval;
 long         fpi_inmval;
@@ -25,22 +25,20 @@ long          fpi_loopgain;
 static float *loopmult;
 long          fpi_loopmult;
 
-static float *vlimit;
-long          fpi_vlimit;
+static float *looplimit;
+long          fpi_looplimit;
 
-static float *galpha;
-long          fpi_galpha;
 
-static uint32_t *mimax;
-long             fpi_mimax;
 
-static uint32_t *avets;
-long             fpi_avets;
 
-static uint32_t *aftgain;
-long             fpi_aftgain;
-
-static CLICMDARGDEF farg[] = {{CLIARG_STREAM,
+static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
+                               ".AOloopindex",
+                               "AO loop index",
+                               "0",
+                               CLIARG_VISIBLE_DEFAULT,
+                               (void **) &AOloopindex,
+                               NULL},
+                              {CLIARG_STREAM,
                                ".inmval",
                                "input mode values from WFS",
                                "aol0_modevalWFS",
@@ -67,42 +65,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_STREAM,
                                "0.95",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &loopmult,
-                               &fpi_loopmult},
-                              {CLIARG_FLOAT32,
-                               ".vlimit",
-                               "value limit",
-                               "0.2",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &vlimit,
-                               &fpi_vlimit},
-                              {CLIARG_FLOAT32,
-                               ".galpha",
-                               "loop gain alpha (1=flat)",
-                               "0.5",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &galpha,
-                               &fpi_galpha},
-                              {CLIARG_UINT32,
-                               ".mimax",
-                               "maximum mode index",
-                               "100",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &mimax,
-                               &fpi_mimax},
-                              {CLIARG_FLOAT32,
-                               ".avets",
-                               "averaging timescale [nb fr]",
-                               "10000.0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &avets,
-                               &fpi_avets},
-                              {CLIARG_FLOAT32,
-                               ".aftgain",
-                               "afterburner gain",
-                               "0.0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &aftgain,
-                               &fpi_aftgain}};
+                               &fpi_loopmult}};
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -113,11 +76,7 @@ static errno_t customCONFsetup()
     {
         data.fpsptr->parray[fpi_loopgain].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_vlimit].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_galpha].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_mimax].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_avets].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_aftgain].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_looplimit].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -139,6 +98,9 @@ static errno_t customCONFcheck()
 static CLICMDDATA CLIcmddata = {
     "modalfilter", "modal filtering", CLICMD_FIELDS_DEFAULTS};
 
+
+
+
 // detailed help
 static errno_t help_function()
 {
@@ -149,6 +111,29 @@ static errno_t help_function()
 
 /**
  * @brief Modal filtering AO processing
+ *
+ * Basic modal control. Each mode controlled independently.
+ *
+ * Control parameters for each mode are:
+ * - (g) gain
+ * - (m) mult
+ * - (z) zeropt
+ * - (l) limit
+ *
+ * PROCESSING
+ * Output (o) is computed from input (i) according to following steps :
+ *
+ * Apply gain :
+ * o += (z-i)*g
+ *
+ * Apply mult :
+ * o = z + m*(o-z)
+ *
+ * Apply limit:
+ * if o>z+l -> o = z+l
+ * if o<z-l -> o = z-l
+ *
+ *
  *
  * @return errno_t
  */
@@ -164,128 +149,195 @@ static errno_t compute_function()
     printf("%u modes\n", imgin.md->size[0]);
     uint32_t NBmode = imgin.md->size[0];
 
-    // allocate memory for output mode values
+
+
+    // allocate memory for temporary output mode values
     float *mvalout = (float *) malloc(sizeof(float) * NBmode);
 
 
-    // time-averaged mode vales
-    float *avemval = (float *) malloc(sizeof(float) * NBmode);
 
 
-
-    // create output mode coeffs
-    imageID IDoutmval;
-    imageID IDmodegainfact;
-    {
-        uint32_t naxes[2];
-        naxes[0] = imgin.md->size[0];
-        naxes[1] = 1;
-
-        char modegfname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(modegfname, "aol%d_modevalgain", AOloopindex);
-
-        printf("Create %s size %ld %ld\n", outmval, naxes[0], naxes[1]);
-
-        create_image_ID(outmval, 2, naxes, imgin.datatype, 1, 0, 0, &IDoutmval);
-
-
-        create_image_ID(modegfname,
-                        2,
-                        naxes,
-                        imgin.datatype,
-                        1,
-                        0,
-                        0,
-                        &IDmodegainfact);
-    }
-
+    // connect/create output mode coeffs
+    IMGID imgout = stream_connect_create_2Df32(outmval, NBmode, 1);
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
-        data.image[IDoutmval].array.F[mi]      = 0.0;
-        mvalout[mi]                            = 0.0;
-        avemval[mi]                            = 0.0;
-        data.image[IDmodegainfact].array.F[mi] = 1.0;
+        data.image[imgout.ID].array.F[mi] = 0.0;
     }
 
-    float avegain = 1.0 / (*avets);
-    printf("avegain = %f\n", avegain);
+
+
+
+    // ========================= MODAL GAIN ===========================
+
+    IMGID imgmgain;
+    {
+        char mgainname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(mgainname, "aol%lu_mgain", AOloopindex);
+        imgmgain = stream_connect_create_2Df32(mgainname, NBmode, 1);
+    }
+
+    // modal gains factors
+    // to be multiplied by overal gain to become mgain
+    // allows for single-parameter gain tuning
+    IMGID imgmgainfact;
+    {
+        char mgainfactname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(mgainfactname, "aol%lu_mgainfact", AOloopindex);
+        imgmgainfact = stream_connect_create_2Df32(mgainfactname, NBmode, 1);
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgmgainfact.im->array.F[mi] = 1.0;
+        }
+    }
+
+
+
+
+    // ========================= MODAL MULT ==========================
+
+    IMGID imgmmult;
+    {
+        char mmultname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(mmultname, "aol%lu_mmult", AOloopindex);
+        imgmmult = stream_connect_create_2Df32(mmultname, NBmode, 1);
+    }
+
+    // modal multiiplicative factors
+    // to be multiplied by overal mult to become mmult
+    // allows for single-parameter mult tuning
+    IMGID imgmmultfact;
+    {
+        char mmultfactname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(mmultfactname, "aol%lu_mmultfact", AOloopindex);
+        imgmmultfact = stream_connect_create_2Df32(mmultfactname, NBmode, 1);
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgmmultfact.im->array.F[mi] = 1.0;
+        }
+    }
+
+
+    // ========================= MODAL ZEROPOINT ==========================
+
+    IMGID imgmzeropoint;
+    {
+        char mzeropointname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(mzeropointname, "aol%lu_mzeropoint", AOloopindex);
+        imgmzeropoint = stream_connect_create_2Df32(mzeropointname, NBmode, 1);
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgmzeropoint.im->array.F[mi] = 0.0;
+        }
+    }
+
+
+
+    // ========================= MODAL LIMIT ==========================
+
+    IMGID imgmlimit;
+    {
+        char mlimitname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(mlimitname, "aol%lu_mlimit", AOloopindex);
+        imgmlimit = stream_connect_create_2Df32(mlimitname, NBmode, 1);
+    }
+
+    // modal multiiplicative factors
+    // to be multiplied by overal mult to become mmult
+    // allows for single-parameter mult tuning
+    IMGID imgmlimitfact;
+    {
+        char mlimitfactname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(mlimitfactname, "aol%lu_mlimitfact", AOloopindex);
+        imgmlimitfact = stream_connect_create_2Df32(mlimitfactname, NBmode, 1);
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgmlimitfact.im->array.F[mi] = 1.0;
+        }
+    }
+
+
+
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
-    avegain = 1.0 / (*avets);
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
-        float x = 1.0 * mi / NBmode;
 
-        float gain = (*loopgain);
-        gain *= pow((*galpha), x);
-        gain *= data.image[IDmodegainfact].array.F[mi];
+        // grab input value
+        double mval = imgin.im->array.F[mi];
+        // offset from zp to mval
+        double dmval = imgmzeropoint.im->array.F[mi] - mval;
 
-        if (mi > (*mimax))
+
+        // GAIN
+        mval += dmval * imgmgain.im->array.F[mi];
+
+
+        // MULT
+        dmval = mval - imgmzeropoint.im->array.F[mi];
+        dmval *= imgmmult.im->array.F[mi];
+
+
+        // LIMIT
+        float limit = imgmlimit.im->array.F[mi];
+        if (dmval > limit)
         {
-            gain = 0.0;
+            dmval = limit;
         }
-        /*        else
+        if (dmval < -limit)
         {
-        gain *= 1.0e-4; //TODO figure out why necessary
+            dmval = -limit;
         }
-        */
-        float mult     = (*loopmult);
-        float limitval = (*vlimit);
+        mval = imgmzeropoint.im->array.F[mi] + dmval;
 
-        /*        if((mi==0) || (mi==1))
-        {
-        gain *= 4.0;
-        }
-        */
-
-        avemval[mi] = (1.0 - avegain) * avemval[mi] +
-                      avegain * (imgin.im->array.F[mi] * gain);
-
-        // update long term average if input mode values
-        mvalout[mi] = (1.0 - gain) * mvalout[mi] -
-                      gain * (imgin.im->array.F[mi] - (*aftgain) * avemval[mi]);
-        mvalout[mi] *= mult;
-
-        if (mi > (*mimax))
-        {
-            mvalout[mi] = 0.0;
-        }
-
-        if (mvalout[mi] > limitval)
-        {
-            mvalout[mi] = limitval;
-        }
-
-        if (mvalout[mi] < -limitval)
-        {
-            mvalout[mi] = -limitval;
-        }
-
-        if (avemval[mi] > limitval)
-        {
-            avemval[mi] = limitval;
-        }
-
-        if (avemval[mi] < -limitval)
-        {
-            avemval[mi] = -limitval;
-        }
+        mvalout[mi] = mval;
     }
 
-    memcpy(data.image[IDoutmval].array.F, mvalout, sizeof(float) * NBmode);
-    processinfo_update_output_stream(processinfo, IDoutmval);
+    memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
+    processinfo_update_output_stream(processinfo, imgout.ID);
+
+
+    // Update individual gain, mult and limit values
+    // This is done AFTER computing mode values to minimize latency
+    //
+    for (uint32_t mi = 0; mi < NBmode; mi++)
+    {
+        imgmgain.im->array.F[mi] = imgmgainfact.im->array.F[mi] * (*loopgain);
+    }
+    processinfo_update_output_stream(processinfo, imgmgain.ID);
+
+
+    for (uint32_t mi = 0; mi < NBmode; mi++)
+    {
+        imgmmult.im->array.F[mi] = imgmmultfact.im->array.F[mi] * (*loopmult);
+    }
+    processinfo_update_output_stream(processinfo, imgmmult.ID);
+
+
+    for (uint32_t mi = 0; mi < NBmode; mi++)
+    {
+        imgmlimit.im->array.F[mi] =
+            imgmlimitfact.im->array.F[mi] * (*looplimit);
+    }
+    processinfo_update_output_stream(processinfo, imgmlimit.ID);
+
+
+
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(mvalout);
-    free(avemval);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
+
+
+
 INSERT_STD_FPSCLIfunctions
+
+
 
     // Register function in CLI
     errno_t
