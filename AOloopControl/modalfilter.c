@@ -185,6 +185,7 @@ static errno_t compute_function()
         char mgainfactname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(mgainfactname, "aol%lu_mgainfact", *AOloopindex);
         imgmgainfact = stream_connect_create_2Df32(mgainfactname, NBmode, 1);
+        printf("%s  ID = %ld\n", imgmgainfact.name, imgmgainfact.ID);
         list_image_ID();
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
