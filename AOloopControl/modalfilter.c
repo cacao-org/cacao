@@ -306,12 +306,15 @@ static errno_t compute_function()
     // Update individual gain, mult and limit values
     // This is done AFTER computing mode values to minimize latency
     //
+    list_image_ID();
+    printf(" mgain ID = %ld\n", imgmgain.ID);
+    fflush(stdout);
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
         imgmgain.im->array.F[mi] =
             1.0; //imgmgainfact.im->array.F[mi] * (*loopgain);
     }
-    processinfo_update_output_stream(processinfo, imgmgain.ID);
+    //processinfo_update_output_stream(processinfo, imgmgain.ID);
 
     /*
     for (uint32_t mi = 0; mi < NBmode; mi++)
