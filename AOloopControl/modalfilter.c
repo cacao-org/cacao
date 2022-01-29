@@ -270,26 +270,18 @@ static errno_t compute_function()
 
         // grab input value
         double mval = imgin.im->array.F[mi];
-        //        printf(" 0 mval = %lf\n", mval);
-        //        fflush(stdout);
 
         // offset from zp to mval
         double dmval = imgmzeropoint.im->array.F[mi] - mval;
-        //        printf(" 1 dmval = %lf\n", dmval);
-        //        fflush(stdout);
 
 
         // GAIN
         mval += dmval * imgmgain.im->array.F[mi];
-        //        printf(" 2 val = %lf\n", mval);
-        //        fflush(stdout);
 
 
         // MULT
         dmval = mval - imgmzeropoint.im->array.F[mi];
         dmval *= imgmmult.im->array.F[mi];
-        //        printf(" 3 dmval = %lf\n", dmval);
-        //        fflush(stdout);
 
 
         // LIMIT
@@ -303,8 +295,6 @@ static errno_t compute_function()
             dmval = -limit;
         }
         mval = imgmzeropoint.im->array.F[mi] + dmval;
-        //        printf(" 4 mval = %lf\n", mval);
-        //        fflush(stdout);
 
         mvalout[mi] = mval;
     }
@@ -318,7 +308,8 @@ static errno_t compute_function()
     //
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
-        imgmgain.im->array.F[mi] = imgmgainfact.im->array.F[mi] * (*loopgain);
+        imgmgain.im->array.F[mi] =
+            1.0; //imgmgainfact.im->array.F[mi] * (*loopgain);
     }
     processinfo_update_output_stream(processinfo, imgmgain.ID);
 
