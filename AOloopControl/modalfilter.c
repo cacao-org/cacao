@@ -314,7 +314,7 @@ static errno_t compute_function()
         imgmgain.im->array.F[mi] = imgmgainfact.im->array.F[mi] * (*loopgain);
     }
     processinfo_update_output_stream(processinfo, imgmgain.ID);
-    /*
+
 
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
@@ -322,7 +322,7 @@ static errno_t compute_function()
     }
     processinfo_update_output_stream(processinfo, imgmmult.ID);
 
-
+    /*
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
         imgmlimit.im->array.F[mi] =
