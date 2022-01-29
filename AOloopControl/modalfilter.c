@@ -281,13 +281,15 @@ static errno_t compute_function()
         // grab input value
         double mval = imgin.im->array.F[mi];
 
-        // offset from zp to mval
+        // offset from mval to zp
         double dmval = imgmzeropoint.im->array.F[mi] - mval;
 
 
         // GAIN
-        mval += dmval * imgmgain.im->array.F[mi];
+        dmval *= imgmgain.im->array.F[mi];
+        // dmval is change to be applied to mval
 
+        mval += dmval;
 
         // MULT
         dmval = mval - imgmzeropoint.im->array.F[mi];
@@ -304,6 +306,7 @@ static errno_t compute_function()
         {
             dmval = -limit;
         }
+
         mval = imgmzeropoint.im->array.F[mi] + dmval;
 
         mvalout[mi] = mval;
