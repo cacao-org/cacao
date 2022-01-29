@@ -176,6 +176,9 @@ static errno_t compute_function()
         WRITE_IMAGENAME(mgainname, "aol%lu_mgain", *AOloopindex);
         imgmgain = stream_connect_create_2Df32(mgainname, NBmode, 1);
     }
+    list_image_ID();
+    printf(" mgain ID = %ld\n", imgmgain.ID);
+    fflush(stdout);
 
     // modal gains factors
     // to be multiplied by overal gain to become mgain
@@ -306,9 +309,6 @@ static errno_t compute_function()
     // Update individual gain, mult and limit values
     // This is done AFTER computing mode values to minimize latency
     //
-    list_image_ID();
-    printf(" mgain ID = %ld\n", imgmgain.ID);
-    fflush(stdout);
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
         imgmgain.im->array.F[mi] =
@@ -330,7 +330,7 @@ static errno_t compute_function()
             imgmlimitfact.im->array.F[mi] * (*looplimit);
     }
     processinfo_update_output_stream(processinfo, imgmlimit.ID);
-*/
+    */
 
 
 
