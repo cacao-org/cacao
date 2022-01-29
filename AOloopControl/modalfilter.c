@@ -288,7 +288,7 @@ static errno_t compute_function()
         // MULT
         dmval = mval - imgmzeropoint.im->array.F[mi];
         dmval *= imgmmult.im->array.F[mi];
-        printf(" 3 dval = %lf\n", dval);
+        printf(" 3 dmval = %lf\n", dmval);
         fflush(stdout);
 
 
