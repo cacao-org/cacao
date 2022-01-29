@@ -329,11 +329,14 @@ static errno_t compute_function()
     fflush(stdout);
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
-        imgmlimit.im->array.F[mi] =
-            imgmlimitfact.im->array.F[mi] * (*looplimit);
+        imgmlimit.im->array.F[mi] = 1.0;
+        //            imgmlimitfact.im->array.F[mi] * (*looplimit);
     }
+    printf("LINE %dn", __LINE__);
+    fflush(stdout);
     processinfo_update_output_stream(processinfo, imgmlimit.ID);
-
+    printf("LINE %d\n", __LINE__);
+    fflush(stdout);
 
 
 
