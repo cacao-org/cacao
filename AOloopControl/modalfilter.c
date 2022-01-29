@@ -323,6 +323,10 @@ static errno_t compute_function()
     processinfo_update_output_stream(processinfo, imgmmult.ID);
 
 
+
+    list_image_ID();
+    printf("  ID  %ld  %ld\n", imgmlimit.ID, imgmlimitfact.ID);
+    fflush(stdout);
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
         imgmlimit.im->array.F[mi] =
