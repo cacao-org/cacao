@@ -279,25 +279,24 @@ static errno_t compute_function()
     {
 
         // grab input value
-        double mval = imgin.im->array.F[mi];
+        double mval0 = imgin.im->array.F[mi];
 
         // offset from mval to zp
-        double dmval = imgmzeropoint.im->array.F[mi] - mval;
+        double dmval = imgmzeropoint.im->array.F[mi] - mval0;
 
 
         // GAIN
         dmval *= imgmgain.im->array.F[mi];
         // dmval is change to be applied to mval
-
-        mval += dmval;
+        double mval1 = mval0 + dmval;
 
         // MULT
-        dmval = mval; // - imgmzeropoint.im->array.F[mi];
-                      //      dmval *= imgmmult.im->array.F[mi];
+        dmval = mval1 - imgmzeropoint.im->array.F[mi];
+        dmval *= imgmmult.im->array.F[mi];
 
 
         // LIMIT
-        /*        float limit = imgmlimit.im->array.F[mi];
+        float limit = imgmlimit.im->array.F[mi];
         if (dmval > limit)
         {
             dmval = limit;
@@ -306,11 +305,9 @@ static errno_t compute_function()
         {
             dmval = -limit;
         }
-*/
-        //        mval = imgmzeropoint.im->array.F[mi] + dmval;
-        mval = dmval;
+        double mval2 = imgmzeropoint.im->array.F[mi] + dmval;
 
-        mvalout[mi] = mval;
+        mvalout[mi] = mval2;
     }
 
     memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
