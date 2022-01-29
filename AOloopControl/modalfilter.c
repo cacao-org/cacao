@@ -168,6 +168,7 @@ static errno_t compute_function()
 
 
     // ========================= MODAL GAIN ===========================
+    printf("Setting up modal gain\n");
 
     IMGID imgmgain;
     {
@@ -184,6 +185,7 @@ static errno_t compute_function()
         char mgainfactname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(mgainfactname, "aol%lu_mgainfact", *AOloopindex);
         imgmgainfact = stream_connect_create_2Df32(mgainfactname, NBmode, 1);
+        list_image_ID();
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmgainfact.im->array.F[mi] = 1.0;
@@ -192,8 +194,8 @@ static errno_t compute_function()
 
 
 
-
     // ========================= MODAL MULT ==========================
+    printf("Setting up modal mult\n");
 
     IMGID imgmmult;
     {
@@ -218,6 +220,7 @@ static errno_t compute_function()
 
 
     // ========================= MODAL ZEROPOINT ==========================
+    printf("Setting up modal zero point\n");
 
     IMGID imgmzeropoint;
     {
@@ -233,6 +236,7 @@ static errno_t compute_function()
 
 
     // ========================= MODAL LIMIT ==========================
+    printf("Setting up modal limit\n");
 
     IMGID imgmlimit;
     {
