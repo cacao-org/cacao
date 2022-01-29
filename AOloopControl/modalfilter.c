@@ -292,12 +292,12 @@ static errno_t compute_function()
         mval += dmval;
 
         // MULT
-        dmval = mval - imgmzeropoint.im->array.F[mi];
-        dmval *= imgmmult.im->array.F[mi];
+        dmval = mval; // - imgmzeropoint.im->array.F[mi];
+                      //      dmval *= imgmmult.im->array.F[mi];
 
 
         // LIMIT
-        float limit = imgmlimit.im->array.F[mi];
+        /*        float limit = imgmlimit.im->array.F[mi];
         if (dmval > limit)
         {
             dmval = limit;
@@ -306,8 +306,9 @@ static errno_t compute_function()
         {
             dmval = -limit;
         }
-
-        mval = imgmzeropoint.im->array.F[mi] + dmval;
+*/
+        //        mval = imgmzeropoint.im->array.F[mi] + dmval;
+        mval = dmval;
 
         mvalout[mi] = mval;
     }
