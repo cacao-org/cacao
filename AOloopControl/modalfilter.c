@@ -65,7 +65,14 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                "0.95",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &loopmult,
-                               &fpi_loopmult}};
+                               &fpi_loopmult},
+                              {CLIARG_FLOAT32,
+                               ".looplimit",
+                               "loop limit",
+                               "1.0",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &looplimit,
+                               &fpi_looplimit}};
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -323,20 +330,12 @@ static errno_t compute_function()
     processinfo_update_output_stream(processinfo, imgmmult.ID);
 
 
-
-    list_image_ID();
-    printf("  ID  %ld  %ld\n", imgmlimit.ID, imgmlimitfact.ID);
-    fflush(stdout);
     for (uint32_t mi = 0; mi < NBmode; mi++)
     {
-        imgmlimit.im->array.F[mi] = 1.0 * (*looplimit);
-        //            imgmlimitfact.im->array.F[mi] * (*looplimit);
+        imgmlimit.im->array.F[mi] =
+            imgmlimitfact.im->array.F[mi] * (*looplimit);
     }
-    printf("LINE %dn", __LINE__);
-    fflush(stdout);
     processinfo_update_output_stream(processinfo, imgmlimit.ID);
-    printf("LINE %d\n", __LINE__);
-    fflush(stdout);
 
 
 
