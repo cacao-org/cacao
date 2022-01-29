@@ -172,7 +172,7 @@ static errno_t compute_function()
     IMGID imgmgain;
     {
         char mgainname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mgainname, "aol%lu_mgain", AOloopindex);
+        WRITE_IMAGENAME(mgainname, "aol%lu_mgain", *AOloopindex);
         imgmgain = stream_connect_create_2Df32(mgainname, NBmode, 1);
     }
 
@@ -182,7 +182,7 @@ static errno_t compute_function()
     IMGID imgmgainfact;
     {
         char mgainfactname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mgainfactname, "aol%lu_mgainfact", AOloopindex);
+        WRITE_IMAGENAME(mgainfactname, "aol%lu_mgainfact", *AOloopindex);
         imgmgainfact = stream_connect_create_2Df32(mgainfactname, NBmode, 1);
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
@@ -198,7 +198,7 @@ static errno_t compute_function()
     IMGID imgmmult;
     {
         char mmultname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mmultname, "aol%lu_mmult", AOloopindex);
+        WRITE_IMAGENAME(mmultname, "aol%lu_mmult", *AOloopindex);
         imgmmult = stream_connect_create_2Df32(mmultname, NBmode, 1);
     }
 
@@ -208,7 +208,7 @@ static errno_t compute_function()
     IMGID imgmmultfact;
     {
         char mmultfactname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mmultfactname, "aol%lu_mmultfact", AOloopindex);
+        WRITE_IMAGENAME(mmultfactname, "aol%lu_mmultfact", *AOloopindex);
         imgmmultfact = stream_connect_create_2Df32(mmultfactname, NBmode, 1);
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
@@ -222,7 +222,7 @@ static errno_t compute_function()
     IMGID imgmzeropoint;
     {
         char mzeropointname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mzeropointname, "aol%lu_mzeropoint", AOloopindex);
+        WRITE_IMAGENAME(mzeropointname, "aol%lu_mzeropoint", *AOloopindex);
         imgmzeropoint = stream_connect_create_2Df32(mzeropointname, NBmode, 1);
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
@@ -237,7 +237,7 @@ static errno_t compute_function()
     IMGID imgmlimit;
     {
         char mlimitname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mlimitname, "aol%lu_mlimit", AOloopindex);
+        WRITE_IMAGENAME(mlimitname, "aol%lu_mlimit", *AOloopindex);
         imgmlimit = stream_connect_create_2Df32(mlimitname, NBmode, 1);
     }
 
@@ -247,7 +247,7 @@ static errno_t compute_function()
     IMGID imgmlimitfact;
     {
         char mlimitfactname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mlimitfactname, "aol%lu_mlimitfact", AOloopindex);
+        WRITE_IMAGENAME(mlimitfactname, "aol%lu_mlimitfact", *AOloopindex);
         imgmlimitfact = stream_connect_create_2Df32(mlimitfactname, NBmode, 1);
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
