@@ -287,11 +287,8 @@ static errno_t compute_function()
 
         // GAIN
         dmval *= imgmgain.im->array.F[mi];
-        // dmval is change to be applied to mval
-        double mval1 = mval0 + dmval;
 
         // MULT
-        dmval = mval1 - imgmzeropoint.im->array.F[mi];
         dmval *= imgmmult.im->array.F[mi];
 
 
@@ -305,9 +302,9 @@ static errno_t compute_function()
         {
             dmval = -limit;
         }
-        double mval2 = imgmzeropoint.im->array.F[mi] + dmval;
+        //double mval2 = imgmzeropoint.im->array.F[mi] + dmval;
 
-        mvalout[mi] = mval2;
+        mvalout[mi] = dmval;
     }
 
     memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
