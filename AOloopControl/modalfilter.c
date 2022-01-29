@@ -11,7 +11,7 @@
 #include "CommandLineInterface/CLIcore.h"
 
 // Local variables pointers
-static uint64_t AOloopindex;
+static uint64_t *AOloopindex;
 
 static char *inmval;
 long         fpi_inmval;
