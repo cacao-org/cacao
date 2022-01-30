@@ -19,6 +19,11 @@
 static uint32_t *DMindex;
 long             fpi_DMindex;
 
+// output DM displacement stream
+// can be read or created
+static char *DMcombout;
+long         fpi_DMcombout;
+
 static uint32_t *DMxsize;
 long             fpi_DMxsize;
 
@@ -72,6 +77,13 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                CLIARG_VISIBLE_DEFAULT,
                                (void **) &DMindex,
                                &fpi_DMindex},
+                              {CLIARG_STREAM,
+                               ".DMcombout",
+                               "output stream for combined command",
+                               "dm99disp",
+                               CLIARG_VISIBLE_DEFAULT,
+                               (void **) &DMcombout,
+                               &fpi_DMcombout},
                               {CLIARG_UINT32,
                                ".DMxsize",
                                "x size",
@@ -210,8 +222,8 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_DMindex].fpflag =
             FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
         data.fpsptr->parray[fpi_DMindex].fpflag &= ~FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_DMindex].val.ui32[1] = 0; // min value
-        data.fpsptr->parray[fpi_DMindex].val.ui32[2] = 9; // max value
+        data.fpsptr->parray[fpi_DMindex].val.ui32[1] = 0;  // min value
+        data.fpsptr->parray[fpi_DMindex].val.ui32[2] = 99; // max value
     }
 
     return RETURN_SUCCESS;
