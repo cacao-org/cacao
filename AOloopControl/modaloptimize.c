@@ -1,6 +1,6 @@
 /**
- * @file    modalfilter.c
- * @brief   Apply modal filtering
+ * @file    modaloptimize.c
+ * @brief   Optimize modal control parameters
  *
  *
  *
@@ -13,21 +13,8 @@
 // Local variables pointers
 static uint64_t *AOloopindex;
 
-static char *inmval;
-static long  fpi_inmval;
-
-static char *outmval;
-static long  fpi_outmval;
-
-static float *loopgain;
-static long   fpi_loopgain;
-
-static float *loopmult;
-static long   fpi_loopmult;
-
-static float *looplimit;
-static long   fpi_looplimit;
-
+static uint64_t *samplesize;
+static long      fpi_samplesize;
 
 
 
@@ -38,41 +25,13 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                CLIARG_VISIBLE_DEFAULT,
                                (void **) &AOloopindex,
                                NULL},
-                              {CLIARG_STREAM,
-                               ".inmval",
-                               "input mode values from WFS",
-                               "aol0_modevalWFS",
+                              {CLIARG_UINT64,
+                               ".samplesize",
+                               "number of point per set",
+                               "10000",
                                CLIARG_VISIBLE_DEFAULT,
-                               (void **) &inmval,
-                               &fpi_inmval},
-                              {CLIARG_STREAM,
-                               ".outmval",
-                               "output mode values to DM",
-                               "aol0_modevalDM",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &outmval,
-                               &fpi_outmval},
-                              {CLIARG_FLOAT32,
-                               ".loopgain",
-                               "loop gain",
-                               "0.01",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &loopgain,
-                               &fpi_loopgain},
-                              {CLIARG_FLOAT32,
-                               ".loopmult",
-                               "loop mult",
-                               "0.95",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &loopmult,
-                               &fpi_loopmult},
-                              {CLIARG_FLOAT32,
-                               ".looplimit",
-                               "loop limit",
-                               "1.0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &looplimit,
-                               &fpi_looplimit}};
+                               (void **) &samplesize,
+                               &fpi_samplesize}};
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -81,9 +40,7 @@ static errno_t customCONFsetup()
 {
     if (data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_loopgain].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_looplimit].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_samplesize].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -103,7 +60,7 @@ static errno_t customCONFcheck()
 }
 
 static CLICMDDATA CLIcmddata = {
-    "modalfilter", "modal filtering", CLICMD_FIELDS_DEFAULTS};
+    "modaloptimize", "modal control optimize", CLICMD_FIELDS_DEFAULTS};
 
 
 
@@ -116,39 +73,11 @@ static errno_t help_function()
 
 
 
-/**
- * @brief Modal filtering AO processing
- *
- * Basic modal control. Each mode controlled independently.
- *
- * Control parameters for each mode are:
- * - (g) gain
- * - (m) mult
- * - (z) zeropt
- * - (l) limit
- *
- * PROCESSING
- * Output (o) is computed from input (i) according to following steps :
- *
- * Apply gain :
- * o += (z-i)*g
- *
- * Apply mult :
- * o = z + m*(o-z)
- *
- * Apply limit:
- * if o>z+l -> o = z+l
- * if o<z-l -> o = z-l
- *
- *
- *
- * @return errno_t
- */
 
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
-
+    /*
     // connect to input mode values array and get number of modes
     //
     IMGID imgin = mkIMGID_from_name(inmval);
@@ -343,7 +272,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(mvalout);
-
+*/
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
@@ -357,7 +286,7 @@ INSERT_STD_FPSCLIfunctions
 
     // Register function in CLI
     errno_t
-    CLIADDCMD_AOloopControl__modalfilter()
+    CLIADDCMD_AOloopControl__modaloptimize()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
