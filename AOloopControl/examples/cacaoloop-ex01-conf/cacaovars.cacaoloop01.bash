@@ -23,6 +23,7 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
 # ========================================
 #       FPS processes to be set up
+#       Comment processes not used
 # ========================================
 
 # DM combination
@@ -65,10 +66,19 @@ export CACAO_FPSPROC_COMPFCM="ON"
 export CACAO_FPSPROC_COMPSCM="ON"
 
 
-# Extract control modes
+# Extract control modes from WFS using MVM
 #
-export CACAO_FPSPROC_MODESEXTRACTWFSGPU="ON"
+export CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL="ON"
+
+# Modal control filtering
+#
+export CACAO_FPSPROC_MODALFILTERING="ON"
+
+# Compute DM command from control mode values
+#
+export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
+
 
 # Control loop
 #
-export CACAO_FPSPROC_AOLOOP_RUN="ON"
+# export CACAO_FPSPROC_AOLOOP_RUN="ON"
