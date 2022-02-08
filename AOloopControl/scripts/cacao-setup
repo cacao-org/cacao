@@ -888,10 +888,12 @@ fi
 echo "    Establish links ..."
 if [ "$UPDATEMODE" = "0" ]; then
     # link DM index to loop number
+    echo "    linking DM ..."
     cacao-setDMnolink &>> ${LOGFILENAME}
 
     # link WFS
     echo "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
+    echo "    linking WFS ..."
     milk-streamlink -p aol${LOOPNUMBER}_ wfsim &>> ${LOGFILENAME}
 fi
 
