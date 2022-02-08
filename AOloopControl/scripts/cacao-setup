@@ -865,7 +865,7 @@ fi
 # ===================================================================================
 # ========= START ALL CONF PROCESSES  ===============================================
 # ===================================================================================
-
+echo "    (re)-starting conf processes ..."
 # stop CONF processes in case already running
 allFPScmd confstop
 
@@ -875,7 +875,7 @@ allFPScmd confstart
 # ===================================================================================
 # ========= INIT SETTINGS IMPORTED FROM CONF FILE ===================================
 # ===================================================================================
-
+echo "    INIT settings imported from conf file ..."
 if [ "$UPDATEMODE" = "0" ]; then
     fpssetparamconf
 fi
@@ -885,7 +885,7 @@ fi
 # ===================================================================================
 # Startup sequence: establish links
 # ===================================================================================
-
+echo "    Establish links ..."
 if [ "$UPDATEMODE" = "0" ]; then
     # link DM index to loop number
     cacao-setDMnolink &>> ${LOGFILENAME}
