@@ -170,7 +170,7 @@ else
     LOOPNUMBER="7"
 fi
 
-
+echo "    Linking streams ..."
 
 echo "dm${DMindex}disp03" > ./conf/streamlink.dmC.name.txt # DM control channel
 milk-streamlink -p aol${LOOPNUMBER}_ dmC
@@ -207,6 +207,8 @@ milk-streamlink -p aol${LOOPNUMBER}_ dmdisp
 
 echo "dm${DMindex}disp02" > ./conf/streamlink.dmRM.name.txt # DM actuation channel for RM matrix
 milk-streamlink -p aol${LOOPNUMBER}_ dmRM
+
+echo "    Removing pre-existing pokes ..."
 
 # remove pre-existing poke patterns
 rm ./conf/RMpokeCubeZ.fits.gz
