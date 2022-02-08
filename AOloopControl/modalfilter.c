@@ -271,74 +271,80 @@ static errno_t compute_function()
     }
 
 
-
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
-    for (uint32_t mi = 0; mi < NBmode; mi++)
     {
+        // Pre-allocations for modal loop
+        double mvalWFS;
+        double dmval;
+        double mvalDM;
+        float  limit;
 
-        // grab input value from WFS
-        double mvalWFS = imgin.im->array.F[mi];
-
-        // offset from mval to zp
-        double dmval = imgmzeropoint.im->array.F[mi] - mvalWFS;
-
-        // GAIN
-        dmval *= imgmgain.im->array.F[mi];
-
-        // get current DM position
-        double mvalDM = imgout.im->array.F[mi];
-
-        // apply scaled offset
-        mvalDM += dmval;
-        // MULT
-        mvalDM *= imgmmult.im->array.F[mi];
-
-
-        // LIMIT
-        float limit = imgmlimit.im->array.F[mi];
-        if (mvalDM > limit)
+        for (uint32_t mi = 0; mi < NBmode; mi++)
         {
-            mvalDM = limit;
+
+            // grab input value from WFS
+            mvalWFS = imgin.im->array.F[mi];
+
+            // offset from mval to zp
+            dmval = imgmzeropoint.im->array.F[mi] - mvalWFS;
+
+            // GAIN
+            dmval *= imgmgain.im->array.F[mi];
+
+            // get current DM position
+            mvalDM = imgout.im->array.F[mi];
+
+            // apply scaled offset
+            mvalDM += dmval;
+            // MULT
+            mvalDM *= imgmmult.im->array.F[mi];
+
+
+            // LIMIT
+            limit = imgmlimit.im->array.F[mi];
+            if (mvalDM > limit)
+            {
+                mvalDM = limit;
+            }
+            if (mvalDM < -limit)
+            {
+                mvalDM = -limit;
+            }
+
+            mvalout[mi] = mvalDM;
         }
-        if (mvalDM < -limit)
+
+        memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
+        processinfo_update_output_stream(processinfo, imgout.ID);
+
+
+        // Update individual gain, mult and limit values
+        // This is done AFTER computing mode values to minimize latency
+        //
+        for (uint32_t mi = 0; mi < NBmode; mi++)
         {
-            mvalDM = -limit;
+            imgmgain.im->array.F[mi] =
+                imgmgainfact.im->array.F[mi] * (*loopgain);
         }
+        processinfo_update_output_stream(processinfo, imgmgain.ID);
 
-        mvalout[mi] = mvalDM;
+
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgmmult.im->array.F[mi] =
+                imgmmultfact.im->array.F[mi] * (*loopmult);
+        }
+        processinfo_update_output_stream(processinfo, imgmmult.ID);
+
+
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgmlimit.im->array.F[mi] =
+                imgmlimitfact.im->array.F[mi] * (*looplimit);
+        }
+        processinfo_update_output_stream(processinfo, imgmlimit.ID);
     }
-
-    memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
-    processinfo_update_output_stream(processinfo, imgout.ID);
-
-
-    // Update individual gain, mult and limit values
-    // This is done AFTER computing mode values to minimize latency
-    //
-    for (uint32_t mi = 0; mi < NBmode; mi++)
-    {
-        imgmgain.im->array.F[mi] = imgmgainfact.im->array.F[mi] * (*loopgain);
-    }
-    processinfo_update_output_stream(processinfo, imgmgain.ID);
-
-
-    for (uint32_t mi = 0; mi < NBmode; mi++)
-    {
-        imgmmult.im->array.F[mi] = imgmmultfact.im->array.F[mi] * (*loopmult);
-    }
-    processinfo_update_output_stream(processinfo, imgmmult.ID);
-
-
-    for (uint32_t mi = 0; mi < NBmode; mi++)
-    {
-        imgmlimit.im->array.F[mi] =
-            imgmlimitfact.im->array.F[mi] * (*looplimit);
-    }
-    processinfo_update_output_stream(processinfo, imgmlimit.ID);
-
-
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
