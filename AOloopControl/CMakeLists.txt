@@ -89,6 +89,9 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-mkDMslaveActprox
 	scripts/cacao-mkLODMmodes
 	scripts/cacao-NULL
+	scripts/cacao-calib-archive
+	scripts/cacao-calib-apply
+	scripts/cacao-calib-archivecurrent
 	scripts/cacao-exec
 	scripts/cacao.tmux
 	scripts/cacao-fpsarchive
