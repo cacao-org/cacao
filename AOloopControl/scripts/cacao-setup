@@ -832,6 +832,7 @@ milk-fpsinit -e cacao -C
 # start fpsCTRL and conf processes
 
 if [ "$UPDATEMODE" = "0" ]; then
+	echo "Running milk-fpsCTRL from tmux session ${fpsCTRLtmuxname}"
     tmux new-session -d -s ${fpsCTRLtmuxname}
     tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m  &>> ${LOGFILENAME} # in case previous instance is running, exit from it
     tmux send-keys -t ${fpsCTRLtmuxname} "TMUX=" C-m  &>> ${LOGFILENAME}   # ensures that tmux sessions can be created from fpsCTRL
@@ -839,6 +840,7 @@ if [ "$UPDATEMODE" = "0" ]; then
 
     tmux send-keys -t ${fpsCTRLtmuxname} "milk-fpsCTRL -s -f ${fpsCTRLfifo}" C-m  &>> ${LOGFILENAME}
 else
+	echo "Updating milk-fpsCTRL from tmux session ${fpsCTRLtmuxname}"
     tmux send-keys -t ${fpsCTRLtmuxname} "s"  &>> ${LOGFILENAME}
 fi
 
@@ -850,8 +852,9 @@ echo "waiting for fifo \"${fpsCTRLfifo}\" ..."
 until [ -p "${fpsCTRLfifo}" ]
 do
     sleep 0.05
+    echo -n "."
 done
-
+echo ""
 
 
 if [ "$UPDATEMODE" = "0" ]; then
