@@ -9,7 +9,6 @@ ARCHDIR="AOcalibs/$1"
 mkdir -p ${ARCHDIR}
 
 
-
 cp fps.compfCM-0.datadir/mkmodestmp/fmodesWFS1all.fits ${ARCHDIR}/aol0_modesWFS.fits
 cp fps.compfCM-0.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/aol0_DMmodes.fits
 

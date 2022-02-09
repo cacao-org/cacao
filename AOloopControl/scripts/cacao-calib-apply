@@ -4,24 +4,46 @@
 # Calib name
 
 
+
 ARCHDIR="AOcalibs/$1"
 
-mkdir -p ${ARCHDIR}
+if [[ -d "${ARCHDIR}" ]]; then
+
+milk <<EOF
+loadfits "${ARCHDIR}/aol0_modesWFS.fits" aol0mWFS
+cpsh aol0mWFS aol0_modesWFS
+
+loadfits "${ARCHDIR}/aol0_DMmodes.fits" aol0mDM
+cpsh aol0mDM  aol0_DMmodes
+
+loadfits "${ARCHDIR}/aol0_wfsref.fits" aol0wfsref
+cpsh aol0wfsref aol0_wfsref
+
+loadfits "${ARCHDIR}/aol0_wfsmask.fits" aol0wfsmask
+cpsh aol0wfsmask aol0_wfsmask
 
 
+loadfits "${ARCHDIR}/aol0_wfsmap.fits" aol0wfsmap
+cpsh aol0wfsmap aol0_wfsmap
 
-cp fps.compfCM-0.datadir/mkmodestmp/fmodesWFS1all.fits ${ARCHDIR}/aol0_modesWFS.fits
-cp fps.compfCM-0.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/aol0_DMmodes.fits
+loadfits "${ARCHDIR}/aol0_dmmask.fits" aol0dmmask
+cpsh aol0dmmask aol0_dmmask
 
-cp fps.acqlin_zRM-0.datadir/wfsref_mn.fits ${ARCHDIR}/aol0_wfsref.fits
-cp fps.acqlin_zRM-0.datadir/wfsmask_mkm.fits ${ARCHDIR}/aol0_wfsmask.fits
-cp fps.acqlin_zRM-0.datadir/wfsmap.fits ${ARCHDIR}/aol0_wfsmap.fits
+loadfits "${ARCHDIR}/aol0_dmslaved.fits" aol0dmslaved
+cpsh aol0dmslaved aol0_dmslaved
 
-cp fps.acqlin_zRM-0.datadir/dmmask_mkm.fits ${ARCHDIR}/aol0_dmmask.fits
-cp fps.acqlin_zRM-0.datadir/dmslaved.fits ${ARCHDIR}/aol0_dmslaved.fits
+loadfits "${ARCHDIR}/aol0_zrespM.fits" aol0zrespM
+cpsh aol0zrespM aol0_zrespM
 
-cp fps.acqlin_zRM-0.datadir/zrespM.fits ${ARCHDIR}/aol0_zrespM.fits
+loadfits "${ARCHDIR}/aol0_LOrespM.fits" aol0LOrespM
+cpsh aol0LOrespM aol0_LOrespM
 
+loadfits "${ARCHDIR}/aol0_LODMmodes.fits" aol0LODMmodes
+cpsh aol0LODMmodes aol0_LODMmodes
 
-cp fps.acqlin_loRM-0.datadir/respM.fits ${ARCHDIR}/aol0_LOrespM.fits
-cp fps.acqlin_loRM-0.datadir/RMpokeCube.fits ${ARCHDIR}/aol0_LODMmodes.fits
+exitCLI
+EOF
+
+else
+    echo "DIRECTORY DOES NOT EXIST"
+fi
