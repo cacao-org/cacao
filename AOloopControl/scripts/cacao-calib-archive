@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# Arguments:
+# Calib name
+
+
+ARCHDIR="AOcalibs/$1"
+
+mkdir -p ${ARCHDIR}
+
+
+
+cp fps.compfCM-0.datadir/mkmodestmp/fmodesWFS1all.fits ${ARCHDIR}/aol0_modesWFS.fits
+cp fps.compfCM-0.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/aol0_DMmodes.fits
+
+cp fps.acqlin_zRM-0.datadir/wfsref_mn.fits ${ARCHDIR}/aol0_wfsref.fits
+cp fps.acqlin_zRM-0.datadir/wfsmask_mkm.fits ${ARCHDIR}/aol0_wfsmask.fits
+cp fps.acqlin_zRM-0.datadir/wfsmap.fits ${ARCHDIR}/aol0_wfsmap.fits
+
+cp fps.acqlin_zRM-0.datadir/dmmask_mkm.fits ${ARCHDIR}/aol0_dmmask.fits
+cp fps.acqlin_zRM-0.datadir/dmslaved.fits ${ARCHDIR}/aol0_dmslaved.fits
+
+cp fps.acqlin_zRM-0.datadir/zrespM.fits ${ARCHDIR}/aol0_zrespM.fits
+
+
+cp fps.acqlin_loRM-0.datadir/respM.fits ${ARCHDIR}/aol0_LOrespM.fits
+cp fps.acqlin_loRM-0.datadir/RMpokeCube.fits ${ARCHDIR}/aol0_LODMmodes.fits
