@@ -53,7 +53,9 @@ if [[ -d "${ARCHDIR}" ]]; then
 echo "Purging streams ..."
 
 milk-shmim-rm aol${AOLOOPNUMBER}_modesWFS
+milk-shmim-rm aol${AOLOOPNUMBER}_modevalWFS
 milk-shmim-rm aol${AOLOOPNUMBER}_DMmodes
+milk-shmim-rm aol${AOLOOPNUMBER}_modevalDM
 milk-shmim-rm aol${AOLOOPNUMBER}_wfsref
 milk-shmim-rm aol${AOLOOPNUMBER}_wfsmask
 milk-shmim-rm aol${AOLOOPNUMBER}_wfsmap
