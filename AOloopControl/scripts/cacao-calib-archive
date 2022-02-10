@@ -1,5 +1,34 @@
 #!/usr/bin/env bash
 
+MSdescr="Archive AO calibration"
+
+MSextdescr="Copy current filesystem calibration to AOcalibs/<calibname>/ directory"
+
+source milk-script-std-config
+
+
+RequiredCommands=(milk)
+RequiredFiles=(LOOPNUMBER)
+RequiredDirs=(fps.compfCM-${AOLOOPNUMBER}.datadir fps.acqlin_zRM-${AOLOOPNUMBER}.datadir fps.acqlin_loRM-${AOLOOPNUMBER}.datadir)
+
+MSarg+=( "calibname:string:calibration name" )
+
+
+
+source milk-argparse
+set +u
+if [ "${EXITSTATUS}" = "1" ]; then
+exit
+fi
+set -u
+
+
+
+
+calib="${inputMSargARRAY[0]}"
+
+echo "Calibration : ${calib}"
+
 
 if [ -f LOOPNUMBER ]; then
     AOLOOPNUMBER=$( head -1 LOOPNUMBER )
@@ -21,13 +50,17 @@ mkdir -p ${ARCHDIR}
 cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodesWFS1all.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS.fits
 cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_DMmodes.fits
 
+# modes including WFS-space diagonalization
+cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodesWFSall.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS_WFSdiag.fits
+cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodesall.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_DMmodes_WFSdiag.fits
+
+
+
 cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/wfsref_mn.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_wfsref.fits
 cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/wfsmask_mkm.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_wfsmask.fits
 cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/wfsmap.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_wfsmap.fits
-
 cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/dmmask_mkm.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_dmmask.fits
 cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/dmslaved.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_dmslaved.fits
-
 cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/zrespM.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_zrespM.fits
 
 

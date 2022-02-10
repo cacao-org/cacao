@@ -13,6 +13,16 @@ RequiredDirs=(AOcalibs)
 
 MSarg+=( "calibname:string:calibration name" )
 
+MSopt+=( "w:wfsdiag:setwfsdiag::use WFS-diagonalized modes" )
+
+
+
+WFSdiag="0"
+function setwfsdiag() {
+	echo "Using WFS-diagonalized modes"
+	WFSdiag="1"
+}
+
 
 source milk-argparse
 
@@ -21,6 +31,14 @@ if [ "${EXITSTATUS}" = "1" ]; then
 exit
 fi
 set -u
+
+
+
+
+
+
+
+
 
 calib="${inputMSargARRAY[0]}"
 
@@ -65,12 +83,37 @@ milk-shmim-rm aol${AOLOOPNUMBER}_zrespM
 milk-shmim-rm aol${AOLOOPNUMBER}_LOrespM
 milk-shmim-rm aol${AOLOOPNUMBER}_LODMmodes
 
-milk <<EOF
+
+if [ "${WFSdiag}" = "1" ]; then
+
+milk << EOF
+
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS_WFSdiag.fits" aolmWFS
+cpsh aolmWFS aol${AOLOOPNUMBER}_modesWFS
+
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_DMmodes_WFSdiag.fits" aolmDM
+cpsh aolmDM  aol${AOLOOPNUMBER}_DMmodes
+
+exitCLI
+EOF
+
+else
+
+milk << EOF
+
 loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS.fits" aolmWFS
 cpsh aolmWFS aol${AOLOOPNUMBER}_modesWFS
 
 loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_DMmodes.fits" aolmDM
 cpsh aolmDM  aol${AOLOOPNUMBER}_DMmodes
+
+exitCLI
+EOF
+
+fi
+
+
+milk <<EOF
 
 loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_wfsref.fits" aolwfsref
 cpsh aolwfsref aol${AOLOOPNUMBER}_wfsref
