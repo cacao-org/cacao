@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+AOLOOPNUMBER=0
+
 # Arguments:
 # Calib name
 
@@ -9,37 +11,49 @@ ARCHDIR="AOcalibs/$1"
 
 if [[ -d "${ARCHDIR}" ]]; then
 
+# remove existing streams
+milk-shmimpurge aol${AOLOOPNUMBER}_modesWFS
+milk-shmimpurge aol${AOLOOPNUMBER}_DMmodes
+milk-shmimpurge aol${AOLOOPNUMBER}_wfsref
+milk-shmimpurge aol${AOLOOPNUMBER}_wfsmask
+milk-shmimpurge aol${AOLOOPNUMBER}_wfsmap
+milk-shmimpurge aol${AOLOOPNUMBER}_dmmask
+milk-shmimpurge aol${AOLOOPNUMBER}_dmslaved
+milk-shmimpurge aol${AOLOOPNUMBER}_zrespM
+milk-shmimpurge aol${AOLOOPNUMBER}_LOrespM
+milk-shmimpurge aol${AOLOOPNUMBER}_LODMmodes
+
 milk <<EOF
-loadfits "${ARCHDIR}/aol0_modesWFS.fits" aol0mWFS
-cpsh aol0mWFS aol0_modesWFS
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS.fits" aolmWFS
+cpsh aolmWFS aol${AOLOOPNUMBER}_modesWFS
 
-loadfits "${ARCHDIR}/aol0_DMmodes.fits" aol0mDM
-cpsh aol0mDM  aol0_DMmodes
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_DMmodes.fits" aolmDM
+cpsh aolmDM  aol${AOLOOPNUMBER}_DMmodes
 
-loadfits "${ARCHDIR}/aol0_wfsref.fits" aol0wfsref
-cpsh aol0wfsref aol0_wfsref
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_wfsref.fits" aolwfsref
+cpsh aolwfsref aol${AOLOOPNUMBER}_wfsref
 
-loadfits "${ARCHDIR}/aol0_wfsmask.fits" aol0wfsmask
-cpsh aol0wfsmask aol0_wfsmask
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_wfsmask.fits" aolwfsmask
+cpsh aolwfsmask aol${AOLOOPNUMBER}_wfsmask
 
 
-loadfits "${ARCHDIR}/aol0_wfsmap.fits" aol0wfsmap
-cpsh aol0wfsmap aol0_wfsmap
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_wfsmap.fits" aolwfsmap
+cpsh aolwfsmap aol${AOLOOPNUMBER}_wfsmap
 
-loadfits "${ARCHDIR}/aol0_dmmask.fits" aol0dmmask
-cpsh aol0dmmask aol0_dmmask
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_dmmask.fits" aoldmmask
+cpsh aoldmmask aol${AOLOOPNUMBER}_dmmask
 
-loadfits "${ARCHDIR}/aol0_dmslaved.fits" aol0dmslaved
-cpsh aol0dmslaved aol0_dmslaved
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_dmslaved.fits" aoldmslaved
+cpsh aoldmslaved aol${AOLOOPNUMBER}_dmslaved
 
-loadfits "${ARCHDIR}/aol0_zrespM.fits" aol0zrespM
-cpsh aol0zrespM aol0_zrespM
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_zrespM.fits" aolzrespM
+cpsh aolzrespM aol0_zrespM
 
-loadfits "${ARCHDIR}/aol0_LOrespM.fits" aol0LOrespM
-cpsh aol0LOrespM aol0_LOrespM
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_LOrespM.fits" aolLOrespM
+cpsh aolLOrespM aol${AOLOOPNUMBER}_LOrespM
 
-loadfits "${ARCHDIR}/aol0_LODMmodes.fits" aol0LODMmodes
-cpsh aol0LODMmodes aol0_LODMmodes
+loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_LODMmodes.fits" aolLODMmodes
+cpsh aolLODMmodes aol${AOLOOPNUMBER}_LODMmodes
 
 exitCLI
 EOF
