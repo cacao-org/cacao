@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+if [ -f LOOPNUMBER ]; then
+    AOLOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+	echo "Error: no LOOPNUMBER file. Are we running this from the correct directory ?"
+    exit
+fi
+
 # Arguments:
 # Calib name
 
@@ -10,36 +17,36 @@ mkdir -p ${ARCHDIR}
 
 
 milk << EOF
-readshmim aol0_modesWFS
-saveFITS aol0_modesWFS "${ARCHDIR}/aol0_modesWFS.fits"
+readshmim aol${AOLOOPNUMBER}_modesWFS
+saveFITS aol${AOLOOPNUMBER}_modesWFS "${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS.fits"
 
-readshmim aol0_DMmodes
-saveFITS aol0_DMmodes "${ARCHDIR}/aol0_DMmodes.fits"
+readshmim aol${AOLOOPNUMBER}_DMmodes
+saveFITS aol${AOLOOPNUMBER}_DMmodes "${ARCHDIR}/aol${AOLOOPNUMBER}_DMmodes.fits"
 
-readshmim aol0_wfsref
-saveFITS aol0_wfsref "${ARCHDIR}/aol0_wfsref.fits"
+readshmim aol${AOLOOPNUMBER}_wfsref
+saveFITS aol${AOLOOPNUMBER}_wfsref "${ARCHDIR}/aol${AOLOOPNUMBER}_wfsref.fits"
 
 
-readshmim aol0_wfsmask
-saveFITS aol0_wfsmask "${ARCHDIR}/aol0_wfsmask.fits"
+readshmim aol${AOLOOPNUMBER}_wfsmask
+saveFITS aol${AOLOOPNUMBER}_wfsmask "${ARCHDIR}/aol${AOLOOPNUMBER}_wfsmask.fits"
 
-readshmim aol0_wfsmap
-saveFITS aol0_wfsmap "${ARCHDIR}/aol0_wfsmap.fits"
+readshmim aol${AOLOOPNUMBER}_wfsmap
+saveFITS aol${AOLOOPNUMBER}_wfsmap "${ARCHDIR}/aol${AOLOOPNUMBER}_wfsmap.fits"
 
-readshmim aol0_dmmask
-saveFITS aol0_dmmask "${ARCHDIR}/aol0_dmmask.fits"
+readshmim aol${AOLOOPNUMBER}_dmmask
+saveFITS aol${AOLOOPNUMBER}_dmmask "${ARCHDIR}/aol${AOLOOPNUMBER}_dmmask.fits"
 
-readshmim aol0_dmslaved
-saveFITS aol0_dmslaved "${ARCHDIR}/aol0_dmslaved.fits"
+readshmim aol${AOLOOPNUMBER}_dmslaved
+saveFITS aol${AOLOOPNUMBER}_dmslaved "${ARCHDIR}/aol${AOLOOPNUMBER}_dmslaved.fits"
 
-readshmim aol0_zrespM
-saveFITS aol0_zrespM "${ARCHDIR}/aol0_zrespM.fits"
+readshmim aol${AOLOOPNUMBER}_zrespM
+saveFITS aol${AOLOOPNUMBER}_zrespM "${ARCHDIR}/aol${AOLOOPNUMBER}_zrespM.fits"
 
-readshmim aol0_LOrespM
-saveFITS aol0_LOrespM "${ARCHDIR}/aol0_LOrespM.fits"
+readshmim aol${AOLOOPNUMBER}_LOrespM
+saveFITS aol${AOLOOPNUMBER}_LOrespM "${ARCHDIR}/aol${AOLOOPNUMBER}_LOrespM.fits"
 
-readshmim aol0_LODMmodes
-saveFITS aol0_LODMmodes "${ARCHDIR}/aol0_LODMmodes.fits"
+readshmim aol${AOLOOPNUMBER}_LODMmodes
+saveFITS aol${AOLOOPNUMBER}_LODMmodes "${ARCHDIR}/aol${AOLOOPNUMBER}_LODMmodes.fits"
 
 exitCLI
 EOF

@@ -1,17 +1,55 @@
 #!/usr/bin/env bash
 
-AOLOOPNUMBER=0
+MSdescr="Apply AO calibration"
+
+MSextdescr="Load to shared memory from filesystem"
+
+source milk-script-std-config
+
+
+RequiredCommands=(milk)
+RequiredFiles=(LOOPNUMBER)
+RequiredDirs=(AOcalibs)
+
+MSarg+=( "calibname:string:calibration name" )
+
+
+source milk-argparse
+
+if [ ${EXITSTATUS} = 1 ]; then
+exit
+fi
+
+calib="${inputMSargARRAY[0]}"
+
+echo "Calibration : ${calib}"
+
+
+
+
+
+if [ -f LOOPNUMBER ]; then
+    AOLOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+	echo "Error: no LOOPNUMBER file. Are we running this from the correct directory ?"
+    exit
+fi
+
 
 # Arguments:
 # Calib name
 
 
 
-ARCHDIR="AOcalibs/$1"
+ARCHDIR="AOcalibs/${calib}"
+
+echo "Loop ${AOLOOPNUMBER}: Loading calibration from ${ARCHDIR}"
 
 if [[ -d "${ARCHDIR}" ]]; then
 
 # remove existing streams
+echo "Purging streams ..."
+
 milk-shmimpurge aol${AOLOOPNUMBER}_modesWFS
 milk-shmimpurge aol${AOLOOPNUMBER}_DMmodes
 milk-shmimpurge aol${AOLOOPNUMBER}_wfsref
