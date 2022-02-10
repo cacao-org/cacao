@@ -17,7 +17,7 @@ MSarg+=( "calibname:string:calibration name" )
 source milk-argparse
 
 set +u
-if [ ${EXITSTATUS} = 1 ]; then
+if [ "${EXITSTATUS}" = "1" ]; then
 exit
 fi
 set -u
