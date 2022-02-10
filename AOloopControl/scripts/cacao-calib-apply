@@ -52,16 +52,16 @@ if [[ -d "${ARCHDIR}" ]]; then
 # remove existing streams
 echo "Purging streams ..."
 
-milk-shmimpurge aol${AOLOOPNUMBER}_modesWFS
-milk-shmimpurge aol${AOLOOPNUMBER}_DMmodes
-milk-shmimpurge aol${AOLOOPNUMBER}_wfsref
-milk-shmimpurge aol${AOLOOPNUMBER}_wfsmask
-milk-shmimpurge aol${AOLOOPNUMBER}_wfsmap
-milk-shmimpurge aol${AOLOOPNUMBER}_dmmask
-milk-shmimpurge aol${AOLOOPNUMBER}_dmslaved
-milk-shmimpurge aol${AOLOOPNUMBER}_zrespM
-milk-shmimpurge aol${AOLOOPNUMBER}_LOrespM
-milk-shmimpurge aol${AOLOOPNUMBER}_LODMmodes
+milk-shmim-rm aol${AOLOOPNUMBER}_modesWFS
+milk-shmim-rm aol${AOLOOPNUMBER}_DMmodes
+milk-shmim-rm aol${AOLOOPNUMBER}_wfsref
+milk-shmim-rm aol${AOLOOPNUMBER}_wfsmask
+milk-shmim-rm aol${AOLOOPNUMBER}_wfsmap
+milk-shmim-rm aol${AOLOOPNUMBER}_dmmask
+milk-shmim-rm aol${AOLOOPNUMBER}_dmslaved
+milk-shmim-rm aol${AOLOOPNUMBER}_zrespM
+milk-shmim-rm aol${AOLOOPNUMBER}_LOrespM
+milk-shmim-rm aol${AOLOOPNUMBER}_LODMmodes
 
 milk <<EOF
 loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS.fits" aolmWFS
