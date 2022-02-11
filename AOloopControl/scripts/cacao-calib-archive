@@ -9,6 +9,14 @@ source milk-script-std-config
 
 RequiredCommands=(milk)
 RequiredFiles=(LOOPNUMBER)
+
+if [ -f LOOPNUMBER ]; then
+AOLOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+echo "Error: no LOOPNUMBER file. Are we running this from the correct directory ?"
+exit
+fi
+
 RequiredDirs=(fps.compfCM-${AOLOOPNUMBER}.datadir fps.acqlin_zRM-${AOLOOPNUMBER}.datadir fps.acqlin_loRM-${AOLOOPNUMBER}.datadir)
 
 MSarg+=( "calibname:string:calibration name" )
@@ -30,12 +38,7 @@ calib="${inputMSargARRAY[0]}"
 echo "Calibration : ${calib}"
 
 
-if [ -f LOOPNUMBER ]; then
-    AOLOOPNUMBER=$( head -1 LOOPNUMBER )
-else
-	echo "Error: no LOOPNUMBER file. Are we running this from the correct directory ?"
-    exit
-fi
+
 
 
 # Arguments:
