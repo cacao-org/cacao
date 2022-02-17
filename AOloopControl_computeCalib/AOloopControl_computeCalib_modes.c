@@ -71,6 +71,9 @@ extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 #define MAX_MBLOCK 20
 
+
+
+
 /*** \brief creates AO control modes
  *
  *
@@ -238,6 +241,8 @@ imageID AOloopControl_computeCalib_mkModes(const char *ID_name,
     EXECUTE_SYSTEM_COMMAND("mkdir -p %s/mkmodestmp", outdir);
 
     msizexy = msizex * msizey;
+
+
 
     /// STEP 1: CREATE STARTING POINT : ZERNIKES + FOURIER MODES
 
@@ -2800,10 +2805,8 @@ imageID AOloopControl_computeCalib_mkModes(const char *ID_name,
                                                             "VTmat",
                                                             0,
                                                             0,
-                                                            1.e-4,
-                                                            1.e-7,
-                                                            0,
                                                             64,
+                                                            0, // GPU device
                                                             NULL);
 #else
                     linopt_compute_SVDpseudoInverse(imname,
@@ -3303,10 +3306,8 @@ imageID AOloopControl_computeCalib_mkModes_Simple(const char *IDin_name,
                                                     "VTmat",
                                                     0,
                                                     0,
-                                                    1.e-4,
-                                                    1.e-7,
-                                                    0,
                                                     64,
+                                                    0, // GPU device
                                                     NULL);
 #else
             linopt_compute_SVDpseudoInverse(imname,

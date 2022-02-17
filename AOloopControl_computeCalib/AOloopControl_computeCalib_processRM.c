@@ -788,10 +788,8 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
                                                 "VTmat",
                                                 0,
                                                 0,
-                                                1.e-4,
-                                                1.e-7,
-                                                0,
                                                 64,
+                                                0, // GPU device
                                                 NULL);
     }
     else
