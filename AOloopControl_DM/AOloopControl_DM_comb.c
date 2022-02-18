@@ -296,6 +296,8 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_dm2dm_outdisp].fpflag &= ~FPFLAG_VISIBLE;
         }
 
+
+
         if (data.fpsptr->parray[fpi_wfsrefmode].fpflag &
             FPFLAG_ONOFF) // ON state
         {
@@ -313,6 +315,8 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_wfsref_out].fpflag &= ~FPFLAG_VISIBLE;
         }
 
+
+
         if (data.fpsptr->parray[fpi_voltmode].fpflag & FPFLAG_ONOFF) // ON state
         {
             data.fpsptr->parray[fpi_voltname].fpflag |= FPFLAG_USED;
@@ -325,6 +329,23 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_voltname].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_voltname].fpflag &= ~FPFLAG_VISIBLE;
             data.fpsptr->parray[fpi_voltname].fpflag &=
+                ~FPFLAG_STREAM_RUN_REQUIRED;
+        }
+
+
+        if (data.fpsptr->parray[fpi_dmdispcircbuff].fpflag &
+            FPFLAG_ONOFF) // ON state
+        {
+            data.fpsptr->parray[fpi_dmdispCBsname].fpflag |= FPFLAG_USED;
+            data.fpsptr->parray[fpi_dmdispCBsname].fpflag |= FPFLAG_VISIBLE;
+            data.fpsptr->parray[fpi_dmdispCBsname].fpflag |=
+                FPFLAG_STREAM_RUN_REQUIRED;
+        }
+        else // OFF state
+        {
+            data.fpsptr->parray[fpi_dmdispCBsname].fpflag &= ~FPFLAG_USED;
+            data.fpsptr->parray[fpi_dmdispCBsname].fpflag &= ~FPFLAG_VISIBLE;
+            data.fpsptr->parray[fpi_dmdispCBsname].fpflag &=
                 ~FPFLAG_STREAM_RUN_REQUIRED;
         }
     }
