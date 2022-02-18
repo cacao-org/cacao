@@ -291,6 +291,10 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_DMindex].fpflag &= ~FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_DMindex].val.ui32[1] = 0;  // min value
         data.fpsptr->parray[fpi_DMindex].val.ui32[2] = 99; // max value
+
+        data.fpsptr->parray[fpi_dmdispcircbuff].fpflag &= ~FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_dmdispCBmult].fpflag &= ~FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_dmdispCBnbframe].fpflag &= ~FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -421,7 +425,7 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
         printf("Apply circular buffer slice %u\n", sliceindex);
 
         framecnt++;
-        if (framecnt == (*dmdispCBnbframe))
+        if (framecnt >= (*dmdispCBnbframe))
         {
             framecnt = 0;
             sliceindex++;
