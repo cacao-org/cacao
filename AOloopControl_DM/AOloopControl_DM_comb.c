@@ -342,13 +342,17 @@ static errno_t compute_function()
 
 
 
-
+    IMGID imgdmvolt;
     if (*voltmode == 1)
     {
+
         if (image_ID(voltname) == -1)
         {
             read_sharedmem_image(voltname);
         }
+
+        imgdmvolt = mkIMGID_from_name(voltname);
+        resolveIMGID(&imgdmvolt, ERRMODE_ABORT);
     }
     list_image_ID();
 
@@ -429,6 +433,17 @@ static errno_t compute_function()
                sizeof(float) * (*DMxsize) * (*DMysize));
 
         processinfo_update_output_stream(processinfo, img.ID);
+
+
+        if (*voltmode == 1)
+        {
+            for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+            {
+                imgdmvolt.im->array.UI16[ii] = 0;
+            }
+
+            processinfo_update_output_stream(processinfo, imgdmvolt.ID);
+        }
     }
 
 
