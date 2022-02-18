@@ -502,11 +502,6 @@ static errno_t compute_function()
         if (*voltmode == 1)
         {
             DM_displ2V(imgdisp, imgdmvolt);
-            for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
-            {
-                imgdmvolt.im->array.UI16[ii] = 0;
-            }
-
             processinfo_update_output_stream(processinfo, imgdmvolt.ID);
         }
     }
