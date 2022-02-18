@@ -62,13 +62,16 @@ static long     fpi_voltmode = -1;
 static uint32_t *volttype;
 
 static float *stroke100; // stroke [um] for 100V
+static long   fpi_stroke100;
 
 static char *voltname;
 long         fpi_voltname;
 
 static float *DClevel;
+static long   fpi_DClevel;
 
 static float *maxvolt;
+static long   fpi_maxvolt;
 
 static uint64_t *loopcnt;
 
@@ -213,7 +216,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                "1.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &stroke100,
-                               NULL},
+                               &fpi_stroke100},
                               {CLIARG_STREAM,
                                ".option.voltname",
                                "Stream name for volt output",
@@ -227,14 +230,14 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                "0.5",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &DClevel,
-                               NULL},
+                               &fpi_DClevel},
                               {CLIARG_FLOAT32,
                                ".option.maxvolt",
                                "Maximum voltage",
                                "100.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &maxvolt,
-                               NULL},
+                               &fpi_maxvolt},
                               {CLIARG_UINT64,
                                ".status.loopcnt",
                                "Loop counter",
@@ -292,9 +295,14 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_DMindex].val.ui32[1] = 0;  // min value
         data.fpsptr->parray[fpi_DMindex].val.ui32[2] = 99; // max value
 
-        data.fpsptr->parray[fpi_dmdispcircbuff].fpflag &= ~FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_dmdispCBmult].fpflag &= ~FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_dmdispCBnbframe].fpflag &= ~FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_voltmode].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_stroke100].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_DClevel].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_maxvolt].fpflag |= FPFLAG_WRITERUN;
+
+        data.fpsptr->parray[fpi_dmdispcircbuff].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_dmdispCBmult].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_dmdispCBnbframe].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
