@@ -108,6 +108,7 @@ if [ "${CACAO_FPSPROC_DMCOMB}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.DMindex ${CACAO_DMINDEX}"
         addfpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
         addfpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
+        addfpscmd "setval ${fpsfname}.DMcombout dm${CACAO_DMINDEX}disp"
     fi
 else
     echolog "CACAO_FPSPROC_DMCOMB = OFF"

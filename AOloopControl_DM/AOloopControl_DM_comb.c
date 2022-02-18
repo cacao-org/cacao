@@ -322,11 +322,12 @@ static errno_t compute_function()
     {
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "dm%02udisp%02u", *DMindex, ch);
-        imgch[ch]        = makeIMGID_2D(name, *DMxsize, *DMysize);
-        imgch[ch].shared = 1;
+        //imgch[ch]        = makeIMGID_2D(name, *DMxsize, *DMysize);
+        //imgch[ch].shared = 1;
 
-        // Create image if needed
-        imcreateIMGID(&imgch[ch]);
+        // connect, or (re-)create image if needed
+        imgch[ch] = stream_connect_create_2Df32(name, *DMxsize, *DMysize);
+        //imcreateIMGID(&imgch[ch]);
     }
 
     // Create combined DM channel
@@ -335,9 +336,10 @@ static errno_t compute_function()
     {
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "dm%02udisp", *DMindex);
-        img        = makeIMGID_2D(name, *DMxsize, *DMysize);
-        img.shared = 1;
-        imcreateIMGID(&img);
+        img = stream_connect_create_2Df32(name, *DMxsize, *DMysize);
+        //makeIMGID_2D(name, *DMxsize, *DMysize);
+        //img.shared = 1;
+        //imcreateIMGID(&img);
     }
 
     // Create temporaray storage
