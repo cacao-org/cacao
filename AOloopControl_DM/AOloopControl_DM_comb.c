@@ -322,6 +322,7 @@ static errno_t compute_function()
     {
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "dm%02udisp%02u", *DMindex, ch);
+        read_sharedmem_image(name);
         imgch[ch] = stream_connect_create_2Df32(name, *DMxsize, *DMysize);
     }
 
@@ -334,7 +335,7 @@ static errno_t compute_function()
         img = stream_connect_create_2Df32(DMcombout, *DMxsize, *DMysize);
     }
 
-    // Create temporaray storage to compute dummed displacement
+    // Create temporaray storage to compute summed displacement
     //
     float *dmdisptmp =
         (float *) malloc(sizeof(float) * (*DMxsize) * (*DMysize));
