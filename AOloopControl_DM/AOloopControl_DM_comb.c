@@ -493,7 +493,6 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
     else if ((*volttype) == 2)
     {
         // quadratic unipolar, output is UI16
-        printf("volttype 2\n");
         for (uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
             float volt = 100.0 * sqrt(imgdisp.im->array.F[ii] / (*stroke100));
@@ -504,11 +503,6 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
             // TODO add quantization code
             imgvolt.im->array.UI16[ii] =
                 (unsigned short int) (volt / 300.0 * 16384.0);
-            printf("    %3ld    %10.f   %10.3f      %u\n",
-                   ii,
-                   (*stroke100),
-                   volt,
-                   imgvolt.im->array.UI16[ii]);
         }
     }
 
