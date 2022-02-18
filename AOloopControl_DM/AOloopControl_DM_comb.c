@@ -81,26 +81,26 @@ static uint64_t *loopcnt;
 // optional additive circular buffer
 
 // on / off
-static int64_t *dmdispcircbuff;
-long            fpi_dmdispcircbuff;
+static int64_t *astrogrid;
+long            fpi_astrogrid;
 
 // channel
-static uint32_t *dmdispCBchan;
-long             fpi_dmdispCBchan;
+static uint32_t *astrogridchan;
+long             fpi_astrogridchan;
 
 // stream contaning circular buffer
-static char *dmdispCBsname;
-long         fpi_dmdispCBsname;
+static char *astrogridsname;
+long         fpi_astrogridsname;
 
 
 // multiplicative coeff
-static float *dmdispCBmult;
-long          fpi_dmdispCBmult;
+static float *astrogridmult;
+long          fpi_astrogridmult;
 
 
 // number of consecutive frames with same slice
-static uint32_t *dmdispCBnbframe;
-long             fpi_dmdispCBnbframe;
+static uint32_t *astrogridNBframe;
+long             fpi_astrogridNBframe;
 
 
 
@@ -246,40 +246,40 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                (void **) &loopcnt,
                                NULL},
                               {CLIARG_ONOFF,
-                               ".dispCB.mode",
+                               ".astrogrid.mode",
                                "circular buffer on/off",
                                "0",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &dmdispcircbuff,
-                               &fpi_dmdispcircbuff},
+                               (void **) &astrogrid,
+                               &fpi_astrogrid},
                               {CLIARG_UINT32,
-                               ".dispCB.chan",
-                               "circular buffer DM channel",
+                               ".astrogrid.chan",
+                               "astrogrid DM channel",
                                "9",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &dmdispCBchan,
-                               &fpi_dmdispCBchan},
+                               (void **) &astrogridchan,
+                               &fpi_astrogridchan},
                               {CLIARG_STREAM,
-                               ".dispCB.sname",
-                               "circular buffer cube name",
+                               ".astrogrid.sname",
+                               "astrogrid cube name",
                                "dmCBcube",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &dmdispCBsname,
-                               &fpi_dmdispCBsname},
+                               (void **) &astrogridsname,
+                               &fpi_astrogridsname},
                               {CLIARG_FLOAT32,
-                               ".dispCB.mult",
-                               "circular buffer multiplicative coeff",
+                               ".astrogrid.mult",
+                               "astrogrid multiplicative coeff",
                                "1.0",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &dmdispCBmult,
-                               &fpi_dmdispCBmult},
+                               (void **) &astrogridmult,
+                               &fpi_astrogridmult},
                               {CLIARG_UINT32,
-                               ".dispCB.nbframe",
-                               "number of frame per slice",
+                               ".astrogrid.nbframe",
+                               "astrogrid number of frame per slice",
                                "1",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &dmdispCBnbframe,
-                               &fpi_dmdispCBnbframe}};
+                               (void **) &astrogridNBframe,
+                               &fpi_astrogridNBframe}};
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -300,9 +300,9 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_DClevel].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_maxvolt].fpflag |= FPFLAG_WRITERUN;
 
-        data.fpsptr->parray[fpi_dmdispcircbuff].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_dmdispCBmult].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_dmdispCBnbframe].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_astrogrid].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_astrogridmult].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_astrogridNBframe].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -369,19 +369,19 @@ static errno_t customCONFcheck()
         }
 
 
-        if (data.fpsptr->parray[fpi_dmdispcircbuff].fpflag &
+        if (data.fpsptr->parray[fpi_astrogrid].fpflag &
             FPFLAG_ONOFF) // ON state
         {
-            data.fpsptr->parray[fpi_dmdispCBsname].fpflag |= FPFLAG_USED;
-            data.fpsptr->parray[fpi_dmdispCBsname].fpflag |= FPFLAG_VISIBLE;
-            data.fpsptr->parray[fpi_dmdispCBsname].fpflag |=
+            data.fpsptr->parray[fpi_astrogridsname].fpflag |= FPFLAG_USED;
+            data.fpsptr->parray[fpi_astrogridsname].fpflag |= FPFLAG_VISIBLE;
+            data.fpsptr->parray[fpi_astrogridsname].fpflag |=
                 FPFLAG_STREAM_RUN_REQUIRED;
         }
         else // OFF state
         {
-            data.fpsptr->parray[fpi_dmdispCBsname].fpflag &= ~FPFLAG_USED;
-            data.fpsptr->parray[fpi_dmdispCBsname].fpflag &= ~FPFLAG_VISIBLE;
-            data.fpsptr->parray[fpi_dmdispCBsname].fpflag &=
+            data.fpsptr->parray[fpi_astrogridsname].fpflag &= ~FPFLAG_USED;
+            data.fpsptr->parray[fpi_astrogridsname].fpflag &= ~FPFLAG_VISIBLE;
+            data.fpsptr->parray[fpi_astrogridsname].fpflag &=
                 ~FPFLAG_STREAM_RUN_REQUIRED;
         }
     }
@@ -418,8 +418,8 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
 
     if (funcinit == 0)
     {
-        read_sharedmem_image(dmdispCBsname);
-        imgdispbuffer = mkIMGID_from_name(dmdispCBsname);
+        read_sharedmem_image(astrogridsname);
+        imgdispbuffer = mkIMGID_from_name(astrogridsname);
         resolveIMGID(&imgdispbuffer, ERRMODE_ABORT);
 
         xysize = (uint64_t) (*DMxsize) * (*DMysize);
@@ -428,12 +428,12 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
     }
 
 
-    if ((*dmdispcircbuff) == 1)
+    if ((*astrogrid) == 1)
     {
         printf("Apply circular buffer slice %u\n", sliceindex);
 
         framecnt++;
-        if (framecnt >= (*dmdispCBnbframe))
+        if (framecnt >= (*astrogridNBframe))
         {
             framecnt = 0;
             sliceindex++;
@@ -446,7 +446,7 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
             for (uint64_t ii = 0; ii < xysize; ii++)
             {
                 dispchout.im->array.F[ii] =
-                    (*dmdispCBmult) *
+                    (*astrogridmult) *
                     imgdispbuffer.im->array.F[sliceindex * xysize + ii];
             }
         }
@@ -474,8 +474,6 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
     if ((*volttype) == 1)
     {
         // linear bipolar, output is float
-        printf("volttype 1\n");
-
         for (uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
             float voltvalue = 100.0 * imgdisp.im->array.F[ii] / (*stroke100);
@@ -644,11 +642,11 @@ static errno_t compute_function()
             processinfo_update_output_stream(processinfo, imgdmvolt.ID);
         }
 
-        if ((*dmdispcircbuff) == 1)
+        if ((*astrogrid) == 1)
         {
-            DMdisp_add_disp_from_circular_buffer(imgch[(*dmdispCBchan)]);
+            DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
             processinfo_update_output_stream(processinfo,
-                                             imgch[(*dmdispCBchan)].ID);
+                                             imgch[(*astrogridchan)].ID);
         }
     }
 

@@ -263,6 +263,9 @@ errno_t AOloopControl_DM_disp2V(long DMindex)
     return RETURN_SUCCESS;
 }
 
+
+
+
 //
 // manages configuration parameters
 // initializes configuration parameters structure
