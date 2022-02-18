@@ -70,6 +70,9 @@ static float *maxvolt;
 
 static uint64_t *loopcnt;
 
+
+
+
 static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                ".DMindex",
                                "Deformable mirror index",
@@ -289,14 +292,22 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
+
+
 static CLICMDDATA CLIcmddata = {
     "DMcomb", "Deformable mirror combine channels", CLICMD_FIELDS_DEFAULTS};
+
+
+
 
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
+
+
+
 
 static errno_t compute_function()
 {
@@ -339,7 +350,10 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
-    int DMupdate = 0; // toggles to 1 if DM must be updated
+    // Check if DM needs updating
+    // DMupdate toggles to 1 if DM must be updated
+    //
+    int DMupdate = 0;
     {
         long cnt0sum = 0;
 
@@ -356,11 +370,12 @@ static errno_t compute_function()
         }
     }
 
+
     if (DMupdate == 1)
     {
         // Update DM disp
 
-        // Sum channels
+        // Sum all channels
         memcpy(dmdisptmp,
                imgch[0].im->array.F,
                sizeof(float) * (*DMxsize) * (*DMysize));
@@ -373,6 +388,7 @@ static errno_t compute_function()
         }
 
         // Remove average
+        //
         double ave = 0.0;
         if (*AveMode == 1)
         {
@@ -382,6 +398,7 @@ static errno_t compute_function()
             }
             ave /= (*DMxsize) * (*DMysize);
         }
+
         if (*AveMode < 2) // OFFSET BY DClevel
         {
             for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
@@ -412,7 +429,12 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
+
+
 INSERT_STD_FPSCLIfunctions
+
+
+
 
     // Register function in CLI
     errno_t
