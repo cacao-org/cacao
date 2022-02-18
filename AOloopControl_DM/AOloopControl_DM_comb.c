@@ -75,6 +75,23 @@ static uint64_t *loopcnt;
 
 
 
+// optional additive circular buffer
+
+// on / off
+static int64_t *dmdispcircbuff;
+long            fpi_dmdispcircbuff;
+
+// channel
+static uint32_t *dmdispCBchan;
+long             fpi_dmdispCBchan;
+
+// stream contaning circular buffer
+static char *dmdispCBsname;
+long         fpi_dmdispCBsname;
+
+
+
+
 static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                ".DMindex",
                                "Deformable mirror index",
@@ -214,7 +231,28 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                "0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &loopcnt,
-                               NULL}};
+                               NULL},
+                              {CLIARG_ONOFF,
+                               ".dispCB.mode",
+                               "circular buffer on/off",
+                               "0",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &dmdispcircbuff,
+                               &fpi_dmdispcircbuff},
+                              {CLIARG_UINT32,
+                               ".dispCB.chan",
+                               "circular buffer DM channel",
+                               "9",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &dmdispCBchan,
+                               &fpi_dmdispCBchan},
+                              {CLIARG_STREAM,
+                               ".dispCB.sname",
+                               "circular buffer cube name",
+                               "dmCBcube",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &dmdispCBsname,
+                               &fpi_dmdispCBsname}};
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -311,13 +349,52 @@ static errno_t help_function()
 
 
 
+static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
+{
+    static int funcinit = 0;
+
+    static uint32_t sliceindex = 0;
+    static IMGID    imgdispbuffer;
+    static size_t   framesize = 0;
+
+    if (funcinit == 0)
+    {
+        read_sharedmem_image(dmdispCBsname);
+        imgdispbuffer = mkIMGID_from_name(dmdispCBsname);
+        resolveIMGID(&imgdispbuffer, ERRMODE_ABORT);
+
+        framesize = sizeof(float) * (*DMxsize) * (*DMysize);
+
+        funcinit = 1;
+    }
+
+
+    if ((*dmdispcircbuff) == 1)
+    {
+        printf("Apply circular buffer slice %u\n", sliceindex);
+
+        char *ptr = (char *) imgdispbuffer.im->array.F;
+        ptr += sliceindex * framesize;
+        memcpy(dispchout.im->array.F, ptr, framesize);
+
+        sliceindex++;
+        if (sliceindex >= imgdispbuffer.size[2])
+        {
+            sliceindex = 0;
+        }
+    }
+    return RETURN_SUCCESS;
+}
+
+
+
 static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
 {
-    printf("DISP -> VOLT  %lu actuators\n",
-           ((uint64_t) (*DMxsize)) * (*DMysize));
+    //    printf("DISP -> VOLT  %lu actuators\n",
+    //           ((uint64_t) (*DMxsize)) * (*DMysize));
 
 
-    int QUANTIZATION_RANDOM = 2;
+    //int QUANTIZATION_RANDOM = 2;
     // 1: remove quantization error by probabilistic value, recomputed for each
     // new value
     // 2: remove quantization error by adding an external random map
@@ -503,6 +580,13 @@ static errno_t compute_function()
         {
             DM_displ2V(imgdisp, imgdmvolt);
             processinfo_update_output_stream(processinfo, imgdmvolt.ID);
+        }
+
+        if ((*dmdispcircbuff) == 1)
+        {
+            DMdisp_add_disp_from_circular_buffer(imgch[(*dmdispCBchan)]);
+            processinfo_update_output_stream(processinfo,
+                                             imgch[(*dmdispCBchan)].ID);
         }
     }
 
