@@ -8,6 +8,8 @@
  *
  */
 
+#include <math.h>
+
 #include "CommandLineInterface/CLIcore.h"
 
 // includes AOLOOPCONTROL_DM_DISPCOMB_CONF
@@ -309,6 +311,56 @@ static errno_t help_function()
 
 
 
+static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
+{
+    int QUANTIZATION_RANDOM = 2;
+    // 1: remove quantization error by probabilistic value, recomputed for each
+    // new value
+    // 2: remove quantization error by adding an external random map
+    // between 0 and 1, named dmXXquant
+    //    USER SHOULD UPDATE THIS MAP WHEN REQUIRED
+
+
+    if ((*volttype) == 1)
+    {
+        // linear bipolar, output is float
+
+        for (uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        {
+            float voltvalue = 100.0 * imgdisp.im->array.F[ii] / (*stroke100);
+            if (voltvalue > (*maxvolt))
+            {
+                voltvalue = (*maxvolt);
+            }
+            if (voltvalue < -(*maxvolt))
+            {
+                voltvalue = -(*maxvolt);
+            }
+            imgvolt.im->array.F[ii] = voltvalue;
+        }
+    }
+    else if ((*volttype) == 2)
+    {
+        // quadratic unipolar, output is UI16
+        for (uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        {
+            float volt = 100.0 * sqrt(imgdisp.im->array.F[ii] / (*stroke100));
+            if (volt > (*maxvolt))
+            {
+                volt = (*maxvolt);
+            }
+            // TODO add quantization code
+            imgvolt.im->array.UI16[ii] =
+                (unsigned short int) volt / 300.0 * 16384.0;
+        }
+    }
+
+    return RETURN_SUCCESS;
+}
+
+
+
+
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
@@ -328,11 +380,11 @@ static errno_t compute_function()
 
     // Combined DM channel
     //
-    IMGID img;
+    IMGID imgdisp;
     {
         //char name[STRINGMAXLEN_STREAMNAME];
         //WRITE_IMAGENAME(name, "dm%02udisp", *DMindex);
-        img = stream_connect_create_2Df32(DMcombout, *DMxsize, *DMysize);
+        imgdisp = stream_connect_create_2Df32(DMcombout, *DMxsize, *DMysize);
     }
 
     // Create temporaray storage to compute summed displacement
@@ -428,15 +480,16 @@ static errno_t compute_function()
             }
         }
 
-        memcpy(img.im->array.F,
+        memcpy(imgdisp.im->array.F,
                dmdisptmp,
                sizeof(float) * (*DMxsize) * (*DMysize));
 
-        processinfo_update_output_stream(processinfo, img.ID);
+        processinfo_update_output_stream(processinfo, imgdisp.ID);
 
 
         if (*voltmode == 1)
         {
+            DM_displ2V(imgdisp, imgdmvolt);
             for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
             {
                 imgdmvolt.im->array.UI16[ii] = 0;
