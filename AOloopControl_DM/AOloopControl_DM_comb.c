@@ -358,7 +358,12 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
             }
             // TODO add quantization code
             imgvolt.im->array.UI16[ii] =
-                (unsigned short int) volt / 300.0 * 16384.0;
+                (unsigned short int) (volt / 300.0 * 16384.0);
+            printf("    %3ld    %10.f   %10.3f      %u\n",
+                   ii,
+                   (*stroke100),
+                   volt,
+                   imgvolt.im->array.UI16[ii]);
         }
     }
 
