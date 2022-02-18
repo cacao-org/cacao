@@ -90,6 +90,16 @@ static char *dmdispCBsname;
 long         fpi_dmdispCBsname;
 
 
+// multiplicative coeff
+static float *dmdispCBmult;
+long          fpi_dmdispCBmult;
+
+
+// number of consecutive frames with same slice
+static uint32_t *dmdispCBnbframe;
+long             fpi_dmdispCBnbframe;
+
+
 
 
 static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
@@ -252,7 +262,21 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                "dmCBcube",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &dmdispCBsname,
-                               &fpi_dmdispCBsname}};
+                               &fpi_dmdispCBsname},
+                              {CLIARG_FLOAT32,
+                               ".dispCB.mult",
+                               "circular buffer multiplicative coeff",
+                               "1.0",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &dmdispCBmult,
+                               &fpi_dmdispCBmult},
+                              {CLIARG_UINT32,
+                               ".dispCB.nbframe",
+                               "number of frame per slice",
+                               "1",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &dmdispCBnbframe,
+                               &fpi_dmdispCBnbframe}};
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -376,7 +400,9 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
 
     static uint32_t sliceindex = 0;
     static IMGID    imgdispbuffer;
-    static size_t   framesize = 0;
+
+    static uint32_t framecnt = 0;
+    static uint64_t xysize;
 
     if (funcinit == 0)
     {
@@ -384,7 +410,7 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
         imgdispbuffer = mkIMGID_from_name(dmdispCBsname);
         resolveIMGID(&imgdispbuffer, ERRMODE_ABORT);
 
-        framesize = sizeof(float) * (*DMxsize) * (*DMysize);
+        xysize = (uint64_t) (*DMxsize) * (*DMysize);
 
         funcinit = 1;
     }
@@ -394,14 +420,23 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
     {
         printf("Apply circular buffer slice %u\n", sliceindex);
 
-        char *ptr = (char *) imgdispbuffer.im->array.F;
-        ptr += sliceindex * framesize;
-        memcpy(dispchout.im->array.F, ptr, framesize);
-
-        sliceindex++;
-        if (sliceindex >= imgdispbuffer.size[2])
+        framecnt++;
+        if (framecnt == (*dmdispCBnbframe))
         {
-            sliceindex = 0;
+            framecnt = 0;
+            sliceindex++;
+
+            if (sliceindex >= imgdispbuffer.size[2])
+            {
+                sliceindex = 0;
+            }
+
+            for (uint64_t ii = 0; ii < xysize; ii++)
+            {
+                dispchout.im->array.F[ii] =
+                    (*dmdispCBmult) *
+                    imgdispbuffer.im->array.F[sliceindex * xysize + ii];
+            }
         }
     }
     return RETURN_SUCCESS;
