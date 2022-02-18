@@ -87,7 +87,7 @@ if [ "${CACAO_FPSPROC_DMCOMB}" = "ON" ]; then
     # ==============================================================================
 
     # FPS name
-    fpsname="DMcomb"
+    fpsname="DMch2disp"
     fpsarg0="${CACAO_DMINDEX}"
 
     # FPS full name
