@@ -117,6 +117,43 @@ fi
 
 
 
+if [ "${CACAO_FPSPROC_DMCOMB_TEST}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_DMCOMB"
+    # ==============================================================================
+    # ==========  DM combination TEST ==============================================
+    # ==============================================================================
+
+    # FPS name
+    fpsname="DMch2disp"
+    fpsarg0="01"
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "${fpsname}      cacaodm.DMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
+
+        addfpscmdheader
+        # infinite loop
+        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+        addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+        addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
+        addfpscmd "setval ${fpsfname}.DMindex ${CACAO_DMINDEX}"
+        addfpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
+        addfpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
+        addfpscmd "setval ${fpsfname}.DMcombout dm${CACAO_DMINDEX}disp"
+    fi
+else
+    echolog "CACAO_FPSPROC_DMCOMB = OFF"
+fi
+
+
+
+
 
 
 

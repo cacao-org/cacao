@@ -344,7 +344,10 @@ static errno_t compute_function()
 
     if (*voltmode == 1)
     {
-        read_sharedmem_image(voltname);
+        if (image_ID(voltname) == -1)
+        {
+            read_sharedmem_image(voltname);
+        }
     }
     list_image_ID();
 
@@ -426,7 +429,7 @@ static errno_t compute_function()
 
         processinfo_update_output_stream(processinfo, img.ID);
     }
-*/
+    */
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
