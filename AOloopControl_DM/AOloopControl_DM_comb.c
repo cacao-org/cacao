@@ -346,7 +346,7 @@ static errno_t compute_function()
     {
         read_sharedmem_image(voltname);
     }
-
+    list_image_ID();
 
 
 
@@ -354,6 +354,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
+    /*
     // Check if DM needs updating
     // DMupdate toggles to 1 if DM must be updated
     //
@@ -425,6 +426,7 @@ static errno_t compute_function()
 
         processinfo_update_output_stream(processinfo, img.ID);
     }
+*/
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
