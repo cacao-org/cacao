@@ -313,6 +313,10 @@ static errno_t help_function()
 
 static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
 {
+    printf("DISP -> VOLT  %lu actuators\n",
+           ((uint64_t) (*DMxsize)) * (*DMysize));
+
+
     int QUANTIZATION_RANDOM = 2;
     // 1: remove quantization error by probabilistic value, recomputed for each
     // new value
@@ -321,9 +325,11 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
     //    USER SHOULD UPDATE THIS MAP WHEN REQUIRED
 
 
+
     if ((*volttype) == 1)
     {
         // linear bipolar, output is float
+        printf("volttype 1\n");
 
         for (uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
@@ -342,6 +348,7 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
     else if ((*volttype) == 2)
     {
         // quadratic unipolar, output is UI16
+        printf("volttype 2\n");
         for (uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
             float volt = 100.0 * sqrt(imgdisp.im->array.F[ii] / (*stroke100));
