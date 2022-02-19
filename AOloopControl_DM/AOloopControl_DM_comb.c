@@ -656,6 +656,8 @@ static errno_t compute_function()
         if (((*astrogrid) == 1) && ((*astrogridtdelay) == 0))
         {
             DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
+            processinfo_update_output_stream(processinfo,
+                                             imgch[(*astrogridchan)].ID);
         }
         update_dmdisp(imgdisp, imgch, dmdisptmp);
         processinfo_update_output_stream(processinfo, imgdisp.ID);
