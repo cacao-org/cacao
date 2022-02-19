@@ -659,6 +659,7 @@ static errno_t compute_function()
 
         if (*voltmode == 1)
         {
+            imgdmvolt.md->write = 1;
             DM_displ2V(imgdisp, imgdmvolt);
             processinfo_update_output_stream(processinfo, imgdmvolt.ID);
         }
@@ -683,12 +684,12 @@ static errno_t compute_function()
                 nanosleep(&timesleep, NULL);
             }
 
-
             update_dmdisp(imgdisp, imgch, dmdisptmp);
             processinfo_update_output_stream(processinfo, imgdisp.ID);
             // take into account update to astrogrid channel
             cntsumref++;
 
+            imgdmvolt.md->write = 1;
             DM_displ2V(imgdisp, imgdmvolt);
             processinfo_update_output_stream(processinfo, imgdmvolt.ID);
         }
