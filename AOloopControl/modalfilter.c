@@ -539,8 +539,8 @@ static errno_t compute_function()
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalDM[i].ID);
 
-                    /*
-                    tbuffptr = &buffmvalWFS;
+
+                    tbuffptr = buffmvalWFS;
                     tbuffptr += sizeof(float) * TBindex * NBmode;
                     imgtbuff_mvalWFS[i].md->write = 1;
                     memcpy(imgtbuff_mvalWFS[i].im->array.F,
@@ -550,7 +550,7 @@ static errno_t compute_function()
                                                      imgtbuff_mvalWFS[i].ID);
 
 
-                    tbuffptr = &buffmvalOL;
+                    tbuffptr = buffmvalOL;
                     tbuffptr += sizeof(float) * TBindex * NBmode;
                     imgtbuff_mvalOL[i].md->write = 1;
                     memcpy(imgtbuff_mvalOL[i].im->array.F,
@@ -558,7 +558,6 @@ static errno_t compute_function()
                            tbuffsize[i] * NBmode);
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalOL[i].ID);
-                                                     */
                 }
                 TBindex = tbuffzcnt[i];
             }
