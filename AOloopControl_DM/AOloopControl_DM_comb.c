@@ -652,7 +652,6 @@ static errno_t compute_function()
         // Sum all channels
         //
         update_dmdisp(imgdisp, imgch, dmdisptmp);
-
         processinfo_update_output_stream(processinfo, imgdisp.ID);
 
 
@@ -669,6 +668,8 @@ static errno_t compute_function()
                                              imgch[(*astrogridchan)].ID);
 
 
+            update_dmdisp(imgdisp, imgch, dmdisptmp);
+            processinfo_update_output_stream(processinfo, imgdisp.ID);
             // take into account update to astrogrid channel
             cntsumref++;
 
