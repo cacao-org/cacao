@@ -9,6 +9,7 @@
  */
 
 #include <math.h>
+#include <time.h>
 
 #include "CommandLineInterface/CLIcore.h"
 
@@ -666,6 +667,20 @@ static errno_t compute_function()
             DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
             processinfo_update_output_stream(processinfo,
                                              imgch[(*astrogridchan)].ID);
+
+            // Add time delay
+            {
+                long nsec = (long) (1000 * (*astrogridtdelay));
+
+                long nsec_remaining = nsec % 1000000000;
+                long sec            = nsec / 1000000000;
+
+                struct timespec timesleep;
+                timesleep.tv_sec  = sec;
+                timesleep.tv_nsec = nsec_remaining;
+
+                nanosleep(&timesleep, NULL);
+            }
 
 
             update_dmdisp(imgdisp, imgch, dmdisptmp);
