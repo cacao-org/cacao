@@ -313,6 +313,7 @@ static errno_t customCONFsetup()
 
         data.fpsptr->parray[fpi_astrogrid].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_astrogridmult].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_astrogridtdelay].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_astrogridNBframe].fpflag |= FPFLAG_WRITERUN;
     }
 
