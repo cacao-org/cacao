@@ -528,7 +528,7 @@ static errno_t compute_function()
                 if (tbuffzcnt[i] == tbuffsize[i])
                 {
                     tbuffzcnt[i] = 0;
-                    void *tbuffptr;
+                    /*                    void *tbuffptr;
 
                     tbuffptr = &buffmvalDM;
                     tbuffptr += sizeof(float) * TBindex * NBmode;
@@ -558,6 +558,7 @@ static errno_t compute_function()
                            tbuffsize[i] * NBmode);
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalOL[i].ID);
+                                                     */
                 }
                 TBindex = tbuffzcnt[i];
             }
