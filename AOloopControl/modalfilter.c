@@ -558,7 +558,7 @@ static errno_t compute_function()
                     imgtbuff_mvalWFS[i].md->write = 1;
                     memcpy(imgtbuff_mvalWFS[i].im->array.F,
                            tbuffptrWFS,
-                           tbuffsize[i] * NBmode);
+                           sizeof(float) * tbuffsize[i] * NBmode);
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalWFS[i].ID);
 
@@ -569,7 +569,7 @@ static errno_t compute_function()
                     imgtbuff_mvalOL[i].md->write = 1;
                     memcpy(imgtbuff_mvalOL[i].im->array.F,
                            tbuffptrOL,
-                           tbuffsize[i] * NBmode);
+                           sizeof(float) * tbuffsize[i] * NBmode);
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalOL[i].ID);
 
