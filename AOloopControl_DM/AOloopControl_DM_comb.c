@@ -520,13 +520,63 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
 
 
 
+static errno_t update_dmdisp(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
+{
+    memcpy(dmdisptmp,
+           imgch[0].im->array.F,
+           sizeof(float) * (*DMxsize) * (*DMysize));
+    for (uint32_t ch = 1; ch < *NBchannel; ch++)
+    {
+        for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        {
+            dmdisptmp[ii] += imgch[ch].im->array.F[ii];
+        }
+    }
+
+    // Remove average
+    //
+    double ave = 0.0;
+    if (*AveMode == 1)
+    {
+        for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        {
+            ave += dmdisptmp[ii];
+        }
+        ave /= (*DMxsize) * (*DMysize);
+    }
+
+    if (*AveMode < 2) // OFFSET BY DClevel
+    {
+        for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        {
+            dmdisptmp[ii] += (*DClevel - ave);
+
+            // remove negative values
+            if (*voltmode == 1)
+                if (dmdisptmp[ii] < 0.0)
+                {
+                    dmdisptmp[ii] = 0.0;
+                }
+        }
+    }
+
+    memcpy(imgdisp.im->array.F,
+           dmdisptmp,
+           sizeof(float) * (*DMxsize) * (*DMysize));
+
+    return RETURN_SUCCESS;
+}
+
+
+
+
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     // Connect to or (re)create DM channel streams
     //
-    IMGID imgch[*NBchannel];
+    IMGID *imgch = (IMGID *) malloc(sizeof(IMGID) * (*NBchannel));
     printf("This is DM comb, index = %ld\n", (long) *DMindex);
     printf("Initialize channels\n");
     for (uint32_t ch = 0; ch < *NBchannel; ch++)
@@ -588,7 +638,7 @@ static errno_t compute_function()
 
         if (cnt0sum != cntsumref)
         {
-            printf("cnt0sum = %ld\n", cnt0sum);
+            //printf("cnt0sum = %ld\n", cnt0sum);
             cntsumref = cnt0sum;
             DMupdate  = 1;
         }
@@ -601,47 +651,7 @@ static errno_t compute_function()
 
         // Sum all channels
         //
-        memcpy(dmdisptmp,
-               imgch[0].im->array.F,
-               sizeof(float) * (*DMxsize) * (*DMysize));
-        for (uint32_t ch = 1; ch < *NBchannel; ch++)
-        {
-            for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
-            {
-                dmdisptmp[ii] += imgch[ch].im->array.F[ii];
-            }
-        }
-
-        // Remove average
-        //
-        double ave = 0.0;
-        if (*AveMode == 1)
-        {
-            for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
-            {
-                ave += dmdisptmp[ii];
-            }
-            ave /= (*DMxsize) * (*DMysize);
-        }
-
-        if (*AveMode < 2) // OFFSET BY DClevel
-        {
-            for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
-            {
-                dmdisptmp[ii] += (*DClevel - ave);
-
-                // remove negative values
-                if (*voltmode == 1)
-                    if (dmdisptmp[ii] < 0.0)
-                    {
-                        dmdisptmp[ii] = 0.0;
-                    }
-            }
-        }
-
-        memcpy(imgdisp.im->array.F,
-               dmdisptmp,
-               sizeof(float) * (*DMxsize) * (*DMysize));
+        update_dmdisp(imgdisp, imgch, dmdisptmp);
 
         processinfo_update_output_stream(processinfo, imgdisp.ID);
 
@@ -657,6 +667,13 @@ static errno_t compute_function()
             DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
             processinfo_update_output_stream(processinfo,
                                              imgch[(*astrogridchan)].ID);
+
+
+            // take into account update to astrogrid channel
+            cntsumref++;
+
+            DM_displ2V(imgdisp, imgdmvolt);
+            processinfo_update_output_stream(processinfo, imgdmvolt.ID);
         }
     }
 
@@ -664,6 +681,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(dmdisptmp);
+    free(imgch);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;

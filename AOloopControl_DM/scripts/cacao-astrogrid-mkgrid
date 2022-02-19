@@ -25,7 +25,6 @@ RequiredFiles=(LOOPNUMBER)
 RequiredDirs=(AOcalibs)
 
 MSarg+=( "pattern:int:grid pattern index" )
-#MSarg+=( "bin:int:binning factor" )
 
 MSopt+=( "b2:binfact2:setbin2::use bin factor 2" )
 MSopt+=( "b3:binfact2:setbin3::use bin factor 3" )
@@ -63,7 +62,7 @@ set -u
 
 
 pattern="${inputMSargARRAY[0]}"
-#binfact="${inputMSargARRAY[1]}"
+ampl="${inputMSargARRAY[1]}"
 
 echo "Pattern ${pattern}, bin factor ${binfact}"
 
