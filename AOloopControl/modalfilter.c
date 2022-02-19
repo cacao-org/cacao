@@ -31,6 +31,27 @@ static long   fpi_looplimit;
 
 
 
+// Compute open loop modes
+static int64_t *compOL;
+static long     fpi_compOL;
+
+// Latency between DM and WFS
+static float *latencyfr;
+static long   fpi_latencyfr;
+
+
+// Shared memory telemetry buffers
+static int64_t *comptbuff;
+static long     fpi_comptbuff;
+
+// telemetry buffer log2 size range
+// buffer sizes will go as 2^n, with n from min to max
+static uint32_t *tbuff_l2minsize;
+static uint32_t *tbuff_l2maxsize;
+
+
+
+
 static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                ".AOloopindex",
                                "AO loop index",
@@ -72,9 +93,47 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                "1.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &looplimit,
-                               &fpi_looplimit}};
+                               &fpi_looplimit},
+                              {CLIARG_ONOFF,
+                               ".comp.OLmodes",
+                               "compute open loop modes",
+                               "0",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &compOL,
+                               &fpi_compOL},
+                              {CLIARG_FLOAT32,
+                               ".comp.latencyfr",
+                               "DM to WFS latency [frame]",
+                               "1.7",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &latencyfr,
+                               &fpi_latencyfr},
+                              {CLIARG_ONOFF,
+                               ".comp.tbuff",
+                               "compute telemetry buffer(s)",
+                               "0",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &comptbuff,
+                               &fpi_comptbuff},
+                              {CLIARG_UINT32,
+                               ".comp.tbuffl2minsize",
+                               "log2 min size",
+                               "2",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &tbuff_l2minsize,
+                               NULL},
+                              {CLIARG_UINT32,
+                               ".comp.tbuffl2maxsize",
+                               "log2 max size",
+                               "8",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &tbuff_l2maxsize,
+                               NULL}};
 
-// Optional custom configuration setup.
+
+
+
+// Optional custom configuration setup. comptbuff
 // Runs once at conf startup
 //
 static errno_t customCONFsetup()
@@ -111,8 +170,11 @@ static CLICMDDATA CLIcmddata = {
 // detailed help
 static errno_t help_function()
 {
+
+
     return RETURN_SUCCESS;
 }
+
 
 
 
@@ -144,7 +206,6 @@ static errno_t help_function()
  *
  * @return errno_t
  */
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
@@ -161,6 +222,58 @@ static errno_t compute_function()
     // allocate memory for temporary output mode values
     float *mvalout = (float *) malloc(sizeof(float) * NBmode);
 
+
+
+    // OPEN LOOP MODE VALUES
+    //
+    // allocate memory for DM modes history
+    int    NB_DMtstep = 10; // history buffer size
+    int    DMtstep    = 0;  // current index
+    float *mvalDMbuff = (float *) malloc(sizeof(float) * NBmode * NB_DMtstep);
+
+    IMGID imgOLmval;
+    {
+        char OLmvalname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(OLmvalname, "aol%lu_mval_ol", *AOloopindex);
+        imgOLmval = stream_connect_create_2Df32(OLmvalname, NBmode, 1);
+    }
+
+
+
+    // TELEMETRY BUFFERS
+    //
+    uint32_t TBsize  = 1;
+    uint32_t TBindex = 0;
+    uint32_t tbuffsize[(*tbuff_l2maxsize)];
+    uint32_t tbuffzcnt[(*tbuff_l2maxsize)];
+    IMGID    imgtbuff_mvalDM[(*tbuff_l2maxsize)];
+    IMGID    imgtbuff_mvalWFS[(*tbuff_l2maxsize)];
+    IMGID    imgtbuff_mvalOL[(*tbuff_l2maxsize)];
+    for (uint32_t i = 0; i < (*tbuff_l2maxsize); i++)
+    {
+        tbuffzcnt[i] = 0;
+        TBsize *= 2;
+        tbuffsize[i] = TBsize;
+        if (i >= (*tbuff_l2minsize))
+        {
+            char name[STRINGMAXLEN_STREAMNAME];
+
+            WRITE_IMAGENAME(name, "aol%lu_mvalDM_buff%d", *AOloopindex, i);
+            imgtbuff_mvalDM[i] =
+                stream_connect_create_2Df32(name, tbuffsize[i], NBmode);
+
+            WRITE_IMAGENAME(name, "aol%lu_mvalWFS_buff%d", *AOloopindex, i);
+            imgtbuff_mvalWFS[i] =
+                stream_connect_create_2Df32(name, tbuffsize[i], NBmode);
+
+            WRITE_IMAGENAME(name, "aol%lu_mvalOL_buff%d", *AOloopindex, i);
+            imgtbuff_mvalOL[i] =
+                stream_connect_create_2Df32(name, tbuffsize[i], NBmode);
+        }
+    }
+    float *buffmvalDM  = (float *) malloc(sizeof(float) * TBsize * NBmode);
+    float *buffmvalWFS = (float *) malloc(sizeof(float) * TBsize * NBmode);
+    float *buffmvalOL  = (float *) malloc(sizeof(float) * TBsize * NBmode);
 
 
 
@@ -280,6 +393,9 @@ static errno_t compute_function()
         double mvalDM;
         float  limit;
 
+
+        // Apply modal control filtering
+        //
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
 
@@ -319,6 +435,52 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, imgout.ID);
 
 
+        // Compute pseudo open-loop mode coefficients
+        //
+        if ((*compOL) == 1)
+        {
+            // write to DM history
+            //
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                mvalDMbuff[DMtstep * NBmode + mi] = mvalout[mi];
+            }
+            DMtstep++;
+            if (DMtstep == NB_DMtstep)
+            {
+                DMtstep = 0;
+            }
+
+            int   latint  = (int) (*latencyfr);
+            float latfrac = (*latencyfr) - latint;
+
+            int DMtstep1 = DMtstep - latint;
+            int DMtstep0 = DMtstep1 - 1;
+            while (DMtstep1 < 0)
+            {
+                DMtstep1 += NB_DMtstep;
+            }
+            while (DMtstep0 < 0)
+            {
+                DMtstep0 += NB_DMtstep;
+            }
+
+            imgOLmval.md->write = 1;
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                float tmpmDMval = latfrac * mvalDMbuff[DMtstep0 * NBmode + mi];
+                tmpmDMval +=
+                    (1.0 - latfrac) * mvalDMbuff[DMtstep1 * NBmode + mi];
+
+                float tmpmWFSval = imgin.im->array.F[mi];
+                ;
+
+                imgOLmval.im->array.F[mi] = tmpmWFSval + tmpmDMval;
+            }
+            processinfo_update_output_stream(processinfo, imgOLmval.ID);
+        }
+
+
         // Update individual gain, mult and limit values
         // This is done AFTER computing mode values to minimize latency
         //
@@ -344,11 +506,68 @@ static errno_t compute_function()
                 imgmlimitfact.im->array.F[mi] * (*looplimit);
         }
         processinfo_update_output_stream(processinfo, imgmlimit.ID);
+
+
+        // Fill telemetry buffers
+        //
+        if ((*comptbuff) == 1)
+        {
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                buffmvalDM[TBindex * NBmode + mi]  = mvalout[mi];
+                buffmvalWFS[TBindex * NBmode + mi] = imgin.im->array.F[mi];
+                buffmvalOL[TBindex * NBmode + mi]  = imgOLmval.im->array.F[mi];
+            }
+            for (uint32_t i = (*tbuff_l2minsize); i < (*tbuff_l2maxsize); i++)
+            {
+                tbuffzcnt[i]++;
+                if (tbuffzcnt[i] == tbuffsize[i])
+                {
+                    tbuffzcnt[i] = 0;
+                    void *tbuffptr;
+
+                    tbuffptr = &buffmvalDM;
+                    tbuffptr += sizeof(float) * TBindex * NBmode;
+                    imgtbuff_mvalDM[i].md->write = 1;
+                    memcpy(imgtbuff_mvalDM[i].im->array.F,
+                           tbuffptr,
+                           tbuffsize[i] * NBmode);
+                    processinfo_update_output_stream(processinfo,
+                                                     imgtbuff_mvalDM[i].ID);
+
+
+                    tbuffptr = &buffmvalWFS;
+                    tbuffptr += sizeof(float) * TBindex * NBmode;
+                    imgtbuff_mvalWFS[i].md->write = 1;
+                    memcpy(imgtbuff_mvalWFS[i].im->array.F,
+                           tbuffptr,
+                           tbuffsize[i] * NBmode);
+                    processinfo_update_output_stream(processinfo,
+                                                     imgtbuff_mvalWFS[i].ID);
+
+
+                    tbuffptr = &buffmvalOL;
+                    tbuffptr += sizeof(float) * TBindex * NBmode;
+                    imgtbuff_mvalOL[i].md->write = 1;
+                    memcpy(imgtbuff_mvalOL[i].im->array.F,
+                           tbuffptr,
+                           tbuffsize[i] * NBmode);
+                    processinfo_update_output_stream(processinfo,
+                                                     imgtbuff_mvalOL[i].ID);
+                }
+                TBindex = tbuffzcnt[i];
+            }
+        }
     }
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(mvalout);
+    free(mvalDMbuff);
+
+    free(buffmvalDM);
+    free(buffmvalWFS);
+    free(buffmvalOL);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
