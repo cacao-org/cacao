@@ -143,6 +143,10 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_loopgain].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_looplimit].fpflag |= FPFLAG_WRITERUN;
+
+        data.fpsptr->parray[fpi_comptbuff].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_compOL].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_latencyfr].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
