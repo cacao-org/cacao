@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+MSdescr="Set astrogrid pattern"
+
+MSextdescr="Set astrogrid pattern
+
+Patterns :
+	0 : 2-D tiling -> 4 diag spots
+	1 : X grid     -> 2 X spots
+	2 : Y grid     -> 2 Y spots
+	3 : +diag      -> 2 diag spots
+	4 : -diag      -> 2 diag spots
+
+Binnning factor 1 gives maximum astrogrid separation
+
+Astrogrid pattern will be saved as AOcalibs/astrogrid.fits
+and copied to shared memory aolX_DMastrogrid
+"
+
+source milk-script-std-config
+
+
+RequiredCommands=(milk)
+RequiredFiles=(LOOPNUMBER)
+RequiredDirs=(AOcalibs)
+
+MSarg+=( "pattern:int:grid pattern index" )
+#MSarg+=( "bin:int:binning factor" )
+
+MSopt+=( "b2:binfact2:setbin2::use bin factor 2" )
+MSopt+=( "b3:binfact2:setbin3::use bin factor 3" )
+MSopt+=( "b4:binfact2:setbin4::use bin factor 4" )
+MSopt+=( "b5:binfact2:setbin5::use bin factor 5" )
+
+
+binfact="1"
+function setbin2() {
+	echo "set binning factor 2"
+	binfact="2"
+}
+function setbin3() {
+	echo "set binning factor 3"
+	binfact="3"
+}
+function setbin4() {
+	echo "set binning factor 4"
+	binfact="4"
+}
+function setbin5() {
+	echo "set binning factor 5"
+	binfact="5"
+}
+
+
+source milk-argparse
+
+set +u
+if [ "${EXITSTATUS}" = "1" ]; then
+exit
+fi
+set -u
+
+
+
+pattern="${inputMSargARRAY[0]}"
+#binfact="${inputMSargARRAY[1]}"
+
+echo "Pattern ${pattern}, bin factor ${binfact}"
+
+if [ -f LOOPNUMBER ]; then
+    AOLOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+	echo "Error: no LOOPNUMBER file. Are we running this from the correct directory ?"
+    exit
+fi
+
+milk << EOF
+mload cacaoAOloopControlDM
+cacaodm.mk3Ddmgrid im 50 50 ${pattern} ${binfact}
+saveFITS im "AOcalibs/astrogrid.fits"
+cpsh im aol${AOLOOPNUMBER}_DMastrogrid
+exitCLI
+EOF

@@ -25,6 +25,7 @@ set(INCLUDEFILES
 
 
 set(SCRIPTS
+scripts/cacao-astrogrid-mkgrid
 )
 
 set(LINKLIBS

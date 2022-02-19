@@ -158,7 +158,7 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
             for (uint32_t jj = 0; jj < ysize; jj++)
             {
                 data.image[IDout].array.F[jj * xsize + ii] =
-                    map4[(((ii - jj) / bin) % 4)];
+                    map4[(((ysize + ii - jj) / bin) % 4)];
             }
         }
         break;
