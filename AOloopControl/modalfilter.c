@@ -443,7 +443,7 @@ static errno_t compute_function()
                 mvalDM = -limit;
             }
 
-            mvalout[mi] = mvalDM;
+            mvalout[mi] = mi; //mvalDM;
         }
 
         memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
