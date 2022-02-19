@@ -553,8 +553,8 @@ static errno_t compute_function()
 
 
                     void *tbuffptrWFS = buffmvalWFS;
-                    tbuffptrWFS += sizeof(float) *
-                                   (tbuffcubeindex[i] * tbuffsize[i]) * NBmode;
+                    //tbuffptrWFS += sizeof(float) *
+                    //               (tbuffcubeindex[i] * tbuffsize[i]) * NBmode;
                     imgtbuff_mvalWFS[i].md->write = 1;
                     memcpy(imgtbuff_mvalWFS[i].im->array.F,
                            tbuffptrWFS,
