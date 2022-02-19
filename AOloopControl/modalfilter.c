@@ -267,15 +267,15 @@ static errno_t compute_function()
 
             WRITE_IMAGENAME(name, "aol%lu_mvalDM_buff%d", *AOloopindex, i);
             imgtbuff_mvalDM[i] =
-                stream_connect_create_2Df32(name, tbuffsize[i], NBmode);
+                stream_connect_create_2Df32(name, NBmode, tbuffsize[i]);
 
             WRITE_IMAGENAME(name, "aol%lu_mvalWFS_buff%d", *AOloopindex, i);
             imgtbuff_mvalWFS[i] =
-                stream_connect_create_2Df32(name, tbuffsize[i], NBmode);
+                stream_connect_create_2Df32(name, NBmode, tbuffsize[i]);
 
             WRITE_IMAGENAME(name, "aol%lu_mvalOL_buff%d", *AOloopindex, i);
             imgtbuff_mvalOL[i] =
-                stream_connect_create_2Df32(name, tbuffsize[i], NBmode);
+                stream_connect_create_2Df32(name, NBmode, tbuffsize[i]);
         }
     }
     float *buffmvalDM  = (float *) malloc(sizeof(float) * TBsize * NBmode);
