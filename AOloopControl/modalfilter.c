@@ -237,6 +237,7 @@ static errno_t compute_function()
     // TELEMETRY BUFFERS
     //
     uint32_t tbuffindex = 0;
+    int      tbuffslice = 0;
     IMGID    imgtbuff_mvalDM;
     IMGID    imgtbuff_mvalWFS;
     IMGID    imgtbuff_mvalOL;
@@ -245,15 +246,15 @@ static errno_t compute_function()
 
         WRITE_IMAGENAME(name, "aol%lu_mvalDM_buff", *AOloopindex);
         imgtbuff_mvalDM =
-            stream_connect_create_2Df32(name, NBmode, (*tbuffsize));
+            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
 
         WRITE_IMAGENAME(name, "aol%lu_mvalWFS_buff", *AOloopindex);
         imgtbuff_mvalWFS =
-            stream_connect_create_2Df32(name, NBmode, (*tbuffsize));
+            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
 
         WRITE_IMAGENAME(name, "aol%lu_mvalOL_buff", *AOloopindex);
         imgtbuff_mvalOL =
-            stream_connect_create_2Df32(name, NBmode, (*tbuffsize));
+            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
     }
 
 
@@ -492,13 +493,15 @@ static errno_t compute_function()
         //
         if ((*comptbuff) == 1)
         {
+
+            uint64_t kkoffset =
+                tbuffslice * (*tbuffsize) * NBmode + tbuffindex * NBmode;
             for (uint32_t mi = 0; mi < NBmode; mi++)
             {
-                imgtbuff_mvalDM.im->array.F[tbuffindex * NBmode + mi] =
-                    mvalout[mi];
-                imgtbuff_mvalWFS.im->array.F[tbuffindex * NBmode + mi] =
+                imgtbuff_mvalDM.im->array.F[kkoffset + mi] = mvalout[mi];
+                imgtbuff_mvalWFS.im->array.F[kkoffset + mi] =
                     imgin.im->array.F[mi];
-                imgtbuff_mvalOL.im->array.F[tbuffindex * NBmode + mi] =
+                imgtbuff_mvalOL.im->array.F[kkoffset + mi] =
                     imgOLmval.im->array.F[mi];
             }
             tbuffindex++;
@@ -506,12 +509,23 @@ static errno_t compute_function()
             {
                 tbuffindex = 0;
 
+                imgtbuff_mvalDM.md->cnt1 = tbuffslice;
                 processinfo_update_output_stream(processinfo,
                                                  imgtbuff_mvalDM.ID);
+
+                imgtbuff_mvalWFS.md->cnt1 = tbuffslice;
                 processinfo_update_output_stream(processinfo,
                                                  imgtbuff_mvalWFS.ID);
+
+                imgtbuff_mvalOL.md->cnt1 = tbuffslice;
                 processinfo_update_output_stream(processinfo,
                                                  imgtbuff_mvalOL.ID);
+
+                tbuffslice++;
+                if (tbuffslice == 2)
+                {
+                    tbuffslice = 0;
+                }
             }
         }
     }
