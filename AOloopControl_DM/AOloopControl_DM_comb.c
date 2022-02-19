@@ -653,7 +653,7 @@ static errno_t compute_function()
 
         // Sum all channels
         //
-        if (((*astrogrid) == 1) && (*astrogridtdelay == 0))
+        if (((*astrogrid) == 1) && ((*astrogridtdelay) == 0))
         {
             DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
         }
@@ -669,7 +669,7 @@ static errno_t compute_function()
 
 
 
-        if (((*astrogrid) == 1) && (*astrogridtdelay != 0))
+        if (((*astrogrid) == 1) && ((*astrogridtdelay) != 0))
         {
             DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
             processinfo_update_output_stream(processinfo,
