@@ -98,8 +98,8 @@ long         fpi_astrogridsname;
 static float *astrogridmult;
 long          fpi_astrogridmult;
 
-static float *astrogridtdelay;
-long          fpi_astrogridtdelay;
+static uint32_t *astrogridtdelay;
+long             fpi_astrogridtdelay;
 
 // number of consecutive frames with same slice
 static uint32_t *astrogridNBframe;
@@ -277,10 +277,10 @@ static CLICMDARGDEF farg[] = {
      CLIARG_HIDDEN_DEFAULT,
      (void **) &astrogridmult,
      &fpi_astrogridmult},
-    {CLIARG_FLOAT32,
+    {CLIARG_UINT32,
      ".astrogrid.delay",
      "time delay between main update and astrogrid update [us]",
-     "100.0",
+     "100",
      CLIARG_HIDDEN_DEFAULT,
      (void **) &astrogridtdelay,
      &fpi_astrogridtdelay},
@@ -653,9 +653,12 @@ static errno_t compute_function()
 
         // Sum all channels
         //
+        if (((*astrogrid) == 1) && (*astrogridtdelay == 0))
+        {
+            DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
+        }
         update_dmdisp(imgdisp, imgch, dmdisptmp);
         processinfo_update_output_stream(processinfo, imgdisp.ID);
-
 
         if (*voltmode == 1)
         {
@@ -664,7 +667,9 @@ static errno_t compute_function()
             processinfo_update_output_stream(processinfo, imgdmvolt.ID);
         }
 
-        if ((*astrogrid) == 1)
+
+
+        if (((*astrogrid) == 1) && (*astrogridtdelay != 0))
         {
             DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
             processinfo_update_output_stream(processinfo,
@@ -689,9 +694,12 @@ static errno_t compute_function()
             // take into account update to astrogrid channel
             cntsumref++;
 
-            imgdmvolt.md->write = 1;
-            DM_displ2V(imgdisp, imgdmvolt);
-            processinfo_update_output_stream(processinfo, imgdmvolt.ID);
+            if (*voltmode == 1)
+            {
+                imgdmvolt.md->write = 1;
+                DM_displ2V(imgdisp, imgdmvolt);
+                processinfo_update_output_stream(processinfo, imgdmvolt.ID);
+            }
         }
     }
 
