@@ -528,18 +528,18 @@ static errno_t compute_function()
                 if (tbuffzcnt[i] == tbuffsize[i])
                 {
                     tbuffzcnt[i] = 0;
-                    /*                    void *tbuffptr;
+                    void *tbuffptr;
 
-                    tbuffptr = &buffmvalDM;
+                    tbuffptr = buffmvalDM;
                     tbuffptr += sizeof(float) * TBindex * NBmode;
                     imgtbuff_mvalDM[i].md->write = 1;
                     memcpy(imgtbuff_mvalDM[i].im->array.F,
                            tbuffptr,
-                           tbuffsize[i] * NBmode);
+                           sizeof(float) * tbuffsize[i] * NBmode);
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalDM[i].ID);
 
-
+                    /*
                     tbuffptr = &buffmvalWFS;
                     tbuffptr += sizeof(float) * TBindex * NBmode;
                     imgtbuff_mvalWFS[i].md->write = 1;
