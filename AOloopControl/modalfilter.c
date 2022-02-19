@@ -44,10 +44,7 @@ static long   fpi_latencyfr;
 static int64_t *comptbuff;
 static long     fpi_comptbuff;
 
-// telemetry buffer log2 size range
-// buffer sizes will go as 2^n, with n from min to max
-static uint32_t *tbuff_l2minsize;
-static uint32_t *tbuff_l2maxsize;
+static uint32_t *tbuffsize;
 
 
 
@@ -116,18 +113,11 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                (void **) &comptbuff,
                                &fpi_comptbuff},
                               {CLIARG_UINT32,
-                               ".comp.tbuffl2minsize",
-                               "log2 min size",
-                               "2",
+                               ".comp.tbuffsize",
+                               "buffer time size",
+                               "512",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &tbuff_l2minsize,
-                               NULL},
-                              {CLIARG_UINT32,
-                               ".comp.tbuffl2maxsize",
-                               "log2 max size",
-                               "8",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &tbuff_l2maxsize,
+                               (void **) &tbuffsize,
                                NULL}};
 
 
@@ -246,49 +236,24 @@ static errno_t compute_function()
 
     // TELEMETRY BUFFERS
     //
-    uint32_t TBsize  = 1;
-    uint32_t TBindex = 0;
-    uint32_t tbuffsize[(*tbuff_l2maxsize)];
-    uint32_t tbuffzcnt[(*tbuff_l2maxsize)];
-    uint32_t tbuffcubeindex[(*tbuff_l2maxsize)];
-    uint32_t tbuffNBcube[(*tbuff_l2maxsize)];
-    IMGID    imgtbuff_mvalDM[(*tbuff_l2maxsize)];
-    IMGID    imgtbuff_mvalWFS[(*tbuff_l2maxsize)];
-    IMGID    imgtbuff_mvalOL[(*tbuff_l2maxsize)];
-    for (uint32_t i = 0; i < (*tbuff_l2maxsize); i++)
+    uint32_t tbuffindex = 0;
+    IMGID    imgtbuff_mvalDM;
+    IMGID    imgtbuff_mvalWFS;
+    IMGID    imgtbuff_mvalOL;
     {
-        tbuffzcnt[i]      = 0;
-        tbuffcubeindex[i] = 0;
-        TBsize *= 2;
-        tbuffsize[i] = TBsize;
-        if (i >= (*tbuff_l2minsize))
-        {
-            char name[STRINGMAXLEN_STREAMNAME];
+        char name[STRINGMAXLEN_STREAMNAME];
 
-            WRITE_IMAGENAME(name, "aol%lu_mvalDM_buff%d", *AOloopindex, i);
-            imgtbuff_mvalDM[i] =
-                stream_connect_create_2Df32(name, NBmode, tbuffsize[i]);
+        WRITE_IMAGENAME(name, "aol%lu_mvalDM_buff", *AOloopindex);
+        imgtbuff_mvalDM =
+            stream_connect_create_2Df32(name, NBmode, (*tbuffsize));
 
-            WRITE_IMAGENAME(name, "aol%lu_mvalWFS_buff%d", *AOloopindex, i);
-            imgtbuff_mvalWFS[i] =
-                stream_connect_create_2Df32(name, NBmode, tbuffsize[i]);
+        WRITE_IMAGENAME(name, "aol%lu_mvalWFS_buff", *AOloopindex);
+        imgtbuff_mvalWFS =
+            stream_connect_create_2Df32(name, NBmode, (*tbuffsize));
 
-            WRITE_IMAGENAME(name, "aol%lu_mvalOL_buff%d", *AOloopindex, i);
-            imgtbuff_mvalOL[i] =
-                stream_connect_create_2Df32(name, NBmode, tbuffsize[i]);
-        }
-    }
-    float *buffmvalDM  = (float *) malloc(sizeof(float) * TBsize * NBmode);
-    float *buffmvalWFS = (float *) malloc(sizeof(float) * TBsize * NBmode);
-    float *buffmvalOL  = (float *) malloc(sizeof(float) * TBsize * NBmode);
-    for (uint32_t i = 0; i < (*tbuff_l2maxsize); i++)
-    {
-        tbuffcubeindex[i] = 0;
-        tbuffNBcube[i]    = TBsize / tbuffsize[i];
-        printf("   buffer %u   size %8u  NBcube %8u\n",
-               i,
-               tbuffsize[i],
-               tbuffNBcube[i]);
+        WRITE_IMAGENAME(name, "aol%lu_mvalOL_buff", *AOloopindex);
+        imgtbuff_mvalOL =
+            stream_connect_create_2Df32(name, NBmode, (*tbuffsize));
     }
 
 
@@ -529,76 +494,33 @@ static errno_t compute_function()
         {
             for (uint32_t mi = 0; mi < NBmode; mi++)
             {
-                buffmvalDM[TBindex * NBmode + mi]  = mvalout[mi];
-                buffmvalWFS[TBindex * NBmode + mi] = imgin.im->array.F[mi];
-                buffmvalOL[TBindex * NBmode + mi]  = imgOLmval.im->array.F[mi];
+                imgtbuff_mvalDM.im->array.F[tbuffindex * NBmode + mi] =
+                    mvalout[mi];
+                imgtbuff_mvalWFS.im->array.F[tbuffindex * NBmode + mi] =
+                    imgin.im->array.F[mi];
+                imgtbuff_mvalOL.im->array.F[tbuffindex * NBmode + mi] =
+                    imgOLmval.im->array.F[mi];
             }
-
-
-            for (uint32_t i = (*tbuff_l2minsize); i < (*tbuff_l2maxsize); i++)
+            tbuffindex++;
+            if (tbuffindex == (*tbuffsize))
             {
-                tbuffzcnt[i]++;
-                if (tbuffzcnt[i] == tbuffsize[i])
-                {
+                tbuffindex = 0;
 
-                    void *tbuffptrDM = buffmvalDM;
-                    tbuffptrDM += sizeof(float) *
-                                  (tbuffcubeindex[i] * tbuffsize[i]) * NBmode;
-                    imgtbuff_mvalDM[i].md->write = 1;
-                    memcpy(imgtbuff_mvalDM[i].im->array.F,
-                           tbuffptrDM,
-                           sizeof(float) * tbuffsize[i] * NBmode);
-                    processinfo_update_output_stream(processinfo,
-                                                     imgtbuff_mvalDM[i].ID);
-
-
-                    void *tbuffptrWFS = buffmvalWFS;
-                    //tbuffptrWFS += sizeof(float) *
-                    //               (tbuffcubeindex[i] * tbuffsize[i]) * NBmode;
-                    imgtbuff_mvalWFS[i].md->write = 1;
-                    memcpy(imgtbuff_mvalWFS[i].im->array.F,
-                           tbuffptrWFS,
-                           sizeof(float) * tbuffsize[i] * NBmode);
-                    processinfo_update_output_stream(processinfo,
-                                                     imgtbuff_mvalWFS[i].ID);
-
-
-                    void *tbuffptrOL = buffmvalOL;
-                    tbuffptrOL += sizeof(float) *
-                                  (tbuffcubeindex[i] * tbuffsize[i]) * NBmode;
-                    imgtbuff_mvalOL[i].md->write = 1;
-                    memcpy(imgtbuff_mvalOL[i].im->array.F,
-                           tbuffptrOL,
-                           sizeof(float) * tbuffsize[i] * NBmode);
-                    processinfo_update_output_stream(processinfo,
-                                                     imgtbuff_mvalOL[i].ID);
-
-
-                    tbuffcubeindex[i]++;
-                    tbuffzcnt[i] = 0;
-                    if (tbuffcubeindex[i] == tbuffNBcube[i])
-                    {
-                        tbuffcubeindex[i] = 0;
-                    }
-                }
-            }
-
-            TBindex++;
-            if (TBindex == TBsize)
-            {
-                TBindex = 0;
+                processinfo_update_output_stream(processinfo,
+                                                 imgtbuff_mvalDM.ID);
+                processinfo_update_output_stream(processinfo,
+                                                 imgtbuff_mvalWFS.ID);
+                processinfo_update_output_stream(processinfo,
+                                                 imgtbuff_mvalOL.ID);
             }
         }
     }
+
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(mvalout);
     free(mvalDMbuff);
-
-    free(buffmvalDM);
-    free(buffmvalWFS);
-    free(buffmvalOL);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
