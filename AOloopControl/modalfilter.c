@@ -409,7 +409,7 @@ static errno_t compute_function()
                 mvalDM = -limit;
             }
 
-            mvalout[mi] = mi; //mvalDM;
+            mvalout[mi] = mvalDM;
         }
 
         memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
