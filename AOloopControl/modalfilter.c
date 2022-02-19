@@ -250,12 +250,15 @@ static errno_t compute_function()
     uint32_t TBindex = 0;
     uint32_t tbuffsize[(*tbuff_l2maxsize)];
     uint32_t tbuffzcnt[(*tbuff_l2maxsize)];
+    uint32_t tbuffcubeindex[(*tbuff_l2maxsize)];
+    uint32_t tbuffNBcube[(*tbuff_l2maxsize)];
     IMGID    imgtbuff_mvalDM[(*tbuff_l2maxsize)];
     IMGID    imgtbuff_mvalWFS[(*tbuff_l2maxsize)];
     IMGID    imgtbuff_mvalOL[(*tbuff_l2maxsize)];
     for (uint32_t i = 0; i < (*tbuff_l2maxsize); i++)
     {
-        tbuffzcnt[i] = 0;
+        tbuffzcnt[i]      = 0;
+        tbuffcubeindex[i] = 0;
         TBsize *= 2;
         tbuffsize[i] = TBsize;
         if (i >= (*tbuff_l2minsize))
@@ -278,7 +281,15 @@ static errno_t compute_function()
     float *buffmvalDM  = (float *) malloc(sizeof(float) * TBsize * NBmode);
     float *buffmvalWFS = (float *) malloc(sizeof(float) * TBsize * NBmode);
     float *buffmvalOL  = (float *) malloc(sizeof(float) * TBsize * NBmode);
-
+    for (uint32_t i = 0; i < (*tbuff_l2maxsize); i++)
+    {
+        tbuffcubeindex[i] = 0;
+        tbuffNBcube[i]    = TBsize / tbuffsize[i];
+        printf("   buffer %u   size %8u  NBcube %8u\n",
+               i,
+               tbuffsize[i],
+               tbuffNBcube[i]);
+    }
 
 
     // connect/create output mode coeffs
@@ -522,16 +533,17 @@ static errno_t compute_function()
                 buffmvalWFS[TBindex * NBmode + mi] = imgin.im->array.F[mi];
                 buffmvalOL[TBindex * NBmode + mi]  = imgOLmval.im->array.F[mi];
             }
+
+
             for (uint32_t i = (*tbuff_l2minsize); i < (*tbuff_l2maxsize); i++)
             {
                 tbuffzcnt[i]++;
                 if (tbuffzcnt[i] == tbuffsize[i])
                 {
-                    tbuffzcnt[i] = 0;
 
                     void *tbuffptrDM = buffmvalDM;
-                    tbuffptrDM +=
-                        sizeof(float) * (TBindex - tbuffsize[i]) * NBmode;
+                    tbuffptrDM += sizeof(float) *
+                                  (tbuffcubeindex[i] * tbuffsize[i]) * NBmode;
                     imgtbuff_mvalDM[i].md->write = 1;
                     memcpy(imgtbuff_mvalDM[i].im->array.F,
                            tbuffptrDM,
@@ -541,8 +553,8 @@ static errno_t compute_function()
 
 
                     void *tbuffptrWFS = buffmvalWFS;
-                    tbuffptrWFS +=
-                        sizeof(float) * (TBindex - tbuffsize[i]) * NBmode;
+                    tbuffptrWFS += sizeof(float) *
+                                   (tbuffcubeindex[i] * tbuffsize[i]) * NBmode;
                     imgtbuff_mvalWFS[i].md->write = 1;
                     memcpy(imgtbuff_mvalWFS[i].im->array.F,
                            tbuffptrWFS,
@@ -552,20 +564,29 @@ static errno_t compute_function()
 
 
                     void *tbuffptrOL = buffmvalOL;
-                    tbuffptrOL +=
-                        sizeof(float) * (TBindex - tbuffsize[i]) * NBmode;
+                    tbuffptrOL += sizeof(float) *
+                                  (tbuffcubeindex[i] * tbuffsize[i]) * NBmode;
                     imgtbuff_mvalOL[i].md->write = 1;
                     memcpy(imgtbuff_mvalOL[i].im->array.F,
                            tbuffptrOL,
                            tbuffsize[i] * NBmode);
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalOL[i].ID);
+
+
+                    tbuffcubeindex[i]++;
+                    tbuffzcnt[i] = 0;
+                    if (tbuffcubeindex[i] == tbuffNBcube[i])
+                    {
+                        tbuffcubeindex[i] = 0;
+                    }
                 }
-                TBindex++;
-                if (TBindex == TBsize)
-                {
-                    TBindex = 0;
-                }
+            }
+
+            TBindex++;
+            if (TBindex == TBsize)
+            {
+                TBindex = 0;
             }
         }
     }
