@@ -528,38 +528,44 @@ static errno_t compute_function()
                 if (tbuffzcnt[i] == tbuffsize[i])
                 {
                     tbuffzcnt[i] = 0;
-                    void *tbuffptr;
 
-                    tbuffptr = buffmvalDM;
-                    tbuffptr += sizeof(float) * TBindex * NBmode;
+                    void *tbuffptrDM = buffmvalDM;
+                    tbuffptrDM +=
+                        sizeof(float) * (TBindex - tbuffsize[i]) * NBmode;
                     imgtbuff_mvalDM[i].md->write = 1;
                     memcpy(imgtbuff_mvalDM[i].im->array.F,
-                           tbuffptr,
+                           tbuffptrDM,
                            sizeof(float) * tbuffsize[i] * NBmode);
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalDM[i].ID);
 
 
-                    tbuffptr = buffmvalWFS;
-                    tbuffptr += sizeof(float) * TBindex * NBmode;
+                    void *tbuffptrWFS = buffmvalWFS;
+                    tbuffptrWFS +=
+                        sizeof(float) * (TBindex - tbuffsize[i]) * NBmode;
                     imgtbuff_mvalWFS[i].md->write = 1;
                     memcpy(imgtbuff_mvalWFS[i].im->array.F,
-                           tbuffptr,
+                           tbuffptrWFS,
                            tbuffsize[i] * NBmode);
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalWFS[i].ID);
 
 
-                    tbuffptr = buffmvalOL;
-                    tbuffptr += sizeof(float) * TBindex * NBmode;
+                    void *tbuffptrOL = buffmvalOL;
+                    tbuffptrOL +=
+                        sizeof(float) * (TBindex - tbuffsize[i]) * NBmode;
                     imgtbuff_mvalOL[i].md->write = 1;
                     memcpy(imgtbuff_mvalOL[i].im->array.F,
-                           tbuffptr,
+                           tbuffptrOL,
                            tbuffsize[i] * NBmode);
                     processinfo_update_output_stream(processinfo,
                                                      imgtbuff_mvalOL[i].ID);
                 }
-                TBindex = tbuffzcnt[i];
+                TBindex++;
+                if (TBindex == TBsize)
+                {
+                    TBindex = 0;
+                }
             }
         }
     }
