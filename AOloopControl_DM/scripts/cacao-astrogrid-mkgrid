@@ -61,8 +61,9 @@ set -u
 
 
 
+
+
 pattern="${inputMSargARRAY[0]}"
-ampl="${inputMSargARRAY[1]}"
 
 echo "Pattern ${pattern}, bin factor ${binfact}"
 
