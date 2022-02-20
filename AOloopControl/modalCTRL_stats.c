@@ -92,17 +92,17 @@ static errno_t compute_function()
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
-        WRITE_IMAGENAME(name, "aol%lu_mvalDM_buff", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
         read_sharedmem_image(name);
         imgtbuff_mvalDM = mkIMGID_from_name(name);
         resolveIMGID(&imgtbuff_mvalDM, ERRMODE_ABORT);
 
-        WRITE_IMAGENAME(name, "aol%lu_mvalWFS_buff", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
         read_sharedmem_image(name);
         imgtbuff_mvalWFS = mkIMGID_from_name(name);
         resolveIMGID(&imgtbuff_mvalWFS, ERRMODE_ABORT);
 
-        WRITE_IMAGENAME(name, "aol%lu_mvalOL_buff", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
         read_sharedmem_image(name);
         imgtbuff_mvalOL = mkIMGID_from_name(name);
         resolveIMGID(&imgtbuff_mvalOL, ERRMODE_ABORT);

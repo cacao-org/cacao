@@ -265,7 +265,7 @@ static errno_t compute_function()
     IMGID imgOLmval;
     {
         char OLmvalname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(OLmvalname, "aol%lu_mval_ol", *AOloopindex);
+        WRITE_IMAGENAME(OLmvalname, "aol%lu_modevalOL", *AOloopindex);
         imgOLmval = stream_connect_create_2Df32(OLmvalname, NBmode, 1);
     }
 
@@ -281,15 +281,15 @@ static errno_t compute_function()
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
-        WRITE_IMAGENAME(name, "aol%lu_mvalDM_buff", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
         imgtbuff_mvalDM =
             stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
 
-        WRITE_IMAGENAME(name, "aol%lu_mvalWFS_buff", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
         imgtbuff_mvalWFS =
             stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
 
-        WRITE_IMAGENAME(name, "aol%lu_mvalOL_buff", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
         imgtbuff_mvalOL =
             stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
     }
