@@ -206,6 +206,11 @@ static errno_t compute_function()
                        mvalWFS_rms2[mi],
                        mvalDM_rms2[mi],
                        mvalOL_rms2[mi]);
+                printf("mode %2u  WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
+                       mi,
+                       mvalWFS_ave[mi],
+                       mvalDM_ave[mi],
+                       mvalOL_ave[mi]);
             }
 
             mvalDM_rms2[mi] -= mvalDM_ave[mi] * mvalDM_ave[mi];
@@ -258,7 +263,7 @@ static errno_t compute_function()
                 block_OLrms2[block] /= block_cnt[block];
                 printf(
                     "BLOCK %2d (%5ld modes)   WFS = %7.3f   DM = %7.3f   OL ="
-                    "%7.3f\n",
+                    "%7.3f\n\n",
                     block,
                     block_cnt[block],
                     block_WFSrms2[block],
