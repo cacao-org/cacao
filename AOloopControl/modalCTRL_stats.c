@@ -325,7 +325,7 @@ static errno_t compute_function()
 
                 char ffname[STRINGMAXLEN_FILENAME];
                 WRITE_FULLFILENAME(ffname, "AOmodalstat_mblk%03d.dat", block);
-                FILE *fp = fopen("AOperflog/AOmodalstat_mblk%03d.dat", "a");
+                FILE *fp = fopen(ffname, "a");
                 fprintf(fp,
                         "%5ld  %2d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
                         processinfo->loopcnt,
