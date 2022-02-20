@@ -228,7 +228,9 @@ static errno_t compute_function()
             mvalWFS_rms2[mi] /= NBsample;
             mvalOL_rms2[mi] /= NBsample;
 
-            mvalWFS_mrms2[mi] /= (NBsample - 2);
+            // factor 1.5 excess variance is from linear comb of 3 values with coeffs 0.5, 1, 0.5
+            // variance = 0.25 + 1 + 0.25 = 1.5
+            mvalWFS_mrms2[mi] /= (NBsample - 2) * 1.5;
 
 
             mvalDM_rms2[mi] -= (mvalDM_ave[mi] * mvalDM_ave[mi]);
