@@ -884,7 +884,7 @@ if [ "${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}" = "ON" ]; then
     # ======================================================================
 
     # FPS name
-    fpsname="cmodeval2dm"
+    fpsname="mvalC2dm"
     fpsarg0="${CACAO_LOOPNUMBER}"
 
 
@@ -935,13 +935,13 @@ fi
 
 
 if [ "${CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MVM_CMODEVAL2DM"
+    echolog "ON  CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM"
     # ======================================================================
     # ========== MVM-compute DM shape from pseudo open-loop modes ==========
     # ======================================================================
 
     # FPS name
-    fpsname="olmodeval2dm"
+    fpsname="mvalOL2dm"
     fpsarg0="${CACAO_LOOPNUMBER}"
 
 
