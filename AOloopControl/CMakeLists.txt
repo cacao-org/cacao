@@ -44,7 +44,7 @@ AOloopControl_time_param.c
 AOloopControl_wfs.c
 modalfilter.c
 modalfilter.h
-modaloptimize.c
+modalCTRL_stats.c
 modaloptimize.h
 )
 
