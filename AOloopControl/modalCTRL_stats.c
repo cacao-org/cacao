@@ -78,14 +78,17 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
+    uint32_t mblksizemax = 100;
 
 
     IMGID imgtbuff_mvalDM;
     IMGID imgtbuff_mvalWFS;
     IMGID imgtbuff_mvalOL;
-
+    IMGID imgblock;
     // Connect to telemetry buffers
     //
+    uint32_t NBmode   = 0;
+    uint32_t NBsample = 0;
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
@@ -103,13 +106,41 @@ static errno_t compute_function()
         read_sharedmem_image(name);
         imgtbuff_mvalOL = mkIMGID_from_name(name);
         resolveIMGID(&imgtbuff_mvalOL, ERRMODE_ABORT);
+
+        NBmode   = imgtbuff_mvalOL.md->size[0];
+        NBsample = imgtbuff_mvalOL.md->size[1];
+        WRITE_IMAGENAME(name, "aol%lu_mblk", *AOloopindex);
+        imgblock = stream_connect_create_2D(name, NBmode, 1, _DATATYPE_INT32);
     }
+
 
     list_image_ID();
 
+
+    // allocate arrays
+    double *mvalDM_ave = (double *) malloc(sizeof(double) * NBmode);
+    double *mvalDM_rms = (double *) malloc(sizeof(double) * NBmode);
+
+    double *mvalWFS_ave = (double *) malloc(sizeof(double) * NBmode);
+    double *mvalWFS_rms = (double *) malloc(sizeof(double) * NBmode);
+
+    double *mvalOL_ave = (double *) malloc(sizeof(double) * NBmode);
+    double *mvalOL_rms = (double *) malloc(sizeof(double) * NBmode);
+
+
+    double *block_DMrms  = (double *) malloc(sizeof(double) * mblksizemax);
+    double *block_WFSrms = (double *) malloc(sizeof(double) * mblksizemax);
+    double *block_OLrms  = (double *) malloc(sizeof(double) * mblksizemax);
+    long   *block_cnt    = (long *) malloc(sizeof(long) * mblksizemax);
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
-    printf("%ld\n", processinfo->loopcnt);
+
+
+    printf("%5ld ==== %u modes ==== %u samples ==========\n",
+           processinfo->loopcnt,
+           NBmode,
+           NBsample);
     {
         int slice;
 
@@ -121,10 +152,125 @@ static errno_t compute_function()
 
         slice = imgtbuff_mvalOL.md->cnt1;
         printf("    OL  buffer slice = %d\n", slice);
+
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            mvalDM_ave[mi] = 0.0;
+            mvalDM_rms[mi] = 0.0;
+
+            mvalWFS_ave[mi] = 0.0;
+            mvalWFS_rms[mi] = 0.0;
+
+            mvalOL_ave[mi] = 0.0;
+            mvalOL_rms[mi] = 0.0;
+        }
+
+        for (uint32_t sample = 0; sample < NBsample; sample++)
+        {
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                float tmpv = imgtbuff_mvalDM.im->array.F[sample * NBmode + mi];
+                mvalDM_ave[mi] += tmpv;
+                mvalDM_rms[mi] += tmpv * tmpv;
+            }
+        }
+
+        for (uint32_t sample = 0; sample < NBsample; sample++)
+        {
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                float tmpv = imgtbuff_mvalWFS.im->array.F[sample * NBmode + mi];
+                mvalWFS_ave[mi] += tmpv;
+                mvalWFS_rms[mi] += tmpv * tmpv;
+            }
+        }
+
+        for (uint32_t sample = 0; sample < NBsample; sample++)
+        {
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                float tmpv = imgtbuff_mvalOL.im->array.F[sample * NBmode + mi];
+                mvalOL_ave[mi] += tmpv;
+                mvalOL_rms[mi] += tmpv * tmpv;
+            }
+        }
+
+
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            mvalDM_rms[mi] -= mvalDM_ave[mi] * mvalDM_ave[mi];
+            mvalDM_rms[mi] = sqrt(mvalDM_rms[mi] / NBsample);
+            mvalDM_ave[mi] /= NBsample;
+
+            mvalWFS_rms[mi] -= mvalWFS_ave[mi] * mvalWFS_ave[mi];
+            mvalWFS_rms[mi] = sqrt(mvalWFS_rms[mi] / NBsample);
+            mvalWFS_ave[mi] /= NBsample;
+
+            mvalOL_rms[mi] -= mvalOL_ave[mi] * mvalOL_ave[mi];
+            mvalOL_rms[mi] = sqrt(mvalOL_rms[mi] / NBsample);
+            mvalOL_ave[mi] /= NBsample;
+        }
+
+        for (uint32_t block = 0; block < mblksizemax; block++)
+        {
+            block_cnt[block]    = 0;
+            block_DMrms[block]  = 0.0;
+            block_WFSrms[block] = 0.0;
+            block_OLrms[block]  = 0.0;
+        }
+
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            int32_t block = imgblock.im->array.SI32[mi];
+
+            block_cnt[block]++;
+            block_DMrms[block] += mvalDM_rms[mi] * mvalDM_rms[mi];
+            block_WFSrms[block] += mvalWFS_rms[mi] * mvalWFS_rms[mi];
+            block_OLrms[block] += mvalOL_rms[mi] * mvalOL_rms[mi];
+        }
+
+
+        for (uint32_t block = 0; block < mblksizemax; block++)
+        {
+            if (block_cnt[block] > 0)
+            {
+                block_DMrms[block] =
+                    sqrt(block_DMrms[block] / block_cnt[block]);
+                block_WFSrms[block] =
+                    sqrt(block_WFSrms[block] / block_cnt[block]);
+                block_OLrms[block] =
+                    sqrt(block_OLrms[block] / block_cnt[block]);
+                printf(
+                    "BLOCK %2d (%5ld modes)   WFS = %7.3f   DM = %7.3f   OL = "
+                    "%7.3f\n",
+                    block,
+                    block_cnt[block],
+                    block_WFSrms[block],
+                    block_DMrms[block],
+                    block_OLrms[block]);
+            }
+        }
     }
 
 
+
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+
+    free(block_DMrms);
+    free(block_WFSrms);
+    free(block_OLrms);
+    free(block_cnt);
+
+    free(mvalDM_ave);
+    free(mvalDM_rms);
+
+    free(mvalWFS_ave);
+    free(mvalWFS_rms);
+
+    free(mvalOL_ave);
+    free(mvalOL_rms);
 
     /*
     // connect to input mode values array and get number of modes
