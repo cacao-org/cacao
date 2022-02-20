@@ -327,7 +327,7 @@ static errno_t compute_function()
                 WRITE_FULLFILENAME(ffname, "AOmodalstat.dat");
                 FILE *fp = fopen(ffname, "a");
                 fprintf(fp,
-                        "%5ld  mblk%02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
+                        "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
                         processinfo->loopcnt,
                         block,
                         1000.0 * sqrt(block_WFSrms2[block]),
