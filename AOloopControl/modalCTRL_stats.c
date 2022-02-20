@@ -127,20 +127,19 @@ static errno_t compute_function()
     double *mvalOL_ave  = (double *) malloc(sizeof(double) * NBmode);
     double *mvalOL_rms2 = (double *) malloc(sizeof(double) * NBmode);
 
+    // WFS meassurement noise
+    double *mvalWFS_mrms2 = (double *) malloc(sizeof(double) * NBmode);
 
-    double *block_DMrms2  = (double *) malloc(sizeof(double) * mblksizemax);
-    double *block_WFSrms2 = (double *) malloc(sizeof(double) * mblksizemax);
-    double *block_OLrms2  = (double *) malloc(sizeof(double) * mblksizemax);
-    long   *block_cnt     = (long *) malloc(sizeof(long) * mblksizemax);
+
+    double *block_DMrms2   = (double *) malloc(sizeof(double) * mblksizemax);
+    double *block_WFSrms2  = (double *) malloc(sizeof(double) * mblksizemax);
+    double *block_WFSmrms2 = (double *) malloc(sizeof(double) * mblksizemax);
+    double *block_OLrms2   = (double *) malloc(sizeof(double) * mblksizemax);
+    long   *block_cnt      = (long *) malloc(sizeof(long) * mblksizemax);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
 
-
-    printf("%5ld ==== %u modes ==== %u samples ==========\n",
-           processinfo->loopcnt,
-           NBmode,
-           NBsample);
     {
         int slice;
 
@@ -155,6 +154,8 @@ static errno_t compute_function()
 
             mvalOL_ave[mi]  = 0.0;
             mvalOL_rms2[mi] = 0.0;
+
+            mvalWFS_mrms2[mi] = 0.0;
         }
 
         slice = imgtbuff_mvalDM.md->cnt1;
@@ -180,6 +181,24 @@ static errno_t compute_function()
                         .F[slice * NBsample * NBmode + sample * NBmode + mi];
                 mvalWFS_ave[mi] += tmpv;
                 mvalWFS_rms2[mi] += tmpv * tmpv;
+            }
+        }
+        for (uint32_t sample = 1; sample < NBsample - 1; sample++)
+        {
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                float tmpv0 =
+                    imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
+                                                 (sample - 1) * NBmode + mi];
+                float tmpv1 =
+                    imgtbuff_mvalWFS.im->array
+                        .F[slice * NBsample * NBmode + (sample) *NBmode + mi];
+                float tmpv2 =
+                    imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
+                                                 (sample + 1) * NBmode + mi];
+
+                float tmpv = 0.5 * (tmpv0 + tmpv2) - tmpv1;
+                mvalWFS_mrms2[mi] += tmpv * tmpv;
             }
         }
 
@@ -209,6 +228,9 @@ static errno_t compute_function()
             mvalWFS_rms2[mi] /= NBsample;
             mvalOL_rms2[mi] /= NBsample;
 
+            mvalWFS_mrms2[mi] /= (NBsample - 2);
+
+
             mvalDM_rms2[mi] -= (mvalDM_ave[mi] * mvalDM_ave[mi]);
 
             mvalWFS_rms2[mi] -= (mvalWFS_ave[mi] * mvalWFS_ave[mi]);
@@ -219,10 +241,11 @@ static errno_t compute_function()
 
         for (uint32_t block = 0; block < mblksizemax; block++)
         {
-            block_cnt[block]     = 0;
-            block_DMrms2[block]  = 0.0;
-            block_WFSrms2[block] = 0.0;
-            block_OLrms2[block]  = 0.0;
+            block_cnt[block]      = 0;
+            block_DMrms2[block]   = 0.0;
+            block_WFSrms2[block]  = 0.0;
+            block_WFSmrms2[block] = 0.0;
+            block_OLrms2[block]   = 0.0;
         }
 
         for (uint32_t mi = 0; mi < NBmode; mi++)
@@ -232,6 +255,7 @@ static errno_t compute_function()
             block_cnt[block]++;
             block_DMrms2[block] += mvalDM_rms2[mi];
             block_WFSrms2[block] += mvalWFS_rms2[mi];
+            block_WFSmrms2[block] += mvalWFS_mrms2[mi];
             block_OLrms2[block] += mvalOL_rms2[mi];
         }
 
@@ -244,11 +268,13 @@ static errno_t compute_function()
                 //block_WFSrms2[block] /= block_cnt[block];
                 //block_OLrms2[block] /= block_cnt[block];
                 printf(
-                    "BLOCK %2d (%5ld modes)   WFS = %7.3f   DM = %7.3f   OL = "
+                    "BLOCK %2d (%5ld modes)   WFS = %7.3f %7.3f  DM = %7.3f   "
+                    "OL = "
                     "%7.3f   [nm]\n",
                     block,
                     block_cnt[block],
                     1000.0 * sqrt(block_WFSrms2[block]),
+                    1000.0 * sqrt(block_WFSmrms2[block]),
                     1000.0 * sqrt(block_DMrms2[block]),
                     1000.0 * sqrt(block_OLrms2[block]));
             }
@@ -256,12 +282,12 @@ static errno_t compute_function()
     }
 
 
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
 
     free(block_DMrms2);
     free(block_WFSrms2);
+    free(block_WFSmrms2);
     free(block_OLrms2);
     free(block_cnt);
 
@@ -270,6 +296,7 @@ static errno_t compute_function()
 
     free(mvalWFS_ave);
     free(mvalWFS_rms2);
+    free(mvalWFS_mrms2);
 
     free(mvalOL_ave);
     free(mvalOL_rms2);
