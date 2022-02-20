@@ -213,15 +213,15 @@ static errno_t compute_function()
                        mvalOL_ave[mi]);
             }
 
-            mvalDM_rms2[mi] -= mvalDM_ave[mi] * mvalDM_ave[mi];
+            mvalDM_rms2[mi] -= (mvalDM_ave[mi] * mvalDM_ave[mi]) / NBsample;
             mvalDM_rms2[mi] /= NBsample;
             mvalDM_ave[mi] /= NBsample;
 
-            mvalWFS_rms2[mi] -= mvalWFS_ave[mi] * mvalWFS_ave[mi];
+            mvalWFS_rms2[mi] -= (mvalWFS_ave[mi] * mvalWFS_ave[mi]) / NBsample;
             mvalWFS_rms2[mi] /= NBsample;
             mvalWFS_ave[mi] /= NBsample;
 
-            mvalOL_rms2[mi] -= mvalOL_ave[mi] * mvalOL_ave[mi];
+            mvalOL_rms2[mi] -= (mvalOL_ave[mi] * mvalOL_ave[mi]) / NBsample;
             mvalOL_rms2[mi] /= NBsample;
             mvalOL_ave[mi] /= NBsample;
 
@@ -234,6 +234,7 @@ static errno_t compute_function()
                        mvalOL_rms2[mi]);
             }
         }
+
 
         for (uint32_t block = 0; block < mblksizemax; block++)
         {
@@ -263,7 +264,7 @@ static errno_t compute_function()
                 block_OLrms2[block] /= block_cnt[block];
                 printf(
                     "BLOCK %2d (%5ld modes)   WFS = %7.3f   DM = %7.3f   OL ="
-                    "%7.3f\n\n",
+                    "%7.3f\n",
                     block,
                     block_cnt[block],
                     block_WFSrms2[block],
