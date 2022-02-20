@@ -204,40 +204,40 @@ static errno_t compute_function()
             mvalWFS_ave[mi] /= NBsample;
             mvalOL_ave[mi] /= NBsample;
 
+            mvalDM_rms2[mi] /= NBsample;
+            mvalWFS_rms2[mi] /= NBsample;
+            mvalOL_rms2[mi] /= NBsample;
+
             if (mi < 5)
             {
-                printf("mode %2u  WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
+                printf("m%3u  sig2    WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
                        mi,
                        mvalWFS_rms2[mi],
                        mvalDM_rms2[mi],
                        mvalOL_rms2[mi]);
-                printf(" average WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
+                printf("      ave     WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
                        mvalWFS_ave[mi],
                        mvalDM_ave[mi],
                        mvalOL_ave[mi]);
             }
 
 
-            mvalDM_rms2[mi] -= (mvalDM_ave[mi] * mvalDM_ave[mi]) * NBsample;
-            mvalDM_rms2[mi] /= NBsample;
+            mvalDM_rms2[mi] -= (mvalDM_ave[mi] * mvalDM_ave[mi]);
 
-            mvalWFS_rms2[mi] -= (mvalWFS_ave[mi] * mvalWFS_ave[mi]) * NBsample;
-            mvalWFS_rms2[mi] /= NBsample;
+            mvalWFS_rms2[mi] -= (mvalWFS_ave[mi] * mvalWFS_ave[mi]);
 
-            mvalOL_rms2[mi] -= (mvalOL_ave[mi] * mvalOL_ave[mi]) * NBsample;
-            mvalOL_rms2[mi] /= NBsample;
+            mvalOL_rms2[mi] -= (mvalOL_ave[mi] * mvalOL_ave[mi]);
 
 
             if (mi < 5)
             {
-                printf("mode %2u  WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
-                       mi,
-                       mvalWFS_rms2[mi],
-                       mvalDM_rms2[mi],
-                       mvalOL_rms2[mi]);
+                printf(
+                    "              WFS = %7.3f   DM = %7.3f   OL = %7.3f\n\n",
+                    mvalWFS_rms2[mi],
+                    mvalDM_rms2[mi],
+                    mvalOL_rms2[mi]);
             }
         }
-
 
 
         for (uint32_t block = 0; block < mblksizemax; block++)
