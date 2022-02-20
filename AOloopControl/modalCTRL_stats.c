@@ -197,6 +197,7 @@ static errno_t compute_function()
 
 
 
+
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
 
@@ -210,15 +211,17 @@ static errno_t compute_function()
 
             if (mi < 5)
             {
-                printf("m%3u  sig2    WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
-                       mi,
-                       mvalWFS_rms2[mi],
-                       mvalDM_rms2[mi],
-                       mvalOL_rms2[mi]);
-                printf("      ave     WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
-                       mvalWFS_ave[mi],
-                       mvalDM_ave[mi],
-                       mvalOL_ave[mi]);
+                printf(
+                    "m%3u  sig2    WFS = %10.6f   DM = %10.6f   OL = %10.6f\n",
+                    mi,
+                    mvalWFS_rms2[mi],
+                    mvalDM_rms2[mi],
+                    mvalOL_rms2[mi]);
+                printf(
+                    "      ave     WFS = %10.6f   DM = %10.6f   OL = %10.6f\n",
+                    mvalWFS_ave[mi],
+                    mvalDM_ave[mi],
+                    mvalOL_ave[mi]);
             }
 
 
@@ -232,7 +235,8 @@ static errno_t compute_function()
             if (mi < 5)
             {
                 printf(
-                    "              WFS = %7.3f   DM = %7.3f   OL = %7.3f\n\n",
+                    "              WFS = %10.6f   DM = %10.6f   OL = "
+                    "%10.6f\n\n",
                     mvalWFS_rms2[mi],
                     mvalDM_rms2[mi],
                     mvalOL_rms2[mi]);
