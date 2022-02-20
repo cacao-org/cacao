@@ -109,10 +109,22 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
+    printf("%ld\n", processinfo->loopcnt);
+    {
+        int slice;
+
+        slice = imgtbuff_mvalDM.md->cnt1;
+        printf("    DM  buffer slice = %d\n", slice);
+
+        slice = imgtbuff_mvalWFS.md->cnt1;
+        printf("    WFS buffer slice = %d\n", slice);
+
+        slice = imgtbuff_mvalOL.md->cnt1;
+        printf("    OL  buffer slice = %d\n", slice);
+    }
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
-
 
     /*
     // connect to input mode values array and get number of modes
