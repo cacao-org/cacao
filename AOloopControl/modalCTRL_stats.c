@@ -309,21 +309,21 @@ static errno_t compute_function()
                 //block_WFSrms2[block] /= block_cnt[block];
                 //block_OLrms2[block] /= block_cnt[block];
                 printf(
-                    "BLOCK %2d (%5ld modes)   WFS = %7.3f %7.3f %7.3f  DM = "
+                    "BLOCK %2d (%5ld modes)   WFS = %7.3f (%7.3f %7.3f)  DM = "
                     "%7.3f   "
                     "OL = "
-                    "%7.3f   [nm]\n",
+                    "%7.3f   [nm]  --> %5.3f\n",
                     block,
                     block_cnt[block],
                     1000.0 * sqrt(block_WFSrms2[block]),
                     1000.0 * sqrt(block_WFSmrms2[block]),
                     1000.0 * sqrt(block_WFSmqrms2[block]),
                     1000.0 * sqrt(block_DMrms2[block]),
-                    1000.0 * sqrt(block_OLrms2[block]));
+                    1000.0 * sqrt(block_OLrms2[block]),
+                    sqrt(block_OLrms2[block]) / sqrt(block_WFSrms2[block]));
             }
         }
     }
-
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
