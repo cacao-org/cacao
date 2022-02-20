@@ -196,8 +196,18 @@ static errno_t compute_function()
         }
 
 
+
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
+            if (mi < 5)
+            {
+                printf("mode %2u  WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
+                       mi,
+                       mvalWFS_rms2[mi],
+                       mvalDM_rms2[mi],
+                       mvalOL_rms2[mi]);
+            }
+
             mvalDM_rms2[mi] -= mvalDM_ave[mi] * mvalDM_ave[mi];
             mvalDM_rms2[mi] /= NBsample;
             mvalDM_ave[mi] /= NBsample;
@@ -209,6 +219,15 @@ static errno_t compute_function()
             mvalOL_rms2[mi] -= mvalOL_ave[mi] * mvalOL_ave[mi];
             mvalOL_rms2[mi] /= NBsample;
             mvalOL_ave[mi] /= NBsample;
+
+            if (mi < 5)
+            {
+                printf("mode %2u  WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
+                       mi,
+                       mvalWFS_rms2[mi],
+                       mvalDM_rms2[mi],
+                       mvalOL_rms2[mi]);
+            }
         }
 
         for (uint32_t block = 0; block < mblksizemax; block++)
@@ -227,15 +246,6 @@ static errno_t compute_function()
             block_DMrms2[block] += mvalDM_rms2[mi];
             block_WFSrms2[block] += mvalWFS_rms2[mi];
             block_OLrms2[block] += mvalOL_rms2[mi];
-
-            if (mi < 5)
-            {
-                printf("mode %2u  WFS = %7.3f   DM = %7.3f   OL = %7.3f\n",
-                       mi,
-                       mvalWFS_rms2[mi],
-                       mvalDM_rms2[mi],
-                       mvalOL_rms2[mi]);
-            }
         }
 
 
