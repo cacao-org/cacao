@@ -1,0 +1,6 @@
+#ifndef AOLOOPCONTROL_MODALCTRL_STATS_H
+#define AOLOOPCONTROL_MODALCTRL_STATS_H
+
+errno_t CLIADDCMD_AOloopControl__modalCTRL_stats();
+
+#endif

@@ -60,7 +60,7 @@ static errno_t customCONFcheck()
 }
 
 static CLICMDDATA CLIcmddata = {
-    "modaloptimize", "modal control optimize", CLICMD_FIELDS_DEFAULTS};
+    "modalCTRLstats", "compute modal control stats", CLICMD_FIELDS_DEFAULTS};
 
 
 
@@ -272,7 +272,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(mvalout);
-*/
+    */
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
@@ -286,7 +286,7 @@ INSERT_STD_FPSCLIfunctions
 
     // Register function in CLI
     errno_t
-    CLIADDCMD_AOloopControl__modaloptimize()
+    CLIADDCMD_AOloopControl__modalCTRL_stats()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
