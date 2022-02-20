@@ -105,6 +105,7 @@ if [ "${CACAO_FPSPROC_DMCOMB}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
         addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
+        addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 0.00001" # 10us
         addfpscmd "setval ${fpsfname}.DMindex ${CACAO_DMINDEX}"
         addfpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
         addfpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"

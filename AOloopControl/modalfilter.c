@@ -50,6 +50,21 @@ static uint32_t *tbuffsize;
 
 
 
+// Auxillary output modes to be mixed with std output
+
+static uint64_t *auxDMmvalmode;
+static long      fpi_auxDMmvalmode;
+
+// stream name
+static char *auxDMmvalstream;
+
+// mixing factor
+static float *auxDMmvalmixfact;
+static long   fpi_auxDMmvalmixfact;
+
+
+
+
 static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                ".AOloopindex",
                                "AO loop index",
@@ -119,7 +134,28 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                "512",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &tbuffsize,
-                               NULL}};
+                               NULL},
+                              {CLIARG_ONOFF,
+                               ".auxDMmval.mode",
+                               "mixing aux DM mode vals",
+                               "0",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &auxDMmvalmode,
+                               NULL},
+                              {CLIARG_STREAM,
+                               ".auxDMmval.sname",
+                               "aux DM mode values stream",
+                               "NULL",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &auxDMmvalstream,
+                               NULL},
+                              {CLIARG_FLOAT32,
+                               ".auxDMmval.sname",
+                               "mixing factor",
+                               "0.2",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &auxDMmvalmixfact,
+                               &fpi_auxDMmvalmixfact}};
 
 
 
