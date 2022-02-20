@@ -109,6 +109,7 @@ if [ "${CACAO_FPSPROC_DMCOMB}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
         addfpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
         addfpscmd "setval ${fpsfname}.DMcombout dm${CACAO_DMINDEX}disp"
+        addfpscmd "setval ${fpsfname}.astrogrid aol${CACAO_LOOPNUMBER}_DMastrogrid"
     fi
 else
     echolog "CACAO_FPSPROC_DMCOMB = OFF"
