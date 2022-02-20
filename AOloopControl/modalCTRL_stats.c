@@ -323,9 +323,9 @@ static errno_t compute_function()
                     1000.0 * sqrt(block_OLrms2[block]),
                     sqrt(block_WFSrms2[block]) / sqrt(block_OLrms2[block]));
 
-                char ffname[STRINGMAXLEN_FILENAME];
-                WRITE_FULLFILENAME(ffname, "AOmodalstat_mblk%03d.dat", block);
-                FILE *fp = fopen(ffname, "a");
+                //char ffname[STRINGMAXLEN_FILENAME];
+                //WRITE_FULLFILENAME(ffname, "AOmodalstat_mblk%03d.dat", block);
+                FILE *fp = fopen("AOmodalstat.dat", "a");
                 fprintf(fp,
                         "%5ld  %2d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
                         processinfo->loopcnt,
