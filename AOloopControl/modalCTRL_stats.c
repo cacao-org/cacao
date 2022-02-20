@@ -77,6 +77,39 @@ static errno_t help_function()
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
+
+
+    IMGID imgtbuff_mvalDM;
+    IMGID imgtbuff_mvalWFS;
+    IMGID imgtbuff_mvalOL;
+
+    // Connect to telemetry buffers
+    //
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+
+        WRITE_IMAGENAME(name, "aol%lu_mvalDM_buff", *AOloopindex);
+        imgtbuff_mvalDM = mkIMGID_from_name(name);
+        resolveIMGID(&imgtbuff_mvalDM, ERRMODE_ABORT);
+
+        WRITE_IMAGENAME(name, "aol%lu_mvalWFS_buff", *AOloopindex);
+        imgtbuff_mvalWFS = mkIMGID_from_name(name);
+        resolveIMGID(&imgtbuff_mvalWFS, ERRMODE_ABORT);
+
+        WRITE_IMAGENAME(name, "aol%lu_mvalOL_buff", *AOloopindex);
+        imgtbuff_mvalOL = mkIMGID_from_name(name);
+        resolveIMGID(&imgtbuff_mvalOL, ERRMODE_ABORT);
+    }
+
+    list_image_ID();
+
+    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+
+
+
+    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+
     /*
     // connect to input mode values array and get number of modes
     //
