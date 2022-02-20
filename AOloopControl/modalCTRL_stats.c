@@ -286,8 +286,12 @@ static errno_t compute_function()
 
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
-            int32_t block = imgblock.im->array.SI32[mi];
+            // remove noise
+            mvalWFS_rms2[mi] -= mvalWFS_mqrms2[mi];
+            mvalOL_rms2[mi] -= mvalWFS_mqrms2[mi];
 
+            // add to corresponding block
+            int32_t block = imgblock.im->array.SI32[mi];
             block_cnt[block]++;
             block_DMrms2[block] += mvalDM_rms2[mi];
             block_WFSrms2[block] += mvalWFS_rms2[mi];
