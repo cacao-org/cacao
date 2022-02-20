@@ -114,7 +114,7 @@
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
 #include "modalfilter.h"
-#include "modaloptimize.h"
+#include "modalCTRL_stats.h"
 
 
 #ifdef HAVE_CUDA
@@ -1909,7 +1909,7 @@ static errno_t init_module_CLI()
 
 
     CLIADDCMD_AOloopControl__modalfilter();
-    CLIADDCMD_AOloopControl__modaloptimize();
+    CLIADDCMD_AOloopControl__modalCTRL_stats();
 
     // add atexit functions here
     // atexit((void*) myfunc); atexit = starts a function once the program exits
