@@ -454,7 +454,7 @@ static errno_t compute_function()
             }
 
             auxDMfact *= sin(modpha);
-            printf("auxDMfact = %7.5f\n", auxDMfact);
+            //printf("auxDMfact = %7.5f\n", auxDMfact);
         }
 
         // Apply modal control filtering
@@ -475,35 +475,47 @@ static errno_t compute_function()
 
 
             // get current DM position
+            /*
+                        if ((*auxDMmvalmode) == 1)
+                        {
+                            // subtract offset (will be added later)
+                            mvalDM = imgout.im->array.F[mi] -
+                                     auxDMfact * imgauxmDM.im->array.F[mi];
+                        }
+              */
+            mvalDM = imgout.im->array.F[mi];
 
-            if ((*auxDMmvalmode) == 1)
-            {
-                // subtract offset (will be added later)
-                mvalDM = imgout.im->array.F[mi] -
-                         auxDMfact * imgauxmDM.im->array.F[mi];
-            }
-            else
-            {
-                mvalDM = imgout.im->array.F[mi];
-            }
 
             // apply scaled offset to DM position
-            mvalDM += dmval;
+            double mvalDMnew = mvalDM + dmval;
+
+            double mvalref = 0.0; // reference
+            if ((*auxDMmvalmode) == 1)
+            {
+                mvalref = auxDMfact * imgauxmDM.im->array.F[mi];
+            }
+
+
+            double deltamval; // offset relative to reference
+            deltamval = mvalDMnew - mvalref;
+
             // MULT
-            mvalDM *= imgmmult.im->array.F[mi];
+            deltamval *= imgmmult.im->array.F[mi];
 
 
             // LIMIT
             limit = imgmlimit.im->array.F[mi];
-            if (mvalDM > limit)
+            if (deltamval > limit)
             {
-                mvalDM = limit;
+                deltamval = limit;
             }
-            if (mvalDM < -limit)
+            if (deltamval < -limit)
             {
-                mvalDM = -limit;
+                deltamval = -limit;
             }
 
+            mvalout[mi] = mvalref + deltamval;
+            /*
             if ((*auxDMmvalmode) == 1)
             {
                 // add mode values from aux stream
@@ -513,6 +525,7 @@ static errno_t compute_function()
             {
                 mvalout[mi] = mvalDM;
             }
+            */
         }
 
 
