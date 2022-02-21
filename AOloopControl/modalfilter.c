@@ -504,18 +504,17 @@ static errno_t compute_function()
                 deltamval = -limit;
             }
 
-            mvalout[mi] = mvalref + deltamval;
-            /*
+
             if ((*auxDMmvalmode) == 1)
             {
                 // add mode values from aux stream
-                mvalout[mi] = mvalDM + auxDMfact * imgauxmDM.im->array.F[mi];
+                mvalref = auxDMfact * imgauxmDM.im->array.F[mi];
             }
             else
             {
-                mvalout[mi] = mvalDM;
+                mvalref = 0.0;
             }
-            */
+            mvalout[mi] = mvalref + deltamval;
         }
 
 
