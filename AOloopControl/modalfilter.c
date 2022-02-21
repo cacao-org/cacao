@@ -453,7 +453,7 @@ static errno_t compute_function()
             }
 
             auxDMfact *= sin(2.0 * M_PI * modpha);
-            printf("%7.5f  auxDMfact = %7.5f\n", modpha, auxDMfact);
+            //printf("%7.5f  auxDMfact = %7.5f\n", modpha, auxDMfact);
         }
 
         // Apply modal control filtering
