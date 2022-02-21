@@ -138,7 +138,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                "0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &auxDMmvalmode,
-                               NULL},
+                               &fpi_auxDMmvalmode},
                               {CLIARG_FLOAT32,
                                ".auxDMmval.mixfact",
                                "mixing factor",
@@ -442,18 +442,12 @@ static errno_t compute_function()
             if ((*auxDMmvalmode) == 1)
             {
                 // subtract offset (will be added later)
-                for (uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    mvalDM = imgout.im->array.F[mi] -
-                             (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
-                }
+                mvalDM = imgout.im->array.F[mi] -
+                         (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
             }
             else
             {
-                for (uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    mvalDM = imgout.im->array.F[mi];
-                }
+                mvalDM = imgout.im->array.F[mi];
             }
 
             // apply scaled offset to DM position
@@ -473,18 +467,18 @@ static errno_t compute_function()
                 mvalDM = -limit;
             }
 
-            mvalout[mi] = mvalDM;
-        }
-
-        // add mode values from aux stream
-        //
-        if ((*auxDMmvalmode) == 1)
-        {
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            if ((*auxDMmvalmode) == 1)
             {
-                mvalout[mi] += (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
+                // add mode values from aux stream
+                mvalout[mi] =
+                    mvalDM + (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
+            }
+            else
+            {
+                mvalout[mi] = mvalDM;
             }
         }
+
 
 
         memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
