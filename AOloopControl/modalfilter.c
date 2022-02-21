@@ -59,6 +59,14 @@ static long      fpi_auxDMmvalmode;
 static float *auxDMmvalmixfact;
 static long   fpi_auxDMmvalmixfact;
 
+// modulation on/off
+static uint64_t *auxDMmvalmodulate;
+static long      fpi_auxDMmvalmodulate;
+
+// modulation period
+static float *auxDMmvalmodperiod;
+static long   fpi_auxDMmvalmodperiod;
+
 
 
 
@@ -145,7 +153,21 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                "0.2",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &auxDMmvalmixfact,
-                               &fpi_auxDMmvalmixfact}};
+                               &fpi_auxDMmvalmixfact},
+                              {CLIARG_ONOFF,
+                               ".auxDMmval.modulate",
+                               "modulate aux DM",
+                               "0",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &auxDMmvalmodulate,
+                               &fpi_auxDMmvalmodulate},
+                              {CLIARG_FLOAT32,
+                               ".auxDMmval.modperiod",
+                               "modulation period [frame]",
+                               "20.0",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &auxDMmvalmodperiod,
+                               &fpi_auxDMmvalmodperiod}};
 
 
 
@@ -167,6 +189,8 @@ static errno_t customCONFsetup()
 
         data.fpsptr->parray[fpi_auxDMmvalmode].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_auxDMmvalmixfact].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_auxDMmvalmodulate].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_auxDMmvalmodperiod].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -419,6 +443,18 @@ static errno_t compute_function()
 
 
 
+        float auxDMfact = (*auxDMmvalmixfact);
+        if ((*auxDMmvalmodulate) == 1)
+        {
+            static double modpha = 0.0;
+            modpha += 2.0 * M_PI / (*auxDMmvalmodperiod);
+            if (modpha > 2.0 * M_PI)
+            {
+                modpha -= 2.0 * M_PI;
+            }
+
+            auxDMfact *= sin(modpha);
+        }
 
         // Apply modal control filtering
         //
@@ -443,7 +479,7 @@ static errno_t compute_function()
             {
                 // subtract offset (will be added later)
                 mvalDM = imgout.im->array.F[mi] -
-                         (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
+                         auxDMfact * imgauxmDM.im->array.F[mi];
             }
             else
             {
@@ -470,8 +506,7 @@ static errno_t compute_function()
             if ((*auxDMmvalmode) == 1)
             {
                 // add mode values from aux stream
-                mvalout[mi] =
-                    mvalDM + (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
+                mvalout[mi] = mvalDM + auxDMfact * imgauxmDM.im->array.F[mi];
             }
             else
             {
