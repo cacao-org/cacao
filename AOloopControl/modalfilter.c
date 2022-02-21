@@ -493,7 +493,7 @@ static errno_t compute_function()
                 float tmpmWFSval = imgin.im->array.F[mi];
                 ;
 
-                imgOLmval.im->array.F[mi] = tmpmWFSval + tmpmDMval;
+                imgOLmval.im->array.F[mi] = tmpmWFSval - tmpmDMval;
             }
             processinfo_update_output_stream(processinfo, imgOLmval.ID);
         }
