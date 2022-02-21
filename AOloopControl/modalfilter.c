@@ -442,8 +442,8 @@ static errno_t compute_function()
             if ((*auxDMmvalmode) == 1)
             {
                 // subtract offset (will be added later)
-                mvalDM = imgout.im->array.F[mi];
-                // - (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
+                mvalDM = imgout.im->array.F[mi] -
+                         (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
             }
             else
             {
