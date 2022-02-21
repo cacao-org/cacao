@@ -472,7 +472,6 @@ static errno_t compute_function()
 
 
 
-
             // get current DM position
             mvalDM = imgout.im->array.F[mi];
 
@@ -481,10 +480,10 @@ static errno_t compute_function()
             double mvalDMnew = mvalDM + dmval;
 
             double mvalref = 0.0; // reference
-            if ((*auxDMmvalmode) == 1)
+                                  /* if ((*auxDMmvalmode) == 1)
             {
                 mvalref = auxDMfact * imgauxmDM.im->array.F[mi];
-            }
+            }*/
 
 
             double deltamval; // offset relative to reference
