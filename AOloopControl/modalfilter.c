@@ -442,19 +442,18 @@ static errno_t compute_function()
         float  limit;
 
 
-
         float auxDMfact = (*auxDMmvalmixfact);
         if ((*auxDMmvalmodulate) == 1)
         {
             static double modpha = 0.0;
-            modpha += 2.0 * M_PI / (*auxDMmvalmodperiod);
-            if (modpha > 2.0 * M_PI)
+            modpha += 1 / (*auxDMmvalmodperiod);
+            if (modpha > 1.0)
             {
-                modpha -= 2.0 * M_PI;
+                modpha -= 1.0;
             }
 
-            auxDMfact *= sin(modpha);
-            //printf("auxDMfact = %7.5f\n", auxDMfact);
+            auxDMfact *= sin(2.0 * M_PI * modpha);
+            printf("%7.5f  auxDMfact = %7.5f\n", modpha, auxDMfact);
         }
 
         // Apply modal control filtering
@@ -475,18 +474,10 @@ static errno_t compute_function()
 
 
             // get current DM position
-            /*
-                        if ((*auxDMmvalmode) == 1)
-                        {
-                            // subtract offset (will be added later)
-                            mvalDM = imgout.im->array.F[mi] -
-                                     auxDMfact * imgauxmDM.im->array.F[mi];
-                        }
-              */
             mvalDM = imgout.im->array.F[mi];
 
 
-            // apply scaled offset to DM position
+            // goal position
             double mvalDMnew = mvalDM + dmval;
 
             double mvalref = 0.0; // reference
