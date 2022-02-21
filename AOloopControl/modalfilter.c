@@ -302,7 +302,7 @@ static errno_t compute_function()
     {
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%lu_modevalauxDM", *AOloopindex);
-        IMGID imgauxmDM = stream_connect_create_2Df32(name, NBmode, 1);
+        imgauxmDM = stream_connect_create_2Df32(name, NBmode, 1);
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
             data.image[imgauxmDM.ID].array.F[mi] = 0.0;
@@ -471,7 +471,7 @@ static errno_t compute_function()
             {
                 // add mode values from aux stream
                 mvalout[mi] =
-                    mvalDM; // + (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
+                    mvalDM + (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
             }
             else
             {
