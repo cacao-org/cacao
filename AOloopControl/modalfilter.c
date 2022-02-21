@@ -55,9 +55,6 @@ static uint32_t *tbuffsize;
 static uint64_t *auxDMmvalmode;
 static long      fpi_auxDMmvalmode;
 
-// stream name
-static char *auxDMmvalstream;
-
 // mixing factor
 static float *auxDMmvalmixfact;
 static long   fpi_auxDMmvalmixfact;
@@ -142,13 +139,6 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &auxDMmvalmode,
                                NULL},
-                              {CLIARG_STREAM,
-                               ".auxDMmval.sname",
-                               "aux DM mode values stream",
-                               "NULL",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &auxDMmvalstream,
-                               NULL},
                               {CLIARG_FLOAT32,
                                ".auxDMmval.mixfact",
                                "mixing factor",
@@ -174,6 +164,9 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_comptbuff].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_compOL].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_latencyfr].fpflag |= FPFLAG_WRITERUN;
+
+        data.fpsptr->parray[fpi_auxDMmvalmode].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_auxDMmvalmixfact].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -304,6 +297,19 @@ static errno_t compute_function()
 
 
 
+    // connect/create aux DM control mode coeffs
+    IMGID imgauxmDM;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_modevalauxDM", *AOloopindex);
+        IMGID imgauxmDM = stream_connect_create_2Df32(name, NBmode, 1);
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            data.image[imgauxmDM.ID].array.F[mi] = 0.0;
+        }
+    }
+
+
 
     // ========================= MODAL GAIN ===========================
     printf("Setting up modal gain\n");
@@ -412,6 +418,8 @@ static errno_t compute_function()
         float  limit;
 
 
+
+
         // Apply modal control filtering
         //
         for (uint32_t mi = 0; mi < NBmode; mi++)
@@ -426,10 +434,29 @@ static errno_t compute_function()
             // GAIN
             dmval *= imgmgain.im->array.F[mi];
 
-            // get current DM position
-            mvalDM = imgout.im->array.F[mi];
 
-            // apply scaled offset
+
+
+            // get current DM position
+
+            if ((*auxDMmvalmode) == 1)
+            {
+                // subtract offset (will be added later)
+                for (uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    mvalDM = imgout.im->array.F[mi] -
+                             (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
+                }
+            }
+            else
+            {
+                for (uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    mvalDM = imgout.im->array.F[mi];
+                }
+            }
+
+            // apply scaled offset to DM position
             mvalDM += dmval;
             // MULT
             mvalDM *= imgmmult.im->array.F[mi];
@@ -448,6 +475,17 @@ static errno_t compute_function()
 
             mvalout[mi] = mvalDM;
         }
+
+        // add mode values from aux stream
+        //
+        if ((*auxDMmvalmode) == 1)
+        {
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                mvalout[mi] += (*auxDMmvalmixfact) * imgauxmDM.im->array.F[mi];
+            }
+        }
+
 
         memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
         processinfo_update_output_stream(processinfo, imgout.ID);
