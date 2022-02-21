@@ -990,6 +990,63 @@ fi
 
 
 
+if [ "${CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM"
+    # ======================================================================
+    # ========== MVM-compute DM shape from WFS modes =======================
+    # ======================================================================
+
+    # FPS name
+    fpsname="mvalWFS2dm"
+    fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "+milkcudacomp" >> fpslist.txt
+        echo "${fpsname}         cuda.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
+
+        addfpscmdheader
+
+        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalWFS"
+
+        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_modevalWFS"
+        addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_DMmodes"
+        addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_dmWFS"
+        addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
+
+
+        addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+
+        addfpscmd "setval ${fpsfname}.outinit OFF"
+
+        addfpscmd "setval ${fpsfname}.GPUindex 3"
+
+        addfpscmd "setval ${fpsfname}.option.axmode 1"
+        addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
+        addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+        addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
+
+        addfpscmd "setval ${fpsfname}.option.twait 0"
+        addfpscmd "setval ${fpsfname}.option.semwarn OFF"
+
+    fi
+else
+    echolog "OFF CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM"
+fi
+
+
+
+
+
 
 
 CACAO_CMDMINDEX="2"
