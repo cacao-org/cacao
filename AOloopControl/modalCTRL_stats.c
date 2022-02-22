@@ -212,12 +212,18 @@ static errno_t compute_function()
     while ((NBmode_available > 0) && (NBblk < (uint32_t) MAXBLK))
     {
         NBmode_available -= blksize[blki];
+        printf("%u  available : %d\n", blki, NBmode_available);
+        fflush(stdout);
         if (NBmode_available < 0)
         {
             blksize[blki] += NBmode_available;
         }
+        printf(" --> size   : %u\n", blksize[blki]);
+        fflush(stdout);
         blki++;
         blkoffset[blki] = blkoffset[blki - 1] + blksize[blki - 1];
+        printf(" --> offset : %u\n", blkoffset[blki]);
+        fflush(stdout);
         NBblk++;
     }
     for (uint32_t blki1 = blki; blki1 < (uint32_t) MAXBLK; blki++)
