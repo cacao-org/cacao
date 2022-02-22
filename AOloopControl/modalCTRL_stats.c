@@ -226,7 +226,7 @@ static errno_t compute_function()
         fflush(stdout);
         NBblk++;
     }
-    for (uint32_t blki1 = blki; blki1 < (uint32_t) MAXBLK; blki++)
+    for (uint32_t blki1 = blki; blki1 < (uint32_t) MAXBLK; blki1++)
     {
         blksize[blki1]   = 0;
         blkoffset[blki1] = blkoffset[blki1 - 1];
