@@ -19,27 +19,39 @@ static long      fpi_samplesize;
 
 // blocks sizes
 
-static uint32_t *block0size;
-static long      fpi_block0size;
+static uint32_t *block0NBmode;
+static long      fpi_block0NBmode;
+static uint32_t *block0NBsample;
+static long      fpi_block0NBsample;
 
-static uint32_t *block1size;
-static long      fpi_block1size;
+static uint32_t *block1NBmode;
+static long      fpi_block1NBmode;
+static uint32_t *block1NBsample;
+static long      fpi_block1NBsample;
 
-static uint32_t *block2size;
-static long      fpi_block2size;
+static uint32_t *block2NBmode;
+static long      fpi_block2NBmode;
+static uint32_t *block2NBsample;
+static long      fpi_block2NBsample;
 
-static uint32_t *block3size;
-static long      fpi_block3size;
+static uint32_t *block3NBmode;
+static long      fpi_block3NBmode;
+static uint32_t *block3NBsample;
+static long      fpi_block3NBsample;
 
-static uint32_t *block4size;
-static long      fpi_block4size;
+static uint32_t *block4NBmode;
+static long      fpi_block4NBmode;
+static uint32_t *block4NBsample;
+static long      fpi_block4NBsample;
 
-static uint32_t *block5size;
-static long      fpi_block5size;
-
+static uint32_t *block5NBmode;
+static long      fpi_block5NBmode;
+static uint32_t *block5NBsample;
+static long      fpi_block5NBsample;
 
 static uint64_t *compstatswrite;
 static long      fpi_compstatswrite;
+
 
 
 
@@ -57,48 +69,97 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                CLIARG_VISIBLE_DEFAULT,
                                (void **) &samplesize,
                                &fpi_samplesize},
+
                               {CLIARG_UINT32,
-                               ".block.blk0size",
-                               "block 0 size",
+                               ".block.blk0NBmode",
+                               "block 0 number of modes",
                                "2",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block0size,
-                               &fpi_block0size},
+                               (void **) &block0NBmode,
+                               &fpi_block0NBmode},
                               {CLIARG_UINT32,
-                               ".block.blk1size",
-                               "block 1 size",
-                               "8",
+                               ".block.blk0NBsample",
+                               "block 0 number of samples",
+                               "10000",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block1size,
-                               &fpi_block1size},
+                               (void **) &block0NBsample,
+                               &fpi_block0NBsample},
+
                               {CLIARG_UINT32,
-                               ".block.blk2size",
-                               "block 2 size",
-                               "32",
+                               ".block.blk1NBmode",
+                               "block 1 number of modes",
+                               "256",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block2size,
-                               &fpi_block2size},
+                               (void **) &block1NBmode,
+                               &fpi_block1NBmode},
                               {CLIARG_UINT32,
-                               ".block.blk3size",
-                               "block 3 size",
-                               "128",
+                               ".block.blk1NBsample",
+                               "block 1 number of samples",
+                               "10000",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block3size,
-                               &fpi_block3size},
+                               (void **) &block1NBsample,
+                               &fpi_block1NBsample},
+
                               {CLIARG_UINT32,
-                               ".block.blk4size",
-                               "block 4 size",
-                               "512",
+                               ".block.blk2NBmode",
+                               "block 2 number of modes",
+                               "256",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block4size,
-                               &fpi_block4size},
+                               (void **) &block2NBmode,
+                               &fpi_block2NBmode},
                               {CLIARG_UINT32,
-                               ".block.blk5size",
-                               "block 5 size",
-                               "512",
+                               ".block.blk2NBsample",
+                               "block 2 number of samples",
+                               "10000",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block5size,
-                               &fpi_block5size},
+                               (void **) &block2NBsample,
+                               &fpi_block2NBsample},
+
+                              {CLIARG_UINT32,
+                               ".block.blk3NBmode",
+                               "block 3 number of modes",
+                               "256",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block3NBmode,
+                               &fpi_block3NBmode},
+                              {CLIARG_UINT32,
+                               ".block.blk3NBsample",
+                               "block 3 number of samples",
+                               "10000",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block3NBsample,
+                               &fpi_block3NBsample},
+
+                              {CLIARG_UINT32,
+                               ".block.blk4NBmode",
+                               "block 4 number of modes",
+                               "256",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block4NBmode,
+                               &fpi_block4NBmode},
+                              {CLIARG_UINT32,
+                               ".block.blk4NBsample",
+                               "block 4 number of samples",
+                               "10000",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block4NBsample,
+                               &fpi_block4NBsample},
+
+                              {CLIARG_UINT32,
+                               ".block.blk5NBmode",
+                               "block 5 number of modes",
+                               "256",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block5NBmode,
+                               &fpi_block5NBmode},
+                              {CLIARG_UINT32,
+                               ".block.blk4NBsample",
+                               "block 5 number of samples",
+                               "10000",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block5NBsample,
+                               &fpi_block5NBsample},
+
                               {CLIARG_ONOFF,
                                ".comp.statswrite",
                                "Write stats to file",
@@ -200,12 +261,20 @@ static errno_t compute_function()
     uint32_t blksize[MAXBLK];
     uint32_t blkoffset[MAXBLK];
     blkoffset[0] = 0;
-    blksize[0]   = *block0size;
-    blksize[1]   = *block1size;
-    blksize[2]   = *block2size;
-    blksize[3]   = *block3size;
-    blksize[4]   = *block4size;
-    blksize[5]   = *block5size;
+    blksize[0]   = *block0NBmode;
+    blksize[1]   = *block1NBmode;
+    blksize[2]   = *block2NBmode;
+    blksize[3]   = *block3NBmode;
+    blksize[4]   = *block4NBmode;
+    blksize[5]   = *block5NBmode;
+
+    int32_t blksamplesize[MAXBLK];
+    blksamplesize[0] = *block0NBmode;
+    blksamplesize[1] = *block1NBmode;
+    blksamplesize[2] = *block2NBmode;
+    blksamplesize[3] = *block3NBmode;
+    blksamplesize[4] = *block4NBmode;
+    blksamplesize[5] = *block5NBmode;
 
     uint32_t blki             = 0;
     int32_t  NBmode_available = NBmode;
@@ -240,12 +309,12 @@ static errno_t compute_function()
                blkoffset[blki],
                blkoffset[blki] + blksize[blki] - 1);
     }
-    *block0size = blksize[0];
-    *block1size = blksize[1];
-    *block2size = blksize[2];
-    *block3size = blksize[3];
-    *block4size = blksize[4];
-    *block5size = blksize[5];
+    *block0NBmode = blksize[0];
+    *block1NBmode = blksize[1];
+    *block2NBmode = blksize[2];
+    *block3NBmode = blksize[3];
+    *block4NBmode = blksize[4];
+    *block5NBmode = blksize[5];
 
     IMGID imgmvalOLblk[NBblk];
     for (uint32_t blki = 0; blki < NBblk; blki++)
@@ -253,8 +322,10 @@ static errno_t compute_function()
         char name[STRINGMAXLEN_STREAMNAME];
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_blk%02u", *AOloopindex, blki);
-        imgmvalOLblk[blki] =
-            stream_connect_create_3Df32(name, NBmode, 1, blksize[blki]);
+        imgmvalOLblk[blki] = stream_connect_create_3Df32(name,
+                                                         blksize[blki],
+                                                         1,
+                                                         blksamplesize[blki]);
     }
 
     list_image_ID();
