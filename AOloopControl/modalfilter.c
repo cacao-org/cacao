@@ -472,7 +472,7 @@ static errno_t compute_function()
 
 
 
-            // get current DM position (minus auxFM)
+            // get current DM position (minus auxDM)
             if ((*auxDMmvalmode) == 1)
             {
                 mvalDM = imgout.im->array.F[mi] -
@@ -485,7 +485,7 @@ static errno_t compute_function()
 
 
             // goal position
-            double mvalDMnew = mvalDM + dmval;
+            double mvalDMnew = mvalDM; // + dmval;
 
 
 
