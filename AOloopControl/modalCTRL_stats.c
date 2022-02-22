@@ -327,33 +327,13 @@ static errno_t compute_function()
                                                          1,
                                                          blksamplesize[blki]);
     }
+    int32_t blksampleindex[NBblk];
+    for (uint32_t blki = 0; blki < NBblk; blki++)
+    {
+        blksampleindex[blki] = 0;
+    }
 
     list_image_ID();
-
-    // TELEMETRY BUFFERS
-    //
-    /*
-    uint32_t tbuffindex = 0;
-    int      tbuffslice = 0;
-    IMGID    imgmvalDMblk;
-    IMGID    imgmvalWFSblk;
-    IMGID    imgtmvalOLblk;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-
-        WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
-        imgtbuff_mvalDM =
-            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
-
-        WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
-        imgtbuff_mvalWFS =
-            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
-
-        WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
-        imgtbuff_mvalOL =
-            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
-    }
-    */
 
 
 
@@ -384,10 +364,35 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
+    // fill up block telemetry streams
+    {
+        int slice = imgtbuff_mvalOL.md->cnt1;
+        for (uint32_t sample = 0; sample < NBsample; sample++)
+        {
+            for (uint32_t blki = 0; blki < NBblk; blki++)
+            {
+                for (uint32_t mirel = 0; mirel < blksize[blki]; mirel++)
+                {
+                    uint32_t mi = mirel + blkoffset[blki];
+                    imgmvalOLblk[blki]
+                        .im->array
+                        .F[blksize[blki] * blksampleindex[blki] + mirel] =
+                        imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
+                                                    sample * NBmode + mi];
+                }
+                blksampleindex[blki]++;
+                if (blksampleindex[blki] == blksamplesize[blki])
+                {
+                    processinfo_update_output_stream(processinfo,
+                                                     imgmvalOLblk[blki].ID);
+                    blksampleindex[blki] = 0;
+                }
+            }
+        }
+    }
 
     {
         int slice;
-
 
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
