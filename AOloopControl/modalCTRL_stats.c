@@ -322,19 +322,24 @@ static errno_t compute_function()
         char name[STRINGMAXLEN_STREAMNAME];
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_blk%02u", *AOloopindex, blki);
-        imgmvalOLblk[blki] = stream_connect_create_3Df32(name,
+        imgmvalOLblk[blki] = stream_connect_create_2Df32(name,
                                                          blksize[blki],
-                                                         1,
                                                          blksamplesize[blki]);
     }
+
     int32_t blksampleindex[NBblk];
+    float  *mvalOLarray[NBblk];
     for (uint32_t blki = 0; blki < NBblk; blki++)
     {
         blksampleindex[blki] = 0;
+        mvalOLarray[blki]    = (float *) malloc(sizeof(float) * blksize[blki] *
+                                             blksamplesize[blki]);
     }
 
-    list_image_ID();
 
+
+
+    list_image_ID();
 
 
 
@@ -362,6 +367,8 @@ static errno_t compute_function()
     double *block_OLrms2    = (double *) malloc(sizeof(double) * mblksizemax);
     long   *block_cnt       = (long *) malloc(sizeof(long) * mblksizemax);
 
+
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
     // fill up block telemetry streams
@@ -374,15 +381,25 @@ static errno_t compute_function()
                 for (uint32_t mirel = 0; mirel < blksize[blki]; mirel++)
                 {
                     uint32_t mi = mirel + blkoffset[blki];
-                    imgmvalOLblk[blki]
-                        .im->array
-                        .F[blksize[blki] * blksampleindex[blki] + mirel] =
+
+                    mvalOLarray[blki][blksize[blki] * blksampleindex[blki] +
+                                      mirel] =
                         imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
                                                     sample * NBmode + mi];
+
+
+                    /* imgmvalOLblk[blki]
+                     .im->array
+                     .F[blksize[blki] * blksampleindex[blki] + mirel] =
+                     imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
+                                                       sample * NBmode + mi];*/
                 }
                 blksampleindex[blki]++;
                 if (blksampleindex[blki] == blksamplesize[blki])
                 {
+                    memcpy(imgmvalOLblk[blki].im->array.F,
+                           mvalOLarray[blki],
+                           sizeof(float) * blksize[blki] * blksamplesize[blki]);
                     processinfo_update_output_stream(processinfo,
                                                      imgmvalOLblk[blki].ID);
                     blksampleindex[blki] = 0;
@@ -593,6 +610,11 @@ static errno_t compute_function()
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    for (uint32_t blki = 0; blki < NBblk; blki++)
+    {
+        free(mvalOLarray[blki]);
+    }
 
 
     free(block_DMrms2);
