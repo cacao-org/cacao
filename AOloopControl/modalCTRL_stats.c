@@ -99,7 +99,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &block5size,
                                &fpi_block5size},
-                              {CLIARG_UINT64,
+                              {CLIARG_ONOFF,
                                ".comp.statswrite",
                                "Write stats to file",
                                "1",
@@ -199,12 +199,13 @@ static errno_t compute_function()
     int      MAXBLK = 6;
     uint32_t blksize[MAXBLK];
     uint32_t blkoffset[MAXBLK];
-    blksize[0] = *block0size;
-    blksize[1] = *block1size;
-    blksize[2] = *block2size;
-    blksize[3] = *block3size;
-    blksize[4] = *block4size;
-    blksize[5] = *block5size;
+    blkoffset[0] = 0;
+    blksize[0]   = *block0size;
+    blksize[1]   = *block1size;
+    blksize[2]   = *block2size;
+    blksize[3]   = *block3size;
+    blksize[4]   = *block4size;
+    blksize[5]   = *block5size;
 
     uint32_t blki             = 0;
     int32_t  NBmode_available = NBmode;
@@ -227,12 +228,18 @@ static errno_t compute_function()
 
     for (uint32_t blki = 0; blki < (uint32_t) MAXBLK; blki++)
     {
-        printf("BLOCK %u  size %4u  offset %4u\n",
+        printf("BLOCK %u  size %4u  offset %4u  last %4u\n",
                blki,
                blksize[blki],
-               blkoffset[blki]);
+               blkoffset[blki],
+               blkoffset[blki] + blksize[blki]);
     }
-
+    *block0size = blksize[0];
+    *block1size = blksize[1];
+    *block2size = blksize[2];
+    *block3size = blksize[3];
+    *block4size = blksize[4];
+    *block5size = blksize[5];
 
 
     // TELEMETRY BUFFERS
