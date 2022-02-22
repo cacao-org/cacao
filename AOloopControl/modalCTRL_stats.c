@@ -269,12 +269,12 @@ static errno_t compute_function()
     blksize[5]   = *block5NBmode;
 
     int32_t blksamplesize[MAXBLK];
-    blksamplesize[0] = *block0NBmode;
-    blksamplesize[1] = *block1NBmode;
-    blksamplesize[2] = *block2NBmode;
-    blksamplesize[3] = *block3NBmode;
-    blksamplesize[4] = *block4NBmode;
-    blksamplesize[5] = *block5NBmode;
+    blksamplesize[0] = *block0NBsample;
+    blksamplesize[1] = *block1NBsample;
+    blksamplesize[2] = *block2NBsample;
+    blksamplesize[3] = *block3NBsample;
+    blksamplesize[4] = *block4NBsample;
+    blksamplesize[5] = *block5NBsample;
 
     uint32_t blki             = 0;
     int32_t  NBmode_available = NBmode;
