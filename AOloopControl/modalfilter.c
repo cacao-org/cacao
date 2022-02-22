@@ -535,7 +535,6 @@ static errno_t compute_function()
                 {
                     mvalDMbuff[DMtstep * NBmode + mi] =
                         mvalout[mi] - (auxDMfact * imgauxmDM.im->array.F[mi]);
-                    ;
                 }
             }
             else
@@ -619,12 +618,30 @@ static errno_t compute_function()
                 tbuffslice * (*tbuffsize) * NBmode + tbuffindex * NBmode;
             for (uint32_t mi = 0; mi < NBmode; mi++)
             {
-                imgtbuff_mvalDM.im->array.F[kkoffset + mi] = mvalout[mi];
                 imgtbuff_mvalWFS.im->array.F[kkoffset + mi] =
                     imgin.im->array.F[mi];
                 imgtbuff_mvalOL.im->array.F[kkoffset + mi] =
                     imgOLmval.im->array.F[mi];
             }
+
+
+            if ((*auxDMmvalmode) == 1)
+            {
+                for (uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    imgtbuff_mvalDM.im->array.F[kkoffset + mi] =
+                        mvalout[mi] - (auxDMfact * imgauxmDM.im->array.F[mi]);
+                }
+            }
+            else
+            {
+                for (uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    imgtbuff_mvalDM.im->array.F[kkoffset + mi] = mvalout[mi];
+                }
+            }
+
+
             tbuffindex++;
             if (tbuffindex == (*tbuffsize))
             {
@@ -650,6 +667,7 @@ static errno_t compute_function()
             }
         }
     }
+
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
