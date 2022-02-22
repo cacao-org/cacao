@@ -17,6 +17,31 @@ static uint64_t *samplesize;
 static long      fpi_samplesize;
 
 
+// blocks sizes
+
+static uint32_t *block0size;
+static long      fpi_block0size;
+
+static uint32_t *block1size;
+static long      fpi_block1size;
+
+static uint32_t *block2size;
+static long      fpi_block2size;
+
+static uint32_t *block3size;
+static long      fpi_block3size;
+
+static uint32_t *block4size;
+static long      fpi_block4size;
+
+static uint32_t *block5size;
+static long      fpi_block5size;
+
+
+static uint64_t *compstatswrite;
+static long      fpi_compstatswrite;
+
+
 
 static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                ".AOloopindex",
@@ -27,11 +52,62 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                                NULL},
                               {CLIARG_UINT64,
                                ".samplesize",
-                               "number of point per set",
-                               "10000",
+                               "number of point per telemetry batch",
+                               "30000",
                                CLIARG_VISIBLE_DEFAULT,
                                (void **) &samplesize,
-                               &fpi_samplesize}};
+                               &fpi_samplesize},
+                              {CLIARG_UINT32,
+                               ".block.blk0size",
+                               "block 0 size",
+                               "2",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block0size,
+                               &fpi_block0size},
+                              {CLIARG_UINT32,
+                               ".block.blk1size",
+                               "block 1 size",
+                               "2",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block1size,
+                               &fpi_block1size},
+                              {CLIARG_UINT32,
+                               ".block.blk2size",
+                               "block 2 size",
+                               "2",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block2size,
+                               &fpi_block2size},
+                              {CLIARG_UINT32,
+                               ".block.blk3size",
+                               "block 3 size",
+                               "2",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block3size,
+                               &fpi_block3size},
+                              {CLIARG_UINT32,
+                               ".block.blk4size",
+                               "block 4 size",
+                               "2",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block4size,
+                               &fpi_block4size},
+                              {CLIARG_UINT32,
+                               ".block.blk5size",
+                               "block 5 size",
+                               "2",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &block5size,
+                               &fpi_block5size},
+                              {CLIARG_UINT64,
+                               ".comp.statswrite",
+                               "Write stats to file",
+                               "1",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &compstatswrite,
+                               &fpi_compstatswrite}};
+
+
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -40,7 +116,7 @@ static errno_t customCONFsetup()
 {
     if (data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_samplesize].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_compstatswrite].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -115,6 +191,76 @@ static errno_t compute_function()
 
 
     list_image_ID();
+
+
+
+    // how many blocks ?
+    int      NBblk  = 0;
+    int      MAXBLK = 6;
+    uint32_t blksize[MAXBLK];
+    uint32_t blkoffset[MAXBLK];
+    blksize[0] = *block0size;
+    blksize[1] = *block1size;
+    blksize[2] = *block2size;
+    blksize[3] = *block3size;
+    blksize[4] = *block4size;
+    blksize[5] = *block5size;
+
+    uint32_t blki             = 0;
+    int32_t  NBmode_available = NBmode;
+    while (NBmode_available > 0)
+    {
+        NBmode_available -= blksize[blki];
+        if (NBmode_available < 0)
+        {
+            blksize[blki] += NBmode_available;
+        }
+        blki++;
+        blkoffset[blki] = blkoffset[blki - 1] + blksize[blki - 1];
+        NBblk++;
+    }
+    for (uint32_t blki1 = blki; blki1 < (uint32_t) MAXBLK; blki++)
+    {
+        blksize[blki1]   = 0;
+        blkoffset[blki1] = blkoffset[blki1 - 1];
+    }
+
+    for (uint32_t blki = 0; blki < (uint32_t) MAXBLK; blki++)
+    {
+        printf("BLOCK %u  size %4u  offset %4u\n",
+               blki,
+               blksize[blki],
+               blkoffset[blki]);
+    }
+
+
+
+    // TELEMETRY BUFFERS
+    //
+    /*
+    uint32_t tbuffindex = 0;
+    int      tbuffslice = 0;
+    IMGID    imgmvalDMblk;
+    IMGID    imgmvalWFSblk;
+    IMGID    imgtmvalOLblk;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+
+        WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
+        imgtbuff_mvalDM =
+            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
+
+        WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
+        imgtbuff_mvalWFS =
+            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
+
+        WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
+        imgtbuff_mvalOL =
+            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
+    }
+*/
+
+
 
 
     // allocate arrays
@@ -301,41 +447,46 @@ static errno_t compute_function()
         }
 
 
-        for (uint32_t block = 0; block < mblksizemax; block++)
+        if (*compstatswrite == 1)
         {
-            if (block_cnt[block] > 0)
+            for (uint32_t block = 0; block < mblksizemax; block++)
             {
-                //block_DMrms2[block] /= block_cnt[block];
-                //block_WFSrms2[block] /= block_cnt[block];
-                //block_OLrms2[block] /= block_cnt[block];
-                printf(
-                    "BLOCK %2d (%5ld modes) RMS  WFS = %7.3f (noise = %7.3f "
-                    "%7.3f)  DM = "
-                    "%7.3f   "
-                    "OL = "
-                    "%7.3f   [nm]  --> %5.3f\n",
-                    block,
-                    block_cnt[block],
-                    1000.0 * sqrt(block_WFSrms2[block]),
-                    1000.0 * sqrt(block_WFSmrms2[block]),
-                    1000.0 * sqrt(block_WFSmqrms2[block]),
-                    1000.0 * sqrt(block_DMrms2[block]),
-                    1000.0 * sqrt(block_OLrms2[block]),
-                    sqrt(block_WFSrms2[block]) / sqrt(block_OLrms2[block]));
-
-                char ffname[STRINGMAXLEN_FULLFILENAME];
-                WRITE_FULLFILENAME(ffname, "AOmodalstat.dat");
-                FILE *fp = fopen(ffname, "a");
-                fprintf(fp,
-                        "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
-                        processinfo->loopcnt,
+                if (block_cnt[block] > 0)
+                {
+                    //block_DMrms2[block] /= block_cnt[block];
+                    //block_WFSrms2[block] /= block_cnt[block];
+                    //block_OLrms2[block] /= block_cnt[block];
+                    printf(
+                        "BLOCK %2d (%5ld modes) RMS  WFS = %7.3f (noise = "
+                        "%7.3f "
+                        "%7.3f)  DM = "
+                        "%7.3f   "
+                        "OL = "
+                        "%7.3f   [nm]  --> %5.3f\n",
                         block,
+                        block_cnt[block],
                         1000.0 * sqrt(block_WFSrms2[block]),
+                        1000.0 * sqrt(block_WFSmrms2[block]),
                         1000.0 * sqrt(block_WFSmqrms2[block]),
                         1000.0 * sqrt(block_DMrms2[block]),
                         1000.0 * sqrt(block_OLrms2[block]),
                         sqrt(block_WFSrms2[block]) / sqrt(block_OLrms2[block]));
-                fclose(fp);
+
+                    char ffname[STRINGMAXLEN_FULLFILENAME];
+                    WRITE_FULLFILENAME(ffname, "AOmodalstat.dat");
+                    FILE *fp = fopen(ffname, "a");
+                    fprintf(fp,
+                            "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
+                            processinfo->loopcnt,
+                            block,
+                            1000.0 * sqrt(block_WFSrms2[block]),
+                            1000.0 * sqrt(block_WFSmqrms2[block]),
+                            1000.0 * sqrt(block_DMrms2[block]),
+                            1000.0 * sqrt(block_OLrms2[block]),
+                            sqrt(block_WFSrms2[block]) /
+                                sqrt(block_OLrms2[block]));
+                    fclose(fp);
+                }
             }
         }
     }
@@ -362,8 +513,8 @@ static errno_t compute_function()
     free(mvalOL_ave);
     free(mvalOL_rms2);
 
-
     DEBUG_TRACE_FEXIT();
+
     return RETURN_SUCCESS;
 }
 
