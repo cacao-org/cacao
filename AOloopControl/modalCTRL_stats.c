@@ -67,42 +67,42 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                               {CLIARG_UINT32,
                                ".block.blk1size",
                                "block 1 size",
-                               "2",
+                               "8",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &block1size,
                                &fpi_block1size},
                               {CLIARG_UINT32,
                                ".block.blk2size",
                                "block 2 size",
-                               "2",
+                               "32",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &block2size,
                                &fpi_block2size},
                               {CLIARG_UINT32,
                                ".block.blk3size",
                                "block 3 size",
-                               "2",
+                               "128",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &block3size,
                                &fpi_block3size},
                               {CLIARG_UINT32,
                                ".block.blk4size",
                                "block 4 size",
-                               "2",
+                               "512",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &block4size,
                                &fpi_block4size},
                               {CLIARG_UINT32,
                                ".block.blk5size",
                                "block 5 size",
-                               "2",
+                               "512",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &block5size,
                                &fpi_block5size},
                               {CLIARG_ONOFF,
                                ".comp.statswrite",
                                "Write stats to file",
-                               "1",
+                               "512",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &compstatswrite,
                                &fpi_compstatswrite}};
@@ -195,7 +195,7 @@ static errno_t compute_function()
 
 
     // how many blocks ?
-    int      NBblk  = 0;
+    uint32_t NBblk  = 0;
     int      MAXBLK = 6;
     uint32_t blksize[MAXBLK];
     uint32_t blkoffset[MAXBLK];
@@ -226,13 +226,13 @@ static errno_t compute_function()
         blkoffset[blki1] = blkoffset[blki1 - 1];
     }
 
-    for (uint32_t blki = 0; blki < (uint32_t) MAXBLK; blki++)
+    for (uint32_t blki = 0; blki < NBblk; blki++)
     {
-        printf("BLOCK %u  size %4u  offset %4u  last %4u\n",
+        printf("BLOCK %u  size %4u  range: %4u - %4u\n",
                blki,
                blksize[blki],
                blkoffset[blki],
-               blkoffset[blki] + blksize[blki]);
+               blkoffset[blki] + blksize[blki] - 1);
     }
     *block0size = blksize[0];
     *block1size = blksize[1];
@@ -241,6 +241,17 @@ static errno_t compute_function()
     *block4size = blksize[4];
     *block5size = blksize[5];
 
+    IMGID imgmvalOLblk[NBblk];
+    for (uint32_t blki = 0; blki < NBblk; blki++)
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+
+        WRITE_IMAGENAME(name, "aol%lu_modevalOL_blk%02u", *AOloopindex, blki);
+        imgtbuff_mvalDM =
+            stream_connect_create_3Df32(name, NBmode, 1, blksize[blki]);
+    }
+
+    list_image_ID();
 
     // TELEMETRY BUFFERS
     //
@@ -265,7 +276,7 @@ static errno_t compute_function()
         imgtbuff_mvalOL =
             stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
     }
-*/
+    */
 
 
 
