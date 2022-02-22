@@ -472,51 +472,51 @@ static errno_t compute_function()
 
 
 
-            // get current DM position
-            mvalDM = imgout.im->array.F[mi];
+            // get current DM position (minus auxFM)
+            if ((*auxDMmvalmode) == 1)
+            {
+                mvalDM = imgout.im->array.F[mi] -
+                         (auxDMfact * imgauxmDM.im->array.F[mi]);
+            }
+            else
+            {
+                mvalDM = imgout.im->array.F[mi];
+            }
 
 
             // goal position
             double mvalDMnew = mvalDM + dmval;
 
-            double mvalref = 0.0; // reference
-                                  /* if ((*auxDMmvalmode) == 1)
-            {
-                mvalref = auxDMfact * imgauxmDM.im->array.F[mi];
-            }*/
 
-
-            double deltamval; // offset relative to reference
-            deltamval = mvalDMnew - mvalref;
 
             // MULT
-            deltamval *= imgmmult.im->array.F[mi];
+            mvalDMnew *= imgmmult.im->array.F[mi];
 
 
             // LIMIT
             limit = imgmlimit.im->array.F[mi];
-            if (deltamval > limit)
+            if (mvalDMnew > limit)
             {
-                deltamval = limit;
+                mvalDMnew = limit;
             }
-            if (deltamval < -limit)
+            if (mvalDMnew < -limit)
             {
-                deltamval = -limit;
+                mvalDMnew = -limit;
             }
 
 
             if ((*auxDMmvalmode) == 1)
             {
                 // add mode values from aux stream
-                mvalref = auxDMfact * imgauxmDM.im->array.F[mi];
+                mvalout[mi] =
+                    mvalDMnew + (auxDMfact * imgauxmDM.im->array.F[mi]);
             }
             else
             {
-                mvalref = 0.0;
+                mvalout[mi] = mvalDMnew;
             }
-            mvalout[mi] = mvalref + deltamval;
+            //            mvalout[mi] = mvalref + mvalDMnew;
         }
-
 
 
         memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);

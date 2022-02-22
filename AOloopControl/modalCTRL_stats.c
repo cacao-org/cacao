@@ -322,8 +322,9 @@ static errno_t compute_function()
         char name[STRINGMAXLEN_STREAMNAME];
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_blk%02u", *AOloopindex, blki);
-        imgmvalOLblk[blki] = stream_connect_create_2Df32(name,
+        imgmvalOLblk[blki] = stream_connect_create_3Df32(name,
                                                          blksize[blki],
+                                                         1,
                                                          blksamplesize[blki]);
     }
 
@@ -335,7 +336,6 @@ static errno_t compute_function()
         mvalOLarray[blki]    = (float *) malloc(sizeof(float) * blksize[blki] *
                                              blksamplesize[blki]);
     }
-
 
 
 
@@ -386,13 +386,6 @@ static errno_t compute_function()
                                       mirel] =
                         imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
                                                     sample * NBmode + mi];
-
-
-                    /* imgmvalOLblk[blki]
-                     .im->array
-                     .F[blksize[blki] * blksampleindex[blki] + mirel] =
-                     imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
-                                                       sample * NBmode + mi];*/
                 }
                 blksampleindex[blki]++;
                 if (blksampleindex[blki] == blksamplesize[blki])
