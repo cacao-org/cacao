@@ -529,10 +529,24 @@ static errno_t compute_function()
         {
             // write to DM history
             //
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            if ((*auxDMmvalmode) == 1)
             {
-                mvalDMbuff[DMtstep * NBmode + mi] = mvalout[mi];
+                for (uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    mvalDMbuff[DMtstep * NBmode + mi] =
+                        mvalout[mi] - (auxDMfact * imgauxmDM.im->array.F[mi]);
+                    ;
+                }
             }
+            else
+            {
+                for (uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    mvalDMbuff[DMtstep * NBmode + mi] = mvalout[mi];
+                }
+            }
+
+
             DMtstep++;
             if (DMtstep == NB_DMtstep)
             {
