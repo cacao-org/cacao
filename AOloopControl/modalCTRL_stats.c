@@ -209,7 +209,7 @@ static errno_t compute_function()
 
     uint32_t blki             = 0;
     int32_t  NBmode_available = NBmode;
-    while (NBmode_available > 0)
+    while ((NBmode_available > 0) && (NBblk < (uint32_t) MAXBLK))
     {
         NBmode_available -= blksize[blki];
         if (NBmode_available < 0)
@@ -247,7 +247,7 @@ static errno_t compute_function()
         char name[STRINGMAXLEN_STREAMNAME];
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_blk%02u", *AOloopindex, blki);
-        imgtbuff_mvalDM =
+        imgmvalOLblk[blki] =
             stream_connect_create_3Df32(name, NBmode, 1, blksize[blki]);
     }
 
