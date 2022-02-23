@@ -1152,6 +1152,38 @@ fi
 
 
 
+if [ "${CACAO_FPSPROC_MKPF}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_MKPF"
+    # ==============================================================================
+    # ========== Acquire Linear Response Matrix (control modes - MODAL) ============
+    # ==============================================================================
+
+    # FPS name
+    fpsname="mkPF"
+    fpsarg0="${CACAO_LOOPNUMBER}"
+
+	CACAO_CMLOOPNUMBER="2"
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "+milklinARfilterPred" >> fpslist.txt
+        echo "${fpsname}           larpf.mkPF     ${fpsarg0}" >> fpslist.txt
+
+        addfpscmdheader
+
+    fi
+else
+    echolog "OFF CACAO_FPSPROC_MKPF"
+fi
+
+
+
 
 
 
