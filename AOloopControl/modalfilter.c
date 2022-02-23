@@ -447,7 +447,6 @@ static errno_t compute_function()
         // Pre-allocations for modal loop
         double mvalWFS;
         double dmval;
-        double mvalDM;
         float  limit;
 
 

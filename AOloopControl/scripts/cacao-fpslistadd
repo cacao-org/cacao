@@ -1152,14 +1152,14 @@ fi
 
 
 
-if [ "${CACAO_FPSPROC_MKPF}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MKPF"
+if [ "${CACAO_FPSPROC_MKPF00}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_MKPF00"
     # ==============================================================================
     # ========== Acquire Linear Response Matrix (control modes - MODAL) ============
     # ==============================================================================
 
     # FPS name
-    fpsname="mkPF"
+    fpsname="mkPF00"
     fpsarg0="${CACAO_LOOPNUMBER}"
 
 	CACAO_CMLOOPNUMBER="2"
@@ -1176,6 +1176,13 @@ if [ "${CACAO_FPSPROC_MKPF}" = "ON" ]; then
         echo "${fpsname}           larpf.mkPF     ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
+        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_blk00"
+        addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
+
+		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOL_blk00"
+		addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk00"
 
     fi
 else
