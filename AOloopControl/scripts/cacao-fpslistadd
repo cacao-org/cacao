@@ -1172,7 +1172,7 @@ if [ "${CACAO_FPSPROC_MKPF00}" = "ON" ]; then
         echolog "Process ${fpsname} already registered - skipping"
     else
         echolog "Adding process ${fpsname}"
-        echo "+milklinARfilterPred" >> fpslist.txt
+        echo "+milklinARfilterPred;milkcudacomp" >> fpslist.txt
         echo "${fpsname}           larpf.mkPF     ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
