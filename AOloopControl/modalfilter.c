@@ -268,6 +268,15 @@ static errno_t compute_function()
 
 
     // allocate memory for temporary output mode values
+
+    // current control values
+    float *mvalDMc = (float *) malloc(sizeof(float) * NBmode);
+    for (uint32_t mi; mi < NBmode; mi++)
+    {
+        mvalDMc[mi] = 0.0;
+    }
+
+    // output (applied)
     float *mvalout = (float *) malloc(sizeof(float) * NBmode);
 
 
@@ -473,7 +482,7 @@ static errno_t compute_function()
 
 
             // get current DM position (minus auxDM)
-            if ((*auxDMmvalmode) == 1)
+            /*if ((*auxDMmvalmode) == 1)
             {
                 mvalDM = imgout.im->array.F[mi] -
                          (auxDMfact * imgauxmDM.im->array.F[mi]);
@@ -481,27 +490,40 @@ static errno_t compute_function()
             else
             {
                 mvalDM = imgout.im->array.F[mi];
-            }
+            }*/
+
+
 
 
             // goal position
-            double mvalDMnew = mvalDM; // + dmval;
+            //double mvalDMnew = mvalDM + dmval;
+            mvalDMc[mi] += dmval;
 
 
 
             // MULT
-            mvalDMnew *= imgmmult.im->array.F[mi];
+            //mvalDMnew *= imgmmult.im->array.F[mi];
+            mvalDMc[mi] *= imgmmult.im->array.F[mi];
 
 
             // LIMIT
             limit = imgmlimit.im->array.F[mi];
-            if (mvalDMnew > limit)
+            /*            if (mvalDMnew > limit)
             {
                 mvalDMnew = limit;
             }
             if (mvalDMnew < -limit)
             {
                 mvalDMnew = -limit;
+            }*/
+
+            if (mvalDMc[mi] > limit)
+            {
+                mvalDMc[mi] = limit;
+            }
+            if (mvalDMc[mi] < -limit)
+            {
+                mvalDMc[mi] = -limit;
             }
 
 
@@ -509,11 +531,11 @@ static errno_t compute_function()
             {
                 // add mode values from aux stream
                 mvalout[mi] =
-                    mvalDMnew + (auxDMfact * imgauxmDM.im->array.F[mi]);
+                    mvalDMc[mi] + (auxDMfact * imgauxmDM.im->array.F[mi]);
             }
             else
             {
-                mvalout[mi] = mvalDMnew;
+                mvalout[mi] = mvalDMc[mi];
             }
             //            mvalout[mi] = mvalref + mvalDMnew;
         }
@@ -673,6 +695,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(mvalout);
+    free(mvalDMc);
     free(mvalDMbuff);
 
     DEBUG_TRACE_FEXIT();
