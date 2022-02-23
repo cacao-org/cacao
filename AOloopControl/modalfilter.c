@@ -480,43 +480,14 @@ static errno_t compute_function()
             dmval *= imgmgain.im->array.F[mi];
 
 
-
-            // get current DM position (minus auxDM)
-            /*if ((*auxDMmvalmode) == 1)
-            {
-                mvalDM = imgout.im->array.F[mi] -
-                         (auxDMfact * imgauxmDM.im->array.F[mi]);
-            }
-            else
-            {
-                mvalDM = imgout.im->array.F[mi];
-            }*/
-
-
-
-
             // goal position
-            //double mvalDMnew = mvalDM + dmval;
             mvalDMc[mi] += dmval;
 
-
-
             // MULT
-            //mvalDMnew *= imgmmult.im->array.F[mi];
             mvalDMc[mi] *= imgmmult.im->array.F[mi];
-
 
             // LIMIT
             limit = imgmlimit.im->array.F[mi];
-            /*            if (mvalDMnew > limit)
-            {
-                mvalDMnew = limit;
-            }
-            if (mvalDMnew < -limit)
-            {
-                mvalDMnew = -limit;
-            }*/
-
             if (mvalDMc[mi] > limit)
             {
                 mvalDMc[mi] = limit;
@@ -537,7 +508,6 @@ static errno_t compute_function()
             {
                 mvalout[mi] = mvalDMc[mi];
             }
-            //            mvalout[mi] = mvalref + mvalDMnew;
         }
 
 
@@ -551,20 +521,9 @@ static errno_t compute_function()
         {
             // write to DM history
             //
-            if ((*auxDMmvalmode) == 1)
+            for (uint32_t mi = 0; mi < NBmode; mi++)
             {
-                for (uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    mvalDMbuff[DMtstep * NBmode + mi] =
-                        mvalout[mi] - (auxDMfact * imgauxmDM.im->array.F[mi]);
-                }
-            }
-            else
-            {
-                for (uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    mvalDMbuff[DMtstep * NBmode + mi] = mvalout[mi];
-                }
+                mvalDMbuff[DMtstep * NBmode + mi] = mvalDMc[mi];
             }
 
 
