@@ -395,7 +395,7 @@ static errno_t compute_function()
              mi < blkoffset[blki] + blksize[blki];
              mi++)
         {
-            imgtbuff_mvalWFS.im->array.SI8[mi] = 1;
+            imgblkmask[blki].im->array.SI8[mi] = 1;
         }
         processinfo_update_output_stream(processinfo, imgblkmask[blki].ID);
     }
