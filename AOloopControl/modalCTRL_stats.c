@@ -316,25 +316,35 @@ static errno_t compute_function()
     *block4NBmode = blksize[4];
     *block5NBmode = blksize[5];
 
-    IMGID imgmvalOLblk[NBblk];
+
+
+
+    // block buffers
+    //
+    IMGID imgmvalOLbuffblk[NBblk];
     for (uint32_t blki = 0; blki < NBblk; blki++)
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
-        WRITE_IMAGENAME(name, "aol%lu_modevalOL_blk%02u", *AOloopindex, blki);
-        imgmvalOLblk[blki] = stream_connect_create_3Df32(name,
-                                                         blksize[blki],
-                                                         1,
-                                                         blksamplesize[blki]);
+        WRITE_IMAGENAME(name,
+                        "aol%lu_modevalOLbuff_blk%02u",
+                        *AOloopindex,
+                        blki);
+        imgmvalOLbuffblk[blki] =
+            stream_connect_create_3Df32(name,
+                                        blksize[blki],
+                                        1,
+                                        blksamplesize[blki]);
     }
-
+    // local memory for block buffers
+    //
     int32_t blksampleindex[NBblk];
-    float  *mvalOLarray[NBblk];
+    float  *mvalOLbuffarray[NBblk];
     for (uint32_t blki = 0; blki < NBblk; blki++)
     {
-        blksampleindex[blki] = 0;
-        mvalOLarray[blki]    = (float *) malloc(sizeof(float) * blksize[blki] *
-                                             blksamplesize[blki]);
+        blksampleindex[blki]  = 0;
+        mvalOLbuffarray[blki] = (float *) malloc(sizeof(float) * blksize[blki] *
+                                                 blksamplesize[blki]);
     }
 
 
@@ -369,9 +379,34 @@ static errno_t compute_function()
 
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+
+    // block masks
+    //
+    IMGID imgblkmask[NBblk];
+    for (uint32_t blki = 0; blki < NBblk; blki++)
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+
+        WRITE_IMAGENAME(name,
+                        "aol%lu_modevalOLbuff_blk%02u",
+                        *AOloopindex,
+                        blki);
+        imgblkmask[blki] =
+            stream_connect_create_2D(name, NBmode, 1, _DATATYPE_INT8);
+        for (uint32_t mi = blkoffset[blki];
+             mi < blkoffset[blki] + blksize[blki];
+             mi++)
+        {
+            imgtbuff_mvalWFS.im->array.SI8[mi] = 1;
+        }
+        processinfo_update_output_stream(processinfo, imgblkmask[blki].ID);
+    }
+
+    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
 
     // fill up block telemetry streams
+    //
     {
         int slice = imgtbuff_mvalOL.md->cnt1;
         for (uint32_t sample = 0; sample < NBsample; sample++)
@@ -382,19 +417,19 @@ static errno_t compute_function()
                 {
                     uint32_t mi = mirel + blkoffset[blki];
 
-                    mvalOLarray[blki][blksize[blki] * blksampleindex[blki] +
-                                      mirel] =
+                    mvalOLbuffarray[blki][blksize[blki] * blksampleindex[blki] +
+                                          mirel] =
                         imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
                                                     sample * NBmode + mi];
                 }
                 blksampleindex[blki]++;
                 if (blksampleindex[blki] == blksamplesize[blki])
                 {
-                    memcpy(imgmvalOLblk[blki].im->array.F,
-                           mvalOLarray[blki],
+                    memcpy(imgmvalOLbuffblk[blki].im->array.F,
+                           mvalOLbuffarray[blki],
                            sizeof(float) * blksize[blki] * blksamplesize[blki]);
                     processinfo_update_output_stream(processinfo,
-                                                     imgmvalOLblk[blki].ID);
+                                                     imgmvalOLbuffblk[blki].ID);
                     blksampleindex[blki] = 0;
                 }
             }
@@ -606,7 +641,7 @@ static errno_t compute_function()
 
     for (uint32_t blki = 0; blki < NBblk; blki++)
     {
-        free(mvalOLarray[blki]);
+        free(mvalOLbuffarray[blki]);
     }
 
 

@@ -1402,7 +1402,7 @@ if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
 
-		addfpscmd "setval ${fpsfname}.indata aol${CACAO_LOOPNUMBER}_modevalOL_blk00"
+		addfpscmd "setval ${fpsfname}.indata aol${CACAO_LOOPNUMBER}_modevalOL"
 		addfpscmd "setval ${fpsfname}.PFmat aol${CACAO_LOOPNUMBER}_outPF_blk00"
 		addfpscmd "setval ${fpsfname}.outPF aol${CACAO_LOOPNUMBER}_modevalPF_blk00"
 
