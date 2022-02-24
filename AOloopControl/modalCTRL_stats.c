@@ -388,10 +388,7 @@ static errno_t compute_function()
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
-        WRITE_IMAGENAME(name,
-                        "aol%lu_modevalOLbuff_blk%02u",
-                        *AOloopindex,
-                        blki);
+        WRITE_IMAGENAME(name, "aol%lu_blkmask%02u", *AOloopindex, blki);
         imgblkmask[blki] =
             stream_connect_create_2D(name, NBmode, 1, _DATATYPE_INT8);
         for (uint32_t mi = blkoffset[blki];
@@ -402,6 +399,7 @@ static errno_t compute_function()
         }
         processinfo_update_output_stream(processinfo, imgblkmask[blki].ID);
     }
+
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
 
