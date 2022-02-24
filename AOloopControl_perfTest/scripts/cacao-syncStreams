@@ -100,7 +100,8 @@ echo "dealing with sync files"
 
 if [ -f "${streamWFS}.dark.fits" ]; then
 cacao << EOF
-loadfits "${streamWFS}.dark.fits" stream0dark
+readshmim ${streamWFS}_dark
+stream0dark=${streamWFS}_dark+0
 loadfits "${streamWFS}.sync.fits" outC0
 outC0c=outC0-streamWFSdark
 saveFITS outC0c "${streamWFS}.syncC.fits"
@@ -112,7 +113,9 @@ fi
 
 if [ -f "${streamPSF}.dark.fits" ]; then
 cacao << EOF
-loadfits "${streamPSF}.dark.fits" stream1dark
+#loadfits "${streamPSF}.dark.fits" stream1dark
+readshmim ${streamPSF}_dark
+stream1dark=${streamPSF}_dark+0
 loadfits "${streamPSF}.sync.fits" outC1
 outC1c=outC1-streamWFSdark
 saveFITS outC1c "${streamPSF}.syncC.fits"
