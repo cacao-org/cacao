@@ -96,13 +96,12 @@ echo "dealing with sync files"
 
 
 
-
 # subtract dark if it exists
 
 #if [ -f "${streamWFS}.dark.fits" ]; then
 cacao << EOF
 readshmim ${streamWFS}_dark
-stream0dark=${streamWFS}_dark+0
+streamWFSdark=${streamWFS}_dark+0
 loadfits "${streamWFS}.sync.fits" outC0
 outC0c=outC0-streamWFSdark
 saveFITS outC0c "${streamWFS}.syncC.fits"
@@ -116,9 +115,9 @@ mv ${streamWFS}.syncC.fits ${streamWFS}.sync.fits
 cacao << EOF
 #loadfits "${streamPSF}.dark.fits" stream1dark
 readshmim ${streamPSF}_dark
-stream1dark=${streamPSF}_dark+0
+streamPSFdark=${streamPSF}_dark+0
 loadfits "${streamPSF}.sync.fits" outC1
-outC1c=outC1-streamWFSdark
+outC1c=outC1-streamPSFdark
 saveFITS outC1c "${streamPSF}.syncC.fits"
 exitCLI
 EOF
