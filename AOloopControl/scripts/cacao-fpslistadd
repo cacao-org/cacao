@@ -1405,7 +1405,7 @@ if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
 		addfpscmd "setval ${fpsfname}.indata aol${CACAO_LOOPNUMBER}_modevalOL"
 		addfpscmd "setval ${fpsfname}.inmask aol${CACAO_LOOPNUMBER}_blkmask00"
 		addfpscmd "setval ${fpsfname}.PFmat aol${CACAO_LOOPNUMBER}_outPF_blk00"
-		addfpscmd "setval ${fpsfname}.outPF aol${CACAO_LOOPNUMBER}_modevalPF_blk00"
+		addfpscmd "setval ${fpsfname}.outdata aol${CACAO_LOOPNUMBER}_modevalPF"
 		addfpscmd "setval ${fpsfname}.outmask aol${CACAO_LOOPNUMBER}_blkmask00"
 
 
