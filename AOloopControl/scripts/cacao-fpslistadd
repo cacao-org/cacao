@@ -1371,7 +1371,9 @@ fi
 
 # predictive filter index
 
+echo "------------- PREDICTIVE CONTROL"
 if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
+echo "------------- CACAO_FPSPROC_APPLYPF00 is ON"
 PFindex="00"
 source ${MILK_INSTALLDIR}/cacao-fpslistadd-APPLYPF00
 fi
