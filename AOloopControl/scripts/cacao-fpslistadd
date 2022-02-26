@@ -1372,10 +1372,11 @@ fi
 
 # predictive filter index
 
-echo "------------- PREDICTIVE CONTROL"
+echolog "------------- PREDICTIVE CONTROL"
 if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
-echo "------------- CACAO_FPSPROC_APPLYPF00 is ON"
+echolog "------------- CACAO_FPSPROC_APPLYPF00 is ON"
 PFindex="00"
+echolog "sourcing ${MILK_INSTALLDIR}/cacao-fpslistadd-APPLYPF00"
 source ${MILK_INSTALLDIR}/cacao-fpslistadd-APPLYPF00
 fi
 
