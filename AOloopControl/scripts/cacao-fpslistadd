@@ -1398,7 +1398,7 @@ if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_blk00"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL"
         addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
 
