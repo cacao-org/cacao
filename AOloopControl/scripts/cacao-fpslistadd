@@ -1176,10 +1176,10 @@ if [ "${CACAO_FPSPROC_MKPF00}" = "ON" ]; then
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_blk00"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk00"
         addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
-		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOL_blk00"
+		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk00"
 		addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk00"
 
     fi
@@ -1212,10 +1212,10 @@ if [ "${CACAO_FPSPROC_MKPF01}" = "ON" ]; then
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_blk01"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk01"
         addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
-		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOL_blk01"
+		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk01"
 		addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk01"
 
     fi
@@ -1248,10 +1248,10 @@ if [ "${CACAO_FPSPROC_MKPF02}" = "ON" ]; then
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_blk02"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk02"
         addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
-		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOL_blk02"
+		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk02"
 		addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk02"
 
     fi
@@ -1284,10 +1284,10 @@ if [ "${CACAO_FPSPROC_MKPF03}" = "ON" ]; then
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_blk03"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk03"
         addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
-		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOL_blk03"
+		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk03"
 		addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk03"
 
     fi
@@ -1320,10 +1320,10 @@ if [ "${CACAO_FPSPROC_MKPF04}" = "ON" ]; then
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_blk04"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk04"
         addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
-		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOL_blk04"
+		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk04"
 		addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk04"
 
     fi
@@ -1356,10 +1356,10 @@ if [ "${CACAO_FPSPROC_MKPF05}" = "ON" ]; then
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_blk05"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk05"
         addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
-		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOL_blk05"
+		addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk05"
 		addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk05"
 
     fi
