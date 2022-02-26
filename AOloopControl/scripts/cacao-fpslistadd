@@ -1373,7 +1373,9 @@ fi
 
 # predictive filter index
 
-echolog "------------- PREDICTIVE CONTROL"
+echolog "------------- PREDICTIVE CONTROL ----"
+echolog "CACAO_FPSPROC_APPLYPF00 = ${CACAO_FPSPROC_APPLYPF00}"
+
 if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
 echolog "------------- CACAO_FPSPROC_APPLYPF00 is ON"
 PFindex="00"
