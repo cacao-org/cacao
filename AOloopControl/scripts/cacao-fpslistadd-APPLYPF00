@@ -2,6 +2,7 @@
 
 if [ "${CACAO_FPSPROC_APPLYPF00" = "ON" ]; then
     echolog "ON  CACAO_FPSPROC_APPLYPF"
+    echolog "Apply Predictive Filter ${PFindex}"
     # ==============================================================================
     # ========== Apply Predictive Filter ${PFindex} ================================
     # ==============================================================================

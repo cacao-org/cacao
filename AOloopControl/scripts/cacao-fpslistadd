@@ -1391,7 +1391,7 @@ if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
 echolog "------------- CACAO_FPSPROC_APPLYPF00 is ON"
 PFindex="00"
 echolog "sourcing ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF00"
-#source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF00
+source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF00
 fi
 
 
