@@ -1375,6 +1375,19 @@ fi
 
 echolog "------------- PREDICTIVE CONTROL ----"
 echolog "CACAO_FPSPROC_APPLYPF00 = ${CACAO_FPSPROC_APPLYPF00}"
+if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
+echolog "ON  CACAO_FPSPROC_APPLYPF"
+else
+echolog "OFF CACAO_FPSPROC_APPLYPF"
+fi
+
+
+echolog "CACAO_FPSPROC_APPLYPF00 = ${CACAO_FPSPROC_APPLYPF00}"
+
+
+
+
+
 
 if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
 echolog "------------- CACAO_FPSPROC_APPLYPF00 is ON"
@@ -1415,7 +1428,6 @@ if [ "${CACAO_FPSPROC_APPLYPF00" = "ON" ]; then
 	addfpscmd "setval ${fpsfname}.PFmat aol${CACAO_LOOPNUMBER}_outPF_blk00"
 	addfpscmd "setval ${fpsfname}.outdata aol${CACAO_LOOPNUMBER}_modevalPF"
 	addfpscmd "setval ${fpsfname}.outmask aol${CACAO_LOOPNUMBER}_blkmask00"
-
 
     fi
 else
