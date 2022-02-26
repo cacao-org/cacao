@@ -1387,55 +1387,11 @@ echolog "CACAO_FPSPROC_APPLYPF00 = ${CACAO_FPSPROC_APPLYPF00}"
 
 
 
-
-
 if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
 echolog "------------- CACAO_FPSPROC_APPLYPF00 is ON"
 PFindex="00"
 echolog "sourcing ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF00"
 #source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF00
-
-if [ "${CACAO_FPSPROC_APPLYPF00" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_APPLYPF"
-    # ==============================================================================
-    # ========== Apply Predictive Filter ${PFindex} ================================
-    # ==============================================================================
-
-    # FPS name
-    fpsname="applyPF00"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "+milklinARfilterPred;milkcudacomp" >> fpslist.txt
-        echo "${fpsname}           larpf.applyPF     ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL"
-        addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
-
-
-	addfpscmd "setval ${fpsfname}.indata aol${CACAO_LOOPNUMBER}_modevalOL"
-	addfpscmd "setval ${fpsfname}.inmask aol${CACAO_LOOPNUMBER}_blkmask00"
-	addfpscmd "setval ${fpsfname}.PFmat aol${CACAO_LOOPNUMBER}_outPF_blk00"
-	addfpscmd "setval ${fpsfname}.outdata aol${CACAO_LOOPNUMBER}_modevalPF"
-	addfpscmd "setval ${fpsfname}.outmask aol${CACAO_LOOPNUMBER}_blkmask00"
-
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_APPLYPF00"
-fi
-
-
-
 fi
 
 
