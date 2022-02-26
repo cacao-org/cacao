@@ -1373,7 +1373,7 @@ fi
 
 if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
 PFindex="00"
-source ${MILK_INSTALLDIR}/cacao-fpslistadd-APPLYPF
+source ${MILK_INSTALLDIR}/cacao-fpslistadd-APPLYPF00
 fi
 
 
