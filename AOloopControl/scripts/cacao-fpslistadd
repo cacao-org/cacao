@@ -1332,6 +1332,8 @@ else
 fi
 
 
+echo ">>>>>>>>>>>> BUILD PF for block 05"
+
 if [ "${CACAO_FPSPROC_MKPF05}" = "ON" ]; then
     echolog "ON  CACAO_FPSPROC_MKPF05"
     # ==============================================================================
