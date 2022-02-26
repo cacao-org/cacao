@@ -1,41 +1,34 @@
 
+echolog "Apply Predictive Filter ${BLKindex}"
+# ==============================================================================
+# ========== Apply Predictive Filter ${BLKindex} ================================
+# ==============================================================================
 
-if [ "${CACAO_FPSPROC_APPLYPF" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_APPLYPF"
-    # ==============================================================================
-    # ========== Apply Predictive Filter ${PFindex} ================================
-    # ==============================================================================
+# FPS name
+fpsname="applyPF${BLKindex}"
+fpsarg0="${CACAO_LOOPNUMBER}"
 
-    # FPS name
-    fpsname="applyPF${PFindex}"
-    fpsarg0="${CACAO_LOOPNUMBER}"
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
 
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
+if grep -q "${fpsname}" fpslist.txt
+then
+	echolog "Process ${fpsname} already registered - skipping"
+else
+	echolog "Adding process ${fpsname}"
+	echo "+milklinARfilterPred;milkcudacomp" >> fpslist.txt
+	echo "${fpsname}           larpf.applyPF     ${fpsarg0}" >> fpslist.txt
 
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "+milklinARfilterPred;milkcudacomp" >> fpslist.txt
-        echo "${fpsname}           larpf.applyPF     ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL"
-        addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
+	addfpscmdheader
+	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+	addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
+	addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL"
+	addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
 
 	addfpscmd "setval ${fpsfname}.indata aol${CACAO_LOOPNUMBER}_modevalOL"
-	addfpscmd "setval ${fpsfname}.inmask aol${CACAO_LOOPNUMBER}_blkmask${PFindex}"
-	addfpscmd "setval ${fpsfname}.PFmat aol${CACAO_LOOPNUMBER}_outPF_blk${PFindex}"
+	addfpscmd "setval ${fpsfname}.inmask aol${CACAO_LOOPNUMBER}_blkmask${BLKindex}"
+	addfpscmd "setval ${fpsfname}.PFmat aol${CACAO_LOOPNUMBER}_outPF_blk${BLKindex}"
 	addfpscmd "setval ${fpsfname}.outdata aol${CACAO_LOOPNUMBER}_modevalPF"
-	addfpscmd "setval ${fpsfname}.outmask aol${CACAO_LOOPNUMBER}_blkmask${PFindex}"
-
-
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_APPLYPF"
+	addfpscmd "setval ${fpsfname}.outmask aol${CACAO_LOOPNUMBER}_blkmask${BLKindex}"
 fi

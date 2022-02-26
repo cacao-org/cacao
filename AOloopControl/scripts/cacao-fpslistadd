@@ -1371,27 +1371,23 @@ fi
 
 
 
+
 # predictive filter index
 
-echolog "------------- PREDICTIVE CONTROL ----"
-echolog "CACAO_FPSPROC_APPLYPF00 = ${CACAO_FPSPROC_APPLYPF00}"
 if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_APPLYPF"
+echolog "ON  CACAO_FPSPROC_APPLYPF00"
+BLKindex="00"
+source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
 else
-echolog "OFF CACAO_FPSPROC_APPLYPF"
+echolog "OFF CACAO_FPSPROC_APPLYPF00"
 fi
 
-
-echolog "CACAO_FPSPROC_APPLYPF00 = ${CACAO_FPSPROC_APPLYPF00}"
-
-
-
-
-if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
-echolog "------------- CACAO_FPSPROC_APPLYPF00 is ON"
-PFindex="00"
-echolog "sourcing ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF00"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF00
+if [ "${CACAO_FPSPROC_APPLYPF01}" = "ON" ]; then
+echolog "ON  CACAO_FPSPROC_APPLYPF01"
+BLKindex="01"
+source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
+else
+echolog "OFF CACAO_FPSPROC_APPLYPF01"
 fi
 
 
