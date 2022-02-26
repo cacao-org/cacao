@@ -1,0 +1,34 @@
+
+echolog "Build Predictive Filter ${BLKindex}"
+# ==============================================================================
+# ========== Build Predictive Filter ${BLKindex} ===============================
+# ==============================================================================
+
+
+
+
+
+# FPS name
+fpsname="mkPF${BLKindex}"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+if grep -q "${fpsname}" fpslist.txt
+then
+	echolog "Process ${fpsname} already registered - skipping"
+else
+	echolog "Adding process ${fpsname}"
+	echo "+milklinARfilterPred;milkcudacomp" >> fpslist.txt
+	echo "${fpsname}           larpf.mkPF     ${fpsarg0}" >> fpslist.txt
+
+	addfpscmdheader
+	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+	addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
+	addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk${BLKindex}"
+	addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
+
+	addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk{BLKindex}"
+	addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk{BLKindex}"
+fi
