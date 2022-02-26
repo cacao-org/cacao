@@ -1378,13 +1378,15 @@ fi
 for BLKindex in 00 01 02 04 05 06 07 08 09
 do
 if [ ! -z ${CACAO_FPSPROC_APPLYPF[${BLKindex}]+x} ]; then
-	echo "${BLKindex}  : ${CACAO_FPSPROC_APPLYPF[${BLKindex}]} "
+	echolog "${BLKindex}  : ${CACAO_FPSPROC_APPLYPF[${BLKindex}]} "
 	if [ ${CACAO_FPSPROC_APPLYPF[${BLKindex}]} = "ON" ]; then
 		echolog "ON  CACAO_FPSPROC_APPLYPF${BLKindex}"
 		source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
 	else
 		echolog "OFF CACAO_FPSPROC_APPLYPF${BLKindex}"
 	fi
+else
+	echolog "variable unset for BLKindex ${BLKindex}"
 fi
 done
 
