@@ -403,6 +403,9 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
 
+    printf("Stepping ...\n");
+
+
     // fill up block telemetry streams
     //
     {
