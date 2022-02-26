@@ -1374,7 +1374,7 @@ fi
 # predictive filter index
 
 
-if [ "${CACAO_FPSPROC_APPLYPF00" = "ON" ]; then
+if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
 echolog "ON  CACAO_FPSPROC_APPLYPF00"
 BLKindex="00"
 source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
