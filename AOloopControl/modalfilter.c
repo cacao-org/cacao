@@ -662,7 +662,8 @@ static errno_t compute_function()
 
                 for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    mvalout[mi] += imgPF.im->array.F[mi] * (*PFmixcoeff);
+                    mvalout[mi] = imgPF.im->array.F[mi] * (*PFmixcoeff) +
+                                  mvalout[mi] * (1.0 - *PFmixcoeff);
                 }
 
                 memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
