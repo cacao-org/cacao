@@ -9,6 +9,7 @@
 #include <math.h>
 
 #include "CommandLineInterface/CLIcore.h"
+#include "CommandLineInterface/timeutils.h"
 
 
 // Local variables pointers
@@ -67,107 +68,159 @@ static long      fpi_auxDMmvalmodulate;
 static float *auxDMmvalmodperiod;
 static long   fpi_auxDMmvalmodperiod;
 
+static uint64_t *enablePF;
+static long      fpi_enablePF;
+
+
+// nummber of prediction blocks to wait for
+// this is by how much modevalOL counter should increment
+//
+static uint32_t *PF_NBblock;
+static long      fpi_PF_NBblock;
+
+// how long to wait for PF blocks ?
+static uint32_t *PF_maxwaitus;
+static long      fpi_PF_maxwaitus;
+
+// PF mixing coeff
+static float *PFmixcoeff;
+static long   fpi_PFmixcoeff;
 
 
 
-static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
-                               ".AOloopindex",
-                               "AO loop index",
-                               "0",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &AOloopindex,
-                               NULL},
-                              {CLIARG_STREAM,
-                               ".inmval",
-                               "input mode values from WFS",
-                               "aol0_modevalWFS",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &inmval,
-                               &fpi_inmval},
-                              {CLIARG_STREAM,
-                               ".outmval",
-                               "output mode values to DM",
-                               "aol0_modevalDM",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &outmval,
-                               &fpi_outmval},
-                              {CLIARG_FLOAT32,
-                               ".loopgain",
-                               "loop gain",
-                               "0.01",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &loopgain,
-                               &fpi_loopgain},
-                              {CLIARG_FLOAT32,
-                               ".loopmult",
-                               "loop mult",
-                               "0.95",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &loopmult,
-                               &fpi_loopmult},
-                              {CLIARG_FLOAT32,
-                               ".looplimit",
-                               "loop limit",
-                               "1.0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &looplimit,
-                               &fpi_looplimit},
-                              {CLIARG_ONOFF,
-                               ".comp.OLmodes",
-                               "compute open loop modes",
-                               "0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &compOL,
-                               &fpi_compOL},
-                              {CLIARG_FLOAT32,
-                               ".comp.latencyfr",
-                               "DM to WFS latency [frame]",
-                               "1.7",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &latencyfr,
-                               &fpi_latencyfr},
-                              {CLIARG_ONOFF,
-                               ".comp.tbuff",
-                               "compute telemetry buffer(s)",
-                               "0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &comptbuff,
-                               &fpi_comptbuff},
-                              {CLIARG_UINT32,
-                               ".comp.tbuffsize",
-                               "buffer time size",
-                               "512",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &tbuffsize,
-                               NULL},
-                              {CLIARG_ONOFF,
-                               ".auxDMmval.mode",
-                               "mixing aux DM mode vals",
-                               "0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &auxDMmvalmode,
-                               &fpi_auxDMmvalmode},
-                              {CLIARG_FLOAT32,
-                               ".auxDMmval.mixfact",
-                               "mixing factor",
-                               "0.2",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &auxDMmvalmixfact,
-                               &fpi_auxDMmvalmixfact},
-                              {CLIARG_ONOFF,
-                               ".auxDMmval.modulate",
-                               "modulate aux DM",
-                               "0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &auxDMmvalmodulate,
-                               &fpi_auxDMmvalmodulate},
-                              {CLIARG_FLOAT32,
-                               ".auxDMmval.modperiod",
-                               "modulation period [frame]",
-                               "20.0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &auxDMmvalmodperiod,
-                               &fpi_auxDMmvalmodperiod}};
+
+static CLICMDARGDEF farg[] = {
+    {// AO loop index. Used for naming streams aolX_
+     CLIARG_UINT64,
+     ".AOloopindex",
+     "AO loop index",
+     "0",
+     CLIARG_VISIBLE_DEFAULT,
+     (void **) &AOloopindex,
+     NULL},
+    {CLIARG_STREAM,
+     ".inmval",
+     "input mode values from WFS",
+     "aol0_modevalWFS",
+     CLIARG_VISIBLE_DEFAULT,
+     (void **) &inmval,
+     &fpi_inmval},
+    {CLIARG_STREAM,
+     ".outmval",
+     "output mode values to DM",
+     "aol0_modevalDM",
+     CLIARG_VISIBLE_DEFAULT,
+     (void **) &outmval,
+     &fpi_outmval},
+    {CLIARG_FLOAT32,
+     ".loopgain",
+     "loop gain",
+     "0.01",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &loopgain,
+     &fpi_loopgain},
+    {CLIARG_FLOAT32,
+     ".loopmult",
+     "loop mult",
+     "0.95",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &loopmult,
+     &fpi_loopmult},
+    {CLIARG_FLOAT32,
+     ".looplimit",
+     "loop limit",
+     "1.0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &looplimit,
+     &fpi_looplimit},
+    {CLIARG_ONOFF,
+     ".comp.OLmodes",
+     "compute open loop modes",
+     "0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &compOL,
+     &fpi_compOL},
+    {CLIARG_FLOAT32,
+     ".comp.latencyfr",
+     "DM to WFS latency [frame]",
+     "1.7",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &latencyfr,
+     &fpi_latencyfr},
+    {CLIARG_ONOFF,
+     ".comp.tbuff",
+     "compute telemetry buffer(s)",
+     "0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &comptbuff,
+     &fpi_comptbuff},
+    {CLIARG_UINT32,
+     ".comp.tbuffsize",
+     "buffer time size",
+     "512",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &tbuffsize,
+     NULL},
+    {CLIARG_ONOFF,
+     ".auxDMmval.mode",
+     "mixing aux DM mode vals",
+     "0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &auxDMmvalmode,
+     &fpi_auxDMmvalmode},
+    {CLIARG_FLOAT32,
+     ".auxDMmval.mixfact",
+     "mixing factor",
+     "0.2",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &auxDMmvalmixfact,
+     &fpi_auxDMmvalmixfact},
+    {CLIARG_ONOFF,
+     ".auxDMmval.modulate",
+     "modulate aux DM",
+     "0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &auxDMmvalmodulate,
+     &fpi_auxDMmvalmodulate},
+    {CLIARG_FLOAT32,
+     ".auxDMmval.modperiod",
+     "modulation period [frame]",
+     "20.0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &auxDMmvalmodperiod,
+     &fpi_auxDMmvalmodperiod},
+    {// enable predictive filter, listen to aolX_modevalPF
+     CLIARG_ONOFF,
+     ".PF.enable",
+     "enable predictive filter",
+     "0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &enablePF,
+     &fpi_enablePF},
+    {// enable predictive filter, listen to aolX_modevalPF
+     CLIARG_UINT32,
+     ".PF.NBblock",
+     "number of blocks to wait from",
+     "0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &PF_NBblock,
+     &fpi_PF_NBblock},
+    {// enable predictive filter, listen to aolX_modevalPF
+     CLIARG_UINT32,
+     ".PF.maxwaitus",
+     "maximum wait time for blocks [us]",
+     "500",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &PF_maxwaitus,
+     &fpi_PF_maxwaitus},
+    {// predictive filter mult coeff
+     CLIARG_FLOAT32,
+     ".PF.mixcoeff",
+     "mixing coeff",
+     "0.3",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &PFmixcoeff,
+     &fpi_PFmixcoeff}};
 
 
 
@@ -191,6 +244,10 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_auxDMmvalmixfact].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_auxDMmvalmodulate].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_auxDMmvalmodperiod].fpflag |= FPFLAG_WRITERUN;
+
+        data.fpsptr->parray[fpi_enablePF].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_PF_NBblock].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_PF_maxwaitus].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -331,6 +388,7 @@ static errno_t compute_function()
 
 
     // connect/create aux DM control mode coeffs
+    //
     IMGID imgauxmDM;
     {
         char name[STRINGMAXLEN_STREAMNAME];
@@ -341,6 +399,22 @@ static errno_t compute_function()
             data.image[imgauxmDM.ID].array.F[mi] = 0.0;
         }
     }
+
+
+
+    // connect/create predictive filter (PF) control mode coeffs
+    //
+    IMGID imgPF;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_modevalPF", *AOloopindex);
+        imgPF = stream_connect_create_2Df32(name, NBmode, 1);
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgPF.im->array.F[mi] = 0.0;
+        }
+    }
+
 
 
 
@@ -510,8 +584,12 @@ static errno_t compute_function()
         }
 
 
-        memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
-        processinfo_update_output_stream(processinfo, imgout.ID);
+
+        if (*enablePF == 0)
+        {
+            memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
+            processinfo_update_output_stream(processinfo, imgout.ID);
+        }
 
 
         // Compute pseudo open-loop mode coefficients
@@ -558,8 +636,41 @@ static errno_t compute_function()
 
                 imgOLmval.im->array.F[mi] = tmpmWFSval - tmpmDMval;
             }
+
+            uint64_t PFcnt = imgPF.md->cnt0;
+
             processinfo_update_output_stream(processinfo, imgOLmval.ID);
+
+
+            if (*enablePF == 1)
+            {
+                // wait for PF blocks to complete
+                //
+
+                struct timespec t0;
+                struct timespec t1;
+                clock_gettime(CLOCK_REALTIME, &t0);
+                clock_gettime(CLOCK_REALTIME, &t1);
+                uint64_t PFcntOK = PFcnt + *PF_NBblock;
+                while (
+                    (imgPF.md->cnt0 < PFcntOK) &&
+                    (timespec_diff_double(t0, t1) < 1.0e-6 * (*PF_maxwaitus)))
+                {
+                    // busy waiting
+                    clock_gettime(CLOCK_REALTIME, &t1);
+                }
+
+                for (uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    mvalout[mi] += imgPF.im->array.F[mi] * (*PFmixcoeff);
+                }
+
+                memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
+                processinfo_update_output_stream(processinfo, imgout.ID);
+            }
         }
+
+
 
 
         // Update individual gain, mult and limit values
