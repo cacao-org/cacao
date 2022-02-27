@@ -5,7 +5,7 @@ echolog "Apply Predictive Filter ${BLKindex}"
 # ==============================================================================
 
 # FPS name
-fpsname="PF.applyPF${BLKindex}"
+fpsname="applyPF${BLKindex}"
 fpsarg0="${CACAO_LOOPNUMBER}"
 
 # FPS full name
