@@ -163,7 +163,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
                               {CLIARG_ONOFF,
                                ".comp.statswrite",
                                "Write stats to file",
-                               "512",
+                               "0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &compstatswrite,
                                &fpi_compstatswrite}};
