@@ -442,7 +442,7 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
 
     if ((*astrogrid) == 1)
     {
-        printf("Apply circular buffer slice %u\n", sliceindex);
+        //printf("Apply circular buffer slice %u\n", sliceindex);
 
         framecnt++;
         if (framecnt >= (*astrogridNBframe))
