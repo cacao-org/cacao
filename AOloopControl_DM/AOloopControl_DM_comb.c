@@ -633,9 +633,23 @@ static errno_t compute_function()
     {
         long cnt0sum = 0;
 
-        for (uint32_t ch = 0; ch < *NBchannel; ch++)
+        if (*astrogrid == 1)
         {
-            cnt0sum += imgch[ch].md->cnt0;
+            // exclude astrogridchan
+            for (uint32_t ch = 0; ch < *NBchannel; ch++)
+            {
+                if (ch != *astrogridchan)
+                {
+                    cnt0sum += imgch[ch].md->cnt0;
+                }
+            }
+        }
+        else
+        {
+            for (uint32_t ch = 0; ch < *NBchannel; ch++)
+            {
+                cnt0sum += imgch[ch].md->cnt0;
+            }
         }
 
         if (cnt0sum != cntsumref)
