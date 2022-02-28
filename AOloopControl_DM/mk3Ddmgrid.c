@@ -84,11 +84,13 @@ static errno_t help_function()
 
 //
 // patterns
-//	0 : XYdiag
-//	1 : X
-//	2 : Y
-//	3 : Xdiag
-//	4 : Ydiag
+//	0 : XYdiag [2 frames]
+//	1 : X      [2 frames]
+//	2 : Y      [2 frames]
+//	3 : Xdiag  [2 frames]
+//	4 : Ydiag  [2 frames]
+//  5 : X + Y  [4 frames]
+//
 
 long make_3Dgrid_DMsequ(char    *IDoutname,
                         uint32_t xsize,
@@ -98,10 +100,15 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
 {
     uint64_t xysize = xsize;
     xysize *= ysize;
-    uint32_t zsize = 2;
 
-    imageID IDout;
-    create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+
+    uint32_t zsize = 2;
+    if (XYmode == 5)
+    {
+        zsize = 4;
+    }
+
+    IMGID imgout = stream_connect_create_3Df32(IDoutname, xsize, ysize, zsize);
 
     float map4[4] = {0.0, 1.0, 0.0, -1.0};
 
@@ -113,7 +120,7 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
         {
             for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                data.image[IDout].array.F[jj * xsize + ii] =
+                imgout.im->array.F[jj * xsize + ii] =
                     2.0 * ((((ii / bin) % 2 + (jj / bin) % 2)) % 2) - 1;
             }
         }
@@ -124,7 +131,7 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
         {
             for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                data.image[IDout].array.F[jj * xsize + ii] =
+                imgout.im->array.F[jj * xsize + ii] =
                     2.0 * ((ii / bin) % 2) - 1;
             }
         }
@@ -135,7 +142,7 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
         {
             for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                data.image[IDout].array.F[jj * xsize + ii] =
+                imgout.im->array.F[jj * xsize + ii] =
                     2.0 * ((jj / bin) % 2) - 1;
             }
         }
@@ -146,7 +153,7 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
         {
             for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                data.image[IDout].array.F[jj * xsize + ii] =
+                imgout.im->array.F[jj * xsize + ii] =
                     map4[(((ii + jj) / bin) % 4)];
             }
         }
@@ -157,8 +164,24 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
         {
             for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                data.image[IDout].array.F[jj * xsize + ii] =
+                imgout.im->array.F[jj * xsize + ii] =
                     map4[(((ysize + ii - jj) / bin) % 4)];
+            }
+        }
+        break;
+
+    case 5: // X then Y
+        for (uint32_t ii = 0; ii < xsize; ii++)
+        {
+            for (uint32_t jj = 0; jj < ysize; jj++)
+            {
+                // X
+                imgout.im->array.F[jj * xsize + ii] =
+                    2.0 * ((ii / bin) % 2) - 1;
+
+                // Y
+                imgout.im->array.F[2 * xysize + jj * xsize + ii] =
+                    2.0 * ((jj / bin) % 2) - 1;
             }
         }
         break;
@@ -168,11 +191,20 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
     // repeat pattern to slices > 0
     for (uint64_t ii = 0; ii < xysize; ii++)
     {
-        data.image[IDout].array.F[xysize + ii] = -data.image[IDout].array.F[ii];
+        imgout.im->array.F[xysize + ii] = -imgout.im->array.F[ii];
+    }
+
+    if (zsize == 4)
+    {
+        for (uint64_t ii = 0; ii < xysize; ii++)
+        {
+            imgout.im->array.F[3 * xysize + ii] =
+                -imgout.im->array.F[xysize + ii];
+        }
     }
 
 
-    return (IDout);
+    return RETURN_SUCCESS;
 }
 
 
