@@ -18,6 +18,9 @@
 
 //#include <time.h>
 
+static int DMdisp_add_disp_from_circular_buffer_init = 0;
+
+
 // Local variables pointers
 static uint32_t *DMindex;
 long             fpi_DMindex;
@@ -423,29 +426,30 @@ static errno_t help_function()
 
 static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
 {
-    static int funcinit = 0;
-
     static uint32_t sliceindex = 0;
     static IMGID    imgdispbuffer;
 
     static uint32_t framecnt = 0;
     static uint64_t xysize;
 
-    if (funcinit == 0)
+    if (DMdisp_add_disp_from_circular_buffer_init == 0)
     {
+        printf("Initializing DMdisp_add_disp_from_circular_buffer\n");
         read_sharedmem_image(astrogridsname);
         imgdispbuffer = mkIMGID_from_name(astrogridsname);
         resolveIMGID(&imgdispbuffer, ERRMODE_ABORT);
 
         xysize = (uint64_t) (*DMxsize) * (*DMysize);
 
-        funcinit = 1;
+        DMdisp_add_disp_from_circular_buffer_init = 1;
     }
 
 
     if ((*astrogrid) == 1)
     {
-        //printf("Apply circular buffer slice %u\n", sliceindex);
+        printf("Apply circular buffer slice %u / %u\n",
+               sliceindex,
+               imgdispbuffer.size[2]);
 
         framecnt++;
         if (framecnt >= (*astrogridNBframe))
@@ -667,6 +671,12 @@ static errno_t compute_function()
     if (DMupdate == 1)
     {
         // Update DM disp
+
+        if ((*astrogrid) == 0)
+        {
+            DMdisp_add_disp_from_circular_buffer_init = 0;
+        }
+
 
         // Sum all channels
         //
