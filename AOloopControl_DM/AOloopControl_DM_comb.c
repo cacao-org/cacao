@@ -439,6 +439,8 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
         imgdispbuffer = mkIMGID_from_name(astrogridsname);
         resolveIMGID(&imgdispbuffer, ERRMODE_ABORT);
 
+        list_image_ID();
+
         xysize = (uint64_t) (*DMxsize) * (*DMysize);
 
         DMdisp_add_disp_from_circular_buffer_init = 1;
@@ -447,9 +449,9 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
 
     if ((*astrogrid) == 1)
     {
-        printf("Apply circular buffer slice %u / %u\n",
+        /* printf("Apply circular buffer slice %u / %u\n",
                sliceindex,
-               imgdispbuffer.size[2]);
+               imgdispbuffer.size[2]);*/
 
         framecnt++;
         if (framecnt >= (*astrogridNBframe))
