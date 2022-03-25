@@ -34,7 +34,7 @@ MSopt+=( "b5:binfact2:setbin5::use bin factor 5" )
 
 
 binfact="1"
-function setbin2() {
+function setbin1() {
 	echo "set binning factor 1"
 	binfact="1"
 }
