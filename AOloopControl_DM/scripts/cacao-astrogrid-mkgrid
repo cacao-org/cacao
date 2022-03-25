@@ -5,11 +5,12 @@ MSdescr="Set astrogrid pattern"
 MSextdescr="Set astrogrid pattern
 
 Patterns :
-	0 : 2-D tiling -> 4 diag spots
-	1 : X grid     -> 2 X spots
-	2 : Y grid     -> 2 Y spots
-	3 : +diag      -> 2 diag spots
-	4 : -diag      -> 2 diag spots
+	0 : XYgrid     -> 4 diag spots 45 deg
+	1 : Xgrid      -> 2 X spots
+	2 : Ygrid      -> 2 Y spots
+	3 : Xdiag      -> 2 diag spots
+	4 : Ydiag      -> 2 diag spots
+	5 : XYgrid0    -> 4 XY spots 0 90 deg
 
 Binnning factor 1 gives maximum astrogrid separation
 
