@@ -84,12 +84,12 @@ static errno_t help_function()
 
 //
 // patterns
-//	0 : XYdiag [2 frames]
-//	1 : X      [2 frames]
-//	2 : Y      [2 frames]
-//	3 : Xdiag  [2 frames]
-//	4 : Ydiag  [2 frames]
-//  5 : X + Y  [4 frames]
+//	0 : XYdiag   [2 frames]
+//	1 : X        [2 frames]
+//	2 : Y        [2 frames]
+//	3 : Xdiag    [2 frames]
+//	4 : Ydiag    [2 frames]
+//  5 : XYdiag0  [4 frames]
 //
 
 long make_3Dgrid_DMsequ(char    *IDoutname,
@@ -199,7 +199,7 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
         for (uint64_t ii = 0; ii < xysize; ii++)
         {
             imgout.im->array.F[3 * xysize + ii] =
-                -imgout.im->array.F[xysize + ii];
+                -imgout.im->array.F[2 * xysize + ii];
         }
     }
 

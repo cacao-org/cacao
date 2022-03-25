@@ -292,6 +292,9 @@ static CLICMDARGDEF farg[] = {
      (void **) &astrogridNBframe,
      &fpi_astrogridNBframe}};
 
+
+
+
 // Optional custom configuration setup.
 // Runs once at conf startup
 //
