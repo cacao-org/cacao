@@ -31,6 +31,11 @@ static long     fpi_loopON;
 static int64_t *loopNBstep;
 static long     fpi_loopNBstep;
 
+// convenient loop on/off toggle
+static int64_t *loopZERO;
+static long     fpi_loopZERO;
+
+
 
 
 static float *loopgain;
@@ -138,6 +143,13 @@ static CLICMDARGDEF farg[] = {
      CLIARG_HIDDEN_DEFAULT,
      (void **) &loopNBstep,
      &fpi_loopNBstep},
+    {CLIARG_ONOFF,
+     ".loopZERO",
+     "loop zero",
+     "OFF",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &loopZERO,
+     &fpi_loopZERO},
     {CLIARG_FLOAT32,
      ".loopgain",
      "loop gain",
@@ -545,6 +557,29 @@ static errno_t compute_function()
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
+
+
+    // zero loop
+    if (data.fpsptr->parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF)
+    {
+
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            // set goal position to zero
+            mvalDMc[mi] = 0.0;
+
+            mvalout[mi] = 0.0;
+        }
+
+        memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
+        processinfo_update_output_stream(processinfo, imgout.ID);
+
+        // toggle back to OFF
+        data.fpsptr->parray[fpi_loopZERO].fpflag &= ~FPFLAG_ONOFF;
+    }
+
+
+
 
     if ((*loopON) == 1)
     {
