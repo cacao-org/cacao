@@ -434,14 +434,11 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
 
     if (DMdisp_add_disp_from_circular_buffer_init == 0)
     {
-        printf("Initializing DMdisp_add_disp_from_circular_buffer\n");
+        printf("(re-)initializing DMdisp_add_disp_from_circular_buffer\n");
         delete_image_ID(astrogridsname, DELETE_IMAGE_ERRMODE_WARNING);
         read_sharedmem_image(astrogridsname);
         imgdispbuffer = mkIMGID_from_name(astrogridsname);
         resolveIMGID(&imgdispbuffer, ERRMODE_ABORT);
-
-        list_image_ID();
-
         xysize = (uint64_t) (*DMxsize) * (*DMysize);
 
         DMdisp_add_disp_from_circular_buffer_init = 1;

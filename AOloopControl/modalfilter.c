@@ -21,6 +21,14 @@ static long  fpi_inmval;
 static char *outmval;
 static long  fpi_outmval;
 
+
+// convenient loop on/off toggle
+static int64_t *loopON;
+static long     fpi_loopON;
+
+
+
+
 static float *loopgain;
 static long   fpi_loopgain;
 
@@ -112,6 +120,13 @@ static CLICMDARGDEF farg[] = {
      CLIARG_VISIBLE_DEFAULT,
      (void **) &outmval,
      &fpi_outmval},
+    {CLIARG_ONOFF,
+     ".loopON",
+     "loop on/off (off=freeze)",
+     "1",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &loopON,
+     &fpi_loopON},
     {CLIARG_FLOAT32,
      ".loopgain",
      "loop gain",
@@ -232,6 +247,7 @@ static errno_t customCONFsetup()
 {
     if (data.fpsptr != NULL)
     {
+        data.fpsptr->parray[fpi_loopON].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_loopgain].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_looplimit].fpflag |= FPFLAG_WRITERUN;
@@ -517,6 +533,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
+    if ((*loopON) == 1)
     {
         // Pre-allocations for modal loop
         double mvalWFS;
