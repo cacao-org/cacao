@@ -26,6 +26,10 @@ static long  fpi_outmval;
 static int64_t *loopON;
 static long     fpi_loopON;
 
+// keep loop open for NBstep
+// -1 is infinite
+static int64_t *loopNBstep;
+static long     fpi_loopNBstep;
 
 
 
@@ -123,10 +127,17 @@ static CLICMDARGDEF farg[] = {
     {CLIARG_ONOFF,
      ".loopON",
      "loop on/off (off=freeze)",
-     "1",
+     "ON",
      CLIARG_HIDDEN_DEFAULT,
      (void **) &loopON,
      &fpi_loopON},
+    {CLIARG_INT64,
+     ".loopNBstep",
+     "loop nb steps (-1 = inf)",
+     "-1",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &loopNBstep,
+     &fpi_loopNBstep},
     {CLIARG_FLOAT32,
      ".loopgain",
      "loop gain",
@@ -531,10 +542,23 @@ static errno_t compute_function()
     }
 
 
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
     if ((*loopON) == 1)
     {
+
+        if (*loopNBstep > 0)
+        {
+            *loopNBstep--;
+        }
+        if (*loopNBstep == 0)
+        {
+            *loopON     = 0;
+            *loopNBstep = 1;
+        }
+
+
         // Pre-allocations for modal loop
         double mvalWFS;
         double dmval;
