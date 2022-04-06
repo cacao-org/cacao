@@ -543,6 +543,7 @@ static errno_t compute_function()
     }
 
 
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
     if ((*loopON) == 1)
@@ -551,11 +552,14 @@ static errno_t compute_function()
 
         if (*loopNBstep > 0)
         {
-            *loopNBstep = *loopNBstep - 1;
+            *loopNBstep                                    = *loopNBstep - 1;
+            data.fpsptr->parray[fpi_loopNBstep].val.i64[0] = *loopNBstep;
         }
         if (*loopNBstep == 0)
         {
-            *loopON     = 0;
+            *loopON = 0;
+            // set loop to OFF
+            data.fpsptr->parray[fpi_loopON].fpflag &= ~FPFLAG_ONOFF;
             *loopNBstep = 1;
         }
 
