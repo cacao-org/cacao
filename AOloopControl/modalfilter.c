@@ -543,15 +543,15 @@ static errno_t compute_function()
     }
 
 
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
     if ((*loopON) == 1)
     {
+        printf(" NBstep = %ld\n", *loopNBstep);
 
         if (*loopNBstep > 0)
         {
-            *loopNBstep--;
+            *loopNBstep = *loopNBstep - 1;
         }
         if (*loopNBstep == 0)
         {
