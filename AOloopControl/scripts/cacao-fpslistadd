@@ -345,7 +345,7 @@ if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
 
         # default startup values
         addfpscmd "setval ${fpsfname}.normalize ON"
@@ -408,7 +408,7 @@ if [ "${CACAO_FPSPROC_ACQWFSLINCALZ}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
 
         # default startup values
         addfpscmd "setval ${fpsfname}.normalize ON"
@@ -464,7 +464,7 @@ if [ "${CACAO_FPSPROC_ACQLINLORM}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
 
 
         # default startup values
@@ -540,7 +540,7 @@ if [ "${CACAO_FPSPROC_COMPFCM}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.FPS_loRMacqu acqlin_loRM-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
 
         #addfpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
@@ -580,7 +580,7 @@ if [ "${CACAO_FPSPROC_COMPCTRLMODES}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.FPS_loRMacqu acqlin_loRM-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-${CACAO_DMINDEX}"
+        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
 
         #addfpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
@@ -1115,7 +1115,7 @@ if [ "${CACAO_FPSPROC_ACQLINCMRM}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_CMLOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMcomb-cm${CACAO_DMINDEX}"
+        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-cm${CACAO_DMINDEX}"
 
 
         # default startup values
