@@ -548,8 +548,6 @@ static errno_t compute_function()
 
     if ((*loopON) == 1)
     {
-        printf(" NBstep = %ld\n", *loopNBstep);
-
         if (*loopNBstep > 0)
         {
             *loopNBstep                                    = *loopNBstep - 1;
