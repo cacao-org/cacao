@@ -32,6 +32,7 @@
 
 #include "AOloopControl_DM_comb.h"
 
+#include "DMturbulence.h"
 #include "mk3Ddmgrid.h"
 
 
@@ -744,7 +745,7 @@ static errno_t init_module_CLI()
 
     CLIADDCMD_AOloopControl_DM__mk3Ddmgrid();
 
-
+    CLIADDCMD_AOloopControl_DM__atmturbulence();
 
 
     // add atexit functions here

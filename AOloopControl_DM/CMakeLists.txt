@@ -15,6 +15,7 @@ set(SOURCEFILES
     AOloopControl_DM_toolbox.c
     AOloopControl_DM_TTcircle_astrogrid.c
     AOloopControl_DM_turbusimul.c
+    DMturbulence.c
     mk3Ddmgrid.c
 )
 

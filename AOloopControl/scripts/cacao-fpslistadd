@@ -1153,6 +1153,41 @@ fi
 
 
 
+if [ "${CACAO_FPSPROC_DMATMTURB}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_DMATMTURB"
+    # ==============================================================================
+    # ========== DM Atmospheric Turbulence simulator ===============================
+    # ==============================================================================
+
+    # FPS name
+    fpsname="DMatmturb"
+    fpsarg0="${CACAO_DMINDEX}"
+    DMTURBCHAN="10"
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "${fpsname}           cacaodm.dmturb     ${fpsarg0}" >> fpslist.txt
+
+        addfpscmdheader
+        addfpscmd "setval ${fpsfname}.dmstream dm${CACAO_DMINDEX}disp${DMTURBCHAN}"
+        addfpscmd "setval ${fpsfname}.turbfname atmturbC.fits"
+
+    fi
+else
+    echolog "OFF CACAO_FPSPROC_DMATMTURB"
+fi
+
+
+
+
+
+
 # Compute predictive filters
 
 if [ "${CACAO_FPSPROC_MKPF00}" = "ON" ]; then
