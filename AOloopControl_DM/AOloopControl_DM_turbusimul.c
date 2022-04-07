@@ -20,27 +20,6 @@
 #include "image_filter/image_filter.h"
 #include "image_gen/image_gen.h"
 
-#ifdef __MACH__
-#include <mach/mach_time.h>
-#define CLOCK_REALTIME  0
-#define CLOCK_MONOTONIC 0
-int clock_gettime(int clk_id, struct mach_timespec *t)
-{
-    mach_timebase_info_data_t timebase;
-    mach_timebase_info(&timebase);
-    uint64_t time;
-    time = mach_absolute_time();
-    double nseconds =
-        ((double) time * (double) timebase.numer) / ((double) timebase.denom);
-    double seconds = ((double) time * (double) timebase.numer) /
-                     ((double) timebase.denom * 1e9);
-    t->tv_sec  = seconds;
-    t->tv_nsec = nseconds;
-    return 0;
-}
-#else
-#include <time.h>
-#endif
 
 extern long NB_DMindex;
 
@@ -452,8 +431,9 @@ int AOloopControl_DM_dmturb(long        DMindex,
         dmturbconf[DMindex].tend = dmturbconf[DMindex].tstart;
     }
 
-    DM_Xsize = dmdispcombconf[DMindex].xsize;
-    DM_Ysize = dmdispcombconf[DMindex].ysize;
+
+    DM_Xsize = 50; //dmdispcombconf[DMindex].xsize;
+    DM_Ysize = 50; //dmdispcombconf[DMindex].ysize;
     printf("DM %ld array size : %ld %ld\n", DMindex, DM_Xsize, DM_Ysize);
     list_image_ID();
     sprintf(name, "dm%02lddisp10", DMindex);
@@ -653,7 +633,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
         {
             ave += data.image[IDturb].array.F[ii1];
         }
-        ave /= dmdispcombconf[DMindex].xysize;
+        ave /= 50 * 50; //dmdispcombconf[DMindex].xysize;
         for (ii1 = 0; ii1 < DM_Xsize * DM_Ysize; ii1++)
         {
             data.image[IDturb].array.F[ii1] -= ave;
