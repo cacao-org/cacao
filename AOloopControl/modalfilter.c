@@ -11,6 +11,8 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "CommandLineInterface/timeutils.h"
 
+#include "COREMOD_iofits/COREMOD_iofits.h"
+
 
 // Local variables pointers
 static uint64_t *AOloopindex;
@@ -70,10 +72,10 @@ static uint32_t *tbuffsize;
 
 // Auxillary output modes to be mixed with std output
 
-static uint64_t *auxDMmvalmode;
-static long      fpi_auxDMmvalmode;
+static uint64_t *auxDMmvalenable;
+static long      fpi_auxDMmvalenable;
 
-// mixing factor
+// mixing factoor
 static float *auxDMmvalmixfact;
 static long   fpi_auxDMmvalmixfact;
 
@@ -102,6 +104,40 @@ static long      fpi_PF_maxwaitus;
 // PF mixing coeff
 static float *PFmixcoeff;
 static long   fpi_PFmixcoeff;
+
+
+
+
+// autoloop self-test : write output back to input
+static uint64_t *autoloopenable;
+static long      fpi_autoloopenable;
+
+static float *autoloopsleep;
+static long   fpi_autoloopsleep;
+
+
+
+
+// self-test: modal response matrix
+static uint64_t *selfRMenable;
+static long      fpi_selfRMenable;
+
+// poke amplitude
+static float *selfRMpokeampl;
+static long   fpi_selfRMpokeampl;
+
+// number of time stamp recorded
+static uint32_t *selfRMzsize;
+static long      fpi_selfRMzsize;
+
+// number of iterations averaged
+static uint32_t *selfRMnbiter;
+static long      fpi_selfRMnbiter;
+
+// time to settle after poke
+static uint32_t *selfRMnbsettlestep;
+static long      fpi_selfRMnbsettlestep;
+;
 
 
 
@@ -200,29 +236,29 @@ static CLICMDARGDEF farg[] = {
      (void **) &tbuffsize,
      NULL},
     {CLIARG_ONOFF,
-     ".auxDMmval.mode",
-     "mixing aux DM mode vals",
+     ".auxDMmval.enable",
+     "mixing aux DM mode vals from stream aolx_modevalauxDM ?",
      "0",
      CLIARG_HIDDEN_DEFAULT,
-     (void **) &auxDMmvalmode,
-     &fpi_auxDMmvalmode},
+     (void **) &auxDMmvalenable,
+     &fpi_auxDMmvalenable},
     {CLIARG_FLOAT32,
      ".auxDMmval.mixfact",
-     "mixing factor",
-     "0.2",
+     "mixing multiplicative factor (0:no mixing)",
+     "1.0",
      CLIARG_HIDDEN_DEFAULT,
      (void **) &auxDMmvalmixfact,
      &fpi_auxDMmvalmixfact},
     {CLIARG_ONOFF,
      ".auxDMmval.modulate",
-     "modulate aux DM",
+     "modulate auxDM temporally ?",
      "0",
      CLIARG_HIDDEN_DEFAULT,
      (void **) &auxDMmvalmodulate,
      &fpi_auxDMmvalmodulate},
     {CLIARG_FLOAT32,
      ".auxDMmval.modperiod",
-     "modulation period [frame]",
+     "auxDM modulation period [frame]",
      "20.0",
      CLIARG_HIDDEN_DEFAULT,
      (void **) &auxDMmvalmodperiod,
@@ -258,8 +294,56 @@ static CLICMDARGDEF farg[] = {
      "0.3",
      CLIARG_HIDDEN_DEFAULT,
      (void **) &PFmixcoeff,
-     &fpi_PFmixcoeff}};
-
+     &fpi_PFmixcoeff},
+    {CLIARG_ONOFF,
+     ".autoloop.enable",
+     "autoloop self-test: loop back output to input ?",
+     "0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &autoloopenable,
+     &fpi_autoloopenable},
+    {CLIARG_FLOAT32,
+     ".autoloop.sleep",
+     "loop sleep time",
+     "0.001",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &autoloopsleep,
+     &fpi_autoloopsleep},
+    {CLIARG_ONOFF,
+     ".selfRM.enable",
+     "Start self response matrix measurement",
+     "0",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &selfRMenable,
+     &fpi_selfRMenable},
+    {CLIARG_FLOAT32,
+     ".selfRM.pokeampl",
+     "poke amplitude",
+     "0.01",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &selfRMpokeampl,
+     &fpi_selfRMpokeampl},
+    {CLIARG_UINT32,
+     ".selfRM.zsize",
+     "number of time steps recorded",
+     "6",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &selfRMzsize,
+     &fpi_selfRMzsize},
+    {CLIARG_UINT32,
+     ".selfRM.nbiter",
+     "number of iterations averaged, ideally 8n",
+     "8",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &selfRMnbiter,
+     &fpi_selfRMnbiter},
+    {CLIARG_UINT32,
+     ".selfRM.nbsettle",
+     "number of loop iteration to settle between pokes",
+     "1",
+     CLIARG_HIDDEN_DEFAULT,
+     (void **) &selfRMnbsettlestep,
+     &fpi_selfRMnbsettlestep}};
 
 
 
@@ -270,6 +354,10 @@ static errno_t customCONFsetup()
 {
     if (data.fpsptr != NULL)
     {
+        data.fpsptr->parray[fpi_inmval].fpflag |=
+            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+
+
         data.fpsptr->parray[fpi_loopON].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_loopZERO].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_loopNBstep].fpflag |= FPFLAG_WRITERUN;
@@ -281,7 +369,7 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_compOL].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_latencyfr].fpflag |= FPFLAG_WRITERUN;
 
-        data.fpsptr->parray[fpi_auxDMmvalmode].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_auxDMmvalenable].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_auxDMmvalmixfact].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_auxDMmvalmodulate].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_auxDMmvalmodperiod].fpflag |= FPFLAG_WRITERUN;
@@ -289,6 +377,14 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_enablePF].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_PF_NBblock].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_PF_maxwaitus].fpflag |= FPFLAG_WRITERUN;
+
+        data.fpsptr->parray[fpi_autoloopenable].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_autoloopsleep].fpflag |= FPFLAG_WRITERUN;
+
+        data.fpsptr->parray[fpi_selfRMenable].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_selfRMnbsettlestep].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_selfRMpokeampl].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_selfRMnbiter].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -316,7 +412,18 @@ static CLICMDDATA CLIcmddata = {
 // detailed help
 static errno_t help_function()
 {
+    printf("Modal gain for adaptive optics control\n");
 
+
+    printf(
+        "Main input/output streams :\n"
+        "[STREAM]   <.inmval>    input mode values\n"
+        "[STREAM]   <.outmval>   output mode values\n");
+
+    printf(
+        "Auxillary input, added to output\n"
+        "[STREAM]  aolx_modevalauxDM  auxillary mode values\n"
+        "If enabled, add mode values to output");
 
     return RETURN_SUCCESS;
 }
@@ -364,6 +471,32 @@ static errno_t compute_function()
     uint32_t NBmode = imgin.md->size[0];
 
 
+    // selfRM initialization
+    //
+    int      blockcnt         = 0;
+    int      selfRMpokeparity = 0; // 0 or 1
+    uint32_t selfRMiter       = 0;
+    uint32_t selfRM_pokemode  = 0;
+    uint32_t selfRM_pokecnt   = 0;
+    float    selfRMpokesign   = 1.0;
+    // create selfRM image
+    //
+    IMGID imgselfRM;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mfiltselfRM", *AOloopindex);
+        imgselfRM =
+            stream_connect_create_3Df32(name, NBmode, NBmode, (*selfRMzsize));
+        for (uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
+        {
+            data.image[imgselfRM.ID].array.F[mi] = 0.0;
+        }
+    }
+    float *selfRMpokecmd = (float *) malloc(sizeof(float) * NBmode);
+    for (uint32_t mi = 0; mi < NBmode; mi++)
+    {
+        selfRMpokecmd[mi] = 0.0;
+    }
 
     // allocate memory for temporary output mode values
 
@@ -374,8 +507,10 @@ static errno_t compute_function()
         mvalDMc[mi] = 0.0;
     }
 
-    // output (applied)
+    // output (computed)
     float *mvalout = (float *) malloc(sizeof(float) * NBmode);
+    // output (applied, includes selfRM poke)
+    float *mvaloutapply = (float *) malloc(sizeof(float) * NBmode);
 
 
 
@@ -569,10 +704,11 @@ static errno_t compute_function()
             // set goal position to zero
             mvalDMc[mi] = 0.0;
 
-            mvalout[mi] = 0.0;
+            mvalout[mi]      = 0.0;
+            mvaloutapply[mi] = 0.0;
         }
 
-        memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
+        memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
         processinfo_update_output_stream(processinfo, imgout.ID);
 
         // toggle back to OFF
@@ -626,20 +762,21 @@ static errno_t compute_function()
             // grab input value from WFS
             mvalWFS = imgin.im->array.F[mi];
 
-            // offset from mval to zp
+            // offset from mval to zero point
+            // this is the input zero point
             dmval = imgmzeropoint.im->array.F[mi] - mvalWFS;
 
-            // GAIN
+            // multiply by GAIN
             dmval *= imgmgain.im->array.F[mi];
 
 
-            // goal position
+            // this is the goal position
             mvalDMc[mi] += dmval;
 
-            // MULT
+            // multiply goal position by MULT
             mvalDMc[mi] *= imgmmult.im->array.F[mi];
 
-            // LIMIT
+            // apply LIMIT
             limit = imgmlimit.im->array.F[mi];
             if (mvalDMc[mi] > limit)
             {
@@ -651,7 +788,7 @@ static errno_t compute_function()
             }
 
 
-            if ((*auxDMmvalmode) == 1)
+            if ((*auxDMmvalenable) == 1)
             {
                 // add mode values from aux stream
                 mvalout[mi] =
@@ -661,13 +798,14 @@ static errno_t compute_function()
             {
                 mvalout[mi] = mvalDMc[mi];
             }
+            mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
         }
 
 
 
         if (*enablePF == 0)
         {
-            memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
+            memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
             processinfo_update_output_stream(processinfo, imgout.ID);
         }
 
@@ -744,9 +882,12 @@ static errno_t compute_function()
                 {
                     mvalout[mi] = imgPF.im->array.F[mi] * (*PFmixcoeff) +
                                   mvalout[mi] * (1.0 - *PFmixcoeff);
+                    mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
                 }
 
-                memcpy(imgout.im->array.F, mvalout, sizeof(float) * NBmode);
+                memcpy(imgout.im->array.F,
+                       mvaloutapply,
+                       sizeof(float) * NBmode);
                 processinfo_update_output_stream(processinfo, imgout.ID);
             }
         }
@@ -797,7 +938,7 @@ static errno_t compute_function()
             }
 
 
-            if ((*auxDMmvalmode) == 1)
+            if ((*auxDMmvalenable) == 1)
             {
                 for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
@@ -842,9 +983,158 @@ static errno_t compute_function()
 
 
 
+    if (*autoloopenable == 1)
+    {
+        // write output back to input
+        //
+        struct timespec twait;
+
+        double x = *autoloopsleep;
+        x += 0.5e-9; // minimize rounding error
+        twait.tv_sec  = (long) x;
+        twait.tv_nsec = (x - twait.tv_sec) * 1000000000L;
+
+        nanosleep(&twait, NULL);
+
+        memcpy(imgin.im->array.F, imgout.im->array.F, sizeof(float) * NBmode);
+        processinfo_update_output_stream(processinfo, imgin.ID);
+    }
+
+
+
+
+    if (*selfRMenable == 1)
+    {
+        if ((selfRM_pokecnt == 0) && (selfRM_pokemode == 0))
+        {
+            if (blockcnt == 0)
+            {
+                // start poke sign
+                selfRMpokesign = 1.0 - 2.0 * ((selfRMiter / 4) % 2);
+                /*if( selfRMiter % 8 > 3)
+                {
+                    selfRMpokesign = -1.0;
+                }
+                else
+                {
+                    selfRMpokesign = 1.0;
+                }*/
+            }
+            printf(
+                "iteration %u / %u  block %d  pokesign %f  pokepolarity %d\n",
+                selfRMiter,
+                *selfRMnbiter,
+                blockcnt,
+                selfRMpokesign,
+                selfRMpokeparity);
+        }
+
+        /*        printf("selfRM  iter %4u / %4u   mode %4u / %4u  sign %.2f   pokecnt %4u / %4u\n",
+                       selfRMiter, *selfRMnbiter,
+                       selfRM_pokemode, NBmode,
+                       selfRMpokesign,
+                       selfRM_pokecnt, *selfRMzsize
+                      );
+        */
+
+        int pkmode = 0;
+        //if (selfRMpokeparity == 0)
+        //{
+        pkmode = selfRM_pokemode;
+        //}
+        //else
+        //{
+        //    pkmode = NBmode -1 - selfRM_pokemode;
+        //}
+
+        float signmult;
+        if ((selfRM_pokemode % 2 == 0) && (selfRMpokeparity == 1))
+        {
+            signmult = -1.0;
+        }
+        else
+        {
+            signmult = 1.0;
+        }
+
+
+        if (selfRM_pokecnt < *selfRMzsize)
+        {
+            selfRMpokecmd[pkmode] =
+                selfRMpokesign * (*selfRMpokeampl) * signmult;
+        }
+        else
+        {
+            selfRMpokecmd[pkmode] = 0.0;
+        }
+
+
+        if (selfRM_pokecnt < *selfRMzsize)
+        {
+            // write result in output 3D selfRM
+            //
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                long pindex = NBmode * NBmode * selfRM_pokecnt;
+                pindex += NBmode * pkmode;
+                pindex += mi;
+                imgselfRM.im->array.F[pindex] +=
+                    0.5 * signmult * selfRMpokesign * imgin.im->array.F[mi] /
+                    (*selfRMpokeampl) / (*selfRMnbiter);
+            }
+        }
+        selfRM_pokecnt++;
+
+        if (selfRM_pokecnt > (*selfRMzsize) + (*selfRMnbsettlestep))
+        {
+
+            if (((selfRMiter % 8) < 2) || ((selfRMiter % 8) > 5))
+            {
+                selfRMpokesign *= -1.0;
+            }
+
+            blockcnt++;
+            if (blockcnt == 2)
+            {
+                selfRM_pokemode++;
+                blockcnt = 0;
+            }
+            selfRM_pokecnt = 0;
+        }
+
+
+        if (selfRM_pokemode == NBmode)
+        {
+            selfRMpokeparity = 1 - selfRMpokeparity;
+            selfRM_pokemode  = 0;
+            selfRM_pokecnt   = 0;
+
+            selfRMiter++;
+        }
+
+        if (selfRMiter == *selfRMnbiter)
+        {
+
+            selfRMiter      = 0;
+            selfRM_pokemode = 0;
+            selfRM_pokecnt  = 0;
+
+            data.fpsptr->parray[fpi_selfRMenable].fpflag &= ~FPFLAG_ONOFF;
+            *selfRMenable = 0;
+
+            // testing
+            save_fits(imgselfRM.name, "selfRM.fits");
+        }
+    }
+
+
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
+    free(selfRMpokecmd);
+
     free(mvalout);
+    free(mvaloutapply);
     free(mvalDMc);
     free(mvalDMbuff);
 
