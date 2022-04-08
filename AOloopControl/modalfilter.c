@@ -1005,47 +1005,41 @@ static errno_t compute_function()
 
     if (*selfRMenable == 1)
     {
+        // initialization
+        if ((selfRM_pokecnt == 0) && (selfRM_pokemode == 0) &&
+            (blockcnt == 0) && (selfRMiter == 0))
+        {
+            printf("INITIALIZING selfRM\n");
+            for (uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
+            {
+                data.image[imgselfRM.ID].array.F[mi] = 0.0;
+            }
+        }
+
         if ((selfRM_pokecnt == 0) && (selfRM_pokemode == 0))
         {
             if (blockcnt == 0)
             {
                 // start poke sign
                 selfRMpokesign = 1.0 - 2.0 * ((selfRMiter / 4) % 2);
-                /*if( selfRMiter % 8 > 3)
-                {
-                    selfRMpokesign = -1.0;
-                }
-                else
-                {
-                    selfRMpokesign = 1.0;
-                }*/
+
+                printf(
+                    "iteration %u / %u  pokepolarity %d  pokesign  [ %+3.1f ",
+                    selfRMiter,
+                    *selfRMnbiter,
+                    selfRMpokeparity,
+                    selfRMpokesign);
             }
-            printf(
-                "iteration %u / %u  block %d  pokesign %f  pokepolarity %d\n",
-                selfRMiter,
-                *selfRMnbiter,
-                blockcnt,
-                selfRMpokesign,
-                selfRMpokeparity);
+            else
+            {
+                printf(" %+3.1f ]\n", selfRMpokesign);
+            }
         }
 
-        /*        printf("selfRM  iter %4u / %4u   mode %4u / %4u  sign %.2f   pokecnt %4u / %4u\n",
-                       selfRMiter, *selfRMnbiter,
-                       selfRM_pokemode, NBmode,
-                       selfRMpokesign,
-                       selfRM_pokecnt, *selfRMzsize
-                      );
-        */
+
 
         int pkmode = 0;
-        //if (selfRMpokeparity == 0)
-        //{
-        pkmode = selfRM_pokemode;
-        //}
-        //else
-        //{
-        //    pkmode = NBmode -1 - selfRM_pokemode;
-        //}
+        pkmode     = selfRM_pokemode;
 
         float signmult;
         if ((selfRM_pokemode % 2 == 0) && (selfRMpokeparity == 1))
