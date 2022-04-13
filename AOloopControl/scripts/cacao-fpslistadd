@@ -111,6 +111,7 @@ if [ "${CACAO_FPSPROC_DMCOMB}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
         addfpscmd "setval ${fpsfname}.DMcombout dm${CACAO_DMINDEX}disp"
         addfpscmd "setval ${fpsfname}.astrogrid aol${CACAO_LOOPNUMBER}_DMastrogrid"
+        addfpscmd "setval ${fpsfname}.DMcomboutzpo aol${CACAO_LOOPNUMBER}_dmzpo"
     fi
 else
     echolog "CACAO_FPSPROC_DMCOMB = OFF"
@@ -832,8 +833,6 @@ if [ "${CACAO_FPSPROC_MODALFILTERING}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.inmval aol${CACAO_LOOPNUMBER}_modevalWFS"
         addfpscmd "setval ${fpsfname}.outmval aol${CACAO_LOOPNUMBER}_modevalDM"
-
-        addfpscmd "setval ${fpsfname}.DMcomboutzpo aol${CACAO_LOOPNUMBER}_dmzpo"
 
     fi
 else
