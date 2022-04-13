@@ -1024,7 +1024,8 @@ static errno_t compute_function()
                 selfRMpokesign = 1.0 - 2.0 * ((selfRMiter / 4) % 2);
 
                 printf(
-                    "iteration %u / %u  pokepolarity %d  pokesign  [ %+3.1f ",
+                    "iteration %u / %u  pokepolarity %d  poke sequence  [ "
+                    "%+3.1f ",
                     selfRMiter,
                     *selfRMnbiter,
                     selfRMpokeparity,

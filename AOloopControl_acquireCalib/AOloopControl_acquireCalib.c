@@ -21,7 +21,6 @@
 
 // Module short description
 #define MODULE_DESCRIPTION "AO loop control acquire calibration"
-
 // Application to which module belongs
 #define MODULE_APPLICATION "cacao"
 
