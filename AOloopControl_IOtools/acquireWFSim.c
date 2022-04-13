@@ -102,7 +102,7 @@ static CLICMDARGDEF farg[] = {
      &fpi_WFSrefcmult},
     {CLIARG_FLOAT32,
      ".WFSrefcgain",
-     "wfsrefc + gain*imwfs3 -> wfsrefc",
+     "(1-gain)*wfsrefc + gain*imwfs3 -> wfsrefc",
      "0.00",
      CLIARG_HIDDEN_DEFAULT,
      (void **) &WFSrefcgain,
@@ -191,6 +191,8 @@ static CLICMDARGDEF farg[] = {
      CLIARG_VISIBLE_DEFAULT,
      (void **) &wfszposname,
      &fpi_wfszposname}};
+
+
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -649,7 +651,8 @@ static errno_t compute_function()
         {
             // refcgain is pulling refc to imWFS3
             //
-            data.image[IDwfsrefc].array.F[ii] +=
+            data.image[IDwfsrefc].array.F[ii] =
+                (1.0 - refcgain) * data.image[IDwfsrefc].array.F[ii] +
                 refcgain * data.image[ID_imWFS3].array.F[ii];
         }
 
