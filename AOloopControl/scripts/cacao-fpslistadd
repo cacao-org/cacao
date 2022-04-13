@@ -270,6 +270,7 @@ fi
 
 
 
+
 if [ "${CACAO_FPSPROC_ACQUWFS}" = "ON" ]; then
     echolog "ON  CACAO_FPSPROC_ACQUWFS"
     # ==============================================================================
@@ -303,6 +304,8 @@ if [ "${CACAO_FPSPROC_ACQUWFS}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.comp.darksub ON"
         addfpscmd "setval ${fpsfname}.comp.imtotal ON"
         addfpscmd "setval ${fpsfname}.comp.normwfsim ON"
+
+        addfpscmd "setval ${fpsfname}.wfszpo aol${CACAO_LOOPNUMBER}_wfszpo"
     fi
 else
     echolog "OFF CACAO_FPSPROC_ACQUWFS"
