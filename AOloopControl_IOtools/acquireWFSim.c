@@ -59,6 +59,12 @@ long            fpi_compimtotal;
 static int64_t *compnormwfsim;
 long            fpi_compnormwfsim;
 
+static char *wfszposname;
+long         fpi_wfszposname;
+
+
+
+
 static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                ".AOloopindex",
                                "loop index",
@@ -177,7 +183,14 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT32,
                                "1",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &compnormwfsim,
-                               &fpi_compnormwfsim}};
+                               &fpi_compnormwfsim},
+                              {CLIARG_STREAM,
+                               ".wfszpo",
+                               "Wavefront sensor zero point offset",
+                               "aol9_wfszpo",
+                               CLIARG_VISIBLE_DEFAULT,
+                               (void **) &wfszposname,
+                               &fpi_wfszposname}};
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -342,6 +355,16 @@ static errno_t compute_function()
         printf("reading image %s -> ID = %ld\n", name, IDwfsref);
     }
 
+
+    // WFS zero point offset
+    //
+    IMGID imgdispzpo;
+    {
+        imgdispzpo =
+            stream_connect_create_2Df32(wfszposname, sizexWFS, sizeyWFS);
+    }
+
+
     // set semaphore to 0
     int semval;
     sem_getvalue(data.image[ID_wfsim].semptr[*semindex], &semval);
@@ -362,14 +385,14 @@ static errno_t compute_function()
 
     int slice = 0;
     /*
-  if(data.image[ID_wfsim].md[0].naxis == 3) // ring buffer
-  {
+    if(data.image[ID_wfsim].md[0].naxis == 3) // ring buffer
+    {
       slice = data.image[ID_wfsim].md[0].cnt1;
       if(slice == -1)
       {
           slice = data.image[ID_wfsim].md[0].size[2];
       }
-  }*/
+    }*/
 
     DEBUG_TRACEPOINT(" ");
 
@@ -612,12 +635,13 @@ static errno_t compute_function()
         float refcmult                    = *WFSrefcmult;
         if (IDwfsref != -1)
         {
-            // refcmult is pulling refc toward ref
+            // refcmult is pulling refc toward ref-wfszpo
             // if refcmult = 1, then refc=ref
             for (uint64_t ii = 0; ii < sizeWFS; ii++)
             {
                 data.image[IDwfsrefc].array.F[ii] =
-                    refcmult * data.image[IDwfsref].array.F[ii] +
+                    refcmult * (data.image[IDwfsref].array.F[ii] -
+                                imgdispzpo.im->array.F[ii]) +
                     (1.0 - refcmult) * data.image[IDwfsrefc].array.F[ii];
             }
         }
