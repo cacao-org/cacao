@@ -64,7 +64,6 @@ long         fpi_wfszposname;
 
 
 
-
 static CLICMDARGDEF farg[] = {
     {CLIARG_UINT32,
      ".AOloopindex",
