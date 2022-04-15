@@ -102,7 +102,7 @@ static CLICMDARGDEF farg[] = {
      &fpi_WFSrefcmult},
     {CLIARG_FLOAT32,
      ".WFSrefcgain",
-     "(1-gain)*wfsrefc + gain*imwfs3 -> wfsrefc",
+     "wfsrefc + gain*imwfs3 -> wfsrefc",
      "0.00",
      CLIARG_HIDDEN_DEFAULT,
      (void **) &WFSrefcgain,
@@ -649,10 +649,10 @@ static errno_t compute_function()
         }
         for (uint64_t ii = 0; ii < sizeWFS; ii++)
         {
-            // refcgain is pulling refc to imWFS3
+            // refcgain is zeroing residual
             //
             data.image[IDwfsrefc].array.F[ii] =
-                (1.0 - refcgain) * data.image[IDwfsrefc].array.F[ii] +
+                data.image[IDwfsrefc].array.F[ii] +
                 refcgain * data.image[ID_imWFS3].array.F[ii];
         }
 
