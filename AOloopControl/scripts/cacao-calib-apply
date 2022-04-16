@@ -132,7 +132,7 @@ loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_dmslaved.fits" aoldmslaved
 cpsh aoldmslaved aol${AOLOOPNUMBER}_dmslaved
 
 loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_zrespM.fits" aolzrespM
-cpsh aolzrespM aol0_zrespM
+cpsh aolzrespM aol${AOLOOPNUMBER}_zrespM
 
 loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_LOrespM.fits" aolLOrespM
 cpsh aolLOrespM aol${AOLOOPNUMBER}_LOrespM
