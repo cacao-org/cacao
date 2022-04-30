@@ -154,8 +154,7 @@ WFSmaskRMc1=$( grep "^${FPSname}.WFSmask.RMc1 " ${FPSfilename} |  awk '{print $3
 
 
 echo "LOOP: ${loopnb}"
-
-
+echo "Params: ${DMmaskRMp0} ${DMmaskRMc0} ${DMmaskRMp1} ${DMmaskRMc1} ${WFSmaskRMp0} ${WFSmaskRMc0} ${WFSmaskRMp1} ${WFSmaskRMc1}"
 
 
 cacao << EOF
