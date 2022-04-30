@@ -688,6 +688,8 @@ static errno_t init_module_CLI()
         "float frac, long x0, long x1, long y0, long y1, int EvalMode, float "
         "alpha)");
 
+
+    CLIADDCMD_AOloopControl_perfTest__compRMsensitivity();
     CLIADDCMD_AOloopControl_perfTest__mlat();
 
     return RETURN_SUCCESS;
