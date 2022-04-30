@@ -75,15 +75,15 @@ static CLICMDARGDEF farg[] = {{CLIARG_IMG,
                                &fpi_wfsmask},
                               {CLIARG_FLOAT32,
                                ".ampl",
-                               "RM modes ampl [um]",
-                               "ampl",
+                               "RM modes ampl limit [um]",
+                               "1.0",
                                CLIARG_VISIBLE_DEFAULT,
                                (void **) &amplum,
                                &fpi_amplum},
                               {CLIARG_FLOAT32,
                                ".lambdaum",
                                "wavelength [um]",
-                               "lambdaum",
+                               "0.8",
                                CLIARG_VISIBLE_DEFAULT,
                                (void **) &lambdaum,
                                &fpi_lambdaum}};
@@ -135,8 +135,8 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
                                              const char *IDwfsref_name,
                                              const char *IDwfsresp_name,
                                              const char *IDwfsmask_name,
-                                             float       amplimitnm,
-                                             float       lambdanm,
+                                             float       amplimitum,
+                                             float       lambdaum,
                                              const char *foutname)
 {
     FILE   *fp;
@@ -149,7 +149,6 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
     long    dmxsize, dmysize, dmxysize;
     long    NBmodes;
     long    wfsxsize, wfsysize, wfsxysize;
-    long    mode, mode1;
 
     long ii;
 
@@ -160,7 +159,7 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
     long   IDoutXP, IDoutXP_WFS;
     double XPval;
 
-    printf("amplimit = %f nm\n", amplimitnm);
+    printf("amplimit = %f um\n", amplimitum);
 
     IDdmmodes = image_ID(IDdmmodes_name);
     dmxsize   = data.image[IDdmmodes].md[0].size[0];
@@ -201,7 +200,7 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
     fp = fopen(foutname, "w");
 
     fprintf(fp, "# col 1 : mode index\n");
-    fprintf(fp, "# col 2 : average value (should be zero)\n");
+    fprintf(fp, "# col 2 : average DM value (should be zero)\n");
     fprintf(fp, "# col 3 : DM mode RMS\n");
     fprintf(fp, "# col 4 : WFS mode RMS\n");
     fprintf(fp, "# col 5 : SNR for a 1um DM motion with 1 ph\n");
@@ -209,7 +208,7 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
     fprintf(fp, "# col 7 : Photon Efficiency\n");
     fprintf(fp, "\n");
 
-    for (mode = 0; mode < NBmodes; mode++)
+    for (int mode = 0; mode < NBmodes; mode++)
     {
         double dmmoderms;
         double aveval;
@@ -247,9 +246,10 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
             wfsmodermscnt += data.image[IDwfsmask].array.F[ii];
 
             if (data.image[IDwfsmask].array.F[ii] > 0.1)
+            {
                 if (data.image[IDwfsref].array.F[ii] >
                     fabs(data.image[IDwfsresp].array.F[mode * wfsxysize + ii] *
-                         amplimitnm * 0.001))
+                         amplimitum))
                 {
                     SNR1 =
                         data.image[IDwfsresp].array.F[mode * wfsxysize + ii] /
@@ -258,6 +258,7 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
                     SNR += SNR1 * SNR1;
                     pcnt += data.image[IDwfsref].array.F[ii];
                 }
+            }
         }
         frac = pcnt / wfsreftot;
 
@@ -268,7 +269,7 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
         // 1umDM act = 2.0*M_PI * ( 2.0 / (lambdanm*0.001) ) rad WF
         // -> sigma for 1ph = (1/SNR) * 2.0*M_PI * ( 2.0 / (lambdanm*0.001) ) rad
         // WF
-        sigmarad = (1.0 / SNR) * 2.0 * M_PI * (2.0 / (lambdanm * 0.001));
+        sigmarad = (1.0 / SNR) * 2.0 * M_PI * (2.0 / (lambdaum));
 
         // SNR is in DMum per sqrt(Nph)
         // factor 2.0 for DM reflection
@@ -276,7 +277,8 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
         eff = 1.0 / (sigmarad * sigmarad);
 
         fprintf(fp,
-                "%5ld   %16f   %16f   %16f    %16g      %12g        %12.10f\n",
+                "%5d   %16.06f   %16.06f   %16.06f    %16.06g      %12.06g     "
+                "   %12.010f\n",
                 mode,
                 aveval,
                 dmmoderms,
@@ -291,8 +293,8 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
     // computing DM space cross-product
     create_2Dimage_ID("DMmodesXP", NBmodes, NBmodes, &IDoutXP);
 
-    for (mode = 0; mode < NBmodes; mode++)
-        for (mode1 = 0; mode1 < mode + 1; mode1++)
+    for (int mode = 0; mode < NBmodes; mode++)
+        for (int mode1 = 0; mode1 < mode + 1; mode1++)
         {
             XPval = 0.0;
             for (ii = 0; ii < dmxysize; ii++)
@@ -309,8 +311,8 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
 
     // computing WFS space cross-product
     create_2Dimage_ID("WFSmodesXP", NBmodes, NBmodes, &IDoutXP_WFS);
-    for (mode = 0; mode < NBmodes; mode++)
-        for (mode1 = 0; mode1 < mode + 1; mode1++)
+    for (int mode = 0; mode < NBmodes; mode++)
+        for (int mode1 = 0; mode1 < mode + 1; mode1++)
         {
             XPval = 0.0;
             for (ii = 0; ii < wfsxysize; ii++)
