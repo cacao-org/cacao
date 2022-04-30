@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# short description
+MSdescr="Compute response matrix (RM) sensitivity"
+
+
+# exteded description
+MSextdescr="
+
+
+"
+
+
+source milk-script-std-config
+
+RequiredCommands=( cacao )
+RequiredFiles=()
+RequiredDirs=()
+
+
+
+
+# SCRIPT ARGUMENTS (mandatory)
+# syntax: "name:type(s)/test(s):description"
+MSarg+=( "dmmodes:string:DM modes" )
+MSarg+=( "dmmask:string:DM mask" )
+MSarg+=( "wfsref:string:WFS reference" )
+MSarg+=( "wfsmodes:string:WFS modes" )
+MSarg+=( "wfsmask:string:WFS mask" )
+MSarg+=( "amplum:float:amplitude [um]" )
+MSarg+=( "lambdaum:float:wavelength [um]" )
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+
+
+
+
+source milk-argparse
+
+
+# load arguments
+dmmodes="${inputMSargARRAY[0]}"
+dmmask="${inputMSargARRAY[1]}"
+wfsref="${inputMSargARRAY[2]}"
+wfsmodes="${inputMSargARRAY[3]}"
+wfsmask="${inputMSargARRAY[4]}"
+amplum="${inputMSargARRAY[5]}"
+lambdaum="${inputMSargARRAY[6]}"
+
+
+
+cacao << EOF
+loadfits "$dmmodes" dmmodes
+loadfits "$dmmask" dmmask
+loadfits "$wfsref" wfsref
+loadfits "$wfsmodes" wfsmodes
+loadfits "$wfsmask" wfsmask
+
+cacaopt.compRMsens dmmodes dmmask wfsref wfsmodes wfsmask ${amplum} ${lambdaum}
+
+listim
+
+exit
+EOF

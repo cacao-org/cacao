@@ -5,6 +5,7 @@ set(SOURCEFILES
 	AOloopControl_perfTest_DM.c
 	AOloopControl_perfTest_status.c
 	AOloopControl_perfTest_LinSim.c
+	compRMsensitivity.c
 	mlat.c
 )
 
@@ -15,6 +16,7 @@ set(INCLUDEFILES
 
 # list scripts that should be installed on system
 set(SCRIPTFILES
+	scripts/cacao-compRMsens
 	scripts/cacao-selectWFSframes
 	scripts/cacao-syncStreams
 	scripts/cacao-WFSrefTunePSFloop

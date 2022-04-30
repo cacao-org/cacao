@@ -66,6 +66,7 @@
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
+#include "compRMsensitivity.h"
 #include "mlat.h"
 
 /* ===============================================================================================
