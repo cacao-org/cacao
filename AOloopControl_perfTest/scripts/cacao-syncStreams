@@ -28,8 +28,8 @@ dtlag 		Lag between streamWFS and streamPSF. streamPSF later
 timespan    length in seconds of the synchronized final cube = lenght of Dr WHO loop
 
 OPTIONAL INPUT
-<streamWFS>.dark.fits
-<streamPSF>.fark.fits
+<streamWFS>.dark.fits (for dark subtraction)
+<streamPSF>.fark.fits (for dark subtraction)
 
 EXAMPLE
 $0 \"/media/data/20180628/\" streamWFS streamPSF 1530180589.0 1530180589.8 0.0002 0.000556 30
@@ -98,30 +98,27 @@ echo "dealing with sync files"
 
 # subtract dark if it exists
 
-#if [ -f "${streamWFS}.dark.fits" ]; then
+if [ -f "${streamWFS}.dark.fits" ]; then
 cacao << EOF
-readshmim ${streamWFS}_dark
-streamWFSdark=${streamWFS}_dark+0
+loadfits "${streamWFS}.dark.fits" streamWFSdark
 loadfits "${streamWFS}.sync.fits" outC0
 outC0c=outC0-streamWFSdark
 saveFITS outC0c "${streamWFS}.syncC.fits"
 exitCLI
 EOF
 mv ${streamWFS}.syncC.fits ${streamWFS}.sync.fits
-#fi
+fi
 
 
-#if [ -f "${streamPSF}.dark.fits" ]; then
+if [ -f "${streamPSF}.dark.fits" ]; then
 cacao << EOF
-#loadfits "${streamPSF}.dark.fits" stream1dark
-readshmim ${streamPSF}_dark
-streamPSFdark=${streamPSF}_dark+0
+loadfits "${streamPSF}.dark.fits" streamPSFdark
 loadfits "${streamPSF}.sync.fits" outC1
 outC1c=outC1-streamPSFdark
 saveFITS outC1c "${streamPSF}.syncC.fits"
 exitCLI
 EOF
 mv ${streamPSF}.syncC.fits ${streamPSF}.sync.fits
-#fi
+fi
 
 #sleep 1000
