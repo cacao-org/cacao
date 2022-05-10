@@ -2875,6 +2875,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
         {
             while ((dir = readdir(d0)) != NULL)
             {
+                printf("found file %s\n", dir->d_name);
                 ext = strrchr(dir->d_name, '.');
                 if (!ext)
                 {
@@ -2894,6 +2895,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
 
                     if (datfileOK != 0)
                     {
+                        printf("    processing file %s\n", dir->d_name);
                         // int mkTiming;
                         float tmpv;
                         int   ret;
