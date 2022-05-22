@@ -206,12 +206,12 @@ static errno_t customCONFcheck()
 {
     if (data.fpsptr != NULL)
     {
-        //if (fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX < 1)
-        //{
-        functionparameter_ConnectExternalFPS(data.fpsptr,
-                                             fpi_FPS_DMcomb,
-                                             &FPS_DMcomb);
-        //}
+        if (data.fpsptr->parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX < 1)
+        {
+            functionparameter_ConnectExternalFPS(data.fpsptr,
+                                                 fpi_FPS_DMcomb,
+                                                 &FPS_DMcomb);
+        }
     }
 
     return RETURN_SUCCESS;
