@@ -22,9 +22,10 @@ static float *alignOD; // Outer diameter
 static uint32_t *DMxsize;
 static uint32_t *DMysize;
 
-static long fpi_FPS_zRMacqu;
-static long fpi_FPS_loRMacqu;
-static long fpi_FPS_DMcomb;
+static long                      fpi_FPS_zRMacqu;
+static long                      fpi_FPS_loRMacqu;
+static long                      fpi_FPS_DMcomb;
+static FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
 
 static char *fname_DMslaved;
 static char *fname_zrespM;
@@ -205,12 +206,12 @@ static errno_t customCONFcheck()
 {
     if (data.fpsptr != NULL)
     {
-        /* if (fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX < 1)
-        {
-            functionparameter_ConnectExternalFPS(&fps,
-                                                 fpi_FPS_DMcomb,
-                                                 &FPS_DMcomb);
-        }*/
+        //if (fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX < 1)
+        //{
+        functionparameter_ConnectExternalFPS(data.fpsptr,
+                                             fpi_FPS_DMcomb,
+                                             &FPS_DMcomb);
+        //}
     }
 
     return RETURN_SUCCESS;
