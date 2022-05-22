@@ -106,7 +106,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &DMysize,
                                NULL},
-                              {CLIARG_STR,
+                              {CLIARG_FPSNAME,
                                ".FPS_zRMacqu",
                                "FPS zonal RM acquisition",
                                "NULL",
@@ -115,7 +115,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
                                (void **) &fpi_FPS_zRMacqu,
                                NULL},
-                              {CLIARG_STR,
+                              {CLIARG_FPSNAME,
                                ".FPS_loRMacqu",
                                "FPS low order modal RM acquisition",
                                "NULL",
@@ -124,7 +124,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
                                (void **) &fpi_FPS_loRMacqu,
                                NULL},
-                              {CLIARG_STR,
+                              {CLIARG_FPSNAME,
                                ".FPS_DMcomb",
                                "FPS DM comb",
                                "NULL",
@@ -262,7 +262,12 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
+
+
 INSERT_STD_FPSCLIfunctions
+
+
+
 
     // Register function in CLI
     errno_t

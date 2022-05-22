@@ -505,7 +505,8 @@ fi
 
 
 
-
+# TO BE DEPRECATED
+#
 if [ "${CACAO_FPSPROC_COMPFCM}" = "ON" ]; then
     echolog "ON  CACAO_FPSPROC_COMPFCM"
     # ==============================================================================
@@ -556,7 +557,8 @@ fi
 
 
 
-
+# WILL REPLACE COMPFCM
+#
 if [ "${CACAO_FPSPROC_COMPCTRLMODES}" = "ON" ]; then
     echolog "ON  CACAO_FPSPROC_COMPCTRLMODES"
     # ==============================================================================
