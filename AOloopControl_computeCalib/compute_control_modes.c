@@ -6,6 +6,10 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
+
+#include "mkmodes.h"
+
+
 // Local variables pointers
 
 static uint32_t *AOloopindex;
@@ -22,9 +26,14 @@ static float *alignOD; // Outer diameter
 static uint32_t *DMxsize;
 static uint32_t *DMysize;
 
-static long                      fpi_FPS_zRMacqu;
-static long                      fpi_FPS_loRMacqu;
-static long                      fpi_FPS_DMcomb;
+
+static long                      fpi_FPS_zRMacqu = 0;
+static FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
+
+static long                      fpi_FPS_loRMacqu = 0;
+static FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
+
+static long                      fpi_FPS_DMcomb = 0;
 static FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
 
 static char *fname_DMslaved;
@@ -34,7 +43,12 @@ static char *fname_WFSmask;
 static char *fname_loRM;
 static char *fname_loRMmodes;
 
+// Toggles
+static int64_t *update_RMfiles;
+static long     fpi_update_RMfiles;
 
+static int64_t *update_align;
+static long     fpi_update_align;
 
 
 static CLICMDARGDEF farg[] = {{CLIARG_INT32,
@@ -114,8 +128,8 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                CLICMDARG_FLAG_NOCLI,
                                FPTYPE_FPSNAME,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
-                               (void **) &fpi_FPS_zRMacqu,
-                               NULL},
+                               (void **) &FPS_zRMacqu,
+                               &fpi_FPS_zRMacqu},
                               {CLIARG_FPSNAME,
                                ".FPS_loRMacqu",
                                "FPS low order modal RM acquisition",
@@ -123,8 +137,8 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                CLICMDARG_FLAG_NOCLI,
                                FPTYPE_FPSNAME,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
-                               (void **) &fpi_FPS_loRMacqu,
-                               NULL},
+                               (void **) &FPS_loRMacqu,
+                               &fpi_FPS_loRMacqu},
                               {CLIARG_FPSNAME,
                                ".FPS_DMcomb",
                                "FPS DM comb",
@@ -132,8 +146,8 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                CLICMDARG_FLAG_NOCLI,
                                FPTYPE_FPSNAME,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
-                               (void **) &fpi_FPS_DMcomb,
-                               NULL},
+                               (void **) &FPS_DMcomb,
+                               &fpi_FPS_DMcomb},
                               {CLIARG_STR,
                                ".DMslaved",
                                "DM slaved actuators",
@@ -187,10 +201,23 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                FPTYPE_FITSFILENAME,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
                                (void **) &fname_loRMmodes,
-                               NULL}
+                               NULL},
+                              {CLIARG_ONOFF,
+                               ".upRMfiles",
+                               "update RM files",
+                               "OFF",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &update_RMfiles,
+                               &fpi_update_RMfiles},
+                              {CLIARG_ONOFF,
+                               ".upAlign",
+                               "update default align (if no DMmaskRM)",
+                               "OFF",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &update_align,
+                               &fpi_update_align}
 
 };
-
 
 
 
@@ -206,11 +233,146 @@ static errno_t customCONFcheck()
 {
     if (data.fpsptr != NULL)
     {
-        if (data.fpsptr->parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX < 1)
+
+        if (FPS_zRMacqu.SMfd < 1)
+        {
+            functionparameter_ConnectExternalFPS(data.fpsptr,
+                                                 fpi_FPS_zRMacqu,
+                                                 &FPS_zRMacqu);
+        }
+
+        if (FPS_loRMacqu.SMfd < 1)
+        {
+            functionparameter_ConnectExternalFPS(data.fpsptr,
+                                                 fpi_FPS_loRMacqu,
+                                                 &FPS_loRMacqu);
+        }
+
+        if (FPS_DMcomb.SMfd < 1)
         {
             functionparameter_ConnectExternalFPS(data.fpsptr,
                                                  fpi_FPS_DMcomb,
                                                  &FPS_DMcomb);
+        }
+
+
+        // Update RM files
+        if (data.fpsptr->parray[fpi_update_RMfiles].fpflag & FPFLAG_ONOFF)
+        {
+
+            if (FPS_zRMacqu.SMfd > 0)
+            {
+                char datadir[FUNCTION_PARAMETER_STRMAXLEN];
+                char fname[FUNCTION_PARAMETER_STRMAXLEN];
+
+                strncpy(datadir,
+                        functionparameter_GetParamPtr_STRING(&FPS_zRMacqu,
+                                                             ".conf.datadir"),
+                        FUNCTION_PARAMETER_STRMAXLEN);
+
+                SNPRINTF_CHECK(fname,
+                               FUNCTION_PARAMETER_STRMAXLEN,
+                               "%s/dmslaved.fits",
+                               datadir);
+                functionparameter_SetParamValue_STRING(data.fpsptr,
+                                                       ".DMslaved",
+                                                       fname);
+
+                SNPRINTF_CHECK(fname,
+                               FUNCTION_PARAMETER_STRMAXLEN,
+                               "%s/zrespM_mn.fits",
+                               datadir);
+                functionparameter_SetParamValue_STRING(data.fpsptr,
+                                                       ".zrespM",
+                                                       fname);
+
+                SNPRINTF_CHECK(fname,
+                               FUNCTION_PARAMETER_STRMAXLEN,
+                               "%s/dmmask_mksl.fits",
+                               datadir);
+                functionparameter_SetParamValue_STRING(data.fpsptr,
+                                                       ".DMmaskRM",
+                                                       fname);
+
+                SNPRINTF_CHECK(fname,
+                               FUNCTION_PARAMETER_STRMAXLEN,
+                               "%s/wfsmask_mkm.fits",
+                               datadir);
+                functionparameter_SetParamValue_STRING(data.fpsptr,
+                                                       ".WFSmask",
+                                                       fname);
+            }
+
+            if (FPS_loRMacqu.SMfd > 0)
+            {
+                char datadir[FUNCTION_PARAMETER_STRMAXLEN];
+                char fname[FUNCTION_PARAMETER_STRMAXLEN];
+
+                strncpy(datadir,
+                        functionparameter_GetParamPtr_STRING(&FPS_loRMacqu,
+                                                             ".conf.datadir"),
+                        FUNCTION_PARAMETER_STRMAXLEN);
+
+                SNPRINTF_CHECK(fname,
+                               FUNCTION_PARAMETER_STRMAXLEN,
+                               "%s/respM.fits",
+                               datadir);
+                functionparameter_SetParamValue_STRING(data.fpsptr,
+                                                       ".loRM",
+                                                       fname);
+
+                SNPRINTF_CHECK(fname,
+                               FUNCTION_PARAMETER_STRMAXLEN,
+                               "%s/RMpokeCube.fits",
+                               datadir);
+                functionparameter_SetParamValue_STRING(data.fpsptr,
+                                                       ".loRMmodes",
+                                                       fname);
+            }
+
+            // set back to OFF
+            data.fpsptr->parray[fpi_update_RMfiles].fpflag &= ~FPFLAG_ONOFF;
+        }
+
+
+        // update align params for auto mask
+        if (data.fpsptr->parray[fpi_update_align].fpflag & FPFLAG_ONOFF)
+        {
+            if (FPS_DMcomb.SMfd > 0)
+            {
+                int DMxsize = functionparameter_GetParamValue_INT64(&FPS_DMcomb,
+                                                                    ".DMxsize");
+                int DMysize = functionparameter_GetParamValue_INT64(&FPS_DMcomb,
+                                                                    ".DMysize");
+                __attribute__((unused)) int DMMODE =
+                    functionparameter_GetParamValue_INT64(&FPS_DMcomb,
+                                                          ".DMMODE");
+
+                float cx = 0.5 * DMxsize - 0.5;
+                float cy = 0.5 * DMysize - 0.5;
+                float od = 0.45 * DMxsize;
+                float id = 0.05 * DMxsize;
+
+                functionparameter_SetParamValue_INT64(data.fpsptr,
+                                                      ".DMxsize",
+                                                      DMxsize);
+                functionparameter_SetParamValue_INT64(data.fpsptr,
+                                                      ".DMysize",
+                                                      DMysize);
+                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                                                        ".align.CX",
+                                                        cx);
+                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                                                        ".align.CY",
+                                                        cy);
+                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                                                        ".align.OD",
+                                                        od);
+                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                                                        ".align.ID",
+                                                        id);
+            }
+            data.fpsptr->parray[fpi_update_align].fpflag &= ~FPFLAG_ONOFF;
         }
     }
 
@@ -238,6 +400,8 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
+
+
     /*IMGID inimg = makeIMGID(inimname);
     resolveIMGID(&inimg, ERRMODE_ABORT);
 
@@ -253,6 +417,29 @@ static errno_t compute_function()
     }
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+
+
+    // MaskMode = 0  : tapered masking
+    // MaskMode = 1  : STRICT masking
+    //
+    // if BlockNB < 0 : do all blocks
+    // if BlockNB >= 0 : only update single block (untested)
+    int MaskMode = 0;
+    int BlockNB  = -1;
+
+    AOloopControl_computeCalib_mkModes("fmodes",
+                                       *DMxsize,
+                                       *DMysize,
+                                       *CPAmax,
+                                       *deltaCPA,
+                                       *alignCX,
+                                       *alignCY,
+                                       *alignID,
+                                       *alignOD,
+                                       MaskMode,
+                                       BlockNB,
+                                       *svdlim,
+                                       data.fpsptr->md->datadir);
 
     // streamprocess(inimg, outimg);
     // processinfo_update_output_stream(processinfo, outimg.ID);

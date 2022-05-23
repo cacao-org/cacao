@@ -13,7 +13,7 @@ AOloopControl_computeCalib_CM.c
 AOloopControl_computeCalib_dm.c
 AOloopControl_computeCalib_Hadamard.c
 AOloopControl_computeCalib_loDMmodes.c
-AOloopControl_computeCalib_modes.c
+mkmodes.c
 AOloopControl_computeCalib_processRM.c
 compute_straight_CM.c
 compute_control_modes.c
