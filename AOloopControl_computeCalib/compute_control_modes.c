@@ -417,19 +417,19 @@ static errno_t compute_function()
 
 
 
-    AOloopControl_computeCalib_mkModes("fmodes",
-                                       *DMxsize,
-                                       *DMysize,
-                                       *CPAmax,
-                                       *deltaCPA,
-                                       *alignCX,
-                                       *alignCY,
-                                       *alignID,
-                                       *alignOD,
-                                       MaskMode,
-                                       BlockNB,
-                                       *svdlim,
-                                       data.fpsptr->md->datadir);
+    AOloopControl_computeCalib_mkModes_new("fmodes",
+                                           *DMxsize,
+                                           *DMysize,
+                                           *CPAmax,
+                                           *deltaCPA,
+                                           *alignCX,
+                                           *alignCY,
+                                           *alignID,
+                                           *alignOD,
+                                           MaskMode,
+                                           BlockNB,
+                                           *svdlim,
+                                           data.fpsptr->md->datadir);
 
     // streamprocess(inimg, outimg);
     // processinfo_update_output_stream(processinfo, outimg.ID);
