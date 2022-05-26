@@ -73,6 +73,30 @@ extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 
 
+imageID AOloopControl_computeCalib_mkModes_new(const char *ID_name,
+                                               uint32_t    msizex,
+                                               uint32_t    msizey,
+                                               float       CPAmax,
+                                               float       deltaCPA,
+                                               double      xc,
+                                               double      yc,
+                                               double      r0,
+                                               double      r1,
+                                               int         MaskMode,
+                                               int         BlockNB,
+                                               float       SVDlim,
+                                               char       *outdir)
+{
+    DEBUG_TRACE_FSTART();
+
+    imageID ID = -1;
+
+    DEBUG_TRACE_FEXIT();
+    return ID;
+}
+
+
+
 
 /*** \brief creates AO control modes
  *
@@ -129,7 +153,7 @@ imageID AOloopControl_computeCalib_mkModes(const char *ID_name,
     long zindex[10];
     double
         zcpa[10]; /// CPA for each Zernike (somewhat arbitrary... used to sort
-                  /// modes in CPA)
+    /// modes in CPA)
 
     uint32_t NBmblock = 0;
     uint32_t MBLOCK_NBmode[MAX_MBLOCK]; // number of blocks
@@ -286,6 +310,7 @@ imageID AOloopControl_computeCalib_mkModes(const char *ID_name,
         }
         else /// extract xc and yc from mask
         {
+            save_fits("dmmaskRM", "dmmaskRM-test.fits");
             printf("extracting beam center from dmmaskRM\n");
             xc1  = 0.0;
             yc1  = 0.0;
@@ -443,15 +468,15 @@ imageID AOloopControl_computeCalib_mkModes(const char *ID_name,
 
                             for(ii=0; ii<msizex*msizey; ii++)
                                 data.image[IDtm].array.F[ii] =
-              data.image[ID].array.F[k*msizex*msizey+ii];
+                data.image[ID].array.F[k*msizex*msizey+ii];
                             linopt_imtools_image_fitModes("tmpmode", "emodes",
-              "dmmaskRM", 1.0e-3, "lcoeff", 0);
+                "dmmaskRM", 1.0e-3, "lcoeff", 0);
                             linopt_imtools_image_construct("emodes", "lcoeff",
-              "em00"); delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
-              IDem = image_ID("em00");
+                "em00"); delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
+                IDem = image_ID("em00");
 
-              //					coeff
-              = 1.0-exp(-pow(1.0*k/kelim,6.0));
+                //					coeff
+                = 1.0-exp(-pow(1.0*k/kelim,6.0));
 
                                       if(k>kelim)
                                               coeff = 1.0;
@@ -461,11 +486,11 @@ imageID AOloopControl_computeCalib_mkModes(const char *ID_name,
 
                             for(ii=0; ii<msizex*msizey; ii++)
                                 data.image[ID].array.F[k*msizex*msizey+ii] =
-              data.image[IDtm].array.F[ii] - coeff*data.image[IDem].array.F[ii];
+                data.image[IDtm].array.F[ii] - coeff*data.image[IDem].array.F[ii];
 
                             delete_image_ID("em00",
-              DELETE_IMAGE_ERRMODE_WARNING); delete_image_ID("tmpmode",
-              DELETE_IMAGE_ERRMODE_WARNING);
+                DELETE_IMAGE_ERRMODE_WARNING); delete_image_ID("tmpmode",
+                DELETE_IMAGE_ERRMODE_WARNING);
                         }*/
 
                 // Compute total of image over mask -> totvm
@@ -2771,7 +2796,7 @@ imageID AOloopControl_computeCalib_mkModes(const char *ID_name,
             WRITE_IMAGENAME(imnameCM, "cmat_%02u", mblock);
 
             char imnameCMc[STRINGMAXLEN_IMGNAME]; // zonal ("combined") control
-                                                  // matrix
+            // matrix
             WRITE_IMAGENAME(imnameCMc, "cmatc_%02u", mblock);
 
             char imnameCMcact
