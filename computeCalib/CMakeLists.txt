@@ -1,5 +1,5 @@
 set(LIBNAME "cacaocomputeCalib")
-
+project(lib_${LIBNAME}_project)
 
 # list source files (.c) other than modulename.c
 set(SOURCEFILES
@@ -71,9 +71,6 @@ message(" SRCNAME = ${SRCNAME}")
 #string(REPLACE "_" "" LIBNAME "${SRCNAME}")
 #message(" LIBNAME = ${LIBNAME}")
 
-
-
-project(lib_${LIBNAME}_project)
 
 # Library can be compiled from multiple source files
 # Convention: the main souce file is named <libname>.c
