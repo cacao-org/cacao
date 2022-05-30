@@ -6,8 +6,10 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
+#include "COREMOD_iofits/COREMOD_iofits.h"
 
 #include "mkmodes.h"
+#include "modes_spatial_extrapolate.h"
 
 
 // Local variables pointers
@@ -36,9 +38,13 @@ static FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
 static long                      fpi_FPS_DMcomb = 0;
 static FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
 
-static char *fname_DMslaved;
+
+static char *fname_DMmaskCTRL;
+static long  fpi_fname_DMmaskCTRL;
+static char *fname_DMmaskEXTR;
+static long  fpi_fname_DMmaskEXTR;
+
 static char *fname_zrespM;
-static char *fname_DMmaskRM;
 static char *fname_WFSmask;
 static char *fname_loRM;
 static char *fname_loRMmodes;
@@ -80,42 +86,42 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                (void **) &deltaCPA,
                                NULL},
                               {CLIARG_FLOAT32,
-                               ".align.CX",
+                               ".DMgeom.align.CX",
                                "beam X center on DM",
                                "10.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &alignCX,
                                NULL},
                               {CLIARG_FLOAT32,
-                               ".align.CY",
+                               ".DMgeom.align.CY",
                                "beam Y center on DM",
                                "10.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &alignCY,
                                NULL},
                               {CLIARG_FLOAT32,
-                               ".align.ID",
+                               ".DMgeom.align.ID",
                                "beam inner diameter",
                                "5.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &alignID,
                                NULL},
                               {CLIARG_FLOAT32,
-                               ".align.OD",
+                               ".DMgeom.align.OD",
                                "beam outer diameter",
                                "10.0",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &alignOD,
                                NULL},
                               {CLIARG_UINT32,
-                               ".DMxsize",
+                               ".DMgeom.DMxsize",
                                "DM x size",
                                "32",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &DMxsize,
                                NULL},
                               {CLIARG_UINT32,
-                               ".DMysize",
+                               ".DMgeom.DMysize",
                                "DM y size",
                                "32",
                                CLIARG_HIDDEN_DEFAULT,
@@ -148,26 +154,26 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
                                (void **) &FPS_DMcomb,
                                &fpi_FPS_DMcomb},
-                              {CLIARG_STR,
-                               ".DMslaved",
-                               "DM slaved actuators",
+                              {CLIARG_FITSFILENAME,
+                               ".DMgeom.DMmaskCTRL",
+                               "DM actuators controlled",
                                "NULL",
                                CLIARG_HIDDEN_DEFAULT,
-                               (void **) &fname_DMslaved,
-                               NULL},
+                               (void **) &fname_DMmaskCTRL,
+                               &fpi_fname_DMmaskCTRL},
+                              {CLIARG_FITSFILENAME,
+                               ".DMgeom.DMmaskEXTR",
+                               "DM actuators extrapolated",
+                               "NULL",
+                               CLIARG_HIDDEN_DEFAULT,
+                               (void **) &fname_DMmaskEXTR,
+                               &fpi_fname_DMmaskEXTR},
                               {CLIARG_STR,
                                ".zrespM",
                                "zonal response matrix",
                                "NULL",
                                CLIARG_HIDDEN_DEFAULT,
                                (void **) &fname_zrespM,
-                               NULL},
-                              {CLIARG_STR,
-                               ".DMmaskRM",
-                               "actuators directly controlled",
-                               "NULL",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &fname_DMmaskRM,
                                NULL},
                               {CLIARG_STR,
                                ".WFSmask",
@@ -198,7 +204,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_INT32,
                                (void **) &update_RMfiles,
                                &fpi_update_RMfiles},
                               {CLIARG_ONOFF,
-                               ".upAlign",
+                               ".DMgeom.upAlign",
                                "update default align (if no DMmaskRM)",
                                "OFF",
                                CLIARG_HIDDEN_DEFAULT,
@@ -263,7 +269,7 @@ static errno_t customCONFcheck()
                                "%s/dmslaved.fits",
                                datadir);
                 functionparameter_SetParamValue_STRING(data.fpsptr,
-                                                       ".DMslaved",
+                                                       ".DMgeom.DMmaskEXTR",
                                                        fname);
 
                 SNPRINTF_CHECK(fname,
@@ -279,7 +285,7 @@ static errno_t customCONFcheck()
                                "%s/dmmask_mksl.fits",
                                datadir);
                 functionparameter_SetParamValue_STRING(data.fpsptr,
-                                                       ".DMmaskRM",
+                                                       ".DMgeom.DMmaskCTRL",
                                                        fname);
 
                 SNPRINTF_CHECK(fname,
@@ -342,26 +348,32 @@ static errno_t customCONFcheck()
                 float id = 0.05 * DMxsize;
 
                 functionparameter_SetParamValue_INT64(data.fpsptr,
-                                                      ".DMxsize",
+                                                      ".DMgeom.DMxsize",
                                                       DMxsize);
                 functionparameter_SetParamValue_INT64(data.fpsptr,
-                                                      ".DMysize",
+                                                      ".DMgeom.DMysize",
                                                       DMysize);
                 functionparameter_SetParamValue_FLOAT32(data.fpsptr,
-                                                        ".align.CX",
+                                                        ".DMgeom.align.CX",
                                                         cx);
                 functionparameter_SetParamValue_FLOAT32(data.fpsptr,
-                                                        ".align.CY",
+                                                        ".DMgeom.align.CY",
                                                         cy);
                 functionparameter_SetParamValue_FLOAT32(data.fpsptr,
-                                                        ".align.OD",
+                                                        ".DMgeom.align.OD",
                                                         od);
                 functionparameter_SetParamValue_FLOAT32(data.fpsptr,
-                                                        ".align.ID",
+                                                        ".DMgeom.align.ID",
                                                         id);
             }
             data.fpsptr->parray[fpi_update_align].fpflag &= ~FPFLAG_ONOFF;
         }
+
+
+        data.fpsptr->parray[fpi_fname_DMmaskCTRL].fpflag |=
+            FPFLAG_STREAM_RUN_REQUIRED;
+        data.fpsptr->parray[fpi_fname_DMmaskEXTR].fpflag |=
+            FPFLAG_STREAM_RUN_REQUIRED;
     }
 
     return RETURN_SUCCESS;
@@ -415,24 +427,67 @@ static errno_t compute_function()
     int MaskMode = 0;
     int BlockNB  = -1;
 
+    // full set of DM actuators to be controlled
+    load_fits(fname_DMmaskCTRL, "DMmaskCTRL", LOADFITS_ERRMODE_ERROR, NULL);
+    IMGID imgDMmaskCTRL = mkIMGID_from_name("DMmaskCTRL");
+    resolveIMGID(&imgDMmaskCTRL, ERRMODE_ABORT);
+
+    // DM actuators to be extrapolated (part of DMmaskCTRL)
+    // this is a subset of dmmaskRM
+    load_fits(fname_DMmaskEXTR, "DMmaskEXTR", LOADFITS_ERRMODE_ERROR, NULL);
+    IMGID imgDMmaskEXTR = mkIMGID_from_name("DMmaskEXTR");
+    resolveIMGID(&imgDMmaskEXTR, ERRMODE_ABORT);
 
 
-    AOloopControl_computeCalib_mkModes_new("fmodes",
-                                           *DMxsize,
-                                           *DMysize,
-                                           *CPAmax,
-                                           *deltaCPA,
-                                           *alignCX,
-                                           *alignCY,
-                                           *alignID,
-                                           *alignOD,
-                                           MaskMode,
-                                           BlockNB,
-                                           *svdlim,
-                                           data.fpsptr->md->datadir);
+    // Create Zernike + Fourier mode basis
+    //
+    IMGID imgZFmodes = mkIMGID_from_name("ZFm");
+    mk_ZernikeFourier_modal_basis(*DMxsize,
+                                  *DMysize,
+                                  *CPAmax,
+                                  *deltaCPA,
+                                  *alignCX,
+                                  *alignCY,
+                                  *alignID,
+                                  *alignOD,
+                                  &imgZFmodes);
+
+    modes_mask_normalize(imgZFmodes, imgDMmaskCTRL);
+
+    save_fits("ZFm", "ZFmodes.fits");
+
+    list_image_ID();
+
+    IMGID imgoutmodes = mkIMGID_from_name("modes00");
+    IMGID imgcpa      = mkIMGID_from_name("modesfreqcpa");
+
+    modes_spatial_extrapolate(imgZFmodes, imgDMmaskCTRL, imgcpa, imgoutmodes);
+
+    save_fits("modes00", "modes00.fits");
+
+
+
+    list_image_ID();
+    /*
+        AOloopControl_computeCalib_mkModes_new("fmodes",
+                                               *DMxsize,
+                                               *DMysize,
+                                               *CPAmax,
+                                               *deltaCPA,
+                                               *alignCX,
+                                               *alignCY,
+                                               *alignID,
+                                               *alignOD,
+                                               MaskMode,
+                                               BlockNB,
+                                               *svdlim,
+                                               data.fpsptr->md->datadir);
+    */
+
 
     // streamprocess(inimg, outimg);
     // processinfo_update_output_stream(processinfo, outimg.ID);
+
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

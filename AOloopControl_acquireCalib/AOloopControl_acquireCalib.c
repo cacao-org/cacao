@@ -66,7 +66,7 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
 #include "AOloopControl_compTools/AOloopControl_compTools.h"
-#include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
+#include "computeCalib/computeCalib.h"
 
 #include "AOloopControl_acquireCalib/acquireWFSlincalib.h"
 

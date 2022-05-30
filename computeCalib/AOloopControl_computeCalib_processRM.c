@@ -79,7 +79,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
-#include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
+#include "computeCalib/computeCalib.h"
 
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"

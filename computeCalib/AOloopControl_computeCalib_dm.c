@@ -77,7 +77,7 @@ int clock_gettime(int clk_id, struct mach_timespec *t)
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
-#include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
+#include "computeCalib/computeCalib.h"
 
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
@@ -222,6 +222,9 @@ imageID AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name,
     return IDout;
 }
 
+
+
+
 long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name,
                                                    const char *IDmask_name,
                                                    const char *IDcpa_name,
@@ -304,6 +307,9 @@ long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name,
 
     return (IDout);
 }
+
+
+
 
 long AOloopControl_computeCalib_DMslaveExt(const char *IDin_name,
                                            const char *IDmask_name,

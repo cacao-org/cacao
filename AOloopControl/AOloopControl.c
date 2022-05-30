@@ -110,7 +110,7 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
-#include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
+#include "computeCalib/computeCalib.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
 
 #include "modalfilter.h"

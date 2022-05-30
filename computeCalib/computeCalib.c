@@ -44,7 +44,7 @@
 #include "CommandLineInterface/CLIcore.h"
 
 #include "AOloopControl/AOloopControl.h"
-#include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
+#include "computeCalib/computeCalib.h"
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"
