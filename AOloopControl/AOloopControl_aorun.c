@@ -266,8 +266,9 @@ int AOloopControl_aorun_FPCONF()
     // main control
 
     double loopgaindefault[4] = {0.001, 0.0, 1.5, 0.001};
-    FPFLAG                    = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT |
-             FPFLAG_MAXLIMIT; // required to enforce the min and max limits
+    FPFLAG                    = FPFLAG_DEFAULT_INPUT;
+    // | FPFLAG_MINLIMIT |
+    //         FPFLAG_MAXLIMIT; // required to enforce the min and max limits
     FPFLAG |= FPFLAG_WRITERUN;
     long fpi_loopgain = 0;
     function_parameter_add_entry(&fps,
@@ -279,8 +280,9 @@ int AOloopControl_aorun_FPCONF()
                                  &fpi_loopgain);
 
     double loopmultdefault[4] = {0.001, 0.0, 1.5, 0.001};
-    FPFLAG                    = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT |
-             FPFLAG_MAXLIMIT; // required to enforce the min and max limits
+    FPFLAG                    = FPFLAG_DEFAULT_INPUT;
+    // | FPFLAG_MINLIMIT |
+    //         FPFLAG_MAXLIMIT; // required to enforce the min and max limits
     FPFLAG |= FPFLAG_WRITERUN;
     long fpi_loopmult = 0;
     function_parameter_add_entry(&fps,
