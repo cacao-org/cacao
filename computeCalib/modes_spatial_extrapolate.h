@@ -4,6 +4,6 @@
 errno_t modes_spatial_extrapolate(IMGID imgmodes,
                                   IMGID imgmask,
                                   IMGID imgcpa,
-                                  IMGID imgoutmodes);
+                                  IMGID *imgoutmodes);
 
 #endif

@@ -171,8 +171,8 @@ errno_t mk_ZernikeFourier_modal_basis(uint32_t msizex,
 
     zernike_init();
 
-    double PA;
-
+    // First NBZ modes are Zernike modes
+    //
     for (uint32_t k = 0; k < NBZ; k++)
     {
         data.image[IDmfcpa].array.F[k] = zcpa[k];
@@ -182,7 +182,7 @@ errno_t mk_ZernikeFourier_modal_basis(uint32_t msizex,
                 double x = 1.0 * ii - xc;
                 double y = 1.0 * jj - yc;
                 double r = sqrt(x * x + y * y) / r1;
-                PA       = atan2(y, x);
+                double PA  = atan2(y, x);
 
                 imgZFmodes->im->array
                     .F[k * msizex * msizey + jj * msizex + ii] =
@@ -190,6 +190,9 @@ errno_t mk_ZernikeFourier_modal_basis(uint32_t msizex,
             }
     }
 
+
+    // Copy Fourier modes into basis
+    //
     for (uint32_t k = 0; k < data.image[ID0].md[0].size[2] - 1; k++)
     {
         data.image[IDmfcpa].array.F[k + NBZ] =

@@ -5,10 +5,12 @@
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
 
+
+
 errno_t modes_spatial_extrapolate(IMGID imgmodes,
                                   IMGID imgmask,
                                   IMGID imgcpa,
-                                  IMGID imgoutmodes)
+                                  IMGID *imgoutmodes)
 {
     DEBUG_TRACE_FSTART();
 
@@ -18,7 +20,7 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
     resolveIMGID(&imgmask, ERRMODE_ABORT);
     resolveIMGID(&imgcpa, ERRMODE_ABORT);
 
-    imcreatelikewiseIMGID(&imgoutmodes, &imgmodes);
+    imcreatelikewiseIMGID(imgoutmodes, &imgmodes);
 
     IMGID imgpixmdist = mkIMGID_from_name("pmindist");
     imcreatelikewiseIMGID(&imgpixmdist, &imgmask);
@@ -61,7 +63,7 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
         }
     }
 
-    save_fits("pmindist", "pmindist.fits");
+    // save_fits("pmindist", "pmindist.fits");
 
 
     for (uint32_t kk = 0; kk < imgmodes.size[2]; kk++)
@@ -80,7 +82,7 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
                     coeff = 0.0;
                 }
 
-                imgoutmodes.im->array.F[kk * xysize + jj * xsize + ii] =
+                imgoutmodes->im->array.F[kk * xysize + jj * xsize + ii] =
                     coeff * imgmodes.im->array.F[kk * xysize + jj * xsize + ii];
             }
         }
