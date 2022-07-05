@@ -1,14 +1,14 @@
 exclude: "^.github/"
 repos:
--   repo: https://github.com/pre-commit/mirrors-yapf.git
-    rev: v0.32.0
-    hooks:
-    -   id: yapf
-        additional_dependencies: [toml]
--   repo: https://github.com/pre-commit/mirrors-clang-format.git
-    rev: v13.0.0
-    hooks:
-    -   id: clang-format
+#-   repo: https://github.com/pre-commit/mirrors-yapf.git
+#    rev: v0.32.0
+#    hooks:
+#    -   id: yapf
+#        additional_dependencies: [toml]
+#-   repo: https://github.com/pre-commit/mirrors-clang-format.git
+#    rev: v13.0.0
+#    hooks:
+#    -   id: clang-format
 -   repo: https://github.com/pre-commit/pre-commit-hooks.git
     rev: v4.1.0
     hooks:
