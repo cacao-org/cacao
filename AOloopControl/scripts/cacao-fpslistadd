@@ -983,8 +983,6 @@ if [ "${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
 
         addfpscmd "setval ${fpsfname}.option.twait 0"
-        addfpscmd "setval ${fpsfname}.option.semwarn OFF"
-
     fi
 else
     echolog "OFF CACAO_FPSPROC_MVM_WFS2CMODEVAL"
@@ -1040,8 +1038,6 @@ if [ "${CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
 
         addfpscmd "setval ${fpsfname}.option.twait 0"
-        addfpscmd "setval ${fpsfname}.option.semwarn OFF"
-
     fi
 else
     echolog "OFF CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM"
@@ -1096,8 +1092,6 @@ if [ "${CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
 
         addfpscmd "setval ${fpsfname}.option.twait 0"
-        addfpscmd "setval ${fpsfname}.option.semwarn OFF"
-
     fi
 else
     echolog "OFF CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM"
