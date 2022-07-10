@@ -29,7 +29,12 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 # DM combination
 # Manages mutipe DM channels
 #
-export CACAO_FPSPROC_DMCOMB="ON"
+export CACAO_FPSPROC_DMCH2DISP="ON"
+
+
+
+
+## SIMULATOR
 
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
@@ -39,6 +44,14 @@ export CACAO_FPSPROC_STREAMDELAY="ON"
 # MVM lop on GPU: used to simulate hardware
 #
 export CACAO_FPSPROC_SIMMVMGPU="ON"
+
+# Turbulence simulator
+#
+export CACAO_FPSPROC_DMATMTURB="ON"
+
+
+
+## CALIBRATION
 
 # Measure hardware latency
 #
@@ -60,11 +73,17 @@ export CACAO_FPSPROC_ACQLINLORM="ON"
 # Compute control matrix - Fourier
 #
 export CACAO_FPSPROC_COMPFCM="ON"
+export CACAO_FPSPROC_COMPCTRLMODES="ON"
+
 
 # Compute control matrix - straight
 #
 export CACAO_FPSPROC_COMPSCM="ON"
 
+
+
+
+## CONTROL
 
 # Extract control modes from WFS using MVM
 #
@@ -79,6 +98,13 @@ export CACAO_FPSPROC_MODALFILTERING="ON"
 export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 
 
+
+# Compute DM command from control mode values
+#
+export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
+
+
+
 # Control loop
 #
-# export CACAO_FPSPROC_AOLOOP_RUN="ON"
+export CACAO_FPSPROC_AOLOOP_RUN="ON"

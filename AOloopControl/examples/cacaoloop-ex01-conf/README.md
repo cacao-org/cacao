@@ -70,7 +70,7 @@ The following tasks should be listed :
  2          TESTCONFIG             DONE        READY   Test configuration:
  3          CACAOSETUP             DONE        READY   Run cacao-setup:
 ~~~
-Subsequent tasks perform specific parts of the AO loop.
+Subsequent tasks can perform specific parts of the AO loop.
 
 The INITSETUP task creates the **WORKDIR** directory.
 
