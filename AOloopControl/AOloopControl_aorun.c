@@ -196,7 +196,7 @@ int AOloopControl_aorun_FPCONF()
     FPFLAG        = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
     long fpi_loop = 0;
     function_parameter_add_entry(&fps,
-                                 ".loop",
+                                 ".AOloopindex",
                                  "Loop index",
                                  FPTYPE_INT64,
                                  FPFLAG,
@@ -357,7 +357,7 @@ int AOloopControl_aorun_FPCONF()
             {
                 char dmCsname[200];
                 long loop =
-                    functionparameter_GetParamValue_INT64(&fps, ".loop");
+                    functionparameter_GetParamValue_INT64(&fps, ".AOloopindex");
                 sprintf(dmCsname, "aol%ld_dmC", loop);
                 read_sharedmem_image(dmCsname);
                 arith_image_zero(dmCsname);
@@ -396,7 +396,7 @@ int AOloopControl_aorun_RUN()
     // GET FUNCTION PARAMETER VALUES
     // ===============================
 
-    long loop = functionparameter_GetParamValue_INT64(&fps, ".loop");
+    long loop = functionparameter_GetParamValue_INT64(&fps, ".AOloopindex");
 
     char snameWFS[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(snameWFS,
