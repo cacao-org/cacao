@@ -695,9 +695,6 @@ if [ "${CACAO_FPSPROC_MODESEXTRACTWFSGPU}" = "ON" ]; then
 
         # run GPU full speed
         addfpscmd "setval ${fpsfname}.option.twait 0"
-
-        addfpscmd "setval ${fpsfname}.option.semwarn ON"
-
     fi
 else
     echolog "OFF CACAO_FPSPROC_MODESEXTRACTWFSGPU"
@@ -799,8 +796,6 @@ if [ "${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.option.MODENORM ON"
 
         addfpscmd "setval ${fpsfname}.option.twait 0"
-        addfpscmd "setval ${fpsfname}.option.semwarn ON"
-
     fi
 else
     echolog "OFF CACAO_FPSPROC_MVM_WFS2CMODEVAL"
