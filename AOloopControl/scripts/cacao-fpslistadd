@@ -890,7 +890,6 @@ if [ "${CACAO_FPSPROC_MVMGPU_ZPO}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
 
         addfpscmd "setval ${fpsfname}.option.twait 0"
-        addfpscmd "setval ${fpsfname}.option.semwarn OFF"
 
     fi
 else
