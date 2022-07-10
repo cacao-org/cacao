@@ -64,6 +64,7 @@ export CACAO_FPSPROC_ACQUWFS="ON"
 # Acquire linear RM (zonal)
 #
 export CACAO_FPSPROC_ACQLINZRM="ON"
+export CACAO_FPSPROC_ACQWFSLINCALZ="ON"
 
 # Acquire low-order modal RM
 #
