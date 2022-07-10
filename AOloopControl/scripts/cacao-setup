@@ -306,6 +306,7 @@ function allFPScmd {
     echo "running command $1 on all FPSs"
 
     while IFS='' read -r line || [[ -n "$line" ]]; do
+    if [[ ${line::1} != "+" ]]; then
         getfpsname_fromline "${line}"
         echolog "command $1 for FPS ${fpsname}"
         echo "$1 ${fpsname}" >> ${fpsCTRLfifo}
@@ -319,7 +320,7 @@ function allFPScmd {
                 echo "${taskline}" >> ${fpsCTRLfifo}
             done < ${taskflist}
         fi
-
+    fi
     done < ${LOOPWORKDIR}/fpslist.txt
 }
 
