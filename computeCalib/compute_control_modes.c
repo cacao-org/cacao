@@ -250,6 +250,12 @@ static CLICMDARGDEF farg[] = {
 };
 
 
+static CLICMDDATA CLIcmddata = {"compctrlmodes",
+                                "compute AO control modes in WFS and DM space",
+                                CLICMD_FIELDS_DEFAULTS
+                               };
+
+
 
 static errno_t customCONFsetup()
 {
@@ -442,10 +448,7 @@ static errno_t customCONFcheck()
 
 
 
-static CLICMDDATA CLIcmddata = {"compctrlmodes",
-                                "compute AO control modes in WFS and DM space",
-                                CLICMD_FIELDS_DEFAULTS
-                               };
+
 
 
 // detailed help
