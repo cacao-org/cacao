@@ -111,9 +111,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
     float GainCoeff1 = 1.0;
 
     schedpar.sched_priority = RT_priority;
-#ifndef __MACH__
     sched_setscheduler(0, SCHED_FIFO, &schedpar);
-#endif
 
     printf("AUTO GAIN\n");
     fflush(stdout);

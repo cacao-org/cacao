@@ -127,9 +127,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     uint64_t LOOPiter;
 
     schedpar.sched_priority = RT_priority;
-#ifndef __MACH__
     sched_setscheduler(0, SCHED_FIFO, &schedpar);
-#endif
 
     PROCESSINFO *processinfo;
     if (data.processinfo == 1)

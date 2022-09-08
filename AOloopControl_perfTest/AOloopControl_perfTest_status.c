@@ -814,9 +814,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     usec1 = 150.0;
 
     schedpar.sched_priority = RT_priority;
-#ifndef __MACH__
     sched_setscheduler(0, SCHED_FIFO, &schedpar);
-#endif
 
     nbgpu = AOconf[LOOPNUMBER].AOcompute.GPU0;
 

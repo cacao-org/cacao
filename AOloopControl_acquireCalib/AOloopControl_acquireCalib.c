@@ -3608,9 +3608,7 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(long        loop,
     long  poke, poke1, poke2;
 
     schedpar.sched_priority = RT_priority;
-#ifndef __MACH__
     sched_setscheduler(0, SCHED_FIFO, &schedpar);
-#endif
 
     if (NBcycle < 1)
     {
@@ -5007,7 +5005,6 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(const char *DMmodes_name,
     wfsframesize = sizeof(float) * wfsxysize;
 
     schedpar.sched_priority = RT_priority;
-#ifndef __MACH__
     if (seteuid(data.euid) != 0) // This goes up to maximum privileges
     {
         PRINT_ERROR("seteuid error");
@@ -5019,7 +5016,6 @@ long AOloopControl_acquireCalib_RespMatrix_Fast(const char *DMmodes_name,
     {
         PRINT_ERROR("seteuid error");
     }
-#endif
 
     ptr0  = (char *) data.image[IDmodes1].array.F;
     ptrs0 = (char *) data.image[IDbuff].array.F;

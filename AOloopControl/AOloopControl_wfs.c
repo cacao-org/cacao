@@ -271,7 +271,6 @@ AOloopControl_WFSzeropoint_sum_update_loop(__attribute__((unused)) long loopnb,
     }
 
     schedpar.sched_priority = RT_priority;
-#ifndef __MACH__
     if (seteuid(data.euid) != 0) // This goes up to maximum privileges
     {
         PRINT_ERROR("seteuid() returns non-zero value");
@@ -285,7 +284,6 @@ AOloopControl_WFSzeropoint_sum_update_loop(__attribute__((unused)) long loopnb,
     {
         PRINT_ERROR("seteuid() returns non-zero value");
     }
-#endif
 
     IDwfsref  = image_ID(IDwfsref_name);
     wfsxsize  = data.image[IDwfsref].md[0].size[0];
