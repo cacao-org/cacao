@@ -161,8 +161,7 @@ static errno_t customCONFcheck()
 {
 
     if (data.fpsptr != NULL)
-    {
-    }
+    {}
 
     return RETURN_SUCCESS;
 }
@@ -488,85 +487,16 @@ static errno_t compute_function()
                 wfsslice = 0;
                 //}
 
-                if (imgwfs.datatype == _DATATYPE_FLOAT)
-                {
-                    char *ptr0 = (char *) imgwfs.im->array.F;
-                    ptr0 += SIZEOF_DATATYPE_FLOAT * wfsslice * wfssize;
-                    // copy image to cube slice
-                    char *ptr = (char *) data.image[IDwfsc].array.F;
-                    ptr += sizeof(float) * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(float) * wfssize);
-                }
+                int   datatype_size = ImageStreamIO_typesize(imgwfs.datatype);
+                char *ptr0          = ImageStreamIO_get_image_d_ptr(imgwfs.im);
+                ptr0 += datatype_size * wfsslice * wfssize;
 
-                if (imgwfs.datatype == _DATATYPE_DOUBLE)
-                {
-                    char *ptr0 = (char *) imgwfs.im->array.D;
-                    ptr0 += SIZEOF_DATATYPE_DOUBLE * wfsslice * wfssize;
-                    // copy image to cube slice
-                    char *ptr = (char *) data.image[IDwfsc].array.D;
-                    ptr += sizeof(float) * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(float) * wfssize);
-                }
+                char *ptr = ImageStreamIO_get_image_d_ptr(&data.image[IDwfsc]);
+                ptr += datatype_size * wfsframe * wfssize;
 
-                if (imgwfs.datatype == _DATATYPE_UINT16)
-                {
-                    char *ptr0 = (char *) imgwfs.im->array.UI16;
-                    ptr0 += SIZEOF_DATATYPE_UINT16 * wfsslice * wfssize;
-                    // copy image to cube slice
-                    char *ptr = (char *) data.image[IDwfsc].array.UI16;
-                    ptr += SIZEOF_DATATYPE_UINT16 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
-                }
+                memcpy(ptr, ptr0, datatype_size * wfssize);
+                //
 
-                if (imgwfs.datatype == _DATATYPE_INT16)
-                {
-                    char *ptr0 = (char *) imgwfs.im->array.SI16;
-                    ptr0 += SIZEOF_DATATYPE_INT16 * wfsslice * wfssize;
-                    // copy image to cube slice
-                    char *ptr = (char *) data.image[IDwfsc].array.SI16;
-                    ptr += SIZEOF_DATATYPE_INT16 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
-                }
-
-                if (imgwfs.datatype == _DATATYPE_UINT32)
-                {
-                    char *ptr0 = (char *) imgwfs.im->array.UI32;
-                    ptr0 += SIZEOF_DATATYPE_UINT32 * wfsslice * wfssize;
-                    // copy image to cube slice
-                    char *ptr = (char *) data.image[IDwfsc].array.UI32;
-                    ptr += SIZEOF_DATATYPE_UINT32 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
-                }
-
-                if (imgwfs.datatype == _DATATYPE_INT32)
-                {
-                    char *ptr0 = (char *) imgwfs.im->array.SI32;
-                    ptr0 += SIZEOF_DATATYPE_INT32 * wfsslice * wfssize;
-                    // copy image to cube slice
-                    char *ptr = (char *) data.image[IDwfsc].array.SI32;
-                    ptr += SIZEOF_DATATYPE_INT32 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
-                }
-
-                if (imgwfs.datatype == _DATATYPE_UINT64)
-                {
-                    char *ptr0 = (char *) imgwfs.im->array.UI64;
-                    ptr0 += SIZEOF_DATATYPE_UINT64 * wfsslice * wfssize;
-                    // copy image to cube slice
-                    char *ptr = (char *) data.image[IDwfsc].array.UI64;
-                    ptr += SIZEOF_DATATYPE_UINT64 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
-                }
-
-                if (imgwfs.datatype == _DATATYPE_INT64)
-                {
-                    char *ptr0 = (char *) imgwfs.im->array.SI64;
-                    ptr0 += SIZEOF_DATATYPE_INT64 * wfsslice * wfssize;
-                    // copy image to cube slice
-                    char *ptr = (char *) data.image[IDwfsc].array.SI64;
-                    ptr += SIZEOF_DATATYPE_INT64 * wfsframe * wfssize;
-                    memcpy(ptr, ptr0, sizeof(short) * wfssize);
-                }
 
                 clock_gettime(CLOCK_REALTIME, &tarray[wfsframe]);
 
@@ -630,87 +560,55 @@ static errno_t compute_function()
 
             double valmax   = 0.0;
             double valmaxdt = 0.0;
+
+// Define a macro for the type switching that follows
+#define IMAGE_SUMMING_CASE(IMG_PTR_ID, SCALAR_OUT_TYPE)                        \
+    {                                                                          \
+        for (uint64_t ii = 0; ii < wfssize; ii++)                              \
+        {                                                                      \
+            SCALAR_OUT_TYPE tmp =                                              \
+                data.image[IDwfsc].array.IMG_PTR_ID[kk * wfssize + ii] -       \
+                data.image[IDwfsc].array.IMG_PTR_ID[(kk - 1) * wfssize + ii];  \
+            valarray[kk] += 1.0 * tmp * tmp;                                   \
+        }                                                                      \
+    }
+
             for (long kk = 1; kk < NBwfsframe; kk++)
             {
                 valarray[kk] = 0.0;
 
-                if (imgwfs.datatype == _DATATYPE_FLOAT)
-                    for (uint64_t ii = 0; ii < wfssize; ii++)
-                    {
-                        float tmp =
-                            data.image[IDwfsc].array.F[kk * wfssize + ii] -
-                            data.image[IDwfsc].array.F[(kk - 1) * wfssize + ii];
-                        valarray[kk] += tmp * tmp;
-                    }
-
-                if (imgwfs.datatype == _DATATYPE_DOUBLE)
-                    for (uint64_t ii = 0; ii < wfssize; ii++)
-                    {
-                        double tmp =
-                            data.image[IDwfsc].array.D[kk * wfssize + ii] -
-                            data.image[IDwfsc].array.D[(kk - 1) * wfssize + ii];
-                        valarray[kk] += tmp * tmp;
-                    }
-
-                if (imgwfs.datatype == _DATATYPE_UINT16)
-                    for (uint64_t ii = 0; ii < wfssize; ii++)
-                    {
-                        int tmp =
-                            data.image[IDwfsc].array.UI16[kk * wfssize + ii] -
-                            data.image[IDwfsc]
-                                .array.UI16[(kk - 1) * wfssize + ii];
-                        valarray[kk] += 1.0 * tmp * tmp;
-                    }
-
-                if (imgwfs.datatype == _DATATYPE_INT16)
-                    for (uint64_t ii = 0; ii < wfssize; ii++)
-                    {
-                        int tmp =
-                            data.image[IDwfsc].array.SI16[kk * wfssize + ii] -
-                            data.image[IDwfsc]
-                                .array.SI16[(kk - 1) * wfssize + ii];
-                        valarray[kk] += 1.0 * tmp * tmp;
-                    }
-
-                if (imgwfs.datatype == _DATATYPE_UINT32)
-                    for (uint64_t ii = 0; ii < wfssize; ii++)
-                    {
-                        long tmp =
-                            data.image[IDwfsc].array.UI32[kk * wfssize + ii] -
-                            data.image[IDwfsc]
-                                .array.UI32[(kk - 1) * wfssize + ii];
-                        valarray[kk] += 1.0 * tmp * tmp;
-                    }
-
-                if (imgwfs.datatype == _DATATYPE_INT32)
-                    for (uint64_t ii = 0; ii < wfssize; ii++)
-                    {
-                        long tmp =
-                            data.image[IDwfsc].array.SI32[kk * wfssize + ii] -
-                            data.image[IDwfsc]
-                                .array.SI32[(kk - 1) * wfssize + ii];
-                        valarray[kk] += 1.0 * tmp * tmp;
-                    }
-
-                if (imgwfs.datatype == _DATATYPE_UINT64)
-                    for (uint64_t ii = 0; ii < wfssize; ii++)
-                    {
-                        long tmp =
-                            data.image[IDwfsc].array.UI64[kk * wfssize + ii] -
-                            data.image[IDwfsc]
-                                .array.UI64[(kk - 1) * wfssize + ii];
-                        valarray[kk] += 1.0 * tmp * tmp;
-                    }
-
-                if (imgwfs.datatype == _DATATYPE_INT64)
-                    for (uint64_t ii = 0; ii < wfssize; ii++)
-                    {
-                        long tmp =
-                            data.image[IDwfsc].array.SI64[kk * wfssize + ii] -
-                            data.image[IDwfsc]
-                                .array.SI64[(kk - 1) * wfssize + ii];
-                        valarray[kk] += 1.0 * tmp * tmp;
-                    }
+                switch (imgwfs.datatype)
+                {
+                case _DATATYPE_FLOAT:
+                    IMAGE_SUMMING_CASE(F, float);
+                    break;
+                case _DATATYPE_DOUBLE:
+                    IMAGE_SUMMING_CASE(D, double);
+                    break;
+                case _DATATYPE_UINT16:
+                    IMAGE_SUMMING_CASE(UI16, int);
+                    break;
+                case _DATATYPE_INT16:
+                    IMAGE_SUMMING_CASE(SI16, int);
+                    break;
+                case _DATATYPE_UINT32:
+                    IMAGE_SUMMING_CASE(UI32, long);
+                    break;
+                case _DATATYPE_INT32:
+                    IMAGE_SUMMING_CASE(SI32, long);
+                    break;
+                case _DATATYPE_UINT64:
+                    IMAGE_SUMMING_CASE(UI64, long);
+                    break;
+                case _DATATYPE_INT64:
+                    IMAGE_SUMMING_CASE(SI64, long);
+                    break;
+                case _DATATYPE_COMPLEX_FLOAT:
+                case _DATATYPE_COMPLEX_DOUBLE:
+                default:
+                    PRINT_ERROR("COMPLEX TYPES UNSUPPORTED");
+                    return RETURN_FAILURE;
+                }
 
                 valarray[kk] = sqrt(valarray[kk] / wfssize / 2);
 
