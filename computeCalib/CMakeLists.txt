@@ -5,7 +5,7 @@ project(lib_${LIBNAME}_project)
 set(SOURCEFILES
 AOloopControl_computeCalib_CM.c
 AOloopControl_computeCalib_dm.c
-AOloopControl_computeCalib_Hadamard.c
+computeHadamard.c
 AOloopControl_computeCalib_loDMmodes.c
 mkmodes.c
 AOloopControl_computeCalib_processRM.c

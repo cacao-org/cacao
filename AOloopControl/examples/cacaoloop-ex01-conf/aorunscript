@@ -48,7 +48,9 @@ function sendFPScmd {
 
 stepFile="step.aorunscript.DMCH2DISP"
 if [ ! -f "$stepFile" ]; then
-
+	echo ""
+	echo "Starting DM channels to displacement process"
+    echo ""
     # Start DM comb
     taskset_DMch2disp="3"
     sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
@@ -78,7 +80,9 @@ fi
 
 stepFile="step.aorunscript.ACQWFS"
 if [ ! -f "$stepFile" ]; then
-
+	echo ""
+	echo "Pre-fill queue 2 with WFS acquisition"
+	echo ""
     # Fill up execution queue 2
     # set queue to #2
     sendFPScmd "setqindex 2"
@@ -110,6 +114,9 @@ fi
 stepFile="step.aorunscript.STREMDELAY"
 if [ ! -f "$stepFile" ]; then
 
+	echo ""
+	echo "Start STREAMDELAY"
+	echo ""
     sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
     sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
 
@@ -126,9 +133,14 @@ fi
 # Starting simulation MVM GPU process
 # ======================================================================
 
-stepFile="step.aorunscript.SIMMVGPU"
+stepFile="step.aorunscript.SIMMVMGPU"
 if [ ! -f "$stepFile" ]; then
 
+	echo ""
+	echo "Sart simulation MVM on GPU"
+	echo ""
+	# set loop at 100 Hz
+	sendFPScmd "setval simmvmgpu-${CACAO_LOOPNUMBER}.procinfo.triggerdelay 0.01"
     sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
     sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
 
@@ -148,6 +160,9 @@ fi
 stepFile="step.aorunscript.MLAT"
 if [ ! -f "$stepFile" ]; then
 
+	echo ""
+	echo "Start WFS acquisition and measure latency"
+	echo ""
     # launch queue 2
     sendFPScmd "queueprio 2 1"
 
@@ -177,9 +192,13 @@ fi
 stepFile="step.aorunscript.ZRM"
 if [ ! -f "$stepFile" ]; then
 
+	echo ""
+	echo "Acquire zonal response matrix"
+	echo ""
     # take zonal response matrix
-    sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
-    sendFPScmd "runstart acqlin_zRM-${CACAO_LOOPNUMBER}"
+    sendFPScmd "setval acqWFSlincal_z-${CACAO_LOOPNUMBER}.timing.upmlat ON"
+    sendFPScmd "confwupdate acqWFSlincal_z-${CACAO_LOOPNUMBER}"
+    sendFPScmd "runstart acqWFSlincal_z-${CACAO_LOOPNUMBER}"
 
     touch ${stepFile}
     exit

@@ -315,7 +315,7 @@ fi
 
 
 
-
+# old - to be deprecated
 if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
     echolog "ON  CACAO_FPSPROC_ACQLINZRM"
     # ==============================================================================
@@ -410,21 +410,24 @@ if [ "${CACAO_FPSPROC_ACQWFSLINCALZ}" = "ON" ]; then
 
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.dmstream aol${CACAO_LOOPNUMBER}_dmRM"
 
-        addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
-
-        # default startup values
-        addfpscmd "setval ${fpsfname}.normalize ON"
-        addfpscmd "setval ${fpsfname}.Hpoke ON"
-        addfpscmd "setval ${fpsfname}.autoTiming ON"
-        addfpscmd "setval ${fpsfname}.compDMmask ON"
-        addfpscmd "setval ${fpsfname}.compMpoke ON"
-
+		# Timing
+        addfpscmd "setval ${fpsfname}.timing.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.timing.autoTiming ON"
         addfpscmd "setval ${fpsfname}.timing.NBave 1"
         addfpscmd "setval ${fpsfname}.timing.NBcycle 2"
         addfpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
         addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
+
+        # DM
+        addfpscmd "setval ${fpsfname}.RMDMmask.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
+
+        # default startup values
+        addfpscmd "setval ${fpsfname}.normalize ON"
+        addfpscmd "setval ${fpsfname}.Hpoke ON"
+        addfpscmd "setval ${fpsfname}.compDMmask ON"
+        addfpscmd "setval ${fpsfname}.compMpoke ON"
 
         addfpscmd "setval ${fpsfname}.MaskMode ON"
         addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"

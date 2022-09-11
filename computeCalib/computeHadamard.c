@@ -38,8 +38,10 @@
 // Hadamard modes (outname)
 // Hadamard matrix ("Hmat.fits")
 // pixel indexes ("Hpixindex.fits", float, to be converted to long)
-imageID AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name,
-                                                   const char *outname)
+imageID AOloopControl_computeCalib_mkHadamardModes(
+    const char *DMmask_name,
+    const char *outname
+)
 {
     imageID IDout;
     long    cnt;
@@ -184,9 +186,9 @@ imageID AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name,
 }
 
 imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
-                                                     const char *Hmatname,
-                                                     const char *indexname,
-                                                     const char *outname)
+        const char *Hmatname,
+        const char *indexname,
+        const char *outname)
 {
     imageID  IDin, IDhad, IDout, IDindex;
     long     NBframes, sizexwfs, sizeywfs, sizewfs;
@@ -203,7 +205,7 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
 
     IDhad = image_ID(Hmatname);
     if ((data.image[IDhad].md[0].size[0] != NBframes) ||
-        (data.image[IDhad].md[0].size[1] != NBframes))
+            (data.image[IDhad].md[0].size[1] != NBframes))
     {
         printf(
             "ERROR: size of Hadamard matrix [%ld x %ld] does not match "
@@ -220,7 +222,7 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
 
     long kk0;
 #ifdef _OPENMP
-#pragma omp parallel for private(kk0, kk1, ii)
+    #pragma omp parallel for private(kk0, kk1, ii)
 #endif
     for (kk = 0; kk < zsizeout; kk++) // output frame
     {
