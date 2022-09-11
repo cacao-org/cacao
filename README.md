@@ -68,6 +68,12 @@ Check compilation options with compile.sh -h option.
 
 ---
 
+## Documentation
+
+See [cacao's wiki page](https://github.com/cacao-org/cacao/wiki) for detailed instructions to install, configure and use cacao.
+
+
+---
 
 ## Getting Started
 
