@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 CACAOTASK_SCRIPT_FNAME=$0
 source cacaotask-check # check environment
 
@@ -15,6 +16,9 @@ done
 
 cd ${CURRENTDIR}
 cp ${CONFDIR}/simLHS/*.fits ${WORKDIRECTORY}/simLHS/
+
+# uncompress all gz files
+gunzip ${WORKDIRECTORY}/simLHS/*.fits.gz
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
