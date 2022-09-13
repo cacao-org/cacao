@@ -1,4 +1,4 @@
-# 1. Running cacao examples
+# Running cacao examples
 
 Each example directory contains the cacao configuration files required to setup and run an example. Directories are named :
 
@@ -7,7 +7,7 @@ Each example directory contains the cacao configuration files required to setup 
 Where EXAMPLENAME is, unsurprisingly, the example name.
 
 
-## 1.1. Description of files in example directory
+## 1. Description of files in example directory
 
 - **LOOPNAME**: Name of cacao loop.
 - **WORKDIR**: Directory in which configuration will run.
@@ -17,18 +17,17 @@ Where EXAMPLENAME is, unsurprisingly, the example name.
 
 
 
-## 1.2. Deploying a cacao example
+## 2. Deploying a cacao example
+
+We define **rootworkdir** as the root work directory under which the cacao example is run. All directory paths are relative to **rootworkdir**, which will be omitted for convenience. User should have read and write permission in **roorworkdir**.
 
 Copy the example conf directory to the root work directory :
 
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-XXXX-conf <rootworkdir>
+    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-EXAMPLENAME-conf <rootworkdir>
+    $ cd <rootworkdir>
 
-Where XXXX is the example name.
 
-
-## 1.2. Directory layout and naming
-
-We define **rootworkdir** as the root work directory under which the cacao example is run. All directory paths are relative to **rootworkdir**, which will be omitted for convenience. User should have read and write permission in **roorworkdir**.
+## 3. Directory layout and naming
 
 Directory and file names are constructed from the following three variables:
 
@@ -60,8 +59,7 @@ Note that **WORKDIR** and **CONFNAME**, and **LOOPNAME** may or may not be the s
 ---
 
 
-
-## 3.1. Running Setup Tasks
+## 4. Running Setup Tasks
 
 cacao-task-manager is a high level wrapper script that runs a sequence of tasks, reading configuration files, and deploying necessary processes and tmux sessions.
 
