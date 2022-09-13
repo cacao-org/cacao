@@ -13,7 +13,7 @@ Directory and file names for each example are constructed from the following thr
 - **LOOPNAME**: The loop name, which will be the basis for process names, tmux sessions and various files
 
 
-:warning: Confusingly, **WORKDIR** and **CONFNAME**, and **LOOPNAME** may or may not be the same. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the three names can be different.
+:warning: Make sure you understand the role of these three variables before proceeding. Confusingly, **WORKDIR** and **CONFNAME**, and **LOOPNAME** may or may not be the same. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the three names can be different.
 
 
 ---

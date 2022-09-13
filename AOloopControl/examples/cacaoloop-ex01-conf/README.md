@@ -1,11 +1,4 @@
-# 1. Overview
-
-
-
-Copy this directory to the root work directory :
-
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-ex01-conf <rootworkdir>
-
+# Overview
 
 
 cacao-task-manager tasks for this example :
@@ -23,10 +16,12 @@ Subsequent tasks can perform specific parts of the AO loop.
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
-To run tasks 0, 1, 2 and 3 :
+To run the example :
 
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-ex01-conf cacaoloop=ex01
-    # cd cacaoloop=ex01
+    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-ex01-conf cacaoloop-ex01-rootdir
+    $ cd cacaoloop-ex01-rootdir
     $ cacao-task-manager -X 3 cacaoloop-ex01
     $ cp cacaoloop-ex01-conf/aorunscript .
     $ ./aorunscript
+
+THE END
