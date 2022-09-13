@@ -19,7 +19,7 @@ Subsequent tasks can perform specific parts of the AO loop.
 
 To run the example :
 
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-compCM-conf cacaoloop-compCM-rootdir
+    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-compCM.conf cacaoloop-compCM-rootdir
     $ cd cacaoloop-compCM-rootdir
     $ cacao-task-manager -X 3 cacaoloop-compCM
     $ cp cacaoloop-comCM-conf/aorunscript .
