@@ -16,6 +16,8 @@ Directory and file names for each example are constructed from the following thr
 :warning: Confusingly, **WORKDIR** and **CONFNAME**, and **LOOPNAME** may or may not be the same. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the three names can be different.
 
 
+---
+
 # 1. Description of files in example directory
 
 Content of directory CONFNAME-conf
@@ -31,9 +33,14 @@ Content of directory CONFNAME-conf
 │   └── simLHS                         -> (optional) Linear Hardware Simulation files
 ~~~
 
+
+---
+
 # 2. Selecting a cacao example
 
-We define **rootworkdir** as the work directory under which the cacao example is run. All directory paths are relative to **rootworkdir**, which will be omitted for convenience. User should have read and write permission in **roorworkdir**.
+We define **rootworkdir** as the work directory under which the cacao example is run. All directory paths are relative to **rootworkdir**, which will be omitted for convenience.
+
+:warning: You need to have read and write permission in **rootworkdir**.
 
 First, copy the example configuration directory to the work directory :
 
@@ -41,6 +48,7 @@ First, copy the example configuration directory to the work directory :
     $ cd <rootworkdir>
 
 
+---
 
 # 3. Running Setup Tasks
 
@@ -63,9 +71,9 @@ For example, the following tasks could be listed :
  2          TESTCONFIG             DONE        READY   Test configuration:
  3          CACAOSETUP             DONE        READY   Run cacao-setup:
 ~~~
-Subsequent tasks can perform specific parts of the AO loop.
 
-:warning: Instruction steps below depend on the tasks. For example, tasks GETSIMCONFFILES and TESTCONFIG may not exit... in which case you can skip the reading the corresponding sections. Note also that the task numbering may change: if GETSIMCONFFILES and TESTCONFIG don't exist, then CACAOSETUP will be task #1.
+
+:warning: Instruction steps below depend on the tasks. For example, tasks GETSIMCONFFILES and TESTCONFIG may not exit... in which case you can skip the reading the corresponding sections. Note also that the task numbering may change: if GETSIMCONFFILES and TESTCONFIG don't exist, then CACAOSETUP will be task #1. The example may also include additional setup tasks.
 
 ## 3.1. Setting up WORKDIR
 
@@ -122,29 +130,23 @@ To run this step using cacao-task-manager:
 
     $ cacao-task-manager -X 3 <CONFNAME>
 
-
-## 3.5. Notes
-
-To run tasks 0, 1, 2 and 3 (inclusive) :
+:bulb: To run tasks 0, 1, 2 and 3 (inclusive) :
 
     $ cacao-task-manager -X 3 <CONFNAME>
 
-The example may include additional setup tasks.
+
+---
 
 
+# 4. Configuring and controlling processes through milk-fpsCTRL fifo: aorunscript
 
-
-
-
-## 4. Configuring and controlling processes through milk-fpsCTRL fifo: aorunscript
-
-The cacao-setup task (task 3 above) will start an instance of milk-fpsCTRL within a dedicated tmux session. This instance is processing commands sent to a fifo named **/milk/shm/cacaoloop01_fpsCTRL.fifo**.
+The cacao-setup task (task 3 above) will start an instance of milk-fpsCTRL within a dedicated tmux session. This instance is processing commands sent to a fifo named **/milk/shm/LOOPNAME_fpsCTRL.fifo**.
 
 From this point on, scripts can send commands to the fifo to change parameters, and run/stop processes. Alternatively, users can also use milk-fpsCTRL as an interactive GUI to perform these operations.
 
-The script **aorunscript** performs these steps.
+The script **aorunscript** included in some of the examples performs these steps.
 
-    $ cp cacaoloop-ex01-conf/aorunscript .
+    $ cp CONFNAME-conf/aorunscript .
     $ ./aorunscript
 
 Each time aorunscript runs, it performs one step. Run it several times until done. Users are encouraged to read the script content as a template for writing custom scripts.
@@ -153,10 +155,10 @@ Each time aorunscript runs, it performs one step. Run it several times until don
 
 ---
 
-# 4. Managing data products and configurations
+# 5. Managing data products and configurations
 
 
-## 4.1.Directory, files, scripts and conventions
+## 5.1.Directory, files, scripts and conventions
 
 Each process managed by the function parameter structure (FPS) framework uses the following standard directories:
 
@@ -172,62 +174,11 @@ The directories are managed by the following scripts:
 - **fpsconf-load**: Load from fps._fpsname_.archive into fps._fpsname_.conf
 
 
-## 4.2. What is considered part of a configuration ?
-
-Not all files in fps._fpsname_.data should be saved to configuration of archived.
-
-- fps._fpsname_.dat : values of all fields in the FPS
-- blahblah
+<!--
+# Notes - to be done
 
 
-## Communication between FPSs
-
-Tools are provided to manage dependencies between different FPSs.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 1.1. Set up configuration files on disk
-
-copy cacaoloop-ex01-conf directory to local work directory
-
-
-## 1.2. Deploy tasks
-
-
-	cacao-task-manager -X 3 cacaoloop-ex01
-
-
-Launches all conf-processes
-launches DMcomb run-process
-
-Interactive FPS control GUI runs in tmux session cacaoloop01_fpsCTRL
-
-
-
-## 1.3. Run execution script
-
-
-    cp cacaoloop-ex01-conf/aorunscript .
-	./aorunscript
-
-The execution script will run one step forward each time it is called, so call it multiple time to advance through the example.
-
-
-
-# 2. Notes
-
+:construction: Everything below this point is under construction
 
 Three directories are associated to each fps:
 
@@ -258,3 +209,6 @@ cacao-fpsarchive
 To adopt results :
 
 cacao-fpsconfadopt
+-->
+
+THE END
