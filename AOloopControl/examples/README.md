@@ -1,65 +1,64 @@
-# Running cacao examples
+# Running cacao examples - Overview
 
 Each example directory contains the cacao configuration files required to setup and run an example. Directories are named :
 
-	cacaoloop-EXAMPLENAME-conf
+	CONFNAME-conf
 
-Where EXAMPLENAME is, unsurprisingly, the example name.
+Where CONFNAME is, unsurprisingly, the example name.
 
+Directory and file names for each example are constructed from the following three variables:
 
-## 1. Description of files in example directory
-
-- **LOOPNAME**: Name of cacao loop.
-- **WORKDIR**: Directory in which configuration will run.
-- **tasklist.txt**: List of tasks that will be managed by cacao-task-manager.
-- **cacaovars.LOOPNAME.bash**: Variables (cacaovars) that define the configuration. Defines which processes will be setup by cacao-setup.
-- **fpssetup.setval.LOOPNAME.conf**: Initialization read by milk-fpsCTRL after lauch.
-
-
-
-## 2. Deploying a cacao example
-
-We define **rootworkdir** as the root work directory under which the cacao example is run. All directory paths are relative to **rootworkdir**, which will be omitted for convenience. User should have read and write permission in **roorworkdir**.
-
-Copy the example conf directory to the root work directory :
-
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-EXAMPLENAME-conf <rootworkdir>
-    $ cd <rootworkdir>
-
-
-## 3. Directory layout and naming
-
-Directory and file names are constructed from the following three variables:
-
-- **CONFNAME**: The configuration name.
-- **WORKDIR**: Where cacao will install files and run
+- **CONFNAME**: The configuration name (as described above)
+- **WORKDIR**: Directory where cacao will install files and run
 - **LOOPNAME**: The loop name, which will be the basis for process names, tmux sessions and various files
 
-Note that **WORKDIR** and **LOOPNAME** are specified in a configuration (see section below).
 
-Initially, only the **CONFNAME** directory exists. The directory structure downstream of **rootworkdir** will ultimately be:
+Note that **WORKDIR** and **CONFNAME**, and **LOOPNAME** may or may not be the same. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the three names can be different.
+
+
+# 1. Description of files in example directory
+
+Content of directory CONFNAME-conf
 
 ~~~
 ├── <CONFNAME>-conf                    -> configuration directory (where configuration files are stored)
+│   ├── LOOPNAME                       -> Name of cacao loop
+│   ├── WORKDIR                        -> Directory name in which cacao will run
+│   ├── tasklist.txt                   -> List of tasks that will be managed by cacao-task-manager
+│   ├── cacaovars.LOOPNAME.bash        -> Variables (cacaovars) that define the configuration. Defines which processes will be setup by cacao-setup
+│   ├── fpssetup.setval.LOOPNAME.conf  -> Initialization read by milk-fpsCTRL after lauch
+│   ├── aorunscript                    -> custom user script (optional)
 │   └── simLHS                         -> Linear Hardware Simulation files (optional)
+~~~
+
+# 2. Deploying a cacao example
+
+We define **rootworkdir** as the work directory under which the cacao example is run. All directory paths are relative to **rootworkdir**, which will be omitted for convenience. User should have read and write permission in **roorworkdir**.
+
+Copy the example configuration directory to the work directory :
+
+    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/CONFNAME-conf <rootworkdir>
+    $ cd <rootworkdir>
+
+
+
+# 3. Directory layout and naming
+
+The directory structure downstream of **rootworkdir** will ultimately be:
+
+~~~
 ├── <WORKDIR>
 │   ├── <LOOPNAME>dir                  -> conf and run processes launched from here
 │   ├── datalogdir
 │   ├── log                            -> cacao-setup log
-│   └── simLHS                         -> Linear Hardware Simulator files
+│   └── simLHS                         -> Linear Hardware Simulator files (optional)
 ├── .<LOOPNAME>-cacaotaskmanager-log   -> cacao-task-manager status and log
-
 ~~~
 
-Note that **WORKDIR** and **CONFNAME**, and **LOOPNAME** may or may not be the same. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the three names will be different.
 
 
 
-
----
-
-
-## 4. Running Setup Tasks
+# 3. Running Setup Tasks
 
 cacao-task-manager is a high level wrapper script that runs a sequence of tasks, reading configuration files, and deploying necessary processes and tmux sessions.
 
@@ -82,11 +81,45 @@ For example, the following tasks could be listed :
 ~~~
 Subsequent tasks can perform specific parts of the AO loop.
 
-The INITSETUP task creates the **WORKDIR** directory.
 
+## 3.1. Setting up WORKDIR
+
+The INITSETUP task creates the **WORKDIR** directory :
+
+        $ cacao-task-manager -X 0 <CONFNAME>
+
+The WORKDIR content is as follows :
+
+~~~
+├── <WORKDIR>
+│   ├── <LOOPNAME>dir                  -> conf and run processes launched from here
+│   ├── datalogdir
+│   ├── log                            -> cacao-setup log
+│   └── simLHS                         -> Linear Hardware Simulator files (optional)
+├── .<LOOPNAME>-cacaotaskmanager-log   -> cacao-task-manager status and log
+~~~
+
+All cacao processes will be running from the WORKDIR/LOOPNAMEdir directory.
+
+
+## 3.2. Uploading external file(s)
+
+Some of the examples include downloading external files.
 The GETSIMCONFFILES task downloads calibration file to simulate an AO system for test purposes.
 
+To run this step:
+
+    $ cacao-task-manager -X 1 <CONFNAME>
+
+## 3.3. Testing the configuration
+
 The TESTCONFIG task performs tests.
+
+To run this step:
+
+    $ cacao-task-manager -X 2 <CONFNAME>
+
+## 3.4. cacao-setup
 
 The CACAOSETUP task runs cacao-setup within **WORKDIR**, which :
 
@@ -96,19 +129,30 @@ The CACAOSETUP task runs cacao-setup within **WORKDIR**, which :
 - Launches milk-fpsCTRL instance in tmux session. This will be used to manage and communicate with processes.
 
 
-To run tasks 0, 1, 2 and 3 (inclusive) :
-
-    $ cacao-task-manager -X 3 <CONFNAME>
-
-
-## 3.2. cacao-setup
-
 cacao-setup is the main setup script, which calls other scripts and sets parameters for processes. The help option lists the main operations performed by cacao-setup :
 
     $ cacao-setup -h
 
+To run this step using cacao-task-manager:
 
-## 3.3. Configuring and controlling processes through milk-fpsCTRL fifo: aorunscript
+    $ cacao-task-manager -X 3 <CONFNAME>
+
+
+## 3.5. Notes
+
+
+To run tasks 0, 1, 2 and 3 (inclusive) :
+
+    $ cacao-task-manager -X 3 <CONFNAME>
+
+The example may include additional setup tasks.
+
+
+
+
+
+
+## 4. Configuring and controlling processes through milk-fpsCTRL fifo: aorunscript
 
 The cacao-setup task (task 3 above) will start an instance of milk-fpsCTRL within a dedicated tmux session. This instance is processing commands sent to a fifo named **/milk/shm/cacaoloop01_fpsCTRL.fifo**.
 
