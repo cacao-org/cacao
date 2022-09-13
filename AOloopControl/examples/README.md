@@ -65,6 +65,7 @@ For example, the following tasks could be listed :
 ~~~
 Subsequent tasks can perform specific parts of the AO loop.
 
+:warning: Instruction steps below depend on the tasks. For example, tasks GETSIMCONFFILES and TESTCONFIG may not exit... in which case you can skip the reading the corresponding sections. Note also that the task numbering may change: if GETSIMCONFFILES and TESTCONFIG don't exist, then CACAOSETUP will be task #1.
 
 ## 3.1. Setting up WORKDIR
 
@@ -103,7 +104,7 @@ To run this step:
 
     $ cacao-task-manager -X 2 <CONFNAME>
 
-## 3.4. cacao-setup
+## 3.4. Running cacao-setup
 
 The CACAOSETUP task runs cacao-setup within **WORKDIR**, which :
 
@@ -123,7 +124,6 @@ To run this step using cacao-task-manager:
 
 
 ## 3.5. Notes
-
 
 To run tasks 0, 1, 2 and 3 (inclusive) :
 
