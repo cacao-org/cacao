@@ -1,6 +1,9 @@
 # Overview
 
-Compute control matrix example.
+KalAO system configuration.
+
+Uses SH-WFS, 12x12 DM.
+
 
 cacao-task-manager tasks for this example :
 

@@ -111,7 +111,7 @@ fi
 # Starting streamdelay process
 # ======================================================================
 
-stepFile="step.aorunscript.STREMDELAY"
+stepFile="step.aorunscript.STREAMDELAY"
 if [ ! -f "$stepFile" ]; then
 
 	echo ""
