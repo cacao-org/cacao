@@ -16,6 +16,7 @@ done
 
 cd ${CURRENTDIR}
 cp ${CONFDIR}/simLHS/*.fits ${WORKDIRECTORY}/simLHS/
+cp ${CONFDIR}/simLHS/*.fits.gz ${WORKDIRECTORY}/simLHS/
 
 # uncompress all gz files
 gunzip ${WORKDIRECTORY}/simLHS/*.fits.gz
