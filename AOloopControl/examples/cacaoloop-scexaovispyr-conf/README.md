@@ -1,8 +1,8 @@
 # Overview
 
-KalAO system configuration.
+SCExAO system pyramid WFS.
 
-Uses SH-WFS, 12x12 DM.
+
 
 
 cacao-task-manager tasks for this example :
@@ -22,10 +22,10 @@ Subsequent tasks can perform specific parts of the AO loop.
 
 To run the example :
 
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-kalAO-conf cacaoloop-kalAO-rootdir
-    $ cd cacaoloop-kalAO-rootdir
-    $ cacao-task-manager -X 3 cacaoloop-kalAO
-    $ cp cacaoloop-kalAO-conf/aorunscript .
+    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-scexaovispyr-conf cacaoloop-scexaovispyr-rootdir
+    $ cd cacaoloop-scexaovispyr-rootdir
+    $ cacao-task-manager -X 3 cacaoloop-scexaovispyr
+    $ cp cacaoloop-scexaovispyr-conf/aorunscript .
     $ ./aorunscript
 
 THE END
