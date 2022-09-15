@@ -13,11 +13,11 @@ export CACAO_DMxsize="12"
 export CACAO_DMysize="12"
 
 export CACAO_LOOPWORKDIR="cacaoloop01"
-#export CACAO_DMINDEX="01"
+export CACAO_DMINDEX="01"
 export CACAO_LOOPNUMBER="2"
 
 # input WFS stream
-#export CACAO_WFSSTREAM="aol2_linsimWFS"
+export CACAO_WFSSTREAM="aol2_linsimWFS"
 
 #export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
