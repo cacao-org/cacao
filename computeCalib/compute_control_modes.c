@@ -261,14 +261,15 @@ static errno_t customCONFsetup()
 {
     if (data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_fname_zrespM].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED;
+        // not required
+        //data.fpsptr->parray[fpi_fname_zrespM].fpflag |=
+        //    FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_fname_WFSmask].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED;
+        //data.fpsptr->parray[fpi_fname_WFSmask].fpflag |=
+        //    FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_FPS_loRMacqu].fpflag &=
-            ~FPFLAG_FPS_RUN_REQUIRED;
+        //data.fpsptr->parray[fpi_FPS_loRMacqu].fpflag &=
+        //    ~FPFLAG_FPS_RUN_REQUIRED;
 
 //        data.fpsptr->parray[fpi_FPS_zRMacqu].fpflag &=
 //            ~FPFLAG_FPS_RUN_REQUIRED;
