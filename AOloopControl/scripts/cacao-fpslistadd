@@ -114,7 +114,7 @@ if [ "${CACAO_FPSPROC_DMCH2DISP}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.zpoffset.DMcomboutzpo aol${CACAO_LOOPNUMBER}_dmzpo"
     fi
 else
-    echolog "CACAO_FPSPROC_DMCOMB = OFF"
+    echolog "CACAO_FPSPROC_DMCH2DISP = OFF"
 fi
 
 
