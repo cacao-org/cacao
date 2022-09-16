@@ -571,7 +571,8 @@ static errno_t compute_function()
                 char ffnameC[STRINGMAXLEN_FULLFILENAME];
                 WRITE_FULLFILENAME(ffnameC,
                                    "mlat-testC-%04d.fits", iter);
-                save_fits("_testwfsc", ffnameC);
+                fps_write_RUNoutput_image(data.fpsptr, "_testwfsc", ffnameC);
+//                save_fits("_testwfsc", ffnameC);
             }
 
             // Computing difference between consecutive images
