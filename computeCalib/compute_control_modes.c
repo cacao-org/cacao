@@ -261,7 +261,8 @@ static errno_t customCONFsetup()
 {
     if (data.fpsptr != NULL)
     {
-        // not required
+        // FPS are not required
+
         data.fpsptr->parray[fpi_fname_zrespM].fpflag &=
             ~FPFLAG_STREAM_RUN_REQUIRED;
 
@@ -497,12 +498,14 @@ static errno_t compute_function()
     int BlockNB  = -1;
 
     // full set of DM actuators to be controlled
+    //
     load_fits(fname_DMmaskCTRL, "DMmaskCTRL", LOADFITS_ERRMODE_ERROR, NULL);
     IMGID imgDMmaskCTRL = mkIMGID_from_name("DMmaskCTRL");
     resolveIMGID(&imgDMmaskCTRL, ERRMODE_ABORT);
 
-    // DM actuators to be extrapolated (part of DMmaskCTRL)
-    // this is a subset of dmmaskRM
+    // DM actuators to be extrapolated from neighbors
+    // this is a subset of DMmaskCTRL
+    //
     load_fits(fname_DMmaskEXTR, "DMmaskEXTR", LOADFITS_ERRMODE_ERROR, NULL);
     IMGID imgDMmaskEXTR = mkIMGID_from_name("DMmaskEXTR");
     resolveIMGID(&imgDMmaskEXTR, ERRMODE_ABORT);
@@ -510,7 +513,8 @@ static errno_t compute_function()
 
 
     // CREATE ZERNIKE+FOURIER DM MODES BASIS
-    // output : imgDMmodesZF
+    // Zernike modes are centered on (alignCX, alignCY)
+    // output : imgDMmodesZF ("DMmodesZFm")
     //
     IMGID imgDMmodesZF = mkIMGID_from_name("DMmodesZFm");
     mk_ZernikeFourier_modal_basis(*DMxsize,
@@ -523,13 +527,13 @@ static errno_t compute_function()
                                   *alignOD,
                                   &imgDMmodesZF);
 
+    // Adjust mode amplitude to have RMS=1 over DMmaskCTRL
+    // in-place computation
+    //
     modes_mask_normalize(imgDMmodesZF, imgDMmaskCTRL);
 
     // save to disk
-    fps_write_RUNoutput_image(data.fpsptr, "ZFm", "ZFmodes");
-
-
-
+    fps_write_RUNoutput_image(data.fpsptr, "DMmodesZFm", "DMmodesZFm");
 
 
     // EXTRAPOLATE DM MODES

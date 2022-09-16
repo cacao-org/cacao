@@ -817,7 +817,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  ".FPS_zRMacqu",
                                  "FPS zonal RM acquisition",
                                  FPTYPE_FPSNAME,
-                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                                 FPFLAG_DEFAULT_INPUT, // | FPFLAG_FPS_RUN_REQUIRED,
                                  pNull,
                                  &fpi_FPS_zRMacqu);
     FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
@@ -828,7 +828,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  ".FPS_loRMacqu",
                                  "FPS low order modal RM acquisition",
                                  FPTYPE_FPSNAME,
-                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                                 FPFLAG_DEFAULT_INPUT, // | FPFLAG_FPS_RUN_REQUIRED,
                                  pNull,
                                  &fpi_FPS_loRMacqu);
     FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
@@ -839,7 +839,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  ".FPS_DMcomb",
                                  "FPS DMcomb",
                                  FPTYPE_FPSNAME,
-                                 FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
+                                 FPFLAG_DEFAULT_INPUT, // | FPFLAG_FPS_RUN_REQUIRED,
                                  pNull,
                                  &fpi_FPS_DMcomb);
     FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
