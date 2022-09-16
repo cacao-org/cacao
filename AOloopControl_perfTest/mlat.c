@@ -13,6 +13,8 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
+#include "COREMOD_iofits/COREMOD_iofits.h"
+
 #include "COREMOD_tools/COREMOD_tools.h" // quicksort
 #include "statistic/statistic.h"         // ran1()
 
@@ -53,90 +55,104 @@ long          fpi_framerateHz;
 static float *latencyfr;
 long          fpi_latencyfr;
 
-static CLICMDARGDEF farg[] = {{CLIARG_STREAM,
-                               ".dmstream",
-                               "DM stream",
-                               "null",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &dmstream,
-                               &fpi_dmstream},
-                              {CLIARG_STREAM,
-                               ".wfsstream",
-                               "WFS stream",
-                               "null",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &wfsstream,
-                               &fpi_wfsstream},
-                              {CLIARG_FLOAT32,
-                               ".OPDamp",
-                               "poke amplitude [um]",
-                               "0.1",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &OPDamp,
-                               &fpi_OPDamp},
-                              {CLIARG_FLOAT32,
-                               ".frameratewait",
-                               "time period for frame rate measurement",
-                               "5",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &frameratewait,
-                               &fpi_frameratewait},
-                              {CLIARG_UINT32,
-                               ".NBiter",
-                               "Number of iteration",
-                               "100",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &NBiter,
-                               &fpi_NBiter},
-                              {CLIARG_UINT32,
-                               ".wfsNBframemax",
-                               "Number frames in measurement sequence",
-                               "50",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &wfsNBframemax,
-                               &fpi_wfsNBframemax},
-                              {CLIARG_FLOAT32,
-                               ".status.wfsdt",
-                               "WFS frame interval",
-                               "0",
-                               CLIARG_OUTPUT_DEFAULT,
-                               (void **) &wfsdt,
-                               &fpi_wfsdt},
-                              {CLIARG_FLOAT32,
-                               ".status.twaitus",
-                               "initial wait [us]",
-                               "0",
-                               CLIARG_OUTPUT_DEFAULT,
-                               (void **) &twaitus,
-                               &fpi_twaitus},
-                              {CLIARG_FLOAT32,
-                               ".status.refdtoffset",
-                               "baseline time offset to poke",
-                               "0",
-                               CLIARG_OUTPUT_DEFAULT,
-                               (void **) &refdtoffset,
-                               &fpi_refdtoffset},
-                              {CLIARG_FLOAT32,
-                               ".status.dtoffset",
-                               "actual time offset to poke",
-                               "0",
-                               CLIARG_OUTPUT_DEFAULT,
-                               (void **) &dtoffset,
-                               &fpi_dtoffset},
-                              {CLIARG_FLOAT32,
-                               ".out.framerateHz",
-                               "WFS frame rate [Hz]",
-                               "0",
-                               CLIARG_OUTPUT_DEFAULT,
-                               (void **) &framerateHz,
-                               &fpi_framerateHz},
-                              {CLIARG_FLOAT32,
-                               ".out.latencyfr",
-                               "hardware latency [frame]",
-                               "0",
-                               CLIARG_OUTPUT_DEFAULT,
-                               (void **) &latencyfr,
-                               &fpi_latencyfr}};
+static CLICMDARGDEF farg[] = {{
+        CLIARG_STREAM,
+        ".dmstream",
+        "DM stream",
+        "null",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &dmstream,
+        &fpi_dmstream
+    },
+    {   CLIARG_STREAM,
+        ".wfsstream",
+        "WFS stream",
+        "null",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &wfsstream,
+        &fpi_wfsstream
+    },
+    {   CLIARG_FLOAT32,
+        ".OPDamp",
+        "poke amplitude [um]",
+        "0.1",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &OPDamp,
+        &fpi_OPDamp
+    },
+    {   CLIARG_FLOAT32,
+        ".frameratewait",
+        "time period for frame rate measurement",
+        "5",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &frameratewait,
+        &fpi_frameratewait
+    },
+    {   CLIARG_UINT32,
+        ".NBiter",
+        "Number of iteration",
+        "100",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &NBiter,
+        &fpi_NBiter
+    },
+    {   CLIARG_UINT32,
+        ".wfsNBframemax",
+        "Number frames in measurement sequence",
+        "50",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &wfsNBframemax,
+        &fpi_wfsNBframemax
+    },
+    {   CLIARG_FLOAT32,
+        ".status.wfsdt",
+        "WFS frame interval",
+        "0",
+        CLIARG_OUTPUT_DEFAULT,
+        (void **) &wfsdt,
+        &fpi_wfsdt
+    },
+    {   CLIARG_FLOAT32,
+        ".status.twaitus",
+        "initial wait [us]",
+        "0",
+        CLIARG_OUTPUT_DEFAULT,
+        (void **) &twaitus,
+        &fpi_twaitus
+    },
+    {   CLIARG_FLOAT32,
+        ".status.refdtoffset",
+        "baseline time offset to poke",
+        "0",
+        CLIARG_OUTPUT_DEFAULT,
+        (void **) &refdtoffset,
+        &fpi_refdtoffset
+    },
+    {   CLIARG_FLOAT32,
+        ".status.dtoffset",
+        "actual time offset to poke",
+        "0",
+        CLIARG_OUTPUT_DEFAULT,
+        (void **) &dtoffset,
+        &fpi_dtoffset
+    },
+    {   CLIARG_FLOAT32,
+        ".out.framerateHz",
+        "WFS frame rate [Hz]",
+        "0",
+        CLIARG_OUTPUT_DEFAULT,
+        (void **) &framerateHz,
+        &fpi_framerateHz
+    },
+    {   CLIARG_FLOAT32,
+        ".out.latencyfr",
+        "hardware latency [frame]",
+        "0",
+        CLIARG_OUTPUT_DEFAULT,
+        (void **) &latencyfr,
+        &fpi_latencyfr
+    }
+};
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -167,7 +183,8 @@ static errno_t customCONFcheck()
 }
 
 static CLICMDDATA CLIcmddata = {
-    "mlat", "measure latency between DM and WFS", CLICMD_FIELDS_DEFAULTS};
+    "mlat", "measure latency between DM and WFS", CLICMD_FIELDS_DEFAULTS
+};
 
 // detailed help
 static errno_t help_function()
@@ -478,12 +495,12 @@ static errno_t compute_function()
                 fflush(stdout);
 
                 /*
-              if(CIRCBUFFER == 1) //TODO
-              {
+                if(CIRCBUFFER == 1) //TODO
+                {
                   wfsslice = imgwfs.md->cnt1;
-              }
-              else
-              {*/
+                }
+                else
+                {*/
                 wfsslice = 0;
                 //}
 
@@ -509,7 +526,7 @@ static errno_t compute_function()
 
                 // apply DM pattern #1
                 if ((dmstate == 0) && (dt > *refdtoffset) &&
-                    (wfsframe > wfsframeoffset))
+                        (wfsframe > wfsframeoffset))
                 {
                     //                    usleep((long)(ran1() * 1000000.0 *
                     //                    *wfsdt));
@@ -547,6 +564,15 @@ static errno_t compute_function()
 
             copy_image_ID("_testdm0", dmstream, 1);
             dmstate = 0;
+
+
+            // _testwfsc
+            {
+                char ffnameC[STRINGMAXLEN_FULLFILENAME];
+                WRITE_FULLFILENAME(ffnameC,
+                                   "mlat-testC-%04d.fits", iter);
+                save_fits("_testwfsc", ffnameC);
+            }
 
             // Computing difference between consecutive images
             NBwfsframe = wfsframe;
@@ -629,8 +655,8 @@ static errno_t compute_function()
                         "%ld   %10.2f     %g\n",
                         wfsframe - kkoffset,
                         1.0e6 *
-                            (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) -
-                             *dtoffset),
+                        (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) -
+                         *dtoffset),
                         valarray[wfsframe]);
             }
 
@@ -754,9 +780,9 @@ static errno_t compute_function()
 
 INSERT_STD_FPSCLIfunctions
 
-    // Register function in CLI
-    errno_t
-    CLIADDCMD_AOloopControl_perfTest__mlat()
+// Register function in CLI
+errno_t
+CLIADDCMD_AOloopControl_perfTest__mlat()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
