@@ -55,6 +55,10 @@ long          fpi_framerateHz;
 static float *latencyfr;
 long          fpi_latencyfr;
 
+static int64_t *saveraw;
+long            fpi_saveraw;
+
+
 static CLICMDARGDEF farg[] = {{
         CLIARG_STREAM,
         ".dmstream",
@@ -151,8 +155,18 @@ static CLICMDARGDEF farg[] = {{
         CLIARG_OUTPUT_DEFAULT,
         (void **) &latencyfr,
         &fpi_latencyfr
-    }
+    },
+    {   CLIARG_ONOFF,
+        ".option.saveraw",
+        "Save raw image cubes",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &saveraw,
+        &fpi_saveraw
+    },
 };
+
+
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -165,6 +179,8 @@ static errno_t customCONFsetup()
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
         data.fpsptr->parray[fpi_wfsstream].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+
+        data.fpsptr->parray[fpi_saveraw].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -566,6 +582,7 @@ static errno_t compute_function()
             dmstate = 0;
 
 
+            if (data.fpsptr->parray[fpi_saveraw].fpflag & FPFLAG_ONOFF)
             {
                 // Save each datacube
                 //
