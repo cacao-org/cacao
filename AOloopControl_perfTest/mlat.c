@@ -259,7 +259,7 @@ static errno_t compute_function()
                 float y = (2.0 * jj - 1.0 * dmxsize) / dmysize;
                 data.image[IDdm0].array.F[jj * dmxsize + ii] = 0.0;
                 data.image[IDdm1].array.F[jj * dmxsize + ii] =
-                    (*OPDamp) * (sin(8.0 * x) * sin(8.0 * y));
+                    (*OPDamp) * (sin(20.0 * x) * sin(20.0 * y));
                 RMStot += data.image[IDdm1].array.F[jj * dmxsize + ii] *
                           data.image[IDdm1].array.F[jj * dmxsize + ii];
             }
@@ -566,13 +566,13 @@ static errno_t compute_function()
             dmstate = 0;
 
 
-            // _testwfsc
             {
+                // Save each datacube
+                //
                 char ffnameC[STRINGMAXLEN_FULLFILENAME];
                 WRITE_FULLFILENAME(ffnameC,
                                    "mlat-testC-%04d.fits", iter);
                 fps_write_RUNoutput_image(data.fpsptr, "_testwfsc", ffnameC);
-//                save_fits("_testwfsc", ffnameC);
             }
 
             // Computing difference between consecutive images
@@ -589,13 +589,13 @@ static errno_t compute_function()
             double valmaxdt = 0.0;
 
 // Define a macro for the type switching that follows
-#define IMAGE_SUMMING_CASE(IMG_PTR_ID, SCALAR_OUT_TYPE)                        \
+#define IMAGE_SUMMING_CASE(IMG_PTR_ID)                        \
     {                                                                          \
         for (uint64_t ii = 0; ii < wfssize; ii++)                              \
         {                                                                      \
-            SCALAR_OUT_TYPE tmp =                                              \
-                data.image[IDwfsc].array.IMG_PTR_ID[kk * wfssize + ii] -       \
-                data.image[IDwfsc].array.IMG_PTR_ID[(kk - 1) * wfssize + ii];  \
+            double tmp =                                                       \
+                1.0*data.image[IDwfsc].array.IMG_PTR_ID[kk * wfssize + ii] -       \
+                1.0*data.image[IDwfsc].array.IMG_PTR_ID[(kk - 1) * wfssize + ii];  \
             valarray[kk] += 1.0 * tmp * tmp;                                   \
         }                                                                      \
     }
@@ -607,28 +607,28 @@ static errno_t compute_function()
                 switch (imgwfs.datatype)
                 {
                 case _DATATYPE_FLOAT:
-                    IMAGE_SUMMING_CASE(F, float);
+                    IMAGE_SUMMING_CASE(F);
                     break;
                 case _DATATYPE_DOUBLE:
-                    IMAGE_SUMMING_CASE(D, double);
+                    IMAGE_SUMMING_CASE(D);
                     break;
                 case _DATATYPE_UINT16:
-                    IMAGE_SUMMING_CASE(UI16, int);
+                    IMAGE_SUMMING_CASE(UI16);
                     break;
                 case _DATATYPE_INT16:
-                    IMAGE_SUMMING_CASE(SI16, int);
+                    IMAGE_SUMMING_CASE(SI16);
                     break;
                 case _DATATYPE_UINT32:
-                    IMAGE_SUMMING_CASE(UI32, long);
+                    IMAGE_SUMMING_CASE(UI32);
                     break;
                 case _DATATYPE_INT32:
-                    IMAGE_SUMMING_CASE(SI32, long);
+                    IMAGE_SUMMING_CASE(SI32);
                     break;
                 case _DATATYPE_UINT64:
-                    IMAGE_SUMMING_CASE(UI64, long);
+                    IMAGE_SUMMING_CASE(UI64);
                     break;
                 case _DATATYPE_INT64:
-                    IMAGE_SUMMING_CASE(SI64, long);
+                    IMAGE_SUMMING_CASE(SI64);
                     break;
                 case _DATATYPE_COMPLEX_FLOAT:
                 case _DATATYPE_COMPLEX_DOUBLE:
