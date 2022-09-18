@@ -202,11 +202,18 @@ static CLICMDDATA CLIcmddata = {
     "mlat", "measure latency between DM and WFS", CLICMD_FIELDS_DEFAULTS
 };
 
+
+
 // detailed help
 static errno_t help_function()
 {
+    printf("Measure latency between two streams\n");
+
     return RETURN_SUCCESS;
 }
+
+
+
 
 static errno_t compute_function()
 {
