@@ -460,6 +460,11 @@ static errno_t customCONFcheck()
 // detailed help
 static errno_t help_function()
 {
+    printf(
+        "Compute AO control modes\n"
+        "Corresponding pairs of DM and WFS modes are computed\n"
+    );
+
     return RETURN_SUCCESS;
 }
 
