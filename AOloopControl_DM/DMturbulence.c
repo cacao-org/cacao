@@ -35,34 +35,43 @@ static long      fpi_NBsamples;
 
 
 
-static CLICMDARGDEF farg[] = {{CLIARG_STREAM,
-                               ".dmstream",
-                               "output DM turbulence stream",
-                               "null",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &dmstream,
-                               &fpi_dmstream},
-                              {CLIARG_FILENAME,
-                               ".turbfname",
-                               "turbulence file cube",
-                               "null",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &turbfname,
-                               &fpi_turbfname},
-                              {CLIARG_FLOAT32,
-                               ".wspeed",
-                               "wind speed [m/s]",
-                               "10.0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &turbwspeed,
-                               &fpi_turbwspeed},
-                              {CLIARG_UINT32,
-                               ".NBsamples",
-                               "number of samples in cube",
-                               "10000",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &NBsamples,
-                               &fpi_NBsamples}};
+static CLICMDARGDEF farg[] = {{
+        CLIARG_STREAM,
+        ".dmstream",
+        "output DM turbulence stream",
+        "null",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &dmstream,
+        &fpi_dmstream
+    },
+    {
+        CLIARG_FILENAME,
+        ".turbfname",
+        "turbulence file cube",
+        "null",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &turbfname,
+        &fpi_turbfname
+    },
+    {
+        CLIARG_FLOAT32,
+        ".wspeed",
+        "wind speed [m/s]",
+        "10.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &turbwspeed,
+        &fpi_turbwspeed
+    },
+    {
+        CLIARG_UINT32,
+        ".NBsamples",
+        "number of samples in cube",
+        "10000",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &NBsamples,
+        &fpi_NBsamples
+    }
+};
 
 
 
@@ -71,7 +80,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_STREAM,
 //
 static errno_t customCONFsetup()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
         data.fpsptr->parray[fpi_dmstream].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
@@ -86,7 +95,7 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
     }
 
@@ -96,8 +105,10 @@ static errno_t customCONFcheck()
 
 
 
-static CLICMDDATA CLIcmddata = {
-    "dmturb", "DM turbulence", CLICMD_FIELDS_DEFAULTS};
+static CLICMDDATA CLIcmddata =
+{
+    "dmturb", "DM turbulence", CLICMD_FIELDS_DEFAULTS
+};
 
 
 
@@ -115,10 +126,10 @@ static errno_t help_function()
 // von Karman spectrum
 //
 static errno_t make_master_turbulence_screen(const char *ID_name1,
-                                             const char *ID_name2,
-                                             long        size,
-                                             float       outerscale,
-                                             float       innerscale)
+        const char *ID_name2,
+        long        size,
+        float       outerscale,
+        float       innerscale)
 {
     imageID ID;
     float   value, C1, C2;
@@ -140,10 +151,10 @@ static errno_t make_master_turbulence_screen(const char *ID_name1,
         outerscale = data.variable[IDv].value.f;
         printf("Outer scale = %f pix\n", outerscale);
       }
-   */
+    */
 
     IDv = variable_ID("RLIM");
-    if (IDv != -1)
+    if(IDv != -1)
     {
         RLIMMODE = 1;
         rlim     = data.variable[IDv].value.f;
@@ -158,16 +169,16 @@ static errno_t make_master_turbulence_screen(const char *ID_name1,
     delete_image_ID("tmppha", DELETE_IMAGE_ERRMODE_WARNING);
     //  make_dist("tmpd",size,size,size/2,size/2);
     create_2Dimage_ID("tmpd", size, size, &ID);
-    for (uint32_t ii = 0; ii < size; ii++)
-        for (uint32_t jj = 0; jj < size; jj++)
+    for(uint32_t ii = 0; ii < size; ii++)
+        for(uint32_t jj = 0; jj < size; jj++)
         {
             dx = 1.0 * ii - size / 2;
             dy = 1.0 * jj - size / 2;
 
-            if (RLIMMODE == 1)
+            if(RLIMMODE == 1)
             {
                 r = sqrt(dx * dx + dy * dy);
-                if (r < rlim)
+                if(r < rlim)
                 {
                     data.image[ID].array.F[jj * size + ii] = 0.0;
                 }
@@ -191,8 +202,8 @@ static errno_t make_master_turbulence_screen(const char *ID_name1,
 
     make_rnd("tmpg", size, size, "-gauss");
     ID = image_ID("tmpg");
-    for (uint32_t ii = 0; ii < size; ii++)
-        for (uint32_t jj = 0; jj < size; jj++)
+    for(uint32_t ii = 0; ii < size; ii++)
+        for(uint32_t jj = 0; jj < size; jj++)
         {
             dx      = 1.0 * ii - size / 2;
             dy      = 1.0 * jj - size / 2;
@@ -221,8 +232,8 @@ static errno_t make_master_turbulence_screen(const char *ID_name1,
     ID    = image_ID("strf");
     value = 0.0;
     cnt   = 0;
-    for (uint32_t ii = 1; ii < Dlim; ii++)
-        for (uint32_t jj = 1; jj < Dlim; jj++)
+    for(uint32_t ii = 1; ii < Dlim; ii++)
+        for(uint32_t jj = 1; jj < Dlim; jj++)
         {
             value += log10(data.image[ID].array.F[jj * size + ii]) -
                      5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
@@ -236,8 +247,8 @@ static errno_t make_master_turbulence_screen(const char *ID_name1,
     ID    = image_ID("strf");
     value = 0.0;
     cnt   = 0;
-    for (uint32_t ii = 1; ii < Dlim; ii++)
-        for (uint32_t jj = 1; jj < Dlim; jj++)
+    for(uint32_t ii = 1; ii < Dlim; ii++)
+        for(uint32_t jj = 1; jj < Dlim; jj++)
         {
             value += log10(data.image[ID].array.F[jj * size + ii]) -
                      5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
@@ -279,17 +290,17 @@ long make_DMturbcube(char    *IDoutname,
     load_fits("turbscreen2.fits", "screen2", 1, &IDs2);
     list_image_ID();
 
-    if (IDs1 == -1)
+    if(IDs1 == -1)
     {
         make_master_turbulence_screen("screen1", "screen2", imsize, 200.0, 1.0);
         IDs1          = image_ID("screen1");
         imageID IDk   = make_gauss("kernim", imsize, imsize, 20.0, 1.0);
         double  totim = 0.0;
-        for (uint64_t ii = 0; ii < imsize * imsize; ii++)
+        for(uint64_t ii = 0; ii < imsize * imsize; ii++)
         {
             totim += data.image[IDk].array.F[ii];
         }
-        for (uint64_t ii = 0; ii < imsize * imsize; ii++)
+        for(uint64_t ii = 0; ii < imsize * imsize; ii++)
         {
             data.image[IDk].array.F[ii] /= totim;
         }
@@ -344,8 +355,8 @@ static errno_t compute_function()
 
 INSERT_STD_FPSCLIfunctions
 
-    errno_t
-    CLIADDCMD_AOloopControl_DM__atmturbulence()
+errno_t
+CLIADDCMD_AOloopControl_DM__atmturbulence()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;

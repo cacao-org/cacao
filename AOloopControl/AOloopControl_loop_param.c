@@ -28,7 +28,7 @@ extern AOloopControl_var aoloopcontrol_var;
 
 errno_t AOloopControl_setgain(float gain)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -41,7 +41,7 @@ errno_t AOloopControl_setgain(float gain)
 
 errno_t AOloopControl_setARPFgain(float gain)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -54,7 +54,7 @@ errno_t AOloopControl_setARPFgain(float gain)
 
 errno_t AOloopControl_setARPFgainAutoMin(float val)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -67,7 +67,7 @@ errno_t AOloopControl_setARPFgainAutoMin(float val)
 
 errno_t AOloopControl_setARPFgainAutoMax(float val)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -80,7 +80,7 @@ errno_t AOloopControl_setARPFgainAutoMax(float val)
 
 errno_t AOloopControl_setWFSnormfloor(float WFSnormfloor)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -97,7 +97,7 @@ errno_t AOloopControl_setWFSnormfloor(float WFSnormfloor)
 
 errno_t AOloopControl_setmaxlimit(float maxlimit)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -110,7 +110,7 @@ errno_t AOloopControl_setmaxlimit(float maxlimit)
 
 errno_t AOloopControl_setmult(float multcoeff)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -133,20 +133,20 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
     fflush(stdout);
 
     /*if(AOconf[loop].CMMODE==0)
-  {
-      printf("Command has no effect: modeblock gain not compatible with CMMODE =
-  0\n"); fflush(stdout);
-  }
-  else*/
-
-    if (AOconf[loop].AOpmodecoeffs.DMmodesNBblock < 2)
     {
-        if (sprintf(name2, "aol%ld_contrMc00", loop) < 1)
+      printf("Command has no effect: modeblock gain not compatible with CMMODE =
+    0\n"); fflush(stdout);
+    }
+    else*/
+
+    if(AOconf[loop].AOpmodecoeffs.DMmodesNBblock < 2)
+    {
+        if(sprintf(name2, "aol%ld_contrMc00", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
-        if (sprintf(name3, "aol%ld_contrMcact00_00", loop) < 1)
+        if(sprintf(name3, "aol%ld_contrMcact00_00", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -158,8 +158,8 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
         memcpy(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F,
                data.image[ID].array.F,
                sizeof(float) * AOconf[loop].WFSim.sizexWFS *
-                   AOconf[loop].WFSim.sizeyWFS * AOconf[loop].DMctrl.sizexDM *
-                   AOconf[loop].DMctrl.sizeyDM);
+               AOconf[loop].WFSim.sizeyWFS * AOconf[loop].DMctrl.sizexDM *
+               AOconf[loop].DMctrl.sizeyDM);
         data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt0++;
         data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 =
             AOconf[loop].aorun.LOOPiteration;
@@ -172,7 +172,7 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
         memcpy(data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F,
                data.image[ID].array.F,
                sizeof(float) * AOconf[loop].WFSim.activeWFScnt *
-                   AOconf[loop].DMctrl.activeDMcnt);
+               AOconf[loop].DMctrl.activeDMcnt);
         data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt0++;
         data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt1 =
             AOconf[loop].aorun.LOOPiteration;
@@ -184,42 +184,42 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
         char     name[200];
         long     NBmodes = 0;
 
-        for (kk = 0; kk < AOconf[loop].AOpmodecoeffs.DMmodesNBblock; kk++)
+        for(kk = 0; kk < AOconf[loop].AOpmodecoeffs.DMmodesNBblock; kk++)
         {
             NBmodes += AOconf[loop].AOpmodecoeffs.NBmodes_block[kk];
         }
 
-        if (sprintf(name, "aol%ld_gainb", loop) < 1)
+        if(sprintf(name, "aol%ld_gainb", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_gainb = image_ID(name);
-        if ((blocknb < (long) AOconf[loop].AOpmodecoeffs.DMmodesNBblock) &&
-            (blocknb > -1))
+        if((blocknb < (long) AOconf[loop].AOpmodecoeffs.DMmodesNBblock) &&
+                (blocknb > -1))
         {
             data.image[aoloopcontrol_var.aoconfID_gainb].array.F[blocknb] =
                 gain;
         }
 
-        if (add == 1)
+        if(add == 1)
         {
             long IDcontrMc0;    // local storage
             long IDcontrMcact0; // local storage
 
             IDcontrMc0 = image_ID("contrMc0");
-            if (IDcontrMc0 == -1)
+            if(IDcontrMc0 == -1)
             {
                 create_3Dimage_ID("contrMc0",
                                   AOconf[loop].WFSim.sizexWFS,
                                   AOconf[loop].WFSim.sizeyWFS,
                                   AOconf[loop].DMctrl.sizexDM *
-                                      AOconf[loop].DMctrl.sizeyDM,
+                                  AOconf[loop].DMctrl.sizeyDM,
                                   &IDcontrMc0);
             }
 
             IDcontrMcact0 = image_ID("contrMcact0");
-            if (IDcontrMcact0 == -1)
+            if(IDcontrMcact0 == -1)
             {
                 create_2Dimage_ID("contrMcact0",
                                   AOconf[loop].WFSim.activeWFScnt,
@@ -231,16 +231,16 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
             arith_image_zero("contrMc0");
             arith_image_zero("contrMcact0");
 
-            for (kk = 0; kk < AOconf[loop].AOpmodecoeffs.DMmodesNBblock; kk++)
+            for(kk = 0; kk < AOconf[loop].AOpmodecoeffs.DMmodesNBblock; kk++)
             {
                 double eps = 1e-6;
 
-                if (sprintf(name2, "aol%ld_contrMc%02u", loop, kk) < 1)
+                if(sprintf(name2, "aol%ld_contrMc%02u", loop, kk) < 1)
                 {
                     PRINT_ERROR("sprintf wrote <1 char");
                 }
 
-                if (sprintf(name3, "aol%ld_contrMcact%02u_00", loop, kk) < 1)
+                if(sprintf(name3, "aol%ld_contrMcact%02u_00", loop, kk) < 1)
                 {
                     PRINT_ERROR("sprintf wrote <1 char");
                 }
@@ -256,38 +256,38 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
                 // data.image[ID].md[0].size[2],
                 // aoloopcontrol_var.aoconfID_gainb); 	fflush(stdout); // TEST
 
-                if (data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk] >
-                    eps)
+                if(data.image[aoloopcontrol_var.aoconfID_gainb].array.F[kk] >
+                        eps)
                 {
                     uint64_t ii;
 
                     ID = image_ID(name2);
 #ifdef _OPENMP
-#pragma omp parallel for
+                    #pragma omp parallel for
 #endif
-                    for (ii = 0; ii < AOconf[loop].WFSim.sizexWFS *
-                                          AOconf[loop].WFSim.sizeyWFS *
-                                          AOconf[loop].DMctrl.sizexDM *
-                                          AOconf[loop].DMctrl.sizeyDM;
-                         ii++)
+                    for(ii = 0; ii < AOconf[loop].WFSim.sizexWFS *
+                            AOconf[loop].WFSim.sizeyWFS *
+                            AOconf[loop].DMctrl.sizexDM *
+                            AOconf[loop].DMctrl.sizeyDM;
+                            ii++)
                     {
                         data.image[IDcontrMc0].array.F[ii] +=
                             data.image[aoloopcontrol_var.aoconfID_gainb]
-                                .array.F[kk] *
+                            .array.F[kk] *
                             data.image[ID].array.F[ii];
                     }
 
                     ID = image_ID(name3);
 #ifdef _OPENMP
-#pragma omp parallel for
+                    #pragma omp parallel for
 #endif
-                    for (ii = 0; ii < AOconf[loop].WFSim.activeWFScnt *
-                                          AOconf[loop].DMctrl.activeDMcnt;
-                         ii++)
+                    for(ii = 0; ii < AOconf[loop].WFSim.activeWFScnt *
+                            AOconf[loop].DMctrl.activeDMcnt;
+                            ii++)
                     {
                         data.image[IDcontrMcact0].array.F[ii] +=
                             data.image[aoloopcontrol_var.aoconfID_gainb]
-                                .array.F[kk] *
+                            .array.F[kk] *
                             data.image[ID].array.F[ii];
                     }
                 }
@@ -299,9 +299,9 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
             memcpy(data.image[aoloopcontrol_var.aoconfID_contrMc].array.F,
                    data.image[IDcontrMc0].array.F,
                    sizeof(float) * AOconf[loop].WFSim.sizexWFS *
-                       AOconf[loop].WFSim.sizeyWFS *
-                       AOconf[loop].DMctrl.sizexDM *
-                       AOconf[loop].DMctrl.sizeyDM);
+                   AOconf[loop].WFSim.sizeyWFS *
+                   AOconf[loop].DMctrl.sizexDM *
+                   AOconf[loop].DMctrl.sizeyDM);
             data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt0++;
             data.image[aoloopcontrol_var.aoconfID_contrMc].md[0].cnt1 =
                 AOconf[loop].aorun.LOOPiteration;
@@ -314,7 +314,7 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
             memcpy(data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].array.F,
                    data.image[IDcontrMcact0].array.F,
                    sizeof(float) * AOconf[loop].WFSim.activeWFScnt *
-                       AOconf[loop].DMctrl.activeDMcnt);
+                   AOconf[loop].DMctrl.activeDMcnt);
             data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt0++;
             data.image[aoloopcontrol_var.aoconfID_contrMcact[0]].md[0].cnt1 =
                 AOconf[loop].aorun.LOOPiteration;
@@ -335,17 +335,17 @@ errno_t AOloopControl_scanGainBlock(
     float bestgain = 0.0;
     float bestval  = 10000000.0;
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
 
-    if (aoloopcontrol_var.aoconfID_cmd_modes == -1)
+    if(aoloopcontrol_var.aoconfID_cmd_modes == -1)
     {
         char name[200];
 
-        if (sprintf(name, "aol%ld_DMmode_cmd", aoloopcontrol_var.LOOPNUMBER) <
-            1)
+        if(sprintf(name, "aol%ld_DMmode_cmd", aoloopcontrol_var.LOOPNUMBER) <
+                1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -360,14 +360,14 @@ errno_t AOloopControl_scanGainBlock(
            gainEnd,
            NBgain);
 
-    for (kg = 0; kg < NBgain; kg++)
+    for(kg = 0; kg < NBgain; kg++)
     {
         float gain;
         float val;
 
-        for (uint32_t k = 0;
-             k < AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes;
-             k++)
+        for(uint32_t k = 0;
+                k < AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes;
+                k++)
         {
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
         }
@@ -376,12 +376,12 @@ errno_t AOloopControl_scanGainBlock(
         AOloopControl_setgainblock(NBblock, gain);
         AOloopControl_loopstep(aoloopcontrol_var.LOOPNUMBER, NBstep);
         val = sqrt(
-            AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul /
-            AOconf[aoloopcontrol_var.LOOPNUMBER]
-                .AOpmodecoeffs.RMSmodesCumulcnt);
+                  AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul /
+                  AOconf[aoloopcontrol_var.LOOPNUMBER]
+                  .AOpmodecoeffs.RMSmodesCumulcnt);
         printf("%2ld  %6.4f  %10.8lf\n", kg, gain, val);
 
-        if (val < bestval)
+        if(val < bestval)
         {
             bestval  = val;
             bestgain = gain;

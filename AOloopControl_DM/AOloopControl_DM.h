@@ -41,12 +41,12 @@ typedef struct
     float   DClevel;
 
     int TrigMode; // 0 (std) : any channel update triggers disp update, 1: use
-                  // specific channel and semaphore
+    // specific channel and semaphore
     int TrigChan; // if TrigMode = 1, use this channel for trigger
     int TrigSem;  // if TrigMode = 1, use this semaphore for trigger
 
     long nsecwait; // inner wait loop duration, interrupted if sem[1] of disp
-                   // posted
+    // posted
     struct timespec tstart;
     struct timespec tend;
     double          tdelay;
@@ -114,10 +114,10 @@ void __attribute__((constructor)) libinit_AOloopControl_DM();
 struct timespec time_diff(struct timespec start, struct timespec end);
 
 errno_t make_master_turbulence_screen_local(const char *ID_name1,
-                                            const char *ID_name2,
-                                            long        size,
-                                            float       outerscale,
-                                            float       innerscale);
+        const char *ID_name2,
+        long        size,
+        float       outerscale,
+        float       innerscale);
 
 /* ===============================================================================================
  */

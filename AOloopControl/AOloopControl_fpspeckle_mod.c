@@ -47,12 +47,14 @@ errno_t AOloopControl_OptimizePSF_LO(__attribute__((unused))
 
     char imname[200];
 
-    if (aoloopcontrol_var.aoconfID_looptiming == -1)
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
         // LOOPiteration is written in cnt1 of loop timing array
-        if (sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
-            1)
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
+                1)
+        {
             PRINT_ERROR("sprintf wrote <1 char");
+        }
         aoloopcontrol_var.aoconfID_looptiming =
             AOloopControl_IOtools_2Dloadcreate_shmim(
                 imname,
@@ -79,19 +81,21 @@ errno_t AOloopControl_OptimizePSF_LO(__attribute__((unused))
 
     NBmodes = data.image[IDmodes].md[0].size[2];
 
-    for (uint64_t ii = 0; ii < dmxsize * dmysize; ii++)
-        data.image[IDdmbest].array.F[ii] = data.image[IDdm].array.F[ii];
-
-    for (uint32_t mode = 0; mode < NBmodes; mode++)
+    for(uint64_t ii = 0; ii < dmxsize * dmysize; ii++)
     {
-        for (x = -ampl; x < 1.01 * ampl; x += ampl)
+        data.image[IDdmbest].array.F[ii] = data.image[IDdm].array.F[ii];
+    }
+
+    for(uint32_t mode = 0; mode < NBmodes; mode++)
+    {
+        for(x = -ampl; x < 1.01 * ampl; x += ampl)
         {
             // apply DM pattern
-            for (uint64_t ii = 0; ii < dmxsize * dmysize; ii++)
+            for(uint64_t ii = 0; ii < dmxsize * dmysize; ii++)
                 data.image[IDdm].array.F[ii] =
                     data.image[IDdmbest].array.F[ii] +
                     ampl * data.image[IDmodes]
-                               .array.F[dmxsize * dmysize * mode + ii];
+                    .array.F[dmxsize * dmysize * mode + ii];
 
             data.image[IDdmstream].md[0].write = 1;
             memcpy(data.image[IDdmstream].array.F,
@@ -154,12 +158,14 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
     long ii;
     int  semval;
 
-    if (aoloopcontrol_var.aoconfID_looptiming == -1)
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
         // LOOPiteration is written in cnt1 of loop timing array
-        if (sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
-            1)
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
+                1)
+        {
             PRINT_ERROR("sprintf wrote <1 char");
+        }
         aoloopcontrol_var.aoconfID_looptiming =
             AOloopControl_IOtools_2Dloadcreate_shmim(
                 imname,
@@ -190,22 +196,22 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
 
     coeffA[0] = 0.0;
     coeffB[0] = 0.0;
-    for (k = 1; k < NBprobes; k++)
+    for(k = 1; k < NBprobes; k++)
     {
         coeffA[k] = cos(2.0 * M_PI * (k - 1) / (NBprobes - 1));
         coeffB[k] = sin(2.0 * M_PI * (k - 1) / (NBprobes - 1));
     }
 
     // prepare MODdmC and WFSrefC
-    for (k = 0; k < NBprobes; k++)
+    for(k = 0; k < NBprobes; k++)
     {
-        for (act = 0; act < dmsize; act++)
+        for(act = 0; act < dmsize; act++)
             data.image[IDdmC].array.F[k * dmsize + act] =
                 coeffA[k] * data.image[IDprobeA].array.F[act] +
                 coeffB[k] * data.image[IDprobeB].array.F[act];
 
-        for (wfselem = 0; wfselem < wfssize; wfselem++)
-            for (act = 0; act < dmsize; act++)
+        for(wfselem = 0; wfselem < wfssize; wfselem++)
+            for(act = 0; act < dmsize; act++)
                 data.image[IDwfsrefC].array.F[k * wfssize + wfselem] +=
                     data.image[IDdmC].array.F[k * dmsize + act] *
                     data.image[IDrespmat].array.F[act * wfssize + wfselem];
@@ -216,17 +222,19 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
 
     t      = time(NULL);
     uttime = gmtime(&t);
-    if (sprintf(flogname,
-                "logfpwfs_%04d-%02d-%02d_%02d:%02d:%02d.txt",
-                1900 + uttime->tm_year,
-                1 + uttime->tm_mon,
-                uttime->tm_mday,
-                uttime->tm_hour,
-                uttime->tm_min,
-                uttime->tm_sec) < 1)
+    if(sprintf(flogname,
+               "logfpwfs_%04d-%02d-%02d_%02d:%02d:%02d.txt",
+               1900 + uttime->tm_year,
+               1 + uttime->tm_mon,
+               uttime->tm_mday,
+               uttime->tm_hour,
+               uttime->tm_min,
+               uttime->tm_sec) < 1)
+    {
         PRINT_ERROR("sprintf wrote <1 char");
+    }
 
-    if ((fp = fopen(flogname, "w")) == NULL)
+    if((fp = fopen(flogname, "w")) == NULL)
     {
         printf("ERROR: cannot create file \"%s\"\n", flogname);
         exit(0);
@@ -238,17 +246,17 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
 
     list_image_ID();
 
-    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+    if(sigaction(SIGINT, &data.sigact, NULL) == -1)
     {
         perror("sigaction");
         exit(EXIT_FAILURE);
     }
-    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+    if(sigaction(SIGTERM, &data.sigact, NULL) == -1)
     {
         perror("sigaction");
         exit(EXIT_FAILURE);
     }
-    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+    if(sigaction(SIGBUS, &data.sigact, NULL) == -1)
     {
         perror("sigaction");
         exit(EXIT_FAILURE);
@@ -257,17 +265,17 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
          perror("sigaction");
          exit(EXIT_FAILURE);
      }*/
-    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+    if(sigaction(SIGABRT, &data.sigact, NULL) == -1)
     {
         perror("sigaction");
         exit(EXIT_FAILURE);
     }
-    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+    if(sigaction(SIGHUP, &data.sigact, NULL) == -1)
     {
         perror("sigaction");
         exit(EXIT_FAILURE);
     }
-    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+    if(sigaction(SIGPIPE, &data.sigact, NULL) == -1)
     {
         perror("sigaction");
         exit(EXIT_FAILURE);
@@ -276,7 +284,7 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
     k      = 0;
     loopOK = 1;
 
-    while (loopOK == 1)
+    while(loopOK == 1)
     {
         printf("Applying probe # %d   %ld %ld\n",
                k,
@@ -291,8 +299,10 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
         data.image[IDdmstream].md[0].write = 1;
         memcpy(data.image[IDdmstream].array.F, (void *) ptr0, dmframesize);
         sem_getvalue(data.image[IDdmstream].semptr[0], &semval);
-        if (semval < SEMAPHORE_MAXVAL)
+        if(semval < SEMAPHORE_MAXVAL)
+        {
             sem_post(data.image[IDdmstream].semptr[0]);
+        }
         data.image[IDdmstream].md[0].cnt0++;
         data.image[IDdmstream].md[0].cnt1 =
             data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
@@ -304,8 +314,10 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
         data.image[IDwfsrefstream].md[0].write = 1;
         memcpy(data.image[IDwfsrefstream].array.F, (void *) ptr0, wfsframesize);
         sem_getvalue(data.image[IDwfsrefstream].semptr[0], &semval);
-        if (semval < SEMAPHORE_MAXVAL)
+        if(semval < SEMAPHORE_MAXVAL)
+        {
             sem_post(data.image[IDwfsrefstream].semptr[0]);
+        }
         data.image[IDwfsrefstream].md[0].cnt0++;
         data.image[IDwfsrefstream].md[0].cnt1 =
             data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
@@ -316,16 +328,18 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
         uttime = gmtime(&t);
         clock_gettime(CLOCK_REALTIME, thetime);
 
-        if (sprintf(timestr,
-                    "%02d %02d %02d.%09ld",
-                    uttime->tm_hour,
-                    uttime->tm_min,
-                    uttime->tm_sec,
-                    thetime->tv_nsec) < 1)
+        if(sprintf(timestr,
+                   "%02d %02d %02d.%09ld",
+                   uttime->tm_hour,
+                   uttime->tm_min,
+                   uttime->tm_sec,
+                   thetime->tv_nsec) < 1)
+        {
             PRINT_ERROR("sprintf wrote <1 char");
+        }
 
         printf("time = %s\n", timestr);
-        if ((fp = fopen(flogname, "a")) == NULL)
+        if((fp = fopen(flogname, "a")) == NULL)
         {
             printf("ERROR: cannot open file \"%s\"\n", flogname);
             exit(0);
@@ -333,35 +347,47 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
         fprintf(fp, "%s %2d %10f %10f\n", timestr, k, coeffA[k], coeffB[k]);
         fclose(fp);
 
-        usleep((long) (1.0e6 * delay));
+        usleep((long)(1.0e6 * delay));
         k++;
-        if (k == NBprobes)
+        if(k == NBprobes)
+        {
             k = 0;
+        }
 
-        if ((data.signal_INT == 1) || (data.signal_TERM == 1) ||
-            (data.signal_ABRT == 1) || (data.signal_BUS == 1) ||
-            (data.signal_SEGV == 1) || (data.signal_HUP == 1) ||
-            (data.signal_PIPE == 1))
+        if((data.signal_INT == 1) || (data.signal_TERM == 1) ||
+                (data.signal_ABRT == 1) || (data.signal_BUS == 1) ||
+                (data.signal_SEGV == 1) || (data.signal_HUP == 1) ||
+                (data.signal_PIPE == 1))
+        {
             loopOK = 0;
+        }
     }
 
     data.image[IDdmstream].md[0].write = 1;
-    for (ii = 0; ii < dmsize; ii++)
+    for(ii = 0; ii < dmsize; ii++)
+    {
         data.image[IDdmstream].array.F[ii] = 0.0;
+    }
     sem_getvalue(data.image[IDdmstream].semptr[0], &semval);
-    if (semval < SEMAPHORE_MAXVAL)
+    if(semval < SEMAPHORE_MAXVAL)
+    {
         sem_post(data.image[IDdmstream].semptr[0]);
+    }
     data.image[IDdmstream].md[0].cnt0++;
     data.image[IDdmstream].md[0].cnt1 =
         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
     data.image[IDdmstream].md[0].write = 0;
 
     data.image[IDwfsrefstream].md[0].write = 1;
-    for (ii = 0; ii < wfssize; ii++)
+    for(ii = 0; ii < wfssize; ii++)
+    {
         data.image[IDwfsrefstream].array.F[ii] = 0.0;
+    }
     sem_getvalue(data.image[IDwfsrefstream].semptr[0], &semval);
-    if (semval < SEMAPHORE_MAXVAL)
+    if(semval < SEMAPHORE_MAXVAL)
+    {
         sem_post(data.image[IDwfsrefstream].semptr[0]);
+    }
     data.image[IDwfsrefstream].md[0].cnt0++;
     data.image[IDwfsrefstream].md[0].cnt1 =
         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;

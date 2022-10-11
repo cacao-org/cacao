@@ -191,7 +191,7 @@ errno_t AOloopControl_IOtools_AveStream(const char *IDname,
     ysize = data.image[IDin].md[0].size[1];
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-    if (sizearray == NULL)
+    if(sizearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -231,15 +231,15 @@ errno_t AOloopControl_IOtools_AveStream(const char *IDname,
 
     free(sizearray);
 
-    for (;;)
+    for(;;)
     {
-        if (data.image[IDin].md[0].cnt0 != cnt0old)
+        if(data.image[IDin].md[0].cnt0 != cnt0old)
         {
             data.image[IDout_ave].md[0].write = 1;
             data.image[IDout_AC].md[0].write  = 1;
             data.image[IDout_RMS].md[0].write = 1;
             uint_fast64_t ii;
-            for (ii = 0; ii < xsize * ysize; ii++)
+            for(ii = 0; ii < xsize * ysize; ii++)
             {
                 data.image[IDout_ave].array.F[ii] =
                     (1.0 - alpha) * data.image[IDout_ave].array.F[ii] +
@@ -247,10 +247,10 @@ errno_t AOloopControl_IOtools_AveStream(const char *IDname,
                 data.image[IDout_RMS].array.F[ii] =
                     (1.0 - alpha) * data.image[IDout_RMS].array.F[ii] +
                     alpha *
-                        (data.image[IDin].array.F[ii] -
-                         data.image[IDout_ave].array.F[ii]) *
-                        (data.image[IDin].array.F[ii] -
-                         data.image[IDout_ave].array.F[ii]);
+                    (data.image[IDin].array.F[ii] -
+                     data.image[IDout_ave].array.F[ii]) *
+                    (data.image[IDin].array.F[ii] -
+                     data.image[IDout_ave].array.F[ii]);
                 data.image[IDout_AC].array.F[ii] =
                     data.image[IDin].array.F[ii] -
                     data.image[IDout_ave].array.F[ii];
@@ -299,11 +299,11 @@ errno_t AOloopControl_IOtools_AveStream(const char *IDname,
  */
 
 errno_t AOloopControl_IOtools_imAlignStream(const char *IDname,
-                                            int         xbox0,
-                                            int         ybox0,
-                                            const char *IDref_name,
-                                            const char *IDout_name,
-                                            int         insem)
+        int         xbox0,
+        int         ybox0,
+        const char *IDref_name,
+        const char *IDout_name,
+        int         insem)
 {
     imageID       IDin, IDref, IDtmp;
     uint32_t      xboxsize, yboxsize;
@@ -338,7 +338,7 @@ errno_t AOloopControl_IOtools_imAlignStream(const char *IDname,
     imageID   IDout;
     uint32_t *sizearray;
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-    if (sizearray == NULL)
+    if(sizearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -349,22 +349,22 @@ errno_t AOloopControl_IOtools_imAlignStream(const char *IDname,
     COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
     free(sizearray);
 
-    for (;;)
+    for(;;)
     {
-        if (IDdark != -1)
+        if(IDdark != -1)
         {
-            if (datatype == _DATATYPE_FLOAT)
+            if(datatype == _DATATYPE_FLOAT)
             {
                 long ii;
-                for (ii = 0; ii < xsize * ysize; ii++)
+                for(ii = 0; ii < xsize * ysize; ii++)
                     data.image[IDin1].array.F[ii] =
                         data.image[IDin].array.F[ii] -
                         data.image[IDdark].array.F[ii];
             }
-            if (datatype == _DATATYPE_INT16)
+            if(datatype == _DATATYPE_INT16)
             {
                 long ii;
-                for (ii = 0; ii < xsize * ysize; ii++)
+                for(ii = 0; ii < xsize * ysize; ii++)
                     data.image[IDin1].array.F[ii] =
                         1.0 * data.image[IDin].array.SI16[ii] -
                         data.image[IDdark].array.F[ii];
@@ -372,37 +372,41 @@ errno_t AOloopControl_IOtools_imAlignStream(const char *IDname,
         }
         else
         {
-            if (datatype == _DATATYPE_FLOAT)
+            if(datatype == _DATATYPE_FLOAT)
             {
                 long ii;
-                for (ii = 0; ii < xsize * ysize; ii++)
+                for(ii = 0; ii < xsize * ysize; ii++)
                     data.image[IDin1].array.F[ii] =
                         data.image[IDin].array.F[ii];
             }
-            if (datatype == _DATATYPE_INT16)
+            if(datatype == _DATATYPE_INT16)
             {
                 long ii;
-                for (ii = 0; ii < xsize * ysize; ii++)
+                for(ii = 0; ii < xsize * ysize; ii++)
                     data.image[IDin1].array.F[ii] =
                         1.0 * data.image[IDin].array.SI16[ii];
             }
         }
 
-        if (data.image[IDin].md[0].sem == 0)
+        if(data.image[IDin].md[0].sem == 0)
         {
-            while (cnt ==
-                   data.image[IDin].md[0].cnt0) // test if new frame exists
+            while(cnt ==
+                    data.image[IDin].md[0].cnt0) // test if new frame exists
+            {
                 usleep(5);
+            }
             cnt = data.image[IDin].md[0].cnt0;
         }
         else
+        {
             sem_wait(data.image[IDin].semptr[insem]);
+        }
 
         // copy box into tmp image
         long ii, jj;
 
-        for (ii = 0; ii < xboxsize; ii++)
-            for (jj = 0; jj < yboxsize; jj++)
+        for(ii = 0; ii < xboxsize; ii++)
+            for(jj = 0; jj < yboxsize; jj++)
             {
                 long ii1, jj1;
 
@@ -420,10 +424,10 @@ errno_t AOloopControl_IOtools_imAlignStream(const char *IDname,
         long  ID;
         long  xoffset0, yoffset0;
         ID = image_ID("tmpCorr");
-        for (ii = 0; ii < xboxsize; ii++)
-            for (jj = 0; jj < yboxsize; jj++)
+        for(ii = 0; ii < xboxsize; ii++)
+            for(jj = 0; jj < yboxsize; jj++)
             {
-                if (data.image[ID].array.F[jj * xboxsize + ii] > vmax)
+                if(data.image[ID].array.F[jj * xboxsize + ii] > vmax)
                 {
                     vmax     = data.image[ID].array.F[jj * xboxsize + ii];
                     xoffset0 = ii;
@@ -440,13 +444,13 @@ errno_t AOloopControl_IOtools_imAlignStream(const char *IDname,
 
         int kiter;
         int NBkiter = 3;
-        for (kiter = 0; kiter < NBkiter; kiter++)
+        for(kiter = 0; kiter < NBkiter; kiter++)
         {
             double tmpxs = 0.0;
             double tmpys = 0.0;
             double tmps  = 0.0;
-            for (ii = 0; ii < xboxsize; ii++)
-                for (jj = 0; jj < yboxsize; jj++)
+            for(ii = 0; ii < xboxsize; ii++)
+                for(jj = 0; jj < yboxsize; jj++)
                 {
                     float dx, dy, dx2, dy2;
                     float kcoeff;
@@ -498,9 +502,9 @@ errno_t AOloopControl_IOtools_imAlignStream(const char *IDname,
 }
 
 imageID AOloopControl_IOtools_frameDelay(const char *IDin_name,
-                                         const char *IDkern_name,
-                                         const char *IDout_name,
-                                         int         insem)
+        const char *IDkern_name,
+        const char *IDout_name,
+        int         insem)
 {
     imageID       IDout;
     imageID       IDin;
@@ -534,7 +538,7 @@ imageID AOloopControl_IOtools_frameDelay(const char *IDin_name,
     create_3Dimage_ID("_tmpbuff", xsize, ysize, ksize, &IDbuff);
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-    if (sizearray == NULL)
+    if(sizearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -550,17 +554,21 @@ imageID AOloopControl_IOtools_frameDelay(const char *IDin_name,
     kindex = 0;
     cnt    = 0;
 
-    for (;;)
+    for(;;)
     {
-        if (data.image[IDin].md[0].sem == 0)
+        if(data.image[IDin].md[0].sem == 0)
         {
-            while (cnt ==
-                   data.image[IDin].md[0].cnt0) // test if new frame exists
+            while(cnt ==
+                    data.image[IDin].md[0].cnt0) // test if new frame exists
+            {
                 usleep(5);
+            }
             cnt = data.image[IDin].md[0].cnt0;
         }
         else
+        {
             sem_wait(data.image[IDin].semptr[insem]);
+        }
 
         char *ptr0;
 
@@ -574,17 +582,21 @@ imageID AOloopControl_IOtools_frameDelay(const char *IDin_name,
 
         data.image[IDout].md[0].write = 1;
 
-        for (uint32_t ii = 0; ii < xysize; ii++)
-            data.image[IDtmp].array.F[ii] = 0.0;
-        for (uint32_t kk = 0; kk < ksize; kk++)
+        for(uint32_t ii = 0; ii < xysize; ii++)
         {
-            if (fabs(data.image[IDkern].array.F[kk]) > eps)
+            data.image[IDtmp].array.F[ii] = 0.0;
+        }
+        for(uint32_t kk = 0; kk < ksize; kk++)
+        {
+            if(fabs(data.image[IDkern].array.F[kk]) > eps)
             {
                 int k1 = kindex - kk;
-                if (k1 < 0)
+                if(k1 < 0)
+                {
                     k1 += ksize;
+                }
 
-                for (uint32_t ii = 0; ii < xysize; ii++)
+                for(uint32_t ii = 0; ii < xysize; ii++)
                     data.image[IDtmp].array.F[ii] +=
                         data.image[IDkern].array.F[kk] *
                         data.image[IDbuff].array.F[k1 * xysize + ii];
@@ -596,17 +608,19 @@ imageID AOloopControl_IOtools_frameDelay(const char *IDin_name,
         data.image[IDout].md[0].write = 0;
 
         kindex++;
-        if (kindex == ksize)
+        if(kindex == ksize)
+        {
             kindex = 0;
+        }
     }
 
     return IDout;
 }
 
 imageID AOloopControl_IOtools_stream3Dto2D(const char *in_name,
-                                           const char *out_name,
-                                           int         NBcols,
-                                           int         insem)
+        const char *out_name,
+        int         NBcols,
+        int         insem)
 {
     imageID            IDin, IDout;
     uint_fast16_t      xsize0, ysize0, zsize0;
@@ -637,14 +651,16 @@ imageID AOloopControl_IOtools_stream3Dto2D(const char *in_name,
     xysize0 = xsize0 * ysize0;
 
     xsize1 = xsize0 * NBcols;
-    ysize1 = ysize0 * (1 + (long) (1.0 * zsize0 / NBcols - 0.00001));
+    ysize1 = ysize0 * (1 + (long)(1.0 * zsize0 / NBcols - 0.00001));
 
-    if (sprintf(out0name, "%sc", out_name) < 1)
+    if(sprintf(out0name, "%sc", out_name) < 1)
+    {
         PRINT_ERROR("sprintf wrote <1 char");
+    }
 
     datatype  = _DATATYPE_FLOAT;
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-    if (sizearray == NULL)
+    if(sizearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -656,32 +672,36 @@ imageID AOloopControl_IOtools_stream3Dto2D(const char *in_name,
     create_image_ID(out0name, 2, sizearray, datatype, 1, 0, 0, &IDout0);
     free(sizearray);
 
-    for (;;)
+    for(;;)
     {
-        if (data.image[IDin].md[0].sem == 0)
+        if(data.image[IDin].md[0].sem == 0)
         {
-            while (cnt ==
-                   data.image[IDin].md[0].cnt0) // test if new frame exists
+            while(cnt ==
+                    data.image[IDin].md[0].cnt0) // test if new frame exists
+            {
                 usleep(5);
+            }
             cnt = data.image[IDin].md[0].cnt0;
         }
         else
+        {
             sem_wait(data.image[IDin].semptr[insem]);
+        }
 
         printf("Updating image %s ...", out_name);
         fflush(stdout);
 
         data.image[IDout].md[0].write = 1;
 
-        for (kk0 = 0; kk0 < zsize0; kk0++)
+        for(kk0 = 0; kk0 < zsize0; kk0++)
         {
             kk     = 0;
             Xindex = 0;
             Yindex = 0;
-            while (kk < kk0)
+            while(kk < kk0)
             {
                 Xindex++;
-                if ((int) Xindex == NBcols)
+                if((int) Xindex == NBcols)
                 {
                     Xindex = 0;
                     Yindex++;
@@ -691,8 +711,8 @@ imageID AOloopControl_IOtools_stream3Dto2D(const char *in_name,
             iioffset = Xindex * xsize0;
             jjoffset = Yindex * ysize0;
 
-            for (ii0 = 0; ii0 < xsize0; ii0++)
-                for (jj0 = 0; jj0 < ysize0; jj0++)
+            for(ii0 = 0; ii0 < xsize0; ii0++)
+                for(jj0 = 0; jj0 < ysize0; jj0++)
                 {
                     ii1 = ii0 + iioffset;
                     jj1 = jj0 + jjoffset;
@@ -706,7 +726,7 @@ imageID AOloopControl_IOtools_stream3Dto2D(const char *in_name,
 
                     data.image[IDout0].array.F[jj1 * xsize1 + ii1] =
                         data.image[IDin]
-                            .array.F[kk0 * xysize0 + jj0 * xsize0 + ii0] /
+                        .array.F[kk0 * xysize0 + jj0 * xsize0 + ii0] /
                         ContrastCoeff;
                 }
         }

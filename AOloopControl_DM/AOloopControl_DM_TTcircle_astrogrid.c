@@ -63,15 +63,15 @@ long AOloopControl_mkDM_TT_circle(char *IDoutname,
 
     create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
 
-    for (kk = 0; kk < zsize; kk++)
+    for(kk = 0; kk < zsize; kk++)
     {
         xslope = ampl * cos(2.0 * M_PI * kk / zsize);
         yslope = ampl * sin(2.0 * M_PI * kk / zsize);
 
-        for (ii = 0; ii < xsize; ii++)
+        for(ii = 0; ii < xsize; ii++)
         {
             x = 2.0 * ii / xsize - 1.0;
-            for (jj = 0; jj < ysize; jj++)
+            for(jj = 0; jj < ysize; jj++)
             {
                 y = 2.0 * jj / ysize - 1.0;
                 data.image[IDout].array.F[kk * xysize + jj * xsize + ii] =
@@ -116,10 +116,10 @@ long AOloopControl_DM_mkAstroGrid_seq(
     xysize = xsize * ysize;
 
     create_2Dimage_ID("_tmpX", xsize, ysize, &IDx);
-    for (ii = 0; ii < xsize; ii++)
-        for (jj = 0; jj < ysize; jj++)
+    for(ii = 0; ii < xsize; ii++)
+        for(jj = 0; jj < ysize; jj++)
         {
-            if ((ii / bin) % 2 == 0)
+            if((ii / bin) % 2 == 0)
             {
                 data.image[IDx].array.F[jj * xsize + ii] = 1.0;
             }
@@ -130,10 +130,10 @@ long AOloopControl_DM_mkAstroGrid_seq(
         }
 
     create_2Dimage_ID("_tmpY", xsize, ysize, &IDy);
-    for (ii = 0; ii < xsize; ii++)
-        for (jj = 0; jj < ysize; jj++)
+    for(ii = 0; ii < xsize; ii++)
+        for(jj = 0; jj < ysize; jj++)
         {
-            if ((jj / bin) % 2 == 0)
+            if((jj / bin) % 2 == 0)
             {
                 data.image[IDy].array.F[jj * xsize + ii] = 1.0;
             }
@@ -144,8 +144,8 @@ long AOloopControl_DM_mkAstroGrid_seq(
         }
 
     create_2Dimage_ID("_tmpXY", xsize, ysize, &IDxy);
-    for (ii = 0; ii < xsize; ii++)
-        for (jj = 0; jj < ysize; jj++)
+    for(ii = 0; ii < xsize; ii++)
+        for(jj = 0; jj < ysize; jj++)
         {
             data.image[IDxy].array.F[jj * xsize + ii] =
                 data.image[IDx].array.F[jj * xsize + ii] *
@@ -153,268 +153,268 @@ long AOloopControl_DM_mkAstroGrid_seq(
         }
 
     create_2Dimage_ID("_tmpXd", xsize, ysize, &IDxd);
-    for (ii = 0; ii < xsize; ii++)
-        for (jj = 0; jj < ysize; jj++)
+    for(ii = 0; ii < xsize; ii++)
+        for(jj = 0; jj < ysize; jj++)
         {
-            if ((ii / bin + jj / bin) % 4 == 0)
+            if((ii / bin + jj / bin) % 4 == 0)
             {
                 data.image[IDxd].array.F[jj * xsize + ii] = 1.0;
             }
-            if ((ii / bin + jj / bin) % 4 == 2)
+            if((ii / bin + jj / bin) % 4 == 2)
             {
                 data.image[IDxd].array.F[jj * xsize + ii] = -1.0;
             }
         }
 
     create_2Dimage_ID("_tmpYd", xsize, ysize, &IDyd);
-    for (ii = 0; ii < xsize; ii++)
-        for (jj = 0; jj < ysize; jj++)
+    for(ii = 0; ii < xsize; ii++)
+        for(jj = 0; jj < ysize; jj++)
         {
-            if ((ii / bin - jj / bin + ysize / bin) % 4 == 0)
+            if((ii / bin - jj / bin + ysize / bin) % 4 == 0)
             {
                 data.image[IDyd].array.F[jj * xsize + ii] = 1.0;
             }
-            if ((ii / bin - jj / bin + ysize / bin) % 4 == 2)
+            if((ii / bin - jj / bin + ysize / bin) % 4 == 2)
             {
                 data.image[IDyd].array.F[jj * xsize + ii] = -1.0;
             }
         }
 
-    switch (XYmode)
+    switch(XYmode)
     {
 
-    case 0:        // single XY-diag pattern
-        zsize = 2; // only 2 frames
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        kk = 0;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    data.image[IDxy].array.F[jj * xsize + ii];
-            }
-        kk = 1;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    -data.image[IDxy].array.F[jj * xsize + ii];
-            }
-        break;
-
-    case 1:        // single X pattern
-        zsize = 2; // only 2 frames
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        kk = 0;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    data.image[IDx].array.F[jj * xsize + ii];
-            }
-        kk = 1;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    -data.image[IDx].array.F[jj * xsize + ii];
-            }
-        break;
-
-    case 2:        // single Y pattern
-        zsize = 2; // only 2 frames
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        kk = 0;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    data.image[IDy].array.F[jj * xsize + ii];
-            }
-        kk = 1;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    -data.image[IDy].array.F[jj * xsize + ii];
-            }
-        break;
-
-    case 3:        // single Xdiag pattern
-        zsize = 2; // only 2 frames
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        kk = 0;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    data.image[IDxd].array.F[jj * xsize + ii];
-            }
-        kk = 1;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    -data.image[IDxd].array.F[jj * xsize + ii];
-            }
-        break;
-
-    case 4:        // single Ydiag pattern
-        zsize = 2; // only 2 frames
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        kk = 0;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    data.image[IDyd].array.F[jj * xsize + ii];
-            }
-        kk = 1;
-        for (ii = 0; ii < xsize; ii++)
-            for (jj = 0; jj < ysize; jj++)
-            {
-                data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                    -data.image[IDyd].array.F[jj * xsize + ii];
-            }
-        break;
-
-    case 5: // XYdiag -> OFF ->
-        zsize = 2 * NBcycle * 2;
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        sign = 1;
-        for (kk = 0; kk < 2 * NBcycle; kk++)
-        {
-            for (ii = 0; ii < xsize; ii++)
-                for (jj = 0; jj < ysize; jj++)
+        case 0:        // single XY-diag pattern
+            zsize = 2; // only 2 frames
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            kk = 0;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
                 {
                     data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                        sign * data.image[IDxy].array.F[jj * xsize + ii];
+                        data.image[IDxy].array.F[jj * xsize + ii];
                 }
-            sign *= -1;
-        }
-        break;
+            kk = 1;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
+                {
+                    data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                        -data.image[IDxy].array.F[jj * xsize + ii];
+                }
+            break;
 
-    case 6: // X -> OFF ->
-        zsize = 2 * NBcycle * 2;
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        sign = 1;
-        for (kk = 0; kk < 2 * NBcycle; kk++)
-        {
-            for (ii = 0; ii < xsize; ii++)
-                for (jj = 0; jj < ysize; jj++)
+        case 1:        // single X pattern
+            zsize = 2; // only 2 frames
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            kk = 0;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
                 {
                     data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                        sign * data.image[IDx].array.F[jj * xsize + ii];
+                        data.image[IDx].array.F[jj * xsize + ii];
                 }
-            sign *= -1;
-        }
-        break;
+            kk = 1;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
+                {
+                    data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                        -data.image[IDx].array.F[jj * xsize + ii];
+                }
+            break;
 
-    case 7: // Y -> OFF ->
-        zsize = 2 * NBcycle * 2;
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        sign = 1;
-        for (kk = 0; kk < 2 * NBcycle; kk++)
-        {
-            for (ii = 0; ii < xsize; ii++)
-                for (jj = 0; jj < ysize; jj++)
+        case 2:        // single Y pattern
+            zsize = 2; // only 2 frames
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            kk = 0;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
                 {
                     data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                        sign * data.image[IDy].array.F[jj * xsize + ii];
+                        data.image[IDy].array.F[jj * xsize + ii];
                 }
-            sign *= -1;
-        }
-        break;
+            kk = 1;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
+                {
+                    data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                        -data.image[IDy].array.F[jj * xsize + ii];
+                }
+            break;
 
-    case 8: // X -> Y ->
-        zsize = 2 * NBcycle * 2;
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        sign = 1;
-        kk   = 0;
-        for (kk1 = 0; kk1 < 2 * NBcycle; kk1++)
-        {
-            for (ii = 0; ii < xsize; ii++)
-                for (jj = 0; jj < ysize; jj++)
+        case 3:        // single Xdiag pattern
+            zsize = 2; // only 2 frames
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            kk = 0;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
                 {
                     data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                        sign * data.image[IDx].array.F[jj * xsize + ii];
+                        data.image[IDxd].array.F[jj * xsize + ii];
                 }
-            sign *= -1;
-            kk++;
-        }
-        for (kk1 = 0; kk1 < 2 * NBcycle; kk1++)
-        {
-            for (ii = 0; ii < xsize; ii++)
-                for (jj = 0; jj < ysize; jj++)
+            kk = 1;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
                 {
                     data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                        sign * data.image[IDy].array.F[jj * xsize + ii];
+                        -data.image[IDxd].array.F[jj * xsize + ii];
                 }
-            sign *= -1;
-            kk++;
-        }
-        break;
+            break;
 
-    case 9: // Xdiag -> OFF ->
-        zsize = 2 * NBcycle * 2;
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        sign = 1;
-        for (kk = 0; kk < 2 * NBcycle; kk++)
-        {
-            for (ii = 0; ii < xsize; ii++)
-                for (jj = 0; jj < ysize; jj++)
+        case 4:        // single Ydiag pattern
+            zsize = 2; // only 2 frames
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            kk = 0;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
                 {
                     data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                        sign * data.image[IDxd].array.F[jj * xsize + ii];
+                        data.image[IDyd].array.F[jj * xsize + ii];
                 }
-            sign *= -1;
-        }
-        break;
+            kk = 1;
+            for(ii = 0; ii < xsize; ii++)
+                for(jj = 0; jj < ysize; jj++)
+                {
+                    data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                        -data.image[IDyd].array.F[jj * xsize + ii];
+                }
+            break;
 
-    case 10: // Ydiag -> OFF ->
-        zsize = 2 * NBcycle * 2;
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        sign = 1;
-        for (kk = 0; kk < 2 * NBcycle; kk++)
-        {
-            for (ii = 0; ii < xsize; ii++)
-                for (jj = 0; jj < ysize; jj++)
-                {
-                    data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                        sign * data.image[IDyd].array.F[jj * xsize + ii];
-                }
-            sign *= -1;
-        }
-        break;
+        case 5: // XYdiag -> OFF ->
+            zsize = 2 * NBcycle * 2;
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            sign = 1;
+            for(kk = 0; kk < 2 * NBcycle; kk++)
+            {
+                for(ii = 0; ii < xsize; ii++)
+                    for(jj = 0; jj < ysize; jj++)
+                    {
+                        data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                            sign * data.image[IDxy].array.F[jj * xsize + ii];
+                    }
+                sign *= -1;
+            }
+            break;
 
-    case 11: // Xdiag -> Ydiag ->
-        zsize = 2 * NBcycle * 2;
-        create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
-        sign = 1;
-        kk   = 0;
-        for (kk1 = 0; kk1 < 2 * NBcycle; kk1++)
-        {
-            for (ii = 0; ii < xsize; ii++)
-                for (jj = 0; jj < ysize; jj++)
-                {
-                    data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                        sign * data.image[IDxd].array.F[jj * xsize + ii];
-                }
-            sign *= -1;
-            kk++;
-        }
-        for (kk1 = 0; kk1 < 2 * NBcycle; kk1++)
-        {
-            for (ii = 0; ii < xsize; ii++)
-                for (jj = 0; jj < ysize; jj++)
-                {
-                    data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
-                        sign * data.image[IDyd].array.F[jj * xsize + ii];
-                }
-            sign *= -1;
-            kk++;
-        }
-        break;
+        case 6: // X -> OFF ->
+            zsize = 2 * NBcycle * 2;
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            sign = 1;
+            for(kk = 0; kk < 2 * NBcycle; kk++)
+            {
+                for(ii = 0; ii < xsize; ii++)
+                    for(jj = 0; jj < ysize; jj++)
+                    {
+                        data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                            sign * data.image[IDx].array.F[jj * xsize + ii];
+                    }
+                sign *= -1;
+            }
+            break;
+
+        case 7: // Y -> OFF ->
+            zsize = 2 * NBcycle * 2;
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            sign = 1;
+            for(kk = 0; kk < 2 * NBcycle; kk++)
+            {
+                for(ii = 0; ii < xsize; ii++)
+                    for(jj = 0; jj < ysize; jj++)
+                    {
+                        data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                            sign * data.image[IDy].array.F[jj * xsize + ii];
+                    }
+                sign *= -1;
+            }
+            break;
+
+        case 8: // X -> Y ->
+            zsize = 2 * NBcycle * 2;
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            sign = 1;
+            kk   = 0;
+            for(kk1 = 0; kk1 < 2 * NBcycle; kk1++)
+            {
+                for(ii = 0; ii < xsize; ii++)
+                    for(jj = 0; jj < ysize; jj++)
+                    {
+                        data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                            sign * data.image[IDx].array.F[jj * xsize + ii];
+                    }
+                sign *= -1;
+                kk++;
+            }
+            for(kk1 = 0; kk1 < 2 * NBcycle; kk1++)
+            {
+                for(ii = 0; ii < xsize; ii++)
+                    for(jj = 0; jj < ysize; jj++)
+                    {
+                        data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                            sign * data.image[IDy].array.F[jj * xsize + ii];
+                    }
+                sign *= -1;
+                kk++;
+            }
+            break;
+
+        case 9: // Xdiag -> OFF ->
+            zsize = 2 * NBcycle * 2;
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            sign = 1;
+            for(kk = 0; kk < 2 * NBcycle; kk++)
+            {
+                for(ii = 0; ii < xsize; ii++)
+                    for(jj = 0; jj < ysize; jj++)
+                    {
+                        data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                            sign * data.image[IDxd].array.F[jj * xsize + ii];
+                    }
+                sign *= -1;
+            }
+            break;
+
+        case 10: // Ydiag -> OFF ->
+            zsize = 2 * NBcycle * 2;
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            sign = 1;
+            for(kk = 0; kk < 2 * NBcycle; kk++)
+            {
+                for(ii = 0; ii < xsize; ii++)
+                    for(jj = 0; jj < ysize; jj++)
+                    {
+                        data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                            sign * data.image[IDyd].array.F[jj * xsize + ii];
+                    }
+                sign *= -1;
+            }
+            break;
+
+        case 11: // Xdiag -> Ydiag ->
+            zsize = 2 * NBcycle * 2;
+            create_3Dimage_ID(IDoutname, xsize, ysize, zsize, &IDout);
+            sign = 1;
+            kk   = 0;
+            for(kk1 = 0; kk1 < 2 * NBcycle; kk1++)
+            {
+                for(ii = 0; ii < xsize; ii++)
+                    for(jj = 0; jj < ysize; jj++)
+                    {
+                        data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                            sign * data.image[IDxd].array.F[jj * xsize + ii];
+                    }
+                sign *= -1;
+                kk++;
+            }
+            for(kk1 = 0; kk1 < 2 * NBcycle; kk1++)
+            {
+                for(ii = 0; ii < xsize; ii++)
+                    for(jj = 0; jj < ysize; jj++)
+                    {
+                        data.image[IDout].array.F[kk * xysize + jj * ysize + ii] =
+                            sign * data.image[IDyd].array.F[jj * xsize + ii];
+                    }
+                sign *= -1;
+                kk++;
+            }
+            break;
     }
 
     return (IDout);

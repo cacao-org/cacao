@@ -103,7 +103,7 @@ errno_t AOloopControl_DM_disp2V(long DMindex)
     DEBUG_TRACEPOINT(" ");
 
     IDvolt = dmdispcombconf[DMindex].IDvolt;
-    if (IDvolt == -1)
+    if(IDvolt == -1)
     {
         printf("IDvolt = -1 -> exiting\n");
         exit(0);
@@ -112,14 +112,14 @@ errno_t AOloopControl_DM_disp2V(long DMindex)
     data.image[IDvolt].md[0].write = 1;
 
     DEBUG_TRACEPOINT(" ");
-    if (QUANTIZATION_RANDOM == 2)
+    if(QUANTIZATION_RANDOM == 2)
     {
-        if (qmapinit == 0)
+        if(qmapinit == 0)
         {
             uint32_t *sizearray;
 
             sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-            if (sizearray == NULL)
+            if(sizearray == NULL)
             {
                 PRINT_ERROR("malloc error");
                 abort();
@@ -144,64 +144,64 @@ errno_t AOloopControl_DM_disp2V(long DMindex)
     }
 
     DEBUG_TRACEPOINT(" ");
-    if (dmdispcombconf[DMindex].voltON == 1)
+    if(dmdispcombconf[DMindex].voltON == 1)
     {
-        if (dmdispcombconf[DMindex].volttype ==
-            1) // linear bipolar, output is float
+        if(dmdispcombconf[DMindex].volttype ==
+                1) // linear bipolar, output is float
         {
-            for (uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
+            for(uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
             {
                 volt = 100.0 *
                        (data.image[dmdispcombconf[DMindex].IDdisp].array.F[ii] /
                         dmdispcombconf[DMindex].stroke100);
-                if (volt > dmdispcombconf[DMindex].MAXVOLT)
+                if(volt > dmdispcombconf[DMindex].MAXVOLT)
                 {
                     volt = dmdispcombconf[DMindex].MAXVOLT;
                 }
-                if (volt < -dmdispcombconf[DMindex].MAXVOLT)
+                if(volt < -dmdispcombconf[DMindex].MAXVOLT)
                 {
                     volt = -dmdispcombconf[DMindex].MAXVOLT;
                 }
                 data.image[IDvolt].array.F[ii] = volt;
             }
         }
-        else if (dmdispcombconf[DMindex].volttype ==
-                 2) // quadratic unipolar, output is UI16
+        else if(dmdispcombconf[DMindex].volttype ==
+                2) // quadratic unipolar, output is UI16
         {
-            for (uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
+            for(uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
             {
                 volt =
                     100.0 *
                     sqrt(
                         data.image[dmdispcombconf[DMindex].IDdisp].array.F[ii] /
                         dmdispcombconf[DMindex].stroke100);
-                if (volt > dmdispcombconf[DMindex].MAXVOLT)
+                if(volt > dmdispcombconf[DMindex].MAXVOLT)
                 {
                     volt = dmdispcombconf[DMindex].MAXVOLT;
                 }
 
-                if (QUANTIZATION_RANDOM == 1)
+                if(QUANTIZATION_RANDOM == 1)
                 {
                     float              fval;
                     unsigned short int uval;
                     float              fracval;
 
                     fval    = volt / 300.0 * 16384.0;
-                    uval    = (unsigned short int) (fval);
+                    uval    = (unsigned short int)(fval);
                     fracval = fval - uval; // between 0 and 1
 
-                    if (ran1() < fracval)
+                    if(ran1() < fracval)
                     {
                         uval++;
                     }
 
                     data.image[IDvolt].array.UI16[ii] = uval;
                 }
-                else if (QUANTIZATION_RANDOM == 2)
+                else if(QUANTIZATION_RANDOM == 2)
                 {
                     data.image[IDvolt].array.UI16[ii] =
-                        (unsigned short int) (volt / 300.0 * 16384.0 +
-                                              data.image[IDqmap].array.F[ii]);
+                        (unsigned short int)(volt / 300.0 * 16384.0 +
+                                             data.image[IDqmap].array.F[ii]);
                 }
                 else
                     data.image[IDvolt].array.UI16[ii] =
@@ -211,18 +211,18 @@ errno_t AOloopControl_DM_disp2V(long DMindex)
     }
     else
     {
-        if (dmdispcombconf[DMindex].volttype ==
-            1) // linear bipolar, output is float
+        if(dmdispcombconf[DMindex].volttype ==
+                1) // linear bipolar, output is float
         {
-            for (uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
+            for(uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
             {
                 data.image[IDvolt].array.F[ii] = 0;
             }
         }
 
-        if (dmdispcombconf[DMindex].volttype == 2)
+        if(dmdispcombconf[DMindex].volttype == 2)
         {
-            for (uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
+            for(uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
             {
                 data.image[IDvolt].array.UI16[ii] = 0;
             }
@@ -458,19 +458,19 @@ int AOloopControl_DM_CombineChannels_FPCONF()
                                  pNull,
                                  &fp_loopcnt);
 
-    if (!fps.localstatus & FPS_LOCALSTATUS_CONFLOOP) // stop fps
+    if(!fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)  // stop fps
     {
         return RETURN_SUCCESS;
     }
 
     // RUN UPDATE LOOP
-    while (fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
+    while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
     {
 
-        if (function_parameter_FPCONFloopstep(&fps) == 1) // if update needed
+        if(function_parameter_FPCONFloopstep(&fps) == 1)  // if update needed
         {
             // here goes the logic
-            if (fps.parray[fp_dm2dm_mode].fpflag & FPFLAG_ONOFF) // ON state
+            if(fps.parray[fp_dm2dm_mode].fpflag & FPFLAG_ONOFF)  // ON state
             {
                 fps.parray[fp_dm2dm_DMmodes].fpflag |= FPFLAG_USED;
                 fps.parray[fp_dm2dm_outdisp].fpflag |= FPFLAG_USED;
@@ -485,7 +485,7 @@ int AOloopControl_DM_CombineChannels_FPCONF()
                 fps.parray[fp_dm2dm_outdisp].fpflag &= ~FPFLAG_VISIBLE;
             }
 
-            if (fps.parray[fp_wfsrefmode].fpflag & FPFLAG_ONOFF) // ON state
+            if(fps.parray[fp_wfsrefmode].fpflag & FPFLAG_ONOFF)  // ON state
             {
                 fps.parray[fp_wfsref_WFSRespMat].fpflag |= FPFLAG_USED;
                 fps.parray[fp_wfsref_WFSRespMat].fpflag |= FPFLAG_VISIBLE;
@@ -500,7 +500,7 @@ int AOloopControl_DM_CombineChannels_FPCONF()
                 fps.parray[fp_wfsref_out].fpflag &= ~FPFLAG_VISIBLE;
             }
 
-            if (fps.parray[fp_voltmode].fpflag & FPFLAG_ONOFF) // ON state
+            if(fps.parray[fp_voltmode].fpflag & FPFLAG_ONOFF)  // ON state
             {
                 fps.parray[fp_voltname].fpflag |= FPFLAG_USED;
                 fps.parray[fp_voltname].fpflag |= FPFLAG_VISIBLE;
@@ -603,14 +603,14 @@ int AOloopControl_DM_CombineChannels_RUN()
 
     DEBUG_TRACEPOINT(" ");
     /*
-  int SMfd = -1;
-  FUNCTION_PARAMETER_STRUCT fps;
+    int SMfd = -1;
+    FUNCTION_PARAMETER_STRUCT fps;
 
-  if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) ==
-  -1) { printf("ERROR: fps \"%s\" does not exist -> Cannot run\n", fpsname);
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) ==
+    -1) { printf("ERROR: fps \"%s\" does not exist -> Cannot run\n", fpsname);
       return EXIT_FAILURE;
-  }
-  */
+    }
+    */
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
     // GET FUNCTION PARAMETER VALUES
@@ -624,7 +624,7 @@ int AOloopControl_DM_CombineChannels_RUN()
         functionparameter_GetParamValue_INT64(&fps, ".option.dm2dm_mode");
     char dm2dm_DMmodes[FUNCTION_PARAMETER_STRMAXLEN];
     char dm2dm_outdisp[FUNCTION_PARAMETER_STRMAXLEN];
-    if (dm2dm_mode == 1)
+    if(dm2dm_mode == 1)
     {
         strncpy(
             dm2dm_DMmodes,
@@ -640,12 +640,12 @@ int AOloopControl_DM_CombineChannels_RUN()
         functionparameter_GetParamValue_INT64(&fps, ".option.wfsrefmode");
     char wfsref_WFSRespMat[FUNCTION_PARAMETER_STRMAXLEN];
     char wfsref_out[FUNCTION_PARAMETER_STRMAXLEN];
-    if (wfsrefmode == 1)
+    if(wfsrefmode == 1)
     {
         strncpy(
             wfsref_WFSRespMat,
             functionparameter_GetParamPtr_STRING(&fps,
-                                                 ".option.wfsref_WFSRespMat"),
+                    ".option.wfsref_WFSRespMat"),
             FUNCTION_PARAMETER_STRMAXLEN);
         strncpy(
             wfsref_out,
@@ -657,7 +657,7 @@ int AOloopControl_DM_CombineChannels_RUN()
         functionparameter_GetParamValue_ONOFF(&fps, ".option.voltmode");
 
     char IDvolt_name[FUNCTION_PARAMETER_STRMAXLEN];
-    if (voltmode == 1)
+    if(voltmode == 1)
     {
         strncpy(IDvolt_name,
                 functionparameter_GetParamPtr_STRING(&fps, ".option.voltname"),
@@ -711,7 +711,7 @@ int AOloopControl_DM_CombineChannels_RUN()
 
     fps_to_processinfo(&fps, processinfo);
 
-    if (DMindex > NB_DMindex - 1)
+    if(DMindex > NB_DMindex - 1)
     {
         printf(
             "ERROR: requested DMindex (%02ld) exceeds maximum number of DMs "
@@ -725,9 +725,9 @@ int AOloopControl_DM_CombineChannels_RUN()
 
     list_variable_ID();
     IDvar = variable_ID("DMTWAIT");
-    if (IDvar != -1)
+    if(IDvar != -1)
     {
-        DMtwaitus = (long) (data.variable[IDvar].value.f);
+        DMtwaitus = (long)(data.variable[IDvar].value.f);
     }
     printf("Using DMtwaitus = %ld us\n", DMtwaitus);
 
@@ -766,7 +766,7 @@ int AOloopControl_DM_CombineChannels_RUN()
 
     dmdispcombconf[DMindex].dm2dm_mode = dm2dm_mode;
 
-    if (dm2dm_mode == 1)
+    if(dm2dm_mode == 1)
     {
         printf("INITIALIZATION AND VERIFICATION FOR dm2dm MODE ...\n");
         fflush(stdout);
@@ -775,8 +775,8 @@ int AOloopControl_DM_CombineChannels_RUN()
         sprintf(dmdispcombconf[DMindex].dm2dm_DMmodes_name,
                 "%s",
                 dm2dm_DMmodes);
-        if (data.image[dmdispcombconf[DMindex].ID_dm2dm_DMmodes].md[0].naxis !=
-            3)
+        if(data.image[dmdispcombconf[DMindex].ID_dm2dm_DMmodes].md[0].naxis !=
+                3)
         {
             PRINT_ERROR("image \"%s\" should have naxis = 3", dm2dm_DMmodes);
             exit(0);
@@ -787,7 +787,7 @@ int AOloopControl_DM_CombineChannels_RUN()
             data.image[dmdispcombconf[DMindex].ID_dm2dm_DMmodes].md[0].size[1];
 
         dmdispcombconf[DMindex].ID_dm2dm_outdisp = image_ID(dm2dm_outdisp);
-        if (data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
+        if(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
                 .md[0]
                 .size[0] != dmdispcombconf[DMindex].xsizeout)
         {
@@ -796,7 +796,7 @@ int AOloopControl_DM_CombineChannels_RUN()
                         dmdispcombconf[DMindex].xsizeout);
             exit(0);
         }
-        if (data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
+        if(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
                 .md[0]
                 .size[1] != dmdispcombconf[DMindex].ysizeout)
         {
@@ -821,7 +821,7 @@ int AOloopControl_DM_CombineChannels_RUN()
     DEBUG_TRACEPOINT(" ");
 
     dmdispcombconf[DMindex].wfsrefmode = wfsrefmode;
-    if (wfsrefmode == 1)
+    if(wfsrefmode == 1)
     {
         printf("INITIALIZATION AND VERIFICATION FOR wfsref MODE ...\n");
         fflush(stdout);
@@ -830,14 +830,14 @@ int AOloopControl_DM_CombineChannels_RUN()
         fflush(stdout);
 
         dmdispcombconf[DMindex].ID_wfsref_RespMat = image_ID(wfsref_WFSRespMat);
-        if (dmdispcombconf[DMindex].ID_wfsref_RespMat == -1)
+        if(dmdispcombconf[DMindex].ID_wfsref_RespMat == -1)
         {
             printf("ERROR: cannot find image \"%s\"\n", wfsref_WFSRespMat);
             exit(0);
         }
 
-        if (data.image[dmdispcombconf[DMindex].ID_wfsref_RespMat].md[0].naxis !=
-            3)
+        if(data.image[dmdispcombconf[DMindex].ID_wfsref_RespMat].md[0].naxis !=
+                3)
         {
             PRINT_ERROR("image \"%s\" should have naxis = 3",
                         wfsref_WFSRespMat);
@@ -853,16 +853,16 @@ int AOloopControl_DM_CombineChannels_RUN()
         fflush(stdout);
 
         dmdispcombconf[DMindex].ID_wfsref_out = image_ID(wfsref_out);
-        if (data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].size[0] !=
-            dmdispcombconf[DMindex].xsizewfsref)
+        if(data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].size[0] !=
+                dmdispcombconf[DMindex].xsizewfsref)
         {
             PRINT_ERROR("image \"%s\" should have x axis = %ld",
                         wfsref_out,
                         dmdispcombconf[DMindex].xsizewfsref);
             exit(0);
         }
-        if (data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].size[1] !=
-            dmdispcombconf[DMindex].ysizewfsref)
+        if(data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].size[1] !=
+                dmdispcombconf[DMindex].ysizewfsref)
         {
             PRINT_ERROR("image \"%s\" should have y axis = %ld",
                         wfsref_out,
@@ -892,10 +892,10 @@ int AOloopControl_DM_CombineChannels_RUN()
     printf("Initialize channels\n");
     printf("Max DM stroke = %f um\n",
            dmdispcombconf[DMindex].stroke100 * dmdispcombconf[DMindex].MAXVOLT /
-               100.0 * dmdispcombconf[DMindex].MAXVOLT / 100.0);
+           100.0 * dmdispcombconf[DMindex].MAXVOLT / 100.0);
     fflush(stdout);
 
-    for (ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++)
+    for(ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++)
     {
         imageID chID;
 
@@ -930,12 +930,12 @@ int AOloopControl_DM_CombineChannels_RUN()
 
     DEBUG_TRACEPOINT(" ");
 
-    if (dmdispcombconf[DMindex].voltmode == 1)
+    if(dmdispcombconf[DMindex].voltmode == 1)
     {
         IDvolt = image_ID(dmdispcombconf[DMindex].voltname);
 
         vOK = 0;
-        if (IDvolt != -1)
+        if(IDvolt != -1)
         {
             printf("stream %s found  %d axis, size = %u x %u\n",
                    dmdispcombconf[DMindex].voltname,
@@ -943,21 +943,21 @@ int AOloopControl_DM_CombineChannels_RUN()
                    size[0],
                    size[1]);
             fflush(stdout);
-            if ((data.image[IDvolt].md[0].naxis == 2) &&
-                (data.image[IDvolt].md[0].size[0] == xsize) &&
-                (data.image[IDvolt].md[0].size[1] == ysize))
+            if((data.image[IDvolt].md[0].naxis == 2) &&
+                    (data.image[IDvolt].md[0].size[0] == xsize) &&
+                    (data.image[IDvolt].md[0].size[1] == ysize))
             {
-                if ((dmdispcombconf[DMindex].volttype == 1) &&
-                    (data.image[IDvolt].md[0].datatype == _DATATYPE_FLOAT))
+                if((dmdispcombconf[DMindex].volttype == 1) &&
+                        (data.image[IDvolt].md[0].datatype == _DATATYPE_FLOAT))
                 {
                     vOK = 1;
                 }
-                if ((dmdispcombconf[DMindex].volttype == 2) &&
-                    (data.image[IDvolt].md[0].datatype == _DATATYPE_UINT16))
+                if((dmdispcombconf[DMindex].volttype == 2) &&
+                        (data.image[IDvolt].md[0].datatype == _DATATYPE_UINT16))
                 {
                     vOK = 1;
                 }
-                if (vOK == 0)
+                if(vOK == 0)
                 {
                     delete_image_ID(dmdispcombconf[DMindex].voltname,
                                     DELETE_IMAGE_ERRMODE_WARNING);
@@ -966,16 +966,16 @@ int AOloopControl_DM_CombineChannels_RUN()
         }
 
         printf("vOK = %d\n", vOK);
-        if (vOK == 0)
+        if(vOK == 0)
         {
 
-            if (dmdispcombconf[DMindex].volttype == 0)
+            if(dmdispcombconf[DMindex].volttype == 0)
             {
                 printf("volttype=0 NOT CREATING stream %s\n",
                        dmdispcombconf[DMindex].voltname);
             }
 
-            if (dmdispcombconf[DMindex].volttype == 1)
+            if(dmdispcombconf[DMindex].volttype == 1)
             {
                 printf("CREATING stream %s  %d axis, size = %u x %u\n",
                        dmdispcombconf[DMindex].voltname,
@@ -992,7 +992,7 @@ int AOloopControl_DM_CombineChannels_RUN()
                                 &(dmdispcombconf[DMindex].IDvolt));
             }
 
-            if (dmdispcombconf[DMindex].volttype == 2)
+            if(dmdispcombconf[DMindex].volttype == 2)
             {
                 printf("CREATING stream %s  %d axis, size = %u x %u\n",
                        dmdispcombconf[DMindex].voltname,
@@ -1029,7 +1029,7 @@ int AOloopControl_DM_CombineChannels_RUN()
     sprintf(name, "dm%02lddisp", DMindex);
     COREMOD_MEMORY_image_set_createsem(name, 10);
 
-    if (data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem < 2)
+    if(data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem < 2)
     {
         printf("ERROR: image %s semaphore %d missing\n",
                data.image[dmdispcombconf[DMindex].IDdisp].name,
@@ -1038,7 +1038,7 @@ int AOloopControl_DM_CombineChannels_RUN()
     }
 
     dmdispcombconf[DMindex].MAXVOLT = maxvolt;
-    if (dmdispcombconf[DMindex].MAXVOLT > maxmaxvolt)
+    if(dmdispcombconf[DMindex].MAXVOLT > maxmaxvolt)
     {
         dmdispcombconf[DMindex].MAXVOLT = maxvolt;
     }
@@ -1063,7 +1063,7 @@ int AOloopControl_DM_CombineChannels_RUN()
 
     DEBUG_TRACEPOINT(" ");
 
-    while (dmdispcombconf[DMindex].ON == 1)
+    while(dmdispcombconf[DMindex].ON == 1)
     {
         struct timespec semwaitts;
 
@@ -1073,30 +1073,30 @@ int AOloopControl_DM_CombineChannels_RUN()
 
         DEBUG_TRACEPOINT(" ");
 
-        if (DMtwaitus > 0)
+        if(DMtwaitus > 0)
         {
             struct timespec tim;
             tim.tv_sec  = 0;
-            tim.tv_nsec = (long) (1000 * DMtwaitus);
+            tim.tv_nsec = (long)(1000 * DMtwaitus);
             // usleep(DMtwaitus);
             nanosleep(&tim, NULL);
         }
 
-        if (clock_gettime(CLOCK_REALTIME, &semwaitts) == -1)
+        if(clock_gettime(CLOCK_REALTIME, &semwaitts) == -1)
         {
             perror("clock_gettime");
             exit(EXIT_FAILURE);
         }
 
         semwaitts.tv_nsec += dmdispcombconf[DMindex].nsecwait;
-        if (semwaitts.tv_nsec >= 1000000000)
+        if(semwaitts.tv_nsec >= 1000000000)
         {
             semwaitts.tv_sec = semwaitts.tv_sec + 1;
         }
 
         DMupdate = 0;
 
-        if (dmdispcombconf[DMindex].TrigMode == 0)
+        if(dmdispcombconf[DMindex].TrigMode == 0)
         {
             //
             // this is semaphore that triggers the write to the DM
@@ -1109,13 +1109,13 @@ int AOloopControl_DM_CombineChannels_RUN()
             DEBUG_TRACEPOINT(" ");
 
             cntsum = 0;
-            for (ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++)
+            for(ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++)
             {
 
                 cntch =
                     data.image[dmdispcombconf[DMindex].dmdispID[ch]].md[0].cnt0;
 
-                if (dmdispcombconf[DMindex].dmdispcnt[ch] != cntch)
+                if(dmdispcombconf[DMindex].dmdispcnt[ch] != cntch)
                 {
                     dmdispcombconf[DMindex].dmdispcnt[ch] = cntch;
                     trigID = dmdispcombconf[DMindex].dmdispID[ch];
@@ -1127,7 +1127,7 @@ int AOloopControl_DM_CombineChannels_RUN()
                 cntsum +=
                     data.image[dmdispcombconf[DMindex].dmdispID[ch]].md[0].cnt0;
             }
-            if (cntsum != cntsumold)
+            if(cntsum != cntsumold)
             {
                 DMupdate = 1;
                 // update trigger counter
@@ -1141,15 +1141,15 @@ int AOloopControl_DM_CombineChannels_RUN()
         {
             sem_timedwait(
                 data.image[dmdispcombconf[DMindex]
-                               .dmdispID[dmdispcombconf[DMindex].TrigChan]]
-                    .semptr[dmdispcombconf[DMindex]
-                                .dmdispID[dmdispcombconf[DMindex].TrigSem]],
+                           .dmdispID[dmdispcombconf[DMindex].TrigChan]]
+                .semptr[dmdispcombconf[DMindex]
+                        .dmdispID[dmdispcombconf[DMindex].TrigSem]],
                 &semwaitts);
             cnt = data.image[dmdispcombconf[DMindex]
-                                 .dmdispID[dmdispcombconf[DMindex].TrigChan]]
-                      .md[0]
-                      .cnt0;
-            if (cnt != cntold)
+                             .dmdispID[dmdispcombconf[DMindex].TrigChan]]
+                  .md[0]
+                  .cnt0;
+            if(cnt != cntold)
             {
                 DMupdate = 1;
                 cntold   = cnt;
@@ -1159,7 +1159,7 @@ int AOloopControl_DM_CombineChannels_RUN()
 
         processinfo_exec_start(processinfo);
 
-        if (DMupdate == 1)
+        if(DMupdate == 1)
         {
             clock_gettime(CLOCK_REALTIME, &ttrig);
             DEBUG_TRACEPOINT(" ");
@@ -1170,9 +1170,9 @@ int AOloopControl_DM_CombineChannels_RUN()
             memcpy(data.image[IDdispt].array.F,
                    dmdispptr_array[0],
                    sizeof(float) * sizexy);
-            for (ch = 1; ch < dmdispcombconf[DMindex].NBchannel; ch++)
+            for(ch = 1; ch < dmdispcombconf[DMindex].NBchannel; ch++)
             {
-                for (uint64_t ii = 0; ii < sizexy; ii++)
+                for(uint64_t ii = 0; ii < sizexy; ii++)
                 {
                     dmdispptr[ii] += dmdispcombconf[DMindex].dmdispgain[ch] *
                                      dmdispptr_array[ch][ii];
@@ -1183,9 +1183,9 @@ int AOloopControl_DM_CombineChannels_RUN()
             DEBUG_TRACEPOINT(" ");
 
             ave = 0.0;
-            if (dmdispcombconf[DMindex].AveMode == 1) // REMOVE AVERAGE
+            if(dmdispcombconf[DMindex].AveMode == 1)  // REMOVE AVERAGE
             {
-                for (uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
+                for(uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
                 {
                     ave += data.image[IDdispt].array.F[ii];
                 }
@@ -1194,16 +1194,16 @@ int AOloopControl_DM_CombineChannels_RUN()
             dmdispcombconf[DMindex].status = 5;
             DEBUG_TRACEPOINT(" ");
 
-            if (dmdispcombconf[DMindex].AveMode < 2) // OFFSET BY DClevel
+            if(dmdispcombconf[DMindex].AveMode < 2)  // OFFSET BY DClevel
             {
-                for (uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
+                for(uint64_t ii = 0; ii < dmdispcombconf[DMindex].xysize; ii++)
                 {
                     data.image[IDdispt].array.F[ii] +=
                         (dmdispcombconf[DMindex].DClevel - ave);
 
                     // remove negative values
-                    if (dmdispcombconf[DMindex].voltmode == 1)
-                        if (data.image[IDdispt].array.F[ii] < 0.0)
+                    if(dmdispcombconf[DMindex].voltmode == 1)
+                        if(data.image[IDdispt].array.F[ii] < 0.0)
                         {
                             data.image[IDdispt].array.F[ii] = 0.0;
                         }
@@ -1217,7 +1217,7 @@ int AOloopControl_DM_CombineChannels_RUN()
                 data.image[dmdispcombconf[DMindex].IDdisp].array.F,
                 data.image[IDdispt].array.F,
                 sizeof(float) *
-                    data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement);
+                data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement);
 
             processinfo_update_output_stream(processinfo,
                                              dmdispcombconf[DMindex].IDdisp);
@@ -1241,49 +1241,49 @@ int AOloopControl_DM_CombineChannels_RUN()
 
             DEBUG_TRACEPOINT(" ");
 
-            if (dm2dm_mode == 1)
+            if(dm2dm_mode == 1)
             {
                 DEBUG_TRACEPOINT(" ");
                 memset(data.image[IDtmpoutdm].array.F,
                        '\0',
                        sizeof(float) * sizexyDMout);
-                for (uint64_t kk = 0;
-                     kk <
-                     data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement;
-                     kk++)
+                for(uint64_t kk = 0;
+                        kk <
+                        data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement;
+                        kk++)
                 {
-                    for (uint64_t ii = 0; ii < sizexyDMout; ii++)
+                    for(uint64_t ii = 0; ii < sizexyDMout; ii++)
                     {
                         data.image[IDtmpoutdm].array.F[ii] +=
                             data.image[dmdispcombconf[DMindex].IDdisp]
-                                .array.F[kk] *
+                            .array.F[kk] *
                             data.image[dmdispcombconf[DMindex].ID_dm2dm_DMmodes]
-                                .array.F[kk * sizexyDMout + ii];
+                            .array.F[kk * sizexyDMout + ii];
                     }
                 }
 
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
-                    .md[0]
-                    .write = 1;
+                .md[0]
+                .write = 1;
                 memcpy(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
-                           .array.F,
+                       .array.F,
                        data.image[IDtmpoutdm].array.F,
                        sizeof(float) * sizexyDMout);
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
-                    .md[0]
-                    .cnt0++;
+                .md[0]
+                .cnt0++;
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
-                    .md[0]
-                    .atime = ttrig;
+                .md[0]
+                .atime = ttrig;
                 data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
-                    .md[0]
-                    .write = 0;
+                .md[0]
+                .write = 0;
                 sem_post(data.image[dmdispcombconf[DMindex].ID_dm2dm_outdisp]
-                             .semptr[0]);
+                         .semptr[0]);
                 DEBUG_TRACEPOINT(" ");
             }
 
-            if (wfsrefmode == 1)
+            if(wfsrefmode == 1)
             {
                 DEBUG_TRACEPOINT(" ");
                 memset(data.image[IDtmpoutref].array.F,
@@ -1299,26 +1299,26 @@ int AOloopControl_DM_CombineChannels_RUN()
                     dmdispcombconf[DMindex].ID_wfsref_RespMat,
                     (data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement -
                      1) * sizexywfsref +
-                        sizexywfsref - 1);
+                    sizexywfsref - 1);
                 fflush(stdout);
                 save_fits(wfsref_WFSRespMat, "_test_wfsref_WFSRespMat.fits");
-                for (uint64_t kk = 0;
-                     kk <
-                     data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement;
-                     kk++)
+                for(uint64_t kk = 0;
+                        kk <
+                        data.image[dmdispcombconf[DMindex].IDdisp].md[0].nelement;
+                        kk++)
                 {
                     printf(
                         "(%ld %g) ",
                         kk,
                         data.image[dmdispcombconf[DMindex].IDdisp].array.F[kk]);
-                    for (uint64_t ii = 0; ii < sizexywfsref; ii++)
+                    for(uint64_t ii = 0; ii < sizexywfsref; ii++)
                     {
                         data.image[IDtmpoutref].array.F[ii] +=
                             data.image[dmdispcombconf[DMindex].IDdisp]
-                                .array.F[kk] *
+                            .array.F[kk] *
                             data.image[dmdispcombconf[DMindex]
-                                           .ID_wfsref_RespMat]
-                                .array.F[kk * sizexywfsref + ii];
+                                       .ID_wfsref_RespMat]
+                            .array.F[kk * sizexywfsref + ii];
                     }
                 }
                 DEBUG_TRACEPOINT(" ");
@@ -1339,7 +1339,7 @@ int AOloopControl_DM_CombineChannels_RUN()
                 data.image[dmdispcombconf[DMindex].ID_wfsref_out].md[0].write =
                     0;
                 sem_post(data.image[dmdispcombconf[DMindex].ID_wfsref_out]
-                             .semptr[0]);
+                         .semptr[0]);
                 printf("Done\n");
                 fflush(stdout);
                 DEBUG_TRACEPOINT(" ");
@@ -1348,7 +1348,7 @@ int AOloopControl_DM_CombineChannels_RUN()
             dmdispcombconf[DMindex].status = 7;
 
             clock_gettime(CLOCK_REALTIME, &t1);
-            if (dmdispcombconf[DMindex].voltmode == 1)
+            if(dmdispcombconf[DMindex].voltmode == 1)
             {
                 DEBUG_TRACEPOINT(" ");
                 AOloopControl_DM_disp2V(DMindex);
@@ -1384,11 +1384,11 @@ int AOloopControl_DM_CombineChannels_RUN()
 
         processinfo_exec_end(processinfo);
 
-        if (loopOK == 0)
+        if(loopOK == 0)
         {
             DEBUG_TRACEPOINT(" ");
             dmdispcombconf[DMindex].ON = 0;
-            if (data.processinfo == 1)
+            if(data.processinfo == 1)
             {
                 processinfo->loopstat = 3;
             }

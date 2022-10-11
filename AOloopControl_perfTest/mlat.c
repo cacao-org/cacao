@@ -68,7 +68,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &dmstream,
         &fpi_dmstream
     },
-    {   CLIARG_STREAM,
+    {
+        CLIARG_STREAM,
         ".wfsstream",
         "WFS stream",
         "null",
@@ -76,7 +77,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &wfsstream,
         &fpi_wfsstream
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".OPDamp",
         "poke amplitude [um]",
         "0.1",
@@ -84,7 +86,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &OPDamp,
         &fpi_OPDamp
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".frameratewait",
         "time period for frame rate measurement",
         "5",
@@ -92,7 +95,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &frameratewait,
         &fpi_frameratewait
     },
-    {   CLIARG_UINT32,
+    {
+        CLIARG_UINT32,
         ".NBiter",
         "Number of iteration",
         "100",
@@ -100,7 +104,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &NBiter,
         &fpi_NBiter
     },
-    {   CLIARG_UINT32,
+    {
+        CLIARG_UINT32,
         ".wfsNBframemax",
         "Number frames in measurement sequence",
         "50",
@@ -108,7 +113,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &wfsNBframemax,
         &fpi_wfsNBframemax
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".status.wfsdt",
         "WFS frame interval",
         "0",
@@ -116,7 +122,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &wfsdt,
         &fpi_wfsdt
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".status.twaitus",
         "initial wait [us]",
         "0",
@@ -124,7 +131,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &twaitus,
         &fpi_twaitus
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".status.refdtoffset",
         "baseline time offset to poke",
         "0",
@@ -132,7 +140,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &refdtoffset,
         &fpi_refdtoffset
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".status.dtoffset",
         "actual time offset to poke",
         "0",
@@ -140,7 +149,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &dtoffset,
         &fpi_dtoffset
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".out.framerateHz",
         "WFS frame rate [Hz]",
         "0",
@@ -148,7 +158,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &framerateHz,
         &fpi_framerateHz
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".out.latencyfr",
         "hardware latency [frame]",
         "0",
@@ -156,7 +167,8 @@ static CLICMDARGDEF farg[] = {{
         (void **) &latencyfr,
         &fpi_latencyfr
     },
-    {   CLIARG_ONOFF,
+    {
+        CLIARG_ONOFF,
         ".option.saveraw",
         "Save raw image cubes",
         "0",
@@ -173,7 +185,7 @@ static CLICMDARGDEF farg[] = {{
 //
 static errno_t customCONFsetup()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
         data.fpsptr->parray[fpi_dmstream].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
@@ -192,13 +204,14 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {}
 
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata = {
+static CLICMDDATA CLIcmddata =
+{
     "mlat", "measure latency between DM and WFS", CLICMD_FIELDS_DEFAULTS
 };
 
@@ -251,14 +264,14 @@ static errno_t compute_function()
     }
 
     float *latencyarray = (float *) malloc(sizeof(float) * *NBiter);
-    if (latencyarray == NULL)
+    if(latencyarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     float *latencysteparray = (float *) malloc(sizeof(float) * *NBiter);
-    if (latencysteparray == NULL)
+    if(latencysteparray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -275,8 +288,8 @@ static errno_t compute_function()
         create_2Dimage_ID("_testdm1", dmxsize, dmysize, &IDdm1);
 
         float RMStot = 0.0;
-        for (uint32_t ii = 0; ii < dmxsize; ii++)
-            for (uint32_t jj = 0; jj < dmysize; jj++)
+        for(uint32_t ii = 0; ii < dmxsize; ii++)
+            for(uint32_t jj = 0; jj < dmysize; jj++)
             {
                 float x = (2.0 * ii - 1.0 * dmxsize) / dmxsize;
                 float y = (2.0 * jj - 1.0 * dmxsize) / dmysize;
@@ -290,8 +303,8 @@ static errno_t compute_function()
 
         printf("RMStot = %f", RMStot);
 
-        for (uint32_t ii = 0; ii < dmxsize; ii++)
-            for (uint32_t jj = 0; jj < dmysize; jj++)
+        for(uint32_t ii = 0; ii < dmxsize; ii++)
+            for(uint32_t jj = 0; jj < dmysize; jj++)
             {
                 data.image[IDdm1].array.F[jj * dmxsize + ii] *=
                     (*OPDamp) / RMStot;
@@ -326,7 +339,7 @@ static errno_t compute_function()
         wfscntstart   = imgwfs.md->cnt0;
 
         {
-            long nsec           = (long) (1000000000 * (*frameratewait));
+            long nsec           = (long)(1000000000 * (*frameratewait));
             long nsec_remaining = nsec % 1000000000;
             long sec            = nsec / 1000000000;
 
@@ -346,7 +359,7 @@ static errno_t compute_function()
 
         printf("wfs dt = %f sec\n", *wfsdt);
 
-        if (wfscntend - wfscntstart < 5)
+        if(wfscntend - wfscntstart < 5)
         {
             snprintf(msgstring,
                      stringmaxlen,
@@ -370,7 +383,7 @@ static errno_t compute_function()
         }
     }
 
-    if (framerateOK == 1)
+    if(framerateOK == 1)
     {
         // Measure latency
         double tdouble_start;
@@ -386,7 +399,7 @@ static errno_t compute_function()
         struct timespec *tarray;
         tarray = (struct timespec *) malloc(sizeof(struct timespec) *
                                             (*wfsNBframemax));
-        if (tarray == NULL)
+        if(tarray == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort(); // or handle error in other ways
@@ -394,7 +407,7 @@ static errno_t compute_function()
 
         double *dtarray;
         dtarray = (double *) malloc(sizeof(double) * (*wfsNBframemax));
-        if (dtarray == NULL)
+        if(dtarray == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort(); // or handle error in other ways
@@ -407,13 +420,13 @@ static errno_t compute_function()
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdouble_start       = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
         long wfscntstart    = imgwfs.md->cnt0;
-        long wfsframeoffset = (long) (0.1 * (*wfsNBframemax));
+        long wfsframeoffset = (long)(0.1 * (*wfsNBframemax));
 
         // Measurement loop
 
         uint32_t iter   = 0;
         int      loopOK = 1;
-        while (loopOK == 1)
+        while(loopOK == 1)
         {
             // double tlastdouble;
             double        tstartdouble;
@@ -451,7 +464,7 @@ static errno_t compute_function()
             // usleep(*twaitus);
 
             {
-                long nsec = (long) (1000 * (*twaitus));
+                long nsec = (long)(1000 * (*twaitus));
 
                 long nsec_remaining = nsec % 1000000000;
                 long sec            = nsec / 1000000000;
@@ -465,11 +478,11 @@ static errno_t compute_function()
 
             // and waiting frames
             wfscnt0 = imgwfs.md->cnt0;
-            for (uint32_t wfsframe = 0; wfsframe < *wfsNBframemax; wfsframe++)
+            for(uint32_t wfsframe = 0; wfsframe < *wfsNBframemax; wfsframe++)
             {
-                while (wfscnt0 == imgwfs.md->cnt0)
+                while(wfscnt0 == imgwfs.md->cnt0)
                 {
-                    long nsec = (long) (1000 * 50); // 50 usec
+                    long nsec = (long)(1000 * 50);  // 50 usec
 
                     long nsec_remaining = nsec % 1000000000;
                     long sec            = nsec / 1000000000;
@@ -492,12 +505,12 @@ static errno_t compute_function()
             int  wfsslice = 0;
             wfscnt0       = imgwfs.md->cnt0;
             printf("\n");
-            while ((dt < dtmax) && (wfsframe < *wfsNBframemax))
+            while((dt < dtmax) && (wfsframe < *wfsNBframemax))
             {
                 // WAITING for image
-                while (wfscnt0 == imgwfs.md->cnt0)
+                while(wfscnt0 == imgwfs.md->cnt0)
                 {
-                    long nsec = (long) (1000 * 2); // 2 usec
+                    long nsec = (long)(1000 * 2);  // 2 usec
 
                     long nsec_remaining = nsec % 1000000000;
                     long sec            = nsec / 1000000000;
@@ -548,13 +561,13 @@ static errno_t compute_function()
                 //     tlastdouble = tdouble;
 
                 // apply DM pattern #1
-                if ((dmstate == 0) && (dt > *refdtoffset) &&
+                if((dmstate == 0) && (dt > *refdtoffset) &&
                         (wfsframe > wfsframeoffset))
                 {
                     //                    usleep((long)(ran1() * 1000000.0 *
                     //                    *wfsdt));
                     {
-                        long nsec = (long) (1000000000.0 * ran1() * (*wfsdt));
+                        long nsec = (long)(1000000000.0 * ran1() * (*wfsdt));
 
                         long nsec_remaining = nsec % 1000000000;
                         long sec            = nsec / 1000000000;
@@ -589,7 +602,7 @@ static errno_t compute_function()
             dmstate = 0;
 
 
-            if (data.fpsptr->parray[fpi_saveraw].fpflag & FPFLAG_ONOFF)
+            if(data.fpsptr->parray[fpi_saveraw].fpflag & FPFLAG_ONOFF)
             {
                 // Save each datacube
                 //
@@ -603,7 +616,7 @@ static errno_t compute_function()
             NBwfsframe = wfsframe;
 
             double *valarray = (double *) malloc(sizeof(double) * NBwfsframe);
-            if (valarray == NULL)
+            if(valarray == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
                 abort();
@@ -624,46 +637,46 @@ static errno_t compute_function()
         }                                                                      \
     }
 
-            for (long kk = 1; kk < NBwfsframe; kk++)
+            for(long kk = 1; kk < NBwfsframe; kk++)
             {
                 valarray[kk] = 0.0;
 
-                switch (imgwfs.datatype)
+                switch(imgwfs.datatype)
                 {
-                case _DATATYPE_FLOAT:
-                    IMAGE_SUMMING_CASE(F);
-                    break;
-                case _DATATYPE_DOUBLE:
-                    IMAGE_SUMMING_CASE(D);
-                    break;
-                case _DATATYPE_UINT16:
-                    IMAGE_SUMMING_CASE(UI16);
-                    break;
-                case _DATATYPE_INT16:
-                    IMAGE_SUMMING_CASE(SI16);
-                    break;
-                case _DATATYPE_UINT32:
-                    IMAGE_SUMMING_CASE(UI32);
-                    break;
-                case _DATATYPE_INT32:
-                    IMAGE_SUMMING_CASE(SI32);
-                    break;
-                case _DATATYPE_UINT64:
-                    IMAGE_SUMMING_CASE(UI64);
-                    break;
-                case _DATATYPE_INT64:
-                    IMAGE_SUMMING_CASE(SI64);
-                    break;
-                case _DATATYPE_COMPLEX_FLOAT:
-                case _DATATYPE_COMPLEX_DOUBLE:
-                default:
-                    PRINT_ERROR("COMPLEX TYPES UNSUPPORTED");
-                    return RETURN_FAILURE;
+                    case _DATATYPE_FLOAT:
+                        IMAGE_SUMMING_CASE(F);
+                        break;
+                    case _DATATYPE_DOUBLE:
+                        IMAGE_SUMMING_CASE(D);
+                        break;
+                    case _DATATYPE_UINT16:
+                        IMAGE_SUMMING_CASE(UI16);
+                        break;
+                    case _DATATYPE_INT16:
+                        IMAGE_SUMMING_CASE(SI16);
+                        break;
+                    case _DATATYPE_UINT32:
+                        IMAGE_SUMMING_CASE(UI32);
+                        break;
+                    case _DATATYPE_INT32:
+                        IMAGE_SUMMING_CASE(SI32);
+                        break;
+                    case _DATATYPE_UINT64:
+                        IMAGE_SUMMING_CASE(UI64);
+                        break;
+                    case _DATATYPE_INT64:
+                        IMAGE_SUMMING_CASE(SI64);
+                        break;
+                    case _DATATYPE_COMPLEX_FLOAT:
+                    case _DATATYPE_COMPLEX_DOUBLE:
+                    default:
+                        PRINT_ERROR("COMPLEX TYPES UNSUPPORTED");
+                        return RETURN_FAILURE;
                 }
 
                 valarray[kk] = sqrt(valarray[kk] / wfssize / 2);
 
-                if (valarray[kk] > valmax)
+                if(valarray[kk] > valmax)
                 {
                     valmax   = valarray[kk];
                     valmaxdt = 0.5 * (dtarray[kk - 1] + dtarray[kk]);
@@ -674,7 +687,7 @@ static errno_t compute_function()
             //
             //
             //
-            for (wfsframe = 1; wfsframe < NBwfsframe; wfsframe++)
+            for(wfsframe = 1; wfsframe < NBwfsframe; wfsframe++)
             {
                 fprintf(fphwlat,
                         "%ld   %10.2f     %g\n",
@@ -698,7 +711,7 @@ static errno_t compute_function()
                    1000.0 * latency,
                    kkmax);
 
-            if (latency > latencymax)
+            if(latency > latencymax)
             {
                 latencymax = latency;
                 // WRITE_FULLFILENAME(ffname, "%s/maxlatencyseq.fits",
@@ -712,7 +725,7 @@ static errno_t compute_function()
 
             // process signals, increment loop counter
             iter++;
-            if (iter == (*NBiter))
+            if(iter == (*NBiter))
             {
                 loopOK = 0;
             }
@@ -745,14 +758,14 @@ static errno_t compute_function()
         float latencystepave = 0.0;
         float minlatency     = latencyarray[0];
         float maxlatency     = latencyarray[0];
-        for (uint32_t iter = 0; iter < (*NBiter); iter++)
+        for(uint32_t iter = 0; iter < (*NBiter); iter++)
         {
-            if (latencyarray[iter] > maxlatency)
+            if(latencyarray[iter] > maxlatency)
             {
                 maxlatency = latencyarray[iter];
             }
 
-            if (latencyarray[iter] < minlatency)
+            if(latencyarray[iter] < minlatency)
             {
                 minlatency = latencyarray[iter];
             }

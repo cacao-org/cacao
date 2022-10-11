@@ -150,287 +150,369 @@ long            fpi_zpoffsetch11;
 
 
 
-static CLICMDARGDEF farg[] = {
-    {CLIARG_UINT32,
-     ".DMindex",
-     "Deformable mirror index",
-     "5",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &DMindex,
-     &fpi_DMindex},
-    {CLIARG_STREAM,
-     ".DMcombout",
-     "output stream for combined command",
-     "dm99disp",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &DMcombout,
-     &fpi_DMcombout},
-    {CLIARG_UINT32,
-     ".DMxsize",
-     "x size",
-     "20",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &DMxsize,
-     &fpi_DMxsize},
-    {CLIARG_UINT32,
-     ".DMysize",
-     "y size",
-     "20",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &DMysize,
-     &fpi_DMysize},
-    {CLIARG_UINT32,
-     ".NBchannel",
-     "number of DM channels",
-     "12",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &NBchannel,
-     NULL},
-    {CLIARG_UINT32,
-     ".DMmode",
-     "0:SquareGrid, 1:Generic",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &DMmode,
-     NULL},
-    {CLIARG_UINT32,
-     ".AveMode",
-     "Averaging mode",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &AveMode,
-     NULL},
-    {CLIARG_ONOFF,
-     ".option.dm2dm_mode",
-     "DM to DM offset mode",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &dm2dm_mode,
-     &fpi_dm2dm_mode},
-    {CLIARG_STREAM,
-     ".option.dm2dm_DMmodes",
-     "Output stream DM to DM",
-     "null",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &dm2dm_DMmodes,
-     &fpi_dm2dm_DMmodes},
-    {CLIARG_STREAM,
-     ".option.dm2dm_outdisp",
-     "data stream to which output DM is written",
-     "null",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &dm2dm_outdisp,
-     &fpi_dm2dm_outdisp},
-    {CLIARG_ONOFF,
-     ".option.wfsrefmode",
-     "WFS ref mode",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &wfsrefmode,
-     &fpi_wfsrefmode},
-    {CLIARG_STREAM,
-     ".option.wfsref_WFSRespMat",
-     "Output WFS resp matrix",
-     "null",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &wfsref_WFSRespMat,
-     &fpi_wfsref_WFSRespMat},
-    {CLIARG_STREAM,
-     ".option.wfsref_out",
-     "Output WFS",
-     "null",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &wfsref_out,
-     &fpi_wfsref_out},
-    {CLIARG_ONOFF,
-     ".option.voltmode",
-     "Volt mode",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &voltmode,
-     &fpi_voltmode},
-    {CLIARG_UINT32,
-     ".option.volttype",
-     "volt type",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &volttype,
-     NULL},
-    {CLIARG_FLOAT32,
-     ".option.stroke100",
-     "Stroke for 100 V [um]",
-     "1.0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &stroke100,
-     &fpi_stroke100},
-    {CLIARG_STREAM,
-     ".option.voltname",
-     "Stream name for volt output",
-     "dmvolt",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &voltname,
-     &fpi_voltname},
-    {CLIARG_FLOAT32,
-     ".option.DClevel",
-     "DC level [um]",
-     "0.5",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &DClevel,
-     &fpi_DClevel},
-    {CLIARG_FLOAT32,
-     ".option.maxvolt",
-     "Maximum voltage",
-     "100.0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &maxvolt,
-     &fpi_maxvolt},
-    {CLIARG_UINT64,
-     ".status.loopcnt",
-     "Loop counter",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &loopcnt,
-     NULL},
-    {CLIARG_ONOFF,
-     ".astrogrid.mode",
-     "circular buffer on/off",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &astrogrid,
-     &fpi_astrogrid},
-    {CLIARG_UINT32,
-     ".astrogrid.chan",
-     "astrogrid DM channel",
-     "9",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &astrogridchan,
-     &fpi_astrogridchan},
-    {CLIARG_STREAM,
-     ".astrogrid.sname",
-     "astrogrid cube name",
-     "dmCBcube",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &astrogridsname,
-     &fpi_astrogridsname},
-    {CLIARG_FLOAT32,
-     ".astrogrid.mult",
-     "astrogrid multiplicative coeff",
-     "1.0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &astrogridmult,
-     &fpi_astrogridmult},
-    {CLIARG_UINT32,
-     ".astrogrid.delay",
-     "time delay between main update and astrogrid update [us]",
-     "100",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &astrogridtdelay,
-     &fpi_astrogridtdelay},
-    {CLIARG_UINT32,
-     ".astrogrid.nbframe",
-     "astrogrid number of frame per slice",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &astrogridNBframe,
-     &fpi_astrogridNBframe},
-    {CLIARG_ONOFF,
-     ".zpoffset.enable",
-     "zero point offset enable",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetenable,
-     &fpi_zpoffsetenable},
-    {CLIARG_STREAM,
-     ".zpoffset.DMcomboutzpo",
-     "output stream for combined zero point offset",
-     "dm99zpo",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &DMcomboutzpo,
-     &fpi_DMcomboutzpo},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch00",
-     "channel 00 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch00,
-     &fpi_zpoffsetch00},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch01",
-     "channel 01 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch01,
-     &fpi_zpoffsetch01},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch02",
-     "channel 02 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch02,
-     &fpi_zpoffsetch02},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch03",
-     "channel 03 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch03,
-     &fpi_zpoffsetch03},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch04",
-     "channel 04 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch04,
-     &fpi_zpoffsetch04},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch05",
-     "channel 05 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch05,
-     &fpi_zpoffsetch05},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch06",
-     "channel 06 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch06,
-     &fpi_zpoffsetch06},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch07",
-     "channel 07 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch07,
-     &fpi_zpoffsetch07},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch08",
-     "channel 08 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch08,
-     &fpi_zpoffsetch08},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch09",
-     "channel 09 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch09,
-     &fpi_zpoffsetch09},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch10",
-     "channel 10 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch10,
-     &fpi_zpoffsetch10},
-    {CLIARG_ONOFF,
-     ".zpoffset.ch11",
-     "channel 11 zpoffset ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &zpoffsetch11,
-     &fpi_zpoffsetch11}};
+static CLICMDARGDEF farg[] =
+{
+    {
+        CLIARG_UINT32,
+        ".DMindex",
+        "Deformable mirror index",
+        "5",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &DMindex,
+        &fpi_DMindex
+    },
+    {
+        CLIARG_STREAM,
+        ".DMcombout",
+        "output stream for combined command",
+        "dm99disp",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &DMcombout,
+        &fpi_DMcombout
+    },
+    {
+        CLIARG_UINT32,
+        ".DMxsize",
+        "x size",
+        "20",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &DMxsize,
+        &fpi_DMxsize
+    },
+    {
+        CLIARG_UINT32,
+        ".DMysize",
+        "y size",
+        "20",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &DMysize,
+        &fpi_DMysize
+    },
+    {
+        CLIARG_UINT32,
+        ".NBchannel",
+        "number of DM channels",
+        "12",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &NBchannel,
+        NULL
+    },
+    {
+        CLIARG_UINT32,
+        ".DMmode",
+        "0:SquareGrid, 1:Generic",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &DMmode,
+        NULL
+    },
+    {
+        CLIARG_UINT32,
+        ".AveMode",
+        "Averaging mode",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &AveMode,
+        NULL
+    },
+    {
+        CLIARG_ONOFF,
+        ".option.dm2dm_mode",
+        "DM to DM offset mode",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &dm2dm_mode,
+        &fpi_dm2dm_mode
+    },
+    {
+        CLIARG_STREAM,
+        ".option.dm2dm_DMmodes",
+        "Output stream DM to DM",
+        "null",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &dm2dm_DMmodes,
+        &fpi_dm2dm_DMmodes
+    },
+    {
+        CLIARG_STREAM,
+        ".option.dm2dm_outdisp",
+        "data stream to which output DM is written",
+        "null",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &dm2dm_outdisp,
+        &fpi_dm2dm_outdisp
+    },
+    {
+        CLIARG_ONOFF,
+        ".option.wfsrefmode",
+        "WFS ref mode",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &wfsrefmode,
+        &fpi_wfsrefmode
+    },
+    {
+        CLIARG_STREAM,
+        ".option.wfsref_WFSRespMat",
+        "Output WFS resp matrix",
+        "null",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &wfsref_WFSRespMat,
+        &fpi_wfsref_WFSRespMat
+    },
+    {
+        CLIARG_STREAM,
+        ".option.wfsref_out",
+        "Output WFS",
+        "null",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &wfsref_out,
+        &fpi_wfsref_out
+    },
+    {
+        CLIARG_ONOFF,
+        ".option.voltmode",
+        "Volt mode",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &voltmode,
+        &fpi_voltmode
+    },
+    {
+        CLIARG_UINT32,
+        ".option.volttype",
+        "volt type",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &volttype,
+        NULL
+    },
+    {
+        CLIARG_FLOAT32,
+        ".option.stroke100",
+        "Stroke for 100 V [um]",
+        "1.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &stroke100,
+        &fpi_stroke100
+    },
+    {
+        CLIARG_STREAM,
+        ".option.voltname",
+        "Stream name for volt output",
+        "dmvolt",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &voltname,
+        &fpi_voltname
+    },
+    {
+        CLIARG_FLOAT32,
+        ".option.DClevel",
+        "DC level [um]",
+        "0.5",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &DClevel,
+        &fpi_DClevel
+    },
+    {
+        CLIARG_FLOAT32,
+        ".option.maxvolt",
+        "Maximum voltage",
+        "100.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &maxvolt,
+        &fpi_maxvolt
+    },
+    {
+        CLIARG_UINT64,
+        ".status.loopcnt",
+        "Loop counter",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &loopcnt,
+        NULL
+    },
+    {
+        CLIARG_ONOFF,
+        ".astrogrid.mode",
+        "circular buffer on/off",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &astrogrid,
+        &fpi_astrogrid
+    },
+    {
+        CLIARG_UINT32,
+        ".astrogrid.chan",
+        "astrogrid DM channel",
+        "9",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &astrogridchan,
+        &fpi_astrogridchan
+    },
+    {
+        CLIARG_STREAM,
+        ".astrogrid.sname",
+        "astrogrid cube name",
+        "dmCBcube",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &astrogridsname,
+        &fpi_astrogridsname
+    },
+    {
+        CLIARG_FLOAT32,
+        ".astrogrid.mult",
+        "astrogrid multiplicative coeff",
+        "1.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &astrogridmult,
+        &fpi_astrogridmult
+    },
+    {
+        CLIARG_UINT32,
+        ".astrogrid.delay",
+        "time delay between main update and astrogrid update [us]",
+        "100",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &astrogridtdelay,
+        &fpi_astrogridtdelay
+    },
+    {
+        CLIARG_UINT32,
+        ".astrogrid.nbframe",
+        "astrogrid number of frame per slice",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &astrogridNBframe,
+        &fpi_astrogridNBframe
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.enable",
+        "zero point offset enable",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetenable,
+        &fpi_zpoffsetenable
+    },
+    {
+        CLIARG_STREAM,
+        ".zpoffset.DMcomboutzpo",
+        "output stream for combined zero point offset",
+        "dm99zpo",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &DMcomboutzpo,
+        &fpi_DMcomboutzpo
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch00",
+        "channel 00 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch00,
+        &fpi_zpoffsetch00
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch01",
+        "channel 01 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch01,
+        &fpi_zpoffsetch01
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch02",
+        "channel 02 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch02,
+        &fpi_zpoffsetch02
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch03",
+        "channel 03 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch03,
+        &fpi_zpoffsetch03
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch04",
+        "channel 04 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch04,
+        &fpi_zpoffsetch04
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch05",
+        "channel 05 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch05,
+        &fpi_zpoffsetch05
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch06",
+        "channel 06 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch06,
+        &fpi_zpoffsetch06
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch07",
+        "channel 07 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch07,
+        &fpi_zpoffsetch07
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch08",
+        "channel 08 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch08,
+        &fpi_zpoffsetch08
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch09",
+        "channel 09 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch09,
+        &fpi_zpoffsetch09
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch10",
+        "channel 10 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch10,
+        &fpi_zpoffsetch10
+    },
+    {
+        CLIARG_ONOFF,
+        ".zpoffset.ch11",
+        "channel 11 zpoffset ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &zpoffsetch11,
+        &fpi_zpoffsetch11
+    }
+};
 
 
 
@@ -440,7 +522,7 @@ static CLICMDARGDEF farg[] = {
 //
 static errno_t customCONFsetup()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
 
         data.fpsptr->parray[fpi_DMindex].fpflag =
@@ -482,10 +564,10 @@ static errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
-        if (data.fpsptr->parray[fpi_dm2dm_mode].fpflag &
-            FPFLAG_ONOFF) // ON state
+        if(data.fpsptr->parray[fpi_dm2dm_mode].fpflag &
+                FPFLAG_ONOFF) // ON state
         {
             data.fpsptr->parray[fpi_dm2dm_DMmodes].fpflag |= FPFLAG_USED;
             data.fpsptr->parray[fpi_dm2dm_outdisp].fpflag |= FPFLAG_USED;
@@ -502,8 +584,8 @@ static errno_t customCONFcheck()
 
 
 
-        if (data.fpsptr->parray[fpi_wfsrefmode].fpflag &
-            FPFLAG_ONOFF) // ON state
+        if(data.fpsptr->parray[fpi_wfsrefmode].fpflag &
+                FPFLAG_ONOFF) // ON state
         {
             data.fpsptr->parray[fpi_wfsref_WFSRespMat].fpflag |= FPFLAG_USED;
             data.fpsptr->parray[fpi_wfsref_WFSRespMat].fpflag |= FPFLAG_VISIBLE;
@@ -521,7 +603,7 @@ static errno_t customCONFcheck()
 
 
 
-        if (data.fpsptr->parray[fpi_voltmode].fpflag & FPFLAG_ONOFF) // ON state
+        if(data.fpsptr->parray[fpi_voltmode].fpflag & FPFLAG_ONOFF)  // ON state
         {
             data.fpsptr->parray[fpi_voltname].fpflag |= FPFLAG_USED;
             data.fpsptr->parray[fpi_voltname].fpflag |= FPFLAG_VISIBLE;
@@ -537,8 +619,8 @@ static errno_t customCONFcheck()
         }
 
 
-        if (data.fpsptr->parray[fpi_astrogrid].fpflag &
-            FPFLAG_ONOFF) // ON state
+        if(data.fpsptr->parray[fpi_astrogrid].fpflag &
+                FPFLAG_ONOFF) // ON state
         {
             data.fpsptr->parray[fpi_astrogridsname].fpflag |= FPFLAG_USED;
             data.fpsptr->parray[fpi_astrogridsname].fpflag |= FPFLAG_VISIBLE;
@@ -556,7 +638,7 @@ static errno_t customCONFcheck()
 
 
 
-        if (*NBchannel < 1)
+        if(*NBchannel < 1)
         {
             data.fpsptr->parray[fpi_zpoffsetch00].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch00].fpflag &= ~FPFLAG_VISIBLE;
@@ -567,7 +649,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch00].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 2)
+        if(*NBchannel < 2)
         {
             data.fpsptr->parray[fpi_zpoffsetch01].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch01].fpflag &= ~FPFLAG_VISIBLE;
@@ -578,7 +660,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch01].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 3)
+        if(*NBchannel < 3)
         {
             data.fpsptr->parray[fpi_zpoffsetch02].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch02].fpflag &= ~FPFLAG_VISIBLE;
@@ -589,7 +671,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch02].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 4)
+        if(*NBchannel < 4)
         {
             data.fpsptr->parray[fpi_zpoffsetch03].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch03].fpflag &= ~FPFLAG_VISIBLE;
@@ -600,7 +682,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch03].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 5)
+        if(*NBchannel < 5)
         {
             data.fpsptr->parray[fpi_zpoffsetch04].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch04].fpflag &= ~FPFLAG_VISIBLE;
@@ -611,7 +693,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch04].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 6)
+        if(*NBchannel < 6)
         {
             data.fpsptr->parray[fpi_zpoffsetch05].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch05].fpflag &= ~FPFLAG_VISIBLE;
@@ -622,7 +704,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch05].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 7)
+        if(*NBchannel < 7)
         {
             data.fpsptr->parray[fpi_zpoffsetch06].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch06].fpflag &= ~FPFLAG_VISIBLE;
@@ -633,7 +715,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch06].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 8)
+        if(*NBchannel < 8)
         {
             data.fpsptr->parray[fpi_zpoffsetch07].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch07].fpflag &= ~FPFLAG_VISIBLE;
@@ -644,7 +726,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch07].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 9)
+        if(*NBchannel < 9)
         {
             data.fpsptr->parray[fpi_zpoffsetch08].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch08].fpflag &= ~FPFLAG_VISIBLE;
@@ -655,7 +737,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch08].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 10)
+        if(*NBchannel < 10)
         {
             data.fpsptr->parray[fpi_zpoffsetch09].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch09].fpflag &= ~FPFLAG_VISIBLE;
@@ -666,7 +748,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch09].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 11)
+        if(*NBchannel < 11)
         {
             data.fpsptr->parray[fpi_zpoffsetch10].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch10].fpflag &= ~FPFLAG_VISIBLE;
@@ -677,7 +759,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch10].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (*NBchannel < 12)
+        if(*NBchannel < 12)
         {
             data.fpsptr->parray[fpi_zpoffsetch11].fpflag &= ~FPFLAG_USED;
             data.fpsptr->parray[fpi_zpoffsetch11].fpflag &= ~FPFLAG_VISIBLE;
@@ -688,7 +770,7 @@ static errno_t customCONFcheck()
             data.fpsptr->parray[fpi_zpoffsetch11].fpflag |= FPFLAG_VISIBLE;
         }
 
-        if (data.fpsptr->parray[fpi_zpoffsetch00].fpflag & FPFLAG_ONOFF)
+        if(data.fpsptr->parray[fpi_zpoffsetch00].fpflag & FPFLAG_ONOFF)
         {
             *zpoffsetch00 = 1;
         }
@@ -716,8 +798,10 @@ static errno_t customCONFcheck()
 
 
 
-static CLICMDDATA CLIcmddata = {
-    "DMcomb", "Deformable mirror combine channels", CLICMD_FIELDS_DEFAULTS};
+static CLICMDDATA CLIcmddata =
+{
+    "DMcomb", "Deformable mirror combine channels", CLICMD_FIELDS_DEFAULTS
+};
 
 
 
@@ -739,37 +823,37 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
     static uint32_t framecnt = 0;
     static uint64_t xysize;
 
-    if (DMdisp_add_disp_from_circular_buffer_init == 0)
+    if(DMdisp_add_disp_from_circular_buffer_init == 0)
     {
         printf("(re-)initializing DMdisp_add_disp_from_circular_buffer\n");
         delete_image_ID(astrogridsname, DELETE_IMAGE_ERRMODE_WARNING);
         read_sharedmem_image(astrogridsname);
         imgdispbuffer = mkIMGID_from_name(astrogridsname);
         resolveIMGID(&imgdispbuffer, ERRMODE_ABORT);
-        xysize = (uint64_t) (*DMxsize) * (*DMysize);
+        xysize = (uint64_t)(*DMxsize) * (*DMysize);
 
         DMdisp_add_disp_from_circular_buffer_init = 1;
     }
 
 
-    if ((*astrogrid) == 1)
+    if((*astrogrid) == 1)
     {
         /* printf("Apply circular buffer slice %u / %u\n",
                sliceindex,
                imgdispbuffer.size[2]);*/
 
         framecnt++;
-        if (framecnt >= (*astrogridNBframe))
+        if(framecnt >= (*astrogridNBframe))
         {
             framecnt = 0;
             sliceindex++;
 
-            if (sliceindex >= imgdispbuffer.size[2])
+            if(sliceindex >= imgdispbuffer.size[2])
             {
                 sliceindex = 0;
             }
 
-            for (uint64_t ii = 0; ii < xysize; ii++)
+            for(uint64_t ii = 0; ii < xysize; ii++)
             {
                 dispchout.im->array.F[ii] =
                     (*astrogridmult) *
@@ -797,36 +881,36 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
 
 
 
-    if ((*volttype) == 1)
+    if((*volttype) == 1)
     {
         // linear bipolar, output is float
-        for (uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        for(uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
             float voltvalue = 100.0 * imgdisp.im->array.F[ii] / (*stroke100);
-            if (voltvalue > (*maxvolt))
+            if(voltvalue > (*maxvolt))
             {
                 voltvalue = (*maxvolt);
             }
-            if (voltvalue < -(*maxvolt))
+            if(voltvalue < -(*maxvolt))
             {
                 voltvalue = -(*maxvolt);
             }
             imgvolt.im->array.F[ii] = voltvalue;
         }
     }
-    else if ((*volttype) == 2)
+    else if((*volttype) == 2)
     {
         // quadratic unipolar, output is UI16
-        for (uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        for(uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
             float volt = 100.0 * sqrt(imgdisp.im->array.F[ii] / (*stroke100));
-            if (volt > (*maxvolt))
+            if(volt > (*maxvolt))
             {
                 volt = (*maxvolt);
             }
             // TODO add quantization code
             imgvolt.im->array.UI16[ii] =
-                (unsigned short int) (volt / 300.0 * 16384.0);
+                (unsigned short int)(volt / 300.0 * 16384.0);
         }
     }
 
@@ -841,9 +925,9 @@ static errno_t update_dmdisp(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
     memcpy(dmdisptmp,
            imgch[0].im->array.F,
            sizeof(float) * (*DMxsize) * (*DMysize));
-    for (uint32_t ch = 1; ch < *NBchannel; ch++)
+    for(uint32_t ch = 1; ch < *NBchannel; ch++)
     {
-        for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        for(uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
             dmdisptmp[ii] += imgch[ch].im->array.F[ii];
         }
@@ -852,24 +936,24 @@ static errno_t update_dmdisp(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
     // Remove average
     //
     double ave = 0.0;
-    if (*AveMode == 1)
+    if(*AveMode == 1)
     {
-        for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        for(uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
             ave += dmdisptmp[ii];
         }
         ave /= (*DMxsize) * (*DMysize);
     }
 
-    if (*AveMode < 2) // OFFSET BY DClevel
+    if(*AveMode < 2)  // OFFSET BY DClevel
     {
-        for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        for(uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
             dmdisptmp[ii] += (*DClevel - ave);
 
             // remove negative values
-            if (*voltmode == 1)
-                if (dmdisptmp[ii] < 0.0)
+            if(*voltmode == 1)
+                if(dmdisptmp[ii] < 0.0)
                 {
                     dmdisptmp[ii] = 0.0;
                 }
@@ -887,16 +971,16 @@ static errno_t update_dmdisp(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
 
 static errno_t update_dmdispzpo(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
 {
-    for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+    for(uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
     {
         dmdisptmp[ii] = 0.0;
     }
 
-    for (uint32_t ch = 0; ch < *NBchannel; ch++)
+    for(uint32_t ch = 0; ch < *NBchannel; ch++)
     {
-        if (zpoffset_channel[ch] == 1)
+        if(zpoffset_channel[ch] == 1)
         {
-            for (uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+            for(uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
             {
                 dmdisptmp[ii] += imgch[ch].im->array.F[ii];
             }
@@ -922,7 +1006,7 @@ static errno_t compute_function()
     IMGID *imgch = (IMGID *) malloc(sizeof(IMGID) * (*NBchannel));
     printf("This is DM comb, index = %ld\n", (long) *DMindex);
     printf("Initialize channels\n");
-    for (uint32_t ch = 0; ch < *NBchannel; ch++)
+    for(uint32_t ch = 0; ch < *NBchannel; ch++)
     {
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "dm%02udisp%02u", *DMindex, ch);
@@ -962,10 +1046,10 @@ static errno_t compute_function()
 
 
     IMGID imgdmvolt;
-    if (*voltmode == 1)
+    if(*voltmode == 1)
     {
 
-        if (image_ID(voltname) == -1)
+        if(image_ID(voltname) == -1)
         {
             read_sharedmem_image(voltname);
         }
@@ -986,7 +1070,7 @@ static errno_t compute_function()
     int zpoval;
 
     zpoval = zpoffset_channel[0];
-    if (data.fpsptr->parray[fpi_zpoffsetch00].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch00].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[0] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -998,7 +1082,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[1];
-    if (data.fpsptr->parray[fpi_zpoffsetch01].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch01].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[1] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1010,7 +1094,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[2];
-    if (data.fpsptr->parray[fpi_zpoffsetch02].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch02].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[2] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1022,7 +1106,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[3];
-    if (data.fpsptr->parray[fpi_zpoffsetch03].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch03].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[3] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1034,7 +1118,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[4];
-    if (data.fpsptr->parray[fpi_zpoffsetch04].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch04].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[4] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1046,7 +1130,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[5];
-    if (data.fpsptr->parray[fpi_zpoffsetch05].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch05].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[5] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1058,7 +1142,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[6];
-    if (data.fpsptr->parray[fpi_zpoffsetch06].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch06].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[6] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1070,7 +1154,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[7];
-    if (data.fpsptr->parray[fpi_zpoffsetch07].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch07].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[7] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1082,7 +1166,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[8];
-    if (data.fpsptr->parray[fpi_zpoffsetch08].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch08].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[8] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1094,7 +1178,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[9];
-    if (data.fpsptr->parray[fpi_zpoffsetch09].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch09].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[9] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1106,7 +1190,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[10];
-    if (data.fpsptr->parray[fpi_zpoffsetch10].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch10].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[10] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1118,7 +1202,7 @@ static errno_t compute_function()
     }
 
     zpoval = zpoffset_channel[11];
-    if (data.fpsptr->parray[fpi_zpoffsetch11].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_zpoffsetch11].fpflag & FPFLAG_ONOFF)
     {
         zpoffset_channel[11] = 1;
         zpooffsetchange += 1 - zpoval;
@@ -1143,16 +1227,16 @@ static errno_t compute_function()
         long cnt0sum    = 0;
         long cnt0sumzpo = 0;
 
-        if (*astrogrid == 1)
+        if(*astrogrid == 1)
         {
             // exclude astrogridchan
-            for (uint32_t ch = 0; ch < *NBchannel; ch++)
+            for(uint32_t ch = 0; ch < *NBchannel; ch++)
             {
-                if (ch != *astrogridchan)
+                if(ch != *astrogridchan)
                 {
                     cnt0sum += imgch[ch].md->cnt0;
 
-                    if ((*zpoffsetenable == 1) && (zpoffset_channel[ch] == 1))
+                    if((*zpoffsetenable == 1) && (zpoffset_channel[ch] == 1))
                     {
                         cnt0sumzpo += imgch[ch].md->cnt0;
                     }
@@ -1161,7 +1245,7 @@ static errno_t compute_function()
         }
         else
         {
-            for (uint32_t ch = 0; ch < *NBchannel; ch++)
+            for(uint32_t ch = 0; ch < *NBchannel; ch++)
             {
                 cnt0sum += imgch[ch].md->cnt0;
                 /*if (*zpoffsetenable == 1)
@@ -1169,7 +1253,7 @@ static errno_t compute_function()
                     printf(" %d", zpoffset_channel[ch]);
                 }*/
 
-                if ((*zpoffsetenable == 1) && (zpoffset_channel[ch] == 1))
+                if((*zpoffsetenable == 1) && (zpoffset_channel[ch] == 1))
                 {
                     cnt0sumzpo += imgch[ch].md->cnt0;
                 }
@@ -1180,13 +1264,13 @@ static errno_t compute_function()
                         }*/
         }
 
-        if (cnt0sum != cntsumref)
+        if(cnt0sum != cntsumref)
         {
             //printf("cnt0sum = %ld\n", cnt0sum);
             cntsumref = cnt0sum;
             DMupdate  = 1;
         }
-        if (cnt0sumzpo != cntsumrefzpo)
+        if(cnt0sumzpo != cntsumrefzpo)
         {
             //printf("cnt0sumzpo = %ld\n", cnt0sumzpo);
             cntsumrefzpo = cnt0sumzpo;
@@ -1194,9 +1278,9 @@ static errno_t compute_function()
         }
     }
 
-    if (*zpoffsetenable == 1)
+    if(*zpoffsetenable == 1)
     {
-        if (zpooffsetchange != 0)
+        if(zpooffsetchange != 0)
         {
             DMupdatezpo = 1;
         }
@@ -1204,12 +1288,12 @@ static errno_t compute_function()
 
 
 
-    if (DMupdate == 1)
+    if(DMupdate == 1)
     {
         // Update DM disp
         //printf("Updating dmdisp\n\n");
 
-        if ((*astrogrid) == 0)
+        if((*astrogrid) == 0)
         {
             DMdisp_add_disp_from_circular_buffer_init = 0;
         }
@@ -1217,7 +1301,7 @@ static errno_t compute_function()
 
         // Sum all channels
         //
-        if (((*astrogrid) == 1) && ((*astrogridtdelay) == 0))
+        if(((*astrogrid) == 1) && ((*astrogridtdelay) == 0))
         {
             DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
             processinfo_update_output_stream(processinfo,
@@ -1226,7 +1310,7 @@ static errno_t compute_function()
         update_dmdisp(imgdisp, imgch, dmdisptmp);
         processinfo_update_output_stream(processinfo, imgdisp.ID);
 
-        if (*voltmode == 1)
+        if(*voltmode == 1)
         {
             imgdmvolt.md->write = 1;
             DM_displ2V(imgdisp, imgdmvolt);
@@ -1235,7 +1319,7 @@ static errno_t compute_function()
 
 
 
-        if (((*astrogrid) == 1) && ((*astrogridtdelay) != 0))
+        if(((*astrogrid) == 1) && ((*astrogridtdelay) != 0))
         {
             DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
             processinfo_update_output_stream(processinfo,
@@ -1243,7 +1327,7 @@ static errno_t compute_function()
 
             // Add time delay
             {
-                long nsec = (long) (1000 * (*astrogridtdelay));
+                long nsec = (long)(1000 * (*astrogridtdelay));
 
                 long nsec_remaining = nsec % 1000000000;
                 long sec            = nsec / 1000000000;
@@ -1260,7 +1344,7 @@ static errno_t compute_function()
             // take into account update to astrogrid channel
             cntsumref++;
 
-            if (*voltmode == 1)
+            if(*voltmode == 1)
             {
                 imgdmvolt.md->write = 1;
                 DM_displ2V(imgdisp, imgdmvolt);
@@ -1269,7 +1353,7 @@ static errno_t compute_function()
         }
     }
 
-    if (DMupdatezpo == 1)
+    if(DMupdatezpo == 1)
     {
         // printf("Updating zpo %d\n", zpooffsetchange);
         update_dmdispzpo(imgdispzpo, imgch, dmdisptmp);
@@ -1294,9 +1378,9 @@ INSERT_STD_FPSCLIfunctions
 
 
 
-    // Register function in CLI
-    errno_t
-    CLIADDCMD_AOloopControl_DM__comb()
+// Register function in CLI
+errno_t
+CLIADDCMD_AOloopControl_DM__comb()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;

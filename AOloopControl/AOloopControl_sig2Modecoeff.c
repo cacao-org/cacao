@@ -63,14 +63,14 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name,
     NBmodes = data.image[IDmodes].md[0].size[2];
 
     mcoeff_ave = (double *) malloc(sizeof(double) * NBmodes);
-    if (mcoeff_ave == NULL)
+    if(mcoeff_ave == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
     mcoeff_rms = (double *) malloc(sizeof(double) * NBmodes);
-    if (mcoeff_rms == NULL)
+    if(mcoeff_rms == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -80,28 +80,34 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name,
 
     totref = 0.0;
 
-    for (ii = 0; ii < wfssize; ii++)
+    for(ii = 0; ii < wfssize; ii++)
+    {
         totref += data.image[IDwfsref].array.F[ii];
-    for (ii = 0; ii < wfssize; ii++)
+    }
+    for(ii = 0; ii < wfssize; ii++)
+    {
         data.image[IDwfsref].array.F[ii] /= totref;
+    }
 
-    for (kk = 0; kk < NBframes; kk++)
+    for(kk = 0; kk < NBframes; kk++)
     {
         double totim = 0.0;
 
-        for (ii = 0; ii < wfssize; ii++)
+        for(ii = 0; ii < wfssize; ii++)
+        {
             totim += data.image[IDwfs].array.F[kk * wfssize + ii];
-        for (ii = 0; ii < wfssize; ii++)
+        }
+        for(ii = 0; ii < wfssize; ii++)
         {
             data.image[IDwfs].array.F[kk * wfssize + ii] /= totim;
             data.image[IDwfs].array.F[kk * wfssize + ii] -=
                 data.image[IDwfsref].array.F[ii];
         }
 
-        for (m = 0; m < NBmodes; m++)
+        for(m = 0; m < NBmodes; m++)
         {
             coeff = 0.0;
-            for (ii = 0; ii < wfssize; ii++)
+            for(ii = 0; ii < wfssize; ii++)
                 coeff += data.image[IDmodes].array.F[m * wfssize + ii] *
                          data.image[IDwfs].array.F[kk * wfssize + ii];
             data.image[IDout].array.F[m * NBframes + kk] = coeff;
@@ -111,7 +117,7 @@ long AOloopControl_sig2Modecoeff(const char *WFSim_name,
     }
 
     fp = fopen("mode_stats.txt", "w");
-    for (m = 0; m < NBmodes; m++)
+    for(m = 0; m < NBmodes; m++)
     {
         mcoeff_rms[m] = sqrt(mcoeff_rms[m] / NBframes);
         mcoeff_ave[m] /= NBframes;

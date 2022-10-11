@@ -26,8 +26,10 @@ extern AOloopControl_var aoloopcontrol_var;
 
 errno_t AOloopControl_ARPFon()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFon = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
@@ -37,8 +39,10 @@ errno_t AOloopControl_ARPFon()
 
 errno_t AOloopControl_ARPFoff()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.ARPFon = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);

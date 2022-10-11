@@ -27,12 +27,12 @@ void __attribute__((constructor)) libinit_AOloopControl_compTools();
 
 /** @brief compute cross product between two 3D arrays */
 imageID AOloopControl_compTools_CrossProduct(const char *ID1_name,
-                                             const char *ID2_name,
-                                             const char *IDout_name);
+        const char *ID2_name,
+        const char *IDout_name);
 
 /** @brief Create simple zonal poke cube */
 imageID AOloopControl_compTools_mkSimpleZpokeM(uint32_t dmxsize,
-                                               uint32_t dmysize,
-                                               char    *IDout_name);
+        uint32_t dmysize,
+        char    *IDout_name);
 
 #endif

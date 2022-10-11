@@ -168,9 +168,9 @@ INIT_MODULE_LIB(AOloopControl_perfTest)
 /** @brief CLI function for AOcontrolLoop_TestDMSpeed */
 errno_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
 {
-    if (0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+    if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 1) ==
-        0)
+            0)
     {
         AOcontrolLoop_perfTest_TestDMSpeed(data.cmdargtoken[1].val.string,
                                            data.cmdargtoken[2].val.numl,
@@ -194,7 +194,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_cli()
     // NOT been named. See code in function_parameter.c for detailed rules.
     function_parameter_getFPSargs_from_CLIfunc("measlat");
 
-    if (data.FPS_CMDCODE != 0) // use FPS implementation
+    if(data.FPS_CMDCODE != 0)  // use FPS implementation
     {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOcontrolLoop_perfTest_TestSystemLatency_FPCONF;
@@ -204,14 +204,14 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_cli()
     }
 
     // non FPS implementation - all parameters specified at function launch
-    if (0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 1) +
+    if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 1) +
             CLI_checkarg(4, 2) ==
-        0)
+            0)
     {
         AOcontrolLoop_perfTest_TestSystemLatency(data.cmdargtoken[1].val.string,
-                                                 data.cmdargtoken[2].val.string,
-                                                 data.cmdargtoken[3].val.numf,
-                                                 data.cmdargtoken[4].val.numl);
+                data.cmdargtoken[2].val.string,
+                data.cmdargtoken[3].val.numf,
+                data.cmdargtoken[4].val.numl);
         return CLICMD_SUCCESS;
     }
     else
@@ -223,11 +223,11 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_cli()
 /** @brief CLI function for AOloopControl_TestDMmodeResp */
 errno_t AOloopControl_perfTest_TestDMmodeResp_cli()
 {
-    if (0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) +
+    if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) +
             CLI_checkarg(4, 1) + CLI_checkarg(5, 1) + CLI_checkarg(6, 1) +
             CLI_checkarg(7, 1) + CLI_checkarg(8, 2) + CLI_checkarg(9, 4) +
             CLI_checkarg(10, 4) + CLI_checkarg(11, 4) + CLI_checkarg(12, 3) ==
-        0)
+            0)
     {
         AOloopControl_perfTest_TestDMmodeResp(data.cmdargtoken[1].val.string,
                                               data.cmdargtoken[2].val.numl,
@@ -253,11 +253,11 @@ errno_t AOloopControl_perfTest_TestDMmodeResp_cli()
 /** @brief CLI function for AOloopControl_TestDMmodes_Recovery */
 errno_t AOloopControl_perfTest_TestDMmodes_Recovery_cli()
 {
-    if (0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 1) + CLI_checkarg(3, 4) +
+    if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 1) + CLI_checkarg(3, 4) +
             CLI_checkarg(4, 4) + CLI_checkarg(5, 4) + CLI_checkarg(6, 4) +
             CLI_checkarg(7, 1) + CLI_checkarg(8, 2) + CLI_checkarg(9, 3) +
             CLI_checkarg(10, 3) + CLI_checkarg(11, 3) + CLI_checkarg(12, 3) ==
-        0)
+            0)
     {
         AOloopControl_perfTest_TestDMmodes_Recovery(
             data.cmdargtoken[1].val.string,
@@ -284,7 +284,7 @@ errno_t AOloopControl_perfTest_TestDMmodes_Recovery_cli()
 /** @brief CLI function for AOloopControl_blockstats */
 errno_t AOloopControl_perfTest_blockstats_cli()
 {
-    if (0 + CLI_checkarg(1, 2) + CLI_checkarg(2, 5) == 0)
+    if(0 + CLI_checkarg(1, 2) + CLI_checkarg(2, 5) == 0)
     {
         AOloopControl_perfTest_blockstats(data.cmdargtoken[1].val.numl,
                                           data.cmdargtoken[2].val.string);
@@ -300,7 +300,7 @@ errno_t AOloopControl_perfTest_blockstats_cli()
 /** @brief CLI function for AOloopControl_InjectMode */
 errno_t AOloopControl_perfTest_InjectMode_cli()
 {
-    if (0 + CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
+    if(0 + CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
     {
         AOloopControl_perfTest_InjectMode(data.cmdargtoken[1].val.numl,
                                           data.cmdargtoken[2].val.numf);
@@ -316,7 +316,7 @@ errno_t AOloopControl_perfTest_InjectMode_cli()
 /** @brief CLI function for AOloopControl_loopMonitor */
 errno_t AOloopControl_perfTest_loopMonitor_cli()
 {
-    if (0 + CLI_checkarg(1, 1) + CLI_checkarg(2, 2) == 0)
+    if(0 + CLI_checkarg(1, 1) + CLI_checkarg(2, 2) == 0)
     {
         AOloopControl_perfTest_loopMonitor(LOOPNUMBER,
                                            data.cmdargtoken[1].val.numf,
@@ -335,7 +335,7 @@ errno_t AOloopControl_perfTest_loopMonitor_cli()
 /** @brief CLI function for AOloopControl_statusStats */
 errno_t AOloopControl_perfTest_statusStats_cli()
 {
-    if (0 + CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
+    if(0 + CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
     {
         AOloopControl_perfTest_statusStats(data.cmdargtoken[1].val.numl,
                                            data.cmdargtoken[2].val.numl);
@@ -351,9 +351,9 @@ errno_t AOloopControl_perfTest_statusStats_cli()
 /** @brief CLI function for AOloopControl_mkTestDynamicModeSeq */
 errno_t AOloopControl_perfTest_mkTestDynamicModeSeq_cli()
 {
-    if (0 + CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+    if(0 + CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 2) ==
-        0)
+            0)
     {
         AOloopControl_perfTest_mkTestDynamicModeSeq(
             data.cmdargtoken[1].val.string,
@@ -372,10 +372,10 @@ errno_t AOloopControl_perfTest_mkTestDynamicModeSeq_cli()
 /** @brief CLI function for AOloopControl_AnalyzeRM_sensitivity */
 errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity_cli()
 {
-    if (0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 4) +
+    if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 4) +
             CLI_checkarg(4, 4) + CLI_checkarg(4, 4) + CLI_checkarg(5, 4) +
             CLI_checkarg(6, 1) + CLI_checkarg(7, 1) + CLI_checkarg(8, 3) ==
-        0)
+            0)
     {
         AOloopControl_perfTest_AnalyzeRM_sensitivity(
             data.cmdargtoken[1].val.string,
@@ -397,7 +397,7 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity_cli()
 
 errno_t AOloopControl_LoopTimer_Analysis_cli()
 {
-    if (0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 5) + CLI_checkarg(3, 5) == 0)
+    if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 5) + CLI_checkarg(3, 5) == 0)
     {
         AOloopControl_LoopTimer_Analysis(data.cmdargtoken[1].val.string,
                                          data.cmdargtoken[2].val.string,
@@ -412,10 +412,10 @@ errno_t AOloopControl_LoopTimer_Analysis_cli()
 
 errno_t AOloopControl_perfTest_mkSyncStreamFiles2_cli()
 {
-    if (0 + CLI_checkarg(1, 5) + CLI_checkarg(2, 5) + CLI_checkarg(3, 5) +
+    if(0 + CLI_checkarg(1, 5) + CLI_checkarg(2, 5) + CLI_checkarg(3, 5) +
             CLI_checkarg(4, 1) + CLI_checkarg(5, 1) + CLI_checkarg(6, 1) +
             CLI_checkarg(7, 1) ==
-        0)
+            0)
     {
         AOloopControl_perfTest_mkSyncStreamFiles2(
             data.cmdargtoken[1].val.string,
@@ -436,7 +436,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2_cli()
 
 errno_t AOloopControl_perfTest_ComputeSimilarityMatrix_cli()
 {
-    if (0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 5) == 0)
+    if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 5) == 0)
     {
         AOloopControl_perfTest_ComputeSimilarityMatrix(
             data.cmdargtoken[1].val.string,
@@ -452,9 +452,9 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix_cli()
 
 errno_t AOloopControl_perfTest_StatAnalysis_2streams_cli()
 {
-    if (0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 4) +
+    if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 4) +
             CLI_checkarg(4, 4) + CLI_checkarg(5, 2) + CLI_checkarg(6, 2) ==
-        0)
+            0)
     {
         AOloopControl_perfTest_StatAnalysis_2streams(
             data.cmdargtoken[1].val.string,
@@ -474,10 +474,10 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams_cli()
 
 errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli()
 {
-    if (0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 1) +
+    if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 1) +
             CLI_checkarg(4, 2) + CLI_checkarg(5, 2) + CLI_checkarg(6, 2) +
             CLI_checkarg(7, 2) + CLI_checkarg(8, 2) + CLI_checkarg(9, 1) ==
-        0)
+            0)
     {
         AOloopControl_perfTest_SelectWFSframes_from_PSFframes(
             data.cmdargtoken[1].val.string,
@@ -501,14 +501,14 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes_cli()
 static errno_t init_module_CLI()
 {
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /** @name AOloopControl - 9. STATUS / TESTING / PERF MEASUREMENT */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand("aoldmtestsp",
                        __FILE__,
@@ -833,19 +833,19 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_FPCONF()
                                        "log to filesystem",
                                        FPTYPE_EXECFILENAME,
      FPFLAG_DEFAULT_INPUT, pNull); (void) fpi_exec_logdata;
-  */
+    */
 
     // ==============================================
     // ======== START FPS CONF LOOP =================
     // ==============================================
     FPS_CONFLOOP_START // macro in function_parameter.h
 
-        // ==============================================
-        // ======== STOP FPS CONF LOOP ==================
-        // ==============================================
-        FPS_CONFLOOP_END // macro in function_parameter.h
+    // ==============================================
+    // ======== STOP FPS CONF LOOP ==================
+    // ==============================================
+    FPS_CONFLOOP_END // macro in function_parameter.h
 
-        return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }
 
 /**
@@ -1011,14 +1011,14 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     processinfo_WriteMessage(processinfo, "Allocating memory");
 
     latencyarray = (float *) malloc(sizeof(float) * NBiter);
-    if (latencyarray == NULL)
+    if(latencyarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     latencysteparray = (float *) malloc(sizeof(float) * NBiter);
-    if (latencysteparray == NULL)
+    if(latencysteparray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -1038,8 +1038,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     create_2Dimage_ID("_testdm1", dmxsize, dmysize, &IDdm1);
 
     float RMStot = 0.0;
-    for (ii = 0; ii < dmxsize; ii++)
-        for (jj = 0; jj < dmysize; jj++)
+    for(ii = 0; ii < dmxsize; ii++)
+        for(jj = 0; jj < dmysize; jj++)
         {
             x = (2.0 * ii - 1.0 * dmxsize) / dmxsize;
             y = (2.0 * jj - 1.0 * dmxsize) / dmysize;
@@ -1054,8 +1054,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     snprintf(msgstring, stringmaxlen, "RMStot %f", RMStot);
     processinfo_WriteMessage(processinfo, msgstring);
 
-    for (ii = 0; ii < dmxsize; ii++)
-        for (jj = 0; jj < dmysize; jj++)
+    for(ii = 0; ii < dmxsize; ii++)
+        for(jj = 0; jj < dmysize; jj++)
         {
             data.image[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
         }
@@ -1073,7 +1073,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
              IDwfs);
     processinfo_WriteMessage(processinfo, msgstring);
 
-    if (IDwfs == -1)
+    if(IDwfs == -1)
     {
         snprintf(msgstring,
                  stringmaxlen,
@@ -1087,8 +1087,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
     wfsxsize = data.image[IDwfs].md[0].size[0];
     wfsysize = data.image[IDwfs].md[0].size[1];
-    if ((data.image[IDwfs].md[0].naxis == 3) &&
-        (data.image[IDwfs].md[0].size[2] > 1))
+    if((data.image[IDwfs].md[0].naxis == 3) &&
+            (data.image[IDwfs].md[0].size[2] > 1))
     {
         CIRCBUFFER = 1;
     }
@@ -1112,7 +1112,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntstart   = data.image[IDwfs].md[0].cnt0;
-    usleep((long) (1000000 * FrameRateWait));
+    usleep((long)(1000000 * FrameRateWait));
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntend   = data.image[IDwfs].md[0].cnt0;
@@ -1120,7 +1120,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
     printf("wfs dt = %f sec\n", *wfsdt);
 
-    if (wfscntend - wfscntstart < 5)
+    if(wfscntend - wfscntstart < 5)
     {
         snprintf(msgstring,
                  stringmaxlen,
@@ -1150,14 +1150,14 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
     tarray =
         (struct timespec *) malloc(sizeof(struct timespec) * wfs_NBframesmax);
-    if (tarray == NULL)
+    if(tarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     dtarray = (double *) malloc(sizeof(double) * wfs_NBframesmax);
-    if (dtarray == NULL)
+    if(dtarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
@@ -1170,50 +1170,50 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
           printf("ERROR: cannot create file \"%s/hardwlatency.txt\"\\n",
      outdirname); exit(0);
       }
-  */
+    */
 
     clock_gettime(CLOCK_REALTIME, &tnow);
     tdouble_start  = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntstart    = data.image[IDwfs].md[0].cnt0;
-    wfsframeoffset = (long) (0.1 * wfs_NBframesmax);
+    wfsframeoffset = (long)(0.1 * wfs_NBframesmax);
 
     printf("WFS size : %ld %ld\n", wfsxsize, wfsysize);
-    if (datatype == _DATATYPE_FLOAT)
+    if(datatype == _DATATYPE_FLOAT)
     {
         printf("data type  :  _DATATYPE_FLOAT\n");
     }
 
-    if (datatype == _DATATYPE_DOUBLE)
+    if(datatype == _DATATYPE_DOUBLE)
     {
         printf("data type  :  _DATATYPE_DOUBLE\n");
     }
 
-    if (datatype == _DATATYPE_UINT16)
+    if(datatype == _DATATYPE_UINT16)
     {
         printf("data type  :  _DATATYPE_UINT16\n");
     }
 
-    if (datatype == _DATATYPE_INT16)
+    if(datatype == _DATATYPE_INT16)
     {
         printf("data type  :  _DATATYPE_INT16\n");
     }
 
-    if (datatype == _DATATYPE_UINT32)
+    if(datatype == _DATATYPE_UINT32)
     {
         printf("data type  :  _DATATYPE_UINT32\n");
     }
 
-    if (datatype == _DATATYPE_INT32)
+    if(datatype == _DATATYPE_INT32)
     {
         printf("data type  :  _DATATYPE_INT32\n");
     }
 
-    if (datatype == _DATATYPE_UINT64)
+    if(datatype == _DATATYPE_UINT64)
     {
         printf("data type  :  _DATATYPE_UINT64\n");
     }
 
-    if (datatype == _DATATYPE_INT64)
+    if(datatype == _DATATYPE_INT64)
     {
         printf("data type  :  _DATATYPE_INT64\n");
     }
@@ -1230,7 +1230,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
     iter = 0;
 
-    while (loopOK == 1)
+    while(loopOK == 1)
     {
         // double tlastdouble;
         double        tstartdouble;
@@ -1264,9 +1264,9 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
         // and waiting frames
         wfscnt0 = data.image[IDwfs].md[0].cnt0;
-        for (wfsframe = 0; wfsframe < wfs_NBframesmax; wfsframe++)
+        for(wfsframe = 0; wfsframe < wfs_NBframesmax; wfsframe++)
         {
-            while (wfscnt0 == data.image[IDwfs].md[0].cnt0)
+            while(wfscnt0 == data.image[IDwfs].md[0].cnt0)
             {
                 usleep(50);
             }
@@ -1282,10 +1282,10 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
         int wfsslice = 0;
         wfscnt0      = data.image[IDwfs].md[0].cnt0;
         printf("\n");
-        while ((dt < dtmax) && (wfsframe < wfs_NBframesmax))
+        while((dt < dtmax) && (wfsframe < wfs_NBframesmax))
         {
             // WAITING for image
-            while (wfscnt0 == data.image[IDwfs].md[0].cnt0)
+            while(wfscnt0 == data.image[IDwfs].md[0].cnt0)
             {
                 usleep(2);
             }
@@ -1298,7 +1298,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                    dtmax);
             fflush(stdout);
 
-            if (CIRCBUFFER == 1)
+            if(CIRCBUFFER == 1)
             {
                 wfsslice = data.image[IDwfs].md[0].cnt1;
             }
@@ -1307,7 +1307,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 wfsslice = 0;
             }
 
-            if (datatype == _DATATYPE_FLOAT)
+            if(datatype == _DATATYPE_FLOAT)
             {
                 ptr0 = (char *) data.image[IDwfs].array.F;
                 ptr0 += SIZEOF_DATATYPE_FLOAT * wfsslice * wfssize;
@@ -1317,7 +1317,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 memcpy(ptr, ptr0, sizeof(float) * wfssize);
             }
 
-            if (datatype == _DATATYPE_DOUBLE)
+            if(datatype == _DATATYPE_DOUBLE)
             {
                 ptr0 = (char *) data.image[IDwfs].array.D;
                 ptr0 += SIZEOF_DATATYPE_DOUBLE * wfsslice * wfssize;
@@ -1327,7 +1327,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 memcpy(ptr, ptr0, sizeof(float) * wfssize);
             }
 
-            if (datatype == _DATATYPE_UINT16)
+            if(datatype == _DATATYPE_UINT16)
             {
                 ptr0 = (char *) data.image[IDwfs].array.UI16;
                 ptr0 += SIZEOF_DATATYPE_UINT16 * wfsslice * wfssize;
@@ -1337,7 +1337,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 memcpy(ptr, ptr0, sizeof(short) * wfssize);
             }
 
-            if (datatype == _DATATYPE_INT16)
+            if(datatype == _DATATYPE_INT16)
             {
                 ptr0 = (char *) data.image[IDwfs].array.SI16;
                 ptr0 += SIZEOF_DATATYPE_INT16 * wfsslice * wfssize;
@@ -1347,7 +1347,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 memcpy(ptr, ptr0, sizeof(short) * wfssize);
             }
 
-            if (datatype == _DATATYPE_UINT32)
+            if(datatype == _DATATYPE_UINT32)
             {
                 ptr0 = (char *) data.image[IDwfs].array.UI32;
                 ptr0 += SIZEOF_DATATYPE_UINT32 * wfsslice * wfssize;
@@ -1357,7 +1357,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 memcpy(ptr, ptr0, sizeof(short) * wfssize);
             }
 
-            if (datatype == _DATATYPE_INT32)
+            if(datatype == _DATATYPE_INT32)
             {
                 ptr0 = (char *) data.image[IDwfs].array.SI32;
                 ptr0 += SIZEOF_DATATYPE_INT32 * wfsslice * wfssize;
@@ -1367,7 +1367,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 memcpy(ptr, ptr0, sizeof(short) * wfssize);
             }
 
-            if (datatype == _DATATYPE_UINT64)
+            if(datatype == _DATATYPE_UINT64)
             {
                 ptr0 = (char *) data.image[IDwfs].array.UI64;
                 ptr0 += SIZEOF_DATATYPE_UINT64 * wfsslice * wfssize;
@@ -1377,7 +1377,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 memcpy(ptr, ptr0, sizeof(short) * wfssize);
             }
 
-            if (datatype == _DATATYPE_INT64)
+            if(datatype == _DATATYPE_INT64)
             {
                 ptr0 = (char *) data.image[IDwfs].array.SI64;
                 ptr0 += SIZEOF_DATATYPE_INT64 * wfsslice * wfssize;
@@ -1397,10 +1397,10 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
             //     tlastdouble = tdouble;
 
             // apply DM pattern #1
-            if ((dmstate == 0) && (dt > *refdtoffset) &&
-                (wfsframe > wfsframeoffset))
+            if((dmstate == 0) && (dt > *refdtoffset) &&
+                    (wfsframe > wfsframeoffset))
             {
-                usleep((long) (ran1() * 1000000.0 * *wfsdt));
+                usleep((long)(ran1() * 1000000.0 * *wfsdt));
                 printf("\nDM STATE CHANGED ON ITERATION %ld   / %ld\n\n",
                        wfsframe,
                        wfsframeoffset);
@@ -1427,7 +1427,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
         NBwfsframe = wfsframe;
 
         valarray = (double *) malloc(sizeof(double) * NBwfsframe);
-        if (valarray == NULL)
+        if(valarray == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
@@ -1435,28 +1435,28 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
         double valmax   = 0.0;
         double valmaxdt = 0.0;
-        for (kk = 1; kk < NBwfsframe; kk++)
+        for(kk = 1; kk < NBwfsframe; kk++)
         {
             valarray[kk] = 0.0;
 
-            if (datatype == _DATATYPE_FLOAT)
-                for (ii = 0; ii < wfssize; ii++)
+            if(datatype == _DATATYPE_FLOAT)
+                for(ii = 0; ii < wfssize; ii++)
                 {
                     tmp = data.image[IDwfsc].array.F[kk * wfssize + ii] -
                           data.image[IDwfsc].array.F[(kk - 1) * wfssize + ii];
                     valarray[kk] += tmp * tmp;
                 }
 
-            if (datatype == _DATATYPE_DOUBLE)
-                for (ii = 0; ii < wfssize; ii++)
+            if(datatype == _DATATYPE_DOUBLE)
+                for(ii = 0; ii < wfssize; ii++)
                 {
                     tmp = data.image[IDwfsc].array.D[kk * wfssize + ii] -
                           data.image[IDwfsc].array.D[(kk - 1) * wfssize + ii];
                     valarray[kk] += tmp * tmp;
                 }
 
-            if (datatype == _DATATYPE_UINT16)
-                for (ii = 0; ii < wfssize; ii++)
+            if(datatype == _DATATYPE_UINT16)
+                for(ii = 0; ii < wfssize; ii++)
                 {
                     tmp =
                         data.image[IDwfsc].array.UI16[kk * wfssize + ii] -
@@ -1464,8 +1464,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                     valarray[kk] += 1.0 * tmp * tmp;
                 }
 
-            if (datatype == _DATATYPE_INT16)
-                for (ii = 0; ii < wfssize; ii++)
+            if(datatype == _DATATYPE_INT16)
+                for(ii = 0; ii < wfssize; ii++)
                 {
                     tmp = 0.0;
                     tmp =
@@ -1474,8 +1474,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                     valarray[kk] += 1.0 * tmp * tmp;
                 }
 
-            if (datatype == _DATATYPE_UINT32)
-                for (ii = 0; ii < wfssize; ii++)
+            if(datatype == _DATATYPE_UINT32)
+                for(ii = 0; ii < wfssize; ii++)
                 {
                     tmp =
                         data.image[IDwfsc].array.UI32[kk * wfssize + ii] -
@@ -1483,8 +1483,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                     valarray[kk] += 1.0 * tmp * tmp;
                 }
 
-            if (datatype == _DATATYPE_INT32)
-                for (ii = 0; ii < wfssize; ii++)
+            if(datatype == _DATATYPE_INT32)
+                for(ii = 0; ii < wfssize; ii++)
                 {
                     tmp = 0.0;
                     tmp =
@@ -1493,8 +1493,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                     valarray[kk] += 1.0 * tmp * tmp;
                 }
 
-            if (datatype == _DATATYPE_UINT64)
-                for (ii = 0; ii < wfssize; ii++)
+            if(datatype == _DATATYPE_UINT64)
+                for(ii = 0; ii < wfssize; ii++)
                 {
                     tmp =
                         data.image[IDwfsc].array.UI64[kk * wfssize + ii] -
@@ -1502,8 +1502,8 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                     valarray[kk] += 1.0 * tmp * tmp;
                 }
 
-            if (datatype == _DATATYPE_INT64)
-                for (ii = 0; ii < wfssize; ii++)
+            if(datatype == _DATATYPE_INT64)
+                for(ii = 0; ii < wfssize; ii++)
                 {
                     tmp = 0.0;
                     tmp =
@@ -1514,7 +1514,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 
             valarray[kk] = sqrt(valarray[kk] / wfssize / 2);
 
-            if (valarray[kk] > valmax)
+            if(valarray[kk] > valmax)
             {
                 valmax   = valarray[kk];
                 valmaxdt = 0.5 * (dtarray[kk - 1] + dtarray[kk]);
@@ -1525,7 +1525,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
         //
         //
         //
-        for (wfsframe = 1; wfsframe < NBwfsframe; wfsframe++)
+        for(wfsframe = 1; wfsframe < NBwfsframe; wfsframe++)
         {
             fprintf(fphwlat,
                     "%ld   %10.2f     %g\n",
@@ -1548,7 +1548,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                1000.0 * latency,
                kkmax);
 
-        if (latency > latencymax)
+        if(latency > latencymax)
         {
             latencymax = latency;
             // WRITE_FULLFILENAME(ffname, "%s/maxlatencyseq.fits", outdirname);
@@ -1585,14 +1585,14 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     latencystepave = 0.0;
     minlatency     = latencyarray[0];
     maxlatency     = latencyarray[0];
-    for (iter = 0; iter < NBiter; iter++)
+    for(iter = 0; iter < NBiter; iter++)
     {
-        if (latencyarray[iter] > maxlatency)
+        if(latencyarray[iter] > maxlatency)
         {
             maxlatency = latencyarray[iter];
         }
 
-        if (latencyarray[iter] < minlatency)
+        if(latencyarray[iter] < minlatency)
         {
             minlatency = latencyarray[iter];
         }
@@ -1673,9 +1673,9 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
 }
 
 errno_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname,
-                                                 char       *wfsname,
-                                                 float       OPDamp,
-                                                 long        NBiter)
+        char       *wfsname,
+        float       OPDamp,
+        long        NBiter)
 {
     // ==================================
     // CREATE FPS AND START CONF
@@ -1735,7 +1735,7 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
 
     float alpha = 0.0001;
 
-    if (snprintf(fname, 32, "aol%ld_modeval", loop) < 1)
+    if(snprintf(fname, 32, "aol%ld_modeval", loop) < 1)
     {
         PRINT_ERROR("snprintf wrote <1 char");
     }
@@ -1744,7 +1744,7 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
     NBmodes   = data.image[IDmodeval].md[0].size[0];
 
     sizeout = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-    if (sizeout == NULL)
+    if(sizeout == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -1758,19 +1758,19 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
 
     m   = 0;
     blk = 0;
-    while (m < NBmodes)
+    while(m < NBmodes)
     {
         long ID;
         long n;
 
-        if (snprintf(fname, stringmaxlen, "aol%ld_DMmodes%02ld", loop, blk) < 1)
+        if(snprintf(fname, stringmaxlen, "aol%ld_DMmodes%02ld", loop, blk) < 1)
         {
             PRINT_ERROR("snprintf wrote <1 char");
         }
 
         ID = read_sharedmem_image(fname);
         n  = data.image[ID].md[0].size[2];
-        for (i = 0; i < n; i++)
+        for(i = 0; i < n; i++)
         {
             data.image[IDout].array.F[m] = blk;
             m++;
@@ -1780,29 +1780,29 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
     NBblock = blk;
 
     rmsarray = (float *) malloc(sizeof(float) * NBblock);
-    if (rmsarray == NULL)
+    if(rmsarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
     indexarray = (int *) malloc(sizeof(int) * NBmodes);
-    if (indexarray == NULL)
+    if(indexarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
-    for (m = 0; m < NBmodes; m++)
+    for(m = 0; m < NBmodes; m++)
     {
-        indexarray[m] = (int) (0.1 + data.image[IDout].array.F[m]);
+        indexarray[m] = (int)(0.1 + data.image[IDout].array.F[m]);
     }
 
     printf("NBblock = %ld\n", NBblock);
     sizeout[0] = NBblock;
     sizeout[1] = 1;
 
-    if (snprintf(fname, stringmaxlen, "aol%ld_blockRMS", loop) < 1)
+    if(snprintf(fname, stringmaxlen, "aol%ld_blockRMS", loop) < 1)
     {
         PRINT_ERROR("snprintf wrote <1 char");
     }
@@ -1810,7 +1810,7 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
     create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0, &IDblockRMS);
     COREMOD_MEMORY_image_set_createsem(fname, 10);
 
-    if (snprintf(fname, stringmaxlen, "aol%ld_blockRMS_ave", loop) < 1)
+    if(snprintf(fname, stringmaxlen, "aol%ld_blockRMS_ave", loop) < 1)
     {
         PRINT_ERROR("snprintf wrote <1 char");
     }
@@ -1826,12 +1826,12 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
     COREMOD_MEMORY_image_set_createsem(fname, 10);
 
     cnt = 0;
-    for (;;)
+    for(;;)
     {
-        if (data.image[IDmodeval].md[0].sem == 0)
+        if(data.image[IDmodeval].md[0].sem == 0)
         {
-            while (cnt ==
-                   data.image[IDmodeval].md[0].cnt0) // test if new frame exists
+            while(cnt ==
+                    data.image[IDmodeval].md[0].cnt0) // test if new frame exists
             {
                 usleep(5);
             }
@@ -1842,19 +1842,19 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
             sem_wait(data.image[IDmodeval].semptr[3]);
         }
 
-        for (blk = 0; blk < NBblock; blk++)
+        for(blk = 0; blk < NBblock; blk++)
         {
             rmsarray[blk] = 0.0;
         }
 
-        for (m = 0; m < NBmodes; m++)
+        for(m = 0; m < NBmodes; m++)
         {
             rmsarray[indexarray[m]] += data.image[IDmodeval].array.F[m] *
                                        data.image[IDmodeval].array.F[m];
         }
 
         data.image[IDblockRMS].md[0].write = 1;
-        for (blk = 0; blk < NBblock; blk++)
+        for(blk = 0; blk < NBblock; blk++)
         {
             data.image[IDblockRMS].array.F[blk] = rmsarray[blk];
         }
@@ -1863,7 +1863,7 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
         data.image[IDblockRMS].md[0].write = 0;
 
         data.image[IDblockRMS_ave].md[0].write = 1;
-        for (blk = 0; blk < NBblock; blk++)
+        for(blk = 0; blk < NBblock; blk++)
         {
             data.image[IDblockRMS_ave].array.F[blk] =
                 (1.0 - alpha) * data.image[IDblockRMS_ave].array.F[blk] +
@@ -1885,12 +1885,12 @@ errno_t AOloopControl_perfTest_InjectMode(long index, float ampl)
 {
     // int stringmaxlen = 200;
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
 
-    if (aoloopcontrol_var.aoconfID_DMmodes == -1)
+    if(aoloopcontrol_var.aoconfID_DMmodes == -1)
     {
         char name[STRINGMAXLEN_IMGNAME];
 
@@ -1899,14 +1899,14 @@ errno_t AOloopControl_perfTest_InjectMode(long index, float ampl)
         aoloopcontrol_var.aoconfID_DMmodes = read_sharedmem_image(name);
     }
 
-    if (aoloopcontrol_var.aoconfID_dmRM == -1)
+    if(aoloopcontrol_var.aoconfID_dmRM == -1)
     {
         aoloopcontrol_var.aoconfID_dmRM =
             read_sharedmem_image(AOconf[LOOPNUMBER].DMctrl.dmRMname);
     }
 
-    if ((index < 0) ||
-        (index > (long) AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1))
+    if((index < 0) ||
+            (index > (long) AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes - 1))
     {
         printf("Invalid mode index... must be between 0 and %u\n",
                AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes);
@@ -1917,18 +1917,18 @@ errno_t AOloopControl_perfTest_InjectMode(long index, float ampl)
 
         arrayf =
             (float *) malloc(sizeof(float) * AOconf[LOOPNUMBER].DMctrl.sizeDM);
-        if (arrayf == NULL)
+        if(arrayf == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort(); // or handle error in other ways
         }
 
-        for (unsigned int i = 0; i < AOconf[LOOPNUMBER].DMctrl.sizeDM; i++)
+        for(unsigned int i = 0; i < AOconf[LOOPNUMBER].DMctrl.sizeDM; i++)
         {
             arrayf[i] =
                 ampl *
                 data.image[aoloopcontrol_var.aoconfID_DMmodes]
-                    .array.F[index * AOconf[LOOPNUMBER].DMctrl.sizeDM + i];
+                .array.F[index * AOconf[LOOPNUMBER].DMctrl.sizeDM + i];
         }
 
         data.image[aoloopcontrol_var.aoconfID_dmRM].md[0].write = 1;
@@ -1949,13 +1949,13 @@ errno_t AOloopControl_perfTest_InjectMode(long index, float ampl)
 // measure response matrix sensitivity
 //
 errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
-                                                     const char *IDdmmask_name,
-                                                     const char *IDwfsref_name,
-                                                     const char *IDwfsresp_name,
-                                                     const char *IDwfsmask_name,
-                                                     float       amplimitnm,
-                                                     float       lambdanm,
-                                                     const char *foutname)
+        const char *IDdmmask_name,
+        const char *IDwfsref_name,
+        const char *IDwfsresp_name,
+        const char *IDwfsmask_name,
+        float       amplimitnm,
+        float       lambdanm,
+        const char *foutname)
 {
     FILE  *fp;
     long   IDdmmodes;
@@ -1997,13 +1997,13 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
     IDwfsmask = image_ID(IDwfsmask_name);
 
     wfsreftot = 0.0;
-    for (ii = 0; ii < wfsxysize; ii++)
+    for(ii = 0; ii < wfsxysize; ii++)
     {
         wfsreftot += data.image[IDwfsref].array.F[ii];
     }
 
     wfsmasktot = 0.0;
-    for (ii = 0; ii < wfsxysize; ii++)
+    for(ii = 0; ii < wfsxysize; ii++)
     {
         wfsmasktot += data.image[IDwfsmask].array.F[ii];
     }
@@ -2027,7 +2027,7 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
     fprintf(fp, "# col 7 : Photon Efficiency\n");
     fprintf(fp, "\n");
 
-    for (mode = 0; mode < NBmodes; mode++)
+    for(mode = 0; mode < NBmodes; mode++)
     {
         double dmmoderms;
         double aveval;
@@ -2041,7 +2041,7 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
         dmmoderms    = 0.0;
         dmmodermscnt = 0.0;
         aveval       = 0.0;
-        for (ii = 0; ii < dmxysize; ii++)
+        for(ii = 0; ii < dmxysize; ii++)
         {
             tmp1 = data.image[IDdmmodes].array.F[mode * dmxysize + ii] *
                    data.image[IDdmmask].array.F[ii];
@@ -2056,7 +2056,7 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
         wfsmoderms    = 0.0;
         wfsmodermscnt = 0.0;
         pcnt          = 0.0;
-        for (ii = 0; ii < wfsxysize; ii++)
+        for(ii = 0; ii < wfsxysize; ii++)
         {
             tmp1 = data.image[IDwfsresp].array.F[mode * wfsxysize + ii] *
                    data.image[IDwfsmask].array.F[ii];
@@ -2064,10 +2064,10 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
             wfsmodermscnt = 1.0;
             wfsmodermscnt += data.image[IDwfsmask].array.F[ii];
 
-            if (data.image[IDwfsmask].array.F[ii] > 0.1)
-                if (data.image[IDwfsref].array.F[ii] >
-                    fabs(data.image[IDwfsresp].array.F[mode * wfsxysize + ii] *
-                         amplimitnm * 0.001))
+            if(data.image[IDwfsmask].array.F[ii] > 0.1)
+                if(data.image[IDwfsref].array.F[ii] >
+                        fabs(data.image[IDwfsresp].array.F[mode * wfsxysize + ii] *
+                             amplimitnm * 0.001))
                 {
                     SNR1 =
                         data.image[IDwfsresp].array.F[mode * wfsxysize + ii] /
@@ -2109,11 +2109,11 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
     // computing DM space cross-product
     create_2Dimage_ID("DMmodesXP", NBmodes, NBmodes, &IDoutXP);
 
-    for (mode = 0; mode < NBmodes; mode++)
-        for (mode1 = 0; mode1 < mode + 1; mode1++)
+    for(mode = 0; mode < NBmodes; mode++)
+        for(mode1 = 0; mode1 < mode + 1; mode1++)
         {
             XPval = 0.0;
-            for (ii = 0; ii < dmxysize; ii++)
+            for(ii = 0; ii < dmxysize; ii++)
             {
                 XPval += data.image[IDdmmask].array.F[ii] *
                          data.image[IDdmmodes].array.F[mode * dmxysize + ii] *
@@ -2127,11 +2127,11 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
 
     // computing WFS space cross-product
     create_2Dimage_ID("WFSmodesXP", NBmodes, NBmodes, &IDoutXP_WFS);
-    for (mode = 0; mode < NBmodes; mode++)
-        for (mode1 = 0; mode1 < mode + 1; mode1++)
+    for(mode = 0; mode < NBmodes; mode++)
+        for(mode1 = 0; mode1 < mode + 1; mode1++)
         {
             XPval = 0.0;
-            for (ii = 0; ii < wfsxysize; ii++)
+            for(ii = 0; ii < wfsxysize; ii++)
             {
                 XPval += data.image[IDwfsresp].array.F[mode * wfsxysize + ii] *
                          data.image[IDwfsresp].array.F[mode1 * wfsxysize + ii];
@@ -2149,9 +2149,9 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
 // create dynamic test sequence
 //
 imageID AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out,
-                                                    long        NBpt,
-                                                    long        NBmodes,
-                                                    long        StartMode)
+        long        NBpt,
+        long        NBmodes,
+        long        StartMode)
 {
     int stringmaxlen = 200;
 
@@ -2163,14 +2163,14 @@ imageID AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out,
     float   pha0;
     char    name[stringmaxlen];
     long    m, m1;
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
 
-    if (aoloopcontrol_var.aoconfID_DMmodes == -1)
+    if(aoloopcontrol_var.aoconfID_DMmodes == -1)
     {
-        if (snprintf(name, stringmaxlen, "aol%ld_DMmodes", LOOPNUMBER) < 1)
+        if(snprintf(name, stringmaxlen, "aol%ld_DMmodes", LOOPNUMBER) < 1)
         {
             PRINT_ERROR("snprintf wrote <1 char");
         }
@@ -2183,24 +2183,24 @@ imageID AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out,
 
     create_3Dimage_ID(IDname_out, xsize, ysize, NBpt, &IDout);
 
-    for (kk = 0; kk < NBpt; kk++)
+    for(kk = 0; kk < NBpt; kk++)
     {
-        for (ii = 0; ii < xysize; ii++)
+        for(ii = 0; ii < xysize; ii++)
         {
             data.image[IDout].array.F[kk * xysize + ii] = 0.0;
         }
 
-        for (m = 0; m < NBmodes; m++)
+        for(m = 0; m < NBmodes; m++)
         {
             m1    = m + StartMode;
             ampl0 = 1.0;
             pha0  = M_PI * (1.0 * m / NBmodes);
             ampl  = ampl0 * sin(2.0 * M_PI * (1.0 * kk / NBpt) + pha0);
-            for (ii = 0; ii < xysize; ii++)
+            for(ii = 0; ii < xysize; ii++)
             {
                 data.image[IDout].array.F[kk * xysize + ii] +=
                     ampl * data.image[aoloopcontrol_var.aoconfID_DMmodes]
-                               .array.F[m1 * xysize + ii];
+                    .array.F[m1 * xysize + ii];
             }
         }
     }
@@ -2250,49 +2250,49 @@ AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)
     fflush(stdout);
 
     cnt0array = (uint64_t *) malloc(sizeof(uint64_t) * NBsample);
-    if (cnt0array == NULL)
+    if(cnt0array == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     cnt1array = (uint64_t *) malloc(sizeof(uint64_t) * NBsample);
-    if (cnt1array == NULL)
+    if(cnt1array == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     frameTimearray = (double *) malloc(sizeof(double) * NBsample);
-    if (frameTimearray == NULL)
+    if(frameTimearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     timer_ave = (double *) malloc(sizeof(double) * NBtimer);
-    if (timer_ave == NULL)
+    if(timer_ave == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     timer_min = (double *) malloc(sizeof(double) * NBtimer);
-    if (timer_min == NULL)
+    if(timer_min == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     timer_max = (double *) malloc(sizeof(double) * NBtimer);
-    if (timer_max == NULL)
+    if(timer_max == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     timer_dev = (double *) malloc(sizeof(double) * NBtimer);
-    if (timer_dev == NULL)
+    if(timer_dev == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
@@ -2306,7 +2306,7 @@ AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)
 
     printf("Creating file \"%s\"\n", outfname);
     fflush(stdout);
-    if ((fpout = fopen(outfname, "w")) == NULL)
+    if((fpout = fopen(outfname, "w")) == NULL)
     {
         printf("ERROR: cannot create file %s\n", outfname);
         exit(0);
@@ -2314,7 +2314,7 @@ AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)
 
     printf("Opening file \"%s\"\n", fnametxt);
     fflush(stdout);
-    if ((fptxt = fopen(fnametxt, "r")) == NULL)
+    if((fptxt = fopen(fnametxt, "r")) == NULL)
     {
         printf("ERROR: cannot open file %s\n", fnametxt);
         exit(0);
@@ -2326,16 +2326,16 @@ AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)
 
     printf("Reading File %s\n\n", fnametxt);
     printf("\n");
-    for (sp = 0; sp < NBsample; sp++)
+    for(sp = 0; sp < NBsample; sp++)
     {
         printf("\r     sample %ld / %ld                ", sp, NBsample);
         fflush(stdout);
 
         int fscanfcnt =
             fscanf(fptxt, "%ld %ld %ld %lf\n", &frNB, &l1, &l2, &f1);
-        if (fscanfcnt == EOF)
+        if(fscanfcnt == EOF)
         {
-            if (ferror(fptxt))
+            if(ferror(fptxt))
             {
                 perror("fscanf");
             }
@@ -2356,7 +2356,7 @@ AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)
             free(frameTimearray);
             return RETURN_FAILURE;
         }
-        else if (fscanfcnt != 4)
+        else if(fscanfcnt != 4)
         {
             fprintf(stderr,
                     "Error: fscanf successfully matched and assigned %i input "
@@ -2385,26 +2385,26 @@ AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)
                 cnt1array[sp],
                 frameTimearray[sp]);
 
-        if (sp == 0)
+        if(sp == 0)
         {
-            for (timer = 0; timer < NBtimer; timer++)
+            for(timer = 0; timer < NBtimer; timer++)
             {
                 timer_min[timer] = data.image[ID].array.F[sp * NBtimer + timer];
                 timer_max[timer] = data.image[ID].array.F[sp * NBtimer + timer];
             }
         }
 
-        for (timer = 0; timer < NBtimer; timer++)
+        for(timer = 0; timer < NBtimer; timer++)
         {
             timerval = data.image[ID].array.F[sp * NBtimer + timer];
             fprintf(fpout, "  %12.9f", timerval);
 
             timer_ave[timer] += timerval;
-            if (timerval < timer_min[timer])
+            if(timerval < timer_min[timer])
             {
                 timer_min[timer] = timerval;
             }
-            if (timerval > timer_max[timer])
+            if(timerval > timer_max[timer])
             {
                 timer_max[timer] = timerval;
             }
@@ -2414,12 +2414,12 @@ AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)
 
     missedFrames = (cnt1array[NBsample - 1] - cnt1array[0]) - NBsample;
 
-    for (timer = 0; timer < NBtimer; timer++)
+    for(timer = 0; timer < NBtimer; timer++)
     {
         timer_ave[timer] /= NBsample;
 
         rms = 0.0;
-        for (sp = 0; sp < NBsample; sp++)
+        for(sp = 0; sp < NBsample; sp++)
         {
             timerval = data.image[ID].array.F[sp * NBtimer + timer];
             rms +=
@@ -2438,7 +2438,7 @@ AOloopControl_LoopTimer_Analysis(char *IDname, char *fnametxt, char *outfname)
     printf("| TIMER |   min   -   ave   -   max   | std dev |\n");
     printf("|  XXX  | xxxx.xx - xxxx.xx - xxxx.xx | xxxx.xx |\n");
     printf("-------------------------------------------------\n");
-    for (timer = 0; timer < NBtimer; timer++)
+    for(timer = 0; timer < NBtimer; timer++)
     {
         printf("|  %3d  | %7.2f - %7.2f - %7.2f | %7.2f |\n",
                timer,
@@ -2468,11 +2468,11 @@ char *remove_ext(char *mystr, char dot, char sep)
 
     // Error checks and allocate string.
 
-    if (mystr == NULL)
+    if(mystr == NULL)
     {
         return NULL;
     }
-    if ((retstr = malloc(strlen(mystr) + 1)) == NULL)
+    if((retstr = malloc(strlen(mystr) + 1)) == NULL)
     {
         return NULL;
     }
@@ -2485,13 +2485,13 @@ char *remove_ext(char *mystr, char dot, char sep)
 
     // If it has an extension separator.
 
-    if (lastdot != NULL)
+    if(lastdot != NULL)
     {
         // and it's before the extenstion separator.
 
-        if (lastsep != NULL)
+        if(lastsep != NULL)
         {
-            if (lastsep < lastdot)
+            if(lastsep < lastdot)
             {
                 // then remove it.
 
@@ -2525,16 +2525,16 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 
     do
     {
-        while (datfile[i].tstart < x.tstart && i < right)
+        while(datfile[i].tstart < x.tstart && i < right)
         {
             i++;
         }
-        while (x.tstart < datfile[j].tstart && j > left)
+        while(x.tstart < datfile[j].tstart && j > left)
         {
             j--;
         }
 
-        if (i <= j)
+        if(i <= j)
         {
             y.tstart = datfile[i].tstart;
             y.tend   = datfile[i].tend;
@@ -2554,13 +2554,14 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
             i++;
             j--;
         }
-    } while (i <= j);
+    }
+    while(i <= j);
 
-    if (left < j)
+    if(left < j)
     {
         quicksort_StreamDataFile(datfile, left, j);
     }
-    if (i < right)
+    if(i < right)
     {
         quicksort_StreamDataFile(datfile, i, right);
     }
@@ -2573,8 +2574,8 @@ void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
  *
  */
 errno_t AOloopControl_perfTest_mkTimingFile(char *inTimingfname,
-                                            char *outTimingfname,
-                                            char *tmpstring)
+        char *outTimingfname,
+        char *tmpstring)
 {
     FILE          *fp;
     FILE          *fpout;
@@ -2588,7 +2589,7 @@ errno_t AOloopControl_perfTest_mkTimingFile(char *inTimingfname,
     double *tarray;
     double  MaxNBsample = 1000000;
 
-    if ((fp = fopen(inTimingfname, "r")) == NULL)
+    if((fp = fopen(inTimingfname, "r")) == NULL)
     {
         printf("Cannot open file \"%s\"\n", inTimingfname);
         exit(0);
@@ -2600,7 +2601,7 @@ errno_t AOloopControl_perfTest_mkTimingFile(char *inTimingfname,
         int    scanOK = 1;
 
         tarray = (double *) malloc(sizeof(double) * MaxNBsample);
-        if (tarray == NULL)
+        if(tarray == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort(); // or handle error in other ways
@@ -2608,42 +2609,42 @@ errno_t AOloopControl_perfTest_mkTimingFile(char *inTimingfname,
 
         cnt = 0;
 
-        while (scanOK == 1)
+        while(scanOK == 1)
         {
-            if (fgets(line, sizeof(line), fp) == NULL)
+            if(fgets(line, sizeof(line), fp) == NULL)
             {
                 scanOK = 0;
             }
             else
             {
-                if (line[0] != '#')
+                if(line[0] != '#')
                 {
                     scanOK = 1;
                 }
 
-                if (scanOK == 1)
+                if(scanOK == 1)
                 {
-                    if ((sscanf(line,
-                                "%ld %ld %lf %lf %ld %ld\n",
-                                &vald1,
-                                &vald2,
-                                &valf1,
-                                &valf2,
-                                &vald3,
-                                &vald4) == 6) &&
-                        (tOK == 1))
+                    if((sscanf(line,
+                               "%ld %ld %lf %lf %ld %ld\n",
+                               &vald1,
+                               &vald2,
+                               &valf1,
+                               &valf2,
+                               &vald3,
+                               &vald4) == 6) &&
+                            (tOK == 1))
                     {
                         // printf("cnt %5ld read\n", cnt);//TEST
                         tarray[cnt] = valf2;
 
-                        if (cnt == 0)
+                        if(cnt == 0)
                         {
                             datfile.tstart = valf2;
                             tlast          = valf2;
                         }
                         else
                         {
-                            if (valf2 > tlast)
+                            if(valf2 > tlast)
                             {
                                 tOK = 1;
                             }
@@ -2658,7 +2659,7 @@ errno_t AOloopControl_perfTest_mkTimingFile(char *inTimingfname,
                 }
             }
 
-            if (tOK == 0)
+            if(tOK == 0)
             {
                 scanOK = 0;
             }
@@ -2679,7 +2680,7 @@ errno_t AOloopControl_perfTest_mkTimingFile(char *inTimingfname,
 
     // write timing summary file
 
-    if ((fpout = fopen(outTimingfname, "w")) == NULL)
+    if((fpout = fopen(outTimingfname, "w")) == NULL)
     {
         printf("Cannot write file \"%s\"\n", outTimingfname);
         exit(0);
@@ -2712,12 +2713,12 @@ errno_t AOloopControl_perfTest_mkTimingFile(char *inTimingfname,
  *
  */
 errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
-                                                  char  *stream0,
-                                                  char  *stream1,
-                                                  double tstart,
-                                                  double tend,
-                                                  double dt,
-                                                  double dtlag)
+        char  *stream0,
+        char  *stream1,
+        double tstart,
+        double tend,
+        double dt,
+        double dtlag)
 {
     int stringmaxlen = 500;
 
@@ -2773,7 +2774,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
     // Should frame be kept or not ?
     int *frameOKarray;
     frameOKarray = (int *) malloc(sizeof(double) * zsize);
-    if (frameOKarray == NULL)
+    if(frameOKarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
@@ -2782,42 +2783,42 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
     // Allocate Working arrays and populate timing arrays
 
     tstartarray = (double *) malloc(sizeof(double) * zsize);
-    if (tstartarray == NULL)
+    if(tstartarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     tendarray = (double *) malloc(sizeof(double) * zsize);
-    if (tendarray == NULL)
+    if(tendarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     exparray = (double *) malloc(
-        sizeof(double) *
-        zsize); // exposure time accumulated, in unit of input frame(s)
-    if (exparray == NULL)
+                   sizeof(double) *
+                   zsize); // exposure time accumulated, in unit of input frame(s)
+    if(exparray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     exparray0 = (double *) malloc(sizeof(double) * zsize);
-    if (exparray0 == NULL)
+    if(exparray0 == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     exparray1 = (double *) malloc(sizeof(double) * zsize);
-    if (exparray1 == NULL)
+    if(exparray1 == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
-    for (tstep = 0; tstep < zsize; tstep++)
+    for(tstep = 0; tstep < zsize; tstep++)
     {
         tstartarray[tstep] = tstart + 1.0 * tstep * (tend - tstart) / zsize;
         tendarray[tstep] = tstart + 1.0 * (tstep + 1) * (tend - tstart) / zsize;
@@ -2832,14 +2833,14 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
 
     int stream;
     int NBstream = 2;
-    for (stream = 0; stream < NBstream; stream++)
+    for(stream = 0; stream < NBstream; stream++)
     {
-        for (tstep = 0; tstep < zsize; tstep++)
+        for(tstep = 0; tstep < zsize; tstep++)
         {
             exparray[tstep] = 0.0;
         }
 
-        if (stream == 0)
+        if(stream == 0)
         {
             dtoffset = 0.0; // stream 0 is used as reference
             snprintf(datadirstream, stringmaxlen, "%s/%s", datadir, stream0);
@@ -2848,14 +2849,14 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
         {
             dtoffset =
                 +dtlag; // stream 1 is lagging behind by dtlag, so we bring
-                        // it back in time
+            // it back in time
             // this is achieved by pushing/delaying the output timing window
             snprintf(datadirstream, stringmaxlen, "%s/%s", datadir, stream1);
         }
 
         datfile =
             (StreamDataFile *) malloc(sizeof(StreamDataFile) * MaxNBdatFiles);
-        if (datfile == NULL)
+        if(datfile == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort(); // or handle error in other ways
@@ -2871,29 +2872,29 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
 
         NBdatFiles = 0;
         d0         = opendir(datadirstream);
-        if (d0)
+        if(d0)
         {
-            while ((dir = readdir(d0)) != NULL)
+            while((dir = readdir(d0)) != NULL)
             {
                 printf("found file %s\n", dir->d_name);
                 ext = strrchr(dir->d_name, '.');
-                if (!ext)
+                if(!ext)
                 {
                     // printf("no extension\n");
                 }
                 else
                 {
                     int datfileOK = 0;
-                    if (strcmp(ext + 1, "dat") == 0)
+                    if(strcmp(ext + 1, "dat") == 0)
                     {
                         datfileOK = 1;
                     }
-                    if (strcmp(ext + 1, "txt") == 0)
+                    if(strcmp(ext + 1, "txt") == 0)
                     {
                         datfileOK = 2;
                     }
 
-                    if (datfileOK != 0)
+                    if(datfileOK != 0)
                     {
                         printf("    processing file %s\n", dir->d_name);
                         // int mkTiming;
@@ -2911,7 +2912,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                                  "%s/%s.timing",
                                  datadirstream,
                                  tmpstring);
-                        if ((fp = fopen(fname, "r")) == NULL)
+                        if((fp = fopen(fname, "r")) == NULL)
                         {
                             char fnamein[stringmaxlen];
 
@@ -2919,7 +2920,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                                 "File %s : No timing info found -> creating\n",
                                 fname);
 
-                            if (datfileOK == 1)
+                            if(datfileOK == 1)
                             {
                                 snprintf(fnamein,
                                          stringmaxlen,
@@ -2943,7 +2944,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                                                                 fname,
                                                                 tmpstring);
 
-                            if ((fp = fopen(fname, "r")) == NULL)
+                            if((fp = fopen(fname, "r")) == NULL)
                             {
                                 printf("ERROR: can't open file %s\n", fname);
                                 exit(0);
@@ -2955,16 +2956,16 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                         int scanOK = 1; // keep scanning file
                         int readOK = 0; // read successful
                         // int linenb = 0;
-                        while (scanOK == 1)
+                        while(scanOK == 1)
                         {
                             // printf("Reading line %d\n", linenb); //TEST
 
-                            if (fgets(line, sizeof(line), fp) == NULL)
+                            if(fgets(line, sizeof(line), fp) == NULL)
                             {
                                 scanOK = 0;
                             }
 
-                            if (line[0] != '#')
+                            if(line[0] != '#')
                             {
                                 ret = sscanf(line,
                                              "%s   %lf %lf   %ld  %f\n",
@@ -2974,7 +2975,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                                              &datfile[NBdatFiles].cnt,
                                              &tmpv);
 
-                                if (ret == 5)
+                                if(ret == 5)
                                 {
                                     // mkTiming = 0;
                                     strcpy(datfile[NBdatFiles].name, tmpstring);
@@ -2987,15 +2988,15 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                         }
                         fclose(fp);
 
-                        if (readOK == 0)
+                        if(readOK == 0)
                         {
                             printf("File %s corrupted \n", fname);
                             exit(0);
                         }
 
-                        if ((datfile[NBdatFiles].tstart < tend) &&
-                            (datfile[NBdatFiles].tend > tstart) &&
-                            (datfile[NBdatFiles].cnt > 0))
+                        if((datfile[NBdatFiles].tstart < tend) &&
+                                (datfile[NBdatFiles].tend > tstart) &&
+                                (datfile[NBdatFiles].cnt > 0))
                         {
                             NBdatFiles++;
                         }
@@ -3010,7 +3011,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
 
         printf("NBdatFiles = %ld\n", NBdatFiles);
 
-        for (i = 0; i < NBdatFiles; i++)
+        for(i = 0; i < NBdatFiles; i++)
         {
             printf(
                 "FILE [%ld]: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f "
@@ -3026,12 +3027,12 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
         printf("==========================================================\n");
 
         // sort files according to time
-        if (NBdatFiles > 1)
+        if(NBdatFiles > 1)
         {
             quicksort_StreamDataFile(datfile, 0, NBdatFiles - 1);
         }
 
-        for (i = 0; i < NBdatFiles; i++)
+        for(i = 0; i < NBdatFiles; i++)
         {
             printf(
                 "FILE [%ld]: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f "
@@ -3050,7 +3051,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
         long xsize, ysize;
         long IDout;
 
-        for (i = 0; i < NBdatFiles; i++)
+        for(i = 0; i < NBdatFiles; i++)
         {
             printf("FILE: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f Hz\n",
                    datfile[i].name,
@@ -3070,12 +3071,12 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
             load_fits(fname, "im0C", 1, &IDc);
 
             // CREATE OUTPUT CUBE IF FIRST FILE
-            if (initOutput == 0)
+            if(initOutput == 0)
             {
                 xsize  = data.image[IDc].md[0].size[0];
                 ysize  = data.image[IDc].md[0].size[1];
                 xysize = xsize * ysize;
-                if (stream == 0)
+                if(stream == 0)
                 {
                     create_3Dimage_ID("out0", xsize, ysize, zsize, &IDout);
                     IDout0  = IDout;
@@ -3096,21 +3097,21 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
 
             // start and end time for input exposures
             intarray_start = (double *) malloc(sizeof(double) * datfile[i].cnt);
-            if (intarray_start == NULL)
+            if(intarray_start == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
                 abort(); // or handle error in other ways
             }
 
             intarray_end = (double *) malloc(sizeof(double) * datfile[i].cnt);
-            if (intarray_end == NULL)
+            if(intarray_end == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
                 abort(); // or handle error in other ways
             }
 
             dtarray = (double *) malloc(sizeof(double) * datfile[i].cnt);
-            if (dtarray == NULL)
+            if(dtarray == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
                 abort(); // or handle error in other ways
@@ -3127,7 +3128,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
             printf("READING file \"%s\" ... ", fname);
             fflush(stdout);
 
-            if ((fp = fopen(fname, "r")) == NULL)
+            if((fp = fopen(fname, "r")) == NULL)
             {
                 snprintf(fname,
                          stringmaxlen,
@@ -3135,7 +3136,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                          datadirstream,
                          datfile[i].name);
 
-                if ((fp = fopen(fname, "r")) == NULL)
+                if((fp = fopen(fname, "r")) == NULL)
                 {
                     printf("Cannot open file \"%s.dat\" or \"%s.txt\"\n",
                            datfile[i].name,
@@ -3149,33 +3150,33 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
 
             int scanOK = 1;
             j          = 0;
-            while (scanOK == 1)
+            while(scanOK == 1)
             {
-                if (fgets(line, sizeof(line), fp) == NULL)
+                if(fgets(line, sizeof(line), fp) == NULL)
                 {
                     scanOK = 0;
                 }
                 else
                 {
-                    if (line[0] != '#')
+                    if(line[0] != '#')
                     {
                         scanOK = 1;
                     }
 
-                    if (scanOK == 1)
+                    if(scanOK == 1)
                     {
-                        if (sscanf(line,
-                                   "%ld %ld %lf %lf %ld %ld\n",
-                                   &vald1,
-                                   &vald2,
-                                   &valf1,
-                                   &valf2,
-                                   &vald3,
-                                   &vald4) == 6)
+                        if(sscanf(line,
+                                  "%ld %ld %lf %lf %ld %ld\n",
+                                  &vald1,
+                                  &vald2,
+                                  &valf1,
+                                  &valf2,
+                                  &vald3,
+                                  &vald4) == 6)
                         {
                             intarray_end[j] = valf2;
                             j++;
-                            if (j == datfile[i].cnt)
+                            if(j == datfile[i].cnt)
                             {
                                 scanOK = 0;
                             }
@@ -3201,7 +3202,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
             printf(" %ld lines processed\n", j);
             fflush(stdout);
 
-            for (j = 0; j < datfile[i].cnt - 1; j++)
+            for(j = 0; j < datfile[i].cnt - 1; j++)
             {
                 dtarray[j] = intarray_end[j + 1] - intarray_end[j];
             }
@@ -3209,14 +3210,14 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
             double dtmedian;
             printf("Sorting %ld interval values ...", datfile[i].cnt - 1);
             fflush(stdout);
-            qs_double(dtarray, 0, (unsigned long) (datfile[i].cnt - 1));
+            qs_double(dtarray, 0, (unsigned long)(datfile[i].cnt - 1));
             dtmedian = dtarray[(datfile[i].cnt - 1) / 2];
             printf("   dtmedian = %10.3f us\n", 1.0e6 * dtmedian);
             fflush(stdout);
 
             // we assume here that every frame has the same exposure time, with
             // 100% duty cycle
-            for (j = 0; j < datfile[i].cnt; j++)
+            for(j = 0; j < datfile[i].cnt; j++)
             {
                 intarray_start[j] = intarray_end[j] - dtmedian;
             }
@@ -3224,28 +3225,28 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
             int    j0 = 0;
             double expfrac;
 
-            for (tstep = 0; tstep < zsize; tstep++)
+            for(tstep = 0; tstep < zsize; tstep++)
             {
-                while ((intarray_end[j0] < (tstartarray[tstep] + dtoffset)) &&
-                       (j0 < datfile[i].cnt))
+                while((intarray_end[j0] < (tstartarray[tstep] + dtoffset)) &&
+                        (j0 < datfile[i].cnt))
                 {
                     j0++;
                 }
                 j = j0;
 
-                while ((intarray_start[j] < (tendarray[tstep] + dtoffset)) &&
-                       (j < datfile[i].cnt))
+                while((intarray_start[j] < (tendarray[tstep] + dtoffset)) &&
+                        (j < datfile[i].cnt))
                 {
                     expfrac = 1.0;
 
-                    if ((tstartarray[tstep] + dtoffset) > intarray_start[j])
+                    if((tstartarray[tstep] + dtoffset) > intarray_start[j])
                     {
                         expfrac -= ((tstartarray[tstep] + dtoffset) -
                                     intarray_start[j]) /
                                    dtmedian;
                     }
 
-                    if ((tendarray[tstep] + dtoffset) < intarray_end[j])
+                    if((tendarray[tstep] + dtoffset) < intarray_end[j])
                     {
                         expfrac -=
                             (intarray_end[j] - (tendarray[tstep] + dtoffset)) /
@@ -3261,106 +3262,106 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
 
                     long ii;
 
-                    switch (data.image[IDc].md[0].datatype)
+                    switch(data.image[IDc].md[0].datatype)
                     {
-                    case _DATATYPE_UINT8:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.UI8[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_UINT8:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.UI8[xysize * j + ii];
+                            }
+                            break;
 
-                    case _DATATYPE_INT8:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.SI8[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_INT8:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.SI8[xysize * j + ii];
+                            }
+                            break;
 
-                    case _DATATYPE_UINT16:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.UI16[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_UINT16:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.UI16[xysize * j + ii];
+                            }
+                            break;
 
-                    case _DATATYPE_INT16:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.SI16[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_INT16:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.SI16[xysize * j + ii];
+                            }
+                            break;
 
-                    case _DATATYPE_UINT32:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.UI32[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_UINT32:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.UI32[xysize * j + ii];
+                            }
+                            break;
 
-                    case _DATATYPE_INT32:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.SI32[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_INT32:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.SI32[xysize * j + ii];
+                            }
+                            break;
 
-                    case _DATATYPE_UINT64:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.UI64[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_UINT64:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.UI64[xysize * j + ii];
+                            }
+                            break;
 
-                    case _DATATYPE_INT64:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.SI64[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_INT64:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.SI64[xysize * j + ii];
+                            }
+                            break;
 
-                    case _DATATYPE_FLOAT:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.F[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_FLOAT:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.F[xysize * j + ii];
+                            }
+                            break;
 
-                    case _DATATYPE_DOUBLE:
-                        for (ii = 0; ii < xysize; ii++)
-                        {
-                            data.image[IDout].array.F[xysize * tstep + ii] +=
-                                expfrac *
-                                data.image[IDc].array.D[xysize * j + ii];
-                        }
-                        break;
+                        case _DATATYPE_DOUBLE:
+                            for(ii = 0; ii < xysize; ii++)
+                            {
+                                data.image[IDout].array.F[xysize * tstep + ii] +=
+                                    expfrac *
+                                    data.image[IDc].array.D[xysize * j + ii];
+                            }
+                            break;
 
-                    default:
-                        list_image_ID();
-                        PRINT_ERROR("datatype value not recognised");
-                        printf("ID %ld  datatype = %d\n",
-                               IDc,
-                               data.image[IDc].md[0].datatype);
-                        exit(0);
-                        break;
+                        default:
+                            list_image_ID();
+                            PRINT_ERROR("datatype value not recognised");
+                            printf("ID %ld  datatype = %d\n",
+                                   IDc,
+                                   data.image[IDc].md[0].datatype);
+                            exit(0);
+                            break;
                     }
                     j++;
                 }
@@ -3373,12 +3374,12 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
             free(dtarray);
         }
 
-        for (tstep = 0; tstep < zsize; tstep++)
+        for(tstep = 0; tstep < zsize; tstep++)
         {
-            if (exparray[tstep] > 0.01)
+            if(exparray[tstep] > 0.01)
             {
                 long ii;
-                for (ii = 0; ii < xysize; ii++)
+                for(ii = 0; ii < xysize; ii++)
                 {
                     data.image[IDout].array.F[xysize * tstep + ii] /=
                         exparray[tstep];
@@ -3390,7 +3391,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
         fflush(stdout);
 
         // COMPUTE MEDIAN EXPTIME
-        if (stream == 0)
+        if(stream == 0)
         {
             memcpy(exparray0, exparray, sizeof(double) * zsize);
         }
@@ -3406,7 +3407,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
         medianexptimearray[stream] = exptmedian;
         printf("Median Exp Time = %6.3f\n", exptmedian);
 
-        if (fabs(exptmedian) < 0.0000001)
+        if(fabs(exptmedian) < 0.0000001)
         {
             printf(
                 "Median Exp Time = 0 , exiting the process: check your data "
@@ -3414,7 +3415,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
             exit(0);
         }
 
-        if (stream == 0)
+        if(stream == 0)
         {
             memcpy(exparray, exparray0, sizeof(double) * zsize);
         }
@@ -3424,13 +3425,13 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
         }
 
         // SELECTION
-        for (tstep = 0; tstep < zsize; tstep++)
+        for(tstep = 0; tstep < zsize; tstep++)
         {
-            if (exparray[tstep] < 0.8 * exptmedian)
+            if(exparray[tstep] < 0.8 * exptmedian)
             {
                 frameOKarray[tstep] = 0;
             }
-            if (exparray[tstep] > 1.2 * exptmedian)
+            if(exparray[tstep] > 1.2 * exptmedian)
             {
                 frameOKarray[tstep] = 0;
             }
@@ -3440,8 +3441,8 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
     }
 
     long NBmissingFrame = 0;
-    for (tstep = 0; tstep < zsize; tstep++)
-        if (frameOKarray[tstep] == 0)
+    for(tstep = 0; tstep < zsize; tstep++)
+        if(frameOKarray[tstep] == 0)
         {
             NBmissingFrame++;
         }
@@ -3484,7 +3485,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
     fprintf(fp, "#\n");
 
     long NBframeOK = 0;
-    for (tstep = 0; tstep < zsize; tstep++)
+    for(tstep = 0; tstep < zsize; tstep++)
     {
         fprintf(fp,
                 "%5ld %5ld %d %10.6f %10.6f %10.6f\n",
@@ -3494,9 +3495,9 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                 tstartarray[tstep],
                 exparray0[tstep],
                 exparray1[tstep]);
-        if (frameOKarray[tstep] == 1)
+        if(frameOKarray[tstep] == 1)
         {
-            if (tstep != NBframeOK)
+            if(tstep != NBframeOK)
             {
                 void *ptr0;
                 void *ptr1;
@@ -3525,7 +3526,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
     free(exparray1);
     free(frameOKarray);
 
-    if (NBframeOK > 0)
+    if(NBframeOK > 0)
     {
         imageID IDoutc0;
         create_3Dimage_ID("outC0", xsize0, ysize0, NBframeOK, &IDoutc0);
@@ -3558,7 +3559,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
  */
 
 errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
-                                                       char *IDname_out)
+        char *IDname_out)
 {
     long     ID, IDout;
     uint32_t xsize, ysize, xysize, zsize;
@@ -3578,14 +3579,14 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
     zsize  = data.image[ID].md[0].size[2];
 
     array1 = (float *) malloc(sizeof(float) * xysize);
-    if (array1 == NULL)
+    if(array1 == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     array2 = (float *) malloc(sizeof(float) * xysize);
-    if (array2 == NULL)
+    if(array2 == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
@@ -3593,13 +3594,13 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
 
     create_2Dimage_ID(IDname_out, zsize, zsize, &IDout);
     printf("\n");
-    for (k1 = 0; k1 < zsize; k1++)
+    for(k1 = 0; k1 < zsize; k1++)
     {
         srcptr = (char *) data.image[ID].array.F + sizeof(float) * xysize * k1;
 
         memcpy(array1, srcptr, sizeof(float) * xysize);
 
-        for (k2 = 0; k2 < k1; k2++)
+        for(k2 = 0; k2 < k1; k2++)
         {
             double val = 0.0;
             long   ii;
@@ -3609,8 +3610,8 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
                 (char *) data.image[ID].array.F + sizeof(float) * xysize * k2;
             memcpy(array2, srcptr, sizeof(float) * xysize);
 
-            perccomplete = (int) (100.0 * cnt / (zsize * (zsize - 1) / 2));
-            if (perccompletelast < perccomplete)
+            perccomplete = (int)(100.0 * cnt / (zsize * (zsize - 1) / 2));
+            if(perccompletelast < perccomplete)
             {
                 printf("\r [%5.2f %%]   %5ld / %5ld    %5ld / %5ld     ",
                        100.0 * cnt / (zsize * (zsize - 1) / 2),
@@ -3622,7 +3623,7 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
                 perccompletelast = perccomplete;
             }
 
-            for (ii = 0; ii < xysize; ii++)
+            for(ii = 0; ii < xysize; ii++)
             {
                 v0 = (array1[ii] - array2[ii]);
                 val += v0 * v0;
@@ -3666,11 +3667,11 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
  */
 
 errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
-                                                     char *IDname_stream1,
-                                                     char *IDname_simM0,
-                                                     char *IDname_simM1,
-                                                     long  dtmin,
-                                                     unsigned long NBselected)
+        char *IDname_stream1,
+        char *IDname_simM0,
+        char *IDname_simM1,
+        long  dtmin,
+        unsigned long NBselected)
 {
     imageID IDstream0;
     imageID IDstream1;
@@ -3711,10 +3712,10 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
 
     NBpairMax =
         (unsigned long long) NBframe0; // data.image[IDsimM0].md[0].size[0];
-    NBpairMax *= (unsigned long long) (NBframe0 - 1) / 2;
+    NBpairMax *= (unsigned long long)(NBframe0 - 1) / 2;
     printf("NBpairMax = %llu x %llu =  %llu\n",
            (unsigned long long) NBframe0,
-           (unsigned long long) (NBframe0 - 1) / 2,
+           (unsigned long long)(NBframe0 - 1) / 2,
            NBpairMax);
 
     IDstream1 = image_ID(IDname_stream1);
@@ -3727,7 +3728,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
     IDsimM1 = image_ID(IDname_simM1);
 
     // a few checks before proceeding
-    if (NBframe0 != NBframe1)
+    if(NBframe0 != NBframe1)
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != NBframe1 (%ld)\n",
                __FILE__,
@@ -3738,7 +3739,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
         exit(0);
     }
 
-    if (NBframe0 != data.image[IDsimM0].md[0].size[0])
+    if(NBframe0 != data.image[IDsimM0].md[0].size[0])
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 xsize (%ld)\n",
                __FILE__,
@@ -3749,7 +3750,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
         exit(0);
     }
 
-    if (NBframe0 != data.image[IDsimM0].md[0].size[1])
+    if(NBframe0 != data.image[IDsimM0].md[0].size[1])
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 ysize (%ld)\n",
                __FILE__,
@@ -3760,7 +3761,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
         exit(0);
     }
 
-    if (NBframe1 != data.image[IDsimM1].md[0].size[0])
+    if(NBframe1 != data.image[IDsimM1].md[0].size[0])
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe1 (%ld) != simM1 xsize (%ld)\n",
                __FILE__,
@@ -3771,7 +3772,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
         exit(0);
     }
 
-    if (NBframe1 != data.image[IDsimM1].md[0].size[1])
+    if(NBframe1 != data.image[IDsimM1].md[0].size[1])
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe1 (%ld) != simM1 ysize (%ld)\n",
                __FILE__,
@@ -3783,55 +3784,55 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
     }
 
     sim0pair_k1 = (unsigned long *) malloc(sizeof(unsigned long) * NBpairMax);
-    if (sim0pair_k1 == NULL)
+    if(sim0pair_k1 == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     sim0pair_k2 = (unsigned long *) malloc(sizeof(unsigned long) * NBpairMax);
-    if (sim0pair_k2 == NULL)
+    if(sim0pair_k2 == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     sim0pair_val = (double *) malloc(sizeof(double) * NBpairMax);
-    if (sim0pair_val == NULL)
+    if(sim0pair_val == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     sim1pair_k1 = (unsigned long *) malloc(sizeof(unsigned long) * NBpairMax);
-    if (sim1pair_k1 == NULL)
+    if(sim1pair_k1 == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     sim1pair_k2 = (unsigned long *) malloc(sizeof(unsigned long) * NBpairMax);
-    if (sim1pair_k2 == NULL)
+    if(sim1pair_k2 == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     sim1pair_val = (double *) malloc(sizeof(double) * NBpairMax);
-    if (sim1pair_val == NULL)
+    if(sim1pair_val == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     paircnt = 0;
-    for (k1 = 0; k1 < NBframe0; k1++)
+    for(k1 = 0; k1 < NBframe0; k1++)
     {
-        for (k2 = 0; k2 < k1; k2++)
+        for(k2 = 0; k2 < k1; k2++)
         {
-            if (((long) k1 - (long) k2) > dtmin)
+            if(((long) k1 - (long) k2) > dtmin)
             {
-                if (paircnt > NBpairMax - 1)
+                if(paircnt > NBpairMax - 1)
                 {
                     printf(
                         "[%s] [%s] [%d]  ERROR: paircnt (%llu) >= NBpairMax "
@@ -3882,7 +3883,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
     mediansim0 = sim0pair_val[paircnt / 2];
     mediansim1 = sim1pair_val[paircnt / 2];
 
-    if ((fpout0 = fopen("sim0pairs.txt", "w")) == NULL)
+    if((fpout0 = fopen("sim0pairs.txt", "w")) == NULL)
     {
         printf("[%s] [%s] [%d]  ERROR: cannot create file\n",
                __FILE__,
@@ -3890,7 +3891,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                __LINE__);
         exit(0);
     }
-    for (pair = 0; pair < NBselected; pair++)
+    for(pair = 0; pair < NBselected; pair++)
     {
         k1 = sim0pair_k1[pair];
         k2 = sim0pair_k2[pair];
@@ -3904,7 +3905,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
     }
     fclose(fpout0);
 
-    if ((fpout1 = fopen("sim1pairs.txt", "w")) == NULL)
+    if((fpout1 = fopen("sim1pairs.txt", "w")) == NULL)
     {
         printf("[%s] [%s] [%d]  ERROR: cannot create file\n",
                __FILE__,
@@ -3912,7 +3913,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                __LINE__);
         exit(0);
     }
-    for (pair = 0; pair < NBselected; pair++)
+    for(pair = 0; pair < NBselected; pair++)
     {
         k1 = sim1pair_k1[pair];
         k2 = sim1pair_k2[pair];
@@ -3937,10 +3938,10 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                       ysize2Ddistrib,
                       &IDsim2Ddistrib);
 
-    for (k1 = 0; k1 < NBframe0; k1++)
-        for (k2 = 0; k2 < k1; k2++)
+    for(k1 = 0; k1 < NBframe0; k1++)
+        for(k2 = 0; k2 < k1; k2++)
         {
-            if (((int) k1 - (int) k2) > dtmin)
+            if(((int) k1 - (int) k2) > dtmin)
             {
                 float         x, y;
                 unsigned long ii, jj;
@@ -3950,13 +3951,13 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                 y = data.image[IDsimM1].array.F[k1 * NBframe1 + k2] /
                     mediansim1;
 
-                ii = (uint32_t) (0.5 * x * xsize2Ddistrib);
-                jj = (uint32_t) (0.5 * y * ysize2Ddistrib);
+                ii = (uint32_t)(0.5 * x * xsize2Ddistrib);
+                jj = (uint32_t)(0.5 * y * ysize2Ddistrib);
 
-                if ((ii < xsize2Ddistrib) && (jj < ysize2Ddistrib))
+                if((ii < xsize2Ddistrib) && (jj < ysize2Ddistrib))
                 {
                     data.image[IDsim2Ddistrib]
-                        .array.F[jj * xsize2Ddistrib + ii] += 1.0;
+                    .array.F[jj * xsize2Ddistrib + ii] += 1.0;
                 }
             }
         }
@@ -3980,64 +3981,64 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                       NBselected,
                       &IDsim0pair1);
 
-    for (pair = 0; pair < NBselected; pair++)
+    for(pair = 0; pair < NBselected; pair++)
     {
         unsigned long ii, jj;
 
         k1 = sim0pair_k1[pair];
         k2 = sim0pair_k2[pair];
 
-        for (ii = 0; ii < xysize0; ii++)
+        for(ii = 0; ii < xysize0; ii++)
         {
             data.image[IDsim0diff0].array.F[pair * xysize0 + ii] =
                 data.image[IDstream0].array.F[k1 * xysize0 + ii] -
                 data.image[IDstream0].array.F[k2 * xysize0 + ii];
         }
-        for (ii = 0; ii < xysize1; ii++)
+        for(ii = 0; ii < xysize1; ii++)
         {
             data.image[IDsim0diff1].array.F[pair * xysize1 + ii] =
                 data.image[IDstream1].array.F[k1 * xysize1 + ii] -
                 data.image[IDstream1].array.F[k2 * xysize1 + ii];
         }
 
-        for (ii = 0; ii < xsize0; ii++)
-            for (jj = 0; jj < ysize0; jj++)
+        for(ii = 0; ii < xsize0; ii++)
+            for(jj = 0; jj < ysize0; jj++)
             {
                 data.image[IDsim0pair0].array.F[pair * ysize0 * xsize0 * 3 +
                                                 jj * xsize0 * 3 + ii] =
-                    data.image[IDstream0]
-                        .array.F[k1 * xysize0 + jj * xsize0 + ii];
+                                                    data.image[IDstream0]
+                                                    .array.F[k1 * xysize0 + jj * xsize0 + ii];
                 data.image[IDsim0pair0].array.F[pair * ysize0 * xsize0 * 3 +
                                                 jj * xsize0 * 3 + ii + xsize0] =
-                    data.image[IDstream0]
-                        .array.F[k2 * xysize0 + jj * xsize0 + ii];
+                                                    data.image[IDstream0]
+                                                    .array.F[k2 * xysize0 + jj * xsize0 + ii];
                 data.image[IDsim0pair0]
-                    .array.F[pair * ysize0 * xsize0 * 3 + jj * xsize0 * 3 + ii +
-                             xsize0 * 2] =
-                    data.image[IDstream0]
-                        .array.F[k1 * xysize0 + jj * xsize0 + ii] -
-                    data.image[IDstream0]
-                        .array.F[k2 * xysize0 + jj * xsize0 + ii];
+                .array.F[pair * ysize0 * xsize0 * 3 + jj * xsize0 * 3 + ii +
+                              xsize0 * 2] =
+                             data.image[IDstream0]
+                             .array.F[k1 * xysize0 + jj * xsize0 + ii] -
+                             data.image[IDstream0]
+                             .array.F[k2 * xysize0 + jj * xsize0 + ii];
             }
 
-        for (ii = 0; ii < xsize1; ii++)
-            for (jj = 0; jj < ysize1; jj++)
+        for(ii = 0; ii < xsize1; ii++)
+            for(jj = 0; jj < ysize1; jj++)
             {
                 data.image[IDsim0pair1].array.F[pair * ysize1 * xsize1 * 3 +
                                                 jj * xsize1 * 3 + ii] =
-                    data.image[IDstream1]
-                        .array.F[k1 * xysize1 + jj * xsize1 + ii];
+                                                    data.image[IDstream1]
+                                                    .array.F[k1 * xysize1 + jj * xsize1 + ii];
                 data.image[IDsim0pair1].array.F[pair * ysize1 * xsize1 * 3 +
                                                 jj * xsize1 * 3 + ii + xsize1] =
-                    data.image[IDstream1]
-                        .array.F[k2 * xysize1 + jj * xsize1 + ii];
+                                                    data.image[IDstream1]
+                                                    .array.F[k2 * xysize1 + jj * xsize1 + ii];
                 data.image[IDsim0pair1]
-                    .array.F[pair * ysize1 * xsize1 * 3 + jj * xsize1 * 3 + ii +
-                             xsize1 * 2] =
-                    data.image[IDstream1]
-                        .array.F[k1 * xysize1 + jj * xsize1 + ii] -
-                    data.image[IDstream1]
-                        .array.F[k2 * xysize1 + jj * xsize1 + ii];
+                .array.F[pair * ysize1 * xsize1 * 3 + jj * xsize1 * 3 + ii +
+                              xsize1 * 2] =
+                             data.image[IDstream1]
+                             .array.F[k1 * xysize1 + jj * xsize1 + ii] -
+                             data.image[IDstream1]
+                             .array.F[k2 * xysize1 + jj * xsize1 + ii];
             }
     }
 
@@ -4060,64 +4061,64 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                       NBselected,
                       &IDsim1pair1);
 
-    for (pair = 0; pair < NBselected; pair++)
+    for(pair = 0; pair < NBselected; pair++)
     {
         unsigned long ii, jj;
 
         k1 = sim1pair_k1[pair];
         k2 = sim1pair_k2[pair];
 
-        for (ii = 0; ii < xysize0; ii++)
+        for(ii = 0; ii < xysize0; ii++)
         {
             data.image[IDsim1diff0].array.F[pair * xysize0 + ii] =
                 data.image[IDstream0].array.F[k1 * xysize0 + ii] -
                 data.image[IDstream0].array.F[k2 * xysize0 + ii];
         }
-        for (ii = 0; ii < xysize1; ii++)
+        for(ii = 0; ii < xysize1; ii++)
         {
             data.image[IDsim1diff1].array.F[pair * xysize1 + ii] =
                 data.image[IDstream1].array.F[k1 * xysize1 + ii] -
                 data.image[IDstream1].array.F[k2 * xysize1 + ii];
         }
 
-        for (ii = 0; ii < xsize0; ii++)
-            for (jj = 0; jj < ysize0; jj++)
+        for(ii = 0; ii < xsize0; ii++)
+            for(jj = 0; jj < ysize0; jj++)
             {
                 data.image[IDsim1pair0].array.F[pair * ysize0 * xsize0 * 3 +
                                                 jj * xsize0 * 3 + ii] =
-                    data.image[IDstream0]
-                        .array.F[k1 * xysize0 + jj * xsize0 + ii];
+                                                    data.image[IDstream0]
+                                                    .array.F[k1 * xysize0 + jj * xsize0 + ii];
                 data.image[IDsim1pair0].array.F[pair * ysize0 * xsize0 * 3 +
                                                 jj * xsize0 * 3 + ii + xsize0] =
-                    data.image[IDstream0]
-                        .array.F[k2 * xysize0 + jj * xsize0 + ii];
+                                                    data.image[IDstream0]
+                                                    .array.F[k2 * xysize0 + jj * xsize0 + ii];
                 data.image[IDsim1pair0]
-                    .array.F[pair * ysize0 * xsize0 * 3 + jj * xsize0 * 3 + ii +
-                             xsize0 * 2] =
-                    data.image[IDstream0]
-                        .array.F[k1 * xysize0 + jj * xsize0 + ii] -
-                    data.image[IDstream0]
-                        .array.F[k2 * xysize0 + jj * xsize0 + ii];
+                .array.F[pair * ysize0 * xsize0 * 3 + jj * xsize0 * 3 + ii +
+                              xsize0 * 2] =
+                             data.image[IDstream0]
+                             .array.F[k1 * xysize0 + jj * xsize0 + ii] -
+                             data.image[IDstream0]
+                             .array.F[k2 * xysize0 + jj * xsize0 + ii];
             }
 
-        for (ii = 0; ii < xsize1; ii++)
-            for (jj = 0; jj < ysize1; jj++)
+        for(ii = 0; ii < xsize1; ii++)
+            for(jj = 0; jj < ysize1; jj++)
             {
                 data.image[IDsim1pair1].array.F[pair * ysize1 * xsize1 * 3 +
                                                 jj * xsize1 * 3 + ii] =
-                    data.image[IDstream1]
-                        .array.F[k1 * xysize1 + jj * xsize1 + ii];
+                                                    data.image[IDstream1]
+                                                    .array.F[k1 * xysize1 + jj * xsize1 + ii];
                 data.image[IDsim1pair1].array.F[pair * ysize1 * xsize1 * 3 +
                                                 jj * xsize1 * 3 + ii + xsize1] =
-                    data.image[IDstream1]
-                        .array.F[k2 * xysize1 + jj * xsize1 + ii];
+                                                    data.image[IDstream1]
+                                                    .array.F[k2 * xysize1 + jj * xsize1 + ii];
                 data.image[IDsim1pair1]
-                    .array.F[pair * ysize1 * xsize1 * 3 + jj * xsize1 * 3 + ii +
-                             xsize1 * 2] =
-                    data.image[IDstream1]
-                        .array.F[k1 * xysize1 + jj * xsize1 + ii] -
-                    data.image[IDstream1]
-                        .array.F[k2 * xysize1 + jj * xsize1 + ii];
+                .array.F[pair * ysize1 * xsize1 * 3 + jj * xsize1 * 3 + ii +
+                              xsize1 * 2] =
+                             data.image[IDstream1]
+                             .array.F[k1 * xysize1 + jj * xsize1 + ii] -
+                             data.image[IDstream1]
+                             .array.F[k2 * xysize1 + jj * xsize1 + ii];
             }
     }
 
@@ -4156,14 +4157,14 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
  */
 
 errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
-                                                              char *IDnamePSF,
-                                                              float frac,
-                                                              long  x0,
-                                                              long  x1,
-                                                              long  y0,
-                                                              long  y1,
-                                                              int   EvalMode,
-                                                              float alpha)
+        char *IDnamePSF,
+        float frac,
+        long  x0,
+        long  x1,
+        long  y0,
+        long  y1,
+        int   EvalMode,
+        float alpha)
 {
     imageID IDwfs;
     imageID IDpsf;
@@ -4190,14 +4191,14 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     NBframe = data.image[IDwfs].md[0].size[2];
 
     evalarray = (double *) malloc(sizeof(double) * NBframe);
-    if (evalarray == NULL)
+    if(evalarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     indexarray = (long *) malloc(sizeof(long) * NBframe);
-    if (indexarray == NULL)
+    if(indexarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
@@ -4209,19 +4210,19 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     y0t = y0;
     y1t = y1;
 
-    if (x0 < 0)
+    if(x0 < 0)
     {
         x0t = x0;
     }
-    if (x1 > xsizepsf - 1)
+    if(x1 > xsizepsf - 1)
     {
         x1t = xsizepsf - 1;
     }
-    if (y0 < 0)
+    if(y0 < 0)
     {
         y0t = y0;
     }
-    if (y1 > ysizepsf - 1)
+    if(y1 > ysizepsf - 1)
     {
         y1t = ysizepsf - 1;
     }
@@ -4230,23 +4231,23 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
 
     long kk;
     IDpsfmask = image_ID("PSFmask");
-    if (IDpsfmask != -1)
+    if(IDpsfmask != -1)
     {
-        for (kk = 0; kk < NBframe; kk++)
+        for(kk = 0; kk < NBframe; kk++)
         {
             long ii, jj;
 
-            for (ii = x0t; ii < x1t; ii++)
-                for (jj = y0t; jj < y1t; jj++)
+            for(ii = x0t; ii < x1t; ii++)
+                for(jj = y0t; jj < y1t; jj++)
                 {
                     data.image[IDpsf]
-                        .array.F[kk * xysizepsf + jj * xsizepsf + ii] *=
+                    .array.F[kk * xysizepsf + jj * xsizepsf + ii] *=
                         data.image[IDpsfmask].array.F[jj * xsizepsf + ii];
                 }
         }
     }
 
-    for (kk = 0; kk < NBframe; kk++)
+    for(kk = 0; kk < NBframe; kk++)
     {
         long   ii, jj;
         double sum  = 0.0;
@@ -4254,13 +4255,13 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
 
         indexarray[kk] = kk;
 
-        for (ii = x0t; ii < x1t; ii++)
-            for (jj = y0t; jj < y1t; jj++)
+        for(ii = x0t; ii < x1t; ii++)
+            for(jj = y0t; jj < y1t; jj++)
             {
                 float tval;
                 tval = data.image[IDpsf]
-                           .array.F[kk * xysizepsf + jj * xsizepsf + ii];
-                if (tval < 0.0)
+                       .array.F[kk * xysizepsf + jj * xsizepsf + ii];
+                if(tval < 0.0)
                 {
                     tval = 0.0;
                 }
@@ -4269,23 +4270,23 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
             }
 
         // best frame
-        switch (EvalMode)
+        switch(EvalMode)
         {
-        case 0:
-            evalarray[kk] = -(ssum / (pow(sum, alpha)));
-            break;
+            case 0:
+                evalarray[kk] = -(ssum / (pow(sum, alpha)));
+                break;
 
-        case 1:
-            evalarray[kk] = -sum;
-            break;
+            case 1:
+                evalarray[kk] = -sum;
+                break;
 
-        case 2:
-            evalarray[kk] = sum;
-            break;
+            case 2:
+                evalarray[kk] = sum;
+                break;
 
-        default:
-            evalarray[kk] = -sum;
-            break;
+            default:
+                evalarray[kk] = -sum;
+                break;
         }
     }
 
@@ -4301,39 +4302,39 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     create_2Dimage_ID("impsfall", xsizepsf, ysizepsf, &IDpsfall);
 
     long kklim;
-    kklim = (long) (frac * NBframe);
+    kklim = (long)(frac * NBframe);
 
     printf("kklim = %ld     %ld %ld\n", kklim, xysizewfs, xysizepsf);
 
     FILE *fp = fopen("fptest.txt", "w");
-    for (kk = 0; kk < NBframe; kk++)
+    for(kk = 0; kk < NBframe; kk++)
     {
         long ii;
 
         fprintf(fp, "%6ld  %6ld  %g\n", kk, indexarray[kk], evalarray[kk]);
 
-        if (kk < kklim)
+        if(kk < kklim)
         {
-            for (ii = 0; ii < xysizewfs; ii++)
+            for(ii = 0; ii < xysizewfs; ii++)
             {
                 data.image[IDwfsbest].array.F[ii] +=
                     data.image[IDwfs].array.F[indexarray[kk] * xysizewfs + ii];
             }
 
-            for (ii = 0; ii < xysizepsf; ii++)
+            for(ii = 0; ii < xysizepsf; ii++)
             {
                 data.image[IDpsfbest].array.F[ii] +=
                     data.image[IDpsf].array.F[indexarray[kk] * xysizepsf + ii];
             }
         }
 
-        for (ii = 0; ii < xysizewfs; ii++)
+        for(ii = 0; ii < xysizewfs; ii++)
         {
             data.image[IDwfsall].array.F[ii] +=
                 data.image[IDwfs].array.F[kk * xysizewfs + ii];
         }
 
-        for (ii = 0; ii < xysizepsf; ii++)
+        for(ii = 0; ii < xysizepsf; ii++)
         {
             data.image[IDpsfall].array.F[ii] +=
                 data.image[IDpsf].array.F[kk * xysizepsf + ii];
@@ -4343,22 +4344,22 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
 
     long ii;
 
-    for (ii = 0; ii < xysizewfs; ii++)
+    for(ii = 0; ii < xysizewfs; ii++)
     {
         data.image[IDwfsbest].array.F[ii] /= kklim;
     }
 
-    for (ii = 0; ii < xysizepsf; ii++)
+    for(ii = 0; ii < xysizepsf; ii++)
     {
         data.image[IDpsfbest].array.F[ii] /= kklim;
     }
 
-    for (ii = 0; ii < xysizewfs; ii++)
+    for(ii = 0; ii < xysizewfs; ii++)
     {
         data.image[IDwfsall].array.F[ii] /= NBframe;
     }
 
-    for (ii = 0; ii < xysizepsf; ii++)
+    for(ii = 0; ii < xysizepsf; ii++)
     {
         data.image[IDpsfall].array.F[ii] /= NBframe;
     }

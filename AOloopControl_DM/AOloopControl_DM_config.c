@@ -76,9 +76,9 @@ errno_t AOloopControl_printDMconf()
         "DM | on |  x |  y | Nbch | busy | ave | DClevel | monint  | stat | "
         "IDdisp | voltmode | volttype | "
         "stroke100 | IDvolt | maxvolt |   voltname  |\n");
-    for (DMindex = 0; DMindex < NB_DMindex; DMindex++)
+    for(DMindex = 0; DMindex < NB_DMindex; DMindex++)
     {
-        if (dmdispcombconf[DMindex].voltmode == 1)
+        if(dmdispcombconf[DMindex].voltmode == 1)
         {
             sprintf(IDvolt_str, "%3ld", dmdispcombconf[DMindex].IDvolt);
             sprintf(maxvolt_str, "%6.2f", dmdispcombconf[DMindex].MAXVOLT);
@@ -135,12 +135,12 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
     init_pair(3, COLOR_GREEN, COLOR_BLACK);
     init_pair(4, COLOR_RED, COLOR_BLACK);
 
-    while (!kbdhit())
+    while(!kbdhit())
     {
         {
             struct timespec tim;
             tim.tv_sec  = 0;
-            tim.tv_nsec = (long) (1000 * dmdispcombconf[DMindex].moninterval);
+            tim.tv_nsec = (long)(1000 * dmdispcombconf[DMindex].moninterval);
             nanosleep(&tim, NULL);
             // usleep(dmdispcombconf[DMindex].moninterval);
         }
@@ -178,7 +178,7 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
         printw("disp->V time      = %10.3f us\n",
                dmdispcombconf[DMindex].time_disp2V * 1.0e6);
 
-        if (dmdispcombconf[DMindex].TrigMode == 1)
+        if(dmdispcombconf[DMindex].TrigMode == 1)
         {
             attron(A_BOLD);
         }
@@ -194,13 +194,13 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
         printw(
             "==============================================================="
             "=\n");
-        if (dmdispcombconf[DMindex].TrigMode == 1)
+        if(dmdispcombconf[DMindex].TrigMode == 1)
         {
             attroff(A_BOLD);
         }
         printw("\n");
 
-        if (dmdispcombconf[DMindex].voltmode == 1)
+        if(dmdispcombconf[DMindex].voltmode == 1)
         {
             attron(A_BOLD);
         }
@@ -235,13 +235,13 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
         printw(
             "==============================================================="
             "=\n");
-        if (dmdispcombconf[DMindex].voltmode == 1)
+        if(dmdispcombconf[DMindex].voltmode == 1)
         {
             attroff(A_BOLD);
         }
         printw("\n");
 
-        for (ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++)
+        for(ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++)
         {
             printw(" CHANNEL %2d  gain = %10.3f   dm%02lddisp%02ld   %10ld\n",
                    ch,
@@ -252,7 +252,7 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
         }
         printw("\n");
 
-        if (dmdispcombconf[DMindex].dm2dm_mode == 1)
+        if(dmdispcombconf[DMindex].dm2dm_mode == 1)
         {
             attron(A_BOLD);
         }
@@ -272,13 +272,13 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
         printw(
             "==============================================================="
             "=\n");
-        if (dmdispcombconf[DMindex].dm2dm_mode == 1)
+        if(dmdispcombconf[DMindex].dm2dm_mode == 1)
         {
             attroff(A_BOLD);
         }
         printw("\n");
 
-        if (dmdispcombconf[DMindex].dm2dm_mode == 1)
+        if(dmdispcombconf[DMindex].dm2dm_mode == 1)
         {
             attron(A_BOLD);
         }
@@ -298,7 +298,7 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
         printw(
             "==============================================================="
             "=\n");
-        if (dmdispcombconf[DMindex].dm2dm_mode == 1)
+        if(dmdispcombconf[DMindex].dm2dm_mode == 1)
         {
             attroff(A_BOLD);
         }
@@ -322,7 +322,7 @@ int AOloopControl_DM_chan_setgain(long DMindex, int ch, float gain)
 
     AOloopControl_DM_loadconf();
 
-    if (ch < dmdispcombconf[DMindex].NBchannel)
+    if(ch < dmdispcombconf[DMindex].NBchannel)
     {
         dmdispcombconf[DMindex].dmdispgain[ch] = gain;
     }

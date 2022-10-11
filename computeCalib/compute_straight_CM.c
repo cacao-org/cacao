@@ -36,47 +36,59 @@ static long     fpi_GPUdevice;
 
 
 
-static CLICMDARGDEF farg[] = {
-    {// AO loop index - used for automatic naming of streams aolX_
-     CLIARG_UINT64,
-     ".AOloopindex",
-     "AO loop index",
-     "0",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &AOloopindex,
-     NULL},
-    {// input stream : response matrix
-     CLIARG_STREAM,
-     ".respMat",
-     "input response matrix",
-     "respM",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &respM,
-     &fpi_respM},
-    {// input stream : response matrix
-     CLIARG_STREAM,
-     ".ctrlMat",
-     "output control matrix",
-     "contrM",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &controlM,
-     &fpi_controlM},
-    {// Singular Value Decomposition limit
-     CLIARG_FLOAT32,
-     ".svdlim",
-     "SVD limit",
-     "0.01",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &svdlim,
-     &fpi_svdlim},
-    {// using GPU (-1 : no GPU, otherwise GPU device)
-     CLIARG_INT32,
-     ".GPUdevive",
-     "GPU device",
-     "-1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &GPUdevice,
-     &fpi_GPUdevice}};
+static CLICMDARGDEF farg[] =
+{
+    {
+        // AO loop index - used for automatic naming of streams aolX_
+        CLIARG_UINT64,
+        ".AOloopindex",
+        "AO loop index",
+        "0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &AOloopindex,
+        NULL
+    },
+    {
+        // input stream : response matrix
+        CLIARG_STREAM,
+        ".respMat",
+        "input response matrix",
+        "respM",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &respM,
+        &fpi_respM
+    },
+    {
+        // input stream : response matrix
+        CLIARG_STREAM,
+        ".ctrlMat",
+        "output control matrix",
+        "contrM",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &controlM,
+        &fpi_controlM
+    },
+    {
+        // Singular Value Decomposition limit
+        CLIARG_FLOAT32,
+        ".svdlim",
+        "SVD limit",
+        "0.01",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &svdlim,
+        &fpi_svdlim
+    },
+    {
+        // using GPU (-1 : no GPU, otherwise GPU device)
+        CLIARG_INT32,
+        ".GPUdevive",
+        "GPU device",
+        "-1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &GPUdevice,
+        &fpi_GPUdevice
+    }
+};
 
 
 
@@ -86,7 +98,7 @@ static CLICMDARGDEF farg[] = {
 //
 static errno_t customCONFsetup()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
     }
 
@@ -99,15 +111,17 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
     }
 
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata = {
-    "compsCM", "compute straight control matrix", CLICMD_FIELDS_DEFAULTS};
+static CLICMDDATA CLIcmddata =
+{
+    "compsCM", "compute straight control matrix", CLICMD_FIELDS_DEFAULTS
+};
 
 
 
@@ -132,7 +146,7 @@ static errno_t compute_function()
 
 
 #ifdef HAVE_CUDA
-    if (*GPUdevice >= 0)
+    if(*GPUdevice >= 0)
     {
         CUDACOMP_magma_compute_SVDpseudoInverse(respM,
                                                 controlM,
@@ -173,9 +187,9 @@ INSERT_STD_FPSCLIfunctions
 
 
 
-    // Register function in CLI
-    errno_t
-    CLIADDCMD_AOloopControl_computeCalib__compsCM()
+// Register function in CLI
+errno_t
+CLIADDCMD_AOloopControl_computeCalib__compsCM()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;

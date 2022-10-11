@@ -34,12 +34,12 @@ void __attribute__((constructor)) libinit_AOloopControl_IOtools();
 
 errno_t
 AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
-                                                        const char *dark_name,
-                                                        const char *out_name,
-                                                        long        size_x,
-                                                        long        size_y,
-                                                        long        xstart,
-                                                        long        ystart);
+        const char *dark_name,
+        const char *out_name,
+        long        size_x,
+        long        size_y,
+        long        xstart,
+        long        ystart);
 
 /** @brief compute sum of image pixels */
 // static void *compute_function_imtotal( void *ptr );
@@ -68,18 +68,18 @@ errno_t Read_cam_frame(
 
 /** @brief Load 2D image in shared memory */
 long AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,
-                                              const char *fname,
-                                              long        xsize,
-                                              long        ysize,
-                                              float       DefaultValue);
+        const char *fname,
+        long        xsize,
+        long        ysize,
+        float       DefaultValue);
 
 /** @brief Load 3D image in shared memory */
 long AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
-                                              const char *fname,
-                                              long        xsize,
-                                              long        ysize,
-                                              long        zsize,
-                                              float       DefaultValue);
+        const char *fname,
+        long        xsize,
+        long        ysize,
+        long        zsize,
+        float       DefaultValue);
 
 /* ===============================================================================================
  */
@@ -101,11 +101,11 @@ errno_t AOloopControl_IOtools_AveStream(const char *IDname,
 
 /** @brief Aligns data stream */
 errno_t AOloopControl_IOtools_imAlignStream(const char *IDname,
-                                            int         xbox0,
-                                            int         ybox0,
-                                            const char *IDref_name,
-                                            const char *IDout_name,
-                                            int         insem);
+        int         xbox0,
+        int         ybox0,
+        const char *IDref_name,
+        const char *IDout_name,
+        int         insem);
 
 /** @brief Induces temporal offset between input and output streams */
 long AOloopControl_IOtools_frameDelay(const char *IDin_name,

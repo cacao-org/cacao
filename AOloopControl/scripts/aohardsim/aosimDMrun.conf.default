@@ -3,15 +3,20 @@
 # DM process is triggered by WF OPD, not by DM command
 
 # ============== INPUT & TRIGGER (OPD unit = um) ===============
-INMODE                   0                 # 0:stream, 1:file system (FITS)
+INMODE                   0                 # 0:
+stream, 1:
+file system(FITS)
 INSTREAMNAMEDM           dm05disp          # input DM command stream
-INFITSFILENAMEDM         dm05disp.fits     # input FITS file name (DM command)
+INFITSFILENAMEDM         dm05disp.fits     # input FITS file name(DM command)
 INTRIGSTREAMNAME         wf1opd            # input trigger stream
-INTRIGSEMCHAN            6                 # input semaphore channel (using OPD input)
+INTRIGSEMCHAN            6                 # input semaphore channel(
+    using OPD input)
 INTRIGGERFILE            inwf.txt          # input trigger file
 
 # ============== OUTPUT TYPE ===================================
-OUTMODE                  0                 # 0: stream, 1: file system
+OUTMODE                  0                 # 0:
+stream, 1:
+file system
 OUTSTREAMNAMEDM          dm05dispmap       # output WF stream name
 OUTFITSFILENAMEDM        dm05dispmap.fits  # FITS file name output [um]
 OUTTRIGGERFILE           outdm.txt         # output trigger file

@@ -87,11 +87,11 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
                          __LINE__,
                          commentstring);
 
-    if (aoloopcontrol_var.aoconfID_looptiming == -1)
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
         // LOOPiteration is written in cnt1 of loop timing array
-        if (sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
-            1)
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
+                1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -107,7 +107,7 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
     GPUcnt = 2;
 
     GPUsetM = (int *) malloc(sizeof(int) * GPUcnt);
-    for (uint32_t k = 0; k < GPUcnt; k++)
+    for(uint32_t k = 0; k < GPUcnt; k++)
     {
         GPUsetM[k] = k + 5;
     }
@@ -171,9 +171,9 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
 
     totfluxave = 1.0;
     int initWFSref;
-    for (;;)
+    for(;;)
     {
-        if (initWFSref == 0)
+        if(initWFSref == 0)
         {
             printf("Computing reference\n");
             fflush(stdout);
@@ -181,7 +181,7 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
                    data.image[ID_WFSref].array.F,
                    sizeof(float) * wfsxsize * wfsysize);
             GPU_loop_MultMat_execute(2, &status, &GPUstatus[0], 1.0, 0.0, 0, 0);
-            for (uint32_t m = 0; m < NBmodes; m++)
+            for(uint32_t m = 0; m < NBmodes; m++)
             {
                 data.image[IDcoeff0].array.F[m] =
                     data.image[ID_coefft].array.F[m];
@@ -202,7 +202,7 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
                      alpha * data.image[ID_WFSimtot].array.F[0];
 
         data.image[ID_coeff].md[0].write = 1;
-        for (uint32_t m = 0; m < NBmodes; m++)
+        for(uint32_t m = 0; m < NBmodes; m++)
         {
             data.image[ID_coeff].array.F[m] =
                 data.image[ID_coefft].array.F[m] / totfluxave -

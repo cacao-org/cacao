@@ -70,7 +70,7 @@ errno_t AOloopControl_InitializeMemory(int mode)
     char AOconfnamefull[STRINGMAXLEN_FULLFILENAME];
     WRITE_FULLFILENAME(AOconfnamefull, "%s/%s", data.shmdir, AOconfname);
     SM_fd = open(AOconfnamefull, O_RDWR);
-    if (SM_fd == -1)
+    if(SM_fd == -1)
     {
         printf("Cannot import file \"%s\" -> creating file\n", AOconfnamefull);
         create = 1;
@@ -79,7 +79,7 @@ errno_t AOloopControl_InitializeMemory(int mode)
     {
         fstat(SM_fd, &file_stat);
         printf("File %s size: %zd\n", AOconfnamefull, file_stat.st_size);
-        if (file_stat.st_size != sizeof(AOLOOPCONTROL_CONF) * NB_AOloopcontrol)
+        if(file_stat.st_size != sizeof(AOLOOPCONTROL_CONF) * NB_AOloopcontrol)
         {
             printf("File \"%s\" size is wrong -> recreating file\n",
                    AOconfnamefull);
@@ -92,13 +92,13 @@ errno_t AOloopControl_InitializeMemory(int mode)
         }
     }
 
-    if (create == 1)
+    if(create == 1)
     {
         int result;
 
         SM_fd = open(AOconfnamefull, O_RDWR | O_CREAT | O_TRUNC, (mode_t) 0600);
 
-        if (SM_fd == -1)
+        if(SM_fd == -1)
         {
             perror("Error opening file for writing");
             exit(0);
@@ -107,7 +107,7 @@ errno_t AOloopControl_InitializeMemory(int mode)
         result = lseek(SM_fd,
                        sizeof(AOLOOPCONTROL_CONF) * NB_AOloopcontrol - 1,
                        SEEK_SET);
-        if (result == -1)
+        if(result == -1)
         {
             close(SM_fd);
             perror("Error calling lseek() to 'stretch' the file");
@@ -115,7 +115,7 @@ errno_t AOloopControl_InitializeMemory(int mode)
         }
 
         result = write(SM_fd, "", 1);
-        if (result != 1)
+        if(result != 1)
         {
             close(SM_fd);
             perror("Error writing last byte of the file");
@@ -125,19 +125,19 @@ errno_t AOloopControl_InitializeMemory(int mode)
 
     AOconf = (AOLOOPCONTROL_CONF *) mmap(0,
                                          sizeof(AOLOOPCONTROL_CONF) *
-                                             NB_AOloopcontrol,
+                                         NB_AOloopcontrol,
                                          PROT_READ | PROT_WRITE,
                                          MAP_SHARED,
                                          SM_fd,
                                          0);
-    if (AOconf == MAP_FAILED)
+    if(AOconf == MAP_FAILED)
     {
         close(SM_fd);
         perror("Error mmapping the file");
         exit(0);
     }
 
-    if ((mode == 0) || (create == 1))
+    if((mode == 0) || (create == 1))
     {
         char cntname[200];
 
@@ -156,18 +156,18 @@ errno_t AOloopControl_InitializeMemory(int mode)
         AOconf[loop].aorun.cntmax   = 0;
         AOconf[loop].aorun.init_CMc = 0;
 
-        if (sprintf(cntname,
-                    "aol%ld_logdata",
-                    loop) < 1) // contains loop count (cnt0) and loop gain
+        if(sprintf(cntname,
+                   "aol%ld_logdata",
+                   loop) < 1) // contains loop count (cnt0) and loop gain
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
-        if ((aoloopcontrol_var.aoconfIDlogdata = image_ID(cntname)) == -1)
+        if((aoloopcontrol_var.aoconfIDlogdata = image_ID(cntname)) == -1)
         {
             uint32_t *sizearray;
             sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-            if (sizearray == NULL)
+            if(sizearray == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
                 abort();
@@ -189,9 +189,9 @@ errno_t AOloopControl_InitializeMemory(int mode)
         AOloopControl_RTstreamLOG_init(loop);
     }
 
-    if (create == 1)
+    if(create == 1)
     {
-        for (loop = 0; loop < NB_AOloopcontrol; loop++)
+        for(loop = 0; loop < NB_AOloopcontrol; loop++)
         {
             AOconf[loop].aorun.init              = 0;
             AOconf[loop].aorun.on                = 0;
@@ -234,8 +234,8 @@ errno_t AOloopControl_InitializeMemory(int mode)
     }
     else
     {
-        for (loop = 0; loop < NB_AOloopcontrol; loop++)
-            if (AOconf[loop].aorun.init == 1)
+        for(loop = 0; loop < NB_AOloopcontrol; loop++)
+            if(AOconf[loop].aorun.init == 1)
             {
                 printf("LIST OF ACTIVE LOOPS:\n");
                 printf("----- Loop %ld   (%s) ----------\n",
@@ -259,32 +259,32 @@ errno_t AOloopControl_InitializeMemory(int mode)
             }
     }
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
 
         printf("INITIALIZING GPUset ARRAYS\n");
         fflush(stdout);
 
         aoloopcontrol_var.GPUset0 = (int *) malloc(sizeof(int) * GPUcntMax);
-        if (aoloopcontrol_var.GPUset0 == NULL)
+        if(aoloopcontrol_var.GPUset0 == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
 
-        for (int k = 0; k < GPUcntMax; k++)
+        for(int k = 0; k < GPUcntMax; k++)
         {
             FILE *fp;
             char  fname[200];
 
-            if (sprintf(fname, "./conf/param_GPUset0dev%d.txt", (int) k) < 1)
+            if(sprintf(fname, "./conf/param_GPUset0dev%d.txt", (int) k) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
             fp = fopen(fname, "r");
-            if (fp != NULL)
+            if(fp != NULL)
             {
-                if (fscanf(fp, "%50d", &tmpi) != 1)
+                if(fscanf(fp, "%50d", &tmpi) != 1)
                 {
                     PRINT_ERROR("Cannot read parameter from file");
                 }
@@ -299,24 +299,24 @@ errno_t AOloopControl_InitializeMemory(int mode)
         }
 
         aoloopcontrol_var.GPUset1 = (int *) malloc(sizeof(int) * GPUcntMax);
-        if (aoloopcontrol_var.GPUset1 == NULL)
+        if(aoloopcontrol_var.GPUset1 == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
-        for (int k = 0; k < GPUcntMax; k++)
+        for(int k = 0; k < GPUcntMax; k++)
         {
             FILE *fp;
             char  fname[200];
 
-            if (sprintf(fname, "./conf/param_GPUset1dev%d.txt", (int) k) < 1)
+            if(sprintf(fname, "./conf/param_GPUset1dev%d.txt", (int) k) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
             fp = fopen(fname, "r");
-            if (fp != NULL)
+            if(fp != NULL)
             {
-                if (fscanf(fp, "%50d", &tmpi) != 1)
+                if(fscanf(fp, "%50d", &tmpi) != 1)
                 {
                     PRINT_ERROR("Cannot read parameter from file");
                 }

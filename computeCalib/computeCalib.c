@@ -150,7 +150,7 @@ INIT_MODULE_LIB(AOloopControl_computeCalib)
 /** @brief CLI function for AOloopControl_mkSlavedAct */
 errno_t AOloopControl_computeCalib_mkSlavedAct_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 1) + CLI_checkarg(3, 3) == 0)
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 1) + CLI_checkarg(3, 3) == 0)
     {
         AOloopControl_computeCalib_mkSlavedAct(data.cmdargtoken[1].val.string,
                                                data.cmdargtoken[2].val.numf,
@@ -167,11 +167,11 @@ errno_t AOloopControl_computeCalib_mkSlavedAct_cli()
 /** @brief CLI function for AOloopControl_mkloDMmodes */
 errno_t AOloopControl_computeCalib_mkloDMmodes_cli()
 {
-    if (CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+    if(CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 1) + CLI_checkarg(5, 1) + CLI_checkarg(6, 1) +
             CLI_checkarg(7, 1) + CLI_checkarg(8, 1) + CLI_checkarg(9, 1) +
             CLI_checkarg(10, 2) ==
-        0)
+            0)
     {
         AOloopControl_computeCalib_mkloDMmodes(data.cmdargtoken[1].val.string,
                                                data.cmdargtoken[2].val.numl,
@@ -203,7 +203,7 @@ errno_t AOloopControl_computeCalib_ComputeCM_cli()
 
     function_parameter_getFPSargs_from_CLIfunc("compfCM");
 
-    if (data.FPS_CMDCODE != 0) // use FPS implementation
+    if(data.FPS_CMDCODE != 0)  // use FPS implementation
     {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOcontrolLoop_computeCalib_ComputeCM_FPCONF;
@@ -222,7 +222,7 @@ errno_t AOloopControl_computeCalib_mkCM_cli()
 {
     function_parameter_getFPSargs_from_CLIfunc("compsCM");
 
-    if (data.FPS_CMDCODE != 0) // use FPS implementation
+    if(data.FPS_CMDCODE != 0)  // use FPS implementation
     {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOloopControl_computeCalib_mkCM_FPCONF;
@@ -233,7 +233,7 @@ errno_t AOloopControl_computeCalib_mkCM_cli()
 
     // call non FPS implementation - all parameters specified at function launch
 
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 1) == 0)
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 1) == 0)
     {
 
         AOloopControl_computeCalib_mkCM(data.cmdargtoken[1].val.string,
@@ -258,11 +258,11 @@ data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numf); return 0;
 /** @brief CLI function for AOloopControl_mkModes */
 errno_t AOloopControl_computeCalib_mkModes_cli()
 {
-    if (CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+    if(CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 1) + CLI_checkarg(5, 1) + CLI_checkarg(6, 1) +
             CLI_checkarg(7, 1) + CLI_checkarg(8, 1) + CLI_checkarg(9, 1) +
             CLI_checkarg(10, 2) + CLI_checkarg(11, 2) + CLI_checkarg(12, 1) ==
-        0)
+            0)
     {
         AOloopControl_computeCalib_mkModes(data.cmdargtoken[1].val.string,
                                            data.cmdargtoken[2].val.numl,
@@ -289,9 +289,9 @@ errno_t AOloopControl_computeCalib_mkModes_cli()
 /** @brief CLI function for AOloopControl_mkModes_Simple */
 errno_t AOloopControl_computeCalib_mkModes_Simple_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 1) ==
-        0)
+            0)
     {
         AOloopControl_computeCalib_mkModes_Simple(
             data.cmdargtoken[1].val.string,
@@ -310,9 +310,9 @@ errno_t AOloopControl_computeCalib_mkModes_Simple_cli()
 /** @brief CLI function for AOloopControl_computeCM */
 errno_t AOloopControl_computeCalib_computeCM_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 4) + CLI_checkarg(3, 3) +
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 4) + CLI_checkarg(3, 3) +
             CLI_checkarg(4, 1) + CLI_checkarg(5, 2) + CLI_checkarg(6, 1) ==
-        0)
+            0)
     {
         AOloopControl_computeCalib_compute_ControlMatrix(
             LOOPNUMBER,
@@ -336,7 +336,7 @@ errno_t AOloopControl_computeCalib_computeCM_cli()
 /** @brief CLI function for AOloopControl_loadCM */
 errno_t AOloopControl_computeCalib_loadCM_cli()
 {
-    if (CLI_checkarg(1, 3) == 0)
+    if(CLI_checkarg(1, 3) == 0)
     {
         AOloopControl_computeCalib_loadCM(LOOPNUMBER,
                                           data.cmdargtoken[1].val.string);
@@ -352,7 +352,7 @@ errno_t AOloopControl_computeCalib_loadCM_cli()
 /** @brief CLI function for AOloopControl_mkHadamardModes */
 errno_t AOloopControl_computeCalib_mkHadamardModes_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 3) == 0)
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 3) == 0)
     {
         AOloopControl_computeCalib_mkHadamardModes(
             data.cmdargtoken[1].val.string,
@@ -369,9 +369,9 @@ errno_t AOloopControl_computeCalib_mkHadamardModes_cli()
 /** @brief CLI function for AOloopControl_Hadamard_decodeRM */
 errno_t AOloopControl_computeCalib_Hadamard_decodeRM_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 4) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 4) +
             CLI_checkarg(4, 3) ==
-        0)
+            0)
     {
         AOloopControl_computeCalib_Hadamard_decodeRM(
             data.cmdargtoken[1].val.string,
@@ -390,11 +390,11 @@ errno_t AOloopControl_computeCalib_Hadamard_decodeRM_cli()
 /** @brief CLI function for AOloopControl_mkCalib_map_mask */
 errno_t AOloopControl_computeCalib_mkCalib_map_mask_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 3) + CLI_checkarg(3, 3) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 3) + CLI_checkarg(3, 3) +
             CLI_checkarg(4, 1) + CLI_checkarg(5, 1) + CLI_checkarg(6, 1) +
             CLI_checkarg(7, 1) + CLI_checkarg(8, 1) + CLI_checkarg(9, 1) +
             CLI_checkarg(10, 1) + CLI_checkarg(11, 1) ==
-        0)
+            0)
     {
         AOloopControl_computeCalib_mkCalib_map_mask(
             LOOPNUMBER,
@@ -421,9 +421,9 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask_cli()
 /** @brief CLI function for AOloopControl_Process_zrespM */
 errno_t AOloopControl_computeCalib_Process_zrespM_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 3) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 3) +
             CLI_checkarg(4, 3) + CLI_checkarg(5, 3) ==
-        0)
+            0)
     {
         AOloopControl_computeCalib_Process_zrespM(
             LOOPNUMBER,
@@ -444,9 +444,9 @@ errno_t AOloopControl_computeCalib_Process_zrespM_cli()
 /** @brief CLI function for AOloopControl_ProcessZrespM */
 errno_t AOloopControl_computeCalib_ProcessZrespM_cli()
 {
-    if (CLI_checkarg(1, 3) + CLI_checkarg(2, 3) + CLI_checkarg(3, 3) +
+    if(CLI_checkarg(1, 3) + CLI_checkarg(2, 3) + CLI_checkarg(3, 3) +
             CLI_checkarg(4, 3) + CLI_checkarg(5, 1) + CLI_checkarg(6, 2) ==
-        0)
+            0)
     {
         AOloopControl_computeCalib_ProcessZrespM_medianfilt(
             LOOPNUMBER,
@@ -468,9 +468,9 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_cli()
 /** @brief CLI function for AOloopControl_compute_CombinedControlMatrix */
 errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 4) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 4) +
             CLI_checkarg(4, 4) + CLI_checkarg(5, 3) + CLI_checkarg(6, 3) ==
-        0)
+            0)
     {
         AOloopControl_computeCalib_compute_CombinedControlMatrix(
             data.cmdargtoken[1].val.string,
@@ -503,14 +503,14 @@ static errno_t init_module_CLI()
 {
 
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /** @name AOloopControl_computeCalib - 1. COMPUTING CALIBRATION */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand("aolmkH",
                        __FILE__,
@@ -852,7 +852,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  "DM slaved actuators",
                                  FPTYPE_FITSFILENAME,
                                  FPFLAG_DEFAULT_INPUT |
-                                     FPFLAG_FILE_RUN_REQUIRED,
+                                 FPFLAG_FILE_RUN_REQUIRED,
                                  pNull,
                                  NULL);
 
@@ -862,7 +862,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  "Zonal response matrix",
                                  FPTYPE_FITSFILENAME,
                                  FPFLAG_DEFAULT_INPUT |
-                                     FPFLAG_FILE_RUN_REQUIRED,
+                                 FPFLAG_FILE_RUN_REQUIRED,
                                  pNull,
                                  NULL);
 
@@ -872,7 +872,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  "actuators directly controlled",
                                  FPTYPE_FITSFILENAME,
                                  FPFLAG_DEFAULT_INPUT |
-                                     FPFLAG_FILE_RUN_REQUIRED,
+                                 FPFLAG_FILE_RUN_REQUIRED,
                                  pNull,
                                  NULL);
 
@@ -882,7 +882,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  "WFS mask",
                                  FPTYPE_FITSFILENAME,
                                  FPFLAG_DEFAULT_INPUT |
-                                     FPFLAG_FILE_RUN_REQUIRED,
+                                 FPFLAG_FILE_RUN_REQUIRED,
                                  pNull,
                                  NULL);
 
@@ -892,7 +892,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  "low order modal response matrix",
                                  FPTYPE_FITSFILENAME,
                                  FPFLAG_DEFAULT_INPUT |
-                                     FPFLAG_FILE_RUN_REQUIRED,
+                                 FPFLAG_FILE_RUN_REQUIRED,
                                  pNull,
                                  NULL);
 
@@ -902,7 +902,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  "low order RM modes",
                                  FPTYPE_FITSFILENAME,
                                  FPFLAG_DEFAULT_INPUT |
-                                     FPFLAG_FILE_RUN_REQUIRED,
+                                 FPFLAG_FILE_RUN_REQUIRED,
                                  pNull,
                                  NULL);
 
@@ -980,9 +980,9 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                        "log to filesystem",
                                        FPTYPE_EXECFILENAME,
      FPFLAG_DEFAULT_INPUT, pNull); (void) fpi_exec_logdata;
-  */
+    */
 
-    if (!fps.localstatus & FPS_LOCALSTATUS_CONFLOOP) // stop fps
+    if(!fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)  // stop fps
     {
         return RETURN_SUCCESS;
     }
@@ -990,17 +990,17 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
-    while (fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
+    while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
     {
         usleep(50);
 
-        if (function_parameter_FPCONFloopstep(&fps) ==
-            1) // Apply logic if update is needed
+        if(function_parameter_FPCONFloopstep(&fps) ==
+                1) // Apply logic if update is needed
         {
             //
             //  Connect to aux FPS
             //
-            if (fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX < 1)
+            if(fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX < 1)
             {
                 functionparameter_ConnectExternalFPS(&fps,
                                                      fpi_FPS_zRMacqu,
@@ -1009,7 +1009,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                 //                function_parameter_struct_connect(fps.parray[fpi_FPS_zRMacqu].val.string[0],
                 //                &FPS_zRMacqu, FPSCONNECT_SIMPLE);
             }
-            if (fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX < 1)
+            if(fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX < 1)
             {
                 functionparameter_ConnectExternalFPS(&fps,
                                                      fpi_FPS_loRMacqu,
@@ -1018,7 +1018,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                 // function_parameter_struct_connect(fps.parray[fpi_FPS_loRMacqu].val.string[0],
                 // &FPS_loRMacqu, FPSCONNECT_SIMPLE);
             }
-            if (fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX < 1)
+            if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX < 1)
             {
                 functionparameter_ConnectExternalFPS(&fps,
                                                      fpi_FPS_DMcomb,
@@ -1029,10 +1029,10 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
             }
 
             // Update RM files
-            if (fps.parray[fpi_update_RMfiles].fpflag & FPFLAG_ONOFF)
+            if(fps.parray[fpi_update_RMfiles].fpflag & FPFLAG_ONOFF)
             {
 
-                if (fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0)
+                if(fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0)
                 {
                     char datadir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
@@ -1040,7 +1040,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                     strncpy(
                         datadir,
                         functionparameter_GetParamPtr_STRING(&FPS_zRMacqu,
-                                                             ".conf.datadir"),
+                                ".conf.datadir"),
                         FUNCTION_PARAMETER_STRMAXLEN);
 
                     SNPRINTF_CHECK(fname,
@@ -1076,7 +1076,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                                            fname);
                 }
 
-                if (fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0)
+                if(fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0)
                 {
                     char datadir[FUNCTION_PARAMETER_STRMAXLEN];
                     char fname[FUNCTION_PARAMETER_STRMAXLEN];
@@ -1084,7 +1084,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                     strncpy(
                         datadir,
                         functionparameter_GetParamPtr_STRING(&FPS_loRMacqu,
-                                                             ".conf.datadir"),
+                                ".conf.datadir"),
                         FUNCTION_PARAMETER_STRMAXLEN);
 
                     SNPRINTF_CHECK(fname,
@@ -1109,19 +1109,19 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
             }
 
             // update align params for auto mask
-            if (fps.parray[fpi_update_align].fpflag & FPFLAG_ONOFF)
+            if(fps.parray[fpi_update_align].fpflag & FPFLAG_ONOFF)
             {
-                if (fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0)
+                if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0)
                 {
                     int DMxsize =
                         functionparameter_GetParamValue_INT64(&FPS_DMcomb,
-                                                              ".DMxsize");
+                                ".DMxsize");
                     int DMysize =
                         functionparameter_GetParamValue_INT64(&FPS_DMcomb,
-                                                              ".DMysize");
+                                ".DMysize");
                     __attribute__((unused)) int DMMODE =
                         functionparameter_GetParamValue_INT64(&FPS_DMcomb,
-                                                              ".DMMODE");
+                                ".DMMODE");
 
                     float cx = 0.5 * DMxsize - 0.5;
                     float cy = 0.5 * DMysize - 0.5;
@@ -1159,17 +1159,17 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
 
     function_parameter_FPCONFexit(&fps);
 
-    if (fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0)
+    if(fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX > 0)
     {
         function_parameter_struct_disconnect(&FPS_zRMacqu);
     }
 
-    if (fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0)
+    if(fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX > 0)
     {
         function_parameter_struct_disconnect(&FPS_loRMacqu);
     }
 
-    if (fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0)
+    if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0)
     {
         function_parameter_struct_disconnect(&FPS_DMcomb);
     }
@@ -1363,16 +1363,16 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN()
         fps.md->datadir);
 
     int OKloop = 1;
-    for (int i = 0; i < 20; i++)
+    for(int i = 0; i < 20; i++)
     {
         WRITE_FULLFILENAME(fnamesrc,
                            "./%s/mkmodestmp/fmodes_%02d.fits",
                            fps.md->datadir,
                            i);
 
-        if (OKloop == 1)
+        if(OKloop == 1)
         {
-            if (is_fits_file(fnamesrc) == 1)
+            if(is_fits_file(fnamesrc) == 1)
             {
                 printf("[%s %d] Archive [%d] to disk\n", __FILE__, __LINE__, i);
                 fflush(stdout);

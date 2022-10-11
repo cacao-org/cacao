@@ -60,11 +60,13 @@ errno_t AOloopControl_logprocess_modeval(const char *IDname)
                       1,
                       &ID1dPSD);
 
-    if (system("mkdir -p modePSD") != 0)
+    if(system("mkdir -p modePSD") != 0)
+    {
         PRINT_ERROR("system() returns non-zero value");
+    }
 
     fp = fopen("moveval_stats.dat", "w");
-    for (m = 0; m < NBmodes; m++)
+    for(m = 0; m < NBmodes; m++)
     {
         double ave = 0.0;
         double rms;
@@ -72,12 +74,14 @@ errno_t AOloopControl_logprocess_modeval(const char *IDname)
         FILE  *fpPSD;
         long   IDft;
 
-        for (kk = 0; kk < NBframes; kk++)
+        for(kk = 0; kk < NBframes; kk++)
+        {
             ave += data.image[ID].array.F[kk * NBmodes + m];
+        }
         ave /= NBframes;
         data.image[IDout_ave].array.F[m] = ave;
         rms                              = 0.0;
-        for (kk = 0; kk < NBframes; kk++)
+        for(kk = 0; kk < NBframes; kk++)
         {
             double tmpv;
 
@@ -87,23 +91,25 @@ errno_t AOloopControl_logprocess_modeval(const char *IDname)
         rms                              = sqrt(rms / NBframes);
         data.image[IDout_rms].array.F[m] = rms;
 
-        for (kk = 0; kk < NBframes; kk++)
+        for(kk = 0; kk < NBframes; kk++)
             data.image[ID1dtmp].array.F[kk] =
                 data.image[ID].array.F[kk * NBmodes + m];
         do1drfft("modeval1d", "modeval1d_FT");
         IDft = image_ID("modeval1d_FT");
 
-        if (sprintf(fname, "./modePSD/modevalPSD_%04ld.dat", m) < 1)
+        if(sprintf(fname, "./modePSD/modevalPSD_%04ld.dat", m) < 1)
+        {
             PRINT_ERROR("sprintf wrote <1 char");
+        }
 
         fpPSD = fopen(fname, "w");
-        for (kk = 0; kk < NBframes / 2; kk++)
+        for(kk = 0; kk < NBframes / 2; kk++)
         {
             data.image[ID1dPSD].array.F[kk] =
                 data.image[IDft].array.CF[kk].re *
-                    data.image[IDft].array.CF[kk].re +
+                data.image[IDft].array.CF[kk].re +
                 data.image[IDft].array.CF[kk].im *
-                    data.image[IDft].array.CF[kk].im;
+                data.image[IDft].array.CF[kk].im;
             fprintf(fpPSD, "%03ld %g\n", kk, data.image[ID1dPSD].array.F[kk]);
         }
         delete_image_ID("modeval1d_FT", DELETE_IMAGE_ERRMODE_WARNING);
@@ -147,7 +153,7 @@ errno_t AOloopControl_TweakRM(char                         *ZRMinname,
     dmysize = data.image[IDdmin].md[0].size[1];
     dmsize  = dmxsize * dmysize;
 
-    if (dmsize != data.image[IDzrmin].md[0].size[2])
+    if(dmsize != data.image[IDzrmin].md[0].size[2])
     {
         printf(
             "ERROR: total number of DM actuators (%ld) does not match zsize "
@@ -161,9 +167,9 @@ errno_t AOloopControl_TweakRM(char                         *ZRMinname,
 
     // input WFS frames
     IDwfsin = image_ID(WFSinCname);
-    if ((data.image[IDwfsin].md[0].size[0] != wfsxsize) ||
-        (data.image[IDwfsin].md[0].size[1] != wfsysize) ||
-        (data.image[IDwfsin].md[0].size[2] != NBframes))
+    if((data.image[IDwfsin].md[0].size[0] != wfsxsize) ||
+            (data.image[IDwfsin].md[0].size[1] != wfsysize) ||
+            (data.image[IDwfsin].md[0].size[2] != NBframes))
     {
         printf(
             "ERROR: size of WFS mask image \"%s\" (%u %u %u) does not match "
@@ -180,8 +186,8 @@ errno_t AOloopControl_TweakRM(char                         *ZRMinname,
 
     // DM mask
     IDdmmask = image_ID(DMmaskname);
-    if ((data.image[IDdmmask].md[0].size[0] != dmxsize) ||
-        (data.image[IDdmmask].md[0].size[1] != dmysize))
+    if((data.image[IDdmmask].md[0].size[0] != dmxsize) ||
+            (data.image[IDdmmask].md[0].size[1] != dmysize))
     {
         printf(
             "ERROR: size of DM mask image \"%s\" (%u %u) does not match "

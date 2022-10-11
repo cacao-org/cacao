@@ -12,7 +12,7 @@ typedef struct
 
     int_fast8_t AUTOTUNE_GAINS_ON;
     float
-        AUTOTUNEGAINS_updateGainCoeff; /**< Averaging coefficient (usually about
+    AUTOTUNEGAINS_updateGainCoeff; /**< Averaging coefficient (usually about
                                           0.1) */
     float AUTOTUNEGAINS_evolTimescale; /**< Evolution timescale, beyond which
                                           errors stop growing */

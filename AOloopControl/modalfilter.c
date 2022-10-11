@@ -142,208 +142,266 @@ static long      fpi_selfRMnbsettlestep;
 
 
 
-static CLICMDARGDEF farg[] = {
-    {// AO loop index. Used for naming streams aolX_
-     CLIARG_UINT64,
-     ".AOloopindex",
-     "AO loop index",
-     "0",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &AOloopindex,
-     NULL},
-    {CLIARG_STREAM,
-     ".inmval",
-     "input mode values from WFS",
-     "aol0_modevalWFS",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &inmval,
-     &fpi_inmval},
-    {CLIARG_STREAM,
-     ".outmval",
-     "output mode values to DM",
-     "aol0_modevalDM",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &outmval,
-     &fpi_outmval},
-    {CLIARG_ONOFF,
-     ".loopON",
-     "loop on/off (off=freeze)",
-     "ON",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &loopON,
-     &fpi_loopON},
-    {CLIARG_INT64,
-     ".loopNBstep",
-     "loop nb steps (-1 = inf)",
-     "-1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &loopNBstep,
-     &fpi_loopNBstep},
-    {CLIARG_ONOFF,
-     ".loopZERO",
-     "loop zero",
-     "OFF",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &loopZERO,
-     &fpi_loopZERO},
-    {CLIARG_FLOAT32,
-     ".loopgain",
-     "loop gain",
-     "0.01",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &loopgain,
-     &fpi_loopgain},
-    {CLIARG_FLOAT32,
-     ".loopmult",
-     "loop mult",
-     "0.95",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &loopmult,
-     &fpi_loopmult},
-    {CLIARG_FLOAT32,
-     ".looplimit",
-     "loop limit",
-     "1.0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &looplimit,
-     &fpi_looplimit},
-    {CLIARG_ONOFF,
-     ".comp.OLmodes",
-     "compute open loop modes",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &compOL,
-     &fpi_compOL},
-    {CLIARG_FLOAT32,
-     ".comp.latencyfr",
-     "DM to WFS latency [frame]",
-     "1.7",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &latencyfr,
-     &fpi_latencyfr},
-    {CLIARG_ONOFF,
-     ".comp.tbuff",
-     "compute telemetry buffer(s)",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &comptbuff,
-     &fpi_comptbuff},
-    {CLIARG_UINT32,
-     ".comp.tbuffsize",
-     "buffer time size",
-     "512",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &tbuffsize,
-     NULL},
-    {CLIARG_ONOFF,
-     ".auxDMmval.enable",
-     "mixing aux DM mode vals from stream aolx_modevalauxDM ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &auxDMmvalenable,
-     &fpi_auxDMmvalenable},
-    {CLIARG_FLOAT32,
-     ".auxDMmval.mixfact",
-     "mixing multiplicative factor (0:no mixing)",
-     "1.0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &auxDMmvalmixfact,
-     &fpi_auxDMmvalmixfact},
-    {CLIARG_ONOFF,
-     ".auxDMmval.modulate",
-     "modulate auxDM temporally ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &auxDMmvalmodulate,
-     &fpi_auxDMmvalmodulate},
-    {CLIARG_FLOAT32,
-     ".auxDMmval.modperiod",
-     "auxDM modulation period [frame]",
-     "20.0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &auxDMmvalmodperiod,
-     &fpi_auxDMmvalmodperiod},
-    {// enable predictive filter, listen to aolX_modevalPF
-     CLIARG_ONOFF,
-     ".PF.enable",
-     "enable predictive filter",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &enablePF,
-     &fpi_enablePF},
-    {// enable predictive filter, listen to aolX_modevalPF
-     CLIARG_UINT32,
-     ".PF.NBblock",
-     "number of blocks to wait from",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &PF_NBblock,
-     &fpi_PF_NBblock},
-    {// enable predictive filter, listen to aolX_modevalPF
-     CLIARG_UINT32,
-     ".PF.maxwaitus",
-     "maximum wait time for blocks [us]",
-     "500",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &PF_maxwaitus,
-     &fpi_PF_maxwaitus},
-    {// predictive filter mult coeff
-     CLIARG_FLOAT32,
-     ".PF.mixcoeff",
-     "mixing coeff",
-     "0.3",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &PFmixcoeff,
-     &fpi_PFmixcoeff},
-    {CLIARG_ONOFF,
-     ".autoloop.enable",
-     "autoloop self-test: loop back output to input ?",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &autoloopenable,
-     &fpi_autoloopenable},
-    {CLIARG_FLOAT32,
-     ".autoloop.sleep",
-     "loop sleep time",
-     "0.001",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &autoloopsleep,
-     &fpi_autoloopsleep},
-    {CLIARG_ONOFF,
-     ".selfRM.enable",
-     "Start self response matrix measurement",
-     "0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &selfRMenable,
-     &fpi_selfRMenable},
-    {CLIARG_FLOAT32,
-     ".selfRM.pokeampl",
-     "poke amplitude",
-     "0.01",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &selfRMpokeampl,
-     &fpi_selfRMpokeampl},
-    {CLIARG_UINT32,
-     ".selfRM.zsize",
-     "number of time steps recorded",
-     "6",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &selfRMzsize,
-     &fpi_selfRMzsize},
-    {CLIARG_UINT32,
-     ".selfRM.nbiter",
-     "number of iterations averaged, ideally 8n",
-     "8",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &selfRMnbiter,
-     &fpi_selfRMnbiter},
-    {CLIARG_UINT32,
-     ".selfRM.nbsettle",
-     "number of loop iteration to settle between pokes",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &selfRMnbsettlestep,
-     &fpi_selfRMnbsettlestep}};
+static CLICMDARGDEF farg[] =
+{
+    {
+        // AO loop index. Used for naming streams aolX_
+        CLIARG_UINT64,
+        ".AOloopindex",
+        "AO loop index",
+        "0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &AOloopindex,
+        NULL
+    },
+    {
+        CLIARG_STREAM,
+        ".inmval",
+        "input mode values from WFS",
+        "aol0_modevalWFS",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &inmval,
+        &fpi_inmval
+    },
+    {
+        CLIARG_STREAM,
+        ".outmval",
+        "output mode values to DM",
+        "aol0_modevalDM",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &outmval,
+        &fpi_outmval
+    },
+    {
+        CLIARG_ONOFF,
+        ".loopON",
+        "loop on/off (off=freeze)",
+        "ON",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &loopON,
+        &fpi_loopON
+    },
+    {
+        CLIARG_INT64,
+        ".loopNBstep",
+        "loop nb steps (-1 = inf)",
+        "-1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &loopNBstep,
+        &fpi_loopNBstep
+    },
+    {
+        CLIARG_ONOFF,
+        ".loopZERO",
+        "loop zero",
+        "OFF",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &loopZERO,
+        &fpi_loopZERO
+    },
+    {
+        CLIARG_FLOAT32,
+        ".loopgain",
+        "loop gain",
+        "0.01",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &loopgain,
+        &fpi_loopgain
+    },
+    {
+        CLIARG_FLOAT32,
+        ".loopmult",
+        "loop mult",
+        "0.95",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &loopmult,
+        &fpi_loopmult
+    },
+    {
+        CLIARG_FLOAT32,
+        ".looplimit",
+        "loop limit",
+        "1.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &looplimit,
+        &fpi_looplimit
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.OLmodes",
+        "compute open loop modes",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compOL,
+        &fpi_compOL
+    },
+    {
+        CLIARG_FLOAT32,
+        ".comp.latencyfr",
+        "DM to WFS latency [frame]",
+        "1.7",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &latencyfr,
+        &fpi_latencyfr
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.tbuff",
+        "compute telemetry buffer(s)",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &comptbuff,
+        &fpi_comptbuff
+    },
+    {
+        CLIARG_UINT32,
+        ".comp.tbuffsize",
+        "buffer time size",
+        "512",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &tbuffsize,
+        NULL
+    },
+    {
+        CLIARG_ONOFF,
+        ".auxDMmval.enable",
+        "mixing aux DM mode vals from stream aolx_modevalauxDM ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &auxDMmvalenable,
+        &fpi_auxDMmvalenable
+    },
+    {
+        CLIARG_FLOAT32,
+        ".auxDMmval.mixfact",
+        "mixing multiplicative factor (0:no mixing)",
+        "1.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &auxDMmvalmixfact,
+        &fpi_auxDMmvalmixfact
+    },
+    {
+        CLIARG_ONOFF,
+        ".auxDMmval.modulate",
+        "modulate auxDM temporally ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &auxDMmvalmodulate,
+        &fpi_auxDMmvalmodulate
+    },
+    {
+        CLIARG_FLOAT32,
+        ".auxDMmval.modperiod",
+        "auxDM modulation period [frame]",
+        "20.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &auxDMmvalmodperiod,
+        &fpi_auxDMmvalmodperiod
+    },
+    {
+        // enable predictive filter, listen to aolX_modevalPF
+        CLIARG_ONOFF,
+        ".PF.enable",
+        "enable predictive filter",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &enablePF,
+        &fpi_enablePF
+    },
+    {
+        // enable predictive filter, listen to aolX_modevalPF
+        CLIARG_UINT32,
+        ".PF.NBblock",
+        "number of blocks to wait from",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &PF_NBblock,
+        &fpi_PF_NBblock
+    },
+    {
+        // enable predictive filter, listen to aolX_modevalPF
+        CLIARG_UINT32,
+        ".PF.maxwaitus",
+        "maximum wait time for blocks [us]",
+        "500",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &PF_maxwaitus,
+        &fpi_PF_maxwaitus
+    },
+    {
+        // predictive filter mult coeff
+        CLIARG_FLOAT32,
+        ".PF.mixcoeff",
+        "mixing coeff",
+        "0.3",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &PFmixcoeff,
+        &fpi_PFmixcoeff
+    },
+    {
+        CLIARG_ONOFF,
+        ".autoloop.enable",
+        "autoloop self-test: loop back output to input ?",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &autoloopenable,
+        &fpi_autoloopenable
+    },
+    {
+        CLIARG_FLOAT32,
+        ".autoloop.sleep",
+        "loop sleep time",
+        "0.001",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &autoloopsleep,
+        &fpi_autoloopsleep
+    },
+    {
+        CLIARG_ONOFF,
+        ".selfRM.enable",
+        "Start self response matrix measurement",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &selfRMenable,
+        &fpi_selfRMenable
+    },
+    {
+        CLIARG_FLOAT32,
+        ".selfRM.pokeampl",
+        "poke amplitude",
+        "0.01",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &selfRMpokeampl,
+        &fpi_selfRMpokeampl
+    },
+    {
+        CLIARG_UINT32,
+        ".selfRM.zsize",
+        "number of time steps recorded",
+        "6",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &selfRMzsize,
+        &fpi_selfRMzsize
+    },
+    {
+        CLIARG_UINT32,
+        ".selfRM.nbiter",
+        "number of iterations averaged, ideally 8n",
+        "8",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &selfRMnbiter,
+        &fpi_selfRMnbiter
+    },
+    {
+        CLIARG_UINT32,
+        ".selfRM.nbsettle",
+        "number of loop iteration to settle between pokes",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &selfRMnbsettlestep,
+        &fpi_selfRMnbsettlestep
+    }
+};
 
 
 
@@ -352,7 +410,7 @@ static CLICMDARGDEF farg[] = {
 //
 static errno_t customCONFsetup()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
         data.fpsptr->parray[fpi_inmval].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
@@ -396,15 +454,17 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
     }
 
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata = {
-    "modalfilter", "modal filtering", CLICMD_FIELDS_DEFAULTS};
+static CLICMDDATA CLIcmddata =
+{
+    "modalfilter", "modal filtering", CLICMD_FIELDS_DEFAULTS
+};
 
 
 
@@ -487,13 +547,13 @@ static errno_t compute_function()
         WRITE_IMAGENAME(name, "aol%lu_mfiltselfRM", *AOloopindex);
         imgselfRM =
             stream_connect_create_3Df32(name, NBmode, NBmode, (*selfRMzsize));
-        for (uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
+        for(uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
         {
             data.image[imgselfRM.ID].array.F[mi] = 0.0;
         }
     }
     float *selfRMpokecmd = (float *) malloc(sizeof(float) * NBmode);
-    for (uint32_t mi = 0; mi < NBmode; mi++)
+    for(uint32_t mi = 0; mi < NBmode; mi++)
     {
         selfRMpokecmd[mi] = 0.0;
     }
@@ -502,7 +562,7 @@ static errno_t compute_function()
 
     // current control values
     float *mvalDMc = (float *) malloc(sizeof(float) * NBmode);
-    for (uint32_t mi; mi < NBmode; mi++)
+    for(uint32_t mi; mi < NBmode; mi++)
     {
         mvalDMc[mi] = 0.0;
     }
@@ -556,7 +616,7 @@ static errno_t compute_function()
 
     // connect/create output mode coeffs
     IMGID imgout = stream_connect_create_2Df32(outmval, NBmode, 1);
-    for (uint32_t mi = 0; mi < NBmode; mi++)
+    for(uint32_t mi = 0; mi < NBmode; mi++)
     {
         data.image[imgout.ID].array.F[mi] = 0.0;
     }
@@ -570,7 +630,7 @@ static errno_t compute_function()
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%lu_modevalauxDM", *AOloopindex);
         imgauxmDM = stream_connect_create_2Df32(name, NBmode, 1);
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             data.image[imgauxmDM.ID].array.F[mi] = 0.0;
         }
@@ -585,7 +645,7 @@ static errno_t compute_function()
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%lu_modevalPF", *AOloopindex);
         imgPF = stream_connect_create_2Df32(name, NBmode, 1);
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgPF.im->array.F[mi] = 0.0;
         }
@@ -617,7 +677,7 @@ static errno_t compute_function()
         imgmgainfact = stream_connect_create_2Df32(mgainfactname, NBmode, 1);
         printf("%s  ID = %ld\n", imgmgainfact.name, imgmgainfact.ID);
         list_image_ID();
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmgainfact.im->array.F[mi] = 1.0;
         }
@@ -643,7 +703,7 @@ static errno_t compute_function()
         char mmultfactname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(mmultfactname, "aol%lu_mmultfact", *AOloopindex);
         imgmmultfact = stream_connect_create_2Df32(mmultfactname, NBmode, 1);
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmmultfact.im->array.F[mi] = 1.0;
         }
@@ -658,7 +718,7 @@ static errno_t compute_function()
         char mzeropointname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(mzeropointname, "aol%lu_mzeropoint", *AOloopindex);
         imgmzeropoint = stream_connect_create_2Df32(mzeropointname, NBmode, 1);
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmzeropoint.im->array.F[mi] = 0.0;
         }
@@ -684,7 +744,7 @@ static errno_t compute_function()
         char mlimitfactname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(mlimitfactname, "aol%lu_mlimitfact", *AOloopindex);
         imgmlimitfact = stream_connect_create_2Df32(mlimitfactname, NBmode, 1);
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmlimitfact.im->array.F[mi] = 1.0;
         }
@@ -696,10 +756,10 @@ static errno_t compute_function()
 
 
     // zero loop
-    if (data.fpsptr->parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF)
     {
 
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             // set goal position to zero
             mvalDMc[mi] = 0.0;
@@ -718,14 +778,14 @@ static errno_t compute_function()
 
 
 
-    if ((*loopON) == 1)
+    if((*loopON) == 1)
     {
-        if (*loopNBstep > 0)
+        if(*loopNBstep > 0)
         {
             *loopNBstep                                    = *loopNBstep - 1;
             data.fpsptr->parray[fpi_loopNBstep].val.i64[0] = *loopNBstep;
         }
-        if (*loopNBstep == 0)
+        if(*loopNBstep == 0)
         {
             *loopON = 0;
             // set loop to OFF
@@ -741,11 +801,11 @@ static errno_t compute_function()
 
 
         float auxDMfact = (*auxDMmvalmixfact);
-        if ((*auxDMmvalmodulate) == 1)
+        if((*auxDMmvalmodulate) == 1)
         {
             static double modpha = 0.0;
             modpha += 1 / (*auxDMmvalmodperiod);
-            if (modpha > 1.0)
+            if(modpha > 1.0)
             {
                 modpha -= 1.0;
             }
@@ -756,7 +816,7 @@ static errno_t compute_function()
 
         // Apply modal control filtering
         //
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
 
             // grab input value from WFS
@@ -778,17 +838,17 @@ static errno_t compute_function()
 
             // apply LIMIT
             limit = imgmlimit.im->array.F[mi];
-            if (mvalDMc[mi] > limit)
+            if(mvalDMc[mi] > limit)
             {
                 mvalDMc[mi] = limit;
             }
-            if (mvalDMc[mi] < -limit)
+            if(mvalDMc[mi] < -limit)
             {
                 mvalDMc[mi] = -limit;
             }
 
 
-            if ((*auxDMmvalenable) == 1)
+            if((*auxDMmvalenable) == 1)
             {
                 // add mode values from aux stream
                 mvalout[mi] =
@@ -803,7 +863,7 @@ static errno_t compute_function()
 
 
 
-        if (*enablePF == 0)
+        if(*enablePF == 0)
         {
             memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
             processinfo_update_output_stream(processinfo, imgout.ID);
@@ -812,38 +872,38 @@ static errno_t compute_function()
 
         // Compute pseudo open-loop mode coefficients
         //
-        if ((*compOL) == 1)
+        if((*compOL) == 1)
         {
             // write to DM history
             //
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
                 mvalDMbuff[DMtstep * NBmode + mi] = mvalDMc[mi];
             }
 
 
             DMtstep++;
-            if (DMtstep == NB_DMtstep)
+            if(DMtstep == NB_DMtstep)
             {
                 DMtstep = 0;
             }
 
-            int   latint  = (int) (*latencyfr);
+            int   latint  = (int)(*latencyfr);
             float latfrac = (*latencyfr) - latint;
 
             int DMtstep1 = DMtstep - latint;
             int DMtstep0 = DMtstep1 - 1;
-            while (DMtstep1 < 0)
+            while(DMtstep1 < 0)
             {
                 DMtstep1 += NB_DMtstep;
             }
-            while (DMtstep0 < 0)
+            while(DMtstep0 < 0)
             {
                 DMtstep0 += NB_DMtstep;
             }
 
             imgOLmval.md->write = 1;
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
                 float tmpmDMval = latfrac * mvalDMbuff[DMtstep0 * NBmode + mi];
                 tmpmDMval +=
@@ -860,7 +920,7 @@ static errno_t compute_function()
             processinfo_update_output_stream(processinfo, imgOLmval.ID);
 
 
-            if (*enablePF == 1)
+            if(*enablePF == 1)
             {
                 // wait for PF blocks to complete
                 //
@@ -870,7 +930,7 @@ static errno_t compute_function()
                 clock_gettime(CLOCK_REALTIME, &t0);
                 clock_gettime(CLOCK_REALTIME, &t1);
                 uint64_t PFcntOK = PFcnt + *PF_NBblock;
-                while (
+                while(
                     (imgPF.md->cnt0 < PFcntOK) &&
                     (timespec_diff_double(t0, t1) < 1.0e-6 * (*PF_maxwaitus)))
                 {
@@ -878,7 +938,7 @@ static errno_t compute_function()
                     clock_gettime(CLOCK_REALTIME, &t1);
                 }
 
-                for (uint32_t mi = 0; mi < NBmode; mi++)
+                for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
                     mvalout[mi] = imgPF.im->array.F[mi] * (*PFmixcoeff) +
                                   mvalout[mi] * (1.0 - *PFmixcoeff);
@@ -898,7 +958,7 @@ static errno_t compute_function()
         // Update individual gain, mult and limit values
         // This is done AFTER computing mode values to minimize latency
         //
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmgain.im->array.F[mi] =
                 imgmgainfact.im->array.F[mi] * (*loopgain);
@@ -906,7 +966,7 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, imgmgain.ID);
 
 
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmmult.im->array.F[mi] =
                 imgmmultfact.im->array.F[mi] * (*loopmult);
@@ -914,7 +974,7 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, imgmmult.ID);
 
 
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmlimit.im->array.F[mi] =
                 imgmlimitfact.im->array.F[mi] * (*looplimit);
@@ -924,12 +984,12 @@ static errno_t compute_function()
 
         // Fill telemetry buffers
         //
-        if ((*comptbuff) == 1)
+        if((*comptbuff) == 1)
         {
 
             uint64_t kkoffset =
                 tbuffslice * (*tbuffsize) * NBmode + tbuffindex * NBmode;
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
                 imgtbuff_mvalWFS.im->array.F[kkoffset + mi] =
                     imgin.im->array.F[mi];
@@ -938,9 +998,9 @@ static errno_t compute_function()
             }
 
 
-            if ((*auxDMmvalenable) == 1)
+            if((*auxDMmvalenable) == 1)
             {
-                for (uint32_t mi = 0; mi < NBmode; mi++)
+                for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
                     imgtbuff_mvalDM.im->array.F[kkoffset + mi] =
                         mvalout[mi] - (auxDMfact * imgauxmDM.im->array.F[mi]);
@@ -948,7 +1008,7 @@ static errno_t compute_function()
             }
             else
             {
-                for (uint32_t mi = 0; mi < NBmode; mi++)
+                for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
                     imgtbuff_mvalDM.im->array.F[kkoffset + mi] = mvalout[mi];
                 }
@@ -956,7 +1016,7 @@ static errno_t compute_function()
 
 
             tbuffindex++;
-            if (tbuffindex == (*tbuffsize))
+            if(tbuffindex == (*tbuffsize))
             {
                 tbuffindex = 0;
 
@@ -973,7 +1033,7 @@ static errno_t compute_function()
                                                  imgtbuff_mvalOL.ID);
 
                 tbuffslice++;
-                if (tbuffslice == 2)
+                if(tbuffslice == 2)
                 {
                     tbuffslice = 0;
                 }
@@ -983,7 +1043,7 @@ static errno_t compute_function()
 
 
 
-    if (*autoloopenable == 1)
+    if(*autoloopenable == 1)
     {
         // write output back to input
         //
@@ -1003,22 +1063,22 @@ static errno_t compute_function()
 
 
 
-    if (*selfRMenable == 1)
+    if(*selfRMenable == 1)
     {
         // initialization
-        if ((selfRM_pokecnt == 0) && (selfRM_pokemode == 0) &&
-            (blockcnt == 0) && (selfRMiter == 0))
+        if((selfRM_pokecnt == 0) && (selfRM_pokemode == 0) &&
+                (blockcnt == 0) && (selfRMiter == 0))
         {
             printf("INITIALIZING selfRM\n");
-            for (uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
+            for(uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
             {
                 data.image[imgselfRM.ID].array.F[mi] = 0.0;
             }
         }
 
-        if ((selfRM_pokecnt == 0) && (selfRM_pokemode == 0))
+        if((selfRM_pokecnt == 0) && (selfRM_pokemode == 0))
         {
-            if (blockcnt == 0)
+            if(blockcnt == 0)
             {
                 // start poke sign
                 selfRMpokesign = 1.0 - 2.0 * ((selfRMiter / 4) % 2);
@@ -1043,7 +1103,7 @@ static errno_t compute_function()
         pkmode     = selfRM_pokemode;
 
         float signmult;
-        if ((selfRM_pokemode % 2 == 0) && (selfRMpokeparity == 1))
+        if((selfRM_pokemode % 2 == 0) && (selfRMpokeparity == 1))
         {
             signmult = -1.0;
         }
@@ -1053,7 +1113,7 @@ static errno_t compute_function()
         }
 
 
-        if (selfRM_pokecnt < *selfRMzsize)
+        if(selfRM_pokecnt < *selfRMzsize)
         {
             selfRMpokecmd[pkmode] =
                 selfRMpokesign * (*selfRMpokeampl) * signmult;
@@ -1064,11 +1124,11 @@ static errno_t compute_function()
         }
 
 
-        if (selfRM_pokecnt < *selfRMzsize)
+        if(selfRM_pokecnt < *selfRMzsize)
         {
             // write result in output 3D selfRM
             //
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
                 long pindex = NBmode * NBmode * selfRM_pokecnt;
                 pindex += NBmode * pkmode;
@@ -1080,16 +1140,16 @@ static errno_t compute_function()
         }
         selfRM_pokecnt++;
 
-        if (selfRM_pokecnt > (*selfRMzsize) + (*selfRMnbsettlestep))
+        if(selfRM_pokecnt > (*selfRMzsize) + (*selfRMnbsettlestep))
         {
 
-            if (((selfRMiter % 8) < 2) || ((selfRMiter % 8) > 5))
+            if(((selfRMiter % 8) < 2) || ((selfRMiter % 8) > 5))
             {
                 selfRMpokesign *= -1.0;
             }
 
             blockcnt++;
-            if (blockcnt == 2)
+            if(blockcnt == 2)
             {
                 selfRM_pokemode++;
                 blockcnt = 0;
@@ -1098,7 +1158,7 @@ static errno_t compute_function()
         }
 
 
-        if (selfRM_pokemode == NBmode)
+        if(selfRM_pokemode == NBmode)
         {
             selfRMpokeparity = 1 - selfRMpokeparity;
             selfRM_pokemode  = 0;
@@ -1107,7 +1167,7 @@ static errno_t compute_function()
             selfRMiter++;
         }
 
-        if (selfRMiter == *selfRMnbiter)
+        if(selfRMiter == *selfRMnbiter)
         {
 
             selfRMiter      = 0;
@@ -1144,9 +1204,9 @@ INSERT_STD_FPSCLIfunctions
 
 
 
-    // Register function in CLI
-    errno_t
-    CLIADDCMD_AOloopControl__modalfilter()
+// Register function in CLI
+errno_t
+CLIADDCMD_AOloopControl__modalfilter()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;

@@ -73,9 +73,9 @@ INIT_MODULE_LIB(AOloopControl_PredictiveControl)
 /** @brief CLI function for AOloopControl_builPFloop_WatchInput */
 errno_t AOloopControl_PredictiveControl_builPFloop_WatchInput_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 2) + CLI_checkarg(5, 2) ==
-        0)
+            0)
     {
         AOloopControl_PredictiveControl_builPFloop_WatchInput(
             data.cmdargtoken[1].val.numl,
@@ -95,7 +95,7 @@ errno_t AOloopControl_PredictiveControl_builPFloop_WatchInput_cli()
 /** @brief CLI function for AOloopControl_mapPredictiveFilter */
 errno_t AOloopControl_PredictiveControl_mapPredictiveFilter_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) == 0)
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) == 0)
     {
         AOloopControl_PredictiveControl_mapPredictiveFilter(
             data.cmdargtoken[1].val.string,
@@ -113,9 +113,9 @@ errno_t AOloopControl_PredictiveControl_mapPredictiveFilter_cli()
 /** @brief CLI function for AOloopControl_testPredictiveFilter */
 errno_t AOloopControl_PredictiveControl_testPredictiveFilter_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) +
             CLI_checkarg(4, 2) + CLI_checkarg(5, 3) ==
-        0)
+            0)
     {
         AOloopControl_PredictiveControl_testPredictiveFilter(
             data.cmdargtoken[1].val.string,
@@ -135,7 +135,7 @@ errno_t AOloopControl_PredictiveControl_testPredictiveFilter_cli()
 
 errno_t AOloopControl_PredictiveControl_setPFsimpleAve_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 1) == 0)
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 1) == 0)
     {
         AOloopControl_PredictiveControl_setPFsimpleAve(
             data.cmdargtoken[1].val.string,
@@ -164,14 +164,14 @@ static errno_t init_module_CLI()
 {
 
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /** @name AOloopControl_PredictiveControl - 1. PREDICTIVE CONTROL */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand(
         "aolPFwatchin",

@@ -105,22 +105,24 @@ static long fpi_compPokeMat;
 
 // executable scripts
 
-static char * exec_post_RMdecode;
+static char *exec_post_RMdecode;
 static long fpi_exec_post_RMdecode;
 
-static char * exec_post_mkDMWFSmasks;
+static char *exec_post_mkDMWFSmasks;
 static long fpi_exec_post_mkDMWFSmasks;
 
-static char * exec_post_mkDMslaveact;
+static char *exec_post_mkDMslaveact;
 static long fpi_exec_post_mkDMslaveact;
 
-static char * exec_post_mkLODMmodes;
+static char *exec_post_mkLODMmodes;
 static long fpi_exec_post_mkLODMmodes;
 
 
 
-static CLICMDARGDEF farg[] = {
-    {   CLIARG_UINT32,
+static CLICMDARGDEF farg[] =
+{
+    {
+        CLIARG_UINT32,
         ".AOloopindex",
         "loop index",
         "0",
@@ -128,7 +130,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &AOloopindex,
         NULL
     },
-    {   CLIARG_STREAM,
+    {
+        CLIARG_STREAM,
         ".dmstream",
         "DM stream",
         "NULL",
@@ -136,7 +139,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &dmstream,
         &fpi_dmstream
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".ampl",
         "RM poke amplitude",
         "0.01",
@@ -145,7 +149,8 @@ static CLICMDARGDEF farg[] = {
         NULL
     },
     // ============= TIMING =========================
-    {   CLIARG_FPSNAME,
+    {
+        CLIARG_FPSNAME,
         ".timing.FPS_mlat",
         "hardware latency",
         "NULL",
@@ -155,7 +160,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &FPS_mlat,
         &fpi_FPS_mlat
     },
-    {   CLIARG_ONOFF,
+    {
+        CLIARG_ONOFF,
         ".timing.upmlat",
         "update latency from FPS",
         "OFF",
@@ -163,7 +169,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &update_mlat,
         &fpi_update_mlat
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".timing.WFSfrequ",
         "WFS frame rate [Hz]",
         "1000",
@@ -171,7 +178,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &WFSfrequ,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".timing.hardwlatfr",
         "hardware latency [fr]",
         "1000",
@@ -179,7 +187,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &hardwlatfr,
         NULL
     },
-    {   CLIARG_ONOFF,
+    {
+        CLIARG_ONOFF,
         ".timing.autoTiming",
         "Auto Timing",
         "ON",
@@ -187,7 +196,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &autotiming,
         &fpi_autotiming
     },
-    {   CLIARG_UINT32,
+    {
+        CLIARG_UINT32,
         ".timing.delayfr",
         "frame delay, whole part",
         "2",
@@ -195,7 +205,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &delayfr,
         NULL
     },
-    {   CLIARG_UINT32,
+    {
+        CLIARG_UINT32,
         ".timing.delayRM1us",
         "Sub-frame delay [us]",
         "100",
@@ -203,7 +214,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &delayRM1us,
         NULL
     },
-    {   CLIARG_UINT32,
+    {
+        CLIARG_UINT32,
         ".timing.NBave",
         "Number of frames averaged for a single poke measurement",
         "5",
@@ -211,7 +223,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &NBave,
         NULL
     },
-    {   CLIARG_UINT32,
+    {
+        CLIARG_UINT32,
         ".timing.NBexcl",
         "Number of frames excluded",
         "1",
@@ -219,7 +232,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &NBexcl,
         NULL
     },
-    {   CLIARG_UINT32,
+    {
+        CLIARG_UINT32,
         ".timing.NBcycle",
         "Number of measurement cycles to be repeated",
         "10",
@@ -227,7 +241,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &NBcycle,
         NULL
     },
-    {   CLIARG_UINT32,
+    {
+        CLIARG_UINT32,
         ".timing.NBinnerCycle",
         "Number of inner cycles (how many consecutive times should a single +/- "
         "poke be repeated)",
@@ -236,7 +251,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &NBinnerCycle,
         NULL
     },
-    {   CLIARG_ONOFF,
+    {
+        CLIARG_ONOFF,
         ".timing.upmlat",
         "update latency from FPS",
         "OFF",
@@ -245,7 +261,8 @@ static CLICMDARGDEF farg[] = {
         &fpi_update_mlat
     },
     // ============= RM DM MASK ======================
-    {   CLIARG_FPSNAME,
+    {
+        CLIARG_FPSNAME,
         ".RMDMmask.FPS_DMcomb",
         "DM control process",
         "NULL",
@@ -253,7 +270,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &FPS_DMcomb,
         &fpi_FPS_DMcomb
     },
-    {   CLIARG_UINT32,
+    {
+        CLIARG_UINT32,
         ".RMDMmask.DMMODE",
         "0:spatial, 1:modal",
         "1",
@@ -261,7 +279,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &DMMODE,
         &fpi_DMMODE
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".RMDMmask.Cx",
         "X center",
         "10.0",
@@ -269,7 +288,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &RMDMmaskCx,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".RMDMmask.Cy",
         "Y center",
         "10.0",
@@ -277,7 +297,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &RMDMmaskCy,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".RMDMmask.R",
         "radius",
         "10.0",
@@ -285,7 +306,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &RMDMmaskR,
         NULL
     },
-    {   CLIARG_ONOFF,
+    {
+        CLIARG_ONOFF,
         ".RMDMmask.upmlat",
         "update RMDMmask from FPS",
         "OFF",
@@ -294,7 +316,8 @@ static CLICMDARGDEF farg[] = {
         &fpi_update_RMDMmask
     },
     // ============= MASKiNG =========================
-    {   CLIARG_ONOFF,
+    {
+        CLIARG_ONOFF,
         ".MaskMode",
         "Mask mode, DM and WFS",
         "0",
@@ -302,7 +325,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &MaskMode,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".DMmask.RMp0",
         "DM mask, point0 percentile point",
         "0.2",
@@ -310,7 +334,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &maskDMp0,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".DMmask.RMc0",
         "DM mask, point0 coefficient",
         "1.0",
@@ -318,7 +343,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &maskDMc0,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".DMmask.RMp1",
         "DM mask, point1 percentile point",
         "0.2",
@@ -326,7 +352,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &maskDMp1,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".DMmask.RMc1",
         "DM mask, point1 coefficient",
         "1.0",
@@ -334,7 +361,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &maskDMc1,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".DMmask.proxrad",
         "DM actuator proximity radius",
         "2.5",
@@ -342,7 +370,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &DMproxrad,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".WFSmask.RMp0",
         "WFS mask, point0 percentile point",
         "0.2",
@@ -350,7 +379,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &maskWFSp0,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".WFSmask.RMc0",
         "WFS mask, point0 coefficient",
         "1.0",
@@ -358,7 +388,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &maskWFSc0,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".WFSmask.RMp1",
         "WFS mask, point1 percentile point",
         "0.2",
@@ -366,7 +397,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &maskWFSp1,
         NULL
     },
-    {   CLIARG_FLOAT32,
+    {
+        CLIARG_FLOAT32,
         ".WFSmask.RMc1",
         "WFS mask, point1 coefficient",
         "1.0",
@@ -374,7 +406,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &maskWFSc1,
         NULL
     },
-    {   CLIARG_FITSFILENAME,
+    {
+        CLIARG_FITSFILENAME,
         ".fn_pokeC",
         "Poke sequence cube",
         "null",
@@ -382,7 +415,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &fn_pokeC,
         NULL
     },
-    {   CLIARG_FITSFILENAME,
+    {
+        CLIARG_FITSFILENAME,
         ".fn_RMDMmask",
         "RM active DM actuators mask",
         "null",
@@ -390,7 +424,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &fn_RMDMmask,
         NULL
     },
-    {   CLIARG_ONOFF,
+    {
+        CLIARG_ONOFF,
         ".normalize",
         "Normalize WFS frames",
         "0",
@@ -398,7 +433,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &normalize,
         NULL
     },
-    {   CLIARG_ONOFF,
+    {
+        CLIARG_ONOFF,
         ".Hpoke",
         "Hadamard poke mode",
         "0",
@@ -406,7 +442,8 @@ static CLICMDARGDEF farg[] = {
         (void **) &Hpokemode,
         &fpi_Hpokemode
     },
-    {   CLIARG_ONOFF,
+    {
+        CLIARG_ONOFF,
         ".compPokeMat",
         "(re)compute poke matrix",
         "1",
@@ -456,7 +493,8 @@ static CLICMDARGDEF farg[] = {
 
 
 
-static CLICMDDATA CLIcmddata = {
+static CLICMDDATA CLIcmddata =
+{
     "acqWFSlincal", "acquire linear WFS calibration", CLICMD_FIELDS_DEFAULTS
 };
 
@@ -465,7 +503,7 @@ static CLICMDDATA CLIcmddata = {
 
 static errno_t customCONFsetup()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
         // DM stream is required
         data.fpsptr->parray[fpi_dmstream].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
@@ -487,10 +525,10 @@ static errno_t customCONFsetup()
 
 static errno_t customCONFcheck()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
 
-        if (FPS_mlat.SMfd < 1)
+        if(FPS_mlat.SMfd < 1)
         {
             printf("Connecting to mlat FPS\n");
 
@@ -500,7 +538,7 @@ static errno_t customCONFcheck()
         }
 
 
-        if (FPS_DMcomb.SMfd < 1)
+        if(FPS_DMcomb.SMfd < 1)
         {
             printf("Connecting to DMcomb FPS\n");
 
@@ -512,11 +550,11 @@ static errno_t customCONFcheck()
 
         // update hardware latency
         //
-        if (data.fpsptr->parray[fpi_update_mlat].fpflag & FPFLAG_ONOFF)
+        if(data.fpsptr->parray[fpi_update_mlat].fpflag & FPFLAG_ONOFF)
         {
             printf("Updating from mlat FPS\n");
 
-            if (FPS_mlat.SMfd > 0)
+            if(FPS_mlat.SMfd > 0)
             {
                 float WFSfrequ = functionparameter_GetParamValue_FLOAT32(&FPS_mlat,
                                  ".framerateHz");
@@ -537,7 +575,7 @@ static errno_t customCONFcheck()
 
         // Auto timing
         //
-        if (data.fpsptr->parray[fpi_autotiming].fpflag & FPFLAG_ONOFF) // ON state
+        if(data.fpsptr->parray[fpi_autotiming].fpflag & FPFLAG_ONOFF)  // ON state
         {
             printf("UPDATE TIMING >>>>>>>>>\n");
 
@@ -549,15 +587,15 @@ static errno_t customCONFcheck()
                 *hardwlatfr - 0.5 - 0.5 * (*NBexcl);
 
             int val_RMdelayfr =
-                ((int) ((*hardwlatfr) - 0.5 -
-                        0.5 * (*NBexcl) +
-                        10.0)) +
+                ((int)((*hardwlatfr) - 0.5 -
+                       0.5 * (*NBexcl) +
+                       10.0)) +
                 1 - 10;
 
-            int val_delayRM1us = (int) ((1.0 * val_RMdelayfr - RMdelay) /
-                                        (*WFSfrequ) * 1000000.0);
+            int val_delayRM1us = (int)((1.0 * val_RMdelayfr - RMdelay) /
+                                       (*WFSfrequ) * 1000000.0);
 
-            if (RMdelay > 0)
+            if(RMdelay > 0)
             {
                 *delayfr = val_RMdelayfr;
                 *delayRM1us = val_delayRM1us;
@@ -586,13 +624,13 @@ static errno_t customCONFcheck()
 
             // update RM DM mask
             //
-            if (data.fpsptr->parray[fpi_update_RMDMmask].fpflag & FPFLAG_ONOFF)
+            if(data.fpsptr->parray[fpi_update_RMDMmask].fpflag & FPFLAG_ONOFF)
             {
                 printf("Updating RM DM mask\n");
 
 
                 uint32_t DMMODEin = 1;
-                if (FPS_DMcomb.SMfd > 0)
+                if(FPS_DMcomb.SMfd > 0)
                 {
                     DMMODEin = functionparameter_GetParamValue_UINT32(&FPS_DMcomb,
                                ".DMmode");
@@ -600,11 +638,15 @@ static errno_t customCONFcheck()
 
                 // Update values
                 //
-                functionparameter_SetParamValue_UINT32(data.fpsptr, ".RMDMmask.DMMODE", DMMODEin);
+                functionparameter_SetParamValue_UINT32(data.fpsptr, ".RMDMmask.DMMODE",
+                                                       DMMODEin);
 
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr, ".RMDMmask.Cx", 0.5*DMxsize);
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr, ".RMDMmask.Cy", 0.5*DMysize);
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr, ".RMDMmask.R", 0.5*DMxsize+0.6);
+                functionparameter_SetParamValue_FLOAT32(data.fpsptr, ".RMDMmask.Cx",
+                                                        0.5 * DMxsize);
+                functionparameter_SetParamValue_FLOAT32(data.fpsptr, ".RMDMmask.Cy",
+                                                        0.5 * DMysize);
+                functionparameter_SetParamValue_FLOAT32(data.fpsptr, ".RMDMmask.R",
+                                                        0.5 * DMxsize + 0.6);
 
                 // load or create RMDMmask
                 // this is the map of active actuatores to be poked in RM
@@ -618,11 +660,11 @@ static errno_t customCONFcheck()
 
                     imageID ID_RMDMmask;
                     load_fits(fnameRMDMmask, "RMDMmask", 1, &ID_RMDMmask);
-                    if( ID_RMDMmask == -1)
+                    if(ID_RMDMmask == -1)
                     {
                         // create it
                         //
-                        if(*DMMODE == 0 )
+                        if(*DMMODE == 0)
                         {
                             // spatial DM
                             // make centered disk
@@ -646,7 +688,7 @@ static errno_t customCONFcheck()
                                 DMxsize,
                                 DMysize,
                                 &ID);
-                            for(uint64_t ii=0; ii<DMxsize*DMysize; ii++)
+                            for(uint64_t ii = 0; ii < DMxsize * DMysize; ii++)
                             {
                                 data.image[ID].array.F[ii] = 1.0;
                             }
@@ -663,7 +705,7 @@ static errno_t customCONFcheck()
                                                            fname_RMDMmask);
                 }
 
-                if (FPS_mlat.SMfd > 0)
+                if(FPS_mlat.SMfd > 0)
                 {
                     float WFSfrequ = functionparameter_GetParamValue_FLOAT32(&FPS_mlat,
                                      ".framerateHz");
@@ -691,7 +733,7 @@ static errno_t customCONFcheck()
             //
             // Compute action: make Spoke and Hpoke
             //
-            if (data.fpsptr->parray[fpi_compPokeMat].fpflag & FPFLAG_ONOFF)
+            if(data.fpsptr->parray[fpi_compPokeMat].fpflag & FPFLAG_ONOFF)
             {
 
                 imageID IDdmRM = image_ID(dmstream);
@@ -699,7 +741,7 @@ static errno_t customCONFcheck()
                 if(IDdmRM != -1)
                 {
 
-                    if (data.fpsptr->parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF)
+                    if(data.fpsptr->parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF)
                     {
 
                         AOloopControl_computeCalib_mkHadamardModes(

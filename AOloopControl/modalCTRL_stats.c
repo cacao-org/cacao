@@ -55,118 +55,149 @@ static long      fpi_compstatswrite;
 
 
 
-static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
-                               ".AOloopindex",
-                               "AO loop index",
-                               "0",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &AOloopindex,
-                               NULL},
-                              {CLIARG_UINT64,
-                               ".samplesize",
-                               "number of point per telemetry batch",
-                               "30000",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &samplesize,
-                               &fpi_samplesize},
+static CLICMDARGDEF farg[] = {{
+        CLIARG_UINT64,
+        ".AOloopindex",
+        "AO loop index",
+        "0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &AOloopindex,
+        NULL
+    },
+    {
+        CLIARG_UINT64,
+        ".samplesize",
+        "number of point per telemetry batch",
+        "30000",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &samplesize,
+        &fpi_samplesize
+    },
 
-                              {CLIARG_UINT32,
-                               ".block.blk0NBmode",
-                               "block 0 number of modes",
-                               "2",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block0NBmode,
-                               &fpi_block0NBmode},
-                              {CLIARG_UINT32,
-                               ".block.blk0NBsample",
-                               "block 0 number of samples",
-                               "10000",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block0NBsample,
-                               &fpi_block0NBsample},
+    {
+        CLIARG_UINT32,
+        ".block.blk0NBmode",
+        "block 0 number of modes",
+        "2",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block0NBmode,
+        &fpi_block0NBmode
+    },
+    {
+        CLIARG_UINT32,
+        ".block.blk0NBsample",
+        "block 0 number of samples",
+        "10000",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block0NBsample,
+        &fpi_block0NBsample
+    },
 
-                              {CLIARG_UINT32,
-                               ".block.blk1NBmode",
-                               "block 1 number of modes",
-                               "256",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block1NBmode,
-                               &fpi_block1NBmode},
-                              {CLIARG_UINT32,
-                               ".block.blk1NBsample",
-                               "block 1 number of samples",
-                               "10000",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block1NBsample,
-                               &fpi_block1NBsample},
+    {
+        CLIARG_UINT32,
+        ".block.blk1NBmode",
+        "block 1 number of modes",
+        "256",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block1NBmode,
+        &fpi_block1NBmode
+    },
+    {
+        CLIARG_UINT32,
+        ".block.blk1NBsample",
+        "block 1 number of samples",
+        "10000",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block1NBsample,
+        &fpi_block1NBsample
+    },
 
-                              {CLIARG_UINT32,
-                               ".block.blk2NBmode",
-                               "block 2 number of modes",
-                               "256",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block2NBmode,
-                               &fpi_block2NBmode},
-                              {CLIARG_UINT32,
-                               ".block.blk2NBsample",
-                               "block 2 number of samples",
-                               "10000",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block2NBsample,
-                               &fpi_block2NBsample},
+    {
+        CLIARG_UINT32,
+        ".block.blk2NBmode",
+        "block 2 number of modes",
+        "256",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block2NBmode,
+        &fpi_block2NBmode
+    },
+    {
+        CLIARG_UINT32,
+        ".block.blk2NBsample",
+        "block 2 number of samples",
+        "10000",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block2NBsample,
+        &fpi_block2NBsample
+    },
 
-                              {CLIARG_UINT32,
-                               ".block.blk3NBmode",
-                               "block 3 number of modes",
-                               "256",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block3NBmode,
-                               &fpi_block3NBmode},
-                              {CLIARG_UINT32,
-                               ".block.blk3NBsample",
-                               "block 3 number of samples",
-                               "10000",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block3NBsample,
-                               &fpi_block3NBsample},
+    {
+        CLIARG_UINT32,
+        ".block.blk3NBmode",
+        "block 3 number of modes",
+        "256",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block3NBmode,
+        &fpi_block3NBmode
+    },
+    {
+        CLIARG_UINT32,
+        ".block.blk3NBsample",
+        "block 3 number of samples",
+        "10000",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block3NBsample,
+        &fpi_block3NBsample
+    },
 
-                              {CLIARG_UINT32,
-                               ".block.blk4NBmode",
-                               "block 4 number of modes",
-                               "256",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block4NBmode,
-                               &fpi_block4NBmode},
-                              {CLIARG_UINT32,
-                               ".block.blk4NBsample",
-                               "block 4 number of samples",
-                               "10000",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block4NBsample,
-                               &fpi_block4NBsample},
+    {
+        CLIARG_UINT32,
+        ".block.blk4NBmode",
+        "block 4 number of modes",
+        "256",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block4NBmode,
+        &fpi_block4NBmode
+    },
+    {
+        CLIARG_UINT32,
+        ".block.blk4NBsample",
+        "block 4 number of samples",
+        "10000",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block4NBsample,
+        &fpi_block4NBsample
+    },
 
-                              {CLIARG_UINT32,
-                               ".block.blk5NBmode",
-                               "block 5 number of modes",
-                               "256",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block5NBmode,
-                               &fpi_block5NBmode},
-                              {CLIARG_UINT32,
-                               ".block.blk5NBsample",
-                               "block 5 number of samples",
-                               "10000",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &block5NBsample,
-                               &fpi_block5NBsample},
+    {
+        CLIARG_UINT32,
+        ".block.blk5NBmode",
+        "block 5 number of modes",
+        "256",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block5NBmode,
+        &fpi_block5NBmode
+    },
+    {
+        CLIARG_UINT32,
+        ".block.blk5NBsample",
+        "block 5 number of samples",
+        "10000",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &block5NBsample,
+        &fpi_block5NBsample
+    },
 
-                              {CLIARG_ONOFF,
-                               ".comp.statswrite",
-                               "Write stats to file",
-                               "0",
-                               CLIARG_HIDDEN_DEFAULT,
-                               (void **) &compstatswrite,
-                               &fpi_compstatswrite}};
+    {
+        CLIARG_ONOFF,
+        ".comp.statswrite",
+        "Write stats to file",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compstatswrite,
+        &fpi_compstatswrite
+    }
+};
 
 
 
@@ -175,7 +206,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_UINT64,
 //
 static errno_t customCONFsetup()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
         data.fpsptr->parray[fpi_compstatswrite].fpflag |= FPFLAG_WRITERUN;
     }
@@ -189,15 +220,17 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
     }
 
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata = {
-    "modalCTRLstats", "compute modal control stats", CLICMD_FIELDS_DEFAULTS};
+static CLICMDDATA CLIcmddata =
+{
+    "modalCTRLstats", "compute modal control stats", CLICMD_FIELDS_DEFAULTS
+};
 
 
 
@@ -278,12 +311,12 @@ static errno_t compute_function()
 
     uint32_t blki             = 0;
     int32_t  NBmode_available = NBmode;
-    while ((NBmode_available > 0) && (NBblk < (uint32_t) MAXBLK))
+    while((NBmode_available > 0) && (NBblk < (uint32_t) MAXBLK))
     {
         NBmode_available -= blksize[blki];
         printf("%u  available : %d\n", blki, NBmode_available);
         fflush(stdout);
-        if (NBmode_available < 0)
+        if(NBmode_available < 0)
         {
             blksize[blki] += NBmode_available;
         }
@@ -295,13 +328,13 @@ static errno_t compute_function()
         fflush(stdout);
         NBblk++;
     }
-    for (uint32_t blki1 = blki; blki1 < (uint32_t) MAXBLK; blki1++)
+    for(uint32_t blki1 = blki; blki1 < (uint32_t) MAXBLK; blki1++)
     {
         blksize[blki1]   = 0;
         blkoffset[blki1] = blkoffset[blki1 - 1];
     }
 
-    for (uint32_t blki = 0; blki < NBblk; blki++)
+    for(uint32_t blki = 0; blki < NBblk; blki++)
     {
         printf("BLOCK %u  size %4u  range: %4u - %4u\n",
                blki,
@@ -322,7 +355,7 @@ static errno_t compute_function()
     // block buffers
     //
     IMGID imgmvalOLbuffblk[NBblk];
-    for (uint32_t blki = 0; blki < NBblk; blki++)
+    for(uint32_t blki = 0; blki < NBblk; blki++)
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
@@ -340,11 +373,11 @@ static errno_t compute_function()
     //
     int32_t blksampleindex[NBblk];
     float  *mvalOLbuffarray[NBblk];
-    for (uint32_t blki = 0; blki < NBblk; blki++)
+    for(uint32_t blki = 0; blki < NBblk; blki++)
     {
         blksampleindex[blki]  = 0;
         mvalOLbuffarray[blki] = (float *) malloc(sizeof(float) * blksize[blki] *
-                                                 blksamplesize[blki]);
+                                blksamplesize[blki]);
     }
 
 
@@ -384,16 +417,16 @@ static errno_t compute_function()
     // block masks
     //
     IMGID imgblkmask[NBblk];
-    for (uint32_t blki = 0; blki < NBblk; blki++)
+    for(uint32_t blki = 0; blki < NBblk; blki++)
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
         WRITE_IMAGENAME(name, "aol%lu_blkmask%02u", *AOloopindex, blki);
         imgblkmask[blki] =
             stream_connect_create_2D(name, NBmode, 1, _DATATYPE_INT8);
-        for (uint32_t mi = blkoffset[blki];
-             mi < blkoffset[blki] + blksize[blki];
-             mi++)
+        for(uint32_t mi = blkoffset[blki];
+                mi < blkoffset[blki] + blksize[blki];
+                mi++)
         {
             imgblkmask[blki].im->array.SI8[mi] = 1;
         }
@@ -410,21 +443,21 @@ static errno_t compute_function()
     //
     {
         int slice = imgtbuff_mvalOL.md->cnt1;
-        for (uint32_t sample = 0; sample < NBsample; sample++)
+        for(uint32_t sample = 0; sample < NBsample; sample++)
         {
-            for (uint32_t blki = 0; blki < NBblk; blki++)
+            for(uint32_t blki = 0; blki < NBblk; blki++)
             {
-                for (uint32_t mirel = 0; mirel < blksize[blki]; mirel++)
+                for(uint32_t mirel = 0; mirel < blksize[blki]; mirel++)
                 {
                     uint32_t mi = mirel + blkoffset[blki];
 
                     mvalOLbuffarray[blki][blksize[blki] * blksampleindex[blki] +
                                           mirel] =
-                        imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
-                                                    sample * NBmode + mi];
+                                              imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
+                                                            sample * NBmode + mi];
                 }
                 blksampleindex[blki]++;
-                if (blksampleindex[blki] == blksamplesize[blki])
+                if(blksampleindex[blki] == blksamplesize[blki])
                 {
                     memcpy(imgmvalOLbuffblk[blki].im->array.F,
                            mvalOLbuffarray[blki],
@@ -440,7 +473,7 @@ static errno_t compute_function()
     {
         int slice;
 
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             mvalDM_ave[mi]  = 0.0;
             mvalDM_rms2[mi] = 0.0;
@@ -456,66 +489,66 @@ static errno_t compute_function()
         }
 
         slice = imgtbuff_mvalDM.md->cnt1;
-        for (uint32_t sample = 0; sample < NBsample; sample++)
+        for(uint32_t sample = 0; sample < NBsample; sample++)
         {
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
                 float tmpv =
                     imgtbuff_mvalDM.im->array
-                        .F[slice * NBsample * NBmode + sample * NBmode + mi];
+                    .F[slice * NBsample * NBmode + sample * NBmode + mi];
                 mvalDM_ave[mi] += tmpv;
                 mvalDM_rms2[mi] += tmpv * tmpv;
             }
         }
 
         slice = imgtbuff_mvalWFS.md->cnt1;
-        for (uint32_t sample = 0; sample < NBsample; sample++)
+        for(uint32_t sample = 0; sample < NBsample; sample++)
         {
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
                 float tmpv =
                     imgtbuff_mvalWFS.im->array
-                        .F[slice * NBsample * NBmode + sample * NBmode + mi];
+                    .F[slice * NBsample * NBmode + sample * NBmode + mi];
                 mvalWFS_ave[mi] += tmpv;
                 mvalWFS_rms2[mi] += tmpv * tmpv;
             }
         }
         // linear noise derivation
-        for (uint32_t sample = 1; sample < NBsample - 1; sample++)
+        for(uint32_t sample = 1; sample < NBsample - 1; sample++)
         {
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
                 float tmpv0 =
                     imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                 (sample - 1) * NBmode + mi];
+                                                       (sample - 1) * NBmode + mi];
                 float tmpv1 =
                     imgtbuff_mvalWFS.im->array
-                        .F[slice * NBsample * NBmode + (sample) *NBmode + mi];
+                    .F[slice * NBsample * NBmode + (sample) * NBmode + mi];
                 float tmpv2 =
                     imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                 (sample + 1) * NBmode + mi];
+                                                       (sample + 1) * NBmode + mi];
 
                 float tmpv = 0.5 * (tmpv0 + tmpv2) - tmpv1;
                 mvalWFS_mrms2[mi] += tmpv * tmpv;
             }
         }
         // linear noise derivation
-        for (uint32_t sample = 1; sample < NBsample - 2; sample++)
+        for(uint32_t sample = 1; sample < NBsample - 2; sample++)
         {
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
                 float tmpv0 =
                     imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                 (sample - 1) * NBmode + mi];
+                                                       (sample - 1) * NBmode + mi];
                 float tmpv1 =
                     imgtbuff_mvalWFS.im->array
-                        .F[slice * NBsample * NBmode + (sample) *NBmode + mi];
+                    .F[slice * NBsample * NBmode + (sample) * NBmode + mi];
                 float tmpv2 =
                     imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                 (sample + 1) * NBmode + mi];
+                                                       (sample + 1) * NBmode + mi];
                 float tmpv3 =
                     imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                 (sample + 1) * NBmode + mi];
+                                                       (sample + 1) * NBmode + mi];
 
                 float tmpv =
                     -0.5 * tmpv0 + 1.5 * tmpv1 - 1.5 * tmpv2 + 0.5 * tmpv3;
@@ -527,13 +560,13 @@ static errno_t compute_function()
 
 
         slice = imgtbuff_mvalOL.md->cnt1;
-        for (uint32_t sample = 0; sample < NBsample; sample++)
+        for(uint32_t sample = 0; sample < NBsample; sample++)
         {
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
                 float tmpv =
                     imgtbuff_mvalOL.im->array
-                        .F[slice * NBsample * NBmode + sample * NBmode + mi];
+                    .F[slice * NBsample * NBmode + sample * NBmode + mi];
                 mvalOL_ave[mi] += tmpv;
                 mvalOL_rms2[mi] += tmpv * tmpv;
             }
@@ -541,7 +574,7 @@ static errno_t compute_function()
 
 
 
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
 
             mvalDM_ave[mi] /= NBsample;
@@ -566,7 +599,7 @@ static errno_t compute_function()
         }
 
 
-        for (uint32_t block = 0; block < mblksizemax; block++)
+        for(uint32_t block = 0; block < mblksizemax; block++)
         {
             block_cnt[block]       = 0;
             block_DMrms2[block]    = 0.0;
@@ -576,7 +609,7 @@ static errno_t compute_function()
             block_OLrms2[block]    = 0.0;
         }
 
-        for (uint32_t mi = 0; mi < NBmode; mi++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             // remove noise
             mvalWFS_rms2[mi] -= mvalWFS_mqrms2[mi];
@@ -593,11 +626,11 @@ static errno_t compute_function()
         }
 
 
-        if (*compstatswrite == 1)
+        if(*compstatswrite == 1)
         {
-            for (uint32_t block = 0; block < mblksizemax; block++)
+            for(uint32_t block = 0; block < mblksizemax; block++)
             {
-                if (block_cnt[block] > 0)
+                if(block_cnt[block] > 0)
                 {
                     //block_DMrms2[block] /= block_cnt[block];
                     //block_WFSrms2[block] /= block_cnt[block];
@@ -630,7 +663,7 @@ static errno_t compute_function()
                             1000.0 * sqrt(block_DMrms2[block]),
                             1000.0 * sqrt(block_OLrms2[block]),
                             sqrt(block_WFSrms2[block]) /
-                                sqrt(block_OLrms2[block]));
+                            sqrt(block_OLrms2[block]));
                     fclose(fp);
                 }
             }
@@ -640,7 +673,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
-    for (uint32_t blki = 0; blki < NBblk; blki++)
+    for(uint32_t blki = 0; blki < NBblk; blki++)
     {
         free(mvalOLbuffarray[blki]);
     }
@@ -676,9 +709,9 @@ INSERT_STD_FPSCLIfunctions
 
 
 
-    // Register function in CLI
-    errno_t
-    CLIADDCMD_AOloopControl__modalCTRL_stats()
+// Register function in CLI
+errno_t
+CLIADDCMD_AOloopControl__modalCTRL_stats()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;

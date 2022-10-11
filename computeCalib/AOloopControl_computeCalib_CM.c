@@ -131,13 +131,13 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 
     char command[200];
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
 
     arraysizetmp = (uint32_t *) malloc(sizeof(uint32_t) * 3);
-    if (arraysizetmp == NULL)
+    if(arraysizetmp == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -147,17 +147,17 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 
     uint64_t n = data.image[ID_Rmatrix].md[0].size[0] *
                  data.image[ID_Rmatrix]
-                     .md[0]
-                     .size[1]; // AOconf[loop].AOpmodecoeffs.NBDMmodes;
+                 .md[0]
+                 .size[1]; // AOconf[loop].AOpmodecoeffs.NBDMmodes;
     uint32_t m =
         data.image[ID_Rmatrix].md[0].size[2]; // AOconf[loop].WFSim.sizeWFS;
 
     ID_RMmask = image_ID("RMmask");
-    if (ID_RMmask != -1) // apply mask to response matrix
+    if(ID_RMmask != -1)  // apply mask to response matrix
     {
-        for (uint32_t kk = 0; kk < m; kk++)
+        for(uint32_t kk = 0; kk < m; kk++)
         {
-            for (uint64_t ii = 0; ii < n; ii++)
+            for(uint64_t ii = 0; ii < n; ii++)
             {
                 data.image[ID_Rmatrix].array.F[kk * n + ii] *=
                     data.image[ID_RMmask].array.F[ii];
@@ -166,7 +166,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     }
 
     /** in this procedure, m=number of actuators/modes, n=number of WFS elements
-   */
+    */
     //  long m = smao[0].NBmode;
     // long n = smao[0].NBwfselem;
 
@@ -184,26 +184,26 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     matrix_DtraD_evec = gsl_matrix_alloc(m, m);
 
     CPAcoeff = (double *) malloc(sizeof(double) * m);
-    if (CPAcoeff == NULL)
+    if(CPAcoeff == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
-    if (Beta > 0.000001)
+    if(Beta > 0.000001)
     {
         imageID ID = -1;
         load_fits("modesfreqcpa.fits", "modesfreqcpa", 1, &ID);
-        if (ID == -1)
+        if(ID == -1)
         {
-            for (uint32_t k = 0; k < m; k++)
+            for(uint32_t k = 0; k < m; k++)
             {
                 CPAcoeff[k] = 1.0;
             }
         }
         else
         {
-            for (uint32_t k = 0; k < m; k++)
+            for(uint32_t k = 0; k < m; k++)
             {
                 CPAcoeff[k] = exp(-data.image[ID].array.F[k] * Beta);
                 printf("%5u %5.3f %g\n",
@@ -215,22 +215,22 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     }
     else
     {
-        for (uint32_t k = 0; k < m; k++)
+        for(uint32_t k = 0; k < m; k++)
         {
             CPAcoeff[k] = 1.0;
         }
     }
 
     /* write matrix_D */
-    for (uint32_t k = 0; k < m; k++)
+    for(uint32_t k = 0; k < m; k++)
     {
-        for (uint64_t ii = 0; ii < n; ii++)
+        for(uint64_t ii = 0; ii < n; ii++)
         {
             gsl_matrix_set(matrix_D,
                            ii,
                            k,
                            data.image[ID_Rmatrix].array.F[k * n + ii] *
-                               CPAcoeff[k]);
+                           CPAcoeff[k]);
         }
     }
     /* compute DtraD */
@@ -259,12 +259,12 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     fflush(stdout);
 
     // Write eigenvalues
-    if ((fp = fopen("eigenv.dat", "w")) == NULL)
+    if((fp = fopen("eigenv.dat", "w")) == NULL)
     {
         printf("ERROR: cannot create file \"eigenv.dat\"\n");
         exit(0);
     }
-    for (uint32_t k = 0; k < m; k++)
+    for(uint32_t k = 0; k < m; k++)
     {
         fprintf(fp, "%u %g\n", k, gsl_vector_get(matrix_DtraD_eval, k));
     }
@@ -273,12 +273,12 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     eigenvmin = eigenvlim * gsl_vector_get(matrix_DtraD_eval, 0);
 
     NBMODES_REMOVED_EIGENVLIM = 0;
-    for (uint32_t k = 0; k < m; k++)
+    for(uint32_t k = 0; k < m; k++)
     {
         printf("Mode %u eigenvalue = %g\n",
                k,
                gsl_vector_get(matrix_DtraD_eval, k));
-        if (gsl_vector_get(matrix_DtraD_eval, k) < eigenvmin)
+        if(gsl_vector_get(matrix_DtraD_eval, k) < eigenvmin)
         {
             NBMODES_REMOVED_EIGENVLIM++;
         }
@@ -297,8 +297,8 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
                     0,
                     &ID_VTmatrix);
 
-    for (uint64_t ii = 0; ii < m; ii++)  // modes
-        for (uint32_t k = 0; k < m; k++) // modes
+    for(uint64_t ii = 0; ii < m; ii++)   // modes
+        for(uint32_t k = 0; k < m; k++)  // modes
         {
             data.image[ID_VTmatrix].array.F[k * m + ii] =
                 (float) gsl_matrix_get(matrix_DtraD_evec, k, ii);
@@ -312,19 +312,19 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
                       &IDeigenmodesResp);
 
     printf("Computing eigenmode responses .... \n");
-    for (uint32_t kk = 0; kk < m; kk++) /// eigen mode index
+    for(uint32_t kk = 0; kk < m; kk++)  /// eigen mode index
     {
         printf("\r eigenmode %4u / %4u   ", kk, m);
         fflush(stdout);
-        for (uint32_t kk1 = 0; kk1 < m; kk1++)
+        for(uint32_t kk1 = 0; kk1 < m; kk1++)
         {
-            for (uint64_t ii = 0; ii < n; ii++)
+            for(uint64_t ii = 0; ii < n; ii++)
                 data.image[IDeigenmodesResp].array.F[kk * n + ii] +=
                     data.image[ID_VTmatrix].array.F[kk1 * m + kk] *
                     data.image[ID_Rmatrix].array.F[kk1 * n + ii];
         }
     }
-    if (sprintf(fname, "eigenmodesrespM_%4.2f.fits", Beta) < 1)
+    if(sprintf(fname, "eigenmodesrespM_%4.2f.fits", Beta) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -334,12 +334,12 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 
     /// if modesM exists, compute eigenmodes using rotation matrix
     IDmodes = image_ID("modesM");
-    if (IDmodes != -1)
+    if(IDmodes != -1)
     {
         uint32_t xsize_modes = data.image[IDmodes].md[0].size[0];
         uint32_t ysize_modes = data.image[IDmodes].md[0].size[1];
         uint32_t zsize_modes = data.image[IDmodes].md[0].size[2];
-        if (zsize_modes != m)
+        if(zsize_modes != m)
         {
             printf(
                 "ERROR: zsize (%ld) of modesM does not match expected size "
@@ -357,24 +357,24 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
                               &IDeigenmodes);
 
             printf("Computing eigenmodes .... \n");
-            for (uint32_t kk = 0; kk < m; kk++) /// eigen mode index
+            for(uint32_t kk = 0; kk < m; kk++)  /// eigen mode index
             {
                 printf("\r eigenmode %4u / %4u   ", kk, m);
                 fflush(stdout);
-                for (uint32_t kk1 = 0; kk1 < m; kk1++)
+                for(uint32_t kk1 = 0; kk1 < m; kk1++)
                 {
-                    for (uint64_t ii = 0; ii < xsize_modes * ysize_modes; ii++)
+                    for(uint64_t ii = 0; ii < xsize_modes * ysize_modes; ii++)
                         data.image[IDeigenmodes]
-                            .array.F[kk * xsize_modes * ysize_modes + ii] +=
+                        .array.F[kk * xsize_modes * ysize_modes + ii] +=
                             data.image[ID_VTmatrix].array.F[kk1 * m + kk] *
                             data.image[IDmodes]
-                                .array.F[kk1 * xsize_modes * ysize_modes + ii];
+                            .array.F[kk1 * xsize_modes * ysize_modes + ii];
                 }
             }
             printf("\n");
         }
 
-        if (sprintf(fname, "eigenmodesM_%4.2f.fits", Beta) < 1)
+        if(sprintf(fname, "eigenmodesM_%4.2f.fits", Beta) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -400,7 +400,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
 
     printf("COMPUTING CMAT .... \n");
 
-    if (NB_MODE_REMOVED_STEP == 0)
+    if(NB_MODE_REMOVED_STEP == 0)
     {
         MB_MR_start = NBMODES_REMOVED_EIGENVLIM;
         MB_MR_end   = NBMODES_REMOVED_EIGENVLIM + 1;
@@ -413,19 +413,19 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
         MB_MR_step  = NB_MODE_REMOVED_STEP;
     }
 
-    for (NB_MR = MB_MR_start; NB_MR < MB_MR_end; NB_MR += MB_MR_step)
+    for(NB_MR = MB_MR_start; NB_MR < MB_MR_end; NB_MR += MB_MR_step)
     {
         printf("\r Number of modes removed : %5ld / %5ld  (step %ld)  ",
                NB_MR,
                NB_MODE_REMOVED1,
                NB_MODE_REMOVED_STEP);
         fflush(stdout);
-        for (uint32_t ii1 = 0; ii1 < m; ii1++)
-            for (uint32_t jj1 = 0; jj1 < m; jj1++)
+        for(uint32_t ii1 = 0; ii1 < m; ii1++)
+            for(uint32_t jj1 = 0; jj1 < m; jj1++)
             {
-                if (ii1 == jj1)
+                if(ii1 == jj1)
                 {
-                    if ((m - ii1 - 1) < NB_MR)
+                    if((m - ii1 - 1) < NB_MR)
                     {
                         gsl_matrix_set(matrix1, ii1, jj1, 0.0);
                     }
@@ -471,42 +471,42 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
         printf("write result to ID %ld   [%lu %u]\n", ID_Cmatrix, n, m);
         fflush(stdout);
 
-        for (uint64_t ii = 0; ii < n; ii++)  // sensors
-            for (uint32_t k = 0; k < m; k++) // actuator modes
+        for(uint64_t ii = 0; ii < n; ii++)   // sensors
+            for(uint32_t k = 0; k < m; k++)  // actuator modes
             {
                 data.image[ID_Cmatrix].array.F[k * n + ii] =
                     (float) gsl_matrix_get(matrix_Ds, k, ii) * CPAcoeff[k];
             }
 
-        if (NB_MODE_REMOVED_STEP == 0)
+        if(NB_MODE_REMOVED_STEP == 0)
         {
             save_fits(ID_Cmatrix_name, "cmat.fits");
 
-            if (sprintf(command,
-                        "echo \"%ld\" > ./cmat.NB_MODES_RM.txt",
-                        NBMODES_REMOVED_EIGENVLIM) < 1)
+            if(sprintf(command,
+                       "echo \"%ld\" > ./cmat.NB_MODES_RM.txt",
+                       NBMODES_REMOVED_EIGENVLIM) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
-            if (system(command) != 0)
+            if(system(command) != 0)
             {
                 PRINT_ERROR("system() returns non-zero value");
             }
 
-            if (sprintf(command, "echo \"%u\" > ./cmat.NB_MODES.txt", m) < 1)
+            if(sprintf(command, "echo \"%u\" > ./cmat.NB_MODES.txt", m) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
-            if (system(command) != 0)
+            if(system(command) != 0)
             {
                 PRINT_ERROR("system() returns non-zero value");
             }
         }
         else
         {
-            if (sprintf(fname, "cmat_%4.2f_%02ld.fits", Beta, NB_MR) < 1)
+            if(sprintf(fname, "cmat_%4.2f_%02ld.fits", Beta, NB_MR) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
@@ -602,7 +602,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
     // allocate array for combined matrix
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
-    if (sizearray == NULL)
+    if(sizearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -628,7 +628,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
     // init matrix_Mc
     matrix_Mc = (float *) malloc(sizeof(float) * sizeWFS * sizeDM);
-    if (matrix_Mc == NULL)
+    if(matrix_Mc == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -640,7 +640,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     // copy modal control matrix to matrix_cmp
     IDcmat     = image_ID(IDcmat_name);
     matrix_cmp = (float *) malloc(sizeof(float) * sizeWFS * NBDMmodes);
-    if (matrix_cmp == NULL)
+    if(matrix_cmp == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -651,7 +651,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
     // copy modes matrix to matrix_DMmodes
     matrix_DMmodes = (float *) malloc(sizeof(float) * NBDMmodes * sizeDM);
-    if (matrix_DMmodes == NULL)
+    if(matrix_DMmodes == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -670,11 +670,11 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     //  {
     //        #pragma omp for schedule (static)
     //# endif
-    for (uint32_t mode = 0; mode < NBDMmodes; mode++)
+    for(uint32_t mode = 0; mode < NBDMmodes; mode++)
     {
-        for (uint64_t act = 0; act < sizeDM; act++)
+        for(uint64_t act = 0; act < sizeDM; act++)
         {
-            for (uint64_t wfselem = 0; wfselem < sizeWFS; wfselem++)
+            for(uint64_t wfselem = 0; wfselem < sizeWFS; wfselem++)
             {
                 matrix_Mc[act * sizeWFS + wfselem] +=
                     matrix_cmp[mode * sizeWFS + wfselem] *
@@ -694,40 +694,40 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     fflush(stdout);
 
     aoloopcontrol_var.WFS_active_map = (int *) malloc(
-        sizeof(int) * sizeWFS * aoloopcontrol_var.PIXSTREAM_NBSLICES);
-    if (aoloopcontrol_var.WFS_active_map == NULL)
+                                           sizeof(int) * sizeWFS * aoloopcontrol_var.PIXSTREAM_NBSLICES);
+    if(aoloopcontrol_var.WFS_active_map == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
-    for (uint32_t slice = 0;
-         slice < (uint32_t) aoloopcontrol_var.PIXSTREAM_NBSLICES;
-         slice++)
+    for(uint32_t slice = 0;
+            slice < (uint32_t) aoloopcontrol_var.PIXSTREAM_NBSLICES;
+            slice++)
     {
         uint64_t ii1 = 0;
-        for (uint64_t ii = 0; ii < sizeWFS; ii++)
-            if (data.image[IDwfsmask].array.F[ii] > 0.1)
+        for(uint64_t ii = 0; ii < sizeWFS; ii++)
+            if(data.image[IDwfsmask].array.F[ii] > 0.1)
             {
-                if (slice == 0)
+                if(slice == 0)
                 {
                     aoloopcontrol_var.WFS_active_map[ii1] = ii;
                     ii1++;
                 }
                 else
                 {
-                    if (data.image[aoloopcontrol_var
-                                       .aoconfID_pixstream_wfspixindex]
+                    if(data.image[aoloopcontrol_var
+                                  .aoconfID_pixstream_wfspixindex]
                             .array.UI16[ii] == slice + 1)
                     {
                         aoloopcontrol_var
-                            .WFS_active_map[slice * sizeWFS + ii1] = ii;
+                        .WFS_active_map[slice * sizeWFS + ii1] = ii;
                         ii1++;
                     }
                 }
             }
         sizeWFS_active[slice] = ii1;
 
-        if (sprintf(imname, "aol%ld_imWFS2active_%02d", LOOPNUMBER, slice) < 1)
+        if(sprintf(imname, "aol%ld_imWFS2active_%02d", LOOPNUMBER, slice) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -738,19 +738,19 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
               sizearray[1] =  1;
               aoconfID_imWFS2_active[slice] = create_image_ID(imname, 2,
          sizearray, FLOAT, 1, 0); free(sizearray);
-      */
+        */
     }
 
     aoloopcontrol_var.DM_active_map = (int *) malloc(sizeof(int) * sizeDM);
-    if (aoloopcontrol_var.DM_active_map == NULL)
+    if(aoloopcontrol_var.DM_active_map == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
     uint64_t ii1 = 0;
-    for (uint64_t ii = 0; ii < sizeDM; ii++)
-        if (data.image[IDdmmask].array.F[ii] > 0.1)
+    for(uint64_t ii = 0; ii < sizeDM; ii++)
+        if(data.image[IDdmmask].array.F[ii] > 0.1)
         {
             aoloopcontrol_var.DM_active_map[ii1] = ii;
             ii1++;
@@ -766,14 +766,14 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
       sprintf(name, "aol%ld_meas_act_active", LOOPNUMBER);
       aoconfID_meas_act_active = create_image_ID(name, 2, sizearray, FLOAT, 1,
      0); free(sizearray);
-  */
+    */
 
     // reduce matrix size to active elements
-    for (uint32_t slice = 0;
-         slice < (uint32_t) aoloopcontrol_var.PIXSTREAM_NBSLICES;
-         slice++)
+    for(uint32_t slice = 0;
+            slice < (uint32_t) aoloopcontrol_var.PIXSTREAM_NBSLICES;
+            slice++)
     {
-        if (sprintf(imname, "%s_%02d", IDcmatc_active_name, slice) < 1)
+        if(sprintf(imname, "%s_%02d", IDcmatc_active_name, slice) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -782,19 +782,19 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
                           sizeWFS_active[slice],
                           sizeDM_active,
                           &(IDcmatc_active[slice]));
-        for (uint64_t act_active = 0; act_active < sizeDM_active; act_active++)
+        for(uint64_t act_active = 0; act_active < sizeDM_active; act_active++)
         {
-            for (uint64_t wfselem_active = 0;
-                 wfselem_active < sizeWFS_active[slice];
-                 wfselem_active++)
+            for(uint64_t wfselem_active = 0;
+                    wfselem_active < sizeWFS_active[slice];
+                    wfselem_active++)
             {
                 uint64_t act = aoloopcontrol_var.DM_active_map[act_active];
                 uint64_t wfselem =
                     aoloopcontrol_var
-                        .WFS_active_map[slice * sizeWFS + wfselem_active];
+                    .WFS_active_map[slice * sizeWFS + wfselem_active];
                 data.image[IDcmatc_active[slice]]
-                    .array
-                    .F[act_active * sizeWFS_active[slice] + wfselem_active] =
+                .array
+                .F[act_active * sizeWFS_active[slice] + wfselem_active] =
                     matrix_Mc[act * sizeWFS + wfselem];
             }
         }
@@ -823,31 +823,31 @@ imageID AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
 {
     imageID ID = -1;
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(0);
     }
 
     load_fits(CMfname, "tmpcontrM", 1, &ID);
-    if (ID != -1)
+    if(ID != -1)
     {
 
         // check size is OK
         int vOK = 1;
 
-        if (data.image[ID].md[0].naxis != 3)
+        if(data.image[ID].md[0].naxis != 3)
         {
             printf("Control matrix has wrong dimension\n");
             vOK = 0;
         }
-        if (data.image[ID].md[0].datatype != _DATATYPE_FLOAT)
+        if(data.image[ID].md[0].datatype != _DATATYPE_FLOAT)
         {
             printf("Control matrix has wrong type\n");
             vOK = 0;
         }
-        if (vOK == 1)
+        if(vOK == 1)
         {
-            if (data.image[ID].md[0].size[0] != AOconf[loop].WFSim.sizexWFS)
+            if(data.image[ID].md[0].size[0] != AOconf[loop].WFSim.sizexWFS)
             {
                 printf(
                     "Control matrix has wrong x size : is %ld, should be %ld\n",
@@ -855,40 +855,40 @@ imageID AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
                     (long) AOconf[loop].WFSim.sizexWFS);
                 vOK = 0;
             }
-            if (data.image[ID].md[0].size[1] != AOconf[loop].WFSim.sizeyWFS)
+            if(data.image[ID].md[0].size[1] != AOconf[loop].WFSim.sizeyWFS)
             {
                 printf("Control matrix has wrong y size\n");
                 vOK = 0;
             }
-            if (data.image[ID].md[0].size[2] !=
-                AOconf[loop].AOpmodecoeffs.NBDMmodes)
+            if(data.image[ID].md[0].size[2] !=
+                    AOconf[loop].AOpmodecoeffs.NBDMmodes)
             {
                 printf("Control matrix has wrong z size\n");
                 vOK = 0;
             }
         }
 
-        if (vOK == 1)
+        if(vOK == 1)
         {
             AOconf[loop].aorun.init_CM = 1;
             char name[200];
-            if (sprintf(name, "ContrM_%ld", loop) < 1)
+            if(sprintf(name, "ContrM_%ld", loop) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
 
             ID = image_ID(name);
-            if (ID == -1)
+            if(ID == -1)
             {
                 ID = read_sharedmem_image(name);
             }
             long ID0                   = image_ID("tmpcontrM");
             data.image[ID].md[0].write = 1;
 
-            for (uint64_t ii = 0; ii < AOconf[loop].WFSim.sizexWFS *
-                                           AOconf[loop].WFSim.sizeyWFS *
-                                           AOconf[loop].AOpmodecoeffs.NBDMmodes;
-                 ii++)
+            for(uint64_t ii = 0; ii < AOconf[loop].WFSim.sizexWFS *
+                    AOconf[loop].WFSim.sizeyWFS *
+                    AOconf[loop].AOpmodecoeffs.NBDMmodes;
+                    ii++)
             {
                 data.image[ID].array.F[ii] = data.image[ID0].array.F[ii];
             }

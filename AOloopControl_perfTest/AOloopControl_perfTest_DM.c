@@ -78,9 +78,9 @@ extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
 extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 errno_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname,
-                                           long        delayus,
-                                           long        NBpts,
-                                           float       ampl)
+        long        delayus,
+        long        NBpts,
+        float       ampl)
 {
     imageID  IDdm;
     uint32_t dmxsize;
@@ -99,13 +99,13 @@ errno_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname,
     dmsize  = dmxsize * dmysize;
 
     create_3Dimage_ID("dmpokeseq", dmxsize, dmysize, NBpts, &ID1);
-    for (uint32_t kk = 0; kk < NBpts; kk++)
+    for(uint32_t kk = 0; kk < NBpts; kk++)
     {
         float pha;
 
         pha = 2.0 * M_PI * kk / NBpts;
-        for (uint32_t ii = 0; ii < dmxsize; ii++)
-            for (uint32_t jj = 0; jj < dmysize; jj++)
+        for(uint32_t ii = 0; ii < dmxsize; ii++)
+            for(uint32_t jj = 0; jj < dmysize; jj++)
             {
                 x  = (2.0 * ii / dmxsize) - 1.0;
                 y  = (2.0 * jj / dmysize) - 1.0;
@@ -115,9 +115,9 @@ errno_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname,
             }
     }
 
-    while (1)
+    while(1)
     {
-        for (uint32_t kk = 0; kk < NBpts; kk++)
+        for(uint32_t kk = 0; kk < NBpts; kk++)
         {
             ptr = (char *) data.image[ID1].array.F;
             ptr += sizeof(float) * dmsize * kk;
@@ -136,17 +136,17 @@ errno_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname,
 // Measures mode temporal response (measurement and rejection)
 //
 imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
-                                              long        index,
-                                              float       ampl,
-                                              float       fmin,
-                                              float       fmax,
-                                              float       fmultstep,
-                                              float       avetime,
-                                              long        dtus,
-                                              const char *DMmask_name,
-                                              const char *DMstream_in_name,
-                                              const char *DMstream_out_name,
-                                              const char *IDout_name)
+        long        index,
+        float       ampl,
+        float       fmin,
+        float       fmax,
+        float       fmultstep,
+        float       avetime,
+        long        dtus,
+        const char *DMmask_name,
+        const char *DMstream_in_name,
+        const char *DMstream_out_name,
+        const char *IDout_name)
 {
     imageID         IDout;
     imageID         IDmodes, IDdmmask, IDdmin, IDdmout;
@@ -182,7 +182,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
     dmsize  = dmxsize * dmysize;
     NBmodes = data.image[IDmodes].md[0].size[2];
 
-    if (data.image[IDdmin].md[0].size[0] != data.image[IDmodes].md[0].size[0])
+    if(data.image[IDdmin].md[0].size[0] != data.image[IDmodes].md[0].size[0])
     {
         printf(
             "ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" "
@@ -194,7 +194,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmin].md[0].size[1] != data.image[IDmodes].md[0].size[1])
+    if(data.image[IDdmin].md[0].size[1] != data.image[IDmodes].md[0].size[1])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" "
@@ -206,7 +206,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmout].md[0].size[0] != data.image[IDmodes].md[0].size[0])
+    if(data.image[IDdmout].md[0].size[0] != data.image[IDmodes].md[0].size[0])
     {
         printf(
             "ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" "
@@ -218,7 +218,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmout].md[0].size[1] != data.image[IDmodes].md[0].size[1])
+    if(data.image[IDdmout].md[0].size[1] != data.image[IDmodes].md[0].size[1])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" "
@@ -230,7 +230,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmmask].md[0].size[0] != data.image[IDmodes].md[0].size[0])
+    if(data.image[IDdmmask].md[0].size[0] != data.image[IDmodes].md[0].size[0])
     {
         printf(
             "ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" "
@@ -242,7 +242,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmmask].md[0].size[1] != data.image[IDmodes].md[0].size[1])
+    if(data.image[IDdmmask].md[0].size[1] != data.image[IDmodes].md[0].size[1])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" "
@@ -255,7 +255,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
     }
 
     nbf = 0;
-    for (f = fmin; f < fmax; f *= fmultstep)
+    for(f = fmin; f < fmax; f *= fmultstep)
     {
         nbf++;
     }
@@ -263,7 +263,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
     // TEST
     // Save DM mode
     create_2Dimage_ID("testmrespm", dmxsize, dmysize, &ID);
-    for (ii = 0; ii < dmsize; ii++)
+    for(ii = 0; ii < dmsize; ii++)
     {
         data.image[ID].array.F[ii] =
             data.image[IDmodes].array.F[kk * dmsize + ii];
@@ -271,14 +271,14 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
     save_fits("testmrespm", "testmrespm.fits");
 
     // SET UP RECORDING CUBES
-    kmax = (long) (avetime / (1.0e-6 * dtus));
-    if (kmax > kmaxmax)
+    kmax = (long)(avetime / (1.0e-6 * dtus));
+    if(kmax > kmaxmax)
     {
         kmax = kmaxmax;
     }
 
     timearray = (float *) malloc(sizeof(float) * kmax);
-    if (timearray == NULL)
+    if(timearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -290,7 +290,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
 
     WRITE_FILENAME(fname, "mode%03ld_PSD.txt", kk);
 
-    if ((fp = fopen(fname, "w")) == NULL)
+    if((fp = fopen(fname, "w")) == NULL)
     {
         printf("ERROR: cannot create file \"%s\"", fname);
         exit(0);
@@ -300,7 +300,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
     create_2Dimage_ID(IDout_name, nbf, NBmodes, &IDout);
     create_2Dimage_ID("_tmpdm", dmxsize, dmysize, &IDdmtmp);
 
-    for (f = fmin; f < fmax; f *= fmultstep)
+    for(f = fmin; f < fmax; f *= fmultstep)
     {
         double runtime = 0.0;
         long   k       = 0;
@@ -309,7 +309,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
         float  PSDamp, PSDpha;
 
         clock_gettime(CLOCK_REALTIME, &tstart);
-        while ((runtime < avetime) && (k < kmax))
+        while((runtime < avetime) && (k < kmax))
         {
             clock_gettime(CLOCK_REALTIME, &tnow);
             runtime = timespec_diff_double(tstart, tnow);
@@ -331,7 +331,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
 
             // APPLY MODE TO DM
             data.image[IDdmin].md[0].write = 1;
-            for (ii = 0; ii < dmsize; ii++)
+            for(ii = 0; ii < dmsize; ii++)
             {
                 data.image[IDdmin].array.F[ii] =
                     coeff * data.image[IDmodes].array.F[kk * dmsize + ii];
@@ -354,7 +354,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
 
         // ZERO DM
         data.image[IDdmin].md[0].write = 1;
-        for (ii = 0; ii < dmsize; ii++)
+        for(ii = 0; ii < dmsize; ii++)
         {
             data.image[IDdmin].array.F[ii] = 0.0;
         }
@@ -367,7 +367,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
         printf("\n\n");
 
         // PROCESS RECORDED DATA
-        for (k = 0; k < k1; k++)
+        for(k = 0; k < k1; k++)
         {
             printf("\r  %5ld / %5ld     ", k, k1);
             fflush(stdout);
@@ -385,7 +385,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
                                           NULL);
             SVDreuse = 1;
             IDcoeff  = image_ID("dmcoeffs");
-            for (m = 0; m < NBmodes; m++)
+            for(m = 0; m < NBmodes; m++)
             {
                 data.image[IDcoeffarray].array.F[m * kmax + k] =
                     data.image[IDcoeff].array.F[m];
@@ -399,7 +399,7 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
         // EXTRACT AMPLITUDE AND PHASE
         coscoeff = 0.0;
         sincoeff = 0.0;
-        for (k = k1 / 4; k < k1; k++)
+        for(k = k1 / 4; k < k1; k++)
         {
             pha = 2.0 * M_PI * timearray[k] * f;
             coscoeff +=
@@ -426,17 +426,17 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
 
 imageID
 AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
-                                            float       ampl,
-                                            const char *DMmask_name,
-                                            const char *DMstream_in_name,
-                                            const char *DMstream_out_name,
-                                            const char *DMstream_meas_name,
-                                            long        tlagus,
-                                            long        NBave,
-                                            const char *IDout_name,
-                                            const char *IDoutrms_name,
-                                            const char *IDoutmeas_name,
-                                            const char *IDoutmeasrms_name)
+        float       ampl,
+        const char *DMmask_name,
+        const char *DMstream_in_name,
+        const char *DMstream_out_name,
+        const char *DMstream_meas_name,
+        long        tlagus,
+        long        NBave,
+        const char *IDout_name,
+        const char *IDoutrms_name,
+        const char *IDoutmeas_name,
+        const char *IDoutmeasrms_name)
 {
     imageID  IDout, IDoutrms, IDoutmeas, IDoutmeasrms;
     imageID  IDmodes, IDdmmask, IDdmin, IDmeasout, IDdmout;
@@ -465,7 +465,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
     //
     // CHECK IMAGE SIZES
     //
-    if (data.image[IDdmin].md[0].size[0] != data.image[IDmodes].md[0].size[0])
+    if(data.image[IDdmin].md[0].size[0] != data.image[IDmodes].md[0].size[0])
     {
         printf(
             "ERROR: x size of \"%s\"  (%ld) does not match x size of \"%s\" "
@@ -477,7 +477,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmin].md[0].size[1] != data.image[IDmodes].md[0].size[1])
+    if(data.image[IDdmin].md[0].size[1] != data.image[IDmodes].md[0].size[1])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" "
@@ -489,7 +489,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmout].md[0].size[0] != data.image[IDmodes].md[0].size[0])
+    if(data.image[IDdmout].md[0].size[0] != data.image[IDmodes].md[0].size[0])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match x size of \"%s\" "
@@ -501,7 +501,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmout].md[0].size[1] != data.image[IDmodes].md[0].size[1])
+    if(data.image[IDdmout].md[0].size[1] != data.image[IDmodes].md[0].size[1])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" "
@@ -513,8 +513,8 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDmeasout].md[0].size[0] !=
-        data.image[IDmodes].md[0].size[0])
+    if(data.image[IDmeasout].md[0].size[0] !=
+            data.image[IDmodes].md[0].size[0])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match x size of \"%s\" "
@@ -526,8 +526,8 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDmeasout].md[0].size[1] !=
-        data.image[IDmodes].md[0].size[1])
+    if(data.image[IDmeasout].md[0].size[1] !=
+            data.image[IDmodes].md[0].size[1])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" "
@@ -539,7 +539,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmmask].md[0].size[0] != data.image[IDmodes].md[0].size[0])
+    if(data.image[IDdmmask].md[0].size[0] != data.image[IDmodes].md[0].size[0])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match x size of \"%s\" "
@@ -551,7 +551,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
         exit(0);
     }
 
-    if (data.image[IDdmmask].md[0].size[1] != data.image[IDmodes].md[0].size[1])
+    if(data.image[IDdmmask].md[0].size[1] != data.image[IDmodes].md[0].size[1])
     {
         printf(
             "ERROR: y size of \"%s\"  (%ld) does not match y size of \"%s\" "
@@ -588,7 +588,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
 
     printf("\n\n");
 
-    for (uint32_t kk = 0; kk < NBmodes; kk++)
+    for(uint32_t kk = 0; kk < NBmodes; kk++)
     {
         uint64_t cntdmout;
         long     i;
@@ -598,7 +598,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
 
         // APPLY MODE TO DM
         data.image[IDdmin].md[0].write = 1;
-        for (uint64_t ii = 0; ii < dmsize; ii++)
+        for(uint64_t ii = 0; ii < dmsize; ii++)
         {
             data.image[IDdmin].array.F[ii] =
                 ampl * data.image[IDmodes].array.F[kk * dmsize + ii];
@@ -615,9 +615,9 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
         // POSITIVE
         cntdmout = 0;
         i        = 0;
-        while (i < NBave)
+        while(i < NBave)
         {
-            while (cntdmout == data.image[IDdmout].md[0].cnt0)
+            while(cntdmout == data.image[IDdmout].md[0].cnt0)
             {
                 usleep(20);
             }
@@ -640,7 +640,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
                                           SVDreuse,
                                           NULL);
             IDcoeff = image_ID("dmcoeffs");
-            for (uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
+            for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
             {
                 data.image[IDcoeffarray].array.F[kk1 * NBave + i] =
                     0.5 * data.image[IDcoeff].array.F[kk1];
@@ -655,7 +655,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
                                           SVDreuse,
                                           NULL);
             IDcoeff = image_ID("dmcoeffs");
-            for (uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
+            for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
             {
                 data.image[IDcoeffarraymeas].array.F[kk1 * NBave + i] =
                     0.5 * data.image[IDcoeff].array.F[kk1];
@@ -669,7 +669,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
 
         // APPLY MODE TO DM
         data.image[IDdmin].md[0].write = 1;
-        for (uint64_t ii = 0; ii < dmsize; ii++)
+        for(uint64_t ii = 0; ii < dmsize; ii++)
         {
             data.image[IDdmin].array.F[ii] =
                 -ampl * data.image[IDmodes].array.F[kk * dmsize + ii];
@@ -683,9 +683,9 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
 
         cntdmout = 0;
         i        = 0;
-        while (i < NBave)
+        while(i < NBave)
         {
-            while (cntdmout == data.image[IDdmout].md[0].cnt0)
+            while(cntdmout == data.image[IDdmout].md[0].cnt0)
             {
                 usleep(20);
             }
@@ -708,7 +708,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
                                           SVDreuse,
                                           NULL);
             IDcoeff = image_ID("dmcoeffs");
-            for (uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
+            for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
             {
                 data.image[IDcoeffarray].array.F[kk1 * NBave + i] -=
                     0.5 * data.image[IDcoeff].array.F[kk1];
@@ -724,7 +724,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
                                           SVDreuse,
                                           NULL);
             IDcoeff = image_ID("dmcoeffs");
-            for (uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
+            for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
             {
                 data.image[IDcoeffarraymeas].array.F[kk1 * NBave + i] =
                     0.5 * data.image[IDcoeff].array.F[kk1];
@@ -734,16 +734,16 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
 
         // PROCESSS
 
-        for (uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
+        for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
         {
             data.image[IDout].array.F[kk1 * NBmodes + kk]        = 0.0;
             data.image[IDoutrms].array.F[kk1 * NBmodes + kk]     = 0.0;
             data.image[IDoutmeas].array.F[kk1 * NBmodes + kk]    = 0.0;
             data.image[IDoutmeasrms].array.F[kk1 * NBmodes + kk] = 0.0;
         }
-        for (uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
+        for(uint32_t kk1 = 0; kk1 < NBmodes; kk1++)
         {
-            for (uint32_t i = 0; i < NBave; i++)
+            for(uint32_t i = 0; i < NBave; i++)
             {
                 data.image[IDout].array.F[kk1 * NBmodes + kk] +=
                     data.image[IDcoeffarray].array.F[kk1 * NBave + i];
@@ -761,7 +761,7 @@ AOloopControl_perfTest_TestDMmodes_Recovery(const char *DMmodes_name,
                 sqrt(data.image[IDoutrms].array.F[kk1 * NBmodes + kk] / NBave);
             data.image[IDoutmeas].array.F[kk1 * NBmodes + kk] /= NBave * ampl;
             data.image[IDoutmeasrms].array.F[kk1 * NBmodes + kk] = sqrt(
-                data.image[IDoutmeasrms].array.F[kk1 * NBmodes + kk] / NBave);
+                        data.image[IDoutmeasrms].array.F[kk1 * NBmodes + kk] / NBave);
         }
     }
     printf("\n\n");

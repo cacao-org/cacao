@@ -62,7 +62,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     uint64_t xysize = xsize * ysize;
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-    if (sizearray == NULL)
+    if(sizearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
@@ -80,13 +80,15 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     free(sizearray);
 
     cnt = 0;
-    for (uint64_t ii = 0; ii < xysize; ii++)
-        if (data.image[IDmask].array.F[ii] > 0.5)
+    for(uint64_t ii = 0; ii < xysize; ii++)
+        if(data.image[IDmask].array.F[ii] > 0.5)
+        {
             cnt++;
+        }
 
     Hsize = 1;
     n2max = 0;
-    while (Hsize < cnt)
+    while(Hsize < cnt)
     {
         Hsize *= 2;
         n2max++;
@@ -96,21 +98,25 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     printf("Hsize n2max = %u  %u\n", Hsize, n2max);
     fflush(stdout);
 
-    for (uint64_t ii = 0; ii < xysize; ii++)
+    for(uint64_t ii = 0; ii < xysize; ii++)
+    {
         data.image[IDindex].array.F[ii] = -10.0;
+    }
 
     index = 0;
 
     indexarray = (long *) malloc(sizeof(long) * Hsize);
-    if (indexarray == NULL)
+    if(indexarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
-    for (uint32_t k = 0; k < Hsize; k++)
+    for(uint32_t k = 0; k < Hsize; k++)
+    {
         indexarray[k] = -1;
-    for (uint64_t ii = 0; ii < xysize; ii++)
-        if ((data.image[IDmask].array.F[ii] > 0.5) && (index < Hsize))
+    }
+    for(uint64_t ii = 0; ii < xysize; ii++)
+        if((data.image[IDmask].array.F[ii] > 0.5) && (index < Hsize))
         {
 
             indexarray[index] = ii;
@@ -123,7 +129,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     // save_fits("Hpixindex", "./conf/Hpixindex.fits");
 
     Hmat = (int *) malloc(sizeof(int) * Hsize * Hsize);
-    if (Hmat == NULL)
+    if(Hmat == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -135,10 +141,10 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     uint32_t jj           = 0;
     Hmat[jj * Hsize + ii] = 1;
     uint32_t n2           = 1;
-    for (uint32_t n = 1; n < n2max; n++)
+    for(uint32_t n = 1; n < n2max; n++)
     {
-        for (uint32_t ii = 0; ii < n2; ii++)
-            for (uint32_t jj = 0; jj < n2; jj++)
+        for(uint32_t ii = 0; ii < n2; ii++)
+            for(uint32_t jj = 0; jj < n2; jj++)
             {
                 Hmat[jj * Hsize + (ii + n2)]        = Hmat[jj * Hsize + ii];
                 Hmat[(jj + n2) * Hsize + (ii + n2)] = -Hmat[jj * Hsize + ii];
@@ -151,9 +157,11 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
 
     create_2Dimage_ID("Hmat", Hsize, Hsize, &IDmat);
 
-    for (uint32_t ii = 0; ii < Hsize; ii++)
-        for (uint32_t jj = 0; jj < Hsize; jj++)
+    for(uint32_t ii = 0; ii < Hsize; ii++)
+        for(uint32_t jj = 0; jj < Hsize; jj++)
+        {
             data.image[IDmat].array.F[jj * Hsize + ii] = Hmat[jj * Hsize + ii];
+        }
 
     //    save_fits("Htest", "./conf/Hmat.fits");
 
@@ -161,13 +169,13 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     create_3Dimage_ID(outname, xsize, ysize, Hsize, &IDout);
     list_image_ID();
 
-    for (uint32_t k = 0; k < Hsize; k++)
+    for(uint32_t k = 0; k < Hsize; k++)
     {
-        for (uint32_t index = 0; index < Hsize; index++)
+        for(uint32_t index = 0; index < Hsize; index++)
         {
             long ii = indexarray[index];
 
-            if (ii >= 0)
+            if(ii >= 0)
             {
                 DEBUG_TRACEPOINT("%u %u %ld", k, index, indexarray[index]);
                 data.image[IDout].array.F[k * xysize + ii] =
@@ -204,7 +212,7 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
     IDindex = image_ID(indexname);
 
     IDhad = image_ID(Hmatname);
-    if ((data.image[IDhad].md[0].size[0] != NBframes) ||
+    if((data.image[IDhad].md[0].size[0] != NBframes) ||
             (data.image[IDhad].md[0].size[1] != NBframes))
     {
         printf(
@@ -224,16 +232,16 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
 #ifdef _OPENMP
     #pragma omp parallel for private(kk0, kk1, ii)
 #endif
-    for (kk = 0; kk < zsizeout; kk++) // output frame
+    for(kk = 0; kk < zsizeout; kk++)  // output frame
     {
-        kk0 = (long) (data.image[IDindex].array.F[kk] + 0.1);
-        if (kk0 > -1)
+        kk0 = (long)(data.image[IDindex].array.F[kk] + 0.1);
+        if(kk0 > -1)
         {
             printf("\r  frame %5ld / %5ld     ", kk0, NBframes);
             fflush(stdout);
-            for (kk1 = 0; kk1 < NBframes; kk1++)
+            for(kk1 = 0; kk1 < NBframes; kk1++)
             {
-                for (ii = 0; ii < sizewfs; ii++)
+                for(ii = 0; ii < sizewfs; ii++)
                     data.image[IDout].array.F[kk * sizewfs + ii] +=
                         data.image[IDin].array.F[kk1 * sizewfs + ii] *
                         data.image[IDhad].array.F[kk0 * NBframes + kk1];
@@ -241,10 +249,12 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
         }
     }
 
-    for (kk = 0; kk < zsizeout; kk++)
+    for(kk = 0; kk < zsizeout; kk++)
     {
-        for (ii = 0; ii < sizewfs; ii++)
+        for(ii = 0; ii < sizewfs; ii++)
+        {
             data.image[IDout].array.F[kk * sizewfs + ii] /= NBframes;
+        }
     }
 
     printf("\n\n");

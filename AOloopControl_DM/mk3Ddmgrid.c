@@ -28,48 +28,60 @@ static uint32_t *binfactor;
 
 
 
-static CLICMDARGDEF farg[] = {{CLIARG_STR_NOT_IMG,
-                               ".outname",
-                               "output image name",
-                               "DMgridc",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &outname,
-                               NULL},
-                              {CLIARG_UINT32,
-                               ".xsize",
-                               "x size",
-                               "50",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &xsize,
-                               NULL},
-                              {CLIARG_UINT32,
-                               ".ysize",
-                               "y size",
-                               "50",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &ysize,
-                               NULL},
-                              {CLIARG_UINT32,
-                               ".XYpattern",
-                               "grid pattern",
-                               "3",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &XYpattern,
-                               NULL},
-                              {CLIARG_UINT32,
-                               ".binfact",
-                               "binning factor",
-                               "2",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &binfactor,
-                               NULL}};
+static CLICMDARGDEF farg[] = {{
+        CLIARG_STR_NOT_IMG,
+        ".outname",
+        "output image name",
+        "DMgridc",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &outname,
+        NULL
+    },
+    {
+        CLIARG_UINT32,
+        ".xsize",
+        "x size",
+        "50",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &xsize,
+        NULL
+    },
+    {
+        CLIARG_UINT32,
+        ".ysize",
+        "y size",
+        "50",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &ysize,
+        NULL
+    },
+    {
+        CLIARG_UINT32,
+        ".XYpattern",
+        "grid pattern",
+        "3",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &XYpattern,
+        NULL
+    },
+    {
+        CLIARG_UINT32,
+        ".binfact",
+        "binning factor",
+        "2",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &binfactor,
+        NULL
+    }
+};
 
 
 
 
 static CLICMDDATA CLIcmddata = {"mk3Ddmgrid",
                                 "create DM calibration pattern sequence",
-                                CLICMD_FIELDS_DEFAULTS};
+                                CLICMD_FIELDS_DEFAULTS
+                               };
 
 
 
@@ -103,7 +115,7 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
 
 
     uint32_t zsize = 2;
-    if (XYmode == 5)
+    if(XYmode == 5)
     {
         zsize = 4;
     }
@@ -112,91 +124,91 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
 
     float map4[4] = {0.0, 1.0, 0.0, -1.0};
 
-    switch (XYmode)
+    switch(XYmode)
     {
 
-    case 0: // XYdiag
-        for (uint32_t ii = 0; ii < xsize; ii++)
-        {
-            for (uint32_t jj = 0; jj < ysize; jj++)
+        case 0: // XYdiag
+            for(uint32_t ii = 0; ii < xsize; ii++)
             {
-                imgout.im->array.F[jj * xsize + ii] =
-                    2.0 * ((((ii / bin) % 2 + (jj / bin) % 2)) % 2) - 1;
+                for(uint32_t jj = 0; jj < ysize; jj++)
+                {
+                    imgout.im->array.F[jj * xsize + ii] =
+                        2.0 * ((((ii / bin) % 2 + (jj / bin) % 2)) % 2) - 1;
+                }
             }
-        }
-        break;
+            break;
 
-    case 1: // X
-        for (uint32_t ii = 0; ii < xsize; ii++)
-        {
-            for (uint32_t jj = 0; jj < ysize; jj++)
+        case 1: // X
+            for(uint32_t ii = 0; ii < xsize; ii++)
             {
-                imgout.im->array.F[jj * xsize + ii] =
-                    2.0 * ((ii / bin) % 2) - 1;
+                for(uint32_t jj = 0; jj < ysize; jj++)
+                {
+                    imgout.im->array.F[jj * xsize + ii] =
+                        2.0 * ((ii / bin) % 2) - 1;
+                }
             }
-        }
-        break;
+            break;
 
-    case 2: // Y
-        for (uint32_t ii = 0; ii < xsize; ii++)
-        {
-            for (uint32_t jj = 0; jj < ysize; jj++)
+        case 2: // Y
+            for(uint32_t ii = 0; ii < xsize; ii++)
             {
-                imgout.im->array.F[jj * xsize + ii] =
-                    2.0 * ((jj / bin) % 2) - 1;
+                for(uint32_t jj = 0; jj < ysize; jj++)
+                {
+                    imgout.im->array.F[jj * xsize + ii] =
+                        2.0 * ((jj / bin) % 2) - 1;
+                }
             }
-        }
-        break;
+            break;
 
-    case 3: // Xdiag
-        for (uint32_t ii = 0; ii < xsize; ii++)
-        {
-            for (uint32_t jj = 0; jj < ysize; jj++)
+        case 3: // Xdiag
+            for(uint32_t ii = 0; ii < xsize; ii++)
             {
-                imgout.im->array.F[jj * xsize + ii] =
-                    map4[(((ii + jj) / bin) % 4)];
+                for(uint32_t jj = 0; jj < ysize; jj++)
+                {
+                    imgout.im->array.F[jj * xsize + ii] =
+                        map4[(((ii + jj) / bin) % 4)];
+                }
             }
-        }
-        break;
+            break;
 
-    case 4: // Ydiag
-        for (uint32_t ii = 0; ii < xsize; ii++)
-        {
-            for (uint32_t jj = 0; jj < ysize; jj++)
+        case 4: // Ydiag
+            for(uint32_t ii = 0; ii < xsize; ii++)
             {
-                imgout.im->array.F[jj * xsize + ii] =
-                    map4[(((ysize + ii - jj) / bin) % 4)];
+                for(uint32_t jj = 0; jj < ysize; jj++)
+                {
+                    imgout.im->array.F[jj * xsize + ii] =
+                        map4[(((ysize + ii - jj) / bin) % 4)];
+                }
             }
-        }
-        break;
+            break;
 
-    case 5: // X then Y
-        for (uint32_t ii = 0; ii < xsize; ii++)
-        {
-            for (uint32_t jj = 0; jj < ysize; jj++)
+        case 5: // X then Y
+            for(uint32_t ii = 0; ii < xsize; ii++)
             {
-                // X
-                imgout.im->array.F[jj * xsize + ii] =
-                    2.0 * ((ii / bin) % 2) - 1;
+                for(uint32_t jj = 0; jj < ysize; jj++)
+                {
+                    // X
+                    imgout.im->array.F[jj * xsize + ii] =
+                        2.0 * ((ii / bin) % 2) - 1;
 
-                // Y
-                imgout.im->array.F[2 * xysize + jj * xsize + ii] =
-                    2.0 * ((jj / bin) % 2) - 1;
+                    // Y
+                    imgout.im->array.F[2 * xysize + jj * xsize + ii] =
+                        2.0 * ((jj / bin) % 2) - 1;
+                }
             }
-        }
-        break;
+            break;
     }
 
 
     // repeat pattern to slices > 0
-    for (uint64_t ii = 0; ii < xysize; ii++)
+    for(uint64_t ii = 0; ii < xysize; ii++)
     {
         imgout.im->array.F[xysize + ii] = -imgout.im->array.F[ii];
     }
 
-    if (zsize == 4)
+    if(zsize == 4)
     {
-        for (uint64_t ii = 0; ii < xysize; ii++)
+        for(uint64_t ii = 0; ii < xysize; ii++)
         {
             imgout.im->array.F[3 * xysize + ii] =
                 -imgout.im->array.F[2 * xysize + ii];
@@ -237,8 +249,8 @@ static errno_t compute_function()
 
 INSERT_STD_FPSCLIfunctions
 
-    errno_t
-    CLIADDCMD_AOloopControl_DM__mk3Ddmgrid()
+errno_t
+CLIADDCMD_AOloopControl_DM__mk3Ddmgrid()
 {
     INSERT_STD_CLIREGISTERFUNC
 

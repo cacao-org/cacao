@@ -23,13 +23,13 @@ typedef struct
     // timing info
     float loopfrequ;    // Hz
     float hardwlatency; // hardware latency between DM command and WFS response
-                        // [sec]
+    // [sec]
     float hardwlatency_frame; // hardware latency between DM command and WFS
-                              // response
+    // response
 
     // ============= RESPONSE CALIBRATION ===================
     float
-        fpim_normFlux; // total focal plane flux in the absence of a coronagraph
+    fpim_normFlux; // total focal plane flux in the absence of a coronagraph
     float fpim_Xcent;
     float fpim_Ycent;
 

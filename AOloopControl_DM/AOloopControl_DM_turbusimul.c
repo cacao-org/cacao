@@ -47,7 +47,7 @@ errno_t AOloopControl_printDMturbconf()
 {
     long DMindex;
 
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         AOloopControl_DMturb_createconf();
     }
@@ -56,7 +56,7 @@ errno_t AOloopControl_printDMturbconf()
 
     printf(
         "ind on  ampl [um]  tint [us]  simtime [s]  wspeed [m/s]  LOcoeff\n");
-    for (DMindex = 0; DMindex < NB_DMindex; DMindex++)
+    for(DMindex = 0; DMindex < NB_DMindex; DMindex++)
     {
         printf("%ld  %d  %10f  %10ld  %10f %5f  %5f\n",
                DMindex,
@@ -85,7 +85,7 @@ errno_t AOloopControl_DMturb_createconf()
     printf("ENTERING FUNCTION AOloopControl_DMturb_createconf\n");
     fflush(stdout);
 
-    if (dmdispcomb_loaded == 0)
+    if(dmdispcomb_loaded == 0)
     {
         printf("============== AOloopControl_DM_loadconf\n");
         fflush(stdout);
@@ -94,7 +94,7 @@ errno_t AOloopControl_DMturb_createconf()
         fflush(stdout);
     }
 
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         printf("=============== AOloopControl_DMturb_loadconf\n");
         fflush(stdout);
@@ -103,7 +103,7 @@ errno_t AOloopControl_DMturb_createconf()
         fflush(stdout);
     }
 
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         printf("Create/read DMturb configuration\n");
         fflush(stdout);
@@ -111,7 +111,7 @@ errno_t AOloopControl_DMturb_createconf()
         SMturbfd = open(DMTURBCONF_FILENAME,
                         O_RDWR | O_CREAT | O_TRUNC,
                         (mode_t) 0600);
-        if (SMturbfd == -1)
+        if(SMturbfd == -1)
         {
             snprintf(errstr,
                      STRINGMAXLEN_DEFAULT,
@@ -124,7 +124,7 @@ errno_t AOloopControl_DMturb_createconf()
         result = lseek(SMturbfd,
                        sizeof(AOLOOPCONTROL_DMTURBCONF) * NB_DMindex - 1,
                        SEEK_SET);
-        if (result == -1)
+        if(result == -1)
         {
             close(SMturbfd);
             perror("Error calling lseek() to 'stretch' the file");
@@ -132,7 +132,7 @@ errno_t AOloopControl_DMturb_createconf()
         }
 
         result = write(SMturbfd, "", 1);
-        if (result != 1)
+        if(result != 1)
         {
             close(SMturbfd);
             perror("Error writing last byte of the file");
@@ -140,20 +140,20 @@ errno_t AOloopControl_DMturb_createconf()
         }
 
         dmturbconf = (AOLOOPCONTROL_DMTURBCONF *) mmap(
-            0,
-            sizeof(AOLOOPCONTROL_DMTURBCONF) * NB_DMindex,
-            PROT_READ | PROT_WRITE,
-            MAP_SHARED,
-            SMturbfd,
-            0);
-        if (dmturbconf == MAP_FAILED)
+                         0,
+                         sizeof(AOLOOPCONTROL_DMTURBCONF) * NB_DMindex,
+                         PROT_READ | PROT_WRITE,
+                         MAP_SHARED,
+                         SMturbfd,
+                         0);
+        if(dmturbconf == MAP_FAILED)
         {
             close(SMturbfd);
             perror("Error mmapping the file");
             exit(EXIT_FAILURE);
         }
 
-        for (DMindex = 0; DMindex < NB_DMindex; DMindex++)
+        for(DMindex = 0; DMindex < NB_DMindex; DMindex++)
         {
             dmturbconf[DMindex].on = 0;
 
@@ -179,12 +179,12 @@ errno_t AOloopControl_DMturb_loadconf()
 {
     char errstr[200];
 
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         printf("Read configuration\n");
 
         SMturbfd = open(DMTURBCONF_FILENAME, O_RDWR, (mode_t) 0600);
-        if (SMturbfd == -1)
+        if(SMturbfd == -1)
         {
             sprintf(errstr,
                     "Error opening (O_RDWR) file \"%s\" in function "
@@ -197,13 +197,13 @@ errno_t AOloopControl_DMturb_loadconf()
             //    exit(EXIT_FAILURE);
 
             dmturbconf = (AOLOOPCONTROL_DMTURBCONF *) mmap(
-                0,
-                sizeof(AOLOOPCONTROL_DMTURBCONF) * NB_DMindex,
-                PROT_READ | PROT_WRITE,
-                MAP_SHARED,
-                SMturbfd,
-                0);
-            if (dmturbconf == MAP_FAILED)
+                             0,
+                             sizeof(AOLOOPCONTROL_DMTURBCONF) * NB_DMindex,
+                             PROT_READ | PROT_WRITE,
+                             MAP_SHARED,
+                             SMturbfd,
+                             0);
+            if(dmturbconf == MAP_FAILED)
             {
                 close(SMturbfd);
                 printf("Error mmapping the file -> creating it\n");
@@ -219,7 +219,7 @@ errno_t AOloopControl_DMturb_loadconf()
 int AOloopControl_DM_dmturboff(long DMindex)
 {
     //    AOloopControl_DMturb_loadconf(DMindex);
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         AOloopControl_DMturb_createconf();
     }
@@ -233,7 +233,7 @@ int AOloopControl_DM_dmturboff(long DMindex)
 int AOloopControl_DM_dmturb_wspeed(long DMindex, double wspeed)
 {
     //    AOloopControl_DMturb_loadconf(DMindex);
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         AOloopControl_DMturb_createconf();
     }
@@ -247,7 +247,7 @@ int AOloopControl_DM_dmturb_wspeed(long DMindex, double wspeed)
 int AOloopControl_DM_dmturb_ampl(long DMindex, double ampl)
 {
     //    AOloopControl_DMturb_loadconf(DMindex);
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         AOloopControl_DMturb_createconf();
     }
@@ -261,7 +261,7 @@ int AOloopControl_DM_dmturb_ampl(long DMindex, double ampl)
 int AOloopControl_DM_dmturb_LOcoeff(long DMindex, double LOcoeff)
 {
     //    AOloopControl_DMturb_loadconf(DMindex);
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         AOloopControl_DMturb_createconf();
     }
@@ -275,7 +275,7 @@ int AOloopControl_DM_dmturb_LOcoeff(long DMindex, double LOcoeff)
 int AOloopControl_DM_dmturb_tint(long DMindex, long tint)
 {
     //    AOloopControl_DMturb_loadconf(DMindex);
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         AOloopControl_DMturb_createconf();
     }
@@ -288,7 +288,7 @@ int AOloopControl_DM_dmturb_tint(long DMindex, long tint)
 
 int AOloopControl_DM_dmturb_printstatus(long DMindex)
 {
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         AOloopControl_DMturb_createconf();
     }
@@ -301,7 +301,7 @@ int AOloopControl_DM_dmturb_printstatus(long DMindex)
            0.001 * dmturbconf[DMindex].cnt / dmturbconf[DMindex].simtime);
     printf("\n");
 
-    if (dmturbconf[DMindex].on == 1)
+    if(dmturbconf[DMindex].on == 1)
     {
         printf("LOOP IS ON\n");
     }
@@ -382,7 +382,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
 
     int tint;
 
-    if (dmturb_loaded == 0)
+    if(dmturb_loaded == 0)
     {
         printf("========= START AOloopControl_DMturb_createconf\n");
         fflush(stdout);
@@ -395,7 +395,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
     load_fits("turbscreen2.fits", "screen2", 1, &IDs2);
     list_image_ID();
 
-    if (IDs1 == -1)
+    if(IDs1 == -1)
     {
         make_master_turbulence_screen_local("screen1",
                                             "screen2",
@@ -405,11 +405,11 @@ int AOloopControl_DM_dmturb(long        DMindex,
         IDs1  = image_ID("screen1");
         IDk   = make_gauss("kernim", imsize, imsize, 20.0, 1.0);
         totim = 0.0;
-        for (ii = 0; ii < imsize * imsize; ii++)
+        for(ii = 0; ii < imsize * imsize; ii++)
         {
             totim += data.image[IDk].array.F[ii];
         }
-        for (ii = 0; ii < imsize * imsize; ii++)
+        for(ii = 0; ii < imsize * imsize; ii++)
         {
             data.image[IDk].array.F[ii] /= totim;
         }
@@ -425,7 +425,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
     size_sx = data.image[IDs1].md[0].size[0];
     size_sy = data.image[IDs1].md[0].size[1];
 
-    if (mode == 0)
+    if(mode == 0)
     {
         clock_gettime(CLOCK_REALTIME, &dmturbconf[DMindex].tstart);
         dmturbconf[DMindex].tend = dmturbconf[DMindex].tstart;
@@ -440,7 +440,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
     read_sharedmem_image(name);
     list_image_ID();
 
-    if (mode == 0)
+    if(mode == 0)
     {
         dmturbconf[DMindex].on = 1;
     }
@@ -448,13 +448,13 @@ int AOloopControl_DM_dmturb(long        DMindex,
     create_2Dimage_ID("turbs1", DM_Xsize, DM_Ysize, &IDturbs1);
     create_2Dimage_ID("turbs", DM_Xsize, DM_Ysize, &IDturb);
 
-    if (mode == 1)
+    if(mode == 1)
     {
         create_3Dimage_ID(IDout_name, DM_Xsize, DM_Ysize, NBsamples, &IDout);
     }
 
     k = 0;
-    if (mode == 0)
+    if(mode == 0)
     {
         turbON = dmturbconf[DMindex].on;
     }
@@ -465,8 +465,8 @@ int AOloopControl_DM_dmturb(long        DMindex,
 
     printf("MODE = %d\n  DMindex = %ld", mode, DMindex);
 
-    if (mode ==
-        1) // force periodic sequence if wind speed is sufficiently large
+    if(mode ==
+            1) // force periodic sequence if wind speed is sufficiently large
     {
         printf("Wind speed = %f m/s\n", dmturbconf[DMindex].wspeed);
         printf("angle      = %f rad\n", angle);
@@ -493,7 +493,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
         wspeedx = dX / (1.0e-6 * dmturbconf[DMindex].tint * NBsamples);
         wspeedy = dY / (1.0e-6 * dmturbconf[DMindex].tint * NBsamples);
 
-        if (sqrt(wspeedx * wspeedx + wspeedy * wspeedy) < 0.0001)
+        if(sqrt(wspeedx * wspeedx + wspeedy * wspeedy) < 0.0001)
         {
             wspeedx = dmturbconf[DMindex].wspeed * cos(angle);
             wspeedy = dmturbconf[DMindex].wspeed * sin(angle);
@@ -511,15 +511,15 @@ int AOloopControl_DM_dmturb(long        DMindex,
     RMSvaltotcnt = 0;
     tint         = dmturbconf[DMindex].tint;
 
-    while (turbON == 1) // computation loop
+    while(turbON == 1)  // computation loop
     {
 
-        if (mode == 0)
+        if(mode == 0)
         {
             struct timespec tim;
 
             tim.tv_sec  = 0;
-            tim.tv_nsec = (long) (1000 * dmturbconf[DMindex].tint);
+            tim.tv_nsec = (long)(1000 * dmturbconf[DMindex].tint);
 
             nanosleep(&tim, NULL);
             // usleep(dmturbconf[DMindex].tint);
@@ -540,7 +540,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
             dmturbconf[DMindex].simtime = tdiff1v;
         }
 
-        if (mode == 0)
+        if(mode == 0)
         {
             screen0_X +=
                 dmturbconf[DMindex].wspeed * tdiff1v * cos(angle); // [m]
@@ -555,8 +555,8 @@ int AOloopControl_DM_dmturb(long        DMindex,
 
         // dmturbconf[DMindex].simtime = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
 
-        for (ii = 0; ii < DM_Xsize; ii++)
-            for (jj = 0; jj < DM_Ysize; jj++)
+        for(ii = 0; ii < DM_Xsize; ii++)
+            for(jj = 0; jj < DM_Ysize; jj++)
             {
                 ii1 = jj * DM_Xsize + ii;
 
@@ -573,20 +573,20 @@ int AOloopControl_DM_dmturb(long        DMindex,
                 ypix2 = (ypix1 + 1) % size_sy;
                 ypixf = ypix - (long) ypix;
 
-                while (xpix1 < 0)
+                while(xpix1 < 0)
                 {
                     xpix1 = 0;
                 }
-                while (xpix1 > size_sx - 1)
+                while(xpix1 > size_sx - 1)
                 {
                     xpix1 = size_sx - 1;
                 }
 
-                if (ypix1 < 0)
+                if(ypix1 < 0)
                 {
                     ypix1 = 0;
                 }
-                if (ypix1 > size_sy - 1)
+                if(ypix1 > size_sy - 1)
                 {
                     ypix1 = size_sy - 1;
                 }
@@ -608,33 +608,33 @@ int AOloopControl_DM_dmturb(long        DMindex,
                     (1.0 - xpixf) * (1.0 - ypixf) *
                     (data.image[IDs1].array.F[ypix1 * size_sx + xpix1] -
                      (1.0 - dmturbconf[DMindex].LOcoeff) *
-                         data.image[IDs2].array.F[ypix1 * size_sx + xpix1]);
+                     data.image[IDs2].array.F[ypix1 * size_sx + xpix1]);
                 data.image[IDturb].array.F[ii1] +=
                     (xpixf) * (1.0 - ypixf) *
                     (data.image[IDs1].array.F[ypix1 * size_sx + xpix2] -
                      (1.0 - dmturbconf[DMindex].LOcoeff) *
-                         data.image[IDs2].array.F[ypix1 * size_sx + xpix2]);
+                     data.image[IDs2].array.F[ypix1 * size_sx + xpix2]);
                 data.image[IDturb].array.F[ii1] +=
                     (1.0 - xpixf) * (ypixf) *
                     (data.image[IDs1].array.F[ypix2 * size_sx + xpix1] -
                      (1.0 - dmturbconf[DMindex].LOcoeff) *
-                         data.image[IDs2].array.F[ypix2 * size_sx + xpix1]);
+                     data.image[IDs2].array.F[ypix2 * size_sx + xpix1]);
                 data.image[IDturb].array.F[ii1] +=
                     xpixf * ypixf *
                     (data.image[IDs1].array.F[ypix2 * size_sx + xpix2] -
                      (1.0 - dmturbconf[DMindex].LOcoeff) *
-                         data.image[IDs2].array.F[ypix2 * size_sx + xpix2]);
+                     data.image[IDs2].array.F[ypix2 * size_sx + xpix2]);
             }
 
         // proccess array
 
         ave = 0.0;
-        for (ii1 = 0; ii1 < DM_Xsize * DM_Ysize; ii1++)
+        for(ii1 = 0; ii1 < DM_Xsize * DM_Ysize; ii1++)
         {
             ave += data.image[IDturb].array.F[ii1];
         }
         ave /= 50 * 50; //dmdispcombconf[DMindex].xysize;
-        for (ii1 = 0; ii1 < DM_Xsize * DM_Ysize; ii1++)
+        for(ii1 = 0; ii1 < DM_Xsize * DM_Ysize; ii1++)
         {
             data.image[IDturb].array.F[ii1] -= ave;
             data.image[IDturb].array.F[ii1] *= coeff;
@@ -643,14 +643,14 @@ int AOloopControl_DM_dmturb(long        DMindex,
         RMSval    = 0.0;
         RMSvalcnt = 0;
 
-        for (ii = 0; ii < DM_Xsize; ii++)
-            for (jj = 0; jj < DM_Ysize; jj++)
+        for(ii = 0; ii < DM_Xsize; ii++)
+            for(jj = 0; jj < DM_Ysize; jj++)
             {
                 ii1 = DM_Xsize * jj + ii;
                 x   = 0.5 * DM_Xsize - 0.5 - ii;
                 y   = 0.5 * DM_Ysize - 0.5 - jj;
                 r   = sqrt(x * x + y * y);
-                if (r < DM_Xsize * 0.5 - 1.0)
+                if(r < DM_Xsize * 0.5 - 1.0)
                 {
                     RMSval += data.image[IDturb].array.F[ii1] *
                               data.image[IDturb].array.F[ii1];
@@ -659,7 +659,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
             }
         RMSval = sqrt(RMSval / RMSvalcnt);
 
-        if (mode == 0)
+        if(mode == 0)
         {
             x1  = log10(RMSval / dmturbconf[DMindex].ampl);
             fx1 = 1.0 + 50.0 * exp(-5.0 * x1 * x1);
@@ -667,7 +667,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
         }
         else
         {
-            if (k0init == 1)
+            if(k0init == 1)
             {
                 RMSvaltot += RMSval;
                 RMSvaltotcnt++;
@@ -677,14 +677,14 @@ int AOloopControl_DM_dmturb(long        DMindex,
         //        printf("STEP 001  %f %f\n", screen0_X, screen0_Y);
         //        fflush(stdout);
 
-        if (mode == 0)
+        if(mode == 0)
         {
             sprintf(name, "dm%02lddisp10", DMindex);
             copy_image_ID("turbs", name, 0);
         }
         else
         {
-            if (k0init == 1)
+            if(k0init == 1)
             {
                 // printf("STEP %5ld / %5ld       time = %12.6f    coeff = %18g
                 // RMSval = %18g    %18f x %18f\n", k, NBsamples, tdiff1v, coeff,
@@ -693,7 +693,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
                 // coeff, RMSval, screen0_X, screen0_Y,
                 // dmturbconf[DMindex].wspeed);
 
-                for (ii = 0; ii < DM_Xsize * DM_Ysize; ii++)
+                for(ii = 0; ii < DM_Xsize * DM_Ysize; ii++)
                 {
                     data.image[IDout].array.F[k * DM_Xsize * DM_Ysize + ii] =
                         data.image[IDturb].array.F[ii];
@@ -707,21 +707,21 @@ int AOloopControl_DM_dmturb(long        DMindex,
         //     save_fits("turbs", "turbs.fits");
         //     save_fits("turbs1", "turbs1.fits");
 
-        if (mode == 0)
+        if(mode == 0)
         {
             turbON = dmturbconf[DMindex].on;
         }
         else
         {
             k++;
-            if ((k == k0) && (k0init == 0))
+            if((k == k0) && (k0init == 0))
             {
                 printf("------ k->0 ----------\n");
                 k0init = 1;
                 k      = 0;
             }
 
-            if (k < NBsamples)
+            if(k < NBsamples)
             {
                 turbON = 1;
             }
@@ -734,8 +734,8 @@ int AOloopControl_DM_dmturb(long        DMindex,
     // fclose(fp);
 
     RMSval = RMSvaltot / RMSvaltotcnt;
-    for (k = 0; k < NBsamples; k++)
-        for (ii = 0; ii < DM_Xsize * DM_Ysize; ii++)
+    for(k = 0; k < NBsamples; k++)
+        for(ii = 0; ii < DM_Xsize * DM_Ysize; ii++)
         {
             data.image[IDout].array.F[k * DM_Xsize * DM_Ysize + ii] *=
                 dmturbconf[DMindex].ampl / RMSval;

@@ -109,7 +109,7 @@ typedef struct
     int  active;    // 1 if used
     char name[100]; // stream name (excludes aol#_)
     int ENABLE; // Is logging enabled ? This needs to be specified at startup, if
-                // set to zero, no RT logging will be performed
+    // set to zero, no RT logging will be performed
     int      INIT;           // 1 if memory is initiated
     int      ON;             // Is logging ON ?
     uint32_t SIZE;           // Max number of samples per buffer
@@ -119,7 +119,7 @@ typedef struct
     long     frameindexend1; // last frame in buffer 1
     int      save;   // 0: do not save, 1: save data+timing, 2: save timing only
     int memcpToggle; // 1 if file buffer #0 ready to be memcpied, 2 if file buffer
-                     // #1 ready to be memcpied, 0 otherwise
+    // #1 ready to be memcpied, 0 otherwise
 
     long IDbuff;
     long IDbuff0; // local identifier
@@ -188,7 +188,7 @@ typedef struct
 
     // Modal control
     AOLOOPCONF_ProcessModeCoefficients
-        AOpmodecoeffs; // defined in AOloopControl_ProcessModeCoefficients.h
+    AOpmodecoeffs; // defined in AOloopControl_ProcessModeCoefficients.h
 
     // Automatic loop tuning (experimental)
     AOLOOPCONF_AutoTune AOAutoTune; // defined in AOloopControl_autotune.h
@@ -202,13 +202,13 @@ typedef struct
 typedef struct
 {
     /* ===============================================================================================
-   */
+    */
     /*                    aoconfID are global variables for convenience */
     /*  These variables are LOCAL to each process, and not shared between
-   * processes                    */
+    * processes                    */
     /*  aoconfID can be used in other modules as well (with extern) */
     /* ===============================================================================================
-   */
+    */
 
     long LOOPNUMBER; // = 0; // current loop index
 
@@ -223,11 +223,11 @@ typedef struct
     // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     int initcontrMcact_GPU
-        [100]; // = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-               // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-               // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-               // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-               // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    [100]; // = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     // used in AOloopControl_loop_param.c
     //  static
 
@@ -367,8 +367,8 @@ typedef struct
 
     // timing
     long
-        aoconfID_looptiming; // control loop timing data. Pixel values correspond
-                             // to time offset
+    aoconfID_looptiming; // control loop timing data. Pixel values correspond
+    // to time offset
     // currently has 20 timing slots
     // beginning of iteration is defined when entering "wait for image"
     // md[0].atime.ts is absolute time at beginning of iteration
@@ -478,10 +478,10 @@ errno_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name,
 
 /** @brief WFS sum zero point update */
 errno_t AOloopControl_WFSzeropoint_sum_update_loop(long        loopnb,
-                                                   const char *ID_WFSzp_name,
-                                                   int         NBzp,
-                                                   const char *IDwfsref0_name,
-                                                   const char *IDwfsref_name);
+        const char *ID_WFSzp_name,
+        int         NBzp,
+        const char *IDwfsref0_name,
+        const char *IDwfsref_name);
 
 /** @brief Main loop function */
 int     AOloopControl_aorun_RUN();
@@ -511,13 +511,13 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
 /** @brief Matrix multiplication on GPU to transfom modes coefficients into DM
  * shape */
 errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
-                                                 const char *modecoeffs_name,
-                                                 const char *DMmodes_name,
-                                                 int         semTrigg,
-                                                 const char *out_name,
-                                                 int         GPUindex,
-                                                 long        loop,
-                                                 int         offloadMode);
+        const char *modecoeffs_name,
+        const char *DMmodes_name,
+        int         semTrigg,
+        const char *out_name,
+        int         GPUindex,
+        long        loop,
+        int         offloadMode);
 
 /** @brief CPU matrix multiplication to transfom WFS signal into modes
  * coefficients */
@@ -725,9 +725,9 @@ errno_t AOloopControl_setframesAve(long nbframes);
 
 /** @brief Set gain of block of modes */
 errno_t AOloopControl_set_modeblock_gain(long  loop,
-                                         long  blocknb,
-                                         float gain,
-                                         int   add); // modal blocks
+        long  blocknb,
+        float gain,
+        int   add); // modal blocks
 
 /** @brief Scan block gains */
 errno_t AOloopControl_scanGainBlock(

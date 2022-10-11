@@ -53,11 +53,13 @@
 /** @brief CLI function for AOloopControl_loadconfigure */
 int_fast8_t AOloopControl_loadconfigure_cli()
 {
-    if (CLI_checkarg(1, 2) == 0)
+    if(CLI_checkarg(1, 2) == 0)
     {
         AOloopControl_loadconfigure(data.cmdargtoken[1].val.numl, 1, 10);
         return 0;
     }
     else
+    {
         return 1;
+    }
 }

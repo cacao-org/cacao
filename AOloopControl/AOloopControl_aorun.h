@@ -17,7 +17,7 @@ typedef struct
 
     int init; /**< Has the structure been initialized ? */
     uint64_t
-        cnt; /**<  loop step counter, set to zero every time loop is stopped */
+    cnt; /**<  loop step counter, set to zero every time loop is stopped */
     uint64_t cntmax;      /**<  max value of counter, used to step loop */
     uint64_t DMupdatecnt; /**<  number of DM updates */
 
@@ -55,7 +55,7 @@ typedef struct
 
     // Hardware latency = time from DM command issued to WFS response changed
     float
-        hardwlatency; /**< hardware latency between DM command and WFS response
+    hardwlatency; /**< hardware latency between DM command and WFS response
                          [sec] */
     float hardwlatency_frame; /**< hardware latency between DM command and WFS
                                response [frame] */
@@ -92,7 +92,7 @@ typedef struct
                                    use/active for each slice */
     uint64_t WFScnt; /**< WFS stream counter 0 value at WFS image read */
     uint64_t
-        WFScntRM; /**< WFS stream counter 0 value at WFS image read (RM acqu
+    WFScntRM; /**< WFS stream counter 0 value at WFS image read (RM acqu
                         mode) */
 
     int   WFSnormalize; /**< 1 if each WFS frame should be normalized to 1 */

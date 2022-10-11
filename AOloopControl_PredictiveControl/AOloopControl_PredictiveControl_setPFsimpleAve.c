@@ -25,7 +25,7 @@
  *
  */
 imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
-                                                       float DecayCoeff)
+        float DecayCoeff)
 {
     imageID IDPF;
     int     xsize, ysize;
@@ -40,7 +40,7 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
     FilterOrder = xsize / ysize;
 
     coeff = (float *) malloc(sizeof(float) * FilterOrder);
-    if (coeff == NULL)
+    if(coeff == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -48,25 +48,29 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
 
     // set up coeffs and compute their sum
     total = 0.0;
-    for (kk = 0; kk < FilterOrder; kk++)
+    for(kk = 0; kk < FilterOrder; kk++)
     {
         coeff[kk] = pow(DecayCoeff, kk);
         total += coeff[kk];
     }
     // normalize such that sum of coeffs is 1
-    for (kk = 0; kk < FilterOrder; kk++)
+    for(kk = 0; kk < FilterOrder; kk++)
+    {
         coeff[kk] /= total;
+    }
 
     printf("Filter order = %d\n", FilterOrder);
-    for (kk = 0; kk < FilterOrder; kk++)
+    for(kk = 0; kk < FilterOrder; kk++)
     {
-        for (ii = 0; ii < ysize; ii++)
-            for (jj = 0; jj < ysize; jj++)
+        for(ii = 0; ii < ysize; ii++)
+            for(jj = 0; jj < ysize; jj++)
             {
                 data.image[IDPF].array.F[jj * xsize + ii + kk * ysize] = 0.0;
             }
-        for (ii = 0; ii < ysize; ii++)
+        for(ii = 0; ii < ysize; ii++)
+        {
             data.image[IDPF].array.F[ii * xsize + ii + kk * ysize] = coeff[kk];
+        }
     }
 
     free(coeff);

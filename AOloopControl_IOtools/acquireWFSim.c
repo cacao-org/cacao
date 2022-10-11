@@ -64,133 +64,171 @@ long         fpi_wfszposname;
 
 
 
-static CLICMDARGDEF farg[] = {
-    {CLIARG_UINT32,
-     ".AOloopindex",
-     "loop index",
-     "0",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &AOloopindex,
-     &fpi_AOloopindex},
-    {CLIARG_UINT32,
-     ".semindex",
-     "input semaphore index",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &semindex,
-     &fpi_semindex},
-    {CLIARG_FLOAT32,
-     ".WFStaveragegain",
-     "tmult*(1-tgain)*imwfs3 + tgain*imwfs2 -> imwfs3",
-     "0.01",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &WFStaveragegain,
-     &fpi_WFStaveragegain},
-    {CLIARG_FLOAT32,
-     ".WFStaveragemult",
-     "tmult*(1-tgain)*imwfs3 + tgain*imwfs2 -> imwfs3",
-     "0.999",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &WFStaveragemult,
-     &fpi_WFStaveragemult},
-    {CLIARG_FLOAT32,
-     ".WFSrefcmult",
-     "mult*(wfsref-wfszpo)+(1-mult)*wfsrefc -> wfsrefc",
-     "1.0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &WFSrefcmult,
-     &fpi_WFSrefcmult},
-    {CLIARG_FLOAT32,
-     ".WFSrefcgain",
-     "wfsrefc + gain*imwfs3 -> wfsrefc",
-     "0.00",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &WFSrefcgain,
-     &fpi_WFSrefcgain},
-    {CLIARG_FLOAT32,
-     ".out.fluxtotal",
-     "total flux",
-     "0.0",
-     CLIARG_OUTPUT_DEFAULT,
-     (void **) &fluxtotal,
-     &fpi_fluxtotal},
-    {CLIARG_FLOAT32,
-     ".out.GPUalpha",
-     "GPU alpha coefficient",
-     "0.0",
-     CLIARG_OUTPUT_DEFAULT,
-     (void **) &GPUalpha,
-     &fpi_GPUalpha},
-    {CLIARG_FLOAT32,
-     ".out.GPUbeta",
-     "GPU beta coefficient",
-     "0.0",
-     CLIARG_OUTPUT_DEFAULT,
-     (void **) &GPUbeta,
-     &fpi_GPUbeta},
-    {CLIARG_FLOAT32,
-     ".WFSnormfloor",
-     "WFS flux floor for normalize",
-     "0.0",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &WFSnormfloor,
-     &fpi_WFSnormfloor},
-    {CLIARG_ONOFF,
-     ".comp.darksub",
-     "Subtract Dark aolX_wfsdark",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &compWFSsubdark,
-     &fpi_compWFSsubdark},
-    {CLIARG_ONOFF,
-     ".comp.WFSnormalize",
-     "normalize WFS frames",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &compWFSnormalize,
-     &fpi_compWFSnormalize},
-    {CLIARG_ONOFF,
-     ".comp.WFSrefsub",
-     "subtract WFS reference aol0_wfsref",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &compWFSrefsub,
-     &fpi_compWFSrefsub},
-    {CLIARG_ONOFF,
-     ".comp.WFSsigav",
-     "average WFS signal",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &compWFSsigav,
-     &fpi_compWFSsigav},
-    {CLIARG_ONOFF,
-     ".comp.WFSrefc",
-     "WFS reference correction",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &compWFSrefc,
-     &fpi_compWFSrefc},
-    {CLIARG_ONOFF,
-     ".comp.imtotal",
-     "Compute WFS frame total flux",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &compimtotal,
-     &fpi_compimtotal},
-    {CLIARG_ONOFF,
-     ".comp.normwfsim",
-     "Compute normalized WFS frame",
-     "1",
-     CLIARG_HIDDEN_DEFAULT,
-     (void **) &compnormwfsim,
-     &fpi_compnormwfsim},
-    {CLIARG_STREAM,
-     ".wfszpo",
-     "Wavefront sensor zero point offset",
-     "aol9_wfszpo",
-     CLIARG_VISIBLE_DEFAULT,
-     (void **) &wfszposname,
-     &fpi_wfszposname}};
+static CLICMDARGDEF farg[] =
+{
+    {
+        CLIARG_UINT32,
+        ".AOloopindex",
+        "loop index",
+        "0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &AOloopindex,
+        &fpi_AOloopindex
+    },
+    {
+        CLIARG_UINT32,
+        ".semindex",
+        "input semaphore index",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &semindex,
+        &fpi_semindex
+    },
+    {
+        CLIARG_FLOAT32,
+        ".WFStaveragegain",
+        "tmult*(1-tgain)*imwfs3 + tgain*imwfs2 -> imwfs3",
+        "0.01",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &WFStaveragegain,
+        &fpi_WFStaveragegain
+    },
+    {
+        CLIARG_FLOAT32,
+        ".WFStaveragemult",
+        "tmult*(1-tgain)*imwfs3 + tgain*imwfs2 -> imwfs3",
+        "0.999",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &WFStaveragemult,
+        &fpi_WFStaveragemult
+    },
+    {
+        CLIARG_FLOAT32,
+        ".WFSrefcmult",
+        "mult*(wfsref-wfszpo)+(1-mult)*wfsrefc -> wfsrefc",
+        "1.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &WFSrefcmult,
+        &fpi_WFSrefcmult
+    },
+    {
+        CLIARG_FLOAT32,
+        ".WFSrefcgain",
+        "wfsrefc + gain*imwfs3 -> wfsrefc",
+        "0.00",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &WFSrefcgain,
+        &fpi_WFSrefcgain
+    },
+    {
+        CLIARG_FLOAT32,
+        ".out.fluxtotal",
+        "total flux",
+        "0.0",
+        CLIARG_OUTPUT_DEFAULT,
+        (void **) &fluxtotal,
+        &fpi_fluxtotal
+    },
+    {
+        CLIARG_FLOAT32,
+        ".out.GPUalpha",
+        "GPU alpha coefficient",
+        "0.0",
+        CLIARG_OUTPUT_DEFAULT,
+        (void **) &GPUalpha,
+        &fpi_GPUalpha
+    },
+    {
+        CLIARG_FLOAT32,
+        ".out.GPUbeta",
+        "GPU beta coefficient",
+        "0.0",
+        CLIARG_OUTPUT_DEFAULT,
+        (void **) &GPUbeta,
+        &fpi_GPUbeta
+    },
+    {
+        CLIARG_FLOAT32,
+        ".WFSnormfloor",
+        "WFS flux floor for normalize",
+        "0.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &WFSnormfloor,
+        &fpi_WFSnormfloor
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.darksub",
+        "Subtract Dark aolX_wfsdark",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compWFSsubdark,
+        &fpi_compWFSsubdark
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.WFSnormalize",
+        "normalize WFS frames",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compWFSnormalize,
+        &fpi_compWFSnormalize
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.WFSrefsub",
+        "subtract WFS reference aol0_wfsref",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compWFSrefsub,
+        &fpi_compWFSrefsub
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.WFSsigav",
+        "average WFS signal",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compWFSsigav,
+        &fpi_compWFSsigav
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.WFSrefc",
+        "WFS reference correction",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compWFSrefc,
+        &fpi_compWFSrefc
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.imtotal",
+        "Compute WFS frame total flux",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compimtotal,
+        &fpi_compimtotal
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.normwfsim",
+        "Compute normalized WFS frame",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compnormwfsim,
+        &fpi_compnormwfsim
+    },
+    {
+        CLIARG_STREAM,
+        ".wfszpo",
+        "Wavefront sensor zero point offset",
+        "aol9_wfszpo",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &wfszposname,
+        &fpi_wfszposname
+    }
+};
 
 
 
@@ -199,7 +237,7 @@ static CLICMDARGDEF farg[] = {
 //
 static errno_t customCONFsetup()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
         data.fpsptr->parray[fpi_WFStaveragegain].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_WFStaveragemult].fpflag |= FPFLAG_WRITERUN;
@@ -224,8 +262,10 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata = {
-    "acquireWFS", "acquire WFS image", CLICMD_FIELDS_DEFAULTS};
+static CLICMDDATA CLIcmddata =
+{
+    "acquireWFS", "acquire WFS image", CLICMD_FIELDS_DEFAULTS
+};
 
 // detailed help
 static errno_t help_function()
@@ -241,7 +281,7 @@ static errno_t compute_function()
     char WFSname[100];
     sprintf(WFSname, "aol%u_wfsim", *AOloopindex);
     long ID_wfsim = read_sharedmem_image(WFSname);
-    if (ID_wfsim == -1)
+    if(ID_wfsim == -1)
     {
         printf("ERROR: no WFS input\n");
         return RETURN_FAILURE;
@@ -296,7 +336,7 @@ static errno_t compute_function()
 
     int wfsim_semwaitindex =
         ImageStreamIO_getsemwaitindex(&data.image[ID_wfsim], *semindex);
-    if (wfsim_semwaitindex > -1)
+    if(wfsim_semwaitindex > -1)
     {
         *semindex = wfsim_semwaitindex;
     }
@@ -305,30 +345,30 @@ static errno_t compute_function()
     float          *arrayftmp;
     unsigned short *arrayutmp;
     signed short   *arraystmp;
-    if (WFSatype == _DATATYPE_FLOAT)
+    if(WFSatype == _DATATYPE_FLOAT)
     {
         arrayftmp = (float *) malloc(sizeof(float) * sizeWFS);
-        if (arrayftmp == NULL)
+        if(arrayftmp == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
     }
 
-    if (WFSatype == _DATATYPE_UINT16)
+    if(WFSatype == _DATATYPE_UINT16)
     {
         arrayutmp = (unsigned short *) malloc(sizeof(unsigned short) * sizeWFS);
-        if (arrayutmp == NULL)
+        if(arrayutmp == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
     }
 
-    if (WFSatype == _DATATYPE_INT16)
+    if(WFSatype == _DATATYPE_INT16)
     {
         arraystmp = (signed short *) malloc(sizeof(signed short) * sizeWFS);
-        if (arraystmp == NULL)
+        if(arraystmp == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
@@ -341,7 +381,7 @@ static errno_t compute_function()
         char wfsdarkname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloopindex);
         IDwfsdark = image_ID(wfsdarkname);
-        if (IDwfsdark == -1)
+        if(IDwfsdark == -1)
         {
             IDwfsdark = read_sharedmem_image(wfsdarkname);
         }
@@ -374,7 +414,7 @@ static errno_t compute_function()
            *semindex,
            data.image[ID_wfsim].md[0].name,
            semval);
-    for (int i = 0; i < semval; i++)
+    for(int i = 0; i < semval; i++)
     {
         sem_trywait(data.image[ID_wfsim].semptr[*semindex]);
     }
@@ -399,30 +439,30 @@ static errno_t compute_function()
     DEBUG_TRACEPOINT(" ");
 
     char *ptrv;
-    switch (WFSatype)
+    switch(WFSatype)
     {
-    case _DATATYPE_FLOAT:
-        ptrv = (char *) data.image[ID_wfsim].array.F;
-        ptrv += sizeof(float) * slice * sizeWFS;
-        memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
-        break;
+        case _DATATYPE_FLOAT:
+            ptrv = (char *) data.image[ID_wfsim].array.F;
+            ptrv += sizeof(float) * slice * sizeWFS;
+            memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
+            break;
 
-    case _DATATYPE_UINT16:
-        ptrv = (char *) data.image[ID_wfsim].array.UI16;
-        ptrv += sizeof(unsigned short) * slice * sizeWFS;
-        memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
-        break;
+        case _DATATYPE_UINT16:
+            ptrv = (char *) data.image[ID_wfsim].array.UI16;
+            ptrv += sizeof(unsigned short) * slice * sizeWFS;
+            memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
+            break;
 
-    case _DATATYPE_INT16:
-        ptrv = (char *) data.image[ID_wfsim].array.SI16;
-        ptrv += sizeof(signed short) * slice * sizeWFS;
-        memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
-        break;
+        case _DATATYPE_INT16:
+            ptrv = (char *) data.image[ID_wfsim].array.SI16;
+            ptrv += sizeof(signed short) * slice * sizeWFS;
+            memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
+            break;
 
-    default:
-        printf("ERROR: DATA TYPE NOT SUPPORTED\n");
-        exit(0);
-        break;
+        default:
+            printf("ERROR: DATA TYPE NOT SUPPORTED\n");
+            exit(0);
+            break;
     }
 
     // WFScnt = data.image[ID_wfsim].md[0].cnt0;
@@ -431,76 +471,76 @@ static errno_t compute_function()
     // SUBTRACT DARK -> imWFS0
     // ===========================================
     DEBUG_TRACEPOINT(" ");
-    if (data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF)
     {
         data.image[ID_imWFS0].md[0].write = 1;
         DEBUG_TRACEPOINT(" ");
-        switch (WFSatype)
+        switch(WFSatype)
         {
 
-        case _DATATYPE_UINT16:
-            if (IDwfsdark == -1)
-            {
-                for (uint64_t ii = 0; ii < sizeWFS; ii++)
+            case _DATATYPE_UINT16:
+                if(IDwfsdark == -1)
                 {
-                    data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
+                    }
                 }
-            }
-            else
-            {
-                for (uint64_t ii = 0; ii < sizeWFS; ii++)
+                else
                 {
-                    data.image[ID_imWFS0].array.F[ii] =
-                        ((float) arrayutmp[ii]) -
-                        data.image[IDwfsdark].array.F[ii];
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] =
+                            ((float) arrayutmp[ii]) -
+                            data.image[IDwfsdark].array.F[ii];
+                    }
                 }
-            }
-            break;
+                break;
 
-        case _DATATYPE_INT16:
+            case _DATATYPE_INT16:
 
-            if (IDwfsdark == -1)
-            {
-                for (uint64_t ii = 0; ii < sizeWFS; ii++)
+                if(IDwfsdark == -1)
                 {
-                    data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
+                    }
                 }
-            }
-            else
-            {
-                for (uint64_t ii = 0; ii < sizeWFS; ii++)
+                else
                 {
-                    data.image[ID_imWFS0].array.F[ii] =
-                        ((float) arraystmp[ii]) -
-                        data.image[IDwfsdark].array.F[ii];
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] =
+                            ((float) arraystmp[ii]) -
+                            data.image[IDwfsdark].array.F[ii];
+                    }
                 }
-            }
-            break;
+                break;
 
-        case _DATATYPE_FLOAT:
-            if (IDwfsdark == -1)
-            {
-                memcpy(data.image[ID_imWFS0].array.F,
-                       arrayftmp,
-                       sizeof(float) * sizeWFS);
-            }
-            else
-            {
-                for (uint64_t ii = 0; ii < sizeWFS; ii++)
+            case _DATATYPE_FLOAT:
+                if(IDwfsdark == -1)
                 {
-                    data.image[ID_imWFS0].array.F[ii] =
-                        arrayftmp[ii] - data.image[IDwfsdark].array.F[ii];
+                    memcpy(data.image[ID_imWFS0].array.F,
+                           arrayftmp,
+                           sizeof(float) * sizeWFS);
                 }
-            }
-            break;
+                else
+                {
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] =
+                            arrayftmp[ii] - data.image[IDwfsdark].array.F[ii];
+                    }
+                }
+                break;
 
-        default:
-            printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                   __FILE__,
-                   __LINE__);
-            printf("datatype = %d\n", WFSatype);
-            exit(0);
-            break;
+            default:
+                printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                       __FILE__,
+                       __LINE__);
+                printf("datatype = %d\n", WFSatype);
+                exit(0);
+                break;
         }
 
         processinfo_update_output_stream(processinfo, ID_imWFS0);
@@ -517,14 +557,14 @@ static errno_t compute_function()
     // COMPUTE TOTAL -> WFSfluxtotal
     // ===========================================
     double IMTOTAL;
-    if (data.fpsptr->parray[fpi_compimtotal].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_compimtotal].fpflag & FPFLAG_ONOFF)
     {
         uint64_t nelem = data.image[ID_imWFS0].md[0].size[0] *
                          data.image[ID_imWFS0].md[0].size[1];
         IMTOTAL = 0.0;
-        if (IDwfsmask != -1)
+        if(IDwfsmask != -1)
         {
-            for (uint64_t ii = 0; ii < nelem; ii++)
+            for(uint64_t ii = 0; ii < nelem; ii++)
             {
                 IMTOTAL += data.image[ID_imWFS0].array.F[ii] *
                            data.image[IDwfsmask].array.F[ii];
@@ -532,7 +572,7 @@ static errno_t compute_function()
         }
         else
         {
-            for (uint64_t ii = 0; ii < nelem; ii++)
+            for(uint64_t ii = 0; ii < nelem; ii++)
             {
                 IMTOTAL += data.image[ID_imWFS0].array.F[ii];
             }
@@ -549,7 +589,7 @@ static errno_t compute_function()
     double totalinv;
     double normfloorcoeff;
 
-    if (data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
     {
         DEBUG_TRACEPOINT(" ");
         totalinv       = 1.0 / (*fluxtotal + *WFSnormfloor * sizeWFS);
@@ -567,13 +607,13 @@ static errno_t compute_function()
 
     *GPUbeta = -normfloorcoeff;
 
-    if (data.fpsptr->parray[fpi_compnormwfsim].fpflag &
-        FPFLAG_ONOFF) // normalize WFS image by totalinv
+    if(data.fpsptr->parray[fpi_compnormwfsim].fpflag &
+            FPFLAG_ONOFF) // normalize WFS image by totalinv
     {
 
         data.image[ID_imWFS1].md[0].write = 1;
 
-        for (uint64_t ii = 0; ii < sizeWFS; ii++)
+        for(uint64_t ii = 0; ii < sizeWFS; ii++)
         {
             data.image[ID_imWFS1].array.F[ii] =
                 data.image[ID_imWFS0].array.F[ii] * totalinv;
@@ -590,14 +630,14 @@ static errno_t compute_function()
     // REFERENCE SUBTRACT -> imWFS2
     // ===========================================
 
-    if (data.fpsptr->parray[fpi_compWFSrefsub].fpflag &
-        FPFLAG_ONOFF) // subtract reference
+    if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag &
+            FPFLAG_ONOFF) // subtract reference
     {
         data.image[ID_imWFS2].md[0].write = 1;
 
-        if (IDwfsrefc != -1)
+        if(IDwfsrefc != -1)
         {
-            for (uint64_t ii = 0; ii < sizeWFS; ii++)
+            for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
                 data.image[ID_imWFS2].array.F[ii] =
                     data.image[ID_imWFS1].array.F[ii] -
@@ -611,12 +651,12 @@ static errno_t compute_function()
     // AVERAGE -> imWFS3
     // ===========================================
 
-    if (data.fpsptr->parray[fpi_compWFSsigav].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_compWFSsigav].fpflag & FPFLAG_ONOFF)
     {
         data.image[ID_imWFS3].md[0].write = 1;
         float tave_gain                   = *WFStaveragegain;
         float tave_mult                   = *WFStaveragemult;
-        for (uint64_t ii = 0; ii < sizeWFS; ii++)
+        for(uint64_t ii = 0; ii < sizeWFS; ii++)
         {
             data.image[ID_imWFS3].array.F[ii] =
                 tave_mult *
@@ -630,16 +670,16 @@ static errno_t compute_function()
     // UPDATE wfsrefc
     // ===========================================
 
-    if (data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
+    if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
     {
         data.image[IDwfsrefc].md[0].write = 1;
         float refcgain                    = *WFSrefcgain;
         float refcmult                    = *WFSrefcmult;
-        if (IDwfsref != -1)
+        if(IDwfsref != -1)
         {
             // refcmult is pulling refc toward ref-wfszpo
             // if refcmult = 1, then refc=ref
-            for (uint64_t ii = 0; ii < sizeWFS; ii++)
+            for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
                 data.image[IDwfsrefc].array.F[ii] =
                     refcmult * (data.image[IDwfsref].array.F[ii] +
@@ -647,7 +687,7 @@ static errno_t compute_function()
                     (1.0 - refcmult) * data.image[IDwfsrefc].array.F[ii];
             }
         }
-        for (uint64_t ii = 0; ii < sizeWFS; ii++)
+        for(uint64_t ii = 0; ii < sizeWFS; ii++)
         {
             // refcgain is zeroing residual
             //
@@ -667,9 +707,9 @@ static errno_t compute_function()
 
 INSERT_STD_FPSCLIfunctions
 
-    // Register function in CLI
-    errno_t
-    CLIADDCMD_AOloopControl_IOtools__acquireWFSim()
+// Register function in CLI
+errno_t
+CLIADDCMD_AOloopControl_IOtools__acquireWFSim()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;

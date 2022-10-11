@@ -25,8 +25,10 @@ extern DATA data;
 
 int_fast8_t AOloopControl_ARPFon()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[LOOPNUMBER].ARPFon = 1;
     AOloopControl_perfTest_showparams(LOOPNUMBER);
@@ -36,8 +38,10 @@ int_fast8_t AOloopControl_ARPFon()
 
 int_fast8_t AOloopControl_ARPFoff()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[LOOPNUMBER].ARPFon = 0;
     AOloopControl_perfTest_showparams(LOOPNUMBER);

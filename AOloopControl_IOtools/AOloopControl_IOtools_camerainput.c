@@ -76,12 +76,12 @@ extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 //
 errno_t
 AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
-                                                        const char *dark_name,
-                                                        const char *out_name,
-                                                        long        size_x,
-                                                        long        size_y,
-                                                        long        xstart,
-                                                        long        ystart)
+        const char *dark_name,
+        const char *out_name,
+        long        size_x,
+        long        size_y,
+        long        xstart,
+        long        ystart)
 {
     long               iiin, jjin, iiout, jjout;
     imageID            IDin, IDout, IDdark;
@@ -93,7 +93,7 @@ AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
     uint64_t           sizeoutxy;
 
     sizeout = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-    if (sizeout == NULL)
+    if(sizeout == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -107,9 +107,9 @@ AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
 
     // Check if there is a mask
     IDmask = image_ID("csmask");
-    if (IDmask != -1)
-        if ((data.image[IDmask].md[0].size[0] != size_x) ||
-            (data.image[IDmask].md[0].size[1] != size_y))
+    if(IDmask != -1)
+        if((data.image[IDmask].md[0].size[0] != size_x) ||
+                (data.image[IDmask].md[0].size[1] != size_y))
         {
             printf("ERROR: csmask has wrong size\n");
             exit(EXIT_FAILURE);
@@ -118,17 +118,17 @@ AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
     // Check dark
     IDdark = image_ID(dark_name);
 
-    if (IDdark != -1)
+    if(IDdark != -1)
     {
-        if ((data.image[IDdark].md[0].size[0] !=
-             data.image[IDin].md[0].size[0]) ||
-            (data.image[IDdark].md[0].size[1] !=
-             data.image[IDin].md[0].size[1]))
+        if((data.image[IDdark].md[0].size[0] !=
+                data.image[IDin].md[0].size[0]) ||
+                (data.image[IDdark].md[0].size[1] !=
+                 data.image[IDin].md[0].size[1]))
         {
             printf("ERROR: csmask has wrong size\n");
             exit(EXIT_FAILURE);
         }
-        if (data.image[IDdark].md[0].datatype != _DATATYPE_FLOAT)
+        if(data.image[IDdark].md[0].datatype != _DATATYPE_FLOAT)
         {
             printf("ERROR: csmask has wrong type\n");
             exit(EXIT_FAILURE);
@@ -145,146 +145,146 @@ AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
 
     cnt0 = -1;
 
-    switch (datatype)
+    switch(datatype)
     {
-    case _DATATYPE_UINT16:
-        while (1)
-        {
-            usleep(10); // OK FOR NOW (NOT USED BY FAST WFS)
-            if (data.image[IDin].md[0].cnt0 != cnt0)
+        case _DATATYPE_UINT16:
+            while(1)
             {
-                data.image[IDout].md[0].write = 1;
-                cnt0                          = data.image[IDin].md[0].cnt0;
-                if (datatypeout == _DATATYPE_UINT16)
+                usleep(10); // OK FOR NOW (NOT USED BY FAST WFS)
+                if(data.image[IDin].md[0].cnt0 != cnt0)
                 {
-                    for (iiout = 0; iiout < size_x; iiout++)
-                        for (jjout = 0; jjout < size_y; jjout++)
-                        {
-                            iiin = xstart + iiout;
-                            jjin = ystart + jjout;
-                            data.image[IDout]
-                                .array.UI16[jjout * size_x + iiout] =
-                                data.image[IDin].array.UI16
-                                    [jjin * data.image[IDin].md[0].size[0] +
-                                     iiin];
-                        }
-                    if (IDmask != -1)
-                        for (uint64_t ii = 0; ii < sizeoutxy; ii++)
-                        {
-                            data.image[IDout].array.UI16[ii] *=
-                                (int) data.image[IDmask].array.F[ii];
-                        }
-                }
-                else // FLOAT
-                {
-                    if (IDdark == -1)
+                    data.image[IDout].md[0].write = 1;
+                    cnt0                          = data.image[IDin].md[0].cnt0;
+                    if(datatypeout == _DATATYPE_UINT16)
                     {
-                        for (iiout = 0; iiout < size_x; iiout++)
-                            for (jjout = 0; jjout < size_y; jjout++)
+                        for(iiout = 0; iiout < size_x; iiout++)
+                            for(jjout = 0; jjout < size_y; jjout++)
                             {
                                 iiin = xstart + iiout;
                                 jjin = ystart + jjout;
                                 data.image[IDout]
-                                    .array.F[jjout * size_x + iiout] =
+                                .array.UI16[jjout * size_x + iiout] =
                                     data.image[IDin].array.UI16
+                                    [jjin * data.image[IDin].md[0].size[0] +
+                                          iiin];
+                            }
+                        if(IDmask != -1)
+                            for(uint64_t ii = 0; ii < sizeoutxy; ii++)
+                            {
+                                data.image[IDout].array.UI16[ii] *=
+                                    (int) data.image[IDmask].array.F[ii];
+                            }
+                    }
+                    else // FLOAT
+                    {
+                        if(IDdark == -1)
+                        {
+                            for(iiout = 0; iiout < size_x; iiout++)
+                                for(jjout = 0; jjout < size_y; jjout++)
+                                {
+                                    iiin = xstart + iiout;
+                                    jjin = ystart + jjout;
+                                    data.image[IDout]
+                                    .array.F[jjout * size_x + iiout] =
+                                        data.image[IDin].array.UI16
                                         [jjin * data.image[IDin].md[0].size[0] +
-                                         iiin];
+                                              iiin];
+                                }
+                        }
+                        else
+                        {
+                            for(iiout = 0; iiout < size_x; iiout++)
+                                for(jjout = 0; jjout < size_y; jjout++)
+                                {
+                                    iiin = xstart + iiout;
+                                    jjin = ystart + jjout;
+                                    data.image[IDout]
+                                    .array.F[jjout * size_x + iiout] =
+                                        1.0 *
+                                        data.image[IDin]
+                                        .array.UI16[jjin * data.image[IDin]
+                                                         .md[0]
+                                                         .size[0] +
+                                                         iiin] -
+                                        data.image[IDdark].array.F
+                                        [jjin *
+                                              data.image[IDdark].md[0].size[0] +
+                                              iiin];
+                                }
+                        }
+
+                        if(IDmask != -1)
+                            for(uint64_t ii = 0; ii < sizeoutxy; ii++)
+                            {
+                                data.image[IDout].array.F[ii] *=
+                                    data.image[IDmask].array.F[ii];
+                            }
+                    }
+
+                    data.image[IDout].md[0].cnt0  = cnt0;
+                    data.image[IDout].md[0].write = 0;
+                    COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
+                }
+            }
+            break;
+        case _DATATYPE_FLOAT:
+            while(1)
+            {
+                usleep(10); // OK FOR NOW (NOT USED BY FAST WFS)
+                if(data.image[IDin].md[0].cnt0 != cnt0)
+                {
+                    data.image[IDout].md[0].write = 1;
+                    cnt0                          = data.image[IDin].md[0].cnt0;
+                    if(IDdark == -1)
+                    {
+                        for(iiout = 0; iiout < size_x; iiout++)
+                            for(jjout = 0; jjout < size_y; jjout++)
+                            {
+                                iiin = xstart + iiout;
+                                jjin = ystart + jjout;
+                                data.image[IDout].array.F[jjout * size_x + iiout] =
+                                    data.image[IDin]
+                                    .array
+                                    .F[jjin * data.image[IDin].md[0].size[0] +
+                                            iiin];
                             }
                     }
                     else
                     {
-                        for (iiout = 0; iiout < size_x; iiout++)
-                            for (jjout = 0; jjout < size_y; jjout++)
+                        for(iiout = 0; iiout < size_x; iiout++)
+                            for(jjout = 0; jjout < size_y; jjout++)
                             {
                                 iiin = xstart + iiout;
                                 jjin = ystart + jjout;
-                                data.image[IDout]
-                                    .array.F[jjout * size_x + iiout] =
-                                    1.0 *
-                                        data.image[IDin]
-                                            .array.UI16[jjin * data.image[IDin]
-                                                                   .md[0]
-                                                                   .size[0] +
-                                                        iiin] -
-                                    data.image[IDdark].array.F
-                                        [jjin *
-                                             data.image[IDdark].md[0].size[0] +
-                                         iiin];
+                                data.image[IDout].array.F[jjout * size_x + iiout] =
+                                    data.image[IDin]
+                                    .array
+                                    .F[jjin * data.image[IDin].md[0].size[0] +
+                                            iiin] -
+                                    data.image[IDdark]
+                                    .array
+                                    .F[jjin * data.image[IDdark].md[0].size[0] +
+                                            iiin];
                             }
                     }
 
-                    if (IDmask != -1)
-                        for (uint64_t ii = 0; ii < sizeoutxy; ii++)
+                    if(IDmask != -1)
+                        for(uint64_t ii = 0; ii < sizeoutxy; ii++)
                         {
                             data.image[IDout].array.F[ii] *=
                                 data.image[IDmask].array.F[ii];
                         }
-                }
 
-                data.image[IDout].md[0].cnt0  = cnt0;
-                data.image[IDout].md[0].write = 0;
-                COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
+                    data.image[IDout].md[0].cnt0  = cnt0;
+                    data.image[IDout].md[0].write = 0;
+                    COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
+                }
             }
-        }
-        break;
-    case _DATATYPE_FLOAT:
-        while (1)
-        {
-            usleep(10); // OK FOR NOW (NOT USED BY FAST WFS)
-            if (data.image[IDin].md[0].cnt0 != cnt0)
-            {
-                data.image[IDout].md[0].write = 1;
-                cnt0                          = data.image[IDin].md[0].cnt0;
-                if (IDdark == -1)
-                {
-                    for (iiout = 0; iiout < size_x; iiout++)
-                        for (jjout = 0; jjout < size_y; jjout++)
-                        {
-                            iiin = xstart + iiout;
-                            jjin = ystart + jjout;
-                            data.image[IDout].array.F[jjout * size_x + iiout] =
-                                data.image[IDin]
-                                    .array
-                                    .F[jjin * data.image[IDin].md[0].size[0] +
-                                       iiin];
-                        }
-                }
-                else
-                {
-                    for (iiout = 0; iiout < size_x; iiout++)
-                        for (jjout = 0; jjout < size_y; jjout++)
-                        {
-                            iiin = xstart + iiout;
-                            jjin = ystart + jjout;
-                            data.image[IDout].array.F[jjout * size_x + iiout] =
-                                data.image[IDin]
-                                    .array
-                                    .F[jjin * data.image[IDin].md[0].size[0] +
-                                       iiin] -
-                                data.image[IDdark]
-                                    .array
-                                    .F[jjin * data.image[IDdark].md[0].size[0] +
-                                       iiin];
-                        }
-                }
-
-                if (IDmask != -1)
-                    for (uint64_t ii = 0; ii < sizeoutxy; ii++)
-                    {
-                        data.image[IDout].array.F[ii] *=
-                            data.image[IDmask].array.F[ii];
-                    }
-
-                data.image[IDout].md[0].cnt0  = cnt0;
-                data.image[IDout].md[0].write = 0;
-                COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
-            }
-        }
-        break;
-    default:
-        printf("ERROR: DATA TYPE NOT SUPPORTED\n");
-        exit(0);
-        break;
+            break;
+        default:
+            printf("ERROR: DATA TYPE NOT SUPPORTED\n");
+            exit(0);
+            break;
     }
     free(sizeout);
 
@@ -311,10 +311,10 @@ static void *compute_function_imtotal(__attribute__((unused)) void *ptr)
     // CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__,
     // __func__, __LINE__, commentstring);
 
-    if (aoloopcontrol_var.aoconfID_looptiming == -1)
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
         // LOOPiteration is written in cnt1 of loop timing array
-        if (sprintf(imname, "aol%ld_looptiming", LOOPNUMBER) < 1)
+        if(sprintf(imname, "aol%ld_looptiming", LOOPNUMBER) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -330,7 +330,7 @@ static void *compute_function_imtotal(__attribute__((unused)) void *ptr)
     nelem = data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].size[0] *
             data.image[aoloopcontrol_var.aoconfID_imWFS0].md[0].size[1];
 
-    for (;;)
+    for(;;)
     {
 #ifdef _PRINT_TEST
         printf("TEST - Waiting for semaphore\n");
@@ -350,9 +350,9 @@ static void *compute_function_imtotal(__attribute__((unused)) void *ptr)
 
         data.image[aoloopcontrol_var.aoconfID_imWFS0tot].md[0].write = 1;
         IMTOTAL                                                      = 0.0;
-        if (aoloopcontrol_var.aoconfID_wfsmask != -1)
+        if(aoloopcontrol_var.aoconfID_wfsmask != -1)
         {
-            for (ii = 0; ii < nelem; ii++)
+            for(ii = 0; ii < nelem; ii++)
             {
                 IMTOTAL +=
                     data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii] *
@@ -361,7 +361,7 @@ static void *compute_function_imtotal(__attribute__((unused)) void *ptr)
         }
         else
         {
-            for (ii = 0; ii < nelem; ii++)
+            for(ii = 0; ii < nelem; ii++)
             {
                 IMTOTAL +=
                     data.image[aoloopcontrol_var.aoconfID_imWFS0].array.F[ii];
@@ -402,7 +402,7 @@ static void *compute_function_dark_subtract(void *ptr)
     char WFSname[100];
     sprintf(WFSname, "aol%ld_wfsim", LOOPNUMBER);
     long ID_wfsim = read_sharedmem_image(WFSname);
-    if (ID_wfsim == -1)
+    if(ID_wfsim == -1)
     {
         printf("ERROR: cannot connect to WFS stream\n");
         exit(0);
@@ -414,7 +414,7 @@ static void *compute_function_dark_subtract(void *ptr)
     char sname[100];
     sprintf(sname, "aol%ld_imWFS0", LOOPNUMBER);
     long ID_imWFS0 = read_sharedmem_image(sname);
-    if (ID_imWFS0 == -1)
+    if(ID_imWFS0 == -1)
     {
         printf("ERROR: cannot connect to WFS stream");
         exit(0);
@@ -428,9 +428,9 @@ static void *compute_function_dark_subtract(void *ptr)
     index       = (long *) ptr;
     threadindex = *index;
 
-    iistart = (long) ((threadindex) *nelem / COMPUTE_DARK_SUBTRACT_NBTHREADS);
+    iistart = (long)((threadindex) * nelem / COMPUTE_DARK_SUBTRACT_NBTHREADS);
     iiend =
-        (long) ((threadindex + 1) * nelem / COMPUTE_DARK_SUBTRACT_NBTHREADS);
+        (long)((threadindex + 1) * nelem / COMPUTE_DARK_SUBTRACT_NBTHREADS);
 
     // LOG function / process start
     // int logfunc_level = 0;
@@ -440,48 +440,48 @@ static void *compute_function_dark_subtract(void *ptr)
     // CORE_logFunctionCall( logfunc_level, logfunc_level_max, 0, __FILE__,
     // __func__, __LINE__, commentstring);
 
-    while (1)
+    while(1)
     {
         sem_wait(&AOLCOMPUTE_DARK_SUBTRACT_sem_name[threadindex]);
 
-        switch (WFSatype)
+        switch(WFSatype)
         {
-        case _DATATYPE_UINT16:
-            for (ii = iistart; ii < iiend; ii++)
-            {
-                data.image[ID_imWFS0].array.F[ii] =
-                    ((float) arrayutmp[ii]) -
-                    data.image[Average_cam_frames_IDdark].array.F[ii];
-            }
-            break;
-        case _DATATYPE_INT16:
-            for (ii = iistart; ii < iiend; ii++)
-            {
-                data.image[ID_imWFS0].array.F[ii] =
-                    ((float) arraystmp[ii]) -
-                    data.image[Average_cam_frames_IDdark].array.F[ii];
-            }
-            break;
-        case _DATATYPE_FLOAT:
-            for (ii = iistart; ii < iiend; ii++)
-            {
-                data.image[ID_imWFS0].array.F[ii] =
-                    ((float) arrayftmp[ii]) -
-                    data.image[Average_cam_frames_IDdark].array.F[ii];
-            }
-            break;
-        default:
-            printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                   __FILE__,
-                   __LINE__);
-            printf("datatype = %d\n", aoloopcontrol_var.WFSatype);
-            exit(0);
-            break;
+            case _DATATYPE_UINT16:
+                for(ii = iistart; ii < iiend; ii++)
+                {
+                    data.image[ID_imWFS0].array.F[ii] =
+                        ((float) arrayutmp[ii]) -
+                        data.image[Average_cam_frames_IDdark].array.F[ii];
+                }
+                break;
+            case _DATATYPE_INT16:
+                for(ii = iistart; ii < iiend; ii++)
+                {
+                    data.image[ID_imWFS0].array.F[ii] =
+                        ((float) arraystmp[ii]) -
+                        data.image[Average_cam_frames_IDdark].array.F[ii];
+                }
+                break;
+            case _DATATYPE_FLOAT:
+                for(ii = iistart; ii < iiend; ii++)
+                {
+                    data.image[ID_imWFS0].array.F[ii] =
+                        ((float) arrayftmp[ii]) -
+                        data.image[Average_cam_frames_IDdark].array.F[ii];
+                }
+                break;
+            default:
+                printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                       __FILE__,
+                       __LINE__);
+                printf("datatype = %d\n", aoloopcontrol_var.WFSatype);
+                exit(0);
+                break;
         }
 
         sem_getvalue(&AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[threadindex],
                      &semval);
-        if (semval < SEMAPHORE_MAXVAL)
+        if(semval < SEMAPHORE_MAXVAL)
         {
             sem_post(&AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[threadindex]);
         }
@@ -603,9 +603,9 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF()
 
     FPS_CONFLOOP_START // macro in function_parameter.h
 
-        FPS_CONFLOOP_END // macro in function_parameter.h
+    FPS_CONFLOOP_END // macro in function_parameter.h
 
-        return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }
 
 errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
@@ -614,12 +614,12 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
     // CONNECT TO FPS
     // ===========================
     /*int SMfd = -1;
-  FUNCTION_PARAMETER_STRUCT fps;
+    FUNCTION_PARAMETER_STRUCT fps;
 
-  if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) ==
-  -1) { printf("ERROR: fps \"%s\" does not exist -> running without FPS
-  interface\n", fpsname); return RETURN_FAILURE;
-  }*/
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) ==
+    -1) { printf("ERROR: fps \"%s\" does not exist -> running without FPS
+    interface\n", fpsname); return RETURN_FAILURE;
+    }*/
 
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
@@ -706,7 +706,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
     char WFSname[100];
     sprintf(WFSname, "aol%ld_wfsim", loop);
     long ID_wfsim = read_sharedmem_image(WFSname);
-    if (ID_wfsim == -1)
+    if(ID_wfsim == -1)
     {
         processinfo_error(processinfo, "ERROR: no WFS input");
         return RETURN_FAILURE;
@@ -717,64 +717,64 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
     uint8_t  WFSatype = data.image[ID_wfsim].md[0].datatype;
 
     char name[200];
-    if (sprintf(name, "aol%ld_imWFS0", loop) < 1)
+    if(sprintf(name, "aol%ld_imWFS0", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
     long ID_imWFS0 = AOloopControl_IOtools_2Dloadcreate_shmim(name,
-                                                              " ",
-                                                              sizexWFS,
-                                                              sizeyWFS,
-                                                              0.0);
-    if (sprintf(name, "aol%ld_imWFS1", loop) < 1)
+                     " ",
+                     sizexWFS,
+                     sizeyWFS,
+                     0.0);
+    if(sprintf(name, "aol%ld_imWFS1", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
     long ID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name,
-                                                              " ",
-                                                              sizexWFS,
-                                                              sizeyWFS,
-                                                              0.0);
+                     " ",
+                     sizexWFS,
+                     sizeyWFS,
+                     0.0);
 
     int wfsim_semwaitindex =
         ImageStreamIO_getsemwaitindex(&data.image[ID_wfsim], *semindex);
-    if (wfsim_semwaitindex > -1)
+    if(wfsim_semwaitindex > -1)
     {
         *semindex = wfsim_semwaitindex;
     }
 
     // initialize camera averaging arrays if not already done
-    if (WFSatype == _DATATYPE_FLOAT)
+    if(WFSatype == _DATATYPE_FLOAT)
     {
         arrayftmp = (float *) malloc(sizeof(float) * sizeWFS);
-        if (arrayftmp == NULL)
+        if(arrayftmp == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
     }
 
-    if (WFSatype == _DATATYPE_UINT16)
+    if(WFSatype == _DATATYPE_UINT16)
     {
         arrayutmp = (unsigned short *) malloc(sizeof(unsigned short) * sizeWFS);
-        if (arrayutmp == NULL)
+        if(arrayutmp == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
     }
 
-    if (WFSatype == _DATATYPE_INT16)
+    if(WFSatype == _DATATYPE_INT16)
     {
         arraystmp = (signed short *) malloc(sizeof(signed short) * sizeWFS);
-        if (arraystmp == NULL)
+        if(arraystmp == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
     }
 
-    if (sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
+    if(sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -789,7 +789,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
            *semindex,
            data.image[ID_wfsim].md[0].name,
            semval);
-    for (int i = 0; i < semval; i++)
+    for(int i = 0; i < semval; i++)
     {
         sem_trywait(data.image[ID_wfsim].semptr[*semindex]);
     }
@@ -810,7 +810,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
     // unsigned long long WFScnt  = 0;
     int slice;
 
-    while (loopOK == 1)
+    while(loopOK == 1)
     {
         loopOK = processinfo_loopstep(processinfo);
         processinfo_waitoninputstream(processinfo);
@@ -863,10 +863,10 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
          wfsim_semwaitindex);
                   }
               }
-      */
+        */
 
         processinfo_exec_start(processinfo);
-        if (processinfo_compute_status(processinfo) == 1)
+        if(processinfo_compute_status(processinfo) == 1)
         {
 
             // ===========================================
@@ -874,10 +874,10 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
             // ===========================================
 
             slice = 0;
-            if (data.image[ID_wfsim].md[0].naxis == 3) // ring buffer
+            if(data.image[ID_wfsim].md[0].naxis == 3)  // ring buffer
             {
                 slice = data.image[ID_wfsim].md[0].cnt1;
-                if (slice == -1)
+                if(slice == -1)
                 {
                     slice = data.image[ID_wfsim].md[0].size[2];
                 }
@@ -885,31 +885,31 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
 
             DEBUG_TRACEPOINT(" ");
 
-            switch (WFSatype)
+            switch(WFSatype)
             {
 
-            case _DATATYPE_FLOAT:
-                ptrv = (char *) data.image[ID_wfsim].array.F;
-                ptrv += sizeof(float) * slice * sizeWFS;
-                memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
-                break;
+                case _DATATYPE_FLOAT:
+                    ptrv = (char *) data.image[ID_wfsim].array.F;
+                    ptrv += sizeof(float) * slice * sizeWFS;
+                    memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
+                    break;
 
-            case _DATATYPE_UINT16:
-                ptrv = (char *) data.image[ID_wfsim].array.UI16;
-                ptrv += sizeof(unsigned short) * slice * sizeWFS;
-                memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
-                break;
+                case _DATATYPE_UINT16:
+                    ptrv = (char *) data.image[ID_wfsim].array.UI16;
+                    ptrv += sizeof(unsigned short) * slice * sizeWFS;
+                    memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
+                    break;
 
-            case _DATATYPE_INT16:
-                ptrv = (char *) data.image[ID_wfsim].array.SI16;
-                ptrv += sizeof(signed short) * slice * sizeWFS;
-                memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
-                break;
+                case _DATATYPE_INT16:
+                    ptrv = (char *) data.image[ID_wfsim].array.SI16;
+                    ptrv += sizeof(signed short) * slice * sizeWFS;
+                    memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
+                    break;
 
-            default:
-                printf("ERROR: DATA TYPE NOT SUPPORTED\n");
-                exit(0);
-                break;
+                default:
+                    printf("ERROR: DATA TYPE NOT SUPPORTED\n");
+                    exit(0);
+                    break;
             }
 
             // WFScnt = data.image[ID_wfsim].md[0].cnt0;
@@ -918,89 +918,89 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
             // SUBTRACT DARK -> imWFS0
             // ===========================================
             DEBUG_TRACEPOINT(" ");
-            if ((*FPFLAG_COMPUTE_DARKSUBTRACT) & FPFLAG_ONOFF)
+            if((*FPFLAG_COMPUTE_DARKSUBTRACT) & FPFLAG_ONOFF)
             {
                 data.image[ID_imWFS0].md[0].write = 1;
                 DEBUG_TRACEPOINT(" ");
-                switch (WFSatype)
+                switch(WFSatype)
                 {
 
-                case _DATATYPE_UINT16:
-                    if (Average_cam_frames_IDdark == -1)
-                    {
-                        for (uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                             ii++)
+                    case _DATATYPE_UINT16:
+                        if(Average_cam_frames_IDdark == -1)
                         {
-                            data.image[ID_imWFS0].array.F[ii] =
-                                ((float) arrayutmp[ii]);
+                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                    ii++)
+                            {
+                                data.image[ID_imWFS0].array.F[ii] =
+                                    ((float) arrayutmp[ii]);
+                            }
                         }
-                    }
-                    else
-                    {
-                        for (uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                             ii++)
+                        else
                         {
-                            data.image[ID_imWFS0].array.F[ii] =
-                                ((float) arrayutmp[ii]) -
-                                data.image[Average_cam_frames_IDdark]
+                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                    ii++)
+                            {
+                                data.image[ID_imWFS0].array.F[ii] =
+                                    ((float) arrayutmp[ii]) -
+                                    data.image[Average_cam_frames_IDdark]
                                     .array.F[ii];
+                            }
                         }
-                    }
-                    break;
+                        break;
 
-                case _DATATYPE_INT16:
+                    case _DATATYPE_INT16:
 
-                    if (Average_cam_frames_IDdark == -1)
-                    {
-                        for (uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                             ii++)
+                        if(Average_cam_frames_IDdark == -1)
                         {
-                            data.image[ID_imWFS0].array.F[ii] =
-                                ((float) arraystmp[ii]);
+                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                    ii++)
+                            {
+                                data.image[ID_imWFS0].array.F[ii] =
+                                    ((float) arraystmp[ii]);
+                            }
                         }
-                    }
-                    else
-                    {
-                        for (uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                             ii++)
+                        else
                         {
-                            data.image[ID_imWFS0].array.F[ii] =
-                                ((float) arraystmp[ii]) -
-                                data.image[Average_cam_frames_IDdark]
+                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                    ii++)
+                            {
+                                data.image[ID_imWFS0].array.F[ii] =
+                                    ((float) arraystmp[ii]) -
+                                    data.image[Average_cam_frames_IDdark]
                                     .array.F[ii];
+                            }
                         }
-                    }
-                    break;
+                        break;
 
-                case _DATATYPE_FLOAT:
-                    if (Average_cam_frames_IDdark == -1)
-                    {
-                        memcpy(data.image[ID_imWFS0].array.F,
-                               arrayftmp,
-                               sizeof(float) * Average_cam_frames_nelem);
-                    }
-                    else
-                    {
-                        for (uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                             ii++)
+                    case _DATATYPE_FLOAT:
+                        if(Average_cam_frames_IDdark == -1)
                         {
-                            data.image[ID_imWFS0].array.F[ii] =
-                                arrayftmp[ii] -
-                                data.image[Average_cam_frames_IDdark]
-                                    .array.F[ii];
+                            memcpy(data.image[ID_imWFS0].array.F,
+                                   arrayftmp,
+                                   sizeof(float) * Average_cam_frames_nelem);
                         }
-                    }
-                    break;
+                        else
+                        {
+                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                    ii++)
+                            {
+                                data.image[ID_imWFS0].array.F[ii] =
+                                    arrayftmp[ii] -
+                                    data.image[Average_cam_frames_IDdark]
+                                    .array.F[ii];
+                            }
+                        }
+                        break;
 
-                default:
-                    printf(
-                        "ERROR: WFS data type not recognized\n File %s, "
-                        "line %d\n",
-                        __FILE__,
-                        __LINE__);
-                    printf("datatype = %d\n", WFSatype);
-                    exit(0);
-                    break;
+                    default:
+                        printf(
+                            "ERROR: WFS data type not recognized\n File %s, "
+                            "line %d\n",
+                            __FILE__,
+                            __LINE__);
+                        printf("datatype = %d\n", WFSatype);
+                        exit(0);
+                        break;
                 }
                 processinfo_update_output_stream(processinfo, ID_imWFS0);
                 // data.image[ID_imWFS0].md[0].cnt1 =
@@ -1016,24 +1016,24 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
             // COMPUTE TOTAL -> WFSfluxtotal
             // ===========================================
             double IMTOTAL;
-            if ((*FPFLAG_COMPUTE_IMTOTAL) & FPFLAG_ONOFF)
+            if((*FPFLAG_COMPUTE_IMTOTAL) & FPFLAG_ONOFF)
             {
                 uint64_t nelem = data.image[ID_imWFS0].md[0].size[0] *
                                  data.image[ID_imWFS0].md[0].size[1];
                 IMTOTAL = 0.0;
-                if (aoloopcontrol_var.aoconfID_wfsmask != -1)
+                if(aoloopcontrol_var.aoconfID_wfsmask != -1)
                 {
-                    for (uint64_t ii = 0; ii < nelem; ii++)
+                    for(uint64_t ii = 0; ii < nelem; ii++)
                     {
                         IMTOTAL +=
                             data.image[ID_imWFS0].array.F[ii] *
                             data.image[aoloopcontrol_var.aoconfID_wfsmask]
-                                .array.F[ii];
+                            .array.F[ii];
                     }
                 }
                 else
                 {
-                    for (uint64_t ii = 0; ii < nelem; ii++)
+                    for(uint64_t ii = 0; ii < nelem; ii++)
                     {
                         IMTOTAL += data.image[ID_imWFS0].array.F[ii];
                     }
@@ -1050,7 +1050,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
             double totalinv;
             double normfloorcoeff;
 
-            if ((*FPFLAG_IMNORMALIZE) & FPFLAG_ONOFF)
+            if((*FPFLAG_IMNORMALIZE) & FPFLAG_ONOFF)
             {
                 DEBUG_TRACEPOINT(" ");
                 totalinv = 1.0 / (*WFSfluxtotal + *WFSnormfloor * sizeWFS);
@@ -1069,13 +1069,13 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
 
             *GPU_beta = -normfloorcoeff;
 
-            if ((*FPFLAG_COMPUTE_NORMWFSIM) &
-                FPFLAG_ONOFF) // normalize WFS image by totalinv
+            if((*FPFLAG_COMPUTE_NORMWFSIM) &
+                    FPFLAG_ONOFF) // normalize WFS image by totalinv
             {
 
                 data.image[ID_imWFS1].md[0].write = 1;
 
-                for (uint64_t ii = 0; ii < sizeWFS; ii++)
+                for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
                     data.image[ID_imWFS1].array.F[ii] =
                         data.image[ID_imWFS0].array.F[ii] * totalinv;
@@ -1107,17 +1107,17 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
     processinfo_cleanExit(processinfo);
     function_parameter_RUNexit(&fps);
 
-    if (WFSatype == _DATATYPE_FLOAT)
+    if(WFSatype == _DATATYPE_FLOAT)
     {
         free(arrayftmp);
     }
 
-    if (WFSatype == _DATATYPE_UINT16)
+    if(WFSatype == _DATATYPE_UINT16)
     {
         free(arrayutmp);
     }
 
-    if (WFSatype == _DATATYPE_INT16)
+    if(WFSatype == _DATATYPE_INT16)
     {
         free(arraystmp);
     }
@@ -1130,7 +1130,7 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop)
     char fpsname[200];
 
     long pindex = (long)
-        getpid(); // index used to differentiate multiple calls to function
+                  getpid(); // index used to differentiate multiple calls to function
     // if we don't have anything more informative, we use PID
 
     // int SMfd = -1;
@@ -1213,7 +1213,7 @@ Read_cam_frame(long                        loop,
     static long   imWaitTimeAvecnt0 = 1000;
     static double imWaitTimeAve     = 0.0;
 
-    if (RM == 0)
+    if(RM == 0)
     {
         semindex = 8;
     }
@@ -1240,13 +1240,13 @@ Read_cam_frame(long                        loop,
     DEBUG_TRACEPOINT(" ");
 
     // ======================= INITIALIZATION ========================
-    if (functionINIT == 0)
+    if(functionINIT == 0)
     {
         // connect to WFS image
         char WFSname[100];
         sprintf(WFSname, "aol%ld_wfsim", loop);
         ID_wfsim = read_sharedmem_image(WFSname);
-        if (ID_wfsim == -1)
+        if(ID_wfsim == -1)
         {
             printf("ERROR: cannot connect to WFS stream\n");
             exit(0);
@@ -1256,47 +1256,47 @@ Read_cam_frame(long                        loop,
         sizeWFS  = sizexWFS * sizeyWFS;
         WFSatype = data.image[ID_wfsim].md[0].datatype;
 
-        if (sprintf(name, "aol%ld_imWFS0", loop) < 1)
+        if(sprintf(name, "aol%ld_imWFS0", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
         ID_imWFS0 = AOloopControl_IOtools_2Dloadcreate_shmim(name,
-                                                             " ",
-                                                             sizexWFS,
-                                                             sizeyWFS,
-                                                             0.0);
+                    " ",
+                    sizexWFS,
+                    sizeyWFS,
+                    0.0);
 
-        if (wfsim_semwaitindex == -1)
+        if(wfsim_semwaitindex == -1)
         {
             wfsim_semwaitindex =
                 ImageStreamIO_getsemwaitindex(&data.image[ID_wfsim], semindex);
         }
-        if (wfsim_semwaitindex > -1)
+        if(wfsim_semwaitindex > -1)
         {
             semindex = wfsim_semwaitindex;
         }
 
         // initialize camera averaging arrays if not already done
         arrayftmp = (float *) malloc(sizeof(float) * sizeWFS);
-        if (arrayftmp == NULL)
+        if(arrayftmp == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
         arrayutmp = (unsigned short *) malloc(sizeof(unsigned short) * sizeWFS);
-        if (arrayutmp == NULL)
+        if(arrayutmp == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
         arraystmp = (signed short *) malloc(sizeof(signed short) * sizeWFS);
-        if (arraystmp == NULL)
+        if(arraystmp == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort();
         }
 
-        if (sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
+        if(sprintf(Average_cam_frames_dname, "aol%ld_wfsdark", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -1310,7 +1310,7 @@ Read_cam_frame(long                        loop,
                semindex,
                data.image[ID_wfsim].md[0].name,
                semval);
-        for (i = 0; i < semval; i++)
+        for(i = 0; i < semval; i++)
         {
             sem_trywait(data.image[ID_wfsim].semptr[semindex]);
         }
@@ -1331,7 +1331,7 @@ Read_cam_frame(long                        loop,
       }
       if(wfsim_semwaitindex>-1)
               semindex = wfsim_semwaitindex;
-  */
+    */
 
     printf("================== TEST POINT LINE %d\n", __LINE__);
     fflush(stdout);
@@ -1365,14 +1365,14 @@ Read_cam_frame(long                        loop,
 
     DEBUG_TRACEPOINT(" ");
 
-    if (InitSem == 1)
+    if(InitSem == 1)
     {
         sem_getvalue(data.image[ID_wfsim].semptr[wfsim_semwaitindex], &semval);
         printf("INITIALIZING SEMAPHORE %d   %s   (%d)\n",
                semindex,
                data.image[ID_wfsim].md[0].name,
                semval);
-        for (i = 0; i < semval; i++)
+        for(i = 0; i < semval; i++)
         {
             sem_trywait(data.image[ID_wfsim].semptr[wfsim_semwaitindex]);
         }
@@ -1388,13 +1388,13 @@ Read_cam_frame(long                        loop,
     printf("================== TEST POINT LINE %d\n", __LINE__);
     fflush(stdout);
 
-    if (RM == 0)
+    if(RM == 0)
     {
         //  AOconf[loop].AOtiminginfo.status = 20;  // 020: WAIT FOR IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiffv = timespec_diff_double(
-            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-            tnow);
+                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                     tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[24] = tdiffv;
     }
     else
@@ -1424,7 +1424,7 @@ Read_cam_frame(long                        loop,
     fflush(stdout);
 #endif
 
-    if (data.image[ID_wfsim].md[0].sem == 0) // don't use semaphore
+    if(data.image[ID_wfsim].md[0].sem == 0)  // don't use semaphore
     {
 #ifdef _PRINT_TEST
         printf("TEST - NOT USING SEMAPHORE\n");
@@ -1432,15 +1432,15 @@ Read_cam_frame(long                        loop,
 #endif
 
         // if not using semaphore, use counter to test if new WFS frame is ready
-        if (RM == 0)
-            while (WFScnt ==
-                   data.image[ID_wfsim].md[0].cnt0) // test if new frame exists
+        if(RM == 0)
+            while(WFScnt ==
+                    data.image[ID_wfsim].md[0].cnt0) // test if new frame exists
             {
                 usleep(5);
             }
         else
-            while (WFScntRM ==
-                   data.image[ID_wfsim].md[0].cnt0) // test if new frame exists
+            while(WFScntRM ==
+                    data.image[ID_wfsim].md[0].cnt0) // test if new frame exists
             {
                 usleep(5);
             }
@@ -1456,9 +1456,9 @@ Read_cam_frame(long                        loop,
         fflush(stdout);
 
         sem_getvalue(data.image[ID_wfsim].semptr[semindex], &semval);
-        if (semval > 0)
+        if(semval > 0)
         {
-            if (semval > 1)
+            if(semval > 1)
             {
                 // printf("\n\033[31;1m[%12ld] WARNING [%d] WFS SEMAPHORE already
                 // posted
@@ -1475,13 +1475,13 @@ Read_cam_frame(long                        loop,
         int rval;
         rval = ImageStreamIO_semwait(&data.image[ID_wfsim], wfsim_semwaitindex);
 
-        if (rval == -1)
+        if(rval == -1)
         {
             perror("sem_timedwait");
         }
 
         sem_getvalue(data.image[ID_wfsim].semptr[semindex], &semval);
-        for (i = 0; i < semval; i++)
+        for(i = 0; i < semval; i++)
         {
             //			printf("WARNING: [%d] sem_trywait on
             // ID_wfsim\n", (int) (semval - i)); 			fflush(stdout);
@@ -1505,8 +1505,8 @@ Read_cam_frame(long                        loop,
 
     DEBUG_TRACEPOINT(" ");
 
-    if (data.processinfo == 1)
-        if (data.pinfo->MeasureTiming == 1)
+    if(data.processinfo == 1)
+        if(data.pinfo->MeasureTiming == 1)
         {
             processinfo_exec_start(data.pinfo);
         }
@@ -1523,7 +1523,7 @@ Read_cam_frame(long                        loop,
     // arraystmp)
     // ***********************************************************************************************
 
-    if (RM == 0)
+    if(RM == 0)
     {
         clock_gettime(CLOCK_REALTIME, &tnow);
         aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_wfsim] =
@@ -1536,10 +1536,10 @@ Read_cam_frame(long                        loop,
     // AOconf[loop].AOtiminginfo.statusM = 0;
 
     slice = 0;
-    if (data.image[ID_wfsim].md[0].naxis == 3) // ring buffer
+    if(data.image[ID_wfsim].md[0].naxis == 3)  // ring buffer
     {
         slice = data.image[ID_wfsim].md[0].cnt1;
-        if (slice == -1)
+        if(slice == -1)
         {
             slice = data.image[ID_wfsim].md[0].size[2];
         }
@@ -1550,40 +1550,40 @@ Read_cam_frame(long                        loop,
 
     DEBUG_TRACEPOINT(" ");
 
-    switch (WFSatype)
+    switch(WFSatype)
     {
 
-    case _DATATYPE_FLOAT:
-        ptrv = (char *) data.image[ID_wfsim].array.F;
-        ptrv += sizeof(float) * slice * sizeWFS; // AOconf[loop].WFSim.sizeWFS;
-        memcpy(arrayftmp,
-               ptrv,
-               sizeof(float) * sizeWFS); // AOconf[loop].WFSim.sizeWFS);
-        break;
+        case _DATATYPE_FLOAT:
+            ptrv = (char *) data.image[ID_wfsim].array.F;
+            ptrv += sizeof(float) * slice * sizeWFS; // AOconf[loop].WFSim.sizeWFS;
+            memcpy(arrayftmp,
+                   ptrv,
+                   sizeof(float) * sizeWFS); // AOconf[loop].WFSim.sizeWFS);
+            break;
 
-    case _DATATYPE_UINT16:
-        ptrv = (char *) data.image[ID_wfsim].array.UI16;
-        ptrv += sizeof(unsigned short) * slice *
-                sizeWFS; // AOconf[loop].WFSim.sizeWFS;
-        memcpy(arrayutmp,
-               ptrv,
-               sizeof(unsigned short) *
+        case _DATATYPE_UINT16:
+            ptrv = (char *) data.image[ID_wfsim].array.UI16;
+            ptrv += sizeof(unsigned short) * slice *
+                    sizeWFS; // AOconf[loop].WFSim.sizeWFS;
+            memcpy(arrayutmp,
+                   ptrv,
+                   sizeof(unsigned short) *
                    sizeWFS); // AOconf[loop].WFSim.sizeWFS);
-        break;
+            break;
 
-    case _DATATYPE_INT16:
-        ptrv = (char *) data.image[ID_wfsim].array.SI16;
-        ptrv += sizeof(signed short) * slice *
-                sizeWFS; // AOconf[loop].WFSim.sizeWFS;
-        memcpy(arraystmp,
-               ptrv,
-               sizeof(signed short) * sizeWFS); // AOconf[loop].WFSim.sizeWFS);
-        break;
+        case _DATATYPE_INT16:
+            ptrv = (char *) data.image[ID_wfsim].array.SI16;
+            ptrv += sizeof(signed short) * slice *
+                    sizeWFS; // AOconf[loop].WFSim.sizeWFS;
+            memcpy(arraystmp,
+                   ptrv,
+                   sizeof(signed short) * sizeWFS); // AOconf[loop].WFSim.sizeWFS);
+            break;
 
-    default:
-        printf("ERROR: DATA TYPE NOT SUPPORTED\n");
-        exit(0);
-        break;
+        default:
+            printf("ERROR: DATA TYPE NOT SUPPORTED\n");
+            exit(0);
+            break;
     }
 
     //	printf("WFS size = %ld\n", AOconf[loop].WFSim.sizeWFS);
@@ -1592,7 +1592,7 @@ Read_cam_frame(long                        loop,
     printf("================== TEST POINT LINE %d\n", __LINE__);
     fflush(stdout);
 
-    if (RM == 0)
+    if(RM == 0)
     {
         WFScnt = data.image[ID_wfsim].md[0].cnt0;
     }
@@ -1614,13 +1614,13 @@ Read_cam_frame(long                        loop,
     // THIS IS THE STARTING POINT FOR THE AO LOOP TIMING
     //
     // ===================================================================
-    if (RM == 0) // some timing work
+    if(RM == 0)  // some timing work
     {
         AOconf[loop].AOtiminginfo.status = 1; // 3->001: DARK SUBTRACT
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiffv = timespec_diff_double(
-            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-            tnow);
+                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                     tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[0] = tdiffv;
 
         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].write = 1;
@@ -1647,8 +1647,8 @@ Read_cam_frame(long                        loop,
     // output is imWFS0 (dark subtracted) and imWFS1 (normalized)
     // ***********************************************************************************************
 
-    if ((loop == 0) ||
-        (RM == 1)) // single thread, in CPU  //WHY do CPU-based if loop=0 ?
+    if((loop == 0) ||
+            (RM == 1)) // single thread, in CPU  //WHY do CPU-based if loop=0 ?
     {
         printf("================== TEST POINT LINE %d\n", __LINE__);
         fflush(stdout);
@@ -1661,118 +1661,118 @@ Read_cam_frame(long                        loop,
         fflush(stdout);
 #endif
 
-        switch (WFSatype)
+        switch(WFSatype)
         {
 
-        case _DATATYPE_UINT16:
-            printf("================== TEST POINT LINE %d\n", __LINE__);
-            fflush(stdout);
-            if (Average_cam_frames_IDdark == -1)
-            {
-                for (uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+            case _DATATYPE_UINT16:
+                printf("================== TEST POINT LINE %d\n", __LINE__);
+                fflush(stdout);
+                if(Average_cam_frames_IDdark == -1)
                 {
-                    data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
+                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
+                    }
                 }
-            }
-            else
-            {
-                //# ifdef _OPENMP
-                //            #pragma omp parallel num_threads(4) if
-                //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-                //        {
-                //# endif
-
-                //# ifdef _OPENMP
-                //            #pragma omp for
-                //# endif
-                for (uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+                else
                 {
-                    data.image[ID_imWFS0].array.F[ii] =
-                        ((float) arrayutmp[ii]) -
-                        data.image[Average_cam_frames_IDdark].array.F[ii];
-                }
-                //# ifdef _OPENMP
-                //        }
-                //# endif
-            }
-            break;
+                    //# ifdef _OPENMP
+                    //            #pragma omp parallel num_threads(4) if
+                    //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+                    //        {
+                    //# endif
 
-        case _DATATYPE_INT16:
-            printf("================== TEST POINT LINE %d\n", __LINE__);
-            fflush(stdout);
-            if (Average_cam_frames_IDdark == -1)
-            {
-                for (uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+                    //# ifdef _OPENMP
+                    //            #pragma omp for
+                    //# endif
+                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] =
+                            ((float) arrayutmp[ii]) -
+                            data.image[Average_cam_frames_IDdark].array.F[ii];
+                    }
+                    //# ifdef _OPENMP
+                    //        }
+                    //# endif
+                }
+                break;
+
+            case _DATATYPE_INT16:
+                printf("================== TEST POINT LINE %d\n", __LINE__);
+                fflush(stdout);
+                if(Average_cam_frames_IDdark == -1)
                 {
-                    data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
+                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
+                    }
                 }
-            }
-            else
-            {
-                //# ifdef _OPENMP
-                //            #pragma omp parallel num_threads(4) if
-                //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-                //        {
-                //# endif
-
-                //# ifdef _OPENMP
-                //            #pragma omp for
-                //# endif
-                for (uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+                else
                 {
-                    data.image[ID_imWFS0].array.F[ii] =
-                        ((float) arraystmp[ii]) -
-                        data.image[Average_cam_frames_IDdark].array.F[ii];
+                    //# ifdef _OPENMP
+                    //            #pragma omp parallel num_threads(4) if
+                    //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+                    //        {
+                    //# endif
+
+                    //# ifdef _OPENMP
+                    //            #pragma omp for
+                    //# endif
+                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] =
+                            ((float) arraystmp[ii]) -
+                            data.image[Average_cam_frames_IDdark].array.F[ii];
+                    }
+                    //# ifdef _OPENMP
+                    //        }
+                    //# endif
                 }
-                //# ifdef _OPENMP
-                //        }
-                //# endif
-            }
-            break;
+                break;
 
-        case _DATATYPE_FLOAT:
-            printf("================== TEST POINT LINE %d   ID dark = %ld\n",
-                   __LINE__,
-                   Average_cam_frames_IDdark);
-            fflush(stdout);
-            if (Average_cam_frames_IDdark == -1)
-            {
-                memcpy(data.image[ID_imWFS0].array.F,
-                       arrayftmp,
-                       sizeof(float) * Average_cam_frames_nelem);
-            }
-            else
-            {
-                //# ifdef _OPENMP
-                //            #pragma omp parallel num_threads(4) if
-                //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-                //        {
-                //# endif
-
-                //# ifdef _OPENMP
-                //            #pragma omp parallel for
-                //# endif
-                for (uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+            case _DATATYPE_FLOAT:
+                printf("================== TEST POINT LINE %d   ID dark = %ld\n",
+                       __LINE__,
+                       Average_cam_frames_IDdark);
+                fflush(stdout);
+                if(Average_cam_frames_IDdark == -1)
                 {
-                    data.image[ID_imWFS0].array.F[ii] =
-                        arrayftmp[ii] -
-                        data.image[Average_cam_frames_IDdark].array.F[ii];
+                    memcpy(data.image[ID_imWFS0].array.F,
+                           arrayftmp,
+                           sizeof(float) * Average_cam_frames_nelem);
                 }
-                //# ifdef _OPENMP
-                //        }
-                //# endif
-            }
-            break;
+                else
+                {
+                    //# ifdef _OPENMP
+                    //            #pragma omp parallel num_threads(4) if
+                    //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+                    //        {
+                    //# endif
 
-        default:
-            printf("================== TEST POINT LINE %d\n", __LINE__);
-            fflush(stdout);
-            printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                   __FILE__,
-                   __LINE__);
-            printf("datatype = %d\n", WFSatype);
-            exit(0);
-            break;
+                    //# ifdef _OPENMP
+                    //            #pragma omp parallel for
+                    //# endif
+                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] =
+                            arrayftmp[ii] -
+                            data.image[Average_cam_frames_IDdark].array.F[ii];
+                    }
+                    //# ifdef _OPENMP
+                    //        }
+                    //# endif
+                }
+                break;
+
+            default:
+                printf("================== TEST POINT LINE %d\n", __LINE__);
+                fflush(stdout);
+                printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                       __FILE__,
+                       __LINE__);
+                printf("datatype = %d\n", WFSatype);
+                exit(0);
+                break;
         }
 
         printf("================== TEST POINT LINE %d\n", __LINE__);
@@ -1785,11 +1785,11 @@ Read_cam_frame(long                        loop,
         clock_gettime(CLOCK_REALTIME, &tnow);
 
         /*for(s=0; s<data.image[ID_imWFS0].md[0].sem; s++)
-      {
+        {
           sem_getvalue(data.image[ID_imWFS0].semptr[s], &semval);
           if(semval<SEMAPHORE_MAXVAL)
               sem_post(data.image[ID_imWFS0].semptr[s]);
-      }*/
+        }*/
 
         printf("================== TEST POINT LINE %d\n", __LINE__);
         fflush(stdout);
@@ -1806,7 +1806,7 @@ Read_cam_frame(long                        loop,
         fflush(stdout);
 #endif
 
-        if (AOLCOMPUTE_DARK_SUBTRACT_THREADinit == 0)
+        if(AOLCOMPUTE_DARK_SUBTRACT_THREADinit == 0)
         {
 #ifdef _PRINT_TEST
             printf("TEST - DARK SUBTRACT - CREATE %d THREADS\n",
@@ -1816,7 +1816,7 @@ Read_cam_frame(long                        loop,
 
             ti = 0;
 
-            while (ti < COMPUTE_DARK_SUBTRACT_NBTHREADS)
+            while(ti < COMPUTE_DARK_SUBTRACT_NBTHREADS)
             {
                 pthread_create(&thread_dark_subtract[ti],
                                NULL,
@@ -1830,10 +1830,10 @@ Read_cam_frame(long                        loop,
             AOLCOMPUTE_DARK_SUBTRACT_THREADinit = 1;
         }
 
-        for (ti = 0; ti < COMPUTE_DARK_SUBTRACT_NBTHREADS; ti++)
+        for(ti = 0; ti < COMPUTE_DARK_SUBTRACT_NBTHREADS; ti++)
         {
             sem_getvalue(&AOLCOMPUTE_DARK_SUBTRACT_sem_name[ti], &sval0);
-            if (sval0 < SEMAPHORE_MAXVAL)
+            if(sval0 < SEMAPHORE_MAXVAL)
             {
                 sem_post(&AOLCOMPUTE_DARK_SUBTRACT_sem_name[ti]);
             }
@@ -1866,7 +1866,7 @@ Read_cam_frame(long                        loop,
     printf("================== TEST POINT LINE %d\n", __LINE__);
     fflush(stdout);
 
-    if (RM == 0)
+    if(RM == 0)
     {
         aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS0] =
             1; // there must only be one such process
@@ -1884,14 +1884,14 @@ Read_cam_frame(long                        loop,
     //       data.image[ID_imWFS0].array.F[ii] -= data.image[IDdark].array.F[ii];
     //}
     //    AOconf[loop].AOtiminginfo.statusM = 1;
-    if (RM == 0)
+    if(RM == 0)
     {
         AOconf[loop].AOtiminginfo.status =
             2; // 4 -> 002 : COMPUTE TOTAL OF IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiffv = timespec_diff_double(
-            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-            tnow);
+                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                     tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[1] = tdiffv;
     }
 
@@ -1908,28 +1908,28 @@ Read_cam_frame(long                        loop,
     //
     // Normalize: imWFS0 -> imWFS1
     //
-    if (normalize == 1)
+    if(normalize == 1)
     {
-        if ((AOconf[loop].AOcompute.AOLCOMPUTE_TOTAL_ASYNC == 0) ||
-            (AOLCOMPUTE_TOTAL_INIT == 0) || (RM == 1)) // do it in main thread
+        if((AOconf[loop].AOcompute.AOLCOMPUTE_TOTAL_ASYNC == 0) ||
+                (AOLCOMPUTE_TOTAL_INIT == 0) || (RM == 1)) // do it in main thread
         {
             float IMTOTAL;
 
             nelem = data.image[ID_imWFS0].md[0].size[0] *
                     data.image[ID_imWFS0].md[0].size[1];
             IMTOTAL = 0.0;
-            if (aoloopcontrol_var.aoconfID_wfsmask != -1)
+            if(aoloopcontrol_var.aoconfID_wfsmask != -1)
             {
-                for (uint64_t ii = 0; ii < nelem; ii++)
+                for(uint64_t ii = 0; ii < nelem; ii++)
                 {
                     IMTOTAL += data.image[ID_imWFS0].array.F[ii] *
                                data.image[aoloopcontrol_var.aoconfID_wfsmask]
-                                   .array.F[ii];
+                               .array.F[ii];
                 }
             }
             else
             {
-                for (uint64_t ii = 0; ii < nelem; ii++)
+                for(uint64_t ii = 0; ii < nelem; ii++)
                 {
                     IMTOTAL += data.image[ID_imWFS0].array.F[ii];
                 }
@@ -1941,7 +1941,7 @@ Read_cam_frame(long                        loop,
 
             AOLCOMPUTE_TOTAL_INIT = 1;
             //            IMTOTAL = AOconf[loop].WFSim.WFStotalflux;
-            if (aoloopcontrol_var.aoconfID_imWFS0tot != -1)
+            if(aoloopcontrol_var.aoconfID_imWFS0tot != -1)
             {
                 data.image[aoloopcontrol_var.aoconfID_imWFS0tot].array.F[0] =
                     IMTOTAL;
@@ -1967,7 +1967,7 @@ Read_cam_frame(long                        loop,
             // AOconf[loop].WFSim.WFStotalflux =
             // data.image[aoloopcontrol_var.aoconfID_imWFS0tot].array.F[0]; //
             // from last loop
-            if (AOLCOMPUTE_TOTAL_ASYNC_THREADinit == 0)
+            if(AOLCOMPUTE_TOTAL_ASYNC_THREADinit == 0)
             {
 
                 printf("Starting Image Total Thread \n");
@@ -1989,21 +1989,21 @@ Read_cam_frame(long                        loop,
 #endif
             data.image[aoloopcontrol_var.aoconfID_imWFS0tot].md[0].cnt1 =
                 imtotalcnt;
-            if (semval < SEMAPHORE_MAXVAL)
+            if(semval < SEMAPHORE_MAXVAL)
             {
                 sem_post(&AOLCOMPUTE_TOTAL_ASYNC_sem_name);
             }
         }
     }
 
-    if (RM == 0)
+    if(RM == 0)
     {
         //        AOconf[loop].AOtiminginfo.status = 3;  // 5 -> 003: NORMALIZE
         //        WFS IMAGE
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiffv = timespec_diff_double(
-            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-            tnow);
+                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                     tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[14] = tdiffv;
     }
 
@@ -2011,11 +2011,11 @@ Read_cam_frame(long                        loop,
 
     nelem = AOconf[loop].WFSim.sizeWFS;
 
-    if (normalize == 1)
+    if(normalize == 1)
     {
         totalinv = 1.0 / (AOconf[loop].WFSim.WFStotalflux +
                           AOconf[loop].WFSim.WFSnormfloor *
-                              AOconf[loop].WFSim.sizeWFS);
+                          AOconf[loop].WFSim.sizeWFS);
         aoloopcontrol_var.normfloorcoeff =
             AOconf[loop].WFSim.WFStotalflux /
             (AOconf[loop].WFSim.WFStotalflux +
@@ -2033,8 +2033,8 @@ Read_cam_frame(long                        loop,
 
     DEBUG_TRACEPOINT(" ");
 
-    if (((AOconf[loop].AOcompute.GPUall == 0) && (RM == 0)) ||
-        (RM == 1)) // normalize WFS image by totalinv
+    if(((AOconf[loop].AOcompute.GPUall == 0) && (RM == 0)) ||
+            (RM == 1)) // normalize WFS image by totalinv
     {
 #ifdef _PRINT_TEST
         printf("TEST - Normalize [%d]: IMTOTAL = %g    totalinv = %g\n",
@@ -2054,7 +2054,7 @@ Read_cam_frame(long                        loop,
         //# ifdef _OPENMP
         //            #pragma omp for
         //# endif
-        for (uint64_t ii = 0; ii < nelem; ii++)
+        for(uint64_t ii = 0; ii < nelem; ii++)
         {
             data.image[aoloopcontrol_var.aoconfID_imWFS1].array.F[ii] =
                 data.image[ID_imWFS0].array.F[ii] * totalinv;
@@ -2076,15 +2076,15 @@ Read_cam_frame(long                        loop,
     DEBUG_TRACEPOINT(" ");
 
     // AOconf[loop].AOtiminginfo.statusM = 2;
-    if (RM == 0)
+    if(RM == 0)
     {
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiffv = timespec_diff_double(
-            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-            tnow);
+                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                     tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[2] = tdiffv;
 
-        if (AOconf[loop].AOcompute.GPUall == 0)
+        if(AOconf[loop].AOcompute.GPUall == 0)
         {
             aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS1] =
                 1; // there must only be one such process
@@ -2103,13 +2103,13 @@ Read_cam_frame(long                        loop,
           printf("\n============ TIMING WARNING: %12.3f us Read_cam_frame()
      Process\n", tdiffv*1.0e6); fflush(stdout);
       }
-  */
+    */
 
     // Total time
     tdiffv = timespec_diff_double(functionTestTimer00, functionTestTimerEnd);
 
     // Cam wait time
-    if (imWaitTimeAvecnt < imWaitTimeAvecnt0)
+    if(imWaitTimeAvecnt < imWaitTimeAvecnt0)
     {
         imWaitTimeAve += 1.0 * tdiffv / imWaitTimeAvecnt0;
         imWaitTimeAvecnt++;
@@ -2144,7 +2144,7 @@ Read_cam_frame(long                        loop,
 
               fflush(stdout);
           }
-  */
+    */
 
     return (0);
 }

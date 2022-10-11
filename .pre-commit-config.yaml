@@ -1,16 +1,16 @@
 exclude: "^.github/"
 repos:
-#-   repo: https://github.com/pre-commit/mirrors-yapf.git
-#    rev: v0.32.0
-#    hooks:
-#    -   id: yapf
-#        additional_dependencies: [toml]
+-   repo: https://github.com/pre-commit/mirrors-yapf.git
+    rev: v0.32.0
+    hooks:
+    -   id: yapf
+        additional_dependencies: [toml]
 #-   repo: https://github.com/pre-commit/mirrors-clang-format.git
 #    rev: v13.0.0
 #    hooks:
 #    -   id: clang-format
 -   repo: https://github.com/pre-commit/pre-commit-hooks.git
-    rev: v4.1.0
+    rev: v4.3.0
     hooks:
     -   id: trailing-whitespace
         exclude: \.fits
@@ -22,6 +22,15 @@ repos:
     -   id: check-added-large-files
     -   id: check-ast
     -   id: check-merge-conflict
+-   repo: local
+    hooks:
+    -   id: astyle
+        name: astyle custom script lints C/C++
+        entry: /usr/bin/astyle
+        args: ['-A1', '-s4', '-U', '-p', '-j', '-xC80', '-xG', '-S', '-k3', '-q', '-n']
+        language: script
+        files: '\.(cpp|c|h|hpp)'
+        stages: [commit, push]
 #-   repo: git://github.com/detailyang/pre-commit-shell
 #    rev: v1.0.6
 #    hooks:

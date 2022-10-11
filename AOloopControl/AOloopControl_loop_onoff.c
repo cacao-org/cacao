@@ -32,8 +32,10 @@ errno_t AOloopControl_loopon()
 {
     int rtlindex;
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.cntmax =
         AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.cnt - 1;
@@ -41,7 +43,7 @@ errno_t AOloopControl_loopon()
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 1;
 
     // initialize RT logging frame indices
-    for (rtlindex = 0; rtlindex < MAX_NUMBER_RTLOGSTREAM; rtlindex++)
+    for(rtlindex = 0; rtlindex < MAX_NUMBER_RTLOGSTREAM; rtlindex++)
         AOconf[aoloopcontrol_var.LOOPNUMBER].RTSLOGarray[rtlindex].frameindex =
             0;
 
@@ -52,8 +54,10 @@ errno_t AOloopControl_loopon()
 
 errno_t AOloopControl_loopoff()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
@@ -65,8 +69,10 @@ errno_t AOloopControl_loopWFScompon()
 {
     int rtlindex;
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.cntmax =
         AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.cnt - 1;
@@ -74,7 +80,7 @@ errno_t AOloopControl_loopWFScompon()
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOcompute.ComputeWFSsol_FLAG = 1;
 
     // initialize RT logging frame indices
-    for (rtlindex = 0; rtlindex < MAX_NUMBER_RTLOGSTREAM; rtlindex++)
+    for(rtlindex = 0; rtlindex < MAX_NUMBER_RTLOGSTREAM; rtlindex++)
         AOconf[aoloopcontrol_var.LOOPNUMBER].RTSLOGarray[rtlindex].frameindex =
             0;
 
@@ -85,8 +91,10 @@ errno_t AOloopControl_loopWFScompon()
 
 errno_t AOloopControl_loopWFScompoff()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOcompute.ComputeWFSsol_FLAG = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
@@ -97,8 +105,10 @@ errno_t AOloopControl_loopWFScompoff()
 errno_t AOloopControl_loopkill()
 {
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.kill = 1;
 
@@ -108,8 +118,10 @@ errno_t AOloopControl_loopkill()
 errno_t AOloopControl_loopstep(long loop, long NBstep)
 {
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[loop].aorun.cntmax = AOconf[loop].aorun.cnt + NBstep;
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul    = 0.0;
@@ -117,35 +129,43 @@ errno_t AOloopControl_loopstep(long loop, long NBstep)
 
     AOconf[loop].aorun.on = 1;
 
-    while (AOconf[loop].aorun.on == 1)
-        usleep(100); // THIS WAITING IS OK
+    while(AOconf[loop].aorun.on == 1)
+    {
+        usleep(100);    // THIS WAITING IS OK
+    }
 
     return RETURN_SUCCESS;
 }
 
 errno_t AOloopControl_loopreset()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
-    if (aoloopcontrol_var.aoconfID_cmd_modes == -1)
+    if(aoloopcontrol_var.aoconfID_cmd_modes == -1)
     {
         char name[200];
-        if (sprintf(name, "DMmode_cmd_%ld", aoloopcontrol_var.LOOPNUMBER) < 1)
+        if(sprintf(name, "DMmode_cmd_%ld", aoloopcontrol_var.LOOPNUMBER) < 1)
+        {
             PRINT_ERROR("sprintf wrote <1 char");
+        }
 
         aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
     }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.on = 0;
-    for (unsigned int k = 0;
-         k < AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes;
-         k++)
+    for(unsigned int k = 0;
+            k < AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.NBDMmodes;
+            k++)
+    {
         data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] = 0.0;
+    }
 
-    for (unsigned int mb = 0;
-         mb < AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock;
-         mb++)
+    for(unsigned int mb = 0;
+            mb < AOconf[aoloopcontrol_var.LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock;
+            mb++)
     {
         AOloopControl_setgainblock(mb, 0.0);
         AOloopControl_setlimitblock(mb, 0.01);

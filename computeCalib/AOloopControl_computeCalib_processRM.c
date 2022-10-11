@@ -81,12 +81,12 @@ extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
  *  TEST: if "RMpokeC" exists, decode it as well
  */
 errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
-                                                  const char *IDzrespm0_name,
-                                                  __attribute__((unused))
-                                                  const char *IDwfsref_name,
-                                                  const char *IDzrespm_name,
-                                                  const char *WFSmap_name,
-                                                  const char *DMmap_name)
+        const char *IDzrespm0_name,
+        __attribute__((unused))
+        const char *IDwfsref_name,
+        const char *IDzrespm_name,
+        const char *WFSmap_name,
+        const char *DMmap_name)
 {
     imageID  IDzrm;
     uint64_t sizeWFS;
@@ -97,23 +97,23 @@ errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
 
     // DECODE MAPS (IF REQUIRED)
     IDzrm = image_ID(IDzrespm0_name);
-    if ((image_ID("RMmat") != -1) &&
-        (image_ID("pixindexim") != -1)) // start decoding
+    if((image_ID("RMmat") != -1) &&
+            (image_ID("pixindexim") != -1)) // start decoding
     {
         // save_fits(IDzrespm0_name, "zrespm_Hadamard.fits");
 
         AOloopControl_computeCalib_Hadamard_decodeRM(IDzrespm0_name,
-                                                     "RMmat",
-                                                     "pixindexim",
-                                                     IDzrespm_name);
+                "RMmat",
+                "pixindexim",
+                IDzrespm_name);
         IDzrm = image_ID(IDzrespm_name);
 
-        if (image_ID("RMpokeC") != -1)
+        if(image_ID("RMpokeC") != -1)
         {
             AOloopControl_computeCalib_Hadamard_decodeRM("RMpokeC",
-                                                         "RMmat",
-                                                         "pixindexim",
-                                                         "RMpokeC1");
+                    "RMmat",
+                    "pixindexim",
+                    "RMpokeC1");
             // save_fits("RMpokeC1", "tmp/test_RMpokeC1.fits");
         }
     }
@@ -128,7 +128,7 @@ errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
     uint32_t sizeyWFS = data.image[IDzrm].md[0].size[1];
     uint32_t NBpoke   = data.image[IDzrm].md[0].size[2];
 
-    if (sprintf(name, "aol%ld_dmC", loop) < 1)
+    if(sprintf(name, "aol%ld_dmC", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -144,10 +144,10 @@ errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
 
     printf("Preparing DM map ... ");
     fflush(stdout);
-    for (uint32_t poke = 0; poke < NBpoke; poke++)
+    for(uint32_t poke = 0; poke < NBpoke; poke++)
     {
         rms = 0.0;
-        for (uint32_t ii = 0; ii < sizeWFS; ii++)
+        for(uint32_t ii = 0; ii < sizeWFS; ii++)
         {
             tmpv = data.image[IDzrm].array.F[poke * sizeWFS + ii];
             rms += tmpv * tmpv;
@@ -159,10 +159,10 @@ errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
 
     printf("Preparing WFS map ... ");
     fflush(stdout);
-    for (uint32_t ii = 0; ii < sizeWFS; ii++)
+    for(uint32_t ii = 0; ii < sizeWFS; ii++)
     {
         rms = 0.0;
-        for (uint32_t poke = 0; poke < NBpoke; poke++)
+        for(uint32_t poke = 0; poke < NBpoke; poke++)
         {
             tmpv = data.image[IDzrm].array.F[poke * sizeWFS + ii];
             rms += tmpv * tmpv;
@@ -173,43 +173,43 @@ errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
     fflush(stdout);
 
     /*
-  IDWFSmask = image_ID("wfsmask");
+    IDWFSmask = image_ID("wfsmask");
 
 
-  // normalize wfsref with wfsmask
-  tot = 0.0;
-  for(ii=0; ii<sizeWFS; ii++)
+    // normalize wfsref with wfsmask
+    tot = 0.0;
+    for(ii=0; ii<sizeWFS; ii++)
       tot += data.image[IDWFSref].array.F[ii]*data.image[IDWFSmask].array.F[ii];
 
-  totm = 0.0;
-  for(ii=0; ii<sizeWFS; ii++)
+    totm = 0.0;
+    for(ii=0; ii<sizeWFS; ii++)
       totm += data.image[IDWFSmask].array.F[ii];
 
-  for(ii=0; ii<sizeWFS; ii++)
+    for(ii=0; ii<sizeWFS; ii++)
       data.image[IDWFSref].array.F[ii] /= tot;
 
-  // make zrespm flux-neutral over wfsmask
-  fp = fopen("zrespmat_flux.log", "w");
-  for(poke=0;poke<NBpoke;poke++)
-  {
+    // make zrespm flux-neutral over wfsmask
+    fp = fopen("zrespmat_flux.log", "w");
+    for(poke=0;poke<NBpoke;poke++)
+    {
       tot = 0.0;
       for(ii=0; ii<sizeWFS; ii++)
               tot +=
-  data.image[IDzrm].array.F[poke*sizeWFS+ii]*data.image[IDWFSmask].array.F[ii];
+    data.image[IDzrm].array.F[poke*sizeWFS+ii]*data.image[IDWFSmask].array.F[ii];
 
       for(ii=0; ii<sizeWFS; ii++)
               data.image[IDzrm].array.F[poke*sizeWFS+ii] -=
-  tot*data.image[IDWFSmask].array.F[ii]/totm;
+    tot*data.image[IDWFSmask].array.F[ii]/totm;
 
       tot1 = 0.0;
       for(ii=0; ii<sizeWFS; ii++)
               tot1 +=
-  data.image[IDzrm].array.F[poke*sizeWFS+ii]*data.image[IDWFSmask].array.F[ii];
+    data.image[IDzrm].array.F[poke*sizeWFS+ii]*data.image[IDWFSmask].array.F[ii];
       fprintf(fp, "%6ld %06ld %20f %20f\n", poke, NBpoke, tot, tot1);
-  }
-  fclose(fp);
+    }
+    fclose(fp);
 
-  */
+    */
 
     return RETURN_SUCCESS;
 }
@@ -223,12 +223,12 @@ errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
 //
 errno_t
 AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
-                                                    const char *zrespm_name,
-                                                    const char *WFSref0_name,
-                                                    const char *WFSmap_name,
-                                                    const char *DMmap_name,
-                                                    double      rmampl,
-                                                    int         normalize)
+        const char *zrespm_name,
+        const char *WFSref0_name,
+        const char *WFSmap_name,
+        const char *DMmap_name,
+        double      rmampl,
+        int         normalize)
 {
     long  NBmat; // number of matrices to average
     FILE *fp;
@@ -257,19 +257,19 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
     long   NBpoke, poke;
     double tot, totm;
 
-    if (sprintf(fname, "./zresptmp/%s_nbiter.txt", zrespm_name) < 1)
+    if(sprintf(fname, "./zresptmp/%s_nbiter.txt", zrespm_name) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    if ((fp = fopen(fname, "r")) == NULL)
+    if((fp = fopen(fname, "r")) == NULL)
     {
         printf("ERROR: cannot open file \"%s\"\n", fname);
         exit(0);
     }
     else
     {
-        if (fscanf(fp, "%50ld", &NBmat) != 1)
+        if(fscanf(fp, "%50ld", &NBmat) != 1)
         {
             PRINT_ERROR("Cannot read parameter for file");
         }
@@ -277,7 +277,7 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
         fclose(fp);
     }
 
-    if (NBmat < NBmatlim)
+    if(NBmat < NBmatlim)
     {
         printf("ERROR: insufficient number of input matrixes:\n");
         printf(" NBmat = %ld, should be at least %ld\n",
@@ -290,29 +290,29 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
         printf("Processing %ld matrices\n", NBmat);
     }
 
-    if (sprintf(name, "aol%ld_dmC", loop) < 1)
+    if(sprintf(name, "aol%ld_dmC", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
     IDzresp_array = (imageID *) malloc(sizeof(imageID) * NBmat);
-    if (IDzresp_array == NULL)
+    if(IDzresp_array == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
     IDWFSrefc_array = (imageID *) malloc(sizeof(imageID) * NBmat);
-    if (IDWFSrefc_array == NULL)
+    if(IDWFSrefc_array == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
     // STEP 1: build individually cleaned RM
-    for (kmat = 0; kmat < NBmat; kmat++)
+    for(kmat = 0; kmat < NBmat; kmat++)
     {
-        if (sprintf(fname, "./zresptmp/%s_pos_%03ld.fits", zrespm_name, kmat) <
-            1)
+        if(sprintf(fname, "./zresptmp/%s_pos_%03ld.fits", zrespm_name, kmat) <
+                1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -320,8 +320,8 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
         imageID IDzrespfp = -1;
         load_fits(fname, "zrespfp", 2, &IDzrespfp);
 
-        if (sprintf(fname, "./zresptmp/%s_neg_%03ld.fits", zrespm_name, kmat) <
-            1)
+        if(sprintf(fname, "./zresptmp/%s_neg_%03ld.fits", zrespm_name, kmat) <
+                1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -334,7 +334,7 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
         NBpoke   = data.image[IDzrespfp].md[0].size[2];
         sizeWFS  = sizexWFS * sizeyWFS;
 
-        if (sprintf(name, "wfsrefc%03ld", kmat) < 1)
+        if(sprintf(name, "wfsrefc%03ld", kmat) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -345,7 +345,7 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
                           NBpoke,
                           &(IDWFSrefc_array[kmat]));
 
-        if (sprintf(zrname, "zrespm%03ld", kmat) < 1)
+        if(sprintf(zrname, "zrespm%03ld", kmat) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -357,16 +357,16 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
                           &(IDzresp_array[kmat]));
 
 #ifdef _OPENMP
-#pragma omp parallel for private(fluxpos, fluxneg, ii)
+        #pragma omp parallel for private(fluxpos, fluxneg, ii)
 #endif
-        for (poke = 0; poke < NBpoke; poke++)
+        for(poke = 0; poke < NBpoke; poke++)
         {
             fluxpos = 0.0;
             fluxneg = 0.0;
-            for (ii = 0; ii < sizeWFS; ii++)
+            for(ii = 0; ii < sizeWFS; ii++)
             {
-                if (isnan(data.image[IDzrespfp].array.F[poke * sizeWFS + ii]) !=
-                    0)
+                if(isnan(data.image[IDzrespfp].array.F[poke * sizeWFS + ii]) !=
+                        0)
                 {
                     printf("%ld element %ld is NAN -> replacing by 0\n",
                            IDzrespfp,
@@ -376,10 +376,10 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
                 fluxpos += data.image[IDzrespfp].array.F[poke * sizeWFS + ii];
             }
 
-            for (ii = 0; ii < sizeWFS; ii++)
+            for(ii = 0; ii < sizeWFS; ii++)
             {
-                if (isnan(data.image[IDzrespfm].array.F[poke * sizeWFS + ii]) !=
-                    0)
+                if(isnan(data.image[IDzrespfm].array.F[poke * sizeWFS + ii]) !=
+                        0)
                 {
                     printf("%ld element %ld is NAN -> replacing by 0\n",
                            IDzrespfm,
@@ -389,9 +389,9 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
                 fluxneg += data.image[IDzrespfm].array.F[poke * sizeWFS + ii];
             }
 
-            for (ii = 0; ii < sizeWFS; ii++)
+            for(ii = 0; ii < sizeWFS; ii++)
             {
-                if (normalize == 1)
+                if(normalize == 1)
                 {
                     data.image[IDzrespfp].array.F[poke * sizeWFS + ii] /=
                         fluxpos;
@@ -405,23 +405,23 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
                     0.5 * (data.image[IDzrespfp].array.F[poke * sizeWFS + ii] +
                            data.image[IDzrespfm].array.F[poke * sizeWFS + ii]);
 
-                if (isnan(data.image[IDzresp_array[kmat]]
-                              .array.F[poke * sizeWFS + ii]) != 0)
+                if(isnan(data.image[IDzresp_array[kmat]]
+                         .array.F[poke * sizeWFS + ii]) != 0)
                 {
                     printf("%ld element %ld is NAN -> replacing by 0\n",
                            IDzresp_array[kmat],
                            poke * sizeWFS + ii);
                     data.image[IDzresp_array[kmat]]
-                        .array.F[poke * sizeWFS + ii] = 0.0;
+                    .array.F[poke * sizeWFS + ii] = 0.0;
                 }
-                if (isnan(data.image[IDWFSrefc_array[kmat]]
-                              .array.F[poke * sizeWFS + ii]) != 0)
+                if(isnan(data.image[IDWFSrefc_array[kmat]]
+                         .array.F[poke * sizeWFS + ii]) != 0)
                 {
                     printf("%ld element %ld is NAN -> replacing by 0\n",
                            IDWFSrefc_array[kmat],
                            poke * sizeWFS + ii);
                     data.image[IDWFSrefc_array[kmat]]
-                        .array.F[poke * sizeWFS + ii] = 0.0;
+                    .array.F[poke * sizeWFS + ii] = 0.0;
                 }
             }
         }
@@ -434,36 +434,36 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
     create_3Dimage_ID(zrespm_name, sizexWFS, sizeyWFS, NBpoke, &IDzrm);
     create_2Dimage_ID(WFSref0_name, sizexWFS, sizeyWFS, &IDWFSref);
 
-    kband = (long) (0.2 * NBmat);
+    kband = (long)(0.2 * NBmat);
 
     kmin = kband;
     kmax = NBmat - kband;
 
 #ifdef _OPENMP
-#pragma omp parallel for private(ii, kmat, ave, k, pixvalarray)
+    #pragma omp parallel for private(ii, kmat, ave, k, pixvalarray)
 #endif
-    for (poke = 0; poke < NBpoke; poke++)
+    for(poke = 0; poke < NBpoke; poke++)
     {
         printf("\r act %ld / %ld        ", poke, NBpoke);
         fflush(stdout);
 
-        if ((pixvalarray = (float *) malloc(sizeof(float) * NBmat)) == NULL)
+        if((pixvalarray = (float *) malloc(sizeof(float) * NBmat)) == NULL)
         {
             printf("ERROR: cannot allocate pixvalarray, size = %ld\n",
                    (long) NBmat);
             exit(0);
         }
 
-        for (ii = 0; ii < sizeWFS; ii++)
+        for(ii = 0; ii < sizeWFS; ii++)
         {
-            for (kmat = 0; kmat < NBmat; kmat++)
+            for(kmat = 0; kmat < NBmat; kmat++)
             {
                 pixvalarray[kmat] = data.image[IDzresp_array[kmat]]
-                                        .array.F[poke * sizeWFS + ii];
+                                    .array.F[poke * sizeWFS + ii];
             }
             quick_sort_float(pixvalarray, kmat);
             ave = 0.0;
-            for (k = kmin; k < kmax; k++)
+            for(k = kmin; k < kmax; k++)
             {
                 ave += pixvalarray[k];
             }
@@ -475,19 +475,19 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
 
     printf("\n");
 
-    kband = (long) (0.2 * NBmat * NBpoke);
+    kband = (long)(0.2 * NBmat * NBpoke);
     kmin  = kband;
     kmax  = NBmat * NBpoke - kband;
 
 #ifdef _OPENMP
-#pragma omp parallel for private(poke, kmat, pixvalarray, ave, k)
+    #pragma omp parallel for private(poke, kmat, pixvalarray, ave, k)
 #endif
-    for (ii = 0; ii < sizeWFS; ii++)
+    for(ii = 0; ii < sizeWFS; ii++)
     {
         printf("\r wfs pix %ld / %ld        ", ii, sizeWFS);
         fflush(stdout);
-        if ((pixvalarray = (float *) malloc(sizeof(float) * NBmat * NBpoke)) ==
-            NULL)
+        if((pixvalarray = (float *) malloc(sizeof(float) * NBmat * NBpoke)) ==
+                NULL)
         {
             printf("ERROR: cannot allocate pixvalarray, size = %ld x %ld\n",
                    (long) NBmat,
@@ -495,18 +495,18 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
             exit(0);
         }
 
-        for (poke = 0; poke < NBpoke; poke++)
-            for (kmat = 0; kmat < NBmat; kmat++)
+        for(poke = 0; poke < NBpoke; poke++)
+            for(kmat = 0; kmat < NBmat; kmat++)
             {
                 pixvalarray[kmat * NBpoke + poke] =
                     data.image[IDWFSrefc_array[kmat]]
-                        .array.F[poke * sizeWFS + ii];
+                    .array.F[poke * sizeWFS + ii];
             }
 
         quick_sort_float(pixvalarray, NBpoke * NBmat);
 
         ave = 0.0;
-        for (k = kmin; k < kmax; k++)
+        for(k = kmin; k < kmax; k++)
         {
             ave += pixvalarray[k];
         }
@@ -524,25 +524,25 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
 
     // DECODE MAPS (IF REQUIRED)
 
-    if ((image_ID("Hmat") != -1) && (image_ID("pixindexim") != -1))
+    if((image_ID("Hmat") != -1) && (image_ID("pixindexim") != -1))
     {
         chname_image_ID(zrespm_name, "tmprm");
         save_fits("tmprm", "zrespm_Hadamard.fits");
 
         AOloopControl_computeCalib_Hadamard_decodeRM("tmprm",
-                                                     "Hmat",
-                                                     "pixindexim",
-                                                     zrespm_name);
+                "Hmat",
+                "pixindexim",
+                zrespm_name);
         delete_image_ID("tmprm", DELETE_IMAGE_ERRMODE_WARNING);
 
         IDzrm = image_ID(zrespm_name);
 
-        if (image_ID("RMpokeC") != -1)
+        if(image_ID("RMpokeC") != -1)
         {
             AOloopControl_computeCalib_Hadamard_decodeRM("RMpokeC",
-                                                         "Hmat",
-                                                         "pixindexim",
-                                                         "RMpokeC1");
+                    "Hmat",
+                    "pixindexim",
+                    "RMpokeC1");
             save_fits("RMpokeC1", "test_RMpokeC1.fits");
         }
     }
@@ -550,17 +550,17 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
     NBpoke = data.image[IDzrm].md[0].size[2];
 
     AOloopControl_computeCalib_mkCalib_map_mask(loop,
-                                                zrespm_name,
-                                                WFSmap_name,
-                                                DMmap_name,
-                                                0.2,
-                                                1.0,
-                                                0.7,
-                                                0.3,
-                                                0.05,
-                                                1.0,
-                                                0.65,
-                                                0.3);
+            zrespm_name,
+            WFSmap_name,
+            DMmap_name,
+            0.2,
+            1.0,
+            0.7,
+            0.3,
+            0.05,
+            1.0,
+            0.65,
+            0.3);
 
     //	list_image_ID();
     // printf("========== STEP 000 ============\n");
@@ -571,42 +571,42 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
 
     // normalize wfsref with wfsmask
     tot = 0.0;
-    for (ii = 0; ii < sizeWFS; ii++)
+    for(ii = 0; ii < sizeWFS; ii++)
     {
         tot += data.image[IDWFSref].array.F[ii] *
                data.image[IDWFSmask].array.F[ii];
     }
 
     totm = 0.0;
-    for (ii = 0; ii < sizeWFS; ii++)
+    for(ii = 0; ii < sizeWFS; ii++)
     {
         totm += data.image[IDWFSmask].array.F[ii];
     }
 
-    for (ii = 0; ii < sizeWFS; ii++)
+    for(ii = 0; ii < sizeWFS; ii++)
     {
         data.image[IDWFSref].array.F[ii] /= tot;
     }
 
     // make zrespm flux-neutral over wfsmask
     fp = fopen("zrespmat_flux.log", "w");
-    for (poke = 0; poke < NBpoke; poke++)
+    for(poke = 0; poke < NBpoke; poke++)
     {
         tot = 0.0;
-        for (ii = 0; ii < sizeWFS; ii++)
+        for(ii = 0; ii < sizeWFS; ii++)
         {
             tot += data.image[IDzrm].array.F[poke * sizeWFS + ii] *
                    data.image[IDWFSmask].array.F[ii];
         }
 
-        for (ii = 0; ii < sizeWFS; ii++)
+        for(ii = 0; ii < sizeWFS; ii++)
         {
             data.image[IDzrm].array.F[poke * sizeWFS + ii] -=
                 tot * data.image[IDWFSmask].array.F[ii] / totm;
         }
 
         double tot1 = 0.0;
-        for (ii = 0; ii < sizeWFS; ii++)
+        for(ii = 0; ii < sizeWFS; ii++)
         {
             tot1 += data.image[IDzrm].array.F[poke * sizeWFS + ii] *
                     data.image[IDWFSmask].array.F[ii];
@@ -645,7 +645,7 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
 
     double SVDlimdefault[4] = {0.001, 0.0, 1.0, 0.001};
     FPFLAG                  = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT |
-             FPFLAG_MAXLIMIT; // required to enforce the min and max limits
+                              FPFLAG_MAXLIMIT; // required to enforce the min and max limits
     //__attribute__((unused)) long fpi_SVDlim =
     function_parameter_add_entry(&fps,
                                  ".SVDlim",
@@ -709,16 +709,16 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
                                        "log to filesystem",
                                        FPTYPE_EXECFILENAME,
      FPFLAG_DEFAULT_INPUT, pNull); (void) fpi_exec_logdata;
-  */
+    */
 
     // =====================================
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
     FPS_CONFLOOP_START // macro in function_parameter.h
 
-        FPS_CONFLOOP_END // macro in function_parameter.h
+    FPS_CONFLOOP_END // macro in function_parameter.h
 
-        return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }
 
 errno_t AOloopControl_computeCalib_mkCM_RUN()
@@ -732,7 +732,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
           &fps,
           ".out.timestring",
           timestring);
-  */
+    */
 
     // ===============================
     // GET FUNCTION PARAMETER VALUES
@@ -761,7 +761,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
     char cm_name[] = "sCMat";
 
 #ifdef HAVE_CUDA
-    if (GPUmode)
+    if(GPUmode)
     {
         CUDACOMP_magma_compute_SVDpseudoInverse("respM",
                                                 cm_name,
@@ -819,7 +819,7 @@ errno_t AOloopControl_computeCalib_mkCM(__attribute__((unused))
     char fpsname[200];
 
     long pindex = (long)
-        getpid(); // index used to differentiate multiple calls to function
+                  getpid(); // index used to differentiate multiple calls to function
     // if we don't have anything more informative, we use PID
 
     // int SMfd = -1;
@@ -845,8 +845,8 @@ errno_t AOloopControl_computeCalib_mkCM(__attribute__((unused))
 // make slave actuators from maskRM
 //
 long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name,
-                                            float       pixrad,
-                                            const char *IDout_name)
+        float       pixrad,
+        const char *IDout_name)
 {
     long  IDout;
     long  IDmaskRM;
@@ -864,49 +864,49 @@ long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name,
     pixradl = (long) pixrad + 1;
 
     create_2Dimage_ID(IDout_name, xsize, ysize, &IDout);
-    for (ii = 0; ii < xsize * ysize; ii++)
+    for(ii = 0; ii < xsize * ysize; ii++)
     {
         data.image[IDout].array.F[ii] = xsize + ysize;
     }
 
-    for (ii = 0; ii < xsize; ii++)
-        for (jj = 0; jj < ysize; jj++)
+    for(ii = 0; ii < xsize; ii++)
+        for(jj = 0; jj < ysize; jj++)
         {
-            if (data.image[IDmaskRM].array.F[jj * xsize + ii] < 0.5)
+            if(data.image[IDmaskRM].array.F[jj * xsize + ii] < 0.5)
             {
                 ii1min = ii - pixradl;
-                if (ii1min < 0)
+                if(ii1min < 0)
                 {
                     ii1min = 0;
                 }
                 ii1max = ii + pixradl;
-                if (ii1max > (xsize - 1))
+                if(ii1max > (xsize - 1))
                 {
                     ii1max = xsize - 1;
                 }
 
                 jj1min = jj - pixradl;
-                if (jj1min < 0)
+                if(jj1min < 0)
                 {
                     jj1min = 0;
                 }
                 jj1max = jj + pixradl;
-                if (jj1max > (ysize - 1))
+                if(jj1max > (ysize - 1))
                 {
                     jj1max = ysize - 1;
                 }
 
-                for (ii1 = ii1min; ii1 < ii1max + 1; ii1++)
-                    for (jj1 = jj1min; jj1 < jj1max + 1; jj1++)
-                        if (data.image[IDmaskRM].array.F[jj1 * xsize + ii1] >
-                            0.5)
+                for(ii1 = ii1min; ii1 < ii1max + 1; ii1++)
+                    for(jj1 = jj1min; jj1 < jj1max + 1; jj1++)
+                        if(data.image[IDmaskRM].array.F[jj1 * xsize + ii1] >
+                                0.5)
                         {
                             dx = 1.0 * (ii - ii1);
                             dy = 1.0 * (jj - jj1);
                             r  = sqrt(dx * dx + dy * dy);
-                            if (r < pixrad)
-                                if (r <
-                                    data.image[IDout].array.F[jj * xsize + ii])
+                            if(r < pixrad)
+                                if(r <
+                                        data.image[IDout].array.F[jj * xsize + ii])
                                 {
                                     data.image[IDout].array.F[jj * xsize + ii] =
                                         r;
@@ -915,10 +915,10 @@ long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name,
             }
         }
 
-    for (ii = 0; ii < xsize; ii++)
-        for (jj = 0; jj < ysize; jj++)
-            if (data.image[IDout].array.F[jj * xsize + ii] >
-                (xsize + ysize) / 2)
+    for(ii = 0; ii < xsize; ii++)
+        for(jj = 0; jj < ysize; jj++)
+            if(data.image[IDout].array.F[jj * xsize + ii] >
+                    (xsize + ysize) / 2)
             {
                 data.image[IDout].array.F[jj * xsize + ii] = 0.0;
             }

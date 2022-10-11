@@ -117,7 +117,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
     fflush(stdout);
 
     // read AO loop gain, mult
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -130,18 +130,18 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
 
     // CONNECT to arrays holding gain, limit, and multf values for blocks
 
-    if (aoloopcontrol_var.aoconfID_gainb == -1)
+    if(aoloopcontrol_var.aoconfID_gainb == -1)
     {
-        if (sprintf(imname, "aol%ld_gainb", loop) < 1)
+        if(sprintf(imname, "aol%ld_gainb", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
         aoloopcontrol_var.aoconfID_gainb = read_sharedmem_image(imname);
     }
 
-    if (aoloopcontrol_var.aoconfID_multfb == -1)
+    if(aoloopcontrol_var.aoconfID_multfb == -1)
     {
-        if (sprintf(imname, "aol%ld_multfb", loop) < 1)
+        if(sprintf(imname, "aol%ld_multfb", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -150,11 +150,11 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
 
     // CONNECT to arrays holding gain, limit and multf values for individual modes
 
-    if (aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
+    if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
     {
-        if (sprintf(imname,
-                    "aol%ld_DMmode_GAIN",
-                    aoloopcontrol_var.LOOPNUMBER) < 1)
+        if(sprintf(imname,
+                   "aol%ld_DMmode_GAIN",
+                   aoloopcontrol_var.LOOPNUMBER) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -163,9 +163,9 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
     printf("aoloopcontrol_var.aoconfID_DMmode_GAIN = %ld\n",
            aoloopcontrol_var.aoconfID_DMmode_GAIN);
 
-    if (aoloopcontrol_var.aoconfID_MULTF_modes == -1)
+    if(aoloopcontrol_var.aoconfID_MULTF_modes == -1)
     {
-        if (sprintf(imname, "aol%ld_DMmode_MULTF", loop) < 1)
+        if(sprintf(imname, "aol%ld_DMmode_MULTF", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -173,7 +173,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
     }
 
     // INPUT
-    if (sprintf(imname, "aol%ld_modeval_ol", loop) < 1) // measured from WFS
+    if(sprintf(imname, "aol%ld_modeval_ol", loop) < 1)  // measured from WFS
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -181,32 +181,32 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
     IDmodevalOL = read_sharedmem_image(imname);
     NBmodes     = data.image[IDmodevalOL].md[0].size[0];
 
-    if (sprintf(imname, "aol%ld_modeval", loop) < 1) // measured from WFS
+    if(sprintf(imname, "aol%ld_modeval", loop) < 1)  // measured from WFS
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
     IDmodeval = read_sharedmem_image(imname);
 
-    if (sprintf(imname, "aol%ld_modeval_dm", loop) < 1) // measured from WFS
+    if(sprintf(imname, "aol%ld_modeval_dm", loop) < 1)  // measured from WFS
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
     IDmodeval_dm = read_sharedmem_image(imname);
 
-    if (sprintf(imname,
-                "aol%ld_modeval_dm_now",
-                loop) < 1) // current modal DM correction
+    if(sprintf(imname,
+               "aol%ld_modeval_dm_now",
+               loop) < 1) // current modal DM correction
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
     IDmodeval_dm_now = read_sharedmem_image(imname);
 
-    if (sprintf(imname,
-                "aol%ld_modeval_dm_now_filt",
-                loop) < 1) // current modal DM correction, filtered
+    if(sprintf(imname,
+               "aol%ld_modeval_dm_now_filt",
+               loop) < 1) // current modal DM correction, filtered
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -218,7 +218,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
     sizearray    = (uint32_t *) malloc(sizeof(uint32_t) * 2);
     sizearray[0] = NBmodes;
     sizearray[1] = 1;
-    if (sprintf(imname, "aol%ld_modeWFSnoise", loop) < 1)
+    if(sprintf(imname, "aol%ld_modeWFSnoise", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -234,7 +234,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
     free(sizearray);
 
     // blocks
-    if (sprintf(imname, "aol%ld_mode_blknb", loop) < 1) // block indices
+    if(sprintf(imname, "aol%ld_mode_blknb", loop) < 1)  // block indices
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -279,11 +279,11 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
     errarray = (float *) malloc(sizeof(float) * NBgain);
 
     iter = 0;
-    for (;;)
+    for(;;)
     {
 
         // write gain, mult into arrays
-        for (m = 0; m < NBmodes; m++)
+        for(m = 0; m < NBmodes; m++)
         {
             unsigned short block;
 
@@ -297,8 +297,8 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
                 data.image[aoloopcontrol_var.aoconfID_multfb].array.F[block] *
                 data.image[aoloopcontrol_var.aoconfID_MULTF_modes].array.F[m];
             NOISEfactor[m] = 1.0 + modemult[m] * modemult[m] * modegain[m] *
-                                       modegain[m] /
-                                       (1.0 - modemult[m] * modemult[m]);
+                             modegain[m] /
+                             (1.0 - modemult[m] * modemult[m]);
         }
 
         // prepare gain array
@@ -307,7 +307,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
         // printf("latency = %f frame\n", latency);
         NBgain = 0;
         gain   = mingain;
-        while (gain < maxgain / gainFactor)
+        while(gain < maxgain / gainFactor)
         {
             gain *= gainfactstep;
             NBgain++;
@@ -315,7 +315,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
 
         kk   = 0;
         gain = mingain;
-        while (kk < NBgain)
+        while(kk < NBgain)
         {
             gainval_array[kk] = gain;
             gainval1_array[kk] =
@@ -329,11 +329,11 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
         }
 
         // drive sem5 to zero
-        while (sem_trywait(data.image[IDmodevalOL].semptr[5]) == 0)
+        while(sem_trywait(data.image[IDmodevalOL].semptr[5]) == 0)
         {
         }
 
-        for (m = 0; m < NBmodes; m++)
+        for(m = 0; m < NBmodes; m++)
         {
             array_mvalOL1[m] = 0.0;
             array_mvalOL2[m] = 0.0;
@@ -348,20 +348,20 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
             stdev[m]         = 0.0;
         }
 
-        if (TESTMODE == 1)
+        if(TESTMODE == 1)
         {
             fptest = fopen("test_autotunegain.dat", "w");
         }
 
         cnt      = 0;
         cntstart = 10;
-        while (cnt < AOconf[loop].AOAutoTune.AUTOTUNEGAINS_NBsamples)
+        while(cnt < AOconf[loop].AOAutoTune.AUTOTUNEGAINS_NBsamples)
         {
             sem_wait(data.image[IDmodevalOL].semptr[5]);
 
             data.image[IDout].md[0].write = 1;
 
-            for (m = 0; m < NBmodes; m++)
+            for(m = 0; m < NBmodes; m++)
             {
                 diff1 = data.image[IDmodevalOL].array.F[m] - array_mvalOL1[m];
                 diff2 = data.image[IDmodevalOL].array.F[m] - array_mvalOL2[m];
@@ -372,7 +372,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
                 array_mvalOL2[m] = array_mvalOL1[m];
                 array_mvalOL1[m] = data.image[IDmodevalOL].array.F[m];
 
-                if (cnt > cntstart)
+                if(cnt > cntstart)
                 {
                     ave0[m] += data.image[IDmodevalOL].array.F[m];
                     sig0[m] += data.image[IDmodevalOL].array.F[m] *
@@ -384,7 +384,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
                 }
             }
 
-            if (TESTMODE == 1)
+            if(TESTMODE == 1)
             {
                 fprintf(fptest,
                         "%5lld %+12.10f %+12.10f %+12.10f %+12.10f %+12.10f\n",
@@ -398,19 +398,19 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
 
             cnt++;
         }
-        if (TESTMODE == 1)
+        if(TESTMODE == 1)
         {
             fclose(fptest);
         }
 
         GainCoeff1 = 1.0 / (iter + 1);
-        if (GainCoeff1 < AOconf[loop].AOAutoTune.AUTOTUNEGAINS_updateGainCoeff)
+        if(GainCoeff1 < AOconf[loop].AOAutoTune.AUTOTUNEGAINS_updateGainCoeff)
         {
             GainCoeff1 = AOconf[loop].AOAutoTune.AUTOTUNEGAINS_updateGainCoeff;
         }
 
         data.image[IDout].md[0].write = 1;
-        for (m = 0; m < NBmodes; m++)
+        for(m = 0; m < NBmodes; m++)
         {
             long  kkmin;
             float errmin;
@@ -428,7 +428,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
             // This formula is compatible with astromgrid, which alternates
             // between patterns
             array_asq[m] = (array_sig4[m] - array_sig2[m]) / 12.0;
-            if (array_asq[m] < 0.0)
+            if(array_asq[m] < 0.0)
             {
                 array_asq[m] = 0.0;
             }
@@ -441,13 +441,13 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
 
             stdev[m] =
                 sig0[m] - NOISEfactor[m] * array_sig[m] - ave0[m] * ave0[m];
-            if (stdev[m] < 0.0)
+            if(stdev[m] < 0.0)
             {
                 stdev[m] = 0.0;
             }
             stdev[m] = sqrt(stdev[m]);
 
-            for (kk = 0; kk < NBgain; kk++)
+            for(kk = 0; kk < NBgain; kk++)
             {
                 errarray[kk] = array_asq[m] * gainval1_array[kk] +
                                array_sig[m] * gainval2_array[kk];
@@ -456,8 +456,8 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
             errmin = errarray[0];
             kkmin  = 0;
 
-            for (kk = 0; kk < NBgain; kk++)
-                if (errarray[kk] < errmin)
+            for(kk = 0; kk < NBgain; kk++)
+                if(errarray[kk] < errmin)
                 {
                     errmin = errarray[kk];
                     kkmin  = kk;
@@ -476,7 +476,7 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
         // write noise
         data.image[IDmodeWFSnoise].md[0].write = 1;
         data.image[IDmodeWFSnoise].md[0].cnt0++;
-        for (m = 0; m < NBmodes; m++)
+        for(m = 0; m < NBmodes; m++)
         {
             data.image[IDmodeWFSnoise].array.F[m] = array_sig[m];
         }
@@ -485,13 +485,13 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
             AOconf[loop].aorun.LOOPiteration;
         data.image[IDmodeWFSnoise].md[0].write = 0;
 
-        if (AOconf[loop].AOAutoTune.AUTOTUNE_GAINS_ON ==
-            1) // automatically adjust gain values
+        if(AOconf[loop].AOAutoTune.AUTOTUNE_GAINS_ON ==
+                1) // automatically adjust gain values
         {
         }
 
         fp = fopen("optgain.dat", "w");
-        for (m = 0; m < NBmodes; m++)
+        for(m = 0; m < NBmodes; m++)
         {
             fprintf(fp,
                     "%5ld   %+12.10f %12.10f %12.10f %12.10f %12.10f   %6.4f  "

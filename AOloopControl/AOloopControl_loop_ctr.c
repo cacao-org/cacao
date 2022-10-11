@@ -46,14 +46,16 @@ errno_t AOloopControl_setparam(__attribute__((unused)) long   loop,
     char kstring[200];
 
     strcpy(kstring, "PEperiod");
-    if ((strncmp(key, kstring, strlen(kstring)) == 0) && (pOK == 0))
+    if((strncmp(key, kstring, strlen(kstring)) == 0) && (pOK == 0))
     {
         // AOconf[loop].WFScamPEcorr_period = (long double) value;
         pOK = 1;
     }
 
-    if (pOK == 0)
+    if(pOK == 0)
+    {
         printf("Parameter not found\n");
+    }
 
     return RETURN_SUCCESS;
 }

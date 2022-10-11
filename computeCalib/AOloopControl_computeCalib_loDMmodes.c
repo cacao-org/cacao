@@ -92,15 +92,15 @@
 
 // make low order DM modes
 imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
-                                               uint32_t    msizex,
-                                               uint32_t    msizey,
-                                               float       CPAmax,
-                                               float       deltaCPA,
-                                               double      xc,
-                                               double      yc,
-                                               double      r0,
-                                               double      r1,
-                                               int         MaskMode)
+        uint32_t    msizex,
+        uint32_t    msizey,
+        float       CPAmax,
+        float       deltaCPA,
+        double      xc,
+        double      yc,
+        double      r0,
+        double      r1,
+        int         MaskMode)
 {
     imageID IDmask;
     imageID ID, ID0, IDtm, IDem, IDslaved;
@@ -109,8 +109,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
     long NBZ, m;
     long zindex[10];
     double
-        zcpa[10]; /// CPA for each Zernike (somewhat arbitrary... used to sort
-                  /// modes in CPA)
+    zcpa[10]; /// CPA for each Zernike (somewhat arbitrary... used to sort
+    /// modes in CPA)
     long IDfreq, IDmfcpa;
     long k;
 
@@ -150,7 +150,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
     printf("msizexy = %u %u\n", msizex, msizey);
     list_image_ID();
     IDmask = image_ID("dmmask");
-    if (IDmask == -1)
+    if(IDmask == -1)
     {
         double val0, val1;
         double a0 = 0.88;
@@ -159,8 +159,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         double b1 = 12.0;
 
         create_2Dimage_ID("dmmask", msizex, msizey, &IDmask);
-        for (uint32_t ii = 0; ii < msizex; ii++)
-            for (uint32_t jj = 0; jj < msizey; jj++)
+        for(uint32_t ii = 0; ii < msizex; ii++)
+            for(uint32_t jj = 0; jj < msizey; jj++)
             {
                 x    = 1.0 * ii - xc;
                 y    = 1.0 * jj - yc;
@@ -179,8 +179,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         xc1  = 0.0;
         yc1  = 0.0;
         totm = 0.0;
-        for (uint32_t ii = 0; ii < msizex; ii++)
-            for (uint32_t jj = 0; jj < msizey; jj++)
+        for(uint32_t ii = 0; ii < msizex; ii++)
+            for(uint32_t jj = 0; jj < msizey; jj++)
             {
                 xc1 += 1.0 * ii * data.image[IDmask].array.F[jj * msizex + ii];
                 yc1 += 1.0 * jj * data.image[IDmask].array.F[jj * msizex + ii];
@@ -192,8 +192,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
     }
 
     totm = arith_image_total("dmmask");
-    if ((msizex != data.image[IDmask].md[0].size[0]) ||
-        (msizey != data.image[IDmask].md[0].size[1]))
+    if((msizex != data.image[IDmask].md[0].size[0]) ||
+            (msizey != data.image[IDmask].md[0].size[1]))
     {
         printf(
             "ERROR: file dmmask size (%u %u) does not match expected size "
@@ -207,10 +207,12 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
 
     NBZ = 0;
 
-    for (m = 0; m < 10; m++)
+    for(m = 0; m < 10; m++)
     {
-        if (zcpa[m] < CPAmax)
+        if(zcpa[m] < CPAmax)
+        {
             NBZ++;
+        }
     }
 
     linopt_imtools_makeCPAmodes("CPAmodes",
@@ -242,11 +244,11 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
     /*** Create TTF first */
     zernike_init();
     printf("r1 = %f    %f %f\n", r1, xc1, yc1);
-    for (k = 0; k < NBZ; k++)
+    for(k = 0; k < NBZ; k++)
     {
         data.image[IDmfcpa].array.F[k] = zcpa[k];
-        for (uint32_t ii = 0; ii < msizex; ii++)
-            for (uint32_t jj = 0; jj < msizey; jj++)
+        for(uint32_t ii = 0; ii < msizex; ii++)
+            for(uint32_t jj = 0; jj < msizey; jj++)
             {
                 x  = 1.0 * ii - xc1;
                 y  = 1.0 * jj - yc1;
@@ -257,26 +259,26 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
             }
     }
 
-    for (uint32_t k = 0; k < (uint32_t) data.image[ID0].md[0].size[2] - 1; k++)
+    for(uint32_t k = 0; k < (uint32_t) data.image[ID0].md[0].size[2] - 1; k++)
     {
         data.image[IDmfcpa].array.F[k + NBZ] =
             data.image[IDfreq].array.F[k + 1];
-        for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+        for(uint64_t ii = 0; ii < msizex * msizey; ii++)
             data.image[ID].array.F[(k + NBZ) * msizex * msizey + ii] =
                 data.image[ID0].array.F[(k + 1) * msizex * msizey + ii];
     }
 
-    for (uint32_t k = 0;
-         k < (uint32_t) (data.image[ID0].md[0].size[2] - 1 + NBZ);
-         k++)
+    for(uint32_t k = 0;
+            k < (uint32_t)(data.image[ID0].md[0].size[2] - 1 + NBZ);
+            k++)
     {
         /// Remove excluded modes
         long IDeModes = image_ID("emodes");
-        if (IDeModes != -1)
+        if(IDeModes != -1)
         {
             create_2Dimage_ID("tmpmode", msizex, msizey, &IDtm);
 
-            for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+            for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                 data.image[IDtm].array.F[ii] =
                     data.image[ID].array.F[k * msizex * msizey + ii];
             linopt_imtools_image_fitModes("tmpmode",
@@ -291,9 +293,11 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
             IDem = image_ID("em00");
 
             coeff = 1.0 - exp(-pow(1.0 * k / kelim, 6.0));
-            if (k > 2.0 * kelim)
+            if(k > 2.0 * kelim)
+            {
                 coeff = 1.0;
-            for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+            }
+            for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                 data.image[ID].array.F[k * msizex * msizey + ii] =
                     data.image[IDtm].array.F[ii] -
                     coeff * data.image[IDem].array.F[ii];
@@ -303,7 +307,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         }
 
         double totvm = 0.0;
-        for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+        for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
             //	  data.image[ID].array.F[k*msize*msize+ii] =
             // data.image[ID0].array.F[(k+1)*msize*msize+ii];
@@ -312,7 +316,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         }
         offset = totvm / totm;
 
-        for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+        for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
             data.image[ID].array.F[k * msizex * msizey + ii] -= offset;
             data.image[ID].array.F[k * msizex * msizey + ii] *=
@@ -320,11 +324,13 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         }
 
         offset = 0.0;
-        for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+        for(uint64_t ii = 0; ii < msizex * msizey; ii++)
+        {
             offset += data.image[ID].array.F[k * msizex * msizey + ii];
+        }
 
         rms = 0.0;
-        for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+        for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
             data.image[ID].array.F[k * msizex * msizey + ii] -=
                 offset / msizex / msizey;
@@ -333,14 +339,16 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         }
         rms = sqrt(rms / totm);
         printf("Mode %u   RMS = %lf  (%f)\n", k, rms, totm);
-        for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+        for(uint64_t ii = 0; ii < msizex * msizey; ii++)
+        {
             data.image[ID].array.F[k * msizex * msizey + ii] /= rms;
+        }
     }
 
-    for (k = 0; k < data.image[ID0].md[0].size[2] - 1 + NBZ; k++)
+    for(k = 0; k < data.image[ID0].md[0].size[2] - 1 + NBZ; k++)
     {
         rms = 0.0;
-        for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+        for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
             data.image[ID].array.F[k * msizex * msizey + ii] -=
                 offset / msizex / msizey;
@@ -351,15 +359,17 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         printf("Mode %ld   RMS = %lf\n", k, rms);
     }
 
-    if (MaskMode == 1)
+    if(MaskMode == 1)
     {
         long kernsize = 5;
         long NBciter  = 200;
         long citer;
 
-        if (2 * kernsize > msizex)
+        if(2 * kernsize > msizex)
+        {
             kernsize = msizex / 2;
-        for (citer = 0; citer < NBciter; citer++)
+        }
+        for(citer = 0; citer < NBciter; citer++)
         {
             long IDg;
 
@@ -369,10 +379,10 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                          4.0 * pow(1.0 * (NBciter - citer) / NBciter, 0.5),
                          kernsize);
             IDg = image_ID("modeg");
-            for (uint32_t k = 0; k < data.image[ID].md[0].size[2]; k++)
+            for(uint32_t k = 0; k < data.image[ID].md[0].size[2]; k++)
             {
-                for (uint64_t ii = 0; ii < msizex * msizey; ii++)
-                    if (data.image[IDmask].array.F[ii] < 0.98)
+                for(uint64_t ii = 0; ii < msizex * msizey; ii++)
+                    if(data.image[IDmask].array.F[ii] < 0.98)
                         data.image[ID].array.F[k * msizex * msizey + ii] =
                             data.image[IDg].array.F[k * msizex * msizey + ii];
             }
@@ -383,7 +393,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
     /// SLAVED ACTUATORS
     IDslaved = image_ID("dmslaved");
     ID       = image_ID(ID_name);
-    if ((IDslaved != -1) && (IDmask != -1))
+    if((IDslaved != -1) && (IDmask != -1))
     {
         imageID IDtmp;
         create_2Dimage_ID("_tmpinterpol", msizex, msizey, &IDtmp);
@@ -394,10 +404,10 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         imageID IDtmp2;
         create_2Dimage_ID("_tmpcoeff2", msizex, msizey, &IDtmp2);
 
-        for (m = 0; m < data.image[ID].md[0].size[2]; m++)
+        for(m = 0; m < data.image[ID].md[0].size[2]; m++)
         {
             // write input DM mode
-            for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+            for(uint64_t ii = 0; ii < msizex * msizey; ii++)
             {
                 data.image[IDtmp].array.F[ii] =
                     data.image[ID].array.F[m * msizex * msizey + ii];
@@ -411,41 +421,41 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
             float vxp, vxm, vyp, vym, cxp, cxm, cyp, cym;
             float ctot;
 
-            while (pixcnt > 0)
+            while(pixcnt > 0)
             {
                 pixcnt = 0;
-                for (uint32_t ii = 1; ii < (uint32_t) (msizex - 1); ii++)
-                    for (uint32_t jj = 1; jj < (uint32_t) (msizey - 1); jj++)
+                for(uint32_t ii = 1; ii < (uint32_t)(msizex - 1); ii++)
+                    for(uint32_t jj = 1; jj < (uint32_t)(msizey - 1); jj++)
                     {
-                        if ((data.image[IDtmp1].array.F[jj * msizex + ii] <
-                             0.5) &&
-                            (data.image[IDslaved].array.F[jj * msizex + ii] >
-                             0.5))
+                        if((data.image[IDtmp1].array.F[jj * msizex + ii] <
+                                0.5) &&
+                                (data.image[IDslaved].array.F[jj * msizex + ii] >
+                                 0.5))
                         {
                             pixcnt++;
                             vxp = data.image[IDtmp]
-                                      .array.F[jj * msizex + (ii + 1)];
+                                  .array.F[jj * msizex + (ii + 1)];
                             cxp = data.image[IDtmp1]
-                                      .array.F[jj * msizex + (ii + 1)];
+                                  .array.F[jj * msizex + (ii + 1)];
 
                             vxm = data.image[IDtmp]
-                                      .array.F[jj * msizex + (ii - 1)];
+                                  .array.F[jj * msizex + (ii - 1)];
                             cxm = data.image[IDtmp1]
-                                      .array.F[jj * msizex + (ii - 1)];
+                                  .array.F[jj * msizex + (ii - 1)];
 
                             vyp = data.image[IDtmp]
-                                      .array.F[(jj + 1) * msizex + ii];
+                                  .array.F[(jj + 1) * msizex + ii];
                             cyp = data.image[IDtmp1]
-                                      .array.F[(jj + 1) * msizex + ii];
+                                  .array.F[(jj + 1) * msizex + ii];
 
                             vym = data.image[IDtmp]
-                                      .array.F[(jj - 1) * msizex + ii];
+                                  .array.F[(jj - 1) * msizex + ii];
                             cym = data.image[IDtmp1]
-                                      .array.F[(jj - 1) * msizex + ii];
+                                  .array.F[(jj - 1) * msizex + ii];
 
                             ctot = (cxp + cxm + cyp + cym);
 
-                            if (ctot > 0.5)
+                            if(ctot > 0.5)
                             {
                                 data.image[IDtmp].array.F[jj * msizex + ii] =
                                     (vxp * cxp + vxm * cxm + vyp * cyp +
@@ -456,11 +466,11 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                             }
                         }
                     }
-                for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+                for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                     data.image[IDtmp1].array.F[ii] =
                         data.image[IDtmp2].array.F[ii];
             }
-            for (uint64_t ii = 0; ii < msizex * msizey; ii++)
+            for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                 data.image[ID].array.F[m * msizex * msizey + ii] =
                     data.image[IDtmp].array.F[ii];
 

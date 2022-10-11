@@ -11,7 +11,7 @@ typedef struct
     // BLOCKS OF MODES
     uint32_t DMmodesNBblock; /**< number of mode blocks (read from parameter) */
     uint32_t
-        NBmodes_block[100]; /**< number of modes within each block (computed
+    NBmodes_block[100]; /**< number of modes within each block (computed
                                   from files by AOloopControl_loadconfigure) */
     uint32_t modeBlockIndex[MAXNBMODES]; /**< block index to which each mode
                                           belongs (computed by
@@ -46,7 +46,7 @@ typedef struct
     double   blockave_WFSrms[100];   // WFS residual RMS
     double   blockave_WFSnoise[100]; // WFS noise
     double
-        blockave_limFrac[100]; // fraction of mode coefficients exceeding limit
+    blockave_limFrac[100]; // fraction of mode coefficients exceeding limit
 
     double ALLave_OLrms;    // open loop RMS
     double ALLave_Crms;     // correction RMS

@@ -86,7 +86,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
 
     function_parameter_getFPSargs_from_CLIfunc("DMcomb");
 
-    if (data.FPS_CMDCODE != 0) // use FPS implementation
+    if(data.FPS_CMDCODE != 0)  // use FPS implementation
     {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOloopControl_DM_CombineChannels_FPCONF;
@@ -96,7 +96,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
     }
 
     // call non FPS implementation - all parameters specified at function launch
-    if (0 + CLI_checkarg(1, CLIARG_LONG) + CLI_checkarg(2, CLIARG_LONG) +
+    if(0 + CLI_checkarg(1, CLIARG_LONG) + CLI_checkarg(2, CLIARG_LONG) +
             CLI_checkarg(3, CLIARG_LONG) + CLI_checkarg(4, CLIARG_LONG) +
             CLI_checkarg(5, CLIARG_LONG) + CLI_checkarg(6, CLIARG_LONG) +
             CLI_checkarg(7, CLIARG_STR) + CLI_checkarg(8, CLIARG_STR) +
@@ -105,7 +105,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
             CLI_checkarg(13, CLIARG_LONG) + CLI_checkarg(14, CLIARG_FLOAT) +
             CLI_checkarg(15, CLIARG_STR) + CLI_checkarg(16, CLIARG_FLOAT) +
             CLI_checkarg(17, CLIARG_FLOAT) ==
-        0)
+            0)
     {
         AOloopControl_DM_CombineChannels(data.cmdargtoken[1].val.numl,
                                          data.cmdargtoken[2].val.numl,
@@ -141,7 +141,7 @@ errno_t AOloopControl_DM_CombineChannels_cli()
 
 errno_t AOloopControl_DM_dmdispcomboff_cli()
 {
-    if (CLI_checkarg(1, 2) == 0)
+    if(CLI_checkarg(1, 2) == 0)
     {
         AOloopControl_DM_dmdispcomboff(data.cmdargtoken[1].val.numl);
         return CLICMD_SUCCESS;
@@ -154,7 +154,7 @@ errno_t AOloopControl_DM_dmdispcomboff_cli()
 
 errno_t AOloopControl_DM_dmtrigoff_cli()
 {
-    if (CLI_checkarg(1, 2) == 0)
+    if(CLI_checkarg(1, 2) == 0)
     {
         AOloopControl_DM_dmtrigoff(data.cmdargtoken[1].val.numl);
         return CLICMD_SUCCESS;
@@ -179,7 +179,7 @@ errno_t AOloopControl_DM_dmtrigoff_cli()
 
 errno_t AOloopControl_DM_dmdispcombstatus_cli()
 {
-    if (CLI_checkarg(1, 2) == 0)
+    if(CLI_checkarg(1, 2) == 0)
     {
         AOloopControl_DM_dmdispcombstatus(data.cmdargtoken[1].val.numl);
         return CLICMD_SUCCESS;
@@ -192,7 +192,7 @@ errno_t AOloopControl_DM_dmdispcombstatus_cli()
 
 errno_t AOloopControl_DM_chan_setgain_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 2) + CLI_checkarg(3, 1) == 0)
     {
         AOloopControl_DM_chan_setgain(data.cmdargtoken[1].val.numl,
                                       data.cmdargtoken[2].val.numl,
@@ -207,7 +207,7 @@ errno_t AOloopControl_DM_chan_setgain_cli()
 
 errno_t AOloopControl_DM_setvoltON_cli()
 {
-    if (CLI_checkarg(1, 2) == 0)
+    if(CLI_checkarg(1, 2) == 0)
     {
         AOloopControl_DM_setvoltON(data.cmdargtoken[1].val.numl);
         return CLICMD_SUCCESS;
@@ -220,7 +220,7 @@ errno_t AOloopControl_DM_setvoltON_cli()
 
 errno_t AOloopControl_DM_setvoltOFF_cli()
 {
-    if (CLI_checkarg(1, 2) == 0)
+    if(CLI_checkarg(1, 2) == 0)
     {
         AOloopControl_DM_setvoltOFF(data.cmdargtoken[1].val.numl);
         return CLICMD_SUCCESS;
@@ -233,7 +233,7 @@ errno_t AOloopControl_DM_setvoltOFF_cli()
 
 errno_t AOloopControl_DM_setMAXVOLT_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
     {
         AOloopControl_DM_setMAXVOLT(data.cmdargtoken[1].val.numl,
                                     data.cmdargtoken[2].val.numf);
@@ -247,7 +247,7 @@ errno_t AOloopControl_DM_setMAXVOLT_cli()
 
 errno_t AOloopControl_DM_setDClevel_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
     {
         AOloopControl_DM_setDClevel(data.cmdargtoken[1].val.numl,
                                     data.cmdargtoken[2].val.numf);
@@ -261,7 +261,7 @@ errno_t AOloopControl_DM_setDClevel_cli()
 
 errno_t AOloopControl_DM_setAveMode_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
     {
         AOloopControl_DM_setAveMode(data.cmdargtoken[1].val.numl,
                                     data.cmdargtoken[2].val.numl);
@@ -275,7 +275,7 @@ errno_t AOloopControl_DM_setAveMode_cli()
 
 errno_t AOloopControl_DM_setTrigMode_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
     {
         AOloopControl_DM_setTrigMode(data.cmdargtoken[1].val.numl,
                                      data.cmdargtoken[2].val.numl);
@@ -289,7 +289,7 @@ errno_t AOloopControl_DM_setTrigMode_cli()
 
 errno_t AOloopControl_DM_setTrigChan_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
     {
         AOloopControl_DM_setTrigChan(data.cmdargtoken[1].val.numl,
                                      data.cmdargtoken[2].val.numl);
@@ -303,7 +303,7 @@ errno_t AOloopControl_DM_setTrigChan_cli()
 
 errno_t AOloopControl_DM_setTrigSem_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
     {
         AOloopControl_DM_setTrigSem(data.cmdargtoken[1].val.numl,
                                     data.cmdargtoken[2].val.numl);
@@ -329,7 +329,7 @@ errno_t AOloopControl_DM_setTrigSem_cli()
 
 errno_t AOloopControl_DM_dmturb_cli()
 {
-    if (CLI_checkarg(1, 2) == 0)
+    if(CLI_checkarg(1, 2) == 0)
     {
         AOloopControl_DM_dmturb(data.cmdargtoken[1].val.numl, 0, "NULL", 0);
         return CLICMD_SUCCESS;
@@ -342,7 +342,7 @@ errno_t AOloopControl_DM_dmturb_cli()
 
 errno_t AOloopControl_DM_dmturb2im_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(3, 2) + CLI_checkarg(3, 2) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(3, 2) + CLI_checkarg(3, 2) == 0)
     {
         AOloopControl_DM_dmturb(data.cmdargtoken[1].val.numl,
                                 1,
@@ -358,7 +358,7 @@ errno_t AOloopControl_DM_dmturb2im_cli()
 
 errno_t AOloopControl_DM_dmturboff_cli()
 {
-    if (CLI_checkarg(1, 2) == 0)
+    if(CLI_checkarg(1, 2) == 0)
     {
         AOloopControl_DM_dmturboff(data.cmdargtoken[1].val.numl);
         return CLICMD_SUCCESS;
@@ -371,7 +371,7 @@ errno_t AOloopControl_DM_dmturboff_cli()
 
 errno_t AOloopControl_DM_dmturb_wspeed_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
     {
         AOloopControl_DM_dmturb_wspeed(data.cmdargtoken[1].val.numl,
                                        data.cmdargtoken[2].val.numf);
@@ -385,7 +385,7 @@ errno_t AOloopControl_DM_dmturb_wspeed_cli()
 
 errno_t AOloopControl_DM_dmturb_ampl_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
     {
         AOloopControl_DM_dmturb_ampl(data.cmdargtoken[1].val.numl,
                                      data.cmdargtoken[2].val.numf);
@@ -399,7 +399,7 @@ errno_t AOloopControl_DM_dmturb_ampl_cli()
 
 errno_t AOloopControl_DM_dmturb_LOcoeff_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 1) == 0)
     {
         AOloopControl_DM_dmturb_LOcoeff(data.cmdargtoken[1].val.numl,
                                         data.cmdargtoken[2].val.numf);
@@ -413,7 +413,7 @@ errno_t AOloopControl_DM_dmturb_LOcoeff_cli()
 
 errno_t AOloopControl_DM_dmturb_tint_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 2) == 0)
     {
         AOloopControl_DM_dmturb_tint(data.cmdargtoken[1].val.numl,
                                      data.cmdargtoken[2].val.numl);
@@ -439,9 +439,9 @@ errno_t AOloopControl_DM_dmturb_tint_cli()
 
 errno_t AOloopControl_mkDM_TT_circle_cli()
 {
-    if (CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+    if(CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 1) ==
-        0)
+            0)
     {
         AOloopControl_mkDM_TT_circle(data.cmdargtoken[1].val.string,
                                      data.cmdargtoken[2].val.numl,
@@ -457,9 +457,9 @@ errno_t AOloopControl_mkDM_TT_circle_cli()
 
 errno_t AOloopControl_DM_mkAstroGrid_seq_cli()
 {
-    if (CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+    if(CLI_checkarg(1, 3) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 2) + CLI_checkarg(5, 2) ==
-        0)
+            0)
     {
         AOloopControl_DM_mkAstroGrid_seq(data.cmdargtoken[1].val.string,
                                          data.cmdargtoken[2].val.numl,
@@ -478,16 +478,16 @@ static errno_t init_module_CLI()
 {
 
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /*                                                                                                 */
     /* 2. RUNTIME COMPUTATION */
     /*                                                                                                 */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand(
         "aolcontrolDMcomb",
@@ -527,16 +527,16 @@ static errno_t init_module_CLI()
                        "int AOloopControl_DM_dmtrigoff(long DMindex)");
 
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /*                                                                                                 */
     /* 3. CONFIGURATION */
     /*                                                                                                 */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand("aoloopcontroldmcombmon",
                        __FILE__,
@@ -626,16 +626,16 @@ static errno_t init_module_CLI()
         "int AOloopControl_DM_setTrigSem(long DMindex, int sem)");
 
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /*                                                                                                 */
     /* 4. TURBULENCE SIMULATOR */
     /*                                                                                                 */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand("aoloopcontroldmturbprint",
                        __FILE__,
@@ -708,16 +708,16 @@ static errno_t init_module_CLI()
         "int AOloopControl_DM_dmturb_tint(long DMindex, long tint)");
 
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /*                                                                                                 */
     /* 5. MISC TESTS & UTILS */
     /*                                                                                                 */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand("aoloopcontroldmmkttcirc",
                        __FILE__,

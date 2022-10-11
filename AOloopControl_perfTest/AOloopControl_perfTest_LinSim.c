@@ -68,7 +68,7 @@
  */
 
 errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(const char *fpsname,
-                                                      uint32_t    CMDmode)
+        uint32_t    CMDmode)
 {
     FPS_SETUP_INIT(fpsname, CMDmode);
 
@@ -90,9 +90,9 @@ errno_t AOcontrolLoop_perfTest_LinearSimulator_FPCONF(const char *fpsname,
 
     FPS_CONFLOOP_START // macro in function_parameter.h
 
-        FPS_CONFLOOP_END // macro in function_parameter.h
+    FPS_CONFLOOP_END // macro in function_parameter.h
 
-        return RETURN_SUCCESS;
+    return RETURN_SUCCESS;
 }
 
 errno_t AOcontrolLoop_perfTest_LinearSimulator_RUN(const char *fpsname)
@@ -102,7 +102,7 @@ errno_t AOcontrolLoop_perfTest_LinearSimulator_RUN(const char *fpsname)
 
     int FPSINTERFACE = 1;
 
-    if (function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN) == -1)
     {
         printf(
             "ERROR: fps \"%s\" does not exist -> running without FPS "
@@ -115,7 +115,7 @@ errno_t AOcontrolLoop_perfTest_LinearSimulator_RUN(const char *fpsname)
         FPSINTERFACE = 1;
     }
 
-    if (FPSINTERFACE == 1)
+    if(FPSINTERFACE == 1)
     {
         function_parameter_struct_disconnect(&fps);
     }

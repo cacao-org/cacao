@@ -66,13 +66,13 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     imageID IDmodevalPFsync;
 
     imageID IDmodeARPFgain; // predictive filter mixing ratio per gain
-                            // (0=non-predictive, 1=predictive)
+    // (0=non-predictive, 1=predictive)
     // imageID IDmodevalPF; // predictive filter output
     imageID IDmodevalPFres; // predictive filter measured residual (real-time)
     imageID IDmodeWFSnoise; // WFS noise
     imageID
-        IDmodevalPF_C; // modal prediction, circular buffer to include history
-                       //    long     modevalPFindexl = 0;
+    IDmodevalPF_C; // modal prediction, circular buffer to include history
+    //    long     modevalPFindexl = 0;
     long modevalPFindex = 0; // index in the circular buffer
 
     imageID      IDblknb;
@@ -130,7 +130,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     sched_setscheduler(0, SCHED_FIFO, &schedpar);
 
     PROCESSINFO *processinfo;
-    if (data.processinfo == 1)
+    if(data.processinfo == 1)
     {
         // CREATE PROCESSINFO ENTRY
         // see processtools.c in module CommandLineInterface for details
@@ -153,37 +153,37 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
     // CATCH SIGNALS
 
-    if (sigaction(SIGTERM, &data.sigact, NULL) == -1)
+    if(sigaction(SIGTERM, &data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGTERM\n");
     }
 
-    if (sigaction(SIGINT, &data.sigact, NULL) == -1)
+    if(sigaction(SIGINT, &data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGINT\n");
     }
 
-    if (sigaction(SIGABRT, &data.sigact, NULL) == -1)
+    if(sigaction(SIGABRT, &data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGABRT\n");
     }
 
-    if (sigaction(SIGBUS, &data.sigact, NULL) == -1)
+    if(sigaction(SIGBUS, &data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGBUS\n");
     }
 
-    if (sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+    if(sigaction(SIGSEGV, &data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGSEGV\n");
     }
 
-    if (sigaction(SIGHUP, &data.sigact, NULL) == -1)
+    if(sigaction(SIGHUP, &data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGHUP\n");
     }
 
-    if (sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+    if(sigaction(SIGPIPE, &data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGPIPE\n");
     }
@@ -202,13 +202,13 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                          commentstring);
 
     // read AO loop gain, mult
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
 
     // INPUT
-    if (sprintf(imname, "aol%ld_modeval", loop) < 1) // measured from WFS
+    if(sprintf(imname, "aol%ld_modeval", loop) < 1)  // measured from WFS
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -228,11 +228,11 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
     modeblock = (long *) malloc(sizeof(long) * NBmodes);
 
-    if (aoloopcontrol_var.aoconfID_looptiming == -1)
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
         // LOOPiteration is written in cnt1 of loop timing array
-        if (sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
-            1)
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
+                1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -246,11 +246,11 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     }
 
     // CONNECT to dm control channel
-    if (sprintf(imname, "aol%ld_dmC", loop) < 1)
+    if(sprintf(imname, "aol%ld_dmC", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
-    if (aoloopcontrol_var.aoconfID_dmC == -1)
+    if(aoloopcontrol_var.aoconfID_dmC == -1)
     {
         aoloopcontrol_var.aoconfID_dmC = read_sharedmem_image(imname);
     }
@@ -258,9 +258,9 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_dmC] = 1;
 
     // CONNECT to arrays holding gain, limit, and multf values for blocks
-    if (aoloopcontrol_var.aoconfID_gainb == -1)
+    if(aoloopcontrol_var.aoconfID_gainb == -1)
     {
-        if (sprintf(imname, "aol%ld_gainb", loop) < 1)
+        if(sprintf(imname, "aol%ld_gainb", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -268,9 +268,9 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         aoloopcontrol_var.aoconfID_gainb = read_sharedmem_image(imname);
     }
 
-    if (aoloopcontrol_var.aoconfID_multfb == -1)
+    if(aoloopcontrol_var.aoconfID_multfb == -1)
     {
-        if (sprintf(imname, "aol%ld_multfb", loop) < 1)
+        if(sprintf(imname, "aol%ld_multfb", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -278,9 +278,9 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         aoloopcontrol_var.aoconfID_multfb = read_sharedmem_image(imname);
     }
 
-    if (aoloopcontrol_var.aoconfID_limitb == -1)
+    if(aoloopcontrol_var.aoconfID_limitb == -1)
     {
-        if (sprintf(imname, "aol%ld_limitb", loop) < 1)
+        if(sprintf(imname, "aol%ld_limitb", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -289,9 +289,9 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     }
 
     // CONNECT to arrays holding gain, limit and multf values for individual modes
-    if (aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
+    if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
     {
-        if (sprintf(imname, "aol%ld_DMmode_GAIN", loop) < 1)
+        if(sprintf(imname, "aol%ld_DMmode_GAIN", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -301,30 +301,30 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     printf("aoloopcontrol_var.aoconfID_DMmode_GAIN = %ld\n",
            aoloopcontrol_var.aoconfID_DMmode_GAIN);
 
-    if (aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
+    if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
     {
-        if (sprintf(imname, "aol%ld_DMmode_LIMIT", loop) < 1)
+        if(sprintf(imname, "aol%ld_DMmode_LIMIT", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(imname);
     }
-    if (aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
+    if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
     {
         FILTERMODE = 0;
     }
 
-    if (aoloopcontrol_var.aoconfID_MULTF_modes == -1)
+    if(aoloopcontrol_var.aoconfID_MULTF_modes == -1)
     {
-        if (sprintf(imname, "aol%ld_DMmode_MULTF", loop) < 1)
+        if(sprintf(imname, "aol%ld_DMmode_MULTF", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
         aoloopcontrol_var.aoconfID_MULTF_modes = read_sharedmem_image(imname);
     }
-    if (aoloopcontrol_var.aoconfID_MULTF_modes == -1)
+    if(aoloopcontrol_var.aoconfID_MULTF_modes == -1)
     {
         FILTERMODE = 0;
     }
@@ -340,10 +340,10 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
     // predictive control output
     // Try to read existing modevalPF if exists
-    if (aoloopcontrol_var.aoconfID_modevalPF == -1)
+    if(aoloopcontrol_var.aoconfID_modevalPF == -1)
     {
 
-        if (sprintf(imname, "aol%ld_modevalPF", loop) < 1)
+        if(sprintf(imname, "aol%ld_modevalPF", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -354,21 +354,21 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 __LINE__,
                 aoloopcontrol_var.aoconfID_modevalPF); // TEST
 
-        if (aoloopcontrol_var.aoconfID_modevalPF != -1)
+        if(aoloopcontrol_var.aoconfID_modevalPF != -1)
         {
             fprintf(fptestmPF,
                     "%4d  aoloopcontrol_var.aoconfID_modevalPF =  %ld\n",
                     __LINE__,
                     aoloopcontrol_var.aoconfID_modevalPF); // TEST
 
-            for (uint64_t ii = 0;
-                 ii < data.image[aoloopcontrol_var.aoconfID_modevalPF]
-                              .md[0]
-                              .size[0] *
-                          data.image[aoloopcontrol_var.aoconfID_modevalPF]
-                              .md[0]
-                              .size[1];
-                 ii++)
+            for(uint64_t ii = 0;
+                    ii < data.image[aoloopcontrol_var.aoconfID_modevalPF]
+                    .md[0]
+                    .size[0] *
+                    data.image[aoloopcontrol_var.aoconfID_modevalPF]
+                    .md[0]
+                    .size[1];
+                    ii++)
             {
                 data.image[aoloopcontrol_var.aoconfID_modevalPF].array.F[ii] =
                     0.0;
@@ -390,7 +390,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     // all images below are vectors of dimension NBmodes x 1
 
     // load/create aol_modeval_ol (pseudo-open loop mode values)
-    if (sprintf(imname, "aol%ld_modeval_ol", loop) < 1)
+    if(sprintf(imname, "aol%ld_modeval_ol", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -402,7 +402,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_ol] = 1;
 
     // load/create aol_mode_blknb (block index for each mode)
-    if (sprintf(imname, "aol%ld_mode_blknb", loop) < 1)
+    if(sprintf(imname, "aol%ld_mode_blknb", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -410,7 +410,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     COREMOD_MEMORY_image_set_createsem(imname, 10);
 
     // load/create aol_modeval_dm_corr (current modal DM correction)
-    if (sprintf(imname, "aol%ld_modeval_dm_corr", loop) < 1)
+    if(sprintf(imname, "aol%ld_modeval_dm_corr", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -428,7 +428,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
     // load/create aol_modeval_dm_now (current modal DM correction after mixing
     // with predicitiv control)
-    if (sprintf(imname, "aol%ld_modeval_dm_now", loop) < 1)
+    if(sprintf(imname, "aol%ld_modeval_dm_now", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -445,7 +445,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_dm_now] = 1;
 
     // load/create aol_modeval_dm_now_filt (current modal DM correction, filtered)
-    if (sprintf(imname, "aol%ld_modeval_dm_now_filt", loop) < 1)
+    if(sprintf(imname, "aol%ld_modeval_dm_now_filt", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -465,7 +465,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
     // load/create aol_modeval_dm (modal DM correction at time of currently
     // available WFS measurement)
-    if (sprintf(imname, "aol%ld_modeval_dm", loop) < 1)
+    if(sprintf(imname, "aol%ld_modeval_dm", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -476,7 +476,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
     // load/create aol_modeval_dm (modal DM correction at time of currently
     // available WFS measurement)
-    if (sprintf(imname, "aol%ld_modevalPFsync", loop) < 1)
+    if(sprintf(imname, "aol%ld_modevalPFsync", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -494,7 +494,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
     // load/create aol_modeval_dm (modal DM correction at time of currently
     // available WFS measurement)
-    if (sprintf(imname, "aol%ld_modevalPFres", loop) < 1)
+    if(sprintf(imname, "aol%ld_modevalPFres", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -511,7 +511,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modevalPFres] = 1;
 
     // load/create WFS noise estimate
-    if (sprintf(imname, "aol%ld_modeWFSnoise", loop) < 1)
+    if(sprintf(imname, "aol%ld_modeWFSnoise", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -534,7 +534,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     // set to 1 (or intermediate value) when predictive filter for corresponding
     // mode is on
     //
-    if (sprintf(imname, "aol%ld_mode_ARPFgain", loop) < 1)
+    if(sprintf(imname, "aol%ld_mode_ARPFgain", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -548,15 +548,15 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     &IDmodeARPFgain);
     COREMOD_MEMORY_image_set_createsem(imname, 10);
     // initialize the gain to zero for all modes
-    for (uint32_t m = 0; m < NBmodes; m++)
+    for(uint32_t m = 0; m < NBmodes; m++)
     {
         data.image[IDmodeARPFgain].array.F[m] = 0.0;
     }
 
-    if (aoloopcontrol_var.aoconfID_modeARPFgainAuto == -1)
+    if(aoloopcontrol_var.aoconfID_modeARPFgainAuto == -1)
     {
         // multiplicative auto ratio on top of gain above
-        if (sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1)
+        if(sprintf(imname, "aol%ld_mode_ARPFgainAuto", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -570,7 +570,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                         &(aoloopcontrol_var.aoconfID_modeARPFgainAuto));
         COREMOD_MEMORY_image_set_createsem(imname, 10);
         // initialize the gain to zero for all modes
-        for (uint32_t m = 0; m < NBmodes; m++)
+        for(uint32_t m = 0; m < NBmodes; m++)
         {
             data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto].array.F[m] =
                 1.0;
@@ -578,9 +578,9 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     }
 
     sizeout[1] = modeval_bsize;
-    if (sprintf(imname,
-                "aol%ld_modeval_dm_C",
-                loop) < 1) // modal DM correction, circular buffer
+    if(sprintf(imname,
+               "aol%ld_modeval_dm_C",
+               loop) < 1) // modal DM correction, circular buffer
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -597,7 +597,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
     // modal prediction, circular buffer
     sizeout[1] = modeval_bsize;
-    if (sprintf(imname, "aol%ld_modevalPF_C", loop) < 1)
+    if(sprintf(imname, "aol%ld_modevalPF_C", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -615,7 +615,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     // auto limit tuning
     sizeout[0] = AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
     sizeout[1] = 1;
-    if (sprintf(imname, "aol%ld_autotune_lim_bcoeff", loop) < 1)
+    if(sprintf(imname, "aol%ld_autotune_lim_bcoeff", loop) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -639,11 +639,11 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     {
         uint32_t m   = 0;
         uint32_t blk = 0;
-        while (m < NBmodes)
+        while(m < NBmodes)
         {
             imageID ID;
 
-            if (sprintf(imname, "aol%ld_DMmodes%02u", loop, blk) < 1)
+            if(sprintf(imname, "aol%ld_DMmodes%02u", loop, blk) < 1)
             {
                 PRINT_ERROR("sprintf wrote <1 char");
             }
@@ -652,7 +652,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             fflush(stdout);
 
             ID = read_sharedmem_image(imname);
-            if (ID == -1)
+            if(ID == -1)
             {
                 printf("ERROR: could not load %s from shared memory\n", imname);
                 exit(0);
@@ -661,7 +661,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             printf(" -> found %2u modes\n", n);
             blockNBmodes[blk] = n;
 
-            for (uint32_t i = 0; i < n; i++)
+            for(uint32_t i = 0; i < n; i++)
             {
                 modeblock[m]                      = blk;
                 data.image[IDblknb].array.UI16[m] = blk;
@@ -678,7 +678,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     framelatency = AOconf[loop].AOtiminginfo.hardwlatency_frame +
                    AOconf[loop].AOtiminginfo.wfsmextrlatency_frame;
 
-    if (data.processinfo == 1)
+    if(data.processinfo == 1)
     {
         char msgstring[200];
         sprintf(msgstring, "latency = %.3f", framelatency);
@@ -695,18 +695,18 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     data.image[IDmodevalDMnow].md[0].write  = 1;
     data.image[IDmodevalDM_C].md[0].write   = 1;
     data.image[IDmodevalPF_C].md[0].write   = 1;
-    for (uint32_t m = 0; m < NBmodes; m++)
+    for(uint32_t m = 0; m < NBmodes; m++)
     {
         data.image[IDmodevalDM].array.F[m]     = 0.0;
         data.image[IDmodevalDMcorr].array.F[m] = 0.0;
         data.image[IDmodevalDMnow].array.F[m]  = 0.0;
-        for (modevalDMindex = 0; modevalDMindex < modeval_bsize;
-             modevalDMindex++)
+        for(modevalDMindex = 0; modevalDMindex < modeval_bsize;
+                modevalDMindex++)
         {
             data.image[IDmodevalDM_C].array.F[modevalDMindex * NBmodes + m] = 0;
         }
-        for (modevalPFindex = 0; modevalPFindex < modeval_bsize;
-             modevalPFindex++)
+        for(modevalPFindex = 0; modevalPFindex < modeval_bsize;
+                modevalPFindex++)
         {
             data.image[IDmodevalPF_C].array.F[modevalPFindex * NBmodes + m] = 0;
         }
@@ -739,8 +739,8 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     cnt = 0;
 
     blockstatcnt = 0;
-    for (uint32_t block = 0; block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
-         block++)
+    for(uint32_t block = 0; block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
+            block++)
     {
         blockavePFresrms[block] = 0.0;
         blockaveOLrms[block]    = 0.0;
@@ -753,7 +753,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     allaveWFSrms  = 0.0;
     allavelimFrac = 0.0;
 
-    if (data.processinfo == 1)
+    if(data.processinfo == 1)
     {
         processinfo->loopstat = 1; // loop running
         processinfo_WriteMessage(processinfo, "Running loop");
@@ -763,39 +763,39 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
     long loopcnt = 0;
 
     loopPFcnt = 0;
-    while (loopOK == 1)
+    while(loopOK == 1)
     {
         long modevalDMindex0, modevalDMindex1;
         long modevalPFindex0, modevalPFindex1;
 
         // processinfo control
-        if (data.processinfo == 1)
+        if(data.processinfo == 1)
         {
-            while (processinfo->CTRLval == 1) // pause
+            while(processinfo->CTRLval == 1)  // pause
             {
                 usleep(50);
             }
 
-            if (processinfo->CTRLval == 2) // single iteration
+            if(processinfo->CTRLval == 2)  // single iteration
             {
                 processinfo->CTRLval = 1;
             }
 
-            if (processinfo->CTRLval == 3) // exit loop
+            if(processinfo->CTRLval == 3)  // exit loop
             {
                 loopOK = 0; // loopCTRLexit = 1;
             }
         }
 
-        if (loopOK == 1)
+        if(loopOK == 1)
         {
 
             // read WFS measured modes (residual)
-            if (data.image[IDmodeval].md[0].sem == 0)
+            if(data.image[IDmodeval].md[0].sem == 0)
             {
-                while (cnt == data.image[IDmodeval]
-                                  .md[0]
-                                  .cnt0) // test if new frame exists
+                while(cnt == data.image[IDmodeval]
+                        .md[0]
+                        .cnt0) // test if new frame exists
                 {
                     usleep(5);
                 }
@@ -821,7 +821,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
             // TEST
 
-            for (semcnt = 0; semcnt < semval; semcnt++)
+            for(semcnt = 0; semcnt < semval; semcnt++)
             {
                 printf(
                     "WARNING %s %d  : [%d] sem_trywait on "
@@ -833,7 +833,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 sem_trywait(data.image[IDmodeval].semptr[4]);
             }
 
-            if ((data.processinfo == 1) && (processinfo->MeasureTiming == 1))
+            if((data.processinfo == 1) && (processinfo->MeasureTiming == 1))
             {
                 processinfo_exec_start(processinfo);
             }
@@ -841,8 +841,8 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             AOconf[loop].AOtiminginfo.statusM = 3;
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiffv = timespec_diff_double(
-                data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-                tnow);
+                         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                         tnow);
             data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[3] =
                 tdiffv;
 
@@ -851,24 +851,24 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             AOloopControl_RTstreamLOG_update(loop, RTSLOGindex_modeval, tnow);
 
             // write gain, mult, limit into arrays
-            for (uint32_t m = 0; m < NBmodes; m++)
+            for(uint32_t m = 0; m < NBmodes; m++)
             {
                 modegain[m] = AOconf[loop].aorun.gain *
                               data.image[aoloopcontrol_var.aoconfID_gainb]
-                                  .array.F[modeblock[m]] *
+                              .array.F[modeblock[m]] *
                               data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN]
-                                  .array.F[m];
+                              .array.F[m];
                 modemult[m] = AOconf[loop].aorun.mult *
                               data.image[aoloopcontrol_var.aoconfID_multfb]
-                                  .array.F[modeblock[m]] *
+                              .array.F[modeblock[m]] *
                               data.image[aoloopcontrol_var.aoconfID_MULTF_modes]
-                                  .array.F[m];
+                              .array.F[m];
                 modelimit[m] =
                     AOconf[loop].aorun.maxlimit *
                     data.image[aoloopcontrol_var.aoconfID_limitb]
-                        .array.F[modeblock[m]] *
+                    .array.F[modeblock[m]] *
                     data.image[aoloopcontrol_var.aoconfID_LIMIT_modes]
-                        .array.F[m];
+                    .array.F[m];
             }
 
             //
@@ -881,26 +881,26 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             //
 
             data.image[IDmodevalDMcorr].md[0].write = 1;
-            for (uint32_t m = 0; m < NBmodes; m++)
+            for(uint32_t m = 0; m < NBmodes; m++)
             {
                 data.image[IDmodevalDMcorr].array.F[m] =
                     modemult[m] *
                     (data.image[IDmodevalDM_C]
-                         .array.F[modevalDMindexl * NBmodes + m] -
+                     .array.F[modevalDMindexl * NBmodes + m] -
                      modegain[m] * data.image[IDmodeval].array.F[m]);
             }
             COREMOD_MEMORY_image_set_sempost_byID(IDmodevalDMcorr, -1);
             data.image[IDmodevalDMcorr].md[0].cnt1 =
                 LOOPiter; // modevalPFindex;
-                          // //TBC
+            // //TBC
             data.image[IDmodevalDMcorr].md[0].cnt0++;
             data.image[IDmodevalDMcorr].md[0].write = 0;
 
             AOconf[loop].AOtiminginfo.statusM = 4;
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiffv = timespec_diff_double(
-                data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-                tnow);
+                         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                         tnow);
             data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[4] =
                 tdiffv;
 
@@ -914,14 +914,14 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             //
             //  MIX PREDICTION WITH CURRENT DM STATE
             //
-            if (AOconf[loop].aorun.ARPFon == 1)
+            if(AOconf[loop].aorun.ARPFon == 1)
             {
                 //	printf("%s  %s  %d\n",__FILE__, __func__,
                 //__LINE__);fflush(stdout); //TEST
 
-                if (aoloopcontrol_var.aoconfID_modevalPF == -1)
+                if(aoloopcontrol_var.aoconfID_modevalPF == -1)
                 {
-                    if (sprintf(imname, "aol%ld_modevalPF", loop) < 1)
+                    if(sprintf(imname, "aol%ld_modevalPF", loop) < 1)
                     {
                         PRINT_ERROR("sprintf wrote <1 char");
                     }
@@ -950,21 +950,21 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                                                      RTSLOGindex_modevalPF,
                                                      tnow);
 
-                    for (uint32_t m = 0; m < NBmodes; m++)
+                    for(uint32_t m = 0; m < NBmodes; m++)
                     {
                         float mixratio;
 
                         mixratio = AOconf[loop].aorun.ARPFgain *
                                    data.image[IDmodeARPFgain].array.F[m] *
                                    data.image[aoloopcontrol_var
-                                                  .aoconfID_modeARPFgainAuto]
-                                       .array.F[m];
+                                              .aoconfID_modeARPFgainAuto]
+                                   .array.F[m];
                         data.image[IDmodevalDMnow].array.F[m] =
                             -mixratio *
-                                data.image[aoloopcontrol_var.aoconfID_modevalPF]
-                                    .array.F[m] +
+                            data.image[aoloopcontrol_var.aoconfID_modevalPF]
+                            .array.F[m] +
                             (1.0 - mixratio) *
-                                data.image[IDmodevalDMcorr].array.F[m];
+                            data.image[IDmodevalDMcorr].array.F[m];
                     }
 
                     // drive semaphore to zero
@@ -975,12 +975,12 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     // update current location of prediction circular buffer
                     //
                     data.image[IDmodevalPF_C].md[0].write = 1;
-                    for (uint32_t m = 0; m < NBmodes; m++)
+                    for(uint32_t m = 0; m < NBmodes; m++)
                     {
                         data.image[IDmodevalPF_C]
-                            .array.F[modevalPFindex * NBmodes + m] =
+                        .array.F[modevalPFindex * NBmodes + m] =
                             data.image[aoloopcontrol_var.aoconfID_modevalPF]
-                                .array.F[m];
+                            .array.F[m];
                     }
                     COREMOD_MEMORY_image_set_sempost_byID(IDmodevalPF_C, -1);
                     data.image[IDmodevalPF_C].md[0].cnt1 =
@@ -990,65 +990,65 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
                     // autotune ARPFgainAuto
                     data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto]
-                        .md[0]
-                        .write = 1;
-                    for (uint32_t m = 0; m < NBmodes; m++)
+                    .md[0]
+                    .write = 1;
+                    for(uint32_t m = 0; m < NBmodes; m++)
                     {
                         float minVal = AOconf[loop].aorun.ARPFgainAutoMin;
                         float maxVal = AOconf[loop].aorun.ARPFgainAutoMax;
 
-                        if (data.image[IDmodeARPFgain].array.F[m] >
-                            0.5) // if mode is predictive-controlled
+                        if(data.image[IDmodeARPFgain].array.F[m] >
+                                0.5) // if mode is predictive-controlled
                         {
-                            if (data.image[IDmodevalPFres].array.F[m] *
+                            if(data.image[IDmodevalPFres].array.F[m] *
                                     data.image[IDmodevalPFres].array.F[m] <
-                                data.image[IDmodeval].array.F[m] *
+                                    data.image[IDmodeval].array.F[m] *
                                     data.image[IDmodeval].array.F[m])
                             {
                                 data.image[aoloopcontrol_var
-                                               .aoconfID_modeARPFgainAuto]
-                                    .array.F[m] += 0.001;
+                                           .aoconfID_modeARPFgainAuto]
+                                .array.F[m] += 0.001;
                             }
                             else
                             {
                                 data.image[aoloopcontrol_var
-                                               .aoconfID_modeARPFgainAuto]
-                                    .array.F[m] -= 0.001;
+                                           .aoconfID_modeARPFgainAuto]
+                                .array.F[m] -= 0.001;
                             }
 
-                            if (data.image[aoloopcontrol_var
-                                               .aoconfID_modeARPFgainAuto]
+                            if(data.image[aoloopcontrol_var
+                                          .aoconfID_modeARPFgainAuto]
                                     .array.F[m] > maxVal)
                             {
                                 data.image[aoloopcontrol_var
-                                               .aoconfID_modeARPFgainAuto]
-                                    .array.F[m] = maxVal;
+                                           .aoconfID_modeARPFgainAuto]
+                                .array.F[m] = maxVal;
                             }
-                            if (data.image[aoloopcontrol_var
-                                               .aoconfID_modeARPFgainAuto]
+                            if(data.image[aoloopcontrol_var
+                                          .aoconfID_modeARPFgainAuto]
                                     .array.F[m] < minVal)
                             {
                                 data.image[aoloopcontrol_var
-                                               .aoconfID_modeARPFgainAuto]
-                                    .array.F[m] = minVal;
+                                           .aoconfID_modeARPFgainAuto]
+                                .array.F[m] = minVal;
                             }
                         }
                     }
                     data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto]
-                        .md[0]
-                        .cnt1 = LOOPiter; // modevalPFindex;
+                    .md[0]
+                    .cnt1 = LOOPiter; // modevalPFindex;
                     data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto]
-                        .md[0]
-                        .cnt0++;
+                    .md[0]
+                    .cnt0++;
                     data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto]
-                        .md[0]
-                        .write = 0;
+                    .md[0]
+                    .write = 0;
 
                     loopPFcnt++;
                 }
             }
 
-            if (ARPF_ok == 0)
+            if(ARPF_ok == 0)
             {
                 memcpy(data.image[IDmodevalDMnow].array.F,
                        data.image[IDmodevalDMcorr].array.F,
@@ -1062,8 +1062,8 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             AOconf[loop].AOtiminginfo.statusM = 5;
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiffv = timespec_diff_double(
-                data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-                tnow);
+                         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                         tnow);
             data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[5] =
                 tdiffv;
 
@@ -1071,19 +1071,19 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             // FILTERING MODE VALUES
             // THIS FILTERING GOES TOGETHER WITH THE SECONDARY WRITE ON DM TO KEEP
             // FILTERED AND ACTUAL VALUES IDENTICAL
-            for (uint32_t m = 0; m < NBmodes; m++)
+            for(uint32_t m = 0; m < NBmodes; m++)
             {
                 data.image[IDmodevalDMnowfilt].array.F[m] =
                     data.image[IDmodevalDMnow].array.F[m];
             }
 
-            if (AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_ON ==
-                1) // automatically adjust modal limits
+            if(AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_ON ==
+                    1) // automatically adjust modal limits
             {
                 data.image[IDatlimbcoeff].md[0].write = 1;
-                for (uint32_t block = 0;
-                     block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
-                     block++)
+                for(uint32_t block = 0;
+                        block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
+                        block++)
                 {
                     limitblockarray[block] = 0.0;
                 }
@@ -1093,32 +1093,32 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 data.image[aoloopcontrol_var.aoconfID_limitb].md[0].write = 1;
 
                 // Adjust limit for EACH mode
-                for (uint32_t m = 0; m < NBmodes; m++)
+                for(uint32_t m = 0; m < NBmodes; m++)
                 {
                     uint32_t block = data.image[IDblknb].array.UI16[m];
 
-                    if (fabs(AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_mcoeff *
-                             data.image[IDmodevalDMnowfilt].array.F[m]) >
-                        modelimit[m])
+                    if(fabs(AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_mcoeff *
+                            data.image[IDmodevalDMnowfilt].array.F[m]) >
+                            modelimit[m])
                     {
                         data.image[aoloopcontrol_var.aoconfID_LIMIT_modes]
-                            .array.F[m] *=
+                        .array.F[m] *=
                             (1.0 +
                              AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta);
                     }
                     else
                     {
                         data.image[aoloopcontrol_var.aoconfID_LIMIT_modes]
-                            .array.F[m] *=
+                        .array.F[m] *=
                             (1.0 -
                              AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta *
-                                 0.01 *
-                                 AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_perc);
+                             0.01 *
+                             AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_perc);
                     }
 
                     limitblockarray[block] +=
                         data.image[aoloopcontrol_var.aoconfID_LIMIT_modes]
-                            .array.F[m];
+                        .array.F[m];
                 }
                 COREMOD_MEMORY_image_set_sempost_byID(
                     aoloopcontrol_var.aoconfID_LIMIT_modes,
@@ -1131,32 +1131,32 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
                 // update block limits to drive average limit coefficients to 1
                 data.image[IDatlimbcoeff].md[0].write = 1;
-                for (uint32_t block = 0;
-                     block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
-                     block++)
+                for(uint32_t block = 0;
+                        block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
+                        block++)
                 {
                     data.image[IDatlimbcoeff].array.F[block] =
                         limitblockarray[block] / blockNBmodes[block];
                     coeff = (1.0 +
                              (data.image[IDatlimbcoeff].array.F[block] - 1.0) *
-                                 AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta *
-                                 0.1);
-                    if (coeff <
-                        1.0 - AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta)
+                             AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta *
+                             0.1);
+                    if(coeff <
+                            1.0 - AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta)
                     {
                         coeff =
                             1.0 - AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta;
                     }
-                    if (coeff >
-                        1.0 + AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta)
+                    if(coeff >
+                            1.0 + AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta)
                     {
                         coeff =
                             1.0 + AOconf[loop].AOAutoTune.AUTOTUNE_LIMITS_delta;
                     }
                     data.image[aoloopcontrol_var.aoconfID_limitb]
-                        .array.F[block] =
+                    .array.F[block] =
                         data.image[aoloopcontrol_var.aoconfID_limitb]
-                            .array.F[block] *
+                        .array.F[block] *
                         coeff;
                 }
                 COREMOD_MEMORY_image_set_sempost_byID(IDatlimbcoeff, -1);
@@ -1173,12 +1173,12 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 data.image[aoloopcontrol_var.aoconfID_limitb].md[0].write = 0;
             }
 
-            if (AOconf[loop].AOAutoTune.AUTOTUNE_GAINS_ON == 1)
+            if(AOconf[loop].AOAutoTune.AUTOTUNE_GAINS_ON == 1)
             {
                 // CONNECT to auto gain input
-                if (IDautogain == -1)
+                if(IDautogain == -1)
                 {
-                    if (sprintf(imname, "aol%ld_autogain", loop) < 1)
+                    if(sprintf(imname, "aol%ld_autogain", loop) < 1)
                     {
                         PRINT_ERROR("sprintf wrote <1 char");
                     }
@@ -1186,9 +1186,9 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     IDautogain = read_sharedmem_image(imname);
                 }
 
-                if (IDautogain != -1)
+                if(IDautogain != -1)
                 {
-                    if (data.image[IDautogain].md[0].cnt0 != autogainCnt)
+                    if(data.image[IDautogain].md[0].cnt0 != autogainCnt)
                     {
                         float maxGainVal = 0.0;
                         float globalgain = 0.0;
@@ -1205,9 +1205,9 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                         fflush(stdout);
 
                         // Set global gain to highest gain
-                        for (uint32_t m = 0; m < NBmodes; m++)
+                        for(uint32_t m = 0; m < NBmodes; m++)
                         {
-                            if (data.image[IDautogain].array.F[m] > maxGainVal)
+                            if(data.image[IDautogain].array.F[m] > maxGainVal)
                             {
                                 maxGainVal = data.image[IDautogain].array.F[m];
                             }
@@ -1219,22 +1219,22 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                         sprintf(command,
                                 "echo \"%6.4f\" > conf/param_loopgain.txt",
                                 AOconf[loop].aorun.gain);
-                        if (system(command) != 0)
+                        if(system(command) != 0)
                         {
                             PRINT_ERROR("system() returns non-zero value");
                         }
 
                         // Set block gain to max gain within block, scaled to
                         // global gain
-                        for (uint32_t block = 0;
-                             block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
-                             block++)
+                        for(uint32_t block = 0;
+                                block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
+                                block++)
                         {
                             maxGainVal = 0.0;
-                            for (uint32_t m = 0; m < NBmodes; m++)
-                                if (data.image[IDblknb].array.UI16[m] == block)
-                                    if (data.image[IDautogain].array.F[m] >
-                                        maxGainVal)
+                            for(uint32_t m = 0; m < NBmodes; m++)
+                                if(data.image[IDblknb].array.UI16[m] == block)
+                                    if(data.image[IDautogain].array.F[m] >
+                                            maxGainVal)
                                     {
                                         maxGainVal =
                                             data.image[IDautogain].array.F[m];
@@ -1245,48 +1245,48 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                                    maxGainVal / globalgain);
 
                             data.image[aoloopcontrol_var.aoconfID_gainb]
-                                .array.F[block] =
+                            .array.F[block] =
                                 maxGainVal / AOconf[loop].aorun.gain;
 
                             sprintf(command,
                                     "echo \"%6.4f\" > conf/param_gainb%02u.txt",
                                     data.image[aoloopcontrol_var.aoconfID_gainb]
-                                        .array.F[block],
+                                    .array.F[block],
                                     block);
-                            if (system(command) != 0)
+                            if(system(command) != 0)
                             {
                                 PRINT_ERROR("system() returns non-zero value");
                             }
                         }
 
                         // Set individual gain
-                        for (uint32_t m = 0; m < NBmodes; m++)
+                        for(uint32_t m = 0; m < NBmodes; m++)
                         {
                             data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN]
-                                .array.F[m] =
+                            .array.F[m] =
                                 data.image[IDautogain].array.F[m] /
                                 data.image[aoloopcontrol_var.aoconfID_gainb]
-                                    .array.F[modeblock[m]] /
+                                .array.F[modeblock[m]] /
                                 AOconf[loop].aorun.gain;
 
-                            if (m < 20)
+                            if(m < 20)
                                 printf(
                                     "Mode %3u   %12f  %12f  %12f ->   %12f  "
                                     "%12f\n",
                                     m,
                                     AOconf[loop].aorun.gain,
                                     data.image[aoloopcontrol_var.aoconfID_gainb]
-                                        .array.F[modeblock[m]],
+                                    .array.F[modeblock[m]],
                                     data.image[aoloopcontrol_var
-                                                   .aoconfID_DMmode_GAIN]
-                                        .array.F[m],
+                                               .aoconfID_DMmode_GAIN]
+                                    .array.F[m],
                                     AOconf[loop].aorun.gain *
-                                        data.image[aoloopcontrol_var
-                                                       .aoconfID_gainb]
-                                            .array.F[modeblock[m]] *
-                                        data.image[aoloopcontrol_var
-                                                       .aoconfID_DMmode_GAIN]
-                                            .array.F[m],
+                                    data.image[aoloopcontrol_var
+                                               .aoconfID_gainb]
+                                    .array.F[modeblock[m]] *
+                                    data.image[aoloopcontrol_var
+                                               .aoconfID_DMmode_GAIN]
+                                    .array.F[m],
                                     data.image[IDautogain].array.F[m]);
                         }
 
@@ -1347,21 +1347,21 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                           */
             }
 
-            if (FILTERMODE == 1)
+            if(FILTERMODE == 1)
             {
-                for (uint32_t m = 0; m < NBmodes; m++)
+                for(uint32_t m = 0; m < NBmodes; m++)
                 {
                     uint32_t block = data.image[IDblknb].array.UI16[m];
 
-                    if (data.image[IDmodevalDMnowfilt].array.F[m] >
-                        modelimit[m])
+                    if(data.image[IDmodevalDMnowfilt].array.F[m] >
+                            modelimit[m])
                     {
                         blockavelimFrac[block] += 1.0;
                         data.image[IDmodevalDMnowfilt].array.F[m] =
                             modelimit[m];
                     }
-                    if (data.image[IDmodevalDMnowfilt].array.F[m] <
-                        -modelimit[m])
+                    if(data.image[IDmodevalDMnowfilt].array.F[m] <
+                            -modelimit[m])
                     {
                         blockavelimFrac[block] += 1.0;
                         data.image[IDmodevalDMnowfilt].array.F[m] =
@@ -1376,7 +1376,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             data.image[IDmodevalDMnow].md[0].cnt0++;
             data.image[IDmodevalDMnow].md[0].write = 0;
 
-            if (AOconf[loop].aorun.DMfilteredWriteON == 1)
+            if(AOconf[loop].aorun.DMfilteredWriteON == 1)
             {
                 COREMOD_MEMORY_image_set_sempost_byID(IDmodevalDMnowfilt, -1);
             }
@@ -1385,7 +1385,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 // DM write triggered by sem 2
                 // posting all sems except 2 to block DM write
                 COREMOD_MEMORY_image_set_sempost_excl_byID(IDmodevalDMnowfilt,
-                                                           2);
+                        2);
             }
             data.image[IDmodevalDMnowfilt].md[0].cnt1 =
                 LOOPiter; // modevalDMindex; //TBC
@@ -1397,8 +1397,8 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                                              tnow);
 
             // IF MODAL DM, AND FILTERED DM WRITE IS ON, SEND TO DM
-            if ((AOconf[loop].aorun.DMfilteredWriteON == 1) &&
-                (AOconf[loop].DMctrl.DMMODE == 1))
+            if((AOconf[loop].aorun.DMfilteredWriteON == 1) &&
+                    (AOconf[loop].DMctrl.DMMODE == 1))
             {
                 data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
                 memcpy(data.image[aoloopcontrol_var.aoconfID_dmC].array.F,
@@ -1419,8 +1419,8 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiffv = timespec_diff_double(
-                data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-                tnow);
+                         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                         tnow);
             data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[6] =
                 tdiffv;
 
@@ -1430,10 +1430,10 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             // update current location of dm correction circular buffer
             //
             data.image[IDmodevalDM_C].md[0].write = 1;
-            for (uint32_t m = 0; m < NBmodes; m++)
+            for(uint32_t m = 0; m < NBmodes; m++)
             {
                 data.image[IDmodevalDM_C]
-                    .array.F[modevalDMindex * NBmodes + m] =
+                .array.F[modevalDMindex * NBmodes + m] =
                     data.image[IDmodevalDMnowfilt].array.F[m];
             }
             COREMOD_MEMORY_image_set_sempost_byID(IDmodevalDM_C, -1);
@@ -1445,8 +1445,8 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
 
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiffv = timespec_diff_double(
-                data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-                tnow);
+                         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                         tnow);
             data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[9] =
                 tdiffv;
 
@@ -1455,25 +1455,25 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             // LINEAR INTERPOLATION BETWEEN NEAREST TWO VALUES
             //
             modevalDMindex0 = modevalDMindex - framelatency0;
-            if (modevalDMindex0 < 0)
+            if(modevalDMindex0 < 0)
             {
                 modevalDMindex0 += modeval_bsize;
             }
             modevalDMindex1 = modevalDMindex - framelatency1;
-            if (modevalDMindex1 < 0)
+            if(modevalDMindex1 < 0)
             {
                 modevalDMindex1 += modeval_bsize;
             }
 
             data.image[IDmodevalDM].md[0].write = 1;
-            for (uint32_t m = 0; m < NBmodes; m++)
+            for(uint32_t m = 0; m < NBmodes; m++)
             {
                 data.image[IDmodevalDM].array.F[m] =
                     (1.0 - alpha) *
-                        data.image[IDmodevalDM_C]
-                            .array.F[modevalDMindex0 * NBmodes + m] +
+                    data.image[IDmodevalDM_C]
+                    .array.F[modevalDMindex0 * NBmodes + m] +
                     alpha * data.image[IDmodevalDM_C]
-                                .array.F[modevalDMindex1 * NBmodes + m];
+                    .array.F[modevalDMindex1 * NBmodes + m];
                 COREMOD_MEMORY_image_set_sempost_byID(IDmodevalDM, -1);
             }
             data.image[IDmodevalDM].md[0].cnt0++;
@@ -1483,8 +1483,8 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             AOconf[loop].AOtiminginfo.statusM1 = 2;
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiffv = timespec_diff_double(
-                data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-                tnow);
+                         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                         tnow);
             data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[10] =
                 tdiffv;
 
@@ -1492,7 +1492,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                                              RTSLOGindex_modeval_dm,
                                              tnow);
 
-            if (AOconf[loop].aorun.ARPFon == 1)
+            if(AOconf[loop].aorun.ARPFon == 1)
             {
                 //
                 // COMPUTE OPEN LOOP PREDICTION AT TIME OF WFS MEASUREMENT
@@ -1500,25 +1500,25 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                 //
 
                 modevalPFindex0 = modevalPFindex - framelatency0;
-                if (modevalPFindex0 < 0)
+                if(modevalPFindex0 < 0)
                 {
                     modevalPFindex0 += modeval_bsize;
                 }
                 modevalPFindex1 = modevalPFindex - framelatency1;
-                if (modevalPFindex1 < 0)
+                if(modevalPFindex1 < 0)
                 {
                     modevalPFindex1 += modeval_bsize;
                 }
 
                 data.image[IDmodevalPFsync].md[0].write = 1;
-                for (uint32_t m = 0; m < NBmodes; m++)
+                for(uint32_t m = 0; m < NBmodes; m++)
                 {
                     data.image[IDmodevalPFsync].array.F[m] =
                         (1.0 - alpha) *
-                            data.image[IDmodevalPF_C]
-                                .array.F[modevalPFindex0 * NBmodes + m] +
+                        data.image[IDmodevalPF_C]
+                        .array.F[modevalPFindex0 * NBmodes + m] +
                         alpha * data.image[IDmodevalPF_C]
-                                    .array.F[modevalPFindex1 * NBmodes + m];
+                        .array.F[modevalPFindex1 * NBmodes + m];
                 }
                 COREMOD_MEMORY_image_set_sempost_byID(IDmodevalPFsync, -1);
                 data.image[IDmodevalPFsync].md[0].cnt0++;
@@ -1533,8 +1533,8 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             AOconf[loop].AOtiminginfo.statusM1 = 3;
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiffv = timespec_diff_double(
-                data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-                tnow);
+                         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                         tnow);
             data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[11] =
                 tdiffv;
 
@@ -1542,7 +1542,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             // OPEN LOOP STATE = most recent WFS reading - time-lagged DM
             //
             data.image[IDout].md[0].write = 1;
-            for (uint32_t m = 0; m < NBmodes; m++)
+            for(uint32_t m = 0; m < NBmodes; m++)
             {
                 data.image[IDout].array.F[m] =
                     data.image[IDmodeval].array.F[m] -
@@ -1557,13 +1557,13 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                                              RTSLOGindex_modeval_ol,
                                              tnow);
 
-            if (AOconf[loop].aorun.ARPFon == 1)
+            if(AOconf[loop].aorun.ARPFon == 1)
             {
                 //
                 // OPEN LOOP PREDICTION RESIDUAL = most recent OL - time-lagged PF
                 //
                 data.image[IDmodevalPFres].md[0].write = 1;
-                for (uint32_t m = 0; m < NBmodes; m++)
+                for(uint32_t m = 0; m < NBmodes; m++)
                 {
                     data.image[IDmodevalPFres].array.F[m] =
                         data.image[IDout].array.F[m] -
@@ -1582,15 +1582,15 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             AOconf[loop].AOtiminginfo.statusM1 = 4;
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiffv = timespec_diff_double(
-                data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-                tnow);
+                         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                         tnow);
             data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[12] =
                 tdiffv;
 
             // increment modevalDMindex
             modevalDMindexl = modevalDMindex;
             modevalDMindex++;
-            if (modevalDMindex == modeval_bsize)
+            if(modevalDMindex == modeval_bsize)
             {
                 modevalDMindex = 0;
             }
@@ -1598,13 +1598,13 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             // increment modevalPFindex
             // modevalPFindexl = modevalPFindex;
             modevalPFindex++;
-            if (modevalPFindex == modeval_bsize)
+            if(modevalPFindex == modeval_bsize)
             {
                 modevalPFindex = 0;
             }
 
             // TELEMETRY
-            for (uint32_t m = 0; m < NBmodes; m++)
+            for(uint32_t m = 0; m < NBmodes; m++)
             {
                 uint32_t block = data.image[IDblknb].array.UI16[m];
 
@@ -1623,11 +1623,11 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             }
 
             blockstatcnt++;
-            if (blockstatcnt == AOconf[loop].AOpmodecoeffs.AveStats_NBpt)
+            if(blockstatcnt == AOconf[loop].AOpmodecoeffs.AveStats_NBpt)
             {
-                for (uint32_t block = 0;
-                     block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
-                     block++)
+                for(uint32_t block = 0;
+                        block < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
+                        block++)
                 {
                     AOconf[loop].AOpmodecoeffs.blockave_PFresrms[block] =
                         sqrt(blockavePFresrms[block] / blockstatcnt);
@@ -1680,83 +1680,83 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
             AOconf[loop].AOtiminginfo.statusM1 = 5;
             clock_gettime(CLOCK_REALTIME, &tnow);
             tdiffv = timespec_diff_double(
-                data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-                tnow);
+                         data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                         tnow);
             data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[13] =
                 tdiffv;
 
-            if ((data.processinfo == 1) && (processinfo->MeasureTiming == 1))
+            if((data.processinfo == 1) && (processinfo->MeasureTiming == 1))
             {
                 processinfo_exec_end(processinfo);
             }
         }
         // process signals
 
-        if (data.signal_TERM == 1)
+        if(data.signal_TERM == 1)
         {
             loopOK = 0;
-            if (data.processinfo == 1)
+            if(data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGTERM);
             }
         }
 
-        if (data.signal_INT == 1)
+        if(data.signal_INT == 1)
         {
             loopOK = 0;
-            if (data.processinfo == 1)
+            if(data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGINT);
             }
         }
 
-        if (data.signal_ABRT == 1)
+        if(data.signal_ABRT == 1)
         {
             loopOK = 0;
-            if (data.processinfo == 1)
+            if(data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGABRT);
             }
         }
 
-        if (data.signal_BUS == 1)
+        if(data.signal_BUS == 1)
         {
             loopOK = 0;
-            if (data.processinfo == 1)
+            if(data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGBUS);
             }
         }
 
-        if (data.signal_SEGV == 1)
+        if(data.signal_SEGV == 1)
         {
             loopOK = 0;
-            if (data.processinfo == 1)
+            if(data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGSEGV);
             }
         }
 
-        if (data.signal_HUP == 1)
+        if(data.signal_HUP == 1)
         {
             loopOK = 0;
-            if (data.processinfo == 1)
+            if(data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGHUP);
             }
         }
 
-        if (data.signal_PIPE == 1)
+        if(data.signal_PIPE == 1)
         {
             loopOK = 0;
-            if (data.processinfo == 1)
+            if(data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGPIPE);
             }
         }
 
         loopcnt++;
-        if (data.processinfo == 1)
+        if(data.processinfo == 1)
         {
             processinfo->loopcnt = loopcnt;
         }
@@ -1777,7 +1777,7 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                          __LINE__,
                          commentstring);
 
-    if ((data.processinfo == 1) && (processinfo->loopstat != 4))
+    if((data.processinfo == 1) && (processinfo->loopstat != 4))
     {
         processinfo_cleanExit(processinfo);
     }

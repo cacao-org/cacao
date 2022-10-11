@@ -149,10 +149,10 @@ static FILE *loadcreateshm_fplog;
 
 imageID
 AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
-                                         const char *fname, // file name
-                                         long        xsize, // X size
-                                         long        ysize, // Y size
-                                         float       DefaultValue)
+        const char *fname, // file name
+        long        xsize, // X size
+        long        ysize, // Y size
+        float       DefaultValue)
 {
     imageID   ID;
     int       CreateSMim = 0;
@@ -210,13 +210,13 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
 
     ID        = image_ID(name);
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-    if (sizearray == NULL)
+    if(sizearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
-    if (ID == -1) // if <name> is not loaded in memory
+    if(ID == -1)  // if <name> is not loaded in memory
     {
         printf("%5d   %s   %s <-> %s  exit status = %d\n",
                __LINE__,
@@ -230,7 +230,7 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
         ID         = read_sharedmem_image(name);
         printf("------------- ID = %ld\n", (long) ID);
 
-        if (ID != -1) // ... and <name> exists as a memory stream
+        if(ID != -1)  // ... and <name> exists as a memory stream
         {
             list_image_ID();
 
@@ -252,8 +252,8 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
                    loadcreatestatus);
             fflush(stdout);
 
-            if (sizeOK ==
-                0) // if size is different, delete stream -> create new one
+            if(sizeOK ==
+                    0) // if size is different, delete stream -> create new one
             {
                 printf(
                     "\n========== EXISTING %s HAS WRONG SIZE -> CREATING "
@@ -282,11 +282,11 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
                loadcreatestatus);
         fflush(stdout);
 
-        if (CreateSMim == 1)
+        if(CreateSMim == 1)
         {
             sizearray[0] = xsize;
             sizearray[1] = ysize;
-            if (xsize * ysize > 0)
+            if(xsize * ysize > 0)
             {
                 create_image_ID(name,
                                 2,
@@ -297,7 +297,7 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
                                 0,
                                 &ID);
             }
-            for (ii = 0; ii < xsize * ysize; ii++)
+            for(ii = 0; ii < xsize * ysize; ii++)
             {
                 data.image[ID].array.F[ii] = DefaultValue;
             }
@@ -313,7 +313,7 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
            loadcreatestatus);
     fflush(stdout);
 
-    if (ID == -1)
+    if(ID == -1)
     {
         printf("ERROR: could not load/create %s\n", name);
         printf("Function %s\n", __func__);
@@ -332,10 +332,10 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
 
         load_fits(fname, "tmp2Dim", 3, &ID1);
 
-        if (ID1 != -1)
+        if(ID1 != -1)
         {
             sizeOK = COREMOD_MEMORY_check_2Dsize("tmp2Dim", xsize, ysize);
-            if (sizeOK == 1)
+            if(sizeOK == 1)
             {
                 memcpy(data.image[ID].array.F,
                        data.image[ID1].array.F,
@@ -362,7 +362,7 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
         }
         else
         {
-            if (CreateSMim == 0)
+            if(CreateSMim == 0)
             {
                 loadcreatestatus = 4;
             }
@@ -383,59 +383,59 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
 
     // logging
 
-    if (loadcreateshm_log == 1) // results should be logged in ASCII file
+    if(loadcreateshm_log == 1)  // results should be logged in ASCII file
     {
-        switch (loadcreatestatus)
+        switch(loadcreatestatus)
         {
-        case 0:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: existing stream has "
-                    "wrong size -> recreating stream\n",
+            case 0:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: existing stream has "
+                        "wrong size -> recreating stream\n",
+                        fname,
+                        name);
+                break;
+            case 1:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: new stream created and "
+                        "content loaded\n",
+                        fname,
+                        name);
+                break;
+            case 2:
+                fprintf(
+                    loadcreateshm_fplog,
+                    "LOADING FITS FILE %s TO STREAM %s: existing stream updated\n",
                     fname,
                     name);
-            break;
-        case 1:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: new stream created and "
-                    "content loaded\n",
-                    fname,
-                    name);
-            break;
-        case 2:
-            fprintf(
-                loadcreateshm_fplog,
-                "LOADING FITS FILE %s TO STREAM %s: existing stream updated\n",
-                fname,
-                name);
-            break;
-        case 3:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: FITS image has wrong "
-                    "size -> do nothing\n",
-                    fname,
-                    name);
-            break;
-        case 4:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: FITS image does not "
-                    "exist, stream exists -> do nothing\n",
-                    fname,
-                    name);
-            break;
-        case 5:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: FITS image does not "
-                    "exist, stream does not exist -> create "
-                    "empty stream\n",
-                    fname,
-                    name);
-            break;
-        default:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: UNKNOWN ERROR CODE\n",
-                    fname,
-                    name);
-            break;
+                break;
+            case 3:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: FITS image has wrong "
+                        "size -> do nothing\n",
+                        fname,
+                        name);
+                break;
+            case 4:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: FITS image does not "
+                        "exist, stream exists -> do nothing\n",
+                        fname,
+                        name);
+                break;
+            case 5:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: FITS image does not "
+                        "exist, stream does not exist -> create "
+                        "empty stream\n",
+                        fname,
+                        name);
+                break;
+            default:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: UNKNOWN ERROR CODE\n",
+                        fname,
+                        name);
+                break;
         }
     }
 
@@ -462,11 +462,11 @@ AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,  // stream name
 }
 
 imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
-                                                 const char *fname,
-                                                 long        xsize,
-                                                 long        ysize,
-                                                 long        zsize,
-                                                 float       DefaultValue)
+        const char *fname,
+        long        xsize,
+        long        ysize,
+        long        zsize,
+        float       DefaultValue)
 {
     imageID   ID;
     int       CreateSMim;
@@ -507,7 +507,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
 
     ID        = image_ID(name);
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
-    if (sizearray == NULL)
+    if(sizearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -522,7 +522,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
         ID);
     fflush(stdout);
 
-    if (ID == -1)
+    if(ID == -1)
     {
         CreateSMim = 0;
         ID         = read_sharedmem_image(name);
@@ -533,11 +533,11 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
             ID);
         fflush(stdout);
 
-        if (ID != -1) // stream exists
+        if(ID != -1)  // stream exists
         {
 
             sizeOK = COREMOD_MEMORY_check_3Dsize(name, xsize, ysize, zsize);
-            if (sizeOK == 0)
+            if(sizeOK == 0)
             {
                 //               printf("\n========== EXISTING %s HAS WRONG SIZE
                 //               -> CREATING BLANK %s ===========\n\n", name,
@@ -573,12 +573,12 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
             loadcreatestatus = 1;
         }
 
-        if (CreateSMim == 1)
+        if(CreateSMim == 1)
         {
             sizearray[0] = xsize;
             sizearray[1] = ysize;
             sizearray[2] = zsize;
-            if (xsize * ysize * zsize > 0)
+            if(xsize * ysize * zsize > 0)
             {
                 printf(
                     "        AOloopControl_3Dloadcreate_shmim: ===== "
@@ -592,7 +592,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
                                 0,
                                 0,
                                 &ID);
-                for (ii = 0; ii < xsize * ysize * zsize; ii++)
+                for(ii = 0; ii < xsize * ysize * zsize; ii++)
                 {
                     data.image[ID].array.F[ii] = DefaultValue;
                 }
@@ -609,7 +609,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
     fflush(stdout);
 
     // here, ID is either loaded, or it should be created from FITS image
-    if ((ID == -1) && (creashmimfromFITS == 0))
+    if((ID == -1) && (creashmimfromFITS == 0))
     {
         printf("ERROR: could not load/create %s\n", name);
         exit(0);
@@ -618,9 +618,9 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
     load_fits(fname, "tmp3Dim", 3, &ID1);
     printf("        AOloopControl_3Dloadcreate_shmim: ===== ID1 = %ld\n", ID1);
     fflush(stdout);
-    if (ID1 != -1)
+    if(ID1 != -1)
     {
-        if (creashmimfromFITS == 1) // create shared mem from FITS
+        if(creashmimfromFITS == 1)  // create shared mem from FITS
         {
             sizeOK =
                 COREMOD_MEMORY_check_3Dsize("tmp3Dim", xsize, ysize, zsize);
@@ -628,7 +628,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
                 "        AOloopControl_3Dloadcreate_shmim: ===== sizeOK = %d\n",
                 (int) sizeOK);
             fflush(stdout);
-            if (sizeOK == 1)
+            if(sizeOK == 1)
             {
                 long xsize1, ysize1, zsize1;
 
@@ -711,7 +711,7 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
     }
     else
     {
-        if (CreateSMim == 0)
+        if(CreateSMim == 0)
         {
             loadcreatestatus = 4;
         }
@@ -722,59 +722,59 @@ imageID AOloopControl_IOtools_3Dloadcreate_shmim(const char *name,
     }
     free(sizearray);
 
-    if (loadcreateshm_log == 1) // results should be logged in ASCII file
+    if(loadcreateshm_log == 1)  // results should be logged in ASCII file
     {
-        switch (loadcreatestatus)
+        switch(loadcreatestatus)
         {
-        case 0:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: existing stream has "
-                    "wrong size -> recreating stream\n",
+            case 0:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: existing stream has "
+                        "wrong size -> recreating stream\n",
+                        fname,
+                        name);
+                break;
+            case 1:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: new stream created and "
+                        "content loaded\n",
+                        fname,
+                        name);
+                break;
+            case 2:
+                fprintf(
+                    loadcreateshm_fplog,
+                    "LOADING FITS FILE %s TO STREAM %s: existing stream updated\n",
                     fname,
                     name);
-            break;
-        case 1:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: new stream created and "
-                    "content loaded\n",
-                    fname,
-                    name);
-            break;
-        case 2:
-            fprintf(
-                loadcreateshm_fplog,
-                "LOADING FITS FILE %s TO STREAM %s: existing stream updated\n",
-                fname,
-                name);
-            break;
-        case 3:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: FITS image has wrong "
-                    "size -> do nothing\n",
-                    fname,
-                    name);
-            break;
-        case 4:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: FITS image does not "
-                    "exist, stream exists -> do nothing\n",
-                    fname,
-                    name);
-            break;
-        case 5:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: FITS image does not "
-                    "exist, stream does not exist -> create "
-                    "empty stream\n",
-                    fname,
-                    name);
-            break;
-        default:
-            fprintf(loadcreateshm_fplog,
-                    "LOADING FITS FILE %s TO STREAM %s: UNKNOWN ERROR CODE\n",
-                    fname,
-                    name);
-            break;
+                break;
+            case 3:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: FITS image has wrong "
+                        "size -> do nothing\n",
+                        fname,
+                        name);
+                break;
+            case 4:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: FITS image does not "
+                        "exist, stream exists -> do nothing\n",
+                        fname,
+                        name);
+                break;
+            case 5:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: FITS image does not "
+                        "exist, stream does not exist -> create "
+                        "empty stream\n",
+                        fname,
+                        name);
+                break;
+            default:
+                fprintf(loadcreateshm_fplog,
+                        "LOADING FITS FILE %s TO STREAM %s: UNKNOWN ERROR CODE\n",
+                        fname,
+                        name);
+                break;
         }
     }
 

@@ -69,25 +69,25 @@ errno_t set_DM_modes(long loop)
 {
     int semval;
 
-    if (AOconf[loop].AOcompute.GPU1 == 0)
+    if(AOconf[loop].AOcompute.GPU1 == 0)
     {
         float *arrayf;
 
         arrayf = (float *) malloc(sizeof(float) * AOconf[loop].DMctrl.sizeDM);
 
-        for (unsigned long j = 0; j < AOconf[loop].DMctrl.sizeDM; j++)
+        for(unsigned long j = 0; j < AOconf[loop].DMctrl.sizeDM; j++)
         {
             arrayf[j] = 0.0;
         }
 
-        for (unsigned long i = 0; i < AOconf[loop].DMctrl.sizeDM; i++)
-            for (unsigned long k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes;
-                 k++)
+        for(unsigned long i = 0; i < AOconf[loop].DMctrl.sizeDM; i++)
+            for(unsigned long k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes;
+                    k++)
             {
                 arrayf[i] += data.image[aoloopcontrol_var.aoconfID_cmd_modes]
-                                 .array.F[k] *
+                             .array.F[k] *
                              data.image[aoloopcontrol_var.aoconfID_DMmodes]
-                                 .array.F[k * AOconf[loop].DMctrl.sizeDM + i];
+                             .array.F[k * AOconf[loop].DMctrl.sizeDM + i];
             }
 
         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write = 1;
@@ -122,8 +122,8 @@ errno_t set_DM_modes(long loop)
         AOconf[loop].AOtiminginfo.status = 12;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiffv = timespec_diff_double(
-            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-            tnow);
+                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                     tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[32] = tdiffv;
 
         GPU_loop_MultMat_execute(1,
@@ -137,13 +137,13 @@ errno_t set_DM_modes(long loop)
     }
 
     // post semaphores on DM
-    if (aoloopcontrol_var.aoconfID_dmdisp != -1)
-        if (data.image[aoloopcontrol_var.aoconfID_dmdisp].md[0].sem > 1)
+    if(aoloopcontrol_var.aoconfID_dmdisp != -1)
+        if(data.image[aoloopcontrol_var.aoconfID_dmdisp].md[0].sem > 1)
         {
             sem_getvalue(
                 data.image[aoloopcontrol_var.aoconfID_dmdisp].semptr[1],
                 &semval);
-            if (semval < SEMAPHORE_MAXVAL)
+            if(semval < SEMAPHORE_MAXVAL)
             {
                 sem_post(
                     data.image[aoloopcontrol_var.aoconfID_dmdisp].semptr[1]);
@@ -177,19 +177,19 @@ errno_t set_DM_modesRM(long loop)
 
     arrayf = (float *) malloc(sizeof(float) * AOconf[loop].DMctrl.sizeDM);
 
-    for (unsigned long j = 0; j < AOconf[loop].DMctrl.sizeDM; j++)
+    for(unsigned long j = 0; j < AOconf[loop].DMctrl.sizeDM; j++)
     {
         arrayf[j] = 0.0;
     }
 
-    for (unsigned long k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
+    for(unsigned long k = 0; k < AOconf[loop].AOpmodecoeffs.NBDMmodes; k++)
     {
-        for (unsigned long i = 0; i < AOconf[loop].DMctrl.sizeDM; i++)
+        for(unsigned long i = 0; i < AOconf[loop].DMctrl.sizeDM; i++)
         {
             arrayf[i] +=
                 data.image[aoloopcontrol_var.aoconfID_cmd_modesRM].array.F[k] *
                 data.image[aoloopcontrol_var.aoconfID_DMmodes]
-                    .array.F[k * AOconf[loop].DMctrl.sizeDM + i];
+                .array.F[k * AOconf[loop].DMctrl.sizeDM + i];
         }
     }
 
@@ -216,13 +216,13 @@ errno_t set_DM_modesRM(long loop)
  */
 
 errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
-                                                 const char *modecoeffs_name,
-                                                 const char *DMmodes_name,
-                                                 int         semTrigg,
-                                                 const char *out_name,
-                                                 int         GPUindex,
-                                                 long        loop,
-                                                 int         offloadMode)
+        const char *modecoeffs_name,
+        const char *DMmodes_name,
+        int         semTrigg,
+        const char *out_name,
+        int         GPUindex,
+        long        loop,
+        int         offloadMode)
 {
 #ifdef HAVE_CUDA
     // imageID     IDmodecoeffs;
@@ -266,26 +266,26 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
     sprintf(pinfomsg, "setup");
 
     processinfo = processinfo_setup(
-        pinfoname, // short name for the processinfo instance, no spaces, no dot,
-                   // name should be human-readable
-        pinfodescr, // description
-        pinfomsg,   // message on startup
-        __FUNCTION__,
-        __FILE__,
-        __LINE__);
+                      pinfoname, // short name for the processinfo instance, no spaces, no dot,
+                      // name should be human-readable
+                      pinfodescr, // description
+                      pinfomsg,   // message on startup
+                      __FUNCTION__,
+                      __FILE__,
+                      __LINE__);
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1; // Measure timing
     processinfo->RT_priority =
         RT_priority; // RT_priority, 0-99. Larger number =
-                     // higher priority. If <0, ignore
+    // higher priority. If <0, ignore
 
     int loopOK = 1;
 
-    if (aoloopcontrol_var.aoconfID_looptiming == -1)
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
         // LOOPiteration is written in cnt1 of loop timing array
-        if (sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
-            1)
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
+                1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -298,10 +298,10 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
                 0.0);
     }
 
-    if (GPUMATMULTCONFindex == 0)
+    if(GPUMATMULTCONFindex == 0)
     {
         // read AO loop gain, mult
-        if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+        if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
         {
             AOloopControl_InitializeMemory(1);
         }
@@ -309,7 +309,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
 
     GPUcnt  = 1;
     GPUsetM = (int *) malloc(sizeof(int) * GPUcnt);
-    for (k = 0; k < GPUcnt; k++)
+    for(k = 0; k < GPUcnt; k++)
     {
         GPUsetM[k] = k + GPUindex;
     }
@@ -334,18 +334,18 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
                            initWFSref,
                            0);
 
-    for (k = 0; k < GPUcnt; k++)
+    for(k = 0; k < GPUcnt; k++)
     {
         printf(" ====================     USING GPU %d\n", GPUsetM[k]);
     }
 
     list_image_ID();
 
-    if (offloadMode == 1)
+    if(offloadMode == 1)
     {
         char imnamedmC[200];
 
-        if (sprintf(imnamedmC, "aol%ld_dmC", loop) < 1)
+        if(sprintf(imnamedmC, "aol%ld_dmC", loop) < 1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -375,7 +375,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
         processinfo); // Notify processinfo that we are entering loop
 
     processinfo_WriteMessage(processinfo, "Running loop");
-    while (loopOK == 1)
+    while(loopOK == 1)
     {
         // processinfo control
         loopOK = processinfo_loopstep(processinfo);
@@ -386,8 +386,8 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
 
         // CTRLval = 5 will disable computations in loop (usually for testing)
         int doComputation = 1;
-        if (data.processinfo == 1)
-            if (processinfo->CTRLval == 5)
+        if(data.processinfo == 1)
+            if(processinfo->CTRLval == 5)
             {
                 doComputation = 0;
             }
@@ -395,11 +395,11 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
         AOconf[loop].AOtiminginfo.statusM = 10;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiffv = timespec_diff_double(
-            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-            tnow);
+                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                     tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[7] = tdiffv;
 
-        if (doComputation == 1)
+        if(doComputation == 1)
         {
 
             GPU_loop_MultMat_execute(GPUMATMULTCONFindex,
@@ -411,10 +411,10 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
                                      0);
         }
 
-        if (offloadMode == 1) // offload back to dmC
+        if(offloadMode == 1)  // offload back to dmC
         {
             data.image[IDc].md[0].write = 1;
-            for (ii = 0; ii < dmxsize * dmysize; ii++)
+            for(ii = 0; ii < dmxsize * dmysize; ii++)
             {
                 data.image[IDc].array.F[ii] = data.image[IDout].array.F[ii];
             }
@@ -430,8 +430,8 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
         AOconf[loop].AOtiminginfo.statusM = 20;
         clock_gettime(CLOCK_REALTIME, &tnow);
         tdiffv = timespec_diff_double(
-            data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
-            tnow);
+                     data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
+                     tnow);
         data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[8] = tdiffv;
 
         processinfo_exec_end(processinfo);
@@ -477,11 +477,11 @@ imageID AOloopControl_dm2dm_offload(const char *streamin,
     ysize  = data.image[IDin].md[0].size[1];
     xysize = xsize * ysize;
 
-    if (aoloopcontrol_var.aoconfID_looptiming == -1)
+    if(aoloopcontrol_var.aoconfID_looptiming == -1)
     {
         // LOOPiteration is written in cnt1 of loop timing array
-        if (sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
-            1)
+        if(sprintf(imname, "aol%ld_looptiming", aoloopcontrol_var.LOOPNUMBER) <
+                1)
         {
             PRINT_ERROR("sprintf wrote <1 char");
         }
@@ -494,12 +494,12 @@ imageID AOloopControl_dm2dm_offload(const char *streamin,
                 0.0);
     }
 
-    while (1)
+    while(1)
     {
         printf("%8ld : offloading   %s -> %s\n", cnt, streamin, streamout);
 
         data.image[IDout].md[0].write = 1;
-        for (ii = 0; ii < xysize; ii++)
+        for(ii = 0; ii < xysize; ii++)
         {
             data.image[IDout].array.F[ii] =
                 multcoeff * (data.image[IDout].array.F[ii] +
@@ -511,7 +511,7 @@ imageID AOloopControl_dm2dm_offload(const char *streamin,
             data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
         data.image[IDout].md[0].write = 0;
 
-        usleep((long) (1000000.0 * twait));
+        usleep((long)(1000000.0 * twait));
         cnt++;
     }
 

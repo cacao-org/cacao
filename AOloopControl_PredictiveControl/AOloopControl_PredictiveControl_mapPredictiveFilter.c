@@ -37,7 +37,7 @@ errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(
 
     long ii, m;
 
-    modeoffset = modeout - (long) (modesize / 2);
+    modeoffset = modeout - (long)(modesize / 2);
     modeouto   = modeout - modeoffset;
 
     IDmodecoeff = image_ID(IDmodecoeff_name);
@@ -47,17 +47,17 @@ errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(
     // reformat measurements
     create_2Dimage_ID("trace", NBsamples, modesize, &IDtrace);
 
-    for (ii = 0; ii < NBsamples; ii++)
-        for (m = 0; m < modesize; m++)
+    for(ii = 0; ii < NBsamples; ii++)
+        for(m = 0; m < modesize; m++)
             data.image[IDtrace].array.F[m * NBsamples + ii] =
                 data.image[IDmodecoeff].array.F[ii * NBmodes + m];
 
     AOloopControl_PredictiveControl_testPredictiveFilter("trace",
-                                                         modeouto,
-                                                         delayfr,
-                                                         filtsize,
-                                                         "filt",
-                                                         SVDeps);
+            modeouto,
+            delayfr,
+            filtsize,
+            "filt",
+            SVDeps);
     delete_image_ID("filt", DELETE_IMAGE_ERRMODE_WARNING);
 
     return RETURN_SUCCESS;

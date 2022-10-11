@@ -61,7 +61,7 @@ float AOloopControl_readParam_float(char *paramname,
     int   wParamFile = 0;
 
     sprintf(fname, "./conf/param_%s.txt", paramname);
-    if ((fp = fopen(fname, "r")) == NULL)
+    if((fp = fopen(fname, "r")) == NULL)
     {
         printf("WARNING: file %s missing\n", fname);
         value      = defaultValue;
@@ -69,7 +69,7 @@ float AOloopControl_readParam_float(char *paramname,
     }
     else
     {
-        if (fscanf(fp, "%50f", &value) != 1)
+        if(fscanf(fp, "%50f", &value) != 1)
         {
             PRINT_ERROR("Cannot read parameter for file");
             value      = defaultValue;
@@ -78,15 +78,17 @@ float AOloopControl_readParam_float(char *paramname,
         fclose(fp);
     }
 
-    if (wParamFile == 1) // write file
+    if(wParamFile == 1)  // write file
     {
         fp = fopen(fname, "w");
         fprintf(fp, "%f", value);
         fclose(fp);
     }
 
-    if (fplog != NULL)
+    if(fplog != NULL)
+    {
         fprintf(fplog, "parameter %20s = %f\n", paramname, value);
+    }
 
     return value;
 }
@@ -120,7 +122,7 @@ int AOloopControl_readParam_int(char *paramname, int defaultValue, FILE *fplog)
     int   wParamFile = 0;
 
     sprintf(fname, "./conf/param_%s.txt", paramname);
-    if ((fp = fopen(fname, "r")) == NULL)
+    if((fp = fopen(fname, "r")) == NULL)
     {
         printf("WARNING: file %s missing\n", fname);
         value      = defaultValue;
@@ -128,7 +130,7 @@ int AOloopControl_readParam_int(char *paramname, int defaultValue, FILE *fplog)
     }
     else
     {
-        if (fscanf(fp, "%50d", &value) != 1)
+        if(fscanf(fp, "%50d", &value) != 1)
         {
             PRINT_ERROR("Cannot read parameter for file");
             value      = defaultValue;
@@ -137,15 +139,17 @@ int AOloopControl_readParam_int(char *paramname, int defaultValue, FILE *fplog)
         fclose(fp);
     }
 
-    if (wParamFile == 1) // write file
+    if(wParamFile == 1)  // write file
     {
         fp = fopen(fname, "w");
         fprintf(fp, "%d", value);
         fclose(fp);
     }
 
-    if (fplog != NULL)
+    if(fplog != NULL)
+    {
         fprintf(fplog, "parameter %20s = %d\n", paramname, value);
+    }
 
     return value;
 }
@@ -180,7 +184,7 @@ AOloopControl_readParam_string(char *paramname, char *defaultValue, FILE *fplog)
 
     char fname[STRINGMAXLEN_FILENAME];
     WRITE_FILENAME(fname, "./conf/param_%s.txt", paramname);
-    if ((fp = fopen(fname, "r")) == NULL)
+    if((fp = fopen(fname, "r")) == NULL)
     {
         printf("WARNING: file %s missing\n", fname);
         strcpy(value, defaultValue);
@@ -189,7 +193,7 @@ AOloopControl_readParam_string(char *paramname, char *defaultValue, FILE *fplog)
     else
     {
         strcpy(value, defaultValue);
-        if (fscanf(fp, "%200s", value) != 1)
+        if(fscanf(fp, "%200s", value) != 1)
         {
             PRINT_ERROR("Cannot read parameter for file");
             wParamFile = 1;
@@ -197,15 +201,17 @@ AOloopControl_readParam_string(char *paramname, char *defaultValue, FILE *fplog)
         fclose(fp);
     }
 
-    if (wParamFile == 1) // write file
+    if(wParamFile == 1)  // write file
     {
         fp = fopen(fname, "w");
         fprintf(fp, "%s", value);
         fclose(fp);
     }
 
-    if (fplog != NULL)
+    if(fplog != NULL)
+    {
         fprintf(fplog, "parameter %20s = %s\n", paramname, value);
+    }
 
     return value;
 }

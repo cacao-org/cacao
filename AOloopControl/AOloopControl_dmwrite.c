@@ -26,8 +26,10 @@ extern AOloopControl_var aoloopcontrol_var;
 
 errno_t AOloopControl_DMprimaryWrite_on()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.DMprimaryWriteON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
@@ -37,8 +39,10 @@ errno_t AOloopControl_DMprimaryWrite_on()
 
 errno_t AOloopControl_DMprimaryWrite_off()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.DMprimaryWriteON = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
@@ -48,8 +52,10 @@ errno_t AOloopControl_DMprimaryWrite_off()
 
 errno_t AOloopControl_DMfilteredWrite_on()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.DMfilteredWriteON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
@@ -59,8 +65,10 @@ errno_t AOloopControl_DMfilteredWrite_on()
 
 errno_t AOloopControl_DMfilteredWrite_off()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].aorun.DMfilteredWriteON = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);

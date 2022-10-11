@@ -38,55 +38,70 @@ long          fpi_lambdaum;
 
 
 
-static CLICMDARGDEF farg[] = {{CLIARG_IMG,
-                               ".DMmodes",
-                               "DM modes",
-                               "dmmodes",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &dmmodes,
-                               &fpi_dmmodes},
-                              {CLIARG_IMG,
-                               ".DMmask",
-                               "DM mask",
-                               "dmmask",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &dmmask,
-                               &fpi_dmmask},
-                              {CLIARG_IMG,
-                               ".WFSref",
-                               "WFS reference",
-                               "wfsref",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &wfsref,
-                               &fpi_wfsref},
-                              {CLIARG_IMG,
-                               ".WFSmodes",
-                               "WFS modes",
-                               "wfsmodes",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &wfsmodes,
-                               &fpi_wfsmodes},
-                              {CLIARG_IMG,
-                               ".WFSmask",
-                               "WFS mask",
-                               "wfsmask",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &wfsmask,
-                               &fpi_wfsmask},
-                              {CLIARG_FLOAT32,
-                               ".ampl",
-                               "RM modes ampl limit [um]",
-                               "1.0",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &amplum,
-                               &fpi_amplum},
-                              {CLIARG_FLOAT32,
-                               ".lambdaum",
-                               "wavelength [um]",
-                               "0.8",
-                               CLIARG_VISIBLE_DEFAULT,
-                               (void **) &lambdaum,
-                               &fpi_lambdaum}};
+static CLICMDARGDEF farg[] = {{
+        CLIARG_IMG,
+        ".DMmodes",
+        "DM modes",
+        "dmmodes",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &dmmodes,
+        &fpi_dmmodes
+    },
+    {
+        CLIARG_IMG,
+        ".DMmask",
+        "DM mask",
+        "dmmask",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &dmmask,
+        &fpi_dmmask
+    },
+    {
+        CLIARG_IMG,
+        ".WFSref",
+        "WFS reference",
+        "wfsref",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &wfsref,
+        &fpi_wfsref
+    },
+    {
+        CLIARG_IMG,
+        ".WFSmodes",
+        "WFS modes",
+        "wfsmodes",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &wfsmodes,
+        &fpi_wfsmodes
+    },
+    {
+        CLIARG_IMG,
+        ".WFSmask",
+        "WFS mask",
+        "wfsmask",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &wfsmask,
+        &fpi_wfsmask
+    },
+    {
+        CLIARG_FLOAT32,
+        ".ampl",
+        "RM modes ampl limit [um]",
+        "1.0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &amplum,
+        &fpi_amplum
+    },
+    {
+        CLIARG_FLOAT32,
+        ".lambdaum",
+        "wavelength [um]",
+        "0.8",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &lambdaum,
+        &fpi_lambdaum
+    }
+};
 
 
 // Optional custom configuration setup.
@@ -94,7 +109,7 @@ static CLICMDARGDEF farg[] = {{CLIARG_IMG,
 //
 static errno_t customCONFsetup()
 {
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
     }
 
@@ -107,15 +122,17 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if (data.fpsptr != NULL)
+    if(data.fpsptr != NULL)
     {
     }
 
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata = {
-    "compRMsens", "compute RM sensitivity", CLICMD_FIELDS_DEFAULTS};
+static CLICMDDATA CLIcmddata =
+{
+    "compRMsens", "compute RM sensitivity", CLICMD_FIELDS_DEFAULTS
+};
 
 // detailed help
 static errno_t help_function()
@@ -131,13 +148,13 @@ static errno_t help_function()
 //
 static errno_t
 AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
-                                             const char *IDdmmask_name,
-                                             const char *IDwfsref_name,
-                                             const char *IDwfsresp_name,
-                                             const char *IDwfsmask_name,
-                                             float       amplimitum,
-                                             float       lambdaum,
-                                             const char *foutname)
+        const char *IDdmmask_name,
+        const char *IDwfsref_name,
+        const char *IDwfsresp_name,
+        const char *IDwfsmask_name,
+        float       amplimitum,
+        float       lambdaum,
+        const char *foutname)
 {
     FILE   *fp;
     imageID IDdmmodes;
@@ -178,13 +195,13 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
     IDwfsmask = image_ID(IDwfsmask_name);
 
     wfsreftot = 0.0;
-    for (ii = 0; ii < wfsxysize; ii++)
+    for(ii = 0; ii < wfsxysize; ii++)
     {
         wfsreftot += data.image[IDwfsref].array.F[ii];
     }
 
     wfsmasktot = 0.0;
-    for (ii = 0; ii < wfsxysize; ii++)
+    for(ii = 0; ii < wfsxysize; ii++)
     {
         wfsmasktot += data.image[IDwfsmask].array.F[ii];
     }
@@ -208,7 +225,7 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
     fprintf(fp, "# col 7 : Photon Efficiency\n");
     fprintf(fp, "\n");
 
-    for (int mode = 0; mode < NBmodes; mode++)
+    for(int mode = 0; mode < NBmodes; mode++)
     {
         double dmmoderms;
         double aveval;
@@ -222,7 +239,7 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
         dmmoderms    = 0.0;
         dmmodermscnt = 0.0;
         aveval       = 0.0;
-        for (ii = 0; ii < dmxysize; ii++)
+        for(ii = 0; ii < dmxysize; ii++)
         {
             tmp1 = data.image[IDdmmodes].array.F[mode * dmxysize + ii] *
                    data.image[IDdmmask].array.F[ii];
@@ -237,7 +254,7 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
         wfsmoderms    = 0.0;
         wfsmodermscnt = 0.0;
         pcnt          = 0.0;
-        for (ii = 0; ii < wfsxysize; ii++)
+        for(ii = 0; ii < wfsxysize; ii++)
         {
             tmp1 = data.image[IDwfsresp].array.F[mode * wfsxysize + ii] *
                    data.image[IDwfsmask].array.F[ii];
@@ -245,11 +262,11 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
             wfsmodermscnt = 1.0;
             wfsmodermscnt += data.image[IDwfsmask].array.F[ii];
 
-            if (data.image[IDwfsmask].array.F[ii] > 0.1)
+            if(data.image[IDwfsmask].array.F[ii] > 0.1)
             {
-                if (data.image[IDwfsref].array.F[ii] >
-                    fabs(data.image[IDwfsresp].array.F[mode * wfsxysize + ii] *
-                         amplimitum))
+                if(data.image[IDwfsref].array.F[ii] >
+                        fabs(data.image[IDwfsresp].array.F[mode * wfsxysize + ii] *
+                             amplimitum))
                 {
                     SNR1 =
                         data.image[IDwfsresp].array.F[mode * wfsxysize + ii] /
@@ -293,11 +310,11 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
     // computing DM space cross-product
     create_2Dimage_ID("DMmodesXP", NBmodes, NBmodes, &IDoutXP);
 
-    for (int mode = 0; mode < NBmodes; mode++)
-        for (int mode1 = 0; mode1 < mode + 1; mode1++)
+    for(int mode = 0; mode < NBmodes; mode++)
+        for(int mode1 = 0; mode1 < mode + 1; mode1++)
         {
             XPval = 0.0;
-            for (ii = 0; ii < dmxysize; ii++)
+            for(ii = 0; ii < dmxysize; ii++)
             {
                 XPval += data.image[IDdmmask].array.F[ii] *
                          data.image[IDdmmodes].array.F[mode * dmxysize + ii] *
@@ -311,11 +328,11 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
 
     // computing WFS space cross-product
     create_2Dimage_ID("WFSmodesXP", NBmodes, NBmodes, &IDoutXP_WFS);
-    for (int mode = 0; mode < NBmodes; mode++)
-        for (int mode1 = 0; mode1 < mode + 1; mode1++)
+    for(int mode = 0; mode < NBmodes; mode++)
+        for(int mode1 = 0; mode1 < mode + 1; mode1++)
         {
             XPval = 0.0;
-            for (ii = 0; ii < wfsxysize; ii++)
+            for(ii = 0; ii < wfsxysize; ii++)
             {
                 XPval += data.image[IDwfsresp].array.F[mode * wfsxysize + ii] *
                          data.image[IDwfsresp].array.F[mode1 * wfsxysize + ii];
@@ -337,13 +354,13 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     AOloopControl_perfTest_computeRM_sensitivity(dmmodes,
-                                                 dmmask,
-                                                 wfsref,
-                                                 wfsmodes,
-                                                 wfsmask,
-                                                 *amplum,
-                                                 *lambdaum,
-                                                 "RMsens.txt");
+            dmmask,
+            wfsref,
+            wfsmodes,
+            wfsmask,
+            *amplum,
+            *lambdaum,
+            "RMsens.txt");
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
@@ -355,9 +372,9 @@ INSERT_STD_FPSCLIfunctions
 
 
 
-    // Register function in CLI
-    errno_t
-    CLIADDCMD_AOloopControl_perfTest__compRMsensitivity()
+// Register function in CLI
+errno_t
+CLIADDCMD_AOloopControl_perfTest__compRMsensitivity()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;

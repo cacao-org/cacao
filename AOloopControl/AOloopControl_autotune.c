@@ -30,8 +30,10 @@ extern AOloopControl_var aoloopcontrol_var;
 
 errno_t AOloopControl_AUTOTUNE_LIMITS_on()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_ON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
@@ -44,18 +46,22 @@ errno_t AOloopControl_AUTOTUNE_LIMITS_off()
     int block;
     int NBblock;
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_ON = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
 
-    if (aoloopcontrol_var.aoconfID_limitb == -1)
+    if(aoloopcontrol_var.aoconfID_limitb == -1)
     {
         char imname[200];
 
-        if (sprintf(imname, "aol%ld_limitb", aoloopcontrol_var.LOOPNUMBER) < 1)
+        if(sprintf(imname, "aol%ld_limitb", aoloopcontrol_var.LOOPNUMBER) < 1)
+        {
             PRINT_ERROR("sprintf wrote <1 char");
+        }
 
         aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(imname);
     }
@@ -63,15 +69,17 @@ errno_t AOloopControl_AUTOTUNE_LIMITS_off()
     NBblock = data.image[aoloopcontrol_var.aoconfID_limitb].md[0].size[0];
 
     // Save Limits
-    for (block = 0; block < NBblock; block++)
+    for(block = 0; block < NBblock; block++)
     {
         FILE *fp;
         char  fname[200];
 
         sprintf(fname, "conf/param_limitb%02d.txt", block);
 
-        if ((fp = fopen(fname, "w")) == NULL)
+        if((fp = fopen(fname, "w")) == NULL)
+        {
             PRINT_ERROR("Cannot open file");
+        }
         else
         {
             fprintf(
@@ -88,8 +96,10 @@ errno_t AOloopControl_AUTOTUNE_LIMITS_off()
 
 errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_delta =
         AUTOTUNE_LIMITS_delta;
@@ -100,8 +110,10 @@ errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta)
 
 errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_perc =
         AUTOTUNE_LIMITS_perc;
@@ -112,8 +124,10 @@ errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc)
 
 errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff)
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_LIMITS_mcoeff =
         AUTOTUNE_LIMITS_mcoeff;
@@ -124,8 +138,10 @@ errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff)
 
 errno_t AOloopControl_AUTOTUNE_GAINS_on()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_GAINS_ON = 1;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);
@@ -135,8 +151,10 @@ errno_t AOloopControl_AUTOTUNE_GAINS_on()
 
 errno_t AOloopControl_AUTOTUNE_GAINS_off()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    {
         AOloopControl_InitializeMemory(1);
+    }
 
     AOconf[aoloopcontrol_var.LOOPNUMBER].AOAutoTune.AUTOTUNE_GAINS_ON = 0;
     AOloopControl_perfTest_showparams(aoloopcontrol_var.LOOPNUMBER);

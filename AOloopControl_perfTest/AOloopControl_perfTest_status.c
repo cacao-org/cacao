@@ -118,7 +118,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
 
     printw("    loop number %ld    ", loop);
 
-    if (AOconf[loop].aorun.on == 1)
+    if(AOconf[loop].aorun.on == 1)
     {
         printw("loop is ON     ");
     }
@@ -134,23 +134,23 @@ errno_t AOloopControl_perfTest_printloopstatus(
     else
         printw("log is OFF  ");
 
-  */
+    */
 
     WRITE_IMAGENAME(imname, "aol%ld_mode_blknb", loop);
     IDblknb = image_ID(imname);
 
-    if (IDblknb == -1)
+    if(IDblknb == -1)
     {
         IDblknb = read_sharedmem_image(imname);
     }
 
-    if (AOconf[loop].aorun.ARPFon == 1)
+    if(AOconf[loop].aorun.ARPFon == 1)
     {
-        if (aoloopcontrol_var.aoconfID_modeARPFgainAuto == -1)
+        if(aoloopcontrol_var.aoconfID_modeARPFgainAuto == -1)
         {
             // multiplicative auto ratio on top of gain above
             sizeout = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-            if (sizeout == NULL)
+            if(sizeout == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
                 abort();
@@ -169,39 +169,39 @@ errno_t AOloopControl_perfTest_printloopstatus(
                             &(aoloopcontrol_var.aoconfID_modeARPFgainAuto));
             COREMOD_MEMORY_image_set_createsem(imname, 10);
             // initialize the gain to zero for all modes
-            for (unsigned int m = 0; m < AOconf[loop].AOpmodecoeffs.NBDMmodes;
-                 m++)
+            for(unsigned int m = 0; m < AOconf[loop].AOpmodecoeffs.NBDMmodes;
+                    m++)
             {
                 data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto]
-                    .array.F[m] = 1.0;
+                .array.F[m] = 1.0;
             }
             free(sizeout);
         }
 
-        for (unsigned int k = 0; k < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
-             k++)
+        for(unsigned int k = 0; k < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
+                k++)
         {
             ARPFgainAutob[k]     = 0.0;
             ARPFgainAutob_tot[k] = 0.0;
         }
 
-        for (unsigned int m = 0; m < AOconf[loop].AOpmodecoeffs.NBDMmodes; m++)
+        for(unsigned int m = 0; m < AOconf[loop].AOpmodecoeffs.NBDMmodes; m++)
         {
             block = data.image[IDblknb].array.UI16[m];
             ARPFgainAutob[block] +=
                 data.image[aoloopcontrol_var.aoconfID_modeARPFgainAuto]
-                    .array.F[m];
+                .array.F[m];
             ARPFgainAutob_tot[block] += 1.0;
         }
 
-        for (unsigned int k = 0; k < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
-             k++)
+        for(unsigned int k = 0; k < AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
+                k++)
         {
             ARPFgainAutob[k] /= ARPFgainAutob_tot[k];
         }
     }
 
-    if (aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
+    if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
     {
         WRITE_IMAGENAME(imname, "aol%ld_DMmode_LIMIT", loop);
         aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(imname);
@@ -251,7 +251,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
         " LIMITS         |",
         AOconf[loop].AOpmodecoeffs.NBDMmodes,
         AOconf[loop].AOpmodecoeffs.DMmodesNBblock);
-    if (AOconf[loop].aorun.ARPFon == 1)
+    if(AOconf[loop].aorun.ARPFon == 1)
     {
         printw("---- Predictive Control ----- |");
     }
@@ -261,16 +261,16 @@ errno_t AOloopControl_perfTest_printloopstatus(
         "BLOCK  #modes [ min - max ]    gain   limit   multf  |       dmC  "
         "Input[OL] ->    WFS[CL]  Ratio  |    | "
         "hits/step    perc  |");
-    if (AOconf[loop].aorun.ARPFon == 1)
+    if(AOconf[loop].aorun.ARPFon == 1)
     {
         printw("  PFres  |  Ratio | PFautog |");
     }
     printw("\n");
     printw("\n");
 
-    for (unsigned int k = 0; k < AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
+    for(unsigned int k = 0; k < AOconf[loop].AOpmodecoeffs.DMmodesNBblock; k++)
     {
-        if (k == 0)
+        if(k == 0)
         {
             kmin = 0;
         }
@@ -298,7 +298,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
 
         ratio0 = AOconf[loop].AOpmodecoeffs.blockave_WFSrms[k] /
                  AOconf[loop].AOpmodecoeffs.blockave_OLrms[k];
-        if (ratio0 > 0.999)
+        if(ratio0 > 0.999)
         {
             color = 2;
         }
@@ -311,7 +311,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
         printw("   %5.3f  ", ratio0);
         attroff(A_BOLD | COLOR_PAIR(color));
 
-        if (AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01)
+        if(AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] > 0.01)
         {
             attron(A_BOLD | COLOR_PAIR(2));
         }
@@ -320,13 +320,13 @@ errno_t AOloopControl_perfTest_printloopstatus(
                k,
                AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],
                100.0 * AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] /
-                   AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
+               AOconf[loop].AOpmodecoeffs.NBmodes_block[k]);
         attroff(A_BOLD | COLOR_PAIR(2));
 
         //
         // PREDICTIVE CONTROL
         //
-        if (AOconf[loop].aorun.ARPFon == 1)
+        if(AOconf[loop].aorun.ARPFon == 1)
         {
             printw("%8.2f |",
                    1000.0 * AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k]);
@@ -334,11 +334,11 @@ errno_t AOloopControl_perfTest_printloopstatus(
             ratio = AOconf[loop].AOpmodecoeffs.blockave_PFresrms[k] /
                     AOconf[loop].AOpmodecoeffs.blockave_OLrms[k];
             color = 0;
-            if (ratio > 1.0)
+            if(ratio > 1.0)
             {
                 color = 2;
             }
-            if (ratio < ratio0)
+            if(ratio < ratio0)
             {
                 color = 3;
             }
@@ -430,14 +430,14 @@ errno_t AOloopControl_perfTest_printloopstatus(
     attron(A_BOLD);
     printw("   %5.3f  ",
            AOconf[loop].AOpmodecoeffs.ALLave_WFSrms /
-               AOconf[loop].AOpmodecoeffs.ALLave_OLrms);
+           AOconf[loop].AOpmodecoeffs.ALLave_OLrms);
     attroff(A_BOLD);
 
     printw("| %2ld | %9.3f  %6.2f\% |\n",
            0,
            AOconf[loop].AOpmodecoeffs.ALLave_limFrac,
            100.0 * AOconf[loop].AOpmodecoeffs.ALLave_limFrac /
-               AOconf[loop].AOpmodecoeffs.NBDMmodes);
+           AOconf[loop].AOpmodecoeffs.NBDMmodes);
 
     printw("\n");
 
@@ -536,7 +536,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
           else
               printw(" | ");
       }
-  */
+    */
     return RETURN_SUCCESS;
 }
 
@@ -562,7 +562,7 @@ errno_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbcol)
     imageID IDmodevalrms;
     //    char fname[STRINGMAXLEN_FILENAME];
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -571,44 +571,44 @@ errno_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbcol)
     fflush(stdout);
 
     // load arrays that are required
-    if (aoloopcontrol_var.aoconfID_cmd_modes == -1)
+    if(aoloopcontrol_var.aoconfID_cmd_modes == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_DMmode_cmd", loop);
         aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
     }
 
-    if (aoloopcontrol_var.aoconfID_meas_modes == -1)
+    if(aoloopcontrol_var.aoconfID_meas_modes == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_DMmode_meas", loop);
         aoloopcontrol_var.aoconfID_meas_modes = read_sharedmem_image(name);
     }
 
-    if (aoloopcontrol_var.aoconfID_RMS_modes == -1)
+    if(aoloopcontrol_var.aoconfID_RMS_modes == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_DMmode_RMS", loop);
         aoloopcontrol_var.aoconfID_RMS_modes = read_sharedmem_image(name);
     }
 
-    if (aoloopcontrol_var.aoconfID_AVE_modes == -1)
+    if(aoloopcontrol_var.aoconfID_AVE_modes == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_DMmode_AVE", loop);
         aoloopcontrol_var.aoconfID_AVE_modes = read_sharedmem_image(name);
     }
 
     // blocks
-    if (aoloopcontrol_var.aoconfID_gainb == -1)
+    if(aoloopcontrol_var.aoconfID_gainb == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_gainb", loop);
         aoloopcontrol_var.aoconfID_gainb = read_sharedmem_image(name);
     }
 
-    if (aoloopcontrol_var.aoconfID_multfb == -1)
+    if(aoloopcontrol_var.aoconfID_multfb == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_multfb", loop);
         aoloopcontrol_var.aoconfID_multfb = read_sharedmem_image(name);
     }
 
-    if (aoloopcontrol_var.aoconfID_limitb == -1)
+    if(aoloopcontrol_var.aoconfID_limitb == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_limitb", loop);
         aoloopcontrol_var.aoconfID_limitb = read_sharedmem_image(name);
@@ -616,19 +616,19 @@ errno_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbcol)
 
     // individual modes
 
-    if (aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
+    if(aoloopcontrol_var.aoconfID_DMmode_GAIN == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_DMmode_GAIN", loop);
         aoloopcontrol_var.aoconfID_DMmode_GAIN = read_sharedmem_image(name);
     }
 
-    if (aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
+    if(aoloopcontrol_var.aoconfID_LIMIT_modes == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_DMmode_LIMIT", loop);
         aoloopcontrol_var.aoconfID_LIMIT_modes = read_sharedmem_image(name);
     }
 
-    if (aoloopcontrol_var.aoconfID_MULTF_modes == -1)
+    if(aoloopcontrol_var.aoconfID_MULTF_modes == -1)
     {
         WRITE_IMAGENAME(name, "aol%ld_DMmode_MULTF", loop);
         aoloopcontrol_var.aoconfID_MULTF_modes = read_sharedmem_image(name);
@@ -648,9 +648,9 @@ errno_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbcol)
     IDmodevalave = read_sharedmem_image(name);
     ksize =
         data.image[IDmodevalave]
-            .md[0]
-            .size[1]; // number of averaging line, each line is 2x averaged of
-                      // previous line
+        .md[0]
+        .size[1]; // number of averaging line, each line is 2x averaged of
+    // previous line
 
     // averaged WFS residual modes RMS, computed by CUDACOMP_extractModesLoop
     WRITE_IMAGENAME(name, "aol%ld_modeval_rms", loop);
@@ -665,9 +665,9 @@ errno_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbcol)
     init_pair(3, COLOR_GREEN, COLOR_BLACK);
     init_pair(4, COLOR_RED, COLOR_BLACK);
 
-    while (!kbdhit())
+    while(!kbdhit())
     {
-        usleep((long) (1000000.0 / frequ));
+        usleep((long)(1000000.0 / frequ));
         clear();
 
         attron(A_BOLD);
@@ -724,7 +724,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
     FILE *fp;
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -743,7 +743,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     statusdef[10] = "CONTROL MATRIX MULT: INCREMENT COUNTER AND EXIT FUNCTION";
     statusdef[11] = "MULTIPLYING BY GAINS";
 
-    if (AOconf[LOOPNUMBER].aorun.CMMODE == 0)
+    if(AOconf[LOOPNUMBER].aorun.CMMODE == 0)
     {
         statusdef[12] = "ENTER SET DM MODES";
         statusdef[13] = "START DM MODES MATRIX MULTIPLICATION";
@@ -822,48 +822,48 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     fflush(stdout);
 
     statuscnt = (long *) malloc(sizeof(long) * statusmax);
-    if (statuscnt == NULL)
+    if(statuscnt == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
     statusMcnt = (long *) malloc(sizeof(long) * statusmax);
-    if (statusMcnt == NULL)
+    if(statusMcnt == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
     statusM1cnt = (long *) malloc(sizeof(long) * statusmax);
-    if (statusM1cnt == NULL)
+    if(statusM1cnt == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
     statusgpucnt = (long *) malloc(sizeof(long) * nbgpu * 10);
-    if (statusgpucnt == NULL)
+    if(statusgpucnt == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
     statusgpucnt2 = (long *) malloc(sizeof(long) * nbgpu * 10);
-    if (statusgpucnt2 == NULL)
+    if(statusgpucnt2 == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
     }
 
-    for (st = 0; st < statusmax; st++)
+    for(st = 0; st < statusmax; st++)
     {
         statuscnt[st]   = 0;
         statusMcnt[st]  = 0;
         statusM1cnt[st] = 0;
     }
 
-    for (st = 0; st < nbgpu * 10; st++)
+    for(st = 0; st < nbgpu * 10; st++)
     {
         statusgpucnt[st]  = 0;
         statusgpucnt2[st] = 0;
@@ -880,30 +880,30 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
     loopcnt = AOconf[LOOPNUMBER].aorun.cnt;
     clock_gettime(CLOCK_REALTIME, &t1);
-    for (k = 0; k < NBsample; k++)
+    for(k = 0; k < NBsample; k++)
     {
         int stM;
         int stM1;
 
-        usleep((long) (usec0 + usec1 * (1.0 * k / NBsample)));
+        usleep((long)(usec0 + usec1 * (1.0 * k / NBsample)));
         st   = AOconf[LOOPNUMBER].AOtiminginfo.status;
         stM  = AOconf[LOOPNUMBER].AOtiminginfo.statusM;
         stM1 = AOconf[LOOPNUMBER].AOtiminginfo.statusM1;
 
-        if (st < statusmax)
+        if(st < statusmax)
         {
             statuscnt[st]++;
         }
-        if (stM < statusmax)
+        if(stM < statusmax)
         {
             statusMcnt[stM]++;
         }
-        if (stM1 < statusmax)
+        if(stM1 < statusmax)
         {
             statusM1cnt[stM1]++;
         }
 
-        for (gpu = 0; gpu < AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
+        for(gpu = 0; gpu < AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
         {
             // 1st matrix mult
             st = 10 * gpu + AOconf[LOOPNUMBER].AOtiminginfo.GPUstatus[gpu];
@@ -938,21 +938,21 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     printf("\n");
 
     loopfrequ_measured = 1.0 * loopcnt / tdiffv;
-    if (updateconf == 1)
+    if(updateconf == 1)
     {
         AOconf[LOOPNUMBER].AOtiminginfo.loopfrequ = loopfrequ_measured;
     }
 
     // Primary control matrix computation latency
     complatency_frame_measured = 1.0 - 1.0 * statuscnt[20] / NBsample;
-    if (updateconf == 1)
+    if(updateconf == 1)
     {
         AOconf[LOOPNUMBER].AOtiminginfo.complatency_frame =
             complatency_frame_measured;
     }
 
     complatency_measured = complatency_frame_measured / loopfrequ_measured;
-    if (updateconf == 1)
+    if(updateconf == 1)
     {
         AOconf[LOOPNUMBER].AOtiminginfo.complatency = complatency_measured;
     }
@@ -962,7 +962,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
            statusMcnt[20],
            NBsample,
            wfsmextrlatency_frame_measured);
-    if (updateconf == 1)
+    if(updateconf == 1)
     {
         AOconf[LOOPNUMBER].AOtiminginfo.wfsmextrlatency_frame =
             wfsmextrlatency_frame_measured;
@@ -970,27 +970,27 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
     wfsmextrlatency_measured =
         wfsmextrlatency_frame_measured / loopfrequ_measured;
-    if (updateconf == 1)
+    if(updateconf == 1)
     {
         AOconf[LOOPNUMBER].AOtiminginfo.wfsmextrlatency =
             wfsmextrlatency_measured;
     }
 
-    if (updateconf == 1)
+    if(updateconf == 1)
     {
         fp = fopen("conf/param_mloopfrequ.txt", "w");
         fprintf(fp, "%8.3f", AOconf[LOOPNUMBER].AOtiminginfo.loopfrequ);
         fclose(fp);
     }
 
-    if ((fp = fopen("./conf/param_hardwlatency.txt", "r")) == NULL)
+    if((fp = fopen("./conf/param_hardwlatency.txt", "r")) == NULL)
     {
         printf("WARNING: file ./conf/param_hardwlatency.txt missing\n");
     }
     else
     {
-        if (fscanf(fp, "%50f", &AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency) !=
-            1)
+        if(fscanf(fp, "%50f", &AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency) !=
+                1)
         {
             PRINT_ERROR("Cannot read parameter from file");
         }
@@ -1002,7 +1002,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     }
 
     printf("hardwlatency = %f\n", AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency);
-    if (updateconf == 1)
+    if(updateconf == 1)
     {
         AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency_frame =
             AOconf[LOOPNUMBER].AOtiminginfo.hardwlatency *
@@ -1033,7 +1033,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
         fclose(fp);
     }
 
-    for (st = 0; st < statusmax; st++)
+    for(st = 0; st < statusmax; st++)
     {
         printf(
             "STATUS %2d     %5.2f %%    [   %6ld  /  %6ld  ]   [ %9.3f us] "
@@ -1046,7 +1046,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
             statusdef[st]);
     }
 
-    if (AOconf[LOOPNUMBER].AOcompute.GPU0 != 0)
+    if(AOconf[LOOPNUMBER].AOcompute.GPU0 != 0)
     {
         printf("\n");
         printf(
@@ -1059,7 +1059,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
             "          "
             "------------------------------------------------------\n");
 
-        for (gpu = 0; gpu < AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
+        for(gpu = 0; gpu < AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
         {
             printf("GPU %2d  : ", gpu);
             printf("  %5.2f %%", 100.0 * statusgpucnt[10 * gpu + 1] / NBsample);
@@ -1070,7 +1070,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
             printf("  %5.2f %%\n",
                    100.0 * statusgpucnt[10 * gpu + 6] / NBsample);
         }
-        for (gpu = 0; gpu < AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
+        for(gpu = 0; gpu < AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
         {
             printf("GPU %2d  : ", gpu);
             printf(" %5.2f us",
@@ -1088,12 +1088,12 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
         }
 
         printf("\n");
-        if (AOconf[LOOPNUMBER].aorun.CMMODE == 0)
+        if(AOconf[LOOPNUMBER].aorun.CMMODE == 0)
         {
             printf(
                 "          "
                 "----1--------2--------3--------4--------5--------6----\n");
-            for (gpu = 0; gpu < AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
+            for(gpu = 0; gpu < AOconf[LOOPNUMBER].AOcompute.GPU0; gpu++)
             {
                 printf("GPU %2d  : ", gpu);
                 printf("  %5.2f %%",
@@ -1115,8 +1115,8 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     printf(
         "\n--------------- MODAL STRING "
         "-------------------------------------------------------------\n");
-    for (st = 0; st < statusmax; st++)
-        if (strlen(statusMdef[st]) > 0)
+    for(st = 0; st < statusmax; st++)
+        if(strlen(statusMdef[st]) > 0)
         {
             printf(
                 "STATUSM  %2d     %5.2f %%    [   %6ld  /  %6ld  ]   [ "
@@ -1132,8 +1132,8 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     printf(
         "\n--------------- AUX MODAL STRING "
         "---------------------------------------------------------\n");
-    for (st = 0; st < statusmax; st++)
-        if (strlen(statusM1def[st]) > 0)
+    for(st = 0; st < statusmax; st++)
+        if(strlen(statusM1def[st]) > 0)
         {
             printf(
                 "STATUSM1 %2d     %5.2f %%    [   %6ld  /  %6ld  ]   [ "
@@ -1156,7 +1156,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
 
 errno_t AOloopControl_perfTest_resetRMSperf()
 {
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(1);
     }
@@ -1172,7 +1172,7 @@ errno_t AOloopControl_perfTest_showparams(long loop)
 
     printf("loop number %ld\n", loop);
 
-    if (AOconf[loop].aorun.on == 1)
+    if(AOconf[loop].aorun.on == 1)
     {
         printf("loop is ON\n");
     }

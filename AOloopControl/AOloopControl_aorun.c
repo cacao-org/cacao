@@ -89,7 +89,7 @@ int AOloopControl_aorun_GUI(long loop, double frequ)
     AOloopControl_InitializeMemory(1);
 
     /*  Initialize ncurses  */
-    if (initscr() == NULL)
+    if(initscr() == NULL)
     {
         fprintf(stderr, "Error initialising ncurses.\n");
         exit(EXIT_FAILURE);
@@ -110,12 +110,12 @@ int AOloopControl_aorun_GUI(long loop, double frequ)
     init_pair(5, COLOR_RED, COLOR_BLACK);
     init_pair(6, COLOR_BLACK, COLOR_RED);
 
-    while (loopOK == 1)
+    while(loopOK == 1)
     {
-        usleep((long) (1000000.0 / frequ));
+        usleep((long)(1000000.0 / frequ));
         int ch = getch();
 
-        if (freeze == 0)
+        if(freeze == 0)
         {
             attron(A_BOLD);
             sprintf(monstring, "PRESS x TO STOP MONITOR");
@@ -123,25 +123,25 @@ int AOloopControl_aorun_GUI(long loop, double frequ)
             attroff(A_BOLD);
         }
 
-        switch (ch)
+        switch(ch)
         {
-        case 'f':
-            if (freeze == 0)
-            {
-                freeze = 1;
-            }
-            else
-            {
-                freeze = 0;
-            }
-            break;
+            case 'f':
+                if(freeze == 0)
+                {
+                    freeze = 1;
+                }
+                else
+                {
+                    freeze = 0;
+                }
+                break;
 
-        case 'x':
-            loopOK = 0;
-            break;
+            case 'x':
+                loopOK = 0;
+                break;
         }
 
-        if (freeze == 0)
+        if(freeze == 0)
         {
             clear();
             printstatus_AOloopControl_aorun(loop);
@@ -189,7 +189,7 @@ int AOloopControl_aorun_FPCONF()
       long fpi_RTpriority = 0;
           function_parameter_add_entry(&fps, ".RTpriority", "Real Time
      priority", FPTYPE_INT64, FPFLAG, &RTpriority_default &fpi_RTpriority);
-  */
+    */
 
     long semwaitindex_default[4] = {1, 0, 10, 1};
     long fpi_semwaitindex        = 0;
@@ -275,7 +275,7 @@ int AOloopControl_aorun_FPCONF()
 
     double maxlimdefault[4] = {1.0, 0.0, 1000.0, 1.0};
     FPFLAG                  = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT |
-             FPFLAG_MAXLIMIT; // required to enforce the min and max limits
+                              FPFLAG_MAXLIMIT; // required to enforce the min and max limits
     FPFLAG |= FPFLAG_WRITERUN;
     long fpi_maxlim = 0;
     function_parameter_add_entry(&fps,
@@ -324,16 +324,16 @@ int AOloopControl_aorun_FPCONF()
     // PARAMETER LOGIC AND UPDATE LOOP
     // =====================================
 
-    while (fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
+    while(fps.localstatus & FPS_LOCALSTATUS_CONFLOOP)
     {
         usleep(50);
-        if (function_parameter_FPCONFloopstep(&fps) == 1)
+        if(function_parameter_FPCONFloopstep(&fps) == 1)
         {
             // Apply logic if update is needed
             // here goes the logic
 
             // zero correction
-            if (fps.parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF)
+            if(fps.parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF)
             {
                 char dmCsname[200];
                 long loop =
@@ -363,13 +363,13 @@ int AOloopControl_aorun_RUN()
     // ===========================
 
     /*int SMfd = -1;
-  FUNCTION_PARAMETER_STRUCT fps;
-  if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) ==
-  -1)
-  {
+    FUNCTION_PARAMETER_STRUCT fps;
+    if(function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_RUN, &SMfd) ==
+    -1)
+    {
       printf("ERROR: fps \"%s\" does not exist -> running without FPS
-  interface\n", fpsname); return RETURN_FAILURE;
-  }*/
+    interface\n", fpsname); return RETURN_FAILURE;
+    }*/
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
 
     // ===============================
@@ -433,18 +433,18 @@ int AOloopControl_aorun_RUN()
     sprintf(pinfomsg, "Initialize AO loop %ld", loop);
 
     processinfo = processinfo_setup(
-        pinfoname, // short name for the processinfo instance, no spaces, no dot,
-                   // name should be human-readable
-        pinfodescr, // description
-        pinfomsg,   // message on startup
-        __FUNCTION__,
-        __FILE__,
-        __LINE__);
+                      pinfoname, // short name for the processinfo instance, no spaces, no dot,
+                      // name should be human-readable
+                      pinfodescr, // description
+                      pinfomsg,   // message on startup
+                      __FUNCTION__,
+                      __FILE__,
+                      __LINE__);
 
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1;        // Measure timing
     processinfo->RT_priority = RTpriority; // RT_priority, 0-99. Larger number =
-                                           // higher priority. If <0, ignore
+    // higher priority. If <0, ignore
 
     // connect to WFS image
     long IDimWFS1 = read_sharedmem_image(snameWFS);
@@ -455,7 +455,7 @@ int AOloopControl_aorun_RUN()
            *semwaitindex,
            data.image[IDimWFS1].md[0].name,
            semval);
-    for (int i = 0; i < semval; i++)
+    for(int i = 0; i < semval; i++)
     {
         sem_trywait(data.image[IDimWFS1].semptr[*semwaitindex]);
     }
@@ -526,18 +526,18 @@ int AOloopControl_aorun_RUN()
     // ===============================
     unsigned long long WFScnt = 0;
     int                loopOK = 1;
-    while (loopOK == 1)
+    while(loopOK == 1)
     {
         loopOK = processinfo_loopstep(processinfo);
 
         // ===========================================
         // WAIT FOR INPUT
         // ===========================================
-        if (data.image[IDimWFS1].md[0].sem == 0) // don't use semaphore
+        if(data.image[IDimWFS1].md[0].sem == 0)  // don't use semaphore
         {
             // use counter to test if new WFS frame is ready
-            while (WFScnt ==
-                   data.image[IDimWFS1].md[0].cnt0) // test if new frame exists
+            while(WFScnt ==
+                    data.image[IDimWFS1].md[0].cnt0) // test if new frame exists
             {
                 usleep(5);
             }
@@ -545,9 +545,9 @@ int AOloopControl_aorun_RUN()
         else
         {
             sem_getvalue(data.image[IDimWFS1].semptr[*semwaitindex], &semval);
-            if (semval > 0)
+            if(semval > 0)
             {
-                if (semval > 1)
+                if(semval > 1)
                 {
                     printf(
                         "\n\033[31;1m WARNING [%d] WFS SEMAPHORE already "
@@ -561,13 +561,13 @@ int AOloopControl_aorun_RUN()
             int rval;
             rval = ImageStreamIO_semwait(&data.image[IDimWFS1], *semwaitindex);
 
-            if (rval == -1)
+            if(rval == -1)
             {
                 perror("semwait");
             }
 
             sem_getvalue(data.image[IDimWFS1].semptr[*semwaitindex], &semval);
-            for (int i = 0; i < semval; i++)
+            for(int i = 0; i < semval; i++)
             {
                 //			printf("WARNING: [%d] sem_trywait on
                 // ID_wfsim\n", (int) (semval - i));
@@ -578,13 +578,13 @@ int AOloopControl_aorun_RUN()
         }
 
         processinfo_exec_start(processinfo);
-        if (processinfo_compute_status(processinfo) == 1)
+        if(processinfo_compute_status(processinfo) == 1)
         {
             // Subtract reference
             data.image[IDimWFS2].md[0].write = 1;
-            if (wfsrefON == 1) // if WFS reference is NOT zero
+            if(wfsrefON == 1)  // if WFS reference is NOT zero
             {
-                for (long ii = 0; ii < sizeWFS; ii++)
+                for(long ii = 0; ii < sizeWFS; ii++)
                 {
                     data.image[IDimWFS2].array.F[ii] =
                         data.image[IDimWFS1].array.F[ii] -
@@ -613,12 +613,12 @@ int AOloopControl_aorun_RUN()
             data.image[ID_MVMout].md[0].cnt1  = WFScnt;
             data.image[ID_MVMout].md[0].write = 0;
 
-            if (*loopONflag & FPFLAG_ONOFF)
+            if(*loopONflag & FPFLAG_ONOFF)
             {
-                if (*loopNBstep > 0)
+                if(*loopNBstep > 0)
                 {
                     (*loopNBstep)--;
-                    if (*loopNBstep == 0)
+                    if(*loopNBstep == 0)
                     {
                         // turn loop OFF
                         *loopONflag &= ~FPFLAG_ONOFF;
@@ -627,17 +627,17 @@ int AOloopControl_aorun_RUN()
 
                 data.image[ID_DMout].md[0].write = 1;
 
-                for (long ii = 0; ii < sizeDM; ii++)
+                for(long ii = 0; ii < sizeDM; ii++)
                 {
                     float tmpval =
                         data.image[ID_DMout].array.F[ii] -
                         (*loopgain) * data.image[ID_MVMout].array.F[ii];
                     tmpval *= (*loopmult);
-                    if (tmpval > *maxlim)
+                    if(tmpval > *maxlim)
                     {
                         tmpval = (*maxlim);
                     }
-                    if (tmpval < -*maxlim)
+                    if(tmpval < -*maxlim)
                     {
                         tmpval = -(*maxlim);
                     }
@@ -718,18 +718,18 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
     sprintf(pinfomsg, "Initialize AO loop %ld", loop);
 
     processinfo = processinfo_setup(
-        pinfoname, // short name for the processinfo instance, no spaces, no dot,
-                   // name should be human-readable
-        pinfodescr, // description
-        pinfomsg,   // message on startup
-        __FUNCTION__,
-        __FILE__,
-        __LINE__);
+                      pinfoname, // short name for the processinfo instance, no spaces, no dot,
+                      // name should be human-readable
+                      pinfodescr, // description
+                      pinfomsg,   // message on startup
+                      __FUNCTION__,
+                      __FILE__,
+                      __LINE__);
     // OPTIONAL SETTINGS
     processinfo->MeasureTiming = 1; // Measure timing
     processinfo->RT_priority =
         RT_priority; // RT_priority, 0-99. Larger number =
-                     // higher priority. If <0, ignore
+    // higher priority. If <0, ignore
 
     int loopOK = 1;
 
@@ -746,28 +746,28 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                          __LINE__,
                          commentstring);
 
-    if (aoloopcontrol_var.AOloopcontrol_meminit == 0)
+    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
     {
         AOloopControl_InitializeMemory(0);
     }
 
-    if (AOloopControl_aorun_ProcessInit_Value == 0)
+    if(AOloopControl_aorun_ProcessInit_Value == 0)
     {
         AOloopControl_aorun_ProcessInit();
         AOloopControl_aorun_ProcessInit_Value = 1;
     }
 
     /** ### STEP 1: Setting up
-   *
-   * Load arrays
-   * */
+    *
+    * Load arrays
+    * */
     printf("SETTING UP...\n");
     AOloopControl_loadconfigure(aoloopcontrol_var.LOOPNUMBER, 1, 10);
 
     // pixel streaming ?
     aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 1;
 
-    if (AOconf[loop].AOcompute.GPUall == 0)
+    if(AOconf[loop].AOcompute.GPUall == 0)
     {
         aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
     }
@@ -775,13 +775,13 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
     printf("============ pixel streaming ? =============\n");
     fflush(stdout);
 
-    if (aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 1)
+    if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 1)
     {
         aoloopcontrol_var.aoconfID_pixstream_wfspixindex =
             load_fits("pixstream_wfspixindex.fits", "pixstream", 1, NULL);
     }
 
-    if (aoloopcontrol_var.aoconfID_pixstream_wfspixindex == -1)
+    if(aoloopcontrol_var.aoconfID_pixstream_wfspixindex == -1)
     {
         aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0;
     }
@@ -789,7 +789,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
     {
         printf("Testing data type\n");
         fflush(stdout);
-        if (data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex]
+        if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex]
                 .md[0]
                 .datatype != _DATATYPE_UINT16)
         {
@@ -797,25 +797,25 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
         }
     }
 
-    if (aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 1)
+    if(aoloopcontrol_var.COMPUTE_PIXELSTREAMING == 1)
     {
         long xsize =
             data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex]
-                .md[0]
-                .size[0];
+            .md[0]
+            .size[0];
         long ysize =
             data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex]
-                .md[0]
-                .size[1];
+            .md[0]
+            .size[1];
         aoloopcontrol_var.PIXSTREAM_NBSLICES = 0;
-        for (unsigned int ii = 0; ii < xsize * ysize; ii++)
+        for(unsigned int ii = 0; ii < xsize * ysize; ii++)
         {
-            if (data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex]
+            if(data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex]
                     .array.UI16[ii] > aoloopcontrol_var.PIXSTREAM_NBSLICES)
             {
                 aoloopcontrol_var.PIXSTREAM_NBSLICES =
                     data.image[aoloopcontrol_var.aoconfID_pixstream_wfspixindex]
-                        .array.UI16[ii];
+                    .array.UI16[ii];
             }
         }
         aoloopcontrol_var.PIXSTREAM_NBSLICES++;
@@ -828,7 +828,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
     aoloopcontrol_var.COMPUTE_PIXELSTREAMING = 0; // TEST
 
     vOK = 1;
-    if (AOconf[loop].aorun.init_wfsref0 == 0)
+    if(AOconf[loop].aorun.init_wfsref0 == 0)
     {
 
         processinfo_error(processinfo, "ERROR: no WFS reference");
@@ -837,7 +837,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
     }
 
     //    if(AOconf[loop].init_CM==0)
-    if (aoloopcontrol_var.init_CM_local == 0)
+    if(aoloopcontrol_var.init_CM_local == 0)
     {
         printf("ERROR: CANNOT RUN LOOP WITHOUT CONTROL MATRIX\n");
         printf("aoloopcontrol_var.init_CM_local = 0\n");
@@ -855,7 +855,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
     AOconf[loop].aorun.init_CMc    = 0;
     clock_gettime(CLOCK_REALTIME, &t1);
 
-    if (vOK == 1)
+    if(vOK == 1)
     {
         AOconf[loop].aorun.LOOPiteration     = 0;
         AOconf[loop].aorun.kill              = 0;
@@ -872,7 +872,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
 #endif
 
         int timerinit = 0;
-        if (data.processinfo == 1)
+        if(data.processinfo == 1)
         {
             processinfo->loopstat = 1;
         }
@@ -887,14 +887,14 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
         processinfo_loopstart(
             processinfo); // Notify processinfo that we are entering loop
 
-        while (AOconf[loop].aorun.kill == 0)
+        while(AOconf[loop].aorun.kill == 0)
         {
-            if (timerinit == 1)
+            if(timerinit == 1)
             {
                 processinfoUpdate = 1;
                 clock_gettime(CLOCK_REALTIME, &t1);
                 printf("timer init\n");
-                if (data.processinfo == 1)
+                if(data.processinfo == 1)
                 {
                     char msgstring[200];
                     sprintf(msgstring, "Waiting");
@@ -921,25 +921,25 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
             processinfo_WriteMessage(processinfo, pinfomsg);
 
             long loopcnt = 0;
-            while ((AOconf[loop].aorun.on == 1) && (loopOK == 1))
+            while((AOconf[loop].aorun.on == 1) && (loopOK == 1))
             {
 
                 loopOK = processinfo_loopstep(processinfo);
 
-                if (loopOK == 0)
+                if(loopOK == 0)
                 {
                     AOconf[loop].aorun.on   = 0;
                     AOconf[loop].aorun.kill = 1;
                 }
 
-                if (processinfoUpdate == 1)
+                if(processinfoUpdate == 1)
                 {
                     processinfo_WriteMessage(processinfo, "LOOP RUNNING-");
                 }
 
                 clock_gettime(CLOCK_REALTIME,
                               &functionTestTimer00); // TEST timing in function
-                if (timerinit == 0)
+                if(timerinit == 0)
                 {
                     //      Read_cam_frame(loop, 0,
                     //      AOconf[loop].WFSim.WFSnormalize, 0, 1);
@@ -962,8 +962,8 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 // CTRLval = 5 will disable computations in loop (usually for
                 // testing)
                 int doComputation = 1;
-                if (data.processinfo == 1)
-                    if (processinfo->CTRLval == 5)
+                if(data.processinfo == 1)
+                    if(processinfo->CTRLval == 5)
                     {
                         doComputation = 0;
                     }
@@ -975,7 +975,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 // AOcompute()
                 //
 
-                if (doComputation == 1)
+                if(doComputation == 1)
                 {
                     // processinfo_WriteMessage(processinfo, "start AOcompute");
                     AOcompute(loop, AOconf[loop].WFSim.WFSnormalize);
@@ -994,22 +994,22 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 AOconf[loop].AOtiminginfo.status = 12; // 12
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiffv = timespec_diff_double(
-                    data.image[aoloopcontrol_var.aoconfID_looptiming]
-                        .md[0]
-                        .atime,
-                    tnow);
+                             data.image[aoloopcontrol_var.aoconfID_looptiming]
+                             .md[0]
+                             .atime,
+                             tnow);
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[19] =
                     tdiffv;
 
-                if (AOconf[loop].aorun.CMMODE ==
-                    0) // 2-step : WFS -> mode coeffs -> DM act
+                if(AOconf[loop].aorun.CMMODE ==
+                        0) // 2-step : WFS -> mode coeffs -> DM act
                 {
-                    if (AOconf[loop].aorun.DMprimaryWriteON ==
-                        1) // if Writing to DM
+                    if(AOconf[loop].aorun.DMprimaryWriteON ==
+                            1) // if Writing to DM
                     {
-                        if (doComputation == 1)
+                        if(doComputation == 1)
                         {
-                            if (fabs(AOconf[loop].aorun.gain) > 1.0e-6)
+                            if(fabs(AOconf[loop].aorun.gain) > 1.0e-6)
                             {
                                 set_DM_modes(loop);
                             }
@@ -1018,19 +1018,19 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 }
                 else // 1 step: WFS -> DM act
                 {
-                    if (AOconf[loop].aorun.DMprimaryWriteON ==
-                        1) // if Writing to DM
+                    if(AOconf[loop].aorun.DMprimaryWriteON ==
+                            1) // if Writing to DM
                     {
                         data.image[aoloopcontrol_var.aoconfID_dmC].md[0].write =
                             1;
 
-                        for (unsigned long ii = 0;
-                             ii < AOconf[loop].DMctrl.sizeDM;
-                             ii++) // TEST
+                        for(unsigned long ii = 0;
+                                ii < AOconf[loop].DMctrl.sizeDM;
+                                ii++) // TEST
                         {
-                            if (isnan(data.image[aoloopcontrol_var
-                                                     .aoconfID_meas_act]
-                                          .array.F[ii]) != 0)
+                            if(isnan(data.image[aoloopcontrol_var
+                                                .aoconfID_meas_act]
+                                     .array.F[ii]) != 0)
                             {
                                 printf(
                                     "image aol2_meas_act  element %ld is "
@@ -1038,50 +1038,50 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                                     "replacing by 0\n",
                                     ii);
                                 data.image[aoloopcontrol_var.aoconfID_meas_act]
-                                    .array.F[ii] = 0.0;
+                                .array.F[ii] = 0.0;
                             }
                         }
 
                         AOconf[loop].AOtiminginfo.status = 13; // enforce limits
                         clock_gettime(CLOCK_REALTIME, &tnow);
                         tdiffv = timespec_diff_double(
-                            data.image[aoloopcontrol_var.aoconfID_looptiming]
-                                .md[0]
-                                .atime,
-                            tnow);
+                                     data.image[aoloopcontrol_var.aoconfID_looptiming]
+                                     .md[0]
+                                     .atime,
+                                     tnow);
                         data.image[aoloopcontrol_var.aoconfID_looptiming]
-                            .array.F[20] = tdiffv;
+                        .array.F[20] = tdiffv;
 
-                        if (doComputation == 1)
+                        if(doComputation == 1)
                         {
-                            for (unsigned long ii = 0;
-                                 ii < AOconf[loop].DMctrl.sizeDM;
-                                 ii++)
+                            for(unsigned long ii = 0;
+                                    ii < AOconf[loop].DMctrl.sizeDM;
+                                    ii++)
                             {
                                 data.image[aoloopcontrol_var.aoconfID_dmC]
-                                    .array.F[ii] -=
+                                .array.F[ii] -=
                                     AOconf[loop].aorun.gain *
                                     data.image[aoloopcontrol_var
-                                                   .aoconfID_meas_act]
-                                        .array.F[ii];
+                                               .aoconfID_meas_act]
+                                    .array.F[ii];
 
                                 data.image[aoloopcontrol_var.aoconfID_dmC]
-                                    .array.F[ii] *= AOconf[loop].aorun.mult;
+                                .array.F[ii] *= AOconf[loop].aorun.mult;
 
-                                if (data.image[aoloopcontrol_var.aoconfID_dmC]
+                                if(data.image[aoloopcontrol_var.aoconfID_dmC]
                                         .array.F[ii] >
-                                    AOconf[loop].aorun.maxlimit)
+                                        AOconf[loop].aorun.maxlimit)
                                 {
                                     data.image[aoloopcontrol_var.aoconfID_dmC]
-                                        .array.F[ii] =
+                                    .array.F[ii] =
                                         AOconf[loop].aorun.maxlimit;
                                 }
-                                if (data.image[aoloopcontrol_var.aoconfID_dmC]
+                                if(data.image[aoloopcontrol_var.aoconfID_dmC]
                                         .array.F[ii] <
-                                    -AOconf[loop].aorun.maxlimit)
+                                        -AOconf[loop].aorun.maxlimit)
                                 {
                                     data.image[aoloopcontrol_var.aoconfID_dmC]
-                                        .array.F[ii] =
+                                    .array.F[ii] =
                                         -AOconf[loop].aorun.maxlimit;
                                 }
                             }
@@ -1090,12 +1090,12 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                         AOconf[loop].AOtiminginfo.status = 14; // write to DM
                         clock_gettime(CLOCK_REALTIME, &tnow);
                         tdiffv = timespec_diff_double(
-                            data.image[aoloopcontrol_var.aoconfID_looptiming]
-                                .md[0]
-                                .atime,
-                            tnow);
+                                     data.image[aoloopcontrol_var.aoconfID_looptiming]
+                                     .md[0]
+                                     .atime,
+                                     tnow);
                         data.image[aoloopcontrol_var.aoconfID_looptiming]
-                            .array.F[21] = tdiffv;
+                        .array.F[21] = tdiffv;
 
                         COREMOD_MEMORY_image_set_sempost_byID(
                             aoloopcontrol_var.aoconfID_dmC,
@@ -1108,20 +1108,20 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
 
                         // inform dmdisp that new command is ready in one of the
                         // channels
-                        if (aoloopcontrol_var.aoconfID_dmdisp != -1)
-                            if (data.image[aoloopcontrol_var.aoconfID_dmdisp]
+                        if(aoloopcontrol_var.aoconfID_dmdisp != -1)
+                            if(data.image[aoloopcontrol_var.aoconfID_dmdisp]
                                     .md[0]
                                     .sem > 1)
                             {
                                 sem_getvalue(data.image[aoloopcontrol_var
-                                                            .aoconfID_dmdisp]
-                                                 .semptr[1],
+                                                        .aoconfID_dmdisp]
+                                             .semptr[1],
                                              &semval);
-                                if (semval < SEMAPHORE_MAXVAL)
+                                if(semval < SEMAPHORE_MAXVAL)
                                 {
                                     sem_post(data.image[aoloopcontrol_var
-                                                            .aoconfID_dmdisp]
-                                                 .semptr[1]);
+                                                        .aoconfID_dmdisp]
+                                             .semptr[1]);
                                 }
                             }
                         AOconf[loop].aorun.DMupdatecnt++;
@@ -1131,10 +1131,10 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 AOconf[loop].AOtiminginfo.status = 18; // 18
                 clock_gettime(CLOCK_REALTIME, &tnow);
                 tdiffv = timespec_diff_double(
-                    data.image[aoloopcontrol_var.aoconfID_looptiming]
-                        .md[0]
-                        .atime,
-                    tnow);
+                             data.image[aoloopcontrol_var.aoconfID_looptiming]
+                             .md[0]
+                             .atime,
+                             tnow);
                 data.image[aoloopcontrol_var.aoconfID_looptiming].array.F[22] =
                     tdiffv;
 
@@ -1152,7 +1152,7 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 data.image[aoloopcontrol_var.aoconfIDlogdata].array.F[0] =
                     AOconf[loop].aorun.gain;
 
-                if (AOconf[loop].aorun.cnt == AOconf[loop].aorun.cntmax)
+                if(AOconf[loop].aorun.cnt == AOconf[loop].aorun.cntmax)
                 {
                     AOconf[loop].aorun.on = 0;
                 }
@@ -1164,41 +1164,41 @@ errno_t __attribute__((hot)) AOloopControl_aorun()
                 // double tdiffv02 = tdiffv;
                 // TEST TIMING
                 /*
-              if(tdiffv > 30.0e-6)
-              {
+                if(tdiffv > 30.0e-6)
+                {
                       printf("TIMING WARNING: %12.3f us  %10ld
-              AOloopControl_aorun()
-              - excluding AOcompute\n", tdiffv*1.0e6, (long)
-              AOconf[loop].aorun.LOOPiteration); fflush(stdout);
-              }*/
+                AOloopControl_aorun()
+                - excluding AOcompute\n", tdiffv*1.0e6, (long)
+                AOconf[loop].aorun.LOOPiteration); fflush(stdout);
+                }*/
 
                 tdiffv = timespec_diff_double(functionTestTimer00,
                                               functionTestTimerEnd);
 
                 // TEST TIMING
                 /*
-              if(tdiffv > 600.0e-6)
-              {
+                if(tdiffv > 600.0e-6)
+                {
                       printf("TIMING WARNING: %12.3f us  %10ld
-              AOloopControl_aorun()\n", tdiffv*1.0e6, (long)
-              AOconf[loop].aorun.LOOPiteration); printf("    AOcompute() read
-              cam : %12.3f us \n", tdiffv00*1.0e6); printf("    AOcompute() post
-              read cam   : %12.3f us \n", tdiffv01*1.0e6); printf("
-              AOloopControl_aorun()    post-AOcompute  : %12.3f us \n",
-              tdiffv02*1.0e6);
+                AOloopControl_aorun()\n", tdiffv*1.0e6, (long)
+                AOconf[loop].aorun.LOOPiteration); printf("    AOcompute() read
+                cam : %12.3f us \n", tdiffv00*1.0e6); printf("    AOcompute() post
+                read cam   : %12.3f us \n", tdiffv01*1.0e6); printf("
+                AOloopControl_aorun()    post-AOcompute  : %12.3f us \n",
+                tdiffv02*1.0e6);
 
                       fflush(stdout);
 
 
-              }
-              */
+                }
+                */
 
                 processinfo_exec_end(processinfo);
 
                 loopcnt++;
             }
 
-            if (AOconf[loop].aorun.kill == 1)
+            if(AOconf[loop].aorun.kill == 1)
             {
                 loopOK = 0;
             }

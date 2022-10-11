@@ -158,7 +158,7 @@ errno_t AOloopControl_IOtools_acquireWFSloop_cli()
 
     function_parameter_getFPSargs_from_CLIfunc("acquWFS");
 
-    if (data.FPS_CMDCODE != 0) // use FPS implementation
+    if(data.FPS_CMDCODE != 0)  // use FPS implementation
     {
         // set pointers to CONF and RUN functions
         data.FPS_CONFfunc = AOcontrolLoop_IOtools_acquireWFSloop_FPCONF;
@@ -175,10 +175,10 @@ errno_t AOloopControl_IOtools_acquireWFSloop_cli()
 /** @brief CLI function for AOloopControl_camimage_extract2D_sharedmem_loop */
 errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 5) + CLI_checkarg(3, 3) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 5) + CLI_checkarg(3, 3) +
             CLI_checkarg(4, 2) + CLI_checkarg(5, 2) + CLI_checkarg(6, 2) +
             CLI_checkarg(7, 2) ==
-        0)
+            0)
     {
         AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(
             data.cmdargtoken[1].val.string,
@@ -223,9 +223,9 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli()
 /** @brief CLI function for AOloopControl_AveStream */
 errno_t AOloopControl_IOtools_AveStream_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 1) + CLI_checkarg(3, 3) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 1) + CLI_checkarg(3, 3) +
             CLI_checkarg(4, 3) + CLI_checkarg(5, 3) ==
-        0)
+            0)
     {
         AOloopControl_IOtools_AveStream(data.cmdargtoken[1].val.string,
                                         data.cmdargtoken[2].val.numf,
@@ -244,9 +244,9 @@ errno_t AOloopControl_IOtools_AveStream_cli()
 /** @brief Aligns data stream */
 errno_t AOloopControl_IOtools_imAlignStream_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 4) + CLI_checkarg(5, 3) + CLI_checkarg(6, 2) ==
-        0)
+            0)
     {
         AOloopControl_IOtools_imAlignStream(data.cmdargtoken[1].val.string,
                                             data.cmdargtoken[2].val.numl,
@@ -266,9 +266,9 @@ errno_t AOloopControl_IOtools_imAlignStream_cli()
 /** @brief CLI function for AOloopControl_frameDelay */
 errno_t AOloopControl_IOtools_frameDelay_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 5) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 5) +
             CLI_checkarg(4, 2) ==
-        0)
+            0)
     {
         AOloopControl_IOtools_frameDelay(data.cmdargtoken[1].val.string,
                                          data.cmdargtoken[2].val.string,
@@ -286,9 +286,9 @@ errno_t AOloopControl_IOtools_frameDelay_cli()
 /** @brief CLI function for AOloopControl_stream3Dto2D */
 errno_t AOloopControl_IOtools_stream3Dto2D_cli()
 {
-    if (CLI_checkarg(1, 4) + CLI_checkarg(2, 3) + CLI_checkarg(3, 2) +
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 3) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 2) ==
-        0)
+            0)
     {
         AOloopControl_IOtools_stream3Dto2D(data.cmdargtoken[1].val.string,
                                            data.cmdargtoken[2].val.string,
@@ -317,7 +317,7 @@ errno_t AOloopControl_IOtools_stream3Dto2D_cli()
 /** @brief Save telemetry */
 errno_t AOloopControl_IOtools_RTLOGsave_cli()
 {
-    if (CLI_checkarg(1, 2) + CLI_checkarg(2, 5) + CLI_checkarg(3, 5) == 0)
+    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 5) + CLI_checkarg(3, 5) == 0)
     {
         AOloopControl_IOtools_RTLOGsave(data.cmdargtoken[1].val.numl,
                                         data.cmdargtoken[2].val.string,
@@ -346,15 +346,15 @@ static errno_t init_module_CLI()
 {
 
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /** @name AOloopControl_IOtools - 1. CAMERA INPUT
-   *  Read camera imates */
+    *  Read camera imates */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand("aolacquireWFSloop",
                        __FILE__,
@@ -378,15 +378,15 @@ static errno_t init_module_CLI()
         "long ystart)");
 
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /** @name AOloopControl_IOtools - 3. DATA STREAMS PROCESSING
-   *  Data streams real-time processing */
+    *  Data streams real-time processing */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand(
         "aveACshmim",
@@ -431,15 +431,15 @@ static errno_t init_module_CLI()
         "char *out_name, int NBcols, int insem)");
 
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
     /** @name AOloopControl_IOtools - 4. SAVE REAL-TIME TELEMETRY BUFFER
-   *  Save to disk telemetry packaged in alternate buffers */
+    *  Save to disk telemetry packaged in alternate buffers */
     /* ===============================================================================================
-   */
+    */
     /* ===============================================================================================
-   */
+    */
 
     RegisterCLIcommand("aolrtlogbuffsave",
                        __FILE__,
