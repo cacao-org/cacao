@@ -594,7 +594,7 @@ static errno_t compute_function()
     // TAG LINE 889
 
 
-
+    fps_write_RUNoutput_image(data.fpsptr, "DMmaskCTRL", "DMmaskCTRL"); // test
 
     // set pixels to zero if neither part of DMmaskCTRL or DMmaskEXT
     // output (in-place) : imgDMmodesZFe
