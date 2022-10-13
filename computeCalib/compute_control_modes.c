@@ -780,7 +780,7 @@ static errno_t compute_function()
             {
                 char fnameimout[STRINGMAXLEN_FILENAME];
                 WRITE_FILENAME(fnameimout, "linfit_input.%04d", m);
-                fps_write_RUNoutput_image(data.fpsptr, "imfitim", "fnameimout");
+                fps_write_RUNoutput_image(data.fpsptr, "imfitim", fnameimout);
             }
 
             // Decompose DM mode m input (imfitim) as a linear sum (linfitcoeff) of modal modes (loDMmodes)
