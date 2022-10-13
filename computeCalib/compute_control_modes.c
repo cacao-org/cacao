@@ -695,6 +695,8 @@ static errno_t compute_function()
     imageID IDloDMmodes = -1;
     load_fits(fname_loRMmodes, "loDMmodes", LOADFITS_ERRMODE_WARNING, &IDloDMmodes);
 
+    fps_write_RUNoutput_image(data.fpsptr, "loDMmodes", "loDMmodes"); // test
+
 
 
     if((IDloRM != -1) && (IDloDMmodes != -1))
