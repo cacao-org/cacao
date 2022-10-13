@@ -271,10 +271,12 @@ static CLICMDARGDEF farg[] =
 };
 
 
-static CLICMDDATA CLIcmddata = {"compctrlmodes",
-                                "compute AO control modes in WFS and DM space",
-                                CLICMD_FIELDS_DEFAULTS
-                               };
+static CLICMDDATA CLIcmddata =
+{
+    "compctrlmodes",
+    "compute AO control modes in WFS and DM space",
+    CLICMD_FIELDS_DEFAULTS
+};
 
 
 
@@ -484,6 +486,14 @@ static errno_t help_function()
     printf(
         "Compute AO control modes\n"
         "Corresponding pairs of DM and WFS modes are computed\n"
+        "Intermediate Results (in datadir) and steps:\n"
+        "(1) Construct DM-space modes\n"
+        "    DMmodesZF      DM Zernike+Fourier modes, normalized over active actuators DMmaskCTRL\n"
+        "    DMmodesZFe     extrapolated over DMmaskEXT\n"
+        "    WFSmodesZFe    WFS response to DMmodesZFe\n"
+        "(2) Apply aux DM modes\n"
+        "    imfitmat       linear mapping between DMmodesZFw and auxDMmodes\n"
+        "    LOcoeff.txt    stats of linear mapping\n"
     );
 
     return RETURN_SUCCESS;
@@ -540,9 +550,9 @@ static errno_t compute_function()
 
     // CREATE ZERNIKE+FOURIER DM MODES BASIS
     // Zernike modes are centered on (alignCX, alignCY)
-    // output : imgDMmodesZF ("DMmodesZFm")
+    // output : imgDMmodesZF ("DMmodesZF")
     //
-    IMGID imgDMmodesZF = mkIMGID_from_name("DMmodesZFm");
+    IMGID imgDMmodesZF = mkIMGID_from_name("DMmodesZF");
     mk_ZernikeFourier_modal_basis(*DMxsize,
                                   *DMysize,
                                   *CPAmax,
@@ -559,7 +569,7 @@ static errno_t compute_function()
     modes_mask_normalize(imgDMmodesZF, imgDMmaskCTRL);
 
     // save to disk
-    fps_write_RUNoutput_image(data.fpsptr, "DMmodesZFm", "DMmodesZFm");
+    fps_write_RUNoutput_image(data.fpsptr, "DMmodesZF", "DMmodesZF");
 
 
     // EXTRAPOLATE DM MODES
@@ -677,13 +687,15 @@ static errno_t compute_function()
 
 
 
-    // APPLY MODAL RESPONSE MATRIX IF IT EXISTS
+    // APPLY MODAL (AUX) RESPONSE MATRIX IF IT EXISTS
     // output (in-place) : imgWFSmodesZFe
     //
     imageID IDloRM = -1;
     load_fits(fname_loRM, "loRM", LOADFITS_ERRMODE_WARNING, &IDloRM);
     imageID IDloDMmodes = -1;
     load_fits(fname_loRMmodes, "loDMmodes", LOADFITS_ERRMODE_WARNING, &IDloDMmodes);
+
+
 
     if((IDloRM != -1) && (IDloDMmodes != -1))
     {
@@ -726,15 +738,33 @@ static errno_t compute_function()
                           imgWFSmodesZFe.size[2],
                           &IDcoeffmat);
 
+        // Reconstructed DM modes from aux
+        //
+        imageID IDauxDMmodesrec = -1;
+        create_3Dimage_ID("auxDMmodesrec", msizex, msizey, imgDMmodesZFe.size[2],
+                          &IDauxDMmodesrec);
+        // null space (complement of above)
+        imageID IDauxDMmodesnull = -1;
+        create_3Dimage_ID("auxDMmodesnull", msizex, msizey, imgDMmodesZFe.size[2],
+                          &IDauxDMmodesnull);
+
+
         int linfitreuse = 0;
 
         imageID IDwfstmp = -1;
         create_2Dimage_ID("wfsimtmp", wfssizex, wfssizey, &IDwfstmp);
 
+
+        fprintf(fpLOcoeff, "# col1   Input DM mode index\n");
+        fprintf(fpLOcoeff,
+                "# col2   Fit residual: fraction of input DM mode that cannot be expressed by aux modes\n");
+        fprintf(fpLOcoeff, "# col3   Fit vector power (squared morm)\n");
+        fprintf(fpLOcoeff,
+                "# col4   Mixing fraction (a): new mode equal to a x aux + (1-a) x previous\n");
         for(uint32_t m = 0; m < imgDMmodesZFe.size[2]; m++)
         {
 
-            printf("processing mode %u / %u\n", m, imgDMmodesZFe.size[2]);
+            //printf("processing mode %u / %u\n", m, imgDMmodesZFe.size[2]);
 
 
             // copy DM mode slice into input 2D array
@@ -746,12 +776,12 @@ static errno_t compute_function()
             }
 
 
-            // Decompose DM mode m input (imfitim) as a linear sum (linfitcoeff) of modes (loDMmodes)
+            // Decompose DM mode m input (imfitim) as a linear sum (linfitcoeff) of modal modes (loDMmodes)
             //
             linopt_imtools_image_fitModes("imfitim",
                                           "loDMmodes",
                                           "DMmaskCTRL",
-                                          0.1,
+                                          0.001,
                                           "linfitcoeff",
                                           linfitreuse,
                                           NULL);
@@ -767,19 +797,26 @@ static errno_t compute_function()
                     data.image[IDRMM_coeff].array.F[jj];
             }
 
+
             // Reconstruct linear fit result (DM)
             //
-            imageID IDtmp = -1;
-            create_2Dimage_ID("testrc", msizex, msizey, &IDtmp);
             for(uint32_t jj = 0; jj < linfitsize; jj++)
             {
                 for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                 {
-                    data.image[IDtmp].array.F[ii] +=
+                    data.image[IDauxDMmodesrec].array.F[m * msizex * msizey + ii] +=
                         data.image[IDRMM_coeff].array.F[jj] *
                         imgloDMmodes.im->array.F[jj * msizex * msizey + ii];
                 }
             }
+            // ... and it complement (null)
+            for(uint64_t ii = 0; ii < msizex * msizey; ii++)
+            {
+                data.image[IDauxDMmodesnull].array.F[m * msizex * msizey + ii] =
+                    data.image[ID_imfit].array.F[ii]
+                    - data.image[IDauxDMmodesrec].array.F[m * msizex * msizey + ii];
+            }
+
 
             // Measure fit quality
             // res : residual normalized to input mode
@@ -789,11 +826,12 @@ static errno_t compute_function()
             double resn = 0.0;
             for(uint64_t ii = 0; ii < msizex * msizey; ii++)
             {
-                float v0 = data.image[IDtmp].array.F[ii] -
+                float v0 = data.image[IDauxDMmodesrec].array.F[m * msizex * msizey + ii] -
                            data.image[ID_imfit].array.F[ii];
                 float vn = data.image[ID_imfit].array.F[ii];
-                res += v0 * v0;
-                resn += vn * vn;
+                float mcoeff = imgDMmaskCTRL.im->array.F[ii];
+                res += v0 * v0 * mcoeff;
+                resn += vn * vn * mcoeff;
             }
             res /= resn;
 
@@ -806,7 +844,6 @@ static errno_t compute_function()
                         data.image[IDRMM_coeff].array.F[jj];
             }
 
-            delete_image_ID("testrc", DELETE_IMAGE_ERRMODE_WARNING);
 
             // LOcoeff: mixing fraction from lo modes
             //
@@ -824,10 +861,10 @@ static errno_t compute_function()
                     res1,
                     LOcoeff);
 
-            printf("    %5u   %20g  %20g   ->  %f\n", m, res, res1, LOcoeff);
-            fflush(stdout);
+            //printf("    %5u   %20g  %20g   ->  %f\n", m, res, res1, LOcoeff);
+            //fflush(stdout);
 
-            if(LOcoeff < 0.01)
+            if(LOcoeff > 0.01)
             {
                 // construct linear fit (WFS space)
                 for(uint64_t wfselem = 0; wfselem < wfssizexy; wfselem++)
@@ -857,7 +894,14 @@ static errno_t compute_function()
         delete_image_ID("wfsimtmp", DELETE_IMAGE_ERRMODE_WARNING);
 
         // save to disk
+
         fps_write_RUNoutput_image(data.fpsptr, "imfitmat", "imfitmat");
+
+        fps_write_RUNoutput_image(data.fpsptr, "auxDMmodesrec", "auxDMmodesrec");
+        delete_image_ID("auxDMmodesrec", DELETE_IMAGE_ERRMODE_WARNING);
+
+        fps_write_RUNoutput_image(data.fpsptr, "auxDMmodesnull", "auxDMmodesnull");
+        delete_image_ID("auxDMmodesnull", DELETE_IMAGE_ERRMODE_WARNING);
 
         //save_fits("imfitmat", "imfitmat.fits");
         delete_image_ID("imfitmat", DELETE_IMAGE_ERRMODE_WARNING);
@@ -876,7 +920,7 @@ static errno_t compute_function()
 
 
 
-    list_image_ID();
+    //list_image_ID();
 
 
     // streamprocess(inimg, outimg);

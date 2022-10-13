@@ -73,27 +73,29 @@ For example, the following tasks could be listed :
 
 :warning: Instruction steps below depend on the tasks. For example, tasks GETSIMCONFFILES and TESTCONFIG may not exit... in which case you can skip the reading the corresponding sections. Note also that the task numbering may change: if GETSIMCONFFILES and TESTCONFIG don't exist, then CACAOSETUP will be task #1. The example may also include additional setup tasks.
 
-## 3.1. Setting up WORKDIR
+## 3.1. INITSETUP: Setting up WORKDIR
 
 The INITSETUP task creates the **WORKDIR** directory :
 
         $ cacao-task-manager -X 0 <CONFNAME>
 
-The WORKDIR content is as follows :
+The WORKDIR content will ultimately be as follows :
 
 ~~~
-├── <WORKDIR>
-│   ├── <LOOPNAME>dir                  -> conf and run processes launched from here
-│   ├── datalogdir
-│   ├── log                            -> cacao-setup log
-│   └── simLHS                         -> Linear Hardware Simulator files (optional)
-├── .<LOOPNAME>-cacaotaskmanager-log   -> cacao-task-manager status and log
+├── <WORKDIR>/
+│   ├── cacaovars.<LOOPNAME>.bash       -> cacao variables (see cacao-setup step)
+│   ├── fpssetup.setval.<LOOPNAME>.conf -> custom FPS setup values (see cacao-setup step)
+│   ├── <LOOPNAME>dir/                  -> conf and run processes launched from here
+│   ├── datalogdir/
+│   ├── log/                            -> cacao-setup log
+│   └── simLHS/                         -> Linear Hardware Simulator files (optional)
+├── .<LOOPNAME>-cacaotaskmanager-log/   -> cacao-task-manager status and log
 ~~~
 
 All cacao processes will be running from the WORKDIR/LOOPNAMEdir directory.
 
 
-## 3.2. Uploading external file(s)
+## 3.2. GETSIMCONFFILES: Uploading external file(s)
 
 Some of the examples include downloading external files.
 The GETSIMCONFFILES task downloads calibration file to simulate an AO system for test purposes.
@@ -102,7 +104,7 @@ To run this step:
 
     $ cacao-task-manager -X 1 <CONFNAME>
 
-## 3.3. Testing the configuration
+## 3.3. TESTCONFIG: Testing the configuration
 
 The TESTCONFIG task performs tests.
 
@@ -110,7 +112,7 @@ To run this step:
 
     $ cacao-task-manager -X 2 <CONFNAME>
 
-## 3.4. Running cacao-setup
+## 3.4. CACAOSETUP: Running cacao-setup
 
 The CACAOSETUP task runs cacao-setup within **WORKDIR**, which :
 
@@ -138,7 +140,7 @@ To run this step using cacao-task-manager:
 
 # 4. Configuring and controlling processes through milk-fpsCTRL fifo: aorunscript
 
-The cacao-setup task (task 3 above) will start an instance of milk-fpsCTRL within a dedicated tmux session. This instance is processing commands sent to a fifo named **/milk/shm/LOOPNAME_fpsCTRL.fifo**.
+The cacao-setup task (task 3.4. above) will start an instance of milk-fpsCTRL within a dedicated tmux session. This instance is processing commands sent to a fifo named **/milk/shm/LOOPNAME_fpsCTRL.fifo**.
 
 From this point on, scripts can send commands to the fifo to change parameters, and run/stop processes. Alternatively, users can also use milk-fpsCTRL as an interactive GUI to perform these operations.
 
