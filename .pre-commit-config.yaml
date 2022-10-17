@@ -29,7 +29,7 @@ repos:
         entry: /usr/bin/astyle
         args: ['-A1', '-s4', '-U', '-p', '-j', '-xC80', '-xG', '-S', '-k3', '-q', '-n']
         language: script
-        files: '\.(cpp|c|h|hpp)'
+        files: '\.(cpp|c|h|hpp)$'
         stages: [commit, push]
 #-   repo: git://github.com/detailyang/pre-commit-shell
 #    rev: v1.0.6
