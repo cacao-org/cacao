@@ -21,6 +21,15 @@ RequiredDirs=(fps.compfCM-${AOLOOPNUMBER}.datadir fps.acqlin_zRM-${AOLOOPNUMBER}
 
 MSarg+=( "calibname:string:calibration name" )
 
+MSopt+=( "u:update:setupdate::update existing, do not append timestamp" )
+
+
+update="0"
+function setupdate() {
+        echo "Updating, not apppending timestamp"
+        update="1"
+}
+
 
 
 source milk-argparse
@@ -47,6 +56,11 @@ echo "Calibration : ${calib}"
 
 ARCHDIR="AOcalibs/$1"
 
+if [ "${update}" = "0" ]; then
+ARCHDIR=${ARCHDIR}_$(date -u +%Y%m%d_%H%M%S)
+fi
+
+
 mkdir -p ${ARCHDIR}
 
 
@@ -56,6 +70,15 @@ cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/ao
 # modes including WFS-space diagonalization
 cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodesWFSall.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS_WFSdiag.fits
 cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodesall.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_DMmodes_WFSdiag.fits
+
+# copy the block structure files
+cp fps.compfCM-${AOLOOPNUMBER}.datadir/param_NBmodeblocks.txt ${ARCHDIR}/aol${AOLOOPNUMBER}_NBmodeblocks.txt
+cp fps.compfCM-${AOLOOPNUMBER}.datadir/param_NBmodes.txt ${ARCHDIR}/aol${AOLOOPNUMBER}_NBmodes.txt
+
+# and copy the block files for future reference
+for f in $(ls fps.compfCM-${AOLOOPNUMBER}.datadir/block*.txt) ; do
+   cp $f ${ARCHDIR}/aol${AOLOOPNUMBER}_$(basename $f)
+done
 
 
 
@@ -69,3 +92,10 @@ cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/zrespM.fits ${ARCHDIR}/aol${AOLOOPNUMB
 
 cp fps.acqlin_loRM-${AOLOOPNUMBER}.datadir/respM.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_LOrespM.fits
 cp fps.acqlin_loRM-${AOLOOPNUMBER}.datadir/RMpokeCube.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_LODMmodes.fits
+
+
+# write out complete path so someone following a symlink can easily track where we are
+echo $(pwd)/${ARCHDIR} > ${ARCHDIR}/aol${AOLOOPNUMBER}_calib_dir.txt
+
+# append timestamp
+echo $(date -u --iso-8601=seconds) >> ${ARCHDIR}/aol${AOLOOPNUMBER}_calib_archived.txt

@@ -86,6 +86,9 @@ milk-shmim-rm aol${AOLOOPNUMBER}_LODMmodes
 
 if [ "${WFSdiag}" = "1" ]; then
 
+# wfsdiag.txt records which basis was loaded
+echo 1 > $MILK_SHM_DIR/aol${AOLOOPNUMBER}_calib_wfsdiag.txt
+
 milk << EOF
 
 loadfits "${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS_WFSdiag.fits" aolmWFS
@@ -98,6 +101,10 @@ exitCLI
 EOF
 
 else
+
+
+# wfsdiag.txt records which basis was loaded
+echo 0 > $MILK_SHM_DIR/aol${AOLOOPNUMBER}_calib_wfsdiag.txt
 
 milk << EOF
 
@@ -142,6 +149,13 @@ cpsh aolLODMmodes aol${AOLOOPNUMBER}_LODMmodes
 
 exitCLI
 EOF
+
+# record this calib as applied
+# TODO: is there a standard logger we should invoke?
+echo $(pwd)/${ARCHDIR} > $MILK_SHM_DIR/aol${AOLOOPNUMBER}_calib_source.txt
+echo $(date -u --iso-8601=seconds) > $MILK_SHM_DIR/aol${AOLOOPNUMBER}_calib_loaded.txt
+
+
 
 else
     echo "DIRECTORY DOES NOT EXIST"
