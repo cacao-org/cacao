@@ -435,242 +435,243 @@ static errno_t compute_function()
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
-
-    printf("Stepping ...\n");
-
-
-    // fill up block telemetry streams
-    //
     {
-        int slice = imgtbuff_mvalOL.md->cnt1;
-        for(uint32_t sample = 0; sample < NBsample; sample++)
-        {
-            for(uint32_t blki = 0; blki < NBblk; blki++)
-            {
-                for(uint32_t mirel = 0; mirel < blksize[blki]; mirel++)
-                {
-                    uint32_t mi = mirel + blkoffset[blki];
 
-                    mvalOLbuffarray[blki][blksize[blki] * blksampleindex[blki] +
-                                          mirel] =
-                                              imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
-                                                            sample * NBmode + mi];
-                }
-                blksampleindex[blki]++;
-                if(blksampleindex[blki] == blksamplesize[blki])
+        printf("Stepping ...\n");
+
+
+        // fill up block telemetry streams
+        //
+        {
+            int slice = imgtbuff_mvalOL.md->cnt1;
+            for(uint32_t sample = 0; sample < NBsample; sample++)
+            {
+                for(uint32_t blki = 0; blki < NBblk; blki++)
                 {
-                    memcpy(imgmvalOLbuffblk[blki].im->array.F,
-                           mvalOLbuffarray[blki],
-                           sizeof(float) * blksize[blki] * blksamplesize[blki]);
-                    processinfo_update_output_stream(processinfo,
-                                                     imgmvalOLbuffblk[blki].ID);
-                    blksampleindex[blki] = 0;
+                    for(uint32_t mirel = 0; mirel < blksize[blki]; mirel++)
+                    {
+                        uint32_t mi = mirel + blkoffset[blki];
+
+                        mvalOLbuffarray[blki][blksize[blki] * blksampleindex[blki] +
+                                              mirel] =
+                        imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
+                                                          sample * NBmode + mi];
+                    }
+                    blksampleindex[blki]++;
+                    if(blksampleindex[blki] == blksamplesize[blki])
+                    {
+                        memcpy(imgmvalOLbuffblk[blki].im->array.F,
+                               mvalOLbuffarray[blki],
+                               sizeof(float) * blksize[blki] * blksamplesize[blki]);
+                        processinfo_update_output_stream(processinfo,
+                                                         imgmvalOLbuffblk[blki].ID);
+                        blksampleindex[blki] = 0;
+                    }
                 }
             }
         }
-    }
 
-    {
-        int slice;
-
-        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
-            mvalDM_ave[mi]  = 0.0;
-            mvalDM_rms2[mi] = 0.0;
+            int slice;
 
-            mvalWFS_ave[mi]  = 0.0;
-            mvalWFS_rms2[mi] = 0.0;
-
-            mvalOL_ave[mi]  = 0.0;
-            mvalOL_rms2[mi] = 0.0;
-
-            mvalWFS_mrms2[mi]  = 0.0;
-            mvalWFS_mqrms2[mi] = 0.0;
-        }
-
-        slice = imgtbuff_mvalDM.md->cnt1;
-        for(uint32_t sample = 0; sample < NBsample; sample++)
-        {
             for(uint32_t mi = 0; mi < NBmode; mi++)
             {
-                float tmpv =
+                mvalDM_ave[mi]  = 0.0;
+                mvalDM_rms2[mi] = 0.0;
+
+                mvalWFS_ave[mi]  = 0.0;
+                mvalWFS_rms2[mi] = 0.0;
+
+                mvalOL_ave[mi]  = 0.0;
+                mvalOL_rms2[mi] = 0.0;
+
+                mvalWFS_mrms2[mi]  = 0.0;
+                mvalWFS_mqrms2[mi] = 0.0;
+            }
+
+            slice = imgtbuff_mvalDM.md->cnt1;
+            for(uint32_t sample = 0; sample < NBsample; sample++)
+            {
+                for(uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    float tmpv =
                     imgtbuff_mvalDM.im->array
                     .F[slice * NBsample * NBmode + sample * NBmode + mi];
-                mvalDM_ave[mi] += tmpv;
-                mvalDM_rms2[mi] += tmpv * tmpv;
+                    mvalDM_ave[mi] += tmpv;
+                    mvalDM_rms2[mi] += tmpv * tmpv;
+                }
             }
-        }
 
-        slice = imgtbuff_mvalWFS.md->cnt1;
-        for(uint32_t sample = 0; sample < NBsample; sample++)
-        {
+            slice = imgtbuff_mvalWFS.md->cnt1;
+            for(uint32_t sample = 0; sample < NBsample; sample++)
+            {
+                for(uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    float tmpv =
+                        imgtbuff_mvalWFS.im->array
+                        .F[slice * NBsample * NBmode + sample * NBmode + mi];
+                    mvalWFS_ave[mi] += tmpv;
+                    mvalWFS_rms2[mi] += tmpv * tmpv;
+                }
+            }
+            // linear noise derivation
+            for(uint32_t sample = 1; sample < NBsample - 1; sample++)
+            {
+                for(uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    float tmpv0 =
+                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
+                                                           (sample - 1) * NBmode + mi];
+                    float tmpv1 =
+                        imgtbuff_mvalWFS.im->array
+                        .F[slice * NBsample * NBmode + (sample) * NBmode + mi];
+                    float tmpv2 =
+                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
+                                                           (sample + 1) * NBmode + mi];
+
+                    float tmpv = 0.5 * (tmpv0 + tmpv2) - tmpv1;
+                    mvalWFS_mrms2[mi] += tmpv * tmpv;
+                }
+            }
+            // linear noise derivation
+            for(uint32_t sample = 1; sample < NBsample - 2; sample++)
+            {
+                for(uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    float tmpv0 =
+                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
+                                                           (sample - 1) * NBmode + mi];
+                    float tmpv1 =
+                        imgtbuff_mvalWFS.im->array
+                        .F[slice * NBsample * NBmode + (sample) * NBmode + mi];
+                    float tmpv2 =
+                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
+                                                           (sample + 1) * NBmode + mi];
+                    float tmpv3 =
+                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
+                                                           (sample + 1) * NBmode + mi];
+
+                    float tmpv =
+                        -0.5 * tmpv0 + 1.5 * tmpv1 - 1.5 * tmpv2 + 0.5 * tmpv3;
+                    mvalWFS_mqrms2[mi] += tmpv * tmpv;
+                }
+            }
+
+
+
+
+            slice = imgtbuff_mvalOL.md->cnt1;
+            for(uint32_t sample = 0; sample < NBsample; sample++)
+            {
+                for(uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    float tmpv =
+                        imgtbuff_mvalOL.im->array
+                        .F[slice * NBsample * NBmode + sample * NBmode + mi];
+                    mvalOL_ave[mi] += tmpv;
+                    mvalOL_rms2[mi] += tmpv * tmpv;
+                }
+            }
+
+
+
             for(uint32_t mi = 0; mi < NBmode; mi++)
             {
-                float tmpv =
-                    imgtbuff_mvalWFS.im->array
-                    .F[slice * NBsample * NBmode + sample * NBmode + mi];
-                mvalWFS_ave[mi] += tmpv;
-                mvalWFS_rms2[mi] += tmpv * tmpv;
+
+                mvalDM_ave[mi] /= NBsample;
+                mvalWFS_ave[mi] /= NBsample;
+                mvalOL_ave[mi] /= NBsample;
+
+                mvalDM_rms2[mi] /= NBsample;
+                mvalWFS_rms2[mi] /= NBsample;
+                mvalOL_rms2[mi] /= NBsample;
+
+                // factor 1.5 excess variance is from linear comb of 3 values with coeffs 0.5, 1, 0.5
+                // variance = 0.25 + 1 + 0.25 = 1.5
+                mvalWFS_mrms2[mi] /= (NBsample - 2) * 1.5;
+                mvalWFS_mqrms2[mi] /= (NBsample - 3) * 5;
+
+
+                mvalDM_rms2[mi] -= (mvalDM_ave[mi] * mvalDM_ave[mi]);
+
+                mvalWFS_rms2[mi] -= (mvalWFS_ave[mi] * mvalWFS_ave[mi]);
+
+                mvalOL_rms2[mi] -= (mvalOL_ave[mi] * mvalOL_ave[mi]);
             }
-        }
-        // linear noise derivation
-        for(uint32_t sample = 1; sample < NBsample - 1; sample++)
-        {
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                float tmpv0 =
-                    imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                       (sample - 1) * NBmode + mi];
-                float tmpv1 =
-                    imgtbuff_mvalWFS.im->array
-                    .F[slice * NBsample * NBmode + (sample) * NBmode + mi];
-                float tmpv2 =
-                    imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                       (sample + 1) * NBmode + mi];
-
-                float tmpv = 0.5 * (tmpv0 + tmpv2) - tmpv1;
-                mvalWFS_mrms2[mi] += tmpv * tmpv;
-            }
-        }
-        // linear noise derivation
-        for(uint32_t sample = 1; sample < NBsample - 2; sample++)
-        {
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                float tmpv0 =
-                    imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                       (sample - 1) * NBmode + mi];
-                float tmpv1 =
-                    imgtbuff_mvalWFS.im->array
-                    .F[slice * NBsample * NBmode + (sample) * NBmode + mi];
-                float tmpv2 =
-                    imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                       (sample + 1) * NBmode + mi];
-                float tmpv3 =
-                    imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                       (sample + 1) * NBmode + mi];
-
-                float tmpv =
-                    -0.5 * tmpv0 + 1.5 * tmpv1 - 1.5 * tmpv2 + 0.5 * tmpv3;
-                mvalWFS_mqrms2[mi] += tmpv * tmpv;
-            }
-        }
 
 
-
-
-        slice = imgtbuff_mvalOL.md->cnt1;
-        for(uint32_t sample = 0; sample < NBsample; sample++)
-        {
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                float tmpv =
-                    imgtbuff_mvalOL.im->array
-                    .F[slice * NBsample * NBmode + sample * NBmode + mi];
-                mvalOL_ave[mi] += tmpv;
-                mvalOL_rms2[mi] += tmpv * tmpv;
-            }
-        }
-
-
-
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-
-            mvalDM_ave[mi] /= NBsample;
-            mvalWFS_ave[mi] /= NBsample;
-            mvalOL_ave[mi] /= NBsample;
-
-            mvalDM_rms2[mi] /= NBsample;
-            mvalWFS_rms2[mi] /= NBsample;
-            mvalOL_rms2[mi] /= NBsample;
-
-            // factor 1.5 excess variance is from linear comb of 3 values with coeffs 0.5, 1, 0.5
-            // variance = 0.25 + 1 + 0.25 = 1.5
-            mvalWFS_mrms2[mi] /= (NBsample - 2) * 1.5;
-            mvalWFS_mqrms2[mi] /= (NBsample - 3) * 5;
-
-
-            mvalDM_rms2[mi] -= (mvalDM_ave[mi] * mvalDM_ave[mi]);
-
-            mvalWFS_rms2[mi] -= (mvalWFS_ave[mi] * mvalWFS_ave[mi]);
-
-            mvalOL_rms2[mi] -= (mvalOL_ave[mi] * mvalOL_ave[mi]);
-        }
-
-
-        for(uint32_t block = 0; block < mblksizemax; block++)
-        {
-            block_cnt[block]       = 0;
-            block_DMrms2[block]    = 0.0;
-            block_WFSrms2[block]   = 0.0;
-            block_WFSmrms2[block]  = 0.0;
-            block_WFSmqrms2[block] = 0.0;
-            block_OLrms2[block]    = 0.0;
-        }
-
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            // remove noise
-            mvalWFS_rms2[mi] -= mvalWFS_mqrms2[mi];
-            mvalOL_rms2[mi] -= mvalWFS_mqrms2[mi];
-
-            // add to corresponding block
-            int32_t block = imgblock.im->array.SI32[mi];
-            block_cnt[block]++;
-            block_DMrms2[block] += mvalDM_rms2[mi];
-            block_WFSrms2[block] += mvalWFS_rms2[mi];
-            block_WFSmrms2[block] += mvalWFS_mrms2[mi];
-            block_WFSmqrms2[block] += mvalWFS_mqrms2[mi];
-            block_OLrms2[block] += mvalOL_rms2[mi];
-        }
-
-
-        if(*compstatswrite == 1)
-        {
             for(uint32_t block = 0; block < mblksizemax; block++)
             {
-                if(block_cnt[block] > 0)
-                {
-                    //block_DMrms2[block] /= block_cnt[block];
-                    //block_WFSrms2[block] /= block_cnt[block];
-                    //block_OLrms2[block] /= block_cnt[block];
-                    printf(
-                        "BLOCK %2d (%5ld modes) RMS  WFS = %7.3f (noise = "
-                        "%7.3f "
-                        "%7.3f)  DM = "
-                        "%7.3f   "
-                        "OL = "
-                        "%7.3f   [nm]  --> %5.3f\n",
-                        block,
-                        block_cnt[block],
-                        1000.0 * sqrt(block_WFSrms2[block]),
-                        1000.0 * sqrt(block_WFSmrms2[block]),
-                        1000.0 * sqrt(block_WFSmqrms2[block]),
-                        1000.0 * sqrt(block_DMrms2[block]),
-                        1000.0 * sqrt(block_OLrms2[block]),
-                        sqrt(block_WFSrms2[block]) / sqrt(block_OLrms2[block]));
+                block_cnt[block]       = 0;
+                block_DMrms2[block]    = 0.0;
+                block_WFSrms2[block]   = 0.0;
+                block_WFSmrms2[block]  = 0.0;
+                block_WFSmqrms2[block] = 0.0;
+                block_OLrms2[block]    = 0.0;
+            }
 
-                    char ffname[STRINGMAXLEN_FULLFILENAME];
-                    WRITE_FULLFILENAME(ffname, "AOmodalstat.dat");
-                    FILE *fp = fopen(ffname, "a");
-                    fprintf(fp,
-                            "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
-                            processinfo->loopcnt,
+            for(uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                // remove noise
+                mvalWFS_rms2[mi] -= mvalWFS_mqrms2[mi];
+                mvalOL_rms2[mi] -= mvalWFS_mqrms2[mi];
+
+                // add to corresponding block
+                int32_t block = imgblock.im->array.SI32[mi];
+                block_cnt[block]++;
+                block_DMrms2[block] += mvalDM_rms2[mi];
+                block_WFSrms2[block] += mvalWFS_rms2[mi];
+                block_WFSmrms2[block] += mvalWFS_mrms2[mi];
+                block_WFSmqrms2[block] += mvalWFS_mqrms2[mi];
+                block_OLrms2[block] += mvalOL_rms2[mi];
+            }
+
+
+            if(*compstatswrite == 1)
+            {
+                for(uint32_t block = 0; block < mblksizemax; block++)
+                {
+                    if(block_cnt[block] > 0)
+                    {
+                        //block_DMrms2[block] /= block_cnt[block];
+                        //block_WFSrms2[block] /= block_cnt[block];
+                        //block_OLrms2[block] /= block_cnt[block];
+                        printf(
+                            "BLOCK %2d (%5ld modes) RMS  WFS = %7.3f (noise = "
+                            "%7.3f "
+                            "%7.3f)  DM = "
+                            "%7.3f   "
+                            "OL = "
+                            "%7.3f   [nm]  --> %5.3f\n",
                             block,
+                            block_cnt[block],
                             1000.0 * sqrt(block_WFSrms2[block]),
+                            1000.0 * sqrt(block_WFSmrms2[block]),
                             1000.0 * sqrt(block_WFSmqrms2[block]),
                             1000.0 * sqrt(block_DMrms2[block]),
                             1000.0 * sqrt(block_OLrms2[block]),
-                            sqrt(block_WFSrms2[block]) /
-                            sqrt(block_OLrms2[block]));
-                    fclose(fp);
+                            sqrt(block_WFSrms2[block]) / sqrt(block_OLrms2[block]));
+
+                        char ffname[STRINGMAXLEN_FULLFILENAME];
+                        WRITE_FULLFILENAME(ffname, "AOmodalstat.dat");
+                        FILE *fp = fopen(ffname, "a");
+                        fprintf(fp,
+                                "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
+                                processinfo->loopcnt,
+                                block,
+                                1000.0 * sqrt(block_WFSrms2[block]),
+                                1000.0 * sqrt(block_WFSmqrms2[block]),
+                                1000.0 * sqrt(block_DMrms2[block]),
+                                1000.0 * sqrt(block_OLrms2[block]),
+                                sqrt(block_WFSrms2[block]) /
+                                sqrt(block_OLrms2[block]));
+                        fclose(fp);
+                    }
                 }
             }
         }
+
     }
-
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     for(uint32_t blki = 0; blki < NBblk; blki++)
