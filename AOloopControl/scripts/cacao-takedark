@@ -40,7 +40,7 @@ set -u
 
 
 
-calib="${inputMSargARRAY[0]}"
+nbframe="${inputMSargARRAY[0]}"
 
 echo "Number of frame : ${nbframe}"
 
