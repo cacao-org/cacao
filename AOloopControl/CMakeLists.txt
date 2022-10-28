@@ -100,6 +100,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-fpslistadd-MKPF
 	scripts/cacao-setDMnolink
 	scripts/cacao_simLHS
+	scripts/cacao-takedark
 	scripts/cacao-task-manager
 	scripts/cacaotask-check
 	scripts/cacaotask-INITSETUP
