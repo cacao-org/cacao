@@ -69,8 +69,8 @@ echo "Loop ${AOLOOPNUMBER}"
 milk-all << EOF
 readshmim aol0_wfsim
 streamave ..procinfo 1
-streamave .triggermode 3
-streamave .loopcntMax ${nbframe}
+streamave ..triggermode 3
+streamave ..loopcntMax ${nbframe}
 streamave aol${AOLOOPNUMBER}_wfsim imdark ${nbframe}
 saveFITS imdark "imdark.fits"
 exitCLI
