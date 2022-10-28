@@ -67,7 +67,7 @@ echo "Loop ${AOLOOPNUMBER}"
 
 
 milk-all << EOF
-readshmim aol0_wfsim
+readshmim aol${AOLOOPNUMBER}_wfsim
 streamave ..procinfo 1
 streamave ..triggermode 3
 streamave ..loopcntMax ${nbframe}
