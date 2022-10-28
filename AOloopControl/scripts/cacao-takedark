@@ -71,7 +71,7 @@ readshmim aol0_wfsim
 streamave ..procinfo 1
 streamave .triggermode 3
 streamave .loopcntMax ${nbframe}
-streamave aol${LOOPNUMBER}_wfsim imdark ${nbframe}
+streamave aol${AOLOOPNUMBER}_wfsim imdark ${nbframe}
 saveFITS imdark "imdark.fits"
 exitCLI
 EOF
@@ -87,7 +87,7 @@ cp imdark.fits ${ARCHDIR}/dark_$(date -u --iso-8601=seconds).fits
 if [ "${shmapply}" = "1" ]; then
 milk-all << EOF
 loadfits "imdark.fits" imdark
-cpsh imdark aol${LOOPNUMBER}_wfsdark
+cpsh imdark aol${AOLOOPNUMBER}_wfsdark
 exitCLI
 EOF
 
