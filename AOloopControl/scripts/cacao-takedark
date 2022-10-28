@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+MSdescr="Take WFS dark"
+
+MSextdescr="Take WFS dark, copy it to AOcalib/wfsdark dir"
+
+source milk-script-std-config
+
+
+RequiredCommands=(milk)
+RequiredFiles=(LOOPNUMBER)
+RequiredDirs=(AOcalibs/wfsdark)
+
+MSarg+=( "nbframe:int:number of frames to be averaged" )
+
+MSopt+=( "a:shma:setshmapply::Apply to shared memory" )
+
+
+
+shmapply="0"
+function setshmapply() {
+	echo "Applying dark to shm"
+	shmapply="1"
+}
+
+
+source milk-argparse
+
+set +u
+if [ "${EXITSTATUS}" = "1" ]; then
+exit
+fi
+set -u
+
+
+
+
+
+
+
+
+
+calib="${inputMSargARRAY[0]}"
+
+echo "Number of frame : ${nbframe}"
+
+
+
+
+
+if [ -f LOOPNUMBER ]; then
+    AOLOOPNUMBER=$( head -1 LOOPNUMBER )
+else
+	echo "Error: no LOOPNUMBER file. Are we running this from the correct directory ?"
+    exit
+fi
+
+
+# Arguments:
+# Calib name
+
+
+
+ARCHDIR="AOcalibs/dark"
+
+echo "Loop ${AOLOOPNUMBER}"
+
+
+milk-all << EOF
+readshmim aol0_wfsim
+streamave ..procinfo 1
+streamave .triggermode 3
+streamave .loopcntMax ${nbframe}
+streamave aol${LOOPNUMBER}_wfsim imdark ${nbframe}
+saveFITS imdark "imdark.fits"
+exitCLI
+EOF
+
+
+
+mkdir -d ${ARCHDIR}
+cp imdark.fits ${ARCHDIR}/dark_$(date -u --iso-8601=seconds).fits
+
+
+
+
+if [ "${shmapply}" = "1" ]; then
+milk-all << EOF
+loadfits "imdark.fits" imdark
+cpsh imdark aol${LOOPNUMBER}_wfsdark
+exitCLI
+EOF
+
+
+fi
