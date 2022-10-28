@@ -1066,283 +1066,251 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
-    int zpooffsetchange = 0;
-    int zpoval;
+    {
 
-    zpoval = zpoffset_channel[0];
-    if(data.fpsptr->parray[fpi_zpoffsetch00].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[0] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[0] = 0;
-        zpooffsetchange += zpoval;
-    }
+        int zpooffsetchange = 0;
+        int zpoval;
 
-    zpoval = zpoffset_channel[1];
-    if(data.fpsptr->parray[fpi_zpoffsetch01].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[1] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[1] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[2];
-    if(data.fpsptr->parray[fpi_zpoffsetch02].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[2] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[2] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[3];
-    if(data.fpsptr->parray[fpi_zpoffsetch03].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[3] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[3] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[4];
-    if(data.fpsptr->parray[fpi_zpoffsetch04].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[4] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[4] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[5];
-    if(data.fpsptr->parray[fpi_zpoffsetch05].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[5] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[5] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[6];
-    if(data.fpsptr->parray[fpi_zpoffsetch06].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[6] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[6] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[7];
-    if(data.fpsptr->parray[fpi_zpoffsetch07].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[7] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[7] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[8];
-    if(data.fpsptr->parray[fpi_zpoffsetch08].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[8] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[8] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[9];
-    if(data.fpsptr->parray[fpi_zpoffsetch09].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[9] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[9] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[10];
-    if(data.fpsptr->parray[fpi_zpoffsetch10].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[10] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[10] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-    zpoval = zpoffset_channel[11];
-    if(data.fpsptr->parray[fpi_zpoffsetch11].fpflag & FPFLAG_ONOFF)
-    {
-        zpoffset_channel[11] = 1;
-        zpooffsetchange += 1 - zpoval;
-    }
-    else
-    {
-        zpoffset_channel[11] = 0;
-        zpooffsetchange += zpoval;
-    }
-
-
-
-
-    // Check if DM needs updating
-    // DMupdate toggles to 1 if DM must be updated
-    //
-    // DMupdatezpo is for zero point offset
-    //
-    int DMupdate    = 0;
-    int DMupdatezpo = 0;
-    {
-        long cnt0sum    = 0;
-        long cnt0sumzpo = 0;
-
-        if(*astrogrid == 1)
+        zpoval = zpoffset_channel[0];
+        if(data.fpsptr->parray[fpi_zpoffsetch00].fpflag & FPFLAG_ONOFF)
         {
-            // exclude astrogridchan
-            for(uint32_t ch = 0; ch < *NBchannel; ch++)
+            zpoffset_channel[0] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[0] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[1];
+        if(data.fpsptr->parray[fpi_zpoffsetch01].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[1] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[1] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[2];
+        if(data.fpsptr->parray[fpi_zpoffsetch02].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[2] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[2] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[3];
+        if(data.fpsptr->parray[fpi_zpoffsetch03].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[3] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[3] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[4];
+        if(data.fpsptr->parray[fpi_zpoffsetch04].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[4] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[4] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[5];
+        if(data.fpsptr->parray[fpi_zpoffsetch05].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[5] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[5] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[6];
+        if(data.fpsptr->parray[fpi_zpoffsetch06].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[6] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[6] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[7];
+        if(data.fpsptr->parray[fpi_zpoffsetch07].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[7] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[7] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[8];
+        if(data.fpsptr->parray[fpi_zpoffsetch08].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[8] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[8] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[9];
+        if(data.fpsptr->parray[fpi_zpoffsetch09].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[9] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[9] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[10];
+        if(data.fpsptr->parray[fpi_zpoffsetch10].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[10] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[10] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+        zpoval = zpoffset_channel[11];
+        if(data.fpsptr->parray[fpi_zpoffsetch11].fpflag & FPFLAG_ONOFF)
+        {
+            zpoffset_channel[11] = 1;
+            zpooffsetchange += 1 - zpoval;
+        }
+        else
+        {
+            zpoffset_channel[11] = 0;
+            zpooffsetchange += zpoval;
+        }
+
+
+
+
+        // Check if DM needs updating
+        // DMupdate toggles to 1 if DM must be updated
+        //
+        // DMupdatezpo is for zero point offset
+        //
+        int DMupdate    = 0;
+        int DMupdatezpo = 0;
+        {
+            long cnt0sum    = 0;
+            long cnt0sumzpo = 0;
+
+            if(*astrogrid == 1)
             {
-                if(ch != *astrogridchan)
+                // exclude astrogridchan
+                for(uint32_t ch = 0; ch < *NBchannel; ch++)
+                {
+                    if(ch != *astrogridchan)
+                    {
+                        cnt0sum += imgch[ch].md->cnt0;
+
+                        if((*zpoffsetenable == 1) && (zpoffset_channel[ch] == 1))
+                        {
+                            cnt0sumzpo += imgch[ch].md->cnt0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for(uint32_t ch = 0; ch < *NBchannel; ch++)
                 {
                     cnt0sum += imgch[ch].md->cnt0;
+                    /*if (*zpoffsetenable == 1)
+                    {
+                        printf(" %d", zpoffset_channel[ch]);
+                    }*/
 
                     if((*zpoffsetenable == 1) && (zpoffset_channel[ch] == 1))
                     {
                         cnt0sumzpo += imgch[ch].md->cnt0;
                     }
                 }
+                /*            if (*zpoffsetenable == 1)
+                            {
+                                printf("\n");
+                            }*/
             }
-        }
-        else
-        {
-            for(uint32_t ch = 0; ch < *NBchannel; ch++)
+
+            if(cnt0sum != cntsumref)
             {
-                cnt0sum += imgch[ch].md->cnt0;
-                /*if (*zpoffsetenable == 1)
-                {
-                    printf(" %d", zpoffset_channel[ch]);
-                }*/
-
-                if((*zpoffsetenable == 1) && (zpoffset_channel[ch] == 1))
-                {
-                    cnt0sumzpo += imgch[ch].md->cnt0;
-                }
+                //printf("cnt0sum = %ld\n", cnt0sum);
+                cntsumref = cnt0sum;
+                DMupdate  = 1;
             }
-            /*            if (*zpoffsetenable == 1)
-                        {
-                            printf("\n");
-                        }*/
-        }
-
-        if(cnt0sum != cntsumref)
-        {
-            //printf("cnt0sum = %ld\n", cnt0sum);
-            cntsumref = cnt0sum;
-            DMupdate  = 1;
-        }
-        if(cnt0sumzpo != cntsumrefzpo)
-        {
-            //printf("cnt0sumzpo = %ld\n", cnt0sumzpo);
-            cntsumrefzpo = cnt0sumzpo;
-            DMupdatezpo  = 1;
-        }
-    }
-
-    if(*zpoffsetenable == 1)
-    {
-        if(zpooffsetchange != 0)
-        {
-            DMupdatezpo = 1;
-        }
-    }
-
-
-
-    if(DMupdate == 1)
-    {
-        // Update DM disp
-        //printf("Updating dmdisp\n\n");
-
-        if((*astrogrid) == 0)
-        {
-            DMdisp_add_disp_from_circular_buffer_init = 0;
-        }
-
-
-        // Sum all channels
-        //
-        if(((*astrogrid) == 1) && ((*astrogridtdelay) == 0))
-        {
-            DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
-            processinfo_update_output_stream(processinfo,
-                                             imgch[(*astrogridchan)].ID);
-        }
-        update_dmdisp(imgdisp, imgch, dmdisptmp);
-        processinfo_update_output_stream(processinfo, imgdisp.ID);
-
-        if(*voltmode == 1)
-        {
-            imgdmvolt.md->write = 1;
-            DM_displ2V(imgdisp, imgdmvolt);
-            processinfo_update_output_stream(processinfo, imgdmvolt.ID);
-        }
-
-
-
-        if(((*astrogrid) == 1) && ((*astrogridtdelay) != 0))
-        {
-            DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
-            processinfo_update_output_stream(processinfo,
-                                             imgch[(*astrogridchan)].ID);
-
-            // Add time delay
+            if(cnt0sumzpo != cntsumrefzpo)
             {
-                long nsec = (long)(1000 * (*astrogridtdelay));
+                //printf("cnt0sumzpo = %ld\n", cnt0sumzpo);
+                cntsumrefzpo = cnt0sumzpo;
+                DMupdatezpo  = 1;
+            }
+        }
 
-                long nsec_remaining = nsec % 1000000000;
-                long sec            = nsec / 1000000000;
+        if(*zpoffsetenable == 1)
+        {
+            if(zpooffsetchange != 0)
+            {
+                DMupdatezpo = 1;
+            }
+        }
 
-                struct timespec timesleep;
-                timesleep.tv_sec  = sec;
-                timesleep.tv_nsec = nsec_remaining;
 
-                nanosleep(&timesleep, NULL);
+
+        if(DMupdate == 1)
+        {
+            // Update DM disp
+            //printf("Updating dmdisp\n\n");
+
+            if((*astrogrid) == 0)
+            {
+                DMdisp_add_disp_from_circular_buffer_init = 0;
             }
 
+
+            // Sum all channels
+            //
+            if(((*astrogrid) == 1) && ((*astrogridtdelay) == 0))
+            {
+                DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
+                processinfo_update_output_stream(processinfo,
+                                                 imgch[(*astrogridchan)].ID);
+            }
             update_dmdisp(imgdisp, imgch, dmdisptmp);
             processinfo_update_output_stream(processinfo, imgdisp.ID);
-            // take into account update to astrogrid channel
-            cntsumref++;
 
             if(*voltmode == 1)
             {
@@ -1350,19 +1318,53 @@ static errno_t compute_function()
                 DM_displ2V(imgdisp, imgdmvolt);
                 processinfo_update_output_stream(processinfo, imgdmvolt.ID);
             }
+
+
+
+            if(((*astrogrid) == 1) && ((*astrogridtdelay) != 0))
+            {
+                DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
+                processinfo_update_output_stream(processinfo,
+                                                 imgch[(*astrogridchan)].ID);
+
+                // Add time delay
+                {
+                    long nsec = (long)(1000 * (*astrogridtdelay));
+
+                    long nsec_remaining = nsec % 1000000000;
+                    long sec            = nsec / 1000000000;
+
+                    struct timespec timesleep;
+                    timesleep.tv_sec  = sec;
+                    timesleep.tv_nsec = nsec_remaining;
+
+                    nanosleep(&timesleep, NULL);
+                }
+
+                update_dmdisp(imgdisp, imgch, dmdisptmp);
+                processinfo_update_output_stream(processinfo, imgdisp.ID);
+                // take into account update to astrogrid channel
+                cntsumref++;
+
+                if(*voltmode == 1)
+                {
+                    imgdmvolt.md->write = 1;
+                    DM_displ2V(imgdisp, imgdmvolt);
+                    processinfo_update_output_stream(processinfo, imgdmvolt.ID);
+                }
+            }
         }
+
+        if(DMupdatezpo == 1)
+        {
+            // printf("Updating zpo %d\n", zpooffsetchange);
+            update_dmdispzpo(imgdispzpo, imgch, dmdisptmp);
+            processinfo_update_output_stream(processinfo, imgdispzpo.ID);
+        }
+
+
+
     }
-
-    if(DMupdatezpo == 1)
-    {
-        // printf("Updating zpo %d\n", zpooffsetchange);
-        update_dmdispzpo(imgdispzpo, imgch, dmdisptmp);
-        processinfo_update_output_stream(processinfo, imgdispzpo.ID);
-    }
-
-
-
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(dmdisptmp);

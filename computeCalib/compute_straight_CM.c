@@ -143,38 +143,40 @@ static errno_t compute_function()
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    {
 
 
 #ifdef HAVE_CUDA
-    if(*GPUdevice >= 0)
-    {
-        CUDACOMP_magma_compute_SVDpseudoInverse(respM,
-                                                controlM,
-                                                *svdlim,
-                                                100000,
-                                                "VTmat",
-                                                0,
-                                                0,
-                                                64,
-                                                *GPUdevice, // GPU device
-                                                NULL);
-    }
-    else
-    {
+        if(*GPUdevice >= 0)
+        {
+            CUDACOMP_magma_compute_SVDpseudoInverse(respM,
+                                                    controlM,
+                                                    *svdlim,
+                                                    100000,
+                                                    "VTmat",
+                                                    0,
+                                                    0,
+                                                    64,
+                                                    *GPUdevice, // GPU device
+                                                    NULL);
+        }
+        else
+        {
 #endif
-        linopt_compute_SVDpseudoInverse(respM,
-                                        controlM,
-                                        *svdlim,
-                                        10000,
-                                        "VTmat",
-                                        NULL);
+            linopt_compute_SVDpseudoInverse(respM,
+                                            controlM,
+                                            *svdlim,
+                                            10000,
+                                            "VTmat",
+                                            NULL);
 #ifdef HAVE_CUDA
-    }
+        }
 #endif
 
-    // save_fits("VTmat", "./mkmodestmp/VTmat.fits");
-    delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
+        // save_fits("VTmat", "./mkmodestmp/VTmat.fits");
+        delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
 
+    }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     DEBUG_TRACE_FEXIT();

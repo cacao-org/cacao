@@ -833,32 +833,33 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
-
-
-    // Compute Poke Matrix if required
-    //
-    if(*compPokeMat)
     {
-        printf("Computing Poke Matrix\n");
 
-        imageID IDdmRM = image_ID(dmstream);
 
-        if(IDdmRM != -1)
+        // Compute Poke Matrix if required
+        //
+        if(*compPokeMat)
         {
-            uint32_t DMxsize = data.image[IDdmRM].md->size[0];
-            uint32_t DMysize = data.image[IDdmRM].md->size[1];
-            printf("DM size : %u x %u\n", DMxsize, DMysize);
-        }
-        else
-        {
-            DEBUG_TRACE_FEXIT("Cannot connect to DM");
-            return RETURN_FAILURE;
-        }
+            printf("Computing Poke Matrix\n");
 
+            imageID IDdmRM = image_ID(dmstream);
+
+            if(IDdmRM != -1)
+            {
+                uint32_t DMxsize = data.image[IDdmRM].md->size[0];
+                uint32_t DMysize = data.image[IDdmRM].md->size[1];
+                printf("DM size : %u x %u\n", DMxsize, DMysize);
+            }
+            else
+            {
+                DEBUG_TRACE_FEXIT("Cannot connect to DM");
+                return RETURN_FAILURE;
+            }
+
+
+        }
 
     }
-
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     DEBUG_TRACE_FEXIT();

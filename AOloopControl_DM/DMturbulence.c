@@ -341,9 +341,11 @@ static errno_t compute_function()
     uint32_t ysize = imgDM.md->size[1];
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    {
 
-    make_DMturbcube(turbfname, xsize, ysize, *NBsamples);
+        make_DMturbcube(turbfname, xsize, ysize, *NBsamples);
 
+    }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     DEBUG_TRACE_FEXIT();

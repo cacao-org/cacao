@@ -235,9 +235,9 @@ static errno_t compute_function()
     //inim.name);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
-
-    make_3Dgrid_DMsequ(outname, *xsize, *ysize, *XYpattern, *binfactor);
-
+    {
+        make_3Dgrid_DMsequ(outname, *xsize, *ysize, *XYpattern, *binfactor);
+    }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     DEBUG_TRACE_FEXIT();

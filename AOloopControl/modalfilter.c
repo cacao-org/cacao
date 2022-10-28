@@ -753,437 +753,437 @@ static errno_t compute_function()
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
-
-
-    // zero loop
-    if(data.fpsptr->parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF)
     {
 
-        for(uint32_t mi = 0; mi < NBmode; mi++)
+        // zero loop
+        if(data.fpsptr->parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF)
         {
-            // set goal position to zero
-            mvalDMc[mi] = 0.0;
 
-            mvalout[mi]      = 0.0;
-            mvaloutapply[mi] = 0.0;
-        }
-
-        memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
-        processinfo_update_output_stream(processinfo, imgout.ID);
-
-        // toggle back to OFF
-        data.fpsptr->parray[fpi_loopZERO].fpflag &= ~FPFLAG_ONOFF;
-    }
-
-
-
-
-    if((*loopON) == 1)
-    {
-        if(*loopNBstep > 0)
-        {
-            *loopNBstep                                    = *loopNBstep - 1;
-            data.fpsptr->parray[fpi_loopNBstep].val.i64[0] = *loopNBstep;
-        }
-        if(*loopNBstep == 0)
-        {
-            *loopON = 0;
-            // set loop to OFF
-            data.fpsptr->parray[fpi_loopON].fpflag &= ~FPFLAG_ONOFF;
-            *loopNBstep = 1;
-        }
-
-
-        // Pre-allocations for modal loop
-        double mvalWFS;
-        double dmval;
-        float  limit;
-
-
-        float auxDMfact = (*auxDMmvalmixfact);
-        if((*auxDMmvalmodulate) == 1)
-        {
-            static double modpha = 0.0;
-            modpha += 1 / (*auxDMmvalmodperiod);
-            if(modpha > 1.0)
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
-                modpha -= 1.0;
+                // set goal position to zero
+                mvalDMc[mi] = 0.0;
+
+                mvalout[mi]      = 0.0;
+                mvaloutapply[mi] = 0.0;
             }
 
-            auxDMfact *= sin(2.0 * M_PI * modpha);
-            //printf("%7.5f  auxDMfact = %7.5f\n", modpha, auxDMfact);
-        }
-
-        // Apply modal control filtering
-        //
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-
-            // grab input value from WFS
-            mvalWFS = imgin.im->array.F[mi];
-
-            // offset from mval to zero point
-            // this is the input zero point
-            dmval = imgmzeropoint.im->array.F[mi] - mvalWFS;
-
-            // multiply by GAIN
-            dmval *= imgmgain.im->array.F[mi];
-
-
-            // this is the goal position
-            mvalDMc[mi] += dmval;
-
-            // multiply goal position by MULT
-            mvalDMc[mi] *= imgmmult.im->array.F[mi];
-
-            // apply LIMIT
-            limit = imgmlimit.im->array.F[mi];
-            if(mvalDMc[mi] > limit)
-            {
-                mvalDMc[mi] = limit;
-            }
-            if(mvalDMc[mi] < -limit)
-            {
-                mvalDMc[mi] = -limit;
-            }
-
-
-            if((*auxDMmvalenable) == 1)
-            {
-                // add mode values from aux stream
-                mvalout[mi] =
-                    mvalDMc[mi] + (auxDMfact * imgauxmDM.im->array.F[mi]);
-            }
-            else
-            {
-                mvalout[mi] = mvalDMc[mi];
-            }
-            mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
-        }
-
-
-
-        if(*enablePF == 0)
-        {
             memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
             processinfo_update_output_stream(processinfo, imgout.ID);
+
+            // toggle back to OFF
+            data.fpsptr->parray[fpi_loopZERO].fpflag &= ~FPFLAG_ONOFF;
         }
 
 
-        // Compute pseudo open-loop mode coefficients
-        //
-        if((*compOL) == 1)
+
+
+        if((*loopON) == 1)
         {
-            // write to DM history
+            if(*loopNBstep > 0)
+            {
+                *loopNBstep                                    = *loopNBstep - 1;
+                data.fpsptr->parray[fpi_loopNBstep].val.i64[0] = *loopNBstep;
+            }
+            if(*loopNBstep == 0)
+            {
+                *loopON = 0;
+                // set loop to OFF
+                data.fpsptr->parray[fpi_loopON].fpflag &= ~FPFLAG_ONOFF;
+                *loopNBstep = 1;
+            }
+
+
+            // Pre-allocations for modal loop
+            double mvalWFS;
+            double dmval;
+            float  limit;
+
+
+            float auxDMfact = (*auxDMmvalmixfact);
+            if((*auxDMmvalmodulate) == 1)
+            {
+                static double modpha = 0.0;
+                modpha += 1 / (*auxDMmvalmodperiod);
+                if(modpha > 1.0)
+                {
+                    modpha -= 1.0;
+                }
+
+                auxDMfact *= sin(2.0 * M_PI * modpha);
+                //printf("%7.5f  auxDMfact = %7.5f\n", modpha, auxDMfact);
+            }
+
+            // Apply modal control filtering
             //
             for(uint32_t mi = 0; mi < NBmode; mi++)
             {
-                mvalDMbuff[DMtstep * NBmode + mi] = mvalDMc[mi];
-            }
+
+                // grab input value from WFS
+                mvalWFS = imgin.im->array.F[mi];
+
+                // offset from mval to zero point
+                // this is the input zero point
+                dmval = imgmzeropoint.im->array.F[mi] - mvalWFS;
+
+                // multiply by GAIN
+                dmval *= imgmgain.im->array.F[mi];
 
 
-            DMtstep++;
-            if(DMtstep == NB_DMtstep)
-            {
-                DMtstep = 0;
-            }
+                // this is the goal position
+                mvalDMc[mi] += dmval;
 
-            int   latint  = (int)(*latencyfr);
-            float latfrac = (*latencyfr) - latint;
+                // multiply goal position by MULT
+                mvalDMc[mi] *= imgmmult.im->array.F[mi];
 
-            int DMtstep1 = DMtstep - latint;
-            int DMtstep0 = DMtstep1 - 1;
-            while(DMtstep1 < 0)
-            {
-                DMtstep1 += NB_DMtstep;
-            }
-            while(DMtstep0 < 0)
-            {
-                DMtstep0 += NB_DMtstep;
-            }
-
-            imgOLmval.md->write = 1;
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                float tmpmDMval = latfrac * mvalDMbuff[DMtstep0 * NBmode + mi];
-                tmpmDMval +=
-                    (1.0 - latfrac) * mvalDMbuff[DMtstep1 * NBmode + mi];
-
-                float tmpmWFSval = imgin.im->array.F[mi];
-                ;
-
-                imgOLmval.im->array.F[mi] = tmpmWFSval - tmpmDMval;
-            }
-
-            uint64_t PFcnt = imgPF.md->cnt0;
-
-            processinfo_update_output_stream(processinfo, imgOLmval.ID);
-
-
-            if(*enablePF == 1)
-            {
-                // wait for PF blocks to complete
-                //
-
-                struct timespec t0;
-                struct timespec t1;
-                clock_gettime(CLOCK_REALTIME, &t0);
-                clock_gettime(CLOCK_REALTIME, &t1);
-                uint64_t PFcntOK = PFcnt + *PF_NBblock;
-                while(
-                    (imgPF.md->cnt0 < PFcntOK) &&
-                    (timespec_diff_double(t0, t1) < 1.0e-6 * (*PF_maxwaitus)))
+                // apply LIMIT
+                limit = imgmlimit.im->array.F[mi];
+                if(mvalDMc[mi] > limit)
                 {
-                    // busy waiting
-                    clock_gettime(CLOCK_REALTIME, &t1);
+                    mvalDMc[mi] = limit;
+                }
+                if(mvalDMc[mi] < -limit)
+                {
+                    mvalDMc[mi] = -limit;
                 }
 
-                for(uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    mvalout[mi] = imgPF.im->array.F[mi] * (*PFmixcoeff) +
-                                  mvalout[mi] * (1.0 - *PFmixcoeff);
-                    mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
-                }
 
-                memcpy(imgout.im->array.F,
-                       mvaloutapply,
-                       sizeof(float) * NBmode);
+                if((*auxDMmvalenable) == 1)
+                {
+                    // add mode values from aux stream
+                    mvalout[mi] =
+                        mvalDMc[mi] + (auxDMfact * imgauxmDM.im->array.F[mi]);
+                }
+                else
+                {
+                    mvalout[mi] = mvalDMc[mi];
+                }
+                mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
+            }
+
+
+
+            if(*enablePF == 0)
+            {
+                memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
                 processinfo_update_output_stream(processinfo, imgout.ID);
             }
-        }
 
 
-
-
-        // Update individual gain, mult and limit values
-        // This is done AFTER computing mode values to minimize latency
-        //
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmgain.im->array.F[mi] =
-                imgmgainfact.im->array.F[mi] * (*loopgain);
-        }
-        processinfo_update_output_stream(processinfo, imgmgain.ID);
-
-
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmmult.im->array.F[mi] =
-                imgmmultfact.im->array.F[mi] * (*loopmult);
-        }
-        processinfo_update_output_stream(processinfo, imgmmult.ID);
-
-
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmlimit.im->array.F[mi] =
-                imgmlimitfact.im->array.F[mi] * (*looplimit);
-        }
-        processinfo_update_output_stream(processinfo, imgmlimit.ID);
-
-
-        // Fill telemetry buffers
-        //
-        if((*comptbuff) == 1)
-        {
-
-            uint64_t kkoffset =
-                tbuffslice * (*tbuffsize) * NBmode + tbuffindex * NBmode;
-            for(uint32_t mi = 0; mi < NBmode; mi++)
+            // Compute pseudo open-loop mode coefficients
+            //
+            if((*compOL) == 1)
             {
-                imgtbuff_mvalWFS.im->array.F[kkoffset + mi] =
-                    imgin.im->array.F[mi];
-                imgtbuff_mvalOL.im->array.F[kkoffset + mi] =
-                    imgOLmval.im->array.F[mi];
-            }
-
-
-            if((*auxDMmvalenable) == 1)
-            {
+                // write to DM history
+                //
                 for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    imgtbuff_mvalDM.im->array.F[kkoffset + mi] =
-                        mvalout[mi] - (auxDMfact * imgauxmDM.im->array.F[mi]);
+                    mvalDMbuff[DMtstep * NBmode + mi] = mvalDMc[mi];
                 }
-            }
-            else
-            {
+
+
+                DMtstep++;
+                if(DMtstep == NB_DMtstep)
+                {
+                    DMtstep = 0;
+                }
+
+                int   latint  = (int)(*latencyfr);
+                float latfrac = (*latencyfr) - latint;
+
+                int DMtstep1 = DMtstep - latint;
+                int DMtstep0 = DMtstep1 - 1;
+                while(DMtstep1 < 0)
+                {
+                    DMtstep1 += NB_DMtstep;
+                }
+                while(DMtstep0 < 0)
+                {
+                    DMtstep0 += NB_DMtstep;
+                }
+
+                imgOLmval.md->write = 1;
                 for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    imgtbuff_mvalDM.im->array.F[kkoffset + mi] = mvalout[mi];
+                    float tmpmDMval = latfrac * mvalDMbuff[DMtstep0 * NBmode + mi];
+                    tmpmDMval +=
+                        (1.0 - latfrac) * mvalDMbuff[DMtstep1 * NBmode + mi];
+
+                    float tmpmWFSval = imgin.im->array.F[mi];
+                    ;
+
+                    imgOLmval.im->array.F[mi] = tmpmWFSval - tmpmDMval;
                 }
-            }
+
+                uint64_t PFcnt = imgPF.md->cnt0;
+
+                processinfo_update_output_stream(processinfo, imgOLmval.ID);
 
 
-            tbuffindex++;
-            if(tbuffindex == (*tbuffsize))
-            {
-                tbuffindex = 0;
-
-                imgtbuff_mvalDM.md->cnt1 = tbuffslice;
-                processinfo_update_output_stream(processinfo,
-                                                 imgtbuff_mvalDM.ID);
-
-                imgtbuff_mvalWFS.md->cnt1 = tbuffslice;
-                processinfo_update_output_stream(processinfo,
-                                                 imgtbuff_mvalWFS.ID);
-
-                imgtbuff_mvalOL.md->cnt1 = tbuffslice;
-                processinfo_update_output_stream(processinfo,
-                                                 imgtbuff_mvalOL.ID);
-
-                tbuffslice++;
-                if(tbuffslice == 2)
+                if(*enablePF == 1)
                 {
-                    tbuffslice = 0;
+                    // wait for PF blocks to complete
+                    //
+
+                    struct timespec t0;
+                    struct timespec t1;
+                    clock_gettime(CLOCK_REALTIME, &t0);
+                    clock_gettime(CLOCK_REALTIME, &t1);
+                    uint64_t PFcntOK = PFcnt + *PF_NBblock;
+                    while(
+                        (imgPF.md->cnt0 < PFcntOK) &&
+                        (timespec_diff_double(t0, t1) < 1.0e-6 * (*PF_maxwaitus)))
+                    {
+                        // busy waiting
+                        clock_gettime(CLOCK_REALTIME, &t1);
+                    }
+
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        mvalout[mi] = imgPF.im->array.F[mi] * (*PFmixcoeff) +
+                                      mvalout[mi] * (1.0 - *PFmixcoeff);
+                        mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
+                    }
+
+                    memcpy(imgout.im->array.F,
+                           mvaloutapply,
+                           sizeof(float) * NBmode);
+                    processinfo_update_output_stream(processinfo, imgout.ID);
                 }
             }
-        }
-    }
-
-
-
-    if(*autoloopenable == 1)
-    {
-        // write output back to input
-        //
-        struct timespec twait;
-
-        double x = *autoloopsleep;
-        x += 0.5e-9; // minimize rounding error
-        twait.tv_sec  = (long) x;
-        twait.tv_nsec = (x - twait.tv_sec) * 1000000000L;
-
-        nanosleep(&twait, NULL);
-
-        memcpy(imgin.im->array.F, imgout.im->array.F, sizeof(float) * NBmode);
-        processinfo_update_output_stream(processinfo, imgin.ID);
-    }
 
 
 
 
-    if(*selfRMenable == 1)
-    {
-        // initialization
-        if((selfRM_pokecnt == 0) && (selfRM_pokemode == 0) &&
-                (blockcnt == 0) && (selfRMiter == 0))
-        {
-            printf("INITIALIZING selfRM\n");
-            for(uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
-            {
-                data.image[imgselfRM.ID].array.F[mi] = 0.0;
-            }
-        }
-
-        if((selfRM_pokecnt == 0) && (selfRM_pokemode == 0))
-        {
-            if(blockcnt == 0)
-            {
-                // start poke sign
-                selfRMpokesign = 1.0 - 2.0 * ((selfRMiter / 4) % 2);
-
-                printf(
-                    "iteration %u / %u  pokepolarity %d  poke sequence  [ "
-                    "%+3.1f ",
-                    selfRMiter,
-                    *selfRMnbiter,
-                    selfRMpokeparity,
-                    selfRMpokesign);
-            }
-            else
-            {
-                printf(" %+3.1f ]\n", selfRMpokesign);
-            }
-        }
-
-
-
-        int pkmode = 0;
-        pkmode     = selfRM_pokemode;
-
-        float signmult;
-        if((selfRM_pokemode % 2 == 0) && (selfRMpokeparity == 1))
-        {
-            signmult = -1.0;
-        }
-        else
-        {
-            signmult = 1.0;
-        }
-
-
-        if(selfRM_pokecnt < *selfRMzsize)
-        {
-            selfRMpokecmd[pkmode] =
-                selfRMpokesign * (*selfRMpokeampl) * signmult;
-        }
-        else
-        {
-            selfRMpokecmd[pkmode] = 0.0;
-        }
-
-
-        if(selfRM_pokecnt < *selfRMzsize)
-        {
-            // write result in output 3D selfRM
+            // Update individual gain, mult and limit values
+            // This is done AFTER computing mode values to minimize latency
             //
             for(uint32_t mi = 0; mi < NBmode; mi++)
             {
-                long pindex = NBmode * NBmode * selfRM_pokecnt;
-                pindex += NBmode * pkmode;
-                pindex += mi;
-                imgselfRM.im->array.F[pindex] +=
-                    0.5 * signmult * selfRMpokesign * imgin.im->array.F[mi] /
-                    (*selfRMpokeampl) / (*selfRMnbiter);
+                imgmgain.im->array.F[mi] =
+                    imgmgainfact.im->array.F[mi] * (*loopgain);
             }
-        }
-        selfRM_pokecnt++;
+            processinfo_update_output_stream(processinfo, imgmgain.ID);
 
-        if(selfRM_pokecnt > (*selfRMzsize) + (*selfRMnbsettlestep))
-        {
 
-            if(((selfRMiter % 8) < 2) || ((selfRMiter % 8) > 5))
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
-                selfRMpokesign *= -1.0;
+                imgmmult.im->array.F[mi] =
+                    imgmmultfact.im->array.F[mi] * (*loopmult);
             }
+            processinfo_update_output_stream(processinfo, imgmmult.ID);
 
-            blockcnt++;
-            if(blockcnt == 2)
+
+            for(uint32_t mi = 0; mi < NBmode; mi++)
             {
-                selfRM_pokemode++;
-                blockcnt = 0;
+                imgmlimit.im->array.F[mi] =
+                    imgmlimitfact.im->array.F[mi] * (*looplimit);
             }
-            selfRM_pokecnt = 0;
+            processinfo_update_output_stream(processinfo, imgmlimit.ID);
+
+
+            // Fill telemetry buffers
+            //
+            if((*comptbuff) == 1)
+            {
+
+                uint64_t kkoffset =
+                    tbuffslice * (*tbuffsize) * NBmode + tbuffindex * NBmode;
+                for(uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    imgtbuff_mvalWFS.im->array.F[kkoffset + mi] =
+                        imgin.im->array.F[mi];
+                    imgtbuff_mvalOL.im->array.F[kkoffset + mi] =
+                        imgOLmval.im->array.F[mi];
+                }
+
+
+                if((*auxDMmvalenable) == 1)
+                {
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        imgtbuff_mvalDM.im->array.F[kkoffset + mi] =
+                            mvalout[mi] - (auxDMfact * imgauxmDM.im->array.F[mi]);
+                    }
+                }
+                else
+                {
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        imgtbuff_mvalDM.im->array.F[kkoffset + mi] = mvalout[mi];
+                    }
+                }
+
+
+                tbuffindex++;
+                if(tbuffindex == (*tbuffsize))
+                {
+                    tbuffindex = 0;
+
+                    imgtbuff_mvalDM.md->cnt1 = tbuffslice;
+                    processinfo_update_output_stream(processinfo,
+                                                     imgtbuff_mvalDM.ID);
+
+                    imgtbuff_mvalWFS.md->cnt1 = tbuffslice;
+                    processinfo_update_output_stream(processinfo,
+                                                     imgtbuff_mvalWFS.ID);
+
+                    imgtbuff_mvalOL.md->cnt1 = tbuffslice;
+                    processinfo_update_output_stream(processinfo,
+                                                     imgtbuff_mvalOL.ID);
+
+                    tbuffslice++;
+                    if(tbuffslice == 2)
+                    {
+                        tbuffslice = 0;
+                    }
+                }
+            }
         }
 
 
-        if(selfRM_pokemode == NBmode)
+
+        if(*autoloopenable == 1)
         {
-            selfRMpokeparity = 1 - selfRMpokeparity;
-            selfRM_pokemode  = 0;
-            selfRM_pokecnt   = 0;
+            // write output back to input
+            //
+            struct timespec twait;
 
-            selfRMiter++;
+            double x = *autoloopsleep;
+            x += 0.5e-9; // minimize rounding error
+            twait.tv_sec  = (long) x;
+            twait.tv_nsec = (x - twait.tv_sec) * 1000000000L;
+
+            nanosleep(&twait, NULL);
+
+            memcpy(imgin.im->array.F, imgout.im->array.F, sizeof(float) * NBmode);
+            processinfo_update_output_stream(processinfo, imgin.ID);
         }
 
-        if(selfRMiter == *selfRMnbiter)
+
+
+
+        if(*selfRMenable == 1)
         {
+            // initialization
+            if((selfRM_pokecnt == 0) && (selfRM_pokemode == 0) &&
+                    (blockcnt == 0) && (selfRMiter == 0))
+            {
+                printf("INITIALIZING selfRM\n");
+                for(uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
+                {
+                    data.image[imgselfRM.ID].array.F[mi] = 0.0;
+                }
+            }
 
-            selfRMiter      = 0;
-            selfRM_pokemode = 0;
-            selfRM_pokecnt  = 0;
+            if((selfRM_pokecnt == 0) && (selfRM_pokemode == 0))
+            {
+                if(blockcnt == 0)
+                {
+                    // start poke sign
+                    selfRMpokesign = 1.0 - 2.0 * ((selfRMiter / 4) % 2);
 
-            data.fpsptr->parray[fpi_selfRMenable].fpflag &= ~FPFLAG_ONOFF;
-            *selfRMenable = 0;
+                    printf(
+                        "iteration %u / %u  pokepolarity %d  poke sequence  [ "
+                        "%+3.1f ",
+                        selfRMiter,
+                        *selfRMnbiter,
+                        selfRMpokeparity,
+                        selfRMpokesign);
+                }
+                else
+                {
+                    printf(" %+3.1f ]\n", selfRMpokesign);
+                }
+            }
 
-            // testing
-            save_fits(imgselfRM.name, "selfRM.fits");
+
+
+            int pkmode = 0;
+            pkmode     = selfRM_pokemode;
+
+            float signmult;
+            if((selfRM_pokemode % 2 == 0) && (selfRMpokeparity == 1))
+            {
+                signmult = -1.0;
+            }
+            else
+            {
+                signmult = 1.0;
+            }
+
+
+            if(selfRM_pokecnt < *selfRMzsize)
+            {
+                selfRMpokecmd[pkmode] =
+                    selfRMpokesign * (*selfRMpokeampl) * signmult;
+            }
+            else
+            {
+                selfRMpokecmd[pkmode] = 0.0;
+            }
+
+
+            if(selfRM_pokecnt < *selfRMzsize)
+            {
+                // write result in output 3D selfRM
+                //
+                for(uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    long pindex = NBmode * NBmode * selfRM_pokecnt;
+                    pindex += NBmode * pkmode;
+                    pindex += mi;
+                    imgselfRM.im->array.F[pindex] +=
+                        0.5 * signmult * selfRMpokesign * imgin.im->array.F[mi] /
+                        (*selfRMpokeampl) / (*selfRMnbiter);
+                }
+            }
+            selfRM_pokecnt++;
+
+            if(selfRM_pokecnt > (*selfRMzsize) + (*selfRMnbsettlestep))
+            {
+
+                if(((selfRMiter % 8) < 2) || ((selfRMiter % 8) > 5))
+                {
+                    selfRMpokesign *= -1.0;
+                }
+
+                blockcnt++;
+                if(blockcnt == 2)
+                {
+                    selfRM_pokemode++;
+                    blockcnt = 0;
+                }
+                selfRM_pokecnt = 0;
+            }
+
+
+            if(selfRM_pokemode == NBmode)
+            {
+                selfRMpokeparity = 1 - selfRMpokeparity;
+                selfRM_pokemode  = 0;
+                selfRM_pokecnt   = 0;
+
+                selfRMiter++;
+            }
+
+            if(selfRMiter == *selfRMnbiter)
+            {
+
+                selfRMiter      = 0;
+                selfRM_pokemode = 0;
+                selfRM_pokecnt  = 0;
+
+                data.fpsptr->parray[fpi_selfRMenable].fpflag &= ~FPFLAG_ONOFF;
+                *selfRMenable = 0;
+
+                // testing
+                save_fits(imgselfRM.name, "selfRM.fits");
+            }
         }
+
+
     }
-
-
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(selfRMpokecmd);
