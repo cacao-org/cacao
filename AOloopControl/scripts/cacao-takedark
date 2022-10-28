@@ -70,6 +70,7 @@ milk-all << EOF
 readshmim aol${AOLOOPNUMBER}_wfsim
 streamave ..procinfo 1
 streamave ..triggermode 3
+streamave ..triggersname aol${AOLOOPNUMBER}_wfsim
 streamave ..loopcntMax ${nbframe}
 streamave aol${AOLOOPNUMBER}_wfsim imdark ${nbframe}
 saveFITS imdark "imdark.fits"
