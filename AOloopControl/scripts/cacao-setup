@@ -404,7 +404,9 @@ function fpssetparamconf {
     echo "SETTING PARAMETERS -> ${fpsCTRLfifo}"
 
     rm fpssetup.setval.combined.conf
-    cat ${CURRDIR}/fpssetup.setval.conf ${CURRDIR}/${fpsSETPARAMCONFfile} > fpssetup.setval.combined.conf
+    set "s/LOOPNUMBER/${LOOPNUMBER}/g" ${CURRDIR}/${fpsSETPARAMCONFfile} > fpssetuptmp.tmp
+    cat ${CURRDIR}/fpssetup.setval.conf fpssetuptmp.tmp > fpssetup.setval.combined.conf
+    rm fpssetuptmp.tmp
     rm ${CURRDIR}/fpssetup.setval.conf
 
     while IFS='' read -r line || [[ -n "$line" ]]; do

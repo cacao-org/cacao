@@ -4,15 +4,10 @@
 
 # For each FPS-enabled process:
 # - entry is added to fpslist.txt file
-# - parameters setup added to file fpssetup.setval.conf
+# - fpssetup.setval files created
 
-
-#FPSCONFFILE="fpssetup.setval.conf"
 
 touch fpslist.txt
-touch ${FPSCONFFILE}
-
-
 
 
 # log messages
@@ -55,8 +50,7 @@ function addfpscmdheader {
 #
 function addfpscmd {
     taskfname="fps.conf/fpssetup.confstart.${fpsfname}.conf"
-    echolog "FPS CMD TO ${FPSCONFFILE} : $1"
-    #echo "$1" >> ${FPSCONFFILE}
+    echolog "FPS CMD TO ${taskfname} : $1"
     echo "$1" >> ${taskfname}
 }
 
