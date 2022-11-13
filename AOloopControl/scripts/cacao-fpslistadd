@@ -1342,6 +1342,9 @@ else
 echolog "OFF CACAO_FPSPROC_APPLYPF05"
 fi
 
-
+for fpslf in cacao-fpslistadd-*; do
+echo "Processing fpslistadd file ${fpslf}"
+. ./${fpslf}
+done
 
 echolog "END"

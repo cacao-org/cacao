@@ -17,6 +17,7 @@ fi
 
 # copy test configuration files to work directory
 cp ${CONFDIR}/cacaovars.${LOOPNAME}.bash ${WORKDIRECTORY}/
+cp ${CONFDIR}/cacao-fpslistadd-* ${WORKDIRECTORY}/
 
 cp ${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf ${WORKDIRECTORY}/
 
