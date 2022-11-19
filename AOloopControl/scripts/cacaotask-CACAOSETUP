@@ -6,7 +6,7 @@ source cacaotask-check # check environment
 # PERFORM ACTIONS FOR THIS TASK
 # ======================================================================
 cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
-cd ${WORKDIRECTORY}
+cd ${CACAO_LOOPROOTDIR}
 cacao-setup ${LOOPNAME}
 
 # ======================================================================
@@ -18,7 +18,7 @@ cacao-setup ${LOOPNAME}
 
 cat <<EOT >>  ${CLEANSCRIPT}
 
-cd ${WORKDIRECTORY}
+cd ${CACAO_LOOPROOTDIR}
 cacao-setup -C ${LOOPNAME}
 cd -
 

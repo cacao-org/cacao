@@ -6,7 +6,7 @@ source cacaotask-check # check environment
 # ======================================================================
 # PERFORM ACTIONS FOR THIS TASK
 # ======================================================================
-mkdir -p $WORKDIRECTORY/simLHS
+mkdir -p ${CACAO_LOOPROOTDIR}/simLHS
 cd $CONFDIR/simLHS/
 FLIST=($(ls *.get.bash))
 for gfile in "${FLIST[@]}"
@@ -15,11 +15,11 @@ do
 done
 
 cd ${CURRENTDIR}
-cp ${CONFDIR}/simLHS/*.fits ${WORKDIRECTORY}/simLHS/
-cp ${CONFDIR}/simLHS/*.fits.gz ${WORKDIRECTORY}/simLHS/
+cp ${CONFDIR}/simLHS/*.fits ${CACAO_LOOPROOTDIR}/simLHS/
+cp ${CONFDIR}/simLHS/*.fits.gz ${CACAO_LOOPROOTDIR}/simLHS/
 
 # uncompress all gz files
-gunzip ${WORKDIRECTORY}/simLHS/*.fits.gz
+gunzip ${CACAO_LOOPROOTDIR}/simLHS/*.fits.gz
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
@@ -31,8 +31,8 @@ gunzip ${WORKDIRECTORY}/simLHS/*.fits.gz
 
 cat <<EOT >>  ${CLEANSCRIPT}
 
-rm $WORKDIRECTORY/simLHS/*
-rmdir $WORKDIRECTORY/simLHS
+rm ${CACAO_LOOPROOTDIR}/simLHS/*
+rmdir ${CACAO_LOOPROOTDIR}/simLHS
 
 EOT
 

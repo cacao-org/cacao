@@ -213,7 +213,7 @@ function cacaoCreateExampe_cacaovars {
     echo "" >> ${EXAMPLEFILENAME}
     echo "export CACAO_DMxsize=\"188\"" >> ${EXAMPLEFILENAME}
     echo "export CACAO_DMysize=\"1\"" >> ${EXAMPLEFILENAME}
-    echo "export CACAO_LOOPWORKDIR=\"ao188lhs\"" >> ${EXAMPLEFILENAME}
+    echo "export CACAO_LOOPROOTDIR=\"ao188lhs\"" >> ${EXAMPLEFILENAME}
     echo "export CACAO_DMINDEX=\"02\"" >> ${EXAMPLEFILENAME}
     echo "export CACAO_LOOPNUMBER=\"1\"" >> ${EXAMPLEFILENAME}
     echo "export CACAO_WFSSTREAM=\"aol${CACAO_LOOPNUMBER}_linsimWFS\"" >> ${EXAMPLEFILENAME}
@@ -285,7 +285,7 @@ function cacaosetupLISTprocesses {
     while IFS='' read -r line || [[ -n "$line" ]]; do
         getfpsname_fromline "${line}"
         printf "          %s\n" "${fpsname}"
-    done < ${LOOPWORKDIR}/fpslist.txt
+    done < ${CACAO_LOOPRUNDIR}/fpslist.txt
 
     cd ${CURRDIR}
 }
@@ -321,7 +321,7 @@ function allFPScmd {
             done < ${taskflist}
         fi
     fi
-    done < ${LOOPWORKDIR}/fpslist.txt
+    done < ${CACAO_LOOPRUNDIR_FULLPATH}/fpslist.txt
 }
 
 
@@ -339,7 +339,7 @@ function cacaosetupCLEAR
     # Will be executed by fpsCTRL upon exist
     # This ensures that the corresponding commands are executed
     # in order, and before the tmux session is terminated.
-    echo "# ${PWD}" > ${LOOPWORKDIR}/fpsCTRL-exitscript
+    echo "# ${PWD}" > ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
 
     # exit commands are placed in queue 0, with priority 1
     echo "setqindex 0" >> ${fpsCTRLfifo}
@@ -357,14 +357,14 @@ function cacaosetupCLEAR
         # track log files by sym link
         # first, remove target
         cmdstring="find /milk/shm -type l -name \"fpslog.*-${fpsname}\" -exec sh -c 'rm \$(readlink \$1)' _ {} \;"
-        echo "${cmdstring}" >> ${LOOPWORKDIR}/fpsCTRL-exitscript
+        echo "${cmdstring}" >> ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
         # second, remove link
         cmdstring="find /milk/shm -type l -name \"fpslog.*-${fpsname}\" -delete"
-        echo "${cmdstring}" >> ${LOOPWORKDIR}/fpsCTRL-exitscript
-    done < ${LOOPWORKDIR}/fpslist.txt
+        echo "${cmdstring}" >> ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
+    done < ${CACAO_LOOPRUNDIR_FULLPATH}/fpslist.txt
 
     # will kill tmux session AFTER fpsCTRL exit
-    echo "tmux kill-session -t ${fpsCTRLtmuxname}" >> ${LOOPWORKDIR}/fpsCTRL-exitscript
+    echo "tmux kill-session -t ${fpsCTRLtmuxname}" >> ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
 
     # Exit fpsCTRL
     echo "exit" >> ${fpsCTRLfifo}
@@ -581,12 +581,12 @@ fi
 
 
 
-if [[ -z "${CACAO_LOOPWORKDIR}" ]]; then
-    echo "CACAO_LOOPWORKDIR    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
-    SETTINGOK="0"
+if [[ -z "${CACAO_LOOPRUNDIR}" ]]; then
+    CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"
+    echo "CACAO_LOOPRUNDIR    not set -> using default : ${CACAO_LOOPRUNDIR}"
+    #SETTINGOK="0"
 else
-    LOOPWORKDIR="$CACAO_LOOPWORKDIR"
-    echo "CACAO_LOOPWORKDIR    : ${CACAO_LOOPWORKDIR}"
+    echo "CACAO_LOOPRUNDIR    : ${CACAO_LOOPRUNDIR}"
 fi
 
 
@@ -698,10 +698,11 @@ mkdir -p ${LOGFILEDIR}
 # ======================= SCRIPT CODE STARTS HERE =================================
 
 echolog "START $(basename $0)"
-echolog "LOOPWORKDIR       : ${LOOPWORKDIR}"
-echolog "CACAO_LOOPNAME    : ${CACAO_LOOPNAME}"
-echolog "LOOPNUMBER        : ${LOOPNUMBER}"
-echolog "CACAO_ROOT        : ${CACAO_ROOT}"
+echolog "CACAO_LOOPROOTDIR       : ${CACAO_LOOPROOTDIR}"
+echolog "CACAO_LOOPRUNDIR        : ${CACAO_LOOPRUNDIR}"
+echolog "CACAO_LOOPNAME          : ${CACAO_LOOPNAME}"
+echolog "LOOPNUMBER              : ${LOOPNUMBER}"
+echolog "CACAO_ROOT              : ${CACAO_ROOT}"
 
 
 
@@ -744,18 +745,24 @@ fi
 
 
 
-# Create working directory
+# Create directories
 
-mkdir -p ${LOOPWORKDIR}
-mkdir -p ${LOOPWORKDIR}/conf/
-echo "${CACAO_LOOPNAME}" > ${LOOPWORKDIR}/LOOPNAME
-echo "${LOOPNUMBER}" > ${LOOPWORKDIR}/LOOPNUMBER
+echo "CREATING DIRECTORIES"
+echo "pwd : $( pwd )"
+# full path
+CACAO_LOOPROOTDIR_FULLPATH=$( pwd )
+
+mkdir -p conf/
+mkdir -p ${CACAO_LOOPRUNDIR}/
+CACAO_LOOPRUNDIR_FULLPATH="${CACAO_LOOPROOTDIR_FULLPATH}/${CACAO_LOOPRUNDIR}"
+echo "${CACAO_LOOPNAME}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNAME
+echo "${CACAO_LOOPNUMBER}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNUMBER
 
 # create symlink to data storage
 if [ ! -d ${CACAO_LOOPDATALOGDIR} ]; then
     mkdir -p ${CACAO_LOOPDATALOGDIR}
 fi
-ln -s ${CACAO_LOOPDATALOGDIR} ${LOOPWORKDIR}/aoldatadir
+ln -s ${CACAO_LOOPDATALOGDIR} ${CACAO_LOOPROOTDIR}/aoldatadir
 
 
 
@@ -767,6 +774,7 @@ ln -s ${CACAO_LOOPDATALOGDIR} ${LOOPWORKDIR}/aoldatadir
 
 if [ "$UPDATEMODE" = "0" ]; then
     rm fpslist.txt &>> ${LOGFILENAME}
+    echo "Creating fpslist.txt in directory $( pwd )"
     touch fpslist.txt
 
     FPSCONFFILE="fpssetup.setval.conf"
@@ -802,23 +810,21 @@ source cacao-fpslistadd &>> ${LOGFILENAME}
 
 
 
-# copy files to LOOPWORKDIR
+# copy files to LOOPROOTDIR
 
 # list of FPSs
-echolog "mv fpslist.txt ${LOOPWORKDIR}"
-mv fpslist.txt ${LOOPWORKDIR}
+echolog "mv fpslist.txt ${CACAO_LOOPROOTDIR}"
+mv fpslist.txt ${CACAO_LOOPRUNDIR_FULLPATH}/
 
 # fpssetup config files
 echo "Current dir: $PWD"
-echo "mv fps.conf ${LOOPWORKDIR}/"
-rm -rf ${LOOPWORKDIR}/fps.conf
-mv fps.conf ${LOOPWORKDIR}/
+echo "mv fps.conf ${CACAO_LOOPRUNDIR_FULLPATH}/"
+rm -rf ${CACAO_LOOPRUNDIR_FULLPATH}/fps.conf
+mv fps.conf ${CACAO_LOOPRUNDIR_FULLPATH}/
 
 
 
-cd ${LOOPWORKDIR}
-# update LOOPWORKDIR to full path
-LOOPWORKDIR=$( pwd )
+cd ${CACAO_LOOPRUNDIR_FULLPATH}
 
 
 
@@ -913,7 +919,7 @@ echo  "cacao setup complete"
 echo ""
 echo "Processes :"
 echo ""
-cat ${LOOPWORKDIR}/fpslist.txt | column -t
+cat ${CACAO_LOOPRUNDIR_FULLPATH}/fpslist.txt | column -t
 echo ""
 echo ""
 echo "To enter control screen: tmux a -t ${CACAO_LOOPNAME}_fpsCTRL"

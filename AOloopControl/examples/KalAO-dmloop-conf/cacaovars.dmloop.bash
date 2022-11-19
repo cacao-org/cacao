@@ -12,7 +12,7 @@ export CACAO_DMSPATIAL="1"
 export CACAO_DMxsize="12"
 export CACAO_DMysize="12"
 
-export CACAO_LOOPWORKDIR="dmloop-workdir"
+export CACAO_LOOPROOTDIR="dmloop"
 export CACAO_DMINDEX="01"
 export CACAO_LOOPNUMBER="1"
 

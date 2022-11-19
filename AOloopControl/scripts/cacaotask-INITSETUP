@@ -6,7 +6,12 @@ source cacaotask-check # check environment
 # ======================================================================
 # PERFORM ACTIONS FOR THIS TASK
 # ======================================================================
-mkdir -p ${WORKDIRECTORY}
+echo "LOOPNAME          : ${LOOPNAME}"
+echo "CONFDIR           : ${CONFDIR}"
+echo "CACAO_LOOPROOTDIR : ${CACAO_LOOPROOTDIR}"
+
+
+mkdir -p ${CACAO_LOOPROOTDIR}
 
 # check if successful
 if [ "$?" = 0 ]; then
@@ -16,10 +21,10 @@ else
 fi
 
 # copy test configuration files to work directory
-cp ${CONFDIR}/cacaovars.${LOOPNAME}.bash ${WORKDIRECTORY}/
-cp ${CONFDIR}/cacao-fpslistadd-* ${WORKDIRECTORY}/
+cp ${CONFDIR}/cacaovars.${LOOPNAME}.bash ${CACAO_LOOPROOTDIR}/
+cp ${CONFDIR}/cacao-fpslistadd-* ${CACAO_LOOPROOTDIR}/
 
-cp ${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf ${WORKDIRECTORY}/
+cp ${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf ${CACAO_LOOPROOTDIR}/
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
@@ -31,14 +36,14 @@ cp ${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf ${WORKDIRECTORY}/
 #
 cat <<EOT >>  ${CLEANSCRIPT}
 
-rm ${WORKDIRECTORY}/cacaovars.${LOOPNAME}.bash
-rm ${WORKDIRECTORY}/fpssetup.setval.${LOOPNAME}.conf
+rm ${CACAO_LOOPROOTDIR}/cacaovars.${LOOPNAME}.bash
+rm ${CACAO_LOOPROOTDIR}/fpssetup.setval.${LOOPNAME}.conf
 
-read -p "REMOVING directory ./\${WORKDIRECTORYLOCAL}. Are you sure? " -n 1 -r
+read -p "REMOVING directory ./\${CACAO_LOOPROOTDIR}. Are you sure? " -n 1 -r
 echo
 if [[ \${REPLY} =~ ^[Yy]$ ]]
 then
-    rm -r ./\${WORKDIRECTORYLOCAL}
+    rm -r ./\${CACAO_LOOPROOTDIR}
 fi
 
 EOT

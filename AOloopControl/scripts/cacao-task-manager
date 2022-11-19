@@ -47,8 +47,8 @@ USAGESTRING="$(basename $0) [-hxXcC] <confname>"
 LOOPNAME="NULL"
 CURRENTDIR=$(pwd)
 CONFDIR=""
-WORKDIRECTORY=""
-WORKDIRECTORYLOCAL=""
+#WORKDIRECTORY=""
+#WORKDIRECTORYLOCAL=""
 
 QUIET=0
 
@@ -99,7 +99,7 @@ function printHELP {
     echo "Required user-provided files/directories :"
     echo "   <confname>-conf               [directory]   Configuration directory"
     echo "   <confname>-conf/LOOPNAME      [ASCII file]  Loop name"
-    echo "   <confname>-conf/WORKDIR       [ASCII file]  Work directory name, will be created"
+    #echo "   <confname>-conf/WORKDIR       [ASCII file]  Work directory name, will be created"
     echo "   <confname>-conf/tasklist.txt  [ASCII file]  List of tasks to be executed"
     echo ""
     echo "Each task has a run-status and a clean-status."
@@ -304,18 +304,21 @@ CONFNAME="$1"
 CONFDIR="${CURRENTDIR}/${CONFNAME}-conf"
 checkDir ${CONFDIR}
 
+
 LOOPNAMEFILE="${CONFDIR}/LOOPNAME"
 checkFile ${LOOPNAMEFILE}
 if [ -f $LOOPNAMEFILE ]; then
     LOOPNAME="$(cat $LOOPNAMEFILE)"
 fi
 
-WORKDIRFILE="${CONFDIR}/WORKDIR"
-checkFile ${WORKDIRFILE}
-if [ -f $WORKDIRFILE ]; then
-    WORKDIRECTORY="${CURRENTDIR}/$(cat $WORKDIRFILE)"
-    WORKDIRECTORYLOCAL="$(cat $WORKDIRFILE)"
-fi
+
+#WORKDIRFILE="${CONFDIR}/WORKDIR"
+#checkFile ${WORKDIRFILE}
+
+#if [ -f $WORKDIRFILE ]; then
+#    WORKDIRECTORY="${CURRENTDIR}/$(cat $WORKDIRFILE)"
+#    WORKDIRECTORYLOCAL="$(cat $WORKDIRFILE)"
+#fi
 
 
 TASKLISTFILE="${CONFDIR}/tasklist.txt"
@@ -324,7 +327,7 @@ checkFile ${TASKLISTFILE}
 
 CACAOVARSFILE="${CONFDIR}/cacaovars.${LOOPNAME}.bash"
 checkFile ${CACAOVARSFILE}
-
+source ${CACAOVARSFILE}
 
 FPSSETUPFILE="${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf"
 checkFile ${FPSSETUPFILE}
@@ -441,8 +444,8 @@ echo ""
 echo "    LOOPNAME           : $LOOPNAME"
 echo "    CURRENTDIR         : $CURRENTDIR"
 echo "    CONFDIR            : $CONFDIR"
-echo "    WORKDIRECTORY      : ${WORKDIRECTORY}"
-echo "    WORKDIRECTORYLOCAL : ${WORKDIRECTORYLOCAL}"
+#echo "    WORKDIRECTORY      : ${WORKDIRECTORY}"
+#echo "    WORKDIRECTORYLOCAL : ${WORKDIRECTORYLOCAL}"
 echo "    LOGDIR             : $LOGDIR"
 echo ""
 
