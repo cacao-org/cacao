@@ -490,7 +490,7 @@ if [ "$#" -ne $NBARGS ]; then
     exit
 fi
 
-CACAO_LOOPNAME="$1"
+LOOPNAME="$1"
 
 
 
@@ -516,7 +516,10 @@ checkCommand cacao-fpslistadd
 #	checkCommand ttyecho
 #fi
 
-checkFile cacaovars.${CACAO_LOOPNAME}.bash
+
+
+
+checkFile cacaovars.${LOOPNAME}.bash
 
 if [ ${EXITSTATUS} -eq 1 ]; then
     echo "$(tput setaf 1)$(tput bold) -> EXITING $(tput sgr0)"
@@ -528,7 +531,7 @@ fi
 
 
 
-export CACAO_LOOPNAME="$CACAO_LOOPNAME"
+export CACAO_LOOPNAME="$LOOPNAME"
 echolog "START $(basename $0)"
 
 
@@ -551,7 +554,6 @@ if [[ -z "${CACAO_LOOPNAME}" ]]; then
     LOOPNAMEOK="0"
 else
     echo "CACAO_LOOPNAME   : ${CACAO_LOOPNAME}"
-    # echo "$CACAO_LOOPNAME" > LOOPNAME
     LOOPNAMEOK="1"
 fi
 

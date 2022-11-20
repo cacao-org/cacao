@@ -19,8 +19,8 @@ Subsequent tasks can perform specific parts of the AO loop.
 
 To run the example :
 
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/KalAO-dmloop-conf KalAO-dmloop-rootdir
-    $ cd KalAO-dmloop-rootdir
-    $ cacao-task-manager -X 3 KalAO-dmloop
+    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/KalAO-dmloop-conf KalAO
+    $ cd KalAO
+    $ cacao-task-manager -X 4 KalAO-dmloop
     $ cp KalAO-dmloop-conf/aorunscript .
     $ ./aorunscript

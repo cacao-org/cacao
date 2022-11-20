@@ -9,10 +9,10 @@ Where CONFNAME is, unsurprisingly, the example name.
 Directory and file names for each example are constructed from the following three variables:
 
 - **CONFNAME**: The configuration name (as described above)
-- **WORKDIR**: Directory where cacao will install files and run
+- **LOOPROOTDIR**: Directory where cacao will install files and run
 - **LOOPNAME**: The loop name, which will be the basis for process names, tmux sessions and various files
 
-:warning: Make sure you understand the role of these three variables before proceeding. Confusingly, **CONFNAME**, **WORKDIR** and **LOOPNAME** may or may not be the same. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the three names can be different.
+:warning: Make sure you understand the role of these three variables before proceeding. Confusingly, **CONFNAME**, **LOOPROOTDIR** and **LOOPNAME** may or may not be the same. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the three names can be different.
 
 ---
 
@@ -23,7 +23,6 @@ Content of directory CONFNAME-conf
 ~~~
 ├── <CONFNAME>-conf                    -> configuration directory (where configuration files are stored)
 │   ├── LOOPNAME                       -> Name of cacao loop
-│   ├── WORKDIR                        -> Directory name in which cacao will run
 │   ├── tasklist.txt                   -> List of tasks that will be managed by cacao-task-manager
 │   ├── cacaovars.LOOPNAME.bash        -> Variables defining the configuration: lists processes to be setup by cacao-setup
 │   ├── fpssetup.setval.LOOPNAME.conf  -> (optional) Initialization read by milk-fpsCTRL after launch
