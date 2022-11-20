@@ -8,6 +8,9 @@ source cacaotask-check # check environment
 # ======================================================================
 echo "LOOPNAME          : ${LOOPNAME}"
 echo "CONFDIR           : ${CONFDIR}"
+
+
+
 echo "CACAO_LOOPROOTDIR : ${CACAO_LOOPROOTDIR}"
 
 

@@ -582,6 +582,14 @@ fi
 
 
 
+if [[ -z "${CACAO_LOOPROOTDIR}" ]]; then
+    CACAO_LOOPROOTDIR="${CACAO_LOOPNAME}-rootdir"
+    echo "CACAO_LOOPROOTDIR    not set -> using default : ${CACAO_LOOPROOTDIR}"
+else
+    echo "CACAO_LOOPROOTDIR    : ${CACAO_LOOPROOTDIR}"
+fi
+
+
 
 if [[ -z "${CACAO_LOOPRUNDIR}" ]]; then
     CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"

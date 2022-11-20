@@ -47,8 +47,6 @@ USAGESTRING="$(basename $0) [-hxXcC] <confname>"
 LOOPNAME="NULL"
 CURRENTDIR=$(pwd)
 CONFDIR=""
-#WORKDIRECTORY=""
-#WORKDIRECTORYLOCAL=""
 
 QUIET=0
 
@@ -99,7 +97,6 @@ function printHELP {
     echo "Required user-provided files/directories :"
     echo "   <confname>-conf               [directory]   Configuration directory"
     echo "   <confname>-conf/LOOPNAME      [ASCII file]  Loop name"
-    #echo "   <confname>-conf/WORKDIR       [ASCII file]  Work directory name, will be created"
     echo "   <confname>-conf/tasklist.txt  [ASCII file]  List of tasks to be executed"
     echo ""
     echo "Each task has a run-status and a clean-status."
@@ -312,15 +309,6 @@ if [ -f $LOOPNAMEFILE ]; then
 fi
 
 
-#WORKDIRFILE="${CONFDIR}/WORKDIR"
-#checkFile ${WORKDIRFILE}
-
-#if [ -f $WORKDIRFILE ]; then
-#    WORKDIRECTORY="${CURRENTDIR}/$(cat $WORKDIRFILE)"
-#    WORKDIRECTORYLOCAL="$(cat $WORKDIRFILE)"
-#fi
-
-
 TASKLISTFILE="${CONFDIR}/tasklist.txt"
 checkFile ${TASKLISTFILE}
 
@@ -444,10 +432,21 @@ echo ""
 echo "    LOOPNAME           : $LOOPNAME"
 echo "    CURRENTDIR         : $CURRENTDIR"
 echo "    CONFDIR            : $CONFDIR"
-#echo "    WORKDIRECTORY      : ${WORKDIRECTORY}"
-#echo "    WORKDIRECTORYLOCAL : ${WORKDIRECTORYLOCAL}"
 echo "    LOGDIR             : $LOGDIR"
 echo ""
+
+
+# temporarly disable exit-on-error
+set +o nounset
+if [[ -z "${CACAO_LOOPROOTDIR}" ]]; then
+    CACAO_LOOPROOTDIR="${LOOPNAME}-rootdir"
+    echo "CACAO_LOOPROOTDIR    not set -> using default : ${CACAO_LOOPROOTDIR}"
+else
+    echo "CACAO_LOOPROOTDIR    : ${CACAO_LOOPROOTDIR}"
+fi
+# Attempt to use undefined variable outputs error message, and forces an exit
+set -o nounset
+
 
 
 
