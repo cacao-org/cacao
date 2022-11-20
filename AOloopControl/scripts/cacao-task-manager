@@ -114,6 +114,8 @@ function printHELP {
     echo " $(tput bold)USAGE:$(tput sgr0)"
     echo "     $USAGESTRING"
     echo ""
+    echo " Run without option to print current status (no action performed)"
+    echo ""
     echo " $(tput bold)OPTIONS:$(tput sgr0)"
     echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
     echo "     $(tput bold)-x$(tput sgr0)            e(x)ecute next ready task"

@@ -332,8 +332,11 @@ function allFPScmd {
 #
 function cacaosetupCLEAR
 {
+    echo "CLEARING cacao-setup"
     echolog "CLEARING"
     cd ${CURRDIR}
+
+    echo "CACAO_LOOPRUNDIR_FULLPATH : ${CACAO_LOOPRUNDIR_FULLPATH}"
 
     # Populate script fpsCTRL-exitscript
     # Will be executed by fpsCTRL upon exist
@@ -714,8 +717,10 @@ echolog "CACAO_LOOPNAME          : ${CACAO_LOOPNAME}"
 echolog "LOOPNUMBER              : ${LOOPNUMBER}"
 echolog "CACAO_ROOT              : ${CACAO_ROOT}"
 
+# full path
+CACAO_LOOPROOTDIR_FULLPATH=$( pwd )
 
-
+CACAO_LOOPRUNDIR_FULLPATH="${CACAO_LOOPROOTDIR_FULLPATH}/${CACAO_LOOPRUNDIR}"
 
 
 # ============ CREATE GENERAL PURPOSE TMUX SESSION ============
@@ -759,12 +764,11 @@ fi
 
 echo "CREATING DIRECTORIES"
 echo "pwd : $( pwd )"
-# full path
-CACAO_LOOPROOTDIR_FULLPATH=$( pwd )
+
 
 mkdir -p conf/
 mkdir -p ${CACAO_LOOPRUNDIR}/
-CACAO_LOOPRUNDIR_FULLPATH="${CACAO_LOOPROOTDIR_FULLPATH}/${CACAO_LOOPRUNDIR}"
+
 echo "${CACAO_LOOPNAME}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNAME
 echo "${CACAO_LOOPNUMBER}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNUMBER
 
