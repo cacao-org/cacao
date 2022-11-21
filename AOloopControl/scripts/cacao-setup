@@ -299,7 +299,7 @@ function cacaosetupLISTprocesses {
 # example:
 # allFPScmd confstart
 #
-# also feeds to fpsCTRL fps.conf/fpssetup.cacaosetup-<cmd>.<fpsname>.conf if exists
+# also feeds to fpsCTRL's input fifo fps.conf/fpssetup.cacaosetup-<cmd>.<fpsname>.conf if it exists
 #
 function allFPScmd {
     echolog "SENDING CMD $1 TO ALL CONF PROCESSES"
@@ -314,18 +314,16 @@ function allFPScmd {
         # if there is a taskfile associated with command, load it
         #
         taskflist="${CACAO_LOOPRUNDIR_FULLPATH}/fps.conf/fpssetup.cacaosetup-$1.${fpsname}.conf"
-        echo "FILE : ${taskflist}"
-        #echo "FILE : ${fpstaskfname}"
+        echolog "FILE : ${taskflist}"
         if [ -f ${taskflist} ]; then
-            echo "FILE ${taskflist} EXISTS"
+            echolog "FILE ${taskflist} EXISTS"
             while IFS='' read -r taskline || [[ -n "${taskline}" ]]; do
                 echolog "${taskline}"
                 echo "${taskline}" >> ${fpsCTRLfifo}
             done < ${taskflist}
         else
-            echo "FILE ${taskflist} DOES NOT EXIST - NOTHING TO DO"
+            echolog "FILE ${taskflist} DOES NOT EXIST - NOTHING TO DO"
         fi
-        echo ""
     fi
     done < ${CACAO_LOOPRUNDIR_FULLPATH}/fpslist.txt
 }
