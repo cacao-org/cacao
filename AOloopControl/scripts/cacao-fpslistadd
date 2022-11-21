@@ -35,12 +35,12 @@ function runstrcmd {
 # write header to fpssetup file
 #
 function addfpscmdheader {
-    taskfname="fps.conf/fpssetup.confstart.${fpsfname}.conf"
+    taskfname="fps.conf/fpssetup.cacaosetup-confstart.${fpsfname}.conf"
     rm ${taskfname}
     echo "# Function Parameter Structure (FPS) setup configuration" >> ${taskfname}
     echo "# Written by cacao-fpslistadd - edits will be overwritten and lost when re-running $0" >> ${taskfname}
     echo "# These are the default initial values for FPS entries" >> ${taskfname}
-    echo "# This file is read by milk-fpsCTRL upon launching FPS conf process" >> ${taskfname}
+    echo "# This file is read by script cacao-setup, which sends its content to milk-fpsCTRL's input fifo upon confstart" >> ${taskfname}
     echo "# " >> ${taskfname}
 }
 
@@ -49,7 +49,7 @@ function addfpscmdheader {
 # write entry to fpssetup file
 #
 function addfpscmd {
-    taskfname="fps.conf/fpssetup.confstart.${fpsfname}.conf"
+    taskfname="fps.conf/fpssetup.cacaosetup-confstart.${fpsfname}.conf"
     echolog "FPS CMD TO ${taskfname} : $1"
     echo "$1" >> ${taskfname}
 }
