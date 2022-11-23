@@ -117,7 +117,7 @@ To run this step:
 
 ## 3.4. Running cacao-setup
 
-The CACAOSETUP task runs cacao-setup within **WORKDIR**, which :
+The CACAOSETUP task runs cacao-setup within **CACAOLOOPDIR**, which :
 
 - Reads cacaovars.LOOPNAME.bash to collect information about main loop parameters and which processes should be run.
 - Prepares tmux sessions and windows
