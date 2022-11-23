@@ -8,11 +8,20 @@ Where CONFNAME is, unsurprisingly, the example name.
 
 Directory and file names for each example are constructed from the following three variables:
 
-- **CONFNAME**: The configuration name (as described above)
-- **LOOPROOTDIR**: Directory where cacao will install files and run
-- **LOOPNAME**: The loop name, which will be the basis for process names, tmux sessions and various files
+- **CONFNAME**: The configuration name (as described above).
+- **LOOPNAME**: The loop name, which will be the basis for process names, tmux sessions and various files.
+- **LOOPROOTDIR**: Directory where cacao will install files.
+- **LOOPRUNDIR**: Subdirectory of LOOPROOTDIR from which executables are running
 
-:warning: Make sure you understand the role of these three variables before proceeding. Confusingly, **CONFNAME**, **LOOPROOTDIR** and **LOOPNAME** may or may not be the same. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the three names can be different.
+:warning: Make sure you understand the role of these four variables before proceeding. Confusingly, **CONFNAME**, **LOOPNAME**, **LOOPROOTDIR** and **LOOPRUNDIR** could be the same string. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the four names can be different.
+
+Name                  |  Where is it set ?
+----------------------|------------------------------------------------------------
+**CONFNAME**          | Directory name: **CONFNAME**-conf countains configuration files
+**LOOPNAME**          | String contained in file **CONFNAME**-conf/LOOPNAME
+**LOOPROOTDIR**       | Environment variable CACAO_LOOPROOTDIR defined in cacaovars.**LOOPNAME**.bash
+**LOOPROOTDIR**       | Environment variable CACAO_LOOPRUNDIR defined in cacaovars.**LOOPNAME**.bash
+
 
 ---
 
