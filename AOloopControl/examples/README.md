@@ -17,7 +17,7 @@ Directory and file names for each example are constructed from the following thr
 
 Name                  |  Where is it set ?
 ----------------------|------------------------------------------------------------
-**CONFNAME**          | Directory name: **CONFNAME**-conf countains configuration files
+**CONFNAME**          | This is a directory name: **CONFNAME**-conf countains configuration files
 **LOOPNAME**          | String contained in file **CONFNAME**-conf/LOOPNAME
 **LOOPROOTDIR**       | Environment variable CACAO_LOOPROOTDIR defined in cacaovars.**LOOPNAME**.bash
 **LOOPROOTDIR**       | Environment variable CACAO_LOOPRUNDIR defined in cacaovars.**LOOPNAME**.bash
@@ -30,13 +30,13 @@ Name                  |  Where is it set ?
 Content of directory CONFNAME-conf
 
 ~~~
-├── <CONFNAME>-conf                    -> configuration directory (where configuration files are stored)
-│   ├── LOOPNAME                       -> Name of cacao loop
-│   ├── tasklist.txt                   -> List of tasks that will be managed by cacao-task-manager
-│   ├── cacaovars.LOOPNAME.bash        -> Variables defining the configuration: lists processes to be setup by cacao-setup
-│   ├── fpssetup.setval.LOOPNAME.conf  -> (optional) Initialization read by milk-fpsCTRL after launch
-│   ├── aorunscript                    -> (optional) custom user script
-│   └── simLHS                         -> (optional) Linear Hardware Simulation files
+├── <CONFNAME>-conf                     -> configuration directory (where configuration files are stored)
+│   ├── LOOPNAME                        -> ASCII file containing <LOOPNAME>, the name of cacao loop
+│   ├── tasklist.txt                    -> List of tasks that will be managed by cacao-task-manager
+│   ├── cacaovars.<LOOPNAME>.bash       -> Variables defining the configuration: lists processes to be setup by cacao-setup
+│   ├── fpssetup.setval.<LOOPNAME>.con  -> (optional) Initialization read by milk-fpsCTRL after launch
+│   ├── aorunscript                     -> (optional) custom user script
+│   └── simLHS                          -> (optional) Linear Hardware Simulation files
 ~~~
 
 
@@ -44,14 +44,11 @@ Content of directory CONFNAME-conf
 
 # 2. Selecting a cacao example
 
-We define **rootworkdir** as the work directory under which the cacao example is run. All directory paths are relative to **rootworkdir**, which will be omitted for convenience.
+:warning: You need to have read and write permission in the current directory.
 
-:warning: You need to have read and write permission in **rootworkdir**.
+First, copy the example configuration directory to the current (work) directory :
 
-First, copy the example configuration directory to the work directory :
-
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/CONFNAME-conf <rootworkdir>
-    $ cd <rootworkdir>
+    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/CONFNAME-conf .
 
 
 ---
