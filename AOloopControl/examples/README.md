@@ -1,3 +1,13 @@
+# List of examples
+
+Name                  |  Description
+----------------------|------------------------------------------------------------
+KalAO-dmloop-conf     | KalAO system, SHWFS
+scexao-vispyr-conf    | SCExAO visible pyramid WFS loop
+
+
+---
+
 # Running cacao examples - Overview
 
 Each example directory contains the cacao configuration files required to setup and run an example. Directories are named :
@@ -25,7 +35,7 @@ Name                  |  Where is it set ?
 
 ---
 
-# 1. Description of files in example directory
+# 1. Description of files in each configuration directory
 
 Content of directory CONFNAME-conf
 
