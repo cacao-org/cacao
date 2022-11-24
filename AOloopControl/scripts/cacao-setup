@@ -319,6 +319,7 @@ function allFPScmd {
             echolog "FILE ${taskflist} EXISTS"
             while IFS='' read -r taskline || [[ -n "${taskline}" ]]; do
                 echolog "${taskline}"
+                echo "        ${taskline}   >> ${fpsCTRLfifo} "
                 echo "${taskline}" >> ${fpsCTRLfifo}
             done < ${taskflist}
         else
@@ -629,7 +630,7 @@ fi
 
 
 if [[ -z "${CACAO_WFSSTREAM}" ]]; then
-    echo "CACAO_WFSSTREAM    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+    echo "CACAO_WFSSTREAM     not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
     SETTINGOK="0"
 else
     WFSSTREAM="$CACAO_WFSSTREAM"
@@ -712,6 +713,7 @@ mkdir -p ${LOGFILEDIR}
 #rm -f ${LOGFILENAME}
 
 
+
 # ======================= SCRIPT CODE STARTS HERE =================================
 
 echolog "START $(basename $0)"
@@ -725,6 +727,9 @@ echolog "CACAO_ROOT              : ${CACAO_ROOT}"
 CACAO_LOOPROOTDIR_FULLPATH=$( pwd )
 
 CACAO_LOOPRUNDIR_FULLPATH="${CACAO_LOOPROOTDIR_FULLPATH}/${CACAO_LOOPRUNDIR}"
+
+
+
 
 
 # ============ CREATE GENERAL PURPOSE TMUX SESSION ============
@@ -770,6 +775,12 @@ echo "CREATING DIRECTORIES"
 echo "pwd : $( pwd )"
 
 
+echo "Creating Directories :"
+echo "  conf/"
+echo "  ${CACAO_LOOPRUNDIR}/"
+echo "  "
+
+
 mkdir -p conf/
 mkdir -p ${CACAO_LOOPRUNDIR}/
 
@@ -778,6 +789,7 @@ echo "${CACAO_LOOPNUMBER}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNUMBER
 
 # create symlink to data storage
 if [ ! -d ${CACAO_LOOPDATALOGDIR} ]; then
+    echo "  ${CACAO_LOOPDATALOGDIR}"
     mkdir -p ${CACAO_LOOPDATALOGDIR}
 fi
 ln -s ${CACAO_LOOPDATALOGDIR} ${CACAO_LOOPROOTDIR}/aoldatadir
@@ -846,7 +858,6 @@ cd ${CACAO_LOOPRUNDIR_FULLPATH}
 
 
 
-
 # SETUP ALL (-C) FPS, using cacao as executable (-e cacao)
 # this will create FPS shared mems and tmux sessions
 #
@@ -870,6 +881,7 @@ else
 	echo "Updating milk-fpsCTRL from tmux session ${fpsCTRLtmuxname}"
     tmux send-keys -t ${fpsCTRLtmuxname} "s"  &>> ${LOGFILENAME}
 fi
+
 
 
 
@@ -900,6 +912,8 @@ echo "    (re)-starting conf processes ..."
 allFPScmd confstop
 
 allFPScmd confstart
+
+
 
 
 # ===================================================================================

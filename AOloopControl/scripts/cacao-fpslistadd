@@ -51,7 +51,7 @@ function addfpscmdheader {
 function addfpscmd {
     taskfname="fps.conf/fpssetup.cacaosetup-confstart.${fpsfname}.conf"
     echolog "FPS CMD TO ${taskfname} : $1"
-    echo "$1" >> ${taskfname}
+	echo "$1" >> ${taskfname}
 }
 
 

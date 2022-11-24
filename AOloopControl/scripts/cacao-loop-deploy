@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+
+# script 1-line description
+MSdescr="Indtall and run caco loop example"
+
+# Extended description
+MSdescr="Example is loaded from cacao source code
+"
+
+# standard configuration
+# location ./scripts/
+source milk-script-std-config
+
+# prerequisites
+#
+RequiredCommands=( milk tmux cacao )
+RequiredFiles=()
+RequiredDirs=( ${MILK_ROOT} )
+
+
+
+# SCRIPT MANDATORY ARGUMENTS
+# syntax: "name:type(s)/test(s):description"
+#
+MSarg+=( "cacaoconfname:string:configuration name" )
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+#
+
+# parse arguments
+source milk-argparse
+cacaoconfname="${inputMSargARRAY[0]}"
+
+
+echo "Configuration ${cacaoconfname}"
+
+
+# Download example
+confsrcdir="${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf"
+
+
+if [[ -d "$confsrcdir" ]]
+then
+	rsync -au --progress ${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf .
+else
+	echo "ERROR: Cannot find directory ${confsrcdir}"
+	exit
+fi
+
+# LOOPNAME="$( cat ${cacaoconfname}-conf/LOOPNAME )"
+# echo "LOOPNAME = ${LOOPNAME}"
+
+nbtask=$( grep -c '^[^#]' ${cacaoconfname}-conf////tasklist.txt )
+echo "${nbtask} TASKS"
+
+
+
+# Run cacao task manager
+
+cacao-task-manager -X ${nbtask} ${cacaoconfname}

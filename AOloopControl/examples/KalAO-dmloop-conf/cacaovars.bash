@@ -25,7 +25,7 @@ export CACAO_DMSPATIAL="1"
 # ====== DIRECTORIES ================
 
 # Optional. If not defined, will take value "LOOPNAME-rootdir"
-export CACAO_LOOPROOTDIR="dmloop"
+# export CACAO_LOOPROOTDIR="dmloop"
 
 # Optional. If not defined, will take value "LOOPNAME-rundir"
 # export CACAO_LOOPRUNDIR="dmloop"

@@ -315,11 +315,11 @@ TASKLISTFILE="${CONFDIR}/tasklist.txt"
 checkFile ${TASKLISTFILE}
 
 
-CACAOVARSFILE="${CONFDIR}/cacaovars.${LOOPNAME}.bash"
+CACAOVARSFILE="${CONFDIR}/cacaovars.bash"
 checkFile ${CACAOVARSFILE}
 source ${CACAOVARSFILE}
 
-FPSSETUPFILE="${CONFDIR}/fpssetup.setval.${LOOPNAME}.conf"
+FPSSETUPFILE="${CONFDIR}/fpssetup.setval.conf"
 checkFile ${FPSSETUPFILE}
 
 

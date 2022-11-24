@@ -6,6 +6,12 @@ KalAO-dmloop-conf     | KalAO system, SHWFS
 scexao-vispyr-conf    | SCExAO visible pyramid WFS loop
 
 
+
+To install a cacao loop from the example configuration :
+
+	$ cacao-loop-deploy <CONFNAME>
+
+
 ---
 
 # Running cacao examples - Overview
@@ -27,7 +33,7 @@ Directory and file names for each example are constructed from the following thr
 
 Name                  |  Where is it set ?
 ----------------------|------------------------------------------------------------
-**CONFNAME**          | This is a directory name: **CONFNAME**-conf countains configuration files
+**CONFNAME**          | This is a directory name: **CONFNAME**-conf contains configuration files
 **LOOPNAME**          | String contained in file **CONFNAME**-conf/LOOPNAME
 **LOOPROOTDIR**       | Environment variable CACAO_LOOPROOTDIR defined in cacaovars.**LOOPNAME**.bash
 **LOOPROOTDIR**       | Environment variable CACAO_LOOPRUNDIR defined in cacaovars.**LOOPNAME**.bash
