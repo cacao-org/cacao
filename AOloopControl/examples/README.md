@@ -49,8 +49,8 @@ Content of directory CONFNAME-conf
 ├── <CONFNAME>-conf                     -> configuration directory (where configuration files are stored)
 │   ├── LOOPNAME                        -> ASCII file containing <LOOPNAME>, the name of cacao loop
 │   ├── tasklist.txt                    -> List of tasks that will be managed by cacao-task-manager
-│   ├── cacaovars.<LOOPNAME>.bash       -> Variables defining the configuration: lists processes to be setup by cacao-setup
-│   ├── fpssetup.setval.<LOOPNAME>.con  -> (optional) Initialization read by milk-fpsCTRL after launch
+│   ├── cacaovars.bash                  -> Variables defining the configuration: lists processes to be setup by cacao-setup
+│   ├── fpssetup.setval.conf            -> (optional) Initialization read by milk-fpsCTRL after launch
 │   ├── aorunscript                     -> (optional) custom user script
 │   └── simLHS                          -> (optional) Linear Hardware Simulation files
 ~~~
