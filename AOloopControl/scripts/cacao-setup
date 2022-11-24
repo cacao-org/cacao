@@ -861,6 +861,7 @@ cd ${CACAO_LOOPRUNDIR_FULLPATH}
 # SETUP ALL (-C) FPS, using cacao as executable (-e cacao)
 # this will create FPS shared mems and tmux sessions
 #
+export FPS_KEYWORDARRAY=":cacao-setup:${CACAO_LOOPNAME}:aol${CACAO_LOOPNUMBER}:"
 milk-fpsinit -e cacao -C
 
 
