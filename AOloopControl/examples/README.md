@@ -34,9 +34,9 @@ Directory and file names for each example are constructed from the following thr
 Name                  |  Where is it set ?
 ----------------------|------------------------------------------------------------
 **CONFNAME**          | This is a directory name: **CONFNAME**-conf contains configuration files
-**LOOPNAME**          | String contained in file **CONFNAME**-conf/LOOPNAME
-**LOOPROOTDIR**       | Environment variable CACAO_LOOPROOTDIR defined in cacaovars.**LOOPNAME**.bash
-**LOOPROOTDIR**       | Environment variable CACAO_LOOPRUNDIR defined in cacaovars.**LOOPNAME**.bash
+**LOOPNAME**          | Variable CACAO_LOOPNAME defined in cacaovars.
+**LOOPROOTDIR**       | Variable CACAO_LOOPROOTDIR defined in cacaovars.
+**LOOPROOTDIR**       | Variable CACAO_LOOPRUNDIR defined in cacaovars.
 
 
 ---
@@ -47,7 +47,6 @@ Content of directory CONFNAME-conf
 
 ~~~
 ├── <CONFNAME>-conf                     -> configuration directory (where configuration files are stored)
-│   ├── LOOPNAME                        -> ASCII file containing <LOOPNAME>, the name of cacao loop
 │   ├── tasklist.txt                    -> List of tasks that will be managed by cacao-task-manager
 │   ├── cacaovars.bash                  -> Variables defining the configuration: lists processes to be setup by cacao-setup
 │   ├── fpssetup.setval.conf            -> (optional) Initialization read by milk-fpsCTRL after launch
