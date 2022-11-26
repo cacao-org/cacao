@@ -6,7 +6,7 @@ source cacaotask-check # check environment
 # PERFORM ACTIONS FOR THIS TASK
 # ======================================================================
 cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
-echo "runstart DMcomb-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
+echo "runstart DMcomb-01" >> ${MILK_SHM_DIR}/${CACAO_LOOPNAME}_fpsCTRL.fifo
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
@@ -17,7 +17,7 @@ echo "runstart DMcomb-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
 
 cat <<EOT >>  ${CLEANSCRIPT}
 
-echo "runstop DMcomb-01" >> ${MILK_SHM_DIR}/${LOOPNAME}_fpsCTRL.fifo
+echo "runstop DMcomb-01" >> ${MILK_SHM_DIR}/${CACAO_LOOPNAME}_fpsCTRL.fifo
 milk-shmimpurge
 
 EOT

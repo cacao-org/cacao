@@ -42,9 +42,6 @@ USAGESTRING="$(basename $0) [-hxXcC] <confname>"
 
 
 
-
-
-LOOPNAME="NULL"
 CURRENTDIR=$(pwd)
 CONFDIR=""
 
@@ -96,7 +93,6 @@ function printHELP {
     echo ""
     echo "Required user-provided files/directories :"
     echo "   <confname>-conf               [directory]   Configuration directory"
-    echo "   <confname>-conf/LOOPNAME      [ASCII file]  Loop name"
     echo "   <confname>-conf/tasklist.txt  [ASCII file]  List of tasks to be executed"
     echo ""
     echo "Each task has a run-status and a clean-status."
@@ -304,12 +300,6 @@ CONFDIR="${CURRENTDIR}/${CONFNAME}-conf"
 checkDir ${CONFDIR}
 
 
-LOOPNAMEFILE="${CONFDIR}/LOOPNAME"
-checkFile ${LOOPNAMEFILE}
-if [ -f $LOOPNAMEFILE ]; then
-    LOOPNAME="$(cat $LOOPNAMEFILE)"
-fi
-
 
 TASKLISTFILE="${CONFDIR}/tasklist.txt"
 checkFile ${TASKLISTFILE}
@@ -333,7 +323,7 @@ fi
 # log directory
 # keeps track of what has been executed
 #
-LOGDIR="${CURRENTDIR}/.${LOOPNAME}-cacaotaskmanager-log"
+LOGDIR="${CURRENTDIR}/.cacaotaskmanager-log"
 mkdir -p $LOGDIR
 
 
@@ -431,7 +421,7 @@ done
 echo ""
 echo " CONFIGURATION : ${CONFNAME}"
 echo ""
-echo "    LOOPNAME           : $LOOPNAME"
+echo "    LOOPNAME           : $CACAO_LOOPNAME"
 echo "    CURRENTDIR         : $CURRENTDIR"
 echo "    CONFDIR            : $CONFDIR"
 echo "    LOGDIR             : $LOGDIR"
@@ -441,7 +431,7 @@ echo ""
 # temporarly disable exit-on-error
 set +o nounset
 if [[ -z "${CACAO_LOOPROOTDIR}" ]]; then
-    CACAO_LOOPROOTDIR="${LOOPNAME}-rootdir"
+    CACAO_LOOPROOTDIR="${CACAO_LOOPNAME}-rootdir"
     echo "CACAO_LOOPROOTDIR    not set -> using default : ${CACAO_LOOPROOTDIR}"
 else
     echo "CACAO_LOOPROOTDIR    : ${CACAO_LOOPROOTDIR}"

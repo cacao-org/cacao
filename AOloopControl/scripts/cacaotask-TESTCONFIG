@@ -7,7 +7,7 @@ source cacaotask-check # check environment
 # ======================================================================
 cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
 cd ${CACAO_LOOPROOTDIR}
-cacao-setup -t ${LOOPNAME}
+cacao-setup -t ${CACAO_LOOPNAME}
 
 # check if successful
 if [ "$?" = 0 ]; then
