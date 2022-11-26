@@ -1,7 +1,7 @@
 # cacao environment variables for setup
 # This file will be sourced by cacao-setup
 
-
+export CACAO_LOOPNAME="dmloop"
 export CACAO_LOOPNUMBER="1"
 
 

@@ -31,7 +31,7 @@ export CACAO_DMSPATIAL="1"
 
 
 # input WFS stream
-export CACAO_WFSSTREAM="ocam2d"
+export CACAO_WFSSTREAM="ocam2dhr"
 
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
