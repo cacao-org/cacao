@@ -422,22 +422,14 @@ echo ""
 echo " CONFIGURATION : ${CONFNAME}"
 echo ""
 echo "    LOOPNAME           : $CACAO_LOOPNAME"
+echo "    LOOPROOTDIR        : ${CACAO_LOOPROOTDIR}"
+echo "    LOOPRUNDIR         : ${CACAO_LOOPRUNDIR}"
 echo "    CURRENTDIR         : $CURRENTDIR"
 echo "    CONFDIR            : $CONFDIR"
 echo "    LOGDIR             : $LOGDIR"
 echo ""
 
 
-# temporarly disable exit-on-error
-set +o nounset
-if [[ -z "${CACAO_LOOPROOTDIR}" ]]; then
-    CACAO_LOOPROOTDIR="${CACAO_LOOPNAME}-rootdir"
-    echo "CACAO_LOOPROOTDIR    not set -> using default : ${CACAO_LOOPROOTDIR}"
-else
-    echo "CACAO_LOOPROOTDIR    : ${CACAO_LOOPROOTDIR}"
-fi
-# Attempt to use undefined variable outputs error message, and forces an exit
-set -o nounset
 
 
 

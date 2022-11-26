@@ -23,11 +23,12 @@ export CACAO_DMSPATIAL="1"
 
 # ====== DIRECTORIES ================
 
-# Optional. If not defined, will take value "LOOPNAME-rootdir"
-# export CACAO_LOOPROOTDIR="dmloop"
+# Root directory
+export CACAO_LOOPROOTDIR="${CACAO_LOOPNAME}-rootdir"
 
-# Optional. If not defined, will take value "LOOPNAME-rundir"
-# export CACAO_LOOPRUNDIR="dmloop"
+# Run directory. This is a subdirectory of rootdir
+# processes run in CACAO_LOOPROOTDIR/CACAO_LOOPRUNDIR
+export CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"
 
 
 # input WFS stream
@@ -52,11 +53,11 @@ export CACAO_FPSPROC_DMCH2DISP="ON"
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
 #
-#export CACAO_FPSPROC_STREAMDELAY="ON"
+export CACAO_FPSPROC_STREAMDELAY="ON"
 
 # MVM lop on GPU: used to simulate hardware
 #
-#export CACAO_FPSPROC_SIMMVMGPU="ON"
+export CACAO_FPSPROC_SIMMVMGPU="ON"
 
 # Measure hardware latency
 #
