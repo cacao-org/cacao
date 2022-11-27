@@ -5,10 +5,10 @@
 
 
 # script 1-line description
-MSdescr="Indtall and run caco loop example"
+MSdescr="Indtall and run caco loop configuration from source code"
 
 # Extended description
-MSdescr="Example is loaded from cacao source code
+MSdescr="Configuration is loaded from cacao source code
 "
 
 # standard configuration
@@ -64,3 +64,12 @@ echo "${nbtask} TASKS"
 # Run cacao task manager
 
 cacao-task-manager -X ${nbtask} ${cacaoconfname}
+
+
+source ${cacaoconfname}-conf/cacaovars.bash
+
+echo ""
+echo "CACAO_LOOPROOTDIR = ${CACAO_LOOPROOTDIR}"
+echo "CACAO_LOOPRUNDIR = ${CACAO_LOOPRUNDIR}"
+
+cp ${cacaoconfname}-conf/aorun-* ./${CACAO_LOOPROOTDIR}/
