@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 NBARGS=0
 ERRORSTATUS="0"
@@ -139,7 +139,8 @@ echo ""
 # READ REQUIRED PARAMETERS
 ##########################################
 
-DMindex="$CACAO_DMINDEX"
+DMindex="${CACAO_DMINDEX}"
+LOOPNUMBER="${CACAO_LOOPNUMBER}"
 #$( head -1 fpsconf/AOCONF/DMindex  | awk '{printf("%02d",$1);}' )
 
 
@@ -156,19 +157,7 @@ echo "$DMMODE" > ${DMMODEfile}
 
 mkdir -p conf
 
-#echo "0" > "./conf/param_DM2DM_mode.txt"
-#echo "0" > "./conf/param_DMwfsref_mode.txt"
-#echo "1" > "./conf/param_DMvolt_mode.txt"
-#echo "0" > "./conf/param_DMcombave_mode.txt"
 
-
-
-# READ LOOP NUMBER
-if [ -f LOOPNUMBER ]; then
-    LOOPNUMBER=$( head -1 LOOPNUMBER )
-else
-    LOOPNUMBER="7"
-fi
 
 echo "    Linking streams ..."
 
@@ -208,9 +197,9 @@ milk-streamlink -p aol${LOOPNUMBER}_ dmdisp
 echo "dm${DMindex}disp02" > ./conf/streamlink.dmRM.name.txt # DM actuation channel for RM matrix
 milk-streamlink -p aol${LOOPNUMBER}_ dmRM
 
-echo "    Removing pre-existing pokes ..."
+#echo "    Removing pre-existing pokes ..."
 
 # remove pre-existing poke patterns
-rm ./conf/RMpokeCubeZ.fits.gz
-rm ./conf/RMpokeCube.fits.gz
-rm respM_LOmodes.fits
+#rm ./conf/RMpokeCubeZ.fits.gz
+#rm ./conf/RMpokeCube.fits.gz
+#rm respM_LOmodes.fits
