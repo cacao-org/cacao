@@ -588,24 +588,23 @@ fi
 
 
 
-
-
 if [[ -z "${CACAO_LOOPROOTDIR}" ]]; then
-    CACAO_LOOPROOTDIR="${CACAO_LOOPNAME}-rootdir"
-    echo "CACAO_LOOPROOTDIR    not set -> using default : ${CACAO_LOOPROOTDIR}"
+    echo "CACAO_LOOPROOTDIR    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+    SETTINGOK="0"
 else
     echo "CACAO_LOOPROOTDIR    : ${CACAO_LOOPROOTDIR}"
 fi
 
 
-
 if [[ -z "${CACAO_LOOPRUNDIR}" ]]; then
-    CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"
-    echo "CACAO_LOOPRUNDIR    not set -> using default : ${CACAO_LOOPRUNDIR}"
-    #SETTINGOK="0"
+    echo "CACAO_LOOPRUNDIR    not set -> $(tput setaf 1)$(tput bold) CANNOT PROCEED $(tput sgr0)"
+    SETTINGOK="0"
 else
     echo "CACAO_LOOPRUNDIR    : ${CACAO_LOOPRUNDIR}"
 fi
+
+
+
 
 
 if [[ -z "${CACAO_DMINDEX}" ]]; then
