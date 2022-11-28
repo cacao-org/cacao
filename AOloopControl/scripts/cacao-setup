@@ -353,6 +353,9 @@ function cacaosetupCLEAR
     echo "setqindex 0" >> ${fpsCTRLfifo}
     echo "setqprio 1" >> ${fpsCTRLfifo}
 
+    # turn off RUN processes
+    allFPScmd runstop
+
     # turn off CONF processes
     allFPScmd confstop
 
