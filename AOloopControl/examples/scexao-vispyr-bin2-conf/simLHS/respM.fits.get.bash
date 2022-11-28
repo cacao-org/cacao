@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-FILENAME="cacaoloop01.respM.fits"
+FILENAME="respM.fits"
 
 if [ ! -f $FILENAME ]; then
 

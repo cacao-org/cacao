@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-FILENAME="cacaoloop01.wfsref.fits"
+FILENAME="wfsref.fits"
 
 if [ ! -f ${FILENAME} ]; then
     echo "Downloading $FILENAME"
