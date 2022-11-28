@@ -65,6 +65,7 @@ function sendFPScmd {
 # ======================================================================
 
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
+sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
 sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
 
 
@@ -72,6 +73,7 @@ sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
 # Starting DM hardware delay simulator
 # ======================================================================
 
+sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
 sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
 
 
