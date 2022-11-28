@@ -2,6 +2,8 @@
 
 # TEMPLATE SCRIPT FOR ADDING CACAO FPS-ENABLED PROCESSES
 
+# Runs from CACAO_LOOPROOTDIR
+
 # For each FPS-enabled process:
 # - entry is added to fpslist.txt file
 # - fpssetup.setval files created
@@ -193,17 +195,19 @@ if [ "${CACAO_FPSPROC_SIMMVMGPU}" = "ON" ]; then
 
         # copy calibration files
 
-        runstrcmd "mkdir -p ${LOOPWORKDIR}/simLHS"
-        runstrcmd "cp simLHS/${CACAO_LOOPNAME}.respM.fits ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits"
-        runstrcmd "cp simLHS/${CACAO_LOOPNAME}.wfsref.fits ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits"
+        #runstrcmd "mkdir -p ${LOOPWORKDIR}/simLHS"
+        #runstrcmd "cp simLHS/respM.fits ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits"
+        #runstrcmd "cp simLHS/wfsref.fits ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits"
 
-        runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSrespM.fits"
-        runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSwfsref.fits"
+        #runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSrespM.fits"
+        #runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSwfsref.fits"
+        milk-FITS2shm "./simLHS/respM.fits" aol${CACAO_LOOPNUMBER}_simLHSrespM
+        milk-FITS2shm "./simLHS/wfsref.fits" aol${CACAO_LOOPNUMBER}_simLHSwfsref
 
 
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_dmdispD"
-        addfpscmd "setval ${fpsfname}.immodes aolsimLHSrespM"
+        addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_simLHSrespM"
         addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_linsimWFS"
         addfpscmd "setval ${fpsfname}.outinit ON"
 
