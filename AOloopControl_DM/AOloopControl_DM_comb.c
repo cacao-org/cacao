@@ -531,29 +531,29 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_DMindex].val.ui32[1] = 0;  // min value
         data.fpsptr->parray[fpi_DMindex].val.ui32[2] = 99; // max value
 
-        data.fpsptr->parray[fpi_voltmode].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_voltmode].fpflag  |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_stroke100].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_DClevel].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_maxvolt].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_DClevel].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_maxvolt].fpflag   |= FPFLAG_WRITERUN;
 
-        data.fpsptr->parray[fpi_astrogrid].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_astrogridmult].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_astrogridtdelay].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_astrogrid].fpflag        |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_astrogridmult].fpflag    |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_astrogridtdelay].fpflag  |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_astrogridNBframe].fpflag |= FPFLAG_WRITERUN;
 
         data.fpsptr->parray[fpi_zpoffsetenable].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch00].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch01].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch02].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch03].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch04].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch05].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch06].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch07].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch08].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch09].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch10].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_zpoffsetch11].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch00].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch01].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch02].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch03].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch04].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch05].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch06].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch07].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch08].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch09].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch10].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_zpoffsetch11].fpflag   |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
