@@ -8,59 +8,59 @@
 
 // Local variables pointers
 static uint32_t *AOloopindex;
-long             fpi_AOloopindex;
+static long      fpi_AOloopindex;
 
 static uint32_t *semindex;
-long             fpi_semindex;
+static long      fpi_semindex;
 
 static float *fluxtotal;
-long          fpi_fluxtotal;
+static long   fpi_fluxtotal;
 
 static float *GPUalpha;
-long          fpi_GPUalpha;
+static long   fpi_GPUalpha;
 
 static float *GPUbeta;
-long          fpi_GPUbeta;
+static long   fpi_GPUbeta;
 
 static float *WFSnormfloor;
-long          fpi_WFSnormfloor;
+static long   fpi_WFSnormfloor;
 
 static float *WFStaveragegain;
-long          fpi_WFStaveragegain;
+static long   fpi_WFStaveragegain;
 
 static float *WFStaveragemult;
-long          fpi_WFStaveragemult;
+static long   fpi_WFStaveragemult;
 
 static float *WFSrefcgain;
-long          fpi_WFSrefcgain;
+static long   fpi_WFSrefcgain;
 
 static float *WFSrefcmult;
-long          fpi_WFSrefcmult;
+static long   fpi_WFSrefcmult;
 
 static int64_t *compWFSsubdark;
-long            fpi_compWFSsubdark;
+static long     fpi_compWFSsubdark;
 
 static int64_t *compWFSnormalize;
-long            fpi_compWFSnormalize;
+static long     fpi_compWFSnormalize;
 
 static int64_t *compWFSrefsub;
-long            fpi_compWFSrefsub;
+static long     fpi_compWFSrefsub;
 
 static int64_t *compWFSsigav;
-long            fpi_compWFSsigav;
+static long     fpi_compWFSsigav;
 
 // compute corrected WFS reference
 static int64_t *compWFSrefc;
-long            fpi_compWFSrefc;
+static long     fpi_compWFSrefc;
 
 static int64_t *compimtotal;
-long            fpi_compimtotal;
+static long     fpi_compimtotal;
 
 static int64_t *compnormwfsim;
-long            fpi_compnormwfsim;
+static long     fpi_compnormwfsim;
 
 static char *wfszposname;
-long         fpi_wfszposname;
+static long  fpi_wfszposname;
 
 
 
@@ -277,6 +277,7 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
+
     // connect to WFS image
     char WFSname[100];
     sprintf(WFSname, "aol%u_wfsim", *AOloopindex);
@@ -323,6 +324,8 @@ static errno_t compute_function()
         // ID_imWFS1 = AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", sizexWFS,
         // sizeyWFS, 0.0);
     }
+
+
 
     imageID IDwfsmask = -1;
     {
@@ -375,6 +378,7 @@ static errno_t compute_function()
         }
     }
 
+
     // LOAD DARK
     imageID IDwfsdark = -1;
     {
@@ -398,6 +402,7 @@ static errno_t compute_function()
     }
 
 
+
     // WFS zero point offset
     //
     IMGID imgdispzpo;
@@ -407,17 +412,7 @@ static errno_t compute_function()
     }
 
 
-    // set semaphore to 0
-    int semval;
-    sem_getvalue(data.image[ID_wfsim].semptr[*semindex], &semval);
-    printf("INITIALIZING SEMAPHORE %u   %s   (%d)\n",
-           *semindex,
-           data.image[ID_wfsim].md[0].name,
-           semval);
-    for(int i = 0; i < semval; i++)
-    {
-        sem_trywait(data.image[ID_wfsim].semptr[*semindex]);
-    }
+
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
