@@ -13,12 +13,14 @@ set(SOURCEFILES
     AOloopControl_IOtools_datastream_processing.c
     AOloopControl_IOtools_load_image_sharedmem.c
     AOloopControl_IOtools_RTLOGsave.c
+    WFScamsim.c
 )
 
 set(INCLUDEFILES
 	${SRCNAME}.h
     acquireWFSim.h
     AOloopControl_IOtools.h
+    WFScamsim.h
 )
 
 

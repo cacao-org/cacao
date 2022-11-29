@@ -59,6 +59,15 @@ export CACAO_FPSPROC_STREAMDELAY="ON"
 #
 export CACAO_FPSPROC_SIMMVMGPU="ON"
 
+# Camera simulator
+#
+export CACAO_FPSPROC_WFSCAMSIM="ON"
+
+
+
+
+
+
 # Measure hardware latency
 #
 export CACAO_FPSPROC_MLAT="ON"

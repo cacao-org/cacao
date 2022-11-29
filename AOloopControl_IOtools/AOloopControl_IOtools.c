@@ -48,6 +48,8 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
 #include "acquireWFSim.h"
+#include "WFScamsim.h"
+
 
 /* ===============================================================================================
  */
@@ -451,6 +453,7 @@ static errno_t init_module_CLI()
                        "const char *streamname, const char *dirname)");
 
     CLIADDCMD_AOloopControl_IOtools__acquireWFSim();
+    CLIADDCMD_AOloopControl_IOtools__WFScamsim();
 
     // add atexit functions here
     // atexit((void*) myfunc);

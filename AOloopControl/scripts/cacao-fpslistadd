@@ -153,7 +153,7 @@ if [ "${CACAO_FPSPROC_STREAMDELAY}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
         addfpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
-        addfpscmd "setval ${fpsfname}.delaysec 0.01"
+        addfpscmd "setval ${fpsfname}.delaysec 0.001"
         #addfpscmd "setval ${fpsfname}.dtus 10000"
         #addfpscmd "setval ${fpsfname}.timebuffsize 1000"
         #addfpscmd "setval ${fpsfname}.option.avedt 0.005"
@@ -191,7 +191,7 @@ if [ "${CACAO_FPSPROC_SIMMVMGPU}" = "ON" ]; then
         echo "${fpsname}      cuda.MVMmextrmodes       ${fpsarg0}"  >> fpslist.txt
 
         # time delay [s]
-        LINSIMDT="0.001"
+        LINSIMDT="0.0015"
 
         # copy calibration files
 
@@ -223,12 +223,58 @@ if [ "${CACAO_FPSPROC_SIMMVMGPU}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
         addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
         addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
-        addfpscmd "setval ${fpsfname}.option.sname_refout aolsimLHSwfsref"
+        addfpscmd "setval ${fpsfname}.option.sname_refout aol${CACAO_LOOPNUMBER}_simLHSwfsref"
 
     fi
 else
     echolog "CACAO_FPSPROC_SIMMVMGPU = OFF"
 fi
+
+
+
+
+
+
+if [ "${CACAO_FPSPROC_WFSCAMSIM}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_WFSCAMSIM"
+    # ==============================================================================
+    # ========== CAMERA SIMULATOR ==================================================
+    # ==============================================================================
+
+    # FPS name
+    fpsname="wfscamsim"
+    fpsarg0="${CACAO_LOOPNUMBER}"
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "${fpsname}           cacaoio.WFScamsim     ${fpsarg0}" >> fpslist.txt
+
+        addfpscmdheader
+        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_linsimWFS"
+
+        addfpscmd "setval ${fpsfname}.wfssignal aol${CACAO_LOOPNUMBER}_linsimWFS"
+        addfpscmd "setval ${fpsfname}.wfscamim aol${CACAO_LOOPNUMBER}_wfsim"
+        addfpscmd "setval ${fpsfname}.compdarkadd ON"
+        addfpscmd "setval ${fpsfname}.camdark aol${CACAO_LOOPNUMBER}_wfsdark"
+        addfpscmd "setval ${fpsfname}.fluxtotal 100000"
+        addfpscmd "setval ${fpsfname}.compphnoise ON"
+        addfpscmd "setval ${fpsfname}.camRON 1.0"
+    fi
+else
+    echolog "CACAO_FPSPROC_WFSCAMSIM = OFF"
+fi
+
+
+
+
 
 
 
@@ -362,10 +408,10 @@ if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
 
         addfpscmd "setval ${fpsfname}.MaskMode ON"
-        addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
-        addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
-        addfpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
-        addfpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
+        addfpscmd "setval ${fpsfname}.exec.RMdecode ${MILK_INSTALLDIR}/bin/cacao-RMdecode"
+        addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks ${MILK_INSTALLDIR}/bin/cacao-mkDMWFSmasks"
+        addfpscmd "setval ${fpsfname}.exec.mkDMslaveact ${MILK_INSTALLDIR}/bin/cacao-mkDMslaveActprox"
+        addfpscmd "setval ${fpsfname}.exec.mkLODMmodes ${MILK_INSTALLDIR}/bin/cacao-mkLODMmodes"
         #addfpscmd "setval ${fpsfname}.out.dirname ${outdir}"
 
     fi

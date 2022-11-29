@@ -77,6 +77,32 @@ sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
 sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
 
 
+# ======================================================================
+# Starting MVM simulator
+# ======================================================================
+
+sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
+
+
+# WAIT for aolX_linsimWFS to appear
+filename="${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_linsimWFS.im.shm"
+echo "Waiting for file ${filename} ..."
+until [ -f "$filename" ]
+do
+     sleep 0.1
+done
+
+# ======================================================================
+# Starting WFC camera simulator
+# ======================================================================
+
+sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
+
+
+
+
 
 exit
 
