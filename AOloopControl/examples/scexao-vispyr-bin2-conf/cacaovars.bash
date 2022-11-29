@@ -3,7 +3,7 @@
 
 
 export CACAO_LOOPNAME="vispyr2"
-export CACAO_LOOPNUMBER="1"
+export CACAO_LOOPNUMBER="4"
 
 # ====== DEFORMABLE MIRROR ==========
 
