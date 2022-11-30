@@ -25,7 +25,10 @@ cacao-loop-deploy <CONFNAME>
 
 For example :
 
-	cacaouser:~$ cacao-loop-deploy scexao-vispyr-bin2
+```bash
+# from work directory (workdir)
+cacao-loop-deploy scexao-vispyr-bin2
+```
 
 The cacao-loop-deploy script will copy the configuration from the source to the current directory and run it.
 
@@ -224,7 +227,10 @@ From this point on, scripts can send commands to the fifo to change parameters, 
 
 Scripts **aorun-XXX-yyyyy** included in some of the examples perform these steps.
 
-    cacaouser:~/LOOPROOTDIR$ ./aorun-000-simstart
+```bash
+# from workdir/$LOOPROOTDIR
+./aorun-000-simstart
+```
 
 Users are encouraged to read the script content as a template for writing custom scripts.
 
