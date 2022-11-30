@@ -1,8 +1,9 @@
 # cacao environment variables for setup
 # This file will be sourced by cacao-setup
 
-export CACAO_LOOPNAME="dmloop"
-export CACAO_LOOPNUMBER="1"
+
+export CACAO_LOOPNAME="ttmloop"
+export CACAO_LOOPNUMBER="2"
 
 
 
@@ -11,31 +12,31 @@ export CACAO_LOOPNUMBER="1"
 # Deformable mirror (DM) size
 # If DM is single dimension, enter "1" for DMsize
 #
-export CACAO_DMINDEX="01"
-export CACAO_DMxsize="12"
-export CACAO_DMysize="12"
+export CACAO_DMINDEX="02"
+export CACAO_DMxsize="2"
+export CACAO_DMysize="1"
 
 # 1 if DM actuators are on a coordinate grid
 # This informs processes if a spatial relationship exists
 # between DM actuators
-export CACAO_DMSPATIAL="1"
+export CACAO_DMSPATIAL="0"
 
 
 
 # ====== DIRECTORIES ================
 
 # Optional. If not defined, will take value "LOOPNAME-rootdir"
-export CACAO_LOOPROOTDIR="dmloop-rootdir"
+export CACAO_LOOPROOTDIR="ttmloop-rootdir"
 
 # Optional. If not defined, will take value "LOOPNAME-rundir"
-export CACAO_LOOPRUNDIR="dmloop-rundir"
+export CACAO_LOOPRUNDIR="ttmloop-rundir"
 
 
 
 
 
 # input WFS stream
-export CACAO_WFSSTREAM="shwfs_slopes"
+export CACAO_WFSSTREAM="dm01disp"
 
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
@@ -50,11 +51,11 @@ export CACAO_FPSPROC_DMCH2DISP="ON"
 
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
-#
+# should not be needed
 export CACAO_FPSPROC_STREAMDELAY="ON"
 
 # MVM lop on GPU: used to simulate hardware
-#
+# should not be needed
 export CACAO_FPSPROC_SIMMVMGPU="ON"
 
 # Measure hardware latency

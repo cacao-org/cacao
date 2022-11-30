@@ -1,9 +1,6 @@
 # Overview
 
-KalAO system configuration.
-
-Uses SH-WFS, 12x12 DM.
-
+KalAO system
 
 cacao-task-manager tasks for this example :
 
@@ -22,10 +19,8 @@ Subsequent tasks can perform specific parts of the AO loop.
 
 To run the example :
 
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/cacaoloop-kalAO-conf cacaoloop-kalAO-rootdir
-    $ cd cacaoloop-kalAO-rootdir
-    $ cacao-task-manager -X 3 cacaoloop-kalAO
-    $ cp cacaoloop-kalAO-conf/aorunscript .
+    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/KalAO-dmloop-conf KalAO
+    $ cd KalAO
+    $ cacao-task-manager -X 4 KalAO-dmloop
+    $ cp KalAO-dmloop-conf/aorunscript .
     $ ./aorunscript
-
-THE END
