@@ -77,7 +77,7 @@ Name                  |  Where is it set ?
 **CONFNAME**          | This is a directory name: **CONFNAME**-conf contains configuration files
 **LOOPNAME**          | Variable CACAO_LOOPNAME defined in file cacaovars.bash
 **LOOPROOTDIR**       | Variable CACAO_LOOPROOTDIR defined in file cacaovars.bash
-**LOOPROOTDIR**       | Variable CACAO_LOOPRUNDIR defined in file cacaovars.bash
+**LOOPRUNDIR**        | Variable CACAO_LOOPRUNDIR defined in file cacaovars.bash
 
 
 ---
