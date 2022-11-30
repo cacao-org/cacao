@@ -16,7 +16,10 @@ KalAO-dmloop-conf          | KalAO system, SHWFS
 
 To deploy a cacao loop from the example configuration :
 
-	cacaouser:~$ cacao-loop-deploy <CONFNAME>
+
+```bash
+   cacaouser:~$ cacao-loop-deploy <CONFNAME>
+```
 
 For example :
 
