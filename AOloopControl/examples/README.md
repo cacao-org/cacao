@@ -18,7 +18,8 @@ To deploy a cacao loop from the example configuration :
 
 
 ```bash
-   cacaouser:~$ cacao-loop-deploy <CONFNAME>
+   # from work directory
+   cacao-loop-deploy <CONFNAME>
 ```
 
 For example :
@@ -29,9 +30,12 @@ The cacao-loop-deploy script will copy the configuration from the source to the 
 
 Then, run the following tools to control and monitor processes and streams:
 
+```bash
+	# from any directory
 	cacaouser:~$ milk-fpsCTRL     # interact with function parameters, run/stop processes
 	cacaouser:~$ milk-streamCTRL  # monitor streams
 	cacaouser:~$ milk-procCTRL    # monitor processes
+```
 
 Each example comes with a set of user scripts, following the naming convention aorun-XXX-yyyyyy, where XXX is an integer representing in which order scripts should be exectuted, and yyyyyy is a descriptive name. For example:
 
