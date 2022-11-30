@@ -4,7 +4,7 @@ Each directory is named **CONFNAME**-conf.
 
 Name                       |  Description
 ---------------------------|------------------------------------------------------------
-scexao-vispyr-bin2-conf    | SCExAO visible pyramid WFS loop, 2x2 binned WFS
+scexao-vispyr-bin2-conf    | SCExAO visible pyramid WFS loop, 2x2 binned WFS (this is the recommended example)
 scexao-vispyr-bin1-conf    | SCExAO visible pyramid WFS loop, unbinned WFS
 KalAO-dmloop-conf          | KalAO system, SHWFS
 
@@ -16,23 +16,25 @@ KalAO-dmloop-conf          | KalAO system, SHWFS
 
 To deploy a cacao loop from the example configuration :
 
-	$ cacao-loop-deploy <CONFNAME>
+	cacaouser:~$ cacao-loop-deploy <CONFNAME>
 
 For example :
 
-	$ cacao-loop-deploy scexao-vispyr-bin2
+	cacaouser:~$ cacao-loop-deploy scexao-vispyr-bin2
 
 The cacao-loop-deploy script will copy the configuration from the source to the current directory and run it.
 
 Then, run the following tools to control and monitor processes and streams:
 
-	$ milk-fpsCTRL     # interact with function parameters, run/stop processes
-	$ milk-streamCTRL  # monitor streams
-	$ milk-procCTRL    # monitor processes
+	cacaouser:~$ milk-fpsCTRL     # interact with function parameters, run/stop processes
+	cacaouser:~$ milk-streamCTRL  # monitor streams
+	cacaouser:~$ milk-procCTRL    # monitor processes
 
 Each example comes with a set of user scripts, following the naming convention aorun-XXX-<description>, where XXX is an integer representing in which order scripts should be exectuted. For example:
 
-	$ **LOOPROOTDIR**> ./aorun-000-simstart  # start hardware simulator
+	cacaouser:~/LOOPROOTDIR$ ./aorun-000-simstart  # start hardware simulator
+
+Use the -h option to get more details.
 
 ---
 
@@ -51,7 +53,7 @@ Directory and file names for each example are constructed from the following thr
 
 - **CONFNAME**: The configuration name - this is the name of the directory containing the configuration (dirname = **CONFNAME**-conf).
 - **LOOPNAME**: The loop name, which will be the basis for process names, tmux sessions and various files.
-- **LOOPROOTDIR**: Directory where cacao will install files.
+- **LOOPROOTDIR**: Directory where cacao will install files, and from which most scripts should be launched.
 - **LOOPRUNDIR**: Subdirectory of LOOPROOTDIR from which executables are running
 
 :warning: Make sure you understand the role of these four variables before proceeding. Confusingly, **CONFNAME**, **LOOPNAME**, **LOOPROOTDIR** and **LOOPRUNDIR** could be the same string. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the four names can be different.
@@ -75,7 +77,7 @@ Content of directory CONFNAME-conf
 │   ├── tasklist.txt                    -> List of tasks that will be managed by cacao-task-manager
 │   ├── cacaovars.bash                  -> Variables defining the configuration: lists processes to be setup by cacao-setup
 │   ├── fpssetup.setval.conf            -> (optional) Initialization read by milk-fpsCTRL after launch
-│   ├── aorunscript                     -> (optional) custom user script
+│   ├── aorun-XXX-yyyyyy                -> (optional) custom user script. XXX=index, yyyyy=description
 │   └── simLHS                          -> (optional) Linear Hardware Simulation files
 ~~~
 
@@ -88,7 +90,7 @@ Content of directory CONFNAME-conf
 
 First, copy the example configuration directory to the current (work) directory :
 
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/CONFNAME-conf .
+    cacaouser:~$ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/CONFNAME-conf .
 
 
 ---
@@ -99,12 +101,12 @@ cacao-task-manager is a high level wrapper script that runs a sequence of tasks,
 
 To get more info about the task manager script, run it with help option:
 
-    $ cacao-task-manager -h <CONFNAME>
+    cacaouser:~$ cacao-task-manager -h <CONFNAME>
 
 
 To list the tasks and their status, run the command as follows:
 
-    $ cacao-task-manager <CONFNAME>
+    cacaouser:~$ cacao-task-manager <CONFNAME>
 
 For example, the following tasks could be listed :
 
@@ -122,7 +124,7 @@ For example, the following tasks could be listed :
 
 The INITSETUP task creates the **WORKDIR** directory :
 
-        $ cacao-task-manager -X 0 <CONFNAME>
+        cacaouser:~$ cacao-task-manager -X 0 <CONFNAME>
 
 The WORKDIR content is as follows :
 
@@ -145,7 +147,7 @@ The GETSIMCONFFILES task downloads calibration file to simulate an AO system for
 
 To run this step:
 
-    $ cacao-task-manager -X 1 <CONFNAME>
+    cacaouser:~$ cacao-task-manager -X 1 <CONFNAME>
 
 ## 3.3. Testing the configuration
 
@@ -153,7 +155,7 @@ The TESTCONFIG task performs tests.
 
 To run this step:
 
-    $ cacao-task-manager -X 2 <CONFNAME>
+    cacaouser:~$ cacao-task-manager -X 2 <CONFNAME>
 
 ## 3.4. Running cacao-setup
 
@@ -167,15 +169,15 @@ The CACAOSETUP task runs cacao-setup within **LOOPROOTDIR**, which :
 
 cacao-setup is the main setup script, which calls other scripts and sets parameters for processes. The help option lists the main operations performed by cacao-setup :
 
-    $ cacao-setup -h
+    cacaouser:~/LOOPROOTDIR$ cacao-setup -h
 
 To run this step using cacao-task-manager:
 
-    $ cacao-task-manager -X 3 <CONFNAME>
+    cacaouser:~$ cacao-task-manager -X 3 <CONFNAME>
 
 :bulb: To run tasks 0, 1, 2 and 3 (inclusive) :
 
-    $ cacao-task-manager -X 3 <CONFNAME>
+    cacaouser:~$ cacao-task-manager -X 3 <CONFNAME>
 
 
 ---
@@ -187,12 +189,11 @@ The cacao-setup task (task 3 above) will start an instance of milk-fpsCTRL withi
 
 From this point on, scripts can send commands to the fifo to change parameters, and run/stop processes. Alternatively, users can also use milk-fpsCTRL as an interactive GUI to perform these operations.
 
-The script **aorunscript** included in some of the examples performs these steps.
+Scripts **aorun-XXX-yyyyy** included in some of the examples perform these steps.
 
-    $ cp CONFNAME-conf/aorunscript .
-    $ ./aorunscript
+    cacaouser:~/LOOPROOTDIR$ ./aorun-000-simstart
 
-Each time aorunscript runs, it performs one step. Run it several times until done. Users are encouraged to read the script content as a template for writing custom scripts.
+Users are encouraged to read the script content as a template for writing custom scripts.
 
 
 
@@ -205,16 +206,21 @@ Each time aorunscript runs, it performs one step. Run it several times until don
 
 Each process managed by the function parameter structure (FPS) framework uses the following standard directories:
 
-- **fps._fpsname_.data** : Work directory for the FPS processes. This is where results are written by the run process. This directory may contain both temporary files which do not need to be archived, and files/output that should be saved and archived.
-- **fps._fpsname_.conf** : Configuration directory for the FPS processes. This is mostly an input for the FPS.
-- **fps._fpsname_.archive**: Archive directory. Note this is usually a sym link to another directory.
+- **LOOPROOTDIR/LOOPRUNDIR/fps._fpsname_.data** : Work directory for the FPS processes. This is where results are written by the run process. This directory may contain both temporary files which do not need to be archived, and files/output that should be saved and archived.
+- **LOOPROOTDIR/LOOPRUNDIR/fps._fpsname_.conf** : Configuration directory for the FPS processes. This is mostly an input for the FPS.
+- **LOOPROOTDIR/LOOPRUNDIR/fps._fpsname_.archive**: Archive directory. Note this is usually a sym link to another directory.
 
+
+
+<!--
 The directories are managed by the following scripts:
 
 - **fpsconf-adopt**: Copy configuration files/parameters from fps._fpsname_.data to fps._fpsname_.conf
 - **fpsconf-sync**: Import parameters from fps._fpsname_.conf to the active FPS conf process.
 - **fpsconf-archive**: Copy configuration to an archive directory, attaching timestamp and label.
 - **fpsconf-load**: Load from fps._fpsname_.archive into fps._fpsname_.conf
+-->
+
 
 
 <!--
