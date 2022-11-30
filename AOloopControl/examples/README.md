@@ -18,8 +18,9 @@ To deploy a cacao loop from the example configuration :
 
 
 ```bash
-   # from work directory
-   cacao-loop-deploy <CONFNAME>
+# from work directory (workdir)
+# workdir is the current directory, where the configuration will be deployed
+cacao-loop-deploy <CONFNAME>
 ```
 
 For example :
@@ -31,15 +32,18 @@ The cacao-loop-deploy script will copy the configuration from the source to the 
 Then, run the following tools to control and monitor processes and streams:
 
 ```bash
-	# from any directory
-	cacaouser:~$ milk-fpsCTRL     # interact with function parameters, run/stop processes
-	cacaouser:~$ milk-streamCTRL  # monitor streams
-	cacaouser:~$ milk-procCTRL    # monitor processes
+# from any directory
+milk-fpsCTRL     # interact with function parameters, run/stop processes
+milk-streamCTRL  # monitor streams
+milk-procCTRL    # monitor processes
 ```
 
 Each example comes with a set of user scripts, following the naming convention aorun-XXX-yyyyyy, where XXX is an integer representing in which order scripts should be exectuted, and yyyyyy is a descriptive name. For example:
 
-	cacaouser:~/LOOPROOTDIR$ ./aorun-000-simstart  # start hardware simulator
+```bash
+# from subdirectory workdir/$LOOPROOTDIR
+./aorun-000-simstart  # start hardware simulator
+```
 
 Use the -h option to get more details.
 
@@ -97,8 +101,10 @@ Content of directory CONFNAME-conf
 
 First, copy the example configuration directory to the current (work) directory :
 
-    cacaouser:~$ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/CONFNAME-conf .
-
+```bash
+# from workdir
+rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/CONFNAME-conf .
+```
 
 ---
 
@@ -108,12 +114,17 @@ cacao-task-manager is a high level wrapper script that runs a sequence of tasks,
 
 To get more info about the task manager script, run it with help option:
 
-    cacaouser:~$ cacao-task-manager -h <CONFNAME>
-
+```bash
+# from workdir
+cacao-task-manager -h <CONFNAME>
+```
 
 To list the tasks and their status, run the command as follows:
 
-    cacaouser:~$ cacao-task-manager <CONFNAME>
+```bash
+# from workdir
+cacao-task-manager <CONFNAME>
+```
 
 For example, the following tasks could be listed :
 
@@ -127,24 +138,27 @@ For example, the following tasks could be listed :
 
 :warning: Instruction steps below depend on the tasks. For example, tasks GETSIMCONFFILES and TESTCONFIG may not exit... in which case you can skip the reading the corresponding sections. Note also that the task numbering may change: if GETSIMCONFFILES and TESTCONFIG don't exist, then CACAOSETUP will be task #1. The example may also include additional setup tasks.
 
-## 3.1. Setting up WORKDIR
+## 3.1. Setting up LOOPROOTDIR
 
-The INITSETUP task creates the **WORKDIR** directory :
+The INITSETUP task creates the **LOOPROOTDIR** directory :
 
-        cacaouser:~$ cacao-task-manager -X 0 <CONFNAME>
+```bash
+# from workdir
+cacao-task-manager -X 0 <CONFNAME>
+```
 
-The WORKDIR content is as follows :
+The LOOPROOTDIR content is as follows :
 
 ~~~
-├── <WORKDIR>
-│   ├── <LOOPNAME>dir                  -> conf and run processes launched from here
-│   ├── datalogdir
-│   ├── log                            -> cacao-setup log
-│   └── simLHS                         -> Linear Hardware Simulator files (optional)
-├── .<LOOPNAME>-cacaotaskmanager-log   -> cacao-task-manager status and log
+├── <LOOPROOTDIR>
+│   ├── aorun-XXX-yyyyyy files
+│   ├── cacaovars.LOOPNAME.bash
+│   └── fpssetup.setval.LOOPNAME.conf
+├── .cacaotaskmanager-log
 ~~~
 
-All cacao processes will be running from the WORKDIR/LOOPNAMEdir directory.
+The number of aorun scripts depends on the configuration.
+
 
 
 ## 3.2. Uploading external file(s)
@@ -154,7 +168,11 @@ The GETSIMCONFFILES task downloads calibration file to simulate an AO system for
 
 To run this step:
 
-    cacaouser:~$ cacao-task-manager -X 1 <CONFNAME>
+```bash
+# from workdir
+cacao-task-manager -X 1 <CONFNAME>
+```
+
 
 ## 3.3. Testing the configuration
 
@@ -162,7 +180,11 @@ The TESTCONFIG task performs tests.
 
 To run this step:
 
-    cacaouser:~$ cacao-task-manager -X 2 <CONFNAME>
+```bash
+# from workdir
+cacao-task-manager -X 2 <CONFNAME>
+```
+
 
 ## 3.4. Running cacao-setup
 
@@ -176,16 +198,20 @@ The CACAOSETUP task runs cacao-setup within **LOOPROOTDIR**, which :
 
 cacao-setup is the main setup script, which calls other scripts and sets parameters for processes. The help option lists the main operations performed by cacao-setup :
 
-    cacaouser:~/LOOPROOTDIR$ cacao-setup -h
+```bash
+# from anywhere
+cacao-setup -h
+```
+
 
 To run this step using cacao-task-manager:
 
-    cacaouser:~$ cacao-task-manager -X 3 <CONFNAME>
+```bash
+# from workdir
+cacao-task-manager -X 3 <CONFNAME>
+```
 
-:bulb: To run tasks 0, 1, 2 and 3 (inclusive) :
-
-    cacaouser:~$ cacao-task-manager -X 3 <CONFNAME>
-
+:bulb: To run tasks 0, 1, 2 and 3 (inclusive), you can skip the X=0,1,2 commands, and simply run the X=3 command.
 
 ---
 
