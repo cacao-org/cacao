@@ -323,7 +323,7 @@ fi
 # log directory
 # keeps track of what has been executed
 #
-LOGDIR="${CURRENTDIR}/.cacaotaskmanager-log"
+LOGDIR="${CURRENTDIR}/.${CACAO_LOOPNAME}.cacaotaskmanager-log"
 mkdir -p $LOGDIR
 
 
@@ -340,12 +340,12 @@ mkdir -p $LOGDIR
 # Execute task
 #
 function task_EXEC {
-    LOGRUNFILE="${LOGDIR}/task.${TASKCODE}.RUN"
+    LOGRUNFILE="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.RUN"
 
-    ENVOUTFILE="${LOGDIR}/task.${TASKCODE}.ENVOUT.bash"
+    ENVOUTFILE="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.ENVOUT.bash"
     touch ${ENVOUTFILE}
 
-    CLEANSCRIPT="${LOGDIR}/task.${TASKCODE}.CLEAN.bash"
+    CLEANSCRIPT="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.bash"
     echo "#!/bin/bash" > ${CLEANSCRIPT}
     chmod a+x ${CLEANSCRIPT}
     sleep 0.1
@@ -354,37 +354,37 @@ function task_EXEC {
 
     if [ ${cacaotask_RETURNCODE} = ${CACAOTASK_RUN_SUCCESS} ]; then
         # success
-        touch "${LOGDIR}/task.${TASKCODE}.RUN.DONE"
+        touch "${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.RUN.DONE"
     else
         # failure
-        echo "${CACAOTASK_RUN_SUCCESS}" > "${LOGDIR}/task.${TASKCODE}.RUN.FAILED"
+        echo "${CACAOTASK_RUN_SUCCESS}" > "${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.RUN.FAILED"
     fi
 
-    mv -f ${LOGDIR}/task.${TASKCODE}.CLEAN.DONE ${LOGDIR}/task.${TASKCODE}.CLEAN.DONE.arch &> /dev/null
-    mv -f ${LOGDIR}/task.${TASKCODE}.CLEAN.FAILED ${LOGDIR}/task.${TASKCODE}.CLEAN.FAILED.arch &> /dev/null
+    mv -f ${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.DONE ${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.DONE.arch &> /dev/null
+    mv -f ${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.FAILED ${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.FAILED.arch &> /dev/null
 }
 
 
 function task_SKIP {
-    ENVOUTFILE="${LOGDIR}/task.${TASKCODE}.ENVOUT.bash"
+    ENVOUTFILE="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.ENVOUT.bash"
     source ${ENVOUTFILE}
 }
 
 
 function task_CLEAN {
-    LOGCLEANFILE="${LOGDIR}/task.${TASKCODE}.CLEAN"
+    LOGCLEANFILE="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN"
     #CLEANTASK="NULL"
 
-    source ${LOGDIR}/task.${TASKCODE}.CLEAN.bash
+    source ${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.bash
 
-    rm ${LOGDIR}/task.${TASKCODE}.RUN.DONE &> /dev/null
-    rm ${LOGDIR}/task.${TASKCODE}.RUN.FAILED &> /dev/null
+    rm ${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.RUN.DONE &> /dev/null
+    rm ${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.RUN.FAILED &> /dev/null
 
     # success
-    touch ${LOGDIR}/task.${TASKCODE}.CLEAN.DONE
+    touch ${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.DONE
 
     # failure
-    #touch "${LOGDIR}/task.${TASKCODE}.CLEAN.FAILED"
+    #touch "${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.FAILED"
 }
 
 
@@ -464,12 +464,12 @@ function READ_STATUS {
         else
             STATUS="READY"  # default
 
-            RUNLOGFILE="${LOGDIR}/task.${TASKCODE}.RUN.DONE"
+            RUNLOGFILE="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.RUN.DONE"
             if [ -f ${RUNLOGFILE} ]; then
                 STATUS="DONE"
             fi
 
-            RUNLOGFILE="${LOGDIR}/task.${TASKCODE}.RUN.FAILED"
+            RUNLOGFILE="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.RUN.FAILED"
             if [ -f ${RUNLOGFILE} ]; then
                 STATUS="FAILED"
             fi
@@ -492,19 +492,19 @@ function READ_STATUS {
         #
         # clean script exists ?
         #
-        CLEANSCRIPT="${LOGDIR}/task.${TASKCODE}.CLEAN.bash"
+        CLEANSCRIPT="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.bash"
         STATUS="???"
         if [ ! -f ${CLEANSCRIPT} ]; then
             STATUS="NOSCRIPT"
         else
             STATUS="READY"  # default
 
-            CLEANLOGFILE="${LOGDIR}/task.${TASKCODE}.CLEAN.DONE"
+            CLEANLOGFILE="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.DONE"
             if [ -f ${CLEANLOGFILE} ]; then
                 STATUS="DONE"
             fi
 
-            CLEANLOGFILE="${LOGDIR}/task.${TASKCODE}.CLEAN.FAILED"
+            CLEANLOGFILE="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.CLEAN.FAILED"
             if [ -f ${CLEANLOGFILE} ]; then
                 STATUS="FAILED"
             fi
@@ -609,7 +609,7 @@ do
 
     if [ ${EXECMODE} = 1 ]; then
         if [ "${RUNSTATUSARRAY[$i]}" = "DONE" ]; then
-            ENVOUTFILE="${LOGDIR}/task.${TASKCODE}.ENVOUT.bash"
+            ENVOUTFILE="${LOGDIR}/task.${CACAO_LOOPNAME}.${TASKCODE}.ENVOUT.bash"
             printf "%s %20s  sourcing %s\n"  "   $(tput bold)SKIP$(tput sgr0)" "$TASKCODE" "${ENVOUTFILE} "
             task_SKIP
         fi
