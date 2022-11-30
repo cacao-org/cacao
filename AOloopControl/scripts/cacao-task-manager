@@ -67,7 +67,7 @@ STRING_CLEAN_FORCE="      $(tput setaf 1)$(tput bold)FORCE$(tput sgr0)"
 
 function printHELP {
     echo "------------------------------------------------------------------------"
-    echo "$(tput bold) $pname : cacao task manager $(tput sgr0)"
+    echo "$(tput bold) $pname : cacao task manager v1.0 $(tput sgr0)"
     echo "source : $0"
     echo "------------------------------------------------------------------------"
     echo ""
