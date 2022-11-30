@@ -81,9 +81,9 @@ All functions are accessible from the command line interface (CLI). Enter the CL
 
     cacao
 
-To set up a cacao AO loop, use the cacao-setup script. Consult help with :
+To set up a cacao AO loop, use the cacao-loop-deploy script. Consult help with :
 
-    cacao-setup -h
+    cacao-loop-deploy -h
 
 
 ---

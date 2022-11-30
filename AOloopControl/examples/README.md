@@ -30,7 +30,7 @@ Then, run the following tools to control and monitor processes and streams:
 	cacaouser:~$ milk-streamCTRL  # monitor streams
 	cacaouser:~$ milk-procCTRL    # monitor processes
 
-Each example comes with a set of user scripts, following the naming convention aorun-XXX-<description>, where XXX is an integer representing in which order scripts should be exectuted. For example:
+Each example comes with a set of user scripts, following the naming convention aorun-XXX-yyyyyy, where XXX is an integer representing in which order scripts should be exectuted, and yyyyyy is a descriptive name. For example:
 
 	cacaouser:~/LOOPROOTDIR$ ./aorun-000-simstart  # start hardware simulator
 
