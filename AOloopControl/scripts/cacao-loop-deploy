@@ -5,10 +5,20 @@
 
 
 # script 1-line description
-MSdescr="Indtall and run caco loop configuration from source code"
+MSdescr="Deploy a cacao loop example from source code"
+
+
 
 # Extended description
-MSdescr="Configuration is loaded from cacao source code
+conflist=$( ls $MILK_ROOT/plugins/cacao-src/AOloopControl/examples | grep "\-conf" | sed 's/\-[^-]*$//')
+
+
+MSextdescr="Configuration is loaded from cacao source code
+
+Available configurations :
+
+$conflist
+
 "
 
 # standard configuration

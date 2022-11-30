@@ -11,7 +11,7 @@ MSdescr="AO loop execution script"
 source cacaovars.*.bash
 
 # Extended description
-MSdescr="AO loop script
+MSextdescr="AO loop script
 
 CACAO_LOOPNAME = ${CACAO_LOOPNAME}
 "
