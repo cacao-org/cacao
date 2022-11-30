@@ -6,14 +6,8 @@
 # script 1-line description
 MSdescr="AO loop execution script"
 
-
-
-source cacaovars.*.bash
-
 # Extended description
 MSdescr="AO loop script
-
-CACAO_LOOPNAME = ${CACAO_LOOPNAME}
 "
 
 
@@ -28,7 +22,7 @@ RequiredCommands=( tmux milk )
 
 fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
 fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
-RequiredPipes=( ${fpsCTRLfifo} )
+RequiredFiles=( ${fpsCTRLfifo} )
 
 RequiredDirs=()
 
@@ -59,56 +53,30 @@ function sendFPScmd {
 
 
 
+exit
+
+
+
 
 # ======================================================================
 # Starting DM combination process
 # ======================================================================
 
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
-#taskset_DMch2disp="3"
-#sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
-sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
-sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
+stepFile="step.aorunscript.DMCH2DISP"
+if [ ! -f "$stepFile" ]; then
+	echo ""
+	echo "Starting DM channels to displacement process"
+    echo ""
+    # Start DM comb
+    taskset_DMch2disp="3"
+    sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
+    sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
 
-
-# ======================================================================
-# Starting DM hardware delay simulator
-# ======================================================================
-
-sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
-sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
-
-
-# ======================================================================
-# Starting MVM simulator
-# ======================================================================
-
-sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
-
-
-# WAIT for aolX_linsimWFS to appear
-filename="${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_linsimWFS.im.shm"
-echo "Waiting for file ${filename} ..."
-until [ -f "$filename" ]
-do
-     sleep 0.1
-done
-
-# ======================================================================
-# Starting WFC camera simulator
-# ======================================================================
-
-milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_wfsdark
-sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
-
-
-
-
-
-exit
-
+    touch ${stepFile}
+    exit
+else
+    echo "found ${stepFile} -> skipping"
+fi
 
 
 

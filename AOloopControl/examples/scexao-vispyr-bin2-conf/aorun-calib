@@ -61,15 +61,15 @@ function sendFPScmd {
 
 
 # ======================================================================
-# Starting DM combination process
+# mlat
 # ======================================================================
 
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
-#taskset_DMch2disp="3"
-#sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
-sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
-sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
+sendFPScmd "confwupdate mlat-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart mlat-${CACAO_LOOPNUMBER}"
 
+
+
+exit
 
 # ======================================================================
 # Starting DM hardware delay simulator
@@ -99,7 +99,6 @@ done
 # Starting WFC camera simulator
 # ======================================================================
 
-milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_wfsdark
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
 
@@ -109,6 +108,28 @@ sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
 
 exit
 
+
+
+
+# ======================================================================
+# Starting DM combination process
+# ======================================================================
+
+stepFile="step.aorunscript.DMCH2DISP"
+if [ ! -f "$stepFile" ]; then
+	echo ""
+	echo "Starting DM channels to displacement process"
+    echo ""
+    # Start DM comb
+    taskset_DMch2disp="3"
+    sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
+    sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
+
+    touch ${stepFile}
+    exit
+else
+    echo "found ${stepFile} -> skipping"
+fi
 
 
 
