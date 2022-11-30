@@ -1,20 +1,45 @@
 # List of examples
 
-Name                  |  Description
-----------------------|------------------------------------------------------------
-KalAO-dmloop-conf     | KalAO system, SHWFS
-scexao-vispyr-conf    | SCExAO visible pyramid WFS loop
+Each directory is named **CONFNAME**-conf.
 
-
-
-To install a cacao loop from the example configuration :
-
-	$ cacao-loop-deploy <CONFNAME>
+Name                       |  Description
+---------------------------|------------------------------------------------------------
+scexao-vispyr-bin2-conf    | SCExAO visible pyramid WFS loop, 2x2 binned WFS
+scexao-vispyr-bin1-conf    | SCExAO visible pyramid WFS loop, unbinned WFS
+KalAO-dmloop-conf          | KalAO system, SHWFS
 
 
 ---
 
-# Running cacao examples - Overview
+# Deploying and running cacao examples - Quickstart
+
+
+To deploy a cacao loop from the example configuration :
+
+	$ cacao-loop-deploy <CONFNAME>
+
+For example :
+
+	$ cacao-loop-deploy scexao-vispyr-bin2
+
+The cacao-loop-deploy script will copy the configuration from the source to the current directory and run it.
+
+Then, run the following tools to control and monitor processes and streams:
+
+	$ milk-fpsCTRL     # interact with function parameters, run/stop processes
+	$ milk-streamCTRL  # monitor streams
+	$ milk-procCTRL    # monitor processes
+
+Each example comes with a set of user scripts, following the naming convention aorun-XXX-<description>, where XXX is an integer representing in which order scripts should be exectuted. For example:
+
+	$ **LOOPROOTDIR**> ./aorun-000-simstart  # start hardware simulator
+
+---
+
+# Running cacao examples - Details
+
+
+## 0. Conventions and naming
 
 Each example directory contains the cacao configuration files required to setup and run an example. Directories are named :
 
@@ -24,7 +49,7 @@ Where CONFNAME is, unsurprisingly, the example name.
 
 Directory and file names for each example are constructed from the following three variables:
 
-- **CONFNAME**: The configuration name (as described above).
+- **CONFNAME**: The configuration name - this is the name of the directory containing the configuration (dirname = **CONFNAME**-conf).
 - **LOOPNAME**: The loop name, which will be the basis for process names, tmux sessions and various files.
 - **LOOPROOTDIR**: Directory where cacao will install files.
 - **LOOPRUNDIR**: Subdirectory of LOOPROOTDIR from which executables are running
@@ -34,9 +59,9 @@ Directory and file names for each example are constructed from the following thr
 Name                  |  Where is it set ?
 ----------------------|------------------------------------------------------------
 **CONFNAME**          | This is a directory name: **CONFNAME**-conf contains configuration files
-**LOOPNAME**          | Variable CACAO_LOOPNAME defined in cacaovars.
-**LOOPROOTDIR**       | Variable CACAO_LOOPROOTDIR defined in cacaovars.
-**LOOPROOTDIR**       | Variable CACAO_LOOPRUNDIR defined in cacaovars.
+**LOOPNAME**          | Variable CACAO_LOOPNAME defined in file cacaovars.bash
+**LOOPROOTDIR**       | Variable CACAO_LOOPROOTDIR defined in file cacaovars.bash
+**LOOPROOTDIR**       | Variable CACAO_LOOPRUNDIR defined in file cacaovars.bash
 
 
 ---
@@ -132,7 +157,7 @@ To run this step:
 
 ## 3.4. Running cacao-setup
 
-The CACAOSETUP task runs cacao-setup within **CACAOLOOPDIR**, which :
+The CACAOSETUP task runs cacao-setup within **LOOPROOTDIR**, which :
 
 - Reads cacaovars.LOOPNAME.bash to collect information about main loop parameters and which processes should be run.
 - Prepares tmux sessions and windows
