@@ -180,7 +180,10 @@ static CLICMDARGDEF farg[] =
         CLIARG_HIDDEN_DEFAULT,
         (void **) &loopON,
         &fpi_loopON
-    },
+    }
+};
+
+/*
     {
         CLIARG_INT64,
         ".loopNBstep",
@@ -402,6 +405,7 @@ static CLICMDARGDEF farg[] =
         &fpi_selfRMnbsettlestep
     }
 };
+*/
 
 
 
@@ -410,6 +414,7 @@ static CLICMDARGDEF farg[] =
 //
 static errno_t customCONFsetup()
 {
+    /*
     if(data.fpsptr != NULL)
     {
         data.fpsptr->parray[fpi_inmval].fpflag |=
@@ -443,7 +448,7 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_selfRMnbsettlestep].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_selfRMpokeampl].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_selfRMnbiter].fpflag |= FPFLAG_WRITERUN;
-    }
+    }*/
 
     return RETURN_SUCCESS;
 }
