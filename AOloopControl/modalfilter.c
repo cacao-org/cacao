@@ -162,10 +162,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_VISIBLE_DEFAULT,
         (void **) &inmval,
         &fpi_inmval
-    }
-};
-
-/*
+    },
     {
         CLIARG_STREAM,
         ".outmval",
@@ -174,7 +171,9 @@ static CLICMDARGDEF farg[] =
         CLIARG_VISIBLE_DEFAULT,
         (void **) &outmval,
         &fpi_outmval
-    },
+    }
+};
+/*
     {
         CLIARG_ONOFF,
         ".loopON",
