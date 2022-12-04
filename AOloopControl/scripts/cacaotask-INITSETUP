@@ -35,6 +35,8 @@ cp ${CONFDIR}/aorun-* ${CACAO_LOOPROOTDIR}/
 # WRITE CLEANUP SCRIPT FOR THIS TASK
 # ======================================================================
 
+fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
+
 # Inside cat <<EOT section :
 # ${VAR} will be resolved prior to writing to destination
 # \${VAR} will not be resolved, and will appear as ${VAR} in the destination
@@ -45,12 +47,25 @@ rm ${CACAO_LOOPROOTDIR}/cacaovars.${CACAO_LOOPNAME}.bash
 rm ${CACAO_LOOPROOTDIR}/fpssetup.setval.${CACAO_LOOPNAME}.conf
 rm ${CACAO_LOOPROOTDIR}/aorun-*
 
-read -p "REMOVING directory ./\${CACAO_LOOPROOTDIR}. Are you sure? " -n 1 -r
-echo
-if [[ \${REPLY} =~ ^[Yy]$ ]]
-then
-    rm -r ./\${CACAO_LOOPROOTDIR}
-fi
+echo "Waiting for tmux session ${fpsCTRLtmuxname} to termninate"
+
+until [[ ! "\$(tmux ls)" == *"${fpsCTRLtmuxname}"* ]]
+do
+	sleep 0.2
+  echo -n "."
+done
+echo ""
+
+
+while true; do
+    read -p "REMOVING directory ./\${CACAO_LOOPROOTDIR} ? [y/n] " yn
+    case \$yn in
+        [Yy]* ) rm -r ./\${CACAO_LOOPROOTDIR}; break;;
+        [Nn]* ) echo "not removing directory"; break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 
 EOT
 

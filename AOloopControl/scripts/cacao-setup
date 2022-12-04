@@ -350,7 +350,9 @@ function cacaosetupCLEAR
     echo "# ${PWD}" > ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
 
     # exit commands are placed in queue 0, with priority 1
+    echo "fifo ${fpsCTRLfifo} <- setqindex 0"
     echo "setqindex 0" >> ${fpsCTRLfifo}
+    echo "fifo ${fpsCTRLfifo} <- setqprio 1"
     echo "setqprio 1" >> ${fpsCTRLfifo}
 
     # turn off RUN processes
@@ -368,16 +370,21 @@ function cacaosetupCLEAR
         # track log files by sym link
         # first, remove target
         cmdstring="find /milk/shm -type l -name \"fpslog.*-${fpsname}\" -exec sh -c 'rm \$(readlink \$1)' _ {} \;"
+        echo "File ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript <- ${cmdstring}"
         echo "${cmdstring}" >> ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
         # second, remove link
         cmdstring="find /milk/shm -type l -name \"fpslog.*-${fpsname}\" -delete"
+        echo "File ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript <- ${cmdstring}"
         echo "${cmdstring}" >> ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
     done < ${CACAO_LOOPRUNDIR_FULLPATH}/fpslist.txt
 
     # will kill tmux session AFTER fpsCTRL exit
+    echo "File ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript <- tmux kill-session -t ${fpsCTRLtmuxname}"
     echo "tmux kill-session -t ${fpsCTRLtmuxname}" >> ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
 
     # Exit fpsCTRL
+    echo "fifo ${fpsCTRLfifo}/fpsCTRL-exitscript <- exit"
+    echo "EXITING fpsCTRL =============================="
     echo "exit" >> ${fpsCTRLfifo}
 
 
@@ -390,7 +397,6 @@ function cacaosetupCLEAR
     rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmZP*.im.shm &>> ${LOGFILENAME}
     rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_wfsim.im.shm &>> ${LOGFILENAME}
 
-    #tmux send-keys -t cacao-${CACAO_LOOPNAME} "exit" C-m &>> ${LOGFILENAME}
 
     # remove fpsCTRL log and its sym link
     file="${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}"
@@ -896,12 +902,14 @@ do
     sleep 0.05
     echo -n "."
 done
-echo ""
+echo "found fifo -> continuing"
 
 
 if [ "$UPDATEMODE" = "0" ]; then
     # build sym link to output log
+    echo "fifo ${fpsCTRLfifo} <-  logsymlink ${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}"
     echo "logsymlink ${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}" >> ${fpsCTRLfifo}
+    echo "tmux ${fpsCTRLtmuxname} <- \"s\""
     tmux send-keys -t ${fpsCTRLtmuxname} "s" C-m &>> ${LOGFILENAME}
 fi
 
