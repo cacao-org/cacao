@@ -287,7 +287,6 @@ fi
 
 echo ""
 echo "Checking required commands :"
-checkCommand xterm
 checkCommand tmux
 
 
