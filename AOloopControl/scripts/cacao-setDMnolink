@@ -161,6 +161,7 @@ mkdir -p conf
 
 echo "    Linking streams ..."
 
+
 echo "dm${DMindex}disp03" > ./conf/streamlink.dmC.name.txt # DM control channel
 milk-streamlink -p aol${LOOPNUMBER}_ dmC
 

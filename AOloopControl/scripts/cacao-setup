@@ -918,7 +918,7 @@ fi
 # ===================================================================================
 # ========= START ALL CONF PROCESSES  ===============================================
 # ===================================================================================
-echo "    (re)-starting conf processes ..."
+echolog "    (re)-starting conf processes ..."
 # stop CONF processes in case already running
 allFPScmd confstop
 
@@ -930,7 +930,7 @@ allFPScmd confstart
 # ===================================================================================
 # ========= INIT SETTINGS IMPORTED FROM CONF FILE ===================================
 # ===================================================================================
-echo "    INIT settings imported from conf file ..."
+echolog "    INIT settings imported from conf file ..."
 if [ "$UPDATEMODE" = "0" ]; then
     fpssetparamconf
 fi
@@ -940,16 +940,16 @@ fi
 # ===================================================================================
 # Startup sequence: establish links
 # ===================================================================================
-echo "    Establish links ..."
+echolog "    Establish links ..."
 if [ "$UPDATEMODE" = "0" ]; then
     # link DM index to loop number
-    echo "    linking DM ..."
-    cacao-setDMnolink &>> ${LOGFILENAME}
+    echolog "    linking DM ..."
+    #cacao-setDMnolink &>> ${LOGFILENAME}
 
     # link WFS
-    echo "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
-    echo "    linking WFS ..."
-    milk-streamlink -p aol${LOOPNUMBER}_ wfsim &>> ${LOGFILENAME}
+    echolog "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
+    echolog "    linking WFS ..."
+    #milk-streamlink -p aol${LOOPNUMBER}_ wfsim &>> ${LOGFILENAME}
 fi
 
 
@@ -958,7 +958,7 @@ fi
 
 echo ""
 echo ""
-echo  "cacao setup complete"
+echolog  "cacao setup complete"
 echo ""
 echo "Processes :"
 echo ""
