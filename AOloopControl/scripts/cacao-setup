@@ -944,12 +944,12 @@ echolog "    Establish links ..."
 if [ "$UPDATEMODE" = "0" ]; then
     # link DM index to loop number
     echolog "    linking DM ..."
-    #cacao-setDMnolink &>> ${LOGFILENAME}
+    cacao-setDMnolink &>> ${LOGFILENAME}
 
     # link WFS
     echolog "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
     echolog "    linking WFS ..."
-    #milk-streamlink -p aol${LOOPNUMBER}_ wfsim &>> ${LOGFILENAME}
+    milk-streamlink -p aol${LOOPNUMBER}_ wfsim &>> ${LOGFILENAME}
 fi
 
 
