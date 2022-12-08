@@ -388,13 +388,14 @@ function cacaosetupCLEAR
     echo "exit" >> ${fpsCTRLfifo}
 
 
-    milk-rmshmim aol${LOOPNUMBER}_dmC,aol${LOOPNUMBER}_dmRM,aol${LOOPNUMBER}_dmO,aol${LOOPNUMBER}_dmdisp,aol${LOOPNUMBER}_wfsim &>> ${LOGFILENAME}
+    #milk-rmshmim aol${LOOPNUMBER}_dmC,aol${LOOPNUMBER}_dmRM,aol${LOOPNUMBER}_dmO,aol${LOOPNUMBER}_dmdisp,aol${LOOPNUMBER}_wfsim &>> ${LOGFILENAME}
 
-    #rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmC.im.shm
-    #rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmRM.im.shm
-    #rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmO.im.shm
-    #rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmdisp.im.shm
+    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmC.im.shm &>> ${LOGFILENAME}
+    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmRM.im.shm &>> ${LOGFILENAME}
+    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmO.im.shm &>> ${LOGFILENAME}
+    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmdisp.im.shm &>> ${LOGFILENAME}
     rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmZP*.im.shm &>> ${LOGFILENAME}
+    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmzpo.im.shm &>> ${LOGFILENAME}
     rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_wfsim.im.shm &>> ${LOGFILENAME}
 
 
