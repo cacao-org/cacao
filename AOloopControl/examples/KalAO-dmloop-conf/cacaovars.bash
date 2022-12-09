@@ -91,6 +91,11 @@ export CACAO_FPSPROC_MODESEXTRACTWFSGPU="ON"
 #
 export CACAO_FPSPROC_AOLOOP_RUN="ON"
 
+
+# Zero Point Offset from DM to WFS
+export CACAO_FPSPROC_MVMGPU_ZPO="ON"
+
+
 # Extract control modes from WFS using MVM
 export CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL="ON"
 
