@@ -820,7 +820,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  FPFLAG_DEFAULT_INPUT, // | FPFLAG_FPS_RUN_REQUIRED,
                                  pNull,
                                  &fpi_FPS_zRMacqu);
-    FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
+    FUNCTION_PARAMETER_STRUCT FPS_zRMacqu = {0};
     fps.parray[fpi_FPS_zRMacqu].info.fps.FPSNBparamMAX = 0;
 
     long fpi_FPS_loRMacqu = 0;
@@ -831,7 +831,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  FPFLAG_DEFAULT_INPUT, // | FPFLAG_FPS_RUN_REQUIRED,
                                  pNull,
                                  &fpi_FPS_loRMacqu);
-    FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
+    FUNCTION_PARAMETER_STRUCT FPS_loRMacqu = {0};
     fps.parray[fpi_FPS_loRMacqu].info.fps.FPSNBparamMAX = 0;
 
     long fpi_FPS_DMcomb = 0;
@@ -842,7 +842,7 @@ errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF()
                                  FPFLAG_DEFAULT_INPUT, // | FPFLAG_FPS_RUN_REQUIRED,
                                  pNull,
                                  &fpi_FPS_DMcomb);
-    FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
+    FUNCTION_PARAMETER_STRUCT FPS_DMcomb = {0};
 
     fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX = 0;
 
