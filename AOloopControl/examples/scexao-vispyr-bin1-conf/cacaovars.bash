@@ -2,8 +2,8 @@
 # This file will be sourced by cacao-setup
 
 
-export CACAO_LOOPNAME="vispyr1"
-export CACAO_LOOPNUMBER="1"
+export CACAO_LOOPNAME="vispyrhr"
+export CACAO_LOOPNUMBER="5"
 
 # ====== DEFORMABLE MIRROR ==========
 
@@ -24,10 +24,10 @@ export CACAO_DMSPATIAL="1"
 # ====== DIRECTORIES ================
 
 # Optional. If not defined, will take value "LOOPNAME-rootdir"
-# export CACAO_LOOPROOTDIR="dmloop"
+export CACAO_LOOPROOTDIR="dmloop-rootdir"
 
 # Optional. If not defined, will take value "LOOPNAME-rundir"
-# export CACAO_LOOPRUNDIR="dmloop"
+export CACAO_LOOPRUNDIR="dmloop-rundir"
 
 
 # input WFS stream
