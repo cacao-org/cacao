@@ -2,8 +2,8 @@
 # This file will be sourced by cacao-setup
 
 
-export CACAO_LOOPNAME="vispyr2"
-export CACAO_LOOPNUMBER="4"
+export CACAO_LOOPNAME="vispyr"
+export CACAO_LOOPNUMBER="0"
 
 # ====== DEFORMABLE MIRROR ==========
 
