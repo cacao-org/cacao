@@ -17,6 +17,7 @@ set(SOURCEFILES
     AOloopControl_DM_turbusimul.c
     DMturbulence.c
     mk3Ddmgrid.c
+    pokerndmodes.c
 )
 
 set(INCLUDEFILES

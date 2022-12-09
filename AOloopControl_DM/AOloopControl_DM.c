@@ -34,6 +34,7 @@
 
 #include "DMturbulence.h"
 #include "mk3Ddmgrid.h"
+#include "pokerndmodes.h"
 
 
 
@@ -746,6 +747,8 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_DM__mk3Ddmgrid();
 
     CLIADDCMD_AOloopControl_DM__atmturbulence();
+
+    CLIADDCMD_AOloopControl_DM__pokerndmodes();
 
 
     // add atexit functions here
