@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+
+MSdescr="Archive current AO calibration"
+
+MSextdescr="Copy current filesystem calibration to AOcalibs/<calibname>/ directory"
+
+source milk-script-std-config
+
+
+RequiredCommands=(milk)
+
+RequiredFiles=(LOOPNUMBER)
+
+
 if [ -f LOOPNUMBER ]; then
     AOLOOPNUMBER=$( head -1 LOOPNUMBER )
 else
@@ -7,11 +20,33 @@ else
     exit
 fi
 
+RequiredDirs=(AOcalibs)
+
+MSarg+=( "calibname:string:calibration name" )
+
+
+
+source milk-argparse
+set +u
+if [ "${EXITSTATUS}" = "1" ]; then
+exit
+fi
+set -u
+
+
+
+
+calib="${inputMSargARRAY[0]}"
+
+echo "Calibration : ${calib}"
+
+
+
 # Arguments:
 # Calib name
 
 
-ARCHDIR="AOcalibs/$1"
+ARCHDIR="AOcalibs/${calib}"
 
 mkdir -p ${ARCHDIR}
 
@@ -50,3 +85,8 @@ saveFITS aol${AOLOOPNUMBER}_LODMmodes "${ARCHDIR}/aol${AOLOOPNUMBER}_LODMmodes.f
 
 exitCLI
 EOF
+
+
+
+
+echo "$(date -u --iso-8601=seconds) ARCHCURRENT ${calib}" >> AOcalibs/AOcalib-${AOLOOPNUMBER}-log.txt

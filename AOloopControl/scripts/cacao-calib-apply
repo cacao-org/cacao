@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+
 MSdescr="Apply AO calibration"
 
-MSextdescr="Load to shared memory from filesystem"
+MSextdescr="Load calibration to shared memory from filesystem
+To be executed from loop rootdir"
 
 source milk-script-std-config
 
@@ -154,7 +156,7 @@ EOF
 # TODO: is there a standard logger we should invoke?
 echo $(pwd)/${ARCHDIR} > $MILK_SHM_DIR/aol${AOLOOPNUMBER}_calib_source.txt
 echo $(date -u --iso-8601=seconds) > $MILK_SHM_DIR/aol${AOLOOPNUMBER}_calib_loaded.txt
-
+echo "$(date -u --iso-8601=seconds) APPLY ${calib}" >> AOcalibs/AOcalib-${AOLOOPNUMBER}-log.txt
 
 
 else

@@ -8,7 +8,9 @@ source milk-script-std-config
 
 
 RequiredCommands=(milk)
+
 RequiredFiles=(LOOPNUMBER)
+
 
 if [ -f LOOPNUMBER ]; then
 AOLOOPNUMBER=$( head -1 LOOPNUMBER )
@@ -17,12 +19,13 @@ echo "Error: no LOOPNUMBER file. Are we running this from the correct directory 
 exit
 fi
 
-RequiredDirs=(fps.compfCM-${AOLOOPNUMBER}.datadir fps.acqlin_zRM-${AOLOOPNUMBER}.datadir fps.acqlin_loRM-${AOLOOPNUMBER}.datadir)
+RequiredDirs=(AOcalibs fps.compfCM-${AOLOOPNUMBER}.datadir fps.acqlin_zRM-${AOLOOPNUMBER}.datadir fps.acqlin_loRM-${AOLOOPNUMBER}.datadir)
 
 MSarg+=( "calibname:string:calibration name" )
 
-MSopt+=( "u:update:setupdate::update existing, do not append timestamp" )
 
+
+MSopt+=( "u:update:setupdate::update existing, do not append timestamp" )
 
 update="0"
 function setupdate() {
@@ -99,3 +102,5 @@ echo $(pwd)/${ARCHDIR} > ${ARCHDIR}/aol${AOLOOPNUMBER}_calib_dir.txt
 
 # append timestamp
 echo $(date -u --iso-8601=seconds) >> ${ARCHDIR}/aol${AOLOOPNUMBER}_calib_archived.txt
+
+echo "$(date -u --iso-8601=seconds) ARCHIVE ${calib}" >> AOcalibs/AOcalib-${AOLOOPNUMBER}-log.txt
