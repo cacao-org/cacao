@@ -14,6 +14,7 @@ set(SOURCEFILES
     AOloopControl_IOtools_load_image_sharedmem.c
     AOloopControl_IOtools_RTLOGsave.c
     WFScamsim.c
+    WFSmap.c
 )
 
 set(INCLUDEFILES
@@ -21,6 +22,7 @@ set(INCLUDEFILES
     acquireWFSim.h
     AOloopControl_IOtools.h
     WFScamsim.h
+    WFSmap.h
 )
 
 
