@@ -331,6 +331,7 @@ if [ "${CACAO_FPSPROC_MAPWFS}" = "ON" ]; then
     then
         echolog "Process ${fpsname} already registered - skipping"
     else
+        milk-FITS2shm "./simLHS/WFSmapping.fits.gz" aol${CACAO_LOOPNUMBER}_wfsmapping
         echolog "Adding process ${fpsname}"
         echo "${fpsname}           cacaoio.mapWFS     ${fpsarg0}" >> fpslist.txt
 
@@ -343,7 +344,7 @@ if [ "${CACAO_FPSPROC_MAPWFS}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
 
         addfpscmd "setval ${fpsfname}.wfsin aol${CACAO_LOOPNUMBER}_wfsim"
-        addfpscmd "setval ${fpsfname}.map aol${CACAO_LOOPNUMBER}_wfsmap"
+        addfpscmd "setval ${fpsfname}.map aol${CACAO_LOOPNUMBER}_wfsmapping"
         addfpscmd "setval ${fpsfname}.wfsout aol${CACAO_LOOPNUMBER}_wfsimmap"
     fi
 else
