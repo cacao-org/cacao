@@ -314,6 +314,46 @@ fi
 
 
 
+if [ "${CACAO_FPSPROC_MAPWFS}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_MAPWFS"
+    # ==============================================================================
+    # ========== WFS acquire frames ================================================
+    # ==============================================================================
+
+    # FPS name
+    fpsname="mapWFS"
+    fpsarg0="${CACAO_LOOPNUMBER}"
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "${fpsname}           cacaoio.mapWFS     ${fpsarg0}" >> fpslist.txt
+
+        addfpscmdheader
+        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
+
+        # run simulator at finite frame rate
+        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
+
+        addfpscmd "setval ${fpsfname}.wfsin aol${CACAO_LOOPNUMBER}_wfsim"
+        addfpscmd "setval ${fpsfname}.map aol${CACAO_LOOPNUMBER}_wfsmap"
+        addfpscmd "setval ${fpsfname}.wfsout aol${CACAO_LOOPNUMBER}_wfsimmap"
+    fi
+else
+    echolog "OFF CACAO_FPSPROC_MAPWFS"
+fi
+
+
+
+
+
 
 if [ "${CACAO_FPSPROC_ACQUWFS}" = "ON" ]; then
     echolog "ON  CACAO_FPSPROC_ACQUWFS"
