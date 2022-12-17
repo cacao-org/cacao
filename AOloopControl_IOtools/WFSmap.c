@@ -105,7 +105,6 @@ errno_t image_pixremap(
     static uint64_t *map_inpixindex = NULL;
     static uint64_t *map_outpixindex = NULL;
     static float *map_pixcoeff = NULL;
-    static uint64_t xysize = 0;
 
     if(initialize == 1)
     {
@@ -117,7 +116,8 @@ errno_t image_pixremap(
 
         // scan map to count pixels
         mapNBpix = 0;
-        xysize = mapimg.size[0] * mapimg.size[1];
+        uint64_t xysize = (uint64_t) mapimg.size[0];
+        xysize *= mapimg.size[1];
         for(uint64_t ii = 0; ii < mapimg.size[0]*mapimg.size[1]*mapimg.size[2]; ii++)
         {
             if(fabs(mapimg.im->array.F[ii]) > eps)
@@ -149,14 +149,18 @@ errno_t image_pixremap(
                 }
             }
         }
+        printf("mapping arrays initialized\n");
+        fflush(stdout);
         initialize = 0;
     }
 
-
+    DEBUG_TRACEPOINT("Initializing output array, size %u", mapimg.size[2]);
     for(uint32_t kk = 0; kk < mapimg.size[2]; kk++)
     {
         outimg.im->array.F[kk] = 0.0;
     }
+
+    DEBUG_TRACEPOINT("Applying mapping, %lu pixels", mapNBpix);
     for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
     {
         outimg.im->array.F[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
