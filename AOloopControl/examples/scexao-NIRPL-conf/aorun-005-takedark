@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop execution script"
+
+
+
+source cacaovars.*.bash
+
+# Extended description
+MSextdescr="AO loop script
+
+CACAO_LOOPNAME = ${CACAO_LOOPNAME}
+"
+
+
+# standard configuration
+# location ./scripts/
+source milk-script-std-config
+
+# prerequisites
+#
+
+RequiredCommands=( tmux milk )
+
+fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
+fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
+RequiredPipes=( ${fpsCTRLfifo} )
+
+RequiredDirs=()
+
+
+
+
+
+# SCRIPT MANDATORY ARGUMENTS
+# syntax: "name:type(s)/test(s):description"
+#
+
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+#
+
+# parse arguments
+source milk-argparse
+
+
+
+
+function sendFPScmd {
+    echo "SENDING: $1"
+    echo "$1" >> ${fpsCTRLfifo}
+}
+
+
+
+
+echo "input frame = ${CACAO_WFSSTREAM}"
+
+NBFRAME="1000"
+
+
+
+# ======================================================================
+# Turning source off
+# ======================================================================
+
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal 0.0"
+
+sleep 1
+
+milk << EOF
+readshmim ${CACAO_WFSSTREAM}
+streamave ..procinfo 1
+streamave ..triggersname ${CACAO_WFSSTREAM}
+streamave ..triggermode 3
+streamave ..loopcntMax ${NBFRAME}
+streamave ${CACAO_WFSSTREAM} ${CACAO_WFSSTREAM}_dark ${NBFRAME}
+saveFITS ${CACAO_WFSSTREAM}_dark "${CACAO_WFSSTREAM}_dark.fits"
+listim
+exitCLI
+EOF
+
+
+# ======================================================================
+# Turning source on
+# ======================================================================
+
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal 100000.0"
