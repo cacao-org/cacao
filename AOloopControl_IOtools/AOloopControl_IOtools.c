@@ -48,6 +48,7 @@
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
 #include "acquireWFSim.h"
+#include "findspots.h"
 #include "WFScamsim.h"
 #include "WFSmap.h"
 
@@ -456,6 +457,7 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_IOtools__acquireWFSim();
     CLIADDCMD_AOloopControl_IOtools__WFScamsim();
     CLIADDCMD_AOloopControl_IOtools__WFSmap();
+    CLIADDCMD_AOloopControl_IOtools__findspots();
 
     // add atexit functions here
     // atexit((void*) myfunc);

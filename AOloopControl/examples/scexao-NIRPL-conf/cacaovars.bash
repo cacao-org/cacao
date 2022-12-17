@@ -46,16 +46,29 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 # DM combination
 # Manages mutipe DM channels
 #
-#export CACAO_FPSPROC_DMCH2DISP="ON"
+export CACAO_FPSPROC_DMCH2DISP="ON"
+
+
 
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
 #
-#export CACAO_FPSPROC_STREAMDELAY="ON"
+export CACAO_FPSPROC_STREAMDELAY="ON"
 
 # MVM lop on GPU: used to simulate hardware
 #
-#export CACAO_FPSPROC_SIMMVMGPU="ON"
+export CACAO_FPSPROC_SIMMVMGPU="ON"
+
+# Camera simulator
+#
+export CACAO_FPSPROC_WFSCAMSIM="ON"
+
+
+
+
+
+
+
 
 # Measure hardware latency
 #
