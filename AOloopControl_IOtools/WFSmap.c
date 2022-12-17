@@ -134,6 +134,9 @@ errno_t image_pixremap(
 
         // fill mapping arrays
         uint64_t mappix = 0;
+
+
+
         for(uint32_t kk = 0; kk < mapimg.size[2]; kk++)
         {
             for(uint64_t ii = 0; ii < mapimg.size[0]*mapimg.size[1]; ii++)
@@ -149,23 +152,109 @@ errno_t image_pixremap(
                 }
             }
         }
+
+
         printf("mapping arrays initialized\n");
         fflush(stdout);
         initialize = 0;
     }
 
     DEBUG_TRACEPOINT("Initializing output array, size %u", mapimg.size[2]);
+
+    double *tmpvarray = (double *) malloc(sizeof(double) * mapimg.size[2]);
     for(uint32_t kk = 0; kk < mapimg.size[2]; kk++)
     {
-        outimg.im->array.F[kk] = 0.0;
+        tmpvarray[kk] = 0.0;
     }
 
     DEBUG_TRACEPOINT("Applying mapping, %lu pixels", mapNBpix);
-    for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+
+
+    switch(inimg.datatype)
     {
-        outimg.im->array.F[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
-                inimg.im->array.F[map_inpixindex[mapii]];
+
+        case _DATATYPE_FLOAT :
+            for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+            {
+                tmpvarray[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
+                                                     inimg.im->array.F[map_inpixindex[mapii]];
+            }
+            break;
+
+        case _DATATYPE_DOUBLE :
+            for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+            {
+                tmpvarray[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
+                                                     inimg.im->array.D[map_inpixindex[mapii]];
+            }
+            break;
+
+
+        case _DATATYPE_INT8 :
+            for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+            {
+                tmpvarray[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
+                                                     inimg.im->array.SI8[map_inpixindex[mapii]];
+            }
+            break;
+
+        case _DATATYPE_INT16 :
+            for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+            {
+                tmpvarray[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
+                                                     inimg.im->array.SI16[map_inpixindex[mapii]];
+            }
+            break;
+
+        case _DATATYPE_UINT16 :
+            for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+            {
+                tmpvarray[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
+                                                     inimg.im->array.UI16[map_inpixindex[mapii]];
+            }
+            break;
+
+        case _DATATYPE_INT32 :
+            for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+            {
+                tmpvarray[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
+                                                     inimg.im->array.SI32[map_inpixindex[mapii]];
+            }
+            break;
+
+        case _DATATYPE_UINT32 :
+            for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+            {
+                tmpvarray[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
+                                                     inimg.im->array.UI32[map_inpixindex[mapii]];
+            }
+            break;
+
+        case _DATATYPE_INT64 :
+            for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+            {
+                tmpvarray[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
+                                                     inimg.im->array.SI64[map_inpixindex[mapii]];
+            }
+            break;
+
+        case _DATATYPE_UINT64 :
+            for(uint64_t mapii = 0; mapii < mapNBpix; mapii ++)
+            {
+                tmpvarray[map_outpixindex[mapii]] += map_pixcoeff[mapii] *
+                                                     inimg.im->array.UI64[map_inpixindex[mapii]];
+            }
+            break;
+
+
     }
+
+    for(uint32_t kk = 0; kk < mapimg.size[2]; kk++)
+    {
+        outimg.im->array.F[kk] = (float) tmpvarray[kk];
+    }
+
+    free(tmpvarray);
 
     if(reuse == 0)
     {
