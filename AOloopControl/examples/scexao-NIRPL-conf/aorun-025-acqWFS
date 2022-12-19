@@ -11,7 +11,7 @@ MSdescr="AO loop execution script"
 source cacaovars.*.bash
 
 # Extended description
-MSextdescr="AO loop script
+MSdescr="AO loop script
 
 CACAO_LOOPNAME = ${CACAO_LOOPNAME}
 "
@@ -60,59 +60,24 @@ function sendFPScmd {
 
 
 
-echo "input frame = ${CACAO_WFSSTREAM}"
+# ======================================================================
+# acquWFS
+# ======================================================================
 
-milk << EOF
-readshmim ${CACAO_WFSSTREAM}
-streamave ..procinfo 1
-streamave ..triggersname ${CACAO_WFSSTREAM}
-streamave ..triggermode 3
-streamave ..loopcntMax 1000
-streamave ${CACAO_WFSSTREAM} ${CACAO_WFSSTREAM}_ave 1000
-loadfits "${CACAO_WFSSTREAM}_dark.fits" imdark
-imflux=${CACAO_WFSSTREAM}_ave-imdark
-saveFITS imflux "${CACAO_WFSSTREAM}_wfsref.fits"
-listim
-exitCLI
-EOF
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize ON"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub ON"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.imtotal ON"
 
 
 
+sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
 
-cacao << EOF
-loadfits "${CACAO_WFSSTREAM}_wfsref.fits" im
-cacaoio.findspots im 4 20 19 mapc
-saveFITS spotscan "spotscan.fits"
-saveFITS mapc "${CACAO_WFSSTREAM}_mapc.fits"
-listim
-exitCLI
-EOF
-
-milk-FITS2shm ${CACAO_WFSSTREAM}_mapc.fits ${CACAO_WFSSTREAM}_mapc
-
-sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.wfsin ${CACAO_WFSSTREAM}"
-sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.map ${CACAO_WFSSTREAM}_mapc"
-
-sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.procinfo.triggersname ${CACAO_WFSSTREAM}"
-
-rm $MILK_SHM_DIR/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
-sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.wfsout aol${CACAO_LOOPNUMBER}_wfsim"
 
 
 exit
-
-
-
-# ======================================================================
-# Starting DM combination process
-# ======================================================================
-
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
-#taskset_DMch2disp="3"
-#sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
-sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
-sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
-
 
 # ======================================================================
 # Starting DM hardware delay simulator
@@ -142,7 +107,6 @@ done
 # Starting WFC camera simulator
 # ======================================================================
 
-milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_wfsdark
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
 
@@ -152,6 +116,28 @@ sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
 
 exit
 
+
+
+
+# ======================================================================
+# Starting DM combination process
+# ======================================================================
+
+stepFile="step.aorunscript.DMCH2DISP"
+if [ ! -f "$stepFile" ]; then
+	echo ""
+	echo "Starting DM channels to displacement process"
+    echo ""
+    # Start DM comb
+    taskset_DMch2disp="3"
+    sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
+    sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
+
+    touch ${stepFile}
+    exit
+else
+    echo "found ${stepFile} -> skipping"
+fi
 
 
 

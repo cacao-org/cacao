@@ -89,12 +89,12 @@ export CACAO_FPSPROC_ACQLINZRM="ON"
 
 # Acquire low-order modal RM
 #
-export CACAO_FPSPROC_ACQLINLORM="ON"
+#export CACAO_FPSPROC_ACQLINLORM="ON"
 
 
 # Compute control matrix - Fourier
 #
-export CACAO_FPSPROC_COMPFCM="ON"
+#export CACAO_FPSPROC_COMPFCM="ON"
 
 # Compute control matrix - straight
 #
@@ -103,11 +103,11 @@ export CACAO_FPSPROC_COMPSCM="ON"
 
 # Extract control modes
 #
-export CACAO_FPSPROC_MODESEXTRACTWFSGPU="ON"
+#export CACAO_FPSPROC_MODESEXTRACTWFSGPU="ON"
 
 # Control loop
 #
-export CACAO_FPSPROC_AOLOOP_RUN="ON"
+#export CACAO_FPSPROC_AOLOOP_RUN="ON"
 
 
 # Zero Point Offset from DM to WFS
@@ -115,10 +115,10 @@ export CACAO_FPSPROC_AOLOOP_RUN="ON"
 
 
 # Extract control modes from WFS using MVM
-export CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL="ON"
+#export CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL="ON"
 
 # Modal control filtering
-export CACAO_FPSPROC_MODALFILTERING="ON"
+#export CACAO_FPSPROC_MODALFILTERING="ON"
 
 # Compute DM command from control mode values
-export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
+#export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"

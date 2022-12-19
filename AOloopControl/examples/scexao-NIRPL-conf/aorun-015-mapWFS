@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop execution script"
+
+
+
+source cacaovars.*.bash
+
+# Extended description
+MSextdescr="AO loop script
+
+CACAO_LOOPNAME = ${CACAO_LOOPNAME}
+"
+
+
+# standard configuration
+# location ./scripts/
+source milk-script-std-config
+
+# prerequisites
+#
+
+RequiredCommands=( tmux milk )
+
+fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
+fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
+RequiredPipes=( ${fpsCTRLfifo} )
+
+RequiredDirs=()
+
+
+
+
+
+# SCRIPT MANDATORY ARGUMENTS
+# syntax: "name:type(s)/test(s):description"
+#
+
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+#
+
+# parse arguments
+source milk-argparse
+
+
+
+
+function sendFPScmd {
+    echo "SENDING: $1"
+    echo "$1" >> ${fpsCTRLfifo}
+}
+
+
+
+
+echo "input frame = ${CACAO_WFSSTREAM}"
+
+
+
+
+sendFPScmd "confwupdate mapWFS-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart mapWFS-${CACAO_LOOPNUMBER}"
+
+
+exit

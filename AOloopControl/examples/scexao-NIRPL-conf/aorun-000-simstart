@@ -65,11 +65,11 @@ function sendFPScmd {
 # ======================================================================
 
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.0"
 #taskset_DMch2disp="3"
 #sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
 sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
 sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
-
 
 # ======================================================================
 # Starting DM hardware delay simulator
@@ -82,7 +82,7 @@ sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
 # ======================================================================
 # Starting MVM simulator
 # ======================================================================
-
+sendFPScmd "setval simmvmgpu-${CACAO_LOOPNUMBER}.procinfo.triggerdelay 0.01"
 sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
 
@@ -100,6 +100,7 @@ done
 # ======================================================================
 
 milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_wfsdark
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.wfscamim ${CACAO_WFSSTREAM}"
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
 
