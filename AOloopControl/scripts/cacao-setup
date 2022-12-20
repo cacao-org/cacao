@@ -369,11 +369,11 @@ function cacaosetupCLEAR
         getfpsname_fromline "${line}"
         # track log files by sym link
         # first, remove target
-        cmdstring="find /milk/shm -type l -name \"fpslog.*-${fpsname}\" -exec sh -c 'rm \$(readlink \$1)' _ {} \;"
+        cmdstring="find ${MILK_SHM_DIR} -type l -name \"fpslog.*-${fpsname}\" -exec sh -c 'rm \$(readlink \$1)' _ {} \;"
         echo "File ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript <- ${cmdstring}"
         echo "${cmdstring}" >> ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
         # second, remove link
-        cmdstring="find /milk/shm -type l -name \"fpslog.*-${fpsname}\" -delete"
+        cmdstring="find ${MILK_SHM_DIR} -type l -name \"fpslog.*-${fpsname}\" -delete"
         echo "File ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript <- ${cmdstring}"
         echo "${cmdstring}" >> ${CACAO_LOOPRUNDIR_FULLPATH}/fpsCTRL-exitscript
     done < ${CACAO_LOOPRUNDIR_FULLPATH}/fpslist.txt
