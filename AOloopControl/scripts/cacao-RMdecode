@@ -145,19 +145,24 @@ fi
 
 
 
-loopnb=$( head -1 LOOPNUMBER )
+#loopnb=$( head -1 LOOPNUMBER )
+
+loopnb=${CACAO_LOOPNUMBER}
 
 FPSfilename=$1
 FPSname="$(basename ${FPSfilename} .fps)"
 
 
+
 # Read parameters from FPS file
 # note that ^ ensures grep matches beginning of line, and trailing space ensures exact match
 #
+echo "grep "^${FPSname}.conf.datadir " ${FPSfilename} |  awk '{print $3;}'"
 datadir=$( grep "^${FPSname}.conf.datadir " ${FPSfilename} |  awk '{print $3;}' )
 HpokeMode=$( grep "^${FPSname}.Hpoke " ${FPSfilename} |  awk '{print $3;}' )
 FPStimestring=$( grep "^${FPSname}.conf.timestring " ${FPSfilename} |  awk '{print $3;}' )
 
+echo "FPSname       : ${FPSname}"
 echo "datadir       : ${datadir}"
 echo "HpokeMode     : ${HpokeMode}"
 echo "FPStimestring : ${FPStimestring}"

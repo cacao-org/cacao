@@ -122,7 +122,10 @@ function ConfReadParam {
 
 
 
-loopnb=$( head -1 LOOPNUMBER )
+#loopnb=$( head -1 LOOPNUMBER )
+
+loopnb=${CACAO_LOOPNUMBER}
+
 
 FPSfilename=$1
 FPSname="$(basename ${FPSfilename} .fps)"

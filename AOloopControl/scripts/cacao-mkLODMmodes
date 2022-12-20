@@ -94,8 +94,11 @@ fi
 
 
 
-LOOPNAME=$( head -1 LOOPNAME )
-loopnb=$( head -1 LOOPNUMBER )
+#LOOPNAME=$( head -1 LOOPNAME )
+#loopnb=$( head -1 LOOPNUMBER )
+
+LOOPNAME=${CACAO_LOOPNAME}
+loopnb=${CACAO_LOOPNUMBER}
 
 
 FPSfilename=$1
