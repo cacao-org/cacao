@@ -397,7 +397,6 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask_cli()
             0)
     {
         AOloopControl_computeCalib_mkCalib_map_mask(
-            LOOPNUMBER,
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.string,
             data.cmdargtoken[3].val.string,
@@ -426,7 +425,6 @@ errno_t AOloopControl_computeCalib_Process_zrespM_cli()
             0)
     {
         AOloopControl_computeCalib_Process_zrespM(
-            LOOPNUMBER,
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.string,
             data.cmdargtoken[3].val.string,
@@ -449,7 +447,6 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_cli()
             0)
     {
         AOloopControl_computeCalib_ProcessZrespM_medianfilt(
-            LOOPNUMBER,
             data.cmdargtoken[1].val.string,
             data.cmdargtoken[2].val.string,
             data.cmdargtoken[3].val.string,

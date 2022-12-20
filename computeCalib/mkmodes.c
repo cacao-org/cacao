@@ -3821,18 +3821,18 @@ imageID AOloopControl_computeCalib_mkModes_Simple(const char *IDin_name,
     return IDin;
 }
 
-errno_t AOloopControl_computeCalib_mkCalib_map_mask(long        loop,
-        const char *zrespm_name,
-        const char *WFSmap_name,
-        const char *DMmap_name,
-        float       dmmask_perclow,
-        float       dmmask_coefflow,
-        float       dmmask_perchigh,
-        float dmmask_coeffhigh,
-        float wfsmask_perclow,
-        float wfsmask_coefflow,
-        float wfsmask_perchigh,
-        float wfsmask_coeffhigh)
+errno_t AOloopControl_computeCalib_mkCalib_map_mask(
+    const char *zrespm_name,
+    const char *WFSmap_name,
+    const char *DMmap_name,
+    float       dmmask_perclow,
+    float       dmmask_coefflow,
+    float       dmmask_perchigh,
+    float dmmask_coeffhigh,
+    float wfsmask_perclow,
+    float wfsmask_coefflow,
+    float wfsmask_perchigh,
+    float wfsmask_coeffhigh)
 {
     imageID IDWFSmap, IDDMmap;
     imageID IDWFSmask, IDDMmask;
@@ -3848,12 +3848,20 @@ errno_t AOloopControl_computeCalib_mkCalib_map_mask(long        loop,
     float   lim0;
     imageID IDtmp;
 
+
+    long loopnumber = 0;
+    if(getenv("CACAO_LOOPNUMBER"))
+    {
+        loopnumber = atol(getenv("CACAO_LOOPNUMBER"));
+    }
+
+
     IDzrm    = image_ID(zrespm_name);
     sizexWFS = data.image[IDzrm].md[0].size[0];
     sizeyWFS = data.image[IDzrm].md[0].size[1];
     NBpoke   = data.image[IDzrm].md[0].size[2];
 
-    if(sprintf(name, "aol%ld_dmC", loop) < 1)
+    if(sprintf(name, "aol%ld_dmC", loopnumber) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }

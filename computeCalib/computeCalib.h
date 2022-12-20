@@ -48,34 +48,34 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
 errno_t AOcontrolLoop_computeCalib_ComputeCM_FPCONF();
 errno_t AOcontrolLoop_computeCalib_ComputeCM_RUN();
 
-errno_t AOloopControl_computeCalib_mkCalib_map_mask(long        loop,
-        const char *zrespm_name,
-        const char *WFSmap_name,
-        const char *DMmap_name,
-        float       dmmask_perclow,
-        float       dmmask_coefflow,
-        float       dmmask_perchigh,
-        float dmmask_coeffhigh,
-        float wfsmask_perclow,
-        float wfsmask_coefflow,
-        float wfsmask_perchigh,
-        float wfsmask_coeffhigh);
+errno_t AOloopControl_computeCalib_mkCalib_map_mask(
+    const char *zrespm_name,
+    const char *WFSmap_name,
+    const char *DMmap_name,
+    float       dmmask_perclow,
+    float       dmmask_coefflow,
+    float       dmmask_perchigh,
+    float dmmask_coeffhigh,
+    float wfsmask_perclow,
+    float wfsmask_coefflow,
+    float wfsmask_perchigh,
+    float wfsmask_coeffhigh);
 
-errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
-        const char *IDzrespm0_name,
-        const char *IDwfsref_name,
-        const char *IDzrespm_name,
-        const char *WFSmap_name,
-        const char *DMmap_name);
+errno_t AOloopControl_computeCalib_Process_zrespM(
+    const char *IDzrespm0_name,
+    const char *IDwfsref_name,
+    const char *IDzrespm_name,
+    const char *WFSmap_name,
+    const char *DMmap_name);
 
 errno_t
-AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
-        const char *zrespm_name,
-        const char *WFSref0_name,
-        const char *WFSmap_name,
-        const char *DMmap_name,
-        double      rmampl,
-        int         normalize);
+AOloopControl_computeCalib_ProcessZrespM_medianfilt(
+    const char *zrespm_name,
+    const char *WFSref0_name,
+    const char *WFSmap_name,
+    const char *DMmap_name,
+    double      rmampl,
+    int         normalize);
 
 errno_t AOloopControl_computeCalib_mkCM_FPCONF();
 errno_t AOloopControl_computeCalib_mkCM_RUN();

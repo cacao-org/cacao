@@ -235,6 +235,7 @@ echo "${FPStimestring} ${timestring} wfsmap fits" > ${datadir}/wfsmap.outlog
 echo "${FPStimestring} ${timestring} dmmap fits" > ${datadir}/dmmap.outlog
 
 
+echo "================ END $0"
 
 
 exit

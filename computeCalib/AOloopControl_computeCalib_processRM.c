@@ -67,7 +67,6 @@
 #include "cudacomp/cudacomp.h"
 #endif
 
-extern long LOOPNUMBER; // current loop index
 
 extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
 extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
@@ -80,17 +79,27 @@ extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
  * If images "Hmat" AND "pixindexim" are provided, decode the image
  *  TEST: if "RMpokeC" exists, decode it as well
  */
-errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
-        const char *IDzrespm0_name,
-        __attribute__((unused))
-        const char *IDwfsref_name,
-        const char *IDzrespm_name,
-        const char *WFSmap_name,
-        const char *DMmap_name)
+errno_t AOloopControl_computeCalib_Process_zrespM(
+    const char *IDzrespm0_name,
+    __attribute__((unused))
+    const char *IDwfsref_name,
+    const char *IDzrespm_name,
+    const char *WFSmap_name,
+    const char *DMmap_name)
 {
     imageID  IDzrm;
     uint64_t sizeWFS;
     char     name[200];
+
+
+    long loopnumber = 0;
+    if(getenv("CACAO_LOOPNUMBER"))
+    {
+        loopnumber = atol(getenv("CACAO_LOOPNUMBER"));
+    }
+
+
+    printf(">>>>>>>>>>> loop = %ld\n", loopnumber);
 
     double  rms, tmpv;
     imageID IDDMmap, IDWFSmap, IDdm;
@@ -128,7 +137,7 @@ errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
     uint32_t sizeyWFS = data.image[IDzrm].md[0].size[1];
     uint32_t NBpoke   = data.image[IDzrm].md[0].size[2];
 
-    if(sprintf(name, "aol%ld_dmC", loop) < 1)
+    if(sprintf(name, "aol%ld_dmC", loopnumber) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -222,13 +231,13 @@ errno_t AOloopControl_computeCalib_Process_zrespM(long        loop,
 // TEST: if "RMpokeC" exists, decode it as well
 //
 errno_t
-AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
-        const char *zrespm_name,
-        const char *WFSref0_name,
-        const char *WFSmap_name,
-        const char *DMmap_name,
-        double      rmampl,
-        int         normalize)
+AOloopControl_computeCalib_ProcessZrespM_medianfilt(
+    const char *zrespm_name,
+    const char *WFSref0_name,
+    const char *WFSmap_name,
+    const char *DMmap_name,
+    double      rmampl,
+    int         normalize)
 {
     long  NBmat; // number of matrices to average
     FILE *fp;
@@ -256,6 +265,15 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
     long   NBmatlim = 3;
     long   NBpoke, poke;
     double tot, totm;
+
+
+    long loopnumber = 0;
+    if(getenv("CACAO_LOOPNUMBER"))
+    {
+        loopnumber = atol(getenv("CACAO_LOOPNUMBER"));
+    }
+
+
 
     if(sprintf(fname, "./zresptmp/%s_nbiter.txt", zrespm_name) < 1)
     {
@@ -290,7 +308,7 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
         printf("Processing %ld matrices\n", NBmat);
     }
 
-    if(sprintf(name, "aol%ld_dmC", loop) < 1)
+    if(sprintf(name, "aol%ld_dmC", loopnumber) < 1)
     {
         PRINT_ERROR("sprintf wrote <1 char");
     }
@@ -549,18 +567,18 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(long        loop,
 
     NBpoke = data.image[IDzrm].md[0].size[2];
 
-    AOloopControl_computeCalib_mkCalib_map_mask(loop,
-            zrespm_name,
-            WFSmap_name,
-            DMmap_name,
-            0.2,
-            1.0,
-            0.7,
-            0.3,
-            0.05,
-            1.0,
-            0.65,
-            0.3);
+    AOloopControl_computeCalib_mkCalib_map_mask(
+        zrespm_name,
+        WFSmap_name,
+        DMmap_name,
+        0.2,
+        1.0,
+        0.7,
+        0.3,
+        0.05,
+        1.0,
+        0.65,
+        0.3);
 
     //	list_image_ID();
     // printf("========== STEP 000 ============\n");
