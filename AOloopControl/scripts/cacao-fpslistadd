@@ -970,7 +970,7 @@ if [ "${CACAO_FPSPROC_MVMGPU_ZPO}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.outinit OFF"
 
-        addfpscmd "setval ${fpsfname}.GPUindex 3"
+        addfpscmd "setval ${fpsfname}.GPUindex 0"
 
         addfpscmd "setval ${fpsfname}.option.axmode 1"
         addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
@@ -1063,7 +1063,7 @@ if [ "${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.outinit OFF"
 
-        addfpscmd "setval ${fpsfname}.GPUindex 3"
+        addfpscmd "setval ${fpsfname}.GPUindex 0"
 
         addfpscmd "setval ${fpsfname}.option.axmode 1"
         addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
@@ -1118,7 +1118,7 @@ if [ "${CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.outinit OFF"
 
-        addfpscmd "setval ${fpsfname}.GPUindex 3"
+        addfpscmd "setval ${fpsfname}.GPUindex 0"
 
         addfpscmd "setval ${fpsfname}.option.axmode 1"
         addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
@@ -1172,7 +1172,7 @@ if [ "${CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.outinit OFF"
 
-        addfpscmd "setval ${fpsfname}.GPUindex 3"
+        addfpscmd "setval ${fpsfname}.GPUindex 0"
 
         addfpscmd "setval ${fpsfname}.option.axmode 1"
         addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
