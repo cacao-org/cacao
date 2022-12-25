@@ -863,10 +863,10 @@ if [ "${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS1"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS2"
 
 
-        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_imWFS1"
+        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_imWFS2"
         addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_modesWFS"
         addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_modevalWFS"
 
