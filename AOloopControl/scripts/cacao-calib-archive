@@ -2,35 +2,30 @@
 
 MSdescr="Archive AO calibration"
 
-MSextdescr="Copy current filesystem calibration to AOcalibs/<calibname>/ directory"
+MSextdescr="Copy current filesystem calibration to AOcalibs/<calibname>/ directory
+To be executed from loop rootdir"
 
 source milk-script-std-config
 
+# check and load cacaovars
+source cacao-check-cacaovars
+RequiredCommands=()
+RequiredPipes=()
+RequiredFiles=()
 
-RequiredCommands=(milk)
 
-RequiredFiles=(LOOPNUMBER)
-
-
-if [ -f LOOPNUMBER ]; then
-AOLOOPNUMBER=$( head -1 LOOPNUMBER )
-else
-echo "Error: no LOOPNUMBER file. Are we running this from the correct directory ?"
-exit
-fi
-
-RequiredDirs=(AOcalibs fps.compfCM-${AOLOOPNUMBER}.datadir fps.acqlin_zRM-${AOLOOPNUMBER}.datadir fps.acqlin_loRM-${AOLOOPNUMBER}.datadir)
+RequiredDirs=(AOcalibs)
+RequiredDirs+=(${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir)
+RequiredDirs+=(${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir)
+RequiredDirs+=(${CACAO_LOOPRUNDIR}/fps.acqlin_loRM-${CACAO_LOOPNUMBER}.datadir)
 
 MSarg+=( "calibname:string:calibration name" )
 
-
-
-MSopt+=( "u:update:setupdate::update existing, do not append timestamp" )
-
-update="0"
-function setupdate() {
-        echo "Updating, not apppending timestamp"
-        update="1"
+MSopt+=( "t:timestamp:settimestamp::append timestamp to name" )
+addtimestamp="0"
+function settimestamp() {
+        echo "Append timestamp to name"
+        addtimestamp="1"
 }
 
 
@@ -46,7 +41,6 @@ set -u
 
 
 calib="${inputMSargARRAY[0]}"
-
 echo "Calibration : ${calib}"
 
 
@@ -59,48 +53,48 @@ echo "Calibration : ${calib}"
 
 ARCHDIR="AOcalibs/$1"
 
-if [ "${update}" = "0" ]; then
-ARCHDIR=${ARCHDIR}_$(date -u +%Y%m%d_%H%M%S)
+if [ "${addtimestamp}" = "1" ]; then
+ARCHDIR=${ARCHDIR}_$(date -u +%Y-%m-%dT%H:%M:%S)
 fi
 
 
 mkdir -p ${ARCHDIR}
 
 
-cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodesWFS1all.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS.fits
-cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_DMmodes.fits
+cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodesWFS1all.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS.fits
+cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes.fits
 
 # modes including WFS-space diagonalization
-cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodesWFSall.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_modesWFS_WFSdiag.fits
-cp fps.compfCM-${AOLOOPNUMBER}.datadir/mkmodestmp/fmodesall.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_DMmodes_WFSdiag.fits
+cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodesWFSall.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS_WFSdiag.fits
+cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodesall.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes_WFSdiag.fits
 
 # copy the block structure files
-cp fps.compfCM-${AOLOOPNUMBER}.datadir/param_NBmodeblocks.txt ${ARCHDIR}/aol${AOLOOPNUMBER}_NBmodeblocks.txt
-cp fps.compfCM-${AOLOOPNUMBER}.datadir/param_NBmodes.txt ${ARCHDIR}/aol${AOLOOPNUMBER}_NBmodes.txt
+cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/param_NBmodeblocks.txt ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_NBmodeblocks.txt
+cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/param_NBmodes.txt ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_NBmodes.txt
 
 # and copy the block files for future reference
-for f in $(ls fps.compfCM-${AOLOOPNUMBER}.datadir/block*.txt) ; do
-   cp $f ${ARCHDIR}/aol${AOLOOPNUMBER}_$(basename $f)
+for f in $(ls ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/block*.txt) ; do
+   cp $f ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_$(basename $f)
 done
 
 
 
-cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/wfsref_mn.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_wfsref.fits
-cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/wfsmask_mkm.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_wfsmask.fits
-cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/wfsmap.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_wfsmap.fits
-cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/dmmask_mkm.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_dmmask.fits
-cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/dmslaved.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_dmslaved.fits
-cp fps.acqlin_zRM-${AOLOOPNUMBER}.datadir/zrespM.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_zrespM.fits
+cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/wfsref_mn.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsref.fits
+cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/wfsmask_mkm.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmask.fits
+cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/wfsmap.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmap.fits
+cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/dmmask_mkm.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmmask.fits
+cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/dmslaved.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmslaved.fits
+cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/zrespM.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_zrespM.fits
 
 
-cp fps.acqlin_loRM-${AOLOOPNUMBER}.datadir/respM.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_LOrespM.fits
-cp fps.acqlin_loRM-${AOLOOPNUMBER}.datadir/RMpokeCube.fits ${ARCHDIR}/aol${AOLOOPNUMBER}_LODMmodes.fits
+cp ${CACAO_LOOPRUNDIR}/fps.acqlin_loRM-${CACAO_LOOPNUMBER}.datadir/respM.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LOrespM.fits
+cp ${CACAO_LOOPRUNDIR}/fps.acqlin_loRM-${CACAO_LOOPNUMBER}.datadir/RMpokeCube.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LODMmodes.fits
 
 
 # write out complete path so someone following a symlink can easily track where we are
-echo $(pwd)/${ARCHDIR} > ${ARCHDIR}/aol${AOLOOPNUMBER}_calib_dir.txt
+echo $(pwd)/${ARCHDIR} > ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_calib_dir.txt
 
 # append timestamp
-echo $(date -u --iso-8601=seconds) >> ${ARCHDIR}/aol${AOLOOPNUMBER}_calib_archived.txt
+echo $(date -u --iso-8601=seconds) >> ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_calib_archived.txt
 
-echo "$(date -u --iso-8601=seconds) ARCHIVE ${calib}" >> AOcalibs/AOcalib-${AOLOOPNUMBER}-log.txt
+echo "$(date -u --iso-8601=seconds) ARCHIVE ${calib}" >> AOcalibs/AOcalib-${CACAO_LOOPNUMBER}-log.txt

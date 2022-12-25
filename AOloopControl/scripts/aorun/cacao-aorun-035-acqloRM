@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop execution script"
+
+MSextdescr="AO loop script"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+MSarg+=( "action:string:action (start/check)" )
+
+source milk-argparse
+ACTION="${inputMSargARRAY[0]}"
+
+
+ACTIONOK=0
+
+
+
+
+if [ ${ACTION} == "check" ]; then
+ACTIONOK=1
+fi
+
+
+errexit=0
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
+checkFPSON CACAO_FPSPROC_ACQLINLORM ${CACAO_FPSPROC_ACQLINLORM}
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+errexit=1
+fi
+
+
+# Checking stream
+streamcheckOK="OK"
+checkstream aol${CACAO_LOOPNUMBER}_imWFS0
+checkstream aol${CACAO_LOOPNUMBER}_imWFS1
+checkstream aol${CACAO_LOOPNUMBER}_imWFS2
+
+if [ ${streamcheckOK} == "FAIL" ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+errexit=1
+fi
+
+
+if [ $errexit = 1 ]; then
+exit
+fi
+
+
+
+
+
+
+
+
+if [ ${ACTION} == "start" ]; then
+ACTIONOK=1
+
+# ======================================================================
+# acquWFS
+# ======================================================================
+sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.AOloopindex ${CACAO_LOOPNUMBER}"
+
+sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acqlin_loRM-${CACAO_LOOPNUMBER}"
+
+fi
+
+
+
+
+
+
+if [ ${ACTIONOK} == 0 ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+fi

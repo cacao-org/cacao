@@ -3,8 +3,6 @@
 SCExAO system pyramid WFS.
 Low-resolution WFS mode (120x120)
 
-
-
 cacao-task-manager tasks for this example :
 
 ~~~
@@ -16,15 +14,26 @@ cacao-task-manager tasks for this example :
 Subsequent tasks can perform specific parts of the AO loop.
 
 
+
+
 # Running the example
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
 To run the example :
 
-    $ rsync -au --progress $MILK_ROOT/plugins/cacao-src/AOloopControl/examples/scexao-vispyr-bin2-conf .
-    $ cacao-task-manager -X 3 scexao-vispyr-bin2
-    $ cp cacaoloop-scexaovispyr-conf/aorunscript .
-    $ ./aorunscript
+    $ cacao-loop-deploy scexao-vispyr-bin2
+    $ cd vispyr-rootdir
+    $ ./aorun-setmode-sim
+    $ cacao-aorun-000-simwfs start
+    $ cacao-aorun-005-takedark
+    $ cacao-aorun-020-mlat
+    $ cacao-aorun-025-acqWFS start
+    $ cacao-aorun-030-acqzRM start
+    $ cacao-aorun-035-acqloRM start
+    $ cacao-aorun-040-compfCM
+    $ mkdir AOcalibs
+    $ cacao-calib-archive cal000
+    $ cacao-calib-apply cal000
 
 THE END

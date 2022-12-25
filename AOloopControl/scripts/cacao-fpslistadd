@@ -195,12 +195,12 @@ if [ "${CACAO_FPSPROC_SIMMVMGPU}" = "ON" ]; then
 
         # copy calibration files
 
-        #runstrcmd "mkdir -p ${LOOPWORKDIR}/simLHS"
-        #runstrcmd "cp simLHS/respM.fits ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits"
-        #runstrcmd "cp simLHS/wfsref.fits ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits"
+        #runstrcmd "mkdir -p ${CACAO_LOOPRUNDIR}/simLHS"
+        #runstrcmd "cp simLHS/respM.fits ./${CACAO_LOOPRUNDIR}/simLHS/simLHS.respM.fits"
+        #runstrcmd "cp simLHS/wfsref.fits ./${CACAO_LOOPRUNDIR}/simLHS/simLHS.wfsref.fits"
 
-        #runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.respM.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSrespM.fits"
-        #runstrcmd "cp ./${LOOPWORKDIR}/simLHS/simLHS.wfsref.fits ./${LOOPWORKDIR}/conf/shmim.aolsimLHSwfsref.fits"
+        #runstrcmd "cp ./${CACAO_LOOPRUNDIR}/simLHS/simLHS.respM.fits ./${CACAO_LOOPRUNDIR}/conf/shmim.aolsimLHSrespM.fits"
+        #runstrcmd "cp ./${CACAO_LOOPRUNDIR}/simLHS/simLHS.wfsref.fits ./${CACAO_LOOPRUNDIR}/conf/shmim.aolsimLHSwfsref.fits"
         milk-FITS2shm "./simLHS/respM.fits" aol${CACAO_LOOPNUMBER}_simLHSrespM
         milk-FITS2shm "./simLHS/wfsref.fits" aol${CACAO_LOOPNUMBER}_simLHSwfsref
 
@@ -412,12 +412,12 @@ if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
     fpsarg0="${CACAO_LOOPNUMBER}"
 
     # get scripts that will be used
-    mkdir -p ${LOOPWORKDIR}/cacaobin
-    ln -s $(which cacao-RMdecode) ${LOOPWORKDIR}/cacaobin/cacao-RMdecode
-    ln -s $(which cacao-mkDMWFSmasks) ${LOOPWORKDIR}/cacaobin/cacao-mkDMWFSmasks
-    ln -s $(which cacao-mkDMslaveActprox) ${LOOPWORKDIR}/cacaobin/cacao-mkDMslaveActprox
-    ln -s $(which cacao-mkLODMmodes) ${LOOPWORKDIR}/cacaobin/cacao-mkLODMmodes
-    ln -s $(which cacao-NULL) ${LOOPWORKDIR}/cacaobin/cacao-NULL
+    mkdir -p ${CACAO_LOOPRUNDIR}/cacaobin
+    ln -s $(which cacao-RMdecode) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-RMdecode
+    ln -s $(which cacao-mkDMWFSmasks) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-mkDMWFSmasks
+    ln -s $(which cacao-mkDMslaveActprox) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-mkDMslaveActprox
+    ln -s $(which cacao-mkLODMmodes) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-mkLODMmodes
+    ln -s $(which cacao-NULL) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-NULL
 
     # FPS full name
     fpsfname="${fpsname}-${fpsarg0}"
@@ -475,12 +475,12 @@ if [ "${CACAO_FPSPROC_ACQWFSLINCALZ}" = "ON" ]; then
     fpsarg0="${CACAO_LOOPNUMBER}"
 
     # get scripts that will be used
-    mkdir -p ${LOOPWORKDIR}/cacaobin
-    ln -s $(which cacao-RMdecode) ${LOOPWORKDIR}/cacaobin/cacao-RMdecode
-    ln -s $(which cacao-mkDMWFSmasks) ${LOOPWORKDIR}/cacaobin/cacao-mkDMWFSmasks
-    ln -s $(which cacao-mkDMslaveActprox) ${LOOPWORKDIR}/cacaobin/cacao-mkDMslaveActprox
-    ln -s $(which cacao-mkLODMmodes) ${LOOPWORKDIR}/cacaobin/cacao-mkLODMmodes
-    ln -s $(which cacao-NULL) ${LOOPWORKDIR}/cacaobin/cacao-NULL
+    mkdir -p ${CACAO_LOOPRUNDIR}/cacaobin
+    ln -s $(which cacao-RMdecode) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-RMdecode
+    ln -s $(which cacao-mkDMWFSmasks) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-mkDMWFSmasks
+    ln -s $(which cacao-mkDMslaveActprox) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-mkDMslaveActprox
+    ln -s $(which cacao-mkLODMmodes) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-mkLODMmodes
+    ln -s $(which cacao-NULL) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-NULL
 
     # FPS full name
     fpsfname="${fpsname}-${fpsarg0}"
@@ -605,14 +605,14 @@ if [ "${CACAO_FPSPROC_COMPFCM}" = "ON" ]; then
     fpsname="compfCM"
     fpsarg0="${CACAO_LOOPNUMBER}"
 
-    #mkdir -p ${LOOPWORKDIR}/conf-staged
-    #mkdir -p ${LOOPWORKDIR}/mkmodestmp
+    #mkdir -p ${CACAO_LOOPRUNDIR}/conf-staged
+    #mkdir -p ${CACAO_LOOPRUNDIR}/mkmodestmp
 
-    #mkdir -p ${LOOPWORKDIR}/DMmodes
-    #mkdir -p ${LOOPWORKDIR}/respM
-    #mkdir -p ${LOOPWORKDIR}/contrM
-    #mkdir -p ${LOOPWORKDIR}/contrMc
-    #mkdir -p ${LOOPWORKDIR}/contrMcact
+    #mkdir -p ${CACAO_LOOPRUNDIR}/DMmodes
+    #mkdir -p ${CACAO_LOOPRUNDIR}/respM
+    #mkdir -p ${CACAO_LOOPRUNDIR}/contrM
+    #mkdir -p ${CACAO_LOOPRUNDIR}/contrMc
+    #mkdir -p ${CACAO_LOOPRUNDIR}/contrMcact
 
 
 
@@ -699,7 +699,7 @@ if [ "${CACAO_FPSPROC_COMPSCM}" = "ON" ]; then
     fpsname="compsCM"
     fpsarg0="${CACAO_LOOPNUMBER}"
 
-    #mkdir -p ${LOOPWORKDIR}/sCM
+    #mkdir -p ${CACAO_LOOPRUNDIR}/sCM
 
 
 

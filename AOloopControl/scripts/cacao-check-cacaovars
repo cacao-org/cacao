@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+
+echo "Checking for cacaovars"
+
+# ensure there is a single cacaovar file
+fnb=0
+for f in cacaovars.*.bash; do
+	if [ -f $f ]; then
+		echo "FOUND ${f}"
+		((fnb=fnb+1))
+		filename="$f"
+	fi
+done;
+
+errstatus="0"
+
+
+if [ ${fnb} == 1 ]; then
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Found cavaovar file $filename"
+else
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Found ${fnb} cacaovar file(s). Need 1 cacaovar file to proceed"
+	errstatus="1"
+fi;
+
+
+source cacaovars.*.bash
+
+
+
+if [ -z ${CACAO_LOOPNAME+x} ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] CACAO_LOOPNAME is unset"
+	errstatus="1"
+else
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] CACAO_LOOPNAME is set to '$CACAO_LOOPNAME'"
+fi
+
+
+if [ -z ${CACAO_LOOPNUMBER+x} ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] CACAO_LOOPNUMBER is unset"
+	errstatus="1"
+else
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] CACAO_LOOPNUMBER is set to '$CACAO_LOOPNUMBER'"
+fi
+
+
+
+
+
+if [ -z ${CACAO_DMINDEX+x} ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] CACAO_DMINDEX is unset"
+	errstatus="1"
+else
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] CACAO_DMINDEX is set to '$CACAO_DMINDEX'"
+fi
+
+if [ -z ${CACAO_DMxsize+x} ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] CACAO_DMxsize is unset"
+	errstatus="1"
+else
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] CACAO_DMxsize is set to '$CACAO_DMxsize'"
+fi
+
+if [ -z ${CACAO_DMysize+x} ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] CACAO_DMysize is unset"
+	errstatus="1"
+else
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] CACAO_DMysize is set to '$CACAO_DMysize'"
+fi
+
+if [ -z ${CACAO_DMSPATIAL+x} ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] CACAO_DMSPATIAL is unset"
+	errstatus="1"
+else
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] CACAO_DMSPATIAL is set to '$CACAO_DMSPATIAL'"
+fi
+
+if [ -z ${CACAO_LOOPROOTDIR+x} ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] CACAO_LOOPROOTDIR is unset"
+	errstatus="1"
+else
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] CACAO_LOOPROOTDIR is set to '$CACAO_LOOPROOTDIR'"
+fi
+
+if [ -z ${CACAO_LOOPRUNDIR+x} ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] CACAO_LOOPRUNDIR is unset"
+	errstatus="1"
+else
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] CACAO_LOOPRUNDIR is set to '$CACAO_LOOPRUNDIR'"
+fi
+
+
+
+if [ -z ${CACAO_WFSSTREAM+x} ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] CACAO_WFSSTREAM is unset"
+	errstatus="1"
+else
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] CACAO_WFSSTREAM is set to '$CACAO_WFSSTREAM'"
+fi
+
+
+
+if [ $errstatus == "1" ]; then
+	echo "           Note: This script needs to run in a cacao rootdir directory"
+	echo "           Check that cacaovar file includes variables definitions"
+	echo "           -> Cannot proceed"
+	exit
+fi
+
+
+fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
+fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
+
+function sendFPScmd {
+    echo "SENDING: $1"
+    echo "$1" >> ${fpsCTRLfifo}
+}
+
+
+function checkFPSON {
+   if [ "$2" = "ON" ]; then
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] $1 is ON"
+else
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] $1 is OFF/missing"
+	FPScheckOK="FAIL"
+fi
+}
+
+
+function checkstream {
+   if [ -f "$MILK_SHM_DIR/$1.im.shm" ]; then
+	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] stream $1"
+else
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream $1 missing"
+	streamcheckOK="FAIL"
+fi
+}
+
+
+echo "$(tput bold)CACAO_LOOPNAME = ${CACAO_LOOPNAME}$(tput sgr0)"
+
+RequiredCommands=( tmux milk )
+RequiredPipes=( ${fpsCTRLfifo} )
+RequiredDirs=()

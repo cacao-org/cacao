@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop execution script"
+
+MSextdescr="AO loop script"
+source milk-script-std-config
+source cacao-check-cacaovars
+source milk-argparse
+
+
+
+
+errexit=0
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_COMPFCM ${CACAO_FPSPROC_COMPFCM}
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+errexit=1
+fi
+
+
+if [ $errexit = 1 ]; then
+exit
+fi
+
+
+
+
+# ======================================================================
+# acquWFS
+# ======================================================================
+sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.upRMfiles ON"
+sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.upAlign ON"
+
+sendFPScmd "confwupdate compfCM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart compfCM-${CACAO_LOOPNUMBER}"

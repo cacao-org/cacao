@@ -42,6 +42,12 @@ MSarg+=( "cacaoconfname:string:configuration name" )
 # SCRIPT OPTIONS
 # syntax: "short:long:functioncall:args[types]:description"
 #
+FORCE="0"
+MSopt+=( "f:force:set_force::force deployment" )
+function set_force() {
+	FORCE="1"
+}
+
 
 # parse arguments
 source milk-argparse
@@ -72,6 +78,8 @@ echo "${nbtask} TASKS"
 
 
 # Run cacao task manager
+
+
 
 cacao-task-manager -X ${nbtask} ${cacaoconfname}
 

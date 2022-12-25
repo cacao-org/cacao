@@ -5,71 +5,52 @@
 
 # script 1-line description
 MSdescr="AO loop execution script"
-
-
-
-source cacaovars.*.bash
-
 # Extended description
-MSextdescr="AO loop script
-
-CACAO_LOOPNAME = ${CACAO_LOOPNAME}
-"
-
-
-# standard configuration
-# location ./scripts/
+MSextdescr="AO loop script"
 source milk-script-std-config
+source cacao-check-cacaovars
 
-# prerequisites
-#
-
-RequiredCommands=( tmux milk )
-
-fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
-fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
-RequiredPipes=( ${fpsCTRLfifo} )
-
-RequiredDirs=()
-
-
-
-
-
-# SCRIPT MANDATORY ARGUMENTS
-# syntax: "name:type(s)/test(s):description"
-#
-
-
-
-# SCRIPT OPTIONS
-# syntax: "short:long:functioncall:args[types]:description"
-#
-
-# parse arguments
+MSarg+=( "action:string:action (start/stop/check)" )
 source milk-argparse
+ACTION="${inputMSargARRAY[0]}"
+
+
+ACTIONOK=0
+
+
+
+if [ ${ACTION} == "check" ]; then
+ACTIONOK=1
+fi
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_DMCH2DISP ${CACAO_FPSPROC_DMCH2DISP}
+checkFPSON CACAO_FPSPROC_STREAMDELAY ${CACAO_FPSPROC_STREAMDELAY}
+checkFPSON CACAO_FPSPROC_SIMMVMGPU ${CACAO_FPSPROC_SIMMVMGPU}
+checkFPSON CACAO_FPSPROC_WFSCAMSIM ${CACAO_FPSPROC_WFSCAMSIM}
+echo "FPScheckOK = ${FPScheckOK}"
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+exit
+fi
 
 
 
 
-function sendFPScmd {
-    echo "SENDING: $1"
-    echo "$1" >> ${fpsCTRLfifo}
-}
-
-
-
-
+if [ ${ACTION} == "start" ]; then
+ACTIONOK=1
 # ======================================================================
 # Starting DM combination process
 # ======================================================================
 
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.0"
 #taskset_DMch2disp="3"
 #sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
 sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
 sendFPScmd "runstart DMch2disp-${CACAO_DMINDEX}"
-
 
 # ======================================================================
 # Starting DM hardware delay simulator
@@ -82,7 +63,7 @@ sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
 # ======================================================================
 # Starting MVM simulator
 # ======================================================================
-
+#sendFPScmd "setval simmvmgpu-${CACAO_LOOPNUMBER}.procinfo.triggerdelay ${TRIGDELAY}"
 sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
 
@@ -100,5 +81,26 @@ done
 # ======================================================================
 
 milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_wfsdark
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.wfscamim ${CACAO_WFSSTREAM}"
+FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
+
+fi
+
+
+if [ ${ACTION} == "stop" ]; then
+ACTIONOK=1
+sendFPScmd "runstop wfscamsim-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstop simmvmgpu-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstop streamDelay-${CACAO_DMINDEX}"
+sendFPScmd "runstop DMch2disp-${CACAO_DMINDEX}"
+fi
+
+
+
+
+if [ ${ACTIONOK} == 0 ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+fi
