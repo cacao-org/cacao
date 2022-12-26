@@ -66,6 +66,10 @@ export CACAO_FPS_wfscamsim_fluxtotal="1000000"
 
 
 
+# Turbulence simulator on DM
+#
+export CACAO_FPSPROC_DMATMTURB="ON"
+
 
 
 # Measure hardware latency
@@ -142,18 +146,7 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 # Modal response matrix using control modes
 ##export CACAO_FPSPROC_ACQLINCMRM="ON"
 
-# Predictive control - build filters
-#export CACAO_FPSPROC_MKPF00="ON"
-#export CACAO_FPSPROC_MKPF01="ON"
-#export CACAO_FPSPROC_MKPF02="ON"
-#export CACAO_FPSPROC_MKPF03="ON"
-#export CACAO_FPSPROC_MKPF04="ON"
-#export CACAO_FPSPROC_MKPF05="ON"
-
-
-#export CACAO_FPSPROC_APPLYPF00="ON"
-#export CACAO_FPSPROC_APPLYPF01="ON"
-#export CACAO_FPSPROC_APPLYPF02="ON"
-#export CACAO_FPSPROC_APPLYPF03="ON"
-#export CACAO_FPSPROC_APPLYPF04="ON"
-#export CACAO_FPSPROC_APPLYPF05="ON"
+# Predictive control
+#export CACAO_PF_NBBLOCK=6
+#export CACAO_FPSPROC_MKPF="ON"
+#export CACAO_FPSPROC_APPLYPF="ON"

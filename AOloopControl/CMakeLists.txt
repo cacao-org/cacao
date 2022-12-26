@@ -97,8 +97,6 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao.tmux
 	scripts/cacao-fpsarchive
 	scripts/cacao-fpslistadd
-	scripts/cacao-fpslistadd-APPLYPF
-	scripts/cacao-fpslistadd-MKPF
 	scripts/cacao-setDMnolink
 	scripts/cacao_simLHS
 	scripts/cacao-takedark

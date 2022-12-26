@@ -11,6 +11,9 @@
 
 touch fpslist.txt
 
+# communicate to subscripts they are being sourced from the main script
+#
+FPSLISTADDSCRIPT="1"
 
 # log messages
 
@@ -1254,7 +1257,7 @@ if [ "${CACAO_FPSPROC_ACQLINCMRM}" = "ON" ]; then
         echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader
-        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_CMLOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
         addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
         addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-cm${CACAO_DMINDEX}"
@@ -1295,147 +1298,27 @@ fi
 
 
 
-if [ "${CACAO_FPSPROC_DMATMTURB}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_DMATMTURB"
-    # ==============================================================================
-    # ========== DM Atmospheric Turbulence simulator ===============================
-    # ==============================================================================
-
-    # FPS name
-    fpsname="DMatmturb"
-    fpsarg0="${CACAO_DMINDEX}"
-    DMTURBCHAN="10"
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}           cacaodm.dmturb     ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.dmstream dm${CACAO_DMINDEX}disp${DMTURBCHAN}"
-        addfpscmd "setval ${fpsfname}.turbfname atmturbC.fits"
-
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_DMATMTURB"
-fi
 
 
 
 
-
-
-# Compute predictive filters
-
-if [ "${CACAO_FPSPROC_MKPF00}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_MKPF00"
-BLKindex="00"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-MKPF
-else
-echolog "OFF CACAO_FPSPROC_MKPF00"
-fi
-
-if [ "${CACAO_FPSPROC_MKPF01}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_MKPF01"
-BLKindex="01"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-MKPF
-else
-echolog "OFF CACAO_FPSPROC_MKPF01"
-fi
-
-if [ "${CACAO_FPSPROC_MKPF02}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_MKPF02"
-BLKindex="02"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-MKPF
-else
-echolog "OFF CACAO_FPSPROC_MKPF02"
-fi
-
-if [ "${CACAO_FPSPROC_MKPF03}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_MKPF03"
-BLKindex="03"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-MKPF
-else
-echolog "OFF CACAO_FPSPROC_MKPF03"
-fi
-
-if [ "${CACAO_FPSPROC_MKPF04}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_MKPF04"
-BLKindex="04"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-MKPF
-else
-echolog "OFF CACAO_FPSPROC_MKPF04"
-fi
-
-if [ "${CACAO_FPSPROC_MKPF05}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_MKPF05"
-BLKindex="05"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-MKPF
-else
-echolog "OFF CACAO_FPSPROC_MKPF05"
-fi
+# Run all system fpslistadd files
+#
+milkbindir="$MILK_INSTALLDIR/bin"
+for fpslistaddexec in ${milkbindir}/cacao-fpslistadd-*; do
+        echo "Found ${fpslistaddexec}"
+        source ${fpslistaddexec}
+done
 
 
 
-# Apply predictive filters
-
-
-if [ "${CACAO_FPSPROC_APPLYPF00}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_APPLYPF00"
-BLKindex="00"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
-else
-echolog "OFF CACAO_FPSPROC_APPLYPF00"
-fi
-
-if [ "${CACAO_FPSPROC_APPLYPF01}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_APPLYPF01"
-BLKindex="01"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
-else
-echolog "OFF CACAO_FPSPROC_APPLYPF01"
-fi
-
-if [ "${CACAO_FPSPROC_APPLYPF02}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_APPLYPF02"
-BLKindex="02"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
-else
-echolog "OFF CACAO_FPSPROC_APPLYPF02"
-fi
-
-if [ "${CACAO_FPSPROC_APPLYPF03}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_APPLYPF03"
-BLKindex="03"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
-else
-echolog "OFF CACAO_FPSPROC_APPLYPF03"
-fi
-
-if [ "${CACAO_FPSPROC_APPLYPF04}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_APPLYPF04"
-BLKindex="04"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
-else
-echolog "OFF CACAO_FPSPROC_APPLYPF04"
-fi
-
-if [ "${CACAO_FPSPROC_APPLYPF05}" = "ON" ]; then
-echolog "ON  CACAO_FPSPROC_APPLYPF05"
-BLKindex="05"
-source ${MILK_INSTALLDIR}/bin/cacao-fpslistadd-APPLYPF
-else
-echolog "OFF CACAO_FPSPROC_APPLYPF05"
-fi
-
+# Run local fpslistadd files
+#
 for fpslf in cacao-fpslistadd-*; do
 echo "Processing fpslistadd file ${fpslf}"
 . ./${fpslf}
 done
+
+
 
 echolog "END"

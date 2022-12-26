@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+if [ -z ${FPSLISTADDSCRIPT+x} ]; then
+	echo "Not a standalone script, must be run within cacao-fpslistadd script"
+else
+
+if [ "${CACAO_FPSPROC_DMATMTURB}" = "ON" ]; then
+
+echolog "ON  CACAO_FPSPROC_DMATMTURB"
+# ==============================================================================
+# ========== DM Atmospheric Turbulence simulator ===============================
+# ==============================================================================
+
+# FPS name
+fpsname="DMatmturb"
+fpsarg0="${CACAO_DMINDEX}"
+DMTURBCHAN="10"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+if grep -q "${fpsname}" fpslist.txt
+then
+    echolog "Process ${fpsname} already registered - skipping"
+else
+    echolog "Adding process ${fpsname}"
+    echo "${fpsname}           cacaodm.dmturb     ${fpsarg0}" >> fpslist.txt
+
+    addfpscmdheader
+    addfpscmd "setval ${fpsfname}.dmstream dm${CACAO_DMINDEX}disp${DMTURBCHAN}"
+    addfpscmd "setval ${fpsfname}.turbfname atmturbC.fits"
+fi
+
+fi
+
+fi

@@ -20,14 +20,14 @@ Subsequent tasks can perform specific parts of the AO loop.
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
-To run the example :
+## Deploy
 
     $ cacao-loop-deploy scexao-vispyr-bin2
     $ cd vispyr-rootdir
     $ ./aorun-setmode-sim
     $ cacao-aorun-000-simwfs start
     $ cacao-aorun-005-takedark
-    $ cacao-aorun-020-mlat
+    $ cacao-aorun-020-mlat -w
     $ cacao-aorun-025-acqWFS start
     $ cacao-aorun-030-acqzRM start
     $ cacao-aorun-035-acqloRM start

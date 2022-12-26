@@ -18,4 +18,12 @@ AOloopControl_PredictiveControl_mapPredictiveFilter.c
 target_link_libraries(${LIBNAME} PUBLIC CLIcore milklinoptimtools cacaoAOloopControl)
 
 install(TARGETS ${LIBNAME} DESTINATION lib)
+
+
+install(PROGRAMS
+    scripts/cacao-fpslistadd-APPLYPF
+    scripts/cacao-fpslistadd-MKPF
+    DESTINATION bin)
+
+
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})
