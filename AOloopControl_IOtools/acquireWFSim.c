@@ -316,6 +316,14 @@ static errno_t compute_function()
         WRITE_IMAGENAME(name, "aol%u_imWFS3", *AOloopindex);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS3);
 
+
+        IMGID imgwfsref;
+        {
+            char wfsrefname[STRINGMAXLEN_STREAMNAME];
+            WRITE_IMAGENAME(wfsrefname, "aol%u_wfsref", *AOloopindex);
+            imgwfsref = stream_connect_create_2Df32(wfsrefname, sizexWFS, sizeyWFS);
+        }
+
         WRITE_IMAGENAME(name, "aol%u_wfsrefc", *AOloopindex);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &IDwfsrefc);
 
