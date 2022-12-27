@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop execution script"
+# Extended description
+MSextdescr="AO loop script"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+MSarg+=( "action:string:action (start/stop/check)" )
+source milk-argparse
+ACTION="${inputMSargARRAY[0]}"
+
+
+ACTIONOK=0
+
+
+
+if [ ${ACTION} == "check" ]; then
+ACTIONOK=1
+fi
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_DMCH2DISP ${CACAO_FPSPROC_DMCH2DISP}
+checkFPSON CACAO_FPSPROC_STREAMDELAY ${CACAO_FPSPROC_STREAMDELAY}
+checkFPSON CACAO_FPSPROC_SIMMVMGPU ${CACAO_FPSPROC_SIMMVMGPU}
+checkFPSON CACAO_FPSPROC_WFSCAMSIM ${CACAO_FPSPROC_WFSCAMSIM}
+echo "FPScheckOK = ${FPScheckOK}"
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+exit
+fi
+
+
+
+
+if [ ${ACTION} == "start" ]; then
+ACTIONOK=1
+
+# ======================================================================
+# Starting DM hardware delay simulator
+# ======================================================================
+
+sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
+sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
+
+
+# ======================================================================
+# Starting MVM simulator
+# ======================================================================
+#sendFPScmd "setval simmvmgpu-${CACAO_LOOPNUMBER}.procinfo.triggerdelay ${TRIGDELAY}"
+sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
+
+
+# WAIT for aolX_linsimWFS to appear
+filename="${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_linsimWFS.im.shm"
+echo "Waiting for file ${filename} ..."
+until [ -f "$filename" ]
+do
+     sleep 0.1
+done
+
+# ======================================================================
+# Starting WFC camera simulator
+# ======================================================================
+
+milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_simwfsdark
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.wfscamim ${CACAO_WFSSTREAM}"
+FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"
+sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
+
+fi
+
+
+if [ ${ACTION} == "stop" ]; then
+ACTIONOK=1
+sendFPScmd "runstop wfscamsim-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstop simmvmgpu-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstop streamDelay-${CACAO_DMINDEX}"
+fi
+
+
+
+
+if [ ${ACTIONOK} == 0 ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+fi
