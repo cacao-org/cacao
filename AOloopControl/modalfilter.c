@@ -122,6 +122,10 @@ static long   fpi_autoloopsleep;
 static uint64_t *selfRMenable;
 static long      fpi_selfRMenable;
 
+// Number modes
+static uint32_t *selfRMnbmode;
+static long   fpi_selfRMnbmode;
+
 // poke amplitude
 static float *selfRMpokeampl;
 static long   fpi_selfRMpokeampl;
@@ -366,6 +370,15 @@ static CLICMDARGDEF farg[] =
         &fpi_selfRMenable
     },
     {
+        CLIARG_UINT32,
+        ".selfRM.NBmode",
+        "number of mode poked",
+        "32",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &selfRMnbmode,
+        &fpi_selfRMnbmode
+    },
+    {
         CLIARG_FLOAT32,
         ".selfRM.pokeampl",
         "poke amplitude",
@@ -441,6 +454,7 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_autoloopsleep].fpflag |= FPFLAG_WRITERUN;
 
         data.fpsptr->parray[fpi_selfRMenable].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_selfRMnbmode].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_selfRMnbsettlestep].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_selfRMpokeampl].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_selfRMnbiter].fpflag |= FPFLAG_WRITERUN;
@@ -532,6 +546,11 @@ static errno_t compute_function()
     uint32_t NBmode = imgin.md->size[0];
 
 
+    int selfRM_NBmode = (*selfRMnbmode);
+    if(selfRM_NBmode > NBmode)
+    {
+        selfRM_NBmode = NBmode;
+    }
     // selfRM initialization
     //
     int      blockcnt         = 0;
@@ -1159,7 +1178,7 @@ static errno_t compute_function()
             }
 
 
-            if(selfRM_pokemode == NBmode)
+            if(selfRM_pokemode == selfRM_NBmode)
             {
                 selfRMpokeparity = 1 - selfRMpokeparity;
                 selfRM_pokemode  = 0;
