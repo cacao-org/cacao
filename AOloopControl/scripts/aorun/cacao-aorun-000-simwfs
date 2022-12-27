@@ -91,7 +91,7 @@ done
 # Starting WFC camera simulator
 # ======================================================================
 
-milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_wfsdark
+milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_simwfsdark
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.wfscamim ${CACAO_WFSSTREAM}"
 FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"

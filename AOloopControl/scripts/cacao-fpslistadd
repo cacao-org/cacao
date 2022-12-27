@@ -266,7 +266,7 @@ if [ "${CACAO_FPSPROC_WFSCAMSIM}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.wfssignal aol${CACAO_LOOPNUMBER}_linsimWFS"
         addfpscmd "setval ${fpsfname}.wfscamim aol${CACAO_LOOPNUMBER}_wfsim"
         addfpscmd "setval ${fpsfname}.compdarkadd ON"
-        addfpscmd "setval ${fpsfname}.camdark aol${CACAO_LOOPNUMBER}_wfsdark"
+        addfpscmd "setval ${fpsfname}.camdark aol${CACAO_LOOPNUMBER}_simwfsdark"
         addfpscmd "setval ${fpsfname}.fluxtotal 100000"
         addfpscmd "setval ${fpsfname}.compphnoise ON"
         addfpscmd "setval ${fpsfname}.camRON 1.0"
